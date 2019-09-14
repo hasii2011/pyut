@@ -1,0 +1,40 @@
+(this is pyut's FAQ file. see http://pyut.sf.net for more informations)
+This file contain the project FAQ's.
+(File maintener : C.Dutoit <dutoitc@hotmail.com>)
+
+
+Resumes :
+=======
+1. Reverse engineering Python
+    1.1 : Reverse engineering Python do launch my program. Why ?
+2. rpm errors
+    2.1 : no permission to execute pyut on linux
+
+
+
+1. Reverse engineering Python
+=============================
+1.1 : Reverse engineering Python do launch my program. Why ?
+Q : When i do Python Reverse engineering on my program, my program
+    is launched. Why ?
+R : Python Reverse do an 'import' on python files. 
+    An Import launch all the code that is found in the imported module.
+    To fix it, you must add this kind of code in your program :
+    if __name__=="__main__":
+        do_some_stuff
+    This is general stuff, it's a good idea to put this in all your code.
+    (Answered by C.Dutoit <dutoitc@hotmail.com>)
+
+
+
+2. RPM errors
+=============
+2.1 : RPM : no rights !
+Q : I have no permission to execute pyut on linux, or it won't works,
+	  with the RPM install
+R : This is a known bugs. You need to do the following tricks :
+    - su
+	- (password)
+	- chmod 755 /usr/local/bin/pyut
+	- chmod 777 /usr/local/share/pyut/PyutPrefs.dat
+    (Answered by C.Dutoit <dutoitc@hotmail.com>)

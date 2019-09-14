@@ -1,0 +1,582 @@
+#!/usr/bin/env python
+#
+# Copyright 2002, Nicolas Dubois, Eivd.
+# Visit http://www.eivd.ch
+#
+# This file is part of PyUt.
+#
+# PyUt is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# PyUt is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PyUt; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+__version__ = '$Revision: 1.4 $'
+__author__ = 'Nicolas Dubois <nicdub@gmx.ch>'
+__date__ = '2002-10-31'
+
+from sugiyamaConsts import *
+#Debug
+#from RealSugiyamaNode import *
+
+class SugiyamaNode:
+    """
+    Real or virtual Sugiyama node interface.
+    
+    This class is an interface, you shouldn't have an object of type
+    SugiyamaNode. You have to use RealSugiyamaNode or VirtualSugiyamaNode
+    objects.
+    
+    Instancied by: not instancied
+    Implemented by: RealSugiyamaNode, VirtualSugiyamaNode
+    
+    :author: Nicolas Dubois
+    :contact: nicdub@gmx.ch
+    :version: $Revision: 1.4 $
+    """
+
+
+    #>------------------------------------------------------------------------
+    def __init__(self):
+        """
+        Constructor.
+
+        @author Nicolas Dubois
+        """
+        # Current barycenter value of the link, this value can be computed
+        # on indexes or x coordinate. For more information, see function
+        # getBarycenter()
+        self.__barycenter = None
+        self.__index = None # Index position on the level
+        #~ self.__leftNode = None # Node direct on the left on the same level
+        self.__level = None # Index of level
+        self.__leftNode = None # Node direct on the left on the same level
+        self.__rightNode = None # Node direct on the right on the same level
+        
+        
+        # Fathers and sons
+        # ================
+        #
+        # A son is derived from a father. There is a hierarchical link,
+        # Realisation or Inheritance, from source to father.
+        # Each node can have fathers and sons.
+        
+        
+        # List of fathers : [(SugiyamaNode, SugiyamaLink), ...]
+        self.__fathers = []
+        
+        # List of sons : [(SugiyamaNode, SugiyamaLink), ...]
+        self.__sons = []
+        
+        # List of non-hierarchical link : [(SugiyamaNode, SugiyamaLink), ...]
+        self.__links = []
+
+
+    #>------------------------------------------------------------------------
+    def getSize(self):
+        """
+        Get the size of the node.
+
+        This function has to be overloaded.
+
+        @return (float, float): tuple (width, height)
+        @author Nicolas Dubois
+        """
+        pass
+
+
+    #>------------------------------------------------------------------------
+    def setPosition(self, x, y):
+        """
+        Set position of node.
+
+        This function has to be overloaded.
+
+        @param float x, y: position in absolute coordinates
+        @author Nicolas Dubois
+        """
+        pass
+
+
+    #>------------------------------------------------------------------------
+    def getPosition(self):
+        """
+        Get position of node.
+
+        This function has to be overloaded.
+
+        @return (float, float): tuple (x, y) is absolute coordinates
+        @author Nicolas Dubois
+        """
+        pass
+
+
+    #>------------------------------------------------------------------------
+    def addFather(self, father, link):
+        """
+        Add a father.
+
+        @param SugiyamaNode father : father
+        @param SugiyamaLink link   : link between self and father
+        @author Nicolas Dubois
+        """
+        self.__fathers.append((father, link))
+
+
+    #>------------------------------------------------------------------------
+    def getFathers(self):
+        """
+        Return list of fathers
+
+        @return [SugiyamaNode, ...] : list of fathers
+        @author Nicolas Dubois
+        """
+        return self.__fathers
+
+
+    #>------------------------------------------------------------------------
+    def addSon(self, son, link):
+        """
+        Add a son.
+
+        @param SugiyamaNode son  : son
+        @param SugiyamaLink link : link between self and son
+        @author Nicolas Dubois
+        """
+        self.__sons.append((son, link))
+
+
+    #>------------------------------------------------------------------------
+    def getSons(self):
+        """
+        Get list of sons.
+
+        @return [SugiyamaNode, ...] : list of sons
+        @author Nicolas Dubois
+        """
+        return self.__sons
+
+
+    #>------------------------------------------------------------------------
+    def addNonHierarchicalLink(self, node, link):
+        """
+        Add a non hierarchical link, ie not a father nor a son relation.
+
+        @param SugiyamaNode node : linked node
+        @param SugiyamaLink link : link between the two nodes
+        @author Nicolas Dubois
+        """
+        self.__links.append((node, link))
+
+
+    #>------------------------------------------------------------------------
+    def getNonHierarchicalLink(self):
+        """
+        Get non hierarchical links, ie not father nor son relations.
+
+        @return [(SugiyamaNode, SugiyamaLink), ...] : list of tuple
+        @author Nicolas Dubois
+        """
+        return self.__links
+
+
+    #>------------------------------------------------------------------------
+    def setLevel(self, level):
+        """
+        Set level index.
+
+        @param int level : level index
+        @author Nicolas Dubois
+        """
+        self.__level = level
+
+
+    #>------------------------------------------------------------------------
+    def getLevel(self):
+        """
+        Get level index.
+
+        @return Int : level index
+        @author Nicolas Dubois
+        """
+        return self.__level
+
+
+    #>------------------------------------------------------------------------
+    def setIndex(self, index):
+        """
+        Set index of node in level.
+
+        @param int index : index of node
+        @author Nicolas Dubois
+        """
+        self.__index = index
+
+
+    #>------------------------------------------------------------------------
+    def getIndex(self):
+        """
+        Get index of node.
+
+        @return int : index of node
+        @author Nicolas Dubois
+        """
+        return self.__index
+
+
+    #>------------------------------------------------------------------------
+    def setLeftNode(self, node):
+        """
+        Set the left neighbor node.
+
+        @param SugiyamaNode node : left neighbor
+        @author Nicolas Dubois
+        """
+        self.__leftNode = node
+
+
+    #>------------------------------------------------------------------------
+    def getLeftNode(self):
+        """
+        Get the left neighbor node.
+
+        @return SugiyamaNode : left neighbor
+        @author Nicolas Dubois
+        """
+        return self.__leftNode
+
+
+    #>------------------------------------------------------------------------
+    def setRightNode(self, node):
+        """
+        Set the right neighbor node.
+
+        That function must be used before balancing the graph.
+
+        @param SugiyamaNode node : right neighbor
+        @author Nicolas Dubois
+        """
+        self.__rightNode = node
+
+
+    #>------------------------------------------------------------------------
+    def getRightNode(self):
+        """
+        Get the right neighbor node.
+
+        @return SugiyamaNode : right neighbor
+        @author Nicolas Dubois
+        """
+        return self.__rightNode
+
+
+    #>------------------------------------------------------------------------
+    def getXMax(self):
+        """
+        Get bigger value of x coordinate according to right neighbor position.
+        
+        If there is no right neighbor, return None.
+
+        @return float : max x coordinate
+        @author Nicolas Dubois
+        """
+        if self.__rightNode is None:
+            return None
+        else:
+            xRightNode = self.__rightNode.getPosition()[0]
+            widthSelfNode = self.getSize()[0]
+            return xRightNode - widthSelfNode - H_SPACE
+
+
+    #>------------------------------------------------------------------------
+    def __getAverageIndex(self, nodeList):
+        """
+        Compute the average of indexes position on all the given nodes.
+        
+        Return None if nodeList is empty.
+
+        @param [SugiyamaNode, ...] : list of nodes
+        @return float or None : Average of indexes position
+        @author Nicolas Dubois
+        """
+        if len(nodeList) == 0:
+            return None
+        else:
+            sum = 0
+            for (node, link) in nodeList:
+                sum += node.getIndex()
+            return float(sum) / len(nodeList)
+
+
+    #>------------------------------------------------------------------------
+    def fixAnchorPos(self):
+        """
+        Fix the positions of the anchor points.
+
+        This function has to be overloaded.
+
+        @author Nicolas Dubois
+        """
+        pass
+
+
+    #>------------------------------------------------------------------------
+    def upBarycenterIndex(self):
+        """
+        Compute the up barycenter value with fathers indexes.
+        
+        For reading this value, use getBarycenter()
+
+        @author Nicolas Dubois
+        """
+        self.__barycenter = self.__getAverageIndex(self.__fathers)
+
+
+    #>------------------------------------------------------------------------
+    def downBarycenterIndex(self):
+        """
+        Compute the down barycenter value with sons indexes.
+        
+        For reading this value, use getBarycenter()
+
+        @author Nicolas Dubois
+        """
+        self.__barycenter = self.__getAverageIndex(self.__sons)
+
+
+    #>------------------------------------------------------------------------
+    def barycenterIndex(self):
+        """
+        Compute the average of parents down-barycenter and sons up-barycenter.
+        
+        Before calling this function, you have to call downBarycenterIndex
+        on each fathers and upBarycenterIndex on each sons.
+        
+        For reading this value, use getBarycenter()
+
+        @author Nicolas Dubois
+        """
+        nodeList = self.__fathers + self.__sons
+        if len(nodeList) == 0:
+            #~ print self.__index, "none"
+            self.__barycenter = None
+        else:
+            sum = 0
+            for (node, link) in nodeList:
+                sum += node.getBarycenter()
+            #~ print self.__index, float(sum) / len(nodeList)
+            self.__barycenter = float(sum) / len(nodeList)
+
+
+    #>------------------------------------------------------------------------
+    def __getAverageX(self, nodeList):
+        """
+        Compute the average of x coords on all the given nodes.
+        
+        Return None if nodeList is empty.
+
+        @param [(SugiyamaNode, SugiyamaLink), ...] nodeList : fathers or sons
+        @return float or None : average of x coords
+        @author Nicolas Dubois
+        """
+        if len(nodeList) == 0:
+            return None
+        else:
+            sum = 0
+            for (node, link) in nodeList:
+                sum += node.getPosition()[0] + node.getSize()[0] / 2
+            return sum / len(nodeList) - self.getSize()[0] / 2
+
+
+    #>------------------------------------------------------------------------
+    def upBarycenterX(self):
+        """
+        Compute the up barycenter value with fathers x coord.
+        
+        For reading this value, use getBarycenter()
+
+        @author Nicolas Dubois
+        """
+        self.__barycenter = self.__getAverageX(self.__fathers)
+
+
+    #>------------------------------------------------------------------------
+    def downBarycenterX(self):
+        """
+        Compute the down barycenter value with sons x coord.
+        
+        For reading this value, use getBarycenter()
+
+        @author Nicolas Dubois
+        """
+        self.__barycenter = self.__getAverageX(self.__sons)
+
+
+    #>------------------------------------------------------------------------
+    def barycenterX(self):
+        """
+        Compute the average of up and down barycenter on x coords.
+        
+        For reading this value, use getBarycenter()
+
+        @author Nicolas Dubois
+        """
+        self.__barycenter = \
+            self.__getAverageX(self.__fathers + self.__sons)
+
+
+    #>------------------------------------------------------------------------
+    def getBarycenter(self):
+        """
+        Return the pre-computed barycenter value of the node.
+
+        The barycenter value is computed when you call one of the following
+        function:
+            - upBarycenterIndex()
+            - downBarycenterIndex()
+            - upBarycenterX()
+            - downBarycenterX()
+        If you want to update the value, you have to recall one of the
+        computing functions.
+        
+        Example:
+            If you want the down barycenter computed on indexes:
+            First call function downBarycenterIndex()
+            and then call function getBarycenter()
+
+        @return float: barycenter value
+        @author Nicolas Dubois
+        """
+        return self.__barycenter
+
+
+    #>------------------------------------------------------------------------
+    def __computeWantedXPos(self):
+        """
+        Compute average of fathers and sons x coordinates.
+
+        @return tuple (float, int) : (x average, number of fathers and sons)
+        @author Nicolas Dubois
+        """
+        # Create list of fathers and sons
+        fathersAndSons = self.getFathers() + self.getSons()
+        nbFathersAndSons = len(fathersAndSons)
+        
+        # If there are no fathers and sons
+        if nbFathersAndSons == 0:
+            return (None, 0)
+        
+        # Compute average of fathers and sons x coordinates
+        sum = 0
+        # For all his fahters and sons
+        for (node, link) in fathersAndSons:
+            # Get horizontal center coordinate of the node
+            xCenterNode = node.getPosition()[0] + node.getSize()[0] / 2
+            sum += xCenterNode
+        
+        return (sum / nbFathersAndSons - self.getSize()[0] / 2, \
+            nbFathersAndSons)
+        
+        
+    #>------------------------------------------------------------------------
+    def balance(self):
+        """
+        Compute a new x coordinate for balancing the hierarchical graph.
+        
+        Evaluate the best x coordinate for the node. If the best coord is on
+        the right of the node, try to push the nodes on the right and then fix
+        new position closer to best x coordinate.
+
+        @author Nicolas Dubois
+        """
+        # Get coordinate of node
+        (x, y) = self.getPosition()
+
+        # Evaluate best x coordinate of node
+        (wantedXPos, nbFathersAndSons) = self.__computeWantedXPos()
+        
+        # If there are no parents nor sons
+        if not wantedXPos:
+            # Don't move
+            return 0
+        
+        # If best x coord is righter than current x coordinate
+        if wantedXPos > x:
+            
+            # If there is a right neighbor
+            if self.__rightNode is not None:
+                # Check max x coord according to right neighbor
+                xMax = self.getXMax()
+                
+                # If right node is to close, try to push it
+                if wantedXPos > xMax:
+                    self.__rightNode.__pushToRight(
+                        (wantedXPos - xMax) * nbFathersAndSons,
+                        nbFathersAndSons)
+                        
+                # Fix new position
+                self.setPosition(min(wantedXPos, self.getXMax()), y)
+            else:
+                # There is no right node, fix position
+                self.setPosition(wantedXPos, y)
+                    
+        # Return true if node has been moved
+        return self.getPosition()[0] - x > 3
+
+
+    #>------------------------------------------------------------------------
+    def __pushToRight(self, xDeltaSum, nbLinks):
+        """
+        Called by the left neighbor, that function tries to push the node to
+        the right for the balancing. If there is not enough place, try to
+        push the next node.
+        
+        xDelta is the ideal delta on x coordinate for reaching the best
+        balancing.
+        
+        xDeltaSum is xDelta multiplied by the number of parents and sons
+        which are pushing to the right.
+        
+        nbLinks is the number of parents and sons who push from the left.
+        
+        @param float xDeltaSum : see above
+        @param int nbNode : see above
+        @author Nicolas Dubois
+        """
+        # Get current position
+        (x, y) = self.getPosition()
+        # Get wanted x coordinate
+        (wantedXPos, nbFathersAndSons) = self.__computeWantedXPos()
+        
+        # If the node has a barycenter value (has parents or sons)
+        if wantedXPos is not None:
+            # Add current delta in average
+            xDeltaSum += (wantedXPos - x) * nbFathersAndSons
+            # Update number of fathers and sons who are pushing
+            nbLinks += nbFathersAndSons
+        xDelta = xDeltaSum / nbLinks
+        
+        # If the node has to be moved to the right
+        if xDelta > 0:
+            # If the node has a right neighbor
+            if self.__rightNode is not None:
+                xMax = self.getXMax()
+                # If we need more place, try to push the right neighbor
+                if xMax < x + xDelta:
+                    self.__rightNode.__pushToRight(
+                        (x + xDelta - xMax) * nbLinks , nbLinks)
+                # Fix the new position
+                self.setPosition(min(x + xDelta, self.getXMax()), y)
+            else:
+                # No right neighbor, fix the new position
+                self.setPosition(x + xDelta, y)
+
+

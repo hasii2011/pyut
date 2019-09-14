@@ -1,0 +1,656 @@
+Changed since version 1.4 : 
+========================
+  Fixed language change
+  Added Chinese (draft)
+  Updated Esperanto
+  Fixed help for new wx
+  Upgraded wx
+  Fixed ascii codec error in error handler
+  Fixed various unwanted errors
+  Removed some debug informations
+  Added Versions at startup
+  Added patch from D.Dabrowsky:
+    - Undo/Redo
+    - Zoom
+
+
+
+Changed since version 1.3 :
+=========================
+
+C.Dutoit 2005***
+  + Fixed many bugs
+
+P.Dabrowsky 2005***
+  + Added undo/redo
+  + Added zoom
+  + Fixed many bugs
+
+C.Dutoit 20041228
+  + Fixed python export
+  + Fixed some minor bugs on plugins
+
+C.Dutoit 20041210
+  + Finished MiniOGL debbuging
+  + Finished wxPython 2.5.2.8 upgrade
+  + Remove some debug code
+  + Added selection colors on class (MiniOgl)
+  + Remove exit error (sometimes present)
+  + Traced 'segmentation fault' at the end -> futex, but not solved
+    (Don't know the real location of the problem, 
+    certainly some dead-lock on wx or wrongly uninitialized windows)
+  + Added Esperanto language (base)
+
+C.Dutoit 20041023
+  + Added Arrange Links plugin
+
+C.Dutoit 20041009
+  + Updated XSD reverse
+
+
+C.Dutoit 20041006
+  + Debugged scroll position bug
+  + Upgraded auto-tgz
+
+C.Dutoit 20041002
+  + Debugged / improved XSD reverse
+
+C.Dutoit 20040922
+   + Debugged load/save (PyutXMLV8, PyutApp)
+   + Removed infinite secure float recursion bug 
+        (on some systems, localisation is not well supported and 
+        4,5 means 4.5!)
+
+C.Dutoit 20040921
+   + Javascript import : added support to POO using case unsensitive
+     functions name
+   + Fixed Class dialog bug (due to wxPython upgrade)
+
+C.Dutoit 20040920
+   + Upgrade to wxPython 2.5.2.8
+   + Javascript import
+
+C.Dutoit 20040627
+   + Upgrade to wxPython 2.5.1
+
+C.Dutoit 20040626
+   + Upgrade to wxPython 2.5.1
+
+
+
+Changed since version 1.2 :
+=========================
+
+C.Dutoit 20040321
+   + Added crash bugs patches and corrections from Patrice Ferlet, 
+     Martin Dupont, Leonardo Santagada; Thanks to them
+
+C.Dutoit 20040126
+   + Corrected bug in internal rpm : division by zero if loading OglAssociation
+
+C.Dutoit 20040122
+   + Updated to prepare 1.3b2
+
+C.Dutoit 20040103
+   + Added ToCDAutoLayout
+
+C.Dutoit 20031217
+   + Rewritten IODTD with a new parser
+   + Updated ToLayout to choose filename
+   + Corrected bug SF/822133 : error while adding sequence diagram object on 
+     class diagram frame
+   + Updated associations link so we can see labels by default
+
+C.Dutoit 20031213
+   + Corrected windows save bug
+
+C.Dutoit 20030705
+   + Released PyUt 1.3b1
+
+P.Waelti 20030709:
+   + Patched pyutVersion.py which contain little bug (undefined symbol)
+
+C.Dutoit 20030623:
+   + Added patched from Frank for bug 758862 (picture export)
+
+C.Dutoit 20030622
+   + Closed bug 734488 : bugs related to wxPython
+   + Worked on bug 711555 : Cut&Copy loose links and size
+                         won't fix until PyUt 1.4
+
+C.Dutoit 20030615
+   + Added patches from Frank for bug 742212
+
+C.Dutoit 20030611:
+   + Added patches from Frank for various bugs
+
+C.Dutoit 20030524:
+   + fixed bug 742210 : wrong french translation
+   + fixed bug 742205 : error displaying an error message
+   + Patched Filehandling (patch Frank) : sash position more on left
+
+C.Dutoit 20030523:
+   + Removed XML exportation bug : we can now export to another directory thant
+     Pyut's src directory
+
+C.Dutoit 20030521:
+   + Coded and added PyutXmlV8, the main I/O for PyUt, with better ID handling
+
+C.Dutoit 20030520:
+   + Updated mydorpm script
+
+C.Dutoit 20030514:
+   + Updated Python reverse engineering : added easier classes selection
+   + Removed AppFrame bug while exiting ("unsubscriptable object in _onActivate)
+   + Updated PyutXmlV3.py to support bugged .put loading (due to files
+     saved with the buggy version of wxPython 2.4.2.0)
+   + Improved loading compatibility and fault-tolerance
+   + Removed IoPython bug : select files/cancel cancel the import now
+   + Improved Class edition dialog : now select next field/method/param
+     when deleting one of them
+
+C.Dutoit 20030416:
+   + Added German translation (thanks, S.Dees)
+
+C.Dutoit 20030328:
+   + Resolved Project loading bug for old files
+
+C.Dutoit 20030410:
+   + Updated Indonesian translation(thanks Bonifato)
+
+C.Dutoit 20030404:
+   + Added Indonesian translation
+
+C.Dutoit 20030322:
+   + Resolved MiniOGL bug (cardinality not displayed)
+
+C.Dutoit 20030320:
+   + Resolved some MiniOgl bugs
+
+C.Dutoit 20030317:
+   + Added Spanish translator
+
+C.Dutoit 20030312:
+   + Corrected some bugs
+   + Updated tips
+
+C.Dutoit 20030308:
+   + Corrected some bugs to make sequence diagram work again
+
+C.Dutoit 20030306:
+   + Tried to support iso-8859-2; not found how
+   + Testes pyut : Sequence diagrams does not work anymore ?!
+
+C.Dutoit 20030305:
+   + Added Polish translations of PyUt (need some testing to accept iso-8859-1);
+     Thanks, Michal Zylinski !
+
+C.Dutoit 20030302:
+   + Updated i18n
+
+C.Dutoit 20030223:
+   + Completed links type for XMI-OMG 1.1 import
+
+C.Dutoit 20030222:
+   + Added OMG's XMI 1.1 import
+
+C.Dutoit 20030221:
+   + Updated web site
+
+C.Dutoit 20030218:
+   + Corrected project selection bugs
+
+C.Dutoit 20030217:
+   + Corrected tips frame
+
+C.Dutoit 20030216:
+   + Debugged MiniOGL
+   + Corrected UmlFrame unit test to make it compatible with MiniOGL
+
+C.Dutoit 20030215:
+   + Debugged MiniOGL
+
+C.Dutoit 20030214:
+   + Integrated last MiniOGL version
+
+C.Dutoit 20030131:
+   + Updated class contextual menu :
+      - added content fit
+      - added cut object
+   + Reverse JAVA : added class auto-resize after creation
+
+C.Dutoit 20030119:
+   + Corrected XML Input plugin to not open an unused class diagram
+
+C.Dutoit 20030115:
+   + Removed XML import bug
+   + Updated DlgEditLink
+   + Corrected some minor bugs
+   + Improved document saving, added security in FileHandling,
+     to avoid registering frame and project without links betwwen them.
+
+C.Dutoit 20030111:
+   + Added PUT XML v7 DTD (putV7.dtd)
+
+C.Dutoit 20030107:
+   + Fixed XML export
+
+C.Dutoit 20030104:
+   + Corrected sequence diags to correctly move messages
+   + Tried to correctly save SDMessages.
+     This seems to be impossible, since MiniOGL seems to not support
+     many things like functions overloading and reporting to creator.
+     In fact, Since MiniOGL is no longer supported at all,
+     I think that we must thanks LB for adding in PyUt a dead library
+     for replacing another dead library. PyUt will soon be dead, too !
+     *=)/%&=?)+"*çKLJDF=)"/*ç!!!
+
+C.Dutoit 20030101:
+   + Good year to everyone !
+   + Improved Python Reverse, added tests, reverse with failure reverse
+
+
+C.Dutoit 20021231:
+   + Improved UmlFrame tests
+   + Moved frame and project reference from mediator to FilesHandling
+
+C.Dutoit 20021230:
+   + Corrected Pattern plugin
+   + Added ErrorManager; the final goal is to make a 100% scriptable 
+     and testable PyUt.
+     ErrorManager use a view class which can be textual or graphical.
+   + Moved all operations relative to FileHandling from mediator to 
+     FileHandling to do more localized operations and discharge mediator
+   + Added RAISE_ERROR_VIEW for ErrorManager, to use with unit tests
+   + Added SCRIPTING MODE, a base for scripting and testing all PyUt, =>
+   + Added UmlFrame basic test (objects creation, links)
+
+C.Dutoit 20021229:
+   + Added direct field and method edition in the class editor dialog box, by
+     double-click
+   + Added PyutProject.remove(PyutDocument)
+
+C.Dutoit 20021228:
+   + Added IoMysql on sourceforge
+   + Corrected IoPluginTemplate
+   + Corrected some minor bugs
+
+C.Dutoit 20021226:
+   + Corrected XML Import, which was not functioning since months
+   + Added Patterns tool plugin
+   + Modified IoFile to open .xml and .put files
+   + Added multi-line support in notes (was not supporting '\n' !)
+
+C.Dutoit 20021225:
+   + Merry Christmas !
+
+C.Dutoit 20021224:
+   + Added Edit/Select All menu
+   + Removed diagram properties (was unused)
+   + Corrected Python code generation to respect method order
+   + Corrected file-loading in command line; that re-works now
+   + Improved toolboxes design
+
+C.Dutoit 20021221:
+   + Modified MiniOGL/Diagram.py, added blit(...., x, y) at the end,
+     so we can again scroll the window
+   + Removed the possibility to save a file as the default filename
+
+C.Dutoit 20021220:
+   + Modified AppFrame : modified all toolbar buttons and made them
+     tools.
+   + Simplified AppFrame, checked all code, updated
+   + Tried to remove wxScrolledWindows grey rectangle bug,
+     but not found
+
+C.Dutoit 20021219:
+   + Modified AppFrame : removed all wxMessageDialog and replaced by
+     those in pyutUtils
+
+C.Dutoit 20021211:
+   + Added contrib directory
+
+C.Dutoit 20021202:
+   + Continued Sequence diagram development
+       + Corrected source/destination bug in OglSDMessage
+       + Added Diagrams sequence bugs because i'm boring
+
+C.Dutoit 20021130:
+   + Continued Sequence diagram development
+       + Added load/save ability
+       + Corrected python import bug; still exist for other imports, though
+
+C.Dutoit 20021127:
+   + Continued Sequence diagram devlopment
+        + Added vertical lock on moving
+
+C.Dutoit 20021126:
+   + Added project insertion in a project
+
+C.Dutoit 20021125:
+   + Added Message link in Sequence diagram
+   + Added parenty link in Sequence diagram
+   + Fixed some bugs
+
+C.Dutoit 20021124:
+   + Added PyutXmlV6 to save document types
+   + Added document types : CLASS_DIAGRAM, USECASE_DIAGRAM, SEQUENCE_DIAGRAM
+   + Added the begining of sequence diagram
+   + Added the save of multi-frames per projects
+   + Fixed some bugs
+   + Done some refactoring between FilesHandling, mediator and AppFrame
+
+C.Dutoit 20021122:
+   + Added PyutXmlV5 to save projects
+   + Added checkboxes in class diagram contextual menu
+   + Added postscript and pdf export
+
+P. Waelti 20021121:
+   + Added tool to export ASCII class. This tool take all selected objects,
+     filters to keep only classes and export each class to a file called
+     'ClassName.acl'. Check for already existing file is done and when it
+     happens, and suffix is added to filename (i.e. ClassName2.acl). Class
+     description is written below the ASCII class diagram.
+
+C.Dutoit 20021121:
+   + Added Danish translation .mo file and LCMESSAGE DIRECTORY (bug : wasn't present)
+   + Refactored Links
+   + Added ability to show and hide methods, stereotype, fields
+   + Added diagram properties
+   + Moved Properties to PyutProperties
+   + Added Class contextual menu
+   + Corrected object ID bug - on creation of new classes only (will not repair files)
+   + Added the notion of project and document with PyutProject, PyutDocument.
+     Every file loaded is a project. Next step is multi-diagram in a project
+
+C.Dutoit 20021120:
+   + Added Stereotyp for Dependancy link (named in pyut 'Interface' -> OglInterface,
+     pfff)
+   + Fixed i18n bug (i18n was not working => IoXmi was importing Parse at module level)
+   + Updated about box
+   + Changed PyUt Version (still 1.1 !!!)
+
+P. Waelti 20021119:
+   + Added FastEdit tool option dialog for editor selection
+
+C.Dutoit 20021118:
+   + added the ability to reverse multiple files at one time for java reverse-
+     engineering
+   + corrected bug when calling a plugin action (if the plugin raised an error,
+     the cursor stayed as wxBusyCursor)
+   + made links persistent (double-click)
+
+P. Waelti 20021118:
+   + corrected bug when cutting links
+
+C.Dutoit 20021117:
+   + modified view.py to display pretty xml
+   + coded some toolbox stuff
+
+C.Dutoit 20021116:
+   + added Danish language structure
+   + corrected some strings in FilesHandling for better translations (%s)
+   + added some documentation for i18n
+
+
+C.Dutoit 20021111:
+   + corrected some parsing bugs in IoJavaReverse.py plugin.
+     (now supports multi-line parameters, comments, 
+      merged comments like '//foo', '/***** .. ***/')
+   + corrected SHOW_PARAMS bugs when launching pyut
+
+
+
+
+
+Changed since version 1.1 :
+=========================
+
+C.Dutoit 20021029:
+   + corrected default directory for user
+   + Updated rpm
+   + corrected print bug
+
+C.Dutoit 20021026:
+   + Default directory is last directory for pyut's developers
+   + (with lb) : '<' '>' change objects z-order
+   + double-click on toolbar will now make tool persistent
+   + corrected yellow notes bug
+   + corrected "import lang" bug
+   + tried 2h. to add ps exportation, 
+     but... not really implemented in wxWindows !
+
+L. Burgbacher 20021023, lb@alawa.ch:
+   + fixed some bugs
+      + resize was KO
+      + cut too
+
+C.Dutoit, 20021022:
+   + Improved SplashScreen speed by unloading it when the application is loaded
+
+C.Dutoit, 20021021:
+   + Corrected FileHandling to avoid errors on loading/saving/importing files
+
+C.Dutoit, 20021020:
+   + Updated GNU standards files
+
+L. Burgbacher 20021018, lb@alawa.ch:
+   + Added selector rectangle (click outside of a shape, drag, select)
+   + Better multiple selection support
+   + updated MiniOgl version
+   + fixed problem with shortcuts in mediator
+
+C.Dutoit 20021017: 
+   + Merged lb's CVS to this one, including miniogl
+
+L. Burgbacher 20021012, lb@alawa.ch:
+   + Replaced OGL by MiniOgl
+   + Integrated the current MiniOgl distribution in Pyut
+   + Added PyutXmlV2 to support the new options of MiniOgl
+   + Added modular save/load framework, with a new version attribute in the
+     <Pyut> tag since PyutXmlV2
+   + Added self links, movable labels on links, multiline links
+   + Added field source in PyutLink
+   + Corrected everywhere PyutLink is used
+   + Lots of adaptations everywhere to fully support MiniOgl
+
+C.Dutoit 20021009 :
+   + Added xml.dom.minidom.parse import on IoXml, to avoid xml import bug
+   	(parse not found, before)
+
+C.Dutoit 20021008 :
+   + Corrected IoPython bug (import python, cancel, close dialog => 
+                             wxFalse error, EndModal called twice error)
+   + Added Tools plugins, moved PyutPlugin to PyutIOPlugin,
+   + Added transformation plugin
+
+C.Dutoit 20021007 :
+   + Added colours to UML note
+
+C.Dutoit 20021005 :
+   + Moved PyutPrefs.dat on ~/.PyutPrefs.dat under linux
+   + Corrected wxFalse bug with wxPython 2.3.3.1
+
+C.Dutoit 20020923 :
+   + bin/dorpm/mydorpm create a noarch rpm working; need some work to
+     improve facility to recreate .spec and others needed files
+
+C.Dutoit 20020919 : 
+   + Corrected sf bug 587747 - Objects misclassified as classes (IoPython),
+                               from code given in the bug report
+   + Corrected sf bug 589106 - FreeBSD error; was wrong version
+   + Added unicode support for i18n, first step
+
+C.Dutoit 20020917 :
+   + Corrected bugs file bugs/all.txt
+   + Corrected bug cd14 : a newly inserted class was not at the right place
+   + Corrected bug cd15 : exported bitmaps, jpegs are no longer exported with
+                          selection borders
+   + Corrected bug lb1  : LB is now a Developer, not a developer (majuscule)
+   + Corrected bug pw3  : help/load file disabled
+
+C.Dutoit 20020726 :
+   + Corrected translation bug : xml.dom.minidom was redefining the '_' 
+     function
+
+C.Dutoit 20020725 :
+   + Added gnu traditional command line arguments : --version, --help
+
+
+
+
+##############################################################################
+
+Changed since version 1.0 :
+=========================
+
+N. Dubois 20020724 :
+   + Added sizers in DlgEditLink.py
+
+N. Dubois 20020723 :
+   + Added german translation (made by Stefan Drees)
+
+P. Waelti 20020605 :
+   + Added dialog for use cases
+   + Added full links support (now you can make inheritance links or
+     every kind of link between objects)
+
+C.Dutoit 20020601
+   + Added a check for newer versions in help menu"
+   + Added a maximize properties (file/properties)
+
+P. Waelti 20020601 :
+   + Added save/load for 'systems' in Use Cases.
+
+C.Dutoit 20020531 :
+   + Added the ability to be run from anywhere. Just specify an
+     absolute or relative path to Pyut.
+
+P. Waelti 20020530 :
+   + Added text display for system use case. Not save yet.
+
+C.Dutoit 20020529 :
+   + Added Java reverse ingeneering plugin (reverse class, methods, fields)
+
+N. Dubois 20020529 :
+   + Added i18n, change language in menu->file->properties
+
+P. Waelti 20020529 :
+   + Cleaned PyutXml, refactoring (methods extraction)
+   + Added actor loading
+   + Added system (for Use Case) (no load/save, just drawing)
+   + Update toolbar
+
+P. Waelti 20020527 :
+   + Added actor (use case) support, currently the last button on tool bar
+
+Laurent Burgbacher <lb@alawa.ch> 20020525 :
+   + Completed tests for PyutPreferences + fixed it
+   + Work on the links
+   + Change in `singleton.py` :
+        The `Singleton` class now checks for the `__init__` method at first
+        instanciation, and raises an `AssertionError` if it finds it.
+   + Updated the `TestSingleton.py` file for the previous case.
+   + Removed the `PyutUnmutableObject.py` file, not needed anymore and
+     replaced by the `FlyweightString.py`
+   + Some classes documentation
+   + Added a file `ClassesToDocument.txt` in `src`
+
+P. Waelti 20020524 :
+   + Now click on another file in the tree change the title bar filename
+
+P. Waelti 20020523 :
+   + Added support for class, note, ... with same name, now working
+     Should be backward compatible with files of Pyut version 1.0, please
+     make some tests.
+   + Bugs corrected with notes (when linking from a note to another object,
+     link was not saved)
+   + Bug corrected in backward compatibility
+   + No more Gtk exception on exit or File->Close
+
+P. Waelti 20020522 :
+   + Added note links (dashed line)
+   + Change all '==' or '!=' (None) to 'is' or 'is not'
+   + Removed OglArrow classes : unused
+   + Note and associated links are now loaded !
+
+P. Waelti 20020521 :
+   + Notes : Added Saving (not loading), links between class <-> notes,
+     notes <-> notes (Warning, please no inheritance/interface links on notes)
+     Copy/Cut -> Paste implemented too.
+
+   + Devel level (refactoring) :
+      + PyutLinkedObject : Derive your class from this one if the object
+        may contains some links (PyutClass, PyutNote, ...)
+      + OglObject : Derive your OGL object (not links) from this class,
+        please see doc string for more infos.
+
+   + Many files have changed due to refactoring, this is ok. Please make
+     some tests with notes and links, copy/cut -> paste, ... and reports
+     bugs to me (pwaelti@eivd.ch)
+
+N. Dubois 20020520 :
+   + Export Java under construction...
+
+P. Waelti 20020514 :
+   + Added descriptions for classes
+      - Button in class edition
+      - Saving in XML, one bug (see KNOWN_BUGS)
+
+C.Dutoit 20020503 :
+   + Plugins also remember last directory
+   + Fixed rights error for reverse Python, added file selection,
+     corrected class selection dialog box
+
+P. Waelti 20020501 :
+   + Now remember last directory for file dialogs
+   + Note dialog corrections
+   + Beginning class comments add-on
+
+P. Waelti 20020424 :
+   + Properties bugs corrected (auto-resize, ...)
+
+C.Dutoit 20020417:
+   + Corrected following bugs :
+        - Long filenames as short filenames display is now ok
+        - File dropping on PyUt works again
+
+C.Dutoit 20020412 :
+   + Reverse engineering Python
+        Simply added and fully-working. 
+        Only inheritance can be reverse-engineered in Python or tell me how..?
+        Can reverse entire directory with class selection
+
+P. Waelti 20020410 :
+   + UML Notes added in interface
+
+C.Dutoit 20020318 :
+	+ File tree
+		Fixed some bugs (for title setting, ...)
+		Review of the code for conformity + logical thinking
+		Added file/close
+
+
+C.Dutoit 20020315 :
+	+ FileHandling
+		Handle multiple file opening
+
+
+Laurent Burgbacher <lb@alawa.ch> 20020314 :
+    + OglClass
+        Use floats instead of ints for coords
+        Fixed autoresize
+    + AppFrame
+        Fixed bug corrupting file names when saving under linux
+    + DlgEditClass2
+        AutoSelect name when opening class editor
+
+
+Laurent Burgbacher <lb@alawa.ch> 20020313 :
+    + Put encoding string in xml header. Now, still need to convert unicode
+      strings to normal strings for wx.
+
+
+C.Dutoit 200203xx : 
+    + Added file load/save progression dialog box
+    + Added plugin for Python code generation

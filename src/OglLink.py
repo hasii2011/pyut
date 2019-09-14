@@ -1,0 +1,283 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
+__version__ = "$Revision: 1.9 $"
+__author__ = "EI5, eivd, Group Burgbacher - Waelti"
+__date__ = "2001-11-14"
+
+#from wxPython.wx  import *
+from PyutLink     import PyutLink
+from PyutConsts   import *
+from mediator     import *
+from MiniOgl      import *
+import wx
+
+def getOrient(srcX, srcY, destX, destY):
+    """
+    Giving a source and destination, returns where the destination
+    is located according to the source.
+
+    @param int srcX  : X pos of src point
+    @param int srcY  : Y pos of src point
+    @param int destX : X pos of dest point
+    @param int destY : Y pos of dest point
+
+    @since 1.0
+    @author Laurent Burgbacher <lb@alawa.ch>
+    """
+
+    # Just let's see
+    # Want to understand, please make a little draw
+    deltaX = srcX - destX
+    deltaY = srcY - destY
+    if deltaX > 0: # dest is not east
+        if deltaX > abs(deltaY): # dest is west
+            return WEST
+        elif deltaY > 0:
+            return NORTH
+        else:
+            return SOUTH
+    else: # dest is not west
+        if -deltaX > abs(deltaY): # dest is east
+            return EAST
+        elif deltaY > 0:
+            return NORTH
+        else:
+            return SOUTH
+
+#>------------------------------------------------------------------------
+
+class OglLink(LineShape, ShapeEventHandler):
+    """
+    Abstract class for graphical link.
+    This class should be the base class for every type of link. It implements
+    the following functions :
+        - Link between objects position management
+        - Control points (2)
+        - Data layer link association
+        - Source and destination objects
+
+    You can inherit this class to implement your favorite type of links
+    like `OglAssociation` for example.
+
+    There's a link factory (See `OglLinkFactory`) you can use to build
+    the different type of links that exists.
+
+    :version: $Revision: 1.9 $
+    :author: Philippe Waelti
+    :contact: pwaelti@eivd.ch
+    """
+
+    def __init__(self, srcShape, pyutLink, dstShape, srcPos=None, dstPos=None):
+        """
+        Constructor.
+
+        @param OglObject srcShape : Source shape
+        @param PyutLink pyutLink : Conceptual links associated with the
+                                   graphical links.
+        @param OglObject destShape : Destination shape
+
+        @author Philippe Waelti <pwaelti@eivd.ch>
+        @modified Laurent Burgbacher <lb@alawa.ch>
+            Support for miniogl
+        @modified C.Dutoit 20021125 : Added srcPos and dstPos
+        """
+        # Associate src and dest shapes
+        self._srcShape = srcShape
+        self._destShape = dstShape
+
+
+        if srcPos==None and dstPos==None:
+            srcX, srcY = self._srcShape.GetPosition()
+            dstX, dstY = self._destShape.GetPosition()
+
+            orient = getOrient(srcX,  srcY, dstX, dstY)
+
+            sw, sh = self._srcShape.GetSize()
+            dw, dh = self._destShape.GetSize()
+            if orient == NORTH:
+                srcX, srcY = sw/2, 0
+                dstX, dstY = dw/2, dh
+            elif orient == SOUTH:
+                srcX, srcY = sw/2, sh
+                dstX, dstY = dw/2, 0
+            elif orient == EAST:
+                srcX, srcY = sw, sh/2
+                dstX, dstY = 0, dh/2
+            elif orient == WEST:
+                srcX, srcY = 0, sh/2
+                dstX, dstY = dw, dh/2
+
+            # ============== Avoid overlining; Added by C.Dutoit ================
+            #lstAnchorsPoints = [anchor.GetRelativePosition()
+            #    for anchor in srcShape.GetAnchors()]
+            #while (srcX, srcY) in lstAnchorsPoints:
+            #    if orient == NORTH or orient == SOUTH:
+            #        srcX+=10
+            #    else:
+            #        srcY+=10
+
+            #lstAnchorsPoints = [anchor.GetRelativePosition()
+            #    for anchor in dstShape.GetAnchors()]
+            #while (dstX, dstY) in lstAnchorsPoints:
+            #    if orient == NORTH or orient == SOUTH:
+            #        dstX+=10
+            #    else:
+            #        dstY+=10
+
+            # =========== end avoid overlining-Added by C.Dutoit ================
+
+        else: 
+            # Get given position
+            (srcX, srcY) = srcPos
+            (dstX, dstY) = dstPos
+
+
+        src = self._srcShape.AddAnchor(srcX, srcY)
+        dst = self._destShape.AddAnchor(dstX, dstY)
+        src.SetPosition(srcX, srcY)
+        dst.SetPosition(dstX, dstY)
+        src.SetVisible(False)
+        dst.SetVisible(False)
+
+        src.SetDraggable(True)
+        dst.SetDraggable(True)
+
+        # Init
+        LineShape.__init__(self, src, dst)
+
+        # Set up painting colors
+        self.SetPen(wx.BLACK_PEN)
+        #self.SetBrush(wx.BLACK_BRUSH)
+
+        # Keep reference to the PyutLink for mouse events, in order
+        # to can find back the corresponding link
+        if pyutLink is not None :
+            self._link = pyutLink
+        else :
+            self._link = PyutLink()
+
+
+    #>------------------------------------------------------------------------
+
+    def getSourceShape(self):
+        """
+        Return the source shape for this link.
+
+        @return OglObject
+        @since 1.22
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        return self._srcShape
+
+    #>------------------------------------------------------------------------
+
+    def getDestinationShape(self):
+        """
+        Return the destination shape for this link.
+
+        @return OglObject
+        @since 1.22
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        return self._destShape
+
+    #>------------------------------------------------------------------------
+
+    def getPyutObject(self):
+        """
+        Returns the associatied PyutLink.
+
+        @return PyutLink
+        @since 1.0
+        @author Philippe Waelti <pwaelti@eivd.ch>
+        """
+        return self._link
+
+    #>------------------------------------------------------------------------
+
+    def setPyutObject(self, pyutLink):
+        """
+        Sets the associatied PyutLink.
+
+        @param PyutLink pyutLink : link to associate
+        @since 1.0
+        @author Philippe Waelti <pwaelti@eivd.ch>
+        """
+        self._link = pyutLink
+
+    #>------------------------------------------------------------------------
+
+    def Detach(self):
+        """
+        Detach the line and all its line points, including src and dst.
+
+        @since 1.0
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        if self._diagram is not None and not self._protected:
+            LineShape.Detach(self)
+            self._src.SetProtected(False)
+            self._dst.SetProtected(False)
+            self._src.Detach()
+            self._dst.Detach()
+            try:
+                self.getSourceShape().getLinks().remove(self)
+            except ValueError:
+                pass
+            try:
+                self.getDestinationShape().getLinks().remove(self)
+            except ValueError:
+                pass
+            try:
+                self._link.getSource().getLinks().remove(self._link)
+            except ValueError:
+                pass
+
+
+    #>------------------------------------------------------------------------
+
+    def optimizeLine(self):
+        """
+        Optimize line, so that the line length is minimized
+        """
+        print "OptimizeLine"
+        # Get elements
+        src = self.getSourceShape()
+        dst = self.getDestinationShape()
+        srcAnchor = self.GetSource()
+        dstAnchor = self.GetDestination()
+        srcX, srcY = self._srcShape.GetPosition()
+        dstX, dstY = self._destShape.GetPosition()
+        srcSize = self._srcShape.GetSize()
+        dstSize = self._destShape.GetSize()
+        print "%s / %s" % ((srcX, srcY), (dstX, dstY))
+
+        # Find new positions
+        #srcX = self._srcShape.GetPosition()[0]*0.9 +  \
+        #       self._destShape.GetPosition()[0]*0.1
+        #srcY = self._srcShape.GetPosition()[1]*0.9 +  \
+        #       self._destShape.GetPosition()[1]*0.1
+        #dstX = self._srcShape.GetPosition()[0]*0.1 +  \
+        #       self._destShape.GetPosition()[0]*0.9
+        #dstY = self._srcShape.GetPosition()[1]*0.1 +  \
+        #       self._destShape.GetPosition()[1]*0.9
+
+        #srcX+=srcSize[0]/2
+        #srcY+=srcSize[1]/2
+        #dstX+=dstSize[0]/2
+        #dstY+=dstSize[1]/2
+        #osrcX = srcX + (dstX-srcX)*0.2 
+        #od
+        # Little tips
+        osrcX, osrcY, odstX, odstY = dstX, dstY, srcX, srcY
+        osrcX+=dstSize[0]/2
+        osrcY+=dstSize[1]/2
+        odstX+=srcSize[0]/2
+        odstY+=srcSize[1]/2
+
+
+
+        srcAnchor.SetPosition(osrcX, osrcY)
+        dstAnchor.SetPosition(odstX, odstY)
+        

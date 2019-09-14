@@ -1,0 +1,995 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+# To do for further versions : implements code canvas, templates  
+# Thanks to <anonymous> for submiting bug report AND solution for 
+#   sourceforge bug [ 587747 ] : objects are misclassified as classes
+
+__version__ = "$Revision: 1.12 $"
+__author__ = "C.Dutoit - dutoitc@hotmail.com"
+__date__ = "2002-2-22"
+
+from StringIO import StringIO
+from PyutIoPlugin import PyutIoPlugin
+from PyutClass import PyutClass
+from OglClass import OglClass
+from PyutMethod import PyutMethod
+from PyutParam import PyutParam
+from PyutConsts import *
+#from wxPython.wx import *
+from ast import FieldExtractor
+from PyutField import PyutField
+from pyutUtils import assignID
+import os, wx
+MaxWidth=80
+
+# ?
+[ID_BTN_TO_THE_RIGHT, ID_BTN_TO_THE_LEFT] = assignID(2)
+
+
+class DlgAskWhichClassesToReverse2(wx.Dialog):
+    def __init__(self, lstClasses):
+        wx.Dialog.__init__(self, None, -1, "Classes choice", \
+                          style = wx.CAPTION | wx.DIALOG_MODAL | wx.THICK_FRAME,\
+                          size  = (400, 500))
+
+        #self._dicClassesChoosen = {} # lstClasses index : lstClasses entry
+
+        # Create not choosen classes listBox
+        self._listBox1=wx.ListBox(self, -1, \
+                          style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, \
+                          size=(320, 400))
+        for klass in lstClasses:
+            self._listBox1.Append(klass.__name__, klass)
+
+        # Create choosen classes listBox
+        self._listBox2=wx.ListBox(self, -1, \
+                          style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, \
+                          size=(320, 400))
+
+        # Create buttons
+        btnOk = wx.Button(self, wx.ID_OK, "Ok")
+        btnToTheRight = wx.Button(self, ID_BTN_TO_THE_RIGHT, "=>")
+        btnToTheLeft  = wx.Button(self, ID_BTN_TO_THE_LEFT,  "<=")
+
+        # Callbacks
+        self.Bind(wx.EVT_BUTTON, self._onBtnToTheRight, id=ID_BTN_TO_THE_RIGHT)
+        self.Bind(wx.EVT_BUTTON, self._onBtnToTheLeft, id=ID_BTN_TO_THE_LEFT)
+
+
+        # Create info label
+        lblChoice = wx.StaticText(self, -1, _("Choose classes to reverse: "))
+
+        # Create buttons sizer
+        szrBtn = wx.BoxSizer(wx.VERTICAL)
+        szrBtn.Add(btnToTheRight, 0, wx.EXPAND)
+        szrBtn.Add(btnToTheLeft,  0, wx.EXPAND)
+
+        # Create lists and buttons sizer
+        szrLB = wx.BoxSizer(wx.HORIZONTAL)
+        szrLB.Add(self._listBox1,  0, wx.EXPAND)
+        szrLB.Add(szrBtn,    0, wx.EXPAND)
+        szrLB.Add(self._listBox2,  0, wx.EXPAND)
+
+        # Create sizer
+        box = wx.BoxSizer(wx.VERTICAL)
+        box.Add(lblChoice, 0, wx.EXPAND)
+        box.Add(szrLB,     0, wx.EXPAND)
+        box.Add(btnOk,     0, wx.EXPAND)
+        box.Fit(self)
+        self.SetAutoLayout(True)
+        self.SetSizer(box)
+
+        # Show dialog
+        self.ShowModal()
+        if self.GetReturnCode()==5101 : #abort -> empty right column
+            #self._dicClassesChoosen = {}
+            while self._listBox2.GetCount()>0:
+                data = self._listBox2.GetClientData(0)
+                name = self._listBox2.GetString(0)
+                self._listBox1.Append(name, data)
+                self._listBox2.Delete(0)
+
+
+
+    #>------------------------------------------------------------------------
+
+    def getChoosenClasses(self):
+        """
+        Return the classes choosen by the user
+        """
+        #return self._dicClassesChoosen.values()
+        # Get values
+        ret=[]
+        for el in range(self._listBox2.GetCount()):
+            ret.append(self._listBox2.GetClientData(el))
+        return ret
+
+
+
+    #>------------------------------------------------------------------------
+
+    def _onBtnToTheRight(self, event):
+        """
+        Callback for the "=>" button
+        """
+        lst = list(self._listBox1.GetSelections())
+        lst.sort()
+        lst.reverse()
+        for i in lst:
+            data = self._listBox1.GetClientData(i)
+            name = self._listBox1.GetString(i)
+            self._listBox2.Append(name, data)
+            self._listBox1.Delete(i)
+
+    #>------------------------------------------------------------------------
+
+    def _onBtnToTheLeft(self, event):
+        """
+        Callback for the "<=" button
+        """
+        lst = list(self._listBox2.GetSelections())
+        lst.sort()
+        lst.reverse()
+        for i in lst:
+            data = self._listBox2.GetClientData(i)
+            name = self._listBox2.GetString(i)
+            self._listBox1.Append(name, data)
+            self._listBox2.Delete(i)
+
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+
+def askWhichClassesToReverse2(lstClasses):
+    """
+    Ask which classes must be reversed
+
+    @return list of classes
+    @param list lstClasses : list of classes potentially reversable
+    @since 1.6.2.6
+    @author C.Dutoit <dutoitc@hotmail.com>
+    """
+    # Ask which classes to reverse
+    dlg = DlgAskWhichClassesToReverse2(lstClasses)
+    lstClassesChoosen = dlg.getChoosenClasses()
+    dlg.Destroy()
+
+    return lstClassesChoosen
+
+
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+
+def askWhichClassesToReverse(lstClasses):
+    """
+    Ask which classes must be reversed
+
+    @return list of classes
+    @param list lstClasses : list of classes potentially reversable
+    @since 1.6.2.6
+    @author C.Dutoit <dutoitc@hotmail.com>
+    """
+    # Convert classes from list to dictionary based on the classname
+    
+    # Create frame
+    dlg=wx.Dialog(None, -1, "Classes choice", 
+                 style=wx.CAPTION | wx.DIALOG_MODAL | wx.THICK_FRAME, \
+                 size=(320, 400))
+
+    # Create listBox
+    listBox=wx.ListBox(dlg, -1, \
+                      style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, \
+                      size=(320, 400))
+    for el in lstClasses:
+        listBox.Append(el.__name__, el)
+    for i in range(listBox.Number()):
+        listBox.SetSelection(i, True)
+
+    # Create Ok button
+    btnOk = wx.Button(dlg, wx.ID_OK, "Ok")
+
+    # Create info label
+    lblChoice = wx.StaticText(dlg, -1, "Choose classes to reverse :")
+
+    # Create sizer
+    box = wx.BoxSizer(wx.VERTICAL)
+    box.Add(lblChoice, 0, wx.EXPAND)
+    box.Add(listBox,   0, wx.EXPAND)
+    box.Add(btnOk,     0, wx.EXPAND)
+    box.Fit(dlg)
+    dlg.SetAutoLayout(True)
+    dlg.SetSizer(box)
+
+
+    # Show dialog
+    dlg.ShowModal()
+    if dlg.GetReturnCode()==5101 : #abort
+        #dlg.EndModal(0)
+        return []
+    #dlg.EndModal(0)
+
+    # Get values
+    ret=[]
+    for el in listBox.GetSelections():
+        ret.append(listBox.GetClientData(el))
+
+
+    # Destroy
+    dlg.Destroy()
+
+    return ret
+
+
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+
+class IoPython(PyutIoPlugin):
+    """
+    Python code generation/reverse engineering
+
+    @version $Revision: 1.12 $
+    """
+    def getName(self):
+        """
+        This method returns the name of the plugin.
+
+        @return string
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        return "Python code generation/reverse engineering"
+
+
+
+    #>------------------------------------------------------------------------
+    def getAuthor(self):
+        """
+        This method returns the author of the plugin.
+
+        @return string
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        return "C.Dutoit <dutoitc@hotmail.com> AND L.Burgbacher <lb@alawa.ch>"
+
+
+
+    #>------------------------------------------------------------------------
+    def getVersion(self):
+        """
+        This method returns the version of the plugin.
+
+        @return string
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        return "1.0"
+
+
+
+    #>------------------------------------------------------------------------
+    def getInputFormat(self):
+        """
+        Return a specification tupple.
+
+        @return tupple
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        # return None if this plugin can't read.
+        # otherwise, return a tupple with
+        # - name of the input format
+        # - extension of the input format
+        # - textual description of the plugin input format
+        # example : return ("Text", "txt", "Tabbed text...")
+        return ("Python file", "py", "Python file format")
+
+
+
+    #>------------------------------------------------------------------------
+    def getOutputFormat(self):
+        """
+        Return a specification tupple.
+
+        @return tuple
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        # return None if this plugin can't write.
+        # otherwise, return a tupple with
+        # - name of the output format
+        # - extension of the output format
+        # - textual description of the plugin output format
+        # example : return ("Text", "txt", "Tabbed text...")
+        return ("Python file", "py", "Python file format")
+
+
+
+############################################################################
+############################################################################
+############################################################################
+#Code-generation specific methods
+
+    #>---------------------------------------------------------------------
+    def getVisibilityPythonCode(self, visibilityCar):
+        """
+        Return the python code for a given caracter wich represents the
+        visibility
+
+        @return String
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        # Note : Tested
+        vis=visibilityCar
+        if (vis=="+"):
+            code=''
+        elif (vis=="#"):
+            code='_'
+        elif (vis=="-"):
+            code='__'
+        else:
+            self._logMessage("IoPython", "Field code not supported : <%s>" % \
+                    vis)
+            code=''
+        #print " = " + str(code)
+        return code
+
+
+    #>---------------------------------------------------------------------
+    def getFieldPythonCode(self, aField):
+        """
+        Return the python code for a given field
+
+        @return String
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        #Initialize with class relation
+        fieldCode="self."
+
+        #Add visibility
+        #Note : str must be present, since aField.getVisibility return
+        #       a FlyweightString object !
+        fieldCode+=self.getVisibilityPythonCode(str(aField.getVisibility()))
+
+
+        #Add name
+        fieldCode+=str(aField.getName()) + " = "
+
+        #Add default value
+        value=aField.getDefaultValue()
+        if (value==''):
+            fieldCode+='None' # TODO : deduct this from type
+        else:
+            fieldCode+=str(value)
+
+        #Add type
+        fieldCode+='\t\t\t\t\t#' + str(aField.getType()) + '\n'
+
+        #Return the field code
+        return fieldCode
+
+    #>---------------------------------------------------------------------
+    def indentStr(self, aStr):
+        """
+        Indent one string by one unit
+
+        @return string
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        #TODO : ask which kind of indentation to be added
+        return '    ' + str(aStr)
+
+    #>---------------------------------------------------------------------
+    def indent(self, lstIn):
+        """
+        Indent every lines of the lstIn by one unit
+
+        @return list
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        lstOut=[]
+        for el in lstIn:
+            lstOut.append(self.indentStr(str(el)))
+        return lstOut
+
+    #>---------------------------------------------------------------------
+    def getOneMethodCode(self, aMethod, writePass = True):
+        """
+        Return the python code for a given method
+
+        @param aMethod : ..
+        @param writePass : Write "pass" in the code ?
+        @return list of strings
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        #base
+        methodCode=[]
+        currentCode="def "
+
+        ######################## First line #####################
+        #Add visibility
+        currentCode+=self.getVisibilityPythonCode(str(aMethod.getVisibility()))
+
+        #Add name
+        currentCode+=str(aMethod.getName()) + "(self"
+
+        #Add parameters (parameter, parameter, parameter, ...)
+        #TODO : add default value ?
+        params=aMethod.getParams()
+        if len(params)>0: currentCode+=", "
+        for i in range(len(params)):
+            # Add param code
+            paramCode=""
+            paramCode+=params[i].getName()
+            if (params[i].getDefaultValue()!=None):
+                paramCode+="=" + params[i].getDefaultValue()
+            if i<len(aMethod.getParams())-1:
+                paramCode+=", "
+            if (len(currentCode)%80)+len(paramCode)>MaxWidth: # Width limit
+                currentCode+="\n" + self.indentStr(self.indentStr(paramCode))
+            else:
+                currentCode+=paramCode
+
+        #End first(s) line(s)
+        currentCode+="):\n"
+
+        #Add to the method code
+        methodCode.append(currentCode)
+        currentCode=""
+
+        ############################ ... ########################
+        #Add comments
+        methodCode.append(self.indentStr('"""\n'))
+        methodCode.append(self.indentStr('(TODO : add description)\n\n'))
+
+        #Add parameters
+        params=aMethod.getParams()
+        #if len(params)>0: currentCode+=", "
+        for i in range(len(params)):
+            methodCode.append(self.indentStr('@param ' + \
+                                             str(params[i].getType()) + ' ' + \
+                                             params[i].getName() + '\n'))
+
+        #Add others
+        if aMethod.getReturns()<>None:
+            if len(str(aMethod.getReturns()))>0:
+                methodCode.append(self.indentStr('@return ' + 
+                                              str(aMethod.getReturns()) + '\n'))
+        methodCode.append(self.indentStr('@since 1.0' + '\n'))
+        methodCode.append(self.indentStr('@author ' + '\n'))
+        methodCode.append(self.indentStr('"""\n'))
+        if writePass:
+            methodCode.append(self.indentStr('pass\n'))
+
+        #Return the field code
+        return methodCode
+
+
+
+
+    #>---------------------------------------------------------------------
+    def getMethodsDicCode(self, aClass):
+        """
+        Return a dictionary of method code for a given class
+
+        @return dictionary of String, keys are methods names
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        clsMethods={}
+        for aMethod in aClass.getMethods():
+            #Separation
+            txt="\n\n" + self.indentStr("#>---------------------------------"\
+                                  "---------------------------------------\n")
+            lstCodeMethod=[txt]
+
+            #Get code
+            subcode=self.getOneMethodCode(aMethod)
+
+            #Indent and add to main code
+            #for el in self.indent(subcode):
+            #    lstCodeMethod.append(str(el))
+            lstCodeMethod+=self.indent(subcode)
+            #for el in subcode:
+                #lstCodeMethod.append('    ' + str(el))
+            clsMethods[aMethod.getName()]=lstCodeMethod
+
+
+        #Add fields
+        if len(aClass.getFields())>0:
+            #Create method __init__ if it does not exist
+            if not clsMethods.has_key('__init__'):
+                #Separation
+                lstCodeMethod=["\n\n    #>-------------------------------"+\
+                               "-----------------------------------------\n"]
+
+                #Get code
+                subcode=self.getOneMethodCode(PyutMethod('__init__'), False)
+
+                #Indent and add to main code
+                for el in self.indent(subcode):
+                    lstCodeMethod.append(str(el))
+                #for el in subcode:
+                #    lstCodeMethod.append('    ' + str(el))
+                #lstCodeMethod.append("\n\n")
+                clsMethods['__init__']=lstCodeMethod
+
+            #Add fields
+            clsInit=clsMethods['__init__']
+            for aField in aClass.getFields():
+                clsInit.append(self.indentStr(self.indentStr( \
+                                           self.getFieldPythonCode(aField))))
+        return clsMethods
+
+
+############################################################################
+############################################################################
+############################################################################
+#Plugin write method
+
+
+    #>---------------------------------------------------------------------
+    def write(self, oglObjects):
+        """
+        Datas saving
+        @param OglClass and OglLink [] : list of exported objects
+
+        @author C.Dutoit - dutoitc@hotmail.com
+        @since 1.1
+        """
+        # Ask the user which destination file he wants
+        directory=self._askForDirectoryExport()
+        if directory=="":
+            return False
+
+        # Init
+        self._logMessage("IoPython", "Saving...")
+        classes={}
+
+        #Add top code
+        TopCode= \
+             ["#!/usr/bin/env python\n",              \
+              "__version__ = '$"+"Revision: 1.0 $'\n",\
+              "__author__ = ''\n",                    \
+              "__date__ = ''\n",                      \
+              "\n\n"                                  \
+             ] 
+
+        #Create classes code for each object
+        for el in [object for object in oglObjects if isinstance(object, OglClass)]:
+            #Add class definition
+            aClass=el.getPyutObject() #TODO
+            txt="class " + str(aClass.getName())        #Add class name
+            fathers=aClass.getFathers()
+            if len(fathers)>0:                          #Add fathers
+                txt=txt+"("
+                for i in range(len(fathers)):
+                    txt=txt + fathers[i].getName()
+                    if i<len(fathers)-1:
+                        txt=txt+", "
+                txt=txt+")"
+            txt=txt+":\n"
+            codeClass=[txt]
+          
+            # Get methods
+            clsMethods=self.getMethodsDicCode(aClass)
+
+            #Add __init__ Method
+            if clsMethods.has_key('__init__'):
+                methodCode=clsMethods['__init__']
+                codeClass+=methodCode
+                del clsMethods['__init__']
+                
+           
+            #Add others methods in order
+            for aMethod in aClass.getMethods():
+                methodName = aMethod.getName()
+
+                # Add method code
+                #for aMethod in clsMethods.items():
+                # TODO : __init__ ?
+                try:
+                    methodCode = clsMethods[methodName]
+                    codeClass+=methodCode
+                except:
+                    pass
+    
+            #Save to classes dictionary 
+            codeClass.append("\n\n") 
+            classes[aClass.getName()]=codeClass
+
+
+        #Add classes code
+        #print directory
+        #print os.sep
+        for (className, classCode) in classes.items():
+            filename=directory + os.sep + str(className) + ".py"
+            file=open(filename, "w")
+            file.writelines(TopCode)
+            file.writelines(classCode)
+            file.close()
+
+        self._logMessage("IoPython", "done !")
+        def _(x):
+            return x
+        wx.MessageBox(_("Done !"), _("Python code generation"),
+            style=wx.CENTRE | wx.OK | wx.ICON_INFORMATION)
+
+
+############################################################################
+############################################################################
+############################################################################
+#Plugin read method
+
+    #>------------------------------------------------------------------------
+
+    def getPyutClass(self, orgClass, filename="", pyutclass=None):
+        """
+        Return a PyutClass made from the python class object orgClass.
+        If a pyutclass is given, it is modified in place.
+
+        @param class orgClass
+        @param string filename : filename of the class
+        @param PyutClass pyutclass : pyutclass to modify
+        @return PyutClass
+        @since 1.0
+        """
+        import types
+        from inspect import getargspec
+
+        # Verify that parameters types are acceptable
+        if type(orgClass) not in [types.TypeType, types.ClassType]:
+            self._logMessage("IoPython", "IoPython/getPyutClass : " + \
+                    "Wrong parameter for orgClass:")
+            self._logMessage("IoPython", "Expected ClassType or TypeType, " + \
+                    "found %s" % type(orgClass))
+            return None
+
+        
+        # create objects
+        cl = orgClass
+        if pyutclass is None:
+            pc = PyutClass(cl.__name__)       # A new PyutClass
+        else:
+            pc = pyutclass
+        pc.setFilename(filename)          # store the class' filename
+        methods = []                      # List of methods for this class
+
+        # Extract methods from the class
+        clmethods = [me for me in cl.__dict__.values()
+                     if type(me) == types.FunctionType]
+
+        # Add the methods to the class
+        for me in clmethods:
+            # Remove visibility characters
+            if me.func_name[-2:] != "__":
+                if me.func_name[0:2] == "__":
+                    func_name=me.func_name[2:]
+                elif me.func_name[0] == "_":
+                    func_name=me.func_name[1:]
+                else:
+                    func_name=me.func_name
+            else:
+                func_name=me.func_name
+            meth = PyutMethod(func_name)     # A new PyutMethod
+
+            # Add the method's params
+            args = getargspec(me)
+            if args[3] is None:
+                firstDefVal = len(args[0])
+            else:
+                firstDefVal = len(args[0]) - len(args[3])
+            for arg, i in zip(args[0], range(len(args[0]))):
+                # don't add self, it's implied
+                defVal = None
+                if arg != "self":
+                    if i >= firstDefVal:
+                        defVal = args[3][i - firstDefVal]
+                        if type(defVal) == types.StringType:
+                            defVal = '"' + defVal + '"'
+                        param = PyutParam(arg, "", str(defVal))
+                    else:
+                        param = PyutParam(arg)
+                    meth.addParam(param)
+            methods.append(meth)
+
+            # Set the visibility according to naming conventions
+            if me.func_name[-2:] != "__":
+                if me.func_name[0:2] == "__":
+                    meth.setVisibility("-")
+                elif me.func_name[0] == "_":
+                    meth.setVisibility("#")
+        #methods.sort(lambda x, y: cmp(x.getName(), y.getName()))
+        pc.setMethods(methods)
+
+        # get fields by Laurent Burgbacher <lb@alawa.ch>
+        fields = None
+        try:
+            fields = FieldExtractor(pc.getFilename()).getFields(pc.getName())
+        except IOError:
+            import sys, os
+            print "File", pc.getFilename(), "not found in actual dir"
+            print "actual dir is", os.getcwd()
+            for path in sys.path:
+                try:
+                    fields = FieldExtractor(
+                        path + os.sep + pc.getFilename()).getFields(
+                        pc.getName())
+                    break
+                except IOError:
+                    print "Not found either in", \
+                        path + os.sep + pc.getFilename()
+                    pass
+        if fields is None:
+            print "Could not extract from file", pc.getFilename()
+        fds = []
+        if fields:
+            for name, init in fields.items():
+                if init == "": init = None
+                vis = "+"
+                if len(name) > 1:
+                    if name [-2:] != "__":
+                        if name[0:2] == "__":
+                            vis = "-"
+                            name = name[2:]
+                        elif name[0] == "_":
+                            vis = "#"
+                            name = name[1:]
+                fds.append(PyutField(name, "", init, vis))
+
+        #fds.sort(lambda x, y: cmp(x.getName(), y.getName()))
+        pc.setFields(fds)
+        return pc
+
+    #>------------------------------------------------------------------------
+
+    def reversePython(self, umlFrame, orgClasses, files):
+        """
+        Reverse engineering
+        Classes come from self introspection !!!
+
+        @author C.Dutoit <dutoitc@hotmail.com>
+        @since 1.6.2.1
+        @modified by Laurent Burgbacher <lb@alawa.ch>
+            added filename in PyutLinkedObject
+        """
+        # Note : Original code L.Burgbacher
+        import types
+
+        # get a list of classes info for classes in the display list
+        #classes = [res[name] for name in res.keys() if name in display]
+        classes = [cl for cl in orgClasses
+                   if ((type(cl) == types.ClassType) or 
+                       (type(cl) == types.TypeType))]
+
+        # Add extension class; %TODO : find a better way to do that
+        for cl in orgClasses:
+            try:
+                if str(type(cl)).index("class")>0:
+                    if cl not in classes:
+                        classes.append(cl)
+            except:
+                pass
+
+        objs = {}  # Dictionary classname/OglClass
+        # create the PyutClass objects for each class
+        for cl in classes:
+            try:
+                # create objects
+                pc = self.getPyutClass(cl, files[cl])
+                po = OglClass(pc)                 # A new OglClass
+                umlFrame.addShape(po, 0, 0)
+                po.autoResize()
+                objs[cl.__name__] = po
+            except:
+                print "Error while creating class of type ", cl
+
+        # now, search for paternity links
+        for po in objs.values():
+            pc = po.getPyutObject()#TODO
+            # skip object, it has no parent
+            if pc.getName() == "object": continue
+            currentClass = None
+            for el in orgClasses:
+                if el.__name__==pc.getName():
+                    currentClass=el
+                    break
+            if currentClass==None:
+                print "Reverse error 527"
+                continue
+            #currentClass = objs[pc.getName()]#pdc.__dict__.get(pc.getName())
+
+            try:
+                fatherClasses = [cl for cl in classes
+                      if cl.__name__ in 
+                          map(lambda x : x.__name__, currentClass.__bases__)]
+            except:
+                fatherClasses = []
+                pass
+
+            #def getClassesNames(list):
+                #return [item.__name__ for item in list]
+
+            #fatherNames = getClassesNames(fatherClasses)
+            fatherNames = [item.__name__ for item in fatherClasses]
+            for father in fatherNames:
+                dest = objs.get(father)
+                if dest is not None: # maybe we don't have the father loaded
+                    umlFrame.createInheritanceLink(po, dest)
+
+        def cmpHeight(a, b):
+            xa, ya = a.GetSize()
+            xb, yb = b.GetSize()
+            return cmp(yb, ya)
+
+
+
+        # Sort by descending height
+        objs = objs.values()
+        objs.sort(cmpHeight)
+
+        # Organize by vertical descending sizes
+        x = 20
+        y = 20
+        incX = 0
+        incY = 0
+        for po in objs:
+            incX, sy = po.GetSize()
+            incX += 20
+            sy += 20
+            incY = max(incY, sy)
+            # find good coordinates
+            if x + incX >= umlFrame.maxWidth:
+                x = 20
+                y += incY
+                incY = sy
+            po.SetPosition(x, y)
+            x += incX
+
+
+    #>------------------------------------------------------------------------
+
+    def read(self, oglObjects, umlFrame):
+        """
+        reverse engineering
+
+        @param OglClass and OglLink [] : list of imported objects
+        @param UmlFrame : Pyut's UmlFrame
+        @author C.Dutoit <dutoitc@hotmail.com>
+        @since 1.6.2.1
+        """
+        
+        import os, types, sys
+        from glob import glob
+        # Ask the user which destination file he wants
+        #directory=self._askForDirectoryImport()
+        #if directory=="":
+        #    return False
+        (lstFiles, directory)=self._askForFileImport(True)
+        if len(lstFiles)==0:
+            return False
+
+
+        # Add to sys.path
+        sys.path.insert(0, directory+os.sep)
+
+        print "Directory = " + directory
+        umlFrame.setCodePath(directory)
+        lstModules=[]
+        files = {}
+        for filename in lstFiles:
+            file=os.path.splitext(filename)[0]
+            print "file=",file
+
+            try:
+                module = __import__(file)
+                reload(module)
+                lstModules.append(module)
+            except:
+                print "Error while trying to import file " + str(file)
+                #return
+
+
+        # Get classes
+        classesDic={}
+        for module in lstModules:
+            for cl in module.__dict__.values():
+                if (type(cl) in (types.ClassType, types.TypeType)):
+                    classesDic[cl] = 1
+                    modname = cl.__module__.replace(".", os.sep) + ".py"
+                    files[cl] = modname
+        classes = classesDic.keys()
+
+        # Remove wx.Python classes ? TODO
+        wx.EndBusyCursor()
+        classes=askWhichClassesToReverse2(classes)
+        if len(classes)==0:
+            return
+
+        try:
+            wx.BeginBusyCursor()
+            self.reversePython(umlFrame, classes, files)
+        except:
+            print "Error while reversing python file(s) !"
+        wx.EndBusyCursor()
+
+        #frame.setModified(True)
+        #self.__setTitle()
+        #frame.Refresh()
+
+
+##############################################################################
+##############################################################################
+##############################################################################
+
+def test1():
+    plg=IoPython(None, None)
+    print "IoPython Tests"
+    print "=============="
+
+    # Test getVisibilityPythonCode
+    print "getVisibilityPythonCode test"
+    if (plg.getVisibilityPythonCode('-')!='__') or \
+       (plg.getVisibilityPythonCode("-")!='__'):
+        print "  * private test failed !"
+    if (plg.getVisibilityPythonCode('#')!='_'):
+        print "  * protected test failed !"
+    if (plg.getVisibilityPythonCode('+')!=''):
+        print "  * public test failed !"
+
+    # Test getFieldPythonCode
+    print "getFieldPythonCode test"
+    from PyutField import PyutField
+    s=plg.getFieldPythonCode(PyutField("thename", "", None, "+"))
+    if s.find("self.thename")==-1:
+        print "   * public test failed !"
+        print s
+    s=plg.getFieldPythonCode(PyutField("thename", "", None, "-"))
+    if s.find("self.__thename")==-1:
+        print "   * private test failed !"
+    s=plg.getFieldPythonCode(PyutField("thename", "", None, "#"))
+    if s.find("self._thename")==-1:
+        print "   * protected test failed !"
+
+    # Test indent
+    print "indent test"
+    lst1=['a', '   b', 'c']
+    lst2=['    a', '       b', '    c']
+    lst1b=plg.indent(lst1)
+    if (lst1b!=lst2):
+        print "   * indent test failed !"
+
+
+def testAskWhichClassesToReverse2():
+    class testClass1: pass
+    class testClass2: pass
+    class testClass3: pass
+    class testClass4: pass
+    lstClasses = [testClass1(), testClass2(), testClass3(), testClass4()]
+    ret = askWhichClassesToReverse2(lstClasses)
+
+
+# Local tests
+# Note : to test, move in src directory and add PyutIoPlugin.pyc in that directory
+if __name__=="__main__":
+    #test1()
+    testAskWhichClassesToReverse2()
+

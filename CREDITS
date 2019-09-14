@@ -1,0 +1,71 @@
+
+Here is the PyUt members list for PyUt 1.4 (feb 2006 - ?)
+Name               Mail                        Role/Position
+====               ====                        =============
+T.Gagnebin         thierry.gagnebin@eivd.ch    Project owner for EIVD
+C.Dutoit           dutoitc@shimbawa.ch         Project manager
+P. Dabrowsky       (private)                   Patch submitter
+(tag RELEASE-1-4)
+
+
+
+Here is the PyUt members list for PyUt 1.3 (November 2002 - jan 2006)
+
+Name               Mail                        Role/Position
+====               ====                        =============
+T.Gagnebin         thierry.gagnebin@eivd.ch    Project owner for EIVD
+L.Burgbacher       lb@alawa.ch                 Developer
+C.Dutoit           dutoitc@hotmail.com         Developer
+
+F.Domingues        fernandojd@hotmail.com      Portuguese translator
+
+
+(tag RELEASE-1-3-INIT)
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+Here is the PyUt members list for PyUt 1.2 (July 2002 - november 2002)
+
+    Name           Mail                Role/Position
+    ====           ====                =============
+T.Gagnebin     thierry.gagnebin@eivd.ch  Project owner for EIVD
+L.Burgbacher   lb@alawa.ch            Developer
+C.Dutoit       dutoitc@hotmail.com    Developer, release manager
+
+S.Drees        on demand              German translator
+
+
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+Here is the PyUt members list for PyUt 1.1 (March 2002 - July 2002)
+
+    Name           Mail                Role/Position
+    ====           ====                =============
+C.Dutoit       dutoitc@hotmail.com    Project manager, developer
+D.Roux         droux@eivd.ch          Co-Project manager, CVS, Configuration,
+                                      Releases, developer
+P.Waelti       pwaelti@eivd.ch        Documentation, Quality, developer
+L.Burgbacher   lb@alawa.ch            Tests, developer
+N.Dubois       ndubois@eivd.ch        Internationalization, developer
+N.Hamadi       nhamadi@eivd.ch        feedback, developer
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+Here is the PyUt members list for PyUt 1.0 (October 2001 - March 2002)
+    Name           Mail                Role/Position
+    ====           ====                =============
+L.Burgbacher   lb@alawa.ch            Project manager, .exe packager, developer
+P.Waelti       pwaelti@eivd.ch        Co-Project manager, developer
+N.Dubois       ndubois@eivd.ch        Developer
+C.Dutoit       dutoitc@hotmail.com    Doc writer, .rpm/.tar.gz packager
+N.Hamadi       nhamadi@eivd.ch        Tester, Developer
+D.Roux         droux@eivd.ch          Developer
+
