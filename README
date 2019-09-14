@@ -1,25 +1,6 @@
-(this is Pyut's README file. For more informations, see http://pyut.sf.net)
 
-1. PYUT ?
-=======
-Pyut stands for Python UML Tool. Actually, Pyut is only a class diagram editor,
-but this will evolute very soon...
+PYUT
+Pyut stands for Python UML Tool. Actually, Pyut is only a class diagram editor
 
 
-2. WEB
-======
-You can reach the Pyut's web site on http://pyut.sf.net, or 
-download Pyut's latest version on http://www.sf.net/projects/pyut
-
-
-3. Build environment
-====================
-Please see the INSTALL file
-
-We all hope that you'll enjoy Pyut,
-The Pyut's team : C.Dutoit, many patch submitters, many translators
-
-
-4. File format
-==============
-.put is gzipped xml : zlib.decompress(open(filename, "r").read())
+This is a Python 3 version of a source forge project.  This is the [original web site](http://pyut.sourceforge.net/whatis.html)
