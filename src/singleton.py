@@ -1,11 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
-__version__ = "$Revision: 1.3 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-02-21"
-
 from types import MethodType
+
 
 class Singleton(object):
     """
@@ -16,11 +10,11 @@ class Singleton(object):
 
     Note that `__init__` must not be defined. Use `init` instead.
     This is because `__init__` will always be called, thus reinitializing the
-    state of your singleton each time you try to instanciate it.
+    state of your singleton each time you try to instantiate it.
     On the contrary, `init` will be called just one time.
 
-    To be sure that the `__init__` method won't be inadvertantly defined,
-    the singleton will check for it at first instanciation and raise an
+    To be sure that the `__init__` method won't be inadvertently defined,
+    the singleton will check for it at first instantiation and raise an
     `AssertionError` if it finds it.
 
     Example::
@@ -51,13 +45,11 @@ class Singleton(object):
         instance = cls.__dict__.get("__instance__")
         if instance is None:
             instance = object.__new__(cls)
-            assert type(instance.__init__) != MethodType, \
-                "Error, your singleton class %s cannot contain a __init__ " \
-                "method." % cls
+            assert type(instance.__init__) != MethodType, f"Error, your singleton class {cls} cannot contain a __init__ method."
             try:
                 instance.init(*args, **kwds)
-            except:
-                raise
+            except Exception as e:
+                raise e
             cls.__instance__ = instance
         return instance
 
@@ -69,4 +61,3 @@ class Singleton(object):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         pass
-
