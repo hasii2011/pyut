@@ -1,20 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.3 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
+from weakref import WeakValueDictionary
 
-#from PyutUnmutableObject import *
-import weakref
-from types import MethodType
 
-class FlyweightString(object):
+class FlyweightString:
     """
-    This class instanciates flyweight objects.
+    This class instantiates flyweight objects.
 
     Basically, when you have to manage a lot of identical objects, you can make
-    them unmutable, keep them in a pool, and have only one instance of each
+    them immutable, keep them in a pool, and have only one instance of each
     possible kind. Then, when you try to instantiate an object whose state
     already exist, you get it from the pool. This is called a Flyweight.
     See Design Patterns for more information.
@@ -22,8 +15,8 @@ class FlyweightString(object):
     Like for the singleton (see `singleton.py`), you can't use the standard
     `__init__` method.
 
-    To be sure that the `__init__` method won't be inadvertantly defined,
-    the singleton will check for it at first instanciation and raise an
+    To be sure that the `__init__` method won't be inadvertently defined,
+    the singleton will check for it at first instantiation and raise an
     `AssertionError` if it finds it.
 
     Examples of `FlyweightString` in Pyut are `PyutType` (there will probably
@@ -34,37 +27,31 @@ class FlyweightString(object):
     :contact: <lb@alawa.ch>
     :version: $Revision: 1.3 $
     """
-    __instances = weakref.WeakValueDictionary()
+    __instances = WeakValueDictionary()
+
     def __new__(cls, name=""):
-        ref = None # we need a ref if we must create the object
+        ref = None  # we need a ref if we must create the object
         if name not in cls.__instances.keys():
-            ref = object.__new__(cls, name)
-            assert type(ref.__init__) != MethodType, \
-                "Error, your flyweight class %s cannot contain a __init__ " \
-                "method." % cls
+            # ref = object.__new__(cls, name)
+            ref = object.__new__(cls)
+            # assert type(ref.__init__) != MethodType, f"Error, your flyweight class {cls} cannot contain a __init__ "  "method."
             try:
                 ref.init(name)
-            except:
-                raise
+            except Exception as e:
+                raise e
             ref.init(name)
             cls.__instances[name] = ref
 
         return cls.__instances[name]
 
-    #>------------------------------------------------------------------------
-
     def init(self, name=""):
         """
-        Constructor.
 
-        @param String for the type
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            name: String for the type
+
         """
         self.__name = name
-        #PyutUnmutableObject.__init__(self, name)
-
-    #>------------------------------------------------------------------------
 
     def getName(self):
         """
@@ -76,8 +63,6 @@ class FlyweightString(object):
         """
         return self.__name
 
-    #>------------------------------------------------------------------------
-
     def getAllFlies(self):
         """
         Return a list of names of the objects existing at this time.
@@ -85,4 +70,7 @@ class FlyweightString(object):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        return FlyweightString.__instances.keys()
+        keys = []
+        for k, v in list(FlyweightString.__instances.items()):
+            keys.append(k)
+        return keys

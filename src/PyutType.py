@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
 
 from FlyweightString import *
 
@@ -20,15 +14,14 @@ def getPyutType(name):
     return PyutType(name)
 
 
-
-class PyutType:#(FlyweightString):
+class PyutType(FlyweightString):
     def __init__(self, value):
         self._value = value
 
     """
     Type of a field.
     See `FlyweightString.py` for an explanation of the Flyweight pattern.
-    A pyut type is an unmutable string, like "int", "float"...
+    A pyut type is an immutable string, like "int", "float"...
 
     :author: Laurent Burgbacher
     :contact: <lb@alawa.ch>
@@ -42,9 +35,8 @@ class PyutType:#(FlyweightString):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        #return self.getName()
+        # return self.getName()
         return self._value
-
 
 
 def main():
@@ -68,9 +60,11 @@ def main():
 
     del b
 
-    assert str(a.getAllFlies().keys()) == "['autre', 'salut']"
+    keys = a.getAllFlies()
 
-    print "FlyweightString working"
+    assert 'autre' in keys
+    assert 'salut' in keys
+    print("FlyweightString working")
 
 
 if __name__ == "__main__": main()
