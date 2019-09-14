@@ -1,16 +1,8 @@
-#!/usr/bin/env python
-
-__version__ = "$Revision: 1.1.1.1 $"
-__author__ = "EI6, eivd, Group Dutoit - Roux"
-__date__ = "2002-05-22"
-
-import sys
-if ".." not in sys.path:
-    sys.path.append("..") # access to the classes to test
 import unittest
 
 # import the class you want to test here
 # import ...
+
 
 class TestMY_CLASS_TO_TEST(unittest.TestCase):
     """
@@ -47,21 +39,10 @@ class TestMY_CLASS_TO_TEST(unittest.TestCase):
         #    self.fail(errorMsg) : to fail immediately
         pass
 
-    #>------------------------------------------------------------------------
-
     def testName2(self):
         """Another test"""
         pass
 
-    #>------------------------------------------------------------------------
 
-
-
-def suite():
-    """You need to change the name of the test class here also."""
-    return unittest.makeSuite(TestMY_CLASS_TO_TEST)
-
-def main():
-    unittest.TextTestRunner().run(suite())
-
-if __name__ == "__main__": main()
+if __name__ == '__main__':
+    unittest.main()
