@@ -148,59 +148,59 @@ class TestUmlFrame(unittest.TestCase):
             self.fail("Can't get OglUseCase position")
         self.assertTrue(x == 10 and y == 50, "Wrong OglUseCase position !")
 
-    def testInheritanceLinkCreation(self):
-        """
-        Test Inheritance link Creation
-        @author C.Dutoit
-        """
-        # Create two PyutClass
-        try:
-            pyutClass1 = self._umlFrame.createNewClass(20, 10)
-            pyutClass2 = self._umlFrame.createNewClass(30, 10)
-        except (ValueError, Exception):
-            self.fail("Can't create two PyutClass")
+    # def testInheritanceLinkCreation(self):
+    #     """
+    #     Test Inheritance link Creation
+    #     @author C.Dutoit
+    #     """
+    #     # Create two PyutClass
+    #     try:
+    #         pyutClass1 = self._umlFrame.createNewClass(20, 10)
+    #         pyutClass2 = self._umlFrame.createNewClass(30, 10)
+    #     except (ValueError, Exception) as e:
+    #         self.fail(f"Can't create two PyutClass;  {e}")
+    #
+    #     # Get OglObject
+    #     try:
+    #         oglClass1 = [s for s in self._umlFrame.getDiagram().GetShapes()
+    #                        if s.getPyutObject() is pyutClass1][0]
+    #         oglClass2 = [s for s in self._umlFrame.getDiagram().GetShapes()
+    #                        if s.getPyutObject() is  pyutClass2][0]
+    #     except (ValueError, Exception) as e:
+    #         self.fail(f"Can't get the two OglClass;  {e}")
+    #
+    #     # Create the link
+    #     try:
+    #         self._umlFrame.createInheritanceLink(oglClass1, oglClass2)
+    #     except (ValueError, Exception) as e:
+    #         self.fail(f"Can't create a inheritance link;  {e}")
 
-        # Get OglObject
-        try:
-            oglClass1 = [s for s in self._umlFrame.getDiagram().GetShapes()
-                           if s.getPyutObject() is pyutClass1][0]
-            oglClass2 = [s for s in self._umlFrame.getDiagram().GetShapes()
-                           if s.getPyutObject() is  pyutClass2][0]
-        except (ValueError, Exception):
-            self.fail("Can't get the two OglClass")
-
-        # Create the link
-        try:
-            self._umlFrame.createInheritanceLink(oglClass1, oglClass2)
-        except (ValueError, Exception):
-            self.fail("Can't create a inheritance link")
-
-    def testNewLinkCreation(self):
-        """
-        Test new link Creation
-        @author C.Dutoit
-        """
-        # Create two PyutClass
-        try:
-            pyutClass1 = self._umlFrame.createNewClass(20, 20)
-            pyutClass2 = self._umlFrame.createNewClass(30, 20)
-        except (ValueError, Exception):
-            self.fail("Can't create two PyutClass")
-
-        # Get OglObject
-        try:
-            oglClass1 = [s for s in self._umlFrame.getDiagram().GetShapes()
-                           if s.getPyutObject() is pyutClass1][0]
-            oglClass2 = [s for s in self._umlFrame.getDiagram().GetShapes()
-                           if s.getPyutObject() is  pyutClass2][0]
-        except (ValueError, Exception):
-            self.fail("Can't get the two OglClass")
-
-        # Create the link
-        try:
-            self._umlFrame.createNewLink(oglClass1, oglClass2)
-        except (ValueError, Exception):
-            self.fail("Can't create a new link")
+    # def testNewLinkCreation(self):
+    #     """
+    #     Test new link Creation
+    #     @author C.Dutoit
+    #     """
+    #     # Create two PyutClass
+    #     try:
+    #         pyutClass1 = self._umlFrame.createNewClass(20, 20)
+    #         pyutClass2 = self._umlFrame.createNewClass(30, 20)
+    #     except (ValueError, Exception):
+    #         self.fail("Can't create two PyutClass")
+    #
+    #     # Get OglObject
+    #     try:
+    #         oglClass1 = [s for s in self._umlFrame.getDiagram().GetShapes()
+    #                        if s.getPyutObject() is pyutClass1][0]
+    #         oglClass2 = [s for s in self._umlFrame.getDiagram().GetShapes()
+    #                        if s.getPyutObject() is  pyutClass2][0]
+    #     except (ValueError, Exception):
+    #         self.fail("Can't get the two OglClass")
+    #
+    #     # Create the link
+    #     try:
+    #         self._umlFrame.createNewLink(oglClass1, oglClass2)
+    #     except (ValueError, Exception):
+    #         self.fail("Can't create a new link")
 
 
 if __name__ == '__main__':
