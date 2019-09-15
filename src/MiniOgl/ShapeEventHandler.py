@@ -25,11 +25,10 @@ __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: ShapeEventHandler.py,v 1.3 2004/06/16 19:33:18 dutoitc Exp $"
 
-from __future__                import division
-#from wxPython.wx               import *
 
 __all__ = ["ShapeEventHandler"]
 DEBUG = 0
+
 
 class ShapeEventHandler(object):
     """
@@ -66,10 +65,8 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled left down"
+            print("Unhandled left down")
         event.Skip()
-
-    #>------------------------------------------------------------------ 
 
     def OnLeftUp(self, event):
         """
@@ -78,10 +75,8 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled left up"
+            print("Unhandled left up")
         event.Skip()
-
-    #>------------------------------------------------------------------ 
 
     def OnLeftDClick(self, event):
         """
@@ -90,10 +85,8 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled left double click"
+            print("Unhandled left double click")
         event.Skip()
-
-    #>------------------------------------------------------------------ 
 
     def OnMiddleDown(self, event):
         """
@@ -102,10 +95,8 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled middle down"
+            print("Unhandled middle down")
         event.Skip()
-
-    #>------------------------------------------------------------------ 
 
     def OnMiddleUp(self, event):
         """
@@ -114,10 +105,8 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled middle up"
+            print("Unhandled middle up")
         event.Skip()
-
-    #>------------------------------------------------------------------ 
 
     def OnMiddleDClick(self, event):
         """
@@ -126,10 +115,8 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled middle double click"
+            print("Unhandled middle double click")
         event.Skip()
-
-    #>------------------------------------------------------------------ 
 
     def OnRightDown(self, event):
         """
@@ -138,10 +125,8 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled right down"
+            print("Unhandled right down")
         event.Skip()
-
-    #>------------------------------------------------------------------ 
 
     def OnRightUp(self, event):
         """
@@ -150,10 +135,8 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled right up"
+            print("Unhandled right up")
         event.Skip()
-
-    #>------------------------------------------------------------------ 
 
     def OnRightDClick(self, event):
         """
@@ -162,7 +145,5 @@ class ShapeEventHandler(object):
         @param wx.Event event
         """
         if DEBUG:
-            print "Unhandled right double click"
+            print("Unhandled right double click")
         event.Skip()
-
-    #>------------------------------------------------------------------------

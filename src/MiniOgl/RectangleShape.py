@@ -1,4 +1,9 @@
-#!/usr/bin/env python
+
+from MiniOgl.Shape import Shape
+from MiniOgl.MiniOglUtils import *
+from MiniOgl.SizerShape import SizerShape
+from MiniOgl.RectangleShapeModel import *
+
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -24,15 +29,8 @@ __copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
 __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: RectangleShape.py,v 1.8 2006/02/04 22:01:01 dutoitc Exp $"
-
-from __future__                import division
-#from wxPython.wx               import *
-from Shape                     import Shape
-from MiniOglUtils              import *
-from SizerShape                import SizerShape
-from RectangleShapeModel       import *
-
 __all__ = ["RectangleShape"]
+
 
 class RectangleShape(Shape):
     """
@@ -97,8 +95,6 @@ class RectangleShape(Shape):
         # set the model of the shape (MVC pattern)
         self._model = RectangleShapeModel(self)
 
-    #>------------------------------------------------------------------------
-
     def SetResizable(self, state):
         """
         Set the resizable flag.
@@ -107,8 +103,6 @@ class RectangleShape(Shape):
         """
         self._resizable = state
 
-    #>------------------------------------------------------------------------
-
     def GetResizable(self):
         """
         Get the resizable flag.
@@ -116,8 +110,6 @@ class RectangleShape(Shape):
         @return bool
         """
         return self._resizable
-
-    #>------------------------------------------------------------------------
 
     def GetTopLeft(self):
         """
@@ -135,8 +127,6 @@ class RectangleShape(Shape):
             y += height
         return x, y
 
-    #>------------------------------------------------------------------------
-
     def SetTopLeft(self, x, y):
         """
         Set the position of the top left point.
@@ -151,8 +141,6 @@ class RectangleShape(Shape):
         if height < 0:
             y -= height
         self._x, self._y = x, y
-
-    #>------------------------------------------------------------------------
 
     def Draw(self, dc, withChildren=False):
         """
@@ -176,12 +164,10 @@ class RectangleShape(Shape):
                 dc.DrawRectangle(sx, sy, width, height)
             if withChildren:
                 self.DrawChildren(dc)
-            
+
             # CD
             if self._topLeftSizer!=None:
                 self._topLeftSizer.Draw(dc, False)
-
-    #>------------------------------------------------------------------------
 
     def DrawBorder(self, dc):
         """
@@ -193,8 +179,6 @@ class RectangleShape(Shape):
         width, height = self.GetSize()
         dc.DrawRectangle(sx, sy, width, height)
 
-    #>------------------------------------------------------------------ 
-
     def SetDrawFrame(self, draw):
         """
         Choose to draw a frame around the rectangle.
@@ -202,8 +186,6 @@ class RectangleShape(Shape):
         @param bool draw : True to draw the frame
         """
         self._drawFrame = draw
-
-    #>------------------------------------------------------------------------
 
     def Inside(self, x, y):
         """
@@ -226,8 +208,6 @@ class RectangleShape(Shape):
         d = y > topLeftY + height
         return (a + b) == 1 and (c + d) == 1
 
-    #>------------------------------------------------------------------------
-
     def GetSize(self):
         """
         Get the size of the rectangle.
@@ -235,8 +215,6 @@ class RectangleShape(Shape):
         @return (double, double)
         """
         return self._width, self._height
-
-    #>------------------------------------------------------------------------
 
     def SetSelected(self, state=True):
         """
@@ -248,8 +226,6 @@ class RectangleShape(Shape):
         if self._resizable:
             self.ShowSizers(state)
 
-    #>------------------------------------------------------------------ 
-
     def Detach(self):
         """
         Detach the shape from its diagram.
@@ -260,8 +236,6 @@ class RectangleShape(Shape):
         if self._diagram is not None and not self._protected:
             Shape.Detach(self)
             self.ShowSizers(False)
-
-    #>------------------------------------------------------------------ 
 
     def ShowSizers(self, state=True):
         """
@@ -292,8 +266,6 @@ class RectangleShape(Shape):
             self._botRightSizer.Detach()
             self._botRightSizer = None
 
-    #>------------------------------------------------------------------ 
-
     def SetSize(self, width, height):
         """
         Set the size of the rectangle.
@@ -302,17 +274,14 @@ class RectangleShape(Shape):
         """
         self._width, self._height = width, height
 
-        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
+        #  added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         if self.HasDiagramFrame():
             self.UpdateModel()
-        
+
         for anchor in self._anchors:
             ax, ay = anchor.GetPosition()
             # Reset position to stick the border
             anchor.SetPosition(ax, ay)
-
-           
-    #>------------------------------------------------------------------------
 
     def Resize(self, sizer, x, y):
         """
@@ -359,8 +328,6 @@ class RectangleShape(Shape):
             self._botLeftSizer.SetRelativePosition(0, nh)
             self._botRightSizer.SetRelativePosition(nw, nh)
             self._topRightSizer.SetRelativePosition(nw, 0)
-            
-    #>------------------------------------------------------------------------
 
     def UpdateFromModel(self):
         """
@@ -370,19 +337,17 @@ class RectangleShape(Shape):
         change of state of the diagram frame (here it's only for the zoom)
         """
 
-        #change the position of the shape from the model
+        #  change the position of the shape from the model
         Shape.UpdateFromModel(self)
 
-        #get the model size   
+        #  get the model size
         width, height = self.GetModel().GetSize()
 
-        #get the diagram frame ratio between the shape and the model
+        #  get the diagram frame ratio between the shape and the model
         ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
 
         # set the new size to the shape.
         self._width, self._height = width * ratio, height * ratio
-
-    #>------------------------------------------------------------------------
 
     def UpdateModel(self):
         """
@@ -391,10 +356,10 @@ class RectangleShape(Shape):
         Updates the model when the shape (view) is deplaced or resized.
         """
 
-        #change the coords of model
+        #  change the coords of model
         Shape.UpdateModel(self)
 
-        #get the size of the shape (view)
+        #  get the size of the shape (view)
         width, height = self.GetSize()
 
         #get the ratio between the model and the shape (view) from
@@ -403,7 +368,7 @@ class RectangleShape(Shape):
 
         # set the new size to the model.
         self.GetModel().SetSize(width/ratio, height/ratio)
-        
+
     #>------------------------------------------------------------------------
     # Added by C.Dutoit
 

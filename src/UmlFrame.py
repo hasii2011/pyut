@@ -1,33 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.22 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
-
-#from wxPython.wx.    import *
-#from MiniOgl        import *
 import wx
-from OglLinkFactory import *
-from PyutClass      import *
-from PyutNote       import *
-from PyutMethod     import *
-from PyutField      import *
-from PyutParam      import *
-from PyutStereotype import *
-from PyutLink       import *
-from mediator       import *
-from PyutConsts     import *
+
 from PyutActor      import PyutActor
-from PyutUseCase    import PyutUseCase
 from OglActor       import OglActor
 from OglUseCase     import OglUseCase
 from OglClass       import *
 from OglNote        import *
 from OglSDMessage   import OglSDMessage
-from MiniOgl        import *
 from historyManager import *
-#DEFAULT_WIDTH = 1280
+#  DEFAULT_WIDTH = 1280
 DEFAULT_WIDTH = 3000
 #DEFAULT_WIDTH = 5120
 
@@ -88,19 +69,17 @@ class UmlFrame(DiagramFrame):
         #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (17.11.2005)
         #history of the frame (undo/redo)
         self._history = HistoryManager(self)
-        
+
         # Close event
         self.Bind(wx.EVT_CLOSE, self.evtClose)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_CHAR, self._ctrl.processChar)
         #print "---UmlFrame-6"
-        
+
         #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
         self.SetInfinite(True)
 
         self._defaultCursor = self.GetCursor()
-
-    #>------------------------------------------------------------------------
 
     def setCodePath(self, path):
         """
@@ -112,24 +91,14 @@ class UmlFrame(DiagramFrame):
         if project is not None:
             project.setCodePath(path)
         else:
-            print "Passing setCodePath in UmlFrame-setCodePath"
+            print("Passing setCodePath in UmlFrame-setCodePath")
 
-
-    #>-----------------------------------------------------------------------
     def displayDiagramProperties(self):
         """
         Display class diagram properties
         @author C.Dutoit
         """
         displayError(_("Not yet implemented !"))
-
-    #>------------------------------------------------------------------------
-
-    #def OnPaint(self, event):
-        #self._diagram.Refresh()
-        #self.Refresh()
-
-    #>------------------------------------------------------------------------
 
     def cleanUp(self):
         """
@@ -143,8 +112,6 @@ class UmlFrame(DiagramFrame):
         self._ctrl = None
         self._frame = None
 
-    #>------------------------------------------------------------------------
-
     def evtClose(self, event):
         """
         Clean close, event handler on EVT_CLOSE
@@ -156,11 +123,9 @@ class UmlFrame(DiagramFrame):
         #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (17.11.2005)
         #to destroy the file that contains the history
         self._history.destroy()
-        
+
         self.cleanUp()
         self.Destroy()
-
-    #>------------------------------------------------------------------------
 
     def newDiagram(self):
         """
@@ -172,8 +137,6 @@ class UmlFrame(DiagramFrame):
         self._diagram.DeleteAllShapes()
         self.Refresh()
 
-    #>------------------------------------------------------------------------
-
     def getDiagram(self):
         """
         Return the diagram of this frame.
@@ -183,8 +146,6 @@ class UmlFrame(DiagramFrame):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self._diagram
-
-    #>------------------------------------------------------------------------
 
     def addHierarchy(self, display):
         """
@@ -196,9 +157,9 @@ class UmlFrame(DiagramFrame):
         @since 1.4
         """
         wx.BeginBusyCursor()
-        #from pyclbr import readmodule, Class
+        #  from pyclbr import readmodule, Class
         from inspect import getargspec
-        #res = readmodule("PyutDataClasses")
+        #  res = readmodule("PyutDataClasses")
         import PyutDataClasses as pdc
         import types
 
@@ -207,7 +168,7 @@ class UmlFrame(DiagramFrame):
         # get a list of classes info for classes in the display list
         #classes = [res[name] for name in res.keys() if name in display]
         classes = [cl for cl in pdc.__dict__.values()
-            if (type(cl) == ClassType or type(cl) == TypeType or 
+            if (type(cl) == ClassType or type(cl) == TypeType or
                 type(cl) == 'module')
                 and cl.__name__ in display]
 
@@ -310,8 +271,6 @@ class UmlFrame(DiagramFrame):
 
         wx.EndBusyCursor()
 
-    #>------------------------------------------------------------------------
-
     def addPyutHierarchy(self):
         """
         Calls AddHierarchy with the Pyut classes list.
@@ -322,8 +281,6 @@ class UmlFrame(DiagramFrame):
         import PyutDataClasses as pdc
         self.addHierarchy(pdc.display)
 
-    #>------------------------------------------------------------------------
-
     def addOglHierarchy(self):
         """
         Calls AddHierarchy with the Ogl classes list.
@@ -333,8 +290,6 @@ class UmlFrame(DiagramFrame):
         """
         import PyutDataClasses as pdc
         self.addHierarchy(pdc.displayOgl)
-
-    #>------------------------------------------------------------------------
 
     def createNewClass(self, x, y):
         """
@@ -350,8 +305,6 @@ class UmlFrame(DiagramFrame):
         self.Refresh()
         return pyutClass
 
-    #>------------------------------------------------------------------------
-
     def createNewNote(self, x, y):
         """
         Add a new note at (x, y).
@@ -365,8 +318,6 @@ class UmlFrame(DiagramFrame):
         self.addShape(oglNote, x, y)
         self.Refresh()
         return pyutNote
-
-    #>------------------------------------------------------------------------
 
     def createNewActor(self, x, y):
         """
@@ -382,8 +333,6 @@ class UmlFrame(DiagramFrame):
         self.Refresh()
         return pyutActor
 
-    #>------------------------------------------------------------------------
-
     def createNewUseCase(self, x, y):
         """
         Add a new use case at (x, y).
@@ -398,85 +347,13 @@ class UmlFrame(DiagramFrame):
         self.Refresh()
         return pyutUseCase
 
-#P. Dabrowski 20051202 : These two methods have been deplaced to the
-#                        createOglLinkCommand module in order to be
-#                        undone/redone.
-##    #>------------------------------------------------------------------------
-##
-##    def createInheritanceLink(self, child, father):
-##        """
-##        Add a paternity link between child and father.
-##
-##        @param OglClass child : child
-##        @param OglClass father : father
-##        @since 1.4
-##        @author L. Burgbacher <lb@alawa.ch>
-##        """
-##
-##        pyutLink = PyutLink("", linkType=OGL_INHERITANCE,
-##            source=child.getPyutObject(),
-##            destination=father.getPyutObject())
-##        oglLink = getOglLinkFactory().getOglLink(child, pyutLink, father,
-##            OGL_INHERITANCE)
-##        self._diagram.AddShape(oglLink)
-##
-##        # Added by ND
-##        child.addLink(oglLink)
-##        father.addLink(oglLink)
-##
-##        # add it to the PyutClass
-##        child.getPyutObject().addFather(father.getPyutObject())
-##
-##        return oglLink
-##
-##    #>------------------------------------------------------------------------
-##
-##    def createNewLink(self, src, dst, linkType=OGL_INHERITANCE, 
-##                      srcPos = None, dstPos = None):
-##        """
-##        Add a link between src and dst.
-##
-##        @param OglClass src  : source of the link
-##        @param OglClass dst  : destination of the link
-##        @param int type : type of the link
-##        @param srcPos, dstPos : position on source and destination
-##        @return OglLink : the link created
-##        @author L. Burgbacher
-##        @modified C.Dutoit 20021125 : added srcPos and dstPos to be compatible
-##                                with Sequence diagram
-##        """
-##        
-##        #print "Create new link"
-##        if linkType == OGL_INHERITANCE:
-##            return self.createInheritanceLink(src, dst)
-##
-##        pyutLink = PyutLink("", linkType=linkType,
-##                            source=src.getPyutObject(),
-##                            destination=dst.getPyutObject())
-##        
-##        # Call the factory to create OGL Link
-##        oglLinkFactory = getOglLinkFactory()
-##        oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
-##        
-##        
-##        self._diagram.AddShape(oglLink, withModelUpdate = False) # add it to the diagram
-##        
-##        src.addLink(oglLink)  # add it to the source OglShape
-##        dst.addLink(oglLink)  # add it to the destination OglShape
-##
-##        src.getPyutObject().addLink(pyutLink) # add it to the PyutClass
-##        
-##        return oglLink
-##
-##    #>------------------------------------------------------------------------
-
     def OnLeftDown(self, event):
         """
         Manage a left down mouse event.
         If there's an action pending in the mediator, give it the event, else
         let it go to the next handler.
 
-        @param wx.Event event
+        @param  event
         @since 1.4
         @author L. Burgbacher <lb@alawa.ch>
         """
@@ -490,15 +367,13 @@ class UmlFrame(DiagramFrame):
             #if we use the zoom tool...
             if self._ctrl.getCurrentAction() == ACTION_ZOOM_IN:
                 DiagramFrame._BeginSelect(self, event)
-            
+
             if skip == SKIP_EVENT:
                 DiagramFrame.OnLeftDown(self, event)
-        
+
         else:
             DiagramFrame.OnLeftDown(self, event)
 
-    #>------------------------------------------------------------------------
-    
     def OnLeftUp(self, event):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
@@ -513,10 +388,8 @@ class UmlFrame(DiagramFrame):
             self.Refresh()
             self._ctrl.updateTitle()
         else:
-            
+
             DiagramFrame.OnLeftUp(self, event)
-            
-    #>------------------------------------------------------------------------
 
     def OnLeftDClick(self, event):
         """
@@ -529,8 +402,6 @@ class UmlFrame(DiagramFrame):
         x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
         self._ctrl.editObject(x, y)
         DiagramFrame.OnLeftDClick(self, event)
-
-    #>------------------------------------------------------------------------
 
     def addShape(self, shape, x, y, pen=None, brush=None, withModelUpdate = True):
         """
@@ -547,33 +418,29 @@ class UmlFrame(DiagramFrame):
         @since 1.4
         @author L. Burgbacher <lb@alawa.ch>
         """
-        #print ">UMLFrame-AddShape-1"
+        #  print ">UMLFrame-AddShape-1"
         shape.SetDraggable(True)
-        #print "UMLFrame-AddShape-1"
+        #  print "UMLFrame-AddShape-1"
         shape.SetPosition(x, y)
-        #print "UMLFrame-AddShape-1"
+        #  print "UMLFrame-AddShape-1"
         if pen:
             shape.SetPen(pen)
         if brush:
             shape.SetBrush(brush)
-        #print "UMLFrame-AddShape-1"
+        #  print "UMLFrame-AddShape-1"
         self._diagram.AddShape(shape, withModelUpdate)
         #print "<<UMLFrame-AddShape-1"
         #self._umlObjects.append(shape)
 
-    #>------------------------------------------------------------------------
-
     def getUmlObjects(self):
         """
-        To know all OglObject. 
+        To know all OglObject.
 
         @since 1.19
         @author L. Burgbacher <lb@alawa.ch>
         """
         return [s for s in self._diagram.GetShapes()
             if isinstance(s, (OglObject, OglLink, OglSDMessage))]
-
-    #>------------------------------------------------------------------------
 
     def getWidth(self):
         """
@@ -584,8 +451,6 @@ class UmlFrame(DiagramFrame):
         """
         return self.maxWidth
 
-    #>------------------------------------------------------------------------
-
     def getHeight(self) :
         """
         Knowing Height.
@@ -594,9 +459,6 @@ class UmlFrame(DiagramFrame):
         @author Deve Roux <droux@eivd.ch>
         """
         return self.maxHeight
-
-
-    #>------------------------------------------------------------------------
 
     def getObjectsBoundaries(self) :
         """
@@ -629,8 +491,6 @@ class UmlFrame(DiagramFrame):
         # Return values
         return (minx, miny, maxx, maxy)
 
-    #>------------------------------------------------------------------------
-    
     def getUmlObjectById(self, objectId):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (20.11.2005)
@@ -645,16 +505,9 @@ class UmlFrame(DiagramFrame):
                     return shape
         return None
 
-    #>------------------------------------------------------------------------
-     
     def getHistory(self):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (20.11.2005)
         @return the history associated to this frame
         """
         return self._history
-
-    #>------------------------------------------------------------------------
-
-
-        

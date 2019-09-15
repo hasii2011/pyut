@@ -30,11 +30,11 @@ class PyutParam(PyutObject):
             PyutObject.__init__(self, name)
         except:
             import sys, traceback
-            print sys.exc_info()[0]
-            print sys.exc_info()[1]
+            print((sys.exc_info()[0]))
+            print((sys.exc_info()[1]))
             for el in traceback.extract_tb(sys.exc_info()[2]):
-                print str(el)
-            print "==========================================="
+                print((str(el)))
+            print("===========================================")
 
             
             

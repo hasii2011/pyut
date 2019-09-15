@@ -1,31 +1,24 @@
-#!/usr/bin/env python
 
-__version__ = "$Revision: 1.3 $"
-__author__ = "EI6, eivd, Group Dutoit - Roux"
-__date__ = "2002-05-22"
 
-import sys
-if ".." not in sys.path:
-    sys.path.append("..") # access to the classes to test
 import unittest
 
-# Set lang function emulation
-def _(x): return x
-import __builtin__
-__builtin__.__dict__['_'] = _
+from wx import App
+from wx import Frame
+# from wx import *
 
-# Import pyut elements
-import os
-from wxPython.wx import *
 from UmlFrame import UmlFrame
 from ErrorManager import RAISE_ERROR_VIEW
 from FileHandling import FileHandling
 import mediator
 
-##############################################################################
-class App(wxApp):
+# Set lang function emulation
+def _(x): return x
+
+
+class PyUtApp(App):
     def OnInit(self):
-        return true
+        return True
+
 
 class TestUmlFrame(unittest.TestCase):
     """
@@ -33,8 +26,6 @@ class TestUmlFrame(unittest.TestCase):
     it creates classes, actors, notes, links, etc...
     @author C.Dutoit
     """
-
-    #>------------------------------------------------------------------------
 
     def setUp(self):
         """
@@ -52,15 +43,12 @@ class TestUmlFrame(unittest.TestCase):
         # Create wx application
         app = App()
 
-
-        # Create frame
-        baseFrame = wxFrame(None, -1, "", size=(10, 10))
+        #  Create frame
+        # baseFrame = wxFrame(None, -1, "", size=(10, 10))
+        baseFrame = Frame(None, -1, "", size=(10, 10))
         umlFrame = UmlFrame(baseFrame, None)
-        umlFrame.Show(true)
+        umlFrame.Show(True)
         self._umlFrame = umlFrame
-
-
-    #>------------------------------------------------------------------------
 
     def testClassCreation(self):
         """
@@ -70,25 +58,22 @@ class TestUmlFrame(unittest.TestCase):
         # Create a PyutClass
         try:
             pyutClass = self._umlFrame.createNewClass(10, 10)
-        except:
+        except Exception as e:
             self.fail("Can't create a PyutClass")
 
         # Get the corresponding OglClass
         try:
             oglClass = [s for s in self._umlFrame.getDiagram().GetShapes()
                            if s.getPyutObject() is pyutClass][0]
-        except:
+        except Exception as e:
             self.fail("Can't get OglClass")
 
         # Testing position
         try:
             x, y = oglClass.GetPosition()
-        except:
+        except Exception as e:
             self.fail("Can't get OglClass position")
-        self.failUnless(x==10 and y==10, "Wrong OglClass position !")
-
-
-    #>------------------------------------------------------------------------
+        self.assertTrue(x == 10 and y == 10, "Wrong OglClass position !")
 
     def testNoteCreation(self):
         """
@@ -114,8 +99,6 @@ class TestUmlFrame(unittest.TestCase):
         except:
             self.fail("Can't get OglNote position")
         self.failUnless(x==100 and y==10, "Wrong OglNote position !")
-
-    #>------------------------------------------------------------------------
 
     def testActorCreation(self):
         """
@@ -143,9 +126,6 @@ class TestUmlFrame(unittest.TestCase):
         self.failUnless(x==100 and y==100, "Wrong OglActor position !")
 
 
-
-    #>------------------------------------------------------------------------
-
     def testUseCaseCreation(self):
         """
         Test UseCase Creation
@@ -170,11 +150,6 @@ class TestUmlFrame(unittest.TestCase):
         except:
             self.fail("Can't get OglUseCase position")
         self.failUnless(x==10 and y==50, "Wrong OglUseCase position !")
-
-
-
-
-    #>------------------------------------------------------------------------
 
     def testInheritanceLinkCreation(self):
         """
@@ -203,9 +178,6 @@ class TestUmlFrame(unittest.TestCase):
         except:
             self.fail("Can't create a inheritance link")
 
-
-    #>------------------------------------------------------------------------
-
     def testNewLinkCreation(self):
         """
         Test new link Creation
@@ -232,9 +204,6 @@ class TestUmlFrame(unittest.TestCase):
             self._umlFrame.createNewLink(oglClass1, oglClass2)
         except:
             self.fail("Can't create a new link")
-#todo :createNEwLink(src, dst)
-
-    #>------------------------------------------------------------------------
 
     def testClassCreation(self):
         """
@@ -244,13 +213,5 @@ class TestUmlFrame(unittest.TestCase):
         pyutClass = self._umlFrame.createNewClass(10, 10)
 
 
-
-
-def suite():
-    """You need to change the name of the test class here also."""
-    return unittest.makeSuite(TestUmlFrame)
-
-def main():
-    unittest.TextTestRunner().run(suite())
-
-if __name__ == "__main__": main()
+if __name__ == '__main__':
+    unittest.main()

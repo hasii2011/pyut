@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+import wx
+from MiniOgl.ShapeModel import *
+
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -25,13 +27,6 @@ __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: Shape.py,v 1.8 2006/02/04 22:01:01 dutoitc Exp $"
 
-from __future__                import division
-#from wxPython.wx               import *
-import wx
-
-#added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
-#to get the model relative to a shape (MVC pattern)
-from ShapeModel                 import *
 
 __all__ = ["Shape"]
 
@@ -41,7 +36,7 @@ DEBUG = 0
 class Shape(object):
     """
     Shape is the basic graphical block. It is also the view in
-    a MVC pattern, so it has has a relative model (ShapeModel). 
+    a MVC pattern, so it has has a relative model (ShapeModel).
 
     Exported methods:
     -----------------
@@ -173,9 +168,9 @@ class Shape(object):
         self._pen = wx.BLACK_PEN     # pen to use
         self._brush = wx.WHITE_BRUSH # brush to use
 
-        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
+        #  added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         self._model = ShapeModel(self) # model of the shape (MVC pattern)
-        
+
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
         if DEBUG:
@@ -185,8 +180,6 @@ class Shape(object):
                 t = self.AddText(0, -10, str(self._id))
                 t.SetColor(wx.RED)
 
-    #>------------------------------------------------------------------ 
-
     def SetPen(self, pen):
         """
         Set the pen used to draw the shape.
@@ -194,8 +187,6 @@ class Shape(object):
         @param wx.Pen pen
         """
         self._pen = pen
-
-    #>------------------------------------------------------------------------
 
     def GetPen(self):
         """
@@ -205,8 +196,6 @@ class Shape(object):
         """
         return self._pen
 
-    #>------------------------------------------------------------------------
-
     def SetBrush(self, brush):
         """
         Set the brush used to draw the shape.
@@ -214,8 +203,6 @@ class Shape(object):
         @param wx.Brush brush
         """
         self._brush = brush
-
-    #>------------------------------------------------------------------------
 
     def GetBrush(self):
         """
@@ -225,8 +212,6 @@ class Shape(object):
         """
         return self._brush
 
-    #>------------------------------------------------------------------ 
-
     def GetID(self):
         """
         Get the ID number of the shape.
@@ -234,8 +219,6 @@ class Shape(object):
         @return int
         """
         return self._id
-
-    #>------------------------------------------------------------------------
 
     def SetID(self, id):
         """
@@ -246,8 +229,6 @@ class Shape(object):
         self._id = id
         Shape.ID = max(self._id + 1, Shape.ID)
 
-    #>------------------------------------------------------------------ 
-
     def SetOrigin(self, x, y):
         """
         Set the origin of the shape, from its upper left corner.
@@ -256,8 +237,6 @@ class Shape(object):
         """
         self._ox, self._oy = x, y
 
-    #>------------------------------------------------------------------------
-
     def GetOrigin(self):
         """
         Get the origin of the shape, from its upper left corner.
@@ -265,8 +244,6 @@ class Shape(object):
         @return double x, y : origin
         """
         return self._ox, self._oy
-
-    #>------------------------------------------------------------------------
 
     def AppendChild(self, child):
         """
@@ -277,8 +254,6 @@ class Shape(object):
         """
         child.SetParent(self)
         self._children.append(child)
-
-    #>------------------------------------------------------------------------
 
     def GetAllChildren(self):
         """
@@ -291,8 +266,6 @@ class Shape(object):
             shapes.append(child.GetAllChildren())
         return shapes
 
-    #>------------------------------------------------------------------------
-
     def GetChildren(self):
         """
         Get the children of this shape.
@@ -303,8 +276,6 @@ class Shape(object):
         @return Shape []
         """
         return self._children[:]
-
-    #>------------------------------------------------------------------------
 
     def AddAnchor(self, x, y, anchorType=None):
         """
@@ -331,8 +302,6 @@ class Shape(object):
         # will be attached when Attach is called on the shape.
         return p
 
-    #>------------------------------------------------------------------ 
-
     def AddAnchorObject(self, anchor):
         """
         Add an anchor point directly.
@@ -341,16 +310,12 @@ class Shape(object):
         """
         self._anchors.append(anchor)
 
-    #>------------------------------------------------------------------ 
-
     def RemoveAllAnchors(self):
         """
         Remove all anchors of the shape.
         """
         while self._anchors:
             self.RemoveAnchor(self._anchors[0])
-
-    #>------------------------------------------------------------------------
 
     def RemoveAnchor(self, anchor):
         """
@@ -360,8 +325,6 @@ class Shape(object):
         """
         if anchor in self._anchors:
             self._anchors.remove(anchor)
-
-    #>------------------------------------------------------------------ 
 
     def AddText(self, x, y, text):
         """
@@ -375,8 +338,6 @@ class Shape(object):
         t = self._CreateTextShape(x, y, text)
         self._children.append(t)
         return t
-
-    #>------------------------------------------------------------------ 
 
     def _AddPrivateText(self, x, y, text):
         """
@@ -392,8 +353,6 @@ class Shape(object):
         self._privateChildren.append(t)
         return t
 
-    #>------------------------------------------------------------------ 
-
     def _CreateTextShape(self, x, y, text):
         """
         Create a text shape and add it to the diagram.
@@ -408,10 +367,8 @@ class Shape(object):
         if self._diagram is not None:
             self._diagram.AddShape(t)
         if DEBUG:
-            print "Text", t, "added"
+            print("Text", t, "added")
         return t
-
-    #>------------------------------------------------------------------ 
 
     def Attach(self, diagram):
         """
@@ -427,8 +384,6 @@ class Shape(object):
         map(lambda x: diagram.AddShape(x), self._anchors + self._children
             + self._privateChildren)
 
-    #>------------------------------------------------------------------ 
-
     def Detach(self):
         """
         Detach the shape from its diagram.
@@ -437,15 +392,15 @@ class Shape(object):
         """
         # do not detach a protected shape
         if DEBUG:
-            print "In shape.Detach with", self
+            print("In shape.Detach with", self)
         if self._diagram is not None and not self._protected:
             if DEBUG:
-                print "passed first condition"
+                print("passed first condition")
 
-            #added by P. Dabrowski to ensure that the model is not
-            #attached anymore to this view.
+            #  added by P. Dabrowski to ensure that the model is not
+            #  attached anymore to this view.
             self.GetModel()._views.remove(self)
-            
+
             diagram = self._diagram
             self._diagram = None
             diagram.RemoveShape(self)
@@ -460,9 +415,7 @@ class Shape(object):
                 child.Detach()
                 child.SetProtected(True)
             if DEBUG:
-                print "now, the shapes are", diagram.GetShapes()
-
-    #>------------------------------------------------------------------ 
+                print("now, the shapes are", diagram.GetShapes())
 
     def Draw(self, dc, withChildren=True):
         """
@@ -492,8 +445,6 @@ class Shape(object):
             dc.SetPen(wx.RED_PEN) # CD
             self.DrawHandles(dc)
 
-    #>------------------------------------------------------------------ 
-
     def DrawChildren(self, dc):
         """
         Draw the children of this shape.
@@ -504,8 +455,6 @@ class Shape(object):
             for child in self._children + self._anchors + self._privateChildren:
                 child.Draw(dc)
 
-    #>------------------------------------------------------------------ 
-
     def DrawBorder(self, dc):
         """
         Draw the border of the shape, for fast rendering.
@@ -514,18 +463,14 @@ class Shape(object):
         """
         pass
 
-    #>------------------------------------------------------------------ 
-
     def DrawAnchors(self, dc):
         """
         Draw the anchors of the shape.
 
         @param wx.DC dc
         """
-        #print "Shape.DrawAnchors; shape=", self, ", anchors=", self._anchors
+        #  print "Shape.DrawAnchors; shape=", self, ", anchors=", self._anchors
         map(lambda x: x.Draw(dc), self._anchors)
-
-    #>------------------------------------------------------------------ 
 
     def DrawHandles(self, dc):
         """
@@ -536,8 +481,6 @@ class Shape(object):
         """
         pass
 
-    #>------------------------------------------------------------------ 
-
     def GetAnchors(self):
         """
         Return a list of the anchors of the shape.
@@ -545,8 +488,6 @@ class Shape(object):
         @return AnchorPoint []
         """
         return self._anchors[:]
-
-    #>------------------------------------------------------------------ 
 
     def GetParent(self):
         """
@@ -556,8 +497,6 @@ class Shape(object):
         """
         return self._parent
 
-    #>------------------------------------------------------------------ 
-
     def SetParent(self, parent):
         """
         Set the parent of this shape.
@@ -565,8 +504,6 @@ class Shape(object):
         @param Shape parent
         """
         self._parent = parent
-
-    #>------------------------------------------------------------------ 
 
     def GetPosition(self):
         """
@@ -581,8 +518,6 @@ class Shape(object):
         else:
             return self._x, self._y
 
-    #>------------------------------------------------------------------ 
-
     def GetTopLeft(self):
         """
         Get the coords of the top left point in diagram coords.
@@ -594,8 +529,6 @@ class Shape(object):
         y -= self._oy
         return x, y
 
-    #>------------------------------------------------------------------ 
-
     def GetSize(self):
         """
         Get the size of the shape.
@@ -603,8 +536,6 @@ class Shape(object):
         @return (double, double)
         """
         return 0.0, 0.0
-
-    #>------------------------------------------------------------------ 
 
     def ConvertCoordToRelative(self, x, y):
         """
@@ -620,8 +551,6 @@ class Shape(object):
             y -= oy
         return x, y
 
-    #>------------------------------------------------------------------ 
-
     def GetRelativePosition(self):
         """
         Return the position of the shape, relative to it's parent.
@@ -629,8 +558,6 @@ class Shape(object):
         @return (double, double)
         """
         return self._x, self._y
-
-    #>------------------------------------------------------------------ 
 
     def Inside(self, x, y):
         """
@@ -640,7 +567,6 @@ class Shape(object):
         """
         return False
 
-    #>------------------------------------------------------------------ 
 
     def IsDraggable(self):
         """
@@ -650,8 +576,6 @@ class Shape(object):
         """
         return self._draggable
 
-    #>------------------------------------------------------------------ 
-
     def IsProtected(self):
         """
         True if the shape is protected.
@@ -659,8 +583,6 @@ class Shape(object):
         @return bool
         """
         return self._protected
-
-    #>------------------------------------------------------------------ 
 
     def IsSelected(self):
         """
@@ -670,8 +592,6 @@ class Shape(object):
         """
         return self._selected
 
-    #>------------------------------------------------------------------ 
-
     def IsVisible(self):
         """
         True if the shape is visible.
@@ -679,8 +599,6 @@ class Shape(object):
         @return bool
         """
         return self._visible
-
-    #>------------------------------------------------------------------ 
 
     def SetSelected(self, state=True):
         """
@@ -690,16 +608,12 @@ class Shape(object):
         """
         self._selected = state
 
-    #>------------------------------------------------------------------ 
-
     def IsMoving(self):
         """
         Return the "moving" state of a shape.
         See SetMoving.
         """
         return self._moving
-
-    #>------------------------------------------------------------------ 
 
     def SetMoving(self, state):
         """
@@ -714,8 +628,6 @@ class Shape(object):
         for anchor in self._anchors:
             anchor.SetMoving(state)
 
-    #>------------------------------------------------------------------------
-
     def SetDraggable(self, drag):
         """
         If False, the shape won't be movable.
@@ -723,8 +635,6 @@ class Shape(object):
         @param bool
         """
         self._draggable = drag
-
-    #>------------------------------------------------------------------ 
 
     def SetPosition(self, x, y):
         """
@@ -738,15 +648,13 @@ class Shape(object):
             else:
                 self._x = x
                 self._y = y
-                
+
             #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
             # if the shape is attached to a diagramFrame, it means that
             # the model will be initialized correctly.
             #(Avoid a null pointer error).
             if self.HasDiagramFrame():
                 self.UpdateModel()
-            
-    #>------------------------------------------------------------------ 
 
     def SetRelativePosition(self, x, y):
         """
@@ -759,8 +667,6 @@ class Shape(object):
             self._x = x
             self._y = y
 
-    #>------------------------------------------------------------------ 
-
     def SetProtected(self, bool):
         """
         Protect the shape against deletion (Detach).
@@ -768,8 +674,6 @@ class Shape(object):
         @param bool bool
         """
         self._protected = bool
-
-    #>------------------------------------------------------------------ 
 
     def SetSize(self, w, h):
         """
@@ -779,8 +683,6 @@ class Shape(object):
         """
         pass
 
-    #>------------------------------------------------------------------ 
-
     def SetVisible(self, bool):
         """
         Set the shape visible or not.
@@ -788,8 +690,6 @@ class Shape(object):
         @param bool bool
         """
         self._visible = bool
-
-    #>------------------------------------------------------------------ 
 
     def __repr__(self):
         """
@@ -799,8 +699,6 @@ class Shape(object):
         """
         return object.__repr__(self) + " : " + str(self._id)
 
-    #>------------------------------------------------------------------ 
-
     def GetDiagram(self):
         """
         Return the diagram associated with this shape.
@@ -809,8 +707,6 @@ class Shape(object):
         """
         return self._diagram
 
-    #>------------------------------------------------------------------
-    
     def UpdateFromModel(self):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
@@ -841,9 +737,7 @@ class Shape(object):
         else:
             self._x = x
             self._y = y
-        
-    #>------------------------------------------------------------------
-            
+
     def UpdateModel(self):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
@@ -851,7 +745,7 @@ class Shape(object):
         is deplaced.
         """
 
-        #get the associated model (ShapeModel)
+        #  get the associated model (ShapeModel)
         model = self.GetModel()
 
         #Get the offsets and the ratio between the shape (view) and the
@@ -861,7 +755,7 @@ class Shape(object):
         dx = self.GetDiagram().GetPanel().GetXOffset()
         dy = self.GetDiagram().GetPanel().GetYOffset()
 
-        #get the coords of this shape
+        #  get the coords of this shape
         x, y = self.GetPosition()
 
         #calculation of the model coords in the light of the
@@ -873,14 +767,12 @@ class Shape(object):
         #change also the position of the model of the children,
         #because when we move the parent children setposition isn't called
         #and so their updatemodel isn't called
-        for child in self._anchors : #+ self.GetAllChildren():
+        for child in self._anchors : #  + self.GetAllChildren():
             cx, cy = child.GetPosition()
             cmx = (cx - dx) / ratio
             cmy = (cy - dy) / ratio
             child.GetModel().SetPosition(cmx, cmy)
-            
-    #>------------------------------------------------------------------
-     
+
     def GetModel(self):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
@@ -888,8 +780,6 @@ class Shape(object):
         """
         return self._model
 
-    #>------------------------------------------------------------------
-    
     def SetModel(self, modelShape):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
@@ -899,8 +789,6 @@ class Shape(object):
         """
         self._model = modelShape
 
-    #>------------------------------------------------------------------
-    
     def HasDiagramFrame(self):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)

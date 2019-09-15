@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+import wx
+
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -24,14 +25,8 @@ __copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
 __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: Diagram.py,v 1.10 2006/02/04 22:01:01 dutoitc Exp $"
-
-from __future__                import division
-#from wxPython.wx               import *
-import wx
-
-
-
 __all__ = ["Diagram"]
+
 
 class Diagram(object):
     """
@@ -73,8 +68,6 @@ class Diagram(object):
         self._shapes = []       # all selectable shapes
         self._parentShapes = [] # all first level shapes
 
-    #>------------------------------------------------------------------------
-
     def AddShape(self, shape, withModelUpdate = True):
         """
         Add a shape to the diagram.
@@ -82,7 +75,7 @@ class Diagram(object):
 
         @param Shape shape : the shape to add
         """
-        #print "Diagram.AddShape => ", shape
+        #  print "Diagram.AddShape => ", shape
         if shape not in self._shapes:
             self._shapes.append(shape)
         if shape not in self._parentShapes and shape.GetParent() is None:
@@ -99,8 +92,6 @@ class Diagram(object):
         if withModelUpdate:
             shape.UpdateModel()
 
-    #>------------------------------------------------------------------------
-
     def DeleteAllShapes(self):
         """
         Delete all shapes in the diagram.
@@ -109,8 +100,6 @@ class Diagram(object):
             self._shapes[0].Detach()
         self._shapes = []
         self._parentShapes = []
-
-    #>------------------------------------------------------------------------
 
     def RemoveShape(self, shape):
         """
@@ -124,8 +113,6 @@ class Diagram(object):
         if shape in self._parentShapes:
             self._parentShapes.remove(shape)
 
-    #>------------------------------------------------------------------------
-
     def GetShapes(self):
         """
         Return a list of the shapes in the diagram.
@@ -135,8 +122,6 @@ class Diagram(object):
         @return Shape []
         """
         return self._shapes[:]
-
-    #>------------------------------------------------------------------------
 
     def GetParentShapes(self):
         """
@@ -148,8 +133,6 @@ class Diagram(object):
         """
         return self._parentShapes[:]
 
-    #>------------------------------------------------------------------------
-
     def GetPanel(self):
         """
         Return the panel associated with this diagram.
@@ -157,8 +140,6 @@ class Diagram(object):
         @return DiagramFrame
         """
         return self._panel
-
-    #>------------------------------------------------------------------------
 
     def MoveToFront(self, shape):
         """
@@ -171,8 +152,6 @@ class Diagram(object):
             self._shapes.remove(s)
         self._shapes = self._shapes + shapes
 
-    #>------------------------------------------------------------------------
-
     def MoveToBack(self, shape):
         """
         Move the given shape to the start of the display list => first drawn.
@@ -183,5 +162,3 @@ class Diagram(object):
         for s in shapes:
             self._shapes.remove(s)
         self._shapes = shapes + self._shapes
-
-    #>------------------------------------------------------------------------

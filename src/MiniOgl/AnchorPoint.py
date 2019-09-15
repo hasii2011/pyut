@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -25,11 +24,10 @@ __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: AnchorPoint.py,v 1.10 2006/02/04 22:01:01 dutoitc Exp $"
 
-from __future__                import division
-from LinePoint                 import LinePoint
-#import wx
+from MiniOgl.LinePoint import LinePoint
 
 __all__ = ["AnchorPoint"]
+
 
 class AnchorPoint(LinePoint):
     """
@@ -67,14 +65,12 @@ class AnchorPoint(LinePoint):
         @param double x, y : position of the point
         @param Shape parent : parent shape
         """
-        #print ">>>AnchorPoint.init"
+        #  print ">>>AnchorPoint.init"
         LinePoint.__init__(self, x, y, parent)
         self._protected = True # protected by default
         self.SetDraggable(False)
         self._stayInside = True
         self._stayOnBorder = True
-
-    #>------------------------------------------------------------------------
 
     def SetStayInside(self, state):
         """
@@ -84,8 +80,6 @@ class AnchorPoint(LinePoint):
         """
         self._stayInside = state
 
-    #>------------------------------------------------------------------------
-
     def GetStayInside(self):
         """
         Return True if the point stays inside the bounds of its parent shape.
@@ -93,8 +87,6 @@ class AnchorPoint(LinePoint):
         @return boolean
         """
         return self._stayInside
-
-    #>------------------------------------------------------------------------
 
     def SetStayOnBorder(self, state):
         """
@@ -104,7 +96,6 @@ class AnchorPoint(LinePoint):
         """
         self._stayOnBorder = state
 
-    #>------------------------------------------------------------------------
 
     def GetStayOnBorder(self):
         """
@@ -114,15 +105,13 @@ class AnchorPoint(LinePoint):
         """
         return self._stayOnBorder
 
-    #>------------------------------------------------------------------------
-
     def SetPosition(self, x, y):
         """
         Change the position of the anchor point, if it's draggable.
 
         @param double x, y : new position in diagram coordinates
         """
-                
+
         def stayInside(low, length, value):
             """
             Return the nearest value in [low, low+length].
@@ -153,7 +142,7 @@ class AnchorPoint(LinePoint):
 
         if self._draggable:
             if self._parent is not None:
-                
+
                 topLeftX, topLeftY = self._parent.GetTopLeft()
                 width, height = self._parent.GetSize()
                 width = abs(width) - 1
@@ -172,8 +161,6 @@ class AnchorPoint(LinePoint):
             #updates the model of the anchor point (MVC pattern)
             if self.HasDiagramFrame():
                 self.UpdateModel()
-                
-    #>------------------------------------------------------------------ 
 
     def Detach(self):
         """
@@ -184,5 +171,3 @@ class AnchorPoint(LinePoint):
         parent = self.GetParent()
         if parent:
             parent.RemoveAnchor(self)
-
-    #>-------------------------------------------------------------------

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
 #
@@ -25,11 +23,10 @@ __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: ControlPoint.py,v 1.3 2004/06/16 19:33:18 dutoitc Exp $"
 
-from __future__                import division
-#from wxPython.wx               import *
-from LinePoint                 import LinePoint
+from MiniOgl.LinePoint import LinePoint
 
 __all__ = ["ControlPoint"]
+
 
 class ControlPoint(LinePoint):
     """
@@ -58,18 +55,14 @@ class ControlPoint(LinePoint):
         LinePoint.__init__(self, x, y, parent)
         self.SetVisible(False)
 
-    #>------------------------------------------------------------------------
-
     def RemoveLine(self, line):
         """
         Remove a line from the point.
         If there are no more lines for this point, it is automatically
         detached.
 
-        @param LineShape line
+        @param line line
         """
         super(ControlPoint, self).RemoveLine(line)
         if len(self._lines) == 0:
             self.Detach()
-
-    #>------------------------------------------------------------------------

@@ -1,19 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.11 $"
-__author__  = "EI5, eivd, Group Burgbacher - Waelti"
-__date__    = "2001-12-12"
-
-#from wxPython.wx  import *
-from MiniOgl      import *
-from mediator     import *
-from OglLink      import *
-from PyutConsts   import *
+from OglLink import *
 
 DEFAULT_FONT_SIZE = 10
 
-#----------------------------------------------------------------------
 
 class OglObject(RectangleShape, ShapeEventHandler):
     """
@@ -29,8 +18,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-
-    #>------------------------------------------------------------------ 
 
     def __init__(self, pyutObject = None, width = 0, height = 0):
         """
@@ -64,8 +51,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         # Default font
 #        self._defaultFont = wx.Font((int)(PyutPreferences()['FONT_SIZE']) \
 #                , wx.SWISS, wx.NORMAL, wx.NORMAL)
-        self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.SWISS, \
-                wx.NORMAL, wx.NORMAL)
+        self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.SWISS, wx.NORMAL, wx.NORMAL)
 
         # Connected links
         self._oglLinks = []
@@ -74,8 +60,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
         #added by P.Dabrowski 20051202 : it's the command to undo/redo
         #a modification on this object.
         self._modifyCommand = None
-
-    #>------------------------------------------------------------------
 
     def setPyutObject(self, pyutObject):
         """
@@ -87,8 +71,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         self._pyutObject = pyutObject
 
-    #>------------------------------------------------------------------
-
     def getPyutObject(self):
         """
         Return the associated pyut object.
@@ -98,8 +80,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         return self._pyutObject
-
-    #>------------------------------------------------------------------
 
     def addLink(self, link):
         """
@@ -111,8 +91,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         self._oglLinks.append(link)
 
-    #>------------------------------------------------------------------
-
     def getLinks(self):
         """
         Return the links.
@@ -123,8 +101,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         return self._oglLinks
 
-    #>------------------------------------------------------------------
-
     def OnLeftDown(self, event):
         """
         Handle event on left click.
@@ -133,28 +109,19 @@ class OglObject(RectangleShape, ShapeEventHandler):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
 
-        #print "OglObject.OnLeftDown"
-        # Get mediator and signal selection
+        #  print "OglObject.OnLeftDown"
+
         med = getMediator()
         if med.actionWaiting():
             med.shapeSelected(self, event.GetPositionTuple())
             #print "Event processed in OglObject"
             #return EVENT_PROCESSED
             return
-        #print "Skipped event in OglObject"
+        #  print "Skipped event in OglObject"
         event.Skip()
-        #return SKIP_EVENT
-
-    #>------------------------------------------------------------------------
 
     def OnLeftUp(self, event):
         pass
-
-        #mediator.getMediator().endChangeRecording(self)
-
-
-
-    #>------------------------------------------------------------------------
 
     def autoResize(self):
         """
@@ -165,41 +132,24 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         pass
 
-
-    #>------------------------------------------------------------------ 
-
     def SetPosition(self, x, y):
-        "Define new position for the object"
+        """
+        Define new position for the object
+
+        Args:
+            x:
+            y:
+
+        """
         import mediator
         fileHandling = mediator.getMediator().getFileHandling()
         if fileHandling is not None:
             fileHandling.setModified(True)
         RectangleShape.SetPosition(self, x, y)
-        
+
     def SetSelected(self, state=True):
 
-        from mediator import getMediator
         from mediator import ACTION_ZOOM_OUT
 
-        if mediator.getMediator().getCurrentAction() <> ACTION_ZOOM_OUT:
+        if mediator.getMediator().getCurrentAction() != ACTION_ZOOM_OUT:
             RectangleShape.SetSelected(self, state)
-
-    #>------------------------------------------------------------------
-
-    #def DrawHandles(self, dc):
-    #    """
-    #    Draw the handles (selection points) of the shape.
-    #    A shape has no handles, because it has no size.
-
-    #    @param wx.DC dc
-    #    """
-    #    sx, sy = self.GetPosition()
-    #    dc.DrawRectangle(sx - 1 - self._ox, sy - 1 - self._oy, 3, 3)
-    #    dc.DrawRectangle(sx + self._width - 2 - self._ox,
-    #        sy - 1 - self._oy, 3, 3)
-    #    dc.DrawRectangle(sx - 1 - self._ox,
-    #        sy + self._height - 2 - self._oy, 3, 3)
-    #    dc.DrawRectangle(sx + self._width - 2 - self._ox,
-    #        sy + self._height - 2 - self._oy, 3, 3)
-
-

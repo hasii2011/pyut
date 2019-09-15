@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+from MiniOgl.Shape import Shape
+
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -25,11 +26,8 @@ __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: PointShape.py,v 1.6 2004/12/10 23:31:59 dutoitc Exp $"
 
-from __future__                import division
-#from wxPython.wx               import *
-from Shape                     import Shape
-
 __all__ = ["PointShape"]
+
 
 class PointShape(Shape):
     """
@@ -62,12 +60,10 @@ class PointShape(Shape):
         @param double x, y : position of the point
         @param Shape parent : parent shape
         """
-        #print ">>>PointShape ", x, y
+        #  print ">>>PointShape ", x, y
         Shape.__init__(self, x, y, parent)
         self._selectZone = 5
         self._visibleWhenSelected = True
-
-    #>------------------------------------------------------------------------
 
     def Draw(self, dc, withChildren=True):
         """
@@ -85,8 +81,6 @@ class PointShape(Shape):
             if withChildren:
                 self.DrawChildren(dc)
 
-    #>------------------------------------------------------------------------
-
     def GetSelectionZone(self):
         """
         Get the selection tolerance zone, in pixels.
@@ -95,8 +89,6 @@ class PointShape(Shape):
         """
         return self._selectZone
 
-    #>------------------------------------------------------------------------
-
     def SetSelectionZone(self, halfWidth):
         """
         Set the selection tolerance zone, in pixels.
@@ -104,8 +96,6 @@ class PointShape(Shape):
         @param float halfWidth : half of the selection zone.
         """
         self._selectZone = halfWidth
-
-    #>------------------------------------------------------------------------
 
     def Inside(self, x, y):
         """
@@ -118,8 +108,6 @@ class PointShape(Shape):
         zone = self._selectZone
         return (ax - zone < x < ax + zone) and (ay - zone < y < ay + zone)
 
-    #>------------------------------------------------------------------------
-
     def SetVisibleWhenSelected(self, state):
         """
         Set to True if you want the point to always be visible when it's
@@ -129,8 +117,6 @@ class PointShape(Shape):
         """
         self._visibleWhenSelected = state
 
-    #>------------------------------------------------------------------------
-
     def GetVisibleWhenSelected(self):
         """
         Return the "visible when selected flag".
@@ -138,5 +124,3 @@ class PointShape(Shape):
         @return bool True if the shape is always visible when selected
         """
         return self._visibleWhenSelected
-
-    #>------------------------------------------------------------------------

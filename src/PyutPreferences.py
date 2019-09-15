@@ -1,14 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.5 $"
-__author__ = "EI6, eivd, Group Dutoit-Roux"
-__date__ = "2002-4-17"
-# Class maintainer : C.Dutoit - dutoitc@hotmail.com Please contact me if
-#                    you got problems
 from singleton import Singleton
-from ConfigParser import *
-import sys, os
+from configparser import *
+import sys
+import os
 
 
 # Set the Preferences filename
@@ -24,7 +18,7 @@ class PyutPreferences(Singleton):
     The goal of this class is to handle Pyut Preferences, to load them and save
     them from/to a file.
     To use it :
-      - instanciate a PyutPreferences object : 
+      - instanciate a PyutPreferences object :
         myPP=PyutPreferences()
       - to get a pyut' preference :
         mypref=myPP["ma_preference"]
@@ -91,7 +85,7 @@ class PyutPreferences(Singleton):
             self._config.add_section("Main")
 
         if " " in list(name):
-            raise TypeError, "Name cannot contain a space"
+            raise TypeError("Name cannot contain a space")
 
         # Save
         self._config.set("Main", name, str(value))
@@ -129,10 +123,10 @@ class PyutPreferences(Singleton):
                 f.write("")
                 f.close()
             except:
-                print "Can't make %s for saving preferences !" % PREFS_FILENAME
-                print "Pyut will not work normally from here..."
-                print "Try to create a file named ", PREFS_FILENAME, " " + \
-                      "in your home directory..."
+                print(("Can't make %s for saving preferences !" % PREFS_FILENAME))
+                print("Pyut will not work normally from here...")
+                print(("Try to create a file named ", PREFS_FILENAME, " " + \
+                      "in your home directory..."))
                 return
 
 
@@ -147,7 +141,7 @@ class PyutPreferences(Singleton):
             self._config.add_section("LastOpenedFiles")
 
             # Set last opened files
-            self._config.set("LastOpenedFiles", "NbEntries", 
+            self._config.set("LastOpenedFiles", "NbEntries",
                              str(DEFAULT_NB_LOF))
             for i in range(DEFAULT_NB_LOF):
                 self._config.set("LastOpenedFiles", "File" + str(i+1), "")
@@ -175,7 +169,7 @@ class PyutPreferences(Singleton):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        self._config.set("LastOpenedFiles", "NbEntries", 
+        self._config.set("LastOpenedFiles", "NbEntries",
                          str(max(nbLOF, 0)))
         self.__saveConfig()
 
@@ -193,7 +187,7 @@ class PyutPreferences(Singleton):
 
         # Read datas
         for index in range(self.getNbLOF()):
-            lstFiles.append(self._config.get("LastOpenedFiles", 
+            lstFiles.append(self._config.get("LastOpenedFiles",
                                              "File" + str(index+1)))
         return lstFiles
 

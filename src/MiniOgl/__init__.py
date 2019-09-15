@@ -17,23 +17,18 @@
 # along with MiniOgl; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-__author__    = "Laurent Burgbacher, lb@alawa.ch, EI6, Eivd"
-__copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
-__license__   = "Released under the terms of the GNU General Public Licence V2"
-__date__      = "2002-09-30"
-__version__   = "$Id: __init__.py,v 1.2 2003/02/16 18:17:12 dutoitc Exp $"
 
-from AnchorPoint        import *
-from Constants          import *
-from ControlPoint       import *
-from Diagram            import *
-from DiagramFrame       import *
-from LinePoint          import *
-from LineShape          import *
-from PointShape         import *
-from RectangleShape     import *
-from RotatableShape     import *
-from Shape              import *
-from ShapeEventHandler  import *
-from TextShape          import *
-from VShapes            import *
+from MiniOgl.AnchorPoint import *
+from MiniOgl.Constants import *
+from MiniOgl.ControlPoint import *
+from MiniOgl.Diagram import *
+from MiniOgl.DiagramFrame import *
+from MiniOgl.LinePoint import *
+from MiniOgl.LineShape import *
+from MiniOgl.PointShape import *
+from MiniOgl.RectangleShape import *
+from MiniOgl.RotatableShape import *
+from MiniOgl.Shape import *
+from MiniOgl.ShapeEventHandler import *
+from MiniOgl.TextShape import *
+from MiniOgl.VShapes import *

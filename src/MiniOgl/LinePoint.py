@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -25,11 +25,10 @@ __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: LinePoint.py,v 1.4 2004/06/26 16:35:13 dutoitc Exp $"
 
-from __future__                import division
-#from wxPython.wx               import *
-from PointShape                import PointShape
+from MiniOgl.PointShape import PointShape
 
 __all__ = ["LinePoint"]
+
 
 class LinePoint(PointShape):
     """
@@ -60,11 +59,9 @@ class LinePoint(PointShape):
         @param double x, y : position of the point
         @param Shape parent : parent shape
         """
-        #print ">>>LinePoint ", x, y
+        #  print ">>>LinePoint ", x, y
         PointShape.__init__(self, x, y, parent)
         self._lines = [] # a list of LineShape passing through this point
-
-    #>------------------------------------------------------------------------
 
     def AddLine(self, line):
         """
@@ -73,8 +70,6 @@ class LinePoint(PointShape):
         @param LineShape line
         """
         self._lines.append(line)
-
-    #>------------------------------------------------------------------------
 
     def Detach(self):
         """
@@ -86,8 +81,6 @@ class LinePoint(PointShape):
             line.Remove(self)
         self._lines = []
 
-    #>------------------------------------------------------------------------
-
     def GetLines(self):
         """
         Get the lines passing through this point.
@@ -97,8 +90,6 @@ class LinePoint(PointShape):
         """
         return self._lines[:]
 
-    #>------------------------------------------------------------------------
-
     def RemoveLine(self, line):
         """
         Remove a line from this point.
@@ -107,8 +98,6 @@ class LinePoint(PointShape):
         """
         if line in self._lines:
             self._lines.remove(line)
-
-    #>------------------------------------------------------------------------
 
     def SetMoving(self, state):
         """
@@ -120,5 +109,3 @@ class LinePoint(PointShape):
         PointShape.SetMoving(self, state)
         for line in self._lines:
             line.SetMoving(state)
-
-    #>------------------------------------------------------------------------

@@ -127,7 +127,7 @@ class OglLink(LineShape, ShapeEventHandler):
 
             # =========== end avoid overlining-Added by C.Dutoit ================
 
-        else: 
+        else:
             # Get given position
             (srcX, srcY) = srcPos
             (dstX, dstY) = dstPos
@@ -241,7 +241,7 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         Optimize line, so that the line length is minimized
         """
-        print "OptimizeLine"
+        print("OptimizeLine")
         # Get elements
         src = self.getSourceShape()
         dst = self.getDestinationShape()
@@ -251,33 +251,17 @@ class OglLink(LineShape, ShapeEventHandler):
         dstX, dstY = self._destShape.GetPosition()
         srcSize = self._srcShape.GetSize()
         dstSize = self._destShape.GetSize()
-        print "%s / %s" % ((srcX, srcY), (dstX, dstY))
+        print("%s / %s" % ((srcX, srcY), (dstX, dstY)))
 
         # Find new positions
-        #srcX = self._srcShape.GetPosition()[0]*0.9 +  \
-        #       self._destShape.GetPosition()[0]*0.1
-        #srcY = self._srcShape.GetPosition()[1]*0.9 +  \
-        #       self._destShape.GetPosition()[1]*0.1
-        #dstX = self._srcShape.GetPosition()[0]*0.1 +  \
-        #       self._destShape.GetPosition()[0]*0.9
-        #dstY = self._srcShape.GetPosition()[1]*0.1 +  \
-        #       self._destShape.GetPosition()[1]*0.9
 
-        #srcX+=srcSize[0]/2
-        #srcY+=srcSize[1]/2
-        #dstX+=dstSize[0]/2
-        #dstY+=dstSize[1]/2
-        #osrcX = srcX + (dstX-srcX)*0.2 
-        #od
         # Little tips
         osrcX, osrcY, odstX, odstY = dstX, dstY, srcX, srcY
-        osrcX+=dstSize[0]/2
-        osrcY+=dstSize[1]/2
-        odstX+=srcSize[0]/2
-        odstY+=srcSize[1]/2
 
-
+        osrcX += dstSize[0]/2
+        osrcY += dstSize[1]/2
+        odstX += srcSize[0]/2
+        odstY += srcSize[1]/2
 
         srcAnchor.SetPosition(osrcX, osrcY)
         dstAnchor.SetPosition(odstX, odstY)
-        

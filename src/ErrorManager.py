@@ -64,7 +64,7 @@ class GraphicErrorView:
             for el in traceback.extract_tb(sys.exc_info()[2]): 
                 errMsg = errMsg + str(el) + "\n"
 
-        print errMsg
+        print(errMsg)
         try:
             dlg=wx.MessageDialog(parent, errMsg,  title, wx.OK | wx.ICON_ERROR | wx.CENTRE)
             dlg.ShowModal()
@@ -79,7 +79,7 @@ class GraphicErrorView:
         import sys, traceback
         if title is None:
             title=_("WARNING...")
-        print msg
+        print(msg)
         try:
             dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_EXCLAMATION | 
                                                       wx.CENTRE)
@@ -95,7 +95,7 @@ class GraphicErrorView:
         import sys, traceback
         if title is None:
             title=_("WARNING...")
-        print msg
+        print(msg)
         try:
             dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_INFORMATION | 
                                                       wx.CENTRE)
@@ -144,19 +144,19 @@ class TextErrorView:
             for el in traceback.extract_tb(sys.exc_info()[2]): 
                 errMsg = errMsg + str(el) + "\n"
 
-        print "FATAL ERROR : ", errMsg
+        print("FATAL ERROR : ", errMsg)
 
     #>------------------------------------------------------------------------
 
     def newWarning(self, msg, title=None, parent=None):
         import sys, traceback
-        print "WARNING : ", title, " - ", msg
+        print("WARNING : ", title, " - ", msg)
 
     #>------------------------------------------------------------------------
 
     def displayInformation(self, msg, title=None, parent=None):
         import sys, traceback
-        print "INFORMATION : ", title , " - ", msg
+        print("INFORMATION : ", title , " - ", msg)
 
 
 ##############################################################################
