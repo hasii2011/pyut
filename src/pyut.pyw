@@ -1,16 +1,11 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-__version__ = "$Revision: 1.9 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
-#import pychecker.checker   #Uncomment this to test PyUt
-import os, sys
+
+import os
 
 exePath = None              # the pyut's path
 userPath = os.getcwd()      # where the user launched pyut from
 
 
-#>----------------------------------------------------------------------------
 def getExePath():
     """
     Return the absolute path currently used
@@ -28,18 +23,7 @@ def getExePath():
     path = sys.path[0].decode(sys.getfilesystemencoding())
     return path
 
-    #print sys.argv[0]
-    #if sys.argv[0][0]==os.sep or sys.argv[0].find(":")>0:
-    #    # Absolute path
-    #    exePath = sys.argv[0]
-    #else: 
-    #    # Relative path
-    #    exePath = os.getcwd() + os.sep + sys.argv[0]
-    #return os.path.split(exePath)[0]
-    
 
-
-#>----------------------------------------------------------------------------
 def goToPyutDirectory():
     """
     Go to the pyut directory
@@ -51,10 +35,9 @@ def goToPyutDirectory():
     # Change current directory to pyut's directory
     exePath = getCurrentAbsolutePath()
     sys.path.append(exePath)
-    print "Executing PyUt from exepath ", exePath
+    print("Executing PyUt from exepath ", exePath)
     os.chdir(exePath)
 
-#>----------------------------------------------------------------------------
 
 def main():
     """
@@ -71,8 +54,8 @@ def main():
     try:
         sys.path.append(exePath)
         os.chdir(exePath)
-    except OSError, msg:
-        print "Error while setting path: ", msg
+    except OSError as msg:
+        print(f"Error while setting path: {msg}")
 
     # Define last open directory ?
     #  - default is current directory
@@ -85,8 +68,7 @@ def main():
         prefs["LastDirectory"] = userPath
     del prefs
 
-
-    print """
+    print("""
                                ...
                               /   \\
                        °ooO  | O O |  Ooo°
@@ -101,15 +83,15 @@ def main():
                              |___/    A little UML 1.3 editor
                       
 
-    """
-    print "Versions found : "
+    """)
+    print("Versions found : ")
     import wx, sys
-    print "WX     ", wx.__version__
-    print "Python ", sys.version.split(" ")[0]
+    print("WX     ", wx.__version__)
+    print("Python ", sys.version.split(" ")[0])
 
-    print """
+    print("""
 =============================================================================
-"""
+""")
 
 
     import lang
@@ -120,7 +102,6 @@ def main():
     app.MainLoop()
     app = None
 
-#>----------------------------------------------------------------------------
 
 def treatArguments():
     """
@@ -139,30 +120,30 @@ def treatArguments():
     # Treat command line arguments
     if sys.argv[1] == "--version":
         from pyutVersion import getPyUtVersion
-        print "PyUt, version %s" % getPyUtVersion()
-        print
+        print("PyUt, version %s" % getPyUtVersion())
+        print()
         return 1
     elif sys.argv[1] == "--help":
         from pyutVersion import getPyUtVersion
-        print "PyUt, version %s" % getPyUtVersion()
-        print "Syntaxe : pyut.pyw [filename] [--version] [--help]" \
-              "[--start_directory=xxx] file1 file2 ..."
-        print
-        print "i.e. :    pyut.pyw --version             display version number"
-        print "          pyut.pyw --help                display this help"
-        print "          pyut.pyw file1 file2           load files"
-        print "          pyut.pyw --start_directory=/   start with '/' as"
-        print "                                         default directory"
-        print
+        print("PyUt, version %s" % getPyUtVersion())
+        print("Syntax : pyut.pyw [filename] [--version] [--help]" \
+              "[--start_directory=xxx] file1 file2 ...")
+        print()
+        print("i.e. :    pyut.pyw --version             display version number")
+        print("          pyut.pyw --help                display this help")
+        print("          pyut.pyw file1 file2           load files")
+        print("          pyut.pyw --start_directory=/   start with '/' as")
+        print("                                         default directory")
+        print()
         return 1
     for param in sys.argv[1:]:
         if param[:18] == "--start_directory=":
             import os
-            print "Starting with directory ", param[18:]
+            print("Starting with directory ", param[18:])
             global userPath
             userPath = param[18:]
     return 0
-    
+
 
 # Program entry point
 if __name__ == "__main__":
@@ -170,5 +151,5 @@ if __name__ == "__main__":
     exePath = getExePath()
 
     # Launch pyut
-    if treatArguments()<>1:
+    if treatArguments() != 1:
         main()

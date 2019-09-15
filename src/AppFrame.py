@@ -898,7 +898,7 @@ class AppFrame(wx.Frame):
         filename=dlg.GetPath()
         dlg.Destroy()
 
-        print("inserting file", str(filename))
+        print(("inserting file", str(filename)))
 
         # Insert the specified files
         try:
@@ -1387,7 +1387,7 @@ class AppFrame(wx.Frame):
             dlg.Destroy()
 
 
-        print("loading file(s) ", str(filename))
+        print(("loading file(s) ", str(filename)))
 
         # Open the specified files
         for filename in filenames:
