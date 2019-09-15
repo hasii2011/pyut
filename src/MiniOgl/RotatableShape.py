@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+
+from MiniOgl.RectangleShape import RectangleShape
+from MiniOgl.VShapes import *
+
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -25,12 +28,8 @@ __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: RotatableShape.py,v 1.3 2004/06/16 19:33:18 dutoitc Exp $"
 
-from __future__                import division
-#from wxPython.wx               import *
-from RectangleShape            import RectangleShape
-from VShapes                   import *
-
 __all__ = ["RotatableShape"]
+
 
 class RotatableShape(RectangleShape):
     """
@@ -55,7 +54,7 @@ class RotatableShape(RectangleShape):
     SetOrigin(self, x, y)
         Set the origin of the shape, from its upper left corner.
     Rotate(self, clockwise)
-        Rotate the shape 90° clockwise or conterclockwise.
+        Rotate the shape 90ï¿½ clockwise or conterclockwise.
     Draw(self, dc, withChildren=True)
         Draw the shape on the dc.
 
@@ -72,15 +71,12 @@ class RotatableShape(RectangleShape):
         RectangleShape.__init__(self, x, y, width, height, parent)
         # this is the definition of the shape
         self._defineShape()
-        self._angle = 0                 # angle is in [0..3], by steps of 90°
-        self._vShapes = self._SHAPES[0] # currently used list of shapes
-        self._InitRotations()          # create the other rotations if necessary
-        self._scale = 1.0              # scale of the shape
-        self._sox, self._soy = self._ox, self._oy # ox, oy with scale == 1
-        self._sw, self._sh = self._width, self._height # width and height with
-                                                       # scale == 1
-
-    #>------------------------------------------------------------------------
+        self._angle = 0                                 # angle is in [0..3], by steps of 90ï¿½
+        self._vShapes = self._SHAPES[0]                 # currently used list of shapes
+        self._InitRotations()                           # create the other rotations if necessary
+        self._scale = 1.0                               # scale of the shape
+        self._sox, self._soy = self._ox, self._oy       # ox, oy with scale == 1
+        self._sw, self._sh = self._width, self._height  # width and height with scale == 1
 
     def _defineShape(self):
         """
@@ -94,8 +90,6 @@ class RotatableShape(RectangleShape):
             ]
         ]
 
-    #>------------------------------------------------------------------------
-
     def GetAngle(self):
         """
         Get the actual angle, in range [0; 3].
@@ -104,19 +98,15 @@ class RotatableShape(RectangleShape):
         """
         return self._angle
 
-    #>------------------------------------------------------------------------
-
     def SetAngle(self, angle):
         """
         Set the actual angle, in range [0; 3].
-        0 is the initial angle. Each unit is a clockwise 90° rotation.
+        0 is the initial angle. Each unit is a clockwise 90ï¿½ rotation.
 
         @param int angle
         """
         while self._angle != angle:
             self.Rotate(1)
-
-    #>------------------------------------------------------------------------
 
     def SetScale(self, scale):
         """
@@ -128,8 +118,6 @@ class RotatableShape(RectangleShape):
         self._ox, self._oy = self._sox * scale, self._soy * scale
         self._width, self._height = self._sw * scale, self._sh * scale
 
-    #>------------------------------------------------------------------------
-
     def GetScale(self):
         """
         Get the scaling of this shape.
@@ -137,8 +125,6 @@ class RotatableShape(RectangleShape):
         @return float
         """
         return self._scale
-
-    #>------------------------------------------------------------------------
 
     def SetOrigin(self, x, y):
         """
@@ -152,8 +138,6 @@ class RotatableShape(RectangleShape):
             self._sox, self._soy = x / scale, y / scale
         else:
             self._sox, self._soy = 0, 0
-
-    #>------------------------------------------------------------------------
 
     def _InitRotations(self):
         """
@@ -170,11 +154,9 @@ class RotatableShape(RectangleShape):
                     next.append(n)
                 self._SHAPES.append(next)
 
-    #>------------------------------------------------------------------------
-
     def Rotate(self, clockwise):
         """
-        Rotate the shape 90° clockwise or conterclockwise.
+        Rotate the shape 90ï¿½ clockwise or conterclockwise.
 
         @param bool clockwise
         """
@@ -198,8 +180,6 @@ class RotatableShape(RectangleShape):
             VShape().Convert(1, self._width, self._height)
         self._ox, self._oy= VShape().Convert(1, self._ox, self._oy)
 
-    #>------------------------------------------------------------------------
-
     def Draw(self, dc, withChildren=True):
         """
         Draw the shape on the dc.
@@ -212,5 +192,3 @@ class RotatableShape(RectangleShape):
                 shape.Draw(dc, self._x, self._y, self._scale)
             if withChildren:
                 self.DrawChildren(dc)
-
-    #>------------------------------------------------------------------------

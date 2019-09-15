@@ -1,22 +1,16 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+
+import wx
+
+from AppFrame import *
+from pyutUtils import displayError
+from PyutProject import PyutProject
+import PyutConsts
 
 __version__ = "$Revision: 1.35 $"
 __author__  = "EI6, eivd, Group Dutoit - Roux"
 __date__    = "2002-03-14"
 __PyUtVersion__ = "1.0"
 
-#from wxPython.wx import *
-from UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from AppFrame import *
-from pyutUtils import displayError
-from PyutProject import PyutProject
-from PyutDocument import PyutDocument
-import PyutConsts, wx
-
-
-
-#>-----------------------------------------------------------------------
 
 def shorterFilename(filename):
     """
@@ -28,20 +22,19 @@ def shorterFilename(filename):
     @author C.Dutoit <dutoitc@hotmail.com>
     """
     import os
-    str = os.path.split(filename)[1]
-    if len(str)>12:
-        return str[:4] + str[-8:]
+    aString = os.path.split(filename)[1]
+    if len(aString)>12:
+        return aString[:4] + aString[-8:]
     else:
-        return str
+        return aString
 
-##############################################################################
 
 class FileHandling:
     """
     FileHandling : Handle files in Pyut
-    Used by AppFrame to contain all UML frames, the notebook and 
+    Used by AppFrame to contain all UML frames, the notebook and
     the project tree.
-    
+
     All actions called from AppFrame are executing on the current frame
 
     AppFrame use the following methods :
@@ -61,12 +54,10 @@ class FileHandling:
     Others methods are internal and called only by this module (and they are
     private !)
 
-    :author: C.Dutoit 
+    :author: C.Dutoit
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.35 $
     """
-
-    #>------------------------------------------------------------------------
 
     def __init__(self, parent, mediator):
         """
@@ -85,18 +76,12 @@ class FileHandling:
         if not self._ctrl.isInScriptMode():
             self._initGraphicalElements()
 
-        #self._ctrl.registerUMLFrame(None)
-
-    #>-----------------------------------------------------------------------
-
     def registerUmlFrame(self, frame):
         """
         Register the current UML Frame
         """
         self._currentFrame = frame
         self._currentProject = self.getProjectFromFrame(frame)
-
-    #>------------------------------------------------------------------------
 
     def _initGraphicalElements(self):
         """
@@ -107,7 +92,7 @@ class FileHandling:
         self.__splitter = wx.SplitterWindow(self.__parent, -1)
 
         # project tree
-        self.__projectTree = wx.TreeCtrl(self.__splitter, -1, 
+        self.__projectTree = wx.TreeCtrl(self.__splitter, -1,
                                         style = wx.TR_HIDE_ROOT +
                                                 wx.TR_HAS_BUTTONS)
         self.__projectTreeRoot=self.__projectTree.AddRoot(_("Root"))
@@ -130,18 +115,14 @@ class FileHandling:
         self.__notebookCurrentPage=-1
 
         # Callbacks
-        self.__parent.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, 
+        self.__parent.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED,
                                   self.__onNotebookPageChanged)
         self.__parent.Bind(wx.EVT_TREE_SEL_CHANGED,
                              self.__onProjectTreeSelChanged)
 
-    #>------------------------------------------------------------------------
-
     def showFrame(self, frame):
         self._frame = frame
         frame.Show()
-    
-    #>------------------------------------------------------------------------
 
     def getProjects(self):
         """
@@ -151,8 +132,6 @@ class FileHandling:
         @author C.Dutoit
         """
         return self._projects
-    
-    #>------------------------------------------------------------------------
 
     def isProjectLoaded(self, filename):
         """
@@ -164,15 +143,11 @@ class FileHandling:
                 return True
         return False
 
-    #>------------------------------------------------------------------------
-
     def isDefaultFilename(self, filename):
         """
         Return True if the filename is the default filename
         """
         return filename==PyutConsts.DefaultFilename
-    
-    #>------------------------------------------------------------------------
 
     def openFile(self, filename, project = None):
         """
@@ -190,10 +165,10 @@ class FileHandling:
             displayError(_("The selected file is already loaded !"))
             return False
         #print ">>>FileHandling-openFile-2"
-     
+
         # Create a new project ?
         if project is None:
-            project = PyutProject(PyutConsts.DefaultFilename, self.__notebook, 
+            project = PyutProject(PyutConsts.DefaultFilename, self.__notebook,
                                   self.__projectTree, self.__projectTreeRoot)
 
         #print ">>>FileHandling-openFile-3"
@@ -203,36 +178,32 @@ class FileHandling:
                 displayError(_("The specified file can't be loaded !"))
                 return False
             self._projects.append(project)
-            #self._ctrl.registerCurrentProject(project)
+            #  self._ctrl.registerCurrentProject(project)
             self._currentProject = project
         except:
             displayError(_("An error occured while loading the project !"))
             return False
 
-        #print ">>>FileHandling-openFile-4"
+        #  print ">>>FileHandling-openFile-4"
         try:
             for document in project.getDocuments():
                 if not self._ctrl.isInScriptMode():
                     self.__notebook.AddPage(document.getFrame(),
                                             document.getDiagramTitle())
-            #print ">>>FileHandling-openFile-5"
+            #  print ">>>FileHandling-openFile-5"
             if not self._ctrl.isInScriptMode():
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
-            #print ">>>FileHandling-openFile-6"
+            #  print ">>>FileHandling-openFile-6"
             if len(project.getDocuments())>0:
                 self._currentFrame = project.getDocuments()[0].getFrame()
-            #print ">>>FileHandling-openFile-7"
+            #  print ">>>FileHandling-openFile-7"
         except:
             displayError(_("An error occured while adding " +
                            "the project to the notebook"))
             return False
-
-
-        #print ">>>FileHandling-openFile-8"
+        #  print ">>>FileHandling-openFile-8"
         return True
-
-    #>-----------------------------------------------------------------------
 
     def insertFile(self, filename):
         """
@@ -247,7 +218,7 @@ class FileHandling:
         # Save number of initial documents
         nbInitialDocuments = len(project.getDocuments())
 
-        # Load datas... 
+        # Load datas...
         if not project.insertProject(filename):
             displayError(_("The specified file can't be loaded !"))
             return False
@@ -265,12 +236,10 @@ class FileHandling:
                 displayError(_("An error occured while adding " +
                                "the project to the notebook"))
                 return False
-                
+
         # Select first frame as current frame
         if len(project.getDocuments())>nbInitialDocuments:
             self._frame = projects.getDocuments()[nbInitialDocuments].getFrame()
-
-    #>-----------------------------------------------------------------------
 
     def saveFile(self):
         """
@@ -291,8 +260,6 @@ class FileHandling:
         else:
             return currentProject.saveXmlPyut()
 
-    #>-----------------------------------------------------------------------
-
     def saveFileAs(self):
         """
         Ask for a filename and save datas to it.
@@ -304,12 +271,11 @@ class FileHandling:
         if self._ctrl.isInScriptMode():
             displayError(_("Save File As is not accessible in script mode !"))
             return
-        
+
         # Test if no diagram exists
         if self._ctrl.getDiagram() is None:
             displayError(_("No diagram to save !"), _("Error"))
             return
-
 
         # Ask for filename
         filenameOK = False
@@ -324,13 +290,12 @@ class FileHandling:
                 dlg.Destroy()
                 return False
 
-
             # Find if a specified filename is already opened
             filename = dlg.GetPath()
 
-            if len([project for project in self._projects 
+            if len([project for project in self._projects
                         if project.getFilename() == filename])>0:
-                dlg = wx.MessageDialog(self.__parent, 
+                dlg = wx.MessageDialog(self.__parent,
                     _("Error ! The filename '%s" +
                       "' correspond to a project which is currently opened !" +
                       " Please choose another filename !") %
@@ -357,7 +322,7 @@ class FileHandling:
                 if frame in project.getFrames():
                     self.__notebook.SetPageText(i, document.getDiagramTitle())
             else:
-                print "Not updating notebook in FileHandling"
+                print("Not updating notebook in FileHandling")
 
         self.__parent.updateCurrentDir(dlg.GetPath())
 
@@ -365,21 +330,17 @@ class FileHandling:
         dlg.Destroy()
         return True
 
-    #>-----------------------------------------------------------------------
-
     def newProject(self):
         """
         Begin a new project
 
         @author C.Dutoit
         """
-        project = PyutProject(PyutConsts.DefaultFilename, self.__notebook, 
+        project = PyutProject(PyutConsts.DefaultFilename, self.__notebook,
                               self.__projectTree, self.__projectTreeRoot)
         self._projects.append(project)
         self._currentProject = project
         self._currentFrame = None
-
-    #>-----------------------------------------------------------------------
 
     def newDocument(self, type):
         """
@@ -399,10 +360,9 @@ class FileHandling:
         if not self._ctrl.isInScriptMode():
             self.__notebook.AddPage(frame,
                                     shorterFilename(project.getFilename()))
-            self.__notebookCurrentPage=self.__notebook.GetPageCount()-1
-            self.__notebook.SetSelection(self.__notebookCurrentPage)
+            self.notebookCurrentPage=self.__notebook.GetPageCount()-1
+            self.notebook.SetSelection(self.__notebookCurrentPage)
 
-    #>-----------------------------------------------------------------------
 
     def exportToImageFile(self, extension, imageType):
         """
@@ -414,48 +374,6 @@ class FileHandling:
             displayError(_("Export to image file is not implemented in "
                            "scripting mode now !"))
             return
-
-        dlg=wx.FileDialog(self.__parent, _("Export to %s file format" % extension),
-                self.__parent.getCurrentDir(), "", "*." + extension,
-                wx.SAVE | wx.OVERWRITE_PROMPT)
-        if dlg.ShowModal() == wx.ID_OK:
-            # Deselect all shapes
-            self._ctrl.deselectAllShapes()
-
-            # Get frame
-            frame = self.getCurrentFrame()
-
-            # Get boundaries
-            (x1, y1, x2, y2) = frame.getObjectsBoundaries()
-            x2+=1
-            y2+=1
-
-            # Get output vars
-            out_dc = wx.MemoryDC()
-            out_bitmap = wx.EmptyBitmap(x2-x1, y2-y1)
-            out_dc.SelectObject(out_bitmap)
-
-            # Get input vars
-            diag_dc = wx.MemoryDC()
-            w, h = frame.GetVirtualSize()
-            diag_dc.SelectObject(wx.EmptyBitmap(w, h))
-            diag_dc.SetBackground(wx.WHITE_BRUSH)
-            diag_dc.Clear()
-
-            # Redraw and copy
-            #frame.GetDiagram().Refresh(diag_dc)
-            frame.Redraw(diag_dc)
-            out_dc.BeginDrawing()
-            out_dc.Blit(0, 0, x2-x1, y2-y1, diag_dc, x1, y1)
-            out_dc.EndDrawing()
-            out_dc.SelectObject(wx.NullBitmap);
-            diag_dc.SelectObject(wx.NullBitmap);
-            image = wx.ImageFromBitmap(out_bitmap)
-            image.SaveFile(dlg.GetPath(), imageType)
-        self.__parent.updateCurrentDir(dlg.GetPath())
-        dlg.Destroy()
-    
-    #>-----------------------------------------------------------------------
 
     def exportToBmp(self, event):
         """
@@ -471,9 +389,6 @@ class FileHandling:
 
         self.exportToImageFile("bmp", wx.BITMAP_TYPE_BMP)
 
-
-    #>-----------------------------------------------------------------------
-
     def exportToJpg(self, event):
         """
         Export the current diagram to a jpeg file
@@ -481,8 +396,6 @@ class FileHandling:
         @author C.Dutoit
         """
         self.exportToImageFile("jpg", wx.BITMAP_TYPE_JPEG)
-
-    #>-----------------------------------------------------------------------
 
     def exportToPng(self, event):
         """
@@ -492,8 +405,6 @@ class FileHandling:
         """
         self.exportToImageFile("png", wx.BITMAP_TYPE_PNG)
 
-    #>-----------------------------------------------------------------------
-
     def exportToPostscript(self, event):
         """
         Export the current diagram to postscript
@@ -501,65 +412,13 @@ class FileHandling:
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        dlg = wx.MessageDialog(self.__parent, 
+        dlg = wx.MessageDialog(self.__parent,
             _("Not yet implemented !"),
             _("Sorry..."),
             wx.OK | wx.ICON_QUESTION)
         dlg.ShowModal()
         dlg.Destroy()
         return
-
-
-        dlg=wx.FileDialog(self.__parent, _("Choose a file"),
-                self.__parent.getCurrentDir(), "", "*.ps",
-                wx.SAVE | wx.OVERWRITE_PROMPT)
-        if dlg.ShowModal() == wx.ID_OK:
-            frame = self.getCurrentFrame()
-
-            # Deselect all shapes
-            self._ctrl.deselectAllShapes()
-
-            # Get boundaries
-            (x1, y1, x2, y2) = frame.getObjectsBoundaries()
-
-            # Define printdata
-            printData = wx.PrintData()
-            printData.SetFilename(dlg.GetPath())
-
-            # Get output vars
-            out_dc = wx.PostScriptDC(printData)
-            #out_bitmap = wx.EmptyBitmap(x2-x1, y2-y1)
-            #out_dc.SelectObject(out_bitmap)
-            printData.SetPrinterScaleX(x2-x1)
-            printData.SetPrinterScaleY(y2-y1)
-            #print dir(out_dc)
-
-            # Get input vars
-            diag_dc = wx.MemoryDC()
-            w, h = self.getCurrentFrame().GetVirtualSize()
-            diag_dc.SelectObject(wx.EmptyBitmap(w, h))
-            diag_dc.SetBackground(wx.WHITE_BRUSH)
-            diag_dc.Clear()
-
-            # Redraw and copy
-            frame.GetDiagram().Refresh(diag_dc)
-            out_dc.BeginDrawing()
-            out_dc.Blit(0, 0, x2-x1, y2-y1, diag_dc, x1, y1)
-            out_dc.EndDrawing()
-            out_dc.EndDoc()
-            #out_dc.SelectObject(wx.NullBitmap);
-            diag_dc.SelectObject(wx.NullBitmap);
-            #image = wx.ImageFromBitmap(out_bitmap)
-            #image.SaveFile(dlg.GetPath(), wx.BITMAP_TYPE_JPEG)
-
-            #printer = wx.Printer(printData)
-            #printer.print(frame, wx.PrintOut("..."), False))
-        dlg.Destroy()
-        return
-
-
-
-    #>------------------------------------------------------------------------
 
     def __onNotebookPageChanged(self, event):
         """
@@ -570,7 +429,7 @@ class FileHandling:
         """
         self.__notebookCurrentPage=self.__notebook.GetSelection()
         if not self._ctrl is None:
-            #self._ctrl.registerUMLFrame(self._getCurrentFrame())
+            #  self._ctrl.registerUMLFrame(self._getCurrentFrame())
             self._currentFrame = self._getCurrentFrameFromNotebook()
             self.__parent.notifyTitleChanged()
         #self.__projectTree.SelectItem(getID(self.getCurrentFrame()))
@@ -578,8 +437,6 @@ class FileHandling:
 
         # Register the current project
         self._currentProject = self.getProjectFromFrame(self._currentFrame)
-
-    #>------------------------------------------------------------------------
 
     def __onProjectTreeSelChanged(self, event):
         """
@@ -602,9 +459,6 @@ class FileHandling:
         elif isinstance(pyData, PyutProject):
             self._currentProject = pyData
 
-
-    #>------------------------------------------------------------------------
-
     def _getCurrentFrameFromNotebook(self):
         """
         Get the current frame in the notebook
@@ -623,28 +477,21 @@ class FileHandling:
         frame = self.__notebook.GetPage(noPage)
         return frame
 
-    #>-----------------------------------------------------------------------
-    
     def getCurrentFrame(self):
         """
         Get the current frame
         @author C.Dutoit
         """
         return self._currentFrame
-    
-    #>-----------------------------------------------------------------------
 
     def getCurrentProject(self):
         """
-        Get the current working project 
+        Get the current working project
 
         @return Project : the current project or None if not found
         @author C.Dutoit
         """
         return self._currentProject
-        #return self._getProjectFromFrame(self._currentFrame)
-
-    #>-----------------------------------------------------------------------
 
     def getProjectFromFrame(self, frame):
         """
@@ -658,9 +505,6 @@ class FileHandling:
             if frame in project.getFrames():
                 return project
         return None
-
-
-    #>-----------------------------------------------------------------------
 
     def getCurrentDocument(self):
         """
@@ -676,9 +520,6 @@ class FileHandling:
                 return document
         return None
 
-
-    #>-----------------------------------------------------------------------
-
     def onClose(self):
         """
         Close all files
@@ -688,8 +529,8 @@ class FileHandling:
         """
         # Display warning if we are in scripting mode
         if self._ctrl.isInScriptMode():
-            print "WARNING : in script mode, the non-saved projects " \
-                  "are closed without warning"
+            print("WARNING : in script mode, the non-saved projects " \
+                  "are closed without warning")
 
         # Close projects and ask for unsaved but modified projects
         if not self._ctrl.isInScriptMode():
@@ -703,7 +544,7 @@ class FileHandling:
                         #if self._ctrl is not None:
                             #self._ctrl.registerUMLFrame(frame)
                         self.showFrame(frame)
-                    dlg = wx.MessageDialog(self.__parent, 
+                    dlg = wx.MessageDialog(self.__parent,
                         _("Your diagram has not been saved! Would you like to save it ?"),
                         _("Save changes ?"),
                         wx.YES_NO | wx.ICON_QUESTION)
@@ -725,8 +566,6 @@ class FileHandling:
         self._currentProject = None
         self._currentFrame = None
 
-    #>-----------------------------------------------------------------------
-
     def setModified(self, flag=True):
         """
         Set the Modified flag of the currently opened diagram
@@ -737,9 +576,6 @@ class FileHandling:
         if self._currentProject is not None:
             self._currentProject.setModified(flag)
         self._ctrl.updateTitle()
-
-
-    #>-----------------------------------------------------------------------
 
     def closeCurrentProject(self):
         """
@@ -758,8 +594,8 @@ class FileHandling:
 
         # Display warning if we are in scripting mode
         if self._ctrl.isInScriptMode():
-            print "WARNING : in script mode, the non-saved projects " \
-                  "are closed without warning"
+            print("WARNING : in script mode, the non-saved projects " \
+                  "are closed without warning")
 
         # Close the file
         if self._currentProject.getModified()==True  \
@@ -770,7 +606,7 @@ class FileHandling:
             #self._ctrl.registerUMLFrame(frame)
             self.showFrame(frame)
 
-            dlg = wx.MessageDialog(self.__parent, 
+            dlg = wx.MessageDialog(self.__parent,
                 _("Your project has not been saved. "
                   "Would you like to save it ?"),
                 _("Save changes ?"),
@@ -790,31 +626,12 @@ class FileHandling:
                     self.__notebook.DeletePage(i)
                     # RemovePage si erreur ??
 
-        # Select a new notebook sheet
-        #if self.__notebook.GetPageCount() > 0:
-            #self.__notebookCurrentPage = 0
-            #self.__notebook.SetSelection(self.__notebookCurrentPage)
-        #else:
-            #self.__notebookCurrentPage = -1
-            #self.newFile(-1)                    # Create a new diagram
-            #self.__notebookCurrentPage = 0
-            #self.__notebook.SetSelection(self.__notebookCurrentPage)
-            ##~ self._ctrl.registerUMLFrame(self.getCurrentFrame())
-            #self.__parent.notifyTitleChanged()
-        #self._ctrl.registerUMLFrame(None)
-        #self._ctrl.registerCurrentProject(None)
-
-        # Remove the frame in the tree
-        #self._currentProject.removeFromNotebook()
         self._currentProject.removeFromTree()
         self._projects.remove(self._currentProject)
-        #del project
+        #  del project
 
         self._currentProject = None
         self._currentFrame = None
-
-
-    #>-----------------------------------------------------------------------
 
     def removeAllReferencesToUmlFrame(self, umlFrame):
         """
@@ -829,20 +646,17 @@ class FileHandling:
         # Exit if we are in scripting mode
         if self._ctrl.isInScriptMode():
             return
-        
+
         for i in range(self.__notebook.GetPageCount()):
             pageFrame = self.__notebook.GetPage(i)
             if pageFrame is umlFrame:
                 self.__notebook.DeletePage(i)
                 break
 
-
-    #>-----------------------------------------------------------------------
-
     def getProjectFromOglObjects(self, oglObjects):
         """
         Get a project that owns oglObjects
-       
+
         @param oglObjects Objects to find their parents
         @return PyutProject if found, None else
         @author C.Dutoit

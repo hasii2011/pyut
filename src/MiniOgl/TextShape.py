@@ -1,4 +1,9 @@
-#!/usr/bin/env python
+
+import wx
+
+from MiniOgl.Shape import Shape
+from MiniOgl.RectangleShape import RectangleShape
+
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -24,15 +29,8 @@ __copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
 __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: TextShape.py,v 1.5 2006/02/04 22:01:01 dutoitc Exp $"
-
-from __future__                import division
-#from wxPython.wx               import *
-from Shape                     import Shape
-from RectangleShape            import RectangleShape
-import wx
-from TextShapeModel            import *
-
 __all__ = ["TextShape"]
+
 
 class TextShape(RectangleShape):
     """
@@ -80,8 +78,6 @@ class TextShape(RectangleShape):
         self._resizable = False
         self._textBack = wx.WHITE    # text background colour
 
-    #>------------------------------------------------------------------------
-
     def Attach(self, diagram):
         """
         Don't use this method, use Diagram.AddShape instead !!!
@@ -94,8 +90,6 @@ class TextShape(RectangleShape):
         RectangleShape.Attach(self, diagram)
         self._textBack = self._diagram.GetPanel().GetBackgroundColour()
 
-    #>------------------------------------------------------------------------
-
     def GetText(self):
         """
         Get the text of the shape.
@@ -103,8 +97,6 @@ class TextShape(RectangleShape):
         @return string
         """
         return self._text
-
-    #>------------------------------------------------------------------------
 
     def SetText(self, text):
         """
@@ -115,8 +107,6 @@ class TextShape(RectangleShape):
         self._text = text
         self._width, self._height = wx.MemoryDC().GetTextExtent(text)
 
-    #>------------------------------------------------------------------------
-
     def SetTextBackground(self, colour):
         """
         Set the text background color.
@@ -125,8 +115,6 @@ class TextShape(RectangleShape):
         """
         self._textBack = colour
 
-    #>------------------------------------------------------------------------
-
     def GetTextBackground(self):
         """
         Get the text background color.
@@ -134,8 +122,6 @@ class TextShape(RectangleShape):
         @return wx.Colour
         """
         return self._textBack
-
-    #>------------------------------------------------------------------------
 
     def Draw(self, dc, withChildren=True):
         """
@@ -153,8 +139,6 @@ class TextShape(RectangleShape):
             if withChildren:
                 self.DrawChildren(dc)
 
-    #>------------------------------------------------------------------------
-
     def DrawBorder(self, dc):
         """
         Draw the border of the shape, for fast rendering.
@@ -166,8 +150,6 @@ class TextShape(RectangleShape):
         else:
             Shape.DrawBorder(self, dc)
 
-    #>------------------------------------------------------------------ 
-
     def GetColor(self):
         """
         Get the color of the text.
@@ -176,8 +158,6 @@ class TextShape(RectangleShape):
         """
         return self._color
 
-    #>------------------------------------------------------------------ 
-
     def SetColor(self, color):
         """
         Set the color of the text.
@@ -185,5 +165,3 @@ class TextShape(RectangleShape):
         @param wx.Colour
         """
         self._color = color
-
-    #>------------------------------------------------------------------------

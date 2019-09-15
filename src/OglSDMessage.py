@@ -165,9 +165,9 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         
         #OglLink.Draw(self, dc)
         if DEBUG:
-            print "Draw"
-            print self.GetSource().GetPosition()
-            print self.GetDestination().GetPosition()
+            print("Draw")
+            print(self.GetSource().GetPosition())
+            print(self.GetDestination().GetPosition())
         LineShape.Draw(self, dc, withChildren)
 
     #>------------------------------------------------------------------

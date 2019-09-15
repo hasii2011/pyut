@@ -1,4 +1,6 @@
-from ShapeModel     import *
+
+from MiniOgl.ShapeModel import *
+
 
 class RectangleShapeModel(ShapeModel):
     """
@@ -6,7 +8,7 @@ class RectangleShapeModel(ShapeModel):
     This class is the model of a RectangleShape ('view' in a
     MVC pattern).
     """
-    
+
     def __init__(self, viewShape = None):
         """
         Constructor.
@@ -20,9 +22,7 @@ class RectangleShapeModel(ShapeModel):
 
         # width and height of the model
         self._width = 0.0
-        self._heigth = 0.0
-
-    #>------------------------------------------------------------------------
+        self._height = 0.0
 
     def GetSize(self):
         """
@@ -30,8 +30,6 @@ class RectangleShapeModel(ShapeModel):
         """
 
         return self._width, self._height
-
-    #>------------------------------------------------------------------------
 
     def SetSize(self, width, height):
         """
@@ -43,6 +41,4 @@ class RectangleShapeModel(ShapeModel):
 
         self._width = width
         self._height = height
-        
-        
-    
+

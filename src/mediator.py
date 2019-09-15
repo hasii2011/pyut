@@ -1,26 +1,18 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+
+from PyutConsts import *
+from MiniOgl import *
+from ToolboxOwner import *
+from DlgEditClass2 import *
+from DlgEditNote import *
+from DlgEditUseCase import *
+from DlgEditLink import *
+
+from pyutVersion import getPyUtVersion
 
 __version__ = "$Revision: 1.38 $"
 __author__  = "EI5, eivd, Group Burgbacher - Waelti"
 __date__    = "2001-12-12"
 
-from pyutUtils       import *
-from singleton       import Singleton
-from PyutConsts      import *
-from PyutMethod      import *
-from PyutClass       import *
-from PyutPreferences import *
-from MiniOgl         import *
-from ToolboxOwner    import *
-
-# Dialogs
-from DlgEditClass2   import *
-from DlgEditNote     import *
-from DlgEditUseCase  import *
-from DlgEditLink     import *
-
-from pyutVersion import getPyUtVersion
 __PyUtVersion__ = getPyUtVersion()
 
 # an enum of the supported actions
@@ -111,40 +103,32 @@ LINK_TYPE = {
 }
 
 # messages for the status bar
-a = _("Click on the source class")
-b = _("Now, click on the destination class")
+a = "Click on the source class"
+b = "Now, click on the destination class"
 
 MESSAGES = {
-    ACTION_SELECTOR              : _("Ready"),
-    ACTION_NEW_CLASS             : _("Click where you want to put "
-                                     "the new class"),
-    ACTION_NEW_NOTE              : _("Click where you want to put "
-                                     "the new note"),
-    ACTION_NEW_ACTOR             : _("Click where you want to put "
-                                     "the new actor"),
-    ACTION_NEW_USECASE           : _("Click where you want to put "
-                                     "the new use case"),
-    ACTION_NEW_SD_INSTANCE       : _("Click where you want to put "
-                                     "the new instance"),
-    ACTION_NEW_SD_MESSAGE        : _("Click where you want to put "
-                                     "the new message"),
-    ACTION_DEST_SD_MESSAGE       : _("Click on the destination of the message"),
-    ACTION_NEW_IMPLEMENT_LINK    : a,
-    ACTION_NEW_INHERIT_LINK      : a,
-    ACTION_NEW_AGGREGATION_LINK  : a,
-    ACTION_NEW_COMPOSITION_LINK  : a,
-    ACTION_NEW_ASSOCIATION_LINK  : a,
-    ACTION_NEW_NOTE_LINK         : a,
-    ACTION_DEST_IMPLEMENT_LINK   : b,
-    ACTION_DEST_INHERIT_LINK     : b,
-    ACTION_DEST_AGGREGATION_LINK : b,
-    ACTION_DEST_COMPOSITION_LINK : b,
-    ACTION_DEST_ASSOCIATION_LINK : b,
-    ACTION_DEST_NOTE_LINK        : b,
-
-    # Patch from D.Dabrowsky, 20060129
-    ACTION_ZOOM_IN               : _("Select the area to fit on"),
-    ACTION_ZOOM_OUT              : _("Select the central point"),
+    ACTION_SELECTOR: "Ready",
+    ACTION_NEW_CLASS: "Click where you want to put the new class",
+    ACTION_NEW_NOTE: "Click where you want to put the new note",
+    ACTION_NEW_ACTOR: "Click where you want to put the new actor",
+    ACTION_NEW_USECASE: "Click where you want to put the new use case",
+    ACTION_NEW_SD_INSTANCE: "Click where you want to put the new instance",
+    ACTION_NEW_SD_MESSAGE: "Click where you want to put the new message",
+    ACTION_DEST_SD_MESSAGE: "Click on the destination of the message",
+    ACTION_NEW_IMPLEMENT_LINK: a,
+    ACTION_NEW_INHERIT_LINK: a,
+    ACTION_NEW_AGGREGATION_LINK: a,
+    ACTION_NEW_COMPOSITION_LINK: a,
+    ACTION_NEW_ASSOCIATION_LINK: a,
+    ACTION_NEW_NOTE_LINK: a,
+    ACTION_DEST_IMPLEMENT_LINK: b,
+    ACTION_DEST_INHERIT_LINK: b,
+    ACTION_DEST_AGGREGATION_LINK: b,
+    ACTION_DEST_COMPOSITION_LINK: b,
+    ACTION_DEST_ASSOCIATION_LINK: b,
+    ACTION_DEST_NOTE_LINK: b,
+    ACTION_ZOOM_IN: "Select the area to fit on",
+    ACTION_ZOOM_OUT: "Select the central point",
 
 }
 
@@ -163,6 +147,7 @@ def getMediator():
     @author L. Burgbacher <lb@alawa.ch>
     """
     return Mediator()
+
 
 class Mediator(Singleton):
     """

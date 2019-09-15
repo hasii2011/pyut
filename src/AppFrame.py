@@ -1,30 +1,18 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-#1709->1628 16h25
+
+from FileHandling import *
+from Tool import Tool
 
 __version__ = "$Revision: 1.55 $"
 __author__ = "EI5, eivd, Group Burgbacher - Waelti"
 __date__ = "2001-11-14"
 
-#from wxPython.wx     import *
-#from wxPython.html   import *
-from UmlFrame        import *
-from pyutUtils       import *
-from PyutPrintout    import *
-from PluginManager   import *
-from copy            import deepcopy
-from PyutPreferences import PyutPreferences
-#from UmlClassDiagramsFrame import *
-from FileHandling    import *
-from Tool            import Tool
-#from wxPython.help   import *
-import wx
+
 
 
 # Assign constants
-[ID_MNUFILENEWPROJECT,  ID_MNUFILEOPEN,          ID_MNUFILESAVE, 
-ID_MNUFILESAVEAS,       ID_MNUFILEEXIT,          ID_MNUEDITCUT, 
-ID_MNUEDITCOPY,         ID_MNUEDITPASTE,         ID_MNUHELPABOUT,     
+[ID_MNUFILENEWPROJECT,  ID_MNUFILEOPEN,          ID_MNUFILESAVE,
+ID_MNUFILESAVEAS,       ID_MNUFILEEXIT,          ID_MNUEDITCUT,
+ID_MNUEDITCOPY,         ID_MNUEDITPASTE,         ID_MNUHELPABOUT,
 ID_MNUFILEIMP,          ID_MNUFILE,              ID_MNUFILEDIAGRAMPROPER,
 ID_MNUFILEPRINTSETUP,   ID_MNUFILEPRINTPREV,     ID_MNUFILEPRINT,
 ID_MNUADDPYUTHIERARCHY, ID_MNUADDOGLHIERARCHY,   ID_MNUHELPINDEX,
@@ -111,7 +99,7 @@ class AppFrame(wx.Frame):
         #self.SetFont(font)
 
         # Create the application's icon
-        icon = wx.Icon('img'+os.sep+'icon.ico', wx.BITMAP_TYPE_ICO)        
+        icon = wx.Icon('img'+os.sep+'icon.ico', wx.BITMAP_TYPE_ICO)
         self.SetIcon(icon)
 
         # ...
@@ -180,16 +168,16 @@ class AppFrame(wx.Frame):
         try:
             if self._alreadyDisplayedTipsFrame==True or \
                self._prefs["SHOW_TIPS_ON_STARTUP"]=="0" or \
-               self._prefs["SHOW_TIPS_ON_STARTUP"]=="False": 
+               self._prefs["SHOW_TIPS_ON_STARTUP"]=="False":
                 return
-            # Display tips frame 
+            # Display tips frame
             from TipsFrame import TipsFrame
             tipsFrame = TipsFrame(self)
             #tipsFrame.Show()
             self._alreadyDisplayedTipsFrame = True
-        except: 
+        except:
             pass
-    
+
 
     #>-----------------------------------------------------------------------
 
@@ -205,42 +193,42 @@ class AppFrame(wx.Frame):
         import img.ImgToolboxNote
         import img.ImgToolboxArrow
         import img.ImgToolboxSystem
-       
+
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.getBitmap(),
                     _("Arrow"),      _("Select tool"),
-                    _(_("PyUt tools")), 
-                    (lambda x:self._OnNewAction(x)), 
+                    _(_("PyUt tools")),
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_ARROW, isToggle=True)
         toolClass = Tool("pyut-class", img.ImgToolboxClass.getBitmap(),
                     _("Class"),      _("Create a new class"),
                     _(_("PyUt tools")),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_CLASS, isToggle=True)
         toolActor = Tool("pyut-actor", img.ImgToolboxActor.getBitmap(),
                     _("Actor"),      _("Create a new actor"),
-                    _(_("PyUt tools")), 
-                    (lambda x:self._OnNewAction(x)), 
+                    _(_("PyUt tools")),
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_ACTOR, isToggle=True)
         toolUseCase = Tool("pyut-system", img.ImgToolboxSystem.getBitmap(),
                     _("System"),     _("Create a new use case"),
                     _(_("PyUt tools")),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_USECASE, isToggle=True)
         toolNote = Tool("pyut-note", img.ImgToolboxNote.getBitmap(),
                     _("Note"),     _("Create a new note"),
                     _(_("PyUt tools")),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_NOTE, isToggle=True)
         toolSDInstance = Tool("pyut-instance", img.ImgToolboxUnknown.getBitmap(),
                     _("Instance"),     _("Create a new class diagram instance object"),
                     _(_("PyUt tools")),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_SD_INSTANCE, isToggle=True)
         toolSDMessage = Tool("pyut-message", img.ImgToolboxUnknown.getBitmap(),
                     _("Message"),     _("Create a new class diagram message object"),
                     _(_("PyUt tools")),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_SD_MESSAGE, isToggle=True)
         #Added by P. Dabrowski 20.11.2005
         toolZoomIn = Tool("pyut-zoomIn",
@@ -259,59 +247,59 @@ class AppFrame(wx.Frame):
                             None, wxID = ID_ZOOMOUT, isToggle=True)
 
         # Menu tools
-        toolNewProject = Tool("pyut-new-project", 
+        toolNewProject = Tool("pyut-new-project",
                     wx.Bitmap('img' + os.sep + 'newproject.bmp', wx.BITMAP_TYPE_BMP),
-                    _("new project"), 
+                    _("new project"),
                     _("Create a new project"),
                     _("PyUt menu"),
                     (lambda x: self._OnMnuFileNewProject(x)),
                     None, wxID = ID_MNUFILENEWPROJECT)
         toolNewClassDiagram = Tool("pyut-new-class-diagram",
                     wx.Bitmap('img' + os.sep + 'newcd.bmp', wx.BITMAP_TYPE_BMP),
-                    _("New Class Diagram"), 
+                    _("New Class Diagram"),
                     _("Create a new class diagram"),
                     _("PyUt menu"),
                     (lambda x: self._OnMnuFileNewClassDiagram(x)),
                     None, wxID = ID_MNUFILENEWCLASSDIAGRAM)
         toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram",
                     wx.Bitmap('img' + os.sep + 'newsd.bmp', wx.BITMAP_TYPE_BMP),
-                    _("New Sequence Diagram"), 
+                    _("New Sequence Diagram"),
                     _("Create a new sequence diagram"),
                     _(_("PyUt menu")),
                     (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
                     None, wxID = ID_MNUFILENEWSEQUENCEDIAGRAM)
         toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram",
                     wx.Bitmap('img' + os.sep + 'newud.bmp', wx.BITMAP_TYPE_BMP),
-                    _("New Use-Case diagram"), 
+                    _("New Use-Case diagram"),
                     _("Create a new use-case diagram"),
                     _("PyUt menu"),
                     (lambda x: self._OnMnuFileNewUsecaseDiagram(x)),
                     None, wxID = ID_MNUFILENEWUSECASEDIAGRAM)
         toolOpen = Tool("pyut-open",
                     wx.Bitmap('img' + os.sep + 'open.bmp', wx.BITMAP_TYPE_BMP),
-                    _("Open"), 
+                    _("Open"),
                     _("Open a file"),
                     _("PyUt menu"),
                     (lambda x: self._OnMnuFileOpen(x)),
                     None, wxID = ID_MNUFILEOPEN)
         toolSave = Tool("pyut-save",
                     wx.Bitmap('img' + os.sep + 'save.bmp', wx.BITMAP_TYPE_BMP),
-                    _("Save"), 
+                    _("Save"),
                     _("Save current UML Diagram"),
                     _("PyUt menu"),
                     (lambda x: self._OnMnuFileSave(x)),
                     None, wxID = ID_MNUFILESAVE)
 # Patch from D.Dabrowsky, 20060129
-        toolUndo = Tool("pyut-undo", 
+        toolUndo = Tool("pyut-undo",
                      wx.Bitmap('img' + os.sep + 'undo.bmp', wx.BITMAP_TYPE_BMP),
-                     _("undo"), 
+                     _("undo"),
                      _("undo the last performed action"),
                      _("PyUt menu"),
                      (lambda x: self._OnMnuUndo(x)),
                      None, wxID = ID_MNUUNDO)
-        toolRedo = Tool("pyut-redo", 
+        toolRedo = Tool("pyut-redo",
                      wx.Bitmap('img' + os.sep + 'redo.bmp', wx.BITMAP_TYPE_BMP),
-                     _("redo"), 
+                     _("redo"),
                      _("redo the last undone action"),
                      _("PyUt menu"),
                      (lambda x: self._OnMnuRedo(x)),
@@ -322,62 +310,62 @@ class AppFrame(wx.Frame):
                     wx.Bitmap('img' + os.sep + 'relinheritance.bmp', wx.BITMAP_TYPE_BMP),
                     _("New inheritance relation"), _("New inheritance relation"),
                     _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_REL_INHERITANCE, isToggle = True)
         toolRelRealisation = Tool("pyut-rel-realisation",
                     wx.Bitmap('img' + os.sep + 'relrealisation.bmp', wx.BITMAP_TYPE_BMP),
                     _("New realisation relation"), _("New realisation relation"),
                     _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_REL_REALISATION, isToggle = True)
         toolRelComposition = Tool("pyut-rel-composition",
                     wx.Bitmap('img' + os.sep + 'relcomposition.bmp', wx.BITMAP_TYPE_BMP),
                     _("New composition relation"), _("New composition relation"),
                     _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_REL_COMPOSITION, isToggle = True)
         toolRelAgregation = Tool("pyut-rel-agregation",
                     wx.Bitmap('img' + os.sep + 'relagregation.bmp', wx.BITMAP_TYPE_BMP),
                     _("New agregation relation"), _("New agregation relation"),
                     _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_REL_AGREGATION, isToggle = True)
 
         toolRelAssociation = Tool("pyut-rel-association",
                     wx.Bitmap('img' + os.sep + 'relassociation.bmp', wx.BITMAP_TYPE_BMP),
                     _("New association relation"), _("New association relation"),
                     _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_REL_ASSOCIATION, isToggle = True)
         toolRelNote = Tool("pyut-rel-note",
                     wx.Bitmap('img' + os.sep + 'relnote.bmp', wx.BITMAP_TYPE_BMP),
                     _("New note relation"), _("New note relation"),
                     _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_REL_NOTE, isToggle = True)
         toolSDInstance = Tool("pyut-sd-instance",
                     wx.Bitmap('img' + os.sep + 'sdinstance.bmp', wx.BITMAP_TYPE_BMP),
-                    _("New sequence diagram instance object"), 
+                    _("New sequence diagram instance object"),
                     _("New sequence diagram instance object"),
                     _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_SD_INSTANCE, isToggle = True)
         toolSDMessage = Tool("pyut-sd-message",
                     wx.Bitmap('img' + os.sep + 'sdmessage.bmp', wx.BITMAP_TYPE_BMP),
-                    _("New sequence diagram message object"), 
+                    _("New sequence diagram message object"),
                     _("New sequence diagram message object"),
                     _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)), 
+                    (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_SD_MESSAGE, isToggle = True)
 
         # Create toolboxes
-        for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram, 
-                     toolNewUseCaseDiagram, toolOpen, toolSave, 
+        for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
+                     toolNewUseCaseDiagram, toolOpen, toolSave,
 
                      #added by P. Dabrowski 20.11.2005
                      toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo,
                      toolClass, toolActor, toolUseCase, toolNote,
-                     toolRelInheritance, toolRelRealisation, toolRelComposition, 
+                     toolRelInheritance, toolRelRealisation, toolRelComposition,
                      toolRelAgregation, toolRelAssociation, toolRelNote,
                      toolSDInstance, toolSDMessage
                      ]:
@@ -387,18 +375,18 @@ class AppFrame(wx.Frame):
         self._tb=self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         self.SetToolBar(self._tb)
         self._tb.SetTitle("Standard")
-        for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram, 
-                     toolNewUseCaseDiagram, toolOpen, toolSave, 
+        for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
+                     toolNewUseCaseDiagram, toolOpen, toolSave,
                      None,
 
                      # Patch from D.Dabrowsky, 20060129
                      toolArrow, toolZoomIn, toolZoomOut,
-                     toolUndo, toolRedo, 
+                     toolUndo, toolRedo,
 
                      None,
                      toolClass, toolActor, toolUseCase, toolNote,
                      None,
-                     toolRelInheritance, toolRelRealisation, toolRelComposition, 
+                     toolRelInheritance, toolRelRealisation, toolRelComposition,
                      toolRelAgregation, toolRelAssociation, toolRelNote,
                      None,
                      toolSDInstance, toolSDMessage
@@ -406,11 +394,11 @@ class AppFrame(wx.Frame):
 
             # Add tool
             if tool is not None:
-                self._tb.AddTool(tool.getWXID(), tool.getImg(), 
-                                 shortHelpString = tool.getCaption(), 
-                                 longHelpString = tool.getToolTip(), 
+                self._tb.AddTool(tool.getWXID(), tool.getImg(),
+                                 shortHelpString = tool.getCaption(),
+                                 longHelpString = tool.getToolTip(),
                                  isToggle = tool.getIsToggle())
-                self.Bind(wx.EVT_TOOL, tool.getActionCallback(), 
+                self.Bind(wx.EVT_TOOL, tool.getActionCallback(),
                           id=tool.getWXID())
             else:
                 self._tb.AddSeparator()
@@ -465,7 +453,7 @@ class AppFrame(wx.Frame):
 
         self.mnuFile.AppendMenu(wx.NewId(), _("&New"), self.mnuFileNew)
         self.mnuFile.Append(ID_MNUFILEINSERTPROJECT,
-            _("&Insert a project...\t"), 
+            _("&Insert a project...\t"),
             _("Insert a project in the current project..."))
         self.mnuFile.Append(ID_MNUFILEOPEN,
             _("&Open...\tCtrl-O"), _("Open a file..."))
@@ -518,14 +506,14 @@ class AppFrame(wx.Frame):
         self.mnuFile.Append(ID_MNUFILEPRINT,
             _("&Print\tCtrl-P"), _("Print the current diagram"))
         self.mnuFile.AppendSeparator()
-        
+
         #Add Last opened files
         index=0
         #TODO : does not work ? verify function return...
         for el in self._prefs.getLastOpenedFilesList():
             index+=1
-            self.mnuFile.Append(self.lastOpenedFilesID[index-1], "&" + 
-                str(index) + " " + el)            
+            self.mnuFile.Append(self.lastOpenedFilesID[index-1], "&" +
+                str(index) + " " + el)
         for index in range(index, self._prefs.getNbLOF()):
             self.mnuFile.Append(self.lastOpenedFilesID[index], "&" +
                                 str(index+1) + " -")
@@ -579,7 +567,7 @@ class AppFrame(wx.Frame):
         mnuHelp.Append(ID_MNUHELPINDEX,
             _("&Index"), _("Display help index"))
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(ID_MNUHELPVERSION, 
+        mnuHelp.Append(ID_MNUHELPVERSION,
             _("Check for newer versions"), _("Check if a newer version of "
                                              "Pyut exists"))
         mnuHelp.Append(ID_MNUHELPWEB,
@@ -602,7 +590,7 @@ class AppFrame(wx.Frame):
         # -----------------
         # Events menu click
         # -----------------
-        self.Bind(wx.EVT_MENU,   
+        self.Bind(wx.EVT_MENU,
                  self._OnMnuFileNewProject, id=ID_MNUFILENEWPROJECT)
         self.Bind(wx.EVT_MENU, self._OnMnuFileNewClassDiagram,
                 id=ID_MNUFILENEWCLASSDIAGRAM)
@@ -681,7 +669,7 @@ class AppFrame(wx.Frame):
         # Last opened files handlers
         # ----------------------
         for index in range(self._prefs.getNbLOF()):
-            self.Bind(wx.EVT_MENU, self._OnMnuLOF, 
+            self.Bind(wx.EVT_MENU, self._OnMnuLOF,
                     id=self.lastOpenedFilesID[index])
 
         # ----------------------
@@ -810,7 +798,7 @@ class AppFrame(wx.Frame):
 
         # Save last directory
         self._prefs["LastDirectory"] = self._lastDir
-             
+
 
     #>----------------------------------------------------------------------
 
@@ -928,14 +916,13 @@ class AppFrame(wx.Frame):
                          parent=self)
 
         if (self._fileHandling.getCurrentProject()) is None:
-            displayError(_("No project to insert this file into !"), 
+            displayError(_("No project to insert this file into !"),
                          parent=self)
             return
-        
+
         # Ask which project to insert
-        dlg=wx.FileDialog(self, _("Choose a file"), self._lastDir, "",
-                "*.put", wx.OPEN | wx.HIDE_READONLY)
-        if dlg.ShowModal()<>wx.ID_OK:
+        dlg=wx.FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", wx.OPEN | wx.HIDE_READONLY)
+        if dlg.ShowModal()!=wx.ID_OK:
             dlg.Destroy()
             return False
         self.updateCurrentDir(dlg.GetPath())
@@ -943,17 +930,13 @@ class AppFrame(wx.Frame):
         dlg.Destroy()
 
 
-        print "inserting file", str(filename)
+        print("inserting file", str(filename))
 
         # Insert the specified files
         try:
             self._fileHandling.insertFile(filename)
         except:
-            displayError(_("An error occured while loading the project !"),
-                         parent=self)
-
-
-    #>-----------------------------------------------------------------------
+            displayError(_("An error occured while loading the project !"), parent=self)
 
     def _OnMnuFileOpen(self, event):
         """
@@ -1058,7 +1041,7 @@ class AppFrame(wx.Frame):
         try:
             dlg=wx.FileDialog(self, _("Save as Postscript"), self._lastDir, "",
                 "*.ps", wx.SAVE | wx.HIDE_READONLY)
-            if dlg.ShowModal()<>wx.ID_OK:
+            if dlg.ShowModal()!=wx.ID_OK:
                 dlg.Destroy()
                 return False
             filename=dlg.GetPath()
@@ -1089,7 +1072,7 @@ class AppFrame(wx.Frame):
         try:
             dlg=wx.FileDialog(self, _("Save as PDF"), self._lastDir, "",
                 "*.pdf", wx.SAVE | wx.HIDE_READONLY | wx.OVERWRITE_PROMPT)
-            if dlg.ShowModal()<>wx.ID_OK:
+            if dlg.ShowModal()!=wx.ID_OK:
                 dlg.Destroy()
                 return False
             filename=dlg.GetPath()
@@ -1118,7 +1101,7 @@ class AppFrame(wx.Frame):
                 displayError("Can't export to pdf !", parent=self)
 
     #>-----------------------------------------------------------------------
-    
+
     def printDiagramToPostscript(self, filename):
         """
         print the current diagram to postscript
@@ -1200,14 +1183,14 @@ class AppFrame(wx.Frame):
                "Do you still want to continue ? "
 
         #print "AppFrame-OnMnuFilePrintPreview-2"
-        #dlg = wx.MessageDialog(self, msg, _("Warning"), 
+        #dlg = wx.MessageDialog(self, msg, _("Warning"),
         #        wx.YES_NO | wx.ICON_EXCLAMATION | wx.CENTRE | wx.NO_DEFAULT)
         #dlg = wx.MessageDialog(self, msg, _("Warning"))
         dlg = wx.MessageDialog(self, msg, "1")
         #print "AppFrame-OnMnuFilePrintPreview-3"
         if dlg.ShowModal()==5104: #xNO:
             #print "AppFrame-OnMnuFilePrintPreview-31"
-            print "Abandoning"
+            print("Abandoning")
             dlg.Destroy()
             dlg = None
             return
@@ -1215,7 +1198,7 @@ class AppFrame(wx.Frame):
         dlg.Destroy()
         dlg = None
         #print "AppFrame-OnMnuFilePrintPreview-4"
-                    
+
         self._ctrl.deselectAllShapes()
         frame=self._ctrl.getUmlFrame()
         if frame==-1:
@@ -1343,13 +1326,13 @@ class AppFrame(wx.Frame):
         f.close()
 
         # Verify data coherence
-        if lstFile[0][:15]<>"Last version = " or \
-           lstFile[1][:15]<>"Old versions = ":
+        if lstFile[0][:15]!="Last version = " or \
+           lstFile[1][:15]!="Old versions = ":
             msg = "Incorrect file on server"
         else:
             latestVersion = lstFile[0][15:]
             oldestVersions = lstFile[1][15:].split()
-            print oldestVersions
+            print(oldestVersions)
 
             import pyutVersion
             v = pyutVersion.getPyUtVersion()
@@ -1430,7 +1413,7 @@ class AppFrame(wx.Frame):
         """
         self._loadFile(filename)
 
-    #>----------------------------------------------------------------------- 
+    #>-----------------------------------------------------------------------
 
     def _loadFile(self, filename=""):
         """
@@ -1449,7 +1432,7 @@ class AppFrame(wx.Frame):
         if filename=="":
             dlg=wx.FileDialog(self, _("Choose a file"), self._lastDir, "",
                 "*.put", wx.OPEN | wx.HIDE_READONLY | wx.MULTIPLE)
-            if dlg.ShowModal()<>wx.ID_OK:
+            if dlg.ShowModal()!=wx.ID_OK:
                 dlg.Destroy()
                 return False
             self.updateCurrentDir(dlg.GetPath())
@@ -1457,7 +1440,7 @@ class AppFrame(wx.Frame):
             dlg.Destroy()
 
 
-        print "loading file(s) ", str(filename)
+        print("loading file(s) ", str(filename))
 
         # Open the specified files
         for filename in filenames:
@@ -1522,11 +1505,11 @@ class AppFrame(wx.Frame):
         """
         index=0
         for el in self._prefs.getLastOpenedFilesList():
-            self.mnuFile.SetLabel(self.lastOpenedFilesID[index], "&" + 
+            self.mnuFile.SetLabel(self.lastOpenedFilesID[index], "&" +
                 str(index+1) + " " + el)
             index+=1
 
-    
+
     #>-----------------------------------------------------------------------
 
     def Close(self, force=False):
@@ -1549,8 +1532,6 @@ class AppFrame(wx.Frame):
         #TODO? wx.OGLCleanUp()
         self.Destroy()
 
-    #>-----------------------------------------------------------------------
-
     def _setTitle(self):
         """
         Set the application title, fonction of version and current filename
@@ -1560,8 +1541,6 @@ class AppFrame(wx.Frame):
         """
         self._mediator.updateTitle()
 
-    #>-----------------------------------------------------------------------
-
     def notifyTitleChanged(self):
         """
         Notify that the title changed.
@@ -1570,8 +1549,6 @@ class AppFrame(wx.Frame):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self._ctrl.updateTitle()
-
-    #>-----------------------------------------------------------------------
 
     def OnImport(self, event):
         """
@@ -1595,13 +1572,11 @@ class AppFrame(wx.Frame):
             obj.doImport()
         except:
             displayError(
-                _("An error occured while executing the selected plugin"), 
+                _("An error occured while executing the selected plugin"),
                 _("Error..."),
                 self)
         wx.EndBusyCursor()
         self.Refresh()
-
-    #>-----------------------------------------------------------------------
 
     def OnExport(self, event):
         """
@@ -1620,8 +1595,6 @@ class AppFrame(wx.Frame):
         wx.BeginBusyCursor()
         obj.doExport()
         wx.EndBusyCursor()
-
-    #>-----------------------------------------------------------------------
 
     def OnToolPlugin(self, event):
         """
@@ -1642,7 +1615,7 @@ class AppFrame(wx.Frame):
             obj.callDoAction()
         except:
             displayError(
-                _("An error occured while executing the selected plugin"), 
+                _("An error occured while executing the selected plugin"),
                 _("Error..."),
                 self)
         wx.EndBusyCursor()
@@ -1651,8 +1624,6 @@ class AppFrame(wx.Frame):
         umlFrame = self._ctrl.getUmlFrame()
         if umlFrame is not None:
             umlFrame.Refresh()
-
-    #>-----------------------------------------------------------------------
 
     def OnToolboxMenuClick(self, event):
         """
@@ -1665,8 +1636,6 @@ class AppFrame(wx.Frame):
         # Display toolbox
         self._ctrl.displayToolbox(self._toolboxesID[event.GetId()])
 
-    #>-----------------------------------------------------------------------
-
     def _OnMnuEditShowToolbar(self, event):
         """
         Callback.
@@ -1676,8 +1645,6 @@ class AppFrame(wx.Frame):
         @since 1.31
         """
         self._mainToolbar.Show(True)
-
-    #>-----------------------------------------------------------------------
 
     def _OnNewAction(self, event):
         """
@@ -1692,8 +1659,6 @@ class AppFrame(wx.Frame):
         self._fileHandling.setModified(True)
         self._ctrl.updateTitle()
 
-    #>------------------------------------------------------------------------
-
     def _OnMnuEditCut(self, event):
         """
         Callback.
@@ -1703,8 +1668,6 @@ class AppFrame(wx.Frame):
         """
         self.cutSelectedShapes()
 
-
-    #>------------------------------------------------------------------------
 
     def cutSelectedShapes(self):
         """
@@ -1741,8 +1704,6 @@ class AppFrame(wx.Frame):
         self._ctrl.updateTitle()
         canvas.Refresh()
 
-    #>------------------------------------------------------------------------
-
     def _OnMnuEditCopy(self, event):
         """
         Callback.
@@ -1763,8 +1724,6 @@ class AppFrame(wx.Frame):
             obj = copy(obj.getPyutObject())
             obj.setLinks([]) # we don't want to copy the links
             self._clipboard.append(obj)
-
-    #>------------------------------------------------------------------------
 
     def _OnMnuEditPaste(self, event):
         """
@@ -1795,7 +1754,7 @@ class AppFrame(wx.Frame):
             elif isinstance(obj, PyutUseCase):
                 po = OglUseCase(obj)
             else:
-                print "Error when try to paste object"
+                print("Error when try to paste object")
                 return
             self._ctrl.getUmlFrame().addShape(po, x, y)
             x += 20
@@ -1811,8 +1770,6 @@ class AppFrame(wx.Frame):
         self._ctrl.updateTitle()
         canvas.Refresh()
         #TODO : What are you doing with the dc ?
-
-    #>------------------------------------------------------------------------
 
     def _OnMnuSelectAll(self, event):
         """
@@ -1830,8 +1787,6 @@ class AppFrame(wx.Frame):
             shape.SetSelected(True)
         frame.Refresh()
 
-    
-    #>------------------------------------------------------------------------
 
     def _OnMnuFilePyutProperties(self, event):
         """
@@ -1849,8 +1804,6 @@ class AppFrame(wx.Frame):
         if umlFrame is not None:
             umlFrame.Refresh()
 
-    #>------------------------------------------------------------------------
-
     def _OnMnuDebug(self, event):
         """
         Open a IPython shell
@@ -1862,30 +1815,13 @@ class AppFrame(wx.Frame):
             return
         ipshell = IPShellEmbed()
         ipshell(local_ns=vars(), global_ns=globals())
-   
+
     def _OnMnuUndo(self, event):
         if (self._fileHandling.getCurrentFrame()) is None:
             return # TODO : dialog box
         self._fileHandling.getCurrentFrame().getHistory().undo()
-         
-    #>------------------------------------------------------------------------
- 
+
     def _OnMnuRedo(self, event):
         if (self._fileHandling.getCurrentFrame()) is None:
             return # TODO : dialog box
         self._fileHandling.getCurrentFrame().getHistory().redo()
-
-
-    #>------------------------------------------------------------------------
-
-    #def _OnMnuFileDiagramProperties(self, event):
-    #    """
-    #    Callback.
-
-    #    @param wxEvent event
-    #    @author C.Dutoit <dutoitc@hotmail.com>
-    #    @since 1.10
-    #    """
-    #    frame = self._ctrl.getUmlFrame()
-    #    if frame is not None:
-    #        frame.displayDiagramProperties()

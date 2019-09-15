@@ -1,4 +1,9 @@
-#!/usr/bin/env python
+from MiniOgl.Shape import Shape
+from MiniOgl.AnchorPoint import AnchorPoint
+from MiniOgl.ControlPoint import ControlPoint
+
+import wx
+
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
 # Visit http://www.eivd.ch
@@ -25,15 +30,8 @@ __license__   = "Released under the terms of the GNU General Public Licence V2"
 __date__      = "2002-10-15"
 __version__   = "$Id: LineShape.py,v 1.7 2005/03/22 07:56:42 dutoitc Exp $"
 
-from __future__                import division
-#from wxPython.wx               import *
-from Shape                     import Shape
-from AnchorPoint               import AnchorPoint
-from ControlPoint              import ControlPoint
-#import wxPython
-import wx
-
 __all__ = ["LineShape"]
+
 
 class LineShape(Shape):
     """
@@ -110,8 +108,6 @@ class LineShape(Shape):
         if dstAnchor:
             dstAnchor.AddLine(self)
 
-    #>------------------------------------------------------------------------
-
     def SetSpline(self, state):
         """
         Use a spline instead of a line.
@@ -120,8 +116,6 @@ class LineShape(Shape):
         """
         self._spline = state
 
-    #>------------------------------------------------------------------------
-
     def GetSpline(self):
         """
         Return True if a spline is drawn instead of a line.
@@ -129,8 +123,6 @@ class LineShape(Shape):
         @return boolean
         """
         return self._spline
-
-    #>------------------------------------------------------------------------
 
     def GetPosition(self):
         """
@@ -151,8 +143,6 @@ class LineShape(Shape):
         else:
             # odd number, take the middle point
             return points[middle]
-
-    #>------------------------------------------------------------------------
 
     def AddControl(self, control, after=None):
         """
@@ -180,8 +170,6 @@ class LineShape(Shape):
         if self._diagram is not None:
             self._diagram.AddShape(control)
 
-    #>------------------------------------------------------------------------
-
     def GetDestination(self):
         """
         Get the destination anchor.
@@ -189,8 +177,6 @@ class LineShape(Shape):
         @return AnchorPoint
         """
         return self._dst
-
-    #>------------------------------------------------------------------------
 
     def SetDestination(self, anchor):
         """
@@ -202,8 +188,6 @@ class LineShape(Shape):
         self._dst = anchor
         anchor.AddLine(self)
 
-    #>------------------------------------------------------------------------
-
     def SetDrawArrow(self, draw):
         """
         Set to True if you want to have an arrow head at the destination.
@@ -211,8 +195,6 @@ class LineShape(Shape):
         @param bool draw
         """
         self._drawArrow = draw
-
-    #>------------------------------------------------------------------------
 
     def GetDrawArrow(self):
         """
@@ -222,8 +204,6 @@ class LineShape(Shape):
         """
         return self._drawArrow
 
-    #>------------------------------------------------------------------------
-
     def SetArrowSize(self, size):
         """
         Set the size of the arrow head, in pixels.
@@ -231,8 +211,6 @@ class LineShape(Shape):
         @param double size
         """
         self._arrowSize = size
-
-    #>------------------------------------------------------------------------
 
     def GetArrowSize(self):
         """
@@ -242,8 +220,6 @@ class LineShape(Shape):
         """
         return self._arrowSize
 
-    #>------------------------------------------------------------------------
-
     def GetSource(self):
         """
         Get the source anchor.
@@ -251,8 +227,6 @@ class LineShape(Shape):
         @return AnchorPoint source
         """
         return self._src
-
-    #>------------------------------------------------------------------------
 
     def SetSource(self, anchor):
         """
@@ -264,8 +238,6 @@ class LineShape(Shape):
         self._src = anchor
         anchor.AddLine(self)
 
-    #>------------------------------------------------------------------------
-
     def GetSegments(self):
         """
         Return a list of tuples which are the coordinates of the control points.
@@ -276,8 +248,6 @@ class LineShape(Shape):
         dp = self._dst.GetPosition()
         return [sp] + map(lambda x: x.GetPosition(), self._controls) + [dp]
 
-    #>------------------------------------------------------------------------
-
     def GetControlPoints(self):
         """
         Return a list of the control points.
@@ -287,8 +257,6 @@ class LineShape(Shape):
         @return ControlPoint []
         """
         return self._controls[:]
-
-    #>------------------------------------------------------------------------
 
     def Draw(self, dc, withChildren=True):
         """
@@ -319,15 +287,11 @@ class LineShape(Shape):
             if withChildren:
                 self.DrawChildren(dc)
 
-    #>------------------------------------------------------------------------
-
     def DrawBorder(self, dc):
         """
         Draw the border of the shape, for fast rendering.
         """
         self.Draw(dc)
-
-    #>------------------------------------------------------------------------
 
     def DrawArrow(self, dc, u, v):
         """
@@ -363,8 +327,6 @@ class LineShape(Shape):
         points.append((x2 + size * cos(alpha2), y2 + size * sin(alpha2)))
         dc.DrawPolygon(points)
 
-    #>------------------------------------------------------------------------
-
     def Detach(self):
         """
         Detach the line and all its line points, including src and dst.
@@ -378,8 +340,6 @@ class LineShape(Shape):
             self._src.RemoveLine(self)
             self._dst.RemoveLine(self)
 
-    #>------------------------------------------------------------------------
-
     def _RemoveControl(self, control):
         """
         Remove a control point from the line.
@@ -389,8 +349,6 @@ class LineShape(Shape):
         if control in self._controls:
             self._controls.remove(control)
 
-    #>------------------------------------------------------------------------
-
     def _RemoveAnchor(self, anchor):
         """
         Remove an anchor point.
@@ -399,16 +357,12 @@ class LineShape(Shape):
         """
         self.Detach()
 
-    #>------------------------------------------------------------------------
-
     def RemoveAllControlPoints(self):
         """
         Remove all the control points of the line.
         """
         while self._controls:
             self._RemoveControl(self._controls[0])
-
-    #>------------------------------------------------------------------------
 
     def Remove(self, point):
         """
@@ -421,8 +375,6 @@ class LineShape(Shape):
             self._RemoveAnchor(point)
         elif isinstance(point, ControlPoint):
             self._RemoveControl(point)
-
-    #>------------------------------------------------------------------------
 
     def Inside(self, x, y):
         """
@@ -473,8 +425,6 @@ class LineShape(Shape):
                 return True
         return False
 
-    #>------------------------------------------------------------------------
-
     def SetSelected(self, state=True):
         """
         Select the shape.
@@ -485,4 +435,3 @@ class LineShape(Shape):
         for ctrl in self._controls:
             ctrl.SetVisible(state)
 
-    #>------------------------------------------------------------------------

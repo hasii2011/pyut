@@ -57,38 +57,38 @@ class PluginManager(Singleton):
 
         # Import I/O plugins
         for plug in ioPlugs:
-            print "Importing I/O plugin from file " + str(plug)
+            print("Importing I/O plugin from file " + str(plug))
             module = None
             #~ module = __import__(plug)
             try:
                 module = __import__(plug)
             except:
-                print("Error importing plugin %s with message:" % plug)
+                print(("Error importing plugin %s with message:" % plug))
                 import traceback
-                print "Error : %s" % sys.exc_info()[0]
-                print "Msg   : %s" % sys.exc_info()[1]
-                print "Trace :"
+                print("Error : %s" % sys.exc_info()[0])
+                print("Msg   : %s" % sys.exc_info()[1])
+                print("Trace :")
                 for el in traceback.extract_tb(sys.exc_info()[2]):
-                    print el
+                    print(el)
             if module is not None:
                 cl = eval("module.%s" % (module.__name__))
                 self.ioPlugs.append(cl)
 
         # Import tools plugins
         for plug in toPlugs:
-            print "Importing tool plugin from file " + str(plug)
+            print("Importing tool plugin from file " + str(plug))
             module = None
             #~ module = __import__(plug)
             try:
                 module = __import__(plug)
             except:
-                print("Error importing plugin %s with message:" % plug)
+                print(("Error importing plugin %s with message:" % plug))
                 import traceback
-                print "Error : %s" % sys.exc_info()[0]
-                print "Msg   : %s" % sys.exc_info()[1]
-                print "Trace :"
+                print("Error : %s" % sys.exc_info()[0])
+                print("Msg   : %s" % sys.exc_info()[1])
+                print("Trace :")
                 for el in traceback.extract_tb(sys.exc_info()[2]):
-                    print el
+                    print(el)
             if module is not None:
                 cl = eval("module.%s" % (module.__name__))
                 self.toPlugs.append(cl)
@@ -171,6 +171,6 @@ class PluginManager(Singleton):
 def test():
     p = PluginManager()
     for info in p.getPluginsInfo():
-        print info
+        print(info)
 
 if __name__ == "__main__": test()

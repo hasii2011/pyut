@@ -66,7 +66,7 @@ class OglNote(OglObject):
             lines = LineSplitter().split(\
                     self.getPyutObject().getName(), dc, w - 2 * MARGIN)
         except:
-            print "Unable to display note"
+            print("Unable to display note")
             return
 
         baseX, baseY = self.GetPosition()

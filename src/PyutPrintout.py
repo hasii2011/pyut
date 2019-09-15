@@ -20,9 +20,9 @@ class PyutPrintout(wx.Printout):
     :contact: droux@eivd.ch 
     """
     def __init__(self, canvas):
-        print ">>>PyutPrintout"
+        print(">>>PyutPrintout")
         wx.Printout.__init__(self)
-        print ">>>PyutPrintout-2"
+        print(">>>PyutPrintout-2")
         self.canvas = canvas
         self.nbPages = 1
 
