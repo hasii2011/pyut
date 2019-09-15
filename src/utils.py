@@ -15,6 +15,7 @@ functions :
 :contact: <dutoitc@hotmail.com>
 """
 import sys
+
 from xml.parsers.xmlproc import xmlproc,dtdparser,utils,xmldtd
 
 

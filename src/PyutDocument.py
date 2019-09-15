@@ -60,7 +60,7 @@ class PyutDocument:
         self._tree     = None      # Tree i'm belonging to
         self._type     = type
 
-        print "PyutDocument using type " , type
+        print("PyutDocument using type " , type)
         if (type==CLASS_DIAGRAM):
             self._title = DiagramsLabels[type]
             self._frame = UmlClassDiagramsFrame(parentFrame)

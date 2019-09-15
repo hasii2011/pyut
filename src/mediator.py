@@ -155,7 +155,7 @@ class Mediator(Singleton):
     commands from the modules, and dispatch them to the right receiver.
     See the Model-View-Controller pattern and the Mediator pattern.
     There's just one instance of it, and it's global. You get the only
-    instance by instanciating it. See the `singleton.py` file for more
+    instance by instantiating it. See the `singleton.py` file for more
     information about this.
 
     Each part of the GUI must register itself to the mediator. This is done

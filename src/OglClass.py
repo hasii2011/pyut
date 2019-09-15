@@ -1,19 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.21 $"
-__author__  = "EI5, eivd, Group Burgbacher - Waelti"
-__date__    = "2001-12-12"
-
-#from wx.Python.wx.     import *
-#from MiniOgl         import *
 import wx
-from OglObject       import *
-from PyutClass       import PyutClass
-from PyutField       import PyutField
-from PyutMethod      import PyutMethod
-from PyutParam       import PyutParam
-from pyutUtils       import *
+from OglObject import *
+from PyutClass import PyutClass
+
+from pyutUtils import *
+from globals import _
+
 import mediator
 
 # Menu IDs
@@ -22,13 +14,12 @@ import mediator
 
 MARGIN = 10.0
 
-#----------------------------------------------------------------------
 
 class OglClass(OglObject):
     """
     OGL object that represent an UML class in class diagrams.
     This class defines OGL objects that represents a class. You can just
-    instanciate an OGL class and add it to the diagram, links, resizing,
+    instantiate an OGL class and add it to the diagram, links, resizing,
     ... are managed by parent class `OglObject`.
 
     For more instructions about how to create an OGL object, please refer
@@ -38,8 +29,6 @@ class OglClass(OglObject):
     :author: Laurent Burgbacher
     :contact: lb@alawa.ch
     """
-
-    #>------------------------------------------------------------------ 
 
     def __init__(self, pyutClass = None, w=100.0, h=100.0):
         """
@@ -64,23 +53,15 @@ class OglClass(OglObject):
 
         self._nameFont = wx.Font(DEFAULT_FONT_SIZE, wx.SWISS, wx.NORMAL, wx.BOLD)
 
-    #>------------------------------------------------------------------
-
     def GetTextWidth(self, dc, text):
         width = dc.GetTextExtent(text)[0]
         return width
-
-    #>------------------------------------------------------------------
 
     def GetTextHeight(self, dc, text):
         height = dc.GetTextExtent(text)[1]
         return height
 
-
-
-    #>------------------------------------------------------------------
-
-    def calculateClassHeader(self, dc, draw=False, 
+    def calculateClassHeader(self, dc, draw=False,
                              initialX = None, initialY = None,
                              calcWidth=False):
         """
@@ -95,8 +76,8 @@ class OglClass(OglObject):
         dc.SetTextForeground(wx.BLACK)
         pyutObject = self.getPyutObject()
         x, y = self.GetPosition()
-        if initialX != None: x = initialX
-        if initialY != None: y = initialY
+        if initialX is not None: x = initialX
+        if initialY is not None: y = initialY
         w = self._width
         h = 0
         if calcWidth: w = 0
@@ -134,12 +115,7 @@ class OglClass(OglObject):
         # Return sizes
         return (x, y, w, h)
 
-
-    #>------------------------------------------------------------------
-
-    def calculateClassFields(self, dc, draw=False,
-                              initialX = None, initialY = None,
-                              calcWidth = False):
+    def calculateClassFields(self, dc, draw=False, initialX = None, initialY = None, calcWidth = False):
         """
         Calculate the class fields position and size and display it if
         a draw is True
@@ -152,8 +128,8 @@ class OglClass(OglObject):
         dc.SetTextForeground(wx.BLACK)
         pyutObject = self.getPyutObject()
         x, y = self.GetPosition()
-        if initialX != None: x = initialX
-        if initialY != None: y = initialY
+        if initialX is not None: x = initialX
+        if initialY is not None: y = initialY
         w = self._width
         h = 0
         if calcWidth: w = 0
@@ -340,7 +316,7 @@ class OglClass(OglObject):
             self.SetSelected(True)
 
 
-    #>------------------------------------------------------------------ 
+    #>------------------------------------------------------------------
 
     def OnMenuClick(self, event):
         """
@@ -368,7 +344,7 @@ class OglClass(OglObject):
         else:
             event.skip()
 
-    #>------------------------------------------------------------------ 
+    #>------------------------------------------------------------------
 
     def OnRightDown(self, event):
         """
@@ -380,21 +356,21 @@ class OglClass(OglObject):
         pyutObject = self.getPyutObject()
         menu = wx.Menu()
         menu.Append(MNU_TOGGLE_STEREOTYPE,
-                    _("Toggle stereotype display"), 
+                    _("Toggle stereotype display"),
                     _("Set on or off the stereotype display"),
                     True)
         item = menu.FindItemById(MNU_TOGGLE_STEREOTYPE)
         item.Check(pyutObject.getShowStereotype())
 
         menu.Append(MNU_TOGGLE_FIELDS,
-                    _("Toggle fields display"), 
+                    _("Toggle fields display"),
                     _("Set on or off the fields display"),
                     True)
         item = menu.FindItemById(MNU_TOGGLE_FIELDS)
         item.Check(pyutObject.getShowFields())
 
         menu.Append(MNU_TOGGLE_METHODS,
-                    _("Toggle methods display"), 
+                    _("Toggle methods display"),
                     _("Set on or off the methods display"),
                     True)
         item = menu.FindItemById(MNU_TOGGLE_METHODS)
@@ -406,7 +382,7 @@ class OglClass(OglObject):
         menu.Append(MNU_CUT_SHAPE,
                     _("Cut shape"),
                     _("Cut this shape"))
-                    
+
 
         # Get umlframe
         import mediator
@@ -422,7 +398,7 @@ class OglClass(OglObject):
         menu.Bind(wx.EVT_MENU, self.OnMenuClick, id=MNU_CUT_SHAPE)
 
         # Display menu
-        frame.PopupMenu(menu, umlFrame.CalcScrolledPosition(event.GetX(), 
+        frame.PopupMenu(menu, umlFrame.CalcScrolledPosition(event.GetX(),
                                                             event.GetY()))
 
 

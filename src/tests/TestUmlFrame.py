@@ -11,9 +11,6 @@ from ErrorManager import RAISE_ERROR_VIEW
 from FileHandling import FileHandling
 import mediator
 
-# Set lang function emulation
-def _(x): return x
-
 
 class PyUtApp(App):
     def OnInit(self):
@@ -41,7 +38,8 @@ class TestUmlFrame(unittest.TestCase):
         errorManager.changeType(RAISE_ERROR_VIEW)
 
         # Create wx application
-        app = App()
+        # For python 3 and wx 4.x we need to save it so it does not get GC'ed
+        self.app = App()
 
         #  Create frame
         # baseFrame = wxFrame(None, -1, "", size=(10, 10))
@@ -58,20 +56,20 @@ class TestUmlFrame(unittest.TestCase):
         # Create a PyutClass
         try:
             pyutClass = self._umlFrame.createNewClass(10, 10)
-        except Exception as e:
-            self.fail("Can't create a PyutClass")
+        except (ValueError, Exception) as e:
+            self.fail(f"Can't create a PyutClass;  e: {e}")
 
         # Get the corresponding OglClass
         try:
             oglClass = [s for s in self._umlFrame.getDiagram().GetShapes()
                            if s.getPyutObject() is pyutClass][0]
-        except Exception as e:
+        except (ValueError, Exception):
             self.fail("Can't get OglClass")
 
         # Testing position
         try:
             x, y = oglClass.GetPosition()
-        except Exception as e:
+        except (ValueError, Exception):
             self.fail("Can't get OglClass position")
         self.assertTrue(x == 10 and y == 10, "Wrong OglClass position !")
 
@@ -83,22 +81,22 @@ class TestUmlFrame(unittest.TestCase):
         # PyutNote creation
         try:
             pyutNote = self._umlFrame.createNewNote(100, 10)
-        except:
+        except (ValueError, Exception):
             self.fail("Can't create a PyutNote")
 
         # Get OglNote
         try:
             oglNote = [s for s in self._umlFrame.getDiagram().GetShapes()
                            if s.getPyutObject() is pyutNote][0]
-        except:
+        except (ValueError, Exception):
             self.fail("Can't get OglNote")
 
         # Testing position
         try:
             x, y = oglNote.GetPosition()
-        except:
+        except (ValueError, Exception):
             self.fail("Can't get OglNote position")
-        self.failUnless(x==100 and y==10, "Wrong OglNote position !")
+        self.assertTrue(x==100 and y==10, "Wrong OglNote position !")
 
     def testActorCreation(self):
         """
@@ -108,23 +106,22 @@ class TestUmlFrame(unittest.TestCase):
         # Create a PyutActor
         try:
             pyutActor = self._umlFrame.createNewActor(100, 100)
-        except:
+        except (ValueError, Exception):
             self.fail("Can't create a PyutActor")
 
         # Get the corresponding OglActor
         try:
             oglActor = [s for s in self._umlFrame.getDiagram().GetShapes()
                            if s.getPyutObject() is pyutActor][0]
-        except:
+        except (ValueError, Exception):
             self.fail("Can't get OglActor")
 
         # Testing position
         try:
             x, y = oglActor.GetPosition()
-        except:
+        except (ValueError, Exception):
             self.fail("Can't get OglActor position")
-        self.failUnless(x==100 and y==100, "Wrong OglActor position !")
-
+        self.assertTrue(x==100 and y==100, "Wrong OglActor position !")
 
     def testUseCaseCreation(self):
         """
@@ -134,22 +131,22 @@ class TestUmlFrame(unittest.TestCase):
         # Create a PyutUseCase
         try:
             pyutUseCase = self._umlFrame.createNewUseCase(10, 50)
-        except:
+        except (ValueError, Exception):
             self.fail("Can't create a PyutUseCase")
 
         # Get the corresponding OglUseCase
         try:
             oglUseCase = [s for s in self._umlFrame.getDiagram().GetShapes()
                            if s.getPyutObject() is pyutUseCase][0]
-        except:
+        except (ValueError, Exception):
             self.fail("Can't get OglUseCase")
 
         # Testing position
         try:
             x, y = oglUseCase.GetPosition()
-        except:
+        except (ValueError, Exception):
             self.fail("Can't get OglUseCase position")
-        self.failUnless(x==10 and y==50, "Wrong OglUseCase position !")
+        self.assertTrue(x == 10 and y == 50, "Wrong OglUseCase position !")
 
     def testInheritanceLinkCreation(self):
         """
@@ -160,7 +157,7 @@ class TestUmlFrame(unittest.TestCase):
         try:
             pyutClass1 = self._umlFrame.createNewClass(20, 10)
             pyutClass2 = self._umlFrame.createNewClass(30, 10)
-        except:
+        except (ValueError, Exception):
             self.fail("Can't create two PyutClass")
 
         # Get OglObject
@@ -169,13 +166,13 @@ class TestUmlFrame(unittest.TestCase):
                            if s.getPyutObject() is pyutClass1][0]
             oglClass2 = [s for s in self._umlFrame.getDiagram().GetShapes()
                            if s.getPyutObject() is  pyutClass2][0]
-        except:
+        except (ValueError, Exception):
             self.fail("Can't get the two OglClass")
 
         # Create the link
         try:
             self._umlFrame.createInheritanceLink(oglClass1, oglClass2)
-        except:
+        except (ValueError, Exception):
             self.fail("Can't create a inheritance link")
 
     def testNewLinkCreation(self):
@@ -187,7 +184,7 @@ class TestUmlFrame(unittest.TestCase):
         try:
             pyutClass1 = self._umlFrame.createNewClass(20, 20)
             pyutClass2 = self._umlFrame.createNewClass(30, 20)
-        except:
+        except (ValueError, Exception):
             self.fail("Can't create two PyutClass")
 
         # Get OglObject
@@ -196,21 +193,14 @@ class TestUmlFrame(unittest.TestCase):
                            if s.getPyutObject() is pyutClass1][0]
             oglClass2 = [s for s in self._umlFrame.getDiagram().GetShapes()
                            if s.getPyutObject() is  pyutClass2][0]
-        except:
+        except (ValueError, Exception):
             self.fail("Can't get the two OglClass")
 
         # Create the link
         try:
             self._umlFrame.createNewLink(oglClass1, oglClass2)
-        except:
+        except (ValueError, Exception):
             self.fail("Can't create a new link")
-
-    def testClassCreation(self):
-        """
-        Test Class Creation
-        @author C.Dutoit
-        """
-        pyutClass = self._umlFrame.createNewClass(10, 10)
 
 
 if __name__ == '__main__':

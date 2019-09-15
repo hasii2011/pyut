@@ -5,11 +5,7 @@ from AppFrame import *
 from pyutUtils import displayError
 from PyutProject import PyutProject
 import PyutConsts
-
-__version__ = "$Revision: 1.35 $"
-__author__  = "EI6, eivd, Group Dutoit - Roux"
-__date__    = "2002-03-14"
-__PyUtVersion__ = "1.0"
+from globals import _
 
 
 def shorterFilename(filename):
@@ -23,7 +19,7 @@ def shorterFilename(filename):
     """
     import os
     aString = os.path.split(filename)[1]
-    if len(aString)>12:
+    if len(aString) > 12:
         return aString[:4] + aString[-8:]
     else:
         return aString
@@ -92,33 +88,29 @@ class FileHandling:
         self.__splitter = wx.SplitterWindow(self.__parent, -1)
 
         # project tree
-        self.__projectTree = wx.TreeCtrl(self.__splitter, -1,
-                                        style = wx.TR_HIDE_ROOT +
-                                                wx.TR_HAS_BUTTONS)
+        self.__projectTree = wx.TreeCtrl(self.__splitter, -1, styl=wx.TR_HIDE_ROOT +  wx.TR_HAS_BUTTONS)
         self.__projectTreeRoot=self.__projectTree.AddRoot(_("Root"))
-        #self.__projectTree.SetPyData(self.__projectTreeRoot, None)
+
+        #  self.__projectTree.SetPyData(self.__projectTreeRoot, None)
         # Expand root, since wx.TR_HIDE_ROOT is not supported under winx
         # Not supported for hidden tree since wx.Python 2.3.3.1 ?
-        #self.__projectTree.Expand(self.__projectTreeRoot)
+        #  self.__projectTree.Expand(self.__projectTreeRoot)
 
         # diagram container
         self.__notebook=wx.Notebook(self.__splitter, -1, style=wx.CLIP_CHILDREN)
 
         # Set splitter
         self.__splitter.SetMinimumPaneSize(20)
-        #self.__splitter.SplitVertically(self.__projectTree, self.__notebook)
-        #self.__splitter.SetSashPosition(100)
+        #  self.__splitter.SplitVertically(self.__projectTree, self.__notebook)
+        #  self.__splitter.SetSashPosition(100)
         self.__splitter.SplitVertically(self.__projectTree, self.__notebook, 160)
 
-
-        # ...
+        #  ...
         self.__notebookCurrentPage=-1
 
         # Callbacks
-        self.__parent.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED,
-                                  self.__onNotebookPageChanged)
-        self.__parent.Bind(wx.EVT_TREE_SEL_CHANGED,
-                             self.__onProjectTreeSelChanged)
+        self.__parent.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.__onNotebookPageChanged)
+        self.__parent.Bind(wx.EVT_TREE_SEL_CHANGED,  self.__onProjectTreeSelChanged)
 
     def showFrame(self, frame):
         self._frame = frame
@@ -158,20 +150,20 @@ class FileHandling:
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        #print ">>>FileHandling-openFile-1"
+        #  print ">>>FileHandling-openFile-1"
         # Exit if the file is already loaded
         if not self.isDefaultFilename(filename)\
            and self.isProjectLoaded(filename):
             displayError(_("The selected file is already loaded !"))
             return False
-        #print ">>>FileHandling-openFile-2"
+        #  print ">>>FileHandling-openFile-2"
 
         # Create a new project ?
         if project is None:
             project = PyutProject(PyutConsts.DefaultFilename, self.__notebook,
                                   self.__projectTree, self.__projectTreeRoot)
 
-        #print ">>>FileHandling-openFile-3"
+        #  print ">>>FileHandling-openFile-3"
         # Load the project and add it
         try:
             if not project.loadFromFilename(filename):
@@ -181,7 +173,7 @@ class FileHandling:
             #  self._ctrl.registerCurrentProject(project)
             self._currentProject = project
         except:
-            displayError(_("An error occured while loading the project !"))
+            displayError(_("An error occurred while loading the project !"))
             return False
 
         #  print ">>>FileHandling-openFile-4"
@@ -199,7 +191,7 @@ class FileHandling:
                 self._currentFrame = project.getDocuments()[0].getFrame()
             #  print ">>>FileHandling-openFile-7"
         except:
-            displayError(_("An error occured while adding " +
+            displayError(_("An error occurred while adding " +
                            "the project to the notebook"))
             return False
         #  print ">>>FileHandling-openFile-8"
@@ -233,13 +225,13 @@ class FileHandling:
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
             except:
-                displayError(_("An error occured while adding " +
+                displayError(_("An error occurred while adding " +
                                "the project to the notebook"))
                 return False
 
         # Select first frame as current frame
-        if len(project.getDocuments())>nbInitialDocuments:
-            self._frame = projects.getDocuments()[nbInitialDocuments].getFrame()
+        if len(project.getDocuments()) > nbInitialDocuments:
+            self._frame = project.getDocuments()[nbInitialDocuments].getFrame()
 
     def saveFile(self):
         """
@@ -250,7 +242,7 @@ class FileHandling:
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         currentProject = self._currentProject
-        if currentProject == None:
+        if currentProject is None:
             displayError(_("No diagram to save !"), _("Error"))
             return
 
@@ -280,7 +272,7 @@ class FileHandling:
         # Ask for filename
         filenameOK = False
         while not filenameOK:
-            dlg=wx.FileDialog(self.__parent,
+            dlg = wx.FileDialog(self.__parent,
                     defaultDir=self.__parent.getCurrentDir(),
                     wildcard=_("Pyut file (*.put)|*.put"),
                     style=wx.SAVE | wx.OVERWRITE_PROMPT)
@@ -294,7 +286,7 @@ class FileHandling:
             filename = dlg.GetPath()
 
             if len([project for project in self._projects
-                        if project.getFilename() == filename])>0:
+                        if project.getFilename() == filename]) > 0:
                 dlg = wx.MessageDialog(self.__parent,
                     _("Error ! The filename '%s" +
                       "' correspond to a project which is currently opened !" +
@@ -307,7 +299,6 @@ class FileHandling:
                 return
             filenameOK = True
 
-        #...
         project = self._currentProject
         project.setFilename(dlg.GetPath())
         project.saveXmlPyut()
@@ -362,7 +353,6 @@ class FileHandling:
                                     shorterFilename(project.getFilename()))
             self.notebookCurrentPage=self.__notebook.GetPageCount()-1
             self.notebook.SetSelection(self.__notebookCurrentPage)
-
 
     def exportToImageFile(self, extension, imageType):
         """
@@ -554,7 +544,7 @@ class FileHandling:
                             return False
                     dlg.Destroy()
 
-        # Unreference all
+        # dereference all
         self.__parent = None
         self._ctrl = None
         self.__splitter = None
@@ -598,12 +588,12 @@ class FileHandling:
                   "are closed without warning")
 
         # Close the file
-        if self._currentProject.getModified()==True  \
+        if self._currentProject.getModified() is True  \
            and not self._ctrl.isInScriptMode():
             # Ask to save the file
             frame = self._currentProject.getFrames()[0]
             frame.SetFocus()
-            #self._ctrl.registerUMLFrame(frame)
+            # self._ctrl.registerUMLFrame(frame)
             self.showFrame(frame)
 
             dlg = wx.MessageDialog(self.__parent,

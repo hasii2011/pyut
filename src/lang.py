@@ -38,7 +38,7 @@ def importLanguage():
         language = DEFAULT_LANG
 
     # Set language for all application
-    print "Installing language <", language, ">"
+    print("Installing language <", language, ">")
     try:
         # Latest test 20050308
         #langid=wx.LANGUAGE_CHINESE_TRADITIONAL
@@ -61,7 +61,7 @@ def importLanguage():
             loc.AddCatalog(domain)
 
             # Set up python's gettext
-            print "Encoding name is ", loc.GetCanonicalName()
+            print("Encoding name is ", loc.GetCanonicalName())
             mytrans = gettext.translation(domain, localedir, 
                     [loc.GetCanonicalName()], fallback=True)
             mytrans.install(unicode=True)
@@ -92,7 +92,7 @@ def importLanguage():
             #__builtin__.__dict__['_'] = _
     except:
         # If there has been a problem with i18n
-        print "Warning: problem with gettext, i18n not used"
+        print("Warning: problem with gettext, i18n not used")
         import sys, traceback
         errMsg ="The following error occured : %s" % str(sys.exc_info()[1])
         errMsg += "\n\n---------------------------\n"
@@ -104,7 +104,7 @@ def importLanguage():
             errMsg += "Trace :\n"
             for el in traceback.extract_tb(sys.exc_info()[2]): 
                 errMsg = errMsg + str(el) + "\n"
-        print errMsg
+        print(errMsg)
 
         # Redefining '_' function
         def _(string):

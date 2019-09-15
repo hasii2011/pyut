@@ -1,15 +1,41 @@
-
+import PyutUseCase
 from FileHandling import *
+from OglActor import OglActor
+from OglNote import OglNote
+from OglUseCase import OglUseCase
+
+from PluginManager import PluginManager
+from PyutConsts import CLASS_DIAGRAM
+from PyutConsts import SEQUENCE_DIAGRAM
+from PyutConsts import USECASE_DIAGRAM
+
+from PyutPreferences import PyutPreferences
+from PyutPrintout import PyutPrintout
+
 from Tool import Tool
+from mediator import ACTION_NEW_ACTOR
+from mediator import ACTION_NEW_INHERIT_LINK
+from mediator import ACTION_NEW_NOTE_LINK
+from mediator import ACTION_NEW_AGGREGATION_LINK
+from mediator import ACTION_SELECTOR
+from mediator import ACTION_NEW_CLASS
+from mediator import ACTION_NEW_NOTE
+from mediator import ACTION_NEW_IMPLEMENT_LINK
+from mediator import ACTION_NEW_COMPOSITION_LINK
+from mediator import ACTION_NEW_ASSOCIATION_LINK
+from mediator import ACTION_ZOOM_OUT
+from mediator import ACTION_ZOOM_IN
+from mediator import ACTION_NEW_SD_MESSAGE
+from mediator import ACTION_NEW_SD_INSTANCE
+from mediator import ACTION_NEW_USECASE
+from mediator import getMediator
 
-__version__ = "$Revision: 1.55 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
-
-
-
+from pyutUtils import assignID
 
 # Assign constants
+from pyutUtils import displayWarning
+from globals import _
+
 [ID_MNUFILENEWPROJECT,  ID_MNUFILEOPEN,          ID_MNUFILESAVE,
 ID_MNUFILESAVEAS,       ID_MNUFILEEXIT,          ID_MNUEDITCUT,
 ID_MNUEDITCOPY,         ID_MNUEDITPASTE,         ID_MNUHELPABOUT,
@@ -34,36 +60,29 @@ ID_MNUFILEREMOVEDOCUMENT,                        ID_DEBUG,
 # Assign constants
 
 ACTIONS = {
-    ID_ARROW           : ACTION_SELECTOR,
-    ID_CLASS           : ACTION_NEW_CLASS,
-    ID_NOTE            : ACTION_NEW_NOTE,
-    ID_REL_INHERITANCE : ACTION_NEW_INHERIT_LINK,
-    ID_REL_REALISATION : ACTION_NEW_IMPLEMENT_LINK,
-    ID_REL_COMPOSITION : ACTION_NEW_COMPOSITION_LINK,
-    ID_REL_AGREGATION  : ACTION_NEW_AGGREGATION_LINK,
-    ID_REL_ASSOCIATION : ACTION_NEW_ASSOCIATION_LINK,
-    ID_REL_NOTE        : ACTION_NEW_NOTE_LINK,
-    ID_ACTOR           : ACTION_NEW_ACTOR,
-    ID_USECASE         : ACTION_NEW_USECASE,
-    ID_SD_INSTANCE     : ACTION_NEW_SD_INSTANCE,
-    ID_SD_MESSAGE      : ACTION_NEW_SD_MESSAGE,
-    ID_ZOOMIN          : ACTION_ZOOM_IN,
-    ID_ZOOMOUT         : ACTION_ZOOM_OUT
+    ID_ARROW: ACTION_SELECTOR,
+    ID_CLASS: ACTION_NEW_CLASS,
+    ID_NOTE : ACTION_NEW_NOTE,
+    ID_REL_INHERITANCE: ACTION_NEW_INHERIT_LINK,
+    ID_REL_REALISATION: ACTION_NEW_IMPLEMENT_LINK,
+    ID_REL_COMPOSITION: ACTION_NEW_COMPOSITION_LINK,
+    ID_REL_AGREGATION : ACTION_NEW_AGGREGATION_LINK,
+    ID_REL_ASSOCIATION: ACTION_NEW_ASSOCIATION_LINK,
+    ID_REL_NOTE:    ACTION_NEW_NOTE_LINK,
+    ID_ACTOR:       ACTION_NEW_ACTOR,
+    ID_USECASE:     ACTION_NEW_USECASE,
+    ID_SD_INSTANCE: ACTION_NEW_SD_INSTANCE,
+    ID_SD_MESSAGE:  ACTION_NEW_SD_MESSAGE,
+    ID_ZOOMIN:      ACTION_ZOOM_IN,
+    ID_ZOOMOUT:     ACTION_ZOOM_OUT
 }
 
-#wx.OGLInitialize()
 
-# ...
-#wxInitAllImageHandlers()
-
-
-
-##############################################################################
 class AppFrame(wx.Frame):
     """
     AppFrame : main pyut frame; contain menus, statusbar, UMLframe, ...
 
-    Instancied by PyutApp.py
+    Instantiated by PyutApp.py
     Use it as a normal Frame ::
         dlg=AppFrame(self, -1, "Pyut")
         dlg.Show()
@@ -73,8 +92,6 @@ class AppFrame(wx.Frame):
     :contact: dutoitc@hotmail.com
     :version: $Revision: 1.55 $
     """
-
-    #>------------------------------------------------------------------------
 
     def __init__(self, parent, ID, title):
         """
@@ -109,11 +126,11 @@ class AppFrame(wx.Frame):
         # Properties
         self.plugMgr = PluginManager()
         self.plugs = {}                         # To store the plugins
-        #self.toolbox = Toolbox(self)                # tools plugins, ..
+        # self.toolbox = Toolbox(self)                # tools plugins, ..
         self._toolboxesID = {}                  # Association toolbox category/id
 
         # Preferences
-        self._prefs = PyutPreferences() #getPrefs()
+        self._prefs = PyutPreferences()  # getPrefs()
         self._lastDir = self._prefs["LastDirectory"]
         if self._lastDir is None: # Assert that the path is present
             import os
@@ -137,7 +154,7 @@ class AppFrame(wx.Frame):
         # Initializations
         self._initPyutTools()  # Toolboxes, toolbar
         self._initMenu()       # Menu
-        #self._initToolBar()    # Toolbar
+        #  self._initToolBar()    # Toolbar
         self._initPrinting()   # Printing datas
 
         # Accelerators init. (=Keyboards shortcuts)
@@ -159,8 +176,6 @@ class AppFrame(wx.Frame):
         self._alreadyDisplayedTipsFrame = False
         self.Bind(wx.EVT_ACTIVATE, self._onActivate)
 
-
-    #>-----------------------------------------------------------------------
     def _onActivate(self, event):
         """
         EVT_ACTIVATE Callback; display tips frame.
@@ -173,13 +188,10 @@ class AppFrame(wx.Frame):
             # Display tips frame
             from TipsFrame import TipsFrame
             tipsFrame = TipsFrame(self)
-            #tipsFrame.Show()
+            #  tipsFrame.Show()
             self._alreadyDisplayedTipsFrame = True
         except:
             pass
-
-
-    #>-----------------------------------------------------------------------
 
     def _initPyutTools(self):
         """
@@ -326,7 +338,7 @@ class AppFrame(wx.Frame):
                     None, wxID = ID_REL_COMPOSITION, isToggle = True)
         toolRelAgregation = Tool("pyut-rel-agregation",
                     wx.Bitmap('img' + os.sep + 'relagregation.bmp', wx.BITMAP_TYPE_BMP),
-                    _("New agregation relation"), _("New agregation relation"),
+                    _("New aggregation relation"), _("New agregation relation"),
                     _("PyUt tools"),
                     (lambda x:self._OnNewAction(x)),
                     None, wxID = ID_REL_AGREGATION, isToggle = True)
@@ -423,9 +435,6 @@ class AppFrame(wx.Frame):
             ]
         )
 
-
-    #>-----------------------------------------------------------------------
-
     def _initMenu(self):
         """
         Menu initialisation.
@@ -507,9 +516,9 @@ class AppFrame(wx.Frame):
             _("&Print\tCtrl-P"), _("Print the current diagram"))
         self.mnuFile.AppendSeparator()
 
-        #Add Last opened files
+        #  Add Last opened files
         index=0
-        #TODO : does not work ? verify function return...
+        #  TODO : does not work ? verify function return...
         for el in self._prefs.getLastOpenedFilesList():
             index+=1
             self.mnuFile.Append(self.lastOpenedFilesID[index-1], "&" +
@@ -617,7 +626,7 @@ class AppFrame(wx.Frame):
                 id=ID_MNUFILEPRINT)
         self.Bind(wx.EVT_MENU, self._OnMnuFilePyutProperties,
                 id=ID_MNUFILEPYUTPROPER)
-        #EVT_MENU(self, ID_MNUFILEDIAGRAMPROPER,self._OnMnuFileDiagramProperties)
+        #  EVT_MENU(self, ID_MNUFILEDIAGRAMPROPER,self._OnMnuFileDiagramProperties)
         self.Bind(wx.EVT_MENU, self._OnMnuFileExit,
                 id=ID_MNUFILEEXIT)
         self.Bind(wx.EVT_MENU, self._OnMnuHelpAbout,
@@ -653,21 +662,12 @@ class AppFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self._OnMnuDebug,
                 id=ID_DEBUG)
 
-        #Added by P. Dabrowski 20.11.2005
+        #  Added by P. Dabrowski 20.11.2005
         self.Bind(wx.EVT_MENU, self._OnMnuUndo,
                    id=ID_MNUUNDO)
         self.Bind(wx.EVT_MENU, self._OnMnuRedo,
                    id=ID_MNUREDO)
 
-
-
-
-
-
-        # ----------------------
-
-        # Last opened files handlers
-        # ----------------------
         for index in range(self._prefs.getNbLOF()):
             self.Bind(wx.EVT_MENU, self._OnMnuLOF,
                     id=self.lastOpenedFilesID[index])
@@ -676,8 +676,6 @@ class AppFrame(wx.Frame):
         # Others events handlers
         # ----------------------
         self.Bind(wx.EVT_CLOSE, self.Close)
-
-    #>----------------------------------------------------------------------
 
     def makeExportMenu(self):
         """
@@ -700,8 +698,6 @@ class AppFrame(wx.Frame):
             self.plugs[id] = plugs[i]
         return sub
 
-    #>----------------------------------------------------------------------
-
     def makeImportMenu(self):
         """
         Make the import submenu.
@@ -722,8 +718,6 @@ class AppFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, self.OnImport, id=id)
             self.plugs[id] = plugs[i]
         return sub
-
-    #>----------------------------------------------------------------------
 
     def makeToolsMenu(self):
         """
@@ -746,8 +740,6 @@ class AppFrame(wx.Frame):
             self.plugs[id] = plugs[i]
         return sub
 
-    #>----------------------------------------------------------------------
-
     def makeToolboxesMenu(self):
         """
         Make the toolboxes submenu.
@@ -769,9 +761,6 @@ class AppFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, self.OnToolboxMenuClick, id=id)
         return sub
 
-
-    #>----------------------------------------------------------------------
-
     def getCurrentDir(self):
         """
         Return current working directory.
@@ -782,8 +771,6 @@ class AppFrame(wx.Frame):
         @since 1.50
         """
         return self._lastDir
-
-    #>----------------------------------------------------------------------
 
     def updateCurrentDir(self, fullPath):
         """
@@ -799,16 +786,13 @@ class AppFrame(wx.Frame):
         # Save last directory
         self._prefs["LastDirectory"] = self._lastDir
 
-
-    #>----------------------------------------------------------------------
-
     def _createAcceleratorTable(self):
         """
         Accelerator table initialization
 
         @author C.Dutoit
         """
-        #init accelerator table
+        #  init accelerator table
         lst=[(wx.ACCEL_CTRL,     ord('n'),   ID_MNUFILENEWPROJECT),
              (wx.ACCEL_CTRL,     ord('N'),   ID_MNUFILENEWPROJECT),
              (wx.ACCEL_CTRL,     ord('L'),   ID_MNUFILENEWCLASSDIAGRAM),
@@ -834,15 +818,11 @@ class AppFrame(wx.Frame):
              (wx.ACCEL_CTRL,     ord('d'),   ID_DEBUG),
              (wx.ACCEL_CTRL,     ord('D'),   ID_DEBUG),
              ]
-        acc=[]
+        acc = []
         for el in lst:
             (el1, el2, el3)=el
             acc.append(wx.AcceleratorEntry(el1, el2, el3))
         return acc
-
-
-
-    #>----------------------------------------------------------------------
 
     def _initPrinting(self):
         """
@@ -857,8 +837,6 @@ class AppFrame(wx.Frame):
         self._printData.SetNoCopies(1)
         self._printData.SetCollate(True)
 
-    #>-----------------------------------------------------------------------
-
     def _OnMnuFileNewProject(self, event):
         """
         begin a new project
@@ -867,8 +845,6 @@ class AppFrame(wx.Frame):
         """
         self._fileHandling.newProject()
         self._ctrl.updateTitle()
-
-    #>-----------------------------------------------------------------------
 
     def _OnMnuFileNewClassDiagram(self, event):
         """
@@ -879,8 +855,6 @@ class AppFrame(wx.Frame):
         self._fileHandling.newDocument(CLASS_DIAGRAM)
         self._ctrl.updateTitle()
 
-    #>-----------------------------------------------------------------------
-
     def _OnMnuFileNewSequenceDiagram(self, event):
         """
         begin a new sequence diagram
@@ -890,8 +864,6 @@ class AppFrame(wx.Frame):
         self._fileHandling.newDocument(SEQUENCE_DIAGRAM)
         self._ctrl.updateTitle()
 
-    #>-----------------------------------------------------------------------
-
     def _OnMnuFileNewUsecaseDiagram(self, event):
         """
         begin a new use-case diagram
@@ -900,8 +872,6 @@ class AppFrame(wx.Frame):
         """
         self._fileHandling.newDocument(USECASE_DIAGRAM)
         self._ctrl.updateTitle()
-
-    #>-----------------------------------------------------------------------
 
     def _OnMnuFileInsertProject(self, event):
         """
@@ -913,11 +883,10 @@ class AppFrame(wx.Frame):
                          "use it at your own risk.\n"
                          "You risk a shapes ID duplification with "
                          "unexpected results !"),
-                         parent=self)
+                         parent = self)
 
         if (self._fileHandling.getCurrentProject()) is None:
-            displayError(_("No project to insert this file into !"),
-                         parent=self)
+            displayError(_("No project to insert this file into !"), parent=self)
             return
 
         # Ask which project to insert
@@ -928,7 +897,6 @@ class AppFrame(wx.Frame):
         self.updateCurrentDir(dlg.GetPath())
         filename=dlg.GetPath()
         dlg.Destroy()
-
 
         print("inserting file", str(filename))
 
@@ -946,8 +914,6 @@ class AppFrame(wx.Frame):
         """
         self._loadFile()
 
-    #>-----------------------------------------------------------------------
-
     def _OnMnuFileSave(self, event):
         """
         Save the current diagram to a file
@@ -956,8 +922,6 @@ class AppFrame(wx.Frame):
         @author C.Dutoit < dutoitc@hotmail.com>
         """
         self._saveFile()
-
-    #>-----------------------------------------------------------------------
 
     def _OnMnuFileSaveAs(self, event):
         """
@@ -968,8 +932,6 @@ class AppFrame(wx.Frame):
         """
         self._saveFileAs()
 
-    #>-----------------------------------------------------------------------
-
     def _OnMnuFileClose(self, event):
         """
         Close the current file
@@ -978,8 +940,6 @@ class AppFrame(wx.Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._fileHandling.closeCurrentProject()
-
-    #>-----------------------------------------------------------------------
 
     def _OnMnuFileRemoveDocument(self, event):
         """
@@ -994,8 +954,6 @@ class AppFrame(wx.Frame):
         else:
             displayWarning(_("No document to remove"))
 
-    #>-----------------------------------------------------------------------
-
     def _OnMnuFileExportBmp(self, event):
         """
         Display the Export to bitmap dialog box
@@ -1004,8 +962,6 @@ class AppFrame(wx.Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._fileHandling.exportToBmp(-1)
-
-    #>-----------------------------------------------------------------------
 
     def _OnMnuFileExportJpg(self, event):
         """
@@ -1016,8 +972,6 @@ class AppFrame(wx.Frame):
         """
         self._fileHandling.exportToJpg(-1)
 
-    #>-----------------------------------------------------------------------
-
     def _OnMnuFileExportPng(self, event):
         """
         Display the Export to png dialog box
@@ -1026,8 +980,6 @@ class AppFrame(wx.Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._fileHandling.exportToPng(-1)
-
-    #>-----------------------------------------------------------------------
 
     def _OnMnuFileExportPs(self, event):
         """
@@ -1039,14 +991,13 @@ class AppFrame(wx.Frame):
         # Choose filename
         filename = ""
         try:
-            dlg=wx.FileDialog(self, _("Save as Postscript"), self._lastDir, "",
-                "*.ps", wx.SAVE | wx.HIDE_READONLY)
-            if dlg.ShowModal()!=wx.ID_OK:
+            dlg = wx.FileDialog(self, _("Save as Postscript"), self._lastDir, "", "*.ps", wx.SAVE | wx.HIDE_READONLY)
+            if dlg.ShowModal() != wx.ID_OK:
                 dlg.Destroy()
                 return False
             filename=dlg.GetPath()
             if len(filename)<3 or filename[-3:]!=".ps":
-                filename+=".ps"
+                filename += ".ps"
             dlg.Destroy()
         except:
             displayError(_("Error while displaying Postscript saving dialog"),
@@ -1055,8 +1006,6 @@ class AppFrame(wx.Frame):
 
         # export to PDF
         self.printDiagramToPostscript(filename)
-
-    #>-----------------------------------------------------------------------
 
     def _OnMnuFileExportPDF(self, event):
         """
@@ -1100,8 +1049,6 @@ class AppFrame(wx.Frame):
             except:
                 displayError("Can't export to pdf !", parent=self)
 
-    #>-----------------------------------------------------------------------
-
     def printDiagramToPostscript(self, filename):
         """
         print the current diagram to postscript
@@ -1120,7 +1067,7 @@ class AppFrame(wx.Frame):
         printer=None
         try:
             self._ctrl.deselectAllShapes()
-            datas=wx.PrintDialogData()
+            datas = wx.PrintDialogData()
             datas.SetPrintData(self._printData)
             datas.SetPrintToFile(True)
             datas.SetMinPage(1)
@@ -1137,7 +1084,7 @@ class AppFrame(wx.Frame):
             return False
 
         # Print to postscript
-        if not printer.Print(self, printout, FALSE):
+        if not printer.Print(self, printout, False):
             displayError(_("Cannot print"), parent=self)
             self._ctrl.setStatusText(_("Error while printing to postscript"))
             return False
@@ -1786,7 +1733,6 @@ class AppFrame(wx.Frame):
         for shape in shapes:
             shape.SetSelected(True)
         frame.Refresh()
-
 
     def _OnMnuFilePyutProperties(self, event):
         """

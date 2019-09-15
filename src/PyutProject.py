@@ -1,17 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.19 $"
-__author__  = "EI6, eivd, Group Dutoit - Roux"
-__date__    = "2002-03-14"
-__PyUtVersion__ = "1.0"
-
-#from wxPython.wx import *
-import wx
-from UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from AppFrame import *
 from pyutUtils import displayError
 from PyutDocument import PyutDocument
+from globals import _
 
 
 #>-----------------------------------------------------------------------
@@ -130,11 +121,11 @@ class PyutProject:
         @author C.Dutoit
         """
         self._modified = value
-    
+
     #>------------------------------------------------------------------------
 
     def getModified(self):
-        """ 
+        """
         Return the modified attribute
 
         @author C.Dutoit
@@ -146,11 +137,11 @@ class PyutProject:
     def addToTree(self):
         # Add the project to the project tree
         self._treeRoot = self._tree.AppendItem(
-                         self._treeRootParent, 
+                         self._treeRootParent,
                          shorterFilename(self._filename),
                          data=wx.TreeItemData(self))
         self._tree.Expand(self._treeRoot)
-        
+
         # Add the frames
         for document in self._documents:
             document.addToTree(self, self._tree, self._treeRoot)
@@ -185,7 +176,7 @@ class PyutProject:
         self._filename = filename
         try:
             io.open(filename, self)
-            self._modified = False   
+            self._modified = False
         except:
             wx.EndBusyCursor()
             displayError(_("Error loading file"))
@@ -230,7 +221,7 @@ class PyutProject:
 
         try:
             io.open(filename, self)
-            self._modified = False   
+            self._modified = False
         except:
             displayError(_("Error loading file"))
             wx.EndBusyCursor()
@@ -294,7 +285,7 @@ class PyutProject:
              #io.save(self._filename, self._ctrl.getUmlObjects(), \
               #   self._documents[0].getFrame())
             io.save(self)
-            self._modified = False   
+            self._modified = False
 
             self.updateTreeText()
         except:
@@ -302,14 +293,14 @@ class PyutProject:
         wx.EndBusyCursor()
 
     #>------------------------------------------------------------------------
-    
+
     def updateTreeText(self):
         """
         Update the tree text for this document
 
         @author C.Dutoit
         """
-        self._tree.SetItemText(self._treeRoot, 
+        self._tree.SetItemText(self._treeRoot,
                                shorterFilename(self._filename))
         for document in self._documents:
             document.updateTreeText()
@@ -325,12 +316,12 @@ class PyutProject:
         """
         # Get frame
         frame = document.getFrame()
-        
+
         # Confirmation
         #self._ctrl.registerUMLFrame(frame)
         if confirmation:
             self._ctrl.getFileHandling().showFrame(frame)
-            dlg = wx.MessageDialog(self._parentFrame, 
+            dlg = wx.MessageDialog(self._parentFrame,
                                   _("Are you sure to remove the document ?"),
                                   _("Remove a document from a project"),
                                   wx.YES_NO)
@@ -348,7 +339,7 @@ class PyutProject:
         # Remove frame
         #frame.Close()  # DONE by fileHandling.removeAllRef...
         #self._ctrl.registerUMLFrame(None)
-        
+
         # Remove from tree
         document.removeFromTree()
 

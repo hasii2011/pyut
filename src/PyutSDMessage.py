@@ -34,7 +34,7 @@ class PyutSDMessage(PyutLink):
         @tips : add time scale zoomer ?! and ofset..ter ?
         """
         if DEBUG:
-            print "PyutSDMessage.__init__", srcTime, dstTime
+            print("PyutSDMessage.__init__", srcTime, dstTime)
         PyutLink.__init__(self, source=src, destination=dst)
         self._message = message
         self._srcTime = srcTime
@@ -212,7 +212,7 @@ class PyutSDMessage(PyutLink):
             PyutLink.setSource(self, src)
         if srcTime!=-1:
             if DEBUG:
-                print "PyutSDMessage - Setting srcTime to ", srcTime
+                print("PyutSDMessage - Setting srcTime to ", srcTime)
             self.setSrcTime(srcTime)
 
     #>------------------------------------------------------------------------
@@ -228,6 +228,6 @@ class PyutSDMessage(PyutLink):
             PyutLink.setDestination(self, dst)
             #self._dest = dst
         if dstTime!=-1:
-            print "PyutSDMessage - Setting dstTime to ", dstTime
+            print("PyutSDMessage - Setting dstTime to ", dstTime)
             self.setDstTime(dstTime)
 

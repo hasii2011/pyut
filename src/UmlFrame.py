@@ -1,13 +1,16 @@
 
 import wx
 
-from PyutActor      import PyutActor
-from OglActor       import OglActor
-from OglUseCase     import OglUseCase
-from OglClass       import *
-from OglNote        import *
-from OglSDMessage   import OglSDMessage
+from PyutActor import PyutActor
+from OglActor import OglActor
+from OglUseCase import OglUseCase
+from OglClass import *
+from OglNote import *
+from OglSDMessage import OglSDMessage
 from historyManager import *
+
+from globals import _
+
 #  DEFAULT_WIDTH = 1280
 DEFAULT_WIDTH = 3000
 #DEFAULT_WIDTH = 5120
