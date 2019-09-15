@@ -162,8 +162,13 @@ class DiagramFrame(wx.ScrolledWindow):
 
         # paint related
         w, h = self.GetSize()
-        self.__workingBitmap = wx.EmptyBitmap(w, h) # double buffering
-        self.__backgroundBitmap = wx.EmptyBitmap(w, h)
+        # self.__workingBitmap    = wx.EmptyBitmap(w, h)  # double buffering
+        # self.__backgroundBitmap = wx.EmptyBitmap(w, h)
+        #
+        # EmptyBitMap is deprecated
+        #
+        self.__workingBitmap    = wx.Bitmap(w, h)  # double buffering
+        self.__backgroundBitmap = wx.Bitmap(w, h)
 
         DEFAULT_FONT_SIZE = 12
         self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.DEFAULT, \
