@@ -3,15 +3,12 @@
 __author__  = "Laurent Burgbacher <lb@alawa.ch>"
 __version__ = "$Revision: 1.14 $"
 __date__    = "2001-07-29"
-# Check wxLocale ?
 
 from PyutPreferences import *
 import gettext
-#from wxPython.wx import wxLocale, wxGetTranslation, wxLANGUAGE_POLISH
-import wx 
 
-# Don't know why yet. If not import here, throw a system exception later !
-import zlib 
+import wx
+
 
 # Constants
 DEFAULT_LANG = "en"
@@ -62,14 +59,14 @@ def importLanguage():
 
             # Set up python's gettext
             print("Encoding name is ", loc.GetCanonicalName())
-            mytrans = gettext.translation(domain, localedir, 
+            mytrans = gettext.translation(domain, localedir,
                     [loc.GetCanonicalName()], fallback=True)
             mytrans.install(unicode=True)
             #import __builtin__
             #__builtin__.__dict__['_'] = lambda x:wx.GetTranslation(x).encode("UTF-8")
             #__builtin__.__dict__['_'] = wx.GetTranslation
             #print "importL=", _("Untitled.put")
-            
+
 
 
             #gettext.install('Pyut', '.', unicode=True)
@@ -78,7 +75,7 @@ def importLanguage():
             #loc = wx.Locale(wx.LANGUAGE_CHINESE_TRADITIONAL)
             #loc.setLocale(locale.LC_ALL, 'ci')
             #gettext.translation("Pyut", ".", [language]).install()
-            
+
 
 
 
@@ -102,17 +99,18 @@ def importLanguage():
             errMsg += "Msg   : %s" % sys.exc_info()[1] + "\n"
         if sys.exc_info()[2] is not None:
             errMsg += "Trace :\n"
-            for el in traceback.extract_tb(sys.exc_info()[2]): 
+            for el in traceback.extract_tb(sys.exc_info()[2]):
                 errMsg = errMsg + str(el) + "\n"
         print(errMsg)
 
         # Redefining '_' function
-        def _(string):
-            return unicode(string)
+        # def _(string):
+        #     return unicode(string)
 
         ## Put function '_' in globals (builtin)
-        import __builtin__
-        __builtin__.__dict__['_'] = _
+        # import __builtin__
+        # __builtin__.__dict__['_'] = _
+
 importLanguage()
 #print "**************"
 #print _("Untitled.put")

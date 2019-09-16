@@ -1,13 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.13 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
-
-#from wxPython.wx import *
 import mediator
-import ErrorManager
+
 import wx
 
 """
@@ -21,12 +14,14 @@ Functions :
 """
 
 # Assign constants
+
+
 def assignID(nb):
     """
     Assign and return nb new id.
-    
+
     @param number  nb : number of unique IDs to return
-    @return numbers[] : List of numbers wich contain <nb> unique IDs
+    @return numbers[] : List of numbers which contain <nb> unique IDs
     @since 1.0
     @author C.Dutoit <dutoitc@hotmail.com>
     """
@@ -37,12 +32,12 @@ def assignID(nb):
     #If this not so long header is not enough explicit, please forgive me or
     #mail me with an update to dutoitc@hotmail.com. thks
     #
-    return map(lambda x:wx.NewId(), range(nb))
+    return map(lambda x: wx.NewId(), range(nb))
 
 
 def getErrorInfo(exc_info):
     import traceback
-    errMsg =str(exc_info[1])
+    errMsg = str(exc_info[1])
     errMsg += "\n\n---------------------------\n"
     if exc_info[0] is not None:
         errMsg += "Error : %s" % exc_info[0] + "\n"
@@ -50,12 +45,10 @@ def getErrorInfo(exc_info):
         errMsg += "Msg   : %s" % exc_info[1] + "\n"
     if exc_info[2] is not None:
         errMsg += "Trace :\n"
-        for el in traceback.extract_tb(exc_info[2]): 
+        for el in traceback.extract_tb(exc_info[2]):
             errMsg = errMsg + str(el) + "\n"
     return errMsg
 
-
-#>----------------------------------------------------------------------------
 
 def displayError(msg, title=None, parent=None):
     """
@@ -78,7 +71,7 @@ def displayError(msg, title=None, parent=None):
         #msg = msg2
         #msg = msg.decode("UTF-8").encode("UTF-8")
         em.newFatalError(msg, title, parent)
-    except:
+    except (ValueError, Exception) as e:
         print("*********************************************************")
         print("*********************************************************")
         print("*********************************************************")
@@ -95,10 +88,6 @@ def displayError(msg, title=None, parent=None):
         print("*********************************************************")
 
 
-
-
-#>----------------------------------------------------------------------------
-
 def displayWarning(msg, title=None, parent=None):
     """
     Display a warning
@@ -109,8 +98,6 @@ def displayWarning(msg, title=None, parent=None):
     em = ctrl.getErrorManager()
     em.newWarning(msg, title, parent)
 
-
-#>----------------------------------------------------------------------------
 
 def displayInformation(msg, title=None, parent=None):
     """

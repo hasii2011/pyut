@@ -2,8 +2,17 @@
 
 import os
 
-exePath = None              # the pyut's path
-userPath = os.getcwd()      # where the user launched pyut from
+from os import chdir
+from os import getcwd
+from sys import path
+from sys import argv
+
+from PyutApp import PyutApp
+from pyutVersion import getPyUtVersion
+from PyutPreferences import PyutPreferences
+
+exePath  = None              # the pyut's path
+userPath = getcwd()      # where the user launched pyut from
 
 
 def getExePath():
@@ -14,14 +23,14 @@ def getExePath():
     @since 1.5.2.19
     @author C.Dutoit
     """
-    import sys, os
-    #TODO : fix this bug : unhandled after py2exe, on windows
-    #encoding=sys.getfilesystemencoding()
-    #if encoding in ["mbcs"]:
-        #encoding="ISO-8859-1"
-    #path = sys.path[0].decode(encoding)
-    path = sys.path[0].decode(sys.getfilesystemencoding())
-    return path
+    # TODO : fix this bug : unhandled after py2exe, on windows
+    # encoding = sys.getfilesystemencoding()
+    # if encoding in ["mbcs"]:
+        # encoding="ISO-8859-1"
+    # path = sys.path[0].decode(encoding)
+    # path = sys.path[0].decode(sys.getfilesystemencoding())
+    absPath = path[0]
+    return absPath
 
 
 def goToPyutDirectory():
@@ -33,37 +42,33 @@ def goToPyutDirectory():
     """
     import sys, os
     # Change current directory to pyut's directory
-    exePath = getCurrentAbsolutePath()
+    # exePath = getCurrentAbsolutePath()
+    exePath = os.getcwd()
     sys.path.append(exePath)
-    print("Executing PyUt from exepath ", exePath)
+    print(f"Executing PyUt from exepath {exePath}")
     os.chdir(exePath)
 
 
 def main():
     """
     main pyut function; create and run app
-
-    @param string name : init name with the name
-    @since 1.0
-    @author C.Dutoit
     """
-    import os, sys
+
     global exePath, userPath
 
     # Path
     try:
-        sys.path.append(exePath)
-        os.chdir(exePath)
+        path.append(exePath)
+        chdir(exePath)
     except OSError as msg:
         print(f"Error while setting path: {msg}")
 
     # Define last open directory ?
     #  - default is current directory
     #  - last opened directory for developers (pyut/src present)
-    from PyutPreferences import PyutPreferences
     prefs = PyutPreferences()    # Prefs handler
     prefs["orgDirectory"] = os.getcwd()
-    if (userPath.find('pyut/src')==-1) and (userPath.find('pyut2/src')==-1):
+    if (userPath.find('pyut/src') == -1) and (userPath.find('pyut2/src') == -1):
         # (User-mode)
         prefs["LastDirectory"] = userPath
     del prefs
@@ -93,14 +98,8 @@ def main():
 =============================================================================
 """)
 
-
-    import lang
-    #print "**************"
-    #print _("Untitled.put")
-    from PyutApp import PyutApp
     app = PyutApp(0)
     app.MainLoop()
-    app = None
 
 
 def treatArguments():
@@ -111,23 +110,19 @@ def treatArguments():
     @author C.Dutoit
     @return 1 if an arguments was found and PyUt must be stopped
     """
-    import sys
 
     # Exit if no arguments
-    if len(sys.argv)<2:
+    if len(argv) < 2:
         return 0
 
     # Treat command line arguments
-    if sys.argv[1] == "--version":
-        from pyutVersion import getPyUtVersion
-        print("PyUt, version %s" % getPyUtVersion())
+    if argv[1] == "--version":
+        print(f"PyUt, version {getPyUtVersion()}")
         print()
         return 1
-    elif sys.argv[1] == "--help":
-        from pyutVersion import getPyUtVersion
-        print("PyUt, version %s" % getPyUtVersion())
-        print("Syntax : pyut.pyw [filename] [--version] [--help]" \
-              "[--start_directory=xxx] file1 file2 ...")
+    elif argv[1] == "--help":
+        print(f"PyUt, version {getPyUtVersion()}")
+        print("Syntax : pyut.pyw [filename] [--version] [--help] [--start_directory=xxx] file1 file2 ...")
         print()
         print("i.e. :    pyut.pyw --version             display version number")
         print("          pyut.pyw --help                display this help")
@@ -136,7 +131,7 @@ def treatArguments():
         print("                                         default directory")
         print()
         return 1
-    for param in sys.argv[1:]:
+    for param in argv[1:]:
         if param[:18] == "--start_directory=":
             import os
             print("Starting with directory ", param[18:])

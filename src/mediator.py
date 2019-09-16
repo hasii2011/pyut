@@ -9,9 +9,7 @@ from DlgEditLink import *
 
 from pyutVersion import getPyUtVersion
 
-__version__ = "$Revision: 1.38 $"
-__author__  = "EI5, eivd, Group Burgbacher - Waelti"
-__date__    = "2001-12-12"
+from globals import _
 
 __PyUtVersion__ = getPyUtVersion()
 

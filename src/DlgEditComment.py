@@ -1,18 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-1-8"
-
-#from wxPython.wx import *
-from pyutUtils   import *
-from PyutClass   import *
 import wx
+
+from pyutUtils import assignID
+
+from globals import _
 
 [
     TXT_COMMENT
 ] = assignID(1)
+
 
 class DlgEditComment(wx.Dialog):
     """
@@ -20,8 +16,6 @@ class DlgEditComment(wx.Dialog):
 
     @version $Revision: 1.4 $
     """
-
-    #>------------------------------------------------------------------------
 
     def __init__(self, parent, ID, pyutClass):
         """
@@ -38,35 +32,32 @@ class DlgEditComment(wx.Dialog):
 
         self.SetSize(wx.Size(416, 200))
 
-        #init members vars
+        # init members vars
         self._text = self._pyutClass.getDescription()
-        self._returnAction = -1   #describe how the user exited the dialog box
+        self._returnAction = -1   # describe how the user exited the dialog box
 
-        #labels
+        # labels
         wx.StaticText(self, -1, _("Class description"),  wx.Point(8, 8))
 
-        #text
-        self._txtCtrl=wx.TextCtrl(self, TXT_COMMENT, self._text, 
-                wx.Point(8, 24), wx.Size(392, 100), wx.TE_MULTILINE)
+        # text
+        self._txtCtrl = wx.TextCtrl(self, TXT_COMMENT, self._text, wx.Point(8, 24), wx.Size(392, 100), wx.TE_MULTILINE)
 
         # Set the focus
         self._txtCtrl.SetFocus()
 
-        #text events
+        # text events
         self.Bind(wx.EVT_TEXT, self._onTxtNoteChange, id=TXT_COMMENT)
 
-        #Ok/Cancel
+        # Ok/Cancel
         wx.Button(self, wx.OK, _("&Ok"), wx.Point(120, 140))
         wx.Button(self, wx.CANCEL, _("&Cancel"), wx.Point(208, 140))
 
-        #button events
+        # button events
         self.Bind(wx.EVT_BUTTON, self._onCmdOk, id=wx.OK)
         self.Bind(wx.EVT_BUTTON, self._onCmdCancel, id=wx.CANCEL)
 
         self.Centre()
         self.ShowModal()
-
-    #>------------------------------------------------------------------------
 
     def _onTxtNoteChange(self, event):
         """
@@ -76,8 +67,6 @@ class DlgEditComment(wx.Dialog):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self._text = event.GetString()
-
-    #>------------------------------------------------------------------------
 
     def _onCmdOk(self, event):
         """
@@ -89,11 +78,8 @@ class DlgEditComment(wx.Dialog):
 
         self._pyutClass.setDescription(self._text)
 
-        self._returnAction=wx.OK
+        self._returnAction = wx.OK
         self.Close()
-
-
-    #>------------------------------------------------------------------------
 
     def _onCmdCancel(self, event):
         """
@@ -102,10 +88,8 @@ class DlgEditComment(wx.Dialog):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        self._returnAction=wx.CANCEL
+        self._returnAction = wx.CANCEL
         self.Close()
-
-    #>------------------------------------------------------------------------
 
     def getReturnAction(self):
         """
@@ -116,4 +100,3 @@ class DlgEditComment(wx.Dialog):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         return self._returnAction
-

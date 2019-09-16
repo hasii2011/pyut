@@ -1,23 +1,16 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.14 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
+import wx
 
-#from wxPython.wx    import *
-from pyutUtils      import *
-from PyutClass      import *
-from PyutField      import *
-from PyutMethod     import *
-from PyutVisibility import *
-from PyutModifier   import *
+from PyutField import *
+from PyutMethod import *
+
+from PyutModifier import *
 from PyutStereotype import *
-from PyutType       import *
-from copy           import *
+from PyutType import *
+from copy import *
+
 from DlgEditComment import *
 import mediator
-import wx
 
 # Assign constants
 [ID_TXTNAME, ID_TXTSTEREOTYPE,
@@ -34,6 +27,7 @@ ID_BTNPARAMUP, ID_BTNPARAMDOWN, ID_LSTPARAMLIST,
 ID_BTNPARAMOK, ID_BTNPARAMCANCEL,
 
 ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = assignID(32)
+
 
 class DlgEditClass (wx.Dialog):
     """
@@ -113,7 +107,7 @@ class DlgEditClass (wx.Dialog):
         self._lstFieldList = wx.ListBox(self, ID_LSTFIELDLIST, choices=[],
             style=wx.LB_SINGLE)
         self.Bind(wx.EVT_LISTBOX, self._evtFieldList, id=ID_LSTFIELDLIST)
-        self.Bind(wx.EVT_LISTBOX_DCLICK, self._evtFieldListDClick, 
+        self.Bind(wx.EVT_LISTBOX_DCLICK, self._evtFieldListDClick,
                   id=ID_LSTFIELDLIST)
 
         # Button Add
@@ -154,7 +148,7 @@ class DlgEditClass (wx.Dialog):
         self._lstMethodList = wx.ListBox(self, ID_LSTMETHODLIST, choices=[],
             style=wx.LB_SINGLE)
         self.Bind(wx.EVT_LISTBOX, self._evtMethodList, id=ID_LSTMETHODLIST)
-        self.Bind(wx.EVT_LISTBOX_DCLICK, self._evtMethodListDClick, 
+        self.Bind(wx.EVT_LISTBOX_DCLICK, self._evtMethodListDClick,
                   id=ID_LSTMETHODLIST)
 
         # Button Add
@@ -607,7 +601,7 @@ class DlgEditClass (wx.Dialog):
                                 wx.OK | wx.ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
-            
+
 
         # Fill display properties
         self._chkShowFields.SetValue(self._pyutClassCopy.getShowFields())

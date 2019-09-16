@@ -1,50 +1,30 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.15 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
-
-##from wxPython.wx import wxApp, wxMessageDialog
-from AppFrame import *
-#from PyutFileDropTarget import *
-from wx import SplashScreen
-#from PyutPreferences import PyutPreferences
-##from wxPython.help   import *
-import wx, os, __builtin__
+import os
 import locale
-__builtin__.__dict__['oldFloat'] = float
 
+from AppFrame import *
+
+# from wx import SplashScreen
+from wx.adv import SplashScreen
+
+from globals import _
 
 def pythonFloat(s):
     c = locale.localeconv()["decimal_point"]
     s = s.replace('.', c)
-    return oldFloat(s)
-    #try:
-        #return oldFloat(s)
-    #except:
-        #s = str(x)
-        #s = s.replace(',', '.')
-        #return oldFloat(s)
-
-
-
-#---------------------------------------------------------------------------
+    return float(s)
 
 def opj(path):
     """Convert paths to the platform-specific separator"""
-    return apply(os.path.join, tuple(path.split('/')))
-
-
-#---------------------------------------------------------------------------
-
+    # return apply(os.path.join, tuple(path.split('/')))
+    return os.path.join, tuple(path.split('/'))
 
 
 class PyutApp(wx.App):
     """
     PyutApp : main pyut application class.
 
-    PyutApp is the main pyut application, a wxApp. 
+    PyutApp is the main pyut application, a wxApp.
 
     Called from pyut.pyw
 
@@ -64,9 +44,6 @@ class PyutApp(wx.App):
         #print "DBG2-",float(48.3)
         #print "DBG2-",float("48.3")
 
-
-    #>------------------------------------------------------------------------
-
     def OnInit(self):
         """
         Constructor.
@@ -78,44 +55,40 @@ class PyutApp(wx.App):
         def newPythonFloat(x):
             # Try standard float
             try:
-                return oldFloat(x)
-            except:
+                return float(x)
+            except (ValueError, Exception) as e:
                 pass
 
             # Try localized float
             try:
                 x = x.replace(".", ",")
-            except:
+            except (ValueError, Exception) as e:
                 pass
             return pythonFloat(x)
-        import __builtin__
-        __builtin__.__dict__['float'] = newPythonFloat
 
 
-        #print "DBG3-",float(48.3)
-        #print "DBG3-",pythonFloat("48.3")
-        #float = pythonFloat
-        #print "DBG4-",float(48.3)
-        #print "DBG4-",float("48.3")
+        # print "DBG3-",float(48.3)
+        # print "DBG3-",pythonFloat("48.3")
+        # float = pythonFloat
+        # print "DBG4-",float(48.3)
+        # print "DBG4-",float("48.3")
         # Init help system
         provider = wx.SimpleHelpProvider()
         wx.HelpProvider_Set(provider)
 
         try:
-            #Create the SplashScreen
+            # Create the SplashScreen
             if self._showSplash:
                 wx.InitAllImageHandlers()
                 imgPath = "img" + os.sep + "splash.png"
                 img = wx.Image(imgPath)
                 bmp = img.ConvertToBitmap()
-                self.splash=SplashScreen(bmp, \
-                         wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT, \
-                         3000, None, -1)
+                self.splash=SplashScreen(bmp, wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT, 3000, None, -1)
 
                 self.splash.Show(True)
                 wx.Yield()
 
-            #Create the application
+            # Create the application
             self._frame=AppFrame(None, -1, "Pyut")
             self.SetTopWindow(self._frame)
             #TODO remove this
@@ -126,42 +99,39 @@ class PyutApp(wx.App):
             self._AfterSplash()
 
             return True
-        except: #Display all errors
+        except (ValueError, Exception) as e:
+            # Display all errors
             import sys, traceback
-            dlg=wx.MessageDialog(None, _("The following error occured : %s") \
-                %sys.exc_info()[1], _("An error occured..."),
+            dlg=wx.MessageDialog(None, _("The following error occurred : %s") \
+                %sys.exc_info()[1], _("An error occurred..."),
                 wx.OK | wx.ICON_ERROR)
-            print "==========================================================="
-            print "Error : %s" % sys.exc_info()[0]
-            print "Msg   : %s" % sys.exc_info()[1]
-            print "Trace :"
+            print("===========================================================")
+            print("Error : %s" % sys.exc_info()[0])
+            print("Msg   : %s" % sys.exc_info()[1])
+            print("Trace :")
             for el in traceback.extract_tb(sys.exc_info()[2]):
-                print el
+                print(el)
             dlg.ShowModal()
             dlg.Destroy()
-            dlg = None
             return False
-
-
-    #>------------------------------------------------------------------------
 
     def _AfterSplash(self):
         """
-        AfterSplash : Occure after the splash screen; launch the application
+        AfterSplash : Occurs after the splash screen; launch the application
         PyutApp : main pyut application class
 
         @since  : 1.5
         @author : C.Dutoit<dutoitc@hotmail.com>
         """
         try:
-            #Handle application parameters in the command line
+            # Handle application parameters in the command line
             import sys, PyutPreferences
             prefs = PyutPreferences.PyutPreferences()
             orgPath = prefs["orgDirectory"]
             for filename in [el for el in sys.argv[1:] if el[0]!='-']:
                 self._frame.loadByFilename(orgPath + os.sep + filename)
             if self._frame is None:
-                print "Exiting due to previous errors"
+                print("Exiting due to previous errors")
                 return False
             del orgPath
             if self._showMainFrame:
@@ -176,41 +146,35 @@ class PyutApp(wx.App):
                     fullScreen = 1
                 else :
                     fullScreen = 0
-                #fullScreen = int(fullScreen)
+                # fullScreen = int(fullScreen)
             if fullScreen==1:
                 dc = wx.ScreenDC()
                 self._frame.SetSize(dc.GetSize())
                 self._frame.CentreOnScreen()
 
                 # Doesn't works well
-                #self._frame.ShowFullScreen(True, 0)
+                # self._frame.ShowFullScreen(True, 0)
 
                 # Only on windows
-                #self._frame.Maximize()
+                # self._frame.Maximize()
 
             if self._showSplash:
                 self.splash.Close(True)
             return True
-        except: #Display all errors
+        except (ValueError, Exception) as e:  # Display all errors
             import sys, traceback
-            dlg=wx.MessageDialog(None, _("The following error occured : %s") \
-                %sys.exc_info()[1], _("An error occured..."),
+            dlg=wx.MessageDialog(None, _("The following error occurred : %s") % sys.exc_info()[1], _("An error occurred..."),
                 wx.OK | wx.ICON_ERROR)
-            print "==========================================================="
-            print "Error : %s" % sys.exc_info()[0]
-            print "Msg   : %s" % sys.exc_info()[1]
-            print "Trace :"
+            print("===========================================================")
+            print("Error : %s" % sys.exc_info()[0])
+            print("Msg   : %s" % sys.exc_info()[1])
+            print("Trace :")
             for el in traceback.extract_tb(sys.exc_info()[2]):
-                print el
+                print(el)
             dlg.ShowModal()
             dlg.Destroy()
             dlg = None
             return False
-
-
-
-
-    #>------------------------------------------------------------------------
 
     def OnExit(self):
         """
@@ -225,7 +189,5 @@ class PyutApp(wx.App):
         # Seemed to be removed in latest versions of wxPython ???
         try:
             return wx.App.OnExit(self)
-        except:
+        except (ValueError, Exception) as e:
             pass
-
-
