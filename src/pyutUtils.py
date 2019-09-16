@@ -1,9 +1,14 @@
 
 from wx import NewId
 
-from mediator import getMediator
+from ErrorManager import getErrorManager
 """
 This file is for frequently used pyut utilities.
+
+hasii 
+Updated this to avoid a circular dependency this module and mediator;  This module
+retrieved the mediator singleton and asked it for its error manager.  Nothing special about that
+as the error manager is a singleton;  So I just ask the error manager directly for it
 
 Functions :
     assignID will assign a unique wxID for all the application.
@@ -59,8 +64,9 @@ def displayError(msg, title=None, parent=None):
     errMsg = getErrorInfo(sys.exc_info())
 
     try:
-        ctrl = getMediator()
-        em = ctrl.getErrorManager()
+        # ctrl = getMediator()
+        # em = ctrl.getErrorManager()
+        em = getErrorManager()
         # print "MSG=", msg
         # print "MSG33=", msg.encode("UTF-8")
         # msg = unicode(msg)
@@ -93,8 +99,10 @@ def displayWarning(msg, title=None, parent=None):
 
     @author C.Dutoit
     """
-    ctrl = getMediator()
-    em = ctrl.getErrorManager()
+    # ctrl = getMediator()
+    # em = ctrl.getErrorManager()
+    em = getErrorManager()
+
     em.newWarning(msg, title, parent)
 
 
@@ -104,6 +112,8 @@ def displayInformation(msg, title=None, parent=None):
 
     @author C.Dutoit
     """
-    ctrl = getMediator()
-    em = ctrl.getErrorManager()
+    # ctrl = getMediator()
+    # em = ctrl.getErrorManager()
+    em = getErrorManager()
+
     em.newInformation(msg, title, parent)

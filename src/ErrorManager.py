@@ -15,8 +15,6 @@ GRAPHIC_ERROR_VIEW = 1
 TEXT_ERROR_VIEW    = 2
 RAISE_ERROR_VIEW   = 3
 
-#>----------------------------------------------------------------------------
-
 def getErrorManager():
     """
     Get the error manager
@@ -61,7 +59,7 @@ class GraphicErrorView:
             errMsg += "Msg   : %s" % sys.exc_info()[1] + "\n"
         if sys.exc_info()[2] is not None:
             errMsg += "Trace :\n"
-            for el in traceback.extract_tb(sys.exc_info()[2]): 
+            for el in traceback.extract_tb(sys.exc_info()[2]):
                 errMsg = errMsg + str(el) + "\n"
 
         print(errMsg)
@@ -81,7 +79,7 @@ class GraphicErrorView:
             title=_("WARNING...")
         print(msg)
         try:
-            dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_EXCLAMATION | 
+            dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_EXCLAMATION |
                                                       wx.CENTRE)
             dlg.ShowModal()
             dlg.Destroy()
@@ -97,7 +95,7 @@ class GraphicErrorView:
             title=_("WARNING...")
         print(msg)
         try:
-            dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_INFORMATION | 
+            dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_INFORMATION |
                                                       wx.CENTRE)
             dlg.ShowModal()
             dlg.Destroy()
@@ -141,7 +139,7 @@ class TextErrorView:
             errMsg += "Msg   : %s" % sys.exc_info()[1] + "\n"
         if sys.exc_info()[2] is not None:
             errMsg += "Trace :\n"
-            for el in traceback.extract_tb(sys.exc_info()[2]): 
+            for el in traceback.extract_tb(sys.exc_info()[2]):
                 errMsg = errMsg + str(el) + "\n"
 
         print("FATAL ERROR : ", errMsg)
@@ -214,7 +212,7 @@ def addToLogFile(title, msg):
         errMsg += "Msg   : %s" % sys.exc_info()[1] + "\n"
     if sys.exc_info()[2] is not None:
         errMsg += "Trace :\n"
-        for el in traceback.extract_tb(sys.exc_info()[2]): 
+        for el in traceback.extract_tb(sys.exc_info()[2]):
             errMsg = errMsg + str(el) + "\n"
     f.write(title + u": " + msg)
     f.write(errMsg)
@@ -247,7 +245,7 @@ class ErrorManager(Singleton):
             self._view = RaiseErrorView()
         else:
             self._view = GraphicErrorView()
-    
+
     #>------------------------------------------------------------------------
 
     def newFatalError(self, msg, title=None, parent=None):
