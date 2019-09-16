@@ -1,8 +1,7 @@
 
-import mediator
+from wx import NewId
 
-import wx
-
+from mediator import getMediator
 """
 This file is for frequently used pyut utilities.
 
@@ -25,14 +24,14 @@ def assignID(nb):
     @since 1.0
     @author C.Dutoit <dutoitc@hotmail.com>
     """
-    #personal reminder : map : return <nb> unique wxID as list
-    #explaination in a good phrase : this function return a number <nb> of
-    #                                unique IDs, wich is a list.
-    #Sample use        : [My_Id1, My_Id2, My_Id3] = assignID(3)
-    #If this not so long header is not enough explicit, please forgive me or
-    #mail me with an update to dutoitc@hotmail.com. thks
+    # personal reminder : map : return <nb> unique wxID as list
+    # explanation in a good phrase : this function return a number <nb> of
+    #                                unique IDs, which is a list.
+    # Sample use        : [My_Id1, My_Id2, My_Id3] = assignID(3)
+    # If this not so long header is not enough explicit, please forgive me or
+    # mail me with an update to dutoitc@hotmail.com. thanks
     #
-    return map(lambda x: wx.NewId(), range(nb))
+    return [NewId() for x in range(nb)]
 
 
 def getErrorInfo(exc_info):
@@ -60,23 +59,23 @@ def displayError(msg, title=None, parent=None):
     errMsg = getErrorInfo(sys.exc_info())
 
     try:
-        ctrl = mediator.getMediator()
+        ctrl = getMediator()
         em = ctrl.getErrorManager()
-        #print "MSG=", msg
-        #print "MSG33=", msg.encode("UTF-8")
-        #msg = unicode(msg)
+        # print "MSG=", msg
+        # print "MSG33=", msg.encode("UTF-8")
+        # msg = unicode(msg)
 
-        #msg1 = msg.decode("UTF-8", "replace")
-        #msg2 = msg1.encode("ISO-8859-1", "replace")
-        #msg = msg2
-        #msg = msg.decode("UTF-8").encode("UTF-8")
+        # msg1 = msg.decode("UTF-8", "replace")
+        # msg2 = msg1.encode("ISO-8859-1", "replace")
+        # msg = msg2
+        # msg = msg.decode("UTF-8").encode("UTF-8")
         em.newFatalError(msg, title, parent)
     except (ValueError, Exception) as e:
         print("*********************************************************")
         print("*********************************************************")
         print("*********************************************************")
         print("Error in pyutUtils/displayError")
-        print("Original error message was : ")
+        print(f"Original error message was: {e}")
         print(errMsg)
         print("")
         print("*********************************************************")
@@ -94,7 +93,7 @@ def displayWarning(msg, title=None, parent=None):
 
     @author C.Dutoit
     """
-    ctrl = mediator.getMediator()
+    ctrl = getMediator()
     em = ctrl.getErrorManager()
     em.newWarning(msg, title, parent)
 
@@ -105,6 +104,6 @@ def displayInformation(msg, title=None, parent=None):
 
     @author C.Dutoit
     """
-    ctrl = mediator.getMediator()
+    ctrl = getMediator()
     em = ctrl.getErrorManager()
     em.newInformation(msg, title, parent)

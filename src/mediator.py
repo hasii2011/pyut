@@ -1,14 +1,47 @@
 
-from PyutConsts import *
-from MiniOgl import *
-from ToolboxOwner import *
-from DlgEditClass2 import *
-from DlgEditNote import *
-from DlgEditUseCase import *
-from DlgEditLink import *
+from wx import OK
+from wx import CANCEL
+from wx import CENTRE
+from wx import WXK_DELETE
+from wx import WXK_INSERT
+
+from wx import ID_OK
+
+from wx import BeginBusyCursor
+from wx import EndBusyCursor
+
+from wx import TextEntryDialog
+
+from MiniOgl import EVENT_PROCESSED
+from MiniOgl import SKIP_EVENT
+
+from MiniOgl import LinePoint
+from MiniOgl import ControlPoint
+
+from PyutClass import PyutClass
+from PyutConsts import OGL_INTERFACE
+from PyutConsts import OGL_INHERITANCE
+from PyutConsts import OGL_AGGREGATION
+from PyutConsts import OGL_ASSOCIATION
+from PyutConsts import OGL_COMPOSITION
+from PyutConsts import OGL_NOTELINK
+from PyutConsts import OGL_SD_MESSAGE
+
+from PyutMethod import WITHOUT_PARAMS
+from PyutMethod import WITH_PARAMS
+from PyutMethod import PyutMethod
+from PyutPreferences import PyutPreferences
+from pyutUtils import displayError
+from pyutUtils import assignID
+
+from ToolboxOwner import ToolboxOwner
+from DlgEditClass2 import DlgEditClass
+from DlgEditNote import DlgEditNote
+from DlgEditUseCase import DlgEditUseCase
+from DlgEditLink import DlgEditLink
 
 from pyutVersion import getPyUtVersion
-
+from singleton import Singleton
 from globals import _
 
 __PyUtVersion__ = getPyUtVersion()
@@ -41,28 +74,28 @@ __PyUtVersion__ = getPyUtVersion()
 
 # a table of the next action to select
 NEXT_ACTION = {
-    ACTION_SELECTOR              : ACTION_SELECTOR,
-    ACTION_NEW_CLASS             : ACTION_SELECTOR,
-    ACTION_NEW_NOTE              : ACTION_SELECTOR,
-    ACTION_NEW_IMPLEMENT_LINK    : ACTION_DEST_IMPLEMENT_LINK,
-    ACTION_NEW_INHERIT_LINK      : ACTION_DEST_INHERIT_LINK,
-    ACTION_NEW_AGGREGATION_LINK  : ACTION_DEST_AGGREGATION_LINK,
-    ACTION_NEW_COMPOSITION_LINK  : ACTION_DEST_COMPOSITION_LINK,
-    ACTION_NEW_ASSOCIATION_LINK  : ACTION_DEST_ASSOCIATION_LINK,
-    ACTION_NEW_NOTE_LINK         : ACTION_DEST_NOTE_LINK,
-    ACTION_DEST_IMPLEMENT_LINK   : ACTION_SELECTOR,
-    ACTION_DEST_INHERIT_LINK     : ACTION_SELECTOR,
-    ACTION_DEST_AGGREGATION_LINK : ACTION_SELECTOR,
-    ACTION_DEST_COMPOSITION_LINK : ACTION_SELECTOR,
-    ACTION_DEST_ASSOCIATION_LINK : ACTION_SELECTOR,
-    ACTION_DEST_NOTE_LINK        : ACTION_SELECTOR,
-    ACTION_NEW_ACTOR             : ACTION_SELECTOR,
-    ACTION_NEW_USECASE           : ACTION_SELECTOR,
+    ACTION_SELECTOR: ACTION_SELECTOR,
+    ACTION_NEW_CLASS: ACTION_SELECTOR,
+    ACTION_NEW_NOTE: ACTION_SELECTOR,
+    ACTION_NEW_IMPLEMENT_LINK: ACTION_DEST_IMPLEMENT_LINK,
+    ACTION_NEW_INHERIT_LINK: ACTION_DEST_INHERIT_LINK,
+    ACTION_NEW_AGGREGATION_LINK: ACTION_DEST_AGGREGATION_LINK,
+    ACTION_NEW_COMPOSITION_LINK: ACTION_DEST_COMPOSITION_LINK,
+    ACTION_NEW_ASSOCIATION_LINK: ACTION_DEST_ASSOCIATION_LINK,
+    ACTION_NEW_NOTE_LINK: ACTION_DEST_NOTE_LINK,
+    ACTION_DEST_IMPLEMENT_LINK: ACTION_SELECTOR,
+    ACTION_DEST_INHERIT_LINK: ACTION_SELECTOR,
+    ACTION_DEST_AGGREGATION_LINK: ACTION_SELECTOR,
+    ACTION_DEST_COMPOSITION_LINK: ACTION_SELECTOR,
+    ACTION_DEST_ASSOCIATION_LINK: ACTION_SELECTOR,
+    ACTION_DEST_NOTE_LINK: ACTION_SELECTOR,
+    ACTION_NEW_ACTOR: ACTION_SELECTOR,
+    ACTION_NEW_USECASE: ACTION_SELECTOR,
 
-    ACTION_NEW_SD_INSTANCE       : ACTION_SELECTOR,
-    ACTION_NEW_SD_MESSAGE        : ACTION_DEST_SD_MESSAGE,
-    ACTION_ZOOM_IN               : ACTION_ZOOM_IN,  # Patch from D.Dabrowsky, 20060129
-    ACTION_ZOOM_IN               : ACTION_ZOOM_OUT, # Patch from D.Dabrowsky, 20060129
+    ACTION_NEW_SD_INSTANCE: ACTION_SELECTOR,
+    ACTION_NEW_SD_MESSAGE: ACTION_DEST_SD_MESSAGE,
+    ACTION_ZOOM_IN: ACTION_ZOOM_IN,     # Patch from D.Dabrowsky, 20060129
+    ACTION_ZOOM_IN: ACTION_ZOOM_OUT,    # Patch from D.Dabrowsky, 20060129
 }
 
 # list of actions which are source events
@@ -85,19 +118,19 @@ DEST_ACTIONS = [
     ACTION_DEST_ASSOCIATION_LINK,
     ACTION_DEST_NOTE_LINK,
     ACTION_DEST_SD_MESSAGE,
-    ACTION_ZOOM_IN, # Patch from D.Dabrowsky, 20060129
-    ACTION_ZOOM_OUT # Patch from D.Dabrowsky, 20060129
+    ACTION_ZOOM_IN,     # Patch from D.Dabrowsky, 20060129
+    ACTION_ZOOM_OUT     # Patch from D.Dabrowsky, 20060129
 ]
 
 # OglLink constants according to the current action
 LINK_TYPE = {
-    ACTION_DEST_IMPLEMENT_LINK   : OGL_INTERFACE,
-    ACTION_DEST_INHERIT_LINK     : OGL_INHERITANCE,
-    ACTION_DEST_AGGREGATION_LINK : OGL_AGGREGATION,
-    ACTION_DEST_COMPOSITION_LINK : OGL_COMPOSITION,
-    ACTION_DEST_ASSOCIATION_LINK : OGL_ASSOCIATION,
-    ACTION_DEST_NOTE_LINK        : OGL_NOTELINK,
-    ACTION_DEST_SD_MESSAGE       : OGL_SD_MESSAGE,
+    ACTION_DEST_IMPLEMENT_LINK: OGL_INTERFACE,
+    ACTION_DEST_INHERIT_LINK: OGL_INHERITANCE,
+    ACTION_DEST_AGGREGATION_LINK: OGL_AGGREGATION,
+    ACTION_DEST_COMPOSITION_LINK: OGL_COMPOSITION,
+    ACTION_DEST_ASSOCIATION_LINK: OGL_ASSOCIATION,
+    ACTION_DEST_NOTE_LINK: OGL_NOTELINK,
+    ACTION_DEST_SD_MESSAGE: OGL_SD_MESSAGE,
 }
 
 # messages for the status bar
@@ -130,7 +163,7 @@ MESSAGES = {
 
 }
 
-del a, b
+# del a, b
 
 
 # Define current use mode
@@ -208,12 +241,8 @@ class Mediator(Singleton):
         # Patch from D.Dabrowsky, 20060129
         self._modifyCommand = None  # command for undo/redo a modification on a shape.
 
-
-    #>------------------------------------------------------------------
     def registerFileHandling(self, fh):
         self._fileHandling = fh
-
-    #>------------------------------------------------------------------
 
     def setScriptMode(self):
         """
@@ -222,16 +251,12 @@ class Mediator(Singleton):
         """
         self._useMode = SCRIPT_MODE
 
-    #>------------------------------------------------------------------
-
     def isInScriptMode(self):
         """
         True if the current mode is the scripting mode
         @author C.Dutoit
         """
         return self._useMode == SCRIPT_MODE
-
-    #>------------------------------------------------------------------
 
     def getErrorManager(self):
         """
@@ -240,8 +265,6 @@ class Mediator(Singleton):
         @author C.Dutoit
         """
         return self._errorManager
-
-    #>------------------------------------------------------------------
 
     def registerFileHandling(self, fh):
         """
@@ -252,8 +275,6 @@ class Mediator(Singleton):
         """
         self._fileHandling = fh
 
-    #>------------------------------------------------------------------
-
     def registerAppPath(self, path):
         """
         Register the path of the application files.
@@ -263,8 +284,6 @@ class Mediator(Singleton):
         """
         self._appPath = path
 
-    #>------------------------------------------------------------------
-
     def getAppPath(self):
         """
         Return the path of the application files.
@@ -273,8 +292,6 @@ class Mediator(Singleton):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self._appPath
-
-    #>------------------------------------------------------------------
 
     def notifyTitleChanged(self):
         """
@@ -286,9 +303,6 @@ class Mediator(Singleton):
         if not self._appFrame is None:
             self._appFrame.notifyTitleChanged()
 
-
-    #>------------------------------------------------------------------
-
     def registerAppFrame(self, appFrame):
         """
         Register the application's main frame.
@@ -298,17 +312,13 @@ class Mediator(Singleton):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._appFrame=appFrame
-        if self._toolboxOwner == None:
+        if self._toolboxOwner is None:
             self._toolboxOwner = ToolboxOwner(appFrame)
-
-    #>------------------------------------------------------------------
 
     def getAppFrame(self):
         """
         """
         return self._appFrame
-
-    #>------------------------------------------------------------------
 
     def registerToolBar(self, tb):
         """
@@ -320,8 +330,6 @@ class Mediator(Singleton):
         """
         self._toolBar = tb
 
-    #>------------------------------------------------------------------
-
     def registerToolBarTools(self, tools):
         """
         Register the toolbar tools.
@@ -330,30 +338,6 @@ class Mediator(Singleton):
         @author L. Burgbacher
         """
         self._tools = tools
-
-    #>------------------------------------------------------------------
-
-    #def registerUMLFrame(self, uml):
-        #"""
-        #Register the Uml Frame.
-#
-        #@param wxWindow uml : the uml frame
-        #@author L. Burgbacher
-        #"""
-        #self._uml = uml
-
-    #>------------------------------------------------------------------
-
-    #def registerCurrentProject(self, project):
-        #"""
-        #Register the current project
-#
-        #@param PyutProject project : the project
-        #@author C.Dutoit
-        #"""
-        #self._project = project
-
-    #>------------------------------------------------------------------
 
     def registerStatusBar(self, statusBar):
         """
@@ -364,12 +348,9 @@ class Mediator(Singleton):
         """
         self._status = statusBar
 
-    #>------------------------------------------------------------------
-
     def fastTextClassEditor(self, pyutClass):
         plugs = self._appFrame.plugs
-        cl = [s for s in plugs.values()
-            if s(None, None).getName() == "Fast text edition"]
+        cl = [s for s in plugs.values() if s(None, None).getName() == "Fast text edition"]
         if cl:
             obj = cl[0](self.getUmlObjects(), self.getUmlFrame())
         else:
@@ -378,12 +359,10 @@ class Mediator(Singleton):
             return
 
         # Do plugin functionality
-        wx.BeginBusyCursor()
+        BeginBusyCursor()
         obj.callDoAction()
-        wx.EndBusyCursor()
+        EndBusyCursor()
         self.getUmlFrame().Refresh()
-
-    #>------------------------------------------------------------------
 
     def standardClassEditor(self, pyutClass):
         """
@@ -398,8 +377,6 @@ class Mediator(Singleton):
         dlg = DlgEditClass(umlFrame, -1, pyutClass)
         dlg.Destroy()
 
-    #>------------------------------------------------------------------
-
     def registerClassEditor(self, classEditor):
         """
         Register a function to invoque a class editor.
@@ -410,8 +387,6 @@ class Mediator(Singleton):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         self.classEditor = classEditor
-
-    #>------------------------------------------------------------------
 
     def setCurrentAction(self, action):
         """
@@ -429,8 +404,6 @@ class Mediator(Singleton):
             self._currentActionPersistent = False
         # put a message in the status bar
         self.setStatusText(MESSAGES[self._currentAction])
-
-    #>------------------------------------------------------------------
 
     def doAction(self, x, y):
         """
@@ -455,13 +428,9 @@ class Mediator(Singleton):
             umlFrame.getHistory().addCommandGroup(group)
             umlFrame.getHistory().execute()
 
-##            pyutClass = umlFrame.createNewClass(x, y)
             if not self._currentActionPersistent:
                 self._currentAction = ACTION_SELECTOR
                 self.selectTool(self._tools[0])
-##            self.classEditor(pyutClass)
-##            self.autoResize(pyutClass)
-##            umlFrame.Refresh()
         elif self._currentAction == ACTION_NEW_NOTE:
             pyutNote = umlFrame.createNewNote(x, y)
             if not self._currentActionPersistent:
@@ -475,9 +444,9 @@ class Mediator(Singleton):
             if not self._currentActionPersistent:
                 self._currentAction = ACTION_SELECTOR
                 self.selectTool(self._tools[0])
-            dlg = wx.TextEntryDialog(umlFrame, "Actor name", "Enter actor name",
-                    pyutActor.getName(), wx.OK | wx.CANCEL | wx.CENTRE)
-            if dlg.ShowModal() == wx.ID_OK:
+            dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.getName(), OK | CANCEL | CENTRE)
+
+            if dlg.ShowModal() == ID_OK:
                 pyutActor.setName(dlg.GetValue())
             dlg.Destroy()
             umlFrame.Refresh()
@@ -501,16 +470,17 @@ class Mediator(Singleton):
                 if not self._currentActionPersistent:
                     self._currentAction = ACTION_SELECTOR
                     self.selectTool(self._tools[0])
-                dlg = wx.TextEntryDialog(umlFrame, "Instance name", "Enter instance name",
-                        instance.getInstanceName(), wx.OK | wx.CANCEL | wx.CENTRE)
-                if dlg.ShowModal() == wx.ID_OK:
+
+                dlg = TextEntryDialog(umlFrame, "Instance name", "Enter instance name", instance.getInstanceName(), OK | CANCEL | CENTRE)
+
+                if dlg.ShowModal() == ID_OK:
                     instance.setInstanceName(dlg.GetValue())
                 dlg.Destroy()
                 umlFrame.Refresh()
-            except:
-                displayError(_("An error occured while trying to do this action"))
+            except (ValueError, Exception) as e:
+                displayError(_("f An error occured while trying to do this action {e}"))
                 umlFrame.Refresh()
-        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (10.10.2005)
+        # added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (10.10.2005)
         elif self._currentAction == ACTION_ZOOM_IN:
             return SKIP_EVENT
         elif self._currentAction == ACTION_ZOOM_OUT:
@@ -520,8 +490,6 @@ class Mediator(Singleton):
         else:
             return SKIP_EVENT
         return EVENT_PROCESSED
-
-    #>------------------------------------------------------------------
 
     def selectTool(self, ID):
         """
@@ -533,28 +501,6 @@ class Mediator(Singleton):
         for id in self._tools:
             self._toolBar.ToggleTool(id, False)
         self._toolBar.ToggleTool(ID, True)
-
-#Added by P. Dabrowski (20051122) to change the cursor if we perform a zoom
-#It's experimental, and must be redone to work with other os that WinXp
-##        umlFrame = self.getFileHandling().getCurrentFrame()
-##
-##        from AppFrame import ID_ZOOMIN
-##        from AppFrame import ID_ZOOMOUT
-##        if ID == ID_ZOOMIN or ID == ID_ZOOMOUT:
-##
-##            from wx import Cursor
-##            from wx import BITMAP_TYPE_CUR
-##            zoomCursor = Cursor("img/MAGNIFY.CUR", BITMAP_TYPE_CUR)
-##            umlFrame.SetCursor(zoomCursor)
-##
-##        else :
-##
-##            defaultCursor = umlFrame.getDefaultCursor()
-##            umlFrame.SetCursor(defaultCursor)
-
-
-
-    #>------------------------------------------------------------------
 
     def shapeSelected(self, shape, position = None):
         """
@@ -579,7 +525,7 @@ class Mediator(Singleton):
                 self._currentAction = ACTION_SELECTOR
                 self.selectTool(self._tools[0])
                 self.setStatusText(_("Action cancelled"))
-            else: #store source
+            else: # store source
                 self._src = shape
                 self._srcPos = position
         elif self._currentAction in DEST_ACTIONS:
@@ -593,8 +539,6 @@ class Mediator(Singleton):
                 self.setStatusText(_("Action cancelled"))
                 return
 
-            # create a link from source to destination
-#            try:
             from createOglLinkCommand import CreateOglLinkCommand
             from commandGroup import CommandGroup
             cmd = CreateOglLinkCommand(self._src,
@@ -607,9 +551,6 @@ class Mediator(Singleton):
             cmdGroup.addCommand(cmd)
             umlFrame.getHistory().addCommandGroup(cmdGroup)
             umlFrame.getHistory().execute()
-
-
-
             self._src = None
             self._dst = None
             if self._currentActionPersistent:
@@ -624,9 +565,6 @@ class Mediator(Singleton):
             return
         self.setStatusText(MESSAGES[self._currentAction])
 
-
-    #>------------------------------------------------------------------
-
     def actionWaiting(self):
         """
         Return True if there's an action waiting to be completed.
@@ -635,8 +573,6 @@ class Mediator(Singleton):
         @author L. Burgbacher <lb@alawa.ch>
         """
         return self._currentAction != ACTION_SELECTOR
-
-    #>------------------------------------------------------------------
 
     def autoResize(self, obj):
         """
@@ -648,23 +584,21 @@ class Mediator(Singleton):
         @author L. Burgbacher <lb@alawa.ch>
         """
         from OglClass import OglClass
-        prefs=PyutPreferences()
+        prefs = PyutPreferences()
 
         if prefs["AUTO_RESIZE"]:
 
             if isinstance(obj, PyutClass):
-                #print "DBG-Autoresize"
-                #print dir(obj)
-                #print "getUmlObjects:", self.getUmlObjects()
+                # print "DBG-Autoresize"
+                # print dir(obj)
+                # print "getUmlObjects:", self.getUmlObjects()
                 # get the associated oglClass and resize it
                 po = [po for po in self.getUmlObjects()
                     if isinstance(po, OglClass) and po.getPyutObject() is obj]
-                #print po
+                # print po
                 obj = po[0]
 
             obj.autoResize()
-
-    #>------------------------------------------------------------------
 
     def editObject(self, x, y):
         """
@@ -680,11 +614,11 @@ class Mediator(Singleton):
         from OglUseCase import OglUseCase
         from OglActor import OglActor
         from OglAssociation import OglAssociation
-        #from OglInheritance import OglInheritance
+        # from OglInheritance import OglInheritance
         from OglInterface import OglInterface
-        #print "mediator-editObject1", x, y
+        # print "mediator-editObject1", x, y
         object = umlFrame.FindShape(x, y)
-        #print "mediator-editObject object=", object
+        # print "mediator-editObject object=", object
         if object is None:
             return
 
@@ -702,9 +636,10 @@ class Mediator(Singleton):
             dlg.Destroy()
         elif isinstance(object, OglActor):
             pyutObject = object.getPyutObject()
-            dlg = wx.TextEntryDialog(umlFrame, "Actor name", "Enter actor name",
-                    pyutObject.getName(), wx.OK | wx.CANCEL | wx.CENTRE)
-            if dlg.ShowModal() == wx.ID_OK:
+
+            dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutObject.getName(), OK | CANCEL | CENTRE)
+
+            if dlg.ShowModal() == ID_OK:
                 pyutObject.setName(dlg.GetValue())
             dlg.Destroy()
         elif isinstance(object, OglAssociation):
@@ -712,9 +647,9 @@ class Mediator(Singleton):
             dlg.ShowModal()
             rep = dlg.getReturnAction()
             dlg.Destroy()
-            if rep == -1: # destroy link
+            if rep == -1:    # destroy link
                 object.Detach()
-                #self.removeLink(object)
+                # self.removeLink(object)
         elif isinstance(object, OglInterface):
             dlg = DlgEditLink(None, -1, object.getPyutObject())
             dlg.ShowModal()
@@ -722,11 +657,9 @@ class Mediator(Singleton):
             dlg.Destroy()
             if rep == -1: # destroy link
                 object.Detach()
-                #self.removeLink(object)
+                # self.removeLink(object)
 
         umlFrame.Refresh()
-
-    #>------------------------------------------------------------------
 
     def getUmlObjects(self):
         """
@@ -743,8 +676,6 @@ class Mediator(Singleton):
         else:
             return []
 
-    #>------------------------------------------------------------------
-
     def getSelectedShapes(self):
         """
         Return the list of selected OglObjects in the diagram.
@@ -758,8 +689,6 @@ class Mediator(Singleton):
         else:
             return []
 
-    #>------------------------------------------------------------------
-
     def setStatusText(self, msg):
         """
         Set the text in the status bar.
@@ -771,8 +700,6 @@ class Mediator(Singleton):
         if msg is not None:
             self._status.SetStatusText(msg)
 
-    #>------------------------------------------------------------------
-
     def resetStatusText(self):
         """
         Reset the text in the status bar.
@@ -781,8 +708,6 @@ class Mediator(Singleton):
         @author L. Burgbacher <lb@alawa.ch>
         """
         self._status.SetStatusText(_("Ready"))
-
-    #>------------------------------------------------------------------
 
     def getDiagram(self):
         """
@@ -797,8 +722,6 @@ class Mediator(Singleton):
             return None
         return umlFrame.getDiagram()
 
-    #>------------------------------------------------------------------
-
     def getUmlFrame(self):
         """
         Return the active uml frame.
@@ -808,8 +731,6 @@ class Mediator(Singleton):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self._fileHandling.getCurrentFrame()
-
-    #>------------------------------------------------------------------
 
     def deselectAllShapes(self):
         """
@@ -825,8 +746,6 @@ class Mediator(Singleton):
                 shape.SetSelected(False)
             umlFrame.Refresh()
 
-    #>------------------------------------------------------------------
-
     def showParams(self, val):
         """
         Choose wether to show the params in the classes or not.
@@ -840,80 +759,6 @@ class Mediator(Singleton):
         else:
             PyutMethod.setStringMode(WITHOUT_PARAMS)
 
-    #>------------------------------------------------------------------
-
-    # No longer used ?
-    #def removeLink(self, link):
-    #    """
-    #    Remove a link from all referencing objects.
-
-    #    @param OglLink link : link to remove
-    #    @since 1.24
-    #    @author L. Burgbacher <lb@alawa.ch>
-    #    """
-    #    # remove the link from the OglClasses
-    #    try:
-    #        link.getSourceShape().getLinks().remove(link)
-    #    except ValueError:
-    #        pass # could be already removed
-    #    try:
-    #        link.getDestinationShape().getLinks().remove(link)
-    #    except ValueError:
-    #        pass # could be already removed
-    #    # remove the link from the source PyutClass
-    #    from OglInheritance import OglInheritance
-    #    if isinstance(link, OglInheritance):
-    #        link.getSourceShape().getPyutObject().getFathers()\
-    #            .remove(link.getPyutObject().getDestination())
-    #    else:
-    #        link.getSourceShape().getPyutObject().getLinks()\
-    #            .remove(link.getPyutObject())
-    #    # remove the link from the diagram
-    #    link.Detach()
-    #    self.getUmlObjects().remove(link)
-
-
-
-    #>------------------------------------------------------------------
-
-    #def removeClass(self, obj):
-    #    """
-    #    Remove an OglClass from the screen, without removing the links !
-
-    #    @param OglClass obj : class to remove
-    #    @since 1.24
-    #    @author L. Burgbacher <lb@alawa.ch>
-    #    """
-    #    #obj.SetSelected(False)
-    #    #self.getDiagram().RemoveShape(obj)
-    #    obj.Detach()
-    #    self.getUmlObjects().remove(obj)
-
-    #>------------------------------------------------------------------
-
-    #def getCurrentProject(self):
-        #"""
-        #Return the current project's instance
-#
-        #@return PyutProject the current project's instance
-        #@author C.Dutoit
-        #"""
-        #return self._fileHandling.getCurrentProject()
-        #return self._project
-
-    #>------------------------------------------------------------------
-
-    #def getCurrentDocument(self):
-        #"""
-        #Return the current project's document
-#
-        #@return PyutDocument
-        #@author C.Dutoit
-        #"""
-        #return self._fileHandling.getCurrentDocument()
-
-    #>------------------------------------------------------------------
-
     def getCurrentDir(self):
         """
         Return the application's current directory
@@ -922,8 +767,6 @@ class Mediator(Singleton):
         """
         return self._appFrame.getCurrentDir()
 
-    #>------------------------------------------------------------------
-
     def setCurrentDir(self, directory):
         """
         Set the application's current directory
@@ -931,8 +774,6 @@ class Mediator(Singleton):
         @param String directory : New appliation's current directory
         """
         return self._appFrame.updateCurrentDir(directory)
-
-    #>------------------------------------------------------------------------
 
     def processChar(self, event):
         """
@@ -944,8 +785,8 @@ class Mediator(Singleton):
         """
         c = event.GetKeyCode()
         funcs = {
-            wx.WXK_DELETE : self.deleteSelectedShape,
-            wx.WXK_INSERT : self.insertSelectedShape,
+            WXK_DELETE : self.deleteSelectedShape,
+            WXK_INSERT : self.insertSelectedShape,
             ord('i')   : self.insertSelectedShape,
             ord('I')   : self.insertSelectedShape,
             ord('s')   : self.toggleSpline,
@@ -958,8 +799,6 @@ class Mediator(Singleton):
         else:
             print("Not supported : ", c)
             event.Skip()
-
-    #>------------------------------------------------------------------------
 
     def deleteSelectedShape(self):
         from delOglObjectCommand import DelOglObjectCommand
@@ -995,27 +834,6 @@ class Mediator(Singleton):
             umlFrame.getHistory().addCommandGroup(cmdGroup)
             umlFrame.getHistory().execute()
 
-
-
-##        from OglClass        import OglClass
-##        umlFrame = self._fileHandling.getCurrentFrame()
-##        if umlFrame is None: return
-##        selected = umlFrame.GetSelectedShapes()
-##        for shape in selected:
-##            if isinstance(shape, OglClass):
-##                # need to check if the class has children, and remove the
-##                # refs in the children
-##                pyutClass = shape.getPyutObject()
-##                for klass in [s.getPyutObject() for s in self.getUmlObjects()
-##                    if isinstance(s, OglClass)]:
-##                    if pyutClass in klass.getFathers():
-##                        klass.getFathers().remove(pyutClass)
-##            shape.Detach()
-##        umlFrame.Refresh()
-
-
-    #>------------------------------------------------------------------------
-
     def insertSelectedShape(self):
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None: return
@@ -1028,8 +846,7 @@ class Mediator(Singleton):
             # add a control point and make it child of the shape if it's a
             # self link
             line = selected.GetLines()[0]
-            if line.GetSource().GetParent() is \
-                line.GetDestination().GetParent():
+            if line.GetSource().GetParent() is line.GetDestination().GetParent():
                 cp = ControlPoint(0, 0, line.GetSource().GetParent())
                 cp.SetPosition(px + 20, py + 20)
             else:
@@ -1038,10 +855,9 @@ class Mediator(Singleton):
             umlFrame.GetDiagram().AddShape(cp)
             umlFrame.Refresh()
 
-    #>------------------------------------------------------------------------
-
     def toggleSpline(self):
-        from OglLink         import OglLink
+        from OglLink import OglLink
+        from OglLink import OglLink
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None: return
         selected = umlFrame.GetSelectedShapes()
@@ -1049,8 +865,6 @@ class Mediator(Singleton):
             if isinstance(shape, OglLink):
                 shape.SetSpline(not shape.GetSpline())
         umlFrame.Refresh()
-
-    #>------------------------------------------------------------------------
 
     def moveSelectedShapeUp(self):
         """
@@ -1063,8 +877,6 @@ class Mediator(Singleton):
         if umlFrame is None: return
         self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToFront)
 
-    #>------------------------------------------------------------------------
-
     def moveSelectedShapeDown(self):
         """
         Move the selected shape one level down in z-order
@@ -1075,8 +887,6 @@ class Mediator(Singleton):
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None: return
         self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToBack)
-
-    #>------------------------------------------------------------------------
 
     def _moveSelectedShapeZOrder(self, callback):
         """
@@ -1095,9 +905,6 @@ class Mediator(Singleton):
                     callback(object)
         umlFrame.Refresh()
 
-
-    #>------------------------------------------------------------------------
-
     def registerTool(self, tool):
         """
         Add a tool to toolboxes
@@ -1107,9 +914,6 @@ class Mediator(Singleton):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._toolboxOwner.registerTool(tool)
-
-
-    #>------------------------------------------------------------------------
 
     def displayToolbox(self, category):
         """
@@ -1121,7 +925,6 @@ class Mediator(Singleton):
         """
         self._toolboxOwner.displayToolbox(category)
 
-    #>------------------------------------------------------------------------
     def getToolboxesCategories(self):
         """
         Return all categories of toolboxes
@@ -1131,9 +934,6 @@ class Mediator(Singleton):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         return self._toolboxOwner.getCategories()
-
-
-    #>------------------------------------------------------------------------
 
     def getOglClass(self, pyutClass):
         """
@@ -1148,28 +948,6 @@ class Mediator(Singleton):
             if isinstance(po, OglClass) and po.getPyutObject() is pyutClass]
         return po[0]
 
-
-
-    #>------------------------------------------------------------------------
-
-    #def getProjectFromUmlFrame(self, umlFrame):
-        #"""
-        #Get a project to which a specified umlFrame belongs
-#
-        #@param umlFrame : the umlFrame
-        #@return Project : the project that owns umlFrame or None if not foud
-        #@author C.Dutoit
-        #"""
-        #for project in self._fileHandling.getProjects():
-            #for frame in [document.getFrame()
-                          #for document in project.getDocuments()]:
-                #if frame is umlFrame:
-                    #return project
-        #return None
-
-
-    #>------------------------------------------------------------------------
-
     def getFileHandling(self):
         """
         Return the FileHandling class
@@ -1178,9 +956,6 @@ class Mediator(Singleton):
         @author C.Dutoit
         """
         return self._fileHandling
-
-
-    #>------------------------------------------------------------------------
 
     def updateTitle(self):
         """
@@ -1211,8 +986,6 @@ class Mediator(Singleton):
             txt=txt + " (" + ((int)(zoom * 100)).__str__() + "%)" + " *"
         self._appFrame.SetTitle(txt)
 
-    #>------------------------------------------------------------------------
-
     def loadByFilename(self, filename):
         """
         Load a file from its filename
@@ -1220,17 +993,11 @@ class Mediator(Singleton):
         """
         self._appFrame.loadByFilename(filename)
 
-    #>------------------------------------------------------------------------
-
     def cutSelectedShapes(self):
         self._appFrame.cutSelectedShapes()
 
-    #>------------------------------------------------------------------------
-
     def getCurrentAction(self):
         return self._currentAction
-
-    #>------------------------------------------------------------------------
 
     def beginChangeRecording(self, oglObject):
 
@@ -1251,8 +1018,6 @@ class Mediator(Singleton):
         else:
             raise RuntimeError("a non-OglObject has requested for a change recording")
 
-    #>------------------------------------------------------------------------
-
     def endChangeRecording(self, oglObject):
 
         from createOglClassCommand import CreateOglClassCommand
@@ -1267,7 +1032,6 @@ class Mediator(Singleton):
             print("end")
             cmd = CreateOglClassCommand(shape = oglObject)
 
-
         if cmd is not None and self._modifyCommand is not None :
 
             group = CommandGroup("modify " + oglObject.getPyutObject().getName())
@@ -1279,4 +1043,3 @@ class Mediator(Singleton):
 
         cmd = None
         self._modifyCommand = None
-

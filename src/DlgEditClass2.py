@@ -1,35 +1,76 @@
 
-import wx
+from sys import exc_info
 
-from PyutField import *
-from PyutMethod import *
+from copy import deepcopy
 
-from PyutModifier import *
-from PyutStereotype import *
-from PyutType import *
-from copy import *
+from wx import ALIGN_BOTTOM
+from wx import ALIGN_CENTER
+from wx import ALIGN_CENTER_HORIZONTAL
+from wx import ALIGN_CENTER_VERTICAL
+from wx import ALIGN_RIGHT
+from wx import ALL
+from wx import CAPTION
+from wx import EVT_BUTTON
+from wx import EVT_LISTBOX
+from wx import EVT_LISTBOX_DCLICK
+from wx import EVT_TEXT
+from wx import EXPAND
+from wx import HORIZONTAL
+from wx import ICON_ERROR
+from wx import OK
+from wx import RA_SPECIFY_ROWS
+from wx import VERTICAL
+from wx import LB_SINGLE
+from wx import RESIZE_BORDER
+from wx import CANCEL
 
-from DlgEditComment import *
-import mediator
+from wx import DefaultSize
+from wx import Point
+from wx import Dialog
+from wx import ListBox
+from wx import MessageDialog
+from wx import TextCtrl
+from wx import Button
+from wx import BoxSizer
+from wx import CheckBox
+from wx import RadioBox
+from wx import StaticText
+
+from wx import FlexGridSizer
+
+from PyutField import PyutField
+from PyutMethod import PyutMethod
+
+from PyutModifier import PyutModifier
+from PyutParam import PyutParam
+from PyutStereotype import getPyutStereotype
+
+from DlgEditComment import DlgEditComment
+
+from mediator import getMediator
+
+from globals import _
+from pyutUtils import assignID
 
 # Assign constants
-[ID_TXTNAME, ID_TXTSTEREOTYPE,
-ID_TXTFIELDNAME, ID_BTNFIELDADD, ID_BTNFIELDEDIT, ID_BTNFIELDREMOVE,
-ID_BTNFIELDUP, ID_BTNFIELDDOWN, ID_LSTFIELDLIST,
-ID_BTNFIELDOK, ID_BTNFIELDCANCEL,
+[
+    ID_TXTNAME, ID_TXTSTEREOTYPE,
+    ID_TXTFIELDNAME, ID_BTNFIELDADD, ID_BTNFIELDEDIT, ID_BTNFIELDREMOVE,
+    ID_BTNFIELDUP, ID_BTNFIELDDOWN, ID_LSTFIELDLIST,
+    ID_BTNFIELDOK, ID_BTNFIELDCANCEL,
 
-ID_TXTMETHODNAME, ID_BTNMETHODADD, ID_BTNMETHODEDIT, ID_BTNMETHODREMOVE,
-ID_BTNMETHODUP, ID_BTNMETHODDOWN, ID_LSTMETHODLIST,
-ID_BTNMETHODOK, ID_BTNMETHODCANCEL,
+    ID_TXTMETHODNAME, ID_BTNMETHODADD, ID_BTNMETHODEDIT, ID_BTNMETHODREMOVE,
+    ID_BTNMETHODUP, ID_BTNMETHODDOWN, ID_LSTMETHODLIST,
+    ID_BTNMETHODOK, ID_BTNMETHODCANCEL,
 
-ID_TXTPARAMNAME, ID_BTNPARAMADD, ID_BTNPARAMEDIT, ID_BTNPARAMREMOVE,
-ID_BTNPARAMUP, ID_BTNPARAMDOWN, ID_LSTPARAMLIST,
-ID_BTNPARAMOK, ID_BTNPARAMCANCEL,
+    ID_TXTPARAMNAME, ID_BTNPARAMADD, ID_BTNPARAMEDIT, ID_BTNPARAMREMOVE,
+    ID_BTNPARAMUP, ID_BTNPARAMDOWN, ID_LSTPARAMLIST,
+    ID_BTNPARAMOK, ID_BTNPARAMCANCEL,
 
-ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = assignID(32)
+    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = assignID(32)
 
 
-class DlgEditClass (wx.Dialog):
+class DlgEditClass (Dialog):
     """
     Dialog for the class edition.
 
@@ -50,8 +91,6 @@ class DlgEditClass (wx.Dialog):
     :version: $Revision: 1.14 $
     """
 
-    #>------------------------------------------------------------------------
-
     def __init__(self, parent, ID, pyutClass):
         """
         Constructor.
@@ -62,172 +101,151 @@ class DlgEditClass (wx.Dialog):
         @since 1.0
         @author N. Dubois <n_dub@altavista.com>
         """
-        wx.Dialog.__init__(self, parent, ID, _("Class Edit"),
-                          style = wx.RESIZE_BORDER|wx.CAPTION)
-        # ------
-        # Fields
+        Dialog.__init__(self, parent, ID, _("Class Edit"), style=RESIZE_BORDER | CAPTION)
 
         self._pyutClass = pyutClass
         self._pyutClassCopy = deepcopy(pyutClass)
         self._parent = parent
-        self._ctrl = mediator.getMediator()
-
-
-        # ----------------
-        # Design of dialog
+        self._ctrl = getMediator()
 
         self.SetAutoLayout(True)
 
-        # -------------------
-        # Name and Stereotype
-
-        # Name
-        lblName = wx.StaticText (self, -1, _("Class name"))
-        self._txtName = wx.TextCtrl(self, ID_TXTNAME, "", size = (125, -1))
+        lblName = StaticText (self, -1, _("Class name"))
+        self._txtName = TextCtrl(self, ID_TXTNAME, "", size=(125, -1))
 
         # Stereotype
-        lblStereotype = wx.StaticText (self, -1, _("Stereotype"))
-        self._txtStereotype = wx.TextCtrl(self, ID_TXTSTEREOTYPE, "",
-            size = (125, -1))
+        lblStereotype = StaticText (self, -1, _("Stereotype"))
+        self._txtStereotype = TextCtrl(self, ID_TXTSTEREOTYPE, "", size=(125, -1))
 
         # Name and Stereotype sizer
-        szrNameStereotype = wx.BoxSizer (wx.HORIZONTAL)
-        szrNameStereotype.Add(lblName, 0, wx.ALL|wx.ALIGN_CENTER, 5)
-        szrNameStereotype.Add(self._txtName, 1, wx.ALIGN_CENTER)
-        szrNameStereotype.Add(lblStereotype, 0, wx.ALL|wx.ALIGN_RIGHT, 5)
-        szrNameStereotype.Add(self._txtStereotype, 1, wx.ALIGN_CENTER)
+        szrNameStereotype = BoxSizer (HORIZONTAL)
+        szrNameStereotype.Add(lblName,       0, ALL| ALIGN_CENTER, 5)
+        szrNameStereotype.Add(self._txtName, 1, ALIGN_CENTER)
+        szrNameStereotype.Add(lblStereotype, 0, ALL | ALIGN_RIGHT, 5)
+        szrNameStereotype.Add(self._txtStereotype, 1, ALIGN_CENTER)
 
         # ------
         # Fields
 
         # Label Fields
-        lblField = wx.StaticText (self, -1, _("Fields :"))
+        lblField = StaticText (self, -1, _("Fields :"))
 
         # ListBox List
-        self._lstFieldList = wx.ListBox(self, ID_LSTFIELDLIST, choices=[],
-            style=wx.LB_SINGLE)
-        self.Bind(wx.EVT_LISTBOX, self._evtFieldList, id=ID_LSTFIELDLIST)
-        self.Bind(wx.EVT_LISTBOX_DCLICK, self._evtFieldListDClick,
-                  id=ID_LSTFIELDLIST)
+        self._lstFieldList = ListBox(self, ID_LSTFIELDLIST, choices=[], style=LB_SINGLE)
+        self.Bind(EVT_LISTBOX, self._evtFieldList, id=ID_LSTFIELDLIST)
+        self.Bind(EVT_LISTBOX_DCLICK, self._evtFieldListDClick, id=ID_LSTFIELDLIST)
 
         # Button Add
-        self._btnFieldAdd = wx.Button(self, ID_BTNFIELDADD, _("&Add"))
-        self.Bind(wx.EVT_BUTTON, self._onFieldAdd, id=ID_BTNFIELDADD)
+        self._btnFieldAdd = Button(self, ID_BTNFIELDADD, _("&Add"))
+        self.Bind(EVT_BUTTON, self._onFieldAdd, id=ID_BTNFIELDADD)
 
         # Button Edit
-        self._btnFieldEdit = wx.Button(self, ID_BTNFIELDEDIT, _("&Edit"))
-        self.Bind(wx.EVT_BUTTON, self._onFieldEdit, id=ID_BTNFIELDEDIT)
+        self._btnFieldEdit = Button(self, ID_BTNFIELDEDIT, _("&Edit"))
+        self.Bind(EVT_BUTTON, self._onFieldEdit, id=ID_BTNFIELDEDIT)
 
         # Button Remove
-        self._btnFieldRemove = wx.Button(self, ID_BTNFIELDREMOVE, _("&Remove"))
-        self.Bind(wx.EVT_BUTTON, self._onFieldRemove, id=ID_BTNFIELDREMOVE)
+        self._btnFieldRemove = Button(self, ID_BTNFIELDREMOVE, _("&Remove"))
+        self.Bind(EVT_BUTTON, self._onFieldRemove, id=ID_BTNFIELDREMOVE)
 
         # Button Up
-        self._btnFieldUp = wx.Button(self, ID_BTNFIELDUP, _("&Up"))
-        self.Bind(wx.EVT_BUTTON, self._onFieldUp, id=ID_BTNFIELDUP)
+        self._btnFieldUp = Button(self, ID_BTNFIELDUP, _("&Up"))
+        self.Bind(EVT_BUTTON, self._onFieldUp, id=ID_BTNFIELDUP)
 
         # Button Down
-        self._btnFieldDown = wx.Button(self, ID_BTNFIELDDOWN, _("&Down"))
-        self.Bind(wx.EVT_BUTTON, self._onFieldDown, id=ID_BTNFIELDDOWN)
+        self._btnFieldDown = Button(self, ID_BTNFIELDDOWN, _("&Down"))
+        self.Bind(EVT_BUTTON, self._onFieldDown, id=ID_BTNFIELDDOWN)
 
         # Sizer for Fields buttons
-        szrFieldButtons = wx.BoxSizer (wx.HORIZONTAL)
-        szrFieldButtons.Add(self._btnFieldAdd, 0, wx.ALL, 5)
-        szrFieldButtons.Add(self._btnFieldEdit, 0, wx.ALL, 5)
-        szrFieldButtons.Add(self._btnFieldRemove, 0, wx.ALL, 5)
-        szrFieldButtons.Add(self._btnFieldUp, 0, wx.ALL, 5)
-        szrFieldButtons.Add(self._btnFieldDown, 0, wx.ALL, 5)
+        szrFieldButtons = BoxSizer (HORIZONTAL)
+        szrFieldButtons.Add(self._btnFieldAdd, 0, ALL, 5)
+        szrFieldButtons.Add(self._btnFieldEdit, 0, ALL, 5)
+        szrFieldButtons.Add(self._btnFieldRemove, 0, ALL, 5)
+        szrFieldButtons.Add(self._btnFieldUp, 0, ALL, 5)
+        szrFieldButtons.Add(self._btnFieldDown, 0, ALL, 5)
 
         # -------
         # Methods
 
         # Label Methods
-        lblMethod = wx.StaticText (self, -1, _("Methods :"))
+        lblMethod = StaticText (self, -1, _("Methods :"))
 
         # ListBox List
-        self._lstMethodList = wx.ListBox(self, ID_LSTMETHODLIST, choices=[],
-            style=wx.LB_SINGLE)
-        self.Bind(wx.EVT_LISTBOX, self._evtMethodList, id=ID_LSTMETHODLIST)
-        self.Bind(wx.EVT_LISTBOX_DCLICK, self._evtMethodListDClick,
-                  id=ID_LSTMETHODLIST)
+        self._lstMethodList = ListBox(self, ID_LSTMETHODLIST, choices=[], style=LB_SINGLE)
+        self.Bind(EVT_LISTBOX,        self._evtMethodList,       id=ID_LSTMETHODLIST)
+        self.Bind(EVT_LISTBOX_DCLICK, self._evtMethodListDClick, id=ID_LSTMETHODLIST)
 
         # Button Add
-        self._btnMethodAdd = wx.Button(self, ID_BTNMETHODADD, _("A&dd"))
-        self.Bind(wx.EVT_BUTTON, self._onMethodAdd, id=ID_BTNMETHODADD)
+        self._btnMethodAdd = Button(self, ID_BTNMETHODADD, _("A&dd"))
+        self.Bind(EVT_BUTTON, self._onMethodAdd, id=ID_BTNMETHODADD)
 
         # Button Edit
-        self._btnMethodEdit = wx.Button(self, ID_BTNMETHODEDIT, _("Ed&it"))
-        self.Bind(wx.EVT_BUTTON, self._onMethodEdit, id=ID_BTNMETHODEDIT)
+        self._btnMethodEdit = Button(self, ID_BTNMETHODEDIT, _("Ed&it"))
+        self.Bind(EVT_BUTTON, self._onMethodEdit, id=ID_BTNMETHODEDIT)
 
         # Button Remove
-        self._btnMethodRemove = wx.Button(self, ID_BTNMETHODREMOVE,
-            _("Re&move"))
-        self.Bind(wx.EVT_BUTTON, self._onMethodRemove, id=ID_BTNMETHODREMOVE)
+        self._btnMethodRemove = Button(self, ID_BTNMETHODREMOVE, _("Re&move"))
+        self.Bind(EVT_BUTTON, self._onMethodRemove, id=ID_BTNMETHODREMOVE)
 
         # Button Up
-        self._btnMethodUp = wx.Button(self, ID_BTNMETHODUP, _("U&p"))
-        self.Bind(wx.EVT_BUTTON, self._onMethodUp, id=ID_BTNMETHODUP)
+        self._btnMethodUp = Button(self, ID_BTNMETHODUP, _("U&p"))
+        self.Bind(EVT_BUTTON, self._onMethodUp, id=ID_BTNMETHODUP)
 
         # Button Down
-        self._btnMethodDown = wx.Button(self, ID_BTNMETHODDOWN, _("Do&wn"))
-        self.Bind(wx.EVT_BUTTON, self._onMethodDown, id=ID_BTNMETHODDOWN)
+        self._btnMethodDown = Button(self, ID_BTNMETHODDOWN, _("Do&wn"))
+        self.Bind(EVT_BUTTON, self._onMethodDown, id=ID_BTNMETHODDOWN)
 
         # Sizer for Methods buttons
-        szrMethodButtons = wx.BoxSizer (wx.HORIZONTAL)
-        szrMethodButtons.Add(self._btnMethodAdd, 0, wx.ALL, 5)
-        szrMethodButtons.Add(self._btnMethodEdit, 0, wx.ALL, 5)
-        szrMethodButtons.Add(self._btnMethodRemove, 0, wx.ALL, 5)
-        szrMethodButtons.Add(self._btnMethodUp, 0, wx.ALL, 5)
-        szrMethodButtons.Add(self._btnMethodDown, 0, wx.ALL, 5)
+        szrMethodButtons = BoxSizer (HORIZONTAL)
+        szrMethodButtons.Add(self._btnMethodAdd, 0, ALL, 5)
+        szrMethodButtons.Add(self._btnMethodEdit, 0, ALL, 5)
+        szrMethodButtons.Add(self._btnMethodRemove, 0, ALL, 5)
+        szrMethodButtons.Add(self._btnMethodUp, 0, ALL, 5)
+        szrMethodButtons.Add(self._btnMethodDown, 0, ALL, 5)
 
         # ----------------------------------
         # Display properties
 
         # Show stereotype checkbox
-        self._chkShowStereotype = wx.CheckBox(self, -1, _("Show stereotype"))
+        self._chkShowStereotype = CheckBox(self, -1, _("Show stereotype"))
 
         # Show fields checkbox
-        self._chkShowFields = wx.CheckBox(self, -1, _("Show fields"))
+        self._chkShowFields = CheckBox(self, -1, _("Show fields"))
 
         # Show methods checkbox
-        self._chkShowMethods = wx.CheckBox(self, -1, _("Show methods"))
+        self._chkShowMethods = CheckBox(self, -1, _("Show methods"))
 
         # Sizer for display properties
-        szrDisplayProperties = wx.BoxSizer (wx.VERTICAL)
-        szrDisplayProperties.Add(self._chkShowStereotype, 0, wx.ALL, 5)
-        szrDisplayProperties.Add(self._chkShowFields,    0, wx.ALL, 5)
-        szrDisplayProperties.Add(self._chkShowMethods,   0, wx.ALL, 5)
+        szrDisplayProperties = BoxSizer (VERTICAL)
+        szrDisplayProperties.Add(self._chkShowStereotype, 0, ALL, 5)
+        szrDisplayProperties.Add(self._chkShowFields,    0, ALL, 5)
+        szrDisplayProperties.Add(self._chkShowMethods,   0, ALL, 5)
 
-
-
-        # ----------------------------------
         # Buttons OK, cancel and description
-        self._btnOk = wx.Button(self, ID_BTNOK, _("&Ok"))
-        self.Bind(wx.EVT_BUTTON, self._onOk, id=ID_BTNOK)
+        self._btnOk = Button(self, ID_BTNOK, _("&Ok"))
+        self.Bind(EVT_BUTTON, self._onOk, id=ID_BTNOK)
         self._btnOk.SetDefault()
-        self._btnCancel = wx.Button(self, ID_BTNCANCEL, _("&Cancel"))
-        self.Bind(wx.EVT_BUTTON, self._onCancel, id=ID_BTNCANCEL)
-        self._btnDescription = wx.Button(self, ID_BTNDESCRIPTION,
-                _("De&scription..."))
-        self.Bind(wx.EVT_BUTTON, self._onDescription, id=ID_BTNDESCRIPTION)
-        szrButtons = wx.BoxSizer (wx.HORIZONTAL)
-        szrButtons.Add(self._btnDescription, 0, wx.ALL, 5)
-        szrButtons.Add(self._btnOk, 0, wx.ALL, 5)
-        szrButtons.Add(self._btnCancel, 0, wx.ALL, 5)
+        self._btnCancel = Button(self, ID_BTNCANCEL, _("&Cancel"))
+        self.Bind(EVT_BUTTON, self._onCancel, id=ID_BTNCANCEL)
+        self._btnDescription = Button(self, ID_BTNDESCRIPTION, _("De&scription..."))
+        self.Bind(EVT_BUTTON, self._onDescription, id=ID_BTNDESCRIPTION)
+        szrButtons = BoxSizer (HORIZONTAL)
+        szrButtons.Add(self._btnDescription, 0, ALL, 5)
+        szrButtons.Add(self._btnOk, 0, ALL, 5)
+        szrButtons.Add(self._btnCancel, 0, ALL, 5)
 
         # -------------------
         # Main sizer creation
-        szrMain = wx.BoxSizer (wx.VERTICAL)
+        szrMain = BoxSizer (VERTICAL)
         self.SetSizer(szrMain)
-        szrMain.Add(szrNameStereotype, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(lblField, 0, wx.ALL, 5)
-        szrMain.Add(self._lstFieldList, 1, wx.ALL|wx.EXPAND, 5)
-        szrMain.Add(szrFieldButtons, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(lblMethod, 0, wx.ALL, 5)
-        szrMain.Add(self._lstMethodList, 1, wx.ALL|wx.EXPAND, 5)
-        szrMain.Add(szrMethodButtons, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(szrDisplayProperties, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(szrButtons, 0, wx.ALL|wx.ALIGN_BOTTOM|wx.ALIGN_RIGHT, 5)
+        szrMain.Add(szrNameStereotype, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        szrMain.Add(lblField, 0, ALL, 5)
+        szrMain.Add(self._lstFieldList, 1, ALL | EXPAND, 5)
+        szrMain.Add(szrFieldButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        szrMain.Add(lblMethod, 0, ALL, 5)
+        szrMain.Add(self._lstMethodList, 1, ALL | EXPAND, 5)
+        szrMain.Add(szrMethodButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        szrMain.Add(szrDisplayProperties, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        szrMain.Add(szrButtons, 0, ALL | ALIGN_BOTTOM | ALIGN_RIGHT, 5)
 
         # Fill the txt control with class data
         self._fillAllFields()
@@ -245,8 +263,6 @@ class DlgEditClass (wx.Dialog):
         self.Centre()
         self.ShowModal()
 
-    #>------------------------------------------------------------------------
-
     def _callDlgEditField (self, field):
         """
         Dialog for Field edition.
@@ -257,7 +273,7 @@ class DlgEditClass (wx.Dialog):
         @author N. Dubois <n_dub@altavista.com>
         """
 
-        self._dlgField = wx.Dialog(self, -1, _("Field Edit"))
+        self._dlgField = Dialog(self, -1, _("Field Edit"))
         # Simplify writing
         dlg = self._dlgField
         dlg.field = field
@@ -268,62 +284,56 @@ class DlgEditClass (wx.Dialog):
         dlg.SetAutoLayout(True)
 
         # RadioBox Visibility
-        dlg._rdbFieldVisibility = wx.RadioBox(dlg, -1, "",
-            wx.Point(35, 30), wx.DefaultSize,
-            ["+", "-", "#"], style=wx.RA_SPECIFY_ROWS)
+        dlg._rdbFieldVisibility = RadioBox(dlg, -1, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
 
         # Txt Ctrl Name
-        lblFieldName = wx.StaticText (dlg, -1, _("Name"))
-        dlg._txtFieldName = wx.TextCtrl(dlg, ID_TXTFIELDNAME, "",
-            size = (125, -1))
-        dlg.Bind(wx.EVT_TEXT, self._evtFieldText, id=ID_TXTFIELDNAME)
+        lblFieldName = StaticText (dlg, -1, _("Name"))
+        dlg._txtFieldName = TextCtrl(dlg, ID_TXTFIELDNAME, "", size=(125, -1))
+        dlg.Bind(EVT_TEXT, self._evtFieldText, id=ID_TXTFIELDNAME)
 
         # Txt Ctrl Type
-        lblFieldType = wx.StaticText (dlg, -1, _("Type"))
-        dlg._txtFieldType = wx.TextCtrl(dlg, -1, "",
-            size = (125, -1))
+        lblFieldType = StaticText (dlg, -1, _("Type"))
+        dlg._txtFieldType = TextCtrl(dlg, -1, "", size=(125, -1))
 
         # Txt Ctrl Default
-        lblFieldDefault = wx.StaticText (dlg, -1, _("Default Value"))
-        dlg._txtFieldDefault = wx.TextCtrl(dlg, -1, "",
-            size = (125, -1))
+        lblFieldDefault = StaticText (dlg, -1, _("Default Value"))
+        dlg._txtFieldDefault = TextCtrl(dlg, -1, "", size=(125, -1))
 
         # ---------------------
         # Buttons OK and cancel
-        dlg._btnFieldOk = wx.Button(dlg, ID_BTNFIELDOK, _("&Ok"))
-        dlg.Bind(wx.EVT_BUTTON, self._onFieldOk, id=ID_BTNFIELDOK)
+        dlg._btnFieldOk = Button(dlg, ID_BTNFIELDOK, _("&Ok"))
+        dlg.Bind(EVT_BUTTON, self._onFieldOk, id=ID_BTNFIELDOK)
         dlg._btnFieldOk.SetDefault()
-        dlg._btnFieldCancel = wx.Button(dlg, ID_BTNFIELDCANCEL, _("&Cancel"))
-        dlg.Bind(wx.EVT_BUTTON, self._onFieldCancel, id=ID_BTNFIELDCANCEL)
-        szrButtons = wx.BoxSizer (wx.HORIZONTAL)
-        szrButtons.Add(dlg._btnFieldOk, 0, wx.ALL, 5)
-        szrButtons.Add(dlg._btnFieldCancel, 0, wx.ALL, 5)
+        dlg._btnFieldCancel = Button(dlg, ID_BTNFIELDCANCEL, _("&Cancel"))
+        dlg.Bind(EVT_BUTTON, self._onFieldCancel, id=ID_BTNFIELDCANCEL)
+        szrButtons = BoxSizer (HORIZONTAL)
+        szrButtons.Add(dlg._btnFieldOk, 0, ALL, 5)
+        szrButtons.Add(dlg._btnFieldCancel, 0, ALL, 5)
 
-        szrField1 = wx.FlexGridSizer(cols=3, hgap=6, vgap=6)
+        szrField1 = FlexGridSizer(cols=3, hgap=6, vgap=6)
         szrField1.AddMany([lblFieldName, lblFieldType, lblFieldDefault,
                         dlg._txtFieldName, dlg._txtFieldType,
                         dlg._txtFieldDefault])
 
-        szrField2 = wx.BoxSizer(wx.HORIZONTAL)
-        szrField2.Add(dlg._rdbFieldVisibility, 0, wx.ALL, 5)
-        szrField2.Add(szrField1, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        szrField2 = BoxSizer(HORIZONTAL)
+        szrField2.Add(dlg._rdbFieldVisibility, 0, ALL, 5)
+        szrField2.Add(szrField1, 0, ALIGN_CENTER_VERTICAL | ALL, 5)
 
-        szrField3 = wx.BoxSizer(wx.VERTICAL)
-        szrField3.Add(szrField2, 0, wx.ALL, 5)
-        szrField3.Add(szrButtons, 0, wx.ALL|wx.ALIGN_RIGHT, 5)
+        szrField3 = BoxSizer(VERTICAL)
+        szrField3.Add(szrField2, 0, ALL, 5)
+        szrField3.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)
 
         dlg.SetSizer(szrField3)
         dlg.SetAutoLayout(True)
 
         szrField3.Fit(dlg)
 
-        # Fill the text controls with PyutField datas
+        # Fill the text controls with PyutField data
         dlg._txtFieldName.SetValue(dlg.field.getName())
         dlg._txtFieldType.SetValue(str(dlg.field.getType()))
         dlg._txtFieldDefault.SetValue(self._convertNone(
             dlg.field.getDefaultValue()))
-        dlg._rdbFieldVisibility.SetStringSelection(
-            str(dlg.field.getVisibility()))
+        dlg._rdbFieldVisibility.SetStringSelection(str(dlg.field.getVisibility()))
 
         # Fix state of buttons (enabled or not)
         self._fixBtnDlgFields()
@@ -333,8 +343,6 @@ class DlgEditClass (wx.Dialog):
         dlg.Centre()
 
         return dlg.ShowModal()
-
-    #>------------------------------------------------------------------------
 
     def _callDlgEditMethod (self, method):
         """
@@ -346,7 +354,7 @@ class DlgEditClass (wx.Dialog):
         @author N. Dubois <n_dub@altavista.com>
         """
 
-        self._dlgMethod = wx.Dialog(self, -1, _("Method Edit"))
+        self._dlgMethod = Dialog(self, -1, _("Method Edit"))
         # Simplify writing
         dlg = self._dlgMethod
         dlg._pyutMethod = method
@@ -358,106 +366,96 @@ class DlgEditClass (wx.Dialog):
         dlg.SetAutoLayout(True)
 
         # RadioBox Visibility
-        dlg._rdbVisibility = wx.RadioBox(dlg, -1, "",
-            wx.Point(35, 30), wx.DefaultSize,
-            ["+", "-", "#"], style=wx.RA_SPECIFY_ROWS)
+        dlg._rdbVisibility = RadioBox(dlg, -1, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
 
         # Txt Ctrl Name
-        lblName = wx.StaticText (dlg, -1, _("Name"))
-        dlg._txtName = wx.TextCtrl(dlg, ID_TXTMETHODNAME, "",
-            size = (125, -1))
-        dlg.Bind(wx.EVT_TEXT, self._evtMethodText, id=ID_TXTMETHODNAME)
+        lblName = StaticText (dlg, -1, _("Name"))
+        dlg._txtName = TextCtrl(dlg, ID_TXTMETHODNAME, "", size=(125, -1))
+        dlg.Bind(EVT_TEXT, self._evtMethodText, id=ID_TXTMETHODNAME)
 
         # Txt Ctrl Modifiers
-        lblModifiers = wx.StaticText (dlg, -1, _("Modifiers"))
-        dlg._txtModifiers = wx.TextCtrl(dlg, -1, "",
-            size = (125, -1))
+        lblModifiers = StaticText (dlg, -1, _("Modifiers"))
+        dlg._txtModifiers = TextCtrl(dlg, -1, "", size=(125, -1))
 
         # Txt Ctrl Return Type
-        lblReturn = wx.StaticText (dlg, -1, _("Return type"))
-        dlg._txtReturn = wx.TextCtrl(dlg, -1, "",
-            size = (125, -1))
+        lblReturn = StaticText (dlg, -1, _("Return type"))
+        dlg._txtReturn = TextCtrl(dlg, -1, "", size=(125, -1))
 
         # ------
         # Params
 
         # Label Params
-        lblParam = wx.StaticText (dlg, -1, _("Params :"))
+        lblParam = StaticText (dlg, -1, _("Params :"))
 
         # ListBox
-        dlg._lstParams = wx.ListBox(dlg, ID_LSTPARAMLIST, choices=[],
-            style=wx.LB_SINGLE)
-        dlg.Bind(wx.EVT_LISTBOX, self._evtParamList, id=ID_LSTPARAMLIST)
+        dlg._lstParams = ListBox(dlg, ID_LSTPARAMLIST, choices=[],  style=LB_SINGLE)
+        dlg.Bind(EVT_LISTBOX, self._evtParamList, id=ID_LSTPARAMLIST)
 
         # Button Add
-        dlg._btnParamAdd = wx.Button(dlg, ID_BTNPARAMADD, _("&Add"))
-        dlg.Bind(wx.EVT_BUTTON, self._onParamAdd, id=ID_BTNPARAMADD)
+        dlg._btnParamAdd = Button(dlg, ID_BTNPARAMADD, _("&Add"))
+        dlg.Bind(EVT_BUTTON, self._onParamAdd, id=ID_BTNPARAMADD)
 
         # Button Edit
-        dlg._btnParamEdit = wx.Button(dlg, ID_BTNPARAMEDIT, _("&Edit"))
-        dlg.Bind(wx.EVT_BUTTON, self._onParamEdit, id=ID_BTNPARAMEDIT)
+        dlg._btnParamEdit = Button(dlg, ID_BTNPARAMEDIT, _("&Edit"))
+        dlg.Bind(EVT_BUTTON, self._onParamEdit, id=ID_BTNPARAMEDIT)
 
         # Button Remove
-        dlg._btnParamRemove = wx.Button(dlg, ID_BTNPARAMREMOVE, _("&Remove"))
-        dlg.Bind(wx.EVT_BUTTON, self._onParamRemove, id=ID_BTNPARAMREMOVE)
+        dlg._btnParamRemove = Button(dlg, ID_BTNPARAMREMOVE, _("&Remove"))
+        dlg.Bind(EVT_BUTTON, self._onParamRemove, id=ID_BTNPARAMREMOVE)
 
         # Button Up
-        dlg._btnParamUp = wx.Button(dlg, ID_BTNPARAMUP, _("&Up"))
-        dlg.Bind(wx.EVT_BUTTON, self._onParamUp, id=ID_BTNPARAMUP)
+        dlg._btnParamUp = Button(dlg, ID_BTNPARAMUP, _("&Up"))
+        dlg.Bind(EVT_BUTTON, self._onParamUp, id=ID_BTNPARAMUP)
 
         # Button Down
-        dlg._btnParamDown = wx.Button(dlg, ID_BTNPARAMDOWN, _("&Down"))
-        dlg.Bind(wx.EVT_BUTTON, self._onParamDown, id=ID_BTNPARAMDOWN)
+        dlg._btnParamDown = Button(dlg, ID_BTNPARAMDOWN, _("&Down"))
+        dlg.Bind(EVT_BUTTON, self._onParamDown, id=ID_BTNPARAMDOWN)
 
         # Sizer for Params buttons
-        szrParamButtons = wx.BoxSizer (wx.HORIZONTAL)
-        szrParamButtons.Add(dlg._btnParamAdd, 0, wx.ALL, 5)
-        szrParamButtons.Add(dlg._btnParamEdit, 0, wx.ALL, 5)
-        szrParamButtons.Add(dlg._btnParamRemove, 0, wx.ALL, 5)
-        szrParamButtons.Add(dlg._btnParamUp, 0, wx.ALL, 5)
-        szrParamButtons.Add(dlg._btnParamDown, 0, wx.ALL, 5)
-
+        szrParamButtons = BoxSizer (HORIZONTAL)
+        szrParamButtons.Add(dlg._btnParamAdd, 0, ALL, 5)
+        szrParamButtons.Add(dlg._btnParamEdit, 0, ALL, 5)
+        szrParamButtons.Add(dlg._btnParamRemove, 0, ALL, 5)
+        szrParamButtons.Add(dlg._btnParamUp, 0, ALL, 5)
+        szrParamButtons.Add(dlg._btnParamDown, 0, ALL, 5)
 
         # ---------------------
         # Buttons OK and cancel
-        dlg._btnMethodOk = wx.Button(dlg, ID_BTNMETHODOK, _("&Ok"))
-        dlg.Bind(wx.EVT_BUTTON, self._onMethodOk, id=ID_BTNMETHODOK)
+        dlg._btnMethodOk = Button(dlg, ID_BTNMETHODOK, _("&Ok"))
+        dlg.Bind(EVT_BUTTON, self._onMethodOk, id=ID_BTNMETHODOK)
         dlg._btnMethodOk.SetDefault()
-        dlg._btnMethodCancel = wx.Button(dlg, ID_BTNMETHODCANCEL, _("&Cancel"))
-        dlg.Bind(wx.EVT_BUTTON, self._onMethodCancel, id=ID_BTNMETHODCANCEL)
-        szrButtons = wx.BoxSizer (wx.HORIZONTAL)
-        szrButtons.Add(dlg._btnMethodOk, 0, wx.ALL, 5)
-        szrButtons.Add(dlg._btnMethodCancel, 0, wx.ALL, 5)
+        dlg._btnMethodCancel = Button(dlg, ID_BTNMETHODCANCEL, _("&Cancel"))
+        dlg.Bind(EVT_BUTTON, self._onMethodCancel, id=ID_BTNMETHODCANCEL)
+        szrButtons = BoxSizer (HORIZONTAL)
+        szrButtons.Add(dlg._btnMethodOk, 0, ALL, 5)
+        szrButtons.Add(dlg._btnMethodCancel, 0, ALL, 5)
 
-        szr1 = wx.FlexGridSizer(cols=3, hgap=6, vgap=6)
-        szr1.AddMany([lblName, lblModifiers, lblReturn,
-                        dlg._txtName, dlg._txtModifiers,
-                        dlg._txtReturn])
+        szr1 = FlexGridSizer(cols=3, hgap=6, vgap=6)
+        szr1.AddMany([lblName, lblModifiers, lblReturn, dlg._txtName, dlg._txtModifiers, dlg._txtReturn])
 
-        szr2 = wx.BoxSizer(wx.HORIZONTAL)
-        szr2.Add(dlg._rdbVisibility, 0, wx.ALL, 5)
-        szr2.Add(szr1, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5)
+        szr2 = BoxSizer(HORIZONTAL)
+        szr2.Add(dlg._rdbVisibility, 0, ALL, 5)
+        szr2.Add(szr1, 0, ALIGN_CENTER_VERTICAL | ALL, 5)
 
-        szr3 = wx.BoxSizer(wx.VERTICAL)
-        szr3.Add(szr2, 0, wx.ALL, 5)
-        szr3.Add(lblParam, 0, wx.ALL, 5)
-        szr3.Add(dlg._lstParams, 1, wx.EXPAND|wx.ALL, 5)
-        szr3.Add(szrParamButtons, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5)
-        szr3.Add(szrButtons, 0, wx.ALL|wx.ALIGN_RIGHT, 5)
+        szr3 = BoxSizer(VERTICAL)
+        szr3.Add(szr2, 0, ALL, 5)
+        szr3.Add(lblParam, 0, ALL, 5)
+        szr3.Add(dlg._lstParams, 1, EXPAND | ALL, 5)
+        szr3.Add(szrParamButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        szr3.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)
 
         dlg.SetSizer(szr3)
         dlg.SetAutoLayout(True)
 
         szr3.Fit(dlg)
 
-        # Fill the text controls with PyutMethod datas
+        # Fill the text controls with PyutMethod data
         dlg._txtName.SetValue(dlg._pyutMethodCopy.getName())
         modifs = dlg._pyutMethodCopy.getModifiers()
         modifs = " ".join(map(lambda x: str(x), modifs))
         dlg._txtModifiers.SetValue(modifs)
         dlg._txtReturn.SetValue(str(dlg._pyutMethodCopy.getReturns()))
-        dlg._rdbVisibility.SetStringSelection(
-            str(dlg._pyutMethodCopy.getVisibility()))
+        dlg._rdbVisibility.SetStringSelection(str(dlg._pyutMethodCopy.getVisibility()))
         for i in dlg._pyutMethodCopy.getParams():
             dlg._lstParams.Append(str(i))
 
@@ -471,8 +469,6 @@ class DlgEditClass (wx.Dialog):
 
         return dlg.ShowModal()
 
-    #>------------------------------------------------------------------------
-
     def _callDlgEditParam (self, param):
         """
         Dialog for Param edition.
@@ -483,7 +479,7 @@ class DlgEditClass (wx.Dialog):
         @author N. Dubois <n_dub@altavista.com>
         """
 
-        self._dlgParam = wx.Dialog(self, -1, _("Param Edit"))
+        self._dlgParam = Dialog(self, -1, _("Param Edit"))
         # Simplify writing
         dlg = self._dlgParam
         dlg._pyutParam = param
@@ -494,47 +490,45 @@ class DlgEditClass (wx.Dialog):
         dlg.SetAutoLayout(True)
 
         # Txt Ctrl Name
-        lblName = wx.StaticText (dlg, -1, _("Name"))
-        dlg._txtName = wx.TextCtrl(dlg, ID_TXTPARAMNAME, "", size = (125, -1))
-        dlg.Bind(wx.EVT_TEXT, self._evtParamText, id=ID_TXTPARAMNAME)
+        lblName = StaticText (dlg, -1, _("Name"))
+        dlg._txtName = TextCtrl(dlg, ID_TXTPARAMNAME, "", size = (125, -1))
+        dlg.Bind(EVT_TEXT, self._evtParamText, id=ID_TXTPARAMNAME)
 
         # Txt Ctrl Type
-        lblType = wx.StaticText (dlg, -1, _("Type"))
-        dlg._txtType = wx.TextCtrl(dlg, -1, "", size = (125, -1))
+        lblType = StaticText (dlg, -1, _("Type"))
+        dlg._txtType = TextCtrl(dlg, -1, "", size=(125, -1))
 
         # Txt Ctrl Default
-        lblDefault = wx.StaticText (dlg, -1, _("Default Value"))
-        dlg._txtDefault = wx.TextCtrl(dlg, -1, "", size = (125, -1))
+        lblDefault = StaticText (dlg, -1, _("Default Value"))
+        dlg._txtDefault = TextCtrl(dlg, -1, "", size=(125, -1))
 
         # ---------------------
         # Buttons OK and cancel
-        dlg._btnOk = wx.Button(dlg, ID_BTNPARAMOK, _("&Ok"))
-        dlg.Bind(wx.EVT_BUTTON, self._onParamOk, id=ID_BTNPARAMOK)
+        dlg._btnOk = Button(dlg, ID_BTNPARAMOK, _("&Ok"))
+        dlg.Bind(EVT_BUTTON, self._onParamOk, id=ID_BTNPARAMOK)
         dlg._btnOk.SetDefault()
-        dlg._btnCancel = wx.Button(dlg, ID_BTNPARAMCANCEL, _("&Cancel"))
-        dlg.Bind(wx.EVT_BUTTON, self._onParamCancel, id=ID_BTNPARAMCANCEL)
-        szrButtons = wx.BoxSizer (wx.HORIZONTAL)
-        szrButtons.Add(dlg._btnOk, 0, wx.ALL, 5)
-        szrButtons.Add(dlg._btnCancel, 0, wx.ALL, 5)
+        dlg._btnCancel = Button(dlg, ID_BTNPARAMCANCEL, _("&Cancel"))
+        dlg.Bind(EVT_BUTTON, self._onParamCancel, id=ID_BTNPARAMCANCEL)
+        szrButtons = BoxSizer (HORIZONTAL)
+        szrButtons.Add(dlg._btnOk, 0, ALL, 5)
+        szrButtons.Add(dlg._btnCancel, 0, ALL, 5)
 
-        szr1 = wx.FlexGridSizer(cols=3, hgap=6, vgap=6)
-        szr1.AddMany([lblName, lblType, lblDefault,
-            dlg._txtName, dlg._txtType, dlg._txtDefault])
+        szr1 = FlexGridSizer(cols=3, hgap=6, vgap=6)
+        szr1.AddMany([lblName, lblType, lblDefault, dlg._txtName, dlg._txtType, dlg._txtDefault])
 
-        szr2 = wx.BoxSizer(wx.VERTICAL)
-        szr2.Add(szr1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5)
-        szr2.Add(szrButtons, 0, wx.ALL|wx.ALIGN_RIGHT, 5)
+        szr2 = BoxSizer(VERTICAL)
+        szr2.Add(szr1, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        szr2.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)
 
         dlg.SetSizer(szr2)
         dlg.SetAutoLayout(True)
 
         szr2.Fit(dlg)
 
-        # Fill the text controls with PyutParam datas
+        # Fill the text controls with PyutParam data
         dlg._txtName.SetValue(dlg._pyutParam.getName())
         dlg._txtType.SetValue(str(dlg._pyutParam.getType()))
-        dlg._txtDefault.SetValue(self._convertNone(
-            dlg._pyutParam.getDefaultValue()))
+        dlg._txtDefault.SetValue(self._convertNone(dlg._pyutParam.getDefaultValue()))
 
         # Fix state of buttons (enabled or not)
         self._fixBtnDlgParams()
@@ -544,8 +538,6 @@ class DlgEditClass (wx.Dialog):
         dlg.Centre()
 
         return dlg.ShowModal()
-
-    #>------------------------------------------------------------------------
 
     def _dupParams (self, params):
         """
@@ -557,24 +549,21 @@ class DlgEditClass (wx.Dialog):
         dupParams = []
         for i in params:
             param = PyutParam(
-                name         = i.getName(),
-                type         = i.getType(),
-                defaultValue = i.getDefaultValue())
+                name=i.getName(),
+                type=i.getType(),
+                defaultValue=i.getDefaultValue())
             dupParams.append(param)
         return dupParams
 
-    #>------------------------------------------------------------------------
-
     def _fillAllFields (self):
         """
-        Fill all controls with _pyutClassCopy datas.
+        Fill all controls with _pyutClassCopy data.
 
         @since 1.6
         @author N. Dubois <n_dub@altavista.com>
         """
         # Fill Class name
-        self._txtName.SetValue(
-            self._pyutClassCopy.getName())
+        self._txtName.SetValue(self._pyutClassCopy.getName())
 
         # Fill Stereotype
         stereotype = self._pyutClassCopy.getStereotype()
@@ -590,25 +579,17 @@ class DlgEditClass (wx.Dialog):
                 self._lstFieldList.Append(str(el))
             for el in self._pyutClassCopy.getMethods():
                 self._lstMethodList.Append(el.getString())
-        except:
-            import sys.traceback
-            dlg=wx.MessageDialog(self,
-                                _("Error : %s \n Message : %s\n Trace : %s\n" %
-                                  (sys.exc_info()[0],
-                                   sys.exc_info()[1],
-                                   sys.exc_info()[2])),
-                                _("Error..."),
-                                wx.OK | wx.ICON_ERROR)
+        except (ValueError, Exception) as e:
+            #  import sys.traceback
+            dlg = MessageDialog(self,
+                                _(f"Error : {exc_info()[0]} \n Message : {exc_info()[1]}\n Trace : {exc_info()[2]}\n", OK | ICON_ERROR))
             dlg.ShowModal()
             dlg.Destroy()
-
 
         # Fill display properties
         self._chkShowFields.SetValue(self._pyutClassCopy.getShowFields())
         self._chkShowMethods.SetValue(self._pyutClassCopy.getShowMethods())
         self._chkShowStereotype.SetValue(self._pyutClassCopy.getShowStereotype())
-
-    #>------------------------------------------------------------------------
 
     def _fixBtnFields (self):
         """
@@ -619,14 +600,12 @@ class DlgEditClass (wx.Dialog):
         """
         selection = self._lstFieldList.GetSelection()
         # Button Edit and Remove
-        bool = selection != -1
-        self._btnFieldEdit.Enable(bool)
-        self._btnFieldRemove.Enable(bool)
+        ans = selection != -1
+        self._btnFieldEdit.Enable(ans)
+        self._btnFieldRemove.Enable(ans)
         self._btnFieldUp.Enable(selection > 0)
         self._btnFieldDown.Enable(
-            bool and selection < self._lstFieldList.GetCount() - 1)
-
-    #>------------------------------------------------------------------------
+            ans and selection < self._lstFieldList.GetCount() - 1)
 
     def _fixBtnMethod (self):
         """
@@ -643,8 +622,6 @@ class DlgEditClass (wx.Dialog):
         self._btnMethodUp.Enable(selection > 0)
         self._btnMethodDown.Enable(
             bool and selection < self._lstMethodList.GetCount() - 1)
-
-    #>------------------------------------------------------------------------
 
     def _fixBtnParam (self):
         """
@@ -663,8 +640,6 @@ class DlgEditClass (wx.Dialog):
         dlg._btnParamDown.Enable(
             bool and selection < dlg._lstParams.GetCount() - 1)
 
-    #>------------------------------------------------------------------------
-
     def _fixBtnDlgFields (self):
         """
         # Fix state of buttons in dialog fields (enable or not).
@@ -672,10 +647,7 @@ class DlgEditClass (wx.Dialog):
         @since 1.9
         @author N. Dubois <n_dub@altavista.com>
         """
-        self._dlgField._btnFieldOk.Enable(
-            self._dlgField._txtFieldName.GetValue() != "")
-
-    #>------------------------------------------------------------------------
+        self._dlgField._btnFieldOk.Enable(self._dlgField._txtFieldName.GetValue() != "")
 
     def _fixBtnDlgMethods (self):
         """
@@ -684,10 +656,7 @@ class DlgEditClass (wx.Dialog):
         @since 1.9
         @author N. Dubois <n_dub@altavista.com>
         """
-        self._dlgMethod._btnMethodOk.Enable(
-            self._dlgMethod._txtName.GetValue() != "")
-
-    #>------------------------------------------------------------------------
+        self._dlgMethod._btnMethodOk.Enable(self._dlgMethod._txtName.GetValue() != "")
 
     def _fixBtnDlgParams (self):
         """
@@ -696,10 +665,7 @@ class DlgEditClass (wx.Dialog):
         @since 1.12
         @author N. Dubois <n_dub@altavista.com>
         """
-        self._dlgParam._btnOk.Enable(
-            self._dlgParam._txtName.GetValue() != "")
-
-    #>------------------------------------------------------------------------
+        self._dlgParam._btnOk.Enable(self._dlgParam._txtName.GetValue() != "")
 
     def _onFieldAdd (self, event):
         """
@@ -711,18 +677,16 @@ class DlgEditClass (wx.Dialog):
         """
         field = PyutField()
         ret = self._callDlgEditField(field)
-        if ret == wx.OK:
+        if ret == OK:
             self._pyutClassCopy.getFields().append(field)
             # Add fields in dialog list
             self._lstFieldList.Append(str(field))
 
-            # Tell window that its datas has been modified
+            # Tell window that its data has been modified
             fileHandling = self._ctrl.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onMethodAdd (self, event):
         """
@@ -735,18 +699,16 @@ class DlgEditClass (wx.Dialog):
         # Add fields in PyutClass copy object
         method = PyutMethod()
         ret = self._callDlgEditMethod(method)
-        if ret == wx.OK:
+        if ret == OK:
             self._pyutClassCopy.getMethods().append(method)
             # Add fields in dialog list
             self._lstMethodList.Append(method.getString())
 
-            # Tell window that its datas has been modified
+            # Tell window that its data has been modified
             fileHandling = self._ctrl.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onParamAdd (self, event):
         """
@@ -759,18 +721,16 @@ class DlgEditClass (wx.Dialog):
         param = PyutParam()
         dlg = self._dlgMethod
         ret = self._callDlgEditParam(param)
-        if ret == wx.OK:
+        if ret == OK:
             dlg._pyutMethodCopy.getParams().append(param)
             # Add fields in dialog list
             dlg._lstParams.Append(str(param))
 
-            # Tell window that its datas has been modified
+            # Tell window that its data has been modified
             fileHandling = self._ctrl.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onFieldEdit (self, event):
         """
@@ -783,16 +743,14 @@ class DlgEditClass (wx.Dialog):
         selection = self._lstFieldList.GetSelection()
         field = self._pyutClassCopy.getFields()[selection]
         ret = self._callDlgEditField(field)
-        if ret == wx.OK:
+        if ret == OK:
             # Modify field in dialog list
             self._lstFieldList.SetString(selection, str(field))
-            # Tell window that its datas has been modified
+            # Tell window that its data has been modified
             fileHandling = self._ctrl.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onMethodEdit (self, event):
         """
@@ -805,16 +763,14 @@ class DlgEditClass (wx.Dialog):
         selection = self._lstMethodList.GetSelection()
         method = self._pyutClassCopy.getMethods()[selection]
         ret = self._callDlgEditMethod(method)
-        if ret == wx.OK:
+        if ret == OK:
             # Modify method in dialog list
             self._lstMethodList.SetString(selection, method.getString())
-            # Tell window that its datas has been modified
+            # Tell window that its data has been modified
             fileHandling = self._ctrl.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onParamEdit (self, event):
         """
@@ -828,16 +784,14 @@ class DlgEditClass (wx.Dialog):
         selection = dlg._lstParams.GetSelection()
         param = dlg._pyutMethodCopy.getParams()[selection]
         ret = self._callDlgEditParam(param)
-        if ret == wx.OK:
+        if ret == OK:
             # Modify param in dialog list
             dlg._lstParams.SetString(selection, str(param))
-            # Tell window that its datas has been modified
+            # Tell window that its data has been modified
             fileHandling = self._ctrl.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onFieldRemove (self, event):
         """
@@ -863,13 +817,11 @@ class DlgEditClass (wx.Dialog):
         # Fix buttons of fields list (enable or not)
         self._fixBtnFields()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onMethodRemove (self, event):
         """
@@ -884,7 +836,7 @@ class DlgEditClass (wx.Dialog):
         self._lstMethodList.Delete(selection)
 
         # Select next
-        if self._lstMethodList.GetCount()>0:
+        if self._lstMethodList.GetCount() > 0:
             index = min(selection, self._lstMethodList.GetCount()-1)
             self._lstMethodList.SetSelection(index)
 
@@ -895,13 +847,11 @@ class DlgEditClass (wx.Dialog):
         # Fix buttons of methods list (enable or not)
         self._fixBtnMethod()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onParamRemove (self, event):
         """
@@ -929,13 +879,11 @@ class DlgEditClass (wx.Dialog):
         # Fix buttons of params list (enable or not)
         self._fixBtnParam()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onFieldUp (self, event):
         """
@@ -954,20 +902,17 @@ class DlgEditClass (wx.Dialog):
 
         # Move up the field in dialog list
         self._lstFieldList.SetString(selection, str(fields[selection]))
-        self._lstFieldList.SetString(
-            selection - 1, str(fields[selection - 1]))
+        self._lstFieldList.SetString(selection - 1, str(fields[selection - 1]))
         self._lstFieldList.SetSelection(selection - 1)
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onMethodUp (self, event):
         """
@@ -994,13 +939,11 @@ class DlgEditClass (wx.Dialog):
         # Fix buttons (enable or not)
         self._fixBtnMethod()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onParamUp (self, event):
         """
@@ -1020,20 +963,17 @@ class DlgEditClass (wx.Dialog):
 
         # Move up the param in dialog list
         dlg._lstParams.SetString(selection, str(params[selection]))
-        dlg._lstParams.SetString(
-            selection - 1, str(params[selection - 1]))
+        dlg._lstParams.SetString(selection - 1, str(params[selection - 1]))
         dlg._lstParams.SetSelection(selection - 1)
 
         # Fix buttons (enable or not)
         self._fixBtnParam()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onFieldDown (self, event):
         """
@@ -1052,20 +992,17 @@ class DlgEditClass (wx.Dialog):
 
         # Move down the field in dialog list
         self._lstFieldList.SetString(selection, str(fields[selection]))
-        self._lstFieldList.SetString(
-            selection + 1, str(fields[selection + 1]))
+        self._lstFieldList.SetString(selection + 1, str(fields[selection + 1]))
         self._lstFieldList.SetSelection(selection + 1)
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onMethodDown (self, event):
         """
@@ -1083,22 +1020,18 @@ class DlgEditClass (wx.Dialog):
         methods.insert(selection + 1, method)
 
         # Move up the method in dialog list
-        self._lstMethodList.SetString(selection,
-            methods[selection].getString())
-        self._lstMethodList.SetString(
-            selection + 1, methods[selection + 1].getString())
+        self._lstMethodList.SetString(selection, methods[selection].getString())
+        self._lstMethodList.SetString(selection + 1, methods[selection + 1].getString())
         self._lstMethodList.SetSelection(selection + 1)
 
         # Fix buttons (enable or not)
         self._fixBtnMethod()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _onParamDown (self, event):
         """
@@ -1125,13 +1058,11 @@ class DlgEditClass (wx.Dialog):
         # Fix buttons (enable or not)
         self._fixBtnParam()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
-
-    #>------------------------------------------------------------------------
 
     def _evtFieldText (self, event):
         """
@@ -1143,8 +1074,6 @@ class DlgEditClass (wx.Dialog):
         """
         self._fixBtnDlgFields()
 
-    #>------------------------------------------------------------------------
-
     def _evtMethodText (self, event):
         """
         Check if button "Add" has to be enabled or not.
@@ -1154,8 +1083,6 @@ class DlgEditClass (wx.Dialog):
         @author N. Dubois <n_dub@altavista.com>
         """
         self._fixBtnDlgMethods()
-
-    #>------------------------------------------------------------------------
 
     def _evtParamText (self, event):
         """
@@ -1168,8 +1095,6 @@ class DlgEditClass (wx.Dialog):
         dlg = self._dlgParam
         dlg._btnOk.Enable(dlg._txtName.GetValue() != "")
 
-    #>------------------------------------------------------------------------
-
     def _evtFieldList (self, event):
         """
         Called when click on Fields list.
@@ -1181,8 +1106,6 @@ class DlgEditClass (wx.Dialog):
         # Fix buttons (enable or not)
         self._fixBtnFields()
 
-    #>------------------------------------------------------------------------
-
     def _evtFieldListDClick (self, event):
         """
         Called when double-click on Fields list.
@@ -1192,8 +1115,6 @@ class DlgEditClass (wx.Dialog):
         """
         # Edit field
         self._onFieldEdit(event)
-
-    #>------------------------------------------------------------------------
 
     def _evtMethodList (self, event):
         """
@@ -1206,8 +1127,6 @@ class DlgEditClass (wx.Dialog):
         # Fix buttons (enable or not)
         self._fixBtnMethod()
 
-    #>------------------------------------------------------------------------
-
     def _evtMethodListDClick (self, event):
         """
         Called when click on Methods list.
@@ -1219,8 +1138,6 @@ class DlgEditClass (wx.Dialog):
         # Edit method
         self._onMethodEdit(event)
 
-    #>------------------------------------------------------------------------
-
     def _evtParamList (self, event):
         """
         Called when click on Params list.
@@ -1231,8 +1148,6 @@ class DlgEditClass (wx.Dialog):
         """
         # Fix buttons (enable or not)
         self._fixBtnParam()
-
-    #>------------------------------------------------------------------------
 
     def _convertNone (self, astring):
         """
@@ -1246,7 +1161,6 @@ class DlgEditClass (wx.Dialog):
             astring = ""
         return astring
 
-    #>------------------------------------------------------------------------
     def _onDescription(self, event):
         """
         When class description dialog is opened.
@@ -1258,18 +1172,15 @@ class DlgEditClass (wx.Dialog):
         dlg = DlgEditComment(self, -1, self._pyutClassCopy)
         dlg.Destroy()
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
-
-    #>------------------------------------------------------------------------
-
     def _onOk (self, event):
         """
-        When button OK is cliked.
+        When button OK is clicked.
 
         @param wx.Event event : event that call this subprogram.
         @since 1.5
@@ -1300,24 +1211,22 @@ class DlgEditClass (wx.Dialog):
             if prefs["AUTO_RESIZE"]:
                 oglClass = self._ctrl.getOglClass(self._pyutClass)
                 oglClass.autoResize()
-        except:
+        except (ValueError, Exception) as e:
             pass
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
         # Close dialog
-        self._returnAction=wx.OK
+        self._returnAction=OK
         self.Close()
-
-    #>------------------------------------------------------------------------
 
     def _onFieldOk (self, event):
         """
-        When button OK from dlgEditField is cliked.
+        When button OK from dlgEditField is clicked.
 
         @param wx.Event event : event that call this subprogram.
         @since 1.9
@@ -1325,6 +1234,7 @@ class DlgEditClass (wx.Dialog):
         """
         dlg = self._dlgField
         dlg.field.setName(dlg._txtFieldName.GetValue().strip())
+        from PyutType import getPyutType
         dlg.field.setType(getPyutType(dlg._txtFieldType.GetValue().strip()))
         dlg.field.setVisibility(dlg._rdbFieldVisibility.GetStringSelection())
 
@@ -1333,21 +1243,19 @@ class DlgEditClass (wx.Dialog):
         else:
             dlg.field.setDefaultValue(None)
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
-        #project = self._ctrl.getCurrentProject()
+        #  project = self._ctrl.getCurrentProject()
         if project is not None:
             project.setModified()
 
         # Close dialog
-        dlg.EndModal(wx.OK)
-
-    #>------------------------------------------------------------------------
+        dlg.EndModal(OK)
 
     def _onMethodOk (self, event):
         """
-        When button OK from dlgEditMethod is cliked.
+        When button OK from dlgEditMethod is clicked.
 
         @param wx.Event event : event that call this subprogram.
         @since 1.9
@@ -1366,25 +1274,16 @@ class DlgEditClass (wx.Dialog):
         dlg._pyutMethod.setVisibility(
             dlg._rdbVisibility.GetStringSelection())
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
         # Close dialog
-        dlg.EndModal(wx.OK)
-
-    #>------------------------------------------------------------------------
+        dlg.EndModal(OK)
 
     def _onParamOk (self, event):
-        """
-        When button OK from dlgParamField is cliked.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
         dlg = self._dlgParam
         dlg._pyutParam.setName(dlg._txtName.GetValue())
         dlg._pyutParam.setType(dlg._txtType.GetValue())
@@ -1393,91 +1292,24 @@ class DlgEditClass (wx.Dialog):
         else:
             dlg._pyutParam.setDefaultValue(None)
 
-        # Tell window that its datas has been modified
+        # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
         # Close dialog
-        dlg.EndModal(wx.OK)
-
-    #>------------------------------------------------------------------------
+        dlg.EndModal(OK)
 
     def _onCancel (self, event):
-        """
-        When button Cancel is cliked.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.5
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        # Close dialog
-        self._returnAction=wx.CANCEL
+        self._returnAction = CANCEL
         self.Close()
 
-    #>------------------------------------------------------------------------
-
     def _onFieldCancel (self, event):
-        """
-        When button Cancel from dlgEditField is cliked.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        # Close dialog
-        self._dlgField.EndModal(wx.CANCEL)
-
-    #>------------------------------------------------------------------------
+        self._dlgField.EndModal(CANCEL)
 
     def _onMethodCancel (self, event):
-        """
-        When button Cancel from dlgEditMethod is cliked.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        # Close dialog
-        self._dlgMethod.EndModal(wx.CANCEL)
-
-    #>------------------------------------------------------------------------
+        self._dlgMethod.EndModal(CANCEL)
 
     def _onParamCancel (self, event):
-        """
-        When button Cancel from dlgParamField is cliked.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        # Close dialog
-        self._dlgParam.EndModal(wx.CANCEL)
-
-#>----------------------------------------------------------------------------
-
-# Test code
-#if __name__ == "__main__":
-#
-#    class App(wx.App):
-#        def OnInit(self):
-#            frame = wx.Frame(None, -1, "Youpi")
-#            self.SetTopWindow(frame)
-#            c = PyutClass("Une classe")
-#            #c.setStereotype(PyutStereotype("Stereotype"))
-#            c.setStereotype(None)
-#            a = c.getFields()
-#            a.append(PyutField("Fields", "Type", "Default", "-"))
-#            a.append(PyutField("Fields2", "Type2", None, "-"))
-#            a = c.getMethods()
-#            b = PyutMethod("Method", "+", "type retour")
-#            a.append(b)
-#            b.setParams ([PyutParam ("Nom", "Type", "Default"),
-#                PyutParam ("Nom2", "Type2", "Default2")])
-#
-#            dialog = DlgEditClass(frame, -1, c)
-#            frame.Destroy()
-#            return True
-#    app = App(0)
-#    app.MainLoop()
+        self._dlgParam.EndModal(CANCEL)

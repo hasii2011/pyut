@@ -1,28 +1,25 @@
 
 import wx
 
-from pyutUtils import assignID
-
 from globals import _
 
-[
-    TXT_COMMENT
-] = assignID(1)
+# from pyutUtils import assignID
+from wx import NewId
+TXT_COMMENT = NewId()
 
 
 class DlgEditComment(wx.Dialog):
     """
     Dialog for the class comment edition.
-
-    @version $Revision: 1.4 $
     """
 
     def __init__(self, parent, ID, pyutClass):
         """
-        Constructor.
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            parent:
+            ID:
+            pyutClass:
         """
 
         wx.Dialog.__init__(self, parent, ID, _("Description Edit"))
@@ -61,7 +58,7 @@ class DlgEditComment(wx.Dialog):
 
     def _onTxtNoteChange(self, event):
         """
-        Event occuring when TXT_COMMENT change.
+        Event occurring when TXT_COMMENT change.
 
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>

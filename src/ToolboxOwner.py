@@ -1,27 +1,17 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# Goal : be a toolbox owner
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "C.Dutoit"
-__date__ = "2002-05-25"
-#from wxPython.wx import *
-from Toolbox import Toolbox
-#import wx
+from .Toolbox import Toolbox
+
+# TODO : add observer-observable model to support dynamic plugins
 
 
-##############################################################################
-#TODO : add observer-observable model to support dynamic plugins
 class ToolboxOwner:
     """
     ToolboxOwner : a toolbox owner
 
-    :author: C.Dutoit 
+    :author: C.Dutoit
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.4 $
     """
-
-    #>------------------------------------------------------------------------
 
     def __init__(self, parent):
         """
@@ -35,9 +25,6 @@ class ToolboxOwner:
         self._toolCategories = {}
         self._parent = parent
 
-
-
-    #>------------------------------------------------------------------------
     def displayToolbox(self, category):
         """
         display a toolbox
@@ -50,8 +37,6 @@ class ToolboxOwner:
         toolbox.setCategory(category)
         #toolbox.Show(True)
 
-
-    #>------------------------------------------------------------------------
     def registerTool(self, tool):
         """
         Add a tool to toolboxes
@@ -60,14 +45,11 @@ class ToolboxOwner:
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        if not self._toolCategories.has_key(tool.getInitialCategory()):
+        if tool.getInitialCategory() not in self._toolCategories:
             self._toolCategories[tool.getInitialCategory()] = [tool]
         else:
             self._toolCategories[tool.getInitialCategory()].append(tool)
-            
 
-
-    #>------------------------------------------------------------------------
     def getCategoryTools(self, category):
         """
         Return all tools for a specified category
@@ -78,8 +60,6 @@ class ToolboxOwner:
         """
         return self._toolCategories[category]
 
-
-    #>------------------------------------------------------------------------
     def getCategories(self):
         """
         Return all categories of tools
@@ -88,6 +68,4 @@ class ToolboxOwner:
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        return self._toolCategories.keys()
-
-
+        return list(self._toolCategories.keys())

@@ -2,11 +2,13 @@
 from unittest import TestCase
 from unittest import main
 
-# import the class you want to test here
-# import ...
+# from pyutUtils import assignID
+import pyutUtils
+
+[ID_TXT_NAME, ID_TXT_STEREOTYPE] = pyutUtils.assignID(2)
 
 
-class TestMY_CLASS_TO_TEST(TestCase):
+class TestpyutUtils(TestCase):
     """
     You need to change the name of this class to Test + the name of the class
     that you want to test here.
@@ -15,13 +17,9 @@ class TestMY_CLASS_TO_TEST(TestCase):
     @author Laurent Burgbacher <lb@alawa.ch>
     """
     def setUp(self):
-        # code to be executed before each test
-        # For example, you can instanciate the class you have to
-        # test here.
         pass
 
     def tearDown(self):
-        # code to be executed after each test (rarely used)
         pass
 
     def testName1(self):

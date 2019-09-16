@@ -1,26 +1,52 @@
 
-import os
-import locale
+from os import sep as osSeparator
+# from os import path
 
-from AppFrame import *
+from sys import argv
+from sys import exc_info
+from traceback import extract_tb
 
-# from wx import SplashScreen
+from locale import localeconv
+
 from wx.adv import SplashScreen
+from wx.adv import SPLASH_CENTRE_ON_SCREEN
+from wx.adv import SPLASH_TIMEOUT
+
+from wx import OK
+from wx import ICON_ERROR
+
+from wx import HelpProvider
+from wx import SimpleHelpProvider
+from wx import InitAllImageHandlers
+from wx import Image
+from wx import ScreenDC
+from wx import MessageDialog
+
+from wx import App as wxApp
+
+from wx import Yield as wxYield
 
 from globals import _
 
+from PyutPreferences import PyutPreferences
+
+from AppFrame import AppFrame
+
+
 def pythonFloat(s):
-    c = locale.localeconv()["decimal_point"]
+
+    c = localeconv()["decimal_point"]
     s = s.replace('.', c)
     return float(s)
 
+
 def opj(path):
     """Convert paths to the platform-specific separator"""
-    # return apply(os.path.join, tuple(path.split('/')))
-    return os.path.join, tuple(path.split('/'))
+    # return apply(path.join, tuple(path.split('/')))
+    return path.join, tuple(path.split('/'))
 
 
-class PyutApp(wx.App):
+class PyutApp(wxApp):
     """
     PyutApp : main pyut application class.
 
@@ -36,13 +62,13 @@ class PyutApp(wx.App):
         self._showSplash = splash
 
         # TODO - DEBUG
-        #self._showSplash = False
+        # self._showSplash = False
         self._showMainFrame = show
-        #print "DBG1-",float(48.3)
-        #print "DBG1-",float("48.3")
-        wx.App.__init__(self, val)
-        #print "DBG2-",float(48.3)
-        #print "DBG2-",float("48.3")
+        # print "DBG1-",float(48.3)
+        # print "DBG1-",float("48.3")
+        wxApp.__init__(self, val)
+        # print "DBG2-",float(48.3)
+        # print "DBG2-",float("48.3")
 
     def OnInit(self):
         """
@@ -51,21 +77,20 @@ class PyutApp(wx.App):
         @since 1.0
         @author C.Dutoit
         """
-        # Correct wxPython BUG of float localization
-        def newPythonFloat(x):
-            # Try standard float
-            try:
-                return float(x)
-            except (ValueError, Exception) as e:
-                pass
-
-            # Try localized float
-            try:
-                x = x.replace(".", ",")
-            except (ValueError, Exception) as e:
-                pass
-            return pythonFloat(x)
-
+        # Correct wxPython BUG of float localization  -- Pycharm says NOT USED
+        # def newPythonFloat(x):
+        #     # Try standard float
+        #     try:
+        #         return float(x)
+        #     except (ValueError, Exception) as exc:
+        #         pass
+        #
+        #     # Try localized float
+        #     try:
+        #         x = x.replace(".", ",")
+        #     except (ValueError, Exception) as exc:
+        #         pass
+        #     return pythonFloat(x)
 
         # print "DBG3-",float(48.3)
         # print "DBG3-",pythonFloat("48.3")
@@ -73,27 +98,27 @@ class PyutApp(wx.App):
         # print "DBG4-",float(48.3)
         # print "DBG4-",float("48.3")
         # Init help system
-        provider = wx.SimpleHelpProvider()
-        wx.HelpProvider_Set(provider)
-
+        provider = SimpleHelpProvider()
+        # wx.HelpProvider_Set(provider)
+        HelpProvider.Set(provider)
         try:
             # Create the SplashScreen
             if self._showSplash:
-                wx.InitAllImageHandlers()
-                imgPath = "img" + os.sep + "splash.png"
-                img = wx.Image(imgPath)
+                InitAllImageHandlers()
+                imgPath = "img" + osSeparator + "splash.png"
+                img = Image(imgPath)
                 bmp = img.ConvertToBitmap()
-                self.splash=SplashScreen(bmp, wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT, 3000, None, -1)
+                self.splash = SplashScreen(bmp, SPLASH_CENTRE_ON_SCREEN | SPLASH_TIMEOUT, 3000, None, -1)
 
                 self.splash.Show(True)
-                wx.Yield()
+                wxYield()
 
             # Create the application
-            self._frame=AppFrame(None, -1, "Pyut")
+            self._frame = AppFrame(None, -1, "Pyut")
             self.SetTopWindow(self._frame)
-            #TODO remove this
-            #self.__do=PyutFileDropTarget(self._frame)
-            #self._frame.SetDropTarget(self.__do)
+            # TODO remove this
+            # self.__do=PyutFileDropTarget(self._frame)
+            # self._frame.SetDropTarget(self.__do)
             if self._showSplash:
                 self.splash.Show(False)
             self._AfterSplash()
@@ -101,15 +126,13 @@ class PyutApp(wx.App):
             return True
         except (ValueError, Exception) as e:
             # Display all errors
-            import sys, traceback
-            dlg=wx.MessageDialog(None, _("The following error occurred : %s") \
-                %sys.exc_info()[1], _("An error occurred..."),
-                wx.OK | wx.ICON_ERROR)
+
+            dlg = MessageDialog(None, _(f"The following error occurred: {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
             print("===========================================================")
-            print("Error : %s" % sys.exc_info()[0])
-            print("Msg   : %s" % sys.exc_info()[1])
+            print(f"Error : {exc_info()[0]}")
+            print(f"Msg   : {exc_info()[1]}")
             print("Trace :")
-            for el in traceback.extract_tb(sys.exc_info()[2]):
+            for el in extract_tb(exc_info()[2]):
                 print(el)
             dlg.ShowModal()
             dlg.Destroy()
@@ -125,11 +148,11 @@ class PyutApp(wx.App):
         """
         try:
             # Handle application parameters in the command line
-            import sys, PyutPreferences
-            prefs = PyutPreferences.PyutPreferences()
+
+            prefs = PyutPreferences()
             orgPath = prefs["orgDirectory"]
-            for filename in [el for el in sys.argv[1:] if el[0]!='-']:
-                self._frame.loadByFilename(orgPath + os.sep + filename)
+            for filename in [el for el in argv[1:] if el[0] != '-']:
+                self._frame.loadByFilename(orgPath + osSeparator + filename)
             if self._frame is None:
                 print("Exiting due to previous errors")
                 return False
@@ -142,13 +165,13 @@ class PyutApp(wx.App):
             if fullScreen is None:
                 fullScreen = 0
             else:
-                if fullScreen :
+                if fullScreen:
                     fullScreen = 1
-                else :
+                else:
                     fullScreen = 0
                 # fullScreen = int(fullScreen)
-            if fullScreen==1:
-                dc = wx.ScreenDC()
+            if fullScreen == 1:
+                dc = ScreenDC()
                 self._frame.SetSize(dc.GetSize())
                 self._frame.CentreOnScreen()
 
@@ -162,18 +185,16 @@ class PyutApp(wx.App):
                 self.splash.Close(True)
             return True
         except (ValueError, Exception) as e:  # Display all errors
-            import sys, traceback
-            dlg=wx.MessageDialog(None, _("The following error occurred : %s") % sys.exc_info()[1], _("An error occurred..."),
-                wx.OK | wx.ICON_ERROR)
+
+            dlg = MessageDialog(None, _(f"The following error occurred : {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
             print("===========================================================")
-            print("Error : %s" % sys.exc_info()[0])
-            print("Msg   : %s" % sys.exc_info()[1])
+            print("Error : %s" % exc_info()[0])
+            print("Msg   : %s" % exc_info()[1])
             print("Trace :")
-            for el in traceback.extract_tb(sys.exc_info()[2]):
+            for el in extract_tb(exc_info()[2]):
                 print(el)
             dlg.ShowModal()
             dlg.Destroy()
-            dlg = None
             return False
 
     def OnExit(self):
@@ -188,6 +209,6 @@ class PyutApp(wx.App):
         self.splash = None
         # Seemed to be removed in latest versions of wxPython ???
         try:
-            return wx.App.OnExit(self)
+            return wxApp.OnExit(self)
         except (ValueError, Exception) as e:
             pass
