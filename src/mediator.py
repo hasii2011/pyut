@@ -35,7 +35,7 @@ from pyutUtils import displayError
 from pyutUtils import assignID
 
 from ToolboxOwner import ToolboxOwner
-from DlgEditClass2 import DlgEditClass
+from DlgEditClass2 import *         # Have to do this to avoid cyclical dependency
 from DlgEditNote import DlgEditNote
 from DlgEditUseCase import DlgEditUseCase
 from DlgEditLink import DlgEditLink
@@ -226,8 +226,8 @@ class Mediator(Singleton):
         self._currentActionPersistent = False
         self._toolBar  = None # toolbar
         self._tools    = None # toolbar tools
-        #self._uml      = None # current uml frame
-        #self._project  = None # current project
+        # self._uml      = None # current uml frame
+        # self._project  = None # current project
         self._status   = None # application status bar
         self._src      = None # source of a two-objects action
         self._dst      = None # destination of a two-objects action

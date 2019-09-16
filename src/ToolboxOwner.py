@@ -1,5 +1,5 @@
 
-from .Toolbox import Toolbox
+from Toolbox import Toolbox
 
 # TODO : add observer-observable model to support dynamic plugins
 

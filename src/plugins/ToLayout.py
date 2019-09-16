@@ -1,22 +1,19 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.5 $"
-__author__ = "Laurent Burgbacher - lb@alawa.ch"
-__date__ = "2002-10-10"
+# from StringIO import StringIO
+from io import StringIO
 
-from StringIO import StringIO
-from PyutToPlugin import PyutToPlugin
+# from PyutToPlugin import PyutToPlugin
 from PyutClass import PyutClass
 from OglClass import OglClass
 from PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutField import PyutField
 from PyutConsts import *
-#from wxPython.wx import *
+# from wxPython.wx import *
 import wx
 
-import os
+from plugins.PyutToPlugin import PyutToPlugin
+
 
 class ToLayout(PyutToPlugin):
     """
@@ -37,8 +34,6 @@ class ToLayout(PyutToPlugin):
         PyutToPlugin.__init__(self, umlObjects, umlFrame)
         self._umlFrame = umlFrame
 
-    #>------------------------------------------------------------------------
-
     def getName(self):
         """
         This method returns the name of the plugin.
@@ -48,8 +43,6 @@ class ToLayout(PyutToPlugin):
         """
         return "Layout plugin (read)"
 
-    #>------------------------------------------------------------------------
-
     def getAuthor(self):
         """
         This method returns the author of the plugin.
@@ -57,9 +50,7 @@ class ToLayout(PyutToPlugin):
         @return string
         @since 1.1
         """
-        return "Cédric DUTOIT <dutoitc@hotmail.com>"
-
-    #>------------------------------------------------------------------------
+        return "Cï¿½dric DUTOIT <dutoitc@hotmail.com>"
 
     def getVersion(self):
         """
@@ -69,8 +60,6 @@ class ToLayout(PyutToPlugin):
         @since 1.1
         """
         return "1.0"
-
-    #>------------------------------------------------------------------------
 
     def getMenuTitle(self):
         """
@@ -83,8 +72,6 @@ class ToLayout(PyutToPlugin):
         # Return the menu title as it must be displayed
         return "Layout"
 
-    #>------------------------------------------------------------------------
-
     def setOptions(self):
         """
         Prepare the import.
@@ -95,9 +82,6 @@ class ToLayout(PyutToPlugin):
         @since 1.0
         """
         return True
-
-
-    #>------------------------------------------------------------------------
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
@@ -112,7 +96,7 @@ class ToLayout(PyutToPlugin):
         filename = wx.FileSelector(
             "Choose a layout file to import",
             wildcard = "Layout file (*.lay) | *.lay",
-            #default_path = self.__ctrl.getCurrentDir(),
+            # default_path = self.__ctrl.getCurrentDir(),
             flags = wx.OPEN | wx.FILE_MUST_EXIST | wx.CHANGE_DIR
         )
 
@@ -123,13 +107,10 @@ class ToLayout(PyutToPlugin):
         for el in lstFile:
             spl = el.split(",")
             lst.append(spl)
-        print "Readed ", lst
+        print(f"Read {lst}")
 
         for oglObject in umlObjects:
             for line in lst:
-                if line[0]==oglObject.getPyutObject().getName():
+                if line[0] == oglObject.getPyutObject().getName():
                     oglObject.SetPosition(float(line[1]), float(line[2]))
                     oglObject.SetSize(float(line[3]), float(line[4]))
-
-    #>------------------------------------------------------------------------
-

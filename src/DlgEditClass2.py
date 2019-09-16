@@ -47,7 +47,7 @@ from PyutStereotype import getPyutStereotype
 
 from DlgEditComment import DlgEditComment
 
-from mediator import getMediator
+from mediator import *  # Have to do this to avoid cyclical dependency
 
 from globals import _
 from pyutUtils import assignID

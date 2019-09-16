@@ -1,22 +1,17 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "Laurent Burgbacher - lb@alawa.ch"
-__date__ = "2002-10-10"
-
-from StringIO import StringIO
-from PyutToPlugin import PyutToPlugin
+from io import StringIO
+from .PyutToPlugin import PyutToPlugin
 from PyutClass import PyutClass
 from OglClass import OglClass
 from PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutField import PyutField
 from PyutConsts import *
-#from wxPython.wx import *
+# from wxPython.wx import *
 import wx
 
 import os
+
 
 class ToAscii(PyutToPlugin):
     """
@@ -26,18 +21,13 @@ class ToAscii(PyutToPlugin):
     """
     def __init__(self, umlObjects, umlFrame):
         """
-        Constructor.
 
-        @param String filename : name of the file to save to
-        @param OglObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            umlObjects:  list of ogl objects
+            umlFrame:    the umlframe of pyut
         """
         PyutToPlugin.__init__(self, umlObjects, umlFrame)
         self._umlFrame = umlFrame
-
-    #>------------------------------------------------------------------------
 
     def getName(self):
         """
@@ -48,8 +38,6 @@ class ToAscii(PyutToPlugin):
         """
         return "ASCII Class export"
 
-    #>------------------------------------------------------------------------
-
     def getAuthor(self):
         """
         This method returns the author of the plugin.
@@ -59,8 +47,6 @@ class ToAscii(PyutToPlugin):
         """
         return "Philippe Waelti <pwaelti@eivd.ch>"
 
-    #>------------------------------------------------------------------------
-
     def getVersion(self):
         """
         This method returns the version of the plugin.
@@ -69,8 +55,6 @@ class ToAscii(PyutToPlugin):
         @since 1.1
         """
         return "1.0"
-
-    #>------------------------------------------------------------------------
 
     def getMenuTitle(self):
         """
@@ -83,8 +67,6 @@ class ToAscii(PyutToPlugin):
         # Return the menu title as it must be displayed
         return "ASCII Class Export"
 
-    #>------------------------------------------------------------------------
-
     def setOptions(self):
         """
         Prepare the import.
@@ -95,8 +77,6 @@ class ToAscii(PyutToPlugin):
         @since 1.0
         """
         return True
-
-    #>------------------------------------------------------------------------
 
     def write(self, oglObjects):
         """
@@ -119,7 +99,7 @@ class ToAscii(PyutToPlugin):
             filename = o.getName()
 
             while os.path.exists(filename + ".acl"):
-                print "File exists"
+                print("File exists")
                 filename += str(suffix)
                 suffix += 1
 
@@ -130,10 +110,10 @@ class ToAscii(PyutToPlugin):
             if o.getStereotype() is not None:
                 base.append(str(o.getStereotype()))
 
-            fields = map(lambda x: str(x), o.getFields())
-            methods = map(lambda x: str(x), o.getMethods())
+            fields = [str(x) for x in o.getFields()]
+            methods = [str(x) for x in o.getMethods()]
 
-            lnlgth = max(map(lambda x: len(x), base + fields + methods)) + 4
+            lnlgth = max([len(x) for x in base + fields + methods]) + 4
 
             file.write(lnlgth * "-" + "\n")
 
@@ -160,8 +140,6 @@ class ToAscii(PyutToPlugin):
 
             file.close()
 
-    #>------------------------------------------------------------------------
-
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
         Do the tool's action
@@ -173,9 +151,6 @@ class ToAscii(PyutToPlugin):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         if len(selectedObjects) < 1:
-            print "Please select class(es)"
+            print("Please select class(es)")
             return
         self.write(selectedObjects)
-
-    #>------------------------------------------------------------------------
-
