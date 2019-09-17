@@ -12,6 +12,8 @@ from wx import BITMAP_TYPE_BMP
 from wx import BOTH
 from wx import ClientDC
 from wx import ID_OK
+from wx import ITEM_CHECK
+from wx import ITEM_NORMAL
 from wx import NO_BORDER
 from wx import PAPER_A4
 from wx import PORTRAIT
@@ -47,6 +49,7 @@ from wx import FileDialog
 from wx import PrintDialogData
 from wx import PrintDialog
 from wx import MessageDialog
+from wx import ToolBar
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
@@ -73,6 +76,7 @@ from PyutPrintout import PyutPrintout
 from PyutUseCase import PyutUseCase
 
 from Tool import Tool
+
 from mediator import ACTION_NEW_ACTOR
 from mediator import ACTION_NEW_INHERIT_LINK
 from mediator import ACTION_NEW_NOTE_LINK
@@ -385,52 +389,52 @@ class AppFrame(Frame):
                     _("New inheritance relation"), _("New inheritance relation"),
                     _("PyUt tools"),
                     (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_INHERITANCE, isToggle = True)
+                    None, wxID=ID_REL_INHERITANCE, isToggle=True)
         toolRelRealisation = Tool("pyut-rel-realisation",
                     Bitmap('img' + os.sep + 'relrealisation.bmp', BITMAP_TYPE_BMP),
                     _("New realisation relation"), _("New realisation relation"),
                     _("PyUt tools"),
                     (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_REALISATION, isToggle = True)
+                    None, wxID=ID_REL_REALISATION, isToggle=True)
         toolRelComposition = Tool("pyut-rel-composition",
                     Bitmap('img' + os.sep + 'relcomposition.bmp', BITMAP_TYPE_BMP),
                     _("New composition relation"), _("New composition relation"),
                     _("PyUt tools"),
                     (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_COMPOSITION, isToggle = True)
+                    None, wxID=ID_REL_COMPOSITION, isToggle=True)
         toolRelAgregation = Tool("pyut-rel-agregation",
                     Bitmap('img' + os.sep + 'relagregation.bmp', BITMAP_TYPE_BMP),
                     _("New aggregation relation"), _("New aggregation relation"),
                     _("PyUt tools"),
                     (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_AGREGATION, isToggle = True)
+                    None, wxID=ID_REL_AGREGATION, isToggle=True)
 
         toolRelAssociation = Tool("pyut-rel-association",
                     Bitmap('img' + os.sep + 'relassociation.bmp', BITMAP_TYPE_BMP),
                     _("New association relation"), _("New association relation"),
                     _("PyUt tools"),
                     (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_ASSOCIATION, isToggle = True)
+                    None, wxID=ID_REL_ASSOCIATION, isToggle=True)
         toolRelNote = Tool("pyut-rel-note",
                     Bitmap('img' + os.sep + 'relnote.bmp', BITMAP_TYPE_BMP),
                     _("New note relation"), _("New note relation"),
                     _("PyUt tools"),
                     (lambda x:self._OnNewAction(x)),
-                    None, wxID= ID_REL_NOTE, isToggle = True)
+                    None, wxID= ID_REL_NOTE, isToggle=True)
         toolSDInstance = Tool("pyut-sd-instance",
                     Bitmap('img' + os.sep + 'sdinstance.bmp', BITMAP_TYPE_BMP),
                     _("New sequence diagram instance object"),
                     _("New sequence diagram instance object"),
                     _("PyUt tools"),
                     (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_SD_INSTANCE, isToggle = True)
+                    None, wxID=ID_SD_INSTANCE, isToggle=True)
         toolSDMessage = Tool("pyut-sd-message",
                     Bitmap('img' + os.sep + 'sdmessage.bmp', BITMAP_TYPE_BMP),
                     _("New sequence diagram message object"),
                     _("New sequence diagram message object"),
                     _("PyUt tools"),
                     (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_SD_MESSAGE, isToggle = True)
+                    None, wxID=ID_SD_MESSAGE, isToggle=True)
 
         # Create toolboxes
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
@@ -446,32 +450,38 @@ class AppFrame(Frame):
             self._ctrl.registerTool(tool)
 
         # Create toolbar
-        self._tb = self.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
+
+        self._tb: ToolBar = self.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
         self.SetToolBar(self._tb)
-        self._tb.SetTitle("Standard")
+        #  self._tb.SetTitle("Standard")    # This toolbar does not have a .SetTitle method
+
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
-                     toolNewUseCaseDiagram, toolOpen, toolSave,
-                     None,
-
+                     toolNewUseCaseDiagram, toolOpen, toolSave, None,
                      # Patch from D.Dabrowsky, 20060129
-                     toolArrow, toolZoomIn, toolZoomOut,
-                     toolUndo, toolRedo,
-
-                     None,
-                     toolClass, toolActor, toolUseCase, toolNote,
-                     None,
+                     toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo, None,
+                     toolClass, toolActor, toolUseCase, toolNote, None,
                      toolRelInheritance, toolRelRealisation, toolRelComposition,
-                     toolRelAgregation, toolRelAssociation, toolRelNote,
-                     None,
+                     toolRelAgregation, toolRelAssociation, toolRelNote, None,
                      toolSDInstance, toolSDMessage
                      ]:
 
             # Add tool
             if tool is not None:
-                self._tb.AddTool(tool.getWXID(), tool.getImg(),
-                                 shortHelpString=tool.getCaption(),
-                                 longHelpString=tool.getToolTip(),
-                                 isToggle=tool.getIsToggle())
+                # self._tb.AddTool(tool.getWXID(), tool.getImg(), shortHelpString=tool.getCaption(), longHelpString=tool.getToolTip(),
+                #                  isToggle=tool.getIsToggle())
+                toolId = tool.getWXID()
+                bitMap = tool.getImg()
+                shortHelpString: str  = tool.getCaption()
+                isToggle:        bool = tool.getIsToggle()
+                if isToggle is True:
+                    itemKind = ITEM_CHECK
+                else:
+                    itemKind = ITEM_NORMAL
+                """
+                AddTool(toolId, label, bitmap, shortHelp=EmptyString, kind=ITEM_NORMAL) -> ToolBarToolBase
+                """
+                self._tb.AddTool(toolId, '', bitMap, shortHelpString, itemKind)     #  TODO hasii -- do we need a lablel
+
                 self.Bind(EVT_TOOL, tool.getActionCallback(), id=tool.getWXID())
             else:
                 self._tb.AddSeparator()

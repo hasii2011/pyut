@@ -1,6 +1,5 @@
 
 from os import sep as osSeparator
-# from os import path
 
 from sys import argv
 from sys import exc_info
@@ -59,16 +58,11 @@ class PyutApp(wxApp):
     :version: $Revision: 1.15 $
     """
     def __init__(self, val, splash=True, show=True):
-        self._showSplash = splash
 
-        # TODO - DEBUG
-        # self._showSplash = False
+        self._showSplash = splash
         self._showMainFrame = show
-        # print "DBG1-",float(48.3)
-        # print "DBG1-",float("48.3")
+
         wxApp.__init__(self, val)
-        # print "DBG2-",float(48.3)
-        # print "DBG2-",float("48.3")
 
     def OnInit(self):
         """
@@ -116,9 +110,7 @@ class PyutApp(wxApp):
             # Create the application
             self._frame = AppFrame(None, -1, "Pyut")
             self.SetTopWindow(self._frame)
-            # TODO remove this
-            # self.__do=PyutFileDropTarget(self._frame)
-            # self._frame.SetDropTarget(self.__do)
+
             if self._showSplash:
                 self.splash.Show(False)
             self._AfterSplash()
@@ -126,7 +118,6 @@ class PyutApp(wxApp):
             return True
         except (ValueError, Exception) as e:
             # Display all errors
-
             dlg = MessageDialog(None, _(f"The following error occurred: {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
             print("===========================================================")
             print(f"Error : {exc_info()[0]}")
