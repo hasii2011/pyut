@@ -1,11 +1,16 @@
 
-from AppFrame import *
+from wx import ID_NO
+from wx import YES_NO
+
+from wx import MessageDialog
+from wx import TreeItemData
+from wx import BeginBusyCursor
+from wx import EndBusyCursor
+
 from pyutUtils import displayError
 from PyutDocument import PyutDocument
 from globals import _
 
-
-#>-----------------------------------------------------------------------
 
 def shorterFilename(filename):
     """
@@ -19,16 +24,9 @@ def shorterFilename(filename):
     import os
     return os.path.split(filename)[1]
 
-#       Removed by pwaelti (pwaelti@eivd.ch)
-#        if len(txt)>8:
-#            return txt[:8]
-#        else:
-#            return txt
 
-##############################################################################
-##############################################################################
-##############################################################################
-DefaultFilename=_("Untitled.put")
+DefaultFilename = _("Untitled.put")
+
 
 class PyutProject:
     """
@@ -38,8 +36,6 @@ class PyutProject:
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.19 $
     """
-
-    #>------------------------------------------------------------------------
 
     def __init__(self, filename, parentFrame, tree, treeroot):
         """
@@ -53,13 +49,11 @@ class PyutProject:
         self._documents = []       # List of documents
         self._filename = filename  # Project filename
         self._modified = False     # Was the project modified ?
-        self._treeRootParent = treeroot# Parent of the project root entry
+        self._treeRootParent = treeroot  # Parent of the project root entry
         self._tree     = tree      # Tree i'm belonging to
         self._treeRoot = None      # Root of the project entry in the tree
         self._codePath = ""
         self.addToTree()
-
-    #>------------------------------------------------------------------------
 
     def setFilename(self, filename):
         """
@@ -71,8 +65,6 @@ class PyutProject:
         self._filename = filename
         self.updateTreeText()
 
-    #>------------------------------------------------------------------------
-
     def getFilename(self):
         """
         Get the project's filename
@@ -82,8 +74,6 @@ class PyutProject:
         """
         return self._filename
 
-    #>------------------------------------------------------------------------
-
     def getCodePath(self):
         """
         Get the root path where the corresponding code relies.
@@ -92,17 +82,13 @@ class PyutProject:
         """
         return self._codePath
 
-    #>------------------------------------------------------------------------
-
     def setCodePath(self, codepath):
         """
         Set the root path where the corresponding code relies.
 
-        @param string codepath
+        @param codepath
         """
         self._codePath = codepath
-
-    #>------------------------------------------------------------------------
 
     def getDocuments(self):
         """
@@ -112,8 +98,6 @@ class PyutProject:
         """
         return self._documents
 
-    #>------------------------------------------------------------------------
-
     def setModified(self, value = True):
         """
         Define the modified attribute
@@ -121,8 +105,6 @@ class PyutProject:
         @author C.Dutoit
         """
         self._modified = value
-
-    #>------------------------------------------------------------------------
 
     def getModified(self):
         """
@@ -132,21 +114,14 @@ class PyutProject:
         """
         return self._modified
 
-    #>------------------------------------------------------------------------
-
     def addToTree(self):
         # Add the project to the project tree
-        self._treeRoot = self._tree.AppendItem(
-                         self._treeRootParent,
-                         shorterFilename(self._filename),
-                         data=wx.TreeItemData(self))
+        self._treeRoot = self._tree.AppendItem(self._treeRootParent, shorterFilename(self._filename), data=TreeItemData(self))
         self._tree.Expand(self._treeRoot)
 
         # Add the frames
         for document in self._documents:
             document.addToTree(self, self._tree, self._treeRoot)
-
-    #>------------------------------------------------------------------------
 
     def removeFromTree(self):
         """
@@ -155,8 +130,6 @@ class PyutProject:
         @author C.Dutoit
         """
         self._tree.Delete(self._treeRoot)
-
-    #>------------------------------------------------------------------------
 
     def loadFromFilename(self, filename):
         """
@@ -168,7 +141,7 @@ class PyutProject:
         """
         # Load the file
         import IoFile
-        wx.BeginBusyCursor()
+        BeginBusyCursor()
         io = IoFile.IoFile()
         #wx.Yield() # to treat the umlframe refresh in newDiagram before loading
 
@@ -177,34 +150,28 @@ class PyutProject:
         try:
             io.open(filename, self)
             self._modified = False
-        except:
-            wx.EndBusyCursor()
-            displayError(_("Error loading file"))
+        except (ValueError, Exception) as e:
+            EndBusyCursor()
+            displayError(_(f"Error loading file: {e}"))
             return False
-        ##print ">>>PyutProject-loadFromFilename-5"
-        wx.EndBusyCursor()
-        #print ">>>PyutProject-loadFromFilename-6"
-
+        # print ">>>PyutProject-loadFromFilename-5"
+        EndBusyCursor()
+        # print ">>>PyutProject-loadFromFilename-6"
         # Update text
         self.updateTreeText()
 
-
         # Register to mediator
-        #if len(self._documents)>0:
-            #self._ctrl.registerUMLFrame(self._documents[0].getFrame())
-        #print ">>>PyutProject-loadFromFilename-7"
+        # if len(self._documents)>0:
+        # self._ctrl.registerUMLFrame(self._documents[0].getFrame())
+        # print ">>>PyutProject-loadFromFilename-7"
         if len(self._documents)>0:
             self._ctrl.getFileHandling().showFrame(self._documents[0].getFrame())
-            #print ">>>PyutProject-loadFromFilename-8"
+            # print ">>>PyutProject-loadFromFilename-8"
             self._documents[0].getFrame().Refresh()
-            #print ">>>PyutProject-loadFromFilename-9"
-
-            # Return
+            # print ">>>PyutProject-loadFromFilename-9"
             return True
         else:
             return False
-
-    #>------------------------------------------------------------------------
 
     def insertProject(self, filename):
         """
@@ -216,21 +183,20 @@ class PyutProject:
         """
         # Load the file
         import IoFile
-        wx.BeginBusyCursor()
+        BeginBusyCursor()
         io = IoFile.IoFile()
 
         try:
             io.open(filename, self)
             self._modified = False
-        except:
-            displayError(_("Error loading file"))
-            wx.EndBusyCursor()
+        except (ValueError, Exception) as e:
+            displayError(_(f"Error loading file {e}"))
+            EndBusyCursor()
             return False
-        wx.EndBusyCursor()
+        EndBusyCursor()
 
         # Update text
         self.updateTreeText()
-
 
         # Register to mediator
         if len(self._documents)>0:
@@ -239,7 +205,6 @@ class PyutProject:
 
         # Return
         return True
-    #>------------------------------------------------------------------------
 
     def newDocument(self, type):
         """
@@ -256,8 +221,6 @@ class PyutProject:
         self._ctrl.getFileHandling().registerUmlFrame(frame)
         return document
 
-    #>------------------------------------------------------------------------
-
     def getFrames(self):
         """
         Get all the project's frames
@@ -266,10 +229,7 @@ class PyutProject:
         @return List of frames
         """
 
-        return [ document.getFrame() for document in self._documents ]
-
-
-    #>-----------------------------------------------------------------------
+        return [document.getFrame() for document in self._documents]
 
     def saveXmlPyut(self):
         """
@@ -280,7 +240,7 @@ class PyutProject:
         """
         import IoFile
         io = IoFile.IoFile()
-        wx.BeginBusyCursor()
+        BeginBusyCursor()
         try:
              #io.save(self._filename, self._ctrl.getUmlObjects(), \
               #   self._documents[0].getFrame())
@@ -288,11 +248,9 @@ class PyutProject:
             self._modified = False
 
             self.updateTreeText()
-        except:
-            displayError(_("An error occured while saving project"))
-        wx.EndBusyCursor()
-
-    #>------------------------------------------------------------------------
+        except (ValueError, Exception) as e:
+            displayError(_(f"An error occured while saving project {e}"))
+        EndBusyCursor()
 
     def updateTreeText(self):
         """
@@ -300,32 +258,28 @@ class PyutProject:
 
         @author C.Dutoit
         """
-        self._tree.SetItemText(self._treeRoot,
-                               shorterFilename(self._filename))
+        self._tree.SetItemText(self._treeRoot, shorterFilename(self._filename))
         for document in self._documents:
             document.updateTreeText()
 
-    #>------------------------------------------------------------------------
-
-    def removeDocument(self, document, confirmation = True):
+    def removeDocument(self, document, confirmation=True):
         """
         Remove a given document from the project.
 
-        @param document : PyutDocument to remove from this project
-        @author C.Dutoit
+        Args:
+            document: PyutDocument to remove from this project
+            confirmation:
         """
+
         # Get frame
         frame = document.getFrame()
 
         # Confirmation
-        #self._ctrl.registerUMLFrame(frame)
+        # self._ctrl.registerUMLFrame(frame)
         if confirmation:
             self._ctrl.getFileHandling().showFrame(frame)
-            dlg = wx.MessageDialog(self._parentFrame,
-                                  _("Are you sure to remove the document ?"),
-                                  _("Remove a document from a project"),
-                                  wx.YES_NO)
-            if dlg.ShowModal()==wx.ID_NO:
+            dlg = MessageDialog(self._parentFrame, _("Are you sure to remove the document ?"), _("Remove a document from a project"), YES_NO)
+            if dlg.ShowModal() == ID_NO:
                 dlg.Destroy()
                 return
             dlg.Destroy()
@@ -337,8 +291,8 @@ class PyutProject:
         fileHandling.removeAllReferencesToUmlFrame(frame)
 
         # Remove frame
-        #frame.Close()  # DONE by fileHandling.removeAllRef...
-        #self._ctrl.registerUMLFrame(None)
+        # frame.Close()  # DONE by fileHandling.removeAllRef...
+        # self._ctrl.registerUMLFrame(None)
 
         # Remove from tree
         document.removeFromTree()

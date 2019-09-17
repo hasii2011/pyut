@@ -348,8 +348,7 @@ class FileHandling:
 
         @author C.Dutoit
         """
-        project = PyutProject(PyutConsts.DefaultFilename, self.__notebook,
-                              self.__projectTree, self.__projectTreeRoot)
+        project = PyutProject(PyutConsts.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
         self._projects.append(project)
         self._currentProject = project
         self._currentFrame = None

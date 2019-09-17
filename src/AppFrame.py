@@ -480,18 +480,18 @@ class AppFrame(Frame):
                 """
                 AddTool(toolId, label, bitmap, shortHelp=EmptyString, kind=ITEM_NORMAL) -> ToolBarToolBase
                 """
-                self._tb.AddTool(toolId, '', bitMap, shortHelpString, itemKind)     #  TODO hasii -- do we need a lablel
+                self._tb.AddTool(toolId, '', bitMap, shortHelpString, itemKind)     # TODO hasii -- do we need a lablel
 
                 self.Bind(EVT_TOOL, tool.getActionCallback(), id=tool.getWXID())
             else:
                 self._tb.AddSeparator()
 
         # Add contextual help
-        #self._tb.AddSeparator()
-        #btn = wxContextHelpButton(self._tb)
-        #btn.SetHelpText("Contextual help button")
-        #self._tb.AddControl(btn)
-        #EVT_HELP(self, ...)
+        # self._tb.AddSeparator()
+        # btn = wxContextHelpButton(self._tb)
+        # btn.SetHelpText("Contextual help button")
+        # self._tb.AddControl(btn)
+        # EVT_HELP(self, ...)
 
         # Do toolbar
         self._tb.Realize()
@@ -575,7 +575,7 @@ class AppFrame(Frame):
         self.mnuFile.AppendSeparator()
 
         #  Add Last opened files
-        index=0
+        index = 0
         #  TODO : does not work ? verify function return...
         for el in self._prefs.getLastOpenedFilesList():
             index+=1
