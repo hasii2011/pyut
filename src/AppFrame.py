@@ -259,7 +259,7 @@ class AppFrame(Frame):
         @author C.Dutoit
         """
         import os
-        import img.ImgToolboxUnknown
+        # import img.ImgToolboxUnknown
         import img.ImgToolboxActor
         import img.ImgToolboxClass
         import img.ImgToolboxNote
@@ -292,16 +292,16 @@ class AppFrame(Frame):
                     _(_("PyUt tools")),
                     (lambda x: self._OnNewAction(x)),
                     None, wxID=ID_NOTE, isToggle=True)
-        toolSDInstance = Tool("pyut-instance", img.ImgToolboxUnknown.getBitmap(),
-                    _("Instance"),     _("Create a new class diagram instance object"),
-                    _(_("PyUt tools")),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_SD_INSTANCE, isToggle=True)
-        toolSDMessage = Tool("pyut-message", img.ImgToolboxUnknown.getBitmap(),
-                    _("Message"),     _("Create a new class diagram message object"),
-                    _(_("PyUt tools")),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_SD_MESSAGE, isToggle=True)
+        # toolSDInstance = Tool("pyut-instance", img.ImgToolboxUnknown.getBitmap(),
+        #             _("Instance"),     _("Create a new class diagram instance object"),
+        #             _(_("PyUt tools")),
+        #             (lambda x: self._OnNewAction(x)),
+        #             None, wxID=ID_SD_INSTANCE, isToggle=True)
+        # toolSDMessage = Tool("pyut-message", img.ImgToolboxUnknown.getBitmap(),
+        #             _("Message"),     _("Create a new class diagram message object"),
+        #             _(_("PyUt tools")),
+        #             (lambda x: self._OnNewAction(x)),
+        #             None, wxID=ID_SD_MESSAGE, isToggle=True)
 
         # Added by P. Dabrowski 20.11.2005
 
@@ -446,7 +446,7 @@ class AppFrame(Frame):
             self._ctrl.registerTool(tool)
 
         # Create toolbar
-        self._tb=self.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
+        self._tb = self.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
         self.SetToolBar(self._tb)
         self._tb.SetTitle("Standard")
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
@@ -798,30 +798,30 @@ class AppFrame(Frame):
         #  init accelerator table
         lst = [
             (ACCEL_CTRL,     ord('n'),   ID_MNUFILENEWPROJECT),
-             (ACCEL_CTRL,     ord('N'),   ID_MNUFILENEWPROJECT),
-             (ACCEL_CTRL,     ord('L'),   ID_MNUFILENEWCLASSDIAGRAM),
-             (ACCEL_CTRL,     ord('l'),   ID_MNUFILENEWCLASSDIAGRAM),
-             (ACCEL_CTRL,     ord('E'),   ID_MNUFILENEWSEQUENCEDIAGRAM),
-             (ACCEL_CTRL,     ord('e'),   ID_MNUFILENEWSEQUENCEDIAGRAM),
-             (ACCEL_CTRL,     ord('U'),   ID_MNUFILENEWUSECASEDIAGRAM),
-             (ACCEL_CTRL,     ord('u'),   ID_MNUFILENEWUSECASEDIAGRAM),
-             (ACCEL_CTRL,     ord('o'),   ID_MNUFILEOPEN),
-             (ACCEL_CTRL,     ord('O'),   ID_MNUFILEOPEN),
-             (ACCEL_CTRL,     ord('s'),   ID_MNUFILESAVE),
-             (ACCEL_CTRL,     ord('S'),   ID_MNUFILESAVE),
-             (ACCEL_CTRL,     ord('a'),   ID_MNUFILESAVEAS),
-             (ACCEL_CTRL,     ord('A'),   ID_MNUFILESAVEAS),
-             (ACCEL_CTRL,     ord('p'),   ID_MNUFILEPRINT),
-             (ACCEL_CTRL,     ord('P'),   ID_MNUFILEPRINT),
-             (ACCEL_CTRL,     ord('x'),   ID_MNUEDITCUT),
-             (ACCEL_CTRL,     ord('X'),   ID_MNUEDITCUT),
-             (ACCEL_CTRL,     ord('c'),   ID_MNUEDITCOPY),
-             (ACCEL_CTRL,     ord('C'),   ID_MNUEDITCOPY),
-             (ACCEL_CTRL,     ord('v'),   ID_MNUEDITPASTE),
-             (ACCEL_CTRL,     ord('V'),   ID_MNUEDITPASTE),
-             (ACCEL_CTRL,     ord('d'),   ID_DEBUG),
-             (ACCEL_CTRL,     ord('D'),   ID_DEBUG),
-             ]
+            (ACCEL_CTRL,     ord('N'),   ID_MNUFILENEWPROJECT),
+            (ACCEL_CTRL,     ord('L'),   ID_MNUFILENEWCLASSDIAGRAM),
+            (ACCEL_CTRL,     ord('l'),   ID_MNUFILENEWCLASSDIAGRAM),
+            (ACCEL_CTRL,     ord('E'),   ID_MNUFILENEWSEQUENCEDIAGRAM),
+            (ACCEL_CTRL,     ord('e'),   ID_MNUFILENEWSEQUENCEDIAGRAM),
+            (ACCEL_CTRL,     ord('U'),   ID_MNUFILENEWUSECASEDIAGRAM),
+            (ACCEL_CTRL,     ord('u'),   ID_MNUFILENEWUSECASEDIAGRAM),
+            (ACCEL_CTRL,     ord('o'),   ID_MNUFILEOPEN),
+            (ACCEL_CTRL,     ord('O'),   ID_MNUFILEOPEN),
+            (ACCEL_CTRL,     ord('s'),   ID_MNUFILESAVE),
+            (ACCEL_CTRL,     ord('S'),   ID_MNUFILESAVE),
+            (ACCEL_CTRL,     ord('a'),   ID_MNUFILESAVEAS),
+            (ACCEL_CTRL,     ord('A'),   ID_MNUFILESAVEAS),
+            (ACCEL_CTRL,     ord('p'),   ID_MNUFILEPRINT),
+            (ACCEL_CTRL,     ord('P'),   ID_MNUFILEPRINT),
+            (ACCEL_CTRL,     ord('x'),   ID_MNUEDITCUT),
+            (ACCEL_CTRL,     ord('X'),   ID_MNUEDITCUT),
+            (ACCEL_CTRL,     ord('c'),   ID_MNUEDITCOPY),
+            (ACCEL_CTRL,     ord('C'),   ID_MNUEDITCOPY),
+            (ACCEL_CTRL,     ord('v'),   ID_MNUEDITPASTE),
+            (ACCEL_CTRL,     ord('V'),   ID_MNUEDITPASTE),
+            (ACCEL_CTRL,     ord('d'),   ID_DEBUG),
+            (ACCEL_CTRL,     ord('D'),   ID_DEBUG),
+            ]
         acc = []
         for el in lst:
             (el1, el2, el3) = el
@@ -1574,7 +1574,7 @@ class AppFrame(Frame):
         # put a copy of the PyutObjects in the clipboard
         for obj in selected:
             obj = copy(obj.getPyutObject())
-            obj.setLinks([]) # we don't want to copy the links
+            obj.setLinks([])   # we don't want to copy the links
             self._clipboard.append(obj)
 
     def _OnMnuEditPaste(self, event):
@@ -1657,10 +1657,10 @@ class AppFrame(Frame):
 
     def _OnMnuUndo(self, event):
         if (self._fileHandling.getCurrentFrame()) is None:
-            return # TODO : dialog box
+            return   # TODO : dialog box
         self._fileHandling.getCurrentFrame().getHistory().undo()
 
     def _OnMnuRedo(self, event):
         if (self._fileHandling.getCurrentFrame()) is None:
-            return # TODO : dialog box
+            return   # TODO : dialog box
         self._fileHandling.getCurrentFrame().getHistory().redo()
