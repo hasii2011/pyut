@@ -1,17 +1,23 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__author__  = "Laurent Burgbacher <lb@alawa.ch>"
-__version__ = "$Revision: 1.6 $"
-__date__    = "2002-02-14"
-#from wxPython.wx import *
-import wx, os
+
+import os
+
+from wx import DirDialog
+from wx import FD_OPEN
+from wx import FD_MULTIPLE
+from wx import FD_CHANGE_DIR
+from wx import FD_FILE_MUST_EXIST
+from wx import FD_OVERWRITE_PROMPT
+from wx import FD_SAVE
+from wx import ID_CANCEL
+
+from wx import FileDialog
+from wx import FileSelector
+
 
 class PyutPlugin:
     """
     Standard plugin tools
     """
-   
-    #>------------------------------------------------------------------------
 
     def __init__(self, umlFrame, ctrl):
         """
@@ -22,18 +28,30 @@ class PyutPlugin:
         @author C.Dutoit
         """
         self._umlFrame = umlFrame
-        self._ctrl = ctrl
-        self._verbose = False
-
-
-    #>------------------------------------------------------------------------
+        self._ctrl     = ctrl
+        self._verbose  = False
 
     def logMessage(self, module, msg):
         if self._verbose:
-            print "%s> %s" % (module, msg)
+            print(f'{module}> {msg}')
 
+    def getInputFormat(self):
+        """
+        Implementations probably need to override this
 
-    #>------------------------------------------------------------------------
+        Returns: a tuple
+
+        """
+        return "*", "*", "All"
+
+    def getOutputFormat(self):
+        """
+        Implementations probably need to override this
+
+        Returns: A Tuple
+
+        """
+        return "*", "*", "All"
 
     def _askForFileImport(self, multiple=False):
         """
@@ -45,31 +63,27 @@ class PyutPlugin:
         @since 1.2
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        format=self.getInputFormat()
+        inputformat = self.getInputFormat()
         if multiple:
-            dlg = wx.FileDialog(
+            dlg = FileDialog(
                 self._umlFrame,
                 "Choose files to import",
-                wildcard = format[0] + " (*." + format[1] + ")|*." + format[1],
-                defaultDir = self._ctrl.getCurrentDir(),
-                style = wx.OPEN | wx.FILE_MUST_EXIST | wx.MULTIPLE | wx.CHANGE_DIR
+                wildcard=inputformat[0] + " (*." + inputformat[1] + ")|*." + inputformat[1],
+                defaultDir=self._ctrl.getCurrentDir(),
+                style=FD_OPEN | FD_FILE_MUST_EXIST | FD_MULTIPLE | FD_CHANGE_DIR
             )
             dlg.ShowModal()
-            if dlg.GetReturnCode()==5101: #Cancel
-                return([], "")
-            return (dlg.GetFilenames(), dlg.GetDirectory())
+            if dlg.GetReturnCode() == 5101:  # Cancel
+                return [], ""
+            return dlg.GetFilenames(), dlg.GetDirectory()
         else:
-            file = wx.FileSelector(
+            file = FileSelector(
                 "Choose a file to import",
-                wildcard = format[0] + " (*." + format[1] + ")|*." + format[1],
-                #default_path = self.__ctrl.getCurrentDir(),
-                flags = wx.OPEN | wx.FILE_MUST_EXIST | wx.CHANGE_DIR
+                wildcard=inputformat[0] + " (*." + inputformat[1] + ")|*." + inputformat[1],
+                # default_path = self.__ctrl.getCurrentDir(),
+                flags=FD_OPEN | FD_FILE_MUST_EXIST | FD_CHANGE_DIR
             )
             return file
-        #self.__ctrl.setCurrentDir(file.GetPath())
-
-
-    #>------------------------------------------------------------------------
 
     def _askForFileExport(self):
         """
@@ -78,19 +92,13 @@ class PyutPlugin:
         @since 1.2
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        format=self.getOutputFormat()
-        file = wx.FileSelector(
+        inputFormat = self.getOutputFormat()
+        file = FileSelector(
             "Choose a file name to export",
-            wildcard = format[0] + " (*." + format[1] + ")|*." + format[1],
-            #default_path = self.__ctrl.getCurrentDir(),
-            flags = wx.SAVE | wx.OVERWRITE_PROMPT | wx.CHANGE_DIR
+            wildcard=inputFormat[0] + " (*." + inputFormat[1] + ")|*." + inputFormat[1],
+            flags=FD_SAVE | FD_OVERWRITE_PROMPT | FD_CHANGE_DIR
         )
-        #self.__ctrl.setCurrentDir(file.GetPath())
         return file
-
-
-
-    #>------------------------------------------------------------------------
 
     def _askForDirectoryImport(self):
         """
@@ -100,19 +108,16 @@ class PyutPlugin:
         @return The directory or "" if canceled by user
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        dir = wx.DirDialog(self._umlFrame, "Choose a directory to import", \
-            defaultPath = self._ctrl.getCurrentDir())
-#TODO : add this when supported...(cd)         style=wx.DD_NEW_DIR_BUTTON)
-        if dir.ShowModal()==wx.ID_CANCEL:
-            dir.Destroy()
+        aDirectory = DirDialog(self._umlFrame, "Choose a directory to import", defaultPath=self._ctrl.getCurrentDir())
+        # TODO : add this when supported...(cd)         style=wx.DD_NEW_DIR_BUTTON)
+        if aDirectory.ShowModal() == ID_CANCEL:
+            aDirectory.Destroy()
             return ""
         else:
-            directory=dir.GetPath()
+            directory = aDirectory.GetPath()
             self._ctrl.setCurrentDir(directory)
-            dir.Destroy()
+            aDirectory.Destroy()
             return directory
-
-    #>------------------------------------------------------------------------
 
     def _askForDirectoryExport(self):
         """
@@ -121,17 +126,14 @@ class PyutPlugin:
         @since 1.2
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        dir = wx.DirDialog(self._umlFrame, "Choose a destination directory", \
-            defaultPath = self._ctrl.getCurrentDir())
-#TODO : add this when supported...(cd)         style=wx.DD_NEW_DIR_BUTTON)
-        dir.SetPath(os.getcwd())
-        if dir.ShowModal()==wx.ID_CANCEL:
-            dir.Destroy()
+        dirDialog = DirDialog(self._umlFrame, "Choose a destination directory", defaultPath=self._ctrl.getCurrentDir())
+        # TODO : add this when supported...(cd)         style=wx.DD_NEW_DIR_BUTTON)
+        dirDialog.SetPath(os.getcwd())
+        if dirDialog.ShowModal() == ID_CANCEL:
+            dirDialog.Destroy()
             return ""
         else:
-            directory=dir.GetPath()
+            directory = dirDialog.GetPath()
             self._ctrl.setCurrentDir(directory)
-            dir.Destroy()
+            dirDialog.Destroy()
             return directory
-
-
