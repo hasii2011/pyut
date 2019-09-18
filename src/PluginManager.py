@@ -1,7 +1,17 @@
 
 from glob import glob
-import os
-import sys
+
+from os import chdir
+from os import pardir
+from os import getcwd
+from os import path as osPath
+
+from sys import exc_info
+from sys import path as sysPath
+from traceback import extract_tb
+
+from logging import Logger
+from logging import getLogger
 
 # needed by the plugins
 # from PyutClass      import PyutClass
@@ -38,58 +48,56 @@ class PluginManager(Singleton):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
+        self.logger:  Logger = getLogger(__name__)
+
         # Init
         self.ioPlugs = []
         self.toPlugs = []
 
         # get the file names
-        os.chdir("plugins")
-        sys.path.append(os.getcwd())
+        chdir("plugins")
+        sysPath.append(getcwd())
         ioPlugs = glob("Io*.py")
         toPlugs = glob("To*.py")
-        os.chdir(os.pardir)
+        chdir(pardir)
 
         # remove extension
-        ioPlugs = map(lambda x: os.path.splitext(x)[0], ioPlugs)
-        toPlugs = map(lambda x: os.path.splitext(x)[0], toPlugs)
+        ioPlugs = map(lambda x: osPath.splitext(x)[0], ioPlugs)
+        toPlugs = map(lambda x: osPath.splitext(x)[0], toPlugs)
 
         # Import I/O plugins
         for plug in ioPlugs:
-            print("Importing I/O plugin from file " + str(plug))
+            self.logger.info(f"Importing I/O plugin from file {plug}")
             module = None
-            # module = __import__(plug)
             try:
                 module = __import__(plug)
             except (ValueError, Exception) as e:
-                print(f"Error importing plugin %s with message: {plug} error {e}")
-                import traceback
-                print("Error : %s" % sys.exc_info()[0])
-                print("Msg   : %s" % sys.exc_info()[1])
-                print("Trace :")
-                for el in traceback.extract_tb(sys.exc_info()[2]):
-                    print(el)
+                self.logger.error(f"Error importing plugin %s with message: {plug} error {e}")
+                self.logger.error(f"Error : {exc_info()[0]}")
+                self.logger.error(f"Msg   : {exc_info()[1]}")
+                self.logger.error(f"Trace :")
+                for el in extract_tb(exc_info()[2]):
+                    self.logger.error(el)
             if module is not None:
                 # cl = eval("module.%s" % (module.__name__))
                 pluginName: str = f"module.{module.__name__}"
-                print(f'Loading {pluginName}')
+                self.logger.info(f'Loading {pluginName}')
                 cl = eval(pluginName)
                 self.ioPlugs.append(cl)
 
         # Import tools plugins
         for plug in toPlugs:
-            print("Importing tool plugin from file " + str(plug))
+            print(f"Importing tool plugin from file {plug}")
             module = None
-            #  module = __import__(plug)
             try:
                 module = __import__(plug)
             except (ValueError, Exception) as e:
-                print(("Error importing plugin %s with message:" % plug))
-                import traceback
-                print("Error : %s" % sys.exc_info()[0])
-                print("Msg   : %s" % sys.exc_info()[1])
-                print("Trace :")
-                for el in traceback.extract_tb(sys.exc_info()[2]):
-                    print(el)
+                self.logger.error(f"Error importing plugin %s with message: {plug}")
+                self.logger.error(f"Error : {exc_info()[0]}")
+                self.logger.error(f"Msg   : {exc_info()[1]}")
+                self.logger.error(f"Trace :")
+                for el in extract_tb(exc_info()[2]):
+                    self.logger.error(el)
             if module is not None:
                 cl = eval(f"module.{module.__name}")
                 self.toPlugs.append(cl)

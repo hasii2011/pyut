@@ -1,18 +1,29 @@
 #!/usr/bin/python
 
-import os
+from typing import cast
 
 from os import chdir
 from os import getcwd
 from sys import path
 from sys import argv
 
+import json
+
+from logging import Logger
+from logging import getLogger
+
+import logging.config
+
 from PyutApp import PyutApp
 from pyutVersion import getPyUtVersion
 from PyutPreferences import PyutPreferences
 
-exePath  = None              # the pyut's path
+JSON_LOGGING_CONFIG_FILENAME = "loggingConfiguration.json"
+MADE_UP_PRETTY_MAIN_NAME     = "Pyut"
+
+exePath  = None          # the pyut's path
 userPath = getcwd()      # where the user launched pyut from
+moduleLogger: Logger = cast(Logger, None)
 
 
 def getExePath():
@@ -40,13 +51,12 @@ def goToPyutDirectory():
     @since 1.5.2.19
     @author C.Dutoit
     """
-    import sys, os
     # Change current directory to pyut's directory
     # exePath = getCurrentAbsolutePath()
-    exePath = os.getcwd()
-    sys.path.append(exePath)
-    print(f"Executing PyUt from exepath {exePath}")
-    os.chdir(exePath)
+    execPath = getcwd()
+    path.append(exePath)
+    moduleLogger.info(f"Executing PyUt from exepath {execPath}")
+    chdir(exePath)
 
 
 def main():
@@ -54,20 +64,20 @@ def main():
     main pyut function; create and run app
     """
 
-    global exePath, userPath
+    global exePath, userPath, moduleLogger
 
     # Path
     try:
         path.append(exePath)
         chdir(exePath)
     except OSError as msg:
-        print(f"Error while setting path: {msg}")
+        moduleLogger.error(f"Error while setting path: {msg}")
 
     # Define last open directory ?
     #  - default is current directory
     #  - last opened directory for developers (pyut/src present)
     prefs = PyutPreferences()    # Prefs handler
-    prefs["orgDirectory"] = os.getcwd()
+    prefs["orgDirectory"] = getcwd()
     if (userPath.find('pyut/src') == -1) and (userPath.find('pyut2/src') == -1):
         # (User-mode)
         prefs["LastDirectory"] = userPath
@@ -133,8 +143,8 @@ def treatArguments():
         return 1
     for param in argv[1:]:
         if param[:18] == "--start_directory=":
-            import os
-            print("Starting with directory ", param[18:])
+
+            moduleLogger.info("Starting with directory ", param[18:])
             global userPath
             userPath = param[18:]
     return 0
@@ -142,7 +152,18 @@ def treatArguments():
 
 # Program entry point
 if __name__ == "__main__":
-    # Get exe path
+
+    with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
+        configurationDictionary = json.load(loggingConfigurationFile)
+
+    logging.config.dictConfig(configurationDictionary)
+    logging.logProcesses = False
+    logging.logThreads   = False
+
+    moduleLogger = getLogger(MADE_UP_PRETTY_MAIN_NAME)
+
+    moduleLogger.info(f"Starting {MADE_UP_PRETTY_MAIN_NAME}")
+
     exePath = getExePath()
 
     # Launch pyut
