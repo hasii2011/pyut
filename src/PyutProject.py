@@ -116,7 +116,8 @@ class PyutProject:
 
     def addToTree(self):
         # Add the project to the project tree
-        self._treeRoot = self._tree.AppendItem(self._treeRootParent, shorterFilename(self._filename), data=TreeItemData(self))
+        # self._treeRoot = self._tree.AppendItem(self._treeRootParent, shorterFilename(self._filename), data=TreeItemData(self))
+        self._treeRoot = self._tree.AppendItem(self._treeRootParent, shorterFilename(self._filename), data=self)
         self._tree.Expand(self._treeRoot)
 
         # Add the frames

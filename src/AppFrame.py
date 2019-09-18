@@ -527,7 +527,7 @@ class AppFrame(Frame):
         self.mnuFileNew.Append(ID_MNUFILENEWSEQUENCEDIAGRAM, _("New s&equence diagram\tCtrl-E"), _("New sequence diagram"))
         self.mnuFileNew.Append(ID_MNUFILENEWUSECASEDIAGRAM,  _("New &use-case diagram\tCtrl-U"), _("New use-case diagram"))
 
-        self.mnuFile.AppendMenu(NewId(), _("&New"), self.mnuFileNew)
+        self.mnuFile.Append(NewId(), _("&New"), self.mnuFileNew)
         self.mnuFile.Append(ID_MNUFILEINSERTPROJECT,
             _("&Insert a project...\t"),
             _("Insert a project in the current project..."))
@@ -556,7 +556,7 @@ class AppFrame(Frame):
         sub.Append(ID_MNUFILEEXPPDF, "P&DF",        _("Export data to a PDF file"))
 
         if sub is not None:
-            self.mnuFile.AppendMenu(NewId(), _("Export"), sub)
+            self.mnuFile.Append(NewId(), _("Export"), sub)
 
         sub = self.makeImportMenu()
         if sub is not None:
@@ -616,7 +616,7 @@ class AppFrame(Frame):
             mnuTools.AppendMenu(NewId(), _("Plugins tools"), sub)
         sub = self.makeToolboxesMenu()
         if sub is not None:
-            mnuTools.AppendMenu(NewId(), _("toolboxes"), sub)
+            mnuTools.Append(NewId(), _("toolboxes"), sub)
 
         # -----------------
         #    Help menu
