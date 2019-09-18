@@ -48,7 +48,7 @@ class PluginManager(Singleton):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        self.logger:  Logger = getLogger(__name__)
+        self.logger: Logger = getLogger(__name__)
 
         # Init
         self.ioPlugs = []
@@ -87,12 +87,12 @@ class PluginManager(Singleton):
 
         # Import tools plugins
         for plug in toPlugs:
-            print(f"Importing tool plugin from file {plug}")
+            self.logger.info(f"Importing tool plugin from file {plug}")
             module = None
             try:
                 module = __import__(plug)
             except (ValueError, Exception) as e:
-                self.logger.error(f"Error importing plugin %s with message: {plug}")
+                self.logger.error(f"Error importing plugin {plug} with message: {e}")
                 self.logger.error(f"Error : {exc_info()[0]}")
                 self.logger.error(f"Msg   : {exc_info()[1]}")
                 self.logger.error(f"Trace :")
@@ -113,7 +113,8 @@ class PluginManager(Singleton):
         s = []
         for plug in self.ioPlugs + self.toPlugs:
             obj = plug(None, None)
-            s.append("Plugin : %s version %s (c) by %s" % (obj.getName(), obj.getVersion(), obj.getAuthor()))
+            # s.append("Plugin : %s version %s (c) by %s" % (obj.getName(), obj.getVersion(), obj.getAuthor()))
+            s.append(f"Plugin : {obj.getName()} version {obj.getVersion()} (c) by {obj.getAuthor()}")
         return s
 
     def getInputPlugins(self):
@@ -125,12 +126,12 @@ class PluginManager(Singleton):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        list = []
+        pluginList = []
         for plug in self.ioPlugs:
             obj = plug(None, None)
             if obj.getInputFormat() is not None:
-                list.append(plug)
-        return list
+                pluginList.append(plug)
+        return pluginList
 
     def getOutputPlugins(self):
         """
