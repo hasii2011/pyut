@@ -14,7 +14,7 @@ from PyutType        import *
 from PyutConsts      import *
 
 # reading file
-from StringIO import StringIO
+from io import StringIO
 from UmlFrame import *
 from OglClass import OglClass
 from OglLink  import *
@@ -47,17 +47,17 @@ class PyutXml:
     :contact: pwaelti@eivd.ch
     """
 
-    
+
 #>------------------------------------------------------------------------
     #    Here begin saving file
-    
+
 #>------------------------------------------------------------------------
 
     def _appendLinks(self, pyutLinkedObject, root, xmlDoc):
         """
         Write the links connected to the PyutLinkedObject.
 
-        @param PyutLinkedObject pyutLinkedObject : Object which contains 
+        @param PyutLinkedObject pyutLinkedObject : Object which contains
         @param xmlDoc : xml Document instance
         @param Element root : XML node to write
         @author Philippe Waelti <pwaelti@eivd.ch>
@@ -68,14 +68,14 @@ class PyutXml:
             if xmlLink is not None:
                 root.appendChild(xmlLink)
 
-    
+
 #>------------------------------------------------------------------------
 
     def _appendFathers(self, pyutLinkedObject, root, xmlDoc):
         """
         Write the inheritance links connected to the PyutLinkedObject.
 
-        @param PyutLinkedObject pyutLinkedObject : Object which contains 
+        @param PyutLinkedObject pyutLinkedObject : Object which contains
 links
         @param Element root : XML node to write
         @param xmlDoc : xml Document instance
@@ -88,7 +88,7 @@ links
             xmlFather.setAttribute('id', str(father.getId()))
             root.appendChild(xmlFather)
 
-    
+
 #>------------------------------------------------------------------------
 
     def _PyutLink2xml(self, pyutLink, xmlDoc):
@@ -131,7 +131,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _PyutParam2xml(self, pyutParam, xmlDoc):
@@ -154,12 +154,12 @@ links
 
         # param defaulf value
         defaultValue = pyutParam.getDefaultValue()
-        if (defaultValue is not None):
+        if defaultValue is not None:
             root.setAttribute('defaultValue', defaultValue)
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _PyutField2xml(self, pyutField, xmlDoc):
@@ -184,7 +184,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _PyutMethod2xml(self, pyutMethod, xmlDoc):
@@ -226,7 +226,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _PyutClass2xml(self, pyutClass, xmlDoc):
@@ -271,7 +271,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _PyutNote2xml(self, pyutNote, xmlDoc):
@@ -301,7 +301,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _PyutActor2xml(self, pyutActor, xmlDoc):
@@ -331,7 +331,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _PyutUseCase2xml(self, pyutUseCase, xmlDoc):
@@ -361,7 +361,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _appendOglBase(self, oglObject, root):
@@ -385,7 +385,7 @@ links
         root.setAttribute('y', str(y))
 
 
-    
+
 #>------------------------------------------------------------------------
 
     def _OglClass2xml(self, oglClass, xmlDoc):
@@ -408,7 +408,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _OglNote2xml(self, oglNote, xmlDoc):
@@ -432,7 +432,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _OglActor2xml(self, oglActor, xmlDoc):
@@ -456,7 +456,7 @@ links
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def _OglUseCase2xml(self, oglUseCase, xmlDoc):
@@ -475,12 +475,12 @@ links
         self._appendOglBase(oglUseCase, root)
 
         # adding the data layer object
-        root.appendChild(self._PyutUseCase2xml(oglUseCase.getPyutObject(), 
+        root.appendChild(self._PyutUseCase2xml(oglUseCase.getPyutObject(),
                                                xmlDoc))
 
         return root
 
-    
+
 #>------------------------------------------------------------------------
 
     def save(self, oglObjects, umlFrame):
@@ -520,10 +520,10 @@ links
         self.__savedLinks = None
         return root
 
-    
+
 #>------------------------------------------------------------------------
     #   Here begin reading file
-    
+
 #>------------------------------------------------------------------------
 
     def _getParam(self, Param):
@@ -534,7 +534,7 @@ links
         aParam.setType(Param.getAttribute('type'))
         return aParam
 
-    
+
 #>------------------------------------------------------------------------
 
     def _getMethods(self, Class):
@@ -572,7 +572,7 @@ links
 
         return allMethods
 
-    
+
 #>------------------------------------------------------------------------
 
     def _getFields(self, Class):
@@ -597,7 +597,7 @@ links
             allFields.append(aField)
         return allFields
 
-    
+
 #>------------------------------------------------------------------------
 
     def _getFathers(self, fathers, dicoFather, objectId):
@@ -621,7 +621,7 @@ links
 
             dicoFather[objectId] = fathersIds
 
-    
+
 #>------------------------------------------------------------------------
 
     def _getLinks(self, obj):
@@ -655,7 +655,7 @@ links
 
         return allLinks
 
-    
+
 #>------------------------------------------------------------------------
 
     def _getOglClasses(self, xmlOglClasses, dicoOglObjects, dicoLink, \
@@ -728,7 +728,7 @@ links
 
         return oldData
 
-    
+
 #>------------------------------------------------------------------------
 
     def _getOglNotes(self, xmlOglNotes, dicoOglObjects, dicoLink, \
@@ -785,7 +785,7 @@ links
 
         return oldData
 
-    
+
 #>------------------------------------------------------------------------
 
     def _getOglActors(self, xmlOglActors, dicoOglObjects, dicoLink, \
@@ -838,7 +838,7 @@ links
 
         return oldData
 
-    
+
 #>------------------------------------------------------------------------
 
     def _getOglUseCases(self, xmlOglUseCases, dicoOglObjects, dicoLink, \
@@ -892,7 +892,7 @@ links
 
         return oldData
 
-    
+
 #>------------------------------------------------------------------------
 
     def _fixVersion(self, dicoLink, dicoOglObjects, dicoFather):
@@ -928,7 +928,7 @@ links
                             oglObject.getPyutObject().getName():
                         fathers[father] = id
 
-    
+
 #>------------------------------------------------------------------------
 
     def open(self, dom, umlFrame):
@@ -1016,7 +1016,7 @@ links
 
         dlgGauge.Destroy()
 
-    
+
 #>------------------------------------------------------------------------
 
     def joli(self, fileName):

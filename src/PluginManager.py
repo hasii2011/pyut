@@ -72,7 +72,7 @@ class PluginManager(Singleton):
             try:
                 module = __import__(plug)
             except (ValueError, Exception) as e:
-                self.logger.error(f"Error importing plugin %s with message: {plug} error {e}")
+                self.logger.error(f"Error importing plugin {plug} with message: {e}")
                 self.logger.error(f"Error : {exc_info()[0]}")
                 self.logger.error(f"Msg   : {exc_info()[1]}")
                 self.logger.error(f"Trace :")
