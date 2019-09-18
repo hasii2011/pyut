@@ -5,19 +5,19 @@ __version__ = "$Revision: 1.7 $"
 __author__ = "EI5, eivd, Group Burgbacher - Waelti"
 __date__ = "2002-1-9"
 
-from PyutClass       import *
-from PyutParam       import *
-from PyutMethod      import *
-from PyutField       import *
-from PyutStereotype  import *
-from PyutType        import *
-from PyutConsts      import *
+from .PyutClass       import *
+from .PyutParam       import *
+from .PyutMethod      import *
+from .PyutField       import *
+from .PyutStereotype  import *
+from .PyutType        import *
+from .PyutConsts      import *
 
 # reading file
 from io import StringIO
-from UmlFrame import *
-from OglClass import OglClass
-from OglLink  import *
+from .UmlFrame import *
+from .OglClass import OglClass
+from .OglLink  import *
 #import lang
 import wx
 
@@ -908,22 +908,22 @@ links
         """
         # This works because destinaton of link is the NAME of dest
         # This is fixed just below
-        for links in dicoLink.values():
+        for links in list(dicoLink.values()):
             for link in links:
-                for id, oglObject in dicoOglObjects.items():
+                for id, oglObject in list(dicoOglObjects.items()):
                     try:
                         if link[1].getDestination() == \
                                 oglObject.getPyutObject().getName():
                             link[0] = id
                     except:
-                        print "Error converting old datas"
-                        print link[1].getDestination(),
-                        print " == ",
-                        print oglObject.getPyutObject().getName()
+                        print("Error converting old datas")
+                        print(link[1].getDestination(), end=' ')
+                        print(" == ", end=' ')
+                        print(oglObject.getPyutObject().getName())
 
-        for fathers in dicoFather.values():
+        for fathers in list(dicoFather.values()):
             for father in range(len(fathers)):
-                for id, oglObject in dicoOglObjects.items():
+                for id, oglObject in list(dicoOglObjects.items()):
                     if fathers[father] == \
                             oglObject.getPyutObject().getName():
                         fathers[father] = id
@@ -980,14 +980,14 @@ links
         # fix the link's destination field
         gauge.SetValue(2)
         dlgGauge.SetTitle("Fixing link's destination...")
-        for links in dicoLink.values():
+        for links in list(dicoLink.values()):
             for link in links:
                 link[1].setDestination(dicoOglObjects[link[0]].getPyutObject())
 
         # adding fathers
         dlgGauge.SetTitle("Adding fathers...")
         gauge.SetValue(3)
-        for child, fathers in dicoFather.items():
+        for child, fathers in list(dicoFather.items()):
             for father in fathers:
                 umlFrame.createInheritanceLink(\
                         dicoOglObjects[child], dicoOglObjects[father])
@@ -996,7 +996,7 @@ links
         # adding links to this OGL object
         dlgGauge.SetTitle("Adding Links...")
         gauge.SetValue(4)
-        for src, links in dicoLink.items():
+        for src, links in list(dicoLink.items()):
             for link in links:
                 createdLink = umlFrame.createNewLink(dicoOglObjects[src], \
                     dicoOglObjects[link[1].getDestination().getId()], \
@@ -1026,7 +1026,7 @@ links
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
-        from StringIO import StringIO
+        from io import StringIO
         dom = parse(StringIO(open(fileName).read()))
         xml.dom.ext.PrettyPrint(dom, open("joli.xml", 'w'))
 
