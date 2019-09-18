@@ -69,7 +69,10 @@ class PluginManager(Singleton):
                 for el in traceback.extract_tb(sys.exc_info()[2]):
                     print(el)
             if module is not None:
-                cl = eval(f"module.{module.__name}")
+                # cl = eval("module.%s" % (module.__name__))
+                pluginName: str = f"module.{module.__name__}"
+                print(f'Loading {pluginName}')
+                cl = eval(pluginName)
                 self.ioPlugs.append(cl)
 
         # Import tools plugins
@@ -102,8 +105,7 @@ class PluginManager(Singleton):
         s = []
         for plug in self.ioPlugs + self.toPlugs:
             obj = plug(None, None)
-            s.append("Plugin : %s version %s (c) by %s" % (
-                obj.getName(), obj.getVersion(), obj.getAuthor()))
+            s.append("Plugin : %s version %s (c) by %s" % (obj.getName(), obj.getVersion(), obj.getAuthor()))
         return s
 
     def getInputPlugins(self):
