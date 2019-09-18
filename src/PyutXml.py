@@ -1,25 +1,24 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.7 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-1-9"
-
-from .PyutClass       import *
-from .PyutParam       import *
-from .PyutMethod      import *
-from .PyutField       import *
-from .PyutStereotype  import *
-from .PyutType        import *
-from .PyutConsts      import *
+# from .PyutClass       import *
+# from .PyutParam       import *
+# from .PyutMethod      import *
+# from .PyutField       import *
+# from .PyutStereotype  import *
+# from .PyutType        import *
+# from .PyutConsts      import *
 
 # reading file
-from io import StringIO
-from .UmlFrame import *
-from .OglClass import OglClass
-from .OglLink  import *
-#import lang
+# from io import StringIO
+from xml.dom.minidom import parse
+from xml.dom.minidom import Document
+
+from PyutUseCase import PyutUseCase
+from UmlFrame import *
+from OglClass import OglClass
+from OglLink import *
+
 import wx
+
 
 class PyutXml:
     """
@@ -46,13 +45,6 @@ class PyutXml:
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-
-
-#>------------------------------------------------------------------------
-    #    Here begin saving file
-
-#>------------------------------------------------------------------------
-
     def _appendLinks(self, pyutLinkedObject, root, xmlDoc):
         """
         Write the links connected to the PyutLinkedObject.
@@ -68,28 +60,21 @@ class PyutXml:
             if xmlLink is not None:
                 root.appendChild(xmlLink)
 
-
-#>------------------------------------------------------------------------
-
     def _appendFathers(self, pyutLinkedObject, root, xmlDoc):
         """
         Write the inheritance links connected to the PyutLinkedObject.
 
-        @param PyutLinkedObject pyutLinkedObject : Object which contains
-links
+        @param PyutLinkedObject pyutLinkedObject : Object which contains links
         @param Element root : XML node to write
         @param xmlDoc : xml Document instance
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
         # for all fathers
         for father in pyutLinkedObject.getFathers():
             xmlFather = xmlDoc.createElement('Father')
             xmlFather.setAttribute('id', str(father.getId()))
             root.appendChild(xmlFather)
-
-
-#>------------------------------------------------------------------------
 
     def _PyutLink2xml(self, pyutLink, xmlDoc):
         """
@@ -101,13 +86,12 @@ links
         @since 2.0
         @author Deve Roux <droux@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
 
         # Add link to saved links (avoid to save one twice)
         if pyutLink in self.__savedLinks:
             return None
         self.__savedLinks[pyutLink] = 1
-
 
         root = xmlDoc.createElement('Link')
         # link name
@@ -131,9 +115,6 @@ links
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def _PyutParam2xml(self, pyutParam, xmlDoc):
         """
         Exporting a PyutParam to an miniDom Element.
@@ -143,7 +124,7 @@ links
         @return Element : XML Node
         @author Deve Roux <droux@eivd.ch>
         """
-        ##lang.importLanguage()
+        ## lang.importLanguage()
         root = xmlDoc.createElement('Param')
 
         # param name
@@ -159,9 +140,6 @@ links
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def _PyutField2xml(self, pyutField, xmlDoc):
         """
         Exporting a PyutField to an miniDom Element
@@ -172,7 +150,7 @@ links
         @since 2.0
         @author Deve Roux <droux@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
         root = xmlDoc.createElement('Field')
 
         # adding the parent XML
@@ -184,9 +162,6 @@ links
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def _PyutMethod2xml(self, pyutMethod, xmlDoc):
         """
         Exporting an PyutMethod to an miniDom Element.
@@ -196,7 +171,7 @@ links
         @return Element : XML Node
         @author Deve Roux <droux@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
         root = xmlDoc.createElement('Method')
 
         # method name
@@ -226,9 +201,6 @@ links
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def _PyutClass2xml(self, pyutClass, xmlDoc):
         """
         Exporting an PyutClass to an miniDom Element.
@@ -238,7 +210,7 @@ links
         @return Element : XML Node
         @author Deve Roux <droux@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
         root = xmlDoc.createElement('Class')
 
         # ID
@@ -271,9 +243,6 @@ links
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def _PyutNote2xml(self, pyutNote, xmlDoc):
         """
         Exporting an PyutNote to an miniDom Element.
@@ -283,7 +252,7 @@ links
         @return Element          : New miniDom element
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
 
         root = xmlDoc.createElement('Note')
 
@@ -302,8 +271,6 @@ links
         return root
 
 
-#>------------------------------------------------------------------------
-
     def _PyutActor2xml(self, pyutActor, xmlDoc):
         """
         Exporting an PyutActor to an miniDom Element.
@@ -313,7 +280,7 @@ links
         @return Element : New miniDom element
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
 
         root = xmlDoc.createElement('Actor')
 
@@ -331,9 +298,6 @@ links
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def _PyutUseCase2xml(self, pyutUseCase, xmlDoc):
         """
         Exporting an PyutUseCase to an miniDom Element.
@@ -343,7 +307,7 @@ links
         @return Element : New miniDom element
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
 
         root = xmlDoc.createElement('UseCase')
 
@@ -360,9 +324,6 @@ links
         self._appendLinks(pyutUseCase, root)
 
         return root
-
-
-#>------------------------------------------------------------------------
 
     def _appendOglBase(self, oglObject, root):
         """
@@ -384,10 +345,6 @@ links
         root.setAttribute('x', str(x))
         root.setAttribute('y', str(y))
 
-
-
-#>------------------------------------------------------------------------
-
     def _OglClass2xml(self, oglClass, xmlDoc):
         """
         Exporting an OglClass to an miniDom Element.
@@ -397,7 +354,7 @@ links
         @return Element : XML Node
         @author Deve Roux <droux@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
         root = xmlDoc.createElement("GraphicClass")
 
         # Append OGL object base (size and pos)
@@ -407,9 +364,6 @@ links
         root.appendChild(self._PyutClass2xml(oglClass.getPyutObject(), xmlDoc))
 
         return root
-
-
-#>------------------------------------------------------------------------
 
     def _OglNote2xml(self, oglNote, xmlDoc):
         """
@@ -456,9 +410,6 @@ links
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def _OglUseCase2xml(self, oglUseCase, xmlDoc):
         """
         Exporting an OglUseCase to an miniDom Element.
@@ -468,7 +419,7 @@ links
         @return Element : New miniDom element
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
         root = xmlDoc.createElement('GraphicUseCase')
 
         # Append OGL object base (size and pos)
@@ -480,9 +431,6 @@ links
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def save(self, oglObjects, umlFrame):
         """
         To save save diagram in XML file.
@@ -490,7 +438,6 @@ links
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
-        #lang.importLanguage()
         root    = Document()
         top     = root.createElement("Pyut")
         root.appendChild(top)
@@ -498,11 +445,8 @@ links
         self.__savedLinks = {}
 
         # Gauge
-        dlg=wx.Dialog(None, -1, "Saving...",
-                     style=wx.STAY_ON_TOP | wx.CAPTION | wx.THICK_FRAME,
-                     size=wx.Size(207, 70))
-        gauge=wx.Gauge(dlg, -1, len(oglObjects), pos=wx.Point(2, 5),
-                      size=wx.Size(200, 30))
+        dlg = wx.Dialog(None, -1, "Saving...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.THICK_FRAME, size=wx.Size(207, 70))
+        gauge = wx.Gauge(dlg, -1, len(oglObjects), pos=wx.Point(2, 5), size=wx.Size(200, 30))
         dlg.Show(True)
 
         for i in range(len(oglObjects)):
@@ -520,22 +464,13 @@ links
         self.__savedLinks = None
         return root
 
-
-#>------------------------------------------------------------------------
-    #   Here begin reading file
-
-#>------------------------------------------------------------------------
-
     def _getParam(self, Param):
         aParam = PyutParam()
-        if(Param.hasAttribute('defaultValue')):
+        if Param.hasAttribute('defaultValue'):
             aParam.setDefaultValue(Param.getAttribute('defaultValue'))
         aParam.setName(Param.getAttribute('name'))
         aParam.setType(Param.getAttribute('type'))
         return aParam
-
-
-#>------------------------------------------------------------------------
 
     def _getMethods(self, Class):
         """
@@ -554,7 +489,6 @@ links
             # method visibility
             aMethod.setVisibility(Method.getAttribute('visibility'))
 
-
             # for method return type
             Return = Method.getElementsByTagName("Return")[0]
             aMethod.setReturns(Return.getAttribute('type'))
@@ -564,16 +498,12 @@ links
             for Param in  Method.getElementsByTagName("Param"):
                 allParams.append(self._getParam(Param))
 
-
             # setting de params for thiy method
             aMethod.setParams(allParams)
             # hadding this method in all class methods
             allMethods.append(aMethod)
 
         return allMethods
-
-
-#>------------------------------------------------------------------------
 
     def _getFields(self, Class):
         """
@@ -589,16 +519,13 @@ links
             aField = PyutField()
             aField.setVisibility(Field.getAttribute('visibility'))
             Param = Field.getElementsByTagName("Param")[0]
-            if(Param.hasAttribute('defaultValue')):
+            if Param.hasAttribute('defaultValue'):
                 aField.setDefaultValue(Param.getAttribute('defaultValue'))
             aField.setName(Param.getAttribute('name'))
             aField.setType(Param.getAttribute('type'))
 
             allFields.append(aField)
         return allFields
-
-
-#>------------------------------------------------------------------------
 
     def _getFathers(self, fathers, dicoFather, objectId):
         """
@@ -620,9 +547,6 @@ links
                             father.getAttribute('name').encode("charmap"))
 
             dicoFather[objectId] = fathersIds
-
-
-#>------------------------------------------------------------------------
 
     def _getLinks(self, obj):
         """
@@ -654,9 +578,6 @@ links
             allLinks.append([destId, aLink])
 
         return allLinks
-
-
-#>------------------------------------------------------------------------
 
     def _getOglClasses(self, xmlOglClasses, dicoOglObjects, dicoLink, \
             dicoFather, umlFrame):
@@ -713,8 +634,7 @@ links
             pyutClass.setFields(self._getFields(xmlClass))
 
             # adding fathers
-            self._getFathers(xmlClass.getElementsByTagName("Father"), \
-                dicoFather, pyutClass.getId())
+            self._getFathers(xmlClass.getElementsByTagName("Father"), dicoFather, pyutClass.getId())
 
             # adding link for this class
             dicoLink[pyutClass.getId()] = self._getLinks(xmlClass)[:]
@@ -728,11 +648,7 @@ links
 
         return oldData
 
-
-#>------------------------------------------------------------------------
-
-    def _getOglNotes(self, xmlOglNotes, dicoOglObjects, dicoLink, \
-            dicoFather, umlFrame):
+    def _getOglNotes(self, xmlOglNotes, dicoOglObjects, dicoLink, dicoFather, umlFrame):
         """
         Parse the XML elements given and build data layer for PyUT notes.
         If file is version 1.0, the dictionary given will contain, for key,
@@ -785,11 +701,7 @@ links
 
         return oldData
 
-
-#>------------------------------------------------------------------------
-
-    def _getOglActors(self, xmlOglActors, dicoOglObjects, dicoLink, \
-            dicoFather, umlFrame):
+    def _getOglActors(self, xmlOglActors, dicoOglObjects, dicoLink, dicoFather, umlFrame):
         """
         Parse the XML elements given and build data layer for PyUT actors.
 
@@ -838,11 +750,7 @@ links
 
         return oldData
 
-
-#>------------------------------------------------------------------------
-
-    def _getOglUseCases(self, xmlOglUseCases, dicoOglObjects, dicoLink, \
-            dicoFather, umlFrame):
+    def _getOglUseCases(self, xmlOglUseCases, dicoOglObjects, dicoLink, dicoFather, umlFrame):
         """
         Parse the XML elements given and build data layer for PyUT actors.
 
@@ -892,9 +800,6 @@ links
 
         return oldData
 
-
-#>------------------------------------------------------------------------
-
     def _fixVersion(self, dicoLink, dicoOglObjects, dicoFather):
         """
         Fix links if old version of pyut (v1.0) has been detected.
@@ -928,9 +833,6 @@ links
                             oglObject.getPyutObject().getName():
                         fathers[father] = id
 
-
-#>------------------------------------------------------------------------
-
     def open(self, dom, umlFrame):
         """
         To open a file and creating diagram.
@@ -943,13 +845,10 @@ links
         dicoFather = {} # format {child oglClass : [fathers names]}
         oldData = 0
 
+        # Create and init gauge
+        dlgGauge = wx.Dialog(None, -1, "Loading...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.RESIZE_BORDER, size=wx.Size(207, 70))
+        gauge = wx.Gauge(dlgGauge, -1, 5, pos=wx.Point(2, 5), size=wx.Size(200, 30))
 
-        #Create and init gauge
-        dlgGauge=wx.Dialog(None, -1, "Loading...",
-                      style=wx.STAY_ON_TOP | wx.CAPTION | wx.THICK_FRAME,
-                      size=wx.Size(207, 70))
-        gauge=wx.Gauge(dlgGauge, -1, 5, pos=wx.Point(2, 5),
-                      size=wx.Size(200, 30))
         dlgGauge.Show(True)
 
         # for all elements il xml file
@@ -1016,9 +915,6 @@ links
 
         dlgGauge.Destroy()
 
-
-#>------------------------------------------------------------------------
-
     def joli(self, fileName):
         """
         To open a file and creating diagram.
@@ -1028,5 +924,5 @@ links
         """
         from io import StringIO
         dom = parse(StringIO(open(fileName).read()))
-        xml.dom.ext.PrettyPrint(dom, open("joli.xml", 'w'))
-
+        #  xml.dom.ext.PrettyPrint(dom, open("joli.xml", 'w'))   # don't know what this is supposed to do
+        print(f"{dom.toprettyxml()}")                            # Maybe this ?
