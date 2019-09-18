@@ -1,15 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__author__  = "Laurent Burgbacher <lb@alawa.ch>"
-__version__ = "$Revision: 1.9 $"
-__date__    = "2002-02-14"
-#from wxPython.wx    import * 
-from mediator       import *
-from PyutPlugin     import PyutPlugin
-import os, wx
-#wx.FileSelector, wx.DirDialog, \
-#wx.OPEN, wx.FILE_MUST_EXIST, wx.SAVE, wx.OVERWRITE_PROMPT, \
-#w
+
+from mediator import getMediator
+
+from plugins.PyutPlugin import PyutPlugin
+
 
 class PyutIoPlugin(PyutPlugin):
     """
@@ -71,13 +64,10 @@ class PyutIoPlugin(PyutPlugin):
         """
         PyutPlugin.__init__(self, umlFrame, getMediator())
         self.__oglObjects = oglObjects
-        #self.__umlFrame = umlFrame
-        #self.__ctrl = getMediator()
+        # self.__umlFrame = umlFrame
+        # self.__ctrl = getMediator()
 
-
-    #>------------------------------------------------------------------------
-
-    def getName(self):
+    def getName(self) -> str:
         """
         This method returns the name of the plugin.
 
@@ -87,10 +77,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         return "No name"
 
-
-    #>------------------------------------------------------------------------
-
-    def getAuthor(self):
+    def getAuthor(self) -> str:
         """
         This method returns the author of the plugin.
 
@@ -100,10 +87,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         return "No author"
 
-
-    #>------------------------------------------------------------------------
-
-    def getVersion(self):
+    def getVersion(self) -> str:
         """
         This method returns the version of the plugin.
 
@@ -112,9 +96,6 @@ class PyutIoPlugin(PyutPlugin):
         @since 1.0
         """
         return "0.0"
-
-
-    #>------------------------------------------------------------------------
 
     def getInputFormat(self):
         """
@@ -132,9 +113,6 @@ class PyutIoPlugin(PyutPlugin):
         # example : return ("Text", "txt", "Tabbed text...")
         return None
 
-
-    #>------------------------------------------------------------------------
-
     def getOutputFormat(self):
         """
         Return a specification tupple.
@@ -151,9 +129,6 @@ class PyutIoPlugin(PyutPlugin):
         # example : return ("Text", "txt", "Tabbed text...")
         return None
 
-    #>------------------------------------------------------------------------
-
-
     def setImportOptions(self):
         """
         Prepare the import.
@@ -164,9 +139,6 @@ class PyutIoPlugin(PyutPlugin):
         @since 1.0
         """
         return 1
-
-
-    #>------------------------------------------------------------------------
 
     def setExportOptions(self):
         """
@@ -179,36 +151,24 @@ class PyutIoPlugin(PyutPlugin):
         """
         return 1
 
-
-    #>------------------------------------------------------------------------
-
     def read(self, oglObjects, umlFrame):
         """
-        Read data from filename. Abstract.
 
-        @param OglClass and OglLink [] : list of imported objects
-        @param UmlFrame : Pyut's UmlFrame
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            oglObjects: list of imported objects
+            umlFrame: Pyut's UmlFrame
+
         """
         pass
-
-
-    #>------------------------------------------------------------------------
 
     def write(self, oglObjects):
         """
-        Write data to filename. Abstract.
+         Write data to filename. Abstract.
+        Args:
+            oglObjects:  list of exported objects
 
-        @param OglClass and OglLink [] : list of exported objects
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
         """
         pass
-
-
-
-    #>------------------------------------------------------------------------
 
     def doImport(self):
         """
@@ -217,7 +177,7 @@ class PyutIoPlugin(PyutPlugin):
         @since 1.4
         """
         # if this plugin can import
-        if self.getInputFormat() != None:
+        if self.getInputFormat() is None:
             # set user options for import
             if not self.setImportOptions():
                 return None
@@ -230,9 +190,6 @@ class PyutIoPlugin(PyutPlugin):
         else:
             return None
 
-
-    #>------------------------------------------------------------------------
-
     def doExport(self):
         """
         Called by Pyut to begin the export process.
@@ -240,7 +197,7 @@ class PyutIoPlugin(PyutPlugin):
         @since 1.4
         """
         # if this plugin can export
-        if self.getOutputFormat() != None:
+        if self.getOutputFormat() is None:
             # set user options for export
             if not self.setExportOptions():
                 return None

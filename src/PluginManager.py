@@ -1,22 +1,20 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-02-13"
 
 from glob import glob
-import os, sys
+import os
+import sys
 
 # needed by the plugins
-from PyutClass      import PyutClass
-from PyutParam      import PyutParam
-from PyutMethod     import PyutMethod
-from PyutField      import PyutField
-from PyutStereotype import PyutStereotype
-from UmlFrame       import *
-from OglClass       import OglClass
-from OglLink        import *
-from singleton      import Singleton
+# from PyutClass      import PyutClass
+# from PyutParam      import PyutParam
+# from PyutMethod     import PyutMethod
+# from PyutField      import PyutField
+# from PyutStereotype import PyutStereotype
+# from UmlFrame       import *
+# from OglClass       import OglClass
+# from OglLink        import *
+
+from singleton import Singleton
+
 
 class PluginManager(Singleton):
     """
@@ -59,11 +57,11 @@ class PluginManager(Singleton):
         for plug in ioPlugs:
             print("Importing I/O plugin from file " + str(plug))
             module = None
-            #~ module = __import__(plug)
+            # module = __import__(plug)
             try:
                 module = __import__(plug)
-            except:
-                print(("Error importing plugin %s with message:" % plug))
+            except (ValueError, Exception) as e:
+                print(f"Error importing plugin %s with message: {plug} error {e}")
                 import traceback
                 print("Error : %s" % sys.exc_info()[0])
                 print("Msg   : %s" % sys.exc_info()[1])
@@ -71,17 +69,17 @@ class PluginManager(Singleton):
                 for el in traceback.extract_tb(sys.exc_info()[2]):
                     print(el)
             if module is not None:
-                cl = eval("module.%s" % (module.__name__))
+                cl = eval(f"module.{module.__name}")
                 self.ioPlugs.append(cl)
 
         # Import tools plugins
         for plug in toPlugs:
             print("Importing tool plugin from file " + str(plug))
             module = None
-            #~ module = __import__(plug)
+            #  module = __import__(plug)
             try:
                 module = __import__(plug)
-            except:
+            except (ValueError, Exception) as e:
                 print(("Error importing plugin %s with message:" % plug))
                 import traceback
                 print("Error : %s" % sys.exc_info()[0])
@@ -90,12 +88,8 @@ class PluginManager(Singleton):
                 for el in traceback.extract_tb(sys.exc_info()[2]):
                     print(el)
             if module is not None:
-                cl = eval("module.%s" % (module.__name__))
+                cl = eval(f"module.{module.__name}")
                 self.toPlugs.append(cl)
-
-
-
-    #>------------------------------------------------------------------------
 
     def getPluginsInfo(self):
         """
@@ -111,8 +105,6 @@ class PluginManager(Singleton):
             s.append("Plugin : %s version %s (c) by %s" % (
                 obj.getName(), obj.getVersion(), obj.getAuthor()))
         return s
-
-    #>------------------------------------------------------------------------
 
     def getInputPlugins(self):
         """
@@ -130,8 +122,6 @@ class PluginManager(Singleton):
                 list.append(plug)
         return list
 
-    #>------------------------------------------------------------------------
-
     def getOutputPlugins(self):
         """
         Get the output plugins.
@@ -141,15 +131,13 @@ class PluginManager(Singleton):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        list = []
+        pluginList = []
         for plug in self.ioPlugs:
             obj = plug(None, None)
             if obj.getOutputFormat() is not None:
-                list.append(plug)
-        return list
+                pluginList.append(plug)
+        return pluginList
 
-    #>------------------------------------------------------------------------
-    
     def getToolPlugins(self):
         """
         Get the tool plugins.
@@ -160,17 +148,13 @@ class PluginManager(Singleton):
         @since 1.5.2.6
         """
         return self.toPlugs
-        #list = []
-        #for plug in self.toPlugs:
-        #    obj = plug(None, None)
-        #    list.append(plug)
-        #return list
-    
-    #>------------------------------------------------------------------------
-
-def test():
-    p = PluginManager()
-    for info in p.getPluginsInfo():
-        print(info)
-
-if __name__ == "__main__": test()
+#
+#  TODO Put in Unit test
+#
+# def test():
+#     p = PluginManager()
+#     for info in p.getPluginsInfo():
+#         print(info)
+#
+# if __name__ == "__main__": test()
+#
