@@ -54,7 +54,9 @@ class PluginManager(Singleton):
         # remove extension
         ioPlugs = map(lambda x: osPath.splitext(x)[0], ioPlugs)
         toPlugs = map(lambda x: osPath.splitext(x)[0], toPlugs)
-
+        #
+        # TODO:  Remove this duplicated code by calling a common method
+        #
         # Import I/O plugins
         for plug in ioPlugs:
             self.logger.info(f"Importing I/O plugin from file {plug}")
