@@ -83,7 +83,7 @@ class ToCDAutoLayout(PyutToPlugin):
                     self._step(obj)
 
             # Animation
-            umlFrame.Refresh()
+            # umlFrame.Refresh() # TODO hasii figure out what the replacement is
             t = time()
             while time() < t + 0.005:
                 pass

@@ -1,17 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.2 $"
-__author__ = "Nicolas Dubois <nicdub@gmx.ch>"
-__date__ = "2002-4-14"
+import os
 
-from StringIO import StringIO
-from PyutIoPlugin import PyutIoPlugin
-from PyutClass import PyutClass
+from plugins.PyutIoPlugin import PyutIoPlugin
 from OglClass import OglClass
-from PyutMethod import PyutMethod
 from PyutConsts import *
-import os, types, sys
+
 
 class IoJava(PyutIoPlugin):
     """
@@ -29,8 +22,6 @@ class IoJava(PyutIoPlugin):
         """
         return "Java code generation"
 
-    #>------------------------------------------------------------------------
-
     def getAuthor(self):
         """
         This method returns the author of the plugin.
@@ -41,8 +32,6 @@ class IoJava(PyutIoPlugin):
         """
         return "N. Dubois <nicdub@gmx.ch>"
 
-    #>------------------------------------------------------------------------
-
     def getVersion(self):
         """
         This method returns the version of the plugin.
@@ -52,8 +41,6 @@ class IoJava(PyutIoPlugin):
         @since 1.1
         """
         return "1.0"
-
-    #>------------------------------------------------------------------------
 
     def getOutputFormat(self):
         """
@@ -69,15 +56,13 @@ class IoJava(PyutIoPlugin):
         # - extension of the output format
         # - textual description of the plugin output format
         # example : return ("Text", "txt", "Tabbed text...")
-        return ("Java", "java", "Java file format")
-
-    #>------------------------------------------------------------------------
+        return "Java", "java", "Java file format"
 
     def _writeParam(self, file, param):
         """
         Writing params in file.
 
-        @param file       
+        @param file
         @param param   : pyutParam
 
         @author N. Dubois <nicdub@gmx.ch>
@@ -85,15 +70,13 @@ class IoJava(PyutIoPlugin):
         """
         # writing the param name
         file.write(str(param.getType()) + " " + param.getName())
-        
-    #>------------------------------------------------------------------------
 
     def _writeMethod(self, file, method):
         """
         Writing a method in file : name(param, param, ...).
 
-        @param file       
-        @param method    : pyutMethod 
+        @param file
+        @param method    : pyutMethod
 
         @author N. Dubois <nicdub@gmx.ch>
         @since 1.1
@@ -104,7 +87,7 @@ class IoJava(PyutIoPlugin):
         returnType = str(method.getReturns())
         if returnType == "":
             returnType = "void"
-        
+
         # writing method name
         file.write(self.__tab + visibility + " " + returnType + \
             " " + name + "(")
@@ -115,18 +98,16 @@ class IoJava(PyutIoPlugin):
             self._writeParam(file, param)
 
             # comma between param
-            nbParam = nbParam -1 
+            nbParam = nbParam -1
             if(nbParam > 0) :
                 file.write(" , ")
         file.write(") {\n" + self.__tab + "}\n\n")
 
-    #>------------------------------------------------------------------------
-
     def _writeMethods(self, file, methods, className):#, fields):
         """
-        Writing methods in source (.cpp) file 
+        Writing methods in source (.cpp) file
 
-        @param file       
+        @param file
         @param methods : [] list of all method of a class
         @param className : string the name of the class
         @param fields    : [] list of fils whose are default value
@@ -140,7 +121,7 @@ class IoJava(PyutIoPlugin):
                 self.__tab + "// -------\n" + \
                 self.__tab + "// Methods\n" + \
                 self.__tab + "// -------\n\n")
-        
+
         # for all method in methods list
         for method in methods :
             self._writeMethodComment(file, method, self.__tab)
@@ -148,13 +129,11 @@ class IoJava(PyutIoPlugin):
             # writing method
             self._writeMethod(file, method)
 
-    #>------------------------------------------------------------------------
-
     def _writeHeaderMethods(self, file, methods, className):
         """
-        Writing methods in header (.h) file 
+        Writing methods in header (.h) file
 
-        @param file       
+        @param file
         @param methods : [] list of all method of a class
         @param className : string the name of the class
 
@@ -162,14 +141,14 @@ class IoJava(PyutIoPlugin):
         @since 1.1
         """
         # TODO
-        
+
         # for all method in methods list
         for method in methods :
-        
+
             self._writeMethodComment(file, method, className, self.__tab)
             # writing tab
             file.write(self.__tab)
-            
+
             # writing type
             # constructor case
             name = method.getName()
@@ -180,13 +159,11 @@ class IoJava(PyutIoPlugin):
             self._writeMethod(file, method)
             file.write( ";\n\n")
 
-    #>------------------------------------------------------------------------
-
     def _writeFields(self, file, fields):
         """
         Write fields in file.
 
-        @param file file: 
+        @param file file:
         @param [PyutField, ...] fields : list of all fields of a class
 
         @author N. Dubois <nicdub@gmx.ch>
@@ -198,12 +175,12 @@ class IoJava(PyutIoPlugin):
                 self.__tab + "// ------\n" + \
                 self.__tab + "// Fields\n" + \
                 self.__tab + "// ------\n\n")
-        
+
         # Write all fields in file
-        for field in fields: 
+        for field in fields:
             # Visibility converted from "+" to "public", ...
             visibility = self.__visibility[str(field.getVisibility())]
-            
+
             # Type
             type = str(field.getType())
 
@@ -230,13 +207,11 @@ class IoJava(PyutIoPlugin):
             file.write(self.__tab + visibility + " " + type + " " + name + \
                 default + ";" + comments + "\n")
 
-    #>------------------------------------------------------------------------
-
     def _writeLinks(self, file, links):
         """
         Write relation links in file.
 
-        @param file file: 
+        @param file file:
         @param [] links : list of relation links
 
         @author N. Dubois <nicdub@gmx.ch>
@@ -259,8 +234,6 @@ class IoJava(PyutIoPlugin):
             file.write(self.__tab + "private " + type + " " + \
                 name + array + ";\n")
 
-    #>------------------------------------------------------------------------
-
     def _writeFathers(self, file, fathers):
         """
         Writing fathers for inheritance.
@@ -280,14 +253,12 @@ class IoJava(PyutIoPlugin):
             # Only one father allowed
             file.write(fathers[0].getName())
 
-    #>------------------------------------------------------------------------
-
     def _writeInterfaces(self, file, interfaces):
         """
         Writing interfaces implemented by the class.
 
         @param file file : class java file
-        @param fathers  : [] list of fathers 
+        @param fathers  : [] list of fathers
 
         @author N. Dubois <nicdub@gmx.ch>
         @since 1.1
@@ -300,27 +271,23 @@ class IoJava(PyutIoPlugin):
 
             # Write the first interface
             file.write(interfaces[0].getDestination().getName())
-            
+
             # For all next interfaces, write the name separated by a ','
             for interface in interfaces[1:]:
                 file.write(", " + interface.getDestination().getName())
 
-    #>------------------------------------------------------------------------
-
     def _writeClassComment(self, file, className, classInterface):
         """
-        Write class comment with doxygen organisation. 
+        Write class comment with doxygen organisation.
 
-        @param file       
-        @param className    : String  represtent a class 
+        @param file
+        @param className    : String  represtent a class
 
         @author N. Dubois <nicdub@gmx.ch>
         @since 1.1
         """
         file.write("/**\n * " + classInterface + " " + className + \
             "\n * More info here \n */\n")
-
-    #>------------------------------------------------------------------------
 
     def _writeMethodComment(self, file, method, tab=""):
         """
@@ -343,14 +310,12 @@ class IoJava(PyutIoPlugin):
             file.write(tab + " * @return " + str(method.getReturns()) + "\n")
         file.write(tab + " */\n")
 
-    #>------------------------------------------------------------------------
-
     def _writeFieldComment(self, file, name, tab=""):
         """
-        Write method comment with doxygen organisation. 
+        Write method comment with doxygen organisation.
 
-        @param file       
-        @param name    : field name 
+        @param file
+        @param name    : field name
 
         @author N. Dubois <nicdub@gmx.ch>
         @since 1.1
@@ -361,15 +326,13 @@ class IoJava(PyutIoPlugin):
 
         file.write(tab+" */\n")
 
-    #>------------------------------------------------------------------------
-
     def _seperateLinks(self, allLinks, interfaces, links):
         """
         Seperate the differents types of links into lists.
-        
+
         @param [PyutLinks] links : list of links of the class
         @param [str] interfaces : list of interfaces implemented by the class
-        
+
         @author N. Dubois <nicdub@gmx.ch>
         @since 1.1.2.2
         """
@@ -379,8 +342,6 @@ class IoJava(PyutIoPlugin):
                 interfaces.append(link)
             elif type == OGL_COMPOSITION or type == OGL_AGGREGATION:
                 links.append(link)
-
-    #>------------------------------------------------------------------------
 
     def _writeClass(self, pyutClass):
         """
@@ -418,9 +379,9 @@ class IoJava(PyutIoPlugin):
             stereotype = stereotype.getStereotype()
             if stereotype == "Interface":
                 classInterface = "interface"
-        
-        
-        
+
+
+
         # Write datas in file
         # -------------------
 
@@ -431,21 +392,19 @@ class IoJava(PyutIoPlugin):
 
         self._writeFathers(javaFile, fathers)
         self._writeInterfaces(javaFile, interfaces)
-        javaFile.write(" {\n\n");
+        javaFile.write(" {\n\n")
 
         # Fields
         self._writeFields(javaFile, fields)
-        
+
         # Aggregation and Composition
         self._writeLinks(javaFile, links)
-        
+
         # Methods
         self._writeMethods(javaFile, methods, className)
 
-        # end of class 
-        javaFile.write("}\n");
-
-    #>------------------------------------------------------------------------
+        # end of class
+        javaFile.write("}\n")
 
     def write(self, oglObjects):
         """
@@ -467,16 +426,11 @@ class IoJava(PyutIoPlugin):
         # defining constant
         self.__tab = "    "
         self.__visibility = {"+":"public", "-":"private", "#":"protected"}
-        
+
         # List of class
         #~ self.__className = []
 
-        
+
         for el in [object for object in oglObjects if isinstance(object,
             OglClass)]:
             self._writeClass(el.getPyutObject())
-
-
-# Local tests
-#~ if __name__ == "__main__":
-    #~ pass 
