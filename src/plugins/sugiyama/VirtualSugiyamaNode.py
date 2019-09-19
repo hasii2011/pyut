@@ -23,16 +23,16 @@ __version__ = '$Revision: 1.4 $'
 __author__ = 'Nicolas Dubois <nicdub@gmx.ch>'
 __date__ = '2002-10-31'
 
-from SugiyamaNode import *
+from plugins.sugiyama.SugiyamaNode import *
 
 class VirtualSugiyamaNode(SugiyamaNode):
     """
     VirtualSugiyamaNode: a virtual node is a node on the Sugiyama graph which
     will not be visible on the diagram. It is used to reserve an emplacement
     for the links drawing.
-    
+
     Instancied by: ../ToSugiyama.py
-    
+
     :author: Nicolas Dubois
     :contact: nicdub@gmx.ch
     :version: $Revision: 1.4 $
@@ -48,7 +48,7 @@ class VirtualSugiyamaNode(SugiyamaNode):
         """
         # Call mother class initialization
         SugiyamaNode.__init__(self)
-        
+
         # Self fields
         self.__position = (0, 0)
         self.__size = (1, 1)

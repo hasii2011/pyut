@@ -1,22 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# To do for further versions : implements code canvas, templates  
-# Thanks to <anonymous> for submiting bug report AND solution for 
-#   sourceforge bug [ 587747 ] : objects are misclassified as classes
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "C.Dutoit - dutoitc@hotmail.com"
-__date__ = "2002-2-22"
 
-from StringIO import StringIO
-from PyutToPlugin import PyutToPlugin
-from PyutClass import PyutClass
+import wx
+
+from globals import _
+from plugins.PyutToPlugin import PyutToPlugin
+
 from OglClass import OglClass
-from PyutMethod import PyutMethod
-from PyutParam import PyutParam
-from PyutConsts import *
-from IoPython import IoPython
-import os, wx
+
+from plugins.IoPython import IoPython
+import importlib
+
 
 class ToPython(PyutToPlugin):
     """
@@ -33,8 +26,6 @@ class ToPython(PyutToPlugin):
         @since 1.1
         """
         return "Python class reverse engineering"
-
-    #>------------------------------------------------------------------------
 
     def getAuthor(self):
         """
@@ -96,14 +87,14 @@ class ToPython(PyutToPlugin):
                 _("Choose the root directory for the code"), os.getcwd())
             if dlg.ShowModal() == wx.ID_OK:
                 dir = dlg.GetPath()
-                print "Chosen directory is", dir
+                print("Chosen directory is", dir)
                 umlFrame.setCodePath(dir)
                 dlg.Destroy()
             else:
                 return
-        oglClasses = filter(lambda x: isinstance(x, OglClass), selectedObjects)
+        oglClasses = [x for x in selectedObjects if isinstance(x, OglClass)]
         if len(oglClasses) == 0:
-            print "Nothing selected"
+            print("Nothing selected")
             return
         oldDir = os.getcwd()
         os.chdir(project.getCodePath())
@@ -120,7 +111,7 @@ class ToPython(PyutToPlugin):
                     dlg.Destroy()
                     continue
                 filename = dlg.GetPaths()[0]
-                print "Chosen filename is", filename
+                print("Chosen filename is", filename)
                 pyutClass.setFilename(filename)
                 dlg.Destroy()
             modulename = filename[:-3] # remove ".py"
@@ -129,15 +120,13 @@ class ToPython(PyutToPlugin):
                 path, name = os.path.split(os.path.abspath(modulename))
                 os.chdir(path)
                 module = __import__(name)
-                reload(module)
+                importlib.reload(module)
                 os.chdir(normalDir)
             except ImportError:
-                print "Error while trying to import module " + str(modulename)
+                print("Error while trying to import module " + str(modulename))
                 os.chdir(normalDir)
                 continue
             orgClass = module.__dict__[pyutClass.getName()]
             plug.getPyutClass(orgClass, filename, pyutClass)
             oglClass.autoResize()
         os.chdir(oldDir)
-
-    #>------------------------------------------------------------------------

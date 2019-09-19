@@ -23,8 +23,8 @@ __version__ = '$Revision: 1.4 $'
 __author__ = 'Nicolas Dubois <nicdub@gmx.ch>'
 __date__ = '2002-10-31'
 
-from ALayoutLink import *
-from VirtualSugiyamaNode import *
+from plugins.sugiyama.ALayoutLink import *
+from plugins.sugiyama.VirtualSugiyamaNode import *
 
 # Miniogl import
 from MiniOgl.ControlPoint import *
@@ -32,9 +32,9 @@ from MiniOgl.ControlPoint import *
 class SugiyamaLink(ALayoutLink):
     """
     SugiyamaLink: link of the Sugiyama graph.
-    
+
     Instancied by: ../ToSugiyama.py
-    
+
     :author: Nicolas Dubois
     :contact: nicdub@gmx.ch
     :version: $Revision: 1.4 $
@@ -62,10 +62,10 @@ class SugiyamaLink(ALayoutLink):
         """
         # Clear the actual control points of the link (not the anchor points)
         self.removeAllControlPoints()
-        
+
         # Current x coordinate of the link
         x = self.getSrcAnchorPos()[0]
-        
+
         # For all virtual nodes, add control points to pass through
         for vnode in self.__virtualNodes:
             #~ print "Virtual node"
@@ -76,31 +76,31 @@ class SugiyamaLink(ALayoutLink):
                 neighbor = vnode.getRightNode()
                 while isinstance(neighbor, VirtualSugiyamaNode) and \
                     neighbor is not None:
-                    
+
                     # Try next neighbor
                     neighbor = neighbor.getRightNode()
-                    
+
                 # If real node found
                 if neighbor is not None:
                     ctrlPoint = ControlPoint(xvnode,
                         neighbor.getPosition()[1] + neighbor.getSize()[1])
                     self.addControlPoint(ctrlPoint)
-                
+
             else: # If link goes to up-right
                 # Find the first real node on the left of the virtual node
                 neighbor = vnode.getLeftNode()
                 while isinstance(neighbor, VirtualSugiyamaNode) and \
                     neighbor is not None:
-                    
+
                     # Try next neighbor
                     neighbor = neighbor.getLeftNode()
-                    
+
                 # If real node found
                 if neighbor is not None:
                     ctrlPoint = ControlPoint(xvnode,
                         neighbor.getPosition()[1] + neighbor.getSize()[1])
                     self.addControlPoint(ctrlPoint)
-                    
+
             ctrlPoint = ControlPoint(xvnode, yvnode)#,self._oglLink)
             self.addControlPoint(ctrlPoint)
 
@@ -109,7 +109,7 @@ class SugiyamaLink(ALayoutLink):
     def addVitualNode(self, node):
         """
         Add a virtual node.
-        
+
         A virtual node is inserted in long links which cross a level. If the
         link crosses more than one level, insert virtual nodes, ordered
         from source to destination (son to father - bottom-up).

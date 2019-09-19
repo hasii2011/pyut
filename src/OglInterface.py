@@ -1,22 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.9 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
 
-from __future__ import nested_scopes
-#from wxPython.wx import *
-#from wxPython.ogl import *
-from PyutLink import PyutLink
-from OglClass import *
+from wx import LONG_DASH
+
+from .PyutLink import PyutLink
+
 from OglLink import *
 from DlgRemoveLink import *
 
 # Kind of labels
-[CENTER] = range(1)
+[CENTER] = list(range(1))
 
-#>------------------------------------------------------------------------
 
 class OglInterface(OglLink):
     """
@@ -44,7 +37,7 @@ class OglInterface(OglLink):
 
         # Pen
         #self.SetPen(wx.BLACK_DASHED_PEN)
-        self.SetPen(wx.Pen("BLACK", 1 , wx.LONG_DASH))
+        self.SetPen(wx.Pen("BLACK", 1 , LONG_DASH))
 
         # Arrow must be white inside
         self.SetBrush(wx.WHITE_BRUSH)
@@ -107,16 +100,14 @@ class OglInterface(OglLink):
             # If label should be drawn
             if text.strip() != "":
                 textShape.SetText(text)
-                #textShape.Show(True)
+                # textShape.Show(True)
                 textShape.SetVisible(True)
             else:
-                #textShape.Show(False)
+                # textShape.Show(False)
                 textShape.SetVisible(False)
 
         # Prepares labels
         prepareLabel(self._labels[CENTER], self._link.getName())
-
-    #>------------------------------------------------------------------------
 
     def getLabels(self):
         """
@@ -127,8 +118,6 @@ class OglInterface(OglLink):
         """
         return self._labels
 
-    #>------------------------------------------------------------------------
-
     def Draw(self, dc):#, withChildren=False):
         """
         Called for contents drawing of links.
@@ -138,5 +127,4 @@ class OglInterface(OglLink):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self.updateLabels()
-        OglLink.Draw(self, dc)#, withChildren)
-
+        OglLink.Draw(self, dc)  #   , withChildren)

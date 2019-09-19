@@ -5,17 +5,14 @@ __version__ = "$Revision: 1.4 $"
 __author__ = "EI5, eivd, Group Burgbacher - Waelti"
 __date__ = "2001-11-14"
 
-from __future__ import nested_scopes
+
 #from wxPython.wx import *
 #from wxPython.ogl import *
 from PyutLink import PyutLink
-from OglClass import *
 from OglLink import *
 from DlgRemoveLink import *
 import wx
 
-
-#>------------------------------------------------------------------------
 
 class OglInheritance(OglLink):
     """

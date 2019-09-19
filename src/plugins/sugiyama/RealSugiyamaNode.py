@@ -1,30 +1,7 @@
-#!/usr/bin/env python
-#
-# Copyright 2002, Nicolas Dubois, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of PyUt.
-#
-# PyUt is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# PyUt is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with PyUt; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
-__version__ = '$Revision: 1.4 $'
-__author__ = 'Nicolas Dubois <nicdub@gmx.ch>'
-__date__ = '2002-10-31'
+from plugins.sugiyama.SugiyamaNode import SugiyamaNode
+from plugins.sugiyama.ALayoutNode import ALayoutNode
 
-from SugiyamaNode import *
-from ALayoutNode import *
 
 class RealSugiyamaNode(SugiyamaNode):
     """
@@ -41,8 +18,6 @@ class RealSugiyamaNode(SugiyamaNode):
     :version: $Revision: 1.4 $
     """
 
-
-    #>------------------------------------------------------------------------
     def __init__(self, oglObject):
         """
         Constructor.
@@ -52,12 +27,10 @@ class RealSugiyamaNode(SugiyamaNode):
         """
         # Call mother class initialization
         SugiyamaNode.__init__(self)
-        
+
         # Self fields
         self.__aLayoutNode = ALayoutNode(oglObject)
 
-
-    #>------------------------------------------------------------------------
     def getSize(self):
         """
         Get the size of the node.
@@ -67,19 +40,16 @@ class RealSugiyamaNode(SugiyamaNode):
         """
         return self.__aLayoutNode.getSize()
 
-
-    #>------------------------------------------------------------------------
-    def setPosition(self, x, y):
+    def setPosition(self, xCoord, yCoord):
         """
         Set node position.
 
-        @param float x, y : position in absolute coordinates
-        @author Nicolas Dubois
+        Args:
+            xCoord:  x position in absolute coordinates
+            yCoord:  y position in absolute coordinates
         """
-        self.__aLayoutNode.setPosition(x, y)
+        self.__aLayoutNode.setPosition(xCoord, yCoord)
 
-
-    #>------------------------------------------------------------------------
     def getPosition(self):
         """
         Get node position.
@@ -89,8 +59,6 @@ class RealSugiyamaNode(SugiyamaNode):
         """
         return self.__aLayoutNode.getPosition()
 
-
-    #>------------------------------------------------------------------------
     def getName(self):
         """
         Get the name of the OglObject.
@@ -100,8 +68,6 @@ class RealSugiyamaNode(SugiyamaNode):
         """
         return self.__aLayoutNode.getName()
 
-
-    #>------------------------------------------------------------------------
     def fixAnchorPos(self):
         """
         Fix the positions of the anchor points.
@@ -115,15 +81,17 @@ class RealSugiyamaNode(SugiyamaNode):
         # Internal comparison funtion for sorting list of fathers or sons
         # on index.
         def cmpIndex(l, r):
+            def cmp(left, right):
+                return (left > right) - (left < right)
+
             return cmp(l[0].getIndex(), r[0].getIndex())
-        
-        
+
         # Get position and size of node
         (width, height) = self.getSize()
         (x, y) = self.getPosition()
-        
+
         # Fix all sons anchors position
-        
+
         # Sort sons list to eliminate crossing
         sons = self.getSons()
         sons.sort(cmpIndex)
@@ -134,9 +102,9 @@ class RealSugiyamaNode(SugiyamaNode):
             # Fix anchors coordinates
             link.setDestAnchorPos(
                 x + width * (i + 1) / (nbSons + 1), y + height)
-        
+
         # Fathers anchors position
-        
+
         # Sort fathers list to eliminate crossing
         fathers = self.getFathers()
         fathers.sort(cmpIndex)
@@ -147,5 +115,3 @@ class RealSugiyamaNode(SugiyamaNode):
             # Fix anchors coordinates
             link.setSrcAnchorPos(
                 x + width * (i + 1) / (nbFathers + 1), y)
-
-

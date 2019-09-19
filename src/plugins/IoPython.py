@@ -10,6 +10,7 @@ from PyutParam import PyutParam
 from plugins.ast import FieldExtractor
 
 from globals import _
+from globals import cmp
 
 from PyutField import PyutField
 from pyutUtils import assignID
@@ -716,10 +717,6 @@ class IoPython(PyutIoPlugin):
         def cmpHeight(a, b):
             xa, ya = a.GetSize()
             xb, yb = b.GetSize()
-
-            def cmp(x, y):
-                return (x > y) - (x < y)
-
             return cmp(yb, ya)
 
         # Sort by descending height

@@ -1,15 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__author__  = "C.Dutoit <dutoitc@hotmail.com"
-__version__ = "$Revision: 1.4 $"
-__date__    = "2002-10-10"
-#from wxPython.wx import * 
-from mediator       import *
-from PyutToPlugin import *
-import os, wx
-#wx.FileSelector, wx.DirDialog, \
-#wx.OPEN, wx.FILE_MUST_EXIST, wx.SAVE, wx.OVERWRITE_PROMPT, \
-#w
+
+
+from plugins.PyutToPlugin import PyutToPlugin
+
 
 class ToTransforms(PyutToPlugin):
     """
