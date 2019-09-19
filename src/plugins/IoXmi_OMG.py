@@ -1,18 +1,23 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__author__  = "C.Dutoit <dutoitc@hotmail.com>"
-__version__ = "$Revision: 1.5 $"
-__date__    = "2003-02-22"
-#from wxPython.wx    import * 
-from mediator       import *
-from PyutIoPlugin   import PyutIoPlugin
-from PyutClass      import PyutClass
-from OglClass       import OglClass
-import os, wx
-#wx.FileSelector, wx.DirDialog, \
-#wx.OPEN, wx.FILE_MUST_EXIST, wx.SAVE, wx.OVERWRITE_PROMPT, \
-#w
-# TODO : cardinality + methods
+
+from xml.dom.minidom import parse
+
+from io import StringIO
+
+import wx
+
+from OglClass import OglClass
+
+from mediator import displayError
+
+from PyutConsts import OGL_AGGREGATION
+from PyutConsts import OGL_ASSOCIATION
+from PyutConsts import OGL_COMPOSITION
+
+from PyutField import PyutField
+from PyutClass import PyutClass
+
+from plugins.PyutIoPlugin import PyutIoPlugin
+
 
 class IoXmi_OMG(PyutIoPlugin):
     """
@@ -58,9 +63,6 @@ class IoXmi_OMG(PyutIoPlugin):
         """
         PyutIoPlugin.__init__(self, oglObjects, umlFrame)
 
-
-    #>------------------------------------------------------------------------
-
     def getName(self):
         """
         This method returns the name of the plugin.
@@ -69,9 +71,6 @@ class IoXmi_OMG(PyutIoPlugin):
         @author C.Dutoit
         """
         return "IoXmi_OMG"
-
-
-    #>------------------------------------------------------------------------
 
     def getAuthor(self):
         """
@@ -82,9 +81,6 @@ class IoXmi_OMG(PyutIoPlugin):
         """
         return "C.Dutoit <dutoitc@hotmail.com>"
 
-
-    #>------------------------------------------------------------------------
-
     def getVersion(self):
         """
         This method returns the version of the plugin.
@@ -94,9 +90,6 @@ class IoXmi_OMG(PyutIoPlugin):
         """
         return "1.0a"
 
-
-    #>------------------------------------------------------------------------
-
     def getInputFormat(self):
         """
         Return a specification tupple.
@@ -104,22 +97,14 @@ class IoXmi_OMG(PyutIoPlugin):
         @return tuple
         @author C.Dutoit
         """
-        # return None if this plugin can't read.
-        # otherwise, return a tupple with
-        # - name of the input format
-        # - extension of the input format
-        # - textual description of the plugin input format
-        # example : return ("Text", "txt", "Tabbed text...")
-        return ("XMI-OMG 1.1", "xmi", "XMI 1.1 from OMG specifications")
-
-    #>------------------------------------------------------------------------
+        return "XMI-OMG 1.1", "xmi", "XMI 1.1 from OMG specifications"
 
     def read(self, oglObjects, umlFrame):
         """
         Read data from filename
 
-        @param OglClass and OglLink [] : list of imported objects
-        @param UmlFrame : Pyut's UmlFrame
+        @param oglObjects  list of imported objects
+        @param umlFrame : Pyut's UmlFrame
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         wx.BeginBusyCursor()
@@ -127,10 +112,8 @@ class IoXmi_OMG(PyutIoPlugin):
         importer = XmiImporter(filename, umlFrame)
         importer.doImport()
         wx.EndBusyCursor()
-        
 
-##############################################################################
-# XMI Importer
+
 class XmiImporter:
     """
     import XMI file from OMG 1.1 XMI specifications
@@ -139,12 +122,9 @@ class XmiImporter:
     ============
     importer = XmiImporter(filename, umlFrame)
     importer.doImport()
-    
+
     @author C.Dutoit <dutoitc@hotmail.com>
     """
-
-    #>------------------------------------------------------------------------
-
     def __init__(self, filename, umlFrame):
         """
         Constructor
@@ -153,16 +133,13 @@ class XmiImporter:
         @author C.Dutoit
         """
         # Read file and init
-        from xml.dom.minidom import parse
-        from StringIO        import StringIO
+
         self._dom = parse(StringIO(open(filename).read()))
         self._umlFrame = umlFrame
 
         # Init class fields
         self.dicOglClasses = {}
-        self._dicOglClasses = {} # Dictionary of {XMI.ID:OglClass}
-
-    #>------------------------------------------------------------------------
+        self._dicOglClasses = {}  # Dictionary of {XMI.ID:OglClass}
 
     def doImport(self):
         """
@@ -171,9 +148,9 @@ class XmiImporter:
         """
         # Read XMI
         xmi = self._dom.getElementsByTagName("XMI")
-        if len(xmi)==0:
-            import Utilities
-            Utilities.displayError("Wrong XMI File format : XMI tag not found !")
+        if len(xmi) == 0:
+
+            displayError("Wrong XMI File format : XMI tag not found !")
             return
         else:
             xmi = xmi[0]
@@ -184,10 +161,6 @@ class XmiImporter:
         # Read XMI content
         self._readXMIContent(xmi)
 
-        
-        
-    #>------------------------------------------------------------------------
-
     def _readXMIHeader(self, xmi):
         """
         Read XMI/XMI.header
@@ -196,15 +169,12 @@ class XmiImporter:
         """
         # Get XMI.header
         xmi_header = xmi.getElementsByTagName("XMI.header")
-        if len(xmi_header)==0:
+        if len(xmi_header) == 0:
             return
         xmi_header = xmi_header[0]
 
         # Read documentation
         self._readXMIDocumentation(xmi_header)
-
-
-    #>------------------------------------------------------------------------
 
     def _readXMIDocumentation(self, xmi_header):
         """
@@ -214,27 +184,25 @@ class XmiImporter:
         """
         # Get XMI.documentation
         xmi_documentation = xmi_header.getElementsByTagName("XMI.documentation")
-        if len(xmi_documentation)==0:
+        if len(xmi_documentation) == 0:
             return
         xmi_documentation = xmi_documentation[0]
 
         # Set documentation dictionary
-        dic = {"XMI.owner"            : "Owner", 
-               "XMI.contact"          : "Contact",
-               "XMI.longDescription"  : "Long description",
-               "XMI.shortDescription" : "Short description",
-               "XMI.exporter"         : "Exporter",
-               "XMI.exporterVersion"  : "Exporter version",
-               "XMI.notice"           : "Notice"}
-        
-        for tag in dic.keys():
-            tag_content = xmi_documentation.getElementsByTagName(tag)
-            if len(tag_content)>0:
-                print tag + " : ",
-                print tag_content[0].firstChild.wholeText
-                #print tag_content[0].firstChild.data
+        dic = {"XMI.owner": "Owner",
+               "XMI.contact": "Contact",
+               "XMI.longDescription": "Long description",
+               "XMI.shortDescription": "Short description",
+               "XMI.exporter": "Exporter",
+               "XMI.exporterVersion": "Exporter version",
+               "XMI.notice": "Notice"}
 
-    #>------------------------------------------------------------------------
+        for tag in list(dic.keys()):
+            tag_content = xmi_documentation.getElementsByTagName(tag)
+            if len(tag_content) > 0:
+                print(tag + " : ", end=' ')
+                print(tag_content[0].firstChild.wholeText)
+                # print tag_content[0].firstChild.data
 
     def _readXMIContent(self, xmi):
         """
@@ -244,7 +212,7 @@ class XmiImporter:
         """
         # Get XMI.header
         xmi_content = xmi.getElementsByTagName("XMI.content")
-        if len(xmi_content)==0:
+        if len(xmi_content) == 0:
             return
         xmi_content = xmi_content[0]
 
@@ -257,9 +225,6 @@ class XmiImporter:
         # Read abstractions
         self._readAllFoundationCoreAbstraction(xmi_content)
 
-
-    #>------------------------------------------------------------------------
-
     def _readAllFoundationCoreClass(self, xmiContent):
         """
         Read all Foundation.Core.Class
@@ -269,29 +234,27 @@ class XmiImporter:
         # Get classes
         for xmiClass in xmiContent.getElementsByTagName("Foundation.Core.Class"):
             self._readFoundationCoreClass(xmiClass)
-            
-    #>------------------------------------------------------------------------
 
     def _readFoundationCoreClass(self, coreClass):
         """
         Read one Foundation.Core.Class
-        @param xmiContent : Foundation.Core.Class element
+        @param coreClass : Foundation.Core.Class element
         @author C.Dutoit
         """
         # Get class name
         className = self._readFoundationCoreClassName(coreClass)
-        print "Reading class ", className,
+        print("Reading class ", className, end=' ')
 
         # Get class ID
         classID = str(coreClass.getAttribute("xmi.id"))
-        print "id = ", classID, 
+        print("id = ", classID, end=' ')
 
         # Save class
         pyutClass = PyutClass(className)
 
         # Get class abstract status
         isAbstract = self._readFoundationCoreClassIsAbstract(coreClass)
-        print "isAbstract = ", isAbstract
+        print("isAbstract = ", isAbstract)
         if isAbstract:
             pyutClass.setStereotype("Abstract")
 
@@ -306,89 +269,73 @@ class XmiImporter:
         oglClass.autoResize()
         self._dicOglClasses[classID] = oglClass
 
-
-
-    #>------------------------------------------------------------------------
-    
     def _readFoundationCoreClassName(self, coreClass):
         """
         Read one Foundation.Core.Class
-        @param xmiContent : Foundation.Core.Class element
+        @param coreClass : Foundation.Core.Class element
         @return class name
         @author C.Dutoit
         """
         xmiName = coreClass.getElementsByTagName("Foundation.Core.ModelElement.name")
-        if len(xmiName)>0:
+        if len(xmiName) > 0:
             return xmiName[0].firstChild.wholeText
         else:
             return "Unnamed class"
 
-
-    #>------------------------------------------------------------------------
-
     def _readFoundationCoreClassIsAbstract(self, coreClass):
         """
         Read one Foundation.Core.Class
-        @param xmiContent : Foundation.Core.Class element
+        @param coreClass : Foundation.Core.Class element
         @return 1/0 if the class is abstract or not
         @author C.Dutoit
         """
         # Get class abstract status
-        xmiIsAbstract = coreClass.getElementsByTagName(
-                            "Foundation.Core.GeneralizableElement.isAbstract")
-        if len(xmiIsAbstract)>0:
-            return xmiIsAbstract[0].getAttribute("xmi.value")=="True"
+        xmiIsAbstract = coreClass.getElementsByTagName("Foundation.Core.GeneralizableElement.isAbstract")
+        if len(xmiIsAbstract) > 0:
+            return xmiIsAbstract[0].getAttribute("xmi.value") == "True"
         else:
             return 0
-
-
-    #>------------------------------------------------------------------------
 
     def _readFoundationCoreClassifierFeature(self, coreClass, pyutClass):
         """
         Read one Foundation.Core.Class
-        @param xmiContent : Foundation.Core.Class element
+        @param coreClass : Foundation.Core.Class element
         @param pyutClass  : PyutClass object to which add features
         @return 1/0 if the class is abstract or not
         @author C.Dutoit
         """
         # Get feature
-        xmiFeature = coreClass.getElementsByTagName(
-                                         "Foundation.Core.Classifier.feature")
-        if len(xmiFeature)==0:
+        xmiFeature = coreClass.getElementsByTagName("Foundation.Core.Classifier.feature")
+        if len(xmiFeature) == 0:
             return
 
         # Read all feature attribute
         pyutFields = []
-        for xmiAttribute in xmiFeature[0].getElementsByTagName(
-                                                "Foundation.Core.Attribute"):
-            print "Attribute ",
+        for xmiAttribute in xmiFeature[0].getElementsByTagName("Foundation.Core.Attribute"):
+            print("Attribute ", end=' ')
 
             # Read attribute name
             el = xmiAttribute.getElementsByTagName("Foundation.Core.ModelElement.name")
-            if len(el)>0:
+            if len(el) > 0:
                 name = el[0].firstChild.wholeText
             else:
                 name = "Unnamed_Attribute"
-            print name,
+            print(name, end=' ')
 
             # Read attribute visibility
             el = xmiAttribute.getElementsByTagName("Foundation.Core.ModelElement.visibility")
-            if len(el)>0:
+            if len(el) > 0:
                 visibility = el[0].getAttribute("xmi.value")
             else:
                 visibility = "Unvisibilityd_Attribute"
-            print "v=", visibility
+            print("v=", visibility)
 
             # Add feature attribute to pyut Fields
-            #name, type, def, vis
+            # name, type, def, vis
             pyutFields.append(PyutField(name, "", None, visibility))
 
         # Add feature attributes to pyutClass
         pyutClass.setFields(pyutFields)
-
-
-    #>------------------------------------------------------------------------
 
     def _readAllFoundationCoreAssociation(self, xmiContent):
         """
@@ -397,11 +344,8 @@ class XmiImporter:
         @author C.Dutoit
         """
         # Get classes
-        for xmiAssociation in xmiContent.getElementsByTagName(
-                                              "Foundation.Core.Association"):
+        for xmiAssociation in xmiContent.getElementsByTagName("Foundation.Core.Association"):
             self._readFoundationCoreAssociation(xmiAssociation)
-
-    #>------------------------------------------------------------------------
 
     def _readFoundationCoreAssociation(self, xmiAssociation):
         """
@@ -412,49 +356,46 @@ class XmiImporter:
         # Get connection element
         conn = xmiAssociation.getElementsByTagName(
                                     "Foundation.Core.Association.connection")
-        if len(conn)!=1:
+        if len(conn) != 1:
             return
         conn = conn[0]
 
         # Get the two associations end
         ends = conn.getElementsByTagName("Foundation.Core.AssociationEnd")
-        if len(ends)!=2:
-            print "Invalid association : needed 2 ends, got ", len(ends)
+        if len(ends) != 2:
+            print("Invalid association : needed 2 ends, got ", len(ends))
             return
-        
+
         # Read associations end type
         endsValues = []
         for i in range(2):
-            type = ends[i].getElementsByTagName("Foundation.Core.AssociationEnd.type")
-            if len(type)!=1:
-                print "Invalid association end type"
+            aType = ends[i].getElementsByTagName("Foundation.Core.AssociationEnd.type")
+            if len(type) != 1:
+                print("Invalid association end type")
                 return
-            type = type[0]
+            aType = aType[0]
 
             # Read association end type classifier
             classifier = type.getElementsByTagName("Foundation.Core.Classifier")
-            if len(classifier)!=1:
-                print "Invalid association end type classifier"
+            if len(classifier) != 1:
+                print("Invalid association end type classifier")
                 return
             classifier = classifier[0]
             xmi_id = str(classifier.getAttribute("xmi.idref"))
 
             # Read association end multiplicity
-            multiplicity = ends[i].getElementsByTagName(
-                                    "Foundation.Core.AssociationEnd.multiplicity")
-            if len(multiplicity)>0:
+            multiplicity = ends[i].getElementsByTagName("Foundation.Core.AssociationEnd.multiplicity")
+            if len(multiplicity) > 0:
                 multiplicity = multiplicity[0].firstChild.wholeText
             else:
                 multiplicity = ""
 
             # Read association type
-            isAggregation = ends[i].getElementsByTagName(
-                                 "Foundation.Core.AssociationEnd.aggregation")
-            if len(isAggregation)>0:
-                print isAggregation[0]
-                print isAggregation[0].firstChild
-                isAggregation = isAggregation[0].getElementsByTagName(
-                                                          "xmi.value")!="none"
+            isAggregation = ends[i].getElementsByTagName("Foundation.Core.AssociationEnd.aggregation")
+            if len(isAggregation) > 0:
+                print(isAggregation[0])
+                print(isAggregation[0].firstChild)
+                isAggregation = isAggregation[0].getElementsByTagName("xmi.value") != "none"
             else:
                 isAggregation = False
 
@@ -462,8 +403,7 @@ class XmiImporter:
             endsValues.append((xmi_id, multiplicity, isAggregation))
 
         # Create link
-        if self._dicOglClasses.has_key(endsValues[0][0]) and \
-           self._dicOglClasses.has_key(endsValues[1][0]):
+        if endsValues[0][0] in self._dicOglClasses and endsValues[1][0] in self._dicOglClasses:
             # Get classes
             srcOgl = self._dicOglClasses[endsValues[0][0]]
             dstOgl = self._dicOglClasses[endsValues[1][0]]
@@ -481,8 +421,6 @@ class XmiImporter:
             pyutLink.setSrcCard(endsValues[0][1])
             pyutLink.setDestCard(endsValues[1][1])
 
-    #>------------------------------------------------------------------------
-
     def _readAllFoundationCoreAbstraction(self, xmiContent):
         """
         Read all Foundation.Core.Abstraction
@@ -494,8 +432,6 @@ class XmiImporter:
                                               "Foundation.Core.Abstraction"):
             self._readFoundationCoreAbstraction(xmiAbstraction)
 
-    #>------------------------------------------------------------------------
-
     def _readFoundationCoreAbstraction(self, xmiAbstraction):
         """
         Read one Foundation.Core.Abstraction
@@ -503,41 +439,33 @@ class XmiImporter:
         @author C.Dutoit
         """
         # Get client
-        client = xmiAbstraction.getElementsByTagName(
-                                        "Foundation.Core.Dependency.client")
-        if len(client)==0:
-            print "Error : Foundation.Core.Dependency.client not found !"
+        client = xmiAbstraction.getElementsByTagName("Foundation.Core.Dependency.client")
+        if len(client) == 0:
+            print("Error : Foundation.Core.Dependency.client not found !")
             return
 
         # Get model element
-        modelElement = client[0].getElementsByTagName(
-                                        "Foundation.Core.ModelElement")
-        if len(modelElement)==0:
-            print "Error : Foundation.Core.Dependency.Client has no elements ",
-            print "Foundation.Core.ModelElements !"
+        modelElement = client[0].getElementsByTagName("Foundation.Core.ModelElement")
+        if len(modelElement) == 0:
+            print("Error : Foundation.Core.Dependency.Client has no elements ", end=' ')
+            print("Foundation.Core.ModelElements !")
             return
         clientID = str(modelElement[0].getAttribute("xmi.idref"))
 
         # Get supplier
-        supplier = xmiAbstraction.getElementsByTagName(
-                                        "Foundation.Core.Dependency.supplier")
-        if len(supplier)==0:
-            print "Error : Foundation.Core.supplier not found !"
+        supplier = xmiAbstraction.getElementsByTagName("Foundation.Core.Dependency.supplier")
+        if len(supplier) == 0:
+            print("Error : Foundation.Core.supplier not found !")
             return
 
         # Get model element
-        modelElement = supplier[0].getElementsByTagName(
-                                        "Foundation.Core.ModelElement")
-        if len(modelElement)==0:
-            print "Error : Foundation.Core.Dependency.supplier has no elements ",
-            print "Foundation.Core.ModelElements !"
+        modelElement = supplier[0].getElementsByTagName("Foundation.Core.ModelElement")
+        if len(modelElement) == 0:
+            print("Error : Foundation.Core.Dependency.supplier has no elements ", end=' ')
+            print("Foundation.Core.ModelElements !")
             return
         supplierID = str(modelElement[0].getAttribute("xmi.idref"))
 
         # Get classes
         srcOgl = self._dicOglClasses[clientID]
         dstOgl = self._dicOglClasses[supplierID]
-
-        # Create link
-        oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl, OGL_INTERFACE)
-
