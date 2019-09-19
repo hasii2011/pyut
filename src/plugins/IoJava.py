@@ -430,7 +430,6 @@ class IoJava(PyutIoPlugin):
         # List of class
         #~ self.__className = []
 
-
         for el in [object for object in oglObjects if isinstance(object,
             OglClass)]:
             self._writeClass(el.getPyutObject())

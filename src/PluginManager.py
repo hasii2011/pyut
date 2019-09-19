@@ -89,7 +89,9 @@ class PluginManager(Singleton):
                 for el in extract_tb(exc_info()[2]):
                     self.logger.error(el)
             if module is not None:
-                cl = eval(f"module.{module.__name}")
+                self.logger.info(f'plugin imported {plug}')
+                cl = eval(f"module.{module.__name__}")
+                self.logger.info(f'plugin eval`ed {plug}')
                 self.toPlugs.append(cl)
 
     def getPluginsInfo(self):
