@@ -1,21 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.5 $"
-__author__ = "Laurent Burgbacher - lb@alawa.ch"
-__date__ = "2002-10-10"
+from wx import FD_CHANGE_DIR
+from wx import FD_OVERWRITE_PROMPT
+from wx import FD_SAVE
 
-from StringIO import StringIO
-from PyutToPlugin import PyutToPlugin
-from PyutClass import PyutClass
-from OglClass import OglClass
-from PyutMethod import PyutMethod
-from PyutParam import PyutParam
-from PyutField import PyutField
-from PyutConsts import *
-#from wxPython.wx import *
+from wx import FileSelector
 
-import os, wx
+from plugins.PyutToPlugin import PyutToPlugin
+
 
 class ToLayoutSave(PyutToPlugin):
     """
@@ -27,16 +18,14 @@ class ToLayoutSave(PyutToPlugin):
         """
         Constructor.
 
-        @param String filename : name of the file to save to
-        @param OglObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
+        @param umlObjects : list of ogl objects
+        @param umlFrame : the umlframe of pyut
         """
-        PyutToPlugin.__init__(self, umlObjects, umlFrame)
+        # PyutToPlugin.__init__(self, umlObjects, umlFrame)
+        super().__init__(umlObjects, umlFrame)
         self._umlFrame = umlFrame
 
-    #>------------------------------------------------------------------------
-
-    def getName(self):
+    def getName(self) -> str:
         """
         This method returns the name of the plugin.
 
@@ -45,8 +34,6 @@ class ToLayoutSave(PyutToPlugin):
         """
         return "Layout plugin (save)"
 
-    #>------------------------------------------------------------------------
-
     def getAuthor(self):
         """
         This method returns the author of the plugin.
@@ -54,11 +41,9 @@ class ToLayoutSave(PyutToPlugin):
         @return string
         @since 1.1
         """
-        return "Cédric DUTOIT <dutoitc@hotmail.com>"
+        return "Cedric DUTOIT <dutoitc@hotmail.com>"
 
-    #>------------------------------------------------------------------------
-
-    def getVersion(self):
+    def getVersion(self) -> str:
         """
         This method returns the version of the plugin.
 
@@ -67,9 +52,7 @@ class ToLayoutSave(PyutToPlugin):
         """
         return "1.0"
 
-    #>------------------------------------------------------------------------
-
-    def getMenuTitle(self):
+    def getMenuTitle(self) -> str:
         """
         Return a menu title string
 
@@ -77,12 +60,9 @@ class ToLayoutSave(PyutToPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        # Return the menu title as it must be displayed
         return "Layout (save)"
 
-    #>------------------------------------------------------------------------
-
-    def setOptions(self):
+    def setOptions(self) -> bool:
         """
         Prepare the import.
         This can be used to ask some questions to the user.
@@ -92,9 +72,6 @@ class ToLayoutSave(PyutToPlugin):
         @since 1.0
         """
         return True
-
-
-    #>------------------------------------------------------------------------
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
@@ -106,14 +83,13 @@ class ToLayoutSave(PyutToPlugin):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        file = wx.FileSelector(
+        file = FileSelector(
             "Choose a file name to export layout",
-            wildcard = "Layout file (*.lay) |*.lay",
-            #default_path = self.__ctrl.getCurrentDir(),
-            flags = wx.SAVE | wx.OVERWRITE_PROMPT | wx.CHANGE_DIR
+            wildcard="Layout file (*.lay) |*.lay",
+            flags=FD_SAVE | FD_OVERWRITE_PROMPT | FD_CHANGE_DIR
         )
 
-        f=open(file, "w")
+        f = open(file, "w")
         for el in umlObjects:
             f.write(el.getPyutObject().getName() + "," +
                     str(el.GetPosition()[0]) + "," +
@@ -121,6 +97,3 @@ class ToLayoutSave(PyutToPlugin):
                     str(el.GetSize()[0]) + "," +
                     str(el.GetSize()[1]) + "\n")
         f.close()
-
-    #>------------------------------------------------------------------------
-

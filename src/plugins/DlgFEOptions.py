@@ -1,17 +1,27 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-02-23"
 
-from __future__  import nested_scopes
-#from wxPython.wx import *
-from pyutUtils   import *
-from PyutPreferences import *
-from OglClass    import *
-import lang, wx
+from wx import ALL
+from wx import CENTER
+from wx import EVT_BUTTON
+from wx import EVT_CLOSE
+from wx import EVT_TEXT
+from wx import VERTICAL
+from wx import HORIZONTAL
 
-class DlgFEOptions(wx.Dialog):
+from wx import ID_OK
+
+from wx import BoxSizer
+from wx import Button
+from wx import StaticText
+from wx import TextCtrl
+from wx import Dialog
+
+from globals import _
+
+from PyutPreferences import PyutPreferences
+from pyutUtils import assignID
+
+
+class DlgFEOptions(Dialog):
     """
     This is the option dialog for Fast Edit Tool.
 
@@ -25,18 +35,14 @@ class DlgFEOptions(wx.Dialog):
         """
         Constructor.
 
-        @param wx.Window parent Parent
-        @param int ID ID
         @author Philippe Waelti <pwaelti@eivd.ch>
         @since 1.0
         """
-        wx.Dialog.__init__(self, parent, -1, _("Fast Edit Options"))
+        super().__init__(parent, -1, _("Fast Edit Options"))
         self.__prefs = PyutPreferences()
         self.__initCtrl()
 
-        self.Bind(wx.EVT_CLOSE, self.__OnClose)
-
-    #>------------------------------------------------------------------------
+        self.Bind(EVT_CLOSE, self.__OnClose)
 
     def __initCtrl(self):
         """
@@ -51,17 +57,17 @@ class DlgFEOptions(wx.Dialog):
 
         GAP = 10
 
-        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer = BoxSizer(VERTICAL)
 
-        self.__lblEditor = wx.StaticText(self, -1, _("Editor"))
-        self.__txtEditor = wx.TextCtrl(self, -1, size=(100,20))
-        sizer.Add(self.__lblEditor, 0, wx.ALL, GAP)
-        sizer.Add(self.__txtEditor, 0, wx.ALL, GAP)
+        self.__lblEditor = StaticText(self, -1, _("Editor"))
+        self.__txtEditor = TextCtrl(self, -1, size=(100,20))
+        sizer.Add(self.__lblEditor, 0, ALL, GAP)
+        sizer.Add(self.__txtEditor, 0, ALL, GAP)
 
-        hs = wx.BoxSizer(wx.HORIZONTAL)
-        btnOk = wx.Button(self, wx.ID_OK, _("&OK"))
-        hs.Add(btnOk, 0, wx.ALL, GAP)
-        sizer.Add(hs, 0, wx.CENTER)
+        hs = BoxSizer(HORIZONTAL)
+        btnOk = Button(self, ID_OK, _("&OK"))
+        hs.Add(btnOk, 0, ALL, GAP)
+        sizer.Add(hs, 0, CENTER)
 
         self.__changed = 0
 
@@ -72,15 +78,13 @@ class DlgFEOptions(wx.Dialog):
 
         btnOk.SetDefault()
 
-        self.Bind(wx.EVT_TEXT, self.__OnText, id=self.__editorID)
-        self.Bind(wx.EVT_BUTTON, self.__OnCmdOk, id=wx.ID_OK)
+        self.Bind(EVT_TEXT,   self.__OnText,  id=self.__editorID)
+        self.Bind(EVT_BUTTON, self.__OnCmdOk, id=ID_OK)
 
         self.__setValues()
 
         self.Center()
         self.ShowModal()
-
-    #>------------------------------------------------------------------------
 
     def __setValues(self):
         """
@@ -97,9 +101,6 @@ class DlgFEOptions(wx.Dialog):
         self.__txtEditor.SetValue(secureStr(self.__prefs["EDITOR"]))
         self.__txtEditor.SetInsertionPointEnd()
 
-
-    #>------------------------------------------------------------------------
-
     def __OnText(self, event):
         """
         Occurs when text entry changes.
@@ -108,8 +109,6 @@ class DlgFEOptions(wx.Dialog):
         """
         self.__changed = 1
 
-    #>------------------------------------------------------------------------
-
     def __OnClose(self, event):
         """
         Callback.
@@ -117,8 +116,6 @@ class DlgFEOptions(wx.Dialog):
         @since 1.2
         """
         event.Skip()
-
-    #>------------------------------------------------------------------------
 
     def __OnCmdOk(self, event):
         """
@@ -131,8 +128,6 @@ class DlgFEOptions(wx.Dialog):
 
         self.Close()
 
-    #>------------------------------------------------------------------------
-
     def getEditor(self):
         """
         Return the editor string.
@@ -141,5 +136,3 @@ class DlgFEOptions(wx.Dialog):
         @since 1.2
         """
         return self.__txtEditor.GetValue()
-
-    #>------------------------------------------------------------------------

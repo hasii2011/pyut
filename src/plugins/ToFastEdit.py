@@ -1,21 +1,19 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.5 $"
-__author__ = "Laurent Burgbacher - lb@alawa.ch"
-__date__ = "2002-10-10"
+from typing import List
 
-from StringIO import StringIO
-from PyutToPlugin import PyutToPlugin
-from PyutClass import PyutClass
-from OglClass import OglClass
+from os import system
+
+import UmlFrame
+
+from plugins.PyutToPlugin import PyutToPlugin
+from plugins.DlgFEOptions import DlgFEOptions
+
+from OglObject import OglObject
+
 from PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutField import PyutField
-from PyutConsts import *
-from DlgFEOptions import *
 
-import os
 
 class ToFastEdit(PyutToPlugin):
     """
@@ -23,23 +21,18 @@ class ToFastEdit(PyutToPlugin):
 
     @version $Revision: 1.5 $
     """
-    def __init__(self, umlObjects, umlFrame):
+    def __init__(self, umlObjects: List[OglObject], umlFrame: UmlFrame):
         """
         Constructor.
 
-        @param String filename : name of the file to save to
-        @param OglObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
+        @param umlObjects : list of ogl objects
+        @param umlFrame of pyut
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
         PyutToPlugin.__init__(self, umlObjects, umlFrame)
         self._editor = None
         self._umlFrame = umlFrame
-
-        # your initializations now
-
-    #>------------------------------------------------------------------------
 
     def getName(self):
         """
@@ -50,8 +43,6 @@ class ToFastEdit(PyutToPlugin):
         """
         return "Fast text edition"
 
-    #>------------------------------------------------------------------------
-
     def getAuthor(self):
         """
         This method returns the author of the plugin.
@@ -61,8 +52,6 @@ class ToFastEdit(PyutToPlugin):
         """
         return "Laurent Burgbacher <lb@alawa.ch>"
 
-    #>------------------------------------------------------------------------
-
     def getVersion(self):
         """
         This method returns the version of the plugin.
@@ -71,8 +60,6 @@ class ToFastEdit(PyutToPlugin):
         @since 1.1
         """
         return "1.0"
-
-    #>------------------------------------------------------------------------
 
     def getMenuTitle(self):
         """
@@ -84,8 +71,6 @@ class ToFastEdit(PyutToPlugin):
         """
         # Return the menu title as it must be displayed
         return "Fast text edit"
-
-    #>------------------------------------------------------------------------
 
     def setOptions(self):
         """
@@ -105,30 +90,26 @@ class ToFastEdit(PyutToPlugin):
 
         return True
 
-    #>------------------------------------------------------------------------
-
-    def _findParams(self, line):
+    def _findParams(self, line: str):
         """
         Parse a params line.
 
         format is :
         param:type[, param:type]*
 
-        @param string line
+        @param line
         @return []
         @since 1.0
         """
-        #print "params received :", line
+        # print "params received :", line
         params = [s.strip().split(":") for s in line.split(",")]
-        params = map(lambda x: len(x) == 2 and x or [x[0], ""], params)
+        params = [len(x) == 2 and x or [x[0], ""] for x in params]
         p = []
-        #print "params:", params
+        # print "params:", params
         if params:
             for name, type in params:
                 p.append((name.strip(), type.strip()))
         return p
-
-    #>------------------------------------------------------------------------
 
     def read(self, umlObject, file):
         """
@@ -140,8 +121,8 @@ class ToFastEdit(PyutToPlugin):
         +méthode([param[:type]]*)[:type_retour]
         +field[:type][=valeur_initiale]
 
-        @param OglClass and OglLink [] : list of imported objects
-        @param UmlFrame : Pyut's UmlFrame
+        @param umlObject
+        @param file
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
@@ -150,10 +131,10 @@ class ToFastEdit(PyutToPlugin):
         pyutclass.setName(classname)
 
         # process stereotype if present
-        next = file.readline().strip()
-        if next[0:2] == "<<":
-            pyutclass.setStereotype(next[2:-2].strip())
-            next = file.readline().strip()
+        nextStereoType = file.readline().strip()
+        if nextStereoType[0:2] == "<<":
+            pyutclass.setStereotype(nextStereoType[2:-2].strip())
+            nextStereoType = file.readline().strip()
 
         methods = []
         fields = []
@@ -162,43 +143,40 @@ class ToFastEdit(PyutToPlugin):
 
         # process methods and fields
         while 1:
-            if next == "": break
+            if nextStereoType == "": break
 
             # search visibility
-            if next[0] in ("+", "-", "#"):
-                vis = next[0]
-                next = next[1:]
+            if nextStereoType[0] in ("+", "-", "#"):
+                vis = nextStereoType[0]
+                nextStereoType = nextStereoType[1:]
             else:
                 vis = ""
 
-            pos = next.find("(")
+            pos = nextStereoType.find("(")
             params = []
             if pos != -1:
                 # process method
-                name = next[0:pos].strip()
-                next = next[pos+1:]
-                pos = next.find(")")
+                name = nextStereoType[0:pos].strip()
+                nextStereoType = nextStereoType[pos+1:]
+                pos = nextStereoType.find(")")
                 if pos != -1:
-                    params = self._findParams(next[:pos])
-                    next = next[pos+1:]
-                    pos = next.find(":")
+                    params = self._findParams(nextStereoType[:pos])
+                    nextStereoType = nextStereoType[pos+1:]
+                    pos = nextStereoType.find(":")
                     if pos != -1:
-                        returnType = next[pos+1:].strip()
+                        returnType = nextStereoType[pos+1:].strip()
                     else:
                         returnType = ""
                 method = PyutMethod(name, vis, returnType)
-                method.setParams(map(lambda x: PyutParam(x[0], x[1]), params))
+                method.setParams([PyutParam(x[0], x[1]) for x in params])
                 methods.append(method)
             else:
                 # process field
-                field = self._findParams(next)[0]
+                field = self._findParams(nextStereoType)[0]
                 if field:
-                    fields.append(PyutField(field[0], field[1],
-                        visibility=vis))
+                    fields.append(PyutField(field[0], field[1], visibility=vis))
 
-            next = file.readline().strip()
-
-    #>------------------------------------------------------------------------
+            nextStereoType = file.readline().strip()
 
     def write(self, oglObject, file):
         """
@@ -210,7 +188,8 @@ class ToFastEdit(PyutToPlugin):
         +méthode([param[:type]]*)[:type_retour]
         +field[:type][=valeur_initiale]
 
-        @param OglClass and OglLink [] : list of exported objects
+        @param oglObject
+        @param file
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
@@ -225,8 +204,6 @@ class ToFastEdit(PyutToPlugin):
             file.write(str(field) + "\n")
         file.close()
 
-    #>------------------------------------------------------------------------
-
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
         Do the tool's action
@@ -238,14 +215,12 @@ class ToFastEdit(PyutToPlugin):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         if len(selectedObjects) != 1:
-            print "Please select one class"
+            print("Please select one class")
             return
         filename = "pyut.fte"
         file = open(filename, "w")
         self.write(selectedObjects[0], file)
-        os.system(self._editor + " " + filename)
+        system(self._editor + " " + filename)
         file = open(filename, "r")
         self.read(selectedObjects[0], file)
         file.close()
-
-    #>------------------------------------------------------------------------

@@ -23,9 +23,6 @@ class ToTransforms(PyutToPlugin):
         self._oglObjects = oglObjects
         self._umlFrame = umlFrame
 
-
-    #>------------------------------------------------------------------------
-
     def getName(self):
         """
         This method returns the name of the plugin.
@@ -35,9 +32,6 @@ class ToTransforms(PyutToPlugin):
         @since 1.0
         """
         return "Transformations"
-
-
-    #>------------------------------------------------------------------------
 
     def getAuthor(self):
         """
@@ -49,9 +43,6 @@ class ToTransforms(PyutToPlugin):
         """
         return "C.Dutoit"
 
-
-    #>------------------------------------------------------------------------
-
     def getVersion(self):
         """
         This method returns the version of the plugin.
@@ -61,9 +52,6 @@ class ToTransforms(PyutToPlugin):
         @since 1.0
         """
         return "1.0"
-
-
-    #>------------------------------------------------------------------------
 
     def getMenuTitle(self):
         """
@@ -76,9 +64,6 @@ class ToTransforms(PyutToPlugin):
         # Return the menu title as it must be displayed
         return "Transformations"
 
-    #>------------------------------------------------------------------------
-
-
     def setOptions(self):
         """
         Prepare the import.
@@ -88,10 +73,7 @@ class ToTransforms(PyutToPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        return 1
-
-
-    #>------------------------------------------------------------------------
+        return True
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """

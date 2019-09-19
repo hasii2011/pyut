@@ -1,16 +1,7 @@
 
-from io import StringIO
-from .PyutToPlugin import PyutToPlugin
-from PyutClass import PyutClass
-from OglClass import OglClass
-from PyutMethod import PyutMethod
-from PyutParam import PyutParam
-from PyutField import PyutField
-from PyutConsts import *
-# from wxPython.wx import *
-import wx
 
-import os
+from plugins.PyutToPlugin import PyutToPlugin
+from OglClass import OglClass
 
 
 class ToAscii(PyutToPlugin):
@@ -29,7 +20,7 @@ class ToAscii(PyutToPlugin):
         PyutToPlugin.__init__(self, umlObjects, umlFrame)
         self._umlFrame = umlFrame
 
-    def getName(self):
+    def getName(self) -> str:
         """
         This method returns the name of the plugin.
 
@@ -38,7 +29,7 @@ class ToAscii(PyutToPlugin):
         """
         return "ASCII Class export"
 
-    def getAuthor(self):
+    def getAuthor(self) -> str:
         """
         This method returns the author of the plugin.
 
@@ -47,7 +38,7 @@ class ToAscii(PyutToPlugin):
         """
         return "Philippe Waelti <pwaelti@eivd.ch>"
 
-    def getVersion(self):
+    def getVersion(self) -> str:
         """
         This method returns the version of the plugin.
 
@@ -56,7 +47,7 @@ class ToAscii(PyutToPlugin):
         """
         return "1.0"
 
-    def getMenuTitle(self):
+    def getMenuTitle(self) -> str:
         """
         Return a menu title string
 
@@ -67,7 +58,7 @@ class ToAscii(PyutToPlugin):
         # Return the menu title as it must be displayed
         return "ASCII Class Export"
 
-    def setOptions(self):
+    def setOptions(self) -> bool:
         """
         Prepare the import.
         This can be used to ask some questions to the user.
@@ -82,7 +73,7 @@ class ToAscii(PyutToPlugin):
         """
         Write data to filename.
 
-        @param OglObjects : Objects to export
+        @param oglObjects : Objects to export
         @author Philippe Waelti
         """
         import math
@@ -105,8 +96,8 @@ class ToAscii(PyutToPlugin):
 
             file = open(filename + ".acl", "w")
 
-            base = []
-            base.append(o.getName())
+            # base = []
+            base = [o.getName()]
             if o.getStereotype() is not None:
                 base.append(str(o.getStereotype()))
 
@@ -119,20 +110,17 @@ class ToAscii(PyutToPlugin):
 
             for line in base:
                 spaces = lnlgth - 4 - len(line)
-                file.write("| " + int(math.floor(spaces / 2.0)) * " " +
-                        line + int(math.ceil(spaces / 2.0)) * " " + " |\n")
+                file.write("| " + int(math.floor(spaces / 2.0)) * " " + line + int(math.ceil(spaces / 2.0)) * " " + " |\n")
 
             file.write("|" + (lnlgth - 2) * "-" + "|\n")
 
             for line in fields:
-                file.write("| " + line + (lnlgth - len(line) - 4) * " "
-                    + " |\n")
+                file.write("| " + line + (lnlgth - len(line) - 4) * " " + " |\n")
 
             file.write("|" + (lnlgth - 2) * "-" + "|\n")
 
             for line in methods:
-                file.write("| " + line + (lnlgth - len(line) - 4) * " "
-                    + " |\n")
+                file.write("| " + line + (lnlgth - len(line) - 4) * " " + " |\n")
 
             file.write(lnlgth * "-" + "\n\n")
 

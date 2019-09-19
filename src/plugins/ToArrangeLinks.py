@@ -1,23 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.2 $"
-__author__ = "C.Dutoit - dutoitc@shimbawa.ch"
-__date__ = "2004-10-24"
 
-from StringIO import StringIO
-from OglClass import OglClass
 from OglLink import OglLink
-from PyutClass import PyutClass
-from PyutConsts import *
-from PyutField import PyutField
-from PyutMethod import PyutMethod
-from PyutParam import PyutParam
-from PyutToPlugin import PyutToPlugin
-#from wxPython.wx import *
-import wx
 
-import os
+from plugins.PyutToPlugin import PyutToPlugin
+
 
 class ToArrangeLinks(PyutToPlugin):
     """
@@ -30,13 +16,11 @@ class ToArrangeLinks(PyutToPlugin):
         """
         Constructor.
 
-        @param umlObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
+        @param umlObjects  : list of ogl objects
+        @param umlFrame : the umlframe of pyut
         """
         PyutToPlugin.__init__(self, umlObjects, umlFrame)
         self._umlFrame = umlFrame
-
-    #>------------------------------------------------------------------------
 
     def getName(self):
         """
@@ -47,8 +31,6 @@ class ToArrangeLinks(PyutToPlugin):
         """
         return "Arrange links"
 
-    #>------------------------------------------------------------------------
-
     def getAuthor(self):
         """
         This method returns the author of the plugin.
@@ -56,9 +38,7 @@ class ToArrangeLinks(PyutToPlugin):
         @return string
         @since 1.1
         """
-        return "Cédric DUTOIT <dutoitc@shimbawa.ch>"
-
-    #>------------------------------------------------------------------------
+        return "Cï¿½dric DUTOIT <dutoitc@shimbawa.ch>"
 
     def getVersion(self):
         """
@@ -68,8 +48,6 @@ class ToArrangeLinks(PyutToPlugin):
         @since 1.1
         """
         return "1.0"
-
-    #>------------------------------------------------------------------------
 
     def getMenuTitle(self):
         """
@@ -82,8 +60,6 @@ class ToArrangeLinks(PyutToPlugin):
         # Return the menu title as it must be displayed
         return "Arrange links"
 
-    #>------------------------------------------------------------------------
-
     def setOptions(self):
         """
         Prepare the import.
@@ -94,9 +70,6 @@ class ToArrangeLinks(PyutToPlugin):
         @since 1.0
         """
         return True
-
-
-    #>------------------------------------------------------------------------
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
@@ -110,14 +83,7 @@ class ToArrangeLinks(PyutToPlugin):
         """
         for oglObject in umlObjects:
             if isinstance(oglObject, OglLink):
-                print "1"
+                print("1")
                 oglObject.optimizeLine()
             else:
-                print "0"
-
-            
-
-
-
-    #>------------------------------------------------------------------------
-
+                print("0")

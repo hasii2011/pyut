@@ -171,14 +171,14 @@ class AppFrame(Frame):
         """
         import os
         # Application initialisation
-        Frame.__init__(self, parent, ID, title, DefaultPosition, Size(640, 480))
-
+        # Frame.__init__(self, parent, ID, title, DefaultPosition, Size(640, 480))
+        super().__init__(parent, ID, title, DefaultPosition, Size(960, 480))
 
         # Setting charset
-        #font = self.GetFont()
-        #print dir(font)
-        #font.SetEncoding(wxFONTENCODING_ISO8859_2)
-        #self.SetFont(font)
+        # font = self.GetFont()
+        # print dir(font)
+        # font.SetEncoding(wxFONTENCODING_ISO8859_2)
+        # self.SetFont(font)
 
         # Create the application's icon
         icon = Icon('img' + osSeparator + 'icon.ico', BITMAP_TYPE_ICO)
@@ -560,9 +560,8 @@ class AppFrame(Frame):
 
         sub = self.makeImportMenu()
         if sub is not None:
-            self.mnuFile.AppendMenu(NewId(), _("Import"), sub)
-
-        # end of dynamic plugin support
+            # self.mnuFile.AppendMenu(NewId(), _("Import"), sub)
+            self.mnuFile.Append(NewId(), _("Import"), sub)
 
         self.mnuFile.AppendSeparator()
         self.mnuFile.Append(ID_MNUFILEPYUTPROPER, _("PyUt P&roperties"), _("PyUt properties"))
@@ -613,7 +612,9 @@ class AppFrame(Frame):
         mnuTools = Menu()
         sub = self.makeToolsMenu()
         if sub is not None:
-            mnuTools.AppendMenu(NewId(), _("Plugins tools"), sub)
+            # mnuTools.AppendMenu(NewId(), _("Plugins tools"), sub)
+            mnuTools.Append(NewId(), _("Plugins tools"), sub)
+
         sub = self.makeToolboxesMenu()
         if sub is not None:
             mnuTools.Append(NewId(), _("toolboxes"), sub)
@@ -666,7 +667,7 @@ class AppFrame(Frame):
         self.Bind(EVT_MENU, self._OnMnuHelpVersion,  id=ID_MNUHELPVERSION)
         self.Bind(EVT_MENU, self._OnMnuHelpWeb,      id=ID_MNUHELPWEB)
         self.Bind(EVT_MENU, self._OnMnuAddPyut,      id=ID_MNUADDPYUTHIERARCHY)
-        self.Bind(EVT_MENU,self._OnMnuAddOgl,        id=ID_MNUADDOGLHIERARCHY)
+        self.Bind(EVT_MENU, self._OnMnuAddOgl,       id=ID_MNUADDOGLHIERARCHY)
         self.Bind(EVT_MENU, self._OnMnuFileExportBmp, id=ID_MNUFILEEXPBMP)
         self.Bind(EVT_MENU, self._OnMnuFileExportJpg, id=ID_MNUFILEEXPJPG)
         self.Bind(EVT_MENU, self._OnMnuFileExportPng, id=ID_MNUFILEEXPPNG)
@@ -1466,7 +1467,7 @@ class AppFrame(Frame):
         # Do plugin functionality
         BeginBusyCursor()
         try:
-            wxYield() # time to process the refresh in newDiagram
+            wxYield()  # time to process the refresh in newDiagram
             obj.doImport()
         except (ValueError, Exception) as e:
             displayError(_("An error occured while executing the selected plugin"), _("Error..."), self)
@@ -1497,8 +1498,7 @@ class AppFrame(Frame):
     def OnToolPlugin(self, event):
         # Create a plugin instance
         cl = self.plugs[event.GetId()]
-        obj = cl(self._ctrl.getUmlObjects(), \
-                 self._ctrl.getUmlFrame())
+        obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
 
         # Do plugin functionality
         BeginBusyCursor()

@@ -1,11 +1,18 @@
 
+from wx import ID_YES
 
-from wx import LONG_DASH
+from wx import Pen
+from wx import PENSTYLE_LONG_DASH
+from wx import WHITE_BRUSH
 
-from .PyutLink import PyutLink
+from PyutLink import PyutLink
 
-from OglLink import *
-from DlgRemoveLink import *
+from OglLink import OglLink
+from OglClass import OglClass
+
+from mediator import Mediator
+
+from DlgRemoveLink import DlgRemoveLink
 
 # Kind of labels
 [CENTER] = list(range(1))
@@ -20,14 +27,13 @@ class OglInterface(OglLink):
     @version $Revision: 1.9 $
     """
 
-    def __init__(self, srcShape, pyutLink, dstShape):
+    def __init__(self, srcShape: OglLink, pyutLink: PyutLink, dstShape: OglClass):
         """
         Constructor.
 
-        @param OglClass srcShape : Source shape
-        @param PyutLink pyutLink : Conceptual links associated with the
-                                   graphical links.
-        @param OglClass destShape : Destination shape
+        @param  srcShape : Source shape
+        @param  pyutLink : Conceptual links associated with the graphical links.
+        @param  dstShape : Destination shape
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
@@ -37,24 +43,21 @@ class OglInterface(OglLink):
 
         # Pen
         #self.SetPen(wx.BLACK_DASHED_PEN)
-        self.SetPen(wx.Pen("BLACK", 1 , LONG_DASH))
+        self.SetPen(Pen("BLACK", 1, PENSTYLE_LONG_DASH))
 
         # Arrow must be white inside
-        self.SetBrush(wx.WHITE_BRUSH)
+        self.SetBrush(WHITE_BRUSH)
 
         # Add labels
-        self._labels = {}
+        # self._labels = {}
+        self._labels = {CENTER: self.AddText(0, 0, "")}
 
         # Initialize labels objects
-        self._labels[CENTER] = self.AddText(0, 0, "")
         self.updateLabels()
 
         # Add arrow
-        #self.AddArrow(ARROW_ARROW, ARROW_POSITION_END, 15.0)
+        # self.AddArrow(ARROW_ARROW, ARROW_POSITION_END, 15.0)
         self.SetDrawArrow(True)
-
-
-    #>------------------------------------------------------------------------
 
     def OnLeftClick(self, x, y, keys, attachment):
         """
@@ -64,25 +67,22 @@ class OglInterface(OglLink):
         @param int x : X position
         @param int y : Y position
         @param int keys : ...
-        @param int attachments : ...
+        @param int attachment : ...
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
         # get the shape
-        shape = self.GetShape()
+        #  shape = self.GetShape()
         # the canvas wich contain the shape
-        #canvas = shape.GetCanvas()
+        # canvas = shape.GetCanvas()
 
         # Open dialog to edit link
         dlg = DlgRemoveLink()
         rep = dlg.ShowModal()
         dlg.Destroy()
-        if rep == wx.ID_YES: # destroy link
+        if rep == ID_YES:  # destroy link
             Mediator().removeLink(self)
         self._diagram.Refresh()
-
-    #>------------------------------------------------------------------------
 
     def updateLabels(self):
         """
@@ -118,7 +118,7 @@ class OglInterface(OglLink):
         """
         return self._labels
 
-    def Draw(self, dc):#, withChildren=False):
+    def Draw(self, dc):
         """
         Called for contents drawing of links.
 
@@ -127,4 +127,4 @@ class OglInterface(OglLink):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self.updateLabels()
-        OglLink.Draw(self, dc)  #   , withChildren)
+        OglLink.Draw(self, dc)

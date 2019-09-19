@@ -1,13 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
 
 
-#from wxPython.wx import *
-#from wxPython.ogl import *
 from PyutLink import PyutLink
 from OglLink import *
 from DlgRemoveLink import *
@@ -45,8 +37,6 @@ class OglInheritance(OglLink):
         #self.AddArrow(ARROW_ARROW, ARROW_POSITION_END, 15.0)
         self.SetDrawArrow(True)
 
-    #>------------------------------------------------------------------------
-
     def cleanUp(self):
         """
         Clean up object references before quitting.
@@ -56,8 +46,6 @@ class OglInheritance(OglLink):
         """
         OglLink.cleanUp(self)
         self.ClearArrowsAtPosition() # remove all arrows
-
-    #>------------------------------------------------------------------------
 
     def OnLeftClick(self, x, y, keys, attachment):
         """
@@ -84,5 +72,3 @@ class OglInheritance(OglLink):
         if rep == wx.ID_YES: # destroy link
             Mediator().removeLink(self)
         self._diagram.Refresh()
-
-

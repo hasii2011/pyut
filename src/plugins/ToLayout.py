@@ -1,16 +1,7 @@
-
-# from StringIO import StringIO
-from io import StringIO
-
-# from PyutToPlugin import PyutToPlugin
-from PyutClass import PyutClass
-from OglClass import OglClass
-from PyutMethod import PyutMethod
-from PyutParam import PyutParam
-from PyutField import PyutField
-from PyutConsts import *
-# from wxPython.wx import *
-import wx
+from wx import FD_CHANGE_DIR
+from wx import FD_FILE_MUST_EXIST
+from wx import FD_OPEN
+from wx import FileSelector
 
 from plugins.PyutToPlugin import PyutToPlugin
 
@@ -25,13 +16,13 @@ class ToLayout(PyutToPlugin):
         """
         Constructor.
 
-        @param String filename : name of the file to save to
-        @param OglObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
+        @param umlObjects  : list of ogl objects
+        @param umlFrame umlFrame : the umlframe of pyut
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        PyutToPlugin.__init__(self, umlObjects, umlFrame)
+        # PyutToPlugin.__init__(self, umlObjects, umlFrame)
+        super().__init__(umlObjects, umlFrame)
         self._umlFrame = umlFrame
 
     def getName(self):
@@ -50,7 +41,7 @@ class ToLayout(PyutToPlugin):
         @return string
         @since 1.1
         """
-        return "C�dric DUTOIT <dutoitc@hotmail.com>"
+        return "Cedric DUTOIT <dutoitc@hotmail.com>"
 
     def getVersion(self):
         """
@@ -93,17 +84,14 @@ class ToLayout(PyutToPlugin):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        filename = wx.FileSelector(
-            "Choose a layout file to import",
-            wildcard = "Layout file (*.lay) | *.lay",
-            # default_path = self.__ctrl.getCurrentDir(),
-            flags = wx.OPEN | wx.FILE_MUST_EXIST | wx.CHANGE_DIR
-        )
+        filename = FileSelector("Choose a layout file to import",
+                                wildcard="Layout file (*.lay) | *.lay",
+                                flags=FD_OPEN | FD_FILE_MUST_EXIST | FD_CHANGE_DIR)
 
-        f=open(filename, "r")
+        f = open(filename, "r")
         lstFile = f.readlines()
         f.close()
-        lst=[]
+        lst = []
         for el in lstFile:
             spl = el.split(",")
             lst.append(spl)

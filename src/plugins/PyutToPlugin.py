@@ -1,12 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__author__  = "C.Dutoit <dutoitc@hotmail.com"
-__version__ = "$Revision: 1.5 $"
-__date__    = "2002-10-10"
-#from wxPython.wx    import * 
-from mediator       import *
-from PyutPlugin     import PyutPlugin
-import os, wx
+
+from mediator import Mediator
+from mediator import getMediator
+
+from plugins.PyutPlugin import PyutPlugin
 
 
 class PyutToPlugin(PyutPlugin):
@@ -24,13 +20,11 @@ class PyutToPlugin(PyutPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
+        super().__init__(umlFrame=umlFrame, ctrl=Mediator())
         self._umlObjects = umlObjects
         self._umlFrame = umlFrame
 
-
-    #>------------------------------------------------------------------------
-
-    def getName(self):
+    def getName(self) -> str:
         """
         This method returns the name of the plugin.
 
@@ -40,10 +34,7 @@ class PyutToPlugin(PyutPlugin):
         """
         return "Unnamed tool plugin"
 
-
-    #>------------------------------------------------------------------------
-
-    def getAuthor(self):
+    def getAuthor(self) -> str:
         """
         This method returns the author of the plugin.
 
@@ -53,10 +44,7 @@ class PyutToPlugin(PyutPlugin):
         """
         return "anonymous"
 
-
-    #>------------------------------------------------------------------------
-
-    def getVersion(self):
+    def getVersion(self) -> str:
         """
         This method returns the version of the plugin.
 
@@ -66,10 +54,7 @@ class PyutToPlugin(PyutPlugin):
         """
         return "0.0"
 
-
-    #>------------------------------------------------------------------------
-
-    def getMenuTitle(self):
+    def getMenuTitle(self) -> str:
         """
         Return a menu title string
 
@@ -80,9 +65,7 @@ class PyutToPlugin(PyutPlugin):
         # Return the menu title as it must be displayed
         return "Untitled plugin"
 
-    #>------------------------------------------------------------------------
-
-    def setOptions(self):
+    def setOptions(self) -> bool:
         """
         Prepare the import.
         This can be used to ask some questions to the user.
@@ -91,9 +74,7 @@ class PyutToPlugin(PyutPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        return 1
-
-    #>------------------------------------------------------------------------
+        return True
 
     def callDoAction(self):
         """
@@ -104,10 +85,7 @@ class PyutToPlugin(PyutPlugin):
         """
         if not self.setOptions():
             return
-        self.doAction(self._umlObjects, getMediator().getSelectedShapes(),
-            self._umlFrame)
-
-    #>------------------------------------------------------------------------
+        self.doAction(self._umlObjects, getMediator().getSelectedShapes(), self._umlFrame)
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
