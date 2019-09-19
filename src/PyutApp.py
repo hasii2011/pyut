@@ -51,7 +51,7 @@ class PyutApp(wxApp):
 
     PyutApp is the main pyut application, a wxApp.
 
-    Called from pyut.pyw
+    Called from pyut.pyw=
 
     :author:  C.Dutoit
     :contact: <dutoitc@hotmail.com>

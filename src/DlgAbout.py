@@ -42,21 +42,21 @@ txtToShow=[
             "",
             " Don't forget to visit the Pyut's official web site :",
             "                HTTP://PYUT.SF.NET",
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            " PyUt - 1.3 Credits :", 
-            " ====================", 
-            " Thierry Gagnebin (professor)", 
-            "  - Responsible EIVD", 
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            " PyUt - 1.3 Credits :",
+            " ====================",
+            " Thierry Gagnebin (professor)",
+            "  - Responsible EIVD",
             "",
             "",
             "C.Dutoit (dutoitc@hotmail.com)",
@@ -80,29 +80,29 @@ txtToShow=[
             " - Tester, consultant",
             "",
             "",
-            "", 
+            "",
             " Translators",
             " -----------",
             "  - German     : Stefan Drees",
-            "  - Danish     : Anders Kastrup Jørgensen",
-            "  - French     : Cédric Dutoit",
+            "  - Danish     : Anders Kastrup Jï¿½rgensen",
+            "  - French     : Cï¿½dric Dutoit",
             "  - Dutch      : GB",
             "  - Portuguese : Fernando Domingues (soon)",
             "  - Spanish    : Alberto Mendez",
             "  - Indonesia  : Bonifatio",
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            " PyUt - 1.2 Credits :", 
-            " ====================", 
-            " Thierry Gagnebin (professor)", 
-            "  - Responsible EIVD", 
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            " PyUt - 1.2 Credits :",
+            " ====================",
+            " Thierry Gagnebin (professor)",
+            "  - Responsible EIVD",
             "",
             "",
             "C.Dutoit (dutoitc@hotmail.com)",
@@ -118,17 +118,17 @@ txtToShow=[
             " - Developer",
             "",
             "",
-            "", 
+            "",
             " Translators",
             " -----------",
             "  - German : Stefan Drees"
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
-            "", 
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
             "",
             " PyUt 1.1 (March 2002 - July 2002) Credits :",
             " =============================================",
@@ -145,9 +145,9 @@ txtToShow=[
             "",
             "D.Roux (droux@eivd.ch)",
             " - Co-project manager",
-            " - CVS manager", 
+            " - CVS manager",
             " - Configuration manager",
-            " - Releases manager", 
+            " - Releases manager",
             " - Developer",
             "",
             "P.Waelti (pwaelti@eivd.ch)",
@@ -204,8 +204,8 @@ txtToShow=[
             "",
             "                     MMMMM                        ",
             "                     MMMMW                        ",
-            "",                                                  
-            "",                                                  
+            "",
+            "",
             "    .MMMMMMMM:      2BMM  BMBBMMS    MMMX    802SM,",
             "   MMMM    0MMM    MMMMZ  i:MMMMM   7MMMM      MMM ",
             "  MM8M;    :M8MM  iMZBM      M0WM     MMB     ZMM: ",
@@ -217,7 +217,7 @@ txtToShow=[
             "   ZMMMMMMMMMMM MM@MMMM      MMM;     MMM  MMMMiWM  ",
             "       ;7SSr     :r:         M         ;Z@a  2a;    ",
             "",
-            " EIVD : Ecole d'ingénieurs de l'état de Vaud, Yverdon",
+            " EIVD : Ecole d'ingï¿½nieurs de l'ï¿½tat de Vaud, Yverdon",
             " (http://www.eivd.ch)",
             " to have given us the oportunity to develop PyUt"
            ]
@@ -249,7 +249,7 @@ class DlgAbout(wx.Dialog):
         dlg.ShowModal()
         dlg.Destroy()
 
-    :author: C.Dutoit 
+    :author: C.Dutoit
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.12 $
     """
@@ -268,12 +268,10 @@ class DlgAbout(wx.Dialog):
         """
         import os
         # Application initialisation
-        wx.Dialog.__init__(self, parent, ID, title,
-                         wx.DefaultPosition, wx.Size(FrameWidth, FrameHeight))
-        icon = wx.Icon('img'+os.sep+'icon.ico',  # Creation the
-                      wx.BITMAP_TYPE_ICO)        # application icon
+        wx.Dialog.__init__(self, parent, ID, title, wx.DefaultPosition, wx.Size(FrameWidth, FrameHeight))
+        icon = wx.Icon('img'+os.sep+'icon.ico', wx.BITMAP_TYPE_ICO)
         self.SetIcon(icon)
-        self.Center(wx.BOTH)                     # Center on the screen
+        self.Center(wx.BOTH)
 
         # Animation panel
         self._panel = wx.Panel(self, -1, size=(FrameWidth, FrameHeight))
@@ -303,7 +301,7 @@ class DlgAbout(wx.Dialog):
 
 
         # Events
-        self.Bind(wx.EVT_BUTTON, self._onOk, btnOk) 
+        self.Bind(wx.EVT_BUTTON, self._onOk, btnOk)
         self._panel.Bind(wx.EVT_PAINT, self.OnRefreshPanel)
         #TODO self._panel.Bind(wx.EVT_UPDATE_PANEL, self.OnPanelUpdate)
         self.Bind(wx.EVT_CLOSE, self._onOk)
@@ -328,7 +326,7 @@ class DlgAbout(wx.Dialog):
 
         # Exit modal mode
         self.EndModal(wx.OK)
-        
+
 
 
 
@@ -366,7 +364,7 @@ class DlgAbout(wx.Dialog):
         @since 1.1.2.4
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        # constants 
+        # constants
         backr = backb = 230     # Background color
         backg = 255
         frontr = frontb = 64    # Foreground color
@@ -374,7 +372,7 @@ class DlgAbout(wx.Dialog):
         FADE_IN_LENGTH = 63
 
 
-        
+
         # Init memory buffer
         tdc=wx.MemoryDC()
         tdc.SelectObject(wx.EmptyBitmap(FrameWidth, FrameHeight))
@@ -417,7 +415,7 @@ class DlgAbout(wx.Dialog):
                 y = y0 + j*dy
                 if y>-dy and y<FrameHeight:
                     tdc.DrawText(txtToShow[j], x0, y)
-            
+
 
         # end drawing
         tdc.EndDrawing()
@@ -461,7 +459,7 @@ class myThread:
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         return self._position
-    
+
     #>------------------------------------------------------------------------
 
     def Start(self):
@@ -519,7 +517,7 @@ class myThread:
             if self._position > (len(txtToShow)+15) * dy:
                 self._position = 0.0
 
-        
+
 
             # Ask for update
             #evt = UpdatePanelEvent()

@@ -60,12 +60,12 @@ class TipsFrame(wx.Dialog):
 
 
         # Initialize the dialog box
-        wx.Dialog.__init__(self, parent, -1, _("Tips"), 
+        wx.Dialog.__init__(self, parent, -1, _("Tips"),
                           wx.DefaultPosition,
                           wx.Size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
-                          style=wx.THICK_FRAME | 
-                          wx.SYSTEM_MENU | 
-                          wx.CAPTION     | 
+                          style=wx.THICK_FRAME |
+                          wx.SYSTEM_MENU |
+                          wx.CAPTION     |
                           wx.FRAME_FLOAT_ON_PARENT)
         self.Show()
 
@@ -98,8 +98,7 @@ class TipsFrame(wx.Dialog):
             self._currentTip = int(self._currentTip)
 
         # Add icon
-        icon = wx.Icon('img'+os.sep+'tips.bmp',  # Creation the
-                      wx.BITMAP_TYPE_BMP)        # application icon
+        icon = wx.Icon('img'+os.sep+'tips.bmp', wx.BITMAP_TYPE_BMP)
         self.SetIcon(icon)
         self.Center(wx.BOTH)                     # Center on the screen
 
@@ -107,15 +106,15 @@ class TipsFrame(wx.Dialog):
         bmp = wx.Bitmap("img" + os.sep + "tips.bmp", wx.BITMAP_TYPE_BMP)
         self._picture = wx.StaticBitmap(self, -1, bmp)
         tip = Tips[self._currentTip]
-        self._label = wx.StaticText(self, -1, tip, 
-                              size = wx.Size(DEFAULT_WIDTH * 0.8, 
+        self._label = wx.StaticText(self, -1, tip,
+                              size = wx.Size(DEFAULT_WIDTH * 0.8,
                                             DEFAULT_HEIGHT*0.8),
                               style=wx.ST_NO_AUTORESIZE)
-        nextTipButton = wx.Button(self, ID_SET_NEXT_TIP, 
+        nextTipButton = wx.Button(self, ID_SET_NEXT_TIP,
                                  _("&Next tip"))
-        previousTipButton = wx.Button(self, ID_SET_PREVIOUS_TIP, 
+        previousTipButton = wx.Button(self, ID_SET_PREVIOUS_TIP,
                                      _("&Previous tip"))
-        self._chkShowTips = wx.CheckBox(self, ID_CHK_SHOW_TIPS, 
+        self._chkShowTips = wx.CheckBox(self, ID_CHK_SHOW_TIPS,
                                        _("&Show tips at startup"))
         self._chkShowTips.SetValue(not self._prefs["SHOW_TIPS_ON_STARTUP"]=="0")
 
@@ -140,7 +139,7 @@ class TipsFrame(wx.Dialog):
         mainSizer.Fit(self)
 
         # Events
-        self.Bind(wx.EVT_BUTTON, self._onOk, id=ID_OK) 
+        self.Bind(wx.EVT_BUTTON, self._onOk, id=ID_OK)
         self.Bind(wx.EVT_CLOSE, self._onClose)
         self.Bind(wx.EVT_BUTTON, self._onNextTip, id=ID_SET_NEXT_TIP)
         self.Bind(wx.EVT_BUTTON, self._onPreviousTip, id=ID_SET_PREVIOUS_TIP)
@@ -158,7 +157,7 @@ class TipsFrame(wx.Dialog):
         """
         # Exit modal mode
         self.Close()
-       
+
     #>------------------------------------------------------------------------
 
     def _onNextTip(self, event):

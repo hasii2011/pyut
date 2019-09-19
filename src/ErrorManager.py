@@ -15,6 +15,7 @@ GRAPHIC_ERROR_VIEW = 1
 TEXT_ERROR_VIEW    = 2
 RAISE_ERROR_VIEW   = 3
 
+
 def getErrorManager():
     """
     Get the error manager
@@ -76,11 +77,10 @@ class GraphicErrorView:
     def newWarning(self, msg, title=None, parent=None):
         import sys, traceback
         if title is None:
-            title=_("WARNING...")
+            title = _("WARNING...")
         print(msg)
         try:
-            dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_EXCLAMATION |
-                                                      wx.CENTRE)
+            dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_EXCLAMATION | wx.CENTRE)
             dlg.ShowModal()
             dlg.Destroy()
             dlg = None
@@ -95,8 +95,7 @@ class GraphicErrorView:
             title=_("WARNING...")
         print(msg)
         try:
-            dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_INFORMATION |
-                                                      wx.CENTRE)
+            dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_INFORMATION | wx.CENTRE)
             dlg.ShowModal()
             dlg.Destroy()
             dlg = None
