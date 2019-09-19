@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from os import sep as osSeparator
 
 from copy import copy
@@ -104,25 +107,25 @@ from pyutUtils import displayWarning
 from globals import _
 
 [
-    ID_MNUFILENEWPROJECT,  ID_MNUFILEOPEN,          ID_MNUFILESAVE,
-    ID_MNUFILESAVEAS,       ID_MNUFILEEXIT,          ID_MNUEDITCUT,
-    ID_MNUEDITCOPY,         ID_MNUEDITPASTE,         ID_MNUHELPABOUT,
-    ID_MNUFILEIMP,          ID_MNUFILE,              ID_MNUFILEDIAGRAMPROPER,
-    ID_MNUFILEPRINTSETUP,   ID_MNUFILEPRINTPREV,     ID_MNUFILEPRINT,
-    ID_MNUADDPYUTHIERARCHY, ID_MNUADDOGLHIERARCHY,   ID_MNUHELPINDEX,
-    ID_MNUHELPWEB,          ID_MNUFILEEXP,           ID_MNUFILEEXPBMP,
-    ID_MNUEDITSHOWTOOLBAR,  ID_ARROW,                ID_CLASS,
-    ID_REL_INHERITANCE,     ID_REL_REALISATION,      ID_REL_COMPOSITION,
-    ID_REL_AGREGATION,      ID_REL_ASSOCIATION,      ID_MNUFILEEXPJPG,
-    ID_MNUPROJECTCLOSE,        ID_NOTE,                 ID_ACTOR,
-    ID_USECASE,             ID_REL_NOTE,             ID_MNUHELPVERSION,
-    ID_MNUFILEEXPPS,        ID_MNUFILEEXPPNG,        ID_MNUFILEPYUTPROPER,
-    ID_MNUFILEEXPPDF,       ID_MNUFILENEWCLASSDIAGRAM, ID_MNUFILENEWSEQUENCEDIAGRAM,
-    ID_MNUFILENEWUSECASEDIAGRAM,                     ID_SD_INSTANCE,
-    ID_MNUFILEINSERTPROJECT,ID_SD_MESSAGE,           ID_MNUEDITSELECTALL,
-    ID_MNUFILEREMOVEDOCUMENT,                        ID_DEBUG,
-    ID_ZOOMIN,              ID_ZOOMOUT,              ID_ZOOM_VALUE,
-    ID_MNUREDO,             ID_MNUUNDO
+    ID_MNUFILENEWPROJECT,        ID_MNUFILEOPEN,          ID_MNUFILESAVE,
+    ID_MNUFILESAVEAS,            ID_MNUFILEEXIT,          ID_MNUEDITCUT,
+    ID_MNUEDITCOPY,              ID_MNUEDITPASTE,         ID_MNUHELPABOUT,
+    ID_MNUFILEIMP,               ID_MNUFILE,              ID_MNUFILEDIAGRAMPROPER,
+    ID_MNUFILEPRINTSETUP,        ID_MNUFILEPRINTPREV,     ID_MNUFILEPRINT,
+    ID_MNUADDPYUTHIERARCHY,      ID_MNUADDOGLHIERARCHY,   ID_MNUHELPINDEX,
+    ID_MNUHELPWEB,               ID_MNUFILEEXP,           ID_MNUFILEEXPBMP,
+    ID_MNUEDITSHOWTOOLBAR,       ID_ARROW,                ID_CLASS,
+    ID_REL_INHERITANCE,          ID_REL_REALISATION,      ID_REL_COMPOSITION,
+    ID_REL_AGREGATION,           ID_REL_ASSOCIATION,      ID_MNUFILEEXPJPG,
+    ID_MNUPROJECTCLOSE,          ID_NOTE,                 ID_ACTOR,
+    ID_USECASE,                  ID_REL_NOTE,             ID_MNUHELPVERSION,
+    ID_MNUFILEEXPPS,             ID_MNUFILEEXPPNG,        ID_MNUFILEPYUTPROPER,
+    ID_MNUFILEEXPPDF,            ID_MNUFILENEWCLASSDIAGRAM, ID_MNUFILENEWSEQUENCEDIAGRAM,
+    ID_MNUFILENEWUSECASEDIAGRAM, ID_SD_INSTANCE,
+    ID_MNUFILEINSERTPROJECT,     ID_SD_MESSAGE,           ID_MNUEDITSELECTALL,
+    ID_MNUFILEREMOVEDOCUMENT,    ID_DEBUG,
+    ID_ZOOMIN,                   ID_ZOOMOUT,              ID_ZOOM_VALUE,
+    ID_MNUREDO,                  ID_MNUUNDO
 ] = assignID(54)
 
 # Assign constants
@@ -130,11 +133,11 @@ from globals import _
 ACTIONS = {
     ID_ARROW: ACTION_SELECTOR,
     ID_CLASS: ACTION_NEW_CLASS,
-    ID_NOTE : ACTION_NEW_NOTE,
+    ID_NOTE: ACTION_NEW_NOTE,
     ID_REL_INHERITANCE: ACTION_NEW_INHERIT_LINK,
     ID_REL_REALISATION: ACTION_NEW_IMPLEMENT_LINK,
     ID_REL_COMPOSITION: ACTION_NEW_COMPOSITION_LINK,
-    ID_REL_AGREGATION : ACTION_NEW_AGGREGATION_LINK,
+    ID_REL_AGREGATION: ACTION_NEW_AGGREGATION_LINK,
     ID_REL_ASSOCIATION: ACTION_NEW_ASSOCIATION_LINK,
     ID_REL_NOTE:    ACTION_NEW_NOTE_LINK,
     ID_ACTOR:       ACTION_NEW_ACTOR,
@@ -178,6 +181,7 @@ class AppFrame(Frame):
         # Frame.__init__(self, parent, ID, title, DefaultPosition, Size(640, 480))
         super().__init__(parent, ID, title, DefaultPosition, Size(960, 480))
 
+        self.logger: Logger = getLogger(__name__)
         # Setting charset
         # font = self.GetFont()
         # print dir(font)
@@ -251,17 +255,16 @@ class AppFrame(Frame):
         EVT_ACTIVATE Callback; display tips frame.
         """
         try:
-            if self._alreadyDisplayedTipsFrame==True or \
-               self._prefs["SHOW_TIPS_ON_STARTUP"]=="0" or \
-               self._prefs["SHOW_TIPS_ON_STARTUP"]=="False":
+            if self._alreadyDisplayedTipsFrame is True or self._prefs["SHOW_TIPS_ON_STARTUP"] == "0" or \
+                    self._prefs["SHOW_TIPS_ON_STARTUP"] == "False":
                 return
             # Display tips frame
             from TipsFrame import TipsFrame
             tipsFrame = TipsFrame(self)
             #  tipsFrame.Show()
             self._alreadyDisplayedTipsFrame = True
-        except:
-            pass
+        except (ValueError, Exception) as e:
+            self.logger.error(f'onActivate: {e}')
 
     def _initPyutTools(self):
         """
@@ -514,18 +517,11 @@ class AppFrame(Frame):
 
     def _initMenu(self):
         """
-        Menu initialisation.
+        Menu initialization.
 
         @since 1.0
         @author N.Dubois
         """
-        # -----------------
-        # Menu construction
-        # -----------------
-
-        # -----------------
-        #     File menu
-        # -----------------
         self.mnuFile = Menu()
         self.mnuFileNew = Menu()
         self.mnuFileNew.Append(ID_MNUFILENEWPROJECT,         _("&New project\tCtrl-N"), _("New project"))
@@ -534,19 +530,12 @@ class AppFrame(Frame):
         self.mnuFileNew.Append(ID_MNUFILENEWUSECASEDIAGRAM,  _("New &use-case diagram\tCtrl-U"), _("New use-case diagram"))
 
         self.mnuFile.Append(NewId(), _("&New"), self.mnuFileNew)
-        self.mnuFile.Append(ID_MNUFILEINSERTPROJECT,
-            _("&Insert a project...\t"),
-            _("Insert a project in the current project..."))
-        self.mnuFile.Append(ID_MNUFILEOPEN,
-            _("&Open...\tCtrl-O"), _("Open a file..."))
-        self.mnuFile.Append(ID_MNUFILESAVE,
-            _("&Save\tCtrl-S"), _("Save current datas"))
-        self.mnuFile.Append(ID_MNUFILESAVEAS,
-            _("Save &As...\tCtrl-A"), _("Save current datas"))
-        self.mnuFile.Append(ID_MNUPROJECTCLOSE,
-            _("&Close project\tCtrl-W"), _("Close current project"))
-        self.mnuFile.Append(ID_MNUFILEREMOVEDOCUMENT,
-            _("&Remove document"), _("Remove the document from the project"))
+        self.mnuFile.Append(ID_MNUFILEINSERTPROJECT,  _("&Insert a project...\t"), _("Insert a project in the current project..."))
+        self.mnuFile.Append(ID_MNUFILEOPEN,           _("&Open...\tCtrl-O"), _("Open a file..."))
+        self.mnuFile.Append(ID_MNUFILESAVE,           _("&Save\tCtrl-S"), _("Save current data"))
+        self.mnuFile.Append(ID_MNUFILESAVEAS,         _("Save &As...\tCtrl-A"), _("Save current data"))
+        self.mnuFile.Append(ID_MNUPROJECTCLOSE,       _("&Close project\tCtrl-W"), _("Close current project"))
+        self.mnuFile.Append(ID_MNUFILEREMOVEDOCUMENT, _("&Remove document"), _("Remove the document from the project"))
         self.mnuFile.AppendSeparator()
 
         # added by L. Burgbacher, dynamic plugin support
@@ -583,12 +572,10 @@ class AppFrame(Frame):
         index = 0
         #  TODO : does not work ? verify function return...
         for el in self._prefs.getLastOpenedFilesList():
-            index+=1
-            self.mnuFile.Append(self.lastOpenedFilesID[index-1], "&" +
-                str(index) + " " + el)
+            index += 1
+            self.mnuFile.Append(self.lastOpenedFilesID[index-1], "&" + str(index) + " " + el)
         for index in range(index, self._prefs.getNbLOF()):
-            self.mnuFile.Append(self.lastOpenedFilesID[index], "&" +
-                                str(index+1) + " -")
+            self.mnuFile.Append(self.lastOpenedFilesID[index], "&" + str(index+1) + " -")
 
         # exit
         self.mnuFile.AppendSeparator()

@@ -1,27 +1,46 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.9 $"
-__author__ = "C.Dutoit"
-__date__ = "2003-02-16"
-
-
-#from wxPython.wx    import *
-import wx
-from pyutUtils      import assignID
-from PyutPreferences import *
 import os
 
+from wx import ALIGN_CENTER
+from wx import ALL
+from wx import BITMAP_TYPE_BMP
+from wx import BOTH
+from wx import Bitmap
+from wx import BoxSizer
+from wx import Button
+from wx import CAPTION
+from wx import CheckBox
+from wx import ClientDC
+from wx import DefaultPosition
+from wx import Dialog
+from wx import EVT_BUTTON
+from wx import EVT_CLOSE
+from wx import FRAME_FLOAT_ON_PARENT
+from wx import HORIZONTAL
+from wx import Icon
+from wx import RESIZE_BORDER
+from wx import ST_NO_AUTORESIZE
+from wx import SYSTEM_MENU
+from wx import Size
+from wx import StaticBitmap
+from wx import StaticText
+from wx import VERTICAL
+
+from pyutUtils import assignID
+from PyutPreferences import PyutPreferences
+
+from globals import _
+
 # DEFAULT SIZE
-DEFAULT_WIDTH=600
-DEFAULT_HEIGHT=100
+DEFAULT_WIDTH  = 600
+DEFAULT_HEIGHT = 100
 
 # Constants
 [ID_OK, ID_SET_NEXT_TIP, ID_SET_PREVIOUS_TIP, ID_CHK_SHOW_TIPS] = assignID(4)
 
 # Tips
 Tips = [
-    _("Welcome in PyUt 1.3 ! You will find some news in this box.\n" +
+    _("Welcome in PyUt 1.4 ! You will find some news in this box.\n" +
       "You can activate/desactivate the box display on startup in the " +
       "PyUt preferences dialog box"),
     _("Remember, if you don't submit bugs on http://www.sf.net/projects/pyut, " +
@@ -37,9 +56,7 @@ Tips = [
 ]
 
 
-##############################################################################
-
-class TipsFrame(wx.Dialog):
+class TipsFrame(Dialog):
     """
     Represents a tips frame, a frame for displaying tips.
 
@@ -55,39 +72,33 @@ class TipsFrame(wx.Dialog):
         """
         # Check
         import sys
-        if sys.platform=="win32":
-            return None
-
+        if sys.platform == "win32":
+            return
 
         # Initialize the dialog box
-        wx.Dialog.__init__(self, parent, -1, _("Tips"),
-                          wx.DefaultPosition,
-                          wx.Size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
-                          style=wx.THICK_FRAME |
-                          wx.SYSTEM_MENU |
-                          wx.CAPTION     |
-                          wx.FRAME_FLOAT_ON_PARENT)
+        Dialog.__init__(self, parent, -1, _("Tips"), DefaultPosition, Size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
+                        RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT)
         self.Show()
 
         # Normalize tips
         import LineSplitter
         ls = LineSplitter.LineSplitter()
-        dc = wx.ClientDC(self)
+        dc = ClientDC(self)
         for i in range(len(Tips)):
-            tip = ls.split(Tips[i], dc, DEFAULT_WIDTH*0.8)
-            Tips[i]=""
+            tip = ls.split(Tips[i], dc, int(DEFAULT_WIDTH * 0.8))
+            Tips[i] = ""
             for line in tip:
-                Tips[i]+=line + "\n"
-            #tip = ""
-            #for line in Tips[i].split("\n"):
-                #newLine = ""
-                #for word in line.split(" "):
-                    #if len(newLine) + len(word) > 59:
-                        #tip += newLine + "\n"
-                        #newLine = ""
-                    #newLine += word + " "
-                #tip += newLine
-            #Tips[i] = tip
+                Tips[i] += line + "\n"
+            # tip = ""
+            # for line in Tips[i].split("\n"):
+                # newLine = ""
+                # for word in line.split(" "):
+                    # if len(newLine) + len(word) > 59:
+                        # tip += newLine + "\n"
+                        # newLine = ""
+                    # newLine += word + " "
+                # tip += newLine
+            # Tips[i] = tip
 
         # Set current tips
         self._prefs = PyutPreferences()
@@ -98,56 +109,46 @@ class TipsFrame(wx.Dialog):
             self._currentTip = int(self._currentTip)
 
         # Add icon
-        icon = wx.Icon('img'+os.sep+'tips.bmp', wx.BITMAP_TYPE_BMP)
+        # TODO load as resource
+        icon = Icon('img'+os.sep+'tips.bmp', BITMAP_TYPE_BMP)
         self.SetIcon(icon)
-        self.Center(wx.BOTH)                     # Center on the screen
+        self.Center(BOTH)                     # Center on the screen
 
         # Create controls
-        bmp = wx.Bitmap("img" + os.sep + "tips.bmp", wx.BITMAP_TYPE_BMP)
-        self._picture = wx.StaticBitmap(self, -1, bmp)
+        bmp = Bitmap("img" + os.sep + "tips.bmp", BITMAP_TYPE_BMP)
+        self._picture = StaticBitmap(self, -1, bmp)
         tip = Tips[self._currentTip]
-        self._label = wx.StaticText(self, -1, tip,
-                              size = wx.Size(DEFAULT_WIDTH * 0.8,
-                                            DEFAULT_HEIGHT*0.8),
-                              style=wx.ST_NO_AUTORESIZE)
-        nextTipButton = wx.Button(self, ID_SET_NEXT_TIP,
-                                 _("&Next tip"))
-        previousTipButton = wx.Button(self, ID_SET_PREVIOUS_TIP,
-                                     _("&Previous tip"))
-        self._chkShowTips = wx.CheckBox(self, ID_CHK_SHOW_TIPS,
-                                       _("&Show tips at startup"))
-        self._chkShowTips.SetValue(not self._prefs["SHOW_TIPS_ON_STARTUP"]=="0")
+        self._label = StaticText(self, -1, tip, size=Size(DEFAULT_WIDTH * 0.8, DEFAULT_HEIGHT * 0.8), style=ST_NO_AUTORESIZE)
+        nextTipButton = Button(self, ID_SET_NEXT_TIP, _("&Next tip"))
+        previousTipButton = Button(self, ID_SET_PREVIOUS_TIP, _("&Previous tip"))
+        self._chkShowTips = CheckBox(self, ID_CHK_SHOW_TIPS, _("&Show tips at startup"))
+        self._chkShowTips.SetValue(not self._prefs["SHOW_TIPS_ON_STARTUP"] == "0")
 
         # Upper sizer
-        upSizer = wx.BoxSizer(wx.HORIZONTAL)
-        upSizer.Add(self._picture, 0, wx.ALL | wx.ALIGN_CENTER, 5)
-        upSizer.Add(self._label,   1, wx.ALL | wx.ALIGN_CENTER, 5)
+        upSizer = BoxSizer(HORIZONTAL)
+        upSizer.Add(self._picture, 0, ALL | ALIGN_CENTER, 5)
+        upSizer.Add(self._label,   1, ALL | ALIGN_CENTER, 5)
 
         # Lower sizer
-        loSizer = wx.BoxSizer(wx.HORIZONTAL)
-        loSizer.Add(previousTipButton, 0, wx.ALL | wx.ALIGN_CENTER, 5)
-        loSizer.Add(nextTipButton, 0, wx.ALL | wx.ALIGN_CENTER, 5)
-        loSizer.Add(wx.Button(self, ID_OK, "&Ok"), 0, wx.ALL | wx.ALIGN_CENTER, 5)
+        loSizer = BoxSizer(HORIZONTAL)
+        loSizer.Add(previousTipButton, 0, ALL | ALIGN_CENTER, 5)
+        loSizer.Add(nextTipButton,     0, ALL | ALIGN_CENTER, 5)
+        loSizer.Add(Button(self, ID_OK, "&Ok"), 0, ALL | ALIGN_CENTER, 5)
 
         # Main sizer
         self.SetAutoLayout(True)
-        mainSizer = wx.BoxSizer(wx.VERTICAL)
-        mainSizer.Add(upSizer, 0, wx.ALL | wx.ALIGN_CENTER, 5)
-        mainSizer.Add(self._chkShowTips, 0, wx.ALL | wx.ALIGN_CENTER, 5)
-        mainSizer.Add(loSizer, 0, wx.ALL | wx.ALIGN_CENTER, 5)
+        mainSizer = BoxSizer(VERTICAL)
+        mainSizer.Add(upSizer, 0, ALL | ALIGN_CENTER, 5)
+        mainSizer.Add(self._chkShowTips, 0, ALL | ALIGN_CENTER, 5)
+        mainSizer.Add(loSizer, 0, ALL | ALIGN_CENTER, 5)
         self.SetSizer(mainSizer)
         mainSizer.Fit(self)
 
         # Events
-        self.Bind(wx.EVT_BUTTON, self._onOk, id=ID_OK)
-        self.Bind(wx.EVT_CLOSE, self._onClose)
-        self.Bind(wx.EVT_BUTTON, self._onNextTip, id=ID_SET_NEXT_TIP)
-        self.Bind(wx.EVT_BUTTON, self._onPreviousTip, id=ID_SET_PREVIOUS_TIP)
-
-
-
-
-    #>------------------------------------------------------------------------
+        self.Bind(EVT_BUTTON, self._onOk, id=ID_OK)
+        self.Bind(EVT_CLOSE,  self._onClose)
+        self.Bind(EVT_BUTTON, self._onNextTip,     id=ID_SET_NEXT_TIP)
+        self.Bind(EVT_BUTTON, self._onPreviousTip, id=ID_SET_PREVIOUS_TIP)
 
     def _onOk(self, event):
         """
@@ -158,8 +159,6 @@ class TipsFrame(wx.Dialog):
         # Exit modal mode
         self.Close()
 
-    #>------------------------------------------------------------------------
-
     def _onNextTip(self, event):
         """
         Select and display next tip
@@ -168,8 +167,6 @@ class TipsFrame(wx.Dialog):
         self._currentTip = (self._currentTip + 1) % len(Tips)
         self._label.SetLabel(Tips[self._currentTip])
 
-    #>------------------------------------------------------------------------
-
     def _onPreviousTip(self, event):
         """
         Select and display previous tip
@@ -177,9 +174,6 @@ class TipsFrame(wx.Dialog):
         """
         self._currentTip = (self._currentTip - 1) % len(Tips)
         self._label.SetLabel(Tips[self._currentTip])
-
-
-    #>------------------------------------------------------------------------
 
     def _onClose(self, event):
         """
