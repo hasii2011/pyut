@@ -5,6 +5,8 @@ from copy import copy
 
 from urllib import request
 
+from pkg_resources import resource_filename
+
 from wx import ACCEL_CTRL
 from wx import AcceleratorEntry
 from wx import BITMAP_TYPE_ICO
@@ -159,6 +161,8 @@ class AppFrame(Frame):
     :version: $Revision: 1.55 $
     """
 
+    IMG_PKG = "img"
+
     def __init__(self, parent, ID, title):
         """
         Constructor.
@@ -181,7 +185,9 @@ class AppFrame(Frame):
         # self.SetFont(font)
 
         # Create the application's icon
-        icon = Icon('img' + osSeparator + 'icon.ico', BITMAP_TYPE_ICO)
+        # icon = Icon('img' + osSeparator + 'icon.ico', BITMAP_TYPE_ICO)
+        fileName = resource_filename(AppFrame.IMG_PKG, 'pyut.ico')
+        icon = Icon(fileName, BITMAP_TYPE_ICO)
         self.SetIcon(icon)
 
         self.Center(BOTH)                     # Center on the screen
