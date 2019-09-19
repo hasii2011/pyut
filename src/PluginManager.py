@@ -13,16 +13,6 @@ from traceback import extract_tb
 from logging import Logger
 from logging import getLogger
 
-# needed by the plugins
-# from PyutClass      import PyutClass
-# from PyutParam      import PyutParam
-# from PyutMethod     import PyutMethod
-# from PyutField      import PyutField
-# from PyutStereotype import PyutStereotype
-# from UmlFrame       import *
-# from OglClass       import OglClass
-# from OglLink        import *
-
 from singleton import Singleton
 
 
