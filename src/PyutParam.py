@@ -1,49 +1,42 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-21"
+from logging import Logger
+from logging import getLogger
 
-from PyutObject      import *
-from PyutType        import *
-from types           import *
+from sys import exc_info
+from traceback import extract_tb
+
+from PyutObject import *
+from PyutType import *
+
 
 class PyutParam(PyutObject):
-    """
-    Parameter.
-    @version $Revision: 1.4 $
-    """
 
-    def __init__(self, name="", type="", defaultValue=None):
+    def __init__(self, name: str = "", theParameterType: str = "", defaultValue=None):
         """
-        Constructor with name and type.
 
-        @param string name : init name with the name
-        @param PyutType type : the param type
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            name: init name with the name
+
+            theParameterType: the param type
+
+            defaultValue:
         """
+        self.logger: Logger = getLogger(__name__)
         try:
-            #import pychecker.checker
-            #PyutObject.__init__(PyutObject(self), name)
-            PyutObject.__init__(self, name)
-        except:
-            import sys, traceback
-            print((sys.exc_info()[0]))
-            print((sys.exc_info()[1]))
-            for el in traceback.extract_tb(sys.exc_info()[2]):
-                print((str(el)))
-            print("===========================================")
+            super().__init__(name)
+        except (ValueError, Exception) as e:
 
-            
-            
-        self._type = getPyutType(type)
+            self.logger.error(f'{e}')
+            self.logger.error((exc_info()[0]))
+            self.logger.error((exc_info()[1]))
+            for el in extract_tb(exc_info()[2]):
+                self.logger.error((str(el)))
+            self.logger.error("===========================================")
+
+        self._type = getPyutType(theParameterType)
         self._defaultValue = defaultValue
 
-    #>------------------------------------------------------------------------
-
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Get method, used to know the name.
 
@@ -63,9 +56,7 @@ class PyutParam(PyutObject):
 
         return s
 
-    #>------------------------------------------------------------------------
-
-    def getType(self):
+    def getType(self) -> PyutType:
         """
         Get method, used to know the type.
 
@@ -75,23 +66,21 @@ class PyutParam(PyutObject):
         """
         return self._type
 
-    #>------------------------------------------------------------------------
-
-    def setType(self, theType):
+    def setType(self, theParameterType):
         """
         Set method, used to know initialize type.
 
-        @param PyutType type
+        @param theParameterType
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
-        if type(theType) == StringType or type(theType) == UnicodeType:
-            theType = getPyutType(theType)
-        self._type = theType
+        # Python 3 update
+        # if type(theParameterType) == StringType or type(theParameterType) == UnicodeType:
+        if type(theParameterType) is str:
+            theParameterType = getPyutType(theParameterType)
+        self._type = theParameterType
 
-    #>------------------------------------------------------------------------
-
-    def getDefaultValue(self):
+    def getDefaultValue(self) -> str:
         """
         Get method, used to know the defaultValue.
 
@@ -101,13 +90,11 @@ class PyutParam(PyutObject):
         """
         return self._defaultValue
 
-    #>------------------------------------------------------------------------
-
-    def setDefaultValue(self, defaultValue):
+    def setDefaultValue(self, defaultValue: str):
         """
         Set method, used to know initialize defaultValue.
 
-        @param string defaultValue
+        @param  defaultValue
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """

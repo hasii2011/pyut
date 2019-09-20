@@ -542,24 +542,18 @@ class DiagramFrame(wx.ScrolledWindow):
         w, h = self.GetSize()
         bb = self.__backgroundBitmap
         if (bb.GetWidth(), bb.GetHeight()) != (w, h):
-            bb = self.__backgroundBitmap = wx.EmptyBitmap(w, h)
+            bb = self.__backgroundBitmap = wx.Bitmap(w, h)
         mem = wx.MemoryDC()
         mem.SelectObject(bb)
-        # ADDED BY C.DUTOIT - wx.Python version test
-        #from wx.Python.wx. import wx.CHECK_VERSION
-        #if wx.CHECK_VERSION(2, 3, 2):
-        if wx.__version__>"2.3.2":
-            x, y = self.CalcUnscrolledPosition(0, 0)
-            mem.Blit(0, 0, w, h, dc, x, y)
-        else:
-            mem.Blit(0, 0, w, h, dc, 0, 0)
+
+        x, y = self.CalcUnscrolledPosition(0, 0)
+        mem.Blit(0, 0, w, h, dc, x, y)
+
         mem.SelectObject(wx.NullBitmap)
 
     def LoadBackground(self, dc, w, h):
         """
         Load the background image in the given dc.
-
-        @param wx.DC dc
         """
         mem = wx.MemoryDC()
         mem.SelectObject(self.__backgroundBitmap)
@@ -704,13 +698,13 @@ class DiagramFrame(wx.ScrolledWindow):
         mem.Clear()
         self.Redraw(mem)
 
-        # dc.BeginDrawing()
+        # dc.BeginDrawing()                         # Does not exist in latest wxPython
         if wx.__version__ > "2.3.2":
             x, y = self.CalcUnscrolledPosition(0, 0)
             dc.Blit(0, 0, w, h, mem, x, y)
         else:
             dc.Blit(0, 0, w, h, mem, 0, 0)
-        # dc.EndDrawing()
+        # dc.EndDrawing()                           # Does not exist in latest wxPython
 
     def _NullCallback(self, evt):
         # print "None"

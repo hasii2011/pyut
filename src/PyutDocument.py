@@ -1,24 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.8 $"
-__author__  = "EI6, eivd, Group Dutoit - Roux"
-__date__    = "2002-03-14"
-__PyUtVersion__ = "1.0"
-# local TODO :
-# - do more tests
-# - add shortcuts (appframe.py)
+from PyutConsts import CLASS_DIAGRAM
+from PyutConsts import DiagramsLabels
+from PyutConsts import SEQUENCE_DIAGRAM
+from PyutConsts import USECASE_DIAGRAM
 
-#from wxPython.wx import *
-#import wx
 from UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
-from AppFrame import *
+
 from pyutUtils import displayError
-from PyutConsts import *
 
-
-#>-----------------------------------------------------------------------
 
 def shorterFilename(filename):
     """
@@ -33,8 +23,6 @@ def shorterFilename(filename):
     return os.path.split(filename)[1]
 
 
-##############################################################################
-
 class PyutDocument:
     """
     Document : Contain a document : frames, properties, ...
@@ -44,39 +32,34 @@ class PyutDocument:
     :version: $Revision: 1.8 $
     """
 
-    #>------------------------------------------------------------------------
-
-    def __init__(self, parentFrame, project, type):
+    def __init__(self, parentFrame, project, docType):
         """
         Constructor.
 
-        @param type : Type of document; one cited in PyutConsts.py
+        @param docType : Type of document; one cited in PyutConsts.py
         @author C.Dutoit
         """
-        self._parentFrame = None
-        self._project = project
-        self._treeRoot = None      # Root of the project entry in the tree
-        self._treeRootParent = None# Parent of the project root entry
-        self._tree     = None      # Tree i'm belonging to
-        self._type     = type
+        self._parentFrame    = None
+        self._project        = project
+        self._treeRoot       = None         # Root of the project entry in the tree
+        self._treeRootParent = None         # Parent of the project root entry
+        self._tree           = None         # Tree I am belonging to
+        self._type           = docType
 
-        print("PyutDocument using type " , type)
-        if (type==CLASS_DIAGRAM):
-            self._title = DiagramsLabels[type]
+        print("PyutDocument using type ", docType)
+        if docType == CLASS_DIAGRAM:
+            self._title = DiagramsLabels[docType]
             self._frame = UmlClassDiagramsFrame(parentFrame)
-        elif (type==SEQUENCE_DIAGRAM):
-            self._title = DiagramsLabels[type]
+        elif docType == SEQUENCE_DIAGRAM:
+            self._title = DiagramsLabels[docType]
             self._frame = UmlSequenceDiagramsFrame(parentFrame)
-        elif (type==USECASE_DIAGRAM):
-            self._title = DiagramsLabels[type]
+        elif docType == USECASE_DIAGRAM:
+            self._title = DiagramsLabels[docType]
             self._frame = UmlClassDiagramsFrame(parentFrame)
         else:
             displayError("Unsuported diagram type; replacing by class diagram")
             self._title = DiagramsLabels[CLASS_DIAGRAM]
             self._frame = UmlClassDiagramsFrame(parentFrame)
-
-
-    #>------------------------------------------------------------------------
 
     def getType(self):
         """
@@ -87,8 +70,6 @@ class PyutDocument:
         """
         return self._type
 
-    #>------------------------------------------------------------------------
-
     def getDiagramTitle(self):
         """
         Return the filename for captions
@@ -98,8 +79,6 @@ class PyutDocument:
         """
         return self._project.getFilename() + "/" + self._title
 
-    #>------------------------------------------------------------------------
-
     def getFrame(self):
         """
         Return the document's frame
@@ -108,8 +87,6 @@ class PyutDocument:
         @return xxxFrame this document's frame
         """
         return self._frame
-
-    #>------------------------------------------------------------------------
 
     def addToTree(self, tree, root):
         self._tree = tree
@@ -129,8 +106,6 @@ class PyutDocument:
         @author C.Dutoit
         """
         self._tree.SetItemText(self._treeRoot, self._title)
-
-    #>------------------------------------------------------------------------
 
     def removeFromTree(self):
         """
