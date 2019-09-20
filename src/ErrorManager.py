@@ -1,19 +1,25 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# TODO : add unit test with RAISE_ERROR_VIEW
 
-__version__ = "$Revision: 1.12 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
+from logging import Logger
+from logging import getLogger
 
-#from wxPython.wx import *
-from singleton       import Singleton
+from sys import exc_info
+
+from traceback import extract_tb
+
+from globals import _
+
+from singleton import Singleton
 import wx
 
 # Type of view for the error
 GRAPHIC_ERROR_VIEW = 1
 TEXT_ERROR_VIEW    = 2
 RAISE_ERROR_VIEW   = 3
+
+#
+#   TODO:  Raise a PyutException(s) instead of the general one
+#   TODO:  All these classes need an abstract class to implement
+#
 
 
 def getErrorManager():
@@ -23,7 +29,33 @@ def getErrorManager():
     return ErrorManager()
 
 
-##############################################################################
+def addToLogFile(title, msg):
+
+    import time
+    import codecs
+
+    title = u"" + title
+    msg = u"" + msg
+    # f = open("errors.log", "a")
+    f = codecs.open('errors.log', encoding='utf-8', mode='a')
+
+    f.write("===========================")
+    f.write(str(time.ctime(time.time())))
+
+    errMsg = msg + "\n\n" + _("The following error occurred : %s") % exc_info()[1] + "\n\n---------------------------\n"
+    if exc_info()[0] is not None:
+        errMsg += "Error : %s" % exc_info()[0] + "\n"
+    if exc_info()[1] is not None:
+        errMsg += "Msg   : %s" % exc_info()[1] + "\n"
+    if exc_info()[2] is not None:
+        errMsg += "Trace :\n"
+        for el in extract_tb(exc_info()[2]):
+            errMsg = errMsg + str(el) + "\n"
+
+    f.write(title + u": " + msg)
+    f.write(errMsg)
+    f.close()
+
 
 class GraphicErrorView:
     """
@@ -42,68 +74,59 @@ class GraphicErrorView:
 
     @author C.Dutoit
     """
+    def __init__(self):
 
-
-    #>------------------------------------------------------------------------
+        self.logger: Logger = getLogger(__name__)
 
     def newFatalError(self, msg, title=None, parent=None):
-        import sys, traceback
+
         if title is None:
-            title=_("An error occured...")
+            title = _("An error occurred...")
         errMsg = msg + "\n\n"
-        errMsg +=_("The following error occured : %s") % \
-                                                str(sys.exc_info()[1])
+        errMsg += _("The following error occurred : %s") % str(exc_info()[1])
         errMsg += "\n\n---------------------------\n"
-        if sys.exc_info()[0] is not None:
-            errMsg += "Error : %s" % sys.exc_info()[0] + "\n"
-        if sys.exc_info()[1] is not None:
-            errMsg += "Msg   : %s" % sys.exc_info()[1] + "\n"
-        if sys.exc_info()[2] is not None:
+        if exc_info()[0] is not None:
+            errMsg += "Error : %s" % exc_info()[0] + "\n"
+        if exc_info()[1] is not None:
+            errMsg += "Msg   : %s" % exc_info()[1] + "\n"
+        if exc_info()[2] is not None:
             errMsg += "Trace :\n"
-            for el in traceback.extract_tb(sys.exc_info()[2]):
+            for el in extract_tb(exc_info()[2]):
                 errMsg = errMsg + str(el) + "\n"
 
-        print(errMsg)
+        self.logger.error(errMsg)
         try:
-            dlg=wx.MessageDialog(parent, errMsg,  title, wx.OK | wx.ICON_ERROR | wx.CENTRE)
+            dlg = wx.MessageDialog(parent, errMsg,  title, wx.OK | wx.ICON_ERROR | wx.CENTRE)
             dlg.ShowModal()
             dlg.Destroy()
-            dlg = None
-        except:
-            pass
-
-    #>------------------------------------------------------------------------
+        except (ValueError, Exception) as e:
+            self.logger.error(f'newFatalError: {e}')
 
     def newWarning(self, msg, title=None, parent=None):
-        import sys, traceback
+
         if title is None:
             title = _("WARNING...")
-        print(msg)
+        self.logger.error(msg)
         try:
             dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_EXCLAMATION | wx.CENTRE)
             dlg.ShowModal()
             dlg.Destroy()
-            dlg = None
-        except:
-            pass
-
-    #>------------------------------------------------------------------------
+        except (ValueError, Exception) as e:
+            self.logger.error(f'newWarning: {e}')
 
     def newInformation(self, msg, title=None, parent=None):
-        import sys, traceback
+
         if title is None:
-            title=_("WARNING...")
-        print(msg)
+            title = _("WARNING...")
+        self.logger.error(msg)
         try:
             dlg = wx.MessageDialog(parent, msg, title, wx.OK | wx.ICON_INFORMATION | wx.CENTRE)
             dlg.ShowModal()
             dlg.Destroy()
-            dlg = None
-        except:
-            pass
 
+        except (ValueError, Exception) as e:
+            self.logger.error(f'newInformation: {e}')
 
-##############################################################################
 
 class TextErrorView:
     """
@@ -122,41 +145,32 @@ class TextErrorView:
 
     @author C.Dutoit
     """
-
-    #>------------------------------------------------------------------------
+    def __init__(self):
+        self.logger: Logger = getLogger(__name__)
 
     def newFatalError(self, msg, title=None, parent=None):
-        import sys, traceback
+
         if title is None:
-            title=_("An error occured...")
-        errMsg = msg + "\n\n" + \
-                  _("The following error occured : %s") %sys.exc_info()[1] + \
-                 "\n\n---------------------------\n"
-        if sys.exc_info()[0] is not None:
-            errMsg += "Error : %s" % sys.exc_info()[0] + "\n"
-        if sys.exc_info()[1] is not None:
-            errMsg += "Msg   : %s" % sys.exc_info()[1] + "\n"
-        if sys.exc_info()[2] is not None:
+            title = _("An error occured...")
+        errMsg = msg + "\n\n" + _("The following error occured : %s") % exc_info()[1] + "\n\n---------------------------\n"
+
+        if exc_info()[0] is not None:
+            errMsg += "Error : %s" % exc_info()[0] + "\n"
+        if exc_info()[1] is not None:
+            errMsg += "Msg   : %s" % exc_info()[1] + "\n"
+        if exc_info()[2] is not None:
             errMsg += "Trace :\n"
-            for el in traceback.extract_tb(sys.exc_info()[2]):
+            for el in extract_tb(exc_info()[2]):
                 errMsg = errMsg + str(el) + "\n"
 
-        print("FATAL ERROR : ", errMsg)
-
-    #>------------------------------------------------------------------------
+        self.logger.error(f"FATAL ERROR: {title} {errMsg} - parent {parent}")
 
     def newWarning(self, msg, title=None, parent=None):
-        import sys, traceback
-        print("WARNING : ", title, " - ", msg)
-
-    #>------------------------------------------------------------------------
+        self.logger.error(f"WARNING: {title} - {msg} - parent {parent}")
 
     def displayInformation(self, msg, title=None, parent=None):
-        import sys, traceback
-        print("INFORMATION : ", title , " - ", msg)
+        self.logger.error(f"INFORMATION: {title} - {msg} - parent {parent}")
 
-
-##############################################################################
 
 class RaiseErrorView:
     """
@@ -176,46 +190,15 @@ class RaiseErrorView:
     @author C.Dutoit
     """
 
-    #>------------------------------------------------------------------------
-
     def newFatalError(self, msg, title=None, parent=None):
-        raise "FATAL ERROR : "+ title+ " - "+ msg
-
-    #>------------------------------------------------------------------------
+        raise Exception(f"FATAL ERROR: {title} - {msg}")
 
     def newWarning(self, msg, title=None, parent=None):
-        raise "WARNING : "+ title+ " - "+ msg
-
-    #>------------------------------------------------------------------------
+        raise Exception(f"WARNING: {title} - {msg}")
 
     def displayInformation(self, msg, title=None, parent=None):
-        raise "INFORMATION : "+ title + " - "+ msg
+        raise Exception(f"INFORMATION: {title} 0 {msg}")
 
-
-##############################################################################
-
-def addToLogFile(title, msg):
-    import time, codecs, sys, traceback
-    title = u"" + title
-    msg = u"" + msg
-    #f = open("errors.log", "a")
-    f = codecs.open('errors.log', encoding='utf-8', mode='a')
-    f.write("===========================")
-    f.write(str(time.ctime(time.time())))
-    errMsg = msg + "\n\n" + \
-              _("The following error occured : %s") %sys.exc_info()[1] + \
-             "\n\n---------------------------\n"
-    if sys.exc_info()[0] is not None:
-        errMsg += "Error : %s" % sys.exc_info()[0] + "\n"
-    if sys.exc_info()[1] is not None:
-        errMsg += "Msg   : %s" % sys.exc_info()[1] + "\n"
-    if sys.exc_info()[2] is not None:
-        errMsg += "Trace :\n"
-        for el in traceback.extract_tb(sys.exc_info()[2]):
-            errMsg = errMsg + str(el) + "\n"
-    f.write(title + u": " + msg)
-    f.write(errMsg)
-    f.close()
 
 class ErrorManager(Singleton):
     """
@@ -225,17 +208,14 @@ class ErrorManager(Singleton):
     :contact: <dutoitc@hotmail.com>
     """
 
-    #>------------------------------------------------------------------------
-
-    def init(self, view = GRAPHIC_ERROR_VIEW):
+    def init(self, view=GRAPHIC_ERROR_VIEW):
         """
         Singleton constructor
         """
         self.changeType(view)
 
-    #>------------------------------------------------------------------------
-
     def changeType(self, view):
+
         if view == GRAPHIC_ERROR_VIEW:
             self._view = GraphicErrorView()
         elif view == TEXT_ERROR_VIEW:
@@ -244,8 +224,6 @@ class ErrorManager(Singleton):
             self._view = RaiseErrorView()
         else:
             self._view = GraphicErrorView()
-
-    #>------------------------------------------------------------------------
 
     def newFatalError(self, msg, title=None, parent=None):
         if msg is None:
@@ -257,15 +235,11 @@ class ErrorManager(Singleton):
         addToLogFile("Fatal error : " + title, msg)
         self._view.newFatalError(msg, title, parent)
 
-    #>------------------------------------------------------------------------
-
     def newWarning(self, msg, title=None, parent=None):
         title = u"" + title
         msg = u"" + msg
         addToLogFile("Warning : " + title, msg)
         self._view.newWarning(msg, title, parent)
-
-    #>------------------------------------------------------------------------
 
     def displayInformation(self, msg, title=None, parent=None):
         title = u"" + title

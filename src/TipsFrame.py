@@ -1,6 +1,8 @@
 
 import os
 
+from pkg_resources import resource_filename
+
 from wx import ALIGN_CENTER
 from wx import ALL
 from wx import BITMAP_TYPE_BMP
@@ -30,6 +32,7 @@ from pyutUtils import assignID
 from PyutPreferences import PyutPreferences
 
 from globals import _
+from globals import IMG_PKG
 
 # DEFAULT SIZE
 DEFAULT_WIDTH  = 600
@@ -110,7 +113,10 @@ class TipsFrame(Dialog):
 
         # Add icon
         # TODO load as resource
-        icon = Icon('img'+os.sep+'tips.bmp', BITMAP_TYPE_BMP)
+        # icon = Icon('img' + os.sep + 'tips.bmp', BITMAP_TYPE_BMP)
+        fileName = resource_filename(IMG_PKG, 'tips.bmp')
+        icon = Icon(fileName, BITMAP_TYPE_BMP)
+
         self.SetIcon(icon)
         self.Center(BOTH)                     # Center on the screen
 

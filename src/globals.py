@@ -1,4 +1,7 @@
 
+IMG_PKG = "img"
+
+
 def _(x): return x  # Set lang function emulation
 
 

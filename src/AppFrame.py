@@ -105,6 +105,7 @@ from pyutUtils import displayInformation
 from pyutUtils import displayWarning
 
 from globals import _
+from globals import IMG_PKG
 
 [
     ID_MNUFILENEWPROJECT,        ID_MNUFILEOPEN,          ID_MNUFILESAVE,
@@ -164,7 +165,6 @@ class AppFrame(Frame):
     :version: $Revision: 1.55 $
     """
 
-    IMG_PKG = "img"
 
     def __init__(self, parent, ID, title):
         """
@@ -190,7 +190,7 @@ class AppFrame(Frame):
 
         # Create the application's icon
         # icon = Icon('img' + osSeparator + 'icon.ico', BITMAP_TYPE_ICO)
-        fileName = resource_filename(AppFrame.IMG_PKG, 'pyut.ico')
+        fileName = resource_filename(IMG_PKG, 'pyut.ico')
         icon = Icon(fileName, BITMAP_TYPE_ICO)
         self.SetIcon(icon)
 
