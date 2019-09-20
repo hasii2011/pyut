@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from os import sep as osSeparator
 
 from sys import argv
@@ -64,6 +67,8 @@ class PyutApp(wxApp):
 
         wxApp.__init__(self, val)
 
+        self.logger: Logger = getLogger(__name__)
+
     def OnInit(self):
         """
         Constructor.
@@ -118,13 +123,14 @@ class PyutApp(wxApp):
             return True
         except (ValueError, Exception) as e:
             # Display all errors
+            self.logger.error(f'{e}')
             dlg = MessageDialog(None, _(f"The following error occurred: {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
-            print("===========================================================")
-            print(f"Error : {exc_info()[0]}")
-            print(f"Msg   : {exc_info()[1]}")
-            print("Trace :")
+            self.logger.error("===========================================================")
+            self.logger.error(f"Error : {exc_info()[0]}")
+            self.logger.error(f"Msg   : {exc_info()[1]}")
+            self.logger.error("Trace :")
             for el in extract_tb(exc_info()[2]):
-                print(el)
+                self.logger.error(el)
             dlg.ShowModal()
             dlg.Destroy()
             return False
@@ -202,4 +208,4 @@ class PyutApp(wxApp):
         try:
             return wxApp.OnExit(self)
         except (ValueError, Exception) as e:
-            pass
+            self.logger.error(f'OnExit: {e}')

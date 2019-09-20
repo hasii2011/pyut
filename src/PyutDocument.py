@@ -39,7 +39,7 @@ class PyutDocument:
     """
     Document : Contain a document : frames, properties, ...
 
-    :author: C.Dutoit 
+    :author: C.Dutoit
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.8 $
     """
@@ -86,7 +86,7 @@ class PyutDocument:
         @return String : the document's type as string
         """
         return self._type
-    
+
     #>------------------------------------------------------------------------
 
     def getDiagramTitle(self):
@@ -116,13 +116,12 @@ class PyutDocument:
         self._treeRootParent = root
         # Add the project to the project tree
         self._treeRoot = tree.AppendItem(
-                         self._treeRootParent, 
+                         self._treeRootParent,
                          self._title)
-        #self._tree.Expand(self._treeRoot)
-        self._tree.SetPyData(self._treeRoot, self._frame)
+        # self._tree.Expand(self._treeRoot)
+        # self._tree.SetPyData(self._treeRoot, self._frame)
+        self._tree.SetItemData(self._treeRoot, self._frame)
 
-    #>------------------------------------------------------------------------
-    
     def updateTreeText(self):
         """
         Update the tree text for this document

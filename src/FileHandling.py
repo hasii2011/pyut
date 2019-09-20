@@ -373,7 +373,7 @@ class FileHandling:
         if not self._ctrl.isInScriptMode():
             self.__notebook.AddPage(frame, shorterFilename(project.getFilename()))
             self.notebookCurrentPage  = self.__notebook.GetPageCount() - 1
-            self.notebook.SetSelection(self.__notebookCurrentPage)  # maybe __notebook ?  -- hasii
+            # self.notebook.SetSelection(self.__notebookCurrentPage)  # maybe __notebook ?  -- hasii
 
     def exportToImageFile(self, extension, imageType):
         """

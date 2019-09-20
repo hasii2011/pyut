@@ -1,4 +1,7 @@
 
+from typing import cast
+from typing import Callable
+
 from logging import Logger
 from logging import getLogger
 
@@ -11,11 +14,11 @@ from urllib import request
 from pkg_resources import resource_filename
 
 from wx import ACCEL_CTRL
-from wx import AcceleratorEntry
 from wx import BITMAP_TYPE_ICO
 from wx import BITMAP_TYPE_BMP
 from wx import BOTH
-from wx import ClientDC
+from wx import DEFAULT_FRAME_STYLE
+from wx import FRAME_EX_METAL
 from wx import ID_OK
 from wx import ITEM_CHECK
 from wx import ITEM_NORMAL
@@ -23,9 +26,6 @@ from wx import NO_BORDER
 from wx import PAPER_A4
 from wx import PORTRAIT
 from wx import PRINT_QUALITY_HIGH
-from wx import PreviewFrame
-from wx import PrintPreview
-from wx import Printer
 from wx import TB_FLAT
 from wx import TB_HORIZONTAL
 
@@ -42,6 +42,7 @@ from wx import FD_OVERWRITE_PROMPT
 from wx import NewId
 from wx import PrintData
 
+from wx import AcceleratorEntry
 from wx import Frame
 from wx import DefaultPosition
 from wx import Size
@@ -55,6 +56,10 @@ from wx import PrintDialogData
 from wx import PrintDialog
 from wx import MessageDialog
 from wx import ToolBar
+from wx import ClientDC
+from wx import PreviewFrame
+from wx import PrintPreview
+from wx import Printer
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
@@ -165,7 +170,6 @@ class AppFrame(Frame):
     :version: $Revision: 1.55 $
     """
 
-
     def __init__(self, parent, ID, title):
         """
         Constructor.
@@ -179,7 +183,7 @@ class AppFrame(Frame):
         import os
         # Application initialisation
         # Frame.__init__(self, parent, ID, title, DefaultPosition, Size(640, 480))
-        super().__init__(parent, ID, title, DefaultPosition, Size(960, 480))
+        super().__init__(parent, ID, title, DefaultPosition , Size(960, 480), DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
         self.logger: Logger = getLogger(__name__)
         # Setting charset
@@ -244,7 +248,6 @@ class AppFrame(Frame):
         # set application title
         self._fileHandling.newProject()
         self._ctrl.updateTitle()
-        #self.Maximize(True)        # Not supported since wxPython 2.3.3.1 ?
 
         # Init tips frame
         self._alreadyDisplayedTipsFrame = False
@@ -284,7 +287,7 @@ class AppFrame(Frame):
                     _("Arrow"),      _("Select tool"),
                     _(_("PyUt tools")),
                     (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_ARROW, isToggle=True)
+                    cast(Callable, None), wxID=ID_ARROW, isToggle=True)
         toolClass = Tool("pyut-class", img.ImgToolboxClass.getBitmap(),
                     _("Class"),      _("Create a new class"),
                     _(_("PyUt tools")),

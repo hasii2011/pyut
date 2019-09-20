@@ -1,20 +1,17 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.5 $"
-__author__  = "EI5, eivd, Group Burgbacher - Waelti"
-__date__    = "2001-12-12"
+from logging import Logger
+from logging import getLogger
 
-from __future__     import nested_scopes
 from OglAggregation import *
 from OglComposition import *
 from OglInheritance import *
-from OglInterface   import *
-from OglNoteLink    import *
-from OglSDMessage   import *
+from OglInterface import *
+from OglNoteLink import *
+# from OglSDMessage   import *
 
-from singleton      import *
-from PyutConsts     import *
+from singleton import Singleton
+# from PyutConsts import OGL_AGGREGATION
+
 
 def getOglLinkFactory():
     """
@@ -24,7 +21,6 @@ def getOglLinkFactory():
     @author P. Waelti <pwaelti@eivd.ch>
     """
     return OglLinkFactory()
-
 
 
 def getLinkType(link):
@@ -47,6 +43,10 @@ def getLinkType(link):
 
 
 class OglLinkFactory(Singleton):
+
+    def init(self, *args, **kwds):
+        self.logger: Logger = getLogger(__name__)
+
     """
     This class is a factory to produce `OglLink` objects.
     It works under the Factory Design Pattern model. Ask a kind of link
@@ -56,22 +56,19 @@ class OglLinkFactory(Singleton):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-    def getOglLink(self, srcShape, pyutLink, destShape, linkType, 
-                   srcPos=None, dstPos=None):
+    def getOglLink(self, srcShape, pyutLink, destShape, linkType, srcPos=None, dstPos=None):
         """
         Used to get a OglLink of the given linkType.
 
-        @param OglObject srcShape : Source shape
-        @param PyutLink pyutLink : Conceptual links associated with the
-                                   graphical links.
-        @param OglObject destShape : Destination shape
-        @param int linkType : The linkType of the link (OGL_INHERITANCE, ...)
-        @param tuple srcPos, dstPos : position on both src and dst objects
+        Args:
+            srcShape:   Source shape
+            pyutLink:   Conceptual links associated with the graphical links.
+            destShape:  Destination shape
+            linkType:   The linkType of the link (OGL_INHERITANCE, ...)
+            srcPos:     source position
+            dstPos:     destination position
 
-        @return OglLink : The link you asked
-
-        @author Philippe Waelti
-        @modified C.Dutoit 25112002 : added OGL_SD_MESSAGE
+        Returns:  The requested link
         """
         if linkType == OGL_AGGREGATION:
             return OglAggregation(srcShape, pyutLink, destShape)
@@ -91,7 +88,5 @@ class OglLinkFactory(Singleton):
         elif linkType == OGL_NOTELINK:
             return OglNoteLink(srcShape, pyutLink, destShape)
         else:
-            print "Unknown linkType of OglLink into factory :", repr(linkType)
+            self.logger.error(f"Unknown linkType of OglLink into factory: {repr(linkType)}")
             return None
-
-

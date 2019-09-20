@@ -1,14 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.7 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-12-05"
 
 from PyutLinkedObject import *
-from types            import *
-from PyutStereotype   import *
-#import wx
+from PyutStereotype import *
+
+from globals import _
+
 
 class PyutClass(PyutLinkedObject):
     """
@@ -34,24 +30,20 @@ class PyutClass(PyutLinkedObject):
 
     def __init__(self, name=""):
         """
-        Constructor.
 
-        @param string name : class name
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            name: class name
         """
-        PyutLinkedObject.__init__(self, name)
-        self._fields = []
-        self._methods = []
+        super().__init__(name)
+        self._fields      = []
+        self._methods     = []
         self._description = ""
-        self._stereotype = None
+        self._stereotype  = None
 
         # Display properties
         self._showStereotype = True
-        self._showMethods = True
-        self._showFields = True
-
-    #>------------------------------------------------------------------------
+        self._showMethods    = True
+        self._showFields     = True
 
     def __getstate__(self):
         """
@@ -62,11 +54,9 @@ class PyutClass(PyutLinkedObject):
         @since 1.5
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        dict = self.__dict__.copy()
-        dict["_fathers"]    = []
-        return dict
-
-    #>------------------------------------------------------------------------
+        aDict = self.__dict__.copy()
+        aDict["_fathers"]    = []
+        return aDict
 
     def __str__(self):
         """
@@ -76,8 +66,6 @@ class PyutClass(PyutLinkedObject):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return _("Class : %s") % (self.getName())
-
-    #>------------------------------------------------------------------------
 
     def setDescription(self, description):
         """
@@ -91,8 +79,6 @@ class PyutClass(PyutLinkedObject):
         """
         self._description = description
 
-    #>------------------------------------------------------------------------
-
     def getDescription(self):
         """
         Returns the description field.
@@ -105,11 +91,9 @@ class PyutClass(PyutLinkedObject):
         """
         return self._description
 
-    #>------------------------------------------------------------------------
-
     def getFields(self):
         """
-        Return a list of the fields. 
+        Return a list of the fields.
         This is not a copy, but the original one. Any change made to it is
         directly made on the class.
 
@@ -117,8 +101,6 @@ class PyutClass(PyutLinkedObject):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self._fields
-
-    #>------------------------------------------------------------------------
 
     def setFields(self, fields):
         """
@@ -130,8 +112,6 @@ class PyutClass(PyutLinkedObject):
         """
         self._fields = fields
 
-    #>------------------------------------------------------------------------
-
     def addField(self, field):
         """
         Add a field
@@ -139,11 +119,9 @@ class PyutClass(PyutLinkedObject):
         """
         self._fields.append(field)
 
-    #>------------------------------------------------------------------------
-
     def getMethods(self):
         """
-        Return a list of the methods. 
+        Return a list of the methods.
         This is not a copy, but the original one. Any change made to it is
         directly made on the interface.
 
@@ -151,8 +129,6 @@ class PyutClass(PyutLinkedObject):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self._methods
-
-    #>------------------------------------------------------------------------
 
     def setMethods(self, methods):
         """
@@ -164,8 +140,6 @@ class PyutClass(PyutLinkedObject):
         """
         self._methods = methods
 
-    #>------------------------------------------------------------------------
-
     def getStereotype(self):
         """
         Return the stereotype used, or None if there's no stereotype.
@@ -175,23 +149,20 @@ class PyutClass(PyutLinkedObject):
         """
         return self._stereotype
 
-    #>------------------------------------------------------------------------
-
     def setStereotype(self, stereotype):
         """
         Replace the actual stereotype by the one given.
 
-        @param String or Unicode or PyutStereotype stereotype
+        @param stereotype  String or Unicode or PyutStereotype
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        if type(stereotype) == StringType or type(stereotype) == UnicodeType:
+        # Python 3 update
+        # if type(stereotype) == StringType or type(stereotype) == UnicodeType:
+        if type(stereotype) is str:
             stereotype = getPyutStereotype(stereotype)
         self._stereotype = stereotype
 
-
-    #>------------------------------------------------------------------------
-    
     def getShowStereotype(self):
         """
         Return True if we must display the stereotype
@@ -202,8 +173,6 @@ class PyutClass(PyutLinkedObject):
         """
         return self._showStereotype
 
-    #>------------------------------------------------------------------------
-    
     def setShowStereotype(self, value):
         """
         Define the showStereotype property
@@ -214,8 +183,6 @@ class PyutClass(PyutLinkedObject):
         """
         self._showStereotype = value
 
-    #>------------------------------------------------------------------------
-    
     def getShowMethods(self):
         """
         Return True if we must display the methods
@@ -226,8 +193,6 @@ class PyutClass(PyutLinkedObject):
         """
         return self._showMethods
 
-    #>------------------------------------------------------------------------
-    
     def setShowMethods(self, value):
         """
         Define the showMethods property
@@ -238,8 +203,6 @@ class PyutClass(PyutLinkedObject):
         """
         self._showMethods = value
 
-    #>------------------------------------------------------------------------
-    
     def getShowFields(self):
         """
         Return True if we must display the fields
@@ -250,8 +213,6 @@ class PyutClass(PyutLinkedObject):
         """
         return self._showFields
 
-    #>------------------------------------------------------------------------
-    
     def setShowFields(self, value):
         """
         Define the showFields property
@@ -261,4 +222,3 @@ class PyutClass(PyutLinkedObject):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._showFields = value
-

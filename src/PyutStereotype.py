@@ -1,15 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
-
-from FlyweightString import *
 
 def getPyutStereotype(name):
     """
-    Factory method to return a new or existing PyutStereotype for the given 
+    Factory method to return a new or existing PyutStereotype for the given
     name.
 
     @param String name : name of the stereotype
@@ -19,7 +12,18 @@ def getPyutStereotype(name):
     return PyutStereotype(name)
 
 
-class PyutStereotype:#(FlyweightString):
+class PyutStereotype:
+
+    def __init__(self, name=""):
+        """
+        Constructor.
+
+        @param name for the type
+        @since 1.0
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        self.__name = name
+
     """
     Stereotype for a class, a link
 
@@ -35,8 +39,6 @@ class PyutStereotype:#(FlyweightString):
         """
         return "<< %s >>" % (self.getName())
 
-    #>------------------------------------------------------------------------
-
     def getStereotype(self):
         """
         Get method, used to know the stereotype.
@@ -47,21 +49,6 @@ class PyutStereotype:#(FlyweightString):
         """
         return self.getName()
 
-    #>------------------------------------------------------------------------
-
-    def __init__(self, name=""):
-        """
-        Constructor.
-
-        @param String for the type
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        self.__name = name
-        #PyutUnmutableObject.__init__(self, name)
-
-    #>------------------------------------------------------------------------
-
     def getName(self):
         """
         Get method, used to know the name.
@@ -71,4 +58,3 @@ class PyutStereotype:#(FlyweightString):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self.__name
-

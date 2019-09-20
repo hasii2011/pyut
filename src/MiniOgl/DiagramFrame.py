@@ -6,37 +6,9 @@ from MiniOgl.ControlPoint import ControlPoint
 from MiniOgl.RectangleShape import RectangleShape
 import wx
 
-#
-# Copyright 2002, Laurent Burgbacher, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of MiniOgl.
-#
-# MiniOgl is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MiniOgl is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MiniOgl; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-__author__    = "Laurent Burgbacher, lb@alawa.ch, Eivd"
-__copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
-__license__   = "Released under the terms of the GNU General Public Licence V2"
-__date__      = "2002-10-15"
-__version__   = "$Id: DiagramFrame.py,v 1.16 2006/02/04 22:01:01 dutoitc Exp $"
-
-
-
 __all__ = ["DiagramFrame"]
 
-DEBUG = 0 # set to 1 to have some debug info in the terminal
+DEBUG = 0  # set to 1 to have some debug info in the terminal
 
 LEFT_MARGIN = 0
 RIGHT_MARGIN = 1
@@ -122,13 +94,13 @@ class DiagramFrame(wx.ScrolledWindow):
 
         @param wxObject parent : parent window
         """
-        #print ">>>MiniOGL-DiagramFrame-1", parent
+        # print ">>>MiniOGL-DiagramFrame-1", parent
         wx.ScrolledWindow.__init__(self, parent)
         #scrolled.ScrolledPanel.__init__(self, parent, -1,
         #        style = wx.TAB_TRAVERSAL|wx.SUNKEN_BORDER )
         #print "---MiniOGL-DiagramFrame-2"
         self._diagram = Diagram(self)
-        #print "---MiniOGL-DiagramFrame-3"
+        # print "---MiniOGL-DiagramFrame-3"
 
         self.__keepMoving = False
         self._selectedShapes = [] # list of the shapes that are selected
@@ -198,8 +170,6 @@ class DiagramFrame(wx.ScrolledWindow):
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         #print "---MiniOGL-DiagramFrame-5"
 
-    #>------------------------------------------------------------------
-
     def getEventPosition(self, event):
         """
         Return the position of a click in the diagram.
@@ -214,8 +184,6 @@ class DiagramFrame(wx.ScrolledWindow):
         #        (event.GetX(), event.GetY(), x, y)
         #print dir(event)
         return x, y
-
-    #>------------------------------------------------------------------
 
     def GenericHandler(self, event, methodName):
         """
@@ -241,13 +209,11 @@ class DiagramFrame(wx.ScrolledWindow):
             event.Skip()
         return shape
 
-    #>------------------------------------------------------------------------
-
     def OnLeftDown(self, event):
         """
         Callback for left down events on the diagram.
 
-        @param wx.Event event
+        @param  event
         """
         if DEBUG:
             print("DiagramFrame.OnLeftDown")
@@ -297,8 +263,6 @@ class DiagramFrame(wx.ScrolledWindow):
 
         self.Bind(wx.EVT_MOTION, self.OnMove)
 
-    #>------------------------------------------------------------------------
-
     def _BeginSelect(self, event):
         """
         Create a selector box and manage it.
@@ -316,8 +280,6 @@ class DiagramFrame(wx.ScrolledWindow):
         self.PrepareBackground()
         self.Bind(wx.EVT_MOTION, self._OnMoveSelector)
 
-    #>------------------------------------------------------------------------
-
     def _OnMoveSelector(self, event):
         """
         Callback for the selector box.
@@ -329,8 +291,6 @@ class DiagramFrame(wx.ScrolledWindow):
             x0, y0 = self._selector.GetPosition()
             self._selector.SetSize(x - x0, y - y0)
             self.Refresh(False)
-
-    #>------------------------------------------------------------------------
 
     def OnLeftUp(self, event):
         """
@@ -386,8 +346,6 @@ class DiagramFrame(wx.ScrolledWindow):
             self.Bind(wx.EVT_MOTION, self._NullCallback)
             self.Refresh()
 
-    #>------------------------------------------------------------------------
-
     def OnDrag(self, event):
         """
         Callback to drag the selected shapes.
@@ -417,31 +375,25 @@ class DiagramFrame(wx.ScrolledWindow):
         self.Refresh(False)
         self._lastMousePosition = (x, y)
 
-    #>------------------------------------------------------------------------
-
     def OnMove(self, event):
         """
         Callback for mouse movements.
 
-        @param wx.Event event
+        @param  event
         """
         event.m_x, event.m_y = self.getEventPosition(event)
         self.OnDrag(event)
-
-    #>------------------------------------------------------------------
 
     def OnLeftDClick(self, event):
         """
         Callback for left double clicks.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnLeftDClick")
         self._clickedShape = None
         if not self.__keepMoving:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
-
-    #>------------------------------------------------------------------------
 
     def OnMiddleDown(self, event):
         """
@@ -451,8 +403,6 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.GenericHandler(event, "OnMiddleDown")
 
-    #>------------------------------------------------------------------------
-
     def OnMiddleUp(self, event):
         """
         Callback.
@@ -460,8 +410,6 @@ class DiagramFrame(wx.ScrolledWindow):
         @param wx.Event event
         """
         self.GenericHandler(event, "OnMiddleUp")
-
-    #>------------------------------------------------------------------------
 
     def OnMiddleDClick(self, event):
         """
@@ -471,8 +419,6 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.GenericHandler(event, "OnMiddleDClick")
 
-    #>------------------------------------------------------------------------
-
     def OnRightDown(self, event):
         """
         Callback.
@@ -481,8 +427,6 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.GenericHandler(event, "OnRightDown")
 
-    #>------------------------------------------------------------------------
-
     def OnRightUp(self, event):
         """
         Callback.
@@ -490,8 +434,6 @@ class DiagramFrame(wx.ScrolledWindow):
         @param wx.Event event
         """
         self.GenericHandler(event, "OnRightUp")
-
-    #>------------------------------------------------------------------------
 
     def OnRightDClick(self, event):
         """
@@ -507,8 +449,6 @@ class DiagramFrame(wx.ScrolledWindow):
         crustWin.Show()
         self.GenericHandler(event, "OnRightDClick")
 
-    #>------------------------------------------------------------------------
-
     def GetDiagram(self):
         """
         Return the diagram associated with this panel.
@@ -517,8 +457,6 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._diagram
 
-    #>------------------------------------------------------------------
-
     def SetDiagram(self, diagram):
         """
         Set a new diagram for this panel.
@@ -526,8 +464,6 @@ class DiagramFrame(wx.ScrolledWindow):
         @param Diagram diagram
         """
         self._diagram = diagram
-
-    #>------------------------------------------------------------------------
 
     def FindShape(self, x, y):
         """
@@ -547,8 +483,6 @@ class DiagramFrame(wx.ScrolledWindow):
                 break # only select the first one
         return found
 
-    #>------------------------------------------------------------------------
-
     def DeselectAllShapes(self):
         """
         Deselect all shapes in the frame.
@@ -557,8 +491,6 @@ class DiagramFrame(wx.ScrolledWindow):
             shape.SetSelected(False)
             shape.SetMoving(False)
         self._selectedShapes = []
-
-    #>------------------------------------------------------------------------
 
     def GetSelectedShapes(self):
         """
@@ -570,8 +502,6 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._selectedShapes
 
-    #>------------------------------------------------------------------------
-
     def SetSelectedShapes(self, shapes):
         """
         Set the list of selected shapes.
@@ -579,8 +509,6 @@ class DiagramFrame(wx.ScrolledWindow):
         @param Shape [] shapes
         """
         self._selectedShapes = shapes
-
-    #>------------------------------------------------------------------------
 
     def KeepMoving(self, keep):
         """
@@ -593,8 +521,6 @@ class DiagramFrame(wx.ScrolledWindow):
         if not keep:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
 
-    #>------------------------------------------------------------------
-
     def Refresh(self, eraseBackground=True, rect=None):
         """
         This refresh is done imediately, not through an event.
@@ -606,8 +532,6 @@ class DiagramFrame(wx.ScrolledWindow):
             self.Redraw()
         else:
             self.RedrawWithBackground()
-
-    #>------------------------------------------------------------------------
 
     def SaveBackground(self, dc):
         """
@@ -631,8 +555,6 @@ class DiagramFrame(wx.ScrolledWindow):
             mem.Blit(0, 0, w, h, dc, 0, 0)
         mem.SelectObject(wx.NullBitmap)
 
-    #>------------------------------------------------------------------------
-
     def LoadBackground(self, dc, w, h):
         """
         Load the background image in the given dc.
@@ -643,8 +565,6 @@ class DiagramFrame(wx.ScrolledWindow):
         mem.SelectObject(self.__backgroundBitmap)
         dc.Blit(0, 0, w, h, mem, 0, 0)
         mem.SelectObject(wx.NullBitmap)
-
-    #>------------------------------------------------------------------------
 
     def ClearBackground(self):
         """
@@ -660,13 +580,11 @@ class DiagramFrame(wx.ScrolledWindow):
         dc.Clear()
         dc.SelectObject(wx.NullBitmap)
 
-    #>------------------------------------------------------------------------
-
     def CreateDC(self, loadBackground, w, h):
         """
         Create a DC, load the background on demand.
 
-        @param boolean loadBackground
+        @param loadBackground
         @param int w, h : width and height of the frame.
         @return wx.DC
         """
@@ -675,7 +593,8 @@ class DiagramFrame(wx.ScrolledWindow):
         # cache the bitmap, to avoid creating a new at each refresh.
         # only recreate it if the size of the window has changed
         if (bm.GetWidth(), bm.GetHeight()) != (w, h):
-            bm = self.__workingBitmap = wx.EmptyBitmap(w, h)
+            # bm = self.__workingBitmap = wx.EmptyBitmap(w, h)
+            bm = self.__workingBitmap = wx.Bitmap(w, h)
         dc.SelectObject(bm)
         if loadBackground:
             self.LoadBackground(dc, w, h)
@@ -685,15 +604,11 @@ class DiagramFrame(wx.ScrolledWindow):
         self.PrepareDC(dc)
         return dc
 
-    #>------------------------------------------------------------------------
-
     def PrepareBackground(self):
         """
         Redraw the screen without movable shapes, store it as the background.
         """
         self.Redraw(None, True, True, False)
-
-    #>------------------------------------------------------------------------
 
     def RedrawWithBackground(self):
         """
@@ -701,10 +616,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.Redraw(None, True, False, True)
 
-    #>------------------------------------------------------------------------
-
-    def Redraw(self, dc=None, full=True, saveBackground=False,
-               useBackground=False):
+    def Redraw(self, dc=None, full=True, saveBackground=False, useBackground=False):
         """
         Refresh the diagram graphically.
         If a dc is given, use it. Otherwise, a double buffered dc is used.
@@ -778,14 +690,12 @@ class DiagramFrame(wx.ScrolledWindow):
             else:
                 client.Blit(0, 0, w, h, dc, 0, 0)
 
-    #>------------------------------------------------------------------------
-
     def OnPaint(self, event):
         """
         Callback.
         Refresh the screen when a paint event is issued by the system.
 
-        @param wx.Event event
+        @param  event
         """
         dc = wx.PaintDC(self)
         w, h = self.GetSize()
@@ -793,33 +703,24 @@ class DiagramFrame(wx.ScrolledWindow):
         mem.SetBackground(wx.Brush(self.GetBackgroundColour()))
         mem.Clear()
         self.Redraw(mem)
-        dc.BeginDrawing()
-        #  MODIFIED BY C.DUTOIT : Added wx.Python test
-        #from wx.Python.wx. import wx.CHECK_VERSION
-        #if wx.CHECK_VERSION(2, 3, 2):
-        #import wx.Python
-        if wx.__version__>"2.3.2":
+
+        # dc.BeginDrawing()
+        if wx.__version__ > "2.3.2":
             x, y = self.CalcUnscrolledPosition(0, 0)
             dc.Blit(0, 0, w, h, mem, x, y)
         else:
             dc.Blit(0, 0, w, h, mem, 0, 0)
-        dc.EndDrawing()
-
-    #>------------------------------------------------------------------------
+        # dc.EndDrawing()
 
     def _NullCallback(self, evt):
-        #print "None"
+        # print "None"
         pass
-
-    #>------------------------------------------------------------------------
 
     def _ConvertEventCoords(self, event):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
         return (event.GetX() + (xView * xDelta),
                 event.GetY() + (yView * yDelta))
-
-    #>------------------------------------------------------------------------
 
     def GetCurrentZoom(self):
         """
@@ -830,8 +731,6 @@ class DiagramFrame(wx.ScrolledWindow):
         for z in self._zoomStack:
             zoom *= z
         return zoom
-
-    #>------------------------------------------------------------------------
 
     def GetXOffset(self):
         """

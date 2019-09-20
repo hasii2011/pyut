@@ -1,23 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.11 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
-
-from __future__   import division
-#from wxPython.wx  import *
-#from wxPython.ogl import *
 import wx
-from PyutLink     import PyutLink
-from OglLink      import *
+from PyutLink import PyutLink
+from OglLink import *
 from DlgEditLink  import *
 from math import pi, atan, cos, sin
 
 # Kind of labels
-[CENTER, SRC_CARD, DEST_CARD] = range(3)
+[CENTER, SRC_CARD, DEST_CARD] = list(range(3))
 
-#>------------------------------------------------------------------------
 
 class OglAssociation(OglLink):
     """
@@ -34,10 +24,9 @@ class OglAssociation(OglLink):
         """
         Constructor.
 
-        @param OglObject srcShape : Source shape
-        @param PyutLink pyutLink : Conceptual links associated with the
-                                   graphical links.
-        @param OglObject destShape : Destination shape
+        @param  srcShape : Source shape
+        @param  pyutLink : Conceptual links associated with the graphical links.
+        @param  dstShape : Destination shape
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
@@ -53,15 +42,15 @@ class OglAssociation(OglLink):
         dstX, dstY = dstShape.GetPosition()
         dy = dstY - srcY
         dx = dstX - srcX
-        l  = sqrt(dx*dx + dy*dy)
-        if l==0: l=0.01
-        cenLblX = -dy*5/l
-        cenLblY =  dx*5/l
-        srcLblX =  20*dx/l #- dy*5/l
-        srcLblY =  20*dy/l #+ dx*5/l
-        dstLblX = -20*dx/l #+ dy*5/l
-        dstLblY = -20*dy/l #- dy*5/l
-
+        l = sqrt(dx*dx + dy*dy)
+        if l == 0:
+            l = 0.01
+        cenLblX = -dy*5 / l
+        cenLblY = dx*5 / l
+        srcLblX = 20 * dx/l      # - dy*5/l
+        srcLblY = 20 * dy/l     # + dx*5/l
+        dstLblX = -20 * dx/l    # + dy*5/l
+        dstLblY = -20 * dy/l    # - dy*5/l
 
         # Initialize labels objects
         self._labels[CENTER] = self.AddText(cenLblX, cenLblY, "")
@@ -69,12 +58,6 @@ class OglAssociation(OglLink):
         self._labels[DEST_CARD] = self._dst.AddText(dstLblX, dstLblY, "")
         self.updateLabels()
         self.SetDrawArrow(False)
-
-        # Test
-        #self.AddShape(self._labels[SRC_CARD])
-        #self.AddShape(self._labels[DEST_CARD])
-
-    #>------------------------------------------------------------------------
 
     def updateLabels(self):
         """
@@ -92,18 +75,14 @@ class OglAssociation(OglLink):
             # If label should be drawn
             if text.strip() != "":
                 textShape.SetText(text)
-                #textShape.Show(True)
                 textShape.SetVisible(True)
             else:
-                #textShape.Show(False)
                 textShape.SetVisible(False)
 
         # Prepares labels
         prepareLabel(self._labels[CENTER], self._link.getName())
         prepareLabel(self._labels[SRC_CARD], self._link.getSrcCard())
         prepareLabel(self._labels[DEST_CARD], self._link.getDestCard())
-
-    #>------------------------------------------------------------------------
 
     def getLabels(self):
         """
@@ -114,9 +93,7 @@ class OglAssociation(OglLink):
         """
         return self._labels
 
-    #>------------------------------------------------------------------------
-
-    def Draw(self, dc):#, withChildren = False):
+    def Draw(self, dc):
         """
         Called for contents drawing of links.
 
@@ -125,9 +102,7 @@ class OglAssociation(OglLink):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self.updateLabels()
-        OglLink.Draw(self, dc)#, withChildren)
-
-    #>------------------------------------------------------------------------
+        OglLink.Draw(self, dc)
 
     def drawLosange(self, dc, filled=False):
         """
@@ -151,11 +126,11 @@ class OglAssociation(OglLink):
             else:
                 alpha = pi/2
         else:
-            if a==0:
-                if b>0:
+            if a == 0:
+                if b > 0:
                     alpha = pi/2
                 else:
-                    alpha = 3*pi/2
+                    alpha = 3 * pi / 2
             else:
                 alpha = atan(b/a)
         if a > 0:
@@ -168,11 +143,9 @@ class OglAssociation(OglLink):
         points.append((x2 + size * cos(alpha2), y2 + size * sin(alpha2)))
         points.append((x2 + 2*size * cos(alpha),  y2 + 2*size * sin(alpha)))
         dc.SetPen(wx.BLACK_PEN)
-        if (filled):
+        if filled:
             dc.SetBrush(wx.BLACK_BRUSH)
         else:
             dc.SetBrush(wx.WHITE_BRUSH)
         dc.DrawPolygon(points)
         dc.SetBrush(wx.WHITE_BRUSH)
-
-    #>------------------------------------------------------------------------
