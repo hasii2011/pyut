@@ -9,6 +9,7 @@ from wx import ID_OK
 from wx import ID_YES
 
 from wx import OK
+from wx import TreeEvent
 from wx import YES_NO
 
 from wx import ICON_ERROR
@@ -312,9 +313,9 @@ class FileHandling:
 
             if len([project for project in self._projects if project.getFilename() == filename]) > 0:
                 dlg = MessageDialog(self.__parent,
-                    _("Error ! The filename '%s" + "' correspond to a project which is currently opened !" +
-                      " Please choose another filename !") % str(filename),
-                    _("Save change, filename error"), OK | ICON_ERROR)
+                                    _("Error ! The filename '%s" + "' correspond to a project which is currently opened !" +
+                                      " Please choose another filename !") % str(filename),
+                                    _("Save change, filename error"), OK | ICON_ERROR)
                 dlg.ShowModal()
                 dlg.Destroy()
                 return
@@ -446,12 +447,14 @@ class FileHandling:
         # Register the current project
         self._currentProject = self.getProjectFromFrame(self._currentFrame)
 
-    def __onProjectTreeSelChanged(self, event):
+    def __onProjectTreeSelChanged(self, event: TreeEvent):
         """
         Callback for notebook page changed
 
         @author C.Dutoit
         """
+        # pyData = self.__projectTree.GetPyData(event.GetItem())
+        # Has Use GetItemData instead deprecation warning;  but .GetItemData does not exist
         pyData = self.__projectTree.GetPyData(event.GetItem())
         if isinstance(pyData, ScrolledWindow):
             frame = pyData
