@@ -1,28 +1,4 @@
-#
-# Copyright 2002, Laurent Burgbacher, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of MiniOgl.
-#
-# MiniOgl is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MiniOgl is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MiniOgl; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-__author__    = "Laurent Burgbacher, lb@alawa.ch, Eivd"
-__copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
-__license__   = "Released under the terms of the GNU General Public Licence V2"
-__date__      = "2002-10-15"
-__version__   = "$Id: AnchorPoint.py,v 1.10 2006/02/04 22:01:01 dutoitc Exp $"
 
 from MiniOgl.LinePoint import LinePoint
 
@@ -67,7 +43,7 @@ class AnchorPoint(LinePoint):
         """
         #  print ">>>AnchorPoint.init"
         LinePoint.__init__(self, x, y, parent)
-        self._protected = True # protected by default
+        self._protected = True  # protected by default
         self.SetDraggable(False)
         self._stayInside = True
         self._stayOnBorder = True
@@ -76,7 +52,7 @@ class AnchorPoint(LinePoint):
         """
         If True, the point will stay inside the bounds of its parent shape.
 
-        @param boolean state
+        @param state
         """
         self._stayInside = state
 
@@ -92,10 +68,9 @@ class AnchorPoint(LinePoint):
         """
         If True, the point will stay on the border of its parent shape.
 
-        @param boolean state
+        @param state
         """
         self._stayOnBorder = state
-
 
     def GetStayOnBorder(self):
         """
@@ -109,7 +84,6 @@ class AnchorPoint(LinePoint):
         """
         Change the position of the anchor point, if it's draggable.
 
-        @param double x, y : new position in diagram coordinates
         """
 
         def stayInside(low, length, value):
@@ -132,10 +106,10 @@ class AnchorPoint(LinePoint):
             up = y - oy
             down = oy + height - y
             choice = {
-                left :  lambda x, y: (ox, y),
-                right : lambda x, y: (ox + width, y),
-                up :    lambda x, y: (x, oy),
-                down :  lambda x, y: (x, oy + height),
+                left:  lambda x, y: (ox, y),
+                right: lambda x, y: (ox + width, y),
+                up:    lambda x, y: (x, oy),
+                down:  lambda x, y: (x, oy + height),
             }
             lesser = min(left, right, up, down)
             return choice[lesser](x, y)

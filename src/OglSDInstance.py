@@ -1,18 +1,24 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.13 $"
-__author__ = "C.Dutoit"
-__date__ = "2002-11-22"
+from wx import BLACK_DASHED_PEN
+from wx import CANCEL
+from wx import CENTRE
+from wx import Colour
+from wx import ID_OK
+from wx import OK
+from wx import PENSTYLE_LONG_DASH
+from wx import Pen
 
-#from wxPython.wx  import *
-from PyutLink     import PyutLink
-from PyutConsts   import *
-from mediator     import *
-from MiniOgl      import *
-from OglObject    import *
-from PyutSDInstance import *
+from wx import TextEntryDialog
 
+from MiniOgl import AnchorPoint
+from MiniOgl import LineShape
+from MiniOgl import RectangleShape
+
+from OglObject import OglObject
+from OglObject import TextShape
+from OglObject import ShapeEventHandler
+
+from globals import _
 
 # Constants
 DEFAULT_X = 0
@@ -20,16 +26,12 @@ DEFAULT_Y = 0
 DEFAULT_WIDTH = 100
 DEFAULT_HEIGHT = 400
 
-##############################################################################
 
 class OglInstanceName(TextShape, ShapeEventHandler):
     """
     TextShape that support text editing
     @author C.Dutoit
     """
-
-    #>------------------------------------------------------------------
-
     def __init__(self, pyutObject, x, y, text, parent=None):
         """
         @author C.Dutoit
@@ -37,45 +39,30 @@ class OglInstanceName(TextShape, ShapeEventHandler):
         self._pyutObject = pyutObject
         TextShape.__init__(self, x, y, text, parent)
 
-
-
-
-    #>------------------------------------------------------------------
-
     def OnLeftDClick(self, event):
         """
         Callback for left double clicks.
         @author C.Dutoit
         """
-        dlg = wx.TextEntryDialog(None, _("Message"), _("Enter message"),
-              self._pyutObject.getInstanceName(), wx.OK | wx.CANCEL | wx.CENTRE)
-        if dlg.ShowModal() == wx.ID_OK:
+        dlg = TextEntryDialog(None, _("Message"), _("Enter message"), self._pyutObject.getInstanceName(), OK | CANCEL | CENTRE)
+        if dlg.ShowModal() == ID_OK:
             self._pyutObject.setInstanceName(dlg.GetValue())
         dlg.Destroy()
 
-
-
-
-
-
-##############################################################################
 
 class OglSDInstance(OglObject):
     """
     Class Diagram Instance
     This class is an OGL object for class diagram instance (vertical line, ..)
-    This class implements the following functions : 
+    This class implements the following functions :
         - ...
 
     Instanciated by UmlClassDiagramFrame
 
     :version: $Revision: 1.13 $
-    :author: C.Dutoit   
+    :author: C.Dutoit
     :contact: dutoitc@hotmail.com
     """
-
-    #>------------------------------------------------------------------------
-    
     def __init__(self, pyutObject, parentFrame):
         """
         Constructor.
@@ -93,13 +80,13 @@ class OglSDInstance(OglObject):
         diagram.AddShape(self)
         self.SetDraggable(True)
         self.SetVisible(True)
-        self.SetPen(wx.Pen(wx.Colour(200, 200, 255), 1, wx.LONG_DASH))
+
+        self.SetPen(Pen(Colour(200, 200, 255), 1, PENSTYLE_LONG_DASH))
         self.SetPosition(self.GetPosition()[0], self._instanceYPosition)
 
         # Init lineShape
-        (srcX, srcY, dstX, dstY) = (DEFAULT_WIDTH/2, 0, 
-                                    DEFAULT_WIDTH/2, DEFAULT_HEIGHT)
-        #self._lifeLineX = srcX
+        (srcX, srcY, dstX, dstY) = (DEFAULT_WIDTH/2, 0, DEFAULT_WIDTH/2, DEFAULT_HEIGHT)
+        # self._lifeLineX = srcX
         (src, dst) = (AnchorPoint(srcX, srcY, self), AnchorPoint(dstX, dstY, self))
         for el in [src, dst]:
             el.SetVisible(False)
@@ -109,10 +96,10 @@ class OglSDInstance(OglObject):
         self._lineShape.SetParent(self)
         self._lineShape.SetDrawArrow(False)
         self._lineShape.SetDraggable(True)
-        self._lineShape.SetPen(wx.BLACK_DASHED_PEN)
+        self._lineShape.SetPen(BLACK_DASHED_PEN)
         self._lineShape.SetVisible(True)
         diagram.AddShape(self._lineShape)
-        
+
         # Instance box
         self._instanceBox = RectangleShape(0, 0, 100, 50)
         self.AppendChild(self._instanceBox)
@@ -127,12 +114,8 @@ class OglSDInstance(OglObject):
         self._instanceBoxText = OglInstanceName(pyutObject, 0, 20, text, self._instanceBox)
         self.AppendChild(self._instanceBoxText)
         diagram.AddShape(self._instanceBoxText)
-        #TODO : set instance box size to the size of the text
+        # TODO : set instance box size to the size of the text
         #       by invoking self._instanceBoxText.setSize()
-
-
-
-    #>------------------------------------------------------------------------
 
     def getLifeLineShape(self):
         """
@@ -142,47 +125,28 @@ class OglSDInstance(OglObject):
         """
         return self._lineShape
 
-
-    ##>------------------------------------------------------------------------
-
-    #def getLifeLineX(self):
-    #    """
-    #    return the lifeline X position
-
-    #    @return int : the position in X of the lifeline
-    #    @author C.Dutoit
-    #    """
-    #    return self._lifeLineX
-
-    #>------------------------------------------------------------------------
     def OnInstanceBoxResize(self, sizer, width, height):
         """
         Resize the instance box, so all instance
-
-        @param double x, y : position of the sizer
         """
         RectangleShape.Resize(self._instanceBox, sizer, width, height)
         size = self._instanceBox.GetSize()
         self.SetSize(size[0], self.GetSize()[1])
 
-
-    #>------------------------------------------------------------------------
     def Resize(self, sizer, width, height):
         """
         Resize the rectangle according to the new position of the sizer.
 
-        @param double x, y : position of the sizer
         """
         OglObject.Resize(self, sizer, width, height)
 
-    #>------------------------------------------------------------------------
     def SetSize(self, width, height):
         """
         """
         OglObject.SetSize(self, width, height)
         # Set lifeline
-        #self._lifeLineX = width/2
-        (myX, myY) = self.GetPosition()
+        # self._lifeLineX = width/2
+        #  (myX, myY) = self.GetPosition()
         (myX, myY) = self.GetPosition()
         (w, h) = self.GetSize()
         lineDst = self._lineShape.GetDestination()
@@ -202,26 +166,20 @@ class OglSDInstance(OglObject):
                 pass
 
         # Set TextBox
-        RectangleShape.SetSize(self._instanceBox, 
-                               width, self._instanceBox.GetSize()[1])
-
-    
-    #>------------------------------------------------------------------------
+        RectangleShape.SetSize(self._instanceBox, width, self._instanceBox.GetSize()[1])
 
     def SetPosition(self, x, y):
-        """ 
+        """
         Debug
         @author C.Dutoit
         """
         y = self._instanceYPosition
         OglObject.SetPosition(self, x, y)
 
-    
-    #>------------------------------------------------------------------------
-
-    def Draw(self, dc):#, withChildren=False):
+    def Draw(self, dc):
         """
         Draw overload; update labels
+
         @author C.Dutoit
         """
         # Update labels
@@ -230,39 +188,10 @@ class OglSDInstance(OglObject):
         # Call parent's Draw method
         if self.IsSelected():
             self.SetVisible(True)
-            self.SetPen(wx.Pen(wx.Colour(200, 200, 255), 1, wx.LONG_DASH))
+            self.SetPen(Pen(Colour(200, 200, 255), 1, PENSTYLE_LONG_DASH))
 
         # Draw
-        OglObject.Draw(self, dc)#, withChildren)
-
-
-    #>------------------------------------------------------------------
-
-    #def addLink(self, link):
-        #"""
-        #Add a link to an ogl object.
-#
-        #@param OglLink link : the link to add
-        #@author Philippe Waelti
-        #@modified C.Dutoit 20021125 : Added as error, since it's not used here
-        #"""
-        #raise _("Not valid in this case")
-
-    #>------------------------------------------------------------------
-
-    #def getLinks(self):
-        #"""
-        #Return the links.
-#
-        #@return OglLink[] : Links connected to object
-        #@author Philippe Waelti
-        #@modified C.Dutoit 20021125 : Added as error, since it's not used here
-        #"""
-        #raise _("Not valid in this case")
-
-
-
-    #>------------------------------------------------------------------
+        OglObject.Draw(self, dc)
 
     def OnLeftUp(self, event):
         """

@@ -1,14 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.11 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-12-05"
 
-#from PyutObject      import PyutObject
-from PyutLink        import PyutLink
-from types           import *
-DEBUG=False
+from PyutLink import PyutLink
+
+from globals import _
+
+DEBUG = False
+
 
 class PyutSDMessage(PyutLink):
     """
@@ -19,8 +16,7 @@ class PyutSDMessage(PyutLink):
     :author: C.Dutoit
     """
 
-    def __init__(self, message="", src=None, srcTime=0, dst=None, dstTime=0,  \
-                 oglObject = None):
+    def __init__(self, message="", src=None, srcTime=0, dst=None, dstTime=0, oglObject=None):
         """
         Constructor.
 
@@ -35,21 +31,18 @@ class PyutSDMessage(PyutLink):
         """
         if DEBUG:
             print("PyutSDMessage.__init__", srcTime, dstTime)
-        PyutLink.__init__(self, source=src, destination=dst)
+        super().__init__(source=src, destination=dst)
         self._message = message
         self._srcTime = srcTime
         self._dstTime = dstTime
         self._oglObject = oglObject
-    
-    #>------------------------------------------------------------------------
+
     def setOglObject(self, obj):
         """
         Define the ogl object
         @author C.Dutoit
         """
         self._oglObject = obj
-        
-    #>------------------------------------------------------------------------
 
     def getSrcY(self):
         """
@@ -58,16 +51,12 @@ class PyutSDMessage(PyutLink):
         """
         return self._srcTime
 
-    #>------------------------------------------------------------------------
-
     def getDstY(self):
         """
         Return Y position on destination
         @author C.Dutoit
         """
         return self._dstTime
-
-    #>------------------------------------------------------------------------
 
     def setSrcY(self):
         """
@@ -76,16 +65,12 @@ class PyutSDMessage(PyutLink):
         """
         return self._srcTime
 
-    #>------------------------------------------------------------------------
-
     def setDstY(self):
         """
         Return Y position on destination
         @author C.Dutoit
         """
         return self._dstTime
-
-    #>------------------------------------------------------------------------
 
     def getSrcTime(self):
         """
@@ -95,8 +80,6 @@ class PyutSDMessage(PyutLink):
         """
         return self._srcTime
 
-    #>------------------------------------------------------------------------
-
     def getDstTime(self):
         """
         Return time on destination
@@ -105,9 +88,7 @@ class PyutSDMessage(PyutLink):
         """
         return self._dstTime
 
-    #>------------------------------------------------------------------------
-
-    def setSrcTime(self, value, updateOGLObject = True):
+    def setSrcTime(self, value, updateOGLObject=True):
         """
         Define time on source
         DON'T use it, or only for saving purpose
@@ -117,9 +98,7 @@ class PyutSDMessage(PyutLink):
         if updateOGLObject and self._oglObject is not None:
             self._oglObject.updatePositions()
 
-    #>------------------------------------------------------------------------
-
-    def setDstTime(self, value, updateOGLObject = True):
+    def setDstTime(self, value, updateOGLObject=True):
         """
         Define time on destination
         DON'T use it, or only for saving purpose
@@ -129,16 +108,12 @@ class PyutSDMessage(PyutLink):
         if updateOGLObject and self._oglObject is not None:
             self._oglObject.updatePositions()
 
-    #>------------------------------------------------------------------------
-
     def getSrcID(self):
         """
         Return Y position on source
         @author C.Dutoit
         """
         return self._src.getId()
-
-    #>------------------------------------------------------------------------
 
     def getDstID(self):
         """
@@ -147,8 +122,6 @@ class PyutSDMessage(PyutLink):
         """
         return self._dest.getId()
 
-    #>------------------------------------------------------------------------
-
     def getSource(self):
         """
         Return Y position on source
@@ -156,18 +129,12 @@ class PyutSDMessage(PyutLink):
         """
         return self._src
 
-    #>------------------------------------------------------------------------
-
     def getDest(self):
         """
         Return Y position on source
         @author C.Dutoit
         """
         return self._dest
-
-
-
-    #>------------------------------------------------------------------------
 
     def __str__(self):
         """
@@ -178,8 +145,6 @@ class PyutSDMessage(PyutLink):
         """
         return _("(%s) link to %s") % (self._source, self._destination)
 
-    #>------------------------------------------------------------------------
-
     def getMessage(self):
         """
         Return the message as a string
@@ -187,8 +152,6 @@ class PyutSDMessage(PyutLink):
         @author C.Dutoit
         """
         return self._message
-
-    #>------------------------------------------------------------------------
 
     def setMessage(self, value):
         """
@@ -198,8 +161,6 @@ class PyutSDMessage(PyutLink):
         """
         self._message = value
 
-    #>------------------------------------------------------------------------
-
     def setSource(self, src=None, srcTime=-1):
         """
         Define the source
@@ -207,15 +168,13 @@ class PyutSDMessage(PyutLink):
         @param srcTime : Time on the source
         @author C.Dutoit
         """
-        if src is not None: 
-            #self._src = src
+        if src is not None:
+            # self._src = src
             PyutLink.setSource(self, src)
         if srcTime!=-1:
             if DEBUG:
                 print("PyutSDMessage - Setting srcTime to ", srcTime)
             self.setSrcTime(srcTime)
-
-    #>------------------------------------------------------------------------
 
     def setDestination(self, dst=None, dstTime=-1):
         """
@@ -224,10 +183,9 @@ class PyutSDMessage(PyutLink):
         @param dstTime : Time on the destination
         @author C.Dutoit
         """
-        if dst is not None: 
+        if dst is not None:
             PyutLink.setDestination(self, dst)
-            #self._dest = dst
+            # self._dest = dst
         if dstTime!=-1:
             print("PyutSDMessage - Setting dstTime to ", dstTime)
             self.setDstTime(dstTime)
-

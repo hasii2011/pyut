@@ -1,14 +1,5 @@
 
-# from .PyutClass       import *
-# from .PyutParam       import *
-# from .PyutMethod      import *
-# from .PyutField       import *
-# from .PyutStereotype  import *
-# from .PyutType        import *
-# from .PyutConsts      import *
 
-# reading file
-# from io import StringIO
 from xml.dom.minidom import parse
 from xml.dom.minidom import Document
 
@@ -270,7 +261,6 @@ class PyutXml:
 
         return root
 
-
     def _PyutActor2xml(self, pyutActor, xmlDoc):
         """
         Exporting an PyutActor to an miniDom Element.
@@ -386,9 +376,6 @@ class PyutXml:
 
         return root
 
-
-#>------------------------------------------------------------------------
-
     def _OglActor2xml(self, oglActor, xmlDoc):
         """
         Exporting an OglActor to an miniDom Element.
@@ -399,7 +386,7 @@ class PyutXml:
         @since 2.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
         root = xmlDoc.createElement('GraphicActor')
 
         # Append OGL object base (size and pos)
@@ -736,8 +723,7 @@ class PyutXml:
             pyutActor.setName(xmlActor.getAttribute('name').encode("charmap"))
 
             # adding fathers
-            self._getFathers(xmlActor.getElementsByTagName("Father"), \
-                dicoFather, pyutActor.getId())
+            self._getFathers(xmlActor.getElementsByTagName("Father"), dicoFather, pyutActor.getId())
 
             # Update dicos
             dicoLink[pyutActor.getId()] = self._getLinks(xmlActor)
@@ -891,15 +877,12 @@ class PyutXml:
                 umlFrame.createInheritanceLink(\
                         dicoOglObjects[child], dicoOglObjects[father])
 
-
         # adding links to this OGL object
         dlgGauge.SetTitle("Adding Links...")
         gauge.SetValue(4)
         for src, links in list(dicoLink.items()):
             for link in links:
-                createdLink = umlFrame.createNewLink(dicoOglObjects[src], \
-                    dicoOglObjects[link[1].getDestination().getId()], \
-                    link[1].getType())
+                createdLink = umlFrame.createNewLink(dicoOglObjects[src], dicoOglObjects[link[1].getDestination().getId()], link[1].getType())
 
                 # fix link with the loaded information
                 pyutLink = createdLink.getPyutObject()
@@ -907,7 +890,6 @@ class PyutXml:
                 pyutLink.setDestCard(link[1].getDestCard())
                 pyutLink.setSrcCard(link[1].getSrcCard())
                 pyutLink.setName(link[1].getName())
-
 
         # to draw diagram
         umlFrame.Refresh()

@@ -6,11 +6,10 @@ from PyutClass import PyutClass
 from pyutUtils import *
 from globals import _
 
-import mediator
+from mediator import getMediator
 
 # Menu IDs
-[ MNU_TOGGLE_STEREOTYPE, MNU_TOGGLE_FIELDS, MNU_TOGGLE_METHODS,
-  MNU_FIT_FIELDS, MNU_CUT_SHAPE ]   = assignID(5)
+[MNU_TOGGLE_STEREOTYPE, MNU_TOGGLE_FIELDS, MNU_TOGGLE_METHODS, MNU_FIT_FIELDS, MNU_CUT_SHAPE ]   = assignID(5)
 
 MARGIN = 10.0
 
@@ -30,7 +29,7 @@ class OglClass(OglObject):
     :contact: lb@alawa.ch
     """
 
-    def __init__(self, pyutClass = None, w=100.0, h=100.0):
+    def __init__(self, pyutClass=None, w=100, h=100):
         """
         Constructor.
         @param PyutClass pyutClass : a Pyutclass object
@@ -38,18 +37,24 @@ class OglClass(OglObject):
         @param float h : Height of the shape
         @author N.Hamadi
         """
-        #print "OglClass-1"
+        # print "OglClass-1"
         # initilize the pyutClass if wasn't
-        if pyutClass is not None:
-            pyutObject = pyutClass
-        else:
+        # if pyutClass is not None:
+        #     pyutObject = pyutClass
+        # else:
+        #     pyutObject = PyutClass()
+        if pyutClass is None:
             pyutObject = PyutClass()
-        #print "OglClass-2"
+        else:
+            pyutObject = pyutClass
+        # print "OglClass-2"
 
         # Super init
-        OglObject.__init__(self, pyutObject, w, h)
-        #print "OglClass-3"
-        #self.SetBrush(wx.LIGHT_GREY_BRUSH)
+        # OglObject.__init__(self, pyutObject, w, h)
+        super().__init__(pyutObject, w, h)
+
+        # print "OglClass-3"
+        # self.SetBrush(wx.LIGHT_GREY_BRUSH)
 
         self._nameFont = wx.Font(DEFAULT_FONT_SIZE, wx.SWISS, wx.NORMAL, wx.BOLD)
 
@@ -76,11 +81,14 @@ class OglClass(OglObject):
         dc.SetTextForeground(wx.BLACK)
         pyutObject = self.getPyutObject()
         x, y = self.GetPosition()
-        if initialX is not None: x = initialX
-        if initialY is not None: y = initialY
+        if initialX is not None:
+            x = initialX
+        if initialY is not None:
+            y = initialY
         w = self._width
         h = 0
-        if calcWidth: w = 0
+        if calcWidth:
+            w = 0
 
         # define space between text and line
         lth = dc.GetTextExtent("*")[1] / 2.0
@@ -113,9 +121,9 @@ class OglClass(OglObject):
             h += lth
 
         # Return sizes
-        return (x, y, w, h)
+        return x, y, w, h
 
-    def calculateClassFields(self, dc, draw=False, initialX = None, initialY = None, calcWidth = False):
+    def calculateClassFields(self, dc, draw=False, initialX=None, initialY=None, calcWidth=False):
         """
         Calculate the class fields position and size and display it if
         a draw is True
@@ -128,18 +136,21 @@ class OglClass(OglObject):
         dc.SetTextForeground(wx.BLACK)
         pyutObject = self.getPyutObject()
         x, y = self.GetPosition()
-        if initialX is not None: x = initialX
-        if initialY is not None: y = initialY
+        if initialX is not None:
+            x = initialX
+        if initialY is not None:
+            y = initialY
         w = self._width
         h = 0
-        if calcWidth: w = 0
+        if calcWidth:
+            w = 0
 
         # define space between text and line
         lth = dc.GetTextExtent("*")[1] / 2.0
 
         # Add space
-        if len(self.getPyutObject().getFields())>0:
-            h+=lth
+        if len(self.getPyutObject().getFields()) > 0:
+            h += lth
 
         # draw pyutClass fields
         if pyutObject.getShowFields():
@@ -148,22 +159,17 @@ class OglClass(OglObject):
                     dc.DrawText(str(field), x + MARGIN, y + h)
                 if calcWidth:
                     w = max(w, self.GetTextWidth(dc, str(field)))
-                #h += height
+
                 h += self.GetTextHeight(dc, str(field))
 
         # Add space
-        if len(self.getPyutObject().getFields())>0:
-            h+=lth
+        if len(self.getPyutObject().getFields()) > 0:
+            h += lth
 
         # Return sizes
-        return (x, y, w, h)
+        return x, y, w, h
 
-
-    #>------------------------------------------------------------------
-
-    def calculateClassMethods(self, dc, draw=False,
-                              initialX = None, initialY = None,
-                              calcWidth = False):
+    def calculateClassMethods(self, dc, draw=False, initialX=None, initialY=None, calcWidth=False):
         """
         Calculate the class methods position and size and display it if
         a draw is True
@@ -176,21 +182,24 @@ class OglClass(OglObject):
         dc.SetTextForeground(wx.BLACK)
         pyutObject = self.getPyutObject()
         x, y = self.GetPosition()
-        if initialX != None: x = initialX
-        if initialY != None: y = initialY
+        if initialX is not None:
+            x = initialX
+        if initialY is not None:
+            y = initialY
         w = self._width
         h = 0
-        if calcWidth: w = 0
+        if calcWidth:
+            w = 0
 
         # define space between text and line
         lth = dc.GetTextExtent("*")[1] / 2.0
 
         # Add space
-        if len(self.getPyutObject().getMethods())>0:
-            h+=lth
+        if len(self.getPyutObject().getMethods()) > 0:
+            h += lth
 
         # draw pyutClass methods
-        #print "showmethods => ", pyutObject.getShowMethods()
+        # print "showmethods => ", pyutObject.getShowMethods()
         if pyutObject.getShowMethods():
             for method in self.getPyutObject().getMethods():
                 if draw:
@@ -198,21 +207,17 @@ class OglClass(OglObject):
                 if calcWidth:
                     w = max(w, self.GetTextWidth(dc, str(method)))
                 # separate tow methods
-                #h += height
+                # h += height
                 h += self.GetTextHeight(dc, str(method))
 
         # Add space
-        if len(self.getPyutObject().getMethods())>0:
-            h+=lth
+        if len(self.getPyutObject().getMethods()) > 0:
+            h += lth
 
         # Return sizes
-        return (x, y, w, h)
+        return x, y, w, h
 
-
-
-    #>------------------------------------------------------------------
-
-    def Draw(self, dc):#, withChildren=False):
+    def Draw(self, dc):
         """
         Paint handler, draws the content of the shape.
         @param wx.DC dc : device context to draw to
@@ -221,53 +226,43 @@ class OglClass(OglObject):
         @modified C.Dutoit 20021121 : Refactored: by splitting
         """
         # Autoresize ?
-        #import PyutPreferences
-        #prefs = PyutPreferences.PyutPreferences()
-        #if prefs["AUTO_RESIZE"]:
+        # import PyutPreferences
+        # prefs = PyutPreferences.PyutPreferences()
+        # if prefs["AUTO_RESIZE"]:
         #    self.autoResize()
 
         # Init
         pyutObject = self.getPyutObject()
 
-
         # Draw rectangle shape
-        OglObject.Draw(self, dc)#, withChildren)
-
+        OglObject.Draw(self, dc)
 
         # drawing is restricted in the specified region of the device
         w, h = self._width, self._height
         x, y = self.GetPosition()           # Get position
         dc.SetClippingRegion(x, y, w, h)
 
-
         # Draw header
-        (headerX, headerY, headerW, headerH) =  \
-            self.calculateClassHeader(dc, True)
+        (headerX, headerY, headerW, headerH) = self.calculateClassHeader(dc, True)
         y = headerY + headerH
-
 
         if pyutObject.getShowFields():
             # Draw line
             dc.DrawLine(x, y, x + w, y)
 
             # Draw fields
-            (fieldsX, fieldsY, fieldsW, fieldsH) =  \
-                self.calculateClassFields(dc, True, initialY = y)
+            fieldsX, fieldsY, fieldsW, fieldsH = self.calculateClassFields(dc, True, initialY=y)
             y = fieldsY + fieldsH
 
         # Draw line
         dc.DrawLine(x, y, x + w, y)
 
         # Draw methods
-        if pyutObject.getShowMethods():
-            (methX, methY, methW, methH) =  \
-                self.calculateClassMethods(dc, True, initialY = y)
-            y = methY +methH
+        # if pyutObject.getShowMethods():
+        #     (methX, methY, methW, methH) = self.calculateClassMethods(dc, True, initialY=y)
+        #     y = methY + methH
 
         dc.DestroyClippingRegion()
-
-
-    #>------------------------------------------------------------------
 
     def autoResize(self):
         """
@@ -279,44 +274,36 @@ class OglClass(OglObject):
         # Init
         pyutObject = self.getPyutObject()
         dc = wx.ClientDC(self.GetDiagram().GetPanel())
-        x, y = self.GetPosition()           # Get position
+        # x, y = self.GetPosition()           # Get position
 
         # Get header size
-        (headerX, headerY, headerW, headerH) =  \
-            self.calculateClassHeader(dc, False, calcWidth = True)
+        (headerX, headerY, headerW, headerH) = self.calculateClassHeader(dc, False, calcWidth=True)
         y = headerY + headerH
-
 
         # Get fields size
         if pyutObject.getShowFields():
-            (fieldsX, fieldsY, fieldsW, fieldsH) =  \
-                self.calculateClassFields(dc, False, initialY = y, calcWidth = True)
+            (fieldsX, fieldsY, fieldsW, fieldsH) = self.calculateClassFields(dc, False, initialY=y, calcWidth=True)
             y = fieldsY + fieldsH
         else:
             fieldsW, fieldsH = 0, 0
 
-
         # Get methods size
         if pyutObject.getShowMethods():
             (methX, methY, methW, methH) =  \
-                self.calculateClassMethods(dc, False, initialY = y, calcWidth = True)
-            y = methY +methH
+                self.calculateClassMethods(dc, False, initialY=y, calcWidth=True)
+            y = methY + methH
         else:
             methW, methH = 0, 0
 
-
         w = max(headerW, fieldsW, methW)
         h = y - headerY
-        w += 2.0 * MARGIN # margins
+        w += 2.0 * MARGIN
         self.SetSize(w, h)
 
         # to automatically replace the sizers at a correct place
         if self.IsSelected():
             self.SetSelected(False)
             self.SetSelected(True)
-
-
-    #>------------------------------------------------------------------
 
     def OnMenuClick(self, event):
         """
@@ -325,26 +312,24 @@ class OglClass(OglObject):
         @author C.Dutoit
         """
         pyutObject = self.getPyutObject()
-        if (event.GetId()==MNU_TOGGLE_STEREOTYPE):
+        if event.GetId() == MNU_TOGGLE_STEREOTYPE:
             pyutObject.setShowStereotype(not pyutObject.getShowStereotype())
             self.autoResize()
-        elif (event.GetId()==MNU_TOGGLE_METHODS):
+        elif event.GetId() == MNU_TOGGLE_METHODS:
             pyutObject.setShowMethods(not pyutObject.getShowMethods())
             self.autoResize()
-        elif (event.GetId()==MNU_TOGGLE_FIELDS):
+        elif event.GetId() == MNU_TOGGLE_FIELDS:
             pyutObject.setShowFields(not pyutObject.getShowFields())
             self.autoResize()
-        elif (event.GetId()==MNU_FIT_FIELDS):
+        elif event.GetId() == MNU_FIT_FIELDS:
             self.autoResize()
-        elif (event.GetId()==MNU_CUT_SHAPE):
+        elif event.GetId() == MNU_CUT_SHAPE:
             ctrl = mediator.getMediator()
             ctrl.deselectAllShapes()
             self.SetSelected(True)
             ctrl.cutSelectedShapes()
         else:
             event.skip()
-
-    #>------------------------------------------------------------------
 
     def OnRightDown(self, event):
         """
@@ -355,39 +340,27 @@ class OglClass(OglObject):
         # Define menu
         pyutObject = self.getPyutObject()
         menu = wx.Menu()
-        menu.Append(MNU_TOGGLE_STEREOTYPE,
-                    _("Toggle stereotype display"),
-                    _("Set on or off the stereotype display"),
+        menu.Append(MNU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set on or off the stereotype display"),
                     True)
         item = menu.FindItemById(MNU_TOGGLE_STEREOTYPE)
         item.Check(pyutObject.getShowStereotype())
 
-        menu.Append(MNU_TOGGLE_FIELDS,
-                    _("Toggle fields display"),
-                    _("Set on or off the fields display"),
+        menu.Append(MNU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set on or off the fields display"),
                     True)
         item = menu.FindItemById(MNU_TOGGLE_FIELDS)
         item.Check(pyutObject.getShowFields())
 
-        menu.Append(MNU_TOGGLE_METHODS,
-                    _("Toggle methods display"),
-                    _("Set on or off the methods display"),
+        menu.Append(MNU_TOGGLE_METHODS, _("Toggle methods display"), _("Set on or off the methods display"),
                     True)
         item = menu.FindItemById(MNU_TOGGLE_METHODS)
         item.Check(pyutObject.getShowMethods())
 
-        menu.Append(MNU_FIT_FIELDS,
-                    _("Fit Fields"),
-                    _("Fit to see all class fields"))
-        menu.Append(MNU_CUT_SHAPE,
-                    _("Cut shape"),
-                    _("Cut this shape"))
-
+        menu.Append(MNU_FIT_FIELDS, _("Fit Fields"), _("Fit to see all class fields"))
+        menu.Append(MNU_CUT_SHAPE,  _("Cut shape"),  _("Cut this shape"))
 
         # Get umlframe
-        import mediator
-        mediator = mediator.getMediator()
-        umlFrame = mediator.getUmlFrame()
+        med = getMediator()
+        umlFrame = med.getUmlFrame()
         frame = self._diagram.GetPanel()
 
         # Callback
@@ -398,7 +371,4 @@ class OglClass(OglObject):
         menu.Bind(wx.EVT_MENU, self.OnMenuClick, id=MNU_CUT_SHAPE)
 
         # Display menu
-        frame.PopupMenu(menu, umlFrame.CalcScrolledPosition(event.GetX(),
-                                                            event.GetY()))
-
-
+        frame.PopupMenu(menu, umlFrame.CalcScrolledPosition(event.GetX(), event.GetY()))
