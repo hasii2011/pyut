@@ -47,6 +47,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+         "PyutDocument": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "plugins": {
             "level":     "INFO",
             "propagate": "False"

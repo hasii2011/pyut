@@ -3,12 +3,12 @@ from wx import ID_NO
 from wx import YES_NO
 
 from wx import MessageDialog
-from wx import TreeItemData
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
 from pyutUtils import displayError
 from PyutDocument import PyutDocument
+from IoFile import IoFile
 
 from mediator import getMediator
 from globals import _
@@ -100,7 +100,7 @@ class PyutProject:
         """
         return self._documents
 
-    def setModified(self, value = True):
+    def setModified(self, value=True):
         """
         Define the modified attribute
 
@@ -143,12 +143,10 @@ class PyutProject:
         @return boolean: True if succeeded
         """
         # Load the file
-        import IoFile
         BeginBusyCursor()
-        io = IoFile.IoFile()
-        #wx.Yield() # to treat the umlframe refresh in newDiagram before loading
-
-        #Load the file
+        io = IoFile()
+        # wx.Yield() # to treat the umlframe refresh in newDiagram before loading
+        # Load the file
         self._filename = filename
         try:
             io.open(filename, self)
@@ -157,9 +155,8 @@ class PyutProject:
             EndBusyCursor()
             displayError(_(f"Error loading file: {e}"))
             return False
-        # print ">>>PyutProject-loadFromFilename-5"
+
         EndBusyCursor()
-        # print ">>>PyutProject-loadFromFilename-6"
         # Update text
         self.updateTreeText()
 
@@ -167,11 +164,9 @@ class PyutProject:
         # if len(self._documents)>0:
         # self._ctrl.registerUMLFrame(self._documents[0].getFrame())
         # print ">>>PyutProject-loadFromFilename-7"
-        if len(self._documents)>0:
+        if len(self._documents) > 0:
             self._ctrl.getFileHandling().showFrame(self._documents[0].getFrame())
-            # print ">>>PyutProject-loadFromFilename-8"
             self._documents[0].getFrame().Refresh()
-            # print ">>>PyutProject-loadFromFilename-9"
             return True
         else:
             return False
@@ -202,22 +197,22 @@ class PyutProject:
         self.updateTreeText()
 
         # Register to mediator
-        if len(self._documents)>0:
+        if len(self._documents) > 0:
             frame = self._documents[0].getFrame()
             self._ctrl.getFileHandling().registerUmlFrame(frame)
 
         # Return
         return True
 
-    def newDocument(self, type):
+    def newDocument(self, documentType):
         """
         Create a new document
 
         @author C.Dutoit
-        @param type : Type of document; one cited in PyutConsts.py
+        @param documentType : Type of document; one cited in PyutConsts.py
         @return the newly created PyutDocument
         """
-        document = PyutDocument(self._parentFrame, self, type)
+        document = PyutDocument(self._parentFrame, self, documentType)
         self._documents.append(document)
         document.addToTree(self._tree, self._treeRoot)
         frame = document.getFrame()
@@ -245,11 +240,8 @@ class PyutProject:
         io = IoFile.IoFile()
         BeginBusyCursor()
         try:
-             #io.save(self._filename, self._ctrl.getUmlObjects(), \
-              #   self._documents[0].getFrame())
             io.save(self)
             self._modified = False
-
             self.updateTreeText()
         except (ValueError, Exception) as e:
             displayError(_(f"An error occured while saving project {e}"))

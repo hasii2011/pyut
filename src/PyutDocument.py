@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from PyutConsts import CLASS_DIAGRAM
 from PyutConsts import DiagramsLabels
 from PyutConsts import SEQUENCE_DIAGRAM
@@ -39,6 +42,7 @@ class PyutDocument:
         @param docType : Type of document; one cited in PyutConsts.py
         @author C.Dutoit
         """
+        self.logger: Logger = getLogger(__name__)
         self._parentFrame    = None
         self._project        = project
         self._treeRoot       = None         # Root of the project entry in the tree
@@ -46,7 +50,7 @@ class PyutDocument:
         self._tree           = None         # Tree I am belonging to
         self._type           = docType
 
-        print("PyutDocument using type ", docType)
+        self.logger.info(f'Project: {project} PyutDocument using type {docType}')
         if docType == CLASS_DIAGRAM:
             self._title = DiagramsLabels[docType]
             self._frame = UmlClassDiagramsFrame(parentFrame)

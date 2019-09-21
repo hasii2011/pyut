@@ -14,3 +14,5 @@ __pycache__/
 pyutHistory*
 *.log
 *.put
+*.dat
+*.put copy
