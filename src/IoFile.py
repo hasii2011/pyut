@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from os import getcwd
 from os import chdir
 
@@ -34,6 +37,10 @@ class IoFile:
     :author:  Deve Roux
     :contact: droux@eivd.ch
     """
+    def __init__(self):
+
+        self.logger: Logger = getLogger(__name__)
+
     def save(self, project):
         """
         To save save diagram in XML file.
@@ -49,7 +56,7 @@ class IoFile:
         numbers = [int(s[8:-3]) for s in candidates]
         lastVersion = str(max(numbers))
 
-        print("Using version", lastVersion, " of the exporter")
+        self.logger.info(f"Using version {lastVersion}  of the exporter")
         module = __import__("PyutXmlV" + lastVersion)
         myXml = module.PyutXml()
 
@@ -57,9 +64,11 @@ class IoFile:
         text = doc.toxml()
         # add attribute encoding = "iso-8859-1"
         # this is not possible with minidom, so we use pattern matching
-        text = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
+        updatedText: str = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
+        self.logger.info(f'Document Save: \n {updatedText}')
 
-        compressed = zlib.compress(text)
+        byteText = updatedText.encode('utf-8')
+        compressed = zlib.compress(byteText)
         file = open(project.getFilename(), "wb")
         file.write(compressed)
         file.close()
@@ -76,45 +85,33 @@ class IoFile:
         #
         oldpath = getcwd()
         path = getMediator().getAppPath()
-        # print "IoFile-2"
         chdir(path)
 
-        # print "IoFile-3"
         importLanguage()
-        # print "IoFile-4"
         xmlString = ""
-        if filename[-4:]==".put":
-            # print "IoFile-5"
-            comp = open(filename, "r").read()
-            # print "IoFile-6"
+        if filename[-4:] == ".put":
             try:
-                import zlib
-                print(zlib.__version__)
-                # print "1"
-                import zlib
-                xmlString = zlib.decompress(comp)
-            except:
-                print("EXCEPTION")
-            # print xmlString
-            # print "IoFile-7"
-        elif filename[-4:]==".xml":
+                comp = open(filename, "rb").read()      # Python 3 update use 'rb" instead of just 'r'
+                self.logger.info(f'zlib.__version__: {zlib.__version__}')
+                xmlBytes = zlib.decompress(comp)    # has b'....' around it
+                xmlString: str = xmlBytes.decode('utf-8')
+            except (ValueError, Exception) as e:
+                self.logger.error(f'open:  {e}')
+
+        elif filename[-4:] == ".xml":
             xmlString = open(filename, "rb").read()
         else:
             displayError(_("Can't open the unidentified file : %s") % filename)
             return
-        # try:
-        # print "IoFile-8"
         dom = parseString(xmlString)
 
-        # Try to load file for version >=5
-        # print "IoFile-9"
         root = dom.getElementsByTagName("PyutProject")
-        if len(root)>0:
+        if len(root) > 0:
             root = root[0]
             if root.hasAttribute('version'):
                 version = root.getAttribute("version")
-                print("Using version", version, " of the importer")
-                module = __import__("PyutXmlV" + str(version))
+                self.logger.info(f'Using version {version} of the importer')
+                module = __import__(f'PyutXmlV{str(version)}')
                 myXml = module.PyutXml()
             else:
                 version = 1
@@ -125,7 +122,7 @@ class IoFile:
             root = dom.getElementsByTagName("Pyut")[0]
             if root.hasAttribute('version'):
                 version = root.getAttribute("version")
-                print("Using version", version, " of the importer")
+                self.logger.info(f"Using version {version} of the importer")
                 module = __import__("PyutXmlV" + str(version))
                 myXml = module.PyutXml()
             else:
@@ -134,10 +131,8 @@ class IoFile:
             project.newDocument(CLASS_DIAGRAM)
             umlFrame = project.getDocuments()[0].getFrame()
             myXml.open(dom, umlFrame)
-        #print "IoFile-10"
 
-
-        os.chdir(oldpath)
+        chdir(oldpath)
         # TODO : put this back
         #except:
         #    #dlg=wxMessageDialog(umlFrame,

@@ -24,10 +24,25 @@
     },
     "loggers": {
         "root": {
-            "level":     "ERROR",
+            "level":     "INFO",
             "propagate": "False"
         },
         "Pyut": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "PyutXmlV8": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "lang": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+         "IoFile": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"

@@ -9,6 +9,8 @@ from wx import EndBusyCursor
 
 from pyutUtils import displayError
 from PyutDocument import PyutDocument
+
+from mediator import getMediator
 from globals import _
 
 
@@ -43,16 +45,16 @@ class PyutProject:
 
         @author C.Dutoit
         """
-        import mediator
-        self._parentFrame = parentFrame # Parent frame
-        self._ctrl = mediator.getMediator()
-        self._documents = []       # List of documents
-        self._filename = filename  # Project filename
-        self._modified = False     # Was the project modified ?
-        self._treeRootParent = treeroot  # Parent of the project root entry
-        self._tree     = tree      # Tree i'm belonging to
-        self._treeRoot = None      # Root of the project entry in the tree
-        self._codePath = ""
+        # import mediator
+        self._parentFrame   = parentFrame   # Parent frame
+        self._ctrl          = getMediator()
+        self._documents     = []            # List of documents
+        self._filename      = filename      # Project filename
+        self._modified      = False     # Was the project modified ?
+        self._treeRootParent = treeroot     # Parent of the project root entry
+        self._tree          = tree          # Tree i'm belonging to
+        self._treeRoot      = None          # Root of the project entry in the tree
+        self._codePath      = ""
         self.addToTree()
 
     def setFilename(self, filename):

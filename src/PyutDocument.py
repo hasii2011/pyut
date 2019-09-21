@@ -57,7 +57,7 @@ class PyutDocument:
             self._title = DiagramsLabels[docType]
             self._frame = UmlClassDiagramsFrame(parentFrame)
         else:
-            displayError("Unsuported diagram type; replacing by class diagram")
+            displayError(f'Unsupported diagram type; replacing by class diagram: {docType}')
             self._title = DiagramsLabels[CLASS_DIAGRAM]
             self._frame = UmlClassDiagramsFrame(parentFrame)
 

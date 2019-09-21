@@ -1,11 +1,21 @@
 
 
+from logging import Logger
+from logging import getLogger
+
 from xml.dom.minidom import parse
 from xml.dom.minidom import Document
 
+
 from io import StringIO
 
-import wx
+from wx import Dialog
+from wx import Gauge
+from wx import ICON_INFORMATION
+from wx import Point
+from wx import RESIZE_BORDER
+from wx import STAY_ON_TOP
+from wx import Size
 
 from PyutActor import PyutActor
 from PyutClass import PyutClass
@@ -116,6 +126,8 @@ class PyutXml:
         Constructor
         @author C.Dutoit
         """
+        self.logger: Logger = getLogger(__name__)
+
         self._this_version = 8
         self._idFactory = IDFactory()
 
@@ -598,7 +610,7 @@ class PyutXml:
         """
 
         dlgGauge = None
-        gauge = None
+        gauge    = None
         try:
             xmlDoc  = Document()
             top     = xmlDoc.createElement("PyutProject")
@@ -608,8 +620,8 @@ class PyutXml:
             xmlDoc.appendChild(top)
 
             # Gauge
-            dlg = wx.Dialog(None, -1, "Saving...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.RESIZE_BORDER, size=wx.Size(207, 70))
-            gauge=wx.Gauge(dlg, -1, 100, pos=wx.Point(2, 5), size=wx.Size(200, 30))
+            dlg   = Dialog(None, -1, "Saving...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
+            gauge = Gauge(dlg, -1, 100, pos=Point(2, 5), size=Size(200, 30))
             dlg.Show(True)
 
             # Save all documents in the project
@@ -636,11 +648,12 @@ class PyutXml:
                         documentNode.appendChild(self._OglSDInstance2xml(oglObject, xmlDoc))
                     elif isinstance(oglObject, OglSDMessage):
                         documentNode.appendChild(self._OglSDMessage2xml(oglObject, xmlDoc))
-        except:
+        except (ValueError, Exception) as e:
             try:
                 dlg.Destroy()
-            except:
-                pass
+                self.logger.error(f'{e}')
+            except (ValueError, Exception) as e:
+                self.logger.error(f'{e}')
             displayError(_("Can't save file"))
             return xmlDoc
 
@@ -762,22 +775,27 @@ class PyutXml:
         """
         To extract control points from links.
 
+        Python 3:  This method does not seem to be used;  I'll comment it out and raise an
+        exception;  Especially, since I don't know where the `Class` class comes
+        from == hasii
+
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
+        raise NotImplementedError('I guess this method is used after all.  See the comments')
         # class methods for this current class
-        allControlPoints = []
-
-        for cp in Class.getElementsByTagName('ControlPoint'):
-
-            # point position
-            x = cp.getAttribute('x')
-            y = cp.getAttribute('y')
-
-            point = ControlPoint(x, y)
-            allControlPoints.append(point)
-
-        return allControlPoints
+        # allControlPoints = []
+        #
+        # for cp in Class.getElementsByTagName('ControlPoint'):
+        #
+        #     # point position
+        #     x = cp.getAttribute('x')
+        #     y = cp.getAttribute('y')
+        #
+        #     point = ControlPoint(x, y)
+        #     allControlPoints.append(point)
+        #
+        # return allControlPoints
 
     def _getMethods(self, Class):
         """
@@ -1058,7 +1076,6 @@ class PyutXml:
         """
         dlgGauge = None
         gauge = None
-        # print "PyutXml/open-1"
         try:
             root = dom.getElementsByTagName("PyutProject")[0]
             if root.hasAttribute('version'):
@@ -1066,73 +1083,52 @@ class PyutXml:
             else:
                 version = 1
             if version != self._this_version:
-                print("Wrong version of the file loader")
-                print("This is version", self._this_version, "and the file version is", version)
-                raise Exception("VERSION_ERROR")
+                self.logger.error("Wrong version of the file loader")
+                eMsg: str = f'This is version {self._this_version} and the file version is {version}'
+                self.logger.error(eMsg)
+                raise Exception(f'VERSION_ERROR:  {eMsg}')
             project.setCodePath(root.getAttribute("CodePath"))
-            #  #print "PyutXml/open-2"
 
             # Create and init gauge
-            dlgGauge = wx.Dialog(None, -1, "Loading...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.wx.RESIZE_BORDER, size=wx.Size(207, 70))
-            gauge=wx.Gauge(dlgGauge, -1, 5, pos=wx.Point(2, 5), size=wx.Size(200, 30))
+            dlgGauge = Dialog(None, -1, "Loading...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
+            gauge    = Gauge(dlgGauge, -1, 5, pos=Point(2, 5), size=Size(200, 30))
             dlgGauge.Show(True)
 
             # for all elements il xml file
             dlgGauge.SetTitle("Reading file...")
             gauge.SetValue(1)
-            # print "PyutXml/open-3"
 
             for documentNode in dom.getElementsByTagName("PyutDocument"):
-                # print "PyutXml/open-4"
-                dicoOglObjects = {}  # format {id/name : oglClass}
-                dicoLink = {}   # format [id/name : PyutLink}
-                dicoFather = {} # format {id child oglClass : [id fathers]}
 
-                # Create document and umlframe
-                # print "PyutXml/open-4b"
-                docType = documentNode.getAttribute("type").encode("charmap")
+                dicoOglObjects = {}     # format {id/name : oglClass}
+                dicoLink       = {}     # format [id/name : PyutLink}
+                dicoFather     = {}     # format {id child oglClass : [id fathers]}
+
+                # docType = documentNode.getAttribute("type").encode("charmap")
+                docType = documentNode.getAttribute("type")     # Python 3 update
+
                 document = project.newDocument(diagramTypeFromString(docType))
                 umlFrame = document.getFrame()
                 # print "PyutXml/open-4c"
 
                 ctrl = getMediator()
                 ctrl.getFileHandling().showFrame(umlFrame)
-                # print "PyutXml/open-4d"
 
-                # Load OGL Classes
-                self._getOglClasses(documentNode.getElementsByTagName('GraphicClass'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # print "PyutXml/open-4d0"
-
-                # Load OGL Notes
-                self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # print "PyutXml/open-4d00"
-
-                # Load OGL Actors
-                self._getOglActors(documentNode.getElementsByTagName('GraphicActor'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # print "PyutXml/open-4d1"
-
-                # Load OGL UseCases
+                self._getOglClasses(documentNode.getElementsByTagName('GraphicClass'),    dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                self._getOglActors(documentNode.getElementsByTagName('GraphicActor'),     dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-
-                # Load OGL Links
-                self._getOglLinks(documentNode.getElementsByTagName("GraphicLink"), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # print "PyutXml/open-4d2"
-
-                # Load OGL SDInstances
+                self._getOglLinks(documentNode.getElementsByTagName("GraphicLink"),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-
-                # Load OGL SDMessage
-                # print "PyutXml/open-4d3"
-                self._getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                self._getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"),   dicoOglObjects, dicoLink, dicoFather, umlFrame)
 
                 # fix the link's destination field
                 gauge.SetValue(2)
-                # print "PyutXml/open-4e"
+
                 dlgGauge.SetTitle("Fixing link's destination...")
                 for links in list(dicoLink.values()):
                     for link in links:
                         link[1].setDestination(dicoOglObjects[link[0]].getPyutObject())
-                # print "PyutXml/open-5"
 
                 # adding fathers
                 dlgGauge.SetTitle("Adding fathers...")
@@ -1156,13 +1152,12 @@ class PyutXml:
                         pyutLink.setDestCard(link[1].getDestCard())
                         pyutLink.setSrcCard(link[1].getSrcCard())
                         pyutLink.setName(link[1].getName())
-        except:
-            if dlgGauge is not None: dlgGauge.Destroy()
-            displayError(_("Can't load file"))
+        except (ValueError, Exception) as e:
+            if dlgGauge is not None:
+                dlgGauge.Destroy()
+            displayError(_(f"Can't load file {e}"))
             umlFrame.Refresh()
             return
-
-        # print "PyutXml/open-7"
 
         # to draw diagram
         umlFrame.Refresh()
