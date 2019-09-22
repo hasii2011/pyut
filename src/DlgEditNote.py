@@ -1,12 +1,25 @@
-from wx import Button
+
+from wx import ALIGN_BOTTOM
+from wx import ALIGN_CENTER_HORIZONTAL
+from wx import ALL
+from wx import BOTTOM
 from wx import CANCEL
 from wx import CAPTION
-from wx import Dialog
+from wx import EVT_BUTTON
 from wx import EVT_TEXT
+from wx import EXPAND
+from wx import HORIZONTAL
+from wx import OK
 from wx import RESIZE_BORDER
-from wx import StaticText
+from wx import RIGHT
 from wx import TE_MULTILINE
+from wx import VERTICAL
+
 from wx import TextCtrl
+from wx import StaticText
+from wx import Dialog
+from wx import Button
+from wx import BoxSizer
 
 from pyutUtils import assignID
 
@@ -30,9 +43,6 @@ class DlgEditNote(Dialog):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-
-    #>------------------------------------------------------------------------
-
     def __init__(self, parent, ID, pyutNote):
         """
         Constructor.
@@ -40,8 +50,8 @@ class DlgEditNote(Dialog):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
-        wx.Dialog.__init__(self, parent, ID, _("Note Edit"), style=RESIZE_BORDER | CAPTION)
+        # wx.Dialog.__init__(self, parent, ID, _("Note Edit"), style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, ID, _("Note Edit"), style=RESIZE_BORDER | CAPTION)
 
         # Associated PyutLink
         self._pyutNote = pyutNote
@@ -71,30 +81,28 @@ class DlgEditNote(Dialog):
         btnCancel = Button(self, CANCEL, _("&Cancel"))
 
         # button events
-        self.Bind(wx.EVT_BUTTON, self._onCmdOk, id=wx.OK)
-        self.Bind(wx.EVT_BUTTON, self._onCmdCancel, id=wx.CANCEL)
+        self.Bind(EVT_BUTTON, self._onCmdOk,     id=OK)
+        self.Bind(EVT_BUTTON, self._onCmdCancel, id=CANCEL)
 
         # Sizer for buttons
-        szrButtons = wx.BoxSizer(wx.HORIZONTAL)
-        szrButtons.Add(btnOk, 0, wx.RIGHT, 10)
-        szrButtons.Add(btnCancel, 0, wx.ALL)
+        szrButtons = BoxSizer(HORIZONTAL)
+        szrButtons.Add(btnOk, 0, RIGHT, 10)
+        szrButtons.Add(btnCancel, 0, ALL)
 
         # Sizer for all components
-        szrMain = wx.BoxSizer(wx.VERTICAL)
-        szrMain.Add(label, 0, wx.BOTTOM, 5)
-        szrMain.Add(self._txtCtrl, 1, wx.EXPAND|wx.BOTTOM, 10)
-        szrMain.Add(szrButtons, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_BOTTOM)
+        szrMain = BoxSizer(VERTICAL)
+        szrMain.Add(label, 0, BOTTOM, 5)
+        szrMain.Add(self._txtCtrl, 1, EXPAND | BOTTOM, 10)
+        szrMain.Add(szrButtons, 0, ALIGN_CENTER_HORIZONTAL | ALIGN_BOTTOM)
 
         # Border
-        szrBorder = wx.BoxSizer(wx.VERTICAL)
-        szrBorder.Add(szrMain, 1, wx.EXPAND|wx.ALL, 10)
+        szrBorder = BoxSizer(VERTICAL)
+        szrBorder.Add(szrMain, 1, EXPAND | ALL, 10)
         self.SetSizer(szrBorder)
         szrBorder.Fit(self)
 
         self.Centre()
         self.ShowModal()
-
-    #>------------------------------------------------------------------------
 
     def _onTxtNoteChange(self, event):
         """
@@ -104,8 +112,6 @@ class DlgEditNote(Dialog):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self._text = event.GetString()
-
-    #>------------------------------------------------------------------------
 
     def _onCmdOk(self, event):
         """
@@ -117,11 +123,8 @@ class DlgEditNote(Dialog):
 
         self._pyutNote.setName(self._text)
 
-        self._returnAction=wx.OK
+        self._returnAction = OK
         self.Close()
-
-
-    #>------------------------------------------------------------------------
 
     def _onCmdCancel(self, event):
         """
@@ -130,10 +133,8 @@ class DlgEditNote(Dialog):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        self._returnAction=wx.CANCEL
+        self._returnAction = CANCEL
         self.Close()
-
-    #>------------------------------------------------------------------------
 
     def getReturnAction(self):
         """
@@ -144,4 +145,3 @@ class DlgEditNote(Dialog):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         return self._returnAction
-
