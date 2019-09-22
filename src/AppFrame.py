@@ -738,11 +738,11 @@ class AppFrame(Frame):
         sub = Menu()
 
         for i in range(nb):
-            id = NewId()
+            anId = NewId()
             obj = plugs[i](None, None)
-            sub.Append(id, obj.getMenuTitle())
-            self.Bind(EVT_MENU, self.OnToolPlugin, id=id)
-            self.plugs[id] = plugs[i]
+            sub.Append(anId, obj.getMenuTitle())
+            self.Bind(EVT_MENU, self.OnToolPlugin, id=anId)
+            self.plugs[anId] = plugs[i]
         return sub
 
     def makeToolboxesMenu(self):
@@ -1497,7 +1497,7 @@ class AppFrame(Frame):
             obj.callDoAction()
         except (ValueError, Exception) as e:
             displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
-            print(f'{e}')
+            self.logger.error(f'{e}')
         EndBusyCursor()
 
         # Refresh screen

@@ -1,14 +1,18 @@
 
+from logging import Logger
+from logging import getLogger
+
+import importlib
 
 import wx
 
-from globals import _
 from plugins.PyutToPlugin import PyutToPlugin
 
 from OglClass import OglClass
 
 from plugins.IoPython import IoPython
-import importlib
+
+from globals import _
 
 
 class ToPython(PyutToPlugin):
@@ -17,6 +21,12 @@ class ToPython(PyutToPlugin):
 
     @version $Revision: 1.4 $
     """
+    def __init__(self, umlObjects, umlFrame):
+
+        super().__init__(umlObjects, umlFrame)
+
+        self.logger: Logger = getLogger(__name__)
+
     def getName(self):
         """
         This method returns the name of the plugin.
@@ -37,8 +47,6 @@ class ToPython(PyutToPlugin):
         """
         return "L.Burgbacher <lb@alawa.ch>"
 
-    #>------------------------------------------------------------------------
-
     def getVersion(self):
         """
         This method returns the version of the plugin.
@@ -48,8 +56,6 @@ class ToPython(PyutToPlugin):
         @since 1.1
         """
         return "1.0"
-
-    #>------------------------------------------------------------------------
 
     def getMenuTitle(self):
         """
@@ -62,8 +68,6 @@ class ToPython(PyutToPlugin):
         # Return the menu title as it must be displayed
         return "Reverse Selected Python Classes"
 
-    #>------------------------------------------------------------------------
-
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
         Do the tool's action
@@ -74,27 +78,27 @@ class ToPython(PyutToPlugin):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        import sys, os, mediator
+        import os, mediator
 
         if umlFrame is None:
             # TODO : displayError
+            self.logger.error(f'No umlFrame')
             return
 
         ctrl = mediator.getMediator()
         project = ctrl.getFileHandling().getProjectFromFrame(umlFrame)
         if project.getCodePath() == "":
-            dlg = wx.DirDialog(None,
-                _("Choose the root directory for the code"), os.getcwd())
+            dlg = wx.DirDialog(None, _("Choose the root directory for the code"), os.getcwd())
             if dlg.ShowModal() == wx.ID_OK:
-                dir = dlg.GetPath()
-                print("Chosen directory is", dir)
-                umlFrame.setCodePath(dir)
+                codeDir = dlg.GetPath()
+                self.logger.info(f"Chosen directory is {codeDir}")
+                umlFrame.setCodePath(codeDir)
                 dlg.Destroy()
             else:
                 return
         oglClasses = [x for x in selectedObjects if isinstance(x, OglClass)]
         if len(oglClasses) == 0:
-            print("Nothing selected")
+            self.logger.info("Nothing selected")
             return
         oldDir = os.getcwd()
         os.chdir(project.getCodePath())
@@ -103,18 +107,15 @@ class ToPython(PyutToPlugin):
             pyutClass = oglClass.getPyutObject()
             filename = pyutClass.getFilename()
             if filename == "":
-                dlg = wx.FileDialog(None,
-                    _("Choose the file for this UML class"),
-                    project.getCodePath(), "",
-                    "*.py", wx.OPEN | wx.HIDE_READONLY)
+                dlg = wx.FileDialog(None, _("Choose the file for this UML class"), project.getCodePath(), "", "*.py", wx.FD_OPEN)
                 if dlg.ShowModal() != wx.ID_OK:
                     dlg.Destroy()
                     continue
                 filename = dlg.GetPaths()[0]
-                print("Chosen filename is", filename)
+                self.logger.info(f"Chosen filename is {filename}")
                 pyutClass.setFilename(filename)
                 dlg.Destroy()
-            modulename = filename[:-3] # remove ".py"
+            modulename = filename[:-3]  # remove ".py"
             try:
                 normalDir = os.getcwd()
                 path, name = os.path.split(os.path.abspath(modulename))
@@ -122,8 +123,8 @@ class ToPython(PyutToPlugin):
                 module = __import__(name)
                 importlib.reload(module)
                 os.chdir(normalDir)
-            except ImportError:
-                print("Error while trying to import module " + str(modulename))
+            except ImportError as ie:
+                self.logger.error(f"Error while trying to import module {str(modulename)} --- {ie}")
                 os.chdir(normalDir)
                 continue
             orgClass = module.__dict__[pyutClass.getName()]
