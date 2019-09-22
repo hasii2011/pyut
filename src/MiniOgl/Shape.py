@@ -1,32 +1,6 @@
 import wx
 from MiniOgl.ShapeModel import *
 
-#
-# Copyright 2002, Laurent Burgbacher, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of MiniOgl.
-#
-# MiniOgl is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MiniOgl is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MiniOgl; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-__author__    = "Laurent Burgbacher, lb@alawa.ch, Eivd"
-__copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
-__license__   = "Released under the terms of the GNU General Public Licence V2"
-__date__      = "2002-10-15"
-__version__   = "$Id: Shape.py,v 1.8 2006/02/04 22:01:01 dutoitc Exp $"
-
 
 __all__ = ["Shape"]
 
@@ -175,8 +149,8 @@ class Shape(object):
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
         if DEBUG:
-            from TextShape import TextShape
-            from LineShape import LineShape
+            from MiniOgl.TextShape import TextShape
+            from MiniOgl.LineShape import LineShape
             if not isinstance(self, (TextShape, LineShape)):
                 t = self.AddText(0, -10, str(self._id))
                 t.SetColor(wx.RED)
@@ -225,7 +199,7 @@ class Shape(object):
         """
         Set the ID of the shape. This can be used when loading a shape.
 
-        @param int id
+        @param id
         """
         self._id = id
         Shape.ID = max(self._id + 1, Shape.ID)
@@ -292,6 +266,7 @@ class Shape(object):
         @return AnchorPoint : the created anchor
         """
         from MiniOgl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
+
         if anchorType is None:
             anchorType = AnchorPoint
         p = anchorType(x, y, self)
@@ -363,7 +338,7 @@ class Shape(object):
         @param String text : text to add
         @return TextShape : the created shape
         """
-        from TextShape import TextShape
+        from MiniOgl.TextShape import TextShape
         t = TextShape(x, y, text, self)
         if self._diagram is not None:
             self._diagram.AddShape(t)
@@ -568,7 +543,6 @@ class Shape(object):
         """
         return False
 
-
     def IsDraggable(self):
         """
         True if the shape can be dragged.
@@ -605,7 +579,7 @@ class Shape(object):
         """
         Select the shape.
 
-        @param bool state
+        @param state
         """
         self._selected = state
 
@@ -621,7 +595,7 @@ class Shape(object):
         A non-moving shape will be redrawn faster when others are moved.
         See DiagramFrame.Refresh for more information.
 
-        @param bool state
+        @param state
         """
         self._moving = state
         for shape in self._children:
@@ -633,7 +607,7 @@ class Shape(object):
         """
         If False, the shape won't be movable.
 
-        @param bool
+        @param drag
         """
         self._draggable = drag
 
@@ -716,7 +690,7 @@ class Shape(object):
         change of state of the diagram frame (here it's only for the zoom)
         """
 
-        #Get the coords of the model (ShapeModel)
+        # Get the coords of the model (ShapeModel)
         mx, my = self.GetModel().GetPosition()
 
         #Get the offsets and the ratio between the shape (view) and the
@@ -786,7 +760,7 @@ class Shape(object):
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         Set the specified model associated to this shape (MVC pattern)
 
-        @param modelShape ShapeModel  : model to set
+        @param modelShape : model to set
         """
         self._model = modelShape
 

@@ -2,21 +2,27 @@
 import wx
 
 from PyutActor import PyutActor
+from PyutUseCase import PyutUseCase
+from PyutMethod import PyutMethod
+from PyutParam import PyutParam
+
 from OglActor import OglActor
 from OglUseCase import OglUseCase
 from OglClass import *
 from OglNote import *
 from OglSDMessage import OglSDMessage
+
+from mediator import ACTION_ZOOM_IN
+
 from historyManager import *
 
 from globals import _
 
 #  DEFAULT_WIDTH = 1280
+
 DEFAULT_WIDTH = 3000
-#DEFAULT_WIDTH = 5120
+# DEFAULT_WIDTH = 5120
 
-
-##############################################################################
 
 class UmlFrame(DiagramFrame):
     """
@@ -185,7 +191,7 @@ class UmlFrame(DiagramFrame):
             clmethods = [me for me in cl.__dict__.values()
                 if type(me) == types.FunctionType]
             # add the methods
-            #for me in cl.methods.keys():
+            # for me in cl.methods.keys():
             for me in clmethods:
                 meth = PyutMethod(me.func_name)
                 # add the params

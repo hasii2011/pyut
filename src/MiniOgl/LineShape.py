@@ -246,7 +246,9 @@ class LineShape(Shape):
         """
         sp = self._src.GetPosition()
         dp = self._dst.GetPosition()
-        return [sp] + map(lambda x: x.GetPosition(), self._controls) + [dp]
+        # Python 3 update
+        # return [sp] + map(lambda x: x.GetPosition(), self._controls) + [dp]
+        return [sp] + list(map(lambda x: x.GetPosition(), self._controls)) + [dp]
 
     def GetControlPoints(self):
         """

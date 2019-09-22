@@ -1,5 +1,14 @@
 
+from logging import Logger
+from logging import getLogger
+
+from wx import MouseEvent
+from wx import Point
+
 from OglLink import *
+
+from mediator import getMediator
+from mediator import ACTION_ZOOM_OUT
 
 DEFAULT_FONT_SIZE = 10
 
@@ -19,9 +28,9 @@ class OglObject(RectangleShape, ShapeEventHandler):
     :contact: pwaelti@eivd.ch
     """
 
-    def __init__(self, pyutObject = None, width = 0, height = 0):
+    def __init__(self, pyutObject=None, width=0, height=0):
         """
-        Constructor.
+        Constructor
 
         @param PyutObject pyutObject : Associated PyutObject
         @param int width  : Initial width
@@ -29,28 +38,15 @@ class OglObject(RectangleShape, ShapeEventHandler):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        # Shape initialization
-        #print "OglObject-1"
         RectangleShape.__init__(self, 0, 0, width, height)
-        #print "OglObject-2"
 
-        # rectangle will not be resized from the center
-        #self.SetCentreResize(False)
-
-        # Attachments must be spaced
-        #self.SetAttachmentMode(True)
-
-        # Default, show please
-        #self.Show(True)
-
-        # PROTECTED
-
-        # Associated PyutObject
+        self.logger: Logger = getLogger(__name__)
         self._pyutObject = pyutObject
+        """
+        Associated PyutObject
+        """
 
         # Default font
-#        self._defaultFont = wx.Font((int)(PyutPreferences()['FONT_SIZE']) \
-#                , wx.SWISS, wx.NORMAL, wx.NORMAL)
         self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.SWISS, wx.NORMAL, wx.NORMAL)
 
         # Connected links
@@ -101,23 +97,18 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         return self._oglLinks
 
-    def OnLeftDown(self, event):
+    def OnLeftDown(self, event: MouseEvent):
         """
         Handle event on left click.
-        @param double x,y : Position
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
-        #  print "OglObject.OnLeftDown"
-
+        self.logger.info(f'OnLeftDown - event - {event}')
         med = getMediator()
         if med.actionWaiting():
-            med.shapeSelected(self, event.GetPositionTuple())
-            #print "Event processed in OglObject"
-            #return EVENT_PROCESSED
+            position: Point = event.GetPosition()
+            med.shapeSelected(self, position)
             return
-        #  print "Skipped event in OglObject"
         event.Skip()
 
     def OnLeftUp(self, event):
@@ -139,7 +130,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
         Args:
             x:
             y:
-
         """
         import mediator
         fileHandling = mediator.getMediator().getFileHandling()
@@ -149,7 +139,5 @@ class OglObject(RectangleShape, ShapeEventHandler):
 
     def SetSelected(self, state=True):
 
-        from mediator import ACTION_ZOOM_OUT
-
-        if mediator.getMediator().getCurrentAction() != ACTION_ZOOM_OUT:
+        if getMediator().getCurrentAction() != ACTION_ZOOM_OUT:
             RectangleShape.SetSelected(self, state)

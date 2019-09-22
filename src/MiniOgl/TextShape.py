@@ -1,8 +1,8 @@
 
 import wx
 
-from MiniOgl.Shape import Shape
 from MiniOgl.RectangleShape import RectangleShape
+from MiniOgl.Shape import Shape
 
 #
 # Copyright 2002, Laurent Burgbacher, Eivd.
