@@ -185,7 +185,7 @@ class AppFrame(Frame):
         """
         # Application initialisation
         # Frame.__init__(self, parent, ID, title, DefaultPosition, Size(640, 480))
-        super().__init__(parent, ID, title, DefaultPosition , Size(960, 480), DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
+        super().__init__(parent, ID, title, DefaultPosition, Size(960, 480), DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
         self.logger: Logger = getLogger(__name__)
 
@@ -259,6 +259,7 @@ class AppFrame(Frame):
                 return
             # Display tips frame
             self._alreadyDisplayedTipsFrame = True
+            # noinspection PyUnusedLocal
             tipsFrame = TipsFrame(self)
             #  tipsFrame.Show()     # weird the tips frame constructor does a .show itself  TODO look at this in future
         except (ValueError, Exception) as e:
@@ -279,169 +280,169 @@ class AppFrame(Frame):
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.getBitmap(),
-                    _("Arrow"),      _("Select tool"),
-                    _(_("PyUt tools")),
-                    (lambda x: self._OnNewAction(x)),
-                    cast(Callable, None), wxID=ID_ARROW, isToggle=True)
+                         _("Arrow"),      _("Select tool"),
+                         _(_("PyUt tools")),
+                         (lambda x: self._OnNewAction(x)),
+                         cast(Callable, None), wxID=ID_ARROW, isToggle=True)
         toolClass = Tool("pyut-class", img.ImgToolboxClass.getBitmap(),
-                    _("Class"),      _("Create a new class"),
-                    _(_("PyUt tools")),
-                    (lambda x : self._OnNewAction(x)),
-                    None, wxID=ID_CLASS, isToggle=True)
+                         _("Class"),      _("Create a new class"),
+                         _(_("PyUt tools")),
+                         (lambda x: self._OnNewAction(x)),
+                         cast(Callable, None), wxID=ID_CLASS, isToggle=True)
         toolActor = Tool("pyut-actor", img.ImgToolboxActor.getBitmap(),
-                    _("Actor"),      _("Create a new actor"),
-                    _(_("PyUt tools")),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_ACTOR, isToggle=True)
+                         _("Actor"),      _("Create a new actor"),
+                         _(_("PyUt tools")),
+                         (lambda x: self._OnNewAction(x)),
+                         cast(Callable, None), wxID=ID_ACTOR, isToggle=True)
         toolUseCase = Tool("pyut-system", img.ImgToolboxSystem.getBitmap(),
-                    _("System"),     _("Create a new use case"),
-                    _(_("PyUt tools")),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_USECASE, isToggle=True)
+                           _("System"),     _("Create a new use case"),
+                           _(_("PyUt tools")),
+                           (lambda x: self._OnNewAction(x)),
+                           cast(Callable, None), wxID=ID_USECASE, isToggle=True)
         toolNote = Tool("pyut-note", img.ImgToolboxNote.getBitmap(),
-                    _("Note"),     _("Create a new note"),
-                    _(_("PyUt tools")),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_NOTE, isToggle=True)
+                        _("Note"),     _("Create a new note"),
+                        _(_("PyUt tools")),
+                        (lambda x: self._OnNewAction(x)),
+                        cast(Callable, None), wxID=ID_NOTE, isToggle=True)
         # toolSDInstance = Tool("pyut-instance", img.ImgToolboxUnknown.getBitmap(),
         #             _("Instance"),     _("Create a new class diagram instance object"),
         #             _(_("PyUt tools")),
         #             (lambda x: self._OnNewAction(x)),
-        #             None, wxID=ID_SD_INSTANCE, isToggle=True)
+        #             cast(Callable, None), wxID=ID_SD_INSTANCE, isToggle=True)
         # toolSDMessage = Tool("pyut-message", img.ImgToolboxUnknown.getBitmap(),
         #             _("Message"),     _("Create a new class diagram message object"),
         #             _(_("PyUt tools")),
         #             (lambda x: self._OnNewAction(x)),
-        #             None, wxID=ID_SD_MESSAGE, isToggle=True)
+        #             cast(Callable, None), wxID=ID_SD_MESSAGE, isToggle=True)
 
         # Added by P. Dabrowski 20.11.2005
 
         toolZoomIn = Tool("pyut-zoomIn",
-                          Bitmap('img' + os.sep + 'zoomin.bmp', BITMAP_TYPE_BMP),
-                           _("Zoom In"),
-                           _("Zoom in on the selected area"),
+                          Bitmap(f'img{os.sep}zoomin.bmp', BITMAP_TYPE_BMP),
+                          _("Zoom In"),
+                          _("Zoom in on the selected area"),
+                          _(_("PyUt tools")),
+                          (lambda x: self._OnNewAction(x)),
+                          cast(Callable, None), wxID=ID_ZOOMIN, isToggle=True)
+        toolZoomOut = Tool("pyut-zoomOut",
+                           Bitmap('img' + os.sep + 'zoomout.bmp', BITMAP_TYPE_BMP),
+                           _("Zoom Out"),
+                           _("Zoom out from the clicked point"),
                            _(_("PyUt tools")),
                            (lambda x: self._OnNewAction(x)),
-                           None, wxID=ID_ZOOMIN, isToggle=True)
-        toolZoomOut = Tool("pyut-zoomOut",
-                            Bitmap('img' + os.sep + 'zoomout.bmp', BITMAP_TYPE_BMP),
-                            _("Zoom Out"),
-                            _("Zoom out from the clicked point"),
-                            _(_("PyUt tools")),
-                            (lambda x : self._OnNewAction(x)),
-                            None, wxID=ID_ZOOMOUT, isToggle=True)
+                           cast(Callable, None), wxID=ID_ZOOMOUT, isToggle=True)
 
         # Menu tools
         toolNewProject = Tool("pyut-new-project",
-                    Bitmap('img' + os.sep + 'newproject.bmp', BITMAP_TYPE_BMP),
-                    _("new project"),
-                    _("Create a new project"),
-                    _("PyUt menu"),
-                    (lambda x: self._OnMnuFileNewProject(x)),
-                    None, wxID=ID_MNUFILENEWPROJECT)
+                              Bitmap('img' + os.sep + 'newproject.bmp', BITMAP_TYPE_BMP),
+                              _("new project"),
+                              _("Create a new project"),
+                              _("PyUt menu"),
+                              (lambda x: self._OnMnuFileNewProject(x)),
+                              cast(Callable, None), wxID=ID_MNUFILENEWPROJECT)
         toolNewClassDiagram = Tool("pyut-new-class-diagram",
-                    Bitmap('img' + os.sep + 'newcd.bmp', BITMAP_TYPE_BMP),
-                    _("New Class Diagram"),
-                    _("Create a new class diagram"),
-                    _("PyUt menu"),
-                    (lambda x: self._OnMnuFileNewClassDiagram(x)),
-                    None, wxID = ID_MNUFILENEWCLASSDIAGRAM)
+                                   Bitmap('img' + os.sep + 'newcd.bmp', BITMAP_TYPE_BMP),
+                                   _("New Class Diagram"),
+                                   _("Create a new class diagram"),
+                                   _("PyUt menu"),
+                                   (lambda x: self._OnMnuFileNewClassDiagram(x)),
+                                   cast(Callable, None), wxID=ID_MNUFILENEWCLASSDIAGRAM)
         toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram",
-                    Bitmap('img' + os.sep + 'newsd.bmp', BITMAP_TYPE_BMP),
-                    _("New Sequence Diagram"),
-                    _("Create a new sequence diagram"),
-                    _(_("PyUt menu")),
-                    (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
-                    None, wxID=ID_MNUFILENEWSEQUENCEDIAGRAM)
+                                      Bitmap('img' + os.sep + 'newsd.bmp', BITMAP_TYPE_BMP),
+                                      _("New Sequence Diagram"),
+                                      _("Create a new sequence diagram"),
+                                      _(_("PyUt menu")),
+                                      (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
+                                      cast(Callable, None), wxID=ID_MNUFILENEWSEQUENCEDIAGRAM)
         toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram",
-                    Bitmap('img' + os.sep + 'newud.bmp', BITMAP_TYPE_BMP),
-                    _("New Use-Case diagram"),
-                    _("Create a new use-case diagram"),
-                    _("PyUt menu"),
-                    (lambda x: self._OnMnuFileNewUsecaseDiagram(x)),
-                    None, wxID=ID_MNUFILENEWUSECASEDIAGRAM)
+                                     Bitmap('img' + os.sep + 'newud.bmp', BITMAP_TYPE_BMP),
+                                     _("New Use-Case diagram"),
+                                     _("Create a new use-case diagram"),
+                                     _("PyUt menu"),
+                                     (lambda x: self._OnMnuFileNewUsecaseDiagram(x)),
+                                     cast(Callable, None), wxID=ID_MNUFILENEWUSECASEDIAGRAM)
         toolOpen = Tool("pyut-open",
-                    Bitmap('img' + os.sep + 'open.bmp', BITMAP_TYPE_BMP),
-                    _("Open"),
-                    _("Open a file"),
-                    _("PyUt menu"),
-                    (lambda x: self._OnMnuFileOpen(x)),
-                    None, wxID=ID_MNUFILEOPEN)
+                        Bitmap('img' + os.sep + 'open.bmp', BITMAP_TYPE_BMP),
+                        _("Open"),
+                        _("Open a file"),
+                        _("PyUt menu"),
+                        (lambda x: self._OnMnuFileOpen(x)),
+                        cast(Callable, None), wxID=ID_MNUFILEOPEN)
         toolSave = Tool("pyut-save",
-                    Bitmap('img' + os.sep + 'save.bmp', BITMAP_TYPE_BMP),
-                    _("Save"),
-                    _("Save current UML Diagram"),
-                    _("PyUt menu"),
-                    (lambda x: self._OnMnuFileSave(x)),
-                    None, wxID=ID_MNUFILESAVE)
-# Patch from D.Dabrowsky, 20060129
+                        Bitmap('img' + os.sep + 'save.bmp', BITMAP_TYPE_BMP),
+                        _("Save"),
+                        _("Save current UML Diagram"),
+                        _("PyUt menu"),
+                        (lambda x: self._OnMnuFileSave(x)),
+                        cast(Callable, None), wxID=ID_MNUFILESAVE)
+        # Patch from D.Dabrowsky, 20060129
         toolUndo = Tool("pyut-undo",
-                     Bitmap('img' + os.sep + 'undo.bmp', BITMAP_TYPE_BMP),
-                     _("undo"),
-                     _("undo the last performed action"),
-                     _("PyUt menu"),
-                     (lambda x: self._OnMnuUndo(x)),
-                     None, wxID=ID_MNUUNDO)
+                        Bitmap('img' + os.sep + 'undo.bmp', BITMAP_TYPE_BMP),
+                        _("undo"),
+                        _("undo the last performed action"),
+                        _("PyUt menu"),
+                        (lambda x: self._OnMnuUndo(x)),
+                        cast(Callable, None), wxID=ID_MNUUNDO)
         toolRedo = Tool("pyut-redo",
-                     Bitmap('img' + os.sep + 'redo.bmp', BITMAP_TYPE_BMP),
-                     _("redo"),
-                     _("redo the last undone action"),
-                     _("PyUt menu"),
-                     (lambda x: self._OnMnuRedo(x)),
-                     None, wxID=ID_MNUREDO)
+                        Bitmap('img' + os.sep + 'redo.bmp', BITMAP_TYPE_BMP),
+                        _("redo"),
+                        _("redo the last undone action"),
+                        _("PyUt menu"),
+                        (lambda x: self._OnMnuRedo(x)),
+                        cast(Callable, None), wxID=ID_MNUREDO)
 
         # Relations tools
         toolRelInheritance = Tool("pyut-rel-inheritance",
-                    Bitmap('img' + os.sep + 'relinheritance.bmp', BITMAP_TYPE_BMP),
-                    _("New inheritance relation"), _("New inheritance relation"),
-                    _("PyUt tools"),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_INHERITANCE, isToggle=True)
+                                  Bitmap('img' + os.sep + 'relinheritance.bmp', BITMAP_TYPE_BMP),
+                                  _("New inheritance relation"), _("New inheritance relation"),
+                                  _("PyUt tools"),
+                                  (lambda x: self._OnNewAction(x)),
+                                  cast(Callable, None), wxID=ID_REL_INHERITANCE, isToggle=True)
         toolRelRealisation = Tool("pyut-rel-realisation",
-                    Bitmap('img' + os.sep + 'relrealisation.bmp', BITMAP_TYPE_BMP),
-                    _("New realisation relation"), _("New realisation relation"),
-                    _("PyUt tools"),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_REALISATION, isToggle=True)
+                                  Bitmap('img' + os.sep + 'relrealisation.bmp', BITMAP_TYPE_BMP),
+                                  _("New realisation relation"), _("New realisation relation"),
+                                  _("PyUt tools"),
+                                  (lambda x: self._OnNewAction(x)),
+                                  cast(Callable, None), wxID=ID_REL_REALISATION, isToggle=True)
         toolRelComposition = Tool("pyut-rel-composition",
-                    Bitmap('img' + os.sep + 'relcomposition.bmp', BITMAP_TYPE_BMP),
-                    _("New composition relation"), _("New composition relation"),
-                    _("PyUt tools"),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_COMPOSITION, isToggle=True)
+                                  Bitmap('img' + os.sep + 'relcomposition.bmp', BITMAP_TYPE_BMP),
+                                  _("New composition relation"), _("New composition relation"),
+                                  _("PyUt tools"),
+                                  (lambda x: self._OnNewAction(x)),
+                                  cast(Callable, None), wxID=ID_REL_COMPOSITION, isToggle=True)
         toolRelAgregation = Tool("pyut-rel-agregation",
-                    Bitmap('img' + os.sep + 'relagregation.bmp', BITMAP_TYPE_BMP),
-                    _("New aggregation relation"), _("New aggregation relation"),
-                    _("PyUt tools"),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_AGREGATION, isToggle=True)
+                                 Bitmap('img' + os.sep + 'relagregation.bmp', BITMAP_TYPE_BMP),
+                                 _("New aggregation relation"), _("New aggregation relation"),
+                                 _("PyUt tools"),
+                                 (lambda x: self._OnNewAction(x)),
+                                 cast(Callable, None), wxID=ID_REL_AGREGATION, isToggle=True)
 
         toolRelAssociation = Tool("pyut-rel-association",
-                    Bitmap('img' + os.sep + 'relassociation.bmp', BITMAP_TYPE_BMP),
-                    _("New association relation"), _("New association relation"),
-                    _("PyUt tools"),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_REL_ASSOCIATION, isToggle=True)
+                                  Bitmap('img' + os.sep + 'relassociation.bmp', BITMAP_TYPE_BMP),
+                                  _("New association relation"), _("New association relation"),
+                                  _("PyUt tools"),
+                                  (lambda x: self._OnNewAction(x)),
+                                  cast(Callable, None), wxID=ID_REL_ASSOCIATION, isToggle=True)
         toolRelNote = Tool("pyut-rel-note",
-                    Bitmap('img' + os.sep + 'relnote.bmp', BITMAP_TYPE_BMP),
-                    _("New note relation"), _("New note relation"),
-                    _("PyUt tools"),
-                    (lambda x:self._OnNewAction(x)),
-                    None, wxID= ID_REL_NOTE, isToggle=True)
+                           Bitmap('img' + os.sep + 'relnote.bmp', BITMAP_TYPE_BMP),
+                           _("New note relation"), _("New note relation"),
+                           _("PyUt tools"),
+                           (lambda x: self._OnNewAction(x)),
+                           cast(Callable, None), wxID=ID_REL_NOTE, isToggle=True)
         toolSDInstance = Tool("pyut-sd-instance",
-                    Bitmap('img' + os.sep + 'sdinstance.bmp', BITMAP_TYPE_BMP),
-                    _("New sequence diagram instance object"),
-                    _("New sequence diagram instance object"),
-                    _("PyUt tools"),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_SD_INSTANCE, isToggle=True)
+                              Bitmap('img' + os.sep + 'sdinstance.bmp', BITMAP_TYPE_BMP),
+                              _("New sequence diagram instance object"),
+                              _("New sequence diagram instance object"),
+                              _("PyUt tools"),
+                              (lambda x: self._OnNewAction(x)),
+                              cast(Callable, None), wxID=ID_SD_INSTANCE, isToggle=True)
         toolSDMessage = Tool("pyut-sd-message",
-                    Bitmap('img' + os.sep + 'sdmessage.bmp', BITMAP_TYPE_BMP),
-                    _("New sequence diagram message object"),
-                    _("New sequence diagram message object"),
-                    _("PyUt tools"),
-                    (lambda x: self._OnNewAction(x)),
-                    None, wxID=ID_SD_MESSAGE, isToggle=True)
+                             Bitmap('img' + os.sep + 'sdmessage.bmp', BITMAP_TYPE_BMP),
+                             _("New sequence diagram message object"),
+                             _("New sequence diagram message object"),
+                             _("PyUt tools"),
+                             (lambda x: self._OnNewAction(x)),
+                             cast(Callable, None), wxID=ID_SD_MESSAGE, isToggle=True)
 
         # Create toolboxes
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
@@ -505,13 +506,12 @@ class AppFrame(Frame):
 
         # Register toolbar on mediator
         self._ctrl.registerToolBar(self._tb)
-        self._ctrl.registerToolBarTools(
-            [ID_ARROW, ID_CLASS, ID_NOTE, ID_REL_INHERITANCE,
-             ID_REL_REALISATION, ID_REL_COMPOSITION, ID_REL_AGREGATION,
-             ID_REL_ASSOCIATION, ID_REL_NOTE, ID_ACTOR, ID_USECASE,
-             ID_SD_INSTANCE, ID_SD_MESSAGE, ID_ZOOMIN, ID_ZOOMOUT
-            ]
-        )
+        self._ctrl.registerToolBarTools([
+            ID_ARROW, ID_CLASS, ID_NOTE, ID_REL_INHERITANCE,
+            ID_REL_REALISATION, ID_REL_COMPOSITION, ID_REL_AGREGATION,
+            ID_REL_ASSOCIATION, ID_REL_NOTE, ID_ACTOR, ID_USECASE,
+            ID_SD_INSTANCE, ID_SD_MESSAGE, ID_ZOOMIN, ID_ZOOMOUT
+        ])
 
     def _initMenu(self):
         """
@@ -558,8 +558,7 @@ class AppFrame(Frame):
 
         self.mnuFile.AppendSeparator()
         self.mnuFile.Append(ID_MNUFILEPYUTPROPER, _("PyUt P&roperties"), _("PyUt properties"))
-        #self.mnuFile.Append(ID_MNUFILEDIAGRAMPROPER,
-            #_("&Diagram Properties"), _("Diagram properties"))
+        # self.mnuFile.Append(ID_MNUFILEDIAGRAMPROPER,_("&Diagram Properties"), _("Diagram properties"))
         self.mnuFile.AppendSeparator()
         self.mnuFile.Append(ID_MNUFILEPRINTSETUP, _("Print se&tup..."), _("Display the print setup dialog box"))
         self.mnuFile.Append(ID_MNUFILEPRINTPREV,  _("Print pre&view"),  _("Diagram preview before printing"))
@@ -596,7 +595,6 @@ class AppFrame(Frame):
         mnuEdit.Append(ID_MNUADDPYUTHIERARCHY, _("&Add Pyut hierarchy"), _("Add the UML Diagram of Pyut"))
         mnuEdit.Append(ID_MNUADDOGLHIERARCHY, _("Add &Ogl hierarchy"),   _("Add the UML Diagram of Pyut - Ogl"))
 
-
         # -----------------
         #    Tools menu
         # -----------------
@@ -616,9 +614,7 @@ class AppFrame(Frame):
         mnuHelp = Menu()
         mnuHelp.Append(ID_MNUHELPINDEX, _("&Index"), _("Display help index"))
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(ID_MNUHELPVERSION,
-            _("Check for newer versions"), _("Check if a newer version of "
-                                             "Pyut exists"))
+        mnuHelp.Append(ID_MNUHELPVERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
         mnuHelp.Append(ID_MNUHELPWEB, _("&Web site"), _("Open PyUt web site"))
         mnuHelp.Append(ID_DEBUG,      _("&Debug"), _("Open IPython shell"))
         mnuHelp.AppendSeparator()
@@ -696,11 +692,11 @@ class AppFrame(Frame):
         sub = Menu()
 
         for i in range(nb):
-            id = NewId()
+            pluginId = NewId()
             obj = plugs[i](None, None)
-            sub.Append(id, obj.getOutputFormat()[0])
-            self.Bind(EVT_MENU, self.OnExport, id=id)
-            self.plugs[id] = plugs[i]
+            sub.Append(pluginId, obj.getOutputFormat()[0])
+            self.Bind(EVT_MENU, self.OnExport, id=pluginId)
+            self.plugs[pluginId] = plugs[i]
         return sub
 
     def makeImportMenu(self):
@@ -717,11 +713,11 @@ class AppFrame(Frame):
         sub = Menu()
 
         for i in range(nb):
-            id = NewId()
+            importId = NewId()
             obj = plugs[i](None, None)
-            sub.Append(id, obj.getInputFormat()[0])
-            self.Bind(EVT_MENU, self.OnImport, id=id)
-            self.plugs[id] = plugs[i]
+            sub.Append(importId, obj.getInputFormat()[0])
+            self.Bind(EVT_MENU, self.OnImport, id=importId)
+            self.plugs[importId] = plugs[i]
         return sub
 
     def makeToolsMenu(self):
@@ -760,10 +756,10 @@ class AppFrame(Frame):
         sub = Menu()
 
         for category in categories:
-            id = NewId()
-            self._toolboxesID[id] = category
-            sub.Append(id, category)
-            self.Bind(EVT_MENU, self.OnToolboxMenuClick, id=id)
+            categoryId = NewId()
+            self._toolboxesID[categoryId] = category
+            sub.Append(categoryId, category)
+            self.Bind(EVT_MENU, self.OnToolboxMenuClick, id=categoryId)
         return sub
 
     def getCurrentDir(self):
@@ -843,6 +839,7 @@ class AppFrame(Frame):
         self._printData.SetNoCopies(1)
         self._printData.SetCollate(True)
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileNewProject(self, event):
         """
         begin a new project
@@ -852,6 +849,7 @@ class AppFrame(Frame):
         self._fileHandling.newProject()
         self._ctrl.updateTitle()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileNewClassDiagram(self, event):
         """
         begin a new class diagram
@@ -861,6 +859,7 @@ class AppFrame(Frame):
         self._fileHandling.newDocument(CLASS_DIAGRAM)
         self._ctrl.updateTitle()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileNewSequenceDiagram(self, event):
         """
         begin a new sequence diagram
@@ -870,6 +869,7 @@ class AppFrame(Frame):
         self._fileHandling.newDocument(SEQUENCE_DIAGRAM)
         self._ctrl.updateTitle()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileNewUsecaseDiagram(self, event):
         """
         begin a new use-case diagram
@@ -879,6 +879,7 @@ class AppFrame(Frame):
         self._fileHandling.newDocument(USECASE_DIAGRAM)
         self._ctrl.updateTitle()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileInsertProject(self, event):
         """
         Insert a project into this one
@@ -909,8 +910,9 @@ class AppFrame(Frame):
         try:
             self._fileHandling.insertFile(filename)
         except (ValueError, Exception) as e:
-            displayError(_("An error occurred while loading the project !"), parent=self)
+            displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileOpen(self, event):
         """
         Open a diagram
@@ -919,6 +921,7 @@ class AppFrame(Frame):
         """
         self._loadFile()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileSave(self, event):
         """
         Save the current diagram to a file
@@ -928,6 +931,7 @@ class AppFrame(Frame):
         """
         self._saveFile()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileSaveAs(self, event):
         """
         Ask and save the current diagram to a file
@@ -937,6 +941,7 @@ class AppFrame(Frame):
         """
         self._saveFileAs()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileClose(self, event):
         """
         Close the current file
@@ -946,6 +951,7 @@ class AppFrame(Frame):
         """
         self._fileHandling.closeCurrentProject()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileRemoveDocument(self, event):
         """
         Remove the current document from the current project
@@ -959,6 +965,7 @@ class AppFrame(Frame):
         else:
             displayWarning(_("No document to remove"))
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileExportBmp(self, event):
         """
         Display the Export to bitmap dialog box
@@ -968,6 +975,7 @@ class AppFrame(Frame):
         """
         self._fileHandling.exportToBmp(-1)
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileExportJpg(self, event):
         """
         Display the Export to jpeg dialog box
@@ -977,7 +985,8 @@ class AppFrame(Frame):
         """
         self._fileHandling.exportToJpg(-1)
 
-    def _OnMnuFileExportPng(self, event):
+    # noinspection PyUnusedLocal
+    def _OnMnuFileExportPng(self):
         """
         Display the Export to png dialog box
 
@@ -986,6 +995,7 @@ class AppFrame(Frame):
         """
         self._fileHandling.exportToPng(-1)
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileExportPs(self, event):
         """
         Display the Export to postscript dialog box
@@ -1011,21 +1021,21 @@ class AppFrame(Frame):
         # export to PDF
         self.printDiagramToPostscript(filename)
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileExportPDF(self, event):
         """
         Display the Export to pdf dialog box
 
         @author C.Dutoit
         """
-        # Test programs
         # Choose filename
         filename = ""
         try:
             dlg = FileDialog(self, _("Save as PDF"), self._lastDir, "", "*.pdf", FD_SAVE | FD_OVERWRITE_PROMPT)
-            if dlg.ShowModal()!=ID_OK:
+            if dlg.ShowModal() != ID_OK:
                 dlg.Destroy()
                 return False
-            filename=dlg.GetPath()
+            filename = dlg.GetPath()
             if len(filename) < 4 or filename[-4:] != ".pdf":
                 filename += ".pdf"
             dlg.Destroy()
@@ -1035,9 +1045,11 @@ class AppFrame(Frame):
             return
 
         # export to PDF
+        # TODO -- externalize this command
         if self.printDiagramToPostscript("/tmp/pdfexport.ps"):
             # Convert file to pdf
             import os
+            # noinspection PyUnusedLocal
             try:
                 if os.system("ps2epsi /tmp/pdfexport.ps /tmp/pdfexport.eps") != 0:
                     displayError(_("Can't execute ps2epsi !"), parent=self)
@@ -1063,8 +1075,8 @@ class AppFrame(Frame):
             return False
 
         # Init
-        printout=None
-        printer=None
+        # printout = None
+        # printer  = None
         try:
             self._ctrl.deselectAllShapes()
             datas = PrintDialogData()
@@ -1093,6 +1105,7 @@ class AppFrame(Frame):
         self._ctrl.setStatusText(_("Printed to postscript"))
         return True
 
+    # noinspection PyUnusedLocal
     def _OnMnuFilePrintSetup(self, event):
         """
         Display the print setup dialog box
@@ -1107,6 +1120,7 @@ class AppFrame(Frame):
         self._printData = dlg.GetPrintDialogData().GetPrintData()
         dlg.Destroy()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFilePrintPreview(self, event):
         """
         Display the print preview frame; Preview before printing.
@@ -1114,38 +1128,36 @@ class AppFrame(Frame):
         @since 1.10
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        # print "AppFrame-OnMnuFilePrintPreview"
-        msg =  "If you have a link using wxDASHED_LINE " + \
-               "(OglNoteLink, OglAssociation), " + \
-               " this print preview crash pyut." + \
-               "This is an unresolved bug.\n" + \
-               "This bug come from gtk or gdk ? " + \
-               "It crash in wxPython demo!!! \n" + \
-               "Do you still want to continue ? "
 
-        #print "AppFrame-OnMnuFilePrintPreview-2"
-        #dlg = wx.MessageDialog(self, msg, _("Warning"),
+        msg: str = "If you have a link using wxDASHED_LINE " + \
+                   "(OglNoteLink, OglAssociation)," + \
+                   " this print preview crash pyut." + \
+                   "This is an unresolved bug.\n" + \
+                   "This bug come from gtk or gdk ? " + \
+                   "It crash in wxPython demo!!! \n" + \
+                   "Do you still want to continue ? "
+
+        # print "AppFrame-OnMnuFilePrintPreview-2"
+        # dlg = wx.MessageDialog(self, msg, _("Warning"),
         #        wx.YES_NO | wx.ICON_EXCLAMATION | wx.CENTRE | wx.NO_DEFAULT)
-        #dlg = wx.MessageDialog(self, msg, _("Warning"))
+        # dlg = wx.MessageDialog(self, msg, _("Warning"))
         dlg = MessageDialog(self, msg, "1")
-        # print "AppFrame-OnMnuFilePrintPreview-3"
-        if dlg.ShowModal() == 5104:  # xNO:
-            # print "AppFrame-OnMnuFilePrintPreview-31"
+
+        if dlg.ShowModal() == 5104:
+
             print("Abandoning")
             dlg.Destroy()
             dlg = None
             return
-        # print "AppFrame-OnMnuFilePrintPreview-3b"
+
         dlg.Destroy()
-        dlg = None
-        # print "AppFrame-OnMnuFilePrintPreview-4"
 
         self._ctrl.deselectAllShapes()
         frame = self._ctrl.getUmlFrame()
         if frame == -1:
             displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
             return
-        # print "AppFrame-OnMnuFilePrintPreview-5"
+
         printout  = PyutPrintout(frame)
         printout2 = PyutPrintout(frame)
         preview   = PrintPreview(printout, printout2, self._printData)
@@ -1153,16 +1165,17 @@ class AppFrame(Frame):
         if not preview.Ok():
             displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
             return
-        # print "AppFrame-OnMnuFilePrintPreview-6"
+
         frame = PreviewFrame(preview, self, _("Diagram preview"))
         frame.Initialize()
         frame.Centre(BOTH)
-        # print "AppFrame-OnMnuFilePrintPreview-7"
+
         try:
             frame.Show(True)
         except (ValueError, Exception) as e:
             displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
 
+    # noinspection PyUnusedLocal
     def _OnMnuFilePrint(self, event):
         """
         Print the current diagram
@@ -1192,15 +1205,16 @@ class AppFrame(Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         for index in range(self._prefs.getNbLOF()):
-            if event.GetId()==self.lastOpenedFilesID[index]:
+            if event.GetId() == self.lastOpenedFilesID[index]:
                 try:
                     lst = self._prefs.getLastOpenedFilesList()
                     self._loadFile(lst[index])
                     self._prefs.addNewLastOpenedFilesEntry(lst[index])
                     self._setLastOpenedFilesItems()
                 except (ValueError, Exception) as e:
-                    print(f'{e}')
+                    self.logger.error(f'{e}')
 
+    # noinspection PyUnusedLocal
     def _OnMnuFileExit(self, event):
         """
         Exit the program
@@ -1210,6 +1224,7 @@ class AppFrame(Frame):
         """
         self.Close()
 
+    # noinspection PyUnusedLocal
     def _OnMnuHelpAbout(self, event):
         """
         Show the about box
@@ -1217,12 +1232,13 @@ class AppFrame(Frame):
         @since 1.4
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        from DlgAbout    import DlgAbout
+        from DlgAbout import DlgAbout
         import pyutVersion
         dlg = DlgAbout(self, -1, _("About PyUt ") + pyutVersion.getPyUtVersion())
         dlg.ShowModal()
         dlg.Destroy()
 
+    # noinspection PyUnusedLocal
     def _OnMnuHelpIndex(self, event):
         """
         Display the help index
@@ -1230,11 +1246,12 @@ class AppFrame(Frame):
         @since 1.9
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        import os
-        import DlgHelp # fixed for python 2.2 compatibility
+
+        import DlgHelp  # fixed for python 2.2 compatibility
         dlgHelp = DlgHelp.DlgHelp(self, -1, _("Pyut Help"))
         dlgHelp.Show(True)
 
+    # noinspection PyUnusedLocal
     def _OnMnuHelpVersion(self, event):
         """
         Check for newer version.
@@ -1251,7 +1268,7 @@ class AppFrame(Frame):
         f.close()
 
         # Verify data coherence
-        if lstFile[0][:15]!="Last version = " or lstFile[1][:15]!="Old versions = ":
+        if lstFile[0][:15] != "Last version = " or lstFile[1][:15] != "Old versions = ":
             msg = "Incorrect file on server"
         else:
             latestVersion = lstFile[0][15:]
@@ -1268,6 +1285,7 @@ class AppFrame(Frame):
         # Display dialog box
         displayInformation(msg, _("Check for newer version"), self)
 
+    # noinspection PyUnusedLocal
     def _OnMnuHelpWeb(self, event):
         """
         Launch PyUt web site
@@ -1275,11 +1293,9 @@ class AppFrame(Frame):
         @since 1.9
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        displayInformation(
-            _("Please point your browser at http://pyut.sf.net"),       # TODO FIXME :-)
-            _("Pyut''s web site"),
-            self)
+        displayInformation(_("Please point your browser at http://pyut.sf.net"), _("Pyut''s web site"), self)  # TODO FIXME :-)
 
+    # noinspection PyUnusedLocal
     def _OnMnuAddPyut(self, event):
         """
         Add Pyut UML Diagram.
@@ -1289,8 +1305,7 @@ class AppFrame(Frame):
         """
         frame = self._ctrl.getUmlFrame()
         if frame is None:
-            displayError(_("Please open a diagram to execute this action"),
-                         parent=self)
+            displayError(_("Please open a diagram to execute this action"), parent=self)
             return
         frame.addPyutHierarchy()
         project = self._fileHandling.getCurrentProject()
@@ -1298,6 +1313,7 @@ class AppFrame(Frame):
         self._ctrl.updateTitle()
         frame.Refresh()
 
+    # noinspection PyUnusedLocal
     def _OnMnuAddOgl(self, event):
         """
         Add Pyut-Ogl UML Diagram.
@@ -1307,8 +1323,7 @@ class AppFrame(Frame):
         """
         frame = self._ctrl.getUmlFrame()
         if frame is None:
-            displayError(_("Please open a diagram to execute this action"),
-                         parent=self)
+            displayError(_("Please open a diagram to execute this action"), parent=self)
             return
         frame.addOglHierarchy()
         frame.setModified(True)
@@ -1340,7 +1355,7 @@ class AppFrame(Frame):
 
         # Ask which filename to load ?
         if filename == "":
-            dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN |  FD_MULTIPLE)
+            dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
 
             if dlg.ShowModal() != ID_OK:
                 dlg.Destroy()
@@ -1361,7 +1376,7 @@ class AppFrame(Frame):
                     self._ctrl.updateTitle()
             except (ValueError, Exception) as e:
                 displayError(_("An error occurred while loading the project !"), parent=self)
-                print(f'{e}')
+                self.logger.error(f'{e}')
 
     def _saveFile(self):
         """
@@ -1390,9 +1405,6 @@ class AppFrame(Frame):
         self._fileHandling.saveFileAs()
         self._ctrl.updateTitle()
 
-        # Add to last opened files list
-        #diag=self._ctrl.getUmlFrame()
-        #diag=self._ctrl.getUmlFrame()
         project = self._fileHandling.getCurrentProject()
         if project is not None:
             self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
@@ -1462,7 +1474,7 @@ class AppFrame(Frame):
             obj.doImport()
         except (ValueError, Exception) as e:
             displayError(_("An error occured while executing the selected plugin"), _("Error..."), self)
-            print(f'{e}')
+            self.logger.error(f'{e}')
 
         EndBusyCursor()
         self.Refresh()
@@ -1508,6 +1520,7 @@ class AppFrame(Frame):
     def OnToolboxMenuClick(self, event):
         self._ctrl.displayToolbox(self._toolboxesID[event.GetId()])
 
+    # noinspection PyUnusedLocal
     def _OnMnuEditShowToolbar(self, event):
         self._mainToolbar.Show(True)
 
@@ -1523,6 +1536,7 @@ class AppFrame(Frame):
         self._fileHandling.setModified(True)
         self._ctrl.updateTitle()
 
+    # noinspection PyUnusedLocal
     def _OnMnuEditCut(self, event):
         self.cutSelectedShapes()
 
@@ -1543,7 +1557,7 @@ class AppFrame(Frame):
         # specify the canvas on which we will paint
         # dc = wxClientDC(canvas)
         # canvas.PrepareDC(dc)
-        diagram = self._ctrl.getDiagram()
+        # diagram = self._ctrl.getDiagram()
 
         # put the PyutObjects in the clipboard and remove them from the diagram
         for obj in selected:
@@ -1561,6 +1575,7 @@ class AppFrame(Frame):
         self._ctrl.updateTitle()
         canvas.Refresh()
 
+    # noinspection PyUnusedLocal
     def _OnMnuEditCopy(self, event):
         """
         TODO : adapt for OglLinks
@@ -1578,11 +1593,13 @@ class AppFrame(Frame):
             obj.setLinks([])   # we don't want to copy the links
             self._clipboard.append(obj)
 
+    # noinspection PyUnboundLocalVariable
+    # noinspection PyUnusedLocal
     def _OnMnuEditPaste(self, event):
         if len(self._clipboard) == 0:
             return
 
-        frame=self._ctrl.getUmlFrame()
+        frame = self._ctrl.getUmlFrame()
         if frame == -1:
             displayError(_("No frame to paste into"))
             return
@@ -1600,7 +1617,7 @@ class AppFrame(Frame):
             elif isinstance(obj, PyutUseCase):
                 po = OglUseCase(obj)
             else:
-                print("Error when try to paste object")
+                self.logger.error("Error when try to paste object")
                 return
             self._ctrl.getUmlFrame().addShape(po, x, y)
             x += 20
@@ -1617,6 +1634,7 @@ class AppFrame(Frame):
         canvas.Refresh()
         # TODO : What are you doing with the dc ?
 
+    # noinspection PyUnusedLocal
     def _OnMnuSelectAll(self, event):
         frame = self._ctrl.getUmlFrame()
         if frame is None:
@@ -1628,11 +1646,12 @@ class AppFrame(Frame):
             shape.SetSelected(True)
         frame.Refresh()
 
+    # noinspection PyUnusedLocal
     def _OnMnuFilePyutProperties(self, event):
         """
         Callback.
 
-        @param wxEvent event
+        @param event
         @author L. Burgbacher <lb@alawa.ch>
         @since 1.34
         """
@@ -1644,6 +1663,7 @@ class AppFrame(Frame):
         if umlFrame is not None:
             umlFrame.Refresh()
 
+    # noinspection PyUnusedLocal
     def _OnMnuDebug(self, event):
         """
         Open a IPython shell
@@ -1656,11 +1676,13 @@ class AppFrame(Frame):
         ipshell = IPShellEmbed()
         ipshell(local_ns=vars(), global_ns=globals())
 
+    # noinspection PyUnusedLocal
     def _OnMnuUndo(self, event):
         if (self._fileHandling.getCurrentFrame()) is None:
             return   # TODO : dialog box
         self._fileHandling.getCurrentFrame().getHistory().undo()
 
+    # noinspection PyUnusedLocal
     def _OnMnuRedo(self, event):
         if (self._fileHandling.getCurrentFrame()) is None:
             return   # TODO : dialog box
