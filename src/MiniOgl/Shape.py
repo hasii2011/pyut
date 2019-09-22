@@ -33,6 +33,7 @@ __all__ = ["Shape"]
 # Setting this to 1 will display a little label for each Shape.
 DEBUG = 0
 
+
 class Shape(object):
     """
     Shape is the basic graphical block. It is also the view in
@@ -290,7 +291,7 @@ class Shape(object):
             default (AnchorPoint)
         @return AnchorPoint : the created anchor
         """
-        from AnchorPoint import AnchorPoint
+        from MiniOgl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
         if anchorType is None:
             anchorType = AnchorPoint
         p = anchorType(x, y, self)
@@ -306,7 +307,7 @@ class Shape(object):
         """
         Add an anchor point directly.
 
-        @param AnchorPoint anchor
+        @param anchor
         """
         self._anchors.append(anchor)
 
