@@ -60,7 +60,8 @@ class IoFile:
         myXml = module.PyutXml()
 
         doc = myXml.save(project)
-        text = doc.toxml()
+        # text = doc.toxml()
+        text = doc.toprettyxml()
         # add attribute encoding = "iso-8859-1"
         # this is not possible with minidom, so we use pattern matching
         updatedText: str = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
