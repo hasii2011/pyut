@@ -89,7 +89,8 @@ class ToTransforms(PyutToPlugin):
             # TODO : displayError "No frame opened"
             return
 
-        (frameW, frameH) = self._umlFrame.GetSizeTuple()
+        # (frameW, frameH) = self._umlFrame.GetSizeTuple()
+        (frameW, frameH) = self._umlFrame.GetPosition()
         for obj in umlObjects:
             x, y = obj.GetPosition()
             obj.SetPosition(frameW-x, y)
