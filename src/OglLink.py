@@ -1,16 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.9 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
+from PyutLink import PyutLink
+from PyutConsts import *
 
-#from wxPython.wx  import *
-from PyutLink     import PyutLink
-from PyutConsts   import *
-from mediator     import *
-from MiniOgl      import *
+from MiniOgl import *
 import wx
+
 
 def getOrient(srcX, srcY, destX, destY):
     """
@@ -45,7 +39,6 @@ def getOrient(srcX, srcY, destX, destY):
         else:
             return SOUTH
 
-#>------------------------------------------------------------------------
 
 class OglLink(LineShape, ShapeEventHandler):
     """
@@ -75,7 +68,7 @@ class OglLink(LineShape, ShapeEventHandler):
         @param OglObject srcShape : Source shape
         @param PyutLink pyutLink : Conceptual links associated with the
                                    graphical links.
-        @param OglObject destShape : Destination shape
+        @param OglObject dstShape : Destination shape
 
         @author Philippe Waelti <pwaelti@eivd.ch>
         @modified Laurent Burgbacher <lb@alawa.ch>
@@ -86,8 +79,7 @@ class OglLink(LineShape, ShapeEventHandler):
         self._srcShape = srcShape
         self._destShape = dstShape
 
-
-        if srcPos==None and dstPos==None:
+        if srcPos is None and dstPos is None:
             srcX, srcY = self._srcShape.GetPosition()
             dstX, dstY = self._destShape.GetPosition()
 
@@ -109,29 +101,27 @@ class OglLink(LineShape, ShapeEventHandler):
                 dstX, dstY = dw, dh/2
 
             # ============== Avoid overlining; Added by C.Dutoit ================
-            #lstAnchorsPoints = [anchor.GetRelativePosition()
+            # lstAnchorsPoints = [anchor.GetRelativePosition()
             #    for anchor in srcShape.GetAnchors()]
-            #while (srcX, srcY) in lstAnchorsPoints:
+            # while (srcX, srcY) in lstAnchorsPoints:
             #    if orient == NORTH or orient == SOUTH:
             #        srcX+=10
             #    else:
             #        srcY+=10
 
-            #lstAnchorsPoints = [anchor.GetRelativePosition()
+            # lstAnchorsPoints = [anchor.GetRelativePosition()
             #    for anchor in dstShape.GetAnchors()]
-            #while (dstX, dstY) in lstAnchorsPoints:
+            # while (dstX, dstY) in lstAnchorsPoints:
             #    if orient == NORTH or orient == SOUTH:
             #        dstX+=10
             #    else:
             #        dstY+=10
 
             # =========== end avoid overlining-Added by C.Dutoit ================
-
         else:
             # Get given position
             (srcX, srcY) = srcPos
             (dstX, dstY) = dstPos
-
 
         src = self._srcShape.AddAnchor(srcX, srcY)
         dst = self._destShape.AddAnchor(dstX, dstY)
@@ -148,17 +138,13 @@ class OglLink(LineShape, ShapeEventHandler):
 
         # Set up painting colors
         self.SetPen(wx.BLACK_PEN)
-        #self.SetBrush(wx.BLACK_BRUSH)
 
         # Keep reference to the PyutLink for mouse events, in order
         # to can find back the corresponding link
         if pyutLink is not None :
             self._link = pyutLink
-        else :
+        else:
             self._link = PyutLink()
-
-
-    #>------------------------------------------------------------------------
 
     def getSourceShape(self):
         """
@@ -170,8 +156,6 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         return self._srcShape
 
-    #>------------------------------------------------------------------------
-
     def getDestinationShape(self):
         """
         Return the destination shape for this link.
@@ -181,8 +165,6 @@ class OglLink(LineShape, ShapeEventHandler):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self._destShape
-
-    #>------------------------------------------------------------------------
 
     def getPyutObject(self):
         """
@@ -194,8 +176,6 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         return self._link
 
-    #>------------------------------------------------------------------------
-
     def setPyutObject(self, pyutLink):
         """
         Sets the associatied PyutLink.
@@ -205,8 +185,6 @@ class OglLink(LineShape, ShapeEventHandler):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self._link = pyutLink
-
-    #>------------------------------------------------------------------------
 
     def Detach(self):
         """
@@ -233,9 +211,6 @@ class OglLink(LineShape, ShapeEventHandler):
                 self._link.getSource().getLinks().remove(self._link)
             except ValueError:
                 pass
-
-
-    #>------------------------------------------------------------------------
 
     def optimizeLine(self):
         """
