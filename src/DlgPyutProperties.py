@@ -1,4 +1,9 @@
 
+from logging import Logger
+from logging import getLogger
+
+from sys import platform
+
 import lang
 
 
@@ -44,6 +49,9 @@ class DlgPyutProperties(Dialog):
     :author: C.Dutoit
     :contact: dutoitc@hotmail.com
     """
+
+    THE_GREAT_MAC_PLATFORM = 'darwin'
+
     def __init__(self, parent, ID, ctrl, prefs):
         """
         Constructor.
@@ -56,7 +64,10 @@ class DlgPyutProperties(Dialog):
         @since 1.0
         """
         super().__init__(parent, ID, _("Properties"))
-        self.__ctrl = ctrl
+
+        self.logger: Logger = getLogger(__name__)
+
+        self.__ctrl  = ctrl
         self.__prefs = prefs
         self.__initCtrl()
         self.Bind(EVT_CLOSE, self.__OnClose)
@@ -92,7 +103,17 @@ class DlgPyutProperties(Dialog):
         # Language
         self.__lblLanguage = StaticText(self, -1, _("Language"))
 
-        self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(lang.LANGUAGES.values())], style=CB_READONLY | CB_SORT)
+        self.logger.info(f'We are running on: {platform}')
+        #
+        # wx.CB_SORT not currently supported by wxOSX/Cocoa
+        #
+        if platform == DlgPyutProperties.THE_GREAT_MAC_PLATFORM:
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(lang.LANGUAGES.values())],
+                                          style=CB_READONLY)
+        else:
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(lang.LANGUAGES.values())],
+                                          style=CB_READONLY | CB_SORT)
+
         szrLanguage = BoxSizer(HORIZONTAL)
         szrLanguage.Add(self.__lblLanguage, 0, ALL, GAP)
         szrLanguage.Add(self.__cmbLanguage, 0, ALL, GAP)

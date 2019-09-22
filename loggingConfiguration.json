@@ -52,6 +52,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "DlgPyutProperties": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "plugins": {
             "level":     "INFO",
             "propagate": "False"
