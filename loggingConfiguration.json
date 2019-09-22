@@ -32,6 +32,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "AppFrame": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "PyutXmlV8": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

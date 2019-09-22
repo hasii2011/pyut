@@ -6,6 +6,7 @@ from logging import Logger
 from logging import getLogger
 
 from os import sep as osSeparator
+from os import getcwd
 
 from copy import copy
 
@@ -109,6 +110,8 @@ from pyutUtils import displayError
 from pyutUtils import displayInformation
 from pyutUtils import displayWarning
 
+from TipsFrame import TipsFrame
+
 from globals import _
 from globals import IMG_PKG
 
@@ -180,17 +183,11 @@ class AppFrame(Frame):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        import os
         # Application initialisation
         # Frame.__init__(self, parent, ID, title, DefaultPosition, Size(640, 480))
         super().__init__(parent, ID, title, DefaultPosition , Size(960, 480), DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
         self.logger: Logger = getLogger(__name__)
-        # Setting charset
-        # font = self.GetFont()
-        # print dir(font)
-        # font.SetEncoding(wxFONTENCODING_ISO8859_2)
-        # self.SetFont(font)
 
         # Create the application's icon
         # icon = Icon('img' + osSeparator + 'icon.ico', BITMAP_TYPE_ICO)
@@ -211,8 +208,7 @@ class AppFrame(Frame):
         self._prefs = PyutPreferences()  # getPrefs()
         self._lastDir = self._prefs["LastDirectory"]
         if self._lastDir is None:  # Assert that the path is present
-            import os
-            self._lastDir = os.getcwd()
+            self._lastDir = getcwd()
 
         # get the mediator
         self._ctrl = getMediator()
@@ -241,7 +237,7 @@ class AppFrame(Frame):
         self.SetAcceleratorTable(accel_table)
 
         # Members vars
-        self._currentDirectory = os.getcwd()
+        self._currentDirectory = getcwd()
         self._ctrl.registerAppPath(self._currentDirectory)
         self._clipboard = []
 
@@ -257,15 +253,14 @@ class AppFrame(Frame):
         """
         EVT_ACTIVATE Callback; display tips frame.
         """
+        self.logger.info(f'_onActivate event: {event}')
         try:
-            if self._alreadyDisplayedTipsFrame is True or self._prefs["SHOW_TIPS_ON_STARTUP"] == "0" or \
-                    self._prefs["SHOW_TIPS_ON_STARTUP"] == "False":
+            if self._alreadyDisplayedTipsFrame is True or self._prefs["SHOW_TIPS_ON_STARTUP"] == "0" or self._prefs["SHOW_TIPS_ON_STARTUP"] == "False":
                 return
             # Display tips frame
-            from TipsFrame import TipsFrame
-            tipsFrame = TipsFrame(self)
-            #  tipsFrame.Show()
             self._alreadyDisplayedTipsFrame = True
+            tipsFrame = TipsFrame(self)
+            #  tipsFrame.Show()     # weird the tips frame constructor does a .show itself  TODO look at this in future
         except (ValueError, Exception) as e:
             self.logger.error(f'onActivate: {e}')
 
