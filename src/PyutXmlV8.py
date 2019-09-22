@@ -696,16 +696,15 @@ class PyutXml:
             oglSDInstance = OglSDInstance(pyutSDInstance, umlFrame)
 
             # Data layer
-            xmlSDInstance = xmlOglSDInstance.getElementsByTagName(
-                                                            'SDInstance')[0]
+            xmlSDInstance = xmlOglSDInstance.getElementsByTagName('SDInstance')[0]
 
             # Pyut Data
             pyutSDInstance.setId(int(xmlSDInstance.getAttribute('id')))
-            pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute(
-                                            'instanceName').encode("charmap"))
-            pyutSDInstance.setInstanceLifeLineLength(
-                    secure_int(xmlSDInstance.getAttribute('lifeLineLength')))
+            # pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute('instanceName').encode("charmap"))
+            # Python 3 is already UTF-8
+            pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute('instanceName'))
 
+            pyutSDInstance.setInstanceLifeLineLength(secure_int(xmlSDInstance.getAttribute('lifeLineLength')))
 
             dicoOglObjects[pyutSDInstance.getId()] = oglSDInstance
 
@@ -758,7 +757,9 @@ class PyutXml:
 
             # Pyut Data
             pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute('id')))
-            pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message').encode("charmap"))
+            # pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message').encode("charmap"))
+            # Python 3 is already UTF-8
+            pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message'))
 
             dicoOglObjects[pyutSDMessage.getId()] = pyutSDMessage
 
@@ -1015,7 +1016,9 @@ class PyutXml:
             pyutActor.setId(int(xmlActor.getAttribute('id')))
 
             # adding name for this class
-            pyutActor.setName(xmlActor.getAttribute('name').encode("charmap"))
+            # pyutActor.setName(xmlActor.getAttribute('name').encode("charmap"))
+            # Python 3 is already UTF-8
+            pyutActor.setName(xmlActor.getAttribute('name'))
 
             # adding associated filename (lb@alawa.ch)
             pyutActor.setFilename(xmlActor.getAttribute('filename'))
@@ -1053,7 +1056,9 @@ class PyutXml:
             pyutUseCase.setId(int(xmlUseCase.getAttribute('id')))
 
             # adding name for this class
-            pyutUseCase.setName(xmlUseCase.getAttribute('name').encode("charmap"))
+            # pyutUseCase.setName(xmlUseCase.getAttribute('name').encode("charmap"))
+            # Python 3 is already utf-8;  don't need to encode anything
+            pyutUseCase.setName(xmlUseCase.getAttribute('name'))
 
             # adding associated filename (lb@alawa.ch)
             pyutUseCase.setFilename(xmlUseCase.getAttribute('filename'))
@@ -1105,6 +1110,7 @@ class PyutXml:
                 dicoFather     = {}     # format {id child oglClass : [id fathers]}
 
                 # docType = documentNode.getAttribute("type").encode("charmap")
+                # Python 3 is already UTF-8
                 docType = documentNode.getAttribute("type")     # Python 3 update
 
                 document = project.newDocument(diagramTypeFromString(docType))
@@ -1211,7 +1217,9 @@ class PyutXml:
             pyutClass.setId(int(xmlClass.getAttribute('id')))
 
             # adding name for this class
-            pyutClass.setName(xmlClass.getAttribute('name').encode("charmap"))
+            # pyutClass.setName(xmlClass.getAttribute('name').encode("charmap"))
+            # Python 3 is already utf-8;  don't need to encode anything
+            pyutClass.setName(xmlClass.getAttribute('name'))
             # print "PyutXml/open-4d00d"
 
             # adding description
@@ -1286,7 +1294,10 @@ class PyutXml:
             # adding name for this class
             name = xmlNote.getAttribute('name')
             name = name.replace("\\\\\\\\", "\n")
-            pyutNote.setName(name.encode("charmap"))
+
+            # pyutNote.setName(name.encode("charmap"))
+            # Python 3 is already utf-8;  don't need to encode anything
+            pyutNote.setName(name)
 
             # adding associated filename (lb@alawa.ch)
             pyutNote.setFilename(xmlNote.getAttribute('filename'))
