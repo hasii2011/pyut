@@ -65,12 +65,14 @@ class IoFile:
         # add attribute encoding = "iso-8859-1"
         # this is not possible with minidom, so we use pattern matching
         updatedText: str = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
-        self.logger.info(f'Document Save: \n {updatedText}')
+        self.logger.info(f'Document Save: \n{updatedText}')
 
-        byteText = updatedText.encode('utf-8')
+        byteText = updatedText.encode()
         compressed = zlib.compress(byteText)
+
         file = open(project.getFilename(), "wb")
         file.write(compressed)
+
         file.close()
         chdir(oldpath)
 
@@ -94,7 +96,8 @@ class IoFile:
                 comp = open(filename, "rb").read()      # Python 3 update use 'rb" instead of just 'r'
                 self.logger.info(f'zlib.__version__: {zlib.__version__}')
                 xmlBytes = zlib.decompress(comp)    # has b'....' around it
-                xmlString: str = xmlBytes.decode('utf-8')
+                xmlString: str = xmlBytes.decode()
+                self.logger.info(f'Document read:\n{xmlString}')
             except (ValueError, Exception) as e:
                 self.logger.error(f'open:  {e}')
 

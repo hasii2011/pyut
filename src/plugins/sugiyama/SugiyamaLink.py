@@ -29,6 +29,7 @@ from plugins.sugiyama.VirtualSugiyamaNode import *
 # Miniogl import
 from MiniOgl.ControlPoint import *
 
+
 class SugiyamaLink(ALayoutLink):
     """
     SugiyamaLink: link of the Sugiyama graph.
@@ -39,9 +40,6 @@ class SugiyamaLink(ALayoutLink):
     :contact: nicdub@gmx.ch
     :version: $Revision: 1.4 $
     """
-
-
-    #>------------------------------------------------------------------------
     def __init__(self, oglObject):
         """
         Constructor.
@@ -52,8 +50,6 @@ class SugiyamaLink(ALayoutLink):
         ALayoutLink.__init__(self, oglObject)
         self.__virtualNodes = []
 
-
-    #>------------------------------------------------------------------------
     def fixControlPoints(self):
         """
         Fix a graphical path with control points.
@@ -104,8 +100,6 @@ class SugiyamaLink(ALayoutLink):
             ctrlPoint = ControlPoint(xvnode, yvnode)#,self._oglLink)
             self.addControlPoint(ctrlPoint)
 
-
-    #>------------------------------------------------------------------------
     def addVitualNode(self, node):
         """
         Add a virtual node.
@@ -118,5 +112,3 @@ class SugiyamaLink(ALayoutLink):
         @author Nicolas Dubois
         """
         self.__virtualNodes.append(node)
-
-

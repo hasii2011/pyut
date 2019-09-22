@@ -1,18 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.10 $"
-__author__  = "EI5, eivd, Group Burgbacher - Waelti"
-__date__    = "2001-12-12"
+from logging import Logger
+from logging import getLogger
 
-#from wxPython.wx     import *
-#from wxPython.ogl    import *
 import wx
-from OglObject       import *
-from PyutNote        import *
-from LineSplitter    import *
+from OglObject import OglObject
+from PyutNote import PyutNote
+from LineSplitter import *
 
 MARGIN = 10.0
+
 
 class OglNote(OglObject):
     """
@@ -45,28 +41,30 @@ class OglNote(OglObject):
             pyutObject = pyutNote
 
         # Parent class constructor
-        OglObject.__init__(self, pyutObject, w, h)
+        # OglObject.__init__(self, pyutObject, w, h)
+        super().__init__(pyutObject, w, h)
+
+        self.logger: Logger = getLogger(__name__)
         self.SetBrush(wx.Brush(wx.Colour(255, 255, 230)))
 
-    #>------------------------------------------------------------------
-
-    def Draw(self, dc):#, withChildren=False):
+    def Draw(self, dc):
         """
         Paint handler, draws the content of the shape.
         @param wx.DC dc : device context to draw to
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        OglObject.Draw(self, dc)#, withChildren)
+        OglObject.Draw(self, dc)
         dc.SetFont(self._defaultFont)
 
         w, h = self.GetSize()
 
         try:
-            lines = LineSplitter().split(\
-                    self.getPyutObject().getName(), dc, w - 2 * MARGIN)
-        except:
-            print("Unable to display note")
+            # lines = LineSplitter().split(self.getPyutObject().getName(), dc, w - 2 * MARGIN)
+            noteName = self.getPyutObject().getName()
+            lines = LineSplitter().split(noteName, dc, w - 2 * MARGIN)
+        except (ValueError, Exception) as e:
+            self.logger.error(f"Unable to display note - {e}")
             return
 
         baseX, baseY = self.GetPosition()
@@ -81,6 +79,4 @@ class OglNote(OglObject):
 
         dc.DrawLine(baseX + w - MARGIN, baseY, baseX + w, baseY + MARGIN)
 
-
         dc.DestroyClippingRegion()
-

@@ -11,13 +11,12 @@ class RealSugiyamaNode(SugiyamaNode):
 
     For more information, see ../ToSugiyama.py
 
-    Instancied by: ../ToSugiyama.py
+    Instantiated by: ../ToSugiyama.py
 
     :author: Nicolas Dubois
     :contact: nicdub@gmx.ch
     :version: $Revision: 1.4 $
     """
-
     def __init__(self, oglObject):
         """
         Constructor.
@@ -91,10 +90,10 @@ class RealSugiyamaNode(SugiyamaNode):
         (x, y) = self.getPosition()
 
         # Fix all sons anchors position
-
         # Sort sons list to eliminate crossing
         sons = self.getSons()
-        sons.sort(cmpIndex)
+        #   sons.sort(cmpIndex)
+        sons.sort()
         nbSons = len(sons)
         # For all sons
         for i in range(nbSons):
@@ -107,7 +106,8 @@ class RealSugiyamaNode(SugiyamaNode):
 
         # Sort fathers list to eliminate crossing
         fathers = self.getFathers()
-        fathers.sort(cmpIndex)
+        # fathers.sort(cmpIndex)
+        fathers.sort()
         nbFathers = len(fathers)
         # For all fathers
         for i in range(nbFathers):

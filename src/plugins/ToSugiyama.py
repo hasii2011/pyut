@@ -3,19 +3,17 @@
 from plugins.PyutToPlugin import PyutToPlugin
 
 from plugins.sugiyama.RealSugiyamaNode import *
-from plugins.sugiyama.VirtualSugiyamaNode import *
+# from plugins.sugiyama.VirtualSugiyamaNode import *
 from plugins.sugiyama.SugiyamaLink import *
 from plugins.sugiyama.sugiyamaConsts import *
 
-# Ogl import
-
 from OglInheritance import *
 from OglInterface import *
+from OglObject import OglObject
 
 from PyutConsts import *
 
-# import wx
-
+from globals import cmp
 
 STEPBYSTEP = 0  # Do Sugiyama Step by step
 
@@ -23,10 +21,10 @@ STEPBYSTEP = 0  # Do Sugiyama Step by step
 def waitKey(umlFrame):
     umlFrame.Refresh()
     wx.Yield()
-    input("Appuyez sur Enter pour continuer")
+    input("Appuyez sur Enter pour continuer")   # Press enter to continue?
 
 
-def cmpBarycenter(xNode, yNode):
+def cmpBarycenter(xNode, yNode) -> bool:
     """
     Comparison function on barycenter value
     Args:
@@ -36,14 +34,10 @@ def cmpBarycenter(xNode, yNode):
     Returns:
 
     """
-
-    def cmp(x, y):
-        return (x > y) - (x < y)
-
     return cmp(xNode.getBarycenter(), yNode.getBarycenter())
 
 
-def cmpIndex(xNode, yNode):
+def cmpIndex(xNode, yNode) -> bool:
     """
         Comparison function on index value
     Args:
@@ -53,10 +47,6 @@ def cmpIndex(xNode, yNode):
     Returns:
 
     """
-
-    def cmp(x, y):
-        return (x > y) - (x < y)
-
     return cmp(xNode.getIndex(), yNode.getIndex())
 
 
@@ -69,7 +59,7 @@ class ToSugiyama(PyutToPlugin):
     a lot of hierachical relation (inheritance and interface), and poor
     association relation.
 
-    Instancied by ../PluginManager.py
+    Instantiated by ../PluginManager.py
 
     :author: Nicolas Dubois
     :contact: nicdub@gmx.ch
@@ -84,7 +74,7 @@ class ToSugiyama(PyutToPlugin):
         @author Nicolas Dubois
         """
         # Call father initialisation
-        PyutToPlugin.__init__(self, umlObjects, umlFrame)
+        super().__init__(umlObjects, umlFrame)
 
         # Sugiyama nodes and links
         self.__realSugiyamaNodesList = []   # List of all RealSugiyamaNode
@@ -156,20 +146,20 @@ class ToSugiyama(PyutToPlugin):
 
         # Internal function for creating a RealSugiyamaNode and add it to
         # self.__realSugiyamaNodesList and to dictOgl
-        def createSugiyamaNode(oglObject, dictOgl):
+        def createSugiyamaNode(theOglObject, theDictOgl):
             # Create RealSugiyamaNode only if not already done
-            if oglObject not in dictOgl:
-                node = RealSugiyamaNode(oglObject)
+            if theOglObject not in theDictOgl:
+                node = RealSugiyamaNode(theOglObject)
                 self.__realSugiyamaNodesList.append(node)
-                dictOgl[oglObject] = node
+                theDictOgl[theOglObject] = node
 
         # Internal function for adding nodes that take part in hierarchy into
         # the __hierarchyGraphNodesList.
 
-        def addNode2HierarchyGraph(sugiNode, dictSugiHier):
-            if sugiNode not in dictSugiHier:
-                dictSugiHier[sugiNode] = None
-                self.__hierarchyGraphNodesList.append(sugiNode)
+        def addNode2HierarchyGraph(theSugiNode, theDictSugiHier):
+            if theSugiNode not in theDictSugiHier:
+                theDictSugiHier[theSugiNode] = None
+                self.__hierarchyGraphNodesList.append(theSugiNode)
 
         # For each OglObject or OglLink, create a specific interface
         for oglObject in oglObjects:
