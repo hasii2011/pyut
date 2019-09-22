@@ -253,7 +253,7 @@ class AppFrame(Frame):
         """
         EVT_ACTIVATE Callback; display tips frame.
         """
-        self.logger.info(f'_onActivate event: {event}')
+        self.logger.debug(f'_onActivate event: {event}')
         try:
             if self._alreadyDisplayedTipsFrame is True or self._prefs["SHOW_TIPS_ON_STARTUP"] == "0" or self._prefs["SHOW_TIPS_ON_STARTUP"] == "False":
                 return

@@ -17,7 +17,6 @@ from mediator import getMediator
 from pyutUtils import displayError
 
 from PyutConsts import CLASS_DIAGRAM
-from PyutXml import PyutXml
 
 from globals import _
 
@@ -126,7 +125,8 @@ class IoFile:
                 module = __import__("PyutXmlV" + str(version))
                 myXml = module.PyutXml()
             else:
-                version = 1
+                from PyutXml import PyutXml  # don't like it here but at top of file not recognized -- hasii
+                # version = 1
                 myXml = PyutXml()
             project.newDocument(CLASS_DIAGRAM)
             umlFrame = project.getDocuments()[0].getFrame()
@@ -134,7 +134,7 @@ class IoFile:
 
         chdir(oldpath)
         # TODO : put this back
-        #except:
+        # except:
         #    #dlg=wxMessageDialog(umlFrame,
         #    #    _("An error occured while while parsing the file ")
         #    #    + str(fileName) + ".",
