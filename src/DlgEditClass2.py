@@ -38,6 +38,7 @@ from wx import StaticText
 
 from wx import FlexGridSizer
 
+from PyutClass import PyutClass
 from PyutField import PyutField
 from PyutMethod import PyutMethod
 
@@ -92,7 +93,7 @@ class DlgEditClass (Dialog):
     :version: $Revision: 1.14 $
     """
 
-    def __init__(self, parent, ID, pyutClass):
+    def __init__(self, parent, ID, pyutClass: PyutClass):
         """
         Constructor.
 
@@ -104,10 +105,10 @@ class DlgEditClass (Dialog):
         """
         Dialog.__init__(self, parent, ID, _("Class Edit"), style=RESIZE_BORDER | CAPTION)
 
-        self._pyutClass = pyutClass
+        self._pyutClass     = pyutClass
         self._pyutClassCopy = deepcopy(pyutClass)
-        self._parent = parent
-        self._ctrl = mediator.getMediator()
+        self._parent        = parent
+        self._ctrl          = mediator.getMediator()
 
         self.SetAutoLayout(True)
 

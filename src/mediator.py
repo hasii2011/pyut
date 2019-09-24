@@ -219,7 +219,7 @@ class Mediator(Singleton):
         import ErrorManager
         self._errorManager  = ErrorManager.getErrorManager()
         self._currentAction = ACTION_SELECTOR
-        self._useMode       = NORMAL_MODE # Define current use mode
+        self._useMode       = NORMAL_MODE   # Define current use mode
         self._currentActionPersistent = False
 
         self._toolBar  = None   # toolbar
@@ -306,7 +306,7 @@ class Mediator(Singleton):
         @since 1.27.2.4
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        self._appFrame=appFrame
+        self._appFrame = appFrame
         if self._toolboxOwner is None:
             self._toolboxOwner = ToolboxOwner(appFrame)
 
@@ -343,14 +343,14 @@ class Mediator(Singleton):
         """
         self._status = statusBar
 
-    def fastTextClassEditor(self, pyutClass):
+    def fastTextClassEditor(self, thePyutClass: PyutClass):
         plugs = self._appFrame.plugs
         cl = [s for s in plugs.values() if s(None, None).getName() == "Fast text edition"]
         if cl:
             obj = cl[0](self.getUmlObjects(), self.getUmlFrame())
         else:
             # fallback
-            self.standardClassEditor(pyutClass)
+            self.standardClassEditor(thePyutClass)
             return
 
         # Do plugin functionality
@@ -359,17 +359,18 @@ class Mediator(Singleton):
         EndBusyCursor()
         self.getUmlFrame().Refresh()
 
-    def standardClassEditor(self, pyutClass):
+    def standardClassEditor(self, thePyutClass: PyutClass):
         """
         The standard class editor dialogue, for registerClassEditor.
 
-        @param PyutClass pyutClass : the class to edit
+        @param  thePyutClass : the class to edit
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
-        dlg = DlgEditClass(umlFrame, -1, pyutClass)
+        if umlFrame is None:
+            return
+        dlg = DlgEditClass(umlFrame, -1, thePyutClass)
         dlg.Destroy()
 
     def registerClassEditor(self, classEditor):
@@ -460,9 +461,7 @@ class Mediator(Singleton):
             try:
                 from UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
                 if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
-                    displayError(_("A SD INSTANCE can't be added to a " +
-                                 "class diagram. You must create a sequence " +
-                                 "diagram."))
+                    displayError(_("A SD INSTANCE can't be added to a class diagram. You must create a sequence diagram."))
                     return
                 instance = umlFrame.createNewSDInstance(x, y)
                 if not self._currentActionPersistent:
@@ -476,7 +475,7 @@ class Mediator(Singleton):
                 dlg.Destroy()
                 umlFrame.Refresh()
             except (ValueError, Exception) as e:
-                displayError(_("f An error occured while trying to do this action {e}"))
+                displayError(_(f"An error occured while trying to do this action {e}"))
                 umlFrame.Refresh()
         # added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (10.10.2005)
         elif self._currentAction == ACTION_ZOOM_IN:
@@ -496,11 +495,11 @@ class Mediator(Singleton):
         @since 1.9
         @author L. Burgbacher <lb@alawa.ch>
         """
-        for id in self._tools:
-            self._toolBar.ToggleTool(id, False)
+        for toolId in self._tools:
+            self._toolBar.ToggleTool(toolId, False)
         self._toolBar.ToggleTool(ID, True)
 
-    def shapeSelected(self, shape, position = None):
+    def shapeSelected(self, shape, position=None):
         """
         Do action when a shape is selected.
 
