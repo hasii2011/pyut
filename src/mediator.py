@@ -47,6 +47,7 @@ from globals import _
 __PyUtVersion__ = getPyUtVersion()
 
 # an enum of the supported actions
+# TODO make real enumerations
 [
     ACTION_SELECTOR,
     ACTION_NEW_CLASS,
@@ -221,15 +222,13 @@ class Mediator(Singleton):
         self._useMode       = NORMAL_MODE # Define current use mode
         self._currentActionPersistent = False
 
-        self._toolBar  = None # toolbar
-        self._tools    = None # toolbar tools
-        # self._uml      = None # current uml frame
-        # self._project  = None # current project
-        self._status   = None # application status bar
-        self._src      = None # source of a two-objects action
-        self._dst      = None # destination of a two-objects action
-        self._appFrame = None # Application's main frame
-        self._appPath  = None # Application files' path
+        self._toolBar  = None   # toolbar
+        self._tools    = None   # toolbar tools
+        self._status   = None   # application status bar
+        self._src      = None   # source of a two-objects action
+        self._dst      = None   # destination of a two-objects action
+        self._appFrame = None   # Application's main frame
+        self._appPath  = None   # Application files' path
 
         self.registerClassEditor(self.standardClassEditor)
         self._toolboxOwner = None   # toolbox owner, created when appframe is passed
@@ -239,9 +238,6 @@ class Mediator(Singleton):
         self._modifyCommand = None  # command for undo/redo a modification on a shape.
 
         self.logger: Logger = getLogger(__name__)
-
-    def registerFileHandling(self, fh):
-        self._fileHandling = fh
 
     def setScriptMode(self):
         """
@@ -269,16 +265,16 @@ class Mediator(Singleton):
         """
         Define the file handling class
 
-        @param FileHandling fh : The FileHandling class to be used
+        @param fh : The FileHandling class to be used
         @author C.Dutoit
         """
         self._fileHandling = fh
 
-    def registerAppPath(self, path):
+    def registerAppPath(self, path: str):
         """
         Register the path of the application files.
 
-        @param string path
+        @param path
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         self._appPath = path
@@ -381,22 +377,24 @@ class Mediator(Singleton):
         Register a function to invoque a class editor.
         This function takes one parameter, the pyutClass to edit.
 
-        @param fct(PyutClass)
+        @param classEditor  PyutClass)
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         self.classEditor = classEditor
 
-    def setCurrentAction(self, action):
+    def setCurrentAction(self, action: int):
         """
+        TODO make actions enumerations
+
         Set the new current atction.
         This tells the mediator which action to do for the next doAction call.
 
-        @param int action : the action from ACTION constants
+        @param action : the action from ACTION constants
         @since 1.0
         @author L. Burgbacher <lb@alawa.ch>
         """
-        if self._currentAction==action:
+        if self._currentAction == action:
             self._currentActionPersistent = True
         else:
             self._currentAction = action
@@ -414,7 +412,8 @@ class Mediator(Singleton):
         @author L. Burgbacher <lb@alawa.ch>
         """
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
+        if umlFrame is None:
+            return
         self.resetStatusText()
         if self._currentAction == ACTION_SELECTOR:
             return SKIP_EVENT
