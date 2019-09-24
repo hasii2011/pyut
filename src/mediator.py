@@ -1,6 +1,7 @@
 
-from wx import OK
-from wx import CANCEL
+from logging import Logger
+from logging import getLogger
+
 from wx import CENTRE
 from wx import WXK_DELETE
 from wx import WXK_INSERT
@@ -29,12 +30,9 @@ from PyutConsts import OGL_SD_MESSAGE
 
 from PyutMethod import WITHOUT_PARAMS
 from PyutMethod import WITH_PARAMS
-from PyutMethod import PyutMethod
 from PyutPreferences import PyutPreferences
 from pyutUtils import displayError
-from pyutUtils import assignID
 
-from ToolboxOwner import ToolboxOwner
 from DlgEditClass2 import *         # Have to do this to avoid cyclical dependency
 from DlgEditNote import DlgEditNote
 from DlgEditUseCase import DlgEditUseCase
@@ -42,6 +40,8 @@ from DlgEditLink import DlgEditLink
 
 from pyutVersion import getPyUtVersion
 from singleton import Singleton
+from ToolboxOwner import ToolboxOwner
+
 from globals import _
 
 __PyUtVersion__ = getPyUtVersion()
@@ -69,7 +69,7 @@ __PyUtVersion__ = getPyUtVersion()
     ACTION_NEW_SD_MESSAGE,
     ACTION_DEST_SD_MESSAGE,
     ACTION_ZOOM_IN,  # Patch from D.Dabrowsky, 20060129
-    ACTION_ZOOM_OUT # Patch from D.Dabrowsky, 20060129
+    ACTION_ZOOM_OUT  # Patch from D.Dabrowsky, 20060129
 ] = range(22)
 
 # a table of the next action to select
@@ -107,7 +107,6 @@ SOURCE_ACTIONS = [
     ACTION_NEW_ASSOCIATION_LINK,
     ACTION_NEW_NOTE_LINK,
     ACTION_NEW_SD_MESSAGE,
-
 ]
 # list of actions which are destination events
 DEST_ACTIONS = [
@@ -138,33 +137,30 @@ a = "Click on the source class"
 b = "Now, click on the destination class"
 
 MESSAGES = {
-    ACTION_SELECTOR: "Ready",
-    ACTION_NEW_CLASS: "Click where you want to put the new class",
-    ACTION_NEW_NOTE: "Click where you want to put the new note",
-    ACTION_NEW_ACTOR: "Click where you want to put the new actor",
+    ACTION_SELECTOR:    "Ready",
+    ACTION_NEW_CLASS:   "Click where you want to put the new class",
+    ACTION_NEW_NOTE:    "Click where you want to put the new note",
+    ACTION_NEW_ACTOR:   "Click where you want to put the new actor",
     ACTION_NEW_USECASE: "Click where you want to put the new use case",
     ACTION_NEW_SD_INSTANCE: "Click where you want to put the new instance",
-    ACTION_NEW_SD_MESSAGE: "Click where you want to put the new message",
+    ACTION_NEW_SD_MESSAGE:  "Click where you want to put the new message",
     ACTION_DEST_SD_MESSAGE: "Click on the destination of the message",
-    ACTION_NEW_IMPLEMENT_LINK: a,
-    ACTION_NEW_INHERIT_LINK: a,
+    ACTION_NEW_IMPLEMENT_LINK:   a,
+    ACTION_NEW_INHERIT_LINK:     a,
     ACTION_NEW_AGGREGATION_LINK: a,
     ACTION_NEW_COMPOSITION_LINK: a,
     ACTION_NEW_ASSOCIATION_LINK: a,
-    ACTION_NEW_NOTE_LINK: a,
+    ACTION_NEW_NOTE_LINK:        a,
     ACTION_DEST_IMPLEMENT_LINK: b,
-    ACTION_DEST_INHERIT_LINK: b,
+    ACTION_DEST_INHERIT_LINK:   b,
     ACTION_DEST_AGGREGATION_LINK: b,
     ACTION_DEST_COMPOSITION_LINK: b,
     ACTION_DEST_ASSOCIATION_LINK: b,
     ACTION_DEST_NOTE_LINK: b,
-    ACTION_ZOOM_IN: "Select the area to fit on",
-    ACTION_ZOOM_OUT: "Select the central point",
+    ACTION_ZOOM_IN:     "Select the area to fit on",
+    ACTION_ZOOM_OUT:    "Select the central point",
 
 }
-
-# del a, b
-
 
 # Define current use mode
 [SCRIPT_MODE, NORMAL_MODE] = assignID(2)
@@ -220,10 +216,11 @@ class Mediator(Singleton):
         @modified C.Dutoit 20021121 Added self._project
         """
         import ErrorManager
-        self._errorManager = ErrorManager.getErrorManager()
+        self._errorManager  = ErrorManager.getErrorManager()
         self._currentAction = ACTION_SELECTOR
-        self._useMode = NORMAL_MODE # Define current use mode
+        self._useMode       = NORMAL_MODE # Define current use mode
         self._currentActionPersistent = False
+
         self._toolBar  = None # toolbar
         self._tools    = None # toolbar tools
         # self._uml      = None # current uml frame
@@ -233,13 +230,15 @@ class Mediator(Singleton):
         self._dst      = None # destination of a two-objects action
         self._appFrame = None # Application's main frame
         self._appPath  = None # Application files' path
-        self.registerClassEditor(self.standardClassEditor)
-        self._toolboxOwner = None # toolbox owner, created when appframe is passed
-        self._fileHandling = None # File Handler
-        #self.registerClassEditor(self.fastTextClassEditor)
 
+        self.registerClassEditor(self.standardClassEditor)
+        self._toolboxOwner = None   # toolbox owner, created when appframe is passed
+        self._fileHandling = None   # File Handler
+        # self.registerClassEditor(self.fastTextClassEditor)
         # Patch from D.Dabrowsky, 20060129
         self._modifyCommand = None  # command for undo/redo a modification on a shape.
+
+        self.logger: Logger = getLogger(__name__)
 
     def registerFileHandling(self, fh):
         self._fileHandling = fh
@@ -508,7 +507,7 @@ class Mediator(Singleton):
 
         @since 1.9
         @author L. Burgbacher <lb@alawa.ch>
-        @todo : support each link type
+        TODO : support each link type
         """
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None: return
@@ -521,7 +520,7 @@ class Mediator(Singleton):
 
             # if no source, cancel action
             if shape is None:
-                print(_("Action cancelled"), " (no source)")
+                self.logger.info("Action cancelled (no source)")
                 self._currentAction = ACTION_SELECTOR
                 self.selectTool(self._tools[0])
                 self.setStatusText(_("Action cancelled"))
@@ -560,8 +559,7 @@ class Mediator(Singleton):
                 self._currentAction = ACTION_SELECTOR
                 self.selectTool(self._tools[0])
         else:
-            self.setStatusText(
-                _("Error : Action not supported by the mediator"))
+            self.setStatusText(_("Error : Action not supported by the mediator"))
             return
         self.setStatusText(MESSAGES[self._currentAction])
 
@@ -608,56 +606,54 @@ class Mediator(Singleton):
         @author L. Burgbacher <lb@alawa.ch>
         """
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
+        if umlFrame is None:
+            return
         from OglClass import OglClass
         from OglNote  import OglNote
         from OglUseCase import OglUseCase
         from OglActor import OglActor
         from OglAssociation import OglAssociation
-        # from OglInheritance import OglInheritance
+
         from OglInterface import OglInterface
-        # print "mediator-editObject1", x, y
-        object = umlFrame.FindShape(x, y)
-        # print "mediator-editObject object=", object
-        if object is None:
+
+        diagramShape = umlFrame.FindShape(x, y)
+
+        if diagramShape is None:
             return
 
-        if isinstance(object, OglClass):
-            pyutObject = object.getPyutObject()
+        if isinstance(diagramShape, OglClass):
+            pyutObject = diagramShape.getPyutObject()
             self.classEditor(pyutObject)
-            self.autoResize(object)
-        elif isinstance(object, OglNote):
-            pyutObject = object.getPyutObject()
+            self.autoResize(diagramShape)
+        elif isinstance(diagramShape, OglNote):
+            pyutObject = diagramShape.getPyutObject()
             dlg = DlgEditNote(umlFrame, -1, pyutObject)
             dlg.Destroy()
-        elif isinstance(object, OglUseCase):
-            pyutObject = object.getPyutObject()
+        elif isinstance(diagramShape, OglUseCase):
+            pyutObject = diagramShape.getPyutObject()
             dlg = DlgEditUseCase(umlFrame, -1, pyutObject)
             dlg.Destroy()
-        elif isinstance(object, OglActor):
-            pyutObject = object.getPyutObject()
-
+        elif isinstance(diagramShape, OglActor):
+            pyutObject = diagramShape.getPyutObject()
             dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutObject.getName(), OK | CANCEL | CENTRE)
-
             if dlg.ShowModal() == ID_OK:
                 pyutObject.setName(dlg.GetValue())
             dlg.Destroy()
-        elif isinstance(object, OglAssociation):
-            dlg = DlgEditLink(None, -1, object.getPyutObject())
+        elif isinstance(diagramShape, OglAssociation):
+            dlg = DlgEditLink(None, -1, diagramShape.getPyutObject())
             dlg.ShowModal()
             rep = dlg.getReturnAction()
             dlg.Destroy()
             if rep == -1:    # destroy link
-                object.Detach()
-                # self.removeLink(object)
-        elif isinstance(object, OglInterface):
-            dlg = DlgEditLink(None, -1, object.getPyutObject())
+                diagramShape.Detach()
+        elif isinstance(diagramShape, OglInterface):
+            dlg = DlgEditLink(None, -1, diagramShape.getPyutObject())
             dlg.ShowModal()
             rep = dlg.getReturnAction()
             dlg.Destroy()
-            if rep == -1: # destroy link
-                object.Detach()
-                # self.removeLink(object)
+            if rep == -1:  # destroy link
+                diagramShape.Detach()
+
 
         umlFrame.Refresh()
 
@@ -750,7 +746,7 @@ class Mediator(Singleton):
         """
         Choose wether to show the params in the classes or not.
 
-        @param bool int
+        @param val
         @since 1.17
         @author L. Burgbacher <lb@alawa.ch>
         """
@@ -975,7 +971,7 @@ class Mediator(Singleton):
         else:
             filename = ""
 
-        #Set text
+        # Set text
         txt = "PyUt v" + __PyUtVersion__ + " - " + filename
         if (project is not None) and (project.getModified()):
             if self._fileHandling.getCurrentFrame() is not None:
@@ -1022,17 +1018,15 @@ class Mediator(Singleton):
 
         from createOglClassCommand import CreateOglClassCommand
         from OglClass import OglClass
-        from OglLink import OglLink
-        from OglObject import OglObject
+
         from commandGroup import CommandGroup
 
         cmd = None
 
         if isinstance(oglObject, OglClass):
-            print("end")
-            cmd = CreateOglClassCommand(shape = oglObject)
+            cmd = CreateOglClassCommand(shape=oglObject)
 
-        if cmd is not None and self._modifyCommand is not None :
+        if cmd is not None and self._modifyCommand is not None:
 
             group = CommandGroup("modify " + oglObject.getPyutObject().getName())
             group.addCommand(self._modifyCommand)
@@ -1041,5 +1035,4 @@ class Mediator(Singleton):
             umlFrame = self.getFileHandling().getCurrentFrame()
             umlFrame.getHistory().addCommandGroup(group)
 
-        cmd = None
         self._modifyCommand = None

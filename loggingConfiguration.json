@@ -27,6 +27,12 @@
             "level":     "INFO",
             "propagate": "False"
         },
+        "Mediator": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+
         "Pyut": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
