@@ -806,9 +806,12 @@ class Mediator(Singleton):
         from commandGroup import CommandGroup
 
         umlFrame = self._fileHandling.getCurrentFrame()
-        # TODO : check this : if umlFrame is None: return
-        selected = umlFrame.GetSelectedShapes()
-        cmdGroup = CommandGroup("Delete UML object(s)")
+        if umlFrame is None:
+            return
+        selected     = umlFrame.GetSelectedShapes()
+        cmdGroup     = CommandGroup("Delete UML object(s)")
+        cmdGroupInit = False  # added by hasii to avoid Pycharm warning about cmdGroupInit not set
+
         for shape in selected:
             cmd = None
             if isinstance(shape, OglClass):
@@ -825,7 +828,6 @@ class Mediator(Singleton):
             else:
                 shape.Detach()
                 umlFrame.Refresh()
-                cmdGroupInit = False        # added by hasii to avoid Pycharm warning about cmdGroupInit not set
 
         if cmdGroupInit:
             umlFrame.getHistory().addCommandGroup(cmdGroup)

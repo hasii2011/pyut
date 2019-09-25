@@ -12,15 +12,16 @@ from globals import composeErrorMessageFromStack
 # Constants
 DEFAULT_LANG = "en"
 LANGUAGES = {
-        DEFAULT_LANG: ("English", wx.LANGUAGE_ENGLISH),
-        "da": ("Danish", wx.LANGUAGE_DANISH),
-        "de": ("Deutsch", wx.LANGUAGE_GERMAN),
-        "eo": ("Esperanto",wx.LANGUAGE_ESPERANTO),
-        "es": ("Spanish", wx.LANGUAGE_SPANISH),
-        "fr": ("Francais", wx.LANGUAGE_FRENCH),
-        "id": ("Indonesian",wx.LANGUAGE_INDONESIAN),
-        "pl": ("Polish", wx.LANGUAGE_POLISH),
-        "ci": ("chinese-utf8", wx.LANGUAGE_CHINESE_TRADITIONAL),
+        DEFAULT_LANG: (
+            "English",              wx.LANGUAGE_ENGLISH),
+            "da": ("Danish",        wx.LANGUAGE_DANISH),
+            "de": ("Deutsch",       wx.LANGUAGE_GERMAN),
+            "eo": ("Esperanto",     wx.LANGUAGE_ESPERANTO),
+            "es": ("Spanish",       wx.LANGUAGE_SPANISH),
+            "fr": ("Francais",      wx.LANGUAGE_FRENCH),
+            "id": ("Indonesian",    wx.LANGUAGE_INDONESIAN),
+            "pl": ("Polish",        wx.LANGUAGE_POLISH),
+            "ci": ("chinese-utf8",  wx.LANGUAGE_CHINESE_TRADITIONAL),
         }
 
 
@@ -43,10 +44,10 @@ def importLanguage():
         # langid=wx.LANGUAGE_CHINESE_TRADITIONAL
         wxLangID   = LANGUAGES[language][1]
         domain    = "Pyut"
-        localedir = "."  # "./locale"
+        localedir = "src"  # "./locale"     TODO: look this up via a resource directory
         # print "langid=", wxLangID
 
-        method = 0
+        method = 0          # Really ?
         if method == 0:
             # Possibility to load all languages, then do an install on fly
             tr = gettext.translation(domain, localedir, languages=[language])
@@ -67,21 +68,8 @@ def importLanguage():
             mytrans.install(unicode=True)
     except (ValueError, Exception) as e:
         # If there has been a problem with i18n
-        moduleLogger.error(f'Warning: problem with gettext, i18n not used')
-
+        moduleLogger.error(f'Warning: problem with gettext, i18n not used.  Error: {e}')
         errMsg = composeErrorMessageFromStack()
-        # import sys, traceback
-        # errMsg = "The following error occured : %s" % str(sys.exc_info()[1])
-        # errMsg += "\n\n---------------------------\n"
-        # if sys.exc_info()[0] is not None:
-        #     errMsg += "Error : %s" % sys.exc_info()[0] + "\n"
-        # if sys.exc_info()[1] is not None:
-        #     errMsg += "Msg   : %s" % sys.exc_info()[1] + "\n"
-        # if sys.exc_info()[2] is not None:
-        #     errMsg += "Trace :\n"
-        #     for el in traceback.extract_tb(sys.exc_info()[2]):
-        #         errMsg = errMsg + str(el) + "\n"
-
         moduleLogger.error(errMsg)
 
 
