@@ -300,7 +300,7 @@ class Mediator(Singleton):
         @since 1.27.2.23
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        if not self._appFrame is None:
+        if self._appFrame is not None:
             self._appFrame.notifyTitleChanged()
 
     def registerAppFrame(self, appFrame):

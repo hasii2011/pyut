@@ -1,5 +1,4 @@
 
-import wx
 from OglObject import *
 from PyutClass import PyutClass
 
@@ -29,15 +28,14 @@ class OglClass(OglObject):
     :contact: lb@alawa.ch
     """
 
-    def __init__(self, pyutClass=None, w=100, h=100):
+    def __init__(self, pyutClass=None, w: int = 100, h: int = 100):
         """
         Constructor.
         @param PyutClass pyutClass : a Pyutclass object
-        @param float w : Width of the shape
-        @param float h : Height of the shape
+        @param  w : Width of the shape
+        @param  h : Height of the shape
         @author N.Hamadi
         """
-        # print "OglClass-1"
         # initilize the pyutClass if wasn't
         # if pyutClass is not None:
         #     pyutObject = pyutClass
@@ -47,7 +45,6 @@ class OglClass(OglObject):
             pyutObject = PyutClass()
         else:
             pyutObject = pyutClass
-        # print "OglClass-2"
 
         # Super init
         # OglObject.__init__(self, pyutObject, w, h)
@@ -215,20 +212,16 @@ class OglClass(OglObject):
         # Return sizes
         return x, y, w, h
 
-    def Draw(self, dc):
+    def Draw(self, dc, withChildren=False):
         """
         Paint handler, draws the content of the shape.
-        @param wx.DC dc : device context to draw to
-        @author N. Hamadi
-        WARNING : Every changes here must be reported in autoResize method
-        @modified C.Dutoit 20021121 : Refactored: by splitting
-        """
-        # Autoresize ?
-        # import PyutPreferences
-        # prefs = PyutPreferences.PyutPreferences()
-        # if prefs["AUTO_RESIZE"]:
-        #    self.autoResize()
 
+        WARNING : Every changes here must be reported in autoResize method
+
+        Args:
+            dc: device context to draw to
+            withChildren:
+        """
         # Init
         pyutObject = self.getPyutObject()
 
