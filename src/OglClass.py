@@ -66,9 +66,7 @@ class OglClass(OglObject):
         height = dc.GetTextExtent(text)[1]
         return height
 
-    def calculateClassHeader(self, dc, draw=False,
-                             initialX = None, initialY = None,
-                             calcWidth=False):
+    def calculateClassHeader(self, dc, draw=False, initialX=None, initialY=None, calcWidth=False):
         """
         Calculate the class header position and size adn display it if
         a draw is True
@@ -324,7 +322,7 @@ class OglClass(OglObject):
         elif event.GetId() == MNU_FIT_FIELDS:
             self.autoResize()
         elif event.GetId() == MNU_CUT_SHAPE:
-            ctrl = mediator.getMediator()
+            ctrl = getMediator()
             ctrl.deselectAllShapes()
             self.SetSelected(True)
             ctrl.cutSelectedShapes()

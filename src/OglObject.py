@@ -51,10 +51,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
 
         # Connected links
         self._oglLinks = []
-        #print "OglObject-3"
-
-        #added by P.Dabrowski 20051202 : it's the command to undo/redo
-        #a modification on this object.
+        # added by P.Dabrowski 20051202 : it's the command to undo/redo a modification on this object.
         self._modifyCommand = None
 
     def setPyutObject(self, pyutObject):
