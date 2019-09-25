@@ -2,6 +2,10 @@
 from logging import Logger
 from logging import getLogger
 
+from os import getcwd
+from os import chdir
+from os import path as osPath
+
 import importlib
 
 import wx
@@ -11,6 +15,8 @@ from plugins.PyutToPlugin import PyutToPlugin
 from OglClass import OglClass
 
 from plugins.IoPython import IoPython
+
+from mediator import getMediator
 
 from globals import _
 
@@ -78,17 +84,15 @@ class ToPython(PyutToPlugin):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        import os, mediator
-
         if umlFrame is None:
             # TODO : displayError
             self.logger.error(f'No umlFrame')
             return
 
-        ctrl = mediator.getMediator()
+        ctrl = getMediator()
         project = ctrl.getFileHandling().getProjectFromFrame(umlFrame)
         if project.getCodePath() == "":
-            dlg = wx.DirDialog(None, _("Choose the root directory for the code"), os.getcwd())
+            dlg = wx.DirDialog(None, _("Choose the root directory for the code"), getcwd())
             if dlg.ShowModal() == wx.ID_OK:
                 codeDir = dlg.GetPath()
                 self.logger.info(f"Chosen directory is {codeDir}")
@@ -100,9 +104,10 @@ class ToPython(PyutToPlugin):
         if len(oglClasses) == 0:
             self.logger.info("Nothing selected")
             return
-        oldDir = os.getcwd()
-        os.chdir(project.getCodePath())
+        oldDir = getcwd()
+        chdir(project.getCodePath())
         plug = IoPython(None, None)
+        normalDir = getcwd()
         for oglClass in oglClasses:
             pyutClass = oglClass.getPyutObject()
             filename = pyutClass.getFilename()
@@ -117,17 +122,17 @@ class ToPython(PyutToPlugin):
                 dlg.Destroy()
             modulename = filename[:-3]  # remove ".py"
             try:
-                normalDir = os.getcwd()
-                path, name = os.path.split(os.path.abspath(modulename))
-                os.chdir(path)
+                # normalDir = getcwd()
+                path, name = osPath.split(osPath.abspath(modulename))
+                chdir(path)
                 module = __import__(name)
                 importlib.reload(module)
-                os.chdir(normalDir)
+                chdir(normalDir)
             except ImportError as ie:
                 self.logger.error(f"Error while trying to import module {str(modulename)} --- {ie}")
-                os.chdir(normalDir)
+                chdir(normalDir)
                 continue
             orgClass = module.__dict__[pyutClass.getName()]
             plug.getPyutClass(orgClass, filename, pyutClass)
             oglClass.autoResize()
-        os.chdir(oldDir)
+        chdir(oldDir)

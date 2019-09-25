@@ -1,25 +1,26 @@
 
-from typing import cast
+import os
+from sys import path as sysPath
 
-from plugins.PyutIoPlugin import PyutIoPlugin
+import wx
+
+import importlib
+
 from PyutClass import PyutClass
 from OglClass import OglClass
 from PyutMethod import PyutMethod
 from PyutParam import PyutParam
+from PyutField import PyutField
 
 from plugins.ast import FieldExtractor
+from plugins.PyutIoPlugin import PyutIoPlugin
+
+from pyutUtils import assignID
 
 from globals import _
 from globals import cmp
 
-from PyutField import PyutField
-from pyutUtils import assignID
-import os
-from sys import path as sysPath
-import wx
-import importlib
-
-MaxWidth=80
+MaxWidth = 80
 
 [ID_BTN_TO_THE_RIGHT, ID_BTN_TO_THE_LEFT] = assignID(2)
 
@@ -29,12 +30,12 @@ class DlgAskWhichClassesToReverse2(wx.Dialog):
         wx.Dialog.__init__(self, None, -1, "Classes choice", style=wx.CAPTION | wx.DIALOG_MODAL | wx.RESIZE_BORDER, size=(400, 500))
 
         # Create not choosen classes listBox
-        self._listBox1=wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
+        self._listBox1 = wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
         for klass in lstClasses:
             self._listBox1.Append(klass.__name__, klass)
 
         # Create choosen classes listBox
-        self._listBox2=wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
+        self._listBox2 = wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
 
         # Create buttons
         btnOk = wx.Button(self, wx.ID_OK, "Ok")
@@ -72,7 +73,7 @@ class DlgAskWhichClassesToReverse2(wx.Dialog):
         self.ShowModal()
         if self.GetReturnCode()==5101 :     # abort -> empty right column
             # self._dicClassesChoosen = {}
-            while self._listBox2.GetCount()>0:
+            while self._listBox2.GetCount() > 0:
                 data = self._listBox2.GetClientData(0)
                 name = self._listBox2.GetString(0)
                 self._listBox1.Append(name, data)
@@ -115,6 +116,7 @@ class DlgAskWhichClassesToReverse2(wx.Dialog):
             self._listBox1.Append(name, data)
             self._listBox2.Delete(i)
 
+
 def askWhichClassesToReverse2(lstClasses):
     """
     Ask which classes must be reversed
@@ -131,6 +133,7 @@ def askWhichClassesToReverse2(lstClasses):
 
     return lstClassesChoosen
 
+
 def askWhichClassesToReverse(lstClasses):
     """
     Ask which classes must be reversed
@@ -143,15 +146,15 @@ def askWhichClassesToReverse(lstClasses):
     # Convert classes from list to dictionary based on the classname
 
     # Create frame
-    dlg = wx.Dialog(None, -1, "Classes choice", style=wx.CAPTION | wx.DIALOG_MODAL | wx.THICK_FRAME, size=(320, 400))
+    dlg = wx.Dialog(None, -1, "Classes choice", style=wx.CAPTION | wx.RESIZE_BORDER, size=(320, 400))
 
     # Create listBox
     listBox = wx.ListBox(dlg, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
     for el in lstClasses:
         listBox.Append(el.__name__, el)
     for i in range(listBox.Number()):
-        listBox.SetSelection(i, True)
-
+        # listBox.SetSelection(i, True)
+        listBox.SetSelection(i)
     # Create Ok button
     btnOk = wx.Button(dlg, wx.ID_OK, "Ok")
 
@@ -169,10 +172,9 @@ def askWhichClassesToReverse(lstClasses):
 
     # Show dialog
     dlg.ShowModal()
-    if dlg.GetReturnCode()==5101 :  # abort
+    if dlg.GetReturnCode() == 5101:
         # dlg.EndModal(0)
         return []
-    # dlg.EndModal(0)
 
     # Get values
     ret = []
@@ -229,12 +231,6 @@ class IoPython(PyutIoPlugin):
         @author C.Dutoit - dutoitc@hotmail.com
         @since 1.1
         """
-        # return None if this plugin can't read.
-        # otherwise, return a tupple with
-        # - name of the input format
-        # - extension of the input format
-        # - textual description of the plugin input format
-        # example : return ("Text", "txt", "Tabbed text...")
         return "Python file", "py", "Python file format"
 
     def getOutputFormat(self):
@@ -245,12 +241,6 @@ class IoPython(PyutIoPlugin):
         @author C.Dutoit - dutoitc@hotmail.com
         @since 1.1
         """
-        # return None if this plugin can't write.
-        # otherwise, return a tupple with
-        # - name of the output format
-        # - extension of the output format
-        # - textual description of the plugin output format
-        # example : return ("Text", "txt", "Tabbed text...")
         return "Python file", "py", "Python file format"
 
     def getVisibilityPythonCode(self, visibilityCar):
@@ -292,13 +282,12 @@ class IoPython(PyutIoPlugin):
         #  a FlyweightString object !
         fieldCode += self.getVisibilityPythonCode(str(aField.getVisibility()))
 
-
         # Add name
         fieldCode += str(aField.getName()) + " = "
 
         # Add default value
         value = aField.getDefaultValue()
-        if (value == ''):
+        if value == '':
             fieldCode += 'None'  # TODO : deduct this from type
         else:
             fieldCode += str(value)
@@ -327,12 +316,12 @@ class IoPython(PyutIoPlugin):
         @author C.Dutoit - dutoitc@hotmail.com
         @since 1.1
         """
-        lstOut=[]
+        lstOut = []
         for el in lstIn:
             lstOut.append(self.indentStr(str(el)))
         return lstOut
 
-    def getOneMethodCode(self, aMethod, writePass = True):
+    def getOneMethodCode(self, aMethod, writePass=True):
         """
         Return the python code for a given method
 
@@ -363,9 +352,9 @@ class IoPython(PyutIoPlugin):
             paramCode += params[i].getName()
             if params[i].getDefaultValue() is not None:
                 paramCode += "=" + params[i].getDefaultValue()
-            if i<len(aMethod.getParams())-1:
+            if i < len(aMethod.getParams())-1:
                 paramCode += ", "
-            if (len(currentCode)%80) + len(paramCode)>MaxWidth: # Width limit
+            if (len(currentCode) % 80) + len(paramCode) > MaxWidth:  # Width limit
                 currentCode += "\n" + self.indentStr(self.indentStr(paramCode))
             else:
                 currentCode += paramCode
@@ -375,19 +364,17 @@ class IoPython(PyutIoPlugin):
 
         # Add to the method code
         methodCode.append(currentCode)
-        currentCode = ""
+        # currentCode = ""
 
         # Add comments
         methodCode.append(self.indentStr('"""\n'))
         methodCode.append(self.indentStr('(TODO : add description)\n\n'))
 
         # Add parameters
-        params=aMethod.getParams()
+        params = aMethod.getParams()
         # if len(params)>0: currentCode+=", "
         for i in range(len(params)):
-            methodCode.append(self.indentStr('@param ' + \
-                                             str(params[i].getType()) + ' ' + \
-                                             params[i].getName() + '\n'))
+            methodCode.append(self.indentStr('@param ' + str(params[i].getType()) + ' ' + params[i].getName() + '\n'))
 
         # Add others
         if aMethod.getReturns() is not None and len(str(aMethod.getReturns())) > 0:
@@ -409,31 +396,31 @@ class IoPython(PyutIoPlugin):
         @author C.Dutoit - dutoitc@hotmail.com
         @since 1.1
         """
-        clsMethods={}
+        clsMethods = {}
         for aMethod in aClass.getMethods():
             # Separation
             txt="\n\n" + self.indentStr("#>---------------------------------"  "---------------------------------------\n")
-            lstCodeMethod=[txt]
+            lstCodeMethod = [txt]
 
             # Get code
-            subcode=self.getOneMethodCode(aMethod)
+            subcode = self.getOneMethodCode(aMethod)
 
             # Indent and add to main code
             # for el in self.indent(subcode):
             # lstCodeMethod.append(str(el))
-            lstCodeMethod+=self.indent(subcode)
+            lstCodeMethod += self.indent(subcode)
 
             clsMethods[aMethod.getName()]=lstCodeMethod
 
         # Add fields
-        if len(aClass.getFields())>0:
+        if len(aClass.getFields()) > 0:
             # Create method __init__ if it does not exist
             if '__init__' not in clsMethods:
                 # Separation
-                lstCodeMethod=["\n\n    #>-------------------------------" + "-----------------------------------------\n"]
+                lstCodeMethod = ["\n\n    #>-------------------------------" + "-----------------------------------------\n"]
 
                 # Get code
-                subcode=self.getOneMethodCode(PyutMethod('__init__'), False)
+                subcode = self.getOneMethodCode(PyutMethod('__init__'), False)
 
                 # Indent and add to main code
                 for el in self.indent(subcode):
@@ -444,7 +431,7 @@ class IoPython(PyutIoPlugin):
                 clsMethods['__init__']=lstCodeMethod
 
             # Add fields
-            clsInit=clsMethods['__init__']
+            clsInit = clsMethods['__init__']
             for aField in aClass.getFields():
                 clsInit.append(self.indentStr(self.indentStr(self.getFieldPythonCode(aField))))
         return clsMethods
@@ -452,14 +439,14 @@ class IoPython(PyutIoPlugin):
     def write(self, oglObjects):
         """
         Datas saving
-        @param OglClass and OglLink [] : list of exported objects
+        @param oglObjects : list of exported objects
 
         @author C.Dutoit - dutoitc@hotmail.com
         @since 1.1
         """
         # Ask the user which destination file he wants
-        directory=self._askForDirectoryExport()
-        if directory=="":
+        directory = self._askForDirectoryExport()
+        if directory == "":
             return False
 
         # Init
@@ -467,7 +454,7 @@ class IoPython(PyutIoPlugin):
         classes = {}
 
         # Add top code
-        TopCode= \
+        TopCode = \
              ["#!/usr/bin/env python\n", "__version__ = '$"+"Revision: 1.0 $'\n",
               "__author__ = ''\n",
               "__date__ = ''\n",
@@ -477,9 +464,9 @@ class IoPython(PyutIoPlugin):
         # Create classes code for each object
         for el in [object for object in oglObjects if isinstance(object, OglClass)]:
             # Add class definition
-            aClass = el.getPyutObject() # TODO
+            aClass = el.getPyutObject()     # TODO
             txt = "class " + str(aClass.getName())        # Add class name
-            fathers=aClass.getFathers()
+            fathers = aClass.getFathers()
             if len(fathers) > 0:                          # Add fathers
                 txt = txt + "("
                 for i in range(len(fathers)):
@@ -503,9 +490,6 @@ class IoPython(PyutIoPlugin):
             for aMethod in aClass.getMethods():
                 methodName = aMethod.getName()
 
-                # Add method code
-                # for aMethod in clsMethods.items():
-                # TODO : __init__ ?
                 try:
                     methodCode = clsMethods[methodName]
                     codeClass += methodCode
@@ -535,7 +519,7 @@ class IoPython(PyutIoPlugin):
         Return a PyutClass made from the python class object orgClass.
         If a pyutclass is given, it is modified in place.
 
-        @param class orgClass
+        @param orgClass
         @param string filename : filename of the class
         @param PyutClass pyutclass : pyutclass to modify
         @return PyutClass
@@ -567,13 +551,13 @@ class IoPython(PyutIoPlugin):
             # Remove visibility characters
             if me.__name__[-2:] != "__":
                 if me.__name__[0:2] == "__":
-                    func_name=me.__name__[2:]
+                    func_name = me.__name__[2:]
                 elif me.__name__[0] == "_":
-                    func_name=me.__name__[1:]
+                    func_name = me.__name__[1:]
                 else:
-                    func_name=me.__name__
+                    func_name = me.__name__
             else:
-                func_name=me.__name__
+                func_name = me.__name__
             meth = PyutMethod(func_name)     # A new PyutMethod
 
             # Add the method's params
@@ -584,7 +568,7 @@ class IoPython(PyutIoPlugin):
                 firstDefVal = len(args[0]) - len(args[3])
             for arg, i in zip(args[0], list(range(len(args[0])))):
                 # don't add self, it's implied
-                defVal = None
+                # defVal = None
                 if arg != "self":
                     if i >= firstDefVal:
                         defVal = args[3][i - firstDefVal]
@@ -610,7 +594,8 @@ class IoPython(PyutIoPlugin):
         try:
             fields = FieldExtractor(pc.getFilename()).getFields(pc.getName())
         except IOError:
-            import sys, os
+            import sys
+            import os
             print("File", pc.getFilename(), "not found in actual dir")
             print("actual dir is", os.getcwd())
             for path in sys.path:
@@ -620,15 +605,15 @@ class IoPython(PyutIoPlugin):
                         pc.getName())
                     break
                 except IOError:
-                    print("Not found either in", \
-                        path + os.sep + pc.getFilename())
+                    print("Not found either in", path + os.sep + pc.getFilename())
                     pass
         if fields is None:
             print("Could not extract from file", pc.getFilename())
         fds = []
         if fields:
             for name, init in list(fields.items()):
-                if init == "": init = None
+                if init == "":
+                    init = None
                 vis = "+"
                 if len(name) > 1:
                     if name [-2:] != "__":
@@ -654,8 +639,6 @@ class IoPython(PyutIoPlugin):
         @modified by Laurent Burgbacher <lb@alawa.ch>
             added filename in PyutLinkedObject
         """
-        # Note : Original code L.Burgbacher
-        import types
 
         # get a list of classes info for classes in the display list
         # classes = [res[name] for name in res.keys() if name in display]
@@ -666,7 +649,7 @@ class IoPython(PyutIoPlugin):
         # Add extension class; %TODO : find a better way to do that
         for cl in orgClasses:
             try:
-                if str(type(cl)).index("class")>0:
+                if str(type(cl)).index("class") > 0:
                     if cl not in classes:
                         classes.append(cl)
             except (ValueError, Exception) as e:
@@ -687,23 +670,21 @@ class IoPython(PyutIoPlugin):
 
         # now, search for paternity links
         for po in list(objs.values()):
-            pc = po.getPyutObject() # TODO
+            pc = po.getPyutObject()     # TODO
             # skip object, it has no parent
             if pc.getName() == "object":
                 continue
             currentClass = None
             for el in orgClasses:
-                if el.__name__==pc.getName():
-                    currentClass=el
+                if el.__name__ == pc.getName():
+                    currentClass = el
                     break
             if currentClass is None:
                 print("Reverse error 527")
                 continue
 
             try:
-                fatherClasses = [cl for cl in classes
-                      if cl.__name__ in
-                          [x.__name__ for x in currentClass.__bases__]]
+                fatherClasses = [cl for cl in classes if cl.__name__ in [x.__name__ for x in currentClass.__bases__]]
             except (ValueError, Exception) as e:
                 fatherClasses = []
                 print(f'{e}')
@@ -711,7 +692,7 @@ class IoPython(PyutIoPlugin):
             fatherNames = [item.__name__ for item in fatherClasses]
             for father in fatherNames:
                 dest = objs.get(father)
-                if dest is not None: # maybe we don't have the father loaded
+                if dest is not None:  # maybe we don't have the father loaded
                     umlFrame.createInheritanceLink(po, dest)
 
         def cmpHeight(a, b):
@@ -721,7 +702,8 @@ class IoPython(PyutIoPlugin):
 
         # Sort by descending height
         objs = list(objs.values())
-        objs.sort(cmpHeight)
+        # objs.sort(cmpHeight)
+        objs.sort()
 
         # Organize by vertical descending sizes
         x = 20
@@ -788,8 +770,8 @@ class IoPython(PyutIoPlugin):
 
         # Remove wx.Python classes ? TODO
         wx.EndBusyCursor()
-        classes=askWhichClassesToReverse2(classes)
-        if len(classes)==0:
+        classes = askWhichClassesToReverse2(classes)
+        if len(classes) == 0:
             return
 
         try:
