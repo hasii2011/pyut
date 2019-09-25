@@ -1,4 +1,7 @@
 
+from typing import Dict
+from typing import Callable
+
 from logging import Logger
 from logging import getLogger
 
@@ -10,6 +13,7 @@ from wx import ID_OK
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
+from wx import KeyEvent
 
 from wx import TextEntryDialog
 
@@ -19,7 +23,8 @@ from MiniOgl import SKIP_EVENT
 from MiniOgl import LinePoint
 from MiniOgl import ControlPoint
 
-from PyutClass import PyutClass
+from OglLink import OglLink
+
 from PyutConsts import OGL_INTERFACE
 from PyutConsts import OGL_INHERITANCE
 from PyutConsts import OGL_AGGREGATION
@@ -96,7 +101,7 @@ NEXT_ACTION = {
     ACTION_NEW_SD_INSTANCE: ACTION_SELECTOR,
     ACTION_NEW_SD_MESSAGE: ACTION_DEST_SD_MESSAGE,
     ACTION_ZOOM_IN: ACTION_ZOOM_IN,     # Patch from D.Dabrowsky, 20060129
-    ACTION_ZOOM_IN: ACTION_ZOOM_OUT,    # Patch from D.Dabrowsky, 20060129
+    # ACTION_ZOOM_IN: ACTION_ZOOM_OUT,    # Patch from D.Dabrowsky, 20060129    Duplicated
 }
 
 # list of actions which are source events
@@ -522,7 +527,7 @@ class Mediator(Singleton):
                 self._currentAction = ACTION_SELECTOR
                 self.selectTool(self._tools[0])
                 self.setStatusText(_("Action cancelled"))
-            else: # store source
+            else:   # store source
                 self._src = shape
                 self._srcPos = position
         elif self._currentAction in DEST_ACTIONS:
@@ -570,28 +575,21 @@ class Mediator(Singleton):
         """
         return self._currentAction != ACTION_SELECTOR
 
-    def autoResize(self, obj):
+    def autoResize(self, obj: PyutClass):
         """
         Autoresize the given object.
 
-        @param PyutClass obj
-        @param OglClass obj
+        @param obj
+
         @since 1.18
         @author L. Burgbacher <lb@alawa.ch>
         """
         from OglClass import OglClass
-        prefs = PyutPreferences()
+        prefs: PyutPreferences = PyutPreferences()
 
         if prefs["AUTO_RESIZE"]:
-
             if isinstance(obj, PyutClass):
-                # print "DBG-Autoresize"
-                # print dir(obj)
-                # print "getUmlObjects:", self.getUmlObjects()
-                # get the associated oglClass and resize it
-                po = [po for po in self.getUmlObjects()
-                    if isinstance(po, OglClass) and po.getPyutObject() is obj]
-                # print po
+                po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.getPyutObject() is obj]
                 obj = po[0]
 
             obj.autoResize()
@@ -606,12 +604,14 @@ class Mediator(Singleton):
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
             return
+        #
+        # TODO I don't like in-line imports but moving them to top file causes a cyclic dependency error
+        #
         from OglClass import OglClass
-        from OglNote  import OglNote
+        from OglNote import OglNote
         from OglUseCase import OglUseCase
         from OglActor import OglActor
         from OglAssociation import OglAssociation
-
         from OglInterface import OglInterface
 
         diagramShape = umlFrame.FindShape(x, y)
@@ -651,7 +651,6 @@ class Mediator(Singleton):
             dlg.Destroy()
             if rep == -1:  # destroy link
                 diagramShape.Detach()
-
 
         umlFrame.Refresh()
 
@@ -769,29 +768,32 @@ class Mediator(Singleton):
         """
         return self._appFrame.updateCurrentDir(directory)
 
-    def processChar(self, event):
+    def processChar(self, event: KeyEvent):
         """
         Process the keyboard events.
+        TODO:  Build the callable dictionary once and use it here.  This code builds it every time the
+        user presses a key.  Eeks;
 
-        @param
-        @return
-        @since 1.0
+        Args:
+            event:  The wxPython key event
         """
-        c = event.GetKeyCode()
-        funcs = {
-            WXK_DELETE : self.deleteSelectedShape,
-            WXK_INSERT : self.insertSelectedShape,
-            ord('i')   : self.insertSelectedShape,
-            ord('I')   : self.insertSelectedShape,
-            ord('s')   : self.toggleSpline,
-            ord('S')   : self.toggleSpline,
-            ord('<')   : self.moveSelectedShapeDown,
-            ord('>')   : self.moveSelectedShapeUp,
+        c: int = event.GetKeyCode()
+        funcs: Dict[int, Callable] = {
+            WXK_DELETE: self.deleteSelectedShape,
+            WXK_INSERT: self.insertSelectedShape,
+            ord('i'):   self.insertSelectedShape,
+            ord('I'):   self.insertSelectedShape,
+            ord('s'):   self.toggleSpline,
+            ord('S'):   self.toggleSpline,
+            ord('<'):   self.moveSelectedShapeDown,
+            ord('>'):   self.moveSelectedShapeUp,
         }
-        if funcs.has_key(c):
+        # Python 3 update
+        # if funcs.has_key(c):
+        if c in funcs:
             funcs[c]()
         else:
-            print("Not supported : ", c)
+            self.logger.info(f'Not supported: {c}')
             event.Skip()
 
     def deleteSelectedShape(self):
@@ -802,6 +804,7 @@ class Mediator(Singleton):
         from OglObject import OglObject
         from OglLink import OglLink
         from commandGroup import CommandGroup
+
         umlFrame = self._fileHandling.getCurrentFrame()
         # TODO : check this : if umlFrame is None: return
         selected = umlFrame.GetSelectedShapes()
@@ -815,14 +818,14 @@ class Mediator(Singleton):
             elif isinstance(shape, OglLink):
                 cmd = DelOglLinkCommand(shape)
 
-        #if the shape is not an Ogl instance no command has
-        #been created.
-            if cmd is not None :
+            # if the shape is not an Ogl instance no command has been created.
+            if cmd is not None:
                 cmdGroup.addCommand(cmd)
                 cmdGroupInit = True
-            else :
+            else:
                 shape.Detach()
                 umlFrame.Refresh()
+                cmdGroupInit = False        # added by hasii to avoid Pycharm warning about cmdGroupInit not set
 
         if cmdGroupInit:
             umlFrame.getHistory().addCommandGroup(cmdGroup)
@@ -830,7 +833,8 @@ class Mediator(Singleton):
 
     def insertSelectedShape(self):
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
+        if umlFrame is None:
+            return
         selected = umlFrame.GetSelectedShapes()
         if len(selected) != 1:
             return
@@ -850,11 +854,12 @@ class Mediator(Singleton):
             umlFrame.Refresh()
 
     def toggleSpline(self):
-        from OglLink import OglLink
-        from OglLink import OglLink
+
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
+        if umlFrame is None:
+            return
         selected = umlFrame.GetSelectedShapes()
+        self.logger.info(f'Selected Shape: {selected}')
         for shape in selected:
             if isinstance(shape, OglLink):
                 shape.SetSpline(not shape.GetSpline())
@@ -868,7 +873,8 @@ class Mediator(Singleton):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
+        if umlFrame is None:
+            return
         self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToFront)
 
     def moveSelectedShapeDown(self):
@@ -879,7 +885,8 @@ class Mediator(Singleton):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
+        if umlFrame is None:
+            return
         self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToBack)
 
     def _moveSelectedShapeZOrder(self, callback):
@@ -891,12 +898,13 @@ class Mediator(Singleton):
         """
         import OglObject
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
+        if umlFrame is None:
+            return
         selected = umlFrame.GetSelectedShapes()
-        if len(selected)>0:
-            for object in selected:
-                if isinstance(object, OglObject.OglObject):
-                    callback(object)
+        if len(selected) > 0:
+            for oglObject in selected:
+                if isinstance(oglObject, OglObject.OglObject):
+                    callback(oglObject)
         umlFrame.Refresh()
 
     def registerTool(self, tool):
@@ -938,8 +946,9 @@ class Mediator(Singleton):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         from OglClass import OglClass
-        po = [po for po in self.getUmlObjects()
-            if isinstance(po, OglClass) and po.getPyutObject() is pyutClass]
+
+        po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.getPyutObject() is pyutClass]
+
         return po[0]
 
     def getFileHandling(self):
@@ -953,7 +962,7 @@ class Mediator(Singleton):
 
     def updateTitle(self):
         """
-        Set the application title, fonction of version and current filename
+        Set the application title, function of version and current filename
 
         @since 1.4
         @author C.Dutoit <dutoitc@hotmail.com>
@@ -977,7 +986,7 @@ class Mediator(Singleton):
             else:
                 zoom = 1
 
-            txt=txt + " (" + ((int)(zoom * 100)).__str__() + "%)" + " *"
+            txt = txt + " (" + int(zoom * 100).__str__() + "%)" + " *"
         self._appFrame.SetTitle(txt)
 
     def loadByFilename(self, filename):

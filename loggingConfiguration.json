@@ -27,7 +27,7 @@
             "level":     "INFO",
             "propagate": "False"
         },
-        "Mediator": {
+        "mediator": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
