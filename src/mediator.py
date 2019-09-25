@@ -986,7 +986,8 @@ class Mediator(Singleton):
             else:
                 zoom = 1
 
-            txt = txt + " (" + int(zoom * 100).__str__() + "%)" + " *"
+            txt = txt + f' ( {int(zoom * 100)}%) *'
+
         self._appFrame.SetTitle(txt)
 
     def loadByFilename(self, filename):
