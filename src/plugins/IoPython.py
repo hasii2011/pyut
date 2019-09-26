@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 import os
 from sys import path as sysPath
 
@@ -27,7 +30,7 @@ MaxWidth = 80
 
 class DlgAskWhichClassesToReverse2(wx.Dialog):
     def __init__(self, lstClasses):
-        wx.Dialog.__init__(self, None, -1, "Classes choice", style=wx.CAPTION | wx.DIALOG_MODAL | wx.RESIZE_BORDER, size=(400, 500))
+        wx.Dialog.__init__(self, None, -1, "Classes choice", style=wx.CAPTION | wx.RESIZE_BORDER, size=(400, 500))
 
         # Create not choosen classes listBox
         self._listBox1 = wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
@@ -71,8 +74,8 @@ class DlgAskWhichClassesToReverse2(wx.Dialog):
 
         # Show dialog
         self.ShowModal()
-        if self.GetReturnCode()==5101 :     # abort -> empty right column
-            # self._dicClassesChoosen = {}
+        if self.GetReturnCode() == 5101 :     # abort -> empty right column
+
             while self._listBox2.GetCount() > 0:
                 data = self._listBox2.GetClientData(0)
                 name = self._listBox2.GetString(0)
@@ -152,7 +155,9 @@ def askWhichClassesToReverse(lstClasses):
     listBox = wx.ListBox(dlg, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
     for el in lstClasses:
         listBox.Append(el.__name__, el)
-    for i in range(listBox.Number()):
+    # for i in range(listBox.Number()):
+    # for i in range(listBox.Count()):
+    for i in range(listBox.GetCount()):
         # listBox.SetSelection(i, True)
         listBox.SetSelection(i)
     # Create Ok button
@@ -193,6 +198,12 @@ class IoPython(PyutIoPlugin):
 
     @version $Revision: 1.12 $
     """
+    def __init__(self, oglObjects, umlFrame):
+
+        super().__init__(oglObjects=oglObjects, umlFrame=umlFrame)
+
+        self.logger: Logger = getLogger(__name__)
+
     def getName(self):
         """
         This method returns the name of the plugin.
@@ -399,7 +410,7 @@ class IoPython(PyutIoPlugin):
         clsMethods = {}
         for aMethod in aClass.getMethods():
             # Separation
-            txt="\n\n" + self.indentStr("#>---------------------------------"  "---------------------------------------\n")
+            txt = "\n\n" + self.indentStr("#>---------------------------------"  "---------------------------------------\n")
             lstCodeMethod = [txt]
 
             # Get code
@@ -410,7 +421,7 @@ class IoPython(PyutIoPlugin):
             # lstCodeMethod.append(str(el))
             lstCodeMethod += self.indent(subcode)
 
-            clsMethods[aMethod.getName()]=lstCodeMethod
+            clsMethods[aMethod.getName()] = lstCodeMethod
 
         # Add fields
         if len(aClass.getFields()) > 0:
@@ -454,12 +465,11 @@ class IoPython(PyutIoPlugin):
         classes = {}
 
         # Add top code
-        TopCode = \
-             ["#!/usr/bin/env python\n", "__version__ = '$"+"Revision: 1.0 $'\n",
-              "__author__ = ''\n",
-              "__date__ = ''\n",
-              "\n\n"
-             ]
+        TopCode = ["#!/usr/bin/env python\n", "__version__ = '$"+"Revision: 1.0 $'\n",
+                   "__author__ = ''\n",
+                   "__date__ = ''\n",
+                   "\n\n"
+                   ]
 
         # Create classes code for each object
         for el in [object for object in oglObjects if isinstance(object, OglClass)]:
@@ -498,7 +508,7 @@ class IoPython(PyutIoPlugin):
 
             # Save to classes dictionary
             codeClass.append("\n\n")
-            classes[aClass.getName()]=codeClass
+            classes[aClass.getName()] = codeClass
 
         # Add classes code
         # print directory
@@ -544,7 +554,8 @@ class IoPython(PyutIoPlugin):
         methods = []                      # List of methods for this class
 
         # Extract methods from the class
-        clmethods = [me for me in list(cl.__dict__.values()) if type(me) == types.FunctionType]
+        # clmethods = [me for me in list(cl.__dict__.values()) if type(me) == types.FunctionType]
+        clmethods = [me for me in list(cl.__dict__.values()) if isinstance(me, types.FunctionType)]
 
         # Add the methods to the class
         for me in clmethods:
@@ -646,7 +657,9 @@ class IoPython(PyutIoPlugin):
                    if ((type(cl) == type) or
                        (type(cl) == type))]
 
-        # Add extension class; %TODO : find a better way to do that
+        self.logger.info(f'classes: {classes}')
+
+        # Add extension class; TODO : find a better way to do that
         for cl in orgClasses:
             try:
                 if str(type(cl)).index("class") > 0:
@@ -695,10 +708,10 @@ class IoPython(PyutIoPlugin):
                 if dest is not None:  # maybe we don't have the father loaded
                     umlFrame.createInheritanceLink(po, dest)
 
-        def cmpHeight(a, b):
-            xa, ya = a.GetSize()
-            xb, yb = b.GetSize()
-            return cmp(yb, ya)
+        # def cmpHeight(a, b):
+        #     xa, ya = a.GetSize()
+        #     xb, yb = b.GetSize()
+        #     return cmp(yb, ya)
 
         # Sort by descending height
         objs = list(objs.values())
@@ -708,7 +721,7 @@ class IoPython(PyutIoPlugin):
         # Organize by vertical descending sizes
         x = 20
         y = 20
-        incX = 0
+        # incX = 0
         incY = 0
         for po in objs:
             incX, sy = po.GetSize()

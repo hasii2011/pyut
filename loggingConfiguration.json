@@ -6,7 +6,7 @@
             "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         },
         "pyutSimple": {
-            "format": "%(asctime)s.%(msecs)03d %(levelname)s %(module)s %(message)s",
+            "format": "%(asctime)s.%(msecs)03d %(levelname)s %(module)s: %(message)s",
             "datefmt" : "%H:%M:%S"
         }
     },
@@ -32,7 +32,6 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-
         "Pyut": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
@@ -78,6 +77,16 @@
             "propagate": "False"
         },
         "PluginManager": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "ToPython": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "IOPython": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
