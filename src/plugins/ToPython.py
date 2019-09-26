@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -13,6 +15,9 @@ import wx
 from plugins.PyutToPlugin import PyutToPlugin
 
 from OglClass import OglClass
+from OglObject import OglObject
+
+from UmlFrame import UmlFrame
 
 from plugins.IoPython import IoPython
 
@@ -106,7 +111,8 @@ class ToPython(PyutToPlugin):
             return
         oldDir = getcwd()
         chdir(project.getCodePath())
-        plug = IoPython(None, None)
+        # plug = IoPython(None, None)
+        plug = IoPython(cast(OglObject, None), cast(UmlFrame, None))
         normalDir = getcwd()
         for oglClass in oglClasses:
             pyutClass = oglClass.getPyutObject()

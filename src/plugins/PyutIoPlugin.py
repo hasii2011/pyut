@@ -57,8 +57,8 @@ class PyutIoPlugin(PyutPlugin):
         """
         Constructor.
 
-        @param OglObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
+        @param oglObjects : list of ogl objects
+        @param umlFrame : the umlframe of pyut
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """

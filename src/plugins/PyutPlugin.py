@@ -23,8 +23,8 @@ class PyutPlugin:
         """
         Constructor.
 
-        @param UmlFrame umlFrame : the umlframe of pyut
-        @param Mediator ctrl : mediator to use
+        @param umlFrame : the umlframe of pyut
+        @param  ctrl : mediator to use
         @author C.Dutoit
         """
         self._umlFrame = umlFrame

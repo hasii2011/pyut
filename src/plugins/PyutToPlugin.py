@@ -15,8 +15,8 @@ class PyutToPlugin(PyutPlugin):
         """
         Constructor.
 
-        @param OglObject umlObjects : list of uml objects
-        @param UmlFrame umlFrame : the umlframe of pyut
+        @param umlObjects : list of uml objects
+        @param umlFrame : the umlframe of pyut
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
