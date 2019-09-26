@@ -17,10 +17,10 @@ from copy            import deepcopy
 from mediator        import Mediator
 
 
-#wx.OGLInitialize()
+# wx.OGLInitialize()
 
 # ...
-wx.InitAllImageHandlers()
+# wx.InitAllImageHandlers()
 
 class UmlDiagramsFrame(UmlFrame):
     """
@@ -48,12 +48,12 @@ class UmlDiagramsFrame(UmlFrame):
         """
         import os
         UmlFrame.__init__(self, parent, -1)
-    
+
     #>-----------------------------------------------------------------------
 
     def OnClose(self, force=False):
         """
-        Closing handler (must be called explicitly). 
+        Closing handler (must be called explicitly).
         Save files and ask for confirmation.
 
         @return True if the close succeeded

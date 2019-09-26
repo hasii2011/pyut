@@ -103,7 +103,7 @@ class PyutApp(wxApp):
         try:
             # Create the SplashScreen
             if self._showSplash:
-                InitAllImageHandlers()
+                # InitAllImageHandlers()
                 imgPath = "img" + osSeparator + "splash.png"
                 img = Image(imgPath)
                 bmp = img.ConvertToBitmap()
