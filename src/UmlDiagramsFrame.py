@@ -1,26 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: ISO-8859-1 -*-
-__version__ = "$Revision: 1.6 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-03-13"
-__PyUtVersion__ = "1.0"
 
-#from wx.Python.ogl    import *
-#from wx.Python.wx.     import *
-#from wx.Python.html   import *
-import wx
-from UmlFrame        import *
-from pyutUtils       import *
-from PyutPrintout    import *
-from PluginManager   import *
-from copy            import deepcopy
-from mediator        import Mediator
+from wx import Window
 
+from UmlFrame import UmlFrame
 
-# wx.OGLInitialize()
-
-# ...
-# wx.InitAllImageHandlers()
 
 class UmlDiagramsFrame(UmlFrame):
     """
@@ -34,23 +16,19 @@ class UmlDiagramsFrame(UmlFrame):
     :contact: dutoitc@hotmail.com
     :version: $Revision: 1.6 $
     """
-    #>------------------------------------------------------------------------
 
-    def __init__(self, parent):
+    def __init__(self, parent: Window):
         """
         Constructor.
 
-        @param wx.Window parent : parent window
-        @param int ID : wx. ID of this frame
-        @param String title : Title to display
+        @param  parent : wx.Window parent window
+
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        import os
-        UmlFrame.__init__(self, parent, -1)
+        super().__init__(parent, -1)
 
-    #>-----------------------------------------------------------------------
-
+    # noinspection PyUnusedLocal
     def OnClose(self, force=False):
         """
         Closing handler (must be called explicitly).
@@ -61,7 +39,6 @@ class UmlDiagramsFrame(UmlFrame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self.cleanUp()
-        #wx.OGLCleanUp()
+
         self.Destroy()
         return True
-

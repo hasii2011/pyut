@@ -135,7 +135,7 @@ class ToPython(PyutToPlugin):
                 importlib.reload(module)
                 chdir(normalDir)
             except ImportError as ie:
-                self.logger.error(f"Error while trying to import module {str(modulename)} --- {ie}")
+                self.logger.error(f"Error while trying to import module '{str(modulename)}' --- '{ie}'")
                 chdir(normalDir)
                 continue
             orgClass = module.__dict__[pyutClass.getName()]
