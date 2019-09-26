@@ -42,6 +42,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "DiagramFrame": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "PyutXmlV8": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
