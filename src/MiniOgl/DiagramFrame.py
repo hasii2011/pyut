@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -264,7 +266,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         if not event.ControlDown():
             self.DeselectAllShapes()
-        x, y = event.GetX(), event.GetY() # event position has been modified
+        x, y = event.GetX(), event.GetY()   # event position has been modified
         self._selector = rect = RectangleShape(x, y, 0, 0)
         rect.SetDrawFrame(True)
         rect.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -470,7 +472,7 @@ class DiagramFrame(wx.ScrolledWindow):
                 if DEBUG:
                     print("Inside", shape)
                 found = shape
-                break # only select the first one
+                break   # only select the first one
         return found
 
     def DeselectAllShapes(self):
@@ -598,7 +600,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         Redraw the screen using the background.
         """
-        self.Redraw(None, True, False, True)
+        self.Redraw(cast(wx.DC, None), True, False, True)
 
     def Redraw(self, dc=None, full=True, saveBackground=False, useBackground=False):
         """
@@ -619,8 +621,6 @@ class DiagramFrame(wx.ScrolledWindow):
 
         dc.SetFont(self._defaultFont)
 
-        # dc.SetUserScale(2, 2)
-        # shapes = self._diagram.GetParentShapes()
         shapes = self._diagram.GetShapes()
 
         if full:
@@ -631,22 +631,18 @@ class DiagramFrame(wx.ScrolledWindow):
                     if not shape.IsMoving():
                         shape.Draw(dc)
 
-                # save the background
                 self.SaveBackground(dc)
 
-                # draw every moving shapes
                 for shape in shapes:
                     if shape.IsMoving():
                         shape.Draw(dc)
 
             if useBackground:
-                # draw every moving shapes
                 for shape in shapes:
                     if shape.IsMoving():
                         shape.Draw(dc)
 
             else:   # don't use background
-                # draw all shapes
                 for shape in shapes:
                     shape.Draw(dc)
 
@@ -656,7 +652,6 @@ class DiagramFrame(wx.ScrolledWindow):
                 shape.DrawAnchors(dc)
 
         if needBlit:
-            #  MODIFIED BY C.DUTOIT : Added wx.Python test
             client = wx.ClientDC(self)
 
             if wx.__version__>"2.3.2":
@@ -693,7 +688,7 @@ class DiagramFrame(wx.ScrolledWindow):
     def _ConvertEventCoords(self, event):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
-        return (event.GetX() + (xView * xDelta), event.GetY() + (yView * yDelta))
+        return event.GetX() + (xView * xDelta), event.GetY() + yView * yDelta
 
     def GetCurrentZoom(self):
         """
@@ -822,15 +817,15 @@ class DiagramFrame(wx.ScrolledWindow):
         if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit :
             x = ax
             y = ay
-        else :
+        else:
             x = ax + viewStartX * xUnit
             y = ay + viewStartY * yUnit
 
         # to get the upper left corner of the zoom selected area in the
         # case where we select first the bottom right corner.
-        if width < 0 :
+        if width < 0:
             x = x - width
-        if height < 0 :
+        if height < 0:
             y = y - height
 
         # init the zoom's offsets and factor
@@ -928,11 +923,11 @@ class DiagramFrame(wx.ScrolledWindow):
         self.SetVirtualSize(virtualSize)
 
         # perform the scrolling in the way to have the zoom area visible and centred on the virutal screen.
-        scrollX = (virtualWidth - clientWidth) /2 / xUnit
-        scrollY = (virtualHeight - clientHeight) /2 /yUnit
+        scrollX = (virtualWidth - clientWidth) / 2 / xUnit
+        scrollY = (virtualHeight - clientHeight) / 2 /yUnit
         self.Scroll(scrollX, scrollY)
 
-    def DoZoomOut(self, ax, ay) :
+    def DoZoomOut(self, ax, ay):
 
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
@@ -998,7 +993,7 @@ class DiagramFrame(wx.ScrolledWindow):
                 zoomFactor = minZoomFactor / self.GetCurrentZoom()
                 if zoomFactor != 1:
                     self._zoomStack.append(zoomFactor)
-                    self._zoomLevel -=1
+                    self._zoomLevel -= 1
 
         # set the offsets between the view and the model of the
         # each shape on this diagram frame.
@@ -1017,8 +1012,8 @@ class DiagramFrame(wx.ScrolledWindow):
         self.SetVirtualSize(virtualSize)
 
         # perform the scrolling in the way to have the zoom area visible and centred on the virutal screen.
-        scrollX = (virtualWidth - clientWidth) /2 / xUnit
-        scrollY = (virtualHeight - clientHeight) /2 /yUnit
+        scrollX = (virtualWidth - clientWidth) / 2 / xUnit
+        scrollY = (virtualHeight - clientHeight) / 2 / yUnit
         self.Scroll(scrollX, scrollY)
 
     def SetMargins(self, left, right, top, bottom):
