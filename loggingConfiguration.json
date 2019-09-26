@@ -42,7 +42,7 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "DiagramFrame": {
+        "MiniOgl.DiagramFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"

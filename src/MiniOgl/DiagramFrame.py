@@ -411,15 +411,15 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.GenericHandler(event, "OnMiddleDClick")
 
-    def OnRightDown(self, event):
+    def OnRightDown(self, event: wx.MouseEvent):
         """
         Callback.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnRightDown")
 
-    def OnRightUp(self, event):
+    def OnRightUp(self, event: wx.MouseEvent):
         """
         Callback.
 
@@ -435,9 +435,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         # DEBUG
         import wx
-        import wx.py as py
-        crustWin = wx.Dialog(self, -1, "PyCrust", (0,0), (640,480))
-        win = py.crust.Crust(crustWin)
+        crustWin = wx.Dialog(self, -1, "PyCrust", (0, 0), (640, 480))
         crustWin.Show()
         self.GenericHandler(event, "OnRightDClick")
 
@@ -594,7 +592,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         Redraw the screen without movable shapes, store it as the background.
         """
-        self.Redraw(None, True, True, False)
+        self.Redraw(cast(wx.DC, None), True, True, False)
 
     def RedrawWithBackground(self):
         """
@@ -654,7 +652,7 @@ class DiagramFrame(wx.ScrolledWindow):
         if needBlit:
             client = wx.ClientDC(self)
 
-            if wx.__version__>"2.3.2":
+            if wx.__version__ > "2.3.2":
                 x, y = self.CalcUnscrolledPosition(0, 0)
                 client.Blit(0, 0, w, h, dc, x, y)
             else:
@@ -814,7 +812,7 @@ class DiagramFrame(wx.ScrolledWindow):
         # transform event coords to get them relative to the upper left corner of
         # the virual screen (avoid the case where that corner is on a shape and
         # get its coords relative to the client view).
-        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit :
+        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit:
             x = ax
             y = ay
         else:
@@ -828,10 +826,10 @@ class DiagramFrame(wx.ScrolledWindow):
         if height < 0:
             y = y - height
 
-        # init the zoom's offsets and factor
-        zoomFactor = 1
-        dx = 0
-        dy = 0
+        # init the zoom's offsets and factor -- none of the next 3 are used;  According to PyCharm  :-)
+        # zoomFactor = 1
+        # dx = 0
+        # dy = 0
 
         # if there is no selected area but a clicked point, a default
         # zoom is performed with the clicked point as center.
@@ -883,8 +881,8 @@ class DiagramFrame(wx.ScrolledWindow):
             # size is the half of the diagram frame and which is centred
             # on the clicked point. This calculation is done in the way to
             # get the zoom area centred in the middle of the virtual screen.
-            dx = virtualWidth / 2 - x - (clientWidth / zoomFactor / 2.0)
-            dy = virtualHeight/ 2 - y - (clientHeight / zoomFactor / 2.0)
+            dx = virtualWidth  / 2 - x - (clientWidth / zoomFactor / 2.0)
+            dy = virtualHeight / 2 - y - (clientHeight / zoomFactor / 2.0)
 
             # we have to check if the "zoom in" on a reduced view produce
             # an other less reduced view or an elarged view. For this, we
@@ -924,10 +922,10 @@ class DiagramFrame(wx.ScrolledWindow):
 
         # perform the scrolling in the way to have the zoom area visible and centred on the virutal screen.
         scrollX = (virtualWidth - clientWidth) / 2 / xUnit
-        scrollY = (virtualHeight - clientHeight) / 2 /yUnit
+        scrollY = (virtualHeight - clientHeight) / 2 / yUnit
         self.Scroll(scrollX, scrollY)
 
-    def DoZoomOut(self, ax, ay):
+    def DoZoomOut(self, ax: int, ay: int):
 
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
@@ -938,8 +936,8 @@ class DiagramFrame(wx.ScrolledWindow):
         last one from the zoom stack. Else, we add the default zoom factor inversed
         to the stack.
 
-        @param ax int   : abscissa of the clicked point
-        @param ay int   : ordinate of the clicked point
+        @param ax : abscissa of the clicked point
+        @param ay : ordinate of the clicked point
         """
 
         # number of pixels per unit of scrolling
@@ -958,10 +956,10 @@ class DiagramFrame(wx.ScrolledWindow):
         # transform event coords to get them relative to the upper left corner of
         # the virual screen (avoid the case where that corner is on a shape and
         # get its coords relative to the shape).
-        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit :
+        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit:
             x = ax
             y = ay
-        else :
+        else:
             x = ax + viewStartX * xUnit
             y = ay + viewStartY * yUnit
 
@@ -969,11 +967,11 @@ class DiagramFrame(wx.ScrolledWindow):
         # size is the half of the diagram frame and which is centred
         # on the clicked point. This calculation is done in the way to
         # get the zoom area centred in the middle of the virtual screen.
-        dx = virtualWidth/2 - x
-        dy = virtualHeight/2 - y
+        dx = virtualWidth / 2 - x
+        dy = virtualHeight / 2 - y
 
         minZoomFactor = self.GetMinZoomFactor()
-        minZoomReached = False
+        # minZoomReached = False    # Not used
 
         # if the view is elarged, then we just remove the last
         # zoom in factor that has been applied. Else, we apply
