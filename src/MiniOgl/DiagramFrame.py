@@ -984,8 +984,8 @@ class DiagramFrame(wx.ScrolledWindow):
             shape.UpdateFromModel()
 
         # resize the virutal screen in order to match with the zoom
-        virtualWidth = (virtualWidth) * zoomFactor
-        virtualHeight = (virtualHeight) * zoomFactor
+        virtualWidth  = virtualWidth * zoomFactor
+        virtualHeight = virtualHeight * zoomFactor
         virtualSize = wx.Size(virtualWidth, virtualHeight)
         self.SetVirtualSize(virtualSize)
 
@@ -1041,15 +1041,9 @@ class DiagramFrame(wx.ScrolledWindow):
             # set the scrollbars position in the middle of their scale
             self.Scroll(noUnitX / 2, noUnitY / 2)
 
-    def IsInfinite(self):
+    def IsInfinite(self) -> bool:
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
         @return this frame is infinite.
         """
         return self._isInfinite
-
-    #>------------------------------------------------------------------------
-
-
-
-
