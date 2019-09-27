@@ -197,7 +197,10 @@ class DiagramFrame(wx.ScrolledWindow):
             self.logger.info(f"Generic for: {methodName}")
         x, y = self.getEventPosition(event)
         shape = self.FindShape(x, y)
-        event.m_x, event.m_y = x, y
+        # wxPython update
+        # event.m_x, event.m_y = x, y
+        event.SetX(x)
+        event.SetY(y)
         # if the shape found is a ShapeEventHandler
         if shape and isinstance(shape, ShapeEventHandler):
             # dispatch it the event
