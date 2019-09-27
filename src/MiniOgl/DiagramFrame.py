@@ -1,4 +1,7 @@
 
+from typing import cast
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -173,11 +176,11 @@ class DiagramFrame(wx.ScrolledWindow):
 
         self.Bind(wx.EVT_MOTION, self.OnMove)
 
-    def _BeginSelect(self, event):
+    def _BeginSelect(self, event: wx.MouseEvent):
         """
         Create a selector box and manage it.
 
-        @param wx.Event event
+        @param  event
         """
         if not event.ControlDown():
             self.DeselectAllShapes()
@@ -190,11 +193,11 @@ class DiagramFrame(wx.ScrolledWindow):
         self.PrepareBackground()
         self.Bind(wx.EVT_MOTION, self._OnMoveSelector)
 
-    def _OnMoveSelector(self, event):
+    def _OnMoveSelector(self, event: wx.MouseEvent):
         """
         Callback for the selector box.
 
-        @param wx.Event event
+        @param  event
         """
         if self._selector is not None:
             x, y = self.getEventPosition(event)
@@ -290,11 +293,11 @@ class DiagramFrame(wx.ScrolledWindow):
         event.m_x, event.m_y = self.getEventPosition(event)
         self.OnDrag(event)
 
-    def OnLeftDClick(self, event):
+    def OnLeftDClick(self, event: wx.MouseEvent):
         """
         Callback for left double clicks.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnLeftDClick")
         self._clickedShape = None
@@ -317,11 +320,11 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.GenericHandler(event, "OnMiddleUp")
 
-    def OnMiddleDClick(self, event):
+    def OnMiddleDClick(self, event: wx.MouseEvent):
         """
         Callback.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnMiddleDClick")
 
@@ -341,17 +344,17 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.GenericHandler(event, "OnRightUp")
 
-    def OnRightDClick(self, event):
+    def OnRightDClick(self, event: wx.MouseEvent):
         """
         Callback.
 
-        @param wx.Event event
+        @param  event
         """
         # DEBUG
         import wx
-        import wx.py as py
-        crustWin = wx.Dialog(self, -1, "PyCrust", (0,0), (640,480))
-        win = py.crust.Crust(crustWin)
+        # import wx.py as py
+        crustWin = wx.Dialog(self, -1, "PyCrust", (0, 0), (640, 480))
+        # win = py.crust.Crust(crustWin)
         crustWin.Show()
         self.GenericHandler(event, "OnRightDClick")
 
@@ -367,15 +370,19 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         Set a new diagram for this panel.
 
-        @param Diagram diagram
+        @param diagram
         """
         self._diagram = diagram
 
-    def FindShape(self, x, y):
+    from MiniOgl.Shape import Shape
+
+    def FindShape(self, x: int, y: int):
         """
         Return the shape at (x, y).
 
-        @param double x, y : coord
+        @param x : coord
+        @param y : coord
+
         @return Shape : found shape or None
         """
         found = None
@@ -384,7 +391,7 @@ class DiagramFrame(wx.ScrolledWindow):
         for shape in shapes:
             if shape.Inside(x, y):
                 if DEBUG:
-                    print("Inside", shape)
+                    self.logger.info(f"Inside: {shape}")
                 found = shape
                 break   # only select the first one
         return found
@@ -408,11 +415,11 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._selectedShapes
 
-    def SetSelectedShapes(self, shapes):
+    def SetSelectedShapes(self, shapes: List[Shape]):
         """
         Set the list of selected shapes.
 
-        @param Shape [] shapes
+        @param shapes
         """
         self._selectedShapes = shapes
 
@@ -459,11 +466,17 @@ class DiagramFrame(wx.ScrolledWindow):
             mem.Blit(0, 0, w, h, dc, 0, 0)
         mem.SelectObject(wx.NullBitmap)
 
-    def LoadBackground(self, dc, w, h):
+    def LoadBackground(self, dc: wx.DC, w: int, h: int):
         """
         Load the background image in the given dc.
 
-        @param wx.DC dc
+        Args:
+            dc:
+            w:
+            h:
+
+        Returns:
+
         """
         mem = wx.MemoryDC()
         mem.SelectObject(self.__backgroundBitmap)
@@ -507,19 +520,20 @@ class DiagramFrame(wx.ScrolledWindow):
             dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
             dc.Clear()
         self.PrepareDC(dc)
+
         return dc
 
     def PrepareBackground(self):
         """
         Redraw the screen without movable shapes, store it as the background.
         """
-        self.Redraw(None, True, True, False)
+        self.Redraw(cast(wx.DC, None), True, True, False)
 
     def RedrawWithBackground(self):
         """
         Redraw the screen using the background.
         """
-        self.Redraw(None, True, False, True)
+        self.Redraw(cast(wx.DC, None), True, False, True)
 
     def Redraw(self, dc=None, full=True, saveBackground=False, useBackground=False):
         """
@@ -579,12 +593,13 @@ class DiagramFrame(wx.ScrolledWindow):
             else:
                 client.Blit(0, 0, w, h, dc, 0, 0)
 
-    def OnPaint(self, event):
+    # noinspection PyUnusedLocal
+    def OnPaint(self, event: wx.PaintEvent):
         """
         Callback.
         Refresh the screen when a paint event is issued by the system.
 
-        @param wx.Event event
+        @param event
         """
         dc = wx.PaintDC(self)
         w, h = self.GetSize()
@@ -844,7 +859,7 @@ class DiagramFrame(wx.ScrolledWindow):
         scrollY = (virtualHeight - clientHeight) /2 /yUnit
         self.Scroll(scrollX, scrollY)
 
-    def DoZoomOut(self, ax, ay) :
+    def DoZoomOut(self, ax: int, ay: int):
 
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
@@ -855,8 +870,8 @@ class DiagramFrame(wx.ScrolledWindow):
         last one from the zoom stack. Else, we add the default zoom factor inversed
         to the stack.
 
-        @param ax int   : abscissa of the clicked point
-        @param ay int   : ordinate of the clicked point
+        @param ax  abscissa of the clicked point
+        @param ay  ordinate of the clicked point
         """
 
         # number of pixels per unit of scrolling
