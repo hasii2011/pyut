@@ -23,69 +23,6 @@ class DiagramFrame(wx.ScrolledWindow):
     This frame also manage all mouse events.
     It has a Diagram automatically associated.
 
-    Exported methods:
-    -----------------
-
-    __init__(self, parent)
-        Constructor.
-    getEventPosition(self, event)
-        Return the position of a click in the diagram.
-    GenericHandler(self, event, methodName)
-        This handler finds the shape at event coords and dispatch the event.
-    OnLeftDown(self, event)
-        Callback for left down events on the diagram.
-    OnLeftUp(self, event)
-        Callback for left up events.
-    OnDrag(self, event)
-        Callback to drag the selected shapes.
-    OnMove(self, event)
-        Callback for mouse movements.
-    OnLeftDClick(self, event)
-        Callback for left double clicks.
-    OnMiddleDown(self, event)
-        Callback.
-    OnMiddleUp(self, event)
-        Callback.
-    OnMiddleDClick(self, event)
-        Callback.
-    OnRightDown(self, event)
-        Callback.
-    OnRightUp(self, event)
-        Callback.
-    OnRightDClick(self, event)
-        Callback.
-    GetDiagram(self)
-        Return the diagram associated with this panel.
-    SetDiagram(self, diagram)
-        Set a new diagram for this panel.
-    FindShape(self, x, y)
-        Return the shape at (x, y).
-    DeselectAllShapes(self)
-        Deselect all shapes in the frame.
-    GetSelectedShapes(self)
-        Get the selected shapes.
-    SetSelectedShapes(self, shapes)
-        Set the list of selected shapes.
-    KeepMoving(self, keep)
-        Tell the frame to continue capturing the mouse movements.
-    Refresh(self, eraseBackground=True, rect=None)
-        This refresh is done imediately, not through an event.
-    SaveBackground(self, dc)
-        Save the given dc as the new background image.
-    LoadBackground(self, dc, w, h)
-        Load the background image in the given dc.
-    ClearBackground(self)
-        Clear the background image.
-    CreateDC(self, loadBackground, w, h)
-        Create a DC, load the background on demand.
-    PrepareBackground(self)
-        Redraw the screen without movable shapes, store it as the background.
-    RedrawWithBackground(self)
-        Redraw the screen using the background.
-    Redraw(self, dc=None, full=True, saveBackground=False
-        No description.
-    OnPaint(self, event)
-        Callback.
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
@@ -95,19 +32,19 @@ class DiagramFrame(wx.ScrolledWindow):
 
         @param wxObject parent : parent window
         """
-        wx.ScrolledWindow.__init__(self, parent)
+        super().__init__(parent)
         self._diagram = Diagram(self)
 
-        self.__keepMoving = False
-        self._selectedShapes = [] # list of the shapes that are selected
+        self.__keepMoving       = False
+        self._selectedShapes    = []        # list of the shapes that are selected
         self._lastMousePosition = None
-        self._selector = None # rectangle selector shape
-        self._clickedShape = None # last clicked shape
-        self._moving = False # a drag has been initiated
+        self._selector          = None      # rectangle selector shape
+        self._clickedShape      = None      # last clicked shape
+        self._moving            = False     # a drag has been initiated
 
         self._xOffset = 0.0     # abscissa offset between the view and the model
         self._yOffset = 0.0     # ordinate offset between the view and the model
-        self._zoomStack = []    #cstore all zoom factors applied
+        self._zoomStack = []    # cstore all zoom factors applied
 
         self._zoomLevel = 0             # number of zoom factors applied
         self._maxZoomFactor = 6         # can zoom in beyond 600%
@@ -131,11 +68,9 @@ class DiagramFrame(wx.ScrolledWindow):
 
         DEFAULT_FONT_SIZE = 12
         self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
-
         self.SetBackgroundColour(wx.WHITE)
 
         # Mouse events
-
         self.Bind(wx.EVT_LEFT_DOWN,     self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP,       self.OnLeftUp)
         self.Bind(wx.EVT_LEFT_DCLICK,   self.OnLeftDClick)
@@ -179,8 +114,6 @@ class DiagramFrame(wx.ScrolledWindow):
         else:
             event.Skip()
         return shape
-
-    #>------------------------------------------------------------------------
 
     def OnLeftDown(self, event):
         """
@@ -268,8 +201,6 @@ class DiagramFrame(wx.ScrolledWindow):
 
         @param wx.Event event
         """
-        #print "OnLeftUp, event=(%s, %s); %s)" % (event.GetX(), event.GetY(), event.GetPosition())
-
         # manage the selector box
         if self._selector is not None:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
@@ -333,8 +264,7 @@ class DiagramFrame(wx.ScrolledWindow):
         self._clickedShape = None
         for shape in self._selectedShapes:
             parent = shape.GetParent()
-            if parent is not None and parent.IsSelected() and \
-                not isinstance(shape, SizerShape):
+            if parent is not None and parent.IsSelected() and not isinstance(shape, SizerShape):
                 continue
             ox, oy = self._lastMousePosition
             dx, dy = x - ox, y - oy
@@ -443,13 +373,13 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         found = None
         shapes = self._diagram.GetShapes()
-        shapes.reverse() # to select the one at the top
+        shapes.reverse()    # to select the one at the top
         for shape in shapes:
             if shape.Inside(x, y):
                 if DEBUG:
                     print("Inside", shape)
                 found = shape
-                break # only select the first one
+                break   # only select the first one
         return found
 
     def DeselectAllShapes(self):
@@ -582,8 +512,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.Redraw(None, True, False, True)
 
-    def Redraw(self, dc=None, full=True, saveBackground=False,
-               useBackground=False):
+    def Redraw(self, dc=None, full=True, saveBackground=False, useBackground=False):
         """
         Refresh the diagram graphically.
         If a dc is given, use it. Otherwise, a double buffered dc is used.
