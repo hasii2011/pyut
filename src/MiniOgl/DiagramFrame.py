@@ -1,9 +1,4 @@
 
-from typing import cast
-
-from logging import Logger
-from logging import getLogger
-
 import wx
 
 from MiniOgl.Diagram import Diagram
@@ -12,12 +7,13 @@ from MiniOgl.SizerShape import SizerShape
 from MiniOgl.ControlPoint import ControlPoint
 from MiniOgl.RectangleShape import RectangleShape
 
+__all__ = ["DiagramFrame"]
 
-DEBUG = 0  # set to 1 to have some debug info in the terminal
+DEBUG = 0 # set to 1 to have some debug info in the terminal
 
-LEFT_MARGIN   = 0
-RIGHT_MARGIN  = 1
-TOP_MARGIN    = 2
+LEFT_MARGIN = 0
+RIGHT_MARGIN = 1
+TOP_MARGIN = 2
 BOTTOM_MARGIN = 3
 
 
@@ -99,66 +95,57 @@ class DiagramFrame(wx.ScrolledWindow):
 
         @param wxObject parent : parent window
         """
+        #print ">>>MiniOGL-DiagramFrame-1", parent
         wx.ScrolledWindow.__init__(self, parent)
-
-        self.logger: Logger = getLogger(__name__)
-
+        #scrolled.ScrolledPanel.__init__(self, parent, -1,
+        #        style = wx.TAB_TRAVERSAL|wx.SUNKEN_BORDER )
+        #print "---MiniOGL-DiagramFrame-2"
         self._diagram = Diagram(self)
+        #print "---MiniOGL-DiagramFrame-3"
 
         self.__keepMoving = False
-        self._selectedShapes = []
-        """
-        list of the shapes that are selected
-        """
+        self._selectedShapes = [] # list of the shapes that are selected
         self._lastMousePosition = None
-        self._selector = None
-        """
-        rectangle selector shape
-        """
-        self._clickedShape = None
-        """
-        last clicked shape
-        """
-        self._moving = False
-        """
-        a drag has been initiated
-        """
+        self._selector = None # rectangle selector shape
+        self._clickedShape = None # last clicked shape
+        self._moving = False # a drag has been initiated
 
-        self._xOffset = 0.0     # abscissa offset between the view and the model
-        self._yOffset = 0.0     # ordinate offset between the view and the model
-        self._zoomStack = []    # store all zoom factors applied
+        #zoom related
+        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com>
+        self._xOffset = 0.0 # abscissa offset between the view and the model
+        self._yOffset = 0.0 # ordinate offset between the view and the model
+        self._zoomStack = [] #store all zoom factors applied
+        #self._zoomStack.append(1) #the view is 100% at the begining
+        self._zoomLevel = 0 #number of zoom factors applied
+        self._maxZoomFactor = 6 #can zoom in beyond 600%
+        self._minZoomFactor = 0.2 #can zoom out beyond 20%
+        self._defaultZoomFactor = 1.5 #used when only a point is selected
 
-        self._zoomLevel = 0             # number of zoom factors applied
-        self._maxZoomFactor = 6         # can zoom in beyond 600%
-        self._minZoomFactor = 0.2       # can zoom out beyond 20%
-        self._defaultZoomFactor = 1.5   # used when only a point is selected
-
+        #infinite work area related
+        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com>
         # margins define a perimeter around the work area that must remains
         # blank and hidden. if we scroll beyond the limits, the diagram is
         # resized.
         DEFAULT_MARGIN_VALUE = 100
-        self._leftMargin     = DEFAULT_MARGIN_VALUE
-        self._rightMargin    = DEFAULT_MARGIN_VALUE
-        self._topMargin      = DEFAULT_MARGIN_VALUE
-        self._bottomMargin   = DEFAULT_MARGIN_VALUE
-        self._isInfinite     = False    # to know if the frame is infinite or not
+        self._leftMargin = DEFAULT_MARGIN_VALUE
+        self._rightMargin = DEFAULT_MARGIN_VALUE
+        self._topMargin = DEFAULT_MARGIN_VALUE
+        self._bottomMargin = DEFAULT_MARGIN_VALUE
+        self._isInfinite = False # to know if the frame is infinite or not
 
         # paint related
         w, h = self.GetSize()
-        # self.__workingBitmap    = wx.EmptyBitmap(w, h)  # double buffering
-        # self.__backgroundBitmap = wx.EmptyBitmap(w, h)
-        #
-        # EmptyBitMap is deprecated
-        #
-        self.__workingBitmap    = wx.Bitmap(w, h)  # double buffering
+        self.__workingBitmap    = wx.Bitmap(w, h) # double buffering
         self.__backgroundBitmap = wx.Bitmap(w, h)
 
         DEFAULT_FONT_SIZE = 12
-        self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
 
         self.SetBackgroundColour(wx.WHITE)
+        #print "---MiniOGL-DiagramFrame-4"
 
         # Mouse events
+        #self.Bind(wx.EVT_LEFT_DOWN,     self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_DOWN,     self.OnLeftDown)
         self.Bind(wx.EVT_LEFT_UP,       self.OnLeftUp)
         self.Bind(wx.EVT_LEFT_DCLICK,   self.OnLeftDClick)
@@ -169,58 +156,72 @@ class DiagramFrame(wx.ScrolledWindow):
         self.Bind(wx.EVT_RIGHT_UP,      self.OnRightUp)
         self.Bind(wx.EVT_RIGHT_DCLICK,  self.OnRightDClick)
 
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com>
+        #to manage the fact that we scroll beyond the margins (in the
+        #case where the work area is infinite).
+        #self.Bind(wx.EVT_SCROLLWIN,     self.OnScroll) #PRZ removed cause of an unsolvable error
 
-    def getEventPosition(self, event: wx.MouseEvent):
+
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+        #print "---MiniOGL-DiagramFrame-5"
+
+    #>------------------------------------------------------------------
+
+    def getEventPosition(self, event):
         """
         Return the position of a click in the diagram.
 
-        @param  event : mouse event
-        @return (int, int) : x, y
+        @param wx.Event event : mouse event
+        @return (double, double) : x, y
         """
-
-        x, y = self._ConvertEventCoords(event)
-        self.logger.info(f'x: {x}, y: {y}')
+        #print event.GetButton(), event.GetPosition(),
+        #x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
+        x, y = self._ConvertEventCoords(event)  # Updated by CD, 20041005
+        #print "getEventPosition, event=(%s, %s); p=(%s, %s)" % \
+        #        (event.GetX(), event.GetY(), x, y)
+        #print dir(event)
         return x, y
+
+    #>------------------------------------------------------------------
 
     def GenericHandler(self, event, methodName):
         """
         This handler finds the shape at event coords and dispatch the event.
         The handler will receive an event with coords already unscrolled.
 
-        @param  event : original event
-        @param methodName : name of the method to invoke in the event handler of the shape
-
+        @param wx.Event event : original event
+        @param string methodName : name of the method to invoke in the
+            event handler of the shape
         @return Shape : the clicked shape
         """
         if DEBUG:
-            self.logger.info(f"Generic for: {methodName}")
+            print("Generic for", methodName)
         x, y = self.getEventPosition(event)
         shape = self.FindShape(x, y)
-        # wxPython update
-        # event.m_x, event.m_y = x, y
-        event.SetX(x)
-        event.SetY(y)
+        event.m_x, event.m_y = x, y
         # if the shape found is a ShapeEventHandler
         if shape and isinstance(shape, ShapeEventHandler):
             # dispatch it the event
             getattr(shape, methodName)(event)
         else:
-            event.Skip()    # the event has not been treated
+            # the event has not been treated
+            event.Skip()
         return shape
+
+    #>------------------------------------------------------------------------
 
     def OnLeftDown(self, event):
         """
         Callback for left down events on the diagram.
 
-        @param  event
+        @param wx.Event event
         """
         if DEBUG:
-            self.logger.info("DiagramFrame.OnLeftDown")
+            print("DiagramFrame.OnLeftDown")
 
         # First, call the generic handler for OnLeftDown
         shape = self.GenericHandler(event, "OnLeftDown")
-        self._clickedShape = shape  # store the last clicked shape
+        self._clickedShape = shape # store the last clicked shape
         if not event.GetSkipped():
             return
         if shape is None:
@@ -229,7 +230,9 @@ class DiagramFrame(wx.ScrolledWindow):
 
         # manage click and drag
         x, y = event.GetX(), event.GetY()
-
+        #x, y = self._ConvertEventCoords(event)  # Updated by CD, 20041005
+        #print "OnLeftDown, event=(%s, %s); %s; (%s, %s))" % \
+        #        (event.GetX(), event.GetY(), event.GetPosition(), x, y)
         self._lastMousePosition = (x, y)
 
         if not event.ControlDown() and not shape.IsSelected():
@@ -239,6 +242,7 @@ class DiagramFrame(wx.ScrolledWindow):
                 # don't deselect the parent of a sizer
                 # or its sizers would be detached
                 shapes.remove(shape.GetParent())
+            #elif isinstance(self, ControlPoint): CD
             elif isinstance(shape, ControlPoint):
                 # don't deselect the line of a control point
                 for line in shape.GetLines():
@@ -260,15 +264,17 @@ class DiagramFrame(wx.ScrolledWindow):
 
         self.Bind(wx.EVT_MOTION, self.OnMove)
 
+    #>------------------------------------------------------------------------
+
     def _BeginSelect(self, event):
         """
         Create a selector box and manage it.
 
-        @param  event
+        @param wx.Event event
         """
         if not event.ControlDown():
             self.DeselectAllShapes()
-        x, y = event.GetX(), event.GetY()   # event position has been modified
+        x, y = event.GetX(), event.GetY() # event position has been modified
         self._selector = rect = RectangleShape(x, y, 0, 0)
         rect.SetDrawFrame(True)
         rect.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -277,11 +283,13 @@ class DiagramFrame(wx.ScrolledWindow):
         self.PrepareBackground()
         self.Bind(wx.EVT_MOTION, self._OnMoveSelector)
 
+    #>------------------------------------------------------------------------
+
     def _OnMoveSelector(self, event):
         """
         Callback for the selector box.
 
-        @param  event
+        @param wx.Event event
         """
         if self._selector is not None:
             x, y = self.getEventPosition(event)
@@ -289,12 +297,17 @@ class DiagramFrame(wx.ScrolledWindow):
             self._selector.SetSize(x - x0, y - y0)
             self.Refresh(False)
 
+    #>------------------------------------------------------------------------
+
     def OnLeftUp(self, event):
         """
         Callback for left up events.
 
-        @param  event
+        @param wx.Event event
         """
+        #print "OnLeftUp, event=(%s, %s); %s)" % \
+        #        (event.GetX(), event.GetY(), event.GetPosition())
+
         # manage the selector box
         if self._selector is not None:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
@@ -340,11 +353,13 @@ class DiagramFrame(wx.ScrolledWindow):
             self.Bind(wx.EVT_MOTION, self._NullCallback)
             self.Refresh()
 
-    def OnDrag(self, event: wx.MouseEvent):
+    #>------------------------------------------------------------------------
+
+    def OnDrag(self, event):
         """
         Callback to drag the selected shapes.
 
-        @param  event
+        @param wx.Event event
         """
         x, y = event.GetX(), event.GetY()
         if not self._moving:
@@ -358,7 +373,8 @@ class DiagramFrame(wx.ScrolledWindow):
         self._clickedShape = None
         for shape in self._selectedShapes:
             parent = shape.GetParent()
-            if parent is not None and parent.IsSelected() and not isinstance(shape, SizerShape):
+            if parent is not None and parent.IsSelected() and \
+                not isinstance(shape, SizerShape):
                 continue
             ox, oy = self._lastMousePosition
             dx, dy = x - ox, y - oy
@@ -368,77 +384,97 @@ class DiagramFrame(wx.ScrolledWindow):
         self.Refresh(False)
         self._lastMousePosition = (x, y)
 
+    #>------------------------------------------------------------------------
+
     def OnMove(self, event):
         """
         Callback for mouse movements.
 
-        @param  event
+        @param wx.Event event
         """
         event.m_x, event.m_y = self.getEventPosition(event)
         self.OnDrag(event)
+
+    #>------------------------------------------------------------------
 
     def OnLeftDClick(self, event):
         """
         Callback for left double clicks.
 
-        @param  event
+        @param wx.Event event
         """
         self.GenericHandler(event, "OnLeftDClick")
         self._clickedShape = None
         if not self.__keepMoving:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
 
-    def OnMiddleDown(self, event: wx.MouseEvent):
+    #>------------------------------------------------------------------------
+
+    def OnMiddleDown(self, event):
         """
         Callback.
 
-        @param  event
+        @param wx.Event event
         """
         self.GenericHandler(event, "OnMiddleDown")
+
+    #>------------------------------------------------------------------------
 
     def OnMiddleUp(self, event):
         """
         Callback.
 
-        @param  event
+        @param wx.Event event
         """
         self.GenericHandler(event, "OnMiddleUp")
+
+    #>------------------------------------------------------------------------
 
     def OnMiddleDClick(self, event):
         """
         Callback.
 
-        @param  event
+        @param wx.Event event
         """
         self.GenericHandler(event, "OnMiddleDClick")
 
-    def OnRightDown(self, event: wx.MouseEvent):
+    #>------------------------------------------------------------------------
+
+    def OnRightDown(self, event):
         """
         Callback.
 
-        @param  event
+        @param wx.Event event
         """
         self.GenericHandler(event, "OnRightDown")
 
-    def OnRightUp(self, event: wx.MouseEvent):
+    #>------------------------------------------------------------------------
+
+    def OnRightUp(self, event):
         """
         Callback.
 
-        @param  event
+        @param wx.Event event
         """
         self.GenericHandler(event, "OnRightUp")
+
+    #>------------------------------------------------------------------------
 
     def OnRightDClick(self, event):
         """
         Callback.
 
-        @param  event
+        @param wx.Event event
         """
         # DEBUG
         import wx
-        crustWin = wx.Dialog(self, -1, "PyCrust", (0, 0), (640, 480))
+        import wx.py as py
+        crustWin = wx.Dialog(self, -1, "PyCrust", (0,0), (640,480))
+        win = py.crust.Crust(crustWin)
         crustWin.Show()
         self.GenericHandler(event, "OnRightDClick")
+
+    #>------------------------------------------------------------------------
 
     def GetDiagram(self):
         """
@@ -448,33 +484,37 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._diagram
 
+    #>------------------------------------------------------------------
+
     def SetDiagram(self, diagram):
         """
         Set a new diagram for this panel.
 
-        @param diagram
+        @param Diagram diagram
         """
         self._diagram = diagram
 
-    def FindShape(self, x: int, y: int):
+    #>------------------------------------------------------------------------
+
+    def FindShape(self, x, y):
         """
         Return the shape at (x, y).
 
-        @param x : coord
-        @param y : coord
-
+        @param double x, y : coord
         @return Shape : found shape or None
         """
         found = None
         shapes = self._diagram.GetShapes()
-        shapes.reverse()    # to select the one at the top
+        shapes.reverse() # to select the one at the top
         for shape in shapes:
             if shape.Inside(x, y):
                 if DEBUG:
-                    self.logger.info(f"Inside shape: {shape}")
+                    print("Inside", shape)
                 found = shape
-                break   # only select the first one
+                break # only select the first one
         return found
+
+    #>------------------------------------------------------------------------
 
     def DeselectAllShapes(self):
         """
@@ -484,6 +524,8 @@ class DiagramFrame(wx.ScrolledWindow):
             shape.SetSelected(False)
             shape.SetMoving(False)
         self._selectedShapes = []
+
+    #>------------------------------------------------------------------------
 
     def GetSelectedShapes(self):
         """
@@ -495,13 +537,17 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._selectedShapes
 
+    #>------------------------------------------------------------------------
+
     def SetSelectedShapes(self, shapes):
         """
         Set the list of selected shapes.
 
-        @param  shapes  Shape[]
+        @param Shape [] shapes
         """
         self._selectedShapes = shapes
+
+    #>------------------------------------------------------------------------
 
     def KeepMoving(self, keep):
         """
@@ -513,6 +559,8 @@ class DiagramFrame(wx.ScrolledWindow):
         self.__keepMoving = keep
         if not keep:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
+
+    #>------------------------------------------------------------------
 
     def Refresh(self, eraseBackground=True, rect=None):
         """
@@ -526,6 +574,8 @@ class DiagramFrame(wx.ScrolledWindow):
         else:
             self.RedrawWithBackground()
 
+    #>------------------------------------------------------------------------
+
     def SaveBackground(self, dc):
         """
         Save the given dc as the new background image.
@@ -535,23 +585,33 @@ class DiagramFrame(wx.ScrolledWindow):
         w, h = self.GetSize()
         bb = self.__backgroundBitmap
         if (bb.GetWidth(), bb.GetHeight()) != (w, h):
-            bb = self.__backgroundBitmap = wx.Bitmap(w, h)
+            bb = self.__backgroundBitmap = wx.EmptyBitmap(w, h)
         mem = wx.MemoryDC()
         mem.SelectObject(bb)
-
-        x, y = self.CalcUnscrolledPosition(0, 0)
-        mem.Blit(0, 0, w, h, dc, x, y)
-
+        # ADDED BY C.DUTOIT - wx.Python version test
+        #from wx.Python.wx. import wx.CHECK_VERSION
+        #if wx.CHECK_VERSION(2, 3, 2):
+        if wx.__version__>"2.3.2":
+            x, y = self.CalcUnscrolledPosition(0, 0)
+            mem.Blit(0, 0, w, h, dc, x, y)
+        else:
+            mem.Blit(0, 0, w, h, dc, 0, 0)
         mem.SelectObject(wx.NullBitmap)
+
+    #>------------------------------------------------------------------------
 
     def LoadBackground(self, dc, w, h):
         """
         Load the background image in the given dc.
+
+        @param wx.DC dc
         """
         mem = wx.MemoryDC()
         mem.SelectObject(self.__backgroundBitmap)
         dc.Blit(0, 0, w, h, mem, 0, 0)
         mem.SelectObject(wx.NullBitmap)
+
+    #>------------------------------------------------------------------------
 
     def ClearBackground(self):
         """
@@ -567,14 +627,14 @@ class DiagramFrame(wx.ScrolledWindow):
         dc.Clear()
         dc.SelectObject(wx.NullBitmap)
 
-    def CreateDC(self, loadBackground: bool, w: int, h: int):
+    #>------------------------------------------------------------------------
+
+    def CreateDC(self, loadBackground, w, h):
         """
         Create a DC, load the background on demand.
 
-        @param loadBackground
-        @param w: width and height of the frame.
-        @param h : width and height of the frame.
-
+        @param boolean loadBackground
+        @param int w, h : width and height of the frame.
         @return wx.DC
         """
         dc = wx.MemoryDC()
@@ -582,7 +642,6 @@ class DiagramFrame(wx.ScrolledWindow):
         # cache the bitmap, to avoid creating a new at each refresh.
         # only recreate it if the size of the window has changed
         if (bm.GetWidth(), bm.GetHeight()) != (w, h):
-            # bm = self.__workingBitmap = wx.EmptyBitmap(w, h)
             bm = self.__workingBitmap = wx.Bitmap(w, h)
         dc.SelectObject(bm)
         if loadBackground:
@@ -593,19 +652,26 @@ class DiagramFrame(wx.ScrolledWindow):
         self.PrepareDC(dc)
         return dc
 
+    #>------------------------------------------------------------------------
+
     def PrepareBackground(self):
         """
         Redraw the screen without movable shapes, store it as the background.
         """
-        self.Redraw(cast(wx.DC, None), True, True, False)
+        self.Redraw(None, True, True, False)
+
+    #>------------------------------------------------------------------------
 
     def RedrawWithBackground(self):
         """
         Redraw the screen using the background.
         """
-        self.Redraw(cast(wx.DC, None), True, False, True)
+        self.Redraw(None, True, False, True)
 
-    def Redraw(self, dc=None, full=True, saveBackground=False, useBackground=False):
+    #>------------------------------------------------------------------------
+
+    def Redraw(self, dc=None, full=True, saveBackground=False,
+               useBackground=False):
         """
         Refresh the diagram graphically.
         If a dc is given, use it. Otherwise, a double buffered dc is used.
@@ -624,6 +690,8 @@ class DiagramFrame(wx.ScrolledWindow):
 
         dc.SetFont(self._defaultFont)
 
+        #dc.SetUserScale(2, 2)
+        #shapes = self._diagram.GetParentShapes()
         shapes = self._diagram.GetShapes()
 
         if full:
@@ -632,44 +700,59 @@ class DiagramFrame(wx.ScrolledWindow):
                 # first, draw every non moving shapes
                 for shape in shapes:
                     if not shape.IsMoving():
+                        #C.Dutoit
+                        #shape.Draw(dc, True)
                         shape.Draw(dc)
 
+                # save the background
                 self.SaveBackground(dc)
 
+                # draw every moving shapes
                 for shape in shapes:
                     if shape.IsMoving():
                         shape.Draw(dc)
+                        #C.Dutoit
+                        #shape.Draw(dc, True)
 
             if useBackground:
+                # draw every moving shapes
                 for shape in shapes:
                     if shape.IsMoving():
                         shape.Draw(dc)
+                        #C.Dutoit
+                        #shape.Draw(dc, True)
 
-            else:   # don't use background
+            else: # don't use background
+                # draw all shapes
                 for shape in shapes:
                     shape.Draw(dc)
+                    #C.Dutoit
+                    #shape.Draw(dc, True)
 
-        else:   # not full
+        else: # not full
             for shape in shapes:
                 shape.DrawBorder(dc)
                 shape.DrawAnchors(dc)
 
         if needBlit:
+            #  MODIFIED BY C.DUTOIT : Added wx.Python test
             client = wx.ClientDC(self)
-
-            if wx.__version__ > "2.3.2":
+            #from wx.Python.wx. import wx.CHECK_VERSION
+            #if wx.CHECK_VERSION(2, 3, 2):
+            if wx.__version__>"2.3.2":
                 x, y = self.CalcUnscrolledPosition(0, 0)
                 client.Blit(0, 0, w, h, dc, x, y)
             else:
                 client.Blit(0, 0, w, h, dc, 0, 0)
 
-    # noinspection PyUnusedLocal
+    #>------------------------------------------------------------------------
+
     def OnPaint(self, event):
         """
         Callback.
         Refresh the screen when a paint event is issued by the system.
 
-        @param  event
+        @param wx.Event event
         """
         dc = wx.PaintDC(self)
         w, h = self.GetSize()
@@ -677,23 +760,33 @@ class DiagramFrame(wx.ScrolledWindow):
         mem.SetBackground(wx.Brush(self.GetBackgroundColour()))
         mem.Clear()
         self.Redraw(mem)
-
-        # dc.BeginDrawing()                         # Does not exist in latest wxPython
+        # dc.BeginDrawing()
+        #  MODIFIED BY C.DUTOIT : Added wx.Python test
+        #from wx.Python.wx. import wx.CHECK_VERSION
+        #if wx.CHECK_VERSION(2, 3, 2):
+        #import wx.Python
         if wx.__version__ > "2.3.2":
             x, y = self.CalcUnscrolledPosition(0, 0)
             dc.Blit(0, 0, w, h, mem, x, y)
         else:
             dc.Blit(0, 0, w, h, mem, 0, 0)
+        # dc.EndDrawing()
+
+    #>------------------------------------------------------------------------
 
     def _NullCallback(self, evt):
+        #print "None"
         pass
 
-    def _ConvertEventCoords(self, event: wx.MouseEvent):
+    #>------------------------------------------------------------------------
 
+    def _ConvertEventCoords(self, event):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
+        return (event.GetX() + (xView * xDelta),
+                event.GetY() + (yView * yDelta))
 
-        return event.GetX() + (xView * xDelta), event.GetY() + yView * yDelta
+    #>------------------------------------------------------------------------
 
     def GetCurrentZoom(self):
         """
@@ -705,12 +798,16 @@ class DiagramFrame(wx.ScrolledWindow):
             zoom *= z
         return zoom
 
+    #>------------------------------------------------------------------------
+
     def GetXOffset(self):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
         @return the x offset between the model an the view of the shapes (MVC)
         """
         return self._xOffset
+
+    #>------------------------------------------------------------------------
 
     def GetYOffset(self):
         """
@@ -719,12 +816,16 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._yOffset
 
+    #>------------------------------------------------------------------------
+
     def SetXOffset(self, offset):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
         Set the x offset between the model an the view of the shapes (MVC)
         """
         self._xOffset = offset
+
+    #>------------------------------------------------------------------------
 
     def SetYOffset(self, offset):
         """
@@ -733,12 +834,16 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self._yOffset = offset
 
+    #>------------------------------------------------------------------------
+
     def SetDefaultZoomFactor(self, factor):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
         Set the default zoom factor (1 = 100%)
         """
         self._defaultZoomFactor = factor
+
+    #>------------------------------------------------------------------------
 
     def SetMaxZoomFactor(self, factor):
         """
@@ -747,6 +852,8 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self._maxZoomFactor = factor
 
+    #>------------------------------------------------------------------------
+
     def GetDefaultZoomFactor(self):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
@@ -754,12 +861,16 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._defaultZoomFactor
 
+    #>------------------------------------------------------------------------
+    #PRZ
     def GetMaxZoomFactor(self):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
         @return the maximal zoom factor that can be reached. (1 = 100%)
         """
         return self._maxZoomFactor
+
+    #>------------------------------------------------------------------------
 
     def SetMinZoomFactor(self, factor):
         """
@@ -768,6 +879,8 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self._minLevelZoom = factor
 
+    #>------------------------------------------------------------------------
+
     def GetMinZoomFactor(self):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
@@ -775,7 +888,9 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._minZoomFactor
 
-    def DoZoomIn(self, ax, ay, width=0, height=0):
+    #>------------------------------------------------------------------------
+
+    def DoZoomIn(self, ax, ay, width = 0, height = 0):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
 
@@ -799,60 +914,62 @@ class DiagramFrame(wx.ScrolledWindow):
         @param height   :   height of the selected area for the zoom
         """
 
-        #  number of pixels per unit of scrolling
+        #number of pixels per unit of scrolling
         xUnit, yUnit = self.GetScrollPixelsPerUnit()
 
-        # position of the upper left corner of the client area
-        # (work area that is visible) in scroll units.
+        #position of the upper left corner of the client area
+        #(work area that is visible) in scroll units.
         viewStartX, viewStartY = self.GetViewStart()
 
-        # Get the client and virtual size of the work area, where
-        # the client size is the size of the work area that is
-        # visible and the virtual is the whole work area's size.
+        #Get the client and virtual size of the work area, where
+        #the client size is the size of the work area that is
+        #visible and the virtual is the whole work area's size.
         clientWidth, clientHeight = self.GetClientSize()
         virtualWidth, virtualHeight = self.GetVirtualSize()
 
-        # maximal zoom factor that can be applied
-        # maxZoomFactor = self.GetMaxLevelZoom() * self.GetDefaultZoomFactor()
+        #maximal zoom factor that can be applied
+        #maxZoomFactor = self.GetMaxLevelZoom() * self.GetDefaultZoomFactor()
         maxZoomFactor = self.GetMaxZoomFactor()
 
-        # transform event coords to get them relative to the upper left corner of
-        # the virual screen (avoid the case where that corner is on a shape and
-        # get its coords relative to the client view).
-        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit:
+        #transform event coords to get them relative to the upper left corner of
+        #the virual screen (avoid the case where that corner is on a shape and
+        #get its coords relative to the client view).
+        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit :
             x = ax
             y = ay
-        else:
+        else :
             x = ax + viewStartX * xUnit
             y = ay + viewStartY * yUnit
 
-        # to get the upper left corner of the zoom selected area in the
-        # case where we select first the bottom right corner.
-        if width < 0:
+        #to get the upper left corner of the zoom selected area in the
+        #case where we select first the bottom right corner.
+        if width < 0 :
             x = x - width
-        if height < 0:
+        if height < 0 :
             y = y - height
 
-        # init the zoom's offsets and factor -- none of the next 3 are used;  According to PyCharm  :-)
-        # zoomFactor = 1
-        # dx = 0
-        # dy = 0
+        #init the zoom's offsets and factor
+        zoomFactor = 1
+        dx = 0
+        dy = 0
 
-        # if there is no selected area but a clicked point, a default
-        # zoom is performed with the clicked point as center.
+        #if there is no selected area but a clicked point, a default
+        #zoom is performed with the clicked point as center.
         if width == 0 or height == 0:
             zoomFactor = self.GetDefaultZoomFactor()
 
-            # check if the zoom factor that we are to apply combined with the
-            # previous ones won't be beyond the maximal zoom. If it's the case,
-            # we proceed to the calculation of the zoom factor that allows to
-            # exactly reach the maximal zoom.
+            #check if the zoom factor that we are to apply combined with the
+            #previous ones won't be beyond the maximal zoom. If it's the case,
+            #we proceed to the calculation of the zoom factor that allows to
+            #exactly reach the maximal zoom.
             maxZoomReached = maxZoomFactor <= (self.GetCurrentZoom() * zoomFactor)
             if maxZoomReached:
                 zoomFactor = maxZoomFactor/self.GetCurrentZoom()
 
-            # if the view is reduced, we just eliminate the
-            # last zoom out performed
+
+
+            #if the view is reduced, we just eliminate the
+            #last zoom out performed
             if self._zoomLevel < 0:
                 self._zoomStack.pop()
                 self._zoomLevel += 1
@@ -861,56 +978,61 @@ class DiagramFrame(wx.ScrolledWindow):
                     self._zoomStack.append(zoomFactor)
                     self._zoomLevel += 1
 
-            # calculation of the upper-left corner of a zoom area whose
-            # size is the half of the diagram frame and which is centred
-            # on the clicked point. This calculation is done in the way to
-            # get the zoom area centred in the middle of the virtual screen.
+
+            #calculation of the upper-left corner of a zoom area whose
+            #size is the half of the diagram frame and which is centred
+            #on the clicked point. This calculation is done in the way to
+            #get the zoom area centred in the middle of the virtual screen.
             dx = virtualWidth/2 - x
             dy = virtualHeight/2 - y
-        # if there is a selected area...
+
+        #if there is a selected area...
         else:
 
-            # to be sure to get all the shapes in the selected zoom area
+            #to be sure to get all the shapes in the selected zoom area
             if width > height:
                 zoomFactor = clientWidth / abs(width)
             else:
                 zoomFactor = clientHeight / abs(height)
 
-            # check if the zoom factor that we are to apply combined with the
-            # previous ones won't be beyond the maximal zoom. If it's the case,
-            # we proceed to the calculation of the zoom factor that allows to
-            # exactly reach the maximal zoom.
+            #check if the zoom factor that we are to apply combined with the
+            #previous ones won't be beyond the maximal zoom. If it's the case,
+            #we proceed to the calculation of the zoom factor that allows to
+            #exactly reach the maximal zoom.
             maxZoomReached = maxZoomFactor <= self.GetCurrentZoom() * zoomFactor
             if maxZoomReached:
                 zoomFactor = maxZoomFactor/self.GetCurrentZoom()
 
-            # calculation of the upper-left corner of a zoom area whose
-            # size is the half of the diagram frame and which is centred
-            # on the clicked point. This calculation is done in the way to
-            # get the zoom area centred in the middle of the virtual screen.
-            dx = virtualWidth  / 2 - x - (clientWidth / zoomFactor / 2.0)
-            dy = virtualHeight / 2 - y - (clientHeight / zoomFactor / 2.0)
+            #calculation of the upper-left corner of a zoom area whose
+            #size is the half of the diagram frame and which is centred
+            #on the clicked point. This calculation is done in the way to
+            #get the zoom area centred in the middle of the virtual screen.
+            dx = virtualWidth/2 - x - (clientWidth / zoomFactor / 2.0)
+            dy = virtualHeight/2 - y - (clientHeight / zoomFactor / 2.0)
 
-            # we have to check if the "zoom in" on a reduced view produce
-            # an other less reduced view or an elarged view. For this, we
-            # get the global current zoom, multiply by the zoom factor to
-            # obtain only one zoom factor.
-            if self._zoomLevel < 0:
+            #we have to check if the "zoom in" on a reduced view produce
+            #an other less reduced view or an elarged view. For this, we
+            #get the global current zoom, multiply by the zoom factor to
+            #obtain only one zoom factor.
+            if self._zoomLevel < 0 :
 
                 globalFactor = zoomFactor * self.GetCurrentZoom()
                 self._zoomStack = []
                 self._zoomStack.append(globalFactor)
 
-                if globalFactor < 1.0:
-                    self._zoomLevel = -1    # the view is still reduced
-                elif globalFactor > 1.0:
-                    self._zoomLevel = 1     # the view is elarged
+                if globalFactor < 1.0 :
+                    self._zoomLevel = -1    #the view is still reduced
+                elif globalFactor > 1.0 :
+                    self._zoomLevel = 1     #the view is elarged
                 else:
-                    self._zoomLevel = 0     # the zoom in is just equal to all the zoom out previously applied
+                    self._zoomLevel = 0     #the zoom in is just equal
+                                            #to all the zoom out
+                                            #previously applied
             else:
                 if zoomFactor > 1.0:
                     self._zoomStack.append(zoomFactor)
                     self._zoomLevel += 1
+
 
         # set the offsets between the model and the view
         self.SetXOffset((self.GetXOffset() + dx) * zoomFactor)
@@ -921,18 +1043,21 @@ class DiagramFrame(wx.ScrolledWindow):
         for shape in self.GetDiagram().GetShapes():
             shape.UpdateFromModel()
 
-        # resize the virutal screen in order to match with the zoom
-        virtualWidth  = virtualWidth  * zoomFactor
-        virtualHeight = virtualHeight * zoomFactor
+        #resize the virutal screen in order to match with the zoom
+        virtualWidth = (virtualWidth) * zoomFactor
+        virtualHeight = (virtualHeight) * zoomFactor
         virtualSize = wx.Size(virtualWidth, virtualHeight)
         self.SetVirtualSize(virtualSize)
 
-        # perform the scrolling in the way to have the zoom area visible and centred on the virutal screen.
-        scrollX = (virtualWidth - clientWidth) / 2 / xUnit
-        scrollY = (virtualHeight - clientHeight) / 2 / yUnit
+        #perform the scrolling in the way to have the zoom area visible
+        #and centred on the virutal screen.
+        scrollX = (virtualWidth - clientWidth) /2 / xUnit
+        scrollY = (virtualHeight - clientHeight) /2 /yUnit
         self.Scroll(scrollX, scrollY)
 
-    def DoZoomOut(self, ax: int, ay: int):
+    #>------------------------------------------------------------------------
+
+    def DoZoomOut(self, ax, ay) :
 
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
@@ -943,53 +1068,53 @@ class DiagramFrame(wx.ScrolledWindow):
         last one from the zoom stack. Else, we add the default zoom factor inversed
         to the stack.
 
-        @param ax : abscissa of the clicked point
-        @param ay : ordinate of the clicked point
+        @param ax int   : abscissa of the clicked point
+        @param ay int   : ordinate of the clicked point
         """
 
-        # number of pixels per unit of scrolling
+        #number of pixels per unit of scrolling
         xUnit, yUnit = self.GetScrollPixelsPerUnit()
 
-        # position of the upper left corner of the client area
-        # (work area that is visible) in scroll units.
+        #position of the upper left corner of the client area
+        #(work area that is visible) in scroll units.
         viewStartX, viewStartY = self.GetViewStart()
 
-        # Get the client and virtual size of the work area, where
-        # the client size is the size of the work area that is
-        # visible and the virtual is the whole work area's size.
+        #Get the client and virtual size of the work area, where
+        #the client size is the size of the work area that is
+        #visible and the virtual is the whole work area's size.
         clientWidth, clientHeight = self.GetClientSize()
         virtualWidth, virtualHeight = self.GetVirtualSize()
 
-        # transform event coords to get them relative to the upper left corner of
-        # the virual screen (avoid the case where that corner is on a shape and
-        # get its coords relative to the shape).
-        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit:
+        #transform event coords to get them relative to the upper left corner of
+        #the virual screen (avoid the case where that corner is on a shape and
+        #get its coords relative to the shape).
+        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit :
             x = ax
             y = ay
-        else:
+        else :
             x = ax + viewStartX * xUnit
             y = ay + viewStartY * yUnit
 
-        # calculation of the upper-left corner of a zoom area whose
-        # size is the half of the diagram frame and which is centred
-        # on the clicked point. This calculation is done in the way to
-        # get the zoom area centred in the middle of the virtual screen.
-        dx = virtualWidth / 2 - x
-        dy = virtualHeight / 2 - y
+        #calculation of the upper-left corner of a zoom area whose
+        #size is the half of the diagram frame and which is centred
+        #on the clicked point. This calculation is done in the way to
+        #get the zoom area centred in the middle of the virtual screen.
+        dx = virtualWidth/2 - x
+        dy = virtualHeight/2 - y
 
         minZoomFactor = self.GetMinZoomFactor()
-        # minZoomReached = False    # Not used
+        minZoomReached = False
 
-        # if the view is elarged, then we just remove the last
-        # zoom in factor that has been applied. Else, we apply
-        # the default one inversed.
+        #if the view is elarged, then we just remove the last
+        #zoom in factor that has been applied. Else, we apply
+        #the default one inversed.
         if self._zoomLevel > 0:
             zoomFactor = 1/self._zoomStack.pop()
             self._zoomLevel -= 1
         else:
             zoomFactor = 1/self.GetDefaultZoomFactor()
 
-            #  check if minimal zoom has been reached
+            #check if minimal zoom has been reached
             minZoomReached = minZoomFactor >= (self.GetCurrentZoom() * zoomFactor)
             if not minZoomReached:
                 self._zoomStack.append(zoomFactor)
@@ -998,7 +1123,7 @@ class DiagramFrame(wx.ScrolledWindow):
                 zoomFactor = minZoomFactor / self.GetCurrentZoom()
                 if zoomFactor != 1:
                     self._zoomStack.append(zoomFactor)
-                    self._zoomLevel -= 1
+                    self._zoomLevel -=1
 
         # set the offsets between the view and the model of the
         # each shape on this diagram frame.
@@ -1010,16 +1135,18 @@ class DiagramFrame(wx.ScrolledWindow):
         for shape in self.GetDiagram().GetShapes():
             shape.UpdateFromModel()
 
-        #  resize the virutal screen in order to match with the zoom
-        virtualWidth  = virtualWidth   * zoomFactor
-        virtualHeight = virtualHeight  * zoomFactor
+        #resize the virutal screen in order to match with the zoom
+        virtualWidth = (virtualWidth) * zoomFactor
+        virtualHeight = (virtualHeight) * zoomFactor
         virtualSize = wx.Size(virtualWidth, virtualHeight)
         self.SetVirtualSize(virtualSize)
 
-        # perform the scrolling in the way to have the zoom area visible and centred on the virutal screen.
-        scrollX = (virtualWidth - clientWidth) / 2 / xUnit
-        scrollY = (virtualHeight - clientHeight) / 2 / yUnit
+        #perform the scrolling in the way to have the zoom area visible
+        #and centred on the virutal screen.
+        scrollX = (virtualWidth - clientWidth) /2 / xUnit
+        scrollY = (virtualHeight - clientHeight) /2 /yUnit
         self.Scroll(scrollX, scrollY)
+
 
     def SetMargins(self, left, right, top, bottom):
         """
@@ -1032,6 +1159,8 @@ class DiagramFrame(wx.ScrolledWindow):
         self._bottomMargin = bottom
         self._rightMargin = right
 
+    #>------------------------------------------------------------------------
+
     def GetMargins(self):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
@@ -1040,7 +1169,9 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         return self._leftMargin, self._rightMargin, self._topMargin, self._bottomMargin
 
-    def SetInfinite(self, infinite: bool = False):
+    #>------------------------------------------------------------------------
+
+    def SetInfinite(self, infinite=False):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
         Set this diagram frame as infinite work area. The result is that the
@@ -1048,12 +1179,17 @@ class DiagramFrame(wx.ScrolledWindow):
         margins (see SetMargins). When we set this as true, the scrollbars
         are moved in the middle of their scale.
 
-        @param infinite    : shows if the work area is infinite or not.
+        @param infinite Bool    : shows if the work area is infinite or not.
         """
 
         self._isInfinite = infinite
 
         if infinite:
+
+            #place all the shape in an area centred
+            #on the infinite work area
+            #self.FitOnShapes()
+
             vWidth, vHeight = self.GetVirtualSize()
             cWidth, cHeight = self.GetClientSize()
             # get the number of pixels per scroll unit
@@ -1066,9 +1202,17 @@ class DiagramFrame(wx.ScrolledWindow):
             # set the scrollbars position in the middle of their scale
             self.Scroll(noUnitX / 2, noUnitY / 2)
 
+    #>------------------------------------------------------------------------
+
     def IsInfinite(self):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
         @return this frame is infinite.
         """
         return self._isInfinite
+
+    #>------------------------------------------------------------------------
+
+
+
+
