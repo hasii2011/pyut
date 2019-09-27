@@ -116,8 +116,11 @@ class DiagramFrame(wx.ScrolledWindow):
         if DEBUG:
             self.logger.info(f"Generic for: {methodName}")
         x, y = self.getEventPosition(event)
+        self.logger.info(f'GenericHandler - {methodName} x,y: {x},{y}')
         shape = self.FindShape(x, y)
         event.m_x, event.m_y = x, y
+        # event.SetX(x)
+        # event.SetY(y)
         # if the shape found is a ShapeEventHandler
         if shape and isinstance(shape, ShapeEventHandler):
             getattr(shape, methodName)(event)
@@ -159,7 +162,6 @@ class DiagramFrame(wx.ScrolledWindow):
                 # don't deselect the line of a control point
                 for line in shape.GetLines():
                     shapes.remove(line)
-
             # don't call DeselectAllShapes, because we must ensure that
             # sizers won't be deselected (because they're detached when they're
             # deselected)
@@ -761,15 +763,14 @@ class DiagramFrame(wx.ScrolledWindow):
             y = y - height
 
         # init the zoom's offsets and factor
-        zoomFactor = 1
-        dx = 0
-        dy = 0
+        # zoomFactor = 1
+        # dx = 0
+        # dy = 0
 
         # if there is no selected area but a clicked point, a default
         # zoom is performed with the clicked point as center.
         if width == 0 or height == 0:
             zoomFactor = self.GetDefaultZoomFactor()
-
             # check if the zoom factor that we are to apply combined with the
             # previous ones won't be beyond the maximal zoom. If it's the case,
             # we proceed to the calculation of the zoom factor that allows to
@@ -777,7 +778,6 @@ class DiagramFrame(wx.ScrolledWindow):
             maxZoomReached = maxZoomFactor <= (self.GetCurrentZoom() * zoomFactor)
             if maxZoomReached:
                 zoomFactor = maxZoomFactor/self.GetCurrentZoom()
-
             # if the view is reduced, we just eliminate the
             # last zoom out performed
             if self._zoomLevel < 0:
