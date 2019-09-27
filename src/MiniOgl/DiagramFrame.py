@@ -171,12 +171,12 @@ class DiagramFrame(wx.ScrolledWindow):
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
 
-    def getEventPosition(self, event: wx.Event):
+    def getEventPosition(self, event: wx.MouseEvent):
         """
         Return the position of a click in the diagram.
 
         @param  event : mouse event
-        @return (double, double) : x, y
+        @return (int, int) : x, y
         """
 
         x, y = self._ConvertEventCoords(event)
@@ -188,9 +188,9 @@ class DiagramFrame(wx.ScrolledWindow):
         This handler finds the shape at event coords and dispatch the event.
         The handler will receive an event with coords already unscrolled.
 
-        @param wx.Event event : original event
-        @param string methodName : name of the method to invoke in the
-            event handler of the shape
+        @param  event : original event
+        @param methodName : name of the method to invoke in the event handler of the shape
+
         @return Shape : the clicked shape
         """
         if DEBUG:
@@ -262,7 +262,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         Create a selector box and manage it.
 
-        @param wx.Event event
+        @param  event
         """
         if not event.ControlDown():
             self.DeselectAllShapes()
@@ -279,7 +279,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         Callback for the selector box.
 
-        @param wx.Event event
+        @param  event
         """
         if self._selector is not None:
             x, y = self.getEventPosition(event)
@@ -291,7 +291,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         Callback for left up events.
 
-        @param wx.Event event
+        @param  event
         """
         # manage the selector box
         if self._selector is not None:
@@ -338,11 +338,11 @@ class DiagramFrame(wx.ScrolledWindow):
             self.Bind(wx.EVT_MOTION, self._NullCallback)
             self.Refresh()
 
-    def OnDrag(self, event):
+    def OnDrag(self, event: wx.MouseEvent):
         """
         Callback to drag the selected shapes.
 
-        @param wx.Event event
+        @param  event
         """
         x, y = event.GetX(), event.GetY()
         if not self._moving:
@@ -356,8 +356,7 @@ class DiagramFrame(wx.ScrolledWindow):
         self._clickedShape = None
         for shape in self._selectedShapes:
             parent = shape.GetParent()
-            if parent is not None and parent.IsSelected() and \
-                not isinstance(shape, SizerShape):
+            if parent is not None and parent.IsSelected() and not isinstance(shape, SizerShape):
                 continue
             ox, oy = self._lastMousePosition
             dx, dy = x - ox, y - oy
@@ -387,11 +386,11 @@ class DiagramFrame(wx.ScrolledWindow):
         if not self.__keepMoving:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
 
-    def OnMiddleDown(self, event):
+    def OnMiddleDown(self, event: wx.MouseEvent):
         """
         Callback.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnMiddleDown")
 
@@ -455,11 +454,13 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self._diagram = diagram
 
-    def FindShape(self, x, y):
+    def FindShape(self, x: int, y: int):
         """
         Return the shape at (x, y).
 
-        @param double x, y : coord
+        @param x : coord
+        @param y : coord
+
         @return Shape : found shape or None
         """
         found = None
@@ -564,12 +565,14 @@ class DiagramFrame(wx.ScrolledWindow):
         dc.Clear()
         dc.SelectObject(wx.NullBitmap)
 
-    def CreateDC(self, loadBackground, w, h):
+    def CreateDC(self, loadBackground: bool, w: int, h: int):
         """
         Create a DC, load the background on demand.
 
         @param loadBackground
-        @param int w, h : width and height of the frame.
+        @param w: width and height of the frame.
+        @param h : width and height of the frame.
+
         @return wx.DC
         """
         dc = wx.MemoryDC()
@@ -658,6 +661,7 @@ class DiagramFrame(wx.ScrolledWindow):
             else:
                 client.Blit(0, 0, w, h, dc, 0, 0)
 
+    # noinspection PyUnusedLocal
     def OnPaint(self, event):
         """
         Callback.
@@ -683,9 +687,11 @@ class DiagramFrame(wx.ScrolledWindow):
         # print "None"
         pass
 
-    def _ConvertEventCoords(self, event):
+    def _ConvertEventCoords(self, event: wx.MouseEvent):
+
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
+
         return event.GetX() + (xView * xDelta), event.GetY() + yView * yDelta
 
     def GetCurrentZoom(self):
