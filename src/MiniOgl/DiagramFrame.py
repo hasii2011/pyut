@@ -202,11 +202,11 @@ class DiagramFrame(wx.ScrolledWindow):
             self._selector.SetSize(x - x0, y - y0)
             self.Refresh(False)
 
-    def OnLeftUp(self, event):
+    def OnLeftUp(self, event: wx.MouseEvent):
         """
         Callback for left up events.
 
-        @param wx.Event event
+        @param event
         """
         # manage the selector box
         if self._selector is not None:
@@ -253,11 +253,11 @@ class DiagramFrame(wx.ScrolledWindow):
             self.Bind(wx.EVT_MOTION, self._NullCallback)
             self.Refresh()
 
-    def OnDrag(self, event):
+    def OnDrag(self, event: wx.MouseEvent):
         """
         Callback to drag the selected shapes.
 
-        @param wx.Event event
+        @param  event
         """
         x, y = event.GetX(), event.GetY()
         if not self._moving:
@@ -281,11 +281,11 @@ class DiagramFrame(wx.ScrolledWindow):
         self.Refresh(False)
         self._lastMousePosition = (x, y)
 
-    def OnMove(self, event):
+    def OnMove(self, event: wx.MouseEvent):
         """
         Callback for mouse movements.
 
-        @param wx.Event event
+        @param  event
         """
         event.m_x, event.m_y = self.getEventPosition(event)
         self.OnDrag(event)
@@ -301,19 +301,19 @@ class DiagramFrame(wx.ScrolledWindow):
         if not self.__keepMoving:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
 
-    def OnMiddleDown(self, event):
+    def OnMiddleDown(self, event: wx.MouseEvent):
         """
         Callback.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnMiddleDown")
 
-    def OnMiddleUp(self, event):
+    def OnMiddleUp(self, event: wx.MouseEvent):
         """
         Callback.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnMiddleUp")
 
@@ -325,19 +325,19 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self.GenericHandler(event, "OnMiddleDClick")
 
-    def OnRightDown(self, event):
+    def OnRightDown(self, event: wx.MouseEvent):
         """
         Callback.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnRightDown")
 
-    def OnRightUp(self, event):
+    def OnRightUp(self, event: wx.MouseEvent):
         """
         Callback.
 
-        @param wx.Event event
+        @param  event
         """
         self.GenericHandler(event, "OnRightUp")
 
@@ -484,12 +484,14 @@ class DiagramFrame(wx.ScrolledWindow):
         dc.Clear()
         dc.SelectObject(wx.NullBitmap)
 
-    def CreateDC(self, loadBackground, w, h):
+    def CreateDC(self, loadBackground: bool, w: int, h: int) -> wx.DC:
         """
         Create a DC, load the background on demand.
 
-        @param boolean loadBackground
-        @param int w, h : width and height of the frame.
+        @param loadBackground
+        @param w : width of the frame.
+        @param h :  height of the frame.
+
         @return wx.DC
         """
         dc = wx.MemoryDC()
