@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 import wx
 
 from MiniOgl.Diagram import Diagram
@@ -26,13 +29,16 @@ class DiagramFrame(wx.ScrolledWindow):
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, parent):
+    def __init__(self, parent: wx.Window):
         """
         Constructor.
 
-        @param wxObject parent : parent window
+        @param parent window
         """
         super().__init__(parent)
+
+        self.logger: Logger = getLogger(__name__)
+
         self._diagram = Diagram(self)
 
         self.__keepMoving       = False
@@ -63,7 +69,7 @@ class DiagramFrame(wx.ScrolledWindow):
 
         # paint related
         w, h = self.GetSize()
-        self.__workingBitmap    = wx.Bitmap(w, h) # double buffering
+        self.__workingBitmap    = wx.Bitmap(w, h)   # double buffering
         self.__backgroundBitmap = wx.Bitmap(w, h)
 
         DEFAULT_FONT_SIZE = 12
@@ -82,18 +88,19 @@ class DiagramFrame(wx.ScrolledWindow):
         self.Bind(wx.EVT_RIGHT_DCLICK,  self.OnRightDClick)
         self.Bind(wx.EVT_PAINT,         self.OnPaint)
 
-    def getEventPosition(self, event):
+    def getEventPosition(self, event: wx.MouseEvent):
         """
         Return the position of a click in the diagram.
 
-        @param wx.Event event : mouse event
-        @return (double, double) : x, y
+        @param  event : mouse event
+
+        @return (int, int) : x, y
         """
 
         x, y = self._ConvertEventCoords(event)  # Updated by CD, 20041005
         return x, y
 
-    def GenericHandler(self, event, methodName):
+    def GenericHandler(self, event: wx.MouseEvent, methodName: str):
         """
         This handler finds the shape at event coords and dispatch the event.
         The handler will receive an event with coords already unscrolled.
@@ -104,7 +111,7 @@ class DiagramFrame(wx.ScrolledWindow):
         @return Shape : the clicked shape
         """
         if DEBUG:
-            print("Generic for", methodName)
+            self.logger.info(f"Generic for: {methodName}")
         x, y = self.getEventPosition(event)
         shape = self.FindShape(x, y)
         event.m_x, event.m_y = x, y
@@ -115,14 +122,14 @@ class DiagramFrame(wx.ScrolledWindow):
             event.Skip()
         return shape
 
-    def OnLeftDown(self, event):
+    def OnLeftDown(self, event: wx.MouseEvent):
         """
         Callback for left down events on the diagram.
 
-        @param wx.Event event
+        @param  event
         """
         if DEBUG:
-            print("DiagramFrame.OnLeftDown")
+            self.logger.info("DiagramFrame.OnLeftDown")
 
         # First, call the generic handler for OnLeftDown
         shape = self.GenericHandler(event, "OnLeftDown")
