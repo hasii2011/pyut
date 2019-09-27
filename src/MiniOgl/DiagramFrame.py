@@ -15,9 +15,9 @@ from MiniOgl.RectangleShape import RectangleShape
 
 DEBUG = 0  # set to 1 to have some debug info in the terminal
 
-LEFT_MARGIN = 0
-RIGHT_MARGIN = 1
-TOP_MARGIN = 2
+LEFT_MARGIN   = 0
+RIGHT_MARGIN  = 1
+TOP_MARGIN    = 2
 BOTTOM_MARGIN = 3
 
 
@@ -194,7 +194,7 @@ class DiagramFrame(wx.ScrolledWindow):
         @return Shape : the clicked shape
         """
         if DEBUG:
-            print("Generic for", methodName)
+            self.logger.info(f"Generic for: {methodName}")
         x, y = self.getEventPosition(event)
         shape = self.FindShape(x, y)
         event.m_x, event.m_y = x, y
@@ -203,8 +203,7 @@ class DiagramFrame(wx.ScrolledWindow):
             # dispatch it the event
             getattr(shape, methodName)(event)
         else:
-            # the event has not been treated
-            event.Skip()
+            event.Skip()    # the event has not been treated
         return shape
 
     def OnLeftDown(self, event):
@@ -214,11 +213,11 @@ class DiagramFrame(wx.ScrolledWindow):
         @param  event
         """
         if DEBUG:
-            print("DiagramFrame.OnLeftDown")
+            self.logger.info("DiagramFrame.OnLeftDown")
 
         # First, call the generic handler for OnLeftDown
         shape = self.GenericHandler(event, "OnLeftDown")
-        self._clickedShape = shape # store the last clicked shape
+        self._clickedShape = shape  # store the last clicked shape
         if not event.GetSkipped():
             return
         if shape is None:
@@ -469,7 +468,7 @@ class DiagramFrame(wx.ScrolledWindow):
         for shape in shapes:
             if shape.Inside(x, y):
                 if DEBUG:
-                    print("Inside", shape)
+                    self.logger.info(f"Inside shape: {shape}")
                 found = shape
                 break   # only select the first one
         return found
@@ -684,7 +683,6 @@ class DiagramFrame(wx.ScrolledWindow):
             dc.Blit(0, 0, w, h, mem, 0, 0)
 
     def _NullCallback(self, evt):
-        # print "None"
         pass
 
     def _ConvertEventCoords(self, event: wx.MouseEvent):
