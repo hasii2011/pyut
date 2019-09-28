@@ -10,8 +10,10 @@ from OglActor import OglActor
 from OglUseCase import OglUseCase
 from OglClass import *
 from OglNote import *
+from OglLink import OglLink
 from OglSDMessage import OglSDMessage
 
+from MiniOgl import DiagramFrame
 from mediator import ACTION_ZOOM_IN
 
 from historyManager import *

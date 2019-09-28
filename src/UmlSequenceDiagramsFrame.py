@@ -1,22 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__version__ = "$Revision: 1.11 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-11-24"
 
-#from wxPython.ogl    import *
-#from wxPython.wx     import *
-#from wxPython.html   import *
-from wx.html import *
-from UmlFrame        import *
-from pyutUtils       import *
-from PyutPrintout    import *
-from PluginManager   import *
-from copy            import deepcopy
+
+from UmlFrame import *
+
 from UmlDiagramsFrame import *
-from PyutSDInstance  import *
-from PyutSDMessage   import *
-from OglSDInstance   import *
+from PyutSDInstance import *
+from PyutSDMessage import *
+from OglSDInstance import *
+
+from PyutConsts import OGL_SD_MESSAGE
+
 
 class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     """
@@ -24,7 +16,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
 
     This class is the instance of one UML sequence diagram structure.
     It derives its functionalities from UmlDiagramsFrame, but
-    as he know the structure of a sequence diagram, 
+    as he know the structure of a sequence diagram,
     he can load sequence diagram datas.
 
     Used by FilesHandling.
@@ -32,7 +24,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     :Note on datas:
         - cdInstances is a set of class diagram instances,
           composed by label and lifeline
-          
+
 
     :author: C.Dutoit
     :contact: dutoitc@hotmail.com
@@ -84,12 +76,12 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         ##Return with success
         #wx.EndBusyCursor()
         #return True
-        
+
     #>-----------------------------------------------------------------------
 
     #def onClose(self, force=False):
         #"""
-        #Closing handler (must be called explicitly). 
+        #Closing handler (must be called explicitly).
         #Save files and ask for confirmation.
 #
         #@return True if the close succeeded
@@ -104,7 +96,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
 
     #>------------------------------------------------------------------------
 
-    def createNewLink(self, src, dst, type=OGL_SD_MESSAGE, 
+    def createNewLink(self, src, dst, type=OGL_SD_MESSAGE,
                       srcPos = None, dstPos = None):
         """
         Add a link between src and dst.
@@ -127,7 +119,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         #dstTime=dstPos[1] - dst.GetPosition()[1]
         #print "CreateNewLink - ", srcTime, dstTime
         #print ", src/dst=", src, dst
-        pyutLink = PyutSDMessage("msg test", src.getPyutObject(), srcTime, 
+        pyutLink = PyutSDMessage("msg test", src.getPyutObject(), srcTime,
                                              dst.getPyutObject(), dstTime)
 
         # Call the factory to create OGL Link

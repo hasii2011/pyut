@@ -1,5 +1,12 @@
 
-from OglObject import *
+from logging import Logger
+from logging import getLogger
+
+import wx
+
+from OglObject import OglObject
+from OglObject import DEFAULT_FONT_SIZE
+
 from PyutClass import PyutClass
 
 from pyutUtils import *
@@ -36,11 +43,7 @@ class OglClass(OglObject):
         @param  h : Height of the shape
         @author N.Hamadi
         """
-        # initilize the pyutClass if wasn't
-        # if pyutClass is not None:
-        #     pyutObject = pyutClass
-        # else:
-        #     pyutObject = PyutClass()
+
         if pyutClass is None:
             pyutObject = PyutClass()
         else:
@@ -50,9 +53,7 @@ class OglClass(OglObject):
         # OglObject.__init__(self, pyutObject, w, h)
         super().__init__(pyutObject, w, h)
 
-        # print "OglClass-3"
-        # self.SetBrush(wx.LIGHT_GREY_BRUSH)
-
+        self.logger: Logger = getLogger(__name__)
         self._nameFont = wx.Font(DEFAULT_FONT_SIZE, wx.SWISS, wx.NORMAL, wx.BOLD)
 
     def GetTextWidth(self, dc, text):
@@ -328,21 +329,17 @@ class OglClass(OglObject):
 
         @author C.Dutoit
         """
-        # Define menu
         pyutObject = self.getPyutObject()
         menu = wx.Menu()
-        menu.Append(MNU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set on or off the stereotype display"),
-                    True)
+        menu.Append(MNU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set on or off the stereotype display"), True)
         item = menu.FindItemById(MNU_TOGGLE_STEREOTYPE)
         item.Check(pyutObject.getShowStereotype())
 
-        menu.Append(MNU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set on or off the fields display"),
-                    True)
+        menu.Append(MNU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set on or off the fields display"), True)
         item = menu.FindItemById(MNU_TOGGLE_FIELDS)
         item.Check(pyutObject.getShowFields())
 
-        menu.Append(MNU_TOGGLE_METHODS, _("Toggle methods display"), _("Set on or off the methods display"),
-                    True)
+        menu.Append(MNU_TOGGLE_METHODS, _("Toggle methods display"), _("Set on or off the methods display"), True)
         item = menu.FindItemById(MNU_TOGGLE_METHODS)
         item.Check(pyutObject.getShowMethods())
 
@@ -350,9 +347,9 @@ class OglClass(OglObject):
         menu.Append(MNU_CUT_SHAPE,  _("Cut shape"),  _("Cut this shape"))
 
         # Get umlframe
-        med = getMediator()
-        umlFrame = med.getUmlFrame()
-        frame = self._diagram.GetPanel()
+        med      = getMediator()
+        # umlFrame = med.getUmlFrame()
+        frame    = self._diagram.GetPanel()
 
         # Callback
         menu.Bind(wx.EVT_MENU, self.OnMenuClick, id=MNU_TOGGLE_STEREOTYPE)
@@ -361,5 +358,8 @@ class OglClass(OglObject):
         menu.Bind(wx.EVT_MENU, self.OnMenuClick, id=MNU_FIT_FIELDS)
         menu.Bind(wx.EVT_MENU, self.OnMenuClick, id=MNU_CUT_SHAPE)
 
-        # Display menu
-        frame.PopupMenu(menu, umlFrame.CalcScrolledPosition(event.GetX(), event.GetY()))
+        x: int = event.GetX()
+        y: int = event.GetY()
+        self.logger.debug(f'OglClass - x,y: {x},{y}')
+        # frame.PopupMenu(menu, umlFrame.CalcScrolledPosition(event.GetX(), event.GetY()))
+        frame.PopupMenu(menu, x, y)
