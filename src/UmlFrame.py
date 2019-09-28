@@ -23,6 +23,7 @@ from OglSDMessage import OglSDMessage
 
 from MiniOgl import SKIP_EVENT
 from MiniOgl import DiagramFrame
+from createOglLinkCommand import CreateOglLinkCommand
 
 from mediator import ACTION_ZOOM_IN
 from mediator import getMediator
@@ -250,8 +251,8 @@ class UmlFrame(DiagramFrame):
             for father in fatherNames:
                 dest = objs.get(father)
                 if dest is not None:  # maybe we don't have the father loaded
-                    self.logger.warning(f'Not creating inheritance links, yet')
-                    # self.createInheritanceLink(po, dest)
+                    self.logger.warning(f'Not yet creating inheritance links; po: {po} dest: {dest}')
+                    self._createInheritanceLink(po, dest)
 
         # sort by descending height
         objs = objs.values()
@@ -272,7 +273,7 @@ class UmlFrame(DiagramFrame):
                 x = 20
                 y += incY
                 incY = sy
-            po.SetPosition(x + incX/2, y + sy/2)
+            po.SetPosition(x + incX // 2, y + sy // 2)
 
             x += incX
 
@@ -509,3 +510,17 @@ class UmlFrame(DiagramFrame):
         @return the history associated to this frame
         """
         return self._history
+
+    def _createInheritanceLink(self, child: OglClass, father: OglClass):
+        """
+        Add a paternity link between child and father.
+
+        Args:
+            child:  A child
+            father: The daddy!!
+
+        Returns: an OgLink
+
+        """
+
+        cmd: CreateOglLinkCommand = CreateOglLinkCommand(src=father, dst=child)

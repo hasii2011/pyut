@@ -43,19 +43,15 @@ def getLinkType(link):
 
 
 class OglLinkFactory(Singleton):
-
+    """
+    This class is a factory to produce `OglLink` objects.
+    It works under the Factory Design Pattern model. Ask for a link
+    from this object and it will return you what you was asking for.
+    """
     def init(self, *args, **kwds):
         self.logger: Logger = getLogger(__name__)
 
-    """
-    This class is a factory to produce `OglLink` objects.
-    It works under the Factory Design Pattern model. Ask a kind of link
-    to this object and it will return you what you was asking for.
-
-    :version: $Revision: 1.5 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
-    """
+    # noinspection PyUnusedLocal
     def getOglLink(self, srcShape, pyutLink, destShape, linkType, srcPos=None, dstPos=None):
         """
         Used to get a OglLink of the given linkType.
