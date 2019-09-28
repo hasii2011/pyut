@@ -42,6 +42,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "UmlFrame": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "MiniOgl.DiagramFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

@@ -1,4 +1,9 @@
 
+from typing import Callable
+
+from logging import Logger
+from logging import getLogger
+
 import wx
 
 from PyutActor import PyutActor
@@ -50,45 +55,26 @@ class UmlFrame(DiagramFrame):
             added mediator support
             bind with OglClass to create new classes
         """
-        # initialize a canvas
-        #print ">>>UmlFrame-1"
-        DiagramFrame.__init__(self, parent)
-        #print "---UmlFrame-2"
 
-        # Setting charset
-        #font = self.GetFont()
-        #print font.GetEncoding()
-        #font.SetEncoding(wx.FONTENCODING_ISO8859_2)
-        #self.SetFont(font)
-        #print font.GetEncoding()
+        super().__init__(parent)
 
-        # get the mediator, and register it
-        #print "---UmlFrame-3"
+        self.logger: Logger = getLogger(__name__)
+
         self._ctrl = getMediator()
-        #self._ctrl.registerUMLFrame(self)
-
-        # initialize maxwidth, maxHeight for the canvas
-        #print "---UmlFrame-4"
         self.maxWidth  = DEFAULT_WIDTH
-        self.maxHeight = int(self.maxWidth / 1.41) # 1.41 is for A4 support
+        self.maxHeight = int(self.maxWidth / 1.41)  # 1.41 is for A4 support
 
         # set a scrollbar
         self.SetScrollbars(20, 20, self.maxWidth/20, self.maxHeight/20)
-        #print "---UmlFrame-5"
 
         self._frame = frame
-
-        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (17.11.2005)
-        #history of the frame (undo/redo)
         self._history = HistoryManager(self)
 
         # Close event
         self.Bind(wx.EVT_CLOSE, self.evtClose)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_CHAR, self._ctrl.processChar)
-        #print "---UmlFrame-6"
 
-        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
         self.SetInfinite(True)
 
         self._defaultCursor = self.GetCursor()
@@ -159,123 +145,140 @@ class UmlFrame(DiagramFrame):
         """
         return self._diagram
 
-    # def addHierarchy(self, display):
-    #     """
-    #     Hardcoded example of a class diagram, for test purposes.
-    #     Classes come from self introspection !!!
-    #     OK, it's too big, but it's not a feature, just a toy.
-    #
-    #     @author L. Burgbacher <lb@alawa.ch>
-    #     @since 1.4
-    #     """
-    #     wx.BeginBusyCursor()
-    #     from inspect import getargspec
-    #     import PyutDataClasses as pdc
-    #     import types
-    #
-    #     # get a list of classes info for classes in the display list
-    #     # classes = [res[name] for name in res.keys() if name in display]
-    #     classes = [cl for cl in pdc.__dict__.values()
-    #         if (type(cl) == ClassType or type(cl) == TypeType or type(cl) == 'module') and cl.__name__ in display]
-    #
-    #     objs = {}
-    #     # create the PyutClass objects
-    #     for cl in classes:
-    #         # create objects
-    #         pc = PyutClass(cl.__name__)
-    #         po = OglClass(pc)
-    #         methods = []
-    #         clmethods = [me for me in cl.__dict__.values()
-    #             if type(me) == types.FunctionType]
-    #         # add the methods
-    #         # for me in cl.methods.keys():
-    #         for me in clmethods:
-    #             meth = PyutMethod(me.func_name)
-    #             # add the params
-    #             if type(me) != types.FunctionType:
-    #                 try:
-    #                     me = mobj.__dict__.get("im_func")
-    #                 except AttributeError:
-    #                     me = None
-    #             if me is not None:
-    #                 args = getargspec(me)
-    #                 if args[3] is None:
-    #                     firstDefVal = len(args[0])
-    #                 else:
-    #                     firstDefVal = len(args[0]) - len(args[3])
-    #                 for arg, i in zip(args[0], range(len(args[0]))):
-    #                     # don't add self, it's implied
-    #                     defVal = None
-    #                     if arg != "self":
-    #                         if i >= firstDefVal:
-    #                             defVal = args[3][i - firstDefVal]
-    #                             if type(defVal) == types.StringType:
-    #                                 defVal = '"' + defVal + '"'
-    #                             param = PyutParam(arg, "", str(defVal))
-    #                         else:
-    #                             param = PyutParam(arg)
-    #                         meth.addParam(param)
-    #             methods.append(meth)
-    #             # set the visibility according to naming conventions
-    #             if me.func_name[-2:] != "__":
-    #                 if me.func_name[0:2] == "__":
-    #                     meth.setVisibility("-")
-    #                 elif me.func_name[0] == "_":
-    #                     meth.setVisibility("#")
-    #         methods.sort(lambda x, y: cmp(x.getName(), y.getName()))
-    #         pc.setMethods(methods)
-    #         self.addShape(po, 0, 0)
-    #         po.autoResize()
-    #         objs[cl.__name__] = po
-    #
-    #     # now, search for paternity links
-    #     for po in objs.values():
-    #         pc = po.getPyutObject()
-    #         # skip object, it has no parent
-    #         if pc.getName() == "object": continue
-    #         currentClass = pdc.__dict__.get(pc.getName())
-    #         fatherClasses = [cl for cl in classes
-    #             if cl.__name__ in
-    #                 map(lambda x : x.__name__, currentClass.__bases__)]
-    #
-    #         def getClassesNames(list):
-    #             return [item.__name__ for item in list]
-    #
-    #         fatherNames = getClassesNames(fatherClasses)
-    #         for father in fatherNames:
-    #             dest = objs.get(father)
-    #             if dest is not None: # maybe we don't have the father loaded
-    #                 self.createInheritanceLink(po, dest)
-    #
-    #     def cmpHeight(a, b):
-    #         xa, ya = a.GetSize()
-    #         xb, yb = b.GetSize()
-    #         return cmp(yb, ya)
-    #
-    #     # sort by descending height
-    #     objs = objs.values()
-    #     objs.sort(cmpHeight)
-    #
-    #     # organize by vertical descending sizes
-    #     x = 20
-    #     y = 20
-    #     incX = 0
-    #     incY = 0
-    #     for po in objs:
-    #         incX, sy = po.GetSize()
-    #         incX += 20
-    #         sy += 20
-    #         incY = max(incY, sy)
-    #         # find good coordinates
-    #         if x + incX >= self.maxWidth:
-    #             x = 20
-    #             y += incY
-    #             incY = sy
-    #         po.SetPosition(x + incX/2, y + sy/2)
-    #
-    #         x += incX
-    #
-    #     wx.EndBusyCursor()
+    def addHierarchy(self, display):
+        """
+        Hardcoded example of a class diagram, for test purposes.
+        Classes come from self introspection !!!
+        OK, it's too big, but it's not a feature, just a toy.
+
+        @author L. Burgbacher <lb@alawa.ch>
+        @since 1.4
+        """
+        wx.BeginBusyCursor()
+        from inspect import getargspec
+        from inspect import getfullargspec
+        import PyutDataClasses as pdc
+        import types
+
+        # get a list of classes info for classes in the display list
+        # classes = [res[name] for name in res.keys() if name in display]
+        # if (type(cl) == ClassType or type(cl) == TypeType or type(cl) == 'module') and cl.__name__ in display]
+
+        self.logger.info(f'pdc value {pdc.__dict__.values()}')
+        # classes = [cl for cl in pdc.__dict__.values() if (isinstance(cl, type) or type(cl) == 'module') and cl.__name__ in display]
+        classes = []
+        for cl in pdc.__dict__.values():
+            if (isinstance(cl, type) or type(cl) == 'module') and cl.__name__ in display:
+                classes.append(cl)
+        objs = {}
+        # create the PyutClass objects
+        for cl in classes:
+            # create objects
+            pc = PyutClass(cl.__name__)
+            po = OglClass(pc)
+
+            # clmethods = [me for me in cl.__dict__.values() if type(me) == types.FunctionType]
+            clmethods = []
+            for methd in cl.__dict__.values():
+                if isinstance(methd, Callable):
+                    self.logger.info(f'method: {methd}')
+                    clmethods.append(methd)
+
+            # add the methods
+
+            methods = []
+            for me in clmethods:
+                funcName: str = me.__name__
+                meth = PyutMethod(funcName)
+                # add the params
+                # if type(me) != types.FunctionType:
+                #     try:
+                #         me = mobj.__dict__.get("im_func")
+                #     except AttributeError:
+                #         me = None
+                if me is not None:
+                    # args = getargspec(me)
+                    args = getfullargspec(me)
+                    if args[3] is None:
+                        firstDefVal = len(args[0])
+                    else:
+                        firstDefVal = len(args[0]) - len(args[3])
+                    for arg, i in zip(args[0], range(len(args[0]))):
+                        # don't add self, it's implied
+                        defVal = None
+                        if arg != "self":
+                            if i >= firstDefVal:
+                                defVal = args[3][i - firstDefVal]
+                                # if type(defVal) == types.StringType:
+                                if isinstance(defVal, str):
+                                    # defVal = '"' + defVal + '"'
+                                    defVal = f'"{defVal}"'
+                                param = PyutParam(arg, "", str(defVal))
+                            else:
+                                param = PyutParam(arg)
+                            meth.addParam(param)
+                methods.append(meth)
+                # set the visibility according to naming conventions
+                func_name = funcName
+                if func_name[-2:] != "__":
+                    if func_name[0:2] == "__":
+                        meth.setVisibility("-")
+                    elif func_name[0] == "_":
+                        meth.setVisibility("#")
+            # methods.sort(lambda x, y: cmp(x.getName(), y.getName()))
+            pc.setMethods(methods)
+            self.addShape(po, 0, 0)
+            po.autoResize()
+            objs[cl.__name__] = po
+
+        # now, search for paternity links
+        for po in objs.values():
+            pc = po.getPyutObject()
+            # skip object, it has no parent
+            if pc.getName() == "object": continue
+            currentClass = pdc.__dict__.get(pc.getName())
+            fatherClasses = [cl for cl in classes
+                if cl.__name__ in
+                    map(lambda x : x.__name__, currentClass.__bases__)]
+
+            def getClassesNames(list):
+                return [item.__name__ for item in list]
+
+            fatherNames = getClassesNames(fatherClasses)
+            for father in fatherNames:
+                dest = objs.get(father)
+                if dest is not None:  # maybe we don't have the father loaded
+                    self.createInheritanceLink(po, dest)
+
+        def cmpHeight(a, b):
+            xa, ya = a.GetSize()
+            xb, yb = b.GetSize()
+            return cmp(yb, ya)
+
+        # sort by descending height
+        objs = objs.values()
+        objs.sort(cmpHeight)
+
+        # organize by vertical descending sizes
+        x = 20
+        y = 20
+        incX = 0
+        incY = 0
+        for po in objs:
+            incX, sy = po.GetSize()
+            incX += 20
+            sy += 20
+            incY = max(incY, sy)
+            # find good coordinates
+            if x + incX >= self.maxWidth:
+                x = 20
+                y += incY
+                incY = sy
+            po.SetPosition(x + incX/2, y + sy/2)
+
+            x += incX
+
+        wx.EndBusyCursor()
 
     def addPyutHierarchy(self):
         """
