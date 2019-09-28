@@ -192,6 +192,9 @@ class RectangleShape(Shape):
         """
         return self._width, self._height
 
+    def GetHeight(self):
+        return self._height
+
     def SetSelected(self, state=True):
         """
         Select the shape.

@@ -6,15 +6,18 @@ from logging import getLogger
 
 import wx
 
+from PyutClass import PyutClass
 from PyutActor import PyutActor
 from PyutUseCase import PyutUseCase
 from PyutMethod import PyutMethod
 from PyutParam import PyutParam
+from PyutNote import PyutNote
 
+from OglObject import OglObject
 from OglActor import OglActor
 from OglUseCase import OglUseCase
-from OglClass import *
-from OglNote import *
+from OglClass import OglClass
+from OglNote import OglNote
 from OglLink import OglLink
 from OglSDMessage import OglSDMessage
 
@@ -22,13 +25,17 @@ from MiniOgl import SKIP_EVENT
 from MiniOgl import DiagramFrame
 
 from mediator import ACTION_ZOOM_IN
+from mediator import getMediator
 
-from historyManager import *
+from pyutUtils import displayError
+
+from historyManager import HistoryManager
 
 from globals import _
 
 #  DEFAULT_WIDTH = 1280
 #  DEFAULT_WIDTH = 5120
+
 DEFAULT_WIDTH = 3000
 
 
@@ -110,6 +117,7 @@ class UmlFrame(DiagramFrame):
         self._ctrl = None
         self._frame = None
 
+    # noinspection PyUnusedLocal
     def evtClose(self, event):
         """
         Clean close, event handler on EVT_CLOSE
@@ -117,9 +125,6 @@ class UmlFrame(DiagramFrame):
         @since 1.35.2.8
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-
-        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (17.11.2005)
-        #to destroy the file that contains the history
         self._history.destroy()
 
         self.cleanUp()
@@ -155,10 +160,9 @@ class UmlFrame(DiagramFrame):
         @since 1.4
         """
         wx.BeginBusyCursor()
-        from inspect import getargspec
+
         from inspect import getfullargspec
         import PyutDataClasses as pdc
-        import types
 
         # get a list of classes info for classes in the display list
         # classes = [res[name] for name in res.keys() if name in display]
@@ -183,9 +187,7 @@ class UmlFrame(DiagramFrame):
                 if isinstance(methd, Callable):
                     self.logger.info(f'method: {methd}')
                     clmethods.append(methd)
-
             # add the methods
-
             methods = []
             for me in clmethods:
                 funcName: str = me.__name__
@@ -225,7 +227,8 @@ class UmlFrame(DiagramFrame):
                         meth.setVisibility("-")
                     elif func_name[0] == "_":
                         meth.setVisibility("#")
-            # methods.sort(lambda x, y: cmp(x.getName(), y.getName()))
+
+            methods = sorted(methods, key=PyutMethod.getName)
             pc.setMethods(methods)
             self.addShape(po, 0, 0)
             po.autoResize()
@@ -235,34 +238,29 @@ class UmlFrame(DiagramFrame):
         for po in objs.values():
             pc = po.getPyutObject()
             # skip object, it has no parent
-            if pc.getName() == "object": continue
+            if pc.getName() == "object":
+                continue
             currentClass = pdc.__dict__.get(pc.getName())
-            fatherClasses = [cl for cl in classes
-                if cl.__name__ in
-                    map(lambda x : x.__name__, currentClass.__bases__)]
+            fatherClasses = [cl for cl in classes if cl.__name__ in map(lambda z: z.__name__, currentClass.__bases__)]
 
-            def getClassesNames(list):
-                return [item.__name__ for item in list]
+            def getClassesNames(theList):
+                return [item.__name__ for item in theList]
 
             fatherNames = getClassesNames(fatherClasses)
             for father in fatherNames:
                 dest = objs.get(father)
                 if dest is not None:  # maybe we don't have the father loaded
-                    self.createInheritanceLink(po, dest)
-
-        def cmpHeight(a, b):
-            xa, ya = a.GetSize()
-            xb, yb = b.GetSize()
-            return cmp(yb, ya)
+                    self.logger.warning(f'Not creating inheritance links, yet')
+                    # self.createInheritanceLink(po, dest)
 
         # sort by descending height
         objs = objs.values()
-        objs.sort(cmpHeight)
+        objs = sorted(objs, key=OglClass.GetHeight)
 
         # organize by vertical descending sizes
         x = 20
         y = 20
-        incX = 0
+        # incX = 0   NOT USED
         incY = 0
         for po in objs:
             incX, sy = po.GetSize()
@@ -371,8 +369,6 @@ class UmlFrame(DiagramFrame):
             x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
             skip = self._ctrl.doAction(x, y)
 
-            #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
-            #if we use the zoom tool...
             if self._ctrl.getCurrentAction() == ACTION_ZOOM_IN:
                 DiagramFrame._BeginSelect(self, event)
 
@@ -399,11 +395,11 @@ class UmlFrame(DiagramFrame):
 
             DiagramFrame.OnLeftUp(self, event)
 
-    def OnLeftDClick(self, event):
+    def OnLeftDClick(self, event: wx.MouseEvent):
         """
         Manage a left double click mouse event.
 
-        @param wx.Event event
+        @param  event
         @since 1.22
         @author L. Burgbacher <lb@alawa.ch>
         """
@@ -411,34 +407,29 @@ class UmlFrame(DiagramFrame):
         self._ctrl.editObject(x, y)
         DiagramFrame.OnLeftDClick(self, event)
 
-    def addShape(self, shape, x, y, pen=None, brush=None, withModelUpdate = True):
+    def addShape(self, shape, x, y, pen=None, brush=None, withModelUpdate=True):
         """
         Add a shape to the UmlFrame.
 
         @param wx.Shape shape : the shape to add
-        @param int x y : coords of the center of the shape
+        @param int x : coord of the center of the shape
+        @param int y : coord of the center of the shape
         @param wx.Pen pen : pen to use
         @param wx.Brush brush : brush to use
-        @param withModelUpdate boolean  :   if true the model of the shape will
+        @param withModelUpdate  :   if true the model of the shape will
                                             update from the shape (view) when
                                             added to the diagram. Added by
                                             P. Dabrowski (29.11.05)
         @since 1.4
         @author L. Burgbacher <lb@alawa.ch>
         """
-        #  print ">UMLFrame-AddShape-1"
         shape.SetDraggable(True)
-        #  print "UMLFrame-AddShape-1"
         shape.SetPosition(x, y)
-        #  print "UMLFrame-AddShape-1"
         if pen:
             shape.SetPen(pen)
         if brush:
             shape.SetBrush(brush)
-        #  print "UMLFrame-AddShape-1"
         self._diagram.AddShape(shape, withModelUpdate)
-        #print "<<UMLFrame-AddShape-1"
-        #self._umlObjects.append(shape)
 
     def getUmlObjects(self):
         """
@@ -447,8 +438,7 @@ class UmlFrame(DiagramFrame):
         @since 1.19
         @author L. Burgbacher <lb@alawa.ch>
         """
-        return [s for s in self._diagram.GetShapes()
-            if isinstance(s, (OglObject, OglLink, OglSDMessage))]
+        return [s for s in self._diagram.GetShapes() if isinstance(s, (OglObject, OglLink, OglSDMessage))]
 
     def getWidth(self):
         """
@@ -459,7 +449,7 @@ class UmlFrame(DiagramFrame):
         """
         return self.maxWidth
 
-    def getHeight(self) :
+    def getHeight(self):
         """
         Knowing Height.
 
@@ -468,27 +458,26 @@ class UmlFrame(DiagramFrame):
         """
         return self.maxHeight
 
-    def getObjectsBoundaries(self) :
+    def getObjectsBoundaries(self):
         """
         Return object boundaries (coordinates)
 
         @since 1.35.2.25
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        # Init
         infinite = 1e9
-        minx = infinite
-        maxx = -infinite
-        miny = infinite
-        maxy = -infinite
+        minx     = infinite
+        maxx     = -infinite
+        miny     = infinite
+        maxy     = -infinite
 
         # Get boundaries
-        for object in self._diagram.GetShapes():
+        for shapeObject in self._diagram.GetShapes():
             # Get object limits
-            ox1, oy1 = object.GetPosition()
-            ox2, oy2 = object.GetSize()
-            ox2+=ox1
-            oy2+=oy1
+            ox1, oy1 = shapeObject.GetPosition()
+            ox2, oy2 = shapeObject.GetSize()
+            ox2 += ox1
+            oy2 += oy1
 
             # Update min-max
             minx = min(minx, ox1)
@@ -497,12 +486,13 @@ class UmlFrame(DiagramFrame):
             maxy = max(maxy, oy2)
 
         # Return values
-        return (minx, miny, maxx, maxy)
+        return minx, miny, maxx, maxy
 
-    def getUmlObjectById(self, objectId):
+    def getUmlObjectById(self, objectId: int):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (20.11.2005)
-        @param objectId (Integer)   :   id for which we want to get an object
+        @param objectId    :   id for which we want to get an object
+
         @return the uml object that has the specified id. If there is no
         matching object, None is returned.
         """

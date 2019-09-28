@@ -225,7 +225,7 @@ class AppFrame(Frame):
         self._fileHandling = FileHandling(self, self._ctrl)
         self._ctrl.registerFileHandling(self._fileHandling)
 
-        # Initializations
+        # Initialization
         self._initPyutTools()   # Toolboxes, toolbar
         self._initMenu()        # Menu
         #  self._initToolBar()  # Toolbar
@@ -586,9 +586,9 @@ class AppFrame(Frame):
         mnuEdit.Append(ID_MNUUNDO, _("&Undo\tCtrl-Z"), _("Undo the last performed action"))
         mnuEdit.Append(ID_MNUREDO, _("&Redo\tCtrl-Y"), _("Redo the last undone action"))
         mnuEdit.AppendSeparator()
-        mnuEdit.Append(ID_MNUEDITCUT,    _("Cu&t\tCtrl-X"),   _("Cut selected datas"))
-        mnuEdit.Append(ID_MNUEDITCOPY,   _("&Copy\tCtrl-C"),  _("Copy selected datas"))
-        mnuEdit.Append(ID_MNUEDITPASTE,  _("&Paste\tCtrl-V"), _("Paste selected datas"))
+        mnuEdit.Append(ID_MNUEDITCUT,    _("Cu&t\tCtrl-X"),   _("Cut selected data"))
+        mnuEdit.Append(ID_MNUEDITCOPY,   _("&Copy\tCtrl-C"),  _("Copy selected data"))
+        mnuEdit.Append(ID_MNUEDITPASTE,  _("&Paste\tCtrl-V"), _("Paste selected data"))
         mnuEdit.AppendSeparator()
         mnuEdit.Append(ID_MNUEDITSELECTALL, _("&Select all"), _("Select all elements"))
         mnuEdit.AppendSeparator()
