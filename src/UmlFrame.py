@@ -169,9 +169,7 @@ class UmlFrame(DiagramFrame):
         @since 1.4
         """
         wx.BeginBusyCursor()
-        #  from pyclbr import readmodule, Class
         from inspect import getargspec
-        #  res = readmodule("PyutDataClasses")
         import PyutDataClasses as pdc
         import types
 
