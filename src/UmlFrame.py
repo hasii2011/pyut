@@ -13,7 +13,9 @@ from OglNote import *
 from OglLink import OglLink
 from OglSDMessage import OglSDMessage
 
+from MiniOgl import SKIP_EVENT
 from MiniOgl import DiagramFrame
+
 from mediator import ACTION_ZOOM_IN
 
 from historyManager import *
@@ -21,9 +23,8 @@ from historyManager import *
 from globals import _
 
 #  DEFAULT_WIDTH = 1280
-
+#  DEFAULT_WIDTH = 5120
 DEFAULT_WIDTH = 3000
-# DEFAULT_WIDTH = 5120
 
 
 class UmlFrame(DiagramFrame):
@@ -368,8 +369,7 @@ class UmlFrame(DiagramFrame):
         @since 1.4
         @author L. Burgbacher <lb@alawa.ch>
         """
-        #print "-" * 76
-        #print "UmlFrame.OnLeftDown"
+
         if self._ctrl.actionWaiting():
             x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
             skip = self._ctrl.doAction(x, y)
