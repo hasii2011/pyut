@@ -1,4 +1,8 @@
 
+from logging import Logger
+from logging import getLogger
+
+from UmlFrame import UmlFrame
 
 from plugins.PyutToPlugin import PyutToPlugin
 
@@ -10,7 +14,7 @@ class ToTransforms(PyutToPlugin):
     @author C.Dutoit <dutoitc@hotmail.com>
     @version $Revision: 1.4 $
     """
-    def __init__(self, oglObjects, umlFrame):
+    def __init__(self, oglObjects, umlFrame: UmlFrame):
         """
         Constructor.
 
@@ -19,9 +23,12 @@ class ToTransforms(PyutToPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        PyutToPlugin.__init__(self, oglObjects, umlFrame)
+        super().__init__(oglObjects, umlFrame)
+
+        self.logger: Logger = getLogger(__name__)
+
         self._oglObjects = oglObjects
-        self._umlFrame = umlFrame
+        self._umlFrame: UmlFrame = umlFrame
 
     def getName(self):
         """
@@ -87,10 +94,14 @@ class ToTransforms(PyutToPlugin):
         """
         if umlFrame is None:
             # TODO : displayError "No frame opened"
+            self.logger.error(f"No frame opened")
             return
 
         # (frameW, frameH) = self._umlFrame.GetSizeTuple()
-        (frameW, frameH) = self._umlFrame.GetPosition()
+        (frameW, frameH) = self._umlFrame.GetSize()
+        self.logger.info(f'frameW: {frameW} - frameH: {frameH}')
         for obj in umlObjects:
             x, y = obj.GetPosition()
-            obj.SetPosition(frameW-x, y)
+            newX: int = frameW - x
+            self.logger.info(f"x,y: {x},{y} - newX: {newX}")
+            obj.SetPosition(newX, y)
