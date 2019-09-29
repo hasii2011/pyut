@@ -259,9 +259,11 @@ class AppFrame(Frame):
                 return
             # Display tips frame
             self._alreadyDisplayedTipsFrame = True
-            # noinspection PyUnusedLocal
-            tipsFrame = TipsFrame(self)
-            #  tipsFrame.Show()     # weird the tips frame constructor does a .show itself  TODO look at this in future
+            prefs: PyutPreferences = PyutPreferences()
+            if prefs.getOpenHints() is True:
+                # noinspection PyUnusedLocal
+                tipsFrame = TipsFrame(self)
+                #  tipsFrame.Show()     # weird the tips frame constructor does a .show itself  TODO look at this in future
         except (ValueError, Exception) as e:
             self.logger.error(f'onActivate: {e}')
 

@@ -1,16 +1,24 @@
 
-from singleton import Singleton
-from configparser import *
+from logging import Logger
+from logging import getLogger
+
 import sys
 import os
 
+from singleton import Singleton
+from configparser import *
+
 
 # Set the Preferences filename
-if sys.platform=="linux2" or sys.platform=="linux":
+
+if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == 'darwin':
     PREFS_FILENAME = os.getenv("HOME") + "/.PyutPrefs.dat"
 else:
-    PREFS_FILENAME="PyutPrefs.dat"
-DEFAULT_NB_LOF=5    # Number of last opened files, by default
+    PREFS_FILENAME = "PyutPrefs.dat"
+
+DEFAULT_NB_LOF  = 5    # Number of last opened files, by default
+SECTION_GENERAL        = 'General'
+GENERAL_OPEN_HINTS_KEY = 'OpenHints'
 
 
 class PyutPreferences(Singleton):
@@ -46,10 +54,10 @@ class PyutPreferences(Singleton):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
+        self.logger: Logger = getLogger(__name__)
+
         self._config = None
         self.__loadConfig()
-
-    #>--------------------------------------------------------------------------
 
     def __getitem__(self, name):
         """
@@ -68,14 +76,12 @@ class PyutPreferences(Singleton):
         except NoOptionError:
             return None
 
-    #>--------------------------------------------------------------------------
-
-    def __setitem__(self, name, value):
+    def __setitem__(self, name: str, value: str):
         """
         Return the pyut preferences for the given item
 
         @param String name : Name of the item WITHOUT SPACES
-        @param String Value : Value for the given name
+        @param String value : Value for the given name
         @raises TypeError : if the name contains spaces
         @since 1.1.2.7
         @author C.Dutoit <dutoitc@hotmail.com>
@@ -91,20 +97,16 @@ class PyutPreferences(Singleton):
         self._config.set("Main", name, str(value))
         self.__saveConfig()
 
-    #>--------------------------------------------------------------------------
-
     def __saveConfig(self):
         """
-        Save datas to config file
+        Save data to config file
 
         @since 1.1.2.5
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        f=open(PREFS_FILENAME, "w")
+        f = open(PREFS_FILENAME, "w")
         self._config.write(f)
         f.close()
-
-    #>--------------------------------------------------------------------------
 
     def __loadConfig(self):
         """
@@ -117,37 +119,36 @@ class PyutPreferences(Singleton):
         try:
             f = open(PREFS_FILENAME, "r")
             f.close()
-        except:
+        except (ValueError, Exception) as e:
             try:
                 f = open(PREFS_FILENAME, "w")
                 f.write("")
                 f.close()
-            except:
-                print(("Can't make %s for saving preferences !" % PREFS_FILENAME))
-                print("Pyut will not work normally from here...")
-                print(("Try to create a file named ", PREFS_FILENAME, " " + \
-                      "in your home directory..."))
+                self.logger.warning(f'{e}')
+            except (ValueError, Exception) as e:
+                self.logger.error(f"Error: {e}")
                 return
 
-
-        # Read datas
-        self._config=ConfigParser()
+        # Read data
+        self._config = ConfigParser()
         self._config.read(PREFS_FILENAME)
 
         # Create a "LastOpenedFiles" structure ?
         if not self._config.has_section("LastOpenedFiles"):
             # Add section
-            self._config=ConfigParser()
+            self._config = ConfigParser()
             self._config.add_section("LastOpenedFiles")
 
             # Set last opened files
-            self._config.set("LastOpenedFiles", "NbEntries",
-                             str(DEFAULT_NB_LOF))
+            self._config.set("LastOpenedFiles", "NbEntries", str(DEFAULT_NB_LOF))
             for i in range(DEFAULT_NB_LOF):
                 self._config.set("LastOpenedFiles", "File" + str(i+1), "")
             self.__saveConfig()
-
-    #>--------------------------------------------------------------------------
+        elif not self._config.has_section(SECTION_GENERAL):
+            self._config.add_section(SECTION_GENERAL)
+            self._config.set(SECTION_GENERAL, GENERAL_OPEN_HINTS_KEY, str(True))
+        else:
+            self.logger.info(f'Found all my preferences sections.')
 
     def getNbLOF(self):
         """
@@ -159,8 +160,6 @@ class PyutPreferences(Singleton):
         """
         return int(self._config.get("LastOpenedFiles", "NbEntries"))
 
-    #>--------------------------------------------------------------------------
-
     def setNbLOF(self, nbLOF):
         """
         Set the number of last opened files
@@ -169,11 +168,8 @@ class PyutPreferences(Singleton):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        self._config.set("LastOpenedFiles", "NbEntries",
-                         str(max(nbLOF, 0)))
+        self._config.set("LastOpenedFiles", "NbEntries", str(max(nbLOF, 0)))
         self.__saveConfig()
-
-    #>--------------------------------------------------------------------------
 
     def getLastOpenedFilesList(self):
         """
@@ -183,15 +179,12 @@ class PyutPreferences(Singleton):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        lstFiles=[]
+        lstFiles = []
 
-        # Read datas
+        # Read data
         for index in range(self.getNbLOF()):
-            lstFiles.append(self._config.get("LastOpenedFiles",
-                                             "File" + str(index+1)))
+            lstFiles.append(self._config.get("LastOpenedFiles", "File" + str(index+1)))
         return lstFiles
-
-    #>--------------------------------------------------------------------------
 
     def addNewLastOpenedFilesEntry(self, filename):
         """
@@ -202,16 +195,22 @@ class PyutPreferences(Singleton):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         # Get list
-        lstFiles=self.getLastOpenedFilesList()
+        lstFiles = self.getLastOpenedFilesList()
 
-        #Already in list ? => remove
+        # Already in list ? => remove
         if filename in lstFiles:
             lstFiles.remove(filename)
 
-        #Insert on top of the list
-        lstFiles=[filename]+lstFiles
+        # Insert on top of the list
+        lstFiles = [filename]+lstFiles
 
-        #Save
+        # Save
         for i in range(DEFAULT_NB_LOF):
             self._config.set("LastOpenedFiles", "File" + str(i+1), lstFiles[i])
         self.__saveConfig()
+
+    def getOpenHints(self) -> bool:
+
+        openHints: bool = self._config.getboolean(SECTION_GENERAL, GENERAL_OPEN_HINTS_KEY)
+
+        return openHints

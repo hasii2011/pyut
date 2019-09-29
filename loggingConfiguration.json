@@ -37,6 +37,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "PyutPreferences": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "AppFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
