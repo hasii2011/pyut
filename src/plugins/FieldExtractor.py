@@ -1,10 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__author__  = "Laurent Burgbacher, lb@alawa.ch, EI6, Eivd"
-__date__    = "2002-04-25"
-__version__ = "$Id: FieldExtractor.py,v 1.2 2006/02/04 22:01:04 dutoitc Exp $"
 
 import re
+
 
 class FieldExtractor(object):
     def __init__(self, filename):
@@ -40,7 +36,7 @@ class FieldExtractor(object):
                 line = buffer + line.strip()
             if regmultiline.search(line):
                 buffer = line[:line.rindex("\\")]
-                print "buffer", buffer
+                print("buffer", buffer)
                 multiline = 1
                 continue
             else:
@@ -60,15 +56,15 @@ class FieldExtractor(object):
                     name = name.strip()
                     if name not in found:
                         found[name] = init.strip()
-                        print "adding", `name.strip()`, init.strip()
+                        print("adding", repr(name.strip()), init.strip())
         return found
 
-def main():
-    import sys
-    if len(sys.argv) > 1:
-        res = FieldExtractor(sys.argv[1]).getFields(sys.argv[2])
-        for name, init in res.items():
-            print name, "=", init
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     import sys
+#     if len(sys.argv) > 1:
+#         res = FieldExtractor(sys.argv[1]).getFields(sys.argv[2])
+#         for name, init in res.items():
+#             print name, "=", init
+#
+# if __name__ == "__main__":
+#     main()

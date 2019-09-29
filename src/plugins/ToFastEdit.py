@@ -1,7 +1,12 @@
 
+from logging import Logger
+from logging import getLogger
+
 from typing import List
 
 from os import system
+
+from wx import ID_OK
 
 import UmlFrame
 
@@ -30,7 +35,9 @@ class ToFastEdit(PyutToPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        PyutToPlugin.__init__(self, umlObjects, umlFrame)
+        super().__init__(umlObjects, umlFrame)
+
+        self.logger: Logger = getLogger(__name__)
         self._editor = None
         self._umlFrame = umlFrame
 
@@ -72,23 +79,26 @@ class ToFastEdit(PyutToPlugin):
         # Return the menu title as it must be displayed
         return "Fast text edit"
 
-    def setOptions(self):
+    def setOptions(self) -> bool:
         """
-        Prepare the import.
-        This can be used to ask some questions to the user.
 
         @return Boolean : if False, the import will be cancelled.
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        dlg = DlgFEOptions(self._umlFrame)
-        self._editor = dlg.getEditor()
-        dlg.Destroy()
+        ans: bool = True
+        self.logger.info(f"Before dialog show")
+        with DlgFEOptions(self._umlFrame) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                self.logger.info(f'Waiting for answer')
+                self._editor = dlg.getEditor()
+                if self._editor == "":
+                    ans = False
+            else:
+                self.logger.info(f'Cancelled')
 
-        if self._editor == "":
-            return False
-
-        return True
+        self.logger.info(f"After dialog show")
+        return ans
 
     def _findParams(self, line: str):
         """
@@ -101,24 +111,24 @@ class ToFastEdit(PyutToPlugin):
         @return []
         @since 1.0
         """
-        # print "params received :", line
+        self.logger.debug(f"params received: {line}")
         params = [s.strip().split(":") for s in line.split(",")]
         params = [len(x) == 2 and x or [x[0], ""] for x in params]
         p = []
-        # print "params:", params
+        self.logger.debug(f"params: {params}")
         if params:
-            for name, type in params:
-                p.append((name.strip(), type.strip()))
+            for name, paramType in params:
+                p.append((name.strip(), paramType.strip()))
         return p
 
     def read(self, umlObject, file):
         """
-        Read data from filename. Abstract.
+        Read data from filename
 
         format:
-        Nom_de_la_classe
+        class name
         <<stereotype_optionel>>
-        +méthode([param[:type]]*)[:type_retour]
+        +method([param[:type]]*)[:type_retour]
         +field[:type][=valeur_initiale]
 
         @param umlObject
@@ -143,7 +153,8 @@ class ToFastEdit(PyutToPlugin):
 
         # process methods and fields
         while 1:
-            if nextStereoType == "": break
+            if nextStereoType == "":
+                break
 
             # search visibility
             if nextStereoType[0] in ("+", "-", "#"):
@@ -159,15 +170,19 @@ class ToFastEdit(PyutToPlugin):
                 name = nextStereoType[0:pos].strip()
                 nextStereoType = nextStereoType[pos+1:]
                 pos = nextStereoType.find(")")
+
+                returnType: str = ""
                 if pos != -1:
                     params = self._findParams(nextStereoType[:pos])
                     nextStereoType = nextStereoType[pos+1:]
                     pos = nextStereoType.find(":")
+
                     if pos != -1:
                         returnType = nextStereoType[pos+1:].strip()
                     else:
                         returnType = ""
                 method = PyutMethod(name, vis, returnType)
+
                 method.setParams([PyutParam(x[0], x[1]) for x in params])
                 methods.append(method)
             else:
@@ -193,7 +208,7 @@ class ToFastEdit(PyutToPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        import os
+
         o = oglObject.getPyutObject()
         file.write(o.getName() + "\n")
         if o.getStereotype() is not None:
@@ -215,11 +230,14 @@ class ToFastEdit(PyutToPlugin):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         if len(selectedObjects) != 1:
-            print("Please select one class")
+            self.logger.info("Please select at least one class")
             return
         filename = "pyut.fte"
         file = open(filename, "w")
         self.write(selectedObjects[0], file)
+        #
+        # TODO:  Put a try catch block here;  This needs to work at least execute on a OS-X or Windoze
+        #
         system(self._editor + " " + filename)
         file = open(filename, "r")
         self.read(selectedObjects[0], file)

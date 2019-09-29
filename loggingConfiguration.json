@@ -72,12 +72,22 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+         "ToFastEdit": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
          "PyutDocument": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "DlgPyutProperties": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "plugins.DlgFEOptions": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"

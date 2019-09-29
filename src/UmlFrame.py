@@ -439,7 +439,12 @@ class UmlFrame(DiagramFrame):
         @since 1.19
         @author L. Burgbacher <lb@alawa.ch>
         """
-        return [s for s in self._diagram.GetShapes() if isinstance(s, (OglObject, OglLink, OglSDMessage))]
+        # umlObjs = [s for s in self._diagram.GetShapes() if isinstance(s, (OglObject, OglLink, OglSDMessage))]
+        umlObjs = []
+        for s in self._diagram.GetShapes():
+            if isinstance(s, (OglObject, OglLink, OglSDMessage)):
+                umlObjs.append(s)
+        return umlObjs
 
     def getWidth(self):
         """

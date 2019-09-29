@@ -1444,14 +1444,14 @@ class AppFrame(Frame):
         # TODO? wx.OGLCleanUp()
         self.Destroy()
 
-    def _setTitle(self):
-        """
-        Set the application title, fonction of version and current filename
-
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        self._mediator.updateTitle()
+    # def _setTitle(self):
+    #     """
+    #     Set the application title, fonction of version and current filename
+    #
+    #     @since 1.4
+    #     @author C.Dutoit <dutoitc@hotmail.com>
+    #     """
+    #     self._mediator.updateTitle()
 
     def notifyTitleChanged(self):
         """
@@ -1509,6 +1509,7 @@ class AppFrame(Frame):
         BeginBusyCursor()
         try:
             obj.callDoAction()
+            self.logger.info(f"After tool plugin do action")
         except (ValueError, Exception) as e:
             displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
             self.logger.error(f'{e}')
@@ -1523,8 +1524,8 @@ class AppFrame(Frame):
         self._ctrl.displayToolbox(self._toolboxesID[event.GetId()])
 
     # noinspection PyUnusedLocal
-    def _OnMnuEditShowToolbar(self, event):
-        self._mainToolbar.Show(True)
+    # def _OnMnuEditShowToolbar(self, event):
+    #     self._mainToolbar.Show(True)
 
     def _OnNewAction(self, event):
         """

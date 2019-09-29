@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from wx import ALL
 from wx import CENTER
 from wx import EVT_BUTTON
@@ -39,6 +42,8 @@ class DlgFEOptions(Dialog):
         @since 1.0
         """
         super().__init__(parent, -1, _("Fast Edit Options"))
+        self.logger: Logger = getLogger(__name__)
+
         self.__prefs = PyutPreferences()
         self.__initCtrl()
 
@@ -60,7 +65,7 @@ class DlgFEOptions(Dialog):
         sizer = BoxSizer(VERTICAL)
 
         self.__lblEditor = StaticText(self, -1, _("Editor"))
-        self.__txtEditor = TextCtrl(self, -1, size=(100,20))
+        self.__txtEditor = TextCtrl(self, -1, size=(100, 20))
         sizer.Add(self.__lblEditor, 0, ALL, GAP)
         sizer.Add(self.__txtEditor, 0, ALL, GAP)
 
@@ -69,7 +74,7 @@ class DlgFEOptions(Dialog):
         hs.Add(btnOk, 0, ALL, GAP)
         sizer.Add(hs, 0, CENTER)
 
-        self.__changed = 0
+        self.__changed = False
 
         self.SetAutoLayout(True)
         self.SetSizer(sizer)
@@ -79,12 +84,12 @@ class DlgFEOptions(Dialog):
         btnOk.SetDefault()
 
         self.Bind(EVT_TEXT,   self.__OnText,  id=self.__editorID)
-        self.Bind(EVT_BUTTON, self.__OnCmdOk, id=ID_OK)
+        # self.Bind(EVT_BUTTON, self.__OnCmdOk, id=ID_OK)
 
         self.__setValues()
 
         self.Center()
-        self.ShowModal()
+        # self.ShowModal()
 
     def __setValues(self):
         """
@@ -101,13 +106,14 @@ class DlgFEOptions(Dialog):
         self.__txtEditor.SetValue(secureStr(self.__prefs["EDITOR"]))
         self.__txtEditor.SetInsertionPointEnd()
 
+    # noinspection PyUnusedLocal
     def __OnText(self, event):
         """
         Occurs when text entry changes.
 
         @since 1.0
         """
-        self.__changed = 1
+        self.__changed = True
 
     def __OnClose(self, event):
         """
@@ -116,17 +122,6 @@ class DlgFEOptions(Dialog):
         @since 1.2
         """
         event.Skip()
-
-    def __OnCmdOk(self, event):
-        """
-        Callback.
-
-        @since 1.2
-        """
-        if self.__changed:
-            self.__prefs["EDITOR"] = self.__txtEditor.GetValue()
-
-        self.Close()
 
     def getEditor(self):
         """

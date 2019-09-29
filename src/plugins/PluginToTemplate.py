@@ -1,12 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__author__  = "C.Dutoit <dutoitc@hotmail.com"
-__version__ = "$Revision: 1.4 $"
-__date__    = "2002-10-10"
-#from wxPython.wx  import * 
-from mediator     import *
-from PyutToPlugin import *
-import os, wx
+
+
+from plugins.PyutToPlugin import PyutToPlugin
 
 
 class PluginName(PyutToPlugin):
@@ -26,9 +20,6 @@ class PluginName(PyutToPlugin):
         """
         PyutToPlugin.__init__(self, oglObjects, umlFrame)
 
-
-    #>------------------------------------------------------------------------
-
     def getName(self):
         """
         This method returns the name of the plugin.
@@ -38,9 +29,6 @@ class PluginName(PyutToPlugin):
         @since 1.0
         """
         return "No name"
-
-
-    #>------------------------------------------------------------------------
 
     def getAuthor(self):
         """
@@ -52,9 +40,6 @@ class PluginName(PyutToPlugin):
         """
         return "No author"
 
-
-    #>------------------------------------------------------------------------
-
     def getVersion(self):
         """
         This method returns the version of the plugin.
@@ -64,9 +49,6 @@ class PluginName(PyutToPlugin):
         @since 1.0
         """
         return "0.0"
-
-
-    #>------------------------------------------------------------------------
 
     def getMenuTitle(self):
         """
@@ -79,9 +61,6 @@ class PluginName(PyutToPlugin):
         # Return the menu title as it must be displayed
         return "Untitled plugin"
 
-    #>------------------------------------------------------------------------
-
-
     def setOptions(self):
         """
         Prepare the import.
@@ -91,10 +70,7 @@ class PluginName(PyutToPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        return 1
-
-
-    #>------------------------------------------------------------------------
+        return True
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """

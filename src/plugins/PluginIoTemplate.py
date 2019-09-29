@@ -1,10 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-__author__  = "Laurent Burgbacher <lb@alawa.ch>"
-__version__ = "$Revision: 1.3 $"
-__date__    = "2002-02-14"
 
-from PyutIoPlugin import PyutIoPlugin
+from plugins.PyutIoPlugin import PyutIoPlugin
+
 
 class PluginName(PyutIoPlugin):
     """
@@ -17,17 +13,15 @@ class PluginName(PyutIoPlugin):
         """
         Constructor.
 
-        @param String filename : name of the file to save to
         @param OglObject oglObjects : list of ogl objects
         @param UmlFrame umlFrame : the umlframe of pyut
+
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
         PyutIoPlugin.__init__(self, oglObjects, umlFrame)
 
         # your initializations now
-
-
 
     def getName(self):
         """
@@ -39,8 +33,6 @@ class PluginName(PyutIoPlugin):
         """
         return "No name"
 
-
-
     def getAuthor(self):
         """
         This method returns the author of the plugin.
@@ -51,8 +43,6 @@ class PluginName(PyutIoPlugin):
         """
         return "No author"
 
-
-
     def getVersion(self):
         """
         This method returns the version of the plugin.
@@ -62,8 +52,6 @@ class PluginName(PyutIoPlugin):
         @since 1.2
         """
         return "0.0"
-
-
 
     def getInputFormat(self):
         """
@@ -81,8 +69,6 @@ class PluginName(PyutIoPlugin):
         # example : return ("Text", "txt", "Tabbed text...")
         return None
 
-
-
     def getOutputFormat(self):
         """
         Return a specification tupple.
@@ -99,8 +85,6 @@ class PluginName(PyutIoPlugin):
         # example : return ("Text", "txt", "Tabbed text...")
         return None
 
-
-
     def setImportOptions(self):
         """
         Prepare the import.
@@ -113,8 +97,6 @@ class PluginName(PyutIoPlugin):
         # here, you can open a dialog to ask the user for import options
         # return False if the user wants to cancel at this point
         return True
-
-
 
     def setExportOptions(self):
         """
@@ -129,28 +111,22 @@ class PluginName(PyutIoPlugin):
         # return False if the user wants to cancel at this point
         return True
 
-
-
-    def read(self, file, oglObjects, umlFrame):
+    def read(self, oglObjects, umlFrame):
         """
         Read data from filename. Abstract.
 
-        @param File file : file to read
-        @param OglClass and OglLink [] : list of imported objects
-        @param UmlFrame : Pyut's UmlFrame
+        @param oglObjects: list of imported objects
+        @param umlFrame : Pyut's UmlFrame
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
         pass
 
-
-
-    def write(self, file, oglObjects):
+    def write(self, oglObjects):
         """
-        Write data to filename.
+        Write data
 
-        @param File file : file to write
-        @param OglClass and OglLink [] : list of exported objects
+        @param oglObjects : list of exported objects
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """

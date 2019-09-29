@@ -678,7 +678,12 @@ class Mediator(Singleton):
         """
         umlObjects = self.getUmlObjects()
         if umlObjects is not None:
-            return [obj for obj in self.getUmlObjects() if obj.IsSelected()]
+            selectedObjs = []
+            for obj in self.getUmlObjects():
+                if obj.IsSelected():
+                    selectedObjs.append(obj)
+
+            return selectedObjs
         else:
             return []
 
