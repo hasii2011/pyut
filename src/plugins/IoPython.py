@@ -21,7 +21,6 @@ from plugins.PyutIoPlugin import PyutIoPlugin
 from pyutUtils import assignID
 
 from globals import _
-from globals import cmp
 
 MaxWidth = 80
 
@@ -536,7 +535,7 @@ class IoPython(PyutIoPlugin):
         @since 1.0
         """
         import types
-        from inspect import getargspec
+        from inspect import getfullargspec
 
         # Verify that parameters types are acceptable
         if type(orgClass) not in [type, type]:
@@ -572,7 +571,7 @@ class IoPython(PyutIoPlugin):
             meth = PyutMethod(func_name)     # A new PyutMethod
 
             # Add the method's params
-            args = getargspec(me)
+            args = getfullargspec(me)
             if args[3] is None:
                 firstDefVal = len(args[0])
             else:
@@ -603,12 +602,14 @@ class IoPython(PyutIoPlugin):
         # get fields by Laurent Burgbacher <lb@alawa.ch>
         fields = None
         try:
-            fields = FieldExtractor(pc.getFilename()).getFields(pc.getName())
+            fe: FieldExtractor = FieldExtractor(pc.getFilename())
+            fields = fe.getFields(pc.getName())
+            # fields = FieldExtractor(pc.getFilename()).getFields(pc.getName())
         except IOError:
             import sys
             import os
-            print("File", pc.getFilename(), "not found in actual dir")
-            print("actual dir is", os.getcwd())
+            self.logger.error(f"File {pc.getFilename()} not found in actual dir")
+            self.logger.error(f"actual dir is {os.getcwd()}")
             for path in sys.path:
                 try:
                     fields = FieldExtractor(
@@ -616,10 +617,10 @@ class IoPython(PyutIoPlugin):
                         pc.getName())
                     break
                 except IOError:
-                    print("Not found either in", path + os.sep + pc.getFilename())
+                    self.logger.error(f"Not found either in {path}{os.sep}{pc.getFilename()}")
                     pass
         if fields is None:
-            print("Could not extract from file", pc.getFilename())
+            self.logger.info(f"Could not extract from file {pc.getFilename()}")
         fds = []
         if fields:
             for name, init in list(fields.items()):

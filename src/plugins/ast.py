@@ -99,7 +99,7 @@ class Visitor(NodeVisitor):
 # compiler.walk(ast, Visitor())
 
 
-class FieldExtractor(object):
+class FieldExtractor:
     def __init__(self, filename):
         self._filename = filename
 
@@ -107,8 +107,15 @@ class FieldExtractor(object):
 
         visitor = Visitor(className)
         # compiler.walk(compiler.parseFile(self._filename), visitor)
-        walk(parse(self._filename, PyCF_ONLY_AST))
-
+        try:
+            fileName = self._filename
+            data = open(fileName).read()
+            # astNode = parse(source=data, filename=fileName, mode=PyCF_ONLY_AST)
+            astNode = parse(source=data, filename=fileName)
+            print(f'{astNode}')
+            walk(astNode)
+        except (ValueError, Exception) as e:
+            print(f"getFields Error: {e}")
         return visitor.getResult()
 
 

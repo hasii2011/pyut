@@ -8,6 +8,8 @@ from os import getcwd
 from os import chdir
 from os import path as osPath
 
+from sys import path as sysPath
+
 import importlib
 
 import wx
@@ -111,6 +113,8 @@ class ToPython(PyutToPlugin):
             return
         oldDir = getcwd()
         chdir(project.getCodePath())
+        sysPath.append(getcwd())
+
         # plug = IoPython(None, None)
         plug = IoPython(cast(OglObject, None), cast(UmlFrame, None))
         normalDir = getcwd()

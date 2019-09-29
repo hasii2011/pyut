@@ -1,20 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.7 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-21"
 
-#from wxPython.wx import True, False
-
-class PyutObject(object):
+class PyutObject:
     """
     Base Object of PyutData.
     @version $Revision: 1.7 $
     """
 
     nextId = 0
-
 
     def __init__(self, name=""):
         """
@@ -24,7 +16,6 @@ class PyutObject(object):
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
-        object.__init__(self)
         self._name = name
 
         # Setting an arbitrary ID, for identical name purpose
@@ -32,40 +23,27 @@ class PyutObject(object):
         self._id = PyutObject.nextId
         PyutObject.nextId += 1
 
-
-    #>------------------------------------------------------------------------
-
     def getNextSafeID(self):
         """
         Get the next safe id
-
+        Verify that next id is not already used
         @author C.Dutoit
         """
-        # Verify that next id is not already used
         while self.isIDUsed(PyutObject.nextId):
-            PyutObject.nextId+=1
+            PyutObject.nextId += 1
 
-
-
-
-    #>------------------------------------------------------------------------
-
-    def isIDUsed(self, id):
+    def isIDUsed(self, idToCheck):
         """
         Verify if an ID is already used
 
         @author C.Dutoit
         """
-        # Verify that next id is not already used
         import mediator
         ctrl = mediator.getMediator()
-        for obj in [el for el in ctrl.getUmlObjects() 
-                       if isinstance(el, PyutObject)]:
-            if obj.getId() == id:
+        for obj in [el for el in ctrl.getUmlObjects() if isinstance(el, PyutObject)]:
+            if obj.getId() == idToCheck:
                 return True
         return False
-
-    #>------------------------------------------------------------------------
 
     def getName(self):
         """
@@ -77,35 +55,29 @@ class PyutObject(object):
         """
         try:
             return self._name
-        except:
+        except (ValueError, Exception) as e:
+            print(f'PyutObject error: {e}')
             return ""
 
-    #>------------------------------------------------------------------------
-
-    def setName(self, name):
+    def setName(self, theName: str):
         """
         Set method, used to know initialize name.
 
-        @param string name
+        @param theName
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
-        self._name = name
+        self._name = theName
 
-    #>------------------------------------------------------------------------
-
-    def setId(self, id):
+    def setId(self, theId: int):
         """
         Setting ID.
 
-        @param int id : ID
+        @param theId : ID
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        self._id = id
-
-
-    #>------------------------------------------------------------------------
+        self._id = theId
 
     def getId(self):
         """
