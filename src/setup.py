@@ -1,24 +1,30 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# This file helps to create the .exe distribution.
-#
-# To make a .exe :
-# - install py2exe
-# - check this file (setup.py)
-# - python setup.py py2exe
-# Note: you can find py2exe at this url: py2exe.sf.net
-# final .exe distribution is in dist directory
-# http://starship.python.net/crew/theller/py2exe/
-#
-# Author : C.Dutoit 
-# contact : dutoitc@hotmail.com
-from distutils.core import setup
-from glob import glob
-import py2exe
-import sys
 
-setup(name="pyut", 
-      console=["pyut.pyw"],
-      data_files=[(".",
-                  ["img/icon.ico"])],
-    )
+import pathlib
+from setuptools import setup
+from setuptools import find_packages
+from distutils.core import setup
+
+# The directory containing this file
+HERE = pathlib.Path(__file__).parent
+
+# The text of the README file
+README = (HERE / "README.md").read_text()
+APP = ['Sandwich.py']
+DATA_FILES = []
+OPTIONS = {'argv_emulation': True}
+
+setup(
+    app=APP,
+    data_files=DATA_FILES,
+    options={'py2app': OPTIONS},
+    name="pyut",
+    version="3.0",
+    description="Python UML Tool",
+    long_description=README,
+    long_description_content_type="text/markdown",
+    url="https://hasii2011.github.io",
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=["wxPython"],
+    setup_requires=['py2app'],
+)

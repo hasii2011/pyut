@@ -1,5 +1,5 @@
 
-__PyUtVersion__ = "2019-09.26"
+__PyUtVersion__ = "3.0"
 
 
 def getPyUtVersion():
