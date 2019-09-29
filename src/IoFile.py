@@ -118,7 +118,7 @@ class IoFile:
                 myXml = module.PyutXml()
             else:
                 version = 1
-                from .PyutXml import PyutXml
+                from PyutXml import PyutXml
                 myXml = PyutXml()
             myXml.open(dom, project)
         else:

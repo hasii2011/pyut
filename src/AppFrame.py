@@ -1670,13 +1670,15 @@ class AppFrame(Frame):
         """
         Open a IPython shell
         """
-        try:
-            from IPython.Shell import IPShellEmbed
-        except ImportError:
-            displayError(_("You don't have IPython installed !"))
-            return
-        ipshell = IPShellEmbed()
-        ipshell(local_ns=vars(), global_ns=globals())
+        self.logger.warning(f'not yet implemented on Python 3')
+
+        # try:
+        #     from IPython.Shell import IPShellEmbed
+        # except ImportError:
+        #     displayError(_("You don't have IPython installed !"))
+        #     return
+        # ipshell = IPShellEmbed()
+        # ipshell(local_ns=vars(), global_ns=globals())
 
     # noinspection PyUnusedLocal
     def _OnMnuUndo(self, event):
