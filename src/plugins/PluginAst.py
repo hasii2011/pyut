@@ -1,13 +1,11 @@
 
-# import compiler # TODO need a replacement for this
+from typing import TextIO
 
 from ast import NodeVisitor
-from ast import PyCF_ONLY_AST
+from ast import AnnAssign
+from ast import Name
+from ast import NameConstant
 from ast import parse
-from ast import walk
-
-
-# class Visitor(compiler.visitor.ASTVisitor):
 
 
 class Visitor(NodeVisitor):
@@ -22,9 +20,10 @@ class Visitor(NodeVisitor):
     def getResult(self):
         return self._result
 
-    def visitClass(self, node):
+    def visit_ClassDef(self, node):
         if node.name == self._className:
-            self.visit(node.code)
+            for child in node.body:
+                self.visit(child)
 
     def visitAssTuple(self, node):
         retList = []
@@ -34,6 +33,18 @@ class Visitor(NodeVisitor):
 
     def visitAssAttr(self, node):
         return self.visit(node.expr) + "." + node.attrname
+
+    def visit_AnnAssign(self, node: AnnAssign):
+        strRep: str = node.__repr__()
+        print(f'strRep: {strRep}')
+        target: Name = node.target
+        annot:  Name = node.annotation
+        decl:   str  = f'{target.id}: {annot.id}'
+        nc:     NameConstant = node.value
+        if annot.id == 'int' or annot.id == 'float':
+            self._result[decl] = str(nc.n)
+        else:
+            self._result[decl] = str(nc.value)
 
     def visitAssign(self, node):
         targets = []
@@ -109,11 +120,10 @@ class FieldExtractor:
         # compiler.walk(compiler.parseFile(self._filename), visitor)
         try:
             fileName = self._filename
-            data = open(fileName).read()
-            # astNode = parse(source=data, filename=fileName, mode=PyCF_ONLY_AST)
+            fd: TextIO = open(fileName)
+            data = fd.read()
             astNode = parse(source=data, filename=fileName)
-            print(f'{astNode}')
-            walk(astNode)
+            visitor.visit(astNode)
         except (ValueError, Exception) as e:
             print(f"getFields Error: {e}")
         return visitor.getResult()

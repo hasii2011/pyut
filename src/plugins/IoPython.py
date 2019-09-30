@@ -15,7 +15,7 @@ from PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutField import PyutField
 
-from plugins.ast import FieldExtractor
+from plugins.PluginAst import FieldExtractor
 from plugins.PyutIoPlugin import PyutIoPlugin
 
 from pyutUtils import assignID
