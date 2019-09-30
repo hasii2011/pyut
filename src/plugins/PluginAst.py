@@ -43,6 +43,8 @@ class Visitor(NodeVisitor):
         nc:     NameConstant = node.value
         if annot.id == 'int' or annot.id == 'float':
             self._result[decl] = str(nc.n)
+        elif annot.id == 'str':
+            self._result[decl] = str(nc.s)
         else:
             self._result[decl] = str(nc.value)
 
