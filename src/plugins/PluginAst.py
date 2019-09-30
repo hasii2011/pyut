@@ -5,6 +5,8 @@ from ast import NodeVisitor
 from ast import AnnAssign
 from ast import Name
 from ast import NameConstant
+from ast import Subscript
+
 from ast import parse
 
 
@@ -38,8 +40,16 @@ class Visitor(NodeVisitor):
         strRep: str = node.__repr__()
         print(f'strRep: {strRep}')
         target: Name = node.target
-        annot:  Name = node.annotation
-        decl:   str  = f'{target.id}: {annot.id}'
+        if isinstance(node.annotation, Subscript):
+            annot: Subscript  = node.annotation
+            val:   Name       = annot.value
+            decl:  str        = f'{target.id}: {val.id}'
+            self._result[decl] = ''
+            return
+        else:
+            annot:  Name = node.annotation
+            decl:   str  = f'{target.id}: {annot.id}'
+
         nc:     NameConstant = node.value
         if annot.id == 'int' or annot.id == 'float':
             self._result[decl] = str(nc.n)
@@ -48,7 +58,7 @@ class Visitor(NodeVisitor):
         else:
             self._result[decl] = str(nc.value)
 
-    def visitAssign(self, node):
+    def visit_Assign(self, node):
         targets = []
         for n in node.nodes:
             targets.append(self.visit(n))
