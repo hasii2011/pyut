@@ -6,6 +6,8 @@ from ast import AnnAssign
 from ast import Name
 from ast import NameConstant
 from ast import Subscript
+from ast import List
+from ast import Dict
 
 from ast import parse
 
@@ -60,9 +62,19 @@ class Visitor(NodeVisitor):
 
     def visit_Assign(self, node):
         targets = []
-        for n in node.nodes:
-            targets.append(self.visit(n))
-        expr = self.visit(node.expr)
+        for n in node.targets:
+            targets.append(n.id)
+        if isinstance(node.value, List):
+            val: List = node.value.elts
+            valStr: str = str(val)
+        elif isinstance(node.value, Dict):
+            valStr: str = '{}'
+
+        decl:   str = f'{targets[0]}'
+        self._result[decl] = valStr
+        return
+
+        expr = self.visit(val)
         if expr is None:
             print(node.expr)
         target = targets[-1]
@@ -94,8 +106,8 @@ class Visitor(NodeVisitor):
     def visitUnarySub(self, node):
         return "-" + str(self.visit(node.expr))
 
-    def visitName(self, node):
-        return node.name
+    def visit_Name(self, node: Name):
+        return node.id
 
     def visitTuple(self, node):
         retList = []
