@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from HistoryManager1 import *
+from HistoryManager import *
 from commandGroup import *
 from printCommand import *
 """
