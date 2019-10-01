@@ -1,20 +1,16 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
+from wx import BOTH
 
-#from wxPython.wx import *
-import wx
+from wx import DefaultPosition
+from wx import Dialog
+from wx import Size
 
-class DlgEditMethod (wx.Dialog):
+
+class DlgEditMethod (Dialog):
     """
     dlgEditMethod : Method edition dialog
     @version $Revision: 1.4 $
     """
-
-    #>------------------------------------------------------------------------
 
     def __init__(self, parent, ID):
         """
@@ -23,7 +19,6 @@ class DlgEditMethod (wx.Dialog):
         @since 1.0
         @author C.Dutoit
         """
-        wx.Dialog.__init__(self, parent, ID, "Method edition", 
-                          wx.DefaultPosition, wx.Size(320, 400))
+        super().__init__( parent, ID, "Method edition", DefaultPosition, Size(320, 400))
         self.ShowModal()
-        self.Center(wx.BOTH)
+        self.Center(BOTH)
