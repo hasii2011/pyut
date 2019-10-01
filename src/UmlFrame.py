@@ -30,7 +30,7 @@ from mediator import getMediator
 
 from pyutUtils import displayError
 
-from historyManager import HistoryManager
+from HistoryManager1 import HistoryManager
 
 from globals import _
 

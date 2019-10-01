@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from historyManager import *
+from HistoryManager1 import *
 from commandGroup import *
 from printCommand import *
 """
@@ -99,7 +99,7 @@ h.redo()
 print "-- nothing --"
 print "supposed to add cg2"
 h.addCommandGroup(cg2)
-print "check that the file '" + h._fileName + "' contains groups cg1,3,4,2 and then press [enter]" 
+print "check that the file '" + h._fileName + "' contains groups cg1,3,4,2 and then press [enter]"
 try:
     input()
 finally:
