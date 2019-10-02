@@ -802,7 +802,7 @@ class Mediator(Singleton):
             event.Skip()
 
     def deleteSelectedShape(self):
-        from DelOglObjectCommand1 import DelOglObjectCommand
+        from DelOglObjectCommand import DelOglObjectCommand
         from delOglClassCommand import DelOglClassCommand
         from delOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass
@@ -1013,7 +1013,7 @@ class Mediator(Singleton):
     def beginChangeRecording(self, oglObject):
 
         from delOglClassCommand import DelOglClassCommand
-        from DelOglObjectCommand1 import DelOglObjectCommand
+        from DelOglObjectCommand import DelOglObjectCommand
         from delOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass
         from OglLink import OglLink

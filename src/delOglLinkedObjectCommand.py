@@ -1,5 +1,5 @@
 
-from DelOglObjectCommand1 import DelOglObjectCommand
+from DelOglObjectCommand import DelOglObjectCommand
 
 from org.pyut.history.HistoryUtils import getTokenValue
 
