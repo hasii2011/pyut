@@ -1,7 +1,14 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-from DelOglObjectCommand import *
-from OglLinkFactory import *
+
+
+from Command import Command
+
+from DelOglObjectCommand import DelOglObjectCommand
+
+
+from OglLinkFactory import getLinkType
+
+from org.pyut.history.HistoryUtils import getTokenValue
+from org.pyut.history.HistoryUtils import makeValuatedToken
 
 
 class DelOglLinkCommand(DelOglObjectCommand):
@@ -12,7 +19,7 @@ class DelOglLinkCommand(DelOglObjectCommand):
     command. This class is to be considered as an abstract class.
     """
 
-    def __init__(self, link = None):
+    def __init__(self, link=None):
 
         DelOglObjectCommand.__init__(self, link)
 
@@ -22,8 +29,6 @@ class DelOglLinkCommand(DelOglObjectCommand):
         self._linkSrcId = None
         self._linkDestId = None
         self._linkId = None
-
-    #>------------------------------------------------------------------------
 
     def serialize(self):
 
@@ -45,8 +50,6 @@ class DelOglLinkCommand(DelOglObjectCommand):
 
         return serialLink
 
-    #>------------------------------------------------------------------------
-
     def unserialize(self, serializedInfos):
 
         umlFrame = self.getGroup().getHistory().getFrame()
@@ -60,22 +63,18 @@ class DelOglLinkCommand(DelOglObjectCommand):
 
         self._shape = umlFrame.getUmlObjectById(self._linkId)
 
-    #>------------------------------------------------------------------------
-
     def undo(self):
 
         umlFrame = self.getGroup().getHistory().getFrame()
         src = umlFrame.getUmlObjectById(self._linkSrcId)
         dest = umlFrame.getUmlObjectById(self._linkDestId)
 
-        if self._shape is None :
+        if self._shape is None:
             self._shape = umlFrame.createNewLink(src, dest, self._linkType)
 
         self._shape.getPyutObject().setId(self._linkId)
         self._shape.GetSource().GetModel().SetPosition(self._srcPosition[0], self._srcPosition[1])
-        self._shape.GetDestination().GetModel().SetPosition(self._destPosition[0], self._destPosition[1] )
+        self._shape.GetDestination().GetModel().SetPosition(self._destPosition[0], self._destPosition[1])
         self._shape.GetSource().UpdateFromModel()
         self._shape.GetDestination().UpdateFromModel()
         umlFrame.Refresh()
-
-    #>------------------------------------------------------------------------

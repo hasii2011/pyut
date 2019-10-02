@@ -804,7 +804,7 @@ class Mediator(Singleton):
     def deleteSelectedShape(self):
         from DelOglObjectCommand import DelOglObjectCommand
         from delOglClassCommand import DelOglClassCommand
-        from delOglLinkCommand import DelOglLinkCommand
+        from DelOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass
         from OglObject import OglObject
         from OglLink import OglLink
@@ -1014,7 +1014,7 @@ class Mediator(Singleton):
 
         from delOglClassCommand import DelOglClassCommand
         from DelOglObjectCommand import DelOglObjectCommand
-        from delOglLinkCommand import DelOglLinkCommand
+        from DelOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass
         from OglLink import OglLink
         from OglObject import OglObject
