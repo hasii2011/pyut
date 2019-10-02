@@ -1235,8 +1235,8 @@ class AppFrame(Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         from DlgAbout import DlgAbout
-        import pyutVersion
-        dlg = DlgAbout(self, -1, _("About PyUt ") + pyutVersion.getPyUtVersion())
+        import PyutVersion
+        dlg = DlgAbout(self, -1, _("About PyUt ") + PyutVersion.getPyUtVersion())
         dlg.ShowModal()
         dlg.Destroy()
 
@@ -1277,8 +1277,8 @@ class AppFrame(Frame):
             oldestVersions = lstFile[1][15:].split()
             print(oldestVersions)
 
-            import pyutVersion
-            v = pyutVersion.getPyUtVersion()
+            import PyutVersion
+            v = PyutVersion.getPyUtVersion()
             if v in oldestVersions:
                 msg = _("PyUt version ") + str(latestVersion) + _(" is available on http://pyut.sf.net")
             else:

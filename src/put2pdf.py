@@ -24,11 +24,11 @@ def getExePath():
     if sys.argv[0][0]==os.sep or sys.argv[0].find(":")>0:
         # Absolute path
         exePath = sys.argv[0]
-    else: 
+    else:
         # Relative path
         exePath = os.getcwd() + os.sep + sys.argv[0]
     return os.path.split(exePath)[0]
-    
+
 
 
 #>----------------------------------------------------------------------------
@@ -105,12 +105,12 @@ def treatArguments():
 
     # Treat command line arguments
     if sys.argv[1] == "--version":
-        from pyutVersion import getPyUtVersion
+        from PyutVersion import getPyUtVersion
         print "PyUt, version %s" % getPyUtVersion()
         print
         return 1
     elif sys.argv[1] == "--help":
-        from pyutVersion import getPyUtVersion
+        from PyutVersion import getPyUtVersion
         print "PyUt, version %s" % getPyUtVersion()
         print "Syntaxe : pyut.pyw [filename] [--version] [--help]" \
               "[--start_directory=xxx]"
@@ -129,7 +129,7 @@ def treatArguments():
             global userPath
             userPath = param[18:]
     return 0
-    
+
 
 #>------------------------------------------------------------------------
 #>------------------------------------------------------------------------

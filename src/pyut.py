@@ -15,7 +15,7 @@ from logging import getLogger
 import logging.config
 
 from PyutApp import PyutApp
-from pyutVersion import getPyUtVersion
+from PyutVersion import getPyUtVersion
 from PyutPreferences import PyutPreferences
 
 JSON_LOGGING_CONFIG_FILENAME = "loggingConfiguration.json"

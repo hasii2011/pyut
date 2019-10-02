@@ -43,7 +43,7 @@ from DlgEditNote import DlgEditNote
 from DlgEditUseCase import DlgEditUseCase
 from DlgEditLink import DlgEditLink
 
-from pyutVersion import getPyUtVersion
+from PyutVersion import getPyUtVersion
 from singleton import Singleton
 from ToolboxOwner import ToolboxOwner
 
