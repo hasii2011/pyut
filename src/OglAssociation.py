@@ -1,9 +1,11 @@
 
-import wx
-from PyutLink import PyutLink
+from math import pi
+from math import atan
+from math import cos
+from math import sin
+
 from OglLink import *
-from DlgEditLink  import *
-from math import pi, atan, cos, sin
+from DlgEditLink import *
 
 # Kind of labels
 [CENTER, SRC_CARD, DEST_CARD] = list(range(3))
@@ -19,7 +21,6 @@ class OglAssociation(OglLink):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-
     def __init__(self, srcShape, pyutLink, dstShape):
         """
         Constructor.
@@ -30,8 +31,7 @@ class OglAssociation(OglLink):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        # Init
-        OglLink.__init__(self, srcShape, pyutLink, dstShape)
+        super().__init__(srcShape, pyutLink, dstShape)
 
         # Add labels
         self._labels = {}
@@ -97,7 +97,7 @@ class OglAssociation(OglLink):
         """
         Called for contents drawing of links.
 
-        @param wxDC dc : Device context
+        @param dc : Device context
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
@@ -108,8 +108,9 @@ class OglAssociation(OglLink):
         """
         Draw an arrow at the begining of the line.
 
-        @param wxDC dc
+        @param dc
         @param bool filled : True if the losange must be filled, False otherwise
+
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """

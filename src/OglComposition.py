@@ -1,15 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.6 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
 
-#from wxPython.wx     import *
-#from wxPython.ogl    import *
-from OglAssociation  import *
+from OglAssociation import OglAssociation
 
-#>------------------------------------------------------------------------
 
 class OglComposition(OglAssociation):
     """
@@ -27,30 +19,16 @@ class OglComposition(OglAssociation):
         Constructor.
 
         @param OglObject srcShape : Source shape
-        @param PyutLinkedObject pyutLink : Conceptual links associated with the
-                                           graphical links.
-        @param OglObject destShape : Destination shape
+        @param PyutLinkedObject pyutLink : Conceptual links associated with the graphical links.
+        @param OglObject dstShape : Destination shape
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
 
-        # Init
-        OglAssociation.__init__(self, srcShape, pyutLink, dstShape)
-
-        # Add arrows
-        #self.AddArrow(ARROW_FILLED_CIRCLE, ARROW_POSITION_START)
-        #self.AddArrow(ARROW_ARROW, ARROW_POSITION_END)
-        #modified by C.Dutoit : losange done in OglAssociation
-        #self.AddArrow(ARROW_ARROW, ARROW_POSITION_END)
+        super().__init__(srcShape, pyutLink, dstShape)
         self.SetDrawArrow(True)
 
-        #self.startArrow = OglDiamondArrow()
-        #self.endArrow = OglOpenArrow()
-
-    #>------------------------------------------------------------------------
-
-    #def OnDrawContents(self, dc):
-    def Draw(self, dc):#, withChildren=False):
+    def Draw(self, dc):
         """
         Called for contents drawing of links.
 
@@ -58,18 +36,8 @@ class OglComposition(OglAssociation):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        # Call father
-        #OglAssociation.OnDrawContents(self, dc)
-        OglAssociation.Draw(self, dc)#, withChildren)
-
-        #self.startArrow.drawArrow(dc)
-        #self.endArrow.drawArrow(dc)
-
-
-        # Draw losange
-        self.drawLosange(dc, 1)
-
-    #>------------------------------------------------------------------------
+        OglAssociation.Draw(self, dc)
+        self.drawLosange(dc, True)
 
     def cleanUp(self):
         """
@@ -79,6 +47,4 @@ class OglComposition(OglAssociation):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         OglAssociation.cleanUp(self)
-        self.ClearArrowsAtPosition() # remove all arrows
-
-    #>------------------------------------------------------------------------
+        self.ClearArrowsAtPosition()
