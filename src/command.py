@@ -4,7 +4,7 @@ from org.pyut.history.HistoryUtils import COMMAND_MODULE_ID
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
 
-class Command(object):
+class Command:
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.

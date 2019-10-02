@@ -1,6 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-from delOglLinkedObjectCommand import *
+
+from org.pyut.history.HistoryUtils import getTokenValue
+
+from delOglLinkedObjectCommand import DelOglLinkedObjectCommand
+from org.pyut.history.HistoryUtils import makeValuatedToken
+
+from globals import cmp
 
 
 class DelOglClassCommand(DelOglLinkedObjectCommand):
@@ -10,23 +14,19 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
     It execute/undo/redo the deletion of an OglClass
     """
 
-    def __init__(self, shape = None):
+    def __init__(self, shape=None):
         """
         Constructor.
-        @param shape OglLinkedObject    : object that is destroyed
+        @param shape    : object that is destroyed
         """
-
-        DelOglLinkedObjectCommand.__init__(self, shape)
-
-    #>------------------------------------------------------------------------
+        super().__init__(shape)
 
     def serialize(self):
         """
         Serialize the data needed by the destroyed OglLinkedObject.
         @return a string representation of the data needed by the command.
         """
-
-        #serialize the data common to all OglObjects
+        # serialize the data common to all OglObjects
         serialShape = DelOglLinkedObjectCommand.serialize(self)
 
         pyutClass = self._shape.getPyutObject()
@@ -47,8 +47,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
             fieldType = field.getType().__str__()
             fieldDefaultValue = field.getDefaultValue()
             fieldVisibility = field.getVisibility().__str__()
-            fields.append((fieldName,fieldType,
-                           fieldDefaultValue, fieldVisibility))
+            fields.append((fieldName, fieldType, fieldDefaultValue, fieldVisibility))
 
         methods = []
         for method in pyutClass.getMethods():
@@ -74,28 +73,20 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
 
             methods.append(methodProfile)
 
-        serialShape += makeValuatedToken("classDescription", classDescription)
-
-
-        serialShape += makeValuatedToken("classStereotypeName",
-                                         classStereotypeName)
-
-        serialShape += makeValuatedToken("classShowStereotype",
-                                         classShowStereotype)
-        serialShape += makeValuatedToken("classShowMethods", classShowMethods)
-        serialShape += makeValuatedToken("classShowFields", classShowFields)
+        serialShape += makeValuatedToken("classDescription",    classDescription)
+        serialShape += makeValuatedToken("classStereotypeName", classStereotypeName)
+        serialShape += makeValuatedToken("classShowStereotype", classShowStereotype)
+        serialShape += makeValuatedToken("classShowMethods",    classShowMethods)
+        serialShape += makeValuatedToken("classShowFields",     classShowFields)
         serialShape += makeValuatedToken("fields", repr(fields))
         serialShape += makeValuatedToken("methods", repr(methods))
 
         return serialShape
 
-    #>------------------------------------------------------------------------
-
     def unserialize(self, serializedInfos):
         """
         unserialize the data needed by the destroyed OglLinkedObject.
-        @param serializedInfos String   :   serialized data needed by
-                                            the command.
+        @param serializedInfos   :   serialized data needed by the command.
         """
         from PyutMethod import PyutMethod
         from PyutParam import PyutParam
@@ -104,26 +95,22 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         from PyutStereotype import PyutStereotype
         from PyutModifier import PyutModifier
 
-        #unserialize the data common to all OglObjects
+        # unserialize the data common to all OglObjects
         DelOglLinkedObjectCommand.unserialize(self, serializedInfos)
 
-        #unserialize properities of the OglClass (first level)
-        classDescription = getTokenValue("classDescription", serializedInfos)
-        classStereotypeName = getTokenValue("classStereotypeName",
-                                            serializedInfos)
-        classShowStereotype = eval(getTokenValue("classShowStereotype",
-                                            serializedInfos))
-        classShowMethods = eval(getTokenValue("classShowMethods",
-                                              serializedInfos))
-        classShowFields = eval(getTokenValue("classShowFields",
-                                             serializedInfos))
-        methods = eval(getTokenValue("methods",serializedInfos))
-        fields = eval(getTokenValue("fields",serializedInfos))
+        # unserialize properities of the OglClass (first level)
+        classDescription    = getTokenValue("classDescription", serializedInfos)
+        classStereotypeName = getTokenValue("classStereotypeName", serializedInfos)
+        classShowStereotype = eval(getTokenValue("classShowStereotype", serializedInfos))
+        classShowMethods    = eval(getTokenValue("classShowMethods", serializedInfos))
+        classShowFields     = eval(getTokenValue("classShowFields", serializedInfos))
+
+        methods = eval(getTokenValue("methods", serializedInfos))
+        fields   = eval(getTokenValue("fields", serializedInfos))
 
         # set up the first level properities of the pyutClass
         pyutClass = self._shape.getPyutObject()
         pyutClass.setDescription(classDescription)
-
 
         if cmp(classStereotypeName, ""):
             pyutStereo = PyutStereotype(classStereotypeName)
@@ -145,41 +132,39 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
                                          fieldVisibility))
 
         methodsList = []
-        #unserialise methods of the pyutClass
+        # unserialise methods of the pyutClass
         for methodProfile in methods:
 
-            #construction of a method
+            # construction of a method
             methodName = methodProfile[0]
             methodVisibility = methodProfile[1]
             methodReturns = methodProfile[2]
             method = PyutMethod(methodName, methodVisibility, methodReturns)
 
-            #unserialize method's params so we get a tuple
-            #(name, Type, defaultValue)
+            # unserialize method's params so we get a tuple (name, Type, defaultValue)
             params = eval(methodProfile[3])
             for param in params:
                 paramName = param[0]
 
-                #construction of the type of the param
+                # construction of the type of the param
                 paramType = param[1]
                 pyutType = PyutType(paramType)
                 paramDefaultValue = param[2]
 
-                #creates and add the param to the method
-                method.addParam(PyutParam(paramName, paramType,
-                                          paramDefaultValue))
+                # creates and add the param to the method
+                method.addParam(PyutParam(paramName, paramType, paramDefaultValue))
 
-            #unserialize method's modifiers so we get a list of names
-            #that whe have to transform into a list of PyutModifiers.
+            # unserialize method's modifiers so we get a list of names
+            # that whe have to transform into a list of PyutModifiers.
             modifiersNames = eval(methodProfile[4])
             modifiers = []
             for modifierName in modifiersNames:
                 modifiers.append(PyutModifier(modifierName))
 
-            #add the modifiers to the method
+            # add the modifiers to the method
             method.setModifiers(modifiers)
-            #add the method to the list of methods
+            # add the method to the list of methods
             methodsList.append(method)
 
-        #add all the methods to the list
+        # add all the methods to the list
         pyutClass.setMethods(methodsList)
