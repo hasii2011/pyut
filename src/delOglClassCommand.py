@@ -1,7 +1,7 @@
 
 from org.pyut.history.HistoryUtils import getTokenValue
 
-from delOglLinkedObjectCommand import DelOglLinkedObjectCommand
+from DelOglLinkedObjectCommand import DelOglLinkedObjectCommand
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
 from globals import cmp
