@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from historyUtils import *
+from HistoryUtils1 import *
 from delOglObjectCommand import *
 from OglLinkFactory import *
 
@@ -12,7 +12,7 @@ class DelOglLinkCommand(DelOglObjectCommand):
     Every action that needs to be redone/undone should have an associated
     command. This class is to be considered as an abstract class.
     """
-    
+
     def __init__(self, link = None):
 
         DelOglObjectCommand.__init__(self, link)
@@ -25,7 +25,7 @@ class DelOglLinkCommand(DelOglObjectCommand):
         self._linkId = None
 
     #>------------------------------------------------------------------------
-       
+
     def serialize(self):
 
         serialLink = Command.serialize(self)
@@ -36,7 +36,7 @@ class DelOglLinkCommand(DelOglObjectCommand):
         self._linkSrcId = self._shape.getSourceShape().getPyutObject().getId()
         self._linkDestId = self._shape.getDestinationShape().getPyutObject().getId()
         self._linkId = self._shape.getPyutObject().getId()
-        
+
         serialLink += makeValuatedToken("srcPosition", repr(self._srcPosition))
         serialLink += makeValuatedToken("destPosition", repr(self._destPosition))
         serialLink += makeValuatedToken("linkType", repr(self._linkType))
@@ -45,13 +45,13 @@ class DelOglLinkCommand(DelOglObjectCommand):
         serialLink += makeValuatedToken("linkId", repr(self._linkId))
 
         return serialLink
-        
+
     #>------------------------------------------------------------------------
-    
+
     def unserialize(self, serializedInfos):
 
         umlFrame = self.getGroup().getHistory().getFrame()
-        
+
         self._srcPosition = eval(getTokenValue("srcPosition", serializedInfos))
         self._destPosition = eval(getTokenValue("destPosition", serializedInfos))
         self._linkType = eval(getTokenValue("linkType", serializedInfos))
@@ -78,5 +78,5 @@ class DelOglLinkCommand(DelOglObjectCommand):
         self._shape.GetSource().UpdateFromModel()
         self._shape.GetDestination().UpdateFromModel()
         umlFrame.Refresh()
-        
+
     #>------------------------------------------------------------------------

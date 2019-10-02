@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from historyUtils import *
+from HistoryUtils1 import *
 
 class CommandGroup(object):
     """
@@ -11,11 +11,11 @@ class CommandGroup(object):
     for each one that is added to a CommandGroupe. This way, when we want
     to do an undo, all the deleted shapes will be reconstructed in one action.
     """
-    
+
     def __init__(self, comment = ""):
         """
         Constructor.
-        
+
         @param comment  String  :   a short description/comment in
                                     view to display in the menu or
                                     other GUI part.
@@ -26,7 +26,7 @@ class CommandGroup(object):
 
         # list of commands belonging to the group
         self._commands = []
-        
+
         self._comment = comment
 
         #to store informations that are common to all the commands of the
@@ -34,9 +34,9 @@ class CommandGroup(object):
         #common data are lost after an unserialization. You have to use
         #these data in a command before the serialization.
         self._commonData = []
-        
+
     #>------------------------------------------------------------------------
-        
+
     def addCommand(self, command):
         """
         Add the specified command to the group
@@ -45,7 +45,7 @@ class CommandGroup(object):
 
         command.setGroup(self)
         self._commands.append(command)
-        
+
     #>------------------------------------------------------------------------
 
     def removeCommand(self, command):
@@ -53,11 +53,11 @@ class CommandGroup(object):
         Remove the specified command from the group
         @param command Command : command to remove
         """
-        
+
         self._commands.remove(command)
-        
+
     #>------------------------------------------------------------------------
-        
+
     def serialize(self):
         """
         Transform all the commands belonging to the group into strings in
@@ -75,10 +75,10 @@ class CommandGroup(object):
             serializedGroup += (makeToken(COMMAND_BEGIN_ID) +
                                 command.serialize() +
                                 makeToken(COMMAND_END_ID))
-            
+
         #add the ending informations of the group
         serializedGroup += makeToken(GROUP_END_ID)
-        
+
         return serializedGroup
 
     #>------------------------------------------------------------------------
@@ -101,10 +101,10 @@ class CommandGroup(object):
         #while there is still a command begining token we can
         #proceed to the unserialization.
         while cStart > -1:
-            
+
             #we don't need anymore of the begining token
             cStart += len(commandBegin)
-            
+
             #find the ending token for this command
             cEnd = serializedCommands.find(commandEnd, cStart)
 
@@ -112,7 +112,7 @@ class CommandGroup(object):
             serialCommand = serializedCommands[cStart : cEnd]
 
             commandModuleName = getTokenValue(COMMAND_MODULE_ID, serialCommand)
-            
+
             #get the name of the class of the command
             commandClassName = getTokenValue(COMMAND_CLASS_ID, serialCommand)
 
@@ -132,8 +132,8 @@ class CommandGroup(object):
             #looking for the next command begining token
             cStart = serializedCommands.find(commandBegin, cEnd)
 
-    #>------------------------------------------------------------------------ 
-        
+    #>------------------------------------------------------------------------
+
     def redo(self):
         """
         Call the redo() method of all commands belonging to the group
@@ -142,7 +142,7 @@ class CommandGroup(object):
             command.redo()
 
     #>------------------------------------------------------------------------
-    
+
     def undo(self):
         """
         Call the undo() method of all commands belonging to the group
@@ -154,20 +154,20 @@ class CommandGroup(object):
 
     def execute(self):
         """
-        Call the execute() method of all commands belonging to the group 
+        Call the execute() method of all commands belonging to the group
         """
         for command in self._commands:
             command.execute()
 
     #>------------------------------------------------------------------------
-            
+
     def getHistory(self):
         """
         return the history to which belongs the group
         """
 
         return self._history
-    
+
     #>------------------------------------------------------------------------
 
     def setHistory(self, history):
@@ -178,7 +178,7 @@ class CommandGroup(object):
         """
 
         self._history = history
-    
+
     #>------------------------------------------------------------------------
 
     def getComment(self):
@@ -197,7 +197,7 @@ class CommandGroup(object):
         """
 
         self._comment = comment
-        
+
     #>------------------------------------------------------------------------
 
     def addCommonData(self, commonData):
@@ -216,7 +216,7 @@ class CommandGroup(object):
         self._commonData.append(commonData)
 
     #>------------------------------------------------------------------------
-    
+
     def getCommonData(self):
         """
         @return a list of common data, so a command can use informations
@@ -226,4 +226,4 @@ class CommandGroup(object):
         the serialization of the group.
         """
         return self._commonData
-        
+

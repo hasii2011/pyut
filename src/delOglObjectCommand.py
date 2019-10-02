@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from historyUtils import *
+from HistoryUtils1 import *
 from command import *
 from PyutObject import *
 
@@ -11,15 +11,15 @@ class DelOglObjectCommand(Command):
     It execute/undo/redo the deletion of an OglObject. It is to be considered
     as an abstract class, because OglObject is abstract.
     """
-    
+
     def __init__(self, shape = None):
 
         Command.__init__(self)
 
         self._shape = shape
-        
+
     #>------------------------------------------------------------------------
-       
+
     def serialize(self):
 
         serialShape = Command.serialize(self)
@@ -34,7 +34,7 @@ class DelOglObjectCommand(Command):
         serialShape += makeValuatedToken("oglShapeClass", oglShapeClass)
         serialShape += makeValuatedToken("pyutShapeModule", pyutShapeModule)
         serialShape += makeValuatedToken("pyutShapeClass", pyutShapeClass)
-        
+
         #serialize the shape's model size and position and NOT the Ogl(view)'s
         #ones because a zoom could be performed in between.
         model = self._shape.GetModel()
@@ -53,19 +53,19 @@ class DelOglObjectCommand(Command):
             if not link.IsSelected():
                 cmd = DelOglLinkCommand(link)
                 self.getGroup().addCommand(cmd)
-            
 
-        #serialize data to init the associated pyutObject        
+
+        #serialize data to init the associated pyutObject
         pyutObj = self._shape.getPyutObject()
         shapeId = pyutObj.getId()
         shapeName = pyutObj.getName()
         serialShape += makeValuatedToken("shapeId", repr(shapeId))
         serialShape += makeValuatedToken("shapeName", shapeName)
-        
+
         return serialShape
-    
+
     #>------------------------------------------------------------------------
-    
+
     def unserialize(self, serializedInfos):
         """
         unserialize the data needed to undo/redo a delete command and create
@@ -92,7 +92,7 @@ class DelOglObjectCommand(Command):
 
         #CONSTRUCTION OF THE UML OBJECT :
         #import the module which contains the ogl and pyut shape classes and
-        #get that classes. 
+        #get that classes.
         oglShapeClass = getattr(__import__(oglShapeModule), oglShapeClassName)
         pyutShapeClass = getattr(__import__(pyutShapeModule), pyutShapeClassName)
 
@@ -115,13 +115,13 @@ class DelOglObjectCommand(Command):
             self._shape.GetModel().SetSize(shapeSize[0], shapeSize[1])
 
     #>------------------------------------------------------------------------
-    
+
     def redo(self):
         """
         Delete the shape for which this command has been created. You DON't
         need to redefine it.
         """
-        
+
         from OglClass        import OglClass
         umlFrame = self.getGroup().getHistory().getFrame()
         shape = self._shape
@@ -143,7 +143,7 @@ class DelOglObjectCommand(Command):
         Rebuild the OglObject with its associated PyutObject. You DON't
         need to redefine it for subclasses.
         """
-        
+
         #we have to set up the model after the view is attached to the diagram
         #because when it is attached, the model is set up from the view.
         frame = self.getGroup().getHistory().getFrame()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from historyUtils import *
+from HistoryUtils1 import *
 
 class Command(object):
     """
@@ -9,7 +9,7 @@ class Command(object):
     Every action that needs to be redone/undone should have an associated
     command. This class is to be considered as an abstract class.
     """
-    
+
     def __init__(self):
         """
         Constructor.
@@ -22,14 +22,14 @@ class Command(object):
         self._group = None
 
     #>------------------------------------------------------------------------
-       
+
     def serialize(self):
         """
         @return a string representation of the command in view to store it
         in a file. This method must be redifined in all subclasses in that
         way :
             return Command.serialize + (MyCommand's serialized informations)
-            
+
         Notes : use makeValuatedToken() from historyUtils for each value
         you want to serialize, so that you can use the getTokenValue to get
         back the string representation of this value for the unserialization.
@@ -39,9 +39,9 @@ class Command(object):
         #the unserialization and get the right constructor.
         return (makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__)) +
                 makeValuatedToken(COMMAND_CLASS_ID, str(self.__class__.__name__)))
-        
+
     #>------------------------------------------------------------------------
-    
+
     def unserialize(self, serializedInfos):
         """
         (Abstract) Here should be assigned values to the informations needed
@@ -50,7 +50,7 @@ class Command(object):
                                     the informations needed to set up
                                     the command.
         """
-        
+
         pass
 
     #>------------------------------------------------------------------------
@@ -63,10 +63,10 @@ class Command(object):
         method of the contrary command (for e.g. : createItem.undo() calls
         deleteItem.execute() and deleteItem.undo() calls createItem.execute())
         """
-        
+
         self.redo()
     #>------------------------------------------------------------------------
-    
+
     def redo(self):
         """
         (Abstract)Here should be implemented the code to redo the associated
@@ -87,7 +87,7 @@ class Command(object):
 
     def getGroup(self):
         """
-        @return the group (CommandGroup) to which belongs the command 
+        @return the group (CommandGroup) to which belongs the command
         """
 
         return self._group
