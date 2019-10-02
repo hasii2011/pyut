@@ -1,6 +1,6 @@
 
 import commandGroup
-from HistoryUtils1 import *
+from HistoryUtils import *
 
 
 class HistoryManager(object):
