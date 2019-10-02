@@ -64,7 +64,7 @@ class CreateOglClassCommand(DelOglClassCommand):
         @since 1.4
         @author L. Burgbacher <lb@alawa.ch>
         """
-        from Mediator1 import getMediator
+        from Mediator import getMediator
         from PyutClass import PyutClass
         from OglClass import OglClass
 

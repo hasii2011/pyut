@@ -88,22 +88,22 @@ from PyutUseCase import PyutUseCase
 
 from Tool import Tool
 
-from Mediator1 import ACTION_NEW_ACTOR
-from Mediator1 import ACTION_NEW_INHERIT_LINK
-from Mediator1 import ACTION_NEW_NOTE_LINK
-from Mediator1 import ACTION_NEW_AGGREGATION_LINK
-from Mediator1 import ACTION_SELECTOR
-from Mediator1 import ACTION_NEW_CLASS
-from Mediator1 import ACTION_NEW_NOTE
-from Mediator1 import ACTION_NEW_IMPLEMENT_LINK
-from Mediator1 import ACTION_NEW_COMPOSITION_LINK
-from Mediator1 import ACTION_NEW_ASSOCIATION_LINK
-from Mediator1 import ACTION_ZOOM_OUT
-from Mediator1 import ACTION_ZOOM_IN
-from Mediator1 import ACTION_NEW_SD_MESSAGE
-from Mediator1 import ACTION_NEW_SD_INSTANCE
-from Mediator1 import ACTION_NEW_USECASE
-from Mediator1 import getMediator
+from Mediator import ACTION_NEW_ACTOR
+from Mediator import ACTION_NEW_INHERIT_LINK
+from Mediator import ACTION_NEW_NOTE_LINK
+from Mediator import ACTION_NEW_AGGREGATION_LINK
+from Mediator import ACTION_SELECTOR
+from Mediator import ACTION_NEW_CLASS
+from Mediator import ACTION_NEW_NOTE
+from Mediator import ACTION_NEW_IMPLEMENT_LINK
+from Mediator import ACTION_NEW_COMPOSITION_LINK
+from Mediator import ACTION_NEW_ASSOCIATION_LINK
+from Mediator import ACTION_ZOOM_OUT
+from Mediator import ACTION_ZOOM_IN
+from Mediator import ACTION_NEW_SD_MESSAGE
+from Mediator import ACTION_NEW_SD_INSTANCE
+from Mediator import ACTION_NEW_USECASE
+from Mediator import getMediator
 
 from pyutUtils import assignID
 from pyutUtils import displayError

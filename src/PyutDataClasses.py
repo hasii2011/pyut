@@ -29,7 +29,7 @@ from PyutType import PyutType
 # noinspection PyUnresolvedReferences
 from PyutVisibility import PyutVisibility
 # noinspection PyUnresolvedReferences
-from Mediator1 import Mediator
+from Mediator import Mediator
 # noinspection PyUnresolvedReferences
 from singleton import Singleton
 # noinspection PyUnresolvedReferences

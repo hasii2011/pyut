@@ -25,8 +25,8 @@ from MiniOgl import SKIP_EVENT
 from MiniOgl import DiagramFrame
 from createOglLinkCommand import CreateOglLinkCommand
 
-from Mediator1 import ACTION_ZOOM_IN
-from Mediator1 import getMediator
+from Mediator import ACTION_ZOOM_IN
+from Mediator import getMediator
 
 from pyutUtils import displayError
 

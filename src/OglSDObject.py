@@ -7,7 +7,7 @@ __date__    = "2001-12-12"
 
 #from wxPython.wx  import *
 from MiniOgl      import *
-from Mediator1     import *
+from Mediator     import *
 from OglLink      import *
 from PyutConsts   import *
 

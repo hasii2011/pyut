@@ -1,6 +1,6 @@
 
-from Mediator1 import Mediator
-from Mediator1 import getMediator
+from Mediator import Mediator
+from Mediator import getMediator
 
 from plugins.PyutPlugin import PyutPlugin
 

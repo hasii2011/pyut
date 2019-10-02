@@ -15,7 +15,7 @@ from PyutPrintout    import *
 from PluginManager   import *
 from copy            import deepcopy
 from UmlDiagramsFrame import *
-import Mediator1
+import Mediator
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):
     """

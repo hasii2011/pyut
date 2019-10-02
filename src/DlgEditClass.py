@@ -49,7 +49,7 @@ from PyutStereotype import getPyutStereotype
 from DlgEditComment import DlgEditComment
 
 # from mediator import *  # Have to do this to avoid cyclical dependency
-import Mediator1
+import Mediator
 
 from globals import _
 from pyutUtils import assignID
@@ -108,7 +108,7 @@ class DlgEditClass (Dialog):
         self._pyutClass     = pyutClass
         self._pyutClassCopy = deepcopy(pyutClass)
         self._parent        = parent
-        self._ctrl          = Mediator1.getMediator()
+        self._ctrl          = Mediator.getMediator()
 
         self.SetAutoLayout(True)
 

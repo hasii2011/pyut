@@ -23,7 +23,7 @@ from UmlFrame import UmlFrame
 
 from plugins.IoPython import IoPython
 
-from Mediator1 import getMediator
+from Mediator import getMediator
 
 from globals import _
 

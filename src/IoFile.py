@@ -13,7 +13,7 @@ import zlib
 from xml.dom.minidom import parseString
 
 
-from Mediator1 import getMediator
+from Mediator import getMediator
 from pyutUtils import displayError
 
 from PyutConsts import CLASS_DIAGRAM

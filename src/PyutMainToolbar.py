@@ -9,7 +9,7 @@ __date__ = "2001-11-14"
 from UmlFrame import *
 from pyutUtils import *
 import os, wx
-from Mediator1 import *
+from Mediator import *
 
 # Assign constants
 [

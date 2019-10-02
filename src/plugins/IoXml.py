@@ -2,7 +2,7 @@
 from io import StringIO
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from Mediator1 import getMediator
+from Mediator import getMediator
 import wx
 
 
@@ -118,8 +118,8 @@ class IoXml(PyutIoPlugin):
 
         # if lastVersion >= 5:
         if int(lastVersion) >= 5:   # Python 3 update
-            import Mediator1
-            ctrl = Mediator1.getMediator()
+            import Mediator
+            ctrl = Mediator.getMediator()
             fileHandling = ctrl.getFileHandling()
             project = fileHandling.getProjectFromOglObjects(oglObjects)
             doc = myXml.save(project)
@@ -197,8 +197,8 @@ class IoXml(PyutIoPlugin):
             return False
 
         # Open file
-        import Mediator1
-        ctrl = Mediator1.getMediator()
+        import Mediator
+        ctrl = Mediator.getMediator()
         fileHandling = ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         for document in project.getDocuments():

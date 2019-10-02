@@ -10,7 +10,7 @@ from PyutLink import PyutLink
 from OglLink import OglLink
 from OglClass import OglClass
 
-from Mediator1 import Mediator
+from Mediator import Mediator
 
 from DlgRemoveLink import DlgRemoveLink
 
