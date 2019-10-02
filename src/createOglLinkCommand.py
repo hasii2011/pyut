@@ -1,5 +1,5 @@
 
-from Command1 import *
+from Command import *
 from OglLinkFactory import *
 from PyutLink import PyutLink
 

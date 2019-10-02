@@ -1,5 +1,5 @@
 
-from Command1 import Command
+from Command import Command
 
 from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
