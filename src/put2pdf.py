@@ -73,7 +73,7 @@ def main(script=None):
         prefs["LastDirectory"] = userPath
     del prefs
 
-    import lang
+    import Lang
     from PyutApp import PyutApp
     app = PyutApp(0, splash=0, show=0)
 

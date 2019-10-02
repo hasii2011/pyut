@@ -6,7 +6,7 @@ from os import getcwd
 from os import chdir
 
 from glob import glob
-from lang import importLanguage
+from Lang import importLanguage
 
 import zlib
 

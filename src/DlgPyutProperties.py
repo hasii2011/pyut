@@ -4,7 +4,7 @@ from logging import getLogger
 
 from sys import platform
 
-import lang
+import Lang
 
 
 from wx import ALL
@@ -108,10 +108,10 @@ class DlgPyutProperties(Dialog):
         # wx.CB_SORT not currently supported by wxOSX/Cocoa
         #
         if platform == DlgPyutProperties.THE_GREAT_MAC_PLATFORM:
-            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(lang.LANGUAGES.values())],
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
                                           style=CB_READONLY)
         else:
-            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(lang.LANGUAGES.values())],
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
                                           style=CB_READONLY | CB_SORT)
 
         szrLanguage = BoxSizer(HORIZONTAL)
@@ -165,9 +165,9 @@ class DlgPyutProperties(Dialog):
 
         # i18n
         n = self.__prefs["I18N"]
-        if n not in lang.LANGUAGES:
-            n = lang.DEFAULT_LANG
-        self.__cmbLanguage.SetValue(lang.LANGUAGES[n][0])
+        if n not in Lang.LANGUAGES:
+            n = Lang.DEFAULT_LANG
+        self.__cmbLanguage.SetValue(Lang.LANGUAGES[n][0])
 
     def __OnCheckBox(self, event):
         """
@@ -205,9 +205,9 @@ class DlgPyutProperties(Dialog):
         # If language has been changed
         newlanguage = self.__cmbLanguage.GetValue()
         actuallanguage = self.__prefs["I18N"]
-        if actuallanguage not in lang.LANGUAGES or newlanguage != lang.LANGUAGES[actuallanguage][0]:
+        if actuallanguage not in Lang.LANGUAGES or newlanguage != Lang.LANGUAGES[actuallanguage][0]:
             # Search the key coresponding to the newlanguage
-            for i in list(lang.LANGUAGES.items()):
+            for i in list(Lang.LANGUAGES.items()):
                 if newlanguage == i[1][0]:
                     # Write the key in preferences file
                     self.__prefs["I18N"] = i[0]
