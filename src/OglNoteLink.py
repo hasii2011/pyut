@@ -1,21 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.8 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
+from wx import ID_YES
+from wx import PENSTYLE_LONG_DASH
 
-#from wxPython.wx import *
-#from wxPython.ogl import *
-from PyutLink import PyutLink
-from OglNote import *
-from OglLink import *
-from DlgRemoveLink import *
-import wx
+from wx import Pen
 
+from OglLink import OglLink
+from DlgRemoveLink import DlgRemoveLink
 
-
-#>------------------------------------------------------------------------
 
 class OglNoteLink(OglLink):
     """
@@ -33,45 +24,34 @@ class OglNoteLink(OglLink):
         Constructor.
 
         @param OglObject srcShape : Source shape
-        @param PyutLinkedObject pyutLink : Conceptual links associated with the
-                                           graphical links.
-        @param OglObject destShape : Destination shape
+        @param PyutLinkedObject pyutLink : Conceptual links associated with the graphical links.
+        @param OglObject dstShape : Destination shape
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
-        # Init
-        OglLink.__init__(self, srcShape, pyutLink, dstShape)
+        super().__init__(srcShape, pyutLink, dstShape)
         self.SetDrawArrow(False)
+        self.SetPen(Pen("BLACK", 1, PENSTYLE_LONG_DASH))
 
-        # Pen
-        #self.SetPen(wx.BLACK_DASHED_PEN)
-        self.SetPen(wx.Pen("BLACK", 1 , wx.LONG_DASH))
-
-    #>------------------------------------------------------------------------
-
-    def OnLeftClick(self, x, y, keys, attachment):
+    # noinspection PyUnusedLocal
+    def OnLeftClick(self, x: int, y: int, keys, attachment: int):   # Does not appear to be used
         """
         Event handler for left mouse click.
         This event handler call the link dialog to edit link properties.
 
-        @param int x : X position
-        @param int y : Y position
-        @param int keys : ...
-        @param int attachments : ...
+        @param  x : X position
+        @param  y : Y position
+        @param  keys : ...
+        @param  attachment : ...
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
-        # get the shape
-        shape = self.GetShape()
-        # the canvas wich contain the shape
-        #canvas = shape.GetCanvas()
 
         # Open dialog to edit link
         dlg = DlgRemoveLink()
         rep = dlg.ShowModal()
         dlg.Destroy()
-        if rep == wx.ID_YES: # destroy link
-            Mediator().removeLink(self)
+        if rep == ID_YES:    # destroy link
+            # Mediator().removeLink(self) # missing method
+            pass
         self._diagram.Refresh()
