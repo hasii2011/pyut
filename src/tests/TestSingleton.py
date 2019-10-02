@@ -1,5 +1,5 @@
 
-from singleton import Singleton
+from Singleton import Singleton
 import unittest
 
 

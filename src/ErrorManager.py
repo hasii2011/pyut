@@ -8,7 +8,7 @@ from traceback import extract_tb
 
 from globals import _
 
-from singleton import Singleton
+from Singleton import Singleton
 import wx
 
 # Type of view for the error

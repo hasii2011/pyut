@@ -5,7 +5,7 @@ from logging import getLogger
 import sys
 import os
 
-from singleton import Singleton
+from Singleton import Singleton
 from configparser import *
 
 

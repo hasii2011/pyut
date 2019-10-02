@@ -31,7 +31,7 @@ from PyutVisibility import PyutVisibility
 # noinspection PyUnresolvedReferences
 from Mediator import Mediator
 # noinspection PyUnresolvedReferences
-from singleton import Singleton
+from Singleton import Singleton
 # noinspection PyUnresolvedReferences
 from FlyweightString import FlyweightString
 

@@ -44,7 +44,7 @@ from DlgEditUseCase import DlgEditUseCase
 from DlgEditLink import DlgEditLink
 
 from PyutVersion import getPyUtVersion
-from singleton import Singleton
+from Singleton import Singleton
 from ToolboxOwner import ToolboxOwner
 
 from globals import _

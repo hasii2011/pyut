@@ -9,7 +9,7 @@ from OglInterface import *
 from OglNoteLink import *
 # from OglSDMessage   import *
 
-from singleton import Singleton
+from Singleton import Singleton
 # from PyutConsts import OGL_AGGREGATION
 
 
