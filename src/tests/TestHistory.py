@@ -1,8 +1,8 @@
 
 from org.pyut.history.HistoryManager import HistoryManager
 
-from CommandGroup1 import *
-from printCommand import *
+from CommandGroup import CommandGroup
+from printCommand import PrintCommand
 """
 @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
 This is the unit test of the HistoryManager. It was tested on 21.11.2005

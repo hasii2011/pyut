@@ -1,5 +1,5 @@
 
-import CommandGroup1
+import CommandGroup
 from org.pyut.history.HistoryUtils import *
 
 
@@ -115,7 +115,7 @@ class HistoryManager(object):
         grpComment = getTokenValue(GROUP_COMMENT_ID, serializedGroup)
 
         # create an initialized group with only its comment
-        group = CommandGroup1.CommandGroup(grpComment)
+        group = CommandGroup.CommandGroup(grpComment)
         group.setHistory(self)
 
         # unserialize the commands belonging to the group
