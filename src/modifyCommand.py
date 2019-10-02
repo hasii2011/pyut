@@ -1,7 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-from HistoryUtils import *
-from command import *
+
+from command import Command
+
+from org.pyut.history.HistoryUtils import getTokenValue
+from org.pyut.history.HistoryUtils import makeValuatedToken
+
+from globals import cmp
+
 
 class ModifyCommand(Command):
     """
@@ -12,20 +16,15 @@ class ModifyCommand(Command):
 
     def __init__(self, anyObject = None):
 
-
-        Command.__init__(self)
+        super().__init__()
 
         self._object = anyObject
 
-        #name of the method that is called for modification
+        # name of the method that is called for modification
         self._methodName = ""
-
-        #old and new params for modification
+        # old and new params for modification
         self._oldParams = []
         self._newParams = []
-
-
-    #>------------------------------------------------------------------------
 
     def serialize(self):
 
@@ -37,8 +36,6 @@ class ModifyCommand(Command):
         serialCmd += makeValuatedToken("object", repr(self._object))
 
         return serialCmd
-
-    #>------------------------------------------------------------------------
 
     def unserialize(self, serializedInfos):
 
@@ -52,21 +49,15 @@ class ModifyCommand(Command):
         for anObject in self.getGroup().getHistory().getFrame().getUmlObjects():
             self._object = self._getModifiedObject(strObject, anObject)
 
-    #>------------------------------------------------------------------------
-
     def undo(self):
         method = getattr(self._object, self._methodName)
         apply(method, self._oldParams)
         self.getGroup().getHistory().getFrame().Refresh()
 
-    #>------------------------------------------------------------------------
-
     def redo(self):
         method = getattr(self._object, self._methodName)
         apply(method, self._newParams)
         self.getGroup().getHistory().getFrame().Refresh()
-
-    #>------------------------------------------------------------------------
 
     def execute(self):
         """
@@ -75,39 +66,32 @@ class ModifyCommand(Command):
         """
         pass
 
-    #>------------------------------------------------------------------------
-
     def setMethod(self, methodName):
         """
         set the name of the method that will performed a modification.
-        @param methodName string    :   name of the method
+        @param methodName     :   name of the method
         """
         self._methodName = methodName
-
-    #>------------------------------------------------------------------------
 
     def setOldParams(self, params):
         """
         Set the parameters of the method that must be called to undo.
         Should be called before changes are performed.
-        @param params object    :   values that will be changed by the call
+        @param params :   values that will be changed by the call
                                     of the method. Must be ordered as in the
                                     method profile.
         """
         self._oldParams = params
 
-
     def setNewParams(self, params):
         """
         Set the parameters of the method that must be called to redo.
         Should be called as soon as the parameters for change are known.
-        @param params object    :   values that will be changed by calling
+        @param params     :   values that will be changed by calling
                                     the redo method. Must be ordered as in the
                                     method profile.
         """
         self._newParams = params
-
-    #>------------------------------------------------------------------------
 
     def _getModifiedObject(self, strObject, anObject):
         """
@@ -125,4 +109,3 @@ class ModifyCommand(Command):
             for anSubObject in anObject.__dict__.values():
                 anSubObject = self._getModifiedObject(strObject, anSubObject)
             return anSubObject
-

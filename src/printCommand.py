@@ -1,7 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-from HistoryUtils import *
-from command import *
+
+from command import Command
+
+from org.pyut.history.HistoryUtils import getTokenValue
+from org.pyut.history.HistoryUtils import makeValuatedToken
+
 
 class PrintCommand(Command):
     """
@@ -21,8 +23,6 @@ class PrintCommand(Command):
         Command.__init__(self)
         self._message = None
 
-    #>-----------------------------------------------------------------------
-
     def setMessage(self, message):
         """
         set the message that will be displayed when we call undo/redo methods
@@ -30,19 +30,13 @@ class PrintCommand(Command):
         """
         self._message = message
 
-    #>-----------------------------------------------------------------------
-
     def redo(self):
 
-        print "redo : " + self._message
-
-    #>-----------------------------------------------------------------------
+        print("redo : " + self._message)
 
     def undo(self):
 
-        print "undo : " + self._message
-
-    #>-----------------------------------------------------------------------
+        print("undo : " + self._message)
 
     def serialize(self):
         """
@@ -50,16 +44,13 @@ class PrintCommand(Command):
         method of command.
         """
 
-        return (Command.serialize(self) +
-                makeValuatedToken("message", self._message))
-
-    #>-----------------------------------------------------------------------
+        return Command.serialize(self) + makeValuatedToken("message", self._message)
 
     def unserialize(self, serialCommand):
         """
         get from the serialized command the message to display
         and init the corresponding attribute.
-        @param serialCommand (string)   :   serialized command
+        @param serialCommand    :   serialized command
         """
 
         self._message = getTokenValue("message", serialCommand)

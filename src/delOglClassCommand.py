@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from HistoryUtils import *
 from delOglLinkedObjectCommand import *
-from PyutObject import *
+
 
 class DelOglClassCommand(DelOglLinkedObjectCommand):
     """
@@ -104,7 +103,6 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         from PyutType import PyutType
         from PyutStereotype import PyutStereotype
         from PyutModifier import PyutModifier
-        from PyutVisibility import PyutVisibility
 
         #unserialize the data common to all OglObjects
         DelOglLinkedObjectCommand.unserialize(self, serializedInfos)

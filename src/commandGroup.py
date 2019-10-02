@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from HistoryUtils import *
+from org.pyut.history.HistoryUtils import *
+
 
 class CommandGroup(object):
     """

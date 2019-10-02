@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-from HistoryUtils import *
 from delOglObjectCommand import *
 from OglLinkFactory import *
 

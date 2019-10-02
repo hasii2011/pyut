@@ -1,8 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-from HistoryUtils import *
-from delOglObjectCommand import *
-from PyutObject import *
+
+from delOglObjectCommand import DelOglObjectCommand
+
+from org.pyut.history.HistoryUtils import getTokenValue
+
 
 class DelOglLinkedObjectCommand(DelOglObjectCommand):
     """
@@ -12,15 +12,13 @@ class DelOglLinkedObjectCommand(DelOglObjectCommand):
     but it represent every OglObject that has a pyutLinkedObject as pyutObject
     """
 
-    def __init__(self, shape = None):
+    def __init__(self, shape=None):
         """
         Constructor.
-        @param shape OglLinkedObject    : object that is destroyed
+        @param shape  : object that is destroyed
         """
 
         DelOglObjectCommand.__init__(self, shape)
-
-    #>------------------------------------------------------------------------
 
     def serialize(self):
         """
@@ -28,27 +26,22 @@ class DelOglLinkedObjectCommand(DelOglObjectCommand):
         @return a string representation of the data needed by the command.
         """
 
-        #serialize the data common to all OglObjects
+        # serialize the data common to all OglObjects
         serialShape = DelOglObjectCommand.serialize(self)
 
         fileName = self._shape.getPyutObject().getFilename()
-        serialShape += getTokenValue("fileName",fileName)
+        serialShape += getTokenValue("fileName", fileName)
 
         return serialShape
-
-    #>------------------------------------------------------------------------
 
     def unserialize(self, serializedInfos):
         """
         unserialize the data needed by the destroyed OglLinkedObject.
-        @param serializedInfos String   :   serialized data needed by
-                                            the command.
+        @param serializedInfos :   serialized data needed by the command.
         """
 
-        #unserialize the data common to all OglObjects
+        # unserialize the data common to all OglObjects
         DelOglObjectCommand.unserialize(self, serializedInfos)
 
         fileName = getTokenValue("fileName", serializedInfos)
         self._shape.getPyutObject().setFilename(fileName)
-
-

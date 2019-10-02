@@ -1,6 +1,6 @@
 
 import commandGroup
-from HistoryUtils import *
+from org.pyut.history.HistoryUtils import *
 
 
 class HistoryManager(object):

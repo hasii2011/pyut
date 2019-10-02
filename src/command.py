@@ -1,6 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-from HistoryUtils import *
+
+from org.pyut.history.HistoryUtils import COMMAND_CLASS_ID
+from org.pyut.history.HistoryUtils import COMMAND_MODULE_ID
+from org.pyut.history.HistoryUtils import makeValuatedToken
+
 
 class Command(object):
     """
@@ -17,14 +19,14 @@ class Command(object):
         same profile (no params), because it's this constructor that will
         be called when the history manager will do a unserialization.
         """
-
-        #group to which the command is added. Init when added to a group
+        # group to which the command is added. Init when added to a group
         self._group = None
-
-    #>------------------------------------------------------------------------
 
     def serialize(self):
         """
+        return the module name and class name in view to read them during
+        the unserialization and get the right constructor.
+
         @return a string representation of the command in view to store it
         in a file. This method must be redifined in all subclasses in that
         way :
@@ -35,25 +37,16 @@ class Command(object):
         back the string representation of this value for the unserialization.
         """
 
-        #return the module name and class name in view to read them during
-        #the unserialization and get the right constructor.
         return (makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__)) +
                 makeValuatedToken(COMMAND_CLASS_ID, str(self.__class__.__name__)))
-
-    #>------------------------------------------------------------------------
 
     def unserialize(self, serializedInfos):
         """
         (Abstract) Here should be assigned values to the informations needed
         by the command (see also getTokenValue in historyUtils).
-        @serializedInfos String :   string from which whe have to extract
-                                    the informations needed to set up
-                                    the command.
+        @serializedInfos String :   string from which whe have to extract the informations needed to set up the command.
         """
-
         pass
-
-    #>------------------------------------------------------------------------
 
     def execute(self):
         """
@@ -63,9 +56,7 @@ class Command(object):
         method of the contrary command (for e.g. : createItem.undo() calls
         deleteItem.execute() and deleteItem.undo() calls createItem.execute())
         """
-
         self.redo()
-    #>------------------------------------------------------------------------
 
     def redo(self):
         """
@@ -74,8 +65,6 @@ class Command(object):
         """
         pass
 
-    #>------------------------------------------------------------------------
-
     def undo(self):
         """
         here should be implemented the code to undo the associated action. If
@@ -83,22 +72,16 @@ class Command(object):
         """
         pass
 
-    #>------------------------------------------------------------------------
-
     def getGroup(self):
         """
         @return the group (CommandGroup) to which belongs the command
         """
-
         return self._group
-
-    #>------------------------------------------------------------------------
 
     def setGroup(self, group):
         """
         Set the group to which belongs the command. Avoid to call this method,
         because it is called automaticaly when the command is added to a group.
-        @param group (CommandGroup) : group to which the command belongs.
+        @param group : group to which the command belongs.
         """
-
         self._group = group
