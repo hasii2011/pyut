@@ -9,7 +9,7 @@ __date__ = "2001-11-14"
 from UmlFrame import *
 from pyutUtils import *
 import os, wx
-from mediator import *
+from Mediator1 import *
 
 # Assign constants
 [
@@ -54,8 +54,8 @@ class PyutMainToolbar(wx.Dialog): #wxToolbar
         self.__dicTips={-1:""}     #Dictionary of tips for buttons
         #Note : Modify code when wxPython support multiple toolbars
         #       for a single frame
-        #wx.ToolBar.__init__(self, parent, ID, 
-        #                   wx.DefaultPosition, wx.DefaultSize, 
+        #wx.ToolBar.__init__(self, parent, ID,
+        #                   wx.DefaultPosition, wx.DefaultSize,
                            #wx.NO_BORDER | wx.TB_FLAT | wx.TB_HORIZONTAL |
                            #wx.TB_DOCKABLE)
         #                   wx.TB_HORIZONTAL | wx.TB_DOCKABLE | wx.TB_3DBUTTONS)
@@ -67,11 +67,11 @@ class PyutMainToolbar(wx.Dialog): #wxToolbar
                        "select tool")
         self.addButton(wx.Point(27, 5),  'class.bmp', ID_CLASS,
                        "new class")
-        self.addButton(wx.Point(5,  27), 'relinheritance.bmp', 
+        self.addButton(wx.Point(5,  27), 'relinheritance.bmp',
                       ID_REL_INHERITANCE, "new inheritance")
-        self.addButton(wx.Point(27, 27), 'relrealisation.bmp', 
+        self.addButton(wx.Point(27, 27), 'relrealisation.bmp',
                       ID_REL_REALISATION, "new realisation")
-        self.addButton(wx.Point(5,  49), 'relcomposition.bmp', 
+        self.addButton(wx.Point(5,  49), 'relcomposition.bmp',
                       ID_REL_COMPOSITION, "new composition")
         self.addButton(wx.Point(27, 49), 'relagregation.bmp',
                       ID_REL_AGREGATION, "new agregation")
@@ -114,7 +114,7 @@ class PyutMainToolbar(wx.Dialog): #wxToolbar
         """
         add a button to the window
 
-        @param tuple(x,y) pos : Button position 
+        @param tuple(x,y) pos : Button position
         @param string filename: bitmap filename
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
@@ -122,7 +122,7 @@ class PyutMainToolbar(wx.Dialog): #wxToolbar
         bmp=wx.Bitmap('img'+os.sep+filename, wx.BITMAP_TYPE_BMP)
         wx.BitmapButton(self, id, bmp, pos,
                        wx.Size(bmp.GetWidth()+6, bmp.GetHeight()+6))
-        
+
         #Set callback on mouse move for the tips ?
         #if tips<>"":
             ##Verify that we do have an id

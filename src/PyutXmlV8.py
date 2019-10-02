@@ -49,7 +49,7 @@ from PyutSDInstance import PyutSDInstance
 from PyutSDMessage import PyutSDMessage
 from PyutUseCase import PyutUseCase
 
-from mediator import getMediator
+from Mediator1 import getMediator
 from globals import _
 
 

@@ -7,7 +7,7 @@ __date__ = "2001-11-14"
 
 #from wxPython.wx  import *
 from PyutConsts   import *
-from mediator     import *
+from Mediator1     import *
 from MiniOgl      import *
 from OglLink      import *
 DEBUG=False
@@ -94,7 +94,7 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         #src.SetDraggable(False)
         #dst.SetDraggable(False)
         #print "OglMessage - updatePositions2 ", srcX, srcY, dstX, dstY
-    
+
     #>------------------------------------------------------------------------
 
     def updateLabels(self):
@@ -130,7 +130,7 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         @author C.Dutoit
         """
         return self._pyutObject
-        
+
     #>------------------------------------------------------------------------
 
     def getLabels(self):
@@ -162,7 +162,7 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         #dstY = self._pyutObject.getDstY()
         #src.SetPosition(src.GetPosition()[0], srcY)
         #dst.SetPosition(dst.GetPosition()[0], dstY)
-        
+
         #OglLink.Draw(self, dc)
         if DEBUG:
             print("Draw")

@@ -10,7 +10,7 @@ from pyutUtils import displayError
 from PyutDocument import PyutDocument
 from IoFile import IoFile
 
-from mediator import getMediator
+from Mediator1 import getMediator
 from globals import _
 
 
@@ -280,8 +280,8 @@ class PyutProject:
             dlg.Destroy()
 
         # Remove references
-        import mediator
-        ctrl = mediator.getMediator()
+        import Mediator1
+        ctrl = Mediator1.getMediator()
         fileHandling = ctrl.getFileHandling()
         fileHandling.removeAllReferencesToUmlFrame(frame)
 

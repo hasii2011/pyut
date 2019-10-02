@@ -9,7 +9,7 @@ from wx import Frame
 from UmlFrame import UmlFrame
 from ErrorManager import RAISE_ERROR_VIEW
 from FileHandling import FileHandling
-import mediator
+import Mediator1
 
 
 class PyUtApp(App):
@@ -30,7 +30,7 @@ class TestUmlFrame(unittest.TestCase):
         @author C.Dutoit
         """
         # Initialize mediator and error manager
-        ctrl = mediator.getMediator()
+        ctrl = Mediator1.getMediator()
         ctrl.setScriptMode()
         fileHandling = FileHandling(None, ctrl)
         ctrl.registerFileHandling(fileHandling)

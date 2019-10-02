@@ -7,7 +7,7 @@ __date__    = "2001-12-12"
 
 #from wxPython.wx  import *
 from MiniOgl      import *
-from mediator     import *
+from Mediator1     import *
 from OglLink      import *
 from PyutConsts   import *
 
@@ -19,7 +19,7 @@ class OglCDObject(ShapeEventHandler):
     """
     This is the base class for new CD OGL objects.
     Every new CD OGL class must inherate this class and redefines methods if
-    necessary. 
+    necessary.
 
     This is to be the most compatible with old OglObject class.
 
@@ -28,7 +28,7 @@ class OglCDObject(ShapeEventHandler):
     :author: C.Dutoit
     """
 
-    #>------------------------------------------------------------------ 
+    #>------------------------------------------------------------------
 
     def __init__(self, pyutObject):
         """

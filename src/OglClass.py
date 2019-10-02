@@ -12,7 +12,7 @@ from PyutClass import PyutClass
 from pyutUtils import *
 from globals import _
 
-from mediator import getMediator
+from Mediator1 import getMediator
 
 # Menu IDs
 [MNU_TOGGLE_STEREOTYPE, MNU_TOGGLE_FIELDS, MNU_TOGGLE_METHODS, MNU_FIT_FIELDS, MNU_CUT_SHAPE ]   = assignID(5)

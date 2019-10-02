@@ -7,8 +7,8 @@ from wx import Point
 
 from OglLink import *
 
-from mediator import getMediator
-from mediator import ACTION_ZOOM_OUT
+from Mediator1 import getMediator
+from Mediator1 import ACTION_ZOOM_OUT
 
 DEFAULT_FONT_SIZE = 10
 
@@ -128,8 +128,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
             x:
             y:
         """
-        import mediator
-        fileHandling = mediator.getMediator().getFileHandling()
+        import Mediator1
+        fileHandling = Mediator1.getMediator().getFileHandling()
         if fileHandling is not None:
             fileHandling.setModified(True)
         RectangleShape.SetPosition(self, x, y)

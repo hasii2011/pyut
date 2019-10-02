@@ -38,8 +38,8 @@ class PyutObject:
 
         @author C.Dutoit
         """
-        import mediator
-        ctrl = mediator.getMediator()
+        import Mediator1
+        ctrl = Mediator1.getMediator()
         for obj in [el for el in ctrl.getUmlObjects() if isinstance(el, PyutObject)]:
             if obj.getId() == idToCheck:
                 return True

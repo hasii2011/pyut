@@ -15,7 +15,7 @@ from PyutPrintout    import *
 from PluginManager   import *
 from copy            import deepcopy
 from UmlDiagramsFrame import *
-import mediator
+import Mediator1
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):
     """
@@ -23,7 +23,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
     This class is the instance of one UML class diagram structure.
     It derives its functionalities from UmlDiagramsFrame, but
-    as he know the structure of a class diagram, 
+    as he know the structure of a class diagram,
     he can load class diagram datas.
 
     Used by FilesHandling.
@@ -79,12 +79,12 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         ##Return with success
         #wx.EndBusyCursor()
         #return True
-        
+
     #>-----------------------------------------------------------------------
 
     #def onClose(self, force=False):
         #"""
-        #Closing handler (must be called explicitly). 
+        #Closing handler (must be called explicitly).
         #Save files and ask for confirmation.
 #
         #@return True if the close succeeded

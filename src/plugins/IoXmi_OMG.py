@@ -7,7 +7,7 @@ import wx
 
 from OglClass import OglClass
 
-from mediator import displayError
+from Mediator1 import displayError
 
 from PyutConsts import OGL_AGGREGATION
 from PyutConsts import OGL_ASSOCIATION
