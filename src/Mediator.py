@@ -541,7 +541,7 @@ class Mediator(Singleton):
                 self.setStatusText(_("Action cancelled"))
                 return
 
-            from createOglLinkCommand import CreateOglLinkCommand
+            from CreateOglLinkCommand import CreateOglLinkCommand
             from CommandGroup import CommandGroup
             cmd = CreateOglLinkCommand(self._src,
                                        self._dst,
@@ -803,7 +803,7 @@ class Mediator(Singleton):
 
     def deleteSelectedShape(self):
         from DelOglObjectCommand import DelOglObjectCommand
-        from delOglClassCommand import DelOglClassCommand
+        from DelOglClassCommand import DelOglClassCommand
         from DelOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass
         from OglObject import OglObject
@@ -1012,7 +1012,7 @@ class Mediator(Singleton):
 
     def beginChangeRecording(self, oglObject):
 
-        from delOglClassCommand import DelOglClassCommand
+        from DelOglClassCommand import DelOglClassCommand
         from DelOglObjectCommand import DelOglObjectCommand
         from DelOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass

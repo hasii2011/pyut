@@ -1,7 +1,14 @@
 
-from Command import *
-from OglLinkFactory import *
+from Command import Command
+
+from OglLinkFactory import getLinkType
+from OglLinkFactory import getOglLinkFactory
+
+from PyutConsts import OGL_INHERITANCE
 from PyutLink import PyutLink
+
+from org.pyut.history.HistoryUtils import getTokenValue
+from org.pyut.history.HistoryUtils import makeValuatedToken
 
 
 class CreateOglLinkCommand(Command):
@@ -90,13 +97,12 @@ class CreateOglLinkCommand(Command):
             # get the source and destination OglObjects of the link
             src = umlFrame.getUmlObjectById(srcId)
             dst = umlFrame.getUmlObjectById(dstId)
-
-            #create the link, but don't add it to the frame.
-            #the model position is assigned to temporary to
-            #view, but will be reassigned to the model, after
-            #it has been added to the frame, because the zoom
-            #could have change and we have to update from the
-            #model (see redo() method).
+            # create the link, but don't add it to the frame.
+            # the model position is assigned to temporary to
+            # view, but will be reassigned to the model, after
+            # it has been added to the frame, because the zoom
+            # could have change and we have to update from the
+            # model (see redo() method).
             self._link = self._createLink(src, dst, linkType,
                                           srcPos, dstPos)
             # we set the pyutId that the link has at its first creation

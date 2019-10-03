@@ -1,5 +1,5 @@
 
-from delOglClassCommand import DelOglClassCommand
+from DelOglClassCommand import DelOglClassCommand
 
 from globals import _
 
