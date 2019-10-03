@@ -1,5 +1,5 @@
 
-from Command import Command
+from org.pyut.commands.Command import Command
 
 from org.pyut.history.HistoryUtils import COMMAND_BEGIN_ID
 from org.pyut.history.HistoryUtils import COMMAND_CLASS_ID

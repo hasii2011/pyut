@@ -1,6 +1,6 @@
 
 
-from Command import Command
+from org.pyut.commands.Command import Command
 
 from DelOglObjectCommand import DelOglObjectCommand
 

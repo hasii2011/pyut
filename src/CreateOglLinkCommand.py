@@ -1,5 +1,5 @@
 
-from Command import Command
+from org.pyut.commands.Command import Command
 
 from OglLinkFactory import getLinkType
 from OglLinkFactory import getOglLinkFactory
