@@ -1,5 +1,4 @@
-
-import CommandGroup
+from org.pyut.commands import CommandGroup
 from org.pyut.history.HistoryUtils import *
 
 

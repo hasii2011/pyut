@@ -425,7 +425,7 @@ class Mediator(Singleton):
             return SKIP_EVENT
         elif self._currentAction == ACTION_NEW_CLASS:
             from CreateOglClassCommand import CreateOglClassCommand
-            from CommandGroup import CommandGroup
+            from org.pyut.commands.CommandGroup import CommandGroup
             cmd = CreateOglClassCommand(x, y, True)
             group = CommandGroup("Create class")
             group.addCommand(cmd)
@@ -542,7 +542,7 @@ class Mediator(Singleton):
                 return
 
             from CreateOglLinkCommand import CreateOglLinkCommand
-            from CommandGroup import CommandGroup
+            from org.pyut.commands.CommandGroup import CommandGroup
             cmd = CreateOglLinkCommand(self._src,
                                        self._dst,
                                        LINK_TYPE[self._currentAction],
@@ -808,7 +808,7 @@ class Mediator(Singleton):
         from OglClass import OglClass
         from OglObject import OglObject
         from OglLink import OglLink
-        from CommandGroup import CommandGroup
+        from org.pyut.commands.CommandGroup import CommandGroup
 
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
@@ -1034,7 +1034,7 @@ class Mediator(Singleton):
         from CreateOglClassCommand import CreateOglClassCommand
         from OglClass import OglClass
 
-        from CommandGroup import CommandGroup
+        from org.pyut.commands.CommandGroup import CommandGroup
 
         cmd = None
 

@@ -1,7 +1,7 @@
 
 from org.pyut.history.HistoryManager import HistoryManager
 
-from CommandGroup import CommandGroup
+from org.pyut.commands.CommandGroup import CommandGroup
 from PrintCommand import PrintCommand
 """
 @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
