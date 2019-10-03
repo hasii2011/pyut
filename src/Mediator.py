@@ -803,7 +803,7 @@ class Mediator(Singleton):
 
     def deleteSelectedShape(self):
         from DelOglObjectCommand import DelOglObjectCommand
-        from DelOglClassCommand import DelOglClassCommand
+        from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
         from DelOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass
         from OglObject import OglObject
@@ -1012,7 +1012,7 @@ class Mediator(Singleton):
 
     def beginChangeRecording(self, oglObject):
 
-        from DelOglClassCommand import DelOglClassCommand
+        from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
         from DelOglObjectCommand import DelOglObjectCommand
         from DelOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass

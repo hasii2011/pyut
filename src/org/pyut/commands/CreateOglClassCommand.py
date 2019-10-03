@@ -1,5 +1,5 @@
 
-from DelOglClassCommand import DelOglClassCommand
+from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
 
 from globals import _
 
