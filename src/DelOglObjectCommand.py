@@ -43,7 +43,7 @@ class DelOglObjectCommand(Command):
         # so because the link can be rebuild only after that the
         # shape is rebuild and so the command for link deletion
         # must be placed after this one.
-        from DelOglLinkCommand import DelOglLinkCommand
+        from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         for link in self._shape.getLinks():
             if not link.IsSelected():
                 cmd = DelOglLinkCommand(link)

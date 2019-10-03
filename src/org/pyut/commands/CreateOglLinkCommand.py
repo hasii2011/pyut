@@ -135,7 +135,7 @@ class CreateOglLinkCommand(Command):
         """
         # create the command to delete an oglLink without add it to the group, then
         # just execute the destruction of the link.
-        from DelOglLinkCommand import DelOglLinkCommand
+        from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         cmd = DelOglLinkCommand(self._link)
         cmd.setGroup(self.getGroup())
         cmd.execute()
