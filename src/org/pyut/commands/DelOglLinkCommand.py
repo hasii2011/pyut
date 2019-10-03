@@ -2,7 +2,7 @@
 
 from org.pyut.commands.Command import Command
 
-from DelOglObjectCommand import DelOglObjectCommand
+from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
 
 
 from OglLinkFactory import getLinkType
