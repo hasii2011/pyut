@@ -424,7 +424,7 @@ class Mediator(Singleton):
         if self._currentAction == ACTION_SELECTOR:
             return SKIP_EVENT
         elif self._currentAction == ACTION_NEW_CLASS:
-            from createOglClassCommand import CreateOglClassCommand
+            from CreateOglClassCommand import CreateOglClassCommand
             from CommandGroup import CommandGroup
             cmd = CreateOglClassCommand(x, y, True)
             group = CommandGroup("Create class")
@@ -1031,7 +1031,7 @@ class Mediator(Singleton):
 
     def endChangeRecording(self, oglObject):
 
-        from createOglClassCommand import CreateOglClassCommand
+        from CreateOglClassCommand import CreateOglClassCommand
         from OglClass import OglClass
 
         from CommandGroup import CommandGroup
