@@ -23,7 +23,7 @@ from OglSDMessage import OglSDMessage
 
 from MiniOgl import SKIP_EVENT
 from MiniOgl import DiagramFrame
-from CreateOglLinkCommand import CreateOglLinkCommand
+from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 from Mediator import ACTION_ZOOM_IN
 from Mediator import getMediator

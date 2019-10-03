@@ -541,7 +541,7 @@ class Mediator(Singleton):
                 self.setStatusText(_("Action cancelled"))
                 return
 
-            from CreateOglLinkCommand import CreateOglLinkCommand
+            from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
             from org.pyut.commands.CommandGroup import CommandGroup
             cmd = CreateOglLinkCommand(self._src,
                                        self._dst,
