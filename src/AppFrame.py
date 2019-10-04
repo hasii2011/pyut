@@ -265,7 +265,8 @@ class AppFrame(Frame):
                 tipsFrame = TipsFrame(self)
                 #  tipsFrame.Show()     # weird the tips frame constructor does a .show itself  TODO look at this in future
         except (ValueError, Exception) as e:
-            self.logger.error(f'onActivate: {e}')
+            if self._prefs is not None:
+                self.logger.error(f'_onActivate: {e}')
 
     def _initPyutTools(self):
         """
