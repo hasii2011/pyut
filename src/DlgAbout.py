@@ -1,27 +1,61 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# Note : Linux seems not to support SetPointSize on dc... why ?
-# Todo : change font;  or find a way to not print each character one after the
-#        other (not preatty, with, for eg : WiiW)
 
-__version__ = "$Revision: 1.12 $"
-__author__ = "EI6, eivd, Group Dutoit-Roux"
-__date__ = "2002-05-25"
-#from wxPython.wx import *
-import wx
-import thread
+from logging import Logger
+from logging import getLogger
+
+from os import sep as osSep
+
+from pkg_resources import resource_filename
+
+# Todo : change font;  or find a way to not print each character one after the
+#        other (not pretty, with, for eg : WiiW)
+from wx import ALIGN_CENTER
+from wx import ALL
+from wx import BITMAP_TYPE_BMP
+from wx import BITMAP_TYPE_ICO
+from wx import BRUSHSTYLE_SOLID
+from wx import BoxSizer
+from wx import Brush
+from wx import Button
+from wx import CAPTION
+from wx import BOTH
+from wx import Colour
+from wx import OK
+from wx import VERTICAL
+from wx import FONTFAMILY_SWISS
+
+from wx import EVT_BUTTON
+from wx import EVT_CLOSE
+from wx import EVT_PAINT
+
+from wx import Bitmap
+from wx import DefaultPosition
+from wx import Dialog
+from wx import MemoryDC
+from wx import NullBitmap
+from wx import PaintDC
+from wx import Size
+from wx import StaticBitmap
+from wx import StaticText
+from wx import Icon
+from wx import Panel
+
+from wx import Yield as wxYield
+
+import threading
+
 from pyutUtils import assignID
+from globals import IMG_PKG
 
 # Constants
 [ID_OK] = assignID(1)
-FrameWidth=400          # Canvas width
-FrameHeight=300         # and height
+FrameWidth  = 400       # Canvas width
+FrameHeight = 300       # and height
 x0 = 20                 # Initial x
 y0 = 20                 # Initial y
-dy=20                   # Y increment
+dy = 20                 # Y increment
 
-#Text to show. String list.
-txtToShow=[
+# Text to show. String list.
+txtToShow = [
             #"        .S6EEi                                    ",
             #"     6M@     iMM@                                 ",
             #"    Mz   QM    MMl          wQMM     8M           ",
@@ -48,6 +82,10 @@ txtToShow=[
             "",
             "",
             "",
+            "",
+            "PyUt 1.5 Port to Python 3.7 Credits:",
+            " ====================",
+            " Humberto A. Sanchez II, Consultant, Python Enthusiast",
             "",
             "",
             "",
@@ -223,22 +261,21 @@ txtToShow=[
            ]
 
 
-##############################################################################
+# #############################################################################
 # Panel update event
-#wx.EVT_UPDATE_PANEL = wx.NewEventType()
+# wx.EVT_UPDATE_PANEL = wx.NewEventType()
 #
-## Panel update event connection with window
-#def EVT_UPDATE_PANEL(win, func):
+# # Panel update event connection with window
+# def EVT_UPDATE_PANEL(win, func):
 #    win.Connect(-1, -1, wx.EVT_UPDATE_PANEL, func)
 #
-## Panel update event class
-#class UpdatePanelEvent(wx.PyEvent):
+# # Panel update event class
+# class UpdatePanelEvent(wx.PyEvent):
 #    def __init__(self):
 #        wx.PyEvent.__init__(self)
 #        self.SetEventType(wx.EVT_UPDATE_PANEL)
-
-##############################################################################
-class DlgAbout(wx.Dialog):
+# #############################################################################
+class DlgAbout(Dialog):
     """
     DlgAbout : About box for Pyut.
 
@@ -253,62 +290,56 @@ class DlgAbout(wx.Dialog):
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.12 $
     """
-
-    #>------------------------------------------------------------------------
-
     def __init__(self, parent, ID, title):
         """
         Constructor.
 
-        @param wxWindow parent : parent window
-        @param int ID : wx ID of this frame
-        @param String title : Title to display
+        @param  parent : parent window
+        @param ID : wx ID of this frame
+        @param  title : Title to display
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        import os
-        # Application initialisation
-        wx.Dialog.__init__(self, parent, ID, title, wx.DefaultPosition, wx.Size(FrameWidth, FrameHeight))
-        icon = wx.Icon('img'+os.sep+'icon.ico', wx.BITMAP_TYPE_ICO)
+        super().__init__(parent, ID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
+
+        self.logger: Logger = getLogger(__name__)
+        icon = Icon(f'img{osSep}pyut.ico', BITMAP_TYPE_ICO)
+
         self.SetIcon(icon)
-        self.Center(wx.BOTH)
+        self.Center(BOTH)
 
         # Animation panel
-        self._panel = wx.Panel(self, -1, size=(FrameWidth, FrameHeight))
+        self._panel = Panel(self, -1, size=(FrameWidth, FrameHeight))
 
         # Picture and text
-        import os
-        bmp = wx.Bitmap("img" + os.sep + "pyut.bmp", wx.BITMAP_TYPE_BMP)
-        self._picture = wx.StaticBitmap(self, -1, bmp)
-        self._label = wx.StaticText(self, -1,
-                              "2002, The PyUt team.\nPublished under "
-                              "the GNU General Public License",
-                              style=wx.THICK_FRAME)
+        # bmp = Bitmap("img" + os.sep + "pyut.bmp", BITMAP_TYPE_BMP)
+        fileName = resource_filename(IMG_PKG, 'pyut.bmp')
+        bmp = Bitmap(fileName, BITMAP_TYPE_BMP)
+
+        self._picture = StaticBitmap(self, -1, bmp)
+        summaryText: str = "2019, The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
+        self._label   = StaticText(self, -1, summaryText, style=CAPTION)
 
         # Main sizer
         self.SetAutoLayout(True)
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self._picture,                0, wx.ALL | wx.ALIGN_CENTER, 5)
-        sizer.Add(self._panel,                  1, wx.ALL | wx.ALIGN_CENTER, 5)
-        sizer.Add(self._label,                  0, wx.ALL | wx.ALIGN_CENTER, 5)
-        btnOk = wx.Button(self, ID_OK, "&Ok")
-        sizer.Add(btnOk, 0, wx.ALL | wx.ALIGN_CENTER, 5)
+        sizer = BoxSizer(VERTICAL)
+        sizer.Add(self._picture, 0, ALL | ALIGN_CENTER, 5)
+        sizer.Add(self._panel,   1, ALL | ALIGN_CENTER, 5)
+        sizer.Add(self._label,   0, ALL | ALIGN_CENTER, 5)
+
+        btnOk = Button(self, ID_OK, "&Ok")
+        sizer.Add(btnOk, 0, ALL | ALIGN_CENTER, 5)
         self.SetSizer(sizer)
         sizer.Fit(self)
 
         # Create thread instance
-        self._thread = myThread(self._panel, self)
-
+        self._thread = AboutDialogThread(self._panel, self)
 
         # Events
-        self.Bind(wx.EVT_BUTTON, self._onOk, btnOk)
-        self._panel.Bind(wx.EVT_PAINT, self.OnRefreshPanel)
-        #TODO self._panel.Bind(wx.EVT_UPDATE_PANEL, self.OnPanelUpdate)
-        self.Bind(wx.EVT_CLOSE, self._onOk)
-
-
-
-    #>------------------------------------------------------------------------
+        self.Bind(EVT_BUTTON, self._onOk, btnOk)
+        self._panel.Bind(EVT_PAINT, self.OnRefreshPanel)
+        # TODO self._panel.Bind(wx.EVT_UPDATE_PANEL, self.OnPanelUpdate)
+        self.Bind(EVT_CLOSE, self._onOk)
 
     def _onOk(self, event):
         """
@@ -322,15 +353,10 @@ class DlgAbout(wx.Dialog):
         self._thread.Stop()
         while self._thread.isRunning():
             time.sleep(0.1)
-            wx.Yield()
+            wxYield()
 
         # Exit modal mode
-        self.EndModal(wx.OK)
-
-
-
-
-    #>------------------------------------------------------------------------
+        self.EndModal(OK)
 
     def ShowModal(self):
         """
@@ -340,10 +366,7 @@ class DlgAbout(wx.Dialog):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._thread.Start()
-        wx.Dialog.ShowModal(self)
-
-
-    #>------------------------------------------------------------------------
+        Dialog.ShowModal(self)
 
     def OnPanelUpdate(self, evt):
         """
@@ -354,9 +377,7 @@ class DlgAbout(wx.Dialog):
         """
         self._panel.Refresh(False)
 
-
-    #>------------------------------------------------------------------------
-
+    # noinspection PyUnusedLocal
     def OnRefreshPanel(self, event):
         """
         Refresh dialog box
@@ -364,6 +385,7 @@ class DlgAbout(wx.Dialog):
         @since 1.1.2.4
         @author C.Dutoit <dutoitc@hotmail.com>
         """
+        import time
         # constants
         backr = backb = 230     # Background color
         backg = 255
@@ -371,24 +393,22 @@ class DlgAbout(wx.Dialog):
         frontg = 0
         FADE_IN_LENGTH = 63
 
-
-
         # Init memory buffer
-        tdc=wx.MemoryDC()
-        tdc.SelectObject(wx.EmptyBitmap(FrameWidth, FrameHeight))
-        while not tdc.Ok():
-            sleep(0.05)
-            tdc=wx.MemoryDC()
-            tdc.SelectObject(wx.EmptyBitmap(FrameWidth, FrameHeight))
+        tdc = MemoryDC()
+        tdc.SelectObject(Bitmap(FrameWidth, FrameHeight))
+        while not tdc.IsOk():
+            time.sleep(0.05)
+            tdc = MemoryDC()
+            tdc.SelectObject(Bitmap(FrameWidth, FrameHeight))
 
         # Init drawing
-        tdc.BeginDrawing()
-        tdc.SetTextForeground(wx.Colour(frontr, frontg, frontb))
-        tdc.SetBackground(wx.Brush(wx.Colour(backr, backg, backb), wx.SOLID))
+        # tdc.BeginDrawing()
+        tdc.SetTextForeground(Colour(frontr, frontg, frontb))
+        tdc.SetBackground(Brush(Colour(backr, backg, backb), BRUSHSTYLE_SOLID))
         tdc.Clear()
-        font=tdc.GetFont()
-        #font.SetFamily(wx.ROMAN)
-        font.SetFamily(wx.SWISS)
+        font = tdc.GetFont()
+        # font.SetFamily(wx.ROMAN)
+        font.SetFamily(FONTFAMILY_SWISS)
         font.SetPointSize(12)
         tdc.SetFont(font)
 
@@ -399,43 +419,36 @@ class DlgAbout(wx.Dialog):
             r = backr - n * (backr - frontr)
             g = backg - n * (backg - frontg)
             b = backb - n * (backb - frontb)
-            r=int(r)
-            g=int(g)
-            b=int(b)
-            tdc.SetTextForeground(wx.Colour(r, g, b))
+            r = int(r)
+            g = int(g)
+            b = int(b)
+            tdc.SetTextForeground(Colour(r, g, b))
 
         # Display text
         for j in range(1,len(txtToShow)):
             # Draw text ?
-            if position>FADE_IN_LENGTH:
+            if position > FADE_IN_LENGTH:
                 y = y0 + j*dy - (position - FADE_IN_LENGTH)
-                if y>-dy and y<FrameHeight:
+                if y > -dy and y < FrameHeight:
                     tdc.DrawText(txtToShow[j], x0, y)
             else: # Draw initial screen with fade in
                 y = y0 + j*dy
-                if y>-dy and y<FrameHeight:
+                if y > -dy and y < FrameHeight:
                     tdc.DrawText(txtToShow[j], x0, y)
 
-
         # end drawing
-        tdc.EndDrawing()
+        # tdc.EndDrawing()
 
         # Show memory dc to current dc (blit)
-        dc = wx.PaintDC(self._panel)
-        dc.BeginDrawing()
+        dc = PaintDC(self._panel)
+        # dc.BeginDrawing()
         dc.Blit(0, 0, FrameWidth, FrameHeight, tdc, 0, 0)
-        dc.EndDrawing()
-        tdc.SelectObject(wx.NullBitmap)
+        # dc.EndDrawing()
+        tdc.SelectObject(NullBitmap)
 
 
+class AboutDialogThread:
 
-
-
-##############################################################################
-##############################################################################
-class myThread:
-
-    #>------------------------------------------------------------------------
     def __init__(self, win, parent):
         """
         Thread constructor.
@@ -444,13 +457,12 @@ class myThread:
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         # Init
+        self.logger: Logger = getLogger('AboutDialogThread')
         self._win = win
         self._parent = parent
-        self._position=0.0            # Current position
+        self._position = 0.0            # Current position
         self._keepGoing = self._running = False
 
-
-    #>------------------------------------------------------------------------
     def getPosition(self):
         """
         Return current position
@@ -460,8 +472,6 @@ class myThread:
         """
         return self._position
 
-    #>------------------------------------------------------------------------
-
     def Start(self):
         """
         Start the task.
@@ -470,10 +480,10 @@ class myThread:
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._keepGoing = self._running = True
-        thread.start_new_thread(self.Run, ())
-
-
-    #>------------------------------------------------------------------------
+        # thread.start_new_thread(self.Run, ())
+        self.logger.info("Start a new thread")
+        x = threading.Thread(target=self.Run, args=())
+        x.start()
 
     def Stop(self):
         """
@@ -484,9 +494,6 @@ class myThread:
         """
         self._keepGoing = False
 
-
-    #>------------------------------------------------------------------------
-
     def isRunning(self):
         """
         Test if the task is currently running.
@@ -495,9 +502,6 @@ class myThread:
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         return self._running
-
-
-    #>------------------------------------------------------------------------
 
     def Run(self):
         """
@@ -511,23 +515,16 @@ class myThread:
         # Note : bug for localisation, so I use 2/100 instead of 0.02 (0,02)
         while self._keepGoing:
             # Change state
-            self._position+=1
+            self._position += 1
 
             # End of text -> re-begin on top
             if self._position > (len(txtToShow)+15) * dy:
                 self._position = 0.0
-
-
-
             # Ask for update
-            #evt = UpdatePanelEvent()
-            #wx.PostEvent(self._win, evt)
+            # evt = UpdatePanelEvent()
+            # wx.PostEvent(self._win, evt)
             self._parent.OnPanelUpdate(None)
-
             # Wait
-            wx.Yield()
+            wxYield()
             time.sleep(Delay_Unit)
         self._running = False
-
-
-
