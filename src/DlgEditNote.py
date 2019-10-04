@@ -113,6 +113,7 @@ class DlgEditNote(Dialog):
         """
         self._text = event.GetString()
 
+    # noinspection PyUnusedLocal
     def _onCmdOk(self, event):
         """
         Handle click on "Ok" button.
@@ -126,6 +127,7 @@ class DlgEditNote(Dialog):
         self._returnAction = OK
         self.Close()
 
+    # noinspection PyUnusedLocal
     def _onCmdCancel(self, event):
         """
         Handle click on "Cancel" button.
