@@ -1235,7 +1235,7 @@ class AppFrame(Frame):
         @since 1.4
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        from DlgAbout import DlgAbout
+        from org.pyut.dialogs.DlgAbout import DlgAbout
         import PyutVersion
         dlg = DlgAbout(self, -1, _("About PyUt ") + PyutVersion.getPyUtVersion())
         dlg.ShowModal()
