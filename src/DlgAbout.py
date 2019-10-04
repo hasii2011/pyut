@@ -56,26 +56,26 @@ dy = 20                 # Y increment
 
 # Text to show. String list.
 txtToShow = [
-            #"        .S6EEi                                    ",
-            #"     6M@     iMM@                                 ",
-            #"    Mz   QM    MMl          wQMM     8M           ",
-            #"   M     MM    8M         MM 6MM    iMM     M     ",
-            #"  M     ,M    BMB :    lB    .Mx    MM   CMMMEW   ",
-            #"  M     MMMMMMMCMiMM   MM    MM     MM    BM6.    ",
-            #"  M     MB         MM  MW    MM    8Mr    MM      ",
-            #"  MMM  MM           M  M    MM     MM     MB      ",
-            #"       MM           M.M6    MM  8MMMC  M ,M  Mw   ",
-            #"     iMM   .        MMM    MMMMM@ MMMMM  MMMMC    ",
-            #"   :MEE@MMMl        MM     CMMl   wMM    zM       ",
-            #"                   CM                             ",
-            #"                  MM                              ",
-            #"             MMMMM                                ",
+            # "        .S6EEi                                    ",
+            # "     6M@     iMM@                                 ",
+            # "    Mz   QM    MMl          wQMM     8M           ",
+            # "   M     MM    8M         MM 6MM    iMM     M     ",
+            # "  M     ,M    BMB :    lB    .Mx    MM   CMMMEW   ",
+            # "  M     MMMMMMMCMiMM   MM    MM     MM    BM6.    ",
+            # "  M     MB         MM  MW    MM    8Mr    MM      ",
+            # "  MMM  MM           M  M    MM     MM     MB      ",
+            # "       MM           M.M6    MM  8MMMC  M ,M  Mw   ",
+            # "     iMM   .        MMM    MMMMM@ MMMMM  MMMMC    ",
+            # "   :MEE@MMMl        MM     CMMl   wMM    zM       ",
+            # "                   CM                             ",
+            # "                  MM                              ",
+            # "             MMMMM                                ",
             "",
             "",
             " About PyUt... or the guys behind the success story...",
             "",
             " Don't forget to visit the Pyut's official web site :",
-            "                HTTP://PYUT.SF.NET",
+            "                http://PYUT.SF.NET",
             "",
             "",
             "",
@@ -83,7 +83,7 @@ txtToShow = [
             "",
             "",
             "",
-            "PyUt 1.5 Port to Python 3.7 Credits:",
+            " PyUt 1.5 Port to Python 3.7 Credits:",
             " ====================",
             " Humberto A. Sanchez II, Consultant, Python Enthusiast",
             "",
@@ -341,6 +341,7 @@ class DlgAbout(Dialog):
         # TODO self._panel.Bind(wx.EVT_UPDATE_PANEL, self.OnPanelUpdate)
         self.Bind(EVT_CLOSE, self._onOk)
 
+    # noinspection PyUnusedLocal
     def _onOk(self, event):
         """
         _onOk : Handle user click on the OK button
@@ -368,6 +369,7 @@ class DlgAbout(Dialog):
         self._thread.Start()
         Dialog.ShowModal(self)
 
+    # noinspection PyUnusedLocal
     def OnPanelUpdate(self, evt):
         """
         Update panel.
@@ -425,15 +427,15 @@ class DlgAbout(Dialog):
             tdc.SetTextForeground(Colour(r, g, b))
 
         # Display text
-        for j in range(1,len(txtToShow)):
+        for j in range(1, len(txtToShow)):
             # Draw text ?
             if position > FADE_IN_LENGTH:
                 y = y0 + j*dy - (position - FADE_IN_LENGTH)
-                if y > -dy and y < FrameHeight:
+                if -dy < y < FrameHeight:
                     tdc.DrawText(txtToShow[j], x0, y)
-            else: # Draw initial screen with fade in
+            else:   # Draw initial screen with fade in
                 y = y0 + j*dy
-                if y > -dy and y < FrameHeight:
+                if -dy < y < FrameHeight:
                     tdc.DrawText(txtToShow[j], x0, y)
 
         # end drawing
