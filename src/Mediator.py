@@ -41,7 +41,7 @@ from pyutUtils import displayError
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.DlgEditNote import DlgEditNote
 from DlgEditUseCase import DlgEditUseCase
-from DlgEditLink import DlgEditLink
+from org.pyut.dialogs.DlgEditLink import DlgEditLink
 
 from PyutVersion import getPyUtVersion
 from Singleton import Singleton

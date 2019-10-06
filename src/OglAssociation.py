@@ -5,7 +5,6 @@ from math import cos
 from math import sin
 
 from OglLink import *
-from DlgEditLink import *
 
 # Kind of labels
 [CENTER, SRC_CARD, DEST_CARD] = list(range(3))
@@ -121,7 +120,7 @@ class OglAssociation(OglLink):
         x2, y2 = line[0]
         a = x2 - x1
         b = y2 - y1
-        if abs(a) < 0.01: # vertical segment
+        if abs(a) < 0.01:  # vertical segment
             if b > 0:
                 alpha = -pi/2
             else:
