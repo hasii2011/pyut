@@ -1659,7 +1659,7 @@ class AppFrame(Frame):
         @author L. Burgbacher <lb@alawa.ch>
         @since 1.34
         """
-        from DlgPyutProperties import DlgPyutProperties
+        from org.pyut.dialogs.DlgPyutProperties import DlgPyutProperties
         dlg = DlgPyutProperties(self, -1, self._ctrl, self._prefs)
         dlg.ShowModal()
         dlg.Destroy()
