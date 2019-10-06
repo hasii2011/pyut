@@ -105,6 +105,9 @@ class DlgHelp(Dialog):
         @since 1.1
         @author C.Dutoit
         """
+        #
+        # TODO:  use resource loader to find help index.html
+        #
         name = osPath.join(getcwd(), 'help/index.html')
         self.html.LoadPage(name)
 

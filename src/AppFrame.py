@@ -1250,7 +1250,7 @@ class AppFrame(Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
 
-        import DlgHelp  # fixed for python 2.2 compatibility
+        from org.pyut.dialogs import DlgHelp
         dlgHelp = DlgHelp.DlgHelp(self, -1, _("Pyut Help"))
         dlgHelp.Show(True)
 
