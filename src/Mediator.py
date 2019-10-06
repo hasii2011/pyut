@@ -38,7 +38,7 @@ from PyutMethod import WITH_PARAMS
 from PyutPreferences import PyutPreferences
 from pyutUtils import displayError
 
-from DlgEditClass import *         # Have to do this to avoid cyclical dependency
+from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from DlgEditNote import DlgEditNote
 from DlgEditUseCase import DlgEditUseCase
 from DlgEditLink import DlgEditLink
