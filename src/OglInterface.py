@@ -12,7 +12,7 @@ from OglClass import OglClass
 
 from Mediator import Mediator
 
-from DlgRemoveLink import DlgRemoveLink
+from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
 # Kind of labels
 [CENTER] = list(range(1))

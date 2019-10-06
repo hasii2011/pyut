@@ -5,7 +5,7 @@ from wx import PENSTYLE_LONG_DASH
 from wx import Pen
 
 from OglLink import OglLink
-from DlgRemoveLink import DlgRemoveLink
+from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
 
 class OglNoteLink(OglLink):

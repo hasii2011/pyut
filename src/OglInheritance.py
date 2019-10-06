@@ -4,7 +4,7 @@ import wx
 from PyutLink import PyutLink
 from OglLink import OglLink
 
-from DlgRemoveLink import DlgRemoveLink
+from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
 from Mediator import Mediator
 
