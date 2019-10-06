@@ -3,16 +3,18 @@ import wx
 
 from pyutUtils import *
 from PyutLink import *
+from globals import _
+
 from copy import deepcopy
 
 
-__version__ = "$Revision: 1.9 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-1-8"
-
 [
-    TXT_CARDINALITY_A, TXT_CARDINALITY_B, TXT_RELATIONSHIP,
-    A_ROLE_IN_B, B_ROLE_IN_A, BTN_REMOVE
+    TXT_CARDINALITY_A,
+    TXT_CARDINALITY_B,
+    TXT_RELATIONSHIP,
+    A_ROLE_IN_B,
+    B_ROLE_IN_A,
+    BTN_REMOVE
 ] = assignID(6)
 
 
@@ -48,20 +50,17 @@ class DlgEditLink (wx.Dialog):
         @author C.Dutoit<dutoitc@hotmail.com>
         """
 
-        wx.Dialog.__init__(self, parent, ID, _("Link Edit"),
-                          style = wx.RESIZE_BORDER|wx.CAPTION)
+        super().__init__(parent, ID, _("Link Edit"), style=wx.RESIZE_BORDER | wx.CAPTION)
 
         # Associated PyutLink
         self._pyutLink = pyutLink
-        #~ self.SetSize(wx.Size(416, 200))
 
-        #init members vars
         self._relationship = self._pyutLink.getName()
         self._aRoleInB = ""
         self._bRoleInA = ""
         self._cardinalityA = self._pyutLink.getSrcCard()
         self._cardinalityB = self._pyutLink.getDestCard()
-        self._returnAction = wx.CANCEL#-1 #describe how user exited dialog box
+        self._returnAction = wx.CANCEL      # #describe how user exited dialog box
 
         #  labels
         lblCardA = wx.StaticText(self, -1, _("Cardinality"),  style=wx.ALIGN_LEFT)
@@ -70,7 +69,7 @@ class DlgEditLink (wx.Dialog):
         lblA     = wx.StaticText(self, -1, "A",      style=wx.ALIGN_LEFT)
         self._lblArrow = wx.StaticText(self, -1, "", style=wx.ALIGN_CENTRE)
         self.updateLblArrow()
-        lblB     = wx.StaticText(self, -1, "B",      style = wx.ALIGN_RIGHT)
+        lblB     = wx.StaticText(self, -1, "B",      style=wx.ALIGN_RIGHT)
         lblAinB  = wx.StaticText(self, -1, _("A's role in B"), style=wx.ALIGN_LEFT)
         lblBinA  = wx.StaticText(self, -1, _("B's role in A"), style=wx.ALIGN_RIGHT)
 
@@ -87,9 +86,9 @@ class DlgEditLink (wx.Dialog):
         self._txtBRoleA.Enable(False)
 
         #  text events
-        self.Bind(wx.EVT_TEXT, self._onTxtCardinalityAChange,id=TXT_CARDINALITY_A)
-        self.Bind(wx.EVT_TEXT, self._onTxtCardinalityBChange,id=TXT_CARDINALITY_B)
-        self.Bind(wx.EVT_TEXT, self._onTxtRelationshipChange,id=TXT_RELATIONSHIP)
+        self.Bind(wx.EVT_TEXT, self._onTxtCardinalityAChange, id=TXT_CARDINALITY_A)
+        self.Bind(wx.EVT_TEXT, self._onTxtCardinalityBChange, id=TXT_CARDINALITY_B)
+        self.Bind(wx.EVT_TEXT, self._onTxtRelationshipChange, id=TXT_RELATIONSHIP)
         self.Bind(wx.EVT_TEXT, self._onTxtARoleBChange, id=A_ROLE_IN_B)
         self.Bind(wx.EVT_TEXT, self._onTxtBRoleAChange, id=B_ROLE_IN_A)
 
@@ -100,11 +99,11 @@ class DlgEditLink (wx.Dialog):
         btnOk.SetDefault()
 
         #  button events
-        self.Bind(wx.EVT_BUTTON, self._onCmdOk, id=wx.OK)
+        self.Bind(wx.EVT_BUTTON, self._onCmdOk,     id=wx.OK)
         self.Bind(wx.EVT_BUTTON, self._onCmdCancel, id=wx.CANCEL)
-        self.Bind(wx.EVT_BUTTON, self._onRemove, id=BTN_REMOVE)
+        self.Bind(wx.EVT_BUTTON, self._onRemove,    id=BTN_REMOVE)
 
-        szr1 = wx.FlexGridSizer(cols = 3, hgap = 30, vgap = 5)
+        szr1 = wx.FlexGridSizer(cols=3, hgap=30, vgap=5)
         szr1.AddMany([
             (lblCardA, 0, wx.ALIGN_LEFT),
             (lblRela,  0, wx.ALIGN_CENTER_HORIZONTAL),
@@ -117,19 +116,19 @@ class DlgEditLink (wx.Dialog):
         szr1.AddGrowableCol(2)
 
         szr2 = wx.BoxSizer(wx.HORIZONTAL)
-        szr2.Add(lblA, 1, wx.GROW|wx.RIGHT, 10)
-        szr2.Add(self._lblArrow, 1, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 10)
-        szr2.Add(lblB, 1, wx.GROW|wx.ALIGN_RIGHT)
+        szr2.Add(lblA, 1, wx.GROW | wx.RIGHT, 10)
+        szr2.Add(self._lblArrow, 1, wx.GROW | wx.ALIGN_CENTER_HORIZONTAL | wx.RIGHT, 10)
+        szr2.Add(lblB, 1, wx.GROW | wx.ALIGN_RIGHT)
 
         # szr3 :
         #        lblAinB,         lblBinA
         #        self._txtARoleB, self._txtBRoleA
-        szr3 = wx.FlexGridSizer(cols = 2, hgap = 30, vgap = 5)
+        szr3 = wx.FlexGridSizer(cols=2, hgap=30, vgap=5)
         szr3.AddMany([
             (lblAinB, 0),
             (lblBinA, 0, wx.ALIGN_RIGHT),
             (self._txtARoleB, 0),
-            (self._txtBRoleA, 0, wx.ALIGN_RIGHT|wx.BOTTOM, 20)])
+            (self._txtBRoleA, 0, wx.ALIGN_RIGHT | wx.BOTTOM, 20)])
         szr3.AddGrowableCol(0)
         szr3.AddGrowableCol(1)
 
@@ -146,10 +145,10 @@ class DlgEditLink (wx.Dialog):
         #        szr3
         #        szr4
         szr5 = wx.BoxSizer(wx.VERTICAL)
-        szr5.Add(szr1, 0, wx.GROW|wx.ALL, 10)
-        szr5.Add(szr2, 0, wx.GROW|wx.ALL, 10)
-        szr5.Add(szr3, 0, wx.GROW|wx.ALL, 10)
-        szr5.Add(szr4, 0, wx.ALIGN_RIGHT|wx.ALL, 10)
+        szr5.Add(szr1, 0, wx.GROW | wx.ALL, 10)
+        szr5.Add(szr2, 0, wx.GROW | wx.ALL, 10)
+        szr5.Add(szr3, 0, wx.GROW | wx.ALL, 10)
+        szr5.Add(szr4, 0, wx.ALIGN_RIGHT | wx.ALL, 10)
 
         self.SetSizer(szr5)
         self.SetAutoLayout(True)
@@ -163,19 +162,12 @@ class DlgEditLink (wx.Dialog):
         @since 1.1.1.2
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        #  if self._pyutLink.__class__=="PyutLink.PyutLink
-        #  print self._pyutLink.__class__
-        #  print dir(self._lblArrow)
-        #  print type(self._pyutLink)
-        #  self._pyutLink.SetLabel("Hello world")
-
-        dic = {PyutLink : "Pyut Link"}
+        dic = {PyutLink: "Pyut Link"}
         print("DlgEditLink-updateLblArrow ", self._pyutLink.__class__)
         if self._pyutLink.__class__ in dic.keys():
             self._lblArrow.SetLabel(dic[self._pyutLink.__class__])
         else:
-            self._lblArrow.SetLabel("Unknown link class : " + \
-                                    self._pyutLink.__class__)
+            self._lblArrow.SetLabel("Unknown link class : " + self._pyutLink.__class__)
 
     def _copyLink(self):
         """
@@ -193,7 +185,7 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        self._cardinalityA=event.GetString()
+        self._cardinalityA = event.GetString()
 
     def _onTxtCardinalityBChange(self, event):
         """
@@ -202,7 +194,7 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        self._cardinalityB=event.GetString()
+        self._cardinalityB = event.GetString()
 
     def _onTxtRelationshipChange(self, event):
         """
@@ -211,7 +203,7 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        self._relationship=event.GetString()
+        self._relationship = event.GetString()
 
     def _onTxtARoleBChange(self, event):
         """
@@ -220,7 +212,7 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        self._aRoleInB=event.GetString()
+        self._aRoleInB = event.GetString()
 
     def _onTxtBRoleAChange(self, event):
         """
@@ -229,8 +221,9 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        self._bRoleInA=event.GetString()
+        self._bRoleInA = event.GetString()
 
+    # noinspection PyUnusedLocal
     def _onCmdOk(self, event):
         """
         Handle click on "Ok" button
@@ -245,9 +238,10 @@ class DlgEditLink (wx.Dialog):
 
         # Should perhaps take roles, not yet implemented in PyutLink TODO
 
-        self._returnAction=wx.OK
+        self._returnAction = wx.OK
         self.Close()
 
+    # noinspection PyUnusedLocal
     def _onCmdCancel(self, event):
         """
         Handle click on "Cancel" button
@@ -255,9 +249,10 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        self._returnAction=wx.CANCEL
+        self._returnAction = wx.CANCEL
         self.Close()
 
+    # noinspection PyUnusedLocal
     def _onRemove(self, event):
         """
         Handle click on "Remove" button
@@ -275,7 +270,7 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        return (self._cardinalityA, self._cardinalityB)
+        return self._cardinalityA, self._cardinalityB
 
     def getRoles(self):
         """
@@ -284,7 +279,7 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        return (self._aRoleInB, self._bRoleInA)
+        return self._aRoleInB, self._bRoleInA
 
     def getRelationship(self):
         """
@@ -295,8 +290,7 @@ class DlgEditLink (wx.Dialog):
         """
         return self._relationship
 
-    def setValues(self, relationship, aRoleInB, bRoleInA,
-                  cardinalityA, cardinalityB):
+    def setValues(self, relationship, aRoleInB, bRoleInA, cardinalityA, cardinalityB):
         """
         set all link's values
 
