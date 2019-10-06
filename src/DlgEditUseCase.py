@@ -1,5 +1,23 @@
-
-import wx
+from wx import ALIGN_BOTTOM
+from wx import ALIGN_CENTER_HORIZONTAL
+from wx import ALL
+from wx import BOTTOM
+from wx import BoxSizer
+from wx import Button
+from wx import CANCEL
+from wx import CAPTION
+from wx import Dialog
+from wx import EVT_BUTTON
+from wx import EVT_TEXT
+from wx import EXPAND
+from wx import HORIZONTAL
+from wx import OK
+from wx import RESIZE_BORDER
+from wx import RIGHT
+from wx import StaticText
+from wx import TE_MULTILINE
+from wx import TextCtrl
+from wx import VERTICAL
 
 from pyutUtils import *
 
@@ -10,7 +28,7 @@ from globals import _
 ] = assignID(1)
 
 
-class DlgEditUseCase(wx.Dialog):
+class DlgEditUseCase(Dialog):
     """
     Defines a multiline text control dialog for use case editing.
     This dialog is used to ask the user to enter the text that will be
@@ -31,7 +49,7 @@ class DlgEditUseCase(wx.Dialog):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        super().__init__(parent, ID, _("Use Case Edit"), style=wx.RESIZE_BORDER | wx.CAPTION)
+        super().__init__(parent, ID, _("Use Case Edit"), style=RESIZE_BORDER | CAPTION)
 
         # Associated PyutUseCase
         self._pyutUseCase = pyutUseCase
@@ -41,32 +59,32 @@ class DlgEditUseCase(wx.Dialog):
         self._text = self._pyutUseCase.getName()
         self._returnAction = -1   # describe how the user exited the dialog box
 
-        label = wx.StaticText(self, -1, _("Use case text"))
+        label = StaticText(self, -1, _("Use case text"))
 
-        self._txtCtrl = wx.TextCtrl(self, TXT_USECASE, self._text, size=(400, 180), style=wx.TE_MULTILINE)
+        self._txtCtrl = TextCtrl(self, TXT_USECASE, self._text, size=(400, 180), style=TE_MULTILINE)
         self._txtCtrl.SetFocus()
 
         # text events
-        self.Bind(wx.EVT_TEXT, self._onTxtChange, id=TXT_USECASE)
+        self.Bind(EVT_TEXT, self._onTxtChange, id=TXT_USECASE)
 
-        btnOk = wx.Button(self, wx.OK, _("&Ok"))
+        btnOk = Button(self, OK, _("&Ok"))
         btnOk.SetDefault()
-        btnCancel = wx.Button(self, wx.CANCEL, _("&Cancel"))
+        btnCancel = Button(self, CANCEL, _("&Cancel"))
 
-        self.Bind(wx.EVT_BUTTON, self._onCmdOk, id=wx.OK)
-        self.Bind(wx.EVT_BUTTON, self._onCmdCancel, id=wx.CANCEL)
+        self.Bind(EVT_BUTTON, self._onCmdOk, id=OK)
+        self.Bind(EVT_BUTTON, self._onCmdCancel, id=CANCEL)
 
-        szrButtons = wx.BoxSizer(wx.HORIZONTAL)
-        szrButtons.Add(btnOk, 0, wx.RIGHT, 10)
-        szrButtons.Add(btnCancel, 0, wx.ALL)
+        szrButtons = BoxSizer(HORIZONTAL)
+        szrButtons.Add(btnOk, 0, RIGHT, 10)
+        szrButtons.Add(btnCancel, 0, ALL)
 
-        szrMain = wx.BoxSizer(wx.VERTICAL)
-        szrMain.Add(label, 0, wx.BOTTOM, 5)
-        szrMain.Add(self._txtCtrl, 1, wx.EXPAND | wx.BOTTOM, 10)
-        szrMain.Add(szrButtons, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_BOTTOM)
+        szrMain = BoxSizer(VERTICAL)
+        szrMain.Add(label, 0, BOTTOM, 5)
+        szrMain.Add(self._txtCtrl, 1, EXPAND | BOTTOM, 10)
+        szrMain.Add(szrButtons, 0, ALIGN_CENTER_HORIZONTAL | ALIGN_BOTTOM)
         # Border
-        szrBorder = wx.BoxSizer(wx.VERTICAL)
-        szrBorder.Add(szrMain, 1, wx.EXPAND | wx.ALL, 10)
+        szrBorder = BoxSizer(VERTICAL)
+        szrBorder.Add(szrMain, 1, EXPAND | ALL, 10)
         self.SetSizer(szrBorder)
         szrBorder.Fit(self)
 
@@ -92,7 +110,7 @@ class DlgEditUseCase(wx.Dialog):
         """
 
         self._pyutUseCase.setName(self._text)
-        self._returnAction = wx.OK
+        self._returnAction = OK
         self.Close()
 
     # noinspection PyUnusedLocal
@@ -103,14 +121,14 @@ class DlgEditUseCase(wx.Dialog):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        self._returnAction = wx.CANCEL
+        self._returnAction = CANCEL
         self.Close()
 
     def getReturnAction(self):
         """
         Return an info on how the user exited the dialog box
 
-        @return : wx.Ok = click on Ok button; wx.Cancel = click on Cancel button
+        @return : Ok = click on Ok button; Cancel = click on Cancel button
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
