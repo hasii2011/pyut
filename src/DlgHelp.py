@@ -97,6 +97,7 @@ class DlgHelp(Dialog):
 
         self.Show(True)
 
+    # noinspection PyUnusedLocal
     def OnShowDefault(self, event):
         """
         Show default page
@@ -107,19 +108,7 @@ class DlgHelp(Dialog):
         name = osPath.join(getcwd(), 'help/index.html')
         self.html.LoadPage(name)
 
-    # def __OnLoadFile(self, event):
-        # """
-        # Load a html page
-#
-        # @since 1.1
-        # @author C.Dutoit
-        # """
-        # dlg = wx.FileDialog(self, wildcard = '*.htm*', style=wx.OPEN)
-        # if dlg.ShowModal()==wx.OK:
-            # path = dlg.GetPath()
-            # self.html.LoadPage(path)
-        # dlg.Destroy()
-
+    # noinspection PyUnusedLocal
     def __OnBack(self, event):
         """
         go one level back; load last page
@@ -130,6 +119,7 @@ class DlgHelp(Dialog):
         if not self.html.HistoryBack():
             MessageBox(_("No more items in history !"))
 
+    # noinspection PyUnusedLocal
     def __OnForward(self, event):
         """
         go one level forward; load next page
@@ -140,6 +130,7 @@ class DlgHelp(Dialog):
         if not self.html.HistoryForward():
             MessageBox(_("No more items in history !"))
 
+    # noinspection PyUnusedLocal
     def __OnViewSource(self, event):
         """
         View document source
@@ -147,12 +138,12 @@ class DlgHelp(Dialog):
         @since 1.1
         @author C.Dutoit
         """
-        #  from wx.Python.lib.dialogs import ScrolledMessageDialog
         source = self.html.GetParser().GetSource()
         dlg = ScrolledMessageDialog(self, source, _('HTML Source'))
         dlg.ShowModal()
         dlg.Destroy()
 
+    # noinspection PyUnusedLocal
     def __OnPrint(self, event):
         """
         print the current page
