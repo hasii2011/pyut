@@ -1,8 +1,30 @@
 
-import wx
+from wx import ALIGN_CENTER_HORIZONTAL
+from wx import ALIGN_CENTRE
+from wx import ALIGN_LEFT
+from wx import ALIGN_RIGHT
+from wx import ALL
+from wx import BOTTOM
+from wx import BoxSizer
+from wx import Button
+from wx import CANCEL
+from wx import CAPTION
+from wx import Dialog
+from wx import EVT_BUTTON
+from wx import EVT_TEXT
+from wx import FlexGridSizer
+from wx import GROW
+from wx import HORIZONTAL
+from wx import OK
+from wx import RESIZE_BORDER
+from wx import RIGHT
+from wx import Size
+from wx import StaticText
+from wx import TextCtrl
+from wx import VERTICAL
 
-from pyutUtils import *
-from PyutLink import *
+from pyutUtils import assignID
+from PyutLink import PyutLink
 from globals import _
 
 from copy import deepcopy
@@ -18,7 +40,7 @@ from copy import deepcopy
 ] = assignID(6)
 
 
-class DlgEditLink (wx.Dialog):
+class DlgEditLink (Dialog):
     """
     Dialog for the link (between classes) edition.
 
@@ -50,7 +72,7 @@ class DlgEditLink (wx.Dialog):
         @author C.Dutoit<dutoitc@hotmail.com>
         """
 
-        super().__init__(parent, ID, _("Link Edit"), style=wx.RESIZE_BORDER | wx.CAPTION)
+        super().__init__(parent, ID, _("Link Edit"), style=RESIZE_BORDER | CAPTION)
 
         # Associated PyutLink
         self._pyutLink = pyutLink
@@ -60,25 +82,25 @@ class DlgEditLink (wx.Dialog):
         self._bRoleInA = ""
         self._cardinalityA = self._pyutLink.getSrcCard()
         self._cardinalityB = self._pyutLink.getDestCard()
-        self._returnAction = wx.CANCEL      # #describe how user exited dialog box
+        self._returnAction = CANCEL      # #describe how user exited dialog box
 
         #  labels
-        lblCardA = wx.StaticText(self, -1, _("Cardinality"),  style=wx.ALIGN_LEFT)
-        lblRela  = wx.StaticText(self, -1, _("Relationship"), style=wx.ALIGN_CENTRE)
-        lblCardB = wx.StaticText(self, -1, _("Cardinality"),  style=wx.ALIGN_RIGHT)
-        lblA     = wx.StaticText(self, -1, "A",      style=wx.ALIGN_LEFT)
-        self._lblArrow = wx.StaticText(self, -1, "", style=wx.ALIGN_CENTRE)
+        lblCardA = StaticText(self, -1, _("Cardinality"),  style=ALIGN_LEFT)
+        lblRela  = StaticText(self, -1, _("Relationship"), style=ALIGN_CENTRE)
+        lblCardB = StaticText(self, -1, _("Cardinality"),  style=ALIGN_RIGHT)
+        lblA     = StaticText(self, -1, "A",      style=ALIGN_LEFT)
+        self._lblArrow = StaticText(self, -1, "", style=ALIGN_CENTRE)
         self.updateLblArrow()
-        lblB     = wx.StaticText(self, -1, "B",      style=wx.ALIGN_RIGHT)
-        lblAinB  = wx.StaticText(self, -1, _("A's role in B"), style=wx.ALIGN_LEFT)
-        lblBinA  = wx.StaticText(self, -1, _("B's role in A"), style=wx.ALIGN_RIGHT)
+        lblB     = StaticText(self, -1, "B",      style=ALIGN_RIGHT)
+        lblAinB  = StaticText(self, -1, _("A's role in B"), style=ALIGN_LEFT)
+        lblBinA  = StaticText(self, -1, _("B's role in A"), style=ALIGN_RIGHT)
 
         #  text
-        self._txtCardinalityA = wx.TextCtrl(self, TXT_CARDINALITY_A, "", size=wx.Size(50, 20))
-        self._txtRelationship = wx.TextCtrl(self, TXT_RELATIONSHIP,  "", size=wx.Size(100, 20))
-        self._txtCardinalityB = wx.TextCtrl(self, TXT_CARDINALITY_B, "", size=wx.Size(50, 20))
-        self._txtARoleB = wx.TextCtrl(self, A_ROLE_IN_B, "")
-        self._txtBRoleA = wx.TextCtrl(self, B_ROLE_IN_A, "")
+        self._txtCardinalityA = TextCtrl(self, TXT_CARDINALITY_A, "", size=Size(50, 20))
+        self._txtRelationship = TextCtrl(self, TXT_RELATIONSHIP,  "", size=Size(100, 20))
+        self._txtCardinalityB = TextCtrl(self, TXT_CARDINALITY_B, "", size=Size(50, 20))
+        self._txtARoleB = TextCtrl(self, A_ROLE_IN_B, "")
+        self._txtBRoleA = TextCtrl(self, B_ROLE_IN_A, "")
 
         self.setValues(self._relationship, self._aRoleInB, self._bRoleInA, self._cardinalityA, self._cardinalityB)
 
@@ -86,57 +108,57 @@ class DlgEditLink (wx.Dialog):
         self._txtBRoleA.Enable(False)
 
         #  text events
-        self.Bind(wx.EVT_TEXT, self._onTxtCardinalityAChange, id=TXT_CARDINALITY_A)
-        self.Bind(wx.EVT_TEXT, self._onTxtCardinalityBChange, id=TXT_CARDINALITY_B)
-        self.Bind(wx.EVT_TEXT, self._onTxtRelationshipChange, id=TXT_RELATIONSHIP)
-        self.Bind(wx.EVT_TEXT, self._onTxtARoleBChange, id=A_ROLE_IN_B)
-        self.Bind(wx.EVT_TEXT, self._onTxtBRoleAChange, id=B_ROLE_IN_A)
+        self.Bind(EVT_TEXT, self._onTxtCardinalityAChange, id=TXT_CARDINALITY_A)
+        self.Bind(EVT_TEXT, self._onTxtCardinalityBChange, id=TXT_CARDINALITY_B)
+        self.Bind(EVT_TEXT, self._onTxtRelationshipChange, id=TXT_RELATIONSHIP)
+        self.Bind(EVT_TEXT, self._onTxtARoleBChange, id=A_ROLE_IN_B)
+        self.Bind(EVT_TEXT, self._onTxtBRoleAChange, id=B_ROLE_IN_A)
 
         #  Ok/Cancel
-        btnOk     = wx.Button(self, wx.OK, _("&Ok"))
-        btnCancel = wx.Button(self, wx.CANCEL, _("&Cancel"))
-        btnRemove = wx.Button(self, BTN_REMOVE, _("&Remove"))
+        btnOk     = Button(self, OK, _("&Ok"))
+        btnCancel = Button(self, CANCEL, _("&Cancel"))
+        btnRemove = Button(self, BTN_REMOVE, _("&Remove"))
         btnOk.SetDefault()
 
         #  button events
-        self.Bind(wx.EVT_BUTTON, self._onCmdOk,     id=wx.OK)
-        self.Bind(wx.EVT_BUTTON, self._onCmdCancel, id=wx.CANCEL)
-        self.Bind(wx.EVT_BUTTON, self._onRemove,    id=BTN_REMOVE)
+        self.Bind(EVT_BUTTON, self._onCmdOk,     id=OK)
+        self.Bind(EVT_BUTTON, self._onCmdCancel, id=CANCEL)
+        self.Bind(EVT_BUTTON, self._onRemove,    id=BTN_REMOVE)
 
-        szr1 = wx.FlexGridSizer(cols=3, hgap=30, vgap=5)
+        szr1 = FlexGridSizer(cols=3, hgap=30, vgap=5)
         szr1.AddMany([
-            (lblCardA, 0, wx.ALIGN_LEFT),
-            (lblRela,  0, wx.ALIGN_CENTER_HORIZONTAL),
-            (lblCardB, 0, wx.ALIGN_RIGHT),
-            (self._txtCardinalityA, 0, wx.ALIGN_LEFT),
-            (self._txtRelationship, 0, wx.ALIGN_CENTER_HORIZONTAL),
-            (self._txtCardinalityB, 0, wx.ALIGN_RIGHT)])
+            (lblCardA, 0, ALIGN_LEFT),
+            (lblRela,  0, ALIGN_CENTER_HORIZONTAL),
+            (lblCardB, 0, ALIGN_RIGHT),
+            (self._txtCardinalityA, 0, ALIGN_LEFT),
+            (self._txtRelationship, 0, ALIGN_CENTER_HORIZONTAL),
+            (self._txtCardinalityB, 0, ALIGN_RIGHT)])
         szr1.AddGrowableCol(0)
         szr1.AddGrowableCol(1)
         szr1.AddGrowableCol(2)
 
-        szr2 = wx.BoxSizer(wx.HORIZONTAL)
-        szr2.Add(lblA, 1, wx.GROW | wx.RIGHT, 10)
-        szr2.Add(self._lblArrow, 1, wx.GROW | wx.ALIGN_CENTER_HORIZONTAL | wx.RIGHT, 10)
-        szr2.Add(lblB, 1, wx.GROW | wx.ALIGN_RIGHT)
+        szr2 = BoxSizer(HORIZONTAL)
+        szr2.Add(lblA, 1, GROW | RIGHT, 10)
+        szr2.Add(self._lblArrow, 1, GROW | ALIGN_CENTER_HORIZONTAL | RIGHT, 10)
+        szr2.Add(lblB, 1, GROW | ALIGN_RIGHT)
 
         # szr3 :
         #        lblAinB,         lblBinA
         #        self._txtARoleB, self._txtBRoleA
-        szr3 = wx.FlexGridSizer(cols=2, hgap=30, vgap=5)
+        szr3 = FlexGridSizer(cols=2, hgap=30, vgap=5)
         szr3.AddMany([
             (lblAinB, 0),
-            (lblBinA, 0, wx.ALIGN_RIGHT),
+            (lblBinA, 0, ALIGN_RIGHT),
             (self._txtARoleB, 0),
-            (self._txtBRoleA, 0, wx.ALIGN_RIGHT | wx.BOTTOM, 20)])
+            (self._txtBRoleA, 0, ALIGN_RIGHT | BOTTOM, 20)])
         szr3.AddGrowableCol(0)
         szr3.AddGrowableCol(1)
 
         # szr4 :
         #        btnRemove, btnOk, btnCancel
-        szr4 = wx.BoxSizer(wx.HORIZONTAL)
-        szr4.Add(btnRemove, 0, wx.RIGHT, 10)
-        szr4.Add(btnOk, 0, wx.RIGHT, 10)
+        szr4 = BoxSizer(HORIZONTAL)
+        szr4.Add(btnRemove, 0, RIGHT, 10)
+        szr4.Add(btnOk, 0, RIGHT, 10)
         szr4.Add(btnCancel, 0)
 
         # szr5 :
@@ -144,11 +166,11 @@ class DlgEditLink (wx.Dialog):
         #        szr2
         #        szr3
         #        szr4
-        szr5 = wx.BoxSizer(wx.VERTICAL)
-        szr5.Add(szr1, 0, wx.GROW | wx.ALL, 10)
-        szr5.Add(szr2, 0, wx.GROW | wx.ALL, 10)
-        szr5.Add(szr3, 0, wx.GROW | wx.ALL, 10)
-        szr5.Add(szr4, 0, wx.ALIGN_RIGHT | wx.ALL, 10)
+        szr5 = BoxSizer(VERTICAL)
+        szr5.Add(szr1, 0, GROW | ALL, 10)
+        szr5.Add(szr2, 0, GROW | ALL, 10)
+        szr5.Add(szr3, 0, GROW | ALL, 10)
+        szr5.Add(szr4, 0, ALIGN_RIGHT | ALL, 10)
 
         self.SetSizer(szr5)
         self.SetAutoLayout(True)
@@ -238,7 +260,7 @@ class DlgEditLink (wx.Dialog):
 
         # Should perhaps take roles, not yet implemented in PyutLink TODO
 
-        self._returnAction = wx.OK
+        self._returnAction = OK
         self.Close()
 
     # noinspection PyUnusedLocal
@@ -249,7 +271,7 @@ class DlgEditLink (wx.Dialog):
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
-        self._returnAction = wx.CANCEL
+        self._returnAction = CANCEL
         self.Close()
 
     # noinspection PyUnusedLocal
@@ -312,7 +334,7 @@ class DlgEditLink (wx.Dialog):
         """
         Return an info on how the user exited the dialog box
 
-        @return : wx.Ok = click on Ok button; wx.Cancel = click on Cancel button
+        @return : Ok = click on Ok button; Cancel = click on Cancel button
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
         """
