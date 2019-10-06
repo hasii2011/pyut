@@ -218,6 +218,7 @@ class DlgPyutProperties(Dialog):
 
         event.Skip()
 
+    # noinspection PyUnusedLocal
     def __OnCmdOk(self, event):
         """
         Callback.
