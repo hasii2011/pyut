@@ -1,22 +1,19 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2002-1-8"
+from wx import ICON_QUESTION
+from wx import NO_DEFAULT
+from wx import YES_NO
 
-#from wxPython.wx import *
-import wx
+from wx import MessageDialog
 
-class DlgRemoveLink(wx.MessageDialog):
+from globals import _
+
+
+class DlgRemoveLink(MessageDialog):
     """
     Dialog for the inheritance-interface links rmoval.
 
     @version $Revision: 1.4 $
     """
-
-    #>------------------------------------------------------------------------
-
     def __init__(self):
         """
         Constructor.
@@ -25,9 +22,7 @@ class DlgRemoveLink(wx.MessageDialog):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
 
-        wx.MessageDialog.__init__(self, None,\
-            _("Are you sure you want to remove this link ?"),
-            _("Remove link confirmation"),
-            style = wx.YES_NO | wx.ICON_QUESTION | wx.NO_DEFAULT)
-
-    #>------------------------------------------------------------------------
+        super().__init__(None,
+                         _("Are you sure you want to remove this link ?"),
+                         _("Remove link confirmation"),
+                         style=YES_NO | ICON_QUESTION | NO_DEFAULT)

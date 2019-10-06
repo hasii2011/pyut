@@ -1,9 +1,12 @@
 
+import wx
 
 from PyutLink import PyutLink
-from OglLink import *
-from DlgRemoveLink import *
-import wx
+from OglLink import OglLink
+
+from DlgRemoveLink import DlgRemoveLink
+
+from Mediator import Mediator
 
 
 class OglInheritance(OglLink):
@@ -20,21 +23,15 @@ class OglInheritance(OglLink):
         Constructor.
 
         @param OglClass srcShape : Source shape
-        @param PyutLink pyutLink : Conceptual links associated with the
-                                   graphical links.
-        @param OglClass destShape : Destination shape
+        @param PyutLink pyutLink : Conceptual links associated with the graphical links.
+        @param OglClass dstShape : Destination shape
+
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
-        # Init
-        OglLink.__init__(self, srcShape, pyutLink, dstShape)
-
+        super().__init__(srcShape, pyutLink, dstShape)
         # Arrow must be white inside
         self.SetBrush(wx.WHITE_BRUSH)
-
-        # Add arrow
-        #self.AddArrow(ARROW_ARROW, ARROW_POSITION_END, 15.0)
         self.SetDrawArrow(True)
 
     def cleanUp(self):
@@ -45,8 +42,9 @@ class OglInheritance(OglLink):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         OglLink.cleanUp(self)
-        self.ClearArrowsAtPosition() # remove all arrows
+        self.ClearArrowsAtPosition()  # remove all arrows
 
+    # noinspection PyUnusedLocal
     def OnLeftClick(self, x, y, keys, attachment):
         """
         Event handler for left mouse click.
@@ -55,20 +53,15 @@ class OglInheritance(OglLink):
         @param int x : X position
         @param int y : Y position
         @param int keys : ...
-        @param int attachments : ...
+        @param int attachment : ...
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
         # get the shape
-        shape = self.GetShape()
-        # the canvas wich contain the shape
-        #canvas = shape.GetCanvas()
-
-        # Open dialog to edit link
+        # shape = self.GetShape()
         dlg = DlgRemoveLink()
         rep = dlg.ShowModal()
         dlg.Destroy()
-        if rep == wx.ID_YES: # destroy link
+        if rep == wx.ID_YES:  # destroy link
             Mediator().removeLink(self)
         self._diagram.Refresh()

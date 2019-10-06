@@ -65,10 +65,10 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         Constructor.
 
-        @param OglObject srcShape : Source shape
-        @param PyutLink pyutLink : Conceptual links associated with the
+        @param  srcShape : Source shape
+        @param  pyutLink : Conceptual links associated with the
                                    graphical links.
-        @param OglObject dstShape : Destination shape
+        @param  dstShape : Destination shape
 
         @author Philippe Waelti <pwaelti@eivd.ch>
         @modified Laurent Burgbacher <lb@alawa.ch>
