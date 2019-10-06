@@ -4,6 +4,8 @@ from logging import getLogger
 
 from sys import platform
 
+from wx import CommandEvent
+
 import Lang
 
 
@@ -216,10 +218,10 @@ class DlgPyutProperties(Dialog):
             dlg.ShowModal()
             dlg.Destroy()
 
-        event.Skip()
+        event.Skip(skip=True)
 
     # noinspection PyUnusedLocal
-    def __OnCmdOk(self, event):
+    def __OnCmdOk(self, event: CommandEvent):
         """
         Callback.
 
@@ -229,5 +231,4 @@ class DlgPyutProperties(Dialog):
             for oglObject in self.__ctrl.getUmlObjects():
                 if isinstance(oglObject, OglClass):
                     self.__ctrl.autoResize(oglObject)
-
-        self.Close()
+        event.Skip(skip=True)

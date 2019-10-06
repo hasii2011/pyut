@@ -1660,9 +1660,14 @@ class AppFrame(Frame):
         @since 1.34
         """
         from org.pyut.dialogs.DlgPyutProperties import DlgPyutProperties
-        dlg = DlgPyutProperties(self, -1, self._ctrl, self._prefs)
-        dlg.ShowModal()
-        dlg.Destroy()
+
+        self.logger.info(f"Before dialog show")
+        with DlgPyutProperties(self, -1, self._ctrl, self._prefs) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                self.logger.info(f'Waiting for answer')
+            else:
+                self.logger.info(f'Cancelled')
+
         umlFrame = self._ctrl.getUmlFrame()
         if umlFrame is not None:
             umlFrame.Refresh()
