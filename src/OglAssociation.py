@@ -41,15 +41,15 @@ class OglAssociation(OglLink):
         dstX, dstY = dstShape.GetPosition()
         dy = dstY - srcY
         dx = dstX - srcX
-        l = sqrt(dx*dx + dy*dy)
-        if l == 0:
-            l = 0.01
-        cenLblX = -dy*5 / l
-        cenLblY = dx*5 / l
-        srcLblX = 20 * dx/l      # - dy*5/l
-        srcLblY = 20 * dy/l     # + dx*5/l
-        dstLblX = -20 * dx/l    # + dy*5/l
-        dstLblY = -20 * dy/l    # - dy*5/l
+        linkLength = sqrt(dx*dx + dy*dy)
+        if linkLength == 0:
+            linkLength = 0.01
+        cenLblX = -dy * 5 / linkLength
+        cenLblY = dx * 5 / linkLength
+        srcLblX = 20 * dx/linkLength      # - dy*5/l
+        srcLblY = 20 * dy/linkLength     # + dx*5/l
+        dstLblX = -20 * dx/linkLength    # + dy*5/l
+        dstLblY = -20 * dy/linkLength    # - dy*5/l
 
         # Initialize labels objects
         self._labels[CENTER] = self.AddText(cenLblX, cenLblY, "")
@@ -92,11 +92,14 @@ class OglAssociation(OglLink):
         """
         return self._labels
 
-    def Draw(self, dc):
+    # noinspection PyUnusedLocal
+    def Draw(self, dc: wx.DC, withChildren: bool = True):
         """
         Called for contents drawing of links.
 
         @param dc : Device context
+        @param  withChildren : draw the children or not
+
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
