@@ -65,6 +65,7 @@ class DlgEditComment(wx.Dialog):
         """
         self._text = event.GetString()
 
+    # noinspection PyUnusedLocal
     def _onCmdOk(self, event):
         """
         Handle click on "Ok" button.
@@ -78,6 +79,7 @@ class DlgEditComment(wx.Dialog):
         self._returnAction = wx.OK
         self.Close()
 
+    # noinspection PyUnusedLocal
     def _onCmdCancel(self, event):
         """
         Handle click on "Cancel" button.
