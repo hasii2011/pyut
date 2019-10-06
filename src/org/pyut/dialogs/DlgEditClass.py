@@ -46,7 +46,7 @@ from PyutModifier import PyutModifier
 from PyutParam import PyutParam
 from PyutStereotype import getPyutStereotype
 
-from DlgEditComment import DlgEditComment
+from org.pyut.dialogs.DlgEditComment import DlgEditComment
 
 # from mediator import *  # Have to do this to avoid cyclical dependency
 import Mediator
