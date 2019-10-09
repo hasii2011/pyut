@@ -1,4 +1,8 @@
 
+from wx import DC
+
+from OglClass import OglClass
+from PyutLink import PyutLink
 
 from OglAssociation import OglAssociation
 
@@ -14,13 +18,13 @@ class OglComposition(OglAssociation):
     :contact: pwaelti@eivd.ch
     """
 
-    def __init__(self, srcShape, pyutLink, dstShape):
+    def __init__(self, srcShape: OglClass, pyutLink: PyutLink, dstShape: OglClass):
         """
         Constructor.
 
-        @param OglObject srcShape : Source shape
-        @param PyutLinkedObject pyutLink : Conceptual links associated with the graphical links.
-        @param OglObject dstShape : Destination shape
+        @param  srcShape : Source shape
+        @param  pyutLink : Conceptual links associated with the graphical links
+        @param  dstShape : Destination shape
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
@@ -28,23 +32,12 @@ class OglComposition(OglAssociation):
         super().__init__(srcShape, pyutLink, dstShape)
         self.SetDrawArrow(True)
 
-    def Draw(self, dc):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
-        Called for contents drawing of links.
 
-        @param wxDC dc : Device context
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            dc:     Device Context
+            withChildren:   Draw the children or not
         """
         OglAssociation.Draw(self, dc)
         self.drawLosange(dc, True)
-
-    def cleanUp(self):
-        """
-        Clean up object references before quitting.
-
-        @since 1.5
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        OglAssociation.cleanUp(self)
-        self.ClearArrowsAtPosition()

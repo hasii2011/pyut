@@ -93,7 +93,7 @@ class OglAssociation(OglLink):
         return self._labels
 
     # noinspection PyUnusedLocal
-    def Draw(self, dc: wx.DC, withChildren: bool = True):
+    def Draw(self, dc: wx.DC, withChildren: bool = False):
         """
         Called for contents drawing of links.
 
@@ -112,6 +112,8 @@ class OglAssociation(OglLink):
 
         @param dc
         @param bool filled : True if the losange must be filled, False otherwise
+
+        Note:  Losange is French for 'diamond'
 
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>

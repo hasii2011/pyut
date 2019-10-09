@@ -1,16 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.6 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
+from logging import Logger
+from logging import getLogger
 
-#from wxPython.wx    import *
-#from wxPython.ogl   import *
-#import wx
-from OglAssociation import *
+from wx import DC
 
-#>------------------------------------------------------------------------
+from OglAssociation import OglAssociation
+
 
 class OglAggregation(OglAssociation):
     """
@@ -30,45 +25,27 @@ class OglAggregation(OglAssociation):
         @param OglClass srcShape : Source shape
         @param PyutLink pyutLink : Conceptual links associated with the
                                    graphical links.
-        @param OglClass destShape : Destination shape
+        @param OglClass dstShape : Destination shape
 
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
+        super().__init__(srcShape, pyutLink, dstShape)
 
-        # Init
-        OglAssociation.__init__(self, srcShape, pyutLink, dstShape)
-
-        # Adding arrows
+        self.logger: Logger = getLogger(__name__)
         self.SetDrawArrow(True)
 
-
-    #>------------------------------------------------------------------------
-
-    def Draw(self, dc):#, withChildren):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Called for contents drawing of links.
 
-        @param wxDC dc : Device context
+        @param  dc : Device context
+        @param withChildren
+
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        # Call father
-        OglAssociation.Draw(self, dc)#, withChildren)
+        super().Draw(dc, withChildren)
 
         # Draw losange
-        self.drawLosange(dc, 0)
-
-    #>------------------------------------------------------------------------
-
-    def cleanUp(self):
-        """
-        Clean up object references before quitting.
-
-        @since 1.4
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        OglAssociation.cleanUp(self)
-        self.ClearArrowsAtPosition() # remove all arrows
-
-    #>------------------------------------------------------------------------
+        self.drawLosange(dc, False)
