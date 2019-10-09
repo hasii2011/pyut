@@ -1,4 +1,6 @@
 
+from wx import DC
+
 from MiniOgl.Shape import Shape
 from MiniOgl.MiniOglUtils import sign
 from MiniOgl.SizerShape import SizerShape
@@ -12,12 +14,14 @@ class RectangleShape(Shape):
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, x=0.0, y=0.0, width=0.0, height=0.0, parent=None):
+    def __init__(self, x=0.0, y=0.0, width=0, height=0, parent=None):
         """
         Constructor.
 
-        @param double x, y : position of the point
-        @param double width, height : size of the rectangle
+        @param  x
+        @param y : position of the point
+        @param width
+        @param height : size of the rectangle
         @param Shape parent : parent shape
         """
         super().__init__(x, y, parent)
@@ -81,7 +85,7 @@ class RectangleShape(Shape):
             y -= height
         self._x, self._y = x, y
 
-    def Draw(self, dc, withChildren=False):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Draw the rectangle on the dc.
 
@@ -135,8 +139,8 @@ class RectangleShape(Shape):
         sx, sy = self.GetPosition()
         # take a minimum of 4 pixels for the selection
         width, height = self.GetSize()
-        width  = sign(width) * max(abs(width), 4.0)
-        height = sign(height) * max(abs(height), 4.0)
+        width  = sign(width)  * max(abs(width),  4)
+        height = sign(height) * max(abs(height), 4)
         topLeftX = sx - self._ox
         topLeftY = sy - self._oy
         a = x > topLeftX

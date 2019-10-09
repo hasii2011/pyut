@@ -2,14 +2,22 @@
 from logging import Logger
 from logging import getLogger
 
-from OglAggregation import *
-from OglComposition import *
-from OglInheritance import *
-from OglInterface import *
-from OglNoteLink import *
-# from OglSDMessage   import *
+from OglAssociation import OglAssociation
+from OglAggregation import OglAggregation
+from OglComposition import OglComposition
+from OglInheritance import OglInheritance
+from OglInterface import OglInterface
+from OglNoteLink import OglNoteLink
+
+from PyutConsts import OGL_AGGREGATION
+from PyutConsts import OGL_ASSOCIATION
+from PyutConsts import OGL_COMPOSITION
+from PyutConsts import OGL_INHERITANCE
+from PyutConsts import OGL_INTERFACE
+from PyutConsts import OGL_NOTELINK
 
 from Singleton import Singleton
+
 # from PyutConsts import OGL_AGGREGATION
 
 

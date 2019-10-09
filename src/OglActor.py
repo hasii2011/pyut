@@ -1,18 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.9 $"
-__author__  = "EI5, eivd, Group Burgbacher - Waelti"
-__date__    = "2001-12-12"
+from wx import DC
 
-#from wxPython.wx  import *
-#from wxPython.ogl import *
-from OglObject    import *
-from PyutActor    import *
-import wx
+from OglObject import OglObject
+from PyutActor import PyutActor
 
 
 MARGIN = 10.0
+
 
 class OglActor(OglObject):
     """
@@ -29,10 +23,7 @@ class OglActor(OglObject):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-
-    #>------------------------------------------------------------------ 
-
-    def __init__(self, pyutActor = None, w = 80.0, h = 100.0):
+    def __init__(self, pyutActor=None, w: int = 80, h: int = 100):
         """
         Constructor.
         @param Float w : Width of the shape
@@ -47,21 +38,19 @@ class OglActor(OglObject):
         else:
             pyutObject = pyutActor
 
-        # Super init
-        OglObject.__init__(self, pyutObject, w, h)
+        super().__init__(pyutObject, w, h)
         self._drawFrame = False
 
-    #>------------------------------------------------------------------ 
-
-    def Draw(self, dc):#, withChildren=False):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Draw the actor.
-        @param wxDC dc : Device context
+        @param  dc : Device context
+        @param withChildren Draw the children or not
 
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        OglObject.Draw(self, dc)#, withChildren)
+        OglObject.Draw(self, dc)
         # Get current font
         dc.SetFont(self._defaultFont)
 
@@ -76,12 +65,12 @@ class OglActor(OglObject):
 
         # Our sweet actor size
         actorWidth  = width
-        actorHeight = 0.8 * (height - 2.0 * MARGIN) # 80 % of total height
+        actorHeight = 0.8 * (height - 2.0 * MARGIN)  # 80 % of total height
         sizer = min(actorHeight, actorWidth)
 
         # Draw our actor head
-        centerX = x + width / 2
-        centerY = y + height / 2
+        centerX = x + width  // 2
+        centerY = y + height // 2
 
         x = centerX - 0.2 * sizer
         y += MARGIN
@@ -104,4 +93,3 @@ class OglActor(OglObject):
         y = centerY + 0.5 * height - MARGIN - 0.1 * actorHeight
         dc.DrawText(self.getPyutObject().getName(), x - 0.5 * textWidth, y)
         dc.DestroyClippingRegion()
-

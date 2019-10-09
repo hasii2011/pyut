@@ -4,6 +4,10 @@ from logging import getLogger
 
 from wx import MouseEvent
 from wx import Point
+from wx import Font
+from wx import FONTFAMILY_SWISS
+from wx import FONTSTYLE_NORMAL
+from wx import FONTWEIGHT_NORMAL
 
 from OglLink import *
 
@@ -45,9 +49,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         Associated PyutObject
         """
-
         # Default font
-        self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        self._defaultFont: Font = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
 
         # Connected links
         self._oglLinks = []

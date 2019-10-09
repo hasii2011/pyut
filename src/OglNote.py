@@ -2,10 +2,13 @@
 from logging import Logger
 from logging import getLogger
 
-import wx
+from wx import Brush
+from wx import Colour
+from wx import DC
+
 from OglObject import OglObject
 from PyutNote import PyutNote
-from LineSplitter import *
+from LineSplitter import LineSplitter
 
 MARGIN = 10.0
 
@@ -24,13 +27,13 @@ class OglNote(OglObject):
     :contact: pwaelti@eivd.ch
     """
 
-    def __init__(self, pyutNote = None, w = 100, h = 50):
+    def __init__(self, pyutNote=None, w=100, h=50):
         """
         Constructor.
 
-        @param PyutNote pyutNote : a PyutNote object
-        @param float w : Width of the shape
-        @param float h : Height of the shape
+        @param pyutNote : a PyutNote object
+        @param  w : Width of the shape
+        @param  h : Height of the shape
         @since 1.0
         @author Philippe Waelti<pwaelti@eivd.ch>
         """
@@ -39,20 +42,18 @@ class OglNote(OglObject):
             pyutObject = PyutNote()
         else:
             pyutObject = pyutNote
-
-        # Parent class constructor
-        # OglObject.__init__(self, pyutObject, w, h)
         super().__init__(pyutObject, w, h)
 
         self.logger: Logger = getLogger(__name__)
-        self.SetBrush(wx.Brush(wx.Colour(255, 255, 230)))
+        self.SetBrush(Brush(Colour(255, 255, 230)))
 
-    def Draw(self, dc):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Paint handler, draws the content of the shape.
-        @param wx.DC dc : device context to draw to
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+
+        Args:
+            dc:     device context to draw to
+            withChildren:   Redraw children or not
         """
         OglObject.Draw(self, dc)
         dc.SetFont(self._defaultFont)

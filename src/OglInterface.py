@@ -1,4 +1,8 @@
 
+from logging import Logger
+from logging import getLogger
+
+from wx import DC
 from wx import ID_YES
 
 from wx import Pen
@@ -10,7 +14,7 @@ from PyutLink import PyutLink
 from OglLink import OglLink
 from OglClass import OglClass
 
-from Mediator import Mediator
+# from Mediator import Mediator
 
 from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
@@ -26,7 +30,6 @@ class OglInterface(OglLink):
 
     @version $Revision: 1.9 $
     """
-
     def __init__(self, srcShape: OglLink, pyutLink: PyutLink, dstShape: OglClass):
         """
         Constructor.
@@ -37,51 +40,37 @@ class OglInterface(OglLink):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
+        super().__init__(srcShape, pyutLink, dstShape)
 
-        # Init
-        OglLink.__init__(self, srcShape, pyutLink, dstShape)
+        self.logger: Logger = getLogger(__name__)
 
-        # Pen
-        #self.SetPen(wx.BLACK_DASHED_PEN)
         self.SetPen(Pen("BLACK", 1, PENSTYLE_LONG_DASH))
-
-        # Arrow must be white inside
         self.SetBrush(WHITE_BRUSH)
-
-        # Add labels
-        # self._labels = {}
         self._labels = {CENTER: self.AddText(0, 0, "")}
 
         # Initialize labels objects
         self.updateLabels()
-
-        # Add arrow
-        # self.AddArrow(ARROW_ARROW, ARROW_POSITION_END, 15.0)
         self.SetDrawArrow(True)
 
+    # noinspection PyUnusedLocal
     def OnLeftClick(self, x, y, keys, attachment):
         """
         Event handler for left mouse click.
         This event handler call the link dialog to edit link properties.
 
-        @param int x : X position
-        @param int y : Y position
-        @param int keys : ...
-        @param int attachment : ...
+        @param x : X position
+        @param y : Y position
+        @param keys : ...
+        @param attachment : ...
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        # get the shape
-        #  shape = self.GetShape()
-        # the canvas wich contain the shape
-        # canvas = shape.GetCanvas()
-
-        # Open dialog to edit link
         dlg = DlgRemoveLink()
         rep = dlg.ShowModal()
         dlg.Destroy()
         if rep == ID_YES:  # destroy link
-            Mediator().removeLink(self)
+            # Mediator().removeLink(self)     # TODO  .removeLink does not exist on Mediator
+            self.logger.error(f'Mediator does not have removeLink() method')
         self._diagram.Refresh()
 
     def updateLabels(self):
@@ -118,13 +107,14 @@ class OglInterface(OglLink):
         """
         return self._labels
 
-    def Draw(self, dc):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Called for contents drawing of links.
 
-        @param wx.DC dc : Device context
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            dc: Device context
+            withChildren:   Draw the children or not
+
         """
         self.updateLabels()
         OglLink.Draw(self, dc)
