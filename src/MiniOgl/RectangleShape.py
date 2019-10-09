@@ -1,47 +1,14 @@
 
 from MiniOgl.Shape import Shape
-from MiniOgl.MiniOglUtils import *
+from MiniOgl.MiniOglUtils import sign
 from MiniOgl.SizerShape import SizerShape
-from MiniOgl.RectangleShapeModel import *
+from MiniOgl.RectangleShapeModel import RectangleShapeModel
 
 
 class RectangleShape(Shape):
     """
     A rectangle shape.
 
-    Exported methods:
-    -----------------
-
-    __init__(self, x=0.0, y=0.0, width=0.0, height=0.0, parent=None)
-        Constructor.
-    SetResizable(self, state)
-        Set the resizable flag.
-    GetResizable(self)
-        Get the resizable flag.
-    GetTopLeft(self)
-        Get the coords of the top left point in diagram coords.
-    SetTopLeft(self, x, y)
-        Set the position of the top left point.
-    Draw(self, dc, withChildren=False)
-        Draw the rectangle on the dc.
-    DrawBorder(self, dc)
-        Draw the border of the shape, for fast rendering.
-    SetDrawFrame(self, draw)
-        Choose to draw a frame around the rectangle.
-    Inside(self, x, y)
-        True if (x, y) is inside the rectangle.
-    GetSize(self)
-        Get the size of the rectangle.
-    SetSelected(self, state=True)
-        Select the shape.
-    Detach(self)
-        Detach the shape from its diagram.
-    ShowSizers(self, state=True)
-        Show the four sizer shapes if state is True.
-    SetSize(self, width, height)
-        Set the size of the rectangle.
-    Resize(self, sizer, x, y)
-        Resize the rectangle according to the new position of the sizer.
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
@@ -53,30 +20,28 @@ class RectangleShape(Shape):
         @param double width, height : size of the rectangle
         @param Shape parent : parent shape
         """
-        Shape.__init__(self, x, y, parent)
+        super().__init__(x, y, parent)
         self._width = width   # width and height can be < 0 !!!
         self._height = height
         self._drawFrame = True
         self._resizable = True
 
-        self._topLeftSizer = None
+        self._topLeftSizer  = None
         self._topRightSizer = None
-        self._botLeftSizer = None
+        self._botLeftSizer  = None
         self._botRightSizer = None
-
-        #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         # set the model of the shape (MVC pattern)
         self._model = RectangleShapeModel(self)
 
-    def SetResizable(self, state):
+    def SetResizable(self, state: bool):
         """
         Set the resizable flag.
 
-        @param bool state
+        @param state
         """
         self._resizable = state
 
-    def GetResizable(self):
+    def GetResizable(self) -> bool:
         """
         Get the resizable flag.
 
@@ -104,7 +69,8 @@ class RectangleShape(Shape):
         """
         Set the position of the top left point.
 
-        @param double x, y : new position
+        @param  x
+        @param y : new position
         """
         x += self._ox
         y += self._oy
@@ -127,11 +93,6 @@ class RectangleShape(Shape):
 
         """
         if self._visible:
-            # CD
-            # if self._selected:
-            #    self.ShowSizers(False)
-            #    self.ShowSizers(True)
-
             Shape.Draw(self, dc, False)
             if self._drawFrame:
                 sx, sy = self.GetPosition()
@@ -141,8 +102,7 @@ class RectangleShape(Shape):
                 dc.DrawRectangle(sx, sy, width, height)
             if withChildren:
                 self.DrawChildren(dc)
-            # CD
-            if self._topLeftSizer != None:
+            if self._topLeftSizer is not None:
                 self._topLeftSizer.Draw(dc, False)
 
     def DrawBorder(self, dc):
@@ -163,18 +123,19 @@ class RectangleShape(Shape):
         """
         self._drawFrame = draw
 
-    def Inside(self, x, y):
+    def Inside(self, x, y) -> bool:
         """
         True if (x, y) is inside the rectangle.
 
-        @param double x, y
+        @param  x
+        @param y
         @return bool
         """
         # this also works if width and/or height is negative.
         sx, sy = self.GetPosition()
         # take a minimum of 4 pixels for the selection
         width, height = self.GetSize()
-        width = sign(width) * max(abs(width), 4.0)
+        width  = sign(width) * max(abs(width), 4.0)
         height = sign(height) * max(abs(height), 4.0)
         topLeftX = sx - self._ox
         topLeftY = sy - self._oy
@@ -195,11 +156,11 @@ class RectangleShape(Shape):
     def GetHeight(self):
         return self._height
 
-    def SetSelected(self, state=True):
+    def SetSelected(self, state: bool = True):
         """
         Select the shape.
 
-        @param bool state
+        @param state
         """
         Shape.SetSelected(self, state)
         if self._resizable:
@@ -216,21 +177,19 @@ class RectangleShape(Shape):
             Shape.Detach(self)
             self.ShowSizers(False)
 
-    def ShowSizers(self, state=True):
+    def ShowSizers(self, state: bool = True):
         """
         Show the four sizer shapes if state is True.
 
-        @param bool state
+        @param state
         """
         width, height = self.GetSize()
         if state and not self._topLeftSizer:
-            self._topLeftSizer = SizerShape(-self._ox, -self._oy, self)
-            self._topRightSizer = SizerShape(-self._ox + width - 1,
-                self._oy, self)
-            self._botLeftSizer = SizerShape(-self._ox,
-                -self._oy + height - 1, self)
-            self._botRightSizer = SizerShape(-self._ox + width - 1,
-                -self._oy + height - 1, self)
+            self._topLeftSizer  = SizerShape(-self._ox, -self._oy, self)
+            self._topRightSizer = SizerShape(-self._ox + width - 1, self._oy, self)
+            self._botLeftSizer  = SizerShape(-self._ox, -self._oy + height - 1, self)
+            self._botRightSizer = SizerShape(-self._ox + width - 1, -self._oy + height - 1, self)
+
             self._diagram.AddShape(self._topLeftSizer)
             self._diagram.AddShape(self._topRightSizer)
             self._diagram.AddShape(self._botLeftSizer)
@@ -249,11 +208,11 @@ class RectangleShape(Shape):
         """
         Set the size of the rectangle.
 
-        @param double width, height
+        @param  width
+        @param height
         """
         self._width, self._height = width, height
 
-        #  added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         if self.HasDiagramFrame():
             self.UpdateModel()
 
@@ -267,8 +226,9 @@ class RectangleShape(Shape):
         Resize the rectangle according to the new position of the sizer.
         Not used to programmaticaly resize a shape. Use `SetSize` for this.
 
-        @param SizerShape sizer
-        @param double x, y : position of the sizer
+        @param  sizer
+        @param  x
+        @param y : position of the sizer
         """
         tlx, tly = self.GetTopLeft()
         w, h = self.GetSize()
@@ -334,35 +294,15 @@ class RectangleShape(Shape):
 
         Updates the model when the shape (view) is deplaced or resized.
         """
-
         #  change the coords of model
         Shape.UpdateModel(self)
 
         #  get the size of the shape (view)
         width, height = self.GetSize()
 
-        #get the ratio between the model and the shape (view) from
-        #the diagram frame where the shape is displayed.
+        # get the ratio between the model and the shape (view) from
+        # the diagram frame where the shape is displayed.
         ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
 
         # set the new size to the model.
         self.GetModel().SetSize(width/ratio, height/ratio)
-
-    #>------------------------------------------------------------------------
-    # Added by C.Dutoit
-
-    #def DrawHandles(self, dc):
-    #   """
-    #   Draw the handles (selection points) of the shape.
-    #   A shape has no handles, because it has no size.
-
-    #   @param wxDC dc
-    #   """
-    #   sx, sy = self.GetPosition()
-    #   dc.DrawRectangle(sx - 1 - self._ox, sy - 1 - self._oy, 3, 3)
-    #   dc.DrawRectangle(sx + self._width - 2 - self._ox,
-    #       sy - 1 - self._oy, 3, 3)
-    #   dc.DrawRectangle(sx - 1 - self._ox,
-    #       sy + self._height - 2 - self._oy, 3, 3)
-    #   dc.DrawRectangle(sx + self._width - 2 - self._ox,
-    #       sy + self._height - 2 - self._oy, 3, 3)
