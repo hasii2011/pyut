@@ -1,5 +1,5 @@
 
-from MiniOgl.ShapeModel import *
+from MiniOgl.ShapeModel import ShapeModel
 
 
 class RectangleShapeModel(ShapeModel):
@@ -9,9 +9,8 @@ class RectangleShapeModel(ShapeModel):
     MVC pattern).
     """
 
-    def __init__(self, viewShape = None):
+    def __init__(self, viewShape=None):
         """
-        Constructor.
         Used when the model is created first without any view.
         We have to use AddShape() and UpdateModel from the shape before
         we can use the model.
@@ -35,10 +34,9 @@ class RectangleShapeModel(ShapeModel):
         """
         Set the size of the model
 
-        @param width    float       : width of the model
-        @param height   float       : height of the model
+        @param width          : width of the model
+        @param height         : height of the model
         """
 
         self._width = width
         self._height = height
-
