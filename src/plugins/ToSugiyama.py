@@ -9,7 +9,7 @@ from plugins.sugiyama.sugiyamaConsts import *
 
 from OglInheritance import *
 from OglInterface import *
-from OglObject import OglObject
+from org.pyut.ogl.OglObject import OglObject
 
 from PyutConsts import *
 

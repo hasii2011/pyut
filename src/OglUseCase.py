@@ -1,7 +1,7 @@
 
 from wx import DC
 
-from OglObject import OglObject
+from org.pyut.ogl.OglObject import OglObject
 from PyutUseCase import PyutUseCase
 from LineSplitter import LineSplitter
 

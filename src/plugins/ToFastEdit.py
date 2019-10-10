@@ -13,7 +13,7 @@ import UmlFrame
 from plugins.PyutToPlugin import PyutToPlugin
 from plugins.DlgFEOptions import DlgFEOptions
 
-from OglObject import OglObject
+from org.pyut.ogl.OglObject import OglObject
 
 from PyutMethod import PyutMethod
 from PyutParam import PyutParam

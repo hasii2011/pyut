@@ -13,7 +13,7 @@ from PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutNote import PyutNote
 
-from OglObject import OglObject
+from org.pyut.ogl.OglObject import OglObject
 from OglActor import OglActor
 from OglUseCase import OglUseCase
 from OglClass import OglClass
@@ -174,6 +174,7 @@ class UmlFrame(DiagramFrame):
         # classes = [cl for cl in pdc.__dict__.values() if (isinstance(cl, type) or type(cl) == 'module') and cl.__name__ in display]
         classes = []
         for cl in pdc.__dict__.values():
+            self.logger.info(f"cl: '{cl}' isinstance(cl, type) '{isinstance(cl, type)}' type(cl) '{type(cl)}'")
             if (isinstance(cl, type) or type(cl) == 'module') and cl.__name__ in display:
                 classes.append(cl)
         objs = {}

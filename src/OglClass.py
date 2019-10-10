@@ -11,8 +11,8 @@ from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_BOLD
 from wx import Menu
 
-from OglObject import OglObject
-from OglObject import DEFAULT_FONT_SIZE
+from org.pyut.ogl.OglObject import OglObject
+from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
 from PyutClass import PyutClass
 

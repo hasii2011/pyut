@@ -6,7 +6,7 @@ from wx import Brush
 from wx import Colour
 from wx import DC
 
-from OglObject import OglObject
+from org.pyut.ogl.OglObject import OglObject
 from PyutNote import PyutNote
 from LineSplitter import LineSplitter
 

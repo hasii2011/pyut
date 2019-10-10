@@ -18,7 +18,7 @@ from MiniOgl.RectangleShape import RectangleShape
 from MiniOgl.TextShape import TextShape
 from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
-from OglObject import OglObject
+from org.pyut.ogl.OglObject import OglObject
 
 from globals import _
 

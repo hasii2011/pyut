@@ -806,7 +806,7 @@ class Mediator(Singleton):
         from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass
-        from OglObject import OglObject
+        from org.pyut.ogl.OglObject import OglObject
         from OglLink import OglLink
         from org.pyut.commands.CommandGroup import CommandGroup
 
@@ -903,7 +903,7 @@ class Mediator(Singleton):
         @since 1.27.2.28
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        import OglObject
+        from org.pyut.ogl import OglObject
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
             return
@@ -1017,7 +1017,7 @@ class Mediator(Singleton):
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         from OglClass import OglClass
         from OglLink import OglLink
-        from OglObject import OglObject
+        from org.pyut.ogl.OglObject import OglObject
 
         if isinstance(oglObject, OglClass):
             print("begin")
