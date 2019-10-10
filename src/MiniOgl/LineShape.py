@@ -7,9 +7,6 @@ from MiniOgl.AnchorPoint import AnchorPoint
 from MiniOgl.ControlPoint import ControlPoint
 
 
-__all__ = ["LineShape"]
-
-
 class LineShape(Shape):
     """
     This is a line, passing through control points.

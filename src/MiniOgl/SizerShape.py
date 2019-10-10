@@ -2,22 +2,9 @@
 from MiniOgl.PointShape import PointShape
 
 
-__all__ = ["SizerShape"]
-
-
 class SizerShape(PointShape):
     """
     A sizer, to resize other shapes.
-
-    Exported methods:
-    -----------------
-
-    __init__(self, x, y, parent)
-        Constructor.
-    SetPosition(self, x, y)
-        Change the position of the shape, if it's draggable.
-    SetMoving(self, state)
-        Set the moving flag.
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """

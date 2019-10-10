@@ -1,8 +1,6 @@
 
 from wx import MouseEvent
 
-__all__ = ["ShapeEventHandler"]
-
 DEBUG = 0
 
 
