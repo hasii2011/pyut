@@ -10,7 +10,7 @@ import wx
 import importlib
 
 from PyutClass import PyutClass
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 from PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutField import PyutField

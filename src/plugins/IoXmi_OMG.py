@@ -5,7 +5,7 @@ from io import StringIO
 
 import wx
 
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 
 from Mediator import displayError
 

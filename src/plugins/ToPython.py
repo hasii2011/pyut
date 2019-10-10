@@ -16,7 +16,7 @@ import wx
 
 from plugins.PyutToPlugin import PyutToPlugin
 
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglObject import OglObject
 
 from UmlFrame import UmlFrame

@@ -34,10 +34,11 @@ from Mediator import Mediator
 from Singleton import Singleton
 # noinspection PyUnresolvedReferences
 from FlyweightString import FlyweightString
+
 # noinspection PyUnresolvedReferences
 from org.pyut.ogl.OglObject import OglObject
 # noinspection PyUnresolvedReferences
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 # noinspection PyUnresolvedReferences
 from OglNote import OglNote
 # noinspection PyUnresolvedReferences
@@ -79,7 +80,7 @@ display = [
 
 displayOgl = [
     "org.pyut.ogl.OglObject",
-    "OglClass",
+    "org.pyut.ogl.OglClass",
     "OglNote",
     "OglActor",
     "OglLink",

@@ -584,7 +584,7 @@ class Mediator(Singleton):
         @since 1.18
         @author L. Burgbacher <lb@alawa.ch>
         """
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
         prefs: PyutPreferences = PyutPreferences()
 
         if prefs["AUTO_RESIZE"]:
@@ -607,7 +607,7 @@ class Mediator(Singleton):
         #
         # TODO I don't like in-line imports but moving them to top file causes a cyclic dependency error
         #
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
         from OglNote import OglNote
         from OglUseCase import OglUseCase
         from OglActor import OglActor
@@ -805,7 +805,7 @@ class Mediator(Singleton):
         from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
         from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
         from org.pyut.ogl.OglObject import OglObject
         from OglLink import OglLink
         from org.pyut.commands.CommandGroup import CommandGroup
@@ -952,7 +952,7 @@ class Mediator(Singleton):
         @return OGLClass
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
 
         po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.getPyutObject() is pyutClass]
 
@@ -1015,7 +1015,7 @@ class Mediator(Singleton):
         from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
         from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
         from OglLink import OglLink
         from org.pyut.ogl.OglObject import OglObject
 
@@ -1032,7 +1032,7 @@ class Mediator(Singleton):
     def endChangeRecording(self, oglObject):
 
         from org.pyut.commands.CreateOglClassCommand import CreateOglClassCommand
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
 
         from org.pyut.commands.CommandGroup import CommandGroup
 

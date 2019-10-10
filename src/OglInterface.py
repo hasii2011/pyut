@@ -12,7 +12,7 @@ from wx import WHITE_BRUSH
 from PyutLink import PyutLink
 
 from OglLink import OglLink
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 
 # from Mediator import Mediator
 

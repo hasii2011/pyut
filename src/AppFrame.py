@@ -70,7 +70,7 @@ from wx import Yield as wxYield
 from FileHandling import FileHandling
 
 from OglActor import OglActor
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 from OglNote import OglNote
 from OglUseCase import OglUseCase
 

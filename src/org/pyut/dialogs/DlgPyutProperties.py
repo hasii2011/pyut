@@ -30,7 +30,7 @@ from wx import Dialog
 from wx import MessageDialog
 from wx import StaticText
 
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 from pyutUtils import assignID
 
 from globals import _

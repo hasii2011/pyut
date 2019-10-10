@@ -3,7 +3,7 @@ from PyutConsts import OGL_AGGREGATION
 from PyutConsts import OGL_ASSOCIATION
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 
 import os
 

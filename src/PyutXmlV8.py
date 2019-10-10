@@ -34,7 +34,7 @@ from OglAssociation import DEST_CARD
 from OglAssociation import OglAssociation
 from OglAssociation import SRC_CARD
 
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 from OglLink import OglLink
 from OglNote import OglNote
 from OglSDInstance import OglSDInstance

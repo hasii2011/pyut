@@ -3,7 +3,7 @@ import wx
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 from PyutClass import PyutClass
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 from PyutMethod import PyutMethod
 
 

@@ -2,8 +2,7 @@
 
 from PyutType import *
 
-from OglClass import OglClass
-from OglLink import *
+from org.pyut.ogl.OglClass import OglClass
 
 from xml.dom.minidom import parse
 

@@ -111,7 +111,7 @@ class DelOglObjectCommand(Command):
         need to redefine it.
         """
 
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
         umlFrame = self.getGroup().getHistory().getFrame()
         shape = self._shape
         if isinstance(shape, OglClass):

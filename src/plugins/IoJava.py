@@ -2,7 +2,7 @@
 import os
 
 from plugins.PyutIoPlugin import PyutIoPlugin
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 from PyutConsts import *
 
 

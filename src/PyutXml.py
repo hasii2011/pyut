@@ -3,9 +3,8 @@
 from xml.dom.minidom import parse
 from xml.dom.minidom import Document
 
-from PyutUseCase import PyutUseCase
 from UmlFrame import *
-from OglClass import OglClass
+from org.pyut.ogl.OglClass import OglClass
 from OglLink import *
 
 import wx

@@ -5,8 +5,7 @@ from PyutType import *
 
 # from xml.parsers.xmlproc.dtdparser import DTDParser, DTDConsumer  #  TODO have to figure out where to get this from
 
-from OglClass import OglClass
-from OglLink import *
+from org.pyut.ogl.OglClass import OglClass
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 

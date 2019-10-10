@@ -5,8 +5,7 @@ from xml.dom.minidom import Document
 from xml.dom.minidom import Element
 
 
-from OglClass import OglClass
-from OglLink import *
+from org.pyut.ogl.OglClass import OglClass
 
 import wx
 
@@ -605,7 +604,6 @@ class PyutXmi:
         @since 1.0
         @Deve Roux <droux@eivd.ch>
         """
-        from xml.dom.minidom import parse
         dicoOglObjects = {}     # format {name : oglClass}
         oldData = 0             # 1 if PyUT v1.0 files
         self.dicoLinks = {}     # format [name : PyutLink}

@@ -69,7 +69,7 @@ class ToCDAutoLayout(PyutToPlugin):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
         from time import time
 
         if umlFrame is None:

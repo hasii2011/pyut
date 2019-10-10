@@ -66,7 +66,7 @@ class CreateOglClassCommand(DelOglClassCommand):
         """
         from Mediator import getMediator
         from PyutClass import PyutClass
-        from OglClass import OglClass
+        from org.pyut.ogl.OglClass import OglClass
 
         med = getMediator()
         umlFrame = med.getFileHandling().getCurrentFrame()
