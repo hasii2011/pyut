@@ -7,13 +7,12 @@ from logging import getLogger
 
 import wx
 
+from MiniOgl import Shape
 from MiniOgl.Diagram import Diagram
 from MiniOgl.ShapeEventHandler import ShapeEventHandler
 from MiniOgl.SizerShape import SizerShape
 from MiniOgl.ControlPoint import ControlPoint
 from MiniOgl.RectangleShape import RectangleShape
-
-__all__ = ["DiagramFrame"]
 
 DEBUG = 0  # set to 1 to have some debug info in the terminal
 
@@ -138,7 +137,7 @@ class DiagramFrame(wx.ScrolledWindow):
             self.logger.info("DiagramFrame.OnLeftDown")
 
         # First, call the generic handler for OnLeftDown
-        shape = self.GenericHandler(event, "OnLeftDown")
+        shape: ShapeEventHandler = self.GenericHandler(event, "OnLeftDown")
         self._clickedShape = shape  # store the last clicked shape
         if not event.GetSkipped():
             return
@@ -151,7 +150,8 @@ class DiagramFrame(wx.ScrolledWindow):
         # print "OnLeftDown, event=(%s, %s); %s; (%s, %s))" % (event.GetX(), event.GetY(), event.GetPosition(), x, y)
         self._lastMousePosition = (x, y)
 
-        if not event.ControlDown() and not shape.IsSelected():
+        realShape: Shape = cast(Shape, shape)
+        if not event.ControlDown() and not realShape.IsSelected():
             shapes = self._diagram.GetShapes()
             shapes.remove(shape)
             if isinstance(shape, SizerShape):
@@ -163,8 +163,7 @@ class DiagramFrame(wx.ScrolledWindow):
                 for line in shape.GetLines():
                     shapes.remove(line)
             # don't call DeselectAllShapes, because we must ensure that
-            # sizers won't be deselected (because they're detached when they're
-            # deselected)
+            # sizers won't be deselected (because they are detached when they are deselected)
             # deselect all other shapes
             for s in shapes:
                 s.SetSelected(False)
@@ -186,7 +185,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         if not event.ControlDown():
             self.DeselectAllShapes()
-        x, y = event.GetX(), event.GetY() # event position has been modified
+        x, y = event.GetX(), event.GetY()   # event position has been modified
         self._selector = rect = RectangleShape(x, y, 0, 0)
         rect.SetDrawFrame(True)
         rect.SetBrush(wx.TRANSPARENT_BRUSH)
@@ -217,8 +216,8 @@ class DiagramFrame(wx.ScrolledWindow):
         if self._selector is not None:
             self.Bind(wx.EVT_MOTION, self._NullCallback)
             rect = self._selector
-            x, y = rect.GetPosition()
-            w, h = rect.GetSize()
+            # x, y = rect.GetPosition()     Not used
+            # w, h = rect.GetSize()         Not used
             for shape in self._diagram.GetShapes():
                 x0, y0 = shape.GetTopLeft()
                 w0, h0 = shape.GetSize()
@@ -848,19 +847,18 @@ class DiagramFrame(wx.ScrolledWindow):
             shape.UpdateFromModel()
 
         # resize the virutal screen in order to match with the zoom
-        virtualWidth = (virtualWidth) * zoomFactor
-        virtualHeight = (virtualHeight) * zoomFactor
+        virtualWidth  = virtualWidth * zoomFactor
+        virtualHeight = virtualHeight * zoomFactor
         virtualSize = wx.Size(virtualWidth, virtualHeight)
         self.SetVirtualSize(virtualSize)
 
         # perform the scrolling in the way to have the zoom area visible
         # and centred on the virutal screen.
-        scrollX = (virtualWidth - clientWidth) /2 / xUnit
-        scrollY = (virtualHeight - clientHeight) /2 /yUnit
+        scrollX = (virtualWidth - clientWidth) // 2 // xUnit
+        scrollY = (virtualHeight - clientHeight) // 2 // yUnit
         self.Scroll(scrollX, scrollY)
 
     def DoZoomOut(self, ax: int, ay: int):
-
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
 
@@ -890,7 +888,7 @@ class DiagramFrame(wx.ScrolledWindow):
         # transform event coords to get them relative to the upper left corner of
         # the virual screen (avoid the case where that corner is on a shape and
         # get its coords relative to the shape).
-        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit :
+        if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit:
             x = ax
             y = ay
         else:
@@ -905,7 +903,7 @@ class DiagramFrame(wx.ScrolledWindow):
         dy = virtualHeight/2 - y
 
         minZoomFactor = self.GetMinZoomFactor()
-        minZoomReached = False
+        # minZoomReached = False        not used
 
         # if the view is elarged, then we just remove the last
         # zoom in factor that has been applied. Else, we apply
@@ -944,8 +942,8 @@ class DiagramFrame(wx.ScrolledWindow):
 
         # perform the scrolling in the way to have the zoom area visible
         # and centred on the virutal screen.
-        scrollX = (virtualWidth - clientWidth) /2 / xUnit
-        scrollY = (virtualHeight - clientHeight) /2 /yUnit
+        scrollX = (virtualWidth - clientWidth) // 2 // xUnit
+        scrollY = (virtualHeight - clientHeight) // 2 // yUnit
         self.Scroll(scrollX, scrollY)
 
     def SetMargins(self, left, right, top, bottom):

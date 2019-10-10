@@ -19,7 +19,7 @@ class TestMiniOglApp(App):
 
     def OnInit(self):
 
-        frameTop: Frame = Frame(parent=None, id=TestMiniOglApp.FRAME_ID, titlr="Test MiniOgl", size=(400, 400), style=DEFAULT_FRAME_STYLE)
+        frameTop: Frame = Frame(parent=None, id=TestMiniOglApp.FRAME_ID, title="Test MiniOgl", size=(400, 400), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
 
         diagFrame: DiagramFrame = DiagramFrame(frameTop)
