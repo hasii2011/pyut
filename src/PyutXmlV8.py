@@ -36,7 +36,7 @@ from OglAssociation import SRC_CARD
 
 from org.pyut.ogl.OglClass import OglClass
 from OglLink import OglLink
-from OglNote import OglNote
+from org.pyut.ogl.OglNote import OglNote
 from OglSDInstance import OglSDInstance
 from OglSDMessage import OglSDMessage
 from OglUseCase import OglUseCase

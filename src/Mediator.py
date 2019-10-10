@@ -608,7 +608,7 @@ class Mediator(Singleton):
         # TODO I don't like in-line imports but moving them to top file causes a cyclic dependency error
         #
         from org.pyut.ogl.OglClass import OglClass
-        from OglNote import OglNote
+        from org.pyut.ogl.OglNote import OglNote
         from OglUseCase import OglUseCase
         from OglActor import OglActor
         from OglAssociation import OglAssociation

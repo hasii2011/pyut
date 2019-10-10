@@ -71,7 +71,7 @@ from FileHandling import FileHandling
 
 from OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
-from OglNote import OglNote
+from org.pyut.ogl.OglNote import OglNote
 from OglUseCase import OglUseCase
 
 from PluginManager import PluginManager
