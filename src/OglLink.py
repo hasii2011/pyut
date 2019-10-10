@@ -1,8 +1,13 @@
 
-from PyutLink import PyutLink
-from PyutConsts import *
+from MiniOgl.LineShape import LineShape
+from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
-from MiniOgl import *
+from PyutLink import PyutLink
+from PyutConsts import WEST
+from PyutConsts import SOUTH
+from PyutConsts import NORTH
+from PyutConsts import EAST
+
 import wx
 
 

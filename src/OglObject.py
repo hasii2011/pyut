@@ -9,10 +9,12 @@ from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
 
-from OglLink import *
+# from OglLink import *
 
 from Mediator import getMediator
 from Mediator import ACTION_ZOOM_OUT
+from MiniOgl.RectangleShape import RectangleShape
+from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 DEFAULT_FONT_SIZE = 10
 

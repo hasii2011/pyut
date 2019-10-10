@@ -21,8 +21,9 @@ from OglNote import OglNote
 from OglLink import OglLink
 from OglSDMessage import OglSDMessage
 
-from MiniOgl import SKIP_EVENT
-from MiniOgl import DiagramFrame
+from MiniOgl.Constants import SKIP_EVENT
+from MiniOgl.DiagramFrame import DiagramFrame
+
 from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 from Mediator import ACTION_ZOOM_IN
@@ -208,7 +209,7 @@ class UmlFrame(DiagramFrame):
                         firstDefVal = len(args[0]) - len(args[3])
                     for arg, i in zip(args[0], range(len(args[0]))):
                         # don't add self, it's implied
-                        defVal = None
+                        # defVal = None
                         if arg != "self":
                             if i >= firstDefVal:
                                 defVal = args[3][i - firstDefVal]
@@ -527,5 +528,5 @@ class UmlFrame(DiagramFrame):
         Returns: an OgLink
 
         """
-
+        # noinspection PyUnusedLocal
         cmd: CreateOglLinkCommand = CreateOglLinkCommand(src=father, dst=child)

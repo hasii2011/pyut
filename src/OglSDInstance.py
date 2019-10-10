@@ -10,13 +10,13 @@ from wx import Pen
 
 from wx import TextEntryDialog
 
-from MiniOgl import AnchorPoint
-from MiniOgl import LineShape
-from MiniOgl import RectangleShape
+from MiniOgl.AnchorPoint import AnchorPoint
+from MiniOgl.LineShape import LineShape
+from MiniOgl.RectangleShape import RectangleShape
+from MiniOgl.TextShape import TextShape
+from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from OglObject import OglObject
-from OglObject import TextShape
-from OglObject import ShapeEventHandler
 
 from globals import _
 

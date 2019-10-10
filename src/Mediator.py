@@ -17,8 +17,8 @@ from wx import KeyEvent
 
 from wx import TextEntryDialog
 
-from MiniOgl import EVENT_PROCESSED
-from MiniOgl import SKIP_EVENT
+from MiniOgl.Constants import EVENT_PROCESSED
+from MiniOgl.Constants import SKIP_EVENT
 
 from MiniOgl import LinePoint
 from MiniOgl import ControlPoint
