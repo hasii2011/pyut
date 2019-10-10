@@ -1,14 +1,15 @@
 
+import wx
+
 from MiniOgl.LineShape import LineShape
 from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from PyutLink import PyutLink
+
 from PyutConsts import WEST
 from PyutConsts import SOUTH
 from PyutConsts import NORTH
 from PyutConsts import EAST
-
-import wx
 
 
 def getOrient(srcX, srcY, destX, destY):
@@ -29,15 +30,15 @@ def getOrient(srcX, srcY, destX, destY):
     # Want to understand, please make a little draw
     deltaX = srcX - destX
     deltaY = srcY - destY
-    if deltaX > 0: # dest is not east
-        if deltaX > abs(deltaY): # dest is west
+    if deltaX > 0:  # dest is not east
+        if deltaX > abs(deltaY):    # dest is west
             return WEST
         elif deltaY > 0:
             return NORTH
         else:
             return SOUTH
-    else: # dest is not west
-        if -deltaX > abs(deltaY): # dest is east
+    else:   # dest is not west
+        if -deltaX > abs(deltaY):   # dest is east
             return EAST
         elif deltaY > 0:
             return NORTH
@@ -146,7 +147,7 @@ class OglLink(LineShape, ShapeEventHandler):
 
         # Keep reference to the PyutLink for mouse events, in order
         # to can find back the corresponding link
-        if pyutLink is not None :
+        if pyutLink is not None:
             self._link = pyutLink
         else:
             self._link = PyutLink()
@@ -223,8 +224,8 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         print("OptimizeLine")
         # Get elements
-        src = self.getSourceShape()
-        dst = self.getDestinationShape()
+        # src = self.getSourceShape()
+        # dst = self.getDestinationShape()
         srcAnchor = self.GetSource()
         dstAnchor = self.GetDestination()
         srcX, srcY = self._srcShape.GetPosition()

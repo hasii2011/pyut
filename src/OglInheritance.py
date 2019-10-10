@@ -1,3 +1,5 @@
+from logging import Logger
+from logging import getLogger
 
 import wx
 
@@ -6,7 +8,7 @@ from OglLink import OglLink
 
 from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
-from Mediator import Mediator
+# from Mediator import Mediator
 
 
 class OglInheritance(OglLink):
@@ -30,19 +32,11 @@ class OglInheritance(OglLink):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         super().__init__(srcShape, pyutLink, dstShape)
+
+        self.logger: Logger = getLogger(__name__)
         # Arrow must be white inside
         self.SetBrush(wx.WHITE_BRUSH)
         self.SetDrawArrow(True)
-
-    def cleanUp(self):
-        """
-        Clean up object references before quitting.
-
-        @since 1.4
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        OglLink.cleanUp(self)
-        self.ClearArrowsAtPosition()  # remove all arrows
 
     # noinspection PyUnusedLocal
     def OnLeftClick(self, x, y, keys, attachment):
@@ -63,5 +57,6 @@ class OglInheritance(OglLink):
         rep = dlg.ShowModal()
         dlg.Destroy()
         if rep == wx.ID_YES:  # destroy link
-            Mediator().removeLink(self)
+            # Mediator().removeLink(self)
+            self.logger.error(f'OnLeftClick -- mediator does not support left remove')
         self._diagram.Refresh()
