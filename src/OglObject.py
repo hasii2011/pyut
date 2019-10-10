@@ -34,7 +34,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
     :contact: pwaelti@eivd.ch
     """
 
-    def __init__(self, pyutObject=None, width=0, height=0):
+    def __init__(self, pyutObject=None, width: float = 0, height: float = 0):
         """
         Constructor
 

@@ -1,18 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.8 $"
-__author__  = "EI5, eivd, Group Burgbacher - Waelti"
-__date__    = "2001-12-12"
+from wx import DC
 
-#from wxPython.wx     import *
-#from wxPython.ogl    import *
-from OglObject       import *
-from PyutUseCase     import *
-from LineSplitter    import *
-import wx
+from OglObject import OglObject
+from PyutUseCase import PyutUseCase
+from LineSplitter import LineSplitter
 
-#----------------------------------------------------------------------
 
 class OglUseCase(OglObject):
     """
@@ -29,14 +21,11 @@ class OglUseCase(OglObject):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-
-    #>------------------------------------------------------------------ 
-
-    def __init__(self, pyutUseCase = None, w = 100.0, h = 60.0):
+    def __init__(self, pyutUseCase=None, w: float = 100.0, h: float = 60.0):
         """
         Constructor.
-        @param Float w : Width of the shape
-        @param Float h : Height of the shape
+        @param  w : Width of the shape
+        @param  h : Height of the shape
 
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
@@ -47,23 +36,21 @@ class OglUseCase(OglObject):
         else:
             pyutObject = pyutUseCase
 
-        # Super init
-        OglObject.__init__(self, pyutObject, w, h)
+        super().__init__(pyutObject, w, h)
 
         # Should not draw border
         self._drawFrame = False
 
-    #>------------------------------------------------------------------ 
-
-    def Draw(self, dc):#, withChildren=False):
+    def Draw(self, dc: DC, withChildren=False):
         """
         Draw the actor.
-        @param wx.DC dc : Device context
+        @param dc : Device context
+        @param withChildren
 
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        OglObject.Draw(self, dc)#, withChildren)
+        OglObject.Draw(self, dc, withChildren)
         dc.SetFont(self._defaultFont)
 
         # Gets the minimum bounding box for the shape
@@ -78,15 +65,14 @@ class OglUseCase(OglObject):
         # Draw text
         x += 0.25 * width
         y += 0.25 * height
-        textWidth = 0.6 * width # Text aera width
-        space = 1.1 * dc.GetCharHeight() # Space between lines
+        textWidth = 0.6 * width             # Text aera width
+        space = 1.1 * dc.GetCharHeight()    # Space between lines
 
         # Drawing is restricted in the specified region of the device
         dc.SetClippingRegion(x, y, textWidth, 0.6 * height)
 
         # Split lines
-        lines = LineSplitter().split(self.getPyutObject().getName(), \
-                dc, textWidth)
+        lines = LineSplitter().split(self.getPyutObject().getName(), dc, textWidth)
 
         # Draw text
         for line in lines:
@@ -94,6 +80,3 @@ class OglUseCase(OglObject):
             y += space
 
         dc.DestroyClippingRegion()
-
-    #>------------------------------------------------------------------------
-
