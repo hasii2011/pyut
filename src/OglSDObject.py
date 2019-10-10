@@ -13,8 +13,9 @@ from PyutConsts   import *
 
 DEFAULT_FONT_SIZE = 10
 
-#----------------------------------------------------------------------
-
+#
+#  TODO  Humberto  Cannot find any usages for this classes; Candidate for removal
+#
 class OglCDObject(ShapeEventHandler):
     """
     This is the base class for new CD OGL objects.

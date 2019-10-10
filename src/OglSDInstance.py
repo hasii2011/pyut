@@ -1,3 +1,5 @@
+from logging import Logger
+from logging import getLogger
 
 from wx import BLACK_DASHED_PEN
 from wx import CANCEL
@@ -64,11 +66,8 @@ class OglSDInstance(OglObject):
     :contact: dutoitc@hotmail.com
     """
     def __init__(self, pyutObject, parentFrame):
-        """
-        Constructor.
-        @author C.Dutoit
-        """
-        # Init datas
+
+        # Init data
         self._parentFrame = parentFrame
         self._instanceYPosition = 50       # Start of instances position
 
@@ -76,7 +75,9 @@ class OglSDInstance(OglObject):
         diagram = self._parentFrame.GetDiagram()
 
         # Init this class
-        OglObject.__init__(self, pyutObject, DEFAULT_WIDTH, DEFAULT_HEIGHT)
+        super().__init__(pyutObject, DEFAULT_WIDTH, DEFAULT_HEIGHT)
+
+        self.logger: Logger = getLogger(__name__)
         diagram.AddShape(self)
         self.SetDraggable(True)
         self.SetVisible(True)
@@ -162,8 +163,8 @@ class OglSDInstance(OglObject):
         for link in self._oglLinks:
             try:
                 link.updatePositions()
-            except:
-                pass
+            except (ValueError, Exception) as e:
+                self.logger.error(f'Link update position error: {e}')
 
         # Set TextBox
         RectangleShape.SetSize(self._instanceBox, width, self._instanceBox.GetSize()[1])
@@ -176,7 +177,7 @@ class OglSDInstance(OglObject):
         y = self._instanceYPosition
         OglObject.SetPosition(self, x, y)
 
-    def Draw(self, dc):
+    def Draw(self, dc, withChildren=False):
         """
         Draw overload; update labels
 

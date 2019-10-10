@@ -1,23 +1,21 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.16 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
 
-#from wxPython.wx  import *
-from PyutConsts   import *
-from Mediator     import *
-from MiniOgl      import *
-from OglLink      import *
+from PyutConsts import *
+from Mediator import *
+from MiniOgl import *
+
+from OglLink import *
+from globals import _
+
 DEBUG=False
-#TODO : Find a way to report moves from AnchorPoints to PyutSDMessage
+# TODO : Find a way to report moves from AnchorPoints to PyutSDMessage
 #
+# TODO: Humberto -- This class does not seem to be called; I tried to manually create a sequence
+# diagram but did not invoke this class;  However, it is reference by many plugins;  Fix later
 
 # Kind of labels
 [CENTER, SRC_CARD, DEST_CARD] = range(3)
 
-#>------------------------------------------------------------------------
 
 class OglSDMessage(LineShape, ShapeEventHandler):
     """
@@ -143,7 +141,7 @@ class OglSDMessage(LineShape, ShapeEventHandler):
 
     #>------------------------------------------------------------------------
 
-    def Draw(self, dc):#, withChildren=False):
+    def Draw(self, dc,  withChildren = False):
         """
         Called for contents drawing of links.
 
