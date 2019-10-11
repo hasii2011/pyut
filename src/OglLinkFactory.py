@@ -7,7 +7,7 @@ from OglAggregation import OglAggregation
 from OglComposition import OglComposition
 from OglInheritance import OglInheritance
 from OglInterface import OglInterface
-from OglNoteLink import OglNoteLink
+from org.pyut.ogl.OglNoteLink import OglNoteLink
 
 from PyutConsts import OGL_AGGREGATION
 from PyutConsts import OGL_ASSOCIATION
