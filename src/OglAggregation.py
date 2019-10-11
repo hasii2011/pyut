@@ -4,7 +4,7 @@ from logging import getLogger
 
 from wx import DC
 
-from OglAssociation import OglAssociation
+from org.pyut.ogl.OglAssociation import OglAssociation
 
 
 class OglAggregation(OglAssociation):

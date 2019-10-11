@@ -4,7 +4,7 @@ from wx import DC
 from org.pyut.ogl.OglClass import OglClass
 from PyutLink import PyutLink
 
-from OglAssociation import OglAssociation
+from org.pyut.ogl.OglAssociation import OglAssociation
 
 
 class OglComposition(OglAssociation):

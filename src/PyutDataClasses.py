@@ -49,7 +49,7 @@ from org.pyut.ogl.OglLink import OglLink
 # noinspection PyUnresolvedReferences
 from org.pyut.ogl.OglNoteLink import OglNoteLink
 # noinspection PyUnresolvedReferences
-from OglAssociation import OglAssociation
+from org.pyut.ogl.OglAssociation import OglAssociation
 # noinspection PyUnresolvedReferences
 from OglAggregation import OglAggregation
 # noinspection PyUnresolvedReferences
@@ -88,7 +88,7 @@ displayOgl = [
     "org.pyut.ogl.OglActor",
     "org.pyut.ogl.OglLink",
     "org.pyut.ogl.OglNoteLink",
-    "OglAssociation",
+    "org.pyut.ogl.OglAssociation",
     "OglAggregation",
     "OglComposition",
     "OglInheritance",

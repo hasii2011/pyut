@@ -611,7 +611,7 @@ class Mediator(Singleton):
         from org.pyut.ogl.OglNote import OglNote
         from OglUseCase import OglUseCase
         from org.pyut.ogl.OglActor import OglActor
-        from OglAssociation import OglAssociation
+        from org.pyut.ogl.OglAssociation import OglAssociation
         from OglInterface import OglInterface
 
         diagramShape = umlFrame.FindShape(x, y)

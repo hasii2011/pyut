@@ -29,10 +29,10 @@ from MiniOgl import ControlPoint
 
 from OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.OglActor import OglActor
-from OglAssociation import CENTER
-from OglAssociation import DEST_CARD
-from OglAssociation import OglAssociation
-from OglAssociation import SRC_CARD
+from org.pyut.ogl.OglAssociation import CENTER
+from org.pyut.ogl.OglAssociation import DEST_CARD
+from org.pyut.ogl.OglAssociation import OglAssociation
+from org.pyut.ogl.OglAssociation import SRC_CARD
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink

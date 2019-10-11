@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from OglAssociation import OglAssociation
+from org.pyut.ogl.OglAssociation import OglAssociation
 from OglAggregation import OglAggregation
 from OglComposition import OglComposition
 from OglInheritance import OglInheritance
