@@ -4,7 +4,7 @@ from logging import getLogger
 
 from org.pyut.ogl.OglAssociation import OglAssociation
 from org.pyut.ogl.OglAggregation import OglAggregation
-from OglComposition import OglComposition
+from org.pyut.ogl.OglComposition import OglComposition
 from OglInheritance import OglInheritance
 from OglInterface import OglInterface
 from org.pyut.ogl.OglNoteLink import OglNoteLink
