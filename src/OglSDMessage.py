@@ -1,10 +1,4 @@
-
-
-from PyutConsts import *
-from Mediator import *
-from MiniOgl import *
-
-from OglLink import *
+from org.pyut.ogl.OglLink import *
 from globals import _
 
 DEBUG=False

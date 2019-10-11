@@ -1,6 +1,6 @@
 
 
-from OglLink import OglLink
+from org.pyut.ogl.OglLink import OglLink
 
 from plugins.PyutToPlugin import PyutToPlugin
 

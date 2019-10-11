@@ -5,7 +5,7 @@ from xml.dom.minidom import Document
 
 from UmlFrame import *
 from org.pyut.ogl.OglClass import OglClass
-from OglLink import *
+from org.pyut.ogl.OglLink import *
 
 import wx
 

@@ -23,7 +23,7 @@ from MiniOgl.Constants import SKIP_EVENT
 from MiniOgl import LinePoint
 from MiniOgl import ControlPoint
 
-from OglLink import OglLink
+from org.pyut.ogl.OglLink import OglLink
 
 from PyutConsts import OGL_INTERFACE
 from PyutConsts import OGL_INHERITANCE
@@ -807,7 +807,7 @@ class Mediator(Singleton):
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         from org.pyut.ogl.OglClass import OglClass
         from org.pyut.ogl.OglObject import OglObject
-        from OglLink import OglLink
+        from org.pyut.ogl.OglLink import OglLink
         from org.pyut.commands.CommandGroup import CommandGroup
 
         umlFrame = self._fileHandling.getCurrentFrame()
@@ -1016,7 +1016,7 @@ class Mediator(Singleton):
         from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         from org.pyut.ogl.OglClass import OglClass
-        from OglLink import OglLink
+        from org.pyut.ogl.OglLink import OglLink
         from org.pyut.ogl.OglObject import OglObject
 
         if isinstance(oglObject, OglClass):

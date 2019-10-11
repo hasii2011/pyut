@@ -4,7 +4,7 @@ from math import atan
 from math import cos
 from math import sin
 
-from OglLink import *
+from org.pyut.ogl.OglLink import *
 
 # Kind of labels
 [CENTER, SRC_CARD, DEST_CARD] = list(range(3))
