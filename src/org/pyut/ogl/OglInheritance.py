@@ -42,7 +42,7 @@ class OglInheritance(OglLink):
     def OnLeftClick(self, x, y, keys, attachment):
         """
         Event handler for left mouse click.
-        This event handler call the link dialog to edit link properties.
+        This event handler calls the link dialog to edit link properties.
 
         @param int x : X position
         @param int y : Y position
