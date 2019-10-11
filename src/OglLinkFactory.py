@@ -3,7 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.ogl.OglAssociation import OglAssociation
-from OglAggregation import OglAggregation
+from org.pyut.ogl.OglAggregation import OglAggregation
 from OglComposition import OglComposition
 from OglInheritance import OglInheritance
 from OglInterface import OglInterface
