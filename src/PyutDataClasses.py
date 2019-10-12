@@ -60,7 +60,7 @@ from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import OglInterface
 
 # noinspection PyUnresolvedReferences
-from OglLinkFactory import OglLinkFactory
+from org.pyut.ogl.OglLinkFactory import OglLinkFactory
 
 display = [
     "PyutClass",
@@ -95,5 +95,5 @@ displayOgl = [
     "org.pyut.ogl.OglInheritance",
     "org.pyut.ogl.OglInterface",
     "org.pyut.ogl.OglUseCase",
-    "OglLinkFactory"
+    "org.pyut.ogl.OglLinkFactory"
 ]

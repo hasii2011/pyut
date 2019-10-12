@@ -5,7 +5,7 @@ from org.pyut.commands.Command import Command
 from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
 
 
-from OglLinkFactory import getLinkType
+from org.pyut.ogl.OglLinkFactory import getLinkType
 
 from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken

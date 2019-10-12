@@ -27,7 +27,7 @@ from PyutNote import PyutNote
 
 from MiniOgl import ControlPoint
 
-from OglLinkFactory import getOglLinkFactory
+from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglAssociation import CENTER
 from org.pyut.ogl.OglAssociation import DEST_CARD

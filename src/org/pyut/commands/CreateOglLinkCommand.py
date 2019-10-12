@@ -1,8 +1,8 @@
 
 from org.pyut.commands.Command import Command
 
-from OglLinkFactory import getLinkType
-from OglLinkFactory import getOglLinkFactory
+from org.pyut.ogl.OglLinkFactory import getLinkType
+from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
 from PyutConsts import OGL_INHERITANCE
 from PyutLink import PyutLink
