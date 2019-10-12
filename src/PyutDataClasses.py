@@ -1,7 +1,7 @@
 
 # These unused imports add in the classes so that the test code in UmlFrame.addHierarchy can do an introspection
 # noinspection PyUnresolvedReferences
-from PyutClass import PyutClass
+from org.pyut.PyutClass import PyutClass
 # noinspection PyUnresolvedReferences
 from PyutField import PyutField
 # noinspection PyUnresolvedReferences
@@ -63,7 +63,7 @@ from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglLinkFactory import OglLinkFactory
 
 display = [
-    "PyutClass",
+    "org.pyut.PyutClass",
     "PyutField",
     "org.pyut.PyutLink",
     "PyutLinkedObject",

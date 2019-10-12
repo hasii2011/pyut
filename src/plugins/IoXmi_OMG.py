@@ -14,7 +14,7 @@ from PyutConsts import OGL_ASSOCIATION
 from PyutConsts import OGL_COMPOSITION
 
 from PyutField import PyutField
-from PyutClass import PyutClass
+from org.pyut.PyutClass import PyutClass
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 

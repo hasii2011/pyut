@@ -14,7 +14,7 @@ from wx import Menu
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
-from PyutClass import PyutClass
+from org.pyut.PyutClass import PyutClass
 
 from pyutUtils import assignID
 from globals import _

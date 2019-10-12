@@ -38,7 +38,7 @@ from wx import StaticText
 
 from wx import FlexGridSizer
 
-from PyutClass import PyutClass
+from org.pyut.PyutClass import PyutClass
 from PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 

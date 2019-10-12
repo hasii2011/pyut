@@ -42,7 +42,7 @@ from PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 from PyutUseCase import PyutUseCase
 from PyutActor import PyutActor
-from PyutClass import PyutClass
+from org.pyut.PyutClass import PyutClass
 from PyutConsts import diagramTypeFromString
 from PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod

@@ -1,9 +1,6 @@
 
-
 from PyutLinkedObject import PyutLinkedObject
 from PyutStereotype import getPyutStereotype
-
-from globals import _
 
 
 class PyutClass(PyutLinkedObject):
@@ -44,19 +41,6 @@ class PyutClass(PyutLinkedObject):
         self._showStereotype = True
         self._showMethods    = True
         self._showFields     = True
-
-    def __getstate__(self):
-        """
-        For deepcopy operations, tells which fields to avoid copying.
-        Deepcopy must not copy the links to other classes, or it would result
-        in copying all the diagram.
-
-        @since 1.5
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        aDict = self.__dict__.copy()
-        aDict["_fathers"]    = []
-        return aDict
 
     def setDescription(self, description):
         """
@@ -214,6 +198,19 @@ class PyutClass(PyutLinkedObject):
         """
         self._showFields = value
 
+    def __getstate__(self):
+        """
+        For deepcopy operations, tells which fields to avoid copying.
+        Deepcopy must not copy the links to other classes, or it would result
+        in copying all the diagram.
+
+        @since 1.5
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        aDict = self.__dict__.copy()
+        aDict["_fathers"]    = []
+        return aDict
+
     def __str__(self):
         """
         String representation.
@@ -221,4 +218,4 @@ class PyutClass(PyutLinkedObject):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        return _("Class : %s") % (self.getName())
+        return f"Class : {self.getName()}"
