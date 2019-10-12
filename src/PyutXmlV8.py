@@ -34,7 +34,7 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from OglSDInstance import OglSDInstance
 from OglSDMessage import OglSDMessage
 
-from PyutStereotype import getPyutStereotype
+from org.pyut.PyutStereotype import getPyutStereotype
 from pyutUtils import displayError
 from PyutConsts import diagramTypeAsString
 from org.pyut.PyutParam import PyutParam

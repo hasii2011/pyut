@@ -44,7 +44,7 @@ from org.pyut.PyutMethod import PyutMethod
 
 from org.pyut.PyutModifier import PyutModifier
 from org.pyut.PyutParam import PyutParam
-from PyutStereotype import getPyutStereotype
+from org.pyut.PyutStereotype import getPyutStereotype
 
 from org.pyut.dialogs.DlgEditComment import DlgEditComment
 

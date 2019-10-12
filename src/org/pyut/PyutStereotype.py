@@ -16,28 +16,13 @@ class PyutStereotype:
 
     def __init__(self, name=""):
         """
-        Constructor.
+        Stereotype for a class, a link
 
         @param name for the type
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         self.__name = name
-
-    """
-    Stereotype for a class, a link
-
-    @version $Revision: 1.4 $
-    """
-    def __str__(self):
-        """
-        String representation.
-
-        @return type : string
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        """
-        return "<< %s >>" % (self.getName())
 
     def getStereotype(self):
         """
@@ -58,3 +43,7 @@ class PyutStereotype:
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self.__name
+
+    def __str__(self):
+
+        return f"<< {self.getName()} >>"
