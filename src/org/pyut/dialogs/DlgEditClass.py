@@ -43,7 +43,7 @@ from PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 
 from PyutModifier import PyutModifier
-from PyutParam import PyutParam
+from org.pyut.PyutParam import PyutParam
 from PyutStereotype import getPyutStereotype
 
 from org.pyut.dialogs.DlgEditComment import DlgEditComment

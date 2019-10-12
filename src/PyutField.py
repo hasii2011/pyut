@@ -1,6 +1,6 @@
 
 
-from PyutParam import PyutParam
+from org.pyut.PyutParam import PyutParam
 from PyutVisibility import getPyutVisibility
 
 

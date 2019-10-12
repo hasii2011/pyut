@@ -37,7 +37,7 @@ from OglSDMessage import OglSDMessage
 from PyutStereotype import getPyutStereotype
 from pyutUtils import displayError
 from PyutConsts import diagramTypeAsString
-from PyutParam import PyutParam
+from org.pyut.PyutParam import PyutParam
 from PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 from PyutUseCase import PyutUseCase

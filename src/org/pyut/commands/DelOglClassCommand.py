@@ -89,7 +89,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         @param serializedInfos   :   serialized data needed by the command.
         """
         from org.pyut.PyutMethod import PyutMethod
-        from PyutParam import PyutParam
+        from org.pyut.PyutParam import PyutParam
         from PyutField import PyutField
         from PyutType import PyutType
         from PyutStereotype import PyutStereotype

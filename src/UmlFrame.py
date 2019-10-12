@@ -10,7 +10,7 @@ from PyutClass import PyutClass
 from PyutActor import PyutActor
 from PyutUseCase import PyutUseCase
 from org.pyut.PyutMethod import PyutMethod
-from PyutParam import PyutParam
+from org.pyut.PyutParam import PyutParam
 from PyutNote import PyutNote
 
 from org.pyut.ogl.OglObject import OglObject

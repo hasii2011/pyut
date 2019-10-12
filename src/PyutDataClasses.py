@@ -21,7 +21,7 @@ from PyutModifier import PyutModifier
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutObject import PyutObject
 # noinspection PyUnresolvedReferences
-from PyutParam import PyutParam
+from org.pyut.PyutParam import PyutParam
 # noinspection PyUnresolvedReferences
 from PyutStereotype import PyutStereotype
 # noinspection PyUnresolvedReferences
@@ -65,18 +65,19 @@ from org.pyut.ogl.OglLinkFactory import OglLinkFactory
 display = [
     "PyutClass",
     "PyutField",
-    "PyutLink",
+    "org.pyut.PyutLink",
     "PyutLinkedObject",
     "PyutNote",
     "PyutUseCase",
     "PyutActor",
-    "PyutMethod",
+    "org.pyut.PyutMethod",
     "PyutModifier",
-    "PyutObject",
-    "PyutParam",
+    "org.pyut.PyutObject",
+    "org.pyut.PyutParam",
     "PyutStereotype",
     "PyutType",
     "PyutVisibility",
+    "org.pyut.PyutSDMessage",
     "Mediator",
     "Singleton",
     "FlyweightString",
