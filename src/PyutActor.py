@@ -5,7 +5,7 @@ __version__ = "$Revision: 1.3 $"
 __author__ = "EI5, eivd, Group Burgbacher - Waelti"
 __date__ = "2001-11-14"
 
-from PyutLinkedObject import *
+from org.pyut.PyutLinkedObject import *
 
 class PyutActor(PyutLinkedObject):
     """

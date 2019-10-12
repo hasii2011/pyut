@@ -1,5 +1,5 @@
 
-from PyutLinkedObject import PyutLinkedObject
+from org.pyut.PyutLinkedObject import PyutLinkedObject
 from PyutStereotype import getPyutStereotype
 
 
