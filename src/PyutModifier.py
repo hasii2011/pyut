@@ -1,45 +1,23 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.4 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
 
-#from FlyweightString import *
-
-class PyutModifier:#(FlyweightString):
+class PyutModifier:
     """
     Modifier for a method or param.
-    These are the words like "abstract", "virtual", "const"...
+    These are words like "abstract", "virtual", "const"...
 
     :author: Laurent Burgbacher
     :contact: <lb@alawa.ch>
     :version: $Revision: 1.4 $
     """
-    def __str__(self):
-        """
-        String representation.
-
-        @return type : string
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        return self.getName()
-
-    #>------------------------------------------------------------------------
-
-    def __init__(self, name=""):
+    def __init__(self, modifierTypeName: str = ""):
         """
         Constructor.
 
-        @param String for the type
+        @param  for the type
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        self.__name = name
-        #PyutUnmutableObject.__init__(self, name)
-
-    #>------------------------------------------------------------------------
+        self.__name = modifierTypeName
 
     def getName(self):
         """
@@ -51,4 +29,12 @@ class PyutModifier:#(FlyweightString):
         """
         return self.__name
 
+    def __str__(self):
+        """
+        String representation.
 
+        @return type : string
+        @since 1.0
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        return self.getName()
