@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from PyutObject import PyutObject
+from org.pyut.PyutObject import PyutObject
 
 from globals import _
 

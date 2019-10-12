@@ -5,7 +5,7 @@ from logging import getLogger
 from sys import exc_info
 from traceback import extract_tb
 
-from PyutObject import *
+from org.pyut.PyutObject import *
 from PyutType import *
 
 

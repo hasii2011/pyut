@@ -5,7 +5,7 @@ from logging import getLogger
 from PyutPreferences import PyutPreferences
 from PyutVisibility import PyutVisibility
 from PyutType import getPyutType
-from PyutObject import PyutObject
+from org.pyut.PyutObject import PyutObject
 
 # constants for setStringMode
 
@@ -36,6 +36,9 @@ class PyutMethod(PyutObject):
 
     @version $Revision: 1.5 $
     """
+
+    # define class flag to avoid PyCharm warning in get/set string mode
+    __selectedStringMode = None
 
     def __init__(self, name="", visibility="+", returns=""):
         """
@@ -80,7 +83,7 @@ class PyutMethod(PyutObject):
             cls.__selectedStringMode = cls.__stringWithParams
         elif mode == WITHOUT_PARAMS:
             cls.__selectedStringMode = cls.__stringWithoutParams
-    # setStringMode = classmethod(setStringMode)
+        # setStringMode = classmethod(mode)
 
     @classmethod
     def getStringMode(cls):

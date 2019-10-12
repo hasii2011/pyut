@@ -1,13 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.6 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-12-05"
+from org.pyut.PyutObject import PyutObject
 
-from PyutObject      import PyutObject
-#from wxPython.wx     import True, False
-#from types           import *
 
 class PyutLinkedObject(PyutObject):
     """
@@ -20,8 +13,6 @@ class PyutLinkedObject(PyutObject):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-
-
     def __init__(self, name=""):
         """
         Constructor.
@@ -30,16 +21,11 @@ class PyutLinkedObject(PyutObject):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        PyutObject.__init__(self, name)
-
-        
+        super().__init__(name)
 
         self._links = []
         self._fathers = []
         self._filename = ""
-
-
-    #>------------------------------------------------------------------------
 
     def getNextSafeID(self):
         """
@@ -49,9 +35,7 @@ class PyutLinkedObject(PyutObject):
         """
         # Verify that next id is not already used
         while self.isIDUsed(PyutLinkedObject.nextId):
-            PyutLinkedObject.nextId+=1
-
-    #>------------------------------------------------------------------------
+            PyutLinkedObject.nextId += 1
 
     def __getstate__(self):
         """
@@ -62,11 +46,9 @@ class PyutLinkedObject(PyutObject):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        dict = self.__dict__.copy()
-        dict["_links"] = []
-        return dict
-
-    #>------------------------------------------------------------------------
+        stateDict = self.__dict__.copy()
+        stateDict["_links"] = []
+        return stateDict
 
     def getLinks(self):
         """
@@ -79,8 +61,6 @@ class PyutLinkedObject(PyutObject):
         """
         return self._links
 
-    #>------------------------------------------------------------------------
-
     def setLinks(self, links):
         """
         Replace the actual links by those given in the list.
@@ -91,8 +71,6 @@ class PyutLinkedObject(PyutObject):
         """
         self._links = links
 
-    #>------------------------------------------------------------------------
-
     def addLink(self, link):
         """
         Add the given link to the links
@@ -102,11 +80,9 @@ class PyutLinkedObject(PyutObject):
         """
         self._links.append(link)
 
-    #>------------------------------------------------------------------------
-
     def getFathers(self):
         """
-        Return a list of the fathers. 
+        Return a list of the fathers.
         This is not a copy, but the original one. Any change made to it is
         directly made on the class.
 
@@ -114,8 +90,6 @@ class PyutLinkedObject(PyutObject):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
         return self._fathers
-
-    #>------------------------------------------------------------------------
 
     def setFathers(self, fathers):
         """
@@ -127,8 +101,6 @@ class PyutLinkedObject(PyutObject):
         """
         self._fathers = fathers
 
-    #>------------------------------------------------------------------------
-
     def addFather(self, father):
         """
         Add a father in a fathers list
@@ -138,21 +110,17 @@ class PyutLinkedObject(PyutObject):
         """
         return self._fathers.append(father)
 
-    #>------------------------------------------------------------------------
-
-    def setFilename(self, filename):
+    def setFilename(self, filename: str):
         """
         Set the associated filename.
         This is used by the reverse engineering plugins.
 
-        @param String filename
+        @param  filename
         @since 1.0
         """
         self._filename = filename
 
-    #>------------------------------------------------------------------------
-
-    def getFilename(self):
+    def getFilename(self) -> str:
         """
         Get the associated filename.
         "" is returned if there's no filename.

@@ -1,22 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.10 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
 
 from pyutUtils import *
-from PyutObject import *
+from org.pyut.PyutObject import *
 
 
-[ INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS ] = assignID(2)
+[INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS] = assignID(2)
 
 # List of possible instance type
-INSTANCE_TYPES = [ INSTANCE_TYPE_ACTOR,
-                   INSTANCE_TYPE_CLASS]
-DEBUG=False
+INSTANCE_TYPES = [INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS]
+DEBUG = False
 
-##############################################################################
 
 class PyutSDInstance(PyutObject):
     """
@@ -32,13 +25,10 @@ class PyutSDInstance(PyutObject):
 
         @author C.Dutoit
         """
-        PyutObject.__init__(self)
+        super().__init__()
         self._instanceName = "Unnamed instance"
         self._instanceGraphicalType = INSTANCE_TYPE_CLASS
         self._lifeLineLength = 200
-
-
-    #>------------------------------------------------------------------------
 
     def getInstanceName(self):
         """
@@ -48,8 +38,6 @@ class PyutSDInstance(PyutObject):
         """
         return self._instanceName
 
-    #>------------------------------------------------------------------------
-
     def setInstanceName(self, value):
         """
         Set this instance name
@@ -58,9 +46,6 @@ class PyutSDInstance(PyutObject):
         @author C.Dutoit
         """
         self._instanceName = value
-        
-
-    #>------------------------------------------------------------------------
 
     def getInstanceGraphicalType(self):
         """
@@ -69,8 +54,6 @@ class PyutSDInstance(PyutObject):
         @author C.Dutoit
         """
         return self._instanceGraphicalType
-
-    #>------------------------------------------------------------------------
 
     def setInstanceGraphicalType(self, value):
         """
@@ -81,8 +64,6 @@ class PyutSDInstance(PyutObject):
         """
         self._instanceGraphicalType = value
 
-    #>------------------------------------------------------------------------
-
     def getInstanceLifeLineLength(self):
         """
         Return instance lifeline length
@@ -90,8 +71,6 @@ class PyutSDInstance(PyutObject):
         @author C.Dutoit
         """
         return self._lifeLineLength
-
-    #>------------------------------------------------------------------------
 
     def setInstanceLifeLineLength(self, value):
         """

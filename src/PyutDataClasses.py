@@ -19,7 +19,7 @@ from PyutMethod import PyutMethod
 # noinspection PyUnresolvedReferences
 from PyutModifier import PyutModifier
 # noinspection PyUnresolvedReferences
-from PyutObject import PyutObject
+from org.pyut.PyutObject import PyutObject
 # noinspection PyUnresolvedReferences
 from PyutParam import PyutParam
 # noinspection PyUnresolvedReferences
