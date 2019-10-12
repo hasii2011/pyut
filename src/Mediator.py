@@ -609,7 +609,7 @@ class Mediator(Singleton):
         #
         from org.pyut.ogl.OglClass import OglClass
         from org.pyut.ogl.OglNote import OglNote
-        from OglUseCase import OglUseCase
+        from org.pyut.ogl.OglUseCase import OglUseCase
         from org.pyut.ogl.OglActor import OglActor
         from org.pyut.ogl.OglAssociation import OglAssociation
         from org.pyut.ogl.OglInterface import OglInterface

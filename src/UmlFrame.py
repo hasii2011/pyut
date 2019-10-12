@@ -15,7 +15,7 @@ from PyutNote import PyutNote
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglActor import OglActor
-from OglUseCase import OglUseCase
+from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglLink import OglLink

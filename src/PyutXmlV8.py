@@ -39,7 +39,7 @@ from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from OglSDInstance import OglSDInstance
 from OglSDMessage import OglSDMessage
-from OglUseCase import OglUseCase
+from org.pyut.ogl.OglUseCase import OglUseCase
 
 from PyutStereotype import getPyutStereotype
 from pyutUtils import displayError

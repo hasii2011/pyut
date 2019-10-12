@@ -72,7 +72,7 @@ from FileHandling import FileHandling
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
-from OglUseCase import OglUseCase
+from org.pyut.ogl.OglUseCase import OglUseCase
 
 from PluginManager import PluginManager
 from PyutActor import PyutActor
