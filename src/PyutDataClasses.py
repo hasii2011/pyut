@@ -64,7 +64,7 @@ from org.pyut.ogl.OglLinkFactory import OglLinkFactory
 
 display = [
     "org.pyut.PyutClass",
-    "PyutField",
+    "org.pyut.PyutField",
     "org.pyut.PyutLink",
     "PyutLinkedObject",
     "PyutNote",
