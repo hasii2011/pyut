@@ -1,7 +1,7 @@
 
 
-from PyutLinkedObject import *
-from PyutStereotype import *
+from PyutLinkedObject import PyutLinkedObject
+from PyutStereotype import getPyutStereotype
 
 from globals import _
 
@@ -57,15 +57,6 @@ class PyutClass(PyutLinkedObject):
         aDict = self.__dict__.copy()
         aDict["_fathers"]    = []
         return aDict
-
-    def __str__(self):
-        """
-        String representation.
-
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        return _("Class : %s") % (self.getName())
 
     def setDescription(self, description):
         """
@@ -222,3 +213,12 @@ class PyutClass(PyutLinkedObject):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._showFields = value
+
+    def __str__(self):
+        """
+        String representation.
+
+        @since 1.0
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        return _("Class : %s") % (self.getName())
