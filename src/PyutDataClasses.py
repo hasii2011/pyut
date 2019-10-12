@@ -11,7 +11,7 @@ from org.pyut.PyutLinkedObject import PyutLinkedObject
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutNote import PyutNote
 # noinspection PyUnresolvedReferences
-from PyutUseCase import PyutUseCase
+from org.pyut.PyutUseCase import PyutUseCase
 # noinspection PyUnresolvedReferences
 from PyutActor import PyutActor
 # noinspection PyUnresolvedReferences
@@ -68,7 +68,7 @@ display = [
     "org.pyut.PyutLink",
     "org.pyut.PyutLinkedObject",
     "org.pyut.PyutNote",
-    "PyutUseCase",
+    "org.pyut.PyutUseCase",
     "PyutActor",
     "org.pyut.PyutMethod",
     "PyutModifier",

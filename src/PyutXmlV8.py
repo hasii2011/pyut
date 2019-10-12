@@ -40,7 +40,7 @@ from PyutConsts import diagramTypeAsString
 from org.pyut.PyutParam import PyutParam
 from PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
-from PyutUseCase import PyutUseCase
+from org.pyut.PyutUseCase import PyutUseCase
 from PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from PyutConsts import diagramTypeFromString

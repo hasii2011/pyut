@@ -1,11 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.3 $"
-__author__ = "EI5, eivd, Group Burgbacher - Waelti"
-__date__ = "2001-11-14"
+from org.pyut.PyutLinkedObject import PyutLinkedObject
 
-from org.pyut.PyutLinkedObject import *
 
 class PyutActor(PyutLinkedObject):
     """
@@ -18,13 +13,12 @@ class PyutActor(PyutLinkedObject):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-    def __init__(self, name = ""):
+    def __init__(self, actorName: str = ""):
         """
         Constructor.
-        @param String name : The name of the actor
+        @param actorName : The name of the actor
 
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        PyutLinkedObject.__init__(self, name)
-
+        super().__init__(actorName)

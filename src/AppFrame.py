@@ -84,7 +84,7 @@ from org.pyut.PyutNote import PyutNote
 
 from PyutPreferences import PyutPreferences
 from PyutPrintout import PyutPrintout
-from PyutUseCase import PyutUseCase
+from org.pyut.PyutUseCase import PyutUseCase
 
 from Tool import Tool
 
