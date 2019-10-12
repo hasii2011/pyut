@@ -5,8 +5,8 @@ from org.pyut.PyutObject import PyutObject
 class PyutLinkedObject(PyutObject):
     """
     An object which can be connected to other one.
-    This class provides all support for link management in data layer. All
-    classes that may be interconnected (classes for examples) should inherate
+    This class provides all support for link management in the data layer. All
+    classes that may be interconnected (classes for examples) should inherit
     this class to have all links support.
 
     :version: $Revision: 1.6 $
@@ -36,19 +36,6 @@ class PyutLinkedObject(PyutObject):
         # Verify that next id is not already used
         while self.isIDUsed(PyutLinkedObject.nextId):
             PyutLinkedObject.nextId += 1
-
-    def __getstate__(self):
-        """
-        For deepcopy operations, tells which fields to avoid copying.
-        Deepcopy must not copy the links to other classes, or it would result
-        in copying all the diagram.
-
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        """
-        stateDict = self.__dict__.copy()
-        stateDict["_links"] = []
-        return stateDict
 
     def getLinks(self):
         """
@@ -129,3 +116,16 @@ class PyutLinkedObject(PyutObject):
         @since 1.0
         """
         return self._filename
+
+    def __getstate__(self):
+        """
+        For deepcopy operations, tells which fields to avoid copying.
+        Deepcopy must not copy the links to other classes, or it would result
+        in copying all the diagram.
+
+        @since 1.0
+        @author Philippe Waelti <pwaelti@eivd.ch>
+        """
+        stateDict = self.__dict__.copy()
+        stateDict["_links"] = []
+        return stateDict

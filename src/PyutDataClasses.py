@@ -66,7 +66,7 @@ display = [
     "org.pyut.PyutClass",
     "org.pyut.PyutField",
     "org.pyut.PyutLink",
-    "PyutLinkedObject",
+    "org.pyut.PyutLinkedObject",
     "org.pyut.PyutNote",
     "PyutUseCase",
     "PyutActor",
