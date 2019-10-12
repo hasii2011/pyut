@@ -44,7 +44,7 @@ from PyutUseCase import PyutUseCase
 from PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from PyutConsts import diagramTypeFromString
-from PyutField import PyutField
+from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 from PyutNote import PyutNote
 

@@ -17,7 +17,7 @@ from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
-from PyutField import PyutField
+from org.pyut.PyutField import PyutField
 
 
 class ToFastEdit(PyutToPlugin):

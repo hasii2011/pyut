@@ -3,7 +3,7 @@
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutClass import PyutClass
 # noinspection PyUnresolvedReferences
-from PyutField import PyutField
+from org.pyut.PyutField import PyutField
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutLink import PyutLink
 # noinspection PyUnresolvedReferences

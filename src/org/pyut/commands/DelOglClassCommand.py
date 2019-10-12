@@ -90,7 +90,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         """
         from org.pyut.PyutMethod import PyutMethod
         from org.pyut.PyutParam import PyutParam
-        from PyutField import PyutField
+        from org.pyut.PyutField import PyutField
         from PyutType import PyutType
         from PyutStereotype import PyutStereotype
         from PyutModifier import PyutModifier

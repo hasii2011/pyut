@@ -13,7 +13,7 @@ from PyutConsts import OGL_AGGREGATION
 from PyutConsts import OGL_ASSOCIATION
 from PyutConsts import OGL_COMPOSITION
 
-from PyutField import PyutField
+from org.pyut.PyutField import PyutField
 from org.pyut.PyutClass import PyutClass
 
 from plugins.PyutIoPlugin import PyutIoPlugin
