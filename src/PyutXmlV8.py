@@ -39,7 +39,7 @@ from pyutUtils import displayError
 from PyutConsts import diagramTypeAsString
 from PyutParam import PyutParam
 from PyutSDInstance import PyutSDInstance
-from PyutSDMessage import PyutSDMessage
+from org.pyut.PyutSDMessage import PyutSDMessage
 from PyutUseCase import PyutUseCase
 from PyutActor import PyutActor
 from PyutClass import PyutClass

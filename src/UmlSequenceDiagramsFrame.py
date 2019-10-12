@@ -4,7 +4,7 @@ from UmlFrame import *
 
 from UmlDiagramsFrame import *
 from PyutSDInstance import *
-from PyutSDMessage import *
+from org.pyut.PyutSDMessage import *
 from OglSDInstance import *
 
 from PyutConsts import OGL_SD_MESSAGE
