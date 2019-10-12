@@ -17,14 +17,6 @@ from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 from wx import Size
 
-from PyutActor import PyutActor
-from PyutClass import PyutClass
-from PyutConsts import diagramTypeFromString
-from PyutField import PyutField
-from PyutLink import PyutLink
-from PyutMethod import PyutMethod
-from PyutNote import PyutNote
-
 from MiniOgl import ControlPoint
 
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
@@ -37,9 +29,10 @@ from org.pyut.ogl.OglAssociation import SRC_CARD
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
+from org.pyut.ogl.OglUseCase import OglUseCase
+
 from OglSDInstance import OglSDInstance
 from OglSDMessage import OglSDMessage
-from org.pyut.ogl.OglUseCase import OglUseCase
 
 from PyutStereotype import getPyutStereotype
 from pyutUtils import displayError
@@ -48,6 +41,14 @@ from PyutParam import PyutParam
 from PyutSDInstance import PyutSDInstance
 from PyutSDMessage import PyutSDMessage
 from PyutUseCase import PyutUseCase
+from PyutActor import PyutActor
+from PyutClass import PyutClass
+from PyutConsts import diagramTypeFromString
+from PyutField import PyutField
+from PyutMethod import PyutMethod
+from PyutNote import PyutNote
+
+from org.pyut.PyutLink import PyutLink
 
 from Mediator import getMediator
 from globals import _

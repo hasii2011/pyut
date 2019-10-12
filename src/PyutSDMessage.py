@@ -1,6 +1,6 @@
 
 
-from PyutLink import PyutLink
+from org.pyut.PyutLink import PyutLink
 
 from globals import _
 
@@ -136,15 +136,6 @@ class PyutSDMessage(PyutLink):
         """
         return self._dest
 
-    def __str__(self):
-        """
-        String representation.
-
-        @return : string representing this object
-        @author C.Dutoit
-        """
-        return _("(%s) link to %s") % (self._source, self._destination)
-
     def getMessage(self):
         """
         Return the message as a string
@@ -171,7 +162,7 @@ class PyutSDMessage(PyutLink):
         if src is not None:
             # self._src = src
             PyutLink.setSource(self, src)
-        if srcTime!=-1:
+        if srcTime != -1:
             if DEBUG:
                 print("PyutSDMessage - Setting srcTime to ", srcTime)
             self.setSrcTime(srcTime)
@@ -186,6 +177,15 @@ class PyutSDMessage(PyutLink):
         if dst is not None:
             PyutLink.setDestination(self, dst)
             # self._dest = dst
-        if dstTime!=-1:
+        if dstTime != -1:
             print("PyutSDMessage - Setting dstTime to ", dstTime)
             self.setDstTime(dstTime)
+
+    def __str__(self):
+        """
+        String representation.
+
+        @return : string representing this object
+        @author C.Dutoit
+        """
+        return _("(%s) link to %s") % (self._src, self._dest)

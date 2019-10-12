@@ -24,7 +24,7 @@ from wx import TextCtrl
 from wx import VERTICAL
 
 from pyutUtils import assignID
-from PyutLink import PyutLink
+from org.pyut.PyutLink import PyutLink
 from globals import _
 
 from copy import deepcopy

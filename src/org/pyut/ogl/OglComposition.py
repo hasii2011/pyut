@@ -2,7 +2,7 @@
 from wx import DC
 
 from org.pyut.ogl.OglClass import OglClass
-from PyutLink import PyutLink
+from org.pyut.PyutLink import PyutLink
 
 from org.pyut.ogl.OglAssociation import OglAssociation
 

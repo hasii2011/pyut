@@ -4,7 +4,7 @@ import wx
 from MiniOgl.LineShape import LineShape
 from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
-from PyutLink import PyutLink
+from org.pyut.PyutLink import PyutLink
 
 from PyutConsts import WEST
 from PyutConsts import SOUTH

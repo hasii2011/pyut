@@ -5,7 +5,7 @@ from org.pyut.ogl.OglLinkFactory import getLinkType
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
 from PyutConsts import OGL_INHERITANCE
-from PyutLink import PyutLink
+from org.pyut.PyutLink import PyutLink
 
 from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
