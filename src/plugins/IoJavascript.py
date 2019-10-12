@@ -4,7 +4,7 @@ import wx
 from plugins.PyutIoPlugin import PyutIoPlugin
 from PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
-from PyutMethod import PyutMethod
+from org.pyut.PyutMethod import PyutMethod
 
 
 class IoJavascript(PyutIoPlugin):

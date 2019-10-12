@@ -15,7 +15,7 @@ from plugins.DlgFEOptions import DlgFEOptions
 
 from org.pyut.ogl.OglObject import OglObject
 
-from PyutMethod import PyutMethod
+from org.pyut.PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutField import PyutField
 

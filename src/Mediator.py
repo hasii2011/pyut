@@ -33,8 +33,8 @@ from PyutConsts import OGL_COMPOSITION
 from PyutConsts import OGL_NOTELINK
 from PyutConsts import OGL_SD_MESSAGE
 
-from PyutMethod import WITHOUT_PARAMS
-from PyutMethod import WITH_PARAMS
+from org.pyut.PyutMethod import WITHOUT_PARAMS
+from org.pyut.PyutMethod import WITH_PARAMS
 from PyutPreferences import PyutPreferences
 from pyutUtils import displayError
 

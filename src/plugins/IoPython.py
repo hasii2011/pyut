@@ -11,7 +11,7 @@ import importlib
 
 from PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
-from PyutMethod import PyutMethod
+from org.pyut.PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutField import PyutField
 

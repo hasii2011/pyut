@@ -40,7 +40,7 @@ from wx import FlexGridSizer
 
 from PyutClass import PyutClass
 from PyutField import PyutField
-from PyutMethod import PyutMethod
+from org.pyut.PyutMethod import PyutMethod
 
 from PyutModifier import PyutModifier
 from PyutParam import PyutParam

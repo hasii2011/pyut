@@ -9,7 +9,7 @@ import wx
 from PyutClass import PyutClass
 from PyutActor import PyutActor
 from PyutUseCase import PyutUseCase
-from PyutMethod import PyutMethod
+from org.pyut.PyutMethod import PyutMethod
 from PyutParam import PyutParam
 from PyutNote import PyutNote
 

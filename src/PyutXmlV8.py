@@ -45,7 +45,7 @@ from PyutActor import PyutActor
 from PyutClass import PyutClass
 from PyutConsts import diagramTypeFromString
 from PyutField import PyutField
-from PyutMethod import PyutMethod
+from org.pyut.PyutMethod import PyutMethod
 from PyutNote import PyutNote
 
 from org.pyut.PyutLink import PyutLink

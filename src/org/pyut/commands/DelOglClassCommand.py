@@ -88,7 +88,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         unserialize the data needed by the destroyed OglLinkedObject.
         @param serializedInfos   :   serialized data needed by the command.
         """
-        from PyutMethod import PyutMethod
+        from org.pyut.PyutMethod import PyutMethod
         from PyutParam import PyutParam
         from PyutField import PyutField
         from PyutType import PyutType
