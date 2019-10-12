@@ -42,7 +42,7 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 
-from PyutModifier import PyutModifier
+from org.pyut.PyutModifier import PyutModifier
 from org.pyut.PyutParam import PyutParam
 from PyutStereotype import getPyutStereotype
 

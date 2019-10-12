@@ -93,7 +93,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         from org.pyut.PyutField import PyutField
         from PyutType import PyutType
         from PyutStereotype import PyutStereotype
-        from PyutModifier import PyutModifier
+        from org.pyut.PyutModifier import PyutModifier
 
         # unserialize the data common to all OglObjects
         DelOglLinkedObjectCommand.unserialize(self, serializedInfos)
