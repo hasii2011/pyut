@@ -9,7 +9,7 @@ from org.pyut.PyutLink import PyutLink
 # noinspection PyUnresolvedReferences
 from PyutLinkedObject import PyutLinkedObject
 # noinspection PyUnresolvedReferences
-from PyutNote import PyutNote
+from org.pyut.PyutNote import PyutNote
 # noinspection PyUnresolvedReferences
 from PyutUseCase import PyutUseCase
 # noinspection PyUnresolvedReferences
@@ -67,7 +67,7 @@ display = [
     "org.pyut.PyutField",
     "org.pyut.PyutLink",
     "PyutLinkedObject",
-    "PyutNote",
+    "org.pyut.PyutNote",
     "PyutUseCase",
     "PyutActor",
     "org.pyut.PyutMethod",

@@ -80,7 +80,7 @@ from org.pyut.PyutClass import PyutClass
 from PyutConsts import CLASS_DIAGRAM
 from PyutConsts import SEQUENCE_DIAGRAM
 from PyutConsts import USECASE_DIAGRAM
-from PyutNote import PyutNote
+from org.pyut.PyutNote import PyutNote
 
 from PyutPreferences import PyutPreferences
 from PyutPrintout import PyutPrintout
