@@ -1,6 +1,6 @@
 
 
-from PyutType import *
+from org.pyut.PyutType import *
 
 from org.pyut.ogl.OglClass import OglClass
 

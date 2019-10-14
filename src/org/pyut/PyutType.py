@@ -39,25 +39,27 @@ class PyutType(FlyweightString):
         return self._value
 
 
+# noinspection PyUnusedLocal
 def main():
+    """
+    TODO: Move this to a unit test
+    """
     a = PyutType("salut")
     b = PyutType("salut")
     c = PyutType("autre")
     d = PyutType("autre")
-    #print repr(a), a
-    #print repr(b), b
-    #print repr(c), c
-    #print repr(d), d
+    # print repr(a), a
+    # print repr(b), b
+    #  print repr(c), c
+    # print repr(d), d
     del a
     del b
     a = PyutType("salut")
     b = PyutType("toto")
-
-    #print repr(a), a
-    #print repr(b), b
-    #print repr(c), c
-    #print repr(d), d
-
+    # print repr(a), a
+    # print repr(b), b
+    # print repr(c), c
+    # print repr(d), d
     del b
 
     keys = a.getAllFlies()
@@ -67,4 +69,5 @@ def main():
     print("FlyweightString working")
 
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()

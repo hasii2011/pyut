@@ -25,7 +25,7 @@ from org.pyut.PyutParam import PyutParam
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutStereotype import PyutStereotype
 # noinspection PyUnresolvedReferences
-from PyutType import PyutType
+from org.pyut.PyutType import PyutType
 # noinspection PyUnresolvedReferences
 from PyutVisibility import PyutVisibility
 # noinspection PyUnresolvedReferences
@@ -74,8 +74,8 @@ display = [
     "org.pyut.PyutModifier",
     "org.pyut.PyutObject",
     "org.pyut.PyutParam",
-    "PyutStereotype",
-    "PyutType",
+    "org.pyut.PyutStereotype",
+    "org.pyut.PyutType",
     "PyutVisibility",
     "org.pyut.PyutSDMessage",
     "Mediator",

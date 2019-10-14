@@ -6,7 +6,7 @@ from sys import exc_info
 from traceback import extract_tb
 
 from org.pyut.PyutObject import *
-from PyutType import *
+from org.pyut.PyutType import *
 
 
 class PyutParam(PyutObject):

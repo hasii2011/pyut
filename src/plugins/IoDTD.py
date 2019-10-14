@@ -1,7 +1,7 @@
 
 # TODO : ELEMENT x (#CDATA) -> ajouter un field #CDATA
 
-from PyutType import *
+from org.pyut.PyutType import *
 
 # from xml.parsers.xmlproc.dtdparser import DTDParser, DTDConsumer  #  TODO have to figure out where to get this from
 

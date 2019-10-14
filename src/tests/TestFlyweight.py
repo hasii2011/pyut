@@ -2,7 +2,7 @@
 import unittest
 
 from FlyweightString import FlyweightString
-from PyutType import PyutType   # PyutType is a FlyweightString
+from org.pyut.PyutType import PyutType   # PyutType is a FlyweightString
 
 
 class TestFlyweight(unittest.TestCase):
@@ -32,14 +32,15 @@ class TestFlyweight(unittest.TestCase):
 
     def testPyutType(self):
         """Test PyutType class"""
-        a = PyutType("salut")
-        b = PyutType("s" + "alut")
+        a: PyutType = PyutType("salut")
+        b: PyutType = PyutType("s" + "alut")
         self.assertTrue(a.getName() == b.getName())
         self.assertTrue(a is b, "two different objects with same values strings")
         try:
+            # noinspection PyUnresolvedReferences
             a.setName("Salut")
         except AttributeError:
-            pass
+            pass    # We should get this error
         else:
             self.fail("PyutType should not be modifiable by setName")
 

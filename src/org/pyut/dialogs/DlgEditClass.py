@@ -1236,7 +1236,7 @@ class DlgEditClass (Dialog):
         """
         dlg = self._dlgField
         dlg.field.setName(dlg._txtFieldName.GetValue().strip())
-        from PyutType import getPyutType
+        from org.pyut.PyutType import getPyutType
         dlg.field.setType(getPyutType(dlg._txtFieldType.GetValue().strip()))
         dlg.field.setVisibility(dlg._rdbFieldVisibility.GetStringSelection())
 
