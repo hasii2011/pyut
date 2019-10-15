@@ -3,9 +3,9 @@ from unittest import TestCase
 from unittest import main
 
 # from pyutUtils import assignID
-import PyutUtils1
+import PyutUtils
 
-[ID_TXT_NAME, ID_TXT_STEREOTYPE] = PyutUtils1.assignID(2)
+[ID_TXT_NAME, ID_TXT_STEREOTYPE] = PyutUtils.assignID(2)
 
 
 class TestpyutUtils(TestCase):

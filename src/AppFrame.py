@@ -105,10 +105,10 @@ from Mediator import ACTION_NEW_SD_INSTANCE
 from Mediator import ACTION_NEW_USECASE
 from Mediator import getMediator
 
-from pyutUtils import assignID
-from pyutUtils import displayError
-from pyutUtils import displayInformation
-from pyutUtils import displayWarning
+from PyutUtils import assignID
+from PyutUtils import displayError
+from PyutUtils import displayInformation
+from PyutUtils import displayWarning
 
 from TipsFrame import TipsFrame
 

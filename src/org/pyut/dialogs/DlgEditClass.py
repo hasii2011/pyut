@@ -52,7 +52,7 @@ from org.pyut.dialogs.DlgEditComment import DlgEditComment
 import Mediator
 
 from globals import _
-from PyutUtils1 import assignID
+from PyutUtils import assignID
 
 # Assign constants
 [

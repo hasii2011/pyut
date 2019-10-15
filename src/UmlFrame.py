@@ -29,7 +29,7 @@ from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
 from Mediator import ACTION_ZOOM_IN
 from Mediator import getMediator
 
-from PyutUtils1 import displayError
+from PyutUtils import displayError
 
 from org.pyut.history.HistoryManager import HistoryManager
 

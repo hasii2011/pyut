@@ -6,7 +6,7 @@ from wx import MessageDialog
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
-from PyutUtils1 import displayError
+from PyutUtils import displayError
 from PyutDocument import PyutDocument
 from IoFile import IoFile
 
