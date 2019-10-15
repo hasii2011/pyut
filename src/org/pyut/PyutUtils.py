@@ -1,4 +1,7 @@
 
+from sys import exc_info
+from traceback import extract_tb
+
 from wx import NewId
 
 from ErrorManager import getErrorManager
@@ -40,18 +43,25 @@ def assignID(nb):
     return [NewId() for x in range(nb)]
 
 
-def getErrorInfo(exc_info):
-    import traceback
-    errMsg = str(exc_info[1])
-    errMsg += "\n\n---------------------------\n"
-    if exc_info[0] is not None:
-        errMsg += "Error : %s" % exc_info[0] + "\n"
-    if exc_info[1] is not None:
-        errMsg += "Msg   : %s" % exc_info[1] + "\n"
-    if exc_info[2] is not None:
-        errMsg += "Trace :\n"
-        for el in traceback.extract_tb(exc_info[2]):
-            errMsg = errMsg + str(el) + "\n"
+def getErrorInfo() -> str:
+    """
+    Does this belong in the error manager?
+
+    Returns:
+
+    """
+
+    errMsg = f'The following error occured : {str(exc_info()[1])}'
+    errMsg += f'\n\n---------------------------\n'
+    if exc_info()[0] is not None:
+        errMsg += f'Error : {exc_info()[0]}\n'
+    if exc_info()[1] is not None:
+        errMsg += f'Msg   : {exc_info()[1]}\n'
+    if exc_info()[2] is not None:
+        errMsg += 'Trace :\n'
+        for el in extract_tb(exc_info()[2]):
+            errMsg = errMsg + f'{str(el)}\n'
+
     return errMsg
 
 
