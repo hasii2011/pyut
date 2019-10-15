@@ -13,7 +13,7 @@ from org.pyut.PyutNote import PyutNote
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutUseCase import PyutUseCase
 # noinspection PyUnresolvedReferences
-from PyutActor import PyutActor
+from org.pyut.PyutActor import PyutActor
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutMethod import PyutMethod
 # noinspection PyUnresolvedReferences

@@ -7,7 +7,7 @@ from logging import getLogger
 import wx
 
 from org.pyut.PyutClass import PyutClass
-from PyutActor import PyutActor
+from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam

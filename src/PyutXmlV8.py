@@ -41,7 +41,7 @@ from org.pyut.PyutParam import PyutParam
 from PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 from org.pyut.PyutUseCase import PyutUseCase
-from PyutActor import PyutActor
+from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from PyutConsts import diagramTypeFromString
 from org.pyut.PyutField import PyutField
