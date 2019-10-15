@@ -3,7 +3,7 @@ from unittest import TestCase
 from unittest import main
 
 # from pyutUtils import assignID
-import PyutUtils
+from org.pyut import PyutUtils
 
 [ID_TXT_NAME, ID_TXT_STEREOTYPE] = PyutUtils.assignID(2)
 

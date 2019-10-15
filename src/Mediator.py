@@ -36,7 +36,7 @@ from PyutConsts import OGL_SD_MESSAGE
 from org.pyut.PyutMethod import WITHOUT_PARAMS
 from org.pyut.PyutMethod import WITH_PARAMS
 from PyutPreferences import PyutPreferences
-from PyutUtils import displayError
+from org.pyut.PyutUtils import displayError
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.DlgEditNote import DlgEditNote

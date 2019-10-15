@@ -6,8 +6,6 @@ __author__ = "EI5, eivd, Group Burgbacher - Waelti"
 __date__ = "2001-11-14"
 
 #from wxPython.wx import *
-from UmlFrame import *
-from PyutUtils import *
 import os, wx
 from Mediator import *
 

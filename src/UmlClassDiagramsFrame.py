@@ -9,13 +9,8 @@ __PyUtVersion__ = "1.0"
 #from wx.Python.wx.     import *
 #from wx.Python.html   import *
 import wx
-from UmlFrame        import *
-from PyutUtils       import *
-from PyutPrintout    import *
-from PluginManager   import *
-from copy            import deepcopy
 from UmlDiagramsFrame import *
-import Mediator
+
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):
     """
@@ -43,7 +38,6 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        import os
         #print ">>>UmlClassDiagramsFrame-1"
         UmlDiagramsFrame.__init__(self, parent)
         #print "---UmlClassDiagramsFrame-2"

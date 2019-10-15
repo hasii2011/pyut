@@ -16,7 +16,7 @@ from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
 from org.pyut.PyutClass import PyutClass
 
-from PyutUtils import assignID
+from org.pyut.PyutUtils import assignID
 from globals import _
 
 from Mediator import getMediator

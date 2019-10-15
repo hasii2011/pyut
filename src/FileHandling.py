@@ -31,7 +31,7 @@ from wx import ScrolledWindow
 from wx import Yield
 
 # from AppFrame import *
-from PyutUtils import displayError
+from org.pyut.PyutUtils import displayError
 from PyutProject import PyutProject
 import PyutConsts
 from globals import _

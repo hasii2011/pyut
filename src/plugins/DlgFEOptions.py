@@ -4,7 +4,6 @@ from logging import getLogger
 
 from wx import ALL
 from wx import CENTER
-from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import EVT_TEXT
 from wx import VERTICAL
@@ -21,7 +20,7 @@ from wx import Dialog
 from globals import _
 
 from PyutPreferences import PyutPreferences
-from PyutUtils import assignID
+from org.pyut.PyutUtils import assignID
 
 
 class DlgFEOptions(Dialog):

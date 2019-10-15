@@ -1,6 +1,6 @@
 
 
-from PyutUtils import *
+from org.pyut.PyutUtils import *
 from org.pyut.PyutObject import *
 
 

@@ -10,7 +10,7 @@ from PyutConsts import USECASE_DIAGRAM
 from UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
-from PyutUtils import displayError
+from org.pyut.PyutUtils import displayError
 
 
 def shorterFilename(filename):

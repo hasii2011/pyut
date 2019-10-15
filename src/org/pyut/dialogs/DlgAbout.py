@@ -43,7 +43,7 @@ from wx import Yield as wxYield
 
 import threading
 
-from PyutUtils import assignID
+from org.pyut.PyutUtils import assignID
 from globals import IMG_PKG
 
 # Constants

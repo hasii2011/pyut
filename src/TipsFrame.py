@@ -28,7 +28,7 @@ from wx import StaticBitmap
 from wx import StaticText
 from wx import VERTICAL
 
-from PyutUtils import assignID
+from org.pyut.PyutUtils import assignID
 from PyutPreferences import PyutPreferences
 
 from globals import _

@@ -14,7 +14,7 @@ from xml.dom.minidom import parseString
 
 
 from Mediator import getMediator
-from PyutUtils import displayError
+from org.pyut.PyutUtils import displayError
 
 from PyutConsts import CLASS_DIAGRAM
 
