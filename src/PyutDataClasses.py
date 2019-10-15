@@ -76,7 +76,7 @@ display = [
     "org.pyut.PyutParam",
     "org.pyut.PyutStereotype",
     "org.pyut.PyutType",
-    "PyutVisibility",
+    "org.pyut.PyutVisibility",
     "org.pyut.PyutSDMessage",
     "Mediator",
     "Singleton",
