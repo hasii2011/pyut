@@ -82,25 +82,26 @@ def main():
         # (User-mode)
         prefs["LastDirectory"] = userPath
     del prefs
-
+    # TODO: move this to an external file avoid have to account for invalid escape sequences
     print("""
                                ...
                               /   \\
                        °ooO  | O O |  Ooo°
 =============================================================================
                        _____       _    _ _   
-                      |  __ \     | |  | | |  
+                      |  __ \\    | |  | | |  
                       | |__) |   _| |  | | |_ 
                       |  ___/ | | | |  | | __|
                       | |   | |_| | |__| | |_ 
-                      |_|    \__, |\____/ \__|
+                      |_|    \\_, |\____/ \_ |
                               __/ |           
-                             |___/    A little UML 1.3 editor
+                             |___/    A little UML 1.4 editor
                       
 
     """)
     print("Versions found : ")
-    import wx, sys
+    import wx
+    import sys
     print("WX     ", wx.__version__)
     print("Python ", sys.version.split(" ")[0])
 
