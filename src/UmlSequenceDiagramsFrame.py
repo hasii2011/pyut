@@ -3,7 +3,7 @@
 from UmlFrame import *
 
 from UmlDiagramsFrame import *
-from PyutSDInstance import *
+from org.pyut.PyutSDInstance import *
 from org.pyut.PyutSDMessage import *
 from OglSDInstance import *
 

@@ -38,7 +38,7 @@ from org.pyut.PyutStereotype import getPyutStereotype
 from pyutUtils import displayError
 from PyutConsts import diagramTypeAsString
 from org.pyut.PyutParam import PyutParam
-from PyutSDInstance import PyutSDInstance
+from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutActor import PyutActor
