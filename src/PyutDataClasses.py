@@ -27,7 +27,7 @@ from org.pyut.PyutStereotype import PyutStereotype
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutType import PyutType
 # noinspection PyUnresolvedReferences
-from PyutVisibility import PyutVisibility
+from org.pyut.PyutVisibility import PyutVisibility
 # noinspection PyUnresolvedReferences
 from Mediator import Mediator
 # noinspection PyUnresolvedReferences

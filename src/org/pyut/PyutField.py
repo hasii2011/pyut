@@ -1,7 +1,7 @@
 
 
 from org.pyut.PyutParam import PyutParam
-from PyutVisibility import getPyutVisibility
+from org.pyut.PyutVisibility import getPyutVisibility
 
 
 class PyutField(PyutParam):
