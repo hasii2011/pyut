@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from wx import FD_SAVE
 from wx import FD_OVERWRITE_PROMPT
 
@@ -62,37 +65,20 @@ class FileHandling:
 
     All actions called from AppFrame are executing on the current frame
 
-    AppFrame use the following methods :
-        - getProjects() : boolean
-        - isProjectLoaded(filename) : boolean
-        - isDefaultFilename(filename) : boolean
-        - openFile(filename)
-        - insertFile(filename)
-        - saveFile()
-        - saveFileAs()
-        - newProject()
-        - newDocument()
-        - exportToImageFile(self, extension, imageType)
-        - setModified(self, flag=True)
-        - closeCurrentProject(self)
-
-    Others methods are internal and called only by this module (and they are private !)
-
     :author: C.Dutoit
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.35 $
     """
-
     def __init__(self, parent, mediator):
         """
-        Constructor.
-
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
+        self.logger: Logger = getLogger(__name__)
+
         self._projects = []
         self.__parent = parent
-        self._ctrl = mediator # PyUt mediator
+        self._ctrl = mediator
         self._currentProject = None
         self._currentFrame = None
 
@@ -116,7 +102,7 @@ class FileHandling:
         self.__splitter = SplitterWindow(self.__parent, -1)
 
         # project tree
-        self.__projectTree = TreeCtrl(self.__splitter, -1, style=TR_HIDE_ROOT +  TR_HAS_BUTTONS)
+        self.__projectTree = TreeCtrl(self.__splitter, -1, style=TR_HIDE_ROOT + TR_HAS_BUTTONS)
         self.__projectTreeRoot = self.__projectTree.AddRoot(_("Root"))
 
         #  self.__projectTree.SetPyData(self.__projectTreeRoot, None)
@@ -167,7 +153,7 @@ class FileHandling:
         """
         Return True if the filename is the default filename
         """
-        return filename==PyutConsts.DefaultFilename
+        return filename == PyutConsts.DefaultFilename
 
     def openFile(self, filename, project=None):
         """
@@ -180,13 +166,11 @@ class FileHandling:
         Returns: True if succeeded
 
         """
-        #  print ">>>FileHandling-openFile-1"
+
         # Exit if the file is already loaded
-        if not self.isDefaultFilename(filename)\
-           and self.isProjectLoaded(filename):
+        if not self.isDefaultFilename(filename) and self.isProjectLoaded(filename):
             displayError(_("The selected file is already loaded !"))
             return False
-        #  print ">>>FileHandling-openFile-2"
 
         # Create a new project ?
         if project is None:
@@ -205,24 +189,20 @@ class FileHandling:
             displayError(_(f"An error occurred while loading the project ! {e}"))
             return False
 
-        #  print ">>>FileHandling-openFile-4"
         try:
             for document in project.getDocuments():
                 if not self._ctrl.isInScriptMode():
-                    self.__notebook.AddPage(document.getFrame(),
-                                            document.getDiagramTitle())
-            #  print ">>>FileHandling-openFile-5"
+                    self.__notebook.AddPage(document.getFrame(), document.getDiagramTitle())
+
             if not self._ctrl.isInScriptMode():
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
-            #  print ">>>FileHandling-openFile-6"
-            if len(project.getDocuments())>0:
+            if len(project.getDocuments()) > 0:
                 self._currentFrame = project.getDocuments()[0].getFrame()
-            #  print ">>>FileHandling-openFile-7"
+
         except (ValueError, Exception) as e:
             displayError(_(f"An error occurred while adding the project to the notebook {e}"))
             return False
-        #  print ">>>FileHandling-openFile-8"
         return True
 
     def insertFile(self, filename):
@@ -328,14 +308,13 @@ class FileHandling:
         # Modify notebook text
         for i in range(self.__notebook.GetPageCount()):
             frame = self.__notebook.GetPage(i)
-            document = [document for document in project.getDocuments()
-                                 if document.getFrame() is frame]
-            if len(document)>0:
-                document=document[0]
+            document = [document for document in project.getDocuments() if document.getFrame() is frame]
+            if len(document) > 0:
+                document = document[0]
                 if frame in project.getFrames():
                     self.__notebook.SetPageText(i, document.getDiagramTitle())
             else:
-                print("Not updating notebook in FileHandling")
+                self.logger.info("Not updating notebook in FileHandling")
 
         self.__parent.updateCurrentDir(dlg.GetPath())
 
@@ -376,6 +355,7 @@ class FileHandling:
             self.notebookCurrentPage  = self.__notebook.GetPageCount() - 1
             # self.notebook.SetSelection(self.__notebookCurrentPage)  # maybe __notebook ?  -- hasii
 
+    # noinspection PyUnusedLocal
     def exportToImageFile(self, extension, imageType):
         """
         Export the current diagram to an image file
@@ -383,10 +363,10 @@ class FileHandling:
         """
         # Exit if in scripting mode
         if self._ctrl.isInScriptMode():
-            displayError(_("Export to image file is not implemented in "
-                           "scripting mode now !"))
+            displayError(_("Export to image file is not implemented in scripting mode now !"))
             return
 
+    # noinspection PyUnusedLocal
     def exportToBmp(self, event):
         """
         Export the current diagram to bitmap
@@ -401,6 +381,7 @@ class FileHandling:
 
         self.exportToImageFile("bmp", BITMAP_TYPE_BMP)
 
+    # noinspection PyUnusedLocal
     def exportToJpg(self, event):
         """
         Export the current diagram to a jpeg file
@@ -409,6 +390,7 @@ class FileHandling:
         """
         self.exportToImageFile("jpg", BITMAP_TYPE_JPEG)
 
+    # noinspection PyUnusedLocal
     def exportToPng(self, event):
         """
         Export the current diagram to a png file
@@ -417,6 +399,7 @@ class FileHandling:
         """
         self.exportToImageFile("png", BITMAP_TYPE_PNG)
 
+    # noinspection PyUnusedLocal
     def exportToPostscript(self, event):
         """
         Export the current diagram to postscript
@@ -429,6 +412,7 @@ class FileHandling:
         dlg.Destroy()
         return
 
+    # noinspection PyUnusedLocal
     def __onNotebookPageChanged(self, event):
         """
         Callback for notebook page changed
@@ -463,7 +447,7 @@ class FileHandling:
 
             # Select the frame in the notebook
             for i in range(self.__notebook.GetPageCount()):
-                pageFrame=self.__notebook.GetPage(i)
+                pageFrame = self.__notebook.GetPage(i)
                 if pageFrame is frame:
                     self.__notebook.SetSelection(i)
                     return
@@ -525,7 +509,8 @@ class FileHandling:
         @author C.Dutoit
         """
         project = self.getCurrentProject()
-        if project is None: return None
+        if project is None:
+            return None
         for document in project.getDocuments():
             if document.getFrame() is self._currentFrame:
                 return document
@@ -555,9 +540,8 @@ class FileHandling:
                             # self._ctrl.registerUMLFrame(frame)
                         self.showFrame(frame)
                     dlg = MessageDialog(self.__parent,
-                        _("Your diagram has not been saved! Would you like to save it ?"),
-                        _("Save changes ?"),
-                        YES_NO | ICON_QUESTION)
+                                        _("Your diagram has not been saved! Would you like to save it ?"),
+                                        _("Save changes ?"), YES_NO | ICON_QUESTION)
                     if dlg.ShowModal() == ID_YES:
                         # save
                         if self.saveFile() is False:
@@ -614,13 +598,9 @@ class FileHandling:
             # self._ctrl.registerUMLFrame(frame)
             self.showFrame(frame)
 
-            dlg = MessageDialog(self.__parent,
-                _("Your project has not been saved. "
-                  "Would you like to save it ?"),
-                _("Save changes ?"),
-                YES_NO | ICON_QUESTION)
+            dlg = MessageDialog(self.__parent, _("Your project has not been saved. " 
+                                                 "Would you like to save it ?"), _("Save changes ?"), YES_NO | ICON_QUESTION)
             if dlg.ShowModal() == ID_YES:
-                # save
                 if self.saveFile() is False:
                     return False
 
