@@ -20,6 +20,7 @@ Functions :
 # Assign constants
 
 
+# noinspection PyUnusedLocal
 def assignID(nb):
     """
     Assign and return nb new id.
