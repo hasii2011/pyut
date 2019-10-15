@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from sys import exc_info
 from traceback import extract_tb
 
@@ -71,37 +74,21 @@ def displayError(msg, title=None, parent=None):
 
     @author C.Dutoit
     """
-    import sys
-    errMsg = getErrorInfo(sys.exc_info())
+    errMsg = getErrorInfo()
 
     try:
-        # ctrl = getMediator()
-        # em = ctrl.getErrorManager()
         em = getErrorManager()
-        # print "MSG=", msg
-        # print "MSG33=", msg.encode("UTF-8")
-        # msg = unicode(msg)
-
-        # msg1 = msg.decode("UTF-8", "replace")
-        # msg2 = msg1.encode("ISO-8859-1", "replace")
-        # msg = msg2
-        # msg = msg.decode("UTF-8").encode("UTF-8")
         em.newFatalError(msg, title, parent)
     except (ValueError, Exception) as e:
-        print("*********************************************************")
-        print("*********************************************************")
-        print("*********************************************************")
-        print("Error in pyutUtils/displayError")
-        print(f"Original error message was: {e}")
-        print(errMsg)
-        print("")
-        print("*********************************************************")
-        print("New error is : ")
-        errMsg = getErrorInfo(sys.exc_info())
-        print(errMsg)
-        print("*********************************************************")
-        print("*********************************************************")
-        print("*********************************************************")
+        eLog: Logger = getLogger(__name__)
+        # TODO  I don't this is correct anymore
+        eLog.error("Error in PyutUtils/displayError")
+        eLog.error(f"Original error message was: {e}")
+        eLog.error(errMsg)
+        eLog.error("")
+        eLog.error("New error is : ")
+        errMsg = getErrorInfo()
+        eLog.error(errMsg)
 
 
 def displayWarning(msg, title=None, parent=None):
