@@ -7,7 +7,7 @@ __date__ = "2001-11-14"
 
 #from wxPython.wx import *
 from UmlFrame import *
-from pyutUtils import *
+from PyutUtils1 import *
 import os, wx
 from Mediator import *
 

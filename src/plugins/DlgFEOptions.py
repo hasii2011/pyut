@@ -21,7 +21,7 @@ from wx import Dialog
 from globals import _
 
 from PyutPreferences import PyutPreferences
-from pyutUtils import assignID
+from PyutUtils1 import assignID
 
 
 class DlgFEOptions(Dialog):

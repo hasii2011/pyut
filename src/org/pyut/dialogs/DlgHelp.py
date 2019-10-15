@@ -24,7 +24,7 @@ from wx.html import HtmlEasyPrinting
 
 from wx.lib.dialogs import ScrolledMessageDialog
 
-from pyutUtils import assignID
+from PyutUtils1 import assignID
 
 from globals import _
 

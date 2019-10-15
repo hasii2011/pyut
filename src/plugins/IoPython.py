@@ -18,7 +18,7 @@ from org.pyut.PyutField import PyutField
 from plugins.PluginAst import FieldExtractor
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from pyutUtils import assignID
+from PyutUtils1 import assignID
 
 from globals import _
 

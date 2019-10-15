@@ -31,7 +31,7 @@ from wx import MessageDialog
 from wx import StaticText
 
 from org.pyut.ogl.OglClass import OglClass
-from pyutUtils import assignID
+from PyutUtils1 import assignID
 
 from globals import _
 

@@ -23,7 +23,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-from pyutUtils import assignID
+from PyutUtils1 import assignID
 from org.pyut.PyutLink import PyutLink
 from globals import _
 

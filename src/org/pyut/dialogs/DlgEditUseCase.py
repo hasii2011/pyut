@@ -19,7 +19,7 @@ from wx import TE_MULTILINE
 from wx import TextCtrl
 from wx import VERTICAL
 
-from pyutUtils import *
+from PyutUtils1 import *
 
 from globals import _
 

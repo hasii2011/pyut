@@ -10,7 +10,7 @@ __PyUtVersion__ = "1.0"
 #from wx.Python.html   import *
 import wx
 from UmlFrame        import *
-from pyutUtils       import *
+from PyutUtils1       import *
 from PyutPrintout    import *
 from PluginManager   import *
 from copy            import deepcopy

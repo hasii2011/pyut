@@ -21,7 +21,7 @@ from wx import Dialog
 from wx import Button
 from wx import BoxSizer
 
-from pyutUtils import assignID
+from PyutUtils1 import assignID
 
 from globals import _
 [
