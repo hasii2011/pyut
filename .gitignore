@@ -16,3 +16,4 @@ pyutHistory*
 *.put
 *.dat
 *.put copy
+/BaseSave.xml

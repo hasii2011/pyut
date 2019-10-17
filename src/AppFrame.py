@@ -1,6 +1,7 @@
 
 from typing import cast
 from typing import Callable
+from typing import List
 
 from logging import Logger
 from logging import getLogger
@@ -68,6 +69,7 @@ from wx import EndBusyCursor
 from wx import Yield as wxYield
 
 from FileHandling import FileHandling
+from UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
@@ -1494,8 +1496,9 @@ class AppFrame(Frame):
         """
         # Create a plugin instance
         cl = self.plugs[event.GetId()]
-        obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
-
+        umlObjs: List[OglClass]         = self._ctrl.getUmlObjects()
+        umlFrame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
+        obj = cl(umlObjs, umlFrame)
         # Do plugin functionality
         BeginBusyCursor()
         obj.doExport()

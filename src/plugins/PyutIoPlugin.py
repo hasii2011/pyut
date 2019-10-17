@@ -1,4 +1,7 @@
 
+from typing import Tuple
+from typing import cast
+
 from Mediator import getMediator
 
 from plugins.PyutPlugin import PyutPlugin
@@ -113,9 +116,9 @@ class PyutIoPlugin(PyutPlugin):
         # example : return ("Text", "txt", "Tabbed text...")
         return None
 
-    def getOutputFormat(self):
+    def getOutputFormat(self) -> Tuple[str]:
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
         @return tuple
         @author Laurent Burgbacher <lb@alawa.ch>
@@ -127,7 +130,7 @@ class PyutIoPlugin(PyutPlugin):
         # - extension of the output format
         # - textual description of the plugin output format
         # example : return ("Text", "txt", "Tabbed text...")
-        return None
+        return cast(Tuple[str], None)
 
     def setImportOptions(self):
         """
@@ -197,10 +200,13 @@ class PyutIoPlugin(PyutPlugin):
         @since 1.4
         """
         # if this plugin can export
-        if self.getOutputFormat() is None:
+        outputFormat: Tuple[str] = self.getOutputFormat()
+        if outputFormat is not None:
             # set user options for export
             if not self.setExportOptions():
                 return None
 
             # write the file
             self.write(self.__oglObjects)
+        else:
+            print(f'Output format is None: {outputFormat}')
