@@ -33,10 +33,11 @@ from wx import MessageDialog
 from wx import ScrolledWindow
 from wx import Yield
 
-# from AppFrame import *
 from org.pyut.PyutUtils import displayError
+
+from PyutConsts import DefaultFilename
 from PyutProject import PyutProject
-import PyutConsts
+
 from globals import _
 
 
@@ -153,7 +154,7 @@ class FileHandling:
         """
         Return True if the filename is the default filename
         """
-        return filename == PyutConsts.DefaultFilename
+        return filename == DefaultFilename
 
     def openFile(self, filename, project=None):
         """
@@ -174,7 +175,7 @@ class FileHandling:
 
         # Create a new project ?
         if project is None:
-            project = PyutProject(PyutConsts.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
+            project = PyutProject(DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
 
         #  print ">>>FileHandling-openFile-3"
         # Load the project and add it
@@ -253,7 +254,7 @@ class FileHandling:
             displayError(_("No diagram to save !"), _("Error"))
             return
 
-        if currentProject.getFilename() is None or currentProject.getFilename() == PyutConsts.DefaultFilename:
+        if currentProject.getFilename() is None or currentProject.getFilename() == DefaultFilename:
             return self.saveFileAs()
         else:
             return currentProject.saveXmlPyut()
@@ -328,7 +329,7 @@ class FileHandling:
 
         @author C.Dutoit
         """
-        project = PyutProject(PyutConsts.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
+        project = PyutProject(DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
         self._projects.append(project)
         self._currentProject = project
         self._currentFrame = None
