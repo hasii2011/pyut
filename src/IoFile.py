@@ -102,7 +102,7 @@ class IoFile:
                 self.logger.error(f'open:  {e}')
 
         elif filename[-4:] == ".xml":
-            xmlString = open(filename, "rb").read()
+            xmlString = open(filename, "r").read()
         else:
             displayError(_("Can't open the unidentified file : %s") % filename)
             return
@@ -117,7 +117,7 @@ class IoFile:
                 module = __import__(f'PyutXmlV{str(version)}')
                 myXml = module.PyutXml()
             else:
-                version = 1
+                # version = 1
                 from PyutXml import PyutXml
                 myXml = PyutXml()
             myXml.open(dom, project)
@@ -148,4 +148,3 @@ class IoFile:
         #    #dlg.Destroy()
         #    displayError(_("An error occured while parsing the file") + \
         #                 str(fileName), _("Parse Error !"))
-

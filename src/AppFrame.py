@@ -1470,6 +1470,7 @@ class AppFrame(Frame):
         self._fileHandling.newDocument(CLASS_DIAGRAM)
         self._ctrl.updateTitle()
         cl = self.plugs[event.GetId()]
+
         obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
 
         # Do plugin functionality

@@ -180,7 +180,7 @@ class PyutIoPlugin(PyutPlugin):
         @since 1.4
         """
         # if this plugin can import
-        if self.getInputFormat() is None:
+        if self.getInputFormat() is not None:
             # set user options for import
             if not self.setImportOptions():
                 return None
