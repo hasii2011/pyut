@@ -8,7 +8,7 @@ from wx import EndBusyCursor
 
 from org.pyut.PyutUtils import displayError
 from PyutDocument import PyutDocument
-from IoFile import IoFile
+from org.pyut.persistence.IoFile import IoFile
 
 from Mediator import getMediator
 from globals import _
@@ -180,7 +180,7 @@ class PyutProject:
         @return boolean: True if succeeded
         """
         # Load the file
-        import IoFile
+        from org.pyut.persistence import IoFile
         BeginBusyCursor()
         io = IoFile.IoFile()
 
@@ -236,7 +236,7 @@ class PyutProject:
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        import IoFile
+        from org.pyut.persistence import IoFile
         io = IoFile.IoFile()
         BeginBusyCursor()
         try:
