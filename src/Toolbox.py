@@ -1,96 +1,73 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# Goal : be a toolbox for tools plugins
+from wx import BLACK_PEN
+from wx import CAPTION
+from wx import ClientDC
+from wx import DefaultPosition
+from wx import EVT_CLOSE
+from wx import EVT_LEFT_DOWN
+from wx import EVT_LEFT_UP
+from wx import EVT_PAINT
+from wx import FRAME_FLOAT_ON_PARENT
+from wx import Frame
+from wx import GREY_PEN
+from wx import STATIC_BORDER
+from wx import SYSTEM_MENU
+from wx import Size
+from wx import WHITE_PEN
 
-__version__ = "$Revision: 1.10 $"
-__author__ = "C.Dutoit"
-__date__ = "2002-05-25"
-#from wxPython.wx import *
-import wx
+MARGIN      = 3                 # Margin between dialog border and buttons
+MARGIN_TOP  = 20
+BUTTON_PICTURE_SIZE = 16        # The size of a picture in one button
+BUTTON_SIZE         = BUTTON_PICTURE_SIZE + 3   # The size of one button
 
 
-MARGIN = 3                  # Margin between dialog border and buttons
-MARGIN_TOP = 20
-BUTTON_PICTURE_SIZE = 16    # The size of a picture in one button
-BUTTON_SIZE = BUTTON_PICTURE_SIZE + 3   # The size of one button
-
-
-##############################################################################
-# mini-clone of wxEvent to call callback
-# wxWindows tell to not create wxEvent object in our applications !
 class EventClone:
-    def __init__(self, id):
-        self._id = id
+    """
+    mini-clone of wxEvent to call callback
+    wxWindows tell to not create wxEvent object in our applications !
+    """
+    def __init__(self, theId):
+        self._id = theId
+
     def GetId(self):
         return self._id
 
 
-
-##############################################################################
-class Toolbox(wx.Frame):
+class Toolbox(Frame):
     """
     Toolbox : a toolbox for PyUt tools plugins
 
-    :author: C.Dutoit 
+    :author: C.Dutoit
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.10 $
     """
-
-    #>------------------------------------------------------------------------
-
     def __init__(self, parentWindow, toolboxOwner):
         """
         Constructor.
 
-        @param 
-        @param wxWindow parentWindow : parent window
-        @param ToolboxOwner toolboxOwner
+        @param
+        @param  parentWindow  wxWindow parentWindow
+        @param  toolboxOwner ToolboxOwner
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        import os
-        # Application initialisation
-        wx.Frame.__init__(self, parentWindow, -1, "toolbox",
-                         wx.DefaultPosition, wx.Size(100, 200),
-                         style = 
-                         wx.STATIC_BORDER | 
-                         wx.SYSTEM_MENU |
-                         wx.CAPTION |
-                         wx.FRAME_FLOAT_ON_PARENT)
+        windowStyle = STATIC_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT
+        super().__init__(parentWindow, -1, "toolbox", DefaultPosition, Size(100, 200), style=windowStyle)
 
-                         #style= wx.RESIZE_BORDER |
-                                #wx.CAPTION |
-                                #wx.RESIZE_BORDER |
-                                #wx.FRAME_FLOAT_ON_PARENT 
-                                #wx.FRAME_TOOL_WINDOW 
-                         #       )
-
-        # Member vars
-        self._tools = []
-        self._category = ""
+        self._tools         = []
+        self._category      = ""
         self._clickedButton = None
-        self._parentWindow = parentWindow
-        self._toolboxOwner = toolboxOwner
-
-        # Main sizer
-        #self.SetAutoLayout(True)
-        #sizer = wx.BoxSizer(wx.VERTICAL)
-        #sizer.Add(self._picture,                0, wx.ALL | wx.ALIGN_CENTER, 5)
-        #self.SetSizer(sizer)
-        #sizer.Fit(self)
+        self._parentWindow  = parentWindow
+        self._toolboxOwner  = toolboxOwner
 
         # Events
-        self.Bind(wx.EVT_PAINT, self.OnRefresh)
-        self.Bind(wx.EVT_CLOSE, self.evtClose)
-        self.Bind(wx.EVT_LEFT_UP, self.evtLeftUp)
-        self.Bind(wx.EVT_LEFT_DOWN, self.evtLeftDown)
+        self.Bind(EVT_PAINT, self.OnRefresh)
+        self.Bind(EVT_CLOSE, self.evtClose)
+        self.Bind(EVT_LEFT_UP, self.evtLeftUp)
+        self.Bind(EVT_LEFT_DOWN, self.evtLeftDown)
 
         # Display myself
         self.Show(True)
 
-
-    #>------------------------------------------------------------------------
-    
     def setCategory(self, category):
         """
         Define the toolbox category
@@ -103,9 +80,7 @@ class Toolbox(wx.Frame):
         self._tools = self._toolboxOwner.getCategoryTools(category)
         self.Refresh()
 
-    
-    #>------------------------------------------------------------------------
-
+    # noinspection PyUnusedLocal
     def OnRefresh(self, event):
         """
         Refresh dialog box
@@ -114,72 +89,71 @@ class Toolbox(wx.Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         # Init
-        (w, h) = self.GetSizeTuple()
+        # (w, h) = self.GetSizeTuple()
+        (w, h) = self.GetSize()
+
         nbButtonsW = (w - MARGIN*2) / BUTTON_SIZE
-        dc = wx.ClientDC(self)
+        dc = ClientDC(self)
         oldPen = dc.GetPen()
 
         # Draw
-        i=0
-        j=0
+        i = 0
+        j = 0
         for tool in self._tools:
             # Calculate position
             x = MARGIN + i*BUTTON_SIZE
             y = MARGIN + j*BUTTON_SIZE + MARGIN_TOP
 
             # Draw
-            dc.SetPen(wx.BLACK_PEN)
+            dc.SetPen(BLACK_PEN)
             dc.DrawText("[" + tool.getInitialCategory() + "]", MARGIN, MARGIN)
-            dc.SetPen(wx.WHITE_PEN)
+            dc.SetPen(WHITE_PEN)
             dc.DrawLine(x, y, x+BUTTON_SIZE-1, y)
             dc.DrawLine(x, y, x, y + BUTTON_SIZE-1)
-            dc.SetPen(wx.BLACK_PEN)
+            dc.SetPen(BLACK_PEN)
             dc.DrawLine(x, y+BUTTON_SIZE-1, x+BUTTON_SIZE-1, y+BUTTON_SIZE-1)
             dc.DrawLine(x + BUTTON_SIZE-1, y, x + BUTTON_SIZE-1, y + BUTTON_SIZE-1)
             dc.DrawBitmap(tool.getImg(), x+1, y+1)
-            i+=1
+            i += 1
 
             # Find next position
-            if i>nbButtonsW-1:
-                i=0
-                j+=1
+            if i > nbButtonsW-1:
+                i = 0
+                j += 1
 
         # Set old pen
         dc.SetPen(oldPen)
-
-
-    #>------------------------------------------------------------------------
 
     def _getClickedButton(self, x, y):
         """
         Return the clicked button
         @author C.Dutoit
         """
-        (w, h) = self.GetSizeTuple()
+        # (w, h) = self.GetSizeTuple()
+        (w, h) = self.GetSize()
+
         nbButtonsW = (w - MARGIN*2) / BUTTON_SIZE
 
         # Get position
-        i=0
-        j=0
+        i = 0
+        j = 0
         for tool in self._tools:
             # Calculate position
             bx = MARGIN + i*BUTTON_SIZE
             by = MARGIN + j*BUTTON_SIZE + MARGIN_TOP
 
-            # Are we into the current tool ? 
-            if x>bx and x<bx+BUTTON_SIZE and \
-               y>by and y<by+BUTTON_SIZE:
-               return (bx, by, bx+BUTTON_SIZE, by+BUTTON_SIZE, tool)
+            # Are we into the current tool ?
+            if x > bx and x < bx + BUTTON_SIZE and y > by and y < by + BUTTON_SIZE:
+                return bx, by, bx+BUTTON_SIZE, by+BUTTON_SIZE, tool
 
             # Find next position
-            i+=1
-            if i>nbButtonsW-1:
-                i=0
-                j+=1
-        return (0, 0, 0, 0, None)
-    
-    #>------------------------------------------------------------------------
+            i += 1
+            if i > nbButtonsW-1:
+                i = 0
+                j += 1
+        return 0, 0, 0, 0, None
 
+    # noinspection PyUnusedLocal
     def evtLeftUp(self, event):
         """
         Handle left mouse button up
@@ -188,16 +162,16 @@ class Toolbox(wx.Frame):
         """
         # Get clicked coordinates
         (x1, y1, x2, y2, tool) = self._clickedButton
-        
+
         # Get dc
-        dc = wx.ClientDC(self)
+        dc = ClientDC(self)
         oldPen = dc.GetPen()
 
         # Draw normally button
-        dc.SetPen(wx.BLACK_PEN)
+        dc.SetPen(BLACK_PEN)
         dc.DrawLine(x2-1, y2-1, x2-1, y1)
         dc.DrawLine(x2-1, y2-1, x1, y2-1)
-        dc.SetPen(wx.WHITE_PEN)
+        dc.SetPen(WHITE_PEN)
         dc.DrawLine(x1, y1, x2-1, y1)
         dc.DrawLine(x1, y1, x1, y2-1)
 
@@ -210,10 +184,8 @@ class Toolbox(wx.Frame):
         # Execute callback
         if tool is not None:
             callback = tool.getActionCallback()
-            if (callback!=None):
+            if callback is not None:
                 callback(EventClone(tool.getWXID()))
-
-    #>------------------------------------------------------------------------
 
     def evtLeftDown(self, event):
         """
@@ -226,23 +198,21 @@ class Toolbox(wx.Frame):
         self._clickedButton = (x1, y1, x2, y2, tool)
 
         # Get dc
-        dc = wx.ClientDC(self)
+        dc = ClientDC(self)
         oldPen = dc.GetPen()
 
         # Clicked illusion
-        dc.SetPen(wx.GREY_PEN)
+        dc.SetPen(GREY_PEN)
         dc.DrawLine(x2-1, y2-1, x2-1, y1)
         dc.DrawLine(x2-1, y2-1, x1, y2-1)
-        dc.SetPen(wx.BLACK_PEN)
+        dc.SetPen(BLACK_PEN)
         dc.DrawLine(x1, y1, x2-1, y1)
         dc.DrawLine(x1, y1, x1, y2-1)
 
         # Set old pen
         dc.SetPen(oldPen)
 
-
-    #>------------------------------------------------------------------------
-
+    # noinspection PyUnusedLocal
     def evtClose(self, event):
         """
         Clean close, event handler on EVT_CLOSE
