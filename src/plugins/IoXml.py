@@ -1,9 +1,21 @@
 
+from os import getcwd
+from os import chdir
+
+from glob import glob
+
 from io import StringIO
+
+from wx import CANCEL
+from wx import CENTRE
+from wx import ICON_QUESTION
+from wx import MessageBox
+from wx import YES
+from wx import YES_NO
+
 from plugins.PyutIoPlugin import PyutIoPlugin
 
 from Mediator import getMediator
-import wx
 
 
 class IoXml(PyutIoPlugin):
@@ -83,31 +95,27 @@ class IoXml(PyutIoPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        rep = wx.MessageBox("Do you want pretty xml ?", "Export option", style=wx.YES_NO | wx.CANCEL | wx.CENTRE | wx.ICON_QUESTION)
-        self.pretty = (rep == wx.YES)
-        return rep != wx.CANCEL
+        rep = MessageBox("Do you want pretty xml ?", "Export option", style=YES_NO | CANCEL | CENTRE | ICON_QUESTION)
+        self.pretty = (rep == YES)
+        return rep != CANCEL
 
     def write(self, oglObjects):
         """
-        Write data to filename. Abstract.
+        Write data to filename.
 
         Args:
             oglObjects:
 
         Returns: True if succeeded, False if error or canceled
-
         """
-        import os
-        oldpath = os.getcwd()
+        oldPath = getcwd()
         # Ask the user which destination file he wants
-        # from PyutXmlV2 import PyutXml
         filename = self._askForFileExport()
         if filename == "":
             return False
         path = getMediator().getAppPath()
-        os.chdir(path)
+        chdir(path)
 
-        from glob import glob
         candidates = glob("PyutXmlV*.py")
         numbers = [int(s[8:-3]) for s in candidates]
         lastVersion = str(max(numbers))
@@ -116,13 +124,12 @@ class IoXml(PyutIoPlugin):
         myXml = module.PyutXml()
         file = open(filename, "w")
 
-        # if lastVersion >= 5:
         if int(lastVersion) >= 5:   # Python 3 update
             import Mediator
-            ctrl = Mediator.getMediator()
+            ctrl         = Mediator.getMediator()
             fileHandling = ctrl.getFileHandling()
-            project = fileHandling.getProjectFromOglObjects(oglObjects)
-            doc = myXml.save(project)
+            project      = fileHandling.getProjectFromOglObjects(oglObjects)
+            doc          = myXml.save(project)
         else:
             doc = myXml.save(oglObjects)
 
@@ -130,16 +137,16 @@ class IoXml(PyutIoPlugin):
             text = doc.toprettyxml()
         else:
             text = doc.toxml()
-
         # add attribute encoding = "iso-8859-1"
         # this is not possible with minidom, so we use pattern matching
         text = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
 
         file.write(text)
         file.close()
-        os.chdir(oldpath)
+        chdir(oldPath)
         return True
 
+    # noinspection PyUnusedLocal
     def readOld(self, oglObjects, umlFrame):
         """
         Read data from filename. Abstract.
@@ -151,13 +158,12 @@ class IoXml(PyutIoPlugin):
         Returns: True if succeeded, False if error or canceled
 
         """
-        import os
         # Note : xml.dom.minidom must be instancied here, since it redefines
         # the function '_', which is also used for i18n
         from xml.dom.minidom import parse
-        oldpath = os.getcwd()
+        oldpath = getcwd()
         path = getMediator().getAppPath()
-        os.chdir(path)
+        chdir(path)
         # Ask the user which destination file he wants
         filename = self._askForFileImport()
         if filename == "":
@@ -178,7 +184,7 @@ class IoXml(PyutIoPlugin):
             myXml = module.PyutXml()
 
         myXml.open(dom, umlFrame)
-        os.chdir(oldpath)
+        chdir(oldpath)
         return True
 
     def read(self, oglObjects, umlFrame):
