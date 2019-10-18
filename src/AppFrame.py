@@ -68,7 +68,7 @@ from wx import EndBusyCursor
 
 from wx import Yield as wxYield
 
-from FileHandling import FileHandling
+from org.pyut.persistence.FileHandling import FileHandling
 from UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.ogl.OglActor import OglActor

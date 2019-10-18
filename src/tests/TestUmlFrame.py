@@ -8,7 +8,7 @@ from wx import Frame
 
 from UmlFrame import UmlFrame
 from ErrorManager import RAISE_ERROR_VIEW
-from FileHandling import FileHandling
+from org.pyut.persistence.FileHandling import FileHandling
 import Mediator
 
 
