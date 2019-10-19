@@ -33,9 +33,12 @@ from PyutConsts import OGL_COMPOSITION
 from PyutConsts import OGL_NOTELINK
 from PyutConsts import OGL_SD_MESSAGE
 
+from PyutPreferences import PyutPreferences
+from PyutVersion import getPyUtVersion
+from Singleton import Singleton
+
 from org.pyut.PyutMethod import WITHOUT_PARAMS
 from org.pyut.PyutMethod import WITH_PARAMS
-from PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import displayError
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
@@ -43,9 +46,7 @@ from org.pyut.dialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.DlgEditLink import DlgEditLink
 
-from PyutVersion import getPyUtVersion
-from Singleton import Singleton
-from ToolboxOwner import ToolboxOwner
+from org.pyut.ui.ToolboxOwner import ToolboxOwner
 
 from globals import _
 
