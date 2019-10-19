@@ -32,6 +32,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "Pyut": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

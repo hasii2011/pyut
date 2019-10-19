@@ -19,20 +19,20 @@ class Tool:
         @param string tooltip : tip for this tool, role
         @param string initialCategory : category for this tool (plugin id?)
         @param function actionCallback : callback function for doing action
-        @param function propertiesCallback : callback function for displaying
-                                             tool properties
+        @param function propertiesCallback : callback function for displaying tool properties
         @param wxID : a wx unique ID, used for callback
         @param isToggle : True if the tool can be toggled
+
         @author C.Dutoit
         """
-        self._id = theId
+        self._id  = theId
         self._img = img
         self._caption = caption
         self._tooltip = tooltip
-        self._initialCategory = initialCategory
-        self._actionCallback = actionCallback
+        self._initialCategory    = initialCategory
+        self._actionCallback     = actionCallback
         self._propertiesCallback = propertiesCallback
-        self._wxID = wxID
+        self._wxID     = wxID
         self._isToggle = isToggle
 
     # Some accessors
@@ -59,3 +59,6 @@ class Tool:
 
     def getIsToggle(self):
         return self._isToggle
+
+    def __repr__(self):
+        return f'Tool: Caption: `{self._caption}` initialCategory: `{self._initialCategory}` id: `{self._id}` wxID: `{self._wxID}`'

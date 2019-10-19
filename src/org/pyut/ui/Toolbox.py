@@ -1,3 +1,7 @@
+
+from logging import Logger
+from logging import getLogger
+
 from wx import BLACK_PEN
 from wx import CAPTION
 from wx import ClientDC
@@ -50,6 +54,8 @@ class Toolbox(Frame):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
+        self.logger: Logger = getLogger(__name__)
+
         windowStyle = STATIC_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT
         super().__init__(parentWindow, -1, "toolbox", DefaultPosition, Size(100, 200), style=windowStyle)
 
@@ -143,7 +149,8 @@ class Toolbox(Frame):
             by = MARGIN + j*BUTTON_SIZE + MARGIN_TOP
 
             # Are we into the current tool ?
-            if x > bx and x < bx + BUTTON_SIZE and y > by and y < by + BUTTON_SIZE:
+            #  if x > bx and x < bx + BUTTON_SIZE and y > by and y < by + BUTTON_SIZE:
+            if bx < x < bx + BUTTON_SIZE and by < y < by + BUTTON_SIZE:
                 return bx, by, bx+BUTTON_SIZE, by+BUTTON_SIZE, tool
 
             # Find next position
@@ -161,6 +168,8 @@ class Toolbox(Frame):
         @author C.Dutoit
         """
         # Get clicked coordinates
+        clickedCoordinates = self._clickedButton
+        self.logger.debug(f'clickedCoordinates: {clickedCoordinates}')
         (x1, y1, x2, y2, tool) = self._clickedButton
 
         # Get dc
