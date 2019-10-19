@@ -19,13 +19,11 @@ from wx import ICON_ERROR
 
 from wx import HelpProvider
 from wx import SimpleHelpProvider
-from wx import InitAllImageHandlers
 from wx import Image
 from wx import ScreenDC
 from wx import MessageDialog
 
 from wx import App as wxApp
-
 from wx import Yield as wxYield
 
 from globals import _
@@ -62,10 +60,10 @@ class PyutApp(wxApp):
     """
     def __init__(self, val, splash=True, show=True):
 
-        self._showSplash = splash
+        self._showSplash    = splash
         self._showMainFrame = show
 
-        wxApp.__init__(self, val)
+        super().__init__(val)
 
         self.logger: Logger = getLogger(__name__)
 
@@ -151,7 +149,7 @@ class PyutApp(wxApp):
             for filename in [el for el in argv[1:] if el[0] != '-']:
                 self._frame.loadByFilename(orgPath + osSeparator + filename)
             if self._frame is None:
-                print("Exiting due to previous errors")
+                self.logger.error("Exiting due to previous errors")
                 return False
             del orgPath
             if self._showMainFrame:
@@ -172,24 +170,18 @@ class PyutApp(wxApp):
                 self._frame.SetSize(dc.GetSize())
                 self._frame.CentreOnScreen()
 
-                # Doesn't works well
-                # self._frame.ShowFullScreen(True, 0)
-
-                # Only on windows
-                # self._frame.Maximize()
-
             if self._showSplash:
                 self.splash.Close(True)
             return True
-        except (ValueError, Exception) as e:  # Display all errors
+        except (ValueError, Exception) as e:
 
             dlg = MessageDialog(None, _(f"The following error occurred : {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
-            print("===========================================================")
-            print("Error : %s" % exc_info()[0])
-            print("Msg   : %s" % exc_info()[1])
-            print("Trace :")
+            self.logger.error(f'Exception: {e}')
+            self.logger.error(f'Error: {exc_info()[0]}')
+            self.logger.error('Msg: {exc_info()[1]}')
+            self.logger.error('Trace:')
             for el in extract_tb(exc_info()[2]):
-                print(el)
+                self.logger.error(el)
             dlg.ShowModal()
             dlg.Destroy()
             return False
@@ -201,9 +193,9 @@ class PyutApp(wxApp):
         @since  : 1.6.2.2
         @author : C.Dutoit<dutoitc@hotmail.com>
         """
-        self.__do   = None
+        self.__do    = None
         self._frame  = None
-        self.splash = None
+        self.splash  = None
         # Seemed to be removed in latest versions of wxPython ???
         try:
             return wxApp.OnExit(self)
