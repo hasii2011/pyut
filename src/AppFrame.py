@@ -88,7 +88,7 @@ from PyutPreferences import PyutPreferences
 from PyutPrintout import PyutPrintout
 from org.pyut.PyutUseCase import PyutUseCase
 
-from Tool import Tool
+from org.pyut.ui.Tool import Tool
 
 from Mediator import ACTION_NEW_ACTOR
 from Mediator import ACTION_NEW_INHERIT_LINK
