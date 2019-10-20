@@ -185,14 +185,11 @@ class AppFrame(Frame):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        # Application initialisation
-        # Frame.__init__(self, parent, ID, title, DefaultPosition, Size(640, 480))
         super().__init__(parent, ID, title, DefaultPosition, Size(960, 480), DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
         self.logger: Logger = getLogger(__name__)
 
         # Create the application's icon
-        # icon = Icon('img' + osSeparator + 'icon.ico', BITMAP_TYPE_ICO)
         fileName = resource_filename(IMG_PKG, 'pyut.ico')
         icon = Icon(fileName, BITMAP_TYPE_ICO)
         self.SetIcon(icon)
@@ -203,7 +200,6 @@ class AppFrame(Frame):
         # Properties
         self.plugMgr = PluginManager()
         self.plugs = {}                         # To store the plugins
-        # self.toolbox = Toolbox(self)                # tools plugins, ..
         self._toolboxesID = {}                  # Association toolbox category/id
 
         # Preferences
@@ -1447,15 +1443,6 @@ class AppFrame(Frame):
         # TODO? wx.OGLCleanUp()
         self.Destroy()
 
-    # def _setTitle(self):
-    #     """
-    #     Set the application title, fonction of version and current filename
-    #
-    #     @since 1.4
-    #     @author C.Dutoit <dutoitc@hotmail.com>
-    #     """
-    #     self._mediator.updateTitle()
-
     def notifyTitleChanged(self):
         """
         Notify that the title changed.
@@ -1527,10 +1514,6 @@ class AppFrame(Frame):
 
     def OnToolboxMenuClick(self, event):
         self._ctrl.displayToolbox(self._toolboxesID[event.GetId()])
-
-    # noinspection PyUnusedLocal
-    # def _OnMnuEditShowToolbar(self, event):
-    #     self._mainToolbar.Show(True)
 
     def _OnNewAction(self, event):
         """
