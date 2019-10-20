@@ -8,8 +8,6 @@ from sys import argv
 from sys import exc_info
 from traceback import extract_tb
 
-from locale import localeconv
-
 from wx.adv import SplashScreen
 from wx.adv import SPLASH_CENTRE_ON_SCREEN
 from wx.adv import SPLASH_TIMEOUT
@@ -31,19 +29,6 @@ from globals import _
 from PyutPreferences import PyutPreferences
 
 from AppFrame import AppFrame
-
-
-def pythonFloat(s):
-
-    c = localeconv()["decimal_point"]
-    s = s.replace('.', c)
-    return float(s)
-
-
-def opj(path):
-    """Convert paths to the platform-specific separator"""
-    # return apply(path.join, tuple(path.split('/')))
-    return path.join, tuple(path.split('/'))
 
 
 class PyutApp(wxApp):
