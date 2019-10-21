@@ -1,4 +1,3 @@
-#!/usr/bin/python
 
 from typing import cast
 
@@ -14,7 +13,7 @@ from logging import getLogger
 
 import logging.config
 
-from PyutApp import PyutApp
+from org.pyut.ui.PyutApp import PyutApp
 from PyutVersion import getPyUtVersion
 from PyutPreferences import PyutPreferences
 
