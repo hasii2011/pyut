@@ -54,39 +54,14 @@ class PyutApp(wxApp):
 
     def OnInit(self):
         """
-        Constructor.
-
-        @since 1.0
-        @author C.Dutoit
         """
-        # Correct wxPython BUG of float localization  -- Pycharm says NOT USED
-        # def newPythonFloat(x):
-        #     # Try standard float
-        #     try:
-        #         return float(x)
-        #     except (ValueError, Exception) as exc:
-        #         pass
-        #
-        #     # Try localized float
-        #     try:
-        #         x = x.replace(".", ",")
-        #     except (ValueError, Exception) as exc:
-        #         pass
-        #     return pythonFloat(x)
-
-        # print "DBG3-",float(48.3)
-        # print "DBG3-",pythonFloat("48.3")
-        # float = pythonFloat
-        # print "DBG4-",float(48.3)
-        # print "DBG4-",float("48.3")
-        # Init help system
         provider = SimpleHelpProvider()
-        # wx.HelpProvider_Set(provider)
+
         HelpProvider.Set(provider)
         try:
             # Create the SplashScreen
             if self._showSplash:
-                # InitAllImageHandlers()
+                # TODO: Load this as a resourcde
                 imgPath = "img" + osSeparator + "splash.png"
                 img = Image(imgPath)
                 bmp = img.ConvertToBitmap()
@@ -95,7 +70,6 @@ class PyutApp(wxApp):
                 self.splash.Show(True)
                 wxYield()
 
-            # Create the application
             self._frame = AppFrame(None, -1, "Pyut")
             self.SetTopWindow(self._frame)
 
@@ -122,13 +96,9 @@ class PyutApp(wxApp):
         """
         AfterSplash : Occurs after the splash screen; launch the application
         PyutApp : main pyut application class
-
-        @since  : 1.5
-        @author : C.Dutoit<dutoitc@hotmail.com>
         """
         try:
             # Handle application parameters in the command line
-
             prefs = PyutPreferences()
             orgPath = prefs["orgDirectory"]
             for filename in [el for el in argv[1:] if el[0] != '-']:
@@ -173,10 +143,6 @@ class PyutApp(wxApp):
 
     def OnExit(self):
         """
-        Clean exit
-
-        @since  : 1.6.2.2
-        @author : C.Dutoit<dutoitc@hotmail.com>
         """
         self.__do    = None
         self._frame  = None
