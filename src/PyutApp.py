@@ -28,7 +28,7 @@ from globals import _
 
 from PyutPreferences import PyutPreferences
 
-from AppFrame import AppFrame
+from org.pyut.ui.AppFrame import AppFrame
 
 
 class PyutApp(wxApp):
