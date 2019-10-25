@@ -278,33 +278,38 @@ class AppFrame(Frame):
         import img.ImgToolboxNote
         import img.ImgToolboxArrow
         import img.ImgToolboxSystem
+        import img.ImgToolboxZoomIn
 
         # Element tools
-        toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.getBitmap(),
+        toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
                          _("Arrow"),      _("Select tool"),
                          _(_("PyUt tools")),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_ARROW, isToggle=True)
-        toolClass = Tool("pyut-class", img.ImgToolboxClass.getBitmap(),
+        toolClass = Tool("pyut-class", img.ImgToolboxClass.bitmap.GetImage(),
                          _("Class"),      _("Create a new class"),
                          _(_("PyUt tools")),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_CLASS, isToggle=True)
-        toolActor = Tool("pyut-actor", img.ImgToolboxActor.getBitmap(),
+
+        toolActor = Tool("pyut-actor", img.ImgToolboxActor.bitmap.GetImage(),
                          _("Actor"),      _("Create a new actor"),
                          _(_("PyUt tools")),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_ACTOR, isToggle=True)
-        toolUseCase = Tool("pyut-system", img.ImgToolboxSystem.getBitmap(),
+
+        toolUseCase = Tool("pyut-system", img.ImgToolboxSystem.bitmap.GetImage(),
                            _("System"),     _("Create a new use case"),
                            _(_("PyUt tools")),
                            (lambda x: self._OnNewAction(x)),
                            cast(Callable, None), wxID=ID_USECASE, isToggle=True)
-        toolNote = Tool("pyut-note", img.ImgToolboxNote.getBitmap(),
+
+        toolNote = Tool("pyut-note", img.ImgToolboxNote.bitmap.GetImage(),
                         _("Note"),     _("Create a new note"),
                         _(_("PyUt tools")),
                         (lambda x: self._OnNewAction(x)),
                         cast(Callable, None), wxID=ID_NOTE, isToggle=True)
+
         # toolSDInstance = Tool("pyut-instance", img.ImgToolboxUnknown.getBitmap(),
         #             _("Instance"),     _("Create a new class diagram instance object"),
         #             _(_("PyUt tools")),
@@ -318,13 +323,16 @@ class AppFrame(Frame):
 
         # Added by P. Dabrowski 20.11.2005
 
-        toolZoomIn = Tool("pyut-zoomIn",
-                          Bitmap(f'img{os.sep}zoomin.bmp', BITMAP_TYPE_BMP),
+        toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.bitmap.getImage(),
+                          # Bitmap(f'img{os.sep}zoomin.bmp', BITMAP_TYPE_BMP),
                           _("Zoom In"),
                           _("Zoom in on the selected area"),
                           _(_("PyUt tools")),
                           (lambda x: self._OnNewAction(x)),
                           cast(Callable, None), wxID=ID_ZOOMIN, isToggle=True)
+
+        self.logger.info(f'toolZoomIn: {toolZoomIn}')
+
         toolZoomOut = Tool("pyut-zoomOut",
                            Bitmap('img' + os.sep + 'zoomout.bmp', BITMAP_TYPE_BMP),
                            _("Zoom Out"),
