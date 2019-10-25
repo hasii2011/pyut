@@ -2,6 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
+from pkg_resources import resource_filename
+
 from os import sep as osSeparator
 
 from sys import argv
@@ -25,8 +27,11 @@ from wx import App as wxApp
 from wx import Yield as wxYield
 
 from globals import _
+from globals import IMG_PKG
 
 from PyutPreferences import PyutPreferences
+
+from org.pyut.PyutUtils import getErrorInfo
 
 from org.pyut.ui.AppFrame import AppFrame
 
@@ -45,12 +50,12 @@ class PyutApp(wxApp):
     """
     def __init__(self, val, splash=True, show=True):
 
+        self.logger: Logger = getLogger(__name__)
+
         self._showSplash    = splash
         self._showMainFrame = show
 
         super().__init__(val)
-
-        self.logger: Logger = getLogger(__name__)
 
     def OnInit(self):
         """
@@ -61,9 +66,11 @@ class PyutApp(wxApp):
         try:
             # Create the SplashScreen
             if self._showSplash:
-                # TODO: Load this as a resourcde
-                imgPath = "img" + osSeparator + "splash.png"
-                img = Image(imgPath)
+                # TODO: Load this as a resource
+                # imgPath = "img" + osSeparator + "splash.png"
+                fileName = resource_filename(IMG_PKG, 'splash.png')
+
+                img = Image(fileName)
                 bmp = img.ConvertToBitmap()
                 self.splash = SplashScreen(bmp, SPLASH_CENTRE_ON_SCREEN | SPLASH_TIMEOUT, 3000, None, -1)
 
@@ -79,15 +86,16 @@ class PyutApp(wxApp):
 
             return True
         except (ValueError, Exception) as e:
-            # Display all errors
             self.logger.error(f'{e}')
             dlg = MessageDialog(None, _(f"The following error occurred: {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
-            self.logger.error("===========================================================")
-            self.logger.error(f"Error : {exc_info()[0]}")
-            self.logger.error(f"Msg   : {exc_info()[1]}")
-            self.logger.error("Trace :")
-            for el in extract_tb(exc_info()[2]):
-                self.logger.error(el)
+            # self.logger.error("===========================================================")
+            # self.logger.error(f"Error: {exc_info()[0]}")
+            # self.logger.error(f"Msg: {exc_info()[1]}")
+            # self.logger.error("Trace:")
+            # for el in extract_tb(exc_info()[2]):
+            #     self.logger.error(el)
+            errMessage: str = getErrorInfo()
+            self.logger.debug(errMessage)
             dlg.ShowModal()
             dlg.Destroy()
             return False
@@ -129,7 +137,6 @@ class PyutApp(wxApp):
                 self.splash.Close(True)
             return True
         except (ValueError, Exception) as e:
-
             dlg = MessageDialog(None, _(f"The following error occurred : {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
             self.logger.error(f'Exception: {e}')
             self.logger.error(f'Error: {exc_info()[0]}')

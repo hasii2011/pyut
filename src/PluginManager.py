@@ -2,9 +2,9 @@
 from glob import glob
 
 from os import chdir
-from os import pardir
 from os import getcwd
 from os import path as osPath
+from os import sep as osSep
 
 from sys import exc_info
 from sys import path as sysPath
@@ -17,6 +17,9 @@ from Singleton import Singleton
 
 
 class PluginManager(Singleton):
+
+    PLUGIN_DIRECTORY = "plugins"
+
     """
     Interface between the application and the plugins.
 
@@ -32,7 +35,7 @@ class PluginManager(Singleton):
     def init(self):
         """
         Singleton Constructor.
-        At init time, this class searches for the plugins in the plugins
+        At init time, this class searches for the %s in the plugins
         directory.
 
         @author Laurent Burgbacher <lb@alawa.ch>
@@ -45,11 +48,15 @@ class PluginManager(Singleton):
         self.toPlugs = []
 
         # get the file names
-        chdir("plugins")
+        saveDir = getcwd()
+        self.logger.info(f'Save Directory: {saveDir}')
+        PluginManager.findPluginDirectory()
+        chdir(PluginManager.PLUGIN_DIRECTORY)
+        # chdir('fake')
         sysPath.append(getcwd())
         ioPlugs = glob("Io*.py")
         toPlugs = glob("To*.py")
-        chdir(pardir)
+        chdir(saveDir)
 
         # remove extension
         ioPlugs = map(lambda x: osPath.splitext(x)[0], ioPlugs)
@@ -153,6 +160,17 @@ class PluginManager(Singleton):
         @since 1.5.2.6
         """
         return self.toPlugs
+
+    @classmethod
+    def findPluginDirectory(cls):
+        """"""
+        path = getcwd()
+        if osPath.isdir(f'{path}{osSep}{PluginManager.PLUGIN_DIRECTORY}'):
+            return
+        else:
+            chdir("../")
+            cls.findPluginDirectory()
+
 #
 #  TODO Put in Unit test
 #

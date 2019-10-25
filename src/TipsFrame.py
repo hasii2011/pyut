@@ -112,8 +112,6 @@ class TipsFrame(Dialog):
             self._currentTip = int(self._currentTip)
 
         # Add icon
-        # TODO load as resource
-        # icon = Icon('img' + os.sep + 'tips.bmp', BITMAP_TYPE_BMP)
         fileName = resource_filename(IMG_PKG, 'tips.bmp')
         icon = Icon(fileName, BITMAP_TYPE_BMP)
 
