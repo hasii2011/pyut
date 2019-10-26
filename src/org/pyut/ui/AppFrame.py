@@ -328,7 +328,6 @@ class AppFrame(Frame):
         # Added by P. Dabrowski 20.11.2005
 
         toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.bitmap.GetImage(),
-                          # Bitmap(f'img{os.sep}zoomin.bmp', BITMAP_TYPE_BMP),
                           _("Zoom In"),
                           _("Zoom in on the selected area"),
                           _(_("PyUt tools")),
@@ -336,7 +335,6 @@ class AppFrame(Frame):
                           cast(Callable, None), wxID=ID_ZOOMIN, isToggle=True)
 
         toolZoomOut = Tool("pyut-zoomOut", img.ImgToolboxZoomOut.bitmap.GetImage(),
-                           # Bitmap('img' + os.sep + 'zoomout.bmp', BITMAP_TYPE_BMP),
                            _("Zoom Out"),
                            _("Zoom out from the clicked point"),
                            _(_("PyUt tools")),
@@ -345,7 +343,6 @@ class AppFrame(Frame):
 
         # Menu tools
         toolNewProject = Tool("pyut-new-project", img.ImgToolboxNewProject.bitmap.GetImage(),
-                              # Bitmap('img' + os.sep + 'newproject.bmp', BITMAP_TYPE_BMP),
                               _("New Project"),
                               _("Create a new project"),
                               _("PyUt menu"),
@@ -353,7 +350,6 @@ class AppFrame(Frame):
                               cast(Callable, None), wxID=ID_MNUFILENEWPROJECT)
 
         toolNewClassDiagram = Tool("pyut-new-class-diagram", img.ImgToolboxNewClassDiagram.bitmap.GetImage(),
-                                   # Bitmap('img' + os.sep + 'newcd.bmp', BITMAP_TYPE_BMP),
                                    _("New Class Diagram"),
                                    _("Create a new class diagram"),
                                    _("PyUt menu"),
@@ -361,7 +357,6 @@ class AppFrame(Frame):
                                    cast(Callable, None), wxID=ID_MNUFILENEWCLASSDIAGRAM)
 
         toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", img.ImgToolboxNewSequenceDiagram.bitmap.GetImage(),
-                                      # Bitmap('img' + os.sep + 'newsd.bmp', BITMAP_TYPE_BMP),
                                       _("New Sequence Diagram"),
                                       _("Create a new sequence diagram"),
                                       _(_("PyUt menu")),
