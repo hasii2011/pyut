@@ -17,7 +17,6 @@ from pkg_resources import resource_filename
 
 from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
-from wx import BITMAP_TYPE_BMP
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
 from wx import FRAME_EX_METAL
@@ -30,7 +29,6 @@ from wx import PORTRAIT
 from wx import PRINT_QUALITY_HIGH
 from wx import TB_FLAT
 from wx import TB_HORIZONTAL
-
 
 from wx import EVT_ACTIVATE
 from wx import EVT_CLOSE
@@ -50,7 +48,6 @@ from wx import DefaultPosition
 from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
-from wx import Bitmap
 from wx import Menu
 from wx import MenuBar
 from wx import FileDialog
@@ -272,7 +269,6 @@ class AppFrame(Frame):
 
         @author C.Dutoit
         """
-        import os
         # import img.ImgToolboxUnknown
         import img.ImgToolboxActor
         import img.ImgToolboxClass
@@ -294,7 +290,9 @@ class AppFrame(Frame):
         import img.ImgToolboxRelationshipComposition
         import img.ImgToolboxRelationshipAggregation
         import img.ImgToolboxRelationshipAssociation
-        import img.ImgToolboxNote
+        import img.ImgToolboxRelationshipNote
+        import img.ImgToolboxSequenceDiagramInstance
+        import img.ImgToolboxSequenceDiagramMessage
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
@@ -430,35 +428,31 @@ class AppFrame(Frame):
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_ASSOCIATION, isToggle=True)
 
-        toolRelNote = Tool("pyut-rel-note", img.ImgToolboxNote.bitmap.GetImage(),
+        toolRelNote = Tool("pyut-rel-note", img.ImgToolboxRelationshipNote.bitmap.GetImage(),
                            _("New note relation"), _("New note relation"),
                            _("PyUt tools"),
                            (lambda x: self._OnNewAction(x)),
                            cast(Callable, None), wxID=ID_REL_NOTE, isToggle=True)
 
-        toolSDInstance = Tool("pyut-sd-instance",
-                              Bitmap('img' + os.sep + 'sdinstance.bmp', BITMAP_TYPE_BMP),
+        toolSDInstance = Tool("pyut-sd-instance", img.ImgToolboxSequenceDiagramInstance.bitmap.GetImage(),
                               _("New sequence diagram instance object"),
                               _("New sequence diagram instance object"),
                               _("PyUt tools"),
                               (lambda x: self._OnNewAction(x)),
                               cast(Callable, None), wxID=ID_SD_INSTANCE, isToggle=True)
 
-        self.logger.info(f'toolSDInstance: {toolSDInstance}')
-
-        toolSDMessage = Tool("pyut-sd-message",
-                             Bitmap('img' + os.sep + 'sdmessage.bmp', BITMAP_TYPE_BMP),
+        toolSDMessage = Tool("pyut-sd-message", img.ImgToolboxSequenceDiagramMessage.bitmap.GetImage(),
                              _("New sequence diagram message object"),
                              _("New sequence diagram message object"),
                              _("PyUt tools"),
                              (lambda x: self._OnNewAction(x)),
                              cast(Callable, None), wxID=ID_SD_MESSAGE, isToggle=True)
 
+        self.logger.info(f'toolSDMessage: {toolSDMessage}')
+
         # Create toolboxes
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
                      toolNewUseCaseDiagram, toolOpen, toolSave,
-
-                     # added by P. Dabrowski 20.11.2005
                      toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo,
                      toolClass, toolActor, toolUseCase, toolNote,
                      toolRelInheritance, toolRelRealisation, toolRelComposition,
@@ -475,7 +469,6 @@ class AppFrame(Frame):
 
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
                      toolNewUseCaseDiagram, toolOpen, toolSave, None,
-                     # Patch from D.Dabrowsky, 20060129
                      toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo, None,
                      toolClass, toolActor, toolUseCase, toolNote, None,
                      toolRelInheritance, toolRelRealisation, toolRelComposition,
@@ -485,8 +478,6 @@ class AppFrame(Frame):
 
             # Add tool
             if tool is not None:
-                # self._tb.AddTool(tool.getWXID(), tool.getImg(), shortHelpString=tool.getCaption(), longHelpString=tool.getToolTip(),
-                #                  isToggle=tool.getIsToggle())
                 toolId = tool.getWXID()
                 bitMap = tool.getImg()
                 shortHelpString: str  = tool.getCaption()
@@ -498,7 +489,7 @@ class AppFrame(Frame):
                 """
                 AddTool(toolId, label, bitmap, shortHelp=EmptyString, kind=ITEM_NORMAL) -> ToolBarToolBase
                 """
-                self._tb.AddTool(toolId, '', bitMap, shortHelpString, itemKind)     # TODO hasii -- do we need a lablel
+                self._tb.AddTool(toolId, '', bitMap, shortHelpString, itemKind)     # TODO hasii -- do we need a label
 
                 self.Bind(EVT_TOOL, tool.getActionCallback(), id=tool.getWXID())
             else:
