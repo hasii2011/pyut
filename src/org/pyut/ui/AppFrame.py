@@ -293,6 +293,8 @@ class AppFrame(Frame):
         import img.ImgToolboxRelationshipRealization
         import img.ImgToolboxRelationshipComposition
         import img.ImgToolboxRelationshipAggregation
+        import img.ImgToolboxRelationshipAssociation
+        import img.ImgToolboxNote
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
@@ -323,19 +325,6 @@ class AppFrame(Frame):
                         _(_("PyUt tools")),
                         (lambda x: self._OnNewAction(x)),
                         cast(Callable, None), wxID=ID_NOTE, isToggle=True)
-
-        # toolSDInstance = Tool("pyut-instance", img.ImgToolboxUnknown.getBitmap(),
-        #             _("Instance"),     _("Create a new class diagram instance object"),
-        #             _(_("PyUt tools")),
-        #             (lambda x: self._OnNewAction(x)),
-        #             cast(Callable, None), wxID=ID_SD_INSTANCE, isToggle=True)
-        # toolSDMessage = Tool("pyut-message", img.ImgToolboxUnknown.getBitmap(),
-        #             _("Message"),     _("Create a new class diagram message object"),
-        #             _(_("PyUt tools")),
-        #             (lambda x: self._OnNewAction(x)),
-        #             cast(Callable, None), wxID=ID_SD_MESSAGE, isToggle=True)
-
-        # Added by P. Dabrowski 20.11.2005
 
         toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.bitmap.GetImage(),
                           _("Zoom In"),
@@ -434,20 +423,19 @@ class AppFrame(Frame):
                                  (lambda x: self._OnNewAction(x)),
                                  cast(Callable, None), wxID=ID_REL_AGREGATION, isToggle=True)
 
-        self.logger.info(f'toolRelAgregation: {toolRelAgregation}')
-
-        toolRelAssociation = Tool("pyut-rel-association",
-                                  Bitmap('img' + os.sep + 'relassociation.bmp', BITMAP_TYPE_BMP),
+        toolRelAssociation = Tool("pyut-rel-association", img.ImgToolboxRelationshipAssociation.bitmap.GetImage(),
+                                  # Bitmap('img' + os.sep + 'relassociation.bmp', BITMAP_TYPE_BMP),
                                   _("New association relation"), _("New association relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_ASSOCIATION, isToggle=True)
-        toolRelNote = Tool("pyut-rel-note",
-                           Bitmap('img' + os.sep + 'relnote.bmp', BITMAP_TYPE_BMP),
+
+        toolRelNote = Tool("pyut-rel-note", img.ImgToolboxNote.bitmap.GetImage(),
                            _("New note relation"), _("New note relation"),
                            _("PyUt tools"),
                            (lambda x: self._OnNewAction(x)),
                            cast(Callable, None), wxID=ID_REL_NOTE, isToggle=True)
+
         toolSDInstance = Tool("pyut-sd-instance",
                               Bitmap('img' + os.sep + 'sdinstance.bmp', BITMAP_TYPE_BMP),
                               _("New sequence diagram instance object"),
@@ -455,6 +443,9 @@ class AppFrame(Frame):
                               _("PyUt tools"),
                               (lambda x: self._OnNewAction(x)),
                               cast(Callable, None), wxID=ID_SD_INSTANCE, isToggle=True)
+
+        self.logger.info(f'toolSDInstance: {toolSDInstance}')
+
         toolSDMessage = Tool("pyut-sd-message",
                              Bitmap('img' + os.sep + 'sdmessage.bmp', BITMAP_TYPE_BMP),
                              _("New sequence diagram message object"),
