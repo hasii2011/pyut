@@ -290,6 +290,9 @@ class AppFrame(Frame):
         import img.ImgToolboxUndo
         import img.ImgToolboxRedo
         import img.ImgToolboxRelationShipInheritance
+        import img.ImgToolboxRelationShipRealization
+        import img.ImgToolboxRelationshipComposition
+        import img.ImgToolboxRelationShipAggregation
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
@@ -407,33 +410,31 @@ class AppFrame(Frame):
 
         # Relationship tools
         toolRelInheritance = Tool("pyut-rel-inheritance", img.ImgToolboxRelationShipInheritance.bitmap.GetImage(),
-                                  # Bitmap('img' + os.sep + 'relinheritance.bmp', BITMAP_TYPE_BMP),
                                   _("New inheritance relation"), _("New inheritance relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_INHERITANCE, isToggle=True)
 
-        self.logger.info(f'toolRelInheritance: {toolRelInheritance}')
-
-        toolRelRealisation = Tool("pyut-rel-realization",
-                                  Bitmap('img' + os.sep + 'relrealisation.bmp', BITMAP_TYPE_BMP),
-                                  _("New realisation relation"), _("New realisation relation"),
+        toolRelRealisation = Tool("pyut-rel-realization", img.ImgToolboxRelationShipRealization.bitmap.GetImage(),
+                                  _("New Realization relation"), _("New Realization relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_REALISATION, isToggle=True)
 
-        toolRelComposition = Tool("pyut-rel-composition",
-                                  Bitmap('img' + os.sep + 'relcomposition.bmp', BITMAP_TYPE_BMP),
+        toolRelComposition = Tool("pyut-rel-composition", img.ImgToolboxRelationshipComposition.bitmap.GetImage(),
                                   _("New composition relation"), _("New composition relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_COMPOSITION, isToggle=True)
-        toolRelAgregation = Tool("pyut-rel-agregation",
-                                 Bitmap('img' + os.sep + 'relagregation.bmp', BITMAP_TYPE_BMP),
+
+        toolRelAgregation = Tool("pyut-rel-aggregation", img.ImgToolboxRelationShipAggregation.bitmap.GetImage(),
+                                 # Bitmap('img' + os.sep + 'relagregation.bmp', BITMAP_TYPE_BMP),
                                  _("New aggregation relation"), _("New aggregation relation"),
                                  _("PyUt tools"),
                                  (lambda x: self._OnNewAction(x)),
                                  cast(Callable, None), wxID=ID_REL_AGREGATION, isToggle=True)
+
+        self.logger.info(f'toolRelAgregation: {toolRelAgregation}')
 
         toolRelAssociation = Tool("pyut-rel-association",
                                   Bitmap('img' + os.sep + 'relassociation.bmp', BITMAP_TYPE_BMP),
