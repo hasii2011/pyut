@@ -289,6 +289,7 @@ class AppFrame(Frame):
         import img.ImgToolboxSaveDiagram
         import img.ImgToolboxUndo
         import img.ImgToolboxRedo
+        import img.ImgToolboxRelationShipInheritance
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
@@ -405,14 +406,14 @@ class AppFrame(Frame):
                         cast(Callable, None), wxID=ID_MNUREDO)
 
         # Relationship tools
-        toolRelInheritance = Tool("pyut-rel-inheritance",
-                                  Bitmap('img' + os.sep + 'relinheritance.bmp', BITMAP_TYPE_BMP),
+        toolRelInheritance = Tool("pyut-rel-inheritance", img.ImgToolboxRelationShipInheritance.bitmap.GetImage(),
+                                  # Bitmap('img' + os.sep + 'relinheritance.bmp', BITMAP_TYPE_BMP),
                                   _("New inheritance relation"), _("New inheritance relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_INHERITANCE, isToggle=True)
 
-        self.logger.info(f'toolRedo: {toolRedo}')
+        self.logger.info(f'toolRelInheritance: {toolRelInheritance}')
 
         toolRelRealisation = Tool("pyut-rel-realization",
                                   Bitmap('img' + os.sep + 'relrealisation.bmp', BITMAP_TYPE_BMP),
@@ -420,6 +421,7 @@ class AppFrame(Frame):
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_REALISATION, isToggle=True)
+
         toolRelComposition = Tool("pyut-rel-composition",
                                   Bitmap('img' + os.sep + 'relcomposition.bmp', BITMAP_TYPE_BMP),
                                   _("New composition relation"), _("New composition relation"),
