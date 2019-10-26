@@ -404,16 +404,17 @@ class AppFrame(Frame):
                         (lambda x: self._OnMnuRedo(x)),
                         cast(Callable, None), wxID=ID_MNUREDO)
 
-        self.logger.info(f'toolRedo: {toolRedo}')
-
-        # Relations tools
+        # Relationship tools
         toolRelInheritance = Tool("pyut-rel-inheritance",
                                   Bitmap('img' + os.sep + 'relinheritance.bmp', BITMAP_TYPE_BMP),
                                   _("New inheritance relation"), _("New inheritance relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_INHERITANCE, isToggle=True)
-        toolRelRealisation = Tool("pyut-rel-realisation",
+
+        self.logger.info(f'toolRedo: {toolRedo}')
+
+        toolRelRealisation = Tool("pyut-rel-realization",
                                   Bitmap('img' + os.sep + 'relrealisation.bmp', BITMAP_TYPE_BMP),
                                   _("New realisation relation"), _("New realisation relation"),
                                   _("PyUt tools"),
