@@ -268,7 +268,8 @@ class AppFrame(Frame):
 
     def _initPyutTools(self):
         """
-        Init all PyUt tools for toolbar and toolbox
+        Init all PyUt tools for the toolbar and the toolbox
+
         @author C.Dutoit
         """
         import os
@@ -283,6 +284,11 @@ class AppFrame(Frame):
         import img.ImgToolboxNewProject
         import img.ImgToolboxNewClassDiagram
         import img.ImgToolboxNewSequenceDiagram
+        import img.ImgToolboxNewUseCaseDiagram
+        import img.ImgToolboxOpenFile
+        import img.ImgToolboxSaveDiagram
+        import img.ImgToolboxUndo
+        import img.ImgToolboxRedo
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
@@ -363,44 +369,42 @@ class AppFrame(Frame):
                                       (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
                                       cast(Callable, None), wxID=ID_MNUFILENEWSEQUENCEDIAGRAM)
 
-        self.logger.info(f'toolNewSequenceDiagram: {toolNewSequenceDiagram}')
-
-        toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram",
-                                     Bitmap('img' + os.sep + 'newud.bmp', BITMAP_TYPE_BMP),
+        toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram", img.ImgToolboxNewUseCaseDiagram.bitmap.GetImage(),
                                      _("New Use-Case diagram"),
                                      _("Create a new use-case diagram"),
                                      _("PyUt menu"),
                                      (lambda x: self._OnMnuFileNewUsecaseDiagram(x)),
                                      cast(Callable, None), wxID=ID_MNUFILENEWUSECASEDIAGRAM)
-        toolOpen = Tool("pyut-open",
-                        Bitmap('img' + os.sep + 'open.bmp', BITMAP_TYPE_BMP),
+
+        toolOpen = Tool("pyut-open", img.ImgToolboxOpenFile.bitmap.GetImage(),
                         _("Open"),
                         _("Open a file"),
                         _("PyUt menu"),
                         (lambda x: self._OnMnuFileOpen(x)),
                         cast(Callable, None), wxID=ID_MNUFILEOPEN)
-        toolSave = Tool("pyut-save",
-                        Bitmap('img' + os.sep + 'save.bmp', BITMAP_TYPE_BMP),
+
+        toolSave = Tool("pyut-save", img.ImgToolboxSaveDiagram.bitmap.GetImage(),
                         _("Save"),
                         _("Save current UML Diagram"),
                         _("PyUt menu"),
                         (lambda x: self._OnMnuFileSave(x)),
                         cast(Callable, None), wxID=ID_MNUFILESAVE)
-        # Patch from D.Dabrowsky, 20060129
-        toolUndo = Tool("pyut-undo",
-                        Bitmap('img' + os.sep + 'undo.bmp', BITMAP_TYPE_BMP),
+
+        toolUndo = Tool("pyut-undo", img.ImgToolboxUndo.bitmap.GetImage(),
                         _("undo"),
                         _("undo the last performed action"),
                         _("PyUt menu"),
                         (lambda x: self._OnMnuUndo(x)),
                         cast(Callable, None), wxID=ID_MNUUNDO)
-        toolRedo = Tool("pyut-redo",
-                        Bitmap('img' + os.sep + 'redo.bmp', BITMAP_TYPE_BMP),
+
+        toolRedo = Tool("pyut-redo", img.ImgToolboxRedo.bitmap.GetImage(),
                         _("redo"),
                         _("redo the last undone action"),
                         _("PyUt menu"),
                         (lambda x: self._OnMnuRedo(x)),
                         cast(Callable, None), wxID=ID_MNUREDO)
+
+        self.logger.info(f'toolRedo: {toolRedo}')
 
         # Relations tools
         toolRelInheritance = Tool("pyut-rel-inheritance",
