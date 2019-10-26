@@ -279,6 +279,10 @@ class AppFrame(Frame):
         import img.ImgToolboxArrow
         import img.ImgToolboxSystem
         import img.ImgToolboxZoomIn
+        import img.ImgToolboxZoomOut
+        import img.ImgToolboxNewProject
+        import img.ImgToolboxNewClassDiagram
+        import img.ImgToolboxNewSequenceDiagram
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
@@ -323,7 +327,7 @@ class AppFrame(Frame):
 
         # Added by P. Dabrowski 20.11.2005
 
-        toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.bitmap.getImage(),
+        toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.bitmap.GetImage(),
                           # Bitmap(f'img{os.sep}zoomin.bmp', BITMAP_TYPE_BMP),
                           _("Zoom In"),
                           _("Zoom in on the selected area"),
@@ -331,10 +335,8 @@ class AppFrame(Frame):
                           (lambda x: self._OnNewAction(x)),
                           cast(Callable, None), wxID=ID_ZOOMIN, isToggle=True)
 
-        self.logger.info(f'toolZoomIn: {toolZoomIn}')
-
-        toolZoomOut = Tool("pyut-zoomOut",
-                           Bitmap('img' + os.sep + 'zoomout.bmp', BITMAP_TYPE_BMP),
+        toolZoomOut = Tool("pyut-zoomOut", img.ImgToolboxZoomOut.bitmap.GetImage(),
+                           # Bitmap('img' + os.sep + 'zoomout.bmp', BITMAP_TYPE_BMP),
                            _("Zoom Out"),
                            _("Zoom out from the clicked point"),
                            _(_("PyUt tools")),
@@ -342,27 +344,32 @@ class AppFrame(Frame):
                            cast(Callable, None), wxID=ID_ZOOMOUT, isToggle=True)
 
         # Menu tools
-        toolNewProject = Tool("pyut-new-project",
-                              Bitmap('img' + os.sep + 'newproject.bmp', BITMAP_TYPE_BMP),
-                              _("new project"),
+        toolNewProject = Tool("pyut-new-project", img.ImgToolboxNewProject.bitmap.GetImage(),
+                              # Bitmap('img' + os.sep + 'newproject.bmp', BITMAP_TYPE_BMP),
+                              _("New Project"),
                               _("Create a new project"),
                               _("PyUt menu"),
                               (lambda x: self._OnMnuFileNewProject(x)),
                               cast(Callable, None), wxID=ID_MNUFILENEWPROJECT)
-        toolNewClassDiagram = Tool("pyut-new-class-diagram",
-                                   Bitmap('img' + os.sep + 'newcd.bmp', BITMAP_TYPE_BMP),
+
+        toolNewClassDiagram = Tool("pyut-new-class-diagram", img.ImgToolboxNewClassDiagram.bitmap.GetImage(),
+                                   # Bitmap('img' + os.sep + 'newcd.bmp', BITMAP_TYPE_BMP),
                                    _("New Class Diagram"),
                                    _("Create a new class diagram"),
                                    _("PyUt menu"),
                                    (lambda x: self._OnMnuFileNewClassDiagram(x)),
                                    cast(Callable, None), wxID=ID_MNUFILENEWCLASSDIAGRAM)
-        toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram",
-                                      Bitmap('img' + os.sep + 'newsd.bmp', BITMAP_TYPE_BMP),
+
+        toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", img.ImgToolboxNewSequenceDiagram.bitmap.GetImage(),
+                                      # Bitmap('img' + os.sep + 'newsd.bmp', BITMAP_TYPE_BMP),
                                       _("New Sequence Diagram"),
                                       _("Create a new sequence diagram"),
                                       _(_("PyUt menu")),
                                       (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
                                       cast(Callable, None), wxID=ID_MNUFILENEWSEQUENCEDIAGRAM)
+
+        self.logger.info(f'toolNewSequenceDiagram: {toolNewSequenceDiagram}')
+
         toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram",
                                      Bitmap('img' + os.sep + 'newud.bmp', BITMAP_TYPE_BMP),
                                      _("New Use-Case diagram"),
