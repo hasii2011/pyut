@@ -289,10 +289,10 @@ class AppFrame(Frame):
         import img.ImgToolboxSaveDiagram
         import img.ImgToolboxUndo
         import img.ImgToolboxRedo
-        import img.ImgToolboxRelationShipInheritance
-        import img.ImgToolboxRelationShipRealization
+        import img.ImgToolboxRelationshipInheritance
+        import img.ImgToolboxRelationshipRealization
         import img.ImgToolboxRelationshipComposition
-        import img.ImgToolboxRelationShipAggregation
+        import img.ImgToolboxRelationshipAggregation
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
@@ -409,13 +409,13 @@ class AppFrame(Frame):
                         cast(Callable, None), wxID=ID_MNUREDO)
 
         # Relationship tools
-        toolRelInheritance = Tool("pyut-rel-inheritance", img.ImgToolboxRelationShipInheritance.bitmap.GetImage(),
+        toolRelInheritance = Tool("pyut-rel-inheritance", img.ImgToolboxRelationshipInheritance.bitmap.GetImage(),
                                   _("New inheritance relation"), _("New inheritance relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_INHERITANCE, isToggle=True)
 
-        toolRelRealisation = Tool("pyut-rel-realization", img.ImgToolboxRelationShipRealization.bitmap.GetImage(),
+        toolRelRealisation = Tool("pyut-rel-realization", img.ImgToolboxRelationshipRealization.bitmap.GetImage(),
                                   _("New Realization relation"), _("New Realization relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
@@ -427,7 +427,7 @@ class AppFrame(Frame):
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_COMPOSITION, isToggle=True)
 
-        toolRelAgregation = Tool("pyut-rel-aggregation", img.ImgToolboxRelationShipAggregation.bitmap.GetImage(),
+        toolRelAgregation = Tool("pyut-rel-aggregation", img.ImgToolboxRelationshipAggregation.bitmap.GetImage(),
                                  # Bitmap('img' + os.sep + 'relagregation.bmp', BITMAP_TYPE_BMP),
                                  _("New aggregation relation"), _("New aggregation relation"),
                                  _("PyUt tools"),
