@@ -3,7 +3,7 @@
 #
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-bitmap = PyEmbeddedImage(
+embeddedImage: PyEmbeddedImage = PyEmbeddedImage(
     b'iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAIAAAC0tAIdAAAAA3NCSVQICAjb4U/gAAAAcUlE'
     b'QVQokZWSyw0AIQhEl41N0M2UTjeUgQeTiav4WU5GHvIyUczsua7CE4CU6J8rn4bHgEIFAAfe'
     b'43bz4NozDRV6lj1KtzaTvA2V1ptrpKFiHuaRDiy953x29JVJrzRfjpnQODVJEky5hF4Fx5Jf'

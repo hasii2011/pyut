@@ -64,6 +64,7 @@ from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
 from wx import Yield as wxYield
+from wx.lib.embeddedimage import PyEmbeddedImage
 
 from org.pyut.persistence.FileHandling import FileHandling
 from UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -295,43 +296,43 @@ class AppFrame(Frame):
         import img.ImgToolboxSequenceDiagramMessage
 
         # Element tools
-        toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.bitmap.GetImage(),
+        toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.embeddedImage.GetBitmap(),
                          _("Arrow"),      _("Select tool"),
                          _(_("PyUt tools")),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_ARROW, isToggle=True)
-        toolClass = Tool("pyut-class", img.ImgToolboxClass.bitmap.GetImage(),
+        toolClass = Tool("pyut-class", img.ImgToolboxClass.embeddedImage.GetBitmap(),
                          _("Class"),      _("Create a new class"),
                          _(_("PyUt tools")),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_CLASS, isToggle=True)
 
-        toolActor = Tool("pyut-actor", img.ImgToolboxActor.bitmap.GetImage(),
+        toolActor = Tool("pyut-actor", img.ImgToolboxActor.embeddedImage.GetBitmap(),
                          _("Actor"),      _("Create a new actor"),
                          _(_("PyUt tools")),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_ACTOR, isToggle=True)
 
-        toolUseCase = Tool("pyut-system", img.ImgToolboxSystem.bitmap.GetImage(),
+        toolUseCase = Tool("pyut-system", img.ImgToolboxSystem.embeddedImage.GetBitmap(),
                            _("System"),     _("Create a new use case"),
                            _(_("PyUt tools")),
                            (lambda x: self._OnNewAction(x)),
                            cast(Callable, None), wxID=ID_USECASE, isToggle=True)
 
-        toolNote = Tool("pyut-note", img.ImgToolboxNote.bitmap.GetImage(),
+        toolNote = Tool("pyut-note", img.ImgToolboxNote.embeddedImage.GetBitmap(),
                         _("Note"),     _("Create a new note"),
                         _(_("PyUt tools")),
                         (lambda x: self._OnNewAction(x)),
                         cast(Callable, None), wxID=ID_NOTE, isToggle=True)
 
-        toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.bitmap.GetImage(),
+        toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.embeddedImage.GetBitmap(),
                           _("Zoom In"),
                           _("Zoom in on the selected area"),
                           _(_("PyUt tools")),
                           (lambda x: self._OnNewAction(x)),
                           cast(Callable, None), wxID=ID_ZOOMIN, isToggle=True)
 
-        toolZoomOut = Tool("pyut-zoomOut", img.ImgToolboxZoomOut.bitmap.GetImage(),
+        toolZoomOut = Tool("pyut-zoomOut", img.ImgToolboxZoomOut.embeddedImage.GetBitmap(),
                            _("Zoom Out"),
                            _("Zoom out from the clicked point"),
                            _(_("PyUt tools")),
@@ -339,56 +340,56 @@ class AppFrame(Frame):
                            cast(Callable, None), wxID=ID_ZOOMOUT, isToggle=True)
 
         # Menu tools
-        toolNewProject = Tool("pyut-new-project", img.ImgToolboxNewProject.bitmap.GetImage(),
+        toolNewProject = Tool("pyut-new-project", img.ImgToolboxNewProject.embeddedImage.GetBitmap(),
                               _("New Project"),
                               _("Create a new project"),
                               _("PyUt menu"),
                               (lambda x: self._OnMnuFileNewProject(x)),
                               cast(Callable, None), wxID=ID_MNUFILENEWPROJECT)
 
-        toolNewClassDiagram = Tool("pyut-new-class-diagram", img.ImgToolboxNewClassDiagram.bitmap.GetImage(),
+        toolNewClassDiagram = Tool("pyut-new-class-diagram", img.ImgToolboxNewClassDiagram.embeddedImage.GetBitmap(),
                                    _("New Class Diagram"),
                                    _("Create a new class diagram"),
                                    _("PyUt menu"),
                                    (lambda x: self._OnMnuFileNewClassDiagram(x)),
                                    cast(Callable, None), wxID=ID_MNUFILENEWCLASSDIAGRAM)
 
-        toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", img.ImgToolboxNewSequenceDiagram.bitmap.GetImage(),
+        toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", img.ImgToolboxNewSequenceDiagram.embeddedImage.GetBitmap(),
                                       _("New Sequence Diagram"),
                                       _("Create a new sequence diagram"),
                                       _(_("PyUt menu")),
                                       (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
                                       cast(Callable, None), wxID=ID_MNUFILENEWSEQUENCEDIAGRAM)
 
-        toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram", img.ImgToolboxNewUseCaseDiagram.bitmap.GetImage(),
+        toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram", img.ImgToolboxNewUseCaseDiagram.embeddedImage.GetBitmap(),
                                      _("New Use-Case diagram"),
                                      _("Create a new use-case diagram"),
                                      _("PyUt menu"),
                                      (lambda x: self._OnMnuFileNewUsecaseDiagram(x)),
                                      cast(Callable, None), wxID=ID_MNUFILENEWUSECASEDIAGRAM)
 
-        toolOpen = Tool("pyut-open", img.ImgToolboxOpenFile.bitmap.GetImage(),
+        toolOpen = Tool("pyut-open", img.ImgToolboxOpenFile.embeddedImage.GetBitmap(),
                         _("Open"),
                         _("Open a file"),
                         _("PyUt menu"),
                         (lambda x: self._OnMnuFileOpen(x)),
                         cast(Callable, None), wxID=ID_MNUFILEOPEN)
 
-        toolSave = Tool("pyut-save", img.ImgToolboxSaveDiagram.bitmap.GetImage(),
+        toolSave = Tool("pyut-save", img.ImgToolboxSaveDiagram.embeddedImage.GetBitmap(),
                         _("Save"),
                         _("Save current UML Diagram"),
                         _("PyUt menu"),
                         (lambda x: self._OnMnuFileSave(x)),
                         cast(Callable, None), wxID=ID_MNUFILESAVE)
 
-        toolUndo = Tool("pyut-undo", img.ImgToolboxUndo.bitmap.GetImage(),
+        toolUndo = Tool("pyut-undo", img.ImgToolboxUndo.embeddedImage.GetBitmap(),
                         _("undo"),
                         _("undo the last performed action"),
                         _("PyUt menu"),
                         (lambda x: self._OnMnuUndo(x)),
                         cast(Callable, None), wxID=ID_MNUUNDO)
 
-        toolRedo = Tool("pyut-redo", img.ImgToolboxRedo.bitmap.GetImage(),
+        toolRedo = Tool("pyut-redo", img.ImgToolboxRedo.embeddedImage.GetBitmap(),
                         _("redo"),
                         _("redo the last undone action"),
                         _("PyUt menu"),
@@ -396,52 +397,52 @@ class AppFrame(Frame):
                         cast(Callable, None), wxID=ID_MNUREDO)
 
         # Relationship tools
-        toolRelInheritance = Tool("pyut-rel-inheritance", img.ImgToolboxRelationshipInheritance.bitmap.GetImage(),
+        toolRelInheritance = Tool("pyut-rel-inheritance", img.ImgToolboxRelationshipInheritance.embeddedImage.GetBitmap(),
                                   _("New inheritance relation"), _("New inheritance relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_INHERITANCE, isToggle=True)
 
-        toolRelRealisation = Tool("pyut-rel-realization", img.ImgToolboxRelationshipRealization.bitmap.GetImage(),
+        toolRelRealisation = Tool("pyut-rel-realization", img.ImgToolboxRelationshipRealization.embeddedImage.GetBitmap(),
                                   _("New Realization relation"), _("New Realization relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_REALISATION, isToggle=True)
 
-        toolRelComposition = Tool("pyut-rel-composition", img.ImgToolboxRelationshipComposition.bitmap.GetImage(),
+        toolRelComposition = Tool("pyut-rel-composition", img.ImgToolboxRelationshipComposition.embeddedImage.GetBitmap(),
                                   _("New composition relation"), _("New composition relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_COMPOSITION, isToggle=True)
 
-        toolRelAgregation = Tool("pyut-rel-aggregation", img.ImgToolboxRelationshipAggregation.bitmap.GetImage(),
+        toolRelAgregation = Tool("pyut-rel-aggregation", img.ImgToolboxRelationshipAggregation.embeddedImage.GetBitmap(),
                                  # Bitmap('img' + os.sep + 'relagregation.bmp', BITMAP_TYPE_BMP),
                                  _("New aggregation relation"), _("New aggregation relation"),
                                  _("PyUt tools"),
                                  (lambda x: self._OnNewAction(x)),
                                  cast(Callable, None), wxID=ID_REL_AGREGATION, isToggle=True)
 
-        toolRelAssociation = Tool("pyut-rel-association", img.ImgToolboxRelationshipAssociation.bitmap.GetImage(),
+        toolRelAssociation = Tool("pyut-rel-association", img.ImgToolboxRelationshipAssociation.embeddedImage.GetBitmap(),
                                   # Bitmap('img' + os.sep + 'relassociation.bmp', BITMAP_TYPE_BMP),
                                   _("New association relation"), _("New association relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_ASSOCIATION, isToggle=True)
 
-        toolRelNote = Tool("pyut-rel-note", img.ImgToolboxRelationshipNote.bitmap.GetImage(),
+        toolRelNote = Tool("pyut-rel-note", img.ImgToolboxRelationshipNote.embeddedImage.GetBitmap(),
                            _("New note relation"), _("New note relation"),
                            _("PyUt tools"),
                            (lambda x: self._OnNewAction(x)),
                            cast(Callable, None), wxID=ID_REL_NOTE, isToggle=True)
 
-        toolSDInstance = Tool("pyut-sd-instance", img.ImgToolboxSequenceDiagramInstance.bitmap.GetImage(),
+        toolSDInstance = Tool("pyut-sd-instance", img.ImgToolboxSequenceDiagramInstance.embeddedImage.GetBitmap(),
                               _("New sequence diagram instance object"),
                               _("New sequence diagram instance object"),
                               _("PyUt tools"),
                               (lambda x: self._OnNewAction(x)),
                               cast(Callable, None), wxID=ID_SD_INSTANCE, isToggle=True)
 
-        toolSDMessage = Tool("pyut-sd-message", img.ImgToolboxSequenceDiagramMessage.bitmap.GetImage(),
+        toolSDMessage = Tool("pyut-sd-message", img.ImgToolboxSequenceDiagramMessage.embeddedImage.GetBitmap(),
                              _("New sequence diagram message object"),
                              _("New sequence diagram message object"),
                              _("PyUt tools"),
@@ -479,7 +480,7 @@ class AppFrame(Frame):
             # Add tool
             if tool is not None:
                 toolId = tool.getWXID()
-                bitMap = tool.getImg()
+                bitMap: PyEmbeddedImage = tool.getImg()
                 shortHelpString: str  = tool.getCaption()
                 isToggle:        bool = tool.getIsToggle()
                 if isToggle is True:
