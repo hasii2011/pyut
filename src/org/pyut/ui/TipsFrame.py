@@ -149,6 +149,7 @@ class TipsFrame(Dialog):
         self.Bind(EVT_BUTTON, self._onNextTip,     id=ID_SET_NEXT_TIP)
         self.Bind(EVT_BUTTON, self._onPreviousTip, id=ID_SET_PREVIOUS_TIP)
 
+    # noinspection PyUnusedLocal
     def _onOk(self, event):
         """
         _onOk : Handle user click on the OK button
@@ -158,6 +159,7 @@ class TipsFrame(Dialog):
         # Exit modal mode
         self.Close()
 
+    # noinspection PyUnusedLocal
     def _onNextTip(self, event):
         """
         Select and display next tip
@@ -166,6 +168,7 @@ class TipsFrame(Dialog):
         self._currentTip = (self._currentTip + 1) % len(Tips)
         self._label.SetLabel(Tips[self._currentTip])
 
+    # noinspection PyUnusedLocal
     def _onPreviousTip(self, event):
         """
         Select and display previous tip
