@@ -111,7 +111,7 @@ from org.pyut.PyutUtils import displayError
 from org.pyut.PyutUtils import displayInformation
 from org.pyut.PyutUtils import displayWarning
 
-from TipsFrame import TipsFrame
+from org.pyut.ui.TipsFrame import TipsFrame
 
 from globals import _
 from globals import IMG_PKG
