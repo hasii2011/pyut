@@ -72,8 +72,8 @@ def importLanguage():
         errMsg = getErrorInfo()
         moduleLogger.error(errMsg)
 
-
-importLanguage()
+# Do manually at start up so we can init debug systems
+#importLanguage()
 # print "**************"
 # print _("Untitled.put")
 # print wx.GetTranslation("Untitled.put")

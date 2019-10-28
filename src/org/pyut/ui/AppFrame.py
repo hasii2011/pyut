@@ -83,6 +83,7 @@ from PyutConsts import USECASE_DIAGRAM
 from org.pyut.PyutNote import PyutNote
 
 from PyutPreferences import PyutPreferences
+
 from PyutPrintout import PyutPrintout
 from org.pyut.PyutUseCase import PyutUseCase
 
@@ -201,12 +202,12 @@ class AppFrame(Frame):
         self._toolboxesID = {}                  # Association toolbox category/id
 
         # Preferences
-        self._prefs = PyutPreferences()  # getPrefs()
+        self._prefs: PyutPreferences = PyutPreferences()
+
         self._lastDir = self._prefs["LastDirectory"]
         if self._lastDir is None:  # Assert that the path is present
             self._lastDir = getcwd()
 
-        # get the mediator
         self._ctrl = getMediator()
         self._ctrl.registerStatusBar(self.GetStatusBar())
         self._ctrl.resetStatusText()
@@ -247,19 +248,20 @@ class AppFrame(Frame):
 
     def _onActivate(self, event):
         """
-        EVT_ACTIVATE Callback; display tips frame.
+        EVT_ACTIVATE Callback; display tips frame.  But onlhy, the first activate
         """
-        self.logger.debug(f'_onActivate event: {event}')
+        self.logger.info(f'_onActivate event: {event}')
         try:
-            if self._alreadyDisplayedTipsFrame is True or self._prefs["SHOW_TIPS_ON_STARTUP"] == "0" or self._prefs["SHOW_TIPS_ON_STARTUP"] == "False":
+            if self._alreadyDisplayedTipsFrame is True or self._prefs is False:
                 return
             # Display tips frame
             self._alreadyDisplayedTipsFrame = True
             prefs: PyutPreferences = PyutPreferences()
-            if prefs.getOpenHints() is True:
+            self.logger.info(f'Show tips on startup: {self._prefs.showTipsOnStartup()}')
+            if prefs.showTipsOnStartup() is True:
                 # noinspection PyUnusedLocal
                 tipsFrame = TipsFrame(self)
-                #  tipsFrame.Show()     # weird the tips frame constructor does a .show itself  TODO look at this in future
+                tipsFrame.Show(show=True)
         except (ValueError, Exception) as e:
             if self._prefs is not None:
                 self.logger.error(f'_onActivate: {e}')

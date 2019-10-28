@@ -1,12 +1,6 @@
 
-import os
-
-from pkg_resources import resource_filename
-
 from wx import ALIGN_CENTER
 from wx import ALL
-from wx import BITMAP_TYPE_BMP
-from wx import BOTH
 from wx import Bitmap
 from wx import BoxSizer
 from wx import Button
@@ -19,7 +13,7 @@ from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import FRAME_FLOAT_ON_PARENT
 from wx import HORIZONTAL
-from wx import Icon
+
 from wx import RESIZE_BORDER
 from wx import ST_NO_AUTORESIZE
 from wx import SYSTEM_MENU
@@ -30,9 +24,11 @@ from wx import VERTICAL
 
 from org.pyut.PyutUtils import assignID
 from PyutPreferences import PyutPreferences
+from PyutPreferences import SHOW_TIPS_ON_STARTUP_KEY
 
 from globals import _
-from globals import IMG_PKG
+
+import img.ImgTipsFrameTipsLogo
 
 # DEFAULT SIZE
 DEFAULT_WIDTH  = 600
@@ -79,9 +75,8 @@ class TipsFrame(Dialog):
             return
 
         # Initialize the dialog box
-        Dialog.__init__(self, parent, -1, _("Tips"), DefaultPosition, Size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
-                        RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT)
-        self.Show()
+        super().__init__(parent, -1, _("Tips"), DefaultPosition, Size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
+                         RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT)
 
         # Normalize tips
         import LineSplitter
@@ -112,21 +107,21 @@ class TipsFrame(Dialog):
             self._currentTip = int(self._currentTip)
 
         # Add icon
-        fileName = resource_filename(IMG_PKG, 'tips.bmp')
-        icon = Icon(fileName, BITMAP_TYPE_BMP)
-
-        self.SetIcon(icon)
-        self.Center(BOTH)                     # Center on the screen
-
+        # fileName = resource_filename(IMG_PKG, 'TipsLogo.bmp')
+        # icon = Icon(fileName, BITMAP_TYPE_BMP)
+        # self.SetIcon(icon)
+        # self.Center(BOTH)                     # Center on the screen
+        self.Center(dir=VERTICAL)
+        self.AcceptsFocus()
         # Create controls
-        bmp = Bitmap("img" + os.sep + "tips.bmp", BITMAP_TYPE_BMP)
+        bmp: Bitmap = img.ImgTipsFrameTipsLogo.embeddedImage.GetBitmap()
         self._picture = StaticBitmap(self, -1, bmp)
         tip = Tips[self._currentTip]
         self._label = StaticText(self, -1, tip, size=Size(DEFAULT_WIDTH * 0.8, DEFAULT_HEIGHT * 0.8), style=ST_NO_AUTORESIZE)
         nextTipButton = Button(self, ID_SET_NEXT_TIP, _("&Next tip"))
         previousTipButton = Button(self, ID_SET_PREVIOUS_TIP, _("&Previous tip"))
         self._chkShowTips = CheckBox(self, ID_CHK_SHOW_TIPS, _("&Show tips at startup"))
-        self._chkShowTips.SetValue(not self._prefs["SHOW_TIPS_ON_STARTUP"] == "0")
+        self._chkShowTips.SetValue(not self._prefs[SHOW_TIPS_ON_STARTUP_KEY] is False)
 
         # Upper sizer
         upSizer = BoxSizer(HORIZONTAL)
@@ -185,6 +180,6 @@ class TipsFrame(Dialog):
         @author C.Dutoit
         """
         # Save state
-        self._prefs["CurrentTip"] = (self._currentTip + 1) % len(Tips)
-        self._prefs["SHOW_TIPS_ON_STARTUP"] = self._chkShowTips.GetValue()
+        self._prefs["CurrentTip"] = str((self._currentTip + 1) % len(Tips))
+        self._prefs[SHOW_TIPS_ON_STARTUP_KEY] = self._chkShowTips.GetValue()
         event.Skip()

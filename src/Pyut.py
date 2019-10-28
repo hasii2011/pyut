@@ -17,6 +17,8 @@ from org.pyut.ui.PyutApp import PyutApp
 from PyutVersion import getPyUtVersion
 from PyutPreferences import PyutPreferences
 
+from Lang import importLanguage as setupPyutLanguage
+
 JSON_LOGGING_CONFIG_FILENAME = "loggingConfiguration.json"
 MADE_UP_PRETTY_MAIN_NAME     = "Pyut"
 
@@ -164,6 +166,7 @@ if __name__ == "__main__":
 
     moduleLogger.info(f"Starting {MADE_UP_PRETTY_MAIN_NAME}")
 
+    setupPyutLanguage()
     exePath = getExePath()
 
     # Launch pyut

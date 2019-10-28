@@ -10,15 +10,16 @@ from configparser import *
 
 
 # Set the Preferences filename
-
 if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == 'darwin':
     PREFS_FILENAME = os.getenv("HOME") + "/.PyutPrefs.dat"
 else:
     PREFS_FILENAME = "PyutPrefs.dat"
 
 DEFAULT_NB_LOF  = 5    # Number of last opened files, by default
-SECTION_GENERAL        = 'General'
-GENERAL_OPEN_HINTS_KEY = 'OpenHints'
+
+MAIN_SECTION:             str = 'Main'
+OPENED_FILES_SECTION:     str = "LastOpenedFiles"
+SHOW_TIPS_ON_STARTUP_KEY: str = 'ShowTipsOnStartup'
 
 
 class PyutPreferences(Singleton):
@@ -26,7 +27,7 @@ class PyutPreferences(Singleton):
     The goal of this class is to handle Pyut Preferences, to load them and save
     them from/to a file.
     To use it :
-      - instanciate a PyutPreferences object :
+      - instantiate a PyutPreferences object :
         myPP=PyutPreferences()
       - to get a pyut' preference :
         mypref=myPP["ma_preference"]
@@ -134,19 +135,18 @@ class PyutPreferences(Singleton):
         self._config.read(PREFS_FILENAME)
 
         # Create a "LastOpenedFiles" structure ?
-        if not self._config.has_section("LastOpenedFiles"):
+        hasSection: bool = self._config.has_section(OPENED_FILES_SECTION)
+        self.logger.debug(f'hasSection: {hasSection}')
+        if hasSection is False:
             # Add section
             self._config = ConfigParser()
-            self._config.add_section("LastOpenedFiles")
+            self._config.add_section(OPENED_FILES_SECTION)
 
             # Set last opened files
-            self._config.set("LastOpenedFiles", "NbEntries", str(DEFAULT_NB_LOF))
+            self._config.set(OPENED_FILES_SECTION, "NbEntries", str(DEFAULT_NB_LOF))
             for i in range(DEFAULT_NB_LOF):
-                self._config.set("LastOpenedFiles", "File" + str(i+1), "")
+                self._config.set(OPENED_FILES_SECTION, "File" + str(i + 1), "")
             self.__saveConfig()
-        elif not self._config.has_section(SECTION_GENERAL):
-            self._config.add_section(SECTION_GENERAL)
-            self._config.set(SECTION_GENERAL, GENERAL_OPEN_HINTS_KEY, str(True))
         else:
             self.logger.info(f'Found all my preferences sections.')
 
@@ -209,8 +209,7 @@ class PyutPreferences(Singleton):
             self._config.set("LastOpenedFiles", "File" + str(i+1), lstFiles[i])
         self.__saveConfig()
 
-    def getOpenHints(self) -> bool:
+    def showTipsOnStartup(self) -> bool:
 
-        openHints: bool = self._config.getboolean(SECTION_GENERAL, GENERAL_OPEN_HINTS_KEY)
-
-        return openHints
+        showTips: bool = self._config.getboolean('Main', SHOW_TIPS_ON_STARTUP_KEY)
+        return showTips
