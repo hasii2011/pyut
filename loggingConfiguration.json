@@ -24,7 +24,8 @@
     },
     "loggers": {
         "root": {
-            "level":     "INFO",
+            "level":     "ERROR",
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "mediator": {
@@ -67,7 +68,7 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "lang": {
+        "Lang": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
@@ -117,7 +118,7 @@
             "propagate": "False"
         },
         "PluginManager": {
-            "level":     "INFO",
+            "level":     "ERROR",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },

@@ -110,7 +110,7 @@ def main():
 =============================================================================
 """)
 
-    app = PyutApp(0)
+    app = PyutApp(redirect=False)
     app.MainLoop()
 
 

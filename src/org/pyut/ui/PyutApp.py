@@ -2,16 +2,15 @@
 from logging import Logger
 from logging import getLogger
 
-from pkg_resources import resource_filename
-
 from os import sep as osSeparator
 
 from sys import argv
 from sys import exc_info
 from traceback import extract_tb
 
+from wx import Bitmap
 from wx.adv import SplashScreen
-from wx.adv import SPLASH_CENTRE_ON_SCREEN
+from wx.adv import SPLASH_CENTRE_ON_PARENT
 from wx.adv import SPLASH_TIMEOUT
 
 from wx import OK
@@ -19,15 +18,16 @@ from wx import ICON_ERROR
 
 from wx import HelpProvider
 from wx import SimpleHelpProvider
-from wx import Image
 from wx import ScreenDC
 from wx import MessageDialog
+from wx import DefaultPosition as wxDefaultPosition
+from wx import DefaultSize as wxDefaultSize
 
 from wx import App as wxApp
 from wx import Yield as wxYield
 
 from globals import _
-from globals import IMG_PKG
+import img.ImgSplash
 
 from PyutPreferences import PyutPreferences
 
@@ -42,20 +42,22 @@ class PyutApp(wxApp):
 
     PyutApp is the main pyut application, a wxApp.
 
-    Called from pyut.pyw=
+    Called from pyut.py
 
     :author:  C.Dutoit
     :contact: <dutoitc@hotmail.com>
     :version: $Revision: 1.15 $
     """
-    def __init__(self, val, splash=True, show=True):
+    SPLASH_TIMEOUT_MSECS: int = 3000
+
+    def __init__(self, redirect: bool, showSplash: bool = True, showMainFrame: bool = True):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._showSplash    = splash
-        self._showMainFrame = show
+        self._showSplash    = showSplash
+        self._showMainFrame = showMainFrame
 
-        super().__init__(val)
+        super().__init__(redirect)
 
     def OnInit(self):
         """
@@ -66,22 +68,18 @@ class PyutApp(wxApp):
         try:
             # Create the SplashScreen
             if self._showSplash:
-                # TODO: Load this as a resource
-                # imgPath = "img" + osSeparator + "splash.png"
-                fileName = resource_filename(IMG_PKG, 'splash.png')
 
-                img = Image(fileName)
-                bmp = img.ConvertToBitmap()
-                self.splash = SplashScreen(bmp, SPLASH_CENTRE_ON_SCREEN | SPLASH_TIMEOUT, 3000, None, -1)
+                bmp: Bitmap = img.ImgSplash.embeddedImage.GetBitmap()
+                self.splash = SplashScreen(bmp, SPLASH_CENTRE_ON_PARENT | SPLASH_TIMEOUT, PyutApp.SPLASH_TIMEOUT_MSECS, parent=None,
+                                           pos=wxDefaultPosition, size=wxDefaultSize)
 
+                self.logger.info(f'Showing splash screen')
                 self.splash.Show(True)
                 wxYield()
 
             self._frame = AppFrame(None, -1, "Pyut")
             self.SetTopWindow(self._frame)
 
-            if self._showSplash:
-                self.splash.Show(False)
             self._AfterSplash()
 
             return True
@@ -102,8 +100,7 @@ class PyutApp(wxApp):
 
     def _AfterSplash(self):
         """
-        AfterSplash : Occurs after the splash screen; launch the application
-        PyutApp : main pyut application class
+        AfterSplash : Occurs after the splash screen is launched; launch the application
         """
         try:
             # Handle application parameters in the command line
@@ -133,8 +130,6 @@ class PyutApp(wxApp):
                 self._frame.SetSize(dc.GetSize())
                 self._frame.CentreOnScreen()
 
-            if self._showSplash:
-                self.splash.Close(True)
             return True
         except (ValueError, Exception) as e:
             dlg = MessageDialog(None, _(f"The following error occurred : {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
