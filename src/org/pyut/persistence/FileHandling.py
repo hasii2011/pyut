@@ -1,37 +1,37 @@
 
+from typing import TypeVar
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
 from wx import FD_SAVE
 from wx import FD_OVERWRITE_PROMPT
-
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
 from wx import EVT_TREE_SEL_CHANGED
-
 from wx import ID_OK
 from wx import ID_YES
-
 from wx import OK
-from wx import TreeEvent
 from wx import YES_NO
-
 from wx import ICON_ERROR
 from wx import ICON_QUESTION
 from wx import TR_HIDE_ROOT
 from wx import TR_HAS_BUTTONS
-
 from wx import CLIP_CHILDREN
 from wx import BITMAP_TYPE_BMP
 from wx import BITMAP_TYPE_JPEG
 from wx import BITMAP_TYPE_PNG
 
+from wx import TreeEvent
+from wx import TreeItemId
 from wx import FileDialog
 from wx import SplitterWindow
 from wx import TreeCtrl
 from wx import Notebook
 from wx import MessageDialog
-from wx import ScrolledWindow
 from wx import Yield
+
+from UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.PyutUtils import displayError
 
@@ -39,6 +39,9 @@ from PyutConsts import DefaultFilename
 from PyutProject import PyutProject
 
 from globals import _
+
+TreeDataType = TypeVar('TreeDataType', PyutProject, UmlDiagramsFrame)
+DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)
 
 
 def shorterFilename(filename):
@@ -80,8 +83,8 @@ class FileHandling:
         self._projects = []
         self.__parent = parent
         self._ctrl = mediator
-        self._currentProject = None
-        self._currentFrame = None
+        self._currentProject: PyutProject      = cast(PyutProject, None)
+        self._currentFrame:   UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
 
         # Init graphic
         if not self._ctrl.isInScriptMode():
@@ -100,11 +103,11 @@ class FileHandling:
         @author C.Dutoit
         """
         # window splitting
-        self.__splitter = SplitterWindow(self.__parent, -1)
+        self.__splitter: SplitterWindow = SplitterWindow(self.__parent, -1)
 
         # project tree
-        self.__projectTree = TreeCtrl(self.__splitter, -1, style=TR_HIDE_ROOT + TR_HAS_BUTTONS)
-        self.__projectTreeRoot = self.__projectTree.AddRoot(_("Root"))
+        self.__projectTree: TreeCtrl = TreeCtrl(self.__splitter, -1, style=TR_HIDE_ROOT + TR_HAS_BUTTONS)
+        self.__projectTreeRoot       = self.__projectTree.AddRoot(_("Root"))
 
         #  self.__projectTree.SetPyData(self.__projectTreeRoot, None)
         # Expand root, since wx.TR_HIDE_ROOT is not supported under winx
@@ -278,6 +281,9 @@ class FileHandling:
 
         # Ask for filename
         filenameOK = False
+        # TODO revisit this to figure out how to get rid of Pycharm warning 'dlg referenced before assignment'
+        # Bad thing is dlg can be either a FileDialog or a MessageDialog
+        dlg: DialogType = cast(DialogType, None)
         while not filenameOK:
             dlg = FileDialog(self.__parent,
                              defaultDir=self.__parent.getCurrentDir(),
@@ -438,11 +444,12 @@ class FileHandling:
 
         @author C.Dutoit
         """
-        # pyData = self.__projectTree.GetPyData(event.GetItem())
-        # Has Use GetItemData instead deprecation warning;  but .GetItemData does not exist
-        pyData = self.__projectTree.GetPyData(event.GetItem())
-        if isinstance(pyData, ScrolledWindow):
-            frame = pyData
+        itm: TreeItemId = event.GetItem()
+        pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
+        self.logger.info(f'Clicked on: `{pyutData}`')
+        # Use our own base type
+        if isinstance(pyutData, UmlDiagramsFrame):
+            frame: UmlDiagramsFrame = pyutData
             self._currentFrame = frame
             self._currentProject = self.getProjectFromFrame(frame)
 
@@ -452,8 +459,8 @@ class FileHandling:
                 if pageFrame is frame:
                     self.__notebook.SetSelection(i)
                     return
-        elif isinstance(pyData, PyutProject):
-            self._currentProject = pyData
+        elif isinstance(pyutData, PyutProject):
+            self._currentProject = pyutData
 
     def _getCurrentFrameFromNotebook(self):
         """
@@ -489,7 +496,7 @@ class FileHandling:
         """
         return self._currentProject
 
-    def getProjectFromFrame(self, frame):
+    def getProjectFromFrame(self, frame: UmlDiagramsFrame):
         """
         Return the project that owns a given frame
 
