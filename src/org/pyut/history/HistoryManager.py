@@ -1,31 +1,43 @@
+
+from logging import Logger
+from logging import getLogger
+
+from os import getcwd
+
 from org.pyut.commands import CommandGroup
-from org.pyut.history.HistoryUtils import *
+
+from org.pyut.history.HistoryUtils import GROUP_COMMENT_ID
+from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
+from org.pyut.history.HistoryUtils import getTokenValue
 
 
-class HistoryManager(object):
+class HistoryManager:
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
-    This class is the structure that manage the history of a given frame.
-    It creates a file where are stored serialized 'CommandGroups' that
+
+    This class is the structure that manages the history of a given frame.
+    It creates a file where serialized 'CommandGroups' are stored.  They
     are compound of commands. Each command is able to do the undo/redo
     operations and is also able to serialize/unserialize itself
     (See commandGroup and command).
-    To see how it works, please see UnitTestHistory
+
+    To see how it works, please see test.TestHistory
     """
-
-    # defines an unique id that will be added to the file base name
-    # in order to have a unique file associated to each instance of
-    # the history.
     historyId = 0
-
+    """
+    defines a unique id that will be added to the file base name
+    in order to have a unique file associated to each instance of
+    the history.
+    """
     def __init__(self, theFrame=None):
         """
-        constructor.
-        @ frame (UmlFrame)      :   umlframe to which this history is
-                                    attached.
+
+        Args:
+            theFrame:  umlframe to which this history is attached.
         """
+        self.logger: Logger = getLogger(__name__)
         self._frame    = theFrame
-        self._fileName = (HISTORY_FILE_NAME + str(self.__class__.historyId))
+        self._fileName = f'{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
         """
         name of file for hard storage which is unique for each history
         """
@@ -33,6 +45,7 @@ class HistoryManager(object):
         """
         for the next instance of the history...
         """
+        self.logger.error(f'Current directory: {getcwd()}')
         saveFile = open(self._fileName, 'w')  # create the file to store the groups
         saveFile.close()
 

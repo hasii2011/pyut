@@ -8,6 +8,7 @@ from org.pyut.history.HistoryUtils import makeValuatedToken
 class PrintCommand(Command):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
+
     This is a command created only for testing pyut's history
     (see UnitTestHistory). The undo and redo method just print
     'undo' or 'redo' plus a user defined message.

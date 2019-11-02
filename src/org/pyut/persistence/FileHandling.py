@@ -52,6 +52,8 @@ def shorterFilename(filename):
     @return String better file name
     @since 1.0
     @author C.Dutoit <dutoitc@hotmail.com>
+
+    TODO Make this part of the class
     """
     import os
     aString = os.path.split(filename)[1]

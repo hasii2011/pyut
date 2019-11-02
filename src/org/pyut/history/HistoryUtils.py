@@ -144,4 +144,3 @@ def getTokenValue(tokenId: str, serializedInfos: str):
     value = value.replace(tempEscape, TOKEN_ESCAPE)
 
     return value
-
