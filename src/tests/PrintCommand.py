@@ -1,4 +1,9 @@
 
+from typing import cast
+
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.commands.Command import Command
 
 from org.pyut.history.HistoryUtils import getTokenValue
@@ -13,7 +18,6 @@ class PrintCommand(Command):
     (see UnitTestHistory). The undo and redo method just print
     'undo' or 'redo' plus a user defined message.
     """
-
     def __init__(self):
         """
         Constructor.
@@ -21,10 +25,11 @@ class PrintCommand(Command):
         it can be called by the history (see Command)
         """
 
-        Command.__init__(self)
-        self._message = None
+        super().__init__()
+        self.logger:   Logger = getLogger(__name__)
+        self._message: str    = cast(str, None)
 
-    def setMessage(self, message):
+    def setMessage(self, message: str):
         """
         set the message that will be displayed when we call undo/redo methods
         @param message (string)
@@ -32,12 +37,10 @@ class PrintCommand(Command):
         self._message = message
 
     def redo(self):
-
-        print("redo : " + self._message)
+        self.logger.info(f'redo: `{self._message}`')
 
     def undo(self):
-
-        print("undo : " + self._message)
+        self.logger.info(f'undo: `{self._message}`')
 
     def serialize(self):
         """
