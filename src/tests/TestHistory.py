@@ -47,9 +47,9 @@ class TestHistory(TestBase):
         actualGroupCount:   int = self.historyManager.groupCount
         self.assertEqual(expectedGroupCount, actualGroupCount, 'Group count not correctly initialized')
 
-        expectedGroupToUndo: int = -1
-        actualGroupToUndo:   int = self.historyManager.groupToUndo
-        self.assertEqual(expectedGroupToUndo, actualGroupToUndo, 'Group to undo index not correctly initialized')
+        expectedGroupUndoIndex: int = -1
+        actualGroupUndoIndex:   int = self.historyManager.groupUndoIndex
+        self.assertEqual(expectedGroupUndoIndex, actualGroupUndoIndex, 'Group undo index not correctly initialized')
 
         expectedGroupToExecute: CommandGroup = cast(CommandGroup, None)
         actualGroupToExecute:   CommandGroup = self.historyManager.groupToExecute
@@ -114,11 +114,11 @@ class TestHistory(TestBase):
         self._checkUndoIndex(expectedGroupUndoIndex=0)
         self.historyManager.undo()
 
-        self.logger.info(f'Nothing left to undo: {self.historyManager.groupToUndo}')
+        self.logger.info(f'Nothing left to undo: {self.historyManager.groupUndoIndex}')
 
     def _checkUndoIndex(self, expectedGroupUndoIndex: int):
 
-        actualGroupUndoIndex: int = self.historyManager.groupToUndo
+        actualGroupUndoIndex: int = self.historyManager.groupUndoIndex
         self.logger.info(f'Group to undo index {actualGroupUndoIndex}')
         self.assertEqual(expectedGroupUndoIndex, actualGroupUndoIndex, 'Incorrect command group index')
 
