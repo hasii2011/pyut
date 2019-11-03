@@ -1,5 +1,7 @@
+from typing import cast
 
-import unittest
+from unittest import main as unitTestMain
+
 
 from logging import Logger
 from logging import getLogger
@@ -21,6 +23,11 @@ class TestHistory(TestBase):
     Made into a real unit test; Put in Python 3 logging -- 2019 HASII
 
     """
+    COMMAND_GROUP3_STR: str = 'cg3'
+    COMMAND_GROUP2_STR: str = 'cg2'
+    COMMAND_GROUP1_STR: str = 'cg1'
+    COMMAND_GROUP0_STR: str = 'cg0'
+
     clsLogger: Logger = None
 
     @classmethod
@@ -34,12 +41,29 @@ class TestHistory(TestBase):
         self.logger: Logger = TestHistory.clsLogger
         self.historyManager = HistoryManager(None)
 
+    def testInitialize(self):
+
+        expectedGroupCount: int = 0
+        actualGroupCount:   int = self.historyManager.groupCount
+        self.assertEqual(expectedGroupCount, actualGroupCount, 'Group count not correctly initialized')
+
+        expectedGroupToUndo: int = -1
+        actualGroupToUndo:   int = self.historyManager.groupToUndo
+        self.assertEqual(expectedGroupToUndo, actualGroupToUndo, 'Group to undo index not correctly initialized')
+
+        expectedGroupToExecute: CommandGroup = cast(CommandGroup, None)
+        actualGroupToExecute:   CommandGroup = self.historyManager.groupToExecute
+        self.assertEqual(expectedGroupToExecute, actualGroupToExecute, 'Group to execute not correctly initialized')
+
     def testBasic(self):
         # creating the command groups
-        cg1 = CommandGroup("cg1")
-        cg2 = CommandGroup("cg2")
-        cg3 = CommandGroup("cg3")
-        cg4 = CommandGroup("cg4")
+        cg0 = CommandGroup(TestHistory.COMMAND_GROUP0_STR)
+        cg1 = CommandGroup(TestHistory.COMMAND_GROUP1_STR)
+        cg2 = CommandGroup(TestHistory.COMMAND_GROUP2_STR)
+        cg3 = CommandGroup(TestHistory.COMMAND_GROUP3_STR)
+        # commands for group 0
+        pc0a = PrintCommand()
+        pc0b = PrintCommand()
         # commands for group 1
         pc1a = PrintCommand()
         pc1b = PrintCommand()
@@ -49,96 +73,58 @@ class TestHistory(TestBase):
         # commands for group 3
         pc3a = PrintCommand()
         pc3b = PrintCommand()
-        # commands for group 4
-        pc4a = PrintCommand()
-        pc4b = PrintCommand()
 
         # set the messages of the commands
+        pc0a.setMessage("pc0a")
+        pc0b.setMessage("pc0b")
         pc1a.setMessage("pc1a")
         pc1b.setMessage("pc1b")
         pc2a.setMessage("pc2a")
         pc2b.setMessage("pc2b")
         pc3a.setMessage("pc3a")
         pc3b.setMessage("pc3b")
-        pc4a.setMessage("pc4a")
-        pc4b.setMessage("pc4b")
 
         # add the commands to the groups
+        cg0.addCommand(pc0a)
+        cg0.addCommand(pc0b)
         cg1.addCommand(pc1a)
         cg1.addCommand(pc1b)
         cg2.addCommand(pc2a)
         cg2.addCommand(pc2b)
         cg3.addCommand(pc3a)
         cg3.addCommand(pc3b)
-        cg4.addCommand(pc4a)
-        cg4.addCommand(pc4b)
 
         # add the groups to the history
+        self.historyManager.addCommandGroup(cg0)
         self.historyManager.addCommandGroup(cg1)
         self.historyManager.addCommandGroup(cg2)
-        self.historyManager.addCommandGroup(cg3)
 
-        self.logger.info('Supposed to undo cg3 : ')
+        self.assertEqual(3, self.historyManager.groupCount, 'Group count mismatch')
+
+        self._checkUndoIndex(expectedGroupUndoIndex=2)
         self.historyManager.undo()
 
+        self._checkUndoIndex(expectedGroupUndoIndex=1)
+        self.historyManager.undo()
 
-#
+        self.historyManager.addCommandGroup(cg3)
+        self._checkUndoIndex(expectedGroupUndoIndex=1)
+        self.historyManager.undo()
 
-# creating the history
-# h = HistoryManager(None)
+        self._checkUndoIndex(expectedGroupUndoIndex=0)
+        self.historyManager.undo()
 
-# creating the command groups
-# cg1 = CommandGroup("cg1")
-# cg2 = CommandGroup("cg2")
-# cg3 = CommandGroup("cg3")
-# cg4 = CommandGroup("cg4")
-#
-# # commands for group 1
-# pc1a = PrintCommand()
-# pc1b = PrintCommand()
-#
-# # commands for group 2
-# pc2a = PrintCommand()
-# pc2b = PrintCommand()
-#
-# # commands for group 3
-# pc3a = PrintCommand()
-# pc3b = PrintCommand()
-#
-# # commands for group 4
-# pc4a = PrintCommand()
-# pc4b = PrintCommand()
-#
-# # set the messages of the commands
-# pc1a.setMessage("pc1a")
-# pc1b.setMessage("pc1b")
-# pc2a.setMessage("pc2a")
-# pc2b.setMessage("pc2b")
-# pc3a.setMessage("pc3a")
-# pc3b.setMessage("pc3b")
-# pc4a.setMessage("pc4a")
-# pc4b.setMessage("pc4b")
-#
-# # add the commands to the groups
-# cg1.addCommand(pc1a)
-# cg1.addCommand(pc1b)
-# cg2.addCommand(pc2a)
-# cg2.addCommand(pc2b)
-# cg3.addCommand(pc3a)
-# cg3.addCommand(pc3b)
-# cg4.addCommand(pc4a)
-# cg4.addCommand(pc4b)
-#
-# # add the groups to the history
-# h.addCommandGroup(cg1)
-# h.addCommandGroup(cg2)
-# h.addCommandGroup(cg3)
+        self.logger.info(f'Nothing left to undo: {self.historyManager.groupToUndo}')
+
+    def _checkUndoIndex(self, expectedGroupUndoIndex: int):
+
+        actualGroupUndoIndex: int = self.historyManager.groupToUndo
+        self.logger.info(f'Group to undo index {actualGroupUndoIndex}')
+        self.assertEqual(expectedGroupUndoIndex, actualGroupUndoIndex, 'Incorrect command group index')
+
 #
 # # check if the undo/redo and add method works correctly
-# print("supposed to undo cg3 : ")
-# h.undo()
-# print("supposed to undo cg2 : ")
-# h.undo()
+
 # print("supposed to add cg4 and remove cg2 : ")
 # h.addCommandGroup(cg4)
 # print("supposed to add cg3 : ")
@@ -198,5 +184,6 @@ class TestHistory(TestBase):
 #     h.destroy()
 #     print("!!!DON'T CARE ABOUT THE FINAL ERROR MESSAGE!!!")
 
+
 if __name__ == '__main__':
-    unittest.main()
+    unitTestMain()

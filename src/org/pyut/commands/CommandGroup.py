@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -42,13 +44,12 @@ class CommandGroup(object):
         """
         history to which belongs the group. Init when the group is added.
         """
-        self._commands = []
+        self._commands: List = []
         """
         list of commands belonging to the group
         """
-        self._comment = comment
-
-        self._commonData = []
+        self._comment:    str = comment
+        self._commonData: List = []
         """
         to store information that are common to all the commands of the
         group. WARNING : the common data is NOT serialized, so the
@@ -92,12 +93,13 @@ class CommandGroup(object):
 
         return serializedGroup
 
-    def unserialize(self, serializedCommands: str):
+    def deserialize(self, serializedCommands: str):
         """
-        unserialize the specified commands and add them to the group
-        @param serializedCommands  :   a string representation of the commands belonging to the group.
-        """
+        deserialize the specified commands and add them to the group
 
+        Args:
+            serializedCommands:   a string representation of the commands belonging to the group.
+        """
         # define the begining and ending token of a serialized command
         commandBegin = TOKEN_BEGIN + COMMAND_BEGIN_ID + TOKEN_END
         commandEnd   = TOKEN_BEGIN + COMMAND_END_ID + TOKEN_END
@@ -165,15 +167,15 @@ class CommandGroup(object):
 
     def getHistory(self):
         """
-        return the history to which belongs the group
+        return the group history
         """
-
         return self._history
 
     def setHistory(self, history: HistoryManager):
         """
-        Set the history to which belongs the group. Avoid to call this method
+        Set the history to which belongs the group. Avoid to calling method
         because it is called automaticaly when the group is added.
+
         @param history  : history to which belongs the group
         """
 
@@ -189,26 +191,31 @@ class CommandGroup(object):
     def setComment(self, comment: str):
         """
         set the comment/description of the group
-        @param comment  : comment/description of group to display
+
+        Args:
+            comment: comment/description of group to display
         """
 
         self._comment = comment
 
-    def addCommonData(self, commonData):
+    def addCommonData(self, commonData: List):
         """
-        Add a data that is common to all the commands belonging to the group.
-        A common data should contain a identificator so that a given command
+        Add a data that is common to all the commands belonging to this group.
+
+        Common data should contain an identifier so that a given command
         can get only the pertinent data for itself. For e.g. linkCommand will
         get only the tuples ("link", (shapeToLink, linkId)).
-        WARNING : the common data is NOT serialized, so they are lost after
-        an unserialization. You have to use these data in a command before
+
+        WARNING : the common data is NOT serialized, so it is lost after
+        a deserialization. You have to use this data in a command before
         the serialization of the group.
 
-        @param commonData    :   data (tuple) that a command add to be used by an other command.
+        Args:
+            commonData:   data list that a command adds to be used by another command.
         """
         self._commonData.append(commonData)
 
-    def getCommonData(self):
+    def getCommonData(self) -> List:
         """
         @return a list of common data, so a command can use informations
         produced by an other command in the same group.
@@ -217,3 +224,6 @@ class CommandGroup(object):
         the serialization of the group.
         """
         return self._commonData
+
+    def __repr__(self):
+        return f'Comment: `{self._comment}` Common Data: `{self._commonData}`'

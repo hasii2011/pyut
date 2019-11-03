@@ -35,9 +35,10 @@ class HistoryManager:
         Args:
             theFrame:  umlframe to which this history is attached.
         """
-        self.logger: Logger = getLogger(__name__)
+        self.logger:    Logger = getLogger(__name__)
+        self._fileName: str    = f'{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
+
         self._frame    = theFrame
-        self._fileName = f'{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
         """
         name of file for hard storage which is unique for each history
         """
@@ -57,10 +58,32 @@ class HistoryManager:
         """
         index of the command group that will be undone
         """
-        self._groupToExecute = None
+        self._groupToExecute: CommandGroup = None
         """
         reference to the last added group, for execute() mehtod
         """
+
+    def getGroupCount(self) -> int:
+        return self._groupCount
+
+    def setGroupCount(self, newValue: int):
+        raise NotImplementedError('Group count is read-only')
+
+    def getGroupToUndo(self) -> int:
+        return self._groupToUndo
+
+    def setGroupToUndo(self, newValue: int = -1):
+        raise NotImplementedError('Group to undo is read-only')
+
+    def getGroupToExecute(self) -> CommandGroup:
+        return self._groupToExecute
+
+    def setGroupToExecute(self, newValue: CommandGroup):
+        raise NotImplementedError('Group to execute is read-only')
+
+    groupCount     = property(getGroupCount, setGroupCount)
+    groupToUndo    = property(getGroupToUndo, setGroupToUndo)
+    groupToExecute = property(getGroupToExecute, setGroupToExecute)
 
     def undo(self):
         """
@@ -238,7 +261,7 @@ class HistoryManager:
         group.setHistory(self)
 
         # unserialize the commands belonging to the group
-        group.unserialize(serializedGroup)
+        group.deserialize(serializedGroup)
 
         return group
 
