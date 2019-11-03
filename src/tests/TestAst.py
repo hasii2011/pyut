@@ -7,7 +7,6 @@ from logging import getLogger
 
 from io import TextIOWrapper
 from ast import parse
-from ast import walk
 from ast import dump
 from ast import iter_child_nodes
 
@@ -15,10 +14,10 @@ from tests.TestBase import TestBase
 
 from plugins.PluginAst import Visitor
 
-clsLogger: Logger = None
-
 
 class TestAst(TestBase):
+
+    clsLogger: Logger = None
 
     @classmethod
     def setUpClass(cls):

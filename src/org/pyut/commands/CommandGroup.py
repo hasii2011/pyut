@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.commands.Command import Command
 
 from org.pyut.history.HistoryUtils import COMMAND_BEGIN_ID
@@ -29,10 +32,12 @@ class CommandGroup(object):
     """
     def __init__(self, comment=""):
         """
-        Constructor.
 
-        @param comment  :   a short description/comment in view to display in the menu or other GUI part.
+        Args:
+            comment:  a short description/comment in view to display in the menu or other GUI part.
         """
+        self.logger: Logger = getLogger(__name__)
+
         self._history = None
         """
         history to which belongs the group. Init when the group is added.
@@ -117,21 +122,25 @@ class CommandGroup(object):
             # get the name of the class of the command
             commandClassName = getTokenValue(COMMAND_CLASS_ID, serialCommand)
 
-            # import the module which contains the command class an get that class
-            commandClass = getattr(__import__(commandModuleName), commandClassName)
+            # import the module which contains the command class and get the class (cls)
+            moduleName   = __import__(commandModuleName)
+            commandClass = getattr(moduleName, commandClassName)
 
             # construction of an uninitialized command
-            command = commandClass()
-            command.setGroup(self)
+            try:
+                command = commandClass()
+                command.setGroup(self)
 
-            # unserialization and setup of the command
-            command.unserialize(serialCommand)
+                # unserialization and setup of the command
+                command.unserialize(serialCommand)
 
-            # add the command to the group
-            self.addCommand(command)
+                # add the command to the group
+                self.addCommand(command)
 
-            # looking for the next command begining token
-            cStart = serializedCommands.find(commandBegin, cEnd)
+                # looking for the next command begining token
+                cStart = serializedCommands.find(commandBegin, cEnd)
+            except (ValueError, Exception) as e:
+                self.logger.error(f'Command Class: {e}')
 
     def redo(self):
         """

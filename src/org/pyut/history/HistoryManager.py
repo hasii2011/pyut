@@ -75,7 +75,7 @@ class HistoryManager:
             fileContent = saveFile.readlines()
             saveFile.close()
 
-            # unserialize the group to undo
+            # deserialize the group to undo
             group = self._unserialize(fileContent[self._groupToUndo])
             group.setHistory(self)
 
@@ -115,34 +115,7 @@ class HistoryManager:
         self._groupToExecute.execute()
         self._groupToExecute = None
 
-    def _unserialize(self, serializedGroup):
-        """
-        unserialize the specified string to return a command group
-        @param serialized (string)  :   string from which will be
-                                        constructed the group
-        @return an initialized group (CommandGroup)
-        """
-
-        # get from the string the comment/description for the group
-        grpComment = getTokenValue(GROUP_COMMENT_ID, serializedGroup)
-
-        # create an initialized group with only its comment
-        group = CommandGroup.CommandGroup(grpComment)
-        group.setHistory(self)
-
-        # unserialize the commands belonging to the group
-        group.unserialize(serializedGroup)
-
-        return group
-
-    def _serialize(self, group):
-        """
-        serialize a group to store it in a file. Each serialized group is on
-        one line.
-        """
-        return group.serialize() + "\n"
-
-    def addCommandGroup(self, group):
+    def addCommandGroup(self, group: CommandGroup):
         """
         add a command group to the file.
         @param group   :   group to add to the history.
@@ -168,7 +141,7 @@ class HistoryManager:
         # update the number of groups present in the history
         self._groupCount = len(fileContent)
 
-        # save the new content on file, writting over the old content.
+        # save the new content on file, writing over the old content.
         saveFile = open(self._fileName, 'w')
         saveFile.writelines(fileContent)
         saveFile.close()
@@ -248,3 +221,30 @@ class HistoryManager:
         """
 
         return self._frame
+
+    def _unserialize(self, serializedGroup):
+        """
+        unserialize the specified string to return a command group
+        @param serialized (string)  :   string from which will be
+                                        constructed the group
+        @return an initialized group (CommandGroup)
+        """
+
+        # get from the string the comment/description for the group
+        grpComment = getTokenValue(GROUP_COMMENT_ID, serializedGroup)
+
+        # create an initialized group with only its comment
+        group = CommandGroup.CommandGroup(grpComment)
+        group.setHistory(self)
+
+        # unserialize the commands belonging to the group
+        group.unserialize(serializedGroup)
+
+        return group
+
+    def _serialize(self, group):
+        """
+        serialize a group to store it in a file. Each serialized group is on
+        one line.
+        """
+        return group.serialize() + "\n"
