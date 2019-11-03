@@ -54,7 +54,7 @@ class HistoryManager:
         """
         number of groups added to the histroy
         """
-        self._groupToUndo = -1
+        self._groupUndoIndex = -1
         """
         index of the command group that will be undone
         """
@@ -69,11 +69,11 @@ class HistoryManager:
     def setGroupCount(self, newValue: int):
         raise NotImplementedError('Group count is read-only')
 
-    def getGroupToUndo(self) -> int:
-        return self._groupToUndo
+    def getGroupUndoIndex(self) -> int:
+        return self._groupUndoIndex
 
-    def setGroupToUndo(self, newValue: int = -1):
-        raise NotImplementedError('Group to undo is read-only')
+    def setGroupUndoIndex(self, newValue: int = -1):
+        raise NotImplementedError('Group undo index is read-only')
 
     def getGroupToExecute(self) -> CommandGroup:
         return self._groupToExecute
@@ -81,8 +81,8 @@ class HistoryManager:
     def setGroupToExecute(self, newValue: CommandGroup):
         raise NotImplementedError('Group to execute is read-only')
 
-    groupCount     = property(getGroupCount, setGroupCount)
-    groupToUndo    = property(getGroupToUndo, setGroupToUndo)
+    groupCount      = property(getGroupCount, setGroupCount)
+    groupUndoIndex  = property(getGroupUndoIndex, setGroupUndoIndex)
     groupToExecute = property(getGroupToExecute, setGroupToExecute)
 
     def undo(self):
@@ -99,14 +99,14 @@ class HistoryManager:
             saveFile.close()
 
             # deserialize the group to undo
-            group = self._unserialize(fileContent[self._groupToUndo])
+            group = self._unserialize(fileContent[self._groupUndoIndex])
             group.setHistory(self)
 
             # undo all the commands that are in the group
             group.undo()
 
             # set the previous command as the command to be undone
-            self._groupToUndo -= 1
+            self._groupUndoIndex -= 1
 
     def redo(self):
         """
@@ -121,10 +121,10 @@ class HistoryManager:
             saveFile.close()
 
             # the group to redo means that it will be the group to undo
-            self._groupToUndo += 1
+            self._groupUndoIndex += 1
 
             # unserialize the group
-            group = self._unserialize(fileContent[self._groupToUndo])
+            group = self._unserialize(fileContent[self._groupUndoIndex])
             group.setHistory(self)
 
             # redo all the commands in the group
@@ -155,11 +155,11 @@ class HistoryManager:
 
         # add the serialized group to the file's content
         serialGroup = self._serialize(group)
-        self._groupToUndo += 1
-        fileContent.insert(self._groupToUndo, serialGroup)
+        self._groupUndoIndex += 1
+        fileContent.insert(self._groupUndoIndex, serialGroup)
 
         # remove all the groups that comes after new group
-        del fileContent[self._groupToUndo + 1: len(fileContent) + 1]
+        del fileContent[self._groupUndoIndex + 1: len(fileContent) + 1]
 
         # update the number of groups present in the history
         self._groupCount = len(fileContent)
@@ -184,7 +184,7 @@ class HistoryManager:
         """
 
         # the first group added has the index 0...
-        return self._groupToUndo > -1
+        return self._groupUndoIndex > -1
 
     def isRedoPossible(self):
         """
@@ -195,7 +195,7 @@ class HistoryManager:
         # groupToUndo is on the last group added. If it's the case, the
         # it means that the last group hadn't been undone and so there is
         # no group to redo.
-        return self._groupToUndo < self._groupCount - 1
+        return self._groupUndoIndex < self._groupCount - 1
 
     def getCommandGroupToRedo(self):
         """
@@ -211,7 +211,7 @@ class HistoryManager:
             saveFile.close()
 
             # get the group that is next to be redone
-            group = self._unserialize(fileContent[self._groupToUndo + 1])
+            group = self._unserialize(fileContent[self._groupUndoIndex + 1])
             group.setHistory(self)
             return group
         else:
@@ -232,7 +232,7 @@ class HistoryManager:
             saveFile.close()
 
             # get the group that is next to be redone
-            group = self._unserialize(fileContent[self._groupToUndo])
+            group = self._unserialize(fileContent[self._groupUndoIndex])
             group.setHistory(self)
             return group
         else:
