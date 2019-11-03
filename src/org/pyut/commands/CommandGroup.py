@@ -132,7 +132,7 @@ class CommandGroup(object):
                 command.setGroup(self)
 
                 # unserialization and setup of the command
-                command.unserialize(serialCommand)
+                command.deserialize(serialCommand)
 
                 # add the command to the group
                 self.addCommand(command)

@@ -50,7 +50,7 @@ class DelOglLinkCommand(DelOglObjectCommand):
 
         return serialLink
 
-    def unserialize(self, serializedInfos):
+    def deserialize(self, serializedInfos):
 
         umlFrame = self.getGroup().getHistory().getFrame()
 

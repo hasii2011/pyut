@@ -50,7 +50,7 @@ class PrintCommand(Command):
 
         return Command.serialize(self) + makeValuatedToken("message", self._message)
 
-    def unserialize(self, serialCommand):
+    def deserialize(self, serialCommand):
         """
         get from the serialized command the message to display
         and init the corresponding attribute.

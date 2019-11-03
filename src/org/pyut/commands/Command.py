@@ -40,11 +40,11 @@ class Command:
         return (makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__)) +
                 makeValuatedToken(COMMAND_CLASS_ID, str(self.__class__.__name__)))
 
-    def unserialize(self, serializedInfos):
+    def deserialize(self, serializedInfo: str):
         """
-        (Abstract) Here should be assigned values to the informations needed
+        (Abstract) Here the developer should assign values to the information needed
         by the command (see also getTokenValue in historyUtils).
-        @serializedInfos String :   string from which whe have to extract the informations needed to set up the command.
+        @serializedInfo String :   string from which whe have to extract the informations needed to set up the command.
         """
         pass
 

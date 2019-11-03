@@ -83,7 +83,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
 
         return serialShape
 
-    def unserialize(self, serializedInfos):
+    def deserialize(self, serializedInfos):
         """
         unserialize the data needed by the destroyed OglLinkedObject.
         @param serializedInfos   :   serialized data needed by the command.
@@ -96,7 +96,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         from org.pyut.PyutModifier import PyutModifier
 
         # unserialize the data common to all OglObjects
-        DelOglLinkedObjectCommand.unserialize(self, serializedInfos)
+        DelOglLinkedObjectCommand.deserialize(self, serializedInfos)
 
         # unserialize properities of the OglClass (first level)
         classDescription    = getTokenValue("classDescription", serializedInfos)

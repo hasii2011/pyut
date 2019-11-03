@@ -34,14 +34,14 @@ class DelOglLinkedObjectCommand(DelOglObjectCommand):
 
         return serialShape
 
-    def unserialize(self, serializedInfos):
+    def deserialize(self, serializedInfos):
         """
         unserialize the data needed by the destroyed OglLinkedObject.
         @param serializedInfos :   serialized data needed by the command.
         """
 
         # unserialize the data common to all OglObjects
-        DelOglObjectCommand.unserialize(self, serializedInfos)
+        DelOglObjectCommand.deserialize(self, serializedInfos)
 
         fileName = getTokenValue("fileName", serializedInfos)
         self._shape.getPyutObject().setFilename(fileName)

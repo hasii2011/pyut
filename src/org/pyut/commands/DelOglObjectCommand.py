@@ -58,7 +58,7 @@ class DelOglObjectCommand(Command):
 
         return serialShape
 
-    def unserialize(self, serializedInfos):
+    def deserialize(self, serializedInfos):
         """
         unserialize the data needed to undo/redo a delete command and create
         a shape
