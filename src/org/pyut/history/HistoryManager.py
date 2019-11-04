@@ -2,13 +2,15 @@
 from logging import Logger
 from logging import getLogger
 
-from os import getcwd
+from os import sep as osSep
 
 from org.pyut.commands import CommandGroup
 
 from org.pyut.history.HistoryUtils import GROUP_COMMENT_ID
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 from org.pyut.history.HistoryUtils import getTokenValue
+
+from org.pyut.PyutUtils import PyutUtils
 
 
 class HistoryManager:
@@ -36,7 +38,10 @@ class HistoryManager:
             theFrame:  umlframe to which this history is attached.
         """
         self.logger:    Logger = getLogger(__name__)
-        self._fileName: str    = f'{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
+
+        self.logger.error(f'Base directory: {PyutUtils.getBasePath()}')
+
+        self._fileName: str = f'{PyutUtils.getBasePath()}{osSep}{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
 
         self._frame    = theFrame
         """
@@ -46,7 +51,6 @@ class HistoryManager:
         """
         for the next instance of the history...
         """
-        self.logger.error(f'Current directory: {getcwd()}')
         saveFile = open(self._fileName, 'w')  # create the file to store the groups
         saveFile.close()
 

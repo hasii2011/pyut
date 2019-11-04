@@ -1,48 +1,54 @@
 
-from unittest import TestCase
-from unittest import main
+from logging import Logger
+from logging import getLogger
 
-# from pyutUtils import assignID
-from org.pyut import PyutUtils
+from unittest import main as unitTestMain
 
-[ID_TXT_NAME, ID_TXT_STEREOTYPE] = PyutUtils.assignID(2)
+from tests.TestBase import TestBase
+
+from org.pyut.PyutUtils import PyutUtils
 
 
-class TestpyutUtils(TestCase):
-    """
-    You need to change the name of this class to Test + the name of the class
-    that you want to test here.
-    See existing tests for more information.
+class TestPyutUtils(TestBase):
 
-    @author Laurent Burgbacher <lb@alawa.ch>
-    """
+    clsLogger: Logger = None
+
+    BASE_TEST_PATH: str = '/users/home/hasii'
+    @classmethod
+    def setUpClass(cls):
+        TestBase.setUpLogging()
+        TestPyutUtils.clsLogger = getLogger(__name__)
+
     def setUp(self):
-        pass
+        self.logger: Logger = TestPyutUtils.clsLogger
 
     def tearDown(self):
         pass
 
-    def testName1(self):
-        """Short description (max 1 line) of the test"""
-        # The test methods are names : test + name of the test
-        #
-        # code...
-        #
-        # you can use :
-        #    self.failUnless(condition, errorMsg)
-        # where :
-        #    - `condition` returns a boolean. The test will fail if the
-        #      condition is false.
-        #    - `errorMsg` is an optional string which will be displayed if
-        #      the test is not successful
-        #
-        #    self.fail(errorMsg) : to fail immediately
-        pass
+    def testBasicBasePath(self):
+        basicPath: str = TestPyutUtils.BASE_TEST_PATH
+        PyutUtils.setBasePath(basicPath)
 
-    def testName2(self):
-        """Another test"""
-        pass
+        actualPath: str = PyutUtils.getBasePath()
+        self.assertEqual(TestPyutUtils.BASE_TEST_PATH, actualPath, 'Path should have not been modified')
 
+    def testEndsWithSrcSuffix(self):
+        srcPath: str = f'{TestPyutUtils.BASE_TEST_PATH}{PyutUtils.STRIP_SRC_PATH_SUFFIX}'
+        PyutUtils.setBasePath(srcPath)
+        actualPath: str = PyutUtils.getBasePath()
+        self.assertEqual(TestPyutUtils.BASE_TEST_PATH, actualPath, 'Path should have been modified')
+
+    def testEndsWithTestSuffix(self):
+        srcPath: str = f'{TestPyutUtils.BASE_TEST_PATH}{PyutUtils.STRIP_TEST_PATH_SUFFIX}'
+        PyutUtils.setBasePath(srcPath)
+        actualPath: str = PyutUtils.getBasePath()
+        self.assertEqual(TestPyutUtils.BASE_TEST_PATH, actualPath, 'Path should have been modified')
+
+    def testEndsWithBoth(self):
+        srcPath: str = f'{TestPyutUtils.BASE_TEST_PATH}{PyutUtils.STRIP_SRC_PATH_SUFFIX}{PyutUtils.STRIP_TEST_PATH_SUFFIX}'
+        PyutUtils.setBasePath(srcPath)
+        actualPath: str = PyutUtils.getBasePath()
+        self.assertEqual(TestPyutUtils.BASE_TEST_PATH, actualPath, 'Path should have been modified')
 
 if __name__ == '__main__':
-    main()
+    unitTestMain()

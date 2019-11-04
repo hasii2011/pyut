@@ -1,5 +1,7 @@
 from typing import cast
 
+from sys import path as sysPath
+
 from unittest import main as unitTestMain
 
 
@@ -8,9 +10,12 @@ from logging import getLogger
 
 from tests.TestBase import TestBase
 
+from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.history.HistoryManager import HistoryManager
 
 from org.pyut.commands.CommandGroup import CommandGroup
+
 from PrintCommand import PrintCommand
 
 
@@ -35,6 +40,7 @@ class TestHistory(TestBase):
         """"""
         TestBase.setUpLogging()
         TestHistory.clsLogger = getLogger(__name__)
+        PyutUtils.setBasePath(sysPath[0])
 
     def setUp(self):
         """"""

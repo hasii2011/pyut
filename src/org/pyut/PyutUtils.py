@@ -3,11 +3,15 @@ from logging import Logger
 from logging import getLogger
 
 from sys import exc_info
+
 from traceback import extract_tb
+
+from os import sep as osSep
 
 from wx import NewId
 
 from ErrorManager import getErrorManager
+
 """
 This file is for frequently used pyut utilities.
 
@@ -22,8 +26,6 @@ Functions :
 :author: C.Dutoit
 :contact: <dutoitc@hotmail.com>
 """
-
-# Assign constants
 
 
 # noinspection PyUnusedLocal
@@ -53,7 +55,6 @@ def getErrorInfo() -> str:
     Returns:
 
     """
-
     errMsg = f'The following error occured : {str(exc_info()[1])}'
     errMsg += f'\n\n---------------------------\n'
     if exc_info()[0] is not None:
@@ -75,7 +76,6 @@ def displayError(msg, title=None, parent=None):
     @author C.Dutoit
     """
     errMsg = getErrorInfo()
-
     try:
         em = getErrorManager()
         em.newFatalError(msg, title, parent)
@@ -97,10 +97,7 @@ def displayWarning(msg, title=None, parent=None):
 
     @author C.Dutoit
     """
-    # ctrl = getMediator()
-    # em = ctrl.getErrorManager()
     em = getErrorManager()
-
     em.newWarning(msg, title, parent)
 
 
@@ -110,8 +107,38 @@ def displayInformation(msg, title=None, parent=None):
 
     @author C.Dutoit
     """
-    # ctrl = getMediator()
-    # em = ctrl.getErrorManager()
     em = getErrorManager()
-
     em.newInformation(msg, title, parent)
+
+
+class PyutUtils:
+    STRIP_SRC_PATH_SUFFIX:  str = f'{osSep}src'
+    STRIP_TEST_PATH_SUFFIX: str = f'{osSep}test'
+
+    _basePath: str = ''
+
+    def __init__(self):
+        self.logger: Logger = getLogger(__name__)
+
+    @classmethod
+    def getBasePath(cls) -> str:
+        return cls._basePath
+
+    @classmethod
+    def setBasePath(cls, newValue: str):
+        retPath: str = PyutUtils._stripSrcOrTest(newValue)
+        cls._basePath = retPath
+
+    @classmethod
+    def _stripSrcOrTest(cls, originalPath: str) -> str:
+
+        if originalPath.endswith(PyutUtils.STRIP_SRC_PATH_SUFFIX):
+            retPath: str = originalPath.rstrip(PyutUtils.STRIP_SRC_PATH_SUFFIX)
+            retPath = PyutUtils._stripSrcOrTest(retPath)
+        elif originalPath.endswith(PyutUtils.STRIP_TEST_PATH_SUFFIX):
+            retPath: str = originalPath.rstrip(PyutUtils.STRIP_TEST_PATH_SUFFIX)
+            retPath = PyutUtils._stripSrcOrTest(retPath)
+        else:
+            retPath: str = originalPath
+
+        return retPath

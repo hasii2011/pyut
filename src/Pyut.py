@@ -3,7 +3,7 @@ from typing import cast
 
 from os import chdir
 from os import getcwd
-from sys import path
+from sys import path as sysPath
 from sys import argv
 
 import json
@@ -14,6 +14,8 @@ from logging import getLogger
 import logging.config
 
 from org.pyut.ui.PyutApp import PyutApp
+from org.pyut.PyutUtils import PyutUtils
+
 from PyutVersion import getPyUtVersion
 from PyutPreferences import PyutPreferences
 
@@ -41,7 +43,7 @@ def getExePath():
         # encoding="ISO-8859-1"
     # path = sys.path[0].decode(encoding)
     # path = sys.path[0].decode(sys.getfilesystemencoding())
-    absPath = path[0]
+    absPath = sysPath[0]
     return absPath
 
 
@@ -55,7 +57,7 @@ def goToPyutDirectory():
     # Change current directory to pyut's directory
     # exePath = getCurrentAbsolutePath()
     execPath = getcwd()
-    path.append(exePath)
+    sysPath.append(exePath)
     moduleLogger.info(f"Executing PyUt from exepath {execPath}")
     chdir(exePath)
 
@@ -69,7 +71,7 @@ def main():
 
     # Path
     try:
-        path.append(exePath)
+        sysPath.append(exePath)
         chdir(exePath)
     except OSError as msg:
         moduleLogger.error(f"Error while setting path: {msg}")
@@ -168,6 +170,8 @@ if __name__ == "__main__":
 
     setupPyutLanguage()
     exePath = getExePath()
+    PyutUtils.setBasePath(exePath)
+    moduleLogger.info(f'basePath: {PyutUtils.getBasePath()}')
 
     # Launch pyut
     if treatArguments() != 1:
