@@ -47,21 +47,6 @@ def getExePath():
     return absPath
 
 
-def goToPyutDirectory():
-    """
-    Go to the pyut directory
-
-    @since 1.5.2.19
-    @author C.Dutoit
-    """
-    # Change current directory to pyut's directory
-    # exePath = getCurrentAbsolutePath()
-    execPath = getcwd()
-    sysPath.append(exePath)
-    moduleLogger.info(f"Executing PyUt from exepath {execPath}")
-    chdir(exePath)
-
-
 def main():
     """
     main pyut function; create and run app
