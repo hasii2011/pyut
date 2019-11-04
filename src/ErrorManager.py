@@ -127,6 +127,9 @@ class GraphicErrorView:
         except (ValueError, Exception) as e:
             self.logger.error(f'newInformation: {e}')
 
+    def displayInformation(self, msg, title=None, parent=None):
+        self.logger.error(f"INFORMATION: {title} - {msg} - parent {parent}")
+
 
 class TextErrorView:
     """
