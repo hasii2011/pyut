@@ -1,7 +1,18 @@
-from org.pyut.ogl.OglLink import *
+
+
+from wx import BLACK_PEN
+from wx import CANCEL
+from wx import CENTRE
+from wx import ID_OK
+from wx import OK
+from wx import TextEntryDialog
+
+from MiniOgl.LineShape import LineShape
+from MiniOgl.ShapeEventHandler import ShapeEventHandler
+
 from globals import _
 
-DEBUG=False
+DEBUG: bool = False
 # TODO : Find a way to report moves from AnchorPoints to PyutSDMessage
 #
 # TODO: Humberto -- This class does not seem to be called; I tried to manually create a sequence
@@ -24,19 +35,18 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         Constructor.
 
         @param OglObject srcShape : Source shape
-        @param OglObject destShape : Destination shape
+        @param OglObject dstShape : Destination shape
 
         @author : Added srcPos and dstPos
         """
-        # Init
         self._pyutObject = pyutObject
-        #print srcShape.getLifeLineShape().GetPosition()
+
         srcY = pyutObject.getSrcY() - srcShape.getLifeLineShape().GetPosition()[1]
         dstY = pyutObject.getDstY() - dstShape.getLifeLineShape().GetPosition()[1]
-        #print "OglSDMessage - adding shape at 0-", srcY, "; 0-", dstY
+
         src = srcShape.getLifeLineShape().AddAnchor(0, srcY)
         dst = dstShape.getLifeLineShape().AddAnchor(0, dstY)
-        #print "OglSDMessage - anchors = ", src.GetPosition(), dst.GetPosition()
+
         src.SetStayOnBorder(False)
         dst.SetStayOnBorder(False)
         src.SetStayInside(True)
@@ -45,49 +55,42 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         dst.SetVisible(True)
         src.SetDraggable(True)
         dst.SetDraggable(True)
+
         self._srcShape = srcShape
-        self._dstShape = dstShape
+        self._dstShape   = dstShape
         self._srcAnchor = src
         self._dstAnchor = dst
+
         LineShape.__init__(self, src, dst)
 
         # Pen
-        self.SetPen(wx.BLACK_PEN)
+        self.SetPen(BLACK_PEN)
 
         # Add labels
         self._labels = {}
+        # self._labels = {CENTER: self.AddText(0, 0, "")}
 
         # Initialize labels objects
-        self._labels[CENTER] = self.AddText(0, 0, "")
         self.updateLabels()
 
         # Add arrow
         self.SetDrawArrow(True)
-
-
-    #>------------------------------------------------------------------------
 
     def updatePositions(self):
         """
         Define the positions on lifeline (y)
         @author C.Dutoit
         """
-        #print "OglMessage - updatePositions"
+        # print "OglMessage - updatePositions"
         src = self.GetSource()
         dst = self.GetDestination()
         srcY = self._pyutObject.getSrcY() + src.GetParent().GetSegments()[0][1]
         dstY = self._pyutObject.getDstY() + dst.GetParent().GetSegments()[0][1]
         srcX = 0
         dstX = 0
-        #src.SetDraggable(True)
-        #dst.SetDraggable(True)
+
         src.SetPosition(srcX, srcY)
         dst.SetPosition(dstX, dstY)
-        #src.SetDraggable(False)
-        #dst.SetDraggable(False)
-        #print "OglMessage - updatePositions2 ", srcX, srcY, dstX, dstY
-
-    #>------------------------------------------------------------------------
 
     def updateLabels(self):
         """
@@ -105,16 +108,14 @@ class OglSDMessage(LineShape, ShapeEventHandler):
             # If label should be drawn
             if text.strip() != "":
                 textShape.SetText(text)
-                #textShape.Show(True)
+                # textShape.Show(True)
                 textShape.SetVisible(True)
             else:
-                #textShape.Show(False)
+                # textShape.Show(False)
                 textShape.SetVisible(False)
 
         # Prepares labels
         prepareLabel(self._labels[CENTER], self._pyutObject.getMessage())
-
-    #>------------------------------------------------------------------------
 
     def getPyutObject(self):
         """
@@ -122,8 +123,6 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         @author C.Dutoit
         """
         return self._pyutObject
-
-    #>------------------------------------------------------------------------
 
     def getLabels(self):
         """
@@ -133,44 +132,30 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         """
         return self._labels
 
-    #>------------------------------------------------------------------------
-
-    def Draw(self, dc,  withChildren = False):
+    def Draw(self, dc,  withChildren=False):
         """
         Called for contents drawing of links.
 
         @param wx.DC dc : Device context
+        @param withChildren
+
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        #print "OglSDMEssage.Draw"
         self.updateLabels()
-        #self.updatePositions()
 
-        #Set position
-        #src = self.GetSource()
-        #dst = self.GetDestination()
-        #srcY = self._pyutObject.getSrcY()
-        #dstY = self._pyutObject.getDstY()
-        #src.SetPosition(src.GetPosition()[0], srcY)
-        #dst.SetPosition(dst.GetPosition()[0], dstY)
-
-        #OglLink.Draw(self, dc)
         if DEBUG:
             print("Draw")
             print(self.GetSource().GetPosition())
             print(self.GetDestination().GetPosition())
         LineShape.Draw(self, dc, withChildren)
 
-    #>------------------------------------------------------------------
-
     def OnLeftDClick(self, event):
         """
         Callback for left double clicks.
         @author C.Dutoit
         """
-        dlg = wx.TextEntryDialog(None, _("Message"), _("Enter message"),
-                self._pyutObject.getMessage(), wx.OK | wx.CANCEL | wx.CENTRE)
-        if dlg.ShowModal() == wx.ID_OK:
+        dlg = TextEntryDialog(None, _("Message"), _("Enter message"), self._pyutObject.getMessage(), OK | CANCEL | CENTRE)
+        if dlg.ShowModal() == ID_OK:
             self._pyutObject.setMessage(dlg.GetValue())
         dlg.Destroy()

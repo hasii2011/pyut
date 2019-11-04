@@ -1,7 +1,7 @@
 
 from wx import Window
 
-from UmlFrame import UmlFrame
+from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class UmlDiagramsFrame(UmlFrame):

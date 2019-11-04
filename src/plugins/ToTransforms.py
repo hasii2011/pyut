@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from UmlFrame import UmlFrame
+from org.pyut.ui.UmlFrame import UmlFrame
 
 from plugins.PyutToPlugin import PyutToPlugin
 

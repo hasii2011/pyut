@@ -1,11 +1,12 @@
 
 
-from UmlFrame import *
+from UmlDiagramsFrame import UmlDiagramsFrame
 
-from UmlDiagramsFrame import *
-from org.pyut.PyutSDInstance import *
-from org.pyut.PyutSDMessage import *
-from OglSDInstance import *
+from org.pyut.PyutSDInstance import PyutSDInstance
+from org.pyut.PyutSDMessage import PyutSDMessage
+
+from OglSDInstance import OglSDInstance
+from OglSDMessage import OglSDMessage
 
 from PyutConsts import OGL_SD_MESSAGE
 

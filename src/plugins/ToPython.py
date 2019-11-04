@@ -19,7 +19,7 @@ from plugins.PyutToPlugin import PyutToPlugin
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglObject import OglObject
 
-from UmlFrame import UmlFrame
+from org.pyut.ui.UmlFrame import UmlFrame
 
 from plugins.IoPython import IoPython
 

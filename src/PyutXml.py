@@ -3,9 +3,22 @@
 from xml.dom.minidom import parse
 from xml.dom.minidom import Document
 
-from UmlFrame import *
+from org.pyut.PyutActor import PyutActor
+from org.pyut.PyutClass import PyutClass
+from org.pyut.PyutField import PyutField
+from org.pyut.PyutLink import PyutLink
+from org.pyut.PyutMethod import PyutMethod
+from org.pyut.PyutNote import PyutNote
+from org.pyut.PyutParam import PyutParam
+from org.pyut.PyutStereotype import getPyutStereotype
+from org.pyut.PyutUseCase import PyutUseCase
+
+from org.pyut.ogl.OglActor import OglActor
+from org.pyut.ogl.OglNote import OglNote
+from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import *
+
+from org.pyut.ui.UmlFrame import UmlFrame
 
 import wx
 
@@ -35,6 +48,112 @@ class PyutXml:
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
+    def open(self, dom, umlFrame):
+        """
+        To open a file and creating diagram.
+
+        @since 1.0
+        @author Deve Roux <droux@eivd.ch>
+        """
+        dicoOglObjects = {}  # format {name : oglClass}
+        dicoLink = {}        # format [name : PyutLink}
+        dicoFather = {}      # format {child oglClass : [fathers names]}
+        oldData = 0
+
+        # Create and init gauge
+        dlgGauge = wx.Dialog(None, -1, "Loading...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.RESIZE_BORDER, size=wx.Size(207, 70))
+        gauge = wx.Gauge(dlgGauge, -1, 5, pos=wx.Point(2, 5), size=wx.Size(200, 30))
+
+        dlgGauge.Show(True)
+
+        # for all elements il xml file
+        dlgGauge.SetTitle("Reading file...")
+        gauge.SetValue(1)
+
+        # Load OGL Classes
+        oldData += self._getOglClasses(dom.getElementsByTagName('GraphicClass'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
+
+        # Load OGL Notes
+        oldData += self._getOglNotes(dom.getElementsByTagName('GraphicNote'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
+
+        # Load OGL Actors
+        oldData += self._getOglActors(dom.getElementsByTagName('GraphicActor'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
+
+        # Load OGL UseCases
+        oldData += self._getOglUseCases(dom.getElementsByTagName('GraphicUseCase'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
+
+        # Fix links destination IDs if old data
+        if oldData > 0:
+            self._fixVersion(dicoLink, dicoOglObjects, dicoFather)
+
+        # fix the link's destination field
+        gauge.SetValue(2)
+        dlgGauge.SetTitle("Fixing link's destination...")
+        for links in list(dicoLink.values()):
+            for link in links:
+                link[1].setDestination(dicoOglObjects[link[0]].getPyutObject())
+
+        # adding fathers
+        dlgGauge.SetTitle("Adding fathers...")
+        gauge.SetValue(3)
+        for child, fathers in list(dicoFather.items()):
+            for father in fathers:
+                umlFrame.createInheritanceLink(dicoOglObjects[child], dicoOglObjects[father])
+
+        # adding links to this OGL object
+        dlgGauge.SetTitle("Adding Links...")
+        gauge.SetValue(4)
+        for src, links in list(dicoLink.items()):
+            for link in links:
+                createdLink = umlFrame.createNewLink(dicoOglObjects[src], dicoOglObjects[link[1].getDestination().getId()], link[1].getType())
+
+                # fix link with the loaded information
+                pyutLink = createdLink.getPyutObject()
+                pyutLink.setBidir(link[1].getBidir())
+                pyutLink.setDestCard(link[1].getDestCard())
+                pyutLink.setSrcCard(link[1].getSrcCard())
+                pyutLink.setName(link[1].getName())
+
+        # to draw diagram
+        umlFrame.Refresh()
+        gauge.SetValue(5)
+
+        dlgGauge.Destroy()
+
+    # noinspection PyUnusedLocal
+    def save(self, oglObjects, umlFrame):
+        """
+        To save save diagram in XML file.
+
+        @since 1.0
+        @author Deve Roux <droux@eivd.ch>
+        """
+        root    = Document()
+        top     = root.createElement("Pyut")
+        root.appendChild(top)
+
+        self.__savedLinks = {}
+
+        # Gauge
+        dlg = wx.Dialog(None, -1, "Saving...", style=wx.STAY_ON_TOP | wx.CAPTION, size=wx.Size(207, 70))
+        gauge = wx.Gauge(dlg, -1, len(oglObjects), pos=wx.Point(2, 5), size=wx.Size(200, 30))
+        dlg.Show(True)
+
+        for i in range(len(oglObjects)):
+            gauge.SetValue(i)
+            if isinstance(oglObjects[i], OglClass):
+                top.appendChild(self._OglClass2xml(oglObjects[i], root))
+            elif isinstance(oglObjects[i], OglNote):
+                top.appendChild(self._OglNote2xml(oglObjects[i], root))
+            elif isinstance(oglObjects[i], OglActor):
+                top.appendChild(self._OglActor2xml(oglObjects[i], root))
+            elif isinstance(oglObjects[i], OglUseCase):
+                top.appendChild(self._OglUseCase2xml(oglObjects[i], root))
+        dlg.Destroy()
+
+        self.__savedLinks = None
+        return root
+
     def _appendLinks(self, pyutLinkedObject, root, xmlDoc):
         """
         Write the links connected to the PyutLinkedObject.
@@ -85,7 +204,7 @@ class PyutXml:
 
         root = xmlDoc.createElement('Link')
         # link name
-        root.setAttribute('name', pyutLink.getName() )
+        root.setAttribute('name', pyutLink.getName())
 
         # link type
         root.setAttribute('type', str(pyutLink.getType()))
@@ -114,7 +233,6 @@ class PyutXml:
         @return Element : XML Node
         @author Deve Roux <droux@eivd.ch>
         """
-        ## lang.importLanguage()
         root = xmlDoc.createElement('Param')
 
         # param name
@@ -140,7 +258,6 @@ class PyutXml:
         @since 2.0
         @author Deve Roux <droux@eivd.ch>
         """
-        # lang.importLanguage()
         root = xmlDoc.createElement('Field')
 
         # adding the parent XML
@@ -161,7 +278,6 @@ class PyutXml:
         @return Element : XML Node
         @author Deve Roux <droux@eivd.ch>
         """
-        # lang.importLanguage()
         root = xmlDoc.createElement('Method')
 
         # method name
@@ -191,16 +307,17 @@ class PyutXml:
 
         return root
 
-    def _PyutClass2xml(self, pyutClass, xmlDoc):
+    def _PyutClass2xml(self, pyutClass: PyutClass, xmlDoc: Document):
         """
         Exporting an PyutClass to an miniDom Element.
 
-        @param PyutMethod pyutClass : Class to save
-        @param xmlDoc : xml Document instance
-        @return Element : XML Node
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            pyutClass: Class to save
+            xmlDoc: xml Document instance
+
+        Returns: XML Node
         """
-        # lang.importLanguage()
+
         root = xmlDoc.createElement('Class')
 
         # ID
@@ -209,7 +326,7 @@ class PyutXml:
         # class name
         root.setAttribute('name', pyutClass.getName())
 
-        # classs stereotype
+        # class stereotype
         stereotype = pyutClass.getStereotype()
         if stereotype is not None:
             root.setAttribute('stereotype', stereotype.getStereotype())
@@ -364,7 +481,7 @@ class PyutXml:
         @since 2.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        #lang.importLanguage()
+        # lang.importLanguage()
         root = xmlDoc.createElement('GraphicNote')
 
         # Append OGL object base (size and pos)
@@ -415,39 +532,6 @@ class PyutXml:
         root.appendChild(self._PyutUseCase2xml(oglUseCase.getPyutObject(),
                                                xmlDoc))
 
-        return root
-
-    def save(self, oglObjects, umlFrame):
-        """
-        To save save diagram in XML file.
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        """
-        root    = Document()
-        top     = root.createElement("Pyut")
-        root.appendChild(top)
-
-        self.__savedLinks = {}
-
-        # Gauge
-        dlg = wx.Dialog(None, -1, "Saving...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.THICK_FRAME, size=wx.Size(207, 70))
-        gauge = wx.Gauge(dlg, -1, len(oglObjects), pos=wx.Point(2, 5), size=wx.Size(200, 30))
-        dlg.Show(True)
-
-        for i in range(len(oglObjects)):
-            gauge.SetValue(i)
-            if isinstance(oglObjects[i], OglClass):
-                top.appendChild(self._OglClass2xml(oglObjects[i], root))
-            elif isinstance(oglObjects[i], OglNote):
-                top.appendChild(self._OglNote2xml(oglObjects[i], root))
-            elif isinstance(oglObjects[i], OglActor):
-                top.appendChild(self._OglActor2xml(oglObjects[i], root))
-            elif isinstance(oglObjects[i], OglUseCase):
-                top.appendChild(self._OglUseCase2xml(oglObjects[i], root))
-        dlg.Destroy()
-
-        self.__savedLinks = None
         return root
 
     def _getParam(self, Param):
@@ -517,7 +601,7 @@ class PyutXml:
         """
         To extract fathers form Class.
 
-        @param Node [] fathers
+        @param  [] fathers
         @param {} dicoFather : {id / child name : [father name/id]}
         @param int objectId : child object id (or name)
         @since 1.0
@@ -529,8 +613,7 @@ class PyutXml:
                 if father.hasAttribute('id'):
                     fathersIds.append(int(father.getAttribute('id')))
                 else:
-                    fathersIds.append( \
-                            father.getAttribute('name').encode("charmap"))
+                    fathersIds.append(father.getAttribute('name').encode("charmap"))
 
             dicoFather[objectId] = fathersIds
 
@@ -548,7 +631,7 @@ class PyutXml:
 
             aLink = PyutLink()
 
-            aLink.setBidir(int(link.getAttribute('bidir')))
+            aLink.setBidir(bool(link.getAttribute('bidir')))
             aLink.setDestCard(link.getAttribute('cardDestination'))
             aLink.setSrcCard(link.getAttribute('cardSrc'))
             aLink.setName(link.getAttribute('name'))
@@ -556,7 +639,7 @@ class PyutXml:
             aLink.setDestination(link.getAttribute('destination'))
 
             # Backward compatibility
-            if(link.hasAttribute('destId')):
+            if link.hasAttribute('destId'):
                 destId = int(link.getAttribute('destId'))
             else:
                 destId = 0
@@ -565,8 +648,7 @@ class PyutXml:
 
         return allLinks
 
-    def _getOglClasses(self, xmlOglClasses, dicoOglObjects, dicoLink, \
-            dicoFather, umlFrame):
+    def _getOglClasses(self, xmlOglClasses, dicoOglObjects, dicoLink, dicoFather, umlFrame):
         """
         Parse the XML elements given and build data layer for PyUT classes.
         If file is version 1.0, the dictionary given will contain, for key,
@@ -577,7 +659,7 @@ class PyutXml:
         @param Element[] xmlOglClasses : XML 'GraphicClass' elements
         @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
         @param {id / srcName, OglLink} dicoLink : OGL links loaded
-        @param {id / srcName, id / srcName} fathers: Inheritance
+        @param {id / srcName, id / srcName} dicoFather: Inheritance
         @param UmlFrame umlFrame : Where to draw
         @since 2.0
         @author Philippe Waelti <pwaelti@eivd.ch>
@@ -610,8 +692,7 @@ class PyutXml:
 
             # adding stereotype
             if xmlClass.hasAttribute('stereotype'):
-                pyutClass.setStereotype(
-                    getPyutStereotype(xmlClass.getAttribute('stereotype')))
+                pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute('stereotype')))
 
             # adding methods for this class
             pyutClass.setMethods(self._getMethods(xmlClass))
@@ -645,7 +726,7 @@ class PyutXml:
         @param Element[] xmlOglNotes : XML 'GraphicNote' elements
         @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
         @param {id / srcName, OglLink} dicoLink : OGL links loaded
-        @param {id / srcName, id / srcName} fathers: Inheritance
+        @param {id / srcName, id / srcName} dicoFather: Inheritance
         @param UmlFrame umlFrame : Where to draw
         @since 2.0
         @author Philippe Waelti <pwaelti@eivd.ch>
@@ -673,8 +754,7 @@ class PyutXml:
             pyutNote.setName(xmlNote.getAttribute('name').encode("charmap"))
 
             # adding fathers
-            self._getFathers(xmlNote.getElementsByTagName("Father"), \
-                dicoFather, pyutNote.getId())
+            self._getFathers(xmlNote.getElementsByTagName("Father"), dicoFather, pyutNote.getId())
 
             # Update dicos
             dicoLink[pyutNote.getId()] = self._getLinks(xmlNote)
@@ -694,7 +774,7 @@ class PyutXml:
         @param Element[] xmlOglActors : XML 'GraphicActor' elements
         @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
         @param {id / srcName, OglLink} dicoLink : OGL links loaded
-        @param {id / srcName, id / srcName} fathers: Inheritance
+        @param {id / srcName, id / srcName} dicoFather: Inheritance
         @param UmlFrame umlFrame : Where to draw
         @since 2.0
         @author Philippe Waelti <pwaelti@eivd.ch>
@@ -742,7 +822,7 @@ class PyutXml:
         @param Element[] xmlOglUseCases : XML 'GraphicUseCase' elements
         @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
         @param {id / srcName, OglLink} dicoLink : OGL links loaded
-        @param {id / srcName, id / srcName} fathers: Inheritance
+        @param {id / srcName, id / srcName} dicoFather: Inheritance
         @param UmlFrame umlFrame : Where to draw
         @since 2.0
         @author Philippe Waelti <pwaelti@eivd.ch>
@@ -771,8 +851,7 @@ class PyutXml:
             pyutUseCase.setName(s)
 
             # adding fathers
-            self._getFathers(xmlUseCase.getElementsByTagName("Father"), \
-                dicoFather, pyutUseCase.getId())
+            self._getFathers(xmlUseCase.getElementsByTagName("Father"), dicoFather, pyutUseCase.getId())
 
             # Update dicos
             dicoLink[pyutUseCase.getId()] = self._getLinks(xmlUseCase)
@@ -805,8 +884,9 @@ class PyutXml:
                         if link[1].getDestination() == \
                                 oglObject.getPyutObject().getName():
                             link[0] = id
-                    except:
-                        print("Error converting old datas")
+                    except (ValueError, Exception) as e:
+                        # TODO Use Python logging module
+                        print(f"Error converting old data: {e}")
                         print(link[1].getDestination(), end=' ')
                         print(" == ", end=' ')
                         print(oglObject.getPyutObject().getName())
@@ -817,84 +897,6 @@ class PyutXml:
                     if fathers[father] == \
                             oglObject.getPyutObject().getName():
                         fathers[father] = id
-
-    def open(self, dom, umlFrame):
-        """
-        To open a file and creating diagram.
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        """
-        dicoOglObjects = {}  # format {name : oglClass}
-        dicoLink = {}   # format [name : PyutLink}
-        dicoFather = {} # format {child oglClass : [fathers names]}
-        oldData = 0
-
-        # Create and init gauge
-        dlgGauge = wx.Dialog(None, -1, "Loading...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.RESIZE_BORDER, size=wx.Size(207, 70))
-        gauge = wx.Gauge(dlgGauge, -1, 5, pos=wx.Point(2, 5), size=wx.Size(200, 30))
-
-        dlgGauge.Show(True)
-
-        # for all elements il xml file
-        dlgGauge.SetTitle("Reading file...")
-        gauge.SetValue(1)
-
-        # Load OGL Classes
-        oldData += self._getOglClasses(dom.getElementsByTagName('GraphicClass'),
-                dicoOglObjects, dicoLink, dicoFather, umlFrame)
-
-        # Load OGL Notes
-        oldData += self._getOglNotes(dom.getElementsByTagName('GraphicNote'),
-                dicoOglObjects, dicoLink, dicoFather, umlFrame)
-
-        # Load OGL Actors
-        oldData += self._getOglActors(dom.getElementsByTagName('GraphicActor'),
-                dicoOglObjects, dicoLink, dicoFather, umlFrame)
-
-        # Load OGL UseCases
-        oldData += self._getOglUseCases(
-                dom.getElementsByTagName('GraphicUseCase'),
-                dicoOglObjects, dicoLink, dicoFather, umlFrame)
-
-        # Fix links destination IDs if old data
-        if oldData > 0:
-            self._fixVersion(dicoLink, dicoOglObjects, dicoFather)
-
-        # fix the link's destination field
-        gauge.SetValue(2)
-        dlgGauge.SetTitle("Fixing link's destination...")
-        for links in list(dicoLink.values()):
-            for link in links:
-                link[1].setDestination(dicoOglObjects[link[0]].getPyutObject())
-
-        # adding fathers
-        dlgGauge.SetTitle("Adding fathers...")
-        gauge.SetValue(3)
-        for child, fathers in list(dicoFather.items()):
-            for father in fathers:
-                umlFrame.createInheritanceLink(\
-                        dicoOglObjects[child], dicoOglObjects[father])
-
-        # adding links to this OGL object
-        dlgGauge.SetTitle("Adding Links...")
-        gauge.SetValue(4)
-        for src, links in list(dicoLink.items()):
-            for link in links:
-                createdLink = umlFrame.createNewLink(dicoOglObjects[src], dicoOglObjects[link[1].getDestination().getId()], link[1].getType())
-
-                # fix link with the loaded information
-                pyutLink = createdLink.getPyutObject()
-                pyutLink.setBidir(link[1].getBidir())
-                pyutLink.setDestCard(link[1].getDestCard())
-                pyutLink.setSrcCard(link[1].getSrcCard())
-                pyutLink.setName(link[1].getName())
-
-        # to draw diagram
-        umlFrame.Refresh()
-        gauge.SetValue(5)
-
-        dlgGauge.Destroy()
 
     def joli(self, fileName):
         """

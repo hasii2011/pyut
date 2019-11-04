@@ -8,7 +8,7 @@ from os import system
 
 from wx import ID_OK
 
-import UmlFrame
+from org.pyut.ui.UmlFrame import UmlFrame
 
 from plugins.PyutToPlugin import PyutToPlugin
 from plugins.DlgFEOptions import DlgFEOptions
