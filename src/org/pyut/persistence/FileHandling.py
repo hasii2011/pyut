@@ -31,7 +31,7 @@ from wx import Notebook
 from wx import MessageDialog
 from wx import Yield
 
-from UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.PyutUtils import displayError
 
