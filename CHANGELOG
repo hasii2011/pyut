@@ -1,4 +1,9 @@
-Changed since version 1.4 : 
+Changed since version 1.5 :
+========================
+Python 3 update;  Fork to comply with PEP-8, packaging typing, and latest wxPython API
+
+
+Changed since version 1.4 :
 ========================
   Fixed language change
   Added Chinese (draft)
@@ -37,7 +42,7 @@ C.Dutoit 20041210
   + Added selection colors on class (MiniOgl)
   + Remove exit error (sometimes present)
   + Traced 'segmentation fault' at the end -> futex, but not solved
-    (Don't know the real location of the problem, 
+    (Don't know the real location of the problem,
     certainly some dead-lock on wx or wrongly uninitialized windows)
   + Added Esperanto language (base)
 
@@ -57,8 +62,8 @@ C.Dutoit 20041002
 
 C.Dutoit 20040922
    + Debugged load/save (PyutXMLV8, PyutApp)
-   + Removed infinite secure float recursion bug 
-        (on some systems, localisation is not well supported and 
+   + Removed infinite secure float recursion bug
+        (on some systems, localisation is not well supported and
         4,5 means 4.5!)
 
 C.Dutoit 20040921
@@ -82,7 +87,7 @@ Changed since version 1.2 :
 =========================
 
 C.Dutoit 20040321
-   + Added crash bugs patches and corrections from Patrice Ferlet, 
+   + Added crash bugs patches and corrections from Patrice Ferlet,
      Martin Dupont, Leonardo Santagada; Thanks to them
 
 C.Dutoit 20040126
@@ -97,7 +102,7 @@ C.Dutoit 20040103
 C.Dutoit 20031217
    + Rewritten IODTD with a new parser
    + Updated ToLayout to choose filename
-   + Corrected bug SF/822133 : error while adding sequence diagram object on 
+   + Corrected bug SF/822133 : error while adding sequence diagram object on
      class diagram frame
    + Updated associations link so we can see labels by default
 
@@ -243,7 +248,7 @@ C.Dutoit 20030104:
      In fact, Since MiniOGL is no longer supported at all,
      I think that we must thanks LB for adding in PyUt a dead library
      for replacing another dead library. PyUt will soon be dead, too !
-     *=)/%&=?)+"*çKLJDF=)"/*ç!!!
+     *=)/%&=?)+"*ï¿½KLJDF=)"/*ï¿½!!!
 
 C.Dutoit 20030101:
    + Good year to everyone !
@@ -256,10 +261,10 @@ C.Dutoit 20021231:
 
 C.Dutoit 20021230:
    + Corrected Pattern plugin
-   + Added ErrorManager; the final goal is to make a 100% scriptable 
+   + Added ErrorManager; the final goal is to make a 100% scriptable
      and testable PyUt.
      ErrorManager use a view class which can be textual or graphical.
-   + Moved all operations relative to FileHandling from mediator to 
+   + Moved all operations relative to FileHandling from mediator to
      FileHandling to do more localized operations and discharge mediator
    + Added RAISE_ERROR_VIEW for ErrorManager, to use with unit tests
    + Added SCRIPTING MODE, a base for scripting and testing all PyUt, =>
@@ -395,7 +400,7 @@ C.Dutoit 20021116:
 
 C.Dutoit 20021111:
    + corrected some parsing bugs in IoJavaReverse.py plugin.
-     (now supports multi-line parameters, comments, 
+     (now supports multi-line parameters, comments,
       merged comments like '//foo', '/***** .. ***/')
    + corrected SHOW_PARAMS bugs when launching pyut
 
@@ -417,7 +422,7 @@ C.Dutoit 20021026:
    + double-click on toolbar will now make tool persistent
    + corrected yellow notes bug
    + corrected "import lang" bug
-   + tried 2h. to add ps exportation, 
+   + tried 2h. to add ps exportation,
      but... not really implemented in wxWindows !
 
 L. Burgbacher 20021023, lb@alawa.ch:
@@ -440,7 +445,7 @@ L. Burgbacher 20021018, lb@alawa.ch:
    + updated MiniOgl version
    + fixed problem with shortcuts in mediator
 
-C.Dutoit 20021017: 
+C.Dutoit 20021017:
    + Merged lb's CVS to this one, including miniogl
 
 L. Burgbacher 20021012, lb@alawa.ch:
@@ -459,7 +464,7 @@ C.Dutoit 20021009 :
    	(parse not found, before)
 
 C.Dutoit 20021008 :
-   + Corrected IoPython bug (import python, cancel, close dialog => 
+   + Corrected IoPython bug (import python, cancel, close dialog =>
                              wxFalse error, EndModal called twice error)
    + Added Tools plugins, moved PyutPlugin to PyutIOPlugin,
    + Added transformation plugin
@@ -475,7 +480,7 @@ C.Dutoit 20020923 :
    + bin/dorpm/mydorpm create a noarch rpm working; need some work to
      improve facility to recreate .spec and others needed files
 
-C.Dutoit 20020919 : 
+C.Dutoit 20020919 :
    + Corrected sf bug 587747 - Objects misclassified as classes (IoPython),
                                from code given in the bug report
    + Corrected sf bug 589106 - FreeBSD error; was wrong version
@@ -490,7 +495,7 @@ C.Dutoit 20020917 :
    + Corrected bug pw3  : help/load file disabled
 
 C.Dutoit 20020726 :
-   + Corrected translation bug : xml.dom.minidom was redefining the '_' 
+   + Corrected translation bug : xml.dom.minidom was redefining the '_'
      function
 
 C.Dutoit 20020725 :
@@ -617,7 +622,7 @@ C.Dutoit 20020417:
 
 C.Dutoit 20020412 :
    + Reverse engineering Python
-        Simply added and fully-working. 
+        Simply added and fully-working.
         Only inheritance can be reverse-engineered in Python or tell me how..?
         Can reverse entire directory with class selection
 
@@ -651,6 +656,6 @@ Laurent Burgbacher <lb@alawa.ch> 20020313 :
       strings to normal strings for wx.
 
 
-C.Dutoit 200203xx : 
+C.Dutoit 200203xx :
     + Added file load/save progression dialog box
     + Added plugin for Python code generation
