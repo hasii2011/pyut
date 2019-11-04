@@ -8,7 +8,7 @@ from PyutConsts import SEQUENCE_DIAGRAM
 from PyutConsts import USECASE_DIAGRAM
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
+from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
 from org.pyut.PyutUtils import displayError
 
