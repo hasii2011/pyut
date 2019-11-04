@@ -62,15 +62,15 @@ def main(script=None):
     # Define last open directory ?
     #  - default is current directory
     #  - last opened directory for developers (pyut/src present)
-    from .PyutPreferences import PyutPreferences
+    from PyutPreferences import PyutPreferences
     prefs = PyutPreferences()    # Prefs handler
     if (userPath.find('pyut/src') == -1) and (userPath.find('pyut2/src') == -1):
         # (User-mode)
         prefs["LastDirectory"] = userPath
     del prefs
 
-    from PyutApp import PyutApp
-    app = PyutApp(0, splash=0, show=0)
+    from org.pyut.ui.PyutApp import PyutApp
+    app = PyutApp(redirect=False, showSplash=False, showMainFrame=False)
 
     if script is not None:
         # s = script(app.frame)
