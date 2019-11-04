@@ -39,7 +39,7 @@ class HistoryManager:
         """
         self.logger:    Logger = getLogger(__name__)
 
-        self.logger.error(f'Base directory: {PyutUtils.getBasePath()}')
+        self.logger.debug(f'Base directory: {PyutUtils.getBasePath()}')
 
         self._fileName: str = f'{PyutUtils.getBasePath()}{osSep}{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
 

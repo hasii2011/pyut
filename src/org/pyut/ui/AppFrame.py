@@ -67,7 +67,7 @@ from wx import Yield as wxYield
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 from org.pyut.persistence.FileHandling import FileHandling
-from UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
