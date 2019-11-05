@@ -16,7 +16,7 @@ import logging.config
 from org.pyut.ui.PyutApp import PyutApp
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.PyutVersion import getPyUtVersion
+from org.pyut.general.PyutVersion import PyutVersion
 from PyutPreferences import PyutPreferences
 
 from Lang import importLanguage as setupPyutLanguage
@@ -116,11 +116,11 @@ def treatArguments():
 
     # Treat command line arguments
     if argv[1] == "--version":
-        print(f"PyUt, version {getPyUtVersion()}")
+        print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
         print()
         return 1
     elif argv[1] == "--help":
-        print(f"PyUt, version {getPyUtVersion()}")
+        print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
         print("Syntax : pyut.pyw [filename] [--version] [--help] [--start_directory=xxx] file1 file2 ...")
         print()
         print("i.e. :    pyut.pyw --version             display version number")

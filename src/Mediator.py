@@ -34,7 +34,7 @@ from PyutConsts import OGL_NOTELINK
 from PyutConsts import OGL_SD_MESSAGE
 
 from PyutPreferences import PyutPreferences
-from org.pyut.general.PyutVersion import getPyUtVersion
+from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.Singleton import Singleton
 
 from org.pyut.PyutMethod import WITHOUT_PARAMS
@@ -50,7 +50,7 @@ from org.pyut.ui.ToolboxOwner import ToolboxOwner
 
 from globals import _
 
-__PyUtVersion__ = getPyUtVersion()
+__PyUtVersion__ = PyutVersion.getPyUtVersion()
 
 # an enum of the supported actions
 # TODO make real enumerations
