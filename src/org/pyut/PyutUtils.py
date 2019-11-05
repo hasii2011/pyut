@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -8,7 +10,7 @@ from traceback import extract_tb
 
 from os import sep as osSep
 
-from wx import NewId
+from wx import NewIdRef as wxNewIdRef
 
 from ErrorManager import getErrorManager
 
@@ -26,27 +28,6 @@ Functions :
 :author: C.Dutoit
 :contact: <dutoitc@hotmail.com>
 """
-
-
-# noinspection PyUnusedLocal
-def assignID(nb):
-    """
-    Assign and return nb new id.
-
-    @param number  nb : number of unique IDs to return
-    @return numbers[] : List of numbers which contain <nb> unique IDs
-    @since 1.0
-    @author C.Dutoit <dutoitc@hotmail.com>
-    """
-    # personal reminder : map : return <nb> unique wxID as list
-    # explanation in a good phrase : this function return a number <nb> of
-    #                                unique IDs, which is a list.
-    # Sample use        : [My_Id1, My_Id2, My_Id3] = assignID(3)
-    # If this not so long header is not enough explicit, please forgive me or
-    # mail me with an update to dutoitc@hotmail.com. thanks
-    #
-    return [NewId() for x in range(nb)]
-
 
 def getErrorInfo() -> str:
     """
@@ -119,6 +100,25 @@ class PyutUtils:
 
     def __init__(self):
         self.logger: Logger = getLogger(__name__)
+
+    @staticmethod
+    def assignID(numberOfIds: int) -> List[wxNewIdRef]:
+        """
+        Assign and return numberOfIds
+
+        Sample use        : [Unique_Id1, Unique_Id2, Unique_Id3] = assignID(3)
+
+        Args:
+            numberOfIds: number of unique IDs to return
+
+        Returns:  List of numbers which contain <numberOfIds> unique IDs
+        """
+        retList: List[wxNewIdRef] = []
+        x: int = 0
+        while x < numberOfIds:
+            retList.append(wxNewIdRef())
+            x += 1
+        return retList
 
     @classmethod
     def getBasePath(cls) -> str:

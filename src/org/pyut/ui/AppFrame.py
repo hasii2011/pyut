@@ -106,7 +106,7 @@ from Mediator import ACTION_NEW_SD_INSTANCE
 from Mediator import ACTION_NEW_USECASE
 from Mediator import getMediator
 
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutUtils import displayError
 from org.pyut.PyutUtils import displayInformation
 from org.pyut.PyutUtils import displayWarning
@@ -136,7 +136,7 @@ from globals import IMG_PKG
     ID_MNUFILEREMOVEDOCUMENT,    ID_DEBUG,
     ID_ZOOMIN,                   ID_ZOOMOUT,              ID_ZOOM_VALUE,
     ID_MNUREDO,                  ID_MNUUNDO
-] = assignID(54)
+] = PyutUtils.assignID(54)
 
 # Assign constants
 
@@ -216,7 +216,7 @@ class AppFrame(Frame):
         # Last opened Files IDs
         self.lastOpenedFilesID = []
         for index in range(self._prefs.getNbLOF()):
-            self.lastOpenedFilesID.append(assignID(1)[0])
+            self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
         # loaded files handler
         self._fileHandling = FileHandling(self, self._ctrl)
@@ -1237,7 +1237,7 @@ class AppFrame(Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         from org.pyut.dialogs.DlgAbout import DlgAbout
-        import PyutVersion
+        from org.pyut.general.PyutVersion import PyutVersion
         dlg = DlgAbout(self, -1, _("About PyUt ") + PyutVersion.getPyUtVersion())
         dlg.ShowModal()
         dlg.Destroy()
@@ -1279,7 +1279,7 @@ class AppFrame(Frame):
             oldestVersions = lstFile[1][15:].split()
             print(oldestVersions)
 
-            import PyutVersion
+            from org.pyut.general.PyutVersion import PyutVersion
             v = PyutVersion.getPyUtVersion()
             if v in oldestVersions:
                 msg = _("PyUt version ") + str(latestVersion) + _(" is available on http://pyut.sf.net")

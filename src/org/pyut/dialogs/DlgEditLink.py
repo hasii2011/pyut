@@ -23,7 +23,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutLink import PyutLink
 from globals import _
 
@@ -37,7 +37,7 @@ from copy import deepcopy
     A_ROLE_IN_B,
     B_ROLE_IN_A,
     BTN_REMOVE
-] = assignID(6)
+] = PyutUtils.assignID(6)
 
 
 class DlgEditLink (Dialog):

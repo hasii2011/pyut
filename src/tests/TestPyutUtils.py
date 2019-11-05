@@ -25,6 +25,13 @@ class TestPyutUtils(TestBase):
     def tearDown(self):
         pass
 
+    def testAssignId(self):
+        testIds = [Test_Id1, Test_Id2, Test_Id3] = PyutUtils.assignID(3)
+        self.logger.info(f'test Ids: {testIds}')
+        self.assertIsNotNone(Test_Id1, 'Test_Id1 - Should not be None')
+        self.assertIsNotNone(Test_Id2, 'Test_Id2 - Should not be None')
+        self.assertIsNotNone(Test_Id3, 'Test_Id3 - Should not be None')
+
     def testBasicBasePath(self):
         basicPath: str = TestPyutUtils.BASE_TEST_PATH
         PyutUtils.setBasePath(basicPath)
@@ -49,6 +56,7 @@ class TestPyutUtils(TestBase):
         PyutUtils.setBasePath(srcPath)
         actualPath: str = PyutUtils.getBasePath()
         self.assertEqual(TestPyutUtils.BASE_TEST_PATH, actualPath, 'Path should have been modified')
+
 
 if __name__ == '__main__':
     unitTestMain()

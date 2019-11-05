@@ -16,13 +16,13 @@ from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
 from org.pyut.PyutClass import PyutClass
 
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 from globals import _
 
 from Mediator import getMediator
 
 # Menu IDs
-[MNU_TOGGLE_STEREOTYPE, MNU_TOGGLE_FIELDS, MNU_TOGGLE_METHODS, MNU_FIT_FIELDS, MNU_CUT_SHAPE]  = assignID(5)
+[MNU_TOGGLE_STEREOTYPE, MNU_TOGGLE_FIELDS, MNU_TOGGLE_METHODS, MNU_FIT_FIELDS, MNU_CUT_SHAPE]  = PyutUtils.assignID(5)
 
 MARGIN = 10.0
 

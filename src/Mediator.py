@@ -170,7 +170,7 @@ MESSAGES = {
 }
 
 # Define current use mode
-[SCRIPT_MODE, NORMAL_MODE] = assignID(2)
+[SCRIPT_MODE, NORMAL_MODE] = PyutUtils.assignID(2)
 
 
 def getMediator():

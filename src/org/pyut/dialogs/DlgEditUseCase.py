@@ -19,13 +19,13 @@ from wx import TE_MULTILINE
 from wx import TextCtrl
 from wx import VERTICAL
 
-from org.pyut.PyutUtils import *
+from org.pyut.PyutUtils import PyutUtils
 
 from globals import _
 
 [
     TXT_USECASE
-] = assignID(1)
+] = PyutUtils.assignID(1)
 
 
 class DlgEditUseCase(Dialog):

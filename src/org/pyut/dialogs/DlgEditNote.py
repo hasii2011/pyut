@@ -21,12 +21,12 @@ from wx import Dialog
 from wx import Button
 from wx import BoxSizer
 
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 
 from globals import _
 [
     TXT_NOTE
-] = assignID(1)
+] = PyutUtils.assignID(1)
 
 
 class DlgEditNote(Dialog):

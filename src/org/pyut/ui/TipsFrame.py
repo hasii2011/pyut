@@ -22,7 +22,7 @@ from wx import StaticBitmap
 from wx import StaticText
 from wx import VERTICAL
 
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 from PyutPreferences import PyutPreferences
 from PyutPreferences import SHOW_TIPS_ON_STARTUP_KEY
 
@@ -35,7 +35,7 @@ DEFAULT_WIDTH  = 600
 DEFAULT_HEIGHT = 100
 
 # Constants
-[ID_OK, ID_SET_NEXT_TIP, ID_SET_PREVIOUS_TIP, ID_CHK_SHOW_TIPS] = assignID(4)
+[ID_OK, ID_SET_NEXT_TIP, ID_SET_PREVIOUS_TIP, ID_CHK_SHOW_TIPS] = PyutUtils.assignID(4)
 
 # Tips
 Tips = [

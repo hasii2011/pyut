@@ -38,6 +38,13 @@
             ],
             "propagate": "False"
         },
+        "TestPyutUtils": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "__main__": {
             "level": "INFO",
             "handlers": [

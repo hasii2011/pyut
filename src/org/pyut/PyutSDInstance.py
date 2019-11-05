@@ -1,10 +1,9 @@
 
-
-from org.pyut.PyutUtils import *
+from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutObject import *
 
 
-[INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS] = assignID(2)
+[INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS] = PyutUtils.assignID(2)
 
 # List of possible instance type
 INSTANCE_TYPES = [INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS]

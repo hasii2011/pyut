@@ -52,7 +52,7 @@ from org.pyut.dialogs.DlgEditComment import DlgEditComment
 import Mediator
 
 from globals import _
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 
 # Assign constants
 [
@@ -69,7 +69,7 @@ from org.pyut.PyutUtils import assignID
     ID_BTNPARAMUP, ID_BTNPARAMDOWN, ID_LSTPARAMLIST,
     ID_BTNPARAMOK, ID_BTNPARAMCANCEL,
 
-    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = assignID(32)
+    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(32)
 
 
 class DlgEditClass (Dialog):
@@ -493,7 +493,7 @@ class DlgEditClass (Dialog):
 
         # Txt Ctrl Name
         lblName = StaticText (dlg, -1, _("Name"))
-        dlg._txtName = TextCtrl(dlg, ID_TXTPARAMNAME, "", size = (125, -1))
+        dlg._txtName = TextCtrl(dlg, ID_TXTPARAMNAME, "", size=(125, -1))
         dlg.Bind(EVT_TEXT, self._evtParamText, id=ID_TXTPARAMNAME)
 
         # Txt Ctrl Type
