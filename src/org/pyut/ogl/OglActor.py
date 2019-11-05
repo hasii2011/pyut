@@ -23,7 +23,7 @@ class OglActor(OglObject):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-    def __init__(self, pyutActor=None, w: int = 80, h: int = 100):
+    def __init__(self, pyutActor=None, w: float = 80.0, h: float = 100.0):
         """
         Constructor.
         @param Float w : Width of the shape

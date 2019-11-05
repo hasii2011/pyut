@@ -41,7 +41,7 @@ class OglClass(OglObject):
     :author: Laurent Burgbacher
     :contact: lb@alawa.ch
     """
-    def __init__(self, pyutClass=None, w: int = 100, h: int = 100):
+    def __init__(self, pyutClass=None, w: float = 100.0, h: float = 100.0):
         """
         @param  pyutClass : a Pyutclass object
         @param  w : Width of the shape
