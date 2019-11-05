@@ -35,7 +35,7 @@ from PyutConsts import OGL_SD_MESSAGE
 
 from PyutPreferences import PyutPreferences
 from PyutVersion import getPyUtVersion
-from Singleton import Singleton
+from org.pyut.general.Singleton import Singleton
 
 from org.pyut.PyutMethod import WITHOUT_PARAMS
 from org.pyut.PyutMethod import WITH_PARAMS
@@ -465,7 +465,7 @@ class Mediator(Singleton):
             umlFrame.Refresh()
         elif self._currentAction == ACTION_NEW_SD_INSTANCE:
             try:
-                from UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
+                from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
                 if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
                     displayError(_("A SD INSTANCE can't be added to a class diagram. You must create a sequence diagram."))
                     return

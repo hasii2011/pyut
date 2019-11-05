@@ -16,9 +16,7 @@ from PyutConsts import OGL_INHERITANCE
 from PyutConsts import OGL_INTERFACE
 from PyutConsts import OGL_NOTELINK
 
-from Singleton import Singleton
-
-# from PyutConsts import OGL_AGGREGATION
+from org.pyut.general.Singleton import Singleton
 
 
 def getOglLinkFactory():

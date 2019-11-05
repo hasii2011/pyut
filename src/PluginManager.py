@@ -13,7 +13,7 @@ from traceback import extract_tb
 from logging import Logger
 from logging import getLogger
 
-from Singleton import Singleton
+from org.pyut.general.Singleton import Singleton
 
 
 class PluginManager(Singleton):
