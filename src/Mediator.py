@@ -34,7 +34,7 @@ from PyutConsts import OGL_NOTELINK
 from PyutConsts import OGL_SD_MESSAGE
 
 from PyutPreferences import PyutPreferences
-from PyutVersion import getPyUtVersion
+from org.pyut.general.PyutVersion import getPyUtVersion
 from org.pyut.general.Singleton import Singleton
 
 from org.pyut.PyutMethod import WITHOUT_PARAMS

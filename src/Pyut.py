@@ -16,7 +16,7 @@ import logging.config
 from org.pyut.ui.PyutApp import PyutApp
 from org.pyut.PyutUtils import PyutUtils
 
-from PyutVersion import getPyUtVersion
+from org.pyut.general.PyutVersion import getPyUtVersion
 from PyutPreferences import PyutPreferences
 
 from Lang import importLanguage as setupPyutLanguage
