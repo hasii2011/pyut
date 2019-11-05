@@ -1,5 +1,5 @@
 
-from sys import exc_info
+from typing import cast
 
 from copy import deepcopy
 
@@ -72,7 +72,7 @@ from org.pyut.PyutUtils import PyutUtils
     ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(32)
 
 
-class DlgEditClass (Dialog):
+class DlgEditClass(Dialog):
     """
     Dialog for the class edition.
 
@@ -103,7 +103,7 @@ class DlgEditClass (Dialog):
         @since 1.0
         @author N. Dubois <n_dub@altavista.com>
         """
-        Dialog.__init__(self, parent, ID, _("Class Edit"), style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, ID, _("Class Edit"), style=RESIZE_BORDER | CAPTION)
 
         self._pyutClass     = pyutClass
         self._pyutClassCopy = deepcopy(pyutClass)
@@ -121,7 +121,7 @@ class DlgEditClass (Dialog):
 
         # Name and Stereotype sizer
         szrNameStereotype = BoxSizer (HORIZONTAL)
-        szrNameStereotype.Add(lblName,       0, ALL| ALIGN_CENTER, 5)
+        szrNameStereotype.Add(lblName,       0, ALL | ALIGN_CENTER, 5)
         szrNameStereotype.Add(self._txtName, 1, ALIGN_CENTER)
         szrNameStereotype.Add(lblStereotype, 0, ALL | ALIGN_RIGHT, 5)
         szrNameStereotype.Add(self._txtStereotype, 1, ALIGN_CENTER)
@@ -165,9 +165,6 @@ class DlgEditClass (Dialog):
         szrFieldButtons.Add(self._btnFieldUp, 0, ALL, 5)
         szrFieldButtons.Add(self._btnFieldDown, 0, ALL, 5)
 
-        # -------
-        # Methods
-
         # Label Methods
         lblMethod = StaticText (self, -1, _("Methods :"))
 
@@ -203,9 +200,6 @@ class DlgEditClass (Dialog):
         szrMethodButtons.Add(self._btnMethodRemove, 0, ALL, 5)
         szrMethodButtons.Add(self._btnMethodUp, 0, ALL, 5)
         szrMethodButtons.Add(self._btnMethodDown, 0, ALL, 5)
-
-        # ----------------------------------
-        # Display properties
 
         # Show stereotype checkbox
         self._chkShowStereotype = CheckBox(self, -1, _("Show stereotype"))
@@ -260,6 +254,8 @@ class DlgEditClass (Dialog):
         self._txtName.SetFocus()
         self._txtName.SetSelection(0, len(self._txtName.GetValue()))
 
+        # Help Pycharm
+        self._dlgMethod = cast(Dialog, None)
         szrMain.Fit(self)
 
         self.Centre()
@@ -313,9 +309,7 @@ class DlgEditClass (Dialog):
         szrButtons.Add(dlg._btnFieldCancel, 0, ALL, 5)
 
         szrField1 = FlexGridSizer(cols=3, hgap=6, vgap=6)
-        szrField1.AddMany([lblFieldName, lblFieldType, lblFieldDefault,
-                        dlg._txtFieldName, dlg._txtFieldType,
-                        dlg._txtFieldDefault])
+        szrField1.AddMany([lblFieldName, lblFieldType, lblFieldDefault, dlg._txtFieldName, dlg._txtFieldType, dlg._txtFieldDefault])
 
         szrField2 = BoxSizer(HORIZONTAL)
         szrField2.Add(dlg._rdbFieldVisibility, 0, ALL, 5)
@@ -550,10 +544,7 @@ class DlgEditClass (Dialog):
         """
         dupParams = []
         for i in params:
-            param = PyutParam(
-                name=i.getName(),
-                type=i.getType(),
-                defaultValue=i.getDefaultValue())
+            param: PyutParam = PyutParam(name=i.getName(), theParameterType=i.getType(), defaultValue=i.getDefaultValue())
             dupParams.append(param)
         return dupParams
 
@@ -582,9 +573,9 @@ class DlgEditClass (Dialog):
             for el in self._pyutClassCopy.getMethods():
                 self._lstMethodList.Append(el.getString())
         except (ValueError, Exception) as e:
-            #  import sys.traceback
-            dlg = MessageDialog(self,
-                                _(f"Error : {exc_info()[0]} \n Message : {exc_info()[1]}\n Trace : {exc_info()[2]}\n", OK | ICON_ERROR))
+
+            eMsg: str = _(f"Error: {e}")
+            dlg = MessageDialog(self, eMsg, OK | ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
 
@@ -606,8 +597,7 @@ class DlgEditClass (Dialog):
         self._btnFieldEdit.Enable(ans)
         self._btnFieldRemove.Enable(ans)
         self._btnFieldUp.Enable(selection > 0)
-        self._btnFieldDown.Enable(
-            ans and selection < self._lstFieldList.GetCount() - 1)
+        self._btnFieldDown.Enable(ans and selection < self._lstFieldList.GetCount() - 1)
 
     def _fixBtnMethod (self):
         """
@@ -618,12 +608,12 @@ class DlgEditClass (Dialog):
         """
         selection = self._lstMethodList.GetSelection()
         # Button Edit and Remove
-        bool = selection != -1
-        self._btnMethodEdit.Enable(bool)
-        self._btnMethodRemove.Enable(bool)
+        enabled: bool = selection != -1
+
+        self._btnMethodEdit.Enable(enabled)
+        self._btnMethodRemove.Enable(enabled)
         self._btnMethodUp.Enable(selection > 0)
-        self._btnMethodDown.Enable(
-            bool and selection < self._lstMethodList.GetCount() - 1)
+        self._btnMethodDown.Enable(enabled and selection < self._lstMethodList.GetCount() - 1)
 
     def _fixBtnParam (self):
         """
@@ -633,14 +623,18 @@ class DlgEditClass (Dialog):
         @author N. Dubois <n_dub@altavista.com>
         """
         dlg = self._dlgMethod
+        #
+        # These warnings have to be fixed by defining a specfic Dialog class
+        # rather than building one on the fly
+        #
         selection = dlg._lstParams.GetSelection()
         # Button Edit and Remove
-        bool = selection != -1
-        dlg._btnParamEdit.Enable(bool)
-        dlg._btnParamRemove.Enable(bool)
+        enabled: bool = selection != -1
+        dlg._btnParamEdit.Enable(enabled)
+        dlg._btnParamRemove.Enable(enabled)
         dlg._btnParamUp.Enable(selection > 0)
         dlg._btnParamDown.Enable(
-            bool and selection < dlg._lstParams.GetCount() - 1)
+            enabled and selection < dlg._lstParams.GetCount() - 1)
 
     def _fixBtnDlgFields (self):
         """
@@ -669,6 +663,7 @@ class DlgEditClass (Dialog):
         """
         self._dlgParam._btnOk.Enable(self._dlgParam._txtName.GetValue() != "")
 
+    # noinspection PyUnusedLocal
     def _onFieldAdd (self, event):
         """
         Add a new field in the list.
@@ -690,6 +685,7 @@ class DlgEditClass (Dialog):
             if project is not None:
                 project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onMethodAdd (self, event):
         """
         Add a new method in the list.
@@ -712,6 +708,7 @@ class DlgEditClass (Dialog):
             if project is not None:
                 project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onParamAdd (self, event):
         """
         Add a new param in the list.
@@ -734,6 +731,7 @@ class DlgEditClass (Dialog):
             if project is not None:
                 project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onFieldEdit (self, event):
         """
         Edit a field.
@@ -754,6 +752,7 @@ class DlgEditClass (Dialog):
             if project is not None:
                 project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onMethodEdit (self, event):
         """
         Edit a method.
@@ -774,6 +773,7 @@ class DlgEditClass (Dialog):
             if project is not None:
                 project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onParamEdit (self, event):
         """
         Edit params.
@@ -795,6 +795,7 @@ class DlgEditClass (Dialog):
             if project is not None:
                 project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onFieldRemove (self, event):
         """
         Remove a field from the list.
@@ -808,7 +809,7 @@ class DlgEditClass (Dialog):
         self._lstFieldList.Delete(selection)
 
         # Select next
-        if self._lstFieldList.GetCount()>0:
+        if self._lstFieldList.GetCount() > 0:
             index = min(selection, self._lstFieldList.GetCount()-1)
             self._lstFieldList.SetSelection(index)
 
@@ -825,6 +826,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onMethodRemove (self, event):
         """
         Remove a field from the list.
@@ -855,6 +857,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onParamRemove (self, event):
         """
         Remove a field from the list.
@@ -870,7 +873,7 @@ class DlgEditClass (Dialog):
         dlg._lstParams.Delete(selection)
 
         # Select next
-        if dlg._lstParams.GetCount()>0:
+        if dlg._lstParams.GetCount() > 0:
             index = min(selection, dlg._lstParams.GetCount()-1)
             dlg._lstParams.SetSelection(index)
 
@@ -887,6 +890,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onFieldUp (self, event):
         """
         Move up a field in the list.
@@ -916,6 +920,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onMethodUp (self, event):
         """
         Move up a method in the list.
@@ -926,16 +931,14 @@ class DlgEditClass (Dialog):
         """
         # Move up the method in _pyutClassCopy
         selection = self._lstMethodList.GetSelection()
-        methods = self._pyutClassCopy.getMethods()
-        method = methods[selection]
+        methods   = self._pyutClassCopy.getMethods()
+        method    = methods[selection]
         methods.pop(selection)
         methods.insert(selection - 1, method)
 
         # Move up the method in dialog list
-        self._lstMethodList.SetString(selection,
-            methods[selection].getString())
-        self._lstMethodList.SetString(
-            selection - 1, methods[selection - 1].getString())
+        self._lstMethodList.SetString(selection, methods[selection].getString())
+        self._lstMethodList.SetString(selection - 1, methods[selection - 1].getString())
         self._lstMethodList.SetSelection(selection - 1)
 
         # Fix buttons (enable or not)
@@ -943,10 +946,11 @@ class DlgEditClass (Dialog):
 
         # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
+        project      = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onParamUp (self, event):
         """
         Move up a param in the list.
@@ -977,6 +981,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onFieldDown (self, event):
         """
         Move down a field in the list.
@@ -1006,6 +1011,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onMethodDown (self, event):
         """
         Move down a method in the list.
@@ -1035,6 +1041,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onParamDown (self, event):
         """
         Move down a param in the list.
@@ -1066,6 +1073,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _evtFieldText (self, event):
         """
         Check if button "Add" has to be enabled or not.
@@ -1076,6 +1084,7 @@ class DlgEditClass (Dialog):
         """
         self._fixBtnDlgFields()
 
+    # noinspection PyUnusedLocal
     def _evtMethodText (self, event):
         """
         Check if button "Add" has to be enabled or not.
@@ -1086,6 +1095,7 @@ class DlgEditClass (Dialog):
         """
         self._fixBtnDlgMethods()
 
+    # noinspection PyUnusedLocal
     def _evtParamText (self, event):
         """
         Check if button "Add" has to be enabled or not.
@@ -1097,6 +1107,7 @@ class DlgEditClass (Dialog):
         dlg = self._dlgParam
         dlg._btnOk.Enable(dlg._txtName.GetValue() != "")
 
+    # noinspection PyUnusedLocal
     def _evtFieldList (self, event):
         """
         Called when click on Fields list.
@@ -1118,6 +1129,7 @@ class DlgEditClass (Dialog):
         # Edit field
         self._onFieldEdit(event)
 
+    # noinspection PyUnusedLocal
     def _evtMethodList (self, event):
         """
         Called when click on Methods list.
@@ -1140,6 +1152,7 @@ class DlgEditClass (Dialog):
         # Edit method
         self._onMethodEdit(event)
 
+    # noinspection PyUnusedLocal
     def _evtParamList (self, event):
         """
         Called when click on Params list.
@@ -1163,6 +1176,7 @@ class DlgEditClass (Dialog):
             astring = ""
         return astring
 
+    # noinspection PyUnusedLocal
     def _onDescription(self, event):
         """
         When class description dialog is opened.
@@ -1180,6 +1194,7 @@ class DlgEditClass (Dialog):
         if project is not None:
             project.setModified()
 
+    # noinspection PyUnusedLocal
     def _onOk (self, event):
         """
         When button OK is clicked.
@@ -1223,9 +1238,10 @@ class DlgEditClass (Dialog):
             project.setModified()
 
         # Close dialog
-        self._returnAction=OK
+        self._returnAction = OK
         self.Close()
 
+    # noinspection PyUnusedLocal
     def _onFieldOk (self, event):
         """
         When button OK from dlgEditField is clicked.
@@ -1255,6 +1271,7 @@ class DlgEditClass (Dialog):
         # Close dialog
         dlg.EndModal(OK)
 
+    # noinspection PyUnusedLocal
     def _onMethodOk (self, event):
         """
         When button OK from dlgEditMethod is clicked.
@@ -1285,6 +1302,7 @@ class DlgEditClass (Dialog):
         # Close dialog
         dlg.EndModal(OK)
 
+    # noinspection PyUnusedLocal
     def _onParamOk (self, event):
         dlg = self._dlgParam
         dlg._pyutParam.setName(dlg._txtName.GetValue())
@@ -1303,15 +1321,19 @@ class DlgEditClass (Dialog):
         # Close dialog
         dlg.EndModal(OK)
 
+    # noinspection PyUnusedLocal
     def _onCancel (self, event):
         self._returnAction = CANCEL
         self.Close()
 
+    # noinspection PyUnusedLocal
     def _onFieldCancel (self, event):
         self._dlgField.EndModal(CANCEL)
 
+    # noinspection PyUnusedLocal
     def _onMethodCancel (self, event):
         self._dlgMethod.EndModal(CANCEL)
 
+    # noinspection PyUnusedLocal
     def _onParamCancel (self, event):
         self._dlgParam.EndModal(CANCEL)
