@@ -68,4 +68,3 @@ class PyutPrintout(Printout):
 
         self.canvas.Redraw(dc)
         return True
-
