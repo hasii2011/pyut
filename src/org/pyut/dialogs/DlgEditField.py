@@ -6,7 +6,7 @@ from wx import Button
 from wx import CANCEL
 from wx import CAPTION
 from wx import DefaultSize
-from wx import Dialog
+
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import FlexGridSizer
@@ -22,10 +22,11 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-# from Mediator import Mediator
 from org.pyut import PyutField
 
 from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from globals import _
 
@@ -36,14 +37,13 @@ from globals import _
 ] = PyutUtils.assignID(3)
 
 
-class DlgEditField(Dialog):
+class DlgEditField(BaseDlgEdit):
 
     def __init__(self, theParent, theWindowId=ID_ANY, fieldToEdit: PyutField = None, theMediator=None):
 
-        super().__init__(theParent, theWindowId, title=_("Field Edit"), style=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(theParent, theWindowId, _("Field Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=theMediator)
 
         self.fieldToEdit = fieldToEdit
-        self._ctrl       = theMediator
 
         # ----------------
         # Design of dialog
@@ -158,13 +158,3 @@ class DlgEditField(Dialog):
         Fix the state of the buttons in the dialog fields (enable or not).
         """
         self._btnFieldOk.Enable(self._txtFieldName.GetValue() != "")
-
-    def _convertNone (self, theString: str):
-        """
-        Return the same string, if string = None, return an empty string.
-
-        @param  theString : the string to possibly convert
-        """
-        if theString is None:
-            theString = ''
-        return theString
