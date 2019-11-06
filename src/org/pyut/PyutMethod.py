@@ -4,7 +4,7 @@ from logging import getLogger
 
 from PyutPreferences import PyutPreferences
 from org.pyut.PyutVisibility import PyutVisibility
-from org.pyut.PyutType import getPyutType
+from org.pyut.PyutType import PyutType
 from org.pyut.PyutObject import PyutObject
 
 # constants for setStringMode
@@ -55,7 +55,7 @@ class PyutMethod(PyutObject):
         self._visibility = PyutVisibility(visibility)
         self._modifiers  = []
         self._params     = []
-        self._returns    = getPyutType(returns)
+        self._returns    = PyutType(returns)
         # PyutMethod.setStringMode(WITHOUT_PARAMS)
 
         # Added by C.Dutoit, 11.11.2002
@@ -190,9 +190,9 @@ class PyutMethod(PyutObject):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        # if type(returns) == StringType or type(returns) == UnicodeType:
+
         if type(returnType) is str:
-            returnType = getPyutType(returnType)
+            returnType = PyutType(returnType)
         self._returns = returnType
 
     def __stringWithoutParams(self):

@@ -1,6 +1,9 @@
 
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
+
 from copy import deepcopy
 
 from wx import ALIGN_BOTTOM
@@ -106,6 +109,7 @@ class DlgEditClass(Dialog):
         """
         super().__init__(parent, ID, _("Class Edit"), style=RESIZE_BORDER | CAPTION)
 
+        self.logger: Logger = getLogger(__name__)
         self._pyutClass     = pyutClass
         self._pyutClassCopy = deepcopy(pyutClass)
         self._parent        = parent
@@ -503,7 +507,9 @@ class DlgEditClass(Dialog):
         # Fill the list controls
         try:
             for el in self._pyutClassCopy.getFields():
+                self.logger.info(f'field: {el}')
                 self._lstFieldList.Append(str(el))
+
             for el in self._pyutClassCopy.getMethods():
                 self._lstMethodList.Append(el.getString())
         except (ValueError, Exception) as e:
@@ -569,15 +575,6 @@ class DlgEditClass(Dialog):
         dlg._btnParamUp.Enable(selection > 0)
         dlg._btnParamDown.Enable(
             enabled and selection < dlg._lstParams.GetCount() - 1)
-
-    # def _fixBtnDlgFields (self):
-    #     """
-    #     # Fix state of buttons in dialog fields (enable or not).
-    #
-    #     @since 1.9
-    #     @author N. Dubois <n_dub@altavista.com>
-    #     """
-    #     self._dlgField._btnFieldOk.Enable(self._dlgField._txtFieldName.GetValue() != "")
 
     def _fixBtnDlgMethods (self):
         """

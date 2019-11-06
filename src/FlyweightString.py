@@ -1,4 +1,4 @@
-
+from types import MethodType
 from weakref import WeakValueDictionary
 
 
@@ -34,7 +34,7 @@ class FlyweightString:
         if name not in cls.__instances.keys():
             # ref = object.__new__(cls, name)
             ref = object.__new__(cls)
-            # assert type(ref.__init__) != MethodType, f"Error, your flyweight class {cls} cannot contain a __init__ "  "method."
+            assert type(ref.__init__) != MethodType, f"Error, your flyweight class {cls} cannot contain a __init__ "  "method."
             try:
                 ref.init(name)
             except Exception as e:

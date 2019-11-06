@@ -34,16 +34,6 @@ class PyutField(PyutParam):
         super().__init__(name, theParamType, defaultValue)
         self._visibility = getPyutVisibility(visibility)
 
-    def __str__(self):
-        """
-        Get method, used to know the name and visibility.
-
-        @return string field
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        """
-        return str(self._visibility) + PyutParam.__str__(self)
-
     def getVisibility(self):
         """
         Get Visibility, used to know the visibility ("+", "-", "#").
@@ -68,3 +58,13 @@ class PyutField(PyutParam):
         if type(visibility) is str:
             visibility = getPyutVisibility(visibility)
         self._visibility = visibility
+
+    def __str__(self):
+        """
+        Get method, used to know the name and visibility.
+
+        @return string field
+        @since 1.0
+        @author Deve Roux <droux@eivd.ch>
+        """
+        return str(self._visibility) + PyutParam.__str__(self)

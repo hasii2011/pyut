@@ -6,7 +6,7 @@ from sys import exc_info
 from traceback import extract_tb
 
 from org.pyut.PyutObject import *
-from org.pyut.PyutType import *
+from org.pyut.PyutType import PyutType
 
 
 class PyutParam(PyutObject):
@@ -33,28 +33,8 @@ class PyutParam(PyutObject):
                 self.logger.error((str(el)))
             self.logger.error("===========================================")
 
-        self._type = getPyutType(theParameterType)
+        self._type = PyutType(theParameterType)
         self._defaultValue = defaultValue
-
-    def __str__(self) -> str:
-        """
-        Get method, used to know the name.
-
-        @return string param
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        @modified L. Burgbacher <lb@alawa.ch>
-            don't put the : if there's no type defined
-        """
-        s = self.getName()
-
-        if str(self._type) != "":
-            s += " : " + str(self._type)
-
-        if self._defaultValue is not None:
-            s += " = " + self._defaultValue
-
-        return s
 
     def getType(self) -> PyutType:
         """
@@ -77,7 +57,7 @@ class PyutParam(PyutObject):
         # Python 3 update
         # if type(theParameterType) == StringType or type(theParameterType) == UnicodeType:
         if type(theParameterType) is str:
-            theParameterType = getPyutType(theParameterType)
+            theParameterType = PyutType(theParameterType)
         self._type = theParameterType
 
     def getDefaultValue(self) -> str:
@@ -99,3 +79,23 @@ class PyutParam(PyutObject):
         @author Deve Roux <droux@eivd.ch>
         """
         self._defaultValue = defaultValue
+
+    def __str__(self) -> str:
+        """
+        Get method, used to know the name.
+
+        @return string param
+        @since 1.0
+        @author Deve Roux <droux@eivd.ch>
+        @modified L. Burgbacher <lb@alawa.ch>
+            don't put the : if there's no type defined
+        """
+        s = self.getName()
+
+        if str(self._type) != "":
+            s += " : " + str(self._type)
+
+        if self._defaultValue is not None:
+            s += " = " + self._defaultValue
+
+        return s

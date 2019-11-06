@@ -1,18 +1,33 @@
 
-import unittest
+from typing import List
+
+from logging import Logger
+from logging import getLogger
+
+from unittest import main as unitTestMain
+
+from tests.TestBase import TestBase
 
 from FlyweightString import FlyweightString
 from org.pyut.PyutType import PyutType   # PyutType is a FlyweightString
 
 
-class TestFlyweight(unittest.TestCase):
+class TestFlyweight(TestBase):
     """
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
+    clsLogger: Logger = None
+
+    @classmethod
+    def setUpClass(cls):
+        """"""
+        TestBase.setUpLogging()
+        TestFlyweight.clsLogger = getLogger(__name__)
+
     def setUp(self):
         self.strings = [
             "salut", "hello", "ca va ?"
         ]
+        self.logger: Logger = TestFlyweight.clsLogger
 
     def testFlyweightString(self):
         """Test whether instantiating an existing fly works correctly"""
@@ -39,11 +54,36 @@ class TestFlyweight(unittest.TestCase):
         try:
             # noinspection PyUnresolvedReferences
             a.setName("Salut")
-        except AttributeError:
+        except AttributeError as ae:
+            self.logger.info(f'Expected error: {ae}')
             pass    # We should get this error
         else:
             self.fail("PyutType should not be modifiable by setName")
 
+    def testRealPyutTypes(self):
+
+        anInt:  PyutType = PyutType('int')
+        aFloat: PyutType = PyutType('float')
+        aBool:  PyutType = PyutType('bool')
+        aStr:   PyutType = PyutType('str')
+
+        self.logger.info(f'All flies: {anInt.getAllFlies()}')
+        anotherInt:  PyutType = PyutType('int')
+
+        self.logger.info(f'More flies: {anInt.getAllFlies()}')
+
+        keys: List[str] = aFloat.getAllFlies()
+        self.assertIn(member='int', container=keys, msg='Missing fly')
+
+        moreKeys: List[str] = aBool.getAllFlies()
+        self.assertIn(member='bool', container=moreKeys, msg='Missing fly')
+
+        yetMoreKeys: List[str] = aStr.getAllFlies()
+        self.assertIn(member='float', container=yetMoreKeys, msg='Missing fly')
+
+        evenMoreKeys: List[str] = anotherInt.getAllFlies()
+        self.assertIn(member='str', container=evenMoreKeys, msg='Missing fly')
+
 
 if __name__ == '__main__':
-    unittest.main()
+    unitTestMain()
