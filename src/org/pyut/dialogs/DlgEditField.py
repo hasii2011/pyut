@@ -129,9 +129,9 @@ class DlgEditField(BaseDlgEdit):
         """
 
         self.fieldToEdit.setName(self._txtFieldName.GetValue().strip())
-        from org.pyut.PyutType import getPyutType
+        from org.pyut.PyutType import PyutType
 
-        self.fieldToEdit.setType(getPyutType(self._txtFieldType.GetValue().strip()))
+        self.fieldToEdit.setType(PyutType(self._txtFieldType.GetValue().strip()))
         self.fieldToEdit.setVisibility(self._rdbFieldVisibility.GetStringSelection())
 
         if self._txtFieldDefault.GetValue().strip() != "":

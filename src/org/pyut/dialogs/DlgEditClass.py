@@ -1,5 +1,7 @@
 
 from typing import cast
+from typing import List
+from typing import Dict
 
 from logging import Logger
 from logging import getLogger
@@ -112,6 +114,7 @@ class DlgEditClass(Dialog):
         self.logger: Logger = getLogger(__name__)
         self._pyutClass     = pyutClass
         self._pyutClassCopy = deepcopy(pyutClass)
+        self._fixDeepCopyBug()
         self._parent        = parent
         self._ctrl          = Mediator.getMediator()
 
@@ -507,7 +510,7 @@ class DlgEditClass(Dialog):
         # Fill the list controls
         try:
             for el in self._pyutClassCopy.getFields():
-                self.logger.info(f'field: {el}')
+                self.logger.debug(f'field: {el}')
                 self._lstFieldList.Append(str(el))
 
             for el in self._pyutClassCopy.getMethods():
@@ -1234,3 +1237,23 @@ class DlgEditClass(Dialog):
     # noinspection PyUnusedLocal
     def _onParamCancel (self, event):
         self._dlgParam.EndModal(CANCEL)
+
+    def _fixDeepCopyBug(self):
+        """
+        Debug code in DlgEditClass reveals that deepcopy of all Fields sets the field type to
+        random type;  Seems to be a bug or PyutType deepcopy error
+        """
+        pyutClassFields:     List[PyutField] = self._pyutClass.getFields()
+        pyutClassCopyFields: List[PyutField] = self._pyutClassCopy.getFields()
+
+        realFieldDict: Dict[str, PyutField] = {}
+        for realField in pyutClassFields:
+            realFieldDict[realField.getName()] = realField
+
+        for cloneField in pyutClassCopyFields:
+            self.logger.info(f'cloneField: {cloneField}')
+            cloneName: str = cloneField.getName()
+            realField: PyutField = realFieldDict[cloneName]
+            cloneField.setType(realField.getType())
+
+        self.logger.debug(f'Updated clone fields: {pyutClassCopyFields}')
