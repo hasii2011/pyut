@@ -17,6 +17,7 @@ from wx import EVT_TEXT
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ICON_ERROR
+from wx import ID_ANY
 from wx import OK
 from wx import RA_SPECIFY_ROWS
 from wx import VERTICAL
@@ -47,6 +48,7 @@ from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutStereotype import getPyutStereotype
 
 from org.pyut.dialogs.DlgEditComment import DlgEditComment
+from org.pyut.dialogs.DlgEditField import DlgEditField
 
 # from mediator import *  # Have to do this to avoid cyclical dependency
 import Mediator
@@ -57,9 +59,8 @@ from org.pyut.PyutUtils import PyutUtils
 # Assign constants
 [
     ID_TXTNAME, ID_TXTSTEREOTYPE,
-    ID_TXTFIELDNAME, ID_BTNFIELDADD, ID_BTNFIELDEDIT, ID_BTNFIELDREMOVE,
+    ID_BTNFIELDADD, ID_BTNFIELDEDIT, ID_BTNFIELDREMOVE,
     ID_BTNFIELDUP, ID_BTNFIELDDOWN, ID_LSTFIELDLIST,
-    ID_BTNFIELDOK, ID_BTNFIELDCANCEL,
 
     ID_TXTMETHODNAME, ID_BTNMETHODADD, ID_BTNMETHODEDIT, ID_BTNMETHODREMOVE,
     ID_BTNMETHODUP, ID_BTNMETHODDOWN, ID_LSTMETHODLIST,
@@ -69,7 +70,7 @@ from org.pyut.PyutUtils import PyutUtils
     ID_BTNPARAMUP, ID_BTNPARAMDOWN, ID_LSTPARAMLIST,
     ID_BTNPARAMOK, ID_BTNPARAMCANCEL,
 
-    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(32)
+    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(29)
 
 
 class DlgEditClass(Dialog):
@@ -261,84 +262,17 @@ class DlgEditClass(Dialog):
         self.Centre()
         self.ShowModal()
 
-    def _callDlgEditField (self, field):
+    def _callDlgEditField (self, field: PyutField) -> int:
         """
-        Dialog for Field edition.
+                Dialog for Field editing
 
-        @param PyutField field : Field to be edited
-        @return int : return code from dialog
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
+        Args:
+            field:  Field to be edited
+
+        Returns: return code from dialog
         """
-
-        self._dlgField = Dialog(self, -1, _("Field Edit"))
-        # Simplify writing
-        dlg = self._dlgField
-        dlg.field = field
-
-        # ----------------
-        # Design of dialog
-        # ----------------
-        dlg.SetAutoLayout(True)
-
-        # RadioBox Visibility
-        dlg._rdbFieldVisibility = RadioBox(dlg, -1, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
-
-        # Txt Ctrl Name
-        lblFieldName = StaticText (dlg, -1, _("Name"))
-        dlg._txtFieldName = TextCtrl(dlg, ID_TXTFIELDNAME, "", size=(125, -1))
-        dlg.Bind(EVT_TEXT, self._evtFieldText, id=ID_TXTFIELDNAME)
-
-        # Txt Ctrl Type
-        lblFieldType = StaticText (dlg, -1, _("Type"))
-        dlg._txtFieldType = TextCtrl(dlg, -1, "", size=(125, -1))
-
-        # Txt Ctrl Default
-        lblFieldDefault = StaticText (dlg, -1, _("Default Value"))
-        dlg._txtFieldDefault = TextCtrl(dlg, -1, "", size=(125, -1))
-
-        # ---------------------
-        # Buttons OK and cancel
-        dlg._btnFieldOk = Button(dlg, ID_BTNFIELDOK, _("&Ok"))
-        dlg.Bind(EVT_BUTTON, self._onFieldOk, id=ID_BTNFIELDOK)
-        dlg._btnFieldOk.SetDefault()
-        dlg._btnFieldCancel = Button(dlg, ID_BTNFIELDCANCEL, _("&Cancel"))
-        dlg.Bind(EVT_BUTTON, self._onFieldCancel, id=ID_BTNFIELDCANCEL)
-        szrButtons = BoxSizer (HORIZONTAL)
-        szrButtons.Add(dlg._btnFieldOk, 0, ALL, 5)
-        szrButtons.Add(dlg._btnFieldCancel, 0, ALL, 5)
-
-        szrField1 = FlexGridSizer(cols=3, hgap=6, vgap=6)
-        szrField1.AddMany([lblFieldName, lblFieldType, lblFieldDefault, dlg._txtFieldName, dlg._txtFieldType, dlg._txtFieldDefault])
-
-        szrField2 = BoxSizer(HORIZONTAL)
-        szrField2.Add(dlg._rdbFieldVisibility, 0, ALL, 5)
-        szrField2.Add(szrField1, 0, ALIGN_CENTER_VERTICAL | ALL, 5)
-
-        szrField3 = BoxSizer(VERTICAL)
-        szrField3.Add(szrField2, 0, ALL, 5)
-        szrField3.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)
-
-        dlg.SetSizer(szrField3)
-        dlg.SetAutoLayout(True)
-
-        szrField3.Fit(dlg)
-
-        # Fill the text controls with PyutField data
-        dlg._txtFieldName.SetValue(dlg.field.getName())
-        dlg._txtFieldType.SetValue(str(dlg.field.getType()))
-        dlg._txtFieldDefault.SetValue(self._convertNone(
-            dlg.field.getDefaultValue()))
-        dlg._rdbFieldVisibility.SetStringSelection(str(dlg.field.getVisibility()))
-
-        # Fix state of buttons (enabled or not)
-        self._fixBtnDlgFields()
-
-        # Set the focus
-        dlg._txtFieldName.SetFocus()
-        dlg.Centre()
-
-        return dlg.ShowModal()
+        self._dlgField = DlgEditField(theParent=self, theWindowId=ID_ANY, fieldToEdit=field, theMediator=self._ctrl)
+        return self._dlgField.ShowModal()
 
     def _callDlgEditMethod (self, method):
         """
@@ -636,14 +570,14 @@ class DlgEditClass(Dialog):
         dlg._btnParamDown.Enable(
             enabled and selection < dlg._lstParams.GetCount() - 1)
 
-    def _fixBtnDlgFields (self):
-        """
-        # Fix state of buttons in dialog fields (enable or not).
-
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        self._dlgField._btnFieldOk.Enable(self._dlgField._txtFieldName.GetValue() != "")
+    # def _fixBtnDlgFields (self):
+    #     """
+    #     # Fix state of buttons in dialog fields (enable or not).
+    #
+    #     @since 1.9
+    #     @author N. Dubois <n_dub@altavista.com>
+    #     """
+    #     self._dlgField._btnFieldOk.Enable(self._dlgField._txtFieldName.GetValue() != "")
 
     def _fixBtnDlgMethods (self):
         """
@@ -1074,15 +1008,15 @@ class DlgEditClass(Dialog):
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _evtFieldText (self, event):
-        """
-        Check if button "Add" has to be enabled or not.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.4
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        self._fixBtnDlgFields()
+    # def _evtFieldText (self, event):
+    #     """
+    #     Check if button "Add" has to be enabled or not.
+    #
+    #     @param wx.Event event : event that call this subprogram.
+    #     @since 1.4
+    #     @author N. Dubois <n_dub@altavista.com>
+    #     """
+    #     self._fixBtnDlgFields()
 
     # noinspection PyUnusedLocal
     def _evtMethodText (self, event):
@@ -1242,36 +1176,6 @@ class DlgEditClass(Dialog):
         self.Close()
 
     # noinspection PyUnusedLocal
-    def _onFieldOk (self, event):
-        """
-        When button OK from dlgEditField is clicked.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        dlg = self._dlgField
-        dlg.field.setName(dlg._txtFieldName.GetValue().strip())
-        from org.pyut.PyutType import getPyutType
-        dlg.field.setType(getPyutType(dlg._txtFieldType.GetValue().strip()))
-        dlg.field.setVisibility(dlg._rdbFieldVisibility.GetStringSelection())
-
-        if dlg._txtFieldDefault.GetValue().strip() != "":
-            dlg.field.setDefaultValue(dlg._txtFieldDefault.GetValue().strip())
-        else:
-            dlg.field.setDefaultValue(None)
-
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        #  project = self._ctrl.getCurrentProject()
-        if project is not None:
-            project.setModified()
-
-        # Close dialog
-        dlg.EndModal(OK)
-
-    # noinspection PyUnusedLocal
     def _onMethodOk (self, event):
         """
         When button OK from dlgEditMethod is clicked.
@@ -1325,10 +1229,6 @@ class DlgEditClass(Dialog):
     def _onCancel (self, event):
         self._returnAction = CANCEL
         self.Close()
-
-    # noinspection PyUnusedLocal
-    def _onFieldCancel (self, event):
-        self._dlgField.EndModal(CANCEL)
 
     # noinspection PyUnusedLocal
     def _onMethodCancel (self, event):
