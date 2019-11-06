@@ -17,6 +17,7 @@ from wx import Point
 from wx import RA_SPECIFY_ROWS
 from wx import RESIZE_BORDER
 from wx import RadioBox
+from wx import STAY_ON_TOP
 from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
@@ -37,9 +38,9 @@ from globals import _
 
 class DlgEditField(Dialog):
 
-    def __init__(self, theParent, theWindowId=ID_ANY, fieldToEdit: PyutField = None, theMediator = None):
+    def __init__(self, theParent, theWindowId=ID_ANY, fieldToEdit: PyutField = None, theMediator=None):
 
-        super().__init__(theParent, theWindowId, title=_("Field Edit"), style=RESIZE_BORDER | CAPTION)
+        super().__init__(theParent, theWindowId, title=_("Field Edit"), style=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self.fieldToEdit = fieldToEdit
         self._ctrl       = theMediator
