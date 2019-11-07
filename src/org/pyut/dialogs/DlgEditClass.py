@@ -11,7 +11,7 @@ from copy import deepcopy
 from wx import ALIGN_BOTTOM
 from wx import ALIGN_CENTER
 from wx import ALIGN_CENTER_HORIZONTAL
-from wx import ALIGN_CENTER_VERTICAL
+
 from wx import ALIGN_RIGHT
 from wx import ALL
 from wx import CAPTION
@@ -24,14 +24,12 @@ from wx import HORIZONTAL
 from wx import ICON_ERROR
 from wx import ID_ANY
 from wx import OK
-from wx import RA_SPECIFY_ROWS
 from wx import VERTICAL
 from wx import LB_SINGLE
 from wx import RESIZE_BORDER
 from wx import CANCEL
 
-from wx import DefaultSize
-from wx import Point
+
 from wx import Dialog
 from wx import ListBox
 from wx import MessageDialog
@@ -39,21 +37,20 @@ from wx import TextCtrl
 from wx import Button
 from wx import BoxSizer
 from wx import CheckBox
-from wx import RadioBox
-from wx import StaticText
 
+from wx import StaticText
 from wx import FlexGridSizer
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 
-from org.pyut.PyutModifier import PyutModifier
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutStereotype import getPyutStereotype
 
 from org.pyut.dialogs.DlgEditComment import DlgEditComment
 from org.pyut.dialogs.DlgEditField import DlgEditField
+from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
 
 # from mediator import *  # Have to do this to avoid cyclical dependency
 import Mediator
@@ -67,15 +64,13 @@ from org.pyut.PyutUtils import PyutUtils
     ID_BTNFIELDADD, ID_BTNFIELDEDIT, ID_BTNFIELDREMOVE,
     ID_BTNFIELDUP, ID_BTNFIELDDOWN, ID_LSTFIELDLIST,
 
-    ID_TXTMETHODNAME, ID_BTNMETHODADD, ID_BTNMETHODEDIT, ID_BTNMETHODREMOVE,
+    ID_BTNMETHODADD, ID_BTNMETHODEDIT, ID_BTNMETHODREMOVE,
     ID_BTNMETHODUP, ID_BTNMETHODDOWN, ID_LSTMETHODLIST,
-    ID_BTNMETHODOK, ID_BTNMETHODCANCEL,
 
-    ID_TXTPARAMNAME, ID_BTNPARAMADD, ID_BTNPARAMEDIT, ID_BTNPARAMREMOVE,
-    ID_BTNPARAMUP, ID_BTNPARAMDOWN, ID_LSTPARAMLIST,
+    ID_TXTPARAMNAME,
     ID_BTNPARAMOK, ID_BTNPARAMCANCEL,
 
-    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(29)
+    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(20)
 
 
 class DlgEditClass(Dialog):
@@ -281,130 +276,17 @@ class DlgEditClass(Dialog):
         self._dlgField = DlgEditField(theParent=self, theWindowId=ID_ANY, fieldToEdit=field, theMediator=self._ctrl)
         return self._dlgField.ShowModal()
 
-    def _callDlgEditMethod (self, method):
+    def _callDlgEditMethod (self, method: PyutMethod) -> int:
         """
-        Dialog for Method edition.
+        Create the dialog for Method editing.
 
-        @param PyutMethod method : Method to be edited
-        @return int : return code from dialog
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
+        Args:
+            method: Method to be edited
+
+        Returns: return code from dialog
         """
-
-        self._dlgMethod = Dialog(self, -1, _("Method Edit"))
-        # Simplify writing
-        dlg = self._dlgMethod
-        dlg._pyutMethod = method
-        dlg._pyutMethodCopy = deepcopy(method)
-
-        # ----------------
-        # Design of dialog
-        # ----------------
-        dlg.SetAutoLayout(True)
-
-        # RadioBox Visibility
-        dlg._rdbVisibility = RadioBox(dlg, -1, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
-
-        # Txt Ctrl Name
-        lblName = StaticText (dlg, -1, _("Name"))
-        dlg._txtName = TextCtrl(dlg, ID_TXTMETHODNAME, "", size=(125, -1))
-        dlg.Bind(EVT_TEXT, self._evtMethodText, id=ID_TXTMETHODNAME)
-
-        # Txt Ctrl Modifiers
-        lblModifiers = StaticText (dlg, -1, _("Modifiers"))
-        dlg._txtModifiers = TextCtrl(dlg, -1, "", size=(125, -1))
-
-        # Txt Ctrl Return Type
-        lblReturn = StaticText (dlg, -1, _("Return type"))
-        dlg._txtReturn = TextCtrl(dlg, -1, "", size=(125, -1))
-
-        # ------
-        # Params
-
-        # Label Params
-        lblParam = StaticText (dlg, -1, _("Params :"))
-
-        # ListBox
-        dlg._lstParams = ListBox(dlg, ID_LSTPARAMLIST, choices=[],  style=LB_SINGLE)
-        dlg.Bind(EVT_LISTBOX, self._evtParamList, id=ID_LSTPARAMLIST)
-
-        # Button Add
-        dlg._btnParamAdd = Button(dlg, ID_BTNPARAMADD, _("&Add"))
-        dlg.Bind(EVT_BUTTON, self._onParamAdd, id=ID_BTNPARAMADD)
-
-        # Button Edit
-        dlg._btnParamEdit = Button(dlg, ID_BTNPARAMEDIT, _("&Edit"))
-        dlg.Bind(EVT_BUTTON, self._onParamEdit, id=ID_BTNPARAMEDIT)
-
-        # Button Remove
-        dlg._btnParamRemove = Button(dlg, ID_BTNPARAMREMOVE, _("&Remove"))
-        dlg.Bind(EVT_BUTTON, self._onParamRemove, id=ID_BTNPARAMREMOVE)
-
-        # Button Up
-        dlg._btnParamUp = Button(dlg, ID_BTNPARAMUP, _("&Up"))
-        dlg.Bind(EVT_BUTTON, self._onParamUp, id=ID_BTNPARAMUP)
-
-        # Button Down
-        dlg._btnParamDown = Button(dlg, ID_BTNPARAMDOWN, _("&Down"))
-        dlg.Bind(EVT_BUTTON, self._onParamDown, id=ID_BTNPARAMDOWN)
-
-        # Sizer for Params buttons
-        szrParamButtons = BoxSizer (HORIZONTAL)
-        szrParamButtons.Add(dlg._btnParamAdd, 0, ALL, 5)
-        szrParamButtons.Add(dlg._btnParamEdit, 0, ALL, 5)
-        szrParamButtons.Add(dlg._btnParamRemove, 0, ALL, 5)
-        szrParamButtons.Add(dlg._btnParamUp, 0, ALL, 5)
-        szrParamButtons.Add(dlg._btnParamDown, 0, ALL, 5)
-
-        # ---------------------
-        # Buttons OK and cancel
-        dlg._btnMethodOk = Button(dlg, ID_BTNMETHODOK, _("&Ok"))
-        dlg.Bind(EVT_BUTTON, self._onMethodOk, id=ID_BTNMETHODOK)
-        dlg._btnMethodOk.SetDefault()
-        dlg._btnMethodCancel = Button(dlg, ID_BTNMETHODCANCEL, _("&Cancel"))
-        dlg.Bind(EVT_BUTTON, self._onMethodCancel, id=ID_BTNMETHODCANCEL)
-        szrButtons = BoxSizer (HORIZONTAL)
-        szrButtons.Add(dlg._btnMethodOk, 0, ALL, 5)
-        szrButtons.Add(dlg._btnMethodCancel, 0, ALL, 5)
-
-        szr1 = FlexGridSizer(cols=3, hgap=6, vgap=6)
-        szr1.AddMany([lblName, lblModifiers, lblReturn, dlg._txtName, dlg._txtModifiers, dlg._txtReturn])
-
-        szr2 = BoxSizer(HORIZONTAL)
-        szr2.Add(dlg._rdbVisibility, 0, ALL, 5)
-        szr2.Add(szr1, 0, ALIGN_CENTER_VERTICAL | ALL, 5)
-
-        szr3 = BoxSizer(VERTICAL)
-        szr3.Add(szr2, 0, ALL, 5)
-        szr3.Add(lblParam, 0, ALL, 5)
-        szr3.Add(dlg._lstParams, 1, EXPAND | ALL, 5)
-        szr3.Add(szrParamButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szr3.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)
-
-        dlg.SetSizer(szr3)
-        dlg.SetAutoLayout(True)
-
-        szr3.Fit(dlg)
-
-        # Fill the text controls with PyutMethod data
-        dlg._txtName.SetValue(dlg._pyutMethodCopy.getName())
-        modifs = dlg._pyutMethodCopy.getModifiers()
-        modifs = " ".join(map(lambda x: str(x), modifs))
-        dlg._txtModifiers.SetValue(modifs)
-        dlg._txtReturn.SetValue(str(dlg._pyutMethodCopy.getReturns()))
-        dlg._rdbVisibility.SetStringSelection(str(dlg._pyutMethodCopy.getVisibility()))
-        for i in dlg._pyutMethodCopy.getParams():
-            dlg._lstParams.Append(str(i))
-
-        # Fix state of buttons (enabled or not)
-        self._fixBtnDlgMethods()
-        self._fixBtnParam()
-
-        # Fix the focus
-        dlg._txtName.SetFocus()
-        dlg.Centre()
-
-        return dlg.ShowModal()
+        self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=method, theMediator=self._ctrl)
+        return self._dlgMethod.ShowModal()
 
     def _callDlgEditParam (self, param):
         """
@@ -558,36 +440,6 @@ class DlgEditClass(Dialog):
         self._btnMethodUp.Enable(selection > 0)
         self._btnMethodDown.Enable(enabled and selection < self._lstMethodList.GetCount() - 1)
 
-    def _fixBtnParam (self):
-        """
-        # Fix buttons of Params list (enable or not).
-
-        @since 1.12
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        dlg = self._dlgMethod
-        #
-        # These warnings have to be fixed by defining a specfic Dialog class
-        # rather than building one on the fly
-        #
-        selection = dlg._lstParams.GetSelection()
-        # Button Edit and Remove
-        enabled: bool = selection != -1
-        dlg._btnParamEdit.Enable(enabled)
-        dlg._btnParamRemove.Enable(enabled)
-        dlg._btnParamUp.Enable(selection > 0)
-        dlg._btnParamDown.Enable(
-            enabled and selection < dlg._lstParams.GetCount() - 1)
-
-    def _fixBtnDlgMethods (self):
-        """
-        # Fix state of buttons in dialog method (enable or not).
-
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        self._dlgMethod._btnMethodOk.Enable(self._dlgMethod._txtName.GetValue() != "")
-
     def _fixBtnDlgParams (self):
         """
         # Fix state of buttons in dialog params (enable or not).
@@ -643,29 +495,6 @@ class DlgEditClass(Dialog):
                 project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onParamAdd (self, event):
-        """
-        Add a new param in the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        param = PyutParam()
-        dlg = self._dlgMethod
-        ret = self._callDlgEditParam(param)
-        if ret == OK:
-            dlg._pyutMethodCopy.getParams().append(param)
-            # Add fields in dialog list
-            dlg._lstParams.Append(str(param))
-
-            # Tell window that its data has been modified
-            fileHandling = self._ctrl.getFileHandling()
-            project = fileHandling.getCurrentProject()
-            if project is not None:
-                project.setModified()
-
-    # noinspection PyUnusedLocal
     def _onFieldEdit (self, event):
         """
         Edit a field.
@@ -701,28 +530,6 @@ class DlgEditClass(Dialog):
         if ret == OK:
             # Modify method in dialog list
             self._lstMethodList.SetString(selection, method.getString())
-            # Tell window that its data has been modified
-            fileHandling = self._ctrl.getFileHandling()
-            project = fileHandling.getCurrentProject()
-            if project is not None:
-                project.setModified()
-
-    # noinspection PyUnusedLocal
-    def _onParamEdit (self, event):
-        """
-        Edit params.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        dlg = self._dlgMethod
-        selection = dlg._lstParams.GetSelection()
-        param = dlg._pyutMethodCopy.getParams()[selection]
-        ret = self._callDlgEditParam(param)
-        if ret == OK:
-            # Modify param in dialog list
-            dlg._lstParams.SetString(selection, str(param))
             # Tell window that its data has been modified
             fileHandling = self._ctrl.getFileHandling()
             project = fileHandling.getCurrentProject()
@@ -792,39 +599,6 @@ class DlgEditClass(Dialog):
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onParamRemove (self, event):
-        """
-        Remove a field from the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        dlg = self._dlgMethod
-
-        # Remove from list control
-        selection = dlg._lstParams.GetSelection()
-        dlg._lstParams.Delete(selection)
-
-        # Select next
-        if dlg._lstParams.GetCount() > 0:
-            index = min(selection, dlg._lstParams.GetCount()-1)
-            dlg._lstParams.SetSelection(index)
-
-        # Remove from _pyutMethodCopy
-        param = dlg._pyutMethodCopy.getParams()
-        param.pop(selection)
-
-        # Fix buttons of params list (enable or not)
-        self._fixBtnParam()
-
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
-
-    # noinspection PyUnusedLocal
     def _onFieldUp (self, event):
         """
         Move up a field in the list.
@@ -881,37 +655,6 @@ class DlgEditClass(Dialog):
         # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
         project      = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
-
-    # noinspection PyUnusedLocal
-    def _onParamUp (self, event):
-        """
-        Move up a param in the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        dlg = self._dlgMethod
-        # Move up the param in _pyutMethodCopy
-        selection = dlg._lstParams.GetSelection()
-        params = dlg._pyutMethodCopy.getParams()
-        param = params[selection]
-        params.pop(selection)
-        params.insert(selection - 1, param)
-
-        # Move up the param in dialog list
-        dlg._lstParams.SetString(selection, str(params[selection]))
-        dlg._lstParams.SetString(selection - 1, str(params[selection - 1]))
-        dlg._lstParams.SetSelection(selection - 1)
-
-        # Fix buttons (enable or not)
-        self._fixBtnParam()
-
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
@@ -976,60 +719,6 @@ class DlgEditClass(Dialog):
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onParamDown (self, event):
-        """
-        Move down a param in the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        dlg = self._dlgMethod
-        # Move up the param in _pyutMethodCopy
-        selection = dlg._lstParams.GetSelection()
-        params = dlg._pyutMethodCopy.getParams()
-        param = params[selection]
-        params.pop(selection)
-        params.insert(selection + 1, param)
-
-        # Move up the param in dialog list
-        dlg._lstParams.SetString(selection, str(params[selection]))
-        dlg._lstParams.SetString(
-            selection + 1, str(params[selection + 1]))
-        dlg._lstParams.SetSelection(selection + 1)
-
-        # Fix buttons (enable or not)
-        self._fixBtnParam()
-
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
-
-    # noinspection PyUnusedLocal
-    # def _evtFieldText (self, event):
-    #     """
-    #     Check if button "Add" has to be enabled or not.
-    #
-    #     @param wx.Event event : event that call this subprogram.
-    #     @since 1.4
-    #     @author N. Dubois <n_dub@altavista.com>
-    #     """
-    #     self._fixBtnDlgFields()
-
-    # noinspection PyUnusedLocal
-    def _evtMethodText (self, event):
-        """
-        Check if button "Add" has to be enabled or not.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        self._fixBtnDlgMethods()
-
-    # noinspection PyUnusedLocal
     def _evtParamText (self, event):
         """
         Check if button "Add" has to be enabled or not.
@@ -1085,18 +774,6 @@ class DlgEditClass(Dialog):
         """
         # Edit method
         self._onMethodEdit(event)
-
-    # noinspection PyUnusedLocal
-    def _evtParamList (self, event):
-        """
-        Called when click on Params list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        # Fix buttons (enable or not)
-        self._fixBtnParam()
 
     def _convertNone (self, astring):
         """
@@ -1176,37 +853,6 @@ class DlgEditClass(Dialog):
         self.Close()
 
     # noinspection PyUnusedLocal
-    def _onMethodOk (self, event):
-        """
-        When button OK from dlgEditMethod is clicked.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
-        @modifier L. Burgbacher <lb@alawa.ch> : added support for PyutModifier
-            class
-        """
-        dlg = self._dlgMethod
-        dlg._pyutMethod.setName(dlg._txtName.GetValue())
-        modifs = []
-        for modif in dlg._txtModifiers.GetValue().split():
-            modifs.append(PyutModifier(modif))
-        dlg._pyutMethod.setModifiers(modifs)
-        dlg._pyutMethod.setReturns(dlg._txtReturn.GetValue())
-        dlg._pyutMethod.setParams(dlg._pyutMethodCopy.getParams())
-        dlg._pyutMethod.setVisibility(
-            dlg._rdbVisibility.GetStringSelection())
-
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
-
-        # Close dialog
-        dlg.EndModal(OK)
-
-    # noinspection PyUnusedLocal
     def _onParamOk (self, event):
         dlg = self._dlgParam
         dlg._pyutParam.setName(dlg._txtName.GetValue())
@@ -1229,10 +875,6 @@ class DlgEditClass(Dialog):
     def _onCancel (self, event):
         self._returnAction = CANCEL
         self.Close()
-
-    # noinspection PyUnusedLocal
-    def _onMethodCancel (self, event):
-        self._dlgMethod.EndModal(CANCEL)
 
     # noinspection PyUnusedLocal
     def _onParamCancel (self, event):
