@@ -18,7 +18,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-from org.pyut import PyutParam
+from org.pyut.PyutParam import PyutParam
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils
@@ -123,7 +123,7 @@ class DlgEditParameter(BaseDlgEdit):
         if self._txtDefault.GetValue() != "":
             self._parameterToEdit.setDefaultValue(self._txtDefault.GetValue())
         else:
-            self._parameterToEdit.setDefaultValue(None)
+            self._parameterToEdit.setDefaultValue('')
 
         # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
