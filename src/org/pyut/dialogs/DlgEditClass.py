@@ -18,7 +18,6 @@ from wx import CAPTION
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_LISTBOX_DCLICK
-from wx import EVT_TEXT
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ICON_ERROR
@@ -39,7 +38,6 @@ from wx import BoxSizer
 from wx import CheckBox
 
 from wx import StaticText
-from wx import FlexGridSizer
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
@@ -67,33 +65,25 @@ from org.pyut.PyutUtils import PyutUtils
     ID_BTNMETHODADD, ID_BTNMETHODEDIT, ID_BTNMETHODREMOVE,
     ID_BTNMETHODUP, ID_BTNMETHODDOWN, ID_LSTMETHODLIST,
 
-    ID_TXTPARAMNAME,
-    ID_BTNPARAMOK, ID_BTNPARAMCANCEL,
-
-    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(20)
+    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(17)
 
 
 class DlgEditClass(Dialog):
     """
-    Dialog for the class edition.
+    Dialog for the class edits.
 
     Creating a DlgEditClass object will automatically open a dialog for class
-    edition. The PyutClass given in parameters will be used to fill the
-    fields of the dialog, and will be updated when clicking OK button.
+    editing. The PyutClass given in the constructor parameters will be used to fill the
+    fields of the dialog, and will be updated when the OK button is clicked.
 
-    Dialogs for methods and fields edition are contained in that class,
+    Dialogs for methods and fields edition are contained implemented in different classes and
     created when calling the _callDlgEditMethod and _callDlgEditField methods.
 
     Because dialog works on a copy of the PyutClass object, if you cancel the
-    dialog, any modification will be lost.
+    dialog any modifications are lost.
 
-    Examples of `DlgEditClass` use in `mediator.py`
-
-    :author: Nicolas Dubois
-    :contact: <nicdub@gmx.ch>
-    :version: $Revision: 1.14 $
+    Examples of `DlgEditClass` use are in  `Mediator.py`
     """
-
     def __init__(self, parent, ID, pyutClass: PyutClass):
         """
         Constructor.
@@ -288,76 +278,6 @@ class DlgEditClass(Dialog):
         self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=method, theMediator=self._ctrl)
         return self._dlgMethod.ShowModal()
 
-    def _callDlgEditParam (self, param):
-        """
-        Dialog for Param edition.
-
-        @param PyutParam param : Param to be edited
-        @return int : return code from dialog
-        @since 1.12
-        @author N. Dubois <n_dub@altavista.com>
-        """
-
-        self._dlgParam = Dialog(self, -1, _("Param Edit"))
-        # Simplify writing
-        dlg = self._dlgParam
-        dlg._pyutParam = param
-
-        # ----------------
-        # Design of dialog
-        # ----------------
-        dlg.SetAutoLayout(True)
-
-        # Txt Ctrl Name
-        lblName = StaticText (dlg, -1, _("Name"))
-        dlg._txtName = TextCtrl(dlg, ID_TXTPARAMNAME, "", size=(125, -1))
-        dlg.Bind(EVT_TEXT, self._evtParamText, id=ID_TXTPARAMNAME)
-
-        # Txt Ctrl Type
-        lblType = StaticText (dlg, -1, _("Type"))
-        dlg._txtType = TextCtrl(dlg, -1, "", size=(125, -1))
-
-        # Txt Ctrl Default
-        lblDefault = StaticText (dlg, -1, _("Default Value"))
-        dlg._txtDefault = TextCtrl(dlg, -1, "", size=(125, -1))
-
-        # ---------------------
-        # Buttons OK and cancel
-        dlg._btnOk = Button(dlg, ID_BTNPARAMOK, _("&Ok"))
-        dlg.Bind(EVT_BUTTON, self._onParamOk, id=ID_BTNPARAMOK)
-        dlg._btnOk.SetDefault()
-        dlg._btnCancel = Button(dlg, ID_BTNPARAMCANCEL, _("&Cancel"))
-        dlg.Bind(EVT_BUTTON, self._onParamCancel, id=ID_BTNPARAMCANCEL)
-        szrButtons = BoxSizer (HORIZONTAL)
-        szrButtons.Add(dlg._btnOk, 0, ALL, 5)
-        szrButtons.Add(dlg._btnCancel, 0, ALL, 5)
-
-        szr1 = FlexGridSizer(cols=3, hgap=6, vgap=6)
-        szr1.AddMany([lblName, lblType, lblDefault, dlg._txtName, dlg._txtType, dlg._txtDefault])
-
-        szr2 = BoxSizer(VERTICAL)
-        szr2.Add(szr1, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szr2.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)
-
-        dlg.SetSizer(szr2)
-        dlg.SetAutoLayout(True)
-
-        szr2.Fit(dlg)
-
-        # Fill the text controls with PyutParam data
-        dlg._txtName.SetValue(dlg._pyutParam.getName())
-        dlg._txtType.SetValue(str(dlg._pyutParam.getType()))
-        dlg._txtDefault.SetValue(self._convertNone(dlg._pyutParam.getDefaultValue()))
-
-        # Fix state of buttons (enabled or not)
-        self._fixBtnDlgParams()
-
-        # Set the focus
-        dlg._txtName.SetFocus()
-        dlg.Centre()
-
-        return dlg.ShowModal()
-
     def _dupParams (self, params):
         """
         Duplicate a list of params, all params are duplicated too.
@@ -439,15 +359,6 @@ class DlgEditClass(Dialog):
         self._btnMethodRemove.Enable(enabled)
         self._btnMethodUp.Enable(selection > 0)
         self._btnMethodDown.Enable(enabled and selection < self._lstMethodList.GetCount() - 1)
-
-    def _fixBtnDlgParams (self):
-        """
-        # Fix state of buttons in dialog params (enable or not).
-
-        @since 1.12
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        self._dlgParam._btnOk.Enable(self._dlgParam._txtName.GetValue() != "")
 
     # noinspection PyUnusedLocal
     def _onFieldAdd (self, event):
@@ -719,18 +630,6 @@ class DlgEditClass(Dialog):
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _evtParamText (self, event):
-        """
-        Check if button "Add" has to be enabled or not.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        dlg = self._dlgParam
-        dlg._btnOk.Enable(dlg._txtName.GetValue() != "")
-
-    # noinspection PyUnusedLocal
     def _evtFieldList (self, event):
         """
         Called when click on Fields list.
@@ -853,32 +752,9 @@ class DlgEditClass(Dialog):
         self.Close()
 
     # noinspection PyUnusedLocal
-    def _onParamOk (self, event):
-        dlg = self._dlgParam
-        dlg._pyutParam.setName(dlg._txtName.GetValue())
-        dlg._pyutParam.setType(dlg._txtType.GetValue())
-        if dlg._txtDefault.GetValue() != "":
-            dlg._pyutParam.setDefaultValue(dlg._txtDefault.GetValue())
-        else:
-            dlg._pyutParam.setDefaultValue(None)
-
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
-
-        # Close dialog
-        dlg.EndModal(OK)
-
-    # noinspection PyUnusedLocal
     def _onCancel (self, event):
         self._returnAction = CANCEL
         self.Close()
-
-    # noinspection PyUnusedLocal
-    def _onParamCancel (self, event):
-        self._dlgParam.EndModal(CANCEL)
 
     def _fixDeepCopyBug(self):
         """
