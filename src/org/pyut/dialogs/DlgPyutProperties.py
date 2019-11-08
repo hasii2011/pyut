@@ -31,7 +31,7 @@ from wx import MessageDialog
 from wx import StaticText
 
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 
 from globals import _
 
@@ -84,7 +84,7 @@ class DlgPyutProperties(Dialog):
         [
             self.__autoResizeID, self.__showParamsID, self.__languageID,
             self.__maximizeID,   self.__fontSizeID,   self.__showTipsID,
-        ] = assignID(6)
+        ] = PyutUtils.assignID(6)
 
         GAP = 5
 
