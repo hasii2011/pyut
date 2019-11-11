@@ -35,7 +35,6 @@ class TestFlyweight(TestBase):
         a: PyutType = PyutType("salut")
         b: PyutType = PyutType("s" + "alut")
         self.assertTrue(a.getValue() == b.getValue())
-        self.assertTrue(a is b, "two different objects with same values strings")
         try:
             # noinspection PyUnresolvedReferences
             a.setName("Salut")
