@@ -1,14 +1,22 @@
-
-import wx
+from wx import Button
+from wx import CANCEL
+from wx import Dialog
+from wx import EVT_BUTTON
+from wx import EVT_TEXT
+from wx import NewIdRef as wxNewIdRef
+from wx import OK
+from wx import Point
+from wx import Size
+from wx import StaticText
+from wx import TE_MULTILINE
+from wx import TextCtrl
 
 from globals import _
 
-# from pyutUtils import assignID
-from wx import NewId
-TXT_COMMENT = NewId()
+TXT_COMMENT = wxNewIdRef()
 
 
-class DlgEditComment(wx.Dialog):
+class DlgEditComment(Dialog):
     """
     Dialog for the class comment edition.
     """
@@ -22,36 +30,36 @@ class DlgEditComment(wx.Dialog):
             pyutClass:
         """
 
-        wx.Dialog.__init__(self, parent, ID, _("Description Edit"))
+        super().__init__(parent, ID, _("Description Edit"))
 
         # Associated PyutLink
         self._pyutClass = pyutClass
 
-        self.SetSize(wx.Size(416, 200))
+        self.SetSize(Size(416, 200))
 
         # init members vars
         self._text = self._pyutClass.getDescription()
         self._returnAction = -1   # describe how the user exited the dialog box
 
         # labels
-        wx.StaticText(self, -1, _("Class description"),  wx.Point(8, 8))
+        StaticText(self, -1, _("Class description"),  Point(8, 8))
 
         # text
-        self._txtCtrl = wx.TextCtrl(self, TXT_COMMENT, self._text, wx.Point(8, 24), wx.Size(392, 100), wx.TE_MULTILINE)
+        self._txtCtrl: TextCtrl = TextCtrl(self, TXT_COMMENT, self._text, Point(8, 24), Size(392, 100), TE_MULTILINE)
 
         # Set the focus
         self._txtCtrl.SetFocus()
 
         # text events
-        self.Bind(wx.EVT_TEXT, self._onTxtNoteChange, id=TXT_COMMENT)
+        self.Bind(EVT_TEXT, self._onTxtNoteChange, id=TXT_COMMENT)
 
         # Ok/Cancel
-        wx.Button(self, wx.OK, _("&Ok"), wx.Point(120, 140))
-        wx.Button(self, wx.CANCEL, _("&Cancel"), wx.Point(208, 140))
+        Button(self, OK, _("&Ok"), Point(120, 140))
+        Button(self, CANCEL, _("&Cancel"), Point(208, 140))
 
         # button events
-        self.Bind(wx.EVT_BUTTON, self._onCmdOk, id=wx.OK)
-        self.Bind(wx.EVT_BUTTON, self._onCmdCancel, id=wx.CANCEL)
+        self.Bind(EVT_BUTTON, self._onCmdOk, id=OK)
+        self.Bind(EVT_BUTTON, self._onCmdCancel, id=CANCEL)
 
         self.Centre()
         self.ShowModal()
@@ -76,7 +84,7 @@ class DlgEditComment(wx.Dialog):
 
         self._pyutClass.setDescription(self._text)
 
-        self._returnAction = wx.OK
+        self._returnAction = OK
         self.Close()
 
     # noinspection PyUnusedLocal
@@ -87,7 +95,7 @@ class DlgEditComment(wx.Dialog):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        self._returnAction = wx.CANCEL
+        self._returnAction = CANCEL
         self.Close()
 
     def getReturnAction(self):
