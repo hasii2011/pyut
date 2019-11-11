@@ -10,7 +10,6 @@ from copy import deepcopy
 
 from tests.TestBase import TestBase
 
-from FlyweightString import FlyweightString
 from org.pyut.PyutType import PyutType   # PyutType is a FlyweightString
 
 
