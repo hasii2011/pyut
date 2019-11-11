@@ -30,11 +30,11 @@ class TestFlyweight(TestBase):
         ]
         self.logger: Logger = TestFlyweight.clsLogger
 
-    def testPyutType(self):
+    def testPyutTypeReadOnly(self):
         """Test PyutType class"""
         a: PyutType = PyutType("salut")
         b: PyutType = PyutType("s" + "alut")
-        self.assertTrue(a.getName() == b.getName())
+        self.assertTrue(a.getValue() == b.getValue())
         self.assertTrue(a is b, "two different objects with same values strings")
         try:
             # noinspection PyUnresolvedReferences
@@ -44,30 +44,6 @@ class TestFlyweight(TestBase):
             pass    # We should get this error
         else:
             self.fail("PyutType should not be modifiable by setName")
-
-    def testRealPyutTypes(self):
-
-        anInt:  PyutType = PyutType('int')
-        aFloat: PyutType = PyutType('float')
-        aBool:  PyutType = PyutType('bool')
-        aStr:   PyutType = PyutType('str')
-
-        self.logger.info(f'All flies: {anInt.getAllFlies()}')
-        anotherInt:  PyutType = PyutType('int')
-
-        self.logger.info(f'More flies: {anInt.getAllFlies()}')
-
-        keys: List[str] = aFloat.getAllFlies()
-        self.assertIn(member='int', container=keys, msg='Missing fly')
-
-        moreKeys: List[str] = aBool.getAllFlies()
-        self.assertIn(member='bool', container=moreKeys, msg='Missing fly')
-
-        yetMoreKeys: List[str] = aStr.getAllFlies()
-        self.assertIn(member='float', container=yetMoreKeys, msg='Missing fly')
-
-        evenMoreKeys: List[str] = anotherInt.getAllFlies()
-        self.assertIn(member='str', container=evenMoreKeys, msg='Missing fly')
 
     def testDeepCopyPyutTypes(self):
 
