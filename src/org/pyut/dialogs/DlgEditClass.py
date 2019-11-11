@@ -1,7 +1,5 @@
 
 from typing import cast
-from typing import List
-from typing import Dict
 
 from logging import Logger
 from logging import getLogger
@@ -99,12 +97,8 @@ class DlgEditClass(Dialog):
         self.logger: Logger = getLogger(__name__)
         self._pyutClass     = pyutClass
         self._pyutClassCopy = deepcopy(pyutClass)
-
-        self._fixDeepCopyFieldsBug()
-        self._fixDeepCopyMethodParametersBug()
-
-        self._parent = parent
-        self._ctrl   = Mediator.getMediator()
+        self._parent        = parent
+        self._ctrl          = Mediator.getMediator()
 
         self.SetAutoLayout(True)
 
@@ -759,53 +753,3 @@ class DlgEditClass(Dialog):
     def _onCancel (self, event):
         self._returnAction = CANCEL
         self.Close()
-
-    def _fixDeepCopyFieldsBug(self):
-        """
-        Debug code in DlgEditClass reveals that deepcopy of all Fields sets the field type to
-        random type;  Seems to be a bug or PyutType deepcopy error
-        """
-        pyutClassFields:     List[PyutField] = self._pyutClass.getFields()
-        pyutClassCopyFields: List[PyutField] = self._pyutClassCopy.getFields()
-
-        realFieldDict: Dict[str, PyutField] = {}
-        for realField in pyutClassFields:
-            realFieldDict[realField.getName()] = realField
-
-        for cloneField in pyutClassCopyFields:
-            self.logger.debug(f'cloneField: {cloneField}')
-            cloneName: str = cloneField.getName()
-            realField: PyutField = realFieldDict[cloneName]
-            cloneField.setType(realField.getType())
-            self.logger.debug(f'Updated cloneField: {cloneField}')
-
-    def _fixDeepCopyMethodParametersBug(self):
-
-        pyutMethods:     List[PyutMethod] = self._pyutClass.getMethods()
-        pyutCopyMethods: List[PyutMethod] = self._pyutClassCopy.getMethods()
-
-        realMethodDict: Dict[str, PyutMethod] = {}
-        for realMethod in pyutMethods:
-            realMethodDict[realMethod.getName()] = realMethod
-
-        for cloneMethod in pyutCopyMethods:
-            cloneParams: List[PyutParam] = cloneMethod.getParams()
-            if len(cloneParams) > 0:
-                cloneMethodName: str             = cloneMethod.getName()
-                realMethod:      PyutMethod      = realMethodDict[cloneMethodName]
-                realParams:      List[PyutParam] = realMethod.getParams()
-
-                realParamDict: Dict[str, PyutParam] = {}
-                for realParam in realParams:
-                    realParamDict[realParam.getName()] = realParam
-
-                # fixedCloneParams: List[PyutParam] = []
-                for cloneParam in cloneParams:
-                    self.logger.info(f'broken cloneParam: {cloneParam}')
-                    cloneParamName: str       = cloneParam.getName()
-                    realParam:      PyutParam = realParamDict[cloneParamName]
-                    cloneParam.setType(realParam.getType())
-                    self.logger.info(f'fixed cloneParam: {cloneParam}')
-                #     fixedCloneParams.append(cloneParam)
-                # cloneMethod.setParams(fixedCloneParams)
-

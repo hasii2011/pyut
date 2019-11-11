@@ -1,7 +1,4 @@
 
-from typing import List
-from typing import Dict
-
 from logging import Logger
 from logging import getLogger
 
@@ -69,7 +66,7 @@ class DlgEditMethod(BaseDlgEdit):
 
         self._pyutMethod:     PyutMethod = methodToEdit
         self._pyutMethodCopy: PyutMethod = deepcopy(methodToEdit)
-        self._fixDeepCopyMethodParametersBug()
+        # self._fixDeepCopyMethodParametersBug()
 
         # ----------------
         # Design of dialog
@@ -388,26 +385,4 @@ class DlgEditMethod(BaseDlgEdit):
         self._btnParamRemove.Enable(enabled)
         self._btnParamUp.Enable(selection > 0)
         self._btnParamDown.Enable(enabled and selection < self._lstParams.GetCount() - 1)
-
-    def _fixDeepCopyMethodParametersBug(self):
-
-        cloneMethod: PyutMethod = self._pyutMethodCopy
-
-        cloneParams: List[PyutParam] = cloneMethod.getParams()
-        if len(cloneParams) > 0:
-            realParams: List[PyutParam] = self._pyutMethod.getParams()
-
-            realParamDict: Dict[str, PyutParam] = {}
-            for realParam in realParams:
-                realParamDict[realParam.getName()] = realParam
-
-            # fixedCloneParams: List[PyutParam] = []
-            for cloneParam in cloneParams:
-                self.logger.info(f'broken cloneParam: {cloneParam}')
-                cloneParamName: str       = cloneParam.getName()
-                realParam:      PyutParam = realParamDict[cloneParamName]
-                cloneParam.setType(realParam.getType())
-                self.logger.info(f'fixed cloneParam: {cloneParam}')
-            #     fixedCloneParams.append(cloneParam)
-            # cloneMethod.setParams(fixedCloneParams)
 
