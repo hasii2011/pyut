@@ -29,6 +29,7 @@ Functions :
 :contact: <dutoitc@hotmail.com>
 """
 
+
 def getErrorInfo() -> str:
     """
     Does this belong in the error manager?

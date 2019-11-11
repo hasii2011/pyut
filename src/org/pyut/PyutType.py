@@ -2,23 +2,18 @@
 from FlyweightString import FlyweightString
 
 
-class PyutType(FlyweightString):
+class PyutType:
     """
     Type of a field.
-    See `FlyweightString.py` for an explanation of the Flyweight pattern.
-    A pyut type is an immutable string, like "int", "float"...
     """
-    def init(self, value=''):
-        super().init(name=value)
+    def __init__(self, value=''):
         self._value = value
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         String representation.
-
-        @return type : string
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
-        # return self.getName()
         return self._value
+
+    def __repr__(self) -> str:
+        return self.__str__()

@@ -1,9 +1,5 @@
 
-from typing import Dict
 from typing import Callable
-
-from logging import Logger
-from logging import getLogger
 
 from wx import CENTRE
 from wx import WXK_DELETE
@@ -20,8 +16,8 @@ from wx import TextEntryDialog
 from MiniOgl.Constants import EVENT_PROCESSED
 from MiniOgl.Constants import SKIP_EVENT
 
-from MiniOgl import LinePoint
-from MiniOgl import ControlPoint
+from MiniOgl.LinePoint import LinePoint
+from MiniOgl.ControlPoint import ControlPoint
 
 from org.pyut.ogl.OglLink import OglLink
 
@@ -514,7 +510,8 @@ class Mediator(Singleton):
         TODO : support each link type
         """
         umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None: return
+        if umlFrame is None:
+            return
         # do the right action
         if self._currentAction in SOURCE_ACTIONS:
             # get the next action needed to complete the whole action

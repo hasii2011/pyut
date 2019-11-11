@@ -5,7 +5,7 @@ from logging import getLogger
 from sys import exc_info
 from traceback import extract_tb
 
-from org.pyut.PyutObject import *
+from org.pyut.PyutObject import PyutObject
 from org.pyut.PyutType import PyutType
 
 
@@ -48,7 +48,7 @@ class PyutParam(PyutObject):
 
     def setType(self, theParameterType):
         """
-        Set method, used to know initialize type.
+        Set method, used to know initial type.
 
         @param theParameterType
         @since 1.0
@@ -58,6 +58,7 @@ class PyutParam(PyutObject):
         # if type(theParameterType) == StringType or type(theParameterType) == UnicodeType:
         if type(theParameterType) is str:
             theParameterType = PyutType(theParameterType)
+        self.logger.error(f'theParameterType: `{theParameterType}`')
         self._type = theParameterType
 
     def getDefaultValue(self) -> str:

@@ -9,7 +9,7 @@ class PyutField(PyutParam):
     Field of a class.
 
     A PyutField represents a UML field in a Class of Pyut program
-        - father (`PyutParam`)
+        - parent (`PyutParam`)
         - field  visibility
 
     Example::
@@ -68,3 +68,6 @@ class PyutField(PyutParam):
         @author Deve Roux <droux@eivd.ch>
         """
         return str(self._visibility) + PyutParam.__str__(self)
+
+    def __repr__(self):
+        return self.__str__()

@@ -45,6 +45,20 @@
             ],
             "propagate": "False"
         },
+        "TestPyutField": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+        "TestFlyweight": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "__main__": {
             "level": "INFO",
             "handlers": [

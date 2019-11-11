@@ -6,6 +6,8 @@ from logging import getLogger
 
 from unittest import main as unitTestMain
 
+from copy import deepcopy
+
 from tests.TestBase import TestBase
 
 from FlyweightString import FlyweightString
@@ -28,22 +30,6 @@ class TestFlyweight(TestBase):
             "salut", "hello", "ca va ?"
         ]
         self.logger: Logger = TestFlyweight.clsLogger
-
-    def testFlyweightString(self):
-        """Test whether instantiating an existing fly works correctly"""
-        flies = []
-        for string in self.strings:
-            flies.append(FlyweightString(string))
-        newFlies = []
-        for string in self.strings:
-            newFlies.append(FlyweightString(string))
-        for oldFly, newFly in zip(flies, newFlies):
-            self.assertTrue(newFly is oldFly, "duplicates in flies")
-
-        # now, try with different strings with the same values
-        a = FlyweightString("salut")
-        b = FlyweightString("sa" + "lut")
-        self.assertTrue(a is b, "two different objects with same values strings")
 
     def testPyutType(self):
         """Test PyutType class"""
@@ -83,6 +69,18 @@ class TestFlyweight(TestBase):
 
         evenMoreKeys: List[str] = anotherInt.getAllFlies()
         self.assertIn(member='str', container=evenMoreKeys, msg='Missing fly')
+
+    def testDeepCopyPyutTypes(self):
+
+        fieldTypes: List[str] = ['int', 'bool', 'float']
+        originalTypes: List[PyutType] = []
+        for x in range(len(fieldTypes)):
+            aType: PyutType = PyutType(value=fieldTypes[x])
+            originalTypes.append(aType)
+        self.logger.info(f'originalTypes: {originalTypes}')
+
+        doppleGangers: List[PyutType] = deepcopy(originalTypes)
+        self.logger.info(f'doppleGangers: {doppleGangers}')
 
 
 if __name__ == '__main__':
