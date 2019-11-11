@@ -31,9 +31,7 @@ from org.pyut.PyutVisibility import PyutVisibility
 # noinspection PyUnresolvedReferences
 from Mediator import Mediator
 # noinspection PyUnresolvedReferences
-from Singleton import Singleton
-# noinspection PyUnresolvedReferences
-from FlyweightString import FlyweightString
+from org.pyut.Singleton import Singleton
 
 # noinspection PyUnresolvedReferences
 from org.pyut.ogl.OglObject import OglObject
@@ -80,7 +78,6 @@ display = [
     "org.pyut.PyutSDMessage",
     "Mediator",
     "Singleton",
-    "FlyweightString",
 ]
 
 displayOgl = [
