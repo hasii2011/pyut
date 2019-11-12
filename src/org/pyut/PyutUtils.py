@@ -30,26 +30,6 @@ Functions :
 """
 
 
-def displayWarning(msg, title=None, parent=None):
-    """
-    Display a warning
-
-    @author C.Dutoit
-    """
-    em = getErrorManager()
-    em.newWarning(msg, title, parent)
-
-
-def displayInformation(msg, title=None, parent=None):
-    """
-    Display an information
-
-    @author C.Dutoit
-    """
-    em = getErrorManager()
-    em.newInformation(msg, title, parent)
-
-
 class PyutUtils:
     STRIP_SRC_PATH_SUFFIX:  str = f'{osSep}src'
     STRIP_TEST_PATH_SUFFIX: str = f'{osSep}test'
@@ -58,6 +38,26 @@ class PyutUtils:
 
     def __init__(self):
         self.logger: Logger = getLogger(__name__)
+
+    @staticmethod
+    def displayInformation(msg, title=None, parent=None):
+        """
+        Display an information
+
+        @author C.Dutoit
+        """
+        em = getErrorManager()
+        em.newInformation(msg, title, parent)
+
+    @staticmethod
+    def displayWarning(msg, title=None, parent=None):
+        """
+        Display a warning
+
+        @author C.Dutoit
+        """
+        em = getErrorManager()
+        em.newWarning(msg, title, parent)
 
     @staticmethod
     def displayError(msg, title=None, parent=None):

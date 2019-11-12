@@ -107,9 +107,6 @@ from Mediator import ACTION_NEW_USECASE
 from Mediator import getMediator
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.PyutUtils import displayInformation
-from org.pyut.PyutUtils import displayWarning
-
 from org.pyut.ui.TipsFrame import TipsFrame
 
 from globals import _
@@ -889,10 +886,10 @@ class AppFrame(Frame):
 
         @author C.Dutoit
         """
-        displayWarning(_("The project insert is experimental, "
-                         "use it at your own risk.\n"
-                         "You risk a shapes ID duplicate with "
-                         "unexpected results !"), parent=self)
+        PyutUtils.displayWarning(_("The project insert is experimental, "
+                                   "use it at your own risk.\n"
+                                   "You risk a shapes ID duplicate with "
+                                   "unexpected results !"), parent=self)
 
         if (self._fileHandling.getCurrentProject()) is None:
             PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
@@ -966,7 +963,7 @@ class AppFrame(Frame):
         if project is not None and document is not None:
             project.removeDocument(document)
         else:
-            displayWarning(_("No document to remove"))
+            PyutUtils.displayWarning(_("No document to remove"))
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExportBmp(self, event):
@@ -1286,7 +1283,7 @@ class AppFrame(Frame):
                 msg = _("No newer version yet !")
 
         # Display dialog box
-        displayInformation(msg, _("Check for newer version"), self)
+        PyutUtils.displayInformation(msg, _("Check for newer version"), self)
 
     # noinspection PyUnusedLocal
     def _OnMnuHelpWeb(self, event):
@@ -1296,7 +1293,7 @@ class AppFrame(Frame):
         @since 1.9
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        displayInformation(_("Please point your browser at http://pyut.sf.net"), _("Pyut''s web site"), self)  # TODO FIXME :-)
+        PyutUtils.displayInformation(_("Please point your browser at http://pyut.sf.net"), _("Pyut''s web site"), self)
 
     # noinspection PyUnusedLocal
     def _OnMnuAddPyut(self, event):
