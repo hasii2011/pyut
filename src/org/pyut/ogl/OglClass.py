@@ -196,7 +196,7 @@ class OglClass(OglObject):
             h += lth
 
         # draw pyutClass methods
-        self.logger.info(f"showmethods => {pyutObject.getShowMethods()}")
+        self.logger.debug(f"showmethods => {pyutObject.getShowMethods()}")
         if pyutObject.getShowMethods():
             for method in self.getPyutObject().getMethods():
                 if draw:

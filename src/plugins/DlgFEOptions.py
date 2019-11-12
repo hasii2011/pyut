@@ -20,7 +20,7 @@ from wx import Dialog
 from globals import _
 
 from PyutPreferences import PyutPreferences
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 
 
 class DlgFEOptions(Dialog):
@@ -57,7 +57,7 @@ class DlgFEOptions(Dialog):
         # IDs
         [
             self.__editorID
-        ] = assignID(1)
+        ] = PyutUtils.assignID(1)
 
         GAP = 10
 

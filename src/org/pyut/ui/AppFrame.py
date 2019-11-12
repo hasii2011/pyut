@@ -250,14 +250,14 @@ class AppFrame(Frame):
         """
         EVT_ACTIVATE Callback; display tips frame.  But onlhy, the first activate
         """
-        self.logger.info(f'_onActivate event: {event}')
+        self.logger.debug(f'_onActivate event: {event}')
         try:
             if self._alreadyDisplayedTipsFrame is True or self._prefs is False:
                 return
             # Display tips frame
             self._alreadyDisplayedTipsFrame = True
             prefs: PyutPreferences = PyutPreferences()
-            self.logger.info(f'Show tips on startup: {self._prefs.showTipsOnStartup()}')
+            self.logger.debug(f'Show tips on startup: {self._prefs.showTipsOnStartup()}')
             if prefs.showTipsOnStartup() is True:
                 # noinspection PyUnusedLocal
                 tipsFrame = TipsFrame(self)
@@ -451,7 +451,7 @@ class AppFrame(Frame):
                              (lambda x: self._OnNewAction(x)),
                              cast(Callable, None), wxID=ID_SD_MESSAGE, isToggle=True)
 
-        self.logger.info(f'toolSDMessage: {toolSDMessage}')
+        self.logger.debug(f'toolSDMessage: {toolSDMessage}')
 
         # Create toolboxes
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
@@ -1504,7 +1504,7 @@ class AppFrame(Frame):
         BeginBusyCursor()
         try:
             obj.callDoAction()
-            self.logger.info(f"After tool plugin do action")
+            self.logger.debug(f"After tool plugin do action")
         except (ValueError, Exception) as e:
             displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
             self.logger.error(f'{e}')
@@ -1651,12 +1651,12 @@ class AppFrame(Frame):
         """
         from org.pyut.dialogs.DlgPyutProperties import DlgPyutProperties
 
-        self.logger.info(f"Before dialog show")
+        self.logger.debug(f"Before dialog show")
         with DlgPyutProperties(self, -1, self._ctrl, self._prefs) as dlg:
             if dlg.ShowModal() == ID_OK:
-                self.logger.info(f'Waiting for answer')
+                self.logger.debug(f'Waiting for answer')
             else:
-                self.logger.info(f'Cancelled')
+                self.logger.debug(f'Cancelled')
 
         umlFrame = self._ctrl.getUmlFrame()
         if umlFrame is not None:

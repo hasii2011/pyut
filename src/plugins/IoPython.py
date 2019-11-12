@@ -18,13 +18,13 @@ from org.pyut.PyutField import PyutField
 from plugins.PluginAst import FieldExtractor
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 
 from globals import _
 
 MaxWidth = 80
 
-[ID_BTN_TO_THE_RIGHT, ID_BTN_TO_THE_LEFT] = assignID(2)
+[ID_BTN_TO_THE_RIGHT, ID_BTN_TO_THE_LEFT] = PyutUtils.assignID(2)
 
 
 class DlgAskWhichClassesToReverse2(wx.Dialog):

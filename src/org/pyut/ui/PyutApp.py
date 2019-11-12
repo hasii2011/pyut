@@ -73,7 +73,7 @@ class PyutApp(wxApp):
                 self.splash = SplashScreen(bmp, SPLASH_CENTRE_ON_PARENT | SPLASH_TIMEOUT, PyutApp.SPLASH_TIMEOUT_MSECS, parent=None,
                                            pos=wxDefaultPosition, size=wxDefaultSize)
 
-                self.logger.info(f'Showing splash screen')
+                self.logger.debug(f'Showing splash screen')
                 self.splash.Show(True)
                 wxYield()
 
