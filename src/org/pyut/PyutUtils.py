@@ -14,23 +14,17 @@ from wx import NewIdRef as wxNewIdRef
 
 from ErrorManager import getErrorManager
 
-"""
-This file is for frequently used pyut utilities.
-
-hasii 
-Updated this to avoid a circular dependency this module and mediator;  This module
-retrieved the mediator singleton and asked it for its error manager.  Nothing special about that
-as the error manager is a singleton;  So I just ask the error manager directly for it
-
-Functions :
-    assignID will assign a unique wxID for all the application.
-
-:author: C.Dutoit
-:contact: <dutoitc@hotmail.com>
-"""
-
 
 class PyutUtils:
+    """
+    This static class is for frequently used pyut utilities.
+
+    hasii
+    Updated this to avoid a circular dependency this module and mediator;  This module
+    retrieved the mediator singleton and asked it for its error manager.  Nothing special about that
+    as the error manager is a singleton;  So I just ask the error manager directly for it
+    """
+
     STRIP_SRC_PATH_SUFFIX:  str = f'{osSep}src'
     STRIP_TEST_PATH_SUFFIX: str = f'{osSep}test'
 

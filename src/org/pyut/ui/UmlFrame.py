@@ -4,7 +4,12 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
-import wx
+from wx import BeginBusyCursor
+from wx import EVT_CHAR
+from wx import EVT_CLOSE
+from wx import EVT_PAINT
+from wx import EndBusyCursor
+from wx import MouseEvent
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutActor import PyutActor
@@ -80,9 +85,9 @@ class UmlFrame(DiagramFrame):
         self._history = HistoryManager(self)
 
         # Close event
-        self.Bind(wx.EVT_CLOSE, self.evtClose)
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.Bind(wx.EVT_CHAR, self._ctrl.processChar)
+        self.Bind(EVT_CLOSE, self.evtClose)
+        self.Bind(EVT_PAINT, self.OnPaint)
+        self.Bind(EVT_CHAR, self._ctrl.processChar)
 
         self.SetInfinite(True)
 
@@ -161,7 +166,7 @@ class UmlFrame(DiagramFrame):
         @author L. Burgbacher <lb@alawa.ch>
         @since 1.4
         """
-        wx.BeginBusyCursor()
+        BeginBusyCursor()
 
         from inspect import getfullargspec
         import PyutDataClasses as pdc
@@ -279,7 +284,7 @@ class UmlFrame(DiagramFrame):
 
             x += incX
 
-        wx.EndBusyCursor()
+        EndBusyCursor()
 
     def addPyutHierarchy(self):
         """
@@ -398,7 +403,7 @@ class UmlFrame(DiagramFrame):
 
             DiagramFrame.OnLeftUp(self, event)
 
-    def OnLeftDClick(self, event: wx.MouseEvent):
+    def OnLeftDClick(self, event: MouseEvent):
         """
         Manage a left double click mouse event.
 
