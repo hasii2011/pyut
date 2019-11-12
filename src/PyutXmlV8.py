@@ -4,7 +4,7 @@ from logging import getLogger
 
 from xml.dom.minidom import parse
 from xml.dom.minidom import Document
-
+from xml.dom.minidom import Element
 
 from io import StringIO
 
@@ -743,13 +743,15 @@ class PyutXml:
 
         return root
 
-    def _getParam(self, Param):
-        aParam = PyutParam()
-        if Param.hasAttribute('defaultValue'):
-            aParam.setDefaultValue(Param.getAttribute('defaultValue'))
-        aParam.setName(Param.getAttribute('name'))
-        aParam.setType(Param.getAttribute('type'))
-        return aParam
+    def _getParam(self, domElement: Element) -> PyutParam:
+
+        pyutParam: PyutParam = PyutParam(name=domElement.getAttribute('name'), theParameterType=domElement.getAttribute('type'))
+
+        if domElement.hasAttribute('defaultValue'):
+            pyutParam.setDefaultValue(domElement.getAttribute('defaultValue'))
+        # pyutParam.setName(domElement.getAttribute('name'))
+        # pyutParam.setType(domElement.getAttribute('type'))
+        return pyutParam
 
     # noinspection PyUnusedLocal
     def _getOglSDInstances(self, xmlOglSDInstances, dicoOglObjects, dicoLink, dicoFather, umlFrame):

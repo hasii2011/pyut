@@ -1,5 +1,6 @@
 
 from typing import Callable
+from typing import Dict
 
 from wx import CENTRE
 from wx import WXK_DELETE

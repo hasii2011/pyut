@@ -166,7 +166,7 @@ class OglClass(OglObject):
         # Return sizes
         return x, y, w, h
 
-    def calculateClassMethods(self, dc, draw=False, initialX=None, initialY=None, calcWidth=False):
+    def calculateClassMethods(self, dc, draw=True, initialX=None, initialY=None, calcWidth=False):
         """
         Calculate the class methods position and size and display it if
         a draw is True
@@ -196,14 +196,14 @@ class OglClass(OglObject):
             h += lth
 
         # draw pyutClass methods
-        # print "showmethods => ", pyutObject.getShowMethods()
+        self.logger.info(f"showmethods => {pyutObject.getShowMethods()}")
         if pyutObject.getShowMethods():
             for method in self.getPyutObject().getMethods():
                 if draw:
                     dc.DrawText(str(method), x + MARGIN, y + h)
                 if calcWidth:
                     w = max(w, self.GetTextWidth(dc, str(method)))
-                # separate tow methods
+                # separate two methods
                 # h += height
                 h += self.GetTextHeight(dc, str(method))
 
@@ -248,6 +248,10 @@ class OglClass(OglObject):
             y = fieldsY + fieldsH
         # Draw line
         dc.DrawLine(x, y, x + w, y)
+        if pyutObject.getShowMethods:
+            (methodsX, methodsY, methodsW, methodsH) = self.calculateClassMethods(dc, True, initialY=y, calcWidth=True)
+            y = methodsY + methodsH
+
         dc.DestroyClippingRegion()
 
     def autoResize(self):
@@ -274,7 +278,7 @@ class OglClass(OglObject):
 
         # Get methods size
         if pyutObject.getShowMethods():
-            (methX, methY, methW, methH) = self.calculateClassMethods(dc, False, initialY=y, calcWidth=True)
+            (methX, methY, methW, methH) = self.calculateClassMethods(dc, True, initialY=y, calcWidth=True)
             y = methY + methH
         else:
             methW, methH = 0, 0

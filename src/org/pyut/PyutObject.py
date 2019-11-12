@@ -56,7 +56,7 @@ class PyutObject:
         try:
             return self._name
         except (ValueError, Exception) as e:
-            print(f'PyutObject error: {e}')
+            # print(f'PyutObject warning: {e}')
             return ""
 
     def setName(self, theName: str):

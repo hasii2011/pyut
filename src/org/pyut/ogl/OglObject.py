@@ -48,6 +48,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
 
         self.logger: Logger = getLogger(__name__)
         self._pyutObject = pyutObject
+
         """
         Associated PyutObject
         """

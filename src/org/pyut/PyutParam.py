@@ -58,7 +58,7 @@ class PyutParam(PyutObject):
         # if type(theParameterType) == StringType or type(theParameterType) == UnicodeType:
         if type(theParameterType) is str:
             theParameterType = PyutType(theParameterType)
-        self.logger.error(f'theParameterType: `{theParameterType}`')
+        self.logger.debug(f'theParameterType: `{theParameterType}`')
         self._type = theParameterType
 
     def getDefaultValue(self) -> str:
