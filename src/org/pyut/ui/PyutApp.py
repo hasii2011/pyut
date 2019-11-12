@@ -31,7 +31,7 @@ import img.ImgSplash
 
 from PyutPreferences import PyutPreferences
 
-from org.pyut.PyutUtils import getErrorInfo
+from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.ui.AppFrame import AppFrame
 
@@ -92,7 +92,7 @@ class PyutApp(wxApp):
             # self.logger.error("Trace:")
             # for el in extract_tb(exc_info()[2]):
             #     self.logger.error(el)
-            errMessage: str = getErrorInfo()
+            errMessage: str = PyutUtils.getErrorInfo()
             self.logger.debug(errMessage)
             dlg.ShowModal()
             dlg.Destroy()

@@ -30,34 +30,13 @@ Functions :
 """
 
 
-def getErrorInfo() -> str:
-    """
-    Does this belong in the error manager?
-
-    Returns:
-
-    """
-    errMsg = f'The following error occured : {str(exc_info()[1])}'
-    errMsg += f'\n\n---------------------------\n'
-    if exc_info()[0] is not None:
-        errMsg += f'Error : {exc_info()[0]}\n'
-    if exc_info()[1] is not None:
-        errMsg += f'Msg   : {exc_info()[1]}\n'
-    if exc_info()[2] is not None:
-        errMsg += 'Trace :\n'
-        for el in extract_tb(exc_info()[2]):
-            errMsg = errMsg + f'{str(el)}\n'
-
-    return errMsg
-
-
 def displayError(msg, title=None, parent=None):
     """
     Display an error
 
     @author C.Dutoit
     """
-    errMsg = getErrorInfo()
+    errMsg = PyutUtils.getErrorInfo()
     try:
         em = getErrorManager()
         em.newFatalError(msg, title, parent)
@@ -69,7 +48,7 @@ def displayError(msg, title=None, parent=None):
         eLog.error(errMsg)
         eLog.error("")
         eLog.error("New error is : ")
-        errMsg = getErrorInfo()
+        errMsg = PyutUtils.getErrorInfo()
         eLog.error(errMsg)
 
 
@@ -101,6 +80,27 @@ class PyutUtils:
 
     def __init__(self):
         self.logger: Logger = getLogger(__name__)
+
+    @staticmethod
+    def getErrorInfo() -> str:
+        """
+        Does this belong in the error manager?
+
+        Returns:
+
+        """
+        errMsg = f'The following error occured : {str(exc_info()[1])}'
+        errMsg += f'\n\n---------------------------\n'
+        if exc_info()[0] is not None:
+            errMsg += f'Error : {exc_info()[0]}\n'
+        if exc_info()[1] is not None:
+            errMsg += f'Msg   : {exc_info()[1]}\n'
+        if exc_info()[2] is not None:
+            errMsg += 'Trace :\n'
+            for el in extract_tb(exc_info()[2]):
+                errMsg = errMsg + f'{str(el)}\n'
+
+        return errMsg
 
     @staticmethod
     def assignID(numberOfIds: int) -> List[wxNewIdRef]:
