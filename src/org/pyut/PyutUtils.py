@@ -30,28 +30,6 @@ Functions :
 """
 
 
-def displayError(msg, title=None, parent=None):
-    """
-    Display an error
-
-    @author C.Dutoit
-    """
-    errMsg = PyutUtils.getErrorInfo()
-    try:
-        em = getErrorManager()
-        em.newFatalError(msg, title, parent)
-    except (ValueError, Exception) as e:
-        eLog: Logger = getLogger(__name__)
-        # TODO  I don't this is correct anymore
-        eLog.error("Error in PyutUtils/displayError")
-        eLog.error(f"Original error message was: {e}")
-        eLog.error(errMsg)
-        eLog.error("")
-        eLog.error("New error is : ")
-        errMsg = PyutUtils.getErrorInfo()
-        eLog.error(errMsg)
-
-
 def displayWarning(msg, title=None, parent=None):
     """
     Display a warning
@@ -80,6 +58,28 @@ class PyutUtils:
 
     def __init__(self):
         self.logger: Logger = getLogger(__name__)
+
+    @staticmethod
+    def displayError(msg, title=None, parent=None):
+        """
+        Display an error
+
+        @author C.Dutoit
+        """
+        errMsg = PyutUtils.getErrorInfo()
+        try:
+            em = getErrorManager()
+            em.newFatalError(msg, title, parent)
+        except (ValueError, Exception) as e:
+            eLog: Logger = getLogger(__name__)
+            # TODO  I don't this is correct anymore
+            eLog.error("Error in PyutUtils/displayError")
+            eLog.error(f"Original error message was: {e}")
+            eLog.error(errMsg)
+            eLog.error("")
+            eLog.error("New error is : ")
+            errMsg = PyutUtils.getErrorInfo()
+            eLog.error(errMsg)
 
     @staticmethod
     def getErrorInfo() -> str:

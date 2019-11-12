@@ -29,7 +29,7 @@ from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
 from Mediator import ACTION_ZOOM_IN
 from Mediator import getMediator
 
-from org.pyut.PyutUtils import displayError
+from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.history.HistoryManager import HistoryManager
 
@@ -105,7 +105,7 @@ class UmlFrame(DiagramFrame):
         Display class diagram properties
         @author C.Dutoit
         """
-        displayError(_("Not yet implemented !"))
+        PyutUtils.displayError(_("Not yet implemented !"))
 
     def cleanUp(self):
         """

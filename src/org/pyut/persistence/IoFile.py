@@ -14,7 +14,7 @@ from xml.dom.minidom import parseString
 
 
 from Mediator import getMediator
-from org.pyut.PyutUtils import displayError
+from org.pyut.PyutUtils import PyutUtils
 
 from PyutConsts import CLASS_DIAGRAM
 
@@ -104,7 +104,7 @@ class IoFile:
         elif filename[-4:] == ".xml":
             xmlString = open(filename, "r").read()
         else:
-            displayError(_("Can't open the unidentified file : %s") % filename)
+            PyutUtils.displayError(_(f"Can't open the unidentified file : {filename}"))
             return
         dom = parseString(xmlString)
 

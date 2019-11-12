@@ -7,11 +7,11 @@ import wx
 
 from org.pyut.ogl.OglClass import OglClass
 
-from Mediator import displayError
-
 from PyutConsts import OGL_AGGREGATION
 from PyutConsts import OGL_ASSOCIATION
 from PyutConsts import OGL_COMPOSITION
+
+from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutClass import PyutClass
@@ -150,7 +150,7 @@ class XmiImporter:
         xmi = self._dom.getElementsByTagName("XMI")
         if len(xmi) == 0:
 
-            displayError("Wrong XMI File format : XMI tag not found !")
+            PyutUtils.displayError("Wrong XMI File format : XMI tag not found !")
             return
         else:
             xmi = xmi[0]

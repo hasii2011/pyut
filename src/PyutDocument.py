@@ -10,7 +10,7 @@ from PyutConsts import USECASE_DIAGRAM
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
-from org.pyut.PyutUtils import displayError
+from org.pyut.PyutUtils import PyutUtils
 
 
 def shorterFilename(filename):
@@ -61,7 +61,7 @@ class PyutDocument:
             self._title = DiagramsLabels[docType]
             self._frame = UmlClassDiagramsFrame(parentFrame)
         else:
-            displayError(f'Unsupported diagram type; replacing by class diagram: {docType}')
+            PyutUtils.displayError(f'Unsupported diagram type; replacing by class diagram: {docType}')
             self._title = DiagramsLabels[CLASS_DIAGRAM]
             self._frame = UmlClassDiagramsFrame(parentFrame)
 

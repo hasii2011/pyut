@@ -33,7 +33,7 @@ from OglSDInstance import OglSDInstance
 from OglSDMessage import OglSDMessage
 
 from org.pyut.PyutStereotype import getPyutStereotype
-from org.pyut.PyutUtils import displayError
+from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
@@ -181,7 +181,7 @@ class PyutXml:
                 self.logger.error(f'{e}')
             except (ValueError, Exception) as e:
                 self.logger.error(f'{e}')
-            displayError(_("Can't save file"))
+            PyutUtils.displayError(_("Can't save file"))
             return xmlDoc
 
         dlg.Destroy()
@@ -269,7 +269,7 @@ class PyutXml:
         except (ValueError, Exception) as e:
             if dlgGauge is not None:
                 dlgGauge.Destroy()
-            displayError(_(f"Can't load file {e}"))
+            PyutUtils.displayError(_(f"Can't load file {e}"))
             umlFrame.Refresh()
             return
 

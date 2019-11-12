@@ -36,7 +36,6 @@ from org.pyut.general.Singleton import Singleton
 
 from org.pyut.PyutMethod import WITHOUT_PARAMS
 from org.pyut.PyutMethod import WITH_PARAMS
-from org.pyut.PyutUtils import displayError
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.DlgEditNote import DlgEditNote
@@ -464,7 +463,7 @@ class Mediator(Singleton):
             try:
                 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
                 if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
-                    displayError(_("A SD INSTANCE can't be added to a class diagram. You must create a sequence diagram."))
+                    PyutUtils.displayError(_("A SD INSTANCE can't be added to a class diagram. You must create a sequence diagram."))
                     return
                 instance = umlFrame.createNewSDInstance(x, y)
                 if not self._currentActionPersistent:
@@ -478,7 +477,7 @@ class Mediator(Singleton):
                 dlg.Destroy()
                 umlFrame.Refresh()
             except (ValueError, Exception) as e:
-                displayError(_(f"An error occured while trying to do this action {e}"))
+                PyutUtils.displayError(_(f"An error occured while trying to do this action {e}"))
                 umlFrame.Refresh()
         # added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (10.10.2005)
         elif self._currentAction == ACTION_ZOOM_IN:

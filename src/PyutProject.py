@@ -6,7 +6,7 @@ from wx import MessageDialog
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
-from org.pyut.PyutUtils import displayError
+from org.pyut.PyutUtils import PyutUtils
 from PyutDocument import PyutDocument
 from org.pyut.persistence.IoFile import IoFile
 
@@ -153,7 +153,7 @@ class PyutProject:
             self._modified = False
         except (ValueError, Exception) as e:
             EndBusyCursor()
-            displayError(_(f"Error loading file: {e}"))
+            PyutUtils.displayError(_(f"Error loading file: {e}"))
             return False
 
         EndBusyCursor()
@@ -188,7 +188,7 @@ class PyutProject:
             io.open(filename, self)
             self._modified = False
         except (ValueError, Exception) as e:
-            displayError(_(f"Error loading file {e}"))
+            PyutUtils.displayError(_(f"Error loading file {e}"))
             EndBusyCursor()
             return False
         EndBusyCursor()
@@ -244,7 +244,7 @@ class PyutProject:
             self._modified = False
             self.updateTreeText()
         except (ValueError, Exception) as e:
-            displayError(_(f"An error occured while saving project {e}"))
+            PyutUtils.displayError(_(f"An error occured while saving project {e}"))
         EndBusyCursor()
 
     def updateTreeText(self):

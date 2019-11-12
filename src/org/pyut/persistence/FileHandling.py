@@ -33,7 +33,7 @@ from wx import Yield
 
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
-from org.pyut.PyutUtils import displayError
+from org.pyut.PyutUtils import PyutUtils
 
 from PyutConsts import DefaultFilename
 from PyutProject import PyutProject
@@ -175,7 +175,7 @@ class FileHandling:
 
         # Exit if the file is already loaded
         if not self.isDefaultFilename(filename) and self.isProjectLoaded(filename):
-            displayError(_("The selected file is already loaded !"))
+            PyutUtils.displayError(_("The selected file is already loaded !"))
             return False
 
         # Create a new project ?
@@ -186,13 +186,13 @@ class FileHandling:
         # Load the project and add it
         try:
             if not project.loadFromFilename(filename):
-                displayError(_("The specified file can't be loaded !"))
+                PyutUtils.displayError(_("The specified file can't be loaded !"))
                 return False
             self._projects.append(project)
             #  self._ctrl.registerCurrentProject(project)
             self._currentProject = project
         except (ValueError, Exception) as e:
-            displayError(_(f"An error occurred while loading the project ! {e}"))
+            PyutUtils.displayError(_(f"An error occurred while loading the project ! {e}"))
             return False
 
         try:
@@ -207,7 +207,7 @@ class FileHandling:
                 self._currentFrame = project.getDocuments()[0].getFrame()
 
         except (ValueError, Exception) as e:
-            displayError(_(f"An error occurred while adding the project to the notebook {e}"))
+            PyutUtils.displayError(_(f"An error occurred while adding the project to the notebook {e}"))
             return False
         return True
 
@@ -226,20 +226,19 @@ class FileHandling:
 
         # Load data...
         if not project.insertProject(filename):
-            displayError(_("The specified file can't be loaded !"))
+            PyutUtils.displayError(_("The specified file can't be loaded !"))
             return False
 
         # ...
         if not self._ctrl.isInScriptMode():
             try:
                 for document in project.getDocuments()[nbInitialDocuments:]:
-                    self.__notebook.AddPage(document.getFrame(),
-                                            document.getDiagramTitle())
+                    self.__notebook.AddPage(document.getFrame(), document.getDiagramTitle())
 
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
             except (ValueError, Exception) as e:
-                displayError(_(f"An error occurred while adding the project to the notebook {e}"))
+                PyutUtils.displayError(_(f"An error occurred while adding the project to the notebook {e}"))
                 return False
 
         # Select first frame as current frame
@@ -256,7 +255,7 @@ class FileHandling:
         """
         currentProject = self._currentProject
         if currentProject is None:
-            displayError(_("No diagram to save !"), _("Error"))
+            PyutUtils.displayError(_("No diagram to save !"), _("Error"))
             return
 
         if currentProject.getFilename() is None or currentProject.getFilename() == DefaultFilename:
@@ -273,12 +272,12 @@ class FileHandling:
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         if self._ctrl.isInScriptMode():
-            displayError(_("Save File As is not accessible in script mode !"))
+            PyutUtils.displayError(_("Save File As is not accessible in script mode !"))
             return
 
         # Test if no diagram exists
         if self._ctrl.getDiagram() is None:
-            displayError(_("No diagram to save !"), _("Error"))
+            PyutUtils.displayError(_("No diagram to save !"), _("Error"))
             return
 
         # Ask for filename
@@ -372,7 +371,7 @@ class FileHandling:
         """
         # Exit if in scripting mode
         if self._ctrl.isInScriptMode():
-            displayError(_("Export to image file is not implemented in scripting mode now !"))
+            PyutUtils.displayError(_("Export to image file is not implemented in scripting mode now !"))
             return
 
     # noinspection PyUnusedLocal
@@ -384,8 +383,7 @@ class FileHandling:
         """
         # Exit if in scripting mode
         if self._ctrl.isInScriptMode():
-            displayError(_("Export to bitmap file is not implemented in "
-                           "scripting mode now !"))
+            PyutUtils.displayError(_("Export to bitmap file is not implemented in scripting mode now !"))
             return
 
         self.exportToImageFile("bmp", BITMAP_TYPE_BMP)
@@ -593,7 +591,7 @@ class FileHandling:
         if self._currentProject is None and self._currentFrame is not None:
             self._currentProject = self.getProjectFromFrame(self._currentFrame)
         if self._currentProject is None:
-            displayError(_("No frame to close !"), _("Error..."))
+            PyutUtils.displayError(_("No frame to close !"), _("Error..."))
             return
 
         # Display warning if we are in scripting mode

@@ -107,7 +107,6 @@ from Mediator import ACTION_NEW_USECASE
 from Mediator import getMediator
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.PyutUtils import displayError
 from org.pyut.PyutUtils import displayInformation
 from org.pyut.PyutUtils import displayWarning
 
@@ -896,7 +895,7 @@ class AppFrame(Frame):
                          "unexpected results !"), parent=self)
 
         if (self._fileHandling.getCurrentProject()) is None:
-            displayError(_("No project to insert this file into !"), parent=self)
+            PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
             return
 
         # Ask which project to insert
@@ -914,7 +913,7 @@ class AppFrame(Frame):
         try:
             self._fileHandling.insertFile(filename)
         except (ValueError, Exception) as e:
-            displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
+            PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
 
     # noinspection PyUnusedLocal
     def _OnMnuFileOpen(self, event):
@@ -1019,7 +1018,7 @@ class AppFrame(Frame):
                 filename += ".ps"
             dlg.Destroy()
         except (ValueError, Exception) as e:
-            displayError(_("Error while displaying Postscript saving dialog"), parent=self)
+            PyutUtils.displayError(_("Error while displaying Postscript saving dialog"), parent=self)
             return
 
         # export to PDF
@@ -1044,7 +1043,7 @@ class AppFrame(Frame):
                 filename += ".pdf"
             dlg.Destroy()
         except (ValueError, Exception) as e:
-            displayError(_("Error while displaying pdf saving dialog"), parent=self)
+            PyutUtils.displayError(_("Error while displaying pdf saving dialog"), parent=self)
             self._ctrl.setStatusText(_("Can't export to pdf"))
             return
 
@@ -1056,14 +1055,14 @@ class AppFrame(Frame):
             # noinspection PyUnusedLocal
             try:
                 if os.system("ps2epsi /tmp/pdfexport.ps /tmp/pdfexport.eps") != 0:
-                    displayError(_("Can't execute ps2epsi !"), parent=self)
+                    PyutUtils.displayError(_("Can't execute ps2epsi !"), parent=self)
                     return
                 if os.system("epstopdf /tmp/pdfexport.eps --outfile=" + filename) != 0:
-                    displayError(_("Can't execute ps2epsi !"), parent=self)
+                    PyutUtils.displayError(_("Can't execute ps2epsi !"), parent=self)
                     return
                 self._ctrl.setStatusText(_("Exported to pdf"))
             except (ValueError, Exception) as e:
-                displayError("Can't export to pdf !", parent=self)
+                PyutUtils.displayError("Can't export to pdf !", parent=self)
 
     def printDiagramToPostscript(self, filename):
         """
@@ -1074,7 +1073,7 @@ class AppFrame(Frame):
         """
         # Verify that we do have a diagram to save
         if self._ctrl.getDiagram() is None:
-            displayError(_("No diagram to print !"), parent=self)
+            PyutUtils.displayError(_("No diagram to print !"), parent=self)
             self._ctrl.setStatusText(_("Error while printing to postscript"))
             return False
 
@@ -1095,13 +1094,13 @@ class AppFrame(Frame):
             printer  = Printer(datas)
             printout = PyutPrintout(self._ctrl.getUmlFrame())
         except (ValueError, Exception) as e:
-            displayError(_("Cannot export to Postscript"), parent=self)
+            PyutUtils.displayError(_("Cannot export to Postscript"), parent=self)
             self._ctrl.setStatusText(_(f"Error while printing to postscript {e}"))
             return False
 
         # Print to postscript
         if not printer.Print(self, printout, False):
-            displayError(_("Cannot print"), parent=self)
+            PyutUtils.displayError(_("Cannot print"), parent=self)
             self._ctrl.setStatusText(_("Error while printing to postscript"))
             return False
 
@@ -1159,7 +1158,7 @@ class AppFrame(Frame):
         self._ctrl.deselectAllShapes()
         frame = self._ctrl.getUmlFrame()
         if frame == -1:
-            displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
+            PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
             return
 
         printout  = PyutPrintout(frame)
@@ -1167,7 +1166,7 @@ class AppFrame(Frame):
         preview   = PrintPreview(printout, printout2, self._printData)
 
         if not preview.Ok():
-            displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
             return
 
         frame = PreviewFrame(preview, self, _("Diagram preview"))
@@ -1177,7 +1176,7 @@ class AppFrame(Frame):
         try:
             frame.Show(True)
         except (ValueError, Exception) as e:
-            displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
 
     # noinspection PyUnusedLocal
     def _OnMnuFilePrint(self, event):
@@ -1188,7 +1187,7 @@ class AppFrame(Frame):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         if self._ctrl.getDiagram() is None:
-            displayError(_("No diagram to print !"), _("Error"), self)
+            PyutUtils.displayError(_("No diagram to print !"), _("Error"), self)
             return
         self._ctrl.deselectAllShapes()
         datas = PrintDialogData()
@@ -1199,7 +1198,7 @@ class AppFrame(Frame):
         printout = PyutPrintout(self._ctrl.getUmlFrame())
 
         if not printer.Print(self, printout, True):
-            displayError(_("Cannot print"), _("Error"), self)
+            PyutUtils.displayError(_("Cannot print"), _("Error"), self)
 
     def _OnMnuLOF(self, event):
         """
@@ -1309,7 +1308,7 @@ class AppFrame(Frame):
         """
         frame = self._ctrl.getUmlFrame()
         if frame is None:
-            displayError(_("Please open a diagram to execute this action"), parent=self)
+            PyutUtils.displayError(_("Please open a diagram to execute this action"), parent=self)
             return
         frame.addPyutHierarchy()
         project = self._fileHandling.getCurrentProject()
@@ -1327,7 +1326,7 @@ class AppFrame(Frame):
         """
         frame = self._ctrl.getUmlFrame()
         if frame is None:
-            displayError(_("Please open a diagram to execute this action"), parent=self)
+            PyutUtils.displayError(_("Please open a diagram to execute this action"), parent=self)
             return
         frame.addOglHierarchy()
         frame.setModified(True)
@@ -1379,7 +1378,7 @@ class AppFrame(Frame):
                     self._setLastOpenedFilesItems()
                     self._ctrl.updateTitle()
             except (ValueError, Exception) as e:
-                displayError(_("An error occurred while loading the project !"), parent=self)
+                PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
                 self.logger.error(f'{e}')
 
     def _saveFile(self):
@@ -1469,7 +1468,7 @@ class AppFrame(Frame):
             wxYield()  # time to process the refresh in newDiagram
             obj.doImport()
         except (ValueError, Exception) as e:
-            displayError(_("An error occured while executing the selected plugin"), _("Error..."), self)
+            PyutUtils.displayError(_("An error occured while executing the selected plugin"), _("Error..."), self)
             self.logger.error(f'{e}')
 
         EndBusyCursor()
@@ -1506,7 +1505,7 @@ class AppFrame(Frame):
             obj.callDoAction()
             self.logger.debug(f"After tool plugin do action")
         except (ValueError, Exception) as e:
-            displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
+            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
             self.logger.error(f'{e}')
         EndBusyCursor()
 
@@ -1595,7 +1594,7 @@ class AppFrame(Frame):
 
         frame = self._ctrl.getUmlFrame()
         if frame == -1:
-            displayError(_("No frame to paste into"))
+            PyutUtils.displayError(_("No frame to paste into"))
             return
 
         # put the objects in the clipboard and remove them from the diagram
@@ -1632,7 +1631,7 @@ class AppFrame(Frame):
     def _OnMnuSelectAll(self, event):
         frame = self._ctrl.getUmlFrame()
         if frame is None:
-            displayError(_("No frame found !"))
+            PyutUtils.displayError(_("No frame found !"))
             return
         diagram = frame.GetDiagram()
         shapes = diagram.GetShapes()
