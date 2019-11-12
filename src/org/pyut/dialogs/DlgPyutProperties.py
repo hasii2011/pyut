@@ -33,7 +33,7 @@ from wx import StaticText
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.PyutUtils import PyutUtils
 
-from globals import _
+from Globals import _
 
 
 class DlgPyutProperties(Dialog):

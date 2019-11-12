@@ -51,7 +51,7 @@ from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
 # from mediator import *  # Have to do this to avoid cyclical dependency
 import Mediator
 
-from globals import _
+from Globals import _
 from org.pyut.PyutUtils import PyutUtils
 
 # Assign constants

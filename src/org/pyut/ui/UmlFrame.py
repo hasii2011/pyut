@@ -38,7 +38,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.history.HistoryManager import HistoryManager
 
-from globals import _
+from Globals import _
 
 #  DEFAULT_WIDTH = 1280
 #  DEFAULT_WIDTH = 5120

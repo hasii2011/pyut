@@ -10,7 +10,7 @@ from wx import TextEntryDialog
 from MiniOgl.LineShape import LineShape
 from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
-from globals import _
+from Globals import _
 
 DEBUG: bool = False
 # TODO : Find a way to report moves from AnchorPoints to PyutSDMessage

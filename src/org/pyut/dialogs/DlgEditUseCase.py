@@ -21,7 +21,7 @@ from wx import VERTICAL
 
 from org.pyut.PyutUtils import PyutUtils
 
-from globals import _
+from Globals import _
 
 [
     TXT_USECASE

@@ -13,7 +13,7 @@ from org.pyut.ogl.OglObject import OglObject
 
 from PyutConsts import *
 
-from globals import cmp
+from Globals import cmp
 
 STEPBYSTEP = 0  # Do Sugiyama Step by step
 

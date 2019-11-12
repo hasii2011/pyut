@@ -17,7 +17,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import Dialog
 
-from globals import _
+from Globals import _
 
 from PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils

@@ -26,7 +26,7 @@ from wx.lib.dialogs import ScrolledMessageDialog
 
 from org.pyut.PyutUtils import assignID
 
-from globals import _
+from Globals import _
 
 [ID_LOAD_FILE, ID_BACK, ID_FORWARD, ID_PRINT, ID_VIEW_SOURCE] = assignID(5)
 

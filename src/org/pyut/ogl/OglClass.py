@@ -17,7 +17,7 @@ from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 from org.pyut.PyutClass import PyutClass
 
 from org.pyut.PyutUtils import PyutUtils
-from globals import _
+from Globals import _
 
 from Mediator import getMediator
 

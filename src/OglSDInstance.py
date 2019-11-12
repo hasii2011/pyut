@@ -20,7 +20,7 @@ from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.ogl.OglObject import OglObject
 
-from globals import _
+from Globals import _
 
 # Constants
 DEFAULT_X = 0

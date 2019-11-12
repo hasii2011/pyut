@@ -44,7 +44,7 @@ from org.pyut.dialogs.DlgEditLink import DlgEditLink
 
 from org.pyut.ui.ToolboxOwner import ToolboxOwner
 
-from globals import _
+from Globals import _
 
 __PyUtVersion__ = PyutVersion.getPyUtVersion()
 

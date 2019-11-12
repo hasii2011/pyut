@@ -5,7 +5,7 @@ from wx import YES_NO
 
 from wx import MessageDialog
 
-from globals import _
+from Globals import _
 
 
 class DlgRemoveLink(MessageDialog):

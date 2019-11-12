@@ -11,7 +11,7 @@ from wx import StaticText
 from wx import TE_MULTILINE
 from wx import TextCtrl
 
-from globals import _
+from Globals import _
 
 TXT_COMMENT = wxNewIdRef()
 

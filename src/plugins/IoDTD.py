@@ -9,7 +9,7 @@ from org.pyut.ogl.OglClass import OglClass
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from globals import _
+from Globals import _
 
 
 class IoDTD(PyutIoPlugin):

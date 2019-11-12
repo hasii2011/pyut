@@ -2,7 +2,7 @@
 
 from org.pyut.PyutLink import PyutLink
 
-from globals import _
+from Globals import _
 
 DEBUG = False
 

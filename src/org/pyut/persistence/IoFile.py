@@ -18,7 +18,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from PyutConsts import CLASS_DIAGRAM
 
-from globals import _
+from Globals import _
 
 
 class IoFile:

@@ -6,7 +6,7 @@ from sys import exc_info
 
 from traceback import extract_tb
 
-from globals import _
+from Globals import _
 
 from org.pyut.general.Singleton import Singleton
 import wx

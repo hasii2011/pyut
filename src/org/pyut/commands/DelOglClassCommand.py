@@ -4,7 +4,7 @@ from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.commands.DelOglLinkedObjectCommand import DelOglLinkedObjectCommand
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
-from globals import cmp
+from Globals import cmp
 
 
 class DelOglClassCommand(DelOglLinkedObjectCommand):

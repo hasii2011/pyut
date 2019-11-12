@@ -28,7 +28,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
-from globals import _
+from Globals import _
 
 [
     ID_TXTFIELDNAME,
