@@ -82,9 +82,6 @@ class IoFile:
 
         @author Deve Roux
         """
-        # print "IoFile-1"
-
-        #
         oldpath = getcwd()
         path = getMediator().getAppPath()
         chdir(path)
@@ -118,7 +115,7 @@ class IoFile:
                 myXml = module.PyutXml()
             else:
                 # version = 1
-                from PyutXml import PyutXml
+                from org.pyut.persistence.PyutXml import PyutXml
                 myXml = PyutXml()
             myXml.open(dom, project)
         else:
@@ -129,7 +126,7 @@ class IoFile:
                 module = __import__("PyutXmlV" + str(version))
                 myXml = module.PyutXml()
             else:
-                from PyutXml import PyutXml  # don't like it here but at top of file not recognized -- hasii
+                from org.pyut.persistence.PyutXml import PyutXml  # don't like it here but at top of file not recognized -- hasii
                 # version = 1
                 myXml = PyutXml()
             project.newDocument(CLASS_DIAGRAM)
