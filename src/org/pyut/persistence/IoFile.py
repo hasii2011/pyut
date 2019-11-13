@@ -1,22 +1,22 @@
 
+# from importlib import import_module
 from logging import Logger
 from logging import getLogger
 
 from os import getcwd
 from os import chdir
 
-from glob import glob
-from Lang import importLanguage
-
 import zlib
 
 from xml.dom.minidom import parseString
 
-
-from Mediator import getMediator
+from glob import glob
 from org.pyut.PyutUtils import PyutUtils
 
 from PyutConsts import CLASS_DIAGRAM
+from Lang import importLanguage
+
+from Mediator import getMediator
 
 from Globals import _
 
@@ -108,11 +108,26 @@ class IoFile:
         root = dom.getElementsByTagName("PyutProject")
         if len(root) > 0:
             root = root[0]
+            # myXml = None
             if root.hasAttribute('version'):
                 version = root.getAttribute("version")
                 self.logger.info(f'Using version {version} of the importer')
-                module = __import__(f'PyutXmlV{str(version)}')
-                myXml = module.PyutXml()
+                #
+                # TODO: Fix dynamic loading since I moved code to package;  Both versions of
+                # import do not seem to work.  I don't think I am going to version PyutXml 8 times
+                #
+                # try:
+                #     # module = __import__(f'org.pyut.persistence.PyutXmlV{version}')
+                #     module = import_module(f'PyutXmlV{str(version)}', package=f'org.pyut.persistence.')
+                #     myXml = module.PyutXml()
+                # except (ValueError, Exception) as e:
+                #     self.logger.error(f'Import error: {e}')
+                #     raise e
+                if version == '8':
+                    from org.pyut.persistence.PyutXmlV8 import PyutXml
+                    myXml = PyutXml()
+                else:
+                    raise NotImplementedError(f'Version {version} of PyutXml is not supported')
             else:
                 # version = 1
                 from org.pyut.persistence.PyutXml import PyutXml

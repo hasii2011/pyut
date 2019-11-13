@@ -159,7 +159,7 @@ class PyutXml:
 
                 oglObjects = document.getFrame().getUmlObjects()
                 for i in range(len(oglObjects)):
-                    gauge.SetValue(i*100/len(oglObjects))
+                    gauge.SetValue(i * 100 / len(oglObjects))
                     oglObject = oglObjects[i]
                     if isinstance(oglObject, OglClass):
                         documentNode.appendChild(self._OglClass2xml(oglObject, xmlDoc))
