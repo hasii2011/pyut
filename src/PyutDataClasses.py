@@ -31,7 +31,7 @@ from org.pyut.PyutVisibility import PyutVisibility
 # noinspection PyUnresolvedReferences
 from Mediator import Mediator
 # noinspection PyUnresolvedReferences
-from org.pyut.Singleton import Singleton
+from org.pyut.general.Singleton import Singleton
 
 # noinspection PyUnresolvedReferences
 from org.pyut.ogl.OglObject import OglObject
@@ -61,37 +61,37 @@ from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglLinkFactory import OglLinkFactory
 
 display = [
-    "org.pyut.PyutClass",
-    "org.pyut.PyutField",
-    "org.pyut.PyutLink",
-    "org.pyut.PyutLinkedObject",
-    "org.pyut.PyutNote",
-    "org.pyut.PyutUseCase",
-    "org.pyut.PyutActor",
-    "org.pyut.PyutMethod",
-    "org.pyut.PyutModifier",
-    "org.pyut.PyutObject",
-    "org.pyut.PyutParam",
-    "org.pyut.PyutStereotype",
-    "org.pyut.PyutType",
-    "org.pyut.PyutVisibility",
-    "org.pyut.PyutSDMessage",
+    "PyutClass",
+    "PyutField",
+    "PyutLink",
+    "PyutLinkedObject",
+    "PyutNote",
+    "PyutUseCase",
+    "PyutActor",
+    "PyutMethod",
+    "PyutModifier",
+    "PyutObject",
+    "PyutParam",
+    "PyutStereotype",
+    "PyutType",
+    "PyutVisibility",
+    "PyutSDMessage",
     "Mediator",
     "Singleton",
 ]
 
 displayOgl = [
-    "org.pyut.ogl.OglObject",
-    "org.pyut.ogl.OglClass",
-    "org.pyut.ogl.OglNote",
-    "org.pyut.ogl.OglActor",
-    "org.pyut.ogl.OglLink",
-    "org.pyut.ogl.OglNoteLink",
-    "org.pyut.ogl.OglAssociation",
-    "org.pyut.ogl.OglAggregation",
-    "org.pyut.ogl.OglComposition",
-    "org.pyut.ogl.OglInheritance",
-    "org.pyut.ogl.OglInterface",
-    "org.pyut.ogl.OglUseCase",
-    "org.pyut.ogl.OglLinkFactory"
+    "OglObject",
+    "OglClass",
+    "OglNote",
+    "OglActor",
+    "OglLink",
+    "OglNoteLink",
+    "OglAssociation",
+    "OglAggregation",
+    "OglComposition",
+    "OglInheritance",
+    "OglInterface",
+    "OglUseCase",
+    "OglLinkFactory"
 ]

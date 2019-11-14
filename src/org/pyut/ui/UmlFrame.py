@@ -173,15 +173,18 @@ class UmlFrame(DiagramFrame):
 
         # get a list of classes info for classes in the display list
         # classes = [res[name] for name in res.keys() if name in display]
-        # if (type(cl) == ClassType or type(cl) == TypeType or type(cl) == 'module') and cl.__name__ in display]
-
-        self.logger.info(f'pdc value {pdc.__dict__.values()}')
+        # if (type(cl) == ClassType or type(cl) == TypeType or type(cl) == 'module') and cl.__name__ in display]x
+        self.logger.debug(f'pdc value {pdc.__dict__.values()}')
         # classes = [cl for cl in pdc.__dict__.values() if (isinstance(cl, type) or type(cl) == 'module') and cl.__name__ in display]
         classes = []
         for cl in pdc.__dict__.values():
-            self.logger.info(f"cl: '{cl}' isinstance(cl, type) '{isinstance(cl, type)}' type(cl) '{type(cl)}'")
-            if (isinstance(cl, type) or type(cl) == 'module') and cl.__name__ in display:
-                classes.append(cl)
+
+            self.logger.info(f"cl: '{cl}' isinstance(cl, type): '{isinstance(cl, type)}' type(cl): '{type(cl)}'")
+            if isinstance(cl, type) or type(cl) == 'module':
+                self.logger.info(f'cl.__name__: `{cl.__name__}`')
+                if cl.__name__ in display:
+                    classes.append(cl)
+
         objs = {}
         # create the PyutClass objects
         for cl in classes:
