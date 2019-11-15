@@ -169,48 +169,27 @@ class UmlFrame(DiagramFrame):
         BeginBusyCursor()
 
         from inspect import getfullargspec
-        import PyutDataClasses as pdc
+        from org.pyut.general.ClassGenerator import ClassGenerator
 
-        # get a list of classes info for classes in the display list
-        # classes = [res[name] for name in res.keys() if name in display]
-        # if (type(cl) == ClassType or type(cl) == TypeType or type(cl) == 'module') and cl.__name__ in display]x
-        self.logger.debug(f'pdc value {pdc.__dict__.values()}')
-        # classes = [cl for cl in pdc.__dict__.values() if (isinstance(cl, type) or type(cl) == 'module') and cl.__name__ in display]
-        classes = []
-        for cl in pdc.__dict__.values():
-
-            self.logger.info(f"cl: '{cl}' isinstance(cl, type): '{isinstance(cl, type)}' type(cl): '{type(cl)}'")
-            if isinstance(cl, type) or type(cl) == 'module':
-                self.logger.info(f'cl.__name__: `{cl.__name__}`')
-                if cl.__name__ in display:
-                    classes.append(cl)
+        cg: ClassGenerator = ClassGenerator()
+        classes = cg.getClassListFromNames(display)
 
         objs = {}
-        # create the PyutClass objects
+        # create the Pyut Class objects
         for cl in classes:
             # create objects
             pc = PyutClass(cl.__name__)
             po = OglClass(pc)
 
-            # clmethods = [me for me in cl.__dict__.values() if type(me) == types.FunctionType]
-            clmethods = []
-            for methd in cl.__dict__.values():
-                if isinstance(methd, Callable):
-                    self.logger.info(f'method: {methd}')
-                    clmethods.append(methd)
+            clmethods = cg.getMethodsFromClass(cl)
+
             # add the methods
             methods = []
             for me in clmethods:
                 funcName: str = me.__name__
                 meth = PyutMethod(funcName)
-                # add the params
-                # if type(me) != types.FunctionType:
-                #     try:
-                #         me = mobj.__dict__.get("im_func")
-                #     except AttributeError:
-                #         me = None
+
                 if me is not None:
-                    # args = getargspec(me)
                     args = getfullargspec(me)
                     if args[3] is None:
                         firstDefVal = len(args[0])
@@ -222,9 +201,7 @@ class UmlFrame(DiagramFrame):
                         if arg != "self":
                             if i >= firstDefVal:
                                 defVal = args[3][i - firstDefVal]
-                                # if type(defVal) == types.StringType:
                                 if isinstance(defVal, str):
-                                    # defVal = '"' + defVal + '"'
                                     defVal = f'"{defVal}"'
                                 param = PyutParam(arg, "", str(defVal))
                             else:
@@ -245,7 +222,9 @@ class UmlFrame(DiagramFrame):
             po.autoResize()
             objs[cl.__name__] = po
 
-        # now, search for paternity links
+        import PyutDataClasses as pdc
+
+        # now, search for parent links
         for po in objs.values():
             pc = po.getPyutObject()
             # skip object, it has no parent
