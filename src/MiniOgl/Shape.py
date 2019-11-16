@@ -6,8 +6,8 @@ from logging import getLogger
 from logging import DEBUG as pythonDebugLoggingLevel
 
 import wx
-from MiniOgl.ShapeModel import *
-from MiniOgl.TextShape import TextShape
+from MiniOgl.ShapeModel import ShapeModel
+# from MiniOgl.TextShape import TextShape
 
 
 class Shape:
@@ -208,7 +208,7 @@ class Shape:
         if anchor in self._anchors:
             self._anchors.remove(anchor)
 
-    def AddText(self, x: float, y: float, text: str) -> TextShape:
+    def AddText(self, x: float, y: float, text: str):
         """
         Add a text shape to the shape.
 
@@ -237,7 +237,7 @@ class Shape:
         self._privateChildren.append(t)
         return t
 
-    def _CreateTextShape(self, x, y, text) -> TextShape:
+    def _CreateTextShape(self, x, y, text):
         """
         Create a text shape and add it to the diagram.
 
@@ -247,7 +247,7 @@ class Shape:
 
         @return TextShape : the created shape
         """
-        # from MiniOgl.TextShape import TextShape
+        from MiniOgl.TextShape import TextShape
         t = TextShape(x, y, text, self)
         if self._diagram is not None:
             self._diagram.AddShape(t)

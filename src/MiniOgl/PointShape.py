@@ -1,57 +1,10 @@
 from MiniOgl.Shape import Shape
 
-#
-# Copyright 2002, Laurent Burgbacher, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of MiniOgl.
-#
-# MiniOgl is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MiniOgl is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MiniOgl; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-__author__    = "Laurent Burgbacher, lb@alawa.ch, Eivd"
-__copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
-__license__   = "Released under the terms of the GNU General Public Licence V2"
-__date__      = "2002-10-15"
-__version__   = "$Id: PointShape.py,v 1.6 2004/12/10 23:31:59 dutoitc Exp $"
-
-__all__ = ["PointShape"]
-
 
 class PointShape(Shape):
     """
     A point, which is drawn as a little square (3 pixels wide).
 
-    Exported methods:
-    -----------------
-
-    __init__(self, x, y, parent=None)
-        Constructor.
-    Draw(self, dc, withChildren=True)
-        Draw the point on the dc.
-    GetSelectionZone(self)
-        Get the selection tolerance zone, in pixels.
-    SetSelectionZone(self, halfWidth)
-        Set the selection tolerance zone, in pixels.
-    Inside(self, x, y)
-        True if (x, y) is inside the point, according to the selection zone.
-    SetVisibleWhenSelected(self, state)
-        Set to True if you want the point to always be visible when it's
-    GetVisibleWhenSelected(self)
-        Return the "visible when selected flag".
-
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
     def __init__(self, x, y, parent=None):
         """
@@ -69,7 +22,9 @@ class PointShape(Shape):
         """
         Draw the point on the dc.
 
-        @param wxDC dc
+        Args:
+            dc:
+            withChildren:
         """
         if self._visible or (self._visibleWhenSelected and self._selected):
             Shape.Draw(self, dc, False)
@@ -97,23 +52,24 @@ class PointShape(Shape):
         """
         self._selectZone = halfWidth
 
-    def Inside(self, x, y):
+    def Inside(self, x: float, y: float):
         """
         True if (x, y) is inside the point, according to the selection zone.
 
-        @param double x, y
+        @param  x
+        @param  y
+
         @return bool
         """
-        ax, ay = self.GetPosition() # GetPosition always returns absolute pos
+        ax, ay = self.GetPosition()     # GetPosition always returns absolute pos
         zone = self._selectZone
         return (ax - zone < x < ax + zone) and (ay - zone < y < ay + zone)
 
-    def SetVisibleWhenSelected(self, state):
+    def SetVisibleWhenSelected(self, state: bool):
         """
-        Set to True if you want the point to always be visible when it's
-        selected.
+        Set to True if you want the point to always be visible when it's selected.
 
-        @param bool state
+        @param  state
         """
         self._visibleWhenSelected = state
 
