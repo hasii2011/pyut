@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutObject import *
 
@@ -7,7 +10,6 @@ from org.pyut.PyutObject import *
 
 # List of possible instance type
 INSTANCE_TYPES = [INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS]
-DEBUG = False
 
 
 class PyutSDInstance(PyutObject):
@@ -25,9 +27,10 @@ class PyutSDInstance(PyutObject):
         @author C.Dutoit
         """
         super().__init__()
-        self._instanceName = "Unnamed instance"
-        self._instanceGraphicalType = INSTANCE_TYPE_CLASS
-        self._lifeLineLength = 200
+        self.logger:                 Logger = getLogger(__name__)
+        self._instanceName:          str    = "Unnamed instance"
+        self._instanceGraphicalType: int    = INSTANCE_TYPE_CLASS
+        self._lifeLineLength:        int    = 200
 
     def getInstanceName(self):
         """

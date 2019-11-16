@@ -1,4 +1,6 @@
 
+from logging import Logger
+from logging import getLogger
 
 from wx import BLACK_PEN
 from wx import CANCEL
@@ -12,7 +14,6 @@ from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from Globals import _
 
-DEBUG: bool = False
 # TODO : Find a way to report moves from AnchorPoints to PyutSDMessage
 #
 # TODO: Humberto -- This class does not seem to be called; I tried to manually create a sequence
@@ -39,6 +40,7 @@ class OglSDMessage(LineShape, ShapeEventHandler):
 
         @author : Added srcPos and dstPos
         """
+        self.logger: Logger = getLogger(__name__)
         self._pyutObject = pyutObject
 
         srcY = pyutObject.getSrcY() - srcShape.getLifeLineShape().GetPosition()[1]
@@ -144,10 +146,7 @@ class OglSDMessage(LineShape, ShapeEventHandler):
         """
         self.updateLabels()
 
-        if DEBUG:
-            print("Draw")
-            print(self.GetSource().GetPosition())
-            print(self.GetDestination().GetPosition())
+        self.logger.debug(f"Draw: Src Pos: '{self.GetSource().GetPosition()}' dest Pos '{self.GetDestination().GetPosition()}'")
         LineShape.Draw(self, dc, withChildren)
 
     def OnLeftDClick(self, event):

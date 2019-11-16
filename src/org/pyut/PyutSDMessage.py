@@ -1,10 +1,10 @@
 
+from logging import Logger
+from logging import getLogger
 
 from org.pyut.PyutLink import PyutLink
 
 from Globals import _
-
-DEBUG = False
 
 
 class PyutSDMessage(PyutLink):
@@ -29,8 +29,9 @@ class PyutSDMessage(PyutLink):
         @author C.Dutoit
         @tips : add time scale zoomer ?! and ofset..ter ?
         """
-        if DEBUG:
-            print("PyutSDMessage.__init__", srcTime, dstTime)
+        self.logger: Logger = getLogger(__name__)
+
+        self.logger.debug(f"PyutSDMessage.__init__ {srcTime}, {dstTime}")
         super().__init__(source=src, destination=dst)
         self._message = message
         self._srcTime = srcTime
@@ -163,8 +164,7 @@ class PyutSDMessage(PyutLink):
             # self._src = src
             PyutLink.setSource(self, src)
         if srcTime != -1:
-            if DEBUG:
-                print("PyutSDMessage - Setting srcTime to ", srcTime)
+            self.logger.debug(f"PyutSDMessage - Setting srcTime to: {srcTime}")
             self.setSrcTime(srcTime)
 
     def setDestination(self, dst=None, dstTime=-1):

@@ -14,8 +14,6 @@ from MiniOgl.SizerShape import SizerShape
 from MiniOgl.ControlPoint import ControlPoint
 from MiniOgl.RectangleShape import RectangleShape
 
-DEBUG = 0  # set to 1 to have some debug info in the terminal
-
 LEFT_MARGIN     = 0
 RIGHT_MARGIN    = 1
 TOP_MARGIN      = 2
@@ -75,7 +73,8 @@ class DiagramFrame(wx.ScrolledWindow):
         self.__backgroundBitmap = wx.Bitmap(w, h)
 
         DEFAULT_FONT_SIZE = 12
-        self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
+        # self._defaultFont  = wx.Font(DEFAULT_FONT_SIZE, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
+        self._defaultFont = wx.Font(DEFAULT_FONT_SIZE, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.SetBackgroundColour(wx.WHITE)
 
         # Mouse events
@@ -112,8 +111,7 @@ class DiagramFrame(wx.ScrolledWindow):
             event handler of the shape
         @return Shape : the clicked shape
         """
-        if DEBUG:
-            self.logger.info(f"Generic for: {methodName}")
+        self.logger.debug(f"Generic for: {methodName}")
         x, y = self.getEventPosition(event)
         self.logger.info(f'GenericHandler - {methodName} x,y: {x},{y}')
         shape = self.FindShape(x, y)
@@ -133,8 +131,7 @@ class DiagramFrame(wx.ScrolledWindow):
 
         @param  event
         """
-        if DEBUG:
-            self.logger.info("DiagramFrame.OnLeftDown")
+        self.logger.debug("DiagramFrame.OnLeftDown")
 
         # First, call the generic handler for OnLeftDown
         shape: ShapeEventHandler = self.GenericHandler(event, "OnLeftDown")
@@ -147,7 +144,6 @@ class DiagramFrame(wx.ScrolledWindow):
 
         # manage click and drag
         x, y = event.GetX(), event.GetY()
-        # print "OnLeftDown, event=(%s, %s); %s; (%s, %s))" % (event.GetX(), event.GetY(), event.GetPosition(), x, y)
         self._lastMousePosition = (x, y)
 
         realShape: Shape = cast(Shape, shape)
@@ -351,11 +347,9 @@ class DiagramFrame(wx.ScrolledWindow):
 
         @param  event
         """
-        # DEBUG
         import wx
-        # import wx.py as py
+
         crustWin = wx.Dialog(self, -1, "PyCrust", (0, 0), (640, 480))
-        # win = py.crust.Crust(crustWin)
         crustWin.Show()
         self.GenericHandler(event, "OnRightDClick")
 
@@ -391,8 +385,7 @@ class DiagramFrame(wx.ScrolledWindow):
         shapes.reverse()    # to select the one at the top
         for shape in shapes:
             if shape.Inside(x, y):
-                if DEBUG:
-                    self.logger.info(f"Inside: {shape}")
+                self.logger.debug(f"Inside: {shape}")
                 found = shape
                 break   # only select the first one
         return found
@@ -475,9 +468,6 @@ class DiagramFrame(wx.ScrolledWindow):
             dc:
             w:
             h:
-
-        Returns:
-
         """
         mem = wx.MemoryDC()
         mem.SelectObject(self.__backgroundBitmap)
