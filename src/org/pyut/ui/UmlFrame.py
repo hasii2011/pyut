@@ -1,6 +1,4 @@
 
-from typing import Callable
-
 from logging import Logger
 from logging import getLogger
 

@@ -28,7 +28,7 @@ class Diagram(object):
         Add a shape to the diagram.
         This is the correct way to do it. Don't use Shape.Attach(diagram)!
 
-        @param Shape shape : the shape to add
+        @param  shape : the shape to add
         @param withModelUpdate
         """
         #  print "Diagram.AddShape => ", shape
