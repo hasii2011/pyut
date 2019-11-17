@@ -29,7 +29,7 @@ from wx import Yield as wxYield
 from org.pyut.general.Globals import _
 import img.ImgSplash
 
-from PyutPreferences import PyutPreferences
+from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.PyutUtils import PyutUtils
 

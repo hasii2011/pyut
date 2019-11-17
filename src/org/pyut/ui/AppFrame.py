@@ -83,7 +83,7 @@ from org.pyut.PyutConstants import SEQUENCE_DIAGRAM
 from org.pyut.PyutConstants import USECASE_DIAGRAM
 from org.pyut.PyutNote import PyutNote
 
-from PyutPreferences import PyutPreferences
+from org.pyut.PyutPreferences import PyutPreferences
 
 from PyutPrintout import PyutPrintout
 from org.pyut.PyutUseCase import PyutUseCase

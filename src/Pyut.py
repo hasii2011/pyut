@@ -17,7 +17,7 @@ from org.pyut.ui.PyutApp import PyutApp
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.PyutVersion import PyutVersion
-from PyutPreferences import PyutPreferences
+from org.pyut.PyutPreferences import PyutPreferences
 
 from Lang import importLanguage as setupPyutLanguage
 

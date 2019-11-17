@@ -30,7 +30,7 @@ from org.pyut.PyutConstants import OGL_COMPOSITION
 from org.pyut.PyutConstants import OGL_NOTELINK
 from org.pyut.PyutConstants import OGL_SD_MESSAGE
 
-from PyutPreferences import PyutPreferences
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.Singleton import Singleton
 

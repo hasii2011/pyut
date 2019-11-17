@@ -6,7 +6,7 @@ import gettext
 
 import wx
 
-from PyutPreferences import PyutPreferences
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
 # Constants

@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from PyutPreferences import PyutPreferences
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.PyutVisibility import PyutVisibility
 from org.pyut.PyutType import PyutType
 from org.pyut.PyutObject import PyutObject
