@@ -3,7 +3,7 @@ from wx import DC
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.PyutUseCase import PyutUseCase
-from LineSplitter import LineSplitter
+from org.pyut.general.LineSplitter import LineSplitter
 
 
 class OglUseCase(OglObject):
