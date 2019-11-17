@@ -11,7 +11,7 @@ from wx import CANCEL
 from plugins.PyutXmi import PyutXmi
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from PyutXml import PyutXml
+from org.pyut.persistence.PyutXml import PyutXml
 
 
 class IoXmi(PyutIoPlugin):

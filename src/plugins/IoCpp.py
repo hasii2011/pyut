@@ -1,6 +1,6 @@
 
-from PyutConsts import OGL_AGGREGATION
-from PyutConsts import OGL_ASSOCIATION
+from org.pyut.PyutConsts import OGL_AGGREGATION
+from org.pyut.PyutConsts import OGL_ASSOCIATION
 from plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass

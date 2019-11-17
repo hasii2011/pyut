@@ -35,7 +35,7 @@ from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.PyutUtils import PyutUtils
 
-from PyutConsts import DefaultFilename
+from org.pyut.PyutConsts import DefaultFilename
 from PyutProject import PyutProject
 
 from Globals import _

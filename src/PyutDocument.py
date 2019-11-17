@@ -2,10 +2,10 @@
 from logging import Logger
 from logging import getLogger
 
-from PyutConsts import CLASS_DIAGRAM
-from PyutConsts import DiagramsLabels
-from PyutConsts import SEQUENCE_DIAGRAM
-from PyutConsts import USECASE_DIAGRAM
+from org.pyut.PyutConsts import CLASS_DIAGRAM
+from org.pyut.PyutConsts import DiagramsLabels
+from org.pyut.PyutConsts import SEQUENCE_DIAGRAM
+from org.pyut.PyutConsts import USECASE_DIAGRAM
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame

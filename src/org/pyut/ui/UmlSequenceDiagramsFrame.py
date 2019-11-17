@@ -8,7 +8,7 @@ from org.pyut.PyutSDMessage import PyutSDMessage
 from OglSDInstance import OglSDInstance
 from OglSDMessage import OglSDMessage
 
-from PyutConsts import OGL_SD_MESSAGE
+from org.pyut.PyutConsts import OGL_SD_MESSAGE
 
 
 class UmlSequenceDiagramsFrame(UmlDiagramsFrame):

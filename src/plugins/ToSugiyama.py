@@ -3,7 +3,6 @@
 from plugins.PyutToPlugin import PyutToPlugin
 
 from plugins.sugiyama.RealSugiyamaNode import *
-# from plugins.sugiyama.VirtualSugiyamaNode import *
 from plugins.sugiyama.SugiyamaLink import *
 from plugins.sugiyama.sugiyamaConsts import *
 
@@ -11,7 +10,7 @@ from org.pyut.ogl.OglInheritance import *
 from org.pyut.ogl.OglInterface import *
 from org.pyut.ogl.OglObject import OglObject
 
-from PyutConsts import *
+from org.pyut.PyutConsts import *
 
 from Globals import cmp
 

@@ -9,7 +9,7 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutField import PyutField
-from PyutConsts import *
+from org.pyut.PyutConsts import *
 import wx
 
 # Constants

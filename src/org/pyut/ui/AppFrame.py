@@ -77,9 +77,10 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from PluginManager import PluginManager
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
-from PyutConsts import CLASS_DIAGRAM
-from PyutConsts import SEQUENCE_DIAGRAM
-from PyutConsts import USECASE_DIAGRAM
+
+from org.pyut.PyutConsts import CLASS_DIAGRAM
+from org.pyut.PyutConsts import SEQUENCE_DIAGRAM
+from org.pyut.PyutConsts import USECASE_DIAGRAM
 from org.pyut.PyutNote import PyutNote
 
 from PyutPreferences import PyutPreferences

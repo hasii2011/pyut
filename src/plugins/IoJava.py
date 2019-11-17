@@ -3,7 +3,9 @@ import os
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.ogl.OglClass import OglClass
-from PyutConsts import *
+from org.pyut.PyutConsts import OGL_INTERFACE
+from org.pyut.PyutConsts import OGL_COMPOSITION
+from org.pyut.PyutConsts import OGL_AGGREGATION
 
 
 class IoJava(PyutIoPlugin):
@@ -89,8 +91,7 @@ class IoJava(PyutIoPlugin):
             returnType = "void"
 
         # writing method name
-        file.write(self.__tab + visibility + " " + returnType + \
-            " " + name + "(")
+        file.write(self.__tab + visibility + " " + returnType + " " + name + "(")
         # for all param
         nbParam = len(method.getParams())
         for param in method.getParams():
@@ -98,32 +99,29 @@ class IoJava(PyutIoPlugin):
             self._writeParam(file, param)
 
             # comma between param
-            nbParam = nbParam -1
-            if(nbParam > 0) :
+            nbParam = nbParam - 1
+            if nbParam > 0:
                 file.write(" , ")
         file.write(") {\n" + self.__tab + "}\n\n")
 
-    def _writeMethods(self, file, methods, className):#, fields):
+    # noinspection PyUnusedLocal
+    def _writeMethods(self, file, methods, className):
         """
         Writing methods in source (.cpp) file
 
         @param file
         @param methods : [] list of all method of a class
         @param className : string the name of the class
-        @param fields    : [] list of fils whose are default value
 
         @author N. Dubois <nicdub@gmx.ch>
         @since 1.1
         """
         # Write header
         if len(methods) > 0:
-            file.write("\n" +\
-                self.__tab + "// -------\n" + \
-                self.__tab + "// Methods\n" + \
-                self.__tab + "// -------\n\n")
+            file.write("\n" + self.__tab + "// -------\n" + self.__tab + "// Methods\n" + self.__tab + "// -------\n\n")
 
         # for all method in methods list
-        for method in methods :
+        for method in methods:
             self._writeMethodComment(file, method, self.__tab)
 
             # writing method
@@ -141,23 +139,23 @@ class IoJava(PyutIoPlugin):
         @since 1.1
         """
         # TODO
-
         # for all method in methods list
-        for method in methods :
+        for method in methods:
 
-            self._writeMethodComment(file, method, className, self.__tab)
+            # self._writeMethodComment(file, method, className, self.__tab)
+            self._writeMethodComment(file=file, method=method, tab=self.__tab)
             # writing tab
             file.write(self.__tab)
 
             # writing type
             # constructor case
             name = method.getName()
-            if(name != className and name != '~'+className):
+            if name != className and name != '~'+className:
                 self._writeType(file, str(method.getReturns()))
 
             # writing method
             self._writeMethod(file, method)
-            file.write( ";\n\n")
+            file.write(";\n\n")
 
     def _writeFields(self, file, fields):
         """
@@ -172,9 +170,7 @@ class IoJava(PyutIoPlugin):
         # Write fields header
         if len(fields) > 0:
             file.write(
-                self.__tab + "// ------\n" + \
-                self.__tab + "// Fields\n" + \
-                self.__tab + "// ------\n\n")
+                self.__tab + "// ------\n" + self.__tab + "// Fields\n" + self.__tab + "// ------\n\n")
 
         # Write all fields in file
         for field in fields:
@@ -182,20 +178,20 @@ class IoJava(PyutIoPlugin):
             visibility = self.__visibility[str(field.getVisibility())]
 
             # Type
-            type = str(field.getType())
+            fieldType = str(field.getType())
 
             # Name
             name = field.getName()
 
             # Default value
             default = field.getDefaultValue()
-            if default != None and default != "":
+            if default is not None and default != "":
                 default = " = " + default
             else:
                 default = ""
 
             # Comments
-            if type == "":
+            if fieldType == "":
                 comments = " // Warning: no type"
             else:
                 comments = ""
@@ -204,8 +200,7 @@ class IoJava(PyutIoPlugin):
             self._writeFieldComment(file, name, self.__tab)
 
             # Write the complete line in file
-            file.write(self.__tab + visibility + " " + type + " " + name + \
-                default + ";" + comments + "\n")
+            file.write(self.__tab + visibility + " " + fieldType + " " + name + default + ";" + comments + "\n")
 
     def _writeLinks(self, file, links):
         """
@@ -213,15 +208,12 @@ class IoJava(PyutIoPlugin):
 
         @param file file:
         @param [] links : list of relation links
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1.2.4
         """
         file.write("\n")
         # Write all relation links in file
         for link in links:
             # Get Class linked (type of variable)
-            type = link.getDestination().getName()
+            destinationLinkName = link.getDestination().getName()
             # Get name of aggregation
             name = link.getName()
             # Array or single variable
@@ -230,9 +222,8 @@ class IoJava(PyutIoPlugin):
             else:
                 array = ""
 
-            # Write datas in file
-            file.write(self.__tab + "private " + type + " " + \
-                name + array + ";\n")
+            # Write data in file
+            file.write(self.__tab + "private " + destinationLinkName + " " + name + array + ";\n")
 
     def _writeFathers(self, file, fathers):
         """
@@ -247,7 +238,7 @@ class IoJava(PyutIoPlugin):
         nbr = len(fathers)
 
         # If there is a father:
-        if(nbr != 0):
+        if nbr != 0:
             file.write(" extends ")
 
             # Only one father allowed
@@ -258,7 +249,7 @@ class IoJava(PyutIoPlugin):
         Writing interfaces implemented by the class.
 
         @param file file : class java file
-        @param fathers  : [] list of fathers
+        @param interfaces  : [] list of fathers
 
         @author N. Dubois <nicdub@gmx.ch>
         @since 1.1
@@ -266,7 +257,7 @@ class IoJava(PyutIoPlugin):
         nbr = len(interfaces)
 
         # If there is at least one interface:
-        if(nbr != 0):
+        if nbr != 0:
             file.write(" implements ")
 
             # Write the first interface
@@ -286,8 +277,7 @@ class IoJava(PyutIoPlugin):
         @author N. Dubois <nicdub@gmx.ch>
         @since 1.1
         """
-        file.write("/**\n * " + classInterface + " " + className + \
-            "\n * More info here \n */\n")
+        file.write("/**\n * " + classInterface + " " + className + "\n * More info here \n */\n")
 
     def _writeMethodComment(self, file, method, tab=""):
         """
@@ -303,10 +293,9 @@ class IoJava(PyutIoPlugin):
         file.write(tab + " * method " + method.getName()+"\n")
         file.write(tab + " * More info here.\n")
         for param in method.getParams():
-            file.write(tab + " * @param " + param.getName() + " : " + \
-                str(param.getType()) + "\n")
+            file.write(tab + " * @param " + param.getName() + " : " + str(param.getType()) + "\n")
 
-        if(str(method.getReturns())!=''):
+        if str(method.getReturns()) != '':
             file.write(tab + " * @return " + str(method.getReturns()) + "\n")
         file.write(tab + " */\n")
 
@@ -337,20 +326,17 @@ class IoJava(PyutIoPlugin):
         @since 1.1.2.2
         """
         for link in allLinks:
-            type = link.getType()
-            if type == OGL_INTERFACE:
+            linkType = link.getType()
+            if linkType == OGL_INTERFACE:
                 interfaces.append(link)
-            elif type == OGL_COMPOSITION or type == OGL_AGGREGATION:
+            elif linkType == OGL_COMPOSITION or linkType == OGL_AGGREGATION:
                 links.append(link)
 
     def _writeClass(self, pyutClass):
         """
         Writing a class to files.
 
-        @param puytClass : an obet pyutClass
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        @param pyutClass : an object pyutClass
         """
         # Read class name
         className = pyutClass.getName()
@@ -366,12 +352,12 @@ class IoJava(PyutIoPlugin):
         stereotype = pyutClass.getStereotype()
 
         # List of links
-        interfaces = [] # List of interfaces implemented by the class
-        links      = [] # Aggregation and compositions
+        interfaces = []     # List of interfaces implemented by the class
+        links      = []     # Aggregation and compositions
         self._seperateLinks(allLinks, interfaces, links)
 
         # Is this class an interface
-        #~ self._isInterface(pyutClass)
+        # ~ self._isInterface(pyutClass)
 
         # Is it an interface
         classInterface = "class"
@@ -380,9 +366,7 @@ class IoJava(PyutIoPlugin):
             if stereotype == "Interface":
                 classInterface = "interface"
 
-
-
-        # Write datas in file
+        # Write data in file
         # -------------------
 
         # Write class comment
@@ -399,25 +383,18 @@ class IoJava(PyutIoPlugin):
 
         # Aggregation and Composition
         self._writeLinks(javaFile, links)
-
         # Methods
         self._writeMethods(javaFile, methods, className)
-
         # end of class
         javaFile.write("}\n")
 
     def write(self, oglObjects):
         """
-        Datas saving
-        @param File file : file to write
-        @param OglClass and OglLink [] : list of exported objects
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Data saving
+        @param oglObjects : list of exported objects
         """
         # Directory for sources
         self._dir = self._askForDirectoryExport()
-        #~ self._dir = "/home/nicdub/donnees/projets/devel/essai"
 
         # If no destination, abort
         if self._dir == "":
@@ -425,10 +402,11 @@ class IoJava(PyutIoPlugin):
 
         # defining constant
         self.__tab = "    "
-        self.__visibility = {"+":"public", "-":"private", "#":"protected"}
-
-        # List of class
-        #~ self.__className = []
+        self.__visibility = {
+            "+": "public",
+            "-": "private",
+            "#": "protected"
+        }
 
         for el in [object for object in oglObjects if isinstance(object, OglClass)]:
             self._writeClass(el.getPyutObject())

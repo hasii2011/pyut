@@ -9,12 +9,12 @@ from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglNoteLink import OglNoteLink
 
-from PyutConsts import OGL_AGGREGATION
-from PyutConsts import OGL_ASSOCIATION
-from PyutConsts import OGL_COMPOSITION
-from PyutConsts import OGL_INHERITANCE
-from PyutConsts import OGL_INTERFACE
-from PyutConsts import OGL_NOTELINK
+from org.pyut.PyutConsts import OGL_AGGREGATION
+from org.pyut.PyutConsts import OGL_ASSOCIATION
+from org.pyut.PyutConsts import OGL_COMPOSITION
+from org.pyut.PyutConsts import OGL_INHERITANCE
+from org.pyut.PyutConsts import OGL_INTERFACE
+from org.pyut.PyutConsts import OGL_NOTELINK
 
 from org.pyut.general.Singleton import Singleton
 

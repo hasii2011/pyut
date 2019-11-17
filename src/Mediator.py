@@ -22,13 +22,13 @@ from MiniOgl.ControlPoint import ControlPoint
 
 from org.pyut.ogl.OglLink import OglLink
 
-from PyutConsts import OGL_INTERFACE
-from PyutConsts import OGL_INHERITANCE
-from PyutConsts import OGL_AGGREGATION
-from PyutConsts import OGL_ASSOCIATION
-from PyutConsts import OGL_COMPOSITION
-from PyutConsts import OGL_NOTELINK
-from PyutConsts import OGL_SD_MESSAGE
+from org.pyut.PyutConsts import OGL_INTERFACE
+from org.pyut.PyutConsts import OGL_INHERITANCE
+from org.pyut.PyutConsts import OGL_AGGREGATION
+from org.pyut.PyutConsts import OGL_ASSOCIATION
+from org.pyut.PyutConsts import OGL_COMPOSITION
+from org.pyut.PyutConsts import OGL_NOTELINK
+from org.pyut.PyutConsts import OGL_SD_MESSAGE
 
 from PyutPreferences import PyutPreferences
 from org.pyut.general.PyutVersion import PyutVersion

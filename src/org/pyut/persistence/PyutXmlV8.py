@@ -45,8 +45,8 @@ from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutLink import PyutLink
 
-from PyutConsts import diagramTypeAsString
-from PyutConsts import diagramTypeFromString
+from org.pyut.PyutConsts import diagramTypeAsString
+from org.pyut.PyutConsts import diagramTypeFromString
 
 from Mediator import getMediator
 from Globals import _

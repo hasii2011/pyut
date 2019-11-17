@@ -7,9 +7,9 @@ import wx
 
 from org.pyut.ogl.OglClass import OglClass
 
-from PyutConsts import OGL_AGGREGATION
-from PyutConsts import OGL_ASSOCIATION
-from PyutConsts import OGL_COMPOSITION
+from org.pyut.PyutConsts import OGL_AGGREGATION
+from org.pyut.PyutConsts import OGL_ASSOCIATION
+from org.pyut.PyutConsts import OGL_COMPOSITION
 
 from org.pyut.PyutUtils import PyutUtils
 
