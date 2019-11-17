@@ -53,7 +53,7 @@ from wx import MenuBar
 from wx import FileDialog
 from wx import PrintDialogData
 from wx import PrintDialog
-from wx import MessageDialog
+
 from wx import ToolBar
 from wx import ClientDC
 from wx import PreviewFrame
@@ -85,7 +85,7 @@ from org.pyut.PyutNote import PyutNote
 
 from org.pyut.PyutPreferences import PyutPreferences
 
-from PyutPrintout import PyutPrintout
+from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.PyutUseCase import PyutUseCase
 
 from org.pyut.ui.Tool import Tool
