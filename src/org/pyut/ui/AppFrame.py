@@ -1125,34 +1125,7 @@ class AppFrame(Frame):
     def _OnMnuFilePrintPreview(self, event):
         """
         Display the print preview frame; Preview before printing.
-
-        @since 1.10
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
-
-        msg: str = "If you have a link using wxDASHED_LINE " + \
-                   "(OglNoteLink, OglAssociation)," + \
-                   " this print preview crash pyut." + \
-                   "This is an unresolved bug.\n" + \
-                   "This bug come from gtk or gdk ? " + \
-                   "It crash in wxPython demo!!! \n" + \
-                   "Do you still want to continue ? "
-
-        # print "AppFrame-OnMnuFilePrintPreview-2"
-        # dlg = wx.MessageDialog(self, msg, _("Warning"),
-        #        wx.YES_NO | wx.ICON_EXCLAMATION | wx.CENTRE | wx.NO_DEFAULT)
-        # dlg = wx.MessageDialog(self, msg, _("Warning"))
-        dlg = MessageDialog(self, msg, "1")
-
-        if dlg.ShowModal() == 5104:
-
-            print("Abandoning")
-            dlg.Destroy()
-            dlg = None
-            return
-
-        dlg.Destroy()
-
         self._ctrl.deselectAllShapes()
         frame = self._ctrl.getUmlFrame()
         if frame == -1:
