@@ -49,7 +49,7 @@ from org.pyut.PyutConstants import diagramTypeAsString
 from org.pyut.PyutConstants import diagramTypeFromString
 
 from Mediator import getMediator
-from Globals import _
+from org.pyut.general.Globals import _
 
 
 def secure_int(x):
