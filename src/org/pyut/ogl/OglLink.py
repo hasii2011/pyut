@@ -6,10 +6,10 @@ from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.PyutLink import PyutLink
 
-from org.pyut.PyutConsts import WEST
-from org.pyut.PyutConsts import SOUTH
-from org.pyut.PyutConsts import NORTH
-from org.pyut.PyutConsts import EAST
+from org.pyut.PyutConstants import WEST
+from org.pyut.PyutConstants import SOUTH
+from org.pyut.PyutConstants import NORTH
+from org.pyut.PyutConstants import EAST
 
 
 def getOrient(srcX, srcY, destX, destY):

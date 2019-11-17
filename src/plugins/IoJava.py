@@ -3,9 +3,9 @@ import os
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.PyutConsts import OGL_INTERFACE
-from org.pyut.PyutConsts import OGL_COMPOSITION
-from org.pyut.PyutConsts import OGL_AGGREGATION
+from org.pyut.PyutConstants import OGL_INTERFACE
+from org.pyut.PyutConstants import OGL_COMPOSITION
+from org.pyut.PyutConstants import OGL_AGGREGATION
 
 
 class IoJava(PyutIoPlugin):

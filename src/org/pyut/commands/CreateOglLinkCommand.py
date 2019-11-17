@@ -4,7 +4,7 @@ from org.pyut.commands.Command import Command
 from org.pyut.ogl.OglLinkFactory import getLinkType
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
-from org.pyut.PyutConsts import OGL_INHERITANCE
+from org.pyut.PyutConstants import OGL_INHERITANCE
 from org.pyut.PyutLink import PyutLink
 
 from org.pyut.history.HistoryUtils import getTokenValue

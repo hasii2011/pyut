@@ -10,7 +10,7 @@ from org.pyut.ogl.OglInheritance import *
 from org.pyut.ogl.OglInterface import *
 from org.pyut.ogl.OglObject import OglObject
 
-from org.pyut.PyutConsts import *
+from org.pyut.PyutConstants import *
 
 from Globals import cmp
 

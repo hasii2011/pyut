@@ -78,9 +78,9 @@ from PluginManager import PluginManager
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 
-from org.pyut.PyutConsts import CLASS_DIAGRAM
-from org.pyut.PyutConsts import SEQUENCE_DIAGRAM
-from org.pyut.PyutConsts import USECASE_DIAGRAM
+from org.pyut.PyutConstants import CLASS_DIAGRAM
+from org.pyut.PyutConstants import SEQUENCE_DIAGRAM
+from org.pyut.PyutConstants import USECASE_DIAGRAM
 from org.pyut.PyutNote import PyutNote
 
 from PyutPreferences import PyutPreferences

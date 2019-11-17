@@ -14,7 +14,7 @@ from xml.dom.minidom import parseString
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.PyutConsts import CLASS_DIAGRAM
+from org.pyut.PyutConstants import CLASS_DIAGRAM
 from Lang import importLanguage
 
 from Mediator import getMediator
