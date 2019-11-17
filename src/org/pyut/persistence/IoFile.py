@@ -19,7 +19,7 @@ from Lang import importLanguage
 
 from Mediator import getMediator
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 
 class IoFile:

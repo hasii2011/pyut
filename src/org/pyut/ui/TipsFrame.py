@@ -26,7 +26,7 @@ from org.pyut.PyutUtils import PyutUtils
 from PyutPreferences import PyutPreferences
 from PyutPreferences import SHOW_TIPS_ON_STARTUP_KEY
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 import img.ImgTipsFrameTipsLogo
 

@@ -1,15 +1,20 @@
 
 # TODO : ELEMENT x (#CDATA) -> ajouter un field #CDATA
 
-from org.pyut.PyutType import *
-
 # from xml.parsers.xmlproc.dtdparser import DTDParser, DTDConsumer  #  TODO have to figure out where to get this from
+from org.pyut.PyutClass import PyutClass
+from org.pyut.PyutField import PyutField
+from org.pyut.PyutType import PyutType
 
 from org.pyut.ogl.OglClass import OglClass
 
+from org.pyut.PyutConstants import OGL_AGGREGATION
+
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from Globals import _
+from org.pyut.general.Globals import _
+
+from org.pyut.PyutUtils import PyutUtils
 
 
 class IoDTD(PyutIoPlugin):
@@ -107,7 +112,7 @@ class IoDTD(PyutIoPlugin):
         @since 1.0
         """
         # Ask the user which destination file he wants
-        filename=self._askForFileImport()
+        filename = self._askForFileImport()
         if filename == "":
             return False
 
@@ -115,7 +120,7 @@ class IoDTD(PyutIoPlugin):
 
 
 # class DTDReader(DTDConsumer):
-class DTDReader():
+class DTDReader:
 
     def __init__(self):
         # self._parser = DTDParser()
@@ -232,7 +237,7 @@ class DTDReader():
         for parentElement in list(self._attribute.keys()):
             # test
             if parentElement not in elementsTree:
-                displayError(_("Wrong DTD : An attribute refers to " + parentElement + ", but this is element is not declared."))
+                PyutUtils.displayError(_("Wrong DTD : An attribute refers to " + parentElement + ", but this is element is not declared."))
             else:
                 # Get parent elements
                 pyutClass = elementsTree[parentElement][0]

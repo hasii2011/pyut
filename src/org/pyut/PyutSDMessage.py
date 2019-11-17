@@ -4,7 +4,7 @@ from logging import getLogger
 
 from org.pyut.PyutLink import PyutLink
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 
 class PyutSDMessage(PyutLink):

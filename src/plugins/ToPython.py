@@ -25,7 +25,7 @@ from plugins.IoPython import IoPython
 
 from Mediator import getMediator
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 
 class ToPython(PyutToPlugin):

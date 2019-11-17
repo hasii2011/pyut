@@ -26,7 +26,7 @@ from wx import DefaultSize as wxDefaultSize
 from wx import App as wxApp
 from wx import Yield as wxYield
 
-from Globals import _
+from org.pyut.general.Globals import _
 import img.ImgSplash
 
 from PyutPreferences import PyutPreferences

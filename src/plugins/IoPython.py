@@ -20,7 +20,7 @@ from plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.PyutUtils import PyutUtils
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 MaxWidth = 80
 

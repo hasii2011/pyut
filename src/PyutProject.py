@@ -11,7 +11,7 @@ from PyutDocument import PyutDocument
 from org.pyut.persistence.IoFile import IoFile
 
 from Mediator import getMediator
-from Globals import _
+from org.pyut.general.Globals import _
 
 
 def shorterFilename(filename):

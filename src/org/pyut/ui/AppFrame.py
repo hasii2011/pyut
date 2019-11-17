@@ -110,8 +110,8 @@ from Mediator import getMediator
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.ui.TipsFrame import TipsFrame
 
-from Globals import _
-from Globals import IMG_PKG
+from org.pyut.general.Globals import _
+from org.pyut.general.Globals import IMG_PKG
 
 [
     ID_MNUFILENEWPROJECT,        ID_MNUFILEOPEN,          ID_MNUFILESAVE,

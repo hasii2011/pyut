@@ -1,5 +1,5 @@
 
-from Globals import cmp
+from org.pyut.general.Globals import cmp
 
 """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (18.11.2005)

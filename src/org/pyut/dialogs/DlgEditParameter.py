@@ -23,7 +23,7 @@ from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 [
     ID_TXTPARAMNAME,

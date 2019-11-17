@@ -38,7 +38,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import DefaultFilename
 from PyutProject import PyutProject
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 TreeDataType = TypeVar('TreeDataType', PyutProject, UmlDiagramsFrame)
 DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)

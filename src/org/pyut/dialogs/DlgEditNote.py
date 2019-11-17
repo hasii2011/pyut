@@ -23,7 +23,7 @@ from wx import BoxSizer
 
 from org.pyut.PyutUtils import PyutUtils
 
-from Globals import _
+from org.pyut.general.Globals import _
 [
     TXT_NOTE
 ] = PyutUtils.assignID(1)

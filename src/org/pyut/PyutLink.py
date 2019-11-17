@@ -4,7 +4,7 @@ from logging import getLogger
 
 from org.pyut.PyutObject import PyutObject
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 
 class PyutLink(PyutObject):
