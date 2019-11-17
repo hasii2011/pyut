@@ -1163,7 +1163,7 @@ class AppFrame(Frame):
         printout2 = PyutPrintout(frame)
         preview   = PrintPreview(printout, printout2, self._printData)
 
-        if not preview.Ok():
+        if not preview.IsOk():
             PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
             return
 
