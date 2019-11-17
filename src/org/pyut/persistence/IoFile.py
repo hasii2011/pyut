@@ -1,16 +1,17 @@
 
-# from importlib import import_module
+from importlib import import_module
 from logging import Logger
 from logging import getLogger
 
 from os import getcwd
 from os import chdir
+from os import sep as osSep
+from glob import glob
 
 import zlib
 
 from xml.dom.minidom import parseString
 
-from glob import glob
 from org.pyut.PyutUtils import PyutUtils
 
 from PyutConsts import CLASS_DIAGRAM
@@ -22,6 +23,9 @@ from Globals import _
 
 
 class IoFile:
+
+    PERSISTENCE_PACKAGE: str = 'org.pyut.persistence'
+    PERSISTENCE_DIR:     str = f'org{osSep}pyut{osSep}persistence'
     """
     To save data in a compressed file format.
 
@@ -47,32 +51,27 @@ class IoFile:
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
-        oldpath = getcwd()
-        path = getMediator().getAppPath()
+        oldpath: str = getcwd()
+        path:    str = f'{getMediator().getAppPath()}{osSep}{IoFile.PERSISTENCE_DIR}'
         chdir(path)
 
-        candidates = glob("PyutXmlV*.py")
-        numbers = [int(s[8:-3]) for s in candidates]
+        candidates  = glob("PyutXmlV*.py")
+        numbers     = [int(s[8:-3]) for s in candidates]
         lastVersion = str(max(numbers))
 
         self.logger.info(f"Using version {lastVersion}  of the exporter")
-        module = __import__("PyutXmlV" + lastVersion)
-        myXml = module.PyutXml()
-
-        doc = myXml.save(project)
-        # text = doc.toxml()
-        text = doc.toprettyxml()
-        # add attribute encoding = "iso-8859-1"
-        # this is not possible with minidom, so we use pattern matching
+        module = import_module(f'{IoFile.PERSISTENCE_PACKAGE}.PyutXmlV{str(lastVersion)}')
+        myXml  = module.PyutXml()
+        doc    = myXml.save(project)
+        text   = doc.toprettyxml()
+        # add attribute encoding = "iso-8859-1" this is not possible with minidom, so we use pattern matching
         updatedText: str = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
         self.logger.info(f'Document Save: \n{updatedText}')
-
-        byteText = updatedText.encode()
+        byteText   = updatedText.encode()
         compressed = zlib.compress(byteText)
 
         file = open(project.getFilename(), "wb")
         file.write(compressed)
-
         file.close()
         chdir(oldpath)
 
@@ -97,7 +96,6 @@ class IoFile:
                 self.logger.info(f'Document read:\n{xmlString}')
             except (ValueError, Exception) as e:
                 self.logger.error(f'open:  {e}')
-
         elif filename[-4:] == ".xml":
             xmlString = open(filename, "r").read()
         else:
@@ -108,26 +106,11 @@ class IoFile:
         root = dom.getElementsByTagName("PyutProject")
         if len(root) > 0:
             root = root[0]
-            # myXml = None
             if root.hasAttribute('version'):
                 version = root.getAttribute("version")
                 self.logger.info(f'Using version {version} of the importer')
-                #
-                # TODO: Fix dynamic loading since I moved code to package;  Both versions of
-                # import do not seem to work.  I don't think I am going to version PyutXml 8 times
-                #
-                # try:
-                #     # module = __import__(f'org.pyut.persistence.PyutXmlV{version}')
-                #     module = import_module(f'PyutXmlV{str(version)}', package=f'org.pyut.persistence.')
-                #     myXml = module.PyutXml()
-                # except (ValueError, Exception) as e:
-                #     self.logger.error(f'Import error: {e}')
-                #     raise e
-                if version == '8':
-                    from org.pyut.persistence.PyutXmlV8 import PyutXml
-                    myXml = PyutXml()
-                else:
-                    raise NotImplementedError(f'Version {version} of PyutXml is not supported')
+                module = import_module(f'{IoFile.PERSISTENCE_PACKAGE}.PyutXmlV{str(version)}')
+                myXml = module.PyutXml()
             else:
                 # version = 1
                 from org.pyut.persistence.PyutXml import PyutXml
