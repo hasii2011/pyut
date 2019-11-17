@@ -86,12 +86,6 @@ class PyutApp(wxApp):
         except (ValueError, Exception) as e:
             self.logger.error(f'{e}')
             dlg = MessageDialog(None, _(f"The following error occurred: {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
-            # self.logger.error("===========================================================")
-            # self.logger.error(f"Error: {exc_info()[0]}")
-            # self.logger.error(f"Msg: {exc_info()[1]}")
-            # self.logger.error("Trace:")
-            # for el in extract_tb(exc_info()[2]):
-            #     self.logger.error(el)
             errMessage: str = PyutUtils.getErrorInfo()
             self.logger.debug(errMessage)
             dlg.ShowModal()
