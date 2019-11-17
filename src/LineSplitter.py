@@ -1,9 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 
-__version__ = "$Revision: 1.3 $"
-__author__  = "EI5, eivd, Group Burgbacher - Waelti"
-__date__    = "2001-12-12"
+from typing import List
+
+from wx import DC
+
 
 class LineSplitter:
     """
@@ -13,22 +12,19 @@ class LineSplitter:
 
     Sample of use::
         text = "Hi, how are you today ?"
-        splittedLines = LineSplitter().split(text, dc, 12)
-
-    :version: $Revision: 1.3 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
+        splitLines = LineSplitter().split(text, dc, 12)
     """
 
-    def split(self, text, dc, width):
+    def split(self, text: str, dc: DC, width: int) -> List[str]:
         """
         Split a text in lines fitting in width pixels.
 
-        @param String text : text to split
-        @param wxDC dc
-        @param int width : width for the text, in pixels
+        @param  text : text to split
+        @param  dc
+        @param  width : width for the text, in pixels
+
         @return String [] : a list of strings fitting in width pixels
-        @author Laurent Burgbacher <lb@alawa.ch>
+
         """
         lines = text.splitlines()
         newLines = []
@@ -43,7 +39,7 @@ class LineSplitter:
                     newLine += word
                     wline += wword
                 else:
-                    newLines.append(newLine[:-1]) # remove last space
+                    newLines.append(newLine[:-1])   # remove last space
                     newLine = word
                     wline = wword
             newLines.append(newLine[:-1])
