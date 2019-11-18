@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import Dict
 
 from logging import Logger
 from logging import getLogger
@@ -174,7 +175,7 @@ class UmlFrame(DiagramFrame):
         cg: ClassGenerator = ClassGenerator()
         classes = cg.getClassListFromNames(display)
 
-        objs = {}
+        objs: Dict[str, OglClass] = {}
         # create the Pyut Class objects
         for cl in classes:
             # create objects
@@ -184,10 +185,12 @@ class UmlFrame(DiagramFrame):
             clmethods = cg.getMethodsFromClass(cl)
 
             # add the methods
-            methods: List[PyutMethod] = cg.getMethodsFromClass(cl)
+            methods: List[PyutMethod] = cg.generatePyutMethods(clmethods)
             methods = sorted(methods, key=PyutMethod.getName)
 
             pyutClassDef.setMethods(methods)
+
+            # Add to diagram
             self.addShape(oglClassDef, 0, 0)
             oglClassDef.autoResize()
             objs[cl.__name__] = oglClassDef
@@ -213,28 +216,9 @@ class UmlFrame(DiagramFrame):
                     self.logger.warning(f'Not yet creating inheritance links; po: {oglClassDef} dest: {dest}')
                     self._createInheritanceLink(oglClassDef, dest)
 
-        # sort by descending height
-        objs = objs.values()
-        objs = sorted(objs, key=OglClass.GetHeight)
+        oglClassDefinitions: List[OglClass] = list(objs.values())
 
-        # organize by vertical descending sizes
-        x = 20
-        y = 20
-        # incX = 0   NOT USED
-        incY = 0
-        for oglClassDef in objs:
-            incX, sy = oglClassDef.GetSize()
-            incX += 20
-            sy += 20
-            incY = max(incY, sy)
-            # find good coordinates
-            if x + incX >= self.maxWidth:
-                x = 20
-                y += incY
-                incY = sy
-            oglClassDef.SetPosition(x + incX // 2, y + sy // 2)
-
-            x += incX
+        self._postionClassHierarchy(oglClassDefinitions)
 
         EndBusyCursor()
 
@@ -474,6 +458,33 @@ class UmlFrame(DiagramFrame):
         @return the history associated to this frame
         """
         return self._history
+
+    def _postionClassHierarchy(self, oglClassDefinitions: List[OglClass]):
+        """
+        Organize by vertical descending sizes
+
+        Args:
+            oglClassDefinitions:
+        """
+        # sort by ascending height
+        sortedOglClassDefinitions: List[OglClass] = sorted(oglClassDefinitions, key=OglClass.GetHeight)
+
+        x = 20
+        y = 20
+        incY = 0
+        for oglClassDef in sortedOglClassDefinitions:
+            incX, sy = oglClassDef.GetSize()
+            incX += 20
+            sy += 20
+            incY = max(incY, sy)
+            # find good coordinates
+            if x + incX >= self.maxWidth:
+                x = 20
+                y += incY
+                incY = sy
+            oglClassDef.SetPosition(x + incX // 2, y + sy // 2)
+
+            x += incX
 
     def _createInheritanceLink(self, child: OglClass, father: OglClass):
         """

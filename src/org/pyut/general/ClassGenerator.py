@@ -87,4 +87,4 @@ class ClassGenerator:
                 elif func_name[0] == "_":
                     meth.setVisibility("#")
 
-            return methods
+        return methods
