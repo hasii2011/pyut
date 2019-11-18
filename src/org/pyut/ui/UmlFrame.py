@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -13,7 +15,7 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutMethod import PyutMethod
-from org.pyut.PyutParam import PyutParam
+# from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutNote import PyutNote
 
 from org.pyut.ogl.OglObject import OglObject
@@ -166,7 +168,7 @@ class UmlFrame(DiagramFrame):
         """
         BeginBusyCursor()
 
-        from inspect import getfullargspec
+        # from inspect import getfullargspec
         from org.pyut.general.ClassGenerator import ClassGenerator
 
         cg: ClassGenerator = ClassGenerator()
@@ -176,59 +178,29 @@ class UmlFrame(DiagramFrame):
         # create the Pyut Class objects
         for cl in classes:
             # create objects
-            pc = PyutClass(cl.__name__)
-            po = OglClass(pc)
+            pyutClassDef: PyutClass = PyutClass(cl.__name__)
+            oglClassDef:  OglClass  = OglClass(pyutClassDef)
 
             clmethods = cg.getMethodsFromClass(cl)
 
             # add the methods
-            methods = []
-            for me in clmethods:
-                funcName: str = me.__name__
-                meth = PyutMethod(funcName)
-
-                if me is not None:
-                    args = getfullargspec(me)
-                    if args[3] is None:
-                        firstDefVal = len(args[0])
-                    else:
-                        firstDefVal = len(args[0]) - len(args[3])
-                    for arg, i in zip(args[0], range(len(args[0]))):
-                        # don't add self, it's implied
-                        # defVal = None
-                        if arg != "self":
-                            if i >= firstDefVal:
-                                defVal = args[3][i - firstDefVal]
-                                if isinstance(defVal, str):
-                                    defVal = f'"{defVal}"'
-                                param = PyutParam(arg, "", str(defVal))
-                            else:
-                                param = PyutParam(arg)
-                            meth.addParam(param)
-                methods.append(meth)
-                # set the visibility according to naming conventions
-                func_name = funcName
-                if func_name[-2:] != "__":
-                    if func_name[0:2] == "__":
-                        meth.setVisibility("-")
-                    elif func_name[0] == "_":
-                        meth.setVisibility("#")
-
+            methods: List[PyutMethod] = cg.getMethodsFromClass(cl)
             methods = sorted(methods, key=PyutMethod.getName)
-            pc.setMethods(methods)
-            self.addShape(po, 0, 0)
-            po.autoResize()
-            objs[cl.__name__] = po
+
+            pyutClassDef.setMethods(methods)
+            self.addShape(oglClassDef, 0, 0)
+            oglClassDef.autoResize()
+            objs[cl.__name__] = oglClassDef
 
         import PyutDataClasses as pdc
 
         # now, search for parent links
-        for po in objs.values():
-            pc = po.getPyutObject()
+        for oglClassDef in objs.values():
+            pyutClassDef = oglClassDef.getPyutObject()
             # skip object, it has no parent
-            if pc.getName() == "object":
+            if pyutClassDef.getName() == "object":
                 continue
-            currentClass = pdc.__dict__.get(pc.getName())
+            currentClass = pdc.__dict__.get(pyutClassDef.getName())
             fatherClasses = [cl for cl in classes if cl.__name__ in map(lambda z: z.__name__, currentClass.__bases__)]
 
             def getClassesNames(theList):
@@ -238,8 +210,8 @@ class UmlFrame(DiagramFrame):
             for father in fatherNames:
                 dest = objs.get(father)
                 if dest is not None:  # maybe we don't have the father loaded
-                    self.logger.warning(f'Not yet creating inheritance links; po: {po} dest: {dest}')
-                    self._createInheritanceLink(po, dest)
+                    self.logger.warning(f'Not yet creating inheritance links; po: {oglClassDef} dest: {dest}')
+                    self._createInheritanceLink(oglClassDef, dest)
 
         # sort by descending height
         objs = objs.values()
@@ -250,8 +222,8 @@ class UmlFrame(DiagramFrame):
         y = 20
         # incX = 0   NOT USED
         incY = 0
-        for po in objs:
-            incX, sy = po.GetSize()
+        for oglClassDef in objs:
+            incX, sy = oglClassDef.GetSize()
             incX += 20
             sy += 20
             incY = max(incY, sy)
@@ -260,7 +232,7 @@ class UmlFrame(DiagramFrame):
                 x = 20
                 y += incY
                 incY = sy
-            po.SetPosition(x + incX // 2, y + sy // 2)
+            oglClassDef.SetPosition(x + incX // 2, y + sy // 2)
 
             x += incX
 
