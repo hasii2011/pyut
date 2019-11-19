@@ -134,6 +134,59 @@ class UmlFrame(DiagramFrame):
         self.cleanUp()
         self.Destroy()
 
+    def OnLeftDown(self, event):
+        """
+        Manage a left down mouse event.
+        If there's an action pending in the mediator, give it the event, else
+        let it go to the next handler.
+
+        @param  event
+        @since 1.4
+        @author L. Burgbacher <lb@alawa.ch>
+        """
+
+        if self._ctrl.actionWaiting():
+            x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
+            skip = self._ctrl.doAction(x, y)
+
+            if self._ctrl.getCurrentAction() == ACTION_ZOOM_IN:
+                DiagramFrame._BeginSelect(self, event)
+
+            if skip == SKIP_EVENT:
+                DiagramFrame.OnLeftDown(self, event)
+
+        else:
+            DiagramFrame.OnLeftDown(self, event)
+
+    def OnLeftUp(self, event):
+        """
+        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
+        to make the right action if it is a selection or a zoom.
+        """
+        if self._ctrl.getCurrentAction() == ACTION_ZOOM_IN:
+            width, height = self._selector.GetSize()
+            x, y = self._selector.GetPosition()
+            self._selector.Detach()
+            self._selector = None
+            self.DoZoomIn(x, y, width, height)
+            self.Refresh()
+            self._ctrl.updateTitle()
+        else:
+
+            DiagramFrame.OnLeftUp(self, event)
+
+    def OnLeftDClick(self, event: MouseEvent):
+        """
+        Manage a left double click mouse event.
+
+        @param  event
+        @since 1.22
+        @author L. Burgbacher <lb@alawa.ch>
+        """
+        x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
+        self._ctrl.editObject(x, y)
+        DiagramFrame.OnLeftDClick(self, event)
+
     def newDiagram(self):
         """
         Remove all shapes, get a brand new empty diagram.
@@ -235,59 +288,6 @@ class UmlFrame(DiagramFrame):
         self.addShape(oglUseCase, x, y)
         self.Refresh()
         return pyutUseCase
-
-    def OnLeftDown(self, event):
-        """
-        Manage a left down mouse event.
-        If there's an action pending in the mediator, give it the event, else
-        let it go to the next handler.
-
-        @param  event
-        @since 1.4
-        @author L. Burgbacher <lb@alawa.ch>
-        """
-
-        if self._ctrl.actionWaiting():
-            x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
-            skip = self._ctrl.doAction(x, y)
-
-            if self._ctrl.getCurrentAction() == ACTION_ZOOM_IN:
-                DiagramFrame._BeginSelect(self, event)
-
-            if skip == SKIP_EVENT:
-                DiagramFrame.OnLeftDown(self, event)
-
-        else:
-            DiagramFrame.OnLeftDown(self, event)
-
-    def OnLeftUp(self, event):
-        """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
-        to make the right action if it is a selection or a zoom.
-        """
-        if self._ctrl.getCurrentAction() == ACTION_ZOOM_IN:
-            width, height = self._selector.GetSize()
-            x, y = self._selector.GetPosition()
-            self._selector.Detach()
-            self._selector = None
-            self.DoZoomIn(x, y, width, height)
-            self.Refresh()
-            self._ctrl.updateTitle()
-        else:
-
-            DiagramFrame.OnLeftUp(self, event)
-
-    def OnLeftDClick(self, event: MouseEvent):
-        """
-        Manage a left double click mouse event.
-
-        @param  event
-        @since 1.22
-        @author L. Burgbacher <lb@alawa.ch>
-        """
-        x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
-        self._ctrl.editObject(x, y)
-        DiagramFrame.OnLeftDClick(self, event)
 
     def addShape(self, shape, x, y, pen=None, brush=None, withModelUpdate=True):
         """
