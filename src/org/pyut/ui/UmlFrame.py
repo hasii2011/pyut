@@ -167,15 +167,15 @@ class UmlFrame(DiagramFrame):
         """
         BeginBusyCursor()
 
-        from org.pyut.experimental.ClassGenerator import ClassGenerator
-        from org.pyut.experimental.AddHierarchy import AddHierarchy
+        from org.pyut.experimental.PythonMetaClassDataHandler import ClassGenerator
+        from org.pyut.experimental.GraphicalHandler import GraphicalHandler
 
         cg: ClassGenerator = ClassGenerator()
         classes: List[type] = cg.getClassListFromNames(display)
 
         classNameToOglClass: Dict[str, OglClass] = {}
 
-        addHierarchy: AddHierarchy = AddHierarchy(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
+        addHierarchy: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
         # create the Pyut Class objects & associate Ogl graphical classes
         for cl in classes:
             # create objects

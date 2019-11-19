@@ -15,7 +15,7 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
 
-class AddHierarchy:
+class GraphicalHandler:
 
     def __init__(self, umlFrame: UmlFrame, maxWidth: int, historyManager: HistoryManager):
 
