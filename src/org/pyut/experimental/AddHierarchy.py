@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -15,10 +17,11 @@ from org.pyut.ogl.OglClass import OglClass
 
 class AddHierarchy:
 
-    def __init__(self, umlFrame: UmlFrame, historyManager: HistoryManager):
+    def __init__(self, umlFrame: UmlFrame, maxWidth: int, historyManager: HistoryManager):
 
-        self.logger:   Logger   = getLogger(__name__)
+        self.logger:    Logger   = getLogger(__name__)
         self._umlFrame: UmlFrame = umlFrame
+        self._maxWidth: int       = maxWidth
         self._historyManager: HistoryManager = historyManager
 
     def addToDiagram(self, pyutClassDef: PyutClass) -> OglClass:
@@ -54,3 +57,30 @@ class AddHierarchy:
         self._historyManager.addCommandGroup(cmdGroup)
 
         cmd.execute()
+
+    def positionClassHierarchy(self, oglClassDefinitions: List[OglClass]):
+        """
+        Organize by vertical descending sizes
+
+        Args:
+            oglClassDefinitions:
+        """
+        # sort by ascending height
+        sortedOglClassDefinitions: List[OglClass] = sorted(oglClassDefinitions, key=OglClass.GetHeight)
+
+        x = 20
+        y = 20
+        incY = 0
+        for oglClassDef in sortedOglClassDefinitions:
+            incX, sy = oglClassDef.GetSize()
+            incX += 20
+            sy += 20
+            incY = max(incY, sy)
+            # find good coordinates
+            if x + incX >= self._maxWidth:
+                x = 20
+                y += incY
+                incY = sy
+            oglClassDef.SetPosition(x + incX // 2, y + sy // 2)
+
+            x += incX

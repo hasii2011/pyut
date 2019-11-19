@@ -170,19 +170,19 @@ class UmlFrame(DiagramFrame):
         from org.pyut.experimental.ClassGenerator import ClassGenerator
 
         cg: ClassGenerator = ClassGenerator()
-        classes = cg.getClassListFromNames(display)
+        classes: List[type] = cg.getClassListFromNames(display)
 
         classNameToOglClass: Dict[str, OglClass] = {}
 
         from org.pyut.experimental.AddHierarchy import AddHierarchy
 
-        addHierarchy: AddHierarchy = AddHierarchy(self, self._history)
+        addHierarchy: AddHierarchy = AddHierarchy(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
         # create the Pyut Class objects & associate Ogl graphical classes
         for cl in classes:
             # create objects
             pyutClassDef: PyutClass = PyutClass(cl.__name__)
 
-            clmethods = cg.getMethodsFromClass(cl)
+            clmethods: List[classmethod] = cg.getMethodsFromClass(cl)
 
             # add the methods
             methods: List[PyutMethod] = cg.generatePyutMethods(clmethods)
@@ -193,21 +193,16 @@ class UmlFrame(DiagramFrame):
             oglClassDef = addHierarchy.addToDiagram(pyutClassDef)
             classNameToOglClass[cl.__name__] = oglClassDef
 
-        import PyutDataClasses as pdc
-
         # now, search for parent links
         for oglClassDef in classNameToOglClass.values():
+
             pyutClassDef = oglClassDef.getPyutObject()
             # skip object, it has no parent
             if pyutClassDef.getName() == "object":
                 continue
-            currentClass = pdc.__dict__.get(pyutClassDef.getName())
-            fatherClasses = [cl for cl in classes if cl.__name__ in map(lambda z: z.__name__, currentClass.__bases__)]
 
-            def getClassesNames(theList):
-                return [item.__name__ for item in theList]
+            fatherNames = cg.getParentClassNames(classes, pyutClassDef)
 
-            fatherNames = getClassesNames(fatherClasses)
             for father in fatherNames:
                 dest = classNameToOglClass.get(father)
                 if dest is not None:  # maybe we don't have the father loaded
@@ -215,7 +210,7 @@ class UmlFrame(DiagramFrame):
 
         oglClassDefinitions: List[OglClass] = list(classNameToOglClass.values())
 
-        self._postionClassHierarchy(oglClassDefinitions)
+        addHierarchy.positionClassHierarchy(oglClassDefinitions)
 
         EndBusyCursor()
 
@@ -455,30 +450,3 @@ class UmlFrame(DiagramFrame):
         @return the history associated to this frame
         """
         return self._history
-
-    def _postionClassHierarchy(self, oglClassDefinitions: List[OglClass]):
-        """
-        Organize by vertical descending sizes
-
-        Args:
-            oglClassDefinitions:
-        """
-        # sort by ascending height
-        sortedOglClassDefinitions: List[OglClass] = sorted(oglClassDefinitions, key=OglClass.GetHeight)
-
-        x = 20
-        y = 20
-        incY = 0
-        for oglClassDef in sortedOglClassDefinitions:
-            incX, sy = oglClassDef.GetSize()
-            incX += 20
-            sy += 20
-            incY = max(incY, sy)
-            # find good coordinates
-            if x + incX >= self.maxWidth:
-                x = 20
-                y += incY
-                incY = sy
-            oglClassDef.SetPosition(x + incX // 2, y + sy // 2)
-
-            x += incX

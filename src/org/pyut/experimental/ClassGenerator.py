@@ -6,6 +6,7 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
+from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 
@@ -18,7 +19,7 @@ class ClassGenerator:
 
         self.logger: Logger = getLogger(__name__)
 
-    def getClassListFromNames(self, classNames: List[str]):
+    def getClassListFromNames(self, classNames: List[str]) -> List[type]:
         """
         Get a list of classes info for classes in the name list
 
@@ -32,7 +33,7 @@ class ClassGenerator:
 
         self.logger.debug(f'pdc value {pdc.__dict__.values()}')
 
-        classes = []
+        classes: List[type] = []
         for clsType in pdc.__dict__.values():
 
             self.logger.debug(f"clsType: '{clsType}' isinstance(clsType, type): '{isinstance(clsType, type)}' type(clsType): '{type(clsType)}'")
@@ -42,8 +43,9 @@ class ClassGenerator:
                     classes.append(clsType)
         return classes
 
-    def getMethodsFromClass(self, clsType):
-        clmethods = []
+    def getMethodsFromClass(self, clsType) -> List[classmethod]:
+
+        clmethods: List[classmethod] = []
         for methd in clsType.__dict__.values():
             if isinstance(methd, Callable):
                 methName: str = methd.__name__
@@ -53,12 +55,12 @@ class ClassGenerator:
 
         return clmethods
 
-    def generatePyutMethods(self, clmethods) -> List[PyutMethod]:
+    def generatePyutMethods(self, clmethods: List[classmethod]) -> List[PyutMethod]:
 
         methods: List[PyutMethod] = []
         for me in clmethods:
-            funcName: str = me.__name__
-            meth = PyutMethod(funcName)
+            funcName: str        = me.__name__
+            meth:     PyutMethod = PyutMethod(funcName)
 
             if me is not None:
                 args = getfullargspec(me)
@@ -68,7 +70,6 @@ class ClassGenerator:
                     firstDefVal = len(args[0]) - len(args[3])
                 for arg, i in zip(args[0], range(len(args[0]))):
                     # don't add self, it's implied
-                    # defVal = None
                     if arg != "self":
                         if i >= firstDefVal:
                             defVal = args[3][i - firstDefVal]
@@ -88,3 +89,18 @@ class ClassGenerator:
                     meth.setVisibility("#")
 
         return methods
+
+    def getParentClassNames(self, classes, pyutClassDef: PyutClass) -> List[str]:
+
+        import PyutDataClasses as pdc
+
+        currentClass = pdc.__dict__.get(pyutClassDef.getName())
+        parentClasses = [cl for cl in classes if cl.__name__ in map(lambda z: z.__name__, currentClass.__bases__)]
+
+        self.logger.info(f'parentClasses: `{parentClasses}`')
+
+        def getClassesNames(theList):
+            return [item.__name__ for item in theList]
+
+        parentNames: List[str] = getClassesNames(parentClasses)
+        return parentNames
