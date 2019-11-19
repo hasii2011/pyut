@@ -175,7 +175,7 @@ class UmlFrame(DiagramFrame):
 
         classNameToOglClass: Dict[str, OglClass] = {}
 
-        addHierarchy: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
+        graphicalHandler: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
         # create the Pyut Class objects & associate Ogl graphical classes
         for cl in classes:
             # create objects
@@ -189,7 +189,7 @@ class UmlFrame(DiagramFrame):
 
             pyutClassDef.setMethods(methods)
 
-            oglClassDef = addHierarchy.addToDiagram(pyutClassDef)
+            oglClassDef = graphicalHandler.addToDiagram(pyutClassDef)
             classNameToOglClass[cl.__name__] = oglClassDef
 
         # now, search for parent links
@@ -205,11 +205,11 @@ class UmlFrame(DiagramFrame):
             for parent in parentNames:
                 dest = classNameToOglClass.get(parent)
                 if dest is not None:  # maybe we don't have the parent loaded
-                    addHierarchy.createInheritanceLink(oglClassDef, dest)
+                    graphicalHandler.createInheritanceLink(oglClassDef, dest)
 
         oglClassDefinitions: List[OglClass] = list(classNameToOglClass.values())
 
-        addHierarchy.positionClassHierarchy(oglClassDefinitions)
+        graphicalHandler.positionClassHierarchy(oglClassDefinitions)
 
         EndBusyCursor()
 
