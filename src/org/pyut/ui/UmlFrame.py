@@ -18,7 +18,6 @@ from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutMethod import PyutMethod
 
 from org.pyut.PyutNote import PyutNote
-from org.pyut.commands.CommandGroup import CommandGroup
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglActor import OglActor
@@ -30,8 +29,6 @@ from OglSDMessage import OglSDMessage
 
 from MiniOgl.Constants import SKIP_EVENT
 from MiniOgl.DiagramFrame import DiagramFrame
-
-from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 from Mediator import ACTION_ZOOM_IN
 from Mediator import getMediator
@@ -170,17 +167,20 @@ class UmlFrame(DiagramFrame):
         """
         BeginBusyCursor()
 
-        from org.pyut.general.ClassGenerator import ClassGenerator
+        from org.pyut.experimental.ClassGenerator import ClassGenerator
 
         cg: ClassGenerator = ClassGenerator()
         classes = cg.getClassListFromNames(display)
 
-        objs: Dict[str, OglClass] = {}
-        # create the Pyut Class objects
+        classNameToOglClass: Dict[str, OglClass] = {}
+
+        from org.pyut.experimental.AddHierarchy import AddHierarchy
+
+        addHierarchy: AddHierarchy = AddHierarchy(self, self._history)
+        # create the Pyut Class objects & associate Ogl graphical classes
         for cl in classes:
             # create objects
             pyutClassDef: PyutClass = PyutClass(cl.__name__)
-            oglClassDef:  OglClass  = OglClass(pyutClassDef)
 
             clmethods = cg.getMethodsFromClass(cl)
 
@@ -190,15 +190,13 @@ class UmlFrame(DiagramFrame):
 
             pyutClassDef.setMethods(methods)
 
-            # Add to diagram
-            self.addShape(oglClassDef, 0, 0)
-            oglClassDef.autoResize()
-            objs[cl.__name__] = oglClassDef
+            oglClassDef = addHierarchy.addToDiagram(pyutClassDef)
+            classNameToOglClass[cl.__name__] = oglClassDef
 
         import PyutDataClasses as pdc
 
         # now, search for parent links
-        for oglClassDef in objs.values():
+        for oglClassDef in classNameToOglClass.values():
             pyutClassDef = oglClassDef.getPyutObject()
             # skip object, it has no parent
             if pyutClassDef.getName() == "object":
@@ -211,12 +209,11 @@ class UmlFrame(DiagramFrame):
 
             fatherNames = getClassesNames(fatherClasses)
             for father in fatherNames:
-                dest = objs.get(father)
+                dest = classNameToOglClass.get(father)
                 if dest is not None:  # maybe we don't have the father loaded
-                    self.logger.warning(f'Not yet creating inheritance links; po: {oglClassDef} dest: {dest}')
-                    self._createInheritanceLink(oglClassDef, dest)
+                    addHierarchy.createInheritanceLink(oglClassDef, dest)
 
-        oglClassDefinitions: List[OglClass] = list(objs.values())
+        oglClassDefinitions: List[OglClass] = list(classNameToOglClass.values())
 
         self._postionClassHierarchy(oglClassDefinitions)
 
@@ -485,22 +482,3 @@ class UmlFrame(DiagramFrame):
             oglClassDef.SetPosition(x + incX // 2, y + sy // 2)
 
             x += incX
-
-    def _createInheritanceLink(self, child: OglClass, father: OglClass):
-        """
-        Add a paternity link between child and father.
-
-        Args:
-            child:  A child
-            father: The daddy!!
-
-        Returns: an OgLink
-
-        """
-        cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
-        cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=father, dst=child)
-
-        cmdGroup.addCommand(cmd)
-        self._history.addCommandGroup(cmdGroup)
-
-        cmd.execute()
