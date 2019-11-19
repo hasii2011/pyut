@@ -9,17 +9,8 @@ from wx import EVT_PAINT
 from wx import EndBusyCursor
 from wx import MouseEvent
 
-from org.pyut.PyutClass import PyutClass
-from org.pyut.PyutActor import PyutActor
-from org.pyut.PyutUseCase import PyutUseCase
-
-from org.pyut.PyutNote import PyutNote
-
 from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglUseCase import OglUseCase
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglNote import OglNote
+
 from org.pyut.ogl.OglLink import OglLink
 from OglSDMessage import OglSDMessage
 
@@ -37,13 +28,14 @@ from org.pyut.experimental.GraphicalHandler import GraphicalHandler
 
 from org.pyut.general.Globals import _
 
+from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
+
 #  DEFAULT_WIDTH = 1280
 #  DEFAULT_WIDTH = 5120
-
 DEFAULT_WIDTH = 3000
 
 
-class UmlFrame(DiagramFrame):
+class UmlFrame(UmlFrameShapeHandler):
     """
     Represents a canvas for drawing diagrams.
     It provides all the methods to add new classes, notes, links...
@@ -232,86 +224,6 @@ class UmlFrame(DiagramFrame):
         gh.addHierarchy(pdc.displayOgl)
 
         EndBusyCursor()
-
-    def createNewClass(self, x, y):
-        """
-        Add a new class at (x, y).
-
-        @return PyutClass : the newly created PyutClass
-        @since 1.4
-        @author L. Burgbacher <lb@alawa.ch>
-        """
-        pyutClass = PyutClass(_("NoName"))
-        oglClass = OglClass(pyutClass)
-        self.addShape(oglClass, x, y)
-        self.Refresh()
-        return pyutClass
-
-    def createNewNote(self, x, y):
-        """
-        Add a new note at (x, y).
-
-        @return PyutNote : the newly created PyutNote
-        @since 1.35.2.2
-        @author P. Waelti <pwaelti@eivd.ch>
-        """
-        pyutNote = PyutNote("")
-        oglNote = OglNote(pyutNote)
-        self.addShape(oglNote, x, y)
-        self.Refresh()
-        return pyutNote
-
-    def createNewActor(self, x, y):
-        """
-        Add a new actor at (x, y).
-
-        @return PyutActor : the newly created PyutActor
-        @since 1.35.2.4
-        @author P. Waelti <pwaelti@eivd.ch>
-        """
-        pyutActor = PyutActor()
-        oglActor = OglActor(pyutActor)
-        self.addShape(oglActor, x, y)
-        self.Refresh()
-        return pyutActor
-
-    def createNewUseCase(self, x, y):
-        """
-        Add a new use case at (x, y).
-
-        @return PyutUseCase : the newly created PyutUseCase
-        @since 1.35.2.4
-        @author P. Waelti <pwaelti@eivd.ch>
-        """
-        pyutUseCase = PyutUseCase()
-        oglUseCase = OglUseCase(pyutUseCase)
-        self.addShape(oglUseCase, x, y)
-        self.Refresh()
-        return pyutUseCase
-
-    def addShape(self, shape, x, y, pen=None, brush=None, withModelUpdate=True):
-        """
-        Add a shape to the UmlFrame.
-
-        @param wx.Shape shape : the shape to add
-        @param int x : coord of the center of the shape
-        @param int y : coord of the center of the shape
-        @param wx.Pen pen : pen to use
-        @param wx.Brush brush : brush to use
-        @param withModelUpdate  :   if true the model of the shape will
-                                            update from the shape (view) when
-                                            added to the diagram. Added by
-                                            P. Dabrowski (29.11.05)
-        @since 1.4
-        @author L. Burgbacher <lb@alawa.ch>
-        """
-        shape.SetDraggable(True)
-        shape.SetPosition(x, y)
-        if pen:
-            shape.SetPen(pen)
-        if brush:
-            shape.SetBrush(brush)
-        self._diagram.AddShape(shape, withModelUpdate)
 
     def getUmlObjects(self):
         """

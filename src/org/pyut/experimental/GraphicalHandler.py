@@ -5,6 +5,7 @@ from typing import Dict
 from logging import Logger
 from logging import getLogger
 
+from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from org.pyut.commands.CommandGroup import CommandGroup
 from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
@@ -19,12 +20,10 @@ from org.pyut.ogl.OglClass import OglClass
 
 class GraphicalHandler:
 
-    def __init__(self, umlFrame: 'UmlFrame', maxWidth: int, historyManager: HistoryManager):
-
-        from org.pyut.ui.UmlFrame import UmlFrame
+    def __init__(self, umlFrame: UmlFrameShapeHandler, maxWidth: int, historyManager: HistoryManager):
 
         self.logger:    Logger   = getLogger(__name__)
-        self._umlFrame: UmlFrame = umlFrame
+        self._umlFrame: UmlFrameShapeHandler = umlFrame
         self._maxWidth: int      = maxWidth
         self._historyManager: HistoryManager = historyManager
 
