@@ -11,7 +11,7 @@ from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 
 
-class ClassGenerator:
+class PythonMetaClassDataHandler:
     """
 
     """

@@ -167,10 +167,10 @@ class UmlFrame(DiagramFrame):
         """
         BeginBusyCursor()
 
-        from org.pyut.experimental.PythonMetaClassDataHandler import ClassGenerator
+        from org.pyut.experimental.PythonMetaClassDataHandler import PythonMetaClassDataHandler
         from org.pyut.experimental.GraphicalHandler import GraphicalHandler
 
-        cg: ClassGenerator = ClassGenerator()
+        cg: PythonMetaClassDataHandler = PythonMetaClassDataHandler()
         classes: List[type] = cg.getClassListFromNames(display)
 
         classNameToOglClass: Dict[str, OglClass] = {}
