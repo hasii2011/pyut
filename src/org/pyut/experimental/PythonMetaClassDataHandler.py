@@ -97,7 +97,7 @@ class PythonMetaClassDataHandler:
         currentClass = pdc.__dict__.get(pyutClassDef.getName())
         parentClasses = [cl for cl in classes if cl.__name__ in map(lambda z: z.__name__, currentClass.__bases__)]
 
-        self.logger.info(f'parentClasses: `{parentClasses}`')
+        self.logger.debug(f'parentClasses: `{parentClasses}`')
 
         def getClassesNames(theList):
             return [item.__name__ for item in theList]
