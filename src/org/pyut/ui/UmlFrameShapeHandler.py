@@ -2,6 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
+from wx import Brush
+from wx import Pen
 from wx import Window
 
 from MiniOgl.DiagramFrame import DiagramFrame
@@ -14,6 +16,7 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.general.Globals import _
 from org.pyut.ogl.OglNote import OglNote
+from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
 
 
@@ -77,27 +80,23 @@ class UmlFrameShapeHandler(DiagramFrame):
         self.Refresh()
         return pyutUseCase
 
-    def addShape(self, shape, x, y, pen=None, brush=None, withModelUpdate=True):
+    def addShape(self, shape: OglObject, x: float, y: float, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
         """
         Add a shape to the UmlFrame.
 
-        @param wx.Shape shape : the shape to add
-        @param int x : coord of the center of the shape
-        @param int y : coord of the center of the shape
-        @param wx.Pen pen : pen to use
-        @param wx.Brush brush : brush to use
-        @param withModelUpdate  :   if true the model of the shape will
-                                            update from the shape (view) when
-                                            added to the diagram. Added by
-                                            P. Dabrowski (29.11.05)
-        @since 1.4
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            shape: the shape to add
+            x: coord of the center of the shape
+            y: coord of the center of the shape
+            pen: pen to use
+            brush:  brush to use
+            withModelUpdate: if true the model of the shape will update from the shape (view) when added to the diagram.
         """
         shape.SetDraggable(True)
         shape.SetPosition(x, y)
-        if pen:
+        if pen is not None:
             shape.SetPen(pen)
-        if brush:
+        if brush is not None:
             shape.SetBrush(brush)
         self._diagram.AddShape(shape, withModelUpdate)
 
