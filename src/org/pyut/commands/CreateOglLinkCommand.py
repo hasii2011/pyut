@@ -32,7 +32,7 @@ class CreateOglLinkCommand(Command):
 
         # if the command is created from the history for an undo redo
         # the constructor will have no parameters and so the link
-        # will be created or got in the unserialise method.
+        # will be created or got in the deserialize method.
         if src is None or dst is None:
             self._link = None
         else:
@@ -141,13 +141,7 @@ class CreateOglLinkCommand(Command):
         cmd.execute()
 
     def execute(self):
-        """
-        Create the ogl graphicaly by adding to the frame the oglLink created in the
-        constructor.
-        """
-        umlFrame = self.getGroup().getHistory().getFrame()
-        umlFrame.GetDiagram().AddShape(self._link, withModelUpdate=False)
-        umlFrame.Refresh()
+        self.redo()
 
     def _createLink(self, src, dst, linkType=OGL_INHERITANCE, srcPos=None, dstPos=None):
         """

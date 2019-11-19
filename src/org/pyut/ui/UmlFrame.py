@@ -16,8 +16,9 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutMethod import PyutMethod
-# from org.pyut.PyutParam import PyutParam
+
 from org.pyut.PyutNote import PyutNote
+from org.pyut.commands.CommandGroup import CommandGroup
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglActor import OglActor
@@ -169,7 +170,6 @@ class UmlFrame(DiagramFrame):
         """
         BeginBusyCursor()
 
-        # from inspect import getfullargspec
         from org.pyut.general.ClassGenerator import ClassGenerator
 
         cg: ClassGenerator = ClassGenerator()
@@ -497,5 +497,10 @@ class UmlFrame(DiagramFrame):
         Returns: an OgLink
 
         """
-        # noinspection PyUnusedLocal
-        cmd: CreateOglLinkCommand = CreateOglLinkCommand(src=father, dst=child)
+        cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
+        cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=father, dst=child)
+
+        cmdGroup.addCommand(cmd)
+        self._history.addCommandGroup(cmdGroup)
+
+        cmd.execute()
