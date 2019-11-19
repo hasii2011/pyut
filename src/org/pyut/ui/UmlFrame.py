@@ -168,13 +168,12 @@ class UmlFrame(DiagramFrame):
         BeginBusyCursor()
 
         from org.pyut.experimental.ClassGenerator import ClassGenerator
+        from org.pyut.experimental.AddHierarchy import AddHierarchy
 
         cg: ClassGenerator = ClassGenerator()
         classes: List[type] = cg.getClassListFromNames(display)
 
         classNameToOglClass: Dict[str, OglClass] = {}
-
-        from org.pyut.experimental.AddHierarchy import AddHierarchy
 
         addHierarchy: AddHierarchy = AddHierarchy(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
         # create the Pyut Class objects & associate Ogl graphical classes
@@ -201,11 +200,11 @@ class UmlFrame(DiagramFrame):
             if pyutClassDef.getName() == "object":
                 continue
 
-            fatherNames = cg.getParentClassNames(classes, pyutClassDef)
+            parentNames = cg.getParentClassNames(classes, pyutClassDef)
 
-            for father in fatherNames:
-                dest = classNameToOglClass.get(father)
-                if dest is not None:  # maybe we don't have the father loaded
+            for parent in parentNames:
+                dest = classNameToOglClass.get(parent)
+                if dest is not None:  # maybe we don't have the parent loaded
                     addHierarchy.createInheritanceLink(oglClassDef, dest)
 
         oglClassDefinitions: List[OglClass] = list(classNameToOglClass.values())
