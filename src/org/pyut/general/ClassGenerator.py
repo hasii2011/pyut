@@ -47,7 +47,7 @@ class ClassGenerator:
         for methd in clsType.__dict__.values():
             if isinstance(methd, Callable):
                 methName: str = methd.__name__
-                self.logger.info(f'methName: {methName}')
+                self.logger.debug(f'methName: {methName}')
                 if methName != '__str__' and methName != '__repr__':
                     clmethods.append(methd)
 
