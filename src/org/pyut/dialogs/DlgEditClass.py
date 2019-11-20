@@ -730,8 +730,8 @@ class DlgEditClass(Dialog):
         self._pyutClass.setShowMethods(self._chkShowMethods.GetValue())
         self._pyutClass.setShowStereotype(self._chkShowStereotype.GetValue())
 
-        import PyutPreferences
-        prefs = PyutPreferences.PyutPreferences()
+        from org.pyut.PyutPreferences import PyutPreferences
+        prefs = PyutPreferences()
         try:
             if prefs["AUTO_RESIZE"]:
                 oglClass = self._ctrl.getOglClass(self._pyutClass)

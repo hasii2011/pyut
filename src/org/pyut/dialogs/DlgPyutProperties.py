@@ -8,7 +8,6 @@ from wx import CommandEvent
 
 import Lang
 
-
 from wx import ALL
 from wx import CB_READONLY
 from wx import CB_SORT
@@ -33,7 +32,7 @@ from wx import StaticText
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.PyutUtils import PyutUtils
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 
 class DlgPyutProperties(Dialog):

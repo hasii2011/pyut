@@ -24,11 +24,11 @@ from wx.html import HtmlEasyPrinting
 
 from wx.lib.dialogs import ScrolledMessageDialog
 
-from org.pyut.PyutUtils import assignID
+from org.pyut.PyutUtils import PyutUtils
 
-from Globals import _
+from org.pyut.general.Globals import _
 
-[ID_LOAD_FILE, ID_BACK, ID_FORWARD, ID_PRINT, ID_VIEW_SOURCE] = assignID(5)
+[ID_LOAD_FILE, ID_BACK, ID_FORWARD, ID_PRINT, ID_VIEW_SOURCE] = PyutUtils.assignID(5)
 
 
 class DlgHelp(Dialog):

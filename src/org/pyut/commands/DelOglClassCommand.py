@@ -4,7 +4,7 @@ from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.commands.DelOglLinkedObjectCommand import DelOglLinkedObjectCommand
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
-from Globals import cmp
+from org.pyut.general.Globals import cmp
 
 
 class DelOglClassCommand(DelOglLinkedObjectCommand):
@@ -91,7 +91,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         from org.pyut.PyutMethod import PyutMethod
         from org.pyut.PyutParam import PyutParam
         from org.pyut.PyutField import PyutField
-        from org.pyut.PyutType import PyutType
+        # from org.pyut.PyutType import PyutType
         from org.pyut.PyutStereotype import PyutStereotype
         from org.pyut.PyutModifier import PyutModifier
 
@@ -148,7 +148,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
 
                 # construction of the type of the param
                 paramType = param[1]
-                pyutType = PyutType(paramType)
+                # pyutType = PyutType(paramType)   Not used
                 paramDefaultValue = param[2]
 
                 # creates and add the param to the method

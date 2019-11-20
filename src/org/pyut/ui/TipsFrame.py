@@ -79,8 +79,8 @@ class TipsFrame(Dialog):
                          RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT)
 
         # Normalize tips
-        import LineSplitter
-        ls = LineSplitter.LineSplitter()
+        from org.pyut.general.LineSplitter import LineSplitter
+        ls = LineSplitter()
         dc = ClientDC(self)
         for i in range(len(Tips)):
             tip = ls.split(Tips[i], dc, int(DEFAULT_WIDTH * 0.8))

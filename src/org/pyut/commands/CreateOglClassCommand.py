@@ -1,7 +1,7 @@
 
 from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
 
-from Globals import _
+from org.pyut.general.Globals import _
 
 
 class CreateOglClassCommand(DelOglClassCommand):

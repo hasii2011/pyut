@@ -43,11 +43,11 @@ from wx import Yield as wxYield
 
 import threading
 
-from org.pyut.PyutUtils import assignID
-from Globals import IMG_PKG
+from org.pyut.PyutUtils import PyutUtils
+from org.pyut.general.Globals import IMG_PKG
 
 # Constants
-[ID_OK] = assignID(1)
+[ID_OK] = PyutUtils.assignID(1)
 FrameWidth  = 400       # Canvas width
 FrameHeight = 300       # and height
 x0 = 20                 # Initial x
