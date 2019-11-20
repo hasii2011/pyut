@@ -120,7 +120,6 @@ class PyutXml:
     def __init__(self):
         """
         Constructor
-        @author C.Dutoit
         """
         self.logger: Logger = getLogger(__name__)
 
@@ -287,8 +286,6 @@ class PyutXml:
         @param  pyutSDInstance : Class to save
         @param xmlDoc : xml document
         @return Element : XML Node
-        @author Deve Roux
-        @modified C.Dutoit/20021121 added display properties
         """
         root = xmlDoc.createElement('SDInstance')
         eltId = self._idFactory.getID(pyutSDInstance)
@@ -305,7 +302,6 @@ class PyutXml:
         @param OglSDInstance oglSDInstance : Instance to save
         @param xmlDoc : xml document
         @return Element : XML Node
-        @author C.Dutoit
         """
         root = xmlDoc.createElement('GraphicSDInstance')
 
@@ -324,7 +320,6 @@ class PyutXml:
         @param pyutSDMessage : SDMessage to save
         @param xmlDoc : xml document
         @return Element : XML Node
-        @author C.Dutoit
         """
         root = xmlDoc.createElement('SDMessage')
 
@@ -352,7 +347,6 @@ class PyutXml:
         @param oglSDMessage : Message to save
         @param xmlDoc
         @return Element : XML Node
-        @author C.Dutoit
         """
         root = xmlDoc.createElement('GraphicSDMessage')
 
@@ -368,7 +362,6 @@ class PyutXml:
         @param PyutField pyutField : Field to save
         @param xmlDoc xmlDoc : xml document
         @return Element : XML Node
-        @author Deve Roux <droux@eivd.ch>
         """
         root = xmlDoc.createElement('Field')
 
@@ -388,7 +381,6 @@ class PyutXml:
         @param pyutParam : Parameters to save
         @param xmlDoc  : xml document
         @return Element : XML Node
-        @author Deve Roux <droux@eivd.ch>
         """
         root = xmlDoc.createElement('Param')
 
@@ -412,7 +404,6 @@ class PyutXml:
         @param PyutLink pyutLink : Link to save
         @param xmlDoc : xml document
         @return Element : XML Node
-        @author Deve Roux <droux@eivd.ch>
         """
 
         root = xmlDoc.createElement('Link')
@@ -448,7 +439,6 @@ class PyutXml:
         @param PyutMethod pyutMethod : Method to save
         @param xmlDoc : xml document
         @return Element : XML Node
-        @author Deve Roux <droux@eivd.ch>
         """
         root = xmlDoc.createElement('Method')
 
@@ -488,9 +478,6 @@ class PyutXml:
         @param xmlDoc : xml document
 
         @return Element : XML Node
-
-        @author Deve Roux <droux@eivd.ch>
-        @modified C.Dutoit/20021121 added display properties
         """
         root = xmlDoc.createElement('Class')
 
@@ -506,13 +493,8 @@ class PyutXml:
         if stereotype is not None:
             root.setAttribute('stereotype', stereotype.getStereotype())
 
-        # description (pwaelti@eivd.ch)
         root.setAttribute('description', pyutClass.getDescription())
-
-        # filename (lb@alawa.ch)
         root.setAttribute('filename', pyutClass.getFilename())
-
-        # display properties (cd)
         root.setAttribute('showMethods', str(pyutClass.getShowMethods()))
         root.setAttribute('showFields',  str(pyutClass.getShowFields()))
         root.setAttribute('showStereotype', str(pyutClass.getShowStereotype()))
@@ -534,8 +516,6 @@ class PyutXml:
         @param pyutNote : Note to convert
         @param xmlDoc : xml document
         @return Element          : New miniDom element
-        @author Philippe Waelti
-        @modified C.Dutoit 2002-12-26, added multiline support
         """
         root = xmlDoc.createElement('Note')
         # ID
@@ -546,8 +526,6 @@ class PyutXml:
         name = pyutNote.getName()
         name = name.replace('\n', "\\\\\\\\")
         root.setAttribute('name', name)
-
-        # filename (added by LB)
         root.setAttribute('filename', pyutNote.getFilename())
 
         return root
@@ -559,30 +537,23 @@ class PyutXml:
         @param PyutNote pyutActor : Note to convert
         @param xmlDoc : xml document
         @return Element : New miniDom element
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
         root = xmlDoc.createElement('Actor')
 
         actorId = self._idFactory.getID(pyutActor)
         root.setAttribute('id', str(actorId))
-
-        # Note
         root.setAttribute('name', pyutActor.getName())
-
-        # filename (lb@alawa.ch)
         root.setAttribute('filename', pyutActor.getFilename())
 
         return root
 
     def _PyutUseCase2xml(self, pyutUseCase, xmlDoc):
         """
-        Exporting an PyutUseCase to an miniDom Element.
+        Exporting an PyutUseCase to a miniDom Element.
 
         @param PyutNote pyutUseCase : Note to convert
         @param xmlDoc xmlDoc : xml document
         @return Element : New miniDom element
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         root = xmlDoc.createElement('UseCase')
 
@@ -603,9 +574,7 @@ class PyutXml:
 
         @param OglObject oglObject : OGL Object
         @param Element root : XML node to write
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
         # Saving size
         w, h = oglObject.GetModel().GetSize()
         root.setAttribute('width', str(float(w)))
@@ -672,7 +641,6 @@ class PyutXml:
         @param  oglClass : Class to save
         @param xmlDoc xmlDoc : xml document
         @return Element : XML Node
-        @author Deve Roux <droux@eivd.ch>
         """
         root = xmlDoc.createElement('GraphicClass')
 
@@ -692,7 +660,6 @@ class PyutXml:
         @param xmlDoc xmlDoc : xml document
 
         @return Element        : New miniDom element
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         root = xmlDoc.createElement('GraphicNote')
 
@@ -711,7 +678,6 @@ class PyutXml:
         @param OglActor oglActor : Actor to convert
         @param xmlDoc xmlDoc : xml document
         @return Element : New miniDom element
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         root = xmlDoc.createElement('GraphicActor')
 
@@ -730,7 +696,7 @@ class PyutXml:
         @param oglUseCase : UseCase to convert
         @param xmlDoc xmlDoc : xml document
         @return Element : New miniDom element
-        @author Philippe Waelti <pwaelti@eivd.ch>
+
         """
         root = xmlDoc.createElement('GraphicUseCase')
 
@@ -738,8 +704,7 @@ class PyutXml:
         self._appendOglBase(oglUseCase, root)
 
         # adding the data layer object
-        root.appendChild(self._PyutUseCase2xml(
-                                        oglUseCase.getPyutObject(), xmlDoc))
+        root.appendChild(self._PyutUseCase2xml(oglUseCase.getPyutObject(), xmlDoc))
 
         return root
 
@@ -749,8 +714,7 @@ class PyutXml:
 
         if domElement.hasAttribute('defaultValue'):
             pyutParam.setDefaultValue(domElement.getAttribute('defaultValue'))
-        # pyutParam.setName(domElement.getAttribute('name'))
-        # pyutParam.setType(domElement.getAttribute('type'))
+
         return pyutParam
 
     # noinspection PyUnusedLocal
@@ -771,9 +735,6 @@ class PyutXml:
         @param {id / srcName, id / srcName} dicoFather: Inheritance
 
         @param UmlFrame umlFrame : Where to draw
-
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        @modified C.Dutoit/20021121 added display properties
         """
         for xmlOglSDInstance in xmlOglSDInstances:
             # Main objects
@@ -819,9 +780,6 @@ class PyutXml:
         @param {id / srcName, id / srcName} dicoFather: Inheritance
 
         @param UmlFrame umlFrame : Where to draw
-
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        @modified C.Dutoit/20021121 added display properties
         """
         for xmlOglSDMessage in xmlOglSDMessages:
 
@@ -843,15 +801,12 @@ class PyutXml:
 
             # Pyut Data
             pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute('id')))
-            # pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message').encode("charmap"))
             # Python 3 is already UTF-8
             pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message'))
 
             dicoOglObjects[pyutSDMessage.getId()] = pyutSDMessage
 
             # Adding OGL class to UML Frame
-            # x = float(xmlOglSDMessage.getAttribute('x'))
-            # y = float(xmlOglSDMessage.getAttribute('y'))
             diagram = umlFrame.GetDiagram()
             dicoOglObjects[srcID].addLink(oglSDMessage)
             dicoOglObjects[dstID].addLink(oglSDMessage)
@@ -865,9 +820,6 @@ class PyutXml:
         Python 3:  This method does not seem to be used;  I'll comment it out and raise an
         exception;  Especially, since I don't know where the `Class` class comes
         from == hasii
-
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
         raise NotImplementedError('I guess this method is used after all.  See the comments')
         # class methods for this current class
@@ -886,10 +838,7 @@ class PyutXml:
 
     def _getMethods(self, Class):
         """
-        To extract methods form interface.
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        To extract methods from interface.
         """
         # class methods for this currente class
         allMethods = []
@@ -919,10 +868,7 @@ class PyutXml:
 
     def _getFields(self, Class):
         """
-        To extract fields form Class.
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        To extract fields from Class.
         """
         # for class fields
         allFields = []
@@ -945,10 +891,6 @@ class PyutXml:
         To extract a PyutLink from an OglLink object.
 
         @param String obj : Name of the object.
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        @changed Philippe Waelti <pwaelti@eivd.ch> : Refactoring campain
-        @changed Laurent Burgbacher <lb@alawa.ch> : miniogl support
         """
         link = obj.getElementsByTagName("Link")[0]
 
@@ -970,7 +912,6 @@ class PyutXml:
     def _getOglLinks(self, xmlOglLinks, dicoOglObjects, dicoLink, dicoFather, umlFrame):
         """
         To extract the links from an OGL object.
-
         """
         def secure_float(floatX):
             if floatX is not None:
@@ -1077,8 +1018,6 @@ class PyutXml:
         @param {id / srcName, OglLink} dicoLink : OGL links loaded
         @param {id / srcName, id / srcName} dicoFather: Inheritance
         @param UmlFrame umlFrame : Where to draw
-        @since 2.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         for xmlOglActor in xmlOglActors:
             pyutActor = PyutActor()
@@ -1118,8 +1057,6 @@ class PyutXml:
         @param {id / srcName, OglLink} dicoLink : OGL links loaded
         @param {id / srcName, id / srcName} dicoFather: Inheritance
         @param UmlFrame umlFrame : Where to draw
-        @since 2.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         for xmlOglUseCase in xmlOglUseCases:
             pyutUseCase = PyutUseCase()
@@ -1167,10 +1104,7 @@ class PyutXml:
         @param {id / srcName, id / srcName} dicoFather: Inheritance
 
         @param UmlFrame umlFrame : Where to draw
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        @modified C.Dutoit/20021121 added display properties
         """
-
         for xmlOglClass in xmlOglClasses:
 
             pyutClass = PyutClass()
@@ -1241,9 +1175,6 @@ class PyutXml:
         @param {id / srcName, id / srcName} dicoFather: Inheritance
 
         @param UmlFrame umlFrame : Where to draw
-
-        @author Philippe Waelti
-        @modified C.Dutoit 2002-12-26, added multiline support
         """
         for xmlOglNote in xmlOglNotes:
             pyutNote = PyutNote()
@@ -1279,9 +1210,6 @@ class PyutXml:
     def joli(self, fileName):
         """
         To open a file and creating diagram.
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
         """
         dom = parse(StringIO(open(fileName).read()))
         # PrettyPrint(dom, open("joli.xml", 'w'))

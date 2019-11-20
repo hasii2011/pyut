@@ -111,7 +111,7 @@ class DiagramFrame(wx.ScrolledWindow):
             event handler of the shape
         @return Shape : the clicked shape
         """
-        self.logger.debug(f"Generic for: {methodName}")
+        self.logger.info(f"Generic for: {methodName}")
         x, y = self.getEventPosition(event)
         self.logger.info(f'GenericHandler - {methodName} x,y: {x},{y}')
         shape = self.FindShape(x, y)

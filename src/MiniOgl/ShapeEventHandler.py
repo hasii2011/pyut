@@ -20,7 +20,7 @@ class ShapeEventHandler:
 
         @param  event
         """
-        self.logger.debug("Unhandled left down")
+        self.logger.info("Unhandled left down")
         event.Skip()
 
     def OnLeftUp(self, event: MouseEvent):
