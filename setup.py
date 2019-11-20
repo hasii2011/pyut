@@ -7,8 +7,8 @@ Usage:
 
 from setuptools import setup
 
-APP = ['src/pyut.py']
-DATA_FILES = []
+APP = ['src/Pyut.py']
+DATA_FILES = ['loggingConfiguration.json']
 OPTIONS = {}
 
 setup(
