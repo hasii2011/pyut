@@ -43,6 +43,8 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 # noinspection PyUnresolvedReferences
 from org.pyut.ogl.OglActor import OglActor
+# noinspection PyUnresolvedReferences
+from org.pyut.ogl.OglUseCase import OglUseCase
 
 # noinspection PyUnresolvedReferences
 from org.pyut.ogl.OglLink import OglLink
@@ -87,6 +89,7 @@ displayOgl: List[str] = [
     "OglClass",
     "OglNote",
     "OglActor",
+    "OglUseCase",
     "OglLink",
     "OglNoteLink",
     "OglAssociation",
@@ -94,6 +97,5 @@ displayOgl: List[str] = [
     "OglComposition",
     "OglInheritance",
     "OglInterface",
-    "OglUseCase",
     "OglLinkFactory"
 ]

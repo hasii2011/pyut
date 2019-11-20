@@ -38,8 +38,8 @@ class PythonMetaClassDataHandler:
 
             self.logger.debug(f"clsType: '{clsType}' isinstance(clsType, type): '{isinstance(clsType, type)}' type(clsType): '{type(clsType)}'")
             if isinstance(clsType, type) or type(clsType) == 'module':
-                self.logger.debug(f'clsType.__name__: `{clsType.__name__}`')
                 if clsType.__name__ in classNames:
+                    self.logger.debug(f'clsType.__name__: `{clsType.__name__}`')
                     classes.append(clsType)
         return classes
 
