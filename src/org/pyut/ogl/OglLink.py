@@ -9,7 +9,7 @@ from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.PyutLink import PyutLink
 
-from org.pyut.PyutAttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 
 
 def getOrient(srcX, srcY, destX, destY) -> PyutAttachmentPoint:
