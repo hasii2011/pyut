@@ -10,11 +10,11 @@ from glob import glob
 
 import zlib
 
+from xml.dom.minidom import Document
 from xml.dom.minidom import parseString
 
 from org.pyut.PyutUtils import PyutUtils
 
-# from org.pyut.PyutConstants import CLASS_DIAGRAM
 from org.pyut.enums.DiagramType import DiagramType
 
 from Lang import importLanguage
@@ -64,8 +64,8 @@ class IoFile:
         self.logger.info(f"Using version {lastVersion}  of the exporter")
         module = import_module(f'{IoFile.PERSISTENCE_PACKAGE}.PyutXmlV{str(lastVersion)}')
         myXml  = module.PyutXml()
-        doc    = myXml.save(project)
-        text   = doc.toprettyxml()
+        doc:  Document = myXml.save(project)
+        text: str      = doc.toprettyxml()
         # add attribute encoding = "iso-8859-1" this is not possible with minidom, so we use pattern matching
         updatedText: str = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
         self.logger.info(f'Document Save: \n{updatedText}')
