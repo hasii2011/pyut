@@ -1,4 +1,8 @@
 
+from typing import List
+
+from logging import Logger
+from logging import getLogger
 
 from org.pyut.ogl.OglLink import OglLink
 
@@ -19,8 +23,9 @@ class ToArrangeLinks(PyutToPlugin):
         @param umlObjects  : list of ogl objects
         @param umlFrame : the umlframe of pyut
         """
-        PyutToPlugin.__init__(self, umlObjects, umlFrame)
+        super().__init__(umlObjects, umlFrame)
         self._umlFrame = umlFrame
+        self.logger: Logger = getLogger(__name__)
 
     def getName(self):
         """
@@ -73,17 +78,15 @@ class ToArrangeLinks(PyutToPlugin):
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
-        Do the tool's action
 
-        @param OglObject [] umlObjects : list of the uml objects of the diagram
-        @param OglObject [] selectedObjects : list of the selected objects
-        @param UmlFrame umlFrame : the frame of the diagram
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            umlObjects: list of the uml objects of the diagram
+            selectedObjects:  list of the selected objects
+            umlFrame: the frame of the diagram
         """
         for oglObject in umlObjects:
             if isinstance(oglObject, OglLink):
-                print("1")
+                self.logger.info(f"Optimizing: {oglObject}")
                 oglObject.optimizeLine()
             else:
-                print("0")
+                self.logger.info(f"No line optimizing for: {oglObject}")

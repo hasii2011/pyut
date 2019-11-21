@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 import wx
 
 from MiniOgl.LineShape import LineShape
@@ -56,15 +59,12 @@ class OglLink(LineShape, ShapeEventHandler):
         - Data layer link association
         - Source and destination objects
 
-    You can inherit this class to implement your favorite type of links
-    like `OglAssociation` for example.
+    You can inherit from this class to implement your favorite type of links
+    like `OglAssociation`.
 
-    There's a link factory (See `OglLinkFactory`) you can use to build
-    the different type of links that exists.
+    There is a link factory (See `OglLinkFactory`) you can use to build
+    the different type of links that exist.
 
-    :version: $Revision: 1.9 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
     """
 
     def __init__(self, srcShape, pyutLink, dstShape, srcPos=None, dstPos=None):
@@ -81,6 +81,8 @@ class OglLink(LineShape, ShapeEventHandler):
             Support for miniogl
         @modified C.Dutoit 20021125 : Added srcPos and dstPos
         """
+        self.logger: Logger = getLogger(__name__)
+
         # Associate src and dest shapes
         self._srcShape = srcShape
         self._destShape = dstShape
@@ -222,20 +224,19 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         Optimize line, so that the line length is minimized
         """
-        print("OptimizeLine")
+        self.logger.info("OptimizeLine")
         # Get elements
-        # src = self.getSourceShape()
-        # dst = self.getDestinationShape()
         srcAnchor = self.GetSource()
         dstAnchor = self.GetDestination()
+
         srcX, srcY = self._srcShape.GetPosition()
         dstX, dstY = self._destShape.GetPosition()
+
         srcSize = self._srcShape.GetSize()
         dstSize = self._destShape.GetSize()
-        print("%s / %s" % ((srcX, srcY), (dstX, dstY)))
 
+        self.logger.info(f"({srcX},{srcY}) / ({dstX},{dstY})")
         # Find new positions
-
         # Little tips
         osrcX, osrcY, odstX, odstY = dstX, dstY, srcX, srcY
 

@@ -131,6 +131,11 @@
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
+        },
+        "ToArrangeLinks": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
         }
     }
 }
