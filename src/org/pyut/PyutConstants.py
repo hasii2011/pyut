@@ -22,16 +22,16 @@ DiagramsStrings = {
 }
 
 
-def diagramTypeAsString(inType):
-    return DiagramsStrings[inType]
-
-
-def diagramTypeFromString(string):
-    for key in DiagramsStrings:
-        if DiagramsStrings[key] == string:
-            return key
-    return UNKNOWN_DIAGRAM
-
-
 class PyutConstants:
     DefaultFilename = _("Untitled.put")
+
+    @staticmethod
+    def diagramTypeAsString(inType):
+        return DiagramsStrings[inType]
+
+    @staticmethod
+    def diagramTypeFromString(string):
+        for key in DiagramsStrings:
+            if DiagramsStrings[key] == string:
+                return key
+        return UNKNOWN_DIAGRAM

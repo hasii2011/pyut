@@ -17,6 +17,7 @@ from wx import STAY_ON_TOP
 from wx import Size
 
 from MiniOgl.ControlPoint import ControlPoint
+from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.OglActor import OglActor
@@ -45,8 +46,7 @@ from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutLink import PyutLink
 
-from org.pyut.PyutConstants import diagramTypeAsString
-from org.pyut.PyutConstants import diagramTypeFromString
+from org.pyut.PyutConstants import PyutConstants
 
 from Mediator import getMediator
 from org.pyut.general.Globals import _
@@ -153,7 +153,7 @@ class PyutXml:
             # Save all documents in the project
             for document in project.getDocuments():
                 documentNode = xmlDoc.createElement("PyutDocument")
-                documentNode.setAttribute('type', diagramTypeAsString(document.getType()))
+                documentNode.setAttribute('type', PyutConstants.diagramTypeAsString(document.getType()))
                 top.appendChild(documentNode)
 
                 oglObjects = document.getFrame().getUmlObjects()
@@ -223,7 +223,7 @@ class PyutXml:
 
                 docType = documentNode.getAttribute("type")     # Python 3 update
 
-                document = project.newDocument(diagramTypeFromString(docType))
+                document = project.newDocument(PyutConstants.diagramTypeFromString(docType))
                 umlFrame = document.getFrame()
 
                 ctrl = getMediator()
@@ -900,7 +900,9 @@ class PyutXml:
         aLink.setDestCard(link.getAttribute('cardDestination'))
         aLink.setSrcCard(link.getAttribute('cardSrc'))
         aLink.setName(link.getAttribute('name'))
-        aLink.setType(int(link.getAttribute('type')))
+        strLinkType: str = link.getAttribute('type')
+        linkType: OglLinkType = OglLinkType(int(strLinkType))
+        aLink.setType(linkType)
         # source and destination will be reconstructed by _getOglLinks
 
         sourceId = int(link.getAttribute('sourceId'))
