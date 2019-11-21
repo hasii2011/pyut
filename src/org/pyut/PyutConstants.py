@@ -2,10 +2,6 @@
 from org.pyut.general.Globals import _
 
 from org.pyut.enums.DiagramType import DiagramType
-# Types of diagrams
-# [
-#     CLASS_DIAGRAM, SEQUENCE_DIAGRAM, USECASE_DIAGRAM, UNKNOWN_DIAGRAM
-# ] = range(4)
 
 # Types of diagrams labels
 DiagramsLabels = {
