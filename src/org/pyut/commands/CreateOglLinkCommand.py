@@ -4,7 +4,7 @@ from org.pyut.commands.Command import Command
 from org.pyut.ogl.OglLinkFactory import getLinkType
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
-from org.pyut.PyutConstants import OGL_INHERITANCE
+from org.pyut.enums.OglLinkType import OglLinkType
 from org.pyut.PyutLink import PyutLink
 
 from org.pyut.history.HistoryUtils import getTokenValue
@@ -18,7 +18,7 @@ class CreateOglLinkCommand(Command):
     It creates every kind of OglLink and allowds to undo/redo it.
     """
 
-    def __init__(self, src=None, dst=None, linkType=OGL_INHERITANCE, srcPos=None, dstPos=None):
+    def __init__(self, src=None, dst=None, linkType: OglLinkType = OglLinkType.OGL_INHERITANCE, srcPos=None, dstPos=None):
         """
         Constructor.
         @param src      :   object from which starts the link
@@ -143,13 +143,13 @@ class CreateOglLinkCommand(Command):
     def execute(self):
         self.redo()
 
-    def _createLink(self, src, dst, linkType=OGL_INHERITANCE, srcPos=None, dstPos=None):
+    def _createLink(self, src, dst, linkType: OglLinkType = OglLinkType.OGL_INHERITANCE, srcPos=None, dstPos=None):
         """
         Add a link between src and dst without adding it the frame.
 
         @param OglClass src  : source of the link
         @param OglClass dst  : destination of the link
-        @param int linkType : type of the link
+        @param  linkType : type of the link
         @param srcPos : position on source
         @param dstPos : position destination
 
@@ -161,7 +161,7 @@ class CreateOglLinkCommand(Command):
                                          link is not added to the frame anymore.
         """
 
-        if linkType == OGL_INHERITANCE:
+        if linkType == OglLinkType.OGL_INHERITANCE:
             return self._createInheritanceLink(src, dst)
 
         pyutLink = PyutLink("", linkType=linkType, source=src.getPyutObject(), destination=dst.getPyutObject())
@@ -183,13 +183,9 @@ class CreateOglLinkCommand(Command):
 
         @param OglClass child : child
         @param OglClass father : father
-        @since 1.4
-        @author L. Burgbacher <lb@alawa.ch>
-        @modified P.Dabrowski 20051202 : moved from umlframe to this command in order to be redone/undone. The
-                                         link is not added to the frame anymore.
         """
-        pyutLink = PyutLink("", linkType=OGL_INHERITANCE, source=child.getPyutObject(), destination=father.getPyutObject())
-        oglLink = getOglLinkFactory().getOglLink(child, pyutLink, father, OGL_INHERITANCE)
+        pyutLink = PyutLink("", linkType=OglLinkType.OGL_INHERITANCE, source=child.getPyutObject(), destination=father.getPyutObject())
+        oglLink = getOglLinkFactory().getOglLink(child, pyutLink, father, OglLinkType.OGL_INHERITANCE)
 
         # Added by ND
         child.addLink(oglLink)

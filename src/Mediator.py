@@ -22,13 +22,7 @@ from MiniOgl.ControlPoint import ControlPoint
 
 from org.pyut.ogl.OglLink import OglLink
 
-from org.pyut.PyutConstants import OGL_INTERFACE
-from org.pyut.PyutConstants import OGL_INHERITANCE
-from org.pyut.PyutConstants import OGL_AGGREGATION
-from org.pyut.PyutConstants import OGL_ASSOCIATION
-from org.pyut.PyutConstants import OGL_COMPOSITION
-from org.pyut.PyutConstants import OGL_NOTELINK
-from org.pyut.PyutConstants import OGL_SD_MESSAGE
+from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general.PyutVersion import PyutVersion
@@ -124,15 +118,15 @@ DEST_ACTIONS = [
     ACTION_ZOOM_OUT     # Patch from D.Dabrowsky, 20060129
 ]
 
-# OglLink constants according to the current action
+# OglLink enumerations according to the current action
 LINK_TYPE = {
-    ACTION_DEST_IMPLEMENT_LINK: OGL_INTERFACE,
-    ACTION_DEST_INHERIT_LINK: OGL_INHERITANCE,
-    ACTION_DEST_AGGREGATION_LINK: OGL_AGGREGATION,
-    ACTION_DEST_COMPOSITION_LINK: OGL_COMPOSITION,
-    ACTION_DEST_ASSOCIATION_LINK: OGL_ASSOCIATION,
-    ACTION_DEST_NOTE_LINK: OGL_NOTELINK,
-    ACTION_DEST_SD_MESSAGE: OGL_SD_MESSAGE,
+    ACTION_DEST_IMPLEMENT_LINK:     OglLinkType.OGL_INTERFACE,
+    ACTION_DEST_INHERIT_LINK:       OglLinkType.OGL_INHERITANCE,
+    ACTION_DEST_AGGREGATION_LINK:   OglLinkType.OGL_AGGREGATION,
+    ACTION_DEST_COMPOSITION_LINK:   OglLinkType.OGL_COMPOSITION,
+    ACTION_DEST_ASSOCIATION_LINK:   OglLinkType.OGL_ASSOCIATION,
+    ACTION_DEST_NOTE_LINK:          OglLinkType.OGL_NOTELINK,
+    ACTION_DEST_SD_MESSAGE:         OglLinkType.OGL_SD_MESSAGE,
 }
 
 # messages for the status bar

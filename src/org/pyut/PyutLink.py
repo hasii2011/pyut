@@ -3,6 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.PyutObject import PyutObject
+from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.general.Globals import _
 
@@ -21,7 +22,7 @@ class PyutLink(PyutObject):
     :contact: droux@eivd.ch
     """
 
-    def __init__(self, name="", linkType=0, cardSrc="", cardDest="", bidir=0, source=None, destination=None):
+    def __init__(self, name="", linkType: OglLinkType = OglLinkType.OGL_INHERITANCE, cardSrc="", cardDest="", bidir=0, source=None, destination=None):
         """
         Constructor.
 
@@ -39,9 +40,9 @@ class PyutLink(PyutObject):
         """
         # PyutObject.__init__(self, name)
         super().__init__(name)
-        self.logger: Logger = getLogger(__name__)
+        self.logger: Logger       = getLogger(__name__)
+        self._type:  OglLinkType = linkType
 
-        self._type    = linkType
         self._cardSrc = cardSrc
         self._cardDes = cardDest
         self._bidir   = bidir
@@ -148,31 +149,28 @@ class PyutLink(PyutObject):
         """
         self._bidir = bidirectional
 
-    def setType(self, theType):
+    def setType(self, theType: OglLinkType):
         """
         Updating type of link.
 
-        @param int theType : Type of the link
-        @since 1.2
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        @param  theType : Type of the link
         """
         # Python 3 update
         # if type(theType) == StringType or type(theType) == UnicodeType:
-        if type(theType) is str:
+        if type(theType) is int:
             try:
-                theType = int(theType)
+                theType: OglLinkType = OglLinkType(theType)
             except (ValueError, Exception) as e:
                 self.logger.error(f'setType: {e}')
-                theType = 0
+                theType = OglLinkType.OGL_INHERITANCE
         self._type = theType
 
-    def getType(self):
+    def getType(self) -> OglLinkType:
         """
         To get the link type.
 
-        @return int : The type of the link
-        @since 1.2
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        @return  : The type of the link
+
         """
         return self._type
 

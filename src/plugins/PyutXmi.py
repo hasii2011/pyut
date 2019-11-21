@@ -1,9 +1,13 @@
 
-# reading file
-from io import StringIO
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
 
+from org.pyut.PyutClass import PyutClass
+from org.pyut.PyutField import PyutField
+from org.pyut.PyutMethod import PyutMethod
+from org.pyut.PyutParam import PyutParam
+
+from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 
@@ -47,7 +51,7 @@ class PyutXmi:
         @since 2.0
         @Deve Roux <droux@eivd.ch>
 
-        @param PyutLink
+        @param pyutLink
         @return Element
         """
 
@@ -84,7 +88,7 @@ class PyutXmi:
         @since 2.0
         @Deve Roux <droux@eivd.ch>
 
-        @param PyutParam
+        @param pyutParam
         @return Element
         """
         root = Element('Param')
@@ -97,7 +101,7 @@ class PyutXmi:
 
         # param defaulf value
         defaultValue = pyutParam.getDefaultValue()
-        if (defaultValue != None):
+        if defaultValue is not None:
             root.setAttribute('defaultValue', defaultValue)
 
         return root
@@ -106,10 +110,7 @@ class PyutXmi:
         """
         Exporting an PyutField to an miniDom Element
 
-        @since 2.0
-        @Deve Roux <droux@eivd.ch>
-
-        @param PyutField
+        @param pyutField
         @return Element
         """
         root = Element('Field')
@@ -119,7 +120,7 @@ class PyutXmi:
         root.appendChild(self._PyutParam2xml(pyutField))
 
         # field visibility
-        root.setAttribute('visibility', str(pyutField.getVisibility()) )
+        root.setAttribute('visibility', str(pyutField.getVisibility()))
 
         return root
 
@@ -130,17 +131,17 @@ class PyutXmi:
         @since 2.0
         @Deve Roux <droux@eivd.ch>
 
-        @param PyutMethod
+        @param pyutMethod
         @return Element
         """
         root = Element('Method')
 
         # method name
-        root.setAttribute('name', pyutMethod.getName() )
+        root.setAttribute('name', pyutMethod.getName())
 
         # method visibility
         visibility = pyutMethod.getVisibility()
-        if (visibility != None):
+        if visibility is not None:
             root.setAttribute('visibility', str(visibility.getVisibility()))
 
         # for all modifiers
@@ -149,16 +150,15 @@ class PyutXmi:
             modifier.setAttribute('name', i.getName())
             root.appendChild(modifier)
 
-
         # method return type
         ret = pyutMethod.getReturns()
-        if (ret != None):
+        if ret is not None:
             eleRet = Element('Return')
             eleRet.setAttribute('type', str(ret))
             root.appendChild(eleRet)
 
         # method params
-        for para in pyutMethod.getParams() :
+        for para in pyutMethod.getParams():
             root.appendChild(self._PyutParam2xml(para))
 
         return root
@@ -170,7 +170,7 @@ class PyutXmi:
         @since 2.0
         @Deve Roux <droux@eivd.ch>
 
-        @param PyutClass
+        @param pyutClass
         @return Element
         """
         root = Element('Class')
@@ -180,9 +180,8 @@ class PyutXmi:
 
         # classs stereotype
         stereotype = pyutClass.getStereotype()
-        if (stereotype != None):
-            root.setAttribute('stereotype', \
-                              stereotype.getStereotype())
+        if stereotype is not None:
+            root.setAttribute('stereotype', stereotype.getStereotype())
 
         # methods methods
         for i in pyutClass.getMethods():
@@ -194,7 +193,7 @@ class PyutXmi:
 
         # for fathers
         fathers = pyutClass.getFathers()
-        if(len(fathers) > 0):
+        if len(fathers) > 0:
             for i in fathers:
                 father = Element('Father')
                 father.setAttribute('name', i.getName() )
@@ -216,7 +215,7 @@ class PyutXmi:
         @since 2.0
         @Deve Roux <droux@eivd.ch>
 
-        @param OglClass
+        @param oglClass
         @return Element
         """
         root = Element('GraphicClass')
@@ -224,14 +223,14 @@ class PyutXmi:
         # class definition
         # adding width and height
         w, h = oglClass.GetBoundingBoxMin()
-        root.setAttribute('width', str(int(w)) )
-        root.setAttribute('height', str(int(h)) )
+        root.setAttribute('width', str(int(w)))
+        root.setAttribute('height', str(int(h)))
 
         # calculate the top right corner of the shape
         x = int(oglClass.GetX())
         y = int(oglClass.GetY())
-        root.setAttribute('x', str(int(x)) )
-        root.setAttribute('y', str(int(y)) )
+        root.setAttribute('x', str(int(x)))
+        root.setAttribute('y', str(int(y)))
 
         # adding the class
         root.appendChild(self._PyutClass2xml(oglClass.getPyutClass()))
@@ -288,16 +287,13 @@ class PyutXmi:
 
         return ""
 
-    def _getDefaultValue(self, xmiParam, pyutParam) :
+    def _getDefaultValue(self, xmiParam, pyutParam):
         """
         Get the default value from xmiParm and update pyutParam with
         the default value.
 
-        @param   minidom.Element : xmiParam
-        @param   PyutParam       : pyutParam
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        @param   xmiParam
+        @param   pyutParam
         """
         # get the value
         value = xmiParam.getElementsByTagName("Foundation.Data_Types.Expression.body")[0].firstChild
@@ -340,12 +336,11 @@ class PyutXmi:
             xmiParam:
             param:
             dico:       dicoType of dicoReturn
-
         """
         def parse(xmiParam, param, dico, tag):
-            for type in xmiParam.getElementsByTagName(tag):
-                id = type.getAttribute("xmi.idref")
-                dico[id] = param
+            for xmiType in xmiParam.getElementsByTagName(tag):
+                zId = xmiType.getAttribute("xmi.idref")
+                dico[zId] = param
 
         parse(xmiParam, param, dico, "Foundation.Core.DataType")
         parse(xmiParam, param, dico, "Foundation.Data_Types.Enumeration")
@@ -527,12 +522,12 @@ class PyutXmi:
                 else:
                     dest = self.dicoLinks[classId]
 
-            type = OGL_ASSOCIATION
+            linkType: OglLinkType = OglLinkType.OGL_ASSOCIATION
             xmiType = association.getElementsByTagName("Foundation.Core.AssociationEnd.aggregation")
             if xmiType[0].getAttribute("xmi.value") == 'shared':
-                type = OGL_AGGREGATION
+                linkType = OglLinkType.OGL_AGGREGATION
 
-            createdLink = umlFrame.createNewLink(src, dest, type)
+            createdLink = umlFrame.createNewLink(src, dest, linkType)
             createdLink.setName(linkName)
             createdLink.setDestination(src.getPyutObject())
 
@@ -574,7 +569,7 @@ class PyutXmi:
 
             # for class id
             classId = xmlOglClasses.getAttribute("xmi.id")
-            print("Class ID : "+classId)
+            print("Class ID : " + classId)
 
             # for all class whos are inerithance link
             for fathers in xmlOglClasses.getElementsByTagName("Foundation.Core.Generalization"):
@@ -590,8 +585,7 @@ class PyutXmi:
                     linkId = link.getAttribute("xmi.idref")
                     print("LINK  " + linkId)
                     if linkId not in self.dicoLinks:
-                        self.dicoLinks[linkId]=oglClass
-                    # self.dicoLinks[linkId][classId] = oglClass
+                        self.dicoLinks[linkId] = oglClass
 
             dicoOglObjects[pyutClass.getId()] = oglClass
 
@@ -629,16 +623,3 @@ class PyutXmi:
         self.dicoReturn.clear()
         self.dicoFather.clear()
         self.dicoLinks.clear()
-
-
-def main():
-    from xml.dom.minidom import parse
-    filename = "model.xml"
-    dom = parse(StringIO(open(filename).read()))
-
-    myXmi = PyutXmi()
-    myXmi.open(dom)
-
-
-if __name__ == "__main__":
-    main()

@@ -1,17 +1,6 @@
 
 from org.pyut.general.Globals import _
 
-# Types of OGL Links
-[
-    OGL_ASSOCIATION,
-    OGL_AGGREGATION,
-    OGL_COMPOSITION,
-    OGL_INHERITANCE,
-    OGL_INTERFACE,
-    OGL_NOTELINK,
-    OGL_SD_MESSAGE,
-] = range(7)
-
 # Types of diagrams
 [
     CLASS_DIAGRAM, SEQUENCE_DIAGRAM, USECASE_DIAGRAM, UNKNOWN_DIAGRAM

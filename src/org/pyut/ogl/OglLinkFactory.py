@@ -9,12 +9,7 @@ from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglNoteLink import OglNoteLink
 
-from org.pyut.PyutConstants import OGL_AGGREGATION
-from org.pyut.PyutConstants import OGL_ASSOCIATION
-from org.pyut.PyutConstants import OGL_COMPOSITION
-from org.pyut.PyutConstants import OGL_INHERITANCE
-from org.pyut.PyutConstants import OGL_INTERFACE
-from org.pyut.PyutConstants import OGL_NOTELINK
+from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.general.Singleton import Singleton
 
@@ -29,23 +24,22 @@ def getOglLinkFactory():
     return OglLinkFactory()
 
 
-def getLinkType(link):
+def getLinkType(link) -> OglLinkType:
     """
-    Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (20.11.2005)
-    @return type (integer) of the link as defined in PyutConsts.py
+    @return The OglLinkType
     """
     if isinstance(link, OglAggregation):
-        return OGL_AGGREGATION
+        return OglLinkType.OGL_AGGREGATION
     elif isinstance(link, OglComposition):
-        return OGL_COMPOSITION
+        return OglLinkType.OGL_COMPOSITION
     elif isinstance(link, OglInheritance):
-        return OGL_INHERITANCE
+        return OglLinkType.OGL_INHERITANCE
     elif isinstance(link, OglAssociation):
-        return OGL_ASSOCIATION
+        return OglLinkType.OGL_ASSOCIATION
     elif isinstance(link, OglInterface):
-        return OGL_INTERFACE
+        return OglLinkType.OGL_INTERFACE
     elif isinstance(link, OglNoteLink):
-        return OGL_NOTELINK
+        return OglLinkType.OGL_NOTELINK
 
 
 class OglLinkFactory(Singleton):
@@ -58,7 +52,7 @@ class OglLinkFactory(Singleton):
         self.logger: Logger = getLogger(__name__)
 
     # noinspection PyUnusedLocal
-    def getOglLink(self, srcShape, pyutLink, destShape, linkType, srcPos=None, dstPos=None):
+    def getOglLink(self, srcShape, pyutLink, destShape, linkType: OglLinkType, srcPos=None, dstPos=None):
         """
         Used to get a OglLink of the given linkType.
 
@@ -72,22 +66,22 @@ class OglLinkFactory(Singleton):
 
         Returns:  The requested link
         """
-        if linkType == OGL_AGGREGATION:
+        if linkType == OglLinkType.OGL_AGGREGATION:
             return OglAggregation(srcShape, pyutLink, destShape)
 
-        elif linkType == OGL_COMPOSITION:
+        elif linkType == OglLinkType.OGL_COMPOSITION:
             return OglComposition(srcShape, pyutLink, destShape)
 
-        elif linkType == OGL_INHERITANCE:
+        elif linkType == OglLinkType.OGL_INHERITANCE:
             return OglInheritance(srcShape, pyutLink, destShape)
 
-        elif linkType == OGL_ASSOCIATION:
+        elif linkType == OglLinkType.OGL_ASSOCIATION:
             return OglAssociation(srcShape, pyutLink, destShape)
 
-        elif linkType == OGL_INTERFACE:
+        elif linkType == OglLinkType.OGL_INTERFACE:
             return OglInterface(srcShape, pyutLink, destShape)
 
-        elif linkType == OGL_NOTELINK:
+        elif linkType == OglLinkType.OGL_NOTELINK:
             return OglNoteLink(srcShape, pyutLink, destShape)
         else:
             self.logger.error(f"Unknown linkType of OglLink into factory: {repr(linkType)}")

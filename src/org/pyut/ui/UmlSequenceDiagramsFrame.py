@@ -8,7 +8,7 @@ from org.pyut.PyutSDMessage import PyutSDMessage
 from OglSDInstance import OglSDInstance
 from OglSDMessage import OglSDMessage
 
-from org.pyut.PyutConstants import OGL_SD_MESSAGE
+from org.pyut.enums.OglLinkType import OglLinkType
 
 
 class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
@@ -58,13 +58,13 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         return pyutSDInstance
 
     # noinspection PyUnusedLocal
-    def createNewLink(self, src, dst, linkType=OGL_SD_MESSAGE, srcPos=None, dstPos=None):
+    def createNewLink(self, src, dst, linkType: OglLinkType = OglLinkType.OGL_SD_MESSAGE, srcPos=None, dstPos=None):
         """
         Add a link between src and dst.
 
         @param OglSDInstance src  : source of the link
         @param OglSDInstance dst  : destination of the link
-        @param int linkType : type of the link
+        @param  linkType : type of the link
         @param srcPos : position on source
         @param dstPos : position on  destination
 

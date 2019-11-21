@@ -1,6 +1,6 @@
 
-from org.pyut.PyutConstants import OGL_AGGREGATION
-from org.pyut.PyutConstants import OGL_ASSOCIATION
+from org.pyut.enums.OglLinkType import OglLinkType
+
 from plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
@@ -267,7 +267,7 @@ class IoCpp(PyutIoPlugin):
             file.write(name + ' ')
 
             # *
-            if link.getType() == OGL_ASSOCIATION or link.getType() == OGL_AGGREGATION:
+            if link.getType() == OglLinkType.OGL_ASSOCIATION or link.getType() == OglLinkType.OGL_AGGREGATION:
                 file.write("*")
 
             file.write(linkName + ' ')
