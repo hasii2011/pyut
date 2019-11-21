@@ -10,13 +10,6 @@ class SugiyamaNode:
     This class is an interface, you shouldn't have an object of type
     SugiyamaNode. You have to use RealSugiyamaNode or VirtualSugiyamaNode
     objects.
-
-    Instancied by: not instancied
-    Implemented by: RealSugiyamaNode, VirtualSugiyamaNode
-
-    :author: Nicolas Dubois
-    :contact: nicdub@gmx.ch
-    :version: $Revision: 1.4 $
     """
     def __init__(self):
         """
@@ -90,12 +83,12 @@ class SugiyamaNode:
         """
         Get position of node.
 
-        This function has to be implemented.
+        This function has to be implemented.  Should be a 'pass'  But Pycharm complains
+        at method self.__pushToRight()
 
         @return (float, float): tuple (x, y) is absolute coordinates
-        @author Nicolas Dubois
         """
-        pass
+        return 0.0, 0.0
 
     def addFather(self, father, link):
         """
@@ -457,11 +450,10 @@ class SugiyamaNode:
     def __pushToRight(self, xDeltaSum, nbLinks):
         """
         Called by the left neighbor, that function tries to push the node to
-        the right for the balancing. If there is not enough place, try to
+        the right for the balancing. If there is not enough space, try to
         push the next node.
 
-        xDelta is the ideal delta on x coordinate for reaching the best
-        balancing.
+        xDelta is the ideal delta on x coordinate for reaching the best balance.
 
         xDeltaSum is xDelta multiplied by the number of parents and sons
         which are pushing to the right.
@@ -469,7 +461,7 @@ class SugiyamaNode:
         nbLinks is the number of parents and sons who push from the left.
 
         @param float xDeltaSum : see above
-        @param int nbNode : see above
+        @param int nbLinks : see above
         @author Nicolas Dubois
         """
         # Get current position

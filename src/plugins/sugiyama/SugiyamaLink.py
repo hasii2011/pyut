@@ -1,33 +1,9 @@
-#!/usr/bin/env python
-#
-# Copyright 2002, Nicolas Dubois, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of PyUt.
-#
-# PyUt is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# PyUt is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with PyUt; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
-__version__ = '$Revision: 1.4 $'
-__author__ = 'Nicolas Dubois <nicdub@gmx.ch>'
-__date__ = '2002-10-31'
-
-from plugins.sugiyama.ALayoutLink import *
-from plugins.sugiyama.VirtualSugiyamaNode import *
+from plugins.sugiyama.ALayoutLink import ALayoutLink
+from plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 
 # Miniogl import
-from MiniOgl.ControlPoint import *
+from MiniOgl.ControlPoint import ControlPoint
 
 
 class SugiyamaLink(ALayoutLink):
@@ -100,7 +76,7 @@ class SugiyamaLink(ALayoutLink):
             ctrlPoint = ControlPoint(xvnode, yvnode)#,self._oglLink)
             self.addControlPoint(ctrlPoint)
 
-    def addVitualNode(self, node):
+    def addVirtualNode(self, node):
         """
         Add a virtual node.
 

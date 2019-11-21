@@ -2,6 +2,8 @@
 
 from plugins.PyutToPlugin import PyutToPlugin
 
+from plugins.sugiyama.SugiyamaNode import SugiyamaNode
+
 from plugins.sugiyama.RealSugiyamaNode import *
 from plugins.sugiyama.SugiyamaLink import *
 from plugins.sugiyama.sugiyamaConsts import *
@@ -12,6 +14,7 @@ from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutConstants import *
 
+from plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
 from org.pyut.general.Globals import cmp
 
 STEPBYSTEP = 0  # Do Sugiyama Step by step
@@ -21,19 +24,6 @@ def waitKey(umlFrame):
     umlFrame.Refresh()
     wx.Yield()
     input("Appuyez sur Enter pour continuer")   # Press enter to continue?
-
-
-def cmpBarycenter(xNode, yNode) -> bool:
-    """
-    Comparison function on barycenter value
-    Args:
-        xNode:
-        yNode:
-
-    Returns:
-
-    """
-    return cmp(xNode.getBarycenter(), yNode.getBarycenter())
 
 
 def cmpIndex(xNode, yNode) -> bool:
@@ -225,7 +215,7 @@ class ToSugiyama(PyutToPlugin):
         # Simplify writing
         nodesList = self.__hierarchyGraphNodesList
         # Fix nodes indexes corresponding to matrix column and line index
-        nbNodes = len(nodesList) # Number of nodes in hierarchy
+        nbNodes = len(nodesList)  # Number of nodes in hierarchy
         for i in range(nbNodes):
             nodesList[i].setIndex(i)
 
@@ -242,6 +232,7 @@ class ToSugiyama(PyutToPlugin):
         #     C|0|1|0
         #
         #
+        # noinspection PyUnusedLocal
         matrix = [[0 for el in range(nbNodes)] for el2 in range(nbNodes)]
 
         # Fill matrix
@@ -255,6 +246,7 @@ class ToSugiyama(PyutToPlugin):
         # Define levels
 
         # Sum each column of the matrix
+        # noinspection PyUnusedLocal
         sumColumns = [None for el in range(nbNodes)]
         for i in range(nbNodes):
             sumColumns[i] = 0
@@ -513,7 +505,7 @@ class ToSugiyama(PyutToPlugin):
             # nodes
             if len(indexLevels) == 0:
                 return
-
+            # noinspection PyUnusedLocal
             # For each crossed level, add a virtual node
             vnodes = [VirtualSugiyamaNode() for el in indexLevels]
 
@@ -543,7 +535,7 @@ class ToSugiyama(PyutToPlugin):
 
             # Add virtual nodes in link in order bottom to top
             for i in range(len(vnodes) - 1, -1, -1):
-                link.addVitualNode(vnodes[i])
+                link.addVirtualNode(vnodes[i])
 
         # For all links
         for link in self.__sugiyamaLinksList:
@@ -578,7 +570,7 @@ class ToSugiyama(PyutToPlugin):
             listNodes.append(levelCopy[i])
 
         # Sort list of nodes
-        listNodes.sort(cmpBarycenter)
+        listNodes.sort(key=SugiyamGlobals.cmpBarycenter)
 
         # Put sorted list in levelCopy
         for i in range(len(listNodes)):
@@ -597,7 +589,7 @@ class ToSugiyama(PyutToPlugin):
         else:
             # Else set new order
             self.__levels[indexLevel] = levelCopy
-        nbIntersect3 = self.__getNbIntersectAll()
+        # nbIntersect3 = self.__getNbIntersectAll()    NOT USED
 
     def __shiftSameBarycenter(self, indexLevel):
         """
@@ -639,8 +631,6 @@ class ToSugiyama(PyutToPlugin):
         """
         level = self.__levels[indexLevel]
 
-        # Internal function for comparing barycenter
-
         # A group is a list of nodes that have the same barycenter value
         # groups is a list of all group
         # groups = [[node, node, ..], [node, ..], ..]
@@ -648,6 +638,7 @@ class ToSugiyama(PyutToPlugin):
 
         # Fix indexes
         for i in range(len(level)):
+            # noinspection PyUnusedLocal
             node = level[i].setIndex(i)
 
         barycenter = level[0].getBarycenter()
@@ -669,7 +660,7 @@ class ToSugiyama(PyutToPlugin):
 
         # Sort each group of nodes
         for group in groups:
-            group.sort(cmpBarycenter)
+            group.sort(key=SugiyamGlobals.cmpBarycenter)
 
         # Fix new positions
         moved = 0
@@ -1046,10 +1037,6 @@ class ToSugiyama(PyutToPlugin):
 
         @author Nicolas Dubois
         """
-
-        # ~ def cmpSons(lSon, rSon):
-            # ~ return cmp(lSon[0].getIndex(), rSon[0].getIndex())
-
         # For each hierarchical link, fix anchors coordinates
         for level in self.__levels:
             for node in level:

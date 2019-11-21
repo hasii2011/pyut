@@ -2,6 +2,8 @@
 from plugins.sugiyama.SugiyamaNode import SugiyamaNode
 from plugins.sugiyama.ALayoutNode import ALayoutNode
 
+from plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
+
 
 class RealSugiyamaNode(SugiyamaNode):
     """
@@ -77,14 +79,6 @@ class RealSugiyamaNode(SugiyamaNode):
 
         @author Nicolas Dubois
         """
-        # Internal comparison funtion for sorting list of fathers or sons
-        # on index.
-        def cmpIndex(l, r):
-            def cmp(left, right):
-                return (left > right) - (left < right)
-
-            return cmp(l[0].getIndex(), r[0].getIndex())
-
         # Get position and size of node
         (width, height) = self.getSize()
         (x, y) = self.getPosition()
@@ -92,8 +86,7 @@ class RealSugiyamaNode(SugiyamaNode):
         # Fix all sons anchors position
         # Sort sons list to eliminate crossing
         sons = self.getSons()
-        #   sons.sort(cmpIndex)
-        sons.sort()
+        sons.sort(key=SugiyamGlobals.cmpIndex)
         nbSons = len(sons)
         # For all sons
         for i in range(nbSons):
@@ -101,13 +94,10 @@ class RealSugiyamaNode(SugiyamaNode):
             # Fix anchors coordinates
             link.setDestAnchorPos(
                 x + width * (i + 1) / (nbSons + 1), y + height)
-
         # Fathers anchors position
-
         # Sort fathers list to eliminate crossing
         fathers = self.getFathers()
-        # fathers.sort(cmpIndex)
-        fathers.sort()
+        fathers.sort(key=SugiyamGlobals.cmpIndex)
         nbFathers = len(fathers)
         # For all fathers
         for i in range(nbFathers):
