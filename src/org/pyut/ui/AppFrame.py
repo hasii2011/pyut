@@ -67,14 +67,16 @@ from wx import Yield as wxYield
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 from org.pyut.persistence.FileHandling import FileHandling
+
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
+from org.pyut.plugins.PluginManager import PluginManager
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglUseCase import OglUseCase
 
-from PluginManager import PluginManager
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 
