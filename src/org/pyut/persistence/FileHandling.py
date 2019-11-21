@@ -35,7 +35,8 @@ from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.PyutConstants import DefaultFilename
+from org.pyut.PyutConstants import PyutConstants
+
 from org.pyut.PyutProject import PyutProject
 
 from org.pyut.general.Globals import _
@@ -159,7 +160,7 @@ class FileHandling:
         """
         Return True if the filename is the default filename
         """
-        return filename == DefaultFilename
+        return filename == PyutConstants.DefaultFilename
 
     def openFile(self, filename, project=None):
         """
@@ -180,7 +181,7 @@ class FileHandling:
 
         # Create a new project ?
         if project is None:
-            project = PyutProject(DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
+            project = PyutProject(PyutConstants.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
 
         #  print ">>>FileHandling-openFile-3"
         # Load the project and add it
@@ -258,7 +259,7 @@ class FileHandling:
             PyutUtils.displayError(_("No diagram to save !"), _("Error"))
             return
 
-        if currentProject.getFilename() is None or currentProject.getFilename() == DefaultFilename:
+        if currentProject.getFilename() is None or currentProject.getFilename() == PyutConstants.DefaultFilename:
             return self.saveFileAs()
         else:
             return currentProject.saveXmlPyut()
@@ -336,7 +337,7 @@ class FileHandling:
 
         @author C.Dutoit
         """
-        project = PyutProject(DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
+        project = PyutProject(PyutConstants.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
         self._projects.append(project)
         self._currentProject = project
         self._currentFrame = None

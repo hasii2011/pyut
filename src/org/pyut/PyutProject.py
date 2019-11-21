@@ -27,9 +27,6 @@ def shorterFilename(filename):
     return os.path.split(filename)[1]
 
 
-DefaultFilename = _("Untitled.put")
-
-
 class PyutProject:
     """
     Project : contain multiple documents

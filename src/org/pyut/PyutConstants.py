@@ -1,4 +1,6 @@
 
+from org.pyut.general.Globals import _
+
 # Types of OGL Links
 [
     OGL_ASSOCIATION,
@@ -9,12 +11,6 @@
     OGL_NOTELINK,
     OGL_SD_MESSAGE,
 ] = range(7)
-
-# Cardinal points, taken to correspond to the attachment points of the OglClass
-NORTH = 0
-EAST  = 1
-SOUTH = 2
-WEST  = 3
 
 # Types of diagrams
 [
@@ -48,4 +44,5 @@ def diagramTypeFromString(string):
     return UNKNOWN_DIAGRAM
 
 
-DefaultFilename = "Untitled.put"
+class PyutConstants:
+    DefaultFilename = _("Untitled.put")

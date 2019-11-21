@@ -9,13 +9,10 @@ from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.PyutLink import PyutLink
 
-from org.pyut.PyutConstants import WEST
-from org.pyut.PyutConstants import SOUTH
-from org.pyut.PyutConstants import NORTH
-from org.pyut.PyutConstants import EAST
+from org.pyut.PyutAttachmentPoint import PyutAttachmentPoint
 
 
-def getOrient(srcX, srcY, destX, destY):
+def getOrient(srcX, srcY, destX, destY) -> PyutAttachmentPoint:
     """
     Giving a source and destination, returns where the destination
     is located according to the source.
@@ -24,29 +21,23 @@ def getOrient(srcX, srcY, destX, destY):
     @param int srcY  : Y pos of src point
     @param int destX : X pos of dest point
     @param int destY : Y pos of dest point
-
-    @since 1.0
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
-
-    # Just let's see
-    # Want to understand, please make a little draw
     deltaX = srcX - destX
     deltaY = srcY - destY
     if deltaX > 0:  # dest is not east
         if deltaX > abs(deltaY):    # dest is west
-            return WEST
+            return PyutAttachmentPoint.WEST
         elif deltaY > 0:
-            return NORTH
+            return PyutAttachmentPoint.NORTH
         else:
-            return SOUTH
+            return PyutAttachmentPoint.SOUTH
     else:   # dest is not west
         if -deltaX > abs(deltaY):   # dest is east
-            return EAST
+            return PyutAttachmentPoint.EAST
         elif deltaY > 0:
-            return NORTH
+            return PyutAttachmentPoint.NORTH
         else:
-            return SOUTH
+            return PyutAttachmentPoint.SOUTH
 
 
 class OglLink(LineShape, ShapeEventHandler):
@@ -95,16 +86,16 @@ class OglLink(LineShape, ShapeEventHandler):
 
             sw, sh = self._srcShape.GetSize()
             dw, dh = self._destShape.GetSize()
-            if orient == NORTH:
+            if orient == PyutAttachmentPoint.NORTH:
                 srcX, srcY = sw/2, 0
                 dstX, dstY = dw/2, dh
-            elif orient == SOUTH:
+            elif orient == PyutAttachmentPoint.SOUTH:
                 srcX, srcY = sw/2, sh
                 dstX, dstY = dw/2, 0
-            elif orient == EAST:
+            elif orient == PyutAttachmentPoint.EAST:
                 srcX, srcY = sw, sh/2
                 dstX, dstY = 0, dh/2
-            elif orient == WEST:
+            elif orient == PyutAttachmentPoint.WEST:
                 srcX, srcY = 0, sh/2
                 dstX, dstY = dw, dh/2
 
@@ -112,7 +103,7 @@ class OglLink(LineShape, ShapeEventHandler):
             # lstAnchorsPoints = [anchor.GetRelativePosition()
             #    for anchor in srcShape.GetAnchors()]
             # while (srcX, srcY) in lstAnchorsPoints:
-            #    if orient == NORTH or orient == SOUTH:
+            #    if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
             #        srcX+=10
             #    else:
             #        srcY+=10
@@ -120,7 +111,7 @@ class OglLink(LineShape, ShapeEventHandler):
             # lstAnchorsPoints = [anchor.GetRelativePosition()
             #    for anchor in dstShape.GetAnchors()]
             # while (dstX, dstY) in lstAnchorsPoints:
-            #    if orient == NORTH or orient == SOUTH:
+            #    if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
             #        dstX+=10
             #    else:
             #        dstY+=10
