@@ -3,9 +3,8 @@ import os
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.PyutConstants import OGL_INTERFACE
-from org.pyut.PyutConstants import OGL_COMPOSITION
-from org.pyut.PyutConstants import OGL_AGGREGATION
+
+from org.pyut.enums.OglLinkType import OglLinkType
 
 
 class IoJava(PyutIoPlugin):
@@ -327,9 +326,9 @@ class IoJava(PyutIoPlugin):
         """
         for link in allLinks:
             linkType = link.getType()
-            if linkType == OGL_INTERFACE:
+            if linkType == OglLinkType.OGL_INTERFACE:
                 interfaces.append(link)
-            elif linkType == OGL_COMPOSITION or linkType == OGL_AGGREGATION:
+            elif linkType == OglLinkType.OGL_COMPOSITION or linkType == OglLinkType.OGL_AGGREGATION:
                 links.append(link)
 
     def _writeClass(self, pyutClass):

@@ -8,7 +8,7 @@ from org.pyut.PyutType import PyutType
 
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.PyutConstants import OGL_AGGREGATION
+from org.pyut.enums.OglLinkType import OglLinkType
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 
@@ -224,7 +224,7 @@ class DTDReader:
                             cardinality = mod
 
                         # Create link
-                        link = self._umlFrame.createNewLink(parent_oglClass, childOglClass, OGL_AGGREGATION)
+                        link = self._umlFrame.createNewLink(parent_oglClass, childOglClass, OglLinkType.OGL_AGGREGATION)
                         pyutLink = link.getPyutObject()
                         pyutLink.setDestCard(cardinality)
                     elif len(tuple) == 3:

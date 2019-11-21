@@ -7,9 +7,7 @@ import wx
 
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.PyutConstants import OGL_AGGREGATION
-from org.pyut.PyutConstants import OGL_ASSOCIATION
-from org.pyut.PyutConstants import OGL_COMPOSITION
+from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -410,11 +408,11 @@ class XmiImporter:
 
             # Create link
             if endsValues[0][2]:
-                oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl, OGL_AGGREGATION)
+                oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl, OglLinkType.OGL_AGGREGATION)
             elif endsValues[1][2]:
-                oglLink = self._umlFrame.createNewLink(dstOgl, srcOgl, OGL_COMPOSITION)
+                oglLink = self._umlFrame.createNewLink(dstOgl, srcOgl, OglLinkType.OGL_COMPOSITION)
             else:
-                oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl, OGL_ASSOCIATION)
+                oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl, OglLinkType.OGL_ASSOCIATION)
 
             # Add parameters
             pyutLink = oglLink.getPyutObject()
