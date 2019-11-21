@@ -1,6 +1,8 @@
 
 from typing import Tuple
 
+from wx import Yield as wxYield
+
 from plugins.sugiyama.SugiyamaNode import SugiyamaNode
 
 from org.pyut.general.Globals import cmp
@@ -51,3 +53,9 @@ class SugiyamGlobals:
             return 0
         else:
             return cmp(xNode.getBarycenter(), yNode.getBarycenter())
+
+    @staticmethod
+    def waitKey(umlFrame):
+        umlFrame.Refresh()
+        wxYield()
+        input("Appuyez sur Enter pour continuer")  # Press enter to continue?

@@ -1,45 +1,26 @@
 
-
 from plugins.PyutToPlugin import PyutToPlugin
 
-from plugins.sugiyama.SugiyamaNode import SugiyamaNode
+from plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
+from plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 
-from plugins.sugiyama.RealSugiyamaNode import *
-from plugins.sugiyama.SugiyamaLink import *
+from plugins.sugiyama.SugiyamaLink import SugiyamaLink
 from plugins.sugiyama.sugiyamaConsts import *
 
-from org.pyut.ogl.OglInheritance import *
+from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import *
 from org.pyut.ogl.OglObject import OglObject
 
-from org.pyut.PyutConstants import *
+from org.pyut.PyutConstants import OGL_INHERITANCE
+from org.pyut.PyutConstants import OGL_INTERFACE
 
 from plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
-from org.pyut.general.Globals import cmp
-
-STEPBYSTEP = 0  # Do Sugiyama Step by step
-
-
-def waitKey(umlFrame):
-    umlFrame.Refresh()
-    wx.Yield()
-    input("Appuyez sur Enter pour continuer")   # Press enter to continue?
-
-
-def cmpIndex(xNode, yNode) -> bool:
-    """
-        Comparison function on index value
-    Args:
-        xNode:
-        yNode:
-
-    Returns:
-
-    """
-    return cmp(xNode.getIndex(), yNode.getIndex())
 
 
 class ToSugiyama(PyutToPlugin):
+
+    STEPBYSTEP: bool = False  # Do Sugiyama Step by step
+
     """
     ToSugiyama : Automatic layout algorithm based on Sugiyama levels.
 
@@ -314,7 +295,7 @@ class ToSugiyama(PyutToPlugin):
         # Dictionary internalNodes externalNodes:
         # Keys are internal respectively external nodes
         # Values :
-        #   - externalNodes : # of link to internal nodes
+        #   - externalNodes : # of zLink to internal nodes
         internalNodes = {}
         externalNodes = {}
 
@@ -324,7 +305,7 @@ class ToSugiyama(PyutToPlugin):
 
         # Make dictionary of external nodes
         for node in self.__nonHierarchyGraphNodesList:
-            # Count link to internal nodes
+            # Count zLink to internal nodes
             count = 0
             for (dstNode, link) in node.getNonHierarchicalLink():
                 if dstNode in internalNodes:
@@ -342,12 +323,11 @@ class ToSugiyama(PyutToPlugin):
 
         # Function for getting node that has most connections to internal
         # nodes
-        def mostConnection(externalNodes):
+        def mostConnection(zExternalNodes):
 
-            maxNode = None
+            maxNode    = None
             maxNbLinks = -1
-
-            for (nbLinkNode, nbLinks) in list(externalNodes.items()):
+            for (nbLinkNode, nbLinks) in list(zExternalNodes.items()):
                 # If current node has more connections
                 if nbLinks > maxNbLinks:
                     maxNode    = nbLinkNode
@@ -359,27 +339,29 @@ class ToSugiyama(PyutToPlugin):
         # Function for evaluting best level and best index for an external
         # node
 
-        def bestPos(extNode, internalNodes):
-            # Returns (level, index)
+        def bestPos(zExtNode, zInternalNodes):
+            """
+            Evaluate average of level of linked nodes
+            Args:
+                zExtNode:
+                zInternalNodes:
 
-            # Evaluate average of level of linked nodes
-            nb = 0
+            Returns: (level, index)
+            """
+            nb        = 0
             summation = 0
-            nodes = []  # List of connected internal nodes
+            nodes     = []  # List of connected internal nodes
 
             # For all non hierarchical links
-            for (dstNode, link) in extNode.getNonHierarchicalLink():
+            for (zDstNode, zLink) in zExtNode.getNonHierarchicalLink():
                 # If node linked to internal nodes
-                if dstNode in internalNodes:
-
+                if zDstNode in zInternalNodes:
                     # Add connected node to list
-                    nodes.append(dstNode)
-
-                    # Add level to sum and count number of link
-                    summation += dstNode.getLevel()
+                    nodes.append(zDstNode)
+                    # Add level to sum and count number of zLink
+                    summation += zDstNode.getLevel()
                     nb += 1
-
-            # If no link to internal nodes
+            # If no zLink to internal nodes
             # if nodes == []:
             if not nodes:
                 return None, None
@@ -389,7 +371,6 @@ class ToSugiyama(PyutToPlugin):
             levelNodes = []  # List of nodes on same level
             bestLevel = None
             # Fix best level on first node
-            # if nodes != []:
             if nodes:
                 bestLevel = nodes[0].getLevel()
 
@@ -415,7 +396,6 @@ class ToSugiyama(PyutToPlugin):
 
             # Return average of nodes' level
             return bestLevel, levelNodes[len(levelNodes) // 2].getIndex()
-        # End of bestPos
 
         # Function for getting level that has less nodes in.
 
@@ -432,25 +412,25 @@ class ToSugiyama(PyutToPlugin):
             return lessLevel
 
         # Function to move a node from internal to external nodes.
-        def moveExternal2Internal(node, internalNodes, externalNodes):
+        def moveExternal2Internal(zNode, zInternalNodes, zExternalNodes):
 
             # Remove node from external nodes
-            del externalNodes[node]
+            del zExternalNodes[zNode]
 
             # Add node to internal nodes
-            internalNodes[node] = None
+            zInternalNodes[zNode] = None
 
             # For all his linked external nodes, update their counter
-            extNode = None
-            for (dstNode, link) in node.getNonHierarchicalLink():
-                if dstNode in externalNodes:
-                    externalNodes[dstNode] += 1
+            # zExtNode = None   NOT USED
+            for (zDstNode, zLink) in zNode.getNonHierarchicalLink():
+                if zDstNode in zExternalNodes:
+                    zExternalNodes[zDstNode] += 1
 
         # While there are nodes still not in hierarchy
         while externalNodes:
             # Get external node that has most connections to internalNodes
             extNode = mostConnection(externalNodes)
-            # ~ print extNode.getName()
+            # ~ print zExtNode.getName()
             # Evaluate best level and index for the node
             (level, index) = bestPos(extNode, internalNodes)
 
@@ -480,22 +460,22 @@ class ToSugiyama(PyutToPlugin):
         """
 
         # Internal function for updating a sons or fathers list
-        def updateLink(nodesList, link, newNode):
+        def updateLink(nodesList, zLink, newNode):
             """
             Find the tuple (node, link2) in nodesList where link == link2 and
             replace node by newNode.
             """
             for i in range(len(nodesList)):
                 (node, link2) = nodesList[i]
-                if link == link2:
-                    nodesList[i] = (newNode, link)
+                if zLink == link2:
+                    nodesList[i] = (newNode, zLink)
                     break
 
         # Add virtual nodes between a father and one of his sons
-        def addVirtualNodesOnHierarchicalLink(link):
+        def addVirtualNodesOnHierarchicalLink(zLink):
 
-            srcNode = link.getSource()
-            dstNode = link.getDestination()
+            srcNode = zLink.getSource()
+            dstNode = zLink.getDestination()
             dstNodeLevel = dstNode.getLevel()
 
             # List of level index between dstNode and srcNode
@@ -516,15 +496,15 @@ class ToSugiyama(PyutToPlugin):
 
             # Fix relation between virtual nodes
             for i in range(len(vnodes) - 1):
-                vnodes[i].addSon(vnodes[i + 1], link)
-                vnodes[i + 1].addFather(vnodes[i], link)
+                vnodes[i].addSon(vnodes[i + 1], zLink)
+                vnodes[i + 1].addFather(vnodes[i], zLink)
 
             # Fix relations between virtual and real nodes
-            vnodes[-1].addSon(srcNode, link)
-            vnodes[0].addFather(dstNode, link)
+            vnodes[-1].addSon(srcNode, zLink)
+            vnodes[0].addFather(dstNode, zLink)
 
-            updateLink(dstNode.getSons(), link, vnodes[0])
-            updateLink(srcNode.getFathers(), link, vnodes[-1])
+            updateLink(dstNode.getSons(), zLink, vnodes[0])
+            updateLink(srcNode.getFathers(), zLink, vnodes[-1])
 
             # Add virtual nodes in levels
             for i in range(len(vnodes)):
@@ -535,7 +515,7 @@ class ToSugiyama(PyutToPlugin):
 
             # Add virtual nodes in link in order bottom to top
             for i in range(len(vnodes) - 1, -1, -1):
-                link.addVirtualNode(vnodes[i])
+                zLink.addVirtualNode(vnodes[i])
 
         # For all links
         for link in self.__sugiyamaLinksList:
@@ -673,7 +653,7 @@ class ToSugiyama(PyutToPlugin):
                 index += 1
 
         # Sort level on new indexes
-        level.sort(cmpIndex)
+        level.sort(SugiyamGlobals.cmpIndex)
 
         return moved
 
@@ -971,8 +951,8 @@ class ToSugiyama(PyutToPlugin):
                 maxHeight = max(maxHeight, height)
             y += maxHeight + V_SPACE
 
-        if STEPBYSTEP:
-            waitKey(self._umlFrame)
+        if ToSugiyama.STEPBYSTEP:
+            SugiyamGlobals.waitKey(self._umlFrame)
 
         # While nodes have to be moved
         moved = 1
@@ -983,8 +963,8 @@ class ToSugiyama(PyutToPlugin):
                 for node in level:
                     if node.balance():
                         moved = 1
-                        if STEPBYSTEP:
-                            waitKey(self._umlFrame)
+                        if ToSugiyama.STEPBYSTEP:
+                            SugiyamGlobals.waitKey(self._umlFrame)
 
     def __fixNodesPositions_(self):
         """
