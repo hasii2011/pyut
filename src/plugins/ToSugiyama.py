@@ -5,7 +5,7 @@ from plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
 from plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 
 from plugins.sugiyama.SugiyamaLink import SugiyamaLink
-from plugins.sugiyama.sugiyamaConsts import *
+from plugins.sugiyama.SugiyamaConstants import *
 
 from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import *
