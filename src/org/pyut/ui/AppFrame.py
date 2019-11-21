@@ -1304,7 +1304,8 @@ class AppFrame(Frame):
             PyutUtils.displayError(_("Please open a diagram to execute this action"), parent=self)
             return
         frame.addOglHierarchy()
-        frame.setModified(True)
+        project = self._fileHandling.getCurrentProject()
+        project.setModified(True)
         self._ctrl.updateTitle()
         frame.Refresh()
 
