@@ -2,10 +2,12 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.PyutConstants import CLASS_DIAGRAM
 from org.pyut.PyutConstants import DiagramsLabels
-from org.pyut.PyutConstants import SEQUENCE_DIAGRAM
-from org.pyut.PyutConstants import USECASE_DIAGRAM
+
+# from org.pyut.PyutConstants import CLASS_DIAGRAM
+# from org.pyut.PyutConstants import SEQUENCE_DIAGRAM
+# from org.pyut.PyutConstants import USECASE_DIAGRAM
+from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
@@ -35,7 +37,7 @@ class PyutDocument:
     :version: $Revision: 1.8 $
     """
 
-    def __init__(self, parentFrame, project, docType):
+    def __init__(self, parentFrame, project, docType: DiagramType):
         """
         Constructor.
 
@@ -48,21 +50,22 @@ class PyutDocument:
         self._treeRoot       = None         # Root of the project entry in the tree
         self._treeRootParent = None         # Parent of the project root entry
         self._tree           = None         # Tree I am belonging to
-        self._type           = docType
+
+        self._type: DiagramType = docType
 
         self.logger.info(f'Project: {project} PyutDocument using type {docType}')
-        if docType == CLASS_DIAGRAM:
+        if docType == DiagramType.CLASS_DIAGRAM:
             self._title = DiagramsLabels[docType]
             self._frame = UmlClassDiagramsFrame(parentFrame)
-        elif docType == SEQUENCE_DIAGRAM:
+        elif docType == DiagramType.SEQUENCE_DIAGRAM:
             self._title = DiagramsLabels[docType]
             self._frame = UmlSequenceDiagramsFrame(parentFrame)
-        elif docType == USECASE_DIAGRAM:
+        elif docType == DiagramType.USECASE_DIAGRAM:
             self._title = DiagramsLabels[docType]
             self._frame = UmlClassDiagramsFrame(parentFrame)
         else:
             PyutUtils.displayError(f'Unsupported diagram type; replacing by class diagram: {docType}')
-            self._title = DiagramsLabels[CLASS_DIAGRAM]
+            self._title = DiagramsLabels[DiagramType.CLASS_DIAGRAM]
             self._frame = UmlClassDiagramsFrame(parentFrame)
 
     def getType(self):

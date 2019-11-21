@@ -31,6 +31,7 @@ from wx import Notebook
 from wx import MessageDialog
 from wx import Yield
 
+from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.PyutUtils import PyutUtils
@@ -342,7 +343,7 @@ class FileHandling:
         self._currentProject = project
         self._currentFrame = None
 
-    def newDocument(self, docType):
+    def newDocument(self, docType: DiagramType):
         """
         Begin a new document
 

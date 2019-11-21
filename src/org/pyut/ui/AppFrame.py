@@ -80,9 +80,11 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 
-from org.pyut.PyutConstants import CLASS_DIAGRAM
-from org.pyut.PyutConstants import SEQUENCE_DIAGRAM
-from org.pyut.PyutConstants import USECASE_DIAGRAM
+# from org.pyut.PyutConstants import CLASS_DIAGRAM
+# from org.pyut.PyutConstants import SEQUENCE_DIAGRAM
+# from org.pyut.PyutConstants import USECASE_DIAGRAM
+from org.pyut.enums.DiagramType import DiagramType
+
 from org.pyut.PyutNote import PyutNote
 
 from org.pyut.PyutPreferences import PyutPreferences
@@ -859,7 +861,7 @@ class AppFrame(Frame):
 
         @author C.Dutoit
         """
-        self._fileHandling.newDocument(CLASS_DIAGRAM)
+        self._fileHandling.newDocument(DiagramType.CLASS_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
@@ -869,7 +871,7 @@ class AppFrame(Frame):
 
         @author C.Dutoit
         """
-        self._fileHandling.newDocument(SEQUENCE_DIAGRAM)
+        self._fileHandling.newDocument(DiagramType.SEQUENCE_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
@@ -879,7 +881,7 @@ class AppFrame(Frame):
 
         @author C.Dutoit
         """
-        self._fileHandling.newDocument(USECASE_DIAGRAM)
+        self._fileHandling.newDocument(DiagramType.USECASE_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
@@ -1429,7 +1431,7 @@ class AppFrame(Frame):
 
     def OnImport(self, event):
         self._fileHandling.newProject()
-        self._fileHandling.newDocument(CLASS_DIAGRAM)
+        self._fileHandling.newDocument(DiagramType.CLASS_DIAGRAM)
         self._ctrl.updateTitle()
         cl = self.plugs[event.GetId()]
 

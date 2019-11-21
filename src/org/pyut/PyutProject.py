@@ -10,6 +10,8 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutDocument import PyutDocument
 from org.pyut.persistence.IoFile import IoFile
 
+from org.pyut.enums.DiagramType import DiagramType
+
 from Mediator import getMediator
 from org.pyut.general.Globals import _
 
@@ -201,7 +203,7 @@ class PyutProject:
         # Return
         return True
 
-    def newDocument(self, documentType):
+    def newDocument(self, documentType: DiagramType):
         """
         Create a new document
 

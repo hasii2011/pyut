@@ -14,7 +14,9 @@ from xml.dom.minidom import parseString
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.PyutConstants import CLASS_DIAGRAM
+# from org.pyut.PyutConstants import CLASS_DIAGRAM
+from org.pyut.enums.DiagramType import DiagramType
+
 from Lang import importLanguage
 
 from Mediator import getMediator
@@ -127,7 +129,7 @@ class IoFile:
                 from org.pyut.persistence.PyutXml import PyutXml  # don't like it here but at top of file not recognized -- hasii
                 # version = 1
                 myXml = PyutXml()
-            project.newDocument(CLASS_DIAGRAM)
+            project.newDocument(DiagramType.CLASS_DIAGRAM)
             umlFrame = project.getDocuments()[0].getFrame()
             myXml.open(dom, umlFrame)
 

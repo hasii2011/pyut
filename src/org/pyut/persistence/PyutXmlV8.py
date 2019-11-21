@@ -411,7 +411,7 @@ class PyutXml:
         root.setAttribute('name', pyutLink.getName())
 
         # link type
-        root.setAttribute('type', str(pyutLink.getType()))
+        root.setAttribute('type', str(pyutLink.getType().value))
 
         # link cardinality source
         root.setAttribute('cardSrc', pyutLink.getSrcCard())
