@@ -5,11 +5,16 @@ from plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
 from plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 
 from plugins.sugiyama.SugiyamaLink import SugiyamaLink
-from plugins.sugiyama.SugiyamaConstants import *
+
+from plugins.sugiyama.SugiyamaConstants import UP_MARGIN
+from plugins.sugiyama.SugiyamaConstants import H_SPACE
+from plugins.sugiyama.SugiyamaConstants import V_SPACE
+from plugins.sugiyama.SugiyamaConstants import LEFT_MARGIN
 
 from org.pyut.ogl.OglInheritance import OglInheritance
-from org.pyut.ogl.OglInterface import *
+from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglObject import OglObject
+from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.PyutConstants import OGL_INHERITANCE
 from org.pyut.PyutConstants import OGL_INTERFACE
