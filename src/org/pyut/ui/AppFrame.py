@@ -18,6 +18,7 @@ from pkg_resources import resource_filename
 from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
+from wx import CommandEvent
 from wx import DEFAULT_FRAME_STYLE
 from wx import FRAME_EX_METAL
 from wx import ID_OK
@@ -64,35 +65,37 @@ from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
 from wx import Yield as wxYield
+
 from wx.lib.embeddedimage import PyEmbeddedImage
-
-from org.pyut.persistence.FileHandling import FileHandling
-
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-
-from org.pyut.plugins.PluginManager import PluginManager
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglUseCase import OglUseCase
 
+from org.pyut.PyutProject import PyutProject
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
-
-# from org.pyut.PyutConstants import CLASS_DIAGRAM
-# from org.pyut.PyutConstants import SEQUENCE_DIAGRAM
-# from org.pyut.PyutConstants import USECASE_DIAGRAM
-from org.pyut.enums.DiagramType import DiagramType
-
 from org.pyut.PyutNote import PyutNote
+from org.pyut.PyutUseCase import PyutUseCase
+from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.PyutPrintout import PyutPrintout
+from org.pyut.ui.Tool import Tool
+from org.pyut.ui.TipsFrame import TipsFrame
+
+from org.pyut.general.Globals import _
+from org.pyut.general.Globals import IMG_PKG
 
 from org.pyut.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.PyutPrintout import PyutPrintout
-from org.pyut.PyutUseCase import PyutUseCase
+from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.ui.Tool import Tool
+from org.pyut.persistence.FileHandling import FileHandling
+
+from org.pyut.plugins.PluginManager import PluginManager
+
 
 from Mediator import ACTION_NEW_ACTOR
 from Mediator import ACTION_NEW_INHERIT_LINK
@@ -110,12 +113,6 @@ from Mediator import ACTION_NEW_SD_MESSAGE
 from Mediator import ACTION_NEW_SD_INSTANCE
 from Mediator import ACTION_NEW_USECASE
 from Mediator import getMediator
-
-from org.pyut.PyutUtils import PyutUtils
-from org.pyut.ui.TipsFrame import TipsFrame
-
-from org.pyut.general.Globals import _
-from org.pyut.general.Globals import IMG_PKG
 
 [
     ID_MNUFILENEWPROJECT,        ID_MNUFILEOPEN,          ID_MNUFILESAVE,
@@ -1274,37 +1271,44 @@ class AppFrame(Frame):
         PyutUtils.displayInformation(_("Please point your browser at http://pyut.sf.net"), _("Pyut''s web site"), self)
 
     # noinspection PyUnusedLocal
-    def _OnMnuAddPyut(self, event):
+    def _OnMnuAddPyut(self, event: CommandEvent):
         """
         Add Pyut UML Diagram.
-
-        @since 1.19
-        @author L. Burgbacher <lb@alawa.ch>
         """
-        frame = self._ctrl.getUmlFrame()
-        if frame is None:
-            PyutUtils.displayError(_("Please open a diagram to execute this action"), parent=self)
-            return
-        frame.addPyutHierarchy()
-        project = self._fileHandling.getCurrentProject()
-        project.setModified(True)
-        self._ctrl.updateTitle()
-        frame.Refresh()
+        frame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
+        if self._isDiagramFromOpen(frame) is True:
+            frame.addPyutHierarchy()
+            self._refreshUI(frame)
 
     # noinspection PyUnusedLocal
-    def _OnMnuAddOgl(self, event):
+    def _OnMnuAddOgl(self, event: CommandEvent):
         """
         Add Pyut-Ogl UML Diagram.
-
-        @since 1.19
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        frame = self._ctrl.getUmlFrame()
+        frame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
+        if self._isDiagramFromOpen(frame) is True:
+            frame.addOglHierarchy()
+            self._refreshUI(frame)
+
+    def _isDiagramFromOpen(self, frame: UmlClassDiagramsFrame) -> bool:
+        """
+        Does 2 things, Checks and displays the dialog;  Oh well
+
+        Args:
+            frame:
+
+        Returns: `True` if there is a frame open else, `False`
+
+        """
         if frame is None:
-            PyutUtils.displayError(_("Please open a diagram to execute this action"), parent=self)
-            return
-        frame.addOglHierarchy()
-        project = self._fileHandling.getCurrentProject()
+            PyutUtils.displayWarning(msg=_("Please open a diagram to hold the UML"), title=_('Silly User'), parent=self)
+            return False
+        else:
+            return True
+
+    def _refreshUI(self, frame: UmlClassDiagramsFrame):
+
+        project: PyutProject = self._fileHandling.getCurrentProject()
         project.setModified(True)
         self._ctrl.updateTitle()
         frame.Refresh()
