@@ -90,9 +90,9 @@ NEXT_ACTION = {
     ACTION_NEW_USECASE: ACTION_SELECTOR,
 
     ACTION_NEW_SD_INSTANCE: ACTION_SELECTOR,
-    ACTION_NEW_SD_MESSAGE: ACTION_DEST_SD_MESSAGE,
-    ACTION_ZOOM_IN: ACTION_ZOOM_IN,     # Patch from D.Dabrowsky, 20060129
-    # ACTION_ZOOM_IN: ACTION_ZOOM_OUT,    # Patch from D.Dabrowsky, 20060129    Duplicated
+    ACTION_NEW_SD_MESSAGE:  ACTION_DEST_SD_MESSAGE,
+
+    ACTION_ZOOM_IN: ACTION_ZOOM_IN
 }
 
 # list of actions which are source events
@@ -473,7 +473,6 @@ class Mediator(Singleton):
             except (ValueError, Exception) as e:
                 PyutUtils.displayError(_(f"An error occured while trying to do this action {e}"))
                 umlFrame.Refresh()
-        # added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (10.10.2005)
         elif self._currentAction == ACTION_ZOOM_IN:
             return SKIP_EVENT
         elif self._currentAction == ACTION_ZOOM_OUT:

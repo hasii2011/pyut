@@ -106,18 +106,16 @@ class DiagramFrame(wx.ScrolledWindow):
         This handler finds the shape at event coords and dispatch the event.
         The handler will receive an event with coords already unscrolled.
 
-        @param wx.Event event : original event
-        @param string methodName : name of the method to invoke in the
-            event handler of the shape
+        @param event : original event
+        @param methodName : name of the method to invoke in the event handler of the shape
+
         @return Shape : the clicked shape
         """
-        self.logger.info(f"Generic for: {methodName}")
         x, y = self.getEventPosition(event)
-        self.logger.info(f'GenericHandler - {methodName} x,y: {x},{y}')
         shape = self.FindShape(x, y)
         event.m_x, event.m_y = x, y
-        # event.SetX(x)
-        # event.SetY(y)
+
+        self.logger.info(f'GenericHandler - shape: `{shape}` methodName: `{methodName}` x,y: {x},{y}')
         # if the shape found is a ShapeEventHandler
         if shape and isinstance(shape, ShapeEventHandler):
             getattr(shape, methodName)(event)

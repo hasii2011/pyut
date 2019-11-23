@@ -1504,7 +1504,9 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._ctrl.setCurrentAction(ACTIONS[event.GetId()])
+        self.logger.info(f'SD Instance: `{ACTION_NEW_SD_INSTANCE}`, SD Message: `{ACTION_NEW_SD_MESSAGE}`')
+        currentAction: int = ACTIONS[event.GetId()]
+        self._ctrl.setCurrentAction(currentAction)
         self._ctrl.selectTool(event.GetId())
         self._fileHandling.setModified(True)
         self._ctrl.updateTitle()
