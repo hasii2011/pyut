@@ -6,7 +6,7 @@ __author__  = "EI5, eivd, Group Burgbacher - Waelti"
 __date__    = "2001-12-12"
 
 #from wxPython.wx  import *
-from Mediator     import *
+from org.pyut.general.Mediator import *
 from org.pyut.ogl.OglLink import *
 
 DEFAULT_FONT_SIZE = 10

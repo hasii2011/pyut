@@ -97,22 +97,22 @@ from org.pyut.persistence.FileHandling import FileHandling
 from org.pyut.plugins.PluginManager import PluginManager
 
 
-from Mediator import ACTION_NEW_ACTOR
-from Mediator import ACTION_NEW_INHERIT_LINK
-from Mediator import ACTION_NEW_NOTE_LINK
-from Mediator import ACTION_NEW_AGGREGATION_LINK
-from Mediator import ACTION_SELECTOR
-from Mediator import ACTION_NEW_CLASS
-from Mediator import ACTION_NEW_NOTE
-from Mediator import ACTION_NEW_IMPLEMENT_LINK
-from Mediator import ACTION_NEW_COMPOSITION_LINK
-from Mediator import ACTION_NEW_ASSOCIATION_LINK
-from Mediator import ACTION_ZOOM_OUT
-from Mediator import ACTION_ZOOM_IN
-from Mediator import ACTION_NEW_SD_MESSAGE
-from Mediator import ACTION_NEW_SD_INSTANCE
-from Mediator import ACTION_NEW_USECASE
-from Mediator import getMediator
+from org.pyut.general.Mediator import ACTION_NEW_ACTOR
+from org.pyut.general.Mediator import ACTION_NEW_INHERIT_LINK
+from org.pyut.general.Mediator import ACTION_NEW_NOTE_LINK
+from org.pyut.general.Mediator import ACTION_NEW_AGGREGATION_LINK
+from org.pyut.general.Mediator import ACTION_SELECTOR
+from org.pyut.general.Mediator import ACTION_NEW_CLASS
+from org.pyut.general.Mediator import ACTION_NEW_NOTE
+from org.pyut.general.Mediator import ACTION_NEW_IMPLEMENT_LINK
+from org.pyut.general.Mediator import ACTION_NEW_COMPOSITION_LINK
+from org.pyut.general.Mediator import ACTION_NEW_ASSOCIATION_LINK
+from org.pyut.general.Mediator import ACTION_ZOOM_OUT
+from org.pyut.general.Mediator import ACTION_ZOOM_IN
+from org.pyut.general.Mediator import ACTION_NEW_SD_MESSAGE
+from org.pyut.general.Mediator import ACTION_NEW_SD_INSTANCE
+from org.pyut.general.Mediator import ACTION_NEW_USECASE
+from org.pyut.general.Mediator import getMediator
 
 [
     ID_MNUFILENEWPROJECT,        ID_MNUFILEOPEN,          ID_MNUFILESAVE,

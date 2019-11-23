@@ -17,8 +17,8 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 from MiniOgl.Constants import SKIP_EVENT
 from MiniOgl.DiagramFrame import DiagramFrame
 
-from Mediator import ACTION_ZOOM_IN
-from Mediator import getMediator
+from org.pyut.general.Mediator import ACTION_ZOOM_IN
+from org.pyut.general.Mediator import getMediator
 
 from org.pyut.PyutUtils import PyutUtils
 

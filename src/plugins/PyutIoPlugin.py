@@ -2,7 +2,7 @@
 from typing import Tuple
 from typing import cast
 
-from Mediator import getMediator
+from org.pyut.general.Mediator import getMediator
 
 from plugins.PyutPlugin import PyutPlugin
 

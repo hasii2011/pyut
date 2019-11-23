@@ -19,7 +19,7 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Lang import importLanguage
 
-from Mediator import getMediator
+from org.pyut.general.Mediator import getMediator
 
 from org.pyut.general.Globals import _
 

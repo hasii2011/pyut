@@ -11,8 +11,8 @@ from wx import FONTWEIGHT_NORMAL
 
 # from OglLink import *
 
-from Mediator import getMediator
-from Mediator import ACTION_ZOOM_OUT
+from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import ACTION_ZOOM_OUT
 from MiniOgl.RectangleShape import RectangleShape
 from MiniOgl.ShapeEventHandler import ShapeEventHandler
 
@@ -134,7 +134,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
             x:
             y:
         """
-        import Mediator
+        from org.pyut.general import Mediator
         fileHandling = Mediator.getMediator().getFileHandling()
         if fileHandling is not None:
             fileHandling.setModified(True)

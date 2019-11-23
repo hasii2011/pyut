@@ -15,7 +15,7 @@ from wx import YES_NO
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from Mediator import getMediator
+from org.pyut.general.Mediator import getMediator
 
 
 class IoXml(PyutIoPlugin):
@@ -125,7 +125,7 @@ class IoXml(PyutIoPlugin):
         file = open(filename, "w")
 
         if int(lastVersion) >= 5:   # Python 3 update
-            import Mediator
+            from org.pyut.general import Mediator
             ctrl         = Mediator.getMediator()
             fileHandling = ctrl.getFileHandling()
             project      = fileHandling.getProjectFromOglObjects(oglObjects)
@@ -203,7 +203,7 @@ class IoXml(PyutIoPlugin):
             return False
 
         # Open file
-        import Mediator
+        from org.pyut.general import Mediator
         ctrl = Mediator.getMediator()
         fileHandling = ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()

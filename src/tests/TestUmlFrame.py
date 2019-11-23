@@ -9,7 +9,7 @@ from wx import Frame
 from UmlFrame import UmlFrame
 from ErrorManager import RAISE_ERROR_VIEW
 from org.pyut.persistence.FileHandling import FileHandling
-import Mediator
+from org.pyut.general import Mediator
 
 
 class PyUtApp(App):

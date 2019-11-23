@@ -23,7 +23,7 @@ from org.pyut.ui.UmlFrame import UmlFrame
 
 from plugins.IoPython import IoPython
 
-from Mediator import getMediator
+from org.pyut.general.Mediator import getMediator
 
 from org.pyut.general.Globals import _
 

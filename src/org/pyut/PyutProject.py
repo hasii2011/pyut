@@ -12,7 +12,7 @@ from org.pyut.persistence.IoFile import IoFile
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from Mediator import getMediator
+from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
 
 
@@ -279,7 +279,7 @@ class PyutProject:
             dlg.Destroy()
 
         # Remove references
-        import Mediator
+        from org.pyut.general import Mediator
         ctrl = Mediator.getMediator()
         fileHandling = ctrl.getFileHandling()
         fileHandling.removeAllReferencesToUmlFrame(frame)
