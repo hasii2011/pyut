@@ -29,7 +29,7 @@ class PythonMetaClassDataHandler:
         Returns:
 
         """
-        import PyutDataClasses as pdc
+        import org.pyut.experimental.PyutDataClasses as pdc
 
         self.logger.debug(f'pdc value {pdc.__dict__.values()}')
 
@@ -92,7 +92,7 @@ class PythonMetaClassDataHandler:
 
     def getParentClassNames(self, classes, pyutClassDef: PyutClass) -> List[str]:
 
-        import PyutDataClasses as pdc
+        import org.pyut.experimental.PyutDataClasses as pdc
 
         currentClass = pdc.__dict__.get(pyutClassDef.getName())
         parentClasses = [cl for cl in classes if cl.__name__ in map(lambda z: z.__name__, currentClass.__bases__)]
