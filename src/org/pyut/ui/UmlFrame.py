@@ -12,7 +12,7 @@ from wx import MouseEvent
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ogl.OglLink import OglLink
-from OglSDMessage import OglSDMessage
+from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from MiniOgl.Constants import SKIP_EVENT
 from MiniOgl.DiagramFrame import DiagramFrame

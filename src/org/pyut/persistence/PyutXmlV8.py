@@ -31,7 +31,7 @@ from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglUseCase import OglUseCase
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from OglSDMessage import OglSDMessage
+from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.PyutUtils import PyutUtils
