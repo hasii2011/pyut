@@ -17,7 +17,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from Lang import importLanguage
+from org.pyut.general.Lang import importLanguage
 
 from Mediator import getMediator
 

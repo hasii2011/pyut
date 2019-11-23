@@ -19,7 +19,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.PyutPreferences import PyutPreferences
 
-from Lang import importLanguage as setupPyutLanguage
+from org.pyut.general.Lang import importLanguage as setupPyutLanguage
 
 JSON_LOGGING_CONFIG_FILENAME = "loggingConfiguration.json"
 MADE_UP_PRETTY_MAIN_NAME     = "Pyut"

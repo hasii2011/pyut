@@ -6,7 +6,7 @@ from sys import platform
 
 from wx import CommandEvent
 
-import Lang
+from org.pyut.general import Lang
 
 from wx import ALL
 from wx import CB_READONLY
