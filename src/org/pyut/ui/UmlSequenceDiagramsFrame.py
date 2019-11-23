@@ -5,7 +5,7 @@ from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 
-from OglSDInstance import OglSDInstance
+from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from OglSDMessage import OglSDMessage
 
 from org.pyut.enums.OglLinkType import OglLinkType
