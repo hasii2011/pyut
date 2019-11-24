@@ -1,0 +1,3 @@
+
+class UnsupportedXmlFileFormat(Exception):
+    pass
