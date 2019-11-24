@@ -6,26 +6,22 @@ from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
 
-# import the class you want to test here
-# import ...
+from org.pyut.persistence.IoFile import IoFile
 
 
-class TestTemplate(TestBase):
+class TestIoFile(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
-        TestTemplate.clsLogger = getLogger(__name__)
+        TestIoFile.clsLogger = getLogger(__name__)
 
     def setUp(self):
-        self.logger: Logger = TestTemplate.clsLogger
+        self.logger: Logger = TestIoFile.clsLogger
+        ioFile: IoFile = IoFile()
 
     def tearDown(self):
         pass
@@ -34,7 +30,6 @@ class TestTemplate(TestBase):
         pass
 
     def testName2(self):
-        """Another test"""
         pass
 
 
