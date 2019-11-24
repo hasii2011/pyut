@@ -1,27 +1,32 @@
 
-from unittest import TestCase
-from unittest import main
+from logging import Logger
+from logging import getLogger
+
+from unittest import main as unitTestMain
+
+from tests.TestBase import TestBase
 
 # import the class you want to test here
 # import ...
 
 
-class TestMY_CLASS_TO_TEST(TestCase):
+class Template(TestBase):
     """
     You need to change the name of this class to Test + the name of the class
     that you want to test here.
     See existing tests for more information.
-
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
+    clsLogger: Logger = None
+
+    @classmethod
+    def setUpClass(cls):
+        TestBase.setUpLogging()
+        Template.clsLogger = getLogger(__name__)
+
     def setUp(self):
-        # code to be executed before each test
-        # For example, you can instanciate the class you have to
-        # test here.
-        pass
+        self.logger: Logger = Template.clsLogger
 
     def tearDown(self):
-        # code to be executed after each test (rarely used)
         pass
 
     def testName1(self):
@@ -47,4 +52,4 @@ class TestMY_CLASS_TO_TEST(TestCase):
 
 
 if __name__ == '__main__':
-    main()
+    unitTestMain()
