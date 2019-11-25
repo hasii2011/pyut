@@ -1,5 +1,6 @@
 
 from importlib import import_module
+
 from logging import Logger
 from logging import getLogger
 
@@ -91,11 +92,12 @@ class IoFile:
         xmlString = ""
         if filename[-4:] == ".put":
             try:
-                comp = open(filename, "rb").read()      # Python 3 update use 'rb" instead of just 'r'
-                self.logger.info(f'zlib.__version__: {zlib.__version__}')
-                xmlBytes = zlib.decompress(comp)    # has b'....' around it
-                xmlString: str = xmlBytes.decode()
-                self.logger.info(f'Document read:\n{xmlString}')
+                with open(filename, "rb") as dataFile:
+                    compressedData: bytes = dataFile.read()
+                    self.logger.info(f'zlib.__version__: {zlib.__version__}')
+                    xmlBytes = zlib.decompress(compressedData)    # has b'....' around it
+                    xmlString: str = xmlBytes.decode()
+                    self.logger.info(f'Document read:\n{xmlString}')
             except (ValueError, Exception) as e:
                 self.logger.error(f'open:  {e}')
         elif filename[-4:] == ".xml":
