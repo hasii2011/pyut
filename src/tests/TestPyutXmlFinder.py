@@ -1,3 +1,5 @@
+from os import chdir
+from os import getcwd
 
 from typing import Any
 
@@ -5,6 +7,7 @@ from logging import Logger
 from logging import getLogger
 
 from unittest import main as unitTestMain
+from unittest.mock import patch
 
 from tests.TestBase import TestBase
 
@@ -19,6 +22,8 @@ class TestPyutXmlFinder(TestBase):
 
     UNSUPPORTED_VERSION: int = 0xDEADBEEF
 
+    LATEST_VERSION: int = 9     # This needs to change everytime the XML is updated
+
     clsLogger: Logger = None
 
     @classmethod
@@ -28,6 +33,18 @@ class TestPyutXmlFinder(TestBase):
 
     def setUp(self):
         self.logger: Logger = TestPyutXmlFinder.clsLogger
+        oldPath: str = getcwd()
+        # Assume we are at src/tests
+        chdir('..')
+        self.newAppPath: str = getcwd()
+        chdir(oldPath)
+
+    def testBasicGetLatestXmlVersion(self):
+
+        with patch('org.pyut.general.Mediator.Mediator') as mockMediator:
+            mockMediator.return_value.getAppPath.return_value = self.newAppPath
+            actualVersion: int = PyutXmlFinder.getLatestXmlVersion()
+            self.assertEqual(TestPyutXmlFinder.LATEST_VERSION, actualVersion, 'Houston, we have a mismatch; check code or update constant')
 
     def testVersionBasicVersion(self):
 

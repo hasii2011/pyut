@@ -1,13 +1,10 @@
 
-from importlib import import_module
-
 from logging import Logger
 from logging import getLogger
 
 from os import getcwd
 from os import chdir
 from os import sep as osSep
-from glob import glob
 
 import zlib
 
@@ -19,6 +16,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Lang import importLanguage
+from org.pyut.general.PyutXmfFinder import PyutXmlFinder
 
 from org.pyut.general.Mediator import getMediator
 
@@ -49,24 +47,14 @@ class IoFile:
 
     def save(self, project):
         """
-        To save save diagram in XML file.
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        To save diagram in XML file.  Always, uses the latest version
         """
-        oldpath: str = getcwd()
-        path:    str = f'{getMediator().getAppPath()}{osSep}{IoFile.PERSISTENCE_DIR}'
-        chdir(path)
+        lastVersion: int = PyutXmlFinder.getLatestXmlVersion()
 
-        candidates  = glob("PyutXmlV*.py")
-        numbers     = [int(s[8:-3]) for s in candidates]
-        lastVersion = str(max(numbers))
-
-        self.logger.info(f"Using version {lastVersion}  of the exporter")
-        module = import_module(f'{IoFile.PERSISTENCE_PACKAGE}.PyutXmlV{str(lastVersion)}')
-        myXml  = module.PyutXml()
+        myXml = PyutXmlFinder.getPyutXmlClass(theVersion=lastVersion)
         doc:  Document = myXml.save(project)
         text: str      = doc.toprettyxml()
+
         # add attribute encoding = "iso-8859-1" this is not possible with minidom, so we use pattern matching
         updatedText: str = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
         self.logger.info(f'Document Save: \n{updatedText}')
@@ -76,7 +64,7 @@ class IoFile:
         file = open(project.getFilename(), "wb")
         file.write(compressed)
         file.close()
-        chdir(oldpath)
+        # chdir(oldpath)
 
     def open(self, filename, project):
         """
@@ -112,15 +100,13 @@ class IoFile:
             root = root[0]
             if root.hasAttribute('version'):
                 version = root.getAttribute("version")
-                self.logger.info(f'Using version {version} of the importer')
-                module = import_module(f'{IoFile.PERSISTENCE_PACKAGE}.PyutXmlV{str(version)}')
-                myXml = module.PyutXml()
+                myXml = PyutXmlFinder.getPyutXmlClass(theVersion=version)
             else:
-                # version = 1
                 from org.pyut.persistence.PyutXml import PyutXml
                 myXml = PyutXml()
             myXml.open(dom, project)
         else:
+            # TODO fix this code to use PyutXmlFinder
             root = dom.getElementsByTagName("Pyut")[0]
             if root.hasAttribute('version'):
                 version = root.getAttribute("version")

@@ -324,7 +324,7 @@
 				</Method>
 			</Class>
 		</GraphicClass>
-		<GraphicClass height="60sa.0" width="95.0" x="749.0" y="60.0">
+		<GraphicClass height="60.0" width="95.0" x="749.0" y="60.0">
 			<Class description="" filename="" id="12" name="PyutStereotype" showFields="True" showMethods="True" showStereotype="True">
 				<Method name="__init__" visibility="+">
 					<Return type=""/>
