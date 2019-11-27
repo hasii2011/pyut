@@ -2,8 +2,6 @@
 from os import getcwd
 from os import chdir
 
-from io import StringIO
-
 from wx import CANCEL
 from wx import CENTRE
 from wx import ICON_QUESTION
@@ -13,7 +11,6 @@ from wx import YES_NO
 
 from plugins.PyutIoPlugin import PyutIoPlugin
 
-from org.pyut.general.Mediator import getMediator
 from org.pyut.general.PyutXmfFinder import PyutXmlFinder
 
 
@@ -142,41 +139,6 @@ class IoXml(PyutIoPlugin):
         file.close()
         chdir(oldPath)
         return True
-
-    # noinspection PyUnusedLocal
-    # def readOld(self, oglObjects, umlFrame):
-    #     """
-    #     Read data from filename. Abstract.
-    #
-    #     Args:
-    #         oglObjects:
-    #         umlFrame:   Pyut's UmlFrame
-    #
-    #     Returns: True if succeeded, False if error or canceled
-    #
-    #     """
-    #     # Note : xml.dom.minidom must be instancied here, since it redefines
-    #     # the function '_', which is also used for i18n
-    #     from xml.dom.minidom import parse
-    #     oldpath = getcwd()
-    #     path = getMediator().getAppPath()
-    #     chdir(path)
-    #     # Ask the user which destination file he wants
-    #     filename = self._askForFileImport()
-    #     if filename == "":
-    #         return False
-    #
-    #     dom = parse(StringIO(open(filename).read()))
-    #     root = dom.getElementsByTagName("Pyut")[0]
-    #     if root.hasAttribute('version'):
-    #         version = root.getAttribute("version")
-    #     else:
-    #         version = 1
-    #
-    #     myXml = PyutXmlFinder.getPyutXmlClass(theVersion=version)
-    #     myXml.open(dom, umlFrame)
-    #     chdir(oldpath)
-    #     return True
 
     def read(self, oglObjects, umlFrame):
         """
