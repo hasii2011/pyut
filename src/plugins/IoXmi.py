@@ -58,7 +58,7 @@ class IoXmi(PyutIoPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.2
         """
-        return "XMI", "xml", "Pyut XMI file"
+        return "XMI", "xmi", "Pyut XMI file"        # typo here maybe xml --> xmi
 
     def getOutputFormat(self):
         """
@@ -68,7 +68,7 @@ class IoXmi(PyutIoPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.2
         """
-        return "XMI", "xml", "Pyut XMI file"
+        return "XMI", "xmi", "Pyut XMI file"        # typo here maybe xml --> xmi
 
     def setExportOptions(self):
         """
@@ -99,13 +99,12 @@ class IoXmi(PyutIoPlugin):
         file = open(filename, "w")
 
         myXml = PyutXml()
-        doc = myXml.save(oglObjects)
+        doc = myXml.save(oglObjects, self._umlFrame)
 
         if self.pretty:
             text = doc.toprettyxml()
         else:
             text = doc.toxml()
-
         # add attribute encoding = "iso-8859-1"
         # this is not possible with minidom, so we use pattern matching
         text = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
