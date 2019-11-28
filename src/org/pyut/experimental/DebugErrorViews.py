@@ -9,11 +9,30 @@ class DebugErrorViews:
 
     # noinspection PyUnusedLocal
     @staticmethod
-    def debugGraphicView(commandEvent: CommandEvent):
+    def debugGraphicErrorView(commandEvent: CommandEvent):
 
         em: ErrorManager = getErrorManager()
-        em.changeType(ErrorViewTypes.GRAPHIC_ERROR_VIEW)
+        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewTypes.GRAPHIC_ERROR_VIEW)
 
-        em.displayInformation(msg='Graphic Message', title='Graphic Title', parent=None)
-        em.newWarning(msg='Warning Message', title='WarningTitle', parent=None)
-        em.newFatalError(msg='Fatal Messafge', title='Fatal Title', parent=None)
+    # noinspection PyUnusedLocal
+    @staticmethod
+    def debugTextErrorView(commandEvent: CommandEvent):
+
+        em: ErrorManager = getErrorManager()
+        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewTypes.TEXT_ERROR_VIEW)
+
+    # noinspection PyUnusedLocal
+    @staticmethod
+    def debugRaiseErrorView(commandEvent: CommandEvent):
+
+        em: ErrorManager = getErrorManager()
+        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewTypes.RAISE_ERROR_VIEW)
+
+    @staticmethod
+    def _makeCalls(em: ErrorManager, viewType: ErrorViewTypes):
+
+        em.changeType(viewType)
+
+        em.displayInformation(msg=f'{viewType} Message', title=f'{viewType} Title', parent=None)
+        em.newWarning(msg=f'{viewType} - Warning Message', title=f'{viewType} - WarningTitle', parent=None)
+        em.newFatalError(msg=f'{viewType}: Fatal Message', title=f'{viewType} - Fatal Title', parent=None)

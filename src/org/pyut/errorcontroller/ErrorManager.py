@@ -1,12 +1,12 @@
 
-from logging import Logger
-from logging import getLogger
-
 from sys import exc_info
 
 from traceback import extract_tb
 
 from org.pyut.errorcontroller.GraphicErrorView import GraphicErrorView
+from org.pyut.errorcontroller.TextErrorView import TextErrorView
+from org.pyut.errorcontroller.RaiseErrorView import RaiseErrorView
+
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from org.pyut.general.Globals import _
@@ -52,78 +52,6 @@ def addToLogFile(title, msg):
     f.write(title + u": " + msg)
     f.write(errMsg)
     f.close()
-
-
-class TextErrorView:
-    """
-    This class is an error view which will display error as
-    text message box.
-
-    To use it, use the mediator methods :
-     - mediator = Mediator.getMediator()
-     - mediator.registerErrorManager(GraphicErrorManager())
-     - ...
-     - errorManager = mediator.getErrorManager()
-     - errorManager.newFatalError("This is a message", "...")
-     - errorManager.newWarning("This is a message", "...")
-     - errorManager.newInformation("This is a message", "...")
-     - ...
-
-    @author C.Dutoit
-    """
-    def __init__(self):
-        self.logger: Logger = getLogger(__name__)
-
-    def newFatalError(self, msg, title=None, parent=None):
-
-        if title is None:
-            title = _("An error occured...")
-        errMsg = msg + "\n\n" + _("The following error occured : %s") % exc_info()[1] + "\n\n---------------------------\n"
-
-        if exc_info()[0] is not None:
-            errMsg += "Error : %s" % exc_info()[0] + "\n"
-        if exc_info()[1] is not None:
-            errMsg += "Msg   : %s" % exc_info()[1] + "\n"
-        if exc_info()[2] is not None:
-            errMsg += "Trace :\n"
-            for el in extract_tb(exc_info()[2]):
-                errMsg = errMsg + str(el) + "\n"
-
-        self.logger.error(f"FATAL ERROR: {title} {errMsg} - parent {parent}")
-
-    def newWarning(self, msg, title=None, parent=None):
-        self.logger.error(f"WARNING: {title} - {msg} - parent {parent}")
-
-    def displayInformation(self, msg, title=None, parent=None):
-        self.logger.error(f"INFORMATION: {title} - {msg} - parent {parent}")
-
-
-class RaiseErrorView:
-    """
-    This class is an error view which will raise all errors as
-    text message box.
-
-    To use it, use the mediator methods :
-     - mediator = Mediator.getMediator()
-     - mediator.registerErrorManager(GraphicErrorManager())
-     - ...
-     - errorManager = mediator.getErrorManager()
-     - errorManager.newFatalError("This is a message", "...")
-     - errorManager.newWarning("This is a message", "...")
-     - errorManager.newInformation("This is a message", "...")
-     - ...
-
-    @author C.Dutoit
-    """
-
-    def newFatalError(self, msg, title=None, parent=None):
-        raise Exception(f"FATAL ERROR: {title} - {msg}")
-
-    def newWarning(self, msg, title=None, parent=None):
-        raise Exception(f"WARNING: {title} - {msg}")
-
-    def displayInformation(self, msg, title=None, parent=None):
-        raise Exception(f"INFORMATION: {title} 0 {msg}")
 
 
 class ErrorManager(Singleton):

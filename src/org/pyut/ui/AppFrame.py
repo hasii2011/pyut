@@ -667,7 +667,9 @@ class AppFrame(Frame):
 
         if AppFrame.DEBUG_ERROR_VIEWS is True:
             from org.pyut.experimental.DebugErrorViews import DebugErrorViews
-            self.Bind(EVT_MENU, DebugErrorViews.debugGraphicView, id=ID_MENU_GRAPHIC_ERROR_VIEW)
+            self.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=ID_MENU_GRAPHIC_ERROR_VIEW)
+            self.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView, id=ID_MENU_TEXT_ERROR_VIEW)
+            self.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView, id=ID_MENU_RAISE_ERROR_VIEW)
 
         self.Bind(EVT_MENU, self._OnMnuFileExportBmp, id=ID_MNUFILEEXPBMP)
         self.Bind(EVT_MENU, self._OnMnuFileExportJpg, id=ID_MNUFILEEXPJPG)
