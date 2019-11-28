@@ -2,7 +2,7 @@ from wx import CommandEvent
 
 from org.pyut.errorcontroller.ErrorManager import getErrorManager
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
-from org.pyut.errorcontroller.ErrorManager import GRAPHIC_ERROR_VIEW
+from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 
 class DebugErrorViews:
@@ -12,7 +12,7 @@ class DebugErrorViews:
     def debugGraphicView(commandEvent: CommandEvent):
 
         em: ErrorManager = getErrorManager()
-        em.changeType(GRAPHIC_ERROR_VIEW)
+        em.changeType(ErrorViewTypes.GRAPHIC_ERROR_VIEW)
 
         em.displayInformation(msg='Graphic Message', title='Graphic Title', parent=None)
         em.newWarning(msg='Warning Message', title='WarningTitle', parent=None)

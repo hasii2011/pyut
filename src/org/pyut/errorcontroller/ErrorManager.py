@@ -7,7 +7,7 @@ from sys import exc_info
 from traceback import extract_tb
 
 from org.pyut.errorcontroller.GraphicErrorView import GraphicErrorView
-from org.pyut.experimental.ErrorViewTypes import ErrorViewTypes
+from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from org.pyut.general.Globals import _
 
