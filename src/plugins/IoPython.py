@@ -73,7 +73,7 @@ class DlgAskWhichClassesToReverse2(wx.Dialog):
 
         # Show dialog
         self.ShowModal()
-        if self.GetReturnCode() == 5101 :     # abort -> empty right column
+        if self.GetReturnCode() == 5101:     # abort -> empty right column
 
             while self._listBox2.GetCount() > 0:
                 data = self._listBox2.GetClientData(0)
@@ -271,7 +271,7 @@ class IoPython(PyutIoPlugin):
         elif vis == "-":
             code = '__'
         else:
-            self._logMessage("IoPython", "Field code not supported : <%s>" % vis)
+            self.logger.error(f"IoPython: Field code not supported : {vis}")
             code = ''
         # print " = " + str(code)
         return code
@@ -438,7 +438,7 @@ class IoPython(PyutIoPlugin):
                 # for el in subcode:
                 # lstCodeMethod.append('    ' + str(el))
                 # lstCodeMethod.append("\n\n")
-                clsMethods['__init__']=lstCodeMethod
+                clsMethods['__init__'] = lstCodeMethod
 
             # Add fields
             clsInit = clsMethods['__init__']
@@ -460,7 +460,7 @@ class IoPython(PyutIoPlugin):
             return False
 
         # Init
-        self._logMessage("IoPython", "Saving...")
+        self.logger.info("IoPython Saving...")
         classes = {}
 
         # Add top code
@@ -519,7 +519,7 @@ class IoPython(PyutIoPlugin):
             file.writelines(classCode)
             file.close()
 
-        self._logMessage("IoPython", "done !")
+        self.logger.info("IoPython done !")
 
         wx.MessageBox(_("Done !"), _("Python code generation"), style=wx.CENTRE | wx.OK | wx.ICON_INFORMATION)
 
@@ -539,8 +539,8 @@ class IoPython(PyutIoPlugin):
 
         # Verify that parameters types are acceptable
         if type(orgClass) not in [type, type]:
-            self._logMessage("IoPython", "IoPython/getPyutClass : " + "Wrong parameter for orgClass:")
-            self._logMessage("IoPython", "Expected ClassType or TypeType, " + "found %s" % type(orgClass))
+            self.logger.error(f"IoPython/getPyutClass: Wrong parameter for orgClass:")
+            self.logger.error(f"IoPython Expected ClassType or TypeType, found {type(orgClass)}")
             return None
 
         # create objects

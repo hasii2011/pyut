@@ -1,5 +1,4 @@
 
-from typing import List
 
 from logging import Logger
 from logging import getLogger

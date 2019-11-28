@@ -307,7 +307,7 @@ class DTDReader:
         if elem in self._attribute:
             self._attribute[elem].append((attr, a_type, a_decl, a_def))
         else:
-            self._attribute[elem]=[(attr, a_type, a_decl, a_def)]
+            self._attribute[elem] = [(attr, a_type, a_decl, a_def)]
 
     def handle_comment(self, contents):
         """

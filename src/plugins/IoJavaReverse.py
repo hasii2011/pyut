@@ -9,7 +9,8 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutField import PyutField
-from org.pyut.PyutConstants import *
+from org.pyut.enums.OglLinkType import OglLinkType
+
 import wx
 
 # Constants
@@ -149,7 +150,7 @@ class ReverseJava:
 
         # Create the inheritance link
         if interface:
-            self._umlFrame.createNewLink(po, father, OGL_INTERFACE)
+            self._umlFrame.createNewLink(po, father, OglLinkType.OGL_INTERFACE)
         else:
             self._umlFrame.createInheritanceLink(po, father)
 

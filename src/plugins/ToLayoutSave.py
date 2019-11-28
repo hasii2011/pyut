@@ -21,7 +21,6 @@ class ToLayoutSave(PyutToPlugin):
         @param umlObjects : list of ogl objects
         @param umlFrame : the umlframe of pyut
         """
-        # PyutToPlugin.__init__(self, umlObjects, umlFrame)
         super().__init__(umlObjects, umlFrame)
         self._umlFrame = umlFrame
 
