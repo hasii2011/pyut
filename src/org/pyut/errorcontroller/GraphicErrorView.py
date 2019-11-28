@@ -2,9 +2,6 @@
 from logging import Logger
 from logging import getLogger
 
-from sys import exc_info
-from traceback import extract_tb
-
 from wx import CENTRE
 from wx import ICON_ERROR
 from wx import ICON_EXCLAMATION
@@ -36,20 +33,11 @@ class GraphicErrorView:
 
     def newFatalError(self, msg, title=None, parent=None):
 
+        from org.pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
+
         if title is None:
             title = _("An error occurred...")
-        errMsg = msg + "\n\n"
-        errMsg += _("The following error occurred : %s") % str(exc_info()[1])
-        errMsg += "\n\n---------------------------\n"
-        if exc_info()[0] is not None:
-            errMsg += "Error : %s" % exc_info()[0] + "\n"
-        if exc_info()[1] is not None:
-            errMsg += "Msg   : %s" % exc_info()[1] + "\n"
-        if exc_info()[2] is not None:
-            errMsg += "Trace :\n"
-            for el in extract_tb(exc_info()[2]):
-                errMsg = errMsg + str(el) + "\n"
-
+        errMsg: str = ErrorManager.getErrorInfo()
         self.logger.error(errMsg)
         try:
             dlg = MessageDialog(parent, errMsg,  title, OK | ICON_ERROR | CENTRE)
