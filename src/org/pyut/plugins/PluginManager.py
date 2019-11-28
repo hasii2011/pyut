@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -9,9 +11,7 @@ from os import getcwd
 from os import path as osPath
 from os import sep as osSep
 
-from sys import exc_info
 from sys import path as sysPath
-from traceback import extract_tb
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.general.Singleton import Singleton
@@ -45,8 +45,8 @@ class PluginManager(Singleton):
         self.logger: Logger = getLogger(__name__)
 
         # Init
-        self.ioPlugs = []
-        self.toPlugs = []
+        self.ioPlugs: List[type] = []
+        self.toPlugs: List[type] = []
 
         # get the file names
         saveDir = getcwd()
@@ -55,47 +55,17 @@ class PluginManager(Singleton):
         chdir(PluginManager.PLUGIN_DIRECTORY)
         # chdir('fake')
         sysPath.append(getcwd())
-        ioPlugs = glob("Io*.py")
-        toPlugs = glob("To*.py")
+        ioPlugs: List[str] = glob("Io*.py")
+        toPlugs: List[str] = glob("To*.py")
         chdir(saveDir)
 
-        # remove extension
-        ioPlugs = map(lambda x: osPath.splitext(x)[0], ioPlugs)
-        toPlugs = map(lambda x: osPath.splitext(x)[0], toPlugs)
-        #
-        # TODO:  Remove this duplicated code by calling a common method
-        #
-        # Import I/O plugins
-        for plug in ioPlugs:
-            self.logger.info(f"Importing I/O plugin from file {plug}")
-            module = None
-            try:
-                module = __import__(plug)
-            except (ValueError, Exception) as e:
-                self.logger.error(f"Error importing plugin {plug} with message: {e}")
-                eMsg: str = ErrorManager.getErrorInfo()
-                self.logger.error(eMsg)
-            if module is not None:
-                pluginName: str = f"module.{module.__name__}"
-                self.logger.info(f'Loading {pluginName}')
-                cl = eval(pluginName)
-                self.ioPlugs.append(cl)
+        # remove extensions
+        ioPlugsNoExt: List[str] = list(map(lambda x: osPath.splitext(x)[0], ioPlugs))
+        toPlugsNoExt: List[str] = list(map(lambda x: osPath.splitext(x)[0], toPlugs))
 
-        # Import tools plugins
-        for plug in toPlugs:
-            self.logger.info(f"Importing tool plugin from file {plug}")
-            module = None
-            try:
-                module = __import__(plug)
-            except (ValueError, Exception) as e:
-                self.logger.error(f"Error importing plugin {plug} with message: {e}")
-                eMsg: str = ErrorManager.getErrorInfo()
-                self.logger.error(eMsg)
-            if module is not None:
-                self.logger.info(f'plugin imported {plug}')
-                cl = eval(f"module.{module.__name__}")
-                self.logger.info(f'plugin eval`ed {plug}')
-                self.toPlugs.append(cl)
+        # Import plugins
+        self.ioPlugs = self._loadPlugins(plugInNames=ioPlugsNoExt, pluginType='I/O')
+        self.toPlugs = self._loadPlugins(plugInNames=toPlugsNoExt, pluginType='tool')
 
     def getPluginsInfo(self):
         """
@@ -154,6 +124,32 @@ class PluginManager(Singleton):
         @since 1.5.2.6
         """
         return self.toPlugs
+
+    def _loadPlugins(self, plugInNames, pluginType: str) -> List[type]:
+        """
+        Load the plugin that are named
+        Args:
+            plugInNames: The list of plugin names
+            pluginType:   Are they I/O plugins or tool plugins
+
+        Returns:  A list of loaded modules
+        """
+        retLoadedPlugins: List[type] = []
+        for plug in plugInNames:
+            self.logger.info(f"Importing {pluginType} plugin from file {plug}")
+            module = None
+            try:
+                module = __import__(plug)
+            except (ValueError, Exception) as e:
+                self.logger.error(f"Error importing plugin {plug} with message: {e}")
+                eMsg: str = ErrorManager.getErrorInfo()
+                self.logger.error(eMsg)
+            if module is not None:
+                pluginName: str = f"module.{module.__name__}"
+                self.logger.info(f'Loading {pluginName}')
+                cl = eval(pluginName)
+                retLoadedPlugins.append(cl)
+        return retLoadedPlugins
 
     @classmethod
     def findPluginDirectory(cls):
