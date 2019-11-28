@@ -120,7 +120,9 @@ from org.pyut.general.Mediator import getMediator
     ID_MNUEDITCOPY,              ID_MNUEDITPASTE,         ID_MNUHELPABOUT,
     ID_MNUFILEIMP,               ID_MNUFILE,              ID_MNUFILEDIAGRAMPROPER,
     ID_MNUFILEPRINTSETUP,        ID_MNUFILEPRINTPREV,     ID_MNUFILEPRINT,
-    ID_MNUADDPYUTHIERARCHY,      ID_MNUADDOGLHIERARCHY,   ID_MNUHELPINDEX,
+    ID_MNUADDPYUTHIERARCHY,      ID_MNUADDOGLHIERARCHY,
+    ID_MENU_GRAPHIC_ERROR_VIEW,  ID_MENU_TEXT_ERROR_VIEW, ID_MENU_RAISE_ERROR_VIEW,
+    ID_MNUHELPINDEX,
     ID_MNUHELPWEB,               ID_MNUFILEEXP,           ID_MNUFILEEXPBMP,
     ID_MNUEDITSHOWTOOLBAR,       ID_ARROW,                ID_CLASS,
     ID_REL_INHERITANCE,          ID_REL_REALISATION,      ID_REL_COMPOSITION,
@@ -134,7 +136,7 @@ from org.pyut.general.Mediator import getMediator
     ID_MNUFILEREMOVEDOCUMENT,    ID_DEBUG,
     ID_ZOOMIN,                   ID_ZOOMOUT,              ID_ZOOM_VALUE,
     ID_MNUREDO,                  ID_MNUUNDO
-] = PyutUtils.assignID(54)
+] = PyutUtils.assignID(57)
 
 # Assign constants
 
@@ -171,6 +173,7 @@ class AppFrame(Frame):
     :contact: dutoitc@hotmail.com
     :version: $Revision: 1.55 $
     """
+    DEBUG_ERROR_VIEWS: bool = True      # TODO Make this a runtime flag
 
     def __init__(self, parent, ID, title):
         """
@@ -596,7 +599,11 @@ class AppFrame(Frame):
         mnuEdit.AppendSeparator()
         mnuEdit.Append(ID_MNUADDPYUTHIERARCHY, _("&Add Pyut hierarchy"), _("Add the UML Diagram of Pyut"))
         mnuEdit.Append(ID_MNUADDOGLHIERARCHY, _("Add &Ogl hierarchy"),   _("Add the UML Diagram of Pyut - Ogl"))
-
+        if AppFrame.DEBUG_ERROR_VIEWS is True:
+            mnuEdit.AppendSeparator()
+            mnuEdit.Append(ID_MENU_GRAPHIC_ERROR_VIEW, 'Show &Graphic Error View',  'Test graphical error view')
+            mnuEdit.Append(ID_MENU_TEXT_ERROR_VIEW,    'Show &Text Error View',     'Test text error view')
+            mnuEdit.Append(ID_MENU_RAISE_ERROR_VIEW,   'Show &Exception Error View', 'Test raising exception')
         # -----------------
         #    Tools menu
         # -----------------
@@ -657,6 +664,11 @@ class AppFrame(Frame):
         self.Bind(EVT_MENU, self._OnMnuHelpWeb,      id=ID_MNUHELPWEB)
         self.Bind(EVT_MENU, self._OnMnuAddPyut,      id=ID_MNUADDPYUTHIERARCHY)
         self.Bind(EVT_MENU, self._OnMnuAddOgl,       id=ID_MNUADDOGLHIERARCHY)
+
+        if AppFrame.DEBUG_ERROR_VIEWS is True:
+            from org.pyut.experimental.DebugErrorViews import DebugErrorViews
+            self.Bind(EVT_MENU, DebugErrorViews.debugGraphicView, id=ID_MENU_GRAPHIC_ERROR_VIEW)
+
         self.Bind(EVT_MENU, self._OnMnuFileExportBmp, id=ID_MNUFILEEXPBMP)
         self.Bind(EVT_MENU, self._OnMnuFileExportJpg, id=ID_MNUFILEEXPJPG)
         self.Bind(EVT_MENU, self._OnMnuFileExportPng, id=ID_MNUFILEEXPPNG)
