@@ -52,7 +52,7 @@
             ],
             "propagate": "False"
         },
-        "TestFlyweight": {
+        "TestPluginManager": {
             "level": "INFO",
             "handlers": [
                 "consoleHandler"

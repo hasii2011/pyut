@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -6,36 +8,30 @@ from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
 
-# import the class you want to test here
-# import ...
+from org.pyut.plugins.PluginManager import PluginManager
 
 
-class TestTemplate(TestBase):
+class TestPluginManager(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
-        TestTemplate.clsLogger = getLogger(__name__)
+        TestPluginManager.clsLogger = getLogger(__name__)
 
     def setUp(self):
-        self.logger: Logger = TestTemplate.clsLogger
+        self.logger: Logger = TestPluginManager.clsLogger
+        self.pluginManager: PluginManager = PluginManager()
 
-    def tearDown(self):
-        pass
+    def testBasicLoad(self):
 
-    def testName1(self):
-        pass
+        infoStrings: List[str] = self.pluginManager.getPluginsInfo()
+        self.assertIsNotNone(infoStrings, 'I should get lots of these')
 
-    def testName2(self):
-        """Another test"""
-        pass
+        for info in infoStrings:
+            self.logger.info(info)
 
 
 if __name__ == '__main__':

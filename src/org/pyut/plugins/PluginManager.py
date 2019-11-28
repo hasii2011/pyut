@@ -67,7 +67,7 @@ class PluginManager(Singleton):
         self.ioPlugs = self._loadPlugins(plugInNames=ioPlugsNoExt, pluginType='I/O')
         self.toPlugs = self._loadPlugins(plugInNames=toPlugsNoExt, pluginType='tool')
 
-    def getPluginsInfo(self):
+    def getPluginsInfo(self) -> List[str]:
         """
         Get textual information about available plugins.
 
@@ -75,10 +75,9 @@ class PluginManager(Singleton):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        s = []
+        s: List[str] = []
         for plug in self.ioPlugs + self.toPlugs:
             obj = plug(None, None)
-            # s.append("Plugin : %s version %s (c) by %s" % (obj.getName(), obj.getVersion(), obj.getAuthor()))
             s.append(f"Plugin : {obj.getName()} version {obj.getVersion()} (c) by {obj.getAuthor()}")
         return s
 

@@ -7,7 +7,7 @@ from unittest import main as unitTestMain
 from tests.TestBase import TestBase
 
 # import the class you want to test here
-# import ...
+# from org.pyut.template import template
 
 
 class TestTemplate(TestBase):
