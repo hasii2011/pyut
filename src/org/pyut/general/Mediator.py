@@ -212,7 +212,7 @@ class Mediator(Singleton):
         @author L. Burgbacher <lb@alawa.ch>
         @modified C.Dutoit 20021121 Added self._project
         """
-        from org.pyut.ErrorManager import getErrorManager
+        from org.pyut.errorcontroller.ErrorManager import getErrorManager
         self._errorManager  = getErrorManager()
         self._currentAction = ACTION_SELECTOR
         self._useMode       = NORMAL_MODE   # Define current use mode

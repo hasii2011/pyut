@@ -12,7 +12,7 @@ from os import sep as osSep
 
 from wx import NewIdRef as wxNewIdRef
 
-from org.pyut.ErrorManager import getErrorManager
+from org.pyut.errorcontroller.ErrorManager import getErrorManager
 
 
 class PyutUtils:
