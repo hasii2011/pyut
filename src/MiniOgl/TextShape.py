@@ -4,61 +4,10 @@ import wx
 from MiniOgl.RectangleShape import RectangleShape
 from MiniOgl.Shape import Shape
 
-#
-# Copyright 2002, Laurent Burgbacher, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of MiniOgl.
-#
-# MiniOgl is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MiniOgl is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MiniOgl; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-__author__    = "Laurent Burgbacher, lb@alawa.ch, Eivd"
-__copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
-__license__   = "Released under the terms of the GNU General Public Licence V2"
-__date__      = "2002-10-15"
-__version__   = "$Id: TextShape.py,v 1.5 2006/02/04 22:01:01 dutoitc Exp $"
-__all__ = ["TextShape"]
-
 
 class TextShape(RectangleShape):
     """
     A text shape that can be attached to another shape (or be standalone).
-
-    Exported methods:
-    -----------------
-
-    __init__(self, x, y, text, parent=None)
-        Constructor.
-    Attach(self, diagram)
-        Don't use this method, use Diagram.AddShape instead !!!
-    GetText(self)
-        Get the text of the shape.
-    SetText(self, text)
-        Set the text of the shape.
-    SetTextBackground(self, colour)
-        Set the text background color.
-    GetTextBackground(self)
-        Get the text background color.
-    Draw(self, dc, withChildren=True)
-        Draw the text on the dc.
-    DrawBorder(self, dc)
-        Draw the border of the shape, for fast rendering.
-    GetColor(self)
-        Get the color of the text.
-    SetColor(self, color)
-        Set the color of the text.
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
@@ -85,7 +34,7 @@ class TextShape(RectangleShape):
         When you create a new shape, you must attach it to a diagram before
         you can see it. This method is used internally by Diagram.AddShape.
 
-        @param Diagram diagram
+        @param  diagram
         """
         RectangleShape.Attach(self, diagram)
         self._textBack = self._diagram.GetPanel().GetBackgroundColour()
@@ -98,11 +47,11 @@ class TextShape(RectangleShape):
         """
         return self._text
 
-    def SetText(self, text):
+    def SetText(self, text: str):
         """
         Set the text of the shape.
 
-        @param string text
+        @param  text
         """
         self._text = text
         self._width, self._height = wx.MemoryDC().GetTextExtent(text)
@@ -111,7 +60,7 @@ class TextShape(RectangleShape):
         """
         Set the text background color.
 
-        @param wx.Colour
+        @param colour
         """
         self._textBack = colour
 
@@ -127,12 +76,13 @@ class TextShape(RectangleShape):
         """
         Draw the text on the dc.
 
-        @param wx.DC dc
+        @param dc
+        @param withChildren
         """
         if self._visible:
             RectangleShape.Draw(self, dc, False)
             dc.SetTextForeground(self._color)
-            dc.SetBackgroundMode(wx.SOLID)
+            dc.SetBackgroundMode(wx.PENSTYLE_SOLID)
             dc.SetTextBackground(self._textBack)
             x, y = self.GetPosition()
             dc.DrawText(self._text, x, y)
@@ -143,7 +93,7 @@ class TextShape(RectangleShape):
         """
         Draw the border of the shape, for fast rendering.
 
-        @param wx.DC dc
+        @param  dc
         """
         if self._selected:
             RectangleShape.DrawBorder(self, dc)
@@ -162,6 +112,6 @@ class TextShape(RectangleShape):
         """
         Set the color of the text.
 
-        @param wx.Colour
+        @param color
         """
         self._color = color

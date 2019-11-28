@@ -2,34 +2,6 @@
 from MiniOgl.RectangleShape import RectangleShape
 from MiniOgl.VShapes import *
 
-#
-# Copyright 2002, Laurent Burgbacher, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of MiniOgl.
-#
-# MiniOgl is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MiniOgl is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MiniOgl; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-__author__    = "Laurent Burgbacher, lb@alawa.ch, Eivd"
-__copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
-__license__   = "Released under the terms of the GNU General Public Licence V2"
-__date__      = "2002-10-15"
-__version__   = "$Id: RotatableShape.py,v 1.3 2004/06/16 19:33:18 dutoitc Exp $"
-
-__all__ = ["RotatableShape"]
-
 
 class RotatableShape(RectangleShape):
     """
@@ -37,26 +9,6 @@ class RotatableShape(RectangleShape):
     The shape is defined for one orientation, using a list of VShapes which
     is a class field named SHAPES. Then, the method Rotate can be called to
     automatically rotate the shape.
-
-    Exported methods:
-    -----------------
-
-    __init__(self, x=0.0, y=0.0, width=0.0, height=0.0, parent=None)
-        Constructor.
-    GetAngle(self)
-        Get the actual angle, in range [0; 3].
-    SetAngle(self, angle)
-        Set the actual angle, in range [0; 3].
-    SetScale(self, scale)
-        Set the scaling of this shape.
-    GetScale(self)
-        Get the scaling of this shape.
-    SetOrigin(self, x, y)
-        Set the origin of the shape, from its upper left corner.
-    Rotate(self, clockwise)
-        Rotate the shape 90� clockwise or conterclockwise.
-    Draw(self, dc, withChildren=True)
-        Draw the shape on the dc.
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
@@ -103,16 +55,16 @@ class RotatableShape(RectangleShape):
         Set the actual angle, in range [0; 3].
         0 is the initial angle. Each unit is a clockwise 90� rotation.
 
-        @param int angle
+        @param  angle
         """
         while self._angle != angle:
-            self.Rotate(1)
+            self.Rotate(True)
 
-    def SetScale(self, scale):
+    def SetScale(self, scale: float):
         """
         Set the scaling of this shape.
 
-        @param float scale
+        @param  scale
         """
         self._scale = scale
         self._ox, self._oy = self._sox * scale, self._soy * scale
@@ -126,11 +78,12 @@ class RotatableShape(RectangleShape):
         """
         return self._scale
 
-    def SetOrigin(self, x, y):
+    def SetOrigin(self, x: float, y: float):
         """
         Set the origin of the shape, from its upper left corner.
 
-        @param double x, y : new origin
+        @param x: new origin
+        @param y: new origin
         """
         self._ox, self._oy = x, y
         scale = self._scale
@@ -147,18 +100,18 @@ class RotatableShape(RectangleShape):
         if len(self._SHAPES) == 1:
             from copy import copy
             for i in range(1, 4):
-                next = []
+                nextRotates = []
                 for shape in self._SHAPES[0]:
                     n = copy(shape)
                     n.SetAngle(i)
-                    next.append(n)
-                self._SHAPES.append(next)
+                    nextRotates.append(n)
+                self._SHAPES.append(nextRotates)
 
-    def Rotate(self, clockwise):
+    def Rotate(self, clockwise: bool):
         """
         Rotate the shape 90� clockwise or conterclockwise.
 
-        @param bool clockwise
+        @param  clockwise
         """
         if clockwise:
             self._angle += 1
@@ -176,15 +129,15 @@ class RotatableShape(RectangleShape):
             child.SetRelativePosition(x, y)
             if lock:
                 child.SetDraggable(False)
-        self._width, self._height = \
-            VShape().Convert(1, self._width, self._height)
-        self._ox, self._oy= VShape().Convert(1, self._ox, self._oy)
+        self._width, self._height = VShape().Convert(1, self._width, self._height)
+        self._ox, self._oy = VShape().Convert(1, self._ox, self._oy)
 
     def Draw(self, dc, withChildren=True):
         """
         Draw the shape on the dc.
 
-        @param wxDC dc
+        @param  dc
+        @param withChildren
         """
         if self._visible:
             RectangleShape.Draw(self, dc, False)

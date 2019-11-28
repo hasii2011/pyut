@@ -94,7 +94,7 @@ class TextShape(RectangleShape):
         if self._visible:
             RectangleShape.Draw(self, dc, False)
             dc.SetTextForeground(self._color)
-            dc.SetBackgroundMode(wx.SOLID)
+            dc.SetBackgroundMode(wx.PENSTYLE_SOLID)
             dc.SetTextBackground(self._textBack)
             x, y = self.GetPosition()
 

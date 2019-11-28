@@ -221,12 +221,13 @@ class LineShape(Shape):
         """
         self.Draw(dc)
 
-    def DrawArrow(self, dc: DC, u, v):
+    def DrawArrow(self, dc: DC, u: float, v: float):
         """
         Draw an arrow at the end of the segment uv.
 
         @param dc
-        @param (double, double) u, v : points of the segment
+        @param  u: points of the segment
+        @param  v: points of the segment
         """
         from math import pi, atan, cos, sin
         pi_6 = pi/6
@@ -366,4 +367,3 @@ class LineShape(Shape):
         Shape.SetSelected(self, state)
         for ctrl in self._controls:
             ctrl.SetVisible(state)
-

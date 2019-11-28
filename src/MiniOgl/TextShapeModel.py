@@ -1,4 +1,5 @@
-from RectangleShapeModel import *
+from MiniOgl.RectangleShapeModel import RectangleShapeModel
+
 
 class TextShapeModel(RectangleShapeModel):
     """
@@ -16,12 +17,10 @@ class TextShapeModel(RectangleShapeModel):
 
         # set the coords and size to 0 and a empty list of associated
         # shapes (views)
-        RectangleShapeModel.__init__(self)
+        super().__init__()
 
         self._fontSize = 0
 
-    #>------------------------------------------------------------------------
-        
     def __init__(self, viewShape):
         """
         Constructor.
@@ -29,17 +28,15 @@ class TextShapeModel(RectangleShapeModel):
         Before we can use it, we have to do a UpdateModel from the shape.
         """
 
-        # set the coords and size to 0 and add the specified shape to the list. 
-        ShapeModel.__init__(self, viewShape)
+        # set the coords and size to 0 and add the specified shape to the list.
+        super().__init__(viewShape)
 
         # init the font of the shape
         self._fontSize = 0
-
-    #>------------------------------------------------------------------------
 
     def GetFontSize(self):
         return self._fontSize
 
     def SetFontSize(self, fontSize):
         self._fontSize = fontSize
-    
+

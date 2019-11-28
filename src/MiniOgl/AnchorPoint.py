@@ -2,35 +2,11 @@
 
 from MiniOgl.LinePoint import LinePoint
 
-__all__ = ["AnchorPoint"]
-
 
 class AnchorPoint(LinePoint):
     """
     This is a point which begins or ends a line.
     It is often anchored to a parent shape, but that's not mandatory.
-
-    Exported methods:
-    -----------------
-
-    __init__(self, x, y, parent=None)
-        Constructor.
-    SetStayInside(self, state)
-        If True, the point will stay inside the bounds of its parent shape.
-    GetStayInside(self)
-        Return True if the point stays inside the bounds of its parent shape.
-    SetStayOnBorder(self, state)
-        If True, the point will stay on the border of its parent shape.
-    GetStayOnBorder(self)
-        Return True if the point stays on the border of its parent shape.
-    SetPosition(self, x, y)
-        Change the position of the anchor point, if it's draggable.
-    stayInside(low, length, value)
-        Return the nearest value in [low, low+length].
-    stickToBorder(ox, oy, width, height, x, y)
-        Return (x, y) on the square (ox, oy, ox+width, oy+height) by
-    Detach(self)
-        Detach the line and all its line points, including src and dst.
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
@@ -131,8 +107,6 @@ class AnchorPoint(LinePoint):
                 self._x = x
                 self._y = y
 
-            #added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
-            #updates the model of the anchor point (MVC pattern)
             if self.HasDiagramFrame():
                 self.UpdateModel()
 

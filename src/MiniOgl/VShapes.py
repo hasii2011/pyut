@@ -128,7 +128,6 @@ class VArc(VShape):
         xc, yc = self.Convert(angle, xc, yc)
         self._data = (x1, y1, x2, y2, xc, yc)
 
-
     def Draw(self, dc, ox, oy, scale):
         if scale == 1:
             x1, y1, x2, y2, xc, yc = self._data
