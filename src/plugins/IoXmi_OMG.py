@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from xml.dom.minidom import parse
 
 from io import StringIO
@@ -21,24 +24,6 @@ class IoXmi_OMG(PyutIoPlugin):
     """
     XMI import plugin
 
-    Informational methods
-    ---------------------
-     - getName          : return plugin name (String)
-     - getAuthor        : return plugin author name (String)
-     - getVersion       : return plugin version number (String)
-     - getInputFormat   : return input format (see pydoc)
-     - getOutputFormat  : return output format (see pydoc)
-
-    Interaction methods
-    -------------------
-     - setImportOptions : return True if ok, False if canceled
-     - setExportOptions : return True if ok, False if canceled
-
-    Real work
-    ---------
-        - doImport
-        - doExport
-
     Plugin call
     -----------
     To use a plugin :
@@ -59,7 +44,7 @@ class IoXmi_OMG(PyutIoPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        PyutIoPlugin.__init__(self, oglObjects, umlFrame)
+        super().__init__(oglObjects, umlFrame)
 
     def getName(self):
         """
@@ -130,6 +115,8 @@ class XmiImporter:
         @param umlFrame : frame to which add uml objects
         @author C.Dutoit
         """
+        self.logger: Logger = getLogger(__name__)
+
         # Read file and init
 
         self._dom = parse(StringIO(open(filename).read()))
@@ -198,8 +185,8 @@ class XmiImporter:
         for tag in list(dic.keys()):
             tag_content = xmi_documentation.getElementsByTagName(tag)
             if len(tag_content) > 0:
-                print(tag + " : ", end=' ')
-                print(tag_content[0].firstChild.wholeText)
+                self.logger.info(tag + " : ", end=' ')
+                self.logger.info(tag_content[0].firstChild.wholeText)
                 # print tag_content[0].firstChild.data
 
     def _readXMIContent(self, xmi):
@@ -241,18 +228,18 @@ class XmiImporter:
         """
         # Get class name
         className = self._readFoundationCoreClassName(coreClass)
-        print("Reading class ", className, end=' ')
+        self.logger.info("Reading class ", className, end=' ')
 
         # Get class ID
         classID = str(coreClass.getAttribute("xmi.id"))
-        print("id = ", classID, end=' ')
+        self.logger.info("id = ", classID, end=' ')
 
         # Save class
         pyutClass = PyutClass(className)
 
         # Get class abstract status
         isAbstract = self._readFoundationCoreClassIsAbstract(coreClass)
-        print("isAbstract = ", isAbstract)
+        self.logger.info("isAbstract = ", isAbstract)
         if isAbstract:
             pyutClass.setStereotype("Abstract")
 
@@ -310,7 +297,7 @@ class XmiImporter:
         # Read all feature attribute
         pyutFields = []
         for xmiAttribute in xmiFeature[0].getElementsByTagName("Foundation.Core.Attribute"):
-            print("Attribute ", end=' ')
+            self.logger.info("Attribute ", end=' ')
 
             # Read attribute name
             el = xmiAttribute.getElementsByTagName("Foundation.Core.ModelElement.name")
@@ -318,7 +305,7 @@ class XmiImporter:
                 name = el[0].firstChild.wholeText
             else:
                 name = "Unnamed_Attribute"
-            print(name, end=' ')
+            self.logger.info(name, end=' ')
 
             # Read attribute visibility
             el = xmiAttribute.getElementsByTagName("Foundation.Core.ModelElement.visibility")
@@ -326,7 +313,7 @@ class XmiImporter:
                 visibility = el[0].getAttribute("xmi.value")
             else:
                 visibility = "Unvisibilityd_Attribute"
-            print("v=", visibility)
+            self.logger.info("v=", visibility)
 
             # Add feature attribute to pyut Fields
             # name, type, def, vis
@@ -361,22 +348,22 @@ class XmiImporter:
         # Get the two associations end
         ends = conn.getElementsByTagName("Foundation.Core.AssociationEnd")
         if len(ends) != 2:
-            print("Invalid association : needed 2 ends, got ", len(ends))
+            self.logger.error("Invalid association : needed 2 ends, got ", len(ends))
             return
 
         # Read associations end type
         endsValues = []
         for i in range(2):
-            aType = ends[i].getElementsByTagName("Foundation.Core.AssociationEnd.type")
-            if len(type) != 1:
-                print("Invalid association end type")
+            endType = ends[i].getElementsByTagName("Foundation.Core.AssociationEnd.type")
+            if len(endType) != 1:
+                self.logger.error("Invalid association end type")
                 return
-            aType = aType[0]
+            endType = endType[0]
 
             # Read association end type classifier
-            classifier = type.getElementsByTagName("Foundation.Core.Classifier")
+            classifier = endType.getElementsByTagName("Foundation.Core.Classifier")
             if len(classifier) != 1:
-                print("Invalid association end type classifier")
+                self.logger.error("Invalid association end type classifier")
                 return
             classifier = classifier[0]
             xmi_id = str(classifier.getAttribute("xmi.idref"))
@@ -391,8 +378,8 @@ class XmiImporter:
             # Read association type
             isAggregation = ends[i].getElementsByTagName("Foundation.Core.AssociationEnd.aggregation")
             if len(isAggregation) > 0:
-                print(isAggregation[0])
-                print(isAggregation[0].firstChild)
+                self.logger.info(isAggregation[0])
+                self.logger.info(isAggregation[0].firstChild)
                 isAggregation = isAggregation[0].getElementsByTagName("xmi.value") != "none"
             else:
                 isAggregation = False
@@ -439,31 +426,31 @@ class XmiImporter:
         # Get client
         client = xmiAbstraction.getElementsByTagName("Foundation.Core.Dependency.client")
         if len(client) == 0:
-            print("Error : Foundation.Core.Dependency.client not found !")
+            self.logger.error("Error : Foundation.Core.Dependency.client not found !")
             return
 
         # Get model element
         modelElement = client[0].getElementsByTagName("Foundation.Core.ModelElement")
         if len(modelElement) == 0:
-            print("Error : Foundation.Core.Dependency.Client has no elements ", end=' ')
-            print("Foundation.Core.ModelElements !")
+            self.logger.error("Error : Foundation.Core.Dependency.Client has no elements ", end=' ')
+            self.logger.error("Foundation.Core.ModelElements !")
             return
-        clientID = str(modelElement[0].getAttribute("xmi.idref"))
+        # clientID = str(modelElement[0].getAttribute("xmi.idref"))
 
         # Get supplier
         supplier = xmiAbstraction.getElementsByTagName("Foundation.Core.Dependency.supplier")
         if len(supplier) == 0:
-            print("Error : Foundation.Core.supplier not found !")
+            self.logger.error("Error : Foundation.Core.supplier not found !")
             return
 
         # Get model element
         modelElement = supplier[0].getElementsByTagName("Foundation.Core.ModelElement")
         if len(modelElement) == 0:
-            print("Error : Foundation.Core.Dependency.supplier has no elements ", end=' ')
-            print("Foundation.Core.ModelElements !")
+            self.logger.error("Error : Foundation.Core.Dependency.supplier has no elements ", end=' ')
+            self.logger.error("Foundation.Core.ModelElements !")
             return
-        supplierID = str(modelElement[0].getAttribute("xmi.idref"))
+        # supplierID = str(modelElement[0].getAttribute("xmi.idref"))
 
         # Get classes
-        srcOgl = self._dicOglClasses[clientID]
-        dstOgl = self._dicOglClasses[supplierID]
+        # srcOgl = self._dicOglClasses[clientID]
+        # dstOgl = self._dicOglClasses[supplierID]

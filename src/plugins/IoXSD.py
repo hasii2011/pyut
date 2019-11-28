@@ -1,12 +1,18 @@
 
-
-from org.pyut.PyutType import *
-
-from org.pyut.ogl.OglClass import OglClass
+from logging import Logger
+from logging import getLogger
 
 from xml.dom.minidom import parse
 
 from plugins.PyutIoPlugin import PyutIoPlugin
+
+from org.pyut.PyutClass import PyutClass
+from org.pyut.PyutType import PyutType
+from org.pyut.PyutField import PyutField
+
+from org.pyut.enums.OglLinkType import OglLinkType
+
+from org.pyut.ogl.OglClass import OglClass
 
 
 class IoXSD(PyutIoPlugin):
@@ -118,6 +124,7 @@ class XSDReader:
         """
         Constructor
         """
+        self.logger: Logger = getLogger(__name__)
         self._dom = parse(filename)
         self._umlFrame = umlFrame
         self._allElements = {}
@@ -155,7 +162,7 @@ class XSDReader:
             elif node.nodeName[0] == "#":
                 pass
             else:
-                print(("Ignored /", node.nodeName))
+                self.logger.warning(f"Ignored: {node.nodeName}")
 
         doc = self._getDoc(self._dom.firstChild)
         if len(doc.strip()) > 0:
@@ -172,7 +179,7 @@ class XSDReader:
                 elif child.nodeName[0] == "#":
                     pass
                 else:
-                    print(("Ignored tag:" + child.nodeName))
+                    self.logger.warning(f"Ignored tag: {child.nodeName}")
 
     def _getDoc(self, node):
         """
@@ -186,7 +193,7 @@ class XSDReader:
                   if el.nodeName in ["xsd:documentation", "xs:documentation"]]
             for n2 in l2:
                 if n2.firstChild.nodeValue is None:
-                    print("getDoc got an empty node !")
+                    self.logger.warning("getDoc got an empty node !")
                 else:
                     doc += n2.firstChild.nodeValue.replace("\n", " ")
         return doc
@@ -229,10 +236,10 @@ class XSDReader:
                     pattern = lstPatterns[0].getAttribute("value")
                     doc += "" + pattern
                 else:
-                    print("Ignored xs:pattern")
+                    self.logger.warning("Ignored xs:pattern")
 
             else:
-                print(("Ignored SimpleType/", child.nodeName))
+                self.logger.warning("Ignored SimpleType/", child.nodeName)
         if len(doc.strip()) > 0:
             note = self._umlFrame.createNewNote(0, 0)
             note.setName(doc)
@@ -243,14 +250,7 @@ class XSDReader:
         """
         # Read name, type
         name = node.getAttribute("name")
-
-        # Save
-        # pc, oc = self._createClass(name, 0, 0)
         self._allAttGroups[name] = Context(node, name, None, None)
-
-        # Read annotation/documentation
-        # doc = self._getDoc(node)
-        # pc.setDescription(doc)
 
     def _completeElement(self, node):
         """
@@ -274,16 +274,14 @@ class XSDReader:
                         vmax = "n"
 
                     # Do link
-                    link = self._umlFrame.createNewLink(context.oc, context2.oc, OGL_AGGREGATION)
+                    link = self._umlFrame.createNewLink(context.oc, context2.oc, OglLinkType.OGL_AGGREGATION)
                     link.getPyutObject().setSrcCard(vmin + ".." + vmax)
                 else:
-                    print("Key not found for xs:sequence[@ref=" + ref + "]")
-            # elif node.nodeName in ["xsd:sequence", "xs:sequence"]:
-                # self._readSequence(context)
+                    self.logger.warning(f"Key not found for xs:sequence[@ref={ref}]")
             elif child.nodeName[0] == "#":
                 pass
             else:
-                print(("Unread tag(2):" + child.nodeName))
+                self.logger.warning(("Unread tag(2):" + child.nodeName))
 
     def _readComplexType(self, context, node):
         """
@@ -296,9 +294,6 @@ class XSDReader:
                 self._readSequence(context, child)
             elif child.nodeName == self._ns + ":attribute":
                 self._readAttribute(context, child)
-            # elif node.nodeName in ["xsd:annotation", "xs:annotation"]:
-                # doc = self._getDoc(node)
-                # pc.setDescription(doc)
             elif child.nodeName == self._ns + ":attributeGroup":
                 self._readAttributeGroup(child, context)
             elif child.nodeName == "#text":
@@ -306,7 +301,7 @@ class XSDReader:
             elif child.nodeName == "#comment":
                 pass
             else:
-                print(("Unread tag(3):" + child.nodeName))
+                self.logger.warning(f"Unread tag(3): {child.nodeName}")
 
     def _readAttribute(self, context, node):
         """
@@ -330,20 +325,20 @@ class XSDReader:
         for child in context.node.childNodes:
             if child.nodeName == self._ns + ":attribute":
                 name = child.getAttribute("name")
-                type = child.getAttribute("type")
+                cType = child.getAttribute("type")
                 use  = child.getAttribute("use")
 
                 field = PyutField()
                 field.setName(name)
-                field.setType(PyutType(str(type) + " " + str(use)))
+                field.setType(PyutType(str(cType) + " " + str(use)))
                 # TODO : support documentation in PyUt for Attributes
                 # if (attDef!="None"):
                     # field.setDefaultValue(attDef)
                 parentContext.pc.addField(field)
-            elif child.nodeName[0]=="#":
+            elif child.nodeName[0] == "#":
                 pass
             else:
-                print(("Unsupported tag: attributeGroup/", child.nodeName))
+                self.logger.warning("Unsupported tag: attributeGroup:  {child.nodeName}")
 
 
 class Context:
