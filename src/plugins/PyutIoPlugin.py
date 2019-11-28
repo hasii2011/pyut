@@ -65,10 +65,8 @@ class PyutIoPlugin(PyutPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        PyutPlugin.__init__(self, umlFrame, getMediator())
+        super().__init__(umlFrame, getMediator())
         self.__oglObjects = oglObjects
-        # self.__umlFrame = umlFrame
-        # self.__ctrl = getMediator()
 
     def getName(self) -> str:
         """
