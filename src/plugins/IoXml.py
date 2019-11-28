@@ -114,7 +114,7 @@ class IoXml(PyutIoPlugin):
         myXml = PyutXmlFinder.getPyutXmlClass(theVersion=lastVersion)
         file = open(filename, "w")
 
-        if int(lastVersion) >= 5:   # Python 3 update
+        if lastVersion >= 5:   # Python 3 update
             from org.pyut.general import Mediator
             ctrl         = Mediator.getMediator()
             fileHandling = ctrl.getFileHandling()
@@ -127,11 +127,9 @@ class IoXml(PyutIoPlugin):
             text = doc.toprettyxml()
         else:
             text = doc.toxml()
-        # add attribute encoding = "iso-8859-1"
-        # this is not possible with minidom, so we use pattern matching
-        text = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
+        updatedXml: str = PyutXmlFinder.setAsISOLatin(text)
 
-        file.write(text)
+        file.write(updatedXml)
         file.close()
         chdir(oldPath)
         return True

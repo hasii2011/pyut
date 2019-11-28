@@ -23,6 +23,9 @@ class PyutXmlFinder:
     PERSISTENCE_PACKAGE: str = 'org.pyut.persistence'
     PERSISTENCE_DIR:     str = f'org{osSep}pyut{osSep}persistence'
 
+    ORIGINAL_XML_PROLOG: str = '<?xml version="1.0" ?>'
+    FIXED_XML_PROLOG:    str = '<?xml version="1.0" encoding="iso-8859-1"?>'
+
     """
     Chunks of code in the source base that are littered all over the place; I'll concentrate them here
     """
@@ -84,6 +87,13 @@ class PyutXmlFinder:
 
     @classmethod
     def setAsISOLatin(cls, xmlTextToUpdate: str) -> str:
+        """
+        Add attribute encoding = "iso-8859-1" this is not possible with minidom, so we use pattern matching
 
-        retText: str = xmlTextToUpdate.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
+        Args:
+            xmlTextToUpdate:  Old XML
+
+        Returns:  Updated XML
+        """
+        retText: str = xmlTextToUpdate.replace(PyutXmlFinder.ORIGINAL_XML_PROLOG, PyutXmlFinder.FIXED_XML_PROLOG)
         return retText

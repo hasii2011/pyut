@@ -52,8 +52,7 @@ class IoFile:
         doc:  Document = myXml.save(project)
         text: str      = doc.toprettyxml()
 
-        # add attribute encoding = "iso-8859-1" this is not possible with minidom, so we use pattern matching
-        updatedText: str = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
+        updatedText: str = PyutXmlFinder.setAsISOLatin(xmlTextToUpdate=text)
         self.logger.info(f'Document Save: \n{updatedText}')
         byteText   = updatedText.encode()
         compressed = zlib.compress(byteText)
@@ -61,7 +60,6 @@ class IoFile:
         file = open(project.getFilename(), "wb")
         file.write(compressed)
         file.close()
-        # chdir(oldpath)
 
     def open(self, filename, project):
         """

@@ -13,6 +13,8 @@ from plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.persistence.PyutXml import PyutXml
 
+from org.pyut.general.PyutXmfFinder import PyutXmlFinder
+
 
 class IoXmi(PyutIoPlugin):
     """
@@ -105,11 +107,9 @@ class IoXmi(PyutIoPlugin):
             text = doc.toprettyxml()
         else:
             text = doc.toxml()
-        # add attribute encoding = "iso-8859-1"
-        # this is not possible with minidom, so we use pattern matching
-        text = text.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
 
-        file.write(text)
+        updatedXml: str = PyutXmlFinder.setAsISOLatin(text)
+        file.write(updatedXml)
         file.close()
         return True
 
