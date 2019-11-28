@@ -1,11 +1,17 @@
 
 
 import unittest
+from os import getcwd
+from os import remove as osRemove
 
 from wx import App
 from wx import Frame
+
+from org.pyut.PyutUtils import PyutUtils
+from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 from org.pyut.ui.UmlFrame import UmlFrame
-from org.pyut.errorcontroller.ErrorManager import RAISE_ERROR_VIEW
+
+from org.pyut.experimental.ErrorViewTypes import ErrorViewTypes
 from org.pyut.persistence.FileHandling import FileHandling
 from org.pyut.general import Mediator
 
@@ -33,7 +39,9 @@ class TestUmlFrame(unittest.TestCase):
         fileHandling = FileHandling(None, ctrl)
         ctrl.registerFileHandling(fileHandling)
         errorManager = ctrl.getErrorManager()
-        errorManager.changeType(RAISE_ERROR_VIEW)
+        errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)
+        whereWeAre: str = getcwd()
+        PyutUtils.setBasePath(whereWeAre)
 
         # Create wx application
         # For python 3 and wx 4.x we need to save it so it does not get GC'ed
@@ -46,6 +54,13 @@ class TestUmlFrame(unittest.TestCase):
         umlFrame.Show(True)
         self._umlFrame = umlFrame
 
+    def tearDown(self):
+        for x in range(4):
+            try:
+                osRemove(f'{HISTORY_FILE_NAME}{x}')
+            except (ValueError, Exception):
+                pass    # we truly want to ignore
+
     def testClassCreation(self):
         """
         Test Class Creation
@@ -55,12 +70,11 @@ class TestUmlFrame(unittest.TestCase):
         try:
             pyutClass = self._umlFrame.createNewClass(10, 10)
         except (ValueError, Exception) as e:
-            self.fail(f"Can't create a PyutClass;  e: {e}")
+            self.fail(f"Can't create a PyutClass: {e}")
 
         # Get the corresponding OglClass
         try:
-            oglClass = [s for s in self._umlFrame.getDiagram().GetShapes()
-                           if s.getPyutObject() is pyutClass][0]
+            oglClass = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutClass][0]  # Too cute; fix
         except (ValueError, Exception):
             self.fail("Can't get OglClass")
 
@@ -84,8 +98,7 @@ class TestUmlFrame(unittest.TestCase):
 
         # Get OglNote
         try:
-            oglNote = [s for s in self._umlFrame.getDiagram().GetShapes()
-                           if s.getPyutObject() is pyutNote][0]
+            oglNote = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutNote][0]  # Too cute; fix
         except (ValueError, Exception):
             self.fail("Can't get OglNote")
 
@@ -94,7 +107,7 @@ class TestUmlFrame(unittest.TestCase):
             x, y = oglNote.GetPosition()
         except (ValueError, Exception):
             self.fail("Can't get OglNote position")
-        self.assertTrue(x==100 and y==10, "Wrong OglNote position !")
+        self.assertTrue(x == 100 and y == 10, "Wrong OglNote position !")
 
     def testActorCreation(self):
         """
@@ -109,8 +122,7 @@ class TestUmlFrame(unittest.TestCase):
 
         # Get the corresponding OglActor
         try:
-            oglActor = [s for s in self._umlFrame.getDiagram().GetShapes()
-                           if s.getPyutObject() is pyutActor][0]
+            oglActor = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutActor][0]  # Too cute; fix
         except (ValueError, Exception):
             self.fail("Can't get OglActor")
 
@@ -119,7 +131,7 @@ class TestUmlFrame(unittest.TestCase):
             x, y = oglActor.GetPosition()
         except (ValueError, Exception):
             self.fail("Can't get OglActor position")
-        self.assertTrue(x==100 and y==100, "Wrong OglActor position !")
+        self.assertTrue(x == 100 and y == 100, "Wrong OglActor position !")
 
     def testUseCaseCreation(self):
         """
@@ -134,8 +146,7 @@ class TestUmlFrame(unittest.TestCase):
 
         # Get the corresponding OglUseCase
         try:
-            oglUseCase = [s for s in self._umlFrame.getDiagram().GetShapes()
-                           if s.getPyutObject() is pyutUseCase][0]
+            oglUseCase = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutUseCase][0]  # Too cute; fix
         except (ValueError, Exception):
             self.fail("Can't get OglUseCase")
 

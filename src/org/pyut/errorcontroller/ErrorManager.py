@@ -7,14 +7,11 @@ from sys import exc_info
 from traceback import extract_tb
 
 from org.pyut.errorcontroller.GraphicErrorView import GraphicErrorView
+from org.pyut.experimental.ErrorViewTypes import ErrorViewTypes
+
 from org.pyut.general.Globals import _
 
 from org.pyut.general.Singleton import Singleton
-
-# Type of view for the error
-GRAPHIC_ERROR_VIEW = 1
-TEXT_ERROR_VIEW    = 2
-RAISE_ERROR_VIEW   = 3
 
 #
 #   TODO:  Raise a PyutException(s) instead of the general one
@@ -137,19 +134,19 @@ class ErrorManager(Singleton):
     :contact: <dutoitc@hotmail.com>
     """
 
-    def init(self, view=GRAPHIC_ERROR_VIEW):
+    def init(self, view=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
         """
         Singleton constructor
         """
         self.changeType(view)
 
-    def changeType(self, view):
+    def changeType(self, view: ErrorViewTypes):
 
-        if view == GRAPHIC_ERROR_VIEW:
+        if view == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
             self._view = GraphicErrorView()
-        elif view == TEXT_ERROR_VIEW:
+        elif view == ErrorViewTypes.TEXT_ERROR_VIEW:
             self._view = TextErrorView()
-        elif view == RAISE_ERROR_VIEW:
+        elif view == ErrorViewTypes.RAISE_ERROR_VIEW:
             self._view = RaiseErrorView()
         else:
             self._view = GraphicErrorView()
