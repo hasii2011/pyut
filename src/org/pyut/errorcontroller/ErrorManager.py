@@ -24,29 +24,9 @@ def getErrorManager():
     return ErrorManager()
 
 
-def addToLogFile(title, msg):
-
-    import time
-    import codecs
-
-    f = codecs.open('errors.log', encoding='utf-8', mode='a')
-
-    f.write("---------------------------\n")
-    f.write(str(time.ctime(time.time())))
-
-    errMsg: str = ErrorManager.getErrorInfo()
-
-    f.write(f'{title} - {msg}\n')
-    f.write(errMsg)
-    f.close()
-
-
 class ErrorManager(Singleton):
     """
-    This class handle all errors.
-
-    :author: C.Dutoit
-    :contact: <dutoitc@hotmail.com>
+    This class handle errors.
     """
 
     def init(self, view=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
@@ -66,26 +46,20 @@ class ErrorManager(Singleton):
         else:
             self._view = GraphicErrorView()
 
-    def newFatalError(self, msg, title=None, parent=None):
+    def newFatalError(self, msg=None, title=None, parent=None):
         if msg is None:
-            msg = u""
+            msg = ""
         if title is None:
-            title = u""
-        title = u"" + title
-        msg = u"" + msg
-        addToLogFile("Fatal error : " + title, msg)
+            title = ""
+        ErrorManager.addToLogFile("Fatal error: " + title, msg)
         self._view.newFatalError(msg, title, parent)
 
     def newWarning(self, msg, title=None, parent=None):
-        title = u"" + title
-        msg = u"" + msg
-        addToLogFile("Warning : " + title, msg)
+        ErrorManager.addToLogFile("Warning: " + title, msg)
         self._view.newWarning(msg, title, parent)
 
     def displayInformation(self, msg, title=None, parent=None):
-        title = u"" + title
-        msg = u"" + msg
-        addToLogFile("Info : " + title, msg)
+        ErrorManager.addToLogFile("Info: " + title, msg)
         self._view.displayInformation(msg, title, parent)
 
     @staticmethod
@@ -106,3 +80,20 @@ class ErrorManager(Singleton):
                 errMsg = errMsg + f'{str(el)}\n'
 
         return errMsg
+
+    @staticmethod
+    def addToLogFile(title, msg):
+
+        import time
+        import codecs
+
+        f = codecs.open('errors.log', encoding='utf-8', mode='a')
+
+        f.write("---------------------------\n")
+        f.write(str(time.ctime(time.time())))
+
+        errMsg: str = ErrorManager.getErrorInfo()
+
+        f.write(f'{title} - {msg}\n')
+        f.write(errMsg)
+        f.close()
