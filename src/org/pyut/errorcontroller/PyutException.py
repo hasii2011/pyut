@@ -1,0 +1,3 @@
+
+class PyutExeption(Exception):
+    pass

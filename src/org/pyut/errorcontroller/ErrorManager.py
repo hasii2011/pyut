@@ -11,11 +11,6 @@ from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from org.pyut.general.Singleton import Singleton
 
-#
-#   TODO:  Raise a PyutException(s) instead of the general one
-#   TODO:  All these classes need an abstract class to implement
-#
-
 
 def getErrorManager():
     """
@@ -66,9 +61,8 @@ class ErrorManager(Singleton):
     def getErrorInfo() -> str:
         """
         Returns:  System exception information as a formatted string
-
         """
-        errMsg = f'The following error occured : {str(exc_info()[1])}'
+        errMsg = f'The following error occurred : {str(exc_info()[1])}'
         errMsg += f'\n\n---------------------------\n'
         if exc_info()[0] is not None:
             errMsg += f'Error : {exc_info()[0]}\n'
