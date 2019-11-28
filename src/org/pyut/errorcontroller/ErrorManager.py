@@ -9,8 +9,6 @@ from org.pyut.errorcontroller.RaiseErrorView import RaiseErrorView
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
-from org.pyut.general.Globals import _
-
 from org.pyut.general.Singleton import Singleton
 
 #
@@ -31,25 +29,14 @@ def addToLogFile(title, msg):
     import time
     import codecs
 
-    title = u"" + title
-    msg = u"" + msg
-    # f = open("errors.log", "a")
     f = codecs.open('errors.log', encoding='utf-8', mode='a')
 
-    f.write("===========================")
+    f.write("---------------------------\n")
     f.write(str(time.ctime(time.time())))
 
-    errMsg = msg + "\n\n" + _("The following error occurred : %s") % exc_info()[1] + "\n\n---------------------------\n"
-    if exc_info()[0] is not None:
-        errMsg += "Error : %s" % exc_info()[0] + "\n"
-    if exc_info()[1] is not None:
-        errMsg += "Msg   : %s" % exc_info()[1] + "\n"
-    if exc_info()[2] is not None:
-        errMsg += "Trace :\n"
-        for el in extract_tb(exc_info()[2]):
-            errMsg = errMsg + str(el) + "\n"
+    errMsg: str = ErrorManager.getErrorInfo()
 
-    f.write(title + u": " + msg)
+    f.write(f'{title} - {msg}\n')
     f.write(errMsg)
     f.close()
 
