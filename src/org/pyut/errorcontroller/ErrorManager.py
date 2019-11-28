@@ -10,7 +10,6 @@ from org.pyut.errorcontroller.GraphicErrorView import GraphicErrorView
 from org.pyut.general.Globals import _
 
 from org.pyut.general.Singleton import Singleton
-import wx
 
 # Type of view for the error
 GRAPHIC_ERROR_VIEW = 1
@@ -176,3 +175,22 @@ class ErrorManager(Singleton):
         msg = u"" + msg
         addToLogFile("Info : " + title, msg)
         self._view.displayInformation(msg, title, parent)
+
+    @staticmethod
+    def getErrorInfo() -> str:
+        """
+        Returns:  System exception information as a formatted string
+
+        """
+        errMsg = f'The following error occured : {str(exc_info()[1])}'
+        errMsg += f'\n\n---------------------------\n'
+        if exc_info()[0] is not None:
+            errMsg += f'Error : {exc_info()[0]}\n'
+        if exc_info()[1] is not None:
+            errMsg += f'Msg   : {exc_info()[1]}\n'
+        if exc_info()[2] is not None:
+            errMsg += 'Trace :\n'
+            for el in extract_tb(exc_info()[2]):
+                errMsg = errMsg + f'{str(el)}\n'
+
+        return errMsg

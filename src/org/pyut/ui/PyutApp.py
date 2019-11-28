@@ -26,12 +26,13 @@ from wx import DefaultSize as wxDefaultSize
 from wx import App as wxApp
 from wx import Yield as wxYield
 
-from org.pyut.general.Globals import _
 import img.ImgSplash
 
 from org.pyut.PyutPreferences import PyutPreferences
 
-from org.pyut.PyutUtils import PyutUtils
+from org.pyut.errorcontroller.ErrorManager import ErrorManager
+
+from org.pyut.general.Globals import _
 
 from org.pyut.ui.AppFrame import AppFrame
 
@@ -86,7 +87,7 @@ class PyutApp(wxApp):
         except (ValueError, Exception) as e:
             self.logger.error(f'{e}')
             dlg = MessageDialog(None, _(f"The following error occurred: {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
-            errMessage: str = PyutUtils.getErrorInfo()
+            errMessage: str = ErrorManager.getErrorInfo()
             self.logger.debug(errMessage)
             dlg.ShowModal()
             dlg.Destroy()

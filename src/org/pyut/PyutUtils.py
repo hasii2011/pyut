@@ -4,14 +4,11 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from sys import exc_info
-
-from traceback import extract_tb
-
 from os import sep as osSep
 
 from wx import NewIdRef as wxNewIdRef
 
+from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.errorcontroller.ErrorManager import getErrorManager
 
 
@@ -60,7 +57,7 @@ class PyutUtils:
 
         @author C.Dutoit
         """
-        errMsg = PyutUtils.getErrorInfo()
+        errMsg = ErrorManager.getErrorInfo()
         try:
             em = getErrorManager()
             em.newFatalError(msg, title, parent)
@@ -72,29 +69,8 @@ class PyutUtils:
             eLog.error(errMsg)
             eLog.error("")
             eLog.error("New error is : ")
-            errMsg = PyutUtils.getErrorInfo()
+            errMsg = ErrorManager.getErrorInfo()
             eLog.error(errMsg)
-
-    @staticmethod
-    def getErrorInfo() -> str:
-        """
-        Does this belong in the error manager?
-
-        Returns:
-
-        """
-        errMsg = f'The following error occured : {str(exc_info()[1])}'
-        errMsg += f'\n\n---------------------------\n'
-        if exc_info()[0] is not None:
-            errMsg += f'Error : {exc_info()[0]}\n'
-        if exc_info()[1] is not None:
-            errMsg += f'Msg   : {exc_info()[1]}\n'
-        if exc_info()[2] is not None:
-            errMsg += 'Trace :\n'
-            for el in extract_tb(exc_info()[2]):
-                errMsg = errMsg + f'{str(el)}\n'
-
-        return errMsg
 
     @staticmethod
     def assignID(numberOfIds: int) -> List[wxNewIdRef]:

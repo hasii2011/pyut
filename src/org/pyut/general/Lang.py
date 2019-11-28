@@ -7,7 +7,8 @@ import gettext
 import wx
 
 from org.pyut.PyutPreferences import PyutPreferences
-from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
 # Constants
 DEFAULT_LANG = "en"
@@ -69,5 +70,5 @@ def importLanguage():
     except (ValueError, Exception) as e:
         # If there has been a problem with i18n
         moduleLogger.error(f'Warning: problem with gettext, i18n not used.  Error: {e}')
-        errMsg = PyutUtils.getErrorInfo()
+        errMsg = ErrorManager.getErrorInfo()
         moduleLogger.error(errMsg)
