@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from glob import glob
 
 from os import chdir
@@ -10,9 +13,7 @@ from sys import exc_info
 from sys import path as sysPath
 from traceback import extract_tb
 
-from logging import Logger
-from logging import getLogger
-
+from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.general.Singleton import Singleton
 
 
@@ -72,13 +73,9 @@ class PluginManager(Singleton):
                 module = __import__(plug)
             except (ValueError, Exception) as e:
                 self.logger.error(f"Error importing plugin {plug} with message: {e}")
-                self.logger.error(f"Error : {exc_info()[0]}")
-                self.logger.error(f"Msg   : {exc_info()[1]}")
-                self.logger.error(f"Trace :")
-                for el in extract_tb(exc_info()[2]):
-                    self.logger.error(el)
+                eMsg: str = ErrorManager.getErrorInfo()
+                self.logger.error(eMsg)
             if module is not None:
-                # cl = eval("module.%s" % (module.__name__))
                 pluginName: str = f"module.{module.__name__}"
                 self.logger.info(f'Loading {pluginName}')
                 cl = eval(pluginName)
@@ -92,11 +89,8 @@ class PluginManager(Singleton):
                 module = __import__(plug)
             except (ValueError, Exception) as e:
                 self.logger.error(f"Error importing plugin {plug} with message: {e}")
-                self.logger.error(f"Error : {exc_info()[0]}")
-                self.logger.error(f"Msg   : {exc_info()[1]}")
-                self.logger.error(f"Trace :")
-                for el in extract_tb(exc_info()[2]):
-                    self.logger.error(el)
+                eMsg: str = ErrorManager.getErrorInfo()
+                self.logger.error(eMsg)
             if module is not None:
                 self.logger.info(f'plugin imported {plug}')
                 cl = eval(f"module.{module.__name__}")
