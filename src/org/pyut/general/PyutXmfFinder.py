@@ -81,3 +81,9 @@ class PyutXmlFinder:
         chdir(oldpath)
 
         return lastVersion
+
+    @classmethod
+    def setAsISOLatin(cls, xmlTextToUpdate: str) -> str:
+
+        retText: str = xmlTextToUpdate.replace(r'<?xml version="1.0" ?>', r'<?xml version="1.0" encoding="iso-8859-1"?>')
+        return retText

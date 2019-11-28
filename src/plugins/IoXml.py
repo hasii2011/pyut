@@ -109,11 +109,7 @@ class IoXml(PyutIoPlugin):
         filename = self._askForFileExport()
         if filename == "":
             return False
-        # path = getMediator().getAppPath()
-        # chdir(path)
-        # candidates = glob("PyutXmlV*.py")
-        # numbers = [int(s[8:-3]) for s in candidates]
-        # lastVersion = max(numbers)
+
         lastVersion: int = PyutXmlFinder.getLatestXmlVersion()
         myXml = PyutXmlFinder.getPyutXmlClass(theVersion=lastVersion)
         file = open(filename, "w")

@@ -4,7 +4,6 @@ from logging import getLogger
 
 from os import getcwd
 from os import chdir
-from os import sep as osSep
 
 import zlib
 
@@ -25,8 +24,6 @@ from org.pyut.general.Globals import _
 
 class IoFile:
 
-    PERSISTENCE_PACKAGE: str = 'org.pyut.persistence'
-    PERSISTENCE_DIR:     str = f'org{osSep}pyut{osSep}persistence'
     """
     To save data in a compressed file format.
 
