@@ -4,10 +4,8 @@ import unittest
 
 from wx import App
 from wx import Frame
-# from wx import *
-
-from UmlFrame import UmlFrame
-from ErrorManager import RAISE_ERROR_VIEW
+from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.errorcontroller.ErrorManager import RAISE_ERROR_VIEW
 from org.pyut.persistence.FileHandling import FileHandling
 from org.pyut.general import Mediator
 
