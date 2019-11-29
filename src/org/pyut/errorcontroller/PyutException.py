@@ -1,3 +1,3 @@
 
-class PyutExeption(Exception):
+class PyutException(Exception):
     pass

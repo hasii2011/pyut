@@ -1,6 +1,6 @@
 
 from org.pyut.errorcontroller.AbstractErrorView import AbstractErrorView
-from org.pyut.errorcontroller.PyutException import PyutExeption
+from org.pyut.errorcontroller.PyutException import PyutException
 
 
 class RaiseErrorView(AbstractErrorView):
@@ -23,11 +23,11 @@ class RaiseErrorView(AbstractErrorView):
     """
 
     def newFatalError(self, msg, title=None, parent=None):
-        raise PyutExeption(f"FATAL ERROR: {title} - {msg}")
+        raise PyutException(f"FATAL ERROR: {title} - {msg}")
 
     def newWarning(self, msg, title=None, parent=None):
-        raise PyutExeption(f"WARNING: {title} - {msg}")
+        raise PyutException(f"WARNING: {title} - {msg}")
 
     def displayInformation(self, msg, title=None, parent=None):
-        raise PyutExeption(f"INFORMATION: {title} 0 {msg}")
+        raise PyutException(f"INFORMATION: {title} 0 {msg}")
 

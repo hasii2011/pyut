@@ -16,7 +16,7 @@ from sys import path as sysPath
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
-from org.pyut.errorcontroller.PyutException import PyutExeption
+from org.pyut.errorcontroller.PyutException import PyutException
 
 from org.pyut.general.Singleton import Singleton
 
@@ -162,7 +162,7 @@ class PluginManager(Singleton):
                 if osPath.isdir(fqn):
                     chdir(fqn)
                     return
-        raise PyutExeption('Can not find plugins directory')
+        raise PyutException('Can not find plugins directory')
         # else:
         #     chdir("../")
         #     cls.findPluginDirectory()
