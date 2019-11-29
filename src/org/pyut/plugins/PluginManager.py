@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
@@ -19,6 +20,8 @@ from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.errorcontroller.PyutException import PyutException
 
 from org.pyut.general.Singleton import Singleton
+
+FileNameListType = List[str]
 
 
 class PluginManager(Singleton):
@@ -51,19 +54,12 @@ class PluginManager(Singleton):
         self.ioPlugs: List[type] = []
         self.toPlugs: List[type] = []
 
-        # get the file names
-        saveDir = getcwd()
-        self.logger.info(f'Save Directory: {saveDir}')
-        PluginManager.findPluginDirectory()
-        # chdir(PluginManager.PLUGIN_DIRECTORY)
-        sysPath.append(getcwd())
-        ioPlugs: List[str] = glob("Io*.py")
-        toPlugs: List[str] = glob("To*.py")
-        chdir(saveDir)
-
+        # ioPlugs: FileNameListType = []
+        # toPlugs: FileNameListType = []
+        ioPluginFileNames, toPluginFileNames = self._getPluginFileNames()
         # remove extensions
-        ioPlugsNoExt: List[str] = list(map(lambda x: osPath.splitext(x)[0], ioPlugs))
-        toPlugsNoExt: List[str] = list(map(lambda x: osPath.splitext(x)[0], toPlugs))
+        ioPlugsNoExt: List[str] = list(map(lambda x: osPath.splitext(x)[0], ioPluginFileNames))
+        toPlugsNoExt: List[str] = list(map(lambda x: osPath.splitext(x)[0], toPluginFileNames))
 
         # Import plugins
         self.ioPlugs = self._loadPlugins(plugInNames=ioPlugsNoExt, pluginType='I/O')
@@ -126,6 +122,19 @@ class PluginManager(Singleton):
         """
         return self.toPlugs
 
+    def _getPluginFileNames(self) -> Tuple[FileNameListType, FileNameListType]:
+
+        saveDir = getcwd()
+        self.logger.info(f'Save Directory: {saveDir}')
+        PluginManager.findPluginDirectory()
+
+        sysPath.append(getcwd())
+        ioPlugs: FileNameListType = glob("Io*.py")
+        toPlugs: FileNameListType = glob("To*.py")
+        chdir(saveDir)
+
+        return ioPlugs, toPlugs
+
     def _loadPlugins(self, plugInNames, pluginType: str) -> List[type]:
         """
         Load the plugin that are named
@@ -163,6 +172,3 @@ class PluginManager(Singleton):
                     chdir(fqn)
                     return
         raise PyutException('Can not find plugins directory')
-        # else:
-        #     chdir("../")
-        #     cls.findPluginDirectory()
