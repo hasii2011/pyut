@@ -38,6 +38,13 @@
             ],
             "propagate": "False"
         },
+        "org.pyut.plugins.PluginManager": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "TestPyutUtils": {
             "level": "INFO",
             "handlers": [

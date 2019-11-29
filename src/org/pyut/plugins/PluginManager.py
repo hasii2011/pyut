@@ -24,8 +24,8 @@ class PluginManager(Singleton):
     """
     Interface between the application and the plugins.
 
-    This class is responsible to search for available plugins, load them,
-    extract runtime information and give the information to those who need it
+    This class is responsible for searching for available plugins, loading them,
+    extracting runtime information and providng the information to components that need it
     (for example the `AppFrame` to create the import/export submenus).
 
     @author Laurent Burgbacher <lb@alawa.ch>
@@ -36,8 +36,7 @@ class PluginManager(Singleton):
     def init(self):
         """
         Singleton Constructor.
-        At init time, this class searches for the %s in the plugins
-        directory.
+        At init time, this class searches the PLUGIN_DIRECTORY.
 
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
@@ -53,7 +52,6 @@ class PluginManager(Singleton):
         self.logger.info(f'Save Directory: {saveDir}')
         PluginManager.findPluginDirectory()
         chdir(PluginManager.PLUGIN_DIRECTORY)
-        # chdir('fake')
         sysPath.append(getcwd())
         ioPlugs: List[str] = glob("Io*.py")
         toPlugs: List[str] = glob("To*.py")
@@ -159,14 +157,3 @@ class PluginManager(Singleton):
         else:
             chdir("../")
             cls.findPluginDirectory()
-
-#
-#  TODO Put in Unit test
-#
-# def test():
-#     p = PluginManager()
-#     for info in p.getPluginsInfo():
-#         print(info)
-#
-# if __name__ == "__main__": test()
-#
