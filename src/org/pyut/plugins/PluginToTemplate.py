@@ -1,30 +1,26 @@
 
-from org.pyut.general.Mediator import Mediator
-from org.pyut.general.Mediator import getMediator
 
-from plugins.PyutPlugin import PyutPlugin
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 
-class PyutToPlugin(PyutPlugin):
+class PluginName(PyutToPlugin):
     """
-    Note : to merge with my PyutToPlugin
+    Sample class for tool plugin.
     @author C.Dutoit <dutoitc@hotmail.com>
-    @version $Revision: 1.5 $
+    @version $Revision: 1.4 $
     """
-    def __init__(self, umlObjects, umlFrame):
+    def __init__(self, oglObjects, umlFrame):
         """
         Constructor.
 
-        @param umlObjects : list of uml objects
-        @param umlFrame : the umlframe of pyut
+        @param OglObject oglObjects : list of ogl objects
+        @param UmlFrame umlFrame : the umlframe of pyut
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        super().__init__(umlFrame=umlFrame, ctrl=Mediator())
-        self._umlObjects = umlObjects
-        self._umlFrame = umlFrame
+        PyutToPlugin.__init__(self, oglObjects, umlFrame)
 
-    def getName(self) -> str:
+    def getName(self):
         """
         This method returns the name of the plugin.
 
@@ -32,9 +28,9 @@ class PyutToPlugin(PyutPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        return "Unnamed tool plugin"
+        return "No name"
 
-    def getAuthor(self) -> str:
+    def getAuthor(self):
         """
         This method returns the author of the plugin.
 
@@ -42,9 +38,9 @@ class PyutToPlugin(PyutPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
-        return "anonymous"
+        return "No author"
 
-    def getVersion(self) -> str:
+    def getVersion(self):
         """
         This method returns the version of the plugin.
 
@@ -54,7 +50,7 @@ class PyutToPlugin(PyutPlugin):
         """
         return "0.0"
 
-    def getMenuTitle(self) -> str:
+    def getMenuTitle(self):
         """
         Return a menu title string
 
@@ -65,7 +61,7 @@ class PyutToPlugin(PyutPlugin):
         # Return the menu title as it must be displayed
         return "Untitled plugin"
 
-    def setOptions(self) -> bool:
+    def setOptions(self):
         """
         Prepare the import.
         This can be used to ask some questions to the user.
@@ -75,17 +71,6 @@ class PyutToPlugin(PyutPlugin):
         @since 1.0
         """
         return True
-
-    def callDoAction(self):
-        """
-        This is used internally, don't overload it.
-
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
-        """
-        if not self.setOptions():
-            return
-        self.doAction(self._umlObjects, getMediator().getSelectedShapes(), self._umlFrame)
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """

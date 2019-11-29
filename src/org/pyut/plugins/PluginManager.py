@@ -10,16 +10,20 @@ from os import chdir
 from os import getcwd
 from os import path as osPath
 from os import sep as osSep
+from os import walk as osWalk
 
 from sys import path as sysPath
 
+from org.pyut.PyutUtils import PyutUtils
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
+from org.pyut.errorcontroller.PyutException import PyutExeption
+
 from org.pyut.general.Singleton import Singleton
 
 
 class PluginManager(Singleton):
 
-    PLUGIN_DIRECTORY = "plugins"
+    PLUGIN_DIRECTORY = f"org{osSep}pyut{osSep}plugins"
 
     """
     Interface between the application and the plugins.
@@ -51,7 +55,7 @@ class PluginManager(Singleton):
         saveDir = getcwd()
         self.logger.info(f'Save Directory: {saveDir}')
         PluginManager.findPluginDirectory()
-        chdir(PluginManager.PLUGIN_DIRECTORY)
+        # chdir(PluginManager.PLUGIN_DIRECTORY)
         sysPath.append(getcwd())
         ioPlugs: List[str] = glob("Io*.py")
         toPlugs: List[str] = glob("To*.py")
@@ -151,9 +155,14 @@ class PluginManager(Singleton):
     @classmethod
     def findPluginDirectory(cls):
         """"""
-        path = getcwd()
-        if osPath.isdir(f'{path}{osSep}{PluginManager.PLUGIN_DIRECTORY}'):
-            return
-        else:
-            chdir("../")
-            cls.findPluginDirectory()
+        path = PyutUtils.getBasePath()
+        for dirpath, dirnames, filenames in osWalk(path):
+            for potentialDir in dirnames:
+                fqn: str = f'{path}{osSep}{potentialDir}{osSep}{PluginManager.PLUGIN_DIRECTORY}'
+                if osPath.isdir(fqn):
+                    chdir(fqn)
+                    return
+        raise PyutExeption('Can not find plugins directory')
+        # else:
+        #     chdir("../")
+        #     cls.findPluginDirectory()

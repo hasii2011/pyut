@@ -4,7 +4,7 @@ from typing import cast
 
 from org.pyut.general.Mediator import getMediator
 
-from plugins.PyutPlugin import PyutPlugin
+from org.pyut.plugins.PyutPlugin import PyutPlugin
 
 
 class PyutIoPlugin(PyutPlugin):

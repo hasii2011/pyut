@@ -10,8 +10,8 @@ from wx import ID_OK
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
-from plugins.PyutToPlugin import PyutToPlugin
-from plugins.DlgFEOptions import DlgFEOptions
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.DlgFEOptions import DlgFEOptions
 
 from org.pyut.ogl.OglObject import OglObject
 

@@ -1,5 +1,5 @@
 
-from plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 
 class PluginName(PyutIoPlugin):

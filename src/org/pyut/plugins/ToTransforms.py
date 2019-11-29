@@ -4,7 +4,7 @@ from logging import getLogger
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
-from plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 
 class ToTransforms(PyutToPlugin):

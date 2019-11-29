@@ -15,8 +15,8 @@ from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutField import PyutField
 
-from plugins.PluginAst import FieldExtractor
-from plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.PluginAst import FieldExtractor
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.PyutUtils import PyutUtils
 

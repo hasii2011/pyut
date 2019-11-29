@@ -1,6 +1,6 @@
 
 
-from plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 from org.pyut.ogl.OglClass import OglClass
 
 

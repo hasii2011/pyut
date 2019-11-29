@@ -3,7 +3,7 @@ from typing import Tuple
 
 from wx import Yield as wxYield
 
-from plugins.sugiyama.SugiyamaNode import SugiyamaNode
+from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
 
 from org.pyut.general.Globals import cmp
 

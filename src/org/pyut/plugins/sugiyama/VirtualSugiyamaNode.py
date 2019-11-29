@@ -1,5 +1,5 @@
 
-from plugins.sugiyama.SugiyamaNode import SugiyamaNode
+from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
 
 
 class VirtualSugiyamaNode(SugiyamaNode):

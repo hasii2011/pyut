@@ -12,7 +12,7 @@ from ast import iter_child_nodes
 
 from tests.TestBase import TestBase
 
-from plugins.PluginAst import Visitor
+from org.pyut.plugins.PluginAst import Visitor
 
 
 class TestAst(TestBase):

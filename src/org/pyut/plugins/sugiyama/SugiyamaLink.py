@@ -1,6 +1,6 @@
 
-from plugins.sugiyama.ALayoutLink import ALayoutLink
-from plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
+from org.pyut.plugins.sugiyama import ALayoutLink
+from org.pyut.plugins.sugiyama import VirtualSugiyamaNode
 
 # Miniogl import
 from MiniOgl.ControlPoint import ControlPoint

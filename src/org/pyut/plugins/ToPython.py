@@ -14,14 +14,14 @@ import importlib
 
 import wx
 
-from plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
-from plugins.IoPython import IoPython
+from org.pyut.plugins.IoPython import IoPython
 
 from org.pyut.general.Mediator import getMediator
 

@@ -4,7 +4,7 @@ from logging import getLogger
 
 from xml.dom.minidom import parse
 
-from plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutType import PyutType

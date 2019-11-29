@@ -17,7 +17,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutClass import PyutClass
 
-from plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 
 class IoXmi_OMG(PyutIoPlugin):

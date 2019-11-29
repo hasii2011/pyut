@@ -8,8 +8,8 @@ from wx import YES
 from wx import YES_NO
 from wx import CANCEL
 
-from plugins.PyutXmi import PyutXmi
-from plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.PyutXmi import PyutXmi
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.persistence.PyutXml import PyutXml
 

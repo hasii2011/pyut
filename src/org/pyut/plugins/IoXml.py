@@ -9,7 +9,7 @@ from wx import MessageBox
 from wx import YES
 from wx import YES_NO
 
-from plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.general.PyutXmfFinder import PyutXmlFinder
 

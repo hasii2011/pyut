@@ -1,15 +1,15 @@
 
-from plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
-from plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
-from plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
+from org.pyut.plugins.sugiyama import RealSugiyamaNode
+from org.pyut.plugins.sugiyama import VirtualSugiyamaNode
 
-from plugins.sugiyama.SugiyamaLink import SugiyamaLink
+from org.pyut.plugins.sugiyama import SugiyamaLink
 
-from plugins.sugiyama.SugiyamaConstants import UP_MARGIN
-from plugins.sugiyama.SugiyamaConstants import H_SPACE
-from plugins.sugiyama.SugiyamaConstants import V_SPACE
-from plugins.sugiyama.SugiyamaConstants import LEFT_MARGIN
+from org.pyut.plugins.sugiyama.SugiyamaConstants import UP_MARGIN
+from org.pyut.plugins.sugiyama.SugiyamaConstants import H_SPACE
+from org.pyut.plugins.sugiyama.SugiyamaConstants import V_SPACE
+from org.pyut.plugins.sugiyama.SugiyamaConstants import LEFT_MARGIN
 
 from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import OglInterface
@@ -18,7 +18,7 @@ from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.enums.OglLinkType import OglLinkType
 
-from plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
+from org.pyut.plugins.sugiyama import SugiyamGlobals
 
 
 class ToSugiyama(PyutToPlugin):

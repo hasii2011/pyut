@@ -10,7 +10,7 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.enums.OglLinkType import OglLinkType
 
-from plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.general.Globals import _
 

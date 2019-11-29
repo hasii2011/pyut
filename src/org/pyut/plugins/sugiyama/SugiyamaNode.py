@@ -1,6 +1,6 @@
 
 
-from plugins.sugiyama.SugiyamaConstants import H_SPACE
+from org.pyut.plugins.sugiyama import H_SPACE
 
 
 class SugiyamaNode:

@@ -1,8 +1,8 @@
 
-from plugins.sugiyama.SugiyamaNode import SugiyamaNode
-from plugins.sugiyama.ALayoutNode import ALayoutNode
+from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
+from org.pyut.plugins.sugiyama import ALayoutNode
 
-from plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
+from org.pyut.plugins.sugiyama import SugiyamGlobals
 
 
 class RealSugiyamaNode(SugiyamaNode):

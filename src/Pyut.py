@@ -101,24 +101,25 @@ def main():
     app.MainLoop()
 
 
-def treatArguments():
+def treatArguments() -> bool:
     """
-    Treat arguments, display helps, ...
+    Treat arguments, display help, ...
 
     @since 1.5.2.15
     @author C.Dutoit
-    @return 1 if an arguments was found and PyUt must be stopped
+
+    @return True if an arguments was found and PyUt must be stopped
     """
 
     # Exit if no arguments
     if len(argv) < 2:
-        return 0
+        return False
 
     # Treat command line arguments
     if argv[1] == "--version":
         print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
         print()
-        return 1
+        return True
     elif argv[1] == "--help":
         print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
         print("Syntax : pyut.pyw [filename] [--version] [--help] [--start_directory=xxx] file1 file2 ...")
@@ -129,14 +130,14 @@ def treatArguments():
         print("          pyut.pyw --start_directory=/   start with '/' as")
         print("                                         default directory")
         print()
-        return 1
+        return True
     for param in argv[1:]:
         if param[:18] == "--start_directory=":
 
-            moduleLogger.info("Starting with directory ", param[18:])
+            moduleLogger.info(f'Starting with default directory: {param[18:]}')
             global userPath
             userPath = param[18:]
-    return 0
+    return False
 
 
 # Program entry point
@@ -159,5 +160,5 @@ if __name__ == "__main__":
     moduleLogger.info(f'basePath: {PyutUtils.getBasePath()}')
 
     # Launch pyut
-    if treatArguments() != 1:
+    if treatArguments() is not True:
         main()

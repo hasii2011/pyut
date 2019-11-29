@@ -5,7 +5,7 @@ from logging import getLogger
 
 from org.pyut.ogl.OglLink import OglLink
 
-from plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 
 class ToArrangeLinks(PyutToPlugin):

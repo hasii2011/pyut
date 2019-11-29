@@ -1,7 +1,7 @@
 
 from org.pyut.enums.OglLinkType import OglLinkType
 
-from plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 
