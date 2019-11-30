@@ -26,91 +26,15 @@ from org.pyut.general.Lang import importLanguage as setupPyutLanguage
 JSON_LOGGING_CONFIG_FILENAME = "loggingConfiguration.json"
 MADE_UP_PRETTY_MAIN_NAME     = "Pyut"
 
-exePath  = None          # the pyut's path
 userPath = getcwd()      # where the user launched pyut from
 moduleLogger: Logger = cast(Logger, None)
 
 
-def getExePath():
+def handlCommandLineArguments() -> bool:
     """
-    Return the absolute path currently used
+    Handle command line arguments, display help, ...
 
-    @return string the path
-    @since 1.5.2.19
-    @author C.Dutoit
-    """
-    # TODO : fix this bug : unhandled after py2exe, on windows
-    # encoding = sys.getfilesystemencoding()
-    # if encoding in ["mbcs"]:
-        # encoding="ISO-8859-1"
-    # path = sys.path[0].decode(encoding)
-    # path = sys.path[0].decode(sys.getfilesystemencoding())
-    absPath = sysPath[0]
-    return absPath
-
-
-def main():
-    """
-    main pyut function; create and run app
-    """
-
-    global exePath, userPath, moduleLogger
-
-    # # Path
-    # try:
-    #     sysPath.append(exePath)
-    #     chdir(exePath)
-    # except OSError as msg:
-    #     moduleLogger.error(f"Error while setting path: {msg}")
-
-    # Define last open directory ?
-    #  - default is current directory
-    #  - last opened directory for developers (pyut/src present)
-    # prefs = PyutPreferences()    # Prefs handler
-    # prefs["orgDirectory"] = getcwd()
-    # if (userPath.find('pyut/src') == -1) and (userPath.find('pyut2/src') == -1):
-    #     # (User-mode)
-    #     prefs["LastDirectory"] = userPath
-    # del prefs
-    # TODO: move this to an external file avoid have to account for invalid escape sequences
-#     print("""
-#                                ...
-#                               /   \\
-#                        °ooO  | O O |  Ooo°
-# =============================================================================
-#                        _____       _    _ _
-#                       |  __ \\    | |  | | |
-#                       | |__) |   _| |  | | |_
-#                       |  ___/ | | | |  | | __|
-#                       | |   | |_| | |__| | |_
-#                       |_|    \\_, |\____/ \_ |
-#                               __/ |
-#                              |___/    A little UML 1.4 editor
-#
-#
-#     """)
-#     print("Versions found : ")
-#     import wx
-#     import sys
-#     print("WX     ", wx.__version__)
-#     print("Python ", sys.version.split(" ")[0])
-#
-#     print("""
-# =============================================================================
-# """)
-
-    # app = PyutApp(redirect=False)
-    # app.MainLoop()
-
-
-def treatArguments() -> bool:
-    """
-    Treat arguments, display help, ...
-
-    @since 1.5.2.15
-    @author C.Dutoit
-
-    @return True if an arguments was found and PyUt must be stopped
+    @return True if arguments were found and handled (means no startup)
     """
 
     # Exit if no arguments
@@ -119,7 +43,7 @@ def treatArguments() -> bool:
 
     # Treat command line arguments
     if argv[1] == "--version":
-        print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
+        print(f"PyUt version {PyutVersion.getPyUtVersion()}")
         print()
         return True
     elif argv[1] == "--help":
@@ -218,11 +142,9 @@ if __name__ == "__main__":
 
     pyut2: Pyut2 = Pyut2()
 
-    # exePath = getExePath()
-    # PyutUtils.setBasePath(exePath)
     moduleLogger.info(f'basePath: {PyutUtils.getBasePath()}')
 
     # Launch pyut
-    if treatArguments() is not True:
+    if handlCommandLineArguments() is not True:
         pyut2.startApp()
         # main()
