@@ -43,6 +43,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "Pyut2": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "PyutPreferences": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
