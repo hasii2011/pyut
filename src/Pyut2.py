@@ -26,67 +26,49 @@ from org.pyut.general.Lang import importLanguage as setupPyutLanguage
 JSON_LOGGING_CONFIG_FILENAME = "loggingConfiguration.json"
 MADE_UP_PRETTY_MAIN_NAME     = "Pyut"
 
-userPath = getcwd()      # where the user launched pyut from
 moduleLogger: Logger = cast(Logger, None)
 
 
-def setupSystemLogging():
-
-    global moduleLogger
-
-    with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
-        configurationDictionary = json.load(loggingConfigurationFile)
-
-    logging.config.dictConfig(configurationDictionary)
-    logging.logProcesses = False
-    logging.logThreads   = False
-
-    moduleLogger = getLogger(MADE_UP_PRETTY_MAIN_NAME)
-
-
-def handlCommandLineArguments() -> bool:
-    """
-    Handle command line arguments, display help, ...
-
-    @return True if arguments were found and handled (means no startup)
-    """
-
-    # Exit if no arguments
-    if len(argv) < 2:
-        return False
-
-    # Treat command line arguments
-    if argv[1] == "--version":
-        print(f"PyUt version {PyutVersion.getPyUtVersion()}")
-        print()
-        return True
-    elif argv[1] == "--help":
-        print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
-        print("Syntax : pyut.pyw [filename] [--version] [--help] [--start_directory=xxx] file1 file2 ...")
-        print()
-        print("i.e. :    pyut.pyw --version             display version number")
-        print("          pyut.pyw --help                display this help")
-        print("          pyut.pyw file1 file2           load files")
-        print("          pyut.pyw --start_directory=/   start with '/' as")
-        print("                                         default directory")
-        print()
-        return True
-    for param in argv[1:]:
-        if param[:18] == "--start_directory=":
-
-            moduleLogger.info(f'Starting with default directory: {param[18:]}')
-            global userPath
-            userPath = param[18:]
-    return False
+# def setupSystemLogging():
+#
+#     global moduleLogger
+#
+#     with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
+#         configurationDictionary = json.load(loggingConfigurationFile)
+#
+#     logging.config.dictConfig(configurationDictionary)
+#     logging.logProcesses = False
+#     logging.logThreads   = False
+#
+#     moduleLogger = getLogger(MADE_UP_PRETTY_MAIN_NAME)
 
 
 class Pyut2:
     def __init__(self):
+        self._setupSystemLogging()
         self.logger: Logger = getLogger('Pyut2')
         setupPyutLanguage()
 
-        self._exePath = self._getExePath()
+        self._exePath:  str = self._getExePath()
+        self._userPath: str = getcwd()      # where the user launched pyut from
         PyutUtils.setBasePath(self._exePath)
+
+    def getUserPath(self) -> str:
+        return self._userPath
+
+    def setUserPath(self, theNewValue: str):
+        self._userPath = theNewValue
+
+    userPath = property(getUserPath, setUserPath)
+
+    def _setupSystemLogging(self):
+
+        with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
+            configurationDictionary = json.load(loggingConfigurationFile)
+
+        logging.config.dictConfig(configurationDictionary)
+        logging.logProcesses = False
+        logging.logThreads = False
 
     def startApp(self):
         self._setOurSysPath()
@@ -117,12 +99,11 @@ class Pyut2:
         """
         prefs: PyutPreferences = PyutPreferences()    # Prefs handler
         prefs["orgDirectory"] = getcwd()
-        if (userPath.find('pyut/src') == -1) and (userPath.find('pyut2/src') == -1):
+        if (self._userPath.find('pyut/src') == -1) and (self._userPath.find('pyut2/src') == -1):
 
-            self.logger.info(f'userPath: {userPath}')
-            prefs["LastDirectory"] = userPath
+            self.logger.debug(f'self._userPath: {self._userPath}')
+            prefs["LastDirectory"] = self._userPath
             self.logger.debug(f'prefs: {prefs}')
-        del prefs
 
     def _displayIntro(self):
 
@@ -140,17 +121,47 @@ class Pyut2:
         print(" =============================================================================")
 
 
+def handlCommandLineArguments(pyut: Pyut2) -> bool:
+    """
+    Handle command line arguments, display help, ...
+
+    @return True if arguments were found and handled (means no startup)
+    """
+    # Exit if no arguments
+    if len(argv) < 2:
+        return False
+
+    # Treat command line arguments
+    if argv[1] == "--version":
+        print(f"PyUt version {PyutVersion.getPyUtVersion()}")
+        print()
+        return True
+    elif argv[1] == "--help":
+        print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
+        print("Syntax : pyut.pyw [filename] [--version] [--help] [--start_directory=xxx] file1 file2 ...")
+        print()
+        print("i.e. :    pyut.pyw --version             display version number")
+        print("          pyut.pyw --help                display this help")
+        print("          pyut.pyw file1 file2           load files")
+        print("          pyut.pyw --start_directory=/   start with '/' as")
+        print("                                         default directory")
+        print()
+        return True
+    for param in argv[1:]:
+        if param[:18] == "--start_directory=":
+            print(f'Starting with default directory: {param[18:]}')
+            pyut.setUserPath(param[18:])
+    return False
+
+
 # Program entry point
 if __name__ == "__main__":
 
-    setupSystemLogging()
-    moduleLogger.info(f"Starting {MADE_UP_PRETTY_MAIN_NAME}")
+    # setupSystemLogging()
+    print(f"Starting {MADE_UP_PRETTY_MAIN_NAME}")
 
     pyut2: Pyut2 = Pyut2()
 
-    moduleLogger.info(f'basePath: {PyutUtils.getBasePath()}')
-
     # Launch pyut
-    if handlCommandLineArguments() is not True:
+    if handlCommandLineArguments(pyut=pyut2) is not True:
         pyut2.startApp()
-        # main()

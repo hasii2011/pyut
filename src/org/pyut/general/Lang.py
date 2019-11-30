@@ -39,7 +39,7 @@ def importLanguage():
         language = DEFAULT_LANG
 
     # Set language for all application
-    moduleLogger.info(f'Installing language <{language}>')
+    moduleLogger.debug(f'Installing language <{language}>')
     try:
         # Latest test 20050308
         # langid=wx.LANGUAGE_CHINESE_TRADITIONAL

@@ -148,7 +148,7 @@ class PyutPreferences(Singleton):
                 self._config.set(OPENED_FILES_SECTION, "File" + str(i + 1), "")
             self.__saveConfig()
         else:
-            self.logger.info(f'Found all my preferences sections.')
+            self.logger.debug(f'Found all my preferences sections.')
 
     def getNbLOF(self):
         """
