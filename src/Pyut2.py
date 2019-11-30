@@ -30,6 +30,20 @@ userPath = getcwd()      # where the user launched pyut from
 moduleLogger: Logger = cast(Logger, None)
 
 
+def setupSystemLogging():
+
+    global moduleLogger
+
+    with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
+        configurationDictionary = json.load(loggingConfigurationFile)
+
+    logging.config.dictConfig(configurationDictionary)
+    logging.logProcesses = False
+    logging.logThreads   = False
+
+    moduleLogger = getLogger(MADE_UP_PRETTY_MAIN_NAME)
+
+
 def handlCommandLineArguments() -> bool:
     """
     Handle command line arguments, display help, ...
@@ -129,15 +143,7 @@ class Pyut2:
 # Program entry point
 if __name__ == "__main__":
 
-    with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
-        configurationDictionary = json.load(loggingConfigurationFile)
-
-    logging.config.dictConfig(configurationDictionary)
-    logging.logProcesses = False
-    logging.logThreads   = False
-
-    moduleLogger = getLogger(MADE_UP_PRETTY_MAIN_NAME)
-
+    setupSystemLogging()
     moduleLogger.info(f"Starting {MADE_UP_PRETTY_MAIN_NAME}")
 
     pyut2: Pyut2 = Pyut2()
