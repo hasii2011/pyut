@@ -1,6 +1,6 @@
 
-from org.pyut.plugins.sugiyama import ALayoutLink
-from org.pyut.plugins.sugiyama import VirtualSugiyamaNode
+from org.pyut.plugins.sugiyama.ALayoutLink import ALayoutLink
+from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 
 # Miniogl import
 from MiniOgl.ControlPoint import ControlPoint
@@ -40,40 +40,36 @@ class SugiyamaLink(ALayoutLink):
 
         # For all virtual nodes, add control points to pass through
         for vnode in self.__virtualNodes:
-            #~ print "Virtual node"
+            #  ~ print "Virtual node"
             (xvnode, yvnode) = vnode.getPosition()
             # If link goes to up-left
             if x > xvnode:
                 # Find the first real node on the right of the virtual node
                 neighbor = vnode.getRightNode()
-                while isinstance(neighbor, VirtualSugiyamaNode) and \
-                    neighbor is not None:
+                while isinstance(neighbor, VirtualSugiyamaNode) and neighbor is not None:
 
                     # Try next neighbor
                     neighbor = neighbor.getRightNode()
 
                 # If real node found
                 if neighbor is not None:
-                    ctrlPoint = ControlPoint(xvnode,
-                        neighbor.getPosition()[1] + neighbor.getSize()[1])
+                    ctrlPoint = ControlPoint(xvnode, neighbor.getPosition()[1] + neighbor.getSize()[1])
                     self.addControlPoint(ctrlPoint)
 
-            else: # If link goes to up-right
+            else:   # If link goes to up-right
                 # Find the first real node on the left of the virtual node
                 neighbor = vnode.getLeftNode()
-                while isinstance(neighbor, VirtualSugiyamaNode) and \
-                    neighbor is not None:
+                while isinstance(neighbor, VirtualSugiyamaNode) and neighbor is not None:
 
                     # Try next neighbor
                     neighbor = neighbor.getLeftNode()
 
                 # If real node found
                 if neighbor is not None:
-                    ctrlPoint = ControlPoint(xvnode,
-                        neighbor.getPosition()[1] + neighbor.getSize()[1])
+                    ctrlPoint = ControlPoint(xvnode, neighbor.getPosition()[1] + neighbor.getSize()[1])
                     self.addControlPoint(ctrlPoint)
 
-            ctrlPoint = ControlPoint(xvnode, yvnode)#,self._oglLink)
+            ctrlPoint = ControlPoint(xvnode, yvnode)
             self.addControlPoint(ctrlPoint)
 
     def addVirtualNode(self, node):

@@ -111,7 +111,7 @@ class PyutPreferences(Singleton):
 
     def __loadConfig(self):
         """
-        Load datas from config file
+        Load data from config file
 
         @since 1.1.2.5
         @author C.Dutoit <dutoitc@hotmail.com>

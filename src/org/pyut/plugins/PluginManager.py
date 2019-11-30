@@ -146,7 +146,7 @@ class PluginManager(Singleton):
         """
         retLoadedPlugins: List[type] = []
         for plug in plugInNames:
-            self.logger.info(f"Importing {pluginType} plugin from file {plug}")
+            self.logger.debug(f"Importing {pluginType} plugin from file {plug}")
             module = None
             try:
                 module = __import__(plug)
@@ -156,7 +156,7 @@ class PluginManager(Singleton):
                 self.logger.error(eMsg)
             if module is not None:
                 pluginName: str = f"module.{module.__name__}"
-                self.logger.info(f'Loading {pluginName}')
+                self.logger.debug(f'Loading {pluginName}')
                 cl = eval(pluginName)
                 retLoadedPlugins.append(cl)
         return retLoadedPlugins
