@@ -110,7 +110,7 @@ class Pyut2:
         print(f'Python:   {sys.version.split(" ")[0]}')
 
 
-def handlCommandLineArguments(pyut: Pyut2) -> bool:
+def handleCommandLineArguments(pyut: Pyut2) -> bool:
     """
     Handle command line arguments, display help, ...
 
@@ -145,5 +145,5 @@ if __name__ == "__main__":
     pyut2: Pyut2 = Pyut2()
 
     # Launch pyut
-    if handlCommandLineArguments(pyut=pyut2) is not True:
+    if handleCommandLineArguments(pyut=pyut2) is not True:
         pyut2.startApp()
