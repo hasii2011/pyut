@@ -1,6 +1,4 @@
 
-from typing import cast
-
 from os import chdir
 from os import getcwd
 from sys import path as sysPath
@@ -13,37 +11,22 @@ from logging import getLogger
 
 import logging.config
 
-from pkg_resources import resource_filename
-
-from org.pyut.ui.PyutApp import PyutApp
 from org.pyut.PyutUtils import PyutUtils
-
-from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.PyutPreferences import PyutPreferences
 
+from org.pyut.ui.PyutApp import PyutApp
+
+from org.pyut.enums.ResourceTextType import ResourceTextType
+
 from org.pyut.general.Lang import importLanguage as setupPyutLanguage
-
-JSON_LOGGING_CONFIG_FILENAME = "loggingConfiguration.json"
-MADE_UP_PRETTY_MAIN_NAME     = "Pyut"
-
-moduleLogger: Logger = cast(Logger, None)
-
-
-# def setupSystemLogging():
-#
-#     global moduleLogger
-#
-#     with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
-#         configurationDictionary = json.load(loggingConfigurationFile)
-#
-#     logging.config.dictConfig(configurationDictionary)
-#     logging.logProcesses = False
-#     logging.logThreads   = False
-#
-#     moduleLogger = getLogger(MADE_UP_PRETTY_MAIN_NAME)
+from org.pyut.general.PyutVersion import PyutVersion
 
 
 class Pyut2:
+
+    JSON_LOGGING_CONFIG_FILENAME: str = "loggingConfiguration.json"
+    MADE_UP_PRETTY_MAIN_NAME:     str = "Pyut"
+
     def __init__(self):
         self._setupSystemLogging()
         self.logger: Logger = getLogger('Pyut2')
@@ -63,7 +46,7 @@ class Pyut2:
 
     def _setupSystemLogging(self):
 
-        with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
+        with open(Pyut2.JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
             configurationDictionary = json.load(loggingConfigurationFile)
 
         logging.config.dictConfig(configurationDictionary)
@@ -107,18 +90,24 @@ class Pyut2:
 
     def _displayIntro(self):
 
-        fileName = resource_filename('org.pyut.resources', 'Kilroy-Pyut.txt')
-        self.logger.debug(f'Intro text filename: {fileName}')
-        objRead = open(fileName, 'r')
-        introText: str = objRead.read()
+        introText: str = PyutUtils.retrieveResourceText(ResourceTextType.INTRODUCTION_TEXT_TYPE)
         print(introText)
+        self.displayVersionInformation()
 
-        print("Versions found : ")
+    def displayVersionInformation(self):
         import wx
         import sys
-        print("WX     ", wx.__version__)
-        print("Python ", sys.version.split(" ")[0])
-        print(" =============================================================================")
+        import platform
+
+        print("Versions: ")
+        print(f"PyUt:     {PyutVersion.getPyUtVersion()}")
+        print(f'Platform: {platform.platform()}')
+        print(f'    System:       {platform.system()}')
+        print(f'    Version:      {platform.version()}')
+        print(f'    Release:      {platform.release()}')
+
+        print(f'WxPython: {wx.__version__}')
+        print(f'Python:   {sys.version.split(" ")[0]}')
 
 
 def handlCommandLineArguments(pyut: Pyut2) -> bool:
@@ -133,8 +122,8 @@ def handlCommandLineArguments(pyut: Pyut2) -> bool:
 
     # Treat command line arguments
     if argv[1] == "--version":
-        print(f"PyUt version {PyutVersion.getPyUtVersion()}")
-        print()
+        pyut.displayVersionInformation()
+
         return True
     elif argv[1] == "--help":
         print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
@@ -158,7 +147,7 @@ def handlCommandLineArguments(pyut: Pyut2) -> bool:
 if __name__ == "__main__":
 
     # setupSystemLogging()
-    print(f"Starting {MADE_UP_PRETTY_MAIN_NAME}")
+    print(f"Starting {Pyut2.MADE_UP_PRETTY_MAIN_NAME}")
 
     pyut2: Pyut2 = Pyut2()
 

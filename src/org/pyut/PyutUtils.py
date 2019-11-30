@@ -6,7 +6,11 @@ from logging import getLogger
 
 from os import sep as osSep
 
+from pkg_resources import resource_filename
+
 from wx import NewIdRef as wxNewIdRef
+
+from org.pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.errorcontroller.ErrorManager import getErrorManager
@@ -25,10 +29,15 @@ class PyutUtils:
     STRIP_SRC_PATH_SUFFIX:  str = f'{osSep}src'
     STRIP_TEST_PATH_SUFFIX: str = f'{osSep}test'
 
+    RESOURCES_PACKAGE_NAME: str = 'org.pyut.resources'
+
     _basePath: str = ''
 
+    clsLogger: Logger = getLogger(__name__)
+
     def __init__(self):
-        self.logger: Logger = getLogger(__name__)
+
+        PyutUtils.logger    = getLogger(__name__)
 
     @staticmethod
     def displayInformation(msg, title=None, parent=None):
@@ -113,3 +122,25 @@ class PyutUtils:
             retPath: str = originalPath
 
         return retPath
+
+    @classmethod
+    def retrieveResourceText(cls, textType: ResourceTextType) -> str:
+        """
+        Look up and retrieve the text associated with the resource type
+
+        Args:
+            textType:  The text type from the 'well known' list
+
+        Returns:  A long string
+        """
+        textFileName = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, textType.value)
+        cls.clsLogger.debug(f'text filename: {textFileName}')
+
+        objRead = open(textFileName, 'r')
+
+        requestedText: str = objRead.read()
+
+        objRead.close()
+
+        return requestedText
+

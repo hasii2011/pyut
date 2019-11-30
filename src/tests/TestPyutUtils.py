@@ -7,6 +7,7 @@ from unittest import main as unitTestMain
 from tests.TestBase import TestBase
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.enums.ResourceTextType import ResourceTextType
 
 
 class TestPyutUtils(TestBase):
@@ -31,6 +32,15 @@ class TestPyutUtils(TestBase):
         self.assertIsNotNone(Test_Id1, 'Test_Id1 - Should not be None')
         self.assertIsNotNone(Test_Id2, 'Test_Id2 - Should not be None')
         self.assertIsNotNone(Test_Id3, 'Test_Id3 - Should not be None')
+
+    def testRetrieveResourceText(self):
+        txt: str = PyutUtils.retrieveResourceText(ResourceTextType.INTRODUCTION_TEXT_TYPE)
+
+        self.assertIsNotNone(txt, 'Oh, where oh where is my text.')
+
+        actualLength:      int = len(txt)
+        notExpectedLength: int = 0
+        self.assertNotEqual(actualLength, notExpectedLength, "Who emptied my text file?")
 
     def testBasicBasePath(self):
         basicPath: str = TestPyutUtils.BASE_TEST_PATH
