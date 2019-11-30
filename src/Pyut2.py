@@ -123,18 +123,11 @@ def handlCommandLineArguments(pyut: Pyut2) -> bool:
     # Treat command line arguments
     if argv[1] == "--version":
         pyut.displayVersionInformation()
-
         return True
     elif argv[1] == "--help":
         print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
-        print("Syntax : pyut.pyw [filename] [--version] [--help] [--start_directory=xxx] file1 file2 ...")
-        print()
-        print("i.e. :    pyut.pyw --version             display version number")
-        print("          pyut.pyw --help                display this help")
-        print("          pyut.pyw file1 file2           load files")
-        print("          pyut.pyw --start_directory=/   start with '/' as")
-        print("                                         default directory")
-        print()
+        helpText: str = PyutUtils.retrieveResourceText(ResourceTextType.HELP_TEXT_TYPE)
+        print(helpText)
         return True
     for param in argv[1:]:
         if param[:18] == "--start_directory=":
