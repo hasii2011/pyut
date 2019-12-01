@@ -2,12 +2,9 @@
 from logging import Logger
 from logging import getLogger
 
-from os import sep as osSep
-
 from pkg_resources import resource_filename
 
-# Todo : change font;  or find a way to not print each character one after the
-#        other (not pretty, with, for eg : WiiW)
+# Todo : change font;  or find a way to not print each character one after the other (not pretty, with, for eg : WiiW)
 from wx import ALIGN_CENTER
 from wx import ALL
 from wx import BITMAP_TYPE_BMP
@@ -48,6 +45,7 @@ from org.pyut.general.Globals import IMG_PKG
 
 # Constants
 [ID_OK] = PyutUtils.assignID(1)
+
 FrameWidth  = 400       # Canvas width
 FrameHeight = 300       # and height
 x0 = 20                 # Initial x
@@ -303,7 +301,10 @@ class DlgAbout(Dialog):
         super().__init__(parent, ID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
 
         self.logger: Logger = getLogger(__name__)
-        icon = Icon(f'img{osSep}pyut.ico', BITMAP_TYPE_ICO)
+
+        iconFileName: str = resource_filename(IMG_PKG, 'pyut.ico')
+        # icon = Icon(f'img{osSep}pyut.ico', BITMAP_TYPE_ICO)
+        icon = Icon(iconFileName, BITMAP_TYPE_ICO)
 
         self.SetIcon(icon)
         self.Center(BOTH)
