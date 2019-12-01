@@ -3,6 +3,8 @@ from os import getcwd
 from os import path as osPath
 from os import sep as osSeparator
 
+from pkg_resources import resource_filename
+
 from wx import ALL
 from wx import BOTH
 from wx import BOTTOM
@@ -32,6 +34,8 @@ from org.pyut.general.Globals import _
 
 
 class DlgHelp(Dialog):
+
+    HELP_PKG_NAME: str = 'help'
     """
     Pyut help dialog frame. Used to show help and navigate through it.
 
@@ -57,10 +61,9 @@ class DlgHelp(Dialog):
         self.Center(BOTH)
 
         self.html = HtmlWindow(self, -1, DefaultPosition, Size(720, 520))
-        #
-        # TODO Change this to load as a resource
-        #
-        self.html.LoadPage(getcwd() + osSeparator + "help" + osSeparator + "index.html")
+
+        htmlFileName = resource_filename(DlgHelp.HELP_PKG_NAME, 'index.html')
+        self.html.LoadPage(htmlFileName)
 
         self.printer = HtmlEasyPrinting()
 

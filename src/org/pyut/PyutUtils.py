@@ -143,4 +143,3 @@ class PyutUtils:
         objRead.close()
 
         return requestedText
-
