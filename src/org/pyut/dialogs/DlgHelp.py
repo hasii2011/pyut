@@ -1,7 +1,6 @@
 
 from os import getcwd
 from os import path as osPath
-from os import sep as osSeparator
 
 from pkg_resources import resource_filename
 
