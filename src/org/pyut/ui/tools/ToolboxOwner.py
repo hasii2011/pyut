@@ -1,5 +1,5 @@
 
-from org.pyut.ui.Toolbox import Toolbox
+from org.pyut.ui.tools.Toolbox import Toolbox
 
 # TODO : add observer-observable model to support dynamic plugins
 

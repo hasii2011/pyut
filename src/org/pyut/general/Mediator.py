@@ -36,7 +36,7 @@ from org.pyut.dialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.DlgEditLink import DlgEditLink
 
-from org.pyut.ui.ToolboxOwner import ToolboxOwner
+from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
 from org.pyut.general.Globals import _
 

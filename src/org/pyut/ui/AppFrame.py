@@ -83,7 +83,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.PyutPrintout import PyutPrintout
-from org.pyut.ui.Tool import Tool
+from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.TipsFrame import TipsFrame
 
 from org.pyut.general.Globals import _
