@@ -69,10 +69,6 @@ class DlgAbout(Dialog):
         dlg=DlgAbout(self, -1, "")
         dlg.ShowModal()
         dlg.Destroy()
-
-    :author: C.Dutoit
-    :contact: <dutoitc@hotmail.com>
-    :version: $Revision: 1.12 $
     """
     def __init__(self, parent, ID, title):
         """
@@ -81,8 +77,6 @@ class DlgAbout(Dialog):
         @param  parent : parent window
         @param ID : wx ID of this frame
         @param  title : Title to display
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         super().__init__(parent, ID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
 
@@ -133,8 +127,6 @@ class DlgAbout(Dialog):
         """
         _onOk : Handle user click on the OK button
 
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         import time
         # Halt task
@@ -150,8 +142,6 @@ class DlgAbout(Dialog):
         """
         Display this box as modal box
 
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._thread.Start()
         Dialog.ShowModal(self)
@@ -160,9 +150,6 @@ class DlgAbout(Dialog):
     def OnPanelUpdate(self, evt):
         """
         Update panel.
-
-        @since 1.1.2.4
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._panel.Refresh(False)
 
@@ -171,8 +158,6 @@ class DlgAbout(Dialog):
         """
         Refresh dialog box
 
-        @since 1.1.2.4
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         import time
         # constants
@@ -239,8 +224,6 @@ class AboutDialogThread:
         """
         Thread constructor.
 
-        @since 1.1.2.5
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         # Init
         self.logger: Logger = getLogger('AboutDialogThread')
@@ -256,17 +239,12 @@ class AboutDialogThread:
         """
         Return current position
 
-        @since 1.1.2.5
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         return self._position
 
     def Start(self):
         """
         Start the task.
-
-        @since 1.1.2.5
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._keepGoing = self._running = True
         # thread.start_new_thread(self.Run, ())
@@ -277,27 +255,18 @@ class AboutDialogThread:
     def Stop(self):
         """
         Stop the task.
-
-        @since 1.1.2.5
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._keepGoing = False
 
     def isRunning(self):
         """
         Test if the task is currently running.
-
-        @since 1.1.2.5
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         return self._running
 
     def Run(self):
         """
         main thread, handle text printout
-
-        @since 1.1.2.5
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         import time
         Delay_Unit = 2/100.0   # Delay to wait, in second
