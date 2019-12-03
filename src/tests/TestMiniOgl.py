@@ -4,13 +4,13 @@ from wx import Cursor
 from wx import DEFAULT_FRAME_STYLE
 from wx import Frame
 
-from MiniOgl.DiagramFrame import DiagramFrame
-from MiniOgl.Diagram import Diagram
+from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
+from org.pyut.MiniOgl.Diagram import Diagram
 
-from MiniOgl.PointShape import PointShape
-from MiniOgl.RectangleShape import RectangleShape
-from MiniOgl.AnchorPoint import AnchorPoint
-from MiniOgl.LineShape import LineShape
+from org.pyut.MiniOgl.PointShape import PointShape
+from org.pyut.MiniOgl.RectangleShape import RectangleShape
+from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
+from org.pyut.MiniOgl.LineShape import LineShape
 
 
 class TestMiniOglApp(App):

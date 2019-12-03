@@ -9,8 +9,8 @@ from wx import ID_OK
 from wx import OK
 from wx import TextEntryDialog
 
-from MiniOgl.LineShape import LineShape
-from MiniOgl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.MiniOgl.LineShape import LineShape
+from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.general.Globals import _
 

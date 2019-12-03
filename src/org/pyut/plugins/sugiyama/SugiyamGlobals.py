@@ -11,14 +11,19 @@ from org.pyut.general.Globals import cmp
 class SugiyamGlobals:
 
     @staticmethod
-    # Internal comparison funtion for sorting list of fathers or sons on index.
     # def cmpIndex(l, r):
     #     def cmp(left, right):
     #         return (left > right) - (left < right)
     #
     #     return cmp(l[0].getIndex(), r[0].getIndex())
     def cmpIndex(aTuple: Tuple):
+        """
+        Internal comparison funtion for sorting list of fathers or sons on index.
 
+        Args:
+            aTuple:
+        Returns:
+        """
         sugiNode: SugiyamaNode = aTuple[0]
         l: SugiyamaNode = sugiNode.getLeftNode()
         r: SugiyamaNode = sugiNode.getRightNode()
@@ -27,16 +32,7 @@ class SugiyamGlobals:
             return 0
         else:
             return cmp(l.getIndex(), r.getIndex())
-    # def cmpBarycenter(xNode, yNode) -> bool:
-    #     """
-    #     Comparison function on barycenter value
-    #     Args:
-    #         xNode:
-    #         yNode:
-    #
-    #     Returns:
-    #     """
-    #     return cmp(xNode.getBarycenter(), yNode.getBarycenter())
+
     @staticmethod
     def cmpBarycenter(theNode: SugiyamaNode) -> int:
         """

@@ -7,12 +7,12 @@ from logging import getLogger
 
 import wx
 
-from MiniOgl import Shape
-from MiniOgl.Diagram import Diagram
-from MiniOgl.ShapeEventHandler import ShapeEventHandler
-from MiniOgl.SizerShape import SizerShape
-from MiniOgl.ControlPoint import ControlPoint
-from MiniOgl.RectangleShape import RectangleShape
+from org.pyut.MiniOgl import Shape
+from org.pyut.MiniOgl.Diagram import Diagram
+from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.MiniOgl.SizerShape import SizerShape
+from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.MiniOgl.RectangleShape import RectangleShape
 
 LEFT_MARGIN     = 0
 RIGHT_MARGIN    = 1
@@ -367,7 +367,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         self._diagram = diagram
 
-    from MiniOgl.Shape import Shape
+    from org.pyut.MiniOgl.Shape import Shape
 
     def FindShape(self, x: int, y: int):
         """

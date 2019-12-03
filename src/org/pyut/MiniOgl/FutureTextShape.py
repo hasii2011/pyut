@@ -1,17 +1,26 @@
+##########################################################
+# Added by P. Dabrowski (21.11.2005)
+# This is the future TextShape that should replace the
+# actual when pyut will be refactorised (oglClass, ogl...)
+# When it is the case just rename this file as TextShape
+# and remove the ancient version
+##########################################################
 
 import wx
 
-from MiniOgl.RectangleShape import RectangleShape
-from MiniOgl.Shape import Shape
+from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.MiniOgl.RectangleShape import RectangleShape
+from org.pyut.MiniOgl.TextShapeModel import TextShapeModel
 
 
 class TextShape(RectangleShape):
     """
     A text shape that can be attached to another shape (or be standalone).
 
+
     @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, x, y, text, parent=None):
+    def __init__(self, x, y, text, parent=None, font=None):
         """
         Constructor.
 
@@ -26,6 +35,9 @@ class TextShape(RectangleShape):
         self._drawFrame = False
         self._resizable = False
         self._textBack = wx.WHITE    # text background colour
+        # added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (16.11.2005)
+        self._model = TextShapeModel(self)
+        self._font = font
 
     def Attach(self, diagram):
         """
@@ -56,7 +68,7 @@ class TextShape(RectangleShape):
         self._text = text
         self._width, self._height = wx.MemoryDC().GetTextExtent(text)
 
-    def SetTextBackground(self, colour):
+    def SetTextBackground(self, colour: wx.Colour):
         """
         Set the text background color.
 
@@ -72,7 +84,7 @@ class TextShape(RectangleShape):
         """
         return self._textBack
 
-    def Draw(self, dc, withChildren=True):
+    def Draw(self, dc: wx.DC, withChildren: bool = True):
         """
         Draw the text on the dc.
 
@@ -85,11 +97,20 @@ class TextShape(RectangleShape):
             dc.SetBackgroundMode(wx.PENSTYLE_SOLID)
             dc.SetTextBackground(self._textBack)
             x, y = self.GetPosition()
+
+            # added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (16.11.2005)
+            # to draw the textshape with its own font size
+            dcFont = dc.GetFont()
+            if self.GetFont() is not None:
+                dc.SetFont(self.GetFont())
+
             dc.DrawText(self._text, x, y)
+            dc.SetFont(dcFont)
+
             if withChildren:
                 self.DrawChildren(dc)
 
-    def DrawBorder(self, dc):
+    def DrawBorder(self, dc: wx.DC):
         """
         Draw the border of the shape, for fast rendering.
 
@@ -108,10 +129,50 @@ class TextShape(RectangleShape):
         """
         return self._color
 
-    def SetColor(self, color):
+    def SetColor(self, color: wx.Colour):
         """
         Set the color of the text.
 
         @param color
         """
         self._color = color
+
+    def UpdateFromModel(self):
+        """
+        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
+
+        Updates the shape position and size from the model in the light of a
+        change of state of the diagram frame (here it's only for the zoom)
+        """
+
+        # change the position and size of the shape from the model
+        RectangleShape.UpdateFromModel(self)
+
+        # get the diagram frame ratio between the shape and the model
+        ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
+
+        fontSize = self.GetModel().GetFontSize() * ratio
+
+        # set the new font size
+        if self._font is not None:
+            self._font.SetPointSize(fontSize)
+
+    def UpdateModel(self):
+        """
+        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
+
+        Updates the model when the shape (view) is deplaced or resized.
+        """
+        # change the coords and size of model
+        RectangleShape.UpdateModel(self)
+
+        # get the ratio between the model and the shape (view) from
+        # the diagram frame where the shape is displayed.
+        ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
+
+        if self.GetFont() is not None:
+            fontSize = self.GetFont().GetPointSize() / ratio
+            self.GetModel().SetFontSize(fontSize)
+
+    def GetFont(self):
+        return self._font

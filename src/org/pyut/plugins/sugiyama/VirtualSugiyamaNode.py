@@ -15,7 +15,7 @@ class VirtualSugiyamaNode(SugiyamaNode):
         @author Nicolas Dubois
         """
         # Call mother class initialization
-        SugiyamaNode.__init__(self)
+        super().__init__()
 
         # Self fields
         self.__position = (0, 0)

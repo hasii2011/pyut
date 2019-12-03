@@ -1,4 +1,4 @@
-from MiniOgl.Shape import Shape
+from org.pyut.MiniOgl.Shape import Shape
 
 
 class PointShape(Shape):

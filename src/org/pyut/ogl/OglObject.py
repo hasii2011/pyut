@@ -13,8 +13,8 @@ from wx import FONTWEIGHT_NORMAL
 
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Mediator import ACTION_ZOOM_OUT
-from MiniOgl.RectangleShape import RectangleShape
-from MiniOgl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.MiniOgl.RectangleShape import RectangleShape
+from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 DEFAULT_FONT_SIZE = 10
 

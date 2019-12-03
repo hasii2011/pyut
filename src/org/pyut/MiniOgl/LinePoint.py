@@ -1,6 +1,6 @@
 
 
-from MiniOgl.PointShape import PointShape
+from org.pyut.MiniOgl.PointShape import PointShape
 
 
 class LinePoint(PointShape):

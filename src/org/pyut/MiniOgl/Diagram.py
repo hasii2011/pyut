@@ -1,7 +1,5 @@
-
-
-from MiniOgl import Shape
-from MiniOgl import SizerShape
+from org.pyut.MiniOgl import Shape
+from org.pyut.MiniOgl import SizerShape
 
 
 class Diagram(object):

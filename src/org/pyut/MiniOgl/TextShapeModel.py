@@ -1,4 +1,4 @@
-from MiniOgl.RectangleShapeModel import RectangleShapeModel
+from org.pyut.MiniOgl.RectangleShapeModel import RectangleShapeModel
 
 
 class TextShapeModel(RectangleShapeModel):

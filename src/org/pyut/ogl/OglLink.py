@@ -4,8 +4,8 @@ from logging import getLogger
 
 import wx
 
-from MiniOgl.LineShape import LineShape
-from MiniOgl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.MiniOgl.LineShape import LineShape
+from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.PyutLink import PyutLink
 

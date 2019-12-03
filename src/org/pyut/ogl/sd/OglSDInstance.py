@@ -12,11 +12,11 @@ from wx import Pen
 
 from wx import TextEntryDialog
 
-from MiniOgl.AnchorPoint import AnchorPoint
-from MiniOgl.LineShape import LineShape
-from MiniOgl.RectangleShape import RectangleShape
-from MiniOgl.TextShape import TextShape
-from MiniOgl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
+from org.pyut.MiniOgl.LineShape import LineShape
+from org.pyut.MiniOgl.RectangleShape import RectangleShape
+from org.pyut.MiniOgl.TextShape import TextShape
+from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.ogl.OglObject import OglObject
 

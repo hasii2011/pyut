@@ -1,10 +1,10 @@
 
 from wx import DC
 
-from MiniOgl.Shape import Shape
-from MiniOgl.MiniOglUtils import sign
-from MiniOgl.SizerShape import SizerShape
-from MiniOgl.RectangleShapeModel import RectangleShapeModel
+from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.MiniOgl.MiniOglUtils import sign
+from org.pyut.MiniOgl.SizerShape import SizerShape
+from org.pyut.MiniOgl.RectangleShapeModel import RectangleShapeModel
 
 
 class RectangleShape(Shape):

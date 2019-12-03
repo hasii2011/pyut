@@ -6,7 +6,7 @@ from logging import getLogger
 from logging import DEBUG as pythonDebugLoggingLevel
 
 import wx
-from MiniOgl.ShapeModel import ShapeModel
+from org.pyut.MiniOgl.ShapeModel import ShapeModel
 # from MiniOgl.TextShape import TextShape
 
 
@@ -54,8 +54,8 @@ class Shape:
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
         if self.logger.level == pythonDebugLoggingLevel:
-            from MiniOgl.TextShape import TextShape
-            from MiniOgl.LineShape import LineShape
+            from org.pyut.MiniOgl.TextShape import TextShape
+            from org.pyut.MiniOgl.LineShape import LineShape
             if not isinstance(self, (TextShape, LineShape)):
                 t: Union[TextShape, LineShape] = self.AddText(0, -10, str(self._id))
                 t.SetColor(wx.RED)
@@ -171,7 +171,7 @@ class Shape:
 
         @return AnchorPoint : the created anchor
         """
-        from MiniOgl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
+        from org.pyut.MiniOgl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
 
         if anchorType is None:
             anchorType = AnchorPoint
@@ -247,7 +247,7 @@ class Shape:
 
         @return TextShape : the created shape
         """
-        from MiniOgl.TextShape import TextShape
+        from org.pyut.MiniOgl.TextShape import TextShape
         t = TextShape(x, y, text, self)
         if self._diagram is not None:
             self._diagram.AddShape(t)

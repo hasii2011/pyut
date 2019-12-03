@@ -1,5 +1,5 @@
 
-from MiniOgl.ShapeModel import ShapeModel
+from org.pyut.MiniOgl.ShapeModel import ShapeModel
 
 
 class RectangleShapeModel(ShapeModel):

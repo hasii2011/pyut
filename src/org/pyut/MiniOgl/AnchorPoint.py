@@ -1,6 +1,6 @@
 
 
-from MiniOgl.LinePoint import LinePoint
+from org.pyut.MiniOgl.LinePoint import LinePoint
 
 
 class AnchorPoint(LinePoint):

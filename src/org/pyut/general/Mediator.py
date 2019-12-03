@@ -14,11 +14,11 @@ from wx import KeyEvent
 
 from wx import TextEntryDialog
 
-from MiniOgl.Constants import EVENT_PROCESSED
-from MiniOgl.Constants import SKIP_EVENT
+from org.pyut.MiniOgl.Constants import EVENT_PROCESSED
+from org.pyut.MiniOgl.Constants import SKIP_EVENT
 
-from MiniOgl.LinePoint import LinePoint
-from MiniOgl.ControlPoint import ControlPoint
+from org.pyut.MiniOgl.LinePoint import LinePoint
+from org.pyut.MiniOgl.ControlPoint import ControlPoint
 
 from org.pyut.ogl.OglLink import OglLink
 
