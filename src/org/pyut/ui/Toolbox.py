@@ -194,7 +194,7 @@ class Toolbox(Frame):
         if tool is not None:
             callback = tool.getActionCallback()
             if callback is not None:
-                callback(EventClone(tool.getWXID()))
+                callback(EventClone(tool.getWxId()))
 
     def evtLeftDown(self, event):
         """

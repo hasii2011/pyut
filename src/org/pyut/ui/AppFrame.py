@@ -63,6 +63,7 @@ from wx import Printer
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
+from wx import WindowIDRef
 
 from wx import Yield as wxYield
 
@@ -300,45 +301,50 @@ class AppFrame(Frame):
 
         # Element tools
         toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.embeddedImage.GetBitmap(),
-                         _("Arrow"),      _("Select tool"),
-                         _(_("PyUt tools")),
+                         _("Arrow"),
+                         _("Select tool"),
+                         _("PyUt tools"),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_ARROW, isToggle=True)
         toolClass = Tool("pyut-class", img.ImgToolboxClass.embeddedImage.GetBitmap(),
-                         _("Class"),      _("Create a new class"),
-                         _(_("PyUt tools")),
+                         _("Class"),
+                         _("Create a new class"),
+                         _("PyUt tools"),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_CLASS, isToggle=True)
 
         toolActor = Tool("pyut-actor", img.ImgToolboxActor.embeddedImage.GetBitmap(),
-                         _("Actor"),      _("Create a new actor"),
-                         _(_("PyUt tools")),
+                         _("Actor"),
+                         _("Create a new actor"),
+                         _("PyUt tools"),
                          (lambda x: self._OnNewAction(x)),
                          cast(Callable, None), wxID=ID_ACTOR, isToggle=True)
 
         toolUseCase = Tool("pyut-system", img.ImgToolboxSystem.embeddedImage.GetBitmap(),
-                           _("System"),     _("Create a new use case"),
-                           _(_("PyUt tools")),
+                           _("System"),
+                           _("Create a new use case"),
+                           _("PyUt tools"),
                            (lambda x: self._OnNewAction(x)),
                            cast(Callable, None), wxID=ID_USECASE, isToggle=True)
 
         toolNote = Tool("pyut-note", img.ImgToolboxNote.embeddedImage.GetBitmap(),
-                        _("Note"),     _("Create a new note"),
-                        _(_("PyUt tools")),
+                        _("Note"),
+                        _("Create a new note"),
+                        _("PyUt tools"),
                         (lambda x: self._OnNewAction(x)),
                         cast(Callable, None), wxID=ID_NOTE, isToggle=True)
 
         toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.embeddedImage.GetBitmap(),
                           _("Zoom In"),
                           _("Zoom in on the selected area"),
-                          _(_("PyUt tools")),
+                          _("PyUt tools"),
                           (lambda x: self._OnNewAction(x)),
                           cast(Callable, None), wxID=ID_ZOOMIN, isToggle=True)
 
         toolZoomOut = Tool("pyut-zoomOut", img.ImgToolboxZoomOut.embeddedImage.GetBitmap(),
                            _("Zoom Out"),
                            _("Zoom out from the clicked point"),
-                           _(_("PyUt tools")),
+                           _("PyUt tools"),
                            (lambda x: self._OnNewAction(x)),
                            cast(Callable, None), wxID=ID_ZOOMOUT, isToggle=True)
 
@@ -360,7 +366,7 @@ class AppFrame(Frame):
         toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", img.ImgToolboxNewSequenceDiagram.embeddedImage.GetBitmap(),
                                       _("New Sequence Diagram"),
                                       _("Create a new sequence diagram"),
-                                      _(_("PyUt menu")),
+                                      _("PyUt menu"),
                                       (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
                                       cast(Callable, None), wxID=ID_MNUFILENEWSEQUENCEDIAGRAM)
 
@@ -401,39 +407,43 @@ class AppFrame(Frame):
 
         # Relationship tools
         toolRelInheritance = Tool("pyut-rel-inheritance", img.ImgToolboxRelationshipInheritance.embeddedImage.GetBitmap(),
-                                  _("New inheritance relation"), _("New inheritance relation"),
+                                  _("New inheritance relation"),
+                                  _("New inheritance relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_INHERITANCE, isToggle=True)
 
         toolRelRealisation = Tool("pyut-rel-realization", img.ImgToolboxRelationshipRealization.embeddedImage.GetBitmap(),
-                                  _("New Realization relation"), _("New Realization relation"),
+                                  _("New Realization relation"),
+                                  _("New Realization relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_REALISATION, isToggle=True)
 
         toolRelComposition = Tool("pyut-rel-composition", img.ImgToolboxRelationshipComposition.embeddedImage.GetBitmap(),
-                                  _("New composition relation"), _("New composition relation"),
+                                  _("New composition relation"),
+                                  _("New composition relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_COMPOSITION, isToggle=True)
 
         toolRelAgregation = Tool("pyut-rel-aggregation", img.ImgToolboxRelationshipAggregation.embeddedImage.GetBitmap(),
-                                 # Bitmap('img' + os.sep + 'relagregation.bmp', BITMAP_TYPE_BMP),
-                                 _("New aggregation relation"), _("New aggregation relation"),
+                                 _("New aggregation relation"),
+                                 _("New aggregation relation"),
                                  _("PyUt tools"),
                                  (lambda x: self._OnNewAction(x)),
                                  cast(Callable, None), wxID=ID_REL_AGREGATION, isToggle=True)
 
         toolRelAssociation = Tool("pyut-rel-association", img.ImgToolboxRelationshipAssociation.embeddedImage.GetBitmap(),
-                                  # Bitmap('img' + os.sep + 'relassociation.bmp', BITMAP_TYPE_BMP),
-                                  _("New association relation"), _("New association relation"),
+                                  _("New association relation"),
+                                  _("New association relation"),
                                   _("PyUt tools"),
                                   (lambda x: self._OnNewAction(x)),
                                   cast(Callable, None), wxID=ID_REL_ASSOCIATION, isToggle=True)
 
         toolRelNote = Tool("pyut-rel-note", img.ImgToolboxRelationshipNote.embeddedImage.GetBitmap(),
-                           _("New note relation"), _("New note relation"),
+                           _("New note relation"),
+                           _("New note relation"),
                            _("PyUt tools"),
                            (lambda x: self._OnNewAction(x)),
                            cast(Callable, None), wxID=ID_REL_NOTE, isToggle=True)
@@ -469,7 +479,6 @@ class AppFrame(Frame):
 
         self._tb: ToolBar = self.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
         self.SetToolBar(self._tb)
-        #  self._tb.SetTitle("Standard")    # This toolbar does not have a .SetTitle method
 
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
                      toolNewUseCaseDiagram, toolOpen, toolSave, None,
@@ -482,10 +491,10 @@ class AppFrame(Frame):
 
             # Add tool
             if tool is not None:
-                toolId = tool.getWXID()
-                bitMap: PyEmbeddedImage = tool.getImg()
-                shortHelpString: str  = tool.getCaption()
-                isToggle:        bool = tool.getIsToggle()
+                toolId:    WindowIDRef     = tool.getWxId()
+                bitMap:    PyEmbeddedImage = tool.getImg()
+                caption:   str  = tool.getCaption()
+                isToggle:  bool = tool.getIsToggle()
                 if isToggle is True:
                     itemKind = ITEM_CHECK
                 else:
@@ -493,23 +502,14 @@ class AppFrame(Frame):
                 """
                 AddTool(toolId, label, bitmap, shortHelp=EmptyString, kind=ITEM_NORMAL) -> ToolBarToolBase
                 """
-                self._tb.AddTool(toolId, '', bitMap, shortHelpString, itemKind)     # TODO hasii -- do we need a label
+                self._tb.AddTool(toolId, '', bitMap, caption, itemKind)     # TODO hasii -- do we need a label
 
-                self.Bind(EVT_TOOL, tool.getActionCallback(), id=tool.getWXID())
+                self.Bind(EVT_TOOL, tool.getActionCallback(), id=tool.getWxId())
             else:
                 self._tb.AddSeparator()
 
-        # Add contextual help
-        # self._tb.AddSeparator()
-        # btn = wxContextHelpButton(self._tb)
-        # btn.SetHelpText("Contextual help button")
-        # self._tb.AddControl(btn)
-        # EVT_HELP(self, ...)
-
-        # Do toolbar
         self._tb.Realize()
 
-        # Register toolbar on mediator
         self._ctrl.registerToolBar(self._tb)
         self._ctrl.registerToolBarTools([
             ID_ARROW, ID_CLASS, ID_NOTE, ID_REL_INHERITANCE,
