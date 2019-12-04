@@ -14,8 +14,5 @@ class ActionCallbackType(Enum):
     UNDO                 = 8
     REDO                 = 9
 
-
-
-
     def __str__(self):
         return str(self.name)

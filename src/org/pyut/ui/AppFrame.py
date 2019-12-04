@@ -1,6 +1,6 @@
 
 from typing import cast
-from typing import Callable
+
 from typing import List
 
 from logging import Logger
@@ -20,20 +20,14 @@ from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
 from wx import FRAME_EX_METAL
+from wx import ID_ANY
 from wx import ID_OK
-from wx import ITEM_CHECK
-from wx import ITEM_NORMAL
-from wx import NO_BORDER
 from wx import PAPER_A4
 from wx import PORTRAIT
 from wx import PRINT_QUALITY_HIGH
-from wx import TB_FLAT
-from wx import TB_HORIZONTAL
-
 from wx import EVT_ACTIVATE
 from wx import EVT_CLOSE
 from wx import EVT_MENU
-from wx import EVT_TOOL
 from wx import FD_OPEN
 from wx import FD_SAVE
 from wx import FD_MULTIPLE
@@ -43,7 +37,6 @@ from wx import NewId
 from wx import PrintData
 
 from wx import AcceleratorEntry
-from wx import Bitmap
 from wx import CommandEvent
 from wx import Frame
 from wx import DefaultPosition
@@ -55,8 +48,6 @@ from wx import MenuBar
 from wx import FileDialog
 from wx import PrintDialogData
 from wx import PrintDialog
-
-from wx import ToolBar
 from wx import ClientDC
 from wx import PreviewFrame
 from wx import PrintPreview
@@ -64,7 +55,6 @@ from wx import Printer
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
-from wx import WindowIDRef
 
 from wx import Yield as wxYield
 
@@ -82,11 +72,14 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.PyutPrintout import PyutPrintout
-from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.TipsFrame import TipsFrame
 
 from org.pyut.general.Globals import _
 from org.pyut.general.Globals import IMG_PKG
+
+from org.pyut.ui.tools.ToolsCreator import ToolsCreator
+from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
+from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from org.pyut.PyutPreferences import PyutPreferences
 
@@ -96,67 +89,9 @@ from org.pyut.persistence.FileHandling import FileHandling
 
 from org.pyut.plugins.PluginManager import PluginManager
 
-
-from org.pyut.general.Mediator import ACTION_NEW_ACTOR
-from org.pyut.general.Mediator import ACTION_NEW_INHERIT_LINK
-from org.pyut.general.Mediator import ACTION_NEW_NOTE_LINK
-from org.pyut.general.Mediator import ACTION_NEW_AGGREGATION_LINK
-from org.pyut.general.Mediator import ACTION_SELECTOR
-from org.pyut.general.Mediator import ACTION_NEW_CLASS
-from org.pyut.general.Mediator import ACTION_NEW_NOTE
-from org.pyut.general.Mediator import ACTION_NEW_IMPLEMENT_LINK
-from org.pyut.general.Mediator import ACTION_NEW_COMPOSITION_LINK
-from org.pyut.general.Mediator import ACTION_NEW_ASSOCIATION_LINK
-from org.pyut.general.Mediator import ACTION_ZOOM_OUT
-from org.pyut.general.Mediator import ACTION_ZOOM_IN
 from org.pyut.general.Mediator import ACTION_NEW_SD_MESSAGE
 from org.pyut.general.Mediator import ACTION_NEW_SD_INSTANCE
-from org.pyut.general.Mediator import ACTION_NEW_USECASE
 from org.pyut.general.Mediator import getMediator
-
-[
-    ID_MNUFILENEWPROJECT,        ID_MNUFILEOPEN,          ID_MNUFILESAVE,
-    ID_MNUFILESAVEAS,            ID_MNUFILEEXIT,          ID_MNUEDITCUT,
-    ID_MNUEDITCOPY,              ID_MNUEDITPASTE,         ID_MNUHELPABOUT,
-    ID_MNUFILEIMP,               ID_MNUFILE,              ID_MNUFILEDIAGRAMPROPER,
-    ID_MNUFILEPRINTSETUP,        ID_MNUFILEPRINTPREV,     ID_MNUFILEPRINT,
-    ID_MNUADDPYUTHIERARCHY,      ID_MNUADDOGLHIERARCHY,
-    ID_MENU_GRAPHIC_ERROR_VIEW,  ID_MENU_TEXT_ERROR_VIEW, ID_MENU_RAISE_ERROR_VIEW,
-    ID_MNUHELPINDEX,
-    ID_MNUHELPWEB,               ID_MNUFILEEXP,           ID_MNUFILEEXPBMP,
-    ID_MNUEDITSHOWTOOLBAR,       ID_ARROW,                ID_CLASS,
-    ID_REL_INHERITANCE,          ID_REL_REALISATION,      ID_REL_COMPOSITION,
-    ID_REL_AGREGATION,           ID_REL_ASSOCIATION,      ID_MNUFILEEXPJPG,
-    ID_MNUPROJECTCLOSE,          ID_NOTE,                 ID_ACTOR,
-    ID_USECASE,                  ID_REL_NOTE,             ID_MNUHELPVERSION,
-    ID_MNUFILEEXPPS,             ID_MNUFILEEXPPNG,        ID_MNUFILEPYUTPROPER,
-    ID_MNUFILEEXPPDF,            ID_MNUFILENEWCLASSDIAGRAM, ID_MNUFILENEWSEQUENCEDIAGRAM,
-    ID_MNUFILENEWUSECASEDIAGRAM, ID_SD_INSTANCE,
-    ID_MNUFILEINSERTPROJECT,     ID_SD_MESSAGE,           ID_MNUEDITSELECTALL,
-    ID_MNUFILEREMOVEDOCUMENT,    ID_DEBUG,
-    ID_ZOOMIN,                   ID_ZOOMOUT,              ID_ZOOM_VALUE,
-    ID_MNUREDO,                  ID_MNUUNDO
-] = PyutUtils.assignID(57)
-
-# Assign constants
-
-ACTIONS = {
-    ID_ARROW: ACTION_SELECTOR,
-    ID_CLASS: ACTION_NEW_CLASS,
-    ID_NOTE: ACTION_NEW_NOTE,
-    ID_REL_INHERITANCE: ACTION_NEW_INHERIT_LINK,
-    ID_REL_REALISATION: ACTION_NEW_IMPLEMENT_LINK,
-    ID_REL_COMPOSITION: ACTION_NEW_COMPOSITION_LINK,
-    ID_REL_AGREGATION: ACTION_NEW_AGGREGATION_LINK,
-    ID_REL_ASSOCIATION: ACTION_NEW_ASSOCIATION_LINK,
-    ID_REL_NOTE:    ACTION_NEW_NOTE_LINK,
-    ID_ACTOR:       ACTION_NEW_ACTOR,
-    ID_USECASE:     ACTION_NEW_USECASE,
-    ID_SD_INSTANCE: ACTION_NEW_SD_INSTANCE,
-    ID_SD_MESSAGE:  ACTION_NEW_SD_MESSAGE,
-    ID_ZOOMIN:      ACTION_ZOOM_IN,
-    ID_ZOOMOUT:     ACTION_ZOOM_OUT
-}
 
 
 class AppFrame(Frame):
@@ -268,254 +203,20 @@ class AppFrame(Frame):
                 self.logger.error(f'_onActivate: {e}')
 
     def _initPyutTools(self):
-        """
-        Init all PyUt tools for the toolbar and the toolbox
 
-        @author C.Dutoit
-        """
-        # import img.ImgToolboxUnknown
-        import img.ImgToolboxActor
-        import img.ImgToolboxClass
-        import img.ImgToolboxNote
-        import img.ImgToolboxArrow
-        import img.ImgToolboxSystem
-        import img.ImgToolboxZoomIn
-        import img.ImgToolboxZoomOut
-        import img.ImgToolboxNewProject
-        import img.ImgToolboxNewClassDiagram
-        import img.ImgToolboxNewSequenceDiagram
-        import img.ImgToolboxNewUseCaseDiagram
-        import img.ImgToolboxOpenFile
-        import img.ImgToolboxSaveDiagram
-        import img.ImgToolboxUndo
-        import img.ImgToolboxRedo
-        import img.ImgToolboxRelationshipInheritance
-        import img.ImgToolboxRelationshipRealization
-        import img.ImgToolboxRelationshipComposition
-        import img.ImgToolboxRelationshipAggregation
-        import img.ImgToolboxRelationshipAssociation
-        import img.ImgToolboxRelationshipNote
-        import img.ImgToolboxSequenceDiagramInstance
-        import img.ImgToolboxSequenceDiagramMessage
-
-        # Element tools
-        toolArrow = Tool("pyut-arrow", img.ImgToolboxArrow.embeddedImage.GetBitmap(),
-                         _("Arrow"),
-                         _("Select tool"),
-                         _("PyUt tools"),
-                         (lambda x: self._OnNewAction(x)),
-                         cast(Callable, None), wxID=ID_ARROW, isToggle=True)
-        toolClass = Tool("pyut-class", img.ImgToolboxClass.embeddedImage.GetBitmap(),
-                         _("Class"),
-                         _("Create a new class"),
-                         _("PyUt tools"),
-                         (lambda x: self._OnNewAction(x)),
-                         cast(Callable, None), wxID=ID_CLASS, isToggle=True)
-
-        toolActor = Tool("pyut-actor", img.ImgToolboxActor.embeddedImage.GetBitmap(),
-                         _("Actor"),
-                         _("Create a new actor"),
-                         _("PyUt tools"),
-                         (lambda x: self._OnNewAction(x)),
-                         cast(Callable, None), wxID=ID_ACTOR, isToggle=True)
-
-        toolUseCase = Tool("pyut-system", img.ImgToolboxSystem.embeddedImage.GetBitmap(),
-                           _("System"),
-                           _("Create a new use case"),
-                           _("PyUt tools"),
-                           (lambda x: self._OnNewAction(x)),
-                           cast(Callable, None), wxID=ID_USECASE, isToggle=True)
-
-        toolNote = Tool("pyut-note", img.ImgToolboxNote.embeddedImage.GetBitmap(),
-                        _("Note"),
-                        _("Create a new note"),
-                        _("PyUt tools"),
-                        (lambda x: self._OnNewAction(x)),
-                        cast(Callable, None), wxID=ID_NOTE, isToggle=True)
-
-        toolZoomIn = Tool("pyut-zoomIn", img.ImgToolboxZoomIn.embeddedImage.GetBitmap(),
-                          _("Zoom In"),
-                          _("Zoom in on the selected area"),
-                          _("PyUt tools"),
-                          (lambda x: self._OnNewAction(x)),
-                          cast(Callable, None), wxID=ID_ZOOMIN, isToggle=True)
-
-        toolZoomOut = Tool("pyut-zoomOut", img.ImgToolboxZoomOut.embeddedImage.GetBitmap(),
-                           _("Zoom Out"),
-                           _("Zoom out from the clicked point"),
-                           _("PyUt tools"),
-                           (lambda x: self._OnNewAction(x)),
-                           cast(Callable, None), wxID=ID_ZOOMOUT, isToggle=True)
-
-        # Menu tools
-        toolNewProject = Tool("pyut-new-project", img.ImgToolboxNewProject.embeddedImage.GetBitmap(),
-                              _("New Project"),
-                              _("Create a new project"),
-                              _("PyUt menu"),
-                              (lambda x: self._OnMnuFileNewProject(x)),
-                              cast(Callable, None), wxID=ID_MNUFILENEWPROJECT)
-
-        toolNewClassDiagram = Tool("pyut-new-class-diagram", img.ImgToolboxNewClassDiagram.embeddedImage.GetBitmap(),
-                                   _("New Class Diagram"),
-                                   _("Create a new class diagram"),
-                                   _("PyUt menu"),
-                                   (lambda x: self._OnMnuFileNewClassDiagram(x)),
-                                   cast(Callable, None), wxID=ID_MNUFILENEWCLASSDIAGRAM)
-
-        toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", img.ImgToolboxNewSequenceDiagram.embeddedImage.GetBitmap(),
-                                      _("New Sequence Diagram"),
-                                      _("Create a new sequence diagram"),
-                                      _("PyUt menu"),
-                                      (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
-                                      cast(Callable, None), wxID=ID_MNUFILENEWSEQUENCEDIAGRAM)
-
-        toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram", img.ImgToolboxNewUseCaseDiagram.embeddedImage.GetBitmap(),
-                                     _("New Use-Case diagram"),
-                                     _("Create a new use-case diagram"),
-                                     _("PyUt menu"),
-                                     (lambda x: self._OnMnuFileNewUsecaseDiagram(x)),
-                                     cast(Callable, None), wxID=ID_MNUFILENEWUSECASEDIAGRAM)
-
-        toolOpen = Tool("pyut-open", img.ImgToolboxOpenFile.embeddedImage.GetBitmap(),
-                        _("Open"),
-                        _("Open a file"),
-                        _("PyUt menu"),
-                        (lambda x: self._OnMnuFileOpen(x)),
-                        cast(Callable, None), wxID=ID_MNUFILEOPEN)
-
-        toolSave = Tool("pyut-save", img.ImgToolboxSaveDiagram.embeddedImage.GetBitmap(),
-                        _("Save"),
-                        _("Save current UML Diagram"),
-                        _("PyUt menu"),
-                        (lambda x: self._OnMnuFileSave(x)),
-                        cast(Callable, None), wxID=ID_MNUFILESAVE)
-
-        toolUndo = Tool("pyut-undo", img.ImgToolboxUndo.embeddedImage.GetBitmap(),
-                        _("undo"),
-                        _("undo the last performed action"),
-                        _("PyUt menu"),
-                        (lambda x: self._OnMnuUndo(x)),
-                        cast(Callable, None), wxID=ID_MNUUNDO)
-
-        toolRedo = Tool("pyut-redo", img.ImgToolboxRedo.embeddedImage.GetBitmap(),
-                        _("redo"),
-                        _("redo the last undone action"),
-                        _("PyUt menu"),
-                        (lambda x: self._OnMnuRedo(x)),
-                        cast(Callable, None), wxID=ID_MNUREDO)
-
-        # Relationship tools
-        toolRelInheritance = Tool("pyut-rel-inheritance", img.ImgToolboxRelationshipInheritance.embeddedImage.GetBitmap(),
-                                  _("New inheritance relation"),
-                                  _("New inheritance relation"),
-                                  _("PyUt tools"),
-                                  (lambda x: self._OnNewAction(x)),
-                                  cast(Callable, None), wxID=ID_REL_INHERITANCE, isToggle=True)
-
-        toolRelRealisation = Tool("pyut-rel-realization", img.ImgToolboxRelationshipRealization.embeddedImage.GetBitmap(),
-                                  _("New Realization relation"),
-                                  _("New Realization relation"),
-                                  _("PyUt tools"),
-                                  (lambda x: self._OnNewAction(x)),
-                                  cast(Callable, None), wxID=ID_REL_REALISATION, isToggle=True)
-
-        toolRelComposition = Tool("pyut-rel-composition", img.ImgToolboxRelationshipComposition.embeddedImage.GetBitmap(),
-                                  _("New composition relation"),
-                                  _("New composition relation"),
-                                  _("PyUt tools"),
-                                  (lambda x: self._OnNewAction(x)),
-                                  cast(Callable, None), wxID=ID_REL_COMPOSITION, isToggle=True)
-
-        toolRelAgregation = Tool("pyut-rel-aggregation", img.ImgToolboxRelationshipAggregation.embeddedImage.GetBitmap(),
-                                 _("New aggregation relation"),
-                                 _("New aggregation relation"),
-                                 _("PyUt tools"),
-                                 (lambda x: self._OnNewAction(x)),
-                                 cast(Callable, None), wxID=ID_REL_AGREGATION, isToggle=True)
-
-        toolRelAssociation = Tool("pyut-rel-association", img.ImgToolboxRelationshipAssociation.embeddedImage.GetBitmap(),
-                                  _("New association relation"),
-                                  _("New association relation"),
-                                  _("PyUt tools"),
-                                  (lambda x: self._OnNewAction(x)),
-                                  cast(Callable, None), wxID=ID_REL_ASSOCIATION, isToggle=True)
-
-        toolRelNote = Tool("pyut-rel-note", img.ImgToolboxRelationshipNote.embeddedImage.GetBitmap(),
-                           _("New note relation"),
-                           _("New note relation"),
-                           _("PyUt tools"),
-                           (lambda x: self._OnNewAction(x)),
-                           cast(Callable, None), wxID=ID_REL_NOTE, isToggle=True)
-
-        toolSDInstance = Tool("pyut-sd-instance", img.ImgToolboxSequenceDiagramInstance.embeddedImage.GetBitmap(),
-                              _("New sequence diagram instance object"),
-                              _("New sequence diagram instance object"),
-                              _("PyUt tools"),
-                              (lambda x: self._OnNewAction(x)),
-                              cast(Callable, None), wxID=ID_SD_INSTANCE, isToggle=True)
-
-        toolSDMessage = Tool("pyut-sd-message", img.ImgToolboxSequenceDiagramMessage.embeddedImage.GetBitmap(),
-                             _("New sequence diagram message object"),
-                             _("New sequence diagram message object"),
-                             _("PyUt tools"),
-                             (lambda x: self._OnNewAction(x)),
-                             cast(Callable, None), wxID=ID_SD_MESSAGE, isToggle=True)
-
-        self.logger.debug(f'toolSDMessage: {toolSDMessage}')
-
-        # Create toolboxes
-        for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
-                     toolNewUseCaseDiagram, toolOpen, toolSave,
-                     toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo,
-                     toolClass, toolActor, toolUseCase, toolNote,
-                     toolRelInheritance, toolRelRealisation, toolRelComposition,
-                     toolRelAgregation, toolRelAssociation, toolRelNote,
-                     toolSDInstance, toolSDMessage
-                     ]:
-            self._ctrl.registerTool(tool)
-
-        # Create toolbar
-
-        self._tb: ToolBar = self.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
-        self.SetToolBar(self._tb)
-
-        for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
-                     toolNewUseCaseDiagram, toolOpen, toolSave, None,
-                     toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo, None,
-                     toolClass, toolActor, toolUseCase, toolNote, None,
-                     toolRelInheritance, toolRelRealisation, toolRelComposition,
-                     toolRelAgregation, toolRelAssociation, toolRelNote, None,
-                     toolSDInstance, toolSDMessage
-                     ]:
-
-            # Add tool
-            if tool is not None:
-                toolId:    WindowIDRef = tool.getWxId()
-                bitMap:    Bitmap      = tool.getImg()
-                caption:   str  = tool.getCaption()
-                isToggle:  bool = tool.getIsToggle()
-                if isToggle is True:
-                    itemKind = ITEM_CHECK
-                else:
-                    itemKind = ITEM_NORMAL
-                """
-                AddTool(toolId, label, bitmap, shortHelp=EmptyString, kind=ITEM_NORMAL) -> ToolBarToolBase
-                """
-                self._tb.AddTool(toolId, '', bitMap, caption, itemKind)     # TODO hasii -- do we need a label
-
-                self.Bind(EVT_TOOL, tool.getActionCallback(), id=tool.getWxId())
-            else:
-                self._tb.AddSeparator()
-
-        self._tb.Realize()
-
-        self._ctrl.registerToolBar(self._tb)
-        self._ctrl.registerToolBarTools([
-            ID_ARROW, ID_CLASS, ID_NOTE, ID_REL_INHERITANCE,
-            ID_REL_REALISATION, ID_REL_COMPOSITION, ID_REL_AGREGATION,
-            ID_REL_ASSOCIATION, ID_REL_NOTE, ID_ACTOR, ID_USECASE,
-            ID_SD_INSTANCE, ID_SD_MESSAGE, ID_ZOOMIN, ID_ZOOMOUT
-        ])
+        callbackMap: ToolsCreator.CallbackMap = cast(ToolsCreator.CallbackMap, {
+            ActionCallbackType.NEW_ACTION:           self._OnNewAction,
+            ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
+            ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
+            ActionCallbackType.NEW_USE_CASE_DIAGRAM: self._OnMnuFileNewUsecaseDiagram,
+            ActionCallbackType.NEW_PROJECT:          self._OnMnuFileNewProject,
+            ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
+            ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
+            ActionCallbackType.UNDO:                 self._OnMnuUndo,
+            ActionCallbackType.REDO:                 self._OnMnuRedo,
+        })
+        self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
+        self._toolsCreator.initTools()
 
     def _initMenu(self):
         """
@@ -526,18 +227,18 @@ class AppFrame(Frame):
         """
         self.mnuFile = Menu()
         self.mnuFileNew = Menu()
-        self.mnuFileNew.Append(ID_MNUFILENEWPROJECT,         _("&New project\tCtrl-N"), _("New project"))
-        self.mnuFileNew.Append(ID_MNUFILENEWCLASSDIAGRAM,    _("New c&lass diagram\tCtrl-L"), _("New class diagram"))
-        self.mnuFileNew.Append(ID_MNUFILENEWSEQUENCEDIAGRAM, _("New s&equence diagram\tCtrl-E"), _("New sequence diagram"))
-        self.mnuFileNew.Append(ID_MNUFILENEWUSECASEDIAGRAM,  _("New &use-case diagram\tCtrl-U"), _("New use-case diagram"))
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWPROJECT,         _("&New project\tCtrl-N"), _("New project"))
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWCLASSDIAGRAM,    _("New c&lass diagram\tCtrl-L"), _("New class diagram"))
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM, _("New s&equence diagram\tCtrl-E"), _("New sequence diagram"))
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM,  _("New &use-case diagram\tCtrl-U"), _("New use-case diagram"))
 
         self.mnuFile.Append(NewId(), _("&New"), self.mnuFileNew)
-        self.mnuFile.Append(ID_MNUFILEINSERTPROJECT,  _("&Insert a project...\t"), _("Insert a project in the current project..."))
-        self.mnuFile.Append(ID_MNUFILEOPEN,           _("&Open...\tCtrl-O"), _("Open a file..."))
-        self.mnuFile.Append(ID_MNUFILESAVE,           _("&Save\tCtrl-S"), _("Save current data"))
-        self.mnuFile.Append(ID_MNUFILESAVEAS,         _("Save &As...\tCtrl-A"), _("Save current data"))
-        self.mnuFile.Append(ID_MNUPROJECTCLOSE,       _("&Close project\tCtrl-W"), _("Close current project"))
-        self.mnuFile.Append(ID_MNUFILEREMOVEDOCUMENT, _("&Remove document"), _("Remove the document from the project"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILEINSERTPROJECT,  _("&Insert a project...\t"), _("Insert a project in the current project..."))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILEOPEN,           _("&Open...\tCtrl-O"), _("Open a file..."))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILESAVE,           _("&Save\tCtrl-S"), _("Save current data"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILESAVEAS,         _("Save &As...\tCtrl-A"), _("Save current data"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUPROJECTCLOSE,       _("&Close project\tCtrl-W"), _("Close current project"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILEREMOVEDOCUMENT, _("&Remove document"), _("Remove the document from the project"))
         self.mnuFile.AppendSeparator()
 
         # added by L. Burgbacher, dynamic plugin support
@@ -546,11 +247,11 @@ class AppFrame(Frame):
         # Fixed Export
         if sub is None:
             sub = Menu()
-        sub.Append(ID_MNUFILEEXPBMP, "&bmp",        _("Export data to a bitmap file"))
-        sub.Append(ID_MNUFILEEXPJPG, "&jpeg",       _("Export data to a jpeg file"))
-        sub.Append(ID_MNUFILEEXPPNG, "&png",        _("Export data to a png file"))
-        sub.Append(ID_MNUFILEEXPPS,  "&Postscript", _("Export data to a postscript file"))
-        sub.Append(ID_MNUFILEEXPPDF, "P&DF",        _("Export data to a PDF file"))
+        sub.Append(SharedIdentifiers.ID_MNUFILEEXPBMP, "&bmp",        _("Export data to a bitmap file"))
+        sub.Append(SharedIdentifiers.ID_MNUFILEEXPJPG, "&jpeg",       _("Export data to a jpeg file"))
+        sub.Append(SharedIdentifiers.ID_MNUFILEEXPPNG, "&png",        _("Export data to a png file"))
+        sub.Append(SharedIdentifiers.ID_MNUFILEEXPPS,  "&Postscript", _("Export data to a postscript file"))
+        sub.Append(SharedIdentifiers.ID_MNUFILEEXPPDF, "P&DF",        _("Export data to a PDF file"))
 
         if sub is not None:
             self.mnuFile.Append(NewId(), _("Export"), sub)
@@ -561,12 +262,12 @@ class AppFrame(Frame):
             self.mnuFile.Append(NewId(), _("Import"), sub)
 
         self.mnuFile.AppendSeparator()
-        self.mnuFile.Append(ID_MNUFILEPYUTPROPER, _("PyUt P&roperties"), _("PyUt properties"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILEPYUTPROPER, _("PyUt P&roperties"), _("PyUt properties"))
         # self.mnuFile.Append(ID_MNUFILEDIAGRAMPROPER,_("&Diagram Properties"), _("Diagram properties"))
         self.mnuFile.AppendSeparator()
-        self.mnuFile.Append(ID_MNUFILEPRINTSETUP, _("Print se&tup..."), _("Display the print setup dialog box"))
-        self.mnuFile.Append(ID_MNUFILEPRINTPREV,  _("Print pre&view"),  _("Diagram preview before printing"))
-        self.mnuFile.Append(ID_MNUFILEPRINT,      _("&Print\tCtrl-P"),  _("Print the current diagram"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILEPRINTSETUP, _("Print se&tup..."), _("Display the print setup dialog box"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILEPRINTPREV,  _("Print pre&view"),  _("Diagram preview before printing"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILEPRINT,      _("&Print\tCtrl-P"),  _("Print the current diagram"))
         self.mnuFile.AppendSeparator()
 
         #  Add Last opened files
@@ -580,29 +281,29 @@ class AppFrame(Frame):
 
         # exit
         self.mnuFile.AppendSeparator()
-        self.mnuFile.Append(ID_MNUFILEEXIT, _("E&xit"), _("Exit PyUt"))
+        self.mnuFile.Append(SharedIdentifiers.ID_MNUFILEEXIT, _("E&xit"), _("Exit PyUt"))
 
         # -----------------
         #     Edit menu
         # -----------------
         mnuEdit = Menu()
         # Path from D.Dabrowsky, 20060129
-        mnuEdit.Append(ID_MNUUNDO, _("&Undo\tCtrl-Z"), _("Undo the last performed action"))
-        mnuEdit.Append(ID_MNUREDO, _("&Redo\tCtrl-Y"), _("Redo the last undone action"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNUUNDO, _("&Undo\tCtrl-Z"), _("Undo the last performed action"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNUREDO, _("&Redo\tCtrl-Y"), _("Redo the last undone action"))
         mnuEdit.AppendSeparator()
-        mnuEdit.Append(ID_MNUEDITCUT,    _("Cu&t\tCtrl-X"),   _("Cut selected data"))
-        mnuEdit.Append(ID_MNUEDITCOPY,   _("&Copy\tCtrl-C"),  _("Copy selected data"))
-        mnuEdit.Append(ID_MNUEDITPASTE,  _("&Paste\tCtrl-V"), _("Paste selected data"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNUEDITCUT,    _("Cu&t\tCtrl-X"),   _("Cut selected data"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNUEDITCOPY,   _("&Copy\tCtrl-C"),  _("Copy selected data"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNUEDITPASTE,  _("&Paste\tCtrl-V"), _("Paste selected data"))
         mnuEdit.AppendSeparator()
-        mnuEdit.Append(ID_MNUEDITSELECTALL, _("&Select all"), _("Select all elements"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNUEDITSELECTALL, _("&Select all"), _("Select all elements"))
         mnuEdit.AppendSeparator()
-        mnuEdit.Append(ID_MNUADDPYUTHIERARCHY, _("&Add Pyut hierarchy"), _("Add the UML Diagram of Pyut"))
-        mnuEdit.Append(ID_MNUADDOGLHIERARCHY, _("Add &Ogl hierarchy"),   _("Add the UML Diagram of Pyut - Ogl"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNUADDPYUTHIERARCHY, _("&Add Pyut hierarchy"), _("Add the UML Diagram of Pyut"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNUADDOGLHIERARCHY, _("Add &Ogl hierarchy"),   _("Add the UML Diagram of Pyut - Ogl"))
         if AppFrame.DEBUG_ERROR_VIEWS is True:
             mnuEdit.AppendSeparator()
-            mnuEdit.Append(ID_MENU_GRAPHIC_ERROR_VIEW, 'Show &Graphic Error View',  'Test graphical error view')
-            mnuEdit.Append(ID_MENU_TEXT_ERROR_VIEW,    'Show &Text Error View',     'Test text error view')
-            mnuEdit.Append(ID_MENU_RAISE_ERROR_VIEW,   'Show &Exception Error View', 'Test raising exception')
+            mnuEdit.Append(SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW, 'Show &Graphic Error View',  'Test graphical error view')
+            mnuEdit.Append(SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW,    'Show &Text Error View',     'Test text error view')
+            mnuEdit.Append(SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW,   'Show &Exception Error View', 'Test raising exception')
         # -----------------
         #    Tools menu
         # -----------------
@@ -620,13 +321,13 @@ class AppFrame(Frame):
         #    Help menu
         # -----------------
         mnuHelp = Menu()
-        mnuHelp.Append(ID_MNUHELPINDEX, _("&Index"), _("Display help index"))
+        mnuHelp.Append(SharedIdentifiers.ID_MNUHELPINDEX, _("&Index"), _("Display help index"))
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(ID_MNUHELPVERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
-        mnuHelp.Append(ID_MNUHELPWEB, _("&Web site"), _("Open PyUt web site"))
-        mnuHelp.Append(ID_DEBUG,      _("&Debug"), _("Open IPython shell"))
+        mnuHelp.Append(SharedIdentifiers.ID_MNUHELPVERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
+        mnuHelp.Append(SharedIdentifiers.ID_MNUHELPWEB, _("&Web site"), _("Open PyUt web site"))
+        mnuHelp.Append(SharedIdentifiers.ID_DEBUG,      _("&Debug"), _("Open IPython shell"))
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(ID_MNUHELPABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
+        mnuHelp.Append(SharedIdentifiers.ID_MNUHELPABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
 
         # -----------------
         #   make menu bar
@@ -641,49 +342,49 @@ class AppFrame(Frame):
         # -----------------
         # Events menu click
         # -----------------
-        self.Bind(EVT_MENU, self._OnMnuFileNewProject,      id=ID_MNUFILENEWPROJECT)
-        self.Bind(EVT_MENU, self._OnMnuFileNewClassDiagram, id=ID_MNUFILENEWCLASSDIAGRAM)
-        self.Bind(EVT_MENU, self._OnMnuFileNewSequenceDiagram, id=ID_MNUFILENEWSEQUENCEDIAGRAM)
-        self.Bind(EVT_MENU, self._OnMnuFileNewUsecaseDiagram,  id=ID_MNUFILENEWUSECASEDIAGRAM)
-        self.Bind(EVT_MENU, self._OnMnuFileInsertProject,      id=ID_MNUFILEINSERTPROJECT)
-        self.Bind(EVT_MENU, self._OnMnuFileOpen, id=ID_MNUFILEOPEN)
-        self.Bind(EVT_MENU, self._OnMnuFileSave, id=ID_MNUFILESAVE)
-        self.Bind(EVT_MENU, self._OnMnuFileSaveAs, id=ID_MNUFILESAVEAS)
-        self.Bind(EVT_MENU, self._OnMnuFileClose,  id=ID_MNUPROJECTCLOSE)
-        self.Bind(EVT_MENU, self._OnMnuFileRemoveDocument,  id=ID_MNUFILEREMOVEDOCUMENT)
-        self.Bind(EVT_MENU, self._OnMnuFilePrintSetup,      id=ID_MNUFILEPRINTSETUP)
-        self.Bind(EVT_MENU, self._OnMnuFilePrintPreview,    id=ID_MNUFILEPRINTPREV)
-        self.Bind(EVT_MENU, self._OnMnuFilePrint,           id=ID_MNUFILEPRINT)
-        self.Bind(EVT_MENU, self._OnMnuFilePyutProperties,  id=ID_MNUFILEPYUTPROPER)
+        self.Bind(EVT_MENU, self._OnMnuFileNewProject,      id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
+        self.Bind(EVT_MENU, self._OnMnuFileNewClassDiagram, id=SharedIdentifiers.ID_MNUFILENEWCLASSDIAGRAM)
+        self.Bind(EVT_MENU, self._OnMnuFileNewSequenceDiagram, id=SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM)
+        self.Bind(EVT_MENU, self._OnMnuFileNewUsecaseDiagram,  id=SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM)
+        self.Bind(EVT_MENU, self._OnMnuFileInsertProject,      id=SharedIdentifiers.ID_MNUFILEINSERTPROJECT)
+        self.Bind(EVT_MENU, self._OnMnuFileOpen, id=SharedIdentifiers.ID_MNUFILEOPEN)
+        self.Bind(EVT_MENU, self._OnMnuFileSave, id=SharedIdentifiers.ID_MNUFILESAVE)
+        self.Bind(EVT_MENU, self._OnMnuFileSaveAs, id=SharedIdentifiers.ID_MNUFILESAVEAS)
+        self.Bind(EVT_MENU, self._OnMnuFileClose,  id=SharedIdentifiers.ID_MNUPROJECTCLOSE)
+        self.Bind(EVT_MENU, self._OnMnuFileRemoveDocument,  id=SharedIdentifiers.ID_MNUFILEREMOVEDOCUMENT)
+        self.Bind(EVT_MENU, self._OnMnuFilePrintSetup,      id=SharedIdentifiers.ID_MNUFILEPRINTSETUP)
+        self.Bind(EVT_MENU, self._OnMnuFilePrintPreview,    id=SharedIdentifiers.ID_MNUFILEPRINTPREV)
+        self.Bind(EVT_MENU, self._OnMnuFilePrint,           id=SharedIdentifiers.ID_MNUFILEPRINT)
+        self.Bind(EVT_MENU, self._OnMnuFilePyutProperties,  id=SharedIdentifiers.ID_MNUFILEPYUTPROPER)
         #  EVT_MENU(self, ID_MNUFILEDIAGRAMPROPER,self._OnMnuFileDiagramProperties)
-        self.Bind(EVT_MENU, self._OnMnuFileExit,     id=ID_MNUFILEEXIT)
-        self.Bind(EVT_MENU, self._OnMnuHelpAbout,    id=ID_MNUHELPABOUT)
-        self.Bind(EVT_MENU, self._OnMnuHelpIndex,    id=ID_MNUHELPINDEX)
-        self.Bind(EVT_MENU, self._OnMnuHelpVersion,  id=ID_MNUHELPVERSION)
-        self.Bind(EVT_MENU, self._OnMnuHelpWeb,      id=ID_MNUHELPWEB)
-        self.Bind(EVT_MENU, self._OnMnuAddPyut,      id=ID_MNUADDPYUTHIERARCHY)
-        self.Bind(EVT_MENU, self._OnMnuAddOgl,       id=ID_MNUADDOGLHIERARCHY)
+        self.Bind(EVT_MENU, self._OnMnuFileExit,     id=SharedIdentifiers.ID_MNUFILEEXIT)
+        self.Bind(EVT_MENU, self._OnMnuHelpAbout,    id=SharedIdentifiers.ID_MNUHELPABOUT)
+        self.Bind(EVT_MENU, self._OnMnuHelpIndex,    id=SharedIdentifiers.ID_MNUHELPINDEX)
+        self.Bind(EVT_MENU, self._OnMnuHelpVersion,  id=SharedIdentifiers.ID_MNUHELPVERSION)
+        self.Bind(EVT_MENU, self._OnMnuHelpWeb,      id=SharedIdentifiers.ID_MNUHELPWEB)
+        self.Bind(EVT_MENU, self._OnMnuAddPyut,      id=SharedIdentifiers.ID_MNUADDPYUTHIERARCHY)
+        self.Bind(EVT_MENU, self._OnMnuAddOgl,       id=SharedIdentifiers.ID_MNUADDOGLHIERARCHY)
 
         if AppFrame.DEBUG_ERROR_VIEWS is True:
             from org.pyut.experimental.DebugErrorViews import DebugErrorViews
-            self.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=ID_MENU_GRAPHIC_ERROR_VIEW)
-            self.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView, id=ID_MENU_TEXT_ERROR_VIEW)
-            self.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView, id=ID_MENU_RAISE_ERROR_VIEW)
+            self.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
+            self.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView, id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
+            self.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView, id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
 
-        self.Bind(EVT_MENU, self._OnMnuFileExportBmp, id=ID_MNUFILEEXPBMP)
-        self.Bind(EVT_MENU, self._OnMnuFileExportJpg, id=ID_MNUFILEEXPJPG)
-        self.Bind(EVT_MENU, self._OnMnuFileExportPng, id=ID_MNUFILEEXPPNG)
-        self.Bind(EVT_MENU, self._OnMnuFileExportPs,  id=ID_MNUFILEEXPPS)
-        self.Bind(EVT_MENU, self._OnMnuFileExportPDF, id=ID_MNUFILEEXPPDF)
-        self.Bind(EVT_MENU, self._OnMnuEditCut,       id=ID_MNUEDITCUT)
-        self.Bind(EVT_MENU, self._OnMnuEditCopy,      id=ID_MNUEDITCOPY)
-        self.Bind(EVT_MENU, self._OnMnuEditPaste,     id=ID_MNUEDITPASTE)
-        self.Bind(EVT_MENU, self._OnMnuSelectAll,     id=ID_MNUEDITSELECTALL)
-        self.Bind(EVT_MENU, self._OnMnuDebug,         id=ID_DEBUG)
+        self.Bind(EVT_MENU, self._OnMnuFileExportBmp, id=SharedIdentifiers.ID_MNUFILEEXPBMP)
+        self.Bind(EVT_MENU, self._OnMnuFileExportJpg, id=SharedIdentifiers.ID_MNUFILEEXPJPG)
+        self.Bind(EVT_MENU, self._OnMnuFileExportPng, id=SharedIdentifiers.ID_MNUFILEEXPPNG)
+        self.Bind(EVT_MENU, self._OnMnuFileExportPs,  id=SharedIdentifiers.ID_MNUFILEEXPPS)
+        self.Bind(EVT_MENU, self._OnMnuFileExportPDF, id=SharedIdentifiers.ID_MNUFILEEXPPDF)
+        self.Bind(EVT_MENU, self._OnMnuEditCut,       id=SharedIdentifiers.ID_MNUEDITCUT)
+        self.Bind(EVT_MENU, self._OnMnuEditCopy,      id=SharedIdentifiers.ID_MNUEDITCOPY)
+        self.Bind(EVT_MENU, self._OnMnuEditPaste,     id=SharedIdentifiers.ID_MNUEDITPASTE)
+        self.Bind(EVT_MENU, self._OnMnuSelectAll,     id=SharedIdentifiers.ID_MNUEDITSELECTALL)
+        self.Bind(EVT_MENU, self._OnMnuDebug,         id=SharedIdentifiers.ID_DEBUG)
 
         #  Added by P. Dabrowski 20.11.2005
-        self.Bind(EVT_MENU, self._OnMnuUndo, id=ID_MNUUNDO)
-        self.Bind(EVT_MENU, self._OnMnuRedo, id=ID_MNUREDO)
+        self.Bind(EVT_MENU, self._OnMnuUndo, id=SharedIdentifiers.ID_MNUUNDO)
+        self.Bind(EVT_MENU, self._OnMnuRedo, id=SharedIdentifiers.ID_MNUREDO)
 
         for index in range(self._prefs.getNbLOF()):
             self.Bind(EVT_MENU, self._OnMnuLOF, id=self.lastOpenedFilesID[index])
@@ -810,30 +511,29 @@ class AppFrame(Frame):
         """
         #  init accelerator table
         lst = [
-            (ACCEL_CTRL,     ord('n'),   ID_MNUFILENEWPROJECT),
-            (ACCEL_CTRL,     ord('N'),   ID_MNUFILENEWPROJECT),
-            (ACCEL_CTRL,     ord('L'),   ID_MNUFILENEWCLASSDIAGRAM),
-            (ACCEL_CTRL,     ord('l'),   ID_MNUFILENEWCLASSDIAGRAM),
-            (ACCEL_CTRL,     ord('E'),   ID_MNUFILENEWSEQUENCEDIAGRAM),
-            (ACCEL_CTRL,     ord('e'),   ID_MNUFILENEWSEQUENCEDIAGRAM),
-            (ACCEL_CTRL,     ord('U'),   ID_MNUFILENEWUSECASEDIAGRAM),
-            (ACCEL_CTRL,     ord('u'),   ID_MNUFILENEWUSECASEDIAGRAM),
-            (ACCEL_CTRL,     ord('o'),   ID_MNUFILEOPEN),
-            (ACCEL_CTRL,     ord('O'),   ID_MNUFILEOPEN),
-            (ACCEL_CTRL,     ord('s'),   ID_MNUFILESAVE),
-            (ACCEL_CTRL,     ord('S'),   ID_MNUFILESAVE),
-            (ACCEL_CTRL,     ord('a'),   ID_MNUFILESAVEAS),
-            (ACCEL_CTRL,     ord('A'),   ID_MNUFILESAVEAS),
-            (ACCEL_CTRL,     ord('p'),   ID_MNUFILEPRINT),
-            (ACCEL_CTRL,     ord('P'),   ID_MNUFILEPRINT),
-            (ACCEL_CTRL,     ord('x'),   ID_MNUEDITCUT),
-            (ACCEL_CTRL,     ord('X'),   ID_MNUEDITCUT),
-            (ACCEL_CTRL,     ord('c'),   ID_MNUEDITCOPY),
-            (ACCEL_CTRL,     ord('C'),   ID_MNUEDITCOPY),
-            (ACCEL_CTRL,     ord('v'),   ID_MNUEDITPASTE),
-            (ACCEL_CTRL,     ord('V'),   ID_MNUEDITPASTE),
-            (ACCEL_CTRL,     ord('d'),   ID_DEBUG),
-            (ACCEL_CTRL,     ord('D'),   ID_DEBUG),
+            (ACCEL_CTRL,     ord('n'),   SharedIdentifiers.ID_MNUFILENEWPROJECT),
+            (ACCEL_CTRL,     ord('N'),   SharedIdentifiers.ID_MNUFILENEWPROJECT),
+            (ACCEL_CTRL,     ord('l'),   SharedIdentifiers.ID_MNUFILENEWCLASSDIAGRAM),
+            (ACCEL_CTRL,     ord('E'),   SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM),
+            (ACCEL_CTRL,     ord('e'),   SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM),
+            (ACCEL_CTRL,     ord('U'),   SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM),
+            (ACCEL_CTRL,     ord('u'),   SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM),
+            (ACCEL_CTRL,     ord('o'),   SharedIdentifiers.ID_MNUFILEOPEN),
+            (ACCEL_CTRL,     ord('O'),   SharedIdentifiers.ID_MNUFILEOPEN),
+            (ACCEL_CTRL,     ord('s'),   SharedIdentifiers.ID_MNUFILESAVE),
+            (ACCEL_CTRL,     ord('S'),   SharedIdentifiers.ID_MNUFILESAVE),
+            (ACCEL_CTRL,     ord('a'),   SharedIdentifiers.ID_MNUFILESAVEAS),
+            (ACCEL_CTRL,     ord('A'),   SharedIdentifiers.ID_MNUFILESAVEAS),
+            (ACCEL_CTRL,     ord('p'),   SharedIdentifiers.ID_MNUFILEPRINT),
+            (ACCEL_CTRL,     ord('P'),   SharedIdentifiers.ID_MNUFILEPRINT),
+            (ACCEL_CTRL,     ord('x'),   SharedIdentifiers.ID_MNUEDITCUT),
+            (ACCEL_CTRL,     ord('X'),   SharedIdentifiers.ID_MNUEDITCUT),
+            (ACCEL_CTRL,     ord('c'),   SharedIdentifiers.ID_MNUEDITCOPY),
+            (ACCEL_CTRL,     ord('C'),   SharedIdentifiers.ID_MNUEDITCOPY),
+            (ACCEL_CTRL,     ord('v'),   SharedIdentifiers.ID_MNUEDITPASTE),
+            (ACCEL_CTRL,     ord('V'),   SharedIdentifiers.ID_MNUEDITPASTE),
+            (ACCEL_CTRL,     ord('d'),   SharedIdentifiers.ID_DEBUG),
+            (ACCEL_CTRL,     ord('D'),   SharedIdentifiers.ID_DEBUG),
             ]
         acc = []
         for el in lst:
@@ -1222,7 +922,7 @@ class AppFrame(Frame):
         """
         from org.pyut.dialogs.DlgAbout import DlgAbout
         from org.pyut.general.PyutVersion import PyutVersion
-        dlg = DlgAbout(self, -1, _("About PyUt ") + PyutVersion.getPyUtVersion())
+        dlg = DlgAbout(self, ID_ANY, _("About PyUt ") + PyutVersion.getPyUtVersion())
         dlg.ShowModal()
         dlg.Destroy()
 
@@ -1518,7 +1218,7 @@ class AppFrame(Frame):
             event:
         """
         self.logger.info(f'SD Instance: `{ACTION_NEW_SD_INSTANCE}`, SD Message: `{ACTION_NEW_SD_MESSAGE}`')
-        currentAction: int = ACTIONS[event.GetId()]
+        currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
         self._ctrl.setCurrentAction(currentAction)
         self._ctrl.selectTool(event.GetId())
         self._fileHandling.setModified(True)
