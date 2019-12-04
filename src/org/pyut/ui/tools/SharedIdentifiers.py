@@ -1,4 +1,11 @@
+
+from typing import Callable
+from typing import Dict
+from typing import NewType
+
 from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 
 from org.pyut.general.Mediator import ACTION_NEW_ACTOR
 from org.pyut.general.Mediator import ACTION_NEW_INHERIT_LINK
@@ -18,6 +25,9 @@ from org.pyut.general.Mediator import ACTION_NEW_USECASE
 
 
 class SharedIdentifiers:
+
+    CallbackMap = NewType('CallbackMap', Dict[ActionCallbackType, Callable])
+
     [
         ID_MNUFILENEWPROJECT, ID_MNUFILEOPEN, ID_MNUFILESAVE,
         ID_MNUFILESAVEAS, ID_MNUFILEEXIT, ID_MNUEDITCUT,

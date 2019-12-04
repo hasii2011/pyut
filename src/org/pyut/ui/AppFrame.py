@@ -204,7 +204,7 @@ class AppFrame(Frame):
 
     def _initPyutTools(self):
 
-        callbackMap: ToolsCreator.CallbackMap = cast(ToolsCreator.CallbackMap, {
+        callbackMap: SharedIdentifiers.CallbackMap = cast(SharedIdentifiers.CallbackMap, {
             ActionCallbackType.NEW_ACTION:           self._OnNewAction,
             ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
             ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,

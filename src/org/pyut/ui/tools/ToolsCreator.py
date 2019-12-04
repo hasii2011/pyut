@@ -1,7 +1,5 @@
 
 from typing import Callable
-from typing import Dict
-from typing import NewType
 from typing import cast
 
 from logging import Logger
@@ -53,12 +51,10 @@ from org.pyut.general.Globals import _
 
 class ToolsCreator:
 
-    CallbackMap = NewType('CallbackMap', Dict[ActionCallbackType, Callable])
-
-    def __init__(self, frame: Frame,  callbackMap: CallbackMap):
+    def __init__(self, frame: Frame,  callbackMap: SharedIdentifiers.CallbackMap):
 
         self._containingFrame: Frame = frame
-        self._callbackMap:     ToolsCreator.CallbackMap = callbackMap
+        self._callbackMap:     SharedIdentifiers.CallbackMap = callbackMap
 
         self.logger: Logger   = getLogger(__name__)
         self._ctrl:  Mediator = Mediator()
