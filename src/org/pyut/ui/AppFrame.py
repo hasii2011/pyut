@@ -18,7 +18,6 @@ from pkg_resources import resource_filename
 from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
-from wx import CommandEvent
 from wx import DEFAULT_FRAME_STYLE
 from wx import FRAME_EX_METAL
 from wx import ID_OK
@@ -44,6 +43,8 @@ from wx import NewId
 from wx import PrintData
 
 from wx import AcceleratorEntry
+from wx import Bitmap
+from wx import CommandEvent
 from wx import Frame
 from wx import DefaultPosition
 from wx import Size
@@ -66,8 +67,6 @@ from wx import EndBusyCursor
 from wx import WindowIDRef
 
 from wx import Yield as wxYield
-
-from wx.lib.embeddedimage import PyEmbeddedImage
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
@@ -491,8 +490,8 @@ class AppFrame(Frame):
 
             # Add tool
             if tool is not None:
-                toolId:    WindowIDRef     = tool.getWxId()
-                bitMap:    PyEmbeddedImage = tool.getImg()
+                toolId:    WindowIDRef = tool.getWxId()
+                bitMap:    Bitmap      = tool.getImg()
                 caption:   str  = tool.getCaption()
                 isToggle:  bool = tool.getIsToggle()
                 if isToggle is True:
