@@ -132,7 +132,7 @@ class AppFrame(Frame):
 
         # Properties
         self.plugMgr: PluginManager         = PluginManager()
-        self.plugs:   SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})    # To store the plugins
+        self.plugins: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})    # To store the plugins
         self._toolboxesID = {}                    # Association toolbox category/id
 
         self.mnuFile: Menu = cast(Menu, None)
@@ -292,269 +292,9 @@ class AppFrame(Frame):
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.initMenus()
         self.mnuFile      = self._menuCreator.fileMenu
-        self.plugs        = self._menuCreator.plugs
+        self.plugins        = self._menuCreator.plugins
         self._toolboxesID = self._menuCreator.toolboxIds
-        self.logger.info(f'self.mnuFile: {self.mnuFile}')
-
-    # def _initMenu(self):
-    #     """On
-    #     Menu initialization.
-    #
-    #     @since 1.0
-    #     @author N.Dubois
-    #     """
-    #     self.fileMenu = Menu()
-    #     self.mnuFileNew = Menu()
-    #     self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWPROJECT,         _("&New project\tCtrl-N"), _("New project"))
-    #     self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWCLASSDIAGRAM,    _("New c&lass diagram\tCtrl-L"), _("New class diagram"))
-    #     self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM, _("New s&equence diagram\tCtrl-E"), _("New sequence diagram"))
-    #     self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM,  _("New &use-case diagram\tCtrl-U"), _("New use-case diagram"))
-    #
-    #     self.fileMenu.Append(NewId(), _("&New"), self.mnuFileNew)
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEINSERTPROJECT,  _("&Insert a project...\t"), _("Insert a project in the current project..."))
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEOPEN,           _("&Open...\tCtrl-O"), _("Open a file..."))
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILESAVE,           _("&Save\tCtrl-S"), _("Save current data"))
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILESAVEAS,         _("Save &As...\tCtrl-A"), _("Save current data"))
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUPROJECTCLOSE,       _("&Close project\tCtrl-W"), _("Close current project"))
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEREMOVEDOCUMENT, _("&Remove document"), _("Remove the document from the project"))
-    #     self.fileMenu.AppendSeparator()
-    #
-    #     # added by L. Burgbacher, dynamic plugin support
-    #     sub = self.makeExportMenu()
-    #
-    #     # Fixed Export
-    #     if sub is None:
-    #         sub = Menu()
-    #     sub.Append(SharedIdentifiers.ID_MNUFILEEXPBMP, "&bmp",        _("Export data to a bitmap file"))
-    #     sub.Append(SharedIdentifiers.ID_MNUFILEEXPJPG, "&jpeg",       _("Export data to a jpeg file"))
-    #     sub.Append(SharedIdentifiers.ID_MNUFILEEXPPNG, "&png",        _("Export data to a png file"))
-    #     sub.Append(SharedIdentifiers.ID_MNUFILEEXPPS,  "&Postscript", _("Export data to a postscript file"))
-    #     sub.Append(SharedIdentifiers.ID_MNUFILEEXPPDF, "P&DF",        _("Export data to a PDF file"))
-    #
-    #     if sub is not None:
-    #         self.fileMenu.Append(NewId(), _("Export"), sub)
-    #
-    #     sub = self.makeImportMenu()
-    #     if sub is not None:
-    #         # self.fileMenu.AppendMenu(NewId(), _("Import"), sub)
-    #         self.fileMenu.Append(NewId(), _("Import"), sub)
-    #
-    #     self.fileMenu.AppendSeparator()
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEPYUTPROPER, _("PyUt P&roperties"), _("PyUt properties"))
-    #     # self.fileMenu.Append(ID_MNUFILEDIAGRAMPROPER,_("&Diagram Properties"), _("Diagram properties"))
-    #     self.fileMenu.AppendSeparator()
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEPRINTSETUP, _("Print se&tup..."), _("Display the print setup dialog box"))
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEPRINTPREV,  _("Print pre&view"),  _("Diagram preview before printing"))
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEPRINT,      _("&Print\tCtrl-P"),  _("Print the current diagram"))
-    #     self.fileMenu.AppendSeparator()
-    #
-    #     #  Add Last opened files
-    #     index = 0
-    #     #  TODO : does not work ? verify function return...
-    #     for el in self._prefs.getLastOpenedFilesList():
-    #         index += 1
-    #         self.fileMenu.Append(self.lastOpenedFilesID[index-1], "&" + str(index) + " " + el)
-    #     for index in range(index, self._prefs.getNbLOF()):
-    #         self.fileMenu.Append(self.lastOpenedFilesID[index], "&" + str(index+1) + " -")
-    #
-    #     # exit
-    #     self.fileMenu.AppendSeparator()
-    #     self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEEXIT, _("E&xit"), _("Exit PyUt"))
-    #
-    #     # -----------------
-    #     #     Edit menu
-    #     # -----------------
-    #     mnuEdit = Menu()
-    #     # Path from D.Dabrowsky, 20060129
-    #     mnuEdit.Append(SharedIdentifiers.ID_MNUUNDO, _("&Undo\tCtrl-Z"), _("Undo the last performed action"))
-    #     mnuEdit.Append(SharedIdentifiers.ID_MNUREDO, _("&Redo\tCtrl-Y"), _("Redo the last undone action"))
-    #     mnuEdit.AppendSeparator()
-    #     mnuEdit.Append(SharedIdentifiers.ID_MNUEDITCUT,    _("Cu&t\tCtrl-X"),   _("Cut selected data"))
-    #     mnuEdit.Append(SharedIdentifiers.ID_MNUEDITCOPY,   _("&Copy\tCtrl-C"),  _("Copy selected data"))
-    #     mnuEdit.Append(SharedIdentifiers.ID_MNUEDITPASTE,  _("&Paste\tCtrl-V"), _("Paste selected data"))
-    #     mnuEdit.AppendSeparator()
-    #     mnuEdit.Append(SharedIdentifiers.ID_MNUEDITSELECTALL, _("&Select all"), _("Select all elements"))
-    #     mnuEdit.AppendSeparator()
-    #     mnuEdit.Append(SharedIdentifiers.ID_MNUADDPYUTHIERARCHY, _("&Add Pyut hierarchy"), _("Add the UML Diagram of Pyut"))
-    #     mnuEdit.Append(SharedIdentifiers.ID_MNUADDOGLHIERARCHY, _("Add &Ogl hierarchy"),   _("Add the UML Diagram of Pyut - Ogl"))
-    #     if AppFrame.DEBUG_ERROR_VIEWS is True:
-    #         mnuEdit.AppendSeparator()
-    #         mnuEdit.Append(SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW, 'Show &Graphic Error View',  'Test graphical error view')
-    #         mnuEdit.Append(SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW,    'Show &Text Error View',     'Test text error view')
-    #         mnuEdit.Append(SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW,   'Show &Exception Error View', 'Test raising exception')
-    #     # -----------------
-    #     #    Tools menu
-    #     # -----------------
-    #     mnuTools = Menu()
-    #     sub = self.makeToolsMenu()
-    #     if sub is not None:
-    #         # mnuTools.AppendMenu(NewId(), _("Plugins tools"), sub)
-    #         mnuTools.Append(NewId(), _("Plugins tools"), sub)
-    #
-    #     sub = self.makeToolboxesMenu()
-    #     if sub is not None:
-    #         mnuTools.Append(NewId(), _("toolboxes"), sub)
-    #
-    #     # -----------------
-    #     #    Help menu
-    #     # -----------------
-    #     mnuHelp = Menu()
-    #     mnuHelp.Append(SharedIdentifiers.ID_MNUHELPINDEX, _("&Index"), _("Display help index"))
-    #     mnuHelp.AppendSeparator()
-    #     mnuHelp.Append(SharedIdentifiers.ID_MNUHELPVERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
-    #     mnuHelp.Append(SharedIdentifiers.ID_MNUHELPWEB, _("&Web site"), _("Open PyUt web site"))
-    #     mnuHelp.Append(SharedIdentifiers.ID_DEBUG,      _("&Debug"), _("Open IPython shell"))
-    #     mnuHelp.AppendSeparator()
-    #     mnuHelp.Append(SharedIdentifiers.ID_MNUHELPABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
-    #
-    #     # -----------------
-    #     #   make menu bar
-    #     # -----------------
-    #     mnuBar = MenuBar()
-    #     mnuBar.Append(self.fileMenu, _("&File"))
-    #     mnuBar.Append(mnuEdit, _("&Edit"))
-    #     mnuBar.Append(mnuTools, _("&Tools"))
-    #     mnuBar.Append(mnuHelp, "&?")
-    #     self.SetMenuBar(mnuBar)
-    #
-    #     # -----------------
-    #     # Events menu click
-    #     # -----------------
-    #     self.Bind(EVT_MENU, self._OnMnuFileNewProject,      id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
-    #     self.Bind(EVT_MENU, self._OnMnuFileNewClassDiagram, id=SharedIdentifiers.ID_MNUFILENEWCLASSDIAGRAM)
-    #     self.Bind(EVT_MENU, self._OnMnuFileNewSequenceDiagram, id=SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM)
-    #     self.Bind(EVT_MENU, self._OnMnuFileNewUsecaseDiagram,  id=SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM)
-    #     self.Bind(EVT_MENU, self._OnMnuFileInsertProject,      id=SharedIdentifiers.ID_MNUFILEINSERTPROJECT)
-    #     self.Bind(EVT_MENU, self._OnMnuFileOpen, id=SharedIdentifiers.ID_MNUFILEOPEN)
-    #     self.Bind(EVT_MENU, self._OnMnuFileSave, id=SharedIdentifiers.ID_MNUFILESAVE)
-    #     self.Bind(EVT_MENU, self._OnMnuFileSaveAs, id=SharedIdentifiers.ID_MNUFILESAVEAS)
-    #     self.Bind(EVT_MENU, self._OnMnuFileClose,  id=SharedIdentifiers.ID_MNUPROJECTCLOSE)
-    #     self.Bind(EVT_MENU, self._OnMnuFileRemoveDocument,  id=SharedIdentifiers.ID_MNUFILEREMOVEDOCUMENT)
-    #     self.Bind(EVT_MENU, self._OnMnuFilePrintSetup,      id=SharedIdentifiers.ID_MNUFILEPRINTSETUP)
-    #     self.Bind(EVT_MENU, self._OnMnuFilePrintPreview,    id=SharedIdentifiers.ID_MNUFILEPRINTPREV)
-    #     self.Bind(EVT_MENU, self._OnMnuFilePrint,           id=SharedIdentifiers.ID_MNUFILEPRINT)
-    #     self.Bind(EVT_MENU, self._OnMnuFilePyutProperties,  id=SharedIdentifiers.ID_MNUFILEPYUTPROPER)
-    #     #  EVT_MENU(self, ID_MNUFILEDIAGRAMPROPER,self._OnMnuFileDiagramProperties)
-    #     self.Bind(EVT_MENU, self._OnMnuFileExit,     id=SharedIdentifiers.ID_MNUFILEEXIT)
-    #     self.Bind(EVT_MENU, self._OnMnuHelpAbout,    id=SharedIdentifiers.ID_MNUHELPABOUT)
-    #     self.Bind(EVT_MENU, self._OnMnuHelpIndex,    id=SharedIdentifiers.ID_MNUHELPINDEX)
-    #     self.Bind(EVT_MENU, self._OnMnuHelpVersion,  id=SharedIdentifiers.ID_MNUHELPVERSION)
-    #     self.Bind(EVT_MENU, self._OnMnuHelpWeb,      id=SharedIdentifiers.ID_MNUHELPWEB)
-    #     self.Bind(EVT_MENU, self._OnMnuAddPyut,      id=SharedIdentifiers.ID_MNUADDPYUTHIERARCHY)
-    #     self.Bind(EVT_MENU, self._OnMnuAddOgl,       id=SharedIdentifiers.ID_MNUADDOGLHIERARCHY)
-    #
-    #     if AppFrame.DEBUG_ERROR_VIEWS is True:
-    #         from org.pyut.experimental.DebugErrorViews import DebugErrorViews
-    #         self.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
-    #         self.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView, id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
-    #         self.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView, id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
-    #
-    #     self.Bind(EVT_MENU, self._OnMnuFileExportBmp, id=SharedIdentifiers.ID_MNUFILEEXPBMP)
-    #     self.Bind(EVT_MENU, self._OnMnuFileExportJpg, id=SharedIdentifiers.ID_MNUFILEEXPJPG)
-    #     self.Bind(EVT_MENU, self._OnMnuFileExportPng, id=SharedIdentifiers.ID_MNUFILEEXPPNG)
-    #     self.Bind(EVT_MENU, self._OnMnuFileExportPs,  id=SharedIdentifiers.ID_MNUFILEEXPPS)
-    #     self.Bind(EVT_MENU, self._OnMnuFileExportPDF, id=SharedIdentifiers.ID_MNUFILEEXPPDF)
-    #     self.Bind(EVT_MENU, self._OnMnuEditCut,       id=SharedIdentifiers.ID_MNUEDITCUT)
-    #     self.Bind(EVT_MENU, self._OnMnuEditCopy,      id=SharedIdentifiers.ID_MNUEDITCOPY)
-    #     self.Bind(EVT_MENU, self._OnMnuEditPaste,     id=SharedIdentifiers.ID_MNUEDITPASTE)
-    #     self.Bind(EVT_MENU, self._OnMnuSelectAll,     id=SharedIdentifiers.ID_MNUEDITSELECTALL)
-    #     self.Bind(EVT_MENU, self._OnMnuDebug,         id=SharedIdentifiers.ID_DEBUG)
-    #
-    #     #  Added by P. Dabrowski 20.11.2005
-    #     self.Bind(EVT_MENU, self._OnMnuUndo, id=SharedIdentifiers.ID_MNUUNDO)
-    #     self.Bind(EVT_MENU, self._OnMnuRedo, id=SharedIdentifiers.ID_MNUREDO)
-    #
-    #     for index in range(self._prefs.getNbLOF()):
-    #         self.Bind(EVT_MENU, self._OnMnuLOF, id=self.lastOpenedFilesID[index])
-    #
-    #     # ----------------------
-    #     # Others events handlers
-    #     # ----------------------
-    #     self.Bind(EVT_CLOSE, self.Close)
-
-    # def makeExportMenu(self):
-    #     """
-    #     Make the export submenu.
-    #
-    #     @author L. Burgbacher <lb@alawa.ch>
-    #     @since 1.26
-    #     """
-    #     plugs = self.plugMgr.getOutputPlugins()
-    #     nb = len(plugs)
-    #     if nb == 0:
-    #         return None
-    #     sub = Menu()
-    #
-    #     for i in range(nb):
-    #         pluginId = NewId()
-    #         obj = plugs[i](None, None)
-    #         sub.Append(pluginId, obj.getOutputFormat()[0])
-    #         self.Bind(EVT_MENU, self.OnExport, id=pluginId)
-    #         self.plugs[pluginId] = plugs[i]
-    #     return sub
-    #
-    # def makeImportMenu(self):
-    #     """
-    #     Make the import submenu.
-    #
-    #     @author L. Burgbacher <lb@alawa.ch>
-    #     @since 1.26
-    #     """
-    #     plugs = self.plugMgr.getInputPlugins()
-    #     nb = len(plugs)
-    #     if nb == 0:
-    #         return None
-    #     sub = Menu()
-    #
-    #     for i in range(nb):
-    #         importId = NewId()
-    #         obj = plugs[i](None, None)
-    #         sub.Append(importId, obj.getInputFormat()[0])
-    #         self.Bind(EVT_MENU, self.OnImport, id=importId)
-    #         self.plugs[importId] = plugs[i]
-    #     return sub
-
-    # def makeToolsMenu(self):
-    #     """
-    #     Make the tools submenu.
-    #
-    #     @author L. Burgbacher <lb@alawa.ch>
-    #     @since 1.26
-    #     """
-    #     plugs = self.plugMgr.getToolPlugins()
-    #     nb = len(plugs)
-    #     if nb == 0:
-    #         return None
-    #     sub = Menu()
-    #
-    #     for i in range(nb):
-    #         anId = NewId()
-    #         obj = plugs[i](None, None)
-    #         sub.Append(anId, obj.getMenuTitle())
-    #         self.Bind(EVT_MENU, self.OnToolPlugin, id=anId)
-    #         self.plugs[anId] = plugs[i]
-    #     return sub
-    #
-    # def makeToolboxesMenu(self):
-    #     """
-    #     Make the toolboxes submenu.
-    #
-    #     @author C.Dutoit <dutoitc@hotmail.com>
-    #     @since 1.4
-    #     """
-    #     # Get categories
-    #     categories = self._ctrl.getToolboxesCategories()
-    #     nb = len(categories)
-    #     if nb == 0:
-    #         return None
-    #     sub = Menu()
-    #
-    #     for category in categories:
-    #         categoryId = NewId()
-    #         self._toolboxesID[categoryId] = category
-    #         sub.Append(categoryId, category)
-    #         self.Bind(EVT_MENU, self.OnToolboxMenuClick, id=categoryId)
-    #     return sub
+        self.logger.debug(f'self.mnuFile: {self.mnuFile}')
 
     def _createAcceleratorTable(self):
         """
@@ -1211,7 +951,7 @@ class AppFrame(Frame):
         self._fileHandling.newProject()
         self._fileHandling.newDocument(DiagramType.CLASS_DIAGRAM)
         self._ctrl.updateTitle()
-        cl = self.plugs[event.GetId()]
+        cl = self.plugins[event.GetId()]
 
         obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
 
@@ -1238,7 +978,7 @@ class AppFrame(Frame):
         @since 1.26
         """
         # Create a plugin instance
-        cl = self.plugs[event.GetId()]
+        cl = self.plugins[event.GetId()]
         umlObjs: List[OglClass]         = self._ctrl.getUmlObjects()
         umlFrame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
         obj = cl(umlObjs, umlFrame)
@@ -1249,7 +989,7 @@ class AppFrame(Frame):
 
     def OnToolPlugin(self, event):
         # Create a plugin instance
-        cl = self.plugs[event.GetId()]
+        cl = self.plugins[event.GetId()]
         obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
 
         # Do plugin functionality

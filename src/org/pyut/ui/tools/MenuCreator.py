@@ -40,7 +40,7 @@ class MenuCreator:
         self.plugMgr: PluginManager   = PluginManager()
         self._mnuFile: Menu           = Menu()
 
-        self._plugs: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})    # To store the plugins
+        self._plugins: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})    # To store the plugins
         self._toolboxesID = {}                      # Association toolbox category/id
 
     def getFileMenu(self) -> Menu:
@@ -49,11 +49,11 @@ class MenuCreator:
     def setFileMenu(self, theNewValue: Menu):
         self._mnuFile = theNewValue
 
-    def getPlugs(self) -> SharedTypes.PluginMap:
-        return self._plugs
+    def getPlugins(self) -> SharedTypes.PluginMap:
+        return self._plugins
 
-    def setPlugs(self, theNewValues: SharedTypes.PluginMap):
-        self._plugs = theNewValues
+    def setPlugins(self, theNewValues: SharedTypes.PluginMap):
+        self._plugins = theNewValues
 
     def getToolboxIds(self):
         return self._toolboxesID
@@ -62,7 +62,7 @@ class MenuCreator:
         self._toolboxesID = theNewValues
 
     fileMenu                     = property(getFileMenu, setFileMenu)
-    plugs: SharedTypes.PluginMap = property(getPlugs, setPlugs)
+    plugins: SharedTypes.PluginMap = property(getPlugins, setPlugins)
     toolboxIds                   = property(getToolboxIds, setToolboxIds)
 
     def initMenus(self):
@@ -115,7 +115,7 @@ class MenuCreator:
             index += 1
             # self.fileMenu.Append(self.lastOpenedFilesID[index - 1], "&" + str(index) + " " + el)
             lof: str = f"&{str(index)} {el}"
-            self.logger.info(f'self.lastOpenedFilesID[index - 1]: {self.lastOpenedFilesID[index - 1]}  lof: {lof}  ')
+            self.logger.debug(f'self.lastOpenedFilesID[index - 1]: {self.lastOpenedFilesID[index - 1]}  lof: {lof}  ')
             self.fileMenu.Append(self.lastOpenedFilesID[index - 1], lof)
 
         for index in range(index, self._prefs.getNbLOF()):
@@ -240,7 +240,7 @@ class MenuCreator:
             obj = plugs[i](None, None)
             sub.Append(pluginId, obj.getOutputFormat()[0])
             self._containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXPORT], id=pluginId)
-            self.plugs[pluginId] = plugs[i]
+            self.plugins[pluginId] = plugs[i]
         return sub
 
     def makeImportMenu(self):
@@ -259,7 +259,7 @@ class MenuCreator:
             obj = plugs[i](None, None)
             sub.Append(importId, obj.getInputFormat()[0])
             self._containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.IMPORT], id=importId)
-            self.plugs[importId] = plugs[i]
+            self.plugins[importId] = plugs[i]
         return sub
 
     def makeToolsMenu(self):
@@ -278,7 +278,7 @@ class MenuCreator:
             obj = plugs[i](None, None)
             sub.Append(wxId, obj.getMenuTitle())
             self._containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.TOOL_PLUGIN], id=wxId)
-            self.plugs[wxId] = plugs[i]
+            self.plugins[wxId] = plugs[i]
         return sub
 
     def makeToolboxesMenu(self):
