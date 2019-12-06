@@ -70,7 +70,6 @@ class ToolsCreator:
                          _("Arrow"),
                          _("Select tool"),
                          _("PyUt tools"),
-                         # (lambda x: self._OnNewAction(x)),
                          self._callbackMap[ActionCallbackType.NEW_ACTION],
                          cast(Callable, None), wxID=SharedIdentifiers.ID_ARROW, isToggle=True)
 
@@ -78,7 +77,6 @@ class ToolsCreator:
                          _("Class"),
                          _("Create a new class"),
                          _("PyUt tools"),
-                         # (lambda x: self._OnNewAction(x)),
                          self._callbackMap[ActionCallbackType.NEW_ACTION],
                          cast(Callable, None), wxID=SharedIdentifiers.ID_CLASS, isToggle=True)
 
@@ -86,7 +84,6 @@ class ToolsCreator:
                          _("Actor"),
                          _("Create a new actor"),
                          _("PyUt tools"),
-                         # (lambda x: self._OnNewAction(x)),
                          self._callbackMap[ActionCallbackType.NEW_ACTION],
                          cast(Callable, None), wxID=SharedIdentifiers.ID_ACTOR, isToggle=True)
 
@@ -94,7 +91,6 @@ class ToolsCreator:
                            _("System"),
                            _("Create a new use case"),
                            _("PyUt tools"),
-                           # (lambda x: self._OnNewAction(x)),
                            self._callbackMap[ActionCallbackType.NEW_ACTION],
                            cast(Callable, None), wxID=SharedIdentifiers.ID_USECASE, isToggle=True)
 
@@ -102,7 +98,6 @@ class ToolsCreator:
                         _("Note"),
                         _("Create a new note"),
                         _("PyUt tools"),
-                        # (lambda x: self._OnNewAction(x)),
                         self._callbackMap[ActionCallbackType.NEW_ACTION],
                         cast(Callable, None), wxID=SharedIdentifiers.ID_NOTE, isToggle=True)
 
@@ -110,7 +105,6 @@ class ToolsCreator:
                           _("Zoom In"),
                           _("Zoom in on the selected area"),
                           _("PyUt tools"),
-                          # (lambda x: self._OnNewAction(x)),
                           self._callbackMap[ActionCallbackType.NEW_ACTION],
                           cast(Callable, None), wxID=SharedIdentifiers.ID_ZOOMIN, isToggle=True)
 
@@ -118,7 +112,6 @@ class ToolsCreator:
                            _("Zoom Out"),
                            _("Zoom out from the clicked point"),
                            _("PyUt tools"),
-                           # (lambda x: self._OnNewAction(x)),
                            self._callbackMap[ActionCallbackType.NEW_ACTION],
                            cast(Callable, None), wxID=SharedIdentifiers.ID_ZOOMOUT, isToggle=True)
 
@@ -127,7 +120,6 @@ class ToolsCreator:
                               _("New Project"),
                               _("Create a new project"),
                               _("PyUt menu"),
-                              # (lambda x: self._OnMnuFileNewProject(x)),
                               self._callbackMap[ActionCallbackType.NEW_PROJECT],
                               cast(Callable, None), wxID=SharedIdentifiers.ID_MNUFILENEWPROJECT)
 
@@ -135,7 +127,6 @@ class ToolsCreator:
                                    _("New Class Diagram"),
                                    _("Create a new class diagram"),
                                    _("PyUt menu"),
-                                   # (lambda x: self._OnMnuFileNewClassDiagram(x)),
                                    self._callbackMap[ActionCallbackType.NEW_CLASS_DIAGRAM],
                                    cast(Callable, None), wxID=SharedIdentifiers.ID_MNUFILENEWCLASSDIAGRAM)
 
@@ -143,7 +134,6 @@ class ToolsCreator:
                                       _("New Sequence Diagram"),
                                       _("Create a new sequence diagram"),
                                       _("PyUt menu"),
-                                      # (lambda x: self._OnMnuFileNewSequenceDiagram(x)),
                                       self._callbackMap[ActionCallbackType.NEW_SEQUENCE_DIAGRAM],
                                       cast(Callable, None), wxID=SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM)
 
@@ -151,7 +141,6 @@ class ToolsCreator:
                                      _("New Use-Case diagram"),
                                      _("Create a new use-case diagram"),
                                      _("PyUt menu"),
-                                     # (lambda x: self._OnMnuFileNewUsecaseDiagram(x)),
                                      self._callbackMap[ActionCallbackType.NEW_USE_CASE_DIAGRAM],
                                      cast(Callable, None), wxID=SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM)
 
@@ -159,7 +148,6 @@ class ToolsCreator:
                         _("Open"),
                         _("Open a file"),
                         _("PyUt menu"),
-                        # (lambda x: self._OnMnuFileOpen(x)),
                         self._callbackMap[ActionCallbackType.FILE_OPEN],
                         cast(Callable, None), wxID=SharedIdentifiers.ID_MNUFILEOPEN)
 
@@ -167,7 +155,6 @@ class ToolsCreator:
                         _("Save"),
                         _("Save current UML Diagram"),
                         _("PyUt menu"),
-                        # (lambda x: self._OnMnuFileSave(x)),
                         (lambda x: self._callbackMap[ActionCallbackType.FILE_SAVE]),
                         cast(Callable, None), wxID=SharedIdentifiers.ID_MNUFILESAVE)
 
@@ -175,7 +162,6 @@ class ToolsCreator:
                         _("undo"),
                         _("undo the last performed action"),
                         _("PyUt menu"),
-                        # (lambda x: self._OnMnuUndo(x)),
                         self._callbackMap[ActionCallbackType.UNDO],
                         cast(Callable, None), wxID=SharedIdentifiers.ID_MNUUNDO)
 
@@ -183,7 +169,6 @@ class ToolsCreator:
                         _("redo"),
                         _("redo the last undone action"),
                         _("PyUt menu"),
-                        # (lambda x: self._OnMnuRedo(x)),
                         self._callbackMap[ActionCallbackType.REDO],
                         cast(Callable, None), wxID=SharedIdentifiers.ID_MNUREDO)
 
@@ -192,7 +177,6 @@ class ToolsCreator:
                                   _("New inheritance relation"),
                                   _("New inheritance relation"),
                                   _("PyUt tools"),
-                                  # (lambda x: self._OnNewAction(x)),
                                   self._callbackMap[ActionCallbackType.NEW_ACTION],
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_INHERITANCE, isToggle=True)
 
@@ -200,7 +184,6 @@ class ToolsCreator:
                                   _("New Realization relation"),
                                   _("New Realization relation"),
                                   _("PyUt tools"),
-                                  # (lambda x: self._OnNewAction(x)),
                                   self._callbackMap[ActionCallbackType.NEW_ACTION],
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_REALISATION, isToggle=True)
 
@@ -208,7 +191,6 @@ class ToolsCreator:
                                   _("New composition relation"),
                                   _("New composition relation"),
                                   _("PyUt tools"),
-                                  # (lambda x: self._OnNewAction(x)),
                                   self._callbackMap[ActionCallbackType.NEW_ACTION],
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_COMPOSITION, isToggle=True)
 
@@ -216,7 +198,6 @@ class ToolsCreator:
                                  _("New aggregation relation"),
                                  _("New aggregation relation"),
                                  _("PyUt tools"),
-                                 # (lambda x: self._OnNewAction(x)),
                                  self._callbackMap[ActionCallbackType.NEW_ACTION],
                                  cast(Callable, None), wxID=SharedIdentifiers.ID_REL_AGGREGATION, isToggle=True)
 
@@ -224,7 +205,6 @@ class ToolsCreator:
                                   _("New association relation"),
                                   _("New association relation"),
                                   _("PyUt tools"),
-                                  # (lambda x: self._OnNewAction(x)),
                                   self._callbackMap[ActionCallbackType.NEW_ACTION],
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_ASSOCIATION, isToggle=True)
 
@@ -232,7 +212,6 @@ class ToolsCreator:
                            _("New note relation"),
                            _("New note relation"),
                            _("PyUt tools"),
-                           # (lambda x: self._OnNewAction(x)),
                            self._callbackMap[ActionCallbackType.NEW_ACTION],
                            cast(Callable, None), wxID=SharedIdentifiers.ID_REL_NOTE, isToggle=True)
 
@@ -240,7 +219,6 @@ class ToolsCreator:
                               _("New sequence diagram instance object"),
                               _("New sequence diagram instance object"),
                               _("PyUt tools"),
-                              # (lambda x: self._OnNewAction(x)),
                               self._callbackMap[ActionCallbackType.NEW_ACTION],
                               cast(Callable, None), wxID=SharedIdentifiers.ID_SD_INSTANCE, isToggle=True)
 
@@ -248,7 +226,6 @@ class ToolsCreator:
                              _("New sequence diagram message object"),
                              _("New sequence diagram message object"),
                              _("PyUt tools"),
-                             # (lambda x: self._OnNewAction(x)),
                              self._callbackMap[ActionCallbackType.NEW_ACTION],
                              cast(Callable, None), wxID=SharedIdentifiers.ID_SD_MESSAGE, isToggle=True)
 

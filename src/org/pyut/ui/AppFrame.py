@@ -71,8 +71,6 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.TipsFrame import TipsFrame
 
-from org.pyut.general.Globals import _
-from org.pyut.general.Globals import IMG_PKG
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
 
@@ -91,6 +89,8 @@ from org.pyut.plugins.PluginManager import PluginManager
 from org.pyut.general.Mediator import ACTION_NEW_SD_MESSAGE
 from org.pyut.general.Mediator import ACTION_NEW_SD_INSTANCE
 from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Globals import _
+from org.pyut.general.Globals import IMG_PKG
 
 
 class AppFrame(Frame):
@@ -121,23 +121,22 @@ class AppFrame(Frame):
         super().__init__(parent, ID, title, DefaultPosition, Size(960, 480), DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
         self.logger: Logger = getLogger(__name__)
-
         # Create the application's icon
-        fileName = resource_filename(IMG_PKG, 'pyut.ico')
-        icon = Icon(fileName, BITMAP_TYPE_ICO)
+        fileName: str  = resource_filename(IMG_PKG, 'pyut.ico')
+        icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
         self.SetIcon(icon)
 
         self.Center(BOTH)                     # Center on the screen
         self.CreateStatusBar()
 
         # Properties
-        self.plugMgr: PluginManager         = PluginManager()
-        self.plugins: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})            # To store the plugins
-        self._toolboxesID: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
-
-        self.mnuFile: Menu = cast(Menu, None)
-
-        self._prefs: PyutPreferences = PyutPreferences()
+        self.plugMgr:     PluginManager            = PluginManager()
+        self.plugins:     SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
+        self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
+        self.mnuFile:     Menu            = cast(Menu, None)
+        self._prefs:      PyutPreferences = PyutPreferences()
+        self._clipboard = []
+        self._currentDirectory = getcwd()
 
         self._lastDir = self._prefs["LastDirectory"]
         if self._lastDir is None:  # Assert that the path is present
@@ -167,10 +166,7 @@ class AppFrame(Frame):
         accel_table = AcceleratorTable(acc)
         self.SetAcceleratorTable(accel_table)
 
-        # Members vars
-        self._currentDirectory = getcwd()
         self._ctrl.registerAppPath(self._currentDirectory)
-        self._clipboard = []
 
         # set application title
         self._fileHandling.newProject()
@@ -292,8 +288,8 @@ class AppFrame(Frame):
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.initMenus()
         self.mnuFile      = self._menuCreator.fileMenu
-        self.plugins        = self._menuCreator.plugins
-        self._toolboxesID = self._menuCreator.toolboxIds
+        self.plugins       = self._menuCreator.plugins
+        self._toolboxIds = self._menuCreator.toolboxIds
         self.logger.debug(f'self.mnuFile: {self.mnuFile}')
 
     def _createAcceleratorTable(self):
@@ -1008,7 +1004,7 @@ class AppFrame(Frame):
             umlFrame.Refresh()
 
     def OnToolboxMenuClick(self, event):
-        self._ctrl.displayToolbox(self._toolboxesID[event.GetId()])
+        self._ctrl.displayToolbox(self._toolboxIds[event.GetId()])
 
     def _OnNewAction(self, event):
         """
