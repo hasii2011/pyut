@@ -37,7 +37,7 @@ class MenuCreator:
         self.plugMgr: PluginManager   = PluginManager()
         self._mnuFile: Menu           = Menu()
 
-        self.plugs = {}                         # To store the plugins
+        self._plugs = {}                        # To store the plugins
         self._toolboxesID = {}                  # Association toolbox category/id
 
     def getFileMenu(self) -> Menu:
@@ -46,7 +46,14 @@ class MenuCreator:
     def setFileMenu(self, theNewValue: Menu):
         self._mnuFile = theNewValue
 
+    def getPlugs(self):
+        return self._plugs
+
+    def setPlugs(self, theNewValue):
+        self._plugs = theNewValue
+
     fileMenu = property(getFileMenu, setFileMenu)
+    plugs    = property(getPlugs, setPlugs)
 
     def initMenus(self):
 
@@ -248,9 +255,6 @@ class MenuCreator:
     def makeToolsMenu(self):
         """
         Make the tools submenu.
-
-        @author L. Burgbacher <lb@alawa.ch>
-        @since 1.26
         """
         plugs = self.plugMgr.getToolPlugins()
         nb = len(plugs)

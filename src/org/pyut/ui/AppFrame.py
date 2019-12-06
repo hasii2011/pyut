@@ -131,7 +131,7 @@ class AppFrame(Frame):
 
         # Properties
         self.plugMgr = PluginManager()
-        self.plugs = {}                         # To store the plugins
+        self.plugs   = {}                         # To store the plugins
         self._toolboxesID = {}                  # Association toolbox category/id
         self.mnuFile: Menu = cast(Menu, None)
 
@@ -178,6 +178,31 @@ class AppFrame(Frame):
         # Init tips frame
         self._alreadyDisplayedTipsFrame = False
         self.Bind(EVT_ACTIVATE, self._onActivate)
+
+    def updateCurrentDir(self, fullPath):
+        """
+        Set current working directory.
+
+        @param String fullPath : Full path, with filename
+
+        @author P. Waelti <pwaelti@eivd.ch>
+        @since 1.50
+        """
+        self._lastDir = fullPath[:fullPath.rindex(osSeparator)]
+
+        # Save last directory
+        self._prefs["LastDirectory"] = self._lastDir
+
+    def getCurrentDir(self):
+        """
+        Return current working directory.
+
+        @return String : Current directory
+
+        @author P. Waelti <pwaelti@eivd.ch>
+        @since 1.50
+        """
+        return self._lastDir
 
     def _onActivate(self, event):
         """
@@ -264,6 +289,7 @@ class AppFrame(Frame):
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.initMenus()
         self.mnuFile = self._menuCreator.fileMenu
+        self.plugs   = self._menuCreator.plugs
         self.logger.info(f'self.mnuFile: {self.mnuFile}')
 
     # def _initMenu(self):
@@ -525,31 +551,6 @@ class AppFrame(Frame):
     #         sub.Append(categoryId, category)
     #         self.Bind(EVT_MENU, self.OnToolboxMenuClick, id=categoryId)
     #     return sub
-
-    def getCurrentDir(self):
-        """
-        Return current working directory.
-
-        @return String : Current directory
-
-        @author P. Waelti <pwaelti@eivd.ch>
-        @since 1.50
-        """
-        return self._lastDir
-
-    def updateCurrentDir(self, fullPath):
-        """
-        Set current working directory.
-
-        @param String fullPath : Full path, with filename
-
-        @author P. Waelti <pwaelti@eivd.ch>
-        @since 1.50
-        """
-        self._lastDir = fullPath[:fullPath.rindex(osSeparator)]
-
-        # Save last directory
-        self._prefs["LastDirectory"] = self._lastDir
 
     def _createAcceleratorTable(self):
         """
