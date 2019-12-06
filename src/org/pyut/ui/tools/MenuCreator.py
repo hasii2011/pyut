@@ -40,8 +40,8 @@ class MenuCreator:
         self.plugMgr: PluginManager   = PluginManager()
         self._mnuFile: Menu           = Menu()
 
-        self._plugins: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})    # To store the plugins
-        self._toolboxesID = {}                      # Association toolbox category/id
+        self._plugins:     SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
+        self._toolboxesID: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id
 
     def getFileMenu(self) -> Menu:
         return self._mnuFile
@@ -55,15 +55,15 @@ class MenuCreator:
     def setPlugins(self, theNewValues: SharedTypes.PluginMap):
         self._plugins = theNewValues
 
-    def getToolboxIds(self):
+    def getToolboxIds(self) -> SharedTypes.ToolboxIdMap:
         return self._toolboxesID
 
-    def setToolboxIds(self, theNewValues):
+    def setToolboxIds(self, theNewValues: SharedTypes.ToolboxIdMap):
         self._toolboxesID = theNewValues
 
-    fileMenu                     = property(getFileMenu, setFileMenu)
-    plugins: SharedTypes.PluginMap = property(getPlugins, setPlugins)
-    toolboxIds                   = property(getToolboxIds, setToolboxIds)
+    fileMenu:   Menu                     = property(getFileMenu, setFileMenu)
+    plugins:    SharedTypes.PluginMap    = property(getPlugins, setPlugins)
+    toolboxIds: SharedTypes.ToolboxIdMap = property(getToolboxIds, setToolboxIds)
 
     def initMenus(self):
 

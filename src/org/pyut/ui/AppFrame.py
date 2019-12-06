@@ -132,8 +132,8 @@ class AppFrame(Frame):
 
         # Properties
         self.plugMgr: PluginManager         = PluginManager()
-        self.plugins: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})    # To store the plugins
-        self._toolboxesID = {}                    # Association toolbox category/id
+        self.plugins: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})            # To store the plugins
+        self._toolboxesID: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
 
         self.mnuFile: Menu = cast(Menu, None)
 

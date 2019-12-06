@@ -8,5 +8,6 @@ from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 
 class SharedTypes:
 
-    CallbackMap = NewType('CallbackMap', Dict[ActionCallbackType, Callable])
-    PluginMap   = NewType('PluginMap',   Dict[int, type])
+    CallbackMap  = NewType('CallbackMap',  Dict[ActionCallbackType, Callable])
+    PluginMap    = NewType('PluginMap',    Dict[int, type])
+    ToolboxIdMap = NewType('ToolboxIdMap', Dict[int, str])
