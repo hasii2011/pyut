@@ -74,6 +74,7 @@ from org.pyut.ui.TipsFrame import TipsFrame
 from org.pyut.general.Globals import _
 from org.pyut.general.Globals import IMG_PKG
 from org.pyut.ui.tools.MenuCreator import MenuCreator
+from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
@@ -130,10 +131,9 @@ class AppFrame(Frame):
         self.CreateStatusBar()
 
         # Properties
-        self.plugMgr = PluginManager()
-        self.plugs   = {}                         # To store the plugins
+        self.plugMgr: PluginManager         = PluginManager()
+        self.plugs:   SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})    # To store the plugins
         self._toolboxesID = {}                    # Association toolbox category/id
-        self._toolboxesID = {}                  # Association toolbox category/id
 
         self.mnuFile: Menu = cast(Menu, None)
 
@@ -160,7 +160,6 @@ class AppFrame(Frame):
         # Initialization
         self._initPyutTools()   # Toolboxes, toolbar
         self._initMenu()        # Menu
-        #  self._initToolBar()  # Toolbar
         self._initPrinting()    # Printing data
 
         # Accelerators init. (=Keyboards shortcuts)
@@ -228,7 +227,7 @@ class AppFrame(Frame):
 
     def _initPyutTools(self):
 
-        callbackMap: SharedIdentifiers.CallbackMap = cast(SharedIdentifiers.CallbackMap, {
+        callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
             ActionCallbackType.NEW_ACTION:           self._OnNewAction,
             ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
             ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
@@ -239,12 +238,13 @@ class AppFrame(Frame):
             ActionCallbackType.UNDO:                 self._OnMnuUndo,
             ActionCallbackType.REDO:                 self._OnMnuRedo,
         })
+
         self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
         self._toolsCreator.initTools()
 
     def _initMenu(self):
 
-        callbackMap: SharedIdentifiers.CallbackMap = cast(SharedIdentifiers.CallbackMap, {
+        callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
             ActionCallbackType.NEW_PROJECT:          self._OnMnuFileNewProject,
             ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
             ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
@@ -288,6 +288,7 @@ class AppFrame(Frame):
             ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
             ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
         })
+
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.initMenus()
         self.mnuFile      = self._menuCreator.fileMenu

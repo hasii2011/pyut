@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -18,6 +20,7 @@ from org.pyut.plugins.PluginManager import PluginManager
 
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 from org.pyut.general.Globals import _
 
@@ -26,10 +29,10 @@ class MenuCreator:
 
     DEBUG_ERROR_VIEWS: bool = True      # TODO Make this a runtime flag
 
-    def __init__(self, frame: Frame,  callbackMap: SharedIdentifiers.CallbackMap, lastOpenFilesID):
+    def __init__(self, frame: Frame,  callbackMap: SharedTypes.CallbackMap, lastOpenFilesID):
 
         self._containingFrame: Frame = frame
-        self._callbackMap:     SharedIdentifiers.CallbackMap = callbackMap
+        self._callbackMap:     SharedTypes.CallbackMap = callbackMap
         self.lastOpenedFilesID = lastOpenFilesID
 
         self.logger:  Logger          = getLogger(__name__)
@@ -37,8 +40,8 @@ class MenuCreator:
         self.plugMgr: PluginManager   = PluginManager()
         self._mnuFile: Menu           = Menu()
 
-        self._plugs = {}                        # To store the plugins
-        self._toolboxesID = {}                  # Association toolbox category/id
+        self._plugs: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})    # To store the plugins
+        self._toolboxesID = {}                      # Association toolbox category/id
 
     def getFileMenu(self) -> Menu:
         return self._mnuFile
@@ -46,11 +49,11 @@ class MenuCreator:
     def setFileMenu(self, theNewValue: Menu):
         self._mnuFile = theNewValue
 
-    def getPlugs(self):
+    def getPlugs(self) -> SharedTypes.PluginMap:
         return self._plugs
 
-    def setPlugs(self, theNewValue):
-        self._plugs = theNewValue
+    def setPlugs(self, theNewValues: SharedTypes.PluginMap):
+        self._plugs = theNewValues
 
     def getToolboxIds(self):
         return self._toolboxesID
@@ -58,9 +61,9 @@ class MenuCreator:
     def setToolboxIds(self, theNewValues):
         self._toolboxesID = theNewValues
 
-    fileMenu    = property(getFileMenu, setFileMenu)
-    plugs       = property(getPlugs, setPlugs)
-    toolboxIds  = property(getToolboxIds, setToolboxIds)
+    fileMenu                     = property(getFileMenu, setFileMenu)
+    plugs: SharedTypes.PluginMap = property(getPlugs, setPlugs)
+    toolboxIds                   = property(getToolboxIds, setToolboxIds)
 
     def initMenus(self):
 
@@ -171,7 +174,7 @@ class MenuCreator:
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
 
-        cb: SharedIdentifiers.CallbackMap = self._callbackMap
+        cb: SharedTypes.CallbackMap = self._callbackMap
 
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_PROJECT],       id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_CLASS_DIAGRAM], id=SharedIdentifiers.ID_MNUFILENEWCLASSDIAGRAM)
@@ -230,7 +233,7 @@ class MenuCreator:
         if nb == 0:
             return None
         sub: Menu = Menu()
-        cb:  SharedIdentifiers.CallbackMap = self._callbackMap
+        cb:  SharedTypes.CallbackMap = self._callbackMap
 
         for i in range(nb):
             pluginId = NewId()
@@ -249,7 +252,7 @@ class MenuCreator:
         if nb == 0:
             return None
         sub: Menu = Menu()
-        cb: SharedIdentifiers.CallbackMap = self._callbackMap
+        cb: SharedTypes.CallbackMap = self._callbackMap
 
         for i in range(nb):
             importId = NewId()
@@ -268,7 +271,7 @@ class MenuCreator:
         if nb == 0:
             return None
         sub: Menu = Menu()
-        cb: SharedIdentifiers.CallbackMap = self._callbackMap
+        cb: SharedTypes.CallbackMap = self._callbackMap
 
         for i in range(nb):
             wxId = NewId()
@@ -289,7 +292,7 @@ class MenuCreator:
         if nb == 0:
             return None
         sub: Menu = Menu()
-        cb: SharedIdentifiers.CallbackMap = self._callbackMap
+        cb: SharedTypes.CallbackMap = self._callbackMap
 
         for category in categories:
             categoryId = NewId()

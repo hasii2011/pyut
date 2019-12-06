@@ -45,16 +45,17 @@ from org.pyut.general.Mediator import Mediator
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 from org.pyut.general.Globals import _
 
 
 class ToolsCreator:
 
-    def __init__(self, frame: Frame,  callbackMap: SharedIdentifiers.CallbackMap):
+    def __init__(self, frame: Frame,  callbackMap: SharedTypes.CallbackMap):
 
         self._containingFrame: Frame = frame
-        self._callbackMap:     SharedIdentifiers.CallbackMap = callbackMap
+        self._callbackMap:     SharedTypes.CallbackMap = callbackMap
 
         self.logger: Logger   = getLogger(__name__)
         self._ctrl:  Mediator = Mediator()
