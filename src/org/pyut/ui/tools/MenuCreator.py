@@ -52,8 +52,15 @@ class MenuCreator:
     def setPlugs(self, theNewValue):
         self._plugs = theNewValue
 
-    fileMenu = property(getFileMenu, setFileMenu)
-    plugs    = property(getPlugs, setPlugs)
+    def getToolboxIds(self):
+        return self._toolboxesID
+
+    def setToolboxIds(self, theNewValues):
+        self._toolboxesID = theNewValues
+
+    fileMenu    = property(getFileMenu, setFileMenu)
+    plugs       = property(getPlugs, setPlugs)
+    toolboxIds  = property(getToolboxIds, setToolboxIds)
 
     def initMenus(self):
 

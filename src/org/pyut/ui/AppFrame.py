@@ -132,7 +132,9 @@ class AppFrame(Frame):
         # Properties
         self.plugMgr = PluginManager()
         self.plugs   = {}                         # To store the plugins
+        self._toolboxesID = {}                    # Association toolbox category/id
         self._toolboxesID = {}                  # Association toolbox category/id
+
         self.mnuFile: Menu = cast(Menu, None)
 
         self._prefs: PyutPreferences = PyutPreferences()
@@ -288,8 +290,9 @@ class AppFrame(Frame):
         })
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.initMenus()
-        self.mnuFile = self._menuCreator.fileMenu
-        self.plugs   = self._menuCreator.plugs
+        self.mnuFile      = self._menuCreator.fileMenu
+        self.plugs        = self._menuCreator.plugs
+        self._toolboxesID = self._menuCreator.toolboxIds
         self.logger.info(f'self.mnuFile: {self.mnuFile}')
 
     # def _initMenu(self):
