@@ -12,12 +12,11 @@ from wx import NewId
 
 from org.pyut.PyutPreferences import PyutPreferences
 
-from org.pyut.PyutUtils import PyutUtils
 from org.pyut.general.Mediator import Mediator
 
 from org.pyut.plugins.PluginManager import PluginManager
-from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 
+from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from org.pyut.general.Globals import _
@@ -27,24 +26,19 @@ class MenuCreator:
 
     DEBUG_ERROR_VIEWS: bool = True      # TODO Make this a runtime flag
 
-    def __init__(self, frame: Frame,  callbackMap: SharedIdentifiers.CallbackMap):
+    def __init__(self, frame: Frame,  callbackMap: SharedIdentifiers.CallbackMap, lastOpenFilesID):
 
         self._containingFrame: Frame = frame
         self._callbackMap:     SharedIdentifiers.CallbackMap = callbackMap
+        self.lastOpenedFilesID = lastOpenFilesID
 
         self.logger:  Logger          = getLogger(__name__)
         self._prefs:  PyutPreferences = PyutPreferences()
         self.plugMgr: PluginManager   = PluginManager()
+        self._mnuFile: Menu           = Menu()
 
         self.plugs = {}                         # To store the plugins
         self._toolboxesID = {}                  # Association toolbox category/id
-
-        # Last opened Files IDs
-        self.lastOpenedFilesID = []
-        for index in range(self._prefs.getNbLOF()):
-            self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
-
-        self._mnuFile = Menu()
 
     def getFileMenu(self) -> Menu:
         return self._mnuFile
@@ -71,10 +65,8 @@ class MenuCreator:
         self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEREMOVEDOCUMENT, _("&Remove document"), _("Remove the document from the project"))
         self.fileMenu.AppendSeparator()
 
-        # added by L. Burgbacher, dynamic plugin support
         sub = self.makeExportMenu()
 
-        # Fixed Export
         if sub is None:
             sub = Menu()
         sub.Append(SharedIdentifiers.ID_MNUFILEEXPBMP, "&bmp",        _("Export data to a bitmap file"))
@@ -88,7 +80,6 @@ class MenuCreator:
 
         sub = self.makeImportMenu()
         if sub is not None:
-            # self.fileMenu.AppendMenu(NewId(), _("Import"), sub)
             self.fileMenu.Append(NewId(), _("Import"), sub)
 
         self.fileMenu.AppendSeparator()
@@ -105,9 +96,15 @@ class MenuCreator:
         #  TODO : does not work ? verify function return...
         for el in self._prefs.getLastOpenedFilesList():
             index += 1
-            self.fileMenu.Append(self.lastOpenedFilesID[index - 1], "&" + str(index) + " " + el)
-        # for index in range(index, self._prefs.getNbLOF()):
-        #     self.fileMenu.Append(self.lastOpenedFilesID[index], "&" + str(index + 1) + " -")
+            # self.fileMenu.Append(self.lastOpenedFilesID[index - 1], "&" + str(index) + " " + el)
+            lof: str = f"&{str(index)} {el}"
+            self.logger.info(f'self.lastOpenedFilesID[index - 1]: {self.lastOpenedFilesID[index - 1]}  lof: {lof}  ')
+            self.fileMenu.Append(self.lastOpenedFilesID[index - 1], lof)
+
+        for index in range(index, self._prefs.getNbLOF()):
+            # self.fileMenu.Append(self.lastOpenedFilesID[index], "&" + str(index + 1) + " -")
+            lofAgain: str = f"&{str(index + 1)} -"
+            self.fileMenu.Append(self.lastOpenedFilesID[index], lofAgain)
 
         self.fileMenu.AppendSeparator()
         self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEEXIT, _("E&xit"), _("Exit PyUt"))
@@ -136,16 +133,12 @@ class MenuCreator:
         mnuTools = Menu()
         sub = self.makeToolsMenu()
         if sub is not None:
-            # mnuTools.AppendMenu(NewId(), _("Plugins tools"), sub)
             mnuTools.Append(NewId(), _("Plugins tools"), sub)
 
         sub = self.makeToolboxesMenu()
         if sub is not None:
             mnuTools.Append(NewId(), _("toolboxes"), sub)
 
-        # -----------------
-        #    Help menu
-        # -----------------
         mnuHelp = Menu()
         mnuHelp.Append(SharedIdentifiers.ID_MNUHELPINDEX, _("&Index"), _("Display help index"))
         mnuHelp.AppendSeparator()
@@ -155,9 +148,6 @@ class MenuCreator:
         mnuHelp.AppendSeparator()
         mnuHelp.Append(SharedIdentifiers.ID_MNUHELPABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
 
-        # -----------------
-        #   make menu bar
-        # -----------------
         mnuBar = MenuBar()
         mnuBar.Append(self.fileMenu, _("&File"))
         mnuBar.Append(mnuEdit, _("&Edit"))

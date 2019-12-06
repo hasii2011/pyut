@@ -133,6 +133,7 @@ class AppFrame(Frame):
         self.plugMgr = PluginManager()
         self.plugs = {}                         # To store the plugins
         self._toolboxesID = {}                  # Association toolbox category/id
+        self.mnuFile: Menu = cast(Menu, None)
 
         self._prefs: PyutPreferences = PyutPreferences()
 
@@ -177,8 +178,6 @@ class AppFrame(Frame):
         # Init tips frame
         self._alreadyDisplayedTipsFrame = False
         self.Bind(EVT_ACTIVATE, self._onActivate)
-
-        self.mnuFile: Menu = cast(Menu, None)
 
     def _onActivate(self, event):
         """
@@ -262,9 +261,10 @@ class AppFrame(Frame):
             ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
             ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
         })
-        self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap)
+        self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.initMenus()
         self.mnuFile = self._menuCreator.fileMenu
+        self.logger.info(f'self.mnuFile: {self.mnuFile}')
 
     # def _initMenu(self):
     #     """On
@@ -1161,9 +1161,16 @@ class AppFrame(Frame):
         @since 1.43
         @author C.Dutoit <dutoitc@hotmail.com>
         """
+        self.logger.info(f'self.mnuFile: {self.mnuFile}')
+
         index = 0
         for el in self._prefs.getLastOpenedFilesList():
-            self.mnuFile.SetLabel(self.lastOpenedFilesID[index], "&" + str(index+1) + " " + el)
+            openFilesId = self.lastOpenedFilesID[index]
+            # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
+            lbl: str = f"&{str(index+1)} {el}"
+            self.logger.info(f'lbL: {lbl}  openFilesId: {openFilesId}')
+            self.mnuFile.SetLabel(id=openFilesId, label=lbl)
+
             index += 1
 
     def Close(self, force=False):

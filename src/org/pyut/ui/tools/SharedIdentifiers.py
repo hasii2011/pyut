@@ -67,5 +67,5 @@ class SharedIdentifiers:
         ID_SD_INSTANCE:       ACTION_NEW_SD_INSTANCE,
         ID_SD_MESSAGE:        ACTION_NEW_SD_MESSAGE,
         ID_ZOOMIN:            ACTION_ZOOM_IN,
-        ID_ZOOMOUT:           ACTION_ZOOM_OUT
-}
+        ID_ZOOMOUT:           ACTION_ZOOM_OUT,
+    }

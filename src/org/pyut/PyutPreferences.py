@@ -158,7 +158,8 @@ class PyutPreferences(Singleton):
         @since 1.Config0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        return int(self._config.get("LastOpenedFiles", "NbEntries"))
+        ans: int = self._config.get("LastOpenedFiles", "NbEntries")
+        return int(ans)
 
     def setNbLOF(self, nbLOF):
         """
