@@ -28,8 +28,6 @@ from org.pyut.PyutPreferences import SHOW_TIPS_ON_STARTUP_KEY
 
 from org.pyut.general.Globals import _
 
-import img.ImgTipsFrameTipsLogo
-
 # DEFAULT SIZE
 DEFAULT_WIDTH  = 600
 DEFAULT_HEIGHT = 100
@@ -114,7 +112,7 @@ class TipsFrame(Dialog):
         self.Center(dir=VERTICAL)
         self.AcceptsFocus()
         # Create controls
-        bmp: Bitmap = img.ImgTipsFrameTipsLogo.embeddedImage.GetBitmap()
+        bmp: Bitmap = org.pyut.resources.img.ImgTipsFrameTipsLogo.embeddedImage.GetBitmap()
         self._picture = StaticBitmap(self, -1, bmp)
         tip = Tips[self._currentTip]
         self._label = StaticText(self, -1, tip, size=Size(DEFAULT_WIDTH * 0.8, DEFAULT_HEIGHT * 0.8), style=ST_NO_AUTORESIZE)

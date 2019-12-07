@@ -26,8 +26,6 @@ from wx import DefaultSize as wxDefaultSize
 from wx import App as wxApp
 from wx import Yield as wxYield
 
-import img.ImgSplash
-
 from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
@@ -35,6 +33,8 @@ from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.AppFrame import AppFrame
+
+from org.pyut.resources.img.ImgSplash import embeddedImage as splashImage
 
 
 class PyutApp(wxApp):
@@ -70,7 +70,7 @@ class PyutApp(wxApp):
             # Create the SplashScreen
             if self._showSplash:
 
-                bmp: Bitmap = img.ImgSplash.embeddedImage.GetBitmap()
+                bmp: Bitmap = splashImage.GetBitmap()
                 self.splash = SplashScreen(bmp, SPLASH_CENTRE_ON_PARENT | SPLASH_TIMEOUT, PyutApp.SPLASH_TIMEOUT_MSECS, parent=None,
                                            pos=wxDefaultPosition, size=wxDefaultSize)
 
