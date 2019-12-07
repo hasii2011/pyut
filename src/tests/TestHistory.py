@@ -4,7 +4,6 @@ from sys import path as sysPath
 
 from unittest import main as unitTestMain
 
-
 from logging import Logger
 from logging import getLogger
 
@@ -16,7 +15,7 @@ from org.pyut.history.HistoryManager import HistoryManager
 
 from org.pyut.commands.CommandGroup import CommandGroup
 
-from PrintCommand import PrintCommand
+from tests.PrintCommand import PrintCommand
 
 
 class TestHistory(TestBase):

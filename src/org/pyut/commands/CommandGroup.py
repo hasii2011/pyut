@@ -4,6 +4,8 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
+from importlib import import_module
+
 from org.pyut.commands.Command import Command
 
 from org.pyut.history.HistoryUtils import COMMAND_BEGIN_ID
@@ -125,7 +127,7 @@ class CommandGroup(object):
             commandClassName = getTokenValue(COMMAND_CLASS_ID, serialCommand)
 
             # import the module which contains the command class and get the class (cls)
-            moduleName   = __import__(commandModuleName)
+            moduleName = import_module(commandModuleName)
             commandClass = getattr(moduleName, commandClassName)
 
             # construction of an uninitialized command

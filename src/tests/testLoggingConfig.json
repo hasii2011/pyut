@@ -66,6 +66,13 @@
             ],
             "propagate": "False"
         },
+        "TestHistory": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "__main__": {
             "level": "INFO",
             "handlers": [
