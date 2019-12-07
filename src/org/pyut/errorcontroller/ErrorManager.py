@@ -50,11 +50,11 @@ class ErrorManager(Singleton):
         self._view.newFatalError(msg, title, parent)
 
     def newWarning(self, msg, title=None, parent=None):
-        ErrorManager.addToLogFile("Warning: " + title, msg)
+        ErrorManager.addToLogFile(f"Warning: {title}", msg)
         self._view.newWarning(msg, title, parent)
 
     def displayInformation(self, msg, title=None, parent=None):
-        ErrorManager.addToLogFile("Info: " + title, msg)
+        ErrorManager.addToLogFile(f"Info: {title}", msg)
         self._view.displayInformation(msg, title, parent)
 
     @staticmethod

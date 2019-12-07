@@ -201,6 +201,142 @@ class AppFrame(Frame):
         """
         return self._lastDir
 
+    def notifyTitleChanged(self):
+        """
+        Notify that the title changed.
+
+        @since 1.50
+        @author Philippe Waelti <pwaelti@eivd.ch>
+        """
+        self._ctrl.updateTitle()
+
+    def Close(self, force=False):
+        """
+        Closing handler overload. Save files and ask for confirmation.
+
+        @since 1.4
+        @author C.Dutoit <dutoitc@hotmail.com>
+        """
+        # Close all files
+        if self._fileHandling.onClose() is False:
+            return
+
+        self._clipboard = None
+        self._fileHandling = None
+        self._ctrl = None
+        self._prefs = None
+        self.plugMgr = None
+        self._printData.Destroy()
+        # TODO? wx.OGLCleanUp()
+        self.Destroy()
+
+    def OnImport(self, event):
+        self._fileHandling.newProject()
+        self._fileHandling.newDocument(DiagramType.CLASS_DIAGRAM)
+        self._ctrl.updateTitle()
+        cl = self.plugins[event.GetId()]
+
+        obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
+
+        # Do plugin functionality
+        BeginBusyCursor()
+        try:
+            wxYield()  # time to process the refresh in newDiagram
+            obj.doImport()
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_("An error occured while executing the selected plugin"), _("Error..."), self)
+            self.logger.error(f'{e}')
+
+        EndBusyCursor()
+        self.Refresh()
+
+    def OnExport(self, event):
+        """
+        Callback.
+
+        Args:
+            event: wxEvent event
+
+        @author L. Burgbacher <lb@alawa.ch>
+        @since 1.26
+        """
+        # Create a plugin instance
+        cl = self.plugins[event.GetId()]
+        umlObjs: List[OglClass]         = self._ctrl.getUmlObjects()
+        umlFrame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
+        obj = cl(umlObjs, umlFrame)
+        # Do plugin functionality
+        BeginBusyCursor()
+        obj.doExport()
+        EndBusyCursor()
+
+    def OnToolPlugin(self, event):
+        # Create a plugin instance
+        cl = self.plugins[event.GetId()]
+        obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
+
+        # Do plugin functionality
+        BeginBusyCursor()
+        try:
+            obj.callDoAction()
+            self.logger.debug(f"After tool plugin do action")
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
+            self.logger.error(f'{e}')
+        EndBusyCursor()
+
+        # Refresh screen
+        umlFrame = self._ctrl.getUmlFrame()
+        if umlFrame is not None:
+            umlFrame.Refresh()
+
+    def OnToolboxMenuClick(self, event):
+        self._ctrl.displayToolbox(self._toolboxIds[event.GetId()])
+
+    def printDiagramToPostscript(self, filename):
+        """
+        print the current diagram to postscript
+
+        @return True if succeeded
+        @author C.Dutoit
+        """
+        # Verify that we do have a diagram to save
+        if self._ctrl.getDiagram() is None:
+            PyutUtils.displayError(_("No diagram to print !"), parent=self)
+            self._ctrl.setStatusText(_("Error while printing to postscript"))
+            return False
+
+        # Init
+        # printout = None
+        # printer  = None
+        try:
+            self._ctrl.deselectAllShapes()
+            datas = PrintDialogData()
+            datas.SetPrintData(self._printData)
+            datas.SetPrintToFile(True)
+            datas.SetMinPage(1)
+            datas.SetMaxPage(1)
+            printDatas = datas.GetPrintData()
+            printDatas.SetFilename(filename)
+            printDatas.SetQuality(PRINT_QUALITY_HIGH)
+            datas.SetPrintData(printDatas)
+            printer  = Printer(datas)
+            printout = PyutPrintout(self._ctrl.getUmlFrame())
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_("Cannot export to Postscript"), parent=self)
+            self._ctrl.setStatusText(_(f"Error while printing to postscript {e}"))
+            return False
+
+        # Print to postscript
+        if not printer.Print(self, printout, False):
+            PyutUtils.displayError(_("Cannot print"), parent=self)
+            self._ctrl.setStatusText(_("Error while printing to postscript"))
+            return False
+
+        # Return
+        self._ctrl.setStatusText(_("Printed to postscript"))
+        return True
+
     def _onActivate(self, event):
         """
         EVT_ACTIVATE Callback; display tips frame.  But onlhy, the first activate
@@ -565,50 +701,6 @@ class AppFrame(Frame):
             except (ValueError, Exception) as e:
                 PyutUtils.displayError("Can't export to pdf !", parent=self)
 
-    def printDiagramToPostscript(self, filename):
-        """
-        print the current diagram to postscript
-
-        @return True if succeeded
-        @author C.Dutoit
-        """
-        # Verify that we do have a diagram to save
-        if self._ctrl.getDiagram() is None:
-            PyutUtils.displayError(_("No diagram to print !"), parent=self)
-            self._ctrl.setStatusText(_("Error while printing to postscript"))
-            return False
-
-        # Init
-        # printout = None
-        # printer  = None
-        try:
-            self._ctrl.deselectAllShapes()
-            datas = PrintDialogData()
-            datas.SetPrintData(self._printData)
-            datas.SetPrintToFile(True)
-            datas.SetMinPage(1)
-            datas.SetMaxPage(1)
-            printDatas = datas.GetPrintData()
-            printDatas.SetFilename(filename)
-            printDatas.SetQuality(PRINT_QUALITY_HIGH)
-            datas.SetPrintData(printDatas)
-            printer  = Printer(datas)
-            printout = PyutPrintout(self._ctrl.getUmlFrame())
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("Cannot export to Postscript"), parent=self)
-            self._ctrl.setStatusText(_(f"Error while printing to postscript {e}"))
-            return False
-
-        # Print to postscript
-        if not printer.Print(self, printout, False):
-            PyutUtils.displayError(_("Cannot print"), parent=self)
-            self._ctrl.setStatusText(_("Error while printing to postscript"))
-            return False
-
-        # Return
-        self._ctrl.setStatusText(_("Printed to postscript"))
-        return True
-
     # noinspection PyUnusedLocal
     def _OnMnuFilePrintSetup(self, event):
         """
@@ -913,98 +1005,6 @@ class AppFrame(Frame):
             self.mnuFile.SetLabel(id=openFilesId, label=lbl)
 
             index += 1
-
-    def Close(self, force=False):
-        """
-        Closing handler overload. Save files and ask for confirmation.
-
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        # Close all files
-        if self._fileHandling.onClose() is False:
-            return
-
-        self._clipboard = None
-        self._fileHandling = None
-        self._ctrl = None
-        self._prefs = None
-        self.plugMgr = None
-        self._printData.Destroy()
-        # TODO? wx.OGLCleanUp()
-        self.Destroy()
-
-    def notifyTitleChanged(self):
-        """
-        Notify that the title changed.
-
-        @since 1.50
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        """
-        self._ctrl.updateTitle()
-
-    def OnImport(self, event):
-        self._fileHandling.newProject()
-        self._fileHandling.newDocument(DiagramType.CLASS_DIAGRAM)
-        self._ctrl.updateTitle()
-        cl = self.plugins[event.GetId()]
-
-        obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
-
-        # Do plugin functionality
-        BeginBusyCursor()
-        try:
-            wxYield()  # time to process the refresh in newDiagram
-            obj.doImport()
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occured while executing the selected plugin"), _("Error..."), self)
-            self.logger.error(f'{e}')
-
-        EndBusyCursor()
-        self.Refresh()
-
-    def OnExport(self, event):
-        """
-        Callback.
-
-        Args:
-            event: wxEvent event
-
-        @author L. Burgbacher <lb@alawa.ch>
-        @since 1.26
-        """
-        # Create a plugin instance
-        cl = self.plugins[event.GetId()]
-        umlObjs: List[OglClass]         = self._ctrl.getUmlObjects()
-        umlFrame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
-        obj = cl(umlObjs, umlFrame)
-        # Do plugin functionality
-        BeginBusyCursor()
-        obj.doExport()
-        EndBusyCursor()
-
-    def OnToolPlugin(self, event):
-        # Create a plugin instance
-        cl = self.plugins[event.GetId()]
-        obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
-
-        # Do plugin functionality
-        BeginBusyCursor()
-        try:
-            obj.callDoAction()
-            self.logger.debug(f"After tool plugin do action")
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
-            self.logger.error(f'{e}')
-        EndBusyCursor()
-
-        # Refresh screen
-        umlFrame = self._ctrl.getUmlFrame()
-        if umlFrame is not None:
-            umlFrame.Refresh()
-
-    def OnToolboxMenuClick(self, event):
-        self._ctrl.displayToolbox(self._toolboxIds[event.GetId()])
 
     def _OnNewAction(self, event):
         """
