@@ -22,7 +22,7 @@ from wx import DefaultPosition
 from wx import Frame
 from wx import Size
 
-from org.pyut.ui.tools.ToolData import ToolData
+from org.pyut.ui.tools.Tool import Tool
 
 MARGIN      = 3                 # Margin between dialog border and buttons
 MARGIN_TOP  = 20
@@ -44,7 +44,7 @@ class EventClone:
 
 class Toolbox(Frame):
 
-    ToolDataList = NewType('ToolDataList', List[ToolData])
+    ToolDataList = NewType('ToolDataList', List[Tool])
 
     """
     Toolbox : a toolbox for PyUt tools plugins

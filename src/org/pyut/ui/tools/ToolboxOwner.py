@@ -1,5 +1,5 @@
 
-from org.pyut.ui.tools.ToolData import ToolData
+from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.tools.Toolbox import Toolbox
 
 # TODO : add observer-observable model to support dynamic plugins
@@ -29,7 +29,7 @@ class ToolboxOwner:
         toolbox = Toolbox(self._parent, self)
         toolbox.setCategory(category)
 
-    def registerTool(self, tool: ToolData):
+    def registerTool(self, tool: Tool):
         """
         Add a tool to toolboxes
 

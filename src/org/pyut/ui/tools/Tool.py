@@ -9,7 +9,7 @@ from wx import WindowIDRef
 
 
 @dataclass
-class ToolData:
+class Tool:
     """
     Tool : a tool for pyut's toolboxes
     """

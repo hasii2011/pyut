@@ -22,7 +22,7 @@ from org.pyut.general.Lang import importLanguage as setupPyutLanguage
 from org.pyut.general.PyutVersion import PyutVersion
 
 
-class Pyut2:
+class Pyut:
 
     JSON_LOGGING_CONFIG_FILENAME: str = "loggingConfiguration.json"
     MADE_UP_PRETTY_MAIN_NAME:     str = "Pyut"
@@ -56,7 +56,7 @@ class Pyut2:
 
     def _setupSystemLogging(self):
 
-        with open(Pyut2.JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
+        with open(Pyut.JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
             configurationDictionary = jsonLoad(loggingConfigurationFile)
 
         logging.config.dictConfig(configurationDictionary)
@@ -151,9 +151,9 @@ class Pyut2:
 if __name__ == "__main__":
 
     # setupSystemLogging()
-    print(f"Starting {Pyut2.MADE_UP_PRETTY_MAIN_NAME}")
+    print(f"Starting {Pyut.MADE_UP_PRETTY_MAIN_NAME}")
 
-    pyut2: Pyut2 = Pyut2()
+    pyut2: Pyut = Pyut()
 
     # Launch pyut
     if pyut2.cmdLineArgsHandled is False:
