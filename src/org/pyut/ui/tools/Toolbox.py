@@ -1,22 +1,28 @@
 
+from typing import List
+from typing import NewType
+
 from logging import Logger
 from logging import getLogger
 
 from wx import BLACK_PEN
 from wx import CAPTION
-from wx import ClientDC
-from wx import DefaultPosition
 from wx import EVT_CLOSE
 from wx import EVT_LEFT_DOWN
 from wx import EVT_LEFT_UP
 from wx import EVT_PAINT
 from wx import FRAME_FLOAT_ON_PARENT
-from wx import Frame
 from wx import GREY_PEN
 from wx import STATIC_BORDER
 from wx import SYSTEM_MENU
-from wx import Size
 from wx import WHITE_PEN
+
+from wx import ClientDC
+from wx import DefaultPosition
+from wx import Frame
+from wx import Size
+
+from org.pyut.ui.tools.ToolData import ToolData
 
 MARGIN      = 3                 # Margin between dialog border and buttons
 MARGIN_TOP  = 20
@@ -37,12 +43,12 @@ class EventClone:
 
 
 class Toolbox(Frame):
+
+    ToolDataList = NewType('ToolDataList', List[ToolData])
+
     """
     Toolbox : a toolbox for PyUt tools plugins
 
-    :author: C.Dutoit
-    :contact: <dutoitc@hotmail.com>
-    :version: $Revision: 1.10 $
     """
     def __init__(self, parentWindow, toolboxOwner):
         """
@@ -51,8 +57,6 @@ class Toolbox(Frame):
         @param
         @param  parentWindow  wxWindow parentWindow
         @param  toolboxOwner ToolboxOwner
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self.logger: Logger = getLogger(__name__)
 
@@ -79,8 +83,6 @@ class Toolbox(Frame):
         Define the toolbox category
 
         @param string category : the new category
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._category = category
         self._tools = self._toolboxOwner.getCategoryTools(category)
@@ -91,11 +93,7 @@ class Toolbox(Frame):
         """
         Refresh dialog box
 
-        @since 1.1.2.4
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
-        # Init
-        # (w, h) = self.GetSizeTuple()
         (w, h) = self.GetSize()
 
         nbButtonsW = (w - MARGIN*2) / BUTTON_SIZE
@@ -112,7 +110,7 @@ class Toolbox(Frame):
 
             # Draw
             dc.SetPen(BLACK_PEN)
-            dc.DrawText("[" + tool.getInitialCategory() + "]", MARGIN, MARGIN)
+            dc.DrawText("[" + tool._initialCategory + "]", MARGIN, MARGIN)
             dc.SetPen(WHITE_PEN)
             dc.DrawLine(x, y, x+BUTTON_SIZE-1, y)
             dc.DrawLine(x, y, x, y + BUTTON_SIZE-1)
@@ -133,7 +131,6 @@ class Toolbox(Frame):
     def _getClickedButton(self, x, y):
         """
         Return the clicked button
-        @author C.Dutoit
         """
         # (w, h) = self.GetSizeTuple()
         (w, h) = self.GetSize()
@@ -164,8 +161,6 @@ class Toolbox(Frame):
     def evtLeftUp(self, event):
         """
         Handle left mouse button up
-
-        @author C.Dutoit
         """
         # Get clicked coordinates
         clickedCoordinates = self._clickedButton
@@ -199,7 +194,6 @@ class Toolbox(Frame):
     def evtLeftDown(self, event):
         """
         Handle left mouse button down
-        @author C.Dutoit
         """
         # Get the clicked tool
         x, y = event.GetPosition()
@@ -225,8 +219,5 @@ class Toolbox(Frame):
     def evtClose(self, event):
         """
         Clean close, event handler on EVT_CLOSE
-
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self.Destroy()
