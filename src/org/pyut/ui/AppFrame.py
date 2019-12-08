@@ -102,11 +102,8 @@ class AppFrame(Frame):
         dlg=AppFrame(self, -1, "Pyut")
         dlg.Show()
         dlg.Destroy()
-
-    :author: C.Dutoit
-    :contact: dutoitc@hotmail.com
-    :version: $Revision: 1.55 $
     """
+    PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/Pyut'
 
     def __init__(self, parent, ID, title):
         """
@@ -855,14 +852,8 @@ class AppFrame(Frame):
         PyutUtils.displayInformation(msg, _("Check for newer version"), self)
 
     # noinspection PyUnusedLocal
-    def _OnMnuHelpWeb(self, event):
-        """
-        Launch PyUt web site
-
-        @since 1.9
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        PyutUtils.displayInformation(_("Please point your browser at http://pyut.sf.net"), _("Pyut''s web site"), self)
+    def _OnMnuHelpWeb(self, event: CommandEvent):
+        PyutUtils.displayInformation(f"Please point your browser to {AppFrame.PYUT_WIKI}", "Pyut's new wiki", self)
 
     # noinspection PyUnusedLocal
     def _OnMnuAddPyut(self, event: CommandEvent):

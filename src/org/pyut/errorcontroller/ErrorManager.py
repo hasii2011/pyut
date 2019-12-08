@@ -53,6 +53,10 @@ class ErrorManager(Singleton):
         ErrorManager.addToLogFile(f"Warning: {title}", msg)
         self._view.newWarning(msg, title, parent)
 
+    def newInformation(self, msg, title=None, parent=None):
+        ErrorManager.addToLogFile(f"Info: {title}", msg)
+        self._view.newInformation(msg, title, parent)
+
     def displayInformation(self, msg, title=None, parent=None):
         ErrorManager.addToLogFile(f"Info: {title}", msg)
         self._view.displayInformation(msg, title, parent)

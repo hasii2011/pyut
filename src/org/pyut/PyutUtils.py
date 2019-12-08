@@ -42,31 +42,25 @@ class PyutUtils:
     @staticmethod
     def displayInformation(msg, title=None, parent=None):
         """
-        Display an information
-
-        @author C.Dutoit
+        Display information
         """
-        em = getErrorManager()
+        em: ErrorManager = getErrorManager()
         em.newInformation(msg, title, parent)
 
     @staticmethod
     def displayWarning(msg, title=None, parent=None):
         """
         Display a warning
-
-        @author C.Dutoit
         """
-        em = getErrorManager()
+        em: ErrorManager = getErrorManager()
         em.newWarning(msg, title, parent)
 
     @staticmethod
     def displayError(msg, title=None, parent=None):
         """
         Display an error
-
-        @author C.Dutoit
         """
-        errMsg = ErrorManager.getErrorInfo()
+        errMsg: str = ErrorManager.getErrorInfo()
         try:
             em = getErrorManager()
             em.newFatalError(msg, title, parent)
