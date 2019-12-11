@@ -2,7 +2,7 @@ from org.pyut.MiniOgl import Shape
 from org.pyut.MiniOgl import SizerShape
 
 
-class Diagram(object):
+class Diagram:
     """
     A diagram contains shapes and is responsible to manage them.
     It can be saved to a file, and loaded back. It knows every shapes that

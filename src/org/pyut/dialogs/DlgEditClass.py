@@ -737,7 +737,7 @@ class DlgEditClass(Dialog):
                 oglClass = self._ctrl.getOglClass(self._pyutClass)
                 oglClass.autoResize()
         except (ValueError, Exception) as e:
-            pass
+            self.logger.warning(f'{e}')
 
         # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
