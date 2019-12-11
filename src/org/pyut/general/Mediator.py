@@ -5,6 +5,7 @@ from typing import Dict
 from wx import CENTRE
 from wx import WXK_DELETE
 from wx import WXK_INSERT
+from wx import WXK_BACK
 
 from wx import ID_OK
 
@@ -46,7 +47,7 @@ __PyUtVersion__ = PyutVersion.getPyUtVersion()
 # TODO make real enumerations
 [
     ACTION_SELECTOR,
-    ACTION_NEW_CLASS,
+    ACTION_NEW_CLASS,                   # 1
     ACTION_NEW_ACTOR,
     ACTION_NEW_USECASE,
     ACTION_NEW_NOTE,
@@ -62,8 +63,8 @@ __PyUtVersion__ = PyutVersion.getPyUtVersion()
     ACTION_DEST_COMPOSITION_LINK,
     ACTION_DEST_ASSOCIATION_LINK,
     ACTION_DEST_NOTE_LINK,
-    ACTION_NEW_SD_INSTANCE,
-    ACTION_NEW_SD_MESSAGE,
+    ACTION_NEW_SD_INSTANCE,                 # 17
+    ACTION_NEW_SD_MESSAGE,                  # 18
     ACTION_DEST_SD_MESSAGE,
     ACTION_ZOOM_IN,  # Patch from D.Dabrowsky, 20060129
     ACTION_ZOOM_OUT  # Patch from D.Dabrowsky, 20060129
@@ -357,11 +358,10 @@ class Mediator(Singleton):
 
     def standardClassEditor(self, thePyutClass: PyutClass):
         """
-        The standard class editor dialogue, for registerClassEditor.
+        The standard class editor dialog, for registerClassEditor.
 
-        @param  thePyutClass : the class to edit
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            thePyutClass:  the class to edit (data model)
         """
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
@@ -776,6 +776,7 @@ class Mediator(Singleton):
         c: int = event.GetKeyCode()
         funcs: Dict[int, Callable] = {
             WXK_DELETE: self.deleteSelectedShape,
+            WXK_BACK:   self.deleteSelectedShape,
             WXK_INSERT: self.insertSelectedShape,
             ord('i'):   self.insertSelectedShape,
             ord('I'):   self.insertSelectedShape,
@@ -784,12 +785,10 @@ class Mediator(Singleton):
             ord('<'):   self.moveSelectedShapeDown,
             ord('>'):   self.moveSelectedShapeUp,
         }
-        # Python 3 update
-        # if funcs.has_key(c):
         if c in funcs:
             funcs[c]()
         else:
-            self.logger.info(f'Not supported: {c}')
+            self.logger.warning(f'Key code not supported: {c}')
             event.Skip()
 
     def deleteSelectedShape(self):
