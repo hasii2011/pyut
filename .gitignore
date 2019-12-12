@@ -8,7 +8,6 @@ __pycache__/
 /python3_albow.egg-info/
 /venv-3.7.3-wxPython/
 /site/
-*.yml
 /docs/
 /pyut.log
 pyutHistory*
