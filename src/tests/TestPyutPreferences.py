@@ -3,7 +3,8 @@ import os
 
 import unittest
 
-from PyutPreferences import PyutPreferences, PREFS_FILENAME
+from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.PyutPreferences import PREFS_FILENAME
 
 
 class TestPyutPreferences(unittest.TestCase):
@@ -33,11 +34,11 @@ class TestPyutPreferences(unittest.TestCase):
         Instantiate a prefs (Singleton class) and fill it.
         """
         self.items = {
-            "test_int" : 12,
-            "test_double" : 12.12,
-            "test_string" : "salut",
-            "test_tuple" : ("salut", "les", "amis"),
-            "test_list" : ["comment", "allez", "vous"],
+            "test_int": 12,
+            "test_double": 12.12,
+            "test_string": "salut",
+            "test_tuple": ("salut", "les", "amis"),
+            "test_list": ["comment", "allez", "vous"],
         }
         self.prefs = PyutPreferences()
         self.emptyPrefs()  # empty the prefs

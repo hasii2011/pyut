@@ -1,5 +1,5 @@
 
-from Singleton import Singleton
+from org.pyut.general.Singleton import Singleton
 import unittest
 
 

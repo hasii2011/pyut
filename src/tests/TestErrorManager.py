@@ -7,7 +7,6 @@ from unittest import main as unitTestMain
 from tests.TestBase import TestBase
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
-from org.pyut.errorcontroller.ErrorManager import addToLogFile
 
 
 class TestErrorManager(TestBase):
@@ -24,7 +23,7 @@ class TestErrorManager(TestBase):
         self.logger: Logger = TestErrorManager.clsLogger
 
     def testAddToLogFile(self):
-        addToLogFile(title='A Test Log Entry Title', msg='This is only a test error message')
+        ErrorManager.addToLogFile(title='A Test Log Entry Title', msg='This is only a test error message')
 
 
 if __name__ == '__main__':
