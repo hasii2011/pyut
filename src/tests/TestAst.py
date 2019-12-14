@@ -1,11 +1,12 @@
 
-
-import unittest
+from typing import TextIO
 
 from logging import Logger
 from logging import getLogger
 
-from io import TextIOWrapper
+from unittest import main as unitTestMain
+from unittest import TestSuite
+
 from ast import parse
 from ast import dump
 from ast import iter_child_nodes
@@ -33,8 +34,8 @@ class TestAst(TestBase):
 
         self.logger.info(f'Do I pass?')
         try:
-            fileName = '/temp/albowui/EventLoopParams.py'
-            fd: TextIOWrapper = open(fileName)
+            fileName = 'testclass/EventLoopParams.py'
+            fd: TextIO = open(fileName)
             data = fd.read()
             fd.close()
             self.logger.info(f'source code: {data}')
@@ -43,6 +44,7 @@ class TestAst(TestBase):
 
             visitor: Visitor = Visitor("EventLoopParams")
             visitor.visit(astNode)
+            # noinspection PyUnusedLocal
             flds = visitor.getResult()
 
             self.logger.info(f'{dump(astNode, annotate_fields=True, include_attributes=True)}')
@@ -54,5 +56,16 @@ class TestAst(TestBase):
             print(f"getFields Error: {e}")
 
 
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestAst))
+
+    return testSuite
+
+
 if __name__ == '__main__':
-    unittest.main()
+    unitTestMain()

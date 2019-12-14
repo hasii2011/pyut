@@ -5,6 +5,7 @@ from logging import Logger
 from logging import getLogger
 
 from unittest import main as unitTestMain
+from unittest import TestSuite
 
 from copy import deepcopy
 
@@ -13,7 +14,7 @@ from tests.TestBase import TestBase
 from org.pyut.PyutType import PyutType   # PyutType is a FlyweightString
 
 
-class TestFlyweight(TestBase):
+class TestPyutType(TestBase):
     """
     """
     clsLogger: Logger = None
@@ -22,13 +23,13 @@ class TestFlyweight(TestBase):
     def setUpClass(cls):
         """"""
         TestBase.setUpLogging()
-        TestFlyweight.clsLogger = getLogger(__name__)
+        TestPyutType.clsLogger = getLogger(__name__)
 
     def setUp(self):
         self.strings = [
             "salut", "hello", "ca va ?"
         ]
-        self.logger: Logger = TestFlyweight.clsLogger
+        self.logger: Logger = TestPyutType.clsLogger
 
     def testPyutTypeReadOnly(self):
         """Test PyutType class"""
@@ -55,6 +56,17 @@ class TestFlyweight(TestBase):
 
         doppleGangers: List[PyutType] = deepcopy(originalTypes)
         self.logger.info(f'doppleGangers: {doppleGangers}')
+
+
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestPyutType))
+
+    return testSuite
 
 
 if __name__ == '__main__':

@@ -5,6 +5,7 @@ from os import chdir
 from os import getcwd
 
 from unittest import main as unitTestMain
+from unittest import TestSuite
 
 from unittest.mock import patch
 from unittest.mock import MagicMock
@@ -58,10 +59,21 @@ class TestIoFile(TestBase):
     def testIoFileOpenV8(self, mockFileHandling, mockMediator, wxGauge, wxDialog):
 
         with patch('org.pyut.PyutProject.PyutProject') as mockPyutProject:
-            self.ioFile.open(filename='BaseSave_V8.put', project=mockPyutProject)
+            self.ioFile.open(filename='testdata/BaseSave_V8.put', project=mockPyutProject)
 
     def testName2(self):
         pass
+
+
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: unittest.TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestIoFile))
+
+    return testSuite
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@ from typing import cast
 from sys import path as sysPath
 
 from unittest import main as unitTestMain
+from unittest import TestSuite
 
 from logging import Logger
 from logging import getLogger
@@ -126,6 +127,17 @@ class TestHistory(TestBase):
         actualGroupUndoIndex: int = self.historyManager.groupUndoIndex
         self.logger.info(f'Group to undo index {actualGroupUndoIndex}')
         self.assertEqual(expectedGroupUndoIndex, actualGroupUndoIndex, 'Incorrect command group index')
+
+
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestHistory))
+
+    return testSuite
 
 #
 # # check if the undo/redo and add method works correctly

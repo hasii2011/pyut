@@ -3,7 +3,7 @@
     "disable_existing_loggers": "False",
     "formatters": {
         "simple": {
-            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            "format": "%(asctime)s.%(msecs)03d %(levelname)s %(module)s: %(message)s"
         },
         "testSimple": {
             "format": "%(levelname)s: %(module)s: %(message)s"
@@ -12,7 +12,7 @@
     "handlers": {
         "consoleHandler": {
             "class": "logging.StreamHandler",
-            "formatter": "testSimple",
+            "formatter": "simple",
             "stream": "ext://sys.stdout"
         }
     },
@@ -31,14 +31,14 @@
             ],
             "propagate": "False"
         },
-        "PrintCommand": {
+        "TestAll": {
             "level": "INFO",
             "handlers": [
                 "consoleHandler"
             ],
             "propagate": "False"
         },
-        "org.pyut.plugins.PluginManager": {
+        "tests.PrintCommand": {
             "level": "INFO",
             "handlers": [
                 "consoleHandler"
@@ -52,6 +52,13 @@
             ],
             "propagate": "False"
         },
+        "TestPyutType": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "TestPyutField": {
             "level": "INFO",
             "handlers": [
@@ -59,6 +66,7 @@
             ],
             "propagate": "False"
         },
+
         "TestPluginManager": {
             "level": "INFO",
             "handlers": [
@@ -67,6 +75,20 @@
             "propagate": "False"
         },
         "TestHistory": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+        "org.pyut.PyutPreferences": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+        "org.pyut.plugins.PluginManager": {
             "level": "INFO",
             "handlers": [
                 "consoleHandler"

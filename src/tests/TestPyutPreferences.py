@@ -1,16 +1,28 @@
 
+from logging import Logger
+from logging import getLogger
+
 import os
 
-import unittest
+from unittest import main as unitTestMain
+from unittest import TestSuite
+
+from tests.TestBase import TestBase
 
 from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.PyutPreferences import PREFS_FILENAME
 
 
-class TestPyutPreferences(unittest.TestCase):
+class TestPyutPreferences(TestBase):
     """
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
+    clsLogger: Logger = None
+
+    @classmethod
+    def setUpClass(cls):
+        TestBase.setUpLogging()
+        TestPyutPreferences.clsLogger = getLogger(__name__)
+
     def emptyPrefs(self):
         """
         Empty the preferences.
@@ -33,6 +45,8 @@ class TestPyutPreferences(unittest.TestCase):
 
         Instantiate a prefs (Singleton class) and fill it.
         """
+        self.logger: Logger = TestPyutPreferences.clsLogger
+
         self.items = {
             "test_int": 12,
             "test_double": 12.12,
@@ -40,7 +54,7 @@ class TestPyutPreferences(unittest.TestCase):
             "test_tuple": ("salut", "les", "amis"),
             "test_list": ["comment", "allez", "vous"],
         }
-        self.prefs = PyutPreferences()
+        self.prefs: PyutPreferences = PyutPreferences()
         self.emptyPrefs()  # empty the prefs
         # fill the prefs
         for item, value in list(self.items.items()):
@@ -59,7 +73,7 @@ class TestPyutPreferences(unittest.TestCase):
         Test what happened with a space in the name of a pref.
         """
         try:
-            self.prefs["salut les amis"] = 3
+            self.prefs["salut les amis"] = str(3)
         except TypeError:
             pass  # that's OK
         else:
@@ -71,7 +85,7 @@ class TestPyutPreferences(unittest.TestCase):
         """
         # now, prefs is already loaded, add some values that are automatically
         # saved
-        self.prefs["new_pref"] = 10
+        self.prefs["new_pref"] = str(10)
         self.prefs.init()  # reinit the object (that's the only way since it's a singleton
         self.assertTrue(self.prefs["new_pref"] == "10", "Value doesn't exist")
 
@@ -111,5 +125,16 @@ class TestPyutPreferences(unittest.TestCase):
             self.assertTrue(self.prefs.getLastOpenedFilesList()[i] == files[i], "wrong file name")
 
 
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: unittest.TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestPyutPreferences))
+
+    return testSuite
+
+
 if __name__ == '__main__':
-    unittest.main()
+    unitTestMain()

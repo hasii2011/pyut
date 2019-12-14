@@ -1,8 +1,7 @@
 
-
 from org.pyut.PyutParam import PyutParam
-from org.pyut.PyutVisibility import getPyutVisibility
-
+# from org.pyut.PyutVisibility import getPyutVisibility
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 class PyutField(PyutParam):
     """
@@ -20,19 +19,21 @@ class PyutField(PyutParam):
     :contact: droux@eivd.ch
     """
 
-    def __init__(self, name: str = "", theParamType: str = "", defaultValue: str = None, visibility: str = "-"):
+    def __init__(self, name: str = "",
+                 theFieldType: str = "",
+                 defaultValue: str = None,
+                 visibility: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE):
         """
-        Constructor.
 
-        @param string name : init name with the name
-        @param string theParamType : the param type
-        @defaultValue string
-        @visibility   string : "+", "-", "#"
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            name:   The name of the field
+            theFieldType: The field type
+            defaultValue: Its default value if any
+            visibility:  The field visibility (private, public, protected)
         """
-        super().__init__(name, theParamType, defaultValue)
-        self._visibility = getPyutVisibility(visibility)
+        super().__init__(name, theFieldType, defaultValue)
+
+        self._visibility: PyutVisibilityEnum = visibility
 
     def getVisibility(self):
         """

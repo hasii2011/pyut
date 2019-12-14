@@ -1,41 +1,77 @@
-#!/usr/bin/env python
 
-__version__ = "$Revision: 1.2 $"
-__author__ = "EI6, eivd, Group Dutoit - Roux"
-__date__ = "2002-05-22"
+from typing import List
+from typing import cast
 
+from logging import Logger
+from logging import getLogger
+
+import logging.config
+
+from json import load as jsonLoad
+
+from importlib import import_module
+
+import sys
+from glob import glob
+
+import unittest
+from unittest.suite import TestSuite
+
+
+if ".." not in sys.path:
+    sys.path.append("..")  # access to the classes to test
+
+moduleLogger: Logger = cast(Logger, None)
 """
 Run this file to run each test found in the current directory.
 @author Laurent Burgbacher <lb@alawa.ch>
 """
 
-import sys
-if ".." not in sys.path:
-    sys.path.append("..") # access to the classes to test
-import unittest
-from glob import glob
 
+def suite() -> TestSuite:
 
-#>--------------------------------------------------------------------------
+    global moduleLogger
 
-def suite():
-    """A suite composed of every suite we can find in this directory"""
-    modules = glob("Test*.py")
-    suite = unittest.TestSuite()
+    fModules = glob("Test*.py")
     # remove .py extension
-    modules = map(lambda x: x[:-3], modules)
-    modules.remove("TestAll") # remove self to avoid recursion ;-)
-    for module in modules:
-        m = __import__(module)
-        suite.addTest(m.suite())
-    return suite
+    modules = list(map(lambda x: x[:-3], fModules))
+    noTests: List[str] = ['TestAll', 'TestMiniOgl', 'TestBase', 'TestTemplate', 'TestIoFile', 'TestUmlFrame']
+    for doNotTest in noTests:
+        modules.remove(doNotTest)
 
-#>--------------------------------------------------------------------------
+    """
+    A suite composed of every suite we can find in this package
+    """
+    fSuite: TestSuite = unittest.TestSuite()
+    for module in modules:
+        try:
+            m = import_module(module)
+            fSuite.addTest(m.suite())
+        except (ValueError, Exception) as e:
+            moduleLogger.error(f'Module import problem:  {e}')
+    return fSuite
+
+
+def setupSystemLogging():
+
+    with open('testLoggingConfig.json', 'r') as loggingConfigurationFile:
+        configurationDictionary = jsonLoad(loggingConfigurationFile)
+
+        logging.config.dictConfig(configurationDictionary)
+        logging.logProcesses = False
+        logging.logThreads   = False
+
 
 def main():
-    unittest.TextTestRunner().run(suite())
+
+    global moduleLogger
+
+    setupSystemLogging()
+    moduleLogger = getLogger('TestAll')
+
+    testSuite: TestSuite = suite()
+    unittest.TextTestRunner().run(testSuite)
 
 
-#>--------------------------------------------------------------------------
-
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()

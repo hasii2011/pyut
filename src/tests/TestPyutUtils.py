@@ -3,6 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from unittest import main as unitTestMain
+from unittest import TestSuite
 
 from tests.TestBase import TestBase
 
@@ -15,6 +16,7 @@ class TestPyutUtils(TestBase):
     clsLogger: Logger = None
 
     BASE_TEST_PATH: str = '/users/home/hasii'
+
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
@@ -66,6 +68,17 @@ class TestPyutUtils(TestBase):
         PyutUtils.setBasePath(srcPath)
         actualPath: str = PyutUtils.getBasePath()
         self.assertEqual(TestPyutUtils.BASE_TEST_PATH, actualPath, 'Path should have been modified')
+
+
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestPyutUtils))
+
+    return testSuite
 
 
 if __name__ == '__main__':

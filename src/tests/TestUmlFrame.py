@@ -212,5 +212,16 @@ class TestUmlFrame(unittest.TestCase):
     #         self.fail("Can't create a new link")
 
 
+def suite() -> unittest.TestSuite:
+
+    import unittest
+
+    testSuite: unittest.TestSuite = unittest.TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestUmlFrame))
+
+    return testSuite
+
+
 if __name__ == '__main__':
     unittest.main()

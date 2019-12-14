@@ -5,6 +5,7 @@ from typing import Any
 
 from logging import Logger
 from logging import getLogger
+from unittest import TestSuite
 
 from unittest import main as unitTestMain
 from unittest.mock import patch
@@ -78,6 +79,17 @@ class TestPyutXmlFinder(TestBase):
     # noinspection PyUnusedLocal
     def _raiseException(self):
         pyutXML: Any = PyutXmlFinder.getPyutXmlClass(TestPyutXmlFinder.UNSUPPORTED_VERSION)
+
+
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestPyutXmlFinder))
+
+    return testSuite
 
 
 if __name__ == '__main__':

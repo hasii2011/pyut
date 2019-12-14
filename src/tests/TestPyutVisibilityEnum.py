@@ -1,6 +1,7 @@
 
 from logging import Logger
 from logging import getLogger
+from unittest import TestSuite
 
 from unittest import main as unitTestMain
 
@@ -95,6 +96,17 @@ class TestPyutVisibilityEnum(TestBase):
         actualValue:   PyutVisibilityEnum = pve
 
         self.assertEqual(expectedValue, actualValue, 'Creation not creating correct value')
+
+
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestPyutVisibilityEnum))
+
+    return testSuite
 
 
 if __name__ == '__main__':

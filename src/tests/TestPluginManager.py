@@ -6,8 +6,8 @@ from logging import getLogger
 from os import chdir
 from os import getcwd
 
-
 from unittest import main as unitTestMain
+from unittest import TestSuite
 
 from org.pyut.PyutUtils import PyutUtils
 from tests.TestBase import TestBase
@@ -44,6 +44,17 @@ class TestPluginManager(TestBase):
 
         for info in infoStrings:
             self.logger.info(info)
+
+
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestPluginManager))
+
+    return testSuite
 
 
 if __name__ == '__main__':

@@ -1,7 +1,10 @@
 
 from org.pyut.general.Singleton import Singleton
+
+
 import unittest
 
+from unittest import TestSuite
 
 class Child(Singleton):
     """
@@ -57,6 +60,17 @@ class TestSingleton(unittest.TestCase):
         a = Child(10)  # good initialization
         self.assertTrue(a.val == 10, "Not correctly initialized")
         a = Child()  # now this works, because the singleton is already instantiated
+
+
+def suite() -> TestSuite:
+
+    import unittest
+
+    testSuite: TestSuite = TestSuite()
+    # noinspection PyUnresolvedReferences
+    testSuite.addTest(unittest.makeSuite(TestSingleton))
+
+    return testSuite
 
 
 if __name__ == '__main__':

@@ -125,7 +125,7 @@ class PyutPreferences(Singleton):
                 f = open(PREFS_FILENAME, "w")
                 f.write("")
                 f.close()
-                self.logger.warning(f'{e}')
+                self.logger.warning(f'Prefs file re-created')
             except (ValueError, Exception) as e:
                 self.logger.error(f"Error: {e}")
                 return
