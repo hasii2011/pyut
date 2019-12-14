@@ -1,4 +1,6 @@
 
+os: osx
+
 language: python
 
 cache: pip
