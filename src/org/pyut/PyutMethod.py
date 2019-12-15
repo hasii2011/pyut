@@ -3,7 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.PyutPreferences import PyutPreferences
-from org.pyut.PyutVisibility import PyutVisibility
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.PyutType import PyutType
 from org.pyut.PyutObject import PyutObject
 
@@ -29,18 +29,12 @@ class PyutMethod(PyutObject):
 
     You can change it with the `setStringMode` class method. This means the
     change will be done for each `PyutMethod` instance.
-
-    :version: $Revision: 1.5 $
-    :author: Laurent Burgbacher
-    :contact: lb@alawa.ch
-
-    @version $Revision: 1.5 $
     """
 
     # define class flag to avoid PyCharm warning in get/set string mode
     __selectedStringMode = None
 
-    def __init__(self, name="", visibility="+", returns=""):
+    def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returns=""):
         """
         Constructor.
 
@@ -52,13 +46,11 @@ class PyutMethod(PyutObject):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._visibility = PyutVisibility(visibility)
+        self._visibility: PyutVisibilityEnum = visibility
         self._modifiers  = []
         self._params     = []
         self._returns    = PyutType(returns)
-        # PyutMethod.setStringMode(WITHOUT_PARAMS)
 
-        # Added by C.Dutoit, 11.11.2002
         prefs = PyutPreferences()
         if prefs["SHOW_PARAMS"] == "1":
             PyutMethod.setStringMode(WITH_PARAMS)
@@ -96,27 +88,18 @@ class PyutMethod(PyutObject):
             return WITHOUT_PARAMS
     # getStringMode = classmethod(getStringMode)
 
-    def getVisibility(self):
+    def getVisibility(self) -> PyutVisibilityEnum:
         """
         Return the visibility of the method.
 
         @return PyutVisibility
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self._visibility
 
-    def setVisibility(self, visibility):
+    def setVisibility(self, visibility: PyutVisibilityEnum):
         """
         Set the visibility of the method.
-
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
-        # if a string is passed, convert it
-        # if type(visibility) == StringType or type(visibility) == UnicodeType:
-        if type(visibility) is str:
-            visibility = PyutVisibility(visibility)
         self._visibility = visibility
 
     def getModifiers(self):

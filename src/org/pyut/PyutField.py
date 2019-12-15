@@ -1,7 +1,7 @@
 
 from org.pyut.PyutParam import PyutParam
-# from org.pyut.PyutVisibility import getPyutVisibility
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+
 
 class PyutField(PyutParam):
     """
@@ -11,12 +11,10 @@ class PyutField(PyutParam):
         - parent (`PyutParam`)
         - field  visibility
 
-    Example::
+    Example:
         myField = PyutField("aField", "integer", "55")
-
-    :version: $Revision: 1.3 $
-    :author:  Deve Roux
-    :contact: droux@eivd.ch
+        or
+        yourField = PyutField('anotherField', 'str', '', PyutVisibilityEnum.private)
     """
 
     def __init__(self, name: str = "",
@@ -35,29 +33,20 @@ class PyutField(PyutParam):
 
         self._visibility: PyutVisibilityEnum = visibility
 
-    def getVisibility(self):
+    def getVisibility(self) -> PyutVisibilityEnum:
         """
-        Get Visibility, used to know the visibility ("+", "-", "#").
+        Get Visibility, used to know the visibility protected, private, or public
 
         @return PyutVisibility
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
         """
         return self._visibility
 
-    def setVisibility(self, visibility):
+    def setVisibility(self, visibility: PyutVisibilityEnum):
         """
         Set method, used to change the visibility.
 
         @param visibility
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
         """
-        # Python 3 update
-        # if type(visibility) == StringType or type(visibility) == UnicodeType:
-        if type(visibility) is str:
-            visibility = getPyutVisibility(visibility)
         self._visibility = visibility
 
     def __str__(self):
@@ -65,10 +54,8 @@ class PyutField(PyutParam):
         Get method, used to know the name and visibility.
 
         @return string field
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
         """
-        return str(self._visibility) + PyutParam.__str__(self)
+        return f'{self._visibility} + {PyutParam.__str__(self)}'
 
     def __repr__(self):
         return self.__str__()

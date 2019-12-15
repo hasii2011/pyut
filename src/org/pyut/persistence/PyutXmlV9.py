@@ -45,6 +45,8 @@ from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutLink import PyutLink
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+
 
 from org.pyut.PyutConstants import PyutConstants
 
@@ -436,9 +438,9 @@ class PyutXml:
         root.setAttribute('name', pyutMethod.getName())
 
         # method visibility
-        visibility = pyutMethod.getVisibility()
+        visibility: PyutVisibilityEnum = pyutMethod.getVisibility()
         if visibility is not None:
-            root.setAttribute('visibility', str(visibility.getVisibility()))
+            root.setAttribute('visibility', visibility)
 
         # for all modifiers
         for modifier in pyutMethod.getModifiers():

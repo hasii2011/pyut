@@ -2,6 +2,9 @@
 from logging import Logger
 from logging import getLogger
 
+from os import sep as osSep
+
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.PyutClass import PyutClass
@@ -88,7 +91,8 @@ class IoJavaReverse(PyutIoPlugin):
         try:
             rj = ReverseJava(umlFrame)
             for filename in filenames:
-                rj.analyseFile(filename)
+                fqnName: str = f'{directory}{osSep}{filename}'
+                rj.analyseFile(fqnName)
         finally:
             wx.EndBusyCursor()
 
@@ -154,36 +158,36 @@ class ReverseJava:
         else:
             self._umlFrame.createInheritanceLink(po, father)
 
-    def _addClassFields(self, className, modifiers, type, names_values):
+    def _addClassFields(self, className, modifiers, fieldType, names_values):
         """
         Add fields to a class
         Note : Default value can be None. (see names_values)
 
         @param String className : Name of the class to be added
         @param String modifiers : Fields modifiers
-        @param String type      : Fields type
+        @param String fieldType      : Fields type
         @param tuple names_values : tuple of (name, default values)
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.0
+
         """
         # Get class fields
         po = self._dicClasses[className]
         pc = po.getPyutObject()
         classFields = pc.getFields()
 
+        # TODO fix this crazy code to use constructor and catch exception on bad input
         # Get visibility
         if "private" in modifiers:
-            visibility = "-"
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE
         elif "protected" in modifiers:
-            visibility = "#"
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.PROTECTED
         elif "public" in modifiers:
-            visibility = "+"
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
         else:
-            visibility = "+"
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
 
         # Add all
         for (name, value) in names_values:
-            classFields.append(PyutField(name, type, value, visibility))
+            classFields.append(PyutField(name, fieldType, value, visibility))
 
     def _addClassMethod(self, className, modifiers, returnType, name, lstFields):
         """
@@ -204,8 +208,7 @@ class ReverseJava:
         @param String returnType        : Method returnType
         @param String name              : Method name
         @param List of string lstFields : Method fields
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.1.2.5
+
         """
         self._logMessage("IoJavaReverse", "Adding method %s for class %s" % (name, className))
         self._logMessage("IoJavaReverse", "(modifiers=%s; returnType=%s)" % (modifiers, returnType))
@@ -213,21 +216,22 @@ class ReverseJava:
         po = self._dicClasses[className]
         pc = po.getPyutObject()
 
+        # TODO fix this crazy code to use constructor and catch exception on bad input
         # Get visibility
         if "private" in modifiers:
-            visibility = "-"
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE
         elif "protected" in modifiers:
-            visibility = "#"
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.PROTECTED
         elif "public" in modifiers:
-            visibility = "+"
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
         else:
-            visibility = "+"
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
 
         # Add method
         methods = pc.getMethods()
         pm = PyutMethod(name, visibility, returnType)
-        for (type, name, defaultValue) in lstFields:
-            param = PyutParam(name, type, defaultValue)
+        for (paramType, name, defaultValue) in lstFields:
+            param = PyutParam(name, paramType, defaultValue)
             pm.addParam(param)
         methods.append(pm)
 
@@ -354,7 +358,7 @@ class ReverseJava:
         self._logMessage("IoJavaReverse", "Reading parameters %s" % lstFile[pos:pos+10])
         while lstFile[pos] != ")":
             # Get parameter
-            type = lstFile[pos]
+            paramType = lstFile[pos]
             pos += 1
             name = lstFile[pos]
             pos += 1
@@ -377,14 +381,14 @@ class ReverseJava:
             pos = self._selectNextAfter(lstFile, pos, ["\n"])
 
             # ',' => new parameter => next position
-            if lstFile[pos]==",":
+            if lstFile[pos] == ",":
                 pos += 1
 
             # Pass \n ?
             pos = self._selectNextAfter(lstFile, pos, ["\n"])
 
             # Append to parameters list
-            parameters.append((type, name, defaultValue))
+            parameters.append((paramType, name, defaultValue))
         # pos = self._readParagraph(lstFile, pos, "(", ")")
         self._logMessage("IoJavaReverse", "*******************************")
         pos += 1
@@ -600,7 +604,7 @@ class ReverseJava:
 
         # Class begining ?
         self._logMessage("IoJavaReverse", "lstFile=%s" % lstFile[currentPos:currentPos+5])
-        if lstFile[currentPos]!="{":
+        if lstFile[currentPos] != "{":
             self._logMessage("IoJavaReverse", "DBG class >> %s" % lstFile[currentPos])
             self._logMessage("IoJavaReverse", "Unexpected characters : %s" % lstFile[currentPos:currentPos+5])
             self._logMessage("IoJavaReverse", "   exiting class reader !\n")
@@ -619,19 +623,19 @@ class ReverseJava:
             elif lstFile[currentPos] == "}":
                 level -= 1
             elif level == 1:
-                (succeeded, tuple, currentPos) = self.readVariable(lstFile, currentPos, True)
+                (succeeded, aTuple, currentPos) = self.readVariable(lstFile, currentPos, True)
                 if succeeded:
-                    (modifiers, type, names_values) = tuple
-                    self._addClassFields(className, modifiers, type, names_values)
+                    (modifiers, fieldType, names_values) = aTuple
+                    self._addClassFields(className, modifiers, fieldType, names_values)
                 else:
                     # Read comments
                     currentPos = self.readComments(lstFile, currentPos)
 
                     # Read method
-                    (succeeded, tuple, currentPos) = self.readMethod(lstFile, currentPos, className, True)
+                    (succeeded, aTuple, currentPos) = self.readMethod(lstFile, currentPos, className, True)
                     if succeeded:
-                        (modifiers, type, name, lstFields) = tuple
-                        self._addClassMethod(className, modifiers, type, name, lstFields)
+                        (modifiers, methType, name, lstFields) = aTuple
+                        self._addClassMethod(className, modifiers, methType, name, lstFields)
 
             # Next token ?
             if level > 0:
