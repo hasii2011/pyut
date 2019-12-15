@@ -9,16 +9,17 @@ import wx
 
 import importlib
 
-from org.pyut.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutField import PyutField
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.plugins.PluginAst import FieldExtractor
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
-
-from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 
@@ -85,13 +86,12 @@ class DlgAskWhichClassesToReverse2(wx.Dialog):
         """
         Return the classes choosen by the user
         """
-        # return self._dicClassesChoosen.values()
-        # Get values
-        ret=[]
+        ret = []
         for el in range(self._listBox2.GetCount()):
             ret.append(self._listBox2.GetClientData(el))
         return ret
 
+    # noinspection PyUnusedLocal
     def _onBtnToTheRight(self, event):
         """
         Callback for the "=>" button
@@ -105,6 +105,7 @@ class DlgAskWhichClassesToReverse2(wx.Dialog):
             self._listBox2.Append(name, data)
             self._listBox1.Delete(i)
 
+    # noinspection PyUnusedLocal
     def _onBtnToTheLeft(self, event):
         """
         Callback for the "<=" button
@@ -134,61 +135,6 @@ def askWhichClassesToReverse2(lstClasses):
     dlg.Destroy()
 
     return lstClassesChoosen
-
-
-def askWhichClassesToReverse(lstClasses):
-    """
-    Ask which classes must be reversed
-
-    @return list of classes
-    @param list lstClasses : list of classes potentially reversable
-    @since 1.6.2.6
-    @author C.Dutoit <dutoitc@hotmail.com>
-    """
-    # Convert classes from list to dictionary based on the classname
-
-    # Create frame
-    dlg = wx.Dialog(None, -1, "Classes choice", style=wx.CAPTION | wx.RESIZE_BORDER, size=(320, 400))
-
-    # Create listBox
-    listBox = wx.ListBox(dlg, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
-    for el in lstClasses:
-        listBox.Append(el.__name__, el)
-    # for i in range(listBox.Number()):
-    # for i in range(listBox.Count()):
-    for i in range(listBox.GetCount()):
-        # listBox.SetSelection(i, True)
-        listBox.SetSelection(i)
-    # Create Ok button
-    btnOk = wx.Button(dlg, wx.ID_OK, "Ok")
-
-    # Create info label
-    lblChoice = wx.StaticText(dlg, -1, "Choose classes to reverse :")
-
-    # Create sizer
-    box = wx.BoxSizer(wx.VERTICAL)
-    box.Add(lblChoice, 0, wx.EXPAND)
-    box.Add(listBox,   0, wx.EXPAND)
-    box.Add(btnOk,     0, wx.EXPAND)
-    box.Fit(dlg)
-    dlg.SetAutoLayout(True)
-    dlg.SetSizer(box)
-
-    # Show dialog
-    dlg.ShowModal()
-    if dlg.GetReturnCode() == 5101:
-        # dlg.EndModal(0)
-        return []
-
-    # Get values
-    ret = []
-    for el in listBox.GetSelections():
-        ret.append(listBox.GetClientData(el))
-
-    # Destroy
-    dlg.Destroy()
-
-    return ret
 
 
 class IoPython(PyutIoPlugin):
@@ -471,7 +417,7 @@ class IoPython(PyutIoPlugin):
                    ]
 
         # Create classes code for each object
-        for el in [object for object in oglObjects if isinstance(object, OglClass)]:
+        for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
             # Add class definition
             aClass = el.getPyutObject()     # TODO
             txt = "class " + str(aClass.getName())        # Add class name
@@ -593,13 +539,12 @@ class IoPython(PyutIoPlugin):
             # Set the visibility according to naming conventions
             if me.__name__[-2:] != "__":
                 if me.__name__[0:2] == "__":
-                    meth.setVisibility("-")
+                    meth.setVisibility(PyutVisibilityEnum.PRIVATE)
                 elif me.__name__[0] == "_":
-                    meth.setVisibility("#")
+                    meth.setVisibility(PyutVisibilityEnum.PROTECTED)
         # methods.sort(lambda x, y: cmp(x.getName(), y.getName()))
         pc.setMethods(methods)
 
-        # get fields by Laurent Burgbacher <lb@alawa.ch>
         fields = None
         try:
             fe: FieldExtractor = FieldExtractor(pc.getFilename())
@@ -626,14 +571,14 @@ class IoPython(PyutIoPlugin):
             for name, init in list(fields.items()):
                 if init == "":
                     init = None
-                vis = "+"
+                vis: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
                 if len(name) > 1:
                     if name [-2:] != "__":
                         if name[0:2] == "__":
-                            vis = "-"
+                            vis: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE
                             name = name[2:]
                         elif name[0] == "_":
-                            vis = "#"
+                            vis: PyutVisibilityEnum = PyutVisibilityEnum.PROTECTED
                             name = name[1:]
                 fds.append(PyutField(name, "", init, vis))
 
@@ -783,7 +728,6 @@ class IoPython(PyutIoPlugin):
         classes = list(classesDic.keys())
 
         # Remove wx.Python classes ? TODO
-        wx.EndBusyCursor()
         classes = askWhichClassesToReverse2(classes)
         if len(classes) == 0:
             return

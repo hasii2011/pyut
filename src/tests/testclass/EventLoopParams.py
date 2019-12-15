@@ -18,3 +18,12 @@ class EventLoopParams:
     last_click_time: float          = 1000.0
     num_clicks:      int            = 2
     mi_nombre:       str            = 'hasii'
+
+    def publicMethod(self) -> str:
+        return "bogus"
+
+    def _protectedMethod(self) -> float:
+        return 1.0
+
+    def __privateMethod(self) -> int:
+        return 42
