@@ -199,30 +199,29 @@ class IoPython(PyutIoPlugin):
         """
         return "Python file", "py", "Python file format"
 
-    def getVisibilityPythonCode(self, visibilityCar):
+    def getVisibilityPythonCode(self, visibility: PyutVisibilityEnum):
         """
-        Return the python code for a given caracter wich represents the
-        visibility
+        Return the python code for a given enum valjue which represents the visibility
 
         @return String
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
+
         """
         # Note : Tested
-        vis = visibilityCar
-        if vis == "+":
+        vis = visibility
+        if vis == PyutVisibilityEnum.PUBLIC:
             code = ''
-        elif vis == "#":
+        elif vis == PyutVisibilityEnum.PROTECTED:
             code = '_'
-        elif vis == "-":
+        elif vis == PyutVisibilityEnum.PRIVATE:
             code = '__'
         else:
             self.logger.error(f"IoPython: Field code not supported : {vis}")
             code = ''
         # print " = " + str(code)
+        self.logger.debug(f"Python code: {code}, for {visibility}")
         return code
 
-    def getFieldPythonCode(self, aField):
+    def getFieldPythonCode(self, aField: PyutField):
         """
         Return the python code for a given field
 
@@ -233,11 +232,7 @@ class IoPython(PyutIoPlugin):
         # Initialize with class relation
         fieldCode = "self."
 
-        # Add visibility
-        # Note : str must be present, since aField.getVisibility return
-        #  a FlyweightString object !
-        fieldCode += self.getVisibilityPythonCode(str(aField.getVisibility()))
-
+        fieldCode += self.getVisibilityPythonCode(aField.getVisibility())
         # Add name
         fieldCode += str(aField.getName()) + " = "
 
@@ -277,7 +272,7 @@ class IoPython(PyutIoPlugin):
             lstOut.append(self.indentStr(str(el)))
         return lstOut
 
-    def getOneMethodCode(self, aMethod, writePass=True):
+    def getOneMethodCode(self, aMethod: PyutMethod, writePass: bool = True):
         """
         Return the python code for a given method
 
@@ -292,8 +287,8 @@ class IoPython(PyutIoPlugin):
         currentCode = "def "
 
         # Add visibility
-        currentCode += self.getVisibilityPythonCode(str(aMethod.getVisibility()))
-
+        # currentCode += self.getVisibilityPythonCode(str(aMethod.getVisibility()))
+        currentCode += aMethod.getVisibility().value
         # Add name
         currentCode += str(aMethod.getName()) + "(self"
 
@@ -739,38 +734,6 @@ class IoPython(PyutIoPlugin):
             print(f"Error while reversing python file(s)! {e}")
         wx.EndBusyCursor()
 
-#
-# TODO make these unit test
-#
-#
-# def test1():
-#     plg=IoPython(None, None)
-#     print("IoPython Tests")
-#     print("==============")
-#
-#     # Test getVisibilityPythonCode
-#     print("getVisibilityPythonCode test")
-#     if (plg.getVisibilityPythonCode('-')!='__') or \
-#        (plg.getVisibilityPythonCode("-")!='__'):
-#         print("  * private test failed !")
-#     if (plg.getVisibilityPythonCode('#')!='_'):
-#         print("  * protected test failed !")
-#     if (plg.getVisibilityPythonCode('+')!=''):
-#         print("  * public test failed !")
-#
-#     # Test getFieldPythonCode
-#     print("getFieldPythonCode test")
-#     from PyutField import PyutField
-#     s=plg.getFieldPythonCode(PyutField("thename", "", None, "+"))
-#     if s.find("self.thename")==-1:
-#         print("   * public test failed !")
-#         print(s)
-#     s=plg.getFieldPythonCode(PyutField("thename", "", None, "-"))
-#     if s.find("self.__thename")==-1:
-#         print("   * private test failed !")
-#     s=plg.getFieldPythonCode(PyutField("thename", "", None, "#"))
-#     if s.find("self._thename")==-1:
-#         print("   * protected test failed !")
 #
 #     # Test indent
 #     print("indent test")

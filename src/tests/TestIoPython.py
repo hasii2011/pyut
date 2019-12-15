@@ -5,13 +5,15 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 from tests.TestBase import TestBase
 
-# import the class you want to test here
-# from org.pyut.template import template
+from org.pyut.plugins.IoPython import IoPython
+
+from org.pyut.PyutField import PyutField
 
 
-class TestTemplate(TestBase):
+class TestIoPython(TestBase):
     """
     You need to change the name of this class to Test`xxxx`
     Where `xxxx' is the name of the class that you want to test.
@@ -23,20 +25,38 @@ class TestTemplate(TestBase):
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
-        TestTemplate.clsLogger = getLogger(__name__)
+        TestIoPython.clsLogger = getLogger(__name__)
 
     def setUp(self):
-        self.logger: Logger = TestTemplate.clsLogger
+        self.logger: Logger = TestIoPython.clsLogger
+        self.plugin = IoPython(oglObjects=None, umlFrame=None)
 
     def tearDown(self):
         pass
 
-    def testName1(self):
-        pass
+    def testGetPublicFieldPythonCode(self):
 
-    def testName2(self):
-        """Another test"""
-        pass
+        s: str = self.plugin.getFieldPythonCode(PyutField("publicMethod", "", None, PyutVisibilityEnum.PUBLIC))
+
+        unExpectedValue: int = -1
+        actualValue:     int = s.find('self.publicMethod')
+        self.assertNotEqual(unExpectedValue, actualValue, f'Did not code generate public method correctly: `{s}`')
+
+    def testGetPrivateFieldPythonCode(self):
+
+        s: str = self.plugin.getFieldPythonCode(PyutField("privateMethod", "", None, PyutVisibilityEnum.PRIVATE))
+
+        unExpectedValue: int = -1
+        actualValue:     int = s.find('self.__privateMethod')
+        self.assertNotEqual(unExpectedValue, actualValue, f'Did not code generate private method correctly: `{s}`')
+
+    def testGetProtectedFieldPythonCode(self):
+
+        s: str = self.plugin.getFieldPythonCode(PyutField("protectedMethod", "", None, PyutVisibilityEnum.PROTECTED))
+
+        unExpectedValue: int = -1
+        actualValue:     int = s.find('self._protectedMethod')
+        self.assertNotEqual(unExpectedValue, actualValue, f'Did not code generate protected method correctly: `{s}`')
 
 
 def suite() -> TestSuite:
@@ -45,7 +65,7 @@ def suite() -> TestSuite:
 
     testSuite: TestSuite = TestSuite()
     # noinspection PyUnresolvedReferences
-    testSuite.addTest(unittest.makeSuite(TestTemplate))
+    testSuite.addTest(unittest.makeSuite(TestIoPython))
 
     return testSuite
 

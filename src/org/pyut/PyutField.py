@@ -55,7 +55,8 @@ class PyutField(PyutParam):
 
         @return string field
         """
-        return f'{self._visibility} + {PyutParam.__str__(self)}'
+        # return str(self._visibility) + PyutParam.__str__(self)
+        return f'{self._visibility}{PyutParam.__str__(self)}'
 
     def __repr__(self):
         return self.__str__()
