@@ -28,7 +28,7 @@ MaxWidth = 80
 [ID_BTN_TO_THE_RIGHT, ID_BTN_TO_THE_LEFT] = PyutUtils.assignID(2)
 
 
-class DlgAskWhichClassesToReverse2(wx.Dialog):
+class DlgAskWhichClassesToReverse(wx.Dialog):
     def __init__(self, lstClasses):
         wx.Dialog.__init__(self, None, -1, "Classes choice", style=wx.CAPTION | wx.RESIZE_BORDER, size=(400, 500))
 
@@ -120,7 +120,7 @@ class DlgAskWhichClassesToReverse2(wx.Dialog):
             self._listBox2.Delete(i)
 
 
-def askWhichClassesToReverse2(lstClasses):
+def askWhichClassesToReverse(lstClasses):
     """
     Ask which classes must be reversed
 
@@ -130,7 +130,7 @@ def askWhichClassesToReverse2(lstClasses):
     @author C.Dutoit <dutoitc@hotmail.com>
     """
     # Ask which classes to reverse
-    dlg = DlgAskWhichClassesToReverse2(lstClasses)
+    dlg = DlgAskWhichClassesToReverse(lstClasses)
     lstClassesChoosen = dlg.getChoosenClasses()
     dlg.Destroy()
 
@@ -728,7 +728,7 @@ class IoPython(PyutIoPlugin):
         classes = list(classesDic.keys())
 
         # Remove wx.Python classes ? TODO
-        classes = askWhichClassesToReverse2(classes)
+        classes = askWhichClassesToReverse(classes)
         if len(classes) == 0:
             return
 
