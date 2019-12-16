@@ -1,11 +1,11 @@
 
+import os
+
 from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
-
-import os
 
 
 class IoCpp(PyutIoPlugin):
@@ -358,6 +358,7 @@ class IoCpp(PyutIoPlugin):
         """
         file.write("/**\n * class "+className+"\n * More info here \n */\n")
 
+    # noinspection PyUnusedLocal
     def _writeMethodComment(self, file, method, className, tab=""):
         """
         Writing method comment with doxygen organisation.
@@ -548,7 +549,7 @@ $(FILENAME): $(OBJS)
         self.__demiTab = "  "
         self.__className = []
 
-        for el in [object for object in oglObjects if isinstance(object, OglClass)]:
+        for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
             self._writeClass(el.getPyutObject())
 
         self.writeMain()

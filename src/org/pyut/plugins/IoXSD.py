@@ -188,6 +188,8 @@ class XSDReader:
         doc = ""
         l1 = [el for el in node.childNodes
               if el.nodeName in ["xsd:annotation", "xs:annotation"]]
+
+        # noinspection PyUnusedLocal
         for n1 in l1:
             l2 = [el for el in l1[0].childNodes
                   if el.nodeName in ["xsd:documentation", "xs:documentation"]]
