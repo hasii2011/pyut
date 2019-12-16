@@ -81,6 +81,13 @@
             ],
             "propagate": "False"
         },
+        "TestIoPython": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "org.pyut.PyutPreferences": {
             "level": "INFO",
             "handlers": [

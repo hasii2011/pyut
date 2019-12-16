@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -272,23 +274,21 @@ class IoPython(PyutIoPlugin):
             lstOut.append(self.indentStr(str(el)))
         return lstOut
 
-    def getOneMethodCode(self, aMethod: PyutMethod, writePass: bool = True):
+    def getOneMethodCode(self, aMethod: PyutMethod, writePass: bool = True) -> List[str]:
         """
         Return the python code for a given method
 
         @param aMethod : ..
         @param writePass : Write "pass" in the code ?
-        @return list of strings
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
-        """
 
-        methodCode = []
+        @return list of strings
+
+        """
+        methodCode: List[str] = []
         currentCode = "def "
 
         # Add visibility
-        # currentCode += self.getVisibilityPythonCode(str(aMethod.getVisibility()))
-        currentCode += aMethod.getVisibility().value
+        currentCode += self.getVisibilityPythonCode(aMethod.getVisibility())
         # Add name
         currentCode += str(aMethod.getName()) + "(self"
 
@@ -733,21 +733,3 @@ class IoPython(PyutIoPlugin):
         except (ValueError, Exception) as e:
             print(f"Error while reversing python file(s)! {e}")
         wx.EndBusyCursor()
-
-#
-#     # Test indent
-#     print("indent test")
-#     lst1=['a', '   b', 'c']
-#     lst2=['    a', '       b', '    c']
-#     lst1b=plg.indent(lst1)
-#     if (lst1b!=lst2):
-#         print("   * indent test failed !")
-#
-#
-# def testAskWhichClassesToReverse2():
-#     class testClass1: pass
-#     class testClass2: pass
-#     class testClass3: pass
-#     class testClass4: pass
-#     lstClasses = [testClass1(), testClass2(), testClass3(), testClass4()]
-#     ret = askWhichClassesToReverse2(lstClasses)
