@@ -97,6 +97,37 @@ class TestPyutVisibilityEnum(TestBase):
 
         self.assertEqual(expectedValue, actualValue, 'Creation not creating correct value')
 
+    def testToEnumPublic(self):
+
+        expectedValue: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
+
+        self._testEnum(expectedValue, 'PUBLIC', 'All upper case public failed')
+        self._testEnum(expectedValue, 'public', 'All lower case public failed')
+        self._testEnum(expectedValue, 'PuBlIc', 'Mixed case public failed')
+        self._testEnum(expectedValue, 'B ogus', 'Unknown public value failed')
+
+    def testToEnumPrivate(self):
+
+        expectedValue: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE
+
+        self._testEnum(expectedValue, 'PRIVATE', 'All upper case private failed')
+        self._testEnum(expectedValue, 'private', 'All lower case private failed')
+        self._testEnum(expectedValue, 'pRiVaTe', 'Mixed case private failed')
+
+    def testToEnumProtected(self):
+
+        expectedValue: PyutVisibilityEnum = PyutVisibilityEnum.PROTECTED
+
+        self._testEnum(expectedValue, 'PROTECTED', 'All upper case protected failed')
+        self._testEnum(expectedValue, 'protected', 'All lower case protected failed')
+        self._testEnum(expectedValue, 'PROtected', 'Mixed case protected failed')
+
+    def _testEnum(self, expectedValue: PyutVisibilityEnum, stringToTest: str, assertMessage: str):
+
+        actualValue:   PyutVisibilityEnum = PyutVisibilityEnum.toEnum(stringToTest)
+
+        self.assertEqual(expectedValue, actualValue, assertMessage)
+
 
 def suite() -> TestSuite:
 
