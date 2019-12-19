@@ -837,10 +837,13 @@ class PyutXml:
         for Method in Class.getElementsByTagName("Method"):
 
             # method name
-            aMethod = PyutMethod(Method.getAttribute('name'))
+            aMethod: PyutMethod = PyutMethod(Method.getAttribute('name'))
 
             # method visibility
-            aMethod.setVisibility(Method.getAttribute('visibility'))
+            # aMethod.setVisibility(Method.getAttribute('visibility'))
+            strVis: str = Method.getAttribute('visibility')
+            vis: PyutVisibilityEnum = PyutVisibilityEnum(strVis)
+            aMethod.setVisibility(visibility=vis)
 
             # for method return type
             Return = Method.getElementsByTagName("Return")[0]

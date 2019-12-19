@@ -1,6 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
 
-from xml.dom.minidom import parse
 from xml.dom.minidom import Document
 
 from org.pyut.PyutActor import PyutActor
@@ -12,9 +13,11 @@ from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.PyutUseCase import PyutUseCase
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglNote import OglNote
+from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.OglClass import OglClass
 
@@ -48,6 +51,9 @@ class PyutXml:
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
+    def __init__(self):
+        self.logger: Logger = getLogger(__name__)
+
     def open(self, dom, umlFrame):
         """
         To open a file and creating diagram.
@@ -105,7 +111,9 @@ class PyutXml:
         gauge.SetValue(4)
         for src, links in list(dicoLink.items()):
             for link in links:
-                createdLink = umlFrame.createNewLink(dicoOglObjects[src], dicoOglObjects[link[1].getDestination().getId()], link[1].getType())
+                createdLink = umlFrame.createNewLink(dicoOglObjects[src],
+                                                     dicoOglObjects[link[1].getDestination().getId()],
+                                                     link[1].getType())
 
                 # fix link with the loaded information
                 pyutLink = createdLink.getPyutObject()
@@ -281,12 +289,13 @@ class PyutXml:
         root = xmlDoc.createElement('Method')
 
         # method name
-        root.setAttribute('name', pyutMethod.getName() )
+        root.setAttribute('name', pyutMethod.getName())
 
         # method visibility
-        visibility = pyutMethod.getVisibility()
+        visibility: PyutVisibilityEnum = pyutMethod.getVisibility()
         if visibility is not None:
-            root.setAttribute('visibility', str(visibility.getVisibility()))
+            # root.setAttribute('visibility', str(visibility.getVisibility()))
+            root.setAttribute('visibility', visibility.value)
 
         # for all modifiers
         for modifier in pyutMethod.getModifiers():
@@ -302,7 +311,7 @@ class PyutXml:
             root.appendChild(xmlReturnType)
 
         # method params
-        for param in pyutMethod.getParams() :
+        for param in pyutMethod.getParams():
             root.appendChild(self._PyutParam2xml(param, xmlDoc))
 
         return root
@@ -343,10 +352,10 @@ class PyutXml:
             root.appendChild(self._PyutField2xml(field, xmlDoc))
 
         # Append fathers
-        self._appendFathers(pyutClass, root)
+        self._appendFathers(pyutLinkedObject=pyutClass, root=root, xmlDoc=xmlDoc)
 
         # Append links
-        self._appendLinks(pyutClass, root)
+        self._appendLinks(pyutLinkedObject=pyutClass, root=root, xmlDoc=xmlDoc)
 
         return root
 
@@ -359,8 +368,6 @@ class PyutXml:
         @return Element          : New miniDom element
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        # lang.importLanguage()
-
         root = xmlDoc.createElement('Note')
 
         # ID
@@ -370,10 +377,10 @@ class PyutXml:
         root.setAttribute('name', pyutNote.getName())
 
         # Append fathers
-        self._appendFathers(pyutNote, root)
+        self._appendFathers(pyutLinkedObject=pyutNote, root=root, xmlDoc=xmlDoc)
 
         # Append links
-        self._appendLinks(pyutNote, root)
+        self._appendLinks(pyutLinkedObject=pyutNote, root=root, xmlDoc=xmlDoc)
 
         return root
 
@@ -397,10 +404,10 @@ class PyutXml:
         root.setAttribute('name', pyutActor.getName())
 
         # Append fathers
-        self._appendFathers(pyutActor, root)
+        self._appendFathers(pyutLinkedObject=pyutActor, root=root, xmlDoc=xmlDoc)
 
         # Append links
-        self._appendLinks(pyutActor, root)
+        self._appendLinks(pyutLinkedObject=pyutActor, root=root, xmlDoc=xmlDoc)
 
         return root
 
@@ -424,14 +431,14 @@ class PyutXml:
         root.setAttribute('name', pyutUseCase.getName())
 
         # Append fathers
-        self._appendFathers(pyutUseCase, root)
+        self._appendFathers(pyutLinkedObject=pyutUseCase, root=root, xmlDoc=xmlDoc)
 
         # Append links
-        self._appendLinks(pyutUseCase, root)
+        self._appendLinks(pyutLinkedObject=pyutUseCase, root=root, xmlDoc=xmlDoc)
 
         return root
 
-    def _appendOglBase(self, oglObject, root):
+    def _appendOglBase(self, oglObject: OglObject, root):
         """
         Saves the position and size of the OGL object in XML node.
 
@@ -441,17 +448,19 @@ class PyutXml:
         """
 
         # Saving size
-        w, h = oglObject.GetBoundingBoxMin()
+        # w, h = oglObject.GetBoundingBoxMin()
+        w, h = oglObject.GetSize()
         root.setAttribute('width', str(int(w)))
         root.setAttribute('height', str(int(h)))
 
         # Saving position
-        x = int(oglObject.GetX())
-        y = int(oglObject.GetY())
+        # x = int(oglObject.GetX())
+        # y = int(oglObject.GetY())
+        x, y = oglObject.GetTopLeft()
         root.setAttribute('x', str(x))
         root.setAttribute('y', str(y))
 
-    def _OglClass2xml(self, oglClass, xmlDoc):
+    def _OglClass2xml(self, oglClass: OglClass, xmlDoc):
         """
         Exporting an OglClass to an miniDom Element.
 
@@ -551,7 +560,7 @@ class PyutXml:
         """
         # class methods for this currente class
         allMethods = []
-        for Method in Class.getElementsByTagName("Method") :
+        for Method in Class.getElementsByTagName("Method"):
 
             # method name
             aMethod = PyutMethod(Method.getAttribute('name'))
@@ -565,7 +574,7 @@ class PyutXml:
 
             # for methods param
             allParams = []
-            for Param in  Method.getElementsByTagName("Param"):
+            for Param in Method.getElementsByTagName("Param"):
                 allParams.append(self._getParam(Param))
 
             # setting de params for thiy method
@@ -587,7 +596,9 @@ class PyutXml:
         for Field in Class.getElementsByTagName("Field"):
 
             aField = PyutField()
-            aField.setVisibility(Field.getAttribute('visibility'))
+            # aField.setVisibility(Field.getAttribute('visibility'))
+            vis: PyutVisibilityEnum = PyutVisibilityEnum(Field.getAttribute('visibility'))
+            aField.setVisibility(vis)
             Param = Field.getElementsByTagName("Param")[0]
             if Param.hasAttribute('defaultValue'):
                 aField.setDefaultValue(Param.getAttribute('defaultValue'))
@@ -879,33 +890,21 @@ class PyutXml:
         # This is fixed just below
         for links in list(dicoLink.values()):
             for link in links:
-                for id, oglObject in list(dicoOglObjects.items()):
+                for objId, oglObject in list(dicoOglObjects.items()):
                     try:
-                        if link[1].getDestination() == \
-                                oglObject.getPyutObject().getName():
-                            link[0] = id
+                        if link[1].getDestination() == oglObject.getPyutObject().getName():
+                            link[0] = objId
                     except (ValueError, Exception) as e:
-                        # TODO Use Python logging module
-                        print(f"Error converting old data: {e}")
-                        print(link[1].getDestination(), end=' ')
-                        print(" == ", end=' ')
-                        print(oglObject.getPyutObject().getName())
+                        # print(f"Error converting old data: {e}")
+                        # print(link[1].getDestination(), end=' ')
+                        # print(" == ", end=' ')
+                        # print(oglObject.getPyutObject().getName())
+
+                        self.logger.error(f"Error converting old data: {e}")
+                        self.logger.error(f'{link[1].getDestination()} == {oglObject.getPyutObject().getName()}')
 
         for fathers in list(dicoFather.values()):
             for father in range(len(fathers)):
-                for id, oglObject in list(dicoOglObjects.items()):
-                    if fathers[father] == \
-                            oglObject.getPyutObject().getName():
-                        fathers[father] = id
-
-    def joli(self, fileName):
-        """
-        To open a file and creating diagram.
-
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        """
-        from io import StringIO
-        dom = parse(StringIO(open(fileName).read()))
-        #  xml.dom.ext.PrettyPrint(dom, open("joli.xml", 'w'))   # don't know what this is supposed to do
-        print(f"{dom.toprettyxml()}")                            # Maybe this ?
+                for objId, oglObject in list(dicoOglObjects.items()):
+                    if fathers[father] == oglObject.getPyutObject().getName():
+                        fathers[father] = objId

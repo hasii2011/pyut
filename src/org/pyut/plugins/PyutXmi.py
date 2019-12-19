@@ -1,4 +1,11 @@
 
+from typing import List
+from typing import Union
+from typing import NewType
+
+from logging import Logger
+from logging import getLogger
+
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
 
@@ -6,6 +13,7 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.OglLinkType import OglLinkType
 
@@ -43,6 +51,8 @@ class PyutXmi:
     :contact: droux@eivd.ch
     @modified C.Dutoit feb 2003 : updated, fixed, improved
     """
+    def __init__(self):
+        self.logger: Logger = getLogger(__name__)
 
     def _PyutLink2xml(self, pyutLink):
         """
@@ -94,7 +104,7 @@ class PyutXmi:
         root = Element('Param')
 
         # param name
-        root.setAttribute('name', pyutParam.getName() )
+        root.setAttribute('name', pyutParam.getName())
 
         # param type
         root.setAttribute('type', str(pyutParam.getType()))
@@ -196,7 +206,7 @@ class PyutXmi:
         if len(fathers) > 0:
             for i in fathers:
                 father = Element('Father')
-                father.setAttribute('name', i.getName() )
+                father.setAttribute('name', i.getName())
                 root.appendChild(father)
 
         # for all links
@@ -240,6 +250,7 @@ class PyutXmi:
     def save(self, oglObjects):
         """
         To save save diagram in XML file.
+        TODO:  Does not generate 'real' XMI
 
         @since 1.0
         @Deve Roux <droux@eivd.ch>
@@ -263,29 +274,25 @@ class PyutXmi:
         self.__savedLinks = None
         return root
 
-    def _xmiVisibility2PyutVisibility(self, visibility="private"):
+    def _xmiVisibility2PyutVisibility(self, visibility: str = "private") -> PyutVisibilityEnum:
         """
-        To translate Xmi visibility to Pyut visibility.
-        Translating :
-            - private   -> -
-            - public    -> +
-            - protected -> #
-            - others    ->
+        Translates Xmi visibility string to a Pyut visibility enumeration
 
-        @param   visibility
-        @return  Sting  : Pyut visibility
+        Args:
+            visibility: the string 'public', 'prviate', or 'protected'
 
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Returns:  The appropriate enumeration value
         """
-        if visibility == "private":
-            return "-"
-        elif visibility == "public":
-            return "+"
-        elif visibility == "protected":
-            return "#"
-
-        return ""
+        retEnum: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visibility)
+        return retEnum
+        # if visibility == "private":
+        #     return "-"
+        # elif visibility == "public":
+        #     return "+"
+        # elif visibility == "protected":
+        #     return "#"
+        #
+        # return ""
 
     def _getDefaultValue(self, xmiParam, pyutParam):
         """
@@ -328,22 +335,25 @@ class PyutXmi:
         parse(theDom, "Foundation.Core.DataType")
         parse(theDom, "Foundation.Data_Types.Enumeration")
 
-    def _getTypeId(self, xmiParam, param, dico):
+    TypeIdObject = NewType('TypeIdObject', Union[PyutMethod, PyutParam, PyutField])
+
+    def _getTypeId(self, xmiElement: Element, typeIdObject: TypeIdObject, dico):
         """
         Parse xmiParam and making link in dico between param and xmiParam Id.
 
         Args:
-            xmiParam:
-            param:
+            xmiElement:
+            typeIdObject:
             dico:       dicoType of dicoReturn
         """
-        def parse(xmiParam, param, dico, tag):
-            for xmiType in xmiParam.getElementsByTagName(tag):
+        def parse(theXmiParam, localTypedIdObject, inDict, tag):
+            for xmiType in theXmiParam.getElementsByTagName(tag):
                 zId = xmiType.getAttribute("xmi.idref")
-                dico[zId] = param
+                inDict[zId] = localTypedIdObject
 
-        parse(xmiParam, param, dico, "Foundation.Core.DataType")
-        parse(xmiParam, param, dico, "Foundation.Data_Types.Enumeration")
+        self.logger.info(f'_getTypeId - typeIdObject: {typeIdObject}')
+        parse(xmiElement, typeIdObject, dico, "Foundation.Core.DataType")
+        parse(xmiElement, typeIdObject, dico, "Foundation.Data_Types.Enumeration")
 
     def _getParam(self, Param, pyutMethod):
         """
@@ -359,10 +369,10 @@ class PyutXmi:
         aParam = PyutParam()
 
         # param's name
-        name = Param.getElementsByTagName \
-            ("Foundation.Core.ModelElement.name")[0].firstChild
+        name = Param.getElementsByTagName("Foundation.Core.ModelElement.name")[0].firstChild
         if name.nodeType == name.TEXT_NODE:
-            if name.data[-6:] == "Return":
+            self.logger.info(f'Parameter name: {name.data}')
+            if name.data[-6:] == "Return" or name.data[-6:] == "return":
                 self._getTypeId(Param, pyutMethod, self.dicoReturn)
                 return None
             else:
@@ -386,37 +396,48 @@ class PyutXmi:
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
-        # class methods for this currente class
+        # class methods for this current class
         allMethods = []
 
         for Method in Class.getElementsByTagName("Foundation.Core.Operation"):
 
-            # method name
-            name = Method.getElementsByTagName("Foundation.Core.ModelElement.name")[0].firstChild
+            self.logger.info(f'Method: {Method}')
+            # name = Method.getElementsByTagName("Foundation.Core.ModelElement.name")[0].firstChild
+            tagName: List[Element] = Method.getElementsByTagName("Foundation.Core.ModelElement.name")
+
+            self.logger.info(f'tagName: {tagName} tagName Length: {len(tagName)}')
+            if len(tagName) == 0:
+                continue
+            elt = tagName[0]
+            self.logger.info(f'elt: {elt}')
+            name = elt.firstChild
+
             if name.nodeType == name.TEXT_NODE:
                 aMethod = PyutMethod(name.data)
-
+                self.logger.info(f'Method name: {name.data}')
                 # method visibility
                 visibility = Method.getElementsByTagName  ("Foundation.Core.ModelElement.visibility")[0]
-                aMethod.setVisibility(self._xmiVisibility2PyutVisibility (visibility.getAttribute('xmi.value')))
-
+                # aMethod.setVisibility(self._xmiVisibility2PyutVisibility (visibility.getAttribute('xmi.value')))
+                visStr: str = visibility.getAttribute('xmi.value')
+                vis:    PyutVisibilityEnum = self._xmiVisibility2PyutVisibility(visStr)
+                self.logger.info(f'Method visibility: {vis}')
+                aMethod.setVisibility(vis)
                 allParams = []
                 for Param in Method.getElementsByTagName("Foundation.Core.Parameter"):
                     pyutParam = self._getParam(Param, aMethod)
                     if pyutParam is not None:
                         allParams.append(pyutParam)
 
-                # setting de params for thiy method
                 aMethod.setParams(allParams)
 
-            # hadding this method in all class methods
-            allMethods.append(aMethod)
+                # adding this method in all class methods
+                allMethods.append(aMethod)
 
         return allMethods
 
     def _getFields(self, Class):
         """
-        To extract fields form Class.
+        To extract fields from Class.
 
         @param   minidom.Element  : Class
         @return  [] with PyutField
@@ -427,17 +448,19 @@ class PyutXmi:
         # for class fields
         allFields = []
 
-        for Field in Class.getElementsByTagName("Foundation.Core.Attribute") :
+        for Field in Class.getElementsByTagName("Foundation.Core.Attribute"):
             aField = PyutField()
-
-            # name
             name = Field.getElementsByTagName("Foundation.Core.ModelElement.name")[0].firstChild
             if name.nodeType == name.TEXT_NODE:
                 aField.setName(name.data)
-
             # field visibility
+            # Be verbose for debugability
+            self.logger.info(f'Field length: {len(Field)} Field: {Field}')
             visibility = Field.getElementsByTagName("Foundation.Core.ModelElement.visibility")[0]
-            aField.setVisibility(self._xmiVisibility2PyutVisibility(visibility.getAttribute('xmi.value')))
+            # aField.setVisibility(self._xmiVisibility2PyutVisibility(visibility.getAttribute('xmi.value')))
+            visStr: str                = visibility.getAttribute('xmi.value')
+            vis:    PyutVisibilityEnum = self._xmiVisibility2PyutVisibility(visStr)
+            aField.setVisibility(vis)
 
             # default value
             self._getDefaultValue(Field, aField)
@@ -451,17 +474,16 @@ class PyutXmi:
         """
         To extract fathers form Class.
 
-        @param xml.dom.minidom Element  : dom
-        @param UmlFrame umlFrame
+        @param dom xml.dom.minidom   : dom
+        @param umlFrame UmlFrame umlFrame
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
         # find id from class in src
-        def parse(src, type):
-            father = fathers.getElementsByTagName(type)
-            if len(father)>0:
-                klass =  father[0].getElementsByTagName\
-                    ("Foundation.Core.Class")[0].getAttribute("xmi.idref")
+        def parse(src, generalizationType: str):
+            parent = src.getElementsByTagName(generalizationType)
+            if len(parent) > 0:
+                klass = parent[0].getElementsByTagName ("Foundation.Core.Class")[0].getAttribute("xmi.idref")
                 return klass
 
             return None
@@ -490,8 +512,8 @@ class PyutXmi:
         """
         To extract links form an OGL object.
 
-        @param xml.dom.minidom Element  : dom
-        @param UmlFrame umlFrame
+        @param  dom  : xml.dom.minidom
+        @param  umlFrame  UmlFrame
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
@@ -505,7 +527,7 @@ class PyutXmi:
             linkName = ""
             xmiName = association.getElementsByTagName\
                 ("Foundation.Core.ModelElement.name")
-            if len(xmiName)>0:
+            if len(xmiName) > 0:
                 name = xmiName[0].firstChild
                 if name is not None:
                     if name.nodeType == name.TEXT_NODE:
@@ -531,6 +553,7 @@ class PyutXmi:
             createdLink.setName(linkName)
             createdLink.setDestination(src.getPyutObject())
 
+    # noinspection PyUnusedLocal
     def _getOglClasses(self, xmlOglClasses, dicoOglObjects, umlFrame, oldData):
         """
         Parse the XMI elements given and build data layer for PyUT classes.
@@ -541,8 +564,6 @@ class PyutXmi:
 
         @param Element[] xmlOglClasses : XMI 'GraphicClass' elements
         @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
-        @param {id / srcName, OglLink} dicoLink : OGL links loaded
-        @param {id / srcName, id / srcName} fathers: Inheritance
         @param UmlFrame umlFrame : Where to draw
         @param int oldData : If old data (v1.0), 1 else 0
         @since 2.0
@@ -553,7 +574,7 @@ class PyutXmi:
 
         # adding name for this class
         className = xmlOglClasses.getElementsByTagName("Foundation.Core.ModelElement.name")
-
+        self.logger.info(f'Ogl class name: {className}')
         if len(className) > 0:
             name = className[0].firstChild
             if name.nodeType == name.TEXT_NODE:
@@ -569,12 +590,12 @@ class PyutXmi:
 
             # for class id
             classId = xmlOglClasses.getAttribute("xmi.id")
-            print("Class ID : " + classId)
+            self.logger.info(f"Class ID: {classId}")
 
-            # for all class whos are inerithance link
+            # for all class whos are inheritance link
             for fathers in xmlOglClasses.getElementsByTagName("Foundation.Core.Generalization"):
                 linkId = fathers.getAttribute("xmi.idref")
-                print("Father : " + linkId)
+                self.logger.info(f"parent: {linkId}")
                 if linkId not in self.dicoFather:
                     self.dicoFather[linkId] = {}
                 self.dicoFather[linkId][classId] = oglClass
@@ -583,11 +604,12 @@ class PyutXmi:
             for links in xmlOglClasses.getElementsByTagName("Foundation.Core.Classifier.associationEnd"):
                 for link in links.getElementsByTagName("Foundation.Core.AssociationEnd"):
                     linkId = link.getAttribute("xmi.idref")
-                    print("LINK  " + linkId)
+                    self.logger.info(f"linkId: {linkId}")
                     if linkId not in self.dicoLinks:
                         self.dicoLinks[linkId] = oglClass
-
-            dicoOglObjects[pyutClass.getId()] = oglClass
+            pyutClassId = pyutClass.getId()
+            self.logger.info(f'pyutClassId: {pyutClassId}')
+            dicoOglObjects[pyutClassId] = oglClass
 
             umlFrame.addShape(oglClass, 100, 100)
 

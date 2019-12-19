@@ -132,6 +132,6 @@ class IoXmi(PyutIoPlugin):
 
         dom = parse(StringIO(open(filename).read()))
 
-        myXmi = PyutXmi()
+        myXmi: PyutXmi = PyutXmi()
         myXmi.open(dom, umlFrame)
         return True

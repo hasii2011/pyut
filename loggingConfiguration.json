@@ -28,14 +28,13 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "mediator": {
+        "org.pyut.general.mediator": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "org.pyut": {
             "level":     "INFO",
-            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "Pyut": {
@@ -43,104 +42,103 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "Pyut2": {
+        "org.pyut.PyutPreferences": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "PyutPreferences": {
+        "org.pyut.ui.AppFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "AppFrame": {
+        "org.pyut.ui.UmlFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "UmlFrame": {
+        "org.pyut.MiniOgl.DiagramFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "MiniOgl.DiagramFrame": {
+        "org.pyut.persistence.PyutXmlV8": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "PyutXmlV8": {
+        "org.pyut.general.Lang": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "Lang": {
+        "org.pyut.persistencde.IoFile": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-         "IoFile": {
+        "org.pyut.plugins.ToFastEdit": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-         "ToFastEdit": {
+        "org.pyut.plugins.ToTransforms": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-         "ToTransforms": {
+        "org.pyut.PyutDocument": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-         "PyutDocument": {
+        "org.pyut.dialogs.DlgPyutProperties": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "DlgPyutProperties": {
+        "org.pyut.plugins.DlgFEOptions": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "plugins.DlgFEOptions": {
+        "org.pyut.ogl.OglObject": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "OglObject": {
+        "org.pyut.ogl.OglClass": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "OglClass": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
-        "plugins": {
+        "org.pyut.plugins": {
             "level":     "INFO",
             "propagate": "False"
         },
-        "PluginManager": {
+        "org.pyut.plugins.PluginManager": {
             "level":     "ERROR",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "ToPython": {
+        "org.pyut.plugins.ToPython": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "IOPython": {
+        "org.pyut.plugins.ToPython.IOPython": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "ToArrangeLinks": {
+        "org.pyut.plugins.ToArrangeLinks": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
-        }
-    }
+        },
+        "org.pyut.plugins.PyutXmi": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        }    }
 }
