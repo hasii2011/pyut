@@ -1,0 +1,10 @@
+<!DOCTYPE contacts [
+        <!ELEMENT contacts (contact)*>
+        <!ELEMENT contact (name|address|phone|email|events)*>
+        <!ELEMENT name (#PCDATA)>
+        <!ELEMENT address (#PCDATA)>
+        <!ELEMENT phone (#PCDATA)>
+        <!ELEMENT email (#PCDATA)>
+        <!ELEMENT events (event)*>
+        <!ELEMENT event (#PCDATA)>
+        ]>
