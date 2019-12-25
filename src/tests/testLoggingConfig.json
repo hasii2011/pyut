@@ -12,7 +12,7 @@
     "handlers": {
         "consoleHandler": {
             "class": "logging.StreamHandler",
-            "formatter": "simple",
+            "formatter": "testSimple",
             "stream": "ext://sys.stdout"
         }
     },
@@ -39,6 +39,13 @@
             "propagate": "False"
         },
         "tests.PrintCommand": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+        "TestDTDParser": {
             "level": "INFO",
             "handlers": [
                 "consoleHandler"
@@ -102,6 +109,14 @@
             ],
             "propagate": "False"
         },
+        "org.pyut.plugins.dtd.DTDParser": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+
         "__main__": {
             "level": "INFO",
             "handlers": [
