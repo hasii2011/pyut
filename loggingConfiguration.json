@@ -140,5 +140,13 @@
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
-        }    }
+        },
+        "org.pyut.plugins.dtd.DTDParser": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        }
+    }
 }

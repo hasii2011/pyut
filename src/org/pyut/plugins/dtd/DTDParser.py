@@ -21,6 +21,7 @@ from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
+from org.pyut.plugins.dtd.DTDElementTypes import DTDElementTypes
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
@@ -36,8 +37,11 @@ CreatedClassesType = NewType('CreatedClassTypes', Tuple[UmlClassType])
 
 class DTDParser:
 
-    MODEL_CHILD_ELEMENT_NAME: int = 2
-    MODEL_CHILDREN_INDEX:     int = 3
+    MODEL_CHILD_ELEMENT_TYPE_INDEX:                int = 0
+    MODEL_CHILD_ELEMENT_NAME_INDEX:                int = 2
+    MODEL_CHILD_ELEMENT_ADDITIONAL_ELEMENTS_INDEX: int = 3
+
+    MODEL_CHILDREN_INDEX:           int = 3
 
     klsLogger: Logger = None
     classParser       = None
@@ -223,18 +227,27 @@ class DTDParser:
 
     def _getChildElementNames(self, eltName, model) -> List[str]:
 
-        self.logger.debug(f'_getChildElementNames - eltName: {eltName:{15}} `{model[0]}` `{model[1]}` `{model[2]}` `{model[3]}`')
+        self.logger.debug(f'_getChildElementNames - eltName: {eltName:{12}}\n model[0]: `{model[0]}`\n model[1]: `{model[1]}`\n model[2]: `{model[2]}`\n model[3]" `{model[3]}`')
 
         children = model[DTDParser.MODEL_CHILDREN_INDEX]
-
-        self.logger.debug(f'children {children}')
+        self.logger.info(f'children {children}')
         chillunNames: List[str] = []
-        for chillun in children:
+        for child in children:
 
-            chillunName = chillun[DTDParser.MODEL_CHILD_ELEMENT_NAME]
-            self.logger.debug(f'eltName:  {eltName} child name: {chillunName}')
-            chillunNames.append(chillunName)
+            self.logger.info(f'eltName: {eltName} - child Length {len(child)}')
 
+            dtdElementType: DTDElementTypes = DTDElementTypes(child[DTDParser.MODEL_CHILD_ELEMENT_TYPE_INDEX])
+            childName = child[DTDParser.MODEL_CHILD_ELEMENT_NAME_INDEX]
+            self.logger.info(f'eltName: {eltName} child: `{child}` eltType: `{dtdElementType.__repr__()}` childName: `{childName}`')
+            addlElts = child[DTDParser.MODEL_CHILD_ELEMENT_ADDITIONAL_ELEMENTS_INDEX]
+            if len(addlElts) != 0:
+                for additionChildren in addlElts:
+                    addlChildName = additionChildren[DTDParser.MODEL_CHILD_ELEMENT_NAME_INDEX]
+                    chillunNames.append(addlChildName)
+            else:
+                chillunNames.append(childName)
+
+        self.logger.info(f'Children names: {chillunNames}')
         return chillunNames
 
     def _createLink(self, src: OglClass, dst: OglClass, linkType: OglLinkType = OglLinkType.OGL_AGGREGATION):
@@ -250,4 +263,3 @@ class DTDParser:
         src.getPyutObject().addLink(pyutLink)
 
         return oglLink
-
