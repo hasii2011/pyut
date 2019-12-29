@@ -147,6 +147,13 @@
                 "consoleHandler"
             ],
             "propagate": "False"
+        },
+        "org.pyut.plugins.xsd.XSDParser": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
         }
     }
 }
