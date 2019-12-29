@@ -20,7 +20,6 @@ from org.pyut.PyutLink import PyutLink
 from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.plugins.dtd.DTDElementTypes import DTDElementTypes
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -180,7 +179,7 @@ class DTDParser:
                 destTreeData: ElementTreeData = self.classTree[associatedClassName]
                 child: OglClass = destTreeData.oglClass
 
-                link: PyutLink = self._createLink(parent, child, OglLinkType.OGL_AGGREGATION)
+                link: PyutLink = self._umlFrame.createLink(parent, child, OglLinkType.OGL_AGGREGATION)
                 self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
 
     def _addAttributesToClasses(self):
@@ -249,17 +248,3 @@ class DTDParser:
 
         self.logger.info(f'Children names: {chillunNames}')
         return chillunNames
-
-    def _createLink(self, src: OglClass, dst: OglClass, linkType: OglLinkType = OglLinkType.OGL_AGGREGATION):
-
-        pyutLink = PyutLink("", linkType=linkType, source=src.getPyutObject(), destination=dst.getPyutObject())
-
-        oglLinkFactory = getOglLinkFactory()
-        oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
-
-        src.addLink(oglLink)
-        dst.addLink(oglLink)
-
-        src.getPyutObject().addLink(pyutLink)
-
-        return oglLink

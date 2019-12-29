@@ -1,5 +1,7 @@
-
-
+from org.pyut.PyutLink import PyutLink
+from org.pyut.enums.OglLinkType import OglLinkType
+from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 
@@ -28,3 +30,24 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         """
         super().__init__(parent)
         self.newDiagram()
+
+    def createLink(self, src: OglClass, dst: OglClass, linkType: OglLinkType = OglLinkType.OGL_AGGREGATION):
+        """
+        An API that is primarily used the Plugins
+
+        Args:
+            src:        The source OglClass
+            dst:        The destination OglClass
+            linkType:   The type of link
+        """
+        pyutLink = PyutLink("", linkType=linkType, source=src.getPyutObject(), destination=dst.getPyutObject())
+
+        oglLinkFactory = getOglLinkFactory()
+        oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
+
+        src.addLink(oglLink)
+        dst.addLink(oglLink)
+
+        src.getPyutObject().addLink(pyutLink)
+
+        return oglLink
