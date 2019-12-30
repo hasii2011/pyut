@@ -52,6 +52,14 @@
             ],
             "propagate": "False"
         },
+        "TestXSDParser": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+
         "TestPyutUtils": {
             "level": "INFO",
             "handlers": [

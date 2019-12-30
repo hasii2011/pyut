@@ -1,4 +1,6 @@
 
+from typing import Dict
+
 from logging import Logger
 from logging import getLogger
 
@@ -29,7 +31,6 @@ class TestXSDParser(TestBase):
 
     def setUp(self):
         self.logger:    Logger = TestXSDParser.clsLogger
-
         # For python 3 and wx 4.x we need to save it so it does not get GC'ed
         # Did this because could not figure out how to mock creation of Font
         # in the OglObject constructor
@@ -39,6 +40,57 @@ class TestXSDParser(TestBase):
 
     def tearDown(self):
         pass
+
+    def testPositionGeneratorInitialValues(self):
+
+        xsdParser: XSDParser = XSDParser(filename='testdata/SimpleSchema.xsd', umlFrame=self.mockFrame)
+
+        pos: Dict[str, float] = next(xsdParser.position)
+        x: float = pos['x']
+        y: float = pos['y']
+        self.logger.info(f'Pos({x}, {y})')
+
+        self.assertEqual(XSDParser.INITIAL_X_POSITION, x, 'Initial X value is incorrect')
+        self.assertEqual(XSDParser.INITIAL_X_POSITION, y, 'Initial Y value is incorrect')
+
+    def testPositionGeneratorIncrementValues(self):
+
+        xsdParser: XSDParser = XSDParser(filename='testdata/SimpleSchema.xsd', umlFrame=self.mockFrame)
+
+        pos: Dict[str, float] = next(xsdParser.position)
+        initX: float = pos['x']
+        initY: float = pos['y']
+
+        pos = next(xsdParser.position)
+        x: float = pos['x']
+        y: float = pos['y']
+
+        expectedX: float = initX + XSDParser.X_INCREMENT_VALUE
+        expectedY: float = initY
+
+        self.logger.info(f'Pos({x}, {y})')
+
+        self.assertEqual(expectedX, x, 'Incremented X value is incorrect')
+        self.assertEqual(expectedY, y, 'Non-incremented Y value is incorrect')
+
+    def testPositionGeneratorIncrementYValue(self):
+
+        xsdParser: XSDParser = XSDParser(filename='testdata/SimpleSchema.xsd', umlFrame=self.mockFrame)
+
+        pos: Dict[str, float] = next(xsdParser.position)
+
+        initY: float = pos['y']
+
+        while True:
+            nextPos: Dict[str, float] = next(xsdParser.position)
+            currX: float = nextPos['x']
+            currY: float = nextPos['y']
+            self.logger.info(f'nextPos({currX}, {currY})')
+            if currY != initY:
+                self.assertEqual(XSDParser.INITIAL_X_POSITION, currX, 'We did not wrap around')
+                expectedY: float = initY + XSDParser.Y_INCREMENT_VALUE
+                self.assertEqual(expectedY, currY, 'Y position did not properly increment')
+                break   # Test is done
 
     def testBasicInitialization(self):
 
