@@ -2,7 +2,7 @@
 from typing import cast
 from typing import Dict
 from typing import Tuple
-# from typing import Union
+
 from typing import List
 
 from typing import NewType
@@ -26,7 +26,7 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlClassDiagramsFrame import CreatedClassesType
 
 from org.pyut.plugins.dtd.DTDAttribute import DTDAttribute
-from org.pyut.plugins.dtd.ElementTreeData import ElementTreeData
+from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 
 
 DTDElements        = NewType('DTDElements', Dict[str, Tuple])

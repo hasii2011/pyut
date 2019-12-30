@@ -15,7 +15,7 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 
 from org.pyut.plugins.dtd.DTDParser import DTDParser
-from org.pyut.plugins.dtd.ElementTreeData import ElementTreeData
+from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 
 
 class TestDTDParser(TestBase):
