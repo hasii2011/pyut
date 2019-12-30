@@ -1,8 +1,18 @@
+
+from typing import cast
+from typing import NewType
+from typing import Tuple
+from typing import Union
+
+from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutLink import PyutLink
 from org.pyut.enums.OglLinkType import OglLinkType
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+
+UmlClassType       = NewType('UmlClassType', Union[PyutClass, OglClass])
+CreatedClassesType = NewType('CreatedClassTypes', Tuple[UmlClassType])
 
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):
@@ -51,3 +61,26 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         src.getPyutObject().addLink(pyutLink)
 
         return oglLink
+
+    def createClasses(self, name: str, x: float, y: float) -> CreatedClassesType:
+        """
+        Create a pair of classes (pyutClass and oglClass)
+
+        Args:
+            name: Class Name
+
+            x:  x-coordinate on umlframe  oglClass
+            y:  y coordinate on umlfram   oglClass
+
+        Returns: A tuple with one of each:  pyutClass and oglClass
+        """
+        pyutClass: PyutClass = PyutClass()
+        pyutClass.setName(name)
+
+        oglClass: OglClass = OglClass(pyutClass, 50, 50)
+        # for debugability
+        oglClass.SetPosition(x=x, y=y)
+        self.addShape(oglClass, x, y)
+
+        retData: CreatedClassesType = cast(CreatedClassesType, (pyutClass, oglClass))
+        return retData

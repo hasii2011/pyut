@@ -2,7 +2,7 @@
 from typing import cast
 from typing import Dict
 from typing import Tuple
-from typing import Union
+# from typing import Union
 from typing import List
 
 from typing import NewType
@@ -23,6 +23,7 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.plugins.dtd.DTDElementTypes import DTDElementTypes
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.UmlClassDiagramsFrame import CreatedClassesType
 
 from org.pyut.plugins.dtd.DTDAttribute import DTDAttribute
 from org.pyut.plugins.dtd.ElementTreeData import ElementTreeData
@@ -30,8 +31,6 @@ from org.pyut.plugins.dtd.ElementTreeData import ElementTreeData
 
 DTDElements        = NewType('DTDElements', Dict[str, Tuple])
 DTDAttributes      = NewType('DTDAttributes', List[DTDAttribute])
-UmlClassType       = NewType('UmlClassType', Union[PyutClass, OglClass])
-CreatedClassesType = NewType('CreatedClassTypes', Tuple[UmlClassType])
 
 
 class DTDParser:
@@ -146,7 +145,7 @@ class DTDParser:
 
         for eltName in list(DTDParser.elementTypes.keys()):
 
-            createdClasses: CreatedClassesType = self._createClasses(name=eltName, x=x, y=y)
+            createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=eltName, x=x, y=y)
             pyutClass: PyutClass = createdClasses[0]
             oglClass:  OglClass  = createdClasses[1]
 
@@ -200,29 +199,6 @@ class DTDParser:
             self.logger.info(f'pyutField: {pyutField}')
             pyutClass: PyutClass = treeData.pyutClass
             pyutClass.addField(pyutField)
-
-    def _createClasses(self, name: str, x: float, y: float) -> CreatedClassesType:
-        """
-        Create a pair of classes (pyutClass and oglClass)
-
-        Args:
-            name: Class Name
-
-            x:  x-coordinate on umlframe  oglClass
-            y:  y coordinate on umlfram   oglClass
-
-        Returns: A tuple with one of each:  pyutClass and oglClass
-        """
-        pyutClass: PyutClass = PyutClass()
-        pyutClass.setName(name)
-
-        oglClass: OglClass = OglClass(pyutClass, 50, 50)
-        # for debugability
-        oglClass.SetPosition(x=x, y=y)
-        self._umlFrame.addShape(oglClass, x, y)
-
-        retData: CreatedClassesType = cast(CreatedClassesType, (pyutClass, oglClass))
-        return retData
 
     def _getChildElementNames(self, eltName, model) -> List[str]:
 
