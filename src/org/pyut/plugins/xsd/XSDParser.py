@@ -10,9 +10,12 @@ from xmlschema import XMLSchema
 from xmlschema.validators import XsdComplexType
 from xmlschema.validators import XsdElement
 from xmlschema.validators import XsdGroup
-# from xmlschema.validators import XsdType
-from xmlschema.validators import XsdAttributeGroup
 
+from xmlschema.validators import XsdType
+
+from org.pyut.PyutClass import PyutClass
+from org.pyut.PyutField import PyutField
+from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -49,10 +52,7 @@ class XSDParser:
             self._schemaTypeNames.append(schemaTypeName)
 
         self._createClassTree()
-            # schemaType: XsdType = self.schema.types[schemaTypeName]
-            # if isinstance(schemaType, XsdComplexType):
-            #     complexSchemaType: XsdComplexType = cast(XsdComplexType, schemaType)
-            #     self._handleComplexTypes(complexSchemaType)
+        self._generateClassFields()
 
     def _createClassTree(self):
 
@@ -60,6 +60,19 @@ class XSDParser:
             pos: Dict[str, float] = next(self.position)
 
             createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=classname, x=pos['x'], y=pos['y'])
+
+            treeData: ElementTreeData = ElementTreeData(pyutClass=createdClasses[0], oglClass=createdClasses[1])
+            self.classTree[classname] = treeData
+
+    def _generateClassFields(self):
+
+        for className in self.classTree.keys():
+            self.logger.info(f'className: {className}')
+            schemaType: XsdType = self.schema.types[className]
+
+            if isinstance(schemaType, XsdComplexType):
+                complexSchemaType: XsdComplexType = cast(XsdComplexType, schemaType)
+                self._handleComplexTypes(complexSchemaType)
 
     def _positionGenerator(self):
 
@@ -74,25 +87,39 @@ class XSDParser:
                 x = XSDParser.INITIAL_X_POSITION
                 y += XSDParser.Y_INCREMENT_VALUE
 
-    def _displayComplexTypes(self, xsdComplexType: XsdComplexType):
+    def _handleComplexTypes(self, xsdComplexType: XsdComplexType):
 
-        self.logger.info(f'--------- Start _displayComplexTypes ---------')
-        isComplex:     bool = xsdComplexType.is_complex()
-        isSimple:      bool = xsdComplexType.is_simple()
+        self.logger.info(f'--------- Start _handleComplexTypes ---------')
         localName:     str  = xsdComplexType.local_name
         isElementOnly: bool = xsdComplexType.is_element_only()
-        self.logger.info(
-            f'\txsdComplexType: localName: `{localName}` isComplex: `{isComplex}` isSimple: `{isSimple}` isElementOnly: `{isElementOnly}`')
+
+        self.logger.info(f'localName: `{localName}` isElementOnly: `{isElementOnly}` xsdComplexType.open_content: {xsdComplexType.open_content}')
 
         contentType: XsdGroup = xsdComplexType.content_type
-        self.logger.info(f'_handleComplexTypes -- contentType: {contentType}')
-        grp = contentType._group
+        self.logger.info(f'contentType: {contentType}')
+        grp: List[XsdElement] = contentType._group
+        self._addFields(classNanme=localName, content=grp)
+        #
+        # attrGroup: XsdAttributeGroup = xsdComplexType.attributes
+        # self.logger.info(f'attrGroup: {attrGroup}')
 
-        for xsdElement in grp:
+        self.logger.info(f'--------- End _handleComplexTypes ---------')
+
+    def _addFields(self, classNanme: str, content: List[XsdElement]):
+
+        treeData:  ElementTreeData = self.classTree[classNanme]
+        pyutClass: PyutClass       = treeData.pyutClass
+        for xsdElement in content:
             xsdElement: XsdElement = cast(XsdElement, xsdElement)
             self.logger.info(f'xsdElement: {xsdElement} {xsdElement.local_name} {xsdElement.type}')
 
-        attrGroup: XsdAttributeGroup = xsdComplexType.attributes
-        self.logger.info(f'attrGroup: {attrGroup}')
+            defaultValue = xsdElement.default
+            if defaultValue is None:
+                defaultValue = ''
+            else:
+                self.logger.warning(f'Handle a real default value for a field')
+            xsdType: XsdType = xsdElement.type
+            pyutField: PyutField = PyutField(name=xsdElement.local_name,
+                                             theFieldType=xsdType.local_name, defaultValue=defaultValue, visibility=PyutVisibilityEnum.PUBLIC)
 
-        self.logger.info(f'--------- End _displayComplexTypes ---------')
+            pyutClass.addField(pyutField)
