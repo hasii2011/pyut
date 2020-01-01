@@ -53,6 +53,7 @@ class XSDParser:
 
         self._createClassTree()
         self._generateClassFields()
+        self._generateLinks()
 
     def _createClassTree(self):
 
@@ -93,22 +94,28 @@ class XSDParser:
         localName:     str  = xsdComplexType.local_name
         isElementOnly: bool = xsdComplexType.is_element_only()
 
-        self.logger.info(f'localName: `{localName}` isElementOnly: `{isElementOnly}` xsdComplexType.open_content: {xsdComplexType.open_content}')
+        self.logger.info(f'localName: `{localName}` isElementOnly: `{isElementOnly}` open_content: {xsdComplexType.open_content}')
 
         contentType: XsdGroup = xsdComplexType.content_type
         self.logger.info(f'contentType: {contentType}')
         grp: List[XsdElement] = contentType._group
-        self._addFields(classNanme=localName, content=grp)
+        self._addFields(className=localName, content=grp)
         #
         # attrGroup: XsdAttributeGroup = xsdComplexType.attributes
         # self.logger.info(f'attrGroup: {attrGroup}')
 
         self.logger.info(f'--------- End _handleComplexTypes ---------')
 
-    def _addFields(self, classNanme: str, content: List[XsdElement]):
+    def _addFields(self, className: str, content: List[XsdElement]):
+        """
+        Has the side effect that it updates the classtree data with the class names of the children
 
-        treeData:  ElementTreeData = self.classTree[classNanme]
-        pyutClass: PyutClass       = treeData.pyutClass
+        Args:
+            className: The class name for which we are adding fields to
+            content:  The list of xsd elements that represents the fields
+        """
+        classTreeData:  ElementTreeData = self.classTree[className]
+        pyutClass: PyutClass       = classTreeData.pyutClass
         for xsdElement in content:
             xsdElement: XsdElement = cast(XsdElement, xsdElement)
             self.logger.info(f'xsdElement: {xsdElement} {xsdElement.local_name} {xsdElement.type}')
@@ -119,7 +126,16 @@ class XSDParser:
             else:
                 self.logger.warning(f'Handle a real default value for a field')
             xsdType: XsdType = xsdElement.type
-            pyutField: PyutField = PyutField(name=xsdElement.local_name,
+            childClassName: str = xsdElement.local_name
+
+            pyutField: PyutField = PyutField(name=childClassName,
                                              theFieldType=xsdType.local_name, defaultValue=defaultValue, visibility=PyutVisibilityEnum.PUBLIC)
 
+            #
+            # SIDE EFFECT !!!!!
+            #
+            classTreeData.addChild(childClassName)
             pyutClass.addField(pyutField)
+
+    def _generateLinks(self):
+        pass

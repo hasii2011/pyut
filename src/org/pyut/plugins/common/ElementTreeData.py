@@ -18,6 +18,9 @@ class ElementTreeData:
         self.oglClass:          OglClass   = oglClass
         self._childElementNames: List[str] = []
 
+    def addChild(self, childClassName: str):
+        self._childElementNames.append(childClassName)
+        
     def getChildElementNames(self) -> List[str]:
         return self._childElementNames
 
