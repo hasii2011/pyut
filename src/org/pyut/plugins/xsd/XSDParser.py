@@ -15,7 +15,12 @@ from xmlschema.validators import XsdType
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
+from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+
+from org.pyut.enums.OglLinkType import OglLinkType
+
+from org.pyut.ogl.OglClass import OglClass
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -134,8 +139,35 @@ class XSDParser:
             #
             # SIDE EFFECT !!!!!
             #
-            classTreeData.addChild(childClassName)
+            self.updateChildTypes(classTreeData, xsdElement)
             pyutClass.addField(pyutField)
 
+    def updateChildTypes(self, classTreeData: ElementTreeData, xsdElement: XsdElement):
+        """
+
+        Args:
+            classTreeData:  our class tree data for this particular type
+            xsdElement:  an xsd element that is contained by this class
+
+        """
+        childTypeName: str = xsdElement.type.local_name
+        if not classTreeData.childElementNames.__contains__(childTypeName):
+            classTreeData.addChild(childTypeName)
+
     def _generateLinks(self):
-        pass
+
+        for className in self.classTree.keys():
+            parentTreeData: ElementTreeData = self.classTree[className]
+            childrenNames = parentTreeData.getChildElementNames()
+            for childName in childrenNames:
+                self.logger.debug(f'Class {className} has child type: {childName}')
+
+                parentOglClass: OglClass = parentTreeData.oglClass
+                try:
+                    childTreeData: ElementTreeData = self.classTree[childName]
+
+                    childOglClass: OglClass = childTreeData.oglClass
+                    link: PyutLink = self._umlFrame.createLink(parentOglClass, childOglClass, OglLinkType.OGL_AGGREGATION)
+                    self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
+                except KeyError:
+                    self.logger.info(f'No problem {childName} is not in this hierarchy')

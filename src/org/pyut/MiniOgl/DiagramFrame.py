@@ -115,7 +115,7 @@ class DiagramFrame(wx.ScrolledWindow):
         shape = self.FindShape(x, y)
         event.m_x, event.m_y = x, y
 
-        self.logger.info(f'GenericHandler - shape: `{shape}` methodName: `{methodName}` x,y: {x},{y}')
+        self.logger.debug(f'GenericHandler - shape: `{shape}` methodName: `{methodName}` x,y: {x},{y}')
         # if the shape found is a ShapeEventHandler
         if shape and isinstance(shape, ShapeEventHandler):
             getattr(shape, methodName)(event)
