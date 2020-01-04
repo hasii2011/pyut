@@ -9,7 +9,9 @@ from xmlschema import XMLSchema
 
 from xmlschema.validators import XsdComplexType
 from xmlschema.validators import XsdElement
+from xmlschema.validators import XsdEnumerationFacets
 from xmlschema.validators import XsdGroup
+from xmlschema.validators import XsdAtomicRestriction
 
 from xmlschema.validators import XsdType
 
@@ -35,6 +37,8 @@ class XSDParser:
     INITIAL_Y_POSITION: float = 50.0
     INITIAL_X_POSITION: float = 50.0
     MAX_X_POSITION:     float = 800
+
+    ENUMERATION_STEREOTYPE: str = 'Enumeration'
 
     def __init__(self, filename: str, umlFrame: UmlClassDiagramsFrame):
 
@@ -79,19 +83,15 @@ class XSDParser:
             if isinstance(schemaType, XsdComplexType):
                 complexSchemaType: XsdComplexType = cast(XsdComplexType, schemaType)
                 self._handleComplexTypes(complexSchemaType)
-
-    def _positionGenerator(self):
-
-        x = XSDParser.INITIAL_X_POSITION
-        y = XSDParser.INITIAL_Y_POSITION
-        while True:
-            yield {'x': x, 'y': y}
-
-            if x < XSDParser.MAX_X_POSITION:
-                x += XSDParser.X_INCREMENT_VALUE
-            else:
-                x = XSDParser.INITIAL_X_POSITION
-                y += XSDParser.Y_INCREMENT_VALUE
+            elif isinstance(schemaType, XsdAtomicRestriction):
+                xsdAtomRestriction: XsdAtomicRestriction = cast(XsdAtomicRestriction, schemaType)
+                self.logger.info(f'{xsdAtomRestriction.local_name}')
+                facets: XsdEnumerationFacets = xsdAtomRestriction.facets
+                for facetName in facets:
+                    facet: XsdEnumerationFacets = facets[facetName]
+                    if isinstance(facet, XsdEnumerationFacets):
+                        self.logger.info(f'enumeration facet element enumeration: {facet.enumeration}')
+                        self._createEnumerationFields(self.classTree[className].pyutClass, facet.enumeration)
 
     def _handleComplexTypes(self, xsdComplexType: XsdComplexType):
 
@@ -126,10 +126,10 @@ class XSDParser:
             self.logger.info(f'xsdElement: {xsdElement} {xsdElement.local_name} {xsdElement.type}')
 
             defaultValue = xsdElement.default
-            if defaultValue is None:
-                defaultValue = ''
-            else:
-                self.logger.warning(f'Handle a real default value for a field')
+            # if defaultValue is None:
+            #     defaultValue = ''
+            # else:
+            #     self.logger.warning(f'Handle a real default value for a field')
             xsdType: XsdType = xsdElement.type
             childClassName: str = xsdElement.local_name
 
@@ -141,6 +141,8 @@ class XSDParser:
             #
             self.updateChildTypes(classTreeData, xsdElement)
             pyutClass.addField(pyutField)
+            oglClass: OglClass = classTreeData.oglClass
+            oglClass.autoResize()
 
     def updateChildTypes(self, classTreeData: ElementTreeData, xsdElement: XsdElement):
         """
@@ -171,3 +173,30 @@ class XSDParser:
                     self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
                 except KeyError:
                     self.logger.info(f'No problem {childName} is not in this hierarchy')
+
+    def _createEnumerationFields(self, pyutClass: PyutClass, enumValues: List[str]):
+        """
+        TODO:  Create a PyutEnumeration at some point
+        For now simulate with a bunch of fields in a class that is `Stereotyped` as
+        Enumeration
+
+        """
+        pyutClass.setStereotype(stereotype=XSDParser.ENUMERATION_STEREOTYPE)
+        pyutClass.setShowStereotype(theNewValue=True)
+
+        for val in enumValues:
+            pyutField: PyutField = PyutField(name=val.upper(), defaultValue=val, visibility=PyutVisibilityEnum.PUBLIC)
+            pyutClass.addField(pyutField)
+
+    def _positionGenerator(self):
+
+        x = XSDParser.INITIAL_X_POSITION
+        y = XSDParser.INITIAL_Y_POSITION
+        while True:
+            yield {'x': x, 'y': y}
+
+            if x < XSDParser.MAX_X_POSITION:
+                x += XSDParser.X_INCREMENT_VALUE
+            else:
+                x = XSDParser.INITIAL_X_POSITION
+                y += XSDParser.Y_INCREMENT_VALUE

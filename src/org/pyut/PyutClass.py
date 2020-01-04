@@ -148,15 +148,15 @@ class PyutClass(PyutLinkedObject):
         """
         return self._showStereotype
 
-    def setShowStereotype(self, value):
+    def setShowStereotype(self, theNewValue: bool):
         """
         Define the showStereotype property
 
-        @param value : boolean indicating if we must display the stereotype
+        @param theNewValue : boolean indicating if we must display the stereotype
         @since 1.1.1.2
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        self._showStereotype = value
+        self._showStereotype = theNewValue
 
     def getShowMethods(self):
         """
