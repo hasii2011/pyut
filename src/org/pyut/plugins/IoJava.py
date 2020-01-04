@@ -346,7 +346,7 @@ class IoJava(PyutIoPlugin):
         # Extract the datas from the class
         fields     = pyutClass.getFields()
         methods    = pyutClass.getMethods()
-        fathers    = pyutClass.getFathers()
+        fathers    = pyutClass.getParents()
         allLinks   = pyutClass.getLinks()
         stereotype = pyutClass.getStereotype()
 

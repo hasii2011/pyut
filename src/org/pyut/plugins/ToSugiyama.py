@@ -163,7 +163,7 @@ class ToSugiyama(PyutToPlugin):
                 # If hierarchical link
                 if isinstance(oglObject, OglInheritance) or isinstance(oglObject, OglInterface):
 
-                    srcSugiyamaNode.addFather(dstSugiyamaNode, link)
+                    srcSugiyamaNode.addParent(dstSugiyamaNode, link)
                     dstSugiyamaNode.addSon(srcSugiyamaNode, link)
 
                     # Add nodes in list of hierachical nodes
@@ -223,7 +223,7 @@ class ToSugiyama(PyutToPlugin):
         # For each node in graph
         for node in nodesList:
             # For each father
-            for (father, link) in node.getFathers():
+            for (father, link) in node.getParents():
                 # Mark relation with a '1' on coords[index Son][index Father]
                 matrix[node.getIndex()][father.getIndex()] = 1
 
@@ -507,7 +507,7 @@ class ToSugiyama(PyutToPlugin):
             vnodes[0].addFather(dstNode, zLink)
 
             updateLink(dstNode.getSons(), zLink, vnodes[0])
-            updateLink(srcNode.getFathers(), zLink, vnodes[-1])
+            updateLink(srcNode.getParents(), zLink, vnodes[-1])
 
             # Add virtual nodes in levels
             for i in range(len(vnodes)):

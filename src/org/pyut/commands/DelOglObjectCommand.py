@@ -121,8 +121,8 @@ class DelOglObjectCommand(Command):
             # TODO: Fix this inscrutable piece of code
             for klass in [s.getPyutObject() for s in umlFrame.getUmlObjects()
                 if isinstance(s, OglClass)]:
-                    if pyutClass in klass.getFathers():
-                        klass.getFathers().remove(pyutClass)
+                    if pyutClass in klass.getParents():
+                        klass.getParents().remove(pyutClass)
         shape.Detach()
         umlFrame.Refresh()
 

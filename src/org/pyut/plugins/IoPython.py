@@ -416,7 +416,7 @@ class IoPython(PyutIoPlugin):
             # Add class definition
             aClass = el.getPyutObject()     # TODO
             txt = "class " + str(aClass.getName())        # Add class name
-            fathers = aClass.getFathers()
+            fathers = aClass.getParents()
             if len(fathers) > 0:                          # Add fathers
                 txt = txt + "("
                 for i in range(len(fathers)):

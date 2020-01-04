@@ -428,7 +428,7 @@ class IoCpp(PyutIoPlugin):
         protectedMethods  = []
         self._visibility(pyutClass.getMethods(), publicMethods, privateMethods, protectedMethods)
 
-        fathers = pyutClass.getFathers()
+        fathers = pyutClass.getParents()
         links   = pyutClass.getLinks()
 
         # header define

@@ -191,6 +191,6 @@ class CreateOglLinkCommand(Command):
         child.addLink(oglLink)
         father.addLink(oglLink)
         # add it to the PyutClass
-        child.getPyutObject().addFather(father.getPyutObject())
+        child.getPyutObject().addParent(father.getPyutObject())
 
         return oglLink

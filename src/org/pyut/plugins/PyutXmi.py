@@ -203,7 +203,7 @@ class PyutXmi:
             root.appendChild(self._PyutField2xml(i))
 
         # for fathers
-        fathers = pyutClass.getFathers()
+        fathers = pyutClass.getParents()
         if len(fathers) > 0:
             for i in fathers:
                 father = Element('Father')
@@ -519,7 +519,7 @@ class PyutXmi:
                 pyutSon    = self.dicoFather[linkId][son]
 
                 # Adding father in pyutClass
-                pyutSon.getPyutObject().addFather(pyutFather)
+                pyutSon.getPyutObject().addParent(pyutFather)
 
                 # hadding link in uml frame
                 umlFrame.createInheritanceLink(pyutSon, pyutFather)

@@ -188,7 +188,7 @@ class PyutXml:
         """
         # lang.importLanguage()
         # for all fathers
-        for father in pyutLinkedObject.getFathers():
+        for father in pyutLinkedObject.getParents():
             xmlFather = xmlDoc.createElement('Father')
             xmlFather.setAttribute('id', str(father.getId()))
             root.appendChild(xmlFather)

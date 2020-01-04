@@ -1,4 +1,7 @@
 
+from typing import List
+
+from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutObject import PyutObject
 
 
@@ -15,17 +18,15 @@ class PyutLinkedObject(PyutObject):
     """
     def __init__(self, name=""):
         """
-        Constructor.
 
-        @param string name : object name
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            name:  The object name
         """
         super().__init__(name)
 
-        self._links = []
-        self._fathers = []
-        self._filename = ""
+        self._links:    List[PyutLink] = []
+        self._parents:  List[str]      = []     # Allows for multiple inheritance
+        self._filename: str            = ""
 
     def getNextSafeID(self):
         """
@@ -37,83 +38,77 @@ class PyutLinkedObject(PyutObject):
         while self.isIDUsed(PyutLinkedObject.nextId):
             PyutLinkedObject.nextId += 1
 
-    def getLinks(self):
+    def getLinks(self) -> List[PyutLink]:
         """
-        Return a list of the links.
         This is not a copy, but the original one. Any change made to it is
         directly made on the class.
 
-        @since 1.1
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Returns: a list of the links.
         """
         return self._links
 
-    def setLinks(self, links):
+    def setLinks(self, links: List[PyutLink]):
         """
         Replace the actual links by those given in the list.
         The methods passed are not copied, but used directly.
 
-        @since 1.1
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            links:
         """
         self._links = links
 
-    def addLink(self, link):
+    def addLink(self, link: PyutLink):
         """
         Add the given link to the links
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            link:   The new link to add
         """
         self._links.append(link)
 
-    def getFathers(self):
+    def getParents(self) -> List[str]:
         """
-        Return a list of the fathers.
         This is not a copy, but the original one. Any change made to it is
         directly made on the class.
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Returns:          Return a list of the parents.
         """
-        return self._fathers
+        return self._parents
 
-    def setFathers(self, fathers):
+    def setParents(self, parents: List[str]):
         """
-        Replace the actual fathers by those given in the list.
+        Replace the actual parents by those given in the list.
         The methods passed are not copied, but used directly.
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            parents:
         """
-        self._fathers = fathers
+        self._parents = parents
 
-    def addFather(self, father):
+    def addParent(self, parent: str):
         """
-        Add a father in a fathers list
+        Add a parent to the parent list
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            parent:
         """
-        return self._fathers.append(father)
+        return self._parents.append(parent)
 
     def setFilename(self, filename: str):
         """
         Set the associated filename.
         This is used by the reverse engineering plugins.
 
-        @param  filename
-        @since 1.0
+        Args:
+            filename:  the file name
         """
         self._filename = filename
 
     def getFilename(self) -> str:
         """
         Get the associated filename.
-        "" is returned if there's no filename.
 
-        @return String
-        @since 1.0
+        Returns: An empty is returned if there is no filename.
         """
         return self._filename
 
@@ -122,9 +117,6 @@ class PyutLinkedObject(PyutObject):
         For deepcopy operations, tells which fields to avoid copying.
         Deepcopy must not copy the links to other classes, or it would result
         in copying all the diagram.
-
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         stateDict = self.__dict__.copy()
         stateDict["_links"] = []
