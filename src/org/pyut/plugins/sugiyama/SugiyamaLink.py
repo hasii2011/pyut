@@ -1,6 +1,5 @@
 
 from org.pyut.plugins.sugiyama.ALayoutLink import ALayoutLink
-from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 
 # Miniogl import
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
@@ -46,6 +45,10 @@ class SugiyamaLink(ALayoutLink):
             if x > xvnode:
                 # Find the first real node on the right of the virtual node
                 neighbor = vnode.getRightNode()
+                #
+                # Don't like embedded imports, but need to avoid cyclical dependency
+                from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
+
                 while isinstance(neighbor, VirtualSugiyamaNode) and neighbor is not None:
 
                     # Try next neighbor
@@ -57,6 +60,8 @@ class SugiyamaLink(ALayoutLink):
                     self.addControlPoint(ctrlPoint)
 
             else:   # If link goes to up-right
+                # Don't like embedded imports, but need to avoid cyclical dependency
+                from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
                 # Find the first real node on the left of the virtual node
                 neighbor = vnode.getLeftNode()
                 while isinstance(neighbor, VirtualSugiyamaNode) and neighbor is not None:

@@ -96,7 +96,7 @@ class RealSugiyamaNode(SugiyamaNode):
                 x + width * (i + 1) / (nbSons + 1), y + height)
         # Fathers anchors position
         # Sort fathers list to eliminate crossing
-        fathers = self.getFathers()
+        fathers = self.getParents()
         fathers.sort(key=SugiyamGlobals.cmpIndex)
         nbFathers = len(fathers)
         # For all fathers

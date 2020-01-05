@@ -1,6 +1,18 @@
 
+from typing import cast
+from typing import NewType
+from typing import Tuple
+from typing import List
 
 from org.pyut.plugins.sugiyama.SugiyamaConstants import H_SPACE
+
+from org.pyut.plugins.sugiyama.SugiyamaLink import SugiyamaLink
+
+SugiyamaParent  = NewType("SugiyamaParent",  Tuple["SugiymaNode", SugiyamaLink])
+SugiyamaParents = NewType("SugiyamaParents", List[SugiyamaParent])
+
+SugiyamaChild    = NewType("SugiyamaChild",    Tuple["SugiymaNode", SugiyamaLink])
+SugiyamaChildren = NewType("SugiyamaChildren", List[SugiyamaParent])
 
 
 class SugiyamaNode:
@@ -25,7 +37,6 @@ class SugiyamaNode:
         """
         Index position on the level
         """
-        # ~ self.__leftNode = None  # Node direct on the left on the same level
         self.__level = None
         """
         Index of level
@@ -38,15 +49,15 @@ class SugiyamaNode:
         """
         Node direct on the right on the same level
         """
-        # Fathers and sons
+        # parents and sons
         # ================
         #
-        # A son is derived from a father. There is a hierarchical link,
-        # Realisation or Inheritance, from source to father.
-        # Each node can have fathers and sons.
-        self.__fathers = []
+        # A child is derived from a prent. There is a hierarchical link,
+        # Realization or Inheritance, from source to parent.
+        # Each node can have parents and children.
+        self.__parents: SugiyamaParents = cast(SugiyamaParents, [])
         """
-        List of fathers : [(SugiyamaNode, SugiyamaLink), ...]
+        List of parents
         """
         self.__sons = []
         """
@@ -90,24 +101,25 @@ class SugiyamaNode:
         """
         return 0.0, 0.0
 
-    def addFather(self, father, link):
+    def addParent(self, parent: "SugiyamaNode", link: SugiyamaLink):
         """
-        Add a father.
+        Update parent list
 
-        @param SugiyamaNode father : father
-        @param SugiyamaLink link   : link between self and father
-        @author Nicolas Dubois
+        Args:
+            parent:  The parent
+            link:   Link betweeen self and parent
         """
-        self.__fathers.append((father, link))
+        sugiyamaParent: SugiyamaParent = cast(SugiyamaParent, (parent, link))
+        self.__parents.append(sugiyamaParent)
 
-    def getFathers(self):
+    def getParents(self) -> SugiyamaParents:
         """
-        Return list of fathers
+        Return list of parents
 
-        @return [SugiyamaNode, ...] : list of fathers
-        @author Nicolas Dubois
+        Returns:  list of parents
+
         """
-        return self.__fathers
+        return self.__parents
 
     def addSon(self, son, link):
         """
@@ -273,7 +285,7 @@ class SugiyamaNode:
 
         @author Nicolas Dubois
         """
-        self.__barycenter = self.__getAverageIndex(self.__fathers)
+        self.__barycenter = self.__getAverageIndex(self.__parents)
 
     def downBarycenterIndex(self):
         """
@@ -296,7 +308,7 @@ class SugiyamaNode:
 
         @author Nicolas Dubois
         """
-        nodeList = self.__fathers + self.__sons
+        nodeList = self.__parents + self.__sons
         if len(nodeList) == 0:
             # ~ print self.__index, "none"
             self.__barycenter = None
@@ -333,7 +345,7 @@ class SugiyamaNode:
 
         @author Nicolas Dubois
         """
-        self.__barycenter = self.__getAverageX(self.__fathers)
+        self.__barycenter = self.__getAverageX(self.__parents)
 
     def downBarycenterX(self):
         """
@@ -353,7 +365,7 @@ class SugiyamaNode:
 
         @author Nicolas Dubois
         """
-        self.__barycenter = self.__getAverageX(self.__fathers + self.__sons)
+        self.__barycenter = self.__getAverageX(self.__parents + self.__sons)
 
     def getBarycenter(self):
         """
@@ -386,7 +398,7 @@ class SugiyamaNode:
         @author Nicolas Dubois
         """
         # Create list of fathers and sons
-        fathersAndSons = self.getFathers() + self.getSons()
+        fathersAndSons = self.getParents() + self.getSons()
         nbFathersAndSons = len(fathersAndSons)
 
         # If there are no fathers and sons

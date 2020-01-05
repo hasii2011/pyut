@@ -106,7 +106,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        self.logger.info(f'OnLeftDown - event - {event}')
+        self.logger.debug(f'OnLeftDown - event - {event}')
         med = getMediator()
         if med.actionWaiting():
             position: Point = event.GetPosition()
