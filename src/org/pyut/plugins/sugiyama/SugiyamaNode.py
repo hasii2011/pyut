@@ -16,20 +16,17 @@ class SugiyamaNode:
     """
     Real or virtual Sugiyama node interface.
 
-    This class is an interface, you shouldn't have an object of type
+    This class is an interface, you should not have an object of type
     SugiyamaNode. You have to use RealSugiyamaNode or VirtualSugiyamaNode
     objects.
     """
     def __init__(self):
         """
-        Constructor.
-
-        @author Nicolas Dubois
         """
         # Current barycenter value of the link, this value can be computed
         # on indexes or x coordinate. For more information, see function
         # getBarycenter()
-        self.__barycenter = None
+        self.__barycenter: float = cast(float, None)
         self.__index = None
         """
         Index position on the level
@@ -56,23 +53,22 @@ class SugiyamaNode:
         """
         List of parents
         """
-        self.__sons: SugiyamaVEs = cast(SugiyamaVEs, [])
+        self.__children: SugiyamaVEs = cast(SugiyamaVEs, [])
         """
-        List of sons : [(SugiyamaNode, SugiyamaLink), ...]
+        List of children : [(SugiyamaNode, SugiyamaLink), ...]
         """
-        self.__links = []
+        self.__links: SugiyamaVEs = cast(SugiyamaVEs, [])
         """
-        List of non-hierarchical link : [(SugiyamaNode, SugiyamaLink), ...]
+        List of non-hierarchical links : [(SugiyamaNode, SugiyamaLink), ...]
         """
 
     def getSize(self):
         """
         Get the size of the node.
 
-        This function has to be overloaded.
+        This function should be overridden.
 
-        @return (float, float): tuple (width, height)
-        @author Nicolas Dubois
+        Returns:    (float, float): tuple (width, height)
         """
         pass
 
@@ -94,7 +90,8 @@ class SugiyamaNode:
         This function has to be implemented.  Should be a 'pass'  But Pycharm complains
         at method self.__pushToRight()
 
-        @return (float, float): tuple (x, y) is absolute coordinates
+        Returns:    (float, float): tuple (x, y) is absolute coordinates
+
         """
         return 0.0, 0.0
 
@@ -127,7 +124,7 @@ class SugiyamaNode:
             link:   Its Link
         """
         sugiyamaData: SugiyamaVertixEdge = cast(SugiyamaVertixEdge, (child, link))
-        self.__sons.append(sugiyamaData)
+        self.__children.append(sugiyamaData)
 
     def getChildren(self) -> SugiyamaVEs:
         """
@@ -135,131 +132,128 @@ class SugiyamaNode:
 
         Returns:  The list of children
         """
-        return self.__sons
+        return self.__children
 
-    def addNonHierarchicalLink(self, node, link):
+    def addNonHierarchicalLink(self, node: "SugiyamaNode", link: SugiyamaLink):
         """
-        Add a non hierarchical link, ie not a father nor a son relation.
+        Add a non hierarchical link, ie not a parent or child relation.
 
-        @param SugiyamaNode node : linked node
-        @param SugiyamaLink link : link between the two nodes
-        @author Nicolas Dubois
+        Args:
+            node:   linked node
+            link:   link between the two nodes
+
+        Returns:
+
         """
         self.__links.append((node, link))
 
-    def getNonHierarchicalLink(self):
+    def getNonHierarchicalLink(self) -> SugiyamaVEs:
         """
-        Get non hierarchical links, ie not father nor son relations.
+        Get non hierarchical links, ie not parent or child relationship
 
-        @return [(SugiyamaNode, SugiyamaLink), ...] : list of tuple
-        @author Nicolas Dubois
+        Returns: [(SugiyamaNode, SugiyamaLink), ...] : list of tuple
+
         """
         return self.__links
 
-    def setLevel(self, level):
+    def setLevel(self, level: int):
         """
         Set level index.
 
-        @param int level : level index
-        @author Nicolas Dubois
+        Args:
+            level:   level index
         """
         self.__level = level
 
-    def getLevel(self):
+    def getLevel(self) -> int:
         """
         Get level index.
 
-        @return Int : level index
-        @author Nicolas Dubois
+        Returns:    level index
         """
         return self.__level
 
-    def setIndex(self, index):
+    def setIndex(self, index: int):
         """
         Set index of node in level.
 
-        @param int index : index of node
-        @author Nicolas Dubois
+        Args:
+            index: index of node
         """
         self.__index = index
 
-    def getIndex(self):
+    def getIndex(self) -> int:
         """
         Get index of node.
 
-        @return int : index of node
-        @author Nicolas Dubois
+        Returns:    index of node
         """
         return self.__index
 
-    def setLeftNode(self, node):
+    def setLeftNode(self, node: "SugiyamaNode"):
         """
         Set the left neighbor node.
 
-        @param SugiyamaNode node : left neighbor
-        @author Nicolas Dubois
+        Args:
+            node:   left neighbor
         """
         self.__leftNode = node
 
-    def getLeftNode(self):
+    def getLeftNode(self) -> "SugiyamaNode":
         """
         Get the left neighbor node.
 
-        @return SugiyamaNode : left neighbor
-        @author Nicolas Dubois
+        Returns:    left neighbor
         """
         return self.__leftNode
 
-    def setRightNode(self, node):
+    def setRightNode(self, node: "SugiyamaNode"):
         """
         Set the right neighbor node.
 
-        That function must be used before balancing the graph.
+        This method must be used before balancing the graph.
 
-        @param SugiyamaNode node : right neighbor
-        @author Nicolas Dubois
+        Args:
+            node: right neighbor
         """
         self.__rightNode = node
 
-    def getRightNode(self):
+    def getRightNode(self) -> "SugiyamaNode":
         """
         Get the right neighbor node.
 
-        @return SugiyamaNode : right neighbor
-        @author Nicolas Dubois
+        Returns:    right neighbor
         """
         return self.__rightNode
 
-    def getXMax(self):
+    def getXMax(self) -> float:
         """
         Get bigger value of x coordinate according to right neighbor position.
 
         If there is no right neighbor, return None.
 
-        @return float : max x coordinate
-        @author Nicolas Dubois
+        Returns:    max x coordinate
         """
         if self.__rightNode is None:
-            return None
+            return cast(float, None)
         else:
             xRightNode = self.__rightNode.getPosition()[0]
             widthSelfNode = self.getSize()[0]
             return xRightNode - widthSelfNode - H_SPACE
 
-    def __getAverageIndex(self, nodeList):
+    def __getAverageIndex(self, nodeList) -> float:
         """
-        Compute the average of indexes position on all the given nodes.
+        Compute the average of indicds position on all the given nodes.
 
-        Return None if nodeList is empty.
+        Args:
+            nodeList:    [SugiyamaNode, ...] : list of nodes
 
-        @param [SugiyamaNode, ...] : list of nodes
-        @return float or None : Average of indexes position
-        @author Nicolas Dubois
+        Returns:  None if nodeList is empty.  float or None : Average of indexes position
         """
         if len(nodeList) == 0:
-            return None
+            return cast(float, None)
         else:
-            summation = 0
+            summation = 0.0
             for (node, link) in nodeList:
                 summation += node.getIndex()
             return float(summation) / len(nodeList)
@@ -270,7 +264,6 @@ class SugiyamaNode:
 
         This function has to be overloaded.
 
-        @author Nicolas Dubois
         """
         pass
 
@@ -280,7 +273,6 @@ class SugiyamaNode:
 
         For reading this value, use getBarycenter()
 
-        @author Nicolas Dubois
         """
         self.__barycenter = self.__getAverageIndex(self.__parents)
 
@@ -290,9 +282,8 @@ class SugiyamaNode:
 
         For reading this value, use getBarycenter()
 
-        @author Nicolas Dubois
         """
-        self.__barycenter = self.__getAverageIndex(self.__sons)
+        self.__barycenter = self.__getAverageIndex(self.__children)
 
     def barycenterIndex(self):
         """
@@ -305,7 +296,7 @@ class SugiyamaNode:
 
         @author Nicolas Dubois
         """
-        nodeList = self.__parents + self.__sons
+        nodeList = self.__parents + self.__children
         if len(nodeList) == 0:
             # ~ print self.__index, "none"
             self.__barycenter = None
@@ -316,15 +307,15 @@ class SugiyamaNode:
             # ~ print self.__index, float(sum) / len(nodeList)
             self.__barycenter = float(summmation) / len(nodeList)
 
-    def __getAverageX(self, nodeList):
+    def __getAverageX(self, nodeList: SugiyamaVEs):
         """
         Compute the average of x coords on all the given nodes.
 
-        Return None if nodeList is empty.
+        Args:
+            nodeList:   [(SugiyamaNode, SugiyamaLink), ...] nodeList : parents or children
 
-        @param [(SugiyamaNode, SugiyamaLink), ...] nodeList : fathers or sons
-        @return float or None : average of x coords
-        @author Nicolas Dubois
+        Returns:    float or None : average of x coords
+                    None if nodeList is empty.
         """
         if len(nodeList) == 0:
             return None
@@ -339,8 +330,6 @@ class SugiyamaNode:
         Compute the up barycenter value with fathers x coord.
 
         For reading this value, use getBarycenter()
-
-        @author Nicolas Dubois
         """
         self.__barycenter = self.__getAverageX(self.__parents)
 
@@ -349,22 +338,19 @@ class SugiyamaNode:
         Compute the down barycenter value with sons x coord.
 
         For reading this value, use getBarycenter()
-
-        @author Nicolas Dubois
         """
-        self.__barycenter = self.__getAverageX(self.__sons)
+        self.__barycenter = self.__getAverageX(self.__children)
 
     def barycenterX(self):
         """
         Compute the average of up and down barycenter on x coords.
 
         For reading this value, use getBarycenter()
-
-        @author Nicolas Dubois
         """
-        self.__barycenter = self.__getAverageX(self.__parents + self.__sons)
+        parentsAndChildren: SugiyamaVEs = cast(SugiyamaVEs, self.__parents + self.__children)
+        self.__barycenter = self.__getAverageX(parentsAndChildren)
 
-    def getBarycenter(self):
+    def getBarycenter(self) -> float:
         """
         Return the pre-computed barycenter value of the node.
 
@@ -382,35 +368,34 @@ class SugiyamaNode:
             First call function downBarycenterIndex()
             and then call function getBarycenter()
 
-        @return float: barycenter value
-        @author Nicolas Dubois
+        Returns:   float: barycenter value
+
         """
         return self.__barycenter
 
     def __computeWantedXPos(self):
         """
-        Compute average of fathers and sons x coordinates.
+        Compute average of parents and children x coordinates.
 
-        @return tuple (float, int) : (x average, number of fathers and sons)
-        @author Nicolas Dubois
+        Returns:    tuple (float, int) : (x average, number of fathers and sons)
         """
-        # Create list of fathers and sons
-        fathersAndSons = self.getParents() + self.getChildren()
-        nbFathersAndSons = len(fathersAndSons)
+        # Create list of parents and children
+        parentsAndChildren = self.getParents() + self.getChildren()
+        nbParentsAndChildren = len(parentsAndChildren)
 
-        # If there are no fathers and sons
-        if nbFathersAndSons == 0:
+        # If there are no parents and children
+        if nbParentsAndChildren == 0:
             return None, 0
 
-        # Compute average of fathers and sons x coordinates
+        # Compute average of parents and children x coordinates
         summation = 0
-        # For all his fahters and sons
-        for (node, link) in fathersAndSons:
+        # For all his parents and children
+        for (node, link) in parentsAndChildren:
             # Get horizontal center coordinate of the node
             xCenterNode = node.getPosition()[0] + node.getSize()[0] / 2
             summation += xCenterNode
 
-        return summation / nbFathersAndSons - self.getSize()[0] / 2, nbFathersAndSons
+        return summation / nbParentsAndChildren - self.getSize()[0] / 2, nbParentsAndChildren
 
     def balance(self):
         """
@@ -420,7 +405,6 @@ class SugiyamaNode:
         the right of the node, try to push the nodes on the right and then fix
         new position closer to best x coordinate.
 
-        @author Nicolas Dubois
         """
         # Get coordinate of node
         (x, y) = self.getPosition()
@@ -456,7 +440,7 @@ class SugiyamaNode:
         # Return true if node has been moved
         return self.getPosition()[0] - x > 3
 
-    def __pushToRight(self, xDeltaSum, nbLinks):
+    def __pushToRight(self, xDeltaSum: float, nbLinks: int):
         """
         Called by the left neighbor, that function tries to push the node to
         the right for the balancing. If there is not enough space, try to
@@ -464,14 +448,13 @@ class SugiyamaNode:
 
         xDelta is the ideal delta on x coordinate for reaching the best balance.
 
-        xDeltaSum is xDelta multiplied by the number of parents and sons
-        which are pushing to the right.
+        xDeltaSum
 
-        nbLinks is the number of parents and sons who push from the left.
+        Args:
+            xDeltaSum:  is xDelta multiplied by the number of parents and sons
+                which are pushing to the right.
 
-        @param float xDeltaSum : see above
-        @param int nbLinks : see above
-        @author Nicolas Dubois
+            nbLinks:   is the number of parents and sons who push from the left.
         """
         # Get current position
         (x, y) = self.getPosition()

@@ -28,8 +28,8 @@ class RealSugiyamaNode(SugiyamaNode):
         @param OglObject oglObject: class or note of the diagram
         @author Nicolas Dubois
         """
-        # Call mother class initialization
-        SugiyamaNode.__init__(self)
+        # Call parent class initialization
+        super().__init__()
 
         # Self fields
         self.__aLayoutNode = ALayoutNode(oglObject)
