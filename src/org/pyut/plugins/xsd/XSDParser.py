@@ -39,6 +39,7 @@ class XSDParser:
     MAX_X_POSITION:     float = 800
 
     ENUMERATION_STEREOTYPE: str = 'Enumeration'
+    SUBCLASS_INDICATOR:     str = 'extension'
 
     def __init__(self, filename: str, umlFrame: UmlClassDiagramsFrame):
 
@@ -62,17 +63,27 @@ class XSDParser:
 
         self._createClassTree()
         self._generateClassFields()
-        self._generateLinks()
+        self._generateAggregationLinks()
+        self._generateInheritanceLinks()
 
     def _createClassTree(self):
 
-        for classname in self._schemaTypeNames:
+        for className in self._schemaTypeNames:
+
             pos: Dict[str, float] = next(self.position)
 
-            createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=classname, x=pos['x'], y=pos['y'])
+            createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=className, x=pos['x'], y=pos['y'])
 
-            treeData: ElementTreeData = ElementTreeData(pyutClass=createdClasses[0], oglClass=createdClasses[1])
-            self.classTree[classname] = treeData
+            pyutClass:  PyutClass  = createdClasses[0]
+            oglClass:   OglClass   = createdClasses[1]
+            schemaType: XsdType    = self.schema.types[className]
+            if schemaType.derivation == XSDParser.SUBCLASS_INDICATOR:
+                baseType: XsdType = schemaType.base_type
+                self.logger.debug(f'class: {className} is a subclass of: {baseType.local_name}')
+                pyutClass.addParent(baseType.local_name)
+
+            treeData: ElementTreeData = ElementTreeData(pyutClass=pyutClass, oglClass=oglClass)
+            self.classTree[className] = treeData
 
     def _generateClassFields(self):
 
@@ -156,7 +167,7 @@ class XSDParser:
         if not classTreeData.childElementNames.__contains__(childTypeName):
             classTreeData.addChild(childTypeName)
 
-    def _generateLinks(self):
+    def _generateAggregationLinks(self):
 
         for className in self.classTree.keys():
             parentTreeData: ElementTreeData = self.classTree[className]
@@ -173,6 +184,22 @@ class XSDParser:
                     self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
                 except KeyError:
                     self.logger.info(f'No problem {childName} is not in this hierarchy')
+
+    def _generateInheritanceLinks(self):
+
+        for className in self.classTree.keys():
+            childTreeData: ElementTreeData = self.classTree[className]
+            pyutClass: PyutClass = childTreeData.pyutClass
+            parents: List[str] = pyutClass.getParents()
+            for parentName in parents:
+                self.logger.info(f'class: {pyutClass.getName()} is a subclass of: {parentName}')
+                parentTreeData: ElementTreeData = self.classTree[parentName]
+
+                childOglClass:  OglClass = childTreeData.oglClass
+                parentOglClass: OglClass = parentTreeData.oglClass
+
+                link: PyutLink = self._umlFrame.createLink(parentOglClass, childOglClass, OglLinkType.OGL_INHERITANCE)
+                self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
 
     def _createEnumerationFields(self, pyutClass: PyutClass, enumValues: List[str]):
         """
