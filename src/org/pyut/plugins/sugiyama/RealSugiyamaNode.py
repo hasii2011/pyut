@@ -1,5 +1,7 @@
 
 from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
+from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaVEs
+
 from org.pyut.plugins.sugiyama.ALayoutNode import ALayoutNode
 
 from org.pyut.plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
@@ -73,35 +75,35 @@ class RealSugiyamaNode(SugiyamaNode):
         """
         Fix the positions of the anchor points.
 
-        The anchor points a placed according to fathers and sons positions.
-        Before calling this function, be sure you have set the index of all
-        fathers and sons (see setIndex).
+        The anchor points are placed according to parent and child positions.
+        Before calling this method, be sure you have set the indices of all
+        parent and children (see setIndex).
 
-        @author Nicolas Dubois
         """
         # Get position and size of node
         (width, height) = self.getSize()
         (x, y) = self.getPosition()
 
-        # Fix all sons anchors position
-        # Sort sons list to eliminate crossing
-        sons = self.getSons()
-        sons.sort(key=SugiyamGlobals.cmpIndex)
-        nbSons = len(sons)
-        # For all sons
-        for i in range(nbSons):
-            (son, link) = sons[i]
+        # Fix all childrent anchors position
+        # Sort child list to eliminate crossing
+        children: SugiyamaVEs = self.getChildren()
+        children.sort(key=SugiyamGlobals.cmpIndex)
+        nChildren = len(children)
+        # For all children
+        for i in range(nChildren):
+            (child, link) = children[i]
             # Fix anchors coordinates
             link.setDestAnchorPos(
-                x + width * (i + 1) / (nbSons + 1), y + height)
-        # Fathers anchors position
-        # Sort fathers list to eliminate crossing
-        fathers = self.getParents()
-        fathers.sort(key=SugiyamGlobals.cmpIndex)
-        nbFathers = len(fathers)
-        # For all fathers
-        for i in range(nbFathers):
-            (father, link) = fathers[i]
+                x + width * (i + 1) / (nChildren + 1), y + height)
+
+        # Parent anchors position
+        # Sort parents list to eliminate crossing
+        parents: SugiyamaVEs = self.getParents()
+        parents.sort(key=SugiyamGlobals.cmpIndex)
+        nParents = len(parents)
+        # For all parents
+        for i in range(nParents):
+            (parent, link) = parents[i]
             # Fix anchors coordinates
             link.setSrcAnchorPos(
-                x + width * (i + 1) / (nbFathers + 1), y)
+                x + width * (i + 1) / (nParents + 1), y)

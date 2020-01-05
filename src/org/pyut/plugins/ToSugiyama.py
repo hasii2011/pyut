@@ -164,7 +164,7 @@ class ToSugiyama(PyutToPlugin):
                 if isinstance(oglObject, OglInheritance) or isinstance(oglObject, OglInterface):
 
                     srcSugiyamaNode.addParent(dstSugiyamaNode, link)
-                    dstSugiyamaNode.addSon(srcSugiyamaNode, link)
+                    dstSugiyamaNode.addChild(srcSugiyamaNode, link)
 
                     # Add nodes in list of hierachical nodes
                     addNode2HierarchyGraph(srcSugiyamaNode, dictSugiHier)
@@ -275,12 +275,12 @@ class ToSugiyama(PyutToPlugin):
             self.__levels.append(level)
 
         # Fix nodes index and level for each nodes
-        for l in range(len(self.__levels)):
-            level = self.__levels[l]
+        for idx in range(len(self.__levels)):
+            level = self.__levels[idx]
             for i in range(len(level)):
                 node = level[i]
                 node.setIndex(i)
-                node.setLevel(l)
+                node.setLevel(idx)
 
         # No error
         return 1
@@ -494,19 +494,19 @@ class ToSugiyama(PyutToPlugin):
 
             # Fix level
             for i in range(len(vnodes)):
-                vnode = vnodes[i]
+                vnode: VirtualSugiyamaNode = vnodes[i]
                 vnode.setLevel(dstNodeLevel + i + 1)
 
             # Fix relation between virtual nodes
             for i in range(len(vnodes) - 1):
-                vnodes[i].addSon(vnodes[i + 1], zLink)
-                vnodes[i + 1].addFather(vnodes[i], zLink)
+                vnodes[i].addChild(vnodes[i + 1], zLink)
+                vnodes[i + 1].addParent(vnodes[i], zLink)
 
             # Fix relations between virtual and real nodes
-            vnodes[-1].addSon(srcNode, zLink)
-            vnodes[0].addFather(dstNode, zLink)
+            vnodes[-1].addChild(srcNode, zLink)
+            vnodes[0].addParent(dstNode, zLink)
 
-            updateLink(dstNode.getSons(), zLink, vnodes[0])
+            updateLink(dstNode.getChildren(), zLink, vnodes[0])
             updateLink(srcNode.getParents(), zLink, vnodes[-1])
 
             # Add virtual nodes in levels
@@ -736,12 +736,12 @@ class ToSugiyama(PyutToPlugin):
         @author Nicolas Dubois
         """
         # Fix nodes index for each level
-        for l in range(len(self.__levels)):
-            level = self.__levels[l]
+        for lvl in range(len(self.__levels)):
+            level = self.__levels[lvl]
             for i in range(len(level)):
                 node = level[i]
                 node.setIndex(i)
-                node.setLevel(l)
+                node.setLevel(lvl)
 
     def __getNbIntersectAll(self):
         """
@@ -773,12 +773,12 @@ class ToSugiyama(PyutToPlugin):
         # For each node of the layer
         for indFatherL in range(len(nodes) - 1):
             # For each son of the current node
-            for (sonL, link) in nodes[indFatherL].getSons():
+            for (sonL, link) in nodes[indFatherL].getChildren():
 
                 # Check intersect with all next parents
                 indFatherR = indFatherL + 1
                 while indFatherR < len(nodes):
-                    for (sonR, rLink) in nodes[indFatherR].getSons():
+                    for (sonR, rLink) in nodes[indFatherR].getChildren():
                         # If intersect
                         if sonL.getIndex() > sonR.getIndex():
                             count += 1
@@ -989,11 +989,10 @@ class ToSugiyama(PyutToPlugin):
         # Balance the graph with the barycenter value
 
         # Downward phase
-        for l in range(1, len(self.__levels)):
+        for lvl in range(1, len(self.__levels)):
 
-            level = self.__levels[l]
-            # Compute the barycenter on all nodes of the level before trying
-            # to balance them
+            level = self.__levels[lvl]
+            # Compute the barycenter on all nodes of the level before trying to balance them
             for node in level:
                 node.upBarycenterX()
 
@@ -1002,9 +1001,9 @@ class ToSugiyama(PyutToPlugin):
                 node.balance()
 
         # Upward phase
-        for l in range(len(self.__levels) - 2, -1, -1):
+        for lvl in range(len(self.__levels) - 2, -1, -1):
 
-            level = self.__levels[l]
+            level = self.__levels[lvl]
             # Compute the barycenter on all nodes of the level before trying
             # to balance them
             for node in level:

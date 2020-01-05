@@ -18,7 +18,7 @@ class SugiyamGlobals:
     #     return cmp(l[0].getIndex(), r[0].getIndex())
     def cmpIndex(aTuple: Tuple):
         """
-        Internal comparison funtion for sorting list of fathers or sons on index.
+        Internal comparison function for sorting list of parents or children by index.
 
         Args:
             aTuple:
@@ -31,6 +31,7 @@ class SugiyamGlobals:
         if l is None or r is None:
             return 0
         else:
+            print(f' l.getIndex(): {l.getIndex()}  r.getIndex(): {r.getIndex()}')
             return cmp(l.getIndex(), r.getIndex())
 
     @staticmethod

@@ -8,11 +8,8 @@ from org.pyut.plugins.sugiyama.SugiyamaConstants import H_SPACE
 
 from org.pyut.plugins.sugiyama.SugiyamaLink import SugiyamaLink
 
-SugiyamaParent  = NewType("SugiyamaParent",  Tuple["SugiymaNode", SugiyamaLink])
-SugiyamaParents = NewType("SugiyamaParents", List[SugiyamaParent])
-
-SugiyamaChild    = NewType("SugiyamaChild",    Tuple["SugiymaNode", SugiyamaLink])
-SugiyamaChildren = NewType("SugiyamaChildren", List[SugiyamaParent])
+SugiyamaVertixEdge = NewType("SugiyamaVertixEdge", Tuple["SugiymaNode", SugiyamaLink])
+SugiyamaVEs        = NewType("SugiyamaVEs",         List[SugiyamaVertixEdge])
 
 
 class SugiyamaNode:
@@ -52,14 +49,14 @@ class SugiyamaNode:
         # parents and sons
         # ================
         #
-        # A child is derived from a prent. There is a hierarchical link,
+        # A child is derived from a parent. There is a hierarchical link,
         # Realization or Inheritance, from source to parent.
         # Each node can have parents and children.
-        self.__parents: SugiyamaParents = cast(SugiyamaParents, [])
+        self.__parents: SugiyamaVEs = cast(SugiyamaVEs, [])
         """
         List of parents
         """
-        self.__sons = []
+        self.__sons: SugiyamaVEs = cast(SugiyamaVEs, [])
         """
         List of sons : [(SugiyamaNode, SugiyamaLink), ...]
         """
@@ -109,10 +106,10 @@ class SugiyamaNode:
             parent:  The parent
             link:   Link betweeen self and parent
         """
-        sugiyamaParent: SugiyamaParent = cast(SugiyamaParent, (parent, link))
-        self.__parents.append(sugiyamaParent)
+        sugiyamaData: SugiyamaVertixEdge = cast(SugiyamaVertixEdge, (parent, link))
+        self.__parents.append(sugiyamaData)
 
-    def getParents(self) -> SugiyamaParents:
+    def getParents(self) -> SugiyamaVEs:
         """
         Return list of parents
 
@@ -121,22 +118,22 @@ class SugiyamaNode:
         """
         return self.__parents
 
-    def addSon(self, son, link):
+    def addChild(self, child, link):
         """
-        Add a son.
+        Add a child.
 
-        @param SugiyamaNode son  : son
-        @param SugiyamaLink link : link between self and son
-        @author Nicolas Dubois
+        Args:
+            child:  The child
+            link:   Its Link
         """
-        self.__sons.append((son, link))
+        sugiyamaData: SugiyamaVertixEdge = cast(SugiyamaVertixEdge, (child, link))
+        self.__sons.append(sugiyamaData)
 
-    def getSons(self):
+    def getChildren(self) -> SugiyamaVEs:
         """
-        Get list of sons.
+        Get list of children.
 
-        @return [SugiyamaNode, ...] : list of sons
-        @author Nicolas Dubois
+        Returns:  The list of children
         """
         return self.__sons
 
@@ -398,7 +395,7 @@ class SugiyamaNode:
         @author Nicolas Dubois
         """
         # Create list of fathers and sons
-        fathersAndSons = self.getParents() + self.getSons()
+        fathersAndSons = self.getParents() + self.getChildren()
         nbFathersAndSons = len(fathersAndSons)
 
         # If there are no fathers and sons
