@@ -2,7 +2,9 @@
 from logging import Logger
 from logging import getLogger
 
-import os
+from os import remove as osRemove
+
+from shutil import copyfile
 
 from unittest import main as unitTestMain
 from unittest import TestSuite
@@ -16,28 +18,14 @@ from org.pyut.PyutPreferences import PREFS_FILENAME
 class TestPyutPreferences(TestBase):
     """
     """
+    BACKUP_SUFFIX: str = '.backup'
+
     clsLogger: Logger = None
 
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
         TestPyutPreferences.clsLogger = getLogger(__name__)
-
-    def emptyPrefs(self):
-        """
-        Empty the preferences.
-
-        Do this by removing the prefs file and reinit the prefs
-        (``prefs.init``).
-        """
-        if os.path.exists(PREFS_FILENAME):
-            os.remove(PREFS_FILENAME)
-        self.prefs.init()
-        # test that it's empty
-        try:
-            self.assertTrue(self.prefs[list(self.items.keys())[0]] is None)
-        except (ValueError, Exception) as e:
-            self.fail(f"Should not raise an exception;  {e}")
 
     def setUp(self):
         """
@@ -55,10 +43,15 @@ class TestPyutPreferences(TestBase):
             "test_list": ["comment", "allez", "vous"],
         }
         self.prefs: PyutPreferences = PyutPreferences()
-        self.emptyPrefs()  # empty the prefs
+        self._backupPrefs()
+        self._emptyPrefs()
+
         # fill the prefs
         for item, value in list(self.items.items()):
             self.prefs[item] = value
+
+    def tearDown(self):
+        self._restoreBackup()
 
     def testValues(self):
         """
@@ -104,7 +97,7 @@ class TestPyutPreferences(TestBase):
 
         All is now in `emptyPrefs`.
         """
-        self.emptyPrefs()
+        self._emptyPrefs()
 
     def testLastOpenedFiles(self):
         """
@@ -123,6 +116,34 @@ class TestPyutPreferences(TestBase):
         files.pop()      # remove last one which should have been dropped
         for i in range(len(files) - 1):
             self.assertTrue(self.prefs.getLastOpenedFilesList()[i] == files[i], "wrong file name")
+
+    def _backupPrefs(self):
+
+        source: str = PREFS_FILENAME
+        target: str = f"{PREFS_FILENAME}{TestPyutPreferences.BACKUP_SUFFIX}"
+        try:
+            copyfile(source, target)
+        except IOError as e:
+            self.logger.error(f"Unable to copy file. {e}")
+
+    def _restoreBackup(self):
+        source: str = f"{PREFS_FILENAME}{TestPyutPreferences.BACKUP_SUFFIX}"
+        target: str = PREFS_FILENAME
+        try:
+            copyfile(source, target)
+        except IOError as e:
+            self.logger.error(f"Unable to copy file. {e}")
+
+        osRemove(source)
+
+    def _emptyPrefs(self):
+        osRemove(PREFS_FILENAME)
+        self.prefs.init()
+        # test that it's empty
+        try:
+            self.assertTrue(self.prefs[list(self.items.keys())[0]] is None)
+        except (ValueError, Exception) as e:
+            self.fail(f"Should not raise an exception;  {e}")
 
 
 def suite() -> TestSuite:
