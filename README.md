@@ -1,5 +1,5 @@
 
-PYUT
+
 𝓟 𝓨 𝓤 𝓣 stands for Python UML Tool. Actually, Pyut is only a class diagram editor
 
 
