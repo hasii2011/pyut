@@ -47,6 +47,12 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.PyutUtils": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+
         "org.pyut.ui.AppFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

@@ -37,7 +37,7 @@ class PyutUtils:
 
     def __init__(self):
 
-        PyutUtils.logger    = getLogger(__name__)
+        PyutUtils.logger = getLogger(__name__)
 
     @staticmethod
     def displayInformation(msg, title=None, parent=None):
