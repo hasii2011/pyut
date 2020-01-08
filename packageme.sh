@@ -3,6 +3,7 @@
 clear
 echo "Clean up old stuff"
 rm -rf build dist
-rm -rf src/UNKNOWN.egg-info
 
-python3 setup.py py2app -A
+python3 setup.py py2app --iconfile src/org/pyut/resources/img/Pyut.icns
+
+rm -rf src/UNKNOWN.egg-info
