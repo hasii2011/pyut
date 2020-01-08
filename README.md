@@ -5,7 +5,7 @@
 
 This is a Python 3 version of a source forge project.  This is the [original web site](http://pyut.sourceforge.net/whatis.html)
 
-I asked the original developers of forking this project.  This is what one replied
+I asked the original developers if it was Ok to fork this project.  This is what one replied:
 
 
 >> Hello,
@@ -18,4 +18,4 @@ I asked the original developers of forking this project.  This is what one repli
 >> Cédric D
 
 
-I intend to do this
+So this is the fork and I let Cedric know.  
