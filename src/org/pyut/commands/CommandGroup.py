@@ -25,7 +25,7 @@ from org.pyut.history.HistoryUtils import makeValuatedToken
 from org.pyut.history import HistoryManager
 
 
-class CommandGroup(object):
+class CommandGroup:
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (17.11.2005)
     This class is a part of the history system of PyUt. It brings together
@@ -46,25 +46,26 @@ class CommandGroup(object):
         """
         history to which belongs the group. Init when the group is added.
         """
-        self._commands: List = []
+        self._commands: List[Command] = []
         """
         list of commands belonging to the group
         """
         self._comment:    str = comment
         self._commonData: List = []
         """
-        to store information that are common to all the commands of the
-        group. WARNING : the common data is NOT serialized, so the
-        common data are lost after an unserialization. You have to use
-        these data in a command before the serialization.        
+        Stores information that is common to all the commands in the
+        group. 
+        WARNING : the common data is NOT serialized, so the
+        common data is lost after a deserialization. You have to use
+        this data in a command before the serialization.        
         """
 
     def addCommand(self, command: Command):
         """
         Add the specified command to the group
-        @param command  : command to add
+        Args:
+            command:  The command to add
         """
-
         command.setGroup(self)
         self._commands.append(command)
 
@@ -108,12 +109,13 @@ class CommandGroup(object):
 
         # looking for the begining of the first command
         cStart = serializedCommands.find(commandBegin)
-
-        # while there is still a command begining token we can proceed to the unserialization.
+        self.logger.info(f'cStart: {cStart}')
+        # while there is still a command begining token we can proceed to the deserialization.
         while cStart > -1:
 
             # we don't need anymore of the begining token
             cStart += len(commandBegin)
+            self.logger.info(f'cStart - commandBegin: {cStart}')
 
             # find the ending token for this command
             cEnd = serializedCommands.find(commandEnd, cStart)
@@ -122,9 +124,11 @@ class CommandGroup(object):
             serialCommand = serializedCommands[cStart: cEnd]
 
             commandModuleName = getTokenValue(COMMAND_MODULE_ID, serialCommand)
+            self.logger.info(f'commandModuleName: {commandModuleName}')
 
             # get the name of the class of the command
             commandClassName = getTokenValue(COMMAND_CLASS_ID, serialCommand)
+            self.logger.info(f'commandClassName: {commandClassName}')
 
             # import the module which contains the command class and get the class (cls)
             moduleName = import_module(commandModuleName)
@@ -135,7 +139,7 @@ class CommandGroup(object):
                 command = commandClass()
                 command.setGroup(self)
 
-                # unserialization and setup of the command
+                # deserialization and setup of the command
                 command.deserialize(serialCommand)
 
                 # add the command to the group
@@ -143,8 +147,10 @@ class CommandGroup(object):
 
                 # looking for the next command begining token
                 cStart = serializedCommands.find(commandBegin, cEnd)
+                self.logger.info(f'cStart - serializedCommands: {cStart}')
+
             except (ValueError, Exception) as e:
-                self.logger.error(f'Command Class: {e}')
+                self.logger.error(f'Error during deserialization: {e}')
 
     def redo(self):
         """

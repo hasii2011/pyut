@@ -59,7 +59,6 @@
             ],
             "propagate": "False"
         },
-
         "TestPyutUtils": {
             "level": "INFO",
             "handlers": [
@@ -81,7 +80,6 @@
             ],
             "propagate": "False"
         },
-
         "TestPluginManager": {
             "level": "INFO",
             "handlers": [
@@ -101,6 +99,23 @@
             "handlers": [
                 "consoleHandler"
             ],
+            "propagate": "False"
+        },
+        "TestCommandGroup": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+        "HistoryUtils": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.commands.CommandGroup": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "org.pyut.PyutPreferences": {

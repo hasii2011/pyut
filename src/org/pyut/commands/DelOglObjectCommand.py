@@ -1,7 +1,11 @@
 
-from org.pyut.commands.Command import Command
-from org.pyut.history.HistoryUtils import getTokenValue
+from typing import Tuple
 
+from importlib import import_module
+
+from org.pyut.commands.Command import Command
+
+from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
 
@@ -58,39 +62,37 @@ class DelOglObjectCommand(Command):
 
         return serialShape
 
-    def deserialize(self, serializedInfos):
+    def deserialize(self, serializedData):
         """
-        unserialize the data needed to undo/redo a delete command and create
-        a shape
+        Deserialize the data needed to undo/redo a delete command and createa shape
+        Args:
+            serializedData:
         """
 
-        #UNSERIALIZATION OF THE DATA NEEDED BY THE COMMAND :
-        #name of the oglObject's class to rebuild it
-        oglShapeClassName = getTokenValue("oglShapeClass", serializedInfos)
-        # name of the oglObject's module to rebuild it
-        oglShapeModule = getTokenValue("oglShapeModule", serializedInfos)
-        # name of the pyutObject's class to rebuild it
-        pyutShapeClassName = getTokenValue("pyutShapeClass", serializedInfos)
-        # name of the pyutObject's module to rebuild it
-        pyutShapeModule = getTokenValue("pyutShapeModule", serializedInfos)
-        # name of the pyutObject
-        shapeName = getTokenValue("shapeName", serializedInfos)
-        # id of the pyutObject
-        shapeId = eval(getTokenValue("shapeId", serializedInfos))
-        # oglObject's modelPosition (MVC : see miniOgl)
-        shapePosition = eval(getTokenValue("position", serializedInfos))
-        # oglObject's modelSize (MVC : see miniOgl)
-        shapeSize = eval(getTokenValue("size", serializedInfos))
+        oglShapeClassName:   str = getTokenValue("oglShapeClass", serializedData)
+        oglShapeModuleName:  str = getTokenValue("oglShapeModule", serializedData)
+        pyutShapeClassName:  str = getTokenValue("pyutShapeClass", serializedData)
+        pyutShapeModuleName: str = getTokenValue("pyutShapeModule", serializedData)
 
-        # CONSTRUCTION OF THE UML OBJECT :
-        # import the module which contains the ogl and pyut shape classes and
-        # get that classes.
-        oglShapeClass = getattr(__import__(oglShapeModule), oglShapeClassName)
-        pyutShapeClass = getattr(__import__(pyutShapeModule), pyutShapeClassName)
+        shapeName:     str = getTokenValue("shapeName", serializedData)     # name of the pyutObject
+        shapeId:       int = eval(getTokenValue("shapeId", serializedData))
 
-        # build the pyutObject : it suppose that every parameter of the
+        shapePosition: Tuple[float, float] = eval(getTokenValue("position", serializedData))
+        shapeSize:     Tuple[float, float] = eval(getTokenValue("size", serializedData))
+        #
+        # Construct the UML objects
+        # import the module which contains the ogl and pyut shape classes and instantiate the classes
+        # oglShapeClass = getattr(__import__(oglShapeModule), oglShapeClassName)
+        # pyutShapeClass = getattr(__import__(pyutShapeModule), pyutShapeClassName)
+        oglModule = import_module(oglShapeModuleName)
+        oglShapeClass = getattr(oglModule, oglShapeClassName)
+
+        pyutModule     = import_module(pyutShapeModuleName)
+        pyutShapeClass = getattr(pyutModule, pyutShapeClassName)
+        #
+        # build the pyutObject : it assumes that every parameter of the
         # constructor has a default value
-
+        #
         self._shape = self.getGroup().getHistory().getFrame().getUmlObjectById(shapeId)
 
         if self._shape is None:
@@ -110,7 +112,6 @@ class DelOglObjectCommand(Command):
         Delete the shape for which this command has been created. You DON't
         need to redefine it.
         """
-
         from org.pyut.ogl.OglClass import OglClass
         umlFrame = self.getGroup().getHistory().getFrame()
         shape = self._shape
@@ -119,10 +120,11 @@ class DelOglObjectCommand(Command):
             # refs in the children
             pyutClass = shape.getPyutObject()
             # TODO: Fix this inscrutable piece of code
-            for klass in [s.getPyutObject() for s in umlFrame.getUmlObjects()
-                if isinstance(s, OglClass)]:
-                    if pyutClass in klass.getParents():
-                        klass.getParents().remove(pyutClass)
+            for klass in [s.getPyutObject()
+                          for s in umlFrame.getUmlObjects()
+                          if isinstance(s, OglClass)]:
+                if pyutClass in klass.getParents():
+                    klass.getParents().remove(pyutClass)
         shape.Detach()
         umlFrame.Refresh()
 

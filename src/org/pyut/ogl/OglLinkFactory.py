@@ -24,9 +24,14 @@ def getOglLinkFactory():
     return OglLinkFactory()
 
 
-def getLinkType(link) -> OglLinkType:
+def getLinkType(link: OglAssociation) -> OglLinkType:
     """
-    @return The OglLinkType
+
+    Args:
+        link:   The enumeration OglLinkType
+
+    Returns:  The OglLinkType
+
     """
     if isinstance(link, OglAggregation):
         return OglLinkType.OGL_AGGREGATION

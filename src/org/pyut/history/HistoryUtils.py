@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.general.Globals import cmp
 
 """
@@ -86,6 +89,8 @@ HISTORY_FILE_NAME = "pyutHistory"
     Defines the base name of the file which contains the serialized commands.
 """
 
+hLogger: Logger = getLogger('HistoryUtils')
+
 
 def makeToken(tokenId: str):
     """
@@ -123,20 +128,22 @@ def makeValuatedToken(tokenId: str, value: str):
     return makeToken(tokenId + TOKEN_ASSIGN + value)
 
 
-def getTokenValue(tokenId: str, serializedInfos: str):
+def getTokenValue(tokenId: str, serializedData: str) -> str:
     """
-    @return the value (string) of the specified token extracted
-    from the specified string. To use in the unserialize method of
+    The token has to be created by the `makeToken()` method.  Used in the deserialize method of
     a command to get back a value.
-    Notes : the token had to be created by makeToken method.
 
-    @param tokenId          : name of the token
-    @param serializedInfos  : string which contains the information needed to unserialize a command
+    Args:
+        tokenId:    name of the token
+        serializedData:  string which contains the information needed to deserialize a command
+
+    Returns: The value (string) of the specified token extracted
+    from the specified string.
     """
-
-    # to not to work on the original
-    value = serializedInfos
-
+    # to not to work on the original    -- hasii note, is this true?
+    value = serializedData
+    hLogger.info(f'tokenId: `{tokenId}`')
+    hLogger.debug(f'value: {value}')
     # find a char that is not present in the value
     tempEscape = chr(1)
     while value.find(tempEscape) > -1:
@@ -167,4 +174,5 @@ def getTokenValue(tokenId: str, serializedInfos: str):
     # add simple escape sequences where they where double
     value = value.replace(tempEscape, TOKEN_ESCAPE)
 
+    hLogger.info(f'return value: {value}')
     return value

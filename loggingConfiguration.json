@@ -118,6 +118,16 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.commands.CommandGroup": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "HistoryUtils": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "org.pyut.plugins": {
             "level":     "INFO",
             "propagate": "False"
