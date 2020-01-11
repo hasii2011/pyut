@@ -19,7 +19,7 @@ class PyutVisibilityEnum(Enum):
         """
         Converts the input string to the visibility enum
         Args:
-            strValue:   The pygame keyboard value
+            strValue:   A serialized string value
 
         Returns:  The visibility enumeration
         """
