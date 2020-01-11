@@ -395,11 +395,11 @@ class XmiImporter:
 
             # Create link
             if endsValues[0][2]:
-                oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl, OglLinkType.OGL_AGGREGATION)
+                oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl)
             elif endsValues[1][2]:
-                oglLink = self._umlFrame.createNewLink(dstOgl, srcOgl, OglLinkType.OGL_COMPOSITION)
+                oglLink = self._umlFrame.createNewLink(dstOgl, srcOgl)
             else:
-                oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl, OglLinkType.OGL_ASSOCIATION)
+                oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl)
 
             # Add parameters
             pyutLink = oglLink.getPyutObject()

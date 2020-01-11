@@ -1,5 +1,4 @@
 
-
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.PyutSDInstance import PyutSDInstance
@@ -8,28 +7,19 @@ from org.pyut.PyutSDMessage import PyutSDMessage
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.enums.OglLinkType import OglLinkType
-
 
 class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     """
     UmlSequenceDiagramsFrame : a UML sequence diagram frame.
 
     This class is the instance of one UML sequence diagram structure.
-    It derives its functionalities from UmlDiagramsFrame, but
-    as he know the structure of a sequence diagram,
-    he can load sequence diagram datas.
+    It derives its functionality from UmlDiagramsFrame, but
+    it knows the structure of a sequence diagram,
+    It can load sequence diagram data
 
-    Used by FilesHandling.
-
-    :Note on datas:
-        - cdInstances is a set of class diagram instances,
+    :Note on data
+        - sdInstances is a set of class diagram instances,
           composed by label and lifeline
-
-
-    :author: C.Dutoit
-    :contact: dutoitc@hotmail.com
-    :version: $Revision: 1.11 $
     """
     def __init__(self, parent):
         """
@@ -46,9 +36,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     # noinspection PyUnusedLocal
     def createNewSDInstance(self, x, y):
         """
-        Create a new class diagram instance
-
-        @author C.Dutoit
+        Create a new sequence diagram instance
         """
         # Create and add instance
         pyutSDInstance = PyutSDInstance()
@@ -57,36 +45,28 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
 
         return pyutSDInstance
 
-    # noinspection PyUnusedLocal
-    def createNewLink(self, src, dst, linkType: OglLinkType = OglLinkType.OGL_SD_MESSAGE, srcPos=None, dstPos=None):
+    def createNewLink(self, src, dst, srcPos=None, dstPos=None):
         """
-        Add a link between src and dst.
+        Adds an OglSDMessage link between src and dst.
 
-        @param OglSDInstance src  : source of the link
-        @param OglSDInstance dst  : destination of the link
-        @param  linkType : type of the link
-        @param srcPos : position on source
-        @param dstPos : position on  destination
+        Args:
+            src:    source of the link
+            dst:    destination of the link
+            srcPos: position on source
+            dstPos: position on  destination
 
-        @return OglLink : the link created
-        @author L. Burgbacher
-        @modified C.Dutoit 20021125 : added srcPos and dstPos to be compatible  with Sequence diagram
+        Returns: the created OglSDMessage link
         """
-
         srcTime = src.ConvertCoordToRelative(0, srcPos[1])[1]
         dstTime = dst.ConvertCoordToRelative(0, dstPos[1])[1]
-        # srcTime=srcPos[1] - src.GetPosition()[1]
-        # dstTime=dstPos[1] - dst.GetPosition()[1]
-        # print "CreateNewLink - ", srcTime, dstTime print ", src/dst=", src, dst
         pyutLink = PyutSDMessage("msg test", src.getPyutObject(), srcTime, dst.getPyutObject(), dstTime)
 
-        # Call the factory to create OGL Link
         oglLink = OglSDMessage(src, pyutLink, dst)
         pyutLink.setOglObject(oglLink)
 
-        src.addLink(oglLink)                # add it to the source OglShape
-        dst.addLink(oglLink)                # add it to the destination OglShape
-        self._diagram.AddShape(oglLink)     # add it to the diagram
+        src.addLink(oglLink)
+        dst.addLink(oglLink)
+        self._diagram.AddShape(oglLink)
 
         self.Refresh()
 

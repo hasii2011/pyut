@@ -111,9 +111,7 @@ class PyutXml:
         gauge.SetValue(4)
         for src, links in list(dicoLink.items()):
             for link in links:
-                createdLink = umlFrame.createNewLink(dicoOglObjects[src],
-                                                     dicoOglObjects[link[1].getDestination().getId()],
-                                                     link[1].getType())
+                createdLink = umlFrame.createNewLink(dicoOglObjects[src], dicoOglObjects[link[1].getDestination().getId()])
 
                 # fix link with the loaded information
                 pyutLink = createdLink.getPyutObject()

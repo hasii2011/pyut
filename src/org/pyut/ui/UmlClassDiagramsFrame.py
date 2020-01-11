@@ -43,7 +43,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
     def createLink(self, src: OglClass, dst: OglClass, linkType: OglLinkType = OglLinkType.OGL_AGGREGATION):
         """
-        An API that is primarily used the Plugins
+        Used to create links;  It is still the caller's respsonsibility to add the created shape to the
+        appropate diagram
 
         Args:
             src:        The source OglClass

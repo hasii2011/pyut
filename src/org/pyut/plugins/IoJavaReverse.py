@@ -154,7 +154,7 @@ class ReverseJava:
 
         # Create the inheritance link
         if interface:
-            self._umlFrame.createNewLink(po, father, OglLinkType.OGL_INTERFACE)
+            self._umlFrame.createNewLink(po, father)
         else:
             self._umlFrame.createInheritanceLink(po, father)
 

@@ -565,7 +565,7 @@ class PyutXmi:
             if xmiType[0].getAttribute("xmi.value") == 'shared':
                 linkType = OglLinkType.OGL_AGGREGATION
 
-            createdLink = umlFrame.createNewLink(src, dest, linkType)
+            createdLink = umlFrame.createNewLink(src, dest)
             createdLink.setName(linkName)
             createdLink.setDestination(src.getPyutObject())
 
