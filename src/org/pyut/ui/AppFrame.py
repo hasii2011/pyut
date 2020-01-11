@@ -985,14 +985,14 @@ class AppFrame(Frame):
         @since 1.43
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        self.logger.info(f'self.mnuFile: {self.mnuFile}')
+        self.logger.debug(f'self.mnuFile: {self.mnuFile}')
 
         index = 0
         for el in self._prefs.getLastOpenedFilesList():
             openFilesId = self.lastOpenedFilesID[index]
             # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
             lbl: str = f"&{str(index+1)} {el}"
-            self.logger.info(f'lbL: {lbl}  openFilesId: {openFilesId}')
+            self.logger.debug(f'lbL: {lbl}  openFilesId: {openFilesId}')
             self.mnuFile.SetLabel(id=openFilesId, label=lbl)
 
             index += 1

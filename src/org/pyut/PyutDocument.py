@@ -53,7 +53,7 @@ class PyutDocument:
 
         self._type: DiagramType = docType
 
-        self.logger.info(f'Project: {project} PyutDocument using type {docType}')
+        self.logger.debug(f'Project: {project} PyutDocument using type {docType}')
         if docType == DiagramType.CLASS_DIAGRAM:
             self._title = DiagramsLabels[docType]
             self._frame = UmlClassDiagramsFrame(parentFrame)
