@@ -3,6 +3,7 @@ from typing import cast
 
 from org.pyut.commands.Command import Command
 from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
+from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.ogl.OglLinkFactory import getLinkType
 
@@ -10,6 +11,7 @@ from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 
 class DelOglLinkCommand(DelOglObjectCommand):
@@ -69,12 +71,13 @@ class DelOglLinkCommand(DelOglObjectCommand):
 
     def undo(self):
 
-        umlFrame = self.getGroup().getHistory().getFrame()
-        src = umlFrame.getUmlObjectById(self._linkSrcId)
-        dest = umlFrame.getUmlObjectById(self._linkDestId)
+        umlFrame: UmlClassDiagramsFrame = self.getGroup().getHistory().getFrame()
+        src:      OglClass              = umlFrame.getUmlObjectById(self._linkSrcId)
+        dest:     OglClass              = umlFrame.getUmlObjectById(self._linkDestId)
 
         if self._shape is None:
-            self._shape = umlFrame.createNewLink(src, dest, self._linkType)
+            self._shape = umlFrame.createLink(src=src, dst=dest, linkType=self._linkType)
+            umlFrame.GetDiagram().AddShape(shape=self._shape, withModelUpdate=True)
 
         self._shape.getPyutObject().setId(self._linkId)
         self._shape.GetSource().GetModel().SetPosition(self._srcPosition[0], self._srcPosition[1])
