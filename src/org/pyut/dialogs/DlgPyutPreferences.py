@@ -37,11 +37,11 @@ from org.pyut.general.Globals import _
 from org.pyut.general.Globals import secureBool
 
 
-class DlgPyutProperties(Dialog):
+class DlgPyutPreferences(Dialog):
     """
-    This is the properties dialog of Pyut.
+    This is the preferences dialog for Pyut.
 
-    Display current properties and possible values, save modified values.
+    Display current prefences and possible values, save modified values.
 
     To use it from a wxFrame:
     ```python
@@ -106,7 +106,7 @@ class DlgPyutProperties(Dialog):
         #
         # wx.CB_SORT not currently supported by wxOSX/Cocoa
         #
-        if platform == DlgPyutProperties.THE_GREAT_MAC_PLATFORM:
+        if platform == DlgPyutPreferences.THE_GREAT_MAC_PLATFORM:
             self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
                                           style=CB_READONLY)
         else:
