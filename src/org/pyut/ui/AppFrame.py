@@ -1130,7 +1130,7 @@ class AppFrame(Frame):
         @author L. Burgbacher <lb@alawa.ch>
         @since 1.34
         """
-        from org.pyut.dialogs.DlgPyutProperties import DlgPyutProperties
+        from org.pyut.dialogs.DlgPyutPreferences import DlgPyutProperties
 
         self.logger.debug(f"Before dialog show")
         with DlgPyutProperties(self, -1, self._ctrl, self._prefs) as dlg:
