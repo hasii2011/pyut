@@ -6,9 +6,6 @@ from sys import platform
 
 from wx import CommandEvent
 
-from org.pyut.PyutPreferences import PyutPreferences
-from org.pyut.general import Lang
-
 from wx import ALL
 from wx import CB_READONLY
 from wx import CB_SORT
@@ -35,6 +32,9 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 from org.pyut.general.Globals import secureBool
+from org.pyut.general import Lang
+
+from org.pyut.PyutPreferences import PyutPreferences
 
 
 class DlgPyutPreferences(Dialog):
@@ -52,7 +52,7 @@ class DlgPyutPreferences(Dialog):
     ```
     """
 
-    THE_GREAT_MAC_PLATFORM = 'darwin'
+    THE_GREAT_MAC_PLATFORM: str = 'darwin'
 
     def __init__(self, parent, ID, ctrl, prefs: PyutPreferences):
         """
@@ -70,10 +70,10 @@ class DlgPyutPreferences(Dialog):
         self.__ctrl  = ctrl
         self.__prefs: PyutPreferences = prefs
 
-        self.__initCtrl()
+        self.__initializeTheControls()
         self.Bind(EVT_CLOSE, self.__OnClose)
 
-    def __initCtrl(self):
+    def __initializeTheControls(self):
         """
         Initialize the controls.
         """
@@ -81,7 +81,8 @@ class DlgPyutPreferences(Dialog):
         [
             self.__autoResizeID, self.__showParamsID, self.__languageID,
             self.__maximizeID,   self.__fontSizeID,   self.__showTipsID,
-        ] = PyutUtils.assignID(6)
+            self.__resetTipsID
+        ] = PyutUtils.assignID(7)
 
         GAP = 5
 
@@ -91,6 +92,8 @@ class DlgPyutPreferences(Dialog):
         self.__cbAutoResize = CheckBox(self, self.__autoResizeID, _("&Auto resize classes to fit content"))
         self.__cbShowParams = CheckBox(self, self.__showParamsID, _("&Show params in classes"))
         self.__cbShowTips   = CheckBox(self, self.__showTipsID,   _("Show &Tips on startup"))
+
+        self.__btnResetTips = Button(self, self.__resetTipsID, _('Reset Tips'))
 
         # Font size
 #        self.__lblFontSize = wx.StaticText(self, -1, _("Font size"))
@@ -107,8 +110,7 @@ class DlgPyutPreferences(Dialog):
         # wx.CB_SORT not currently supported by wxOSX/Cocoa
         #
         if platform == DlgPyutPreferences.THE_GREAT_MAC_PLATFORM:
-            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
-                                          style=CB_READONLY)
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())], style=CB_READONLY)
         else:
             self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
                                           style=CB_READONLY | CB_SORT)
@@ -121,6 +123,7 @@ class DlgPyutPreferences(Dialog):
         sizer.Add(self.__cbShowParams, 0, ALL, GAP)
         sizer.Add(self.__cbMaximize,   0, ALL, GAP)
         sizer.Add(self.__cbShowTips,   0, ALL, GAP)
+        sizer.Add(self.__btnResetTips, 0, ALL, GAP)
         sizer.Add(szrLanguage,         0, ALL, GAP)
 
         hs = BoxSizer(HORIZONTAL)
@@ -138,6 +141,9 @@ class DlgPyutPreferences(Dialog):
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showParamsID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__maximizeID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showTipsID)
+
+        self.Bind(EVT_BUTTON, self.__OnBtnResetTips, id=self.__resetTipsID)
+
         self.Bind(EVT_BUTTON,   self.__OnCmdOk,    id=ID_OK)
 
         self.__setValues()
@@ -206,3 +212,7 @@ class DlgPyutPreferences(Dialog):
                 if isinstance(oglObject, OglClass):
                     self.__ctrl.autoResize(oglObject)
         event.Skip(skip=True)
+
+    # noinspection PyUnusedLocal
+    def __OnBtnResetTips(self, event: CommandEvent):
+        self.__prefs[PyutPreferences.CURRENT_TIP] = '0'

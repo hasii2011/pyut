@@ -379,7 +379,7 @@ class AppFrame(Frame):
             ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
             ActionCallbackType.NEW_USE_CASE_DIAGRAM: self._OnMnuFileNewUsecaseDiagram,
             ActionCallbackType.INSERT_PROJECT:       self._OnMnuFileInsertProject,
-            ActionCallbackType.PROJECT_CLOSE:        self._OnMnuFileClose,
+            ActionCallbackType.PROJECT_CLOSE :        self._OnMnuFileClose,
             ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
             ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
             ActionCallbackType.FILE_SAVE_AS:         self._OnMnuFileSaveAs,
@@ -387,7 +387,7 @@ class AppFrame(Frame):
             ActionCallbackType.PRINT_SETUP:          self._OnMnuFilePrintSetup,
             ActionCallbackType.PRINT_PREVIEW:        self._OnMnuFilePrintPreview,
             ActionCallbackType.PRINT:                self._OnMnuFilePrint,
-            ActionCallbackType.PYUT_PROPERTIES:      self._OnMnuFilePyutProperties,
+            ActionCallbackType.PYUT_PREFERENCES:      self._OnMnuFilePyutPreferences,
             ActionCallbackType.EXIT_PROGRAM:         self._OnMnuFileExit,
             ActionCallbackType.PROGRAM_ABOUT:        self._OnMnuHelpAbout,
             ActionCallbackType.HELP_INDEX:           self._OnMnuHelpIndex,
@@ -1122,13 +1122,8 @@ class AppFrame(Frame):
         frame.Refresh()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFilePyutProperties(self, event):
+    def _OnMnuFilePyutPreferences(self, event: CommandEvent):
         """
-        Callback.
-
-        @param event
-        @author L. Burgbacher <lb@alawa.ch>
-        @since 1.34
         """
         from org.pyut.dialogs.DlgPyutPreferences import DlgPyutPreferences
 

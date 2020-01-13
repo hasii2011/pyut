@@ -20,7 +20,7 @@ class ActionCallbackType(Enum):
     PRINT_SETUP          = 14
     PRINT_PREVIEW        = 15
     PRINT                = 16
-    PYUT_PROPERTIES      = 17
+    PYUT_PREFERENCES     = 17
     EXIT_PROGRAM         = 18
     PROGRAM_ABOUT        = 19
     HELP_INDEX           = 20

@@ -100,7 +100,7 @@ class MenuCreator:
             self.fileMenu.Append(NewId(), _("Import"), sub)
 
         self.fileMenu.AppendSeparator()
-        self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEPYUTPROPER, _("PyUt P&roperties"), _("PyUt properties"))
+        self.fileMenu.Append(SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES, _("PyUt P&references"), _("PyUt preferences"))
         # self.fileMenu.Append(ID_MNUFILEDIAGRAMPROPER,_("&Diagram Properties"), _("Diagram properties"))
         self.fileMenu.AppendSeparator()
         self.fileMenu.Append(SharedIdentifiers.ID_MNUFILEPRINTSETUP, _("Print se&tup..."), _("Display the print setup dialog box"))
@@ -189,7 +189,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_SETUP],      id=SharedIdentifiers.ID_MNUFILEPRINTSETUP)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_PREVIEW],    id=SharedIdentifiers.ID_MNUFILEPRINTPREV)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT],           id=SharedIdentifiers.ID_MNUFILEPRINT)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PYUT_PROPERTIES],  id=SharedIdentifiers.ID_MNUFILEPYUTPROPER)
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PYUT_PREFERENCES], id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
         #  EVT_MENU(self, ID_MNUFILEDIAGRAMPROPER,self._OnMnuFileDiagramProperties)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXIT_PROGRAM],     id=SharedIdentifiers.ID_MNUFILEEXIT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROGRAM_ABOUT],    id=SharedIdentifiers.ID_MNUHELPABOUT)
