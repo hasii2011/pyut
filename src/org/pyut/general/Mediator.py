@@ -1,6 +1,8 @@
 
 from typing import Callable
 from typing import Dict
+from typing import NewType
+from typing import Union
 
 from wx import CENTRE
 from wx import WXK_DELETE
@@ -8,6 +10,7 @@ from wx import WXK_INSERT
 from wx import WXK_BACK
 
 from wx import ID_OK
+from wx import ID_NO
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
@@ -20,6 +23,7 @@ from org.pyut.MiniOgl.Constants import SKIP_EVENT
 
 from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
+
 
 from org.pyut.ogl.OglLink import OglLink
 
@@ -36,6 +40,7 @@ from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid c
 from org.pyut.dialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.DlgEditLink import DlgEditLink
+from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
@@ -162,6 +167,8 @@ MESSAGES = {
 
 # Define current use mode
 [SCRIPT_MODE, NORMAL_MODE] = PyutUtils.assignID(2)
+
+BadPracticeType = NewType("BadPracticeType", Union[PyutClass, "OglClass"])
 
 
 def getMediator():
@@ -566,14 +573,15 @@ class Mediator(Singleton):
         """
         return self._currentAction != ACTION_SELECTOR
 
-    def autoResize(self, obj: PyutClass):
+    def autoResize(self, obj: BadPracticeType):
         """
         Autoresize the given object.
 
         @param obj
 
-        @since 1.18
-        @author L. Burgbacher <lb@alawa.ch>
+        Notes: Don't really like methods with signatures likes this;  Where the input parameter
+        can be one of two things;  I suspect this is some legacy thing;  When I become more
+        familiar with the code base I need to fix this.   Humbert
         """
         from org.pyut.ogl.OglClass import OglClass
         prefs: PyutPreferences = PyutPreferences()
@@ -814,7 +822,13 @@ class Mediator(Singleton):
             elif isinstance(shape, OglObject):
                 cmd = DelOglObjectCommand(shape)
             elif isinstance(shape, OglLink):
-                cmd = DelOglLinkCommand(shape)
+                dlg: DlgRemoveLink = DlgRemoveLink()
+                rep = dlg.ShowModal()
+                dlg.Destroy()
+                if rep == ID_NO:
+                    return
+                else:
+                    cmd = DelOglLinkCommand(shape)
 
             # if the shape is not an Ogl instance no command has been created.
             if cmd is not None:

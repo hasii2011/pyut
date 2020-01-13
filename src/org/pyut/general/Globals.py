@@ -21,3 +21,13 @@ def cmp(left, right):
         1 if left > right
     """
     return (left > right) - (left < right)
+
+
+def secureBool(x):
+    try:
+        if x is not None:
+            if x in [True, "True", "true", 1, "1"]:
+                return True
+    except (ValueError, Exception) as e:
+        print(f'secure_bool error: {e}')
+    return False

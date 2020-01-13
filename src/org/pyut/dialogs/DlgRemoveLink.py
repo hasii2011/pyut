@@ -10,18 +10,11 @@ from org.pyut.general.Globals import _
 
 class DlgRemoveLink(MessageDialog):
     """
-    Dialog for the inheritance-interface links rmoval.
-
-    @version $Revision: 1.4 $
+    Dialog for the inheritance-interface links removal.
     """
     def __init__(self):
         """
-        Constructor.
-
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
-
         super().__init__(None,
                          _("Are you sure you want to remove this link ?"),
                          _("Remove link confirmation"),
