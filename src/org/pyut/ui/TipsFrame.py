@@ -41,17 +41,17 @@ DEFAULT_HEIGHT = 100
 # Tips
 Tips = [
     _("Welcome in PyUt 1.4 ! You will find some news in this box.\n" +
-      "You can activate/desactivate the box display on startup in the " +
-      "PyUt preferences dialog box"),
-    _("Remember, if you don't submit bugs on https://github.com/hasii2011/PyUt/issues, " +
-      "we can't correct them. You can also submit features request."),
+      "You can activate/deactivate the box display on startup in the " +
+      "PyUt preferences dialog"),
+    _("Remember, if you do not submit bugs at https://github.com/hasii2011/PyUt/issues, " +
+      "we can not correct them. You can also submit feature requests."),
     _("Since PyUt 1.3, you can split lines in multi-lines.\n" +
       "Select a Line end and press <ins> or <Insert>"),
     _("You can convert a multiline in a spline by pressing <s>"),
     _("You can find more plugins like a MySQL exporter or Design Patterns viewer " +
-      "on https://github.com/hasii2011/PyUt/wiki, section download"),
-    _("You can find more tips on PyUt's web site: https://github.com/hasii2011/PyUt/wiki"),
-    _("You can submit bugs, features request and support request on " +
+      "at https://github.com/hasii2011/PyUt/wiki, section download"),
+    _("You can find more tips on the PyUt wiki: https://github.com/hasii2011/PyUt/wiki"),
+    _("You can submit bugs, feature requests and support requests at " +
       "https://github.com/hasii2011/PyUt/issues")
 ]
 
@@ -98,7 +98,7 @@ class TipsFrame(Dialog):
 
         # Set current tips
         self._prefs = PyutPreferences()
-        self._currentTip = self._prefs["CurrentTip"]
+        self._currentTip = self._prefs[PyutPreferences.CURRENT_TIP]
         if self._currentTip is None:
             self._currentTip = 0
         else:
@@ -183,6 +183,8 @@ class TipsFrame(Dialog):
         Save state
         """
         # Save state
-        self._prefs["CurrentTip"] = str((self._currentTip + 1) % len(Tips))
+        rationalTipNumber: int = (self._currentTip + 1) % len(Tips)
+        currentTipNumber:  str = f'{str(rationalTipNumber)}'
+        self._prefs[PyutPreferences.CURRENT_TIP] = currentTipNumber
         self._prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = self._chkShowTips.GetValue()
         event.Skip()

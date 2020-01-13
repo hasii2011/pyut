@@ -39,13 +39,15 @@ class PyutPreferences(Singleton):
     SHOW_PARAMETERS:            str = 'Show_Parameters'
     FULL_SCREEN:                str = 'Full_Screen'
     I18N:                       str = 'I18N'
+    CURRENT_TIP:                str = 'Current_Tip'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
         SHOW_TIPS_ON_STARTUP:       'False',
         AUTO_RESIZE_SHAPE_ON_EDIT:  'False',
         SHOW_PARAMETERS:            'False',
         FULL_SCREEN:                'False',
-        I18N:                       'en'
+        I18N:                       'en',
+        CURRENT_TIP:                '0'
     })
 
     """
@@ -260,4 +262,3 @@ class PyutPreferences(Singleton):
         # Save
         self._config.set("Main", name, str(value))
         self.__saveConfig()
-
