@@ -35,7 +35,7 @@ class TestPyutPreferences(TestBase):
         """
         self.logger: Logger = TestPyutPreferences.clsLogger
 
-        self.items = {
+        self.testPrefs = {
             "test_int": 12,
             "test_double": 12.12,
             "test_string": "salut",
@@ -47,7 +47,7 @@ class TestPyutPreferences(TestBase):
         self._emptyPrefs()
 
         # fill the prefs
-        for item, value in list(self.items.items()):
+        for item, value in list(self.testPrefs.items()):
             self.prefs[item] = value
 
     def tearDown(self):
@@ -57,7 +57,7 @@ class TestPyutPreferences(TestBase):
         """
         Test that the prefs contain the good values.
         """
-        for item, value in list(self.items.items()):
+        for item, value in list(self.testPrefs.items()):
             found = self.prefs[item]
             self.assertTrue(found == str(value), "Wrong value for %s. Want %s, got %s" % (item, value, found))
 
@@ -117,6 +117,25 @@ class TestPyutPreferences(TestBase):
         for i in range(len(files) - 1):
             self.assertTrue(self.prefs.getLastOpenedFilesList()[i] == files[i], "wrong file name")
 
+    def testNoAutoResizeOption(self):
+        autoResize = self.prefs['auto_resize']
+        self.assertTrue(autoResize is None, 'Should not have received an option')
+        self.logger.info(f'{autoResize}')
+
+    def testAutoResizeOptionIsTrue(self):
+
+        self.prefs[PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT] = 'True'
+        autoResize: str = self.prefs[PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT]
+        self.assertEqual(autoResize, 'True', 'What !! I set it to string `True`')
+        self.logger.info(f'{autoResize}')
+
+    def testAutoResizeOptionIsFalse(self):
+
+        self.prefs[PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT] = 'False'
+        autoResize: str = self.prefs[PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT]
+        self.assertEqual(autoResize, 'False', 'What !! I set it to the string `False`')
+        self.logger.info(f'{autoResize}')
+
     def _backupPrefs(self):
 
         source: str = PREFS_FILENAME
@@ -141,7 +160,7 @@ class TestPyutPreferences(TestBase):
         self.prefs.init()
         # test that it's empty
         try:
-            self.assertTrue(self.prefs[list(self.items.keys())[0]] is None)
+            self.assertTrue(self.prefs[list(self.testPrefs.keys())[0]] is None)
         except (ValueError, Exception) as e:
             self.fail(f"Should not raise an exception;  {e}")
 

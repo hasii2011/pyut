@@ -29,7 +29,7 @@ class Pyut:
 
     def __init__(self):
         self._setupSystemLogging()
-        self.logger: Logger = getLogger('Pyut2')
+        self.logger: Logger = getLogger(__name__)
         setupPyutLanguage()
 
         self._exePath:  str = self._getExePath()
@@ -91,11 +91,11 @@ class Pyut:
             - last opened directory for developers (pyut/src present)
         """
         prefs: PyutPreferences = PyutPreferences()    # Prefs handler
-        prefs["orgDirectory"] = getcwd()
+        prefs[PyutPreferences.ORG_DIRECTORY] = getcwd()
         if (self._userPath.find('pyut/src') == -1) and (self._userPath.find('pyut2/src') == -1):
 
             self.logger.debug(f'self._userPath: {self._userPath}')
-            prefs["LastDirectory"] = self._userPath
+            prefs[PyutPreferences.LAST_DIRECTORY] = self._userPath
             self.logger.debug(f'prefs: {prefs}')
 
     def _displayIntro(self):

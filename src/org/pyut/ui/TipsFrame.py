@@ -17,6 +17,8 @@ from wx import HORIZONTAL
 from wx import RESIZE_BORDER
 from wx import ST_NO_AUTORESIZE
 from wx import SYSTEM_MENU
+from wx import STAY_ON_TOP
+
 from wx import Size
 from wx import StaticBitmap
 from wx import StaticText
@@ -24,7 +26,8 @@ from wx import VERTICAL
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutPreferences import PyutPreferences
-from org.pyut.PyutPreferences import SHOW_TIPS_ON_STARTUP_KEY
+
+from org.pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
 
 from org.pyut.general.Globals import _
 
@@ -40,16 +43,16 @@ Tips = [
     _("Welcome in PyUt 1.4 ! You will find some news in this box.\n" +
       "You can activate/desactivate the box display on startup in the " +
       "PyUt preferences dialog box"),
-    _("Remember, if you don't submit bugs on http://www.sf.net/projects/pyut, " +
+    _("Remember, if you don't submit bugs on https://github.com/hasii2011/PyUt/issues, " +
       "we can't correct them. You can also submit features request."),
     _("Since PyUt 1.3, you can split lines in multi-lines.\n" +
       "Select a Line end and press <ins> or <Insert>"),
     _("You can convert a multiline in a spline by pressing <s>"),
     _("You can find more plugins like a MySQL exporter or Design Patterns viewer " +
-      "on http://www.sf.net/projects/pyut, section download"),
-    _("You can find more tips on PyUt's web site at address http://pyut.sf.net"),
+      "on https://github.com/hasii2011/PyUt/wiki, section download"),
+    _("You can find more tips on PyUt's web site: https://github.com/hasii2011/PyUt/wiki"),
     _("You can submit bugs, features request and support request on " +
-      "http://www.sf.net/projects/pyut")
+      "https://github.com/hasii2011/PyUt/issues")
 ]
 
 
@@ -63,9 +66,6 @@ class TipsFrame(Dialog):
     """
     def __init__(self, parent):
         """
-        constructor
-        @param wx.Window parent : parent object
-        @author C.Dutoit
         """
         # Check
         import sys
@@ -74,7 +74,7 @@ class TipsFrame(Dialog):
 
         # Initialize the dialog box
         super().__init__(parent, -1, _("Tips"), DefaultPosition, Size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
-                         RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT)
+                         RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT | STAY_ON_TOP)
 
         # Normalize tips
         from org.pyut.general.LineSplitter import LineSplitter
@@ -112,14 +112,17 @@ class TipsFrame(Dialog):
         self.Center(dir=VERTICAL)
         self.AcceptsFocus()
         # Create controls
-        bmp: Bitmap = org.pyut.resources.img.ImgTipsFrameTipsLogo.embeddedImage.GetBitmap()
+        # bmp: Bitmap = org.pyut.resources.img.ImgTipsFrameTipsLogo.embeddedImage.GetBitmap()
+        bmp: Bitmap = TipsLogo.GetBitmap()
         self._picture = StaticBitmap(self, -1, bmp)
         tip = Tips[self._currentTip]
         self._label = StaticText(self, -1, tip, size=Size(DEFAULT_WIDTH * 0.8, DEFAULT_HEIGHT * 0.8), style=ST_NO_AUTORESIZE)
+
         nextTipButton = Button(self, ID_SET_NEXT_TIP, _("&Next tip"))
         previousTipButton = Button(self, ID_SET_PREVIOUS_TIP, _("&Previous tip"))
         self._chkShowTips = CheckBox(self, ID_CHK_SHOW_TIPS, _("&Show tips at startup"))
-        self._chkShowTips.SetValue(not self._prefs[SHOW_TIPS_ON_STARTUP_KEY] is False)
+        showTips: bool = self._prefs.showTipsOnStartup()
+        self._chkShowTips.SetValue(showTips)
 
         # Upper sizer
         upSizer = BoxSizer(HORIZONTAL)
@@ -178,9 +181,8 @@ class TipsFrame(Dialog):
     def _onClose(self, event):
         """
         Save state
-        @author C.Dutoit
         """
         # Save state
         self._prefs["CurrentTip"] = str((self._currentTip + 1) % len(Tips))
-        self._prefs[SHOW_TIPS_ON_STARTUP_KEY] = self._chkShowTips.GetValue()
+        self._prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = self._chkShowTips.GetValue()
         event.Skip()

@@ -99,8 +99,8 @@ class PyutApp(wxApp):
         """
         try:
             # Handle application parameters in the command line
-            prefs = PyutPreferences()
-            orgPath = prefs["orgDirectory"]
+            prefs:  PyutPreferences = PyutPreferences()
+            orgPath: str            = prefs[PyutPreferences.ORG_DIRECTORY]
             for filename in [el for el in argv[1:] if el[0] != '-']:
                 self._frame.loadByFilename(orgPath + osSeparator + filename)
             if self._frame is None:
@@ -111,16 +111,8 @@ class PyutApp(wxApp):
                 self._frame.Show(True)
 
             # Show full screen ?
-            fullScreen = prefs["full_screen"]
-            if fullScreen is None:
-                fullScreen = 0
-            else:
-                if fullScreen:
-                    fullScreen = 1
-                else:
-                    fullScreen = 0
-                # fullScreen = int(fullScreen)
-            if fullScreen == 1:
+            fullScreen = prefs.fullScreen()
+            if fullScreen is True:
                 dc = ScreenDC()
                 self._frame.SetSize(dc.GetSize())
                 self._frame.CentreOnScreen()

@@ -6,6 +6,7 @@ from sys import platform
 
 from wx import CommandEvent
 
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general import Lang
 
 from wx import ALL
@@ -33,6 +34,7 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
+from org.pyut.general.Globals import secureBool
 
 
 class DlgPyutProperties(Dialog):
@@ -41,43 +43,39 @@ class DlgPyutProperties(Dialog):
 
     Display current properties and possible values, save modified values.
 
-    To use it from a w.xFrame :
-        dlg = DlgProperties(self, -1, PyutPreferences(), Mediator())
+    To use it from a wxFrame:
+    ```python
+
+        dlg = DlgProperties(self, wx.ID_ANY PyutPreferences(), Mediator())
         dlg.ShowModal()
         dlg.Destroy()
-
-    :version: $Revision: 1.7 $
-    :author: C.Dutoit
-    :contact: dutoitc@hotmail.com
+    ```
     """
 
     THE_GREAT_MAC_PLATFORM = 'darwin'
 
-    def __init__(self, parent, ID, ctrl, prefs):
+    def __init__(self, parent, ID, ctrl, prefs: PyutPreferences):
         """
-        Constructor.
 
-        @param parent Parent
-        @param ID ID
-        @param ctrl
-        @param prefs
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            parent:
+            ID:
+            ctrl:
+            prefs:   The PyutPreferences
         """
         super().__init__(parent, ID, _("Properties"))
 
         self.logger: Logger = getLogger(__name__)
 
         self.__ctrl  = ctrl
-        self.__prefs = prefs
+        self.__prefs: PyutPreferences = prefs
+
         self.__initCtrl()
         self.Bind(EVT_CLOSE, self.__OnClose)
 
     def __initCtrl(self):
         """
         Initialize the controls.
-
-        @since 1.0
         """
         # IDs
         [
@@ -89,7 +87,7 @@ class DlgPyutProperties(Dialog):
 
         sizer = BoxSizer(VERTICAL)
 
-        self.__cbMaximize   = CheckBox(self, self.__maximizeID,   _("&Maximize on startup"))
+        self.__cbMaximize   = CheckBox(self, self.__maximizeID,   _("&Full Screen on startup"))
         self.__cbAutoResize = CheckBox(self, self.__autoResizeID, _("&Auto resize classes to fit content"))
         self.__cbShowParams = CheckBox(self, self.__showParamsID, _("&Show params in classes"))
         self.__cbShowTips   = CheckBox(self, self.__showTipsID,   _("Show &Tips on startup"))
@@ -147,71 +145,51 @@ class DlgPyutProperties(Dialog):
     def __setValues(self):
         """
         Set the default values to the controls.
-
-        @since 1.0
         """
-        def secureInt(x):
-            if x is None:
-                return 0
-            elif x is True or x == "True":
-                return 1
-            elif x is False or x == "False":
-                return 0
-            else:
-                return int(x)
-        self.__cbAutoResize.SetValue(secureInt(self.__prefs["AUTO_RESIZE"]))
-        self.__cbShowParams.SetValue(secureInt(self.__prefs["SHOW_PARAMS"]))
-        self.__cbMaximize.SetValue(secureInt(self.__prefs["FULL_SCREEN"]))
-        self.__cbShowTips.SetValue(secureInt(self.__prefs["SHOW_TIPS_ON_STARTUP"]))
+        self.__cbAutoResize.SetValue(secureBool(self.__prefs[PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT]))
+        self.__cbShowParams.SetValue(secureBool(self.__prefs[PyutPreferences.SHOW_PARAMETERS]))
+        self.__cbMaximize.SetValue(secureBool(self.__prefs[PyutPreferences.FULL_SCREEN]))
+        self.__cbShowTips.SetValue(secureBool(self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP]))
 
         # i18n
-        n = self.__prefs["I18N"]
+        n = self.__prefs[PyutPreferences.I18N]
         if n not in Lang.LANGUAGES:
             n = Lang.DEFAULT_LANG
         self.__cmbLanguage.SetValue(Lang.LANGUAGES[n][0])
 
     def __OnCheckBox(self, event):
         """
-        Callback.
-
-        @since 1.0
         """
         self.__changed = 1
         eventID = event.GetId()
         val = event.IsChecked()
         if eventID == self.__autoResizeID:
-            self.__prefs["AUTO_RESIZE"] = val
+            self.__prefs[PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT] = val
         elif eventID == self.__showParamsID:
             self.__ctrl.showParams(val)
-            self.__prefs["SHOW_PARAMS"] = val
+            self.__prefs[PyutPreferences.SHOW_PARAMETERS] = val
         elif eventID == self.__maximizeID:
-            self.__prefs["FULL_SCREEN"] = val
+            self.__prefs[PyutPreferences.FULL_SCREEN] = val
         elif eventID == self.__showTipsID:
-            self.__prefs["SHOW_TIPS_ON_STARTUP"] = val
+            self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = val
 
     def __OnChoice(self, event):
         """
-        Callback.
-
-        @since 1.0
         """
         pass
 
     def __OnClose(self, event):
         """
-        Callback.
-
-        @since 1.2
         """
         # If language has been changed
         newlanguage = self.__cmbLanguage.GetValue()
-        actuallanguage = self.__prefs["I18N"]
+        actuallanguage = self.__prefs[PyutPreferences.I18N]
         if actuallanguage not in Lang.LANGUAGES or newlanguage != Lang.LANGUAGES[actuallanguage][0]:
             # Search the key coresponding to the newlanguage
             for i in list(Lang.LANGUAGES.items()):
                 if newlanguage == i[1][0]:
                     # Write the key in preferences file
-                    self.__prefs["I18N"] = i[0]
+                    self.__prefs[PyutPreferences.I18N] = i[0]
             # Dialog must restart Pyut to have the changes
             dlg = MessageDialog(self, _("You must restart application for language changes"), _("Warning"), OK | ICON_EXCLAMATION)
             dlg.ShowModal()
@@ -222,9 +200,6 @@ class DlgPyutProperties(Dialog):
     # noinspection PyUnusedLocal
     def __OnCmdOk(self, event: CommandEvent):
         """
-        Callback.
-
-        @since 1.2
         """
         if self.__changed:
             for oglObject in self.__ctrl.getUmlObjects():
