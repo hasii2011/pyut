@@ -2,7 +2,6 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.PyutLinkedObject import PyutLinkedObject
 from org.pyut.PyutObject import PyutObject
 from org.pyut.enums.OglLinkType import OglLinkType
 
@@ -22,9 +21,10 @@ class PyutLink(PyutObject):
     ```
     """
 
+    # noinspection PyUnresolvedReferences
     def __init__(self, name="", linkType: OglLinkType = OglLinkType.OGL_INHERITANCE,
                  cardSrc: str = "", cardDest: str = "",
-                 bidir: bool = False, source: PyutLinkedObject = None, destination: PyutLinkedObject = None):
+                 bidir: bool = False, source: "PyutLinkedObject" = None, destination: "PyutLinkedObject" = None):
         """
 
         Args:
@@ -43,6 +43,8 @@ class PyutLink(PyutObject):
         self._sourceCardinality:      str  = cardSrc
         self._destinationCardinality: str  = cardDest
         self._bidirectional:          bool = bidir
+
+        from org.pyut.PyutLinkedObject import PyutLinkedObject
 
         self._src:  PyutLinkedObject = source
         self._dest: PyutLinkedObject = destination
