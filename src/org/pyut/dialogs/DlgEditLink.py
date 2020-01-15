@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALIGN_CENTRE
 from wx import ALIGN_LEFT
@@ -42,7 +45,7 @@ from copy import deepcopy
 
 class DlgEditLink (Dialog):
     """
-    Dialog for the link (between classes) edition.
+    Dialog for the link (between classes) editting.
 
     to use it :
         dlg=DlgEditLink(...)
@@ -64,24 +67,23 @@ class DlgEditLink (Dialog):
     :contact: dutoitc@hotmail.com
     """
 
-    def __init__(self, parent, ID, pyutLink):
+    def __init__(self, parent, ID, pyutLink: PyutLink):
         """
-        Constructor.
-
-        @since 1.0
-        @author C.Dutoit<dutoitc@hotmail.com>
         """
-
         super().__init__(parent, ID, _("Link Edit"), style=RESIZE_BORDER | CAPTION)
 
+        self.logger: Logger = getLogger(__name__)
         # Associated PyutLink
-        self._pyutLink = pyutLink
+        self._pyutLink: PyutLink = pyutLink
 
         self._relationship = self._pyutLink.getName()
         self._aRoleInB = ""
         self._bRoleInA = ""
-        self._cardinalityA = self._pyutLink.getSrcCard()
-        self._cardinalityB = self._pyutLink.getDestCard()
+        # self._cardinalityA = self._pyutLink.getSourceCardinality()
+        # self._cardinalityB = self._pyutLink.getDestinationCardinality()
+        self._cardinalityA = self._pyutLink.sourceCardinality
+        self._cardinalityB = self._pyutLink.destinationCardinality
+
         self._returnAction = CANCEL      # #describe how user exited dialog box
 
         #  labels
@@ -185,11 +187,12 @@ class DlgEditLink (Dialog):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         dic = {PyutLink: "Pyut Link"}
-        print("DlgEditLink-updateLblArrow ", self._pyutLink.__class__)
+        self.logger.info(f"DlgEditLink-updateLblArrow: {self._pyutLink.__class__}")
         if self._pyutLink.__class__ in dic.keys():
             self._lblArrow.SetLabel(dic[self._pyutLink.__class__])
         else:
-            self._lblArrow.SetLabel("Unknown link class : " + self._pyutLink.__class__)
+            # self._lblArrow.SetLabel("Unknown link class : " + self._pyutLink.__class__)
+            self._lblArrow.SetLabel(f'Unknown link class : {self._pyutLink.__class__}')
 
     def _copyLink(self):
         """
@@ -255,9 +258,10 @@ class DlgEditLink (Dialog):
         """
 
         self._pyutLink.setName(self._relationship)
-        self._pyutLink.setSrcCard(self._cardinalityA)
-        self._pyutLink.setDestCard(self._cardinalityB)
-
+        # self._pyutLink.setSourceCardinality(self._cardinalityA)
+        # self._pyutLink.setDestinationCardinality(self._cardinalityB)
+        self._pyutLink.sourceCardinality      = self._cardinalityA
+        self._pyutLink.destinationCardinality = self._cardinalityB
         # Should perhaps take roles, not yet implemented in PyutLink TODO
 
         self._returnAction = OK

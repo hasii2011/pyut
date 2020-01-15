@@ -52,8 +52,8 @@ class OglAssociation(OglLink):
         dstLblY = -20 * dy/linkLength    # - dy*5/l
 
         # Initialize labels objects
-        self._labels[CENTER] = self.AddText(cenLblX, cenLblY, "")
-        self._labels[SRC_CARD] = self._src.AddText(srcLblX, srcLblY, "")
+        self._labels[CENTER]    = self.AddText(cenLblX, cenLblY, "")
+        self._labels[SRC_CARD]  = self._src.AddText(srcLblX, srcLblY, "")
         self._labels[DEST_CARD] = self._dst.AddText(dstLblX, dstLblY, "")
         self.updateLabels()
         self.SetDrawArrow(False)
@@ -80,8 +80,10 @@ class OglAssociation(OglLink):
 
         # Prepares labels
         prepareLabel(self._labels[CENTER], self._link.getName())
-        prepareLabel(self._labels[SRC_CARD], self._link.getSrcCard())
-        prepareLabel(self._labels[DEST_CARD], self._link.getDestCard())
+        # prepareLabel(self._labels[SRC_CARD], self._link.getSrcCard())
+        # prepareLabel(self._labels[DEST_CARD], self._link.getDestinationCardinality())
+        prepareLabel(self._labels[SRC_CARD],  self._link.sourceCardinality)
+        prepareLabel(self._labels[DEST_CARD], self._link.destinationCardinality)
 
     def getLabels(self):
         """

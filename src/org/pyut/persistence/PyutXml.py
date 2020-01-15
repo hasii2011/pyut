@@ -115,10 +115,15 @@ class PyutXml:
 
                 # fix link with the loaded information
                 pyutLink = createdLink.getPyutObject()
-                pyutLink.setBidir(link[1].getBidir())
-                pyutLink.setDestCard(link[1].getDestCard())
-                pyutLink.setSrcCard(link[1].getSrcCard())
-                pyutLink.setName(link[1].getName())
+                traversalLink: PyutLink = link[1]
+
+                pyutLink.setBidir(traversalLink.getBidir())
+                # pyutLink.setDestinationCardinality(link[1].getDestinationCardinality())
+                # pyutLink.setSourceCardinality(link[1].getSrcCard())
+
+                pyutLink.destinationCardinality = traversalLink.destinationCardinality
+                pyutLink.sourceCardinality      = traversalLink.sourceCardinality
+                pyutLink.setName(traversalLink.getName())
 
         # to draw diagram
         umlFrame.Refresh()
@@ -216,17 +221,19 @@ class PyutXml:
         root.setAttribute('type', str(pyutLink.getType()))
 
         # link cardinality source
-        root.setAttribute('cardSrc', pyutLink.getSrcCard())
+        # root.setAttribute('cardSrc', pyutLink.getSourceCardinality())
+        root.setAttribute('cardSrc', pyutLink.sourceCardinality)
 
         # link cardinality destination
-        root.setAttribute('cardDestination', pyutLink.getDestCard())
+        # root.setAttribute('cardDestination', pyutLink.getDestinationCardinality())
+        root.setAttribute('cardDestination', pyutLink.destinationCardinality)
 
         # link bidir
         root.setAttribute('bidir', str(pyutLink.getBidir()))
 
         # link destination
         root.setAttribute('destination', pyutLink.getDestination().getName())
-        root.setAttribute('destId', str(pyutLink.getDestination().getId()))
+        root.setAttribute('destId',      str(pyutLink.getDestination().getId()))
 
         return root
 
@@ -641,8 +648,13 @@ class PyutXml:
             aLink = PyutLink()
 
             aLink.setBidir(bool(link.getAttribute('bidir')))
-            aLink.setDestCard(link.getAttribute('cardDestination'))
-            aLink.setSrcCard(link.getAttribute('cardSrc'))
+
+            # aLink.setDestinationCardinality(link.getAttribute('cardDestination'))
+            # aLink.setSourceCardinality(link.getAttribute('cardSrc'))
+
+            aLink.destinationCardinality = link.getAttribute('cardDestination')
+            aLink.sourceCardinality      = link.getAttribute('cardSrc')
+
             aLink.setName(link.getAttribute('name'))
             aLink.setType(link.getAttribute('type'))
             aLink.setDestination(link.getAttribute('destination'))

@@ -12,6 +12,7 @@ from xml.dom.minicompat import NodeList
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
+from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
@@ -55,7 +56,7 @@ class PyutXmi:
     def __init__(self):
         self.logger: Logger = getLogger(__name__)
 
-    def _PyutLink2xml(self, pyutLink):
+    def _PyutLink2xml(self, pyutLink: PyutLink):
         """
         Exporting an PyutLink to an miniDom Element
 
@@ -79,10 +80,11 @@ class PyutXmi:
         root.setAttribute('type', str(pyutLink.getType()))
 
         # link cardinality source
-        root.setAttribute('cardSrc', pyutLink.getSrcCard())
+        root.setAttribute('cardSrc', pyutLink.sourceCardinality)
 
         # link cardinality destination
-        root.setAttribute('cardDestination', pyutLink.getDestCard())
+        # root.setAttribute('cardDestination', pyutLink.getDestinationCardinality())
+        root.setAttribute('cardDestination', pyutLink.destinationCardinality)
 
         # link bidir
         root.setAttribute('bidir', str(pyutLink.getBidir()))

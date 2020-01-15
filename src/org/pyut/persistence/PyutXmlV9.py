@@ -251,9 +251,14 @@ class PyutXml:
 
                         # fix link with the loaded information
                         pyutLink = createdLink.getPyutObject()
-                        pyutLink.setBidir(link[1].getBidir())
-                        pyutLink.setDestCard(link[1].getDestCard())
-                        pyutLink.setSrcCard(link[1].getSrcCard())
+
+                        traversalLink: PyutLink = link[1]
+
+                        pyutLink.setBidir(traversalLink.getBidir())
+
+                        pyutLink.destinationCardinality = traversalLink.destinationCardinality
+                        pyutLink.sourceCardinality      = traversalLink.sourceCardinality
+
                         pyutLink.setName(link[1].getName())
         except (ValueError, Exception) as e:
             if dlgGauge is not None:
@@ -403,11 +408,8 @@ class PyutXml:
         # link type
         root.setAttribute('type', pyutLink.getType().name)
 
-        # link cardinality source
-        root.setAttribute('cardSrc', pyutLink.getSrcCard())
-
-        # link cardinality destination
-        root.setAttribute('cardDestination', pyutLink.getDestCard())
+        root.setAttribute('cardSrc',         pyutLink.sourceCardinality)        # link cardinality source
+        root.setAttribute('cardDestination', pyutLink.destinationCardinality)   # link cardinality destination
 
         # link bidir
         root.setAttribute('bidir', str(pyutLink.getBidir()))
@@ -890,8 +892,10 @@ class PyutXml:
         aLink = PyutLink()
 
         aLink.setBidir(bool(link.getAttribute('bidir')))
-        aLink.setDestCard(link.getAttribute('cardDestination'))
-        aLink.setSrcCard(link.getAttribute('cardSrc'))
+
+        aLink.destinationCardinality = link.getAttribute('cardDestination')
+        aLink.sourceCardinality      = link.getAttribute('cardSrc')
+
         aLink.setName(link.getAttribute('name'))
 
         strLinkType: str         = link.getAttribute('type')
@@ -940,13 +944,15 @@ class PyutXml:
                 ctrlpts.append(ControlPoint(x, y))
 
             # get the associated PyutLink
-            srcId, dstId, pyutLink = self._getPyutLink(link)
+            srcId, dstId, assocPyutLink = self._getPyutLink(link)
 
-            # CD 20060218
             src = dicoOglObjects[srcId]
             dst = dicoOglObjects[dstId]
-            linkType = pyutLink.getType()
-            pyutLink = PyutLink("", linkType=linkType, source=src.getPyutObject(), destination=dst.getPyutObject())
+            linkType = assocPyutLink.getType()
+            pyutLink = PyutLink("", linkType=linkType,
+                                cardSrc=assocPyutLink.sourceCardinality,
+                                cardDest=assocPyutLink.destinationCardinality,
+                                source=src.getPyutObject(), destination=dst.getPyutObject())
 
             oglLinkFactory = getOglLinkFactory()
             oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
@@ -962,8 +968,10 @@ class PyutXml:
 
             # copy the good information from the read link
             newPyutLink.setBidir(pyutLink.getBidir())
-            newPyutLink.setDestCard(pyutLink.getDestCard())
-            newPyutLink.setSrcCard(pyutLink.getSrcCard())
+
+            newPyutLink.destinationCardinality = pyutLink.destinationCardinality
+            newPyutLink.sourceCardinality      = pyutLink.sourceCardinality
+
             newPyutLink.setName(pyutLink.getName())
 
             # put the anchors at the right position

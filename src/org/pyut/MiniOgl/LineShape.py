@@ -19,10 +19,9 @@ class LineShape(Shape):
         """
         Constructor.
 
-        @param AnchorPoint srcAnchor, dstAnchor : the source and destination
-            of the line.
+        @param AnchorPoint srcAnchor, dstAnchor : the source and destination of the line.
         """
-        Shape.__init__(self)
+        super().__init__()
         self._src = srcAnchor
         self._dst = dstAnchor
         self._controls = []

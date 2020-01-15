@@ -259,9 +259,14 @@ class PyutXml:
 
                         # fix link with the loaded information
                         pyutLink = createdLink.getPyutObject()
-                        pyutLink.setBidir(link[1].getBidir())
-                        pyutLink.setDestCard(link[1].getDestCard())
-                        pyutLink.setSrcCard(link[1].getSrcCard())
+                        traversalLink: PyutLink = link[1]
+                        pyutLink.setBidir(traversalLink.getBidir())
+
+                        # pyutLink.setDestinationCardinality(link[1].getDestinationCardinality())
+                        # pyutLink.setSourceCardinality(link[1].getSrcCard())
+                        pyutLink.destinationCardinality = traversalLink.destinationCardinality
+                        pyutLink.sourceCardinality      = traversalLink.sourceCardinality
+
                         pyutLink.setName(link[1].getName())
         except (ValueError, Exception) as e:
             if dlgGauge is not None:
@@ -395,7 +400,7 @@ class PyutXml:
 
         return root
 
-    def _PyutLink2xml(self, pyutLink, xmlDoc):
+    def _PyutLink2xml(self, pyutLink: PyutLink, xmlDoc):
         """
         Exporting an PyutLink to a miniDom Element.
 
@@ -412,10 +417,12 @@ class PyutXml:
         root.setAttribute('type', str(pyutLink.getType().value))
 
         # link cardinality source
-        root.setAttribute('cardSrc', pyutLink.getSrcCard())
+        # root.setAttribute('cardSrc', pyutLink.getSourceCardinality())
+        root.setAttribute('cardSrc', pyutLink.sourceCardinality)
 
         # link cardinality destination
-        root.setAttribute('cardDestination', pyutLink.getDestCard())
+        # root.setAttribute('cardDestination', pyutLink.getDestinationCardinality())
+        root.setAttribute('cardDestination', pyutLink.destinationCardinality)
 
         # link bidir
         root.setAttribute('bidir', str(pyutLink.getBidir()))
@@ -895,8 +902,12 @@ class PyutXml:
         aLink = PyutLink()
 
         aLink.setBidir(bool(link.getAttribute('bidir')))
-        aLink.setDestCard(link.getAttribute('cardDestination'))
-        aLink.setSrcCard(link.getAttribute('cardSrc'))
+
+        # aLink.setDestinationCardinality(link.getAttribute('cardDestination'))
+        # aLink.setSourceCardinality(link.getAttribute('cardSrc'))
+        aLink.destinationCardinality = link.getAttribute('cardDestination')
+        aLink.sourceCardinality      = link.getAttribute('cardSrc')
+
         aLink.setName(link.getAttribute('name'))
         strLinkType: str = link.getAttribute('type')
         linkType: OglLinkType = OglLinkType(int(strLinkType))
@@ -966,8 +977,11 @@ class PyutXml:
 
             # copy the good information from the read link
             newPyutLink.setBidir(pyutLink.getBidir())
-            newPyutLink.setDestCard(pyutLink.getDestCard())
-            newPyutLink.setSrcCard(pyutLink.getSrcCard())
+            # newPyutLink.setDestinationCardinality(pyutLink.getDestinationCardinality())
+            # newPyutLink.setSourceCardinality(pyutLink.getSourceCardinality())
+            newPyutLink.destinationCardinality = pyutLink.destinationCardinality
+            newPyutLink.sourceCardinality      = pyutLink.sourceCardinality
+
             newPyutLink.setName(pyutLink.getName())
 
             # put the anchors at the right position

@@ -7,7 +7,6 @@ from logging import DEBUG as pythonDebugLoggingLevel
 
 import wx
 from org.pyut.MiniOgl.ShapeModel import ShapeModel
-# from MiniOgl.TextShape import TextShape
 
 
 class Shape:

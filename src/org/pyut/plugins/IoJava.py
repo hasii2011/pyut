@@ -1,8 +1,13 @@
 
+from typing import cast
+
 import os
 
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+
 from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.PyutLink import PyutLink
 
 from org.pyut.enums.OglLinkType import OglLinkType
 
@@ -211,12 +216,14 @@ class IoJava(PyutIoPlugin):
         file.write("\n")
         # Write all relation links in file
         for link in links:
+            link = cast(PyutLink, link)
             # Get Class linked (type of variable)
             destinationLinkName = link.getDestination().getName()
             # Get name of aggregation
             name = link.getName()
             # Array or single variable
-            if link.getDestCard().find('n') != -1:
+            # if link.getDestinationCardinality().find('n') != -1:
+            if link.destinationCardinality.find('n') != -1:
                 array = "[]"
             else:
                 array = ""
