@@ -12,7 +12,6 @@ from unittest import TestSuite
 from tests.TestBase import TestBase
 
 from org.pyut.PyutPreferences import PyutPreferences
-from org.pyut.PyutPreferences import PREFS_FILENAME
 
 
 class TestPyutPreferences(TestBase):
@@ -26,6 +25,7 @@ class TestPyutPreferences(TestBase):
     def setUpClass(cls):
         TestBase.setUpLogging()
         TestPyutPreferences.clsLogger = getLogger(__name__)
+        PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
         """
@@ -138,16 +138,19 @@ class TestPyutPreferences(TestBase):
 
     def _backupPrefs(self):
 
-        source: str = PREFS_FILENAME
-        target: str = f"{PREFS_FILENAME}{TestPyutPreferences.BACKUP_SUFFIX}"
+        prefsFileName: str = PyutPreferences.getPreferencesLocation()
+        source: str = prefsFileName
+        target: str = f"{prefsFileName}{TestPyutPreferences.BACKUP_SUFFIX}"
         try:
             copyfile(source, target)
         except IOError as e:
             self.logger.error(f"Unable to copy file. {e}")
 
     def _restoreBackup(self):
-        source: str = f"{PREFS_FILENAME}{TestPyutPreferences.BACKUP_SUFFIX}"
-        target: str = PREFS_FILENAME
+
+        prefsFileName: str = PyutPreferences.getPreferencesLocation()
+        source: str = f"{prefsFileName}{TestPyutPreferences.BACKUP_SUFFIX}"
+        target: str = prefsFileName
         try:
             copyfile(source, target)
         except IOError as e:
@@ -156,7 +159,7 @@ class TestPyutPreferences(TestBase):
         osRemove(source)
 
     def _emptyPrefs(self):
-        osRemove(PREFS_FILENAME)
+        osRemove(PyutPreferences.getPreferencesLocation())
         self.prefs.init()
         # test that it's empty
         try:

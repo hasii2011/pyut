@@ -30,6 +30,7 @@ class Pyut:
     def __init__(self):
         self._setupSystemLogging()
         self.logger: Logger = getLogger(__name__)
+        PyutPreferences.determinePreferencesLocation()
         setupPyutLanguage()
 
         self._exePath:  str = self._getExePath()

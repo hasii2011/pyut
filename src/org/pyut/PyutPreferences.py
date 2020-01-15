@@ -9,15 +9,18 @@ from logging import getLogger
 import sys
 import os
 
-from org.pyut.general.Singleton import Singleton
 from configparser import *
 
+from org.pyut.general.Singleton import Singleton
+
+from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
 
 # Set the Preferences filename
-if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == 'darwin':
-    PREFS_FILENAME = os.getenv("HOME") + "/.PyutPrefs.dat"
-else:
-    PREFS_FILENAME = "PyutPrefs.dat"
+#
+# if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == 'darwin':
+#     PREFS_FILENAME = os.getenv("HOME") + "/.PyutPrefs.dat"
+# else:
+#     PREFS_FILENAME = "PyutPrefs.dat"
 
 PREFS_NAME_VALUES = NewType('PREFS_NAME_VALUES', Dict[str, str])
 
@@ -50,6 +53,8 @@ class PyutPreferences(Singleton):
         CURRENT_TIP:                '0'
     })
 
+    preferencesFileLocationAndName: str = None
+
     """
     The goal of this class is to handle Pyut Preferences, to load them and save
     them from/to a file.
@@ -81,6 +86,20 @@ class PyutPreferences(Singleton):
         self._config: ConfigParser = ConfigParser()
 
         self.__loadConfig()
+
+    @staticmethod
+    def determinePreferencesLocation():
+        if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == 'darwin':
+            PyutPreferences.preferencesFileLocationAndName = os.getenv("HOME") + "/.PyutPrefs.dat"
+        else:
+            PyutPreferences.preferencesFileLocationAndName = "PyutPrefs.dat"
+
+    @staticmethod
+    def getPreferencesLocation():
+        if PyutPreferences.preferencesFileLocationAndName is None:
+            raise PreferencesLocationNotSet()
+        else:
+            return PyutPreferences.preferencesFileLocationAndName
 
     def getNbLOF(self) -> int:
         """
@@ -159,7 +178,7 @@ class PyutPreferences(Singleton):
         @since 1.1.2.5
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        f = open(PREFS_FILENAME, "w")
+        f = open(PyutPreferences.getPreferencesLocation(), "w")
         self._config.write(f)
         f.close()
 
@@ -173,11 +192,11 @@ class PyutPreferences(Singleton):
         # Make sure that the configuration file exists
         # noinspection PyUnusedLocal
         try:
-            f = open(PREFS_FILENAME, "r")
+            f = open(PyutPreferences.getPreferencesLocation(), "r")
             f.close()
         except (ValueError, Exception) as e:
             try:
-                f = open(PREFS_FILENAME, "w")
+                f = open(PyutPreferences.getPreferencesLocation(), "w")
                 f.write("")
                 f.close()
                 self.logger.warning(f'Preferences file re-created')
@@ -186,7 +205,7 @@ class PyutPreferences(Singleton):
                 return
 
         # Read data
-        self._config.read(PREFS_FILENAME)
+        self._config.read(PyutPreferences.getPreferencesLocation())
         # Create a "LastOpenedFiles" structure ?
         hasSection: bool = self._config.has_section(PyutPreferences.OPENED_FILES_SECTION)
         self.logger.debug(f'hasSection: {hasSection}')
