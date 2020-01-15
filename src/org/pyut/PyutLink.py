@@ -49,55 +49,57 @@ class PyutLink(PyutObject):
         self._src:  PyutLinkedObject = source
         self._dest: PyutLinkedObject = destination
 
-    def getSourceCardinality(self) -> str:
+    def _getSourceCardinality(self) -> str:
         """
-        Return a string representing cardinality source.
+        Return a string representing source's cardinality
 
-        @return string source cardinality
+        Returns: string source cardinality
         """
         return self._sourceCardinality
 
-    def setSourceCardinality(self, cardSrc: str):
+    def _setSourceCardinality(self, cardSrc: str):
         """
-        Updating source cardinality.
+        Update the source cardinality.
 
-        @param  cardSrc
+        Args:
+            cardSrc:
+
         """
         self._sourceCardinality = cardSrc
 
-    sourceCardinality = property(getSourceCardinality, setSourceCardinality)
-
-    def getDestinationCardinality(self):
+    def _getDestinationCardinality(self):
         """
         Return a string representing cardinality destination.
 
-        @return string destination cardinality
+        Returns: string destination cardinality
         """
         return self._destinationCardinality
 
-    def setDestinationCardinality(self, cardDest: str):
+    def _setDestinationCardinality(self, cardDest: str):
         """
         Updating destination cardinality.
 
-        @param cardDest
+        Args:
+            cardDest
         """
         self._destinationCardinality = cardDest
 
-    destinationCardinality = property(getDestinationCardinality, setDestinationCardinality)
+    sourceCardinality      = property(_getSourceCardinality,      _setSourceCardinality)
+    destinationCardinality = property(_getDestinationCardinality, _setDestinationCardinality)
 
     def getSource(self):
         """
         Return the source object of the link
 
-        @return object Class or Note
+        Returns: object Class or Note
         """
         return self._src
 
     def setSource(self, source):
         """
         Set the source object of this link.
-
-        @param  source  PyutClass or PyutNote
+        Args:
+            source  PyutClass or PyutNote
         """
         self._src = source
 
@@ -105,39 +107,42 @@ class PyutLink(PyutObject):
         """
         Return an object destination who is linked to this link.
 
-        @return object Class or Note
+        Returns: object PyutClass or PyutNote
         """
         return self._dest
 
     def setDestination(self, destination):
         """
-        Updating destination.
+        Update the link destination.
 
-        @param destination -- PyutClass or PyutNote
+        Args:
+             destination -- PyutClass or PyutNote
         """
         self._dest = destination
 
     def getBidir(self) -> bool:
         """
-        To know if the link is bidirectional.
+        Get the link is bidirectionality
 
-        @return boolean
+        Returns: `True` if the link is bidirection else `False`
         """
         return self._bidirectional
 
     def setBidir(self, bidirectional: bool):
         """
-        Updating bidirectional.
+        Update the bidirectionality
 
-        @param bidirectional
+        Args:
+             bidirectional
         """
         self._bidirectional = bidirectional
 
     def setType(self, theType: OglLinkType):
         """
-        Updating type of link.
+        Update the link type
 
-        @param  theType : Type of the link
+        Args:
+              theType : Type of the link
         """
         # Python 3 update
         # if type(theType) == StringType or type(theType) == UnicodeType:
@@ -151,9 +156,10 @@ class PyutLink(PyutObject):
 
     def getType(self) -> OglLinkType:
         """
-        To get the link type.
+        Get the link type.
 
-        @return  : The type of the link
+        Returns:
+            The type of the link
         """
         return self._type
 
@@ -161,6 +167,7 @@ class PyutLink(PyutObject):
         """
         String representation.
 
-        @return : string representing link
+        Returns:
+             string representing link
         """
         return _(f'("{self.getName()}") links from {self._src} to {self._dest}')
