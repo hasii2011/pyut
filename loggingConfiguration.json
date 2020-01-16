@@ -28,7 +28,7 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.general.mediator": {
+        "Pyut": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
@@ -37,17 +37,17 @@
             "level":     "INFO",
             "propagate": "False"
         },
-        "Pyut": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
         "org.pyut.PyutPreferences": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "org.pyut.PyutUtils": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.PyutDocument": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
@@ -63,51 +63,46 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+
         "org.pyut.MiniOgl.DiagramFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.MiniOgl.TextShape": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+
         "org.pyut.persistence.PyutXmlV8": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.persistence.IoFile": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+
         "org.pyut.general.Lang": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.persistencde.IoFile": {
+        "org.pyut.general.mediator": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.plugins.ToFastEdit": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
-        "org.pyut.plugins.ToTransforms": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
-        "org.pyut.PyutDocument": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
+
         "org.pyut.dialogs.DlgPyutProperties": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.plugins.DlgFEOptions": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
+
         "org.pyut.ogl.OglObject": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
@@ -123,11 +118,12 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "HistoryUtils": {
+        "org.pyut.history.HistoryUtils": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+
         "org.pyut.plugins": {
             "level":     "INFO",
             "propagate": "False"
@@ -169,6 +165,21 @@
             "handlers": [
                 "consoleHandler"
             ],
+            "propagate": "False"
+        },
+        "org.pyut.plugins.ToFastEdit": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.plugins.ToTransforms": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.plugins.DlgFEOptions": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         }
     }

@@ -1,117 +1,202 @@
+##########################################################
+# Added by P. Dabrowski (21.11.2005)
+# This is the future TextShape that should replace the
+# actual when pyut will be refactorised (oglClass, ogl...)
+# When it is the case just rename this file as TextShape
+# and remove the ancient version
+##########################################################
+from typing import cast
 
-import wx
+from logging import Logger
+from logging import getLogger
 
-from org.pyut.MiniOgl.RectangleShape import RectangleShape
+from wx import BLACK
+from wx import WHITE
+from wx import PENSTYLE_SOLID
+
+from wx import Font
+from wx import Colour
+
+from wx import DC
+from wx import MemoryDC
+
 from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.MiniOgl.RectangleShape import RectangleShape
+from org.pyut.MiniOgl.TextShapeModel import TextShapeModel
 
 
 class TextShape(RectangleShape):
     """
-    A text shape that can be attached to another shape (or be standalone).
+    A text shape that can be attached to another shape standalone).
 
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, x, y, text, parent=None):
+    def __init__(self, x: float, y: float, text: str, parent=None, font: Font = None):
         """
-        Constructor.
 
-        @param double x, y : position of the point
-        @param string text : the text of the shape
-        @param Shape parent : parent shape
+        Args:
+            x:          x position of the point
+            y:          y position of the point
+            text:       the text that the shape displays
+            parent:     parent shape
+            font:       Font to use
         """
-        RectangleShape.__init__(self, x, y, 0, 0, parent)
-        self._text = None
-        self._color = wx.BLACK
+        super().__init__(x, y, 0, 0, parent)
+
+        self.logger: Logger = getLogger(__name__)
+        self._text:  str    = cast(str, None)
+        self._color: Colour = BLACK
         self.SetText(text)
-        self._drawFrame = False
-        self._resizable = False
-        self._textBack = wx.WHITE    # text background colour
+
+        self._drawFrame: bool = False
+        self._resizable: bool = False
+        self._textBack:  Colour = WHITE    # text background colour
+
+        self._model: TextShapeModel = TextShapeModel(self)
+        self._font:  Font = font
 
     def Attach(self, diagram):
         """
-        Don't use this method, use Diagram.AddShape instead !!!
+        Do not use this method, use Diagram.AddShape instead !!!
         Attach the shape to a diagram.
         When you create a new shape, you must attach it to a diagram before
         you can see it. This method is used internally by Diagram.AddShape.
 
-        @param  diagram
+        Args:
+            diagram
         """
-        RectangleShape.Attach(self, diagram)
+        # RectangleShape.Attach(self, diagram)
+        super().Attach(diagram)
         self._textBack = self._diagram.GetPanel().GetBackgroundColour()
 
-    def GetText(self):
+    def GetText(self) -> str:
         """
-        Get the text of the shape.
-
-        @return string
+        Returns:  The text that the text shape displays
         """
         return self._text
 
     def SetText(self, text: str):
         """
-        Set the text of the shape.
+        Set the text that the shape displays
 
-        @param  text
+        Args:
+              text
         """
         self._text = text
-        self._width, self._height = wx.MemoryDC().GetTextExtent(text)
+        self._width, self._height = MemoryDC().GetTextExtent(text)
 
-    def SetTextBackground(self, colour):
+    def SetTextBackground(self, color: Colour):
         """
         Set the text background color.
 
-        @param colour
+        Args:
+             color
         """
-        self._textBack = colour
+        self._textBack = color
 
-    def GetTextBackground(self):
+    def GetTextBackground(self) -> Colour:
         """
         Get the text background color.
 
-        @return wx.Colour
+        Returns:
+             the text background color
         """
         return self._textBack
 
-    def Draw(self, dc, withChildren=True):
+    def Draw(self, dc: DC, withChildren: bool = True):
         """
         Draw the text on the dc.
 
-        @param dc
-        @param withChildren
+        Args:
+            dc
+            withChildren
         """
         if self._visible:
             RectangleShape.Draw(self, dc, False)
             dc.SetTextForeground(self._color)
-            dc.SetBackgroundMode(wx.PENSTYLE_SOLID)
+            dc.SetBackgroundMode(PENSTYLE_SOLID)
             dc.SetTextBackground(self._textBack)
             x, y = self.GetPosition()
+
+            # to draw the textshape with its own font size
+            dcFont = dc.GetFont()
+            if self.GetFont() is not None:
+                dc.SetFont(self.GetFont())
+
             dc.DrawText(self._text, x, y)
+            dc.SetFont(dcFont)
+
             if withChildren:
                 self.DrawChildren(dc)
 
-    def DrawBorder(self, dc):
+    def DrawBorder(self, dc: DC):
         """
         Draw the border of the shape, for fast rendering.
 
-        @param  dc
+        Args:
+            dc
         """
         if self._selected:
             RectangleShape.DrawBorder(self, dc)
         else:
             Shape.DrawBorder(self, dc)
 
-    def GetColor(self):
+    def GetColor(self) -> Colour:
         """
-        Get the color of the text.
+        Return the text color
 
-        @return wx.Colour
+        Returns wx.Colour
         """
         return self._color
 
-    def SetColor(self, color):
+    def SetColor(self, color: Colour):
         """
         Set the color of the text.
 
-        @param color
+        Args:
+             color
         """
         self._color = color
+
+    def UpdateFromModel(self):
+        """
+        Updates the shape position and size from the model in light of a
+        change of state of the diagram frame.  Here it is only for the zoom
+        """
+
+        # change the position and size of the shape from the model
+        # RectangleShape.UpdateFromModel(self)
+        super().UpdateFromModel()
+        # get the diagram frame ratio between the shape and the model
+        ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
+
+        fontSize = self.GetModel().GetFontSize() * ratio
+        self.logger.debug(f'UpdateFromModel - ratio: {ratio}')
+
+        # set the new font size
+        if self._font is not None:
+            self._font.SetPointSize(fontSize)
+
+    def UpdateModel(self):
+        """
+        Updates the model when the shape (view) is displaced or resized.
+        """
+        # change the coordinates and size of model
+        # RectangleShape.UpdateModel(self)
+        super().UpdateModel()
+
+        # get the ratio between the model and the shape (view) from
+        # the diagram frame where the shape is displayed.
+        ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
+
+        self.logger.debug(f'UpdateModel - ratio: {ratio}')
+        if self.GetFont() is not None:
+            fontSize = self.GetFont().GetPointSize() / ratio
+            self.GetModel().SetFontSize(fontSize)
+
+    def GetFont(self) -> Font:
+        """
+
+        Returns:  The font used by the text shape
+
+        """
+        return self._font
