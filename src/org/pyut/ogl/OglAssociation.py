@@ -11,14 +11,13 @@ from org.pyut.ogl.OglLink import *
 
 
 class OglAssociation(OglLink):
+
+    TEXT_SHAPE_FONT_SIZE: int = 12
+
     """
     Graphical link representation of association, (simple line, no arrow).
     To get a new link, you should use the `OglLinkFatory` and specify
     the kind of link you want, OGL_ASSOCIATION for an instance of this class.
-
-    :version: $Revision: 1.11 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
     """
     def __init__(self, srcShape, pyutLink, dstShape):
         """
@@ -51,10 +50,12 @@ class OglAssociation(OglLink):
         dstLblX = -20 * dx/linkLength    # + dy*5/l
         dstLblY = -20 * dy/linkLength    # - dy*5/l
 
+        self._defaultFont = wx.Font(OglAssociation.TEXT_SHAPE_FONT_SIZE, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+
         # Initialize labels objects
-        self._labels[CENTER]    = self.AddText(cenLblX, cenLblY, "")
-        self._labels[SRC_CARD]  = self._src.AddText(srcLblX, srcLblY, "")
-        self._labels[DEST_CARD] = self._dst.AddText(dstLblX, dstLblY, "")
+        self._labels[CENTER]    = self.AddText(cenLblX, cenLblY,      "", font=self._defaultFont)
+        self._labels[SRC_CARD]  = self._src.AddText(srcLblX, srcLblY, "", font=self._defaultFont)
+        self._labels[DEST_CARD] = self._dst.AddText(dstLblX, dstLblY, "", font=self._defaultFont)
         self.updateLabels()
         self.SetDrawArrow(False)
 

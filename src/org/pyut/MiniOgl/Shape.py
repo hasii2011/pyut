@@ -5,7 +5,15 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG as pythonDebugLoggingLevel
 
-import wx
+from wx import BLACK_PEN
+from wx import Brush
+from wx import DC
+from wx import Font
+from wx import Pen
+from wx import RED
+from wx import RED_PEN
+from wx import WHITE_BRUSH
+
 from org.pyut.MiniOgl.ShapeModel import ShapeModel
 
 
@@ -30,10 +38,11 @@ class Shape:
         """
         self.logger: Logger = getLogger(__name__)
 
-        self._x = x                 # shape position (view)
-        self._y = y                 # shape position (view)
-        self._ox = 0.0              # origin position (view)
-        self._oy = 0.0              # origin position (view)
+        self._x: float = x                 # shape position (view)
+        self._y: float = y                 # shape position (view)
+        self._ox: float = 0.0              # origin position (view)
+        self._oy: float = 0.0              # origin position (view)
+
         self._parent = parent       # parent shape
         self._selected = False      # is the shape selected ?
         self._anchors = []          # anchors of the shape
@@ -44,8 +53,9 @@ class Shape:
         self._protected = False     # to protect against deletion
         self._children = []         # children shapes
         self._privateChildren = []  # private children, not saved
-        self._pen = wx.BLACK_PEN      # pen to use
-        self._brush = wx.WHITE_BRUSH  # brush to use
+
+        self._pen:   Pen   = BLACK_PEN      # pen to use
+        self._brush: Brush = WHITE_BRUSH  # brush to use
 
         #  added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         self._model = ShapeModel(self)  # model of the shape (MVC pattern)
@@ -57,9 +67,9 @@ class Shape:
             from org.pyut.MiniOgl.LineShape import LineShape
             if not isinstance(self, (TextShape, LineShape)):
                 t: Union[TextShape, LineShape] = self.AddText(0, -10, str(self._id))
-                t.SetColor(wx.RED)
+                t.SetColor(RED)
 
-    def SetPen(self, pen: wx.Pen):
+    def SetPen(self, pen: Pen):
         """
         Set the pen used to draw the shape.
 
@@ -75,7 +85,7 @@ class Shape:
         """
         return self._pen
 
-    def SetBrush(self, brush: wx.Brush):
+    def SetBrush(self, brush: Brush):
         """
         Set the brush used to draw the shape.
 
@@ -207,47 +217,53 @@ class Shape:
         if anchor in self._anchors:
             self._anchors.remove(anchor)
 
-    def AddText(self, x: float, y: float, text: str):
+    def AddText(self, x: float, y: float, text: str, font: Font = None):
         """
         Add a text shape to the shape.
-
-        @param  x : position of the text, relative to the origin of the shape
-        @param  y : position of the text, relative to the origin of the shape
-
-        @param String text : text to add
+        Args:
+            x : position of the text, relative to the origin of the shape
+            y : position of the text, relative to the origin of the shape
+            text : text to add
+            font: font to use
 
         @return TextShape : the created shape
         """
-        t = self._CreateTextShape(x, y, text)
+        t = self._CreateTextShape(x, y, text, font=font)
         self._children.append(t)
         return t
 
-    def _AddPrivateText(self, x, y, text):
+    def _AddPrivateText(self, x: float, y: float, text: str, font: Font = None):
         """
         Add a text shape, putting it in the private children of the shape.
         It won't be saved !!! This is used in constructor of child classes.
 
-        @param double x, y : position of the text, relative to the
-            origin of the shape
-        @param String text : text to add
-        @return TextShape : the created shape
+        Args:
+            x,: position of the text, relative to the origin of the shape
+            y : position of the text, relative to the origin of the shape
+            text: text to add
+            font: font to use
+
+        Returns:  TextShape : the created shape
         """
-        t = self._CreateTextShape(x, y, text)
+        t = self._CreateTextShape(x, y, text, font=font)
         self._privateChildren.append(t)
         return t
 
-    def _CreateTextShape(self, x, y, text):
+    def _CreateTextShape(self, x: float, y: float, text: str, font: Font = None):
         """
         Create a text shape and add it to the diagram.
 
-        @param double x, y : position of the text, relative to the
-            origin of the shape
-        @param String text : text to add
+        Args:
+            x,: position of the text, relative to the origin of the shape
+            y : position of the text, relative to the origin of the shape
+            text: text to add
+            font: font to use
 
-        @return TextShape : the created shape
+        Returns:  TextShape : the created shape
+
         """
         from org.pyut.MiniOgl.TextShape import TextShape
-        t = TextShape(x, y, text, self)
+        t = TextShape(x, y, text, self, font=font)
         if self._diagram is not None:
             self._diagram.AddShape(t)
         self.logger.debug(f"Text: {t} added")
@@ -296,7 +312,7 @@ class Shape:
 
             self.logger.debug("now, the shapes are", diagram.GetShapes())
 
-    def Draw(self, dc: wx.DC, withChildren: bool = True):
+    def Draw(self, dc: DC, withChildren: bool = True):
         """
         Draw the shape.
         For a shape, only the anchors are drawn. Nothing is drawn if the
@@ -316,7 +332,7 @@ class Shape:
                 self.DrawChildren(dc)
 
         if self._selected:
-            dc.SetPen(wx.RED_PEN)
+            dc.SetPen(RED_PEN)
             self.DrawHandles(dc)
 
     def DrawChildren(self, dc):
@@ -346,7 +362,7 @@ class Shape:
         #  print "Shape.DrawAnchors; shape=", self, ", anchors=", self._anchors
         map(lambda x: x.Draw(dc), self._anchors)
 
-    def DrawHandles(self, dc: wx.DC):
+    def DrawHandles(self, dc: DC):
         """
         Draw the handles (selection points) of the shape.
         A shape has no handles, because it has no size.

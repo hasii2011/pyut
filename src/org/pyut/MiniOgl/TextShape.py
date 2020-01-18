@@ -54,6 +54,8 @@ class TextShape(RectangleShape):
         self._model: TextShapeModel = TextShapeModel(self)
         self._font:  Font = font
 
+        self.logger.debug(f'Init Text Shape font: {font}')
+
     def Attach(self, diagram):
         """
         Do not use this method, use Diagram.AddShape instead !!!
@@ -118,12 +120,12 @@ class TextShape(RectangleShape):
             x, y = self.GetPosition()
 
             # to draw the textshape with its own font size
-            dcFont = dc.GetFont()
+            saveFont: Font = dc.GetFont()
             if self.GetFont() is not None:
                 dc.SetFont(self.GetFont())
 
             dc.DrawText(self._text, x, y)
-            dc.SetFont(dcFont)
+            dc.SetFont(saveFont)
 
             if withChildren:
                 self.DrawChildren(dc)
