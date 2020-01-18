@@ -18,7 +18,7 @@ from org.pyut.ui.PyutApp import PyutApp
 
 from org.pyut.enums.ResourceTextType import ResourceTextType
 
-from org.pyut.general.Lang import importLanguage as setupPyutLanguage
+from org.pyut.general.Lang import Lang
 from org.pyut.general.PyutVersion import PyutVersion
 
 
@@ -31,7 +31,7 @@ class Pyut:
         self._setupSystemLogging()
         self.logger: Logger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
-        setupPyutLanguage()
+        Lang.importLanguage()
 
         self._exePath:  str = self._getExePath()
         self._userPath: str = getcwd()      # where the user launched pyut from

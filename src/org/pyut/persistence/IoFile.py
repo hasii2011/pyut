@@ -14,7 +14,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.general.Lang import importLanguage
+from org.pyut.general.Lang import Lang
 from org.pyut.general.PyutXmfFinder import PyutXmlFinder
 
 from org.pyut.general.Mediator import getMediator
@@ -71,7 +71,7 @@ class IoFile:
         path = getMediator().getAppPath()
         chdir(path)
 
-        importLanguage()
+        Lang.importLanguage()
         xmlString = ""
         if filename[-4:] == ".put":
             try:
