@@ -38,10 +38,6 @@ LANGUAGES = {
         }
 
 
-# class PyutUtils(object):
-#     pass
-
-
 class Lang:
 
     LOCALE_DIRECTORY: str = f'{PyutUtils.RESOURCES_PATH}{osSep}locale'
@@ -60,12 +56,12 @@ class Lang:
         # Set language for all application
         moduleLogger.debug(f'Installing language <{language}>')
         try:
-            wxLangID   = LANGUAGES[language][1]
-            domain    = "Pyut"
+            wxLangID:     int  = LANGUAGES[language][1]
+            domain:       str = "Pyut"
             orgDirectory: str = prefs[PyutPreferences.ORG_DIRECTORY]
-            print(f'orgDirectory: {orgDirectory}')
 
-            # localedir = "src"  # "./locale"     TODO: look this up via a resource directory
+            moduleLogger.debug(f'orgDirectory: {orgDirectory}')
+
             localedir: str = f'{orgDirectory}{osSep}{Lang.LOCALE_DIRECTORY}'
             method = 0          # Really ?
             if method == 0:
