@@ -15,12 +15,6 @@ from org.pyut.general.Singleton import Singleton
 
 from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
 
-# Set the Preferences filename
-#
-# if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == 'darwin':
-#     PREFS_FILENAME = os.getenv("HOME") + "/.PyutPrefs.dat"
-# else:
-#     PREFS_FILENAME = "PyutPrefs.dat"
 
 PREFS_NAME_VALUES = NewType('PREFS_NAME_VALUES', Dict[str, str])
 

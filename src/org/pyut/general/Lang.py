@@ -2,6 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
+from os import sep as osSep
+
 import gettext
 
 from wx import LANGUAGE_CHINESE_TRADITIONAL
@@ -16,6 +18,7 @@ from wx import LANGUAGE_SPANISH
 from wx import Locale
 
 from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
@@ -35,19 +38,23 @@ LANGUAGES = {
         }
 
 
+# class PyutUtils(object):
+#     pass
+
+
 class Lang:
+
+    LOCALE_DIRECTORY: str = f'{PyutUtils.RESOURCES_PATH}{osSep}locale'
 
     @staticmethod
     def importLanguage():
 
         moduleLogger: Logger = getLogger(__name__)
         # Get language from preferences
-        prefs = PyutPreferences()
+        prefs: PyutPreferences = PyutPreferences()
         language = prefs['I18N']
 
-        # Set default language?
         if language not in LANGUAGES:
-            # Use default language
             language = DEFAULT_LANG
 
         # Set language for all application
@@ -55,9 +62,11 @@ class Lang:
         try:
             wxLangID   = LANGUAGES[language][1]
             domain    = "Pyut"
-            localedir = "src"  # "./locale"     TODO: look this up via a resource directory
-            # print "langid=", wxLangID
+            orgDirectory: str = prefs[PyutPreferences.ORG_DIRECTORY]
+            print(f'orgDirectory: {orgDirectory}')
 
+            # localedir = "src"  # "./locale"     TODO: look this up via a resource directory
+            localedir: str = f'{orgDirectory}{osSep}{Lang.LOCALE_DIRECTORY}'
             method = 0          # Really ?
             if method == 0:
                 # Possibility to load all languages, then do an install on fly

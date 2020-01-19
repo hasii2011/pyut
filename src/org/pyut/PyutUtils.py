@@ -30,6 +30,7 @@ class PyutUtils:
     STRIP_TEST_PATH_SUFFIX: str = f'{osSep}test'
 
     RESOURCES_PACKAGE_NAME: str = 'org.pyut.resources'
+    RESOURCES_PATH:         str = f'org{osSep}pyut{osSep}resources'
 
     _basePath: str = ''
 
