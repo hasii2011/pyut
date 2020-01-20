@@ -12,6 +12,7 @@ from org.pyut.ogl.OglNoteLink import OglNoteLink
 from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.general.Singleton import Singleton
+from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 
 def getOglLinkFactory():
@@ -33,6 +34,7 @@ def getLinkType(link: OglAssociation) -> OglLinkType:
     Returns:  The OglLinkType
 
     """
+
     if isinstance(link, OglAggregation):
         return OglLinkType.OGL_AGGREGATION
     elif isinstance(link, OglComposition):
@@ -88,6 +90,9 @@ class OglLinkFactory(Singleton):
 
         elif linkType == OglLinkType.OGL_NOTELINK:
             return OglNoteLink(srcShape, pyutLink, destShape)
+
+        elif linkType == OglLinkType.OGL_SD_MESSAGE:
+            return OglSDMessage(srcShape=srcShape, pyutObject=pyutLink, dstShape=destShape)
         else:
-            self.logger.error(f"Unknown linkType of OglLink into factory: {repr(linkType)}")
+            self.logger.error(f"Unknown OglLinkType into factory: {linkType}")
             return None

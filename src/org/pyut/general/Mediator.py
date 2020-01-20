@@ -77,23 +77,23 @@ __PyUtVersion__ = PyutVersion.getPyUtVersion()
 
 # a table of the next action to select
 NEXT_ACTION = {
-    ACTION_SELECTOR: ACTION_SELECTOR,
-    ACTION_NEW_CLASS: ACTION_SELECTOR,
-    ACTION_NEW_NOTE: ACTION_SELECTOR,
-    ACTION_NEW_IMPLEMENT_LINK: ACTION_DEST_IMPLEMENT_LINK,
-    ACTION_NEW_INHERIT_LINK: ACTION_DEST_INHERIT_LINK,
-    ACTION_NEW_AGGREGATION_LINK: ACTION_DEST_AGGREGATION_LINK,
-    ACTION_NEW_COMPOSITION_LINK: ACTION_DEST_COMPOSITION_LINK,
-    ACTION_NEW_ASSOCIATION_LINK: ACTION_DEST_ASSOCIATION_LINK,
-    ACTION_NEW_NOTE_LINK: ACTION_DEST_NOTE_LINK,
-    ACTION_DEST_IMPLEMENT_LINK: ACTION_SELECTOR,
-    ACTION_DEST_INHERIT_LINK: ACTION_SELECTOR,
+    ACTION_SELECTOR:    ACTION_SELECTOR,
+    ACTION_NEW_CLASS:   ACTION_SELECTOR,
+    ACTION_NEW_NOTE:    ACTION_SELECTOR,
+    ACTION_NEW_IMPLEMENT_LINK:      ACTION_DEST_IMPLEMENT_LINK,
+    ACTION_NEW_INHERIT_LINK:        ACTION_DEST_INHERIT_LINK,
+    ACTION_NEW_AGGREGATION_LINK:    ACTION_DEST_AGGREGATION_LINK,
+    ACTION_NEW_COMPOSITION_LINK:    ACTION_DEST_COMPOSITION_LINK,
+    ACTION_NEW_ASSOCIATION_LINK:    ACTION_DEST_ASSOCIATION_LINK,
+    ACTION_NEW_NOTE_LINK:           ACTION_DEST_NOTE_LINK,
+    ACTION_DEST_IMPLEMENT_LINK:   ACTION_SELECTOR,
+    ACTION_DEST_INHERIT_LINK:     ACTION_SELECTOR,
     ACTION_DEST_AGGREGATION_LINK: ACTION_SELECTOR,
     ACTION_DEST_COMPOSITION_LINK: ACTION_SELECTOR,
     ACTION_DEST_ASSOCIATION_LINK: ACTION_SELECTOR,
-    ACTION_DEST_NOTE_LINK: ACTION_SELECTOR,
-    ACTION_NEW_ACTOR: ACTION_SELECTOR,
-    ACTION_NEW_USECASE: ACTION_SELECTOR,
+    ACTION_DEST_NOTE_LINK:  ACTION_SELECTOR,
+    ACTION_NEW_ACTOR:       ACTION_SELECTOR,
+    ACTION_NEW_USECASE:     ACTION_SELECTOR,
 
     ACTION_NEW_SD_INSTANCE: ACTION_SELECTOR,
     ACTION_NEW_SD_MESSAGE:  ACTION_DEST_SD_MESSAGE,
@@ -220,7 +220,10 @@ class Mediator(Singleton):
         @author L. Burgbacher <lb@alawa.ch>
         @modified C.Dutoit 20021121 Added self._project
         """
+        self.logger: Logger = getLogger(__name__)
+
         from org.pyut.errorcontroller.ErrorManager import getErrorManager
+
         self._errorManager  = getErrorManager()
         self._currentAction = ACTION_SELECTOR
         self._useMode       = NORMAL_MODE   # Define current use mode
@@ -240,8 +243,6 @@ class Mediator(Singleton):
         # self.registerClassEditor(self.fastTextClassEditor)
         # Patch from D.Dabrowsky, 20060129
         self._modifyCommand = None  # command for undo/redo a modification on a shape.
-
-        self.logger: Logger = getLogger(__name__)
 
     def setScriptMode(self):
         """
@@ -398,6 +399,7 @@ class Mediator(Singleton):
         @since 1.0
         @author L. Burgbacher <lb@alawa.ch>
         """
+        self.logger.info(f'Set current action to: {action}')
         if self._currentAction == action:
             self._currentActionPersistent = True
         else:
@@ -415,6 +417,7 @@ class Mediator(Singleton):
         @since 1.0
         @author L. Burgbacher <lb@alawa.ch>
         """
+        self.logger.info(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
             return
@@ -504,9 +507,6 @@ class Mediator(Singleton):
     def shapeSelected(self, shape, position=None):
         """
         Do action when a shape is selected.
-
-        @since 1.9
-        @author L. Burgbacher <lb@alawa.ch>
         TODO : support each link type
         """
         umlFrame = self._fileHandling.getCurrentFrame()
@@ -514,6 +514,7 @@ class Mediator(Singleton):
             return
         # do the right action
         if self._currentAction in SOURCE_ACTIONS:
+            self.logger.info(f'Current action in source actions')
             # get the next action needed to complete the whole action
             if self._currentActionPersistent:
                 self._oldAction = self._currentAction
@@ -526,9 +527,11 @@ class Mediator(Singleton):
                 self.selectTool(self._tools[0])
                 self.setStatusText(_("Action cancelled"))
             else:   # store source
-                self._src = shape
+                self.logger.info(f'Store source - shape {shape}  position: {position}')
+                self._src    = shape
                 self._srcPos = position
         elif self._currentAction in DEST_ACTIONS:
+            self.logger.info(f'Current action in destination actions')
             # store the destination object
             self._dst = shape
             self._dstPos = position

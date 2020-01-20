@@ -91,7 +91,7 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.general.mediator": {
+        "org.pyut.general.Mediator": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"

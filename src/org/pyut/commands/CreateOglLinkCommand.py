@@ -1,4 +1,9 @@
 
+from typing import Tuple
+
+from wx import Point
+
+from org.pyut.PyutSDMessage import PyutSDMessage
 from org.pyut.commands.Command import Command
 
 from org.pyut.ogl.OglLinkFactory import getLinkType
@@ -9,6 +14,8 @@ from org.pyut.PyutLink import PyutLink
 
 from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
+from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 
 class CreateOglLinkCommand(Command):
@@ -160,15 +167,16 @@ class CreateOglLinkCommand(Command):
         @modified P.Dabrowski 20051202 : moved from umlframe to this command in order to be redone/undone. The
                                          link is not added to the frame anymore.
         """
-
         if linkType == OglLinkType.OGL_INHERITANCE:
             return self._createInheritanceLink(src, dst)
-
+        elif linkType == OglLinkType.OGL_SD_MESSAGE:
+            return self._createSDMessage(src=src, dest=dst, srcPos=srcPos, destPos=dstPos)
         pyutLink = PyutLink("", linkType=linkType, source=src.getPyutObject(), destination=dst.getPyutObject())
 
         # Call the factory to create OGL Link
         oglLinkFactory = getOglLinkFactory()
-        oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
+        # oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
+        oglLink = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutLink, destShape=dst, linkType=linkType)
 
         src.addLink(oglLink)  # add it to the source OglShape
         dst.addLink(oglLink)  # add it to the destination OglShape
@@ -176,6 +184,21 @@ class CreateOglLinkCommand(Command):
         src.getPyutObject().addLink(pyutLink)   # add it to the PyutClass
 
         return oglLink
+
+    def _createSDMessage(self, src: OglSDInstance, dest: OglSDInstance, srcPos: Point, destPos: Point) -> OglSDMessage:
+
+        srcRelativeCoords: Tuple[int, int] = src.ConvertCoordToRelative(0, srcPos[1])
+        srcY = srcRelativeCoords[1]
+        destRelativeCoords: Tuple[int, int] = dest.ConvertCoordToRelative(0, destPos[1])
+        destY = destRelativeCoords[1]
+
+        sdMessage = PyutSDMessage("msg test", src.getPyutObject(), srcY, dest.getPyutObject(), destY)
+
+        oglLinkFactory = getOglLinkFactory()
+        oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=sdMessage, destShape=dest,
+                                                               linkType=OglLinkType.OGL_SD_MESSAGE, srcPos=srcPos, dstPos=destPos)
+
+        return oglSdMessage
 
     def _createInheritanceLink(self, child, father):
         """
