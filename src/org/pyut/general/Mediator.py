@@ -514,7 +514,7 @@ class Mediator(Singleton):
             return
         # do the right action
         if self._currentAction in SOURCE_ACTIONS:
-            self.logger.info(f'Current action in source actions')
+            self.logger.debug(f'Current action in source actions')
             # get the next action needed to complete the whole action
             if self._currentActionPersistent:
                 self._oldAction = self._currentAction

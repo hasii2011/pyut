@@ -1004,7 +1004,6 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self.logger.info(f'SD Instance: `{ACTION_NEW_SD_INSTANCE}`, SD Message: `{ACTION_NEW_SD_MESSAGE}`')
         currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
         self._ctrl.setCurrentAction(currentAction)
         self._ctrl.selectTool(event.GetId())

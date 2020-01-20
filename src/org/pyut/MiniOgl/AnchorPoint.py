@@ -59,37 +59,7 @@ class AnchorPoint(LinePoint):
     def SetPosition(self, x, y):
         """
         Change the position of the anchor point, if it's draggable.
-
         """
-
-        def stayInside(low, length, value):
-            """
-            Return the nearest value in [low, low+length].
-            """
-            if value < low:
-                value = low
-            elif value > low + length:
-                value = low + length
-            return value
-
-        def stickToBorder(ox, oy, width, height, x, y):
-            """
-            Return (x, y) on the square (ox, oy, ox+width, oy+height) by
-            placing (x, y) on the nearest border.
-            """
-            left = x - ox
-            right = ox + width - x
-            up = y - oy
-            down = oy + height - y
-            choice = {
-                left:  lambda x, y: (ox, y),
-                right: lambda x, y: (ox + width, y),
-                up:    lambda x, y: (x, oy),
-                down:  lambda x, y: (x, oy + height),
-            }
-            lesser = min(left, right, up, down)
-            return choice[lesser](x, y)
-
         if self._draggable:
             if self._parent is not None:
 
@@ -98,10 +68,10 @@ class AnchorPoint(LinePoint):
                 width = abs(width) - 1
                 height = abs(height) - 1
                 if self._stayInside or self._stayOnBorder:
-                    x = stayInside(topLeftX, width, x)
-                    y = stayInside(topLeftY, height, y)
+                    x = self.stayInside(topLeftX, width, x)
+                    y = self.stayInside(topLeftY, height, y)
                     if self._stayOnBorder:
-                        x, y = stickToBorder(topLeftX, topLeftY, width, height, x, y)
+                        x, y = self.stickToBorder(topLeftX, topLeftY, width, height, x, y)
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
             else:
                 self._x = x
@@ -109,6 +79,34 @@ class AnchorPoint(LinePoint):
 
             if self.HasDiagramFrame():
                 self.UpdateModel()
+
+    def stayInside(self, low, length, value):
+        """
+        Return the nearest value in [low, low+length].
+        """
+        if value < low:
+            value = low
+        elif value > low + length:
+            value = low + length
+        return value
+
+    def stickToBorder(self, ox, oy, width, height, x, y):
+        """
+        Return (x, y) on the square (ox, oy, ox+width, oy+height) by
+        placing (x, y) on the nearest border.
+        """
+        left = x - ox
+        right = ox + width - x
+        up = y - oy
+        down = oy + height - y
+        choice = {
+            left: lambda xLeft, yLeft: (ox, y),
+            right: lambda xRight, yRight: (ox + width, y),
+            up: lambda xUp, yUp: (x, oy),
+            down: lambda xDown, yDown: (x, oy + height),
+        }
+        lesser = min(left, right, up, down)
+        return choice[lesser](x, y)
 
     def Detach(self):
         """
