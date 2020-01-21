@@ -48,8 +48,8 @@ class OglSDMessage(OglLink):
         self.logger: Logger = getLogger(__name__)
         self._pyutObject = pyutObject
 
-        srcY = pyutObject.getSrcY() - srcShape.getLifeLineShape().GetPosition()[1]
-        dstY = pyutObject.getDstY() - dstShape.getLifeLineShape().GetPosition()[1]
+        srcY: float = pyutObject.getSrcY() - srcShape.getLifeLineShape().GetPosition()[1]
+        dstY: float = pyutObject.getDstY() - dstShape.getLifeLineShape().GetPosition()[1]
 
         srcAnchor: AnchorPoint = srcShape.getLifeLineShape().AddAnchor(0, srcY)
         dstAnchor: AnchorPoint = dstShape.getLifeLineShape().AddAnchor(0, dstY)
@@ -73,9 +73,9 @@ class OglSDMessage(OglLink):
 
         self.SetPen(BLACK_PEN)
         self._labels: Dict[int, TextShape] = {
-            CENTER:     TextShape(x=0, y=0, text=''),
-            SRC_CARD:   TextShape(x=0, y=0, text=''),
-            DEST_CARD:  TextShape(x=0, y=0, text=''),
+            CENTER:     TextShape(x=0, y=0, text='Center'),
+            SRC_CARD:   TextShape(x=0, y=0, text='SRC'),
+            DEST_CARD:  TextShape(x=0, y=0, text='DEST'),
         }
         self.updateLabels()
         self.SetDrawArrow(True)
@@ -132,7 +132,7 @@ class OglSDMessage(OglLink):
         """
         return self._labels
 
-    def Draw(self, dc: DC,  withChildren: bool = False):
+    def Draw(self, dc: DC,  withChildren: bool = True):
         """
         Called for drawing the contents of links.
 

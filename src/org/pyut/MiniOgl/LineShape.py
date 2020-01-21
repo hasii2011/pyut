@@ -15,11 +15,12 @@ class LineShape(Shape):
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, srcAnchor, dstAnchor):
+    def __init__(self, srcAnchor: AnchorPoint, dstAnchor: AnchorPoint):
         """
-        Constructor.
 
-        @param AnchorPoint srcAnchor, dstAnchor : the source and destination of the line.
+        Args:
+            srcAnchor: the source of the line.
+            dstAnchor: the destination of the line.
         """
         super().__init__()
         self._src = srcAnchor

@@ -2,80 +2,38 @@ from logging import Logger
 from logging import getLogger
 
 from wx import BLACK_DASHED_PEN
-from wx import CANCEL
-from wx import CENTRE
 from wx import Colour
-from wx import ID_OK
-from wx import OK
 from wx import PENSTYLE_LONG_DASH
 from wx import Pen
-
-from wx import TextEntryDialog
 
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.RectangleShape import RectangleShape
-from org.pyut.MiniOgl.TextShape import TextShape
-from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.ogl.OglObject import OglObject
 
-from org.pyut.general.Globals import _
-
-# Constants
-DEFAULT_X = 0
-DEFAULT_Y = 0
-DEFAULT_WIDTH = 100
-DEFAULT_HEIGHT = 400
-
-
-class OglInstanceName(TextShape, ShapeEventHandler):
-    """
-    TextShape that support text editing
-    @author C.Dutoit
-    """
-    def __init__(self, pyutObject, x, y, text, parent=None):
-        """
-        @author C.Dutoit
-        """
-        self._pyutObject = pyutObject
-        TextShape.__init__(self, x, y, text, parent)
-
-    def OnLeftDClick(self, event):
-        """
-        Callback for left double clicks.
-        @author C.Dutoit
-        """
-        dlg = TextEntryDialog(None, _("Message"), _("Enter message"), self._pyutObject.getInstanceName(), OK | CANCEL | CENTRE)
-        if dlg.ShowModal() == ID_OK:
-            self._pyutObject.setInstanceName(dlg.GetValue())
-        dlg.Destroy()
+from org.pyut.ogl.sd.OglInstanceName import OglInstanceName
 
 
 class OglSDInstance(OglObject):
+
+    DEFAULT_X:      int = 0
+    DEFAULT_Y:      int = 0
+    DEFAULT_WIDTH:  int = 100
+    DEFAULT_HEIGHT: int = 400
+
     """
-    Class Diagram Instance
+    Sequence Diagram Instance
     This class is an OGL object for class diagram instance (vertical line, ..)
-    This class implements the following functions :
-        - ...
-
-    Instanciated by UmlClassDiagramFrame
-
-    :version: $Revision: 1.13 $
-    :author: C.Dutoit
-    :contact: dutoitc@hotmail.com
     """
     def __init__(self, pyutObject, parentFrame):
 
-        # Init data
         self._parentFrame = parentFrame
         self._instanceYPosition = 50       # Start of instances position
 
-        # Get diagram
         diagram = self._parentFrame.GetDiagram()
 
-        # Init this class
-        super().__init__(pyutObject, DEFAULT_WIDTH, DEFAULT_HEIGHT)
+        super().__init__(pyutObject, OglSDInstance.DEFAULT_WIDTH, OglSDInstance.DEFAULT_HEIGHT)
 
         self.logger: Logger = getLogger(__name__)
         diagram.AddShape(self)
@@ -85,24 +43,14 @@ class OglSDInstance(OglObject):
         self.SetPen(Pen(Colour(200, 200, 255), 1, PENSTYLE_LONG_DASH))
         self.SetPosition(self.GetPosition()[0], self._instanceYPosition)
 
-        # Init lineShape
-        (srcX, srcY, dstX, dstY) = (DEFAULT_WIDTH/2, 0, DEFAULT_WIDTH/2, DEFAULT_HEIGHT)
-        # self._lifeLineX = srcX
-        (src, dst) = (AnchorPoint(srcX, srcY, self), AnchorPoint(dstX, dstY, self))
-        for el in [src, dst]:
-            el.SetVisible(False)
-            el.SetDraggable(False)
-        self._lineShape = LineShape(src, dst)
-        self.AppendChild(self._lineShape)
-        self._lineShape.SetParent(self)
-        self._lineShape.SetDrawArrow(False)
-        self._lineShape.SetDraggable(True)
-        self._lineShape.SetPen(BLACK_DASHED_PEN)
-        self._lineShape.SetVisible(True)
-        diagram.AddShape(self._lineShape)
+        dstAnchorPoint, srcAnchorPoint = self._createAnchorPoints()
+
+        self._lifeLineShape: LineShape = self._createLifeLineShape(src=srcAnchorPoint, dst=dstAnchorPoint)
+        diagram.AddShape(self._lifeLineShape)
 
         # Instance box
-        self._instanceBox = RectangleShape(0, 0, 100, 50)
+        self._instanceBox: RectangleShape = RectangleShape(0, 0, 100, 50)
+
         self.AppendChild(self._instanceBox)
         self._instanceBox.SetDraggable(False)
         self._instanceBox.Resize = self.OnInstanceBoxResize
@@ -116,7 +64,7 @@ class OglSDInstance(OglObject):
         self.AppendChild(self._instanceBoxText)
         diagram.AddShape(self._instanceBoxText)
         # TODO : set instance box size to the size of the text
-        #       by invoking self._instanceBoxText.setSize()
+        #       by invoking self._instanceBoxText.SetSize()
 
     def getLifeLineShape(self):
         """
@@ -124,7 +72,7 @@ class OglSDInstance(OglObject):
         @author C.Dutoit
         Used by OGLSDMessage to use it as parent
         """
-        return self._lineShape
+        return self._lifeLineShape
 
     def OnInstanceBoxResize(self, sizer, width, height):
         """
@@ -150,8 +98,8 @@ class OglSDInstance(OglObject):
         #  (myX, myY) = self.GetPosition()
         (myX, myY) = self.GetPosition()
         (w, h) = self.GetSize()
-        lineDst = self._lineShape.GetDestination()
-        lineSrc = self._lineShape.GetSource()
+        lineDst = self._lifeLineShape.GetDestination()
+        lineSrc = self._lifeLineShape.GetSource()
         lineSrc.SetDraggable(True)
         lineDst.SetDraggable(True)
         lineSrc.SetPosition(w/2 + myX, 0 + myY)
@@ -180,8 +128,6 @@ class OglSDInstance(OglObject):
     def Draw(self, dc, withChildren=False):
         """
         Draw overload; update labels
-
-        @author C.Dutoit
         """
         # Update labels
         self._instanceBoxText.SetText(self._pyutObject.getInstanceName())
@@ -196,8 +142,33 @@ class OglSDInstance(OglObject):
 
     def OnLeftUp(self, event):
         """
-        Callback for left clicks.
-
-        @since 1.0
         """
         self.SetPosition(self.GetPosition()[0], self._instanceYPosition)
+
+    def _createAnchorPoints(self):
+
+        srcX = OglSDInstance.DEFAULT_WIDTH / 2
+        srcY = 0
+        dstX = OglSDInstance.DEFAULT_WIDTH / 2
+        dstY = OglSDInstance.DEFAULT_HEIGHT
+        srcAnchorPoint: AnchorPoint = AnchorPoint(srcX, srcY, self)
+        dstAnchorPoint: AnchorPoint = AnchorPoint(dstX, dstY, self)
+
+        for el in [srcAnchorPoint, dstAnchorPoint]:
+            el.SetVisible(False)
+            el.SetDraggable(False)
+            
+        return dstAnchorPoint, srcAnchorPoint
+
+    def _createLifeLineShape(self, src: AnchorPoint, dst: AnchorPoint) -> LineShape:
+
+        lifeLineShape: LineShape = LineShape(src, dst)
+
+        self.AppendChild(lifeLineShape)
+        lifeLineShape.SetParent(self)
+        lifeLineShape.SetDrawArrow(False)
+        lifeLineShape.SetDraggable(True)
+        lifeLineShape.SetPen(BLACK_DASHED_PEN)
+        lifeLineShape.SetVisible(True)
+
+        return lifeLineShape

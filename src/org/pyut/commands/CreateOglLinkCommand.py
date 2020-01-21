@@ -192,10 +192,10 @@ class CreateOglLinkCommand(Command):
         destRelativeCoords: Tuple[int, int] = dest.ConvertCoordToRelative(0, destPos[1])
         destY = destRelativeCoords[1]
 
-        sdMessage = PyutSDMessage("msg test", src.getPyutObject(), srcY, dest.getPyutObject(), destY)
+        pyutSDMessage = PyutSDMessage("msg test", src.getPyutObject(), srcY, dest.getPyutObject(), destY)
 
         oglLinkFactory = getOglLinkFactory()
-        oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=sdMessage, destShape=dest,
+        oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest,
                                                                linkType=OglLinkType.OGL_SD_MESSAGE, srcPos=srcPos, dstPos=destPos)
 
         return oglSdMessage
