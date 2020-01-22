@@ -4,7 +4,9 @@ from typing import Dict
 from logging import Logger
 from logging import getLogger
 
-from wx import BLACK_PEN
+# from wx import BLACK_PEN
+from wx import GREEN_PEN
+
 from wx import CANCEL
 from wx import CENTRE
 from wx import DC
@@ -14,8 +16,8 @@ from wx import TextEntryDialog
 
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.LineShape import LineShape
-# from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.MiniOgl.TextShape import TextShape
+
 from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.PyutObject import PyutObject
@@ -24,10 +26,6 @@ from org.pyut.general.Globals import _
 
 # TODO : Find a way to report moves from AnchorPoints to PyutSDMessage
 #
-# TODO: Humberto -- This class does not seem to be called; I tried to manually create a sequence
-# diagram but did not invoke this class;  However, it is reference by many plugins;  Fix later
-
-# Kind of labels
 
 [CENTER, SRC_CARD, DEST_CARD] = range(3)
 
@@ -68,10 +66,9 @@ class OglSDMessage(OglLink):
         self._srcAnchor = srcAnchor
         self._dstAnchor = dstAnchor
 
-        # LineShape.__init__(self, src, dst)
         super().__init__(srcShape=srcShape, pyutLink=pyutObject, dstShape=dstShape)
 
-        self.SetPen(BLACK_PEN)
+        self.SetPen(GREEN_PEN)
         self._labels: Dict[int, TextShape] = {
             CENTER:     TextShape(x=0, y=0, text='Center'),
             SRC_CARD:   TextShape(x=0, y=0, text='SRC'),
@@ -128,7 +125,7 @@ class OglSDMessage(OglLink):
         """
         Get the labels.
 
-        @return TextShape []
+        Returns Dict[int, TextShape]
         """
         return self._labels
 
