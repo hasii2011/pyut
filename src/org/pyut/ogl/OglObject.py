@@ -29,11 +29,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
     This class has been introduced quite late in developement and has
     caused some refactoring.
 
-    :version: $Revision: 1.11 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
     """
-
     def __init__(self, pyutObject=None, width: float = 0, height: float = 0):
         """
         Constructor

@@ -335,11 +335,12 @@ class Shape:
             dc.SetPen(RED_PEN)
             self.DrawHandles(dc)
 
-    def DrawChildren(self, dc):
+    def DrawChildren(self, dc: DC):
         """
         Draw the children of this shape.
 
-        @param dc
+        Args:
+            dc:
         """
         if self._visible:
             for child in self._children + self._anchors + self._privateChildren:
