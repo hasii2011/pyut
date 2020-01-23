@@ -399,7 +399,7 @@ class Mediator(Singleton):
         @since 1.0
         @author L. Burgbacher <lb@alawa.ch>
         """
-        self.logger.info(f'Set current action to: {action}')
+        self.logger.debug(f'Set current action to: {action}')
         if self._currentAction == action:
             self._currentActionPersistent = True
         else:
@@ -408,16 +408,15 @@ class Mediator(Singleton):
         # put a message in the status bar
         self.setStatusText(MESSAGES[self._currentAction])
 
-    def doAction(self, x, y):
+    def doAction(self, x: float, y: float):
         """
         Do the current action at coordinates x, y.
 
-        @param int x : x coord where the action must take place
-        @param int y : y coord where the action must take place
-        @since 1.0
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            x: x coord where the action must take place
+            y: y coord where the action must take place
         """
-        self.logger.info(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
+        self.logger.debug(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
             return
@@ -527,11 +526,11 @@ class Mediator(Singleton):
                 self.selectTool(self._tools[0])
                 self.setStatusText(_("Action cancelled"))
             else:   # store source
-                self.logger.info(f'Store source - shape {shape}  position: {position}')
+                self.logger.debug(f'Store source - shape {shape}  position: {position}')
                 self._src    = shape
                 self._srcPos = position
         elif self._currentAction in DEST_ACTIONS:
-            self.logger.info(f'Current action in destination actions')
+            self.logger.debug(f'Current action in destination actions')
             # store the destination object
             self._dst = shape
             self._dstPos = position

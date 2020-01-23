@@ -23,7 +23,7 @@ class AnchorPoint(LinePoint):
 
         self.logger: Logger = getLogger(__name__)
 
-        self.logger.info(f'AnchorPoint __init__  x: {x}, y: {y} parent: {parent}')
+        self.logger.debug(f'AnchorPoint __init__  x: {x}, y: {y} parent: {parent}')
         self._protected:    bool = True  # protected by default
         self._stayInside:   bool = True
         self._stayOnBorder: bool = True
@@ -131,7 +131,7 @@ class AnchorPoint(LinePoint):
             down: lambda xDown, yDown: (x, oy + height),
         }
         lesser = min(left, right, up, down)
-        self.logger.info(f'lesser: {lesser}')
+        self.logger.debug(f'lesser: {lesser}')
         return choice[lesser](x, y)
 
     def Detach(self):
