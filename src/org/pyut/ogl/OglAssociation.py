@@ -4,7 +4,17 @@ from math import atan
 from math import cos
 from math import sin
 
-from org.pyut.ogl.OglLink import *
+from wx import BLACK_BRUSH
+from wx import BLACK_PEN
+from wx import DC
+from wx import FONTFAMILY_DEFAULT
+from wx import FONTSTYLE_NORMAL
+from wx import FONTWEIGHT_NORMAL
+from wx import WHITE_BRUSH
+
+from wx import Font
+
+from org.pyut.ogl.OglLink import OglLink
 
 # Kind of labels
 [CENTER, SRC_CARD, DEST_CARD] = list(range(3))
@@ -35,14 +45,16 @@ class OglAssociation(OglLink):
         self._labels = {}
 
         # Define position
-        from math import sqrt
-        srcX, srcY = srcShape.GetPosition()
-        dstX, dstY = dstShape.GetPosition()
-        dy = dstY - srcY
-        dx = dstX - srcX
-        linkLength = sqrt(dx*dx + dy*dy)
-        if linkLength == 0:
-            linkLength = 0.01
+        # from math import sqrt
+        # srcX, srcY = srcShape.GetPosition()
+        # dstX, dstY = dstShape.GetPosition()
+        # dy = dstY - srcY
+        # dx = dstX - srcX
+        # linkLength = sqrt(dx*dx + dy*dy)
+        # if linkLength == 0:
+        #     linkLength = 0.01
+        linkLength: float = self._computeLinkLength()
+        dx, dy            = self._computeDxDy()
         cenLblX = -dy * 5 / linkLength
         cenLblY = dx * 5 / linkLength
         srcLblX = 20 * dx/linkLength      # - dy*5/l
@@ -50,7 +62,7 @@ class OglAssociation(OglLink):
         dstLblX = -20 * dx/linkLength    # + dy*5/l
         dstLblY = -20 * dy/linkLength    # - dy*5/l
 
-        self._defaultFont = wx.Font(OglAssociation.TEXT_SHAPE_FONT_SIZE, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        self._defaultFont = Font(OglAssociation.TEXT_SHAPE_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
 
         # Initialize labels objects
         self._labels[CENTER]    = self.AddText(cenLblX, cenLblY,      "", font=self._defaultFont)
@@ -96,7 +108,7 @@ class OglAssociation(OglLink):
         return self._labels
 
     # noinspection PyUnusedLocal
-    def Draw(self, dc: wx.DC, withChildren: bool = False):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Called for contents drawing of links.
 
@@ -150,10 +162,10 @@ class OglAssociation(OglLink):
         points.append((x2, y2))
         points.append((x2 + size * cos(alpha2), y2 + size * sin(alpha2)))
         points.append((x2 + 2*size * cos(alpha),  y2 + 2*size * sin(alpha)))
-        dc.SetPen(wx.BLACK_PEN)
+        dc.SetPen(BLACK_PEN)
         if filled:
-            dc.SetBrush(wx.BLACK_BRUSH)
+            dc.SetBrush(BLACK_BRUSH)
         else:
-            dc.SetBrush(wx.WHITE_BRUSH)
+            dc.SetBrush(WHITE_BRUSH)
         dc.DrawPolygon(points)
-        dc.SetBrush(wx.WHITE_BRUSH)
+        dc.SetBrush(WHITE_BRUSH)
