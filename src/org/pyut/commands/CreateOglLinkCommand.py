@@ -20,10 +20,10 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 class CreateOglLinkCommand(Command):
     """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
     It creates every kind of OglLink and allowds to undo/redo it.
     """
+    NO_NAME_MESSAGE: str = "testMessage()"
 
     def __init__(self, src=None, dst=None, linkType: OglLinkType = OglLinkType.OGL_INHERITANCE, srcPos=None, dstPos=None):
         """
@@ -192,7 +192,7 @@ class CreateOglLinkCommand(Command):
         destRelativeCoords: Tuple[int, int] = dest.ConvertCoordToRelative(0, destPos[1])
         destY = destRelativeCoords[1]
 
-        pyutSDMessage = PyutSDMessage("msg test", src.getPyutObject(), srcY, dest.getPyutObject(), destY)
+        pyutSDMessage = PyutSDMessage(CreateOglLinkCommand.NO_NAME_MESSAGE, src.getPyutObject(), srcY, dest.getPyutObject(), destY)
 
         oglLinkFactory = getOglLinkFactory()
         oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest,

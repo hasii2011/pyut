@@ -44,15 +44,6 @@ class OglAssociation(OglLink):
         # Add labels
         self._labels = {}
 
-        # Define position
-        # from math import sqrt
-        # srcX, srcY = srcShape.GetPosition()
-        # dstX, dstY = dstShape.GetPosition()
-        # dy = dstY - srcY
-        # dx = dstX - srcX
-        # linkLength = sqrt(dx*dx + dy*dy)
-        # if linkLength == 0:
-        #     linkLength = 0.01
         linkLength: float = self._computeLinkLength()
         dx, dy            = self._computeDxDy()
         cenLblX = -dy * 5 / linkLength

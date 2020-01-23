@@ -1,6 +1,4 @@
 
-from typing import Dict
-
 from logging import Logger
 from logging import getLogger
 
@@ -17,6 +15,7 @@ from wx import TextEntryDialog
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.TextShape import TextShape
+from org.pyut.PyutSDMessage import PyutSDMessage
 
 from org.pyut.ogl.OglLink import OglLink
 
@@ -34,7 +33,7 @@ class OglSDMessage(OglLink):
     """
     Class for a graphical message
     """
-    def __init__(self, srcShape, pyutObject, dstShape):
+    def __init__(self, srcShape, pyutObject: PyutSDMessage, dstShape):
         """
 
         Args:
@@ -60,8 +59,8 @@ class OglSDMessage(OglLink):
         srcAnchor.SetDraggable(True)
         dstAnchor.SetDraggable(True)
 
-        self._srcShape  = srcShape
-        self._dstShape  = dstShape
+        # self._srcShape  = srcShape        # Taken care of by parent class
+        # self._dstShape  = dstShape        # Taken care of by parent class
         self._srcAnchor = srcAnchor
         self._dstAnchor = dstAnchor
 
@@ -69,12 +68,15 @@ class OglSDMessage(OglLink):
         self.logger: Logger = getLogger(__name__)
 
         self.SetPen(GREEN_PEN)
-        self._labels: Dict[int, TextShape] = {
-            CENTER:     TextShape(x=0, y=0, text='Center'),
-            SRC_CARD:   TextShape(x=0, y=0, text='SRC'),
-            DEST_CARD:  TextShape(x=0, y=0, text='DEST'),
-        }
-        self.updateLabels()
+
+        linkLength: float = self._computeLinkLength()
+        dx, dy            = self._computeDxDy()
+        centerMessageX = -dy * 5 / linkLength
+        centerMessageY = dx * 5 / linkLength
+
+        self._messageLabel: TextShape = self.AddText(centerMessageX, centerMessageY, pyutObject.getMessage())  # font=self._defaultFont
+
+        self.updateMessage()
         self.SetDrawArrow(True)
 
     def updatePositions(self):
@@ -92,27 +94,18 @@ class OglSDMessage(OglLink):
         src.SetPosition(srcX, srcY)
         dst.SetPosition(dstX, dstY)
 
-    def updateLabels(self):
+    def updateMessage(self):
         """
-        Update the labels according to the link.
+        Update the message
         """
-        def prepareLabel(textShape, text):
-            """
-            Update a label.
-
-            @author Laurent Burgbacher <lb@alawa.ch>
-            """
-            # If label should be drawn
-            if text.strip() != "":
-                textShape.SetText(text)
-                # textShape.Show(True)
-                textShape.SetVisible(True)
-            else:
-                # textShape.Show(False)
-                textShape.SetVisible(False)
-
-        # Prepares labels
-        prepareLabel(self._labels[CENTER], self._pyutObject.getMessage())
+        text:      str       = self._pyutObject.getMessage()
+        textShape: TextShape = self._messageLabel
+        # Don't draw blank messages
+        if text.strip() != "":
+            textShape.SetText(text)
+            textShape.SetVisible(True)
+        else:
+            textShape.SetVisible(False)
 
     def getPyutObject(self) -> PyutObject:
         """
@@ -120,14 +113,6 @@ class OglSDMessage(OglLink):
         Returns: my pyut object
         """
         return self._pyutObject
-
-    def getLabels(self):
-        """
-        Get the labels.
-
-        Returns Dict[int, TextShape]
-        """
-        return self._labels
 
     def Draw(self, dc: DC,  withChildren: bool = True):
         """
@@ -137,7 +122,7 @@ class OglSDMessage(OglLink):
             dc:     Device context
             withChildren:   `True` draw the children
         """
-        self.updateLabels()
+        self.updateMessage()
 
         self.logger.info(f"Draw: Src Pos: '{self.GetSource().GetPosition()}' dest Pos '{self.GetDestination().GetPosition()}'")
         LineShape.Draw(self, dc, withChildren)
