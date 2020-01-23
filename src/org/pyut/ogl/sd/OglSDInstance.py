@@ -120,13 +120,11 @@ class OglSDInstance(OglObject):
 
     def SetPosition(self, x, y):
         """
-        Debug
-        @author C.Dutoit
         """
         y = self._instanceYPosition
         OglObject.SetPosition(self, x, y)
 
-    def Draw(self, dc, withChildren=False):
+    def Draw(self, dc, withChildren=True):
         """
         Draw overload; update labels
         """
@@ -139,7 +137,8 @@ class OglSDInstance(OglObject):
             self.SetPen(Pen(Colour(200, 200, 255), 1, PENSTYLE_LONG_DASH))
 
         # Draw
-        OglObject.Draw(self, dc)
+        # OglObject.Draw(self, dc)
+        super().Draw(dc=dc, withChildren=withChildren)
 
     def OnLeftUp(self, event):
         """

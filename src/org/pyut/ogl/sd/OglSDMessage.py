@@ -43,7 +43,6 @@ class OglSDMessage(OglLink):
             dstShape:   Destination shape OglObject
 
         """
-        self.logger: Logger = getLogger(__name__)
         self._pyutObject = pyutObject
 
         srcY: float = pyutObject.getSrcY() - srcShape.getLifeLineShape().GetPosition()[1]
@@ -67,6 +66,7 @@ class OglSDMessage(OglLink):
         self._dstAnchor = dstAnchor
 
         super().__init__(srcShape=srcShape, pyutLink=pyutObject, dstShape=dstShape)
+        self.logger: Logger = getLogger(__name__)
 
         self.SetPen(GREEN_PEN)
         self._labels: Dict[int, TextShape] = {
@@ -139,7 +139,7 @@ class OglSDMessage(OglLink):
         """
         self.updateLabels()
 
-        self.logger.debug(f"Draw: Src Pos: '{self.GetSource().GetPosition()}' dest Pos '{self.GetDestination().GetPosition()}'")
+        self.logger.info(f"Draw: Src Pos: '{self.GetSource().GetPosition()}' dest Pos '{self.GetDestination().GetPosition()}'")
         LineShape.Draw(self, dc, withChildren)
 
     def OnLeftDClick(self, event):

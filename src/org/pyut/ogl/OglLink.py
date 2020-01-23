@@ -1,8 +1,12 @@
 
+from typing import Tuple
+
 from logging import Logger
 from logging import getLogger
 
-import wx
+from math import sqrt
+
+from wx import BLACK_PEN
 
 from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
@@ -10,6 +14,7 @@ from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.PyutLink import PyutLink
 
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
+from org.pyut.ogl.IllegalOperationException import IllegalOperationException
 
 
 def getOrient(srcX, srcY, destX, destY) -> PyutAttachmentPoint:
@@ -72,10 +77,9 @@ class OglLink(LineShape, ShapeEventHandler):
             Support for miniogl
         @modified C.Dutoit 20021125 : Added srcPos and dstPos
         """
-        self.logger: Logger = getLogger(__name__)
 
         # Associate src and dest shapes
-        self._srcShape = srcShape
+        self._srcShape  = srcShape
         self._destShape = dstShape
 
         if srcPos is None and dstPos is None:
@@ -134,9 +138,10 @@ class OglLink(LineShape, ShapeEventHandler):
 
         # Init
         LineShape.__init__(self, src, dst)
+        self.logger: Logger = getLogger(__name__)
 
         # Set up painting colors
-        self.SetPen(wx.BLACK_PEN)
+        self.SetPen(BLACK_PEN)
 
         # Keep reference to the PyutLink for mouse events, in order
         # to can find back the corresponding link
@@ -238,3 +243,30 @@ class OglLink(LineShape, ShapeEventHandler):
 
         srcAnchor.SetPosition(osrcX, osrcY)
         dstAnchor.SetPosition(odstX, odstY)
+
+    def _computeLinkLength(self) -> float:
+        """
+
+        Returns:  The length of the link between the source shape and destination shape
+        """
+        dx, dy = self._computeDxDy()
+        linkLength = sqrt(dx*dx + dy*dy)
+        if linkLength == 0:
+            linkLength = 0.01
+
+        return linkLength
+
+    def _computeDxDy(self) -> Tuple[float, float]:
+        """
+
+        Returns: a tuple of deltaX and deltaY of the shape position
+        """
+        if self._srcShape is None or self._destShape is None:
+            raise IllegalOperationException('Either the source or the destination shape is None')
+
+        srcX, srcY = self._srcShape.GetPosition()
+        dstX, dstY = self._destShape.GetPosition()
+        dx = dstX - srcX
+        dy = dstY - srcY
+
+        return dx, dy

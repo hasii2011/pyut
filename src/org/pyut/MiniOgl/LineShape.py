@@ -190,12 +190,14 @@ class LineShape(Shape):
         """
         Draw the line on the dc.
 
-        @param  dc
-        @param withChildren
+        Args:
+            dc:
+            withChildren:
         """
         if self._visible:
 
-            Shape.Draw(self, dc, False)
+            # Shape.Draw(self, dc, False)
+            super().Draw(dc=dc, withChildren=withChildren)
             line = self.GetSegments()
             if self._selected:
                 dc.SetPen(RED_PEN)

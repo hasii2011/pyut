@@ -118,6 +118,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.ogl.OglSDMessge": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "org.pyut.commands.CommandGroup": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
