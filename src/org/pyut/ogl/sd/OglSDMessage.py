@@ -1,4 +1,6 @@
 
+from typing import Tuple
+
 from logging import Logger
 from logging import getLogger
 
@@ -15,11 +17,11 @@ from wx import TextEntryDialog
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.TextShape import TextShape
+
 from org.pyut.PyutSDMessage import PyutSDMessage
 
+from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.OglLink import OglLink
-
-from org.pyut.PyutObject import PyutObject
 
 from org.pyut.general.Globals import _
 
@@ -33,48 +35,34 @@ class OglSDMessage(OglLink):
     """
     Class for a graphical message
     """
-    def __init__(self, srcShape, pyutObject: PyutSDMessage, dstShape):
+    def __init__(self, srcShape: OglSDInstance, pyutSDMessage: PyutSDMessage, dstShape: OglSDInstance):
         """
 
         Args:
-            srcShape:   Source shape OglObject
-            pyutObject:
-            dstShape:   Destination shape OglObject
+            srcShape:   Source shape OglSDInstance
+            pyutSDMessage:  PyutSDMessage
+            dstShape:   Destination shape OglSDInstance
 
         """
-        self._pyutObject = pyutObject
+        self._pyutSDMessage = pyutSDMessage
 
-        srcY: float = pyutObject.getSrcY() - srcShape.getLifeLineShape().GetPosition()[1]
-        dstY: float = pyutObject.getDstY() - dstShape.getLifeLineShape().GetPosition()[1]
+        dstAnchor, srcAnchor = self._createAnchorPoints(srcShape=srcShape, pyutSDMessage=pyutSDMessage, dstShape=dstShape)
 
-        srcAnchor: AnchorPoint = srcShape.getLifeLineShape().AddAnchor(0, srcY)
-        dstAnchor: AnchorPoint = dstShape.getLifeLineShape().AddAnchor(0, dstY)
-
-        srcAnchor.SetStayOnBorder(False)
-        dstAnchor.SetStayOnBorder(False)
-        srcAnchor.SetStayInside(True)
-        dstAnchor.SetStayInside(True)
-        srcAnchor.SetVisible(True)
-        dstAnchor.SetVisible(True)
-        srcAnchor.SetDraggable(True)
-        dstAnchor.SetDraggable(True)
-
-        # self._srcShape  = srcShape        # Taken care of by parent class
-        # self._dstShape  = dstShape        # Taken care of by parent class
         self._srcAnchor = srcAnchor
         self._dstAnchor = dstAnchor
 
-        super().__init__(srcShape=srcShape, pyutLink=pyutObject, dstShape=dstShape)
+        super().__init__(srcShape=srcShape, pyutLink=pyutSDMessage, dstShape=dstShape)
         self.logger: Logger = getLogger(__name__)
 
         self.SetPen(GREEN_PEN)
 
         linkLength: float = self._computeLinkLength()
         dx, dy            = self._computeDxDy()
-        centerMessageX = -dy * 5 / linkLength
-        centerMessageY = dx * 5 / linkLength
 
-        self._messageLabel: TextShape = self.AddText(centerMessageX, centerMessageY, pyutObject.getMessage())  # font=self._defaultFont
+        centerMessageX    = -dy * 5 / linkLength
+        centerMessageY    = dx * 5 / linkLength
+
+        self._messageLabel: TextShape = self.AddText(centerMessageX, centerMessageY, pyutSDMessage.getMessage())  # font=self._defaultFont
 
         self.updateMessage()
         self.SetDrawArrow(True)
@@ -86,8 +74,8 @@ class OglSDMessage(OglLink):
         self.logger.debug(f'OglMessage - updatePositions')
         src = self.GetSource()
         dst = self.GetDestination()
-        srcY = self._pyutObject.getSrcY() + src.GetParent().GetSegments()[0][1]
-        dstY = self._pyutObject.getDstY() + dst.GetParent().GetSegments()[0][1]
+        srcY = self._pyutSDMessage.getSrcY() + src.GetParent().GetSegments()[0][1]
+        dstY = self._pyutSDMessage.getDstY() + dst.GetParent().GetSegments()[0][1]
         srcX = 0
         dstX = 0
 
@@ -98,7 +86,7 @@ class OglSDMessage(OglLink):
         """
         Update the message
         """
-        text:      str       = self._pyutObject.getMessage()
+        text:      str       = self._pyutSDMessage.getMessage()
         textShape: TextShape = self._messageLabel
         # Don't draw blank messages
         if text.strip() != "":
@@ -107,12 +95,13 @@ class OglSDMessage(OglLink):
         else:
             textShape.SetVisible(False)
 
-    def getPyutObject(self) -> PyutObject:
+    def getPyutObject(self) -> PyutSDMessage:
         """
+        override
 
-        Returns: my pyut object
+        Returns: my pyut sd message
         """
-        return self._pyutObject
+        return self._pyutSDMessage
 
     def Draw(self, dc: DC,  withChildren: bool = True):
         """
@@ -132,7 +121,36 @@ class OglSDMessage(OglLink):
         Callback for left double clicks.
 
         """
-        dlg = TextEntryDialog(None, _("Message"), _("Enter message"), self._pyutObject.getMessage(), OK | CANCEL | CENTRE)
+        dlg = TextEntryDialog(None, _("Message"), _("Enter message"), self._pyutSDMessage.getMessage(), OK | CANCEL | CENTRE)
         if dlg.ShowModal() == ID_OK:
-            self._pyutObject.setMessage(dlg.GetValue())
+            self._pyutSDMessage.setMessage(dlg.GetValue())
         dlg.Destroy()
+
+    def _createAnchorPoints(self, srcShape: OglSDInstance, dstShape: OglSDInstance, pyutSDMessage: PyutSDMessage) -> Tuple[AnchorPoint, AnchorPoint]:
+        """
+        Royal ready to heat rice
+
+
+        Args:
+            dstShape:
+            srcShape:
+            pyutSDMessage
+
+        Returns:  A tuple of anchor points for the source and destination shapes
+
+        """
+        srcY: float = pyutSDMessage.getSrcY() - srcShape.getLifeLineShape().GetPosition()[1]
+        dstY: float = pyutSDMessage.getDstY() - dstShape.getLifeLineShape().GetPosition()[1]
+
+        srcAnchor: AnchorPoint = srcShape.getLifeLineShape().AddAnchor(0, srcY)
+        dstAnchor: AnchorPoint = dstShape.getLifeLineShape().AddAnchor(0, dstY)
+        srcAnchor.SetStayOnBorder(False)
+        dstAnchor.SetStayOnBorder(False)
+        srcAnchor.SetStayInside(True)
+        dstAnchor.SetStayInside(True)
+        srcAnchor.SetVisible(True)
+        dstAnchor.SetVisible(True)
+        srcAnchor.SetDraggable(True)
+        dstAnchor.SetDraggable(True)
+
+        return dstAnchor, srcAnchor
