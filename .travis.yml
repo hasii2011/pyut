@@ -2,10 +2,6 @@
 # os: osx
 
 # osx_image: xcode11.2
-dist: bionic
-
-services:
-  - xvfb
 
 language: python
 
@@ -18,6 +14,7 @@ python:
 install:
   # - pip install -r requirements.txt
   pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython
+  pip install xmlschema
 
 # command to run tests
-script: xvfb-run ${TRAVIS_BUILD_DIR}/runtests.sh
+script: ${TRAVIS_BUILD_DIR}/runtests.sh
