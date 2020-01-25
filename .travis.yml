@@ -2,10 +2,7 @@
 # os: osx
 
 # osx_image: xcode11.2
-dist: xenial
-
-services:
-  - xvfb
+dist: trusty
 
 language: python
 
@@ -19,5 +16,10 @@ install:
   # - pip install -r requirements.txt
   pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython
 
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+
 # command to run tests
-script: xvfb-run ${TRAVIS_BUILD_DIR}/runtests.sh
+script: ${TRAVIS_BUILD_DIR}/runtests.sh
