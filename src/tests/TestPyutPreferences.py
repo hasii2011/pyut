@@ -3,6 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from os import remove as osRemove
+from os import path as osPath
 
 from shutil import copyfile
 
@@ -141,22 +142,26 @@ class TestPyutPreferences(TestBase):
         prefsFileName: str = PyutPreferences.getPreferencesLocation()
         source: str = prefsFileName
         target: str = f"{prefsFileName}{TestPyutPreferences.BACKUP_SUFFIX}"
-        try:
-            copyfile(source, target)
-        except IOError as e:
-            self.logger.error(f"Unable to copy file. {e}")
+        if osPath.exists(source):
+            try:
+                copyfile(source, target)
+            except IOError as e:
+                self.logger.error(f"Unable to copy file. {e}")
 
     def _restoreBackup(self):
 
         prefsFileName: str = PyutPreferences.getPreferencesLocation()
         source: str = f"{prefsFileName}{TestPyutPreferences.BACKUP_SUFFIX}"
         target: str = prefsFileName
-        try:
-            copyfile(source, target)
-        except IOError as e:
-            self.logger.error(f"Unable to copy file. {e}")
+        if osPath.exists(source):
+            try:
+                copyfile(source, target)
+            except IOError as e:
+                self.logger.error(f"Unable to copy file. {e}")
 
-        osRemove(source)
+            osRemove(source)
+        else:
+            osRemove(target)
 
     def _emptyPrefs(self):
         osRemove(PyutPreferences.getPreferencesLocation())
