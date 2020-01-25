@@ -77,8 +77,7 @@ class PyutPreferences(Singleton):
         """
         """
         self.logger:  Logger = getLogger(__name__)
-        self._config: ConfigParser = ConfigParser()
-
+        self._emptyPrefs()
         self.__loadConfig()
 
     @staticmethod
@@ -199,7 +198,6 @@ class PyutPreferences(Singleton):
                 return
 
         # Read data
-        self._config.read(PyutPreferences.getPreferencesLocation())
         # Create a "LastOpenedFiles" structure ?
         hasSection: bool = self._config.has_section(PyutPreferences.OPENED_FILES_SECTION)
         self.logger.debug(f'hasSection: {hasSection}')
@@ -237,6 +235,9 @@ class PyutPreferences(Singleton):
     def __addMissingPreference(self, sectionName: str, preferenceName, value: str):
         self._config.set(sectionName, preferenceName, value)
         self.__saveConfig()
+
+    def _emptyPrefs(self):
+        self._config: ConfigParser = ConfigParser()
 
     def __getitem__(self, name):
         """
