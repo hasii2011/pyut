@@ -7,6 +7,9 @@ language: python
 
 cache: pip
 
+services:
+  - xvfb
+
 python:
   - "3.7"
 
@@ -17,4 +20,4 @@ install:
   - pip install xmlschema
 
 # command to run tests
-script: ${TRAVIS_BUILD_DIR}/runtests.sh
+script: xvfb-run ${TRAVIS_BUILD_DIR}/runtests.sh
