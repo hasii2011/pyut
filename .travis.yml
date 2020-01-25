@@ -2,6 +2,10 @@
 # os: osx
 
 # osx_image: xcode11.2
+dist: xenial
+
+services:
+  - xvfb
 
 language: python
 
@@ -16,4 +20,4 @@ install:
   pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython
 
 # command to run tests
-script: ${TRAVIS_BUILD_DIR}/runtests.sh
+script: xvfb-run ${TRAVIS_BUILD_DIR}/runtests.sh
