@@ -70,7 +70,10 @@ def main():
     moduleLogger = getLogger('TestAll')
 
     testSuite: TestSuite = suite()
-    unittest.TextTestRunner().run(testSuite)
+    status: unittest.TestResult = unittest.TextTestRunner().run(testSuite)
+    moduleLogger.info(f'Test Suite Status: {status}')
+    if len(status.failures) != 0:
+        exit(1)
 
 
 if __name__ == "__main__":
