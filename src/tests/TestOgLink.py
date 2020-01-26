@@ -15,11 +15,10 @@ from org.pyut.ogl.OglLink import OglLink
 
 class TestOglLink(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
+    MOCK_SOURCE_POSITION:       Tuple[float, float] = (100.0, 100.0)
+    MOCK_DESTINATION_POSITION:  Tuple[float, float] = (500.0, 500.0)
+
     clsLogger: Logger = None
 
     @classmethod
@@ -55,26 +54,27 @@ class TestOglLink(TestBase):
         self.assertRaises(IllegalOperationException, lambda: self._raiseException(badOglLink))
 
     def testBasicComputeLinkLength(self):
-        mockSourceShape:      MagicMock = self._createMockShape((100, 100), (10, 100))
-        mockDestinationShape: MagicMock = self._createMockShape((500, 500), (10, 100))
+        mockSourceShape:      MagicMock = self._createMockShape(self.MOCK_SOURCE_POSITION, (10, 100))
+        mockDestinationShape: MagicMock = self._createMockShape(self.MOCK_DESTINATION_POSITION, (10, 100))
 
         mockPyutLink:         MagicMock = MagicMock()
 
         oglLink: OglLink = OglLink(srcShape=mockSourceShape, pyutLink=mockPyutLink, dstShape=mockDestinationShape)
-        actualLength:   float = oglLink._computeLinkLength()
+        actualLength:   float = oglLink._computeLinkLength(self.MOCK_SOURCE_POSITION, self.MOCK_DESTINATION_POSITION)
         expectedLength: float = 565.685
         self.assertAlmostEqual(expectedLength, actualLength, places=2)
 
     def _createMockShape(self, position: Tuple[float, float], size: Tuple[int, int]) -> MagicMock:
 
-        mockShape:      MagicMock = MagicMock()
+        mockShape: MagicMock = MagicMock()
+
         mockShape.GetPosition.return_value = position
         mockShape.GetSize.return_value     = size
 
         return mockShape
 
     def _raiseException(self, badOglLink: OglLink):
-        badOglLink._computeDxDy()
+        badOglLink._computeDxDy(srcPosition=self.MOCK_SOURCE_POSITION, destPosition=self.MOCK_DESTINATION_POSITION)
 
 
 def suite() -> TestSuite:

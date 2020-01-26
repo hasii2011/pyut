@@ -36,16 +36,18 @@ class OglAssociation(OglLink):
         @param  srcShape : Source shape
         @param  pyutLink : Conceptual links associated with the graphical links.
         @param  dstShape : Destination shape
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+
         """
         super().__init__(srcShape, pyutLink, dstShape)
 
         # Add labels
         self._labels = {}
+        srcPos  = srcShape.GetPosition()
+        destPos = dstShape.GetPosition()
 
-        linkLength: float = self._computeLinkLength()
-        dx, dy            = self._computeDxDy()
+        linkLength: float = self._computeLinkLength(srcPosition=srcPos, destPosition=destPos)
+        dx, dy            = self._computeDxDy(srcPosition=srcPos, destPosition=destPos)
+
         cenLblX = -dy * 5 / linkLength
         cenLblY = dx * 5 / linkLength
         srcLblX = 20 * dx/linkLength      # - dy*5/l
@@ -57,8 +59,8 @@ class OglAssociation(OglLink):
 
         # Initialize labels objects
         self._labels[CENTER]    = self.AddText(cenLblX, cenLblY,      "", font=self._defaultFont)
-        self._labels[SRC_CARD]  = self._src.AddText(srcLblX, srcLblY, "", font=self._defaultFont)
-        self._labels[DEST_CARD] = self._dst.AddText(dstLblX, dstLblY, "", font=self._defaultFont)
+        self._labels[SRC_CARD]  = self._srcAnchor.AddText(srcLblX, srcLblY, "", font=self._defaultFont)
+        self._labels[DEST_CARD] = self._dstAnchor.AddText(dstLblX, dstLblY, "", font=self._defaultFont)
         self.updateLabels()
         self.SetDrawArrow(False)
 

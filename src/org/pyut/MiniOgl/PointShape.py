@@ -6,15 +6,16 @@ class PointShape(Shape):
     A point, which is drawn as a little square (3 pixels wide).
 
     """
-    def __init__(self, x, y, parent=None):
+    def __init__(self, x: float, y: float, parent=None):
         """
-        Constructor.
 
-        @param double x, y : position of the point
-        @param Shape parent : parent shape
+        Args:
+            x:  x position of the point
+            y:  y position of the point
+            parent:  parent shape
         """
         #  print ">>>PointShape ", x, y
-        Shape.__init__(self, x, y, parent)
+        super().__init__(x, y, parent)
         self._selectZone = 5
         self._visibleWhenSelected = True
 
@@ -54,14 +55,15 @@ class PointShape(Shape):
 
     def Inside(self, x: float, y: float):
         """
-        True if (x, y) is inside the point, according to the selection zone.
 
-        @param  x
-        @param  y
+        Args:
+            x: x coordinate
+            y: y coordinate
 
-        @return bool
+        Returns:          `True` if (x, y) is inside the shape.
+
         """
-        ax, ay = self.GetPosition()     # GetPosition always returns absolute pos
+        ax, ay = self.GetPosition()     # GetPosition always returns absolute position
         zone = self._selectZone
         return (ax - zone < x < ax + zone) and (ay - zone < y < ay + zone)
 

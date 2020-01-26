@@ -26,9 +26,6 @@ from org.pyut.ogl.OglLink import OglLink
 from org.pyut.general.Globals import _
 
 # TODO : Find a way to report moves from AnchorPoints to PyutSDMessage
-#
-
-[CENTER, SRC_CARD, DEST_CARD] = range(3)
 
 
 class OglSDMessage(OglLink):
@@ -46,18 +43,22 @@ class OglSDMessage(OglLink):
         """
         self._pyutSDMessage = pyutSDMessage
 
-        dstAnchor, srcAnchor = self._createAnchorPoints(srcShape=srcShape, pyutSDMessage=pyutSDMessage, dstShape=dstShape)
-
-        self._srcAnchor = srcAnchor
-        self._dstAnchor = dstAnchor
+        # srcAnchor, dstAnchor = self._createAnchorPoints(srcShape=srcShape, pyutSDMessage=pyutSDMessage, dstShape=dstShape)
+        #
+        # self._srcAnchor = srcAnchor
+        # self._dstAnchor = dstAnchor
 
         super().__init__(srcShape=srcShape, pyutLink=pyutSDMessage, dstShape=dstShape)
+
         self.logger: Logger = getLogger(__name__)
 
         self.SetPen(GREEN_PEN)
 
-        linkLength: float = self._computeLinkLength()
-        dx, dy            = self._computeDxDy()
+        srcPos  = self._srcShape.GetPosition()
+        destPos = self._destShape.GetPosition()
+
+        linkLength: float = self._computeLinkLength(srcPosition=srcPos, destPosition=destPos)
+        dx, dy            = self._computeDxDy(srcPosition=srcPos, destPosition=destPos)
 
         centerMessageX    = -dy * 5 / linkLength
         centerMessageY    = dx * 5 / linkLength
@@ -153,4 +154,4 @@ class OglSDMessage(OglLink):
         srcAnchor.SetDraggable(True)
         dstAnchor.SetDraggable(True)
 
-        return dstAnchor, srcAnchor
+        return srcAnchor, dstAnchor

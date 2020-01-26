@@ -1,5 +1,6 @@
 
 from typing import Union
+from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
@@ -21,27 +22,25 @@ class Shape:
     """
     Shape is the basic graphical block. It is also the view in
     a MVC pattern, so it has has a relative model (ShapeModel).
-
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
 
     ID = 0  # internal ID number
 
-    def __init__(self, x=0.0, y=0.0, parent=None):
+    def __init__(self, x: float = 0.0, y: float = 0.0, parent=None):
         """
-        Constructor.
-        If a parent is given, the position is relative to the parent's
-        origin.
+        If a parent is given, the position is relative to the parent's origin.
 
-        @param  x : position of the shape on the diagram
-        @param  y : position of the shape on the diagram
+        Args:
+            x: position of the shape on the diagram
+            y: position of the shape on the diagram
+            parent:
         """
         self.logger: Logger = getLogger(__name__)
 
-        self._x: float = x                 # shape position (view)
-        self._y: float = y                 # shape position (view)
-        self._ox: float = 0.0              # origin position (view)
-        self._oy: float = 0.0              # origin position (view)
+        self._x: float = x      # shape position (view)
+        self._y: float = y      # shape position (view)
+        self._ox: float = 0.0   # origin position (view)
+        self._oy: float = 0.0   # origin position (view)
 
         self._parent = parent       # parent shape
         self._selected = False      # is the shape selected ?
@@ -54,10 +53,9 @@ class Shape:
         self._children = []         # children shapes
         self._privateChildren = []  # private children, not saved
 
-        self._pen:   Pen   = BLACK_PEN      # pen to use
+        self._pen:   Pen   = BLACK_PEN    # pen to use
         self._brush: Brush = WHITE_BRUSH  # brush to use
 
-        #  added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         self._model = ShapeModel(self)  # model of the shape (MVC pattern)
 
         self._id = Shape.ID     # unique ID number
@@ -396,12 +394,13 @@ class Shape:
         """
         self._parent = parent
 
-    def GetPosition(self):
+    def GetPosition(self) -> Tuple[float, float]:
         """
         Return the absolute position of the shape.
-        It's in the diagram's coordinate system.
+        It is in the diagram's coordinate system.
 
-        @return (double, double)
+        Returns: An x,y tuple
+
         """
         if self._parent is not None:
             x, y = self._parent.GetPosition()
@@ -450,11 +449,14 @@ class Shape:
         """
         return self._x, self._y
 
-    def Inside(self, x, y):
+    def Inside(self, x, y) -> bool:
         """
-        True if (x, y) is inside the shape.
 
-        @return bool
+        Args:
+            x: x coordinate
+            y: y coordinate
+
+        Returns:          `True` if (x, y) is inside the shape.
         """
         return False
 

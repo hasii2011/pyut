@@ -199,10 +199,10 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         if self._diagram is not None and not self._protected:
             LineShape.Detach(self)
-            self._src.SetProtected(False)
-            self._dst.SetProtected(False)
-            self._src.Detach()
-            self._dst.Detach()
+            self._srcAnchor.SetProtected(False)
+            self._dstAnchor.SetProtected(False)
+            self._srcAnchor.Detach()
+            self._dstAnchor.Detach()
             try:
                 self.getSourceShape().getLinks().remove(self)
             except ValueError:
@@ -244,19 +244,19 @@ class OglLink(LineShape, ShapeEventHandler):
         srcAnchor.SetPosition(osrcX, osrcY)
         dstAnchor.SetPosition(odstX, odstY)
 
-    def _computeLinkLength(self) -> float:
+    def _computeLinkLength(self, srcPosition: Tuple[float, float], destPosition: Tuple[float, float]) -> float:
         """
 
         Returns:  The length of the link between the source shape and destination shape
         """
-        dx, dy = self._computeDxDy()
+        dx, dy = self._computeDxDy(srcPosition, destPosition)
         linkLength = sqrt(dx*dx + dy*dy)
         if linkLength == 0:
             linkLength = 0.01
 
         return linkLength
 
-    def _computeDxDy(self) -> Tuple[float, float]:
+    def _computeDxDy(self, srcPosition: Tuple[float, float], destPosition: Tuple[float, float]) -> Tuple[float, float]:
         """
 
         Returns: a tuple of deltaX and deltaY of the shape position
@@ -264,8 +264,11 @@ class OglLink(LineShape, ShapeEventHandler):
         if self._srcShape is None or self._destShape is None:
             raise IllegalOperationException('Either the source or the destination shape is None')
 
-        srcX, srcY = self._srcShape.GetPosition()
-        dstX, dstY = self._destShape.GetPosition()
+        # srcX, srcY = self._srcShape.GetPosition()
+        # dstX, dstY = self._destShape.GetPosition()
+        srcX, srcY = srcPosition
+        dstX, dstY = destPosition
+
         dx = dstX - srcX
         dy = dstY - srcY
 

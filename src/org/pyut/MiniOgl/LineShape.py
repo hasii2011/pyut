@@ -19,12 +19,12 @@ class LineShape(Shape):
         """
 
         Args:
-            srcAnchor: the source of the line.
-            dstAnchor: the destination of the line.
+            srcAnchor: the source anchor of the line.
+            dstAnchor: the destination anchor of the line.
         """
         super().__init__()
-        self._src = srcAnchor
-        self._dst = dstAnchor
+        self._srcAnchor = srcAnchor
+        self._dstAnchor = dstAnchor
         self._controls = []
         self._drawArrow = True
         self._arrowSize = 8
@@ -82,9 +82,9 @@ class LineShape(Shape):
             destination anchor, the point will be inserted BEFORE it.
         """
         if after is not None:
-            if after is self._src:
+            if after is self._srcAnchor:
                 self._controls.insert(0, control)
-            elif after is self._dst:
+            elif after is self._dstAnchor:
                 self._controls.append(control)
             else:
                 i = self._controls.index(after)
@@ -102,7 +102,7 @@ class LineShape(Shape):
 
         @return AnchorPoint
         """
-        return self._dst
+        return self._dstAnchor
 
     def SetDestination(self, anchor):
         """
@@ -111,7 +111,7 @@ class LineShape(Shape):
 
         @param anchor
         """
-        self._dst = anchor
+        self._dstAnchor = anchor
         anchor.AddLine(self)
 
     def SetDrawArrow(self, draw: bool):
@@ -152,7 +152,7 @@ class LineShape(Shape):
 
         @return AnchorPoint source
         """
-        return self._src
+        return self._srcAnchor
 
     def SetSource(self, anchor):
         """
@@ -161,7 +161,7 @@ class LineShape(Shape):
 
         @param anchor
         """
-        self._src = anchor
+        self._srcAnchor = anchor
         anchor.AddLine(self)
 
     def GetSegments(self):
@@ -170,8 +170,8 @@ class LineShape(Shape):
 
         @return (double, double) []
         """
-        sp = self._src.GetPosition()
-        dp = self._dst.GetPosition()
+        sp = self._srcAnchor.GetPosition()
+        dp = self._dstAnchor.GetPosition()
         # Python 3 update
         # return [sp] + map(lambda x: x.GetPosition(), self._controls) + [dp]
         return [sp] + list(map(lambda x: x.GetPosition(), self._controls)) + [dp]
@@ -208,8 +208,8 @@ class LineShape(Shape):
             for control in self._controls:
                 control.Draw(dc)
             if self._selected:
-                self._src.Draw(dc)
-                self._dst.Draw(dc)
+                self._srcAnchor.Draw(dc)
+                self._dstAnchor.Draw(dc)
             dc.SetPen(BLACK_PEN)
             if self._drawArrow:
                 u, v = line[-2], line[-1]
@@ -268,8 +268,8 @@ class LineShape(Shape):
             # which we iterate
             while self._controls:
                 self._controls[0].Detach()
-            self._src.RemoveLine(self)
-            self._dst.RemoveLine(self)
+            self._srcAnchor.RemoveLine(self)
+            self._dstAnchor.RemoveLine(self)
 
     def _RemoveControl(self, control):
         """
@@ -350,7 +350,7 @@ class LineShape(Shape):
             return abs(d) < 4.0
 
         # go through each segment of the line
-        points = [self._src] + self._controls + [self._dst]
+        points = [self._srcAnchor] + self._controls + [self._dstAnchor]
         while len(points) > 1:
             x1, y1 = points[0].GetPosition()
             x2, y2 = points[1].GetPosition()
