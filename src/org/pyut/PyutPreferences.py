@@ -177,10 +177,7 @@ class PyutPreferences(Singleton):
 
     def __loadConfig(self):
         """
-        Load data from config file
-
-        @since 1.1.2.5
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Load preferences from configuration file
         """
         # Make sure that the configuration file exists
         # noinspection PyUnusedLocal
@@ -198,6 +195,9 @@ class PyutPreferences(Singleton):
                 return
 
         # Read data
+        self._config = ConfigParser()
+        self._config.read(PyutPreferences.getPreferencesLocation())
+
         # Create a "LastOpenedFiles" structure ?
         hasSection: bool = self._config.has_section(PyutPreferences.OPENED_FILES_SECTION)
         self.logger.debug(f'hasSection: {hasSection}')
