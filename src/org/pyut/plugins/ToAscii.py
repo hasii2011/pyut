@@ -1,7 +1,11 @@
 
+from typing import List
 
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+
 from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class ToAscii(PyutToPlugin):
@@ -20,16 +24,13 @@ class ToAscii(PyutToPlugin):
 
     def getName(self) -> str:
         """
-
         Returns: the name of the plugin.
         """
         return "ASCII Class export"
 
     def getAuthor(self) -> str:
         """
-
         Returns: The author's name
-
         """
         return "Philippe Waelti <pwaelti@eivd.ch>"
 
@@ -54,7 +55,7 @@ class ToAscii(PyutToPlugin):
         """
         return True
 
-    def write(self, oglObjects):
+    def write(self, oglObjects: List[OglClass]):
         """
         Write the data to a file
         Args:
@@ -112,7 +113,7 @@ class ToAscii(PyutToPlugin):
 
             file.close()
 
-    def doAction(self, umlObjects, selectedObjects, umlFrame):
+    def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
         """
 
         Args:
