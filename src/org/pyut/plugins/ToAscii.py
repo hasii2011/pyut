@@ -7,8 +7,6 @@ from org.pyut.ogl.OglClass import OglClass
 class ToAscii(PyutToPlugin):
     """
     Python code generation/reverse engineering
-
-    @version $Revision: 1.4 $
     """
     def __init__(self, umlObjects, umlFrame):
         """
@@ -22,40 +20,29 @@ class ToAscii(PyutToPlugin):
 
     def getName(self) -> str:
         """
-        This method returns the name of the plugin.
 
-        @return string
-        @since 1.1
+        Returns: the name of the plugin.
         """
         return "ASCII Class export"
 
     def getAuthor(self) -> str:
         """
-        This method returns the author of the plugin.
 
-        @return string
-        @since 1.1
+        Returns: The author's name
+
         """
         return "Philippe Waelti <pwaelti@eivd.ch>"
 
     def getVersion(self) -> str:
         """
-        This method returns the version of the plugin.
-
-        @return string
-        @since 1.1
+        Returns: The plugin version string
         """
         return "1.0"
 
     def getMenuTitle(self) -> str:
         """
-        Return a menu title string
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:  The menu title for this plugin
         """
-        # Return the menu title as it must be displayed
         return "ASCII Class Export"
 
     def setOptions(self) -> bool:
@@ -63,18 +50,15 @@ class ToAscii(PyutToPlugin):
         Prepare the import.
         This can be used to ask some questions to the user.
 
-        @return Boolean : if False, the import will be cancelled.
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: if False, the import will be cancelled.
         """
         return True
 
     def write(self, oglObjects):
         """
-        Write data to filename.
-
-        @param oglObjects : Objects to export
-        @author Philippe Waelti
+        Write the data to a file
+        Args:
+            oglObjects:   The objects to export
         """
         import math
         import os.path
@@ -130,13 +114,11 @@ class ToAscii(PyutToPlugin):
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
-        Do the tool's action
 
-        @param OglObject [] umlObjects : list of the uml objects of the diagram
-        @param OglObject [] selectedObjects : list of the selected objects
-        @param UmlFrame umlFrame : the frame of the diagram
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            umlObjects:         list of the uml objects of the diagram
+            selectedObjects:    list of the selected objects
+            umlFrame:           The diagram frame
         """
         if len(selectedObjects) < 1:
             print("Please select class(es)")
