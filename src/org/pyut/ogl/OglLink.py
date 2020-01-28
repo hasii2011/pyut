@@ -8,6 +8,7 @@ from math import sqrt
 
 from wx import BLACK_PEN
 
+from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
@@ -62,26 +63,22 @@ class OglLink(LineShape, ShapeEventHandler):
     the different type of links that exist.
 
     """
+    clsLogger: Logger = getLogger(__name__)
 
     def __init__(self, srcShape, pyutLink, dstShape, srcPos=None, dstPos=None):
         """
-        Constructor.
 
-        @param  srcShape : Source shape
-        @param  pyutLink : Conceptual links associated with the
-                                   graphical links.
-        @param  dstShape : Destination shape
-
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        @modified Laurent Burgbacher <lb@alawa.ch>
-            Support for miniogl
-        @modified C.Dutoit 20021125 : Added srcPos and dstPos
+        Args:
+            srcShape:   Source shape
+            pyutLink:   Conceptual links associated with the graphical links.
+            dstShape:   Destination shape
+            srcPos:     Position of source      Override location of input source
+            dstPos:     Position of destination Override location of input destination
         """
-
-        # Associate src and dest shapes
         self._srcShape  = srcShape
         self._destShape = dstShape
 
+        self.clsLogger.info(f'Input Override positions - srcPos: {srcPos} dstPos: {dstPos}')
         if srcPos is None and dstPos is None:
             srcX, srcY = self._srcShape.GetPosition()
             dstX, dstY = self._destShape.GetPosition()
@@ -122,27 +119,23 @@ class OglLink(LineShape, ShapeEventHandler):
 
             # =========== end avoid overlining-Added by C.Dutoit ================
         else:
-            # Get given position
+            # Use provided position
             (srcX, srcY) = srcPos
             (dstX, dstY) = dstPos
 
-        src = self._srcShape.AddAnchor(srcX, srcY)
-        dst = self._destShape.AddAnchor(dstX, dstY)
-        src.SetPosition(srcX, srcY)
-        dst.SetPosition(dstX, dstY)
-        src.SetVisible(False)
-        dst.SetVisible(False)
-
-        src.SetDraggable(True)
-        dst.SetDraggable(True)
-
+        srcAnchor: AnchorPoint = self._srcShape.AddAnchor(srcX, srcY)
+        dstAnchor: AnchorPoint = self._destShape.AddAnchor(dstX, dstY)
+        srcAnchor.SetPosition(srcX, srcY)
+        dstAnchor.SetPosition(dstX, dstY)
+        srcAnchor.SetVisible(False)
+        dstAnchor.SetVisible(False)
+        self.clsLogger.info(f'src anchor pos: {srcAnchor.GetPosition()} dst anchor pos {dstAnchor.GetPosition()}')
+        srcAnchor.SetDraggable(True)
+        dstAnchor.SetDraggable(True)
         # Init
-        LineShape.__init__(self, src, dst)
-        self.logger: Logger = getLogger(__name__)
-
+        LineShape.__init__(self, srcAnchor, dstAnchor)
         # Set up painting colors
         self.SetPen(BLACK_PEN)
-
         # Keep reference to the PyutLink for mouse events, in order
         # to can find back the corresponding link
         if pyutLink is not None:
@@ -190,6 +183,9 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         self._link = pyutLink
 
+    def getAnchors(self) -> Tuple[AnchorPoint, AnchorPoint]:
+        return self._srcAnchor, self._dstAnchor
+
     def Detach(self):
         """
         Detach the line and all its line points, including src and dst.
@@ -220,7 +216,7 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         Optimize line, so that the line length is minimized
         """
-        self.logger.info("OptimizeLine")
+        self.clsLogger.info("OptimizeLine")
         # Get elements
         srcAnchor = self.GetSource()
         dstAnchor = self.GetDestination()
@@ -231,7 +227,7 @@ class OglLink(LineShape, ShapeEventHandler):
         srcSize = self._srcShape.GetSize()
         dstSize = self._destShape.GetSize()
 
-        self.logger.info(f"({srcX},{srcY}) / ({dstX},{dstY})")
+        self.clsLogger.info(f"({srcX},{srcY}) / ({dstX},{dstY})")
         # Find new positions
         # Little tips
         osrcX, osrcY, odstX, odstY = dstX, dstY, srcX, srcY

@@ -79,6 +79,16 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.MiniOgl.LineShape": {
+            "level":     "WARNING",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.MiniOgl.Shape": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
 
         "org.pyut.persistence.PyutXmlV8": {
             "level":     "INFO",
@@ -118,11 +128,12 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.ogl.OglSDMessge": {
+        "org.pyut.ogl.sd.OglSDMessage": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+
         "org.pyut.commands.CommandGroup": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

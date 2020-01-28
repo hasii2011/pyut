@@ -25,6 +25,7 @@ class Shape:
     """
 
     ID = 0  # internal ID number
+    clsLogger: Logger = getLogger(__name__)
 
     def __init__(self, x: float = 0.0, y: float = 0.0, parent=None):
         """
@@ -35,8 +36,6 @@ class Shape:
             y: position of the shape on the diagram
             parent:
         """
-        self.logger: Logger = getLogger(__name__)
-
         self._x: float = x      # shape position (view)
         self._y: float = y      # shape position (view)
         self._ox: float = 0.0   # origin position (view)
@@ -60,7 +59,7 @@ class Shape:
 
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
-        if self.logger.level == pythonDebugLoggingLevel:
+        if self.clsLogger.level == pythonDebugLoggingLevel:
             from org.pyut.MiniOgl.TextShape import TextShape
             from org.pyut.MiniOgl.LineShape import LineShape
             if not isinstance(self, (TextShape, LineShape)):
@@ -264,7 +263,7 @@ class Shape:
         t = TextShape(x, y, text, self, font=font)
         if self._diagram is not None:
             self._diagram.AddShape(t)
-        self.logger.debug(f"Text: {t} added")
+        self.clsLogger.debug(f"Text: {t} added")
         return t
 
     def Attach(self, diagram):
@@ -288,9 +287,9 @@ class Shape:
         removed, and link lines too.
         """
         # do not detach a protected shape
-        self.logger.debug(f"In shape.Detach with: {self}")
+        self.clsLogger.debug(f"In shape.Detach with: {self}")
         if self._diagram is not None and not self._protected:
-            self.logger.debug(f"passed first condition")
+            self.clsLogger.debug(f"passed first condition")
 
             self.GetModel()._views.remove(self)
 
@@ -308,9 +307,9 @@ class Shape:
                 child.Detach()
                 child.SetProtected(True)
 
-            self.logger.debug("now, the shapes are", diagram.GetShapes())
+            # self.clsLogger.debug("now, the shapes are", diagram.GetShapes())
 
-    def Draw(self, dc: DC, withChildren: bool = True):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Draw the shape.
         For a shape, only the anchors are drawn. Nothing is drawn if the

@@ -15,7 +15,6 @@ from wx import OK
 from wx import TextEntryDialog
 
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.TextShape import TextShape
 
 from org.pyut.PyutSDMessage import PyutSDMessage
@@ -32,6 +31,8 @@ class OglSDMessage(OglLink):
     """
     Class for a graphical message
     """
+    clsLogger: Logger = getLogger(__name__)
+
     def __init__(self, srcShape: OglSDInstance, pyutSDMessage: PyutSDMessage, dstShape: OglSDInstance):
         """
 
@@ -43,22 +44,20 @@ class OglSDMessage(OglLink):
         """
         self._pyutSDMessage = pyutSDMessage
 
-        # srcAnchor, dstAnchor = self._createAnchorPoints(srcShape=srcShape, pyutSDMessage=pyutSDMessage, dstShape=dstShape)
-        #
-        # self._srcAnchor = srcAnchor
-        # self._dstAnchor = dstAnchor
-
         super().__init__(srcShape=srcShape, pyutLink=pyutSDMessage, dstShape=dstShape)
+        # LineShape.__init__(self, srcAnchor=srcAnchor, dstAnchor=dstAnchor)
+        #
+        # Override OglLink anchors
+        #
+        srcAnchor, dstAnchor = self._createAnchorPoints(srcShape=srcShape, pyutSDMessage=pyutSDMessage, dstShape=dstShape)
+        srcAnchorPosition  = srcAnchor.GetPosition()
+        dstAnchorPosition = dstAnchor.GetPosition()
+        self.clsLogger.debug(f'__init__ -  src anchor: {srcAnchorPosition} dest anchor: {dstAnchorPosition}')
+        self._srcAnchor: AnchorPoint = srcAnchor
+        self._dstAnchor: AnchorPoint = dstAnchor
 
-        self.logger: Logger = getLogger(__name__)
-
-        self.SetPen(GREEN_PEN)
-
-        srcPos  = self._srcShape.GetPosition()
-        destPos = self._destShape.GetPosition()
-
-        linkLength: float = self._computeLinkLength(srcPosition=srcPos, destPosition=destPos)
-        dx, dy            = self._computeDxDy(srcPosition=srcPos, destPosition=destPos)
+        linkLength: float = self._computeLinkLength(srcPosition=srcAnchorPosition, destPosition=dstAnchorPosition)
+        dx, dy            = self._computeDxDy(srcPosition=srcAnchorPosition, destPosition=dstAnchorPosition)
 
         centerMessageX    = -dy * 5 / linkLength
         centerMessageY    = dx * 5 / linkLength
@@ -72,7 +71,7 @@ class OglSDMessage(OglLink):
         """
         Define the positions on lifeline (y)
         """
-        self.logger.debug(f'OglMessage - updatePositions')
+        self.clsLogger.debug(f'OglMessage - updatePositions')
         src = self.GetSource()
         dst = self.GetDestination()
         srcY = self._pyutSDMessage.getSrcY() + src.GetParent().GetSegments()[0][1]
@@ -104,7 +103,7 @@ class OglSDMessage(OglLink):
         """
         return self._pyutSDMessage
 
-    def Draw(self, dc: DC,  withChildren: bool = True):
+    def Draw(self, dc: DC,  withChildren: bool = False):
         """
         Called for drawing the contents of links.
 
@@ -114,8 +113,15 @@ class OglSDMessage(OglLink):
         """
         self.updateMessage()
 
-        self.logger.info(f"Draw: Src Pos: '{self.GetSource().GetPosition()}' dest Pos '{self.GetDestination().GetPosition()}'")
-        LineShape.Draw(self, dc, withChildren)
+        srcAnchor, dstAnchor = self.getAnchors()
+
+        srcX, srcY = srcAnchor.GetPosition()
+        dstX, dstY = dstAnchor.GetPosition()
+        self.clsLogger.debug(f'Draw line from: ({srcX},{srcY})  to: ({dstX},{dstY})')
+        dc.SetPen(GREEN_PEN)
+        dc.DrawLine(srcX, srcY, dstX, dstY)
+        self.DrawArrow(dc, srcAnchor.GetPosition(), dstAnchor.GetPosition())
+        self.DrawChildren(dc=dc)
 
     def OnLeftDClick(self, event):
         """
@@ -127,10 +133,10 @@ class OglSDMessage(OglLink):
             self._pyutSDMessage.setMessage(dlg.GetValue())
         dlg.Destroy()
 
-    def _createAnchorPoints(self, srcShape: OglSDInstance, dstShape: OglSDInstance, pyutSDMessage: PyutSDMessage) -> Tuple[AnchorPoint, AnchorPoint]:
+    def _createAnchorPoints(self, srcShape: OglSDInstance, dstShape: OglSDInstance,
+                            pyutSDMessage: PyutSDMessage) -> Tuple[AnchorPoint, AnchorPoint]:
         """
         Royal ready to heat rice
-
 
         Args:
             dstShape:

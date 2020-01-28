@@ -1,3 +1,9 @@
+
+from typing import Tuple
+
+from logging import Logger
+from logging import getLogger
+
 from wx import BLACK_PEN
 from wx import DC
 from wx import RED_PEN
@@ -12,9 +18,9 @@ class LineShape(Shape):
     This is a line, passing through control points.
     The line must begin and end with AnchorPoints, and can be guided by
     ControlPoints.
-
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
+    clsLogger: Logger = getLogger(__name__)
+
     def __init__(self, srcAnchor: AnchorPoint, dstAnchor: AnchorPoint):
         """
 
@@ -168,12 +174,12 @@ class LineShape(Shape):
         """
         Return a list of tuples which are the coordinates of the control points.
 
-        @return (double, double) []
+        Returns:  A list of float tuples
+
         """
         sp = self._srcAnchor.GetPosition()
         dp = self._dstAnchor.GetPosition()
-        # Python 3 update
-        # return [sp] + map(lambda x: x.GetPosition(), self._controls) + [dp]
+        self.clsLogger.debug(f'GetSegments --  sp: {sp} dp: {dp}')
         return [sp] + list(map(lambda x: x.GetPosition(), self._controls)) + [dp]
 
     def GetControlPoints(self):
@@ -186,7 +192,7 @@ class LineShape(Shape):
         """
         return self._controls[:]
 
-    def Draw(self, dc: DC, withChildren: bool = True):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Draw the line on the dc.
 
@@ -223,7 +229,7 @@ class LineShape(Shape):
         """
         self.Draw(dc)
 
-    def DrawArrow(self, dc: DC, u: float, v: float):
+    def DrawArrow(self, dc: DC, u: Tuple[float, float], v: Tuple[float, float]):
         """
         Draw an arrow at the end of the segment uv.
 
