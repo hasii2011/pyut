@@ -24,7 +24,7 @@ class ToAscii(PyutToPlugin):
     """
     Python code generation/reverse engineering
     """
-    def __init__(self, umlObjects, umlFrame):
+    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
         """
 
         Args:

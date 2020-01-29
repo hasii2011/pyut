@@ -14,13 +14,10 @@ from sys import path as sysPath
 import importlib
 
 from wx import FD_OPEN
-from wx import ICON_ERROR
 from wx import ID_OK
-from wx import OK
 
 from wx import DirDialog
 from wx import FileDialog
-from wx import MessageDialog
 
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 from org.pyut.plugins.IoPython import IoPython
@@ -39,7 +36,12 @@ class ToPython(PyutToPlugin):
     Python code generation/reverse engineering
     """
     def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
+        """
 
+        Args:
+            umlObjects:  list of ogl objects
+            umlFrame:    the umlframe of pyut
+        """
         super().__init__(umlObjects, umlFrame)
 
         self.logger: Logger = getLogger(__name__)

@@ -1,3 +1,6 @@
+
+from typing import List
+
 from wx import ICON_ERROR
 from wx import MessageDialog
 from wx import OK
@@ -7,19 +10,21 @@ from org.pyut.general.Mediator import getMediator
 
 from org.pyut.plugins.PyutPlugin import PyutPlugin
 
+from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.ui.UmlFrame import UmlFrame
+
 
 class PyutToPlugin(PyutPlugin):
     """
-    Note : to merge with my PyutToPlugin
+    Note : Merge with PyutToPlugin
     """
-    def __init__(self, umlObjects, umlFrame):
+    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
         """
-        Constructor.
 
-        @param umlObjects : list of uml objects
-        @param umlFrame : the umlframe of pyut
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            umlObjects:  list of ogl objects
+            umlFrame:    the umlframe of pyut
         """
         super().__init__(umlFrame=umlFrame, ctrl=Mediator())
         self._umlObjects = umlObjects

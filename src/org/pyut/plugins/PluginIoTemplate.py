@@ -1,133 +1,111 @@
 
+from typing import List
+from typing import Tuple
+from typing import cast
+
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+
+from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class PluginName(PyutIoPlugin):
     """
     Sample class for input/output plug-ins.
-
-    @author Laurent Burgbacher <lb@alawa.ch>
-    @version $Revision: 1.3 $
     """
-    def __init__(self, oglObjects, umlFrame):
+    def __init__(self, oglObjects: List[OglClass], umlFrame: UmlFrame):
         """
-        Constructor.
 
-        @param OglObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
-
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            oglObjects:  list of ogl objects
+            umlFrame:    the umlframe of pyut
         """
-        PyutIoPlugin.__init__(self, oglObjects, umlFrame)
+        super().__init__(oglObjects, umlFrame)
 
-        # your initializations now
-
-    def getName(self):
+    def getName(self) -> str:
         """
-        This method returns the name of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.2
+        Returns: the name of the plugin.
         """
         return "No name"
 
-    def getAuthor(self):
+    def getAuthor(self) -> str:
         """
-        This method returns the author of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.2
+        Returns: The author's name
         """
         return "No author"
 
-    def getVersion(self):
+    def getVersion(self) -> str:
         """
-        This method returns the version of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.2
+        Returns: The plugin version string
         """
         return "0.0"
 
-    def getInputFormat(self):
+    def getInputFormat(self) -> Tuple[str, str, str]:
         """
-        Return a specification tupple.
+        return None if this plugin can't read.
+        otherwise, return a tuple with
+            name of the input format
+            extension of the input format
+            textual description of the plugin input format
+            example :
+                return ("Text", "txt", "Tabbed text...")
 
-        @return tupple
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.2
+        Returns:
+            Return a specification tuple.
         """
-        # return None if this plugin can't read.
-        # otherwise, return a tupple with
-        # - name of the input format
-        # - extension of the input format
-        # - textual description of the plugin input format
-        # example : return ("Text", "txt", "Tabbed text...")
-        return None
+        return cast(Tuple[str, str, str], None)
 
-    def getOutputFormat(self):
+    def getOutputFormat(self) -> Tuple[str, str, str]:
         """
-        Return a specification tupple.
+        return None if this plugin can't write.
+        otherwise, return a tupple with
+            name of the output format
+            extension of the output format
+            textual description of the plugin output format
+        example:
+            return ("Text", "txt", "Tabbed text...")
 
-        @return tupple
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.2
+        Returns:
+            Return a specification tuple.
         """
-        # return None if this plugin can't write.
-        # otherwise, return a tupple with
-        # - name of the output format
-        # - extension of the output format
-        # - textual description of the plugin output format
-        # example : return ("Text", "txt", "Tabbed text...")
-        return None
+        return cast(Tuple[str, str, str], None)
 
-    def setImportOptions(self):
+    def setImportOptions(self) -> bool:
         """
         Prepare the import.
         This can be used to ask some questions to the user.
 
-        @return Boolean : if False, the import will be cancelled.
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:
+            if False, the import will be cancelled.
         """
-        # here, you can open a dialog to ask the user for import options
-        # return False if the user wants to cancel at this point
         return True
 
-    def setExportOptions(self):
+    def setExportOptions(self) -> bool:
         """
         Prepare the export.
-        This can be used to ask some questions to the user.
+        This can be used to ask the user some questions
 
-        @return Boolean : if False, the export will be cancelled.
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:
+            if False, the export will be cancelled.
         """
-        # here, you can open a dialog to ask the user for export options
-        # return False if the user wants to cancel at this point
         return True
 
-    def read(self, oglObjects, umlFrame):
+    def read(self, oglObjects: List[OglClass], umlFrame: UmlFrame):
         """
         Read data from filename. Abstract.
 
-        @param oglObjects: list of imported objects
-        @param umlFrame : Pyut's UmlFrame
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            oglObjects: list of imported objects
+            umlFrame:   Pyut's UmlFrame
         """
         pass
 
-    def write(self, oglObjects):
+    def write(self, oglObjects: List[OglClass]):
         """
         Write data
 
-        @param oglObjects : list of exported objects
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            oglObjects:     list of exported objects
         """
         pass

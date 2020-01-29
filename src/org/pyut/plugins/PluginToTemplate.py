@@ -12,16 +12,14 @@ class PluginName(PyutToPlugin):
     """
     Sample class for tool plugin.
     """
-    def __init__(self, oglObjects, umlFrame):
+    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
         """
-        Constructor.
 
-        @param OglObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            umlObjects:  list of ogl objects
+            umlFrame:    the umlframe of pyut
         """
-        PyutToPlugin.__init__(self, oglObjects, umlFrame)
+        super().__init__(umlObjects, umlFrame)
 
     def getName(self):
         """
@@ -37,7 +35,7 @@ class PluginName(PyutToPlugin):
 
     def getVersion(self):
         """
-        Returns: The author's name
+        Returns: The plugin version string
         """
         return "0.0"
 
