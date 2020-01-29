@@ -31,6 +31,7 @@ class PyutPreferences(Singleton):
 
     ORG_DIRECTORY:              str = 'orgDirectory'
     LAST_DIRECTORY:             str = 'LastDirectory'
+    STARTUP_DIRECTORY:          str = 'Startup_Directory'
     SHOW_TIPS_ON_STARTUP:       str = 'Show_Tips_On_Startup'
     AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
     SHOW_PARAMETERS:            str = 'Show_Parameters'
@@ -39,6 +40,7 @@ class PyutPreferences(Singleton):
     CURRENT_TIP:                str = 'Current_Tip'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
+        STARTUP_DIRECTORY:          '.',
         SHOW_TIPS_ON_STARTUP:       'False',
         AUTO_RESIZE_SHAPE_ON_EDIT:  'False',
         SHOW_PARAMETERS:            'False',

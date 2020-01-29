@@ -45,6 +45,8 @@ class Pyut:
 
     def setUserPath(self, theNewValue: str):
         self._userPath = theNewValue
+        prefs: PyutPreferences = PyutPreferences()
+        prefs[PyutPreferences.STARTUP_DIRECTORY] = theNewValue
 
     def getCmdLineArgsHandled(self) -> bool:
         return self._cmdLineArgsHandled

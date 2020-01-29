@@ -1,6 +1,20 @@
 
 from typing import List
 
+from math import floor
+from math import ceil
+
+from os import path as osPath
+from os import chdir
+from os import getcwd
+
+from wx import MessageDialog
+from wx import DirDialog
+
+from wx import OK
+from wx import ID_CANCEL
+
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 from org.pyut.ogl.OglClass import OglClass
@@ -61,8 +75,19 @@ class ToAscii(PyutToPlugin):
         Args:
             oglObjects:   The objects to export
         """
-        import math
-        import os.path
+
+        saveDir:    str             = getcwd()
+        prefs:      PyutPreferences = PyutPreferences()
+        defaultDir: str             = prefs[PyutPreferences.STARTUP_DIRECTORY]
+
+        dirDialog: DirDialog = DirDialog(parent=None, message='Save ASCII files to directory?', defaultPath=defaultDir)
+        ans = dirDialog.ShowModal()
+        if ans == ID_CANCEL:
+            chdir(saveDir)
+            return
+        selectedDir = dirDialog.GetPath()
+        print(f'selectedDir: {selectedDir}')
+        chdir(selectedDir)
 
         for oglObject in oglObjects:
 
@@ -74,7 +99,7 @@ class ToAscii(PyutToPlugin):
             suffix = 2
             filename = o.getName()
 
-            while os.path.exists(filename + ".acl"):
+            while osPath.exists(filename + ".acl"):
                 print("File exists")
                 filename += str(suffix)
                 suffix += 1
@@ -95,7 +120,7 @@ class ToAscii(PyutToPlugin):
 
             for line in base:
                 spaces = lnlgth - 4 - len(line)
-                file.write("| " + int(math.floor(spaces / 2.0)) * " " + line + int(math.ceil(spaces / 2.0)) * " " + " |\n")
+                file.write("| " + int(floor(spaces / 2.0)) * " " + line + int(ceil(spaces / 2.0)) * " " + " |\n")
 
             file.write("|" + (lnlgth - 2) * "-" + "|\n")
 
@@ -113,6 +138,8 @@ class ToAscii(PyutToPlugin):
 
             file.close()
 
+        chdir(saveDir)
+
     def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
         """
 
@@ -122,6 +149,8 @@ class ToAscii(PyutToPlugin):
             umlFrame:           The diagram frame
         """
         if len(selectedObjects) < 1:
-            print("Please select class(es)")
+            booBoo: MessageDialog = MessageDialog(parent=None, message='Please select classes(es)',
+                                                  caption='Try Again!', style=OK)
+            booBoo.ShowModal()
             return
         self.write(selectedObjects)
