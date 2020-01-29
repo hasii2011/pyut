@@ -1,4 +1,9 @@
 
+from typing import List
+
+from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ui.UmlFrame import UmlFrame
+
 
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
@@ -6,8 +11,6 @@ from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 class PluginName(PyutToPlugin):
     """
     Sample class for tool plugin.
-    @author C.Dutoit <dutoitc@hotmail.com>
-    @version $Revision: 1.4 $
     """
     def __init__(self, oglObjects, umlFrame):
         """
@@ -22,43 +25,26 @@ class PluginName(PyutToPlugin):
 
     def getName(self):
         """
-        This method returns the name of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: the name of the plugin.
         """
         return "No name"
 
     def getAuthor(self):
         """
-        This method returns the author of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: The author's name
         """
         return "No author"
 
     def getVersion(self):
         """
-        This method returns the version of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: The author's name
         """
         return "0.0"
 
     def getMenuTitle(self):
         """
-        Return a menu title string
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:  The menu title for this plugin
         """
-        # Return the menu title as it must be displayed
         return "Untitled plugin"
 
     def setOptions(self):
@@ -66,20 +52,17 @@ class PluginName(PyutToPlugin):
         Prepare the import.
         This can be used to ask some questions to the user.
 
-        @return Boolean : if False, the import will be cancelled.
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: if False, the import will be cancelled.
         """
         return True
 
-    def doAction(self, umlObjects, selectedObjects, umlFrame):
+    def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
         """
         Do the tool's action
 
-        @param OglObject [] umlObjects : list of the uml objects of the diagram
-        @param OglObject [] selectedObjects : list of the selected objects
-        @param UmlFrame umlFrame : the frame of the diagram
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            umlObjects:         list of the uml objects of the diagram
+            selectedObjects:    list of the selected objects
+            umlFrame:           The diagram frame
         """
         pass

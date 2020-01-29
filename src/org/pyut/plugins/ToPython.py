@@ -1,5 +1,6 @@
 
 from typing import cast
+from typing import List
 
 from logging import Logger
 from logging import getLogger
@@ -31,8 +32,6 @@ from org.pyut.general.Globals import _
 class ToPython(PyutToPlugin):
     """
     Python code generation/reverse engineering
-
-    @version $Revision: 1.4 $
     """
     def __init__(self, umlObjects, umlFrame):
 
@@ -42,54 +41,35 @@ class ToPython(PyutToPlugin):
 
     def getName(self):
         """
-        This method returns the name of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.1
+        Returns: the name of the plugin.
         """
         return "Python class reverse engineering"
 
     def getAuthor(self):
         """
-        This method returns the author of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.1
+        Returns: The author's name
         """
         return "L.Burgbacher <lb@alawa.ch>"
 
     def getVersion(self):
         """
-        This method returns the version of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.1
+        Returns: The plugin version string
         """
         return "1.0"
 
     def getMenuTitle(self):
         """
-        Return a menu title string
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:  The menu title for this plugin
         """
-        # Return the menu title as it must be displayed
         return "Reverse Selected Python Classes"
 
-    def doAction(self, umlObjects, selectedObjects, umlFrame):
+    def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
         """
-        Do the tool's action
 
-        @param OglObject [] umlObjects : list of the uml objects of the diagram
-        @param OglObject [] selectedObjects : list of the selected objects
-        @param UmlFrame umlFrame : the frame of the diagram
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            umlObjects:         list of the uml objects of the diagram
+            selectedObjects:    list of the selected objects
+            umlFrame:           The diagram frame
         """
         if umlFrame is None:
             # TODO : displayError
