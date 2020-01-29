@@ -13,19 +13,24 @@ from sys import path as sysPath
 
 import importlib
 
-import wx
+from wx import FD_OPEN
+from wx import ICON_ERROR
+from wx import ID_OK
+from wx import OK
+
+from wx import DirDialog
+from wx import FileDialog
+from wx import MessageDialog
 
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.IoPython import IoPython
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
-from org.pyut.plugins.IoPython import IoPython
-
 from org.pyut.general.Mediator import getMediator
-
 from org.pyut.general.Globals import _
 
 
@@ -72,15 +77,15 @@ class ToPython(PyutToPlugin):
             umlFrame:           The diagram frame
         """
         if umlFrame is None:
-            # TODO : displayError
-            self.logger.error(f'No umlFrame')
+            booBoo: MessageDialog = MessageDialog(parent=None, message='No UML frame', caption='Try Again!', style=OK | ICON_ERROR)
+            booBoo.ShowModal()
             return
 
         ctrl = getMediator()
         project = ctrl.getFileHandling().getProjectFromFrame(umlFrame)
         if project.getCodePath() == "":
-            dlg = wx.DirDialog(None, _("Choose the root directory for the code"), getcwd())
-            if dlg.ShowModal() == wx.ID_OK:
+            dlg = DirDialog(None, _("Choose the root directory for the code"), getcwd())
+            if dlg.ShowModal() == ID_OK:
                 codeDir = dlg.GetPath()
                 self.logger.info(f"Chosen directory is {codeDir}")
                 umlFrame.setCodePath(codeDir)
@@ -102,8 +107,8 @@ class ToPython(PyutToPlugin):
             pyutClass = oglClass.getPyutObject()
             filename = pyutClass.getFilename()
             if filename == "":
-                dlg = wx.FileDialog(None, _("Choose the file for this UML class"), project.getCodePath(), "", "*.py", wx.FD_OPEN)
-                if dlg.ShowModal() != wx.ID_OK:
+                dlg = FileDialog(None, _("Choose the file for this UML class"), project.getCodePath(), "", "*.py", FD_OPEN)
+                if dlg.ShowModal() != ID_OK:
                     dlg.Destroy()
                     continue
                 filename = dlg.GetPaths()[0]

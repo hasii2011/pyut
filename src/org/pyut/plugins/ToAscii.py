@@ -8,6 +8,7 @@ from os import path as osPath
 from os import chdir
 from os import getcwd
 
+from wx import ICON_ERROR
 from wx import MessageDialog
 from wx import DirDialog
 
@@ -150,7 +151,7 @@ class ToAscii(PyutToPlugin):
         """
         if len(selectedObjects) < 1:
             booBoo: MessageDialog = MessageDialog(parent=None, message='Please select classes(es)',
-                                                  caption='Try Again!', style=OK)
+                                                  caption='Try Again!', style=OK | ICON_ERROR)
             booBoo.ShowModal()
             return
         self.write(selectedObjects)
