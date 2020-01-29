@@ -1,3 +1,6 @@
+from wx import ICON_ERROR
+from wx import MessageDialog
+from wx import OK
 
 from org.pyut.general.Mediator import Mediator
 from org.pyut.general.Mediator import getMediator
@@ -8,8 +11,6 @@ from org.pyut.plugins.PyutPlugin import PyutPlugin
 class PyutToPlugin(PyutPlugin):
     """
     Note : to merge with my PyutToPlugin
-    @author C.Dutoit <dutoitc@hotmail.com>
-    @version $Revision: 1.5 $
     """
     def __init__(self, umlObjects, umlFrame):
         """
@@ -24,45 +25,39 @@ class PyutToPlugin(PyutPlugin):
         self._umlObjects = umlObjects
         self._umlFrame = umlFrame
 
+    @staticmethod
+    def displayNothingSelected():
+        booBoo: MessageDialog = MessageDialog(parent=None, message='Please select some frame objects',
+                                              caption='Try Again!', style=OK | ICON_ERROR)
+        booBoo.ShowModal()
+
+    @staticmethod
+    def displayNoUmlFrame():
+        booBoo: MessageDialog = MessageDialog(parent=None, message='No UML frame', caption='Try Again!', style=OK | ICON_ERROR)
+        booBoo.ShowModal()
+
     def getName(self) -> str:
         """
-        This method returns the name of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: the name of the plugin.
         """
         return "Unnamed tool plugin"
 
     def getAuthor(self) -> str:
         """
-        This method returns the author of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: The author's name
         """
         return "anonymous"
 
     def getVersion(self) -> str:
         """
-        This method returns the version of the plugin.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: The plugin version string
         """
         return "0.0"
 
     def getMenuTitle(self) -> str:
         """
-        Return a menu title string
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:  The menu title for this plugin
         """
-        # Return the menu title as it must be displayed
         return "Untitled plugin"
 
     def setOptions(self) -> bool:
@@ -70,18 +65,13 @@ class PyutToPlugin(PyutPlugin):
         Prepare the import.
         This can be used to ask some questions to the user.
 
-        @return Boolean : if False, the import will be cancelled.
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns: if False, the import will be cancelled.
         """
         return True
 
     def callDoAction(self):
         """
         This is used internally, don't overload it.
-
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
         """
         if not self.setOptions():
             return

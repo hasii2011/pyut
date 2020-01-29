@@ -8,11 +8,8 @@ from os import path as osPath
 from os import chdir
 from os import getcwd
 
-from wx import ICON_ERROR
-from wx import MessageDialog
 from wx import DirDialog
 
-from wx import OK
 from wx import ID_CANCEL
 
 from org.pyut.PyutPreferences import PyutPreferences
@@ -150,8 +147,6 @@ class ToAscii(PyutToPlugin):
             umlFrame:           The diagram frame
         """
         if len(selectedObjects) < 1:
-            booBoo: MessageDialog = MessageDialog(parent=None, message='Please select classes(es)',
-                                                  caption='Try Again!', style=OK | ICON_ERROR)
-            booBoo.ShowModal()
+            self.displayNothingSelected()
             return
         self.write(selectedObjects)

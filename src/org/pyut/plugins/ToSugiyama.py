@@ -1,4 +1,7 @@
 
+from typing import List
+
+from org.pyut.ogl.OglClass import OglClass
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 from org.pyut.plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
@@ -18,6 +21,7 @@ from org.pyut.ogl.OglLink import OglLink
 from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
+from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class ToSugiyama(PyutToPlugin):
@@ -31,22 +35,13 @@ class ToSugiyama(PyutToPlugin):
     structure). This plugin give good result with diagram which contains
     a lot of hierachical relation (inheritance and interface), and poor
     association relation.
-
-    Instantiated by ../PluginManager.py
-
-    :author: Nicolas Dubois
-    :contact: nicdub@gmx.ch
-    :version: $Revision: 1.8 $
     """
-    def __init__(self, umlObjects, umlFrame):
+    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
         """
-        Constructor.
-
-        @param umlObjects : list of uml objects
-        @param umlFrame : the umlframe of pyut
-        @author Nicolas Dubois
+        Args:
+            umlObjects: list of ogl objects
+            umlFrame: PyUt's UML Frame
         """
-        # Call father initialisation
         super().__init__(umlObjects, umlFrame)
 
         # Sugiyama nodes and links
@@ -64,42 +59,72 @@ class ToSugiyama(PyutToPlugin):
         #  A level is a list of nodes (real or virtual).
         self.__levels = []  # List of levels
 
-    def getName(self):
+    def getName(self) -> str:
         """
-        This method returns the name of the plugin.
-
-        @return string
-        @author Nicolas Dubois
+        Returns: the name of the plugin.
         """
         return "Sugiyama automatic layout"
 
-    def getAuthor(self):
+    def getAuthor(self) -> str:
         """
-        This method returns the author of the plugin.
-
-        @return string
-        @author Nicolas Dubois
+        Returns: The author's name
         """
         return "Nicolas Dubois <nicdub@gmx.ch>"
 
-    def getVersion(self):
+    def getVersion(self) -> str:
         """
-        This method returns the version of the plugin.
-
-        @return string
-        @author Nicolas Dubois
+        Returns: The plugin version string
         """
         return "1.0"
 
-    def getMenuTitle(self):
+    def getMenuTitle(self) -> str:
         """
-        Return a menu title string
-
-        @return string
-        @author Nicolas Dubois
+        Returns:  The menu title for this plugin
         """
-        # Return the menu title as it must be displayed
         return "Sugiyama ALayout"
+
+    def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
+        """
+
+        Args:
+            umlObjects:         list of the uml objects of the diagram
+            selectedObjects:    list of the selected objects
+            umlFrame:           The diagram frame
+        """
+
+        if umlFrame is None:
+            self.displayNoUmlFrame()
+            return
+
+        print("Begin Sugiyama algorithm")
+        # Create the subgraph containing the hierarchical relations
+        self.__createInterfaceOglALayout(umlObjects)
+
+        # Compute the best level for each nodes
+        if not self.__levelFind():
+            print("Error: there is a cycle in hierarchial links. Sugiyama" " algorithm could not be applied")
+            return
+
+        # Add vitual nodes between fathers and sons which are separated by
+        # more than one level.
+        self.__addVirtualNodes()
+
+        # Apply barycenter algorithm to the graph for minimizing crossings
+        self.__barycenter()
+        print("Nb of hierarchical intersections:", self.__getNbIntersectAll())
+
+        # Add non hierarchical nodes to levels
+        # ~ print self.__nonHierarchyGraphNodesList
+        # ~ print self.__nonHierarchyGraphLinksList
+        self.__addNonHierarchicalNodes()
+
+        # Fix the coordinates xy of the nodes
+        self.__fixPositions()
+
+        # Redraw frame
+        self._umlFrame.Refresh()
+
+        print("End Sugiyama algorithm")
 
     def __createInterfaceOglALayout(self, oglObjects):
         """
@@ -1028,46 +1053,3 @@ class ToSugiyama(PyutToPlugin):
         # each virtual nodes
         for link in self.__sugiyamaLinksList:
             link.fixControlPoints()
-
-    def doAction(self, umlObjects, selectedObjects, umlFrame):
-        """
-        Do the tool's action
-
-        @param OglObject [] umlObjects : list of uml objects of the diagram
-        @param OglObject [] selectedObjects : list of the selected objects
-        @param UmlFrame umlFrame : the frame of the diagram
-        @author Nicolas Dubois
-        """
-        if umlFrame is None:
-            # TODO : displayError "No frame opened"
-            return
-
-        print("Begin Sugiyama algorithm")
-        # Create the subgraph containing the hierarchical relations
-        self.__createInterfaceOglALayout(umlObjects)
-
-        # Compute the best level for each nodes
-        if not self.__levelFind():
-            print("Error: there is a cycle in hierarchial links. Sugiyama" " algorithm could not be applied")
-            return
-
-        # Add vitual nodes between fathers and sons which are separated by
-        # more than one level.
-        self.__addVirtualNodes()
-
-        # Apply barycenter algorithm to the graph for minimizing crossings
-        self.__barycenter()
-        print("Nb of hierarchical intersections:", self.__getNbIntersectAll())
-
-        # Add non hierarchical nodes to levels
-        # ~ print self.__nonHierarchyGraphNodesList
-        # ~ print self.__nonHierarchyGraphLinksList
-        self.__addNonHierarchicalNodes()
-
-        # Fix the coordinates xy of the nodes
-        self.__fixPositions()
-
-        # Redraw frame
-        self._umlFrame.Refresh()
-
-        print("End Sugiyama algorithm")

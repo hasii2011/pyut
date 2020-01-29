@@ -38,7 +38,7 @@ class ToPython(PyutToPlugin):
     """
     Python code generation/reverse engineering
     """
-    def __init__(self, umlObjects, umlFrame):
+    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
 
         super().__init__(umlObjects, umlFrame)
 
@@ -77,8 +77,7 @@ class ToPython(PyutToPlugin):
             umlFrame:           The diagram frame
         """
         if umlFrame is None:
-            booBoo: MessageDialog = MessageDialog(parent=None, message='No UML frame', caption='Try Again!', style=OK | ICON_ERROR)
-            booBoo.ShowModal()
+            self.displayNoUmlFrame()
             return
 
         ctrl = getMediator()
