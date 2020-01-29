@@ -8,10 +8,6 @@ from os import path as osPath
 from os import chdir
 from os import getcwd
 
-from wx import DirDialog
-
-from wx import ID_CANCEL
-
 from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
@@ -73,17 +69,13 @@ class ToAscii(PyutToPlugin):
         Args:
             oglObjects:   The objects to export
         """
-
         saveDir:    str             = getcwd()
         prefs:      PyutPreferences = PyutPreferences()
         defaultDir: str             = prefs[PyutPreferences.STARTUP_DIRECTORY]
 
-        dirDialog: DirDialog = DirDialog(parent=None, message='Save ASCII files to directory?', defaultPath=defaultDir)
-        ans = dirDialog.ShowModal()
-        if ans == ID_CANCEL:
-            chdir(saveDir)
+        selectedDir = self._askForDirectoryExport(preferredDefaultPath=defaultDir)
+        if selectedDir == '':
             return
-        selectedDir = dirDialog.GetPath()
         print(f'selectedDir: {selectedDir}')
         chdir(selectedDir)
 

@@ -60,6 +60,9 @@ class IoCpp(PyutIoPlugin):
         # example : return ("Text", "txt", "Tabbed text...")
         return "C++ file", "cpp", "C++ file format"
 
+    def setExportOptions(self) -> bool:
+        return True
+
     def _visibility(self, elements, public, private, protected):
         """
         Put all ellement of elements list to list public, private, protected.

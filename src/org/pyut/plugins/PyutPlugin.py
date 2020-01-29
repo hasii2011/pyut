@@ -13,19 +13,19 @@ from wx import ID_CANCEL
 from wx import FileDialog
 from wx import FileSelector
 
+from org.pyut.ui.UmlFrame import UmlFrame
+
 
 class PyutPlugin:
     """
     Standard plugin tools
     """
-
-    def __init__(self, umlFrame, ctrl):
+    def __init__(self, umlFrame: UmlFrame, ctrl):
         """
-        Constructor.
 
-        @param umlFrame : the umlframe of pyut
-        @param  ctrl : mediator to use
-        @author C.Dutoit
+        Args:
+            umlFrame:   PyUt's UML frame
+            ctrl:       The mediator to use
         """
         self._umlFrame = umlFrame
         self._ctrl     = ctrl
@@ -53,16 +53,20 @@ class PyutPlugin:
         """
         return "*", "*", "All"
 
-    def _askForFileImport(self, multiple=False):
+    def _askForFileImport(self, multiple: bool = False):
         """
         Called by plugin to ask which file must be imported
 
-        @param Boolean multiple : True for multiple file selection
-        @return filename or "" for multiple=False, filenames[] or [] else
-                "", [] indicates that the user pressed the cancel button
-        @since 1.2
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            multiple: True to allow multi-file selection
+
+        Returns:
+            filename or "" for multiple=False, filenames[] or
+            [] else
+            "",
+            [] indicates that the user pressed the cancel button
         """
+
         inputformat = self.getInputFormat()
         if multiple:
             dlg = FileDialog(
@@ -88,9 +92,6 @@ class PyutPlugin:
     def _askForFileExport(self):
         """
         Called by plugin to ask which file must be exported
-
-        @since 1.2
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         inputFormat = self.getOutputFormat()
         file = FileSelector(
@@ -103,10 +104,6 @@ class PyutPlugin:
     def _askForDirectoryImport(self):
         """
         Called by plugin to ask which file must be imported
-
-        @since 1.3
-        @return The directory or "" if canceled by user
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         aDirectory = DirDialog(self._umlFrame, "Choose a directory to import", defaultPath=self._ctrl.getCurrentDir())
         # TODO : add this when supported...(cd)         style=wx.DD_NEW_DIR_BUTTON)
@@ -119,16 +116,17 @@ class PyutPlugin:
             aDirectory.Destroy()
             return directory
 
-    def _askForDirectoryExport(self):
+    def _askForDirectoryExport(self, preferredDefaultPath: str = None):
         """
         Called by plugin to ask for an output directory
-
-        @since 1.2
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
-        dirDialog = DirDialog(self._umlFrame, "Choose a destination directory", defaultPath=self._ctrl.getCurrentDir())
-        # TODO : add this when supported...(cd)         style=wx.DD_NEW_DIR_BUTTON)
-        dirDialog.SetPath(os.getcwd())
+        if preferredDefaultPath is None:
+            defaultPath: str = self._ctrl.getCurrentDir()
+        else:
+            defaultPath = preferredDefaultPath
+
+        dirDialog = DirDialog(self._umlFrame, "Choose a destination directory", defaultPath=defaultPath)
+        # dirDialog.SetPath(os.getcwd())
         if dirDialog.ShowModal() == ID_CANCEL:
             dirDialog.Destroy()
             return ""
