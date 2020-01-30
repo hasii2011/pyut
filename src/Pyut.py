@@ -122,7 +122,7 @@ class Pyut:
         print(f'WxPython: {wx.__version__}')
         print(f'Python:   {sys.version.split(" ")[0]}')
 
-    def handleCommandLineArguments(self) :
+    def handleCommandLineArguments(self):
         """
         Handle command line arguments, display help, ...
 
