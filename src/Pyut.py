@@ -153,7 +153,6 @@ class Pyut:
 
 if __name__ == "__main__":
 
-    # setupSystemLogging()
     print(f"Starting {Pyut.MADE_UP_PRETTY_MAIN_NAME}")
 
     pyut2: Pyut = Pyut()
