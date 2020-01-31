@@ -82,12 +82,10 @@ from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.persistence.FileHandling import FileHandling
+from org.pyut.ui.FileHandling import FileHandling
 
 from org.pyut.plugins.PluginManager import PluginManager
 
-from org.pyut.general.Mediator import ACTION_NEW_SD_MESSAGE
-from org.pyut.general.Mediator import ACTION_NEW_SD_INSTANCE
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
 from org.pyut.general.Globals import IMG_PKG

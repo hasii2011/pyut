@@ -12,7 +12,7 @@ from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 from org.pyut.ui.UmlFrame import UmlFrame
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
-from org.pyut.persistence.FileHandling import FileHandling
+from org.pyut.ui.FileHandling import FileHandling
 from org.pyut.general import Mediator
 
 
