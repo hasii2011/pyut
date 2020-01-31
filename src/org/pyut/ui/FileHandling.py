@@ -5,6 +5,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import FD_SAVE
 from wx import FD_OVERWRITE_PROMPT
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
@@ -31,6 +32,7 @@ from wx import Notebook
 from wx import MessageDialog
 from wx import Yield
 
+from org.pyut.PyutDocument import PyutDocument
 from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
@@ -71,16 +73,14 @@ class FileHandling:
     Used by AppFrame to contain all UML frames, the notebook and
     the project tree.
 
-    All actions called from AppFrame are executing on the current frame
-
-    :author: C.Dutoit
-    :contact: <dutoitc@hotmail.com>
-    :version: $Revision: 1.35 $
+    All actions called from AppFrame are executed on the current frame
     """
     def __init__(self, parent, mediator):
         """
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+
+        Args:
+            parent:
+            mediator:
         """
         self.logger: Logger = getLogger(__name__)
 
@@ -97,6 +97,9 @@ class FileHandling:
     def registerUmlFrame(self, frame):
         """
         Register the current UML Frame
+
+        Args:
+            frame:
         """
         self._currentFrame = frame
         self._currentProject = self.getProjectFromFrame(frame)
@@ -104,7 +107,6 @@ class FileHandling:
     def _initGraphicalElements(self):
         """
         Define all graphical elements
-        @author C.Dutoit
         """
         # window splitting
         self.__splitter: SplitterWindow = SplitterWindow(self.__parent, -1)
@@ -113,6 +115,7 @@ class FileHandling:
         self.__projectTree: TreeCtrl = TreeCtrl(self.__splitter, -1, style=TR_HIDE_ROOT + TR_HAS_BUTTONS)
         self.__projectTreeRoot       = self.__projectTree.AddRoot(_("Root"))
 
+        self.__projectTree.Bind(EVT_TREE_ITEM_RIGHT_CLICK, self.__onProjectTreeRightClick)
         #  self.__projectTree.SetPyData(self.__projectTreeRoot, None)
         # Expand root, since wx.TR_HIDE_ROOT is not supported under winx
         # Not supported for hidden tree since wx.Python 2.3.3.1 ?
@@ -140,26 +143,34 @@ class FileHandling:
 
     def getProjects(self):
         """
-        Return all projects
 
-        @return PyutProject[] the projects
-        @author C.Dutoit
+        Returns:
+            Return all projects
         """
         return self._projects
 
-    def isProjectLoaded(self, filename):
+    def isProjectLoaded(self, filename) -> bool:
         """
-        Return True if the project is already loaded
-        @author C.Dutoit
+
+        Args:
+            filename:
+
+        Returns:
+            `True` if the project is already loaded
         """
         for project in self._projects:
             if project.getFilename == filename:
                 return True
         return False
 
-    def isDefaultFilename(self, filename):
+    def isDefaultFilename(self, filename: str) -> bool:
         """
-        Return True if the filename is the default filename
+
+        Args:
+            filename:
+
+        Returns:
+            `True` if the filename is the default filename
         """
         return filename == PyutConstants.DefaultFilename
 
@@ -171,10 +182,9 @@ class FileHandling:
             filename:
             project:
 
-        Returns: True if succeeded
-
+        Returns:
+            `True` if operation succeeded
         """
-
         # Exit if the file is already loaded
         if not self.isDefaultFilename(filename) and self.isProjectLoaded(filename):
             PyutUtils.displayError(_("The selected file is already loaded !"))
@@ -217,8 +227,9 @@ class FileHandling:
         """
         Insert a file in the current project
 
-        @param filename : filename of the project to insert
-        @author C.Dutoit
+        Args:
+            filename: filename of the project to insert
+
         """
         # Get current project
         project = self._currentProject
@@ -247,18 +258,17 @@ class FileHandling:
         if len(project.getDocuments()) > nbInitialDocuments:
             self._frame = project.getDocuments()[nbInitialDocuments].getFrame()
 
-    def saveFile(self):
+    def saveFile(self) -> bool:
         """
         save to the current filename
 
-        @return bool True if succeeded
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Returns:
+            `True` if the save suceeds else `False`
         """
         currentProject = self._currentProject
         if currentProject is None:
             PyutUtils.displayError(_("No diagram to save !"), _("Error"))
-            return
+            return False
 
         if currentProject.getFilename() is None or currentProject.getFilename() == PyutConstants.DefaultFilename:
             return self.saveFileAs()
@@ -267,11 +277,10 @@ class FileHandling:
 
     def saveFileAs(self):
         """
-        Ask for a filename and save datas to it.
+        Ask for a filename and save the diagram data
 
-        @return bool True if succeeded
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Returns:
+            `True` if the save suceeds else `False`
         """
         if self._ctrl.isInScriptMode():
             PyutUtils.displayError(_("Save File As is not accessible in script mode !"))
@@ -335,8 +344,6 @@ class FileHandling:
     def newProject(self):
         """
         Begin a new project
-
-        @author C.Dutoit
         """
         project = PyutProject(PyutConstants.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
         self._projects.append(project)
@@ -349,8 +356,6 @@ class FileHandling:
 
         Args:
             docType:  Type of document; one cited in PyutConsts.py
-
-        @author C.Dutoit
         """
         project = self._currentProject
         if project is None:
@@ -369,7 +374,10 @@ class FileHandling:
     def exportToImageFile(self, extension, imageType):
         """
         Export the current diagram to an image file
-        @author C.Dutoit
+
+        Args:
+            extension:
+            imageType:
         """
         # Exit if in scripting mode
         if self._ctrl.isInScriptMode():
@@ -381,7 +389,8 @@ class FileHandling:
         """
         Export the current diagram to bitmap
 
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         # Exit if in scripting mode
         if self._ctrl.isInScriptMode():
@@ -395,7 +404,9 @@ class FileHandling:
         """
         Export the current diagram to a jpeg file
 
-        @author C.Dutoit
+        Args:
+            event:
+
         """
         self.exportToImageFile("jpg", BITMAP_TYPE_JPEG)
 
@@ -404,7 +415,8 @@ class FileHandling:
         """
         Export the current diagram to a png file
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         self.exportToImageFile("png", BITMAP_TYPE_PNG)
 
@@ -413,8 +425,8 @@ class FileHandling:
         """
         Export the current diagram to postscript
 
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         dlg = MessageDialog(self.__parent, _("Not yet implemented !"), _("Sorry..."), OK | ICON_QUESTION)
         dlg.ShowModal()
@@ -426,8 +438,8 @@ class FileHandling:
         """
         Callback for notebook page changed
 
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.0
+        Args:
+            event:
         """
         self.__notebookCurrentPage = self.__notebook.GetSelection()
         if self._ctrl is not None:      # hasii maybe I got this right from the old pre PEP-8 code
@@ -444,7 +456,9 @@ class FileHandling:
         """
         Callback for notebook page changed
 
-        @author C.Dutoit
+        Args:
+            event:
+
         """
         itm: TreeItemId = event.GetItem()
         pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
@@ -468,9 +482,7 @@ class FileHandling:
         """
         Get the current frame in the notebook
 
-        @return frame Current frame in the notebook; -1 if none selected
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.0
+        Returns:
         """
         # Return None if we are in scripting mode
         if self._ctrl.isInScriptMode():
@@ -484,54 +496,57 @@ class FileHandling:
 
     def getCurrentFrame(self):
         """
-        Get the current frame
-        @author C.Dutoit
+
+        Returns:
+            Get the current frame
         """
         return self._currentFrame
 
-    def getCurrentProject(self):
+    def getCurrentProject(self) -> PyutProject:
         """
         Get the current working project
 
-        @return Project : the current project or None if not found
-        @author C.Dutoit
+        Returns:
+            the current project or None if not found
         """
         return self._currentProject
 
-    def getProjectFromFrame(self, frame: UmlDiagramsFrame):
+    def getProjectFromFrame(self, frame: UmlDiagramsFrame) -> PyutProject:
         """
         Return the project that owns a given frame
 
-        @param wx.Frame frame : the frame to get his project
-        @return PyutProject or None if not found
-        @author C.Dutoit
+        Args:
+            frame:  the frame to get This project
+
+        Returns:
+            PyutProject or None if not found
         """
         for project in self._projects:
             if frame in project.getFrames():
                 return project
-        return None
+        return cast(PyutProject, None)
 
-    def getCurrentDocument(self):
+    def getCurrentDocument(self) -> PyutDocument:
         """
         Get the current document.
 
-        @return PyutDocument : the current document or None if not found
-        @author C.Dutoit
+        Returns:
+            the current document or None if not found
         """
         project = self.getCurrentProject()
         if project is None:
-            return None
+            return cast(PyutDocument, None)
         for document in project.getDocuments():
             if document.getFrame() is self._currentFrame:
                 return document
-        return None
+        return cast(PyutDocument, None)
 
-    def onClose(self):
+    def onClose(self) -> bool:
         """
         Close all files
 
-        @return True if everything's ok
-        @author C.Dutoit
+        Returns:
+            True if everything is ok
         """
         # Display warning if we are in scripting mode
         if self._ctrl.isInScriptMode():
@@ -574,8 +589,9 @@ class FileHandling:
         """
         Set the Modified flag of the currently opened diagram
 
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            flag:
+
         """
         if self._currentProject is not None:
             self._currentProject.setModified(flag)
@@ -585,9 +601,8 @@ class FileHandling:
         """
         Close the current project
 
-        @return True if everything's ok
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Returns:
+            True if everything is ok
         """
         # No frame left ?
         if self._currentProject is None and self._currentFrame is not None:
@@ -636,7 +651,9 @@ class FileHandling:
         """
         Remove all my references to a given uml frame
 
-        @author C.Dutoit
+        Args:
+            umlFrame:
+
         """
         # Current frame ?
         if self._currentFrame is umlFrame:
@@ -652,13 +669,15 @@ class FileHandling:
                 self.__notebook.DeletePage(i)
                 break
 
-    def getProjectFromOglObjects(self, oglObjects):
+    def getProjectFromOglObjects(self, oglObjects) -> PyutProject:
         """
         Get a project that owns oglObjects
 
-        @param oglObjects Objects to find their parents
-        @return PyutProject if found, None else
-        @author C.Dutoit
+        Args:
+            oglObjects: Objects to find their parents
+
+        Returns:
+            PyutProject if found, None else
         """
         for project in self._projects:
             for frame in project.getFrames():
@@ -667,4 +686,8 @@ class FileHandling:
                 for obj in oglObjects:
                     if obj in shapes:
                         return project
-        return None
+
+        return cast(PyutProject, None)
+
+    def __onProjectTreeRightClick(self, event: TreeEvent):
+        self.logger.info(f'event: {event}')
