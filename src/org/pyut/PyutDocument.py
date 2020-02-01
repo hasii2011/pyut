@@ -2,11 +2,11 @@
 from logging import Logger
 from logging import getLogger
 
+from wx import TreeCtrl
+from wx import TreeItemId
+
 from org.pyut.PyutConstants import DiagramsLabels
 
-# from org.pyut.PyutConstants import CLASS_DIAGRAM
-# from org.pyut.PyutConstants import SEQUENCE_DIAGRAM
-# from org.pyut.PyutConstants import USECASE_DIAGRAM
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -15,26 +15,9 @@ from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 from org.pyut.PyutUtils import PyutUtils
 
 
-def shorterFilename(filename):
-    """
-    Return a shorter filename to display
-
-    @param filename file name to display
-    @return String better file name
-    @since 1.0
-    @author C.Dutoit <dutoitc@hotmail.com>
-    """
-    import os
-    return os.path.split(filename)[1]
-
-
 class PyutDocument:
     """
     Document : Contain a document : frames, properties, ...
-
-    :author: C.Dutoit
-    :contact: <dutoitc@hotmail.com>
-    :version: $Revision: 1.8 $
     """
 
     def __init__(self, parentFrame, project, docType: DiagramType):
@@ -68,21 +51,19 @@ class PyutDocument:
             self._title = DiagramsLabels[DiagramType.CLASS_DIAGRAM]
             self._frame = UmlClassDiagramsFrame(parentFrame)
 
-    def getType(self):
+    def getType(self) -> DiagramType:
         """
-        Return the document's type
 
-        @author C.Dutoit
-        @return String : the document's type as string
+        Returns:
+                The document type
         """
         return self._type
 
-    def getDiagramTitle(self):
+    def getDiagramTitle(self) -> str:
         """
-        Return the filename for captions
 
-        @author C.Dutoit
-        @return String : the caption
+        Returns:
+            The diagram caption
         """
         return self._project.getFilename() + "/" + self._title
 
@@ -95,13 +76,18 @@ class PyutDocument:
         """
         return self._frame
 
-    def addToTree(self, tree, root):
-        self._tree = tree
-        self._treeRootParent = root
+    def addToTree(self, tree: TreeCtrl, root: TreeItemId):
+        """
+
+        Args:
+            tree:   The tree control
+            root:   The itemId of the parent root
+        """
+        self._tree: TreeCtrl = tree
+        self._treeRootParent: TreeItemId = root
+
         # Add the project to the project tree
-        self._treeRoot = tree.AppendItem(
-                         self._treeRootParent,
-                         self._title)
+        self._treeRoot: TreeItemId = tree.AppendItem(self._treeRootParent, self._title)
         # self._tree.Expand(self._treeRoot)
         # self._tree.SetPyData(self._treeRoot, self._frame)
         self._tree.SetItemData(self._treeRoot, self._frame)
@@ -109,8 +95,6 @@ class PyutDocument:
     def updateTreeText(self):
         """
         Update the tree text for this document
-
-        @author C.Dutoit
         """
         self._tree.SetItemText(self._treeRoot, self._title)
 
@@ -118,5 +102,4 @@ class PyutDocument:
         """
         Remove this document.
         """
-        # Remove from tree
         self._tree.Delete(self._treeRoot)

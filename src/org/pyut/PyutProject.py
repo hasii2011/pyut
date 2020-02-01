@@ -24,22 +24,6 @@ from org.pyut.general.Globals import _
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
-
-def shorterFilename(filename):
-    """
-    Return a shorter filename to display
-
-    Args:
-        filename:  file name to display
-
-    Returns:
-        String better file name
-    """
-
-    import os
-    return os.path.split(filename)[1]
-
-
 UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])
 
 
@@ -136,7 +120,7 @@ class PyutProject:
         Add the project to the project tree
         """
         # self._treeRoot = self._tree.AppendItem(self._treeRootParent, shorterFilename(self._filename), data=TreeItemData(self))
-        self._treeRoot = self._tree.AppendItem(self._treeRootParent, shorterFilename(self._filename), data=self)
+        self._treeRoot = self._tree.AppendItem(self._treeRootParent, PyutUtils.shorterFilename(self._filename), data=self)
         self._tree.Expand(self._treeRoot)
 
         # Add the frames
@@ -269,7 +253,7 @@ class PyutProject:
         """
         Update the tree text for this document
         """
-        self._tree.SetItemText(self._treeRoot, shorterFilename(self._filename))
+        self._tree.SetItemText(self._treeRoot, PyutUtils.shorterFilename(self._filename))
         for document in self._documents:
             document.updateTreeText()
 

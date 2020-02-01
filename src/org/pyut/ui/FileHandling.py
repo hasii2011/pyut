@@ -5,6 +5,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import CommandEvent
+from wx import EVT_MENU
 from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import FD_SAVE
 from wx import FD_OVERWRITE_PROMPT
@@ -12,6 +14,7 @@ from wx import EVT_NOTEBOOK_PAGE_CHANGED
 from wx import EVT_TREE_SEL_CHANGED
 from wx import ID_OK
 from wx import ID_YES
+from wx import ITEM_NORMAL
 from wx import OK
 from wx import YES_NO
 from wx import ICON_ERROR
@@ -31,16 +34,15 @@ from wx import TreeCtrl
 from wx import Notebook
 from wx import MessageDialog
 from wx import Yield
+from wx import Menu
 
 from org.pyut.PyutDocument import PyutDocument
+from org.pyut.PyutUtils import PyutUtils
+from org.pyut.PyutConstants import PyutConstants
+from org.pyut.PyutProject import PyutProject
+
 from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
-
-from org.pyut.PyutUtils import PyutUtils
-
-from org.pyut.PyutConstants import PyutConstants
-
-from org.pyut.PyutProject import PyutProject
 
 from org.pyut.general.Globals import _
 
@@ -585,16 +587,16 @@ class FileHandling:
         self._currentProject = None
         self._currentFrame = None
 
-    def setModified(self, flag=True):
+    def setModified(self, theNewValue: bool = True):
         """
         Set the Modified flag of the currently opened diagram
 
         Args:
-            flag:
+            theNewValue:
 
         """
         if self._currentProject is not None:
-            self._currentProject.setModified(flag)
+            self._currentProject.setModified(theNewValue)
         self._ctrl.updateTitle()
 
     def closeCurrentProject(self):
@@ -693,4 +695,20 @@ class FileHandling:
 
         itemId: TreeItemId = treeEvent.GetItem()
         data = self.__projectTree.GetItemData(item=itemId)
-        self.logger.info(f'Item Data: {data}')
+        self.logger.info(f'Item Data: {data}  currentProject: {self._currentProject.getFilename()}')
+        if isinstance(data, PyutProject):
+            self.__popupProjectMenu()
+
+    def __popupProjectMenu(self):
+
+        [closeProjectMenuID] = PyutUtils.assignID(1)
+        popupMenu: Menu = Menu('Actions')
+        popupMenu.AppendSeparator()
+        popupMenu.Append(closeProjectMenuID, 'Close Project', 'Remove project from tree', ITEM_NORMAL)
+        popupMenu.Bind(EVT_MENU, self.__onCloseProject, id=closeProjectMenuID)
+        self.__parent.PopupMenu(popupMenu)
+
+    # noinspection PyUnusedLocal
+    def __onCloseProject(self, event: CommandEvent):
+        self.logger.info(f'I have arrived')
+        self.closeCurrentProject()
