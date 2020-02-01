@@ -107,39 +107,6 @@ class FileHandling:
         self._currentFrame = frame
         self._currentProject = self.getProjectFromFrame(frame)
 
-    def _initGraphicalElements(self):
-        """
-        Define all graphical elements
-        """
-        # window splitting
-        self.__splitter: SplitterWindow = SplitterWindow(self.__parent, -1)
-
-        # project tree
-        self.__projectTree: TreeCtrl = TreeCtrl(self.__splitter, -1, style=TR_HIDE_ROOT + TR_HAS_BUTTONS)
-        self.__projectTreeRoot       = self.__projectTree.AddRoot(_("Root"))
-
-        self.__projectTree.Bind(EVT_TREE_ITEM_RIGHT_CLICK, self.__onProjectTreeRightClick)
-        #  self.__projectTree.SetPyData(self.__projectTreeRoot, None)
-        # Expand root, since wx.TR_HIDE_ROOT is not supported under winx
-        # Not supported for hidden tree since wx.Python 2.3.3.1 ?
-        #  self.__projectTree.Expand(self.__projectTreeRoot)
-
-        # diagram container
-        self.__notebook = Notebook(self.__splitter, -1, style=CLIP_CHILDREN)
-
-        # Set splitter
-        self.__splitter.SetMinimumPaneSize(20)
-        #  self.__splitter.SplitVertically(self.__projectTree, self.__notebook)
-        #  self.__splitter.SetSashPosition(100)
-        self.__splitter.SplitVertically(self.__projectTree, self.__notebook, 160)
-
-        #  ...
-        self.__notebookCurrentPage = -1
-
-        # Callbacks
-        self.__parent.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self.__onNotebookPageChanged)
-        self.__parent.Bind(EVT_TREE_SEL_CHANGED,  self.__onProjectTreeSelChanged)
-
     def showFrame(self, frame):
         self._frame = frame
         frame.Show()
@@ -436,66 +403,6 @@ class FileHandling:
         dlg.Destroy()
         return
 
-    # noinspection PyUnusedLocal
-    def __onNotebookPageChanged(self, event):
-        """
-        Callback for notebook page changed
-
-        Args:
-            event:
-        """
-        self.__notebookCurrentPage = self.__notebook.GetSelection()
-        if self._ctrl is not None:      # hasii maybe I got this right from the old pre PEP-8 code
-            #  self._ctrl.registerUMLFrame(self._getCurrentFrame())
-            self._currentFrame = self._getCurrentFrameFromNotebook()
-            self.__parent.notifyTitleChanged()
-        # self.__projectTree.SelectItem(getID(self.getCurrentFrame()))
-        # TODO : how can I do getID ???
-
-        # Register the current project
-        self._currentProject = self.getProjectFromFrame(self._currentFrame)
-
-    def __onProjectTreeSelChanged(self, event: TreeEvent):
-        """
-        Callback for notebook page changed
-
-        Args:
-            event:
-        """
-        itm: TreeItemId = event.GetItem()
-        pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
-        self.logger.info(f'Clicked on: `{pyutData}`')
-        # Use our own base type
-        if isinstance(pyutData, UmlDiagramsFrame):
-            frame: UmlDiagramsFrame = pyutData
-            self._currentFrame = frame
-            self._currentProject = self.getProjectFromFrame(frame)
-
-            # Select the frame in the notebook
-            for i in range(self.__notebook.GetPageCount()):
-                pageFrame = self.__notebook.GetPage(i)
-                if pageFrame is frame:
-                    self.__notebook.SetSelection(i)
-                    return
-        elif isinstance(pyutData, PyutProject):
-            self._currentProject = pyutData
-
-    def _getCurrentFrameFromNotebook(self):
-        """
-        Get the current frame in the notebook
-
-        Returns:
-        """
-        # Return None if we are in scripting mode
-        if self._ctrl.isInScriptMode():
-            return None
-
-        noPage = self.__notebookCurrentPage
-        if noPage == -1:
-            return None
-        frame = self.__notebook.GetPage(noPage)
-        return frame
-
     def getCurrentFrame(self):
         """
 
@@ -690,6 +597,99 @@ class FileHandling:
                         return project
 
         return cast(PyutProject, None)
+
+    def _initGraphicalElements(self):
+        """
+        Define all graphical elements
+        """
+        # window splitting
+        self.__splitter: SplitterWindow = SplitterWindow(self.__parent, -1)
+
+        # project tree
+        self.__projectTree: TreeCtrl = TreeCtrl(self.__splitter, -1, style=TR_HIDE_ROOT + TR_HAS_BUTTONS)
+        self.__projectTreeRoot       = self.__projectTree.AddRoot(_("Root"))
+
+        self.__projectTree.Bind(EVT_TREE_ITEM_RIGHT_CLICK, self.__onProjectTreeRightClick)
+        #  self.__projectTree.SetPyData(self.__projectTreeRoot, None)
+        # Expand root, since wx.TR_HIDE_ROOT is not supported under winx
+        # Not supported for hidden tree since wx.Python 2.3.3.1 ?
+        #  self.__projectTree.Expand(self.__projectTreeRoot)
+
+        # diagram container
+        self.__notebook = Notebook(self.__splitter, -1, style=CLIP_CHILDREN)
+
+        # Set splitter
+        self.__splitter.SetMinimumPaneSize(20)
+        #  self.__splitter.SplitVertically(self.__projectTree, self.__notebook)
+        #  self.__splitter.SetSashPosition(100)
+        self.__splitter.SplitVertically(self.__projectTree, self.__notebook, 160)
+
+        #  ...
+        self.__notebookCurrentPage = -1
+
+        # Callbacks
+        self.__parent.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self.__onNotebookPageChanged)
+        self.__parent.Bind(EVT_TREE_SEL_CHANGED,  self.__onProjectTreeSelChanged)
+
+    # noinspection PyUnusedLocal
+    def __onNotebookPageChanged(self, event):
+        """
+        Callback for notebook page changed
+
+        Args:
+            event:
+        """
+        self.__notebookCurrentPage = self.__notebook.GetSelection()
+        if self._ctrl is not None:      # hasii maybe I got this right from the old pre PEP-8 code
+            #  self._ctrl.registerUMLFrame(self._getCurrentFrame())
+            self._currentFrame = self._getCurrentFrameFromNotebook()
+            self.__parent.notifyTitleChanged()
+        # self.__projectTree.SelectItem(getID(self.getCurrentFrame()))
+        # TODO : how can I do getID ???
+
+        # Register the current project
+        self._currentProject = self.getProjectFromFrame(self._currentFrame)
+
+    def __onProjectTreeSelChanged(self, event: TreeEvent):
+        """
+        Callback for notebook page changed
+
+        Args:
+            event:
+        """
+        itm: TreeItemId = event.GetItem()
+        pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
+        self.logger.info(f'Clicked on: `{pyutData}`')
+        # Use our own base type
+        if isinstance(pyutData, UmlDiagramsFrame):
+            frame: UmlDiagramsFrame = pyutData
+            self._currentFrame = frame
+            self._currentProject = self.getProjectFromFrame(frame)
+
+            # Select the frame in the notebook
+            for i in range(self.__notebook.GetPageCount()):
+                pageFrame = self.__notebook.GetPage(i)
+                if pageFrame is frame:
+                    self.__notebook.SetSelection(i)
+                    return
+        elif isinstance(pyutData, PyutProject):
+            self._currentProject = pyutData
+
+    def _getCurrentFrameFromNotebook(self):
+        """
+        Get the current frame in the notebook
+
+        Returns:
+        """
+        # Return None if we are in scripting mode
+        if self._ctrl.isInScriptMode():
+            return None
+
+        noPage = self.__notebookCurrentPage
+        if noPage == -1:
+            return None
+        frame = self.__notebook.GetPage(noPage)
+        return frame
 
     def __onProjectTreeRightClick(self, treeEvent: TreeEvent):
 
