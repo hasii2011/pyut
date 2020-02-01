@@ -53,23 +53,6 @@ TreeDataType = TypeVar('TreeDataType', PyutProject, UmlDiagramsFrame)
 DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)
 
 
-def shortenNotebookPageFileName(filename: str) -> str:
-    """
-    Return a shorter filename to display
-
-    Args:
-        filename:  The file name to display
-
-    Returns:
-        A better file name
-    """
-    aString = osPath.split(filename)[1]
-    if len(aString) > 12:
-        return aString[:4] + aString[-8:]
-    else:
-        return aString
-
-
 class FileHandling:
     """
     FileHandling : Handle files in Pyut
@@ -78,6 +61,8 @@ class FileHandling:
 
     All actions called from AppFrame are executed on the current frame
     """
+    MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12
+
     def __init__(self, parent, mediator):
         """
 
@@ -336,7 +321,8 @@ class FileHandling:
         self._currentProject = project
 
         if not self._ctrl.isInScriptMode():
-            self.__notebook.AddPage(frame, shortenNotebookPageFileName(project.getFilename()))
+            shortName: str = self.shortenNotebookPageFileName(project.getFilename())
+            self.__notebook.AddPage(frame, shortName)
             self.notebookCurrentPage  = self.__notebook.GetPageCount() - 1
             # self.notebook.SetSelection(self.__notebookCurrentPage)  # maybe __notebook ?  -- hasii
 
@@ -712,3 +698,23 @@ class FileHandling:
     def __onCloseProject(self, event: CommandEvent):
         self.logger.info(f'I have arrived')
         self.closeCurrentProject()
+
+    def shortenNotebookPageFileName(self, filename: str) -> str:
+        """
+        Return a shorter filename to display; For file names longer
+        than `MAX_NOTEBOOK_PAGE_NAME_LENGTH` this method takes the first
+        four characters and the last eight as the shortened file name
+
+        Args:
+            filename:  The file name to display
+
+        Returns:
+            A better file name
+        """
+        justFileName: str = osPath.split(filename)[1]
+        if len(justFileName) > FileHandling.MAX_NOTEBOOK_PAGE_NAME_LENGTH:
+            firstFour: str = justFileName[:4]
+            lastEight: str = justFileName[-8:]
+            return f'{firstFour}{lastEight}'
+        else:
+            return justFileName

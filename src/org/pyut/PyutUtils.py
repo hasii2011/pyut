@@ -97,9 +97,9 @@ class PyutUtils:
         return retList
 
     @staticmethod
-    def shorterFilename(filename):
+    def getJustTheFileName(filename):
         """
-        Return a shorter filename to display
+        Return just the file name portion of the fully qualified path
 
         Args:
             filename:  file name to display
