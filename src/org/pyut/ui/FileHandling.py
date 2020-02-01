@@ -39,7 +39,7 @@ from wx import Menu
 from org.pyut.PyutDocument import PyutDocument
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import PyutConstants
-from org.pyut.PyutProject import PyutProject
+from org.pyut.ui.PyutProject import PyutProject
 
 from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
