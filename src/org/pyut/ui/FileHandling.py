@@ -163,13 +163,13 @@ class FileHandling:
             return False
 
         try:
-            for document in project.getDocuments():
-                if not self._ctrl.isInScriptMode():
+            if not self._ctrl.isInScriptMode():
+                for document in project.getDocuments():
                     self.__notebook.AddPage(document.getFrame(), document.getDiagramTitle())
 
-            if not self._ctrl.isInScriptMode():
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
+                
             if len(project.getDocuments()) > 0:
                 self._currentFrame = project.getDocuments()[0].getFrame()
 
