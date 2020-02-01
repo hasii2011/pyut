@@ -51,16 +51,15 @@ TreeDataType = TypeVar('TreeDataType', PyutProject, UmlDiagramsFrame)
 DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)
 
 
-def shorterFilename(filename):
+def shorterFilename(filename: str) -> str:
     """
     Return a shorter filename to display
 
-    @param filename file name to display
-    @return String better file name
-    @since 1.0
-    @author C.Dutoit <dutoitc@hotmail.com>
+    Args:
+        filename:  The file name to display
 
-    TODO Make this part of the class
+    Returns:
+        A better file name
     """
     import os
     aString = os.path.split(filename)[1]
