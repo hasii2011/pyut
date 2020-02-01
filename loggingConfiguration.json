@@ -63,6 +63,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.ui.FileHandling": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
 
         "org.pyut.MiniOgl.DiagramFrame": {
             "level":     "INFO",

@@ -1,8 +1,15 @@
+from typing import List
+from typing import NewType
+from typing import Union
 
 from wx import ID_NO
+from wx import TreeCtrl
+from wx import TreeItemId
 from wx import YES_NO
 
 from wx import MessageDialog
+from wx import Notebook
+
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
@@ -14,46 +21,55 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
 
 def shorterFilename(filename):
     """
     Return a shorter filename to display
 
-    @param filename file name to display
-    @return String better file name
-    @since 1.0
-    @author C.Dutoit <dutoitc@hotmail.com>
+    Args:
+        filename:  file name to display
+
+    Returns:
+        String better file name
     """
+
     import os
     return os.path.split(filename)[1]
+
+
+UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])
 
 
 class PyutProject:
     """
     Project : contain multiple documents
 
-    :author: C.Dutoit
-    :contact: <dutoitc@hotmail.com>
-    :version: $Revision: 1.19 $
     """
 
-    def __init__(self, filename, parentFrame, tree, treeroot):
+    def __init__(self, filename: str, parentFrame: Notebook, tree: TreeCtrl, treeroot: TreeItemId):
         """
-        Constructor
 
-        @author C.Dutoit
+        Args:
+            filename:       The project file name
+            parentFrame:
+            tree:           The tree control
+            treeroot:       Where to root the tree
         """
-        # import mediator
+
         self._parentFrame   = parentFrame   # Parent frame
         self._ctrl          = getMediator()
-        self._documents     = []            # List of documents
-        self._filename      = filename      # Project filename
-        self._modified      = False     # Was the project modified ?
+
+        self._documents: List[PyutDocument] = []            # List of documents
+
+        self._filename: str     = filename      # Project filename
+        self._modified: bool    = False         # Was the project modified ?
         self._treeRootParent = treeroot     # Parent of the project root entry
-        self._tree          = tree          # Tree i'm belonging to
+        self._tree          = tree          # Tree I belong to
         self._treeRoot      = None          # Root of the project entry in the tree
-        self._codePath      = ""
+        self._codePath: str      = ""
         self.addToTree()
 
     def setFilename(self, filename):
@@ -116,30 +132,32 @@ class PyutProject:
         return self._modified
 
     def addToTree(self):
-        # Add the project to the project tree
+        """
+        Add the project to the project tree
+        """
         # self._treeRoot = self._tree.AppendItem(self._treeRootParent, shorterFilename(self._filename), data=TreeItemData(self))
         self._treeRoot = self._tree.AppendItem(self._treeRootParent, shorterFilename(self._filename), data=self)
         self._tree.Expand(self._treeRoot)
 
         # Add the frames
         for document in self._documents:
-            document.addToTree(self, self._tree, self._treeRoot)
+            document.addToTree(self._tree, self._treeRoot)
 
     def removeFromTree(self):
         """
         Remove the project from the tree
-
-        @author C.Dutoit
         """
         self._tree.Delete(self._treeRoot)
 
-    def loadFromFilename(self, filename):
+    def loadFromFilename(self, filename: str) -> bool:
         """
         Load a project from a file
 
-        @author C.Dutoit
-        @param String filename : filename to open
-        @return boolean: True if succeeded
+        Args:
+            filename: filename to open
+
+        Returns:
+            `True` if the operation succeeded
         """
         # Load the file
         BeginBusyCursor()
@@ -170,13 +188,15 @@ class PyutProject:
         else:
             return False
 
-    def insertProject(self, filename):
+    def insertProject(self, filename: str) -> bool:
         """
         Insert another project into this one
 
-        @author C.Dutoit
-        @param String filename : filename to open
-        @return boolean: True if succeeded
+        Args:
+            filename: filename to open
+
+        Returns:
+            `True` if the operation succeeded
         """
         # Load the file
         from org.pyut.persistence import IoFile
@@ -203,13 +223,15 @@ class PyutProject:
         # Return
         return True
 
-    def newDocument(self, documentType: DiagramType):
+    def newDocument(self, documentType: DiagramType) -> PyutDocument:
         """
         Create a new document
 
-        @author C.Dutoit
-        @param documentType : Type of document; one cited in PyutConsts.py
-        @return the newly created PyutDocument
+        Args:
+            documentType: The document type to create
+
+        Returns:
+            the newly created PyutDocument
         """
         document = PyutDocument(self._parentFrame, self, documentType)
         self._documents.append(document)
@@ -218,22 +240,19 @@ class PyutProject:
         self._ctrl.getFileHandling().registerUmlFrame(frame)
         return document
 
-    def getFrames(self):
+    def getFrames(self) -> List[UmlFrameType]:
         """
         Get all the project's frames
 
-        @author C.Dutoit
-        @return List of frames
+        Returns:
+            List of frames
         """
-
-        return [document.getFrame() for document in self._documents]
+        frameList = [document.getFrame() for document in self._documents]
+        return frameList
 
     def saveXmlPyut(self):
         """
         save the project
-
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         from org.pyut.persistence import IoFile
         io = IoFile.IoFile()
@@ -249,8 +268,6 @@ class PyutProject:
     def updateTreeText(self):
         """
         Update the tree text for this document
-
-        @author C.Dutoit
         """
         self._tree.SetItemText(self._treeRoot, shorterFilename(self._filename))
         for document in self._documents:
@@ -262,7 +279,7 @@ class PyutProject:
 
         Args:
             document: PyutDocument to remove from this project
-            confirmation:
+            confirmation:  If `True` ask for confirmation
         """
 
         # Get frame

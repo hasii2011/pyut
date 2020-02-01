@@ -355,7 +355,7 @@ class FileHandling:
         Begin a new document
 
         Args:
-            docType:  Type of document; one cited in PyutConsts.py
+            docType:  Type of document
         """
         project = self._currentProject
         if project is None:
@@ -689,5 +689,8 @@ class FileHandling:
 
         return cast(PyutProject, None)
 
-    def __onProjectTreeRightClick(self, event: TreeEvent):
-        self.logger.info(f'event: {event}')
+    def __onProjectTreeRightClick(self, treeEvent: TreeEvent):
+
+        itemId: TreeItemId = treeEvent.GetItem()
+        data = self.__projectTree.GetItemData(item=itemId)
+        self.logger.info(f'Item Data: {data}')
