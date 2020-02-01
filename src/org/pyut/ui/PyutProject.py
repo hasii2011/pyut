@@ -14,7 +14,7 @@ from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.PyutDocument import PyutDocument
+from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.persistence.IoFile import IoFile
 
 from org.pyut.enums.DiagramType import DiagramType

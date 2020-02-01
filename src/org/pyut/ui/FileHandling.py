@@ -1,4 +1,4 @@
-
+from typing import List
 from typing import TypeVar
 from typing import cast
 
@@ -36,13 +36,14 @@ from wx import MessageDialog
 from wx import Yield
 from wx import Menu
 
-from org.pyut.PyutDocument import PyutDocument
-from org.pyut.PyutUtils import PyutUtils
-from org.pyut.PyutConstants import PyutConstants
+from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 
-from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.PyutUtils import PyutUtils
+from org.pyut.PyutConstants import PyutConstants
+
+from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Globals import _
 
@@ -86,7 +87,7 @@ class FileHandling:
         """
         self.logger: Logger = getLogger(__name__)
 
-        self._projects = []
+        self._projects: List[PyutProject] = []
         self.__parent = parent
         self._ctrl = mediator
         self._currentProject: PyutProject      = cast(PyutProject, None)
@@ -460,7 +461,6 @@ class FileHandling:
 
         Args:
             event:
-
         """
         itm: TreeItemId = event.GetItem()
         pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
