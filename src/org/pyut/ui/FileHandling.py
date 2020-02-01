@@ -5,6 +5,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from os import path as osPath
+
 from wx import CommandEvent
 from wx import EVT_MENU
 from wx import EVT_TREE_ITEM_RIGHT_CLICK
@@ -51,7 +53,7 @@ TreeDataType = TypeVar('TreeDataType', PyutProject, UmlDiagramsFrame)
 DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)
 
 
-def shorterFilename(filename: str) -> str:
+def shortenNotebookPageFileName(filename: str) -> str:
     """
     Return a shorter filename to display
 
@@ -61,8 +63,7 @@ def shorterFilename(filename: str) -> str:
     Returns:
         A better file name
     """
-    import os
-    aString = os.path.split(filename)[1]
+    aString = osPath.split(filename)[1]
     if len(aString) > 12:
         return aString[:4] + aString[-8:]
     else:
@@ -335,7 +336,7 @@ class FileHandling:
         self._currentProject = project
 
         if not self._ctrl.isInScriptMode():
-            self.__notebook.AddPage(frame, shorterFilename(project.getFilename()))
+            self.__notebook.AddPage(frame, shortenNotebookPageFileName(project.getFilename()))
             self.notebookCurrentPage  = self.__notebook.GetPageCount() - 1
             # self.notebook.SetSelection(self.__notebookCurrentPage)  # maybe __notebook ?  -- hasii
 
