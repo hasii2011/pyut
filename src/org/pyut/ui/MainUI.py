@@ -14,6 +14,7 @@ from wx import FD_SAVE
 from wx import FD_OVERWRITE_PROMPT
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
 from wx import EVT_TREE_SEL_CHANGED
+from wx import ID_ANY
 from wx import ID_OK
 from wx import ID_YES
 from wx import ITEM_NORMAL
@@ -55,9 +56,13 @@ DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)
 
 class MainUI:
     """
-    FileHandling : Handle files in Pyut
-    Used by AppFrame to contain all UML frames, the notebook and
-    the project tree.
+    The main portion of the User Interface.
+    Used by the main application frame (AppFrame) to host all UML frames,
+    the notebook and the project tree.
+
+    Handles the the project files, projects, documents and
+    their relationship to the various UI Tree elements and the
+    notebook tabs in the UI
 
     All actions called from AppFrame are executed on the current frame
     """
@@ -72,20 +77,19 @@ class MainUI:
         """
         self.logger: Logger = getLogger(__name__)
 
-        self._projects: List[PyutProject] = []
         self.__parent = parent
-        self._ctrl = mediator
-        self._currentProject: PyutProject      = cast(PyutProject, None)
-        self._currentFrame:   UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
+        self._ctrl    = mediator
+        self._projects:       List[PyutProject] = []
+        self._currentProject: PyutProject       = cast(PyutProject, None)
+        self._currentFrame:   UmlDiagramsFrame  = cast(UmlDiagramsFrame, None)
 
-        # Init graphic
         if not self._ctrl.isInScriptMode():
 
             self.__splitter:        SplitterWindow = cast(SplitterWindow, None)
             self.__projectTree:     TreeCtrl       = cast(TreeCtrl, None)
             self.__projectTreeRoot: TreeItemId     = cast(TreeItemId, None)
             self.__notebook:        Notebook       = cast(Notebook, None)
-            self._initGraphicalElements()
+            self._initializeUIElements()
 
     def registerUmlFrame(self, frame):
         """
@@ -591,38 +595,32 @@ class MainUI:
 
         return cast(PyutProject, None)
 
-    def _initGraphicalElements(self):
+    def _initializeUIElements(self):
         """
-        Define all graphical elements
+        Instantiate all the UI elements
         """
-        # window splitting
-        self.__splitter: SplitterWindow = SplitterWindow(self.__parent, -1)
+        self.__splitter        = SplitterWindow(self.__parent, ID_ANY)
+        self.__projectTree     = TreeCtrl(self.__splitter, ID_ANY, style=TR_HIDE_ROOT + TR_HAS_BUTTONS)
+        self.__projectTreeRoot = self.__projectTree.AddRoot(_("Root"))
 
-        # project tree
-        self.__projectTree: TreeCtrl = TreeCtrl(self.__splitter, -1, style=TR_HIDE_ROOT + TR_HAS_BUTTONS)
-        self.__projectTreeRoot       = self.__projectTree.AddRoot(_("Root"))
-
-        self.__projectTree.Bind(EVT_TREE_ITEM_RIGHT_CLICK, self.__onProjectTreeRightClick)
         #  self.__projectTree.SetPyData(self.__projectTreeRoot, None)
         # Expand root, since wx.TR_HIDE_ROOT is not supported under winx
         # Not supported for hidden tree since wx.Python 2.3.3.1 ?
         #  self.__projectTree.Expand(self.__projectTreeRoot)
 
         # diagram container
-        self.__notebook = Notebook(self.__splitter, -1, style=CLIP_CHILDREN)
+        self.__notebook = Notebook(self.__splitter, ID_ANY, style=CLIP_CHILDREN)
 
         # Set splitter
         self.__splitter.SetMinimumPaneSize(20)
-        #  self.__splitter.SplitVertically(self.__projectTree, self.__notebook)
-        #  self.__splitter.SetSashPosition(100)
         self.__splitter.SplitVertically(self.__projectTree, self.__notebook, 160)
 
-        #  ...
         self.__notebookCurrentPage = -1
 
         # Callbacks
-        self.__parent.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self.__onNotebookPageChanged)
-        self.__parent.Bind(EVT_TREE_SEL_CHANGED,  self.__onProjectTreeSelChanged)
+        self.__parent.Bind(EVT_NOTEBOOK_PAGE_CHANGED,      self.__onNotebookPageChanged)
+        self.__parent.Bind(EVT_TREE_SEL_CHANGED,           self.__onProjectTreeSelChanged)
+        self.__projectTree.Bind(EVT_TREE_ITEM_RIGHT_CLICK, self.__onProjectTreeRightClick)
 
     # noinspection PyUnusedLocal
     def __onNotebookPageChanged(self, event):
