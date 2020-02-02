@@ -80,6 +80,11 @@ class FileHandling:
 
         # Init graphic
         if not self._ctrl.isInScriptMode():
+
+            self.__splitter:        SplitterWindow = cast(SplitterWindow, None)
+            self.__projectTree:     TreeCtrl       = cast(TreeCtrl, None)
+            self.__projectTreeRoot: TreeItemId     = cast(TreeItemId, None)
+            self.__notebook:        Notebook       = cast(Notebook, None)
             self._initGraphicalElements()
 
     def registerUmlFrame(self, frame):
@@ -129,7 +134,7 @@ class FileHandling:
         """
         return filename == PyutConstants.DefaultFilename
 
-    def openFile(self, filename, project=None):
+    def openFile(self, filename, project=None) -> bool:
         """
         Open a file
 
@@ -165,11 +170,13 @@ class FileHandling:
         try:
             if not self._ctrl.isInScriptMode():
                 for document in project.getDocuments():
-                    self.__notebook.AddPage(document.getFrame(), document.getDiagramTitle())
+                    diagramTitle: str = document.getDiagramTitle()
+                    shortName: str = self.shortenNotebookPageFileName(diagramTitle)
+                    self.__notebook.AddPage(document.getFrame(), shortName)
 
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
-                
+
             if len(project.getDocuments()) > 0:
                 self._currentFrame = project.getDocuments()[0].getFrame()
 
