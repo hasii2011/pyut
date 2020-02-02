@@ -82,7 +82,7 @@ from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.ui.FileHandling import FileHandling
+from org.pyut.ui.MainUI import FileHandling
 
 from org.pyut.plugins.PluginManager import PluginManager
 

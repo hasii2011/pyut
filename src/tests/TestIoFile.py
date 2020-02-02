@@ -10,7 +10,7 @@ from unittest import TestSuite
 from unittest.mock import patch
 from unittest.mock import MagicMock
 
-from org.pyut.ui.FileHandling import FileHandling
+from org.pyut.ui.MainUI import FileHandling
 from tests.TestBase import TestBase
 
 from org.pyut.general.Mediator import Mediator
