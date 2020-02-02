@@ -82,7 +82,7 @@ from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.ui.MainUI import FileHandling
+from org.pyut.ui.MainUI import MainUI
 
 from org.pyut.plugins.PluginManager import PluginManager
 
@@ -148,7 +148,7 @@ class AppFrame(Frame):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
         # loaded files handler
-        self._fileHandling = FileHandling(self, self._ctrl)
+        self._fileHandling = MainUI(self, self._ctrl)
         self._ctrl.registerFileHandling(self._fileHandling)
 
         # Initialization
