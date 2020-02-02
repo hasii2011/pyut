@@ -1,6 +1,7 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from wx import TreeCtrl
 from wx import TreeItemId
@@ -19,22 +20,34 @@ class PyutDocument:
     """
     Document : Contain a document : frames, properties, ...
     """
-
     def __init__(self, parentFrame, project, docType: DiagramType):
         """
-        Constructor.
 
-        @param docType : Type of document; one cited in PyutConsts.py
-        @author C.Dutoit
+        Args:
+            parentFrame:    The containing UML or sequence diagram frame
+            project:        The project
+            docType:        The enumeration value for the diagram type
         """
         self.logger: Logger = getLogger(__name__)
         self._parentFrame    = None
         self._project        = project
-        self._treeRoot       = None         # Root of the project entry in the tree
-        self._treeRootParent = None         # Parent of the project root entry
-        self._tree           = None         # Tree I am belonging to
 
         self._type: DiagramType = docType
+        """
+        This document's diagram type
+        """
+        self._treeRoot:       TreeItemId = cast(TreeItemId, None)
+        """
+        Root of the project entry in the tree
+        """
+        self._treeRootParent: TreeItemId = cast(TreeItemId, None)
+        """
+        Parent of the project root entry
+        """
+        self._tree:           TreeCtrl   = cast(TreeCtrl, None)
+        """
+        Tree I belong to
+        """
 
         self.logger.debug(f'Project: {project} PyutDocument using type {docType}')
         if docType == DiagramType.CLASS_DIAGRAM:
@@ -63,9 +76,18 @@ class PyutDocument:
         """
 
         Returns:
-            The diagram caption
+            The diagram's fully qualified file name
         """
-        return self._project.getFilename() + "/" + self._title
+        fullyQualifiedName: str = f'{self._project.getFilename()}/{self._title}'
+        return fullyQualifiedName
+
+    def getTitle(self) -> str:
+        return self._title
+
+    def setTitle(self, theNewValue: str):
+        self._title = theNewValue
+
+    title = property(getTitle, setTitle)
 
     def getFrame(self):
         """

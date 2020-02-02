@@ -9,11 +9,8 @@ class PyutPrintout(Printout):
     Class to prepare for printing
 
     This class is used to prepare printing
-    it's copying from wx.Python documentation
+    It is a copy from the wx.Python documentation
 
-    :version: $Revision: 1.8 $
-    :author:  Deve Roux
-    :contact: droux@eivd.ch
     """
     def __init__(self, canvas):
 
@@ -31,9 +28,6 @@ class PyutPrintout(Printout):
     def OnPrintPage(self, page):
         """
         Called by printing method
-
-        @since 1.19
-        @author Deve Roux <droux@eivd.ch>
         """
         dc: DC = self.GetDC()
 
@@ -49,7 +43,6 @@ class PyutPrintout(Printout):
         maxY = maxY + (2 * marginY)
 
         # Get the size of the DC in pixels
-        # (w, h) = dc.GetSizeTuple()
         (w, h) = dc.GetSize()
         # Calculate a suitable scaling factor
         scaleX = float(w) / maxX
@@ -58,7 +51,7 @@ class PyutPrintout(Printout):
         # Use x or y scaling factor, whichever fits on the DC
         actualScale = min(scaleX, scaleY)
 
-        # Calculate the position on the DC for centring the graphic
+        # Calculate the position on the DC for centering the graphic
         posX = (w - (self.canvas.getWidth() * actualScale)) / 2.0
         posY = (h - (self.canvas.getHeight() * actualScale)) / 2.0
 
