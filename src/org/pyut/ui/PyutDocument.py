@@ -72,7 +72,7 @@ class PyutDocument:
         """
         return self._type
 
-    def getDiagramTitle(self) -> str:
+    def getFullyQualifiedName(self) -> str:
         """
 
         Returns:

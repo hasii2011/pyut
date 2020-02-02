@@ -174,7 +174,7 @@ class MainUI:
         try:
             if not self._ctrl.isInScriptMode():
                 for document in project.getDocuments():
-                    diagramTitle: str = document.getDiagramTitle()
+                    diagramTitle: str = document.getFullyQualifiedName()
                     shortName: str = self.shortenNotebookPageFileName(diagramTitle)
                     self.__notebook.AddPage(document.getFrame(), shortName)
 
@@ -212,7 +212,7 @@ class MainUI:
         if not self._ctrl.isInScriptMode():
             try:
                 for document in project.getDocuments()[nbInitialDocuments:]:
-                    self.__notebook.AddPage(document.getFrame(), document.getDiagramTitle())
+                    self.__notebook.AddPage(document.getFrame(), document.getFullyQualifiedName())
 
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
@@ -297,7 +297,7 @@ class MainUI:
             if len(document) > 0:
                 document = document[0]
                 if frame in project.getFrames():
-                    self.__notebook.SetPageText(i, document.getDiagramTitle())
+                    self.__notebook.SetPageText(i, document.getFullyQualifiedName())
             else:
                 self.logger.info("Not updating notebook in FileHandling")
 
