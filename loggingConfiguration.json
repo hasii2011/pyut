@@ -63,7 +63,7 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.ui.FileHandling": {
+        "org.pyut.ui.MainUI": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"

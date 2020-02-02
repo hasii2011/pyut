@@ -1,3 +1,4 @@
+
 from typing import List
 from typing import TypeVar
 from typing import cast
@@ -85,10 +86,13 @@ class MainUI:
 
         if not self._ctrl.isInScriptMode():
 
-            self.__splitter:        SplitterWindow = cast(SplitterWindow, None)
-            self.__projectTree:     TreeCtrl       = cast(TreeCtrl, None)
-            self.__projectTreeRoot: TreeItemId     = cast(TreeItemId, None)
-            self.__notebook:        Notebook       = cast(Notebook, None)
+            self.__splitter:          SplitterWindow = cast(SplitterWindow, None)
+            self.__projectTree:       TreeCtrl       = cast(TreeCtrl, None)
+            self.__projectTreeRoot:   TreeItemId     = cast(TreeItemId, None)
+            self.__notebook:          Notebook       = cast(Notebook, None)
+            self.__projectPopupMenu:  Menu = cast(Menu, None)
+            self.__documentPopupMenu: Menu = cast(Menu, None)
+
             self._initializeUIElements()
 
     def registerUmlFrame(self, frame):
@@ -174,8 +178,8 @@ class MainUI:
         try:
             if not self._ctrl.isInScriptMode():
                 for document in project.getDocuments():
-                    diagramTitle: str = document.getFullyQualifiedName()
-                    shortName: str = self.shortenNotebookPageFileName(diagramTitle)
+                    diagramTitle: str = document.getTitle()
+                    shortName:    str = self.shortenNotebookPageFileName(diagramTitle)
                     self.__notebook.AddPage(document.getFrame(), shortName)
 
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
@@ -297,7 +301,10 @@ class MainUI:
             if len(document) > 0:
                 document = document[0]
                 if frame in project.getFrames():
-                    self.__notebook.SetPageText(i, document.getFullyQualifiedName())
+                    diagramTitle: str = document.getTitle()
+                    shortName:    str = self.shortenNotebookPageFileName(diagramTitle)
+
+                    self.__notebook.SetPageText(i, shortName)
             else:
                 self.logger.info("Not updating notebook in FileHandling")
 
@@ -650,7 +657,7 @@ class MainUI:
         """
         itm: TreeItemId = event.GetItem()
         pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
-        self.logger.info(f'Clicked on: `{pyutData}`')
+        self.logger.debug(f'Clicked on: `{pyutData}`')
         # Use our own base type
         if isinstance(pyutData, UmlDiagramsFrame):
             frame: UmlDiagramsFrame = pyutData
@@ -686,23 +693,47 @@ class MainUI:
 
         itemId: TreeItemId = treeEvent.GetItem()
         data = self.__projectTree.GetItemData(item=itemId)
-        self.logger.info(f'Item Data: {data}  currentProject: {self._currentProject.getFilename()}')
+        self.logger.info(f'Item Data: {data}')
         if isinstance(data, PyutProject):
             self.__popupProjectMenu()
+        elif isinstance(data, UmlDiagramsFrame):
+            self.__popupProjectDocumentMenu()
 
     def __popupProjectMenu(self):
 
-        [closeProjectMenuID] = PyutUtils.assignID(1)
-        popupMenu: Menu = Menu('Actions')
-        popupMenu.AppendSeparator()
-        popupMenu.Append(closeProjectMenuID, 'Close Project', 'Remove project from tree', ITEM_NORMAL)
-        popupMenu.Bind(EVT_MENU, self.__onCloseProject, id=closeProjectMenuID)
-        self.__parent.PopupMenu(popupMenu)
+        if self.__projectPopupMenu is None:
+            self.logger.info(f'Create the project popup menu')
+            [closeProjectMenuID] = PyutUtils.assignID(1)
+            popupMenu: Menu = Menu('Actions')
+            popupMenu.AppendSeparator()
+            popupMenu.Append(closeProjectMenuID, 'Close Project', 'Remove project from tree', ITEM_NORMAL)
+            popupMenu.Bind(EVT_MENU, self.__onCloseProject, id=closeProjectMenuID)
+            self.__projectPopupMenu = popupMenu
+
+        self.logger.info(f'currentProject: `{self._currentProject.getFilename()}`')
+        self.__parent.PopupMenu(self.__projectPopupMenu)
+
+    def __popupProjectDocumentMenu(self):
+
+        if self.__documentPopupMenu is None:
+            self.logger.info(f'Create the document popup menu')
+            [editDocumentNameMenuID] = PyutUtils.assignID(1)
+            popupMenu: Menu = Menu('Actions')
+            popupMenu.AppendSeparator()
+            popupMenu.Append(editDocumentNameMenuID, 'Edit Document Name', 'Change document name', ITEM_NORMAL)
+            popupMenu.Bind(EVT_MENU, self.__onEditDocumentName, id=editDocumentNameMenuID)
+            self.__documentPopupMenu = popupMenu
+
+        self.logger.info(f'Current Document: `{self.getCurrentDocument()}`')
+        self.__parent.PopupMenu(self.__documentPopupMenu)
 
     # noinspection PyUnusedLocal
     def __onCloseProject(self, event: CommandEvent):
-        self.logger.info(f'I have arrived')
         self.closeCurrentProject()
+
+    # noinspection PyUnusedLocal
+    def __onEditDocumentName(self, event: CommandEvent):
+        self.logger.info(f'I have to edit the document name')
 
     def shortenNotebookPageFileName(self, filename: str) -> str:
         """

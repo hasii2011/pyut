@@ -125,3 +125,6 @@ class PyutDocument:
         Remove this document.
         """
         self._tree.Delete(self._treeRoot)
+
+    def __str__(self) -> str:
+        return f'{self.getFullyQualifiedName()}'
