@@ -8,6 +8,7 @@ from wx import EVT_CLOSE
 from wx import EVT_PAINT
 from wx import EndBusyCursor
 from wx import MouseEvent
+from wx import Window
 
 from org.pyut.ogl.OglObject import OglObject
 
@@ -41,24 +42,17 @@ class UmlFrame(UmlFrameShapeHandler):
     It provides all the methods to add new classes, notes, links...
     It also routes some click events to the mediator. See the `OnLeftDown`
     method.
-
-    :version: $Revision: 1.22 $
-    :author: L. Burgbacher
-    :contact: lb@alawa.ch
     """
-    def __init__(self, parent, frame):
-        """
-        constructor
-        @param wx.Window parent : parent object
-        @param frame : parent frame object
-        @since 1.0
-        @author N. hamadi (hamadi12@yahoo.fr)
-        @modified L. Burgbacher <lb@alawa.ch>
-            added event processing
-            added mediator support
-            bind with OglClass to create new classes
+    PIXELS_PER_UNIT_X: int = 20
+    PIXELS_PER_UNIT_Y: int = 20
+
+    def __init__(self, parent: Window, frame):
         """
 
+        Args:
+            parent: The parent window
+            frame:  The uml frame
+        """
         super().__init__(parent)
 
         self.logger: Logger = getLogger(__name__)
@@ -67,8 +61,11 @@ class UmlFrame(UmlFrameShapeHandler):
         self.maxWidth  = DEFAULT_WIDTH
         self.maxHeight = int(self.maxWidth / 1.41)  # 1.41 is for A4 support
 
-        # set a scrollbar
-        self.SetScrollbars(20, 20, self.maxWidth/20, self.maxHeight/20)
+        nbrUnitsX: int = int(self.maxWidth / UmlFrame.PIXELS_PER_UNIT_X)
+        nbrUnitsY: int = int(self.maxHeight / UmlFrame.PIXELS_PER_UNIT_Y)
+        initPosX:  int = 0
+        initPosY:  int = 0
+        self.SetScrollbars(UmlFrame.PIXELS_PER_UNIT_X, UmlFrame.PIXELS_PER_UNIT_Y, nbrUnitsX, nbrUnitsY, initPosX, initPosY, False)
 
         self._frame = frame
         self._history = HistoryManager(self)
@@ -81,7 +78,7 @@ class UmlFrame(UmlFrameShapeHandler):
         self.SetInfinite(True)
 
         self._defaultCursor = self.GetCursor()
-        self.Scroll(0, 0)
+        # self.Scroll(0, 0)
 
     def setCodePath(self, path):
         """
