@@ -10,8 +10,10 @@ from io import StringIO
 
 from wx import Dialog
 from wx import Gauge
-from wx import ICON_INFORMATION
 from wx import Point
+from wx import Yield as wxYield
+
+from wx import ICON_INFORMATION
 from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 from wx import Size
@@ -141,11 +143,14 @@ class PyutXml:
 
             gauge = Gauge(dlg, -1, 100, pos=Point(2, 5), size=Size(200, 30))
             dlg.Show(True)
+            wxYield()
 
             # Save all documents in the project
             for document in project.getDocuments():
                 documentNode = xmlDoc.createElement("PyutDocument")
-                documentNode.setAttribute('type', PyutConstants.diagramTypeAsString(document.getType()))
+                # documentNode.setAttribute('type', PyutConstants.diagramTypeAsString(document.getType()))
+                docType: str = document.getType().__str__()
+                documentNode.setAttribute('type', docType)
                 top.appendChild(documentNode)
 
                 oglObjects = document.getFrame().getUmlObjects()
@@ -439,8 +444,9 @@ class PyutXml:
 
         # method visibility
         visibility: PyutVisibilityEnum = pyutMethod.getVisibility()
+        visStr: str = visibility.__str__()
         if visibility is not None:
-            root.setAttribute('visibility', visibility)
+            root.setAttribute('visibility', visStr)
 
         # for all modifiers
         for modifier in pyutMethod.getModifiers():
