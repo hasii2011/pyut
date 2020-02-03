@@ -8,7 +8,6 @@ from logging import getLogger
 
 from os import path as osPath
 
-from wx import CommandEvent
 from wx import EVT_MENU
 from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import FD_SAVE
@@ -31,6 +30,8 @@ from wx import BITMAP_TYPE_JPEG
 from wx import BITMAP_TYPE_PNG
 
 from wx import TreeEvent
+from wx import CommandEvent
+
 from wx import TreeItemId
 from wx import FileDialog
 from wx import SplitterWindow
@@ -42,12 +43,14 @@ from wx import Menu
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
-
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.enums.DiagramType import DiagramType
+
+from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
 from org.pyut.general.Globals import _
 
@@ -733,7 +736,14 @@ class MainUI:
 
     # noinspection PyUnusedLocal
     def __onEditDocumentName(self, event: CommandEvent):
-        self.logger.info(f'I have to edit the document name')
+
+        currentDocument: PyutDocument = self.getCurrentDocument()
+        dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.getCurrentFrame(),
+                                                           dialogIdentifier=ID_ANY,
+                                                           document=currentDocument)
+        dlgEditDocument.Destroy()
+
+        self.__notebook.SetPageText(page=self.__notebookCurrentPage, text=currentDocument.title)
 
     def shortenNotebookPageFileName(self, filename: str) -> str:
         """
