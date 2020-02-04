@@ -1,6 +1,7 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from xml.dom.minidom import parse
 from xml.dom.minidom import Document
@@ -19,6 +20,8 @@ from wx import STAY_ON_TOP
 from wx import Size
 
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
+
+from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
@@ -51,6 +54,9 @@ from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 from org.pyut.PyutConstants import PyutConstants
+
+from org.pyut.ui.PyutDocument import PyutDocument
+from org.pyut.ui.PyutProject import PyutProject
 
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
@@ -93,6 +99,7 @@ class IDFactory:
 
 
 class PyutXml:
+
     VERSION: int = 9
     """
     Class for saving and loading a PyUT UML diagram in XML.
@@ -102,7 +109,7 @@ class PyutXml:
     the file and indicate the UML frame on which you want to draw
     (See `UmlFrame`).
 
-    Sample use::
+    Sample use:
 
         # Write
         pyutXml = PyutXml()
@@ -114,6 +121,9 @@ class PyutXml:
         pyutXml = PyutXml()
         myXml.open(dom, umlFrame)xs
     """
+    DOCUMENT_ATTR_TITLE:    str = 'title'
+    DOCUMENT_ATTR_DOC_TYPE: str = 'type'
+
     def __init__(self):
         """
         Constructor
@@ -122,12 +132,12 @@ class PyutXml:
 
         self._idFactory = IDFactory()
 
-    def save(self, project) -> Document:
+    def save(self, project: PyutProject) -> Document:
         """
         Save diagram in XML file.
 
         Args:
-            project:
+            project:  The project to write as XML
 
         Returns:  And minidom XML Document
         """
@@ -147,10 +157,15 @@ class PyutXml:
 
             # Save all documents in the project
             for document in project.getDocuments():
+
+                document: PyutDocument = cast(PyutDocument, document)
+
                 documentNode = xmlDoc.createElement("PyutDocument")
-                # documentNode.setAttribute('type', PyutConstants.diagramTypeAsString(document.getType()))
+
                 docType: str = document.getType().__str__()
-                documentNode.setAttribute('type', docType)
+
+                documentNode.setAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE, docType)
+                documentNode.setAttribute(PyutXml.DOCUMENT_ATTR_TITLE, document.title)
                 top.appendChild(documentNode)
 
                 oglObjects = document.getFrame().getUmlObjects()
@@ -207,6 +222,7 @@ class PyutXml:
             dlgGauge = Dialog(None, -1, "Loading...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
             gauge    = Gauge(dlgGauge, -1, 5, pos=Point(2, 5), size=Size(200, 30))
             dlgGauge.Show(True)
+            wxYield()
 
             # for all elements il xml file
             dlgGauge.SetTitle("Reading file...")
@@ -218,9 +234,16 @@ class PyutXml:
                 dicoLink       = {}     # format [id/name : PyutLink}
                 dicoFather     = {}     # format {id child oglClass : [id fathers]}
 
-                docType = documentNode.getAttribute("type")     # Python 3 update
+                docTypeStr = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
 
-                document = project.newDocument(PyutConstants.diagramTypeFromString(docType))
+                docType: DiagramType = PyutConstants.diagramTypeFromString(docTypeStr)
+                document: PyutDocument = project.newDocument(docType)
+                docTitle: str          = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_TITLE)
+                if docTitle == '' or docTitle is None:
+                    document.title = docTypeStr
+                else:
+                    document.title = docTitle
+
                 umlFrame = document.getFrame()
 
                 ctrl = getMediator()

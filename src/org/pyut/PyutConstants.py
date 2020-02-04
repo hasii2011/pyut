@@ -28,6 +28,15 @@ class PyutConstants:
 
     @staticmethod
     def diagramTypeFromString(string):
+        """
+        TODO:  This code belongs in the enumeration class
+
+        Args:
+            string:   A String that can be matched to the enumeration
+
+        Returns:
+
+        """
         for key in DiagramsStrings:
             if DiagramsStrings[key] == string:
                 return key
