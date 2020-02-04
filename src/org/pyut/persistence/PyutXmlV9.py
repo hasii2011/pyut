@@ -39,7 +39,6 @@ from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.PyutStereotype import getPyutStereotype
-from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
@@ -54,32 +53,13 @@ from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 from org.pyut.PyutConstants import PyutConstants
+from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
-
-
-def secure_int(x):
-    try:
-        if x is not None:
-            return int(x)
-        else:
-            return 0
-    finally:
-        return 0
-
-
-def secure_bool(x):
-    try:
-        if x is not None:
-            if x in [True, "True", "true", 1, "1"]:
-                return True
-    except (ValueError, Exception) as e:
-        print(f'secure_bool error: {e}')
-    return False
 
 
 class IDFactory:
@@ -771,7 +751,7 @@ class PyutXml:
             # Python 3 is already UTF-8
             pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute('instanceName'))
 
-            pyutSDInstance.setInstanceLifeLineLength(secure_int(xmlSDInstance.getAttribute('lifeLineLength')))
+            pyutSDInstance.setInstanceLifeLineLength(PyutUtils.secureInteger(xmlSDInstance.getAttribute('lifeLineLength')))
 
             dicoOglObjects[pyutSDInstance.getId()] = oglSDInstance
 
@@ -1166,11 +1146,11 @@ class PyutXml:
                 pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute('stereotype')))
 
             # adding display properties (cd)
-            value = secure_bool(xmlClass.getAttribute('showStereotype'))
+            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showStereotype'))
             pyutClass.setShowStereotype(value)
-            value = secure_bool(xmlClass.getAttribute('showMethods'))
+            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showMethods'))
             pyutClass.setShowMethods(value)
-            value = secure_bool(xmlClass.getAttribute('showFields'))
+            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showFields'))
             pyutClass.setShowFields(value)
 
             # adding associated filename (lb@alawa.ch)

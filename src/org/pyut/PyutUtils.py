@@ -42,6 +42,26 @@ class PyutUtils:
         PyutUtils.logger = getLogger(__name__)
 
     @staticmethod
+    def secureInteger(x: int):
+        try:
+            if x is not None:
+                return int(x)
+            else:
+                return 0
+        finally:
+            return 0
+
+    @staticmethod
+    def secureBoolean(x: str):
+        try:
+            if x is not None:
+                if x in [True, "True", "true", 1, "1"]:
+                    return True
+        except (ValueError, Exception) as e:
+            PyutUtils.clsLogger.error(f'secureBoolean error: {e}')
+        return False
+
+    @staticmethod
     def displayInformation(msg, title=None, parent=None):
         """
         Display information
