@@ -6,21 +6,24 @@ from typing import NewType
 
 from logging import Logger
 from logging import getLogger
-from xml.dom.minidom import Element
 
+from xml.dom.minidom import Element
 from xml.dom.minidom import NodeList
 
 from org.pyut.PyutClass import PyutClass
+from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.PyutStereotype import getPyutStereotype
 
 OglClasses  = NewType('OglClasses',  Dict[int, OglClass])
 PyutMethods = NewType('PyutMethods', List[PyutMethod])
+PyutFields  = NewType('PyutFields',  List[PyutField])
 
 
 class ToOgl:
@@ -44,7 +47,7 @@ class ToOgl:
         Returns:
                 The built dictionary uses an ID for the key and an OglClass for the value
         """
-        dicoOglObjects: OglClasses = cast(OglClasses, {})
+        oglObjects: OglClasses = cast(OglClasses, {})
 
         for xmlOglClass in xmlOglClasses:
 
@@ -73,13 +76,10 @@ class ToOgl:
 
             pyutClass.setFilename(xmlClass.getAttribute('filename'))
 
-            # adding methods for this class
             pyutClass.setMethods(self._getMethods(xmlClass))
+            pyutClass.setFields(self._getFields(xmlClass))
 
-            # adding fields for this class
-            #    TEMP pyutClass.setFields(self._getFields(xmlClass))
-
-            dicoOglObjects[pyutClass.getId()] = oglClass
+            oglObjects[pyutClass.getId()] = oglClass
 
             # Adding properties necessary to place shape on diagram frame
             x = float(xmlOglClass.getAttribute('x'))
@@ -87,7 +87,7 @@ class ToOgl:
 
             oglClass.SetPosition(x, y)
 
-        return dicoOglObjects
+        return oglObjects
 
     def _getMethods(self, xmlClass: Element) -> PyutMethods:
         """
@@ -136,3 +136,32 @@ class ToOgl:
 
         return pyutParam
 
+    def _getFields(self, xmlClass: Element) -> PyutFields:
+        """
+        Extracts fields from a DOM element that represents a UML class
+
+        Args:
+            xmlClass:
+                The DOM version of a UML class
+
+        Returns:
+            PyutFields
+        """
+        pyutFields: PyutFields = cast(PyutFields, [])
+
+        for xmlField in xmlClass.getElementsByTagName("Field"):
+
+            xmlField:   Element  = cast(Element, xmlField)
+            pyutField: PyutField = PyutField()
+
+            pyutField.setVisibility(xmlField.getAttribute('visibility'))
+            xmlParam: Element = xmlField.getElementsByTagName("Param")[0]
+
+            if xmlParam.hasAttribute('defaultValue'):
+                pyutField.setDefaultValue(xmlParam.getAttribute('defaultValue'))
+            pyutField.setName(xmlParam.getAttribute('name'))
+            pyutField.setType(xmlParam.getAttribute('type'))
+
+            pyutFields.append(pyutField)
+
+        return pyutFields

@@ -195,11 +195,12 @@ class PyutXml:
                 eMsg: str = f'This is version {PyutXml.VERSION} and the file version is {version}'
                 self.logger.error(eMsg)
                 raise Exception(f'VERSION_ERROR:  {eMsg}')
+
             project.setCodePath(root.getAttribute("CodePath"))
 
             # Create and init gauge
             dlgGauge: Dialog = Dialog(None, ID_ANY, "Loading...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(250, 70))
-            gauge:    Gauge  = Gauge(dlgGauge, -1, 5, pos=Point(2, 5), size=Size(200, 30))
+            gauge:    Gauge  = Gauge(dlgGauge, ID_ANY, 5, pos=Point(2, 5), size=Size(200, 30))
             dlgGauge.Show(True)
             wxYield()
 
@@ -831,26 +832,6 @@ class PyutXml:
         #     allControlPoints.append(point)
         #
         # return allControlPoints
-
-    # def _getFields(self, Class):
-    #     """
-    #     To extract fields from Class.
-    #     """
-    #     # for class fields
-    #     allFields = []
-    #     for Field in Class.getElementsByTagName("Field"):
-    #
-    #         aField = PyutField()
-    #         aField.setVisibility(Field.getAttribute('visibility'))
-    #         Param = Field.getElementsByTagName("Param")[0]
-    #
-    #         if Param.hasAttribute('defaultValue'):
-    #             aField.setDefaultValue(Param.getAttribute('defaultValue'))
-    #         aField.setName(Param.getAttribute('name'))
-    #         aField.setType(Param.getAttribute('type'))
-    #
-    #         allFields.append(aField)
-    #     return allFields
 
     def _getPyutLink(self, obj):
         """
