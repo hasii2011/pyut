@@ -3,21 +3,19 @@ from logging import Logger
 from logging import getLogger
 from typing import cast
 
-from xml.dom.minidom import parse
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
-
-from io import StringIO
 
 from wx import Dialog
 from wx import Gauge
 from wx import Point
+from wx import Size
 from wx import Yield as wxYield
 
 from wx import ICON_INFORMATION
 from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
-from wx import Size
+from wx import ID_ANY
 
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 
@@ -38,7 +36,6 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
@@ -55,11 +52,16 @@ from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
+from org.pyut.persistence.converters.ToOgl import ToOgl
+from org.pyut.persistence.converters.ToOgl import OglClasses
+
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
+
+from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class IDFactory:
@@ -82,24 +84,21 @@ class PyutXml:
 
     VERSION: int = 9
     """
-    Class for saving and loading a PyUT UML diagram in XML.
-    This class offers two main methods that are save() and load().
-    Using the dom XML model, you can, with the saving method, get the
-    diagram corresponding XML view. For loading, you have to parse
-    the file and indicate the UML frame on which you want to draw
+    Use this class to save and load a PyUT UML diagram in XML.
+    This class offers two main methods.  They are:
+    
+     * `save()` 
+     * `load()`
+     
+     
+    Using the mindocm API you can use the save method to get the
+    diagram converted to its corresponding XML respresentation. For loading, you have to parse
+    the XML file and indicate the UML frame onto which you want to draw
     (See `UmlFrame`).
 
-    Sample use:
-
-        # Write
-        pyutXml = PyutXml()
-        text = pyutXml.save(oglObjects)
-        file.write(text)
-
-        # Read
-        dom = parse(StringIO(file.read()))
-        pyutXml = PyutXml()
-        myXml.open(dom, umlFrame)xs
+    This module is dynamically loaded based on the input XML's version number.  This
+    class supports `PyutXml.VERSION`  9
+    
     """
     DOCUMENT_ATTR_TITLE:    str = 'title'
     DOCUMENT_ATTR_DOC_TYPE: str = 'type'
@@ -179,14 +178,14 @@ class PyutXml:
 
         return xmlDoc
 
-    def open(self, dom, project):
+    def open(self, dom: Document, project: PyutProject):
         """
         Open a file and create a diagram.
         """
-        dlgGauge = None
-        umlFrame = None  # avoid Pycharm warning
+        dlgGauge: Dialog    = cast(Dialog, None)
+        umlFrame: UmlFrame = cast(UmlFrame, None)  # avoid Pycharm warning
         try:
-            root = dom.getElementsByTagName("PyutProject")[0]
+            root: Element = dom.getElementsByTagName("PyutProject")[0]
             if root.hasAttribute('version'):
                 version = int(root.getAttribute("version"))
             else:
@@ -199,24 +198,24 @@ class PyutXml:
             project.setCodePath(root.getAttribute("CodePath"))
 
             # Create and init gauge
-            dlgGauge = Dialog(None, -1, "Loading...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
-            gauge    = Gauge(dlgGauge, -1, 5, pos=Point(2, 5), size=Size(200, 30))
+            dlgGauge: Dialog = Dialog(None, ID_ANY, "Loading...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(250, 70))
+            gauge:    Gauge  = Gauge(dlgGauge, -1, 5, pos=Point(2, 5), size=Size(200, 30))
             dlgGauge.Show(True)
             wxYield()
 
-            # for all elements il xml file
-            dlgGauge.SetTitle("Reading file...")
+            # for all elements in xml file
+            dlgGauge.SetTitle("Reading elements...")
             gauge.SetValue(1)
 
+            toOgl: ToOgl = ToOgl()
             for documentNode in dom.getElementsByTagName("PyutDocument"):
 
-                dicoOglObjects = {}     # format {id/name : oglClass}
-                dicoLink       = {}     # format [id/name : PyutLink}
+                dicoLink       = {}     # format [id/ : PyutLink}
                 dicoFather     = {}     # format {id child oglClass : [id fathers]}
 
                 docTypeStr = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
 
-                docType: DiagramType = PyutConstants.diagramTypeFromString(docTypeStr)
+                docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
                 document: PyutDocument = project.newDocument(docType)
                 docTitle: str          = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_TITLE)
                 if docTitle == '' or docTitle is None:
@@ -224,12 +223,15 @@ class PyutXml:
                 else:
                     document.title = docTitle
 
-                umlFrame = document.getFrame()
+                umlFrame: UmlFrame = document.getFrame()
 
                 ctrl = getMediator()
                 ctrl.getFileHandling().showFrame(umlFrame)
 
-                self._getOglClasses(documentNode.getElementsByTagName('GraphicClass'),    dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                # self._getOglClasses(documentNode.getElementsByTagName('GraphicClass'),    dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                dicoOglObjects: OglClasses = toOgl.getOglClasses(documentNode.getElementsByTagName('GraphicClass'))
+                self.__displayTheClasses(dicoOglObjects, umlFrame)
+
                 self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglActors(documentNode.getElementsByTagName('GraphicActor'),     dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
@@ -237,22 +239,25 @@ class PyutXml:
                 self._getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"),   dicoOglObjects, dicoLink, dicoFather, umlFrame)
 
-                # fix the link's destination field
+                #
                 gauge.SetValue(2)
                 dlgGauge.SetTitle("Fixing link's destination...")
+                wxYield()
                 for links in list(dicoLink.values()):
                     for link in links:
                         link[1].setDestination(dicoOglObjects[link[0]].getPyutObject())
-                # adding fathers
-                dlgGauge.SetTitle("Adding fathers...")
+                #
+                dlgGauge.SetTitle("Adding parents...")
                 gauge.SetValue(3)
+                wxYield()
                 for child, fathers in list(dicoFather.items()):
                     for father in fathers:
                         umlFrame.createInheritanceLink(dicoOglObjects[child], dicoOglObjects[father])
 
-                # adding links to this OGL object
+                #
                 dlgGauge.SetTitle("Adding Links...")
                 gauge.SetValue(4)
+                wxYield()
                 for src, links in list(dicoLink.items()):
                     for link in links:
                         createdLink = umlFrame.createNewLink(dicoOglObjects[src], dicoOglObjects[link[1].getDestination().getId()])
@@ -275,11 +280,10 @@ class PyutXml:
             umlFrame.Refresh()
             return
 
-        # to draw diagram
-        umlFrame.Refresh()
-        gauge.SetValue(5)
-
         if dlgGauge is not None:
+            umlFrame.Refresh()
+            gauge.SetValue(5)
+            wxYield()
             dlgGauge.Destroy()
 
     def _PyutSDInstance2xml(self, pyutSDInstance: PyutSDInstance, xmlDoc: Document):
@@ -709,15 +713,6 @@ class PyutXml:
 
         return root
 
-    def _getParam(self, domElement: Element) -> PyutParam:
-
-        pyutParam: PyutParam = PyutParam(name=domElement.getAttribute('name'), theParameterType=domElement.getAttribute('type'))
-
-        if domElement.hasAttribute('defaultValue'):
-            pyutParam.setDefaultValue(domElement.getAttribute('defaultValue'))
-
-        return pyutParam
-
     # noinspection PyUnusedLocal
     def _getOglSDInstances(self, xmlOglSDInstances, dicoOglObjects, dicoLink, dicoFather, umlFrame):
         """
@@ -837,58 +832,25 @@ class PyutXml:
         #
         # return allControlPoints
 
-    def _getMethods(self, Class):
-        """
-        To extract methods from interface.
-        """
-        # class methods for this currente class
-        allMethods = []
-        for Method in Class.getElementsByTagName("Method"):
-
-            # method name
-            aMethod: PyutMethod = PyutMethod(Method.getAttribute('name'))
-
-            # method visibility
-            # aMethod.setVisibility(Method.getAttribute('visibility'))
-            strVis: str = Method.getAttribute('visibility')
-            vis: PyutVisibilityEnum = PyutVisibilityEnum(strVis)
-            aMethod.setVisibility(visibility=vis)
-
-            # for method return type
-            Return = Method.getElementsByTagName("Return")[0]
-            aMethod.setReturns(Return.getAttribute('type'))
-
-            # for methods param
-            allParams = []
-            for Param in Method.getElementsByTagName("Param"):
-                allParams.append(self._getParam(Param))
-
-            # setting de params for thiy method
-            aMethod.setParams(allParams)
-            # hadding this method in all class methods
-            allMethods.append(aMethod)
-
-        return allMethods
-
-    def _getFields(self, Class):
-        """
-        To extract fields from Class.
-        """
-        # for class fields
-        allFields = []
-        for Field in Class.getElementsByTagName("Field"):
-
-            aField = PyutField()
-            aField.setVisibility(Field.getAttribute('visibility'))
-            Param = Field.getElementsByTagName("Param")[0]
-
-            if Param.hasAttribute('defaultValue'):
-                aField.setDefaultValue(Param.getAttribute('defaultValue'))
-            aField.setName(Param.getAttribute('name'))
-            aField.setType(Param.getAttribute('type'))
-
-            allFields.append(aField)
-        return allFields
+    # def _getFields(self, Class):
+    #     """
+    #     To extract fields from Class.
+    #     """
+    #     # for class fields
+    #     allFields = []
+    #     for Field in Class.getElementsByTagName("Field"):
+    #
+    #         aField = PyutField()
+    #         aField.setVisibility(Field.getAttribute('visibility'))
+    #         Param = Field.getElementsByTagName("Param")[0]
+    #
+    #         if Param.hasAttribute('defaultValue'):
+    #             aField.setDefaultValue(Param.getAttribute('defaultValue'))
+    #         aField.setName(Param.getAttribute('name'))
+    #         aField.setType(Param.getAttribute('type'))
+    #
+    #         allFields.append(aField)
+    #     return allFields
 
     def _getPyutLink(self, obj):
         """
@@ -1100,77 +1062,6 @@ class PyutXml:
             umlFrame.addShape(oglUseCase, x, y)
 
     # noinspection PyUnusedLocal
-    def _getOglClasses(self, xmlOglClasses, dicoOglObjects, dicoLink, dicoFather, umlFrame):
-        """
-        Parse the XML elements given and build data layer for PyUT classes.
-        If file is version 1.0, the dictionary given will contain, for key,
-        the name of the OGL object. Otherwise, it will be the ID
-        (multi-same-name support from version 1.1). Everything is fixed
-        later.
-
-        @param Element[] xmlOglClasses : XML 'GraphicClass' elements
-
-        @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
-
-        @param {id / srcName, OglLink} dicoLink : OGL links loaded
-
-        @param {id / srcName, id / srcName} dicoFather: Inheritance
-
-        @param UmlFrame umlFrame : Where to draw
-        """
-        for xmlOglClass in xmlOglClasses:
-
-            pyutClass = PyutClass()
-
-            # Building OGL class
-            height   = float(xmlOglClass.getAttribute('height'))
-            width    = float(xmlOglClass.getAttribute('width'))
-            oglClass = OglClass(pyutClass, width, height)
-
-            # Data layer class
-            xmlClass = xmlOglClass.getElementsByTagName('Class')[0]
-
-            pyutClass.setId(int(xmlClass.getAttribute('id')))
-
-            # adding name for this class
-            # pyutClass.setName(xmlClass.getAttribute('name').encode("charmap"))
-            # Python 3 is already utf-8;  don't need to encode anything
-            pyutClass.setName(xmlClass.getAttribute('name'))
-            # print "PyutXml/open-4d00d"
-
-            # adding description
-            pyutClass.setDescription(xmlClass.getAttribute('description'))
-
-            # adding stereotype
-            if xmlClass.hasAttribute('stereotype'):
-                pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute('stereotype')))
-
-            # adding display properties (cd)
-            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showStereotype'))
-            pyutClass.setShowStereotype(value)
-            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showMethods'))
-            pyutClass.setShowMethods(value)
-            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showFields'))
-            pyutClass.setShowFields(value)
-
-            # adding associated filename (lb@alawa.ch)
-            pyutClass.setFilename(xmlClass.getAttribute('filename'))
-
-            # adding methods for this class
-            pyutClass.setMethods(self._getMethods(xmlClass))
-
-            # adding fields for this class
-            pyutClass.setFields(self._getFields(xmlClass))
-
-            dicoOglObjects[pyutClass.getId()] = oglClass
-
-            # Adding OGL class to UML Frame
-            x = float(xmlOglClass.getAttribute('x'))
-            y = float(xmlOglClass.getAttribute('y'))
-
-            umlFrame.addShape(oglClass, x, y)
-
-    # noinspection PyUnusedLocal
     def _getOglNotes(self, xmlOglNotes, dicoOglObjects, dicoLink, dicoFather, umlFrame):
         """
         Parse the XML elements given and build data layer for PyUT notes.
@@ -1220,10 +1111,17 @@ class PyutXml:
             y = float(xmlOglNote.getAttribute('y'))
             umlFrame.addShape(oglNote, x, y)
 
-    def joli(self, fileName):
+    def __displayTheClasses(self, oglClasses: OglClasses, umlFrame: UmlFrame):
         """
-        To open a file and creating diagram.
+        Place the OGL classes on the input frame at their respective positions
+
+        Args:
+            oglClasses: A dictionary of OGL classes
+            umlFrame:       The UML Frame to place the OGL objects on
+
         """
-        dom = parse(StringIO(open(fileName).read()))
-        # PrettyPrint(dom, open("joli.xml", 'w'))
-        print(f"{dom.toprettyxml()}")                            # Maybe this ?
+        for oglClass in oglClasses.values():
+
+            oglClass: OglClass = cast(OglClass, oglClass)
+            x, y = oglClass.GetPosition()
+            umlFrame.addShape(oglClass, x, y)
