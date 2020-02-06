@@ -1,5 +1,4 @@
 
-
 from org.pyut.MiniOgl.LinePoint import LinePoint
 
 
@@ -9,17 +8,16 @@ class ControlPoint(LinePoint):
     A control point must be linked to a line, it has no life by itself.
     If you remove the last line of a control point, the control point will
     be automatically erased.
-
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, x, y, parent=None):
+    def __init__(self, x: float, y: float, parent=None):
         """
-        Constructor.
 
-        @param double x, y : position of the point
-        @param Shape parent : parent shape
+        Args:
+            x:  x position of the point
+            y:  y position of the point
+            parent:     parent Shape
         """
-        LinePoint.__init__(self, x, y, parent)
+        super().__init__(x, y, parent)
         self.SetVisible(False)
 
     def RemoveLine(self, line):
@@ -28,7 +26,8 @@ class ControlPoint(LinePoint):
         If there are no more lines for this point, it is automatically
         detached.
 
-        @param line line
+        Args:
+            line:   The line to remove
         """
         super(ControlPoint, self).RemoveLine(line)
         if len(self._lines) == 0:
