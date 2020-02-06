@@ -62,6 +62,23 @@ class PyutUtils:
         return False
 
     @staticmethod
+    def secureFloat(possibleFloatStr: str) -> float:
+        if possibleFloatStr is not None:
+            return float(possibleFloatStr)
+        return 0.0
+
+    @staticmethod
+    def secureSplineInt(splineX: str) -> int:
+        if splineX is None:
+            return 0
+        elif splineX == "_DeprecatedNonBool: False" or splineX == "False":
+            return 0
+        elif splineX == "_DeprecatedNonBool: True" or splineX == "True":
+            return 1
+        else:
+            return int(splineX)
+
+    @staticmethod
     def displayInformation(msg, title=None, parent=None):
         """
         Display information
