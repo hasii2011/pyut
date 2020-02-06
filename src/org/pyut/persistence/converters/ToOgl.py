@@ -2,6 +2,7 @@
 from typing import cast
 from typing import Dict
 from typing import List
+from typing import Union
 from typing import NewType
 
 from logging import Logger
@@ -23,12 +24,14 @@ from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.OglLinkType import OglLinkType
 
+from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglAssociation import OglAssociation
 from org.pyut.ogl.OglAssociation import CENTER
 from org.pyut.ogl.OglAssociation import DEST_CARD
-from org.pyut.ogl.OglAssociation import OglAssociation
 from org.pyut.ogl.OglAssociation import SRC_CARD
+from org.pyut.ogl.OglLink import OglLink
 
-from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 
 from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
@@ -37,6 +40,8 @@ OglClasses    = NewType('OglClasses',    Dict[int, OglClass])
 PyutMethods   = NewType('PyutMethods',   List[PyutMethod])
 PyutFields    = NewType('PyutFields',    List[PyutField])
 ControlPoints = NewType('ControlPoints', List[ControlPoint])
+Links         = NewType('Links',         Union[OglLink, OglSDInstance])
+OglLinks      = NewType('OglLinks',      List[Links])
 
 
 class ToOgl:
@@ -102,18 +107,19 @@ class ToOgl:
 
         return oglObjects
 
-    def getOglLinks(self, xmlOglLinks: NodeList, oglClasses: OglClasses, umlFrame):
+    def getOglLinks(self, xmlOglLinks: NodeList, oglClasses: OglClasses) -> OglLinks:
         """
         Extract the link for the OglClasses
 
         Args:
             xmlOglLinks:    A DOM node list of links
             oglClasses:  The OglClasses
-            umlFrame:
 
         Returns:
-
+            The OglLinks list
         """
+        oglLinks: OglLinks = cast(OglLinks, [])
+
         for xmlLink in xmlOglLinks:
             # src and dst anchor position
             xmlLink: Element = cast(Element, xmlLink)
@@ -140,7 +146,8 @@ class ToOgl:
             oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
             src.addLink(oglLink)
             dst.addLink(oglLink)
-            umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=False)
+            # umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=False)
+            oglLinks.append(oglLink)
 
             oglLink.SetSpline(spline)
 
@@ -165,6 +172,8 @@ class ToOgl:
 
             if isinstance(oglLink, OglAssociation):
                 self.__furtherCustomizeAssociationLink(xmlLink, oglLink)
+
+        return oglLinks
 
     def _getMethods(self, xmlClass: Element) -> PyutMethods:
         """

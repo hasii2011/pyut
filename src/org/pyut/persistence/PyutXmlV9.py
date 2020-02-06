@@ -17,12 +17,8 @@ from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 from wx import ID_ANY
 
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
-
 from org.pyut.enums.DiagramType import DiagramType
-from org.pyut.enums.OglLinkType import OglLinkType
 
-from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglAssociation import CENTER
 from org.pyut.ogl.OglAssociation import DEST_CARD
@@ -36,7 +32,6 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 from org.pyut.PyutUseCase import PyutUseCase
@@ -48,11 +43,11 @@ from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
-
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.persistence.converters.ToOgl import ToOgl
+from org.pyut.persistence.converters.ToOgl import OglLinks
 from org.pyut.persistence.converters.ToOgl import OglClasses
 
 from org.pyut.ui.PyutDocument import PyutDocument
@@ -232,13 +227,14 @@ class PyutXml:
                 # self._getOglClasses(documentNode.getElementsByTagName('GraphicClass'),    dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 dicoOglObjects: OglClasses = toOgl.getOglClasses(documentNode.getElementsByTagName('GraphicClass'))
                 self.__displayTheClasses(dicoOglObjects, umlFrame)
+                # self._getOglLinks(documentNode.getElementsByTagName("GraphicLink"),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName("GraphicLink"), dicoOglObjects)
+                self.__displayTheLinks(oglLinks, umlFrame)
 
                 self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglActors(documentNode.getElementsByTagName('GraphicActor'),     dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
 
-                # self._getOglLinks(documentNode.getElementsByTagName("GraphicLink"),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                toOgl.getOglLinks(documentNode.getElementsByTagName("GraphicLink"), dicoOglObjects, umlFrame)
                 self._getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"),   dicoOglObjects, dicoLink, dicoFather, umlFrame)
 
@@ -1100,11 +1096,21 @@ class PyutXml:
 
         Args:
             oglClasses: A dictionary of OGL classes
-            umlFrame:       The UML Frame to place the OGL objects on
-
+            umlFrame:   The UML Frame to place the OGL objects on
         """
         for oglClass in oglClasses.values():
 
             oglClass: OglClass = cast(OglClass, oglClass)
             x, y = oglClass.GetPosition()
             umlFrame.addShape(oglClass, x, y)
+
+    def __displayTheLinks(self, oglLinks: OglLinks, umlFrame: UmlFrame):
+        """
+        Place the OGL links on the input frame at their respective positions
+
+        Args:
+            oglLinks:   A dictionary of OGL links
+            umlFrame:   The UML Frame to place the OGL objects on
+        """
+        for oglLink in oglLinks:
+            umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=False)
