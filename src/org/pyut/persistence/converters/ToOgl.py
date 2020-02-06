@@ -114,21 +114,19 @@ class ToOgl:
         Returns:
 
         """
-        for link in xmlOglLinks:
+        for xmlLink in xmlOglLinks:
             # src and dst anchor position
-            link: Element = cast(Element, link)
+            xmlLink: Element = cast(Element, xmlLink)
 
-            sx = PyutUtils.secureFloat(link.getAttribute("srcX"))
-            sy = PyutUtils.secureFloat(link.getAttribute("srcY"))
-            dx = PyutUtils.secureFloat(link.getAttribute("dstX"))
-            dy = PyutUtils.secureFloat(link.getAttribute("dstY"))
+            sx = PyutUtils.secureFloat(xmlLink.getAttribute("srcX"))
+            sy = PyutUtils.secureFloat(xmlLink.getAttribute("srcY"))
+            dx = PyutUtils.secureFloat(xmlLink.getAttribute("dstX"))
+            dy = PyutUtils.secureFloat(xmlLink.getAttribute("dstY"))
 
-            spline = PyutUtils.secureSplineInt(link.getAttribute("spline"))
-
-            ctrlpts: ControlPoints = self._generateControlPoints(link)
+            spline = PyutUtils.secureSplineInt(xmlLink.getAttribute("spline"))
 
             # get the associated PyutLink
-            srcId, dstId, assocPyutLink = self._getPyutLink(link)
+            srcId, dstId, assocPyutLink = self._getPyutLink(xmlLink)
 
             src: OglClass         = oglClasses[srcId]
             dst: OglClass         = oglClasses[dstId]
@@ -157,6 +155,7 @@ class ToOgl:
             parent = line.GetSource().GetParent()
             selfLink = parent is line.GetDestination().GetParent()
 
+            ctrlpts: ControlPoints = self._generateControlPoints(xmlLink)
             for ctrl in ctrlpts:
                 line.AddControl(ctrl)
                 if selfLink:
@@ -165,7 +164,7 @@ class ToOgl:
                     ctrl.SetPosition(x, y)
 
             if isinstance(oglLink, OglAssociation):
-                self.__furtherCustomizeAssociationLink(link, oglLink)
+                self.__furtherCustomizeAssociationLink(xmlLink, oglLink)
 
     def _getMethods(self, xmlClass: Element) -> PyutMethods:
         """
