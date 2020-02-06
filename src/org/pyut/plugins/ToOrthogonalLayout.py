@@ -46,7 +46,7 @@ class ToOrthogonalLayout(PyutToPlugin):
         Returns:
             The menu title for this plugin
         """
-        return "Orthonal Layout"
+        return "Orthogonal Layout"
 
     def setOptions(self):
         """

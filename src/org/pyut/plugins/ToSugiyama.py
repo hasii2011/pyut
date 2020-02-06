@@ -1,18 +1,20 @@
 
 from typing import List
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 from org.pyut.plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
 from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 from org.pyut.plugins.sugiyama.SugiyamaLink import SugiyamaLink
+from org.pyut.plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
+
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 from org.pyut.plugins.sugiyama.SugiyamaConstants import UP_MARGIN
 from org.pyut.plugins.sugiyama.SugiyamaConstants import H_SPACE
 from org.pyut.plugins.sugiyama.SugiyamaConstants import V_SPACE
 from org.pyut.plugins.sugiyama.SugiyamaConstants import LEFT_MARGIN
 
+from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglObject import OglObject
@@ -20,7 +22,7 @@ from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.enums.OglLinkType import OglLinkType
 
-from org.pyut.plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
+
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
@@ -63,7 +65,7 @@ class ToSugiyama(PyutToPlugin):
         """
         Returns: the name of the plugin.
         """
-        return "Sugiyama automatic layout"
+        return "Sugiyama Automatic Layout"
 
     def getAuthor(self) -> str:
         """
@@ -81,7 +83,7 @@ class ToSugiyama(PyutToPlugin):
         """
         Returns:  The menu title for this plugin
         """
-        return "Sugiyama ALayout"
+        return "Sugiyama Automatic Layout"
 
     def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
         """
