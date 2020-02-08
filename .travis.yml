@@ -4,7 +4,10 @@
 # osx_image: xcode11.2
 notifications:
   email:
-    - Opie.Dopie.Baby.Jesus@gmail.com
+    recipients:
+      - humberto.a.sanchez.ii@gmail.com
+    on_success: always # default: change
+    on_failure: always # default: always
 
 language: python
 
