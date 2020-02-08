@@ -108,6 +108,13 @@
             ],
             "propagate": "False"
         },
+        "TestOglAssociation": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "HistoryUtils": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

@@ -95,7 +95,12 @@
             "propagate": "False"
         },
 
-        "org.pyut.persistence.PyutXmlV8": {
+        "org.pyut.persistence.PyutXmlV9": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.persistence.converters.ToOgl": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
@@ -129,6 +134,11 @@
             "propagate": "False"
         },
         "org.pyut.ogl.OglClass": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.ogl.OglAssociation": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"

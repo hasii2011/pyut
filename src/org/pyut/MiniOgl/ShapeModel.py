@@ -1,7 +1,6 @@
+
 class ShapeModel(object):
     """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com>
-    @date 11.11.2005
     This class is the model of a shape ('view' in a MVC pattern).
     """
 
@@ -23,44 +22,45 @@ class ShapeModel(object):
 
     def GetPosition(self):
         """
-        @return the position of the model
-        """
 
+        Returns:
+            the position of the model
+        """
         return self._x, self._y
 
     def SetPosition(self, x: float, y: float):
         """
-        Set the position of the model.
 
-        @param x       : abscissa of the model.
-        @param y       : oridnate of the model.
+        Args:
+            x:  abscissa of the model.
+            y:  oridnate of the model.
         """
-
         self._x = x
         self._y = y
 
     def AddShape(self, viewShape):
         """
         Add the specified Shape (view) to the model
-
-        @param viewShape   : Shape (view) to add to the model
+        Args:
+            viewShape:
+                Shape (view) to add to the model
         """
-
         self._views.append(viewShape)
 
     def removeShape(self, viewShape):
         """
         Remove the specified Shape (view) from the model. An exception is
         thrown when the specified Shape doesn't exist.
-
-        @param viewShape   : Shape (view) to remove from the model
+        Args:
+            viewShape:
+                Shape (view) to remove from the model
         """
-
         self._views.remove(viewShape)
 
     def GetAllViews(self):
         """
-        @return all the shapes (views) attached to this model
-        """
 
+        Returns:
+            all the shapes (views) attached to this model
+        """
         return self._views

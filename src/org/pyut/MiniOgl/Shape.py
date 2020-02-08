@@ -223,10 +223,12 @@ class Shape:
             text : text to add
             font: font to use
 
-        @return TextShape : the created shape
+        Returns:
+            The created shape
         """
         t = self._CreateTextShape(x, y, text, font=font)
         self._children.append(t)
+
         return t
 
     def _AddPrivateText(self, x: float, y: float, text: str, font: Font = None):

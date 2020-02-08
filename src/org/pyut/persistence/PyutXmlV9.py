@@ -607,14 +607,17 @@ class PyutXml:
         root.setAttribute('spline', str(oglLink.GetSpline()))
 
         if isinstance(oglLink, OglAssociation):
+
             center = oglLink.getLabels()[CENTER]
             src = oglLink.getLabels()[SRC_CARD]
             dst = oglLink.getLabels()[DEST_CARD]
+
             label = xmlDoc.createElement("LabelCenter")
             root.appendChild(label)
             x, y = center.GetModel().GetPosition()
             label.setAttribute("x", str(x))
             label.setAttribute("y", str(y))
+
             label = xmlDoc.createElement("LabelSrc")
             root.appendChild(label)
             x, y = src.GetModel().GetPosition()
@@ -1113,4 +1116,4 @@ class PyutXml:
             umlFrame:   The UML Frame to place the OGL objects on
         """
         for oglLink in oglLinks:
-            umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=False)
+            umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=True)

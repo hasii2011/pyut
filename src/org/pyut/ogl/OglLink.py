@@ -255,13 +255,16 @@ class OglLink(LineShape, ShapeEventHandler):
     def _computeDxDy(self, srcPosition: Tuple[float, float], destPosition: Tuple[float, float]) -> Tuple[float, float]:
         """
 
-        Returns: a tuple of deltaX and deltaY of the shape position
+        Args:
+            srcPosition:    Tuple x,y source position
+            destPosition:   Tuple x,y destination position
+
+        Returns:
+            A tuple of deltaX and deltaY of the shape position
         """
         if self._srcShape is None or self._destShape is None:
             raise IllegalOperationException('Either the source or the destination shape is None')
 
-        # srcX, srcY = self._srcShape.GetPosition()
-        # dstX, dstY = self._destShape.GetPosition()
         srcX, srcY = srcPosition
         dstX, dstY = destPosition
 

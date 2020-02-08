@@ -1,4 +1,13 @@
 
+from typing import cast
+from typing import List
+from typing import NewType
+from typing import Tuple
+
+
+from logging import Logger
+from logging import getLogger
+
 from math import pi
 from math import atan
 from math import cos
@@ -14,10 +23,14 @@ from wx import WHITE_BRUSH
 
 from wx import Font
 
+from org.pyut.MiniOgl.TextShape import TextShape
+
 from org.pyut.ogl.OglLink import OglLink
 
 # Kind of labels
 [CENTER, SRC_CARD, DEST_CARD] = list(range(3))
+
+TextShapes = NewType('TextShapes', List[TextShape])
 
 
 class OglAssociation(OglLink):
@@ -26,39 +39,42 @@ class OglAssociation(OglLink):
 
     """
     Graphical link representation of association, (simple line, no arrow).
-    To get a new link, you should use the `OglLinkFatory` and specify
+    To get a new link, you should use the `OglLinkFactory` and specify
     the kind of link you want, OGL_ASSOCIATION for an instance of this class.
     """
     def __init__(self, srcShape, pyutLink, dstShape):
         """
-        Constructor.
 
-        @param  srcShape : Source shape
-        @param  pyutLink : Conceptual links associated with the graphical links.
-        @param  dstShape : Destination shape
-
+        Args:
+            srcShape:   Source shape
+            pyutLink:   Conceptual links associated with the graphical links.
+            dstShape:   Destination shape
         """
         super().__init__(srcShape, pyutLink, dstShape)
 
+        self.logger: Logger = getLogger(__name__)
         # Add labels
-        self._labels = {}
+        self._labels: TextShapes = cast(TextShapes, {})
         srcPos  = srcShape.GetPosition()
         destPos = dstShape.GetPosition()
 
         linkLength: float = self._computeLinkLength(srcPosition=srcPos, destPosition=destPos)
         dx, dy            = self._computeDxDy(srcPosition=srcPos, destPosition=destPos)
 
-        cenLblX = -dy * 5 / linkLength
-        cenLblY = dx * 5 / linkLength
-        srcLblX = 20 * dx/linkLength      # - dy*5/l
-        srcLblY = 20 * dy/linkLength     # + dx*5/l
-        dstLblX = -20 * dx/linkLength    # + dy*5/l
-        dstLblY = -20 * dy/linkLength    # - dy*5/l
+        # cenLblX = -dy * 5 / linkLength
+        # cenLblY = dx * 5 / linkLength
+        cenLblX, cenLblY = self._computeMidPoint(srcPosition=srcPos, destPosition=destPos)
+        self.logger.info(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
+
+        srcLblX = 20 * dx / linkLength     # - dy*5/l
+        srcLblY = 20 * dy / linkLength     # + dx*5/l
+        dstLblX = -20 * dx / linkLength    # + dy*5/l
+        dstLblY = -20 * dy / linkLength    # - dy*5/l
 
         self._defaultFont = Font(OglAssociation.TEXT_SHAPE_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
 
-        # Initialize labels objects
-        self._labels[CENTER]    = self.AddText(cenLblX, cenLblY,      "", font=self._defaultFont)
+        # Initialize label objects
+        self._labels[CENTER]    = self.AddText(cenLblX, cenLblY,            "", font=self._defaultFont)
         self._labels[SRC_CARD]  = self._srcAnchor.AddText(srcLblX, srcLblY, "", font=self._defaultFont)
         self._labels[DEST_CARD] = self._dstAnchor.AddText(dstLblX, dstLblY, "", font=self._defaultFont)
         self.updateLabels()
@@ -67,15 +83,10 @@ class OglAssociation(OglLink):
     def updateLabels(self):
         """
         Update the labels according to the link.
-
-        @since 1.14
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
         def prepareLabel(textShape, text):
             """
             Update a label.
-
-            @author Laurent Burgbacher <lb@alawa.ch>
             """
             # If label should be drawn
             if text.strip() != "":
@@ -85,46 +96,38 @@ class OglAssociation(OglLink):
                 textShape.SetVisible(False)
 
         # Prepares labels
-        prepareLabel(self._labels[CENTER], self._link.getName())
-        # prepareLabel(self._labels[SRC_CARD], self._link.getSrcCard())
-        # prepareLabel(self._labels[DEST_CARD], self._link.getDestinationCardinality())
+        prepareLabel(self._labels[CENTER],    self._link.getName())
         prepareLabel(self._labels[SRC_CARD],  self._link.sourceCardinality)
         prepareLabel(self._labels[DEST_CARD], self._link.destinationCardinality)
 
-    def getLabels(self):
+    def getLabels(self) -> TextShapes:
         """
-        Get the labels.
 
-        @return TextShape []
-        @since 1.0
+        Returns:
+            The associated text shapes that are used on Association links
         """
         return self._labels
 
-    # noinspection PyUnusedLocal
     def Draw(self, dc: DC, withChildren: bool = False):
         """
-        Called for contents drawing of links.
+        Called for the content drawing of links.
 
-        @param dc : Device context
-        @param  withChildren : draw the children or not
-
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            dc:     Device context
+            withChildren:   draw the children or not
         """
         self.updateLabels()
-        OglLink.Draw(self, dc)
+        OglLink.Draw(self, dc, withChildren)
 
-    def drawLosange(self, dc, filled=False):
+    def drawLosange(self, dc: DC, filled: bool = False):
         """
         Draw an arrow at the begining of the line.
 
-        @param dc
-        @param bool filled : True if the losange must be filled, False otherwise
+        Args:
+            dc:         The device context
+            filled:     True if the losange must be filled, False otherwise
 
         Note:  Losange is French for 'diamond'
-
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
         pi_6 = pi/6
         points = []
@@ -162,3 +165,27 @@ class OglAssociation(OglLink):
             dc.SetBrush(WHITE_BRUSH)
         dc.DrawPolygon(points)
         dc.SetBrush(WHITE_BRUSH)
+
+    @staticmethod
+    def _computeMidPoint(srcPosition: Tuple[float, float], destPosition: Tuple[float, float]):
+        """
+
+        Args:
+            srcPosition:        Tuple x,y source position
+            destPosition:       Tuple x,y destination position
+
+        Returns:
+                A tuple that is the x,y position between `srcPosition` and `destPosition`
+
+            [Reference]: https://mathbitsnotebook.com/Geometry/CoordinateGeometry/CGmidpoint.html
+        """
+
+        x1 = srcPosition[0]
+        y1 = srcPosition[1]
+        x2 = destPosition[0]
+        y2 = destPosition[1]
+
+        midPointX = (x1 + x2) / 2
+        midPointY = (y1 + y2) / 2
+
+        return midPointX, midPointY

@@ -137,7 +137,8 @@ class ToOgl:
             src: OglClass         = oglClasses[srcId]
             dst: OglClass         = oglClasses[dstId]
             linkType: OglLinkType = assocPyutLink.getType()
-            pyutLink: PyutLink = PyutLink("", linkType=linkType,
+            pyutLink: PyutLink = PyutLink(name=assocPyutLink.getName(),
+                                          linkType=linkType,
                                           cardSrc=assocPyutLink.sourceCardinality,
                                           cardDest=assocPyutLink.destinationCardinality,
                                           source=src.getPyutObject(), destination=dst.getPyutObject())
@@ -295,7 +296,7 @@ class ToOgl:
 
     def __furtherCustomizeAssociationLink(self, xmlLink: Element, oglLink: OglAssociation):
         """
-
+        Customize the visual aspects of an Association link
         Args:
             xmlLink:
             oglLink:
@@ -316,9 +317,11 @@ class ToOgl:
             tagName:
             textShape:
         """
-
         label:  Element   = xmlLink.getElementsByTagName(tagName)[0]
         x = float(label.getAttribute("x"))
         y = float(label.getAttribute("y"))
+
+        if tagName == 'LabelCenter':
+            self.logger.info(f'tagName: {tagName} textShape.text: `{textShape.GetText()}`  pos: ({x:.2f},{y:.2f})')
 
         textShape.SetPosition(x, y)
