@@ -1,10 +1,4 @@
-##########################################################
-# Added by P. Dabrowski (21.11.2005)
-# This is the future TextShape that should replace the
-# actual when pyut will be refactorised (oglClass, ogl...)
-# When it is the case just rename this file as TextShape
-# and remove the ancient version
-##########################################################
+
 from typing import cast
 
 from logging import Logger
@@ -202,3 +196,7 @@ class TextShape(RectangleShape):
 
         """
         return self._font
+
+    def __repr__(self):
+        x, y = self.GetPosition()
+        return f'text `{self._text}`   position: ({x:.2f},{y:.2f})'

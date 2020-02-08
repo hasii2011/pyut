@@ -143,3 +143,7 @@ class AnchorPoint(LinePoint):
         parent = self.GetParent()
         if parent:
             parent.RemoveAnchor(self)
+
+    def __repr__(self):
+        x, y = self.GetPosition()
+        return f'AnchorPoint at ({x:.2f},{y:.2f})'

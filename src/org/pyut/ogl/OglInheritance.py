@@ -28,3 +28,6 @@ class OglInheritance(OglLink):
         # Arrow must be white inside
         self.SetBrush(wx.WHITE_BRUSH)
         self.SetDrawArrow(True)
+
+    def __repr__(self):
+        return f'Parent: {self.getSourceShape()}  Child: {self.getDestinationShape()}'

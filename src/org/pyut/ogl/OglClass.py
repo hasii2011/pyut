@@ -355,3 +355,7 @@ class OglClass(OglObject):
         y: int = event.GetY()
         self.logger.debug(f'OglClass - x,y: {x},{y}')
         frame.PopupMenu(menu, x, y)
+
+    def __repr__(self):
+        selfName:   str = self.getPyutObject().getName()
+        return f'OglClass.{selfName}'
