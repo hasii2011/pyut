@@ -106,10 +106,10 @@ def main():
         sysPath.append("..")  # access to the classes to test
 
     testAll: TestAll = TestAll()
+    status: int = 0
     if len(sysArgv) < 2:
         status: int = testAll.runTextTestRunner()
     else:
-        status = 0
         for param in sysArgv[1:]:
             if param[:22] == "--produce-html-results":
                 print(f'Running HTML Tests')
@@ -119,4 +119,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    cliStatus: int = main()
+    exit(cliStatus)
