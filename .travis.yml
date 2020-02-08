@@ -2,6 +2,9 @@
 # os: osx
 
 # osx_image: xcode11.2
+notifications:
+  email:
+    - Opie.Dopie.Baby.Jesus@gmail.com
 
 language: python
 
