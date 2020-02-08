@@ -6,7 +6,7 @@ notifications:
   email:
     recipients:
       - humberto.a.sanchez.ii@gmail.com
-    on_success: always # default: change
+    on_success: change # default: change
     on_failure: always # default: always
 
 language: python
