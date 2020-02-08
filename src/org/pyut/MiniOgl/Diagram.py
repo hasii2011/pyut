@@ -38,7 +38,7 @@ class Diagram:
         if shape not in self._parentShapes and shape.GetParent() is None:
             self._parentShapes.append(shape)
 
-        self.clsLogger.info(f'Diagram.AddShape before shape.Attach()=> {shape}')
+        self.clsLogger.info(f'.AddShape before shape.Attach()=> {shape} withModelUpdate {withModelUpdate}')
         shape.Attach(self)
 
         # makes the shape's model (MVC pattern) have the right values depending on
@@ -95,22 +95,24 @@ class Diagram:
         """
         return self._panel
 
-    def MoveToFront(self, shape):
+    def MoveToFront(self, shape: Shape):
         """
         Move the given shape to the end of the display list => last drawn.
 
-        @param Shape shape : shape to move
+        Args:
+            shape: The shape to move
         """
         shapes = [shape] + shape.GetAllChildren()
         for s in shapes:
             self._shapes.remove(s)
         self._shapes = self._shapes + shapes
 
-    def MoveToBack(self, shape):
+    def MoveToBack(self, shape: Shape):
         """
         Move the given shape to the start of the display list => first drawn.
 
-        @param Shape shape : shape to move
+        Args:
+            shape: The shape to move
         """
         shapes = [shape] + shape.GetAllChildren()
         for s in shapes:

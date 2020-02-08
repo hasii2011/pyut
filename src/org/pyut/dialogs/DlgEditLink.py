@@ -12,6 +12,7 @@ from wx import BoxSizer
 from wx import Button
 from wx import CANCEL
 from wx import CAPTION
+from wx import CommandEvent
 from wx import Dialog
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
@@ -249,17 +250,15 @@ class DlgEditLink (Dialog):
         self._bRoleInA = event.GetString()
 
     # noinspection PyUnusedLocal
-    def _onCmdOk(self, event):
+    def _onCmdOk(self, event: CommandEvent):
         """
         Handle click on "Ok" button
 
-        @since 1.2
-        @author C.Dutoit<dutoitc@hotmail.com>
+        Args:
+            event:
         """
-
         self._pyutLink.setName(self._relationship)
-        # self._pyutLink.setSourceCardinality(self._cardinalityA)
-        # self._pyutLink.setDestinationCardinality(self._cardinalityB)
+
         self._pyutLink.sourceCardinality      = self._cardinalityA
         self._pyutLink.destinationCardinality = self._cardinalityB
         # Should perhaps take roles, not yet implemented in PyutLink TODO

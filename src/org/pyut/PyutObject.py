@@ -2,11 +2,10 @@
 
 class PyutObject:
     """
-    Base Object of PyutData.
-    @version $Revision: 1.7 $
+    PyutData  base object
     """
 
-    nextId = 0
+    nextId: int = 0
 
     def __init__(self, name=""):
         """
@@ -45,13 +44,11 @@ class PyutObject:
                 return True
         return False
 
-    def getName(self):
+    def getName(self) -> str:
         """
-        Get method, used to know the name.
 
-        @return string name
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Returns:
+            Return the object name
         """
         try:
             return self._name
