@@ -1,15 +1,18 @@
+
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.MiniOgl import Shape
 from org.pyut.MiniOgl import SizerShape
 
 
 class Diagram:
+
+    clsLogger: Logger = getLogger(__name__)
     """
     A diagram contains shapes and is responsible to manage them.
     It can be saved to a file, and loaded back. It knows every shapes that
     can be clicked (selected, moved...).
-
-
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
     def __init__(self, panel):
         """
@@ -26,15 +29,16 @@ class Diagram:
         Add a shape to the diagram.
         This is the correct way to do it. Don't use Shape.Attach(diagram)!
 
-        @param  shape : the shape to add
-        @param withModelUpdate
+        Args:
+            shape:  the shape to add
+            withModelUpdate:
         """
-        #  print "Diagram.AddShape => ", shape
         if shape not in self._shapes:
             self._shapes.append(shape)
         if shape not in self._parentShapes and shape.GetParent() is None:
             self._parentShapes.append(shape)
 
+        self.clsLogger.info(f'Diagram.AddShape before shape.Attach()=> {shape}')
         shape.Attach(self)
 
         # makes the shape's model (MVC pattern) have the right values depending on
