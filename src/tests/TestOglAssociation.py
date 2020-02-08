@@ -86,7 +86,7 @@ class TestOglAssociation(TestBase):
 
         midPoint = OglAssociation._computeMidPoint(srcPosition=srcPosition, destPosition=destPosition)
         self.assertEqual(4558.0, midPoint[0], 'X coordinate is not correct')
-        self.assertEqual(4551.0, midPoint[1], 'Y coordinate is not correct')
+        self.assertEqual(4558.0, midPoint[1], 'Y coordinate is not correct')
         self.logger.info(f'midPoint: {midPoint}')
 
 
