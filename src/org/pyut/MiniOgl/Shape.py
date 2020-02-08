@@ -311,7 +311,7 @@ class Shape:
 
             # self.clsLogger.debug("now, the shapes are", diagram.GetShapes())
 
-    def Draw(self, dc: DC, withChildren: bool = False):
+    def Draw(self, dc: DC, withChildren: bool = True):
         """
         Draw the shape.
         For a shape, only the anchors are drawn. Nothing is drawn if the

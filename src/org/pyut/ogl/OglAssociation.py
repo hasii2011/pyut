@@ -27,7 +27,7 @@ from org.pyut.MiniOgl.TextShape import TextShape
 
 from org.pyut.ogl.OglLink import OglLink
 
-# Kind of labels
+# label types
 [CENTER, SRC_CARD, DEST_CARD] = list(range(3))
 
 TextShapes = NewType('TextShapes', List[TextShape])
@@ -38,9 +38,9 @@ class OglAssociation(OglLink):
     TEXT_SHAPE_FONT_SIZE: int = 12
 
     """
-    Graphical link representation of association, (simple line, no arrow).
-    To get a new link, you should use the `OglLinkFactory` and specify
-    the kind of link you want, OGL_ASSOCIATION for an instance of this class.
+    Graphical link representation of an association, (simple line, no arrow).
+    To get a new link,  use the `OglLinkFactory` and specify
+    the link type.  .e.g. OGL_ASSOCIATION for an instance of this class.
     """
     def __init__(self, srcShape, pyutLink, dstShape):
         """
@@ -61,9 +61,9 @@ class OglAssociation(OglLink):
         linkLength: float = self._computeLinkLength(srcPosition=srcPos, destPosition=destPos)
         dx, dy            = self._computeDxDy(srcPosition=srcPos, destPosition=destPos)
 
-        # cenLblX = -dy * 5 / linkLength
-        # cenLblY = dx * 5 / linkLength
-        cenLblX, cenLblY = self._computeMidPoint(srcPosition=srcPos, destPosition=destPos)
+        cenLblX = -dy * 5 / linkLength
+        cenLblY = dx * 5 / linkLength
+        # cenLblX, cenLblY = self._computeMidPoint(srcPosition=srcPos, destPosition=destPos)
         self.logger.info(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
 
         srcLblX = 20 * dx / linkLength     # - dy*5/l
@@ -74,7 +74,7 @@ class OglAssociation(OglLink):
         self._defaultFont = Font(OglAssociation.TEXT_SHAPE_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
 
         # Initialize label objects
-        self._labels[CENTER]    = self.AddText(cenLblX, cenLblY,            "", font=self._defaultFont)
+        self._labels[CENTER]    = self.AddText(cenLblX, cenLblY, "", font=self._defaultFont)
         self._labels[SRC_CARD]  = self._srcAnchor.AddText(srcLblX, srcLblY, "", font=self._defaultFont)
         self._labels[DEST_CARD] = self._dstAnchor.AddText(dstLblX, dstLblY, "", font=self._defaultFont)
         self.updateLabels()
@@ -84,21 +84,20 @@ class OglAssociation(OglLink):
         """
         Update the labels according to the link.
         """
-        def prepareLabel(textShape, text):
+        def updateTheAssociationLabels(textShape: TextShape, text: str):
             """
-            Update a label.
+            Update the label text;  Empty labels are rendered invisible
             """
-            # If label should be drawn
             if text.strip() != "":
                 textShape.SetText(text)
                 textShape.SetVisible(True)
             else:
                 textShape.SetVisible(False)
 
-        # Prepares labels
-        prepareLabel(self._labels[CENTER],    self._link.getName())
-        prepareLabel(self._labels[SRC_CARD],  self._link.sourceCardinality)
-        prepareLabel(self._labels[DEST_CARD], self._link.destinationCardinality)
+        # update the labels
+        updateTheAssociationLabels(self._labels[CENTER],    self._link.getName())
+        updateTheAssociationLabels(self._labels[SRC_CARD],  self._link.sourceCardinality)
+        updateTheAssociationLabels(self._labels[DEST_CARD], self._link.destinationCardinality)
 
     def getLabels(self) -> TextShapes:
         """
@@ -108,7 +107,7 @@ class OglAssociation(OglLink):
         """
         return self._labels
 
-    def Draw(self, dc: DC, withChildren: bool = False):
+    def Draw(self, dc: DC, withChildren: bool = True):
         """
         Called for the content drawing of links.
 
@@ -189,3 +188,6 @@ class OglAssociation(OglLink):
         midPointY = (y1 + y2) / 2
 
         return midPointX, midPointY
+
+    def __repr__(self):
+        return f'from: {self.getSourceShape()} to: {self.getDestinationShape()}'

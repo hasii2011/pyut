@@ -69,6 +69,11 @@
             "propagate": "False"
         },
 
+        "org.pyut.MiniOgl.Diagram": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "org.pyut.MiniOgl.DiagramFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
