@@ -21,6 +21,7 @@ from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
+from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -35,6 +36,7 @@ from org.pyut.ogl.OglAssociation import SRC_CARD
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
+from org.pyut.ogl.OglUseCase import OglUseCase
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 
@@ -45,6 +47,7 @@ OglObjects    = NewType('OglObjects',    Dict[int, OglObject])
 OglClasses    = NewType('OglClasses',    Dict[int, OglClass])
 OglNotes      = NewType('OglNotes',      Dict[int, OglNote])
 OglActors     = NewType('OglActors',     Dict[int, OglActor])
+OglUseCases   = NewType('OglUseCases',   Dict[int, OglUseCase])
 PyutMethods   = NewType('PyutMethods',   List[PyutMethod])
 PyutFields    = NewType('PyutFields',    List[PyutField])
 ControlPoints = NewType('ControlPoints', List[ControlPoint])
@@ -184,7 +187,7 @@ class ToOgl:
 
         return oglLinks
 
-    def getOglNotes(self, xmlOglNotes, umlFrame) -> OglNotes:
+    def getOglNotes(self, xmlOglNotes: NodeList, umlFrame) -> OglNotes:
         """
         Parse the XML elements given and build data layer for PyUt notes.
 
@@ -226,9 +229,9 @@ class ToOgl:
 
         return oglNotes
 
-    def getOglActors(self, xmlOglActors) -> OglActors:
+    def getOglActors(self, xmlOglActors: NodeList) -> OglActors:
         """
-        Parse the XML elements given and build data layer for PyUT actors.
+        Parse the XML elements given and build data layer for PyUt actors.
 
         Args:
             xmlOglActors:       XML 'GraphicActor' elements
@@ -246,7 +249,7 @@ class ToOgl:
             width:  float = float(xmlOglActor.getAttribute('width'))
             oglActor: OglActor = OglActor(pyutActor, width, height)
 
-            xmlActor = xmlOglActor.getElementsByTagName('Actor')[0]
+            xmlActor: Element = xmlOglActor.getElementsByTagName('Actor')[0]
 
             pyutActor.setId(int(xmlActor.getAttribute('id')))
             pyutActor.setName(xmlActor.getAttribute('name'))
@@ -260,6 +263,41 @@ class ToOgl:
             oglActors[pyutActor.getId()] = oglActor
 
         return oglActors
+
+    def getOglUseCases(self, xmlOglUseCases: NodeList) -> OglUseCases:
+        """
+        Parse the XML elements given and build data layer for PyUt actors.
+
+        Args:
+            xmlOglUseCases:     XML 'GraphicUseCase' elements
+
+        Returns:
+            A dictionary of OglUseCase objects
+        """
+        oglUseCases: OglUseCases = cast(OglUseCases, {})
+
+        for xmlOglUseCase in xmlOglUseCases:
+
+            pyutUseCase: PyutUseCase = PyutUseCase()
+
+            # Building OGL UseCase
+            height = float(xmlOglUseCase.getAttribute('height'))
+            width = float(xmlOglUseCase.getAttribute('width'))
+            oglUseCase = OglUseCase(pyutUseCase, width, height)
+
+            xmlUseCase: Element = xmlOglUseCase.getElementsByTagName('UseCase')[0]
+
+            pyutUseCase.setId(int(xmlUseCase.getAttribute('id')))
+            pyutUseCase.setName(xmlUseCase.getAttribute('name'))
+            pyutUseCase.setFilename(xmlUseCase.getAttribute('filename'))
+
+            x = float(xmlOglUseCase.getAttribute('x'))
+            y = float(xmlOglUseCase.getAttribute('y'))
+            oglUseCase.SetPosition(x, y)
+
+            oglUseCases[pyutUseCase.getId()] = oglUseCase
+
+        return oglUseCases
 
     def _getMethods(self, xmlClass: Element) -> PyutMethods:
         """

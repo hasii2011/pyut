@@ -35,7 +35,6 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
-from org.pyut.PyutUseCase import PyutUseCase
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
@@ -48,6 +47,7 @@ from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.persistence.converters.ToOgl import OglActors
 from org.pyut.persistence.converters.ToOgl import OglObjects
+from org.pyut.persistence.converters.ToOgl import OglUseCases
 
 from org.pyut.persistence.converters.ToOgl import ToOgl
 from org.pyut.persistence.converters.ToOgl import OglLinks
@@ -232,6 +232,7 @@ class PyutXml:
                 # self._getOglLinks(documentNode.getElementsByTagName("GraphicLink"),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 # self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 # self._getOglActors(documentNode.getElementsByTagName('GraphicActor'),     dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                # self._getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
 
                 if docType == DiagramType.CLASS_DIAGRAM:
                     oglClasses: OglClasses = toOgl.getOglClasses(documentNode.getElementsByTagName('GraphicClass'))
@@ -242,10 +243,12 @@ class PyutXml:
                     self.__displayTheNotes(oglNotes, umlFrame)
                 elif docType == DiagramType.USECASE_DIAGRAM:
                     oglObjects: OglObjects = cast(OglObjects, {})
+
                     oglActors: OglActors = toOgl.getOglActors(documentNode.getElementsByTagName('GraphicActor'))
                     self.__displayTheActors(oglActors, umlFrame)
 
-                    self._getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'), oglObjects, dicoLink, dicoFather, umlFrame)
+                    oglUseCases: OglUseCases = toOgl.getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'))
+                    self.__displayTheUseCases(oglUseCases, umlFrame)
 
                     oglNotes: OglNotes = toOgl.getOglNotes(documentNode.getElementsByTagName('GraphicNote'), umlFrame)
                     self.__displayTheNotes(oglNotes, umlFrame)
@@ -255,6 +258,7 @@ class PyutXml:
                     merged: OglObjects = cast(OglObjects, oglObjects.copy())
                     merged.update(oglActors)
                     merged.update(oglNotes)
+                    merged.update(oglUseCases)
                     oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName("GraphicLink"), merged)
                     self.__displayTheLinks(oglLinks, umlFrame)
                 elif docType == DiagramType.SEQUENCE_DIAGRAM:
@@ -858,45 +862,6 @@ class PyutXml:
         #
         # return allControlPoints
 
-    # noinspection PyUnusedLocal
-    def _getOglUseCases(self, xmlOglUseCases, dicoOglObjects, dicoLink, dicoFather, umlFrame):
-        """
-        Parse the XML elements given and build data layer for PyUT actors.
-
-        @param Element[] xmlOglUseCases : XML 'GraphicUseCase' elements
-        @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
-        @param {id / srcName, OglLink} dicoLink : OGL links loaded
-        @param {id / srcName, id / srcName} dicoFather: Inheritance
-        @param UmlFrame umlFrame : Where to draw
-        """
-        for xmlOglUseCase in xmlOglUseCases:
-            pyutUseCase = PyutUseCase()
-
-            # Building OGL UseCase
-            height = float(xmlOglUseCase.getAttribute('height'))
-            width = float(xmlOglUseCase.getAttribute('width'))
-            oglUseCase = OglUseCase(pyutUseCase, width, height)
-
-            xmlUseCase = xmlOglUseCase.getElementsByTagName('UseCase')[0]
-
-            pyutUseCase.setId(int(xmlUseCase.getAttribute('id')))
-
-            # adding name for this class
-            # pyutUseCase.setName(xmlUseCase.getAttribute('name').encode("charmap"))
-            # Python 3 is already utf-8;  don't need to encode anything
-            pyutUseCase.setName(xmlUseCase.getAttribute('name'))
-
-            # adding associated filename (lb@alawa.ch)
-            pyutUseCase.setFilename(xmlUseCase.getAttribute('filename'))
-
-            # Update dicos
-            dicoOglObjects[pyutUseCase.getId()] = oglUseCase
-
-            # Update UML Frame
-            x = float(xmlOglUseCase.getAttribute('x'))
-            y = float(xmlOglUseCase.getAttribute('y'))
-            umlFrame.addShape(oglUseCase, x, y)
-
     def __displayTheClasses(self, oglClasses: OglClasses, umlFrame: UmlFrame):
         """
         Place the OGL classes on the input frame at their respective positions
@@ -920,13 +885,16 @@ class PyutXml:
             umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=True)
 
     def __displayTheNotes(self, oglNotes: OglNotes, umlFrame: UmlFrame):
-
         for oglNote in oglNotes.values():
             self.__displayAnOglObject(oglNote, umlFrame)
 
     def __displayTheActors(self, oglActors: OglActors, umlFrame: UmlFrame):
         for oglActor in oglActors.values():
             self.__displayAnOglObject(oglActor, umlFrame)
+
+    def __displayTheUseCases(self, oglUseCases: OglUseCases, umlFrame: UmlFrame):
+        for oglUseCase in oglUseCases.values():
+            self.__displayAnOglObject(oglUseCase, umlFrame)
 
     def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlFrame):
 
