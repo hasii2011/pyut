@@ -32,12 +32,14 @@ from org.pyut.ogl.OglAssociation import DEST_CARD
 from org.pyut.ogl.OglAssociation import SRC_CARD
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
+from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 
 from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
+OglObjects    = NewType('OglObjects',    Dict[int, OglObject])
 OglClasses    = NewType('OglClasses',    Dict[int, OglClass])
 OglNotes      = NewType('OglNotes',      Dict[int, OglNote])
 PyutMethods   = NewType('PyutMethods',   List[PyutMethod])
@@ -110,7 +112,7 @@ class ToOgl:
 
         return oglObjects
 
-    def getOglLinks(self, xmlOglLinks: NodeList, oglClasses: OglClasses) -> OglLinks:
+    def getOglLinks(self, xmlOglLinks: NodeList, oglClasses: OglObjects) -> OglLinks:
         """
         Extract the link for the OglClasses
 
