@@ -321,6 +321,6 @@ class ToOgl:
         x = float(label.getAttribute("x"))
         y = float(label.getAttribute("y"))
 
-        self.logger.info(f'tagName: {tagName} textShape.text: `{textShape.GetText()}`  pos: ({x:.2f},{y:.2f})')
+        self.logger.debug(f'tagName: {tagName} textShape.text: `{textShape.GetText()}`  pos: ({x:.2f},{y:.2f})')
 
         textShape.SetPosition(x, y)

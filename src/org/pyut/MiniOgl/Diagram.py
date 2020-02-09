@@ -38,7 +38,7 @@ class Diagram:
         if shape not in self._parentShapes and shape.GetParent() is None:
             self._parentShapes.append(shape)
 
-        self.clsLogger.info(f'.AddShape before shape.Attach()=> {shape} withModelUpdate {withModelUpdate}')
+        self.clsLogger.debug(f'.AddShape before shape.Attach()=> {shape} withModelUpdate {withModelUpdate}')
         shape.Attach(self)
 
         # makes the shape's model (MVC pattern) have the right values depending on

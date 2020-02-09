@@ -65,7 +65,7 @@ class OglAssociation(OglLink):
         # cenLblX = -dy * 5 / linkLength
         # cenLblY = dx * 5 / linkLength
         cenLblX, cenLblY = self._computeMidPoint(srcPosition=srcPos, destPosition=destPos)
-        self.logger.info(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
+        self.logger.debug(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
 
         srcLblX = 20 * dx / linkLength     # - dy*5/l
         srcLblY = 20 * dy / linkLength     # + dx*5/l
