@@ -24,6 +24,7 @@ from wx import WHITE_BRUSH
 from wx import Font
 
 from org.pyut.MiniOgl.TextShape import TextShape
+from org.pyut.MiniOgl.TextShapeModel import TextShapeModel
 
 from org.pyut.ogl.OglLink import OglLink
 
@@ -61,9 +62,9 @@ class OglAssociation(OglLink):
         linkLength: float = self._computeLinkLength(srcPosition=srcPos, destPosition=destPos)
         dx, dy            = self._computeDxDy(srcPosition=srcPos, destPosition=destPos)
 
-        cenLblX = -dy * 5 / linkLength
-        cenLblY = dx * 5 / linkLength
-        # cenLblX, cenLblY = self._computeMidPoint(srcPosition=srcPos, destPosition=destPos)
+        # cenLblX = -dy * 5 / linkLength
+        # cenLblY = dx * 5 / linkLength
+        cenLblX, cenLblY = self._computeMidPoint(srcPosition=srcPos, destPosition=destPos)
         self.logger.info(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
 
         srcLblX = 20 * dx / linkLength     # - dy*5/l
@@ -79,6 +80,8 @@ class OglAssociation(OglLink):
         self._labels[DEST_CARD] = self._dstAnchor.AddText(dstLblX, dstLblY, "", font=self._defaultFont)
         self.updateLabels()
         self.SetDrawArrow(False)
+
+        self.__hackCenterLabelPosition(cenLblX, cenLblY)
 
     def updateLabels(self):
         """
@@ -164,6 +167,24 @@ class OglAssociation(OglLink):
             dc.SetBrush(WHITE_BRUSH)
         dc.DrawPolygon(points)
         dc.SetBrush(WHITE_BRUSH)
+
+    def __hackCenterLabelPosition(self, cenLblX, cenLblY):
+        """
+        This code is a hack because I cannot figure out why some "TextShape"s have their
+        diagram attribute set and some do not;  Having our diagram attribute set means that the
+        model can be updated.
+        So I am manually updating here
+
+        Args:
+            cenLblX:    center label X position
+            cenLblY:    center label Y position
+
+        """
+        centerTextShape: TextShape      = self._labels[CENTER]
+        model:           TextShapeModel = centerTextShape.GetModel()
+
+        self.logger.info(f'center text position {model.GetPosition()}')
+        model.SetPosition(cenLblX, cenLblY)
 
     @staticmethod
     def _computeMidPoint(srcPosition: Tuple[float, float], destPosition: Tuple[float, float]):
