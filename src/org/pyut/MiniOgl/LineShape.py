@@ -192,7 +192,7 @@ class LineShape(Shape):
         """
         return self._controls[:]
 
-    def Draw(self, dc: DC, withChildren: bool = False):
+    def Draw(self, dc: DC, withChildren: bool = True):
         """
         Draw the line on the dc.
 
@@ -202,7 +202,6 @@ class LineShape(Shape):
         """
         if self._visible:
 
-            # Shape.Draw(self, dc, False)
             super().Draw(dc=dc, withChildren=withChildren)
             line = self.GetSegments()
             if self._selected:

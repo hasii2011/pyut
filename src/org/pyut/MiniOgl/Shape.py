@@ -320,8 +320,9 @@ class Shape:
         parent's Draw method, passing withChildren = False, and finally
         calling itself the DrawChildren method.
 
-        @param dc
-        @param boolean withChildren : draw the children or not
+        Args:
+            dc:             wxPython device context
+            withChildren:   draw the children or not
         """
 
         if self._visible:
