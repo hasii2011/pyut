@@ -13,6 +13,7 @@ from xml.dom.minidom import NodeList
 
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.TextShape import TextShape
+from org.pyut.PyutActor import PyutActor
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
@@ -24,6 +25,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.OglLinkType import OglLinkType
+from org.pyut.ogl.OglActor import OglActor
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglAssociation import OglAssociation
@@ -42,6 +44,7 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 OglObjects    = NewType('OglObjects',    Dict[int, OglObject])
 OglClasses    = NewType('OglClasses',    Dict[int, OglClass])
 OglNotes      = NewType('OglNotes',      Dict[int, OglNote])
+OglActors     = NewType('OglActors',     Dict[int, OglActor])
 PyutMethods   = NewType('PyutMethods',   List[PyutMethod])
 PyutFields    = NewType('PyutFields',    List[PyutField])
 ControlPoints = NewType('ControlPoints', List[ControlPoint])
@@ -222,6 +225,41 @@ class ToOgl:
             oglNotes[pyutNote.getId()] = oglNote
 
         return oglNotes
+
+    def getOglActors(self, xmlOglActors) -> OglActors:
+        """
+        Parse the XML elements given and build data layer for PyUT actors.
+
+        Args:
+            xmlOglActors:       XML 'GraphicActor' elements
+
+        Returns:
+            A dictionary of OglActor objects
+        """
+        oglActors: OglActors = cast(OglActors, {})
+
+        for xmlOglActor in xmlOglActors:
+            pyutActor: PyutActor = PyutActor()
+
+            # Building OGL Actor
+            height: float = float(xmlOglActor.getAttribute('height'))
+            width:  float = float(xmlOglActor.getAttribute('width'))
+            oglActor: OglActor = OglActor(pyutActor, width, height)
+
+            xmlActor = xmlOglActor.getElementsByTagName('Actor')[0]
+
+            pyutActor.setId(int(xmlActor.getAttribute('id')))
+            pyutActor.setName(xmlActor.getAttribute('name'))
+            pyutActor.setFilename(xmlActor.getAttribute('filename'))
+
+            # Adding properties necessary to place shape on a diagram frame
+            x = float(xmlOglActor.getAttribute('x'))
+            y = float(xmlOglActor.getAttribute('y'))
+            oglActor.SetPosition(x, y)
+
+            oglActors[pyutActor.getId()] = oglActor
+
+        return oglActors
 
     def _getMethods(self, xmlClass: Element) -> PyutMethods:
         """
