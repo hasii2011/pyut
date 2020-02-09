@@ -18,6 +18,7 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod
+from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
@@ -30,6 +31,7 @@ from org.pyut.ogl.OglAssociation import CENTER
 from org.pyut.ogl.OglAssociation import DEST_CARD
 from org.pyut.ogl.OglAssociation import SRC_CARD
 from org.pyut.ogl.OglLink import OglLink
+from org.pyut.ogl.OglNote import OglNote
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 
@@ -37,6 +39,7 @@ from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
 OglClasses    = NewType('OglClasses',    Dict[int, OglClass])
+OglNotes      = NewType('OglNotes',      Dict[int, OglNote])
 PyutMethods   = NewType('PyutMethods',   List[PyutMethod])
 PyutFields    = NewType('PyutFields',    List[PyutField])
 ControlPoints = NewType('ControlPoints', List[ControlPoint])
@@ -97,13 +100,13 @@ class ToOgl:
             pyutClass.setMethods(self._getMethods(xmlClass))
             pyutClass.setFields(self._getFields(xmlClass))
 
-            oglObjects[pyutClass.getId()] = oglClass
-
-            # Adding properties necessary to place shape on diagram frame
+            # Adding properties necessary to place shape on a diagram frame
             x = float(xmlOglClass.getAttribute('x'))
             y = float(xmlOglClass.getAttribute('y'))
 
             oglClass.SetPosition(x, y)
+
+            oglObjects[pyutClass.getId()] = oglClass
 
         return oglObjects
 
@@ -175,6 +178,48 @@ class ToOgl:
                 self.__furtherCustomizeAssociationLink(xmlLink, oglLink)
 
         return oglLinks
+
+    def getOglNotes(self, xmlOglNotes, umlFrame) -> OglNotes:
+        """
+        Parse the XML elements given and build data layer for PyUt notes.
+
+        Args:
+            xmlOglNotes:        XML 'GraphicNote' elements
+            umlFrame:           Where to draw
+
+        Returns:
+            The returned dictionary uses a generated ID for the key
+        """
+        oglNotes: OglNotes = cast(OglNotes, {})
+        for xmlOglNote in xmlOglNotes:
+
+            pyutNote: PyutNote = PyutNote()
+
+            # Building OGL Note
+            height: float = float(xmlOglNote.getAttribute('height'))
+            width:  float = float(xmlOglNote.getAttribute('width'))
+            oglNote = OglNote(pyutNote, width, height)
+
+            xmlNote: Element = xmlOglNote.getElementsByTagName('Note')[0]
+
+            pyutNote.setId(int(xmlNote.getAttribute('id')))
+
+            name = xmlNote.getAttribute('name')
+            name = name.replace("\\\\\\\\", "\n")
+
+            pyutNote.setName(name)
+
+            pyutNote.setFilename(xmlNote.getAttribute('filename'))
+
+            # Adding properties necessary to place shape on a diagram frame
+            x: float = float(xmlOglNote.getAttribute('x'))
+            y: float = float(xmlOglNote.getAttribute('y'))
+
+            oglNote.SetPosition(x, y)
+            # Update the dictionary
+            oglNotes[pyutNote.getId()] = oglNote
+
+        return oglNotes
 
     def _getMethods(self, xmlClass: Element) -> PyutMethods:
         """

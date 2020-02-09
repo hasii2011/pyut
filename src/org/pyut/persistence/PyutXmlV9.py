@@ -27,6 +27,7 @@ from org.pyut.ogl.OglAssociation import SRC_CARD
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
+from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
@@ -49,6 +50,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.persistence.converters.ToOgl import ToOgl
 from org.pyut.persistence.converters.ToOgl import OglLinks
 from org.pyut.persistence.converters.ToOgl import OglClasses
+from org.pyut.persistence.converters.ToOgl import OglNotes
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
@@ -231,7 +233,10 @@ class PyutXml:
                 oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName("GraphicLink"), dicoOglObjects)
                 self.__displayTheLinks(oglLinks, umlFrame)
 
-                self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                # self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
+                oglNotes: OglNotes = toOgl.getOglNotes(documentNode.getElementsByTagName('GraphicNote'), umlFrame)
+                self.__displayTheNotes(oglNotes, umlFrame)
+
                 self._getOglActors(documentNode.getElementsByTagName('GraphicActor'),     dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
 
@@ -834,137 +839,6 @@ class PyutXml:
         #
         # return allControlPoints
 
-    # def _getPyutLink(self, obj):
-    #     """
-    #     To extract a PyutLink from an OglLink object.
-    #
-    #     @param String obj : Name of the object.
-    #     """
-    #     link = obj.getElementsByTagName("Link")[0]
-    #
-    #     aLink = PyutLink()
-    #
-    #     aLink.setBidir(bool(link.getAttribute('bidir')))
-    #
-    #     aLink.destinationCardinality = link.getAttribute('cardDestination')
-    #     aLink.sourceCardinality      = link.getAttribute('cardSrc')
-    #
-    #     aLink.setName(link.getAttribute('name'))
-    #
-    #     strLinkType: str         = link.getAttribute('type')
-    #     linkType:    OglLinkType = OglLinkType[strLinkType]
-    #     aLink.setType(linkType)
-    #
-    #     # source and destination will be reconstructed by _getOglLinks
-    #     sourceId = int(link.getAttribute('sourceId'))
-    #     destId = int(link.getAttribute('destId'))
-    #
-    #     return sourceId, destId, aLink
-    #
-    # noinspection PyUnusedLocal
-    # def _getOglLinks(self, xmlOglLinks, dicoOglObjects, dicoLink, dicoFather, umlFrame):
-    #     """
-    #     To extract the links from an OGL object.
-    #     """
-    #     def secure_float(floatX):
-    #         if floatX is not None:
-    #             return float(floatX)
-    #         return 0.0
-    #
-    #     def secure_spline_int(splineX):
-    #         if splineX is None:
-    #             return 0
-    #         elif splineX == "_DeprecatedNonBool: False" or splineX == "False":
-    #             return 0
-    #         elif splineX == "_DeprecatedNonBool: True" or splineX == "True":
-    #             return 1
-    #         else:
-    #             return int(splineX)
-    #
-    #     for link in xmlOglLinks:
-    #         # src and dst anchor position
-    #         sx = secure_float(link.getAttribute("srcX"))
-    #         sy = secure_float(link.getAttribute("srcY"))
-    #         dx = secure_float(link.getAttribute("dstX"))
-    #         dy = secure_float(link.getAttribute("dstY"))
-    #         spline = secure_spline_int(link.getAttribute("spline"))
-    #
-    #         # create a list of ControlPoints
-    #         ctrlpts = []
-    #         for ctrlpt in link.getElementsByTagName("ControlPoint"):
-    #             x = secure_float(ctrlpt.getAttribute("x"))
-    #             y = secure_float(ctrlpt.getAttribute("y"))
-    #             ctrlpts.append(ControlPoint(x, y))
-    #
-    #         # get the associated PyutLink
-    #         srcId, dstId, assocPyutLink = self._getPyutLink(link)
-    #
-    #         src = dicoOglObjects[srcId]
-    #         dst = dicoOglObjects[dstId]
-    #         linkType = assocPyutLink.getType()
-    #         pyutLink = PyutLink("", linkType=linkType,
-    #                             cardSrc=assocPyutLink.sourceCardinality,
-    #                             cardDest=assocPyutLink.destinationCardinality,
-    #                             source=src.getPyutObject(), destination=dst.getPyutObject())
-    #
-    #         oglLinkFactory = getOglLinkFactory()
-    #         oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
-    #         src.addLink(oglLink)
-    #         dst.addLink(oglLink)
-    #         umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=False)
-    #
-    #         # create the OglLink
-    #         oglLink.SetSpline(spline)
-    #
-    #         # give it the PyutLink
-    #         newPyutLink = pyutLink
-    #
-    #         # copy the good information from the read link
-    #         newPyutLink.setBidir(pyutLink.getBidir())
-    #
-    #         newPyutLink.destinationCardinality = pyutLink.destinationCardinality
-    #         newPyutLink.sourceCardinality      = pyutLink.sourceCardinality
-    #
-    #         newPyutLink.setName(pyutLink.getName())
-    #
-    #         # put the anchors at the right position
-    #         srcAnchor = oglLink.GetSource()
-    #         dstAnchor = oglLink.GetDestination()
-    #         srcAnchor.SetPosition(sx, sy)
-    #         dstAnchor.SetPosition(dx, dy)
-    #
-    #         # add the control points to the line
-    #         line = srcAnchor.GetLines()[0]  # only 1 line per anchor in pyut
-    #         parent = line.GetSource().GetParent()
-    #         selfLink = parent is line.GetDestination().GetParent()
-    #
-    #         for ctrl in ctrlpts:
-    #             line.AddControl(ctrl)
-    #             if selfLink:
-    #                 x, y = ctrl.GetPosition()
-    #                 ctrl.SetParent(parent)
-    #                 ctrl.SetPosition(x, y)
-    #
-    #         if isinstance(oglLink, OglAssociation):
-    #             center = oglLink.getLabels()[CENTER]
-    #             src = oglLink.getLabels()[SRC_CARD]
-    #             dst = oglLink.getLabels()[DEST_CARD]
-    #
-    #             label = link.getElementsByTagName("LabelCenter")[0]
-    #             x = float(label.getAttribute("x"))
-    #             y = float(label.getAttribute("y"))
-    #             center.SetPosition(x, y)
-    #
-    #             label = link.getElementsByTagName("LabelSrc")[0]
-    #             x = float(label.getAttribute("x"))
-    #             y = float(label.getAttribute("y"))
-    #             src.SetPosition(x, y)
-    #
-    #             label = link.getElementsByTagName("LabelDst")[0]
-    #             x = float(label.getAttribute("x"))
-    #             y = float(label.getAttribute("y"))
-    #             dst.SetPosition(x, y)
-
     # noinspection PyUnusedLocal
     def _getOglActors(self, xmlOglActors, dicoOglObjects, dicoLink, dicoFather, umlFrame):
         """
@@ -1043,56 +917,6 @@ class PyutXml:
             y = float(xmlOglUseCase.getAttribute('y'))
             umlFrame.addShape(oglUseCase, x, y)
 
-    # noinspection PyUnusedLocal
-    def _getOglNotes(self, xmlOglNotes, dicoOglObjects, dicoLink, dicoFather, umlFrame):
-        """
-        Parse the XML elements given and build data layer for PyUT notes.
-        If file is version 1.0, the dictionary given will contain, for key,
-        the name of the OGL object. Otherwise, it will be the ID
-        (multi-same-name support from version 1.1). Everything is fixed
-        later.
-
-        @param Element[] xmlOglNotes : XML 'GraphicNote' elements
-
-        @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
-
-        @param {id / srcName, OglLink} dicoLink : OGL links loaded
-
-        @param {id / srcName, id / srcName} dicoFather: Inheritance
-
-        @param UmlFrame umlFrame : Where to draw
-        """
-        for xmlOglNote in xmlOglNotes:
-            pyutNote = PyutNote()
-
-            # Building OGL Note
-            height = float(xmlOglNote.getAttribute('height'))
-            width = float(xmlOglNote.getAttribute('width'))
-            oglNote = OglNote(pyutNote, width, height)
-
-            xmlNote = xmlOglNote.getElementsByTagName('Note')[0]
-
-            pyutNote.setId(int(xmlNote.getAttribute('id')))
-
-            # adding name for this class
-            name = xmlNote.getAttribute('name')
-            name = name.replace("\\\\\\\\", "\n")
-
-            # pyutNote.setName(name.encode("charmap"))
-            # Python 3 is already utf-8;  don't need to encode anything
-            pyutNote.setName(name)
-
-            # adding associated filename (lb@alawa.ch)
-            pyutNote.setFilename(xmlNote.getAttribute('filename'))
-
-            # Update dicos
-            dicoOglObjects[pyutNote.getId()] = oglNote
-
-            # Update UML Frame
-            x = float(xmlOglNote.getAttribute('x'))
-            y = float(xmlOglNote.getAttribute('y'))
-            umlFrame.addShape(oglNote, x, y)
-
     def __displayTheClasses(self, oglClasses: OglClasses, umlFrame: UmlFrame):
         """
         Place the OGL classes on the input frame at their respective positions
@@ -1102,10 +926,7 @@ class PyutXml:
             umlFrame:   The UML Frame to place the OGL objects on
         """
         for oglClass in oglClasses.values():
-
-            oglClass: OglClass = cast(OglClass, oglClass)
-            x, y = oglClass.GetPosition()
-            umlFrame.addShape(oglClass, x, y)
+            self.__displayAnOglObject(oglClass, umlFrame)
 
     def __displayTheLinks(self, oglLinks: OglLinks, umlFrame: UmlFrame):
         """
@@ -1117,3 +938,13 @@ class PyutXml:
         """
         for oglLink in oglLinks:
             umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=True)
+
+    def __displayTheNotes(self, oglNotes: OglNotes, umlFrame: UmlFrame):
+
+        for oglNote in oglNotes.values():
+            self.__displayAnOglObject(oglNote, umlFrame)
+
+    def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlFrame):
+
+        x, y = oglObject.GetPosition()
+        umlFrame.addShape(oglObject, x, y)
