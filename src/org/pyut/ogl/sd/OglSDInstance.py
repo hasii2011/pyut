@@ -27,6 +27,12 @@ class OglSDInstance(OglObject):
     This class is an OGL object for class diagram instance (vertical line, ..)
     """
     def __init__(self, pyutObject, parentFrame):
+        """
+
+        Args:
+            pyutObject:
+            parentFrame:   TODO figure out how NOT to need this;  Do it in the Draw method
+        """
 
         self._parentFrame = parentFrame
         self._instanceYPosition = 50       # Start of instances position

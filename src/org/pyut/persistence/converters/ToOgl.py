@@ -21,38 +21,43 @@ from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
+from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.OglLinkType import OglLinkType
-from org.pyut.ogl.OglActor import OglActor
 
+from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglAssociation import CENTER
-from org.pyut.ogl.OglAssociation import DEST_CARD
-from org.pyut.ogl.OglAssociation import SRC_CARD
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
+
+from org.pyut.ogl.OglAssociation import OglAssociation
+from org.pyut.ogl.OglAssociation import CENTER
+from org.pyut.ogl.OglAssociation import DEST_CARD
+from org.pyut.ogl.OglAssociation import SRC_CARD
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 
 from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
-OglObjects    = NewType('OglObjects',    Dict[int, OglObject])
-OglClasses    = NewType('OglClasses',    Dict[int, OglClass])
-OglNotes      = NewType('OglNotes',      Dict[int, OglNote])
-OglActors     = NewType('OglActors',     Dict[int, OglActor])
-OglUseCases   = NewType('OglUseCases',   Dict[int, OglUseCase])
-PyutMethods   = NewType('PyutMethods',   List[PyutMethod])
-PyutFields    = NewType('PyutFields',    List[PyutField])
-ControlPoints = NewType('ControlPoints', List[ControlPoint])
-Links         = NewType('Links',         Union[OglLink, OglSDInstance])
-OglLinks      = NewType('OglLinks',      List[Links])
+from org.pyut.ui.UmlFrame import UmlFrame
+
+OglObjects     = NewType('OglObjects',     Dict[int, OglObject])
+OglClasses     = NewType('OglClasses',     Dict[int, OglClass])
+OglNotes       = NewType('OglNotes',       Dict[int, OglNote])
+OglActors      = NewType('OglActors',      Dict[int, OglActor])
+OglUseCases    = NewType('OglUseCases',    Dict[int, OglUseCase])
+OglSDInstances = NewType('OglSDInstances', Dict[int, OglSDInstance])
+PyutMethods    = NewType('PyutMethods',    List[PyutMethod])
+PyutFields     = NewType('PyutFields',     List[PyutField])
+ControlPoints  = NewType('ControlPoints',  List[ControlPoint])
+Links          = NewType('Links',          Union[OglLink, OglSDInstance])
+OglLinks       = NewType('OglLinks',       List[Links])
 
 
 class ToOgl:
@@ -298,6 +303,45 @@ class ToOgl:
             oglUseCases[pyutUseCase.getId()] = oglUseCase
 
         return oglUseCases
+
+    def getOglSDInstances(self, xmlOglSDInstances: NodeList, umlFrame: UmlFrame) -> OglSDInstances:
+        """
+        Parse the given XML elements and build data layer for PyUT sequence diagram instaneces.
+
+        Args:
+            xmlOglSDInstances:
+            umlFrame:  Because of the way SDInstances are constructed they need access
+            to the diagram frame
+
+        Returns:
+            A dictionary of OglSDInstance objects
+
+        """
+        oglSDInstances: OglSDInstances = cast(OglSDInstances, {})
+        for xmlOglSDInstance in xmlOglSDInstances:
+
+            pyutSDInstance: PyutSDInstance = PyutSDInstance()
+            oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance, umlFrame)
+
+            xmlSDInstance = xmlOglSDInstance.getElementsByTagName('SDInstance')[0]
+
+            pyutSDInstance.setId(int(xmlSDInstance.getAttribute('id')))
+            pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute('instanceName'))
+            pyutSDInstance.setInstanceLifeLineLength(PyutUtils.secureInteger(xmlSDInstance.getAttribute('lifeLineLength')))
+
+            # Adding OGL class to UML Frame
+            x = float(xmlOglSDInstance.getAttribute('x'))
+            y = float(xmlOglSDInstance.getAttribute('y'))
+            w = float(xmlOglSDInstance.getAttribute('width'))
+            h = float(xmlOglSDInstance.getAttribute('height'))
+            oglSDInstance.SetSize(w, h)
+            oglSDInstance.SetPosition(x, y)
+
+            oglSDInstances[pyutSDInstance.getId()] = oglSDInstance
+
+            # umlFrame.addShape(oglSDInstance, x, y)        # currently SD Instance constructor adds itself
+
+        return oglSDInstances
 
     def _getMethods(self, xmlClass: Element) -> PyutMethods:
         """
