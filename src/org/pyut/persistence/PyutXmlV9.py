@@ -191,22 +191,10 @@ class PyutXml:
         """
         self.__setupProgressDialog()
         umlFrame: UmlFrame = cast(UmlFrame, None)  # avoid Pycharm warning
+        root = self.__validateXmlVersion(dom)
         try:
-            root: Element = dom.getElementsByTagName("PyutProject")[0]
-            if root.hasAttribute('version'):
-                version = int(root.getAttribute("version"))
-            else:
-                version = 1
-            if version != PyutXml.VERSION:
-                self.logger.error("Wrong version of the file loader")
-                eMsg: str = f'This is version {PyutXml.VERSION} and the file version is {version}'
-                self.logger.error(eMsg)
-                raise Exception(f'VERSION_ERROR:  {eMsg}')
-
             project.setCodePath(root.getAttribute("CodePath"))
-
             self.__updateProgressDialog(newMessage='Reading elements...', newGaugeValue=1)
-
             toOgl: ToOgl = ToOgl()
             for documentNode in dom.getElementsByTagName("PyutDocument"):
 
@@ -216,11 +204,7 @@ class PyutXml:
 
                 docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
                 document: PyutDocument = project.newDocument(docType)
-                docTitle: str          = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_TITLE)
-                if docTitle == '' or docTitle is None:
-                    document.title = docTypeStr
-                else:
-                    document.title = docTitle
+                document.title = self.__determineDocumentTitle(documentNode)
 
                 umlFrame: UmlFrame = document.getFrame()
 
@@ -808,3 +792,35 @@ class PyutXml:
         self._gauge.SetValue(5)
         wxYield()
         self._dlgGauge.Destroy()
+
+    def __validateXmlVersion(self, dom: Document) -> Element:
+        """
+
+        Args:
+            dom: The minidom Document
+
+        Returns:
+            The root element unless the XML version is incorrect
+        """
+        root: Element = dom.getElementsByTagName("PyutProject")[0]
+        if root.hasAttribute('version'):
+            version = int(root.getAttribute("version"))
+        else:
+            version = 1
+        if version != PyutXml.VERSION:
+            self.logger.error("Wrong version of the file loader")
+            eMsg: str = f'This is version {PyutXml.VERSION} and the file version is {version}'
+            self.logger.error(eMsg)
+            raise Exception(f'VERSION_ERROR:  {eMsg}')
+
+        return root
+
+    def __determineDocumentTitle(self, documentNode) -> str:
+
+        docTitle:   str = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_TITLE)
+        docTypeStr: str = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
+
+        if docTitle == '' or docTitle is None:
+            return docTypeStr
+        else:
+            return docTitle
