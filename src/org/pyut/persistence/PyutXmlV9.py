@@ -49,6 +49,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.persistence.converters.ToOgl import OglActors
 from org.pyut.persistence.converters.ToOgl import OglObjects
 from org.pyut.persistence.converters.ToOgl import OglSDInstances
+from org.pyut.persistence.converters.ToOgl import OglSDMessages
 from org.pyut.persistence.converters.ToOgl import OglUseCases
 
 from org.pyut.persistence.converters.ToOgl import ToOgl
@@ -160,12 +161,15 @@ class PyutXml:
                         documentNode.appendChild(self._OglActor2xml(oglObject, xmlDoc))
                     elif isinstance(oglObject, OglUseCase):
                         documentNode.appendChild(self._OglUseCase2xml(oglObject, xmlDoc))
-                    elif isinstance(oglObject, OglLink):
-                        documentNode.appendChild(self._OglLink2xml(oglObject, xmlDoc))
                     elif isinstance(oglObject, OglSDInstance):
                         documentNode.appendChild(self._OglSDInstance2xml(oglObject, xmlDoc))
                     elif isinstance(oglObject, OglSDMessage):
                         documentNode.appendChild(self._OglSDMessage2xml(oglObject, xmlDoc))
+                    # OglLink comes last because OglSDInstance is a subclass of OglLink
+                    # Now I know why OglLink used to double inherit from LineShape, ShapeEventHandler
+                    # I changed it to inherit from OglLink directly
+                    elif isinstance(oglObject, OglLink):
+                        documentNode.appendChild(self._OglLink2xml(oglObject, xmlDoc))
         except (ValueError, Exception) as e:
             try:
                 dlg.Destroy()
@@ -213,8 +217,8 @@ class PyutXml:
             for documentNode in dom.getElementsByTagName("PyutDocument"):
 
                 documentNode: Element = cast(Element, documentNode)
-                dicoLink       = {}     # format [id/ : PyutLink}
-                dicoFather     = {}     # format {id child oglClass : [id fathers]}
+                # dicoLink       = {}     # format [id/ : PyutLink}
+                # dicoFather     = {}     # format {id child oglClass : [id fathers]}
 
                 docTypeStr = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
 
@@ -237,7 +241,7 @@ class PyutXml:
                 # self._getOglActors(documentNode.getElementsByTagName('GraphicActor'),     dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 # self._getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 # self._getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-
+                # self._getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances, dicoLink, dicoFather, umlFrame)
                 gauge.SetValue(2)
                 dlgGauge.SetTitle("Determine Conversion Type...")
                 wxYield()
@@ -246,11 +250,11 @@ class PyutXml:
                 elif docType == DiagramType.USECASE_DIAGRAM:
                     self.__renderUseCaseDiagram(documentNode, toOgl, umlFrame)
                 elif docType == DiagramType.SEQUENCE_DIAGRAM:
-                    dicoOglObjects = {}
+                    # dicoOglObjects = {}
                     # noinspection PyUnusedLocal
                     oglSDInstances: OglSDInstances = toOgl.getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), umlFrame)
-                    self._getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"),   dicoOglObjects, dicoLink, dicoFather, umlFrame)
-
+                    oglSDMessages:  OglSDMessages  = toOgl.getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances)
+                    self._displayTheSDMessages(oglSDMessages, umlFrame)
 
                 # for links in list(dicoLink.values()):
                 #     for link in links:
@@ -725,102 +729,6 @@ class PyutXml:
 
         return root
 
-    # noinspection PyUnusedLocal
-    # def _getOglSDInstances(self, xmlOglSDInstances, dicoOglObjects, dicoLink, dicoFather, umlFrame):
-    #     """
-    #     Parse the XML elements given and build data layer for PyUT classes.
-    #     If file is version 1.0, the dictionary given will contain, for key,
-    #     the name of the OGL object. Otherwise, it will be the ID
-    #     (multi-same-name support from version 1.1). Everything is fixed
-    #     later.
-    #
-    #     @param Element[] xmlOglSDInstances : XML 'GraphicSDInstance' elements
-    #
-    #     @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
-    #
-    #     @param {id / srcName, OglLink} dicoLink : OGL links loaded
-    #
-    #     @param {id / srcName, id / srcName} dicoFather: Inheritance
-    #
-    #     @param UmlFrame umlFrame : Where to draw
-    #     """
-    #     for xmlOglSDInstance in xmlOglSDInstances:
-    #         # Main objects
-    #         pyutSDInstance = PyutSDInstance()
-    #         oglSDInstance = OglSDInstance(pyutSDInstance, umlFrame)
-    #
-    #         # Data layer
-    #         xmlSDInstance = xmlOglSDInstance.getElementsByTagName('SDInstance')[0]
-    #
-    #         # Pyut Data
-    #         pyutSDInstance.setId(int(xmlSDInstance.getAttribute('id')))
-    #         # pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute('instanceName').encode("charmap"))
-    #         # Python 3 is already UTF-8
-    #         pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute('instanceName'))
-    #
-    #         pyutSDInstance.setInstanceLifeLineLength(PyutUtils.secureInteger(xmlSDInstance.getAttribute('lifeLineLength')))
-    #
-    #         dicoOglObjects[pyutSDInstance.getId()] = oglSDInstance
-    #
-    #         # Adding OGL class to UML Frame
-    #         x = float(xmlOglSDInstance.getAttribute('x'))
-    #         y = float(xmlOglSDInstance.getAttribute('y'))
-    #         w = float(xmlOglSDInstance.getAttribute('width'))
-    #         h = float(xmlOglSDInstance.getAttribute('height'))
-    #         oglSDInstance.SetSize(w, h)
-    #         umlFrame.addShape(oglSDInstance, x, y)
-    #
-    # noinspection PyUnusedLocal
-    def _getOglSDMessages(self, xmlOglSDMessages, dicoOglObjects, dicoLink, dicoFather, umlFrame):
-        """
-        Parse the XML elements given and build data layer for PyUT classes.
-        If file is version 1.0, the dictionary given will contain, for key,
-        the name of the OGL object. Otherwise, it will be the ID
-        (multi-same-name support from version 1.1). Everything is fixed
-        later.
-
-        @param Element[] xmlOglSDMessages : XML 'GraphicSDInstance elements
-
-        @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
-
-        @param {id / srcName, OglLink} dicoLink : OGL links loaded
-
-        @param {id / srcName, id / srcName} dicoFather: Inheritance
-
-        @param UmlFrame umlFrame : Where to draw
-        """
-        for xmlOglSDMessage in xmlOglSDMessages:
-
-            # Data layer class
-            xmlPyutSDMessage = xmlOglSDMessage.getElementsByTagName('SDMessage')[0]
-
-            # Building OGL
-            pyutSDMessage = PyutSDMessage()
-            srcID = int(xmlPyutSDMessage.getAttribute('srcID'))
-            dstID = int(xmlPyutSDMessage.getAttribute('dstID'))
-            srcTime = int(float(xmlPyutSDMessage.getAttribute('srcTime')))
-            dstTime = int(float(xmlPyutSDMessage.getAttribute('dstTime')))
-            srcOgl = dicoOglObjects[srcID]
-            dstOgl = dicoOglObjects[dstID]
-            oglSDMessage = OglSDMessage(srcOgl, pyutSDMessage, dstOgl)
-            pyutSDMessage.setOglObject(oglSDMessage)
-            pyutSDMessage.setSource(srcOgl.getPyutObject(), srcTime)
-            pyutSDMessage.setDestination(dstOgl.getPyutObject(), dstTime)
-
-            # Pyut Data
-            pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute('id')))
-            # Python 3 is already UTF-8
-            pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message'))
-
-            dicoOglObjects[pyutSDMessage.getId()] = pyutSDMessage
-
-            # Adding OGL class to UML Frame
-            diagram = umlFrame.GetDiagram()
-            dicoOglObjects[srcID].addLink(oglSDMessage)
-            dicoOglObjects[dstID].addLink(oglSDMessage)
-            diagram.AddShape(oglSDMessage)
-            # umlFrame.addShape(oglSDMessage, x, y)
-
     def _getControlPoints(self, link):
         """
         To extract control points from links.
@@ -920,7 +828,11 @@ class PyutXml:
         for oglUseCase in oglUseCases.values():
             self.__displayAnOglObject(oglUseCase, umlFrame)
 
-    def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlFrame):
+    def _displayTheSDMessages(self, oglSDMessages: OglSDMessages, umlFrame: UmlFrame):
+        for oglSDMessage in oglSDMessages.values():
+            oglSDMessage: OglSDMessage = cast(OglSDMessage, oglSDMessage)
+            umlFrame.getDiagram().AddShape(oglSDMessage)
 
+    def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlFrame):
         x, y = oglObject.GetPosition()
         umlFrame.addShape(oglObject, x, y)

@@ -22,6 +22,7 @@ from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
+from org.pyut.PyutSDMessage import PyutSDMessage
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
@@ -44,6 +45,7 @@ from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 
 from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
+from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -53,6 +55,7 @@ OglNotes       = NewType('OglNotes',       Dict[int, OglNote])
 OglActors      = NewType('OglActors',      Dict[int, OglActor])
 OglUseCases    = NewType('OglUseCases',    Dict[int, OglUseCase])
 OglSDInstances = NewType('OglSDInstances', Dict[int, OglSDInstance])
+OglSDMessages  = NewType('OglSDMessages',  Dict[int, OglSDMessage])
 PyutMethods    = NewType('PyutMethods',    List[PyutMethod])
 PyutFields     = NewType('PyutFields',     List[PyutField])
 ControlPoints  = NewType('ControlPoints',  List[ControlPoint])
@@ -306,7 +309,7 @@ class ToOgl:
 
     def getOglSDInstances(self, xmlOglSDInstances: NodeList, umlFrame: UmlFrame) -> OglSDInstances:
         """
-        Parse the given XML elements and build data layer for PyUT sequence diagram instaneces.
+        Parse the given XML elements and build data layer for PyUT sequence diagram instances.
 
         Args:
             xmlOglSDInstances:
@@ -315,7 +318,6 @@ class ToOgl:
 
         Returns:
             A dictionary of OglSDInstance objects
-
         """
         oglSDInstances: OglSDInstances = cast(OglSDInstances, {})
         for xmlOglSDInstance in xmlOglSDInstances:
@@ -342,6 +344,53 @@ class ToOgl:
             # umlFrame.addShape(oglSDInstance, x, y)        # currently SD Instance constructor adds itself
 
         return oglSDInstances
+
+    def getOglSDMessages(self, xmlOglSDMessages: NodeList, oglSDInstances: OglSDInstances) -> OglSDMessages:
+        """
+        Parse the given XML elements and build data layer for PyUT sequence diagram messages.
+
+        Args:
+            xmlOglSDMessages:
+            oglSDInstances:
+
+        Returns:
+            A dictionary of OglSDMessage objects
+        """
+        oglSDMessages: OglSDMessages = cast(OglSDMessages,{})
+
+        for xmlOglSDMessage in xmlOglSDMessages:
+
+            # Data layer class
+            xmlPyutSDMessage: Element = xmlOglSDMessage.getElementsByTagName('SDMessage')[0]
+
+            # Building OGL
+            pyutSDMessage: PyutSDMessage = PyutSDMessage()
+
+            srcID: int = int(xmlPyutSDMessage.getAttribute('srcID'))
+            dstID: int = int(xmlPyutSDMessage.getAttribute('dstID'))
+            srcTime: int = int(float(xmlPyutSDMessage.getAttribute('srcTime')))
+            dstTime: int = int(float(xmlPyutSDMessage.getAttribute('dstTime')))
+            srcOgl = oglSDInstances[srcID]
+            dstOgl = oglSDInstances[dstID]
+
+            oglSDMessage: OglSDMessage = OglSDMessage(srcOgl, pyutSDMessage, dstOgl)
+            pyutSDMessage.setOglObject(oglSDMessage)
+            pyutSDMessage.setSource(srcOgl.getPyutObject(), srcTime)
+            pyutSDMessage.setDestination(dstOgl.getPyutObject(), dstTime)
+
+            # Pyut Data
+            pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute('id')))
+            pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message'))
+
+            oglSDMessages[pyutSDMessage.getId()] = oglSDMessage
+
+            # Adding OGL class to UML Frame
+            # diagram = umlFrame.GetDiagram()
+            oglSDInstances[srcID].addLink(oglSDMessage)
+            oglSDInstances[dstID].addLink(oglSDMessage)
+            # diagram.AddShape(oglSDMessage)
+
+        return oglSDMessages
 
     def _getMethods(self, xmlClass: Element) -> PyutMethods:
         """
