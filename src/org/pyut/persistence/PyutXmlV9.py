@@ -113,6 +113,8 @@ class PyutXml:
 
         self._idFactory = IDFactory()
 
+        self._dlgGauge: Dialog = cast(Dialog, None)
+
     def save(self, project: PyutProject) -> Document:
         """
         Save diagram in XML file.
@@ -187,7 +189,7 @@ class PyutXml:
         """
         Open a file and create a diagram.
         """
-        dlgGauge: Dialog    = cast(Dialog, None)
+        self.__setupProgressDialog()
         umlFrame: UmlFrame = cast(UmlFrame, None)  # avoid Pycharm warning
         try:
             root: Element = dom.getElementsByTagName("PyutProject")[0]
@@ -203,23 +205,14 @@ class PyutXml:
 
             project.setCodePath(root.getAttribute("CodePath"))
 
-            # Create and init gauge
-            dlgGauge: Dialog = Dialog(None, ID_ANY, "Loading...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(250, 70))
-            gauge:    Gauge  = Gauge(dlgGauge, ID_ANY, 5, pos=Point(2, 5), size=Size(200, 30))
-            dlgGauge.Show(True)
-            wxYield()
-
-            dlgGauge.SetTitle("Reading elements...")
-            gauge.SetValue(1)
+            self.__updateProgressDialog(newMessage='Reading elements...', newGaugeValue=1)
 
             toOgl: ToOgl = ToOgl()
             for documentNode in dom.getElementsByTagName("PyutDocument"):
 
                 documentNode: Element = cast(Element, documentNode)
                 docTypeStr:   str     = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
-                dlgGauge.SetTitle(f'Determine Title for document type: {docTypeStr}')
-                gauge.SetValue(2)
-                wxYield()
+                self.__updateProgressDialog(newMessage=f'Determine Title for document type: {docTypeStr}', newGaugeValue=2)
 
                 docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
                 document: PyutDocument = project.newDocument(docType)
@@ -234,9 +227,8 @@ class PyutXml:
                 ctrl = getMediator()
                 ctrl.getFileHandling().showFrame(umlFrame)
 
-                gauge.SetValue(3)
-                dlgGauge.SetTitle("Start Conversion...")
-                wxYield()
+                self.__updateProgressDialog(newMessage='Start Conversion...', newGaugeValue=3)
+
                 if docType == DiagramType.CLASS_DIAGRAM:
                     self.__renderClassDiagram(documentNode, toOgl, umlFrame)
                 elif docType == DiagramType.USECASE_DIAGRAM:
@@ -246,21 +238,15 @@ class PyutXml:
                     oglSDMessages:  OglSDMessages  = toOgl.getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances)
                     self._displayTheSDMessages(oglSDMessages, umlFrame)
 
-                dlgGauge.SetTitle("Conversion Complete...")
-                gauge.SetValue(4)
-                wxYield()
+                self.__updateProgressDialog(newMessage='Conversion Complete...', newGaugeValue=4)
+
         except (ValueError, Exception) as e:
-            if dlgGauge is not None:
-                dlgGauge.Destroy()
+            self._dlgGauge.Destroy()
             PyutUtils.displayError(_(f"Can't load file {e}"))
             umlFrame.Refresh()
             return
 
-        if dlgGauge is not None:
-            umlFrame.Refresh()
-            gauge.SetValue(5)
-            wxYield()
-            dlgGauge.Destroy()
+        self.__cleanupProgressDialog(umlFrame)
 
     def _PyutSDInstance2xml(self, pyutSDInstance: PyutSDInstance, xmlDoc: Document):
         """
@@ -802,3 +788,23 @@ class PyutXml:
     def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlFrame):
         x, y = oglObject.GetPosition()
         umlFrame.addShape(oglObject, x, y)
+
+    def __setupProgressDialog(self):
+
+        self._dlgGauge = Dialog(None, ID_ANY, "Loading...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(250, 70))
+        self._gauge: Gauge = Gauge(self._dlgGauge, ID_ANY, 5, pos=Point(2, 5), size=Size(200, 30))
+        self._dlgGauge.Show(True)
+        wxYield()
+
+    def __updateProgressDialog(self, newMessage: str, newGaugeValue: int):
+
+        self._dlgGauge.SetTitle(newMessage)
+        self._gauge.SetValue(newGaugeValue)
+        wxYield()
+
+    def __cleanupProgressDialog(self, umlFrame: UmlFrame):
+
+        umlFrame.Refresh()
+        self._gauge.SetValue(5)
+        wxYield()
+        self._dlgGauge.Destroy()
