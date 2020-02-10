@@ -188,6 +188,10 @@ class PyutXml:
     def open(self, dom: Document, project: PyutProject):
         """
         Open a file and create a diagram.
+
+        Args:
+            dom:        The minidom document
+            project:    The UI Project to fill out
         """
         self.__setupProgressDialog()
         umlFrame: UmlFrame = cast(UmlFrame, None)  # avoid Pycharm warning
@@ -206,10 +210,7 @@ class PyutXml:
                 document: PyutDocument = project.newDocument(docType)
                 document.title = self.__determineDocumentTitle(documentNode)
 
-                umlFrame: UmlFrame = document.getFrame()
-
-                ctrl = getMediator()
-                ctrl.getFileHandling().showFrame(umlFrame)
+                umlFrame: UmlFrame = self.__showAppropriateUmlFrame(document)
 
                 self.__updateProgressDialog(newMessage='Start Conversion...', newGaugeValue=3)
 
@@ -218,15 +219,13 @@ class PyutXml:
                 elif docType == DiagramType.USECASE_DIAGRAM:
                     self.__renderUseCaseDiagram(documentNode, toOgl, umlFrame)
                 elif docType == DiagramType.SEQUENCE_DIAGRAM:
-                    oglSDInstances: OglSDInstances = toOgl.getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), umlFrame)
-                    oglSDMessages:  OglSDMessages  = toOgl.getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances)
-                    self._displayTheSDMessages(oglSDMessages, umlFrame)
+                    self.__renderSequenceDiagram(documentNode, toOgl, umlFrame)
 
                 self.__updateProgressDialog(newMessage='Conversion Complete...', newGaugeValue=4)
 
         except (ValueError, Exception) as e:
             self._dlgGauge.Destroy()
-            PyutUtils.displayError(_(f"Can't load file {e}"))
+            PyutUtils.displayError(_(f"Can not load file {e}"))
             umlFrame.Refresh()
             return
 
@@ -730,6 +729,18 @@ class PyutXml:
         oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName("GraphicLink"), mergedOglObjects)
         self.__displayTheLinks(oglLinks, umlFrame)
 
+    def __renderSequenceDiagram(self, documentNode, toOgl, umlFrame):
+        """
+
+        Args:
+            documentNode:   A minidom document element
+            toOgl:          The converter class
+            umlFrame:       Where to render
+        """
+        oglSDInstances: OglSDInstances = toOgl.getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), umlFrame)
+        oglSDMessages: OglSDMessages = toOgl.getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances)
+        self._displayTheSDMessages(oglSDMessages, umlFrame)
+
     def __displayTheClasses(self, oglClasses: OglClasses, umlFrame: UmlFrame):
         """
         Place the OGL classes on the input frame at their respective positions
@@ -824,3 +835,11 @@ class PyutXml:
             return docTypeStr
         else:
             return docTitle
+
+    def __showAppropriateUmlFrame(self, document) -> UmlFrame:
+
+        umlFrame: UmlFrame = document.getFrame()
+        ctrl = getMediator()
+        ctrl.getFileHandling().showFrame(umlFrame)
+
+        return umlFrame
