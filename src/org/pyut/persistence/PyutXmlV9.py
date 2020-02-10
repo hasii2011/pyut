@@ -726,8 +726,11 @@ class PyutXml:
         oglClasses: OglClasses = toOgl.getOglClasses(documentNode.getElementsByTagName('GraphicClass'))
         oglNotes:   OglNotes   = toOgl.getOglNotes(documentNode.getElementsByTagName('GraphicNote'), umlFrame)
 
+        mergedOglObjects: OglObjects = cast(OglObjects, oglClasses.copy())
+        mergedOglObjects.update(oglNotes)
+
         self.__displayTheClasses(oglClasses, umlFrame)
-        oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName("GraphicLink"), cast(OglObjects, oglClasses))
+        oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName("GraphicLink"), mergedOglObjects)
         self.__displayTheLinks(oglLinks, umlFrame)
         self.__displayTheNotes(oglNotes, umlFrame)
 

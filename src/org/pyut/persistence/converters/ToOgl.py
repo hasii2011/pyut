@@ -153,8 +153,13 @@ class ToOgl:
             # get the associated PyutLink
             srcId, dstId, assocPyutLink = self._getPyutLink(xmlLink)
 
-            src: OglClass         = oglClasses[srcId]
-            dst: OglClass         = oglClasses[dstId]
+            try:
+                src: OglClass = oglClasses[srcId]
+                dst: OglClass = oglClasses[dstId]
+            except KeyError as ke:
+                self.logger.error(f'Developer Error -- srcId: {srcId} - dstId: {dstId}  error: {ke}')
+                continue
+
             linkType: OglLinkType = assocPyutLink.getType()
             pyutLink: PyutLink = PyutLink(name=assocPyutLink.getName(),
                                           linkType=linkType,
