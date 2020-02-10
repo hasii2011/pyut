@@ -209,7 +209,6 @@ class PyutXml:
             dlgGauge.Show(True)
             wxYield()
 
-            # for all elements in xml file
             dlgGauge.SetTitle("Reading elements...")
             gauge.SetValue(1)
 
@@ -217,10 +216,10 @@ class PyutXml:
             for documentNode in dom.getElementsByTagName("PyutDocument"):
 
                 documentNode: Element = cast(Element, documentNode)
-                # dicoLink       = {}     # format [id/ : PyutLink}
-                # dicoFather     = {}     # format {id child oglClass : [id fathers]}
-
-                docTypeStr = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
+                docTypeStr:   str     = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
+                dlgGauge.SetTitle(f'Determine Title for document type: {docTypeStr}')
+                gauge.SetValue(2)
+                wxYield()
 
                 docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
                 document: PyutDocument = project.newDocument(docType)
@@ -235,57 +234,21 @@ class PyutXml:
                 ctrl = getMediator()
                 ctrl.getFileHandling().showFrame(umlFrame)
 
-                # self._getOglClasses(documentNode.getElementsByTagName('GraphicClass'),    dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # self._getOglLinks(documentNode.getElementsByTagName("GraphicLink"),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'),       dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # self._getOglActors(documentNode.getElementsByTagName('GraphicActor'),     dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # self._getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # self._getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), dicoOglObjects, dicoLink, dicoFather, umlFrame)
-                # self._getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances, dicoLink, dicoFather, umlFrame)
-                gauge.SetValue(2)
-                dlgGauge.SetTitle("Determine Conversion Type...")
+                gauge.SetValue(3)
+                dlgGauge.SetTitle("Start Conversion...")
                 wxYield()
                 if docType == DiagramType.CLASS_DIAGRAM:
                     self.__renderClassDiagram(documentNode, toOgl, umlFrame)
                 elif docType == DiagramType.USECASE_DIAGRAM:
                     self.__renderUseCaseDiagram(documentNode, toOgl, umlFrame)
                 elif docType == DiagramType.SEQUENCE_DIAGRAM:
-                    # dicoOglObjects = {}
-                    # noinspection PyUnusedLocal
                     oglSDInstances: OglSDInstances = toOgl.getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), umlFrame)
                     oglSDMessages:  OglSDMessages  = toOgl.getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances)
                     self._displayTheSDMessages(oglSDMessages, umlFrame)
 
-                # for links in list(dicoLink.values()):
-                #     for link in links:
-                #         link[1].setDestination(dicoOglObjects[link[0]].getPyutObject())
-                #
-                dlgGauge.SetTitle("Adding parents...")
-                gauge.SetValue(3)
-                wxYield()
-                # for child, fathers in list(dicoFather.items()):
-                #     for father in fathers:
-                #         umlFrame.createInheritanceLink(dicoOglObjects[child], dicoOglObjects[father])
-
-                #
-                dlgGauge.SetTitle("Adding Links...")
+                dlgGauge.SetTitle("Conversion Complete...")
                 gauge.SetValue(4)
                 wxYield()
-                # for src, links in list(dicoLink.items()):
-                #     for link in links:
-                #         createdLink = umlFrame.createNewLink(dicoOglObjects[src], dicoOglObjects[link[1].getDestination().getId()])
-                #
-                #         # fix link with the loaded information
-                #         pyutLink = createdLink.getPyutObject()
-                #
-                #         traversalLink: PyutLink = link[1]
-                #
-                #         pyutLink.setBidir(traversalLink.getBidir())
-                #
-                #         pyutLink.destinationCardinality = traversalLink.destinationCardinality
-                #         pyutLink.sourceCardinality      = traversalLink.sourceCardinality
-                #
-                #         pyutLink.setName(link[1].getName())
         except (ValueError, Exception) as e:
             if dlgGauge is not None:
                 dlgGauge.Destroy()
