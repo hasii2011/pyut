@@ -117,8 +117,8 @@ class PyutXml:
         xmlDoc: Document = Document()
         try:
             # xmlDoc: Document  = Document()
-            top     = xmlDoc.createElement("PyutProject")
-            top.setAttribute('version', str(PyutXml.VERSION))
+            top     = xmlDoc.createElement(PyutXmlConstants.TOP_LEVEL_ELEMENT)
+            top.setAttribute(PyutXmlConstants.ATTR_VERSION, str(PyutXml.VERSION))
             top.setAttribute('CodePath', project.getCodePath())
 
             xmlDoc.appendChild(top)
@@ -155,7 +155,9 @@ class PyutXml:
                         noteElement: Element = toPyutXml.oglNoteToXml(oglObject, xmlDoc)
                         documentNode.appendChild(noteElement)
                     elif isinstance(oglObject, OglActor):
-                        documentNode.appendChild(self._OglActor2xml(oglObject, xmlDoc))
+                        # documentNode.appendChild(self._OglActor2xml(oglObject, xmlDoc))
+                        actorElement: Element = toPyutXml.oglActor2xml(oglObject, xmlDoc)
+                        documentNode.appendChild(actorElement)
                     elif isinstance(oglObject, OglUseCase):
                         documentNode.appendChild(self._OglUseCase2xml(oglObject, xmlDoc))
                     elif isinstance(oglObject, OglSDInstance):
@@ -195,7 +197,7 @@ class PyutXml:
             project.setCodePath(root.getAttribute("CodePath"))
             self.__updateProgressDialog(newMessage='Reading elements...', newGaugeValue=1)
             toOgl: ToOgl = ToOgl()
-            for documentNode in dom.getElementsByTagName("PyutDocument"):
+            for documentNode in dom.getElementsByTagName(PyutXmlConstants.ELEMENT_DOCUMENT):
 
                 documentNode: Element = cast(Element, documentNode)
                 docTypeStr:   str     = documentNode.getAttribute(PyutXmlConstants.ATTR_TYPE)
@@ -357,23 +359,23 @@ class PyutXml:
 
         return root
 
-    def _PyutActor2xml(self, pyutActor, xmlDoc):
-        """
-        Exporting an PyutActor to an miniDom Element.
-
-        @param PyutNote pyutActor : Note to convert
-        @param xmlDoc : xml document
-        @return Element : New miniDom element
-        """
-        root = xmlDoc.createElement('Actor')
-
-        actorId = self._idFactory.getID(pyutActor)
-        root.setAttribute('id', str(actorId))
-        root.setAttribute('name', pyutActor.getName())
-        root.setAttribute('filename', pyutActor.getFilename())
-
-        return root
-
+    # def _PyutActor2xml(self, pyutActor, xmlDoc):
+    #     """
+    #     Exporting an PyutActor to an miniDom Element.
+    #
+    #     @param PyutNote pyutActor : Note to convert
+    #     @param xmlDoc : xml document
+    #     @return Element : New miniDom element
+    #     """
+    #     root = xmlDoc.createElement('Actor')
+    #
+    #     actorId = self._idFactory.getID(pyutActor)
+    #     root.setAttribute('id', str(actorId))
+    #     root.setAttribute('name', pyutActor.getName())
+    #     root.setAttribute('filename', pyutActor.getFilename())
+    #
+    #     return root
+    #
     def _PyutUseCase2xml(self, pyutUseCase, xmlDoc):
         """
         Exporting an PyutUseCase to a miniDom Element.
@@ -464,24 +466,24 @@ class PyutXml:
 
         return root
 
-    def _OglActor2xml(self, oglActor, xmlDoc):
-        """
-        Exporting an OglActor to an miniDom Element.
-
-        @param OglActor oglActor : Actor to convert
-        @param xmlDoc xmlDoc : xml document
-        @return Element : New miniDom element
-        """
-        root = xmlDoc.createElement('GraphicActor')
-
-        # Append OGL object base (size and pos)
-        self._appendOglBase(oglActor, root)
-
-        # adding the data layer object
-        root.appendChild(self._PyutActor2xml(oglActor.getPyutObject(), xmlDoc))
-
-        return root
-
+    # def _OglActor2xml(self, oglActor, xmlDoc):
+    #     """
+    #     Exporting an OglActor to an miniDom Element.
+    #
+    #     @param OglActor oglActor : Actor to convert
+    #     @param xmlDoc xmlDoc : xml document
+    #     @return Element : New miniDom element
+    #     """
+    #     root = xmlDoc.createElement('GraphicActor')
+    #
+    #     # Append OGL object base (size and pos)
+    #     self._appendOglBase(oglActor, root)
+    #
+    #     # adding the data layer object
+    #     root.appendChild(self._PyutActor2xml(oglActor.getPyutObject(), xmlDoc))
+    #
+    #     return root
+    #
     def _OglUseCase2xml(self, oglUseCase, xmlDoc):
         """
         Exporting an OglUseCase to an miniDom Element.
@@ -653,9 +655,9 @@ class PyutXml:
         Returns:
             The root element unless the XML version is incorrect
         """
-        root: Element = dom.getElementsByTagName("PyutProject")[0]
-        if root.hasAttribute('version'):
-            version = int(root.getAttribute("version"))
+        root: Element = dom.getElementsByTagName(PyutXmlConstants.TOP_LEVEL_ELEMENT)[0]
+        if root.hasAttribute(PyutXmlConstants.ATTR_VERSION):
+            version = int(root.getAttribute(PyutXmlConstants.ATTR_VERSION))
         else:
             version = 1
         if version != PyutXml.VERSION:

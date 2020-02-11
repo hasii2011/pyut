@@ -5,11 +5,13 @@ from logging import getLogger
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
 
+from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.ogl.OglActor import OglActor
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
@@ -38,7 +40,7 @@ class ToPyutXml:
 
     def oglClassToXml(self, oglClass: OglClass, xmlDoc: Document) -> Element:
         """
-        Exports an OglClass to a miniDom Element.
+        Exports an OglClass to a minidom Element.
 
         Args:
             oglClass:   Graphic Class to save
@@ -58,20 +60,39 @@ class ToPyutXml:
 
     def oglNoteToXml(self, oglNote: OglNote, xmlDoc: Document) -> Element:
         """
-        Export an OglNote to a miniDom Element.
+        Export an OglNote to a minidom Element.
 
         Args:
             oglNote:    Note to convert
             xmlDoc:     xml document
 
         Returns:
-            New miniDom element
+            New minidom element
         """
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_NOTE)
 
         self.__appendOglBase(oglNote, root)
 
         root.appendChild(self._pyutNoteToXml(oglNote.getPyutObject(), xmlDoc))
+
+        return root
+
+    def oglActor2xml(self, oglActor: OglActor, xmlDoc: Document) -> Element:
+        """
+        Exporting an OglActor to a minidom Element.
+
+        Args:
+            oglActor:   Actor to convert
+            xmlDoc:     xml document
+
+        Returns:
+            New minidom element
+        """
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_ACTOR)
+
+        self.__appendOglBase(oglActor, root)
+
+        root.appendChild(self._pyutActorToXml(oglActor.getPyutObject(), xmlDoc))
 
         return root
 
@@ -228,5 +249,24 @@ class ToPyutXml:
         name = name.replace('\n', "\\\\\\\\")
         root.setAttribute(PyutXmlConstants.ATTR_NAME, name)
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutNote.getFilename())
+
+        return root
+
+    def _pyutActorToXml(self, pyutActor: PyutActor, xmlDoc: Document) -> Element:
+        """
+        Export an PyutActor to a minidom Element.
+        Args:
+            pyutActor:  Actor to convert
+            xmlDoc:     xml document
+
+        Returns:
+            A new minidom element
+        """
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_ACTOR)
+
+        actorId = self._idFactory.getID(pyutActor)
+        root.setAttribute(PyutXmlConstants.ATTR_ID, str(actorId))
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutActor.getName())
+        root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutActor.getFilename())
 
         return root
