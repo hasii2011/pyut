@@ -1,0 +1,33 @@
+
+class PyutXmlConstants:
+    """
+    A `no method` class that just hosts the strings that represent the Pyut XML strings
+    """
+
+    ELEMENT_GRAPHIC_CLASS: str = 'GraphicClass'
+    ELEMENT_MODEL_CLASS:   str = 'Class'
+    ELEMENT_FIELD:         str = 'Field'
+    ELEMENT_PARAM:         str = 'Param'
+
+    ATTR_ID: str = 'id'
+
+    ATTR_WIDTH:  str = 'width'
+    ATTR_HEIGHT: str = 'height'
+
+    ATTR_X: str = 'x'
+    ATTR_Y: str = 'y'
+
+    ATTR_STEREOTYPE:  str = 'stereotype'
+    ATTR_DESCRIPTION: str = 'description'
+    ATTR_VISIBILITY:  str = 'visibility'
+
+    ATTR_FILENAME: str = 'filename'
+    ATTR_NAME:     str = 'name'
+    ATTR_TYPE:     str = 'type'
+
+    ATTR_SHOW_STEREOTYPE: str = 'showStereotype'
+    ATTR_DEFAULT_VALUE:   str = 'defaultValue'
+    ATTR_SHOW_METHODS:    str = 'showMethods'
+    ATTR_SHOW_FIELDS:     str = 'showFields'
+    ATTR_DEFAULT_VALUE:   str = 'defaultValue'
+

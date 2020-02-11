@@ -1,7 +1,9 @@
 
+from typing import List
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
-from typing import cast
 
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
@@ -36,7 +38,7 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 
-from org.pyut.PyutClass import PyutClass
+# from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutNote import PyutNote
@@ -53,9 +55,13 @@ from org.pyut.persistence.converters.ToOgl import OglSDMessages
 from org.pyut.persistence.converters.ToOgl import OglUseCases
 
 from org.pyut.persistence.converters.ToOgl import ToOgl
+from org.pyut.persistence.converters.ToPyutXml import ToPyutXml
+
 from org.pyut.persistence.converters.ToOgl import OglLinks
 from org.pyut.persistence.converters.ToOgl import OglClasses
 from org.pyut.persistence.converters.ToOgl import OglNotes
+from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
+from org.pyut.persistence.converters.IDFactorySingleton import IDFactory
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
@@ -64,22 +70,6 @@ from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.UmlFrame import UmlFrame
-
-
-class IDFactory:
-    nextID = 1
-
-    def __init__(self):
-        self._dicID = {}
-
-    def getID(self, aclass):
-        if aclass in self._dicID:
-            return self._dicID[aclass]
-        else:
-            clsId = IDFactory.nextID
-            self._dicID[aclass] = clsId
-            IDFactory.nextID += 1
-            return clsId
 
 
 class PyutXml:
@@ -93,8 +83,8 @@ class PyutXml:
      * `load()`
      
      
-    Using the mindocm API you can use the save method to get the
-    diagram converted to its corresponding XML respresentation. For loading, you have to parse
+    Using the minidom API you can use the save method to get the
+    diagram converted to its corresponding XML representation. For loading, you have to parse
     the XML file and indicate the UML frame onto which you want to draw
     (See `UmlFrame`).
 
@@ -104,14 +94,18 @@ class PyutXml:
     """
     DOCUMENT_ATTR_TITLE:    str = 'title'
     DOCUMENT_ATTR_DOC_TYPE: str = 'type'
-
+    _idFactory: IDFactory = IDFactory()
+    """
+    Temporarily make this a class variable until I get everything moved to the new `ToPyutXml'
+    This makes it accessible to both 
+    """
     def __init__(self):
         """
         Constructor
         """
         self.logger: Logger = getLogger(__name__)
 
-        self._idFactory = IDFactory()
+        # self._idFactory = IDFactory()
 
         self._dlgGauge: Dialog = cast(Dialog, None)
 
@@ -138,6 +132,7 @@ class PyutXml:
             dlg.Show(True)
             wxYield()
 
+            toPyutXml: ToPyutXml = ToPyutXml()
             # Save all documents in the project
             for document in project.getDocuments():
 
@@ -151,12 +146,15 @@ class PyutXml:
                 documentNode.setAttribute(PyutXml.DOCUMENT_ATTR_TITLE, document.title)
                 top.appendChild(documentNode)
 
-                oglObjects = document.getFrame().getUmlObjects()
+                oglObjects: List[OglObject] = document.getFrame().getUmlObjects()
                 for i in range(len(oglObjects)):
                     gauge.SetValue(i * 100 / len(oglObjects))
+                    wxYield()
                     oglObject = oglObjects[i]
                     if isinstance(oglObject, OglClass):
-                        documentNode.appendChild(self._OglClass2xml(oglObject, xmlDoc))
+                        # documentNode.appendChild(self._OglClass2xml(oglObject, xmlDoc))
+                        classElement: Element = toPyutXml.oglClassToXml(oglObject, xmlDoc)
+                        documentNode.appendChild(classElement)
                     elif isinstance(oglObject, OglNote):
                         documentNode.appendChild(self._OglNote2xml(oglObject, xmlDoc))
                     elif isinstance(oglObject, OglActor):
@@ -307,25 +305,25 @@ class PyutXml:
 
         return root
 
-    def _PyutField2xml(self, pyutField, xmlDoc):
-        """
-        Exporting a PyutField to an miniDom Element
-
-        @param PyutField pyutField : Field to save
-        @param xmlDoc xmlDoc : xml document
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('Field')
-
-        # adding the parent XML
-        # pyutField is a param
-        root.appendChild(self._PyutParam2xml(pyutField, xmlDoc))
-
-        # field visibility
-        root.setAttribute('visibility', str(pyutField.getVisibility()))
-
-        return root
-
+    # def _PyutField2xml(self, pyutField, xmlDoc):
+    #     """
+    #     Exporting a PyutField to an miniDom Element
+    #
+    #     @param PyutField pyutField : Field to save
+    #     @param xmlDoc xmlDoc : xml document
+    #     @return Element : XML Node
+    #     """
+    #     root = xmlDoc.createElement('Field')
+    #
+    #     # adding the parent XML
+    #     # pyutField is a param
+    #     root.appendChild(self._PyutParam2xml(pyutField, xmlDoc))
+    #
+    #     # field visibility
+    #     root.setAttribute('visibility', str(pyutField.getVisibility()))
+    #
+    #     return root
+    #
     def _PyutParam2xml(self, pyutParam, xmlDoc):
         """
         Exporting a PyutParam to an miniDom Element.
@@ -342,7 +340,7 @@ class PyutXml:
         # param type
         root.setAttribute('type', str(pyutParam.getType()))
 
-        # param defaulf value
+        # param default value
         defaultValue = pyutParam.getDefaultValue()
         if defaultValue is not None:
             root.setAttribute('defaultValue', defaultValue)
@@ -381,83 +379,83 @@ class PyutXml:
 
         return root
 
-    def _PyutMethod2xml(self, pyutMethod, xmlDoc):
-        """
-        Exporting an PyutMethod to an miniDom Element.
+    # def _PyutMethod2xml(self, pyutMethod, xmlDoc):
+    #     """
+    #     Exporting an PyutMethod to an miniDom Element.
+    #
+    #     @param PyutMethod pyutMethod : Method to save
+    #     @param xmlDoc : xml document
+    #     @return Element : XML Node
+    #     """
+    #     root = xmlDoc.createElement('Method')
+    #
+    #     # method name
+    #     root.setAttribute('name', pyutMethod.getName())
+    #
+    #     # method visibility
+    #     visibility: PyutVisibilityEnum = pyutMethod.getVisibility()
+    #     visStr: str = visibility.__str__()
+    #     if visibility is not None:
+    #         root.setAttribute('visibility', visStr)
+    #
+    #     # for all modifiers
+    #     for modifier in pyutMethod.getModifiers():
+    #         xmlModifier = xmlDoc.createElement('Modifier')
+    #         xmlModifier.setAttribute('name', modifier.getName())
+    #         root.appendChild(xmlModifier)
+    #
+    #     # method return type
+    #     returnType = pyutMethod.getReturns()
+    #     if returnType is not None:
+    #         xmlReturnType = xmlDoc.createElement('Return')
+    #         xmlReturnType.setAttribute('type', str(returnType))
+    #         root.appendChild(xmlReturnType)
+    #
+    #     # method params
+    #     for param in pyutMethod.getParams():
+    #         root.appendChild(self._PyutParam2xml(param, xmlDoc))
+    #
+    #     return root
 
-        @param PyutMethod pyutMethod : Method to save
-        @param xmlDoc : xml document
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('Method')
-
-        # method name
-        root.setAttribute('name', pyutMethod.getName())
-
-        # method visibility
-        visibility: PyutVisibilityEnum = pyutMethod.getVisibility()
-        visStr: str = visibility.__str__()
-        if visibility is not None:
-            root.setAttribute('visibility', visStr)
-
-        # for all modifiers
-        for modifier in pyutMethod.getModifiers():
-            xmlModifier = xmlDoc.createElement('Modifier')
-            xmlModifier.setAttribute('name', modifier.getName())
-            root.appendChild(xmlModifier)
-
-        # method return type
-        returnType = pyutMethod.getReturns()
-        if returnType is not None:
-            xmlReturnType = xmlDoc.createElement('Return')
-            xmlReturnType.setAttribute('type', str(returnType))
-            root.appendChild(xmlReturnType)
-
-        # method params
-        for param in pyutMethod.getParams():
-            root.appendChild(self._PyutParam2xml(param, xmlDoc))
-
-        return root
-
-    def _PyutClass2xml(self, pyutClass: PyutClass, xmlDoc: Document):
-        """
-        Exporting an PyutClass to an miniDom Element.
-
-        @param  pyutClass : Class to save
-
-        @param xmlDoc : xml document
-
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('Class')
-
-        # ID
-        classId = self._idFactory.getID(pyutClass)
-        root.setAttribute('id', str(classId))
-
-        # class name
-        root.setAttribute('name', pyutClass.getName())
-
-        # classs stereotype
-        stereotype = pyutClass.getStereotype()
-        if stereotype is not None:
-            root.setAttribute('stereotype', stereotype.getStereotype())
-
-        root.setAttribute('description', pyutClass.getDescription())
-        root.setAttribute('filename', pyutClass.getFilename())
-        root.setAttribute('showMethods', str(pyutClass.getShowMethods()))
-        root.setAttribute('showFields',  str(pyutClass.getShowFields()))
-        root.setAttribute('showStereotype', str(pyutClass.getShowStereotype()))
-
-        # methods
-        for method in pyutClass.getMethods():
-            root.appendChild(self._PyutMethod2xml(method, xmlDoc))
-
-        # fields
-        for field in pyutClass.getFields():
-            root.appendChild(self._PyutField2xml(field, xmlDoc))
-
-        return root
+    # def _PyutClass2xml(self, pyutClass: PyutClass, xmlDoc: Document):
+    #     """
+    #     Exporting an PyutClass to an miniDom Element.
+    #
+    #     @param  pyutClass : Class to save
+    #
+    #     @param xmlDoc : xml document
+    #
+    #     @return Element : XML Node
+    #     """
+    #     root = xmlDoc.createElement('Class')
+    #
+    #     # ID
+    #     classId = self._idFactory.getID(pyutClass)
+    #     root.setAttribute('id', str(classId))
+    #
+    #     # class name
+    #     root.setAttribute('name', pyutClass.getName())
+    #
+    #     # class stereotype
+    #     stereotype = pyutClass.getStereotype()
+    #     if stereotype is not None:
+    #         root.setAttribute('stereotype', stereotype.getStereotype())
+    #
+    #     root.setAttribute('description', pyutClass.getDescription())
+    #     root.setAttribute('filename', pyutClass.getFilename())
+    #     root.setAttribute('showMethods', str(pyutClass.getShowMethods()))
+    #     root.setAttribute('showFields',  str(pyutClass.getShowFields()))
+    #     root.setAttribute('showStereotype', str(pyutClass.getShowStereotype()))
+    #
+    #     # methods
+    #     for method in pyutClass.getMethods():
+    #         root.appendChild(self._PyutMethod2xml(method, xmlDoc))
+    #
+    #     # fields
+    #     for field in pyutClass.getFields():
+    #         root.appendChild(self._PyutField2xml(field, xmlDoc))
+    #
+    #     return root
 
     def _PyutNote2xml(self, pyutNote, xmlDoc):
         """
@@ -587,23 +585,23 @@ class PyutXml:
 
         return root
 
-    def _OglClass2xml(self, oglClass: OglClass, xmlDoc: Document):
-        """
-        Exporting an OglClass to an miniDom Element.
-
-        @param  oglClass : Class to save
-        @param xmlDoc xmlDoc : xml document
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('GraphicClass')
-
-        # Append OGL object base (size and pos)
-        self._appendOglBase(oglClass, root)
-
-        # adding the data layer object
-        root.appendChild(self._PyutClass2xml(oglClass.getPyutObject(), xmlDoc))
-
-        return root
+    # def _OglClass2xml(self, oglClass: OglClass, xmlDoc: Document):
+    #     """
+    #     Exporting an OglClass to an miniDom Element.
+    #
+    #     @param  oglClass : Class to save
+    #     @param xmlDoc xmlDoc : xml document
+    #     @return Element : XML Node
+    #     """
+    #     root = xmlDoc.createElement('GraphicClass')
+    #
+    #     # Append OGL object base (size and pos)
+    #     self._appendOglBase(oglClass, root)
+    #
+    #     # adding the data layer object
+    #     root.appendChild(self._PyutClass2xml(oglClass.getPyutObject(), xmlDoc))
+    #
+    #     return root
 
     def _OglNote2xml(self, oglNote, xmlDoc):
         """
@@ -692,8 +690,8 @@ class PyutXml:
             toOgl:          The converter class
             umlFrame:       Where to render
         """
-        oglClasses: OglClasses = toOgl.getOglClasses(documentNode.getElementsByTagName('GraphicClass'))
-        oglNotes:   OglNotes   = toOgl.getOglNotes(documentNode.getElementsByTagName('GraphicNote'), umlFrame)
+        oglClasses: OglClasses = toOgl.getOglClasses(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_CLASS))
+        oglNotes:   OglNotes   = toOgl.getOglNotes(documentNode.getElementsByTagName('GraphicNote'))
 
         mergedOglObjects: OglObjects = cast(OglObjects, oglClasses.copy())
         mergedOglObjects.update(oglNotes)
@@ -715,7 +713,7 @@ class PyutXml:
 
         oglActors:   OglActors   = toOgl.getOglActors(documentNode.getElementsByTagName('GraphicActor'))
         oglUseCases: OglUseCases = toOgl.getOglUseCases(documentNode.getElementsByTagName('GraphicUseCase'))
-        oglNotes:    OglNotes    = toOgl.getOglNotes(documentNode.getElementsByTagName('GraphicNote'), umlFrame)
+        oglNotes:    OglNotes    = toOgl.getOglNotes(documentNode.getElementsByTagName('GraphicNote'))
 
         self.__displayTheActors(oglActors, umlFrame)
         self.__displayTheUseCases(oglUseCases, umlFrame)

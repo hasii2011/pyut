@@ -46,6 +46,7 @@ from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.PyutStereotype import getPyutStereotype
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -65,7 +66,8 @@ OglLinks       = NewType('OglLinks',       List[Links])
 
 class ToOgl:
     """
-    The refactored version of this does NO UI related actions;  It is up to the
+    The refactored version of the original methods that were part of the monolithic
+     `PyutXml`xxx classes.  This version does NO UI related actions;  It is up to the
     caller to actually place the visual OGL object on the diagram frame
 
     """
@@ -91,34 +93,34 @@ class ToOgl:
             xmlOglClass: Element   = cast(Element, xmlOglClass)
             pyutClass:   PyutClass = PyutClass()
 
-            height: float      = float(xmlOglClass.getAttribute('height'))
-            width:  float      = float(xmlOglClass.getAttribute('width'))
+            height: float      = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  float      = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglClass: OglClass = OglClass(pyutClass, width, height)
 
-            xmlClass: Element = xmlOglClass.getElementsByTagName('Class')[0]
+            xmlClass: Element = xmlOglClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CLASS)[0]
 
-            pyutClass.setId(int(xmlClass.getAttribute('id')))
-            pyutClass.setName(xmlClass.getAttribute('name'))
-            pyutClass.setDescription(xmlClass.getAttribute('description'))
-            if xmlClass.hasAttribute('stereotype'):
-                pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute('stereotype')))
+            pyutClass.setId(int(xmlClass.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutClass.setName(xmlClass.getAttribute(PyutXmlConstants.ATTR_NAME))
+            pyutClass.setDescription(xmlClass.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION))
+            if xmlClass.hasAttribute(PyutXmlConstants.ATTR_STEREOTYPE):
+                pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute(PyutXmlConstants.ATTR_STEREOTYPE)))
 
             # adding display properties (cd)
-            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showStereotype'))
+            value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE))
             pyutClass.setShowStereotype(value)
-            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showMethods'))
+            value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_METHODS))
             pyutClass.setShowMethods(value)
-            value = PyutUtils.secureBoolean(xmlClass.getAttribute('showFields'))
+            value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS))
             pyutClass.setShowFields(value)
 
-            pyutClass.setFilename(xmlClass.getAttribute('filename'))
+            pyutClass.setFilename(xmlClass.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
             pyutClass.setMethods(self._getMethods(xmlClass))
             pyutClass.setFields(self._getFields(xmlClass))
 
             # Adding properties necessary to place shape on a diagram frame
-            x = float(xmlOglClass.getAttribute('x'))
-            y = float(xmlOglClass.getAttribute('y'))
+            x = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_X))
+            y = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_Y))
 
             oglClass.SetPosition(x, y)
 
@@ -200,13 +202,12 @@ class ToOgl:
 
         return oglLinks
 
-    def getOglNotes(self, xmlOglNotes: NodeList, umlFrame) -> OglNotes:
+    def getOglNotes(self, xmlOglNotes: NodeList) -> OglNotes:
         """
         Parse the XML elements given and build data layer for PyUt notes.
 
         Args:
             xmlOglNotes:        XML 'GraphicNote' elements
-            umlFrame:           Where to draw
 
         Returns:
             The returned dictionary uses a generated ID for the key
@@ -361,7 +362,7 @@ class ToOgl:
         Returns:
             A dictionary of OglSDMessage objects
         """
-        oglSDMessages: OglSDMessages = cast(OglSDMessages,{})
+        oglSDMessages: OglSDMessages = cast(OglSDMessages, {})
 
         for xmlOglSDMessage in xmlOglSDMessages:
 
@@ -411,7 +412,7 @@ class ToOgl:
 
             pyutMethod: PyutMethod = PyutMethod(xmlMethod.getAttribute('name'))
 
-            strVis: str = xmlMethod.getAttribute('visibility')
+            strVis: str = xmlMethod.getAttribute(PyutXmlConstants.ATTR_VISIBILITY)
             vis: PyutVisibilityEnum = PyutVisibilityEnum(strVis)
             pyutMethod.setVisibility(visibility=vis)
 
@@ -432,7 +433,7 @@ class ToOgl:
         """
 
         Args:
-            domElement:  The xml element tht is a paremeter
+            domElement:  The xml element tht is a parameter
 
         Returns:
             A parameter model object
@@ -457,18 +458,18 @@ class ToOgl:
         """
         pyutFields: PyutFields = cast(PyutFields, [])
 
-        for xmlField in xmlClass.getElementsByTagName("Field"):
+        for xmlField in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_FIELD):
 
             xmlField:   Element  = cast(Element, xmlField)
             pyutField: PyutField = PyutField()
 
-            pyutField.setVisibility(xmlField.getAttribute('visibility'))
-            xmlParam: Element = xmlField.getElementsByTagName("Param")[0]
+            pyutField.setVisibility(xmlField.getAttribute(PyutXmlConstants.ATTR_VISIBILITY))
+            xmlParam: Element = xmlField.getElementsByTagName(PyutXmlConstants.ELEMENT_PARAM)[0]
 
-            if xmlParam.hasAttribute('defaultValue'):
-                pyutField.setDefaultValue(xmlParam.getAttribute('defaultValue'))
-            pyutField.setName(xmlParam.getAttribute('name'))
-            pyutField.setType(xmlParam.getAttribute('type'))
+            if xmlParam.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):
+                pyutField.setDefaultValue(xmlParam.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE))
+            pyutField.setName(xmlParam.getAttribute(PyutXmlConstants.ATTR_NAME))
+            pyutField.setType(xmlParam.getAttribute(PyutXmlConstants.ATTR_TYPE))
 
             pyutFields.append(pyutField)
 
