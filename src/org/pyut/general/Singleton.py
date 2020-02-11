@@ -24,15 +24,11 @@ class Singleton(object):
             def init(self, val):
                 self.val = val
 
-        # This class will raise AssertionError at first instanciation, because
+        # This class will raise AssertionError at first instantiation, because
         # of the __init__ method.
         class B(Singleton):
             def __init__(self, val):
                 self.val = val
-
-    :author: Laurent Burgbacher
-    :contact: <lb@alawa.ch>
-    :version: $Revision: 1.3 $
     """
     def __new__(cls, *args, **kwds):
         """
