@@ -6,8 +6,12 @@ class PyutXmlConstants:
 
     ELEMENT_GRAPHIC_CLASS: str = 'GraphicClass'
     ELEMENT_MODEL_CLASS:   str = 'Class'
+    ELEMENT_MODEL_METHOD:  str = 'Method'
     ELEMENT_FIELD:         str = 'Field'
     ELEMENT_PARAM:         str = 'Param'
+    ELEMENT_DOCUMENT:      str = 'PyutDocument'
+    ELEMENT_RETURN:        str = 'Return'
+    ELEMENT_MODIFIER:      str = 'Modifier'
 
     ATTR_ID: str = 'id'
 
@@ -24,6 +28,7 @@ class PyutXmlConstants:
     ATTR_FILENAME: str = 'filename'
     ATTR_NAME:     str = 'name'
     ATTR_TYPE:     str = 'type'
+    ATTR_TITLE:    str = 'title'
 
     ATTR_SHOW_STEREOTYPE: str = 'showStereotype'
     ATTR_DEFAULT_VALUE:   str = 'defaultValue'

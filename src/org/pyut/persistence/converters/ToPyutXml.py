@@ -8,6 +8,7 @@ from xml.dom.minidom import Element
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglObject import OglObject
 
@@ -100,7 +101,7 @@ class ToPyutXml:
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME,    pyutClass.getFilename())
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_METHODS, str(pyutClass.getShowMethods()))
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS,  str(pyutClass.getShowFields()))
-        root.setAttribute(PyutXmlConstants.ATTR_STEREOTYPE,   str(pyutClass.getShowStereotype()))
+        root.setAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE,   str(pyutClass.getShowStereotype()))
         # methods
         for method in pyutClass.getMethods():
             root.appendChild(self._pyutMethodToXml(method, xmlDoc))
@@ -121,7 +122,7 @@ class ToPyutXml:
         Returns:
             The new updated element
         """
-        root: Element = xmlDoc.createElement('Method')
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_METHOD)
 
         root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutMethod.getName())
 
@@ -131,14 +132,14 @@ class ToPyutXml:
             root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visStr)
 
         for modifier in pyutMethod.getModifiers():
-            xmlModifier = xmlDoc.createElement('Modifier')
-            xmlModifier.setAttribute('name', modifier.getName())
+            xmlModifier: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODIFIER)
+            xmlModifier.setAttribute(PyutXmlConstants.ATTR_NAME, modifier.getName())
             root.appendChild(xmlModifier)
 
         returnType = pyutMethod.getReturns()
         if returnType is not None:
-            xmlReturnType = xmlDoc.createElement('Return')
-            xmlReturnType.setAttribute('type', str(returnType))
+            xmlReturnType: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_RETURN)
+            xmlReturnType.setAttribute(PyutXmlConstants.ATTR_TYPE, str(returnType))
             root.appendChild(xmlReturnType)
 
         for param in pyutMethod.getParams():

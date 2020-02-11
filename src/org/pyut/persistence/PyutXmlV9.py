@@ -38,12 +38,8 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 
-# from org.pyut.PyutClass import PyutClass
-from org.pyut.PyutField import PyutField
-from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutLink import PyutLink
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
@@ -92,8 +88,7 @@ class PyutXml:
     class supports `PyutXml.VERSION`  9
     
     """
-    DOCUMENT_ATTR_TITLE:    str = 'title'
-    DOCUMENT_ATTR_DOC_TYPE: str = 'type'
+
     _idFactory: IDFactory = IDFactory()
     """
     Temporarily make this a class variable until I get everything moved to the new `ToPyutXml'
@@ -138,12 +133,12 @@ class PyutXml:
 
                 document: PyutDocument = cast(PyutDocument, document)
 
-                documentNode = xmlDoc.createElement("PyutDocument")
+                documentNode = xmlDoc.createElement(PyutXmlConstants.ELEMENT_DOCUMENT)
 
                 docType: str = document.getType().__str__()
 
-                documentNode.setAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE, docType)
-                documentNode.setAttribute(PyutXml.DOCUMENT_ATTR_TITLE, document.title)
+                documentNode.setAttribute(PyutXmlConstants.ATTR_TYPE, docType)
+                documentNode.setAttribute(PyutXmlConstants.ATTR_TITLE, document.title)
                 top.appendChild(documentNode)
 
                 oglObjects: List[OglObject] = document.getFrame().getUmlObjects()
@@ -201,7 +196,7 @@ class PyutXml:
             for documentNode in dom.getElementsByTagName("PyutDocument"):
 
                 documentNode: Element = cast(Element, documentNode)
-                docTypeStr:   str     = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
+                docTypeStr:   str     = documentNode.getAttribute(PyutXmlConstants.ATTR_TYPE)
                 self.__updateProgressDialog(newMessage=f'Determine Title for document type: {docTypeStr}', newGaugeValue=2)
 
                 docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
@@ -826,8 +821,8 @@ class PyutXml:
 
     def __determineDocumentTitle(self, documentNode) -> str:
 
-        docTitle:   str = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_TITLE)
-        docTypeStr: str = documentNode.getAttribute(PyutXml.DOCUMENT_ATTR_DOC_TYPE)
+        docTitle:   str = documentNode.getAttribute(PyutXmlConstants.ATTR_TITLE)
+        docTypeStr: str = documentNode.getAttribute(PyutXmlConstants.ATTR_TYPE)
 
         if docTitle == '' or docTitle is None:
             return docTypeStr
