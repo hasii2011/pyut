@@ -10,12 +10,14 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
+from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.ogl.OglActor import OglActor
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
+from org.pyut.ogl.OglUseCase import OglUseCase
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.persistence.converters.IDFactorySingleton import IDFactory
@@ -77,7 +79,7 @@ class ToPyutXml:
 
         return root
 
-    def oglActor2xml(self, oglActor: OglActor, xmlDoc: Document) -> Element:
+    def oglActorToXml(self, oglActor: OglActor, xmlDoc: Document) -> Element:
         """
         Exporting an OglActor to a minidom Element.
 
@@ -93,6 +95,25 @@ class ToPyutXml:
         self.__appendOglBase(oglActor, root)
 
         root.appendChild(self._pyutActorToXml(oglActor.getPyutObject(), xmlDoc))
+
+        return root
+
+    def oglUseCaseToXml(self, oglUseCase: OglUseCase, xmlDoc: Document) -> Element:
+        """
+        Exporting an OglUseCase to a miniDom Element.
+
+        Args:
+            oglUseCase:  UseCase to convert
+            xmlDoc:      xml document
+
+        Returns:
+            A new minidom element
+        """
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_USE_CASE)
+
+        self.__appendOglBase(oglUseCase, root)
+
+        root.appendChild(self._pyutUseCaseToXml(oglUseCase.getPyutObject(), xmlDoc))
 
         return root
 
@@ -268,5 +289,25 @@ class ToPyutXml:
         root.setAttribute(PyutXmlConstants.ATTR_ID, str(actorId))
         root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutActor.getName())
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutActor.getFilename())
+
+        return root
+
+    def _pyutUseCaseToXml(self, pyutUseCase: PyutUseCase, xmlDoc: Document) -> Element:
+        """
+        Export a PyutUseCase to a minidom Element.
+
+        Args:
+            pyutUseCase:    Use case to convert
+            xmlDoc:         xml document
+
+        Returns:
+            A new minidom element
+        """
+        root = xmlDoc.createElement('UseCase')
+
+        useCaseId = self._idFactory.getID(pyutUseCase)
+        root.setAttribute(PyutXmlConstants.ATTR_ID,       str(useCaseId))
+        root.setAttribute(PyutXmlConstants.ATTR_NAME,     pyutUseCase.getName())
+        root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutUseCase.getFilename())
 
         return root

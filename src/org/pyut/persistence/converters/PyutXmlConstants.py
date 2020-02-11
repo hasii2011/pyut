@@ -4,10 +4,11 @@ class PyutXmlConstants:
     A `no method` class that just hosts the strings that represent the Pyut XML strings
     """
 
-    TOP_LEVEL_ELEMENT:     str = 'PyutProject'
-    ELEMENT_GRAPHIC_CLASS: str = 'GraphicClass'
-    ELEMENT_GRAPHIC_NOTE:  str = 'GraphicNote'
-    ELEMENT_GRAPHIC_ACTOR: str = 'GraphicActor'
+    TOP_LEVEL_ELEMENT:        str = 'PyutProject'
+    ELEMENT_GRAPHIC_CLASS:    str = 'GraphicClass'
+    ELEMENT_GRAPHIC_NOTE:     str = 'GraphicNote'
+    ELEMENT_GRAPHIC_ACTOR:    str = 'GraphicActor'
+    ELEMENT_GRAPHIC_USE_CASE: str = 'GraphicUseCase'
 
     ELEMENT_DOCUMENT:      str = 'PyutDocument'
     ELEMENT_MODEL_CLASS:   str = 'Class'

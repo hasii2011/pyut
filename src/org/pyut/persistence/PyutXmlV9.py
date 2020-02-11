@@ -38,7 +38,6 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 
-from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutLink import PyutLink
 
 from org.pyut.PyutConstants import PyutConstants
@@ -111,7 +110,8 @@ class PyutXml:
         Args:
             project:  The project to write as XML
 
-        Returns:  And minidom XML Document
+        Returns:
+            A minidom XML Document
         """
         dlg:    Dialog   = Dialog(None, -1, "Saving...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
         xmlDoc: Document = Document()
@@ -156,10 +156,12 @@ class PyutXml:
                         documentNode.appendChild(noteElement)
                     elif isinstance(oglObject, OglActor):
                         # documentNode.appendChild(self._OglActor2xml(oglObject, xmlDoc))
-                        actorElement: Element = toPyutXml.oglActor2xml(oglObject, xmlDoc)
+                        actorElement: Element = toPyutXml.oglActorToXml(oglObject, xmlDoc)
                         documentNode.appendChild(actorElement)
                     elif isinstance(oglObject, OglUseCase):
-                        documentNode.appendChild(self._OglUseCase2xml(oglObject, xmlDoc))
+                        # documentNode.appendChild(self._OglUseCase2xml(oglObject, xmlDoc))
+                        useCaseElement: Element = toPyutXml.oglUseCaseToXml(oglObject, xmlDoc)
+                        documentNode.appendChild(useCaseElement)
                     elif isinstance(oglObject, OglSDInstance):
                         documentNode.appendChild(self._OglSDInstance2xml(oglObject, xmlDoc))
                     elif isinstance(oglObject, OglSDMessage):
@@ -359,44 +361,6 @@ class PyutXml:
 
         return root
 
-    # def _PyutActor2xml(self, pyutActor, xmlDoc):
-    #     """
-    #     Exporting an PyutActor to an miniDom Element.
-    #
-    #     @param PyutNote pyutActor : Note to convert
-    #     @param xmlDoc : xml document
-    #     @return Element : New miniDom element
-    #     """
-    #     root = xmlDoc.createElement('Actor')
-    #
-    #     actorId = self._idFactory.getID(pyutActor)
-    #     root.setAttribute('id', str(actorId))
-    #     root.setAttribute('name', pyutActor.getName())
-    #     root.setAttribute('filename', pyutActor.getFilename())
-    #
-    #     return root
-    #
-    def _PyutUseCase2xml(self, pyutUseCase, xmlDoc):
-        """
-        Exporting an PyutUseCase to a miniDom Element.
-
-        @param PyutNote pyutUseCase : Note to convert
-        @param xmlDoc xmlDoc : xml document
-        @return Element : New miniDom element
-        """
-        root = xmlDoc.createElement('UseCase')
-
-        useCaseId = self._idFactory.getID(pyutUseCase)
-        root.setAttribute('id', str(useCaseId))
-
-        # Note
-        root.setAttribute('name', pyutUseCase.getName())
-
-        # filename (lb@alawa.ch)
-        root.setAttribute('filename', pyutUseCase.getFilename())
-
-        return root
-
     def _appendOglBase(self, oglObject, root):
         """
         Saves the position and size of the OGL object in XML node.
@@ -463,43 +427,6 @@ class PyutXml:
 
         # adding the data layer object
         root.appendChild(self._PyutLink2xml(oglLink.getPyutObject(), xmlDoc))
-
-        return root
-
-    # def _OglActor2xml(self, oglActor, xmlDoc):
-    #     """
-    #     Exporting an OglActor to an miniDom Element.
-    #
-    #     @param OglActor oglActor : Actor to convert
-    #     @param xmlDoc xmlDoc : xml document
-    #     @return Element : New miniDom element
-    #     """
-    #     root = xmlDoc.createElement('GraphicActor')
-    #
-    #     # Append OGL object base (size and pos)
-    #     self._appendOglBase(oglActor, root)
-    #
-    #     # adding the data layer object
-    #     root.appendChild(self._PyutActor2xml(oglActor.getPyutObject(), xmlDoc))
-    #
-    #     return root
-    #
-    def _OglUseCase2xml(self, oglUseCase, xmlDoc):
-        """
-        Exporting an OglUseCase to an miniDom Element.
-
-        @param oglUseCase : UseCase to convert
-        @param xmlDoc xmlDoc : xml document
-        @return Element : New miniDom element
-
-        """
-        root = xmlDoc.createElement('GraphicUseCase')
-
-        # Append OGL object base (size and pos)
-        self._appendOglBase(oglUseCase, root)
-
-        # adding the data layer object
-        root.appendChild(self._PyutUseCase2xml(oglUseCase.getPyutObject(), xmlDoc))
 
         return root
 

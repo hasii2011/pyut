@@ -150,7 +150,7 @@ class ToOgl:
             dx = PyutUtils.secureFloat(xmlLink.getAttribute("dstX"))
             dy = PyutUtils.secureFloat(xmlLink.getAttribute("dstY"))
 
-            spline = PyutUtils.secureSplineInt(xmlLink.getAttribute("spline"))
+            spline: bool = PyutUtils.secureBoolean(xmlLink.getAttribute("spline"))
 
             # get the associated PyutLink
             srcId, dstId, assocPyutLink = self._getPyutLink(xmlLink)
