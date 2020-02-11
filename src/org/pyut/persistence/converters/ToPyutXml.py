@@ -7,9 +7,12 @@ from xml.dom.minidom import Element
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
+from org.pyut.PyutNote import PyutNote
+from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
@@ -53,6 +56,25 @@ class ToPyutXml:
 
         return root
 
+    def oglNoteToXml(self, oglNote: OglNote, xmlDoc: Document) -> Element:
+        """
+        Export an OglNote to a miniDom Element.
+
+        Args:
+            oglNote:    Note to convert
+            xmlDoc:     xml document
+
+        Returns:
+            New miniDom element
+        """
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_NOTE)
+
+        self.__appendOglBase(oglNote, root)
+
+        root.appendChild(self._pyutNoteToXml(oglNote.getPyutObject(), xmlDoc))
+
+        return root
+
     def __appendOglBase(self, oglObject: OglObject, root: Element) -> Element:
         """
         Saves the position and size of the OGL object in XML node.
@@ -89,7 +111,7 @@ class ToPyutXml:
         """
         root = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_CLASS)
 
-        classId = self._idFactory.getID(pyutClass)
+        classId: int = self._idFactory.getID(pyutClass)
         root.setAttribute(PyutXmlConstants.ATTR_ID, str(classId))
         root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutClass.getName())
 
@@ -157,14 +179,14 @@ class ToPyutXml:
         Returns:
             The new updated element
         """
-        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_FIELD)
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_FIELD)
 
         root.appendChild(self._pyutParamToXml(pyutField, xmlDoc))
         root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, str(pyutField.getVisibility()))
 
         return root
 
-    def _pyutParamToXml(self, pyutParam, xmlDoc) -> Element:
+    def _pyutParamToXml(self, pyutParam: PyutParam, xmlDoc: Document) -> Element:
         """
         Export a PyutParam to a miniDom Element
 
@@ -175,7 +197,7 @@ class ToPyutXml:
         Returns:
             The new updated element
         """
-        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_PARAM)
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_PARAM)
 
         root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutParam.getName())
         root.setAttribute(PyutXmlConstants.ATTR_TYPE, str(pyutParam.getType()))
@@ -183,5 +205,28 @@ class ToPyutXml:
         defaultValue = pyutParam.getDefaultValue()
         if defaultValue is not None:
             root.setAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE, defaultValue)
+
+        return root
+
+    def _pyutNoteToXml(self, pyutNote: PyutNote, xmlDoc: Document) -> Element:
+        """
+        Export a PyutNote to a miniDom Element.
+
+        Args:
+            pyutNote:   Note to convert
+            xmlDoc:     xml document
+
+        Returns:
+            New miniDom element
+        """
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_NOTE)
+
+        noteId: int = self._idFactory.getID(pyutNote)
+        root.setAttribute('id', str(noteId))
+
+        name: str = pyutNote.getName()
+        name = name.replace('\n', "\\\\\\\\")
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, name)
+        root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutNote.getFilename())
 
         return root

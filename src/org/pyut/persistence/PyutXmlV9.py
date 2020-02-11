@@ -151,7 +151,9 @@ class PyutXml:
                         classElement: Element = toPyutXml.oglClassToXml(oglObject, xmlDoc)
                         documentNode.appendChild(classElement)
                     elif isinstance(oglObject, OglNote):
-                        documentNode.appendChild(self._OglNote2xml(oglObject, xmlDoc))
+                        # documentNode.appendChild(self._OglNote2xml(oglObject, xmlDoc))
+                        noteElement: Element = toPyutXml.oglNoteToXml(oglObject, xmlDoc)
+                        documentNode.appendChild(noteElement)
                     elif isinstance(oglObject, OglActor):
                         documentNode.appendChild(self._OglActor2xml(oglObject, xmlDoc))
                     elif isinstance(oglObject, OglUseCase):
@@ -355,27 +357,6 @@ class PyutXml:
 
         return root
 
-    def _PyutNote2xml(self, pyutNote, xmlDoc):
-        """
-        Exporting an PyutNote to an miniDom Element.
-
-        @param pyutNote : Note to convert
-        @param xmlDoc : xml document
-        @return Element          : New miniDom element
-        """
-        root = xmlDoc.createElement('Note')
-        # ID
-        noteId = self._idFactory.getID(pyutNote)
-        root.setAttribute('id', str(noteId))
-
-        # Note
-        name = pyutNote.getName()
-        name = name.replace('\n', "\\\\\\\\")
-        root.setAttribute('name', name)
-        root.setAttribute('filename', pyutNote.getFilename())
-
-        return root
-
     def _PyutActor2xml(self, pyutActor, xmlDoc):
         """
         Exporting an PyutActor to an miniDom Element.
@@ -480,25 +461,6 @@ class PyutXml:
 
         # adding the data layer object
         root.appendChild(self._PyutLink2xml(oglLink.getPyutObject(), xmlDoc))
-
-        return root
-
-    def _OglNote2xml(self, oglNote, xmlDoc):
-        """
-        Exporting an OglNote to an miniDom Element.
-
-        @param OglNote oglNote : Note to convert
-        @param xmlDoc xmlDoc : xml document
-
-        @return Element        : New miniDom element
-        """
-        root = xmlDoc.createElement('GraphicNote')
-
-        # Append OGL object base (size and pos)
-        self._appendOglBase(oglNote, root)
-
-        # adding the data layer object
-        root.appendChild(self._PyutNote2xml(oglNote.getPyutObject(), xmlDoc))
 
         return root
 

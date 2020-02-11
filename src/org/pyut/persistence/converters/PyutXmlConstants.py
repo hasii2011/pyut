@@ -5,10 +5,13 @@ class PyutXmlConstants:
     """
 
     ELEMENT_GRAPHIC_CLASS: str = 'GraphicClass'
+    ELEMENT_GRAPHIC_NOTE:  str = 'GraphicNote'
+
     ELEMENT_MODEL_CLASS:   str = 'Class'
     ELEMENT_MODEL_METHOD:  str = 'Method'
-    ELEMENT_FIELD:         str = 'Field'
-    ELEMENT_PARAM:         str = 'Param'
+    ELEMENT_MODEL_NOTE:    str = 'Note'
+    ELEMENT_MODEL_FIELD:   str = 'Field'
+    ELEMENT_MODEL_PARAM:   str = 'Param'
     ELEMENT_DOCUMENT:      str = 'PyutDocument'
     ELEMENT_RETURN:        str = 'Return'
     ELEMENT_MODIFIER:      str = 'Modifier'
@@ -35,4 +38,5 @@ class PyutXmlConstants:
     ATTR_SHOW_METHODS:    str = 'showMethods'
     ATTR_SHOW_FIELDS:     str = 'showFields'
     ATTR_DEFAULT_VALUE:   str = 'defaultValue'
+    ATTR_FILE_NAME:       str = 'filename'
 

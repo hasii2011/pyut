@@ -458,13 +458,13 @@ class ToOgl:
         """
         pyutFields: PyutFields = cast(PyutFields, [])
 
-        for xmlField in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_FIELD):
+        for xmlField in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_FIELD):
 
             xmlField:   Element  = cast(Element, xmlField)
             pyutField: PyutField = PyutField()
 
             pyutField.setVisibility(xmlField.getAttribute(PyutXmlConstants.ATTR_VISIBILITY))
-            xmlParam: Element = xmlField.getElementsByTagName(PyutXmlConstants.ELEMENT_PARAM)[0]
+            xmlParam: Element = xmlField.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_PARAM)[0]
 
             if xmlParam.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):
                 pyutField.setDefaultValue(xmlParam.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE))
