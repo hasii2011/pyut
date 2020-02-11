@@ -189,13 +189,13 @@ class ToOgl:
             parent = line.GetSource().GetParent()
             selfLink = parent is line.GetDestination().GetParent()
 
-            ctrlpts: ControlPoints = self._generateControlPoints(xmlLink)
-            for ctrl in ctrlpts:
-                line.AddControl(ctrl)
+            controlPoints: ControlPoints = self._generateControlPoints(xmlLink)
+            for controlPoint in controlPoints:
+                line.AddControl(controlPoint)
                 if selfLink:
-                    x, y = ctrl.GetPosition()
-                    ctrl.SetParent(parent)
-                    ctrl.SetPosition(x, y)
+                    x, y = controlPoint.GetPosition()
+                    controlPoint.SetParent(parent)
+                    controlPoint.SetPosition(x, y)
 
             if isinstance(oglLink, OglAssociation):
                 self.__furtherCustomizeAssociationLink(xmlLink, oglLink)
@@ -478,14 +478,14 @@ class ToOgl:
 
     def _generateControlPoints(self, link: Element) -> ControlPoints:
 
-        ctrlpts: ControlPoints = cast(ControlPoints, [])
+        controlPoints: ControlPoints = cast(ControlPoints, [])
 
-        for ctrlpt in link.getElementsByTagName("ControlPoint"):
-            x = PyutUtils.secureFloat(ctrlpt.getAttribute(PyutXmlConstants.ATTR_X))
-            y = PyutUtils.secureFloat(ctrlpt.getAttribute(PyutXmlConstants.ATTR_Y))
-            ctrlpts.append(ControlPoint(x, y))
+        for controlPoint in link.getElementsByTagName("ControlPoint"):
+            x = PyutUtils.secureFloat(controlPoint.getAttribute(PyutXmlConstants.ATTR_X))
+            y = PyutUtils.secureFloat(controlPoint.getAttribute(PyutXmlConstants.ATTR_Y))
+            controlPoints.append(ControlPoint(x, y))
 
-        return ctrlpts
+        return controlPoints
 
     def _getPyutLink(self, obj: Element):
         """
