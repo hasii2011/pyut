@@ -218,24 +218,24 @@ class ToOgl:
             pyutNote: PyutNote = PyutNote()
 
             # Building OGL Note
-            height: float = float(xmlOglNote.getAttribute('height'))
-            width:  float = float(xmlOglNote.getAttribute('width'))
+            height: float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglNote = OglNote(pyutNote, width, height)
 
             xmlNote: Element = xmlOglNote.getElementsByTagName('Note')[0]
 
-            pyutNote.setId(int(xmlNote.getAttribute('id')))
+            pyutNote.setId(int(xmlNote.getAttribute(PyutXmlConstants.ATTR_ID)))
 
-            name = xmlNote.getAttribute('name')
+            name = xmlNote.getAttribute(PyutXmlConstants.ATTR_NAME)
             name = name.replace("\\\\\\\\", "\n")
 
             pyutNote.setName(name)
 
-            pyutNote.setFilename(xmlNote.getAttribute('filename'))
+            pyutNote.setFilename(xmlNote.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
             # Adding properties necessary to place shape on a diagram frame
-            x: float = float(xmlOglNote.getAttribute('x'))
-            y: float = float(xmlOglNote.getAttribute('y'))
+            x: float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_X))
+            y: float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_Y))
 
             oglNote.SetPosition(x, y)
             # Update the dictionary
@@ -259,19 +259,19 @@ class ToOgl:
             pyutActor: PyutActor = PyutActor()
 
             # Building OGL Actor
-            height: float = float(xmlOglActor.getAttribute('height'))
-            width:  float = float(xmlOglActor.getAttribute('width'))
+            height: float = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  float = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglActor: OglActor = OglActor(pyutActor, width, height)
 
             xmlActor: Element = xmlOglActor.getElementsByTagName('Actor')[0]
 
-            pyutActor.setId(int(xmlActor.getAttribute('id')))
-            pyutActor.setName(xmlActor.getAttribute('name'))
-            pyutActor.setFilename(xmlActor.getAttribute('filename'))
+            pyutActor.setId(int(xmlActor.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutActor.setName(xmlActor.getAttribute(PyutXmlConstants.ATTR_NAME))
+            pyutActor.setFilename(xmlActor.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
             # Adding properties necessary to place shape on a diagram frame
-            x = float(xmlOglActor.getAttribute('x'))
-            y = float(xmlOglActor.getAttribute('y'))
+            x = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_X))
+            y = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_Y))
             oglActor.SetPosition(x, y)
 
             oglActors[pyutActor.getId()] = oglActor
@@ -295,18 +295,18 @@ class ToOgl:
             pyutUseCase: PyutUseCase = PyutUseCase()
 
             # Building OGL UseCase
-            height = float(xmlOglUseCase.getAttribute('height'))
-            width = float(xmlOglUseCase.getAttribute('width'))
+            height = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglUseCase = OglUseCase(pyutUseCase, width, height)
 
             xmlUseCase: Element = xmlOglUseCase.getElementsByTagName('UseCase')[0]
 
-            pyutUseCase.setId(int(xmlUseCase.getAttribute('id')))
-            pyutUseCase.setName(xmlUseCase.getAttribute('name'))
-            pyutUseCase.setFilename(xmlUseCase.getAttribute('filename'))
+            pyutUseCase.setId(int(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutUseCase.setName(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_NAME))
+            pyutUseCase.setFilename(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
-            x = float(xmlOglUseCase.getAttribute('x'))
-            y = float(xmlOglUseCase.getAttribute('y'))
+            x = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_X))
+            y = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_Y))
             oglUseCase.SetPosition(x, y)
 
             oglUseCases[pyutUseCase.getId()] = oglUseCase
@@ -333,15 +333,15 @@ class ToOgl:
 
             xmlSDInstance = xmlOglSDInstance.getElementsByTagName('SDInstance')[0]
 
-            pyutSDInstance.setId(int(xmlSDInstance.getAttribute('id')))
+            pyutSDInstance.setId(int(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_ID)))
             pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute('instanceName'))
             pyutSDInstance.setInstanceLifeLineLength(PyutUtils.secureInteger(xmlSDInstance.getAttribute('lifeLineLength')))
 
             # Adding OGL class to UML Frame
-            x = float(xmlOglSDInstance.getAttribute('x'))
-            y = float(xmlOglSDInstance.getAttribute('y'))
-            w = float(xmlOglSDInstance.getAttribute('width'))
-            h = float(xmlOglSDInstance.getAttribute('height'))
+            x = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_X))
+            y = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_Y))
+            w = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            h = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
             oglSDInstance.SetSize(w, h)
             oglSDInstance.SetPosition(x, y)
 
@@ -385,7 +385,7 @@ class ToOgl:
             pyutSDMessage.setDestination(dstOgl.getPyutObject(), dstTime)
 
             # Pyut Data
-            pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute('id')))
+            pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_ID)))
             pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message'))
 
             oglSDMessages[pyutSDMessage.getId()] = oglSDMessage
@@ -410,14 +410,14 @@ class ToOgl:
         allMethods: PyutMethods = cast(PyutMethods, [])
         for xmlMethod in xmlClass.getElementsByTagName("Method"):
 
-            pyutMethod: PyutMethod = PyutMethod(xmlMethod.getAttribute('name'))
+            pyutMethod: PyutMethod = PyutMethod(xmlMethod.getAttribute(PyutXmlConstants.ATTR_NAME))
 
             strVis: str = xmlMethod.getAttribute(PyutXmlConstants.ATTR_VISIBILITY)
             vis: PyutVisibilityEnum = PyutVisibilityEnum(strVis)
             pyutMethod.setVisibility(visibility=vis)
 
             returnElt: Element = xmlMethod.getElementsByTagName("Return")[0]
-            pyutMethod.setReturns(returnElt.getAttribute('type'))
+            pyutMethod.setReturns(returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE))
 
             methodParameters = []
             for xmlParam in xmlMethod.getElementsByTagName("Param"):
@@ -438,10 +438,11 @@ class ToOgl:
         Returns:
             A parameter model object
         """
-        pyutParam: PyutParam = PyutParam(name=domElement.getAttribute('name'), theParameterType=domElement.getAttribute('type'))
+        pyutParam: PyutParam = PyutParam(name=domElement.getAttribute(PyutXmlConstants.ATTR_NAME),
+                                         theParameterType=domElement.getAttribute(PyutXmlConstants.ATTR_TYPE))
 
-        if domElement.hasAttribute('defaultValue'):
-            pyutParam.setDefaultValue(domElement.getAttribute('defaultValue'))
+        if domElement.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):
+            pyutParam.setDefaultValue(domElement.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE))
 
         return pyutParam
 
@@ -480,8 +481,8 @@ class ToOgl:
         ctrlpts: ControlPoints = cast(ControlPoints, [])
 
         for ctrlpt in link.getElementsByTagName("ControlPoint"):
-            x = PyutUtils.secureFloat(ctrlpt.getAttribute("x"))
-            y = PyutUtils.secureFloat(ctrlpt.getAttribute("y"))
+            x = PyutUtils.secureFloat(ctrlpt.getAttribute(PyutXmlConstants.ATTR_X))
+            y = PyutUtils.secureFloat(ctrlpt.getAttribute(PyutXmlConstants.ATTR_Y))
             ctrlpts.append(ControlPoint(x, y))
 
         return ctrlpts
@@ -504,9 +505,9 @@ class ToOgl:
         pyutLink.destinationCardinality = link.getAttribute('cardDestination')
         pyutLink.sourceCardinality      = link.getAttribute('cardSrc')
 
-        pyutLink.setName(link.getAttribute('name'))
+        pyutLink.setName(link.getAttribute(PyutXmlConstants.ATTR_NAME))
 
-        strLinkType: str         = link.getAttribute('type')
+        strLinkType: str         = link.getAttribute(PyutXmlConstants.ATTR_TYPE)
         linkType:    OglLinkType = OglLinkType[strLinkType]
         pyutLink.setType(linkType)
 
@@ -540,8 +541,8 @@ class ToOgl:
             textShape:
         """
         label:  Element   = xmlLink.getElementsByTagName(tagName)[0]
-        x = float(label.getAttribute("x"))
-        y = float(label.getAttribute("y"))
+        x = float(label.getAttribute(PyutXmlConstants.ATTR_X))
+        y = float(label.getAttribute(PyutXmlConstants.ATTR_Y))
 
         self.logger.debug(f'tagName: {tagName} textShape.text: `{textShape.GetText()}`  pos: ({x:.2f},{y:.2f})')
 

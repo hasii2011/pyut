@@ -33,10 +33,7 @@ class PyutXmlConstants:
     ATTR_TYPE:     str = 'type'
     ATTR_TITLE:    str = 'title'
 
-    ATTR_SHOW_STEREOTYPE: str = 'showStereotype'
     ATTR_DEFAULT_VALUE:   str = 'defaultValue'
+    ATTR_SHOW_STEREOTYPE: str = 'showStereotype'
     ATTR_SHOW_METHODS:    str = 'showMethods'
     ATTR_SHOW_FIELDS:     str = 'showFields'
-    ATTR_DEFAULT_VALUE:   str = 'defaultValue'
-    ATTR_FILE_NAME:       str = 'filename'
-

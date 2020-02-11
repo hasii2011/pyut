@@ -222,7 +222,7 @@ class ToPyutXml:
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_NOTE)
 
         noteId: int = self._idFactory.getID(pyutNote)
-        root.setAttribute('id', str(noteId))
+        root.setAttribute(PyutXmlConstants.ATTR_ID, str(noteId))
 
         name: str = pyutNote.getName()
         name = name.replace('\n', "\\\\\\\\")
