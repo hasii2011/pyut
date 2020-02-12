@@ -5,16 +5,25 @@ from logging import getLogger
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
 
+from org.pyut.MiniOgl.Shape import Shape
+
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
+from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+
 from org.pyut.ogl.OglActor import OglActor
+from org.pyut.ogl.OglAssociation import CENTER
+from org.pyut.ogl.OglAssociation import DEST_CARD
+from org.pyut.ogl.OglAssociation import OglAssociation
+from org.pyut.ogl.OglAssociation import SRC_CARD
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
@@ -100,7 +109,7 @@ class ToPyutXml:
 
     def oglUseCaseToXml(self, oglUseCase: OglUseCase, xmlDoc: Document) -> Element:
         """
-        Exporting an OglUseCase to a miniDom Element.
+        Export an OglUseCase to a minidom Element.
 
         Args:
             oglUseCase:  UseCase to convert
@@ -114,6 +123,57 @@ class ToPyutXml:
         self.__appendOglBase(oglUseCase, root)
 
         root.appendChild(self._pyutUseCaseToXml(oglUseCase.getPyutObject(), xmlDoc))
+
+        return root
+
+    def oglLinkToXml(self, oglLink: OglLink, xmlDoc: Document):
+        """
+        Export an OgLink to a minidom element
+        Args:
+            oglLink:    OglLink to convert
+            xmlDoc:     xml document
+
+        Returns:
+            A new minidom element
+        """
+        root = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_LINK)
+
+        # save source and destination anchor points
+        x, y = oglLink.GetSource().GetModel().GetPosition()
+        root.setAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_X, str(x))
+        root.setAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_Y, str(y))
+
+        x, y = oglLink.GetDestination().GetModel().GetPosition()
+        root.setAttribute(PyutXmlConstants.ATTR_LINK_DESTINATION_ANCHOR_X, str(x))
+        root.setAttribute(PyutXmlConstants.ATTR_LINK_DESTINATION_ANCHOR_Y, str(y))
+
+        root.setAttribute(PyutXmlConstants.ATTR_SPLINE, str(oglLink.GetSpline()))
+
+        if isinstance(oglLink, OglAssociation):
+
+            center = oglLink.getLabels()[CENTER]
+            src    = oglLink.getLabels()[SRC_CARD]
+            dst    = oglLink.getLabels()[DEST_CARD]
+
+            assocLabels = {
+                PyutXmlConstants.ELEMENT_ASSOC_CENTER_LABEL: center,
+                PyutXmlConstants.ELEMENT_ASSOC_SOURCE_LABEL: src,
+                PyutXmlConstants.ELEMENT_ASSOC_DESTINATION_LABEL: dst
+            }
+            for eltName in assocLabels:
+                elt: Element = self.__createAssocLabelElement(eltName, xmlDoc, assocLabels[eltName])
+                root.appendChild(elt)
+
+        # save control points (not anchors!)
+        for x, y in oglLink.GetSegments()[1:-1]:
+            item = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_CONTROL_POINT)
+            item.setAttribute(PyutXmlConstants.ATTR_X, str(x))
+            item.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
+            root.appendChild(item)
+
+        # adding the data layer object
+
+        root.appendChild(self._pyutLinkToXml(oglLink.getPyutObject(), xmlDoc))
 
         return root
 
@@ -311,3 +371,60 @@ class ToPyutXml:
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutUseCase.getFilename())
 
         return root
+
+    def _pyutLinkToXml(self, pyutLink: PyutLink, xmlDoc: Document) -> Element:
+        """
+        Exporting a PyutLink to a miniDom Element.
+
+        Args:
+            pyutLink:   Link to sav
+            xmlDoc:     xml document
+
+        Returns:
+            A new minidom element
+        """
+        root: Element = xmlDoc.createElement('Link')
+
+        root.setAttribute('name',            pyutLink.getName())
+        root.setAttribute('type',            pyutLink.getType().name)
+        root.setAttribute('cardSrc',         pyutLink.sourceCardinality)
+        root.setAttribute('cardDestination', pyutLink.destinationCardinality)
+        root.setAttribute('bidir',           str(pyutLink.getBidir()))
+
+        srcLinkId = self._idFactory.getID(pyutLink.getSource())
+        root.setAttribute('sourceId', str(srcLinkId))
+
+        destLinkId = self._idFactory.getID(pyutLink.getDestination())
+        root.setAttribute('destId', str(destLinkId))
+
+        return root
+
+    def __createAssocLabelElement(self, eltText: str, xmlDoc: Document, miniOglShape: Shape) -> Element:
+        """
+        Creates an element of the form:
+
+        ```html
+        `<eltText x="nnnn.n" y="nnnn.n"/>`
+        ```
+
+        e.g.
+
+        ```html
+            `<LabelCenter x="1811.0" y="1137.5"/>`
+        ```
+
+        Args:
+            eltText:        The element name
+            xmlDoc:         The minidom document
+            miniOglShape:   The shape for which we are extracting a position
+
+        Returns:
+            A new minidom element
+        """
+        label: Element = xmlDoc.createElement(eltText)
+
+        x, y = miniOglShape.GetModel().GetPosition()
+        label.setAttribute(PyutXmlConstants.ATTR_X, str(x))
+        label.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
+
+        return label

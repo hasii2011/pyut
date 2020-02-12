@@ -22,10 +22,7 @@ from wx import ID_ANY
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglAssociation import CENTER
-from org.pyut.ogl.OglAssociation import DEST_CARD
-from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglAssociation import SRC_CARD
+
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
@@ -37,8 +34,6 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
-
-from org.pyut.PyutLink import PyutLink
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
@@ -170,7 +165,9 @@ class PyutXml:
                     # Now I know why OglLink used to double inherit from LineShape, ShapeEventHandler
                     # I changed it to inherit from OglLink directly
                     elif isinstance(oglObject, OglLink):
-                        documentNode.appendChild(self._OglLink2xml(oglObject, xmlDoc))
+                        # documentNode.appendChild(self._OglLink2xml(oglObject, xmlDoc))
+                        linkElement: Element = toPyutXml.oglLinkToXml(oglObject, xmlDoc)
+                        documentNode.appendChild(linkElement)
         except (ValueError, Exception) as e:
             try:
                 dlg.Destroy()
@@ -306,61 +303,6 @@ class PyutXml:
 
         return root
 
-    def _PyutParam2xml(self, pyutParam, xmlDoc):
-        """
-        Exporting a PyutParam to an miniDom Element.
-
-        @param pyutParam : Parameters to save
-        @param xmlDoc  : xml document
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('Param')
-
-        # param name
-        root.setAttribute('name', pyutParam.getName())
-
-        # param type
-        root.setAttribute('type', str(pyutParam.getType()))
-
-        # param default value
-        defaultValue = pyutParam.getDefaultValue()
-        if defaultValue is not None:
-            root.setAttribute('defaultValue', defaultValue)
-
-        return root
-
-    def _PyutLink2xml(self, pyutLink, xmlDoc):
-        """
-        Exporting an PyutLink to a miniDom Element.
-
-        @param PyutLink pyutLink : Link to save
-        @param xmlDoc : xml document
-        @return Element : XML Node
-        """
-
-        root = xmlDoc.createElement('Link')
-        # link name
-        root.setAttribute('name', pyutLink.getName())
-
-        # link type
-        root.setAttribute('type', pyutLink.getType().name)
-
-        root.setAttribute('cardSrc',         pyutLink.sourceCardinality)        # link cardinality source
-        root.setAttribute('cardDestination', pyutLink.destinationCardinality)   # link cardinality destination
-
-        # link bidir
-        root.setAttribute('bidir', str(pyutLink.getBidir()))
-
-        # link source
-        srcLinkId = self._idFactory.getID(pyutLink.getSource())
-        root.setAttribute('sourceId', str(srcLinkId))
-
-        # link destination
-        destLinkId = self._idFactory.getID(pyutLink.getDestination())
-        root.setAttribute('destId', str(destLinkId))
-
-        return root
-
     def _appendOglBase(self, oglObject, root):
         """
         Saves the position and size of the OGL object in XML node.
@@ -377,81 +319,6 @@ class PyutXml:
         x, y = oglObject.GetModel().GetPosition()
         root.setAttribute('x', str(x))
         root.setAttribute('y', str(y))
-
-    def _OglLink2xml(self, oglLink: OglLink, xmlDoc: Document):
-        """
-        """
-        root = xmlDoc.createElement('GraphicLink')
-
-        # Append OGL object base
-        # save src and dst anchor points
-        x, y = oglLink.GetSource().GetModel().GetPosition()
-        root.setAttribute('srcX', str(x))
-        root.setAttribute('srcY', str(y))
-
-        x, y = oglLink.GetDestination().GetModel().GetPosition()
-        root.setAttribute('dstX', str(x))
-        root.setAttribute('dstY', str(y))
-
-        root.setAttribute('spline', str(oglLink.GetSpline()))
-
-        if isinstance(oglLink, OglAssociation):
-
-            center = oglLink.getLabels()[CENTER]
-            src = oglLink.getLabels()[SRC_CARD]
-            dst = oglLink.getLabels()[DEST_CARD]
-
-            label = xmlDoc.createElement("LabelCenter")
-            root.appendChild(label)
-            x, y = center.GetModel().GetPosition()
-            label.setAttribute("x", str(x))
-            label.setAttribute("y", str(y))
-
-            label = xmlDoc.createElement("LabelSrc")
-            root.appendChild(label)
-            x, y = src.GetModel().GetPosition()
-            label.setAttribute("x", str(x))
-            label.setAttribute("y", str(y))
-            label = xmlDoc.createElement("LabelDst")
-            root.appendChild(label)
-            x, y = dst.GetModel().GetPosition()
-            label.setAttribute("x", str(x))
-            label.setAttribute("y", str(y))
-
-        # save control points (not anchors!)
-        for x, y in oglLink.GetSegments()[1:-1]:
-            item = xmlDoc.createElement('ControlPoint')
-            item.setAttribute('x', str(x))
-            item.setAttribute('y', str(y))
-            root.appendChild(item)
-
-        # adding the data layer object
-        root.appendChild(self._PyutLink2xml(oglLink.getPyutObject(), xmlDoc))
-
-        return root
-
-    def _getControlPoints(self, link):
-        """
-        To extract control points from links.
-
-        Python 3:  This method does not seem to be used;  I'll comment it out and raise an
-        exception;  Especially, since I don't know where the `Class` class comes
-        from == hasii
-        """
-        raise NotImplementedError('I guess this method is used after all.  See the comments')
-        # class methods for this current class
-        # allControlPoints = []
-        #
-        # for cp in Class.getElementsByTagName('ControlPoint'):
-        #
-        #     # point position
-        #     x = cp.getAttribute('x')
-        #     y = cp.getAttribute('y')
-        #
-        #     point = ControlPoint(x, y)
-        #     allControlPoints.append(point)
-        #
-        # return allControlPoints
 
     def __renderClassDiagram(self, documentNode: Element, toOgl: ToOgl, umlFrame: UmlFrame):
         """
