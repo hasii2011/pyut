@@ -385,17 +385,17 @@ class ToPyutXml:
         """
         root: Element = xmlDoc.createElement('Link')
 
-        root.setAttribute('name',            pyutLink.getName())
-        root.setAttribute('type',            pyutLink.getType().name)
-        root.setAttribute('cardSrc',         pyutLink.sourceCardinality)
-        root.setAttribute('cardDestination', pyutLink.destinationCardinality)
-        root.setAttribute('bidir',           str(pyutLink.getBidir()))
+        root.setAttribute(PyutXmlConstants.ATTR_NAME,            pyutLink.getName())
+        root.setAttribute(PyutXmlConstants.ATTR_TYPE,            pyutLink.getType().name)
+        root.setAttribute(PyutXmlConstants.ATTR_CARDINALITY_SOURCE,      pyutLink.sourceCardinality)
+        root.setAttribute(PyutXmlConstants.ATTR_CARDINALITY_DESTINATION, pyutLink.destinationCardinality)
+        root.setAttribute(PyutXmlConstants.ATTR_BIDIRECTIONAL,           str(pyutLink.getBidir()))
 
-        srcLinkId = self._idFactory.getID(pyutLink.getSource())
-        root.setAttribute('sourceId', str(srcLinkId))
+        srcLinkId:  int = self._idFactory.getID(pyutLink.getSource())
+        destLinkId: int = self._idFactory.getID(pyutLink.getDestination())
 
-        destLinkId = self._idFactory.getID(pyutLink.getDestination())
-        root.setAttribute('destId', str(destLinkId))
+        root.setAttribute(PyutXmlConstants.ATTR_SOURCE_ID,      str(srcLinkId))
+        root.setAttribute(PyutXmlConstants.ATTR_DESTINATION_ID, str(destLinkId))
 
         return root
 

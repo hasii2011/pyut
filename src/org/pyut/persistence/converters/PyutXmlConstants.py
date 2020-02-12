@@ -57,5 +57,12 @@ class PyutXmlConstants:
     ATTR_LINK_DESTINATION_ANCHOR_X: str = 'dstX'
     ATTR_LINK_DESTINATION_ANCHOR_Y: str = 'dstY'
 
-    ATTR_SPLINE: str = 'spline'
+    ATTR_SPLINE:        str = 'spline'
+    ATTR_BIDIRECTIONAL: str = 'bidir'
+
+    ATTR_SOURCE_ID:      str = 'sourceId'
+    ATTR_DESTINATION_ID: str = 'destId'
+
+    ATTR_CARDINALITY_SOURCE:      str = 'cardSrc'
+    ATTR_CARDINALITY_DESTINATION: str = 'cardDestination'
 
