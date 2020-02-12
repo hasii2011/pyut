@@ -331,11 +331,13 @@ class ToOgl:
             pyutSDInstance: PyutSDInstance = PyutSDInstance()
             oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance, umlFrame)
 
-            xmlSDInstance = xmlOglSDInstance.getElementsByTagName('SDInstance')[0]
+            xmlSDInstance = xmlOglSDInstance.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SD_INSTANCE)[0]
 
             pyutSDInstance.setId(int(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_ID)))
-            pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute('instanceName'))
-            pyutSDInstance.setInstanceLifeLineLength(PyutUtils.secureInteger(xmlSDInstance.getAttribute('lifeLineLength')))
+            pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_INSTANCE_NAME))
+
+            lifeLineLength: int = PyutUtils.secureInteger(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_LIFE_LINE_LENGTH))
+            pyutSDInstance.setInstanceLifeLineLength(lifeLineLength)
 
             # Adding OGL class to UML Frame
             x = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_X))

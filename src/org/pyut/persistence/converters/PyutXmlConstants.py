@@ -4,30 +4,31 @@ class PyutXmlConstants:
     A `no method` class that just hosts the strings that represent the Pyut XML strings
     """
 
-    TOP_LEVEL_ELEMENT:        str = 'PyutProject'
-    ELEMENT_GRAPHIC_CLASS:    str = 'GraphicClass'
-    ELEMENT_GRAPHIC_NOTE:     str = 'GraphicNote'
-    ELEMENT_GRAPHIC_ACTOR:    str = 'GraphicActor'
-    ELEMENT_GRAPHIC_USE_CASE: str = 'GraphicUseCase'
-    ELEMENT_GRAPHIC_LINK:     str = 'GraphicLink'
+    TOP_LEVEL_ELEMENT:           str = 'PyutProject'
+    ELEMENT_GRAPHIC_CLASS:       str = 'GraphicClass'
+    ELEMENT_GRAPHIC_NOTE:        str = 'GraphicNote'
+    ELEMENT_GRAPHIC_ACTOR:       str = 'GraphicActor'
+    ELEMENT_GRAPHIC_USE_CASE:    str = 'GraphicUseCase'
+    ELEMENT_GRAPHIC_LINK:        str = 'GraphicLink'
+    ELEMENT_GRAPHIC_SD_INSTANCE: str = 'GraphicSDInstance'
 
-    ELEMENT_DOCUMENT:       str = 'PyutDocument'
-    ELEMENT_MODEL_CLASS:    str = 'Class'
-    ELEMENT_MODEL_METHOD:   str = 'Method'
-    ELEMENT_MODEL_NOTE:     str = 'Note'
-    ELEMENT_MODEL_ACTOR:    str = 'Actor'
-    ELEMENT_MODEL_USE_CASE: str = 'UseCase'
-    ELEMENT_MODEL_LINK:     str = 'Link'
-    ELEMENT_MODEL_FIELD:    str = 'Field'
-    ELEMENT_MODEL_PARAM:    str = 'Param'
-    ELEMENT_RETURN:         str = 'Return'
-    ELEMENT_MODIFIER:       str = 'Modifier'
+    ELEMENT_DOCUMENT:          str = 'PyutDocument'
+    ELEMENT_MODEL_CLASS:       str = 'Class'
+    ELEMENT_MODEL_METHOD:      str = 'Method'
+    ELEMENT_MODEL_NOTE:        str = 'Note'
+    ELEMENT_MODEL_ACTOR:       str = 'Actor'
+    ELEMENT_MODEL_USE_CASE:    str = 'UseCase'
+    ELEMENT_MODEL_LINK:        str = 'Link'
+    ELEMENT_MODEL_FIELD:       str = 'Field'
+    ELEMENT_MODEL_PARAM:       str = 'Param'
+    ELEMENT_RETURN:            str = 'Return'
+    ELEMENT_MODIFIER:          str = 'Modifier'
+    ELEMENT_MODEL_SD_INSTANCE: str = 'SDInstance'
+    ELEMENT_MODEL_CONTROL_POINT: str = 'ControlPoint'
 
     ELEMENT_ASSOC_CENTER_LABEL:      str = 'LabelCenter'
     ELEMENT_ASSOC_SOURCE_LABEL:      str = 'LabelSrc'
     ELEMENT_ASSOC_DESTINATION_LABEL: str = 'LabelDst'
-
-    ELEMENT_MODEL_CONTROL_POINT: str = 'ControlPoint'
 
     ATTR_VERSION: str = 'version'
 
@@ -67,3 +68,6 @@ class PyutXmlConstants:
 
     ATTR_CARDINALITY_SOURCE:      str = 'cardSrc'
     ATTR_CARDINALITY_DESTINATION: str = 'cardDestination'
+
+    ATTR_INSTANCE_NAME:    str = 'instanceName'
+    ATTR_LIFE_LINE_LENGTH: str = 'lifeLineLength'

@@ -32,7 +32,6 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 
 from org.pyut.PyutConstants import PyutConstants
@@ -158,7 +157,9 @@ class PyutXml:
                         useCaseElement: Element = toPyutXml.oglUseCaseToXml(oglObject, xmlDoc)
                         documentNode.appendChild(useCaseElement)
                     elif isinstance(oglObject, OglSDInstance):
-                        documentNode.appendChild(self._OglSDInstance2xml(oglObject, xmlDoc))
+                        # documentNode.appendChild(self._OglSDInstance2xml(oglObject, xmlDoc))
+                        sdInstanceElement: Element = toPyutXml.oglSDInstanceToXml(oglObject, xmlDoc)
+                        documentNode.appendChild(sdInstanceElement)
                     elif isinstance(oglObject, OglSDMessage):
                         documentNode.appendChild(self._OglSDMessage2xml(oglObject, xmlDoc))
                     # OglLink comes last because OglSDInstance is a subclass of OglLink
@@ -226,40 +227,6 @@ class PyutXml:
             return
 
         self.__cleanupProgressDialog(umlFrame)
-
-    def _PyutSDInstance2xml(self, pyutSDInstance: PyutSDInstance, xmlDoc: Document):
-        """
-        Exporting an PyutSDInstance to an miniDom Element.
-
-        @param  pyutSDInstance : Class to save
-        @param xmlDoc : xml document
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('SDInstance')
-        eltId = self._idFactory.getID(pyutSDInstance)
-
-        root.setAttribute('id',           str(eltId))
-        root.setAttribute('instanceName', pyutSDInstance.getInstanceName())
-        root.setAttribute('lifeLineLength', str(pyutSDInstance.getInstanceLifeLineLength()))
-        return root
-
-    def _OglSDInstance2xml(self, oglSDInstance, xmlDoc):
-        """
-        Exporting an OglSDInstance to a miniDom Element.
-
-        @param OglSDInstance oglSDInstance : Instance to save
-        @param xmlDoc : xml document
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('GraphicSDInstance')
-
-        # Append OGL object base (size and pos)
-        self._appendOglBase(oglSDInstance, root)
-
-        # adding the data layer object
-        root.appendChild(self._PyutSDInstance2xml(oglSDInstance.getPyutObject(), xmlDoc))
-
-        return root
 
     def _PyutSDMessage2xml(self, pyutSDMessage: PyutSDMessage, xmlDoc: Document):
         """

@@ -42,13 +42,10 @@ class PyutUtils:
         PyutUtils.logger = getLogger(__name__)
 
     @staticmethod
-    def secureInteger(x: int):
-        try:
-            if x is not None:
-                return int(x)
-            else:
-                return 0
-        finally:
+    def secureInteger(x: str):
+        if x is not None:
+            return int(x)
+        else:
             return 0
 
     @staticmethod

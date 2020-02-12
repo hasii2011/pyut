@@ -13,6 +13,7 @@ from org.pyut.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
+from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -27,6 +28,7 @@ from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
+from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.persistence.converters.IDFactorySingleton import IDFactory
@@ -174,6 +176,25 @@ class ToPyutXml:
         # adding the data layer object
 
         root.appendChild(self._pyutLinkToXml(oglLink.getPyutObject(), xmlDoc))
+
+        return root
+
+    def oglSDInstanceToXml(self, oglSDInstance: OglSDInstance, xmlDoc: Document) -> Element:
+        """
+        Export an OglSDInstance to a minidom Element
+
+        Args:
+            oglSDInstance:  Instance to convert
+            xmlDoc:         xml document
+
+        Returns:
+            A new minidom element
+        """
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_SD_INSTANCE)
+
+        self.__appendOglBase(oglSDInstance, root)
+
+        root.appendChild(self._pyutSDInstanceToXml(oglSDInstance.getPyutObject(), xmlDoc))
 
         return root
 
@@ -377,7 +398,7 @@ class ToPyutXml:
         Exporting a PyutLink to a miniDom Element.
 
         Args:
-            pyutLink:   Link to sav
+            pyutLink:   Link to save
             xmlDoc:     xml document
 
         Returns:
@@ -396,6 +417,26 @@ class ToPyutXml:
 
         root.setAttribute(PyutXmlConstants.ATTR_SOURCE_ID,      str(srcLinkId))
         root.setAttribute(PyutXmlConstants.ATTR_DESTINATION_ID, str(destLinkId))
+
+        return root
+
+    def _pyutSDInstanceToXml(self, pyutSDInstance: PyutSDInstance, xmlDoc: Document) -> Element:
+        """
+        Exporting an PyutSDInstance to an minidom Element.
+
+        Args:
+            pyutSDInstance:     Class to convert
+            xmlDoc:             xml document
+
+        Returns:
+            A new minidom element
+        """
+        root:  Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_SD_INSTANCE)
+        eltId: int     = self._idFactory.getID(pyutSDInstance)
+
+        root.setAttribute(PyutXmlConstants.ATTR_ID,               str(eltId))
+        root.setAttribute(PyutXmlConstants.ATTR_INSTANCE_NAME,    pyutSDInstance.getInstanceName())
+        root.setAttribute(PyutXmlConstants.ATTR_LIFE_LINE_LENGTH, str(pyutSDInstance.getInstanceLifeLineLength()))
 
         return root
 
