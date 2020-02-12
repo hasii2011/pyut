@@ -11,6 +11,7 @@ class PyutXmlConstants:
     ELEMENT_GRAPHIC_USE_CASE:    str = 'GraphicUseCase'
     ELEMENT_GRAPHIC_LINK:        str = 'GraphicLink'
     ELEMENT_GRAPHIC_SD_INSTANCE: str = 'GraphicSDInstance'
+    ELEMENT_GRAPHIC_SD_MESSAGE:  str = 'GraphicSDMessage'
 
     ELEMENT_DOCUMENT:          str = 'PyutDocument'
     ELEMENT_MODEL_CLASS:       str = 'Class'
@@ -24,6 +25,7 @@ class PyutXmlConstants:
     ELEMENT_RETURN:            str = 'Return'
     ELEMENT_MODIFIER:          str = 'Modifier'
     ELEMENT_MODEL_SD_INSTANCE: str = 'SDInstance'
+    ELEMENT_MODEL_SD_MESSAGE:    str = 'SDMessage'
     ELEMENT_MODEL_CONTROL_POINT: str = 'ControlPoint'
 
     ELEMENT_ASSOC_CENTER_LABEL:      str = 'LabelCenter'
@@ -71,3 +73,10 @@ class PyutXmlConstants:
 
     ATTR_INSTANCE_NAME:    str = 'instanceName'
     ATTR_LIFE_LINE_LENGTH: str = 'lifeLineLength'
+
+    ATTR_MESSAGE:               str = 'message'
+    ATTR_SOURCE_TIME_LINE:      str = 'srcTime'
+    ATTR_DESTINATION_TIME_LINE: str = 'dstTime'
+
+    ATTR_SD_MESSAGE_SOURCE_ID:      str = 'srcID'
+    ATTR_SD_MESSAGE_DESTINATION_ID: str = 'dstID'

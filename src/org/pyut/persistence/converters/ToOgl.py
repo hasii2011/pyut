@@ -369,15 +369,15 @@ class ToOgl:
         for xmlOglSDMessage in xmlOglSDMessages:
 
             # Data layer class
-            xmlPyutSDMessage: Element = xmlOglSDMessage.getElementsByTagName('SDMessage')[0]
+            xmlPyutSDMessage: Element = xmlOglSDMessage.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SD_MESSAGE)[0]
 
             # Building OGL
             pyutSDMessage: PyutSDMessage = PyutSDMessage()
 
-            srcID: int = int(xmlPyutSDMessage.getAttribute('srcID'))
-            dstID: int = int(xmlPyutSDMessage.getAttribute('dstID'))
-            srcTime: int = int(float(xmlPyutSDMessage.getAttribute('srcTime')))
-            dstTime: int = int(float(xmlPyutSDMessage.getAttribute('dstTime')))
+            srcID: int = int(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_SD_MESSAGE_SOURCE_ID))
+            dstID: int = int(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_SD_MESSAGE_DESTINATION_ID))
+            srcTime: int = int(float(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_SOURCE_TIME_LINE)))
+            dstTime: int = int(float(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_DESTINATION_TIME_LINE)))
             srcOgl = oglSDInstances[srcID]
             dstOgl = oglSDInstances[dstID]
 
@@ -388,7 +388,7 @@ class ToOgl:
 
             # Pyut Data
             pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_ID)))
-            pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute('message'))
+            pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_MESSAGE))
 
             oglSDMessages[pyutSDMessage.getId()] = oglSDMessage
 

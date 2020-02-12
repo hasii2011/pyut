@@ -32,8 +32,6 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.PyutSDMessage import PyutSDMessage
-
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
@@ -161,7 +159,9 @@ class PyutXml:
                         sdInstanceElement: Element = toPyutXml.oglSDInstanceToXml(oglObject, xmlDoc)
                         documentNode.appendChild(sdInstanceElement)
                     elif isinstance(oglObject, OglSDMessage):
-                        documentNode.appendChild(self._OglSDMessage2xml(oglObject, xmlDoc))
+                        # documentNode.appendChild(self._OglSDMessage2xml(oglObject, xmlDoc))
+                        sdMessageElement: Element = toPyutXml.oglSDMessageToXml(oglObject, xmlDoc)
+                        documentNode.appendChild(sdMessageElement)
                     # OglLink comes last because OglSDInstance is a subclass of OglLink
                     # Now I know why OglLink used to double inherit from LineShape, ShapeEventHandler
                     # I changed it to inherit from OglLink directly
@@ -227,65 +227,6 @@ class PyutXml:
             return
 
         self.__cleanupProgressDialog(umlFrame)
-
-    def _PyutSDMessage2xml(self, pyutSDMessage: PyutSDMessage, xmlDoc: Document):
-        """
-        Exporting an PyutSDMessage to an miniDom Element.
-
-        @param pyutSDMessage : SDMessage to save
-        @param xmlDoc : xml document
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('SDMessage')
-
-        # ID
-        eltId = self._idFactory.getID(pyutSDMessage)
-        root.setAttribute('id', str(eltId))
-
-        # message
-        root.setAttribute('message', pyutSDMessage.getMessage())
-
-        # time
-        idSrc = self._idFactory.getID(pyutSDMessage.getSource())
-        idDst = self._idFactory.getID(pyutSDMessage.getDest())
-        root.setAttribute('srcTime', str(pyutSDMessage.getSrcTime()))
-        root.setAttribute('dstTime', str(pyutSDMessage.getDstTime()))
-        root.setAttribute('srcID', str(idSrc))
-        root.setAttribute('dstID', str(idDst))
-
-        return root
-
-    def _OglSDMessage2xml(self, oglSDMessage, xmlDoc):
-        """
-        Exporting an OglSDMessage to an miniDom Element.
-
-        @param oglSDMessage : Message to save
-        @param xmlDoc
-        @return Element : XML Node
-        """
-        root = xmlDoc.createElement('GraphicSDMessage')
-
-        # adding the data layer object
-        root.appendChild(self._PyutSDMessage2xml(oglSDMessage.getPyutObject(), xmlDoc))
-
-        return root
-
-    def _appendOglBase(self, oglObject, root):
-        """
-        Saves the position and size of the OGL object in XML node.
-
-        @param OglObject oglObject : OGL Object
-        @param Element root : XML node to write
-        """
-        # Saving size
-        w, h = oglObject.GetModel().GetSize()
-        root.setAttribute('width', str(float(w)))
-        root.setAttribute('height', str(float(h)))
-
-        # Saving position
-        x, y = oglObject.GetModel().GetPosition()
-        root.setAttribute('x', str(x))
-        root.setAttribute('y', str(y))
 
     def __renderClassDiagram(self, documentNode: Element, toOgl: ToOgl, umlFrame: UmlFrame):
         """

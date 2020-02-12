@@ -14,6 +14,7 @@ from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
+from org.pyut.PyutSDMessage import PyutSDMessage
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -29,6 +30,7 @@ from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
+from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.persistence.converters.IDFactorySingleton import IDFactory
@@ -195,6 +197,24 @@ class ToPyutXml:
         self.__appendOglBase(oglSDInstance, root)
 
         root.appendChild(self._pyutSDInstanceToXml(oglSDInstance.getPyutObject(), xmlDoc))
+
+        return root
+
+    def oglSDMessageToXml(self, oglSDMessage: OglSDMessage, xmlDoc: Document) -> Element:
+        """
+        Export an OglSDMessage to an minidom Element.
+
+        Args:
+            oglSDMessage:   Message to convert
+            xmlDoc:         xml document
+
+        Returns:
+            A new minidom element
+        """
+        root = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_SD_MESSAGE)
+
+        # adding the data layer object
+        root.appendChild(self._pyutSDMessageToXml(oglSDMessage.getPyutObject(), xmlDoc))
 
         return root
 
@@ -422,7 +442,7 @@ class ToPyutXml:
 
     def _pyutSDInstanceToXml(self, pyutSDInstance: PyutSDInstance, xmlDoc: Document) -> Element:
         """
-        Exporting an PyutSDInstance to an minidom Element.
+        Exporting a PyutSDInstance to an minidom Element.
 
         Args:
             pyutSDInstance:     Class to convert
@@ -437,6 +457,34 @@ class ToPyutXml:
         root.setAttribute(PyutXmlConstants.ATTR_ID,               str(eltId))
         root.setAttribute(PyutXmlConstants.ATTR_INSTANCE_NAME,    pyutSDInstance.getInstanceName())
         root.setAttribute(PyutXmlConstants.ATTR_LIFE_LINE_LENGTH, str(pyutSDInstance.getInstanceLifeLineLength()))
+
+        return root
+
+    def _pyutSDMessageToXml(self, pyutSDMessage: PyutSDMessage, xmlDoc: Document) -> Element:
+        """
+        Exporting a PyutSDMessage to an minidom Element.
+        Args:
+            pyutSDMessage:  SDMessage to export
+            xmlDoc:         xml document
+
+        Returns:
+            A new minidom element
+        """
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_SD_MESSAGE)
+
+        eltId = self._idFactory.getID(pyutSDMessage)
+        root.setAttribute(PyutXmlConstants.ATTR_ID, str(eltId))
+
+        # message
+        root.setAttribute(PyutXmlConstants.ATTR_MESSAGE, pyutSDMessage.getMessage())
+
+        # time
+        idSrc = self._idFactory.getID(pyutSDMessage.getSource())
+        idDst = self._idFactory.getID(pyutSDMessage.getDest())
+        root.setAttribute(PyutXmlConstants.ATTR_SOURCE_TIME_LINE,      str(pyutSDMessage.getSrcTime()))
+        root.setAttribute(PyutXmlConstants.ATTR_DESTINATION_TIME_LINE, str(pyutSDMessage.getDstTime()))
+        root.setAttribute(PyutXmlConstants.ATTR_SD_MESSAGE_SOURCE_ID,      str(idSrc))
+        root.setAttribute(PyutXmlConstants.ATTR_SD_MESSAGE_DESTINATION_ID, str(idDst))
 
         return root
 
