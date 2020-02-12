@@ -145,12 +145,12 @@ class ToOgl:
             # src and dst anchor position
             xmlLink: Element = cast(Element, xmlLink)
 
-            sx = PyutUtils.secureFloat(xmlLink.getAttribute("srcX"))
-            sy = PyutUtils.secureFloat(xmlLink.getAttribute("srcY"))
-            dx = PyutUtils.secureFloat(xmlLink.getAttribute("dstX"))
-            dy = PyutUtils.secureFloat(xmlLink.getAttribute("dstY"))
+            sx = PyutUtils.secureFloat(xmlLink.getAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_X))
+            sy = PyutUtils.secureFloat(xmlLink.getAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_Y))
+            dx = PyutUtils.secureFloat(xmlLink.getAttribute(PyutXmlConstants.ATTR_LINK_DESTINATION_ANCHOR_X))
+            dy = PyutUtils.secureFloat(xmlLink.getAttribute(PyutXmlConstants.ATTR_LINK_DESTINATION_ANCHOR_Y))
 
-            spline: bool = PyutUtils.secureBoolean(xmlLink.getAttribute("spline"))
+            spline: bool = PyutUtils.secureBoolean(xmlLink.getAttribute(PyutXmlConstants.ATTR_SPLINE))
 
             # get the associated PyutLink
             srcId, dstId, assocPyutLink = self._getPyutLink(xmlLink)
@@ -173,7 +173,7 @@ class ToOgl:
             oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
             src.addLink(oglLink)
             dst.addLink(oglLink)
-            # umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=False)
+
             oglLinks.append(oglLink)
 
             oglLink.SetSpline(spline)
@@ -222,7 +222,7 @@ class ToOgl:
             width:  float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglNote = OglNote(pyutNote, width, height)
 
-            xmlNote: Element = xmlOglNote.getElementsByTagName('Note')[0]
+            xmlNote: Element = xmlOglNote.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_NOTE)[0]
 
             pyutNote.setId(int(xmlNote.getAttribute(PyutXmlConstants.ATTR_ID)))
 
@@ -263,7 +263,7 @@ class ToOgl:
             width:  float = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglActor: OglActor = OglActor(pyutActor, width, height)
 
-            xmlActor: Element = xmlOglActor.getElementsByTagName('Actor')[0]
+            xmlActor: Element = xmlOglActor.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_ACTOR)[0]
 
             pyutActor.setId(int(xmlActor.getAttribute(PyutXmlConstants.ATTR_ID)))
             pyutActor.setName(xmlActor.getAttribute(PyutXmlConstants.ATTR_NAME))
@@ -299,7 +299,7 @@ class ToOgl:
             width = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglUseCase = OglUseCase(pyutUseCase, width, height)
 
-            xmlUseCase: Element = xmlOglUseCase.getElementsByTagName('UseCase')[0]
+            xmlUseCase: Element = xmlOglUseCase.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_USE_CASE)[0]
 
             pyutUseCase.setId(int(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_ID)))
             pyutUseCase.setName(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_NAME))
@@ -408,7 +408,7 @@ class ToOgl:
             A list of `PyutMethod`s associated with the class
         """
         allMethods: PyutMethods = cast(PyutMethods, [])
-        for xmlMethod in xmlClass.getElementsByTagName("Method"):
+        for xmlMethod in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_METHOD):
 
             pyutMethod: PyutMethod = PyutMethod(xmlMethod.getAttribute(PyutXmlConstants.ATTR_NAME))
 
@@ -416,11 +416,11 @@ class ToOgl:
             vis: PyutVisibilityEnum = PyutVisibilityEnum(strVis)
             pyutMethod.setVisibility(visibility=vis)
 
-            returnElt: Element = xmlMethod.getElementsByTagName("Return")[0]
+            returnElt: Element = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_RETURN)[0]
             pyutMethod.setReturns(returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE))
 
             methodParameters = []
-            for xmlParam in xmlMethod.getElementsByTagName("Param"):
+            for xmlParam in xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_PARAM):
                 methodParameters.append(self._getParam(xmlParam))
 
             pyutMethod.setParams(methodParameters)
@@ -480,7 +480,7 @@ class ToOgl:
 
         controlPoints: ControlPoints = cast(ControlPoints, [])
 
-        for controlPoint in link.getElementsByTagName("ControlPoint"):
+        for controlPoint in link.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CONTROL_POINT):
             x = PyutUtils.secureFloat(controlPoint.getAttribute(PyutXmlConstants.ATTR_X))
             y = PyutUtils.secureFloat(controlPoint.getAttribute(PyutXmlConstants.ATTR_Y))
             controlPoints.append(ControlPoint(x, y))
@@ -496,14 +496,14 @@ class ToOgl:
         Returns:
             A tuple of a source ID, destination ID, and a PyutLink object
         """
-        link: Element = obj.getElementsByTagName("Link")[0]
+        link: Element = obj.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_LINK)[0]
 
         pyutLink: PyutLink = PyutLink()
 
-        pyutLink.setBidir(bool(link.getAttribute('bidir')))
+        pyutLink.setBidir(bool(link.getAttribute(PyutXmlConstants.ATTR_BIDIRECTIONAL)))
 
-        pyutLink.destinationCardinality = link.getAttribute('cardDestination')
-        pyutLink.sourceCardinality      = link.getAttribute('cardSrc')
+        pyutLink.destinationCardinality = link.getAttribute(PyutXmlConstants.ATTR_CARDINALITY_DESTINATION)
+        pyutLink.sourceCardinality      = link.getAttribute(PyutXmlConstants.ATTR_CARDINALITY_SOURCE)
 
         pyutLink.setName(link.getAttribute(PyutXmlConstants.ATTR_NAME))
 
@@ -512,8 +512,8 @@ class ToOgl:
         pyutLink.setType(linkType)
 
         # source and destination will be reconstructed by _getOglLinks
-        sourceId = int(link.getAttribute('sourceId'))
-        destId   = int(link.getAttribute('destId'))
+        sourceId = int(link.getAttribute(PyutXmlConstants.ATTR_SOURCE_ID))
+        destId   = int(link.getAttribute(PyutXmlConstants.ATTR_DESTINATION_ID))
 
         return sourceId, destId, pyutLink
 
@@ -528,9 +528,9 @@ class ToOgl:
         src:    TextShape = oglLink.getLabels()[SRC_CARD]
         dst:    TextShape = oglLink.getLabels()[DEST_CARD]
 
-        self.__setAssociationLabelPosition(xmlLink, 'LabelCenter', center)
-        self.__setAssociationLabelPosition(xmlLink, 'LabelSrc',    src)
-        self.__setAssociationLabelPosition(xmlLink, 'LabelDst',    dst)
+        self.__setAssociationLabelPosition(xmlLink, PyutXmlConstants.ELEMENT_ASSOC_CENTER_LABEL,      center)
+        self.__setAssociationLabelPosition(xmlLink, PyutXmlConstants.ELEMENT_ASSOC_SOURCE_LABEL,      src)
+        self.__setAssociationLabelPosition(xmlLink, PyutXmlConstants.ELEMENT_ASSOC_DESTINATION_LABEL, dst)
 
     def __setAssociationLabelPosition(self, xmlLink: Element, tagName: str, textShape: TextShape):
         """

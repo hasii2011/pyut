@@ -363,7 +363,7 @@ class ToPyutXml:
         Returns:
             A new minidom element
         """
-        root = xmlDoc.createElement('UseCase')
+        root = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_USE_CASE)
 
         useCaseId = self._idFactory.getID(pyutUseCase)
         root.setAttribute(PyutXmlConstants.ATTR_ID,       str(useCaseId))
@@ -383,7 +383,7 @@ class ToPyutXml:
         Returns:
             A new minidom element
         """
-        root: Element = xmlDoc.createElement('Link')
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_LINK)
 
         root.setAttribute(PyutXmlConstants.ATTR_NAME,            pyutLink.getName())
         root.setAttribute(PyutXmlConstants.ATTR_TYPE,            pyutLink.getType().name)
