@@ -1,19 +1,5 @@
-
-from logging import Logger
-from logging import getLogger
-
-from xml.dom.minidom import parse
-
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.xsd.XSDParser import XSDParser
-
-from org.pyut.PyutClass import PyutClass
-from org.pyut.PyutType import PyutType
-from org.pyut.PyutField import PyutField
-
-from org.pyut.enums.OglLinkType import OglLinkType
-
-from org.pyut.ogl.OglClass import OglClass
 
 
 class IoXSD(PyutIoPlugin):

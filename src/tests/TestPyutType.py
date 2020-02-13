@@ -11,7 +11,7 @@ from copy import deepcopy
 
 from tests.TestBase import TestBase
 
-from org.pyut.PyutType import PyutType   # PyutType is a FlyweightString
+from org.pyut.model.PyutType import PyutType
 
 
 class TestPyutType(TestBase):

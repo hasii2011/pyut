@@ -129,7 +129,7 @@ class DlgEditField(BaseDlgEdit):
         """
 
         self.fieldToEdit.setName(self._txtFieldName.GetValue().strip())
-        from org.pyut.PyutType import PyutType
+        from org.pyut.model.PyutType import PyutType
 
         self.fieldToEdit.setType(PyutType(self._txtFieldType.GetValue().strip()))
         self.fieldToEdit.setVisibility(self._rdbFieldVisibility.GetStringSelection())

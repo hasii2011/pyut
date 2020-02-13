@@ -27,7 +27,7 @@ from org.pyut.PyutParam import PyutParam
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutStereotype import PyutStereotype
 # noinspection PyUnresolvedReferences
-from org.pyut.PyutType import PyutType
+from org.pyut.model.PyutType import PyutType
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
 # noinspection PyUnresolvedReferences

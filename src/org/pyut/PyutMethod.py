@@ -4,7 +4,7 @@ from logging import getLogger
 
 from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
-from org.pyut.PyutType import PyutType
+from org.pyut.model.PyutType import PyutType
 from org.pyut.PyutObject import PyutObject
 
 # constants for setStringMode
