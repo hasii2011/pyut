@@ -18,7 +18,7 @@ from xmlschema.validators import XsdType
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.OglLinkType import OglLinkType
 

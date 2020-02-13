@@ -3,7 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.PyutPreferences import PyutPreferences
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.model.PyutType import PyutType
 from org.pyut.PyutObject import PyutObject
 

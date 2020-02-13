@@ -15,7 +15,7 @@ from org.pyut.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.OglLinkType import OglLinkType
 

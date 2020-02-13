@@ -1,6 +1,6 @@
 
 from org.pyut.PyutParam import PyutParam
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class PyutField(PyutParam):

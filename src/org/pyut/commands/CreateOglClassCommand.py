@@ -30,14 +30,14 @@ class CreateOglClassCommand(DelOglClassCommand):
 
         return DelOglClassCommand.serialize(self)
 
-    def deserialize(self, serializedInfos):
+    def deserialize(self, serializedData):
         """
-        unserialize the data needed by the command to undo/redo the created link
-        @param serializedInfos    :   string representation of the data needed
+        deserialize the data needed by the command to undo/redo the created link
+        @param serializedData    :   string representation of the data needed
                                             by the command to undo redo a link
         """
 
-        DelOglClassCommand.deserialize(self, serializedInfos)
+        DelOglClassCommand.deserialize(self, serializedData)
 
     def redo(self):
         """

@@ -29,7 +29,7 @@ from org.pyut.model.PyutStereotype import PyutStereotype
 # noinspection PyUnresolvedReferences
 from org.pyut.model.PyutType import PyutType
 # noinspection PyUnresolvedReferences
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 # noinspection PyUnresolvedReferences
 from org.pyut.general.Mediator import Mediator
 # noinspection PyUnresolvedReferences

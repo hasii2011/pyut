@@ -13,7 +13,7 @@ from org.pyut.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.PyutUseCase import PyutUseCase
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglNote import OglNote

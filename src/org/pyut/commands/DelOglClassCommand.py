@@ -83,12 +83,12 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
 
         return serialShape
 
-    def deserialize(self, serializedInfos):
+    def deserialize(self, serializedData):
         """
         deserialize the data needed by the destroyed OglLinkedObject.
 
         Args:
-            serializedInfos: serialized data needed by the command.
+            serializedData: serialized data needed by the command.
         """
         from org.pyut.PyutMethod import PyutMethod
         from org.pyut.PyutParam import PyutParam
@@ -98,17 +98,17 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         from org.pyut.PyutModifier import PyutModifier
 
         # deserialize the data common to all OglObjects
-        DelOglLinkedObjectCommand.deserialize(self, serializedInfos)
+        DelOglLinkedObjectCommand.deserialize(self, serializedData)
 
         # deserialize properties of the OglClass (first level)
-        classDescription    = getTokenValue("classDescription", serializedInfos)
-        classStereotypeName = getTokenValue("classStereotypeName", serializedInfos)
-        classShowStereotype = eval(getTokenValue("classShowStereotype", serializedInfos))
-        classShowMethods    = eval(getTokenValue("classShowMethods", serializedInfos))
-        classShowFields     = eval(getTokenValue("classShowFields", serializedInfos))
+        classDescription    = getTokenValue("classDescription", serializedData)
+        classStereotypeName = getTokenValue("classStereotypeName", serializedData)
+        classShowStereotype = eval(getTokenValue("classShowStereotype", serializedData))
+        classShowMethods    = eval(getTokenValue("classShowMethods", serializedData))
+        classShowFields     = eval(getTokenValue("classShowFields", serializedData))
 
-        methods = eval(getTokenValue("methods", serializedInfos))
-        fields   = eval(getTokenValue("fields", serializedInfos))
+        methods = eval(getTokenValue("methods", serializedData))
+        fields   = eval(getTokenValue("fields", serializedData))
 
         # set up the first level properties of the pyutClass
         pyutClass = self._shape.getPyutObject()

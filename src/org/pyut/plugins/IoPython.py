@@ -17,7 +17,7 @@ from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutField import PyutField
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.plugins.PluginAst import FieldExtractor

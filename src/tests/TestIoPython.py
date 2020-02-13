@@ -11,7 +11,7 @@ from tests.TestBase import TestBase
 
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.plugins.IoPython import IoPython
 

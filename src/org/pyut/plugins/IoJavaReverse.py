@@ -4,7 +4,7 @@ from logging import getLogger
 
 from os import sep as osSep
 
-from org.pyut.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.PyutClass import PyutClass
@@ -12,7 +12,6 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutField import PyutField
-from org.pyut.enums.OglLinkType import OglLinkType
 
 import wx
 
