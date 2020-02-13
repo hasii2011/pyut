@@ -22,9 +22,10 @@ class PyutXmlConstants:
     ELEMENT_MODEL_LINK:        str = 'Link'
     ELEMENT_MODEL_FIELD:       str = 'Field'
     ELEMENT_MODEL_PARAM:       str = 'Param'
-    ELEMENT_RETURN:            str = 'Return'
-    ELEMENT_MODIFIER:          str = 'Modifier'
-    ELEMENT_MODEL_SD_INSTANCE: str = 'SDInstance'
+    ELEMENT_MODEL_RETURN:      str = 'Return'
+    ELEMENT_MODEL_MODIFIER:    str = 'Modifier'
+
+    ELEMENT_MODEL_SD_INSTANCE:   str = 'SDInstance'
     ELEMENT_MODEL_SD_MESSAGE:    str = 'SDMessage'
     ELEMENT_MODEL_CONTROL_POINT: str = 'ControlPoint'
 

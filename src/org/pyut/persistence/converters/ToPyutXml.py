@@ -297,13 +297,13 @@ class ToPyutXml:
             root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visStr)
 
         for modifier in pyutMethod.getModifiers():
-            xmlModifier: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODIFIER)
+            xmlModifier: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_MODIFIER)
             xmlModifier.setAttribute(PyutXmlConstants.ATTR_NAME, modifier.getName())
             root.appendChild(xmlModifier)
 
         returnType = pyutMethod.getReturns()
         if returnType is not None:
-            xmlReturnType: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_RETURN)
+            xmlReturnType: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_RETURN)
             xmlReturnType.setAttribute(PyutXmlConstants.ATTR_TYPE, str(returnType))
             root.appendChild(xmlReturnType)
 

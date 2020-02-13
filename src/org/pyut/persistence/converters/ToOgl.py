@@ -418,7 +418,7 @@ class ToOgl:
             vis: PyutVisibilityEnum = PyutVisibilityEnum(strVis)
             pyutMethod.setVisibility(visibility=vis)
 
-            returnElt: Element = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_RETURN)[0]
+            returnElt: Element = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_RETURN)[0]
             pyutMethod.setReturns(returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE))
 
             methodParameters = []
