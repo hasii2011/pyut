@@ -44,8 +44,8 @@ class ToPyutXml:
      This version is
         * renamed for clarity
         * uses typing for developer clarity
-        * removes 'magic' strings shared between it and the ToOgl class
-        * updated to use google docstrings
+        * removes 'magic' strings shared between it and the ToOgl/ToPyutXml classes
+        * Updated to use google docstrings
 
     """
     def __init__(self):
@@ -215,29 +215,6 @@ class ToPyutXml:
 
         # adding the data layer object
         root.appendChild(self._pyutSDMessageToXml(oglSDMessage.getPyutObject(), xmlDoc))
-
-        return root
-
-    def __appendOglBase(self, oglObject: OglObject, root: Element) -> Element:
-        """
-        Saves the position and size of the OGL object in XML node.
-
-        Args:
-            oglObject:  OGL Object
-            root:      XML node to update
-
-        Returns:
-            The updated element
-        """
-        # Saving size
-        w, h = oglObject.GetModel().GetSize()
-        root.setAttribute(PyutXmlConstants.ATTR_WIDTH,  str(float(w)))
-        root.setAttribute(PyutXmlConstants.ATTR_HEIGHT, str(float(h)))
-
-        # Saving position
-        x, y = oglObject.GetModel().GetPosition()
-        root.setAttribute(PyutXmlConstants.ATTR_X, str(x))
-        root.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
 
         return root
 
@@ -517,3 +494,26 @@ class ToPyutXml:
         label.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
 
         return label
+
+    def __appendOglBase(self, oglObject: OglObject, root: Element) -> Element:
+        """
+        Saves the position and size of the OGL object in XML node.
+
+        Args:
+            oglObject:  OGL Object
+            root:      XML node to update
+
+        Returns:
+            The updated element
+        """
+        # Saving size
+        w, h = oglObject.GetModel().GetSize()
+        root.setAttribute(PyutXmlConstants.ATTR_WIDTH,  str(float(w)))
+        root.setAttribute(PyutXmlConstants.ATTR_HEIGHT, str(float(h)))
+
+        # Saving position
+        x, y = oglObject.GetModel().GetPosition()
+        root.setAttribute(PyutXmlConstants.ATTR_X, str(x))
+        root.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
+
+        return root

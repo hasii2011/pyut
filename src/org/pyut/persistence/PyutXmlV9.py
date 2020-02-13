@@ -48,7 +48,6 @@ from org.pyut.persistence.converters.ToOgl import OglLinks
 from org.pyut.persistence.converters.ToOgl import OglClasses
 from org.pyut.persistence.converters.ToOgl import OglNotes
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
-from org.pyut.persistence.converters.IDFactorySingleton import IDFactory
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
@@ -78,12 +77,6 @@ class PyutXml:
     This module is dynamically loaded based on the input XML's version number.  This
     class supports `PyutXml.VERSION`  9
     
-    """
-
-    _idFactory: IDFactory = IDFactory()
-    """
-    Temporarily make this a class variable until I get everything moved to the new `ToPyutXml'
-    This makes it accessible to both 
     """
     def __init__(self):
         """
