@@ -25,7 +25,7 @@ from org.pyut.PyutObject import PyutObject
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutParam import PyutParam
 # noinspection PyUnresolvedReferences
-from org.pyut.PyutStereotype import PyutStereotype
+from org.pyut.model.PyutStereotype import PyutStereotype
 # noinspection PyUnresolvedReferences
 from org.pyut.model.PyutType import PyutType
 # noinspection PyUnresolvedReferences

@@ -43,7 +43,7 @@ from org.pyut.ogl.OglAssociation import SRC_CARD
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 
-from org.pyut.PyutStereotype import getPyutStereotype
+from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants

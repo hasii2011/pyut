@@ -85,20 +85,22 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
 
     def deserialize(self, serializedInfos):
         """
-        unserialize the data needed by the destroyed OglLinkedObject.
-        @param serializedInfos   :   serialized data needed by the command.
+        deserialize the data needed by the destroyed OglLinkedObject.
+
+        Args:
+            serializedInfos: serialized data needed by the command.
         """
         from org.pyut.PyutMethod import PyutMethod
         from org.pyut.PyutParam import PyutParam
         from org.pyut.PyutField import PyutField
-        # from org.pyut.PyutType import PyutType
-        from org.pyut.PyutStereotype import PyutStereotype
+
+        from org.pyut.model.PyutStereotype import PyutStereotype
         from org.pyut.PyutModifier import PyutModifier
 
-        # unserialize the data common to all OglObjects
+        # deserialize the data common to all OglObjects
         DelOglLinkedObjectCommand.deserialize(self, serializedInfos)
 
-        # unserialize properities of the OglClass (first level)
+        # deserialize properties of the OglClass (first level)
         classDescription    = getTokenValue("classDescription", serializedInfos)
         classStereotypeName = getTokenValue("classStereotypeName", serializedInfos)
         classShowStereotype = eval(getTokenValue("classShowStereotype", serializedInfos))
@@ -108,7 +110,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         methods = eval(getTokenValue("methods", serializedInfos))
         fields   = eval(getTokenValue("fields", serializedInfos))
 
-        # set up the first level properities of the pyutClass
+        # set up the first level properties of the pyutClass
         pyutClass = self._shape.getPyutObject()
         pyutClass.setDescription(classDescription)
 
@@ -132,7 +134,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
                                          fieldVisibility))
 
         methodsList = []
-        # unserialise methods of the pyutClass
+        # deserialize methods of the pyutClass
         for methodProfile in methods:
 
             # construction of a method
@@ -141,7 +143,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
             methodReturns = methodProfile[2]
             method = PyutMethod(methodName, methodVisibility, methodReturns)
 
-            # unserialize method's params so we get a tuple (name, Type, defaultValue)
+            # deserialize method's params so we get a tuple (name, Type, defaultValue)
             params = eval(methodProfile[3])
             for param in params:
                 paramName = param[0]
@@ -154,7 +156,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
                 # creates and add the param to the method
                 method.addParam(PyutParam(paramName, paramType, paramDefaultValue))
 
-            # unserialize method's modifiers so we get a list of names
+            # deserialize method's modifiers so we get a list of names
             # that whe have to transform into a list of PyutModifiers.
             modifiersNames = eval(methodProfile[4])
             modifiers = []

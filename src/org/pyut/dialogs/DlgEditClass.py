@@ -42,7 +42,7 @@ from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 
 from org.pyut.PyutParam import PyutParam
-from org.pyut.PyutStereotype import getPyutStereotype
+from org.pyut.model.PyutStereotype import getPyutStereotype
 
 from org.pyut.dialogs.DlgEditComment import DlgEditComment
 from org.pyut.dialogs.DlgEditField import DlgEditField
