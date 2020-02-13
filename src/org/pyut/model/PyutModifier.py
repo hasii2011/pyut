@@ -4,7 +4,7 @@ class PyutModifier:
     """
     Modifier for a method or param.
     These are words like:
-    
+
     * "abstract"
     * "virtual"
     *"const"...
