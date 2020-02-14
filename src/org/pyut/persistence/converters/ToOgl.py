@@ -25,6 +25,7 @@ from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.OglLinkType import OglLinkType
@@ -420,6 +421,17 @@ class ToOgl:
 
             returnElt: Element = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_RETURN)[0]
             pyutMethod.setReturns(returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE))
+
+            #
+            #  Code supports multiple modifiers, but the dialog allows input of only one
+            #
+            modifiers: NodeList = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_MODIFIER)
+            for xmlModifier in modifiers:
+                xmlModifier: Element = cast(Element, xmlModifier)
+                modName:  str        = xmlModifier.getAttribute(PyutXmlConstants.ATTR_NAME)
+
+                pyutModifier: PyutModifier = PyutModifier(modName)
+                pyutMethod.addModifier(pyutModifier)
 
             methodParameters = []
             for xmlParam in xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_PARAM):

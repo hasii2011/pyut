@@ -1,15 +1,23 @@
 
+from typing import cast
+from typing import List
+from typing import NewType
+
 from logging import Logger
 from logging import getLogger
 
 from org.pyut.PyutPreferences import PyutPreferences
+
+from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.model.PyutType import PyutType
+
 from org.pyut.PyutObject import PyutObject
 
-# constants for setStringMode
 
 [WITH_PARAMS, WITHOUT_PARAMS] = range(2)
+
+PyutModifiers    = NewType('PyutModifiers',    List[PyutModifier])
 
 
 class PyutMethod(PyutObject):
@@ -47,7 +55,8 @@ class PyutMethod(PyutObject):
         self.logger: Logger = getLogger(__name__)
 
         self._visibility: PyutVisibilityEnum = visibility
-        self._modifiers  = []
+        self._modifiers:  PyutModifiers      = cast(PyutModifiers, [])
+
         self._params     = []
         self._returns    = PyutType(returns)
 
@@ -75,7 +84,6 @@ class PyutMethod(PyutObject):
             cls.__selectedStringMode = cls.__stringWithParams
         elif mode == WITHOUT_PARAMS:
             cls.__selectedStringMode = cls.__stringWithoutParams
-        # setStringMode = classmethod(mode)
 
     @classmethod
     def getStringMode(cls):
@@ -86,7 +94,6 @@ class PyutMethod(PyutObject):
             return WITH_PARAMS
         else:
             return WITHOUT_PARAMS
-    # getStringMode = classmethod(getStringMode)
 
     def getVisibility(self) -> PyutVisibilityEnum:
         """
@@ -102,7 +109,7 @@ class PyutMethod(PyutObject):
         """
         self._visibility = visibility
 
-    def getModifiers(self):
+    def getModifiers(self) -> PyutModifiers:
         """
         Return a list of the modifiers.
         This is not a copy, but the original one. Any change made to it is
@@ -113,7 +120,7 @@ class PyutMethod(PyutObject):
         """
         return self._modifiers
 
-    def setModifiers(self, modifiers):
+    def setModifiers(self, modifiers: PyutModifiers):
         """
         Replace the actual modifiers by those given in the list.
         The methods passed are not copied, but used directly.
@@ -122,6 +129,16 @@ class PyutMethod(PyutObject):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         self._modifiers = modifiers
+
+    def addModifier(self, newModifier: PyutModifier):
+        """
+        Adds new modifier to current list
+
+        Args:
+            newModifier:
+                modifier to add to current list
+        """
+        self._modifiers.append(newModifier)
 
     def getParams(self):
         """
