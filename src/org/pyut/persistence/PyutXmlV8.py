@@ -43,7 +43,7 @@ from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
-from org.pyut.PyutNote import PyutNote
+from org.pyut.model.PyutNote import PyutNote
 from org.pyut.PyutLink import PyutLink
 
 from org.pyut.PyutConstants import PyutConstants

@@ -7,7 +7,7 @@ from wx import Colour
 from wx import DC
 
 from org.pyut.ogl.OglObject import OglObject
-from org.pyut.PyutNote import PyutNote
+from org.pyut.model.PyutNote import PyutNote
 from org.pyut.general.LineSplitter import LineSplitter
 
 MARGIN = 10.0

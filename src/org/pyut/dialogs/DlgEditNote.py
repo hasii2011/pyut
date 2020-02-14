@@ -24,7 +24,7 @@ from wx import Button
 from wx import BoxSizer
 from wx import Window
 
-from org.pyut.PyutNote import PyutNote
+from org.pyut.model.PyutNote import PyutNote
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _

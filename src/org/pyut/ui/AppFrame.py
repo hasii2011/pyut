@@ -63,7 +63,7 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
-from org.pyut.PyutNote import PyutNote
+from org.pyut.model.PyutNote import PyutNote
 from org.pyut.PyutUseCase import PyutUseCase
 from org.pyut.PyutUtils import PyutUtils
 

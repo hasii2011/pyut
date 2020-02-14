@@ -11,7 +11,7 @@ from org.pyut.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
-from org.pyut.PyutNote import PyutNote
+from org.pyut.model.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
