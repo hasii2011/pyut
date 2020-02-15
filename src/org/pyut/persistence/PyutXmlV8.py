@@ -38,7 +38,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
 from org.pyut.PyutSDMessage import PyutSDMessage
-from org.pyut.PyutUseCase import PyutUseCase
+from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
