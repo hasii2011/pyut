@@ -7,7 +7,7 @@ from wx import Pen
 from wx import Window
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
-from org.pyut.PyutActor import PyutActor
+from org.pyut.model.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.PyutUseCase import PyutUseCase

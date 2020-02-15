@@ -7,7 +7,7 @@ from typing import Set
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.PyutActor import PyutActor
+from org.pyut.model.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink

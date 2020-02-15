@@ -2,7 +2,7 @@
 from wx import DC
 
 from org.pyut.ogl.OglObject import OglObject
-from org.pyut.PyutActor import PyutActor
+from org.pyut.model.PyutActor import PyutActor
 
 
 MARGIN = 10.0

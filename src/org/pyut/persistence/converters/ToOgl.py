@@ -13,7 +13,7 @@ from xml.dom.minidom import NodeList
 
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.TextShape import TextShape
-from org.pyut.PyutActor import PyutActor
+from org.pyut.model.PyutActor import PyutActor
 
 from org.pyut.PyutClass import PyutClass
 from org.pyut.PyutField import PyutField
