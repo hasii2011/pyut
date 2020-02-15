@@ -3,7 +3,7 @@ from typing import Tuple
 
 from wx import Point
 
-from org.pyut.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.commands.Command import Command
 
 from org.pyut.ogl.OglLinkFactory import getLinkType

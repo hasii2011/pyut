@@ -22,7 +22,7 @@ from org.pyut.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
-from org.pyut.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.model.PyutModifier import PyutModifier

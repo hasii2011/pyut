@@ -17,7 +17,7 @@ from wx import TextEntryDialog
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.TextShape import TextShape
 
-from org.pyut.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutSDMessage import PyutSDMessage
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.OglLink import OglLink

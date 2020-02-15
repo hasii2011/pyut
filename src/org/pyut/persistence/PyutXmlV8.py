@@ -37,7 +37,7 @@ from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutParam import PyutParam
 from org.pyut.PyutSDInstance import PyutSDInstance
-from org.pyut.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.PyutClass import PyutClass
