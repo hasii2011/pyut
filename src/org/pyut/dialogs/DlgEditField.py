@@ -22,7 +22,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-from org.pyut import PyutField
+from org.pyut.model import PyutField
 
 from org.pyut.PyutUtils import PyutUtils
 

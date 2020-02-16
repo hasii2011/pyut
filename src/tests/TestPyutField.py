@@ -11,7 +11,7 @@ from copy import deepcopy
 
 from tests.TestBase import TestBase
 
-from org.pyut.PyutField import PyutField
+from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 

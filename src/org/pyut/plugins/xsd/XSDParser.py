@@ -16,7 +16,7 @@ from xmlschema.validators import XsdAtomicRestriction
 from xmlschema.validators import XsdType
 
 from org.pyut.PyutClass import PyutClass
-from org.pyut.PyutField import PyutField
+from org.pyut.model.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
