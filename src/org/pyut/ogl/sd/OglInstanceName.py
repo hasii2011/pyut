@@ -1,12 +1,10 @@
 
 from wx import CANCEL
 from wx import CENTRE
-from wx import FONTFAMILY_DEFAULT
 from wx import FONTFAMILY_TELETYPE
-from wx import FONTSTYLE_NORMAL
 from wx import FONTSTYLE_ITALIC
 from wx import FONTWEIGHT_NORMAL
-from wx import FONTWEIGHT_BOLD
+
 from wx import Font
 from wx import ID_OK
 from wx import OK
