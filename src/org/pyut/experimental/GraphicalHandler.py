@@ -13,7 +13,7 @@ from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
 from org.pyut.history.HistoryManager import HistoryManager
 
 from org.pyut.model.PyutClass import PyutClass
-from org.pyut.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import PyutMethod
 
 from org.pyut.ogl.OglClass import OglClass
 

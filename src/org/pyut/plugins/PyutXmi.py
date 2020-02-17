@@ -13,7 +13,7 @@ from xml.dom.minicompat import NodeList
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
-from org.pyut.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 

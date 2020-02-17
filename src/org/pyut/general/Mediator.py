@@ -33,8 +33,8 @@ from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.Singleton import Singleton
 
-from org.pyut.PyutMethod import WITHOUT_PARAMS
-from org.pyut.PyutMethod import WITH_PARAMS
+from org.pyut.model.PyutMethod import WITHOUT_PARAMS
+from org.pyut.model.PyutMethod import WITH_PARAMS
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.DlgEditNote import DlgEditNote

@@ -33,7 +33,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-from org.pyut.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
