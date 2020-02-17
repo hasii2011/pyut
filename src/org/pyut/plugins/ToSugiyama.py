@@ -28,14 +28,14 @@ from org.pyut.ui.UmlFrame import UmlFrame
 
 class ToSugiyama(PyutToPlugin):
 
-    STEPBYSTEP: bool = False  # Do Sugiyama Step by step
+    STEP_BY_STEP: bool = False  # Do Sugiyama Step by step
 
     """
     ToSugiyama : Automatic layout algorithm based on Sugiyama levels.
 
     This algorithm will change the class and links positions (not the
     structure). This plugin give good result with diagram which contains
-    a lot of hierachical relation (inheritance and interface), and poor
+    a lot of hierarchical relation (inheritance and interface), and poor
     association relation.
     """
     def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
@@ -99,15 +99,15 @@ class ToSugiyama(PyutToPlugin):
             return
 
         print("Begin Sugiyama algorithm")
-        # Create the subgraph containing the hierarchical relations
+        # Create the sub-graph containing the hierarchical relations
         self.__createInterfaceOglALayout(umlObjects)
 
         # Compute the best level for each nodes
         if not self.__levelFind():
-            print("Error: there is a cycle in hierarchial links. Sugiyama" " algorithm could not be applied")
+            print("Error: there is a cycle in hierarchical links. Sugiyama" " algorithm could not be applied")
             return
 
-        # Add vitual nodes between fathers and sons which are separated by
+        # Add virtual nodes between fathers and sons which are separated by
         # more than one level.
         self.__addVirtualNodes()
 
@@ -193,7 +193,7 @@ class ToSugiyama(PyutToPlugin):
                     srcSugiyamaNode.addParent(dstSugiyamaNode, link)
                     dstSugiyamaNode.addChild(srcSugiyamaNode, link)
 
-                    # Add nodes in list of hierachical nodes
+                    # Add nodes in list of hierarchical nodes
                     addNode2HierarchyGraph(srcSugiyamaNode, dictSugiHier)
                     addNode2HierarchyGraph(dstSugiyamaNode, dictSugiHier)
 
@@ -237,7 +237,7 @@ class ToSugiyama(PyutToPlugin):
         #      |A|B|C
         #     -+-+-+-
         #     A|0|0|1 <-- that 1 means A is C's father
-        #     -+-+-+-     and is on coords matrix[2][0]
+        #     -+-+-+-     and is on coordinates matrix[2][0]
         #     B|0|0|0
         #     -+-+-+-     matrix[column][line]
         #     C|0|1|0
@@ -314,7 +314,7 @@ class ToSugiyama(PyutToPlugin):
 
     def __addNonHierarchicalNodes(self):
         """
-        Add non-hierarchial nodes into levels.
+        Add non-hierarchical nodes into levels.
 
         @author Nicolas Dubois
         """
@@ -366,7 +366,7 @@ class ToSugiyama(PyutToPlugin):
             return maxNode
         # End of mostConnection
 
-        # Function for evaluting best level and best index for an external
+        # Function for evaluating best level and best index for an external
         # node
 
         def bestPos(zExtNode, zInternalNodes):
@@ -483,7 +483,7 @@ class ToSugiyama(PyutToPlugin):
 
     def __addVirtualNodes(self):
         """
-        Add a vitual node by level crossed between fathers and sons that are
+        Add a virtual node by level crossed between fathers and sons that are
         separated by more than one level.
 
         @author Nicolas Dubois
@@ -517,35 +517,35 @@ class ToSugiyama(PyutToPlugin):
                 return
             # noinspection PyUnusedLocal
             # For each crossed level, add a virtual node
-            vnodes = [VirtualSugiyamaNode() for el in indexLevels]
+            virtualNodes = [VirtualSugiyamaNode() for el in indexLevels]
 
             # Fix level
-            for i in range(len(vnodes)):
-                vnode: VirtualSugiyamaNode = vnodes[i]
-                vnode.setLevel(dstNodeLevel + i + 1)
+            for i in range(len(virtualNodes)):
+                virtualNode: VirtualSugiyamaNode = virtualNodes[i]
+                virtualNode.setLevel(dstNodeLevel + i + 1)
 
             # Fix relation between virtual nodes
-            for i in range(len(vnodes) - 1):
-                vnodes[i].addChild(vnodes[i + 1], zLink)
-                vnodes[i + 1].addParent(vnodes[i], zLink)
+            for i in range(len(virtualNodes) - 1):
+                virtualNodes[i].addChild(virtualNodes[i + 1], zLink)
+                virtualNodes[i + 1].addParent(virtualNodes[i], zLink)
 
             # Fix relations between virtual and real nodes
-            vnodes[-1].addChild(srcNode, zLink)
-            vnodes[0].addParent(dstNode, zLink)
+            virtualNodes[-1].addChild(srcNode, zLink)
+            virtualNodes[0].addParent(dstNode, zLink)
 
-            updateLink(dstNode.getChildren(), zLink, vnodes[0])
-            updateLink(srcNode.getParents(), zLink, vnodes[-1])
+            updateLink(dstNode.getChildren(), zLink, virtualNodes[0])
+            updateLink(srcNode.getParents(), zLink, virtualNodes[-1])
 
             # Add virtual nodes in levels
-            for i in range(len(vnodes)):
+            for i in range(len(virtualNodes)):
                 level = self.__levels[dstNodeLevel + i + 1]
-                level.append(vnodes[i])
+                level.append(virtualNodes[i])
                 # Fix index of the virtual node
                 level[-1].setIndex(len(level) - 1)
 
             # Add virtual nodes in link in order bottom to top
-            for i in range(len(vnodes) - 1, -1, -1):
-                zLink.addVirtualNode(vnodes[i])
+            for i in range(len(virtualNodes) - 1, -1, -1):
+                zLink.addVirtualNode(virtualNodes[i])
 
         # For all links
         for link in self.__sugiyamaLinksList:
@@ -557,7 +557,7 @@ class ToSugiyama(PyutToPlugin):
 
     def __sortLevel(self, indexLevel):
         """
-        Sort nodes on a level according to precalculated barycenter value.
+        Sort nodes on a level according to pre-calculated barycenter value.
         Nodes that don't have a barycenter value keep their place.
 
         @param indexLevel : index of level in self.__levels to sort
@@ -605,7 +605,7 @@ class ToSugiyama(PyutToPlugin):
         """
         Do a left circular shifting on nodes with same barycenter on a level.
 
-        For each group of nodes wich have the same pre-calulated value, do a
+        For each group of nodes which have the same pre-calculated value, do a
         left circular shifting of the nodes.
 
         @param indexLevel : index of level
@@ -981,7 +981,7 @@ class ToSugiyama(PyutToPlugin):
                 maxHeight = max(maxHeight, height)
             y += maxHeight + V_SPACE
 
-        if ToSugiyama.STEPBYSTEP:
+        if ToSugiyama.STEP_BY_STEP:
             SugiyamGlobals.waitKey(self._umlFrame)
 
         # While nodes have to be moved
@@ -993,7 +993,7 @@ class ToSugiyama(PyutToPlugin):
                 for node in level:
                     if node.balance():
                         moved = 1
-                        if ToSugiyama.STEPBYSTEP:
+                        if ToSugiyama.STEP_BY_STEP:
                             SugiyamGlobals.waitKey(self._umlFrame)
 
     def __fixNodesPositions_(self):
