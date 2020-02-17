@@ -4,7 +4,7 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
 
@@ -20,7 +20,7 @@ class ElementTreeData:
 
     def addChild(self, childClassName: str):
         self._childElementNames.append(childClassName)
-        
+
     def getChildElementNames(self) -> List[str]:
         return self._childElementNames
 

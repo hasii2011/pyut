@@ -10,7 +10,7 @@ from xml.dom.minidom import Element
 
 from xml.dom.minicompat import NodeList
 
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod

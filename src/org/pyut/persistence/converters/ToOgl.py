@@ -15,7 +15,7 @@ from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.TextShape import TextShape
 from org.pyut.model.PyutActor import PyutActor
 
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod

@@ -8,7 +8,7 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from org.pyut.model.PyutActor import PyutActor
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod

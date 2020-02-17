@@ -4,7 +4,7 @@ from typing import NewType
 from typing import Tuple
 from typing import Union
 
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.PyutLink import PyutLink
 from org.pyut.enums.OglLinkType import OglLinkType
 from org.pyut.ogl.OglClass import OglClass

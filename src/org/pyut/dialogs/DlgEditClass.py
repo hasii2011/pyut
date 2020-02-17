@@ -37,7 +37,7 @@ from wx import CheckBox
 
 from wx import StaticText
 
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.PyutMethod import PyutMethod
 

@@ -5,7 +5,7 @@ from logging import getLogger
 from xml.dom.minidom import Document
 
 from org.pyut.model.PyutActor import PyutActor
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 from org.pyut.PyutMethod import PyutMethod

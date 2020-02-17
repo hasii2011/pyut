@@ -13,7 +13,7 @@ from logging import getLogger
 from xml.parsers.expat import ParserCreate
 
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.PyutLink import PyutLink
 

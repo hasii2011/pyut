@@ -6,7 +6,7 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.PyutMethod import PyutMethod
 from org.pyut.PyutParam import PyutParam
 

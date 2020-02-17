@@ -8,7 +8,7 @@ from wx import Window
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
 from org.pyut.model.PyutActor import PyutActor
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.ogl.OglActor import OglActor

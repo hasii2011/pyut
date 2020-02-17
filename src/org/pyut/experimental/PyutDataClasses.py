@@ -3,7 +3,7 @@ from typing import List
 
 # These unused imports add in the classes so that the test code in UmlFrame.addHierarchy can do an introspection
 # noinspection PyUnresolvedReferences
-from org.pyut.PyutClass import PyutClass
+from org.pyut.model.PyutClass import PyutClass
 # noinspection PyUnresolvedReferences
 from org.pyut.model.PyutField import PyutField
 # noinspection PyUnresolvedReferences
