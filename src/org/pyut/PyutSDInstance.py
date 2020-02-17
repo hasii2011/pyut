@@ -3,7 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.PyutObject import *
+from org.pyut.model.PyutObject import *
 
 
 [INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS] = PyutUtils.assignID(2)

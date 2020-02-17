@@ -2,7 +2,7 @@
 from typing import List
 
 from org.pyut.model.PyutLink import PyutLink
-from org.pyut.PyutObject import PyutObject
+from org.pyut.model.PyutObject import PyutObject
 
 
 class PyutLinkedObject(PyutObject):

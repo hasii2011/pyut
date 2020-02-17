@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.PyutObject import PyutObject
+from org.pyut.model.PyutObject import PyutObject
 from org.pyut.enums.OglLinkType import OglLinkType
 
 from org.pyut.general.Globals import _

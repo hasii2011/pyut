@@ -12,7 +12,7 @@ from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.model.PyutType import PyutType
 
-from org.pyut.PyutObject import PyutObject
+from org.pyut.model.PyutObject import PyutObject
 
 
 [WITH_PARAMS, WITHOUT_PARAMS] = range(2)
