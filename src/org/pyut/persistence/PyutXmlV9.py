@@ -35,18 +35,19 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.persistence.converters.ToOgl import OglActors
-from org.pyut.persistence.converters.ToOgl import OglObjects
-from org.pyut.persistence.converters.ToOgl import OglSDInstances
-from org.pyut.persistence.converters.ToOgl import OglSDMessages
-from org.pyut.persistence.converters.ToOgl import OglUseCases
+from org.pyut.persistence.converters.MiniDomToOgl import OglActors
+from org.pyut.persistence.converters.MiniDomToOgl import OglObjects
+from org.pyut.persistence.converters.MiniDomToOgl import OglSDInstances
+from org.pyut.persistence.converters.MiniDomToOgl import OglSDMessages
+from org.pyut.persistence.converters.MiniDomToOgl import OglUseCases
+from org.pyut.persistence.converters.MiniDomToOgl import OglLinks
+from org.pyut.persistence.converters.MiniDomToOgl import OglClasses
+from org.pyut.persistence.converters.MiniDomToOgl import OglNotes
 
-from org.pyut.persistence.converters.ToOgl import ToOgl
-from org.pyut.persistence.converters.ToPyutXml import ToPyutXml
+from org.pyut.persistence.converters.MiniDomToOgl import MiniDomToOgl
+from org.pyut.persistence.converters.OglToMiniDom import OglToMiniDom
 
-from org.pyut.persistence.converters.ToOgl import OglLinks
-from org.pyut.persistence.converters.ToOgl import OglClasses
-from org.pyut.persistence.converters.ToOgl import OglNotes
+
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from org.pyut.ui.PyutDocument import PyutDocument
@@ -112,7 +113,7 @@ class PyutXml:
             dlg.Show(True)
             wxYield()
 
-            toPyutXml: ToPyutXml = ToPyutXml()
+            toPyutXml: OglToMiniDom = OglToMiniDom()
             # Save all documents in the project
             for document in project.getDocuments():
 
@@ -189,7 +190,7 @@ class PyutXml:
         try:
             project.setCodePath(root.getAttribute("CodePath"))
             self.__updateProgressDialog(newMessage='Reading elements...', newGaugeValue=1)
-            toOgl: ToOgl = ToOgl()
+            toOgl: MiniDomToOgl = MiniDomToOgl()
             for documentNode in dom.getElementsByTagName(PyutXmlConstants.ELEMENT_DOCUMENT):
 
                 documentNode: Element = cast(Element, documentNode)
@@ -221,7 +222,7 @@ class PyutXml:
 
         self.__cleanupProgressDialog(umlFrame)
 
-    def __renderClassDiagram(self, documentNode: Element, toOgl: ToOgl, umlFrame: UmlFrame):
+    def __renderClassDiagram(self, documentNode: Element, toOgl: MiniDomToOgl, umlFrame: UmlFrame):
         """
 
         Args:
@@ -240,7 +241,7 @@ class PyutXml:
         self.__displayTheLinks(oglLinks, umlFrame)
         self.__displayTheNotes(oglNotes, umlFrame)
 
-    def __renderUseCaseDiagram(self, documentNode: Element, toOgl: ToOgl, umlFrame: UmlFrame):
+    def __renderUseCaseDiagram(self, documentNode: Element, toOgl: MiniDomToOgl, umlFrame: UmlFrame):
         """
 
         Args:

@@ -36,7 +36,7 @@ from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.persistence.converters.IDFactorySingleton import IDFactory
 
 
-class ToPyutXml:
+class OglToMiniDom:
     """
     The refactored version of the original methods that were part of the monolithic
      PyutXml`xxx` classes.

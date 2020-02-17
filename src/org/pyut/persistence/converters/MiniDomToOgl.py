@@ -65,7 +65,7 @@ Links          = NewType('Links',          Union[OglLink, OglSDInstance])
 OglLinks       = NewType('OglLinks',       List[Links])
 
 
-class ToOgl:
+class MiniDomToOgl:
     """
     The refactored version of the original methods that were part of the monolithic
      `PyutXml`xxx classes.  This version does NO UI related actions;  It is up to the
