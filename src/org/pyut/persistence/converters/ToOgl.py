@@ -21,7 +21,7 @@ from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
-from org.pyut.PyutSDInstance import PyutSDInstance
+from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.PyutUtils import PyutUtils

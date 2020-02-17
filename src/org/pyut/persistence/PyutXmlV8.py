@@ -36,7 +36,7 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.model.PyutParam import PyutParam
-from org.pyut.PyutSDInstance import PyutSDInstance
+from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutActor import PyutActor
