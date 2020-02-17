@@ -23,7 +23,7 @@ from org.pyut.model.PyutModifier import PyutModifier
 # noinspection PyUnresolvedReferences
 from org.pyut.model.PyutObject import PyutObject
 # noinspection PyUnresolvedReferences
-from org.pyut.PyutParam import PyutParam
+from org.pyut.model.PyutParam import PyutParam
 # noinspection PyUnresolvedReferences
 from org.pyut.model.PyutStereotype import PyutStereotype
 # noinspection PyUnresolvedReferences

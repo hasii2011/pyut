@@ -15,7 +15,7 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.PyutMethod import PyutMethod
-from org.pyut.PyutParam import PyutParam
+from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.PyutUtils import PyutUtils

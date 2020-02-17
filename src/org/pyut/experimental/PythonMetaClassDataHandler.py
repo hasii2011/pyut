@@ -8,7 +8,7 @@ from logging import getLogger
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.PyutMethod import PyutMethod
-from org.pyut.PyutParam import PyutParam
+from org.pyut.model.PyutParam import PyutParam
 
 
 class PythonMetaClassDataHandler:

@@ -18,7 +18,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-from org.pyut.PyutParam import PyutParam
+from org.pyut.model.PyutParam import PyutParam
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils

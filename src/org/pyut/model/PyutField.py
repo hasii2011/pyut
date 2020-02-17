@@ -1,5 +1,5 @@
 
-from org.pyut.PyutParam import PyutParam
+from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
