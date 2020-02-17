@@ -44,7 +44,7 @@ class PyutLink(PyutObject):
         self._destinationCardinality: str  = cardDest
         self._bidirectional:          bool = bidir
 
-        from org.pyut.PyutLinkedObject import PyutLinkedObject
+        from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 
         self._src:  PyutLinkedObject = source
         self._dest: PyutLinkedObject = destination
