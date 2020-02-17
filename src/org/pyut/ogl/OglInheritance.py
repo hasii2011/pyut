@@ -3,7 +3,7 @@ from logging import getLogger
 
 import wx
 
-from org.pyut.PyutLink import PyutLink
+from org.pyut.model.PyutLink import PyutLink
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 

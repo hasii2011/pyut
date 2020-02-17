@@ -3,7 +3,7 @@ from wx import PENSTYLE_LONG_DASH
 
 from wx import Pen
 
-from org.pyut.PyutLink import PyutLink
+from org.pyut.model.PyutLink import PyutLink
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglObject import OglObject
 

@@ -10,7 +10,7 @@ from org.pyut.ogl.OglLinkFactory import getLinkType
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
 from org.pyut.enums.OglLinkType import OglLinkType
-from org.pyut.PyutLink import PyutLink
+from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken

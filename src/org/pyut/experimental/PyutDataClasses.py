@@ -7,7 +7,7 @@ from org.pyut.model.PyutClass import PyutClass
 # noinspection PyUnresolvedReferences
 from org.pyut.model.PyutField import PyutField
 # noinspection PyUnresolvedReferences
-from org.pyut.PyutLink import PyutLink
+from org.pyut.model.PyutLink import PyutLink
 # noinspection PyUnresolvedReferences
 from org.pyut.PyutLinkedObject import PyutLinkedObject
 # noinspection PyUnresolvedReferences

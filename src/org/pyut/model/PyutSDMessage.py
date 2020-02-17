@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.PyutLink import PyutLink
+from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.general.Globals import _
 

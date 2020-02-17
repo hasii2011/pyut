@@ -12,7 +12,7 @@ from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
-from org.pyut.PyutLink import PyutLink
+from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 from org.pyut.ogl.IllegalOperationException import IllegalOperationException
