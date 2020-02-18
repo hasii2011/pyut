@@ -4,7 +4,7 @@ from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaVEs
 
 from org.pyut.plugins.sugiyama.ALayoutNode import ALayoutNode
 
-from org.pyut.plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
+from org.pyut.plugins.sugiyama.SugiyamaGlobals import SugiyamaGlobals
 
 
 class RealSugiyamaNode(SugiyamaNode):
@@ -87,7 +87,7 @@ class RealSugiyamaNode(SugiyamaNode):
         # Fix all childrent anchors position
         # Sort child list to eliminate crossing
         children: SugiyamaVEs = self.getChildren()
-        children.sort(key=SugiyamGlobals.cmpIndex)
+        children.sort(key=SugiyamaGlobals.cmpIndex)
         nChildren = len(children)
         # For all children
         for i in range(nChildren):
@@ -99,7 +99,7 @@ class RealSugiyamaNode(SugiyamaNode):
         # Parent anchors position
         # Sort parents list to eliminate crossing
         parents: SugiyamaVEs = self.getParents()
-        parents.sort(key=SugiyamGlobals.cmpIndex)
+        parents.sort(key=SugiyamaGlobals.cmpIndex)
         nParents = len(parents)
         # For all parents
         for i in range(nParents):

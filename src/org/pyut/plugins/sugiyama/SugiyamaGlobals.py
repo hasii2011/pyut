@@ -8,7 +8,7 @@ from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
 from org.pyut.general.Globals import cmp
 
 
-class SugiyamGlobals:
+class SugiyamaGlobals:
 
     @staticmethod
     def cmpIndex(aTuple: Tuple):
@@ -36,7 +36,7 @@ class SugiyamGlobals:
         Args:
             theNode
 
-        Returns: Tthe return value from cmp()
+        Returns: The return value from cmp()
         """
         xNode: SugiyamaNode = theNode.getLeftNode()
         yNode: SugiyamaNode = theNode.getRightNode()

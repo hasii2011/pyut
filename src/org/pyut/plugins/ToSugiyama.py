@@ -7,7 +7,7 @@ from logging import getLogger
 from org.pyut.plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
 from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 from org.pyut.plugins.sugiyama.SugiyamaLink import SugiyamaLink
-from org.pyut.plugins.sugiyama.SugiyamGlobals import SugiyamGlobals
+from org.pyut.plugins.sugiyama.SugiyamaGlobals import SugiyamaGlobals
 
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
@@ -598,7 +598,7 @@ class ToSugiyama(PyutToPlugin):
             listNodes.append(levelCopy[i])
 
         # Sort list of nodes
-        listNodes.sort(key=SugiyamGlobals.cmpBarycenter)
+        listNodes.sort(key=SugiyamaGlobals.cmpBarycenter)
 
         # Put sorted list in levelCopy
         for i in range(len(listNodes)):
@@ -688,7 +688,7 @@ class ToSugiyama(PyutToPlugin):
 
         # Sort each group of nodes
         for group in groups:
-            group.sort(key=SugiyamGlobals.cmpBarycenter)
+            group.sort(key=SugiyamaGlobals.cmpBarycenter)
 
         # Fix new positions
         moved = 0
@@ -701,7 +701,7 @@ class ToSugiyama(PyutToPlugin):
                 index += 1
 
         # Sort level on new indexes
-        level.sort(SugiyamGlobals.cmpIndex)
+        level.sort(SugiyamaGlobals.cmpIndex)
 
         return moved
 
@@ -1000,7 +1000,7 @@ class ToSugiyama(PyutToPlugin):
             y += maxHeight + V_SPACE
 
         if ToSugiyama.STEP_BY_STEP:
-            SugiyamGlobals.waitKey(self._umlFrame)
+            SugiyamaGlobals.waitKey(self._umlFrame)
 
         # While nodes have to be moved
         moved = 1
@@ -1012,7 +1012,7 @@ class ToSugiyama(PyutToPlugin):
                     if node.balance():
                         moved = 1
                         if ToSugiyama.STEP_BY_STEP:
-                            SugiyamGlobals.waitKey(self._umlFrame)
+                            SugiyamaGlobals.waitKey(self._umlFrame)
 
     def __fixNodesPositions_(self):
         """
