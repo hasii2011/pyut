@@ -1,6 +1,8 @@
 
 from typing import List
 
+from logging import Logger
+from logging import getLogger
 
 from org.pyut.plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
 from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
@@ -34,9 +36,9 @@ class ToSugiyama(PyutToPlugin):
     ToSugiyama : Automatic layout algorithm based on Sugiyama levels.
 
     This algorithm will change the class and links positions (not the
-    structure). This plugin give good result with diagram which contains
-    a lot of hierarchical relation (inheritance and interface), and poor
-    association relation.
+    structure). This plugin gives good result with diagrams that contain
+    a lot of hierarchical relations (inheritance and interface), and poor
+    association relations.
     """
     def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
         """
@@ -45,6 +47,8 @@ class ToSugiyama(PyutToPlugin):
             umlFrame: PyUt's UML Frame
         """
         super().__init__(umlObjects, umlFrame)
+
+        self.logger: Logger = getLogger(__name__)
 
         # Sugiyama nodes and links
         self.__realSugiyamaNodesList = []   # List of all RealSugiyamaNode
@@ -98,13 +102,13 @@ class ToSugiyama(PyutToPlugin):
             self.displayNoUmlFrame()
             return
 
-        print("Begin Sugiyama algorithm")
+        self.logger.info(f'Begin Sugiyama algorithm')
         # Create the sub-graph containing the hierarchical relations
         self.__createInterfaceOglALayout(umlObjects)
 
         # Compute the best level for each nodes
         if not self.__levelFind():
-            print("Error: there is a cycle in hierarchical links. Sugiyama" " algorithm could not be applied")
+            self.logger.error('Error: there is a cycle in hierarchical links. Sugiyama,  algorithm could not be applied')
             return
 
         # Add virtual nodes between fathers and sons which are separated by
@@ -113,11 +117,11 @@ class ToSugiyama(PyutToPlugin):
 
         # Apply barycenter algorithm to the graph for minimizing crossings
         self.__barycenter()
-        print("Nb of hierarchical intersections:", self.__getNbIntersectAll())
+        self.logger.info(f'Number of hierarchical intersections: {self.__getNbIntersectAll()}')
 
         # Add non hierarchical nodes to levels
-        # ~ print self.__nonHierarchyGraphNodesList
-        # ~ print self.__nonHierarchyGraphLinksList
+        self.logger.info(f'non hierarchy graph nodes list: {self.__nonHierarchyGraphNodesList}')
+        self.logger.info(f'non hierarchy graph links list{self.__nonHierarchyGraphLinksList}')
         self.__addNonHierarchicalNodes()
 
         # Fix the coordinates xy of the nodes
@@ -126,7 +130,7 @@ class ToSugiyama(PyutToPlugin):
         # Redraw frame
         self._umlFrame.Refresh()
 
-        print("End Sugiyama algorithm")
+        self.logger.info('End Sugiyama algorithm')
 
     def __createInterfaceOglALayout(self, oglObjects):
         """
@@ -140,26 +144,37 @@ class ToSugiyama(PyutToPlugin):
         # Dictionary for oglObjects fast research
         # Key = OglObject, Value = RealSugiyamaNode
         dictOgl     = {}
-        # Dictionary for RealSugiyamaNode that take part in hierarchy
+        # Dictionary for RealSugiyamaNode that takes part in hierarchy
         # Key = OglObject, Value = None
-        dictSugiHier = {}
+        dictSugiyamaHierarchy = {}
 
-        # Internal function for creating a RealSugiyamaNode and add it to
-        # self.__realSugiyamaNodesList and to dictOgl
         def createSugiyamaNode(theOglObject, theDictOgl):
+            """
+            Internal function for creating a RealSugiyamaNode and add it to
+            self.__realSugiyamaNodesList and to dictOgl
+            Args:
+                theOglObject:
+                theDictOgl:
+            """
             # Create RealSugiyamaNode only if not already done
             if theOglObject not in theDictOgl:
                 node = RealSugiyamaNode(theOglObject)
                 self.__realSugiyamaNodesList.append(node)
                 theDictOgl[theOglObject] = node
 
-        # Internal function for adding nodes that take part in hierarchy into
-        # the __hierarchyGraphNodesList.
+        def addNode2HierarchyGraph(theSugiyamaNode, theDictSugiyamaHierarchy):
+            """
+            Internal function for adding nodes that take part in hierarchy in
+            the __hierarchyGraphNodesList.
 
-        def addNode2HierarchyGraph(theSugiNode, theDictSugiHier):
-            if theSugiNode not in theDictSugiHier:
-                theDictSugiHier[theSugiNode] = None
-                self.__hierarchyGraphNodesList.append(theSugiNode)
+            Args:
+                theSugiyamaNode:
+                theDictSugiyamaHierarchy:
+            """
+
+            if theSugiyamaNode not in theDictSugiyamaHierarchy:
+                theDictSugiyamaHierarchy[theSugiyamaNode] = None
+                self.__hierarchyGraphNodesList.append(theSugiyamaNode)
 
         # For each OglObject or OglLink, create a specific interface
         for oglObject in oglObjects:
@@ -194,8 +209,8 @@ class ToSugiyama(PyutToPlugin):
                     dstSugiyamaNode.addChild(srcSugiyamaNode, link)
 
                     # Add nodes in list of hierarchical nodes
-                    addNode2HierarchyGraph(srcSugiyamaNode, dictSugiHier)
-                    addNode2HierarchyGraph(dstSugiyamaNode, dictSugiHier)
+                    addNode2HierarchyGraph(srcSugiyamaNode, dictSugiyamaHierarchy)
+                    addNode2HierarchyGraph(dstSugiyamaNode, dictSugiyamaHierarchy)
 
                 # Non hierarchical links
                 else:
@@ -212,10 +227,10 @@ class ToSugiyama(PyutToPlugin):
         # Create list of non hierarchical nodes
 
         # For each class or note
-        for sugiNode in list(dictOgl.values()):
+        for sugiyamaNode in list(dictOgl.values()):
             # If not in hierarchy
-            if sugiNode not in dictSugiHier:
-                self.__nonHierarchyGraphNodesList.append(sugiNode)
+            if sugiyamaNode not in dictSugiyamaHierarchy:
+                self.__nonHierarchyGraphNodesList.append(sugiyamaNode)
 
     def __levelFind(self):
         """
@@ -251,7 +266,7 @@ class ToSugiyama(PyutToPlugin):
         for node in nodesList:
             # For each father
             for (father, link) in node.getParents():
-                # Mark relation with a '1' on coords[index Son][index Father]
+                # Mark relation with a '1' on coordinates[index Son][index Father]
                 matrix[node.getIndex()][father.getIndex()] = 1
 
         # Define levels
@@ -260,6 +275,8 @@ class ToSugiyama(PyutToPlugin):
         # noinspection PyUnusedLocal
         sumColumns = [None for el in range(nbNodes)]
         for i in range(nbNodes):
+            # suppress for now;  Can't tell difference between 0 and None
+            # noinspection PyTypeChecker
             sumColumns[i] = 0
             for el in matrix[i]:
                 sumColumns[i] += el
@@ -284,7 +301,7 @@ class ToSugiyama(PyutToPlugin):
                     indexNodesSel.append(i)
                     indexNodesNotSel.remove(i)
 
-            # If no nodes is selected, there is a cycle in hierarchal links
+            # If no nodes is selected, there is a cycle in hierarchical links
             # if indexNodesSel == []:
             if not indexNodesSel:
                 return 0
@@ -460,7 +477,8 @@ class ToSugiyama(PyutToPlugin):
         while externalNodes:
             # Get external node that has most connections to internalNodes
             extNode = mostConnection(externalNodes)
-            # ~ print zExtNode.getName()
+
+            self.logger.info(f'extNode.getName(): `{extNode.getName()}`')
             # Evaluate best level and index for the node
             (level, index) = bestPos(extNode, internalNodes)
 
@@ -941,7 +959,7 @@ class ToSugiyama(PyutToPlugin):
 
     def __fixPositions(self):
         """
-        Compute coordinates for each nodes and links.
+        Compute coordinates for nodes and links.
 
         @author Nicolas Dubois
         """
@@ -998,7 +1016,7 @@ class ToSugiyama(PyutToPlugin):
 
     def __fixNodesPositions_(self):
         """
-        Compute coordinates for each nodes.
+        Compute coordinates for each node.
 
         @author Nicolas Dubois
         """
@@ -1052,6 +1070,6 @@ class ToSugiyama(PyutToPlugin):
                 node.fixAnchorPos()
 
         # For each hierarchical link, add control points to pass through
-        # each virtual nodes
+        # each virtual node
         for link in self.__sugiyamaLinksList:
             link.fixControlPoints()

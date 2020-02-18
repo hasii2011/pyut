@@ -227,6 +227,11 @@
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
+        },
+        "ToSugiyama": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
         }
     }
 }

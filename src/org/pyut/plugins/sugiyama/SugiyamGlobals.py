@@ -11,11 +11,6 @@ from org.pyut.general.Globals import cmp
 class SugiyamGlobals:
 
     @staticmethod
-    # def cmpIndex(l, r):
-    #     def cmp(left, right):
-    #         return (left > right) - (left < right)
-    #
-    #     return cmp(l[0].getIndex(), r[0].getIndex())
     def cmpIndex(aTuple: Tuple):
         """
         Internal comparison function for sorting list of parents or children by index.
@@ -24,9 +19,9 @@ class SugiyamGlobals:
             aTuple:
         Returns:
         """
-        sugiNode: SugiyamaNode = aTuple[0]
-        l: SugiyamaNode = sugiNode.getLeftNode()
-        r: SugiyamaNode = sugiNode.getRightNode()
+        sugiyamaNode: SugiyamaNode = aTuple[0]
+        l: SugiyamaNode = sugiyamaNode.getLeftNode()
+        r: SugiyamaNode = sugiyamaNode.getRightNode()
 
         if l is None or r is None:
             return 0
@@ -55,4 +50,4 @@ class SugiyamGlobals:
     def waitKey(umlFrame):
         umlFrame.Refresh()
         wxYield()
-        input("Appuyez sur Enter pour continuer")  # Press enter to continue?
+        input('Press enter to continue')
