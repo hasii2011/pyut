@@ -1,14 +1,23 @@
 
+from logging import Logger
+from logging import getLogger
+
 from typing import Tuple
 
+from wx import CENTRE
+from wx import OK
 from wx import Yield as wxYield
+from wx import MessageBox
 
+from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
 from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
 
 from org.pyut.general.Globals import cmp
 
 
 class SugiyamaGlobals:
+
+    clsLogger: Logger = getLogger(__name__)
 
     @staticmethod
     def cmpIndex(aTuple: Tuple):
@@ -26,7 +35,7 @@ class SugiyamaGlobals:
         if l is None or r is None:
             return 0
         else:
-            print(f' l.getIndex(): {l.getIndex()}  r.getIndex(): {r.getIndex()}')
+            SugiyamaGlobals.clsLogger.info(f' l.getIndex(): {l.getIndex()}  r.getIndex(): {r.getIndex()}')
             return cmp(l.getIndex(), r.getIndex())
 
     @staticmethod
@@ -47,7 +56,11 @@ class SugiyamaGlobals:
             return cmp(xNode.getBarycenter(), yNode.getBarycenter())
 
     @staticmethod
-    def waitKey(umlFrame):
+    def waitKey(umlFrame: DiagramFrame, optionalMessage: str = None):
+        # input('Press enter to continue')
+        if optionalMessage is None:
+            MessageBox('Press Ok to continue', 'Confirm', style=OK | CENTRE)
+        else:
+            MessageBox(optionalMessage, 'Press Ok to continue', style=OK | CENTRE)
         umlFrame.Refresh()
         wxYield()
-        input('Press enter to continue')

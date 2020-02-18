@@ -84,7 +84,7 @@ class RealSugiyamaNode(SugiyamaNode):
         (width, height) = self.getSize()
         (x, y) = self.getPosition()
 
-        # Fix all childrent anchors position
+        # Fix all children anchors position
         # Sort child list to eliminate crossing
         children: SugiyamaVEs = self.getChildren()
         children.sort(key=SugiyamaGlobals.cmpIndex)
@@ -107,3 +107,6 @@ class RealSugiyamaNode(SugiyamaNode):
             # Fix anchors coordinates
             link.setSrcAnchorPos(
                 x + width * (i + 1) / (nParents + 1), y)
+
+    def __repr__(self):
+        return f'RealSugiyamaNode name: {self.getName()} level: {self.getLevel()}'

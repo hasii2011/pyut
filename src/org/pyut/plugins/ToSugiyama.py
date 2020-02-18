@@ -216,10 +216,8 @@ class ToSugiyama(PyutToPlugin):
                 else:
 
                     # Add link between source and destination interface
-                    srcSugiyamaNode.addNonHierarchicalLink(
-                        dstSugiyamaNode, link)
-                    dstSugiyamaNode.addNonHierarchicalLink(
-                        srcSugiyamaNode, link)
+                    srcSugiyamaNode.addNonHierarchicalLink(dstSugiyamaNode, link)
+                    dstSugiyamaNode.addNonHierarchicalLink(srcSugiyamaNode, link)
 
                     # Add link into non-hierarchical links' list
                     self.__nonHierarchyGraphLinksList.append(link)
@@ -1001,18 +999,23 @@ class ToSugiyama(PyutToPlugin):
 
         if ToSugiyama.STEP_BY_STEP:
             SugiyamaGlobals.waitKey(self._umlFrame)
+        else:
+            self.logger.info(f'.__fixNodesPositions() is complete')
 
         # While nodes have to be moved
-        moved = 1
+        moved: bool = True
         while moved:
-            moved = 0
+            moved = False
             # Compute average coordinates for each node
             for level in self.__levels:
                 for node in level:
                     if node.balance():
-                        moved = 1
+                        moved = True
+                        msg: str = f'LEVEL - node: {node} {level}'
                         if ToSugiyama.STEP_BY_STEP:
-                            SugiyamaGlobals.waitKey(self._umlFrame)
+                            SugiyamaGlobals.waitKey(self._umlFrame, msg)
+                        else:
+                            self.logger.info(msg)
 
     def __fixNodesPositions_(self):
         """

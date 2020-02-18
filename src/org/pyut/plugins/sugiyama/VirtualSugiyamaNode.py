@@ -58,3 +58,6 @@ class VirtualSugiyamaNode(SugiyamaNode):
         @author Nicolas Dubois
         """
         return self.__position
+
+    def __repr__(self):
+        return f'VirtualSugiyamaNode level: {self.getLevel()}'

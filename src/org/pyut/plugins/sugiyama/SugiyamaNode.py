@@ -8,7 +8,7 @@ from org.pyut.plugins.sugiyama.SugiyamaConstants import H_SPACE
 
 from org.pyut.plugins.sugiyama.SugiyamaLink import SugiyamaLink
 
-SugiyamaVertixEdge = NewType("SugiyamaVertixEdge", Tuple["SugiymaNode", SugiyamaLink])
+SugiyamaVertixEdge = NewType("SugiyamaVertixEdge", Tuple["SugiyamaNode", SugiyamaLink])
 SugiyamaVEs        = NewType("SugiyamaVEs",         List[SugiyamaVertixEdge])
 
 
@@ -101,7 +101,7 @@ class SugiyamaNode:
 
         Args:
             parent:  The parent
-            link:   Link betweeen self and parent
+            link:   Link between self and parent
         """
         sugiyamaData: SugiyamaVertixEdge = cast(SugiyamaVertixEdge, (parent, link))
         self.__parents.append(sugiyamaData)
@@ -243,7 +243,7 @@ class SugiyamaNode:
 
     def __getAverageIndex(self, nodeList) -> float:
         """
-        Compute the average of indicds position on all the given nodes.
+        Compute the average of indices position on all the given nodes.
 
         Args:
             nodeList:    [SugiyamaNode, ...] : list of nodes
@@ -301,29 +301,29 @@ class SugiyamaNode:
             # ~ print self.__index, "none"
             self.__barycenter = None
         else:
-            summmation = 0
+            summation = 0
             for (node, link) in nodeList:
-                summmation += node.getBarycenter()
+                summation += node.getBarycenter()
             # ~ print self.__index, float(sum) / len(nodeList)
-            self.__barycenter = float(summmation) / len(nodeList)
+            self.__barycenter = float(summation) / len(nodeList)
 
     def __getAverageX(self, nodeList: SugiyamaVEs):
         """
-        Compute the average of x coords on all the given nodes.
+        Compute the average of x coordinates on all the given nodes.
 
         Args:
             nodeList:   [(SugiyamaNode, SugiyamaLink), ...] nodeList : parents or children
 
-        Returns:    float or None : average of x coords
+        Returns:    float or None : average of x coordinates
                     None if nodeList is empty.
         """
         if len(nodeList) == 0:
             return None
         else:
-            summmation = 0
+            summation = 0
             for (node, link) in nodeList:
-                summmation += node.getPosition()[0] + node.getSize()[0] / 2
-            return summmation / len(nodeList) - self.getSize()[0] / 2
+                summation += node.getPosition()[0] + node.getSize()[0] / 2
+            return summation / len(nodeList) - self.getSize()[0] / 2
 
     def upBarycenterX(self):
         """
@@ -343,7 +343,7 @@ class SugiyamaNode:
 
     def barycenterX(self):
         """
-        Compute the average of up and down barycenter on x coords.
+        Compute the average of up and down barycenter on x coordinates.
 
         For reading this value, use getBarycenter()
         """
