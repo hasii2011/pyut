@@ -4,6 +4,7 @@ __pycache__/
 /html/
 /build/
 /dist/
+/pyoxidizer-pyut/
 /.eggs/
 UNKNOWN.egg-info
 /venv-3.7.3-wxPython/
