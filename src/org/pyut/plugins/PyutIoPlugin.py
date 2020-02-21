@@ -183,6 +183,9 @@ class PyutIoPlugin(PyutPlugin):
             # set user options for export
             if not self.setExportOptions():
                 return None
+            mediator = getMediator()
+            mediator.selectAllShapes()  # during debug only
+            self.__oglObjects = mediator.getSelectedShapes()
             # write the file
             self.write(self.__oglObjects)
         else:

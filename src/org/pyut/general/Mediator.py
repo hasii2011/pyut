@@ -733,17 +733,15 @@ class Mediator(Singleton):
 
     def deselectAllShapes(self):
         """
-        Deselect all shapes in the diagram.
-
-        @since 1.12
-        @author L. Burgbacher <lb@alawa.ch>
+        Deselect all shapes in the current diagram.
         """
-        umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is not None:
-            shapes = umlFrame.GetDiagram().GetShapes()
-            for shape in shapes:
-                shape.SetSelected(False)
-            umlFrame.Refresh()
+        self._setShapeSelection(False)
+
+    def selectAllShapes(self):
+        """
+        Select all shapes in the current diagram.
+        """
+        self._setShapeSelection(True)
 
     def showParams(self, val):
         """
@@ -1057,3 +1055,17 @@ class Mediator(Singleton):
             umlFrame.getHistory().addCommandGroup(group)
 
         self._modifyCommand = None
+
+    def _setShapeSelection(self, selected: bool):
+        """
+        Either select or deselect all shapes in the current frame
+
+        Args:
+            selected: If `True` select all shapes else deselect them
+        """
+        umlFrame = self._fileHandling.getCurrentFrame()
+        if umlFrame is not None:
+            shapes = umlFrame.GetDiagram().GetShapes()
+            for shape in shapes:
+                shape.SetSelected(selected)
+            umlFrame.Refresh()

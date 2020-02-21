@@ -1,8 +1,18 @@
 
 from typing import cast
 
-import os
+from logging import Logger
+from logging import getLogger
 
+from os import open
+from os import write
+
+from os import sep as osSep
+from os import O_WRONLY
+from os import O_CREAT
+
+from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutParam import PyutParam
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
@@ -10,21 +20,24 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.enums.OglLinkType import OglLinkType
+from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class IoJava(PyutIoPlugin):
     """
     Java code generation
-
-    @version $Revision: 1.2 $
     """
+    def __init__(self, oglObjects, umlFrame: UmlFrame):
+
+        super().__init__(oglObjects, umlFrame)
+        self.logger: Logger = getLogger(__name__)
+
     def getName(self):
         """
         This method returns the name of the plugin.
 
-        @return string
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Returns:
+            The name of the plugin
         """
         return "Java code generation"
 
@@ -32,9 +45,9 @@ class IoJava(PyutIoPlugin):
         """
         This method returns the author of the plugin.
 
-        @return string
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Returns:
+            The name of the author
+
         """
         return "N. Dubois <nicdub@gmx.ch>"
 
@@ -42,62 +55,56 @@ class IoJava(PyutIoPlugin):
         """
         This method returns the version of the plugin.
 
-        @return string
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Returns:
+            The version number
         """
         return "1.0"
 
     def getOutputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
-        @return tuple
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Returns:
+            A specification tuple.
         """
-        # return None if this plugin can't write.
-        # otherwise, return a tupple with
-        # - name of the output format
-        # - extension of the output format
-        # - textual description of the plugin output format
-        # example : return ("Text", "txt", "Tabbed text...")
         return "Java", "java", "Java file format"
 
-    def _writeParam(self, file, param):
+    def setExportOptions(self) -> bool:
+        return True
+
+    def _writeParam(self, file: int, param: PyutParam):
         """
-        Writing params in file.
+        Writing params to file.
 
-        @param file
-        @param param   : pyutParam
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Args:
+            file:   file descriptor
+            param:  pyut parameter object to write
         """
-        # writing the param name
-        file.write(str(param.getType()) + " " + param.getName())
+        # file.write(str(param.getType()) + " " + param.getName())
+        paramType: str = param.getType().__str__()
+        paramName: str = param.getName()
+        write(file, f'{paramType} {paramName}'.encode())
 
-    def _writeMethod(self, file, method):
+    def _writeMethod(self, file: int, method: PyutMethod):
         """
         Writing a method in file : name(param, param, ...).
 
-        @param file
-        @param method    : pyutMethod
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Args:
+            file:       File descriptor
+            method:     method object
         """
-        # Name of method
-        name = method.getName()
-        visibility = self.__visibility[str(method.getVisibility())]
-        returnType = str(method.getReturns())
+        name:       str = method.getName()
+        visibility: str = self.__visibility[str(method.getVisibility())]
+        returnType: str = str(method.getReturns())
         if returnType == "":
             returnType = "void"
 
-        # writing method name
-        file.write(self.__tab + visibility + " " + returnType + " " + name + "(")
+        # file.write(self.__tab + visibility + " " + returnType + " " + name + "(")
+        write(file, f'{self.__tab}{visibility} {returnType} {name}('.encode())
+
         # for all param
         nbParam = len(method.getParams())
+        self.logger.info(f'# params: {nbParam}')
         for param in method.getParams():
             # writing param
             self._writeParam(file, param)
@@ -105,61 +112,32 @@ class IoJava(PyutIoPlugin):
             # comma between param
             nbParam = nbParam - 1
             if nbParam > 0:
-                file.write(" , ")
-        file.write(") {\n" + self.__tab + "}\n\n")
+                # file.write(" , ")
+                write(file, ' , '.encode())
 
-    # noinspection PyUnusedLocal
-    def _writeMethods(self, file, methods, className):
+        # file.write(") {\n" + self.__tab + "}\n\n")
+        write(file, f') {{\n{self.__tab}}}\n\n'.encode())
+
+    def _writeMethods(self, file: int, methods):
         """
-        Writing methods in source (.cpp) file
+        Writing methods in source (.java) file
 
-        @param file
-        @param methods : [] list of all method of a class
-        @param className : string the name of the class
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Args:
+            file:       file descriptor
+            methods:    list of all method of a class
         """
         # Write header
         if len(methods) > 0:
-            file.write("\n" + self.__tab + "// -------\n" + self.__tab + "// Methods\n" + self.__tab + "// -------\n\n")
+            # file.write("\n" + self.__tab + "// -------\n" + self.__tab + "// Methods\n" + self.__tab + "// -------\n\n")
+            header: str = f'\n{self.__tab}// -------\n{self.__tab}// Methods\n{self.__tab}// -------\n\n'
+            write(file, header.encode())
 
         # for all method in methods list
         for method in methods:
+            method: PyutMethod = cast(PyutMethod, method)
+            self.logger.info(f'method: {method}')
             self._writeMethodComment(file, method, self.__tab)
-
-            # writing method
             self._writeMethod(file, method)
-
-    def _writeHeaderMethods(self, file, methods, className):
-        """
-        Writing methods in header (.h) file
-
-        @param file
-        @param methods : [] list of all method of a class
-        @param className : string the name of the class
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
-        """
-        # TODO
-        # for all method in methods list
-        for method in methods:
-
-            # self._writeMethodComment(file, method, className, self.__tab)
-            self._writeMethodComment(file=file, method=method, tab=self.__tab)
-            # writing tab
-            file.write(self.__tab)
-
-            # writing type
-            # constructor case
-            name = method.getName()
-            if name != className and name != '~'+className:
-                self._writeType(file, str(method.getReturns()))
-
-            # writing method
-            self._writeMethod(file, method)
-            file.write(";\n\n")
 
     def _writeFields(self, file, fields):
         """
@@ -213,7 +191,8 @@ class IoJava(PyutIoPlugin):
         @param file file:
         @param [] links : list of relation links
         """
-        file.write("\n")
+        # file.write("\n")
+        write(file, "\n".encode())
         # Write all relation links in file
         for link in links:
             link = cast(PyutLink, link)
@@ -229,7 +208,8 @@ class IoJava(PyutIoPlugin):
                 array = ""
 
             # Write data in file
-            file.write(self.__tab + "private " + destinationLinkName + " " + name + array + ";\n")
+            # file.write(self.__tab + "private " + destinationLinkName + " " + name + array + ";\n")
+            write(file, f'{self.__tab}private {destinationLinkName} {name}{array};\n'.encode())
 
     def _writeFathers(self, file, fathers):
         """
@@ -273,41 +253,49 @@ class IoJava(PyutIoPlugin):
             for interface in interfaces[1:]:
                 file.write(", " + interface.getDestination().getName())
 
-    def _writeClassComment(self, file, className, classInterface):
+    def _writeClassComment(self, file: int, className, classInterface):
         """
-        Write class comment with doxygen organisation.
+        Write class comment with doxygen organization.
 
-        @param file
-        @param className    : String  represtent a class
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Args:
+            file:       file descriptor
+            className:
+            classInterface:
         """
-        file.write("/**\n * " + classInterface + " " + className + "\n * More info here \n */\n")
+        # file.write("/**\n * " + classInterface + " " + className + "\n * More info here \n */\n")
+        write(file, f'/**\n * {classInterface} {className}\n * Class information here \n */\n'.encode())
 
-    def _writeMethodComment(self, file, method, tab=""):
+    def _writeMethodComment(self, file: int, method: PyutMethod, tab=""):
         """
-        Write method comment with doxygen organisation.
+        Write method comment with doxygen organization.
 
-        @param file file : java file
-        @param method    : pyutMethod
+        Args:
+            file:   file descriptor
+            method: pyutMethod
+            tab:    tab character(s) to use
 
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
         """
-        file.write(tab + "/**\n")
-        file.write(tab + " * method " + method.getName()+"\n")
-        file.write(tab + " * More info here.\n")
+        # file.write(tab + "/**\n")
+        # file.write(tab + " * method " + method.getName()+"\n")
+        # file.write(tab + " * More info here.\n")
+        write(file, f'{tab}/**\n'.encode())
+        write(file, f'{tab} * method {method.getName()}\n'.encode())
+        write(file, f'{tab} * More info here.\n'.encode())
+
         for param in method.getParams():
-            file.write(tab + " * @param " + param.getName() + " : " + str(param.getType()) + "\n")
+            # file.write(tab + " * @param " + param.getName() + " : " + str(param.getType()) + "\n")
+            write(file, f' * @param {param.getName()} : {str(param.getType())}\n'.encode())
 
         if str(method.getReturns()) != '':
-            file.write(tab + " * @return " + str(method.getReturns()) + "\n")
-        file.write(tab + " */\n")
+            # file.write(tab + " * @return " + str(method.getReturns()) + "\n")
+            write(file, f'{tab} * @return {str(method.getReturns())}\n'.encode())
+
+        # file.write(tab + " */\n")
+        write(file, f'{tab} */\n'.encode())
 
     def _writeFieldComment(self, file, name, tab=""):
         """
-        Write method comment with doxygen organisation.
+        Write method comment with doxygen organization.
 
         @param file
         @param name    : field name
@@ -319,11 +307,11 @@ class IoJava(PyutIoPlugin):
         file.write(tab + " * field " + name+"\n")
         file.write(tab + " * More info here.\n")
 
-        file.write(tab+" */\n")
+        file.write(tab + " */\n")
 
-    def _seperateLinks(self, allLinks, interfaces, links):
+    def _separateLinks(self, allLinks, interfaces, links):
         """
-        Seperate the differents types of links into lists.
+        Separate the different types of links into lists.
 
         @param [PyutLinks] links : list of links of the class
         @param [str] interfaces : list of interfaces implemented by the class
@@ -348,9 +336,12 @@ class IoJava(PyutIoPlugin):
         className = pyutClass.getName()
 
         # Opening a file for each class
-        javaFile = open(self._dir+os.sep+className+'.java', 'w')
+        fqn: str = f'{self._dir}{osSep}{className}.java'
+        # javaFile = open(self._dir + osSep + className + '.java')
+        flags:    int = O_WRONLY | O_CREAT
+        javaFileFD: int = open(fqn, flags)
 
-        # Extract the datas from the class
+        # Extract the data from the class
         fields     = pyutClass.getFields()
         methods    = pyutClass.getMethods()
         fathers    = pyutClass.getParents()
@@ -360,7 +351,7 @@ class IoJava(PyutIoPlugin):
         # List of links
         interfaces = []     # List of interfaces implemented by the class
         links      = []     # Aggregation and compositions
-        self._seperateLinks(allLinks, interfaces, links)
+        self._separateLinks(allLinks, interfaces, links)
 
         # Is this class an interface
         # ~ self._isInterface(pyutClass)
@@ -373,26 +364,37 @@ class IoJava(PyutIoPlugin):
                 classInterface = "interface"
 
         # Write data in file
-        # -------------------
-
         # Write class comment
-        self._writeClassComment(javaFile, className, classInterface)
+        self._writeClassComment(javaFileFD, className, classInterface)
         # class name
-        javaFile.write("public " + classInterface + " " + className)
+        # javaFile.write("public " + classInterface + " " + className)
+        write(javaFileFD, f'public {classInterface} {className}'.encode())
 
-        self._writeFathers(javaFile, fathers)
-        self._writeInterfaces(javaFile, interfaces)
-        javaFile.write(" {\n\n")
+        self._writeFathers(javaFileFD, fathers)
+        self._writeInterfaces(javaFileFD, interfaces)
+        # javaFile.write(" {\n\n")
+        write(javaFileFD, ' {\n\n'.encode())
 
         # Fields
-        self._writeFields(javaFile, fields)
+        self._writeFields(javaFileFD, fields)
 
         # Aggregation and Composition
-        self._writeLinks(javaFile, links)
+        self._writeLinks(javaFileFD, links)
         # Methods
-        self._writeMethods(javaFile, methods, className)
+        self._writeMethods(javaFileFD, methods)
         # end of class
-        javaFile.write("}\n")
+        # javaFile.write("}\n")
+        write(javaFileFD, '}\n'.encode())
+
+    def _writeType(self, file, aParam):
+        """
+        This method undefined.  What is it supposed to do.   hasii 02/2020
+        Args:
+            file:
+            aParam:
+
+        """
+        pass
 
     def write(self, oglObjects):
         """
@@ -414,5 +416,12 @@ class IoJava(PyutIoPlugin):
             "#": "protected"
         }
 
-        for el in [object for object in oglObjects if isinstance(object, OglClass)]:
+        # noinspection PyUnusedLocal
+        oglClasses = []
+        for oglObject in oglObjects:
+            if isinstance(oglObject, OglClass):
+                oglClasses.append(oglObject)
+
+        # for el in [object for objects in oglObjects if isinstance(object, OglClass)]:
+        for el in oglClasses:
             self._writeClass(el.getPyutObject())

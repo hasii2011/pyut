@@ -174,16 +174,17 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.plugins.ToPython": {
+        "IoPython": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-        "org.pyut.plugins.ToPython.IOPython": {
+        "IoJava": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+
         "org.pyut.plugins.ToArrangeLinks": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
@@ -229,6 +230,11 @@
             "propagate": "False"
         },
         "ToSugiyama": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "ToPython": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
