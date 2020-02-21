@@ -19,3 +19,13 @@ I asked the original developers if it was Ok to fork this project.  This is what
 
 
 So this is the fork and I let Cedric know.  
+
+------
+Note to self:
+
+In the loggingConfiguration.json configuration file some plugins use the fully qualified
+package.className and some do not.
+
+If we define instance loggers then we use just the class name
+If we define class loggers (for parent classes) then we need the full package.className
+specification

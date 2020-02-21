@@ -2,6 +2,10 @@ from typing import List
 from typing import Tuple
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
+from logging import DEBUG as pythonDebugLoggingLevel
+
 from org.pyut.general.Mediator import getMediator
 from org.pyut.ogl.OglClass import OglClass
 
@@ -55,12 +59,14 @@ class PyutIoPlugin(PyutPlugin):
 
     These two *Template Methods* (Design patterns) will call what needs to be.
     """
+    clsLogger: Logger = getLogger(__name__)
+
     def __init__(self, oglObjects, umlFrame):
         """
         Constructor.
 
         @param oglObjects : list of ogl objects
-        @param umlFrame : the umlframe of pyut
+        @param umlFrame : the UML Frame of pyut
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.0
         """
@@ -184,7 +190,8 @@ class PyutIoPlugin(PyutPlugin):
             if not self.setExportOptions():
                 return None
             mediator = getMediator()
-            mediator.selectAllShapes()  # during debug only
+            if self.clsLogger.level == pythonDebugLoggingLevel:
+                mediator.selectAllShapes()
             self.__oglObjects = mediator.getSelectedShapes()
             # write the file
             self.write(self.__oglObjects)

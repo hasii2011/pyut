@@ -139,7 +139,7 @@ class IoJava(PyutIoPlugin):
             self._writeMethodComment(file, method, self.__tab)
             self._writeMethod(file, method)
 
-    def _writeFields(self, file, fields):
+    def _writeFields(self, file: int, fields):
         """
         Write fields in file.
 
@@ -151,16 +151,16 @@ class IoJava(PyutIoPlugin):
         """
         # Write fields header
         if len(fields) > 0:
-            file.write(
-                self.__tab + "// ------\n" + self.__tab + "// Fields\n" + self.__tab + "// ------\n\n")
-
+            # file.write(self.__tab + "// ------\n" + self.__tab + "// Fields\n" + self.__tab + "// ------\n\n")
+            write(file, f'{self.__tab}// ------\n{self.__tab}// Fields\n{self.__tab}// ------\n\n'.encode())
         # Write all fields in file
         for field in fields:
             # Visibility converted from "+" to "public", ...
             visibility = self.__visibility[str(field.getVisibility())]
 
             # Type
-            fieldType = str(field.getType())
+            fieldType: str = str(field.getType())
+            self.logger.info(f'fieldType: {fieldType}')
 
             # Name
             name = field.getName()
@@ -168,7 +168,10 @@ class IoJava(PyutIoPlugin):
             # Default value
             default = field.getDefaultValue()
             if default is not None and default != "":
-                default = " = " + default
+                if fieldType.lower() == 'string':
+                    default = f' = "{default}"'
+                else:
+                    default = f' = {default}'
             else:
                 default = ""
 
@@ -182,7 +185,8 @@ class IoJava(PyutIoPlugin):
             self._writeFieldComment(file, name, self.__tab)
 
             # Write the complete line in file
-            file.write(self.__tab + visibility + " " + fieldType + " " + name + default + ";" + comments + "\n")
+            # file.write(self.__tab + visibility + " " + fieldType + " " + name + default + ";" + comments + "\n")
+            write(file, f'{self.__tab}{visibility} {fieldType} {name}{default};{comments}\n'.encode())
 
     def _writeLinks(self, file, links):
         """
@@ -293,21 +297,26 @@ class IoJava(PyutIoPlugin):
         # file.write(tab + " */\n")
         write(file, f'{tab} */\n'.encode())
 
-    def _writeFieldComment(self, file, name, tab=""):
+    def _writeFieldComment(self, file: int, name: str, tab=""):
         """
-        Write method comment with doxygen organization.
+        Write method comment using doxygen format.
 
-        @param file
-        @param name    : field name
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Args:
+            file:   File descriptor
+            name:   The field name
+            tab:    `tab` character to use
         """
-        file.write(tab + "/**\n")
-        file.write(tab + " * field " + name+"\n")
-        file.write(tab + " * More info here.\n")
+        # file.write(tab + "/**\n")
+        # file.write(tab + " * field " + name+"\n")
+        # file.write(tab + " * More info here.\n")
+        #
+        # file.write(tab + " */\n")
 
-        file.write(tab + " */\n")
+        write(file, f'{tab}/**\n'.encode())
+        write(file, f'{tab} * field {name}\n'.encode())
+        write(file, f'{tab} * More field information here.\n'.encode())
+
+        write(file, f'{tab} */\n'.encode())
 
     def _separateLinks(self, allLinks, interfaces, links):
         """
