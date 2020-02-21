@@ -238,7 +238,7 @@ class Mediator(Singleton):
         self._appPath  = None   # Application files' path
 
         self.registerClassEditor(self.standardClassEditor)
-        self._toolboxOwner = None   # toolbox owner, created when appframe is passed
+        self._toolboxOwner = None   # toolbox owner, created when application frame is passed
         self._fileHandling = None   # File Handler
         # self.registerClassEditor(self.fastTextClassEditor)
         # Patch from D.Dabrowsky, 20060129
@@ -295,7 +295,7 @@ class Mediator(Singleton):
 
     def notifyTitleChanged(self):
         """
-        Notify appframe that the application title has changed
+        Notify application frame that the application title has changed
 
         @since 1.27.2.23
         @author C.Dutoit <dutoitc@hotmail.com>
@@ -379,7 +379,7 @@ class Mediator(Singleton):
 
     def registerClassEditor(self, classEditor):
         """
-        Register a function to invoque a class editor.
+        Register a function to invoke a class editor.
         This function takes one parameter, the pyutClass to edit.
 
         @param classEditor  PyutClass)
@@ -392,7 +392,7 @@ class Mediator(Singleton):
         """
         TODO make actions enumerations
 
-        Set the new current atction.
+        Set the new current action.
         This tells the mediator which action to do for the next doAction call.
 
         @param action : the action from ACTION constants
@@ -480,7 +480,7 @@ class Mediator(Singleton):
                 dlg.Destroy()
                 umlFrame.Refresh()
             except (ValueError, Exception) as e:
-                PyutUtils.displayError(_(f"An error occured while trying to do this action {e}"))
+                PyutUtils.displayError(_(f"An error occurred while trying to do this action {e}"))
                 umlFrame.Refresh()
         elif self._currentAction == ACTION_ZOOM_IN:
             return SKIP_EVENT
@@ -494,7 +494,7 @@ class Mediator(Singleton):
 
     def selectTool(self, ID):
         """
-        Select the tool of given ID from the toolbar, and delesect the others.
+        Select the tool of given ID from the toolbar, and deselect the others.
 
         @since 1.9
         @author L. Burgbacher <lb@alawa.ch>
@@ -577,7 +577,7 @@ class Mediator(Singleton):
 
     def autoResize(self, obj: BadPracticeType):
         """
-        Autoresize the given object.
+        Auto-resize the given object.
 
         @param obj
 
@@ -679,12 +679,12 @@ class Mediator(Singleton):
         """
         umlObjects = self.getUmlObjects()
         if umlObjects is not None:
-            selectedObjs = []
+            selectedObjects = []
             for obj in self.getUmlObjects():
                 if obj.IsSelected():
-                    selectedObjs.append(obj)
+                    selectedObjects.append(obj)
 
-            return selectedObjs
+            return selectedObjects
         else:
             return []
 
@@ -745,7 +745,7 @@ class Mediator(Singleton):
 
     def showParams(self, val):
         """
-        Choose wether to show the params in the classes or not.
+        Choose whether to show the params in the classes or not.
 
         @param val
         @since 1.17
@@ -768,7 +768,7 @@ class Mediator(Singleton):
         """
         Set the application's current directory
 
-        @param String directory : New appliation's current directory
+        @param String directory : New application's current directory
         """
         return self._appFrame.updateCurrentDir(directory)
 
