@@ -11,6 +11,7 @@ from os import sep as osSep
 from os import O_WRONLY
 from os import O_CREAT
 
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
@@ -215,47 +216,45 @@ class IoJava(PyutIoPlugin):
             # file.write(self.__tab + "private " + destinationLinkName + " " + name + array + ";\n")
             write(file, f'{self.__tab}private {destinationLinkName} {name}{array};\n'.encode())
 
-    def _writeFathers(self, file, fathers):
+    def _writeParent(self, file: int, parents):
         """
-        Writing fathers for inheritance.
+        Writing parent for inheritance.  (Java only has single inheritance)
 
-        @param file file : class java file
-        @param fathers  : [] list of fathers
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Args:
+            file:       file descriptor
+            parents:    list of parents
         """
-        nbr = len(fathers)
+        nbr = len(parents)
 
-        # If there is a father:
+        # If there is a parent:
         if nbr != 0:
-            file.write(" extends ")
+            write(file, " extends ".encode())
 
-            # Only one father allowed
-            file.write(fathers[0].getName())
+            # Only one parent allowed
+            parent: PyutClass = parents[0]
+            name:   str       = parent.getName()
+            write(file, name.encode())
 
     def _writeInterfaces(self, file, interfaces):
         """
         Writing interfaces implemented by the class.
 
-        @param file file : class java file
-        @param interfaces  : [] list of fathers
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Args:
+            file:       file descriptor
+            interfaces: list of implemented interfaces
         """
         nbr = len(interfaces)
 
         # If there is at least one interface:
         if nbr != 0:
-            file.write(" implements ")
+            write(file, " implements ".encode())
 
             # Write the first interface
-            file.write(interfaces[0].getDestination().getName())
+            write(file, interfaces[0].getDestination().getName())
 
             # For all next interfaces, write the name separated by a ','
             for interface in interfaces[1:]:
-                file.write(", " + interface.getDestination().getName())
+                write(file, f', {interface.getDestination().getName()}'.encode())
 
     def _writeClassComment(self, file: int, className, classInterface):
         """
@@ -322,22 +321,25 @@ class IoJava(PyutIoPlugin):
         """
         Separate the different types of links into lists.
 
-        @param [PyutLinks] links : list of links of the class
-        @param [str] interfaces : list of interfaces implemented by the class
+        Args:
+            allLinks:   list of links of the class
+            interfaces: list of interfaces implemented by the class
+            links:
 
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1.2.2
+        Returns:
+
         """
         for link in allLinks:
             linkType = link.getType()
+            self.logger.info(f'Found linkType: `{linkType}`')
             if linkType == OglLinkType.OGL_INTERFACE:
                 interfaces.append(link)
             elif linkType == OglLinkType.OGL_COMPOSITION or linkType == OglLinkType.OGL_AGGREGATION:
                 links.append(link)
 
-    def _writeClass(self, pyutClass):
+    def _writeClass(self, pyutClass: PyutClass):
         """
-        Writing a class to files.
+        Writing a class to a file.
 
         @param pyutClass : an object pyutClass
         """
@@ -347,13 +349,13 @@ class IoJava(PyutIoPlugin):
         # Opening a file for each class
         fqn: str = f'{self._dir}{osSep}{className}.java'
         # javaFile = open(self._dir + osSep + className + '.java')
-        flags:    int = O_WRONLY | O_CREAT
+        flags:      int = O_WRONLY | O_CREAT
         javaFileFD: int = open(fqn, flags)
 
         # Extract the data from the class
         fields     = pyutClass.getFields()
         methods    = pyutClass.getMethods()
-        fathers    = pyutClass.getParents()
+        parents    = pyutClass.getParents()
         allLinks   = pyutClass.getLinks()
         stereotype = pyutClass.getStereotype()
 
@@ -379,7 +381,7 @@ class IoJava(PyutIoPlugin):
         # javaFile.write("public " + classInterface + " " + className)
         write(javaFileFD, f'public {classInterface} {className}'.encode())
 
-        self._writeFathers(javaFileFD, fathers)
+        self._writeParent(javaFileFD, parents)
         self._writeInterfaces(javaFileFD, interfaces)
         # javaFile.write(" {\n\n")
         write(javaFileFD, ' {\n\n'.encode())
@@ -424,10 +426,9 @@ class IoJava(PyutIoPlugin):
             "-": "private",
             "#": "protected"
         }
-
-        # noinspection PyUnusedLocal
         oglClasses = []
         for oglObject in oglObjects:
+            self.logger.info(f'oglObject: {oglObject}')
             if isinstance(oglObject, OglClass):
                 oglClasses.append(oglObject)
 

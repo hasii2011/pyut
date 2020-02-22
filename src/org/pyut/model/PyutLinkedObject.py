@@ -11,10 +11,6 @@ class PyutLinkedObject(PyutObject):
     This class provides all support for link management in the data layer. All
     classes that may be interconnected (classes for examples) should inherit
     this class to have all links support.
-
-    :version: $Revision: 1.6 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
     """
     def __init__(self, name=""):
         """
@@ -24,8 +20,8 @@ class PyutLinkedObject(PyutObject):
         """
         super().__init__(name)
 
-        self._links:    List[PyutLink] = []
-        self._parents:  List[str]      = []     # Allows for multiple inheritance
+        self._links:    List[PyutLink]         = []
+        self._parents:  List[PyutLinkedObject] = []     # Allows for multiple inheritance
         self._filename: str            = ""
 
     def getNextSafeID(self):
@@ -66,7 +62,7 @@ class PyutLinkedObject(PyutObject):
         """
         self._links.append(link)
 
-    def getParents(self) -> List[str]:
+    def getParents(self) -> List["PyutLinkedObject"]:
         """
         This is not a copy, but the original one. Any change made to it is
         directly made on the class.
@@ -75,7 +71,7 @@ class PyutLinkedObject(PyutObject):
         """
         return self._parents
 
-    def setParents(self, parents: List[str]):
+    def setParents(self, parents: List["PyutLinkedObject"]):
         """
         Replace the actual parents by those given in the list.
         The methods passed are not copied, but used directly.
@@ -85,14 +81,14 @@ class PyutLinkedObject(PyutObject):
         """
         self._parents = parents
 
-    def addParent(self, parent: str):
+    def addParent(self, parent: "PyutLinkedObject"):
         """
         Add a parent to the parent list
 
         Args:
             parent:
         """
-        return self._parents.append(parent)
+        self._parents.append(parent)
 
     def setFilename(self, filename: str):
         """

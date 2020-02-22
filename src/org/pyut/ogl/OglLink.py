@@ -165,11 +165,10 @@ class OglLink(LineShape, ShapeEventHandler):
 
     def getPyutObject(self):
         """
-        Returns the associatied PyutLink.
+        Returns the associated PyutLink.
 
-        @return PyutLink
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Returns: PyutLink
+
         """
         return self._link
 

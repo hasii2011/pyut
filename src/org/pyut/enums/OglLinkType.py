@@ -4,6 +4,9 @@ from enum import Enum
 class OglLinkType(Enum):
     """
      Types of OGL Links
+
+     TODO:  No such thing as Ogl Link type;  Link types are embedded only the PyutData model; So
+            this enumeration should be part of the data model and named accordingly
     """
     OGL_ASSOCIATION = 0
     OGL_AGGREGATION = 1

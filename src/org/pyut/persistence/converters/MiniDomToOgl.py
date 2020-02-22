@@ -186,7 +186,7 @@ class MiniDomToOgl:
             dstAnchor.SetPosition(dx, dy)
 
             # add the control points to the line
-            line = srcAnchor.GetLines()[0]  # only 1 line per anchor in pyut
+            line   = srcAnchor.GetLines()[0]  # only 1 line per anchor in pyut
             parent = line.GetSource().GetParent()
             selfLink = parent is line.GetDestination().GetParent()
 
@@ -200,6 +200,7 @@ class MiniDomToOgl:
 
             if isinstance(oglLink, OglAssociation):
                 self.__furtherCustomizeAssociationLink(xmlLink, oglLink)
+            self._reconstituteLinkDataModel(oglLink)
 
         return oglLinks
 
@@ -500,6 +501,30 @@ class MiniDomToOgl:
             controlPoints.append(ControlPoint(x, y))
 
         return controlPoints
+
+    def _reconstituteLinkDataModel(self, oglLink: OglLink):
+        """
+        Updates one the following lists in a PyutLinkedObject:
+
+        ._parents   for Inheritance links
+        ._links     for all other link types
+
+        Args:
+            oglLink:       An OglLink
+        """
+        srcShape:  OglClass = oglLink.getSourceShape()
+        destShape: OglClass = oglLink.getDestinationShape()
+        self.logger.info(f'source ID: {srcShape.GetID()} - destination ID: {destShape.GetID()}')
+
+        pyutLink:        PyutLink = oglLink.getPyutObject()
+
+        if pyutLink.getType() == OglLinkType.OGL_INHERITANCE:
+            childPyutClass:  PyutClass = srcShape.getPyutObject()
+            parentPyutClass: PyutClass = destShape.getPyutObject()
+            childPyutClass.addParent(parentPyutClass)
+        else:
+            srcPyutClass:  PyutClass = srcShape.getPyutObject()
+            srcPyutClass.addLink(pyutLink)
 
     def _getPyutLink(self, obj: Element):
         """

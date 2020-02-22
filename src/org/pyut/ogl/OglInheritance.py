@@ -30,4 +30,4 @@ class OglInheritance(OglLink):
         self.SetDrawArrow(True)
 
     def __repr__(self):
-        return f'Parent: {self.getSourceShape()}  Child: {self.getDestinationShape()}'
+        return f'OglInheritance - Parent: {self.getSourceShape()}  Child: {self.getDestinationShape()}'
