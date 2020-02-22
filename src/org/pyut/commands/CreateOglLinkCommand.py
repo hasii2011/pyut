@@ -3,8 +3,11 @@ from typing import Tuple
 
 from wx import Point
 
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.commands.Command import Command
+from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.ogl.OglLinkFactory import getLinkType
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
@@ -20,8 +23,8 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 class CreateOglLinkCommand(Command):
     """
-    This class is a part of the history system of PyUt.
-    It creates every kind of OglLink and allowds to undo/redo it.
+    This class is a part of the PyUt history system.
+    It creates every kind of OglLink and allows undo/redo actions.
     """
     NO_NAME_MESSAGE: str = "testMessage()"
 
@@ -200,20 +203,28 @@ class CreateOglLinkCommand(Command):
 
         return oglSdMessage
 
-    def _createInheritanceLink(self, child, father):
+    def _createInheritanceLink(self, child: OglClass, parent: OglClass) -> OglLink:
         """
-        Add a paternity link between child and father.
+        Add a parent link between the child and parent objects.
 
-        @param OglClass child : child
-        @param OglClass father : father
+        Args:
+            child:  Child PyutClass
+            parent: Parent PyutClass
+
+        Returns:
+            The inheritance OglLink
         """
-        pyutLink = PyutLink("", linkType=OglLinkType.OGL_INHERITANCE, source=child.getPyutObject(), destination=father.getPyutObject())
-        oglLink = getOglLinkFactory().getOglLink(child, pyutLink, father, OglLinkType.OGL_INHERITANCE)
+        pyutLink = PyutLink("", linkType=OglLinkType.OGL_INHERITANCE, source=child.getPyutObject(), destination=parent.getPyutObject())
+        oglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, OglLinkType.OGL_INHERITANCE)
 
-        # Added by ND
         child.addLink(oglLink)
-        father.addLink(oglLink)
+        parent.addLink(oglLink)
+
         # add it to the PyutClass
-        child.getPyutObject().addParent(father.getPyutObject())
+        # child.getPyutObject().addParent(parent.getPyutObject())
+        childPyutClass:  PyutClass = child.getPyutObject()
+        parentPyutClass: PyutClass = parent.getPyutObject()
+
+        childPyutClass.addParent(parentPyutClass)
 
         return oglLink
