@@ -1,6 +1,9 @@
 
 from typing import List
 
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -17,10 +20,12 @@ class ToOrthogonalLayout(PyutToPlugin):
 
         Args:
             umlObjects:  list of ogl objects
-            umlFrame:    the umlframe of pyut
+            umlFrame:    A Pyut umlFrame
         """
         super().__init__(umlObjects, umlFrame)
 
+        self.logger: Logger = getLogger(__name__)
+        
     def getName(self):
         """
         Returns: the name of the plugin.
