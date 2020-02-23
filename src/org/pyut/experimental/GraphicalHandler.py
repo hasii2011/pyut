@@ -98,20 +98,21 @@ class GraphicalHandler:
         oglClassDef.autoResize()
         return oglClassDef
 
-    def createInheritanceLink(self, child: OglClass, father: OglClass):
+    def createInheritanceLink(self, child: OglClass, parent: OglClass):
         """
         Add a paternity link between child and father.
 
         Args:
             child:  A child
-            father: The daddy!!
+            parent: The daddy!!
 
         Returns: an OgLink
 
         """
         cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
-        cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=father, dst=child)
-
+        # cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=father, dst=child)
+        # inheritance points back to parent
+        cmd: CreateOglLinkCommand = CreateOglLinkCommand(src=child, dst=parent)
         cmdGroup.addCommand(cmd)
         self._historyManager.addCommandGroup(cmdGroup)
 
