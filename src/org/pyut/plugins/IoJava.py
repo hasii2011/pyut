@@ -1,5 +1,6 @@
 
 from typing import cast
+from typing import List
 
 from logging import Logger
 from logging import getLogger
@@ -14,6 +15,7 @@ from os import O_CREAT
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutStereotype import PyutStereotype
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
@@ -235,7 +237,7 @@ class IoJava(PyutIoPlugin):
             name:   str       = parent.getName()
             write(file, name.encode())
 
-    def _writeInterfaces(self, file, interfaces):
+    def _writeInterfaces(self, file: int, interfaces: List[PyutLink]):
         """
         Writing interfaces implemented by the class.
 
@@ -250,7 +252,8 @@ class IoJava(PyutIoPlugin):
             write(file, " implements ".encode())
 
             # Write the first interface
-            write(file, interfaces[0].getDestination().getName())
+            interfaceName: str = interfaces[0].getDestination().getName()
+            write(file, interfaceName.encode())
 
             # For all next interfaces, write the name separated by a ','
             for interface in interfaces[1:]:
@@ -357,7 +360,8 @@ class IoJava(PyutIoPlugin):
         methods    = pyutClass.getMethods()
         parents    = pyutClass.getParents()
         allLinks   = pyutClass.getLinks()
-        stereotype = pyutClass.getStereotype()
+
+        stereotype: PyutStereotype = pyutClass.getStereotype()
 
         # List of links
         interfaces = []     # List of interfaces implemented by the class
@@ -370,8 +374,8 @@ class IoJava(PyutIoPlugin):
         # Is it an interface
         classInterface = "class"
         if stereotype is not None:
-            stereotype = stereotype.getStereotype()
-            if stereotype == "Interface":
+            stereotypeName: str = stereotype.getStereotype()
+            if stereotypeName.lower() == "interface":
                 classInterface = "interface"
 
         # Write data in file

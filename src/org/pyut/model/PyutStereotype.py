@@ -18,29 +18,27 @@ class PyutStereotype:
         """
         Stereotype for a class, a link
 
-        @param name for the type
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            name: for the type
         """
-        self.__name = name
+        self.__name: str = name
 
-    def getStereotype(self):
+    def getStereotype(self) -> str:
         """
         Get method, used to know the stereotype.
 
-        @return string name
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        TODO:  This method name is confusing;  How to fix it.  -- hasii
+
+        Returns:  The name
         """
         return self.getName()
 
-    def getName(self):
+    def getName(self) -> str:
         """
         Get method, used to know the name.
 
-        @return string name
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:
+                name
         """
         return self.__name
 

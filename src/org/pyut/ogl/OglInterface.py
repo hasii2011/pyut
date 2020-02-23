@@ -18,12 +18,16 @@ from org.pyut.ogl.OglClass import OglClass
 
 
 class OglInterface(OglLink):
+
+    clsLogger: Logger = getLogger(__name__)
+
     """
     Graphical OGL representation of an interface link.
     This class provide the methods for drawing an interface link between
     two classes of an UML diagram. Add labels to an OglLink.
     """
     def __init__(self, srcShape: OglLink, pyutLink: PyutLink, dstShape: OglClass):
+
         """
 
         Args:
@@ -32,8 +36,6 @@ class OglInterface(OglLink):
             dstShape: Destination shape
         """
         super().__init__(srcShape, pyutLink, dstShape)
-
-        self.logger: Logger = getLogger(__name__)
 
         self.SetPen(Pen("BLACK", 1, PENSTYLE_LONG_DASH))
         self.SetBrush(WHITE_BRUSH)
