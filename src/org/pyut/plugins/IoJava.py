@@ -345,7 +345,7 @@ class IoJava(PyutIoPlugin):
         write(file, f'{tab} * More info here.\n'.encode())
 
         for param in method.getParams():
-            write(file, f' * @param {param.getName()} : {str(param.getType())}\n'.encode())
+            write(file, f'{tab} * @param {param.getName()} : {str(param.getType())}\n'.encode())
 
         if str(method.getReturns()) != '':
             write(file, f'{tab} * @return {str(method.getReturns())}\n'.encode())
