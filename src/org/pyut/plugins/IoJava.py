@@ -303,7 +303,7 @@ class IoJava(PyutIoPlugin):
             # Get name of aggregation
             name = link.getName()
             # Array or single variable
-            if link.destinationCardinality.find('n') != -1:
+            if link.destinationCardinality.find('n') != -1 or link.destinationCardinality.find('*') != -1:
                 array = "[]"
             else:
                 array = ""
