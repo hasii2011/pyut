@@ -16,13 +16,14 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutStereotype import PyutStereotype
+from org.pyut.model.PyutLink import PyutLink
+
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.model.PyutLink import PyutLink
-
 from org.pyut.enums.OglLinkType import OglLinkType
+
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
@@ -77,8 +78,10 @@ class IoJava(PyutIoPlugin):
 
     def write(self, oglObjects):
         """
-        Data saving
-        @param oglObjects : list of exported objects
+        Do the export
+        Args:
+            oglObjects:   List of objects to act on
+
         """
         # Directory for sources
         self._dir = self._askForDirectoryExport()
@@ -100,7 +103,6 @@ class IoJava(PyutIoPlugin):
             if isinstance(oglObject, OglClass):
                 oglClasses.append(oglObject)
 
-        # for el in [object for objects in oglObjects if isinstance(object, OglClass)]:
         for el in oglClasses:
             self._writeClass(el.getPyutObject())
 
@@ -108,14 +110,14 @@ class IoJava(PyutIoPlugin):
         """
         Writing a class to a file.
 
-        @param pyutClass : an object pyutClass
+        Args:
+            pyutClass:  The PyutClass object to write
+
         """
-        # Read class name
         className = pyutClass.getName()
 
         # Opening a file for each class
-        fqn: str = f'{self._dir}{osSep}{className}.java'
-        # javaFile = open(self._dir + osSep + className + '.java')
+        fqn:        str = f'{self._dir}{osSep}{className}.java'
         flags:      int = O_WRONLY | O_CREAT
         javaFileFD: int = open(fqn, flags)
 
@@ -182,7 +184,6 @@ class IoJava(PyutIoPlugin):
             className:
             classInterface:
         """
-        # file.write("/**\n * " + classInterface + " " + className + "\n * More info here \n */\n")
         write(file, f'/**\n * {classInterface} {className}\n * Class information here \n */\n'.encode())
 
     def _writeParent(self, file: int, parents):
@@ -238,7 +239,6 @@ class IoJava(PyutIoPlugin):
         """
         # Write fields header
         if len(fields) > 0:
-            # file.write(self.__tab + "// ------\n" + self.__tab + "// Fields\n" + self.__tab + "// ------\n\n")
             write(file, f'{self.__tab}// ------\n{self.__tab}// Fields\n{self.__tab}// ------\n\n'.encode())
         # Write all fields in file
         for field in fields:
@@ -268,11 +268,7 @@ class IoJava(PyutIoPlugin):
             else:
                 comments = ""
 
-            # Write the comment before the field
             self._writeFieldComment(file, name, self.__tab)
-
-            # Write the complete line in file
-            # file.write(self.__tab + visibility + " " + fieldType + " " + name + default + ";" + comments + "\n")
             write(file, f'{self.__tab}{visibility} {fieldType} {name}{default};{comments}\n'.encode())
 
     def _writeFieldComment(self, file: int, name: str, tab=""):
@@ -284,12 +280,6 @@ class IoJava(PyutIoPlugin):
             name:   The field name
             tab:    `tab` character to use
         """
-        # file.write(tab + "/**\n")
-        # file.write(tab + " * field " + name+"\n")
-        # file.write(tab + " * More info here.\n")
-        #
-        # file.write(tab + " */\n")
-
         write(file, f'{tab}/**\n'.encode())
         write(file, f'{tab} * field {name}\n'.encode())
         write(file, f'{tab} * More field information here.\n'.encode())
@@ -300,10 +290,10 @@ class IoJava(PyutIoPlugin):
         """
         Write relation links in file.
 
-        @param file file:
-        @param [] links : list of relation links
+        Args:
+            file:   The file descriptor
+            links:  The class links
         """
-        # file.write("\n")
         write(file, "\n".encode())
         # Write all relation links in file
         for link in links:
@@ -313,14 +303,11 @@ class IoJava(PyutIoPlugin):
             # Get name of aggregation
             name = link.getName()
             # Array or single variable
-            # if link.getDestinationCardinality().find('n') != -1:
             if link.destinationCardinality.find('n') != -1:
                 array = "[]"
             else:
                 array = ""
 
-            # Write data in file
-            # file.write(self.__tab + "private " + destinationLinkName + " " + name + array + ";\n")
             write(file, f'{self.__tab}private {destinationLinkName} {name}{array};\n'.encode())
 
     def _writeMethods(self, file: int, methods):
@@ -333,7 +320,6 @@ class IoJava(PyutIoPlugin):
         """
         # Write header
         if len(methods) > 0:
-            # file.write("\n" + self.__tab + "// -------\n" + self.__tab + "// Methods\n" + self.__tab + "// -------\n\n")
             header: str = f'\n{self.__tab}// -------\n{self.__tab}// Methods\n{self.__tab}// -------\n\n'
             write(file, header.encode())
 
@@ -354,22 +340,16 @@ class IoJava(PyutIoPlugin):
             tab:    tab character(s) to use
 
         """
-        # file.write(tab + "/**\n")
-        # file.write(tab + " * method " + method.getName()+"\n")
-        # file.write(tab + " * More info here.\n")
         write(file, f'{tab}/**\n'.encode())
         write(file, f'{tab} * method {method.getName()}\n'.encode())
         write(file, f'{tab} * More info here.\n'.encode())
 
         for param in method.getParams():
-            # file.write(tab + " * @param " + param.getName() + " : " + str(param.getType()) + "\n")
             write(file, f' * @param {param.getName()} : {str(param.getType())}\n'.encode())
 
         if str(method.getReturns()) != '':
-            # file.write(tab + " * @return " + str(method.getReturns()) + "\n")
             write(file, f'{tab} * @return {str(method.getReturns())}\n'.encode())
 
-        # file.write(tab + " */\n")
         write(file, f'{tab} */\n'.encode())
 
     def _writeMethod(self, file: int, method: PyutMethod):
@@ -386,7 +366,6 @@ class IoJava(PyutIoPlugin):
         if returnType == "":
             returnType = "void"
 
-        # file.write(self.__tab + visibility + " " + returnType + " " + name + "(")
         write(file, f'{self.__tab}{visibility} {returnType} {name}('.encode())
 
         # for all param
@@ -399,10 +378,8 @@ class IoJava(PyutIoPlugin):
             # comma between param
             nbParam = nbParam - 1
             if nbParam > 0:
-                # file.write(" , ")
                 write(file, ' , '.encode())
 
-        # file.write(") {\n" + self.__tab + "}\n\n")
         write(file, f') {{\n{self.__tab}}}\n\n'.encode())
 
     def _writeParam(self, file: int, param: PyutParam):
@@ -413,7 +390,6 @@ class IoJava(PyutIoPlugin):
             file:   file descriptor
             param:  pyut parameter object to write
         """
-        # file.write(str(param.getType()) + " " + param.getName())
         paramType: str = param.getType().__str__()
         paramName: str = param.getName()
         write(file, f'{paramType} {paramName}'.encode())
