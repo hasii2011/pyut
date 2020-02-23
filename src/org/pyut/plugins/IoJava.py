@@ -75,72 +75,156 @@ class IoJava(PyutIoPlugin):
     def setExportOptions(self) -> bool:
         return True
 
-    def _writeParam(self, file: int, param: PyutParam):
+    def write(self, oglObjects):
         """
-        Writing params to file.
+        Data saving
+        @param oglObjects : list of exported objects
+        """
+        # Directory for sources
+        self._dir = self._askForDirectoryExport()
+
+        # If no destination, abort
+        if self._dir == "":
+            return
+
+        # defining constant
+        self.__tab = "    "
+        self.__visibility = {
+            "+": "public",
+            "-": "private",
+            "#": "protected"
+        }
+        oglClasses = []
+        for oglObject in oglObjects:
+            self.logger.info(f'oglObject: {oglObject}')
+            if isinstance(oglObject, OglClass):
+                oglClasses.append(oglObject)
+
+        # for el in [object for objects in oglObjects if isinstance(object, OglClass)]:
+        for el in oglClasses:
+            self._writeClass(el.getPyutObject())
+
+    def _writeClass(self, pyutClass: PyutClass):
+        """
+        Writing a class to a file.
+
+        @param pyutClass : an object pyutClass
+        """
+        # Read class name
+        className = pyutClass.getName()
+
+        # Opening a file for each class
+        fqn: str = f'{self._dir}{osSep}{className}.java'
+        # javaFile = open(self._dir + osSep + className + '.java')
+        flags:      int = O_WRONLY | O_CREAT
+        javaFileFD: int = open(fqn, flags)
+
+        # Extract the data from the class
+        fields     = pyutClass.getFields()
+        methods    = pyutClass.getMethods()
+        parents    = pyutClass.getParents()
+        allLinks   = pyutClass.getLinks()
+
+        stereotype: PyutStereotype = pyutClass.getStereotype()
+
+        # List of links
+        interfaces = []     # List of interfaces implemented by the class
+        links      = []     # Aggregation and compositions
+        self._separateLinks(allLinks, interfaces, links)
+
+        # Is it an interface
+        classInterface = "class"
+        if stereotype is not None:
+            stereotypeName: str = stereotype.getStereotype()
+            if stereotypeName.lower() == "interface":
+                classInterface = "interface"
+
+        self._writeClassComment(javaFileFD, className, classInterface)
+        write(javaFileFD, f'public {classInterface} {className}'.encode())
+
+        self._writeParent(javaFileFD, parents)
+        self._writeInterfaces(javaFileFD, interfaces)
+        write(javaFileFD, ' {\n\n'.encode())
+
+        self._writeFields(javaFileFD, fields)
+
+        # Aggregation and Composition
+        self._writeLinks(javaFileFD, links)
+        self._writeMethods(javaFileFD, methods)
+        write(javaFileFD, '}\n'.encode())
+
+    def _separateLinks(self, allLinks, interfaces, links):
+        """
+        Separate the different types of links into lists.
 
         Args:
-            file:   file descriptor
-            param:  pyut parameter object to write
+            allLinks:   list of links of the class
+            interfaces: list of interfaces implemented by the class
+            links:
+
+        Returns:
+
         """
-        # file.write(str(param.getType()) + " " + param.getName())
-        paramType: str = param.getType().__str__()
-        paramName: str = param.getName()
-        write(file, f'{paramType} {paramName}'.encode())
+        for link in allLinks:
+            linkType = link.getType()
+            self.logger.info(f'Found linkType: `{linkType}`')
+            if linkType == OglLinkType.OGL_INTERFACE:
+                interfaces.append(link)
+            elif linkType == OglLinkType.OGL_COMPOSITION or linkType == OglLinkType.OGL_AGGREGATION:
+                links.append(link)
 
-    def _writeMethod(self, file: int, method: PyutMethod):
+    def _writeClassComment(self, file: int, className, classInterface):
         """
-        Writing a method in file : name(param, param, ...).
-
-        Args:
-            file:       File descriptor
-            method:     method object
-        """
-        name:       str = method.getName()
-        visibility: str = self.__visibility[str(method.getVisibility())]
-        returnType: str = str(method.getReturns())
-        if returnType == "":
-            returnType = "void"
-
-        # file.write(self.__tab + visibility + " " + returnType + " " + name + "(")
-        write(file, f'{self.__tab}{visibility} {returnType} {name}('.encode())
-
-        # for all param
-        nbParam = len(method.getParams())
-        self.logger.info(f'# params: {nbParam}')
-        for param in method.getParams():
-            # writing param
-            self._writeParam(file, param)
-
-            # comma between param
-            nbParam = nbParam - 1
-            if nbParam > 0:
-                # file.write(" , ")
-                write(file, ' , '.encode())
-
-        # file.write(") {\n" + self.__tab + "}\n\n")
-        write(file, f') {{\n{self.__tab}}}\n\n'.encode())
-
-    def _writeMethods(self, file: int, methods):
-        """
-        Writing methods in source (.java) file
+        Write class comment with doxygen organization.
 
         Args:
             file:       file descriptor
-            methods:    list of all method of a class
+            className:
+            classInterface:
         """
-        # Write header
-        if len(methods) > 0:
-            # file.write("\n" + self.__tab + "// -------\n" + self.__tab + "// Methods\n" + self.__tab + "// -------\n\n")
-            header: str = f'\n{self.__tab}// -------\n{self.__tab}// Methods\n{self.__tab}// -------\n\n'
-            write(file, header.encode())
+        # file.write("/**\n * " + classInterface + " " + className + "\n * More info here \n */\n")
+        write(file, f'/**\n * {classInterface} {className}\n * Class information here \n */\n'.encode())
 
-        # for all method in methods list
-        for method in methods:
-            method: PyutMethod = cast(PyutMethod, method)
-            self.logger.info(f'method: {method}')
-            self._writeMethodComment(file, method, self.__tab)
-            self._writeMethod(file, method)
+    def _writeParent(self, file: int, parents):
+        """
+        Writing parent for inheritance.  (Java only has single inheritance)
+
+        Args:
+            file:       file descriptor
+            parents:    list of parents
+        """
+        nbr = len(parents)
+
+        # If there is a parent:
+        if nbr != 0:
+            write(file, " extends ".encode())
+
+            # Only one parent allowed
+            parent: PyutClass = parents[0]
+            name:   str       = parent.getName()
+            write(file, name.encode())
+
+    def _writeInterfaces(self, file: int, interfaces: List[PyutLink]):
+        """
+        Writing interfaces implemented by the class.
+
+        Args:
+            file:       file descriptor
+            interfaces: list of implemented interfaces
+        """
+        nbr = len(interfaces)
+
+        # If there is at least one interface:
+        if nbr != 0:
+            write(file, " implements ".encode())
+
+            # Write the first interface
+            interfaceName: str = interfaces[0].getDestination().getName()
+            write(file, interfaceName.encode())
+
+            # For all next interfaces, write the name separated by a ','
+            for interface in interfaces[1:]:
+                write(file, f', {interface.getDestination().getName()}'.encode())
 
     def _writeFields(self, file: int, fields):
         """
@@ -191,6 +275,27 @@ class IoJava(PyutIoPlugin):
             # file.write(self.__tab + visibility + " " + fieldType + " " + name + default + ";" + comments + "\n")
             write(file, f'{self.__tab}{visibility} {fieldType} {name}{default};{comments}\n'.encode())
 
+    def _writeFieldComment(self, file: int, name: str, tab=""):
+        """
+        Write method comment using doxygen format.
+
+        Args:
+            file:   File descriptor
+            name:   The field name
+            tab:    `tab` character to use
+        """
+        # file.write(tab + "/**\n")
+        # file.write(tab + " * field " + name+"\n")
+        # file.write(tab + " * More info here.\n")
+        #
+        # file.write(tab + " */\n")
+
+        write(file, f'{tab}/**\n'.encode())
+        write(file, f'{tab} * field {name}\n'.encode())
+        write(file, f'{tab} * More field information here.\n'.encode())
+
+        write(file, f'{tab} */\n'.encode())
+
     def _writeLinks(self, file, links):
         """
         Write relation links in file.
@@ -218,58 +323,26 @@ class IoJava(PyutIoPlugin):
             # file.write(self.__tab + "private " + destinationLinkName + " " + name + array + ";\n")
             write(file, f'{self.__tab}private {destinationLinkName} {name}{array};\n'.encode())
 
-    def _writeParent(self, file: int, parents):
+    def _writeMethods(self, file: int, methods):
         """
-        Writing parent for inheritance.  (Java only has single inheritance)
+        Writing methods in source (.java) file
 
         Args:
             file:       file descriptor
-            parents:    list of parents
+            methods:    list of all method of a class
         """
-        nbr = len(parents)
+        # Write header
+        if len(methods) > 0:
+            # file.write("\n" + self.__tab + "// -------\n" + self.__tab + "// Methods\n" + self.__tab + "// -------\n\n")
+            header: str = f'\n{self.__tab}// -------\n{self.__tab}// Methods\n{self.__tab}// -------\n\n'
+            write(file, header.encode())
 
-        # If there is a parent:
-        if nbr != 0:
-            write(file, " extends ".encode())
-
-            # Only one parent allowed
-            parent: PyutClass = parents[0]
-            name:   str       = parent.getName()
-            write(file, name.encode())
-
-    def _writeInterfaces(self, file: int, interfaces: List[PyutLink]):
-        """
-        Writing interfaces implemented by the class.
-
-        Args:
-            file:       file descriptor
-            interfaces: list of implemented interfaces
-        """
-        nbr = len(interfaces)
-
-        # If there is at least one interface:
-        if nbr != 0:
-            write(file, " implements ".encode())
-
-            # Write the first interface
-            interfaceName: str = interfaces[0].getDestination().getName()
-            write(file, interfaceName.encode())
-
-            # For all next interfaces, write the name separated by a ','
-            for interface in interfaces[1:]:
-                write(file, f', {interface.getDestination().getName()}'.encode())
-
-    def _writeClassComment(self, file: int, className, classInterface):
-        """
-        Write class comment with doxygen organization.
-
-        Args:
-            file:       file descriptor
-            className:
-            classInterface:
-        """
-        # file.write("/**\n * " + classInterface + " " + className + "\n * More info here \n */\n")
-        write(file, f'/**\n * {classInterface} {className}\n * Class information here \n */\n'.encode())
+        # for all method in methods list
+        for method in methods:
+            method: PyutMethod = cast(PyutMethod, method)
+            self.logger.info(f'method: {method}')
+            self._writeMethodComment(file, method, self.__tab)
+            self._writeMethod(file, method)
 
     def _writeMethodComment(self, file: int, method: PyutMethod, tab=""):
         """
@@ -299,143 +372,48 @@ class IoJava(PyutIoPlugin):
         # file.write(tab + " */\n")
         write(file, f'{tab} */\n'.encode())
 
-    def _writeFieldComment(self, file: int, name: str, tab=""):
+    def _writeMethod(self, file: int, method: PyutMethod):
         """
-        Write method comment using doxygen format.
+        Writing a method in file : name(param, param, ...).
 
         Args:
-            file:   File descriptor
-            name:   The field name
-            tab:    `tab` character to use
+            file:       File descriptor
+            method:     method object
         """
-        # file.write(tab + "/**\n")
-        # file.write(tab + " * field " + name+"\n")
-        # file.write(tab + " * More info here.\n")
-        #
-        # file.write(tab + " */\n")
+        name:       str = method.getName()
+        visibility: str = self.__visibility[str(method.getVisibility())]
+        returnType: str = str(method.getReturns())
+        if returnType == "":
+            returnType = "void"
 
-        write(file, f'{tab}/**\n'.encode())
-        write(file, f'{tab} * field {name}\n'.encode())
-        write(file, f'{tab} * More field information here.\n'.encode())
+        # file.write(self.__tab + visibility + " " + returnType + " " + name + "(")
+        write(file, f'{self.__tab}{visibility} {returnType} {name}('.encode())
 
-        write(file, f'{tab} */\n'.encode())
+        # for all param
+        nbParam = len(method.getParams())
+        self.logger.info(f'# params: {nbParam}')
+        for param in method.getParams():
+            # writing param
+            self._writeParam(file, param)
 
-    def _separateLinks(self, allLinks, interfaces, links):
+            # comma between param
+            nbParam = nbParam - 1
+            if nbParam > 0:
+                # file.write(" , ")
+                write(file, ' , '.encode())
+
+        # file.write(") {\n" + self.__tab + "}\n\n")
+        write(file, f') {{\n{self.__tab}}}\n\n'.encode())
+
+    def _writeParam(self, file: int, param: PyutParam):
         """
-        Separate the different types of links into lists.
+        Writing params to file.
 
         Args:
-            allLinks:   list of links of the class
-            interfaces: list of interfaces implemented by the class
-            links:
-
-        Returns:
-
+            file:   file descriptor
+            param:  pyut parameter object to write
         """
-        for link in allLinks:
-            linkType = link.getType()
-            self.logger.info(f'Found linkType: `{linkType}`')
-            if linkType == OglLinkType.OGL_INTERFACE:
-                interfaces.append(link)
-            elif linkType == OglLinkType.OGL_COMPOSITION or linkType == OglLinkType.OGL_AGGREGATION:
-                links.append(link)
-
-    def _writeClass(self, pyutClass: PyutClass):
-        """
-        Writing a class to a file.
-
-        @param pyutClass : an object pyutClass
-        """
-        # Read class name
-        className = pyutClass.getName()
-
-        # Opening a file for each class
-        fqn: str = f'{self._dir}{osSep}{className}.java'
-        # javaFile = open(self._dir + osSep + className + '.java')
-        flags:      int = O_WRONLY | O_CREAT
-        javaFileFD: int = open(fqn, flags)
-
-        # Extract the data from the class
-        fields     = pyutClass.getFields()
-        methods    = pyutClass.getMethods()
-        parents    = pyutClass.getParents()
-        allLinks   = pyutClass.getLinks()
-
-        stereotype: PyutStereotype = pyutClass.getStereotype()
-
-        # List of links
-        interfaces = []     # List of interfaces implemented by the class
-        links      = []     # Aggregation and compositions
-        self._separateLinks(allLinks, interfaces, links)
-
-        # Is this class an interface
-        # ~ self._isInterface(pyutClass)
-
-        # Is it an interface
-        classInterface = "class"
-        if stereotype is not None:
-            stereotypeName: str = stereotype.getStereotype()
-            if stereotypeName.lower() == "interface":
-                classInterface = "interface"
-
-        # Write data in file
-        # Write class comment
-        self._writeClassComment(javaFileFD, className, classInterface)
-        # class name
-        # javaFile.write("public " + classInterface + " " + className)
-        write(javaFileFD, f'public {classInterface} {className}'.encode())
-
-        self._writeParent(javaFileFD, parents)
-        self._writeInterfaces(javaFileFD, interfaces)
-        # javaFile.write(" {\n\n")
-        write(javaFileFD, ' {\n\n'.encode())
-
-        # Fields
-        self._writeFields(javaFileFD, fields)
-
-        # Aggregation and Composition
-        self._writeLinks(javaFileFD, links)
-        # Methods
-        self._writeMethods(javaFileFD, methods)
-        # end of class
-        # javaFile.write("}\n")
-        write(javaFileFD, '}\n'.encode())
-
-    def _writeType(self, file, aParam):
-        """
-        This method undefined.  What is it supposed to do.   hasii 02/2020
-        Args:
-            file:
-            aParam:
-
-        """
-        pass
-
-    def write(self, oglObjects):
-        """
-        Data saving
-        @param oglObjects : list of exported objects
-        """
-        # Directory for sources
-        self._dir = self._askForDirectoryExport()
-
-        # If no destination, abort
-        if self._dir == "":
-            return
-
-        # defining constant
-        self.__tab = "    "
-        self.__visibility = {
-            "+": "public",
-            "-": "private",
-            "#": "protected"
-        }
-        oglClasses = []
-        for oglObject in oglObjects:
-            self.logger.info(f'oglObject: {oglObject}')
-            if isinstance(oglObject, OglClass):
-                oglClasses.append(oglObject)
-
-        # for el in [object for objects in oglObjects if isinstance(object, OglClass)]:
-        for el in oglClasses:
-            self._writeClass(el.getPyutObject())
+        # file.write(str(param.getType()) + " " + param.getName())
+        paramType: str = param.getType().__str__()
+        paramName: str = param.getName()
+        write(file, f'{paramType} {paramName}'.encode())
