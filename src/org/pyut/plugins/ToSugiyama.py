@@ -22,7 +22,7 @@ from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglLink import OglLink
 
-from org.pyut.enums.OglLinkType import OglLinkType
+from org.pyut.enums.LinkType import LinkType
 
 
 from org.pyut.ui.UmlFrame import UmlFrame
@@ -566,7 +566,7 @@ class ToSugiyama(PyutToPlugin):
         # For all links
         for link in self.__sugiyamaLinksList:
             # If hierarchical link
-            if link.getType() == OglLinkType.OGL_INHERITANCE or link.getType() == OglLinkType.OGL_INTERFACE:
+            if link.getType() == LinkType.OGL_INHERITANCE or link.getType() == LinkType.OGL_INTERFACE:
 
                 # Add virtual nodes
                 addVirtualNodesOnHierarchicalLink(link)

@@ -3,7 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.model.PyutObject import PyutObject
-from org.pyut.enums.OglLinkType import OglLinkType
+from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.general.Globals import _
 
@@ -22,7 +22,7 @@ class PyutLink(PyutObject):
     """
 
     # noinspection PyUnresolvedReferences
-    def __init__(self, name="", linkType: OglLinkType = OglLinkType.OGL_INHERITANCE,
+    def __init__(self, name="", linkType: LinkType = LinkType.OGL_INHERITANCE,
                  cardSrc: str = "", cardDest: str = "",
                  bidir: bool = False, source: "PyutLinkedObject" = None, destination: "PyutLinkedObject" = None):
         """
@@ -38,7 +38,7 @@ class PyutLink(PyutObject):
         """
         super().__init__(name)
         self.logger: Logger       = getLogger(__name__)
-        self._type:  OglLinkType = linkType
+        self._type:  LinkType = linkType
 
         self._sourceCardinality:      str  = cardSrc
         self._destinationCardinality: str  = cardDest
@@ -137,7 +137,7 @@ class PyutLink(PyutObject):
         """
         self._bidirectional = bidirectional
 
-    def setType(self, theType: OglLinkType):
+    def setType(self, theType: LinkType):
         """
         Update the link type
 
@@ -148,13 +148,13 @@ class PyutLink(PyutObject):
         # if type(theType) == StringType or type(theType) == UnicodeType:
         if type(theType) is int:
             try:
-                theType: OglLinkType = OglLinkType(theType)
+                theType: LinkType = LinkType(theType)
             except (ValueError, Exception) as e:
                 self.logger.error(f'setType: {e}')
-                theType = OglLinkType.OGL_INHERITANCE
+                theType = LinkType.OGL_INHERITANCE
         self._type = theType
 
-    def getType(self) -> OglLinkType:
+    def getType(self) -> LinkType:
         """
         Get the link type.
 

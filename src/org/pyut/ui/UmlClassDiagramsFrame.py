@@ -6,7 +6,7 @@ from typing import Union
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutLink import PyutLink
-from org.pyut.enums.OglLinkType import OglLinkType
+from org.pyut.enums.LinkType import LinkType
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
@@ -41,7 +41,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         super().__init__(parent)
         self.newDiagram()
 
-    def createLink(self, src: OglClass, dst: OglClass, linkType: OglLinkType = OglLinkType.OGL_AGGREGATION):
+    def createLink(self, src: OglClass, dst: OglClass, linkType: LinkType = LinkType.OGL_AGGREGATION):
         """
         Used to create links;  It is still the caller's respsonsibility to add the created shape to the
         appropate diagram

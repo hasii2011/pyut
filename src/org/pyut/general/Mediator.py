@@ -27,7 +27,7 @@ from org.pyut.MiniOgl.ControlPoint import ControlPoint
 
 from org.pyut.ogl.OglLink import OglLink
 
-from org.pyut.enums.OglLinkType import OglLinkType
+from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general.PyutVersion import PyutVersion
@@ -126,13 +126,13 @@ DEST_ACTIONS = [
 
 # OglLink enumerations according to the current action
 LINK_TYPE = {
-    ACTION_DEST_IMPLEMENT_LINK:     OglLinkType.OGL_INTERFACE,
-    ACTION_DEST_INHERIT_LINK:       OglLinkType.OGL_INHERITANCE,
-    ACTION_DEST_AGGREGATION_LINK:   OglLinkType.OGL_AGGREGATION,
-    ACTION_DEST_COMPOSITION_LINK:   OglLinkType.OGL_COMPOSITION,
-    ACTION_DEST_ASSOCIATION_LINK:   OglLinkType.OGL_ASSOCIATION,
-    ACTION_DEST_NOTE_LINK:          OglLinkType.OGL_NOTELINK,
-    ACTION_DEST_SD_MESSAGE:         OglLinkType.OGL_SD_MESSAGE,
+    ACTION_DEST_IMPLEMENT_LINK:     LinkType.OGL_INTERFACE,
+    ACTION_DEST_INHERIT_LINK:       LinkType.OGL_INHERITANCE,
+    ACTION_DEST_AGGREGATION_LINK:   LinkType.OGL_AGGREGATION,
+    ACTION_DEST_COMPOSITION_LINK:   LinkType.OGL_COMPOSITION,
+    ACTION_DEST_ASSOCIATION_LINK:   LinkType.OGL_ASSOCIATION,
+    ACTION_DEST_NOTE_LINK:          LinkType.OGL_NOTELINK,
+    ACTION_DEST_SD_MESSAGE:         LinkType.OGL_SD_MESSAGE,
 }
 
 # messages for the status bar

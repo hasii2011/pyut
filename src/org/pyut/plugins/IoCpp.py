@@ -1,7 +1,7 @@
 
 import os
 
-from org.pyut.enums.OglLinkType import OglLinkType
+from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
@@ -270,7 +270,7 @@ class IoCpp(PyutIoPlugin):
             file.write(name + ' ')
 
             # *
-            if link.getType() == OglLinkType.OGL_ASSOCIATION or link.getType() == OglLinkType.OGL_AGGREGATION:
+            if link.getType() == LinkType.OGL_ASSOCIATION or link.getType() == LinkType.OGL_AGGREGATION:
                 file.write("*")
 
             file.write(linkName + ' ')
