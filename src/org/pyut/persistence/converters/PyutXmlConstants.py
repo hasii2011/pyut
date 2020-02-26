@@ -81,3 +81,7 @@ class PyutXmlConstants:
 
     ATTR_SD_MESSAGE_SOURCE_ID:      str = 'srcID'
     ATTR_SD_MESSAGE_DESTINATION_ID: str = 'dstID'
+
+    V9_LINK_PREFIX: str = 'OGL_'
+
+    ATTR_CODE_PATH: str = 'CodePath'

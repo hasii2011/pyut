@@ -270,7 +270,7 @@ class IoCpp(PyutIoPlugin):
             file.write(name + ' ')
 
             # *
-            if link.getType() == LinkType.OGL_ASSOCIATION or link.getType() == LinkType.OGL_AGGREGATION:
+            if link.getType() == LinkType.ASSOCIATION or link.getType() == LinkType.AGGREGATION:
                 file.write("*")
 
             file.write(linkName + ' ')

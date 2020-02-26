@@ -170,9 +170,9 @@ class IoJava(PyutIoPlugin):
         for link in allLinks:
             linkType = link.getType()
             self.logger.info(f'Found linkType: `{linkType}`')
-            if linkType == LinkType.OGL_INTERFACE:
+            if linkType == LinkType.INTERFACE:
                 interfaces.append(link)
-            elif linkType == LinkType.OGL_COMPOSITION or linkType == LinkType.OGL_AGGREGATION:
+            elif linkType == LinkType.COMPOSITION or linkType == LinkType.AGGREGATION:
                 links.append(link)
 
     def _writeClassComment(self, file: int, className, classInterface):

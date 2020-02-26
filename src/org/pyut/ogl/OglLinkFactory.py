@@ -36,17 +36,17 @@ def getLinkType(link: OglAssociation) -> LinkType:
     """
 
     if isinstance(link, OglAggregation):
-        return LinkType.OGL_AGGREGATION
+        return LinkType.AGGREGATION
     elif isinstance(link, OglComposition):
-        return LinkType.OGL_COMPOSITION
+        return LinkType.COMPOSITION
     elif isinstance(link, OglInheritance):
-        return LinkType.OGL_INHERITANCE
+        return LinkType.INHERITANCE
     elif isinstance(link, OglAssociation):
-        return LinkType.OGL_ASSOCIATION
+        return LinkType.ASSOCIATION
     elif isinstance(link, OglInterface):
-        return LinkType.OGL_INTERFACE
+        return LinkType.INTERFACE
     elif isinstance(link, OglNoteLink):
-        return LinkType.OGL_NOTELINK
+        return LinkType.NOTELINK
 
 
 class OglLinkFactory(Singleton):
@@ -73,25 +73,25 @@ class OglLinkFactory(Singleton):
 
         Returns:  The requested link
         """
-        if linkType == LinkType.OGL_AGGREGATION:
+        if linkType == LinkType.AGGREGATION:
             return OglAggregation(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.OGL_COMPOSITION:
+        elif linkType == LinkType.COMPOSITION:
             return OglComposition(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.OGL_INHERITANCE:
+        elif linkType == LinkType.INHERITANCE:
             return OglInheritance(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.OGL_ASSOCIATION:
+        elif linkType == LinkType.ASSOCIATION:
             return OglAssociation(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.OGL_INTERFACE:
+        elif linkType == LinkType.INTERFACE:
             return OglInterface(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.OGL_NOTELINK:
+        elif linkType == LinkType.NOTELINK:
             return OglNoteLink(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.OGL_SD_MESSAGE:
+        elif linkType == LinkType.SD_MESSAGE:
             return OglSDMessage(srcShape=srcShape, pyutSDMessage=pyutLink, dstShape=destShape)
         else:
             self.logger.error(f"Unknown OglLinkType into factory: {linkType}")

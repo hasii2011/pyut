@@ -566,7 +566,7 @@ class ToSugiyama(PyutToPlugin):
         # For all links
         for link in self.__sugiyamaLinksList:
             # If hierarchical link
-            if link.getType() == LinkType.OGL_INHERITANCE or link.getType() == LinkType.OGL_INTERFACE:
+            if link.getType() == LinkType.INHERITANCE or link.getType() == LinkType.INTERFACE:
 
                 # Add virtual nodes
                 addVirtualNodesOnHierarchicalLink(link)

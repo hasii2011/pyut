@@ -22,7 +22,7 @@ class PyutLink(PyutObject):
     """
 
     # noinspection PyUnresolvedReferences
-    def __init__(self, name="", linkType: LinkType = LinkType.OGL_INHERITANCE,
+    def __init__(self, name="", linkType: LinkType = LinkType.INHERITANCE,
                  cardSrc: str = "", cardDest: str = "",
                  bidir: bool = False, source: "PyutLinkedObject" = None, destination: "PyutLinkedObject" = None):
         """
@@ -151,7 +151,7 @@ class PyutLink(PyutObject):
                 theType: LinkType = LinkType(theType)
             except (ValueError, Exception) as e:
                 self.logger.error(f'setType: {e}')
-                theType = LinkType.OGL_INHERITANCE
+                theType = LinkType.INHERITANCE
         self._type = theType
 
     def getType(self) -> LinkType:

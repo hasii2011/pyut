@@ -562,10 +562,10 @@ class PyutXmi:
                 else:
                     dest = self.dicoLinks[classId]
 
-            linkType: LinkType = LinkType.OGL_ASSOCIATION
+            linkType: LinkType = LinkType.ASSOCIATION
             xmiType = association.getElementsByTagName("Foundation.Core.AssociationEnd.aggregation")
             if xmiType[0].getAttribute("xmi.value") == 'shared':
-                linkType = LinkType.OGL_AGGREGATION
+                linkType = LinkType.AGGREGATION
 
             createdLink = umlFrame.createNewLink(src, dest)
             createdLink.setName(linkName)

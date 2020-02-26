@@ -2,19 +2,17 @@ from enum import Enum
 
 
 class LinkType(Enum):
-    """
-     Types of OGL Links
 
-     TODO:  No such thing as Ogl Link type;  Link types are embedded only the PyutData model; So
-            this enumeration should be part of the data model and named accordingly
     """
-    OGL_ASSOCIATION = 0
-    OGL_AGGREGATION = 1
-    OGL_COMPOSITION = 2
-    OGL_INHERITANCE = 3
-    OGL_INTERFACE   = 4
-    OGL_NOTELINK    = 5
-    OGL_SD_MESSAGE  = 6
+     Types of UML Links
+    """
+    ASSOCIATION = 0
+    AGGREGATION = 1
+    COMPOSITION = 2
+    INHERITANCE = 3
+    INTERFACE   = 4
+    NOTELINK    = 5
+    SD_MESSAGE  = 6
 
     def __str__(self):
         return str(self.name)
@@ -32,20 +30,20 @@ class LinkType(Enum):
         Returns:  The visibility enumeration
         """
         canonicalStr: str = strValue.lower().strip(' ')
-        if canonicalStr == 'ogl_association':
-            return LinkType.OGL_ASSOCIATION
-        elif canonicalStr == 'ogl_aggregation':
-            return LinkType.OGL_AGGREGATION
-        elif canonicalStr == 'ogl_composition':
-            return LinkType.OGL_COMPOSITION
-        elif canonicalStr == 'ogl_inheritance':
-            return LinkType.OGL_INHERITANCE
-        elif canonicalStr == 'ogl_interface':
-            return LinkType.OGL_INTERFACE
-        elif canonicalStr == 'ogl_notelink':
-            return LinkType.OGL_NOTELINK
-        elif canonicalStr == 'ogl_sd_message':
-            return LinkType.OGL_SD_MESSAGE
+        if canonicalStr == 'association':
+            return LinkType.ASSOCIATION
+        elif canonicalStr == 'aggregation':
+            return LinkType.AGGREGATION
+        elif canonicalStr == 'composition':
+            return LinkType.COMPOSITION
+        elif canonicalStr == 'inheritance':
+            return LinkType.INHERITANCE
+        elif canonicalStr == 'interface':
+            return LinkType.INTERFACE
+        elif canonicalStr == 'notelink':
+            return LinkType.NOTELINK
+        elif canonicalStr == 'sd_message':
+            return LinkType.SD_MESSAGE
         else:
             print(f'Warning: did not recognize this link type: {canonicalStr}')
-            return LinkType.OGL_ASSOCIATION
+            return LinkType.ASSOCIATION

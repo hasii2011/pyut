@@ -178,7 +178,7 @@ class DTDParser:
                 destTreeData: ElementTreeData = self.classTree[associatedClassName]
                 child: OglClass = destTreeData.oglClass
 
-                link: PyutLink = self._umlFrame.createLink(parent, child, LinkType.OGL_AGGREGATION)
+                link: PyutLink = self._umlFrame.createLink(parent, child, LinkType.AGGREGATION)
                 self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
 
     def _addAttributesToClasses(self):
