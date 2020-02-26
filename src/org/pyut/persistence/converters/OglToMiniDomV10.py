@@ -146,12 +146,15 @@ class OglToMiniDom:
 
         # save source and destination anchor points
         x, y = oglLink.GetSource().GetModel().GetPosition()
-        root.setAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_X, str(x))
-        root.setAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_Y, str(y))
+        simpleX, simpleY = self.__getSimpleCoordinates(x, y)
+        root.setAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_X, simpleX)
+        root.setAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_Y, simpleY)
 
         x, y = oglLink.GetDestination().GetModel().GetPosition()
-        root.setAttribute(PyutXmlConstants.ATTR_LINK_DESTINATION_ANCHOR_X, str(x))
-        root.setAttribute(PyutXmlConstants.ATTR_LINK_DESTINATION_ANCHOR_Y, str(y))
+        simpleX, simpleY = self.__getSimpleCoordinates(x, y)
+
+        root.setAttribute(PyutXmlConstants.ATTR_LINK_DESTINATION_ANCHOR_X, simpleX)
+        root.setAttribute(PyutXmlConstants.ATTR_LINK_DESTINATION_ANCHOR_Y, simpleY)
 
         root.setAttribute(PyutXmlConstants.ATTR_SPLINE, str(oglLink.GetSpline()))
 
