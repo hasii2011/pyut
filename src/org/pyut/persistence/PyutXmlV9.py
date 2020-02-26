@@ -105,7 +105,11 @@ class PyutXml:
             # xmlDoc: Document  = Document()
             top     = xmlDoc.createElement(PyutXmlConstants.TOP_LEVEL_ELEMENT)
             top.setAttribute(PyutXmlConstants.ATTR_VERSION, str(PyutXml.VERSION))
-            top.setAttribute('CodePath', project.getCodePath())
+            codePath: str = project.getCodePath()
+            if codePath is None:
+                top.setAttribute('CodePath', '')
+            else:
+                top.setAttribute('CodePath', codePath)
 
             xmlDoc.appendChild(top)
 

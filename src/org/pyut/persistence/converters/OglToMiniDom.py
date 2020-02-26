@@ -403,8 +403,11 @@ class OglToMiniDom:
         """
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_LINK)
 
-        root.setAttribute(PyutXmlConstants.ATTR_NAME,            pyutLink.getName())
-        root.setAttribute(PyutXmlConstants.ATTR_TYPE,            pyutLink.getType().name)
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutLink.getName())
+        linkTypeStr: str = pyutLink.getType().name
+        linkTypeStr = PyutXmlConstants.V9_LINK_PREFIX + linkTypeStr
+
+        root.setAttribute(PyutXmlConstants.ATTR_TYPE, linkTypeStr)
         root.setAttribute(PyutXmlConstants.ATTR_CARDINALITY_SOURCE,      pyutLink.sourceCardinality)
         root.setAttribute(PyutXmlConstants.ATTR_CARDINALITY_DESTINATION, pyutLink.destinationCardinality)
         root.setAttribute(PyutXmlConstants.ATTR_BIDIRECTIONAL,           str(pyutLink.getBidir()))

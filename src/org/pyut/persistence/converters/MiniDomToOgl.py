@@ -66,6 +66,7 @@ OglLinks       = NewType('OglLinks',       List[Links])
 
 
 class MiniDomToOgl:
+
     """
     The refactored version of the original methods that were part of the monolithic
      `PyutXml`xxx classes.  This version does NO UI related actions;  It is up to the
@@ -518,7 +519,7 @@ class MiniDomToOgl:
 
         pyutLink:        PyutLink = oglLink.getPyutObject()
 
-        if pyutLink.getType() == LinkType.OGL_INHERITANCE:
+        if pyutLink.getType() == LinkType.INHERITANCE:
             childPyutClass:  PyutClass = srcShape.getPyutObject()
             parentPyutClass: PyutClass = destShape.getPyutObject()
             childPyutClass.addParent(parentPyutClass)
@@ -547,7 +548,8 @@ class MiniDomToOgl:
         pyutLink.setName(link.getAttribute(PyutXmlConstants.ATTR_NAME))
 
         strLinkType: str         = link.getAttribute(PyutXmlConstants.ATTR_TYPE)
-        linkType:    LinkType = LinkType[strLinkType]
+        strLinkType = strLinkType.replace(PyutXmlConstants.V9_LINK_PREFIX, '')
+        linkType:    LinkType    = LinkType.toEnum(strValue=strLinkType)
         pyutLink.setType(linkType)
 
         # source and destination will be reconstructed by _getOglLinks
