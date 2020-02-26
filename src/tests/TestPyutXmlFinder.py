@@ -23,7 +23,7 @@ class TestPyutXmlFinder(TestBase):
 
     UNSUPPORTED_VERSION: int = 0xDEADBEEF
 
-    LATEST_VERSION: int = 9     # This needs to change everytime the XML is updated
+    LATEST_VERSION: int = 10     # This needs to change every time the XML is updated
 
     XML_TO_FIX:         str = '<?xml version="1.0" ?><PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/></PyutProject>'
     EXPECTED_FIXED_XML: str = '<?xml version="1.0" encoding="iso-8859-1"?><PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/></PyutProject>'
@@ -44,7 +44,7 @@ class TestPyutXmlFinder(TestBase):
 
     def testSetAsISOLatin(self):
         fixedXml: str = PyutXmlFinder.setAsISOLatin(TestPyutXmlFinder.XML_TO_FIX)
-        self.assertEqual(TestPyutXmlFinder.EXPECTED_FIXED_XML, fixedXml, 'Does not seem to be set to ISO Laten')
+        self.assertEqual(TestPyutXmlFinder.EXPECTED_FIXED_XML, fixedXml, 'Does not seem to be set to ISO Latin')
 
     def testBasicGetLatestXmlVersion(self):
 
