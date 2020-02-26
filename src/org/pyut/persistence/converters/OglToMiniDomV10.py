@@ -517,8 +517,9 @@ class OglToMiniDom:
         """
         # Saving size
         w, h = oglObject.GetModel().GetSize()
-        root.setAttribute(PyutXmlConstants.ATTR_WIDTH,  str(float(w)))
-        root.setAttribute(PyutXmlConstants.ATTR_HEIGHT, str(float(h)))
+        simpleW, simpleH = self.__getSimpleDimensions(w, h)
+        root.setAttribute(PyutXmlConstants.ATTR_WIDTH,  simpleW)
+        root.setAttribute(PyutXmlConstants.ATTR_HEIGHT, simpleH)
 
         # Saving position
         x, y = oglObject.GetModel().GetPosition()
