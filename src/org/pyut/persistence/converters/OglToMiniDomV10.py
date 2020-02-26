@@ -1,4 +1,6 @@
 
+from typing import Tuple
+
 from logging import Logger
 from logging import getLogger
 
@@ -269,7 +271,7 @@ class OglToMiniDom:
         root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutMethod.getName())
 
         visibility: PyutVisibilityEnum = pyutMethod.getVisibility()
-        visStr: str = visibility.__str__()
+        visStr: str = visibility.name
         if visibility is not None:
             root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visStr)
 
@@ -302,7 +304,9 @@ class OglToMiniDom:
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_FIELD)
 
         root.appendChild(self._pyutParamToXml(pyutField, xmlDoc))
-        root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, str(pyutField.getVisibility()))
+        visibility: PyutVisibilityEnum = pyutField.getVisibility()
+        visStr: str = visibility.name
+        root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visStr)
 
         return root
 
@@ -490,8 +494,10 @@ class OglToMiniDom:
         label: Element = xmlDoc.createElement(eltText)
 
         x, y = miniOglShape.GetModel().GetPosition()
-        label.setAttribute(PyutXmlConstants.ATTR_X, str(x))
-        label.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
+        simpleX, simpleY = self.__getSimpleCoordinates(x, y)
+        self.logger.info(f'x,y = ({x},{y})   simpleX,simpleY = ({simpleX},{simpleY})')
+        label.setAttribute(PyutXmlConstants.ATTR_X, simpleX)
+        label.setAttribute(PyutXmlConstants.ATTR_Y, simpleY)
 
         return label
 
@@ -517,3 +523,23 @@ class OglToMiniDom:
         root.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
 
         return root
+
+    def __getSimpleDimensions(self, w: float, h: float) -> Tuple[str, str]:
+        # reuse code but not name
+        return self.__getSimpleCoordinates(w, h)
+
+    def __getSimpleCoordinates(self, x: float, y: float) -> Tuple[str, str]:
+        """
+
+        Args:
+            x: coordinate
+            y: coordinate
+
+        Returns:
+            Simple formatted string versions of the above
+
+        """
+        simpleX: str = f'{x:.2f}'
+        simpleY: str = f'{y:.2f}'
+
+        return simpleX, simpleY

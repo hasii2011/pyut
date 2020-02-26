@@ -110,6 +110,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.persistence.converters.OglToMiniDomV10": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "org.pyut.persistence.IoFile": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

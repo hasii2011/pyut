@@ -418,7 +418,7 @@ class MiniDomToOgl:
             pyutMethod: PyutMethod = PyutMethod(xmlMethod.getAttribute(PyutXmlConstants.ATTR_NAME))
 
             strVis: str = xmlMethod.getAttribute(PyutXmlConstants.ATTR_VISIBILITY)
-            vis: PyutVisibilityEnum = PyutVisibilityEnum(strVis)
+            vis: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(strVis)
             pyutMethod.setVisibility(visibility=vis)
 
             returnElt: Element = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_RETURN)[0]
@@ -480,7 +480,10 @@ class MiniDomToOgl:
             xmlField:   Element  = cast(Element, xmlField)
             pyutField: PyutField = PyutField()
 
-            pyutField.setVisibility(xmlField.getAttribute(PyutXmlConstants.ATTR_VISIBILITY))
+            strVis: str                = xmlField.getAttribute(PyutXmlConstants.ATTR_VISIBILITY)
+            vis:    PyutVisibilityEnum = PyutVisibilityEnum.toEnum(strVis)
+
+            pyutField.setVisibility(vis)
             xmlParam: Element = xmlField.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_PARAM)[0]
 
             if xmlParam.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):

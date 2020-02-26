@@ -112,7 +112,7 @@ class PyutXml:
 
             xmlDoc.appendChild(top)
 
-            gauge = Gauge(dlg, -1, 100, pos=Point(2, 5), size=Size(200, 30))
+            gauge = Gauge(dlg, ID_ANY, 100, pos=Point(2, 5), size=Size(200, 30))
             dlg.Show(True)
             wxYield()
 
@@ -136,34 +136,27 @@ class PyutXml:
                     wxYield()
                     oglObject = oglObjects[i]
                     if isinstance(oglObject, OglClass):
-                        # documentNode.appendChild(self._OglClass2xml(oglObject, xmlDoc))
                         classElement: Element = toPyutXml.oglClassToXml(oglObject, xmlDoc)
                         documentNode.appendChild(classElement)
                     elif isinstance(oglObject, OglNote):
-                        # documentNode.appendChild(self._OglNote2xml(oglObject, xmlDoc))
                         noteElement: Element = toPyutXml.oglNoteToXml(oglObject, xmlDoc)
                         documentNode.appendChild(noteElement)
                     elif isinstance(oglObject, OglActor):
-                        # documentNode.appendChild(self._OglActor2xml(oglObject, xmlDoc))
                         actorElement: Element = toPyutXml.oglActorToXml(oglObject, xmlDoc)
                         documentNode.appendChild(actorElement)
                     elif isinstance(oglObject, OglUseCase):
-                        # documentNode.appendChild(self._OglUseCase2xml(oglObject, xmlDoc))
                         useCaseElement: Element = toPyutXml.oglUseCaseToXml(oglObject, xmlDoc)
                         documentNode.appendChild(useCaseElement)
                     elif isinstance(oglObject, OglSDInstance):
-                        # documentNode.appendChild(self._OglSDInstance2xml(oglObject, xmlDoc))
                         sdInstanceElement: Element = toPyutXml.oglSDInstanceToXml(oglObject, xmlDoc)
                         documentNode.appendChild(sdInstanceElement)
                     elif isinstance(oglObject, OglSDMessage):
-                        # documentNode.appendChild(self._OglSDMessage2xml(oglObject, xmlDoc))
                         sdMessageElement: Element = toPyutXml.oglSDMessageToXml(oglObject, xmlDoc)
                         documentNode.appendChild(sdMessageElement)
                     # OglLink comes last because OglSDInstance is a subclass of OglLink
                     # Now I know why OglLink used to double inherit from LineShape, ShapeEventHandler
                     # I changed it to inherit from OglLink directly
                     elif isinstance(oglObject, OglLink):
-                        # documentNode.appendChild(self._OglLink2xml(oglObject, xmlDoc))
                         linkElement: Element = toPyutXml.oglLinkToXml(oglObject, xmlDoc)
                         documentNode.appendChild(linkElement)
         except (ValueError, Exception) as e:
