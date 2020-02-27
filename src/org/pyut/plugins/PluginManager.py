@@ -32,7 +32,7 @@ class PluginManager(Singleton):
     Interface between the application and the plugins.
 
     This class is responsible for searching for available plugins, loading them,
-    extracting runtime information and providng the information to components that need it
+    extracting runtime information and providing the information to components that need it
     (for example the `AppFrame` to create the import/export submenus).
 
     @author Laurent Burgbacher <lb@alawa.ch>

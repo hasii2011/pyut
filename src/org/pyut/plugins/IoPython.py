@@ -34,12 +34,12 @@ class DlgAskWhichClassesToReverse(wx.Dialog):
     def __init__(self, lstClasses):
         wx.Dialog.__init__(self, None, -1, "Classes choice", style=wx.CAPTION | wx.RESIZE_BORDER, size=(400, 500))
 
-        # Create not choosen classes listBox
+        # Create not chosen classes listBox
         self._listBox1 = wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
         for klass in lstClasses:
             self._listBox1.Append(klass.__name__, klass)
 
-        # Create choosen classes listBox
+        # Create chosen classes listBox
         self._listBox2 = wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
 
         # Create buttons
@@ -84,9 +84,9 @@ class DlgAskWhichClassesToReverse(wx.Dialog):
                 self._listBox1.Append(name, data)
                 self._listBox2.Delete(0)
 
-    def getChoosenClasses(self):
+    def getChosenClasses(self):
         """
-        Return the classes choosen by the user
+        Return the classes chosen by the user
         """
         ret = []
         for el in range(self._listBox2.GetCount()):
@@ -127,23 +127,21 @@ def askWhichClassesToReverse(lstClasses):
     Ask which classes must be reversed
 
     @return list of classes
-    @param list lstClasses : list of classes potentially reversable
-    @since 1.6.2.6
-    @author C.Dutoit <dutoitc@hotmail.com>
+    @param list lstClasses : list of classes potentially reversible
+
     """
     # Ask which classes to reverse
     dlg = DlgAskWhichClassesToReverse(lstClasses)
-    lstClassesChoosen = dlg.getChoosenClasses()
+    lstClassesChosen = dlg.getChosenClasses()
     dlg.Destroy()
 
-    return lstClassesChoosen
+    return lstClassesChosen
 
 
 class IoPython(PyutIoPlugin):
     """
     Python code generation/reverse engineering
 
-    @version $Revision: 1.12 $
     """
     def __init__(self, oglObjects, umlFrame):
 
@@ -156,8 +154,6 @@ class IoPython(PyutIoPlugin):
         This method returns the name of the plugin.
 
         @return string
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         return "Python code generation/reverse engineering"
 
@@ -166,8 +162,6 @@ class IoPython(PyutIoPlugin):
         This method returns the author of the plugin.
 
         @return string
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         return "C.Dutoit <dutoitc@hotmail.com> AND L.Burgbacher <lb@alawa.ch>"
 
@@ -176,34 +170,37 @@ class IoPython(PyutIoPlugin):
         This method returns the version of the plugin.
 
         @return string
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         return "1.0"
 
     def getInputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
+            name of the input format
+            extension of the input format
+            textual description of the plugin input format
 
-        @return tupple
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
+        @return tuple
         """
         return "Python file", "py", "Python file format"
 
     def getOutputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
+            name of the output format
+            extension of the output format
+            textual description of the plugin output format
 
         @return tuple
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         return "Python file", "py", "Python file format"
 
+    def setExportOptions(self) -> bool:
+        return True
+
     def getVisibilityPythonCode(self, visibility: PyutVisibilityEnum):
         """
-        Return the python code for a given enum valjue which represents the visibility
+        Return the python code for a given enum value which represents the visibility
 
         @return String
 
@@ -228,8 +225,6 @@ class IoPython(PyutIoPlugin):
         Return the python code for a given field
 
         @return String
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         # Initialize with class relation
         fieldCode = "self."
@@ -255,8 +250,6 @@ class IoPython(PyutIoPlugin):
         Indent one string by one unit
 
         @return string
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         # TODO : ask which kind of indentation to be added
         return '    ' + str(aStr)
@@ -266,8 +259,6 @@ class IoPython(PyutIoPlugin):
         Indent every lines of the lstIn by one unit
 
         @return list
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         lstOut = []
         for el in lstIn:
@@ -344,8 +335,6 @@ class IoPython(PyutIoPlugin):
         Return a dictionary of method code for a given class
 
         @return dictionary of String, keys are methods names
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         clsMethods = {}
         for aMethod in aClass.getMethods():
@@ -389,11 +378,9 @@ class IoPython(PyutIoPlugin):
 
     def write(self, oglObjects):
         """
-        Datas saving
+        Data saving
         @param oglObjects : list of exported objects
 
-        @author C.Dutoit - dutoitc@hotmail.com
-        @since 1.1
         """
         # Ask the user which destination file he wants
         directory = self._askForDirectoryExport()
@@ -585,11 +572,6 @@ class IoPython(PyutIoPlugin):
         """
         Reverse engineering
         Classes come from self introspection !!!
-
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.6.2.1
-        @modified by Laurent Burgbacher <lb@alawa.ch>
-            added filename in PyutLinkedObject
         """
 
         # get a list of classes info for classes in the display list
@@ -683,8 +665,6 @@ class IoPython(PyutIoPlugin):
 
         @param oglObjects : list of imported objects
         @param umlFrame : Pyut's UmlFrame
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.6.2.1
         """
         # Ask the user which destination file he wants
         # directory=self._askForDirectoryImport()

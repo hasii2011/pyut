@@ -24,7 +24,7 @@ class PyutToPlugin(PyutPlugin):
 
         Args:
             umlObjects:  list of ogl objects
-            umlFrame:    the umlframe of pyut
+            umlFrame:    Pyut's UML Frame
         """
         super().__init__(umlFrame=umlFrame, ctrl=Mediator())
         self._umlObjects = umlObjects

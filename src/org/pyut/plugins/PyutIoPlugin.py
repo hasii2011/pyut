@@ -109,7 +109,7 @@ class PyutIoPlugin(PyutPlugin):
     def getOutputFormat(self) -> Tuple[str, str, str]:
         """
         return None if this plugin can't write.
-        otherwise, return a tupple with
+        otherwise, return a tuple with
             name of the output format
             extension of the output format
             textual description of the plugin output format
