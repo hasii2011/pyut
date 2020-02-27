@@ -183,21 +183,19 @@ def getMediator():
 
 class Mediator(Singleton):
     """
-    This class is the link between the parts of the GUI of pyut. It receives
+    This class is the link between the Pyut GUI components. It receives
     commands from the modules, and dispatch them to the right receiver.
     See the Model-View-Controller pattern and the Mediator pattern.
-    There's just one instance of it, and it's global. You get the only
-    instance by instantiating it. See the `singleton.py` file for more
-    information about this.
+    It is purposefully a singleton.
 
-    Each part of the GUI must register itself to the mediator. This is done
+    Each part of the GUI registers with the mediator. This is done
     with the various `register...` methods.
 
     The mediator contains a state machine. The different states are
-    represented by integer constants, declared at the beginning of the
-    `mediator.py` file. These are the `ACTION_*` constants.
+    represented by integer constants, declared at the beginning of this
+    module. These are the `ACTION_*` constants.
 
-    The `NEXT_ACTION` dictionary gives the next action based on the given
+    The `NEXT_ACTION` dictionary supplies the next action based on the given
     one. For example, after an `ACTION_NEW_NOTE_LINK`, you get an
     `ACTION_DEST_NOTE_LINK` this way::
 
@@ -205,12 +203,8 @@ class Mediator(Singleton):
 
     The state is kept in `self._currentAction`.
 
-    The `doAction` is called whenever a click is received by the uml diagram
+    The `doAction` is called whenever a click is received by the UML diagram
     frame.
-
-    :author: Laurent Burgbacher
-    :contact: <lb@alawa.ch>
-    :version: $Revision: 1.38 $
     """
     def init(self):
         """
@@ -247,14 +241,12 @@ class Mediator(Singleton):
     def setScriptMode(self):
         """
         Define the script mode, to use PyUt without graphical elements
-        @author C.Dutoit
         """
         self._useMode = SCRIPT_MODE
 
     def isInScriptMode(self):
         """
         True if the current mode is the scripting mode
-        @author C.Dutoit
         """
         return self._useMode == SCRIPT_MODE
 
@@ -265,6 +257,30 @@ class Mediator(Singleton):
         @author C.Dutoit
         """
         return self._errorManager
+
+    def getAppPath(self):
+        """
+        Return the path of the application files.
+
+        @return string
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        return self._appPath
+
+    def getAppFrame(self):
+        """
+        """
+        return self._appFrame
+
+    def notifyTitleChanged(self):
+        """
+        Notify application frame that the application title has changed
+
+        @since 1.27.2.23
+        @author C.Dutoit <dutoitc@hotmail.com>
+        """
+        if self._appFrame is not None:
+            self._appFrame.notifyTitleChanged()
 
     def registerFileHandling(self, fh):
         """
@@ -284,25 +300,6 @@ class Mediator(Singleton):
         """
         self._appPath = path
 
-    def getAppPath(self):
-        """
-        Return the path of the application files.
-
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        return self._appPath
-
-    def notifyTitleChanged(self):
-        """
-        Notify application frame that the application title has changed
-
-        @since 1.27.2.23
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        if self._appFrame is not None:
-            self._appFrame.notifyTitleChanged()
-
     def registerAppFrame(self, appFrame):
         """
         Register the application's main frame.
@@ -314,11 +311,6 @@ class Mediator(Singleton):
         self._appFrame = appFrame
         if self._toolboxOwner is None:
             self._toolboxOwner = ToolboxOwner(appFrame)
-
-    def getAppFrame(self):
-        """
-        """
-        return self._appFrame
 
     def registerToolBar(self, tb):
         """
@@ -348,6 +340,27 @@ class Mediator(Singleton):
         """
         self._status = statusBar
 
+    def registerClassEditor(self, classEditor):
+        """
+        Register a function to invoke a class editor.
+        This function takes one parameter, the pyutClass to edit.
+
+        @param classEditor  PyutClass)
+        @since 1.0
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        self.classEditor = classEditor
+
+    def registerTool(self, tool):
+        """
+        Add a tool to toolboxes
+
+        @param Tool tool : The tool to add
+        @since 1.3
+        @author C.Dutoit <dutoitc@hotmail.com>
+        """
+        self._toolboxOwner.registerTool(tool)
+
     def fastTextClassEditor(self, thePyutClass: PyutClass):
         plugs = self._appFrame.plugs
         cl = [s for s in plugs.values() if s(None, None).getName() == "Fast text edition"]
@@ -376,17 +389,6 @@ class Mediator(Singleton):
             return
         dlg = DlgEditClass(umlFrame, -1, thePyutClass)
         dlg.Destroy()
-
-    def registerClassEditor(self, classEditor):
-        """
-        Register a function to invoke a class editor.
-        This function takes one parameter, the pyutClass to edit.
-
-        @param classEditor  PyutClass)
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        self.classEditor = classEditor
 
     def setCurrentAction(self, action: int):
         """
@@ -492,6 +494,15 @@ class Mediator(Singleton):
             return SKIP_EVENT
         return EVENT_PROCESSED
 
+    def actionWaiting(self):
+        """
+        Return True if there's an action waiting to be completed.
+
+        @since 1.2
+        @author L. Burgbacher <lb@alawa.ch>
+        """
+        return self._currentAction != ACTION_SELECTOR
+
     def selectTool(self, ID):
         """
         Select the tool of given ID from the toolbar, and deselect the others.
@@ -566,15 +577,6 @@ class Mediator(Singleton):
             return
         self.setStatusText(MESSAGES[self._currentAction])
 
-    def actionWaiting(self):
-        """
-        Return True if there's an action waiting to be completed.
-
-        @since 1.2
-        @author L. Burgbacher <lb@alawa.ch>
-        """
-        return self._currentAction != ACTION_SELECTOR
-
     def autoResize(self, obj: BadPracticeType):
         """
         Auto-resize the given object.
@@ -598,9 +600,6 @@ class Mediator(Singleton):
     def editObject(self, x, y):
         """
         Edit the object at x, y.
-
-        @since 1.10
-        @author L. Burgbacher <lb@alawa.ch>
         """
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
@@ -900,34 +899,6 @@ class Mediator(Singleton):
             return
         self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToBack)
 
-    def _moveSelectedShapeZOrder(self, callback):
-        """
-        Move the selected shape one level in z-order
-
-        @since 1.27.2.28
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        from org.pyut.ogl import OglObject
-        umlFrame = self._fileHandling.getCurrentFrame()
-        if umlFrame is None:
-            return
-        selected = umlFrame.GetSelectedShapes()
-        if len(selected) > 0:
-            for oglObject in selected:
-                if isinstance(oglObject, OglObject.OglObject):
-                    callback(oglObject)
-        umlFrame.Refresh()
-
-    def registerTool(self, tool):
-        """
-        Add a tool to toolboxes
-
-        @param Tool tool : The tool to add
-        @since 1.3
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        self._toolboxOwner.registerTool(tool)
-
     def displayToolbox(self, category):
         """
         Display a toolbox
@@ -1069,3 +1040,21 @@ class Mediator(Singleton):
             for shape in shapes:
                 shape.SetSelected(selected)
             umlFrame.Refresh()
+
+    def _moveSelectedShapeZOrder(self, callback):
+        """
+        Move the selected shape one level in z-order
+
+        @since 1.27.2.28
+        @author C.Dutoit <dutoitc@hotmail.com>
+        """
+        from org.pyut.ogl import OglObject
+        umlFrame = self._fileHandling.getCurrentFrame()
+        if umlFrame is None:
+            return
+        selected = umlFrame.GetSelectedShapes()
+        if len(selected) > 0:
+            for oglObject in selected:
+                if isinstance(oglObject, OglObject.OglObject):
+                    callback(oglObject)
+        umlFrame.Refresh()

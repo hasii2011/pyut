@@ -1,5 +1,6 @@
 
 from typing import Tuple
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -101,21 +102,23 @@ class OglLink(LineShape, ShapeEventHandler):
                 dstX, dstY = dw, dh/2
 
             # ============== Avoid over-lining; Added by C.Dutoit ================
-            # lstAnchorsPoints = [anchor.GetRelativePosition()
-            #    for anchor in srcShape.GetAnchors()]
-            # while (srcX, srcY) in lstAnchorsPoints:
-            #    if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
-            #        srcX+=10
-            #    else:
-            #        srcY+=10
+            lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in srcShape.GetAnchors()]
+            while (srcX, srcY) in lstAnchorsPoints:
+                self.clsLogger.warning(f'Over-lining in source shape')
+                if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
+                    srcX += 10
+                else:
+                    srcY += 10
 
-            # lstAnchorsPoints = [anchor.GetRelativePosition()
-            #    for anchor in dstShape.GetAnchors()]
-            # while (dstX, dstY) in lstAnchorsPoints:
-            #    if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
-            #        dstX+=10
-            #    else:
-            #        dstY+=10
+            lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in dstShape.GetAnchors()]
+            while (dstX, dstY) in lstAnchorsPoints:
+                from org.pyut.ogl.OglClass import OglClass
+                dstShape: OglClass = cas
+                self.clsLogger.warning(f'Over-lining in destination shape: {dstShape.getPyutObject}')
+                if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
+                    dstX += 10
+                else:
+                    dstY += 10
 
             # =========== end avoid over-lining-Added by C.Dutoit ================
         else:
@@ -226,15 +229,15 @@ class OglLink(LineShape, ShapeEventHandler):
         self.clsLogger.info(f"optimizeLine - ({srcX},{srcY}) / ({dstX},{dstY})")
         # Find new positions
         # Little tips
-        osrcX, osrcY, odstX, odstY = dstX, dstY, srcX, srcY
+        optimalSrcX, optimalSrcY, optimalDstX, optimalDstY = dstX, dstY, srcX, srcY
 
-        osrcX += dstSize[0]/2
-        osrcY += dstSize[1]/2
-        odstX += srcSize[0]/2
-        odstY += srcSize[1]/2
+        optimalSrcX += dstSize[0]/2
+        optimalSrcY += dstSize[1]/2
+        optimalDstX += srcSize[0]/2
+        optimalDstY += srcSize[1]/2
 
-        srcAnchor.SetPosition(osrcX, osrcY)
-        dstAnchor.SetPosition(odstX, odstY)
+        srcAnchor.SetPosition(optimalSrcX, optimalSrcY)
+        dstAnchor.SetPosition(optimalDstX, optimalDstY)
 
     def _computeLinkLength(self, srcPosition: Tuple[float, float], destPosition: Tuple[float, float]) -> float:
         """
