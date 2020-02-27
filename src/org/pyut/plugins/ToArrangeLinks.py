@@ -1,4 +1,5 @@
 
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -11,67 +12,58 @@ from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 class ToArrangeLinks(PyutToPlugin):
     """
     Plugin to arrange all links
-    Python code generation/reverse engineering
-
-    @version $Revision: 1.2 $
     """
     def __init__(self, umlObjects, umlFrame):
         """
-        Constructor.
 
-        @param umlObjects  : list of ogl objects
-        @param umlFrame : the umlframe of pyut
+        Args:
+            umlObjects: list of ogl objects
+            umlFrame:   A Pyut UML frame
         """
         super().__init__(umlObjects, umlFrame)
-        self._umlFrame = umlFrame
         self.logger: Logger = getLogger(__name__)
+        self._umlFrame = umlFrame
 
-    def getName(self):
+    def getName(self) -> str:
         """
-        This method returns the name of the plugin.
 
-        @return string
-        @since 1.1
+        Returns:
+            The name of the plugin.
+
         """
         return "Arrange links"
 
-    def getAuthor(self):
+    def getAuthor(self) -> str:
         """
-        This method returns the author of the plugin.
 
-        @return string
-        @since 1.1
+        Returns:
+            The author of the plugin.
         """
-        return "C�dric DUTOIT <dutoitc@shimbawa.ch>"
+        return "Cedric DUTOIT <dutoitc@shimbawa.ch>"
 
-    def getVersion(self):
+    def getVersion(self) -> str:
         """
-        This method returns the version of the plugin.
 
-        @return string
-        @since 1.1
+        Returns:
+            The version of the plugin.
         """
         return "1.0"
 
-    def getMenuTitle(self):
+    def getMenuTitle(self) -> str:
         """
-        Return a menu title string
 
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:
+            A menu title string
         """
-        # Return the menu title as it must be displayed
         return "Arrange links"
 
-    def setOptions(self):
+    def setOptions(self) -> bool:
         """
         Prepare the import.
         This can be used to ask some questions to the user.
 
-        @return Boolean : if False, the import will be cancelled.
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:
+            If `False`, the import is cancelled.
         """
         return True
 
@@ -85,7 +77,8 @@ class ToArrangeLinks(PyutToPlugin):
         """
         for oglObject in umlObjects:
             if isinstance(oglObject, OglLink):
-                self.logger.info(f"Optimizing: {oglObject}")
-                oglObject.optimizeLine()
+                oglLink: OglLink = cast(OglLink, oglObject)
+                self.logger.info(f"Optimizing: {oglLink}")
+                oglLink.optimizeLine()
             else:
                 self.logger.info(f"No line optimizing for: {oglObject}")

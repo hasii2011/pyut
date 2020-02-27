@@ -11,17 +11,14 @@ class ToTransforms(PyutToPlugin):
     """
     A plugin for making transformations : translation, rotations, ...
 
-    @author C.Dutoit <dutoitc@hotmail.com>
-    @version $Revision: 1.4 $
     """
     def __init__(self, oglObjects, umlFrame: UmlFrame):
         """
         Constructor.
 
         @param OglObject oglObjects : list of ogl objects
-        @param UmlFrame umlFrame : the umlframe of pyut
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        @param UmlFrame umlFrame : Pyut's UML frame
+
         """
         super().__init__(oglObjects, umlFrame)
 
@@ -35,8 +32,6 @@ class ToTransforms(PyutToPlugin):
         This method returns the name of the plugin.
 
         @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
         """
         return "Transformations"
 
@@ -45,8 +40,6 @@ class ToTransforms(PyutToPlugin):
         This method returns the author of the plugin.
 
         @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
         """
         return "C.Dutoit"
 
@@ -65,8 +58,6 @@ class ToTransforms(PyutToPlugin):
         Return a menu title string
 
         @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
         """
         # Return the menu title as it must be displayed
         return "Transformations"
@@ -77,8 +68,6 @@ class ToTransforms(PyutToPlugin):
         This can be used to ask some questions to the user.
 
         @return Boolean : if False, the import will be cancelled.
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
         """
         return True
 
@@ -89,8 +78,6 @@ class ToTransforms(PyutToPlugin):
         @param OglObject [] umlObjects : list of the uml objects of the diagram
         @param OglObject [] selectedObjects : list of the selected objects
         @param UmlFrame umlFrame : the frame of the diagram
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         if umlFrame is None:
             # TODO : displayError "No frame opened"

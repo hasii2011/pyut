@@ -183,7 +183,7 @@ class OglAssociation(OglLink):
         centerTextShape: TextShape      = self._labels[CENTER]
         model:           TextShapeModel = centerTextShape.GetModel()
 
-        self.logger.info(f'center text position {model.GetPosition()}')
+        self.logger.debug(f'center text position {model.GetPosition()}')
         model.SetPosition(cenLblX, cenLblY)
 
     @staticmethod

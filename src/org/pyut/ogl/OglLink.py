@@ -78,7 +78,7 @@ class OglLink(LineShape, ShapeEventHandler):
         self._srcShape  = srcShape
         self._destShape = dstShape
 
-        self.clsLogger.info(f'Input Override positions - srcPos: {srcPos} dstPos: {dstPos}')
+        self.clsLogger.debug(f'Input Override positions - srcPos: {srcPos} dstPos: {dstPos}')
         if srcPos is None and dstPos is None:
             srcX, srcY = self._srcShape.GetPosition()
             dstX, dstY = self._destShape.GetPosition()
@@ -100,7 +100,7 @@ class OglLink(LineShape, ShapeEventHandler):
                 srcX, srcY = 0, sh/2
                 dstX, dstY = dw, dh/2
 
-            # ============== Avoid overlining; Added by C.Dutoit ================
+            # ============== Avoid over-lining; Added by C.Dutoit ================
             # lstAnchorsPoints = [anchor.GetRelativePosition()
             #    for anchor in srcShape.GetAnchors()]
             # while (srcX, srcY) in lstAnchorsPoints:
@@ -117,7 +117,7 @@ class OglLink(LineShape, ShapeEventHandler):
             #    else:
             #        dstY+=10
 
-            # =========== end avoid overlining-Added by C.Dutoit ================
+            # =========== end avoid over-lining-Added by C.Dutoit ================
         else:
             # Use provided position
             (srcX, srcY) = srcPos
@@ -129,7 +129,7 @@ class OglLink(LineShape, ShapeEventHandler):
         dstAnchor.SetPosition(dstX, dstY)
         srcAnchor.SetVisible(False)
         dstAnchor.SetVisible(False)
-        self.clsLogger.info(f'src anchor pos: {srcAnchor.GetPosition()} dst anchor pos {dstAnchor.GetPosition()}')
+        self.clsLogger.debug(f'src anchor pos: {srcAnchor.GetPosition()} dst anchor pos {dstAnchor.GetPosition()}')
         srcAnchor.SetDraggable(True)
         dstAnchor.SetDraggable(True)
         # Init
@@ -174,11 +174,9 @@ class OglLink(LineShape, ShapeEventHandler):
 
     def setPyutObject(self, pyutLink):
         """
-        Sets the associatied PyutLink.
+        Sets the associated PyutLink.
 
         @param PyutLink pyutLink : link to associate
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self._link = pyutLink
 
@@ -215,7 +213,6 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         Optimize line, so that the line length is minimized
         """
-        self.clsLogger.info("OptimizeLine")
         # Get elements
         srcAnchor = self.GetSource()
         dstAnchor = self.GetDestination()
@@ -226,7 +223,7 @@ class OglLink(LineShape, ShapeEventHandler):
         srcSize = self._srcShape.GetSize()
         dstSize = self._destShape.GetSize()
 
-        self.clsLogger.info(f"({srcX},{srcY}) / ({dstX},{dstY})")
+        self.clsLogger.info(f"optimizeLine - ({srcX},{srcY}) / ({dstX},{dstY})")
         # Find new positions
         # Little tips
         osrcX, osrcY, odstX, odstY = dstX, dstY, srcX, srcY

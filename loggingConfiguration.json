@@ -143,6 +143,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.ogl.OglLink": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "org.pyut.ogl.OglClass": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
@@ -196,7 +201,7 @@
             "propagate": "False"
         },
 
-        "org.pyut.plugins.ToArrangeLinks": {
+        "ToArrangeLinks": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
