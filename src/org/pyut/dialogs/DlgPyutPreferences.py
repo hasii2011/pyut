@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -13,11 +15,14 @@ from wx import CENTER
 from wx import EVT_BUTTON
 from wx import EVT_CHECKBOX
 from wx import EVT_CLOSE
+from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ICON_EXCLAMATION
 from wx import ID_ANY
 from wx import ID_OK
 from wx import OK
+from wx import StaticBox
+from wx import StaticBoxSizer
 from wx import VERTICAL
 
 from wx import BoxSizer
@@ -66,7 +71,7 @@ class DlgPyutPreferences(Dialog):
             ctrl:
             prefs:   The PyutPreferences
         """
-        super().__init__(parent, ID, _("Properties"))
+        super().__init__(parent, ID, _("Preferences"))
 
         self.logger: Logger = getLogger(__name__)
 
@@ -87,57 +92,33 @@ class DlgPyutPreferences(Dialog):
             self.__resetTipsID
         ] = PyutUtils.assignID(7)
 
-        sizer: BoxSizer = BoxSizer(VERTICAL)
+        self.__createMainControls()
+        self.__createFontSizeControl()
+        self.__cmbLanguage: ComboBox = cast(ComboBox, None)
+        szrLanguage: BoxSizer = self.__createLanguageControlContainer()
+        hs:          BoxSizer = self.__createDialogButtonsContainer()
 
-        self.__cbMaximize:   CheckBox  = CheckBox(self, self.__maximizeID,   _("&Full Screen on startup"))
-        self.__cbAutoResize: CheckBox  = CheckBox(self, self.__autoResizeID, _("&Auto resize classes to fit content"))
-        self.__cbShowParams: CheckBox  = CheckBox(self, self.__showParamsID, _("&Show params in classes"))
-        self.__cbShowTips:   CheckBox  = CheckBox(self, self.__showTipsID,   _("Show &Tips on startup"))
+        box:       StaticBox = StaticBox(self, ID_OK, "")
+        mainSizer: StaticBoxSizer = StaticBoxSizer(box, VERTICAL)
 
-        self.__btnResetTips: Button = Button(self, self.__resetTipsID, _('Reset Tips'))
+        # mainSizer.Add(window=self.__cbAutoResize, proportion=0, flag=ALL, border=DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__cbAutoResize, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__cbShowParams, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__cbMaximize,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__cbShowTips,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__btnResetTips, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
 
-        # Font size
-#        self.__lblFontSize = wx.StaticText(self, -1, _("Font size"))
-#        self.__txtFontSize = wx.TextCtrl(self, self.__fontSizeID)
-#        szrFont = wx.BoxSizer(wx.HORIZONTAL)
-#        szrFont.Add(self.__lblFontSize, 0, wx.ALL, GAP)
-#        szrFont.Add(self.__txtFontSize, 0, wx.ALL, GAP)
+        mainSizer.Add(szrLanguage, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(hs,          0, CENTER)
 
-        # Language
-        self.__lblLanguage: StaticText = StaticText(self, ID_ANY, _("Language"))
-
-        self.logger.info(f'We are running on: {platform}')
-        #
-        # wx.CB_SORT not currently supported by wxOSX/Cocoa (True even as late as wx 4.0.7
-        #
-        if platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
-            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())], style=CB_READONLY)
-        else:
-            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())], style=CB_READONLY | CB_SORT)
-
-        szrLanguage = BoxSizer(HORIZONTAL)
-        szrLanguage.Add(self.__lblLanguage, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
-        szrLanguage.Add(self.__cmbLanguage, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
-
-        # sizer.Add(self.__cbAutoResize, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
-        sizer.Add(window=self.__cbAutoResize, proportion=0, flag=ALL, border=DlgPyutPreferences.VERTICAL_GAP)
-        sizer.Add(self.__cbShowParams, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
-        sizer.Add(self.__cbMaximize,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
-        sizer.Add(self.__cbShowTips,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
-        sizer.Add(self.__btnResetTips, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
-
-        sizer.Add(szrLanguage, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
-
-        hs: BoxSizer = BoxSizer(HORIZONTAL)
-        btnOk = Button(self, ID_OK, _("&OK"))
-        hs.Add(btnOk, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
-        sizer.Add(hs, 0, CENTER)
-        self.__changed = 0
+        border: BoxSizer = BoxSizer()
+        border.Add(mainSizer, 1, EXPAND | ALL, 25)
 
         self.SetAutoLayout(True)
-        self.SetSizer(sizer)
-        sizer.Fit(self)
-        sizer.SetSizeHints(self)
+        self.SetSizer(border)
+
+        border.Fit(self)
+        border.SetSizeHints(self)
 
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__autoResizeID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showParamsID)
@@ -148,7 +129,66 @@ class DlgPyutPreferences(Dialog):
 
         self.Bind(EVT_BUTTON,   self.__OnCmdOk,    id=ID_OK)
 
+        self.__changed = 0
         self.__setValues()
+
+    def __createDialogButtonsContainer(self) -> BoxSizer:
+
+        hs: BoxSizer = BoxSizer(HORIZONTAL)
+
+        btnOk: Button = Button(self, ID_OK, _("&OK"))
+        hs.Add(btnOk, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+
+        return hs
+
+    def __createLanguageControlContainer(self) -> BoxSizer:
+        """
+        Creates the language control inside a container
+
+        Returns:
+            The sizer that contains the language selection control
+        """
+
+        # Language
+        self.__lblLanguage: StaticText = StaticText(self, ID_ANY, _("Language"))
+        self.logger.info(f'We are running on: {platform}')
+        #
+        # wx.CB_SORT not currently supported by wxOSX/Cocoa (True even as late as wx 4.0.7
+        #
+        if platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
+                                          style=CB_READONLY)
+        else:
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
+                                          style=CB_READONLY | CB_SORT)
+        szrLanguage: BoxSizer = BoxSizer(HORIZONTAL)
+        szrLanguage.Add(self.__lblLanguage, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+        szrLanguage.Add(self.__cmbLanguage, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+
+        return szrLanguage
+
+    def __createMainControls(self):
+        """
+        Creates the main control and stashes them as private instance variables
+        """
+
+        self.__cbMaximize:   CheckBox = CheckBox(self, self.__maximizeID,   _("&Full Screen on startup"))
+        self.__cbAutoResize: CheckBox = CheckBox(self, self.__autoResizeID, _("&Auto resize classes to fit content"))
+        self.__cbShowParams: CheckBox = CheckBox(self, self.__showParamsID, _("&Show params in classes"))
+        self.__cbShowTips:   CheckBox = CheckBox(self, self.__showTipsID,   _("Show &Tips on startup"))
+
+        self.__btnResetTips: Button = Button(self, self.__resetTipsID, _('Reset Tips'))
+
+    def __createFontSizeControl(self):
+        """
+        TODO:  Need this later;  Inherited from legacy code
+        """
+        #        self.__lblFontSize = StaticText(self, -1, _("Font size"))
+        #        self.__txtFontSize = TextCtrl(self, self.__fontSizeID)
+        #        szrFont = wx.BoxSizer(HORIZONTAL)
+        #        szrFont.Add(self.__lblFontSize, 0, ALL, HORIZONTAL_GAP)
+        #        szrFont.Add(self.__txtFontSize, 0, ALL, HORIZONTAL_GAP)
+        pass
 
     def __setValues(self):
         """
@@ -190,8 +230,8 @@ class DlgPyutPreferences(Dialog):
         """
         """
         # If language has been changed
-        newLanguage = self.__cmbLanguage.GetValue()
-        actualLanguage = self.__prefs[PyutPreferences.I18N]
+        newLanguage:    str = self.__cmbLanguage.GetValue()
+        actualLanguage: str = self.__prefs[PyutPreferences.I18N]
         if actualLanguage not in Lang.LANGUAGES or newLanguage != Lang.LANGUAGES[actualLanguage][0]:
             # Search the key corresponding to the newLanguage
             for i in list(Lang.LANGUAGES.items()):

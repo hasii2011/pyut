@@ -45,7 +45,7 @@ class PyutPreferences(Singleton):
         AUTO_RESIZE_SHAPE_ON_EDIT:  'False',
         SHOW_PARAMETERS:            'False',
         FULL_SCREEN:                'False',
-        I18N:                       'en',
+        I18N:                       'en',       # TODO: I think this should be 'English' if I look at the preferences dialog Close code
         CURRENT_TIP:                '0'
     })
 
