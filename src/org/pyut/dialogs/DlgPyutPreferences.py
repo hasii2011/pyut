@@ -15,6 +15,7 @@ from wx import EVT_CHECKBOX
 from wx import EVT_CLOSE
 from wx import HORIZONTAL
 from wx import ICON_EXCLAMATION
+from wx import ID_ANY
 from wx import ID_OK
 from wx import OK
 from wx import VERTICAL
@@ -39,6 +40,10 @@ from org.pyut.PyutPreferences import PyutPreferences
 
 
 class DlgPyutPreferences(Dialog):
+
+    VERTICAL_GAP:   int = 5
+    HORIZONTAL_GAP: int = 5
+
     """
     This is the preferences dialog for Pyut.
 
@@ -82,16 +87,14 @@ class DlgPyutPreferences(Dialog):
             self.__resetTipsID
         ] = PyutUtils.assignID(7)
 
-        GAP = 5
+        sizer: BoxSizer = BoxSizer(VERTICAL)
 
-        sizer = BoxSizer(VERTICAL)
+        self.__cbMaximize:   CheckBox  = CheckBox(self, self.__maximizeID,   _("&Full Screen on startup"))
+        self.__cbAutoResize: CheckBox  = CheckBox(self, self.__autoResizeID, _("&Auto resize classes to fit content"))
+        self.__cbShowParams: CheckBox  = CheckBox(self, self.__showParamsID, _("&Show params in classes"))
+        self.__cbShowTips:   CheckBox  = CheckBox(self, self.__showTipsID,   _("Show &Tips on startup"))
 
-        self.__cbMaximize   = CheckBox(self, self.__maximizeID,   _("&Full Screen on startup"))
-        self.__cbAutoResize = CheckBox(self, self.__autoResizeID, _("&Auto resize classes to fit content"))
-        self.__cbShowParams = CheckBox(self, self.__showParamsID, _("&Show params in classes"))
-        self.__cbShowTips   = CheckBox(self, self.__showTipsID,   _("Show &Tips on startup"))
-
-        self.__btnResetTips = Button(self, self.__resetTipsID, _('Reset Tips'))
+        self.__btnResetTips: Button = Button(self, self.__resetTipsID, _('Reset Tips'))
 
         # Font size
 #        self.__lblFontSize = wx.StaticText(self, -1, _("Font size"))
@@ -101,32 +104,33 @@ class DlgPyutPreferences(Dialog):
 #        szrFont.Add(self.__txtFontSize, 0, wx.ALL, GAP)
 
         # Language
-        self.__lblLanguage = StaticText(self, -1, _("Language"))
+        self.__lblLanguage: StaticText = StaticText(self, ID_ANY, _("Language"))
 
         self.logger.info(f'We are running on: {platform}')
         #
-        # wx.CB_SORT not currently supported by wxOSX/Cocoa
+        # wx.CB_SORT not currently supported by wxOSX/Cocoa (True even as late as wx 4.0.7
         #
         if platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
             self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())], style=CB_READONLY)
         else:
-            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
-                                          style=CB_READONLY | CB_SORT)
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())], style=CB_READONLY | CB_SORT)
 
         szrLanguage = BoxSizer(HORIZONTAL)
-        szrLanguage.Add(self.__lblLanguage, 0, ALL, GAP)
-        szrLanguage.Add(self.__cmbLanguage, 0, ALL, GAP)
+        szrLanguage.Add(self.__lblLanguage, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+        szrLanguage.Add(self.__cmbLanguage, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
 
-        sizer.Add(self.__cbAutoResize, 0, ALL, GAP)
-        sizer.Add(self.__cbShowParams, 0, ALL, GAP)
-        sizer.Add(self.__cbMaximize,   0, ALL, GAP)
-        sizer.Add(self.__cbShowTips,   0, ALL, GAP)
-        sizer.Add(self.__btnResetTips, 0, ALL, GAP)
-        sizer.Add(szrLanguage,         0, ALL, GAP)
+        # sizer.Add(self.__cbAutoResize, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        sizer.Add(window=self.__cbAutoResize, proportion=0, flag=ALL, border=DlgPyutPreferences.VERTICAL_GAP)
+        sizer.Add(self.__cbShowParams, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        sizer.Add(self.__cbMaximize,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        sizer.Add(self.__cbShowTips,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        sizer.Add(self.__btnResetTips, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
 
-        hs = BoxSizer(HORIZONTAL)
+        sizer.Add(szrLanguage, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+
+        hs: BoxSizer = BoxSizer(HORIZONTAL)
         btnOk = Button(self, ID_OK, _("&OK"))
-        hs.Add(btnOk, 0, ALL, GAP)
+        hs.Add(btnOk, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
         sizer.Add(hs, 0, CENTER)
         self.__changed = 0
 
@@ -140,7 +144,7 @@ class DlgPyutPreferences(Dialog):
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__maximizeID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showTipsID)
 
-        self.Bind(EVT_BUTTON, self.__OnBtnResetTips, id=self.__resetTipsID)
+        self.Bind(EVT_BUTTON,   self.__OnBtnResetTips, id=self.__resetTipsID)
 
         self.Bind(EVT_BUTTON,   self.__OnCmdOk,    id=ID_OK)
 
