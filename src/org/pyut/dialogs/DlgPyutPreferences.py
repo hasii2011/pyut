@@ -27,6 +27,7 @@ from wx import Dialog
 from wx import MessageDialog
 from wx import StaticText
 
+from org.pyut.PyutConstants import PyutConstants
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.PyutUtils import PyutUtils
 
@@ -41,7 +42,7 @@ class DlgPyutPreferences(Dialog):
     """
     This is the preferences dialog for Pyut.
 
-    Display current prefences and possible values, save modified values.
+    Display current preferences and possible values, save modified values.
 
     To use it from a wxFrame:
     ```python
@@ -51,9 +52,6 @@ class DlgPyutPreferences(Dialog):
         dlg.Destroy()
     ```
     """
-
-    THE_GREAT_MAC_PLATFORM: str = 'darwin'
-
     def __init__(self, parent, ID, ctrl, prefs: PyutPreferences):
         """
 
@@ -109,7 +107,7 @@ class DlgPyutPreferences(Dialog):
         #
         # wx.CB_SORT not currently supported by wxOSX/Cocoa
         #
-        if platform == DlgPyutPreferences.THE_GREAT_MAC_PLATFORM:
+        if platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
             self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())], style=CB_READONLY)
         else:
             self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(Lang.LANGUAGES.values())],
@@ -188,12 +186,12 @@ class DlgPyutPreferences(Dialog):
         """
         """
         # If language has been changed
-        newlanguage = self.__cmbLanguage.GetValue()
-        actuallanguage = self.__prefs[PyutPreferences.I18N]
-        if actuallanguage not in Lang.LANGUAGES or newlanguage != Lang.LANGUAGES[actuallanguage][0]:
-            # Search the key coresponding to the newlanguage
+        newLanguage = self.__cmbLanguage.GetValue()
+        actualLanguage = self.__prefs[PyutPreferences.I18N]
+        if actualLanguage not in Lang.LANGUAGES or newLanguage != Lang.LANGUAGES[actualLanguage][0]:
+            # Search the key corresponding to the newLanguage
             for i in list(Lang.LANGUAGES.items()):
-                if newlanguage == i[1][0]:
+                if newLanguage == i[1][0]:
                     # Write the key in preferences file
                     self.__prefs[PyutPreferences.I18N] = i[0]
             # Dialog must restart Pyut to have the changes

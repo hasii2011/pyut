@@ -20,7 +20,9 @@ DiagramsStrings = {
 
 
 class PyutConstants:
-    DefaultFilename = _("Untitled.put")
+
+    DefaultFilename:        str = _("Untitled.put")
+    THE_GREAT_MAC_PLATFORM: str = 'darwin'
 
     @staticmethod
     def diagramTypeAsString(inType):

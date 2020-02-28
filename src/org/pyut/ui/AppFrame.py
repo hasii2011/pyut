@@ -334,7 +334,7 @@ class AppFrame(Frame):
 
     def _onActivate(self, event):
         """
-        EVT_ACTIVATE Callback; display tips frame.  But onlhy, the first activate
+        EVT_ACTIVATE Callback; display tips frame.  But only, the first activate
         """
         self.logger.debug(f'_onActivate event: {event}')
         try:
@@ -1125,7 +1125,7 @@ class AppFrame(Frame):
         from org.pyut.dialogs.DlgPyutPreferences import DlgPyutPreferences
 
         self.logger.debug(f"Before dialog show")
-        with DlgPyutPreferences(self, -1, self._ctrl, self._prefs) as dlg:
+        with DlgPyutPreferences(self, ID_ANY, self._ctrl, self._prefs) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.debug(f'Waiting for answer')
             else:

@@ -1,10 +1,10 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
-from typing import List
-
-from os import system
+from os import system as osSystem
 
 from wx import ID_OK
 
@@ -22,9 +22,7 @@ from org.pyut.model.PyutField import PyutField
 
 class ToFastEdit(PyutToPlugin):
     """
-    Python code generation/reverse engineering
 
-    @version $Revision: 1.5 $
     """
     def __init__(self, umlObjects: List[OglObject], umlFrame: UmlFrame):
         """
@@ -41,50 +39,41 @@ class ToFastEdit(PyutToPlugin):
         self._editor = None
         self._umlFrame = umlFrame
 
-    def getName(self):
+    def getName(self) -> str:
         """
-        This method returns the name of the plugin.
-
-        @return string
-        @since 1.1
+        Returns:
+            The name of the plugin.
         """
         return "Fast text edition"
 
-    def getAuthor(self):
+    def getAuthor(self) -> str:
         """
-        This method returns the author of the plugin.
-
-        @return string
-        @since 1.1
+        Returns:
+            The author of the plugin.
         """
         return "Laurent Burgbacher <lb@alawa.ch>"
 
-    def getVersion(self):
+    def getVersion(self) -> str:
         """
-        This method returns the version of the plugin.
+        Returns:
+            The version of the plugin.
 
-        @return string
-        @since 1.1
         """
         return "1.0"
 
-    def getMenuTitle(self):
+    def getMenuTitle(self) -> str:
         """
-        Return a menu title string
+        Returns:
+            A menu title string
 
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
         """
         # Return the menu title as it must be displayed
         return "Fast text edit"
 
     def setOptions(self) -> bool:
         """
-
-        @return Boolean : if False, the import will be cancelled.
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Returns:
+            if `False` the import is cancelled.
         """
         ans: bool = True
         self.logger.info(f"Before dialog show")
@@ -127,9 +116,9 @@ class ToFastEdit(PyutToPlugin):
 
         format:
         class name
-        <<stereotype_optionel>>
-        +method([param[:type]]*)[:type_retour]
-        +field[:type][=valeur_initiale]
+        <<stereotype_optional>>
+        +method([param[:type]]*)[:type_return]
+        +field[:type][=value_initial]
 
         @param umlObject
         @param file
@@ -198,15 +187,14 @@ class ToFastEdit(PyutToPlugin):
         Write data to filename.
 
         format
-        Nom_de_la_classe
-        <<stereotype_optionel>>
-        +méthode([param[:type]]*)[:type_retour]
-        +field[:type][=valeur_initiale]
+        Class Name
+        <<stereotype_optional>>
+        +method([param[:type]]*)[:type_return]
+        +field[:type][=value_initial]
 
         @param oglObject
         @param file
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+
         """
 
         o = oglObject.getPyutObject()
@@ -219,15 +207,14 @@ class ToFastEdit(PyutToPlugin):
             file.write(str(field) + "\n")
         file.close()
 
-    def doAction(self, umlObjects, selectedObjects, umlFrame):
+    def doAction(self, umlObjects: List[OglObject], selectedObjects: List[OglObject], umlFrame: UmlFrame):
         """
-        Do the tool's action
 
-        @param OglObject [] umlObjects : list of the uml objects of the diagram
-        @param OglObject [] selectedObjects : list of the selected objects
-        @param UmlFrame umlFrame : the frame of the diagram
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            umlObjects: list of the uml objects of the diagram
+            selectedObjects:  list of the selected objects
+            umlFrame: the frame of the diagram
+
         """
         if len(selectedObjects) != 1:
             self.logger.info("Please select at least one class")
@@ -238,7 +225,7 @@ class ToFastEdit(PyutToPlugin):
         #
         # TODO:  Put a try catch block here;  This needs to work at least execute on a OS-X or Windoze
         #
-        system(self._editor + " " + filename)
+        osSystem(self._editor + " " + filename)
         file = open(filename, "r")
         self.read(selectedObjects[0], file)
         file.close()

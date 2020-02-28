@@ -58,7 +58,7 @@ class PyutPreferences(Singleton):
       - instantiate a PyutPreferences object :
         myPP=PyutPreferences()
       - to get a pyut' preference :
-        mypref=myPP["ma_preference"]
+        myPref=myPP["ma_preference"]
       - to set a pyut' preference :
         myPP["ma_preference"]=xxx
 
@@ -73,7 +73,7 @@ class PyutPreferences(Singleton):
 
     The preferences are loaded on the first instantiation of this
     class and are auto-saved when a value is added or changed.
-    ---
+
     """
     def init(self):
         """
@@ -241,22 +241,24 @@ class PyutPreferences(Singleton):
     def _emptyPrefs(self):
         self._config: ConfigParser = ConfigParser()
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> str:
         """
+        Magic method
         Return the pyut preferences for the given item
 
-        @param String name : Name of the item for which we return a value
-        @return String : value of the pref, or None if inexistant
-        @since 1.1.2.7
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            name:
+                Name of the item for which we return a value
+        Returns:
+            value of the preference, or None if it is not defined
         """
         if not self._config.has_section(PyutPreferences.MAIN_SECTION):
-            return None
+            return cast(str, None)
 
         try:
             return self._config.get(PyutPreferences.MAIN_SECTION, name)
         except NoOptionError:
-            return None
+            return cast(str, None)
 
     def __setitem__(self, name: str, value: str):
         """

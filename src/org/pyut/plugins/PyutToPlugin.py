@@ -10,7 +10,7 @@ from org.pyut.general.Mediator import getMediator
 
 from org.pyut.plugins.PyutPlugin import PyutPlugin
 
-from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -19,7 +19,7 @@ class PyutToPlugin(PyutPlugin):
     """
     Note : Merge with PyutToPlugin
     """
-    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
+    def __init__(self, umlObjects: List[OglObject], umlFrame: UmlFrame):
         """
 
         Args:
@@ -80,7 +80,8 @@ class PyutToPlugin(PyutPlugin):
         """
         if not self.setOptions():
             return
-        self.doAction(self._umlObjects, getMediator().getSelectedShapes(), self._umlFrame)
+        selectedShapes = self._ctrl.getSelectedShapes()
+        self.doAction(self._umlObjects, selectedShapes, self._umlFrame)
 
     def doAction(self, umlObjects, selectedObjects, umlFrame):
         """
