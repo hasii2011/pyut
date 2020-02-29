@@ -1,10 +1,13 @@
 
 from typing import List
+from typing import TextIO
 
 from logging import Logger
 from logging import getLogger
 
 from os import system as osSystem
+from os import remove as osRemove
+
 from sys import platform as sysPlatform
 
 from wx import ICON_EXCLAMATION
@@ -15,6 +18,7 @@ from wx import OK
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -31,8 +35,10 @@ from org.pyut.general.Globals import _
 
 
 class ToFastEdit(PyutToPlugin):
-    """
 
+    FAST_EDIT_TEMP_FILE: str = 'pyut.fte'
+
+    """
     """
     def __init__(self, umlObjects: List[OglObject], umlFrame: UmlFrame):
         """
@@ -244,9 +250,11 @@ class ToFastEdit(PyutToPlugin):
             dlg.Destroy()
 
             return
-        filename = "pyut.fte"
-        file = open(filename, "w")
+        filename: str = ToFastEdit.FAST_EDIT_TEMP_FILE
+
+        file: TextIO = open(filename, "w")
         self.write(selectedObjects[0], file)
+        file.close()
 
         if sysPlatform == PyutConstants.THE_GREAT_MAC_PLATFORM:
             osSystem(f'open -W -a {self._editor} {filename}')
@@ -257,6 +265,7 @@ class ToFastEdit(PyutToPlugin):
         file.close()
 
         self._setProjectModified()
+        self._cleanupTempFile()
 
     def _setProjectModified(self):
 
@@ -265,3 +274,5 @@ class ToFastEdit(PyutToPlugin):
         if project is not None:
             project.setModified()
 
+    def _cleanupTempFile(self):
+        osRemove(ToFastEdit.FAST_EDIT_TEMP_FILE)
