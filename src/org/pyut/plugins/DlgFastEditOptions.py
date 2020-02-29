@@ -25,7 +25,7 @@ from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
 
-class DlgFEOptions(Dialog):
+class DlgFastEditOptions(Dialog):
 
     GAP: int = 10
 
@@ -61,12 +61,12 @@ class DlgFEOptions(Dialog):
 
         self.__lblEditor = StaticText(self, -1, _("Editor"))
         self.__txtEditor = TextCtrl(self, -1, size=(100, 20))
-        sizer.Add(self.__lblEditor, 0, ALL, DlgFEOptions.GAP)
-        sizer.Add(self.__txtEditor, 0, ALL, DlgFEOptions.GAP)
+        sizer.Add(self.__lblEditor, 0, ALL, DlgFastEditOptions.GAP)
+        sizer.Add(self.__txtEditor, 0, ALL, DlgFastEditOptions.GAP)
 
         hs = BoxSizer(HORIZONTAL)
         btnOk = Button(self, ID_OK, _("&OK"))
-        hs.Add(btnOk, 0, ALL, DlgFEOptions.GAP)
+        hs.Add(btnOk, 0, ALL, DlgFastEditOptions.GAP)
         sizer.Add(hs, 0, CENTER)
 
         self.SetAutoLayout(True)

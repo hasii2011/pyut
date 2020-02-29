@@ -23,7 +23,7 @@ from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlFrame import UmlFrame
 
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
-from org.pyut.plugins.DlgFEOptions import DlgFEOptions
+from org.pyut.plugins.DlgFastEditOptions import DlgFastEditOptions
 
 from org.pyut.ogl.OglObject import OglObject
 
@@ -93,7 +93,7 @@ class ToFastEdit(PyutToPlugin):
         """
         ans: bool = True
         self.logger.info(f"Before dialog show")
-        with DlgFEOptions(self._umlFrame) as dlg:
+        with DlgFastEditOptions(self._umlFrame) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.info(f'Waiting for answer')
                 self._editor = dlg.getEditor()
