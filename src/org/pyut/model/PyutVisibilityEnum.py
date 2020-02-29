@@ -1,5 +1,8 @@
 
+from typing import List
+
 from enum import Enum
+from typing import cast
 
 
 class PyutVisibilityEnum(Enum):
@@ -13,6 +16,14 @@ class PyutVisibilityEnum(Enum):
 
     def __repr__(self):
         return f'{self.name} - {self.__str__()}'
+
+    @staticmethod
+    def values() -> List[str]:
+        retList: List[str] = []
+        for val in PyutVisibilityEnum:
+            val:    PyutVisibilityEnum = cast(PyutVisibilityEnum, val)
+            retList.append(val.__str__())
+        return retList
 
     @staticmethod
     def toEnum(strValue: str) -> 'PyutVisibilityEnum':
@@ -29,6 +40,12 @@ class PyutVisibilityEnum(Enum):
         elif canonicalStr == 'private':
             return PyutVisibilityEnum.PRIVATE
         elif canonicalStr == 'protected':
+            return PyutVisibilityEnum.PROTECTED
+        elif canonicalStr == '+':
+            return PyutVisibilityEnum.PUBLIC
+        elif canonicalStr == '-':
+            return PyutVisibilityEnum.PRIVATE
+        elif canonicalStr == '#':
             return PyutVisibilityEnum.PROTECTED
         else:
             print(f'Warning: did not recognize this visibility type: {canonicalStr}')

@@ -31,3 +31,10 @@ def secureBool(x):
     except (ValueError, Exception) as e:
         print(f'secure_bool error: {e}')
     return False
+
+
+def secureStr(x):
+    if x is None:
+        return ""
+    else:
+        return x

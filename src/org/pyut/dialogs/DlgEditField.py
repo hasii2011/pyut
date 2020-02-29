@@ -28,12 +28,14 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+
 from org.pyut.general.Globals import _
 
 [
-    ID_TXTFIELDNAME,
-    ID_BTNFIELDOK,
-    ID_BTNFIELDCANCEL
+    ID_TXT_FIELD_NAME,
+    ID_BTN_FIELD_OK,
+    ID_BTN_FIELD_CANCEL
 ] = PyutUtils.assignID(3)
 
 
@@ -55,8 +57,8 @@ class DlgEditField(BaseDlgEdit):
 
         # Txt Ctrl Name
         lblFieldName = StaticText (self, ID_ANY, _("Name"))
-        self._txtFieldName = TextCtrl(self, ID_TXTFIELDNAME, "", size=(125, -1))
-        self.Bind(EVT_TEXT, self._evtFieldText, id=ID_TXTFIELDNAME)
+        self._txtFieldName = TextCtrl(self, ID_TXT_FIELD_NAME, "", size=(125, -1))
+        self.Bind(EVT_TEXT, self._evtFieldText, id=ID_TXT_FIELD_NAME)
 
         # Txt Ctrl Type
         lblFieldType:       StaticText = StaticText (self, ID_ANY, _("Type"))
@@ -69,12 +71,12 @@ class DlgEditField(BaseDlgEdit):
         # ---------------------
         # Buttons OK and Cancel
         # ---------------------
-        self._btnFieldOk: Button = Button(self, ID_BTNFIELDOK, _("&Ok"))
-        self.Bind(EVT_BUTTON, self._onFieldOk, id=ID_BTNFIELDOK)
+        self._btnFieldOk: Button = Button(self, ID_BTN_FIELD_OK, _("&Ok"))
+        self.Bind(EVT_BUTTON, self._onFieldOk, id=ID_BTN_FIELD_OK)
         self._btnFieldOk.SetDefault()
 
-        self._btnFieldCancel = Button(self, ID_BTNFIELDCANCEL, _("&Cancel"))
-        self.Bind(EVT_BUTTON, self._onFieldCancel, id=ID_BTNFIELDCANCEL)
+        self._btnFieldCancel = Button(self, ID_BTN_FIELD_CANCEL, _("&Cancel"))
+        self.Bind(EVT_BUTTON, self._onFieldCancel, id=ID_BTN_FIELD_CANCEL)
 
         szrButtons = BoxSizer (HORIZONTAL)
         szrButtons.Add(self._btnFieldOk, 0, ALL, 5)
@@ -132,7 +134,9 @@ class DlgEditField(BaseDlgEdit):
         from org.pyut.model.PyutType import PyutType
 
         self.fieldToEdit.setType(PyutType(self._txtFieldType.GetValue().strip()))
-        self.fieldToEdit.setVisibility(self._rdbFieldVisibility.GetStringSelection())
+        visStr: str = self._rdbFieldVisibility.GetStringSelection()
+        vis:    PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
+        self.fieldToEdit.setVisibility(vis)
 
         if self._txtFieldDefault.GetValue().strip() != "":
             self.fieldToEdit.setDefaultValue(self._txtFieldDefault.GetValue().strip())

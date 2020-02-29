@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 from unittest import TestSuite
@@ -12,10 +14,6 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 class TestPyutVisibilityEnum(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 
@@ -120,7 +118,47 @@ class TestPyutVisibilityEnum(TestBase):
 
         self._testEnum(expectedValue, 'PROTECTED', 'All upper case protected failed')
         self._testEnum(expectedValue, 'protected', 'All lower case protected failed')
+        # noinspection spelling
         self._testEnum(expectedValue, 'PROtected', 'Mixed case protected failed')
+
+    def testGetValues(self):
+
+        enumValueList: List[str] = PyutVisibilityEnum.values()
+        self.logger.info(f'{enumValueList}')
+
+        self.assertIn(member=PyutVisibilityEnum.PROTECTED.value, container=enumValueList, msg='Ugh. missing value')
+        self.assertIn(member=PyutVisibilityEnum.PRIVATE.value,   container=enumValueList, msg='Ugh. missing value')
+        self.assertIn(member=PyutVisibilityEnum.PUBLIC.value,    container=enumValueList, msg='Ugh. missing value')
+
+    def testToEnumPublicName(self):
+
+        val: PyutVisibilityEnum = PyutVisibilityEnum.toEnum('public')
+        self.assertEqual(PyutVisibilityEnum.PUBLIC, val, 'Public to enum name fail')
+
+    def testToEnumPrivateName(self):
+
+        val: PyutVisibilityEnum = PyutVisibilityEnum.toEnum('private')
+        self.assertEqual(PyutVisibilityEnum.PRIVATE, val, 'Private to enum fail')
+
+    def testToEnumProtectedName(self):
+
+        val: PyutVisibilityEnum = PyutVisibilityEnum.toEnum('protected')
+        self.assertEqual(PyutVisibilityEnum.PROTECTED, val, 'protected to enum fail')
+
+    def testToEnumPublicValue(self):
+
+        val: PyutVisibilityEnum = PyutVisibilityEnum.toEnum('+')
+        self.assertEqual(PyutVisibilityEnum.PUBLIC, val, 'Public to enum value fail')
+
+    def testToEnumPrivateValue(self):
+
+        val: PyutVisibilityEnum = PyutVisibilityEnum.toEnum('-')
+        self.assertEqual(PyutVisibilityEnum.PRIVATE, val, 'Private to enum value fail')
+
+    def testToEnumProtectedValue(self):
+
+        val: PyutVisibilityEnum = PyutVisibilityEnum.toEnum('#')
+        self.assertEqual(PyutVisibilityEnum.PROTECTED, val, 'Protected to enum value fail')
 
     def _testEnum(self, expectedValue: PyutVisibilityEnum, stringToTest: str, assertMessage: str):
 

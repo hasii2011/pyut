@@ -38,6 +38,7 @@ class PyutPreferences(Singleton):
     FULL_SCREEN:                str = 'Full_Screen'
     I18N:                       str = 'I18N'
     CURRENT_TIP:                str = 'Current_Tip'
+    EDITOR:                     str = 'Editor'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
         STARTUP_DIRECTORY:          '.',
@@ -46,7 +47,8 @@ class PyutPreferences(Singleton):
         SHOW_PARAMETERS:            'False',
         FULL_SCREEN:                'False',
         I18N:                       'en',       # TODO: I think this should be 'English' if I look at the preferences dialog Close code
-        CURRENT_TIP:                '0'
+        CURRENT_TIP:                '0',
+        EDITOR:                     'brackets'
     })
 
     preferencesFileLocationAndName: str = None

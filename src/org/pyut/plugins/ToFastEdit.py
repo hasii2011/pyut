@@ -5,9 +5,17 @@ from logging import Logger
 from logging import getLogger
 
 from os import system as osSystem
+from sys import platform as sysPlatform
 
+from wx import ICON_EXCLAMATION
 from wx import ID_OK
+from wx import MessageDialog
+from wx import OK
 
+from org.pyut.PyutConstants import PyutConstants
+from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlFrame import UmlFrame
 
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
@@ -18,6 +26,8 @@ from org.pyut.ogl.OglObject import OglObject
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutField import PyutField
+
+from org.pyut.general.Globals import _
 
 
 class ToFastEdit(PyutToPlugin):
@@ -112,45 +122,57 @@ class ToFastEdit(PyutToPlugin):
 
     def read(self, umlObject, file):
         """
-        Read data from filename
+        Read data from file
 
         format:
+        ```Python
         class name
         <<stereotype_optional>>
         +method([param[:type]]*)[:type_return]
         +field[:type][=value_initial]
+        ```
 
-        @param umlObject
-        @param file
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        for example:
+
+        ParentClass
+        +strMethod(strParam : str = bogus) : str
+        +intMethod(intParam = 1) : int
+        +floatField : float = 1.0
+        +booleanField : bool = True
+
+        Args:
+            umlObject:
+            file:
         """
-        classname = file.readline().strip()
-        pyutclass = umlObject.getPyutObject()
-        pyutclass.setName(classname)
+        className: str       = file.readline().strip()
+        pyutClass: PyutClass = umlObject.getPyutObject()
+        pyutClass.setName(className)
 
         # process stereotype if present
-        nextStereoType = file.readline().strip()
+        nextStereoType: str = file.readline().strip()
         if nextStereoType[0:2] == "<<":
-            pyutclass.setStereotype(nextStereoType[2:-2].strip())
+            pyutClass.setStereotype(nextStereoType[2:-2].strip())
             nextStereoType = file.readline().strip()
 
         methods = []
         fields = []
-        pyutclass.setMethods(methods)
-        pyutclass.setFields(fields)
+        pyutClass.setMethods(methods)
+        pyutClass.setFields(fields)
 
         # process methods and fields
-        while 1:
+        visValues: List[str] = PyutVisibilityEnum.values()
+        while True:
             if nextStereoType == "":
                 break
 
             # search visibility
-            if nextStereoType[0] in ("+", "-", "#"):
-                vis = nextStereoType[0]
+
+            if nextStereoType[0] in visValues:
+                visStr = nextStereoType[0]
+                vis: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
                 nextStereoType = nextStereoType[1:]
             else:
-                vis = ""
+                vis: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
 
             pos = nextStereoType.find("(")
             params = []
@@ -217,15 +239,29 @@ class ToFastEdit(PyutToPlugin):
 
         """
         if len(selectedObjects) != 1:
-            self.logger.info("Please select at least one class")
+            dlg = MessageDialog(None, _("You must select at most a single class"), _("Warning"), OK | ICON_EXCLAMATION)
+            dlg.ShowModal()
+            dlg.Destroy()
+
             return
         filename = "pyut.fte"
         file = open(filename, "w")
         self.write(selectedObjects[0], file)
-        #
-        # TODO:  Put a try catch block here;  This needs to work at least execute on a OS-X or Windoze
-        #
-        osSystem(self._editor + " " + filename)
+
+        if sysPlatform == PyutConstants.THE_GREAT_MAC_PLATFORM:
+            osSystem(f'open -W -a {self._editor} {filename}')
+        else:
+            osSystem(f'{self._editor} {filename}')
         file = open(filename, "r")
         self.read(selectedObjects[0], file)
         file.close()
+
+        self._setProjectModified()
+
+    def _setProjectModified(self):
+
+        fileHandling = self._ctrl.getFileHandling()
+        project: PyutProject = fileHandling.getCurrentProject()
+        if project is not None:
+            project.setModified()
+
