@@ -387,13 +387,10 @@ class MainUI:
         """
         self.exportToImageFile("jpg", BITMAP_TYPE_JPEG)
 
-    # noinspection PyUnusedLocal
-    def exportToPng(self, event):
+    def exportToPng(self):
         """
         Export the current diagram to a png file
 
-        Args:
-            event:
         """
         self.exportToImageFile("png", BITMAP_TYPE_PNG)
 

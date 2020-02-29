@@ -93,7 +93,7 @@ from org.pyut.general.Globals import IMG_PKG
 
 class AppFrame(Frame):
     """
-    AppFrame : main pyut frame; contain menus, statusbar, UMLframe, ...
+    AppFrame : main pyut frame; contain menus, status bar, UML frame, ...
 
     Instantiated by PyutApp.py
     Use it as a normal Frame ::
@@ -377,7 +377,7 @@ class AppFrame(Frame):
             ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
             ActionCallbackType.NEW_USE_CASE_DIAGRAM: self._OnMnuFileNewUsecaseDiagram,
             ActionCallbackType.INSERT_PROJECT:       self._OnMnuFileInsertProject,
-            ActionCallbackType.PROJECT_CLOSE :        self._OnMnuFileClose,
+            ActionCallbackType.PROJECT_CLOSE:        self._OnMnuFileClose,
             ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
             ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
             ActionCallbackType.FILE_SAVE_AS:         self._OnMnuFileSaveAs,
@@ -615,20 +615,15 @@ class AppFrame(Frame):
         """
         Display the Export to jpeg dialog box
 
-        @since 1.23
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self._fileHandling.exportToJpg(-1)
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileExportPng(self):
+    def _OnMnuFileExportPng(self, event):
         """
         Display the Export to png dialog box
-
-        @since 1.23
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
-        self._fileHandling.exportToPng(-1)
+        self._fileHandling.exportToPng()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExportPs(self, event):
@@ -997,7 +992,7 @@ class AppFrame(Frame):
 
     def _OnNewAction(self, event):
         """
-        Call the mediator to specifiy the current action.
+        Call the mediator to specify the current action.
 
         Args:
             event:
@@ -1015,8 +1010,6 @@ class AppFrame(Frame):
     def cutSelectedShapes(self):
         """
         Cut all current shapes
-
-        @author C.Dutoit from lb code (splitted)
         """
         selected = self._ctrl.getSelectedShapes()
         if len(selected) > 0:
