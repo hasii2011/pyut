@@ -608,7 +608,7 @@ class AppFrame(Frame):
         @since 1.23
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        self._fileHandling.exportToBmp(-1)
+        self._fileHandling.exportToBmp()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExportJpg(self, event):
@@ -616,7 +616,7 @@ class AppFrame(Frame):
         Display the Export to jpeg dialog box
 
         """
-        self._fileHandling.exportToJpg(-1)
+        self._fileHandling.exportToJpg()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExportPng(self, event):

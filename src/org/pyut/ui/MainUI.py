@@ -8,6 +8,10 @@ from logging import getLogger
 
 from os import path as osPath
 
+from wx import Bitmap
+from wx import NullBitmap
+
+from wx import ClientDC
 from wx import EVT_MENU
 from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import FD_SAVE
@@ -18,6 +22,7 @@ from wx import ID_ANY
 from wx import ID_OK
 from wx import ID_YES
 from wx import ITEM_NORMAL
+from wx import MemoryDC
 from wx import OK
 from wx import YES_NO
 from wx import ICON_ERROR
@@ -40,6 +45,8 @@ from wx import Notebook
 from wx import MessageDialog
 from wx import Yield
 from wx import Menu
+
+from wx._core import BitmapType
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
@@ -347,50 +354,48 @@ class MainUI:
             self.notebookCurrentPage  = self.__notebook.GetPageCount() - 1
             # self.notebook.SetSelection(self.__notebookCurrentPage)  # maybe __notebook ?  -- hasii
 
-    # noinspection PyUnusedLocal
-    def exportToImageFile(self, extension, imageType):
+    def exportToImageFile(self, extension: str, imageType: BitmapType):
         """
         Export the current diagram to an image file
 
         Args:
-            extension:
-            imageType:
+            extension:  file name extension string
+            imageType:  the wx image type
         """
-        # Exit if in scripting mode
         if self._ctrl.isInScriptMode():
             PyutUtils.displayError(_("Export to image file is not implemented in scripting mode now !"))
             return
+        else:
+            window = self.getCurrentFrame()
+            context: ClientDC = ClientDC(window)
+            memory:  MemoryDC = MemoryDC()
 
-    # noinspection PyUnusedLocal
-    def exportToBmp(self, event):
+            x, y = self.getCurrentFrame().ClientSize
+            emptyBitmap: Bitmap = Bitmap(x, y, -1)
+
+            memory.SelectObject(emptyBitmap)
+            memory.Blit(0, 0, x, y, context, 0, 0)
+            memory.SelectObject(NullBitmap)
+            filename: str = f'DiagramDump.{extension}'
+            emptyBitmap.SaveFile(filename, imageType)
+
+            self._ctrl.setStatusText(f'Diagram written to {filename}')
+
+    def exportToBmp(self):
         """
         Export the current diagram to bitmap
-
-        Args:
-            event:
         """
-        # Exit if in scripting mode
-        if self._ctrl.isInScriptMode():
-            PyutUtils.displayError(_("Export to bitmap file is not implemented in scripting mode now !"))
-            return
-
         self.exportToImageFile("bmp", BITMAP_TYPE_BMP)
 
-    # noinspection PyUnusedLocal
-    def exportToJpg(self, event):
+    def exportToJpg(self):
         """
         Export the current diagram to a jpeg file
-
-        Args:
-            event:
-
         """
         self.exportToImageFile("jpg", BITMAP_TYPE_JPEG)
 
     def exportToPng(self):
         """
         Export the current diagram to a png file
-
         """
         self.exportToImageFile("png", BITMAP_TYPE_PNG)
 

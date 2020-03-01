@@ -31,9 +31,9 @@ class DiagramFrame(wx.ScrolledWindow):
     """
     def __init__(self, parent: wx.Window):
         """
-        Constructor.
 
-        @param parent window
+        Args:
+            parent:  parent window
         """
         super().__init__(parent)
 
@@ -428,7 +428,7 @@ class DiagramFrame(wx.ScrolledWindow):
 
     def Refresh(self, eraseBackground=True, rect=None):
         """
-        This refresh is done imediately, not through an event.
+        This refresh is done immediately, not through an event.
 
         @param bool eraseBackground : if False, the stored background is used
         @param wx.Rect rect : not used
@@ -732,9 +732,9 @@ class DiagramFrame(wx.ScrolledWindow):
         # maxZoomFactor = self.GetMaxLevelZoom() * self.GetDefaultZoomFactor()
         maxZoomFactor = self.GetMaxZoomFactor()
 
-        # transform event coords to get them relative to the upper left corner of
-        # the virual screen (avoid the case where that corner is on a shape and
-        # get its coords relative to the client view).
+        # transform event coordinates to get them relative to the upper left corner of
+        # the virtual screen (avoid the case where that corner is on a shape and
+        # get its coordinates relative to the client view).
         if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit:
             x = ax
             y = ay
@@ -805,7 +805,7 @@ class DiagramFrame(wx.ScrolledWindow):
             dy = virtualHeight/2 - y - (clientHeight / zoomFactor / 2.0)
 
             # we have to check if the "zoom in" on a reduced view produce
-            # an other less reduced view or an elarged view. For this, we
+            # an other less reduced view or an enlarged view. For this, we
             # get the global current zoom, multiply by the zoom factor to
             # obtain only one zoom factor.
             if self._zoomLevel < 0:
@@ -922,7 +922,7 @@ class DiagramFrame(wx.ScrolledWindow):
         for shape in self.GetDiagram().GetShapes():
             shape.UpdateFromModel()
 
-        # resize the virutal screen in order to match with the zoom
+        # resize the virtual screen in order to match with the zoom
         virtualWidth  = virtualWidth * zoomFactor
         virtualHeight = virtualHeight * zoomFactor
         virtualSize = wx.Size(virtualWidth, virtualHeight)
@@ -957,7 +957,7 @@ class DiagramFrame(wx.ScrolledWindow):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
         Set this diagram frame as infinite work area. The result is that the
-        virtual size is elarged when the scrollbar reached the specified
+        virtual size is enlarged when the scrollbar reached the specified
         margins (see SetMargins). When we set this as true, the scrollbars
         are moved in the middle of their scale.
 

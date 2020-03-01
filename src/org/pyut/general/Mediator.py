@@ -687,13 +687,11 @@ class Mediator(Singleton):
         else:
             return []
 
-    def setStatusText(self, msg):
+    def setStatusText(self, msg: str):
         """
         Set the text in the status bar.
-
-        @param String msg : The message to put in the status bar
-        @since 1.12
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            msg:    The message to put in the status bar
         """
         if msg is not None:
             self._status.SetStatusText(msg)
