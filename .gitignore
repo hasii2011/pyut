@@ -2,8 +2,8 @@
 __pycache__/
 .DS_Store
 /html/
-/build/
-/dist/
+build/
+dist/
 /pyoxidizer-pyut/
 /.eggs/
 UNKNOWN.egg-info
