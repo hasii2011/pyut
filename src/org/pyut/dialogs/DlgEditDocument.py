@@ -2,19 +2,12 @@
 from logging import Logger
 from logging import getLogger
 
-from wx import ALIGN_BOTTOM
-from wx import ALIGN_CENTER_HORIZONTAL
-from wx import ALL
-from wx import BOTTOM
 from wx import EVT_TEXT
-from wx import EXPAND
 from wx import ID_ANY
-from wx import VERTICAL
 
 from wx import StaticText
 from wx import TextCtrl
 from wx import Window
-from wx import BoxSizer
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.BaseDlgEditText import BaseDlgEditText
@@ -46,17 +39,7 @@ class DlgEditDocument(BaseDlgEditText):
         self._nameEntry: TextCtrl = TextCtrl(parent=self, id=TXT_DOCUMENT_NAME, value=document.title)
         self._nameEntry.SetFocus()
 
-        sizerButtons: BoxSizer = self._createDialogButtons()
-
-        sizerMain: BoxSizer = BoxSizer(VERTICAL)
-        sizerMain.Add(label, 0, BOTTOM, 5)
-        sizerMain.Add(self._nameEntry, 1, EXPAND | BOTTOM, 10)
-        sizerMain.Add(sizerButtons, 0, ALIGN_CENTER_HORIZONTAL | ALIGN_BOTTOM)
-
-        sizerBorder: BoxSizer = BoxSizer(VERTICAL)
-        sizerBorder.Add(sizerMain, 1, EXPAND | ALL, 10)
-        self.SetSizer(sizerBorder)
-        sizerBorder.Fit(self)
+        self._setupMainDialogLayout(self._nameEntry, label)
 
         self.Bind(EVT_TEXT,   self._onDocumentNameChange, id=TXT_DOCUMENT_NAME)
 

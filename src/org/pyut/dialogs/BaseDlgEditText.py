@@ -4,10 +4,17 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import ALIGN_BOTTOM
+from wx import ALIGN_CENTER_HORIZONTAL
+from wx import BOTTOM
 from wx import BoxSizer
 from wx import Button
 from wx import Dialog
 from wx import EVT_BUTTON
+from wx import EXPAND
+from wx import StaticText
+from wx import TextCtrl
+from wx import VERTICAL
 from wx import Window
 from wx import CommandEvent
 
@@ -66,6 +73,21 @@ class BaseDlgEditText(Dialog):
         sizerButtons.Add(btnCancel, 0, ALL)
 
         return sizerButtons
+
+    def _setupMainDialogLayout(self, textControl: TextCtrl, label: StaticText):
+
+        sizerButtons: BoxSizer = self._createDialogButtons()
+        # Sizer for all components
+        szrMain: BoxSizer = BoxSizer(VERTICAL)
+        szrMain.Add(label, 0, BOTTOM, 5)
+        szrMain.Add(textControl, 1, EXPAND | BOTTOM, 10)
+        szrMain.Add(sizerButtons, 0, ALIGN_CENTER_HORIZONTAL | ALIGN_BOTTOM)
+
+        # Border
+        szrBorder: BoxSizer = BoxSizer(VERTICAL)
+        szrBorder.Add(szrMain, 1, EXPAND | ALL, 10)
+        self.SetSizer(szrBorder)
+        szrBorder.Fit(self)
 
     # noinspection PyUnusedLocal
     def _onCmdOk(self, event: CommandEvent):
