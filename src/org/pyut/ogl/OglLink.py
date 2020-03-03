@@ -113,7 +113,7 @@ class OglLink(LineShape, ShapeEventHandler):
             lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in dstShape.GetAnchors()]
             while (dstX, dstY) in lstAnchorsPoints:
                 from org.pyut.ogl.OglClass import OglClass
-                dstShape: OglClass = cas
+                dstShape: OglClass = cast(OglClass, dstShape)
                 self.clsLogger.warning(f'Over-lining in destination shape: {dstShape.getPyutObject}')
                 if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
                     dstX += 10
