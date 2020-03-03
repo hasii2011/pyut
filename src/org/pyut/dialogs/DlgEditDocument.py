@@ -6,17 +6,16 @@ from wx import ALIGN_BOTTOM
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALL
 from wx import BOTTOM
-from wx import CAPTION
+
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import EXPAND
 from wx import HORIZONTAL
-from wx import RESIZE_BORDER
+
 from wx import ID_ANY
 from wx import OK
 from wx import CANCEL
 
-from wx import Dialog
 from wx import RIGHT
 from wx import StaticText
 from wx import TextCtrl
@@ -26,6 +25,7 @@ from wx import Window
 from wx import BoxSizer
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.dialogs.BaseDlgEditText import BaseDlgEditText
 from org.pyut.ui.PyutDocument import PyutDocument
 
 from org.pyut.general.Globals import _
@@ -35,7 +35,7 @@ from org.pyut.general.Globals import _
 ] = PyutUtils.assignID(1)
 
 
-class DlgEditDocument(Dialog):
+class DlgEditDocument(BaseDlgEditText):
 
     def __init__(self, parent: Window, dialogIdentifier, document: PyutDocument):
         """
@@ -45,11 +45,11 @@ class DlgEditDocument(Dialog):
             dialogIdentifier
             document:           The UML document we want to edit
         """
-        super().__init__(parent, dialogIdentifier, _("Document Edit"), style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, dialogIdentifier, _("Document Edit"))
 
         self.logger:    Logger       = getLogger(__name__)
         self._document: PyutDocument = document
-        self._returnAction = -1   # describe how the user exited the dialog box
+        # self._returnAction = -1   # describe how the user exited the dialog box
 
         self.SetAutoLayout(True)
         label = StaticText(self, ID_ANY, _("Document Name"))

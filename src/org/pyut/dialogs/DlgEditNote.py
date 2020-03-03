@@ -4,7 +4,7 @@ from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALL
 from wx import BOTTOM
 from wx import CANCEL
-from wx import CAPTION
+
 from wx import CommandEvent
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
@@ -12,18 +12,19 @@ from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import OK
-from wx import RESIZE_BORDER
+
 from wx import RIGHT
 from wx import TE_MULTILINE
 from wx import VERTICAL
 
 from wx import TextCtrl
 from wx import StaticText
-from wx import Dialog
+
 from wx import Button
 from wx import BoxSizer
 from wx import Window
 
+from org.pyut.dialogs.BaseDlgEditText import BaseDlgEditText
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.PyutUtils import PyutUtils
 
@@ -33,9 +34,9 @@ from org.pyut.general.Globals import _
 ] = PyutUtils.assignID(1)
 
 
-class DlgEditNote(Dialog):
+class DlgEditNote(BaseDlgEditText):
     """
-    Defines a multiline text control dialog for note editing.
+    Defines a multi-line text control dialog for note editing.
     This dialog is used to ask the user to enter the text that will be
     displayed in a UML note.
 
@@ -51,11 +52,11 @@ class DlgEditNote(Dialog):
             dialogIdentifier:   An identifier for the dialog
             pyutNote:           Model object we are editing
         """
-        super().__init__(parent, dialogIdentifier, _("Note Edit"), style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, dialogIdentifier, _("Note Edit"))
 
         self._pyutNote:     PyutNote = pyutNote
         self._text:         str      = self._pyutNote.getName()
-        self._returnAction: int      = -1   # describe how the user exited the dialog box
+        # self._returnAction: int      = -1   # describe how the user exited the dialog box
 
         self.SetAutoLayout(True)
 
