@@ -9,7 +9,9 @@ from wx import StaticText
 from wx import Window
 
 from org.pyut.dialogs.BaseDlgEditText import BaseDlgEditText
+
 from org.pyut.model.PyutNote import PyutNote
+
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
@@ -40,9 +42,8 @@ class DlgEditNote(BaseDlgEditText):
 
         self._pyutNote:     PyutNote = pyutNote
 
-        label = StaticText(self, ID_ANY, _("Note text"))
-
-        self._txtCtrl = TextCtrl(self, TXT_NOTE, self._pyutNote.getName(), size=(400, 180), style=TE_MULTILINE)
+        label: StaticText = StaticText(self, ID_ANY, _("Note text"))
+        self._txtCtrl: TextCtrl = TextCtrl(self, TXT_NOTE, self._pyutNote.getName(), size=(400, 180), style=TE_MULTILINE)
         self._txtCtrl.SetFocus()
 
         self._setupMainDialogLayout(self._txtCtrl, label)

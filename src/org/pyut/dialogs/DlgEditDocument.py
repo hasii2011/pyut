@@ -10,7 +10,9 @@ from wx import TextCtrl
 from wx import Window
 
 from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.dialogs.BaseDlgEditText import BaseDlgEditText
+
 from org.pyut.ui.PyutDocument import PyutDocument
 
 from org.pyut.general.Globals import _
@@ -27,7 +29,7 @@ class DlgEditDocument(BaseDlgEditText):
 
         Args:
             parent:             The parent window
-            dialogIdentifier
+            dialogIdentifier    An identifier for the dialog
             document:           The UML document we want to edit
         """
         super().__init__(parent, dialogIdentifier, _("Document Edit"))
@@ -35,7 +37,7 @@ class DlgEditDocument(BaseDlgEditText):
         self.logger:    Logger       = getLogger(__name__)
         self._document: PyutDocument = document
 
-        label = StaticText(self, ID_ANY, _("Document Name"))
+        label: StaticText = StaticText(self, ID_ANY, _("Document Name"))
         self._nameEntry: TextCtrl = TextCtrl(parent=self, id=TXT_DOCUMENT_NAME, value=document.title)
         self._nameEntry.SetFocus()
 
