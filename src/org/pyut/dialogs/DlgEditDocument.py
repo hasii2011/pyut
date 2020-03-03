@@ -49,9 +49,7 @@ class DlgEditDocument(BaseDlgEditText):
 
         self.logger:    Logger       = getLogger(__name__)
         self._document: PyutDocument = document
-        # self._returnAction = -1   # describe how the user exited the dialog box
 
-        self.SetAutoLayout(True)
         label = StaticText(self, ID_ANY, _("Document Name"))
         self._nameEntry: TextCtrl = TextCtrl(parent=self, id=TXT_DOCUMENT_NAME, value=document.title)
         self._nameEntry.SetFocus()
@@ -82,30 +80,7 @@ class DlgEditDocument(BaseDlgEditText):
         self.Centre()
         self.ShowModal()
 
-    def getReturnAction(self):
-        """
-        Return an info on how the user exited the dialog box
-
-        Returns:
-            wx.Ok = click on Ok button; wx.Cancel = click on Cancel button
-        """
-        return self._returnAction
-
     # noinspection PyUnusedLocal
     def _onDocumentNameChange(self, event):
         self.logger.info(f'Howdy')
         self._document.title = event.GetString()
-
-    # noinspection PyUnusedLocal
-    def _onCmdOk(self, event):
-
-        self._returnAction = OK
-        self.Close()
-
-    # noinspection PyUnusedLocal
-    def _onCmdCancel(self, event):
-        """
-        Handle click on "Cancel" button.
-        """
-        self._returnAction = CANCEL
-        self.Close()

@@ -55,14 +55,10 @@ class DlgEditNote(BaseDlgEditText):
         super().__init__(parent, dialogIdentifier, _("Note Edit"))
 
         self._pyutNote:     PyutNote = pyutNote
-        self._text:         str      = self._pyutNote.getName()
-        # self._returnAction: int      = -1   # describe how the user exited the dialog box
-
-        self.SetAutoLayout(True)
 
         label = StaticText(self, ID_ANY, _("Note text"))
 
-        self._txtCtrl = TextCtrl(self, TXT_NOTE, self._text, size=(400, 180), style=TE_MULTILINE)
+        self._txtCtrl = TextCtrl(self, TXT_NOTE, self._pyutNote.getName(), size=(400, 180), style=TE_MULTILINE)
 
         self._txtCtrl.SetFocus()
 
@@ -94,15 +90,6 @@ class DlgEditNote(BaseDlgEditText):
         self.Centre()
         self.ShowModal()
 
-    def getReturnAction(self):
-        """
-        Return an information on how the user exited the dialog box
-
-        Returns:
-            wx.Ok = click on Ok button; wx.Cancel = click on Cancel button
-        """
-        return self._returnAction
-
     def _onTxtNoteChange(self, event: CommandEvent):
         """
         Handle when the text in the widget identified by TXT_NOTE change.s
@@ -110,27 +97,4 @@ class DlgEditNote(BaseDlgEditText):
         Args:
             event:
         """
-        self._text = event.GetString()
-
-    # noinspection PyUnusedLocal
-    def _onCmdOk(self, event: CommandEvent):
-        """
-        Handle click on "Ok" button.
-        Args:
-            event:
-        """
-        self._pyutNote.setName(self._text)
-
-        self._returnAction = OK
-        self.Close()
-
-    # noinspection PyUnusedLocal
-    def _onCmdCancel(self, event: CommandEvent):
-        """
-        Handle click on "Cancel" button.
-
-        Args:
-            event:
-        """
-        self._returnAction = CANCEL
-        self.Close()
+        self._pyutNote.setName(event.GetString())
