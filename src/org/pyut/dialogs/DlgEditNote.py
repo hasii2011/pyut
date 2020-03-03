@@ -3,24 +3,15 @@ from wx import ALIGN_BOTTOM
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALL
 from wx import BOTTOM
-from wx import CANCEL
-
-from wx import CommandEvent
-from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import EXPAND
-from wx import HORIZONTAL
 from wx import ID_ANY
-from wx import OK
-
-from wx import RIGHT
 from wx import TE_MULTILINE
 from wx import VERTICAL
 
+from wx import CommandEvent
 from wx import TextCtrl
 from wx import StaticText
-
-from wx import Button
 from wx import BoxSizer
 from wx import Window
 
@@ -62,19 +53,12 @@ class DlgEditNote(BaseDlgEditText):
 
         self._txtCtrl.SetFocus()
 
-        btnOk:     Button = Button(self, OK, _("&Ok"))
-        btnCancel: Button = Button(self, CANCEL, _("&Cancel"))
-        btnOk.SetDefault()
-
-        szrButtons = BoxSizer(HORIZONTAL)
-        szrButtons.Add(btnOk, 0, RIGHT, 10)
-        szrButtons.Add(btnCancel, 0, ALL)
-
+        sizerButtons: BoxSizer = self._createDialogButtons()
         # Sizer for all components
         szrMain: BoxSizer = BoxSizer(VERTICAL)
         szrMain.Add(label, 0, BOTTOM, 5)
         szrMain.Add(self._txtCtrl, 1, EXPAND | BOTTOM, 10)
-        szrMain.Add(szrButtons, 0, ALIGN_CENTER_HORIZONTAL | ALIGN_BOTTOM)
+        szrMain.Add(sizerButtons, 0, ALIGN_CENTER_HORIZONTAL | ALIGN_BOTTOM)
 
         # Border
         szrBorder: BoxSizer = BoxSizer(VERTICAL)
@@ -83,8 +67,6 @@ class DlgEditNote(BaseDlgEditText):
         szrBorder.Fit(self)
 
         # Set up the event handlers
-        self.Bind(EVT_BUTTON, self._onCmdOk,     id=OK)
-        self.Bind(EVT_BUTTON, self._onCmdCancel, id=CANCEL)
         self.Bind(EVT_TEXT, self._onTxtNoteChange, id=TXT_NOTE)
 
         self.Centre()

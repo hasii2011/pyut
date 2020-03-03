@@ -6,21 +6,13 @@ from wx import ALIGN_BOTTOM
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALL
 from wx import BOTTOM
-
-from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import EXPAND
-from wx import HORIZONTAL
-
 from wx import ID_ANY
-from wx import OK
-from wx import CANCEL
+from wx import VERTICAL
 
-from wx import RIGHT
 from wx import StaticText
 from wx import TextCtrl
-from wx import Button
-from wx import VERTICAL
 from wx import Window
 from wx import BoxSizer
 
@@ -54,14 +46,7 @@ class DlgEditDocument(BaseDlgEditText):
         self._nameEntry: TextCtrl = TextCtrl(parent=self, id=TXT_DOCUMENT_NAME, value=document.title)
         self._nameEntry.SetFocus()
 
-        btnOk:     Button = Button(self, OK, _("&Ok"))
-        btnCancel: Button = Button(self, CANCEL, _("&Cancel"))
-
-        btnOk.SetDefault()
-
-        sizerButtons: BoxSizer = BoxSizer(HORIZONTAL)
-        sizerButtons.Add(btnOk, 0, RIGHT, 10)
-        sizerButtons.Add(btnCancel, 0, ALL)
+        sizerButtons: BoxSizer = self._createDialogButtons()
 
         sizerMain: BoxSizer = BoxSizer(VERTICAL)
         sizerMain.Add(label, 0, BOTTOM, 5)
@@ -74,8 +59,6 @@ class DlgEditDocument(BaseDlgEditText):
         sizerBorder.Fit(self)
 
         self.Bind(EVT_TEXT,   self._onDocumentNameChange, id=TXT_DOCUMENT_NAME)
-        self.Bind(EVT_BUTTON, self._onCmdOk,     id=OK)
-        self.Bind(EVT_BUTTON, self._onCmdCancel, id=CANCEL)
 
         self.Centre()
         self.ShowModal()
