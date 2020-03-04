@@ -16,7 +16,6 @@ class ShapeModel(object):
         if viewShape is not None:
             self._views.append(viewShape)
 
-        # coords of the model
         self._x = 0
         self._y = 0
 
@@ -33,8 +32,10 @@ class ShapeModel(object):
 
         Args:
             x:  abscissa of the model.
-            y:  oridnate of the model.
+            y:  ordinate of the model.
+
         """
+
         self._x = x
         self._y = y
 

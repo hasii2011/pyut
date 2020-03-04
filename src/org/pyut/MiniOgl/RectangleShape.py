@@ -55,7 +55,7 @@ class RectangleShape(Shape):
 
     def GetTopLeft(self):
         """
-        Get the coords of the top left point in diagram coords.
+        Get the coordinates of the top left point in diagram coordinates.
 
         @return (double, double)
         """
@@ -228,11 +228,13 @@ class RectangleShape(Shape):
     def Resize(self, sizer, x, y):
         """
         Resize the rectangle according to the new position of the sizer.
-        Not used to programmaticaly resize a shape. Use `SetSize` for this.
+        Not used to programmatically resize a shape. Use `SetSize` for this.
 
-        @param  sizer
-        @param  x
-        @param y : position of the sizer
+        Args:
+            sizer:
+            x:      x position of the sizer
+            y:      y position of the sizer
+
         """
         tlx, tly = self.GetTopLeft()
         w, h = self.GetSize()
@@ -296,9 +298,9 @@ class RectangleShape(Shape):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
 
-        Updates the model when the shape (view) is deplaced or resized.
+        Updates the model when the shape (view) is moved or resized.
         """
-        #  change the coords of model
+        #  change the coordinates of model
         Shape.UpdateModel(self)
 
         #  get the size of the shape (view)

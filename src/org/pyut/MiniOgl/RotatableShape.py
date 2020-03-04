@@ -109,7 +109,7 @@ class RotatableShape(RectangleShape):
 
     def Rotate(self, clockwise: bool):
         """
-        Rotate the shape 90� clockwise or conterclockwise.
+        Rotate the shape 90� clockwise or counterclockwise.
 
         @param  clockwise
         """

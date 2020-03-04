@@ -48,7 +48,7 @@ class TextShape(RectangleShape):
         self._model: TextShapeModel = TextShapeModel(self)
         self._font:  Font = font
 
-        self.logger.debug(f'Init Text Shape font: {font}')
+        self.logger.debug(f'Initial Text Shape font: {font}')
 
     def Attach(self, diagram):
         """
@@ -113,7 +113,7 @@ class TextShape(RectangleShape):
             dc.SetTextBackground(self._textBack)
             x, y = self.GetPosition()
 
-            # to draw the textshape with its own font size
+            # to draw the text shape with its own font size
             saveFont: Font = dc.GetFont()
             if self.GetFont() is not None:
                 dc.SetFont(self.GetFont())

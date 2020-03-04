@@ -6,7 +6,6 @@ class SizerShape(PointShape):
     """
     A sizer, to resize other shapes.
 
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
     def __init__(self, x, y, parent):
         """
@@ -20,11 +19,21 @@ class SizerShape(PointShape):
         self._moving = True
 
     def Draw(self, dc, withChildren=True):
-        #  TODO : Remove this. This is for debugging purpose. CD
+        """
+        #  TODO : Remove this. This is for debugging purpose.
+
+        Note : This functions seems to be needed to display anchors
+                on rectangle when moving them, but not for lines,
+            single anchors, ...
+
+        Args:
+            dc:
+            withChildren:
+
+        Returns:
+
+        """
         PointShape.Draw(self, dc, withChildren)
-        # Note : This functions seems to be needed to display anchors
-        #        on rectangle when moving them, but not for lines,
-        #        single anchors, ...
         pass
 
     def SetPosition(self, x, y):
@@ -44,8 +53,6 @@ class SizerShape(PointShape):
         If setting a sizer moving, the parent will also be set moving.
 
         @param
-        @return
-        @since 1.0
         """
         PointShape.SetMoving(self, True)
         # a sizer is always moving

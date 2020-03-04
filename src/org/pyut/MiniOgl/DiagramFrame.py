@@ -50,7 +50,7 @@ class DiagramFrame(wx.ScrolledWindow):
 
         self._xOffset = 0.0     # abscissa offset between the view and the model
         self._yOffset = 0.0     # ordinate offset between the view and the model
-        self._zoomStack = []    # cstore all zoom factors applied
+        self._zoomStack = []    # store all zoom factors applied
 
         self._zoomLevel = 0             # number of zoom factors applied
         self._maxZoomFactor = 6         # can zoom in beyond 600%
@@ -98,13 +98,13 @@ class DiagramFrame(wx.ScrolledWindow):
         @return (int, int) : x, y
         """
 
-        x, y = self._ConvertEventCoords(event)  # Updated by CD, 20041005
+        x, y = self._ConvertEventCoordinates(event)  # Updated by CD, 20041005
         return x, y
 
     def GenericHandler(self, event: wx.MouseEvent, methodName: str):
         """
-        This handler finds the shape at event coords and dispatch the event.
-        The handler will receive an event with coords already unscrolled.
+        This handler finds the shape at event coordinates and dispatch the event.
+        The handler will receive an event with coordinates already nog scrolled.
 
         @param event : original event
         @param methodName : name of the method to invoke in the event handler of the shape
@@ -150,14 +150,14 @@ class DiagramFrame(wx.ScrolledWindow):
             shapes.remove(shape)
             if isinstance(shape, SizerShape):
                 # don't deselect the parent of a sizer
-                # or its sizers would be detached
+                # or its sizer's would be detached
                 shapes.remove(shape.GetParent())
             elif isinstance(shape, ControlPoint):
                 # don't deselect the line of a control point
                 for line in shape.GetLines():
                     shapes.remove(line)
             # don't call DeselectAllShapes, because we must ensure that
-            # sizers won't be deselected (because they are detached when they are deselected)
+            # the sizer won't be deselected (because they are detached when they are deselected)
             # deselect all other shapes
             for s in shapes:
                 s.SetSelected(False)
@@ -606,7 +606,7 @@ class DiagramFrame(wx.ScrolledWindow):
     def _NullCallback(self, evt):
         pass
 
-    def _ConvertEventCoords(self, event):
+    def _ConvertEventCoordinates(self, event):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
         return event.GetX() + (xView * xDelta), event.GetY() + (yView * yDelta)
@@ -834,26 +834,24 @@ class DiagramFrame(wx.ScrolledWindow):
         for shape in self.GetDiagram().GetShapes():
             shape.UpdateFromModel()
 
-        # resize the virutal screen in order to match with the zoom
+        # resize the virtual screen in order to match with the zoom
         virtualWidth  = virtualWidth * zoomFactor
         virtualHeight = virtualHeight * zoomFactor
         virtualSize = wx.Size(virtualWidth, virtualHeight)
         self.SetVirtualSize(virtualSize)
 
         # perform the scrolling in the way to have the zoom area visible
-        # and centred on the virutal screen.
+        # and centred on the virtual screen.
         scrollX = (virtualWidth - clientWidth) // 2 // xUnit
         scrollY = (virtualHeight - clientHeight) // 2 // yUnit
         self.Scroll(scrollX, scrollY)
 
     def DoZoomOut(self, ax: int, ay: int):
         """
-        added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
-
         Do the 'zoom out' in the way to have the clicked point (ax, ay) as
         the central point of new view.
         If one or many 'zoom in' where performed before, then we just suppress the
-        last one from the zoom stack. Else, we add the default zoom factor inversed
+        last one from the zoom stack. Else, we add the default inverted zoom factor
         to the stack.
 
         @param ax  abscissa of the clicked point
@@ -873,9 +871,9 @@ class DiagramFrame(wx.ScrolledWindow):
         clientWidth, clientHeight = self.GetClientSize()
         virtualWidth, virtualHeight = self.GetVirtualSize()
 
-        # transform event coords to get them relative to the upper left corner of
-        # the virual screen (avoid the case where that corner is on a shape and
-        # get its coords relative to the shape).
+        # transform event coordinates to get them relative to the upper left corner of
+        # the virtual screen (avoid the case where that corner is on a shape and
+        # get its coordinates relative to the shape).
         if ax >= viewStartX * xUnit and ay >= viewStartY * yUnit:
             x = ax
             y = ay
@@ -893,9 +891,9 @@ class DiagramFrame(wx.ScrolledWindow):
         minZoomFactor = self.GetMinZoomFactor()
         # minZoomReached = False        not used
 
-        # if the view is elarged, then we just remove the last
+        # if the view is enlarged, then we just remove the last
         # zoom in factor that has been applied. Else, we apply
-        # the default one inversed.
+        # the default one in inverted.
         if self._zoomLevel > 0:
             zoomFactor = 1/self._zoomStack.pop()
             self._zoomLevel -= 1
@@ -929,7 +927,7 @@ class DiagramFrame(wx.ScrolledWindow):
         self.SetVirtualSize(virtualSize)
 
         # perform the scrolling in the way to have the zoom area visible
-        # and centred on the virutal screen.
+        # and centred on the virtual screen.
         scrollX = (virtualWidth - clientWidth) // 2 // xUnit
         scrollY = (virtualHeight - clientHeight) // 2 // yUnit
         self.Scroll(scrollX, scrollY)

@@ -1,34 +1,4 @@
 
-#
-# Copyright 2002, Laurent Burgbacher, Eivd.
-# Visit http://www.eivd.ch
-#
-# This file is part of MiniOgl.
-#
-# MiniOgl is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MiniOgl is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MiniOgl; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-__author__    = "Laurent Burgbacher, lb@alawa.ch, Eivd"
-__copyright__ = "Copyright 2002, Laurent Burgbacher, Eivd"
-__license__   = "Released under the terms of the GNU General Public Licence V2"
-__date__      = "2002-10-15"
-__version__   = "$Id: VShapes.py,v 1.3 2004/06/16 19:33:19 dutoitc Exp $"
-__all__ = [
-    "VShape", "VRectangle", "VEllipse", "VCircle", "VArc", "VEllipticArc",
-    "VLineLength", "VLineDest", "VPolygon", "VPen", "VBrush"
-]
-
 """
 This is a suite of small classes used to draw RotatableShapes.
 Each one represent a simple shape (line, rectangle, circle, ellipse...) or
@@ -135,6 +105,7 @@ class VArc(VShape):
             x1, y1, x2, y2, xc, yc = self.Scale(scale, self._data)
         dc.DrawArc(ox + x1, oy + y1, ox + x2, oy + y2, ox + xc, oy + yc)
 
+
 class VEllipticArc(VShape):
     def __init__(self, x, y, w, h, start, end):
         VShape.__init__(self)
@@ -223,6 +194,7 @@ class VPen(VShape):
         VShape.__init__(self)
         self._pen = pen
 
+    # noinspection PyUnusedLocal
     def Draw(self, dc, x, y, scale=1):
         dc.SetPen(self._pen)
 
@@ -232,5 +204,6 @@ class VBrush(VShape):
         VShape.__init__(self)
         self._brush = brush
 
+    # noinspection PyUnusedLocal
     def Draw(self, dc, x, y, scale=1):
         dc.SetBrush(self._brush)

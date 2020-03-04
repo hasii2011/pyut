@@ -12,7 +12,7 @@ class RectangleShapeModel(ShapeModel):
         We have to use AddShape() and UpdateModel from the shape before
         we can use the model.
 
-        Set the coords to 0 and a empty list of associated shapes (views)
+        Set the coordinates to 0 and a empty list of associated shapes (views)
         """
         super().__init__(viewShape)
 

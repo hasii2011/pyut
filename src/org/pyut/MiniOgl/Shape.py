@@ -412,7 +412,7 @@ class Shape:
 
     def GetTopLeft(self):
         """
-        Get the coords of the top left point in diagram coords.
+        Get the coordinates of the top left point in diagram coordinates.
 
         @return (double, double)
         """
@@ -604,7 +604,7 @@ class Shape:
         change of state of the diagram frame (here it's only for the zoom)
         """
 
-        # Get the coords of the model (ShapeModel)
+        # Get the coordinates of the model (ShapeModel)
         mx, my = self.GetModel().GetPosition()
 
         # Get the offsets and the ratio between the shape (view) and the
@@ -614,11 +614,11 @@ class Shape:
         dx = self.GetDiagram().GetPanel().GetXOffset()
         dy = self.GetDiagram().GetPanel().GetYOffset()
 
-        # calculation of the shape (view) coords in the light of the offsets and ratio
+        # calculation of the shape (view) coordinates in the light of the offsets and ratio
         x = (ratio * mx) + dx
         y = (ratio * my) + dy
 
-        # assign the new coords to the shape (view). DON'T USE SetPosition(),
+        # assign the new coordinates to the shape (view). DON'T USE SetPosition(),
         # because there is a call to UpdateModel() in that method.
         if self._parent is not None:
             self._x, self._y = self.ConvertCoordToRelative(x, y)
@@ -629,8 +629,8 @@ class Shape:
     def UpdateModel(self):
         """
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
-        Updates the coords of the model (ShapeModel) when the Shape (view)
-        is deplaced.
+        Updates the coordinates of the model (ShapeModel) when the Shape (view)
+        is moved.
         """
 
         #  get the associated model (ShapeModel)
@@ -643,19 +643,19 @@ class Shape:
         dx = self.GetDiagram().GetPanel().GetXOffset()
         dy = self.GetDiagram().GetPanel().GetYOffset()
 
-        #  get the coords of this shape
+        #  get the coordinates of this shape
         x, y = self.GetPosition()
 
-        # calculation of the model coords in the light of the
-        # offsets and ratio and assignement.
+        # calculation of the model coordinates in the light of the
+        # offsets and ratio and assignment.
         mx = (x - dx)/ratio
         my = (y - dy)/ratio
         model.SetPosition(mx, my)
 
         # change also the position of the model of the children,
-        # because when we move the parent children setposition isn't called
-        # and so their updatemodel isn't called
-        for child in self._anchors:        # + self.GetAllChildren():
+        # because when we move the parent children set position is not called
+        # and so their update model is not called
+        for child in self._anchors:
             cx, cy = child.GetPosition()
             cmx = (cx - dx) / ratio
             cmy = (cy - dy) / ratio
