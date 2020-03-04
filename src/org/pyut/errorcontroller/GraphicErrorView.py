@@ -55,7 +55,6 @@ class GraphicErrorView(AbstractErrorView):
 
         if title is None:
             title = _("WARNING...")
-        self.logger.error(msg)
         try:
             dlg = MessageDialog(parent, msg, title, OK | ICON_EXCLAMATION | CENTRE)
             dlg.ShowModal()
@@ -67,7 +66,6 @@ class GraphicErrorView(AbstractErrorView):
 
         if title is None:
             title = _("WARNING...")
-        self.logger.error(msg)
         try:
             dlg = MessageDialog(parent, msg, title, OK | ICON_INFORMATION | CENTRE)
             dlg.ShowModal()

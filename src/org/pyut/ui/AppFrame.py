@@ -774,22 +774,16 @@ class AppFrame(Frame):
                     self.logger.error(f'{e}')
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileExit(self, event):
+    def _OnMnuFileExit(self, event: CommandEvent):
         """
         Exit the program
-
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self.Close()
 
     # noinspection PyUnusedLocal
-    def _OnMnuHelpAbout(self, event):
+    def _OnMnuHelpAbout(self, event: CommandEvent):
         """
         Show the about box
-
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         from org.pyut.dialogs.DlgAbout import DlgAbout
         from org.pyut.general.PyutVersion import PyutVersion
@@ -798,12 +792,9 @@ class AppFrame(Frame):
         dlg.Destroy()
 
     # noinspection PyUnusedLocal
-    def _OnMnuHelpIndex(self, event):
+    def _OnMnuHelpIndex(self, event: CommandEvent):
         """
         Display the help index
-
-        @since 1.9
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
 
         from org.pyut.dialogs import DlgHelp
@@ -811,12 +802,9 @@ class AppFrame(Frame):
         dlgHelp.Show(True)
 
     # noinspection PyUnusedLocal
-    def _OnMnuHelpVersion(self, event):
+    def _OnMnuHelpVersion(self, event: CommandEvent):
         """
         Check for newer version.
-
-        @since 1.49.2.28
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         # Init
         FILE_TO_CHECK = "http://pyut.sourceforge.net/backdoors/lastversion"     # TODO FIXME  :-)
@@ -894,12 +882,11 @@ class AppFrame(Frame):
     def loadByFilename(self, filename):
         """
         load the specified filename
-        called by pyutApp.py
-        This is a simple indirection to __loadFile. No direct call because
-        it seems to be more logical to let loadFile private.
-        pyutApp do not need to know the correct name of the __loadFile method.
-        @since 1.31
-        @author C.Dutoit <dutoitc@hotmail.com>
+        called by PyutApp
+        This is a simple indirection to __loadFile. Not direct call because
+        it seems to be more logical to let loadFile be private.
+        PyutApp do not need to know the correct name of the __loadFile method.
+
         """
         self._loadFile(filename)
 
@@ -953,10 +940,7 @@ class AppFrame(Frame):
 
     def _saveFileAs(self):
         """
-        save to the current filename; Ask for the name
-
-        @since 1.9
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Save to the current filename; Ask for the name
         """
         self._fileHandling.saveFileAs()
         self._ctrl.updateTitle()
@@ -969,9 +953,6 @@ class AppFrame(Frame):
     def _setLastOpenedFilesItems(self):
         """
         Set the menu last opened files items
-
-        @since 1.43
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         self.logger.debug(f'self.mnuFile: {self.mnuFile}')
 
@@ -1095,7 +1076,7 @@ class AppFrame(Frame):
         # TODO : What are you doing with the dc ?
 
     # noinspection PyUnusedLocal
-    def _OnMnuSelectAll(self, event):
+    def _OnMnuSelectAll(self, event: CommandEvent):
         frame = self._ctrl.getUmlFrame()
         if frame is None:
             PyutUtils.displayError(_("No frame found !"))
@@ -1129,7 +1110,7 @@ class AppFrame(Frame):
         Open a IPython shell
         """
         self.logger.warning(f'not yet implemented on Python 3')
-
+        PyutUtils.displayInformation(msg=_('Not yet implemented'), title=_('Sorry!'))
         # try:
         #     from IPython.Shell import IPShellEmbed
         # except ImportError:
@@ -1141,11 +1122,13 @@ class AppFrame(Frame):
     # noinspection PyUnusedLocal
     def _OnMnuUndo(self, event):
         if (self._fileHandling.getCurrentFrame()) is None:
-            return   # TODO : dialog box
+            PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
+            return
         self._fileHandling.getCurrentFrame().getHistory().undo()
 
     # noinspection PyUnusedLocal
     def _OnMnuRedo(self, event):
         if (self._fileHandling.getCurrentFrame()) is None:
-            return   # TODO : dialog box
+            PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
+            return 
         self._fileHandling.getCurrentFrame().getHistory().redo()
