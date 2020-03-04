@@ -1,46 +1,53 @@
 
 from typing import List
+from typing import Tuple
 
 from wx import DC
 
 
 class LineSplitter:
     """
-    This class offers a text split algorithm.
-    You can give your text to the method split and this will return you
-    a list of string, length of text for each string <= total width.
+    This class implements a text split algorithm.
+    You provide text to the method to split and it returns
+    a list of strings; The length of text for each string <= total width.
 
-    Sample of use::
-        text = "Hi, how are you today ?"
-        splitLines = LineSplitter().split(text, dc, 12)
+    Sample use:
+        text:       str        = "Hi, how are you today ?"
+        splitLines: List[str] = LineSplitter().split(text, dc, 12)
     """
 
-    def split(self, text: str, dc: DC, width: int) -> List[str]:
+    def split(self, text: str, dc: DC, textWidth: int) -> List[str]:
         """
-        Split a text in lines fitting in width pixels.
+        Split the `text` into lines that fit into `textWidth` pixels.
 
-        @param  text : text to split
-        @param  dc
-        @param  width : width for the text, in pixels
+        Args:
+            text:       The text to split
+            dc:         Device Context
+            textWidth:  The width of the text in pixels
 
-        @return String [] : a list of strings fitting in width pixels
-
+        Returns:
+            A list of strings that are no wider than the input pixel `width`
         """
-        lines = text.splitlines()
-        newLines = []
-        for line in lines:
-            words = line.split()
-            wline = 0
-            newLine = ""
+        splitLines: List[str] = text.splitlines()
+        newLines:   List[str] = []
+
+        for line in splitLines:
+            words:     List[str] = line.split()
+            lineWidth: int       = 0
+            newLine:   str       = ""
             for word in words:
-                word += " "
-                wword = dc.GetTextExtent(word)[0]
-                if wline + wword <= width:
-                    newLine += word
-                    wline += wword
+                word: str = f'{word} '
+
+                extentSize: Tuple[int, int] = dc.GetTextExtent(word)        # width, height
+                wordWidth:  int             = extentSize[0]
+                if lineWidth + wordWidth <= textWidth:
+                    newLine = f'{newLine}{word}'
+                    lineWidth += wordWidth
                 else:
                     newLines.append(newLine[:-1])   # remove last space
                     newLine = word
-                    wline = wword
+                    lineWidth = wordWidth
+
             newLines.append(newLine[:-1])
+
         return newLines

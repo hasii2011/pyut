@@ -19,8 +19,8 @@ from org.pyut.persistence.IoFile import IoFile
 
 class TestIoFile(TestBase):
     """
-    PyutClasses (datamodel) and OglClasses UI are intermixed in the PyutXml code;  Extremely, hard to unit
-    test that the data model has been built correct
+    PyutClasses (data model) and OglClasses UI are intermixed in the PyutXml code;  Extremely, hard to unit
+    test that the data model has been built correctly
     But, I did learn a bit about Python mocking !!
     """
     clsLogger: Logger = None
@@ -37,7 +37,7 @@ class TestIoFile(TestBase):
         self.mockFrame:    MagicMock = MagicMock()
         self.mockTree:     MagicMock = MagicMock()
         self.mockTreeRoot: MagicMock = MagicMock()
-        self.fileHandling: MainUI = MagicMock()
+        self.fileHandling: MainUI    = MagicMock()
 
         oldPath: str = getcwd()
         # Assume we are at src/tests
@@ -45,13 +45,14 @@ class TestIoFile(TestBase):
         newAppPath: str = getcwd()
         chdir(oldPath)
 
-        self.mediator = Mediator()      # It's a Singleon, I can do this
+        self.mediator = Mediator()      # It's a Singleton, I can do this
         self.mediator.registerAppPath(newAppPath)
         self.mediator.registerFileHandling(self.fileHandling)
 
     def tearDown(self):
         pass
 
+    # noinspection PyUnusedLocal
     @patch('wx.Dialog')
     @patch('wx.Gauge')
     @patch('org.pyut.general.Mediator')
