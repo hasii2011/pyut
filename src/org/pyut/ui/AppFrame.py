@@ -288,58 +288,6 @@ class AppFrame(Frame):
     def OnToolboxMenuClick(self, event):
         self._ctrl.displayToolbox(self._toolboxIds[event.GetId()])
 
-    def printDiagramToPostscript(self, filename: str):
-        """
-        Print the current diagram to postscript
-        Args:
-            filename:  The temp file name path that holds the post script
-
-        Returns:
-            `True` if the postscript file was successfully created, else `False`
-        """
-        # Verify that we do have a diagram to save
-        if self._ctrl.getDiagram() is None:
-            PyutUtils.displayError(_("No diagram to print !"), parent=self)
-            self._ctrl.setStatusText(_("Error while printing to postscript"))
-            return False
-
-        # Init
-        # printout = None
-        # printer  = None
-        try:
-            self._ctrl.deselectAllShapes()
-
-            printDialogData: PrintDialogData = PrintDialogData()
-
-            printDialogData.SetPrintData(self._printData)
-            printDialogData.SetPrintToFile(True)
-            printDialogData.SetMinPage(1)
-            printDialogData.SetMaxPage(1)
-
-            printData: PrintData = printDialogData.GetPrintData()
-            printData.SetFilename(filename)
-            printData.SetQuality(PRINT_QUALITY_HIGH)
-
-            printDialogData.SetPrintData(printData)
-
-            printer:  Printer      = Printer(printDialogData)
-            printout: PyutPrintout = PyutPrintout(self._ctrl.getUmlFrame())
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("Cannot export to Postscript"), parent=self)
-            self._ctrl.setStatusText(_(f"Error while printing to postscript {e}"))
-            return False
-
-        # Print to postscript
-        if not printer.Print(self, printout, False):
-            PyutUtils.displayError(_("Cannot print"), parent=self)
-            self._ctrl.setStatusText(_("Error while printing to postscript"))
-            return False
-
-        # Return
-        self._ctrl.setStatusText(_("Printed to postscript"))
-        wxYield()
-        return True
-
     def cutSelectedShapes(self):
         """
         Cut all current shapes
@@ -684,12 +632,13 @@ class AppFrame(Frame):
             if len(filename) < 3 or filename[-3:] != ".ps":
                 filename += ".ps"
             dlg.Destroy()
+            wxYield()
         except (ValueError, Exception) as e:
             PyutUtils.displayError(_("Error while displaying Postscript saving dialog"), parent=self)
             return
 
         # export to PDF
-        self.printDiagramToPostscript(filename)
+        self.__printDiagramToPostscript(filename)
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExportPDF(self, event:  CommandEvent):
@@ -726,7 +675,7 @@ class AppFrame(Frame):
         # os.system(f'open -W -a {PS_TO_EXT_PS}  {TEMP_PS_FILE}  {TEMP_EPS_FILE}')
         # os.system(f'open -W -a {EPS_TO_PDF_CMD} {TEMP_EPS_FILE} --outfile={filename}')
         wxYield()
-        if self.printDiagramToPostscript(f'{TEMP_PS_FILE}'):
+        if self.__printDiagramToPostscript(f'{TEMP_PS_FILE}'):
             # Convert file to pdf
             import os
             # noinspection PyUnusedLocal
@@ -824,7 +773,7 @@ class AppFrame(Frame):
                     lst = self._prefs.getLastOpenedFilesList()
                     self._loadFile(lst[index])
                     self._prefs.addNewLastOpenedFilesEntry(lst[index])
-                    self._setLastOpenedFilesItems()
+                    self.__setLastOpenedFilesItems()
                 except (ValueError, Exception) as e:
                     self.logger.error(f'{e}')
 
@@ -993,7 +942,7 @@ class AppFrame(Frame):
                 if self._fileHandling.openFile(filename):
                     # Add to last opened files list
                     self._prefs.addNewLastOpenedFilesEntry(filename)
-                    self._setLastOpenedFilesItems()
+                    self.__setLastOpenedFilesItems()
                     self._ctrl.updateTitle()
             except (ValueError, Exception) as e:
                 PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
@@ -1010,7 +959,7 @@ class AppFrame(Frame):
         project = self._fileHandling.getCurrentProject()
         if project is not None:
             self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
-            self._setLastOpenedFilesItems()
+            self.__setLastOpenedFilesItems()
 
     def _saveFileAs(self):
         """
@@ -1022,23 +971,7 @@ class AppFrame(Frame):
         project = self._fileHandling.getCurrentProject()
         if project is not None:
             self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
-            self._setLastOpenedFilesItems()
-
-    def _setLastOpenedFilesItems(self):
-        """
-        Set the menu last opened files items
-        """
-        self.logger.debug(f'self.mnuFile: {self.mnuFile}')
-
-        index = 0
-        for el in self._prefs.getLastOpenedFilesList():
-            openFilesId = self.lastOpenedFilesID[index]
-            # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
-            lbl: str = f"&{str(index+1)} {el}"
-            self.logger.debug(f'lbL: {lbl}  openFilesId: {openFilesId}')
-            self.mnuFile.SetLabel(id=openFilesId, label=lbl)
-
-            index += 1
+            self.__setLastOpenedFilesItems()
 
     def _OnNewAction(self, event: CommandEvent):
         """
@@ -1216,3 +1149,71 @@ class AppFrame(Frame):
         self._printData.SetOrientation(PORTRAIT)
         self._printData.SetNoCopies(1)
         self._printData.SetCollate(True)
+
+    def __printDiagramToPostscript(self, filename: str):
+        """
+        Print the current diagram to postscript
+        Args:
+            filename:  The temp file name path that holds the post script
+
+        Returns:
+            `True` if the postscript file was successfully created, else `False`
+        """
+        # Verify that we do have a diagram to save
+        if self._ctrl.getDiagram() is None:
+            PyutUtils.displayError(_("No diagram to print !"), parent=self)
+            self._ctrl.setStatusText(_("Error while printing to postscript"))
+            return False
+
+        # Init
+        # printout = None
+        # printer  = None
+        try:
+            self._ctrl.deselectAllShapes()
+
+            printDialogData: PrintDialogData = PrintDialogData()
+
+            printDialogData.SetPrintData(self._printData)
+            printDialogData.SetPrintToFile(True)
+            printDialogData.SetMinPage(1)
+            printDialogData.SetMaxPage(1)
+
+            printData: PrintData = printDialogData.GetPrintData()
+            printData.SetFilename(filename)
+            printData.SetQuality(PRINT_QUALITY_HIGH)
+
+            printDialogData.SetPrintData(printData)
+
+            printer:  Printer      = Printer(printDialogData)
+            printout: PyutPrintout = PyutPrintout(self._ctrl.getUmlFrame())
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_("Cannot export to Postscript"), parent=self)
+            self._ctrl.setStatusText(_(f"Error while printing to postscript {e}"))
+            return False
+
+        # Print to postscript
+        if not printer.Print(self, printout, False):
+            PyutUtils.displayError(_("Cannot print"), parent=self)
+            self._ctrl.setStatusText(_("Error while printing to postscript"))
+            return False
+
+        # Return
+        self._ctrl.setStatusText(_("Printed to postscript"))
+        wxYield()
+        return True
+
+    def __setLastOpenedFilesItems(self):
+        """
+        Set the menu last opened files items
+        """
+        self.logger.debug(f'self.mnuFile: {self.mnuFile}')
+
+        index = 0
+        for el in self._prefs.getLastOpenedFilesList():
+            openFilesId = self.lastOpenedFilesID[index]
+            # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
+            lbl: str = f"&{str(index+1)} {el}"
+            self.logger.debug(f'lbL: {lbl}  openFilesId: {openFilesId}')
+            self.mnuFile.SetLabel(id=openFilesId, label=lbl)
+
+            index += 1
