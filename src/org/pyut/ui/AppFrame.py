@@ -147,8 +147,7 @@ class AppFrame(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        # loaded files handler
-        self._fileHandling = MainUI(self, self._ctrl)
+        self._fileHandling: MainUI = MainUI(self, self._ctrl)
         self._ctrl.registerFileHandling(self._fileHandling)
 
         # Initialization
@@ -735,22 +734,23 @@ class AppFrame(Frame):
             PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
 
     # noinspection PyUnusedLocal
-    def _OnMnuFilePrint(self, event):
+    def _OnMnuFilePrint(self, event: CommandEvent):
         """
         Print the current diagram
 
-        @since 1.10
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         if self._ctrl.getDiagram() is None:
             PyutUtils.displayError(_("No diagram to print !"), _("Error"), self)
             return
         self._ctrl.deselectAllShapes()
-        datas = PrintDialogData()
-        datas.SetPrintData(self._printData)
-        datas.SetMinPage(1)
-        datas.SetMaxPage(1)
-        printer  = Printer(datas)
+        printDialogData: PrintDialogData = PrintDialogData()
+
+        printDialogData.SetPrintData(self._printData)
+        printDialogData.SetMinPage(1)
+        printDialogData.SetMaxPage(1)
+        printer  = Printer(printDialogData)
         printout = PyutPrintout(self._ctrl.getUmlFrame())
 
         if not printer.Print(self, printout, True):
@@ -905,14 +905,13 @@ class AppFrame(Frame):
 
     def _loadFile(self, filename=""):
         """
-        load the specified filename
-        called by PyutFileDropTarget.py
+        Load the specified filename
 
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            filename: Its name
         """
         # Make a list to be compatible with multi-files loading
-        filenames = [filename]
+        fileNames = [filename]
 
         # Ask which filename to load ?
         if filename == "":
@@ -922,13 +921,13 @@ class AppFrame(Frame):
                 dlg.Destroy()
                 return False
             self.updateCurrentDir(dlg.GetPath())
-            filenames = dlg.GetPaths()
+            fileNames = dlg.GetPaths()
             dlg.Destroy()
 
         print(f"loading file(s) {str(filename)}")
 
         # Open the specified files
-        for filename in filenames:
+        for filename in fileNames:
             try:
                 if self._fileHandling.openFile(filename):
                     # Add to last opened files list
@@ -941,16 +940,12 @@ class AppFrame(Frame):
 
     def _saveFile(self):
         """
-        save to the current filename
-
-        @since 1.9
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Save to the current filename
         """
         self._fileHandling.saveFile()
         self._ctrl.updateTitle()
 
         # Add to last opened files list
-        # diag=self._ctrl.getUmlFrame()
         project = self._fileHandling.getCurrentProject()
         if project is not None:
             self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
@@ -1089,7 +1084,7 @@ class AppFrame(Frame):
             y += 20
 
         canvas = po.GetDiagram().GetPanel()
-        # the canvas wich contain the shape
+        # the canvas that contain the shape
         # specify the canvas on which we will paint
         dc = ClientDC(canvas)
         canvas.PrepareDC(dc)

@@ -39,8 +39,11 @@ class GraphicErrorView(AbstractErrorView):
 
         if title is None:
             title = _("An error occurred...")
-        errMsg: str = ErrorManager.getErrorInfo()
-        self.logger.error(errMsg)
+
+        errMsg: str = msg + "\n\n"
+        errorInfo: str = ErrorManager.getErrorInfo()
+        if errorInfo is not None:
+            errMsg = f'{errMsg}{ErrorManager.getErrorInfo()}'
         try:
             dlg = MessageDialog(parent, errMsg,  title, OK | ICON_ERROR | CENTRE)
             dlg.ShowModal()

@@ -72,7 +72,7 @@ class PyutXmlFinder:
         Returns: An integer that is the version number of the latest PyutXml file
         """
         med:     Mediator = getMediator()
-        oldpath: str = getcwd()
+        oldPath: str = getcwd()
         appPath: str = med.getAppPath()
         path:    str = f'{appPath}{osSep}{PyutXmlFinder.PERSISTENCE_DIR}'
         chdir(path)
@@ -81,7 +81,7 @@ class PyutXmlFinder:
         numbers     = [int(s[8:-3]) for s in candidates]
         lastVersion = max(numbers)
 
-        chdir(oldpath)
+        chdir(oldPath)
 
         return lastVersion
 

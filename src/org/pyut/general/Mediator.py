@@ -282,14 +282,11 @@ class Mediator(Singleton):
         if self._appFrame is not None:
             self._appFrame.notifyTitleChanged()
 
-    def registerFileHandling(self, fh):
+    def registerFileHandling(self, mainUI):
         """
-        Define the file handling class
-
-        @param fh : The FileHandling class to be used
-        @author C.Dutoit
+        Register the main part of the user interface
         """
-        self._fileHandling = fh
+        self._fileHandling = mainUI
 
     def registerAppPath(self, path: str):
         """

@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from sys import exc_info
 
 from traceback import extract_tb
@@ -64,10 +66,10 @@ class ErrorManager(Singleton):
     @staticmethod
     def getErrorInfo() -> str:
         """
-        Returns:  System exception information as a formatted string
+        Returns:
+            System exception information as a formatted string
         """
-        errMsg = f'The following error occurred : {str(exc_info()[1])}'
-        errMsg += f'\n\n---------------------------\n'
+        errMsg: str = ''
         if exc_info()[0] is not None:
             errMsg += f'Error : {exc_info()[0]}\n'
         if exc_info()[1] is not None:
@@ -76,6 +78,13 @@ class ErrorManager(Singleton):
             errMsg += 'Trace :\n'
             for el in extract_tb(exc_info()[2]):
                 errMsg = errMsg + f'{str(el)}\n'
+
+        if errMsg == '':
+            errMsg = cast(str, None)
+        else:
+            prependMsg: str = f'The following error occurred : {str(exc_info()[1])}'
+            prependMsg += f'\n\n---------------------------\n'
+            errMsg = f'{prependMsg}{errMsg}'
 
         return errMsg
 
@@ -93,5 +102,6 @@ class ErrorManager(Singleton):
         errMsg: str = ErrorManager.getErrorInfo()
 
         f.write(f'{title} - {msg}\n')
-        f.write(errMsg)
+        if errMsg is not None:
+            f.write(errMsg)
         f.close()
