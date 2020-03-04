@@ -60,20 +60,21 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglUseCase import OglUseCase
 
-from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutUseCase import PyutUseCase
+
 from org.pyut.PyutUtils import PyutUtils
 
+from org.pyut.ui.MainUI import MainUI
+from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.TipsFrame import TipsFrame
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
-
 from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
@@ -81,8 +82,6 @@ from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
-
-from org.pyut.ui.MainUI import MainUI
 
 from org.pyut.plugins.PluginManager import PluginManager
 
@@ -238,33 +237,35 @@ class AppFrame(Frame):
             wxYield()  # time to process the refresh in newDiagram
             obj.doImport()
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occured while executing the selected plugin"), _("Error..."), self)
+            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
             self.logger.error(f'{e}')
 
         EndBusyCursor()
         self.Refresh()
 
-    def OnExport(self, event):
+    def OnExport(self, event: CommandEvent):
         """
         Callback.
 
         Args:
             event: wxEvent event
-
-        @author L. Burgbacher <lb@alawa.ch>
-        @since 1.26
         """
         # Create a plugin instance
         cl = self.plugins[event.GetId()]
-        umlObjs: List[OglClass]         = self._ctrl.getUmlObjects()
+        umlObjects: List[OglClass]      = self._ctrl.getUmlObjects()
         umlFrame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
-        obj = cl(umlObjs, umlFrame)
+        obj = cl(umlObjects, umlFrame)
         # Do plugin functionality
         BeginBusyCursor()
         obj.doExport()
         EndBusyCursor()
 
-    def OnToolPlugin(self, event):
+    def OnToolPlugin(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
         # Create a plugin instance
         cl = self.plugins[event.GetId()]
         obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
@@ -287,12 +288,14 @@ class AppFrame(Frame):
     def OnToolboxMenuClick(self, event):
         self._ctrl.displayToolbox(self._toolboxIds[event.GetId()])
 
-    def printDiagramToPostscript(self, filename):
+    def printDiagramToPostscript(self, filename: str):
         """
-        print the current diagram to postscript
+        Print the current diagram to postscript
+        Args:
+            filename:  The temp file name path that holds the post script
 
-        @return True if succeeded
-        @author C.Dutoit
+        Returns:
+            `True` if the postscript file was successfully created, else `False`
         """
         # Verify that we do have a diagram to save
         if self._ctrl.getDiagram() is None:
@@ -305,17 +308,22 @@ class AppFrame(Frame):
         # printer  = None
         try:
             self._ctrl.deselectAllShapes()
-            datas = PrintDialogData()
-            datas.SetPrintData(self._printData)
-            datas.SetPrintToFile(True)
-            datas.SetMinPage(1)
-            datas.SetMaxPage(1)
-            printDatas = datas.GetPrintData()
-            printDatas.SetFilename(filename)
-            printDatas.SetQuality(PRINT_QUALITY_HIGH)
-            datas.SetPrintData(printDatas)
-            printer  = Printer(datas)
-            printout = PyutPrintout(self._ctrl.getUmlFrame())
+
+            printDialogData: PrintDialogData = PrintDialogData()
+
+            printDialogData.SetPrintData(self._printData)
+            printDialogData.SetPrintToFile(True)
+            printDialogData.SetMinPage(1)
+            printDialogData.SetMaxPage(1)
+
+            printData: PrintData = printDialogData.GetPrintData()
+            printData.SetFilename(filename)
+            printData.SetQuality(PRINT_QUALITY_HIGH)
+
+            printDialogData.SetPrintData(printData)
+
+            printer:  Printer      = Printer(printDialogData)
+            printout: PyutPrintout = PyutPrintout(self._ctrl.getUmlFrame())
         except (ValueError, Exception) as e:
             PyutUtils.displayError(_("Cannot export to Postscript"), parent=self)
             self._ctrl.setStatusText(_(f"Error while printing to postscript {e}"))
@@ -329,7 +337,41 @@ class AppFrame(Frame):
 
         # Return
         self._ctrl.setStatusText(_("Printed to postscript"))
+        wxYield()
         return True
+
+    def cutSelectedShapes(self):
+        """
+        Cut all current shapes
+        """
+        selected = self._ctrl.getSelectedShapes()
+        if len(selected) > 0:
+            self._clipboard = []
+        else:
+            return
+
+        canvas = selected[0].GetDiagram().GetPanel()
+        # the canvas which contain the shape
+        # specify the canvas on which we will paint
+        # dc = wxClientDC(canvas)
+        # canvas.PrepareDC(dc)
+        # diagram = self._ctrl.getDiagram()
+
+        # put the PyutObjects in the clipboard and remove them from the diagram
+        for obj in selected:
+            # remove the links
+            # for each link
+            # for link in obj.getLinks()[:]:
+            # self._ctrl.removeLink(link)
+            obj.Detach()
+
+        for obj in selected:
+            self._clipboard.append(obj.getPyutObject())
+            # self._ctrl.removeClass(obj)
+
+        self._fileHandling.setModified(True)
+        self._ctrl.updateTitle()
+        canvas.Refresh()
 
     def _onActivate(self, event):
         """
@@ -460,65 +502,57 @@ class AppFrame(Frame):
             acc.append(AcceleratorEntry(el1, el2, el3))
         return acc
 
-    def _initPrinting(self):
-        """
-        printing data initialization
-
-        @author C.Dutoit
-        """
-        self._printData = PrintData()
-        self._printData.SetPaperId(PAPER_A4)
-        self._printData.SetQuality(PRINT_QUALITY_HIGH)
-        self._printData.SetOrientation(PORTRAIT)
-        self._printData.SetNoCopies(1)
-        self._printData.SetCollate(True)
-
     # noinspection PyUnusedLocal
-    def _OnMnuFileNewProject(self, event):
+    def _OnMnuFileNewProject(self, event: CommandEvent):
         """
-        begin a new project
+        Create a new project
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         self._fileHandling.newProject()
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileNewClassDiagram(self, event):
+    def _OnMnuFileNewClassDiagram(self, event: CommandEvent):
         """
-        begin a new class diagram
+        Create a new class diagram
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         self._fileHandling.newDocument(DiagramType.CLASS_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileNewSequenceDiagram(self, event):
+    def _OnMnuFileNewSequenceDiagram(self, event: CommandEvent):
         """
-        begin a new sequence diagram
+        Create a new sequence diagram
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         self._fileHandling.newDocument(DiagramType.SEQUENCE_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileNewUsecaseDiagram(self, event):
+    def _OnMnuFileNewUsecaseDiagram(self, event: CommandEvent):
         """
-        begin a new use-case diagram
+        Create a new use-case diagram
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         self._fileHandling.newDocument(DiagramType.USECASE_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileInsertProject(self, event):
+    def _OnMnuFileInsertProject(self, event: CommandEvent):
         """
         Insert a project into this one
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         PyutUtils.displayWarning(_("The project insert is experimental, "
                                    "use it at your own risk.\n"
@@ -547,50 +581,52 @@ class AppFrame(Frame):
             PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileOpen(self, event):
+    def _OnMnuFileOpen(self, event: CommandEvent):
         """
         Open a diagram
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         self._loadFile()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileSave(self, event):
+    def _OnMnuFileSave(self, event: CommandEvent):
         """
         Save the current diagram to a file
 
-        @since 1.4
-        @author C.Dutoit < dutoitc@hotmail.com>
+        Args:
+            event:
         """
         self._saveFile()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileSaveAs(self, event):
+    def _OnMnuFileSaveAs(self, event: CommandEvent):
         """
         Ask and save the current diagram to a file
 
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         self._saveFileAs()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileClose(self, event):
+    def _OnMnuFileClose(self, event: CommandEvent):
         """
         Close the current file
 
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         self._fileHandling.closeCurrentProject()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileRemoveDocument(self, event):
+    def _OnMnuFileRemoveDocument(self, event: CommandEvent):
         """
         Remove the current document from the current project
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         project  = self._fileHandling.getCurrentProject()
         document = self._fileHandling.getCurrentDocument()
@@ -600,37 +636,42 @@ class AppFrame(Frame):
             PyutUtils.displayWarning(_("No document to remove"))
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileExportBmp(self, event):
+    def _OnMnuFileExportBmp(self, event: CommandEvent):
         """
         Display the Export to bitmap dialog box
 
-        @since 1.23
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         self._fileHandling.exportToBmp()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileExportJpg(self, event):
+    def _OnMnuFileExportJpg(self, event: CommandEvent):
         """
         Display the Export to jpeg dialog box
 
+        Args:
+            event:
         """
         self._fileHandling.exportToJpg()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileExportPng(self, event):
+    def _OnMnuFileExportPng(self, event: CommandEvent):
         """
         Display the Export to png dialog box
+
+        Args:
+            event:
         """
         self._fileHandling.exportToPng()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileExportPs(self, event):
+    def _OnMnuFileExportPs(self, event: CommandEvent):
         """
         Display the Export to postscript dialog box
 
-        @since 1.23
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         # Choose filename
         # filename = ""
@@ -651,11 +692,12 @@ class AppFrame(Frame):
         self.printDiagramToPostscript(filename)
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileExportPDF(self, event):
+    def _OnMnuFileExportPDF(self, event:  CommandEvent):
         """
         Display the Export to pdf dialog box
 
-        @author C.Dutoit
+        Args:
+            event:
         """
         # Choose filename
         filename = ""
@@ -674,29 +716,39 @@ class AppFrame(Frame):
             return
 
         # export to PDF
-        # TODO -- externalize this command
-        if self.printDiagramToPostscript("/tmp/pdfexport.ps"):
+        TEMP_PS_FILE:   str  = '/tmp/pdfExport.ps'
+        TEMP_EPS_FILE:  str = '/tmp/pdfExport.eps'
+        EPS_TO_PDF_CMD: str = 'epstopdf'
+        PS_TO_EXT_PS:   str = 'ps2epsi'
+
+        # TODO -- externalize this command --
+        # TODO -- update for mac
+        # os.system(f'open -W -a {PS_TO_EXT_PS}  {TEMP_PS_FILE}  {TEMP_EPS_FILE}')
+        # os.system(f'open -W -a {EPS_TO_PDF_CMD} {TEMP_EPS_FILE} --outfile={filename}')
+        wxYield()
+        if self.printDiagramToPostscript(f'{TEMP_PS_FILE}'):
             # Convert file to pdf
             import os
             # noinspection PyUnusedLocal
             try:
-                if os.system("ps2epsi /tmp/pdfexport.ps /tmp/pdfexport.eps") != 0:
-                    PyutUtils.displayError(_("Can't execute ps2epsi !"), parent=self)
+
+                if os.system(f'{PS_TO_EXT_PS} {TEMP_PS_FILE} {TEMP_EPS_FILE}') != 0:
+                    PyutUtils.displayError(_(f'Can not execute {PS_TO_EXT_PS} !'), parent=self)
                     return
-                if os.system("epstopdf /tmp/pdfexport.eps --outfile=" + filename) != 0:
-                    PyutUtils.displayError(_("Can't execute ps2epsi !"), parent=self)
+                if os.system(f'{EPS_TO_PDF_CMD} {TEMP_EPS_FILE} --outfile={filename}') != 0:
+                    PyutUtils.displayError(_(f'Can not execute {EPS_TO_PDF_CMD} !'), parent=self)
                     return
                 self._ctrl.setStatusText(_("Exported to pdf"))
             except (ValueError, Exception) as e:
-                PyutUtils.displayError("Can't export to pdf !", parent=self)
+                PyutUtils.displayError(_("Can not export to pdf !"), parent=self)
 
     # noinspection PyUnusedLocal
-    def _OnMnuFilePrintSetup(self, event):
+    def _OnMnuFilePrintSetup(self, event: CommandEvent):
         """
         Display the print setup dialog box
 
-        @since 1.10
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         dlg = PrintDialog(self)
         dlg.GetPrintDialogData().SetSetupDialog(True)
@@ -706,9 +758,12 @@ class AppFrame(Frame):
         dlg.Destroy()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFilePrintPreview(self, event):
+    def _OnMnuFilePrintPreview(self, event: CommandEvent):
         """
         Display the print preview frame; Preview before printing.
+
+        Args:
+            event:
         """
         self._ctrl.deselectAllShapes()
         frame = self._ctrl.getUmlFrame()
@@ -756,12 +811,12 @@ class AppFrame(Frame):
         if not printer.Print(self, printout, True):
             PyutUtils.displayError(_("Cannot print"), _("Error"), self)
 
-    def _OnMnuLOF(self, event):
+    def _OnMnuLOF(self, event: CommandEvent):
         """
         Open a file from the last opened files list
 
-        @since 1.43
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         for index in range(self._prefs.getNbLOF()):
             if event.GetId() == self.lastOpenedFilesID[index]:
@@ -777,6 +832,9 @@ class AppFrame(Frame):
     def _OnMnuFileExit(self, event: CommandEvent):
         """
         Exit the program
+
+        Args:
+            event:
         """
         self.Close()
 
@@ -784,6 +842,9 @@ class AppFrame(Frame):
     def _OnMnuHelpAbout(self, event: CommandEvent):
         """
         Show the about box
+
+        Args:
+            event:
         """
         from org.pyut.dialogs.DlgAbout import DlgAbout
         from org.pyut.general.PyutVersion import PyutVersion
@@ -805,6 +866,8 @@ class AppFrame(Frame):
     def _OnMnuHelpVersion(self, event: CommandEvent):
         """
         Check for newer version.
+        Args:
+            event:
         """
         # Init
         FILE_TO_CHECK = "http://pyut.sourceforge.net/backdoors/lastversion"     # TODO FIXME  :-)
@@ -834,12 +897,20 @@ class AppFrame(Frame):
 
     # noinspection PyUnusedLocal
     def _OnMnuHelpWeb(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
         PyutUtils.displayInformation(f"Please point your browser to {AppFrame.PYUT_WIKI}", "Pyut's new wiki", self)
 
     # noinspection PyUnusedLocal
     def _OnMnuAddPyut(self, event: CommandEvent):
         """
         Add Pyut UML Diagram.
+
+        Args:
+            event:
         """
         frame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
         if self._isDiagramFromOpen(frame) is True:
@@ -850,6 +921,9 @@ class AppFrame(Frame):
     def _OnMnuAddOgl(self, event: CommandEvent):
         """
         Add Pyut-Ogl UML Diagram.
+
+        Args:
+            event:
         """
         frame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
         if self._isDiagramFromOpen(frame) is True:
@@ -966,7 +1040,7 @@ class AppFrame(Frame):
 
             index += 1
 
-    def _OnNewAction(self, event):
+    def _OnNewAction(self, event: CommandEvent):
         """
         Call the mediator to specify the current action.
 
@@ -980,47 +1054,21 @@ class AppFrame(Frame):
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
-    def _OnMnuEditCut(self, event):
+    def _OnMnuEditCut(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
         self.cutSelectedShapes()
 
-    def cutSelectedShapes(self):
-        """
-        Cut all current shapes
-        """
-        selected = self._ctrl.getSelectedShapes()
-        if len(selected) > 0:
-            self._clipboard = []
-        else:
-            return
-
-        canvas = selected[0].GetDiagram().GetPanel()
-        # the canvas which contain the shape
-        # specify the canvas on which we will paint
-        # dc = wxClientDC(canvas)
-        # canvas.PrepareDC(dc)
-        # diagram = self._ctrl.getDiagram()
-
-        # put the PyutObjects in the clipboard and remove them from the diagram
-        for obj in selected:
-            # remove the links
-            # for each link
-            # for link in obj.getLinks()[:]:
-            # self._ctrl.removeLink(link)
-            obj.Detach()
-
-        for obj in selected:
-            self._clipboard.append(obj.getPyutObject())
-            # self._ctrl.removeClass(obj)
-
-        self._fileHandling.setModified(True)
-        self._ctrl.updateTitle()
-        canvas.Refresh()
-
     # noinspection PyUnusedLocal
-    def _OnMnuEditCopy(self, event):
+    def _OnMnuEditCopy(self, event: CommandEvent):
         """
         TODO : adapt for OglLinks
 
+        Args:
+            event:
         """
         selected = self._ctrl.getSelectedShapes()
         if len(selected) > 0:
@@ -1036,7 +1084,12 @@ class AppFrame(Frame):
 
     # noinspection PyUnboundLocalVariable
     # noinspection PyUnusedLocal
-    def _OnMnuEditPaste(self, event):
+    def _OnMnuEditPaste(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
         if len(self._clipboard) == 0:
             return
 
@@ -1077,6 +1130,11 @@ class AppFrame(Frame):
 
     # noinspection PyUnusedLocal
     def _OnMnuSelectAll(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
         frame = self._ctrl.getUmlFrame()
         if frame is None:
             PyutUtils.displayError(_("No frame found !"))
@@ -1090,6 +1148,8 @@ class AppFrame(Frame):
     # noinspection PyUnusedLocal
     def _OnMnuFilePyutPreferences(self, event: CommandEvent):
         """
+        Args:
+            event:
         """
         from org.pyut.dialogs.DlgPyutPreferences import DlgPyutPreferences
 
@@ -1105,9 +1165,12 @@ class AppFrame(Frame):
             umlFrame.Refresh()
 
     # noinspection PyUnusedLocal
-    def _OnMnuDebug(self, event):
+    def _OnMnuDebug(self, event: CommandEvent):
         """
         Open a IPython shell
+
+        Args:
+            event:
         """
         self.logger.warning(f'not yet implemented on Python 3')
         PyutUtils.displayInformation(msg=_('Not yet implemented'), title=_('Sorry!'))
@@ -1116,19 +1179,40 @@ class AppFrame(Frame):
         # except ImportError:
         #     displayError(_("You don't have IPython installed !"))
         #     return
-        # ipshell = IPShellEmbed()
-        # ipshell(local_ns=vars(), global_ns=globals())
+        # ipShell = IPShellEmbed()
+        # ipShell(local_ns=vars(), global_ns=globals())
 
     # noinspection PyUnusedLocal
-    def _OnMnuUndo(self, event):
+    def _OnMnuUndo(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
         if (self._fileHandling.getCurrentFrame()) is None:
             PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
             return
         self._fileHandling.getCurrentFrame().getHistory().undo()
 
     # noinspection PyUnusedLocal
-    def _OnMnuRedo(self, event):
+    def _OnMnuRedo(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
         if (self._fileHandling.getCurrentFrame()) is None:
             PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
-            return 
+            return
         self._fileHandling.getCurrentFrame().getHistory().redo()
+
+    def _initPrinting(self):
+        """
+        printing data initialization
+        """
+        self._printData = PrintData()
+        self._printData.SetPaperId(PAPER_A4)
+        self._printData.SetQuality(PRINT_QUALITY_HIGH)
+        self._printData.SetOrientation(PORTRAIT)
+        self._printData.SetNoCopies(1)
+        self._printData.SetCollate(True)
