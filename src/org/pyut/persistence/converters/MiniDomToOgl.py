@@ -229,10 +229,10 @@ class MiniDomToOgl:
 
             pyutNote.setId(int(xmlNote.getAttribute(PyutXmlConstants.ATTR_ID)))
 
-            name = xmlNote.getAttribute(PyutXmlConstants.ATTR_NAME)
-            name = name.replace("\\\\\\\\", "\n")
+            content: str = xmlNote.getAttribute(PyutXmlConstants.ATTR_NAME)
+            content = content.replace("\\\\\\\\", "\n")
 
-            pyutNote.setName(name)
+            pyutNote.content = content
 
             pyutNote.setFilename(xmlNote.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 

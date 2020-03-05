@@ -24,7 +24,7 @@ class PyutLinkedObject(PyutObject):
         self._parents:  List[PyutLinkedObject] = []     # Allows for multiple inheritance
         self._filename: str            = ""
 
-    def getNextSafeID(self):
+    def computeNextSafeID(self):
         """
         Get the next safe id
 

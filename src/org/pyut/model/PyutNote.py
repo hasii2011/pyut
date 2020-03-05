@@ -1,14 +1,17 @@
 
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 
+from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+
 
 class PyutNote(PyutLinkedObject):
     """
-    Data layer representation of a UML note.
-    There are currently no supplementary attributes for this class, it
-    may just be linked with other objects.
+    A data model representation of a UML note.
 
-    TODO:  fix inappropriate use of the .name attribute to hold the note contents;  Should have a `new` attribute
+    The legacy code used the base PyutObject's .name property to store the note content.  Modified to
+    use a more appropriate property.  In the meantime, `PyutNote` overrides the `PyutObject's` `.getName()` and
+    `.setName()` methods and raises exceptions if code calls them.  In this manner, I can catch and change all
+    the current code to use the new property
     """
     def __init__(self, theNoteText: str = ""):
         """
@@ -16,4 +19,20 @@ class PyutNote(PyutLinkedObject):
         Args:
             theNoteText: The Note
         """
-        super().__init__(name=theNoteText)
+        super().__init__()
+
+        self._content: str = theNoteText
+
+    def _getContent(self) -> str:
+        return self._content
+
+    def _setContent(self, newContent: str):
+        self._content = newContent
+
+    content: str = property(_getContent, _setContent)
+
+    def getName(self) -> str:
+        raise UnsupportedOperation('Use .content property')
+
+    def setName(self, newName: str):
+        raise UnsupportedOperation('Use .content property')

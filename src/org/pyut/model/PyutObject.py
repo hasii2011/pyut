@@ -11,32 +11,37 @@ class PyutObject:
         """
 
         Args:
-            name:   init name with the name
+            name:   The initial object name
         """
         self._name = name
+        # Setting an arbitrary ID, for identity purposes
+        self.computeNextSafeID()
 
-        # Setting an arbitrary ID, for identical name purpose
-        self.getNextSafeID()
-        self._id = PyutObject.nextId
+        self._id: int = PyutObject.nextId
         PyutObject.nextId += 1
 
-    def getNextSafeID(self):
+    def computeNextSafeID(self):
         """
-        Get the next safe id
-        Verify that next id is not already used
-        @author C.Dutoit
+        Compute the next safe id
+        Verify that next id is not in use
         """
         while self.isIDUsed(PyutObject.nextId):
             PyutObject.nextId += 1
 
-    def isIDUsed(self, idToCheck):
+    def isIDUsed(self, idToCheck) -> bool:
         """
-        Verify if an ID is already used
+        Determine if an ID is in use
 
-        @author C.Dutoit
+        Args:
+            idToCheck:
+
+        Returns:
+            `True` if `idToCheck` is in use, else `False`
         """
         from org.pyut.general import Mediator
         ctrl = Mediator.getMediator()
+        #
+        # TODO:  This seems compute heavy;  I wonder if we should have a lookup map
         for obj in [el for el in ctrl.getUmlObjects() if isinstance(el, PyutObject)]:
             if obj.getId() == idToCheck:
                 return True
@@ -51,35 +56,31 @@ class PyutObject:
         try:
             return self._name
         except (ValueError, Exception) as e:
-            # print(f'PyutObject warning: {e}')
+            print(f'PyutObject warning: {e}')
             return ""
 
     def setName(self, theName: str):
         """
         Set method, used to know initialize name.
 
-        @param theName
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            theName:
         """
         self._name = theName
 
     def setId(self, theId: int):
         """
-        Setting ID.
 
-        @param theId : ID
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            theId:  the id (doh!)
         """
         self._id = theId
 
-    def getId(self):
+    def getId(self) -> int:
         """
         Get object ID.
 
-        @return int : ID
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Returns:
+            The object ID
         """
         return self._id

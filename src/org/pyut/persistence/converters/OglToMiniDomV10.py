@@ -351,9 +351,15 @@ class OglToMiniDom:
         noteId: int = self._idFactory.getID(pyutNote)
         root.setAttribute(PyutXmlConstants.ATTR_ID, str(noteId))
 
-        name: str = pyutNote.getName()
-        name = name.replace('\n', "\\\\\\\\")
-        root.setAttribute(PyutXmlConstants.ATTR_NAME, name)
+        # name: str = pyutNote.getName()
+        # name = name.replace('\n', "\\\\\\\\")
+        # root.setAttribute(PyutXmlConstants.ATTR_NAME, name)
+
+        content: str = pyutNote.content
+        content = content.replace('\n', "\\\\\\\\")
+        # TODO Use ATTR_CONTENT
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, content)
+
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutNote.getFilename())
 
         return root

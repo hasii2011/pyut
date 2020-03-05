@@ -10,23 +10,19 @@ from org.pyut.ogl.OglObject import OglObject
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.general.LineSplitter import LineSplitter
 
-MARGIN = 10.0
-
 
 class OglNote(OglObject):
+
+    MARGIN: int = 10.0
+
     """
-    OGL object that represent an UML note in diagrams.
-    This class defines OGL objects that represents a note. A note may be linked
+    OGL object that represents a UML note in diagrams.
+    This class defines OGL object that represents a note. A note may be linked
     with all links except Inheritance and Interface.
 
     For more instructions about how to create an OGL object, please refer
     to the `OglObject` class.
-
-    :version: $Revision: 1.10 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
     """
-
     def __init__(self, pyutNote=None, w=100, h=50):
         """
         Constructor.
@@ -62,8 +58,9 @@ class OglNote(OglObject):
 
         try:
             # lines = LineSplitter().split(self.getPyutObject().getName(), dc, w - 2 * MARGIN)
-            noteName = self.getPyutObject().getName()
-            lines = LineSplitter().split(noteName, dc, w - 2 * MARGIN)
+            # noteName = self.getPyutObject().getName()
+            noteContent = self.getPyutObject().content
+            lines = LineSplitter().split(noteContent, dc, w - 2 * OglNote.MARGIN)
         except (ValueError, Exception) as e:
             self.logger.error(f"Unable to display note - {e}")
             return
@@ -72,13 +69,13 @@ class OglNote(OglObject):
 
         dc.SetClippingRegion(baseX, baseY, w, h)
 
-        x = baseX + MARGIN
-        y = baseY + MARGIN
+        x = baseX + OglNote.MARGIN
+        y = baseY + OglNote.MARGIN
 
         for line in range(len(lines)):
             dc.DrawText(lines[line], x, y + line * (dc.GetCharHeight() + 5))
 
-        dc.DrawLine(baseX + w - MARGIN, baseY, baseX + w, baseY + MARGIN)
+        dc.DrawLine(baseX + w - OglNote.MARGIN, baseY, baseX + w, baseY + OglNote.MARGIN)
 
         dc.DestroyClippingRegion()
 
@@ -87,4 +84,4 @@ class OglNote(OglObject):
         if pyutNote is None:
             return f'Anonymous Note'
         else:
-            return f'{pyutNote.getName()}'
+            return f'{pyutNote.content}'

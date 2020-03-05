@@ -43,7 +43,7 @@ class DlgEditNote(BaseDlgEditText):
         self._pyutNote:     PyutNote = pyutNote
 
         label: StaticText = StaticText(self, ID_ANY, _("Note text"))
-        self._txtCtrl: TextCtrl = TextCtrl(self, TXT_NOTE, self._pyutNote.getName(), size=(400, 180), style=TE_MULTILINE)
+        self._txtCtrl: TextCtrl = TextCtrl(self, TXT_NOTE, self._pyutNote.content, size=(400, 180), style=TE_MULTILINE)
         self._txtCtrl.SetFocus()
 
         self._setupMainDialogLayout(self._txtCtrl, label)
@@ -55,9 +55,9 @@ class DlgEditNote(BaseDlgEditText):
 
     def _onTxtNoteChange(self, event: CommandEvent):
         """
-        Handle when the text in the widget identified by TXT_NOTE change.s
+        Handle changes to the text in the widget identified by TXT_NOTE
 
         Args:
             event:
         """
-        self._pyutNote.setName(event.GetString())
+        self._pyutNote.content = event.GetString()

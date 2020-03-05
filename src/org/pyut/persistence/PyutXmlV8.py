@@ -1202,13 +1202,10 @@ class PyutXml:
 
             pyutNote.setId(int(xmlNote.getAttribute('id')))
 
-            # adding name for this class
+            # adding note content for this class
             name = xmlNote.getAttribute('name')
             name = name.replace("\\\\\\\\", "\n")
-
-            # pyutNote.setName(name.encode("charmap"))
-            # Python 3 is already utf-8;  don't need to encode anything
-            pyutNote.setName(name)
+            pyutNote.content = name
 
             # adding associated filename (lb@alawa.ch)
             pyutNote.setFilename(xmlNote.getAttribute('filename'))
