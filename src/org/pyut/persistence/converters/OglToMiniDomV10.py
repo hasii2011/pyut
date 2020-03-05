@@ -357,8 +357,7 @@ class OglToMiniDom:
 
         content: str = pyutNote.content
         content = content.replace('\n', "\\\\\\\\")
-        # TODO Use ATTR_CONTENT
-        root.setAttribute(PyutXmlConstants.ATTR_NAME, content)
+        root.setAttribute(PyutXmlConstants.ATTR_CONTENT, content)
 
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutNote.getFilename())
 

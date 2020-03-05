@@ -49,6 +49,7 @@ class PyutXmlConstants:
 
     ATTR_FILENAME: str = 'filename'
     ATTR_NAME:     str = 'name'
+    ATTR_CONTENT:  str = 'content'
     ATTR_TYPE:     str = 'type'
     ATTR_TITLE:    str = 'title'
 

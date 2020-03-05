@@ -229,8 +229,7 @@ class MiniDomToOgl:
 
             pyutNote.setId(int(xmlNote.getAttribute(PyutXmlConstants.ATTR_ID)))
 
-            # TODO  Use ATTR_CONTENTS
-            content: str = xmlNote.getAttribute(PyutXmlConstants.ATTR_NAME)
+            content: str = xmlNote.getAttribute(PyutXmlConstants.ATTR_CONTENT)
             content = content.replace("\\\\\\\\", "\n")
 
             pyutNote.content = content
