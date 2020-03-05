@@ -68,6 +68,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.ui.PyutProject": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
 
         "org.pyut.MiniOgl.Diagram": {
             "level":     "INFO",

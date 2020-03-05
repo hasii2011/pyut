@@ -81,3 +81,10 @@ class OglNote(OglObject):
         dc.DrawLine(baseX + w - MARGIN, baseY, baseX + w, baseY + MARGIN)
 
         dc.DestroyClippingRegion()
+
+    def __repr__(self):
+        pyutNote: PyutNote = self.getPyutObject()
+        if pyutNote is None:
+            return f'Anonymous Note'
+        else:
+            return f'{pyutNote.getName()}'

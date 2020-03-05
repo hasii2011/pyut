@@ -603,8 +603,10 @@ class MainUI:
                 shapes = diagram.GetShapes()
                 for obj in oglObjects:
                     if obj in shapes:
+                        self.logger.info(f'obj: {obj} is part of project: {project}')
                         return project
 
+        self.logger.warning(f'The oglObjects: {oglObjects} appear to not belong to any project')
         return cast(PyutProject, None)
 
     def _initializeUIElements(self):
@@ -698,7 +700,7 @@ class MainUI:
 
         itemId: TreeItemId = treeEvent.GetItem()
         data = self.__projectTree.GetItemData(item=itemId)
-        self.logger.info(f'Item Data: {data}')
+        self.logger.info(f'Item Data: `{data}`')
         if isinstance(data, PyutProject):
             self.__popupProjectMenu()
         elif isinstance(data, UmlDiagramsFrame):
@@ -715,7 +717,7 @@ class MainUI:
             popupMenu.Bind(EVT_MENU, self.__onCloseProject, id=closeProjectMenuID)
             self.__projectPopupMenu = popupMenu
 
-        self.logger.info(f'currentProject: `{self._currentProject.getFilename()}`')
+        self.logger.info(f'currentProject: `{self._currentProject}`')
         self.__parent.PopupMenu(self.__projectPopupMenu)
 
     def __popupProjectDocumentMenu(self):

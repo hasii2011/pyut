@@ -69,6 +69,30 @@ class TestPyutUtils(TestBase):
         actualPath: str = PyutUtils.getBasePath()
         self.assertEqual(TestPyutUtils.BASE_TEST_PATH, actualPath, 'Path should have been modified')
 
+    def testBasicExtractFileName(self):
+        """
+        /tmp/Project1.put
+        012345678    3210
+
+        """
+        PROJECT_NAME: str = 'Project1'
+        fullPathName: str = f'/tmp/{PROJECT_NAME}.put'
+        projectName: str = PyutUtils.extractFileName(fullPathName)
+
+        expectedName: str = PROJECT_NAME
+        actualName:   str = projectName
+        self.assertEqual(expectedName, actualName, 'Did not work')
+
+    def testExtraLongPathExtractFileName(self):
+
+        PROJECT_NAME: str = 'hasiiProject'
+        fullPathName: str = f'/Users/humberto.a.sanchez.ii/pyut-diagrams/{PROJECT_NAME}.put'
+        projectName: str = PyutUtils.extractFileName(fullPathName)
+
+        expectedName: str = PROJECT_NAME
+        actualName:   str = projectName
+        self.assertEqual(expectedName, actualName, 'Did not work')
+
 
 def suite() -> TestSuite:
 

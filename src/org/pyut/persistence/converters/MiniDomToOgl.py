@@ -517,7 +517,7 @@ class MiniDomToOgl:
         """
         srcShape:  OglClass = oglLink.getSourceShape()
         destShape: OglClass = oglLink.getDestinationShape()
-        self.logger.info(f'source ID: {srcShape.GetID()} - destination ID: {destShape.GetID()}')
+        self.logger.debug(f'source ID: {srcShape.GetID()} - destination ID: {destShape.GetID()}')
 
         pyutLink:        PyutLink = oglLink.getPyutObject()
 

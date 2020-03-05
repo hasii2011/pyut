@@ -8,16 +8,12 @@ class PyutNote(PyutLinkedObject):
     There are currently no supplementary attributes for this class, it
     may just be linked with other objects.
 
-    :version: $Revision: 1.3 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
+    TODO:  fix inappropriate use of the .name attribute to hold the note contents;  Should have a `new` attribute
     """
     def __init__(self, theNoteText: str = ""):
         """
-        Constructor.
-        @param  theNoteText : The note
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            theNoteText: The Note
         """
-        super().__init__(theNoteText)
+        super().__init__(name=theNoteText)

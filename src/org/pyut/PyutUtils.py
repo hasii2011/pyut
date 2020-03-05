@@ -42,6 +42,23 @@ class PyutUtils:
         PyutUtils.logger = getLogger(__name__)
 
     @staticmethod
+    def extractFileName(fullPath: str) -> str:
+        """
+        Used to get just the file name for a full path.  Does NOT include the file extension
+
+        Args:
+            fullPath:   The fully qualified path
+
+        Returns:
+            A string that is just the file name without the file extension
+        """
+        comps: List[str] = fullPath.split('/')      # break up into path components
+        pName: str       = comps[len(comps) - 1]    # The file name is the last one
+        s:     str       = pName[:-4]               # strip the suffix and the dot ('.')
+
+        return s
+
+    @staticmethod
     def secureInteger(x: str):
         if x is not None:
             return int(x)

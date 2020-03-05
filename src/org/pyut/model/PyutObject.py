@@ -9,11 +9,9 @@ class PyutObject:
 
     def __init__(self, name=""):
         """
-        Constructor.
 
-        @param string name : init name with the name
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            name:   init name with the name
         """
         self._name = name
 

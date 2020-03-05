@@ -1,6 +1,7 @@
 from typing import List
 from typing import NewType
 from typing import Union
+from typing import cast
 
 from wx import ID_NO
 from wx import TreeCtrl
@@ -12,6 +13,7 @@ from wx import Notebook
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
+from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.ui.PyutDocument import PyutDocument
@@ -33,14 +35,14 @@ class PyutProject:
 
     """
 
-    def __init__(self, filename: str, parentFrame: Notebook, tree: TreeCtrl, treeroot: TreeItemId):
+    def __init__(self, filename: str, parentFrame: Notebook, tree: TreeCtrl, treeRoot: TreeItemId):
         """
 
         Args:
             filename:       The project file name
             parentFrame:
             tree:           The tree control
-            treeroot:       Where to root the tree
+            treeRoot:       Where to root the tree
         """
 
         self._parentFrame   = parentFrame   # Parent frame
@@ -50,10 +52,10 @@ class PyutProject:
 
         self._filename: str     = filename      # Project filename
         self._modified: bool    = False         # Was the project modified ?
-        self._treeRootParent: TreeItemId = treeroot     # Parent of the project root entry
-        self._tree          = tree          # Tree I belong to
-        self._treeRoot: TreeItemId      = None          # Root of the project entry in the tree
         self._codePath: str      = ""
+        self._treeRootParent: TreeItemId = treeRoot                 # Parent of the project root entry
+        self._treeRoot:       TreeItemId = cast(TreeItemId, None)   # Root of the project entry in the tree
+        self._tree          = tree          # Tree I belong to
         self.addToTree()
 
     def setFilename(self, filename):
@@ -83,13 +85,13 @@ class PyutProject:
         """
         return self._codePath
 
-    def setCodePath(self, codepath):
+    def setCodePath(self, codePath):
         """
-        Set the root path where the corresponding code relies.
+        Set the root path where the corresponding code resides.
 
-        @param codepath
+        @param codePath
         """
-        self._codePath = codepath
+        self._codePath = codePath
 
     def getDocuments(self):
         """
@@ -145,8 +147,8 @@ class PyutProject:
         """
         # Load the file
         BeginBusyCursor()
-        io = IoFile()
-        # wx.Yield() # to treat the umlframe refresh in newDiagram before loading
+        io: IoFile = IoFile()
+        wxYield()       # to treat the uml frame refresh in newDiagram before loading
         # Load the file
         self._filename = filename
         try:
@@ -238,15 +240,15 @@ class PyutProject:
         """
         save the project
         """
-        from org.pyut.persistence import IoFile
-        io = IoFile.IoFile()
+        from org.pyut.persistence.IoFile import IoFile
+        io: IoFile = IoFile()
         BeginBusyCursor()
         try:
             io.save(self)
             self._modified = False
             self.updateTreeText()
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_(f"An error occured while saving project {e}"))
+            PyutUtils.displayError(_(f"An error occurred while saving project {e}"))
         EndBusyCursor()
 
     def updateTreeText(self):
@@ -294,3 +296,7 @@ class PyutProject:
 
         # Remove document from documents list
         self._documents.remove(document)
+
+    def __repr__(self):
+        projectName: str = PyutUtils.extractFileName(self._filename)
+        return f'Project: {projectName} modified: {self._modified}'
