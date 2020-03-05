@@ -1,10 +1,10 @@
 
 
 class PyutObject:
+    BASE_OBJECT_NAME: str = 'PyutObject_'
     """
-    PyutData  base object
+    Pyut model  base object
     """
-
     nextId: int = 0
 
     def __init__(self, name=""):
@@ -13,11 +13,15 @@ class PyutObject:
         Args:
             name:   The initial object name
         """
-        self._name = name
         # Setting an arbitrary ID, for identity purposes
         self.computeNextSafeID()
 
         self._id: int = PyutObject.nextId
+        if len(name) == 0:
+            self._name = f'{PyutObject.BASE_OBJECT_NAME}{self._id:05}'
+        else:
+            self._name = name
+
         PyutObject.nextId += 1
 
     def computeNextSafeID(self):

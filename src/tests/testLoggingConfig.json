@@ -66,6 +66,13 @@
             ],
             "propagate": "False"
         },
+        "TestPyutObject": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "TestPyutType": {
             "level": "INFO",
             "handlers": [
