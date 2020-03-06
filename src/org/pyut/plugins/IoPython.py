@@ -1,5 +1,8 @@
 
 from typing import List
+from typing import Dict
+from typing import NewType
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -18,127 +21,21 @@ from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
-from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.plugins.PluginAst import FieldExtractor
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.general.Globals import _
 
-MaxWidth = 80
+from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
 
-[ID_BTN_TO_THE_RIGHT, ID_BTN_TO_THE_LEFT] = PyutUtils.assignID(2)
-
-
-class DlgAskWhichClassesToReverse(wx.Dialog):
-    def __init__(self, lstClasses):
-        wx.Dialog.__init__(self, None, -1, "Classes choice", style=wx.CAPTION | wx.RESIZE_BORDER, size=(400, 500))
-
-        # Create not chosen classes listBox
-        self._listBox1 = wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
-        for klass in lstClasses:
-            self._listBox1.Append(klass.__name__, klass)
-
-        # Create chosen classes listBox
-        self._listBox2 = wx.ListBox(self, -1, style=wx.LB_EXTENDED | wx.LB_ALWAYS_SB | wx.LB_SORT, size=(320, 400))
-
-        # Create buttons
-        btnOk = wx.Button(self, wx.ID_OK, "Ok")
-        btnToTheRight = wx.Button(self, ID_BTN_TO_THE_RIGHT, "=>")
-        btnToTheLeft  = wx.Button(self, ID_BTN_TO_THE_LEFT,  "<=")
-
-        # Callbacks
-        self.Bind(wx.EVT_BUTTON, self._onBtnToTheRight, id=ID_BTN_TO_THE_RIGHT)
-        self.Bind(wx.EVT_BUTTON, self._onBtnToTheLeft, id=ID_BTN_TO_THE_LEFT)
-
-        # Create info label
-        lblChoice = wx.StaticText(self, -1, _("Choose classes to reverse: "))
-
-        # Create buttons sizer
-        szrBtn = wx.BoxSizer(wx.VERTICAL)
-        szrBtn.Add(btnToTheRight, 0, wx.EXPAND)
-        szrBtn.Add(btnToTheLeft,  0, wx.EXPAND)
-
-        # Create lists and buttons sizer
-        szrLB = wx.BoxSizer(wx.HORIZONTAL)
-        szrLB.Add(self._listBox1,  0, wx.EXPAND)
-        szrLB.Add(szrBtn,    0, wx.EXPAND)
-        szrLB.Add(self._listBox2,  0, wx.EXPAND)
-
-        # Create sizer
-        box = wx.BoxSizer(wx.VERTICAL)
-        box.Add(lblChoice, 0, wx.EXPAND)
-        box.Add(szrLB,     0, wx.EXPAND)
-        box.Add(btnOk,     0, wx.EXPAND)
-        box.Fit(self)
-        self.SetAutoLayout(True)
-        self.SetSizer(box)
-
-        # Show dialog
-        self.ShowModal()
-        if self.GetReturnCode() == 5101:     # abort -> empty right column
-
-            while self._listBox2.GetCount() > 0:
-                data = self._listBox2.GetClientData(0)
-                name = self._listBox2.GetString(0)
-                self._listBox1.Append(name, data)
-                self._listBox2.Delete(0)
-
-    def getChosenClasses(self):
-        """
-        Return the classes chosen by the user
-        """
-        ret = []
-        for el in range(self._listBox2.GetCount()):
-            ret.append(self._listBox2.GetClientData(el))
-        return ret
-
-    # noinspection PyUnusedLocal
-    def _onBtnToTheRight(self, event):
-        """
-        Callback for the "=>" button
-        """
-        lst = list(self._listBox1.GetSelections())
-        lst.sort()
-        lst.reverse()
-        for i in lst:
-            data = self._listBox1.GetClientData(i)
-            name = self._listBox1.GetString(i)
-            self._listBox2.Append(name, data)
-            self._listBox1.Delete(i)
-
-    # noinspection PyUnusedLocal
-    def _onBtnToTheLeft(self, event):
-        """
-        Callback for the "<=" button
-        """
-        lst = list(self._listBox2.GetSelections())
-        lst.sort()
-        lst.reverse()
-        for i in lst:
-            data = self._listBox2.GetClientData(i)
-            name = self._listBox2.GetString(i)
-            self._listBox1.Append(name, data)
-            self._listBox2.Delete(i)
-
-
-def askWhichClassesToReverse(lstClasses):
-    """
-    Ask which classes must be reversed
-
-    @return list of classes
-    @param list lstClasses : list of classes potentially reversible
-
-    """
-    # Ask which classes to reverse
-    dlg = DlgAskWhichClassesToReverse(lstClasses)
-    lstClassesChosen = dlg.getChosenClasses()
-    dlg.Destroy()
-
-    return lstClassesChosen
+OBJECT_MAP_TYPE = NewType('OBJECT_MAP_TYPE', Dict[str, OglClass])
 
 
 class IoPython(PyutIoPlugin):
+
+    MAX_WIDTH: int = 80
+
     """
     Python code generation/reverse engineering
 
@@ -182,7 +79,7 @@ class IoPython(PyutIoPlugin):
 
         @return tuple
         """
-        return "Python file", "py", "Python file format"
+        return "Python File", "py", "Python File format"
 
     def getOutputFormat(self):
         """
@@ -193,7 +90,7 @@ class IoPython(PyutIoPlugin):
 
         @return tuple
         """
-        return "Python file", "py", "Python file format"
+        return "Python File", "py", "Python File format"
 
     def setExportOptions(self) -> bool:
         return True
@@ -296,7 +193,7 @@ class IoPython(PyutIoPlugin):
                 paramCode += "=" + params[i].getDefaultValue()
             if i < len(aMethod.getParams())-1:
                 paramCode += ", "
-            if (len(currentCode) % 80) + len(paramCode) > MaxWidth:  # Width limit
+            if (len(currentCode) % 80) + len(paramCode) > IoPython.MAX_WIDTH:  # Width limit
                 currentCode += "\n" + self.indentStr(self.indentStr(paramCode))
             else:
                 currentCode += paramCode
@@ -589,9 +486,9 @@ class IoPython(PyutIoPlugin):
                     if cl not in classes:
                         classes.append(cl)
             except (ValueError, Exception) as e:
-                print(f'{e}')
+                self.logger.error(f'{e}')
 
-        objs = {}  # Dictionary classname/OglClass
+        objectMap: OBJECT_MAP_TYPE = cast(OBJECT_MAP_TYPE, {})  # Dictionary className/OglClass
         # create the PyutClass objects for each class
         for cl in classes:
             try:
@@ -600,12 +497,12 @@ class IoPython(PyutIoPlugin):
                 po = OglClass(pc)                 # A new OglClass
                 umlFrame.addShape(po, 0, 0)
                 po.autoResize()
-                objs[cl.__name__] = po
+                objectMap[cl.__name__] = po
             except (ValueError, Exception) as e:
-                print(f"Error while creating class of type {cl},  {e}")
+                self.logger.error(f"Error while creating class of type {cl},  {e}")
 
         # now, search for paternity links
-        for po in list(objs.values()):
+        for po in list(objectMap.values()):
             pc = po.getPyutObject()     # TODO
             # skip object, it has no parent
             if pc.getName() == "object":
@@ -616,37 +513,30 @@ class IoPython(PyutIoPlugin):
                     currentClass = el
                     break
             if currentClass is None:
-                print("Reverse error 527")
+                self.logger.error("Reverse error 527")
                 continue
 
             try:
                 fatherClasses = [cl for cl in classes if cl.__name__ in [x.__name__ for x in currentClass.__bases__]]
             except (ValueError, Exception) as e:
                 fatherClasses = []
-                print(f'{e}')
+                self.logger.error(f'{e}')
 
             fatherNames = [item.__name__ for item in fatherClasses]
             for father in fatherNames:
-                dest = objs.get(father)
+                dest = objectMap.get(father)
                 if dest is not None:  # maybe we don't have the father loaded
                     umlFrame.createInheritanceLink(po, dest)
-
-        # def cmpHeight(a, b):
-        #     xa, ya = a.GetSize()
-        #     xb, yb = b.GetSize()
-        #     return cmp(yb, ya)
-
         # Sort by descending height
-        objs = list(objs.values())
-        # objs.sort(cmpHeight)
-        objs.sort()
+        objectList = list(objectMap.values())
+        objectList.sort()
 
         # Organize by vertical descending sizes
         x = 20
         y = 20
         # incX = 0
         incY = 0
-        for po in objs:
+        for po in objectList:
             incX, sy = po.GetSize()
             incX += 20
             sy += 20
@@ -677,20 +567,20 @@ class IoPython(PyutIoPlugin):
         # Add to sys.path
         sysPath.insert(0, directory+os.sep)
 
-        print("Directory = " + directory)
+        self.logger.info(f'Directory added to sysPath = {directory}')
         umlFrame.setCodePath(directory)
         lstModules = []
         files = {}
         for filename in lstFiles:
             file = os.path.splitext(filename)[0]
-            print("file=", file)
+            self.logger.info(f'Importing file={file}')
 
             try:
                 module = __import__(file)
                 importlib.reload(module)
                 lstModules.append(module)
             except (ValueError, Exception) as e:
-                print(f"Error while trying to import file {file}, {e}")
+                self.logger.error(f"Error while trying to import file {file}, {e}")
 
         # Get classes
         classesDic = {}
@@ -703,7 +593,7 @@ class IoPython(PyutIoPlugin):
         classes = list(classesDic.keys())
 
         # Remove wx.Python classes ? TODO
-        classes = askWhichClassesToReverse(classes)
+        classes = self.askWhichClassesToReverse(classes)
         if len(classes) == 0:
             return
 
@@ -713,3 +603,19 @@ class IoPython(PyutIoPlugin):
         except (ValueError, Exception) as e:
             print(f"Error while reversing python file(s)! {e}")
         wx.EndBusyCursor()
+
+    def askWhichClassesToReverse(self, lstClasses):
+        """
+        Starts the dialog that asks which classes must be reversed
+
+        Args:
+            lstClasses: list of classes potentially reversible
+
+        Returns:
+            A list of classes to reverse-engineer
+        """
+        dlg = DlgAskWhichClassesToReverse(lstClasses)
+        lstClassesChosen = dlg.getChosenClasses()
+        dlg.Destroy()
+
+        return lstClassesChosen

@@ -1,5 +1,4 @@
 
-import os
 
 from wx import DirDialog
 from wx import FD_OPEN
@@ -53,37 +52,37 @@ class PyutPlugin:
         """
         return "*", "*", "All"
 
-    def _askForFileImport(self, multiple: bool = False):
+    def _askForFileImport(self, multiSelect: bool = False):
         """
         Called by plugin to ask which file must be imported
 
         Args:
-            multiple: True to allow multi-file selection
+            multiSelect: True to allow multi-file selection
 
         Returns:
-            filename or "" for multiple=False, filenames[] or
+            filename or "" for multiple=False, fileNames[] or
             [] else
             "",
             [] indicates that the user pressed the cancel button
         """
 
-        inputformat = self.getInputFormat()
-        if multiple:
+        inputFormat = self.getInputFormat()
+        if multiSelect:
             dlg = FileDialog(
                 self._umlFrame,
                 "Choose files to import",
-                wildcard=inputformat[0] + " (*." + inputformat[1] + ")|*." + inputformat[1],
+                wildcard=inputFormat[0] + " (*." + inputFormat[1] + ")|*." + inputFormat[1],
                 defaultDir=self._ctrl.getCurrentDir(),
                 style=FD_OPEN | FD_FILE_MUST_EXIST | FD_MULTIPLE | FD_CHANGE_DIR
             )
             dlg.ShowModal()
-            if dlg.GetReturnCode() == 5101:  # Cancel
+            if dlg.GetReturnCode() == ID_CANCEL:
                 return [], ""
             return dlg.GetFilenames(), dlg.GetDirectory()
         else:
             file = FileSelector(
                 "Choose a file to import",
-                wildcard=inputformat[0] + " (*." + inputformat[1] + ")|*." + inputformat[1],
+                wildcard=inputFormat[0] + " (*." + inputFormat[1] + ")|*." + inputFormat[1],
                 # default_path = self.__ctrl.getCurrentDir(),
                 flags=FD_OPEN | FD_FILE_MUST_EXIST | FD_CHANGE_DIR
             )
@@ -103,7 +102,7 @@ class PyutPlugin:
 
     def _askForDirectoryImport(self):
         """
-        Called by plugin to ask which file must be imported
+        Called by plugin to ask which directory must be imported
         """
         aDirectory = DirDialog(self._umlFrame, "Choose a directory to import", defaultPath=self._ctrl.getCurrentDir())
         # TODO : add this when supported...(cd)         style=wx.DD_NEW_DIR_BUTTON)
@@ -126,7 +125,6 @@ class PyutPlugin:
             defaultPath = preferredDefaultPath
 
         dirDialog = DirDialog(self._umlFrame, "Choose a destination directory", defaultPath=defaultPath)
-        # dirDialog.SetPath(os.getcwd())
         if dirDialog.ShowModal() == ID_CANCEL:
             dirDialog.Destroy()
             return ""
