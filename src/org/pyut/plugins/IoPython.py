@@ -26,6 +26,7 @@ from org.pyut.plugins.PluginAst import FieldExtractor
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.general.Globals import _
+from org.pyut.plugins.PyutPlugin import PyutPlugin
 
 from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
 
@@ -70,27 +71,29 @@ class IoPython(PyutIoPlugin):
         """
         return "1.0"
 
-    def getInputFormat(self):
+    def getInputFormat(self) -> PyutPlugin.INPUT_FORMAT_TYPE:
         """
         Return a specification tuple.
             name of the input format
             extension of the input format
             textual description of the plugin input format
 
-        @return tuple
+        Returns:
+            Return a specification tuple.
         """
-        return "Python File", "py", "Python File format"
+        return cast(PyutPlugin.INPUT_FORMAT_TYPE, ("Python File", "py", "Python File format"))
 
-    def getOutputFormat(self):
+    def getOutputFormat(self) -> PyutPlugin.OUTPUT_FORMAT_TYPE:
         """
         Return a specification tuple.
             name of the output format
             extension of the output format
             textual description of the plugin output format
 
-        @return tuple
+        Returns:
+            Return a specification tuple.
         """
-        return "Python File", "py", "Python File format"
+        return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, ("Python File", "py", "Python File format"))
 
     def setExportOptions(self) -> bool:
         return True
@@ -348,32 +351,33 @@ class IoPython(PyutIoPlugin):
 
         wx.MessageBox(_("Done !"), _("Python code generation"), style=wx.CENTRE | wx.OK | wx.ICON_INFORMATION)
 
-    def getPyutClass(self, orgClass, filename="", pyutclass=None):
+    def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):
         """
-        Return a PyutClass made from the python class object orgClass.
-        If a pyutclass is given, it is modified in place.
+        If a pyutClass is input, it is modified in place.
 
-        @param orgClass
-        @param string filename : filename of the class
-        @param PyutClass pyutclass : pyutclass to modify
-        @return PyutClass
-        @since 1.0
+        Args:
+            oglClass:
+            filename:   filename of the class
+            pyutClass:  pyutClass to modify
+
+        Returns:
+            A PyutClass constructed from the Python class object OglClass.
         """
         import types
         from inspect import getfullargspec
 
         # Verify that parameters types are acceptable
-        if type(orgClass) not in [type, type]:
+        if type(oglClass) not in [type, type]:
             self.logger.error(f"IoPython/getPyutClass: Wrong parameter for orgClass:")
-            self.logger.error(f"IoPython Expected ClassType or TypeType, found {type(orgClass)}")
+            self.logger.error(f"IoPython Expected ClassType or TypeType, found {type(oglClass)}")
             return None
 
         # create objects
-        cl = orgClass
-        if pyutclass is None:
+        cl = oglClass
+        if pyutClass is None:
             pc = PyutClass(cl.__name__)       # A new PyutClass
         else:
-            pc = pyutclass
+            pc = pyutClass
         pc.setFilename(filename)          # store the class' filename
         methods = []                      # List of methods for this class
 
@@ -393,7 +397,7 @@ class IoPython(PyutIoPlugin):
                     func_name = me.__name__
             else:
                 func_name = me.__name__
-            meth = PyutMethod(func_name)     # A new PyutMethod
+            pyutMethod: PyutMethod = PyutMethod(func_name)     # A new PyutMethod
 
             # Add the method's params
             args = getfullargspec(me)
@@ -412,15 +416,15 @@ class IoPython(PyutIoPlugin):
                         param = PyutParam(arg, "", str(defVal))
                     else:
                         param = PyutParam(arg)
-                    meth.addParam(param)
-            methods.append(meth)
+                    pyutMethod.addParam(param)
+            methods.append(pyutMethod)
 
             # Set the visibility according to naming conventions
             if me.__name__[-2:] != "__":
                 if me.__name__[0:2] == "__":
-                    meth.setVisibility(PyutVisibilityEnum.PRIVATE)
+                    pyutMethod.setVisibility(PyutVisibilityEnum.PRIVATE)
                 elif me.__name__[0] == "_":
-                    meth.setVisibility(PyutVisibilityEnum.PROTECTED)
+                    pyutMethod.setVisibility(PyutVisibilityEnum.PROTECTED)
         # methods.sort(lambda x, y: cmp(x.getName(), y.getName()))
         pc.setMethods(methods)
 
@@ -465,22 +469,22 @@ class IoPython(PyutIoPlugin):
         pc.setFields(fds)
         return pc
 
-    def reversePython(self, umlFrame, orgClasses, files):
+    def reversePython(self, umlFrame, classesToReverseEngineer, files):
         """
         Reverse engineering
-        Classes come from self introspection !!!
+        Classes come from introspection !!!
         """
 
         # get a list of classes info for classes in the display list
         # classes = [res[name] for name in res.keys() if name in display]
-        classes = [cl for cl in orgClasses
+        classes = [cl for cl in classesToReverseEngineer
                    if ((type(cl) == type) or
                        (type(cl) == type))]
 
         self.logger.info(f'classes: {classes}')
 
         # Add extension class; TODO : find a better way to do that
-        for cl in orgClasses:
+        for cl in classesToReverseEngineer:
             try:
                 if str(type(cl)).index("class") > 0:
                     if cl not in classes:
@@ -508,12 +512,12 @@ class IoPython(PyutIoPlugin):
             if pc.getName() == "object":
                 continue
             currentClass = None
-            for el in orgClasses:
+            for el in classesToReverseEngineer:
                 if el.__name__ == pc.getName():
                     currentClass = el
                     break
             if currentClass is None:
-                self.logger.error("Reverse error 527")
+                self.logger.error("Reverse engineer error 527")
                 continue
 
             try:
@@ -525,11 +529,11 @@ class IoPython(PyutIoPlugin):
             fatherNames = [item.__name__ for item in fatherClasses]
             for father in fatherNames:
                 dest = objectMap.get(father)
-                if dest is not None:  # maybe we don't have the father loaded
+                if dest is not None:  # maybe we don't have the parent loaded
                     umlFrame.createInheritanceLink(po, dest)
         # Sort by descending height
         objectList = list(objectMap.values())
-        objectList.sort()
+        # objectList.sort()   TODO OglClasses need a magic method for comparing
 
         # Organize by vertical descending sizes
         x = 20
@@ -601,7 +605,7 @@ class IoPython(PyutIoPlugin):
             wx.BeginBusyCursor()
             self.reversePython(umlFrame, classes, files)
         except (ValueError, Exception) as e:
-            print(f"Error while reversing python file(s)! {e}")
+            self.logger.error(f"Error while reversing engineering Python file(s)! {e}")
         wx.EndBusyCursor()
 
     def askWhichClassesToReverse(self, lstClasses):

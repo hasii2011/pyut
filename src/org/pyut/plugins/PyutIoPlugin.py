@@ -10,6 +10,7 @@ from org.pyut.general.Mediator import getMediator
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.PyutPlugin import PyutPlugin
+
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
@@ -91,7 +92,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         return "0.0"
 
-    def getInputFormat(self) -> Tuple[str, str, str]:
+    def getInputFormat(self) -> PyutPlugin.INPUT_FORMAT_TYPE:
         """
         return None if this plugin can't read.
         otherwise, return a tuple with
@@ -104,9 +105,9 @@ class PyutIoPlugin(PyutPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(Tuple[str, str, str], None)
+        return cast(PyutPlugin.INPUT_FORMAT_TYPE, None)
 
-    def getOutputFormat(self) -> Tuple[str, str, str]:
+    def getOutputFormat(self) -> PyutPlugin.OUTPUT_FORMAT_TYPE:
         """
         return None if this plugin can't write.
         otherwise, return a tuple with
@@ -119,7 +120,7 @@ class PyutIoPlugin(PyutPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(Tuple[str, str, str], None)
+        return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, None)
 
     def setImportOptions(self) -> bool:
         """

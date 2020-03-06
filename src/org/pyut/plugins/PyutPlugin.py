@@ -1,4 +1,7 @@
 
+from typing import NewType
+from typing import Tuple
+from typing import cast
 
 from wx import DirDialog
 from wx import FD_OPEN
@@ -16,6 +19,10 @@ from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class PyutPlugin:
+
+    INPUT_FORMAT_TYPE = NewType('INPUT_FORMAT_TYPE', Tuple[str, str, str])
+    OUTPUT_FORMAT_TYPE = NewType('OUTPUT_FORMAT_TYPE', Tuple[str, str, str])
+
     """
     Standard plugin tools
     """
@@ -34,25 +41,25 @@ class PyutPlugin:
         if self._verbose:
             print(f'{module}> {msg}')
 
-    def getInputFormat(self):
+    def getInputFormat(self) -> INPUT_FORMAT_TYPE:
         """
         Implementations probably need to override this
 
-        Returns: a tuple
-
+        Returns:
+            The input format type
         """
-        return "*", "*", "All"
+        return cast(PyutPlugin.INPUT_FORMAT_TYPE, ("*", "*", "All"))
 
-    def getOutputFormat(self):
+    def getOutputFormat(self) -> OUTPUT_FORMAT_TYPE:
         """
         Implementations probably need to override this
 
-        Returns: A Tuple
-
+        Returns:
+            The output format type
         """
-        return "*", "*", "All"
+        return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, ("*", "*", "All"))
 
-    def _askForFileImport(self, multiSelect: bool = False):
+    def _askForFileImport(self, multiSelect: bool = False, startDirectory: str = None):
         """
         Called by plugin to ask which file must be imported
 
@@ -66,24 +73,27 @@ class PyutPlugin:
             [] indicates that the user pressed the cancel button
         """
 
-        inputFormat = self.getInputFormat()
+        inputFormat: Tuple[str, str, str] = self.getInputFormat()
+        defaultDir:  str                  = startDirectory
+        if defaultDir is None:
+            defaultDir = self._ctrl.getCurrentDir()
         if multiSelect:
             dlg = FileDialog(
                 self._umlFrame,
                 "Choose files to import",
                 wildcard=inputFormat[0] + " (*." + inputFormat[1] + ")|*." + inputFormat[1],
-                defaultDir=self._ctrl.getCurrentDir(),
+                defaultDir=defaultDir,
                 style=FD_OPEN | FD_FILE_MUST_EXIST | FD_MULTIPLE | FD_CHANGE_DIR
             )
             dlg.ShowModal()
             if dlg.GetReturnCode() == ID_CANCEL:
                 return [], ""
+
             return dlg.GetFilenames(), dlg.GetDirectory()
         else:
             file = FileSelector(
                 "Choose a file to import",
                 wildcard=inputFormat[0] + " (*." + inputFormat[1] + ")|*." + inputFormat[1],
-                # default_path = self.__ctrl.getCurrentDir(),
                 flags=FD_OPEN | FD_FILE_MUST_EXIST | FD_CHANGE_DIR
             )
             return file
