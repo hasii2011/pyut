@@ -98,6 +98,136 @@ class IoPython(PyutIoPlugin):
     def setExportOptions(self) -> bool:
         return True
 
+    def write(self, oglObjects):
+        """
+        Data saving
+        @param oglObjects : list of exported objects
+
+        """
+        # Ask the user which destination file he wants
+        directory = self._askForDirectoryExport()
+        if directory == "":
+            return False
+
+        # Init
+        self.logger.info("IoPython Saving...")
+        classes = {}
+
+        # Add top code
+        TopCode = ["#!/usr/bin/env python\n", "__version__ = '$"+"Revision: 1.0 $'\n",
+                   "__author__ = ''\n",
+                   "__date__ = ''\n",
+                   "\n\n"
+                   ]
+
+        # Create classes code for each object
+        for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
+            # Add class definition
+            aClass = el.getPyutObject()     # TODO
+            txt = "class " + str(aClass.getName())        # Add class name
+            fathers = aClass.getParents()
+            if len(fathers) > 0:                          # Add fathers
+                txt = txt + "("
+                for i in range(len(fathers)):
+                    txt = txt + fathers[i].getName()
+                    if i < len(fathers)-1:
+                        txt = txt + ", "
+                txt = txt + ")"
+            txt = txt + ":\n"
+            codeClass = [txt]
+
+            # Get methods
+            clsMethods = self.getMethodsDicCode(aClass)
+
+            # Add __init__ Method
+            if '__init__' in clsMethods:
+                methodCode = clsMethods['__init__']
+                codeClass += methodCode
+                del clsMethods['__init__']
+
+            # Add others methods in order
+            for aMethod in aClass.getMethods():
+                methodName = aMethod.getName()
+
+                try:
+                    methodCode = clsMethods[methodName]
+                    codeClass += methodCode
+                except (ValueError, Exception) as e:
+                    print(f'{e}')
+
+            # Save to classes dictionary
+            codeClass.append("\n\n")
+            classes[aClass.getName()] = codeClass
+
+        # Add classes code
+        # print directory
+        # print os.sep
+        for (className, classCode) in list(classes.items()):
+            filename = directory + os.sep + str(className) + ".py"
+            file = open(filename, "w")
+            file.writelines(TopCode)
+            file.writelines(classCode)
+            file.close()
+
+        self.logger.info("IoPython done !")
+
+        wx.MessageBox(_("Done !"), _("Python code generation"), style=wx.CENTRE | wx.OK | wx.ICON_INFORMATION)
+
+    def read(self, oglObjects, umlFrame):
+        """
+        reverse engineering
+
+        @param oglObjects : list of imported objects
+        @param umlFrame : Pyut's UmlFrame
+        """
+        # Ask the user which destination file he wants
+        # directory=self._askForDirectoryImport()
+        # if directory=="":
+        #    return False
+        (lstFiles, directory) = self._askForFileImport(True)
+        if len(lstFiles) == 0:
+            return False
+
+        # Add to sys.path
+        sysPath.insert(0, directory+os.sep)
+
+        self.logger.info(f'Directory added to sysPath = {directory}')
+        umlFrame.setCodePath(directory)
+        lstModules = []
+        files = {}
+        for filename in lstFiles:
+            file = os.path.splitext(filename)[0]
+            self.logger.info(f'Importing file={file}')
+
+            try:
+                module = __import__(file)
+                importlib.reload(module)
+                lstModules.append(module)
+            except (ValueError, Exception) as e:
+                self.logger.error(f"Error while trying to import file {file}, {e}")
+
+        # Get classes
+        classesDic = {}
+        for module in lstModules:
+            for cl in list(module.__dict__.values()):
+                if type(cl) in (type, type):
+                    classesDic[cl] = 1
+                    modname = cl.__module__.replace(".", os.sep) + ".py"
+                    files[cl] = modname
+        classes = list(classesDic.keys())
+
+        # Remove wx.Python classes ? TODO
+        classes = self.askWhichClassesToReverse(classes)
+        if len(classes) == 0:
+            return
+
+        try:
+            wx.BeginBusyCursor()
+            self.reversePython(umlFrame, classes, files)
+        except (ValueError, Exception) as e:
+            self.logger.error(f"Error while reversing engineering Python file(s)! {e}")
+        wx.EndBusyCursor()
+
     def getVisibilityPythonCode(self, visibility: PyutVisibilityEnum):
         """
         Return the python code for a given enum value which represents the visibility
@@ -243,12 +373,9 @@ class IoPython(PyutIoPlugin):
             lstCodeMethod = [txt]
 
             # Get code
-            subcode = self.getOneMethodCode(aMethod)
+            subCode = self.getOneMethodCode(aMethod)
 
-            # Indent and add to main code
-            # for el in self.indent(subcode):
-            # lstCodeMethod.append(str(el))
-            lstCodeMethod += self.indent(subcode)
+            lstCodeMethod += self.indent(subCode)
 
             clsMethods[aMethod.getName()] = lstCodeMethod
 
@@ -260,14 +387,12 @@ class IoPython(PyutIoPlugin):
                 lstCodeMethod = ["\n\n    #>-------------------------------" + "-----------------------------------------\n"]
 
                 # Get code
-                subcode = self.getOneMethodCode(PyutMethod('__init__'), False)
+                subCode = self.getOneMethodCode(PyutMethod('__init__'), False)
 
                 # Indent and add to main code
-                for el in self.indent(subcode):
+                for el in self.indent(subCode):
                     lstCodeMethod.append(str(el))
-                # for el in subcode:
-                # lstCodeMethod.append('    ' + str(el))
-                # lstCodeMethod.append("\n\n")
+
                 clsMethods['__init__'] = lstCodeMethod
 
             # Add fields
@@ -275,81 +400,6 @@ class IoPython(PyutIoPlugin):
             for aField in aClass.getFields():
                 clsInit.append(self.indentStr(self.indentStr(self.getFieldPythonCode(aField))))
         return clsMethods
-
-    def write(self, oglObjects):
-        """
-        Data saving
-        @param oglObjects : list of exported objects
-
-        """
-        # Ask the user which destination file he wants
-        directory = self._askForDirectoryExport()
-        if directory == "":
-            return False
-
-        # Init
-        self.logger.info("IoPython Saving...")
-        classes = {}
-
-        # Add top code
-        TopCode = ["#!/usr/bin/env python\n", "__version__ = '$"+"Revision: 1.0 $'\n",
-                   "__author__ = ''\n",
-                   "__date__ = ''\n",
-                   "\n\n"
-                   ]
-
-        # Create classes code for each object
-        for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
-            # Add class definition
-            aClass = el.getPyutObject()     # TODO
-            txt = "class " + str(aClass.getName())        # Add class name
-            fathers = aClass.getParents()
-            if len(fathers) > 0:                          # Add fathers
-                txt = txt + "("
-                for i in range(len(fathers)):
-                    txt = txt + fathers[i].getName()
-                    if i < len(fathers)-1:
-                        txt = txt + ", "
-                txt = txt + ")"
-            txt = txt + ":\n"
-            codeClass = [txt]
-
-            # Get methods
-            clsMethods = self.getMethodsDicCode(aClass)
-
-            # Add __init__ Method
-            if '__init__' in clsMethods:
-                methodCode = clsMethods['__init__']
-                codeClass += methodCode
-                del clsMethods['__init__']
-
-            # Add others methods in order
-            for aMethod in aClass.getMethods():
-                methodName = aMethod.getName()
-
-                try:
-                    methodCode = clsMethods[methodName]
-                    codeClass += methodCode
-                except (ValueError, Exception) as e:
-                    print(f'{e}')
-
-            # Save to classes dictionary
-            codeClass.append("\n\n")
-            classes[aClass.getName()] = codeClass
-
-        # Add classes code
-        # print directory
-        # print os.sep
-        for (className, classCode) in list(classes.items()):
-            filename = directory + os.sep + str(className) + ".py"
-            file = open(filename, "w")
-            file.writelines(TopCode)
-            file.writelines(classCode)
-            file.close()
-
-        self.logger.info("IoPython done !")
-
-        wx.MessageBox(_("Done !"), _("Python code generation"), style=wx.CENTRE | wx.OK | wx.ICON_INFORMATION)
 
     def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):
         """
@@ -367,9 +417,9 @@ class IoPython(PyutIoPlugin):
         from inspect import getfullargspec
 
         # Verify that parameters types are acceptable
-        if type(oglClass) not in [type, type]:
-            self.logger.error(f"IoPython/getPyutClass: Wrong parameter for orgClass:")
-            self.logger.error(f"IoPython Expected ClassType or TypeType, found {type(oglClass)}")
+        if type(oglClass) not in [type]:
+            self.logger.error(f"IoPython/getPyutClass: Wrong parameter for oglClass:")
+            self.logger.error(f"IoPython Expected class type, found {type(oglClass)}")
             return None
 
         # create objects
@@ -382,11 +432,10 @@ class IoPython(PyutIoPlugin):
         methods = []                      # List of methods for this class
 
         # Extract methods from the class
-        # clmethods = [me for me in list(cl.__dict__.values()) if type(me) == types.FunctionType]
-        clmethods = [me for me in list(cl.__dict__.values()) if isinstance(me, types.FunctionType)]
+        klassMethods = [me for me in list(cl.__dict__.values()) if isinstance(me, types.FunctionType)]
 
         # Add the methods to the class
-        for me in clmethods:
+        for me in klassMethods:
             # Remove visibility characters
             if me.__name__[-2:] != "__":
                 if me.__name__[0:2] == "__":
@@ -477,9 +526,7 @@ class IoPython(PyutIoPlugin):
 
         # get a list of classes info for classes in the display list
         # classes = [res[name] for name in res.keys() if name in display]
-        classes = [cl for cl in classesToReverseEngineer
-                   if ((type(cl) == type) or
-                       (type(cl) == type))]
+        classes = [cl for cl in classesToReverseEngineer if (type(cl) == type)]
 
         self.logger.info(f'classes: {classes}')
 
@@ -552,61 +599,6 @@ class IoPython(PyutIoPlugin):
                 incY = sy
             po.SetPosition(x, y)
             x += incX
-
-    def read(self, oglObjects, umlFrame):
-        """
-        reverse engineering
-
-        @param oglObjects : list of imported objects
-        @param umlFrame : Pyut's UmlFrame
-        """
-        # Ask the user which destination file he wants
-        # directory=self._askForDirectoryImport()
-        # if directory=="":
-        #    return False
-        (lstFiles, directory) = self._askForFileImport(True)
-        if len(lstFiles) == 0:
-            return False
-
-        # Add to sys.path
-        sysPath.insert(0, directory+os.sep)
-
-        self.logger.info(f'Directory added to sysPath = {directory}')
-        umlFrame.setCodePath(directory)
-        lstModules = []
-        files = {}
-        for filename in lstFiles:
-            file = os.path.splitext(filename)[0]
-            self.logger.info(f'Importing file={file}')
-
-            try:
-                module = __import__(file)
-                importlib.reload(module)
-                lstModules.append(module)
-            except (ValueError, Exception) as e:
-                self.logger.error(f"Error while trying to import file {file}, {e}")
-
-        # Get classes
-        classesDic = {}
-        for module in lstModules:
-            for cl in list(module.__dict__.values()):
-                if type(cl) in (type, type):
-                    classesDic[cl] = 1
-                    modname = cl.__module__.replace(".", os.sep) + ".py"
-                    files[cl] = modname
-        classes = list(classesDic.keys())
-
-        # Remove wx.Python classes ? TODO
-        classes = self.askWhichClassesToReverse(classes)
-        if len(classes) == 0:
-            return
-
-        try:
-            wx.BeginBusyCursor()
-            self.reversePython(umlFrame, classes, files)
-        except (ValueError, Exception) as e:
-            self.logger.error(f"Error while reversing engineering Python file(s)! {e}")
-        wx.EndBusyCursor()
 
     def askWhichClassesToReverse(self, lstClasses):
         """
