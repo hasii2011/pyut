@@ -11,7 +11,7 @@ Reverse engineering Python launches my program. Why ?
 Q: When I do Python Reverse engineering on my program, my program
     is launched. Why ?
 A: Python Reverse does an 'import' on python files.
-    An Import launch all the code that is found in the imported module.
+    An Import launches all the code that is found in the imported module.
     To fix it, you must add this kind of code in your program :
     if __name__=="__main__":
         do_some_stuff

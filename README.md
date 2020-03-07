@@ -23,7 +23,7 @@ So this is the fork and I let Cedric know.
 ------
 Note to self:
 
-In the loggingConfiguration.json configuration file some plugins use the fully qualified
+In the loggingConfiguration.json configuration file some plugin logging configuration stanzas use the fully qualified
 package.className and some do not.
 
 If we define instance loggers then we use just the class name
