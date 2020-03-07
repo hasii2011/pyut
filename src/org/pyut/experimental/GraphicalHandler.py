@@ -45,21 +45,20 @@ class GraphicalHandler:
 
         classNameToOglClass: Dict[str, OglClass] = {}
 
-        graphicalHandler: GraphicalHandler = GraphicalHandler(umlFrame=self._umlFrame, maxWidth=self._maxWidth, historyManager=self._historyManager)
         # create the Pyut Class objects & associate Ogl graphical classes
         for cl in classes:
             # create objects
             pyutClassDef: PyutClass = PyutClass(cl.__name__)
 
-            clmethods: List[classmethod] = cg.getMethodsFromClass(cl)
+            klassMethods: List[classmethod] = cg.getMethodsFromClass(cl)
 
             # add the methods
-            methods: List[PyutMethod] = cg.generatePyutMethods(clmethods)
+            methods: List[PyutMethod] = cg.generatePyutMethods(klassMethods)
             methods = sorted(methods, key=PyutMethod.getName)
 
             pyutClassDef.setMethods(methods)
 
-            oglClassDef = graphicalHandler.addToDiagram(pyutClassDef)
+            oglClassDef = self.addToDiagram(pyutClassDef)
             classNameToOglClass[cl.__name__] = oglClassDef
 
         # now, search for parent links
@@ -75,11 +74,11 @@ class GraphicalHandler:
             for parent in parentNames:
                 dest = classNameToOglClass.get(parent)
                 if dest is not None:  # maybe we don't have the parent loaded
-                    graphicalHandler.createInheritanceLink(oglClassDef, dest)
+                    self.createInheritanceLink(oglClassDef, dest)
 
         oglClassDefinitions: List[OglClass] = list(classNameToOglClass.values())
 
-        graphicalHandler.positionClassHierarchy(oglClassDefinitions)
+        self.positionClassHierarchy(oglClassDefinitions)
 
         # EndBusyCursor()
 
