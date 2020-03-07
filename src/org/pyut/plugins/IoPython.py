@@ -5,14 +5,22 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-import os
+from os import sep as osSep
+from os import path as osPath
+
 from sys import path as sysPath
 
-import wx
+import importlib
 
+from wx import CENTRE
+from wx import ICON_INFORMATION
+from wx import OK
+
+from wx import BeginBusyCursor
+from wx import EndBusyCursor
+from wx import MessageBox
 from wx import Yield as wxYield
 
-import importlib
 
 from org.pyut.ogl.OglClass import OglClass
 
@@ -161,7 +169,8 @@ class IoPython(PyutIoPlugin):
         # print directory
         # print os.sep
         for (className, classCode) in list(classes.items()):
-            filename = directory + os.sep + str(className) + ".py"
+            # filename = directory + osSep + str(className) + ".py"
+            filename: str = f'{dir()}{osSep}{str(className)}.py'
             file = open(filename, "w")
             file.writelines(TopCode)
             file.writelines(classCode)
@@ -169,7 +178,7 @@ class IoPython(PyutIoPlugin):
 
         self.logger.info("IoPython done !")
 
-        wx.MessageBox(_("Done !"), _("Python code generation"), style=wx.CENTRE | wx.OK | wx.ICON_INFORMATION)
+        MessageBox(_("Done !"), _("Python code generation"), style=CENTRE | OK | ICON_INFORMATION)
 
     def read(self, oglObjects, umlFrame):
         """
@@ -187,14 +196,14 @@ class IoPython(PyutIoPlugin):
             return False
 
         # Add to sys.path
-        sysPath.insert(0, directory+os.sep)
+        sysPath.insert(0, f'{directory}{osSep}')
 
         self.logger.info(f'Directory added to sysPath = {directory}')
         umlFrame.setCodePath(directory)
         lstModules = []
         files = {}
         for filename in lstFiles:
-            file = os.path.splitext(filename)[0]
+            file = osPath.splitext(filename)[0]
             self.logger.info(f'Importing file={file}')
 
             try:
@@ -208,9 +217,9 @@ class IoPython(PyutIoPlugin):
         classesDic = {}
         for module in lstModules:
             for cl in list(module.__dict__.values()):
-                if type(cl) in (type, type):
+                if type(cl) is type:
                     classesDic[cl] = 1
-                    modname = cl.__module__.replace(".", os.sep) + ".py"
+                    modname = cl.__module__.replace(".", osSep) + ".py"
                     files[cl] = modname
         classes = list(classesDic.keys())
 
@@ -221,12 +230,12 @@ class IoPython(PyutIoPlugin):
             return
 
         try:
-            wx.BeginBusyCursor()
+            BeginBusyCursor()
             self._reverseEngineer.reversePython(umlFrame, classes, files)
 
         except (ValueError, Exception) as e:
             self.logger.error(f"Error while reversing engineering Python file(s)! {e}")
-        wx.EndBusyCursor()
+        EndBusyCursor()
 
     def getVisibilityPythonCode(self, visibility: PyutVisibilityEnum):
         """
