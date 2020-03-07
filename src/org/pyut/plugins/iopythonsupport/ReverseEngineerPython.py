@@ -6,6 +6,7 @@ from typing import NewType
 from logging import Logger
 from logging import getLogger
 
+from org.pyut.experimental.GraphicalHandler import GraphicalHandler
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
@@ -16,7 +17,7 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.PluginAst import FieldExtractor
-
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 OBJECT_MAP_TYPE = NewType('OBJECT_MAP_TYPE', Dict[str, OglClass])
 
@@ -27,7 +28,7 @@ class ReverseEngineerPython:
 
         self.logger: Logger = getLogger(__name__)
 
-    def reversePython(self, umlFrame, classesToReverseEngineer, files):
+    def reversePython(self, umlFrame: UmlClassDiagramsFrame, classesToReverseEngineer, files):
         """
         Reverse engineering
         Classes come from introspection !!!
@@ -86,7 +87,10 @@ class ReverseEngineerPython:
             for father in fatherNames:
                 dest = objectMap.get(father)
                 if dest is not None:  # maybe we don't have the parent loaded
-                    umlFrame.createInheritanceLink(po, dest)
+                    # umlFrame.createInheritanceLink(po, dest)
+                    graphicalHandler: GraphicalHandler = GraphicalHandler(umlFrame=umlFrame, maxWidth=umlFrame.maxWidth,
+                                                                          historyManager=umlFrame.getHistory())
+                    graphicalHandler.createInheritanceLink(child=po, parent=dest)
         # Sort by descending height
         objectList = list(objectMap.values())
         # objectList.sort()   TODO OglClasses need a magic method for comparing

@@ -43,8 +43,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
     def createLink(self, src: OglClass, dst: OglClass, linkType: LinkType = LinkType.AGGREGATION):
         """
-        Used to create links;  It is still the caller's respsonsibility to add the created shape to the
-        appropate diagram
+        Used to create links;  It is still the caller's responsibility to add the created shape to the
+        appropriate diagram
 
         Args:
             src:        The source OglClass
