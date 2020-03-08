@@ -31,6 +31,7 @@ from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.PyutPlugin import PyutPlugin
 
 from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
+from org.pyut.plugins.iopythonsupport.OglToPython import OglToPython
 from org.pyut.plugins.iopythonsupport.ReverseEngineerPython import ReverseEngineerPython
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -119,25 +120,22 @@ class IoPython(PyutIoPlugin):
         # Init
         self.logger.info("IoPython Saving...")
         classes = {}
+        oglToPython: OglToPython = OglToPython()
 
-        # Add top code
-        TopCode = ["#!/usr/bin/env python\n", "__version__ = '$"+"Revision: 1.0 $'\n",
-                   "__author__ = ''\n",
-                   "__date__ = ''\n",
-                   "\n\n"
-                   ]
+        TopCode: List[str] = oglToPython.generateTopCode()
 
         # Create classes code for each object
         for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
+
             # Add class definition
             aClass = el.getPyutObject()     # TODO
             txt = "class " + str(aClass.getName())        # Add class name
-            fathers = aClass.getParents()
-            if len(fathers) > 0:                          # Add fathers
+            parentPyutClasses = aClass.getParents()
+            if len(parentPyutClasses) > 0:                          # Add fathers
                 txt = txt + "("
-                for i in range(len(fathers)):
-                    txt = txt + fathers[i].getName()
-                    if i < len(fathers)-1:
+                for i in range(len(parentPyutClasses)):
+                    txt = txt + parentPyutClasses[i].getName()
+                    if i < len(parentPyutClasses)-1:
                         txt = txt + ", "
                 txt = txt + ")"
             txt = txt + ":\n"
@@ -171,7 +169,7 @@ class IoPython(PyutIoPlugin):
         # print os.sep
         for (className, classCode) in list(classes.items()):
             # filename = directory + osSep + str(className) + ".py"
-            filename: str = f'{dir()}{osSep}{str(className)}.py'
+            filename: str = f'{directory}{osSep}{str(className)}.py'
             file = open(filename, "w")
             file.writelines(TopCode)
             file.writelines(classCode)
