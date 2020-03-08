@@ -21,7 +21,6 @@ from wx import EndBusyCursor
 from wx import MessageBox
 from wx import Yield as wxYield
 
-
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.model.PyutMethod import PyutMethod
@@ -29,12 +28,14 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
-
-from org.pyut.general.Globals import _
 from org.pyut.plugins.PyutPlugin import PyutPlugin
 
 from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
 from org.pyut.plugins.iopythonsupport.ReverseEngineerPython import ReverseEngineerPython
+
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
+from org.pyut.general.Globals import _
 
 
 class IoPython(PyutIoPlugin):
@@ -87,7 +88,7 @@ class IoPython(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(PyutPlugin.INPUT_FORMAT_TYPE, ("Python File", "py", "Python File format"))
+        return cast(PyutPlugin.INPUT_FORMAT_TYPE, ("Python File(s)", "py", "Syntactically correct Python File"))
 
     def getOutputFormat(self) -> PyutPlugin.OUTPUT_FORMAT_TYPE:
         """
@@ -99,16 +100,16 @@ class IoPython(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, ("Python File", "py", "Python File format"))
+        return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, ("Python File(s)", "py", "Syntactically correct Python File"))
 
     def setExportOptions(self) -> bool:
         return True
 
     def write(self, oglObjects):
         """
-        Data saving
-        @param oglObjects : list of exported objects
 
+        Args:
+            oglObjects:
         """
         # Ask the user which destination file he wants
         directory = self._askForDirectoryExport()
@@ -180,12 +181,13 @@ class IoPython(PyutIoPlugin):
 
         MessageBox(_("Done !"), _("Python code generation"), style=CENTRE | OK | ICON_INFORMATION)
 
-    def read(self, oglObjects, umlFrame):
+    def read(self, oglObjects, umlFrame: UmlClassDiagramsFrame):
         """
-        reverse engineering
+        Reverse engineering
 
-        @param oglObjects : list of imported objects
-        @param umlFrame : Pyut's UmlFrame
+        Args:
+            oglObjects:     list of imported objects
+            umlFrame:       Pyut's UmlFrame
         """
         # Ask the user which destination file he wants
         # directory=self._askForDirectoryImport()

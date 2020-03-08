@@ -73,6 +73,13 @@
             ],
             "propagate": "False"
         },
+        "TestAst": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
         "TestPyutType": {
             "level": "INFO",
             "handlers": [

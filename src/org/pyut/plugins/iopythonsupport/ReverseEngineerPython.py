@@ -1,4 +1,4 @@
-
+from typing import List
 from typing import cast
 from typing import Dict
 from typing import NewType
@@ -28,23 +28,29 @@ class ReverseEngineerPython:
 
         self.logger: Logger = getLogger(__name__)
 
-    def reversePython(self, umlFrame: UmlClassDiagramsFrame, classesToReverseEngineer, files):
+    def reversePython(self, umlFrame: UmlClassDiagramsFrame, classesToReverseEngineer: List[type], files: Dict[type, str]):
         """
         Reverse engineering
         Classes come from introspection !!!
+
+        Args:
+            umlFrame:           The uml to display on
+            classesToReverseEngineer:  The classes from introspection
+            files:   A map of introspected classes to the filename they came from
         """
 
         # get a list of classes info for classes in the display list
         # classes = [res[name] for name in res.keys() if name in display]
-        classes = [cl for cl in classesToReverseEngineer if (type(cl) == type)]
+        classes: List[type] = [cl for cl in classesToReverseEngineer if (type(cl) == type)]
 
         self.logger.info(f'classes: {classes}')
 
-        # Add extension class; TODO : find a better way to do that
+        # Add extension class; TODO : I think this is old Python 2 code; put in warning to alert me if ever activated
         for cl in classesToReverseEngineer:
             try:
                 if str(type(cl)).index("class") > 0:
                     if cl not in classes:
+                        self.logger.warning(f'Found a class with .`class` prefix `{cl}` not originally defined by `type`')
                         classes.append(cl)
             except (ValueError, Exception) as e:
                 self.logger.error(f'{e}')
@@ -54,15 +60,15 @@ class ReverseEngineerPython:
         for cl in classes:
             try:
                 # create objects
-                pc = self.getPyutClass(cl, files[cl])
-                po = OglClass(pc)                 # A new OglClass
+                pc: PyutClass = self.getPyutClass(cl, files[cl])
+                po: OglClass   = OglClass(pc)
                 umlFrame.addShape(po, 0, 0)
                 po.autoResize()
                 objectMap[cl.__name__] = po
             except (ValueError, Exception) as e:
                 self.logger.error(f"Error while creating class of type {cl},  {e}")
 
-        # now, search for paternity links
+        # now, search for parent links
         for po in list(objectMap.values()):
             pc = po.getPyutObject()     # TODO
             # skip object, it has no parent
@@ -74,20 +80,19 @@ class ReverseEngineerPython:
                     currentClass = el
                     break
             if currentClass is None:
-                self.logger.error("Reverse engineer error 527")
+                self.logger.error("Reverse engineering error `currentClass` is `None`")
                 continue
 
+            parentKlasses: List[type] = []
             try:
-                fatherClasses = [cl for cl in classes if cl.__name__ in [x.__name__ for x in currentClass.__bases__]]
+                parentKlasses = [cl for cl in classes if cl.__name__ in [x.__name__ for x in currentClass.__bases__]]
             except (ValueError, Exception) as e:
-                fatherClasses = []
                 self.logger.error(f'{e}')
 
-            fatherNames = [item.__name__ for item in fatherClasses]
-            for father in fatherNames:
-                dest = objectMap.get(father)
+            parentNames: List[str] = [item.__name__ for item in parentKlasses]
+            for parent in parentNames:
+                dest = objectMap.get(parent)
                 if dest is not None:  # maybe we don't have the parent loaded
-                    # umlFrame.createInheritanceLink(po, dest)
                     graphicalHandler: GraphicalHandler = GraphicalHandler(umlFrame=umlFrame, maxWidth=umlFrame.maxWidth,
                                                                           historyManager=umlFrame.getHistory())
                     graphicalHandler.createInheritanceLink(child=po, parent=dest)
