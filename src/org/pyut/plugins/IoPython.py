@@ -21,11 +21,11 @@ from wx import EndBusyCursor
 from wx import MessageBox
 from wx import Yield as wxYield
 
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.PyutPlugin import PyutPlugin
@@ -54,6 +54,7 @@ class IoPython(PyutIoPlugin):
         self.logger: Logger = getLogger(__name__)
 
         self._reverseEngineer: ReverseEngineerPython = ReverseEngineerPython()
+        self._oglToPython:     OglToPython           = OglToPython()
 
     def getName(self):
         """
@@ -120,58 +121,46 @@ class IoPython(PyutIoPlugin):
         # Init
         self.logger.info("IoPython Saving...")
         classes = {}
-        oglToPython: OglToPython = OglToPython()
 
-        TopCode: List[str] = oglToPython.generateTopCode()
+        generatedClassDoc: List[str] = self._oglToPython.generateTopCode()
 
         # Create classes code for each object
-        for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
+        for oglClass in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
 
-            # Add class definition
-            aClass = el.getPyutObject()     # TODO
-            txt = "class " + str(aClass.getName())        # Add class name
-            parentPyutClasses = aClass.getParents()
-            if len(parentPyutClasses) > 0:                          # Add fathers
-                txt = txt + "("
-                for i in range(len(parentPyutClasses)):
-                    txt = txt + parentPyutClasses[i].getName()
-                    if i < len(parentPyutClasses)-1:
-                        txt = txt + ", "
-                txt = txt + ")"
-            txt = txt + ":\n"
-            codeClass = [txt]
+            oglClass:  OglClass  = cast(OglClass, oglClass)
+            pyutClass: PyutClass = oglClass.getPyutObject()
 
-            # Get methods
-            clsMethods = self.getMethodsDicCode(aClass)
+            generatedStanza:    str       = self._oglToPython.generateClassStanza(pyutClass)
+            generatedClassCode: List[str] = [generatedStanza]
+
+            clsMethods = self.getMethodsDicCode(pyutClass)
 
             # Add __init__ Method
             if '__init__' in clsMethods:
                 methodCode = clsMethods['__init__']
-                codeClass += methodCode
+                generatedClassCode += methodCode
                 del clsMethods['__init__']
 
             # Add others methods in order
-            for aMethod in aClass.getMethods():
+            for aMethod in pyutClass.getMethods():
                 methodName = aMethod.getName()
 
                 try:
                     methodCode = clsMethods[methodName]
-                    codeClass += methodCode
+                    generatedClassCode += methodCode
                 except (ValueError, Exception) as e:
-                    print(f'{e}')
+                    self.logger.error(f'{e}')
 
             # Save to classes dictionary
-            codeClass.append("\n\n")
-            classes[aClass.getName()] = codeClass
+            generatedClassCode.append("\n\n")
+            classes[pyutClass.getName()] = generatedClassCode
 
         # Add classes code
-        # print directory
-        # print os.sep
         for (className, classCode) in list(classes.items()):
             # filename = directory + osSep + str(className) + ".py"
             filename: str = f'{directory}{osSep}{str(className)}.py'
             file = open(filename, "w")
-            file.writelines(TopCode)
+            file.writelines(generatedClassDoc)
             file.writelines(classCode)
             file.close()
 
@@ -237,27 +226,27 @@ class IoPython(PyutIoPlugin):
             self.logger.error(f"Error while reversing engineering Python file(s)! {e}")
         EndBusyCursor()
 
-    def getVisibilityPythonCode(self, visibility: PyutVisibilityEnum):
-        """
-        Return the python code for a given enum value which represents the visibility
-
-        @return String
-
-        """
-        # Note : Tested
-        vis = visibility
-        if vis == PyutVisibilityEnum.PUBLIC:
-            code = ''
-        elif vis == PyutVisibilityEnum.PROTECTED:
-            code = '_'
-        elif vis == PyutVisibilityEnum.PRIVATE:
-            code = '__'
-        else:
-            self.logger.error(f"IoPython: Field code not supported : {vis}")
-            code = ''
-        # print " = " + str(code)
-        self.logger.debug(f"Python code: {code}, for {visibility}")
-        return code
+    # def getVisibilityPythonCode(self, visibility: PyutVisibilityEnum):
+    #     """
+    #     Return the python code for a given enum value which represents the visibility
+    #
+    #     @return String
+    #
+    #     """
+    #     # Note : Tested
+    #     vis = visibility
+    #     if vis == PyutVisibilityEnum.PUBLIC:
+    #         code = ''
+    #     elif vis == PyutVisibilityEnum.PROTECTED:
+    #         code = '_'
+    #     elif vis == PyutVisibilityEnum.PRIVATE:
+    #         code = '__'
+    #     else:
+    #         self.logger.error(f"IoPython: Field code not supported : {vis}")
+    #         code = ''
+    #     # print " = " + str(code)
+    #     self.logger.debug(f"Python code: {code}, for {visibility}")
+    #     return code
 
     def getFieldPythonCode(self, aField: PyutField):
         """
@@ -268,7 +257,8 @@ class IoPython(PyutIoPlugin):
         # Initialize with class relation
         fieldCode = "self."
 
-        fieldCode += self.getVisibilityPythonCode(aField.getVisibility())
+        # fieldCode += self.getVisibilityPythonCode(aField.getVisibility())
+        fieldCode += self._oglToPython.generateVisibilityPrefix(aField.getVisibility())
         # Add name
         fieldCode += str(aField.getName()) + " = "
 
@@ -314,11 +304,12 @@ class IoPython(PyutIoPlugin):
         @return list of strings
 
         """
-        methodCode: List[str] = []
-        currentCode = "def "
+        methodCode:  List[str] = []
+        currentCode: str = "def "
 
         # Add visibility
-        currentCode += self.getVisibilityPythonCode(aMethod.getVisibility())
+        # currentCode += self.getVisibilityPythonCode(aMethod.getVisibility())
+        currentCode += self._oglToPython.generateVisibilityPrefix(aMethod.getVisibility())
         # Add name
         currentCode += str(aMethod.getName()) + "(self"
 

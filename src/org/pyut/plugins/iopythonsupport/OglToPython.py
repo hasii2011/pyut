@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -7,10 +8,15 @@ from logging import getLogger
 from datetime import datetime
 
 from org.pyut.general.PyutVersion import PyutVersion
+from org.pyut.model.PyutClass import PyutClass
+
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class OglToPython:
-
+    """
+    Reads the Pyut data model in order to generated syntactically correct Python code
+    """
     def __init__(self):
 
         self.logger: Logger = getLogger(__name__)
@@ -29,3 +35,71 @@ class OglToPython:
             ]
 
         return topCode
+
+    def generateClassStanza(self, pyutClass: PyutClass) -> str:
+        """
+        Generates something like this
+
+        ```python
+            class Car:
+        ```
+        or with inheritance
+
+        ```python
+            class ElectricCar(BaseVehicle, Car):
+        ```
+`
+        Args:
+            pyutClass:   The data model class
+
+        Returns:
+            The Python class start stanza
+        """
+
+        generatedCode:     str             = f'class {pyutClass.getName()}'
+        parentPyutClasses: List[PyutClass] = cast(List[PyutClass], pyutClass.getParents())
+
+        if len(parentPyutClasses) > 0:  # Add parents
+            generatedCode = f'{generatedCode}('
+            for i in range(len(parentPyutClasses)):
+                generatedCode = f'{generatedCode}{parentPyutClasses[i].getName()}'
+                if i < len(parentPyutClasses) - 1:
+                    generatedCode = f'{generatedCode},'
+            generatedCode = f'{generatedCode})'
+        generatedCode = f'{generatedCode}:\n'
+
+        return generatedCode
+
+    def generateVisibilityPrefix(self, visibility: PyutVisibilityEnum) -> str:
+        """
+        Return the python code for the given enumeration value
+
+        Args:
+            visibility:
+
+        Returns:
+            The Python code that by convention depicts `method` or `field` visibility
+        """
+        code: str = ''
+        if visibility == PyutVisibilityEnum.PUBLIC:
+            code = ''
+        elif visibility == PyutVisibilityEnum.PROTECTED:
+            code = '_'
+        elif visibility == PyutVisibilityEnum.PRIVATE:
+            code = '__'
+        else:
+            self.logger.error(f"PyutToPython: Field code not supported : {visibility}")
+        self.logger.debug(f"Python code: {code}, for {visibility}")
+        return code
+
+    def indentStr(self, stringToIndent) -> str:
+        """
+        Indent one string by one unit
+
+        Args:
+            stringToIndent:  string to indent
+
+        Returns:
+            Indented string
+        """
+        return f'    {stringToIndent}'
