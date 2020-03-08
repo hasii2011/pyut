@@ -31,7 +31,7 @@ from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.PyutPlugin import PyutPlugin
 
 from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
-from org.pyut.plugins.iopythonsupport.OglToPython import OglToPython
+from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
 from org.pyut.plugins.iopythonsupport.ReverseEngineerPython import ReverseEngineerPython
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -54,7 +54,7 @@ class IoPython(PyutIoPlugin):
         self.logger: Logger = getLogger(__name__)
 
         self._reverseEngineer: ReverseEngineerPython = ReverseEngineerPython()
-        self._oglToPython:     OglToPython           = OglToPython()
+        self._oglToPython:     PyutToPython           = PyutToPython()
 
     def getName(self):
         """

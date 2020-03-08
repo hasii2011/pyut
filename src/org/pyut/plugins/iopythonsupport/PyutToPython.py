@@ -13,7 +13,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
-class OglToPython:
+class PyutToPython:
     """
     Reads the Pyut data model in order to generated syntactically correct Python code
     """
