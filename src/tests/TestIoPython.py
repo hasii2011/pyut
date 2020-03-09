@@ -15,6 +15,7 @@ from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.plugins.IoPython import IoPython
+from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -30,8 +31,10 @@ class TestIoPython(TestBase):
         TestIoPython.clsLogger = getLogger(__name__)
 
     def setUp(self):
-        self.logger: Logger = TestIoPython.clsLogger
-        self.plugin = IoPython(oglObjects=None, umlFrame=cast(UmlFrame, None))
+        self.logger: Logger   = TestIoPython.clsLogger
+        self.plugin: IoPython = IoPython(oglObjects=None, umlFrame=cast(UmlFrame, None))
+
+        self.pyutToPython: PyutToPython = PyutToPython()
 
     def tearDown(self):
         pass
@@ -71,7 +74,7 @@ class TestIoPython(TestBase):
 
         publicMethod: PyutMethod = PyutMethod(name='publicMethod', visibility=PyutVisibilityEnum.PUBLIC, returns='str')
 
-        defCode: List[str] = self.plugin.getOneMethodCode(publicMethod, writePass=False)
+        defCode: List[str] = self.pyutToPython.generateASingleMethodsCode(publicMethod, writePass=False)
         self.logger.info(f'Generated definition: {defCode}')
         unExpectedValue: int = -1
         actualValue:     int = defCode.__contains__('def publicMethod')
@@ -82,7 +85,7 @@ class TestIoPython(TestBase):
 
         publicMethod: PyutMethod = PyutMethod(name='privateMethod', visibility=PyutVisibilityEnum.PRIVATE, returns='str')
 
-        defCode: List[str] = self.plugin.getOneMethodCode(publicMethod, writePass=False)
+        defCode: List[str] = self.pyutToPython.generateASingleMethodsCode(publicMethod, writePass=False)
         self.logger.info(f'Generated definition: {defCode}')
         unExpectedValue: int = -1
         actualValue:     int = defCode.__contains__('def __privateMethod')
@@ -93,7 +96,7 @@ class TestIoPython(TestBase):
 
         publicMethod: PyutMethod = PyutMethod(name='protectedMethod', visibility=PyutVisibilityEnum.PROTECTED, returns='str')
 
-        defCode: List[str] = self.plugin.getOneMethodCode(publicMethod, writePass=False)
+        defCode: List[str] = self.pyutToPython.generateASingleMethodsCode(publicMethod, writePass=False)
         self.logger.info(f'Generated definition: {defCode}')
         unExpectedValue: int = -1
         actualValue:     int = defCode.__contains__('def -protectedMethod')

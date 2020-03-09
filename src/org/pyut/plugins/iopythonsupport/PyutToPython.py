@@ -10,6 +10,7 @@ from datetime import datetime
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutParam import PyutParam
 
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -122,17 +123,14 @@ class PyutToPython:
             currentCode = f'{currentCode}, '
         for i in range(len(params)):
             # Add param code
-            paramCode: str = ""
-            paramCode = f'{paramCode}{params[i].getName()}'
+            pyutParam: PyutParam = params[i]
 
-            if params[i].getDefaultValue() is not None:
-                paramCode += "=" + params[i].getDefaultValue()
-            if i < len(pyutMethod.getParams())-1:
-                paramCode += ", "
-            if (len(currentCode) % 80) + len(paramCode) > PyutToPython.MAX_WIDTH:  # Width limit
+            paramCode: str = self.generateParameter(currentParamNumber=i, pyutParam=pyutParam, pyutMethod=pyutMethod)
+
+            if (len(currentCode) % PyutToPython.MAX_WIDTH) + len(paramCode) > PyutToPython.MAX_WIDTH:  # Width limit
                 currentCode += "\n" + self.indentStr(self.indentStr(paramCode))
             else:
-                currentCode += paramCode
+                currentCode = f'{currentCode}{paramCode}'
 
         # End first(s) line(s)
         currentCode += "):\n"
@@ -161,6 +159,19 @@ class PyutToPython:
 
         # Return the field code
         return methodCode
+
+    def generateParameter(self, currentParamNumber: int, pyutParam: PyutParam, pyutMethod: PyutMethod) -> str:
+
+        paramCode: str = ""
+
+        paramCode = f'{paramCode}{pyutParam.getName()}'
+
+        if pyutParam.getDefaultValue() is not None:
+            paramCode = f'{paramCode}={pyutParam.getDefaultValue()}'
+        if currentParamNumber < len(pyutMethod.getParams()) - 1:
+            paramCode = f'{paramCode}, '
+
+        return paramCode
 
     def indentStr(self, stringToIndent) -> str:
         """
