@@ -282,7 +282,7 @@ class IoPython(PyutIoPlugin):
             lstCodeMethod = [txt]
 
             # Get code
-            subCode:       List[str] = self._pyutToPython.getOneMethodCode(aMethod)
+            subCode:       List[str] = self._pyutToPython.generateASingleMethodsCode(aMethod)
             lstCodeMethod += self.indent(subCode)
 
             clsMethods[aMethod.getName()] = lstCodeMethod
@@ -295,7 +295,7 @@ class IoPython(PyutIoPlugin):
                 lstCodeMethod = ["\n\n    #>-------------------------------" + "-----------------------------------------\n"]
 
                 # Get code
-                subCode = self._pyutToPython.getOneMethodCode(PyutMethod('__init__'), False)
+                subCode = self._pyutToPython.generateASingleMethodsCode(PyutMethod('__init__'), False)
 
                 # Indent and add to main code
                 for el in self.indent(subCode):

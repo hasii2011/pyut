@@ -16,7 +16,7 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 class PyutToPython:
 
-    MAX_WIDTH: int = 80
+    MAX_WIDTH: int = 120
 
     """
     Reads the Pyut data model in order to generated syntactically correct Python code
@@ -96,7 +96,7 @@ class PyutToPython:
         self.logger.debug(f"Python code: {code}, for {visibility}")
         return code
 
-    def getOneMethodCode(self, pyutMethod: PyutMethod, writePass: bool = True) -> List[str]:
+    def generateASingleMethodsCode(self, pyutMethod: PyutMethod, writePass: bool = True) -> List[str]:
         """
         Generate the Python code for the input method
 
@@ -108,22 +108,23 @@ class PyutToPython:
             A list that is the generated code
         """
         methodCode:  List[str] = []
-        currentCode: str = "def "
+        currentCode: str       = "def "
 
         # Add visibility
         currentCode += self.generateVisibilityPrefix(pyutMethod.getVisibility())
         # Add name
-        currentCode += str(pyutMethod.getName()) + "(self"
+        currentCode = f'{currentCode}{pyutMethod.getName()}(self'
 
         # Add parameters (parameter, parameter, parameter, ...)
         # TODO : add default value ?
         params = pyutMethod.getParams()
         if len(params) > 0:
-            currentCode += ", "
+            currentCode = f'{currentCode}, '
         for i in range(len(params)):
             # Add param code
-            paramCode = ""
-            paramCode += params[i].getName()
+            paramCode: str = ""
+            paramCode = f'{paramCode}{params[i].getName()}'
+
             if params[i].getDefaultValue() is not None:
                 paramCode += "=" + params[i].getDefaultValue()
             if i < len(pyutMethod.getParams())-1:
@@ -138,7 +139,6 @@ class PyutToPython:
 
         # Add to the method code
         methodCode.append(currentCode)
-        # currentCode = ""
 
         # Add comments
         methodCode.append(self.indentStr('"""\n'))
