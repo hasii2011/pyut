@@ -42,6 +42,7 @@ from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 [
     ID_TXTMETHODNAME,
@@ -353,7 +354,10 @@ class DlgEditMethod(BaseDlgEdit):
         self._pyutMethod.setModifiers(modifs)
         self._pyutMethod.setReturns(self._txtReturn.GetValue())
         self._pyutMethod.setParams(self._pyutMethodCopy.getParams())
-        self._pyutMethod.setVisibility(self._rdbVisibility.GetStringSelection())
+
+        visStr:      str               = self._rdbVisibility.GetStringSelection()
+        visibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
+        self._pyutMethod.setVisibility(visibility)
 
         # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()
