@@ -125,7 +125,7 @@ class PyutToPython:
             # Add param code
             pyutParam: PyutParam = params[i]
 
-            paramCode: str = self.generateParameter(currentParamNumber=i, pyutParam=pyutParam, pyutMethod=pyutMethod)
+            paramCode: str = self.generateParameter(currentParamNumber=i, numberOfParameters=len(pyutMethod.getParams()), pyutParam=pyutParam)
 
             if (len(currentCode) % PyutToPython.MAX_WIDTH) + len(paramCode) > PyutToPython.MAX_WIDTH:  # Width limit
                 currentCode += "\n" + self.indentStr(self.indentStr(paramCode))
@@ -160,7 +160,17 @@ class PyutToPython:
         # Return the field code
         return methodCode
 
-    def generateParameter(self, currentParamNumber: int, pyutParam: PyutParam, pyutMethod: PyutMethod) -> str:
+    def generateParameter(self, currentParamNumber: int, numberOfParameters: int, pyutParam: PyutParam) -> str:
+        """
+
+        Args:
+            currentParamNumber: The current parameter #
+            numberOfParameters: The number of parameters the method has
+            pyutParam:          What we are generating code from
+
+        Returns:
+            Python code for a single parameter
+        """
 
         paramCode: str = ""
 
@@ -168,7 +178,7 @@ class PyutToPython:
 
         if pyutParam.getDefaultValue() is not None:
             paramCode = f'{paramCode}={pyutParam.getDefaultValue()}'
-        if currentParamNumber < len(pyutMethod.getParams()) - 1:
+        if currentParamNumber < numberOfParameters - 1:
             paramCode = f'{paramCode}, '
 
         return paramCode
