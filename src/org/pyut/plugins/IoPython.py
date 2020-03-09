@@ -41,8 +41,6 @@ from org.pyut.general.Globals import _
 
 class IoPython(PyutIoPlugin):
 
-    MAX_WIDTH: int = 80
-
     """
     Python code generation/reverse engineering
 
@@ -54,7 +52,7 @@ class IoPython(PyutIoPlugin):
         self.logger: Logger = getLogger(__name__)
 
         self._reverseEngineer: ReverseEngineerPython = ReverseEngineerPython()
-        self._oglToPython:     PyutToPython           = PyutToPython()
+        self._pyutToPython:    PyutToPython           = PyutToPython()
 
     def getName(self):
         """
@@ -122,7 +120,7 @@ class IoPython(PyutIoPlugin):
         self.logger.info("IoPython Saving...")
         classes = {}
 
-        generatedClassDoc: List[str] = self._oglToPython.generateTopCode()
+        generatedClassDoc: List[str] = self._pyutToPython.generateTopCode()
 
         # Create classes code for each object
         for oglClass in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
@@ -130,7 +128,7 @@ class IoPython(PyutIoPlugin):
             oglClass:  OglClass  = cast(OglClass, oglClass)
             pyutClass: PyutClass = oglClass.getPyutObject()
 
-            generatedStanza:    str       = self._oglToPython.generateClassStanza(pyutClass)
+            generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
             generatedClassCode: List[str] = [generatedStanza]
 
             clsMethods = self.getMethodsDicCode(pyutClass)
@@ -148,7 +146,7 @@ class IoPython(PyutIoPlugin):
                 try:
                     methodCode = clsMethods[methodName]
                     generatedClassCode += methodCode
-                except (ValueError, Exception) as e:
+                except (ValueError, Exception, KeyError) as e:
                     self.logger.error(f'{e}')
 
             # Save to classes dictionary
@@ -226,28 +224,6 @@ class IoPython(PyutIoPlugin):
             self.logger.error(f"Error while reversing engineering Python file(s)! {e}")
         EndBusyCursor()
 
-    # def getVisibilityPythonCode(self, visibility: PyutVisibilityEnum):
-    #     """
-    #     Return the python code for a given enum value which represents the visibility
-    #
-    #     @return String
-    #
-    #     """
-    #     # Note : Tested
-    #     vis = visibility
-    #     if vis == PyutVisibilityEnum.PUBLIC:
-    #         code = ''
-    #     elif vis == PyutVisibilityEnum.PROTECTED:
-    #         code = '_'
-    #     elif vis == PyutVisibilityEnum.PRIVATE:
-    #         code = '__'
-    #     else:
-    #         self.logger.error(f"IoPython: Field code not supported : {vis}")
-    #         code = ''
-    #     # print " = " + str(code)
-    #     self.logger.debug(f"Python code: {code}, for {visibility}")
-    #     return code
-
     def getFieldPythonCode(self, aField: PyutField):
         """
         Return the python code for a given field
@@ -257,8 +233,7 @@ class IoPython(PyutIoPlugin):
         # Initialize with class relation
         fieldCode = "self."
 
-        # fieldCode += self.getVisibilityPythonCode(aField.getVisibility())
-        fieldCode += self._oglToPython.generateVisibilityPrefix(aField.getVisibility())
+        fieldCode += self._pyutToPython.generateVisibilityPrefix(aField.getVisibility())
         # Add name
         fieldCode += str(aField.getName()) + " = "
 
@@ -294,72 +269,6 @@ class IoPython(PyutIoPlugin):
             lstOut.append(self.indentStr(str(el)))
         return lstOut
 
-    def getOneMethodCode(self, aMethod: PyutMethod, writePass: bool = True) -> List[str]:
-        """
-        Return the python code for a given method
-
-        @param aMethod : ..
-        @param writePass : Write "pass" in the code ?
-
-        @return list of strings
-
-        """
-        methodCode:  List[str] = []
-        currentCode: str = "def "
-
-        # Add visibility
-        # currentCode += self.getVisibilityPythonCode(aMethod.getVisibility())
-        currentCode += self._oglToPython.generateVisibilityPrefix(aMethod.getVisibility())
-        # Add name
-        currentCode += str(aMethod.getName()) + "(self"
-
-        # Add parameters (parameter, parameter, parameter, ...)
-        # TODO : add default value ?
-        params = aMethod.getParams()
-        if len(params) > 0:
-            currentCode += ", "
-        for i in range(len(params)):
-            # Add param code
-            paramCode = ""
-            paramCode += params[i].getName()
-            if params[i].getDefaultValue() is not None:
-                paramCode += "=" + params[i].getDefaultValue()
-            if i < len(aMethod.getParams())-1:
-                paramCode += ", "
-            if (len(currentCode) % 80) + len(paramCode) > IoPython.MAX_WIDTH:  # Width limit
-                currentCode += "\n" + self.indentStr(self.indentStr(paramCode))
-            else:
-                currentCode += paramCode
-
-        # End first(s) line(s)
-        currentCode += "):\n"
-
-        # Add to the method code
-        methodCode.append(currentCode)
-        # currentCode = ""
-
-        # Add comments
-        methodCode.append(self.indentStr('"""\n'))
-        methodCode.append(self.indentStr('(TODO : add description)\n\n'))
-
-        # Add parameters
-        params = aMethod.getParams()
-        # if len(params)>0: currentCode+=", "
-        for i in range(len(params)):
-            methodCode.append(self.indentStr('@param ' + str(params[i].getType()) + ' ' + params[i].getName() + '\n'))
-
-        # Add others
-        if aMethod.getReturns() is not None and len(str(aMethod.getReturns())) > 0:
-            methodCode.append(self.indentStr('@return ' + str(aMethod.getReturns()) + '\n'))
-        methodCode.append(self.indentStr('@since 1.0' + '\n'))
-        methodCode.append(self.indentStr('@author ' + '\n'))
-        methodCode.append(self.indentStr('"""\n'))
-        if writePass:
-            methodCode.append(self.indentStr('pass\n'))
-
-        # Return the field code
-        return methodCode
-
     def getMethodsDicCode(self, aClass):
         """
         Return a dictionary of method code for a given class
@@ -373,7 +282,7 @@ class IoPython(PyutIoPlugin):
             lstCodeMethod = [txt]
 
             # Get code
-            subCode:       List[str] = self.getOneMethodCode(aMethod)
+            subCode:       List[str] = self._pyutToPython.getOneMethodCode(aMethod)
             lstCodeMethod += self.indent(subCode)
 
             clsMethods[aMethod.getName()] = lstCodeMethod
@@ -386,7 +295,7 @@ class IoPython(PyutIoPlugin):
                 lstCodeMethod = ["\n\n    #>-------------------------------" + "-----------------------------------------\n"]
 
                 # Get code
-                subCode = self.getOneMethodCode(PyutMethod('__init__'), False)
+                subCode = self._pyutToPython.getOneMethodCode(PyutMethod('__init__'), False)
 
                 # Indent and add to main code
                 for el in self.indent(subCode):
