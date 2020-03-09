@@ -96,12 +96,12 @@ class PyutToPython:
         self.logger.debug(f"Python code: {code}, for {visibility}")
         return code
 
-    def getOneMethodCode(self, aMethod: PyutMethod, writePass: bool = True) -> List[str]:
+    def getOneMethodCode(self, pyutMethod: PyutMethod, writePass: bool = True) -> List[str]:
         """
         Generate the Python code for the input method
 
         Args:
-            aMethod:    The PyutMethod for which we will generate code
+            pyutMethod:    The PyutMethod for which we will generate code
             writePass:  If `True` write `pass` in the code
 
         Returns:
@@ -111,13 +111,13 @@ class PyutToPython:
         currentCode: str = "def "
 
         # Add visibility
-        currentCode += self.generateVisibilityPrefix(aMethod.getVisibility())
+        currentCode += self.generateVisibilityPrefix(pyutMethod.getVisibility())
         # Add name
-        currentCode += str(aMethod.getName()) + "(self"
+        currentCode += str(pyutMethod.getName()) + "(self"
 
         # Add parameters (parameter, parameter, parameter, ...)
         # TODO : add default value ?
-        params = aMethod.getParams()
+        params = pyutMethod.getParams()
         if len(params) > 0:
             currentCode += ", "
         for i in range(len(params)):
@@ -126,7 +126,7 @@ class PyutToPython:
             paramCode += params[i].getName()
             if params[i].getDefaultValue() is not None:
                 paramCode += "=" + params[i].getDefaultValue()
-            if i < len(aMethod.getParams())-1:
+            if i < len(pyutMethod.getParams())-1:
                 paramCode += ", "
             if (len(currentCode) % 80) + len(paramCode) > PyutToPython.MAX_WIDTH:  # Width limit
                 currentCode += "\n" + self.indentStr(self.indentStr(paramCode))
@@ -145,14 +145,14 @@ class PyutToPython:
         methodCode.append(self.indentStr('(TODO : add description)\n\n'))
 
         # Add parameters
-        params = aMethod.getParams()
+        params = pyutMethod.getParams()
         # if len(params)>0: currentCode+=", "
         for i in range(len(params)):
             methodCode.append(self.indentStr('@param ' + str(params[i].getType()) + ' ' + params[i].getName() + '\n'))
 
         # Add others
-        if aMethod.getReturns() is not None and len(str(aMethod.getReturns())) > 0:
-            methodCode.append(self.indentStr('@return ' + str(aMethod.getReturns()) + '\n'))
+        if pyutMethod.getReturns() is not None and len(str(pyutMethod.getReturns())) > 0:
+            methodCode.append(self.indentStr('@return ' + str(pyutMethod.getReturns()) + '\n'))
         methodCode.append(self.indentStr('@since 1.0' + '\n'))
         methodCode.append(self.indentStr('@author ' + '\n'))
         methodCode.append(self.indentStr('"""\n'))
