@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -15,13 +16,11 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.plugins.IoPython import IoPython
 
+from org.pyut.ui.UmlFrame import UmlFrame
+
 
 class TestIoPython(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 
@@ -32,7 +31,7 @@ class TestIoPython(TestBase):
 
     def setUp(self):
         self.logger: Logger = TestIoPython.clsLogger
-        self.plugin = IoPython(oglObjects=None, umlFrame=None)
+        self.plugin = IoPython(oglObjects=None, umlFrame=cast(UmlFrame, None))
 
     def tearDown(self):
         pass
@@ -92,14 +91,14 @@ class TestIoPython(TestBase):
 
     def testGetOneMethodCodeProtected(self):
 
-        publicMethod: PyutMethod = PyutMethod(name='protectedeMethod', visibility=PyutVisibilityEnum.PROTECTED, returns='str')
+        publicMethod: PyutMethod = PyutMethod(name='protectedMethod', visibility=PyutVisibilityEnum.PROTECTED, returns='str')
 
         defCode: List[str] = self.plugin.getOneMethodCode(publicMethod, writePass=False)
         self.logger.info(f'Generated definition: {defCode}')
         unExpectedValue: int = -1
-        actualValue:     int = defCode.__contains__('def -protectedeMethod')
+        actualValue:     int = defCode.__contains__('def -protectedMethod')
 
-        self.assertNotEqual(unExpectedValue, actualValue, f'Did not code generate protectec method correctly: `{defCode}`')
+        self.assertNotEqual(unExpectedValue, actualValue, f'Did not code generate protected method correctly: `{defCode}`')
 
 #
 # def testAskWhichClassesToReverse2():
