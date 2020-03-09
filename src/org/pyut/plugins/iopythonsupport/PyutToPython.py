@@ -17,7 +17,9 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 class PyutToPython:
 
-    MAX_WIDTH: int = 120
+    MAX_WIDTH:            int = 120
+    CLASS_COMMENTS_START: str = '"""'
+    CLASS_COMMENTS_END:   str = '"""'
 
     """
     Reads the Pyut data model in order to generated syntactically correct Python code
@@ -60,7 +62,6 @@ class PyutToPython:
         Returns:
             The Python class start stanza
         """
-
         generatedCode:     str             = f'class {pyutClass.getName()}'
         parentPyutClasses: List[PyutClass] = cast(List[PyutClass], pyutClass.getParents())
 
@@ -72,8 +73,44 @@ class PyutToPython:
                     generatedCode = f'{generatedCode},'
             generatedCode = f'{generatedCode})'
         generatedCode = f'{generatedCode}:\n'
+        generatedCode = f'{generatedCode}{self.__indentStr(PyutToPython.CLASS_COMMENTS_START)}\n'
+        generatedCode = f'{generatedCode}{self.__indentStr(pyutClass.getDescription())}\n'   # TODO need to split lines according to MAX_WIDTH
+        generatedCode = f'{generatedCode}{self.__indentStr(PyutToPython.CLASS_COMMENTS_END)}\n'
 
         return generatedCode
+
+    def generateASingleMethodsCode(self, pyutMethod: PyutMethod, writePass: bool = True) -> List[str]:
+        """
+        Generate the Python code for the input method
+
+        Args:
+            pyutMethod:    The PyutMethod for which we will generate code
+            writePass:  If `True` write `pass` in the code
+
+        Returns:
+            A list that is the generated code
+        """
+        methodCode:  List[str] = []
+
+        currentCode: str = self._generateMethodDefinitionStanza(pyutMethod)
+        # Add parameters (parameter, parameter, parameter, ...)
+        params = pyutMethod.getParams()
+        currentCode = self._generateParametersCode(currentCode, params)
+        currentCode = f'{currentCode}):\n'
+
+        # Add to the method code
+        methodCode.append(currentCode)
+
+        # Add comments
+        methodCode.append(self.__indentStr('"""\n'))
+        methodCode = self._generateMethodComments(methodCode, pyutMethod)
+        methodCode.append(self.__indentStr('"""\n'))
+
+        if writePass:
+            methodCode.append(self.__indentStr('pass\n'))
+
+        # Return the field code
+        return methodCode
 
     def generateVisibilityPrefix(self, visibility: PyutVisibilityEnum) -> str:
         """
@@ -97,70 +134,42 @@ class PyutToPython:
         self.logger.debug(f"Python code: {code}, for {visibility}")
         return code
 
-    def generateASingleMethodsCode(self, pyutMethod: PyutMethod, writePass: bool = True) -> List[str]:
+    def _generateMethodDefinitionStanza(self, pyutMethod: PyutMethod):
         """
-        Generate the Python code for the input method
+        Follow Python conventions for method visibility
 
+        Something like:
+        ```python
+            def publicMethod(self
+            def _protectedMethod(self
+            def __privateMethod(self
+        ```
         Args:
-            pyutMethod:    The PyutMethod for which we will generate code
-            writePass:  If `True` write `pass` in the code
+            pyutMethod: The method whose code we are generating
 
         Returns:
-            A list that is the generated code
+            The method start stanza
         """
-        methodCode:  List[str] = []
-        currentCode: str       = "def "
-
-        # Add visibility
-        currentCode += self.generateVisibilityPrefix(pyutMethod.getVisibility())
-        # Add name
+        currentCode: str = "def "
+        currentCode = f'{currentCode}{self.generateVisibilityPrefix(pyutMethod.getVisibility())}'
         currentCode = f'{currentCode}{pyutMethod.getName()}(self'
 
-        # Add parameters (parameter, parameter, parameter, ...)
-        # TODO : add default value ?
-        params = pyutMethod.getParams()
+        return currentCode
+
+    def _generateParametersCode(self, currentCode: str, params: List[PyutParam]):
+
         if len(params) > 0:
             currentCode = f'{currentCode}, '
+        # Add parameter code
         for i in range(len(params)):
-            # Add param code
             pyutParam: PyutParam = params[i]
+            numParams: int = len(params)
+            paramCode: str = self.__generateParameter(currentParamNumber=i, numberOfParameters=numParams, pyutParam=pyutParam)
 
-            paramCode: str = self.generateParameter(currentParamNumber=i, numberOfParameters=len(pyutMethod.getParams()), pyutParam=pyutParam)
+            currentCode = self.__addParamToMethodSignature(currentCode, paramCode)
+        return currentCode
 
-            if (len(currentCode) % PyutToPython.MAX_WIDTH) + len(paramCode) > PyutToPython.MAX_WIDTH:  # Width limit
-                currentCode += "\n" + self.indentStr(self.indentStr(paramCode))
-            else:
-                currentCode = f'{currentCode}{paramCode}'
-
-        # End first(s) line(s)
-        currentCode += "):\n"
-
-        # Add to the method code
-        methodCode.append(currentCode)
-
-        # Add comments
-        methodCode.append(self.indentStr('"""\n'))
-        methodCode.append(self.indentStr('(TODO : add description)\n\n'))
-
-        # Add parameters
-        params = pyutMethod.getParams()
-        # if len(params)>0: currentCode+=", "
-        for i in range(len(params)):
-            methodCode.append(self.indentStr('@param ' + str(params[i].getType()) + ' ' + params[i].getName() + '\n'))
-
-        # Add others
-        if pyutMethod.getReturns() is not None and len(str(pyutMethod.getReturns())) > 0:
-            methodCode.append(self.indentStr('@return ' + str(pyutMethod.getReturns()) + '\n'))
-        methodCode.append(self.indentStr('@since 1.0' + '\n'))
-        methodCode.append(self.indentStr('@author ' + '\n'))
-        methodCode.append(self.indentStr('"""\n'))
-        if writePass:
-            methodCode.append(self.indentStr('pass\n'))
-
-        # Return the field code
-        return methodCode
-
-    def generateParameter(self, currentParamNumber: int, numberOfParameters: int, pyutParam: PyutParam) -> str:
+    def __generateParameter(self, currentParamNumber: int, numberOfParameters: int, pyutParam: PyutParam) -> str:
         """
 
         Args:
@@ -183,7 +192,42 @@ class PyutToPython:
 
         return paramCode
 
-    def indentStr(self, stringToIndent) -> str:
+    def _generateMethodComments(self, methodCode, pyutMethod):
+
+        methodCode.append(self.__indentStr('(TODO : add description)\n\n'))
+
+        params: List[PyutParam] = pyutMethod.getParams()
+
+        if len(params) > 0:
+            methodCode.append(self.__indentStr(f'Args:\n'))
+
+        for i in range(len(params)):
+            param: PyutParam = params[i]
+            methodCode.append(self.__indentStr(self.__indentStr(f'{param.getName()}\n')))
+        # Add others
+        if pyutMethod.getReturns() is not None and len(str(pyutMethod.getReturns())) > 0:
+            methodCode.append(self.__indentStr('Returns:\n'))
+            methodCode.append(self.__indentStr(self.__indentStr(f'{pyutMethod.getReturns()}\n')))
+
+        return methodCode
+
+    def __addParamToMethodSignature(self, currentCode, paramCode):
+        """
+        Is smart enough to know if the parameters list is so long it must be indented
+        Args:
+            currentCode:    Generated 'so far` code
+            paramCode:      Generated code for current parameter
+
+        Returns:
+            Updated code
+        """
+        if (len(currentCode) % PyutToPython.MAX_WIDTH) + len(paramCode) > PyutToPython.MAX_WIDTH:  # Width limit
+            currentCode += "\n" + self.__indentStr(self.__indentStr(paramCode))
+        else:
+            currentCode = f'{currentCode}{paramCode}'
+        return currentCode
+
+    def __indentStr(self, stringToIndent) -> str:
         """
         Indent one string by one unit
 
