@@ -131,6 +131,9 @@ class IoPython(PyutIoPlugin):
             generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
             generatedClassCode: List[str] = [generatedStanza]
 
+            for pyutField in pyutClass.getFields():
+                generatedClassCode.append(self.indentStr(self.indentStr(self.getFieldPythonCode(pyutField))))
+
             clsMethods = self.getMethodsDicCode(pyutClass)
 
             # Add __init__ Method
@@ -305,8 +308,6 @@ class IoPython(PyutIoPlugin):
 
             # Add fields
             clsInit = clsMethods['__init__']
-            for aField in aClass.getFields():
-                clsInit.append(self.indentStr(self.indentStr(self.getFieldPythonCode(aField))))
         return clsMethods
 
     def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):
