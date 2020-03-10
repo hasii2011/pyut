@@ -20,6 +20,7 @@ class PyutToPython:
     MAX_WIDTH:            int = 120
     CLASS_COMMENTS_START: str = '"""'
     CLASS_COMMENTS_END:   str = '"""'
+    SINGLE_TAB:           str = '    '
 
     """
     Reads the Pyut data model in order to generated syntactically correct Python code
@@ -203,11 +204,11 @@ class PyutToPython:
 
         for i in range(len(params)):
             param: PyutParam = params[i]
-            methodCode.append(self.__indentStr(self.__indentStr(f'{param.getName()}\n')))
+            methodCode.append(self.__indentStr(f'{param.getName()}:\n', 2))
         # Add others
         if pyutMethod.getReturns() is not None and len(str(pyutMethod.getReturns())) > 0:
             methodCode.append(self.__indentStr('Returns:\n'))
-            methodCode.append(self.__indentStr(self.__indentStr(f'{pyutMethod.getReturns()}\n')))
+            methodCode.append(self.__indentStr(f'{pyutMethod.getReturns()}\n', 2))
 
         return methodCode
 
@@ -227,14 +228,19 @@ class PyutToPython:
             currentCode = f'{currentCode}{paramCode}'
         return currentCode
 
-    def __indentStr(self, stringToIndent) -> str:
+    def __indentStr(self, stringToIndent: str, numTabs: int = 1) -> str:
         """
         Indent one string by one unit
 
         Args:
             stringToIndent:  string to indent
+            numTabs:         number of tabs to insert
 
         Returns:
             Indented string
         """
-        return f'    {stringToIndent}'
+        insertedTabs: str = ''
+        for x in range(numTabs):
+            insertedTabs = f'{insertedTabs}{PyutToPython.SINGLE_TAB}'
+
+        return f'{insertedTabs}{stringToIndent}'
