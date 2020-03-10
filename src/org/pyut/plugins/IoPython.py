@@ -278,7 +278,7 @@ class IoPython(PyutIoPlugin):
         clsMethods = {}
         for aMethod in aClass.getMethods():
             # Separation
-            txt = "\n\n" + self.indentStr("#>---------------------------------"  "---------------------------------------\n")
+            txt = ""
             lstCodeMethod = [txt]
 
             # Get code
@@ -292,7 +292,7 @@ class IoPython(PyutIoPlugin):
             # Create method __init__ if it does not exist
             if '__init__' not in clsMethods:
                 # Separation
-                lstCodeMethod = ["\n\n    #>-------------------------------" + "-----------------------------------------\n"]
+                lstCodeMethod = ["\n\n\n"]
 
                 # Get code
                 subCode = self._pyutToPython.generateASingleMethodsCode(PyutMethod('__init__'), False)
