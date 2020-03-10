@@ -25,7 +25,6 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutField import PyutField
 
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.PyutPlugin import PyutPlugin
@@ -41,6 +40,7 @@ from org.pyut.general.Globals import _
 
 class IoPython(PyutIoPlugin):
 
+    SPECIAL_PYTHON_CONSTRUCTOR: str = '__init__'
     """
     Python code generation/reverse engineering
 
@@ -131,16 +131,13 @@ class IoPython(PyutIoPlugin):
             generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
             generatedClassCode: List[str] = [generatedStanza]
 
-            for pyutField in pyutClass.getFields():
-                generatedClassCode.append(self.indentStr(self.indentStr(self.getFieldPythonCode(pyutField))))
-
             clsMethods = self.getMethodsDicCode(pyutClass)
 
             # Add __init__ Method
-            if '__init__' in clsMethods:
-                methodCode = clsMethods['__init__']
+            if IoPython.SPECIAL_PYTHON_CONSTRUCTOR in clsMethods:
+                methodCode = clsMethods[IoPython.SPECIAL_PYTHON_CONSTRUCTOR]
                 generatedClassCode += methodCode
-                del clsMethods['__init__']
+                del clsMethods[IoPython.SPECIAL_PYTHON_CONSTRUCTOR]
 
             # Add others methods in order
             for aMethod in pyutClass.getMethods():
@@ -150,7 +147,7 @@ class IoPython(PyutIoPlugin):
                     methodCode = clsMethods[methodName]
                     generatedClassCode += methodCode
                 except (ValueError, Exception, KeyError) as e:
-                    self.logger.error(f'{e}')
+                    self.logger.warning(f'{e}')
 
             # Save to classes dictionary
             generatedClassCode.append("\n\n")
@@ -227,31 +224,6 @@ class IoPython(PyutIoPlugin):
             self.logger.error(f"Error while reversing engineering Python file(s)! {e}")
         EndBusyCursor()
 
-    def getFieldPythonCode(self, aField: PyutField):
-        """
-        Return the python code for a given field
-
-        @return String
-        """
-        # Initialize with class relation
-        fieldCode = "self."
-
-        fieldCode += self._pyutToPython.generateVisibilityPrefix(aField.getVisibility())
-        # Add name
-        fieldCode += str(aField.getName()) + " = "
-
-        # Add default value
-        value = aField.getDefaultValue()
-        if value == '':
-            fieldCode += 'None'  # TODO : deduct this from type
-        else:
-            fieldCode += str(value)
-
-        # Add type
-        fieldCode += '\t\t\t\t\t#' + str(aField.getType()) + '\n'
-
-        return fieldCode
-
     def indentStr(self, aStr):
         """
         Indent one string by one unit
@@ -295,7 +267,7 @@ class IoPython(PyutIoPlugin):
             # Create method __init__ if it does not exist
             if '__init__' not in clsMethods:
                 # Separation
-                lstCodeMethod = ["\n\n\n"]
+                lstCodeMethod = []
 
                 # Get code
                 subCode = self._pyutToPython.generateASingleMethodsCode(PyutMethod('__init__'), False)
@@ -308,6 +280,10 @@ class IoPython(PyutIoPlugin):
 
             # Add fields
             clsInit = clsMethods['__init__']
+            for pyutField in aClass.getFields():
+                clsInit.append(self.indentStr(self.indentStr(self._pyutToPython.generateFieldPythonCode(pyutField))))
+            clsInit.append('\n')
+
         return clsMethods
 
     def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):

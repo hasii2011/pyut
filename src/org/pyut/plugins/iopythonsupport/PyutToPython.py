@@ -9,6 +9,7 @@ from datetime import datetime
 
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 
@@ -110,8 +111,32 @@ class PyutToPython:
         if writePass:
             methodCode.append(self.__indentStr('pass\n'))
 
-        # Return the field code
+        methodCode.append('\n')
         return methodCode
+
+    def generateFieldPythonCode(self, pyutField: PyutField):
+        """
+        Generate the Python code for a given field
+
+        Args:
+            pyutField:   The PyutField that is the source of our code generation
+
+        Returns:
+            Python Code !!
+        """
+        fieldCode: str = "self."
+
+        fieldCode = f'{fieldCode}{self.generateVisibilityPrefix(pyutField.getVisibility())}'
+        fieldCode = f'{fieldCode}{pyutField.getName()}: {pyutField.getType()}'
+
+        value = pyutField.getDefaultValue()
+        if value == '':
+            fieldCode = f'{fieldCode} = None'
+        else:
+            fieldCode = f'{fieldCode} = {value}'
+
+        fieldCode = f'{fieldCode}\n'
+        return fieldCode
 
     def generateVisibilityPrefix(self, visibility: PyutVisibilityEnum) -> str:
         """
