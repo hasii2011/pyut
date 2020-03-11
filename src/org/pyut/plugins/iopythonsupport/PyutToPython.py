@@ -23,6 +23,8 @@ class PyutToPython:
     CLASS_COMMENTS_END:   str = '"""'
     SINGLE_TAB:           str = '    '
 
+    SPECIAL_PYTHON_CONSTRUCTOR: str = '__init__'
+
     """
     Reads the Pyut data model in order to generated syntactically correct Python code
     """
@@ -80,6 +82,49 @@ class PyutToPython:
         generatedCode = f'{generatedCode}{self.__indentStr(PyutToPython.CLASS_COMMENTS_END)}\n'
 
         return generatedCode
+
+    def generateMethodsCode(self, pyutClass: PyutClass):
+        """
+        Return a dictionary of method code for a given class
+
+        Args:
+            pyutClass:  The data model class for which we have to generate a bunch fo code for
+
+        Returns:
+            A bunch of code that is the code for this class
+        """
+        clsMethods = {}
+        for aMethod in pyutClass.getMethods():
+            # Separation
+            txt = ""
+            lstCodeMethod = [txt]
+
+            # Get code
+            subCode:       List[str] = self.generateASingleMethodsCode(aMethod)
+            lstCodeMethod += self.indent(subCode)
+
+            clsMethods[aMethod.getName()] = lstCodeMethod
+
+        # Add fields
+        if len(pyutClass.getFields()) > 0:
+            # Create method __init__ if it does not exist
+            if PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR not in clsMethods:
+                # Separation
+                lstCodeMethod = []
+
+                subCode = self.generateASingleMethodsCode(PyutMethod(PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR), False)
+
+                for el in self.indent(subCode):
+                    lstCodeMethod.append(str(el))
+
+                clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR] = lstCodeMethod
+
+            clsInit = clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR]
+            for pyutField in pyutClass.getFields():
+                clsInit.append(self.__indentStr(self.__indentStr(self.generateFieldPythonCode(pyutField))))
+            clsInit.append('\n')
+
+        return clsMethods
 
     def generateASingleMethodsCode(self, pyutMethod: PyutMethod, writePass: bool = True) -> List[str]:
         """
@@ -269,3 +314,18 @@ class PyutToPython:
             insertedTabs = f'{insertedTabs}{PyutToPython.SINGLE_TAB}'
 
         return f'{insertedTabs}{stringToIndent}'
+
+    def indent(self, listIn: List[str]) -> List[str]:
+        """
+        Indent every line in listIn by one unit
+
+        Args:
+            listIn: Many strings
+
+        Returns:
+            A new list with indented strings
+        """
+        listOut: List[str] = []
+        for el in listIn:
+            listOut.append(self.__indentStr(str(el)))
+        return listOut

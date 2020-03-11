@@ -24,8 +24,6 @@ from wx import Yield as wxYield
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.model.PyutMethod import PyutMethod
-
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.PyutPlugin import PyutPlugin
 
@@ -116,10 +114,9 @@ class IoPython(PyutIoPlugin):
         if directory == "":
             return False
 
-        # Init
         self.logger.info("IoPython Saving...")
+        
         classes = {}
-
         generatedClassDoc: List[str] = self._pyutToPython.generateTopCode()
 
         # Create classes code for each object
@@ -131,7 +128,7 @@ class IoPython(PyutIoPlugin):
             generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
             generatedClassCode: List[str] = [generatedStanza]
 
-            clsMethods = self.getMethodsDicCode(pyutClass)
+            clsMethods = self._pyutToPython.generateMethodsCode(pyutClass)
 
             # Add __init__ Method
             if IoPython.SPECIAL_PYTHON_CONSTRUCTOR in clsMethods:
@@ -155,8 +152,9 @@ class IoPython(PyutIoPlugin):
 
         # Add classes code
         for (className, classCode) in list(classes.items()):
-            # filename = directory + osSep + str(className) + ".py"
+
             filename: str = f'{directory}{osSep}{str(className)}.py'
+
             file = open(filename, "w")
             file.writelines(generatedClassDoc)
             file.writelines(classCode)
@@ -243,48 +241,6 @@ class IoPython(PyutIoPlugin):
         for el in lstIn:
             lstOut.append(self.indentStr(str(el)))
         return lstOut
-
-    def getMethodsDicCode(self, aClass):
-        """
-        Return a dictionary of method code for a given class
-
-        @return dictionary of String, keys are methods names
-        """
-        clsMethods = {}
-        for aMethod in aClass.getMethods():
-            # Separation
-            txt = ""
-            lstCodeMethod = [txt]
-
-            # Get code
-            subCode:       List[str] = self._pyutToPython.generateASingleMethodsCode(aMethod)
-            lstCodeMethod += self.indent(subCode)
-
-            clsMethods[aMethod.getName()] = lstCodeMethod
-
-        # Add fields
-        if len(aClass.getFields()) > 0:
-            # Create method __init__ if it does not exist
-            if '__init__' not in clsMethods:
-                # Separation
-                lstCodeMethod = []
-
-                # Get code
-                subCode = self._pyutToPython.generateASingleMethodsCode(PyutMethod('__init__'), False)
-
-                # Indent and add to main code
-                for el in self.indent(subCode):
-                    lstCodeMethod.append(str(el))
-
-                clsMethods['__init__'] = lstCodeMethod
-
-            # Add fields
-            clsInit = clsMethods['__init__']
-            for pyutField in aClass.getFields():
-                clsInit.append(self.indentStr(self.indentStr(self._pyutToPython.generateFieldPythonCode(pyutField))))
-            clsInit.append('\n')
-
-        return clsMethods
 
     def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):
         """
