@@ -13,6 +13,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutType import PyutType
 
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -147,7 +148,13 @@ class PyutToPython:
         # Add parameters (parameter, parameter, parameter, ...)
         params = pyutMethod.getParams()
         currentCode = self._generateParametersCode(currentCode, params)
-        currentCode = f'{currentCode}):\n'
+        currentCode = f'{currentCode})'
+
+        returnType: PyutType = pyutMethod.getReturns()
+        if returnType is not None and returnType.value != '':
+            currentCode = f'{currentCode} -> {returnType.value}'
+
+        currentCode = f'{currentCode}:\n'
 
         # Add to the method code
         methodCode.append(currentCode)
@@ -260,8 +267,11 @@ class PyutToPython:
 
         paramCode = f'{paramCode}{pyutParam.getName()}'
 
+        paramType: PyutType = pyutParam.getType()
+        if paramType is not None and paramType.value != '':
+            paramCode = f'{paramCode}: {paramType.value}'
         if pyutParam.getDefaultValue() is not None:
-            paramCode = f'{paramCode}={pyutParam.getDefaultValue()}'
+            paramCode = f'{paramCode} = {pyutParam.getDefaultValue()}'
         if currentParamNumber < numberOfParameters - 1:
             paramCode = f'{paramCode}, '
 
@@ -289,6 +299,7 @@ class PyutToPython:
     def __addParamToMethodSignature(self, currentCode, paramCode):
         """
         Is smart enough to know if the parameters list is so long it must be indented
+
         Args:
             currentCode:    Generated 'so far` code
             paramCode:      Generated code for current parameter

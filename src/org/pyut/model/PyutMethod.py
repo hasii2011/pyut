@@ -171,22 +171,21 @@ class PyutMethod(PyutObject):
         """
         self._params = params
 
-    def getReturns(self):
+    def getReturns(self) -> PyutType:
         """
         Return the return type.
 
-        @return PyutType
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:
+            The method return type
         """
         return self._returns
 
-    def setReturns(self, returnType: str):
+    def setReturns(self, returnType: PyutType):
         """
         Set the return type of the method.
 
         Args:
-            returnType:  A string
+            returnType:  A string but preferably a PyutType
 
         """
         if type(returnType) is str:
