@@ -39,7 +39,6 @@ from org.pyut.general.Globals import _
 
 class IoPython(PyutIoPlugin):
 
-    SPECIAL_PYTHON_CONSTRUCTOR: str = '__init__'
     """
     Python code generation/reverse engineering
 
@@ -128,30 +127,30 @@ class IoPython(PyutIoPlugin):
             generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
             generatedClassCode: List[str] = [generatedStanza]
 
-            clsMethods = self._pyutToPython.generateMethodsCode(pyutClass)
+            clsMethods: PyutToPython.MethodsCodeType = self._pyutToPython.generateMethodsCode(pyutClass)
 
             # Add __init__ Method
-            if IoPython.SPECIAL_PYTHON_CONSTRUCTOR in clsMethods:
-                methodCode = clsMethods[IoPython.SPECIAL_PYTHON_CONSTRUCTOR]
+            if PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR in clsMethods:
+                methodCode = clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR]
                 generatedClassCode += methodCode
-                del clsMethods[IoPython.SPECIAL_PYTHON_CONSTRUCTOR]
+                del clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR]
 
             # Add others methods in order
-            for aMethod in pyutClass.getMethods():
-                methodName = aMethod.getName()
-                try:
-                    methodCode = clsMethods[methodName]
-                    generatedClassCode += methodCode
-                except (ValueError, Exception, KeyError) as e:
-                    self.logger.warning(f'{e}')
+            for pyutMethod in pyutClass.getMethods():
+                methodName: str = pyutMethod.getName()
+                if methodName != PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR:
+                    try:
+                        methodCode: List[str] = clsMethods[methodName]
+                        generatedClassCode += methodCode
+                    except (ValueError, Exception, KeyError) as e:
+                        self.logger.warning(f'{e}')
 
-            # Save to classes dictionary
             generatedClassCode.append("\n\n")
+            # Save to classes dictionary
             classes[pyutClass.getName()] = generatedClassCode
 
-        # Add classes code
+        # Write class code to a file
         for (className, classCode) in list(classes.items()):
-
             self._writeClassToFile(classCode, className, directory, generatedClassDoc)
 
         self.logger.info("IoPython done !")
@@ -261,4 +260,3 @@ class IoPython(PyutIoPlugin):
         dlg.Destroy()
 
         return lstClassesChosen
-

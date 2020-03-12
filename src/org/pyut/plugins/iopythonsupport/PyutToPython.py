@@ -1,6 +1,7 @@
-
+from typing import Dict
 from typing import List
 from typing import cast
+from typing import NewType
 
 from logging import Logger
 from logging import getLogger
@@ -17,6 +18,8 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class PyutToPython:
+
+    MethodsCodeType = NewType('MethodsCodeType', Dict[str, List[str]])
 
     MAX_WIDTH:            int = 120
     CLASS_COMMENTS_START: str = '"""'
@@ -83,7 +86,7 @@ class PyutToPython:
 
         return generatedCode
 
-    def generateMethodsCode(self, pyutClass: PyutClass):
+    def generateMethodsCode(self, pyutClass: PyutClass) -> MethodsCodeType:
         """
         Return a dictionary of method code for a given class
 
@@ -91,19 +94,20 @@ class PyutToPython:
             pyutClass:  The data model class for which we have to generate a bunch fo code for
 
         Returns:
-            A bunch of code that is the code for this class
+            A bunch of code that is the code for this class; The map key is the method name the
+            value is a list of the method code
         """
-        clsMethods = {}
-        for aMethod in pyutClass.getMethods():
+        clsMethods = cast(PyutToPython.MethodsCodeType, {})
+        for pyutMethod in pyutClass.getMethods():
             # Separation
             txt = ""
             lstCodeMethod = [txt]
 
             # Get code
-            subCode:       List[str] = self.generateASingleMethodsCode(aMethod)
+            subCode:       List[str] = self.generateASingleMethodsCode(pyutMethod)
             lstCodeMethod += self.indent(subCode)
 
-            clsMethods[aMethod.getName()] = lstCodeMethod
+            clsMethods[pyutMethod.getName()] = lstCodeMethod
 
         # Add fields
         if len(pyutClass.getFields()) > 0:
