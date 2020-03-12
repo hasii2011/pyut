@@ -1,7 +1,7 @@
 
 class PyutType:
     """
-    Type of a field.
+    Type of a field or the return type for a method
     """
     def __init__(self, value=''):
         self._value = value
