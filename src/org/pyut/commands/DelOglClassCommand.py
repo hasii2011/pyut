@@ -157,7 +157,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
                 method.addParam(PyutParam(paramName, paramType, paramDefaultValue))
 
             # deserialize method's modifiers so we get a list of names
-            # that whe have to transform into a list of PyutModifiers.
+            # that we have to transform into a list of PyutModifiers.
             modifiersNames = eval(methodProfile[4])
             modifiers = []
             for modifierName in modifiersNames:
