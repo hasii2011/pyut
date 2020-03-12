@@ -1,28 +1,32 @@
 from typing import List
+from typing import Tuple
 from typing import cast
 from typing import Dict
 from typing import NewType
+
+from types import FunctionType
 
 from logging import Logger
 from logging import getLogger
 
 from org.pyut.experimental.GraphicalHandler import GraphicalHandler
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
-
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.PluginAst import FieldExtractor
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-OBJECT_MAP_TYPE = NewType('OBJECT_MAP_TYPE', Dict[str, OglClass])
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 
 class ReverseEngineerPython:
+
+    ObjectMapType  = NewType('ObjectMapType', Dict[str, OglClass])
 
     def __init__(self):
 
@@ -55,7 +59,7 @@ class ReverseEngineerPython:
             except (ValueError, Exception) as e:
                 self.logger.error(f'{e}')
 
-        objectMap: OBJECT_MAP_TYPE = cast(OBJECT_MAP_TYPE, {})  # Dictionary className/OglClass
+        objectMap: ReverseEngineerPython.ObjectMapType = cast(ReverseEngineerPython.ObjectMapType, {})  # Dictionary className/OglClass
         # create the PyutClass objects for each class
         for cl in classes:
             try:
@@ -146,7 +150,7 @@ class ReverseEngineerPython:
         else:
             pc = pyutClass
         pc.setFilename(filename)          # store the class' filename
-        methods = []                      # List of methods for this class
+        methods: List[PyutMethod] = []    # List of methods for this class
 
         # Extract methods from the class
         klassMethods = [me for me in list(cl.__dict__.values()) if isinstance(me, types.FunctionType)]
@@ -183,6 +187,8 @@ class ReverseEngineerPython:
                     else:
                         param = PyutParam(arg)
                     pyutMethod.addParam(param)
+
+            self._addSourceCode(pyutMethod, me)
             methods.append(pyutMethod)
 
             # Set the visibility according to naming conventions
@@ -192,7 +198,8 @@ class ReverseEngineerPython:
                 elif me.__name__[0] == "_":
                     pyutMethod.setVisibility(PyutVisibilityEnum.PROTECTED)
         # methods.sort(lambda x, y: cmp(x.getName(), y.getName()))
-        pc.setMethods(methods)
+        sortedMethods = sorted(methods, key=lambda methodToSort: methodToSort._name)
+        pc.setMethods(sortedMethods)
 
         fields = None
         try:
@@ -232,5 +239,25 @@ class ReverseEngineerPython:
                 fds.append(PyutField(name, "", init, vis))
 
         # fds.sort(lambda x, y: cmp(x.getName(), y.getName()))
-        pc.setFields(fds)
+        sortedFields = sorted(fds, key=lambda fieldToSort: fieldToSort._name)
+        pc.setFields(sortedFields)
         return pc
+
+    def _addSourceCode(self, pyutMethod: PyutMethod, klassMethod: FunctionType):
+
+        from inspect import getsourcelines
+
+        methodName: str = pyutMethod.getName()
+        source: Tuple[List[str], int] = getsourcelines(klassMethod)  # source list and line #
+
+        sourceCode: PyutMethod.SourceCodeType = cast(PyutMethod.SourceCodeType, source[0])
+
+        self.logger.info(f'Method: {methodName} - code: {sourceCode}')
+        #
+        # Source code always includes the method stanza
+        #
+        if len(sourceCode) > 1:
+            firstLine: str = sourceCode.pop(0)
+            self.logger.info(f'Removed: {firstLine}')
+
+        pyutMethod.sourceCode = sourceCode

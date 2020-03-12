@@ -17,10 +17,12 @@ from org.pyut.model.PyutObject import PyutObject
 
 [WITH_PARAMS, WITHOUT_PARAMS] = range(2)
 
-PyutModifiers    = NewType('PyutModifiers',    List[PyutModifier])
-
 
 class PyutMethod(PyutObject):
+
+    PyutModifiers  = NewType('PyutModifiers', List[PyutModifier])
+    SourceCodeType = NewType('SourceCodeType', List[str])
+
     """
     A method representation.
 
@@ -29,6 +31,7 @@ class PyutMethod(PyutObject):
         - modifiers (`PyutModifier`)
         - parameters (`PyutParameter`)
         - return type (`PyutType`)
+        - source code if reverse-engineered
 
     It has a string mode that influence the way `__str__` works. The two modes
     are:
@@ -42,7 +45,15 @@ class PyutMethod(PyutObject):
     # define class flag to avoid PyCharm warning in get/set string mode
     __selectedStringMode = None
 
-    def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returns=""):
+    def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returns: PyutType = PyutType('')):
+        """
+
+        Args:
+            name:       The method name
+            visibility: Its visibility public, private, protected
+
+            returns:  Its return value
+        """
         """
         Constructor.
 
@@ -55,16 +66,25 @@ class PyutMethod(PyutObject):
         self.logger: Logger = getLogger(__name__)
 
         self._visibility: PyutVisibilityEnum = visibility
-        self._modifiers:  PyutModifiers      = cast(PyutModifiers, [])
+        self._modifiers:  PyutMethod.PyutModifiers      = cast(PyutMethod.PyutModifiers, [])
+        self._sourceCode: PyutMethod.SourceCodeType     = cast(PyutMethod.SourceCodeType, [])
 
         self._params     = []
-        self._returns    = PyutType(returns)
+        self._returns    = returns
 
         prefs = PyutPreferences()
         if prefs["SHOW_PARAMS"] == "1":
             PyutMethod.setStringMode(WITH_PARAMS)
         else:
             PyutMethod.setStringMode(WITHOUT_PARAMS)
+
+    def _getSourceCode(self) -> SourceCodeType:
+        return self._sourceCode
+
+    def _setSourceCode(self, newCode: SourceCodeType):
+        self._sourceCode = newCode
+
+    sourceCode = property(_getSourceCode, _setSourceCode)
 
     def getString(self):
         """
@@ -111,12 +131,11 @@ class PyutMethod(PyutObject):
 
     def getModifiers(self) -> PyutModifiers:
         """
-        Return a list of the modifiers.
         This is not a copy, but the original one. Any change made to it is
         directly made on the class.
 
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:
+            Return a list of the modifiers.
         """
         return self._modifiers
 
@@ -125,8 +144,8 @@ class PyutMethod(PyutObject):
         Replace the actual modifiers by those given in the list.
         The methods passed are not copied, but used directly.
 
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            modifiers:  The replacement list
         """
         self._modifiers = modifiers
 
@@ -188,10 +207,11 @@ class PyutMethod(PyutObject):
             returnType:  A string but preferably a PyutType
 
         """
+        pyutType: PyutType = returnType
         if type(returnType) is str:
-            pyutType: PyutType = PyutType(returnType)
-        else:
-            pyutType: PyutType = PyutType('unknown')
+            pyutType = PyutType(returnType)
+            self.logger.warning(f'Setting return type as string is deprecated.  use PyutType')
+
         self._returns = pyutType
 
     def __stringWithoutParams(self):
