@@ -1,6 +1,7 @@
 
 from typing import List
 from typing import cast
+from typing import Dict
 
 from logging import Logger
 from logging import getLogger
@@ -103,20 +104,19 @@ class IoPython(PyutIoPlugin):
     def setExportOptions(self) -> bool:
         return True
 
-    def write(self, oglObjects):
+    def write(self, oglObjects: List[OglClass]):
         """
 
         Args:
             oglObjects:
         """
-        # Ask the user which destination file he wants
         directory = self._askForDirectoryExport()
         if directory == "":
             return False
 
         self.logger.info("IoPython Saving...")
-        
-        classes = {}
+
+        classes: Dict[str, List[str]] = {}
         generatedClassDoc: List[str] = self._pyutToPython.generateTopCode()
 
         # Create classes code for each object
@@ -139,7 +139,6 @@ class IoPython(PyutIoPlugin):
             # Add others methods in order
             for aMethod in pyutClass.getMethods():
                 methodName = aMethod.getName()
-
                 try:
                     methodCode = clsMethods[methodName]
                     generatedClassCode += methodCode
@@ -153,16 +152,21 @@ class IoPython(PyutIoPlugin):
         # Add classes code
         for (className, classCode) in list(classes.items()):
 
-            filename: str = f'{directory}{osSep}{str(className)}.py'
-
-            file = open(filename, "w")
-            file.writelines(generatedClassDoc)
-            file.writelines(classCode)
-            file.close()
+            self._writeClassToFile(classCode, className, directory, generatedClassDoc)
 
         self.logger.info("IoPython done !")
 
         MessageBox(_("Done !"), _("Python code generation"), style=CENTRE | OK | ICON_INFORMATION)
+
+    def _writeClassToFile(self, classCode, className, directory, generatedClassDoc):
+
+        filename: str = f'{directory}{osSep}{str(className)}.py'
+
+        file = open(filename, "w")
+        file.writelines(generatedClassDoc)
+        file.writelines(classCode)
+
+        file.close()
 
     def read(self, oglObjects, umlFrame: UmlClassDiagramsFrame):
         """
@@ -222,26 +226,6 @@ class IoPython(PyutIoPlugin):
             self.logger.error(f"Error while reversing engineering Python file(s)! {e}")
         EndBusyCursor()
 
-    def indentStr(self, aStr):
-        """
-        Indent one string by one unit
-
-        @return string
-        """
-        # TODO : ask which kind of indentation to be added
-        return '    ' + str(aStr)
-
-    def indent(self, lstIn):
-        """
-        Indent every lines of the lstIn by one unit
-
-        @return list
-        """
-        lstOut = []
-        for el in lstIn:
-            lstOut.append(self.indentStr(str(el)))
-        return lstOut
-
     def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):
         """
         TODO: BAD BAD BAD.  The ToPython plugin instantiates this plugin to get access to this method;
@@ -277,3 +261,4 @@ class IoPython(PyutIoPlugin):
         dlg.Destroy()
 
         return lstClassesChosen
+

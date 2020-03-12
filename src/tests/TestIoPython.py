@@ -41,7 +41,7 @@ class TestIoPython(TestBase):
 
     def testGetPublicFieldPythonCode(self):
 
-        s: str = self.plugin.getFieldPythonCode(PyutField("publicField", "", None, PyutVisibilityEnum.PUBLIC))
+        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("publicField", "", None, PyutVisibilityEnum.PUBLIC))
 
         unExpectedValue: int = -1
         actualValue:     int = s.find('self.publicField')
@@ -49,7 +49,7 @@ class TestIoPython(TestBase):
 
     def testGetPrivateFieldPythonCode(self):
 
-        s: str = self.plugin.getFieldPythonCode(PyutField("privateField", "", None, PyutVisibilityEnum.PRIVATE))
+        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("privateField", "", None, PyutVisibilityEnum.PRIVATE))
 
         unExpectedValue: int = -1
         actualValue:     int = s.find('self.__privateField')
@@ -57,7 +57,7 @@ class TestIoPython(TestBase):
 
     def testGetProtectedFieldPythonCode(self):
 
-        s: str = self.plugin.getFieldPythonCode(PyutField("protectedField", "", None, PyutVisibilityEnum.PROTECTED))
+        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("protectedField", "", None, PyutVisibilityEnum.PROTECTED))
 
         unExpectedValue: int = -1
         actualValue:     int = s.find('self._protectedField')
@@ -67,7 +67,7 @@ class TestIoPython(TestBase):
 
         lst1: List[str] = ['a', '   b', 'c']
         expectedIndent: List[str] = ['    a', '       b', '    c']
-        actualIndent: List[str] = self.plugin.indent(lst1)
+        actualIndent: List[str] = self.pyutToPython.indent(lst1)
         self.assertEqual(expectedIndent, actualIndent, 'Indentation failed')
 
     def testGetOneMethodCodePublic(self):
