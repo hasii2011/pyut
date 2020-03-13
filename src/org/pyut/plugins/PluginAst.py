@@ -1,5 +1,4 @@
 
-from typing import TextIO
 
 from ast import NodeVisitor
 from ast import AnnAssign
@@ -9,10 +8,6 @@ from ast import Subscript
 from ast import List
 from ast import Dict
 from ast import ClassDef
-
-from ast import parse
-
-from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
 
 class Visitor(NodeVisitor):
@@ -46,22 +41,22 @@ class Visitor(NodeVisitor):
         print(f'strRep: {strRep}')
         target: Name = node.target
         if isinstance(node.annotation, Subscript):
-            annot: Subscript  = node.annotation
-            val:   Name       = annot.value
-            decl:  str        = f'{target.id}: {val.id}'
-            self._result[decl] = ''
+            annotation: Subscript  = node.annotation
+            val:   Name       = annotation.value
+            declaration:  str        = f'{target.id}: {val.id}'
+            self._result[declaration] = ''
             return
         else:
-            annot:  Name = node.annotation
-            decl:   str  = f'{target.value.id}: {annot.id}'
+            annotation:  Name = node.annotation
+            declaration:   str  = f'{target.value.id}: {annotation.id}'
 
         nc:     NameConstant = node.value
-        if annot.id == 'int' or annot.id == 'float':
-            self._result[decl] = str(nc.n)
-        elif annot.id == 'str':
-            self._result[decl] = str(nc.s)
+        if annotation.id == 'int' or annotation.id == 'float':
+            self._result[declaration] = str(nc.n)
+        elif annotation.id == 'str':
+            self._result[declaration] = str(nc.s)
         else:
-            self._result[decl] = str(nc.value)
+            self._result[declaration] = str(nc.value)
 
     def visit_Assign(self, node):
         targets = []
@@ -76,8 +71,8 @@ class Visitor(NodeVisitor):
         else:
             valStr: str = "what!!"
 
-        decl:   str = f'{targets[0]}'
-        self._result[decl] = valStr
+        declaration:   str = f'{targets[0]}'
+        self._result[declaration] = valStr
         #  return
 
         expr = self.visit(val)
@@ -123,54 +118,3 @@ class Visitor(NodeVisitor):
 
     def visitGetattr(self, node):
         return str(self.visit(node.expr)) + "." + str(node.attrname)
-
-    # def visitAdd(self, node):
-    #    return self.visit(node.left) + "+" + self.visit(node.right)
-
-    # def visitFunction(self, node):
-    #    print "function :", node.name
-
-    # def visitCallFunc(self, node):
-    #    s = self.visit(node.node) + "("
-    #    for n in node.args:
-    #        s += self.visit(n) + ", "
-    #    s = s[:-2] + ")"
-    #    return s
-
-# compiler.walk(ast, Visitor())
-
-
-class FieldExtractor:
-    def __init__(self, filename):
-        self._filename = filename
-
-    def getFields(self, className):
-
-        visitor = Visitor(className)
-        # compiler.walk(compiler.parseFile(self._filename), visitor)
-        try:
-            fileName = self._filename
-            fd: TextIO = open(fileName)
-            data = fd.read()
-            astNode = parse(source=data, filename=fileName)
-            visitor.visit(astNode)
-        except (ValueError, Exception) as e:
-            print(f"getFields Error: {e}")
-            errorInfo: str = ErrorManager.getErrorInfo()
-            print(errorInfo)
-            raise e
-        return visitor.getResult()
-
-
-# def main():
-#     import sys
-#     if len(sys.argv) > 1:
-#         print(compiler.parseFile(sys.argv[1]))
-#         res = FieldExtractor(sys.argv[1]).getFields(sys.argv[2])
-#         print("-" * 76)
-#         for name, val in list(res.items()):
-#             print(name, "=", val)
-#
-#
-# if __name__ == "__main__":
-#     main()

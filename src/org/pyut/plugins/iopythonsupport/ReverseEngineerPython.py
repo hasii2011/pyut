@@ -19,7 +19,8 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.plugins.PluginAst import FieldExtractor
+# from org.pyut.plugins.PluginAst import FieldExtractor
+from org.pyut.plugins.FieldExtractor import FieldExtractor
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 

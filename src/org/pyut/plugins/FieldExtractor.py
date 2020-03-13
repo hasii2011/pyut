@@ -2,12 +2,12 @@ from typing import Dict
 from typing import List
 from typing import TextIO
 from typing import Pattern
+from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
 
 import re
-from typing import Tuple
 
 
 class FieldExtractor:
