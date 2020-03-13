@@ -23,54 +23,35 @@ from org.pyut.plugins.PluginAst import FieldExtractor
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
+ObjectMapType = NewType('ObjectMapType', Dict[str, OglClass])
+KlassList = NewType('KlassList', List[type])
+
 
 class ReverseEngineerPython:
-
-    ObjectMapType  = NewType('ObjectMapType', Dict[str, OglClass])
 
     def __init__(self):
 
         self.logger: Logger = getLogger(__name__)
 
-    def reversePython(self, umlFrame: UmlClassDiagramsFrame, classesToReverseEngineer: List[type], files: Dict[type, str]):
+    def reversePython(self, umlFrame: UmlClassDiagramsFrame, potentialTypes: List[type], files: Dict[type, str]):
         """
         Reverse engineering
         Classes come from introspection !!!
 
         Args:
-            umlFrame:           The uml to display on
-            classesToReverseEngineer:  The classes from introspection
+            umlFrame:           The uml frame to display on
+            potentialTypes:     The potential types from introspection
             files:   A map of introspected classes to the filename they came from
         """
-
         # get a list of classes info for classes in the display list
-        # classes = [res[name] for name in res.keys() if name in display]
-        classes: List[type] = [cl for cl in classesToReverseEngineer if (type(cl) == type)]
+        klasses: KlassList = cast(KlassList, [cl for cl in potentialTypes if (type(cl) == type)])
 
-        self.logger.info(f'classes: {classes}')
+        self.logger.info(f'classes: {klasses}')
 
-        # Add extension class; TODO : I think this is old Python 2 code; put in warning to alert me if ever activated
-        for cl in classesToReverseEngineer:
-            try:
-                if str(type(cl)).index("class") > 0:
-                    if cl not in classes:
-                        self.logger.warning(f'Found a class with .`class` prefix `{cl}` not originally defined by `type`')
-                        classes.append(cl)
-            except (ValueError, Exception) as e:
-                self.logger.error(f'{e}')
+        klasses = self._legacyLookup(klasses, potentialTypes)
 
-        objectMap: ReverseEngineerPython.ObjectMapType = cast(ReverseEngineerPython.ObjectMapType, {})  # Dictionary className/OglClass
         # create the PyutClass objects for each class
-        for cl in classes:
-            try:
-                # create objects
-                pc: PyutClass = self.getPyutClass(cl, files[cl])
-                po: OglClass   = OglClass(pc)
-                umlFrame.addShape(po, 0, 0)
-                po.autoResize()
-                objectMap[cl.__name__] = po
-            except (ValueError, Exception) as e:
-                self.logger.error(f"Error while creating class of type {cl},  {e}")
+        objectMap: ObjectMapType = self._createPyutClassObjects(klasses, files, umlFrame)
 
         # now, search for parent links
         for po in list(objectMap.values()):
@@ -79,7 +60,7 @@ class ReverseEngineerPython:
             if pc.getName() == "object":
                 continue
             currentClass = None
-            for el in classesToReverseEngineer:
+            for el in potentialTypes:
                 if el.__name__ == pc.getName():
                     currentClass = el
                     break
@@ -89,7 +70,7 @@ class ReverseEngineerPython:
 
             parentKlasses: List[type] = []
             try:
-                parentKlasses = [cl for cl in classes if cl.__name__ in [x.__name__ for x in currentClass.__bases__]]
+                parentKlasses = [cl for cl in klasses if cl.__name__ in [x.__name__ for x in currentClass.__bases__]]
             except (ValueError, Exception) as e:
                 self.logger.error(f'{e}')
 
@@ -121,6 +102,46 @@ class ReverseEngineerPython:
                 incY = sy
             po.SetPosition(x, y)
             x += incX
+
+    def _legacyLookup(self, klasses: KlassList, classesToReverseEngineer) -> KlassList:
+        """
+        Add extension class;
+        TODO : I think this is old Python 2 code; put in warning to alert me if ever activated
+
+        Args:
+            klasses:  The current ones we know about
+            classesToReverseEngineer:  The potential ones;  Maybe some are missing
+
+        Returns
+            Updated klass list
+        """
+        for cl in classesToReverseEngineer:
+            try:
+                if str(type(cl)).index("class") > 0:
+                    if cl not in klasses:
+                        self.logger.warning(f'Found a class with .`class` prefix `{cl}` not originally defined by `type`')
+                        klasses.append(cl)
+            except (ValueError, Exception) as e:
+                self.logger.error(f'{e}')
+
+        return klasses
+
+    def _createPyutClassObjects(self, classes, files, umlFrame: UmlClassDiagramsFrame):
+
+        objectMap: ObjectMapType = cast(ObjectMapType, {})  # Dictionary className/OglClass
+
+        for cl in classes:
+            try:
+                # create objects
+                pc: PyutClass = self.getPyutClass(cl, files[cl])
+                po: OglClass = OglClass(pc)
+                umlFrame.addShape(po, 0, 0)
+                po.autoResize()
+                objectMap[cl.__name__] = po
+            except (ValueError, Exception) as e:
+                self.logger.error(f"Error while creating class of type {cl},  {e}")
+
+        return objectMap
 
     def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):
         """
