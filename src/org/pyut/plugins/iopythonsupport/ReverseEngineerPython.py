@@ -24,7 +24,7 @@ from org.pyut.plugins.PluginAst import FieldExtractor
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 ObjectMapType = NewType('ObjectMapType', Dict[str, OglClass])
-KlassList = NewType('KlassList', List[type])
+KlassList     = NewType('KlassList', List[type])
 
 
 class ReverseEngineerPython:
@@ -54,44 +54,67 @@ class ReverseEngineerPython:
         objectMap: ObjectMapType = self._createPyutClassObjects(klasses, files, umlFrame)
 
         # now, search for parent links
-        for po in list(objectMap.values()):
-            pc = po.getPyutObject()     # TODO
+        for oglClass in list(objectMap.values()):
+
+            pyutClass: PyutClass = oglClass.getPyutObject()
             # skip object, it has no parent
-            if pc.getName() == "object":
+            if pyutClass.getName() == "object":
+                self.logger.info(f'pyutClass {pyutClass} has no parent')
                 continue
-            currentClass = None
+            currentKlass: type = cast(type, None)
             for el in potentialTypes:
-                if el.__name__ == pc.getName():
-                    currentClass = el
+                if el.__name__ == pyutClass.getName():
+                    currentKlass = el
                     break
-            if currentClass is None:
-                self.logger.error("Reverse engineering error `currentClass` is `None`")
+            if currentKlass is None:
+                self.logger.error("Reverse engineering error `currentKlass` is `None`")
                 continue
 
             parentKlasses: List[type] = []
             try:
-                parentKlasses = [cl for cl in klasses if cl.__name__ in [x.__name__ for x in currentClass.__bases__]]
+                parentKlasses = [cl for cl in klasses if cl.__name__ in [x.__name__ for x in currentKlass.__bases__]]
             except (ValueError, Exception) as e:
                 self.logger.error(f'{e}')
 
-            parentNames: List[str] = [item.__name__ for item in parentKlasses]
-            for parent in parentNames:
-                dest = objectMap.get(parent)
-                if dest is not None:  # maybe we don't have the parent loaded
-                    graphicalHandler: GraphicalHandler = GraphicalHandler(umlFrame=umlFrame, maxWidth=umlFrame.maxWidth,
-                                                                          historyManager=umlFrame.getHistory())
-                    graphicalHandler.createInheritanceLink(child=po, parent=dest)
-        # Sort by descending height
-        objectList = list(objectMap.values())
-        # objectList.sort()   TODO OglClasses need a magic method for comparing
+            self._layoutInheritanceLinks(objectMap, oglClass, parentKlasses, umlFrame)
 
-        # Organize by vertical descending sizes
-        x = 20
-        y = 20
-        # incX = 0
-        incY = 0
-        for po in objectList:
-            incX, sy = po.GetSize()
+        objectList: List[OglClass] = list(objectMap.values())
+        self._layoutUmlClasses(objectList, umlFrame)
+
+    def _layoutInheritanceLinks(self, objectMap: ObjectMapType, oglClass: OglClass, parentKlasses: List[type], umlFrame: UmlClassDiagramsFrame):
+        """
+
+        Args:
+            objectMap:
+            oglClass:
+            parentKlasses:
+            umlFrame:
+
+        """
+        parentNames: List[str] = [item.__name__ for item in parentKlasses]
+        for parent in parentNames:
+            dest = objectMap.get(parent)
+            if dest is not None:  # maybe we don't have the parent loaded
+                graphicalHandler: GraphicalHandler = GraphicalHandler(umlFrame=umlFrame, maxWidth=umlFrame.maxWidth,
+                                                                      historyManager=umlFrame.getHistory())
+                graphicalHandler.createInheritanceLink(child=oglClass, parent=dest)
+
+    def _layoutUmlClasses(self, objectList: List[OglClass], umlFrame: UmlClassDiagramsFrame):
+        """
+        Organize by vertical descending sizes
+
+        Args:
+            objectList:
+            umlFrame:
+        """
+        # Sort by descending height
+        sortedOglClasses = sorted(objectList, key=lambda oglClassToSort: oglClassToSort._height, reverse=True)
+        x: int = 20
+        y: int = 20
+
+        incY: int = 0
+        for oglClass in sortedOglClasses:
+            incX, sy = oglClass.GetSize()
             incX += 20
             sy += 20
             incY = max(incY, sy)
@@ -100,7 +123,7 @@ class ReverseEngineerPython:
                 x = 20
                 y += incY
                 incY = sy
-            po.SetPosition(x, y)
+            oglClass.SetPosition(x, y)
             x += incX
 
     def _legacyLookup(self, klasses: KlassList, classesToReverseEngineer) -> KlassList:
@@ -167,9 +190,9 @@ class ReverseEngineerPython:
         # create objects
         cl = oglClass
         if pyutClass is None:
-            pc = PyutClass(cl.__name__)       # A new PyutClass
+            pc: PyutClass = PyutClass(cl.__name__)       # A new PyutClass
         else:
-            pc = pyutClass
+            pc: PyutClass = pyutClass
         pc.setFilename(filename)          # store the class' filename
         methods: List[PyutMethod] = []    # List of methods for this class
 
@@ -234,9 +257,12 @@ class ReverseEngineerPython:
             self.logger.error(f"actual dir is {os.getcwd()}")
             for path in sys.path:
                 try:
-                    fields = FieldExtractor(
-                        path + os.sep + pc.getFilename()).getFields(
-                        pc.getName())
+
+                    possibleFileName:    str = pc.getFilename()
+                    possibleFQNFileName: str = f'{path}{os.sep}{possibleFileName}'
+                    # fields = FieldExtractor(path + os.sep + pc.getFilename()).getFields(pc.getName())
+                    fe: FieldExtractor = FieldExtractor(possibleFQNFileName)
+                    fields = fe.getFields(pc.getName())
                     break
                 except IOError:
                     self.logger.error(f"Not found either in {path}{os.sep}{pc.getFilename()}")
