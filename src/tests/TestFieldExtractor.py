@@ -38,13 +38,20 @@ class TestFieldExtractor(TestBase):
         self.assertEqual(expectedFieldCount, actualFieldCount, 'Field counts do not match')
         self.logger.info(f'Found {len(fields)} fields')
 
-
         for name, init in fields.items():
-            self.logger.info(f'{name}={init}')
+            self.logger.info(f'{name} = {init}')
 
-    def testName2(self):
-        """Another test"""
-        pass
+    def testRemoveExtraneousNameParts(self):
+
+        fe: FieldExtractor = FieldExtractor(filename=TestFieldExtractor.TEST_FILE_NAME)
+
+        nameToClean: str = '.([,-*/%'
+        cleanedName: str = fe._removeExtraneousNameParts(nameToClean=nameToClean)
+
+        expectedLength: int = 0
+        actualLength:   int = len(cleanedName)
+
+        self.assertEqual(expectedLength, actualLength, 'Name was not cleaned')
 
 
 def suite() -> TestSuite:

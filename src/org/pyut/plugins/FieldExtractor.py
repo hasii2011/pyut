@@ -1,3 +1,4 @@
+from typing import Dict
 from typing import List
 from typing import TextIO
 from typing import Pattern
@@ -9,7 +10,7 @@ import re
 from typing import Tuple
 
 
-class FieldExtractor(object):
+class FieldExtractor:
 
     def __init__(self, filename: str):
 
@@ -23,14 +24,12 @@ class FieldExtractor(object):
         regExNextClass: Pattern = re.compile(r"^\s*class\s+")
         regExMultiLine: Pattern = re.compile(r"\\s*$")
 
-        fd: TextIO = open(self._filename)
-        lines = fd.readlines()
-        fd.close()
+        lines: List[str] = self._getTheSourceCode()
 
-        found = {}
-        inClass: bool = False
-        buffer = ""
-        multiLine: bool = False
+        foundFields: Dict[str, str] = {}
+        inClass:     bool = False
+        buffer:      str = ""
+        multiLine:   bool = False
         for line in lines:
             # skip other classes in the same file
             # TODO : beware, this will interrupt if there's an inner class !!!
@@ -51,25 +50,42 @@ class FieldExtractor(object):
                 continue
             else:
                 multiLine = False
+
             res: List[Tuple[str, str]] = regExVar.findall(line)
             if res:
-                for name, initialValue in res:
-                    name = self.removePart(name, ".")
-                    name = self.removePart(name, "(")
-                    name = self.removePart(name, "[")
-                    name = self.removePart(name, "+")
-                    name = self.removePart(name, "-")
-                    name = self.removePart(name, "*")
-                    name = self.removePart(name, "/")
-                    name = self.removePart(name, "%")
-                    initialValue = self.removePart(initialValue, "#")
-                    name = name.strip()
-                    if name not in found:
-                        found[name] = initialValue.strip()
-                        self.logger.info(f'adding field: `{repr(name.strip())}{initialValue.strip()}`')
-        return found
+                foundFields = self._cleanupField(foundFields, res)
+        return foundFields
 
-    def removePart(self, string: str, char: str):
+    def _cleanupField(self, foundFields, res):
+
+        for name, initialValue in res:
+            name: str = self._removeExtraneousNameParts(nameToClean=name)
+            initialValue: str = self._removePart(initialValue, "#")
+
+            if name not in foundFields:
+                foundFields[name] = initialValue.strip()
+                self.logger.debug(f'adding field: {repr(name.strip())}={initialValue.strip()}')
+
+        return foundFields
+
+    def _getTheSourceCode(self) -> List[str]:
+
+        fd: TextIO = open(self._filename)
+        lines: List[str] = fd.readlines()
+        fd.close()
+
+        return lines
+
+    def _removeExtraneousNameParts(self, nameToClean: str) -> str:
+
+        for charToRemove in ['.', '(', '[', '+', '-', '*', '/', '%']:
+            nameToClean = self._removePart(nameToClean, charToRemove)
+
+        nameToClean.strip()
+
+        return nameToClean
+
+    def _removePart(self, string: str, char: str):
         """
 
         Args:
