@@ -1,70 +1,86 @@
+from typing import List
+from typing import TextIO
+from typing import Pattern
+
+from logging import Logger
+from logging import getLogger
 
 import re
+from typing import Tuple
 
 
 class FieldExtractor(object):
-    def __init__(self, filename):
+
+    def __init__(self, filename: str):
+
+        self.logger: Logger = getLogger(__name__)
         self._filename = filename
 
     def getFields(self, className):
-        def removePart(string, char):
-            i = string.find(char)
-            if i != -1:
-                return string[:i]
-            return string
-        regvar = re.compile(r"^\s*self\.(.*)=(.*)")
-        regclass = re.compile(r"^\s*class\s+" + className.strip())
-        regnextclass = re.compile(r"^\s*class\s+")
-        regmultiline = re.compile(r"\\s*$")
-        lines = open(self._filename).readlines()
+
+        regExVar:       Pattern = re.compile(r"^\s*self\.(.*)=(.*)")
+        regExClass:     Pattern = re.compile(r"^\s*class\s+" + className.strip())
+        regExNextClass: Pattern = re.compile(r"^\s*class\s+")
+        regExMultiLine: Pattern = re.compile(r"\\s*$")
+
+        fd: TextIO = open(self._filename)
+        lines = fd.readlines()
+        fd.close()
+
         found = {}
-        inClass = 0
+        inClass: bool = False
         buffer = ""
-        multiline = 0
+        multiLine: bool = False
         for line in lines:
             # skip other classes in the same file
             # TODO : beware, this will interrupt if there's an inner class !!!
             if not inClass:
-                if regclass.search(line):
-                    inClass = 1
+                if regExClass.search(line):
+                    inClass = True
                 else:
                     continue
             else:
-                if regnextclass.search(line):
+                if regExNextClass.search(line):
                     break
-            if multiline:
+            if multiLine:
                 line = buffer + line.strip()
-            if regmultiline.search(line):
+            if regExMultiLine.search(line):
                 buffer = line[:line.rindex("\\")]
-                print("buffer", buffer)
-                multiline = 1
+                self.logger.info(f'buffer = {buffer}')
+                multiLine = True
                 continue
             else:
-                multiline = 0
-            res = regvar.findall(line)
+                multiLine = False
+            res: List[Tuple[str, str]] = regExVar.findall(line)
             if res:
-                for name, init in res:
-                    name = removePart(name, ".")
-                    name = removePart(name, "(")
-                    name = removePart(name, "[")
-                    name = removePart(name, "+")
-                    name = removePart(name, "-")
-                    name = removePart(name, "*")
-                    name = removePart(name, "/")
-                    name = removePart(name, "%")
-                    init = removePart(init, "#")
+                for name, initialValue in res:
+                    name = self.removePart(name, ".")
+                    name = self.removePart(name, "(")
+                    name = self.removePart(name, "[")
+                    name = self.removePart(name, "+")
+                    name = self.removePart(name, "-")
+                    name = self.removePart(name, "*")
+                    name = self.removePart(name, "/")
+                    name = self.removePart(name, "%")
+                    initialValue = self.removePart(initialValue, "#")
                     name = name.strip()
                     if name not in found:
-                        found[name] = init.strip()
-                        print("adding", repr(name.strip()), init.strip())
+                        found[name] = initialValue.strip()
+                        self.logger.info(f'adding field: `{repr(name.strip())}{initialValue.strip()}`')
         return found
 
-# def main():
-#     import sys
-#     if len(sys.argv) > 1:
-#         res = FieldExtractor(sys.argv[1]).getFields(sys.argv[2])
-#         for name, init in res.items():
-#             print name, "=", init
-#
-# if __name__ == "__main__":
-#     main()
+    def removePart(self, string: str, char: str):
+        """
+
+        Args:
+            string:     String to update
+            char:       Character to remove
+
+        Returns:
+            Updated string with char removed, if found
+        """
+
+        i = string.find(char)
+        if i != -1:
+            return string[:i]
+        return string

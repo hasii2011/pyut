@@ -80,6 +80,14 @@
             ],
             "propagate": "False"
         },
+        "TestFieldExtractor": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+
         "TestPyutType": {
             "level": "INFO",
             "handlers": [
@@ -140,6 +148,13 @@
             "propagate": "False"
         },
         "org.pyut.PyutPreferences": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+        "org.pyut.plugins.FieldExtractor": {
             "level": "INFO",
             "handlers": [
                 "consoleHandler"
