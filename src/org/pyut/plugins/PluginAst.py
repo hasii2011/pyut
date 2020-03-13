@@ -8,8 +8,11 @@ from ast import NameConstant
 from ast import Subscript
 from ast import List
 from ast import Dict
+from ast import ClassDef
 
 from ast import parse
+
+from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
 
 class Visitor(NodeVisitor):
@@ -24,7 +27,7 @@ class Visitor(NodeVisitor):
     def getResult(self):
         return self._result
 
-    def visit_ClassDef(self, node):
+    def visit_ClassDef(self, node: ClassDef):
         if node.name == self._className:
             for child in node.body:
                 self.visit(child)
@@ -39,7 +42,7 @@ class Visitor(NodeVisitor):
         return self.visit(node.expr) + "." + node.attrname
 
     def visit_AnnAssign(self, node: AnnAssign):
-        strRep: str = node.__repr__()
+        strRep: str = node.__str__()
         print(f'strRep: {strRep}')
         target: Name = node.target
         if isinstance(node.annotation, Subscript):
@@ -50,7 +53,7 @@ class Visitor(NodeVisitor):
             return
         else:
             annot:  Name = node.annotation
-            decl:   str  = f'{target.id}: {annot.id}'
+            decl:   str  = f'{target.value.id}: {annot.id}'
 
         nc:     NameConstant = node.value
         if annot.id == 'int' or annot.id == 'float':
@@ -64,15 +67,18 @@ class Visitor(NodeVisitor):
         targets = []
         for n in node.targets:
             targets.append(n.id)
+
         if isinstance(node.value, List):
             val: List = node.value.elts
             valStr: str = str(val)
         elif isinstance(node.value, Dict):
             valStr: str = '{}'
+        else:
+            valStr: str = "what!!"
 
         decl:   str = f'{targets[0]}'
         self._result[decl] = valStr
-        return
+        #  return
 
         expr = self.visit(val)
         if expr is None:
@@ -122,7 +128,7 @@ class Visitor(NodeVisitor):
     #    return self.visit(node.left) + "+" + self.visit(node.right)
 
     # def visitFunction(self, node):
-    #    print "fonction :", node.name
+    #    print "function :", node.name
 
     # def visitCallFunc(self, node):
     #    s = self.visit(node.node) + "("
@@ -150,6 +156,9 @@ class FieldExtractor:
             visitor.visit(astNode)
         except (ValueError, Exception) as e:
             print(f"getFields Error: {e}")
+            errorInfo: str = ErrorManager.getErrorInfo()
+            print(errorInfo)
+            raise e
         return visitor.getResult()
 
 
