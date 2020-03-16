@@ -23,7 +23,6 @@ from org.pyut.general.Globals import _
 
 
 class IoFile:
-
     """
     To save data in a compressed file format.
 
@@ -33,10 +32,6 @@ class IoFile:
         IoFile = io()
         io.save("myFileName.put", project)  # to save diagram
         io.open("pyFileName.put", project)    # to read file
-
-    :version: $Revision: 1.10 $
-    :author:  Deve Roux
-    :contact: droux@eivd.ch
     """
     def __init__(self):
 
@@ -65,10 +60,12 @@ class IoFile:
         """
         To open a compressed file and create diagram.
 
-        @author Deve Roux
+        Args:
+            filename: The file name
+            project: The project
         """
-        oldpath = getcwd()
-        path = getMediator().getAppPath()
+        oldPath: str = getcwd()
+        path:    str  = getMediator().getAppPath()
         chdir(path)
 
         Lang.importLanguage()
@@ -107,6 +104,7 @@ class IoFile:
                 version = root.getAttribute("version")
                 self.logger.info(f"Using version {version} of the importer")
                 module = __import__("PyutXmlV" + str(version))
+                # noinspection PyUnresolvedReferences
                 myXml = module.PyutXml()
             else:
                 from org.pyut.persistence.PyutXml import PyutXml  # don't like it here but at top of file not recognized -- hasii
@@ -116,15 +114,4 @@ class IoFile:
             umlFrame = project.getDocuments()[0].getFrame()
             myXml.open(dom, umlFrame)
 
-        chdir(oldpath)
-        # TODO : put this back
-        # except:
-        #    #dlg=wxMessageDialog(umlFrame,
-        #    #    _("An error occured while while parsing the file ")
-        #    #    + str(fileName) + ".",
-        #    #    _("Parse Error !"),
-        #    #    wxOK | wxICON_ERROR)
-        #    #dlg.ShowModal()
-        #    #dlg.Destroy()
-        #    displayError(_("An error occured while parsing the file") + \
-        #                 str(fileName), _("Parse Error !"))
+        chdir(oldPath)
