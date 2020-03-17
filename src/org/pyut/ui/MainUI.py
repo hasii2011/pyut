@@ -522,23 +522,20 @@ class MainUI:
         Returns:
             True if everything is ok
         """
-        # No frame left ?
         if self._currentProject is None and self._currentFrame is not None:
             self._currentProject = self.getProjectFromFrame(self._currentFrame)
         if self._currentProject is None:
             PyutUtils.displayError(_("No frame to close !"), _("Error..."))
-            return
+            return False
 
         # Display warning if we are in scripting mode
         if self._ctrl.isInScriptMode():
-            print("WARNING : in script mode, the non-saved projects are closed without warning")
+            self.logger.warning("WARNING : in script mode, the non-saved projects are closed without warning")
 
         # Close the file
         if self._currentProject.getModified() is True and not self._ctrl.isInScriptMode():
-            # Ask to save the file
             frame = self._currentProject.getFrames()[0]
             frame.SetFocus()
-            # self._ctrl.registerUMLFrame(frame)
             self.showFrame(frame)
 
             dlg = MessageDialog(self.__parent, _("Your project has not been saved. " 
@@ -556,14 +553,14 @@ class MainUI:
                 pageFrame = self.__notebook.GetPage(i)
                 if pageFrame in self._currentProject.getFrames():
                     self.__notebook.DeletePage(i)
-                    # RemovePage si erreur ??
 
         self._currentProject.removeFromTree()
         self._projects.remove(self._currentProject)
-        #  del project
 
         self._currentProject = None
         self._currentFrame = None
+
+        return True
 
     def removeAllReferencesToUmlFrame(self, umlFrame):
         """

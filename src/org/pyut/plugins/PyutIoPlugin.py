@@ -163,18 +163,14 @@ class PyutIoPlugin(PyutPlugin):
     def doImport(self) -> List[OglClass]:
         """
         Called by Pyut to begin the import process.
+
         Returns:
             None if cancelled, else a list of OglClass objects
         """
-
-        # if this plugin can import
         if self.getInputFormat() is not None:
-            # set user options for import
             if not self.setImportOptions():
                 return cast(List[OglClass], None)
-            # read it into the list
             self.read(self.__oglObjects, self._umlFrame)
-            # return the new oglObjects list
             return self.__oglObjects
         else:
             return cast(List[OglClass], None)
@@ -182,19 +178,17 @@ class PyutIoPlugin(PyutPlugin):
     def doExport(self):
         """
         Called by Pyut to begin the export process.
-
         """
-        # if this plugin can export
         outputFormat: Tuple[str, str, str] = self.getOutputFormat()
         if outputFormat is not None:
-            # set user options for export
             if not self.setExportOptions():
                 return None
             mediator = getMediator()
+            # TODO make this a Pyut preference
             if self.clsLogger.level == pythonDebugLoggingLevel:
                 mediator.selectAllShapes()
             self.__oglObjects = mediator.getSelectedShapes()
             # write the file
             self.write(self.__oglObjects)
         else:
-            print(f'Output format is None: {outputFormat}')
+            PyutIoPlugin.clsLogger.info(f'Output format is None: {outputFormat}')
