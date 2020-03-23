@@ -15,6 +15,7 @@ from wx.adv import SPLASH_TIMEOUT
 
 from wx import OK
 from wx import ICON_ERROR
+from wx import ID_ANY
 
 from wx import HelpProvider
 from wx import SimpleHelpProvider
@@ -43,11 +44,6 @@ class PyutApp(wxApp):
 
     PyutApp is the main pyut application, a wxApp.
 
-    Called from pyut.py
-
-    :author:  C.Dutoit
-    :contact: <dutoitc@hotmail.com>
-    :version: $Revision: 1.15 $
     """
     SPLASH_TIMEOUT_MSECS: int = 3000
 
@@ -63,7 +59,7 @@ class PyutApp(wxApp):
     def OnInit(self):
         """
         """
-        provider = SimpleHelpProvider()
+        provider: SimpleHelpProvider = SimpleHelpProvider()
 
         HelpProvider.Set(provider)
         try:
@@ -78,7 +74,7 @@ class PyutApp(wxApp):
                 self.splash.Show(True)
                 wxYield()
 
-            self._frame = AppFrame(None, -1, "Pyut")
+            self._frame = AppFrame(None, ID_ANY, "Pyut")
             self.SetTopWindow(self._frame)
 
             self._AfterSplash()
