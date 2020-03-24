@@ -205,7 +205,16 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-
+        "ToOrthogonalLayout": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.plugins.orthogonal.TulipMaker": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "ToArrangeLinks": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

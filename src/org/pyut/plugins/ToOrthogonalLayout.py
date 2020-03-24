@@ -5,6 +5,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.plugins.orthogonal.TulipMaker import TulipMaker
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
@@ -25,7 +26,7 @@ class ToOrthogonalLayout(PyutToPlugin):
         super().__init__(umlObjects, umlFrame)
 
         self.logger: Logger = getLogger(__name__)
-        
+
     def getName(self):
         """
         Returns: the name of the plugin.
@@ -72,4 +73,15 @@ class ToOrthogonalLayout(PyutToPlugin):
             selectedObjects:    list of the selected objects
             umlFrame:           The diagram frame
         """
-        pass
+        if umlFrame is None:
+            self.displayNoUmlFrame()
+            return
+        if len(umlObjects) == 0:
+            self.displayNoUmlObjects()
+            return
+
+        self.logger.info(f'Begin Orthogonal algorithm')
+
+        tulipMaker: TulipMaker = TulipMaker()
+
+        tulipMaker.translate(umlObjects)

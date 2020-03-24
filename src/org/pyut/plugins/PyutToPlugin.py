@@ -6,7 +6,6 @@ from wx import MessageDialog
 from wx import OK
 
 from org.pyut.general.Mediator import Mediator
-from org.pyut.general.Mediator import getMediator
 
 from org.pyut.plugins.PyutPlugin import PyutPlugin
 
@@ -39,6 +38,11 @@ class PyutToPlugin(PyutPlugin):
     @staticmethod
     def displayNoUmlFrame():
         booBoo: MessageDialog = MessageDialog(parent=None, message='No UML frame', caption='Try Again!', style=OK | ICON_ERROR)
+        booBoo.ShowModal()
+
+    @staticmethod
+    def displayNoUmlObjects():
+        booBoo: MessageDialog = MessageDialog(parent=None, message='No UML objects', caption='Try Again!', style=OK | ICON_ERROR)
         booBoo.ShowModal()
 
     def getName(self) -> str:

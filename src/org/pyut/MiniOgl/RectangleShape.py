@@ -1,3 +1,4 @@
+from typing import Tuple
 
 from wx import DC
 
@@ -149,11 +150,12 @@ class RectangleShape(Shape):
         d = y > topLeftY + height
         return (a + b) == 1 and (c + d) == 1
 
-    def GetSize(self):
+    def GetSize(self) -> Tuple[float, float]:
         """
         Get the size of the rectangle.
 
-        @return (double, double)
+        Returns:
+            A tuple of width, height
         """
         return self._width, self._height
 
