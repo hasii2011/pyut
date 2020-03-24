@@ -422,6 +422,7 @@ class MiniDomToOgl:
             pyutMethod.setVisibility(visibility=vis)
 
             returnElt: Element = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_RETURN)[0]
+            # TODO use PyutType instead of bare string
             pyutMethod.setReturns(returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE))
 
             #

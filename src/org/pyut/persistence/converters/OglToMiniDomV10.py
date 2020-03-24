@@ -3,6 +3,7 @@ from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
+from typing import Union
 
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
@@ -274,9 +275,10 @@ class OglToMiniDom:
         root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutMethod.getName())
 
         visibility: PyutVisibilityEnum = pyutMethod.getVisibility()
-        visStr: str = visibility.name
+        visName:    str                = self.__safeVisibilityToName(visibility)
+
         if visibility is not None:
-            root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visStr)
+            root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visName)
 
         for modifier in pyutMethod.getModifiers():
             xmlModifier: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_MODIFIER)
@@ -308,8 +310,8 @@ class OglToMiniDom:
 
         root.appendChild(self._pyutParamToXml(pyutField, xmlDoc))
         visibility: PyutVisibilityEnum = pyutField.getVisibility()
-        visStr: str = visibility.name
-        root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visStr)
+        visName:    str                = self.__safeVisibilityToName(visibility)
+        root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visName)
 
         return root
 
@@ -553,3 +555,20 @@ class OglToMiniDom:
         simpleY: str = f'{y:.2f}'
 
         return simpleX, simpleY
+
+    def __safeVisibilityToName(self, visibility: Union[str, PyutVisibilityEnum]) -> str:
+        """
+        Account for old pre V10 code
+        Args:
+            visibility:
+
+        Returns:
+            The visibility name
+        """
+
+        if isinstance(visibility, str):
+            visStr: str = PyutVisibilityEnum.toEnum(visibility).name
+        else:
+            visStr: str = visibility.name
+
+        return visStr
