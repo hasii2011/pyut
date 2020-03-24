@@ -864,9 +864,9 @@ class PyutXml:
             for Param in Method.getElementsByTagName("Param"):
                 allParams.append(self._getParam(Param))
 
-            # setting de params for thiy method
+            # setting the params for this method
             aMethod.setParams(allParams)
-            # hadding this method in all class methods
+            # adding this method in all class methods
             allMethods.append(aMethod)
 
         return allMethods
