@@ -4,6 +4,11 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
+from wx import CENTRE
+from wx import ICON_ERROR
+from wx import MessageDialog
+from wx import OK
+
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.plugins.orthogonal.TulipMaker import TulipMaker
 from org.pyut.ui.UmlFrame import UmlFrame
@@ -85,3 +90,9 @@ class ToOrthogonalLayout(PyutToPlugin):
         tulipMaker: TulipMaker = TulipMaker()
 
         tulipMaker.translate(umlObjects)
+        success: TulipMaker.LayoutStatus = tulipMaker.layout()
+        if success[0] is False:
+            dlg = MessageDialog(None, success[1],  'Layout Error', OK | ICON_ERROR | CENTRE)
+            dlg.ShowModal()
+            dlg.Destroy()
+

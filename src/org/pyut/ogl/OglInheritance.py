@@ -1,9 +1,12 @@
 from logging import Logger
 from logging import getLogger
 
-import wx
+from wx import WHITE_BRUSH
+
+from org.pyut.MiniOgl.Shape import Shape
 
 from org.pyut.model.PyutLink import PyutLink
+
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 
@@ -26,8 +29,12 @@ class OglInheritance(OglLink):
 
         self.logger: Logger = getLogger(__name__)
         # Arrow must be white inside
-        self.SetBrush(wx.WHITE_BRUSH)
+        self.SetBrush(WHITE_BRUSH)
         self.SetDrawArrow(True)
 
     def __repr__(self):
-        return f'OglInheritance - Parent: {self.getSourceShape()}  Child: {self.getDestinationShape()}'
+        srcShape:  Shape = self.getSourceShape()
+        destShape: Shape = self.getDestinationShape()
+        sourceId:  int   = srcShape.GetID()
+        destId:    int   = destShape.GetID()
+        return f'OglInheritance - from: id: {sourceId} {self.getSourceShape()}  to: id: {destId} {self.getDestinationShape()}'

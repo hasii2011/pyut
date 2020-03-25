@@ -123,7 +123,7 @@ class OglAssociation(OglLink):
 
     def drawLosange(self, dc: DC, filled: bool = False):
         """
-        Draw an arrow at the begining of the line.
+        Draw an arrow at the beginning of the line.
 
         Args:
             dc:         The device context
@@ -211,4 +211,4 @@ class OglAssociation(OglLink):
         return midPointX, midPointY
 
     def __repr__(self):
-        return f'from: {self.getSourceShape()} to: {self.getDestinationShape()}'
+        return f'OglAssociation - from: {self.getSourceShape()} to: {self.getDestinationShape()}'

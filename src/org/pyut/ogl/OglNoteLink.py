@@ -3,6 +3,7 @@ from wx import PENSTYLE_LONG_DASH
 
 from wx import Pen
 
+from org.pyut.MiniOgl.Shape import Shape
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglObject import OglObject
@@ -27,3 +28,11 @@ class OglNoteLink(OglLink):
         super().__init__(srcShape, pyutLink, dstShape)
         self.SetDrawArrow(False)
         self.SetPen(Pen("BLACK", 1, PENSTYLE_LONG_DASH))
+
+    def __repr__(self):
+
+        srcShape:  Shape = self.getSourceShape()
+        destShape: Shape = self.getDestinationShape()
+        sourceId:  int   = srcShape.GetID()
+        destId:    int   = destShape.GetID()
+        return f'OglNoteLink - from: id: {sourceId} {self.getSourceShape()}  to: id: {destId} {self.getDestinationShape()}'
