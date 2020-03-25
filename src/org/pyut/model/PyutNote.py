@@ -1,8 +1,6 @@
 
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 
-from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
-
 
 class PyutNote(PyutLinkedObject):
     """
@@ -30,9 +28,3 @@ class PyutNote(PyutLinkedObject):
         self._content = newContent
 
     content: str = property(_getContent, _setContent)
-
-    def getName(self) -> str:
-        raise UnsupportedOperation('Use .content property')
-
-    def setName(self, newName: str):
-        raise UnsupportedOperation('Use .content property')
