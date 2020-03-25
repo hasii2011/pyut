@@ -44,8 +44,8 @@ class DelOglObjectCommand(Command):
         serialShape += makeValuatedToken("size", repr(size))
         # serialize the graphical links (Ogl) attached to the shape
         # and put it in the common data of the group. We have to do
-        # so because the link can be rebuild only after that the
-        # shape is rebuild and so the command for link deletion
+        # so because the link can be rebuilt only after the
+        # shape is rebuilt and so the command for link deletion
         # must be placed after this one.
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         for link in self._shape.getLinks():
