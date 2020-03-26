@@ -142,6 +142,11 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "TestCartesianConverter": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
         "org.pyut.commands.CommandGroup": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

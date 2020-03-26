@@ -38,6 +38,9 @@ class TulipMaker:
         self._tulipNodes: TulipNodes = {}
         self._tulipEdges: TulipEdges = {}
 
+        self._minCoordinates: tlp.Vec3f = None
+        self._maxCoordinates: tlp.Vec3f = None
+
         self.logger.info(f'Graph Name: {self._graph.getName()}')
 
     def translate(self, umlObjects: List[OglClass]):
@@ -62,6 +65,10 @@ class TulipMaker:
         success: TulipMaker.LayoutStatus = self._graph.applyLayoutAlgorithm('Hierarchical Tree (R-T Extended)',  params)
 
         if success[0] is True:
+            resultLayout = self._graph.getLayoutProperty("viewLayout")
+            self._minCoordinates = resultLayout.getMin()
+            self._maxCoordinates = resultLayout.getMax()
+
             gmlPluginParams = tlp.getDefaultPluginParameters('GML Export', self._graph)
             tlp.exportGraph('GML Export', self._graph, 'translationGraph.gml', gmlPluginParams)
 
