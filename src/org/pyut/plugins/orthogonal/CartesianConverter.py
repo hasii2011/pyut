@@ -4,14 +4,14 @@ from logging import getLogger
 from typing import Tuple
 
 from org.pyut.ui.UmlFrame import DEFAULT_WIDTH
+from org.pyut.ui.UmlFrame import A4_FACTOR
 
 ScreenCoordinates = Tuple[int, int]
 
 SCALE_FACTOR: float = 0.75
-A4_FACTOR:    float = 1.41
-XC:           int   = int(DEFAULT_WIDTH / 2)  # Half the screen size
-YC:           int   = int(DEFAULT_WIDTH / 2)  # Account for A4
-PC_X:         int   = XC  # Center X in Cartesian
+XC:           int   = int(DEFAULT_WIDTH / 2)          # Half the screen size
+YC:           int   = int(DEFAULT_WIDTH / A4_FACTOR)  # Account for A4
+PC_X:         int   = XC   # Center X in Cartesian
 PC_Y:         int   = -YC  # Center Y in Cartesian
 
 
@@ -42,9 +42,8 @@ class CartesianConverter:
         Pcx and Pcy are the center of the screen in Cartesian coordinates,
         S is the scale factor from Cartesian to pixels.
 
-        Source https://www.physicsforums.com/threads/screen-coordinates-to-cartesian-coordinates.268633/
+        [Reference](https://www.physicsforums.com/threads/screen-coordinates-to-cartesian-coordinates.268633/)
         """
-
         xS: float = XC + (cartesianX - PC_X) * SCALE_FACTOR
         yS: float = YC - (cartesianY - PC_Y) * SCALE_FACTOR
 

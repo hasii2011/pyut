@@ -35,7 +35,7 @@ class TestCartesianConverter(TestBase):
         y: int = -91
 
         screenCoordinates: ScreenCoordinates = CartesianConverter.cartesianToScreen(x, y)
-        self.logger.info(f'cartesian1: ({x}, {y}) screenCoordinates - {screenCoordinates}')
+        self.logger.info(f'cartesianToScreen: ({x}, {y}) screenCoordinates - {screenCoordinates}')
 
 
 def suite() -> TestSuite:

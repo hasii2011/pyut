@@ -34,6 +34,7 @@ from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
 #  DEFAULT_WIDTH = 1280
 #  DEFAULT_WIDTH = 5120
 DEFAULT_WIDTH = 3000
+A4_FACTOR:    float = 1.41
 
 
 class UmlFrame(UmlFrameShapeHandler):
@@ -59,7 +60,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
         self._ctrl = getMediator()
         self.maxWidth  = DEFAULT_WIDTH
-        self.maxHeight = int(self.maxWidth / 1.41)  # 1.41 is for A4 support
+        self.maxHeight = int(self.maxWidth / A4_FACTOR)  # 1.41 is for A4 support
 
         nbrUnitsX: int = int(self.maxWidth / UmlFrame.PIXELS_PER_UNIT_X)
         nbrUnitsY: int = int(self.maxHeight / UmlFrame.PIXELS_PER_UNIT_Y)
