@@ -18,6 +18,7 @@ PC_Y:         int   = -YC  # Center Y in Cartesian
 class CartesianConverter:
 
     clsLogger: Logger = getLogger(__name__)
+    x = 0
 
     def __init__(self):
 
@@ -30,14 +31,16 @@ class CartesianConverter:
         will bring Pc to the centre of the screen, and a scale will bring everything you want to see on the screen.
 
         You need to flip the sign of y so that y will go up instead. Convert the center of the screen in Cartesian
-        coordinate to (Xc,Yc) in pixels, and S, scale to covert Cartesian to pixels.
+        coordinate to (Xc,Yc) in pixels, and S, scale to convert Cartesian to pixels.
         Usually, Xc and Yc are half of the screen size.
-        Xs =Xc + (X-Pcx)*S
-        Ys =Yc - (Y-Pcy)*S
+
+        Xs = Xc + (X-Pcx) * S
+        Ys = Yc - (Y-Pcy) * S
+
         where (X,Y) in Cartesian
         is mapped to (Xs,Ys) in screen coordinates,
-        Pcx and Pcy are the centre of the screen in Cartesian coordinates,
-        S is the scales factor from Cartesian to pixels.
+        Pcx and Pcy are the center of the screen in Cartesian coordinates,
+        S is the scale factor from Cartesian to pixels.
 
         Source https://www.physicsforums.com/threads/screen-coordinates-to-cartesian-coordinates.268633/
         """
