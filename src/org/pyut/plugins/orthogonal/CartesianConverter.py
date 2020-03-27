@@ -18,7 +18,6 @@ PC_Y:         int   = -YC  # Center Y in Cartesian
 class CartesianConverter:
 
     clsLogger: Logger = getLogger(__name__)
-    x = 0
 
     def __init__(self):
 

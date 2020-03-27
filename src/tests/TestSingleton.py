@@ -6,6 +6,7 @@ import unittest
 
 from unittest import TestSuite
 
+
 class Child(Singleton):
     """
     Test class.
