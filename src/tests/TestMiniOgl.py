@@ -1,6 +1,5 @@
 from wx import App
-from wx import CURSOR_PENCIL
-from wx import Cursor
+
 from wx import DEFAULT_FRAME_STYLE
 from wx import Frame
 
@@ -11,6 +10,7 @@ from org.pyut.MiniOgl.PointShape import PointShape
 from org.pyut.MiniOgl.RectangleShape import RectangleShape
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.LineShape import LineShape
+from org.pyut.MiniOgl.ControlPoint import ControlPoint
 
 
 class TestMiniOglApp(App):
@@ -22,15 +22,15 @@ class TestMiniOglApp(App):
         frameTop: Frame = Frame(parent=None, id=TestMiniOglApp.FRAME_ID, title="Test MiniOgl", size=(400, 400), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
 
-        diagFrame: DiagramFrame = DiagramFrame(frameTop)
-        diagFrame.SetSize((1200, 1200))
-        diagFrame.SetScrollbars(10, 10, 100, 100)
-        diagFrame.SetCursor(Cursor(CURSOR_PENCIL))
-        diagFrame.Show(True)
+        diagramFrame: DiagramFrame = DiagramFrame(frameTop)
+        diagramFrame.SetSize((1200, 1200))
+        diagramFrame.SetScrollbars(10, 10, 100, 100)
 
-        self.SetTopWindow(diagFrame)
+        diagramFrame.Show(True)
 
-        self._diagFrame: DiagramFrame = diagFrame
+        self.SetTopWindow(diagramFrame)
+
+        self._diagramFrame: DiagramFrame = diagramFrame
 
         self.initTest()
 
@@ -38,7 +38,7 @@ class TestMiniOglApp(App):
 
     def initTest(self):
 
-        diagFrame: Diagram = self._diagFrame.GetDiagram()
+        diagFrame: Diagram = self._diagramFrame.GetDiagram()
 
         pointShape: PointShape = PointShape(50, 50)
         diagFrame.AddShape(pointShape)
@@ -54,12 +54,19 @@ class TestMiniOglApp(App):
 
         anchor1 = AnchorPoint(50, 100)
         anchor1.SetDraggable(True)
-        anchor2 = AnchorPoint(70, 130)
+        anchor2 = AnchorPoint(200, 300)
         anchor2.SetDraggable(True)
 
         lineShape: LineShape = LineShape(anchor1, anchor2)
         lineShape.SetDrawArrow(False)
         lineShape.SetDraggable(True)
+        lineShape.SetSpline(False)
+
+        controlPoint: ControlPoint = ControlPoint(50, 150)
+        lineShape.AddControl(controlPoint)
+        controlPoint = ControlPoint(200, 150)
+        lineShape.AddControl(controlPoint)
+
         diagFrame.AddShape(lineShape)
 
 
