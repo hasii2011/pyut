@@ -9,9 +9,14 @@ from typing import Tuple
 from typing import Union
 from typing import cast
 
+from os import sep as osSep
+
+import tempfile
+
 # noinspection PyPackageRequirements
 from tulip import tlp           # because they named it tulip-python
 
+from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
@@ -22,11 +27,17 @@ Use Any as a substitute for tlp.Node and tlp.Edge
 TulipNodes = Dict[int, Any]
 TulipEdges = Dict[str, Any]
 
+OglToTulipMap = Dict[int, int]     # OglId to Tulip Id
+
 
 class TulipMaker:
 
-    OGL_ID: str = 'oglId'
     LayoutStatus = Tuple[bool, str]
+
+    DEBUG_TEMP_FILE_LOCATION:  bool = True          # TODO: Make this a debug runtime value
+    OGL_ID:                    str = 'oglId'
+
+    TEMPORARY_GML_LAYOUT_FILENAME: str = 'translationGraph.gml'
 
     def __init__(self):
 
@@ -38,10 +49,41 @@ class TulipMaker:
         self._tulipNodes: TulipNodes = {}
         self._tulipEdges: TulipEdges = {}
 
+        self._nodeIdMap: OglToTulipMap = {}
+        self._edgeIdMap: OglToTulipMap = {}
+
         self._minCoordinates: tlp.Vec3f = None
         self._maxCoordinates: tlp.Vec3f = None
 
+        tempDir: str = tempfile.gettempdir()
+
+        if TulipMaker.DEBUG_TEMP_FILE_LOCATION is True:
+            self._pathToLayout = f'{TulipMaker.TEMPORARY_GML_LAYOUT_FILENAME}'
+        else:
+            self._pathToLayout = f'{tempDir}{osSep}{TulipMaker.TEMPORARY_GML_LAYOUT_FILENAME}'
         self.logger.info(f'Graph Name: {self._graph.getName()}')
+
+    def getPathToLayout(self) -> str:
+        return self._pathToLayout
+
+    def setPathToLayout(self, theNewValue: str):
+        raise UnsupportedOperation('This is a read-only property')
+
+    def getNodeIdMap(self) -> OglToTulipMap:
+        return self._nodeIdMap
+
+    def setNodeIdMap(self, theNewValue: OglToTulipMap):
+        raise UnsupportedOperation('This is a read-only property')
+
+    def getEdgeIdMap(self) -> OglToTulipMap:
+        return self._edgeIdMap
+
+    def setEdgeIdMap(self, theNewValue: OglToTulipMap):
+        self._edgeIdMap = theNewValue
+
+    pathToLayout = property(getPathToLayout, setPathToLayout)
+    nodeIdMap    = property(getNodeIdMap, setNodeIdMap)
+    edgeIdMap    = property(getEdgeIdMap, setEdgeIdMap)
 
     def translate(self, umlObjects: List[OglClass]):
 
@@ -70,7 +112,7 @@ class TulipMaker:
             self._maxCoordinates = resultLayout.getMax()
 
             gmlPluginParams = tlp.getDefaultPluginParameters('GML Export', self._graph)
-            tlp.exportGraph('GML Export', self._graph, 'translationGraph.gml', gmlPluginParams)
+            tlp.exportGraph('GML Export', self._graph, self._pathToLayout, gmlPluginParams)
 
         return success
 
@@ -100,6 +142,10 @@ class TulipMaker:
 
         self.__setOglIdOnNode(node, umlClass)
 
+        self.logger.info(f'Created tulip node.id {node.id} for OglClass.id: {umlClass.GetID()}')
+        # self._nodeIdMap[node.id] = umlClass.GetID()
+        self._nodeIdMap[umlClass.GetID()] = node.id
+
         return node
 
     def _createEdges(self, umlClass: Union[OglClass, OglNote]):
@@ -119,7 +165,9 @@ class TulipMaker:
                 tulipEdge: tlp.Edge = self._graph.addEdge(sourceTulipNode, targetTulipNode)
                 edgeNameProperty = self._graph.getStringProperty('edgeName')
                 edgeNameProperty.setEdgeValue(tulipEdge, edgeName)
-                self._tulipEdges[edgeName] = tulipEdge
+
+                self._tulipEdges[edgeName]    = tulipEdge
+                self._edgeIdMap[link.GetID()] = tulipEdge.id
 
     def __setOglIdOnNode(self, node, umlClass: OglClass):
 
