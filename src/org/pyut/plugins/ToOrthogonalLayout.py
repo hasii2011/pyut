@@ -8,32 +8,32 @@ from time import time
 from typing import Tuple
 from typing import cast
 
-from pygmlparser.graphics.Point import Point
+from pygmlparser.Edge import Edge
 from wx import CENTRE
 from wx import ICON_ERROR
 from wx import MessageDialog
 from wx import OK
 from wx import Yield as wxYield
 
-from pygmlparser.Graph import Graph
-from pygmlparser.Node import Node
-
-from org.pyut.MiniOgl.Shape import Shape
-from org.pyut.ogl.OglLink import OglLink
-
-from org.pyut.ogl.OglNote import OglNote
-
+from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
-from org.pyut.plugins.orthogonal.CartesianConverter import CartesianConverter
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
+from pygmlparser.Parser import Parser
+from pygmlparser.Graph import Graph
+from pygmlparser.Node import Node
+from pygmlparser.graphics.Point import Point
+
+from org.pyut.MiniOgl.Shape import Shape
+
+from org.pyut.ogl.OglLink import OglLink
+from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.orthogonal.TulipMaker import TulipMaker
 from org.pyut.plugins.orthogonal.TulipMaker import OglToTulipMap
-
-from pygmlparser.Parser import Parser
+from org.pyut.plugins.orthogonal.CartesianConverter import CartesianConverter
 
 
 class ToOrthogonalLayout(PyutToPlugin):
@@ -131,22 +131,37 @@ class ToOrthogonalLayout(PyutToPlugin):
         nodeIdMap: OglToTulipMap = tulipMaker.nodeIdMap
         edgeIdMap: OglToTulipMap = tulipMaker.edgeIdMap
 
+        self._reLayoutNodes(umlObjects, umlFrame, gmlNodes, nodeIdMap)
+
+        self._reLayoutLinks(umlObjects, umlFrame, gmlEdges, edgeIdMap)
+
+    def _reLayoutNodes(self, umlObjects: List[OglClass], umlFrame: UmlFrame, gmlNodes: Graph.Nodes, nodeIdMap: OglToTulipMap):
+        """
+
+        Args:
+            umlObjects:
+            umlFrame:
+            gmlNodes:
+            nodeIdMap:
+        """
+
         for umlObj in umlObjects:
             if isinstance(umlObj, OglClass) or isinstance(umlObj, OglNote):
-                gmlNodeId: int  = nodeIdMap[umlObj.GetID()]
-                gmlNode:   Node = gmlNodes[gmlNodeId]
+                gmlNodeId: int = nodeIdMap[umlObj.GetID()]
+                gmlNode: Node = gmlNodes[gmlNodeId]
                 self._stepNodes(umlObj, gmlNode)
             self._animate(umlFrame)
 
+    def _reLayoutLinks(self, umlObjects, umlFrame: UmlFrame, gmlEdges, edgeIdMap):
+
         for umlLink in umlObjects:
             if isinstance(umlLink, OglLink):
-                umlLink: OglLink   = cast(OglLink, umlLink)
-                gmlEdgeId: int     = edgeIdMap[umlLink.GetID()]
+                umlLink: OglLink = cast(OglLink, umlLink)
+                gmlEdgeId: int = edgeIdMap[umlLink.GetID()]
                 # gmlEdge:   Edge    = gmlEdges[gmlEdgeId]
-                gmlEdge = [gEdge for gEdge in gmlEdges if gEdge.id == gmlEdgeId][0]
-
-                line: Tuple[Point] = gmlEdge.graphics.line
-                self.logger.info(f'{umlLink} has points {len(line)}')
+                gmlEdge: Edge = [gEdge for gEdge in gmlEdges if gEdge.id == gmlEdgeId][0]  # TODO Modify the parser to store as a map
+                self._stepEdges(umlLink=umlLink, gmlEdge=gmlEdge)
+            self._animate(umlFrame)
 
     def _stepNodes(self, srcShape: Shape, gmlNode: Node):
 
@@ -159,6 +174,27 @@ class ToOrthogonalLayout(PyutToPlugin):
         self.logger.info(f'{srcShape} - oldX,oldY = {oldX},{oldY} newX,newY = {newX},{newY}')
 
         srcShape.SetPosition(newX, newY)
+
+    def _stepEdges(self, umlLink: OglLink, gmlEdge: Edge):
+
+        line: Tuple[Point] = gmlEdge.graphics.line
+        nPoints: int = len(line)
+        self.logger.info(f'{umlLink} has points {nPoints}')
+        #
+        # Work around a bug for now
+        #
+        if nPoints > 0:
+            ptNumber: int = 0
+            while ptNumber < nPoints:
+                if 0 < ptNumber < (nPoints - 1):
+                    self.logger.info(f'process point # {ptNumber}')
+                    ptToAdd: Point = line[ptNumber]
+                    cartesianX: int = ptToAdd.x
+                    cartesianY: int = ptToAdd.y
+                    newX, newY = CartesianConverter.cartesianToScreen(cartesianX, cartesianY)
+                    controlPoint: ControlPoint = ControlPoint(newX, newY)
+                    umlLink.AddControl(controlPoint)
+                ptNumber += 1
 
     def _animate(self, umlFrame):
         """
