@@ -13,7 +13,7 @@ from org.pyut.plugins.FieldExtractor import FieldExtractor
 class TestFieldExtractor(TestBase):
     """
     """
-    TEST_FILE_NAME: str = '/Users/humberto.a.sanchez.ii/PycharmProjects/PyUt/src/tests/testclass/Opie.py'
+    TEST_FILE_NAME: str = 'testclass/Opie.py'
     clsLogger: Logger = None
 
     @classmethod
