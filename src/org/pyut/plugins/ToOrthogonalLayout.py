@@ -1,22 +1,26 @@
 
 from typing import List
+from typing import Tuple
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
 from time import time
-from typing import Tuple
-from typing import cast
 
 from pygmlparser.Edge import Edge
+
 from wx import CENTRE
 from wx import ICON_ERROR
 from wx import MessageDialog
 from wx import OK
 from wx import Yield as wxYield
 
+from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.MiniOgl.Shape import Shape
+
+from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -25,11 +29,11 @@ from pygmlparser.Graph import Graph
 from pygmlparser.Node import Node
 from pygmlparser.graphics.Point import Point
 
-from org.pyut.MiniOgl.Shape import Shape
-
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 from org.pyut.plugins.orthogonal.TulipMaker import TulipMaker
 from org.pyut.plugins.orthogonal.TulipMaker import OglToTulipMap
@@ -183,6 +187,15 @@ class ToOrthogonalLayout(PyutToPlugin):
         #
         # Work around a bug for now
         #
+        anchors = umlLink.getAnchors()
+        srcAnchor: AnchorPoint = anchors[0]
+        dstAnchor: AnchorPoint = anchors[1]
+
+        relSrcX, relSrcY, relDstX, relDstY = self._getRelativeCoordinates(srcShape=umlLink.getSourceShape(), destShape=umlLink.getDestinationShape())
+        self.logger.info(f' relSrc: ({relSrcX}, {relSrcY}) -  relDst: ({relDstX}, {relDstY})')
+
+        srcAnchor.SetPosition(relSrcX, relSrcY)
+        dstAnchor.SetPosition(relDstX, relDstY)
         if nPoints > 0:
             ptNumber: int = 0
             while ptNumber < nPoints:
@@ -209,3 +222,58 @@ class ToOrthogonalLayout(PyutToPlugin):
         t = time()
         while time() < t + 0.05:
             pass
+
+    def _getRelativeCoordinates(self, srcShape, destShape):
+
+        srcX, srcY = srcShape.GetPosition()
+        dstX, dstY = destShape.GetPosition()
+
+        orientation = self._getOrientation(srcX, srcY, dstX, dstY)
+        self.logger.info(f'orientation: {orientation}')
+        sw, sh = srcShape.GetSize()
+        dw, dh = destShape.GetSize()
+        if orientation == PyutAttachmentPoint.NORTH:
+            srcX, srcY = sw / 2, 0
+            dstX, dstY = dw / 2, dh
+        elif orientation == PyutAttachmentPoint.SOUTH:
+            srcX, srcY = sw / 2, sh
+            dstX, dstY = dw / 2, 0
+        elif orientation == PyutAttachmentPoint.EAST:
+            srcX, srcY = sw, sh / 2
+            dstX, dstY = 0, dh / 2
+        elif orientation == PyutAttachmentPoint.WEST:
+            srcX, srcY = 0, sh / 2
+            dstX, dstY = dw, dh / 2
+
+        return srcX, srcY, dstX, dstY
+
+    def _getOrientation(self, srcX, srcY, destX, destY) -> PyutAttachmentPoint:
+        """
+        Given a source and destination, returns where the destination
+        is located according to the source.
+
+        Args:
+            srcX:   X pos of src point
+            srcY:   Y pos of src point
+            destX:  X pos of dest point
+            destY:  Y pos of dest point
+
+        Returns:
+            The attachment point on the destination
+        """
+        deltaX = srcX - destX
+        deltaY = srcY - destY
+        if deltaX > 0:  # dest is not east
+            if deltaX > abs(deltaY):    # dest is west
+                return PyutAttachmentPoint.WEST
+            elif deltaY > 0:
+                return PyutAttachmentPoint.NORTH
+            else:
+                return PyutAttachmentPoint.SOUTH
+        else:   # dest is not west
+            if -deltaX > abs(deltaY):   # dest is east
+                return PyutAttachmentPoint.EAST
+            elif deltaY > 0:
+                return PyutAttachmentPoint.NORTH
+            else:
+                return PyutAttachmentPoint.SOUTH

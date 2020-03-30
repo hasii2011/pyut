@@ -138,7 +138,7 @@ class TulipMaker:
 
         graphViewLayout[node] = tlp.Coord(x, y,  0)
         graphViewSize[node]   = tlp.Size(w, h, 0)
-        graphViewShape[node]  = tlp.NodeShape.Square
+        graphViewShape[node]  = tlp.NodeShape.RoundedBox
 
         self.__setOglIdOnNode(node, umlClass)
 
@@ -188,7 +188,8 @@ class TulipMaker:
 
         params['orthogonal']    = True
         params["orientation"]   = "vertical"
-        params["layer spacing"] = 100.0
-        params["node spacing"]  = 50.0
+        params["layer spacing"] = 150.0
+        params["node spacing"]  = 100.0
+        params['compact layout'] = False
 
         return params
