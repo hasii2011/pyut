@@ -2,10 +2,13 @@
 from logging import Logger
 from logging import getLogger
 
+from os import sep as osSep
+
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
+from tests.TestBase import TEST_DIRECTORY
 
 from org.pyut.plugins.FieldExtractor import FieldExtractor
 
@@ -13,7 +16,7 @@ from org.pyut.plugins.FieldExtractor import FieldExtractor
 class TestFieldExtractor(TestBase):
     """
     """
-    TEST_FILE_NAME: str = 'testclass/Opie.py'
+    TEST_FILE_NAME: str = f'{TEST_DIRECTORY}{osSep}testclass{osSep}Opie.py'
     clsLogger: Logger = None
 
     @classmethod

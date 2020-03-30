@@ -4,6 +4,8 @@ from typing import Dict
 from logging import Logger
 from logging import getLogger
 
+from os import sep as osSep
+
 from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
@@ -11,6 +13,7 @@ from unittest.mock import MagicMock
 from wx import App
 
 from tests.TestBase import TestBase
+from tests.TestBase import TEST_DIRECTORY
 
 from org.pyut.plugins.xsd.XSDParser import XSDParser
 
@@ -38,12 +41,14 @@ class TestXSDParser(TestBase):
 
         self.mockFrame:  MagicMock = MagicMock()
 
+        self._schemaPath: str = f'{TEST_DIRECTORY}{osSep}testdata{osSep}SimpleSchema.xsd'
+
     def tearDown(self):
         pass
 
     def testPositionGeneratorInitialValues(self):
 
-        xsdParser: XSDParser = XSDParser(filename='testdata/SimpleSchema.xsd', umlFrame=self.mockFrame)
+        xsdParser: XSDParser = XSDParser(filename=self._schemaPath, umlFrame=self.mockFrame)
 
         pos: Dict[str, float] = next(xsdParser.position)
         x: float = pos['x']
@@ -55,7 +60,7 @@ class TestXSDParser(TestBase):
 
     def testPositionGeneratorIncrementValues(self):
 
-        xsdParser: XSDParser = XSDParser(filename='testdata/SimpleSchema.xsd', umlFrame=self.mockFrame)
+        xsdParser: XSDParser = XSDParser(filename=self._schemaPath, umlFrame=self.mockFrame)
 
         pos: Dict[str, float] = next(xsdParser.position)
         initX: float = pos['x']
@@ -75,7 +80,7 @@ class TestXSDParser(TestBase):
 
     def testPositionGeneratorIncrementYValue(self):
 
-        xsdParser: XSDParser = XSDParser(filename='testdata/SimpleSchema.xsd', umlFrame=self.mockFrame)
+        xsdParser: XSDParser = XSDParser(filename=self._schemaPath, umlFrame=self.mockFrame)
 
         pos: Dict[str, float] = next(xsdParser.position)
 
@@ -94,12 +99,12 @@ class TestXSDParser(TestBase):
 
     def testBasicInitialization(self):
 
-        xsdParser: XSDParser = XSDParser(filename='testdata/SimpleSchema.xsd', umlFrame=self.mockFrame)
+        xsdParser: XSDParser = XSDParser(filename=self._schemaPath, umlFrame=self.mockFrame)
         self.assertIsNotNone(xsdParser, 'Basic creation works')
 
     def testProcessing(self):
 
-        xsdParser: XSDParser = XSDParser(filename='testdata/SimpleSchema.xsd', umlFrame=self.mockFrame)
+        xsdParser: XSDParser = XSDParser(filename=self._schemaPath, umlFrame=self.mockFrame)
 
         xsdParser.process()
 

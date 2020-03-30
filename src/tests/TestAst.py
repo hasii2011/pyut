@@ -4,14 +4,17 @@ from typing import TextIO
 from logging import Logger
 from logging import getLogger
 
-from unittest import main as unitTestMain
-from unittest import TestSuite
+from os import sep as osSep
 
 from ast import parse
 from ast import dump
 from ast import iter_child_nodes
 
+from unittest import main as unitTestMain
+from unittest import TestSuite
+
 from tests.TestBase import TestBase
+from tests.TestBase import TEST_DIRECTORY
 
 from org.pyut.plugins.PluginAst import Visitor
 
@@ -34,7 +37,7 @@ class TestAst(TestBase):
 
         self.logger.info(f'Do I pass?')
         try:
-            fileName = 'testclass/EventLoopParams.py'
+            fileName = f'{TEST_DIRECTORY}{osSep}testclass{osSep}EventLoopParams.py'
             fd: TextIO = open(fileName)
             data = fd.read()
             fd.close()

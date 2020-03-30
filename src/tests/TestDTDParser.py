@@ -3,11 +3,14 @@ from logging import Logger
 from logging import getLogger
 from typing import List
 
+from os import sep as osSep
+
 from unittest import main as unitTestMain
 from unittest import TestSuite
 from unittest.mock import MagicMock
 
 from tests.TestBase import TestBase
+from tests.TestBase import TEST_DIRECTORY
 
 from wx import App
 
@@ -46,7 +49,7 @@ class TestDTDParser(TestBase):
         mockFrame:    MagicMock = MagicMock()
 
         dtdReader: DTDParser = DTDParser(umlFrame=mockFrame)
-        dtdReader.open('testdata/AllElements.dtd')
+        dtdReader.open(f'{TEST_DIRECTORY}{osSep}testdata{osSep}AllElements.dtd')
 
         actualClassCount: int = dtdReader.classTree.__len__()
 

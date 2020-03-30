@@ -28,9 +28,9 @@ class TestPluginManager(TestBase):
     def setUp(self):
         self.logger: Logger = TestPluginManager.clsLogger
 
-        # Assume we are in src/tests
+        # Assume we are in src
         savePath: str = getcwd()
-        chdir('../..')
+
         newBasePath: str = getcwd()
         PyutUtils.setBasePath(newBasePath)
         chdir(savePath)

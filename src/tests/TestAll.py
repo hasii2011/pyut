@@ -58,9 +58,11 @@ class TestAll:
         """
         Read the unit test logging configuration file
         """
-        from tests.TestBase import JSON_LOGGING_CONFIG_FILENAME
+        from tests.TestBase import TestBase
 
-        with open(JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
+        loggingConfigFilename: str = TestBase.findLoggingConfig()
+
+        with open(loggingConfigFilename, 'r') as loggingConfigurationFile:
             configurationDictionary = jsonLoad(loggingConfigurationFile)
 
             loggingConfig.dictConfig(configurationDictionary)
@@ -75,9 +77,12 @@ class TestAll:
         """
         modules: List[str] = self.__getTestableModuleNames()
         fSuite: TestSuite = TestSuite()
+        import os
+        print(f'cwd: {os.getcwd()}')
         for module in modules:
             try:
-                m = import_module(module)
+                fixedName: str = module.replace('/', '.')
+                m = import_module(fixedName)
                 fSuite.addTest(m.suite())
             except (ValueError, Exception) as e:
                 self.logger.error(f'Module import problem with: {module}:  {e}')
@@ -91,11 +96,11 @@ class TestAll:
             A list of module names that we can find in this package
         """
 
-        fModules = glob("Test*.py")
+        fModules = glob("tests/Test*.py")
         # remove .py extension
         modules = list(map(lambda x: x[:-3], fModules))
         for doNotTest in TestAll.NOT_TESTS:
-            modules.remove(doNotTest)
+            modules.remove(f'tests/{doNotTest}')
 
         return modules
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd src/tests
+cd src
 
-python3 -m TestAll $*
+python3 -m tests.TestAll $*
 status=$?
 
 cd ../..

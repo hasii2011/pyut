@@ -37,8 +37,7 @@ class TestPyutXmlFinder(TestBase):
     def setUp(self):
         self.logger: Logger = TestPyutXmlFinder.clsLogger
         oldPath: str = getcwd()
-        # Assume we are at src/tests
-        chdir('..')
+        # Assume we are at src
         self.newAppPath: str = getcwd()
         chdir(oldPath)
 
