@@ -85,8 +85,8 @@ class HistoryManager:
     def setGroupToExecute(self, newValue: CommandGroup):
         raise NotImplementedError('Group to execute is read-only')
 
-    groupCount      = property(getGroupCount, setGroupCount)
-    groupUndoIndex  = property(getGroupUndoIndex, setGroupUndoIndex)
+    groupCount     = property(getGroupCount, setGroupCount)
+    groupUndoIndex = property(getGroupUndoIndex, setGroupUndoIndex)
     groupToExecute = property(getGroupToExecute, setGroupToExecute)
 
     def undo(self):
