@@ -421,11 +421,12 @@ class Shape:
         y -= self._oy
         return x, y
 
-    def GetSize(self):
+    def GetSize(self) -> Tuple[float, float]:
         """
         Get the size of the shape.
 
-        @return (double, double)
+        Returns:  a width, height tuple
+
         """
         return 0.0, 0.0
 

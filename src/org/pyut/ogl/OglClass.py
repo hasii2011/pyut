@@ -41,12 +41,13 @@ class OglClass(OglObject):
     :author: Laurent Burgbacher
     :contact: lb@alawa.ch
     """
-    def __init__(self, pyutClass=None, w: float = 100.0, h: float = 100.0):
+    def __init__(self, pyutClass: PyutClass = None, w: float = 100.0, h: float = 100.0):
         """
-        @param  pyutClass : a Pyutclass object
-        @param  w : Width of the shape
-        @param  h : Height of the shape
-        @author N.Hamadi
+
+        Args:
+            pyutClass:  a PyutClass object
+            w:  Width of the shape
+            h:  Height of the shape
         """
         if pyutClass is None:
             pyutObject = PyutClass()
