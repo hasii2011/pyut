@@ -29,7 +29,7 @@ class PyutLink(PyutObject):
 
         Args:
             name:        The link name
-            linkType:    The enum represening the link type
+            linkType:    The enum representing the link type
             cardSrc:     The source cardinality
             cardDest:    The destination cardinality
             bidir:      `True` if the link is bidirectional, else `False`
@@ -122,15 +122,15 @@ class PyutLink(PyutObject):
 
     def getBidir(self) -> bool:
         """
-        Get the link is bidirectionality
+        Get the link is bidirectional value
 
-        Returns: `True` if the link is bidirection else `False`
+        Returns: `True` if the link is bidirectional else `False`
         """
         return self._bidirectional
 
     def setBidir(self, bidirectional: bool):
         """
-        Update the bidirectionality
+        Update the bidirectional value
 
         Args:
              bidirectional
