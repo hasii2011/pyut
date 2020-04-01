@@ -91,20 +91,20 @@ class GMLExporter:
 
     def _generateNodes(self, umlObjects: OglClasses, gml: str) -> str:
 
+        nodeGml: str = ''
         for umlClass in umlObjects:
             if isinstance(umlClass, OglClass) or isinstance(umlClass, OglNote):
                 oglObject:  OglObject  = cast(OglObject, umlClass)
                 pyutObject: PyutObject = oglObject.getPyutObject()
-                gml = (
-                    f'{gml}'
+                nodeGml = (
+                    f'{nodeGml}'
                     f'{GMLExporter.singleIndent}{GMLExporter.NODE_TOKEN} {GMLExporter.START_TOKEN}\n'
                     f'{GMLExporter.doubleIndent}{GMLExporter.ID_TOKEN} {oglObject.GetID()}\n'
                     f'{GMLExporter.doubleIndent}{GMLExporter.LABEL_TOKEN} "{pyutObject.getName()}"\n'
                     f'{self._generateNodeGraphicsSection(oglObject)}'
+                    f'{GMLExporter.singleIndent}{GMLExporter.END_TOKEN}\n'
                 )
-
-            gml = f'{gml}\n\t{GMLExporter.END_TOKEN}\n'
-        return gml
+        return f'{gml}{nodeGml}'
 
     def _generateNodeGraphicsSection(self, oglObject: OglObject) -> str:
 
@@ -130,7 +130,7 @@ class GMLExporter:
             f'{GMLExporter.tripleIndent}fill "#ff0000"\n'
             f'{GMLExporter.tripleIndent}outline "#000000"\n'
             
-            f'{GMLExporter.doubleIndent}{GMLExporter.END_TOKEN}'
+            f'{GMLExporter.doubleIndent}{GMLExporter.END_TOKEN}\n'
         )
         return gml
 
