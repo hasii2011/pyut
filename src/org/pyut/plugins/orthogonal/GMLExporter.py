@@ -1,17 +1,24 @@
 from logging import Logger
 from logging import getLogger
+
 from typing import List
 from typing import Set
+from typing import Tuple
 from typing import cast
 
-from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
+from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.MiniOgl.LinePoint import LinePoint
+
 from org.pyut.model.PyutObject import PyutObject
+
+from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 
 from org.pyut.general.PyutVersion import PyutVersion
-from org.pyut.ogl.OglObject import OglObject
+from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
 OglClasses = List[OglClass]
 
@@ -44,9 +51,11 @@ class GMLExporter:
     HEIGHT_TOKEN:     str = 'h'
     DEPTH_TOKEN:      str = 'd'
 
-    singleIndent: str = ''
-    doubleIndent: str = ''
-    tripleIndent: str = ''
+    singleTab: str = ''
+    doubleTab: str = ''
+    tripleTab: str = ''
+    quadrupleTab: str = ''
+    quintupleTab: str = ''
 
     def __init__(self):
 
@@ -58,9 +67,11 @@ class GMLExporter:
     def translate(self, umlObjects: OglClasses):
 
         if self._prettyPrint is True:
-            GMLExporter.singleIndent = '\t'
-            GMLExporter.doubleIndent = '\t\t'
-            GMLExporter.tripleIndent = '\t\t\t'
+            GMLExporter.singleTab = '\t'
+            GMLExporter.doubleTab = '\t\t'
+            GMLExporter.tripleTab = '\t\t\t'
+            GMLExporter.quadrupleTab = '\t\t\t\t'
+            GMLExporter.quintupleTab = '\t\t\t\t\t'
 
         gml: str = self._generateGraphStart()
         gml = self._generateNodes(umlObjects, gml)
@@ -98,11 +109,11 @@ class GMLExporter:
                 pyutObject: PyutObject = oglObject.getPyutObject()
                 nodeGml = (
                     f'{nodeGml}'
-                    f'{GMLExporter.singleIndent}{GMLExporter.NODE_TOKEN} {GMLExporter.START_TOKEN}\n'
-                    f'{GMLExporter.doubleIndent}{GMLExporter.ID_TOKEN} {oglObject.GetID()}\n'
-                    f'{GMLExporter.doubleIndent}{GMLExporter.LABEL_TOKEN} "{pyutObject.getName()}"\n'
+                    f'{GMLExporter.singleTab}{GMLExporter.NODE_TOKEN} {GMLExporter.START_TOKEN}\n'
+                    f'{GMLExporter.doubleTab}{GMLExporter.ID_TOKEN} {oglObject.GetID()}\n'
+                    f'{GMLExporter.doubleTab}{GMLExporter.LABEL_TOKEN} "{pyutObject.getName()}"\n'
                     f'{self._generateNodeGraphicsSection(oglObject)}'
-                    f'{GMLExporter.singleIndent}{GMLExporter.END_TOKEN}\n'
+                    f'{GMLExporter.singleTab}{GMLExporter.END_TOKEN}\n'
                 )
         return f'{gml}{nodeGml}'
 
@@ -117,20 +128,20 @@ class GMLExporter:
         h = dimensions[1]
         d = 0
         gml = (
-            f'{GMLExporter.doubleIndent}{GMLExporter.GRAPHICS_TOKEN} {GMLExporter.START_TOKEN}\n'
+            f'{GMLExporter.doubleTab}{GMLExporter.GRAPHICS_TOKEN} {GMLExporter.START_TOKEN}\n'
             
-            f'{GMLExporter.tripleIndent}{GMLExporter.X_POSITION_TOKEN} {x}\n'
-            f'{GMLExporter.tripleIndent}{GMLExporter.Y_POSITION_TOKEN} {y}\n'
-            f'{GMLExporter.tripleIndent}{GMLExporter.Z_POSITION_TOKEN} {z}\n'
-            f'{GMLExporter.tripleIndent}{GMLExporter.WIDTH_TOKEN} {w}\n'
-            f'{GMLExporter.tripleIndent}{GMLExporter.HEIGHT_TOKEN} {h}\n'
-            f'{GMLExporter.tripleIndent}{GMLExporter.DEPTH_TOKEN} {d}\n'
-            f'{GMLExporter.tripleIndent}type "rectangle"\n'
-            f'{GMLExporter.tripleIndent}width 0.12\n'
-            f'{GMLExporter.tripleIndent}fill "#ff0000"\n'
-            f'{GMLExporter.tripleIndent}outline "#000000"\n'
+            f'{GMLExporter.tripleTab}{GMLExporter.X_POSITION_TOKEN} {x}\n'
+            f'{GMLExporter.tripleTab}{GMLExporter.Y_POSITION_TOKEN} {y}\n'
+            f'{GMLExporter.tripleTab}{GMLExporter.Z_POSITION_TOKEN} {z}\n'
+            f'{GMLExporter.tripleTab}{GMLExporter.WIDTH_TOKEN} {w}\n'
+            f'{GMLExporter.tripleTab}{GMLExporter.HEIGHT_TOKEN} {h}\n'
+            f'{GMLExporter.tripleTab}{GMLExporter.DEPTH_TOKEN} {d}\n'
+            f'{GMLExporter.tripleTab}type "rectangle"\n'
+            f'{GMLExporter.tripleTab}width 0.12\n'
+            f'{GMLExporter.tripleTab}fill "#ff0000"\n'
+            f'{GMLExporter.tripleTab}outline "#000000"\n'
             
-            f'{GMLExporter.doubleIndent}{GMLExporter.END_TOKEN}\n'
+            f'{GMLExporter.doubleTab}{GMLExporter.END_TOKEN}\n'
         )
         return gml
 
@@ -138,10 +149,10 @@ class GMLExporter:
 
         gml: str = (
             f'{GMLExporter.GRAPH_TOKEN} {GMLExporter.START_TOKEN}\n'
-            f'{GMLExporter.singleIndent}directed 1\n'
-            f'{GMLExporter.singleIndent}version  1.0\n'
-            f'{GMLExporter.singleIndent}label "GML for {graphName}"\n'
-            f'{GMLExporter.singleIndent}comment "Generated by Pyut Version {PyutVersion.getPyUtVersion()}"\n'
+            f'{GMLExporter.singleTab}directed 1\n'
+            f'{GMLExporter.singleTab}version  1.0\n'
+            f'{GMLExporter.singleTab}label "GML for {graphName}"\n'
+            f'{GMLExporter.singleTab}comment "Generated by Pyut Version {PyutVersion.getPyUtVersion()}"\n'
         )
 
         return gml
@@ -165,14 +176,7 @@ class GMLExporter:
                     destOglId: int = oglLink.getDestinationShape().GetID()
                     linkIds:   str = f'{srcOglId}-{destOglId}'
                     if linkIds not in linkSet:
-                        gml = (
-                            f'{gml}'
-                            f'{GMLExporter.singleIndent}{GMLExporter.EDGE_TOKEN} {GMLExporter.START_TOKEN}\n'
-                            f'{GMLExporter.doubleIndent}{GMLExporter.ID_TOKEN} {oglLink.GetID()}\n'
-                            f'{GMLExporter.doubleIndent}{GMLExporter.SOURCE_ID_TOKEN} {srcOglId}\n'
-                            f'{GMLExporter.doubleIndent}{GMLExporter.TARGET_ID_TOKEN} {destOglId}\n'
-                            f'{GMLExporter.singleIndent}{GMLExporter.END_TOKEN}\n'
-                        )
+                        gml = self.__generateUniqueEdge(oglLink=oglLink, gml=gml)
                         linkSet.add(linkIds)
 
         return gml
@@ -184,11 +188,56 @@ class GMLExporter:
 
         gml = (
             f'{gml}'
-            f'{GMLExporter.singleIndent}{GMLExporter.EDGE_TOKEN} {GMLExporter.START_TOKEN}\n'
-            f'{GMLExporter.doubleIndent}{GMLExporter.ID_TOKEN} {oglLink.GetID()}\n'
-            f'{GMLExporter.doubleIndent}{GMLExporter.SOURCE_ID_TOKEN} {srcOglId}\n'
-            f'{GMLExporter.doubleIndent}{GMLExporter.TARGET_ID_TOKEN} {destOglId}\n'
-            f'{GMLExporter.singleIndent}{GMLExporter.END_TOKEN}\n'
+            f'{GMLExporter.singleTab}{GMLExporter.EDGE_TOKEN} {GMLExporter.START_TOKEN}\n'
+            f'{GMLExporter.doubleTab}{GMLExporter.ID_TOKEN} {oglLink.GetID()}\n'
+            f'{GMLExporter.doubleTab}{GMLExporter.SOURCE_ID_TOKEN} {srcOglId}\n'
+            f'{GMLExporter.doubleTab}{GMLExporter.TARGET_ID_TOKEN} {destOglId}\n'
+            f'{self.__generateEdgeGraphicsSection(oglLink=oglLink)}'
+            f'{GMLExporter.singleTab}{GMLExporter.END_TOKEN}\n'
         )
 
         return gml
+
+    def __generateEdgeGraphicsSection(self, oglLink: OglLink) -> str:
+
+        anchors: Tuple[AnchorPoint, AnchorPoint] = oglLink.GetAnchors()
+        srcAnchor:  AnchorPoint = anchors[0]
+        destAnchor: AnchorPoint = anchors[1]
+
+        controlPoints: List[ControlPoint] = oglLink.GetControlPoints()
+        edgeGml: str = (
+            f'{GMLExporter.doubleTab}{GMLExporter.GRAPHICS_TOKEN} {GMLExporter.START_TOKEN}\n'
+            f'{GMLExporter.tripleTab}type "line"\n'
+            f'{GMLExporter.tripleTab}arrow "last"\n'
+            f'{GMLExporter.tripleTab}{GMLExporter.LINE_DEFINITION_TOKEN} {GMLExporter.START_TOKEN}\n'
+            f'{self.__generatePoint(srcAnchor)}'
+            f'{self.__generatePoints()}'
+            f'{self.__generatePoint(destAnchor)}'
+            f'{GMLExporter.tripleTab}{GMLExporter.END_TOKEN}\n'
+            f'{GMLExporter.doubleTab}{GMLExporter.END_TOKEN}\n'
+        )
+
+        return edgeGml
+
+    def __generatePoints(self, points: List[LinePoint]) -> str:
+
+        pointsGml: str = ''
+
+        return pointsGml
+
+    def __generatePoint(self, linePoint: LinePoint) -> str:
+
+        position: Tuple[float, float] = linePoint.GetPosition()
+
+        x:        float = position[0]
+        y:        float = position[1]
+        z:        float = 0.0
+        pointGml: str = (
+            f'{GMLExporter.quadrupleTab}{GMLExporter.POINT_DEFINITION_TOKEN} {GMLExporter.START_TOKEN}\n'
+            f'{GMLExporter.quintupleTab}{GMLExporter.X_POSITION_TOKEN} {x}\n'
+            f'{GMLExporter.quintupleTab}{GMLExporter.Y_POSITION_TOKEN} {y}\n'
+            f'{GMLExporter.quintupleTab}{GMLExporter.Z_POSITION_TOKEN} {z}\n'
+            f'{GMLExporter.quadrupleTab}{GMLExporter.END_TOKEN}\n'
+        )
+
+        return pointGml
