@@ -10,7 +10,7 @@ from org.pyut.ui.UmlFrame import UmlFrame
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 
-class PluginName(PyutToPlugin):
+class PluginToTemplate(PyutToPlugin):
     """
     Sample class for tool plugin.
     """

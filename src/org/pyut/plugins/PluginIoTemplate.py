@@ -13,7 +13,7 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
-class PluginName(PyutIoPlugin):
+class PluginIoTemplate(PyutIoPlugin):
     """
     Sample class for input/output plug-ins.
     """
