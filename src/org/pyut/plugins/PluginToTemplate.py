@@ -17,7 +17,7 @@ class PluginName(PyutToPlugin):
 
         Args:
             umlObjects:  list of ogl objects
-            umlFrame:    the umlframe of pyut
+            umlFrame:    A Pyut UML Frame
         """
         super().__init__(umlObjects, umlFrame)
 
