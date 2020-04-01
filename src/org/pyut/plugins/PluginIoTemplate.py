@@ -3,6 +3,9 @@ from typing import List
 from typing import Tuple
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
@@ -19,9 +22,11 @@ class PluginName(PyutIoPlugin):
 
         Args:
             oglObjects:  list of ogl objects
-            umlFrame:    the umlframe of pyut
+            umlFrame:    A Pyut umlFrame
         """
         super().__init__(oglObjects, umlFrame)
+
+        self.logger: Logger = getLogger(__name__)
 
     def getName(self) -> str:
         """
