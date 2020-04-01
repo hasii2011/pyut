@@ -187,6 +187,13 @@
             ],
             "propagate": "False"
         },
+        "org.pyut.plugins.orthogonal.GMLExporter": {
+            "level": "INFO",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
 
         "__main__": {
             "level": "INFO",
