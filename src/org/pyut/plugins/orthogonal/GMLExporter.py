@@ -200,18 +200,19 @@ class GMLExporter:
 
     def __generateEdgeGraphicsSection(self, oglLink: OglLink) -> str:
 
-        anchors: Tuple[AnchorPoint, AnchorPoint] = oglLink.GetAnchors()
+        anchors: List[AnchorPoint] = oglLink.GetAnchors()
         srcAnchor:  AnchorPoint = anchors[0]
         destAnchor: AnchorPoint = anchors[1]
 
         controlPoints: List[ControlPoint] = oglLink.GetControlPoints()
+
         edgeGml: str = (
             f'{GMLExporter.doubleTab}{GMLExporter.GRAPHICS_TOKEN} {GMLExporter.START_TOKEN}\n'
             f'{GMLExporter.tripleTab}type "line"\n'
             f'{GMLExporter.tripleTab}arrow "last"\n'
             f'{GMLExporter.tripleTab}{GMLExporter.LINE_DEFINITION_TOKEN} {GMLExporter.START_TOKEN}\n'
             f'{self.__generatePoint(srcAnchor)}'
-            f'{self.__generatePoints()}'
+            f'{self.__generatePoints(controlPoints)}'
             f'{self.__generatePoint(destAnchor)}'
             f'{GMLExporter.tripleTab}{GMLExporter.END_TOKEN}\n'
             f'{GMLExporter.doubleTab}{GMLExporter.END_TOKEN}\n'
@@ -222,6 +223,10 @@ class GMLExporter:
     def __generatePoints(self, points: List[LinePoint]) -> str:
 
         pointsGml: str = ''
+        for point in points:
+            pointsGml = (
+                f'{pointsGml}{self.__generatePoint(point)}'
+            )
 
         return pointsGml
 
