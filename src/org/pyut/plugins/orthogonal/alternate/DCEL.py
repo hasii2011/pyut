@@ -13,7 +13,7 @@ class GraphElement:
 class Hedge(GraphElement):
     def __init__(self, name):
         super().__init__(name)
-        self.inc = None # the incident face'
+        self.inc  = None    # the incident face'
         self.twin = None
         self.ori  = None
         self.pred = None
@@ -64,11 +64,11 @@ class Face(GraphElement):
     def update_nodes(self):
         self.nodes_id = [vertex.id for vertex in self.surround_vertices()]
 
-    def surround_faces(self): # clockwise, duplicated!!
+    def surround_faces(self):   # clockwise, duplicated!!
         for he in self.surround_half_edges():
             yield he.twin.inc
 
-    def surround_half_edges(self): # clockwise
+    def surround_half_edges(self):  # clockwise
         yield self.inc
         he = self.inc.succ
         while he is not self.inc:
@@ -82,6 +82,7 @@ class Face(GraphElement):
 
 class Dcel:
     def __init__(self, G, embedding):
+
         assert nx.check_planarity(G)[0]
 
         self.vertex_dict = {}

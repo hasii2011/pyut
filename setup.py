@@ -32,5 +32,6 @@ setup(
     author_email='Humberto.A.Sanchez.II@gmail.com',
     description='The Python UML Tool',
     options={'py2app': OPTIONS},
-    setup_requires=['py2app'], install_requires=['wxPython', 'xmlschema', 'html-testRunner', 'tulip-python', 'pygmlparser', 'networkx']
+    setup_requires=['py2app'],
+    install_requires=['wxPython', 'xmlschema', 'html-testRunner', 'tulip-python', 'pygmlparser', 'networkx', 'matplotlib']
 )

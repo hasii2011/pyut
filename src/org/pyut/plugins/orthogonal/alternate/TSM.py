@@ -4,14 +4,22 @@ import math as m
 
 import networkx as nx
 
-import DCEL
-
 import matplotlib.pyplot as plt
 
+from org.pyut.plugins.orthogonal.alternate import DCEL
 
-def convert_pos_to_embdeding(G, pos):
-    '''only straight line in G.
-    '''
+
+def convert_pos_to_embedding(G, pos):
+    """
+    only straight line in G.
+    Args:
+        G:
+        pos:
+
+    Returns:
+
+    """
+
     emd = nx.PlanarEmbedding()
     for node in G:
         neigh_pos = {
@@ -64,7 +72,7 @@ class Flow_net(nx.MultiDiGraph):
         self.add_edge(f1, f2, key=key, lowerbound=0, capacity=2**32, weight=1)
 
     def add_v(self, v):
-        self.add_node(v, demand=-4) # the total degree around a node is 2pi
+        self.add_node(v, demand=-4)     # the total degree around a node is 2pi
 
     def add_f(self, f, degree, is_external):
         # the degree of a face is the length of the cycle bounding the face.
@@ -72,10 +80,8 @@ class Flow_net(nx.MultiDiGraph):
 
     def min_cost_flow(self):
         def get_demand(flow_dict, node):
-            in_flow = sum(flow_dict[u][v][key]
-                          for u, v, key in self.in_edges(node, keys=True))
-            out_flow = sum(flow_dict[u][v][key]
-                           for u, v, key in self.out_edges(node, keys=True))
+            in_flow  = sum(flow_dict[u][v][key] for u, v, key in self.in_edges(node, keys=True))
+            out_flow = sum(flow_dict[u][v][key] for u, v, key in self.out_edges(node, keys=True))
             return in_flow - out_flow
 
         def split(multi_flowG):
@@ -111,9 +117,9 @@ class Flow_net(nx.MultiDiGraph):
 
 
 class Planarization:
-    '''This step determines the topology of the drawing which is described by a planar embedding.
-    '''
-
+    """
+    This step determines the topology of the drawing which is described by a planar embedding.
+    """
     def __init__(self, G, pos=None):
         assert nx.number_of_selfloops(G) == 0
         assert nx.is_connected(G)
@@ -123,10 +129,10 @@ class Planarization:
             pos = nx.combinatorial_embedding_to_pos(self.embedding)
         else:
             assert number_of_cross(G, pos) == 0
-            self.embedding = convert_pos_to_embdeding(G, pos)
+            self.embedding = convert_pos_to_embedding(G, pos)
 
         self.G = G.copy()
-        self.pos = pos # is only used to find the ext_face now.
+        self.pos = pos  # is only used to find the ext_face now.
         self.dcel = DCEL.Dcel(G, self.embedding)
         self.ext_face = self.get_external_face()
 
@@ -165,10 +171,9 @@ class Planarization:
 
 
 class Orthogonalization:
-    '''
-    works on a planar embedding, changes shape of the graph.
-    '''
-
+    """
+    Works on a planar embedding, changes shape of the graph.
+    """
     def __init__(self, planar):
         assert max(pair[1] for pair in planar.G.degree) <= 4
         assert planar.G.number_of_nodes() > 1
@@ -192,8 +197,7 @@ class Orthogonalization:
                 flow_network.add_v2f(vertex.id, he.inc.id, he.id)
 
         for he in self.planar.dcel.half_edge_dict.values():
-            flow_network.add_f2f(he.twin.inc.id, he.inc.id, he.id) # lf -> rf
-
+            flow_network.add_f2f(he.twin.inc.id, he.inc.id, he.id)  # lf -> rf
 
         return flow_network
 
@@ -203,10 +207,19 @@ class Orthogonalization:
     def lp_solve(self, weight_of_corner=1, weight_of_sym=0, sym_pairs=None,
                  # trans=lambda s: s if s[0] != '(' else eval(s.replace('_', ' ')),
                  ):
-        '''alert: pulp will automatically transfer node's name into str and replace some special
-        chars into '_', and will throw a error if there are variables' name duplicated.
-        '''
-        import pulp
+        """
+        Note:  pulp will automatically transfer node's name into str and replace some special
+        chars into '_', and will throw a error if there are duplicate variable names
+
+        Args:
+            weight_of_corner:
+            weight_of_sym:
+            sym_pairs:
+
+        Returns
+        """
+
+        import pulp         # Note HASII -- pip3 install PuLP
 
         prob = pulp.LpProblem()  # minimize
 
@@ -237,13 +250,12 @@ class Orthogonalization:
                                                   for key in keys]
                     x = var_dict[v][f1][he1_id]
                     y = var_dict[v][f2][he2_id]
-                    p = pulp.LpVariable(
-                        x.name + "%temp", None, None, pulp.LpInteger)
+                    p = pulp.LpVariable(x.name + "%temp", None, None, pulp.LpInteger)
                     prob.addConstraint(x - y <= p)
                     prob.addConstraint(y - x <= p)
                     objs.append(weight_of_corner * p)
 
-        # non symmetrics cost
+        # non symmetric cost
         if weight_of_sym != 0:
             if sym_pairs:
                 for u, v in sym_pairs:
@@ -295,10 +307,10 @@ class Orthogonalization:
             # code here works only when nodes are represented by str, likes '(1, 2)'
             for var in prob.variables():
                 if 'temp' not in var.name:
-                    l = var.name.split('%')
-                    if len(l) == 3:
-                        # u, v, he_id = map(trans, l) # change str to tuple !!!!!!!!!
-                        u, v, he_id = [item.replace('_', ' ') for item in l]
+                    tempVar = var.name.split('%')
+                    if len(tempVar) == 3:
+                        # u, v, he_id = map(trans, tempVar) # change str to tuple !!!!!!!!!
+                        u, v, he_id = [item.replace('_', ' ') for item in tempVar]
                         he_id = eval(he_id)
                         self.flow_dict[u][v][he_id] = int(var.varValue)
             return pulp.value(prob.objective)
@@ -317,10 +329,10 @@ class Orthogonalization:
 
 
 class Compaction:
-    '''
+    """
     Assign minimum lengths to the segments of the edges of the orthogonal representation.
-    Never reverse ortho in this class.
-    '''
+    Never reverse orthogonal in this class.
+    """
 
     def __init__(self, ortho):
         self.ortho = ortho
@@ -337,42 +349,43 @@ class Compaction:
         self.pos = self.layout()
 
     def bend_point_processor(self):
-            '''Create dummy nodes for bends.
-            '''
-            bends = {}  # left to right
-            for he in self.planar.dcel.half_edge_dict.values():
-                lf, rf = he.twin.inc, he.inc
-                flow = self.flow_dict[lf.id][rf.id][he.id]
-                if flow > 0:
-                    bends[he.id] = flow
+        """
+        Create dummy nodes for bends.
+        Returns:
 
-            idx = 0
-            for he_id, n_bends in bends.items():
-                # Q: what if there are bends on both (u, v) and (v, u)?
-                # A: Impossible, not a min cost
-                he = self.planar.dcel.half_edge_dict[he_id]
-                u, v = he.get_points()
-                lf_id, rf_id = he.twin.inc.id, he.inc.id
+        """
+        bends = {}  # left to right
+        for he in self.planar.dcel.half_edge_dict.values():
+            lf, rf = he.twin.inc, he.inc
+            flow = self.flow_dict[lf.id][rf.id][he.id]
+            if flow > 0:
+                bends[he.id] = flow
 
-                self.planar.G.remove_edge(u, v)
-                self.flow_dict[u][rf_id][u, f'b{idx}'] = self.flow_dict[u][rf_id].pop((u, v))
+        idx = 0
+        for he_id, n_bends in bends.items():
+            # Q: what if there are bends on both (u, v) and (v, u)?
+            # A: Impossible, not a min cost
+            he = self.planar.dcel.half_edge_dict[he_id]
+            u, v = he.get_points()
+            lf_id, rf_id = he.twin.inc.id, he.inc.id
 
+            self.planar.G.remove_edge(u, v)
+            self.flow_dict[u][rf_id][u, f'b{idx}'] = self.flow_dict[u][rf_id].pop((u, v))
 
+            for i in range(n_bends):
+                cur_node = f'b{idx}'
+                pre_node = f'b{idx-1}' if i > 0 else u
+                nxt_node = f'b{idx+1}' if i < n_bends - 1 else v
+                self.planar.G.add_edge(pre_node, cur_node)
+                self.planar.dcel.add_node_between(
+                    pre_node, v, cur_node
+                )
+                self.flow_dict.setdefault(cur_node, {}).setdefault(lf_id, {})[cur_node, pre_node] = 1
+                self.flow_dict.setdefault(cur_node, {}).setdefault(rf_id, {})[cur_node, nxt_node] = 3
+                idx += 1
 
-                for i in range(n_bends):
-                    cur_node = f'b{idx}'
-                    pre_node = f'b{idx-1}' if i > 0 else u
-                    nxt_node = f'b{idx+1}' if i < n_bends - 1 else v
-                    self.planar.G.add_edge(pre_node, cur_node)
-                    self.planar.dcel.add_node_between(
-                        pre_node, v, cur_node
-                    )
-                    self.flow_dict.setdefault(cur_node, {}).setdefault(lf_id, {})[cur_node, pre_node] = 1
-                    self.flow_dict.setdefault(cur_node, {}).setdefault(rf_id, {})[cur_node, nxt_node] = 3
-                    idx += 1
-
-                self.flow_dict[v][lf_id][v, f'b{idx-1}'] = self.flow_dict[v][lf_id].pop((v, u))
-                self.planar.G.add_edge(f'b{idx-1}', v)
+            self.flow_dict[v][lf_id][v, f'b{idx-1}'] = self.flow_dict[v][lf_id].pop((v, u))
+            self.planar.G.add_edge(f'b{idx-1}', v)
 
     def face_side_processor(self):
         '''
