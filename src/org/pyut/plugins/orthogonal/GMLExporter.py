@@ -97,7 +97,7 @@ class GMLExporter:
 
     def write(self, pathToFile: str):
 
-        with open(pathToFile) as writer:
+        with open(pathToFile, 'w') as writer:
             writer.write(self._gml)
 
     def _generateNodes(self, umlObjects: OglClasses, gml: str) -> str:
@@ -200,9 +200,8 @@ class GMLExporter:
 
     def __generateEdgeGraphicsSection(self, oglLink: OglLink) -> str:
 
-        anchors: List[AnchorPoint] = oglLink.GetAnchors()
-        srcAnchor:  AnchorPoint = anchors[0]
-        destAnchor: AnchorPoint = anchors[1]
+        srcAnchor:  AnchorPoint = oglLink.sourceAnchor
+        destAnchor: AnchorPoint = oglLink.destinationAnchor
 
         controlPoints: List[ControlPoint] = oglLink.GetControlPoints()
 

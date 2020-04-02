@@ -8,6 +8,7 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
+from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.model.PyutClass import PyutClass
@@ -63,6 +64,7 @@ class TestGMLExporter(TestBase):
 
         self.assertIsNotNone(gml, 'Generate Something!!')
         self.logger.info(f'Generated GML:\n{gml}')
+        self.exporter.write(f'UnitTest.gml')
 
     def _generateMockNodes(self, nbrToGenerate) -> OglClasses:
 
@@ -124,10 +126,17 @@ class TestGMLExporter(TestBase):
             Mocked OglLink
         """
         oglLink:  MagicMock = MagicMock(spec=OglLink)
-        # gen = self._generateLinkId()
-        # linkId = next(gen)
         linkId = next(self._linkIDGenerator)
         oglLink.GetID.return_value = linkId
+
+        mockSourceAnchor:      MagicMock = MagicMock(spec=AnchorPoint)
+        mockDestinationAnchor: MagicMock = MagicMock(spec=AnchorPoint)
+
+        mockSourceAnchor.GetPosition.return_value = (22, 44)
+        mockDestinationAnchor.GetPosition.return_value = (1024, 450)
+
+        oglLink.sourceAnchor.return_value      = mockSourceAnchor
+        oglLink.destinationAnchor.return_value = mockDestinationAnchor
 
         oglLink.getSourceShape.return_value      = src
         oglLink.getDestinationShape.return_value = dest

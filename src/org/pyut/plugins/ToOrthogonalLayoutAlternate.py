@@ -4,11 +4,23 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.plugins.orthogonal.GMLExporter import GMLExporter
+import matplotlib.pyplot as plt
+
+from networkx import DiGraph
+from networkx import Graph
+from networkx import parse_gml
+
 from org.pyut.ui.UmlFrame import UmlFrame
 
+from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.plugins.orthogonal.GMLExporter import GMLExporter
+
 from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+
+from org.pyut.plugins.orthogonal.alternate.TSM import Compaction
+from org.pyut.plugins.orthogonal.alternate.TSM import Planarization
+from org.pyut.plugins.orthogonal.alternate.TSM import Orthogonalization
 
 
 class ToOrthogonalLayoutAlternate(PyutToPlugin):
@@ -84,3 +96,25 @@ class ToOrthogonalLayoutAlternate(PyutToPlugin):
         gml: str = gmlExporter.gml
 
         self.logger.info(f'Generated GML:\n{gml}')
+        gmlExporter.write('generated.gml')
+
+        spicy: DiGraph = parse_gml(gml)
+        nxGraph: Graph = Graph(spicy)
+
+        nodes = nxGraph.nodes
+        # compact: Compaction = self._generate(nxGraph, {node: eval(node) for node in nxGraph})
+        compact: Compaction = self._generate(nxGraph)
+
+        compact.draw(with_labels=True)
+
+        plt.savefig(f'generated.png')
+
+    def _generate(self, G, pos=None) -> Compaction:
+
+        planar:     Planarization     = Planarization(G, pos)
+        orthogonal: Orthogonalization = Orthogonalization(planar)
+        compact:    Compaction        = Compaction(orthogonal)
+
+        return compact
+
+

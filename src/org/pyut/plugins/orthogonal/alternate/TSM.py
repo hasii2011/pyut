@@ -4,8 +4,6 @@ import math as m
 
 import networkx as nx
 
-import matplotlib.pyplot as plt
-
 from org.pyut.plugins.orthogonal.alternate import DCEL
 
 
@@ -38,9 +36,16 @@ def convert_pos_to_embedding(G, pos):
 
 
 def number_of_cross(G, pos, print_it=False):
-    '''
+    """
     not accurate, may be equal to actual number or double
-    '''
+    Args:
+        G:
+        pos:
+        print_it:
+
+    Returns:
+
+    """
     def is_cross(pa, pb, pc, pd):
         def xmul(v1, v2):
             return v1[0] * v2[1] - v1[1] * v2[0]
@@ -121,8 +126,8 @@ class Planarization:
     This step determines the topology of the drawing which is described by a planar embedding.
     """
     def __init__(self, G, pos=None):
-        assert nx.number_of_selfloops(G) == 0
-        assert nx.is_connected(G)
+        assert nx.number_of_selfloops(G) == 0, f'has {nx.number_of_selfloops(G)} self loops'
+        assert nx.is_connected(G), f'Graph is not connected'
         if pos is None:
             is_planar, self.embedding = nx.check_planarity(G)
             assert is_planar
@@ -175,8 +180,12 @@ class Orthogonalization:
     Works on a planar embedding, changes shape of the graph.
     """
     def __init__(self, planar):
-        assert max(pair[1] for pair in planar.G.degree) <= 4
-        assert planar.G.number_of_nodes() > 1
+
+        for pair in planar.G.degree:
+            print(f'{pair}')
+
+        assert max(pair[1] for pair in planar.G.degree) <= 4, f'max planar pair is <= 4'
+        assert planar.G.number_of_nodes() > 1, f'planar number of nodes is greater than 1'
 
         self.planar = planar
 
@@ -218,7 +227,7 @@ class Orthogonalization:
 
         Returns
         """
-
+        # noinspection PyPackageRequirements
         import pulp         # Note HASII -- pip3 install PuLP
 
         prob = pulp.LpProblem()  # minimize
@@ -351,8 +360,6 @@ class Compaction:
     def bend_point_processor(self):
         """
         Create dummy nodes for bends.
-        Returns:
-
         """
         bends = {}  # left to right
         for he in self.planar.dcel.half_edge_dict.values():
@@ -388,10 +395,11 @@ class Compaction:
             self.planar.G.add_edge(f'b{idx-1}', v)
 
     def face_side_processor(self):
-        '''
+        """
         Associating edges with face sides.
-        '''
 
+        Returns:
+        """
         def update_face_edge(edge_side, face, base):
             for he in face.surround_half_edges():
                 edge_side[he.id] = (edge_side[he.id] + base) % 4
@@ -431,10 +439,11 @@ class Compaction:
         return edge_side
 
     def tidy_rectangle_compaction(self):
-        '''
+        """
         Doing the compaction of TSM algorithm.
         Compute every edge's length, and store them in self.planar.G.edges[u, v]['len']
-        '''
+
+        """
         def build_flow(target_side):
             hv_flow = Flow_net()
             for he_id, side in self.edge_side.items():
@@ -497,7 +506,7 @@ class Compaction:
         for face in self.planar.dfs_face_order():
             for i, u in enumerate(face.nodes_id):
                 if not pos:
-                    pos[u] = (0, 0) # initial point
+                    pos[u] = (0, 0)     # initial point
                 if u in pos:  # has found a start point
                     new_loop = face.nodes_id[i:] + face.nodes_id[:i]
                     for u, v in zip(new_loop, new_loop[1:]):

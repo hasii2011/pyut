@@ -139,7 +139,7 @@ class Dcel:
             # update face
             if he.inc.inc is he:
                 he.inc.inc = he1
-            he.inc.update_nodes() # not efficient
+            he.inc.update_nodes()  # not efficient
 
         # update vertex_dict
         mid_vertice = Vertex(node_name)
