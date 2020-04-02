@@ -31,8 +31,7 @@ class LineShape(Shape):
         super().__init__()
         self._srcAnchor = srcAnchor
         self._dstAnchor = dstAnchor
-        self._anchors.append(srcAnchor)     # From Shape
-        self._anchors.append(dstAnchor)     # From Shape
+
         self._controls = []
         self._drawArrow = True
         self._arrowSize = 8
@@ -41,6 +40,21 @@ class LineShape(Shape):
             srcAnchor.AddLine(self)
         if dstAnchor:
             dstAnchor.AddLine(self)
+
+    def getSourceAnchor(self):
+        return self._srcAnchor
+
+    def setSourceAnchor(self, theNewValue):
+        self._srcAnchor = theNewValue
+
+    def getDestinationAnchor(self):
+        return self._dstAnchor
+
+    def setDestinationAnchor(self, theNewValue):
+        self._dstAnchor = theNewValue
+
+    sourceAnchor      = property(getSourceAnchor, setSourceAnchor)
+    destinationAnchor = property(getDestinationAnchor, setDestinationAnchor)
 
     def SetSpline(self, state):
         """
