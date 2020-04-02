@@ -31,6 +31,8 @@ class LineShape(Shape):
         super().__init__()
         self._srcAnchor = srcAnchor
         self._dstAnchor = dstAnchor
+        self._anchors.append(srcAnchor)     # From Shape
+        self._anchors.append(dstAnchor)     # From Shape
         self._controls = []
         self._drawArrow = True
         self._arrowSize = 8
