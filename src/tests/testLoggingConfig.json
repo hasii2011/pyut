@@ -18,14 +18,14 @@
     },
     "loggers": {
         "root": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
             "propagate": "False"
         },
         "tests": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
@@ -39,14 +39,14 @@
             "propagate": "False"
         },
         "tests.PrintCommand": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
             "propagate": "False"
         },
         "TestDTDParser": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
@@ -66,8 +66,8 @@
             ],
             "propagate": "False"
         },
-        "TestPyutObject": {
-            "level": "INFO",
+        "tests.TestPyutObject": {
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
@@ -80,8 +80,8 @@
             ],
             "propagate": "False"
         },
-        "TestFieldExtractor": {
-            "level": "INFO",
+        "tests.TestFieldExtractor": {
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
@@ -89,14 +89,14 @@
         },
 
         "TestPyutType": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
             "propagate": "False"
         },
-        "TestPyutField": {
-            "level": "INFO",
+        "tests.TestPyutField": {
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
@@ -138,7 +138,7 @@
             "propagate": "False"
         },
         "HistoryUtils": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
@@ -148,7 +148,7 @@
             "propagate": "False"
         },
         "org.pyut.commands.CommandGroup": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
@@ -167,34 +167,40 @@
             "propagate": "False"
         },
         "org.pyut.plugins.PluginManager": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
             "propagate": "False"
         },
         "org.pyut.plugins.dtd.DTDParser": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
             "propagate": "False"
         },
         "org.pyut.plugins.xsd.XSDParser": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": [
                 "consoleHandler"
             ],
             "propagate": "False"
         },
         "org.pyut.plugins.orthogonal.GMLExporter": {
+            "level": "WARNING",
+            "handlers": [
+                "consoleHandler"
+            ],
+            "propagate": "False"
+        },
+        "TestTSM": {
             "level": "INFO",
             "handlers": [
                 "consoleHandler"
             ],
             "propagate": "False"
         },
-
         "__main__": {
             "level": "INFO",
             "handlers": [

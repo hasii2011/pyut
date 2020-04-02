@@ -56,7 +56,8 @@ class TestAst(TestBase):
                 self.logger.info(f'{child}')
 
         except (ValueError, Exception) as e:
-            print(f"getFields Error: {e}")
+            self.logger.error(f'Error: {e}')
+            raise e
 
 
 def suite() -> TestSuite:

@@ -1,11 +1,14 @@
 #!/bin/bash
 
-cd src
+
+cd src > /dev/null 2>&1
+
 
 python3 -m tests.TestAll $*
 status=$?
 
-cd ..
+cd -  > /dev/null 2>&1
+
 ./cleanup.sh
 
 echo "Exit with status: ${status}"

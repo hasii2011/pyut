@@ -26,7 +26,12 @@ class TestAll:
     """
     The class that can run our unit tests in various formats
     """
-    NOT_TESTS: List[str] = ['TestAll', 'TestMiniOgl', 'TestBase', 'TestTemplate', 'TestIoFile', 'TestUmlFrame']
+    NOT_TESTS: List[str] = ['TestAll', 'TestMiniOgl', 'TestBase', 'TestTemplate', 'TestIoFile', 'TestUmlFrame', 'TestAst', 'TestTSM']
+
+    VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
+    VERBOSITY_DEFAULT: int = 1  # VERBOSITY_QUIET plus a dot for every successful test or a F for every failure
+    VERBOSITY_VERBOSE: int = 2  # Print help string of every test and the result
+    VERBOSITY_LOUD:    int = 3  # ??
 
     def __init__(self):
 
@@ -38,7 +43,7 @@ class TestAll:
 
     def runTextTestRunner(self) -> int:
 
-        status: TestResult = TextTestRunner().run(self._testSuite)
+        status: TestResult = TextTestRunner(verbosity=TestAll.VERBOSITY_QUIET).run(self._testSuite)
         self.logger.info(f'Test Suite Status: {status}')
         if len(status.failures) != 0:
             return 1
@@ -77,8 +82,6 @@ class TestAll:
         """
         modules: List[str] = self.__getTestableModuleNames()
         fSuite: TestSuite = TestSuite()
-        import os
-        print(f'cwd: {os.getcwd()}')
         for module in modules:
             try:
                 fixedName: str = module.replace('/', '.')

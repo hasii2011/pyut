@@ -86,6 +86,9 @@ class PyutPreferences(Singleton):
 
     @staticmethod
     def determinePreferencesLocation():
+        """
+        This method MUST (I repeat MUST) be called before attempting to instantiate the preferences Singleton
+        """
         if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == 'darwin':
             PyutPreferences.preferencesFileLocationAndName = os.getenv("HOME") + "/.PyutPrefs.dat"
         else:

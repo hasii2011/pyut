@@ -8,8 +8,11 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.model.PyutType import PyutType
 from tests.TestBase import TestBase
+
+from org.pyut.PyutPreferences import PyutPreferences
+
+from org.pyut.model.PyutType import PyutType
 
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
@@ -36,6 +39,10 @@ class TestIoPython(TestBase):
         self.plugin: IoPython = IoPython(oglObjects=None, umlFrame=cast(UmlFrame, None))
 
         self.pyutToPython: PyutToPython = PyutToPython()
+        #
+        # Ugh -- need this called because PyutMethod instantiates the singleton
+        #
+        PyutPreferences.determinePreferencesLocation()
 
     def tearDown(self):
         pass

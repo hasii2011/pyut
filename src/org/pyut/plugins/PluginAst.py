@@ -38,7 +38,7 @@ class Visitor(NodeVisitor):
 
     def visit_AnnAssign(self, node: AnnAssign):
         strRep: str = node.__str__()
-        print(f'strRep: {strRep}')
+        # print(f'strRep: {strRep}')
         target: Name = node.target
         if isinstance(node.annotation, Subscript):
             annotation: Subscript  = node.annotation
