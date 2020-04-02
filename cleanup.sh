@@ -1,4 +1,10 @@
 #!/bin/bash
 
-find . -name pyutHistory"*" -exec rm -rf {} \; -print   > /dev/null
-find . -name "*".log -exec rm -rf {} \; -print          > /dev/null
+find . -type f -name pyutHistory"*" -delete
+find . -type f -name "*.log" -delete
+
+cd src/tests/testdata
+
+find . -type f -name "*.png" -delete
+
+cd -
