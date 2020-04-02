@@ -378,7 +378,7 @@ class Shape:
 
         @return AnchorPoint []
         """
-        return self._anchors[:]
+        return self._anchors[:]     # Funky Python notation that creates a copy
 
     def GetParent(self):
         """
