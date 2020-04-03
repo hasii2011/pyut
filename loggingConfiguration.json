@@ -269,6 +269,12 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "ToOrthogonalLayoutAlternate": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+
         "ToPython": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],

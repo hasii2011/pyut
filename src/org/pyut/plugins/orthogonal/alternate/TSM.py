@@ -56,7 +56,9 @@ def number_of_cross(G, pos, print_it=False):
         ca = (pa[0] - pc[0], pa[1] - pc[1])
         cb = (pb[0] - pc[0], pb[1] - pc[1])
         cd = (pd[0] - pc[0], pd[1] - pc[1])
-        return xmul(ca, cd) >= 0 and xmul(cd, cb) >= 0 and f(pa, pb, pc) * f(pa, pb, pd) < 0
+        # return xmul(ca, cd) >= 0 and xmul(cd, cb) >= 0 and f(pa, pb, pc) * f(pa, pb, pd) < 0
+        return xmul(ca, cd) >= 0 > f(pa, pb, pc) * f(pa, pb, pd) and xmul(cd, cb) >= 0
+
     count = 0
     for a, b in G.edges:
         for c, d in G.edges:
@@ -84,6 +86,7 @@ class Flow_net(nx.MultiDiGraph):
         self.add_node(f, demand=(2 * degree + 4) if is_external else (2 * degree - 4))
 
     def min_cost_flow(self):
+
         def get_demand(flow_dict, node):
             in_flow  = sum(flow_dict[u][v][key] for u, v, key in self.in_edges(node, keys=True))
             out_flow = sum(flow_dict[u][v][key] for u, v, key in self.out_edges(node, keys=True))
@@ -130,10 +133,10 @@ class Planarization:
         assert nx.is_connected(G), f'Graph is not connected'
         if pos is None:
             is_planar, self.embedding = nx.check_planarity(G)
-            assert is_planar
+            assert is_planar, 'No positions given;  Determined not planar'
             pos = nx.combinatorial_embedding_to_pos(self.embedding)
         else:
-            assert number_of_cross(G, pos) == 0
+            assert number_of_cross(G, pos) == 0, f'{number_of_cross(G, pos)}'
             self.embedding = convert_pos_to_embedding(G, pos)
 
         self.G = G.copy()

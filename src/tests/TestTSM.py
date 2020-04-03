@@ -43,6 +43,10 @@ class TestTSM(TestBase):
     def testSimple(self):
 
         G = nx.Graph(nx.read_gml(TestTSM.SIMPLE_GML_PATH))
+        for node in G:
+            value = eval(node)
+            self.logger.info(f'{node} ')
+
         compact: TSM.Compaction = self._generate(G, {node: eval(node) for node in G})
 
         for flowKey in compact.flow_dict.keys():
@@ -50,6 +54,7 @@ class TestTSM(TestBase):
             self.logger.info(f'flowKey: {flowKey} - valueDict: {valueDict}')
             for valueKey in valueDict.keys():
                 self.logger.info(f'\t\t{valueKey} value: {valueDict[valueKey]}')
+        self.logger.info(f'pos: {compact.pos}')
 
         compact.draw(with_labels=True)
         plt.savefig(f'{TestTSM.TEST_DATA_PATH}simple.png')

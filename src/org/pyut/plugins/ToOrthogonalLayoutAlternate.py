@@ -103,11 +103,28 @@ class ToOrthogonalLayoutAlternate(PyutToPlugin):
 
         nodes = nxGraph.nodes
         # compact: Compaction = self._generate(nxGraph, {node: eval(node) for node in nxGraph})
-        compact: Compaction = self._generate(nxGraph)
+        nodePositions = {}
+        for nodeName in nxGraph:
+            nodeDict = nxGraph.nodes[nodeName]
+            x = nodeDict['graphics']['x']
+            y = nodeDict['graphics']['y']
+            nodePositions[nodeName] = (x, y)
+            self.logger.info(f'{nodeName}')
+
+        compact: Compaction = self._generate(nxGraph, nodePositions)
 
         compact.draw(with_labels=True)
-
         plt.savefig(f'generated.png')
+        for flowKey in compact.flow_dict.keys():
+            flowValues = compact.flow_dict[flowKey]
+            self.logger.info(f'flowKey: `{flowKey}` - flowValues: {flowValues}')
+            for flowValueKey in flowValues.keys():
+                xyzDict = flowValues[flowValueKey]
+                self.logger.info(f'\tflowValueKey: {flowValueKey} - {xyzDict}')
+                for xyzKeys in xyzDict:
+                    self.logger.info(f'\t\txyzKeys: {xyzKeys}')
+
+        self.logger.info(f'pos: {compact.pos}')
 
     def _generate(self, G, pos=None) -> Compaction:
 
