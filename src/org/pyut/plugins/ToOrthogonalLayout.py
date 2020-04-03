@@ -184,18 +184,16 @@ class ToOrthogonalLayout(PyutToPlugin):
         line: Tuple[Point] = gmlEdge.graphics.line
         nPoints: int = len(line)
         self.logger.info(f'{umlLink} has points {nPoints}')
-        #
-        # Work around a bug for now
-        #
-        anchors = umlLink.getAnchors()
-        srcAnchor: AnchorPoint = anchors[0]
-        dstAnchor: AnchorPoint = anchors[1]
+
+        srcAnchor: AnchorPoint = umlLink.sourceAnchor
+        dstAnchor: AnchorPoint = umlLink.destinationAnchor
 
         relSrcX, relSrcY, relDstX, relDstY = self._getRelativeCoordinates(srcShape=umlLink.getSourceShape(), destShape=umlLink.getDestinationShape())
         self.logger.info(f' relSrc: ({relSrcX}, {relSrcY}) -  relDst: ({relDstX}, {relDstY})')
 
         srcAnchor.SetPosition(relSrcX, relSrcY)
         dstAnchor.SetPosition(relDstX, relDstY)
+        # work around bug for now
         if nPoints > 0:
             ptNumber: int = 0
             while ptNumber < nPoints:
