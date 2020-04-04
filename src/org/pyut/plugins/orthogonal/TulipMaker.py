@@ -105,6 +105,9 @@ class TulipMaker:
         params  = self._setupGraphParameters()
 
         success: TulipMaker.LayoutStatus = self._graph.applyLayoutAlgorithm('Hierarchical Tree (R-T Extended)',  params)
+        # Normalize coordinates to screen coordinates
+        bb = tlp.computeBoundingBox(self._graph)
+        self._graph['viewLayout'].translate(bb[0] * -1)
 
         if success[0] is True:
             resultLayout = self._graph.getLayoutProperty("viewLayout")

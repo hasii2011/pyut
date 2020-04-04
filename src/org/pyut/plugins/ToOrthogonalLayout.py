@@ -19,6 +19,7 @@ from wx import Yield as wxYield
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 
@@ -37,7 +38,6 @@ from org.pyut.plugins.PyutToPlugin import PyutToPlugin
 
 from org.pyut.plugins.orthogonal.TulipMaker import TulipMaker
 from org.pyut.plugins.orthogonal.TulipMaker import OglToTulipMap
-from org.pyut.plugins.orthogonal.CartesianConverter import CartesianConverter
 
 
 class ToOrthogonalLayout(PyutToPlugin):
@@ -160,20 +160,17 @@ class ToOrthogonalLayout(PyutToPlugin):
 
         for umlLink in umlObjects:
             if isinstance(umlLink, OglLink):
-                umlLink: OglLink = cast(OglLink, umlLink)
-                gmlEdgeId: int = edgeIdMap[umlLink.GetID()]
-                # gmlEdge:   Edge    = gmlEdges[gmlEdgeId]
-                gmlEdge: Edge = [gEdge for gEdge in gmlEdges if gEdge.id == gmlEdgeId][0]  # TODO Modify the parser to store as a map
+                umlLink:   OglLink = cast(OglLink, umlLink)
+                gmlEdgeId: int     = edgeIdMap[umlLink.GetID()]
+                gmlEdge:   Edge    = [gEdge for gEdge in gmlEdges if gEdge.id == gmlEdgeId][0]  # TODO Modify the parser to store as a map
                 self._stepEdges(umlLink=umlLink, gmlEdge=gmlEdge)
             self._animate(umlFrame)
 
     def _stepNodes(self, srcShape: Shape, gmlNode: Node):
 
         oldX, oldY = srcShape.GetPosition()
-        cartesianX: int = gmlNode.graphics.x
-        cartesianY: int = gmlNode.graphics.y
-
-        newX, newY = CartesianConverter.cartesianToScreen(cartesianX, cartesianY)
+        newX: int = gmlNode.graphics.x
+        newY: int = gmlNode.graphics.y
 
         self.logger.info(f'{srcShape} - oldX,oldY = {oldX},{oldY} newX,newY = {newX},{newY}')
 
@@ -185,11 +182,15 @@ class ToOrthogonalLayout(PyutToPlugin):
         nPoints: int = len(line)
         self.logger.info(f'{umlLink} has points {nPoints}')
 
-        srcAnchor: AnchorPoint = umlLink.sourceAnchor
-        dstAnchor: AnchorPoint = umlLink.destinationAnchor
+        linkType: LinkType = umlLink.getPyutObject().getType()
+        if linkType == LinkType.INHERITANCE:
+            srcAnchor: AnchorPoint = umlLink.destinationAnchor
+            dstAnchor: AnchorPoint = umlLink._srcAnchor
+        else:
+            srcAnchor: AnchorPoint = umlLink.sourceAnchor
+            dstAnchor: AnchorPoint = umlLink.destinationAnchor
 
         relSrcX, relSrcY, relDstX, relDstY = self._getRelativeCoordinates(srcShape=umlLink.getSourceShape(), destShape=umlLink.getDestinationShape())
-        self.logger.info(f' relSrc: ({relSrcX}, {relSrcY}) -  relDst: ({relDstX}, {relDstY})')
 
         srcAnchor.SetPosition(relSrcX, relSrcY)
         dstAnchor.SetPosition(relDstX, relDstY)
@@ -200,9 +201,9 @@ class ToOrthogonalLayout(PyutToPlugin):
                 if 0 < ptNumber < (nPoints - 1):
                     self.logger.info(f'process point # {ptNumber}')
                     ptToAdd: Point = line[ptNumber]
-                    cartesianX: int = ptToAdd.x
-                    cartesianY: int = ptToAdd.y
-                    newX, newY = CartesianConverter.cartesianToScreen(cartesianX, cartesianY)
+                    newX: int = ptToAdd.x
+                    newY: int = ptToAdd.y
+
                     controlPoint: ControlPoint = ControlPoint(newX, newY)
                     umlLink.AddControl(controlPoint)
                 ptNumber += 1
@@ -222,6 +223,16 @@ class ToOrthogonalLayout(PyutToPlugin):
             pass
 
     def _getRelativeCoordinates(self, srcShape, destShape):
+        """
+        Get relative coordinate on where to attach the anchors
+
+        Args:
+            srcShape:
+            destShape:
+
+        Returns:
+
+        """
 
         srcX, srcY = srcShape.GetPosition()
         dstX, dstY = destShape.GetPosition()
@@ -242,6 +253,8 @@ class ToOrthogonalLayout(PyutToPlugin):
         elif orientation == PyutAttachmentPoint.WEST:
             srcX, srcY = 0, sh / 2
             dstX, dstY = dw, dh / 2
+
+        self.logger.info(f' relSrc: ({srcX}, {srcY}) -  relDst: ({dstX}, {dstY})')
 
         return srcX, srcY, dstX, dstY
 
