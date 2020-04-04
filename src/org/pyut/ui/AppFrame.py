@@ -96,23 +96,23 @@ class AppFrame(Frame):
 
     Instantiated by PyutApp.py
     Use it as a normal Frame ::
-        dlg=AppFrame(self, -1, "Pyut")
+        dlg=AppFrame(self, wx.ID_ANY, "Pyut")
         dlg.Show()
         dlg.Destroy()
     """
     PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/Pyut'
 
-    def __init__(self, parent, ID, title):
+    def __init__(self, parent, wxID: int, title: str):
         """
-        Constructor.
 
-        @param wxWindow parent : parent window
-        @param int ID : wx ID of this frame
-        @param String title : Title to display
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            parent:     parent window
+            wxID:       wx ID of this frame
+            title:      Title to display
         """
-        super().__init__(parent, ID, title, DefaultPosition, Size(960, 480), DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
+        prefs: PyutPreferences = PyutPreferences()
+        appSize: Size = Size(prefs.getStartupWidth(), prefs.getStartupHeight())
+        super().__init__(parent, wxID, title, DefaultPosition, appSize, DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
         self.logger: Logger = getLogger(__name__)
         # Create the application's icon

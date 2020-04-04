@@ -94,9 +94,9 @@ class DlgPyutPreferences(Dialog):
         # IDs
         [
             self.__autoResizeID, self.__showParamsID, self.__languageID,
-            self.__maximizeID,   self.__fontSizeID,   self.__showTipsID,
+            self.__maximizeID,   self.__fontSizeID,   self.__showTipsID, self.__centerDiagramID,
             self.__resetTipsID,  self.__scAppWidthID, self.__scAppHeightID
-        ] = PyutUtils.assignID(9)
+        ] = PyutUtils.assignID(10)
 
         self.__createMainControls()
         self.__createFontSizeControl()
@@ -113,6 +113,8 @@ class DlgPyutPreferences(Dialog):
         mainSizer.Add(self.__cbShowParams, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__cbMaximize,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__cbShowTips,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__cbCenterDiagram, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+
         mainSizer.Add(self.__createAppSizeControls(), 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__btnResetTips, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
 
@@ -132,6 +134,7 @@ class DlgPyutPreferences(Dialog):
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showParamsID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__maximizeID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showTipsID)
+        self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__centerDiagramID)
 
         self.Bind(EVT_SPINCTRL, self.__OnSizeChange, id=self.__scAppWidthID)
         self.Bind(EVT_SPINCTRL, self.__OnSizeChange, id=self.__scAppHeightID)
@@ -184,10 +187,11 @@ class DlgPyutPreferences(Dialog):
         Creates the main control and stashes them as private instance variables
         """
 
-        self.__cbMaximize:   CheckBox = CheckBox(self, self.__maximizeID,   _("&Full Screen on startup"))
-        self.__cbAutoResize: CheckBox = CheckBox(self, self.__autoResizeID, _("&Auto resize classes to fit content"))
-        self.__cbShowParams: CheckBox = CheckBox(self, self.__showParamsID, _("&Show params in classes"))
-        self.__cbShowTips:   CheckBox = CheckBox(self, self.__showTipsID,   _("Show &Tips on startup"))
+        self.__cbMaximize:      CheckBox = CheckBox(self, self.__maximizeID,      _("&Full Screen on startup"))
+        self.__cbAutoResize:    CheckBox = CheckBox(self, self.__autoResizeID,    _("&Auto resize classes to fit content"))
+        self.__cbShowParams:    CheckBox = CheckBox(self, self.__showParamsID,    _("&Show params in classes"))
+        self.__cbShowTips:      CheckBox = CheckBox(self, self.__showTipsID,      _("Show &Tips on startup"))
+        self.__cbCenterDiagram: CheckBox = CheckBox(self, self.__centerDiagramID, _('Center Diagram'))
 
         self.__btnResetTips: Button = Button(self, self.__resetTipsID, _('Reset Tips'))
 
@@ -229,6 +233,7 @@ class DlgPyutPreferences(Dialog):
         self.__cbShowParams.SetValue(secureBool(self.__prefs[PyutPreferences.SHOW_PARAMETERS]))
         self.__cbMaximize.SetValue(secureBool(self.__prefs[PyutPreferences.FULL_SCREEN]))
         self.__cbShowTips.SetValue(secureBool(self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP]))
+        self.__cbCenterDiagram.SetValue(secureBool(self.__prefs[PyutPreferences.CENTER_DIAGRAM]))
 
         self.__scAppWidth.SetValue(self.__prefs.getStartupWidth())
         self.__scAppHeight.SetValue(self.__prefs.getStartupHeight())
@@ -253,6 +258,10 @@ class DlgPyutPreferences(Dialog):
             self.__prefs[PyutPreferences.FULL_SCREEN] = val
         elif eventID == self.__showTipsID:
             self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = val
+        elif eventID == self.__centerDiagramID:
+            self.__prefs[PyutPreferences.CENTER_DIAGRAM] = val
+        else:
+            self.logger.warning(f'Unknown combo box ID: {eventID}')
 
     def __OnSizeChange(self, event: SpinEvent):
 

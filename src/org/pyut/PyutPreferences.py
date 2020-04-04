@@ -41,6 +41,7 @@ class PyutPreferences(Singleton):
     EDITOR:                     str = 'Editor'
     STARTUP_WIDTH:              str = 'startup_width'
     STARTUP_HEIGHT:             str = 'startup_height'
+    CENTER_DIAGRAM:             str = 'center_diagram'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
         STARTUP_DIRECTORY:          '.',
@@ -52,7 +53,8 @@ class PyutPreferences(Singleton):
         CURRENT_TIP:                '0',
         EDITOR:                     'brackets',
         STARTUP_WIDTH:              '1024',
-        STARTUP_HEIGHT:             '768'
+        STARTUP_HEIGHT:             '768',
+        CENTER_DIAGRAM: 'False'
     })
 
     preferencesFileLocationAndName: str = None
@@ -185,6 +187,16 @@ class PyutPreferences(Singleton):
     def setStartupHeight(self, newHeight: int):
         self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_HEIGHT, str(newHeight))
         self.__saveConfig()
+
+    def getCenterDiagram(self):
+        centerDiagram: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_DIAGRAM)
+        return centerDiagram
+
+    def setCenterDiagram(self, theNewValue: bool):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH, str(theNewValue))
+        self.__saveConfig()
+
+    centerDiagram = property(getCenterDiagram, setCenterDiagram)
 
     def fullScreen(self) -> bool:
         fullScreenOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.FULL_SCREEN)

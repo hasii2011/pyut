@@ -14,6 +14,8 @@ from org.pyut.MiniOgl.SizerShape import SizerShape
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.RectangleShape import RectangleShape
 
+from org.pyut.PyutPreferences import PyutPreferences
+
 LEFT_MARGIN     = 0
 RIGHT_MARGIN    = 1
 TOP_MARGIN      = 2
@@ -916,18 +918,17 @@ class DiagramFrame(wx.ScrolledWindow):
 
     def SetInfinite(self, infinite: bool = False):
         """
-        added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
-        Set this diagram frame as infinite work area. The result is that the
-        virtual size is enlarged when the scrollbar reached the specified
-        margins (see SetMargins). When we set this as true, the scrollbars
-        are moved in the middle of their scale.
+        Set this diagram frame as an infinite work area. The result is that the
+        virtual size is enlarged when the scrollbar reaches the specified
+        margins (see `SetMargins`). When we set this as `True`, the scrollbars
+        are moved to the middle of their scale.
 
-        @param infinite    : shows if the work area is infinite or not.
+        Args:
+            infinite:   If `True` the work area is infinite
         """
-
         self._isInfinite = infinite
 
-        if infinite:
+        if infinite is True:
             # place all the shape in an area centered on the infinite work area
             vWidth, vHeight = self.GetVirtualSize()
             cWidth, cHeight = self.GetClientSize()
@@ -937,14 +938,15 @@ class DiagramFrame(wx.ScrolledWindow):
             # get the number of scroll unit
             noUnitX = (vWidth-cWidth) / xUnit
             noUnitY = (vHeight-cHeight) / yUnit
-
-            # set the scrollbars position in the middle of their scale
-            self.Scroll(noUnitX / 2, noUnitY / 2)
+            centerDiagram: bool = PyutPreferences().centerDiagram
+            if centerDiagram is True:
+                self.Scroll(noUnitX / 2, noUnitY / 2)   # set the scrollbars position in the middle of their scale
+            else:
+                self.Scroll(0, 0)
 
     def IsInfinite(self) -> bool:
         """
-        added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
-        @return this frame is infinite.
+        Returns:    If this frame is infinite or not
         """
         return self._isInfinite
 
