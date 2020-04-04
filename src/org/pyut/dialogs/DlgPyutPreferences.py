@@ -15,6 +15,7 @@ from wx import CENTER
 from wx import EVT_BUTTON
 from wx import EVT_CHECKBOX
 from wx import EVT_CLOSE
+from wx import EVT_COMBOBOX
 from wx import EVT_SPINCTRL
 from wx import EXPAND
 from wx import HORIZONTAL
@@ -137,6 +138,7 @@ class DlgPyutPreferences(Dialog):
 
         self.Bind(EVT_BUTTON,   self.__OnBtnResetTips, id=self.__resetTipsID)
 
+        self.Bind(EVT_COMBOBOX, self.__languageChange, id=self.__languageID)
         self.Bind(EVT_BUTTON,   self.__OnCmdOk,    id=ID_OK)
 
         self.__changed: bool = False
@@ -265,22 +267,6 @@ class DlgPyutPreferences(Dialog):
             self.logger.error(f'Unknown onSizeChange event id: {eventId}')
 
     def __OnClose(self, event):
-        """
-        """
-        # If language has been changed
-        newLanguage:    str = self.__cmbLanguage.GetValue()
-        actualLanguage: str = self.__prefs[PyutPreferences.I18N]
-        if actualLanguage not in Lang.LANGUAGES or newLanguage != Lang.LANGUAGES[actualLanguage][0]:
-            # Search the key corresponding to the newLanguage
-            for i in list(Lang.LANGUAGES.items()):
-                if newLanguage == i[1][0]:
-                    # Write the key in preferences file
-                    self.__prefs[PyutPreferences.I18N] = i[0]
-
-            dlg = MessageDialog(self, _("You must restart application for language changes"), _("Warning"), OK | ICON_EXCLAMATION)
-            dlg.ShowModal()
-            dlg.Destroy()
-
         event.Skip(skip=True)
 
     # noinspection PyUnusedLocal
@@ -295,5 +281,17 @@ class DlgPyutPreferences(Dialog):
     def __OnBtnResetTips(self, event: CommandEvent):
         self.__prefs[PyutPreferences.CURRENT_TIP] = '0'
 
-    def __languageChange(self):
-        pass
+    def __languageChange(self, event: CommandEvent):
+
+        newLanguage: str = event.GetString()
+        actualLanguage: str = self.__prefs[PyutPreferences.I18N]
+        if actualLanguage not in Lang.LANGUAGES or newLanguage != Lang.LANGUAGES[actualLanguage][0]:
+            # Search the key corresponding to the newLanguage
+            for i in list(Lang.LANGUAGES.items()):
+                if newLanguage == i[1][0]:
+                    # Write the key in preferences file
+                    self.__prefs[PyutPreferences.I18N] = i[0]
+
+            dlg = MessageDialog(self, _("You must restart application for language changes"), _("Warning"), OK | ICON_EXCLAMATION)
+            dlg.ShowModal()
+            dlg.Destroy()
