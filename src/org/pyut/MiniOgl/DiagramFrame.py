@@ -35,7 +35,7 @@ class DiagramFrame(wx.ScrolledWindow):
         Args:
             parent:  parent window
         """
-        super().__init__(parent)
+        super().__init__(parent, style=wx.SUNKEN_BORDER)
 
         self.logger: Logger = getLogger(__name__)
 
@@ -170,35 +170,6 @@ class DiagramFrame(wx.ScrolledWindow):
             self.Refresh()
 
         self.Bind(wx.EVT_MOTION, self.OnMove)
-
-    def _BeginSelect(self, event: wx.MouseEvent):
-        """
-        Create a selector box and manage it.
-
-        @param  event
-        """
-        if not event.ControlDown():
-            self.DeselectAllShapes()
-        x, y = event.GetX(), event.GetY()   # event position has been modified
-        self._selector = rect = RectangleShape(x, y, 0, 0)
-        rect.SetDrawFrame(True)
-        rect.SetBrush(wx.TRANSPARENT_BRUSH)
-        rect.SetMoving(True)
-        self._diagram.AddShape(rect)
-        self.PrepareBackground()
-        self.Bind(wx.EVT_MOTION, self._OnMoveSelector)
-
-    def _OnMoveSelector(self, event: wx.MouseEvent):
-        """
-        Callback for the selector box.
-
-        @param  event
-        """
-        if self._selector is not None:
-            x, y = self.getEventPosition(event)
-            x0, y0 = self._selector.GetPosition()
-            self._selector.SetSize(x - x0, y - y0)
-            self.Refresh(False)
 
     def OnLeftUp(self, event: wx.MouseEvent):
         """
@@ -603,14 +574,6 @@ class DiagramFrame(wx.ScrolledWindow):
         else:
             dc.Blit(0, 0, w, h, mem, 0, 0)
 
-    def _NullCallback(self, evt):
-        pass
-
-    def _ConvertEventCoordinates(self, event):
-        xView, yView = self.GetViewStart()
-        xDelta, yDelta = self.GetScrollPixelsPerUnit()
-        return event.GetX() + (xView * xDelta), event.GetY() + (yView * yDelta)
-
     def GetCurrentZoom(self):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
@@ -984,3 +947,40 @@ class DiagramFrame(wx.ScrolledWindow):
         @return this frame is infinite.
         """
         return self._isInfinite
+
+    def _BeginSelect(self, event: wx.MouseEvent):
+        """
+        Create a selector box and manage it.
+
+        @param  event
+        """
+        if not event.ControlDown():
+            self.DeselectAllShapes()
+        x, y = event.GetX(), event.GetY()   # event position has been modified
+        self._selector = rect = RectangleShape(x, y, 0, 0)
+        rect.SetDrawFrame(True)
+        rect.SetBrush(wx.TRANSPARENT_BRUSH)
+        rect.SetMoving(True)
+        self._diagram.AddShape(rect)
+        self.PrepareBackground()
+        self.Bind(wx.EVT_MOTION, self._OnMoveSelector)
+
+    def _OnMoveSelector(self, event: wx.MouseEvent):
+        """
+        Callback for the selector box.
+
+        @param  event
+        """
+        if self._selector is not None:
+            x, y = self.getEventPosition(event)
+            x0, y0 = self._selector.GetPosition()
+            self._selector.SetSize(x - x0, y - y0)
+            self.Refresh(False)
+
+    def _NullCallback(self, evt):
+        pass
+
+    def _ConvertEventCoordinates(self, event):
+        xView, yView = self.GetViewStart()
+        xDelta, yDelta = self.GetScrollPixelsPerUnit()
+        return event.GetX() + (xView * xDelta), event.GetY() + (yView * yDelta)

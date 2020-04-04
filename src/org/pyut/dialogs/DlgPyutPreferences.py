@@ -15,12 +15,15 @@ from wx import CENTER
 from wx import EVT_BUTTON
 from wx import EVT_CHECKBOX
 from wx import EVT_CLOSE
+from wx import EVT_SPINCTRL
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ICON_EXCLAMATION
 from wx import ID_ANY
 from wx import ID_OK
 from wx import OK
+from wx import SpinCtrl
+from wx import SpinEvent
 from wx import StaticBox
 from wx import StaticBoxSizer
 from wx import VERTICAL
@@ -34,7 +37,6 @@ from wx import MessageDialog
 from wx import StaticText
 
 from org.pyut.PyutConstants import PyutConstants
-from org.pyut.ogl.OglClass import OglClass
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
@@ -53,6 +55,9 @@ class DlgPyutPreferences(Dialog):
     This is the preferences dialog for Pyut.
 
     Display current preferences and possible values, save modified values.
+    
+    This works just like preferences on OS X work.  They are changed
+    immediately
 
     To use it from a wxFrame:
     ```python
@@ -89,16 +94,17 @@ class DlgPyutPreferences(Dialog):
         [
             self.__autoResizeID, self.__showParamsID, self.__languageID,
             self.__maximizeID,   self.__fontSizeID,   self.__showTipsID,
-            self.__resetTipsID
-        ] = PyutUtils.assignID(7)
+            self.__resetTipsID,  self.__scAppWidthID, self.__scAppHeightID
+        ] = PyutUtils.assignID(9)
 
         self.__createMainControls()
         self.__createFontSizeControl()
         self.__cmbLanguage: ComboBox = cast(ComboBox, None)
+
         szrLanguage: BoxSizer = self.__createLanguageControlContainer()
         hs:          BoxSizer = self.__createDialogButtonsContainer()
 
-        box:       StaticBox = StaticBox(self, ID_OK, "")
+        box:       StaticBox = StaticBox(self, ID_ANY, "")
         mainSizer: StaticBoxSizer = StaticBoxSizer(box, VERTICAL)
 
         # mainSizer.Add(window=self.__cbAutoResize, proportion=0, flag=ALL, border=DlgPyutPreferences.VERTICAL_GAP)
@@ -106,13 +112,14 @@ class DlgPyutPreferences(Dialog):
         mainSizer.Add(self.__cbShowParams, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__cbMaximize,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__cbShowTips,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__createAppSizeControls(), 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__btnResetTips, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
 
         mainSizer.Add(szrLanguage, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(hs,          0, CENTER)
 
         border: BoxSizer = BoxSizer()
-        border.Add(mainSizer, 1, EXPAND | ALL, 25)
+        border.Add(mainSizer, 1, EXPAND | ALL, 3)
 
         self.SetAutoLayout(True)
         self.SetSizer(border)
@@ -125,11 +132,14 @@ class DlgPyutPreferences(Dialog):
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__maximizeID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showTipsID)
 
+        self.Bind(EVT_SPINCTRL, self.__OnSizeChange, id=self.__scAppWidthID)
+        self.Bind(EVT_SPINCTRL, self.__OnSizeChange, id=self.__scAppHeightID)
+
         self.Bind(EVT_BUTTON,   self.__OnBtnResetTips, id=self.__resetTipsID)
 
         self.Bind(EVT_BUTTON,   self.__OnCmdOk,    id=ID_OK)
 
-        self.__changed = 0
+        self.__changed: bool = False
         self.__setValues()
 
     def __createDialogButtonsContainer(self) -> BoxSizer:
@@ -179,6 +189,25 @@ class DlgPyutPreferences(Dialog):
 
         self.__btnResetTips: Button = Button(self, self.__resetTipsID, _('Reset Tips'))
 
+    def __createAppSizeControls(self) -> StaticBoxSizer:
+
+        scAppWidth  = SpinCtrl(self, self.__scAppWidthID,  "", (30, 50))
+        scAppHeight = SpinCtrl(self, self.__scAppHeightID, "", (30, 50))
+
+        scAppWidth.SetRange(960, 4096)
+        scAppHeight.SetRange(480, 4096)
+
+        box:        StaticBox = StaticBox(self, ID_ANY, "Startup Width/Height")
+        szrAppSize: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
+
+        szrAppSize.Add(scAppWidth, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+        szrAppSize.Add(scAppHeight, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+
+        self.__scAppWidth  = scAppWidth
+        self.__scAppHeight = scAppHeight
+
+        return szrAppSize
+
     def __createFontSizeControl(self):
         """
         TODO:  Need this later;  Inherited from legacy code
@@ -199,6 +228,8 @@ class DlgPyutPreferences(Dialog):
         self.__cbMaximize.SetValue(secureBool(self.__prefs[PyutPreferences.FULL_SCREEN]))
         self.__cbShowTips.SetValue(secureBool(self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP]))
 
+        self.__scAppWidth.SetValue(self.__prefs.getStartupWidth())
+        self.__scAppHeight.SetValue(self.__prefs.getStartupHeight())
         # i18n
         n = self.__prefs[PyutPreferences.I18N]
         if n not in Lang.LANGUAGES:
@@ -208,7 +239,7 @@ class DlgPyutPreferences(Dialog):
     def __OnCheckBox(self, event):
         """
         """
-        self.__changed = 1
+        self.__changed = True
         eventID = event.GetId()
         val = event.IsChecked()
         if eventID == self.__autoResizeID:
@@ -221,10 +252,17 @@ class DlgPyutPreferences(Dialog):
         elif eventID == self.__showTipsID:
             self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = val
 
-    def __OnChoice(self, event):
-        """
-        """
-        pass
+    def __OnSizeChange(self, event: SpinEvent):
+
+        self.__changed = True
+        eventId:  int = event.GetId()
+        newValue: int = event.GetInt()
+        if eventId == self.__scAppWidthID:
+            self.__prefs.setStartupWidth(newValue)
+        elif eventId == self.__scAppHeightID:
+            self.__prefs.setStartupHeight(newValue)
+        else:
+            self.logger.error(f'Unknown onSizeChange event id: {eventId}')
 
     def __OnClose(self, event):
         """
@@ -238,7 +276,7 @@ class DlgPyutPreferences(Dialog):
                 if newLanguage == i[1][0]:
                     # Write the key in preferences file
                     self.__prefs[PyutPreferences.I18N] = i[0]
-            # Dialog must restart Pyut to have the changes
+
             dlg = MessageDialog(self, _("You must restart application for language changes"), _("Warning"), OK | ICON_EXCLAMATION)
             dlg.ShowModal()
             dlg.Destroy()
@@ -249,12 +287,13 @@ class DlgPyutPreferences(Dialog):
     def __OnCmdOk(self, event: CommandEvent):
         """
         """
-        if self.__changed:
-            for oglObject in self.__ctrl.getUmlObjects():
-                if isinstance(oglObject, OglClass):
-                    self.__ctrl.autoResize(oglObject)
+        if self.__changed is True:
+            self.logger.info(f'Preferences have changed')
         event.Skip(skip=True)
 
     # noinspection PyUnusedLocal
     def __OnBtnResetTips(self, event: CommandEvent):
         self.__prefs[PyutPreferences.CURRENT_TIP] = '0'
+
+    def __languageChange(self):
+        pass

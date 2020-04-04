@@ -39,6 +39,8 @@ class PyutPreferences(Singleton):
     I18N:                       str = 'I18N'
     CURRENT_TIP:                str = 'Current_Tip'
     EDITOR:                     str = 'Editor'
+    STARTUP_WIDTH:              str = 'startup_width'
+    STARTUP_HEIGHT:             str = 'startup_height'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
         STARTUP_DIRECTORY:          '.',
@@ -46,9 +48,11 @@ class PyutPreferences(Singleton):
         AUTO_RESIZE_SHAPE_ON_EDIT:  'False',
         SHOW_PARAMETERS:            'False',
         FULL_SCREEN:                'False',
-        I18N:                       'en',       # TODO: I think this should be 'English' if I look at the preferences dialog Close code
+        I18N:                       'en',       # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
         CURRENT_TIP:                '0',
-        EDITOR:                     'brackets'
+        EDITOR:                     'brackets',
+        STARTUP_WIDTH:              '1024',
+        STARTUP_HEIGHT:             '768'
     })
 
     preferencesFileLocationAndName: str = None
@@ -105,9 +109,8 @@ class PyutPreferences(Singleton):
         """
 
         Returns:  the number of last opened files to keep
-
         """
-        ans: int = self._config.get(PyutPreferences.OPENED_FILES_SECTION, PyutPreferences.NUMBER_OF_ENTRIES)
+        ans: str = self._config.get(PyutPreferences.OPENED_FILES_SECTION, PyutPreferences.NUMBER_OF_ENTRIES)
         return int(ans)
 
     def setNbLOF(self, nbLOF: int):
@@ -166,6 +169,22 @@ class PyutPreferences(Singleton):
     def autoResizeShapesOnEdit(self) -> bool:
         resizeOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT)
         return resizeOrNot
+
+    def getStartupWidth(self) -> int:
+        width: str = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH)
+        return int(width)
+
+    def setStartupWidth(self, newWidth: int):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH, str(newWidth))
+        self.__saveConfig()
+
+    def getStartupHeight(self) -> int:
+        height: str = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_HEIGHT)
+        return int(height)
+
+    def setStartupHeight(self, newHeight: int):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_HEIGHT, str(newHeight))
+        self.__saveConfig()
 
     def fullScreen(self) -> bool:
         fullScreenOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.FULL_SCREEN)
@@ -232,7 +251,6 @@ class PyutPreferences(Singleton):
             for prefName in PyutPreferences.MAIN_PREFERENCES.keys():
                 if self._config.has_option(PyutPreferences.MAIN_SECTION, prefName) is False:
                     self.__addMissingMainPreference(prefName, PyutPreferences.MAIN_PREFERENCES[prefName])
-
         except (ValueError, Exception) as e:
             self.logger.error(f"Error: {e}")
 
