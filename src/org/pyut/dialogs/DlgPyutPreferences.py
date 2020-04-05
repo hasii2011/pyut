@@ -243,7 +243,7 @@ class DlgPyutPreferences(Dialog):
             n = Lang.DEFAULT_LANG
         self.__cmbLanguage.SetValue(Lang.LANGUAGES[n][0])
 
-    def __OnCheckBox(self, event):
+    def __OnCheckBox(self, event: CommandEvent):
         """
         """
         self.__changed = True
