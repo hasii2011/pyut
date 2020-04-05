@@ -207,6 +207,7 @@ class ToOrthogonalLayout(PyutToPlugin):
         dstAnchor.SetPosition(relDstX, relDstY)
         # work around bug for now
         if nPoints > 0:
+            umlLink.RemoveAllControlPoints()    # clean up
             ptNumber: int = 0
             while ptNumber < nPoints:
                 if 0 < ptNumber < (nPoints - 1):
