@@ -26,7 +26,9 @@ class TestAll:
     """
     The class that can run our unit tests in various formats
     """
-    NOT_TESTS: List[str] = ['TestAll', 'TestMiniOgl', 'TestBase', 'TestTemplate', 'TestIoFile', 'TestUmlFrame', 'TestAst']
+    NOT_TESTS: List[str] = ['TestAll', 'TestMiniOgl', 'TestBase',
+                            'TestTemplate', 'TestIoFile', 'TestUmlFrame',
+                            'TestAst', 'TestADialog']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
     VERBOSITY_DEFAULT: int = 1  # VERBOSITY_QUIET plus a dot for every successful test or a F for every failure
