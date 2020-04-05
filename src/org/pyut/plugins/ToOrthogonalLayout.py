@@ -22,6 +22,8 @@ from org.pyut.MiniOgl.Shape import Shape
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
+from org.pyut.plugins.orthogonal.DlgOrthogonalOptions import DlgOrthogonalOptions
+from org.pyut.plugins.orthogonal.OrthogonalOptions import OrthogonalOptions
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -53,7 +55,8 @@ class ToOrthogonalLayout(PyutToPlugin):
         """
         super().__init__(umlObjects, umlFrame)
 
-        self.logger: Logger = getLogger(__name__)
+        self.logger:   Logger            = getLogger(__name__)
+        self._options: OrthogonalOptions = OrthogonalOptions()  # The defaults
 
     def getName(self):
         """
@@ -90,6 +93,14 @@ class ToOrthogonalLayout(PyutToPlugin):
         Returns:
             If False, the import will be cancelled.
         """
+        with DlgOrthogonalOptions(self._umlFrame) as dlg:
+            if dlg.ShowModal() == OK:
+                self.logger.info(f'Waiting for answer')
+                self._options = dlg.options
+                self.logger.info(f'Retrieved Options: {self._options}')
+            else:
+                self.logger.info(f'Cancelled.  Used my original')
+
         return True
 
     def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
@@ -110,7 +121,7 @@ class ToOrthogonalLayout(PyutToPlugin):
 
         self.logger.info(f'Begin Orthogonal algorithm')
 
-        tulipMaker: TulipMaker = TulipMaker()
+        tulipMaker: TulipMaker = TulipMaker(self._options)
 
         tulipMaker.translate(umlObjects)
         success: TulipMaker.LayoutStatus = tulipMaker.layout()

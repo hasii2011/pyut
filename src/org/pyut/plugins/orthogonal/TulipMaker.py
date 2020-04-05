@@ -20,6 +20,7 @@ from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperatio
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
+from org.pyut.plugins.orthogonal.OrthogonalOptions import OrthogonalOptions
 
 """
 Use Any as a substitute for tlp.Node and tlp.Edge
@@ -39,10 +40,11 @@ class TulipMaker:
 
     TEMPORARY_GML_LAYOUT_FILENAME: str = 'translationGraph.gml'
 
-    def __init__(self):
+    def __init__(self, options: OrthogonalOptions):
 
         self.logger: Logger = getLogger(__name__)
 
+        self._options: OrthogonalOptions = options
         self._graph: tlp.Graph = tlp.newGraph()
         self._graph.setName('Translation Graph')
 
@@ -189,10 +191,13 @@ class TulipMaker:
 
         params = tlp.getDefaultPluginParameters('Hierarchical Tree (R-T Extended)', self._graph)
 
-        params['orthogonal']    = True
-        params["orientation"]   = "vertical"
-        params["layer spacing"] = 150.0
-        params["node spacing"]  = 100.0
-        params['compact layout'] = False
+        #
+        # TODO Set these as plugin options
+        #
+        params['orthogonal']     = True
+        params["orientation"]    = self._options.orientation.value
+        params["layer spacing"]  = self._options.layerSpacing
+        params["node spacing"]   = self._options.nodeSpacing
+        params['compact layout'] = self._options.compactLayout
 
         return params
