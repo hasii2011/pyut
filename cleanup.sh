@@ -8,3 +8,4 @@ cd src/tests/testdata > /dev/null 2>&1
 find . -type f -name "*.png" -delete
 
 cd - > /dev/null 2>&1
+find . -type f -name "translationGraph.gml" -delete
