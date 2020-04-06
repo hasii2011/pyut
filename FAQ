@@ -21,9 +21,9 @@ A: Python Reverse does an 'import' on python files.
 
 2. How to run Pyut
 =============================
-Q: How do I get Pyut binaries
+Q: How do I get Pyut binaries?
 
-A.  Unfortunately, at this time I can am unable to generate binaries for Mac OS X.  I am having code-signing problems.
+A.  Unfortunately, at this time I am unable to generate binaries for Mac OS X.  I am having code-signing problems.
 Also, I have not yet started work on generating Window exe files
 If you want to run it outside of Pycharm, you can run it in what py2app calls 'alias' mode.  The following are the steps
 
