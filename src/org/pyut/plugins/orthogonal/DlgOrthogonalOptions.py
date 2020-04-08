@@ -99,8 +99,8 @@ class DlgOrthogonalOptions(Dialog):
         border.SetSizeHints(self)
 
         self.Bind(EVT_CHECKBOX, self.__OnCompactLayoutChange, id=self.__compactLayoutId)
-        self.Bind(EVT_RADIOBOX, self._onOrientationChange, id=self.__orientationId)
-        self.Bind(EVT_SPINCTRL, self.__OnSpacingChange, id=self.__layerSpacingId)
+        self.Bind(EVT_RADIOBOX, self._onOrientationChange,    id=self.__orientationId)
+        self.Bind(EVT_SPINCTRL, self.__OnSpacingChange,       id=self.__layerSpacingId)
         self.Bind(EVT_SPINCTRL, self.__OnSpacingChange,       id=self.__nodeSpacingId)
 
         self.Bind(EVT_BUTTON,   self.__OnCmdOk,    id=ID_OK)

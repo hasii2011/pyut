@@ -211,8 +211,8 @@ class ToOrthogonalLayout(PyutToPlugin):
             ptNumber: int = 0
             while ptNumber < nPoints:
                 if 0 < ptNumber < (nPoints - 1):
-                    self.logger.info(f'process point # {ptNumber}')
                     ptToAdd: Point = line[ptNumber]
+                    self.logger.info(f'process point # {ptNumber} ptToAdd: {ptToAdd}')
                     newX: int = ptToAdd.x
                     newY: int = ptToAdd.y
 
