@@ -183,7 +183,7 @@ class ToOrthogonalLayout(PyutToPlugin):
         newX: int = gmlNode.graphics.x
         newY: int = gmlNode.graphics.y
 
-        self.logger.info(f'{srcShape} - oldX,oldY = {oldX},{oldY} newX,newY = {newX},{newY}')
+        self.logger.info(f'{srcShape} - oldX,oldY: ({oldX},{oldY}) newX,newY: ({newX},{newY})')
 
         srcShape.SetPosition(newX, newY)
 
@@ -193,14 +193,14 @@ class ToOrthogonalLayout(PyutToPlugin):
         nPoints: int = len(line)
         self.logger.info(f'{umlLink} has points {nPoints}')
 
-        linkType: LinkType = umlLink.getPyutObject().getType()
-        if linkType == LinkType.INHERITANCE:
-            srcAnchor: AnchorPoint = umlLink.destinationAnchor
-            dstAnchor: AnchorPoint = umlLink._srcAnchor
-        else:
-            srcAnchor: AnchorPoint = umlLink.sourceAnchor
-            dstAnchor: AnchorPoint = umlLink.destinationAnchor
-
+        # linkType: LinkType = umlLink.getPyutObject().getType()
+        # if linkType == LinkType.INHERITANCE:
+        #     srcAnchor: AnchorPoint = umlLink.destinationAnchor
+        #     dstAnchor: AnchorPoint = umlLink._srcAnchor
+        #     relSrcX, relSrcY, relDstX, relDstY = self._getRelativeCoordinates(srcShape=umlLink.getDestinationShape(), destShape=umlLink.getSourceShape())
+        # else:
+        srcAnchor: AnchorPoint = umlLink.sourceAnchor
+        dstAnchor: AnchorPoint = umlLink.destinationAnchor
         relSrcX, relSrcY, relDstX, relDstY = self._getRelativeCoordinates(srcShape=umlLink.getSourceShape(), destShape=umlLink.getDestinationShape())
 
         srcAnchor.SetPosition(relSrcX, relSrcY)
@@ -253,6 +253,7 @@ class ToOrthogonalLayout(PyutToPlugin):
         self.logger.info(f'orientation: {orientation}')
         sw, sh = srcShape.GetSize()
         dw, dh = destShape.GetSize()
+        self.logger.info(f'Source Dimensions(sw-sh): {sw}-{sh} Destination Dimensions(dw-dh) {dw}-{dh}')
         if orientation == PyutAttachmentPoint.NORTH:
             srcX, srcY = sw / 2, 0
             dstX, dstY = dw / 2, dh
@@ -266,7 +267,7 @@ class ToOrthogonalLayout(PyutToPlugin):
             srcX, srcY = 0, sh / 2
             dstX, dstY = dw, dh / 2
 
-        self.logger.info(f' relSrc: ({srcX}, {srcY}) -  relDst: ({dstX}, {dstY})')
+        self.logger.info(f' relative Src Pos: ({srcX}, {srcY}) -  relative Dest Pos: ({dstX}, {dstY})')
 
         return srcX, srcY, dstX, dstY
 

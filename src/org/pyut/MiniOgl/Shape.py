@@ -533,19 +533,20 @@ class Shape:
 
     def SetPosition(self, x: float, y: float):
         """
-        Change the position of the shape, if it's draggable.
+        If it's draggable; change the position of the shape;  Upper left corner
 
-        @param x
-        @param y
+        Args:
+            x:  x position to move shape to
+            y:  y position to move shape to
         """
         if self._draggable:
-            if self._parent is not None:
-                self._x, self._y = self.ConvertCoordToRelative(x, y)
-            else:
+            self.clsLogger.info(f'_parent: {self._parent}')
+            if self._parent is None:
                 self._x = x
                 self._y = y
-
-            # added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
+                self.clsLogger.info(f'New Position: ({self._x},{self._y})')
+            else:
+                self._x, self._y = self.ConvertCoordToRelative(x, y)
             #  if the shape is attached to a diagramFrame, it means that
             #  the model will be initialized correctly.
             # (Avoid a null pointer error).

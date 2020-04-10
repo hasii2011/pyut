@@ -68,11 +68,14 @@ class AnchorPoint(LinePoint):
             x:
             y:
         """
+        self.logger.info(f'parent: {self._parent} draggable: {self._draggable} stayInside: {self._stayInside} stayOnBorder: {self._stayOnBorder}')
         if self._draggable:
-            if self._parent is not None:
-
+            if self._parent is None:
+                self._x = x
+                self._y = y
+            else:
                 topLeftX, topLeftY = self._parent.GetTopLeft()
-                width, height = self._parent.GetSize()
+                width, height      = self._parent.GetSize()
                 width  = abs(width) - 1
                 height = abs(height) - 1
                 if self._stayInside or self._stayOnBorder:
@@ -81,9 +84,8 @@ class AnchorPoint(LinePoint):
                     if self._stayOnBorder:
                         x, y = self.stickToBorder(topLeftX, topLeftY, width, height, x, y)
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
-            else:
-                self._x = x
-                self._y = y
+
+                self.logger.info(f'Final Position: ({self._x}, {self._y})')
 
             if self.HasDiagramFrame():
                 self.UpdateModel()
