@@ -80,7 +80,7 @@
             "propagate": "False"
         },
         "org.pyut.MiniOgl.DiagramFrame": {
-            "level":     "INFO",
+            "level":     "DEBUG",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
@@ -138,6 +138,11 @@
         },
 
         "org.pyut.dialogs.DlgPyutProperties": {
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.dialogs.DlgDebugDiagramFrame": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"

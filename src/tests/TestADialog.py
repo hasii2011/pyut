@@ -5,11 +5,13 @@ from wx import App
 
 from wx import DEFAULT_FRAME_STYLE
 from wx import Frame
+from wx import ID_ANY
 from wx import OK
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
 
-from org.pyut.plugins.orthogonal.DlgOrthogonalOptions import DlgOrthogonalOptions
+# from org.pyut.plugins.orthogonal.DlgOrthogonalOptions import DlgOrthogonalOptions
+from org.pyut.dialogs.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 
 
 class TestADialog(App):
@@ -38,12 +40,11 @@ class TestADialog(App):
 
     def initTest(self):
 
-        with DlgOrthogonalOptions(self._diagramFrame) as dlg:
+        with DlgDebugDiagramFrame(self._diagramFrame, ID_ANY) as dlg:
             if dlg.ShowModal() == OK:
-                options = dlg.options
-                self.logger.warning(f'Retrieved Options: {options}')
+                self.logger.warning(f'Retrieved data')
             else:
-                self.logger.info(f'Cancelled')
+                self.logger.warning(f'Cancelled')
 
         self.logger.info(f"After dialog show")
 

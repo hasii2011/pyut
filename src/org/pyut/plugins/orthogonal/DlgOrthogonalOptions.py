@@ -82,7 +82,7 @@ class DlgOrthogonalOptions(Dialog):
         nodeSpacingSizer:  BoxSizer = self.__createSpinnerContainer(self.__scNodeSpacing,  _('Node Spacing'))
 
         mainSizer.Add(layerSpacingSizer, 0, ALL, DlgOrthogonalOptions.VERTICAL_GAP)
-        mainSizer.Add(nodeSpacingSizer, 0, ALL, DlgOrthogonalOptions.VERTICAL_GAP)
+        mainSizer.Add(nodeSpacingSizer,  0, ALL, DlgOrthogonalOptions.VERTICAL_GAP)
 
         self.__createOrientationControl()
 
@@ -129,7 +129,7 @@ class DlgOrthogonalOptions(Dialog):
 
     def __createSpinnerContainer(self, spinner: SpinCtrl, text: str) -> BoxSizer:
 
-        lblText = StaticText(self, -1, text)
+        lblText = StaticText(self, ID_ANY, text)
 
         szrSpinner = BoxSizer(HORIZONTAL)
         szrSpinner.Add(lblText, 0, ALL, DlgOrthogonalOptions.HORIZONTAL_GAP)
