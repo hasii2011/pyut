@@ -19,7 +19,7 @@ from wx import Yield as wxYield
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.Shape import Shape
-from org.pyut.enums.LinkType import LinkType
+
 
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 from org.pyut.plugins.orthogonal.DlgOrthogonalOptions import DlgOrthogonalOptions
@@ -274,7 +274,7 @@ class ToOrthogonalLayout(PyutToPlugin):
     def _getOrientation(self, srcX, srcY, destX, destY) -> PyutAttachmentPoint:
         """
         Given a source and destination, returns where the destination
-        is located according to the source.
+        is located relative to the source.
 
         Args:
             srcX:   X pos of src point

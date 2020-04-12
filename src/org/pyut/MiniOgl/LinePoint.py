@@ -18,7 +18,7 @@ class LinePoint(PointShape):
         @param Shape parent : parent shape
         """
         #  print ">>>LinePoint ", x, y
-        PointShape.__init__(self, x, y, parent)
+        super().__init__(x, y, parent)
         self._lines = []    # a list of LineShape passing through this point
 
     def AddLine(self, line):
