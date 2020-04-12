@@ -10,10 +10,12 @@ from wx import CANCEL
 from wx import CENTER
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
+from wx import EVT_TIMER
 from wx import EXPAND
 from wx import GetMouseState
 from wx import MouseState
 from wx import StaticText
+from wx import Timer
 from wx import TimerEvent
 from wx import VERTICAL
 from wx import HORIZONTAL
@@ -38,6 +40,9 @@ class DlgDebugDiagramFrame(Dialog):
     VERTICAL_GAP:          int = 2
     HORIZONTAL_GAP:        int = 3
     PROPORTION_CHANGEABLE: int = 1
+
+    DEBUG_TIMER_UPDATE_MSECS: int = 500
+
     """
     Sample use:
             self._debugDialog: DlgDebugDiagramFrame = DlgDebugDiagramFrame(parent, ID_ANY)
@@ -78,8 +83,14 @@ class DlgDebugDiagramFrame(Dialog):
         self.Bind(EVT_BUTTON, self.__OnCmdOk, id=ID_OK)
         self.Bind(EVT_CLOSE,  self.__OnClose)
 
+    def startMonitor(self):
+
+        self._timer: Timer = Timer(self)
+        self.Bind(EVT_TIMER, self._onTimer, self._timer)
+        self._timer.Start(DlgDebugDiagramFrame.DEBUG_TIMER_UPDATE_MSECS)
+
     # noinspection PyUnusedLocal
-    def onTimer(self, event: TimerEvent):
+    def _onTimer(self, event: TimerEvent):
 
         ms: MouseState = GetMouseState()
 
@@ -127,6 +138,7 @@ class DlgDebugDiagramFrame(Dialog):
     def __OnCmdOk(self, event: CommandEvent):
         """
         """
+        self._timer.Stop()
         event.Skip(skip=True)
         self.SetReturnCode(OK)
         self.EndModal(OK)
@@ -135,5 +147,6 @@ class DlgDebugDiagramFrame(Dialog):
     def __OnClose(self, event: CommandEvent):
         """
         """
+        self._timer.Stop()
         self.SetReturnCode(CANCEL)
         self.EndModal(CANCEL)

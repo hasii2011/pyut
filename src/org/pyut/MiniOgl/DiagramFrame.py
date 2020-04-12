@@ -63,8 +63,6 @@ BOTTOM_MARGIN   = 3
 
 class DiagramFrame(ScrolledWindow):
 
-    DEBUG_TIMER_UPDATE_MSECS: int = 500
-
     clsLogger: Logger = getLogger(__name__)
 
     """
@@ -131,11 +129,10 @@ class DiagramFrame(ScrolledWindow):
         self.Bind(EVT_PAINT,         self.OnPaint)
 
         if self.clsLogger.level == pythonDebugLoggingLevel:
-            self._timer: Timer = Timer(self)
+
             self._debugDialog: DlgDebugDiagramFrame = DlgDebugDiagramFrame(self, ID_ANY)
+            self._debugDialog.startMonitor()
             self._debugDialog.Show(True)
-            self.Bind(EVT_TIMER, self._debugDialog.onTimer, self._timer)
-            self._timer.Start(DiagramFrame.DEBUG_TIMER_UPDATE_MSECS)
 
     def getEventPosition(self, event: MouseEvent):
         """
