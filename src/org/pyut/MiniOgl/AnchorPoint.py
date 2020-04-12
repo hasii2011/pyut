@@ -23,7 +23,7 @@ class AnchorPoint(LinePoint):
 
         self.logger: Logger = getLogger(__name__)
 
-        self.logger.debug(f'AnchorPoint __init__  x: {x}, y: {y} parent: {parent}')
+        self.logger.info(f'AnchorPoint __init__  x: {x}, y: {y} parent: {parent}')
         self._protected:    bool = True  # protected by default
         self._stayInside:   bool = True
         self._stayOnBorder: bool = True
@@ -68,7 +68,15 @@ class AnchorPoint(LinePoint):
             x:
             y:
         """
-        self.logger.info(f'parent: {self._parent} draggable: {self._draggable} stayInside: {self._stayInside} stayOnBorder: {self._stayOnBorder}')
+
+        self.logger.info(
+            (
+                f'x,y: ({x},{y}) '
+                f'parent: {self._parent} '
+                f'draggable: {self._draggable} '
+                f'stayInside: {self._stayInside} '
+                f'stayOnBorder: {self._stayOnBorder}')
+        )
         if self._draggable:
             if self._parent is None:
                 self._x = x
@@ -78,6 +86,7 @@ class AnchorPoint(LinePoint):
                 width, height      = self._parent.GetSize()
                 width  = abs(width) - 1
                 height = abs(height) - 1
+                self.logger.info(f'topLeftX,topLeftY ({topLeftX},{topLeftY}) width,height ({width},{height})')
                 if self._stayInside or self._stayOnBorder:
                     x = self.stayInside(topLeftX, width, x)
                     y = self.stayInside(topLeftY, height, y)

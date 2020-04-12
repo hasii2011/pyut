@@ -19,18 +19,24 @@
     "loggers": {
         "root": {
             "level": "WARNING",
-            "handlers": [
-                "consoleHandler"
-            ],
+            "handlers": ["consoleHandler"],
+            "propagate": "False"
+        },
+        "__main__": {
+            "level": "INFO",
+            "handlers": ["consoleHandler"],
             "propagate": "False"
         },
         "tests": {
             "level": "WARNING",
-            "handlers": [
-                "consoleHandler"
-            ],
             "propagate": "False"
         },
+        "tests.TestAnchorPoint": {
+            "level": "INFO",
+            "handlers": ["consoleHandler"],
+            "propagate": "False"
+        },
+
         "TestAll": {
             "level": "INFO",
             "handlers": [
@@ -160,10 +166,8 @@
             "propagate": "False"
         },
         "org.pyut.plugins.FieldExtractor": {
-            "level": "INFO",
-            "handlers": [
-                "consoleHandler"
-            ],
+            "level": "WARNING",
+            "handlers": ["consoleHandler"],
             "propagate": "False"
         },
         "org.pyut.plugins.PluginManager": {
@@ -194,18 +198,9 @@
             ],
             "propagate": "False"
         },
-        "TestTSM": {
+        "org.pyut.MiniOgl.AnchorPoint": {
             "level": "INFO",
-            "handlers": [
-                "consoleHandler"
-            ],
-            "propagate": "False"
-        },
-        "__main__": {
-            "level": "INFO",
-            "handlers": [
-                "consoleHandler"
-            ],
+            "handlers": ["consoleHandler"],
             "propagate": "False"
         }
     }
