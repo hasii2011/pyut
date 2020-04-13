@@ -102,23 +102,23 @@ class OglLink(LineShape, ShapeEventHandler):
                 dstX, dstY = dw, dh/2
 
             # ============== Avoid over-lining; Added by C.Dutoit ================
-            lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in srcShape.GetAnchors()]
-            while (srcX, srcY) in lstAnchorsPoints:
-                self.clsLogger.warning(f'Over-lining in source shape')
-                if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
-                    srcX += 10
-                else:
-                    srcY += 10
-
-            lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in dstShape.GetAnchors()]
-            while (dstX, dstY) in lstAnchorsPoints:
-                from org.pyut.ogl.OglClass import OglClass
-                dstShape: OglClass = cast(OglClass, dstShape)
-                self.clsLogger.warning(f'Over-lining in destination shape: {dstShape.getPyutObject}')
-                if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
-                    dstX += 10
-                else:
-                    dstY += 10
+            # lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in srcShape.GetAnchors()]
+            # while (srcX, srcY) in lstAnchorsPoints:
+            #     self.clsLogger.warning(f'Over-lining in source shape')
+            #     if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
+            #         srcX += 10
+            #     else:
+            #         srcY += 10
+            #
+            # lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in dstShape.GetAnchors()]
+            # while (dstX, dstY) in lstAnchorsPoints:
+            #     from org.pyut.ogl.OglClass import OglClass
+            #     dstShape: OglClass = cast(OglClass, dstShape)
+            #     self.clsLogger.warning(f'Over-lining in destination shape: {dstShape.getPyutObject}')
+            #     if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
+            #         dstX += 10
+            #     else:
+            #         dstY += 10
 
             # =========== end avoid over-lining-Added by C.Dutoit ================
         else:
