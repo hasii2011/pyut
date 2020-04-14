@@ -51,29 +51,22 @@ class PyutMethod(PyutObject):
         Args:
             name:       The method name
             visibility: Its visibility public, private, protected
-
             returns:  Its return value
-        """
-        """
-        Constructor.
-
-        @param string name : init the method name
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
         super().__init__(name)
 
         self.logger: Logger = getLogger(__name__)
 
         self._visibility: PyutVisibilityEnum = visibility
-        self._modifiers:  PyutMethod.PyutModifiers      = cast(PyutMethod.PyutModifiers, [])
-        self._sourceCode: PyutMethod.SourceCodeType     = cast(PyutMethod.SourceCodeType, [])
+        self._modifiers:  PyutMethod.PyutModifiers  = cast(PyutMethod.PyutModifiers, [])
+        self._sourceCode: PyutMethod.SourceCodeType = cast(PyutMethod.SourceCodeType, [])
 
-        self._params     = []
-        self._returns    = returns
+        self._params            = []
+        self._returns: PyutType = returns
 
         prefs = PyutPreferences()
-        if prefs["SHOW_PARAMS"] == "1":
+        # TODO fix this to get value as boolean
+        if prefs[PyutPreferences.SHOW_PARAMETERS] == "True":
             PyutMethod.setStringMode(WITH_PARAMS)
         else:
             PyutMethod.setStringMode(WITHOUT_PARAMS)

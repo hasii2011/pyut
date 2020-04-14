@@ -4,6 +4,7 @@ from logging import getLogger
 
 from os import sep as osSep
 
+from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
 
@@ -228,7 +229,13 @@ class ReverseJava:
 
         # Add method
         methods = pc.getMethods()
-        pm = PyutMethod(name, visibility, returnType)
+
+        if returnType == '\n' or returnType == '' or returnType == 'void' or returnType is None:
+            pm = PyutMethod(name, visibility)
+        else:
+            retType: PyutType = PyutType(returnType)
+            pm = PyutMethod(name, visibility, retType)
+
         for (paramType, name, defaultValue) in lstFields:
             param = PyutParam(name, paramType, defaultValue)
             pm.addParam(param)
