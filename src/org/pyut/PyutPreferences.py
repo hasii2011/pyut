@@ -1,6 +1,7 @@
 
 from typing import Dict
 from typing import NewType
+from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -42,6 +43,9 @@ class PyutPreferences(Singleton):
     STARTUP_WIDTH:              str = 'startup_width'
     STARTUP_HEIGHT:             str = 'startup_height'
     CENTER_DIAGRAM:             str = 'center_diagram'
+    CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
+    STARTUP_X:                  str = 'startup_x'
+    STARTUP_Y:                  str = 'startup_y'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
         STARTUP_DIRECTORY:          '.',
@@ -54,7 +58,10 @@ class PyutPreferences(Singleton):
         EDITOR:                     'brackets',
         STARTUP_WIDTH:              '1024',
         STARTUP_HEIGHT:             '768',
-        CENTER_DIAGRAM: 'False'
+        CENTER_DIAGRAM:             'False',
+        CENTER_APP_ON_STARTUP:      'True',
+        STARTUP_X:                  '-1',
+        STARTUP_Y:                  '-1'
     })
 
     preferencesFileLocationAndName: str = None
@@ -62,22 +69,24 @@ class PyutPreferences(Singleton):
     """
     The goal of this class is to handle Pyut Preferences, to load them and save
     them from/to a file.
+    
     To use it :
+    
       - instantiate a PyutPreferences object :
-        myPP=PyutPreferences()
+        prefs: PyutPreferences = PyutPreferences()
       - to get a pyut' preference :
-        myPref=myPP["ma_preference"]
+        prefs = myPP["ma_preference"]
       - to set a pyut' preference :
-        myPP["ma_preference"]=xxx
+        prefs["ma_preference"] = xxx
 
       - To change the number of last opened files, use :
-        myPP.setNbLOF(x)
+        prefs.setNbLOF(x)
       - To get the number of last opened files, use :
-        myPP.getNbLOF()
+        prefs.getNbLOF()
       - To get the list of Last Opened files, use :
-        myPP.getLastOpenedFilesList()
+        prefs.getLastOpenedFilesList()
       - To add a file to the Last Opened Files list, use :
-        myPP.addNewLastOpenedFilesEntry(filename)
+        prefs.addNewLastOpenedFilesEntry(filename)
 
     The preferences are loaded on the first instantiation of this
     class and are auto-saved when a value is added or changed.
@@ -196,7 +205,36 @@ class PyutPreferences(Singleton):
         self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH, str(theNewValue))
         self.__saveConfig()
 
-    centerDiagram = property(getCenterDiagram, setCenterDiagram)
+    def getCenterAppOnStartUp(self) -> bool:
+        centerApp: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_APP_ON_STARTUP)
+        return centerApp
+
+    def setCenterAppOnStartUp(self, theNewValue: bool):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_APP_ON_STARTUP, str(theNewValue))
+        self.__saveConfig()
+
+    def getAppStartupPosition(self) -> Tuple[int, int]:
+
+        x: int = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_X)
+        y: int = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_Y)
+
+        return x, y
+
+    def setAppStartupPosition(self, theNewValue: Tuple[int, int]):
+
+        x: int = theNewValue[0]
+        y: int = theNewValue[1]
+
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_X, str(x))
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_Y, str(y))
+
+        self.__saveConfig()
+
+    centerDiagram      = property(getCenterDiagram, setCenterDiagram)
+    centerAppOnStartup = property(getCenterAppOnStartUp, setCenterAppOnStartUp)
+    appStartupPosition = property(getAppStartupPosition, setAppStartupPosition)
+    startupWidth       = property(getStartupWidth,  setStartupWidth)
+    startupHeight      = property(getStartupHeight, setStartupHeight)
 
     def fullScreen(self) -> bool:
         fullScreenOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.FULL_SCREEN)

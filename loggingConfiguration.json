@@ -80,7 +80,7 @@
             "propagate": "False"
         },
         "org.pyut.MiniOgl.DiagramFrame": {
-            "level":     "DEBUG",
+            "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },

@@ -1,6 +1,6 @@
 
+from typing import Tuple
 from typing import cast
-
 from typing import List
 
 from logging import Logger
@@ -36,7 +36,6 @@ from wx import PrintData
 from wx import AcceleratorEntry
 from wx import CommandEvent
 from wx import Frame
-from wx import DefaultPosition
 from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
@@ -110,9 +109,11 @@ class AppFrame(Frame):
             wxID:       wx ID of this frame
             title:      Title to display
         """
-        prefs: PyutPreferences = PyutPreferences()
-        appSize: Size = Size(prefs.getStartupWidth(), prefs.getStartupHeight())
-        super().__init__(parent, wxID, title, DefaultPosition, appSize, DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
+        self._prefs: PyutPreferences = PyutPreferences()
+
+        appSize: Size = Size(self._prefs.getStartupWidth(), self._prefs.getStartupHeight())
+
+        super().__init__(parent=parent, id=wxID, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
         self.logger: Logger = getLogger(__name__)
         # Create the application's icon
@@ -120,7 +121,14 @@ class AppFrame(Frame):
         icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
         self.SetIcon(icon)
 
-        self.Center(BOTH)                     # Center on the screen
+        self.SetThemeEnabled(True)
+
+        if self._prefs.centerAppOnStartup is True:
+            self.Center(BOTH)  # Center on the screen
+        else:
+            appPosition: Tuple[int, int] = self._prefs.appStartupPosition
+            self.SetPosition(pt=appPosition)
+
         self.CreateStatusBar()
 
         # Properties
@@ -128,7 +136,7 @@ class AppFrame(Frame):
         self.plugins:     SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
         self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
         self.mnuFile:     Menu            = cast(Menu, None)
-        self._prefs:      PyutPreferences = PyutPreferences()
+
         self._clipboard = []
         self._currentDirectory = getcwd()
 
@@ -207,18 +215,31 @@ class AppFrame(Frame):
         """
         Closing handler overload. Save files and ask for confirmation.
 
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            force:
+
+        Returns:
+
         """
+
         # Close all files
         if self._fileHandling.onClose() is False:
             return
+        # Only save position if we are not auto-saving
+        if self._prefs.centerAppOnStartup is False:
+            pos: Tuple[int, int] = self.GetPosition()
+            self._prefs.appStartupPosition = pos
 
-        self._clipboard = None
+        ourSize: Tuple[int, int] = self.GetSize()
+        self._prefs.startupWidth  = ourSize[0]
+        self._prefs.startupHeight = ourSize[1]
+
+        self._clipboard    = None
         self._fileHandling = None
-        self._ctrl = None
-        self._prefs = None
-        self.plugMgr = None
+        self._ctrl         = None
+        self._prefs        = None
+        self.plugMgr       = None
+
         self._printData.Destroy()
         # TODO? wx.OGLCleanUp()
         self.Destroy()
