@@ -95,10 +95,11 @@ class DlgPyutPreferences(Dialog):
         [
             self.__autoResizeID, self.__showParamsID, self.__languageID,
             self.__maximizeID,   self.__fontSizeID,   self.__showTipsID, self.__centerDiagramID,
-            self.__resetTipsID,  self.__scAppWidthID, self.__scAppHeightID
-        ] = PyutUtils.assignID(10)
+            self.__resetTipsID,  self.__scAppWidthID, self.__scAppHeightID,
+            self.__scAppPosXID,  self.__scAppPosYID
+        ] = PyutUtils.assignID(12)
 
-        self.__createMainControls()
+        self.__createBooleanControls()
         self.__createFontSizeControl()
         self.__cmbLanguage: ComboBox = cast(ComboBox, None)
 
@@ -113,7 +114,9 @@ class DlgPyutPreferences(Dialog):
         mainSizer.Add(self.__cbShowParams, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__cbMaximize,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__cbShowTips,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+
         mainSizer.Add(self.__cbCenterDiagram, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__createAppPositionControls(), 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
 
         mainSizer.Add(self.__createAppSizeControls(), 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__btnResetTips, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
@@ -141,7 +144,7 @@ class DlgPyutPreferences(Dialog):
 
         self.Bind(EVT_BUTTON,   self.__OnBtnResetTips, id=self.__resetTipsID)
 
-        self.Bind(EVT_COMBOBOX, self.__languageChange, id=self.__languageID)
+        self.Bind(EVT_COMBOBOX, self.__OnLanguageChange, id=self.__languageID)
         self.Bind(EVT_BUTTON,   self.__OnCmdOk,    id=ID_OK)
 
         self.__changed: bool = False
@@ -182,7 +185,7 @@ class DlgPyutPreferences(Dialog):
 
         return szrLanguage
 
-    def __createMainControls(self):
+    def __createBooleanControls(self):
         """
         Creates the main control and stashes them as private instance variables
         """
@@ -213,6 +216,28 @@ class DlgPyutPreferences(Dialog):
         self.__scAppHeight = scAppHeight
 
         return szrAppSize
+
+    def __createAppPositionControls(self) -> StaticBoxSizer:
+
+        scAppPosX = SpinCtrl(self, self.__scAppPosXID, "", (30, 50))
+        scAppPosY = SpinCtrl(self, self.__scAppPosYID, "", (30, 50))
+
+        scAppPosX.SetRange(0, 4096)
+        scAppPosY.SetRange(0, 4096)
+        scAppPosX.SetValue(self.__prefs.appStartupPosition[0])
+        scAppPosY.SetValue(self.__prefs.appStartupPosition[1])
+
+        box:            StaticBox = StaticBox(self, ID_ANY, "Startup Position")
+        szrAppPosition: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
+
+        szrAppPosition.Add(scAppPosX, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+        szrAppPosition.Add(scAppPosY, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+
+        self.__scAppPosX = scAppPosX
+        self.__scAppPosY = scAppPosY
+
+        self.__setPositionControls()
+        return szrAppPosition
 
     def __createFontSizeControl(self):
         """
@@ -259,7 +284,12 @@ class DlgPyutPreferences(Dialog):
         elif eventID == self.__showTipsID:
             self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = val
         elif eventID == self.__centerDiagramID:
-            self.__prefs[PyutPreferences.CENTER_DIAGRAM] = val
+            self.__prefs.centerAppOnStartup = val
+            self.__setPositionControls()
+            dlg = MessageDialog(self, _("You must restart Pyut for position changes"), _("Warning"), OK | ICON_EXCLAMATION)
+            dlg.ShowModal()
+            dlg.Destroy()
+
         else:
             self.logger.warning(f'Unknown combo box ID: {eventID}')
 
@@ -269,11 +299,15 @@ class DlgPyutPreferences(Dialog):
         eventId:  int = event.GetId()
         newValue: int = event.GetInt()
         if eventId == self.__scAppWidthID:
-            self.__prefs.setStartupWidth(newValue)
+            self.__prefs.startupWidth = newValue
         elif eventId == self.__scAppHeightID:
-            self.__prefs.setStartupHeight(newValue)
+            self.__prefs.startupHeight = newValue
         else:
             self.logger.error(f'Unknown onSizeChange event id: {eventId}')
+
+        dlg = MessageDialog(self, _("You must restart Pyut for size changes"), _("Warning"), OK | ICON_EXCLAMATION)
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def __OnClose(self, event):
         event.Skip(skip=True)
@@ -290,7 +324,7 @@ class DlgPyutPreferences(Dialog):
     def __OnBtnResetTips(self, event: CommandEvent):
         self.__prefs[PyutPreferences.CURRENT_TIP] = '0'
 
-    def __languageChange(self, event: CommandEvent):
+    def __OnLanguageChange(self, event: CommandEvent):
 
         newLanguage: str = event.GetString()
         actualLanguage: str = self.__prefs[PyutPreferences.I18N]
@@ -301,6 +335,18 @@ class DlgPyutPreferences(Dialog):
                     # Write the key in preferences file
                     self.__prefs[PyutPreferences.I18N] = i[0]
 
-            dlg = MessageDialog(self, _("You must restart application for language changes"), _("Warning"), OK | ICON_EXCLAMATION)
+            dlg = MessageDialog(self, _("You must restart Pyut for language changes"), _("Warning"), OK | ICON_EXCLAMATION)
             dlg.ShowModal()
             dlg.Destroy()
+
+    def __setPositionControls(self):
+        """
+        Set the position controls based on the value of appropriate preference value
+
+        """
+        if self.__prefs.centerAppOnStartup is True:
+            self.__scAppPosX.Disable()
+            self.__scAppPosY.Disable()
+        else:
+            self.__scAppPosX.Enable()
+            self.__scAppPosY.Enable()
