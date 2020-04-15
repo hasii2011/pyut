@@ -8,6 +8,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.enums.LinkType import LinkType
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
@@ -63,6 +64,58 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         return oglLink
 
+    def createInheritanceLink(self, child: OglClass, parent: OglClass) -> OglLink:
+        """
+        TODO: this is a duplicate of CreateOglLinkCommandCommand._createInheritanceLink (this code adds it to the frame)
+
+        Add a parent link between the child and parent objects.
+
+        Args:
+            child:  Child PyutClass
+            parent: Parent PyutClass
+
+        Returns:
+            The inheritance OglLink
+        """
+        pyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=child.getPyutObject(), destination=parent.getPyutObject())
+        oglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, LinkType.INHERITANCE)
+
+        child.addLink(oglLink)
+        parent.addLink(oglLink)
+
+        # add it to the PyutClass
+        # child.getPyutObject().addParent(parent.getPyutObject())
+        childPyutClass:  PyutClass = child.getPyutObject()
+        parentPyutClass: PyutClass = parent.getPyutObject()
+
+        childPyutClass.addParent(parentPyutClass)
+
+        self._diagram.AddShape(oglLink)
+        self.Refresh()
+
+        return oglLink
+
+    def createInterfaceLink(self, src, dst):
+        """
+        Adds an OglInterface link between src and dst.
+
+        Args:
+            src:    source of the link
+            dst:    destination of the link
+
+        Returns: the created OglInterface link
+        """
+        pyutLink: PyutLink = PyutLink(linkType=LinkType.INTERFACE, source=src, destination=dst)
+        oglLink:  OglLink  = OglLink(srcShape=src, pyutLink=pyutLink, dstShape=dst)
+
+        src.addLink(oglLink)
+        dst.addLink(oglLink)
+
+        self._diagram.AddShape(oglLink)
+        self.Refresh()
+
+        return oglLink
+
     def createClasses(self, name: str, x: float, y: float) -> CreatedClassesType:
         """
         Create a pair of classes (pyutClass and oglClass)
@@ -70,8 +123,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         Args:
             name: Class Name
 
-            x:  x-coordinate on umlframe  oglClass
-            y:  y coordinate on umlfram   oglClass
+            x:  x-coordinate on the uml frame  oglClass
+            y:  y coordinate on the uml frame  oglClass
 
         Returns: A tuple with one of each:  pyutClass and oglClass
         """
@@ -79,7 +132,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         pyutClass.setName(name)
 
         oglClass: OglClass = OglClass(pyutClass, 50, 50)
-        # for debugability
+        # To make this code capable of being debugged
         oglClass.SetPosition(x=x, y=y)
         self.addShape(oglClass, x, y)
 

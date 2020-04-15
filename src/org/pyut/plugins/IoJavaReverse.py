@@ -3,18 +3,24 @@ from logging import Logger
 from logging import getLogger
 
 from os import sep as osSep
+from typing import cast
+
+from wx import BeginBusyCursor as wxBeginBusyCursor
+from wx import EndBusyCursor as wxEndBusyCursor
+
+from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+
+from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
-from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
-
 from org.pyut.model.PyutClass import PyutClass
-from org.pyut.ogl.OglClass import OglClass
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutField import PyutField
 
-import wx
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
 
 # Constants
 CLASS_MODIFIER   = ["public", "protected", "private", "abstract", "final", "static", "strictfp"]
@@ -25,8 +31,6 @@ METHOD_MODIFIERS = ["public", "protected", "private", "abstract", "static", "fin
 class IoJavaReverse(PyutIoPlugin):
     """
     Java reverse engineering plugin.
-
-    @version $Revision: 1.9 $
     """
     def getName(self):
         """
@@ -63,7 +67,7 @@ class IoJavaReverse(PyutIoPlugin):
 
     def getOutputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
         @return tuple
         @author C.Dutoit - dutoitc@hotmail.com
@@ -82,79 +86,76 @@ class IoJavaReverse(PyutIoPlugin):
         """
 
         # Ask for file import
-        filenames, directory = self._askForFileImport(True)
-        if len(filenames) == 0:
+        fileNames, directory = self._askForFileImport(True)
+        if len(fileNames) == 0:
             return False
 
         # Reverse Java
-        wx.BeginBusyCursor()
+        wxBeginBusyCursor()
         try:
-            rj = ReverseJava(umlFrame)
-            for filename in filenames:
+            rj = ReverseJava(cast(UmlClassDiagramsFrame, umlFrame))
+            for filename in fileNames:
                 fqnName: str = f'{directory}{osSep}{filename}'
                 rj.analyseFile(fqnName)
         finally:
-            wx.EndBusyCursor()
+            wxEndBusyCursor()
 
 
 class ReverseJava:
 
-    def __init__(self, umlFrame):
+    def __init__(self, umlFrame: UmlClassDiagramsFrame):
 
         self.logger: Logger = getLogger(__name__)
 
         self._dicClasses = {}                     # Dictionary of classes
-        self._umlFrame = umlFrame
+        self._umlFrame: UmlClassDiagramsFrame = umlFrame
 
-    def _addClass(self, className):
+    def _addClass(self, className: str) -> OglClass:
         """
         Add a class to the dictionary of classes
 
-        @param String className : Name of the class to be added
-        @return OglClass instance for the class
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.0
+        Args:
+            className: Name of the class to be added
+
+        Returns: OglClass instance for the class
+
         """
-        # If the classname exists already, return the instance
+        # If the class name exists already, return the instance
         if className in self._dicClasses:
             return self._dicClasses[className]
 
         # Create the class
-        pc = PyutClass(className)         # A new PyutClass
-        po = OglClass(pc)                 # A new OglClass
+        pc: PyutClass = PyutClass(className)        # A new PyutClass
+        po: OglClass = OglClass(pc)                 # A new OglClass
         self._umlFrame.addShape(po, 0, 0)
         po.autoResize()
         self._dicClasses[className] = po
 
         return po
 
-    def _addClassFather(self, className, fatherName, interface=False):
+    def _addClassParent(self, className, parentName, isInterface: bool = False):
         """
-        Add a father to a class
 
-        @param String className  : Name of the class to be added
-        @param String fatherName : Name of the father
-        @param boolean interface : True if the link must be for an interface
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.0
+        Args:
+            className:  Name of the class to be added
+            parentName: Name of the parent
+            isInterface:  True if the link must be for an interface
+
         """
-        self._logMessage("IoJavaReverse", "Adding father %s for class %s" % (fatherName, className))
-        if interface:
-            self._logMessage("IoJavaReverse", " (interface)")
-        else:
-            self._logMessage("IoJavaReverse", "")
+        self._logMessage(f'Adding father {parentName} for class {className}')
+
         # Get the OglClass object for the child class
         po = self._dicClasses[className]
 
-        # Create father class ?
-        if fatherName in self._dicClasses:
-            father = self._dicClasses[fatherName]
+        # Create parent class ?
+        if parentName in self._dicClasses:
+            father = self._dicClasses[parentName]
         else:
-            father = self._addClass(fatherName)
+            father = self._addClass(parentName)
 
-        # Create the inheritance link
-        if interface:
-            self._umlFrame.createNewLink(po, father)
+        # Create the interface/inheritance link
+        if isInterface is True:
+            self._umlFrame.createInterfaceLink(po, father)
         else:
             self._umlFrame.createInheritanceLink(po, father)
 
@@ -210,8 +211,8 @@ class ReverseJava:
         @param List of string lstFields : Method fields
 
         """
-        self._logMessage("IoJavaReverse", "Adding method %s for class %s" % (name, className))
-        self._logMessage("IoJavaReverse", "(modifiers=%s; returnType=%s)" % (modifiers, returnType))
+        self._logMessage("Adding method %s for class %s" % (name, className))
+        self._logMessage("(modifiers=%s; returnType=%s)" % (modifiers, returnType))
         # Get class fields
         po = self._dicClasses[className]
         pc = po.getPyutObject()
@@ -245,12 +246,12 @@ class ReverseJava:
         """
         Read all comments
 
-        @param lstFile : list of instructions readed from the file to analyze
+        @param lstFile : list of instructions read from the file to analyze
         @param currentPos : current position in the list
         @author C.Dutoit <dutoitc@hotmail.com>
         @since 1.0
         """
-        self._logMessage("IoJavaReverse", "readComments")
+        self._logMessage("readComments")
         # Set comment terminator
         if lstFile[currentPos][:2] == "//":
             terminator = "\n"
@@ -272,9 +273,9 @@ class ReverseJava:
         As a paragraph can include itself a paragraph, this function
         do read sub-paragraphs.
 
-        @param lstFile : list of instructions readed from the file to analyze
+        @param lstFile : list of instructions read from the file to analyze
         @param currentPos : current position in the list
-        @param paragraphStart : token which identify the begining of the
+        @param paragraphStart : token which identify the beginning of the
                                 paragraph
         @param paragraphStop  : token which identify the end of the paragraph
         @return end of paragraph position
@@ -303,17 +304,17 @@ class ReverseJava:
         Is considered as function :
         - Something of the following type :
             Method_Declaration ::= Method_Header MethodBody
-            Method_Header ::= Method_Modifiers Result_Type Method_Declarator
+            Method_Header ::= Method_Modifiers Result_Type Method_Declaration
                               Throws
             ResultType ::= Type or void
-            Methode_Declarator ::= identifier (Formal_Parameter_List)
+            Method_Declaration ::= identifier (Formal_Parameter_List)
             Formal_Parameter_List ::= [Formal_Parameter_List,] Formal_Parameter
-            Formal_Parameter ::= final Type Variable_Declarator_Id
+            Formal_Parameter ::= final Type Variable_Declaration_Id
             Throws ::= throws Class_Type_List
             Class_Type_List ::= [Class_Type_List,] ClassType
             ...
 
-        @param lstFile : list of instructions readed from the file to analyze
+        @param lstFile : list of instructions read from the file to analyze
         @param currentPos : current position in the list
         @param className : current class name, used to detect constructors
         @param returnValues : bool, indicate if we must return values
@@ -331,7 +332,7 @@ class ReverseJava:
         lstModifiers = []
 
         # Debug info
-        self._logMessage("IoJavaReverse", "readMethod, %s..." % (lstFile[currentPos:currentPos+5]))
+        self._logMessage("readMethod, %s..." % (lstFile[currentPos:currentPos+5]))
 
         # Pass field modifiers
         while lstFile[pos] in METHOD_MODIFIERS:
@@ -357,18 +358,18 @@ class ReverseJava:
                 return False
 
         # Read the parameters
-        # TODO : int classe(int pi=(...)); doesn't work here ! (parenthesis)
+        # TODO : int class(int pi=(...)); doesn't work here ! (parenthesis)
         parameters = []
         pos += 1
-        self._logMessage("IoJavaReverse", "*******************************")
-        self._logMessage("IoJavaReverse", "Reading parameters %s" % lstFile[pos:pos+10])
+        self._logMessage("*******************************")
+        self._logMessage("Reading parameters %s" % lstFile[pos:pos+10])
         while lstFile[pos] != ")":
             # Get parameter
             paramType = lstFile[pos]
             pos += 1
             name = lstFile[pos]
             pos += 1
-            self._logMessage("IoJavaReverse", "type=%s, name=%s" % (type, name))
+            self._logMessage("type=%s, name=%s" % (type, name))
 
             # Read default value
             defaultValue = ""
@@ -379,7 +380,7 @@ class ReverseJava:
                     pos += 1
                 if lstFile[pos] == ",":
                     pos += 1
-                self._logMessage("IoJavaReverse", "=%s" % defaultValue)
+                self._logMessage(f"={defaultValue}")
             if defaultValue == "":
                 defaultValue = None
 
@@ -396,7 +397,7 @@ class ReverseJava:
             # Append to parameters list
             parameters.append((paramType, name, defaultValue))
         # pos = self._readParagraph(lstFile, pos, "(", ")")
-        self._logMessage("IoJavaReverse", "*******************************")
+        self._logMessage("*******************************")
         pos += 1
 
         # Pass \n ?
@@ -432,13 +433,13 @@ class ReverseJava:
         Test if the current position starts a variable.
         Is considered as variable :
         - Something of the following type :
-           Field_Declaration    ::= Field_Modifiers Type Variable_Declarators;
-           Variable_Declarators ::= [Variable_Declarators,] Variable_Declarator
-           Variable_Declarator  ::= Variable_Declarator_ID
+           Field_Declaration    ::= Field_Modifiers Type Variable_Declaration;
+           Variable_Declaration ::= [Variable_Declaration,] Variable_Declaration
+           Variable_Declaration  ::= Variable_Declaration_ID
                                     [ = Variable_Initializer ]
            Variable_Initializer ::= ... etc
 
-        @param lstFile : list of instructions readed from the file to analyze
+        @param lstFile : list of instructions read from the file to analyze
         @param currentPos : current position in the list
         @param returnValues : bool, indicate if we must return values
                               (types, ...)
@@ -460,12 +461,12 @@ class ReverseJava:
             pos += 1
 
         # Read type
-        type = lstFile[pos]
+        theType = lstFile[pos]
         pos += 1
 
-        # Read first variable declarator
+        # Read first variable declaration
         lstNames_Values.append((lstFile[pos], None))
-        self._logMessage("IoJavaReverse", "Adding name %s, following %s" % (lstFile[pos], lstFile[pos:pos+2]))
+        self._logMessage(f"Adding name {lstFile[pos]}, following {lstFile[pos:pos+2]}")
         pos += 1
 
         # valid following ?
@@ -484,7 +485,7 @@ class ReverseJava:
                 pos += 1
             elif lstFile[pos] == ";":
                 if returnValues:
-                    return True, (lstModifiers, type, lstNames_Values), pos
+                    return True, (lstModifiers, theType, lstNames_Values), pos
                 else:
                     return True
             elif lstFile[pos] == "=":
@@ -509,7 +510,7 @@ class ReverseJava:
         """
         Select next position after an End-Of-Line
 
-        @param lstFile : list of instructions readed from the file to analyze
+        @param lstFile : list of instructions read from the file to analyze
         @param currentPos : current position in the list
         @param lstElements : Elements to pass
         @return Next position after EOL
@@ -522,12 +523,12 @@ class ReverseJava:
 
     def readClass(self, lstFile, currentPos):
         """
-        Read a class from a list of strings, begining on a given position.
-        This class read one classe from lstFile, from currentLine.
+        Read a class from a list of strings, beginning on a given position.
+        This class reads one class from lstFile, from currentLine.
 
-        @param lstFile : list of instructions readed from the file to analyze
+        @param lstFile : list of instructions read from the file to analyze
         @param currentPos : current position in the list
-        @return tuple : int : last readed line pointer, Pyut's OglClass object,
+        @return tuple : int : last read line pointer, Pyut's OglClass object,
                         class name
         @author C.Dutoit
         @since 1.0
@@ -539,9 +540,9 @@ class ReverseJava:
         # Read "class"
         currentPos += 1
 
-        # Read classname
+        # Read class name
         className = lstFile[currentPos]
-        self._logMessage("IoJavaReverse", "Reading className %s" % className)
+        self._logMessage(f"Reading className {className}")
         currentPos += 1
 
         # Create a class object
@@ -559,27 +560,27 @@ class ReverseJava:
                 # Get superclass
                 superClass = lstFile[currentPos]
                 currentPos += 1
-                self._logMessage("IoJavaReverse", " - superclass=%s" % superClass)
+                self._logMessage(f' - superclass={superClass}')
 
                 # Create a class object
                 self._addClass(superClass)
-                self._addClassFather(className, superClass)
+                self._addClassParent(className, superClass)
             else:  # implements
-                exit = False
-                self._logMessage("IoJavaReverse", "Reading interface... %s" % lstFile[currentPos:currentPos+5])
-                while not exit:
+                shouldExit: bool = False
+                self._logMessage(f"Reading interface... {lstFile[currentPos:currentPos+5]}")
+                while not shouldExit:
                     # Next token, points on first interface name
                     currentPos += 1
                     currentPos = self._selectNextAfter(lstFile, currentPos, ['\n', ''])
 
                     # Get interface name
                     interfaceName = lstFile[currentPos]
-                    self._logMessage("IoJavaReverse", " - interface=%s" % interfaceName)
+                    self._logMessage(f" - interface={interfaceName}")
                     currentPos += 1
 
                     # Create a class object
                     self._addClass(interfaceName)
-                    self._addClassFather(className, interfaceName, True)
+                    self._addClassParent(className, interfaceName, True)
 
                     # Read comments
                     currentPos = self.readComments(lstFile, currentPos)
@@ -587,7 +588,7 @@ class ReverseJava:
 
                     # Exit if no more implementations
                     if lstFile[currentPos] != ",":
-                        exit = True
+                        shouldExit = True
 
             # Remove end of lines
             currentPos = self._selectNextAfter(lstFile, currentPos, ['\n', ''])
@@ -608,12 +609,12 @@ class ReverseJava:
         # Read comments
         currentPos = self.readComments(lstFile, currentPos)
 
-        # Class begining ?
-        self._logMessage("IoJavaReverse", "lstFile=%s" % lstFile[currentPos:currentPos+5])
+        # Class beginning ?
+        self._logMessage("lstFile=%s" % lstFile[currentPos:currentPos+5])
         if lstFile[currentPos] != "{":
-            self._logMessage("IoJavaReverse", "DBG class >> %s" % lstFile[currentPos])
-            self._logMessage("IoJavaReverse", "Unexpected characters : %s" % lstFile[currentPos:currentPos+5])
-            self._logMessage("IoJavaReverse", "   exiting class reader !\n")
+            self._logMessage(f"DBG class >> {lstFile[currentPos]}")
+            self._logMessage(f"Unexpected characters : {lstFile[currentPos:currentPos+5]}")
+            self._logMessage("   exiting class reader !\n")
             return currentPos
         currentPos += 1
 
@@ -640,19 +641,19 @@ class ReverseJava:
                     # Read method
                     (succeeded, aTuple, currentPos) = self.readMethod(lstFile, currentPos, className, True)
                     if succeeded:
-                        (modifiers, methType, name, lstFields) = aTuple
-                        self._addClassMethod(className, modifiers, methType, name, lstFields)
+                        (modifiers, methodType, name, lstFields) = aTuple
+                        self._addClassMethod(className, modifiers, methodType, name, lstFields)
 
             # Next token ?
             if level > 0:
                 currentPos += 1
         return currentPos
 
-    def isClassBegining(self, lstFile, currentPos):
+    def isClassBeginning(self, lstFile, currentPos):
         """
-        Return True if the specified line is a class begining
+        Return True if the specified line is a class beginning
 
-        @param lstFile : list of instructions readed from the file to analyze
+        @param lstFile : list of instructions read from the file to analyze
         @param currentPos : current position in the list
         @return bool : True if the specified line do begin a class
         @author C.Dutoit
@@ -668,27 +669,33 @@ class ReverseJava:
                 # if not modified, add it as modifiers list
                 if not (el in lstUsedCM):
                     lstUsedCM.append(el)
-                else:  # Already used => not a valid class begining
+                else:  # Already used => not a valid class beginning
                     # TODO : print warning ?
                     return False
             elif el == "class":  # class token => this is a class
                 return True
             elif el == "interface":  # interface token => take it as a class
                 return True
-            else:  # unacceptable token => not a class begining
+            else:  # unacceptable token => not a class beginning
                 return False
             pos += 1
         return False
 
     def _mySplit(self, lstIn):
         """
-        Do more split on a list of String.
-        Split elements like [")};"] in ¨[")", "}", ";"] or ["mavar;"] in ["mavar", ";"]
+        Do more splits on a list of String.
+        Split elements like [")};"]     into    ¨[")", "}", ";"]
 
-        @param lstIn : list of String to be splitted
-        @return splitted list
-        @author C.Dutoit
-        @since 1.1.2.3
+        or
+
+        ["Humberto;"]   into   ["Humberto", ";"]
+
+
+        Args:
+            lstIn: list of String to be split
+
+        Returns: the split list
+
         """
         TO_BE_SPLIT = ['{', '}', ';', ')', '(', ',']
         lstOut = []
@@ -736,26 +743,26 @@ class ReverseJava:
         try:
             while currentPos < len(lstFile):
                 # Analyze word
-                self._logMessage("IoJavaReverse", f"\n analyzing word {currentPos}")
-                self._logMessage("IoJavaReverse", "***")
-                self._logMessage("IoJavaReverse", f"{lstFile}")
+                self._logMessage(f"\n analyzing word {currentPos}")
+                self._logMessage("***")
+                self._logMessage(f"{lstFile}")
 
                 # Read comments
                 currentPos = self.readComments(lstFile, currentPos)
 
                 # new class ?
-                if self.isClassBegining(lstFile, currentPos):
+                if self.isClassBeginning(lstFile, currentPos):
                     currentPos = self.readClass(lstFile, currentPos)
                 currentPos += 1
         finally:
             # Best display
-            self._logMessage("IoJavaReverse", "Improving display")
+            self._logMessage("Improving display")
             Margin = 10
             x      = Margin
             y      = Margin
             dy     = 10
             for po in list(self._dicClasses.values()):
-                self._logMessage("IoJavaReverse", ".")
+                self._logMessage(".")
                 try:  # Catch exceptions
                     (w, h) = po.GetSize()
                     dy = max(dy, h+Margin)
@@ -767,16 +774,13 @@ class ReverseJava:
                         y += dy
                         dy = Margin
                 except (ValueError, Exception) as e:
-                    self._logMessage(f"IoJavaReverse", f"Error in IoJavaReverse.py {e}. Please report !")
+                    self._logMessage(f"Error in IoJavaReverse.py {e}. Please report !")
 
-    def _logMessage(self, theTitle: str, theMessage: str):
+    def _logMessage(self, theMessage: str):
         """
         Probably not a correct implementation but that is what I got !!
         Args:
-            theTitle:
             theMessage:
 
-        Returns:
-
         """
-        self.logger.info(f"{theTitle} -- {theMessage}")
+        self.logger.info(f"{theMessage}")
