@@ -3,9 +3,12 @@ from logging import Logger
 from logging import getLogger
 
 from wx import DC
-
 from wx import Pen
+
+from wx import PENSTYLE_SHORT_DASH
 from wx import PENSTYLE_LONG_DASH
+from wx import RED_PEN
+from wx import BLACK_PEN
 from wx import WHITE_BRUSH
 
 from org.pyut.model.PyutLink import PyutLink
@@ -26,7 +29,7 @@ class OglInterface(OglLink):
     This class provide the methods for drawing an interface link between
     two classes of an UML diagram. Add labels to an OglLink.
     """
-    def __init__(self, srcShape: OglLink, pyutLink: PyutLink, dstShape: OglClass):
+    def __init__(self, srcShape: OglClass, pyutLink: PyutLink, dstShape: OglClass):
 
         """
 
@@ -81,7 +84,9 @@ class OglInterface(OglLink):
 
     def Draw(self, dc: DC, withChildren: bool = False):
         """
-        Called for contents drawing of links.
+        Called for drawing of interface links.
+        OglLink drew regular lines
+        I need dashed lines for an interface
 
         Args:
             dc: Device context
@@ -89,4 +94,30 @@ class OglInterface(OglLink):
 
         """
         self.updateLabels()
-        OglLink.Draw(self, dc)
+        if self._visible:
+            line = self.GetSegments()
+            if self._selected:
+                dc.SetPen(RED_PEN)
+
+            if self._spline:
+                dc.DrawSpline(line)
+            else:
+                pen: Pen = dc.GetPen()              #
+                pen.SetStyle(PENSTYLE_SHORT_DASH)   # This is what is different from OglLink.Draw(..)
+                dc.SetPen(pen)                      #
+                dc.DrawLines(line)
+
+            for control in self._controls:
+                control.Draw(dc)
+
+            if self._selected:
+                self._srcAnchor.Draw(dc)
+                self._dstAnchor.Draw(dc)
+            dc.SetPen(BLACK_PEN)
+
+            if self._drawArrow:
+                u, v = line[-2], line[-1]
+                self.DrawArrow(dc, u, v)
+
+            if withChildren is True:
+                self.DrawChildren(dc)

@@ -6,10 +6,14 @@ from typing import Union
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutLink import PyutLink
+
 from org.pyut.enums.LinkType import LinkType
+
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
+
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 UmlClassType       = NewType('UmlClassType', Union[PyutClass, OglClass])
@@ -21,15 +25,9 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
     UmlClassDiagramsFrame : a UML class diagram frame.
 
     This class is the instance of one UML class diagram structure.
-    It derives its functionalities from UmlDiagramsFrame, but
-    as he know the structure of a class diagram,
-    he can load class diagram datas.
-
-    Used by FilesHandling.
-
-    :author: C.Dutoit
-    :contact: dutoitc@hotmail.com
-    :version: $Revision: 1.8 $
+    It derives its functionality from UmlDiagramsFrame, but
+    as it know the structure of a class diagram,
+    it can load class diagram data.
     """
     def __init__(self, parent):
         """
@@ -95,7 +93,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         return oglLink
 
-    def createInterfaceLink(self, src, dst):
+    def createInterfaceLink(self, src: OglClass, dst: OglClass) -> OglInterface:
         """
         Adds an OglInterface link between src and dst.
 
@@ -105,16 +103,16 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         Returns: the created OglInterface link
         """
-        pyutLink: PyutLink = PyutLink(linkType=LinkType.INTERFACE, source=src, destination=dst)
-        oglLink:  OglLink  = OglLink(srcShape=src, pyutLink=pyutLink, dstShape=dst)
+        pyutLink:     PyutLink     = PyutLink(linkType=LinkType.INTERFACE, source=src, destination=dst)
+        oglInterface: OglInterface = OglInterface(srcShape=src, pyutLink=pyutLink, dstShape=dst)
 
-        src.addLink(oglLink)
-        dst.addLink(oglLink)
+        src.addLink(oglInterface)
+        dst.addLink(oglInterface)
 
-        self._diagram.AddShape(oglLink)
+        self._diagram.AddShape(oglInterface)
         self.Refresh()
 
-        return oglLink
+        return oglInterface
 
     def createClasses(self, name: str, x: float, y: float) -> CreatedClassesType:
         """
