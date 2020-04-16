@@ -203,3 +203,9 @@ class PyutUtils:
         objRead.close()
 
         return requestedText
+
+    @classmethod
+    def retrieveResourcePath(cls, bareFileName: str) -> str:
+
+        fqFileName = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, bareFileName)
+        return fqFileName

@@ -38,6 +38,11 @@ class Pyut:
         PyutUtils.setBasePath(self._exePath)
 
         self._cmdLineArgsHandled: bool = False
+        """
+        If `True` then we handled some command line arguments that do not require the
+        full startup of Pyut.  Examples of this are `--help` or `--version`.
+        TODO:  Perhaps rename this to `_startupUI` or `_fullStartup` or `_startUI`
+        """
         self.handleCommandLineArguments()
 
     def getUserPath(self) -> str:
@@ -59,7 +64,9 @@ class Pyut:
 
     def _setupSystemLogging(self):
 
-        with open(Pyut.JSON_LOGGING_CONFIG_FILENAME, 'r') as loggingConfigurationFile:
+        configFilePath: str = PyutUtils.retrieveResourcePath(Pyut.JSON_LOGGING_CONFIG_FILENAME)
+
+        with open(configFilePath, 'r') as loggingConfigurationFile:
             configurationDictionary = jsonLoad(loggingConfigurationFile)
 
         logging.config.dictConfig(configurationDictionary)
@@ -147,7 +154,7 @@ class Pyut:
         for param in argv[1:]:
             if param[:18] == "--start_directory=":
                 print(f'Starting with default directory: {param[18:]}')
-                self.setUserPath(param[18:])
+                self.userPath = param[18:]
         self.cmdLineArgsHandled = False
 
 

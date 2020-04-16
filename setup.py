@@ -8,7 +8,39 @@ Usage:
 from setuptools import setup
 
 APP = ['src/Pyut.py']
-DATA_FILES = ['loggingConfiguration.json']
+DATA_FILES = ['loggingConfiguration.json',
+              ('org/pyut/resources', ['src/org/pyut/resources/Kilroy-Pyut.txt']),
+              ('org/pyut/resources', ['src/org/pyut/resources/Help.txt']),
+              ('org/pyut/resources', ['src/org/pyut/resources/Kudos.txt']),
+
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgSplash.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgTipsFrameTipsLogo.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxActor.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxArrow.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxClass.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxNewClassDiagram.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxNewProject.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxNewSequenceDiagram.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxNewUseCaseDiagram.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxNote.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxOpenFile.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxRedo.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxRelationshipAggregation.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxRelationshipAssociation.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxRelationshipComposition.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxRelationshipInheritance.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxRelationshipNote.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxRelationshipRealization.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxSaveDiagram.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxSequenceDiagramInstance.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxSequenceDiagramMessage.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxSystem.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxUndo.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxUnknown.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxZoomIn.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxZoomOut.py']),
+
+              ]
 OPTIONS = {}
 
 setup(
