@@ -77,19 +77,23 @@ class PyutProject:
         """
         return self._filename
 
-    def getCodePath(self):
+    def getCodePath(self) -> str:
         """
-        Get the root path where the corresponding code relies.
 
-        @return string
+        Returns: The root path where the corresponding code relies.
+
         """
         return self._codePath
 
-    def setCodePath(self, codePath):
+    def setCodePath(self, codePath: str):
         """
         Set the root path where the corresponding code resides.
 
-        @param codePath
+        Args:
+            codePath:
+
+        Returns:
+
         """
         self._codePath = codePath
 

@@ -99,6 +99,8 @@ class PyutXml:
         Returns:
             A minidom XML Document
         """
+        assert project is not None, 'Oops someone sent me a bad project'
+
         dlg:    Dialog   = Dialog(None, ID_ANY, "Saving...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
         xmlDoc: Document = Document()
         try:
