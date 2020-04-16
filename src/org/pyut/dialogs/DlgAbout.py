@@ -98,7 +98,7 @@ class DlgAbout(Dialog):
         bmp = Bitmap(fileName, BITMAP_TYPE_BMP)
 
         self._picture = StaticBitmap(self, -1, bmp)
-        summaryText: str = "2019, The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
+        summaryText: str = "2020 The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
         self._label   = StaticText(self, -1, summaryText, style=CAPTION)
 
         # Main sizer

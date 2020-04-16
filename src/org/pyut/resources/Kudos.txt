@@ -7,16 +7,19 @@
            /____/
 
 
-  About PyUt... or the guys behind the success story...
+  About PyUt... and the team behind the success story...
 
   Don't forget to visit the Pyut's official web site:
-                 http://pyut.sf.net
+                https://github.com/hasii2011/PyUt/wiki
 
 The Python 3 port Github URL is:
         https://github.com/hasii2011/PyUt/
 
 
-
+  Pyut 4.0 Actual Mac Release
+  ====================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+  See Changelog for fixes
 
   PyUt 1.5 Port to Python 3.7 Credits:
   ====================

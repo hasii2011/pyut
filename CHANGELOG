@@ -1,3 +1,54 @@
+
+Changed since version 4.0 :
+========================
+Version #s now match Github Milestone Releases
+Fixes:
+    Issue #  Title
+    112      Load debug logging configuration file as resource
+    111      Fix OglInterface Links
+    109      Fix IOJavaReverse
+    108      Update Preferences Dialog
+    107      Fix Python Code Generation -- void
+    106      Remember last window position and size
+    104      Set scroll window position as preference
+    103      Allow preferences for OrthogonalLayout
+    102      Fix DlgPyutPreferences
+    101      Make Pyut Startup Size a preference
+     98      Fix Unit Test Path Problems
+     95      Export to Images is not implemented
+     94      Clean up DlgPyutPreferences
+     93      Fix FastEdit to launch edit app on Mac
+     90      File --> Export PNG is failing
+     87      Fix PyutHierarchy and OglHierarchy generation
+     86      Fix OglLinkType
+     85      Fix CreateOglLinkCommand
+     84      Fix PyutLinkedObject
+     83      Modifier not being reloaded
+     82      Complete package refactor
+     79      Association Link name not restored
+     78      Refactor module PyutXmlV9
+     77      Consolidate common code for dialogs
+     76      Diagrams in Projects need their own names
+     75      Inconsistent name shortening when adding new tabs
+     74      Refactor FileHandling
+     73      Convert TestAll module to class
+     70      Implement Orthogonal Line Drawing
+     69      Remove print statements from ToSugiyama
+     68      Fix ToCDAutoLayout animation
+     67      ToPython needs an error dialog
+     65      Remove inline code in PyutPreferences
+     64      Use FutureTextShape
+     63      Rationalize PyutPreferences & PyutProperties
+     62       No translation file found for domain: 'Pyut'
+     61      Pyut Standalone Mac App
+     57      Need a PyutEnumeration
+     42      Fix ToAscii plugin
+     24      Allow OglInterface Creation
+     17      DlgRemoveLink never activates
+     13      Class Diagram Link Data Not Persisted
+     10      Fix Undo
+
+
 Changed since version 1.5 :
 ========================
 Python 3 update;  Fork to comply with PEP-8, packaging typing, and latest wxPython API

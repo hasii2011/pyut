@@ -1,7 +1,8 @@
 (this is pyut's HISTORY file. see https://github.com/hasii2011/PyUt/ for more informations)
 This file contain the project history.
 
-V1.9 2020  Coming 25 January !!
+V4.0 15 April 2020 -- See the ChangeLog on why big version bump
+V1.9 2020  25 January
 V1.7  2019 Christmas Release - Lots plugins made to work again; Internal maintainability changes
 V1.6  2019 - See https://github.com/hasii2011/PyUt/releases
 V1.5  2019 - Python 3 update;  Fork to comply with PEP-8, packaging typing, and latest wxPython API
