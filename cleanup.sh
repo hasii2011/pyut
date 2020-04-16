@@ -1,5 +1,8 @@
 #!/bin/bash
 
+rm -rf dist build
+rm -rf UNKNOWN.egg-info
+
 find . -type f -name pyutHistory"*" -delete
 find . -type f -name "*.log" -delete
 

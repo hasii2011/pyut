@@ -23,15 +23,6 @@ A: Python Reverse does an 'import' on python files.
 =============================
 Q: How do I get Pyut binaries?
 
-A.  Unfortunately, at this time I am unable to generate binaries for Mac OS X.  I am having code-signing problems.
-Also, I have not yet started work on generating Window exe files
-If you want to run it outside of Pycharm, you can run it in what py2app calls 'alias' mode.  The following are the steps
-
-
-    1.  Get Source:
-            git clone https://github.com/hasii2011/PyUt.git
-    2.  from the root directory (Assumes python3 on path)
-            ./packageme.sh
-    3.  start Pyut
-            ./dist/Pyut.app/Contents/MacOS/Pyut
-    (Answered by Humberto A. Sanchez. II <Humberto.A.Sanchez.II@gmail.com>)
+A.  Unfortunately, at this time I can only generate binaries for Mac OS X.
+    Also, I have not yet started work on generating Window exe files
+    
