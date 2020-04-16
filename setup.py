@@ -8,7 +8,7 @@ Usage:
 from setuptools import setup
 
 APP = ['src/Pyut.py']
-DATA_FILES = ['loggingConfiguration.json',
+DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfiguration.json']),
               ('org/pyut/resources', ['src/org/pyut/resources/Kilroy-Pyut.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/Help.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/Kudos.txt']),
@@ -48,17 +48,17 @@ setup(
     data_files=DATA_FILES,
     packages=['org.pyut', 'org.pyut.commands', 'org.pyut.dialogs', 'org.pyut.enums', 'org.pyut.errorcontroller',
               'org.pyut.experimental', 'org.pyut.general', 'org.pyut.general.exceptions', 'org.pyut.history',
-              'org.pyut.MiniOgl', 'org.pyut.ogl', 'org.pyut.ogl.sd',
-              'org.pyut.persistence',
-              'org.pyut.plugins', 'org.pyut.plugins.common', 'org.pyut.plugins.dtd', 'org.pyut.plugins.sugiyama', 'org.pyut.plugins.xsd',
-              'org.pyut.resources', 'org.pyut.resources.img',
+              'org.pyut.MiniOgl', 'org.pyut.model', 'org.pyut.ogl', 'org.pyut.ogl.sd',
+              'org.pyut.persistence', 'org.pyut.persistence.converters',
+              'org.pyut.plugins', 'org.pyut.plugins.common', 'org.pyut.plugins.dtd', 'org.pyut.plugins.fastedit',
+              'org.pyut.plugins.iopythonsupport',
+              'org.pyut.plugins.sugiyama', 'org.pyut.plugins.xsd',
+              'org.pyut.resources', 'org.pyut.resources.img', 'org.pyut.resources.locale',
               'org.pyut.ui', 'org.pyut.ui.tools'
               ],
     include_package_data=True,
     package_dir={'': 'src'},
-    package_data={
-        'org.pyut.resources': ['Help.txt', 'Kilroy-Pyut.txt', 'Kudos.txt'],
-    },
+
     url='https://github.com/hasii2011/PyUt',
     author='Humberto A. Sanchez II',
     author_email='Humberto.A.Sanchez.II@gmail.com',
