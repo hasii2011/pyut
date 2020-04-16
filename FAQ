@@ -25,4 +25,5 @@ Q: How do I get Pyut binaries?
 
 A.  Unfortunately, at this time I can only generate binaries for Mac OS X.
     Also, I have not yet started work on generating Window exe files
-    
+
+    The mac binary is here:  https://github.com/hasii2011/PyUt/releases/tag/4.0
