@@ -7,6 +7,6 @@ from org.pyut.plugins.orthogonal.OrthogonalOrientation import OrthogonalOrientat
 class OrthogonalOptions:
 
     orientation:   OrthogonalOrientation = OrthogonalOrientation.VERTICAL
-    layerSpacing:  float = 20.0
-    nodeSpacing:   float = 75.0
+    layerSpacing:  float = 64.0
+    nodeSpacing:   float = 64.0
     compactLayout: bool = False

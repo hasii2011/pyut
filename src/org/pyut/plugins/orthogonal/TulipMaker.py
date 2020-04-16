@@ -200,4 +200,7 @@ class TulipMaker:
         params["node spacing"]   = self._options.nodeSpacing
         params['compact layout'] = self._options.compactLayout
 
+        nsProp: tlp.SizeProperty = self._graph.getSizeProperty('viewSize')
+
+        params['node size'] = nsProp
         return params
