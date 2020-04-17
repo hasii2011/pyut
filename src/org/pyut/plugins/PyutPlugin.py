@@ -3,17 +3,21 @@ from typing import NewType
 from typing import Tuple
 from typing import cast
 
-from wx import DirDialog
 from wx import FD_OPEN
 from wx import FD_MULTIPLE
 from wx import FD_CHANGE_DIR
 from wx import FD_FILE_MUST_EXIST
 from wx import FD_OVERWRITE_PROMPT
 from wx import FD_SAVE
+from wx import ICON_ERROR
 from wx import ID_CANCEL
+from wx import OK
 
+from wx import DirDialog
 from wx import FileDialog
 from wx import FileSelector
+from wx import MessageDialog
+from wx import Yield as wxYield
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -102,6 +106,7 @@ class PyutPlugin:
         """
         Called by plugin to ask which file must be exported
         """
+        wxYield()
         inputFormat = self.getOutputFormat()
         file = FileSelector(
             "Choose a file name to export",
@@ -143,3 +148,7 @@ class PyutPlugin:
             self._ctrl.setCurrentDir(directory)
             dirDialog.Destroy()
             return directory
+
+    def displayNoSelectedUmlObjects(self):
+        booBoo: MessageDialog = MessageDialog(parent=None, message='No selected UML objects', caption='Try Again!', style=OK | ICON_ERROR)
+        booBoo.ShowModal()

@@ -188,7 +188,10 @@ class PyutIoPlugin(PyutPlugin):
             if self.clsLogger.level == pythonDebugLoggingLevel:
                 mediator.selectAllShapes()
             self.__oglObjects = mediator.getSelectedShapes()
-            # write the file
-            self.write(self.__oglObjects)
+            if len(self.__oglObjects) == 0:
+                self.displayNoSelectedUmlObjects()
+            else:
+                # write the file
+                self.write(self.__oglObjects)
         else:
             PyutIoPlugin.clsLogger.info(f'Output format is None: {outputFormat}')

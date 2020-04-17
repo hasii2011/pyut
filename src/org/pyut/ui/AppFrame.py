@@ -154,8 +154,8 @@ class AppFrame(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        self._fileHandling: MainUI = MainUI(self, self._ctrl)
-        self._ctrl.registerFileHandling(self._fileHandling)
+        self._mainFileHandlingUI: MainUI = MainUI(self, self._ctrl)
+        self._ctrl.registerFileHandling(self._mainFileHandlingUI)
 
         # Initialization
         self._initPyutTools()   # Toolboxes, toolbar
@@ -170,7 +170,7 @@ class AppFrame(Frame):
         self._ctrl.registerAppPath(self._currentDirectory)
 
         # set application title
-        self._fileHandling.newProject()
+        self._mainFileHandlingUI.newProject()
         self._ctrl.updateTitle()
 
         # Init tips frame
@@ -223,7 +223,7 @@ class AppFrame(Frame):
         """
 
         # Close all files
-        if self._fileHandling.onClose() is False:
+        if self._mainFileHandlingUI.onClose() is False:
             return
         # Only save position if we are not auto-saving
         if self._prefs.centerAppOnStartup is False:
@@ -235,7 +235,7 @@ class AppFrame(Frame):
         self._prefs.startupHeight = ourSize[1]
 
         self._clipboard    = None
-        self._fileHandling = None
+        self._mainFileHandlingUI = None
         self._ctrl         = None
         self._prefs        = None
         self.plugMgr       = None
@@ -245,8 +245,8 @@ class AppFrame(Frame):
         self.Destroy()
 
     def OnImport(self, event):
-        self._fileHandling.newProject()
-        self._fileHandling.newDocument(DiagramType.CLASS_DIAGRAM)
+        self._mainFileHandlingUI.newProject()
+        self._mainFileHandlingUI.newDocument(DiagramType.CLASS_DIAGRAM)
         self._ctrl.updateTitle()
         cl = self.plugins[event.GetId()]
 
@@ -338,7 +338,7 @@ class AppFrame(Frame):
             self._clipboard.append(obj.getPyutObject())
             # self._ctrl.removeClass(obj)
 
-        self._fileHandling.setModified(True)
+        self._mainFileHandlingUI.setModified(True)
         self._ctrl.updateTitle()
         canvas.Refresh()
 
@@ -479,7 +479,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._fileHandling.newProject()
+        self._mainFileHandlingUI.newProject()
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
@@ -490,7 +490,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._fileHandling.newDocument(DiagramType.CLASS_DIAGRAM)
+        self._mainFileHandlingUI.newDocument(DiagramType.CLASS_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
@@ -501,7 +501,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._fileHandling.newDocument(DiagramType.SEQUENCE_DIAGRAM)
+        self._mainFileHandlingUI.newDocument(DiagramType.SEQUENCE_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
@@ -512,7 +512,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._fileHandling.newDocument(DiagramType.USECASE_DIAGRAM)
+        self._mainFileHandlingUI.newDocument(DiagramType.USECASE_DIAGRAM)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
@@ -528,7 +528,7 @@ class AppFrame(Frame):
                                    "You risk a shapes ID duplicate with "
                                    "unexpected results !"), parent=self)
 
-        if (self._fileHandling.getCurrentProject()) is None:
+        if (self._mainFileHandlingUI.getCurrentProject()) is None:
             PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
             return
 
@@ -545,7 +545,7 @@ class AppFrame(Frame):
 
         # Insert the specified files
         try:
-            self._fileHandling.insertFile(filename)
+            self._mainFileHandlingUI.insertFile(filename)
         except (ValueError, Exception) as e:
             PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
 
@@ -587,7 +587,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._fileHandling.closeCurrentProject()
+        self._mainFileHandlingUI.closeCurrentProject()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileRemoveDocument(self, event: CommandEvent):
@@ -597,8 +597,8 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        project  = self._fileHandling.getCurrentProject()
-        document = self._fileHandling.getCurrentDocument()
+        project  = self._mainFileHandlingUI.getCurrentProject()
+        document = self._mainFileHandlingUI.getCurrentDocument()
         if project is not None and document is not None:
             project.removeDocument(document)
         else:
@@ -612,7 +612,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._fileHandling.exportToBmp()
+        self._mainFileHandlingUI.exportToBmp()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExportJpg(self, event: CommandEvent):
@@ -622,7 +622,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._fileHandling.exportToJpg()
+        self._mainFileHandlingUI.exportToJpg()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExportPng(self, event: CommandEvent):
@@ -632,7 +632,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._fileHandling.exportToPng()
+        self._mainFileHandlingUI.exportToPng()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExportPs(self, event: CommandEvent):
@@ -918,7 +918,7 @@ class AppFrame(Frame):
 
     def _refreshUI(self, frame: UmlClassDiagramsFrame):
 
-        project: PyutProject = self._fileHandling.getCurrentProject()
+        project: PyutProject = self._mainFileHandlingUI.getCurrentProject()
         project.setModified(True)
         self._ctrl.updateTitle()
         frame.Refresh()
@@ -960,7 +960,7 @@ class AppFrame(Frame):
         # Open the specified files
         for filename in fileNames:
             try:
-                if self._fileHandling.openFile(filename):
+                if self._mainFileHandlingUI.openFile(filename):
                     # Add to last opened files list
                     self._prefs.addNewLastOpenedFilesEntry(filename)
                     self.__setLastOpenedFilesItems()
@@ -973,11 +973,11 @@ class AppFrame(Frame):
         """
         Save to the current filename
         """
-        self._fileHandling.saveFile()
+        self._mainFileHandlingUI.saveFile()
         self._ctrl.updateTitle()
 
         # Add to last opened files list
-        project = self._fileHandling.getCurrentProject()
+        project = self._mainFileHandlingUI.getCurrentProject()
         if project is not None:
             self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
             self.__setLastOpenedFilesItems()
@@ -986,10 +986,10 @@ class AppFrame(Frame):
         """
         Save to the current filename; Ask for the name
         """
-        self._fileHandling.saveFileAs()
+        self._mainFileHandlingUI.saveFileAs()
         self._ctrl.updateTitle()
 
-        project = self._fileHandling.getCurrentProject()
+        project = self._mainFileHandlingUI.getCurrentProject()
         if project is not None:
             self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
             self.__setLastOpenedFilesItems()
@@ -1004,7 +1004,7 @@ class AppFrame(Frame):
         currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
         self._ctrl.setCurrentAction(currentAction)
         self._ctrl.selectTool(event.GetId())
-        self._fileHandling.setModified(True)
+        self._mainFileHandlingUI.setModified(True)
         self._ctrl.updateTitle()
 
     # noinspection PyUnusedLocal
@@ -1077,7 +1077,7 @@ class AppFrame(Frame):
         dc = ClientDC(canvas)
         canvas.PrepareDC(dc)
 
-        self._fileHandling.setModified(True)
+        self._mainFileHandlingUI.setModified(True)
         self._ctrl.updateTitle()
         canvas.Refresh()
         # TODO : What are you doing with the dc ?
@@ -1143,10 +1143,10 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        if (self._fileHandling.getCurrentFrame()) is None:
+        if (self._mainFileHandlingUI.getCurrentFrame()) is None:
             PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
             return
-        self._fileHandling.getCurrentFrame().getHistory().undo()
+        self._mainFileHandlingUI.getCurrentFrame().getHistory().undo()
 
     # noinspection PyUnusedLocal
     def _OnMnuRedo(self, event: CommandEvent):
@@ -1155,10 +1155,10 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        if (self._fileHandling.getCurrentFrame()) is None:
+        if (self._mainFileHandlingUI.getCurrentFrame()) is None:
             PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
             return
-        self._fileHandling.getCurrentFrame().getHistory().redo()
+        self._mainFileHandlingUI.getCurrentFrame().getHistory().redo()
 
     def _initPrinting(self):
         """
