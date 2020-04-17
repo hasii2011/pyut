@@ -8,13 +8,15 @@ from typing import NewType
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import NodeList
 
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.TextShape import TextShape
-from org.pyut.model.PyutActor import PyutActor
 
+from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
@@ -23,8 +25,9 @@ from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutUseCase import PyutUseCase
-from org.pyut.PyutUtils import PyutUtils
+from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -36,18 +39,18 @@ from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
-
 from org.pyut.ogl.OglAssociation import OglAssociation
 from org.pyut.ogl.OglAssociation import CENTER
 from org.pyut.ogl.OglAssociation import DEST_CARD
 from org.pyut.ogl.OglAssociation import SRC_CARD
-
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-
-from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
+
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
+
+from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -421,9 +424,10 @@ class MiniDomToOgl:
             vis: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(strVis)
             pyutMethod.setVisibility(visibility=vis)
 
-            returnElt: Element = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_RETURN)[0]
-            # TODO use PyutType instead of bare string
-            pyutMethod.setReturns(returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE))
+            returnElt:  Element  = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_RETURN)[0]
+            retTypeStr: str      = returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE)
+            retType:    PyutType = PyutType(retTypeStr)
+            pyutMethod.setReturns(retType)
 
             #
             #  Code supports multiple modifiers, but the dialog allows input of only one
@@ -519,7 +523,7 @@ class MiniDomToOgl:
         """
         srcShape:  OglClass = oglLink.getSourceShape()
         destShape: OglClass = oglLink.getDestinationShape()
-        self.logger.info(f'source ID: {srcShape.GetID()} - destination ID: {destShape.GetID()}')
+        self.logger.debug(f'source ID: {srcShape.GetID()} - destination ID: {destShape.GetID()}')
 
         pyutLink:        PyutLink = oglLink.getPyutObject()
 
