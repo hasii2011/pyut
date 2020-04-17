@@ -540,11 +540,11 @@ class Shape:
             y:  y position to move shape to
         """
         if self._draggable:
-            self.clsLogger.info(f'_parent: {self._parent}')
+            self.clsLogger.debug(f'_parent: {self._parent}')
             if self._parent is None:
                 self._x = x
                 self._y = y
-                self.clsLogger.info(f'New Position: ({self._x},{self._y})')
+                self.clsLogger.debug(f'New Position: ({self._x},{self._y})')
             else:
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
             #  if the shape is attached to a diagramFrame, it means that

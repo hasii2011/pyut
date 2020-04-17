@@ -23,7 +23,7 @@ class AnchorPoint(LinePoint):
 
         self.logger: Logger = getLogger(__name__)
 
-        self.logger.info(f'AnchorPoint __init__  x: {x}, y: {y} parent: {parent}')
+        self.logger.debug(f'AnchorPoint __init__  x: {x}, y: {y} parent: {parent}')
         self._protected:    bool = True  # protected by default
         self._stayInside:   bool = True
         self._stayOnBorder: bool = True
@@ -69,7 +69,7 @@ class AnchorPoint(LinePoint):
             y:
         """
 
-        self.logger.info(
+        self.logger.debug(
             (
                 f'x,y: ({x},{y}) '
                 f'parent: {self._parent} '
@@ -86,7 +86,7 @@ class AnchorPoint(LinePoint):
                 width, height      = self._parent.GetSize()
                 width  = abs(width) - 1
                 height = abs(height) - 1
-                self.logger.info(f'topLeftX,topLeftY ({topLeftX},{topLeftY}) width,height ({width},{height})')
+                self.logger.debug(f'topLeftX,topLeftY ({topLeftX},{topLeftY}) width,height ({width},{height})')
                 if self._stayInside or self._stayOnBorder:
                     x = self.stayInside(topLeftX, width, x)
                     y = self.stayInside(topLeftY, height, y)
@@ -94,7 +94,7 @@ class AnchorPoint(LinePoint):
                         x, y = self.stickToBorder(topLeftX, topLeftY, width, height, x, y)
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
 
-                self.logger.info(f'Final Position: ({self._x}, {self._y})')
+                self.logger.debug(f'Final Position: ({self._x}, {self._y})')
 
             if self.HasDiagramFrame():
                 self.UpdateModel()

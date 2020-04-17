@@ -6,8 +6,9 @@ from os import getcwd
 from os import chdir
 
 import zlib
-
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import parseString
 
 from org.pyut.PyutUtils import PyutUtils
@@ -74,6 +75,7 @@ class IoFile:
             try:
                 with open(filename, "rb") as dataFile:
                     compressedData: bytes = dataFile.read()
+                    # noinspection PyUnresolvedReferences
                     self.logger.info(f'zlib.__version__: {zlib.__version__}')
                     xmlBytes = zlib.decompress(compressedData)    # has b'....' around it
                     xmlString: str = xmlBytes.decode()

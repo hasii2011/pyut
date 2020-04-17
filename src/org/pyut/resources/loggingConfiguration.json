@@ -33,12 +33,18 @@
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org": {
+            "level":     "INFO",
+            "propagate": "False",
+            "handlers":  ["consoleHandler"]
+        },
         "org.pyut": {
             "level":     "INFO",
             "propagate": "False"
         },
         "org.pyut.ui.MainUI": {
-            "level":     "DEBUG",
+            "level":     "INFO",
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         }
     }

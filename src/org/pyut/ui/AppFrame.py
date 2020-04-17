@@ -955,7 +955,7 @@ class AppFrame(Frame):
             fileNames = dlg.GetPaths()
             dlg.Destroy()
 
-        print(f"loading file(s) {str(filename)}")
+        self.logger.info(f"loading file(s) {filename}")
 
         # Open the specified files
         for filename in fileNames:
