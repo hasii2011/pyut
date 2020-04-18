@@ -5,7 +5,9 @@ from logging import Logger
 from logging import getLogger
 from typing import Union
 
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
 from org.pyut.MiniOgl.Shape import Shape
