@@ -83,12 +83,13 @@ class MainUI:
         """
 
         Args:
-            parent:
-            mediator:
+            parent:     An AppFrame
+            mediator:   Our one and only mediator
         """
         self.logger: Logger = getLogger(__name__)
 
-        self.__parent = parent
+        from org.pyut.ui.AppFrame import AppFrame   # Prevent recursion import problem
+        self.__parent: AppFrame = parent
         self._ctrl    = mediator
         self._projects:       List[PyutProject] = []
         self._currentProject: PyutProject       = cast(PyutProject, None)
@@ -243,7 +244,7 @@ class MainUI:
         save to the current filename
 
         Returns:
-            `True` if the save suceeds else `False`
+            `True` if the save succeeds else `False`
         """
         currentProject = self._currentProject
         if currentProject is None:
@@ -260,7 +261,7 @@ class MainUI:
         Ask for a filename and save the diagram data
 
         Returns:
-            `True` if the save suceeds else `False`
+            `True` if the save succeeds else `False`
         """
         if self._ctrl.isInScriptMode():
             PyutUtils.displayError(_("Save File As is not accessible in script mode !"))
@@ -615,7 +616,7 @@ class MainUI:
         self.__projectTreeRoot = self.__projectTree.AddRoot(_("Root"))
 
         #  self.__projectTree.SetPyData(self.__projectTreeRoot, None)
-        # Expand root, since wx.TR_HIDE_ROOT is not supported under winx
+        # Expand root, since wx.TR_HIDE_ROOT is not supported under windows
         # Not supported for hidden tree since wx.Python 2.3.3.1 ?
         #  self.__projectTree.Expand(self.__projectTreeRoot)
 

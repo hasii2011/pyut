@@ -79,7 +79,7 @@ class UmlFrame(UmlFrameShapeHandler):
         self.SetInfinite(True)
 
         self._defaultCursor = self.GetCursor()
-        # self.Scroll(0, 0)
+
 
     def setCodePath(self, path):
         """

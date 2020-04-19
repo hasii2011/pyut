@@ -95,7 +95,7 @@ class IoXml(PyutIoPlugin):
         self.pretty = (rep == YES)
         return rep != CANCEL
 
-    def write(self, oglObjects):
+    def write(self, oglObjects) -> bool:
         """
         Write data to filename.
 
@@ -106,7 +106,7 @@ class IoXml(PyutIoPlugin):
         """
         oldPath = getcwd()
         # Ask the user which destination file he wants
-        filename = self._askForFileExport()
+        filename: str = self._askForFileExport()
         if filename == "":
             return False
 

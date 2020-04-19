@@ -1,11 +1,14 @@
 
 from typing import List
+
 from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
 from wx import Dialog
@@ -22,7 +25,6 @@ from wx import ID_ANY
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ogl.OglActor import OglActor
-
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
@@ -46,17 +48,14 @@ from org.pyut.persistence.converters.MiniDomToOgl import OglNotes
 
 from org.pyut.persistence.converters.MiniDomToOglV10 import MiniDomToOgl
 from org.pyut.persistence.converters.OglToMiniDomV10 import OglToMiniDom
-
-
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
+from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
-
-from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class PyutXml:
@@ -73,7 +72,7 @@ class PyutXml:
     Using the minidom API you can use the save method to get the
     diagram converted to its corresponding XML representation. For loading, you have to parse
     the XML file and indicate the UML frame onto which you want to draw
-    (See `UmlFrame`).
+    (See `UmlDiagramsFrame`).
 
     This module is dynamically loaded based on the input XML's version number.  This
     class supports `PyutXml.VERSION`  10
@@ -84,9 +83,6 @@ class PyutXml:
         Constructor
         """
         self.logger: Logger = getLogger(__name__)
-
-        # self._idFactory = IDFactory()
-
         self._dlgGauge: Dialog = cast(Dialog, None)
 
     def save(self, project: PyutProject) -> Document:
@@ -104,7 +100,7 @@ class PyutXml:
         dlg:    Dialog   = Dialog(None, ID_ANY, "Saving...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
         xmlDoc: Document = Document()
         try:
-            top     = xmlDoc.createElement(PyutXmlConstants.TOP_LEVEL_ELEMENT)
+            top = xmlDoc.createElement(PyutXmlConstants.TOP_LEVEL_ELEMENT)
             top.setAttribute(PyutXmlConstants.ATTR_VERSION, str(PyutXml.VERSION))
             codePath: str = project.getCodePath()
             if codePath is None:
@@ -124,12 +120,8 @@ class PyutXml:
 
                 document: PyutDocument = cast(PyutDocument, document)
 
-                documentNode = xmlDoc.createElement(PyutXmlConstants.ELEMENT_DOCUMENT)
+                documentNode: Element = self.__pyutDocumentToPyutXml(xmlDoc=xmlDoc, pyutDocument=document)
 
-                docType: str = document.getType().__str__()
-
-                documentNode.setAttribute(PyutXmlConstants.ATTR_TYPE, docType)
-                documentNode.setAttribute(PyutXmlConstants.ATTR_TITLE, document.title)
                 top.appendChild(documentNode)
 
                 oglObjects: List[OglObject] = document.getFrame().getUmlObjects()
@@ -183,7 +175,7 @@ class PyutXml:
             project:    The UI Project to fill out
         """
         self.__setupProgressDialog()
-        umlFrame: UmlFrame = cast(UmlFrame, None)  # avoid Pycharm warning
+        umlFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, None)  # avoid Pycharm warning
         root = self.__validateXmlVersion(dom)
         try:
             project.setCodePath(root.getAttribute("CodePath"))
@@ -199,7 +191,7 @@ class PyutXml:
                 document: PyutDocument = project.newDocument(docType)
                 document.title = self.__determineDocumentTitle(documentNode)
 
-                umlFrame: UmlFrame = self.__showAppropriateUmlFrame(document)
+                umlFrame: UmlDiagramsFrame = self.__showAppropriateUmlFrame(document)
 
                 self.__updateProgressDialog(newMessage='Start Conversion...', newGaugeValue=3)
 
@@ -220,7 +212,28 @@ class PyutXml:
 
         self.__cleanupProgressDialog(umlFrame)
 
-    def __renderClassDiagram(self, documentNode: Element, toOgl: MiniDomToOgl, umlFrame: UmlFrame):
+    def __pyutDocumentToPyutXml(self, xmlDoc: Document, pyutDocument: PyutDocument) -> Element:
+
+        documentNode = xmlDoc.createElement(PyutXmlConstants.ELEMENT_DOCUMENT)
+
+        docType: str = pyutDocument.getType().__str__()
+
+        documentNode.setAttribute(PyutXmlConstants.ATTR_TYPE, docType)
+        documentNode.setAttribute(PyutXmlConstants.ATTR_TITLE, pyutDocument.title)
+
+        docFrame: UmlDiagramsFrame = pyutDocument.getFrame()
+        scrollPosX, scrollPosY = docFrame.GetViewStart()
+        documentNode.setAttribute(PyutXmlConstants.ATTR_SCROLL_POSITION_X, str(scrollPosX))
+        documentNode.setAttribute(PyutXmlConstants.ATTR_SCROLL_POSITION_Y, str(scrollPosY))
+
+        xUnit, yUnit = docFrame.GetScrollPixelsPerUnit()
+
+        documentNode.setAttribute(PyutXmlConstants.ATTR_PIXELS_PER_UNIT_X, str(xUnit))
+        documentNode.setAttribute(PyutXmlConstants.ATTR_PIXELS_PER_UNIT_Y, str(yUnit))
+
+        return documentNode
+
+    def __renderClassDiagram(self, documentNode: Element, toOgl: MiniDomToOgl, umlFrame: UmlDiagramsFrame):
         """
 
         Args:
@@ -239,7 +252,7 @@ class PyutXml:
         self.__displayTheLinks(oglLinks, umlFrame)
         self.__displayTheNotes(oglNotes, umlFrame)
 
-    def __renderUseCaseDiagram(self, documentNode: Element, toOgl: MiniDomToOgl, umlFrame: UmlFrame):
+    def __renderUseCaseDiagram(self, documentNode: Element, toOgl: MiniDomToOgl, umlFrame: UmlDiagramsFrame):
         """
 
         Args:
@@ -277,7 +290,7 @@ class PyutXml:
         oglSDMessages: OglSDMessages = toOgl.getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances)
         self.__displayTheSDMessages(oglSDMessages, umlFrame)
 
-    def __displayTheClasses(self, oglClasses: OglClasses, umlFrame: UmlFrame):
+    def __displayTheClasses(self, oglClasses: OglClasses, umlFrame: UmlDiagramsFrame):
         """
         Place the OGL classes on the input frame at their respective positions
 
@@ -288,7 +301,7 @@ class PyutXml:
         for oglClass in oglClasses.values():
             self.__displayAnOglObject(oglClass, umlFrame)
 
-    def __displayTheLinks(self, oglLinks: OglLinks, umlFrame: UmlFrame):
+    def __displayTheLinks(self, oglLinks: OglLinks, umlFrame: UmlDiagramsFrame):
         """
         Place the OGL links on the input frame at their respective positions
 
@@ -299,24 +312,24 @@ class PyutXml:
         for oglLink in oglLinks:
             umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=True)
 
-    def __displayTheNotes(self, oglNotes: OglNotes, umlFrame: UmlFrame):
+    def __displayTheNotes(self, oglNotes: OglNotes, umlFrame: UmlDiagramsFrame):
         for oglNote in oglNotes.values():
             self.__displayAnOglObject(oglNote, umlFrame)
 
-    def __displayTheActors(self, oglActors: OglActors, umlFrame: UmlFrame):
+    def __displayTheActors(self, oglActors: OglActors, umlFrame: UmlDiagramsFrame):
         for oglActor in oglActors.values():
             self.__displayAnOglObject(oglActor, umlFrame)
 
-    def __displayTheUseCases(self, oglUseCases: OglUseCases, umlFrame: UmlFrame):
+    def __displayTheUseCases(self, oglUseCases: OglUseCases, umlFrame: UmlDiagramsFrame):
         for oglUseCase in oglUseCases.values():
             self.__displayAnOglObject(oglUseCase, umlFrame)
 
-    def __displayTheSDMessages(self, oglSDMessages: OglSDMessages, umlFrame: UmlFrame):
+    def __displayTheSDMessages(self, oglSDMessages: OglSDMessages, umlFrame: UmlDiagramsFrame):
         for oglSDMessage in oglSDMessages.values():
             oglSDMessage: OglSDMessage = cast(OglSDMessage, oglSDMessage)
             umlFrame.getDiagram().AddShape(oglSDMessage)
 
-    def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlFrame):
+    def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlDiagramsFrame):
         x, y = oglObject.GetPosition()
         umlFrame.addShape(oglObject, x, y)
 
@@ -333,7 +346,7 @@ class PyutXml:
         self._gauge.SetValue(newGaugeValue)
         wxYield()
 
-    def __cleanupProgressDialog(self, umlFrame: UmlFrame):
+    def __cleanupProgressDialog(self, umlFrame: UmlDiagramsFrame):
 
         umlFrame.Refresh()
         self._gauge.SetValue(5)
@@ -372,9 +385,9 @@ class PyutXml:
         else:
             return docTitle
 
-    def __showAppropriateUmlFrame(self, document) -> UmlFrame:
+    def __showAppropriateUmlFrame(self, document) -> UmlDiagramsFrame:
 
-        umlFrame: UmlFrame = document.getFrame()
+        umlFrame: UmlDiagramsFrame = document.getFrame()
         ctrl = getMediator()
         ctrl.getFileHandling().showFrame(umlFrame)
 

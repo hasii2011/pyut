@@ -22,7 +22,7 @@ from wx import EVT_PAINT
 from wx import EVT_RIGHT_DCLICK
 from wx import EVT_RIGHT_DOWN
 from wx import EVT_RIGHT_UP
-from wx import EVT_TIMER
+
 from wx import EmptyBitmap
 from wx import FONTFAMILY_DEFAULT
 from wx import FONTSTYLE_NORMAL
@@ -39,7 +39,7 @@ from wx import SUNKEN_BORDER
 from wx import ScrolledWindow
 from wx import Size
 from wx import TRANSPARENT_BRUSH
-from wx import Timer
+
 
 from wx import WHITE
 from wx import Window
@@ -59,6 +59,8 @@ LEFT_MARGIN     = 0
 RIGHT_MARGIN    = 1
 TOP_MARGIN      = 2
 BOTTOM_MARGIN   = 3
+
+DEFAULT_MARGIN_VALUE = 100
 
 
 class DiagramFrame(ScrolledWindow):
@@ -99,10 +101,9 @@ class DiagramFrame(ScrolledWindow):
         # margins define a perimeter around the work area that must remains
         # blank and hidden. if we scroll beyond the limits, the diagram is
         # resized.
-        DEFAULT_MARGIN_VALUE = 100
-        self._leftMargin = DEFAULT_MARGIN_VALUE
-        self._rightMargin = DEFAULT_MARGIN_VALUE
-        self._topMargin = DEFAULT_MARGIN_VALUE
+        self._leftMargin   = DEFAULT_MARGIN_VALUE
+        self._rightMargin  = DEFAULT_MARGIN_VALUE
+        self._topMargin    = DEFAULT_MARGIN_VALUE
         self._bottomMargin = DEFAULT_MARGIN_VALUE
         self._isInfinite = False    # to know if the frame is infinite or not
 
@@ -969,7 +970,7 @@ class DiagramFrame(ScrolledWindow):
         self._isInfinite = infinite
 
         if infinite is True:
-            # place all the shape in an area centered on the infinite work area
+            # place all the shapes in an area centered on the infinite work area
             vWidth, vHeight = self.GetVirtualSize()
             cWidth, cHeight = self.GetClientSize()
             # get the number of pixels per scroll unit

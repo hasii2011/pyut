@@ -1,7 +1,8 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
-from typing import cast
 
 from wx import TreeCtrl
 from wx import TreeItemId
@@ -11,6 +12,7 @@ from org.pyut.PyutConstants import DiagramsLabels
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
 from org.pyut.PyutUtils import PyutUtils
@@ -28,8 +30,8 @@ class PyutDocument:
             project:        The project
             docType:        The enumeration value for the diagram type
         """
-        self.logger: Logger = getLogger(__name__)
-        self._parentFrame    = None
+        self.logger:       Logger           = getLogger(__name__)
+        self._parentFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
         self._project        = project
 
         self._type: DiagramType = docType
@@ -89,12 +91,12 @@ class PyutDocument:
 
     title = property(getTitle, setTitle)
 
-    def getFrame(self):
+    def getFrame(self) -> UmlDiagramsFrame:
         """
         Return the document's frame
 
-        @author C.Dutoit
-        @return xxxFrame this document's frame
+        Returns:    this document's frame
+
         """
         return self._frame
 

@@ -86,3 +86,8 @@ class PyutXmlConstants:
     V9_LINK_PREFIX: str = 'OGL_'
 
     ATTR_CODE_PATH: str = 'CodePath'
+
+    ATTR_SCROLL_POSITION_X: str = 'scrollPositionX'
+    ATTR_SCROLL_POSITION_Y: str = 'scrollPositionY'
+    ATTR_PIXELS_PER_UNIT_X: str = 'pixelsPerUnitX'
+    ATTR_PIXELS_PER_UNIT_Y: str = 'pixelsPerUnitY'
