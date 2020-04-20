@@ -36,7 +36,11 @@
             "level": "INFO",
             "handlers": ["consoleHandler"],
             "propagate": "False"
+        },
+        "org.pyut.dialogs.DlgPyutDebug": {
+            "level": "INFO",
+            "handlers": ["consoleHandler"],
+            "propagate": "False"
         }
-
     }
 }

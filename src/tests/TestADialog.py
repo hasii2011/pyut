@@ -1,5 +1,6 @@
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from wx import App
 
@@ -10,8 +11,8 @@ from wx import OK
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
 
-# from org.pyut.plugins.orthogonal.DlgOrthogonalOptions import DlgOrthogonalOptions
-from org.pyut.dialogs.DlgDebugDiagramFrame import DlgDebugDiagramFrame
+from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
+from tests.TestBase import TestBase
 
 
 class TestADialog(App):
@@ -20,8 +21,10 @@ class TestADialog(App):
 
     def OnInit(self):
 
+        # self.InitInspection(alt=False, cmd=False, shift=False, keyCode=ord('z'))
+        TestBase.setUpLogging()
         self.logger: Logger = getLogger(__name__)
-        frameTop: Frame = Frame(parent=None, id=TestADialog.FRAME_ID, title="Test A Dialog", size=(400, 400), style=DEFAULT_FRAME_STYLE)
+        frameTop: Frame = Frame(parent=None, id=TestADialog.FRAME_ID, title="Test A Dialog", size=(600, 400), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
 
         diagramFrame: DiagramFrame = DiagramFrame(frameTop)
@@ -35,12 +38,11 @@ class TestADialog(App):
         self._diagramFrame: DiagramFrame = diagramFrame
 
         self.initTest()
-
         return True
 
     def initTest(self):
-
-        with DlgDebugDiagramFrame(self._diagramFrame, ID_ANY) as dlg:
+        with DlgPyutDebug(self._diagramFrame, ID_ANY) as dlg:
+            dlg: DlgPyutDebug = cast(DlgPyutDebug, dlg)
             if dlg.ShowModal() == OK:
                 self.logger.warning(f'Retrieved data')
             else:
