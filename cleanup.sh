@@ -1,10 +1,12 @@
 #!/bin/bash
 
 rm -rf dist build
-rm -rf UNKNOWN.egg-info
+
+find . -type d -name UNKNOWN.egg-info -exec rm -rf {} \; -print
 
 find . -type f -name pyutHistory"*" -delete
 find . -type f -name "*.log" -delete
+find . -type f -name UnitTest.gml -delete
 
 cd src/tests/testdata > /dev/null 2>&1
 
