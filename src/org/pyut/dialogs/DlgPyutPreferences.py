@@ -260,8 +260,8 @@ class DlgPyutPreferences(Dialog):
         self.__cbShowTips.SetValue(secureBool(self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP]))
         self.__cbCenterDiagram.SetValue(secureBool(self.__prefs[PyutPreferences.CENTER_DIAGRAM]))
 
-        self.__scAppWidth.SetValue(self.__prefs.getStartupWidth())
-        self.__scAppHeight.SetValue(self.__prefs.getStartupHeight())
+        self.__scAppWidth.SetValue(self.__prefs.startupWidth)
+        self.__scAppHeight.SetValue(self.__prefs.startupHeight)
         # i18n
         n = self.__prefs[PyutPreferences.I18N]
         if n not in Lang.LANGUAGES:
@@ -344,7 +344,7 @@ class DlgPyutPreferences(Dialog):
         Set the position controls based on the value of appropriate preference value
 
         """
-        if self.__prefs.centerAppOnStartup is True:
+        if self.__prefs.centerAppOnStartUp is True:
             self.__scAppPosX.Disable()
             self.__scAppPosY.Disable()
         else:

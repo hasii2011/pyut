@@ -181,46 +181,56 @@ class PyutPreferences(Singleton):
         resizeOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT)
         return resizeOrNot
 
-    def getStartupWidth(self) -> int:
+    @property
+    def startupWidth(self) -> int:
         width: str = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH)
         return int(width)
 
-    def setStartupWidth(self, newWidth: int):
+    @startupWidth.setter
+    def startupWidth(self, newWidth: int):
         self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH, str(newWidth))
         self.__saveConfig()
 
-    def getStartupHeight(self) -> int:
+    @property
+    def startupHeight(self) -> int:
         height: str = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_HEIGHT)
         return int(height)
 
-    def setStartupHeight(self, newHeight: int):
+    @startupHeight.setter
+    def startupHeight(self, newHeight: int):
         self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_HEIGHT, str(newHeight))
         self.__saveConfig()
 
-    def getCenterDiagram(self):
+    @property
+    def centerDiagram(self):
         centerDiagram: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_DIAGRAM)
         return centerDiagram
 
-    def setCenterDiagram(self, theNewValue: bool):
+    @centerDiagram.setter
+    def centerDiagram(self, theNewValue: bool):
         self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH, str(theNewValue))
         self.__saveConfig()
 
-    def getCenterAppOnStartUp(self) -> bool:
+    @property
+    def centerAppOnStartUp(self) -> bool:
         centerApp: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_APP_ON_STARTUP)
         return centerApp
 
-    def setCenterAppOnStartUp(self, theNewValue: bool):
+    @centerAppOnStartUp.setter
+    def centerAppOnStartUp(self, theNewValue: bool):
         self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_APP_ON_STARTUP, str(theNewValue))
         self.__saveConfig()
 
-    def getAppStartupPosition(self) -> Tuple[int, int]:
+    @property
+    def appStartupPosition(self) -> Tuple[int, int]:
 
         x: int = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_X)
         y: int = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_Y)
 
         return x, y
 
-    def setAppStartupPosition(self, theNewValue: Tuple[int, int]):
+    @appStartupPosition.setter
+    def appStartupPosition(self, theNewValue: Tuple[int, int]):
 
         x: int = theNewValue[0]
         y: int = theNewValue[1]
@@ -230,15 +240,15 @@ class PyutPreferences(Singleton):
 
         self.__saveConfig()
 
-    centerDiagram      = property(getCenterDiagram, setCenterDiagram)
-    centerAppOnStartup = property(getCenterAppOnStartUp, setCenterAppOnStartUp)
-    appStartupPosition = property(getAppStartupPosition, setAppStartupPosition)
-    startupWidth       = property(getStartupWidth,  setStartupWidth)
-    startupHeight      = property(getStartupHeight, setStartupHeight)
-
+    @property
     def fullScreen(self) -> bool:
         fullScreenOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.FULL_SCREEN)
         return fullScreenOrNot
+
+    @fullScreen.setter
+    def fullScreen(self, theNewValue: bool):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.FULL_SCREEN, str(theNewValue))
+        self.__saveConfig()
 
     def __saveConfig(self):
         """

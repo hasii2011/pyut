@@ -107,8 +107,7 @@ class PyutApp(wxApp):
                 self._frame.Show(True)
 
             # Show full screen ?
-            fullScreen = prefs.fullScreen()
-            if fullScreen is True:
+            if prefs.fullScreen is True:
                 dc = ScreenDC()
                 self._frame.SetSize(dc.GetSize())
                 self._frame.CentreOnScreen()

@@ -111,7 +111,7 @@ class AppFrame(Frame):
         """
         self._prefs: PyutPreferences = PyutPreferences()
 
-        appSize: Size = Size(self._prefs.getStartupWidth(), self._prefs.getStartupHeight())
+        appSize: Size = Size(self._prefs.startupWidth, self._prefs.startupHeight)
 
         super().__init__(parent=parent, id=wxID, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
@@ -123,7 +123,7 @@ class AppFrame(Frame):
 
         self.SetThemeEnabled(True)
 
-        if self._prefs.centerAppOnStartup is True:
+        if self._prefs.centerAppOnStartUp is True:
             self.Center(BOTH)  # Center on the screen
         else:
             appPosition: Tuple[int, int] = self._prefs.appStartupPosition
@@ -226,7 +226,7 @@ class AppFrame(Frame):
         if self._mainFileHandlingUI.onClose() is False:
             return
         # Only save position if we are not auto-saving
-        if self._prefs.centerAppOnStartup is False:
+        if self._prefs.centerAppOnStartUp is False:
             pos: Tuple[int, int] = self.GetPosition()
             self._prefs.appStartupPosition = pos
 
