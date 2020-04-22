@@ -7,11 +7,16 @@ import logging.config
 
 from unittest import TestCase
 
+from pkg_resources import resource_filename
+
 JSON_LOGGING_CONFIG_FILENAME: str = "testLoggingConfig.json"
 TEST_DIRECTORY:               str = 'tests'
 
 
 class TestBase(TestCase):
+
+    RESOURCES_PACKAGE_NAME: str = 'tests.resources'
+
     """
     A base unit test class to initialize some logging stuff we need
     """
@@ -29,14 +34,8 @@ class TestBase(TestCase):
 
     @classmethod
     def findLoggingConfig(cls) -> str:
-        """"""
 
-        upDir = f'{TEST_DIRECTORY}{os.sep}{JSON_LOGGING_CONFIG_FILENAME}'
-        if os.path.isfile(upDir):
-            return upDir
+        fqFileName = resource_filename(TestBase.RESOURCES_PACKAGE_NAME, JSON_LOGGING_CONFIG_FILENAME)
 
-        if os.path.isfile(JSON_LOGGING_CONFIG_FILENAME):
-            return JSON_LOGGING_CONFIG_FILENAME
-        else:
-            os.chdir("../")
-            return cls.findLoggingConfig()
+        return fqFileName
+

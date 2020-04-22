@@ -1,15 +1,11 @@
 
 from typing import List
 
-import logging
 from logging import Logger
 from logging import getLogger
-from logging import config as loggingConfig
 
 from sys import path as sysPath
 from sys import argv as sysArgv
-
-from json import load as jsonLoad
 
 from importlib import import_module
 
@@ -67,14 +63,7 @@ class TestAll:
         """
         from tests.TestBase import TestBase
 
-        loggingConfigFilename: str = TestBase.findLoggingConfig()
-
-        with open(loggingConfigFilename, 'r') as loggingConfigurationFile:
-            configurationDictionary = jsonLoad(loggingConfigurationFile)
-
-            loggingConfig.dictConfig(configurationDictionary)
-            logging.logProcesses = False
-            logging.logThreads   = False
+        TestBase.setUpLogging()
 
     def _getTestSuite(self) -> TestSuite:
         """

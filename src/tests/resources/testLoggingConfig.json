@@ -27,6 +27,15 @@
             "handlers": ["consoleHandler"],
             "propagate": "False"
         },
+        "org": {
+            "level":     "DEBUG",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut": {
+            "level":     "DEBUG",
+            "propagate": "False"
+        },
         "tests": {
             "level": "INFO",
             "handlers": ["consoleHandler"],
