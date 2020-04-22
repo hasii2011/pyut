@@ -17,6 +17,7 @@ from wx import EVT_SIZE
 from wx import EXPAND
 from wx import OK
 from wx import ID_OK
+from wx import RESIZE_BORDER
 from wx import VERTICAL
 
 from wx import BoxSizer
@@ -36,7 +37,7 @@ class DlgPyutDebug(BaseDlgEdit):
 
     def __init__(self, theParent, theWindowId):
 
-        super().__init__(theParent, theWindowId, "Debug Pyut", theStyle=CLOSE_BOX | CAPTION)
+        super().__init__(theParent, theWindowId, "Debug Pyut", theStyle=CLOSE_BOX | CAPTION | RESIZE_BORDER)
         self.logger: Logger = getLogger(__name__)
 
         hs:        BoxSizer = self._createDialogButtonsContainer()

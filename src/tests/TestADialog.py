@@ -1,17 +1,20 @@
-from logging import Logger
-from logging import getLogger
+
 from typing import cast
 
-from wx import App
+from logging import Logger
+from logging import getLogger
 
 from wx import DEFAULT_FRAME_STYLE
-from wx import Frame
 from wx import ID_ANY
 from wx import OK
+
+from wx import App
+from wx import Frame
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
 
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
+
 from tests.TestBase import TestBase
 
 
@@ -21,7 +24,6 @@ class TestADialog(App):
 
     def OnInit(self):
 
-        # self.InitInspection(alt=False, cmd=False, shift=False, keyCode=ord('z'))
         TestBase.setUpLogging()
         self.logger: Logger = getLogger(__name__)
         frameTop: Frame = Frame(parent=None, id=TestADialog.FRAME_ID, title="Test A Dialog", size=(600, 400), style=DEFAULT_FRAME_STYLE)
