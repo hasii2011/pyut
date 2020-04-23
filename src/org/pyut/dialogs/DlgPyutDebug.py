@@ -35,6 +35,17 @@ from org.pyut.dialogs.DebugListControl import DebugListControl
 
 
 class DlgPyutDebug(BaseDlgEdit):
+    """
+    Sample use:
+
+        with DlgPyutDebug(self._diagramFrame, ID_ANY) as dlg:
+            dlg: DlgPyutDebug = cast(DlgPyutDebug, dlg)
+            if dlg.ShowModal() == OK:
+                self.logger.info(f'Normal Quite')
+            else:
+                self.logger.info(f'Cancelled')
+
+    """
 
     SCROLL_BAR_SPACE: int = 7
 
