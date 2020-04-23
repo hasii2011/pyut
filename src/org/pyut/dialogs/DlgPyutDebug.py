@@ -1,10 +1,11 @@
-
+from typing import List
 from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
 
-from wx import ALL
+from wx import ALIGN_LEFT
+
 from wx import BORDER_SUNKEN
 from wx import CANCEL
 from wx import CAPTION
@@ -14,10 +15,12 @@ from wx import CLOSE_BOX
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import EVT_SIZE
-from wx import EXPAND
+from wx import LEFT
 from wx import OK
 from wx import ID_OK
 from wx import RESIZE_BORDER
+from wx import RIGHT
+from wx import Sizer
 from wx import VERTICAL
 
 from wx import BoxSizer
@@ -33,26 +36,30 @@ from org.pyut.dialogs.DebugListControl import DebugListControl
 
 class DlgPyutDebug(BaseDlgEdit):
 
-    SCROLL_BAR_SPACE: int = 6
+    SCROLL_BAR_SPACE: int = 7
+
+    NAME_PERCENTAGE:      float = 0.45
+    LEVEL_PERCENTAGE:     float = 0.25
+    PROPAGATE_PERCENTAGE: float = 0.10
+    DISABLED_PERCENTAGE:  float = 0.10
+
+    COLUMN_WIDTH_RATIOS: List[float] = [NAME_PERCENTAGE, LEVEL_PERCENTAGE, DISABLED_PERCENTAGE, PROPAGATE_PERCENTAGE]
 
     def __init__(self, theParent, theWindowId):
 
         super().__init__(theParent, theWindowId, "Debug Pyut", theStyle=CLOSE_BOX | CAPTION | RESIZE_BORDER)
         self.logger: Logger = getLogger(__name__)
 
-        hs:        BoxSizer = self._createDialogButtonsContainer()
+        hs:        Sizer    = self._createDialogButtonsContainer()
         mainSizer: BoxSizer = BoxSizer(orient=VERTICAL)
 
         self._list: DebugListControl = self.__initializeTheControls()
 
-        mainSizer.Add(self._list, 0, ALL | EXPAND, BaseDlgEdit.VERTICAL_GAP)
+        mainSizer.Add(self._list, 0, LEFT | RIGHT | ALIGN_LEFT, border=5)
         mainSizer.Add(hs,         0, CENTER)
 
         self.SetSizer(mainSizer)
-        mainSizer.Fit(self)
-        mainSizer.InsertSpacer(index=0, size=7)     # magic # for the index
-        mainSizer.InsertSpacer(index=2, size=20)    # magic # for the index
-        mainSizer.SetSizeHints(self)
+
         mainSizer.Fit(self)
 
         self.Bind(EVT_SIZE, self.__onSize)
@@ -64,7 +71,7 @@ class DlgPyutDebug(BaseDlgEdit):
         """
         Initialize the controls.
         """
-        [ self.__tId] = PyutUtils.assignID(1)
+        [self.__tId] = PyutUtils.assignID(1)
 
         dbgListCtrl: DebugListControl = DebugListControl(self, self.__tId, style=BORDER_SUNKEN)
 
@@ -74,28 +81,27 @@ class DlgPyutDebug(BaseDlgEdit):
 
     def __onSize(self, event: SizeEvent):
         """
-        This will only fire once since I don't allow resize of the dialog
+
         Args:
             event:
-
-        Returns:
 
         """
         size: Tuple[int, int] = event.GetSize()
 
         width:    int = size[0]
-
         nColumns: int = self._list.GetColumnCount()
-        colWidth: int = width // nColumns
-        self.logger.info(f'width: {width} nColumns: {nColumns} colWidth: {colWidth}')
+        self.logger.info(f'width: {width} nColumns: {nColumns}')
 
+        adjustedWidth = width - DlgPyutDebug.SCROLL_BAR_SPACE
         for x in range(nColumns):
-            self._list.SetColumnWidth(x, colWidth - DlgPyutDebug.SCROLL_BAR_SPACE)  # Allow room for scroll bar
+            colWidth: float = adjustedWidth * DlgPyutDebug.COLUMN_WIDTH_RATIOS[x]
+            self.logger.info(f'x: {x} colWidth: {colWidth}')
+            self._list.SetColumnWidth(x, colWidth)  # Allow room for scroll bar
 
         dlgSize: Tuple[int, int] = self._list.GetSize()
         dlgHeight: int = dlgSize[1]
 
-        self._list.SetSize(width, dlgHeight)
+        self._list.SetSize(adjustedWidth, dlgHeight)
 
     def __OnCmdOk(self, event: CommandEvent):
         """

@@ -1,16 +1,13 @@
-from wx import ALL
-from wx import BoxSizer
-from wx import Button
+
 from wx import CAPTION
-from wx import HORIZONTAL
+
 from wx import ID_ANY
-from wx import ID_OK
+from wx import OK
 from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 
 from wx import Dialog
-
-from org.pyut.general.Globals import _
+from wx import Sizer
 
 
 class BaseDlgEdit(Dialog):
@@ -28,12 +25,9 @@ class BaseDlgEdit(Dialog):
 
         self._ctrl = theMediator
 
-    def _createDialogButtonsContainer(self) -> BoxSizer:
+    def _createDialogButtonsContainer(self) -> Sizer:
 
-        hs: BoxSizer = BoxSizer(HORIZONTAL)
-
-        btnOk: Button = Button(self, ID_OK, _("&OK"))
-        hs.Add(btnOk, 0, ALL, BaseDlgEdit.CONTAINER_GAP)
+        hs: Sizer = self.CreateSeparatedButtonSizer(OK)
         return hs
 
     def _convertNone (self, theString: str):

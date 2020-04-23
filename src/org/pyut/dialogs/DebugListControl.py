@@ -13,7 +13,6 @@ from wx import EVT_CHOICE
 from wx import ID_ANY
 
 from wx import LC_REPORT
-from wx import LIST_AUTOSIZE
 from wx import LIST_MASK_FORMAT
 from wx import LIST_MASK_TEXT
 
@@ -101,11 +100,6 @@ class DebugListControl(ULC.UltimateListCtrl, ListRowHighlighter):
             self._makeACheckBox(valueToSet=bool(logger.propagate), rowNumber=row, columnName=self.COLUMN_NAME_PROPAGATE, columnIdx=self.IDX_PROPAGATE_COLUMN)
 
             row += 1
-
-        self.SetColumnWidth(self.IDX_NAME_COLUMN,      LIST_AUTOSIZE)
-        self.SetColumnWidth(self.IDX_LEVEL_COLUMN,     LIST_AUTOSIZE)
-        self.SetColumnWidth(self.IDX_DISABLED_COLUMN,  LIST_AUTOSIZE)
-        self.SetColumnWidth(self.IDX_PROPAGATE_COLUMN, LIST_AUTOSIZE)
 
     def _getColumnHeader(self, text: str, kind=0, mask=LIST_MASK_TEXT | LIST_MASK_FORMAT) -> UltimateListItem:
 
