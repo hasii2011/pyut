@@ -54,6 +54,7 @@ from wx import EndBusyCursor
 
 from wx import Yield as wxYield
 
+from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
@@ -1121,20 +1122,14 @@ class AppFrame(Frame):
     # noinspection PyUnusedLocal
     def _OnMnuDebug(self, event: CommandEvent):
         """
-        Open a IPython shell
+        Open a dialog to access the Pyut logers
 
         Args:
             event:
         """
-        self.logger.warning(f'not yet implemented on Python 3')
-        PyutUtils.displayInformation(msg=_('Not yet implemented'), title=_('Sorry!'))
-        # try:
-        #     from IPython.Shell import IPShellEmbed
-        # except ImportError:
-        #     displayError(_("You don't have IPython installed !"))
-        #     return
-        # ipShell = IPShellEmbed()
-        # ipShell(local_ns=vars(), global_ns=globals())
+        with DlgPyutDebug(self, ID_ANY) as dlg:
+            dlg: DlgPyutDebug = cast(DlgPyutDebug, dlg)
+            dlg.ShowModal()
 
     # noinspection PyUnusedLocal
     def _OnMnuUndo(self, event: CommandEvent):
