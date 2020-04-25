@@ -22,8 +22,8 @@ python:
 # command to install dependencies
 install:
   # pip install -r requirements.txt
-  # - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython
-  - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython-4.0.7.post2
+  pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython==4.0.7.post2
+  # - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython-4.0.7.post2
   - pip install xmlschema
   - pip install html-testRunner
   - pip install pygmlparser
