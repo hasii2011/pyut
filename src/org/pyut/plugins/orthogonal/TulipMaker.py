@@ -16,11 +16,15 @@ import tempfile
 # noinspection PyPackageRequirements
 from tulip import tlp           # because they named it tulip-python
 
-from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
+
+from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+
 from org.pyut.plugins.orthogonal.OrthogonalOptions import OrthogonalOptions
+
+from org.pyut.PyutPreferences import PyutPreferences
 
 """
 Use Any as a substitute for tlp.Node and tlp.Edge
@@ -35,7 +39,6 @@ class TulipMaker:
 
     LayoutStatus = Tuple[bool, str]
 
-    DEBUG_TEMP_FILE_LOCATION:  bool = True          # TODO: Make this a debug runtime value
     OGL_ID:                    str = 'oglId'
 
     TEMPORARY_GML_LAYOUT_FILENAME: str = 'translationGraph.gml'
@@ -59,7 +62,7 @@ class TulipMaker:
 
         tempDir: str = tempfile.gettempdir()
 
-        if TulipMaker.DEBUG_TEMP_FILE_LOCATION is True:
+        if PyutPreferences().useDebugTempFileLocation is True:
             self._pathToLayout = f'{TulipMaker.TEMPORARY_GML_LAYOUT_FILENAME}'
         else:
             self._pathToLayout = f'{tempDir}{osSep}{TulipMaker.TEMPORARY_GML_LAYOUT_FILENAME}'

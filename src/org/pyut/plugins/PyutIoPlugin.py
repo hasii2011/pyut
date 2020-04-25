@@ -4,8 +4,8 @@ from typing import cast
 
 from logging import Logger
 from logging import getLogger
-from logging import DEBUG as pythonDebugLoggingLevel
 
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general.Mediator import getMediator
 from org.pyut.ogl.OglClass import OglClass
 
@@ -183,9 +183,10 @@ class PyutIoPlugin(PyutPlugin):
         if outputFormat is not None:
             if not self.setExportOptions():
                 return None
+
             mediator = getMediator()
-            # TODO make this a Pyut preference
-            if self.clsLogger.level == pythonDebugLoggingLevel:
+            prefs: PyutPreferences = PyutPreferences()
+            if prefs.pyutIoPluginAutoSelectAll is True:
                 mediator.selectAllShapes()
             self.__oglObjects = mediator.getSelectedShapes()
             if len(self.__oglObjects) == 0:

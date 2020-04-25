@@ -4,13 +4,7 @@ from typing import List
 
 from logging import Logger
 from logging import getLogger
-from logging import DEBUG as pythonDebugLoggingLevel
 
-from wx import Bitmap
-from wx import Brush
-from wx import ClientDC
-from wx import DC
-from wx import Dialog
 from wx import EVT_LEFT_DCLICK
 from wx import EVT_LEFT_DOWN
 from wx import EVT_LEFT_UP
@@ -22,26 +16,29 @@ from wx import EVT_PAINT
 from wx import EVT_RIGHT_DCLICK
 from wx import EVT_RIGHT_DOWN
 from wx import EVT_RIGHT_UP
+from wx import WHITE
 
-from wx import EmptyBitmap
 from wx import FONTFAMILY_DEFAULT
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
-from wx import Font
 from wx import ID_ANY
+from wx import SUNKEN_BORDER
+from wx import TRANSPARENT_BRUSH
+
+from wx import Bitmap
+from wx import EmptyBitmap
+from wx import Brush
+from wx import ClientDC
+from wx import DC
+from wx import Dialog
+from wx import PaintDC
+from wx import PaintEvent
+from wx import ScrolledWindow
+from wx import Size
 from wx import MemoryDC
 from wx import MouseEvent
 from wx import NullBitmap
-
-from wx import PaintDC
-from wx import PaintEvent
-from wx import SUNKEN_BORDER
-from wx import ScrolledWindow
-from wx import Size
-from wx import TRANSPARENT_BRUSH
-
-
-from wx import WHITE
+from wx import Font
 from wx import Window
 from wx import __version__
 
@@ -116,6 +113,7 @@ class DiagramFrame(ScrolledWindow):
         # self._defaultFont  = Font(DEFAULT_FONT_SIZE, DEFAULT, NORMAL, NORMAL)
         self._defaultFont = Font(DEFAULT_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
         self.SetBackgroundColour(WHITE)
+        self._prefs: PyutPreferences = PyutPreferences()
 
         # Mouse events
         self.Bind(EVT_LEFT_DOWN,     self.OnLeftDown)
@@ -129,7 +127,7 @@ class DiagramFrame(ScrolledWindow):
         self.Bind(EVT_RIGHT_DCLICK,  self.OnRightDClick)
         self.Bind(EVT_PAINT,         self.OnPaint)
 
-        if self.clsLogger.level == pythonDebugLoggingLevel:
+        if self._prefs.debugDiagramFrame is True:
 
             self._debugDialog: DlgDebugDiagramFrame = DlgDebugDiagramFrame(self, ID_ANY)
             self._debugDialog.startMonitor()
@@ -979,8 +977,8 @@ class DiagramFrame(ScrolledWindow):
             # get the number of scroll unit
             noUnitX = (vWidth-cWidth) / xUnit
             noUnitY = (vHeight-cHeight) / yUnit
-            centerDiagram: bool = PyutPreferences().centerDiagram
-            if centerDiagram is True:
+
+            if self._prefs.centerDiagram is True:
                 self.Scroll(noUnitX / 2, noUnitY / 2)   # set the scrollbars position in the middle of their scale
             else:
                 self.Scroll(0, 0)
