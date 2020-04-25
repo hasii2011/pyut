@@ -1,4 +1,4 @@
-
+from typing import Dict
 from typing import List
 
 from typing import cast
@@ -180,18 +180,21 @@ class PyutXml:
         try:
             project.setCodePath(root.getAttribute("CodePath"))
             self.__updateProgressDialog(newMessage='Reading elements...', newGaugeValue=1)
+            wxYield()
             toOgl: MiniDomToOgl = MiniDomToOgl()
             for documentNode in dom.getElementsByTagName(PyutXmlConstants.ELEMENT_DOCUMENT):
 
                 documentNode: Element = cast(Element, documentNode)
                 docTypeStr:   str     = documentNode.getAttribute(PyutXmlConstants.ATTR_TYPE)
                 self.__updateProgressDialog(newMessage=f'Determine Title for document type: {docTypeStr}', newGaugeValue=2)
+                wxYield()
 
                 docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
                 document: PyutDocument = project.newDocument(docType)
                 document.title = self.__determineDocumentTitle(documentNode)
 
                 umlFrame: UmlDiagramsFrame = self.__showAppropriateUmlFrame(document)
+                self.__positionAndSetupDiagramFrame(umlFrame=umlFrame, documentNode=documentNode)
 
                 self.__updateProgressDialog(newMessage='Start Conversion...', newGaugeValue=3)
 
@@ -392,3 +395,48 @@ class PyutXml:
         ctrl.getFileHandling().showFrame(umlFrame)
 
         return umlFrame
+
+    def __positionAndSetupDiagramFrame(self, umlFrame: UmlDiagramsFrame, documentNode: Element, ):
+
+        xStr: str = documentNode.getAttribute(PyutXmlConstants.ATTR_SCROLL_POSITION_X)
+        yStr: str = documentNode.getAttribute(PyutXmlConstants.ATTR_SCROLL_POSITION_Y)
+
+        scrollPosX: int = PyutUtils.secureInteger(xStr)
+        scrollPosY: int = PyutUtils.secureInteger(yStr)
+
+        umlFrame.Scroll(scrollPosX, scrollPosY)
+
+        xPerUnitStr: str = documentNode.getAttribute(PyutXmlConstants.ATTR_PIXELS_PER_UNIT_X)
+        yPerUnitStr: str = documentNode.getAttribute(PyutXmlConstants.ATTR_PIXELS_PER_UNIT_Y)
+
+        pixelsPerUnitX: int = PyutUtils.secureInteger(xPerUnitStr)
+        pixelsPerUnitY: int = PyutUtils.secureInteger(yPerUnitStr)
+        if pixelsPerUnitX != 0 and pixelsPerUnitY != 0:
+            umlFrame.SetScrollRate(xstep=pixelsPerUnitX, ystep=pixelsPerUnitY)
+
+    def _nonEmptyParameters(self, params: Dict[str, str]) -> bool:
+        """
+
+        Args:
+            params: A dictionary where the key is the name of the value and the value is the value
+
+        Returns:    `True` if all the parameters are valid else `False`
+        """
+        areValid: bool = True
+        for paramName in params.keys():
+            if self._isNoneEmptyParameter(params[paramName]):
+                continue
+            else:
+                areValid = False
+                self.logger.info(f'Parameter: {paramName} is either `None` or empty')
+
+        return areValid
+
+    def _isNoneEmptyParameter(self, valueToValidate: str):
+
+        isValid: bool = True
+
+        if valueToValidate is None or valueToValidate == '':
+            isValid = False
+
+        return isValid

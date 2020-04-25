@@ -60,7 +60,7 @@ class PyutUtils:
 
     @staticmethod
     def secureInteger(x: str):
-        if x is not None:
+        if x is not None and x != '':
             return int(x)
         else:
             return 0
