@@ -65,8 +65,7 @@ class PyutMethod(PyutObject):
         self._returns: PyutType = returns
 
         prefs = PyutPreferences()
-        # TODO fix this to get value as boolean
-        if prefs[PyutPreferences.SHOW_PARAMETERS] == "True":
+        if prefs.showParameters is True:
             PyutMethod.setStringMode(WITH_PARAMS)
         else:
             PyutMethod.setStringMode(WITHOUT_PARAMS)

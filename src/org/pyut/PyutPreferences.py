@@ -264,6 +264,16 @@ class PyutPreferences(Singleton):
         self.__saveConfig()
 
     @property
+    def showParameters(self) -> bool:
+        ans: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.SHOW_PARAMETERS)
+        return ans
+
+    @showParameters.setter
+    def showParameters(self, theNewValue: bool):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.SHOW_PARAMETERS, str(theNewValue))
+        self.__saveConfig()
+
+    @property
     def useDebugTempFileLocation(self) -> bool:
         ans: bool = self._config.getboolean(PyutPreferences.DEBUG_SECTION, PyutPreferences.DEBUG_TEMP_FILE_LOCATION)
         return ans
