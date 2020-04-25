@@ -4,7 +4,6 @@ from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
-from logging import DEBUG as pythonDebugLoggingLevel
 
 from wx import BLACK_PEN
 from wx import Brush
@@ -16,6 +15,7 @@ from wx import RED_PEN
 from wx import WHITE_BRUSH
 
 from org.pyut.MiniOgl.ShapeModel import ShapeModel
+from org.pyut.PyutPreferences import PyutPreferences
 
 
 class Shape:
@@ -59,7 +59,7 @@ class Shape:
 
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
-        if self.clsLogger.level == pythonDebugLoggingLevel:
+        if PyutPreferences().debugBasicShape is True:
             from org.pyut.MiniOgl.TextShape import TextShape
             from org.pyut.MiniOgl.LineShape import LineShape
             if not isinstance(self, (TextShape, LineShape)):
