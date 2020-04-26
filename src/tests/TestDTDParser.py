@@ -12,7 +12,6 @@ from unittest.mock import MagicMock
 from tests.TestBase import TestBase
 from tests.TestBase import TEST_DIRECTORY
 
-from wx import App
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
@@ -24,8 +23,7 @@ from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 class TestDTDParser(TestBase):
 
     EXPECTED_CLASS_COUNT: int = 17
-    """
-    """
+
     clsLogger: Logger = None
 
     @classmethod
@@ -35,11 +33,6 @@ class TestDTDParser(TestBase):
 
     def setUp(self):
         self.logger: Logger = TestDTDParser.clsLogger
-        # Create wx application
-        # For python 3 and wx 4.x we need to save it so it does not get GC'ed
-        # Did this because could not figure out how to mock creation of Font
-        # in the OglObject constructor
-        self.app = App()
 
     def tearDown(self):
         pass

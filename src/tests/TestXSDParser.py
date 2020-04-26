@@ -10,8 +10,6 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
-from wx import App
-
 from tests.TestBase import TestBase
 from tests.TestBase import TEST_DIRECTORY
 
@@ -20,10 +18,6 @@ from org.pyut.plugins.xsd.XSDParser import XSDParser
 
 class TestXSDParser(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 
@@ -34,12 +28,7 @@ class TestXSDParser(TestBase):
 
     def setUp(self):
         self.logger:    Logger = TestXSDParser.clsLogger
-        # For python 3 and wx 4.x we need to save it so it does not get GC'ed
-        # Did this because could not figure out how to mock creation of Font
-        # in the OglObject constructor
-        self.app = App()
-
-        self.mockFrame:  MagicMock = MagicMock()
+        self.mockFrame: MagicMock = MagicMock()
 
         self._schemaPath: str = f'{TEST_DIRECTORY}{osSep}testdata{osSep}SimpleSchema.xsd'
 

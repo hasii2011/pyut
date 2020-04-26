@@ -27,3 +27,10 @@ A.  Unfortunately, at this time I can only generate binaries for Mac OS X.
     Also, I have not yet started work on generating Window exe files
 
     The mac binary is here:  https://github.com/hasii2011/PyUt/releases/tag/4.0
+
+3. Pyut Development
+=============================
+Q: Why do some unit tests fail with: "wx._core.PyNoAppError: The wx.App object must be created first!"
+
+A. Make sure that the Debug preference debug_basic_shape is set to False
+        debug_basic_shape = False

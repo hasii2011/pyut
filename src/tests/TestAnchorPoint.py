@@ -21,7 +21,7 @@ class TestAnchorPoint(TestBase):
         TestAnchorPoint.clsLogger = getLogger(__name__)
 
     def setUp(self):
-        self.logger: Logger = TestAnchorPoint.clsLogger
+        self.logger:      Logger      = TestAnchorPoint.clsLogger
         self.anchorPoint: AnchorPoint = AnchorPoint(x=93, y=276, parent=None)
 
     def tearDown(self):
