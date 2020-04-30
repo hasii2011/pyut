@@ -7,8 +7,7 @@ dist/
 /pyoxidizer-pyut/
 /.eggs/
 UNKNOWN.egg-info
-/venv-3.7.3-wxPython/
-/venv-3.7.5-wxPython/
+/Python-3.7.3/
 /site/
 /docs/
 /pyut.log
