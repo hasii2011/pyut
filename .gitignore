@@ -4,10 +4,14 @@ __pycache__/
 /html/
 build/
 dist/
+Pyut.build/
+Pyut.dist/
 /pyoxidizer-pyut/
 /.eggs/
 UNKNOWN.egg-info
 /Python-3.7.3/
+/venv-pyenv-3.7.3/
+/venv-nuitka/
 /site/
 /docs/
 /pyut.log

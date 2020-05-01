@@ -1,6 +1,7 @@
 #!/bin/bash
 
 rm -rf dist build
+rm -rf Pyut.dist Pyut.build
 
 find . -type d -name UNKNOWN.egg-info -exec rm -rf {} \; -print
 

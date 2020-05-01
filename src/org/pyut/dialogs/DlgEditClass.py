@@ -48,8 +48,6 @@ from org.pyut.dialogs.DlgEditComment import DlgEditComment
 from org.pyut.dialogs.DlgEditField import DlgEditField
 from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
 
-# from mediator import *  # Have to do this to avoid cyclical dependency
-from org.pyut.general import Mediator
 
 from org.pyut.general.Globals import _
 from org.pyut.PyutUtils import PyutUtils
@@ -98,6 +96,8 @@ class DlgEditClass(Dialog):
         self._pyutClass     = pyutClass
         self._pyutClassCopy = deepcopy(pyutClass)
         self._parent        = parent
+        from org.pyut.general import Mediator
+
         self._ctrl          = Mediator.getMediator()
 
         self.SetAutoLayout(True)

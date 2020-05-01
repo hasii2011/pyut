@@ -35,7 +35,7 @@ class HistoryManager:
         """
 
         Args:
-            theFrame:  umlframe to which this history is attached.
+            theFrame:  The UML Frame to which this history is attached.
         """
         self.logger:    Logger = getLogger(__name__)
 
@@ -56,7 +56,7 @@ class HistoryManager:
 
         self._groupCount = 0
         """
-        number of groups added to the histroy
+        number of groups added to the history
         """
         self._groupUndoIndex = -1
         """
@@ -64,7 +64,7 @@ class HistoryManager:
         """
         self._groupToExecute: CommandGroup = None
         """
-        reference to the last added group, for execute() mehtod
+        reference to the last added group, for execute() method
         """
 
     def getGroupCount(self) -> int:
@@ -127,7 +127,7 @@ class HistoryManager:
             # the group to redo means that it will be the group to undo
             self._groupUndoIndex += 1
 
-            # unserialize the group
+            # deserialize the group
             group = self._unserialize(fileContent[self._groupUndoIndex])
             group.setHistory(self)
 

@@ -22,8 +22,6 @@ from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeToken
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
-from org.pyut.history import HistoryManager
-
 
 class CommandGroup:
     """
@@ -31,7 +29,7 @@ class CommandGroup:
     This class is a part of the history system of PyUt. It brings together
     different commands used for doing a undo or redo. For example, when we
     select many shapes and we delete them, then there is a command 'created'
-    for each one that is added to a CommandGroupe. This way, when we want
+    for each one that is added to a CommandGroup. This way, when we want
     to do an undo, all the deleted shapes will be reconstructed in one action.
     """
     def __init__(self, comment=""):
@@ -83,10 +81,10 @@ class CommandGroup:
         view to store them in a file.
         @return a string representing the command.
         """
-        # add the begining information of the group
+        # add the beginning information of the group
         serializedGroup = (makeToken(GROUP_BEGIN_ID) + makeValuatedToken(GROUP_COMMENT_ID, self._comment))
-        # add the begining informations and setup informations of
-        # each command. After that add the ending informations of
+        # add the beginning information and setup information of
+        # each command. After that add the ending information of
         # for each command.
         for command in self._commands:
             serializedGroup += (makeToken(COMMAND_BEGIN_ID) + command.serialize() + makeToken(COMMAND_END_ID))
@@ -103,17 +101,17 @@ class CommandGroup:
         Args:
             serializedCommands:   a string representation of the commands belonging to the group.
         """
-        # define the begining and ending token of a serialized command
+        # define the beginning and ending token of a serialized command
         commandBegin = TOKEN_BEGIN + COMMAND_BEGIN_ID + TOKEN_END
         commandEnd   = TOKEN_BEGIN + COMMAND_END_ID + TOKEN_END
 
-        # looking for the begining of the first command
+        # looking for the beginning of the first command
         cStart = serializedCommands.find(commandBegin)
         self.logger.info(f'cStart: {cStart}')
-        # while there is still a command begining token we can proceed to the deserialization.
+        # while there is still a command beginning token we can proceed to the deserialization.
         while cStart > -1:
 
-            # we don't need anymore of the begining token
+            # we don't need anymore of the beginning token
             cStart += len(commandBegin)
             self.logger.info(f'cStart - commandBegin: {cStart}')
 
@@ -145,7 +143,7 @@ class CommandGroup:
                 # add the command to the group
                 self.addCommand(command)
 
-                # looking for the next command begining token
+                # looking for the next command beginning token
                 cStart = serializedCommands.find(commandBegin, cEnd)
                 self.logger.info(f'cStart - serializedCommands: {cStart}')
 
@@ -179,10 +177,10 @@ class CommandGroup:
         """
         return self._history
 
-    def setHistory(self, history: HistoryManager):
+    def setHistory(self, history):
         """
         Set the history to which belongs the group. Avoid to calling method
-        because it is called automaticaly when the group is added.
+        because it is called automatically when the group is added.
 
         @param history  : history to which belongs the group
         """
@@ -225,10 +223,10 @@ class CommandGroup:
 
     def getCommonData(self) -> List:
         """
-        @return a list of common data, so a command can use informations
+        @return a list of common data, so a command can use information
         produced by an other command in the same group.
         WARNING : the common data is NOT serialized, so they are lost after
-        an unserialization. You have to use these data in a command before
+        an deserialization. You have to use these data in a command before
         the serialization of the group.
         """
         return self._commonData
