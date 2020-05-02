@@ -9,6 +9,7 @@ STATUS=$?
 
 if [[ ${STATUS} -eq 0 ]] ; then
     echo "in virtual environment"
+    pip3 install --upgrade pip
     pip3 install wheel
     pip3 install wxPython xmlschema tulip-python pygmlparser html-testRunner py2app
 else

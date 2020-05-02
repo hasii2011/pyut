@@ -57,6 +57,7 @@ setup(
               'org.pyut.ui', 'org.pyut.ui.tools'
               ],
     include_package_data=True,
+    zip_safe=False,
     package_dir={'': 'src'},
 
     url='https://github.com/hasii2011/PyUt',

@@ -83,7 +83,6 @@ from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.plugins.PluginManager import PluginManager
 
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
@@ -133,6 +132,8 @@ class AppFrame(Frame):
         self.CreateStatusBar()
 
         # Properties
+        from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
+
         self.plugMgr:     PluginManager            = PluginManager()
         self.plugins:     SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
         self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category

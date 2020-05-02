@@ -16,7 +16,6 @@ from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
 
-from org.pyut.plugins.PluginManager import PluginManager
 
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
@@ -30,6 +29,8 @@ class MenuCreator:
     DEBUG_ERROR_VIEWS: bool = True      # TODO Make this a runtime flag
 
     def __init__(self, frame: Frame,  callbackMap: SharedTypes.CallbackMap, lastOpenFilesID):
+
+        from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
 
         self._containingFrame: Frame = frame
         self._callbackMap:     SharedTypes.CallbackMap = callbackMap

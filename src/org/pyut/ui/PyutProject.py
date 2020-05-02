@@ -17,7 +17,6 @@ from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.ui.PyutDocument import PyutDocument
-from org.pyut.persistence.IoFile import IoFile
 
 from org.pyut.enums.DiagramType import DiagramType
 
@@ -151,6 +150,8 @@ class PyutProject:
         """
         # Load the file
         BeginBusyCursor()
+        from org.pyut.persistence.IoFile import IoFile  # Avoid Nuitka cyclical dependency
+
         io: IoFile = IoFile()
         wxYield()       # to treat the uml frame refresh in newDiagram before loading
         # Load the file
