@@ -13,8 +13,6 @@ from copy import copy
 
 from urllib import request
 
-from pkg_resources import resource_filename
-
 from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
@@ -55,6 +53,7 @@ from wx import EndBusyCursor
 from wx import Yield as wxYield
 
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
+
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
@@ -64,8 +63,6 @@ from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutUseCase import PyutUseCase
-
-from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.ui.MainUI import MainUI
 from org.pyut.ui.PyutProject import PyutProject
@@ -79,14 +76,14 @@ from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
+from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
 
-
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
-from org.pyut.general.Globals import IMG_PKG
+from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 
 class AppFrame(Frame):
@@ -117,7 +114,8 @@ class AppFrame(Frame):
 
         self.logger: Logger = getLogger(__name__)
         # Create the application's icon
-        fileName: str  = resource_filename(IMG_PKG, 'pyut.ico')
+        # fileName: str  = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.ico')
+        fileName: str  = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
         icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
         self.SetIcon(icon)
 
@@ -688,7 +686,7 @@ class AppFrame(Frame):
             return
 
         # export to PDF
-        TEMP_PS_FILE:   str  = '/tmp/pdfExport.ps'
+        TEMP_PS_FILE:   str = '/tmp/pdfExport.ps'
         TEMP_EPS_FILE:  str = '/tmp/pdfExport.eps'
         EPS_TO_PDF_CMD: str = 'epstopdf'
         PS_TO_EXT_PS:   str = 'ps2epsi'
@@ -1123,7 +1121,7 @@ class AppFrame(Frame):
     # noinspection PyUnusedLocal
     def _OnMnuDebug(self, event: CommandEvent):
         """
-        Open a dialog to access the Pyut logers
+        Open a dialog to access the Pyut loggers
 
         Args:
             event:

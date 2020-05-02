@@ -33,6 +33,8 @@ class PyutUtils:
     RESOURCES_PACKAGE_NAME: str = 'org.pyut.resources'
     RESOURCES_PATH:         str = f'org{osSep}pyut{osSep}resources'
 
+    RESOURCE_ENV_VAR:       str = 'RESOURCEPATH'
+
     _basePath: str = ''
 
     clsLogger: Logger = getLogger(__name__)
@@ -193,13 +195,12 @@ class PyutUtils:
 
         Returns:  A long string
         """
-        textFileName = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, textType.value)
+        # textFileName = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, textType.value)
+        textFileName: str = PyutUtils.retrieveResourcePath(textType.value)
         cls.clsLogger.debug(f'text filename: {textFileName}')
 
         objRead = open(textFileName, 'r')
-
         requestedText: str = objRead.read()
-
         objRead.close()
 
         return requestedText
@@ -207,5 +208,33 @@ class PyutUtils:
     @classmethod
     def retrieveResourcePath(cls, bareFileName: str) -> str:
 
-        fqFileName = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, bareFileName)
+        # Use this method in Python 3.9
+        # from importlib_resources import files
+        # configFilePath: str  = files('org.pyut.resources').joinpath(Pyut.JSON_LOGGING_CONFIG_FILENAME)
+
+        try:
+            fqFileName: str = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, bareFileName)
+        except (ValueError, Exception):
+            #
+            # Maybe we are in an app
+            #
+            from os import environ
+            pathToResources: str = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
+            fqFileName:      str = f'{pathToResources}/{PyutUtils.RESOURCES_PATH}/{bareFileName}'
+
+        return fqFileName
+
+    @classmethod
+    def getResourcePath(cls, packageName: str, fileName: str):
+
+        try:
+            fqFileName: str = resource_filename(packageName, fileName)
+        except (ValueError, Exception):
+            #
+            # Maybe we are in an app
+            #
+            from os import environ
+            pathToResources: str = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
+            fqFileName:      str = f'{pathToResources}/{packageName}/{fileName}'
+
         return fqFileName

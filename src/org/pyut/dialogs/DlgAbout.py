@@ -47,7 +47,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.ResourceTextType import ResourceTextType
 
-from org.pyut.general.Globals import IMG_PKG
+from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 # Constants
 [ID_OK] = PyutUtils.assignID(1)
@@ -81,7 +81,7 @@ class DlgAbout(Dialog):
         super().__init__(parent, ID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
 
         self.logger:  Logger = getLogger(__name__)
-        iconFileName: str    = resource_filename(IMG_PKG, 'pyut.ico')
+        iconFileName: str    = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.ico')
         icon:         Icon   = Icon(iconFileName, BITMAP_TYPE_ICO)
 
         self.SetIcon(icon)
@@ -94,7 +94,7 @@ class DlgAbout(Dialog):
 
         # Picture and text
         # bmp = Bitmap("img" + os.sep + "pyut.bmp", BITMAP_TYPE_BMP)
-        fileName = resource_filename(IMG_PKG, 'pyut.bmp')
+        fileName = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.bmp')
         bmp = Bitmap(fileName, BITMAP_TYPE_BMP)
 
         self._picture = StaticBitmap(self, -1, bmp)

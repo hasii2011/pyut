@@ -1,5 +1,7 @@
 
-IMG_PKG = "org.pyut.resources.img"
+
+BASE_RESOURCES_PACKAGE:  str = 'org.pyut.resources'
+IMAGE_RESOURCES_PACKAGE: str = f'{BASE_RESOURCES_PACKAGE}.img'
 
 
 def _(x): return x  # Set lang function emulation
