@@ -8,7 +8,7 @@ export IMPORTS="--follow-imports"
 export IO_PLUGINS="--include-plugin-directory=src/org/pyut/persistence"
 export PYUT_PLUGINS="--include-plugin-directory=src/org/pyut/plugins"
 
-export OTHER_OPTS="--standalone --python-flag=no_site"
+export OTHER_OPTS="--standalone"
 
 python3 -m nuitka --clang --standalone ${VERBOSE} ${IO_PLUGINS} ${PYUT_PLUGINS} ${IMPORTS} ${OTHER_OPTS} src/Pyut.py
 
