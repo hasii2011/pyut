@@ -13,6 +13,7 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources', ['src/org/pyut/resources/Help.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/Kudos.txt']),
 
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/pyut.ico']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgSplash.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgTipsFrameTipsLogo.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxActor.py']),
@@ -41,7 +42,7 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxZoomOut.py']),
 
               ]
-OPTIONS = {}
+OPTIONS = {'includes': ['tulip']}
 
 setup(
     app=APP,
