@@ -38,12 +38,12 @@ class PluginManager(Singleton):
     PLUGIN_DIRECTORY: str = f"org{osSep}pyut{osSep}plugins"
     PLUGIN_PACKAGE:   str = 'org.pyut.plugins'
 
-    ioPlugs: List[type] = [IoCpp, IoDTD, IoJava, IoJavaReverse, IoJavascript,
-                           IoPython, IoXmi, IoXmi_OMG, IoXml, IoXSD
-                           ]
-    toPlugs: List[type] = [ToArrangeLinks, ToAscii, ToCDAutoLayout, ToFastEdit, ToLayout, ToLayoutSave,
-                           ToOrthogonalLayout, ToPython, ToSugiyama, ToTransforms
-                           ]
+    IO_PLUGINS: List[type] = [IoCpp, IoDTD, IoJava, IoJavaReverse, IoJavascript,
+                              IoPython, IoXmi, IoXmi_OMG, IoXml, IoXSD
+                              ]
+    TOOL_PLUGINS: List[type] = [ToArrangeLinks, ToAscii, ToCDAutoLayout, ToFastEdit, ToLayout, ToLayoutSave,
+                                ToOrthogonalLayout, ToPython, ToSugiyama, ToTransforms
+                                ]
 
     """
     Interface between the application and the plugins.
@@ -63,7 +63,7 @@ class PluginManager(Singleton):
         Returns:  A string list
         """
         s: List[str] = []
-        for plug in self.ioPlugs + self.toPlugs:
+        for plug in self.IO_PLUGINS + self.TOOL_PLUGINS:
             obj = plug(None, None)
             s.append(f"Plugin : {obj.getName()} version {obj.getVersion()} (c) by {obj.getAuthor()}")
         return s
@@ -76,7 +76,7 @@ class PluginManager(Singleton):
         """
 
         pluginList = []
-        for plug in self.ioPlugs:
+        for plug in self.IO_PLUGINS:
             obj = plug(None, None)
             if obj.getInputFormat() is not None:
                 pluginList.append(plug)
@@ -89,7 +89,7 @@ class PluginManager(Singleton):
         Returns:  A list of classes (the plugins classes).
         """
         pluginList = []
-        for plug in self.ioPlugs:
+        for plug in self.IO_PLUGINS:
             obj = plug(None, None)
             if obj.getOutputFormat() is not None:
                 pluginList.append(plug)
@@ -101,4 +101,4 @@ class PluginManager(Singleton):
 
         Returns:    A list of classes (the plugins classes).
         """
-        return self.toPlugs
+        return self.TOOL_PLUGINS
