@@ -11,7 +11,12 @@ if [[ ${STATUS} -eq 0 ]] ; then
     echo "in virtual environment"
     pip3 install --upgrade pip
     pip3 install wheel
-    pip3 install wxPython xmlschema tulip-python pygmlparser html-testRunner py2app
+    pip3 install wxPython
+    pip3 install xmlschema
+    pip3 install pygmlparser
+    pip3 install html-testRunner
+    pip3 install py2app
+    pip3 install tulip-python
 else
     echo "You are not in a virtual environment"
 
