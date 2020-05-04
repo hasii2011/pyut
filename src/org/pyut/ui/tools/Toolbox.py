@@ -4,6 +4,7 @@ from typing import NewType
 
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from wx import BLACK_PEN
 from wx import CAPTION
@@ -52,11 +53,10 @@ class Toolbox(Frame):
     """
     def __init__(self, parentWindow, toolboxOwner):
         """
-        Constructor.
 
-        @param
-        @param  parentWindow  wxWindow parentWindow
-        @param  toolboxOwner ToolboxOwner
+        Args:
+            parentWindow:   wxWindow parentWindow
+            toolboxOwner:   ToolboxOwner
         """
         self.logger: Logger = getLogger(__name__)
 
@@ -104,20 +104,23 @@ class Toolbox(Frame):
         i = 0
         j = 0
         for tool in self._tools:
+            tool: Tool = cast(Tool, tool)
+
             # Calculate position
             x = MARGIN + i*BUTTON_SIZE
             y = MARGIN + j*BUTTON_SIZE + MARGIN_TOP
 
             # Draw
             dc.SetPen(BLACK_PEN)
-            dc.DrawText("[" + tool._initialCategory + "]", MARGIN, MARGIN)
+            categoryStr: str = f'[{tool.initialCategory}]'
+            dc.DrawText(categoryStr, MARGIN, MARGIN)
             dc.SetPen(WHITE_PEN)
             dc.DrawLine(x, y, x+BUTTON_SIZE-1, y)
             dc.DrawLine(x, y, x, y + BUTTON_SIZE-1)
             dc.SetPen(BLACK_PEN)
             dc.DrawLine(x, y+BUTTON_SIZE-1, x+BUTTON_SIZE-1, y+BUTTON_SIZE-1)
             dc.DrawLine(x + BUTTON_SIZE-1, y, x + BUTTON_SIZE-1, y + BUTTON_SIZE-1)
-            dc.DrawBitmap(tool.getImg(), x+1, y+1)
+            dc.DrawBitmap(tool.img, x+1, y+1)
             i += 1
 
             # Find next position
