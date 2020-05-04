@@ -76,7 +76,6 @@ class PyutApp(wxApp):
 
             self._frame = AppFrame(None, ID_ANY, "Pyut")
             self.SetTopWindow(self._frame)
-
             self._AfterSplash()
 
             return True

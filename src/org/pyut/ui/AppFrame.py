@@ -114,7 +114,6 @@ class AppFrame(Frame):
 
         self.logger: Logger = getLogger(__name__)
         # Create the application's icon
-        # fileName: str  = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.ico')
         fileName: str  = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
         icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
         self.SetIcon(icon)
