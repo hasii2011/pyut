@@ -10,6 +10,7 @@ Pyut.dist/
 /.eggs/
 UNKNOWN.egg-info
 /venv-3.7.7/
+/venv-pyenv-3.8.2/
 /site/
 /docs/
 /pyut.log

@@ -113,7 +113,7 @@ class DlgEditClass(Dialog):
         szrNameStereotype = BoxSizer (HORIZONTAL)
         szrNameStereotype.Add(lblName,       0, ALL | ALIGN_CENTER, 5)
         szrNameStereotype.Add(self._txtName, 1, ALIGN_CENTER)
-        szrNameStereotype.Add(lblStereotype, 0, ALL | ALIGN_RIGHT, 5)
+        szrNameStereotype.Add(lblStereotype, 0, ALL, 5)   # wxPython 4.1.0 fix -- Horizontal alignment flags are ignored in horizontal sizers
         szrNameStereotype.Add(self._txtStereotype, 1, ALIGN_CENTER)
 
         # ------
@@ -231,7 +231,7 @@ class DlgEditClass(Dialog):
         szrMain.Add(self._lstMethodList, 1, ALL | EXPAND, 5)
         szrMain.Add(szrMethodButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
         szrMain.Add(szrDisplayProperties, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(szrButtons, 0, ALL | ALIGN_BOTTOM | ALIGN_RIGHT, 5)
+        szrMain.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)     # wxPython 4.1.0 Vertical alignment flags are ignored in vertical sizers
 
         # Fill the txt control with class data
         self._fillAllFields()
