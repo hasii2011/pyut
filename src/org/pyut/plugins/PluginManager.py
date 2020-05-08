@@ -19,16 +19,16 @@ from org.pyut.plugins.IoXmi_OMG import IoXmi_OMG
 from org.pyut.plugins.IoXml import IoXml
 from org.pyut.plugins.IoXSD import IoXSD
 
-from org.pyut.plugins.ToArrangeLinks import ToArrangeLinks
-from org.pyut.plugins.ToAscii import ToAscii
-from org.pyut.plugins.ToCDAutoLayout import ToCDAutoLayout
-from org.pyut.plugins.ToFastEdit import ToFastEdit
-from org.pyut.plugins.ToLayout import ToLayout
-from org.pyut.plugins.ToLayoutSave import ToLayoutSave
-from org.pyut.plugins.ToOrthogonalLayout import ToOrthogonalLayout
-from org.pyut.plugins.ToPython import ToPython
-from org.pyut.plugins.ToSugiyama import ToSugiyama
-from org.pyut.plugins.ToTransforms import ToTransforms
+from org.pyut.plugins.tools.ToArrangeLinks import ToArrangeLinks
+from org.pyut.plugins.tools.ToAscii import ToAscii
+from org.pyut.plugins.tools.ToCDAutoLayout import ToCDAutoLayout
+from org.pyut.plugins.tools.ToFastEdit import ToFastEdit
+from org.pyut.plugins.tools.ToLayout import ToLayout
+from org.pyut.plugins.tools.ToLayoutSave import ToLayoutSave
+from org.pyut.plugins.tools.ToOrthogonalLayout import ToOrthogonalLayout
+from org.pyut.plugins.tools.ToPython import ToPython
+from org.pyut.plugins.tools.ToSugiyama import ToSugiyama
+from org.pyut.plugins.tools.ToTransforms import ToTransforms
 
 FileNameListType = List[str]
 
