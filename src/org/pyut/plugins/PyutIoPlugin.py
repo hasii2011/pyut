@@ -9,7 +9,7 @@ from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general.Mediator import getMediator
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.plugins.PyutPlugin import PyutPlugin
+from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 
 from org.pyut.ui.UmlFrame import UmlFrame
 

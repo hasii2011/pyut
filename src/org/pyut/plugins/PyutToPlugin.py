@@ -7,7 +7,7 @@ from wx import OK
 
 from org.pyut.general.Mediator import Mediator
 
-from org.pyut.plugins.PyutPlugin import PyutPlugin
+from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 
 from org.pyut.ogl.OglObject import OglObject
 
