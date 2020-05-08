@@ -19,8 +19,8 @@ from org.pyut.ogl.OglLink import OglLink
 
 from tests.TestBase import TestBase
 
-from org.pyut.plugins.orthogonal.GMLExporter import GMLExporter
-from org.pyut.plugins.orthogonal.GMLExporter import OglClasses
+from org.pyut.plugins.gml.GMLExporter import GMLExporter
+from org.pyut.plugins.gml.GMLExporter import OglClasses
 
 
 class TestGMLExporter(TestBase):
