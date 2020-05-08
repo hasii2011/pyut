@@ -142,8 +142,8 @@ class DlgEditLink (Dialog):
 
         szr2 = BoxSizer(HORIZONTAL)
         szr2.Add(lblA, 1, GROW | RIGHT, 10)
-        szr2.Add(self._lblArrow, 1, GROW | ALIGN_CENTER_HORIZONTAL | RIGHT, 10)
-        szr2.Add(lblB, 1, GROW | ALIGN_RIGHT)
+        szr2.Add(self._lblArrow, 1, GROW, 10)
+        szr2.Add(lblB, 1, GROW)
 
         # szr3 :
         #        lblAinB,         lblBinA

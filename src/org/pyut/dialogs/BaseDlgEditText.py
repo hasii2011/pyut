@@ -4,7 +4,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from wx import ALIGN_BOTTOM
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import BOTTOM
 from wx import BoxSizer
@@ -81,7 +80,7 @@ class BaseDlgEditText(Dialog):
         szrMain: BoxSizer = BoxSizer(VERTICAL)
         szrMain.Add(label, 0, BOTTOM, 5)
         szrMain.Add(textControl, 1, EXPAND | BOTTOM, 10)
-        szrMain.Add(sizerButtons, 0, ALIGN_CENTER_HORIZONTAL | ALIGN_BOTTOM)
+        szrMain.Add(sizerButtons, 0, ALIGN_CENTER_HORIZONTAL)
 
         # Border
         szrBorder: BoxSizer = BoxSizer(VERTICAL)

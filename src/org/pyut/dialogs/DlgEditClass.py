@@ -6,7 +6,6 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from wx import ALIGN_BOTTOM
 from wx import ALIGN_CENTER
 from wx import ALIGN_CENTER_HORIZONTAL
 

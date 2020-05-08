@@ -50,5 +50,4 @@ class DlgEditDocument(BaseDlgEditText):
 
     # noinspection PyUnusedLocal
     def _onDocumentNameChange(self, event):
-        self.logger.info(f'Howdy')
         self._document.title = event.GetString()
