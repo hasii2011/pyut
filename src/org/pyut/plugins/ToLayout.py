@@ -3,7 +3,7 @@ from wx import FD_FILE_MUST_EXIST
 from wx import FD_OPEN
 from wx import FileSelector
 
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 
 class ToLayout(PyutToPlugin):

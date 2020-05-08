@@ -36,7 +36,7 @@ from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 from org.pyut.plugins.orthogonal.TulipMaker import TulipMaker
 from org.pyut.plugins.orthogonal.TulipMaker import OglToTulipMap

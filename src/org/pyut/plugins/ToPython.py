@@ -19,7 +19,7 @@ from wx import ID_OK
 from wx import DirDialog
 from wx import FileDialog
 
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 from org.pyut.plugins.IoPython import IoPython
 
 from org.pyut.ogl.OglClass import OglClass

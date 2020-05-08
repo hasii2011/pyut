@@ -9,7 +9,7 @@ from wx import Yield as wxYield
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 

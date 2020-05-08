@@ -5,7 +5,7 @@ from wx import FD_SAVE
 
 from wx import FileSelector
 
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 
 class ToLayoutSave(PyutToPlugin):

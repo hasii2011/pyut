@@ -7,7 +7,7 @@ from logging import getLogger
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ui.UmlFrame import UmlFrame
 
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 
 class PluginToTemplate(PyutToPlugin):

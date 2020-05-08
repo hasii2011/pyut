@@ -9,7 +9,7 @@ from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 from org.pyut.plugins.sugiyama.SugiyamaLink import SugiyamaLink
 from org.pyut.plugins.sugiyama.SugiyamaGlobals import SugiyamaGlobals
 
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 from org.pyut.plugins.sugiyama.SugiyamaConstants import UP_MARGIN
 from org.pyut.plugins.sugiyama.SugiyamaConstants import H_SPACE

@@ -9,7 +9,7 @@ from os import chdir
 from os import getcwd
 
 from org.pyut.PyutPreferences import PyutPreferences
-from org.pyut.plugins.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 
