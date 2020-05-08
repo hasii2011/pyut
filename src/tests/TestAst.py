@@ -16,7 +16,7 @@ from unittest import TestSuite
 from tests.TestBase import TestBase
 from tests.TestBase import TEST_DIRECTORY
 
-from org.pyut.plugins.PluginAst import Visitor
+from org.pyut.plugins.common.PluginAst import Visitor
 
 
 class TestAst(TestBase):
