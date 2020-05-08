@@ -7,9 +7,9 @@ from logging import getLogger
 
 # noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
-#noinspection PyUnresolvedReferences
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
-
+# noinspection PyUnresolvedReferences
 from xml.dom.minicompat import NodeList
 
 from org.pyut.model.PyutClass import PyutClass
