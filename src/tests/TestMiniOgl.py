@@ -5,6 +5,7 @@ from wx import Frame
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
 from org.pyut.MiniOgl.Diagram import Diagram
+from org.pyut.MiniOgl.LollipopLine import LollipopLine
 
 from org.pyut.MiniOgl.PointShape import PointShape
 from org.pyut.MiniOgl.RectangleShape import RectangleShape
@@ -71,6 +72,19 @@ class TestMiniOglApp(App):
         lineShape.AddControl(controlPoint)
 
         diagramFrame.AddShape(lineShape)
+
+        self.drawLollipops()
+
+    def drawLollipops(self):
+
+        diagramFrame: Diagram = self._diagramFrame.GetDiagram()
+
+        destAnchor = AnchorPoint(350, 50)
+        destAnchor.SetDraggable(True)
+
+        lollipopLine: LollipopLine = LollipopLine(destAnchor)
+
+        diagramFrame.AddShape(lollipopLine)
 
 
 testApp: App = TestMiniOglApp(redirect=False)
