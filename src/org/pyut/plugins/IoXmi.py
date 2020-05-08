@@ -9,7 +9,7 @@ from wx import YES_NO
 from wx import CANCEL
 
 from org.pyut.plugins.xmi.PyutXmi import PyutXmi
-from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.persistence.PyutXml import PyutXml
 

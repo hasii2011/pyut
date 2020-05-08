@@ -6,7 +6,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 

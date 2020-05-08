@@ -18,7 +18,7 @@ from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutStereotype import PyutStereotype
 from org.pyut.model.PyutLink import PyutLink
 
-from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 

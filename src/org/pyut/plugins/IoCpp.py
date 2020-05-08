@@ -3,7 +3,7 @@ import os
 
 from org.pyut.enums.LinkType import LinkType
 
-from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 

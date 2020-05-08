@@ -1,4 +1,4 @@
-from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.xsd.XSDParser import XSDParser
 
 

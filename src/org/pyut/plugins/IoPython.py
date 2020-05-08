@@ -25,7 +25,7 @@ from wx import Yield as wxYield
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.plugins.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 
 from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
