@@ -45,22 +45,23 @@ class Pyut:
         """
         self.handleCommandLineArguments()
 
-    def getUserPath(self) -> str:
+    @property
+    def userPath(self) -> str:
         return self._userPath
 
-    def setUserPath(self, theNewValue: str):
+    @userPath.setter
+    def userPath(self, theNewValue: str):
         self._userPath = theNewValue
         prefs: PyutPreferences = PyutPreferences()
-        prefs[PyutPreferences.STARTUP_DIRECTORY] = theNewValue
+        prefs.startupDirectory = theNewValue
 
-    def getCmdLineArgsHandled(self) -> bool:
+    @property
+    def cmdLineArgsHandled(self) -> bool:
         return self._cmdLineArgsHandled
 
-    def setCmdLinesArgsHandled(self, theNewValue: bool):
+    @cmdLineArgsHandled.setter
+    def cmdLineArgsHandled(self, theNewValue: bool):
         self._cmdLineArgsHandled = theNewValue
-
-    userPath           = property(getUserPath, setUserPath)
-    cmdLineArgsHandled = property(getCmdLineArgsHandled, setCmdLinesArgsHandled)
 
     def _setupSystemLogging(self):
 
