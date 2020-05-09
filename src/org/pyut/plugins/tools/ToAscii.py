@@ -71,7 +71,7 @@ class ToAscii(PyutToPlugin):
         """
         saveDir:    str             = getcwd()
         prefs:      PyutPreferences = PyutPreferences()
-        defaultDir: str             = prefs[PyutPreferences.STARTUP_DIRECTORY]
+        defaultDir: str             = prefs.userDirectory
 
         selectedDir = self._askForDirectoryExport(preferredDefaultPath=defaultDir)
         if selectedDir == '':

@@ -33,7 +33,7 @@ class PyutPreferences(Singleton):
 
     ORG_DIRECTORY:              str = 'orgDirectory'
     LAST_DIRECTORY:             str = 'LastDirectory'
-    STARTUP_DIRECTORY:          str = 'Startup_Directory'
+    USER_DIRECTORY:                  str = 'userPath'
     SHOW_TIPS_ON_STARTUP:       str = 'Show_Tips_On_Startup'
     AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
     SHOW_PARAMETERS:            str = 'Show_Parameters'
@@ -49,20 +49,20 @@ class PyutPreferences(Singleton):
     STARTUP_Y:                  str = 'startup_y'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
-        STARTUP_DIRECTORY:          '.',
-        SHOW_TIPS_ON_STARTUP:       'False',
-        AUTO_RESIZE_SHAPE_ON_EDIT:  'False',
-        SHOW_PARAMETERS:            'False',
-        FULL_SCREEN:                'False',
-        I18N:                       'en',       # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
-        CURRENT_TIP:                '0',
-        EDITOR:                     'brackets',
-        STARTUP_WIDTH:              '1024',
-        STARTUP_HEIGHT:             '768',
-        CENTER_DIAGRAM:             'False',
-        CENTER_APP_ON_STARTUP:      'True',
-        STARTUP_X:                  '-1',
-        STARTUP_Y:                  '-1'
+        USER_DIRECTORY: '.',
+        SHOW_TIPS_ON_STARTUP:      'False',
+        AUTO_RESIZE_SHAPE_ON_EDIT: 'False',
+        SHOW_PARAMETERS:           'False',
+        FULL_SCREEN:               'False',
+        I18N:                      'en',       # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
+        CURRENT_TIP:               '0',
+        EDITOR:                    'brackets',
+        STARTUP_WIDTH:             '1024',
+        STARTUP_HEIGHT:            '768',
+        CENTER_DIAGRAM:            'False',
+        CENTER_APP_ON_STARTUP:     'True',
+        STARTUP_X:                 '-1',
+        STARTUP_Y:                 '-1'
     })
 
     DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # If `True` any created temporary files appear in the current directory
@@ -195,12 +195,12 @@ class PyutPreferences(Singleton):
         return resizeOrNot
 
     @property
-    def startupDirectory(self) -> str:
-        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_DIRECTORY)
+    def userDirectory(self) -> str:
+        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.USER_DIRECTORY)
 
-    @startupDirectory.setter
-    def startupDirectory(self, theNewValue: str):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_DIRECTORY, theNewValue)
+    @userDirectory.setter
+    def userDirectory(self, theNewValue: str):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.USER_DIRECTORY, theNewValue)
         self.__saveConfig()
 
     @property

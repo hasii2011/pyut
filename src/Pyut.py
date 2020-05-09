@@ -53,7 +53,7 @@ class Pyut:
     def userPath(self, theNewValue: str):
         self._userPath = theNewValue
         prefs: PyutPreferences = PyutPreferences()
-        prefs.startupDirectory = theNewValue
+        prefs.userDirectory = theNewValue
 
     @property
     def cmdLineArgsHandled(self) -> bool:
