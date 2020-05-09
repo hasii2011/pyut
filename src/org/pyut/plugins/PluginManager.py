@@ -8,16 +8,16 @@ from os import sep as osSep
 
 from org.pyut.general.Singleton import Singleton
 
-from org.pyut.plugins.IoCpp import IoCpp
-from org.pyut.plugins.IoDTD import IoDTD
-from org.pyut.plugins.IoJava import IoJava
-from org.pyut.plugins.IoJavaReverse import IoJavaReverse
-from org.pyut.plugins.IoJavascript import IoJavascript
-from org.pyut.plugins.IoPython import IoPython
-from org.pyut.plugins.IoXmi import IoXmi
-from org.pyut.plugins.IoXmi_OMG import IoXmi_OMG
-from org.pyut.plugins.IoXml import IoXml
-from org.pyut.plugins.IoXSD import IoXSD
+from org.pyut.plugins.io.IoCpp import IoCpp
+from org.pyut.plugins.io.IoDTD import IoDTD
+from org.pyut.plugins.io.IoJava import IoJava
+from org.pyut.plugins.io.IoJavaReverse import IoJavaReverse
+from org.pyut.plugins.io.IoJavascript import IoJavascript
+from org.pyut.plugins.io.IoPython import IoPython
+from org.pyut.plugins.io.IoXmi import IoXmi
+from org.pyut.plugins.io.IoXmi_OMG import IoXmi_OMG
+from org.pyut.plugins.io.IoXml import IoXml
+from org.pyut.plugins.io.IoXSD import IoXSD
 
 from org.pyut.plugins.tools.ToArrangeLinks import ToArrangeLinks
 from org.pyut.plugins.tools.ToAscii import ToAscii

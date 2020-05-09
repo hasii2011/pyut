@@ -18,7 +18,7 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.plugins.IoPython import IoPython
+from org.pyut.plugins.io.IoPython import IoPython
 from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
 
 from org.pyut.ui.UmlFrame import UmlFrame

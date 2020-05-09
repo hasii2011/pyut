@@ -20,7 +20,7 @@ from wx import DirDialog
 from wx import FileDialog
 
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
-from org.pyut.plugins.IoPython import IoPython
+from org.pyut.plugins.io.IoPython import IoPython
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglObject import OglObject
