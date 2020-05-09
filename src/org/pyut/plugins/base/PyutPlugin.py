@@ -63,6 +63,11 @@ class PyutPlugin:
         """
         return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, ("*", "*", "All"))
 
+    @staticmethod
+    def displayNoUmlFrame():
+        booBoo: MessageDialog = MessageDialog(parent=None, message='No UML frame', caption='Try Again!', style=OK | ICON_ERROR)
+        booBoo.ShowModal()
+
     def _askForFileImport(self, multiSelect: bool = False, startDirectory: str = None):
         """
         Called by plugin to ask which file must be imported
@@ -102,17 +107,21 @@ class PyutPlugin:
             )
             return file
 
-    def _askForFileExport(self):
+    def _askForFileExport(self) -> str:
         """
-        Called by plugin to ask which file must be exported
+        Called by a plugin to ask for the export file name
+
+        Returns:
+
+        """
+        """
         """
         wxYield()
-        inputFormat = self.getOutputFormat()
-        file = FileSelector(
-            "Choose a file name to export",
-            wildcard=inputFormat[0] + " (*." + inputFormat[1] + ")|*." + inputFormat[1],
-            flags=FD_SAVE | FD_OVERWRITE_PROMPT | FD_CHANGE_DIR
-        )
+
+        inputFormat: str = self.getOutputFormat()
+        wildCard:    str = f'{inputFormat[0]} (*. {inputFormat[1]} )|*.{inputFormat[1]}'
+        file:        str = FileSelector("Choose the export file name", wildcard=wildCard, flags=FD_SAVE | FD_OVERWRITE_PROMPT | FD_CHANGE_DIR)
+
         return file
 
     def _askForDirectoryImport(self):

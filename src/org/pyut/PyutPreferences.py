@@ -195,6 +195,15 @@ class PyutPreferences(Singleton):
         return resizeOrNot
 
     @property
+    def startupDirectory(self) -> str:
+        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_DIRECTORY)
+
+    @startupDirectory.setter
+    def startupDirectory(self, theNewValue: str):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_DIRECTORY, theNewValue)
+        self.__saveConfig()
+
+    @property
     def startupWidth(self) -> int:
         width: str = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH)
         return int(width)

@@ -80,20 +80,21 @@ class GMLExporter:
         gml = self._generateGraphTermination(gml)
         self._gml = gml
 
-    def getGML(self):
+    @property
+    def gml(self):
         return self._gml
 
-    def setGML(self, theNewValue):
+    @gml.setter
+    def gml(self, theNewValue):
         raise UnsupportedOperation('gml is a read-only property')
 
-    def getPrettyPrint(self):
+    @property
+    def prettyPrint(self):
         return self._prettyPrint
 
-    def setPrettyPrint(self, theNewValue):
+    @prettyPrint.setter
+    def prettyPrint(self, theNewValue):
         self._prettyPrint = theNewValue
-
-    gml         = property(getGML, setGML)
-    prettyPrint = property(getPrettyPrint, setPrettyPrint)
 
     def write(self, pathToFile: str):
 

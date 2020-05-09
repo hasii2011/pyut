@@ -179,6 +179,10 @@ class PyutIoPlugin(PyutPlugin):
         """
         Called by Pyut to begin the export process.
         """
+        if self._umlFrame is None:
+            self.displayNoUmlFrame()
+            return
+
         outputFormat: Tuple[str, str, str] = self.getOutputFormat()
         if outputFormat is not None:
             if not self.setExportOptions():
