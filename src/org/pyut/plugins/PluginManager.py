@@ -15,7 +15,7 @@ from org.pyut.plugins.io.IoJavaReverse import IoJavaReverse
 from org.pyut.plugins.io.IoJavascript import IoJavascript
 from org.pyut.plugins.io.IoPython import IoPython
 from org.pyut.plugins.io.IoXmi import IoXmi
-from org.pyut.plugins.io.IoXmi_OMG import IoXmi_OMG
+from org.pyut.plugins.io.IoXmiOMG import IoXmi_OMG
 from org.pyut.plugins.io.IoXml import IoXml
 from org.pyut.plugins.io.IoXSD import IoXSD
 
