@@ -25,16 +25,16 @@ class Command:
     def serialize(self):
         """
         return the module name and class name in view to read them during
-        the unserialization and get the right constructor.
+        the deserialization and get the right constructor.
 
         @return a string representation of the command in view to store it
-        in a file. This method must be redifined in all subclasses in that
+        in a file. This method must be redefined in all subclasses in that
         way :
-            return Command.serialize + (MyCommand's serialized informations)
+            return Command.serialize + (MyCommand's serialized information)
 
         Notes : use makeValuatedToken() from historyUtils for each value
         you want to serialize, so that you can use the getTokenValue to get
-        back the string representation of this value for the unserialization.
+        back the string representation of this value for the deserialization.
         """
 
         return (makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__)) +
@@ -44,7 +44,7 @@ class Command:
         """
         (Abstract) Here the developer should assign values to the information needed
         by the command (see also getTokenValue in historyUtils).
-        @serializedInfo String :   string from which whe have to extract the informations needed to set up the command.
+        @serializedInfo String :   string from which whe have to extract the information needed to set up the command.
         """
         pass
 
@@ -81,7 +81,7 @@ class Command:
     def setGroup(self, group):
         """
         Set the group to which belongs the command. Avoid to call this method,
-        because it is called automaticaly when the command is added to a group.
+        because it is called automatically when the command is added to a group.
         @param group : group to which the command belongs.
         """
         self._group = group
