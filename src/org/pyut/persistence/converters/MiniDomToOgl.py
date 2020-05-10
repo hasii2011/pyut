@@ -8,7 +8,9 @@ from typing import NewType
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import NodeList
 
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
@@ -103,7 +105,7 @@ class MiniDomToOgl:
 
             pyutClass.setId(int(xmlClass.getAttribute(PyutXmlConstants.ATTR_ID)))
             pyutClass.setName(xmlClass.getAttribute(PyutXmlConstants.ATTR_NAME))
-            pyutClass.setDescription(xmlClass.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION))
+            pyutClass.description = xmlClass.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
             if xmlClass.hasAttribute(PyutXmlConstants.ATTR_STEREOTYPE):
                 pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute(PyutXmlConstants.ATTR_STEREOTYPE)))
 

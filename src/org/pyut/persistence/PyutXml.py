@@ -2,6 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
 
 from org.pyut.model.PyutActor import PyutActor
@@ -58,8 +59,6 @@ class PyutXml:
         """
         To open a file and creating diagram.
 
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
         """
         dicoOglObjects = {}  # format {name : oglClass}
         dicoLink = {}        # format [name : PyutLink}
@@ -254,7 +253,7 @@ class PyutXml:
         # param type
         root.setAttribute('type', str(pyutParam.getType()))
 
-        # param defaulf value
+        # param default value
         defaultValue = pyutParam.getDefaultValue()
         if defaultValue is not None:
             root.setAttribute('defaultValue', defaultValue)
@@ -346,7 +345,7 @@ class PyutXml:
             root.setAttribute('stereotype', stereotype.getStereotype())
 
         # description (pwaelti@eivd.ch)
-        root.setAttribute('description', pyutClass.getDescription())
+        root.setAttribute('description', pyutClass.description)
 
         # methods
         for method in pyutClass.getMethods():

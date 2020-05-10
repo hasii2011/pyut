@@ -82,7 +82,7 @@ class PyutToPython:
             generatedCode = f'{generatedCode})'
         generatedCode = f'{generatedCode}:\n'
         generatedCode = f'{generatedCode}{self.__indentStr(PyutToPython.CLASS_COMMENTS_START)}\n'
-        generatedCode = f'{generatedCode}{self.__indentStr(pyutClass.getDescription())}\n'   # TODO need to split lines according to MAX_WIDTH
+        generatedCode = f'{generatedCode}{self.__indentStr(pyutClass.description)}\n'   # TODO need to split lines according to MAX_WIDTH
         generatedCode = f'{generatedCode}{self.__indentStr(PyutToPython.CLASS_COMMENTS_END)}\n'
 
         return generatedCode

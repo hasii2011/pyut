@@ -42,29 +42,31 @@ class PyutClass(PyutLinkedObject):
         self._showMethods    = True
         self._showFields     = True
 
-    def setDescription(self, description):
+    @property
+    def description(self) -> str:
+        """
+        Returns the description field.
+
+        This description may be inserted just after the class declaration when
+        using python code generation
+
+        Returns:    Description string
+        """
+        return self._description
+
+    @description.setter
+    def description(self, description: str):
         """
         Description field.
         This description may be inserted just after the class declaration when
-        using python code generation, for example.
+        using python code generation
 
-        @param String description : description string
-        @since 1.15
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            description:    The description string
+
+        Returns:
         """
         self._description = description
-
-    def getDescription(self):
-        """
-        Returns the description field.
-        This description may be inserted just after the class declaration when
-        using python code generation, for example.
-
-        @return String : Description string
-        @since 1.15
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        """
-        return self._description
 
     def getFields(self):
         """

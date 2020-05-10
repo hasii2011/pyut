@@ -9,6 +9,7 @@ from os import chdir
 from os import getcwd
 
 from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 from org.pyut.ogl.OglClass import OglClass
@@ -25,7 +26,7 @@ class ToAscii(PyutToPlugin):
 
         Args:
             umlObjects:  list of ogl objects
-            umlFrame:    the umlframe of pyut
+            umlFrame:    A Pyut UML Frame
         """
         PyutToPlugin.__init__(self, umlObjects, umlFrame)
         self._umlFrame = umlFrame
@@ -84,7 +85,7 @@ class ToAscii(PyutToPlugin):
             if not isinstance(oglObject, OglClass):
                 continue
 
-            o = oglObject.getPyutObject()
+            o: PyutClass = oglObject.getPyutObject()
 
             suffix = 2
             filename = o.getName()
@@ -104,27 +105,27 @@ class ToAscii(PyutToPlugin):
             fields = [str(x) for x in o.getFields()]
             methods = [str(x) for x in o.getMethods()]
 
-            lnlgth = max([len(x) for x in base + fields + methods]) + 4
+            lineLength = max([len(x) for x in base + fields + methods]) + 4
 
-            file.write(lnlgth * "-" + "\n")
+            file.write(lineLength * "-" + "\n")
 
             for line in base:
-                spaces = lnlgth - 4 - len(line)
+                spaces = lineLength - 4 - len(line)
                 file.write("| " + int(floor(spaces / 2.0)) * " " + line + int(ceil(spaces / 2.0)) * " " + " |\n")
 
-            file.write("|" + (lnlgth - 2) * "-" + "|\n")
+            file.write("|" + (lineLength - 2) * "-" + "|\n")
 
             for line in fields:
-                file.write("| " + line + (lnlgth - len(line) - 4) * " " + " |\n")
+                file.write("| " + line + (lineLength - len(line) - 4) * " " + " |\n")
 
-            file.write("|" + (lnlgth - 2) * "-" + "|\n")
+            file.write("|" + (lineLength - 2) * "-" + "|\n")
 
             for line in methods:
-                file.write("| " + line + (lnlgth - len(line) - 4) * " " + " |\n")
+                file.write("| " + line + (lineLength - len(line) - 4) * " " + " |\n")
 
-            file.write(lnlgth * "-" + "\n\n")
+            file.write(lineLength * "-" + "\n\n")
 
-            file.write(o.getDescription())
+            file.write(o.description)
 
             file.close()
 

@@ -12,6 +12,7 @@ from wx import TE_MULTILINE
 from wx import TextCtrl
 
 from org.pyut.general.Globals import _
+from org.pyut.model.PyutClass import PyutClass
 
 TXT_COMMENT = wxNewIdRef()
 
@@ -21,7 +22,7 @@ class DlgEditComment(Dialog):
     Dialog for the class comment edition.
     """
 
-    def __init__(self, parent, ID, pyutClass):
+    def __init__(self, parent, ID, pyutClass: PyutClass):
         """
 
         Args:
@@ -33,12 +34,12 @@ class DlgEditComment(Dialog):
         super().__init__(parent, ID, _("Description Edit"))
 
         # Associated PyutLink
-        self._pyutClass = pyutClass
+        self._pyutClass: PyutClass = pyutClass
 
         self.SetSize(Size(416, 200))
 
         # init members vars
-        self._text = self._pyutClass.getDescription()
+        self._text = self._pyutClass.description
         self._returnAction = -1   # describe how the user exited the dialog box
 
         # labels
@@ -82,7 +83,7 @@ class DlgEditComment(Dialog):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
 
-        self._pyutClass.setDescription(self._text)
+        self._pyutClass.description = self._text
 
         self._returnAction = OK
         self.Close()

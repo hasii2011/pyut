@@ -46,23 +46,17 @@ class IoJavascript(PyutIoPlugin):
 
     def getInputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
-        @return tupple
+        @return tuple
         @author C.Dutoit - dutoitc@hotmail.com
         @since 1.1
         """
-        # return None if this plugin can't read.
-        # otherwise, return a tupple with
-        # - name of the input format
-        # - extension of the input format
-        # - textual description of the plugin input format
-        # example : return ("Text", "txt", "Tabbed text...")
         return "Javascript file", "js", "Javascript file format"
 
     def getOutputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
         @return tuple
         @author C.Dutoit - dutoitc@hotmail.com
@@ -102,7 +96,7 @@ class IoJavascript(PyutIoPlugin):
         """
         Add objects to PyUt UMLFrame
         functions is list of function
-        function is dictionnary of ('functionName', 'parameters', 'javadoc')
+        function is dictionary of ('functionName', 'parameters', 'javadoc')
         """
         # Create classes
         classes = {}        # key=classname; value = (function, [functions])
@@ -130,7 +124,7 @@ class IoJavascript(PyutIoPlugin):
             # Create class
             pc = PyutClass(classname)        # A new PyutClass
             po = OglClass(pc)                 # A new OglClass
-            pc.setDescription(classJavadoc[0] + "\r\n" + classJavadoc[1])
+            pc.description = classJavadoc[0] + "\r\n" + classJavadoc[1]
 
             # Add method constructor
             methods = pc.getMethods()
@@ -169,7 +163,7 @@ class JSReader:
 
     def getFunctions(self):
         """
-        Return list of functions; function is declared as explicit dictionnary
+        Return list of functions; function is declared as explicit dictionary
         """
         return self._functions
 

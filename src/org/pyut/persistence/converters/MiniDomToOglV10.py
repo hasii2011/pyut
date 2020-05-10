@@ -106,7 +106,7 @@ class MiniDomToOgl:
 
             pyutClass.setId(int(xmlClass.getAttribute(PyutXmlConstants.ATTR_ID)))
             pyutClass.setName(xmlClass.getAttribute(PyutXmlConstants.ATTR_NAME))
-            pyutClass.setDescription(xmlClass.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION))
+            pyutClass.description = xmlClass.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
             if xmlClass.hasAttribute(PyutXmlConstants.ATTR_STEREOTYPE):
                 pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute(PyutXmlConstants.ATTR_STEREOTYPE)))
 

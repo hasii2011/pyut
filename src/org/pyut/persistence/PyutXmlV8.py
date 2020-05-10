@@ -2,8 +2,11 @@
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import parse
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
 from io import StringIO
@@ -393,7 +396,7 @@ class PyutXml:
         # param type
         root.setAttribute('type', str(pyutParam.getType()))
 
-        # param defaulf value
+        # param default value
         defaultValue = pyutParam.getDefaultValue()
         if defaultValue is not None:
             root.setAttribute('defaultValue', defaultValue)
@@ -493,12 +496,12 @@ class PyutXml:
         # class name
         root.setAttribute('name', pyutClass.getName())
 
-        # classs stereotype
+        # class stereotype
         stereotype = pyutClass.getStereotype()
         if stereotype is not None:
             root.setAttribute('stereotype', stereotype.getStereotype())
 
-        root.setAttribute('description', pyutClass.getDescription())
+        root.setAttribute('description', pyutClass.description)
         root.setAttribute('filename', pyutClass.getFilename())
         root.setAttribute('showMethods', str(pyutClass.getShowMethods()))
         root.setAttribute('showFields',  str(pyutClass.getShowFields()))
@@ -845,7 +848,7 @@ class PyutXml:
         """
         To extract methods from interface.
         """
-        # class methods for this currente class
+        # class methods for this current class
         allMethods = []
         for Method in Class.getElementsByTagName("Method"):
 

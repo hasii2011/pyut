@@ -34,15 +34,15 @@
             "propagate": "False"
         },
         "org": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "propagate": "False",
             "handlers":  ["consoleHandler"]
         },
         "org.pyut": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.ui.MainUI": {
+        "org.pyut.general.Mediator": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
             "propagate": "False"

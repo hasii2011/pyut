@@ -671,17 +671,18 @@ class DlgEditClass(Dialog):
         # Edit method
         self._onMethodEdit(event)
 
-    def _convertNone (self, astring):
+    def _convertNone (self, theString):
         """
         Return the same string, if string = None, return an empty string.
 
-        @param string astring : the string.
-        @since 1.7
-        @author N. Dubois <n_dub@altavista.com>
+        Args:
+            theString:  The string
+
+        Returns:  The input string or 'None' if it was empty
         """
-        if astring is None:
-            astring = ""
-        return astring
+        if theString is None:
+            theString = ""
+        return theString
 
     # noinspection PyUnusedLocal
     def _onDescription(self, event):
@@ -722,7 +723,7 @@ class DlgEditClass(Dialog):
         self._pyutClass.setMethods(self._pyutClassCopy.getMethods())
 
         # Update description (pwaelti@eivd.ch)
-        self._pyutClass.setDescription(self._pyutClassCopy.getDescription())
+        self._pyutClass.description = self._pyutClassCopy.description
 
         # Update display properties
         self._pyutClass.setShowFields(self._chkShowFields.GetValue())

@@ -5,6 +5,7 @@ from org.pyut.commands.DelOglLinkedObjectCommand import DelOglLinkedObjectComman
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
 from org.pyut.general.Globals import cmp
+from org.pyut.model.PyutClass import PyutClass
 
 
 class DelOglClassCommand(DelOglLinkedObjectCommand):
@@ -111,8 +112,8 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         fields   = eval(getTokenValue("fields", serializedData))
 
         # set up the first level properties of the pyutClass
-        pyutClass = self._shape.getPyutObject()
-        pyutClass.setDescription(classDescription)
+        pyutClass: PyutClass = self._shape.getPyutObject()
+        pyutClass.description = classDescription
 
         if cmp(classStereotypeName, ""):
             pyutStereo = PyutStereotype(classStereotypeName)
