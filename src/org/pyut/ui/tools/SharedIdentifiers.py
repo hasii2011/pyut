@@ -9,6 +9,7 @@ from org.pyut.general.Mediator import ACTION_SELECTOR
 from org.pyut.general.Mediator import ACTION_NEW_CLASS
 from org.pyut.general.Mediator import ACTION_NEW_NOTE
 from org.pyut.general.Mediator import ACTION_NEW_IMPLEMENT_LINK
+from org.pyut.general.Mediator import ACTION_NEW_INTERFACE
 from org.pyut.general.Mediator import ACTION_NEW_COMPOSITION_LINK
 from org.pyut.general.Mediator import ACTION_NEW_ASSOCIATION_LINK
 from org.pyut.general.Mediator import ACTION_ZOOM_OUT
@@ -31,7 +32,8 @@ class SharedIdentifiers:
         ID_MNUHELPINDEX,
         ID_MNUHELPWEB, ID_MNUFILEEXP, ID_MNUFILEEXPBMP,
         ID_MNUEDITSHOWTOOLBAR, ID_ARROW, ID_CLASS,
-        ID_REL_INHERITANCE, ID_REL_REALISATION, ID_REL_COMPOSITION,
+        ID_REL_INHERITANCE, ID_REL_REALISATION, ID_RELATIONSHIP_INTERFACE,
+        ID_REL_COMPOSITION,
         ID_REL_AGGREGATION, ID_REL_ASSOCIATION, ID_MNUFILEEXPJPG,
         ID_MNUPROJECTCLOSE, ID_NOTE, ID_ACTOR,
         ID_USECASE, ID_REL_NOTE, ID_MNUHELPVERSION,
@@ -42,7 +44,7 @@ class SharedIdentifiers:
         ID_MNUFILEREMOVEDOCUMENT, ID_DEBUG,
         ID_ZOOMIN, ID_ZOOMOUT, ID_ZOOM_VALUE,
         ID_MNUREDO, ID_MNUUNDO
-    ] = PyutUtils.assignID(57)
+    ] = PyutUtils.assignID(58)
 
     ACTIONS = {
         ID_ARROW:             ACTION_SELECTOR,
@@ -50,6 +52,9 @@ class SharedIdentifiers:
         ID_NOTE:              ACTION_NEW_NOTE,
         ID_REL_INHERITANCE:   ACTION_NEW_INHERIT_LINK,
         ID_REL_REALISATION:   ACTION_NEW_IMPLEMENT_LINK,
+
+        ID_RELATIONSHIP_INTERFACE: ACTION_NEW_INTERFACE,
+
         ID_REL_COMPOSITION:   ACTION_NEW_COMPOSITION_LINK,
         ID_REL_AGGREGATION:   ACTION_NEW_AGGREGATION_LINK,
         ID_REL_ASSOCIATION:   ACTION_NEW_ASSOCIATION_LINK,

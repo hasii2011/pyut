@@ -16,6 +16,7 @@ from wx import ToolBar
 from wx import WindowIDRef
 from wx import Frame
 
+from org.pyut.resources.img import ImgLollipop
 from org.pyut.resources.img import ImgToolboxActor
 from org.pyut.resources.img import ImgToolboxArrow
 from org.pyut.resources.img import ImgToolboxClass
@@ -187,6 +188,13 @@ class ToolsCreator:
                                   self._callbackMap[ActionCallbackType.NEW_ACTION],
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_REALISATION, isToggle=True)
 
+        toolInterface = Tool('pyut-relationship-interface', ImgLollipop.embeddedImage.GetBitmap(),
+                             _('New Interface'),
+                             _('New Interface'),
+                             _('PyUt tools'),
+                             self._callbackMap[ActionCallbackType.NEW_ACTION],
+                             cast(Callable, None), wxID=SharedIdentifiers.ID_RELATIONSHIP_INTERFACE, isToggle=True)
+
         toolRelComposition = Tool("pyut-rel-composition", ImgToolboxRelationshipComposition.embeddedImage.GetBitmap(),
                                   _("New composition relation"),
                                   _("New composition relation"),
@@ -194,12 +202,12 @@ class ToolsCreator:
                                   self._callbackMap[ActionCallbackType.NEW_ACTION],
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_COMPOSITION, isToggle=True)
 
-        toolRelAgregation = Tool("pyut-rel-aggregation", ImgToolboxRelationshipAggregation.embeddedImage.GetBitmap(),
-                                 _("New aggregation relation"),
-                                 _("New aggregation relation"),
-                                 _("PyUt tools"),
-                                 self._callbackMap[ActionCallbackType.NEW_ACTION],
-                                 cast(Callable, None), wxID=SharedIdentifiers.ID_REL_AGGREGATION, isToggle=True)
+        toolRelAggregation = Tool("pyut-rel-aggregation", ImgToolboxRelationshipAggregation.embeddedImage.GetBitmap(),
+                                  _("New aggregation relation"),
+                                  _("New aggregation relation"),
+                                  _("PyUt tools"),
+                                  self._callbackMap[ActionCallbackType.NEW_ACTION],
+                                  cast(Callable, None), wxID=SharedIdentifiers.ID_REL_AGGREGATION, isToggle=True)
 
         toolRelAssociation = Tool("pyut-rel-association", ImgToolboxRelationshipAssociation.embeddedImage.GetBitmap(),
                                   _("New association relation"),
@@ -236,8 +244,8 @@ class ToolsCreator:
                      toolNewUseCaseDiagram, toolOpen, toolSave,
                      toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo,
                      toolClass, toolActor, toolUseCase, toolNote,
-                     toolRelInheritance, toolRelRealisation, toolRelComposition,
-                     toolRelAgregation, toolRelAssociation, toolRelNote,
+                     toolRelInheritance, toolRelRealisation, toolInterface, toolRelComposition,
+                     toolRelAggregation, toolRelAssociation, toolRelNote,
                      toolSDInstance, toolSDMessage
                      ]:
             self._ctrl.registerTool(tool)
@@ -251,8 +259,8 @@ class ToolsCreator:
                      toolNewUseCaseDiagram, toolOpen, toolSave, None,
                      toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo, None,
                      toolClass, toolActor, toolUseCase, toolNote, None,
-                     toolRelInheritance, toolRelRealisation, toolRelComposition,
-                     toolRelAgregation, toolRelAssociation, toolRelNote, None,
+                     toolRelInheritance, toolRelRealisation, toolInterface, toolRelComposition,
+                     toolRelAggregation, toolRelAssociation, toolRelNote, None,
                      toolSDInstance, toolSDMessage
                      ]:
 
@@ -281,7 +289,7 @@ class ToolsCreator:
             SharedIdentifiers.ID_ARROW,
             SharedIdentifiers.ID_CLASS,
             SharedIdentifiers.ID_NOTE,
-            SharedIdentifiers.ID_REL_INHERITANCE, SharedIdentifiers.ID_REL_REALISATION,
+            SharedIdentifiers.ID_REL_INHERITANCE, SharedIdentifiers.ID_REL_REALISATION, SharedIdentifiers.ID_RELATIONSHIP_INTERFACE,
             SharedIdentifiers.ID_REL_COMPOSITION, SharedIdentifiers.ID_REL_AGGREGATION, SharedIdentifiers.ID_REL_ASSOCIATION,
             SharedIdentifiers.ID_REL_NOTE, SharedIdentifiers.ID_ACTOR,
             SharedIdentifiers.ID_USECASE,

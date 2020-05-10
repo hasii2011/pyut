@@ -125,7 +125,7 @@ class CreateOglLinkCommand(Command):
 
         # get the frame to which belongs the link
         umlFrame = self.getGroup().getHistory().getFrame()
-        # add the link that was created in the unserialize method.
+        # add the link that was created in the deserialize method.
         umlFrame.GetDiagram().AddShape(self._link, withModelUpdate=False)
 
         # get the view start and end position and assign it to the
@@ -167,7 +167,7 @@ class CreateOglLinkCommand(Command):
 
         @author L. Burgbacher
         @modified C.Dutoit 20021125 : added srcPos and dstPos to be compatible with Sequence diagram
-        @modified P.Dabrowski 20051202 : moved from umlframe to this command in order to be redone/undone. The
+        @modified P.Dabrowski 20051202 : moved from umlFrame to this command in order to be redone/undone. The
                                          link is not added to the frame anymore.
         """
         if linkType == LinkType.INHERITANCE:

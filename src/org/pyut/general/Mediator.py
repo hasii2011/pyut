@@ -53,27 +53,30 @@ __PyUtVersion__ = PyutVersion.getPyUtVersion()
 [
     ACTION_SELECTOR,
     ACTION_NEW_CLASS,                   # 1
-    ACTION_NEW_ACTOR,
-    ACTION_NEW_USECASE,
-    ACTION_NEW_NOTE,
-    ACTION_NEW_IMPLEMENT_LINK,
+    ACTION_NEW_ACTOR,                   # 2
+    ACTION_NEW_USECASE,                 # 3
+    ACTION_NEW_NOTE,                    # 4
+    ACTION_NEW_IMPLEMENT_LINK,          # 5
+    ACTION_NEW_INTERFACE,               # 6
     ACTION_NEW_INHERIT_LINK,
     ACTION_NEW_AGGREGATION_LINK,
     ACTION_NEW_COMPOSITION_LINK,
     ACTION_NEW_ASSOCIATION_LINK,
     ACTION_NEW_NOTE_LINK,
+
     ACTION_DEST_IMPLEMENT_LINK,
+    ACTION_DESTINATION_IMPLEMENT_INTERFACE,     # 13
     ACTION_DEST_INHERIT_LINK,
     ACTION_DEST_AGGREGATION_LINK,
     ACTION_DEST_COMPOSITION_LINK,
     ACTION_DEST_ASSOCIATION_LINK,
     ACTION_DEST_NOTE_LINK,
-    ACTION_NEW_SD_INSTANCE,                 # 17
-    ACTION_NEW_SD_MESSAGE,                  # 18
+    ACTION_NEW_SD_INSTANCE,                 # 18
+    ACTION_NEW_SD_MESSAGE,                  # 19
     ACTION_DEST_SD_MESSAGE,
-    ACTION_ZOOM_IN,  # Patch from D.Dabrowsky, 20060129
-    ACTION_ZOOM_OUT  # Patch from D.Dabrowsky, 20060129
-] = range(22)
+    ACTION_ZOOM_IN,
+    ACTION_ZOOM_OUT
+] = range(24)
 
 # a table of the next action to select
 NEXT_ACTION = {
@@ -86,7 +89,9 @@ NEXT_ACTION = {
     ACTION_NEW_COMPOSITION_LINK:    ACTION_DEST_COMPOSITION_LINK,
     ACTION_NEW_ASSOCIATION_LINK:    ACTION_DEST_ASSOCIATION_LINK,
     ACTION_NEW_NOTE_LINK:           ACTION_DEST_NOTE_LINK,
-    ACTION_DEST_IMPLEMENT_LINK:   ACTION_SELECTOR,
+    ACTION_DEST_IMPLEMENT_LINK:             ACTION_SELECTOR,
+    ACTION_DESTINATION_IMPLEMENT_INTERFACE: ACTION_SELECTOR,
+
     ACTION_DEST_INHERIT_LINK:     ACTION_SELECTOR,
     ACTION_DEST_AGGREGATION_LINK: ACTION_SELECTOR,
     ACTION_DEST_COMPOSITION_LINK: ACTION_SELECTOR,
@@ -115,6 +120,7 @@ SOURCE_ACTIONS = [
 DEST_ACTIONS = [
     ACTION_DEST_IMPLEMENT_LINK,
     ACTION_DEST_INHERIT_LINK,
+    ACTION_DESTINATION_IMPLEMENT_INTERFACE,
     ACTION_DEST_AGGREGATION_LINK,
     ACTION_DEST_COMPOSITION_LINK,
     ACTION_DEST_ASSOCIATION_LINK,
@@ -155,6 +161,7 @@ MESSAGES = {
     ACTION_NEW_ASSOCIATION_LINK: a,
     ACTION_NEW_NOTE_LINK:        a,
     ACTION_DEST_IMPLEMENT_LINK: b,
+    ACTION_DESTINATION_IMPLEMENT_INTERFACE: 'Click on the implementing class',
     ACTION_DEST_INHERIT_LINK:   b,
     ACTION_DEST_AGGREGATION_LINK: b,
     ACTION_DEST_COMPOSITION_LINK: b,
@@ -519,6 +526,7 @@ class Mediator(Singleton):
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
             return
+
         # do the right action
         if self._currentAction in SOURCE_ACTIONS:
             self.logger.debug(f'Current action in source actions')
@@ -540,7 +548,7 @@ class Mediator(Singleton):
         elif self._currentAction in DEST_ACTIONS:
             self.logger.debug(f'Current action in destination actions')
             # store the destination object
-            self._dst = shape
+            self._dst    = shape
             self._dstPos = position
             # if no destination, cancel action
             if self._dst is None:
@@ -548,21 +556,11 @@ class Mediator(Singleton):
                 self.selectTool(self._tools[0])
                 self.setStatusText(_("Action cancelled"))
                 return
+            if self._currentAction == ACTION_DESTINATION_IMPLEMENT_INTERFACE:
+                self.setStatusText(f'Do the lollipop')
+            else:
+                self._createLink(umlFrame)
 
-            from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
-            from org.pyut.commands.CommandGroup import CommandGroup
-            cmd = CreateOglLinkCommand(self._src,
-                                       self._dst,
-                                       LINK_TYPE[self._currentAction],
-                                       self._srcPos,
-                                       self._dstPos)
-
-            cmdGroup = CommandGroup("create link")
-            cmdGroup.addCommand(cmd)
-            umlFrame.getHistory().addCommandGroup(cmdGroup)
-            umlFrame.getHistory().execute()
-            self._src = None
-            self._dst = None
             if self._currentActionPersistent:
                 self._currentAction = self._oldAction
                 del self._oldAction
@@ -573,6 +571,21 @@ class Mediator(Singleton):
             self.setStatusText(_("Error : Action not supported by the mediator"))
             return
         self.setStatusText(MESSAGES[self._currentAction])
+
+    def _createLink(self, umlFrame):
+
+        from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
+        from org.pyut.commands.CommandGroup import CommandGroup
+
+        linkType = LINK_TYPE[self._currentAction]
+        cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
+
+        cmdGroup = CommandGroup("create link")
+        cmdGroup.addCommand(cmd)
+        umlFrame.getHistory().addCommandGroup(cmdGroup)
+        umlFrame.getHistory().execute()
+        self._src = None
+        self._dst = None
 
     def autoResize(self, obj: BadPracticeType):
         """
