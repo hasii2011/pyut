@@ -6,35 +6,34 @@ from org.pyut.history.HistoryUtils import makeValuatedToken
 
 class Command:
     """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
-    This class is a part of the history system of PyUt.
+
+    This class is a part of the PyUt history capability.
     Every action that needs to be redone/undone should have an associated
-    command. This class is to be considered as an abstract class.
+    command. This class is to be considered an abstract class.
     """
 
     def __init__(self):
         """
-        Constructor.
-        Notes : each Command should have at least one constructor with the
+        Notes:  Each Command should have at least one constructor with the
         same profile (no params), because it's this constructor that will
-        be called when the history manager will do deserialization.
+        be called when the history manager does deserialization.
         """
-        # group to which the command is added. Init when added to a group
-        self._group = None
+        self._group = None  # group to which the command is added. Init when added to a group
 
     def serialize(self):
         """
-        return the module name and class name in view to read them during
+        Return the module name and class name in view to read them during
         the deserialization and get the right constructor.
 
-        @return a string representation of the command in view to store it
-        in a file. This method must be redefined in all subclasses in that
-        way :
-            return Command.serialize + (MyCommand's serialized information)
-
-        Notes : use makeValuatedToken() from historyUtils for each value
+        Notes:  Use makeValuatedToken() from historyUtils for each value
         you want to serialize, so that you can use the getTokenValue to get
         back the string representation of this value for the deserialization.
+
+        Returns:   String representation of the command in view to store it
+        in a file. This method must be redefined in all subclasses in that
+        way :
+
+            return Command.serialize + (MyCommand's serialized information)
         """
 
         return (makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__)) +
@@ -44,44 +43,57 @@ class Command:
         """
         (Abstract) Here the developer should assign values to the information needed
         by the command (see also getTokenValue in historyUtils).
-        @serializedInfo String :   string from which whe have to extract the information needed to set up the command.
+
+        Args:
+            serializedInfo:
+
+        Returns:    String from which we have to extract the information needed to
+        set up the command.
         """
         pass
 
     def execute(self):
         """
-        Do exactly the same as redo(), but is added for context clearness.
-        It should be called instead of redo when we execute for the first time
-        the command outside the history. It should be also called in the undo
-        method of the contrary command (for e.g. : createItem.undo() calls
-        deleteItem.execute() and deleteItem.undo() calls createItem.execute())
+        Do exactly the same as redo(), but is added for context clarity.
+        It should be called instead of redo when we execute
+        the command outside the history for the first time.
+
+        It should be also called in the undo method of the contrary command
+
+        e.g.
+
+        createItem.undo() calls deleteItem.execute() and
+        deleteItem.undo() calls createItem.execute()
         """
         self.redo()
 
     def redo(self):
         """
-        (Abstract)Here should be implemented the code to redo the associated
-        action
+        (Abstract)Here should be implemented the code to redo the associated action
         """
         pass
 
     def undo(self):
         """
-        here should be implemented the code to undo the associated action. If
+        This method should implement the code to undo the associated action. If
         there is a contrary command, use its execute() method.
         """
         pass
 
     def getGroup(self):
         """
-        @return the group (CommandGroup) to which belongs the command
+
+        Returns:  The Command's CommandGroup
         """
         return self._group
 
     def setGroup(self, group):
         """
-        Set the group to which belongs the command. Avoid to call this method,
+        Set the group to for the command. Avoid calling this method,
         because it is called automatically when the command is added to a group.
-        @param group : group to which the command belongs.
+
+        Args:
+            group:  group to which the command belongs.
+
         """
         self._group = group
