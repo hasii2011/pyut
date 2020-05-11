@@ -2,7 +2,9 @@
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
+# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
 from org.pyut.MiniOgl.Shape import Shape
@@ -245,7 +247,7 @@ class OglToMiniDom:
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS,  str(pyutClass.getShowFields()))
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE,   str(pyutClass.getShowStereotype()))
         # methods
-        for method in pyutClass.getMethods():
+        for method in pyutClass.methods:
             root.appendChild(self._pyutMethodToXml(method, xmlDoc))
         # fields
         for field in pyutClass.fields:

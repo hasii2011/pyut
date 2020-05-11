@@ -79,21 +79,21 @@ class DlgEditClass(Dialog):
 
     Examples of `DlgEditClass` use are in  `Mediator.py`
     """
-    def __init__(self, parent, ID, pyutClass: PyutClass):
+    def __init__(self, parent, windowId, pyutClass: PyutClass):
         """
         Constructor.
 
         @param wx.Window   parent    : Parent of the dialog
-        @param wx.WindowID ID        : Identity of the dialog
+        @param wx.WindowID windowId        : Identity of the dialog
         @param PyutClass  pyutClass : Class modified by dialog
         @since 1.0
         @author N. Dubois <n_dub@altavista.com>
         """
-        super().__init__(parent, ID, _("Class Edit"), style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, windowId, _("Class Edit"), style=RESIZE_BORDER | CAPTION)
 
-        self.logger: Logger = getLogger(__name__)
-        self._pyutClass     = pyutClass
-        self._pyutClassCopy = deepcopy(pyutClass)
+        self.logger:         Logger = getLogger(__name__)
+        self._pyutClass:     PyutClass     = pyutClass
+        self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
         self._parent        = parent
         from org.pyut.general import Mediator
 
@@ -312,7 +312,7 @@ class DlgEditClass(Dialog):
                 self.logger.debug(f'field: {el}')
                 self._lstFieldList.Append(str(el))
 
-            for el in self._pyutClassCopy.getMethods():
+            for el in self._pyutClassCopy.methods:
                 self._lstMethodList.Append(el.getString())
         except (ValueError, Exception) as e:
 
@@ -392,7 +392,7 @@ class DlgEditClass(Dialog):
         method = PyutMethod()
         ret = self._callDlgEditMethod(method)
         if ret == OK:
-            self._pyutClassCopy.getMethods().append(method)
+            self._pyutClassCopy.methods.append(method)
             # Add fields in dialog list
             self._lstMethodList.Append(method.getString())
 
@@ -433,7 +433,8 @@ class DlgEditClass(Dialog):
         @author N. Dubois <n_dub@altavista.com>
         """
         selection = self._lstMethodList.GetSelection()
-        method = self._pyutClassCopy.getMethods()[selection]
+        method = self._pyutClassCopy.methods[selection]
+
         ret = self._callDlgEditMethod(method)
         if ret == OK:
             # Modify method in dialog list
@@ -494,8 +495,8 @@ class DlgEditClass(Dialog):
             self._lstMethodList.SetSelection(index)
 
         # Remove from _pyutClassCopy
-        method = self._pyutClassCopy.getMethods()
-        method.pop(selection)
+        methods = self._pyutClassCopy.methods
+        methods.pop(selection)
 
         # Fix buttons of methods list (enable or not)
         self._fixBtnMethod()
@@ -547,7 +548,7 @@ class DlgEditClass(Dialog):
         """
         # Move up the method in _pyutClassCopy
         selection = self._lstMethodList.GetSelection()
-        methods   = self._pyutClassCopy.getMethods()
+        methods   = self._pyutClassCopy.methods
         method    = methods[selection]
         methods.pop(selection)
         methods.insert(selection - 1, method)
@@ -607,7 +608,7 @@ class DlgEditClass(Dialog):
         """
         # Move up the method in _pyutClassCopy
         selection = self._lstMethodList.GetSelection()
-        methods = self._pyutClassCopy.getMethods()
+        methods = self._pyutClassCopy.methods
         method = methods[selection]
         methods.pop(selection)
         methods.insert(selection + 1, method)
@@ -720,7 +721,7 @@ class DlgEditClass(Dialog):
             self._pyutClass.setStereotype(getPyutStereotype(strStereotype))
         # Adds all fields in a list
         self._pyutClass.fields = self._pyutClassCopy.fields
-        self._pyutClass.setMethods(self._pyutClassCopy.getMethods())
+        self._pyutClass.methods = self._pyutClassCopy.methods
 
         # Update description (pwaelti@eivd.ch)
         self._pyutClass.description = self._pyutClassCopy.description

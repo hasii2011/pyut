@@ -348,7 +348,7 @@ class PyutXml:
         root.setAttribute('description', pyutClass.description)
 
         # methods
-        for method in pyutClass.getMethods():
+        for method in pyutClass.methods:
             root.appendChild(self._PyutMethod2xml(method, xmlDoc))
 
         # fields

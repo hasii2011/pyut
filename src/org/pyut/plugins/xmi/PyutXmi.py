@@ -198,7 +198,7 @@ class PyutXmi:
             root.setAttribute('stereotype', stereotype.getStereotype())
 
         # methods methods
-        for i in pyutClass.getMethods():
+        for i in pyutClass.methods:
             root.appendChild(self._PyutMethod2xml(i))
 
         # for all the field

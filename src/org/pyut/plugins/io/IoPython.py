@@ -136,7 +136,7 @@ class IoPython(PyutIoPlugin):
                 del clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR]
 
             # Add others methods in order
-            for pyutMethod in pyutClass.getMethods():
+            for pyutMethod in pyutClass.methods:
                 methodName: str = pyutMethod.getName()
                 if methodName != PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR:
                     try:

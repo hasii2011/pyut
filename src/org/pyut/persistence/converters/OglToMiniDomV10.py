@@ -253,7 +253,7 @@ class OglToMiniDom:
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS,  str(pyutClass.getShowFields()))
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE,   str(pyutClass.getShowStereotype()))
         # methods
-        for method in pyutClass.getMethods():
+        for method in pyutClass.methods:
             root.appendChild(self._pyutMethodToXml(method, xmlDoc))
         # fields
         for field in pyutClass.fields:

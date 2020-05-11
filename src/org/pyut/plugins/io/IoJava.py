@@ -123,7 +123,7 @@ class IoJava(PyutIoPlugin):
 
         # Extract the data from the class
         fields     = pyutClass.fields
-        methods    = pyutClass.getMethods()
+        methods    = pyutClass.methods
         parents    = pyutClass.getParents()
         allLinks   = pyutClass.getLinks()
 

@@ -2,6 +2,7 @@
 import os
 
 from org.pyut.enums.LinkType import LinkType
+from org.pyut.model.PyutClass import PyutClass
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
@@ -46,14 +47,14 @@ class IoCpp(PyutIoPlugin):
 
     def getOutputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
         @return tuple
         @author D.Roux - droux@eivd.ch
         @since 1.1
         """
         # return None if this plugin can't write.
-        # otherwise, return a tupple with
+        # otherwise, return a tuple with
         # - name of the output format
         # - extension of the output format
         # - textual description of the plugin output format
@@ -65,9 +66,9 @@ class IoCpp(PyutIoPlugin):
 
     def _visibility(self, elements, public, private, protected):
         """
-        Put all ellement of elements list to list public, private, protected.
+        Put all element of elements list to list public, private, protected.
 
-        @param elements  : []  of objetc who as getVisibility methods.
+        @param elements  : []  of object who has getVisibility methods.
         @param public    : []  list of public element
         @param private   : []  list of private element
         @param protected : []  list of protected element
@@ -78,7 +79,7 @@ class IoCpp(PyutIoPlugin):
         # for all element in list elements
         for element in elements:
 
-            # gettin element visibiliy
+            # getting element visibility
             visibility = str(element.getVisibility())
 
             # public case
@@ -100,7 +101,7 @@ class IoCpp(PyutIoPlugin):
         Default objType is void
 
         @param file
-        @param objType      : String  represtant a objType
+        @param objType      : String  represents a objType
 
         @author D.Roux - droux@eivd.ch
         @since 1.1
@@ -164,7 +165,7 @@ class IoCpp(PyutIoPlugin):
         @param file
         @param methods : [] list of all method of a class
         @param className : string the name of the class
-        @param fields    : [] list of fils whose are default value
+        @param fields    : [] list of files whose are default value
 
         @author D.Roux - droux@eivd.ch
         @since 1.1
@@ -186,12 +187,12 @@ class IoCpp(PyutIoPlugin):
             # writing method
             self._writeMethod(file, method)
 
-            # if fathers --> initiling list
+            # if fathers --> initializing list
             if constructor:
                 nbFields = len(fields)
                 if nbFields > 0:
                     file.write(" : ")
-                # for all fields whos are default value
+                # for all fields who have a default value
                 for field in fields:
                     if field.getDefaultValue() is not None:
                         file.write(field.getName() + '('+field.getDefaultValue() + ')')
@@ -286,7 +287,7 @@ class IoCpp(PyutIoPlugin):
         @author D.Roux - droux@eivd.ch
         @since 1.1
         """
-        # is wrinting in file : #ifndef __CLASSNAME_H__
+        # is writing in file : #ifndef __CLASSNAME_H__
         #                       #define __CLASSNAME_H__
         define = "__"+className.upper()+"_H__"
         file.write("#ifndef "+define+"\n#define "+define+"\n\n\n")
@@ -303,7 +304,7 @@ class IoCpp(PyutIoPlugin):
         """
         nbr = len(fathers)
 
-        # if is father for this class wrinting :
+        # if is father for this class writing :
         if nbr > 0:
             file.write(" : ")
 
@@ -311,7 +312,7 @@ class IoCpp(PyutIoPlugin):
             # writing fathers with public mode
             file.write("public " + father.getName())
 
-            # writing ',' betwin fathers
+            # writing ',' between fathers
             nbr = nbr - 1
             if nbr > 0:
                 file.write(", ")
@@ -328,7 +329,7 @@ class IoCpp(PyutIoPlugin):
         @since 1.1
         """
         # write name in include close
-        # if the name is not in included dictionnary
+        # if the name is not in included dictionary
         def writeName():
             if name not in included:
                 file.write('#include "' + name + '.h"\n')
@@ -354,7 +355,7 @@ class IoCpp(PyutIoPlugin):
         Writing class comment with doxygen organisation.
 
         @param file
-        @param className    : String  represtent a class
+        @param className    : String  represents a class
 
         @author D.Roux - droux@eivd.ch
         @since 1.1
@@ -400,7 +401,7 @@ class IoCpp(PyutIoPlugin):
 
         file.write(tab+" */\n")
 
-    def _writeClass(self, pyutClass):
+    def _writeClass(self, pyutClass: PyutClass):
         """
         Writing a class to files
 
@@ -429,7 +430,7 @@ class IoCpp(PyutIoPlugin):
         publicMethods     = []
         privateMethods    = []
         protectedMethods  = []
-        self._visibility(pyutClass.getMethods(), publicMethods, privateMethods, protectedMethods)
+        self._visibility(pyutClass.methods, publicMethods, privateMethods, protectedMethods)
 
         fathers = pyutClass.getParents()
         links   = pyutClass.getLinks()

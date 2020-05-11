@@ -99,7 +99,7 @@ class PyutToPython:
             value is a list of the method code
         """
         clsMethods = cast(PyutToPython.MethodsCodeType, {})
-        for pyutMethod in pyutClass.getMethods():
+        for pyutMethod in pyutClass.methods:
             # Separation
             txt = ""
             lstCodeMethod = [txt]

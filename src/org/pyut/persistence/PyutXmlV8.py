@@ -508,7 +508,7 @@ class PyutXml:
         root.setAttribute('showStereotype', str(pyutClass.getShowStereotype()))
 
         # methods
-        for method in pyutClass.getMethods():
+        for method in pyutClass.methods:
             root.appendChild(self._PyutMethod2xml(method, xmlDoc))
 
         # fields
@@ -1161,7 +1161,7 @@ class PyutXml:
             pyutClass.setFilename(xmlClass.getAttribute('filename'))
 
             # adding methods for this class
-            pyutClass.setMethods(self._getMethods(xmlClass))
+            pyutClass.methods = self._getMethods(xmlClass)
 
             # adding fields for this class
             pyutClass.fields = self._getFields(xmlClass)
@@ -1220,11 +1220,3 @@ class PyutXml:
             x = float(xmlOglNote.getAttribute('x'))
             y = float(xmlOglNote.getAttribute('y'))
             umlFrame.addShape(oglNote, x, y)
-
-    def joli(self, fileName):
-        """
-        To open a file and creating diagram.
-        """
-        dom = parse(StringIO(open(fileName).read()))
-        # PrettyPrint(dom, open("joli.xml", 'w'))
-        print(f"{dom.toprettyxml()}")                            # Maybe this ?

@@ -30,7 +30,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
         # serialize the data common to all OglObjects
         serialShape = DelOglLinkedObjectCommand.serialize(self)
 
-        pyutClass:PyutClass = self._shape.getPyutObject()
+        pyutClass: PyutClass = self._shape.getPyutObject()
         classDescription = pyutClass.description
 
         if pyutClass.getStereotype() is not None:
@@ -51,7 +51,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
             fields.append((fieldName, fieldType, fieldDefaultValue, fieldVisibility))
 
         methods = []
-        for method in pyutClass.getMethods():
+        for method in pyutClass.methods:
             methodName = method.getName()
             methodVisibility = method.getVisibility().__str__()
             methodReturns = method.getReturns().__str__()

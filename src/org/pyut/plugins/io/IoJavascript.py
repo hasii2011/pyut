@@ -80,9 +80,9 @@ class IoJavascript(PyutIoPlugin):
             # Read all files
             for filename in lstFiles:
                 f = open(filename)
-                datas = f.read()
+                dataValue = f.read()
                 f.close()
-                jsr = JSReader(datas)
+                jsr = JSReader(dataValue)
                 jsr.process()
                 functions = jsr.getFunctions()
                 print(("import JS: ", len(functions), " functions found"))
@@ -99,7 +99,7 @@ class IoJavascript(PyutIoPlugin):
         function is dictionary of ('functionName', 'parameters', 'javadoc')
         """
         # Create classes
-        classes = {}        # key=classname; value = (function, [functions])
+        classes = {}        # key=className; value = (function, [functions])
         for f1 in functions:
             for f2 in functions:
                 # f2 is f1 + "_" + f2 ? -> class member
@@ -109,33 +109,33 @@ class IoJavascript(PyutIoPlugin):
                     break
 
         # Add class members
-        for classname in list(classes.keys()):
+        for className in list(classes.keys()):
             for f in functions:
-                if f["functionName"].upper().startswith(classname.upper() + "_"):
-                    f["functionName"] = f["functionName"][len(classname)+1:]
-                    classes[classname][1].append(f)
+                if f["functionName"].upper().startswith(className.upper() + "_"):
+                    f["functionName"] = f["functionName"][len(className)+1:]
+                    classes[className][1].append(f)
 
         # create objects
-        for classname in list(classes.keys()):
-            classFunction = classes[classname][0]
+        for className in list(classes.keys()):
+            classFunction = classes[className][0]
             classParameters = classFunction["parameters"]
             classJavadoc = classFunction["javadoc"]
 
             # Create class
-            pc = PyutClass(classname)        # A new PyutClass
+            pc = PyutClass(className)        # A new PyutClass
             po = OglClass(pc)                 # A new OglClass
             pc.description = classJavadoc[0] + "\r\n" + classJavadoc[1]
 
             # Add method constructor
-            methods = pc.getMethods()
-            method = PyutMethod(classname)
+            methods = pc.methods
+            method = PyutMethod(className)
             params = method.getParams()
             params.append(classParameters)
             method.setParams(params)
             methods.append(method)
 
             # Add methods
-            for function in classes[classname][1]:
+            for function in classes[className][1]:
                 functionName = function["functionName"]
                 parameters = function["parameters"]
                 method = PyutMethod(functionName)
@@ -143,7 +143,7 @@ class IoJavascript(PyutIoPlugin):
                 params.append(parameters)
                 method.setParams(params)
                 methods.append(method)
-            pc.setMethods(methods)
+            pc.methods = methods
 
             # Refresh
             umlFrame.addShape(po, 0, 0)

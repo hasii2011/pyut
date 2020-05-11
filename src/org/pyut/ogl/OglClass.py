@@ -194,13 +194,14 @@ class OglClass(OglObject):
         lth = dc.GetTextExtent("*")[1] / 2.0
 
         # Add space
-        if len(self.getPyutObject().getMethods()) > 0:
+        pyutClass: PyutClass = self.getPyutObject()
+        if len(pyutClass.methods) > 0:
             h += lth
 
         # draw pyutClass methods
-        self.logger.debug(f"showmethods => {pyutObject.getShowMethods()}")
+        self.logger.debug(f"showMethods => {pyutObject.getShowMethods()}")
         if pyutObject.getShowMethods():
-            for method in self.getPyutObject().getMethods():
+            for method in pyutClass.methods:
                 if draw:
                     dc.DrawText(str(method), x + MARGIN, y + h)
                 if calcWidth:
@@ -210,7 +211,7 @@ class OglClass(OglObject):
                 h += self.GetTextHeight(dc, str(method))
 
         # Add space
-        if len(self.getPyutObject().getMethods()) > 0:
+        if len(pyutClass.methods) > 0:
             h += lth
 
         # Return sizes

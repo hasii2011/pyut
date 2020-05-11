@@ -162,8 +162,8 @@ class ToFastEdit(PyutToPlugin):
 
         methods = []
         fields = []
-        pyutClass.setMethods(methods)
-        pyutClass.fields = fields
+        pyutClass.methods = methods
+        pyutClass.fields  = fields
 
         # process methods and fields
         visValues: List[str] = PyutVisibilityEnum.values()
@@ -226,11 +226,11 @@ class ToFastEdit(PyutToPlugin):
 
         """
 
-        o = oglObject.getPyutObject()
+        o: PyutClass = oglObject.getPyutObject()
         file.write(o.getName() + "\n")
         if o.getStereotype() is not None:
             file.write(str(o.getStereotype()) + "\n")
-        for method in o.getMethods():
+        for method in o.methods:
             file.write(method.getString() + "\n")
         for field in o.fields:
             file.write(str(field) + "\n")

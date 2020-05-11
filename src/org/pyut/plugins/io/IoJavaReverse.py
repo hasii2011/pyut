@@ -214,8 +214,8 @@ class ReverseJava:
         self._logMessage("Adding method %s for class %s" % (name, className))
         self._logMessage("(modifiers=%s; returnType=%s)" % (modifiers, returnType))
         # Get class fields
-        po = self._dicClasses[className]
-        pc = po.getPyutObject()
+        po: OglClass  = self._dicClasses[className]
+        pc: PyutClass = po.getPyutObject()
 
         # TODO fix this crazy code to use constructor and catch exception on bad input
         # Get visibility
@@ -229,7 +229,7 @@ class ReverseJava:
             visibility: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
 
         # Add method
-        methods = pc.getMethods()
+        methods = pc.methods
 
         if returnType == '\n' or returnType == '' or returnType == 'void' or returnType is None:
             pm = PyutMethod(name, visibility)

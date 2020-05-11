@@ -1,8 +1,11 @@
 
 from typing import List
+from typing import cast
 
 from org.pyut.model.PyutField import PyutField
+from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
+from org.pyut.model.PyutStereotype import PyutStereotype
 from org.pyut.model.PyutStereotype import getPyutStereotype
 
 
@@ -13,7 +16,7 @@ class PyutClass(PyutLinkedObject):
     A PyutClass represents a UML class in Pyut. It manages its:
         - object data fields (`PyutField`)
         - methods (`PyutMethod`)
-        - fathers (`PyutClass`)(classes from which this one inherits)
+        - parents (`PyutClass`)(classes from which this one inherits)
         - stereotype (`PyutStereotype`)
         - a description (`string`)
 
@@ -33,15 +36,16 @@ class PyutClass(PyutLinkedObject):
             name: class name
         """
         super().__init__(name)
-        self._fields: List[PyutField] = []
-        self._methods     = []
-        self._description = ""
-        self._stereotype  = None
+        self._fields:  List[PyutField]  = []
+        self._methods: List[PyutMethod] = []
+
+        self._description: str = ""
+        self._stereotype: PyutStereotype = cast (PyutStereotype, None)
 
         # Display properties
-        self._showStereotype = True
-        self._showMethods    = True
-        self._showFields     = True
+        self._showStereotype: bool = True
+        self._showMethods:    bool = True
+        self._showFields:     bool = True
 
     @property
     def description(self) -> str:
@@ -96,24 +100,24 @@ class PyutClass(PyutLinkedObject):
         """
         self._fields.append(field)
 
-    def getMethods(self):
+    @property
+    def methods(self) -> List[PyutMethod]:
         """
-        Return a list of the methods.
         This is not a copy, but the original one. Any change made to it is
         directly made on the interface.
 
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:    a list of the methods.
         """
         return self._methods
 
-    def setMethods(self, methods):
+    @methods.setter
+    def methods(self, methods: List[PyutMethod]):
         """
         Replace the actual methods by those given in the list.
         The methods passed are not copied, but used directly.
 
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            methods: The methods
         """
         self._methods = methods
 
