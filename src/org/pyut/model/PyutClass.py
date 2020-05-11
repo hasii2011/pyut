@@ -164,23 +164,22 @@ class PyutClass(PyutLinkedObject):
         """
         self._showStereotype = theNewValue
 
-    def getShowMethods(self):
+    @property
+    def showMethods(self) -> bool:
         """
-        Return True if we must display the methods
+        `True` if we should display the methods
 
-        @return boolean indicating if we must display the methods
-        @since 1.1.1.2
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Returns:  `True` if we should display the methods, else `False`
         """
         return self._showMethods
 
-    def setShowMethods(self, value):
+    @showMethods.setter
+    def showMethods(self, value: bool):
         """
-        Define the showMethods property
+        Setter
 
-        @param value : boolean indicating if we must display the methods
-        @since 1.1.1.2
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            value:  Set to `True` to display the method, else `False`
         """
         self._showMethods = value
 

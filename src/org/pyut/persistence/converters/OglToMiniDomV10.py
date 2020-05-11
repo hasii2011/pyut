@@ -249,7 +249,7 @@ class OglToMiniDom:
 
         root.setAttribute(PyutXmlConstants.ATTR_DESCRIPTION, pyutClass.description)
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME,    pyutClass.getFilename())
-        root.setAttribute(PyutXmlConstants.ATTR_SHOW_METHODS, str(pyutClass.getShowMethods()))
+        root.setAttribute(PyutXmlConstants.ATTR_SHOW_METHODS, str(pyutClass.showMethods))
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS,  str(pyutClass.getShowFields()))
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE,   str(pyutClass.getShowStereotype()))
         # methods

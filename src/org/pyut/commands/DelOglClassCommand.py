@@ -39,7 +39,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
             classStereotypeName = ""
 
         classShowStereotype = repr(pyutClass.getShowStereotype())
-        classShowMethods = repr(pyutClass.getShowMethods())
+        classShowMethods = repr(pyutClass.showMethods)
         classShowFields = repr(pyutClass.getShowFields())
 
         fields = []

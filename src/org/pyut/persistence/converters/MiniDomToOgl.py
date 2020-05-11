@@ -113,14 +113,14 @@ class MiniDomToOgl:
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE))
             pyutClass.setShowStereotype(value)
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_METHODS))
-            pyutClass.setShowMethods(value)
+            pyutClass.showMethods = value
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS))
             pyutClass.setShowFields(value)
 
             pyutClass.setFilename(xmlClass.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
-            pyutClass.setMethods(self._getMethods(xmlClass))
-            pyutClass.fields = self._getFields(xmlClass)
+            pyutClass.methods = self._getMethods(xmlClass)
+            pyutClass.fields  = self._getFields(xmlClass)
 
             # Adding properties necessary to place shape on a diagram frame
             x = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_X))

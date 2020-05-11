@@ -1,14 +1,17 @@
 
+from typing import Tuple
+
 from logging import Logger
 from logging import getLogger
 
 from wx import BLACK
-from wx import ClientDC
 from wx import EVT_MENU
-from wx import Font
 from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_BOLD
+
+from wx import Font
+from wx import ClientDC
 from wx import Menu
 
 from org.pyut.ogl.OglObject import OglObject
@@ -168,18 +171,24 @@ class OglClass(OglObject):
         # Return sizes
         return x, y, w, h
 
-    def calculateClassMethods(self, dc, draw=True, initialX=None, initialY=None, calcWidth=False):
+    def calculateClassMethods(self, dc, draw=True, initialX=None, initialY=None, calcWidth=False) -> Tuple[int, int, int, int]:
         """
         Calculate the class methods position and size and display it if
         a draw is True
 
-        @return tuple : (x, y, w, h) = position and size of the methods
-        @author C.Dutoit
+        Args:
+            dc:
+            draw:
+            initialX:
+            initialY:
+            calcWidth:
+
+        Returns:    tuple : (x, y, w, h) = position and size of the methods
         """
-        # Init
+
         dc.SetFont(self._defaultFont)
         dc.SetTextForeground(BLACK)
-        pyutObject = self.getPyutObject()
+
         x, y = self.GetPosition()
         if initialX is not None:
             x = initialX
@@ -199,8 +208,8 @@ class OglClass(OglObject):
             h += lth
 
         # draw pyutClass methods
-        self.logger.debug(f"showMethods => {pyutObject.getShowMethods()}")
-        if pyutObject.getShowMethods():
+        self.logger.debug(f"showMethods => {pyutClass.showMethods}")
+        if pyutClass.showMethods is True:
             for method in pyutClass.methods:
                 if draw:
                     dc.DrawText(str(method), x + MARGIN, y + h)
@@ -227,8 +236,8 @@ class OglClass(OglObject):
             dc: device context to draw to
             withChildren:
         """
-        # Init
-        pyutObject = self.getPyutObject()
+
+        pyutObject: PyutClass = self.getPyutObject()
 
         # Draw rectangle shape
         OglObject.Draw(self, dc)
@@ -251,8 +260,12 @@ class OglClass(OglObject):
             y = fieldsY + fieldsH
         # Draw line
         dc.DrawLine(x, y, x + w, y)
-        if pyutObject.getShowMethods:
+        #
+        # Method needs to be called even though returned values not used  -- TODO look at refactoring
+        #
+        if pyutObject.showMethods is True:
             (methodsX, methodsY, methodsW, methodsH) = self.calculateClassMethods(dc, True, initialY=y, calcWidth=True)
+            # noinspection PyUnusedLocal
             y = methodsY + methodsH
 
         dc.DestroyClippingRegion()
@@ -280,13 +293,13 @@ class OglClass(OglObject):
             fieldsW, fieldsH = 0, 0
 
         # Get methods size
-        if pyutObject.getShowMethods():
-            (methX, methY, methW, methH) = self.calculateClassMethods(dc, True, initialY=y, calcWidth=True)
-            y = methY + methH
+        if pyutObject.showMethods is True:
+            (methodX, methodY, methodW, methodH) = self.calculateClassMethods(dc, True, initialY=y, calcWidth=True)
+            y = methodY + methodH
         else:
-            methW, methH = 0, 0
+            methodW, methodH = 0, 0
 
-        w = max(headerW, fieldsW, methW)
+        w = max(headerW, fieldsW, methodW)
         h = y - headerY
         w += 2.0 * MARGIN
         self.SetSize(w, h)
@@ -302,12 +315,12 @@ class OglClass(OglObject):
 
         @author C.Dutoit
         """
-        pyutObject = self.getPyutObject()
+        pyutObject: PyutClass = self.getPyutObject()
         if event.GetId() == MNU_TOGGLE_STEREOTYPE:
             pyutObject.setShowStereotype(not pyutObject.getShowStereotype())
             self.autoResize()
         elif event.GetId() == MNU_TOGGLE_METHODS:
-            pyutObject.setShowMethods(not pyutObject.getShowMethods())
+            pyutObject.showMethods = not pyutObject.showMethods     # flip it!!  too cute
             self.autoResize()
         elif event.GetId() == MNU_TOGGLE_FIELDS:
             pyutObject.setShowFields(not pyutObject.getShowFields())
@@ -328,7 +341,7 @@ class OglClass(OglObject):
 
         @author C.Dutoit
         """
-        pyutObject = self.getPyutObject()
+        pyutObject: PyutClass = self.getPyutObject()
         menu = Menu()
         menu.Append(MNU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set on or off the stereotype display"), True)
         item = menu.FindItemById(MNU_TOGGLE_STEREOTYPE)
@@ -340,7 +353,7 @@ class OglClass(OglObject):
 
         menu.Append(MNU_TOGGLE_METHODS, _("Toggle methods display"), _("Set on or off the methods display"), True)
         item = menu.FindItemById(MNU_TOGGLE_METHODS)
-        item.Check(pyutObject.getShowMethods())
+        item.Check(pyutObject.showMethods)
 
         menu.Append(MNU_FIT_FIELDS, _("Fit Fields"), _("Fit to see all class fields"))
         menu.Append(MNU_CUT_SHAPE,  _("Cut shape"),  _("Cut this shape"))

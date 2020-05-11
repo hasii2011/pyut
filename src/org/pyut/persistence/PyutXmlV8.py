@@ -9,8 +9,6 @@ from xml.dom.minidom import Document
 # noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
-from io import StringIO
-
 from wx import Dialog
 from wx import Gauge
 from wx import ICON_INFORMATION
@@ -81,12 +79,12 @@ class IDFactory:
     def __init__(self):
         self._dicID = {}
 
-    def getID(self, aclass):
-        if aclass in self._dicID:
-            return self._dicID[aclass]
+    def getID(self, theClass):
+        if theClass in self._dicID:
+            return self._dicID[theClass]
         else:
             clsId = IDFactory.nextID
-            self._dicID[aclass] = clsId
+            self._dicID[theClass] = clsId
             IDFactory.nextID += 1
             return clsId
 
@@ -503,7 +501,7 @@ class PyutXml:
 
         root.setAttribute('description', pyutClass.description)
         root.setAttribute('filename', pyutClass.getFilename())
-        root.setAttribute('showMethods', str(pyutClass.getShowMethods()))
+        root.setAttribute('showMethods', str(pyutClass.showMethods))
         root.setAttribute('showFields',  str(pyutClass.getShowFields()))
         root.setAttribute('showStereotype', str(pyutClass.getShowStereotype()))
 
@@ -1153,7 +1151,7 @@ class PyutXml:
             value = secure_bool(xmlClass.getAttribute('showStereotype'))
             pyutClass.setShowStereotype(value)
             value = secure_bool(xmlClass.getAttribute('showMethods'))
-            pyutClass.setShowMethods(value)
+            pyutClass.showMethods = value
             value = secure_bool(xmlClass.getAttribute('showFields'))
             pyutClass.setShowFields(value)
 

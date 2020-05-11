@@ -323,7 +323,7 @@ class DlgEditClass(Dialog):
 
         # Fill display properties
         self._chkShowFields.SetValue(self._pyutClassCopy.getShowFields())
-        self._chkShowMethods.SetValue(self._pyutClassCopy.getShowMethods())
+        self._chkShowMethods.SetValue(self._pyutClassCopy.showMethods)
         self._chkShowStereotype.SetValue(self._pyutClassCopy.getShowStereotype())
 
     def _fixBtnFields (self):
@@ -728,7 +728,7 @@ class DlgEditClass(Dialog):
 
         # Update display properties
         self._pyutClass.setShowFields(self._chkShowFields.GetValue())
-        self._pyutClass.setShowMethods(self._chkShowMethods.GetValue())
+        self._pyutClass.showMethods = self._chkShowMethods.GetValue()
         self._pyutClass.setShowStereotype(self._chkShowStereotype.GetValue())
 
         from org.pyut.PyutPreferences import PyutPreferences
