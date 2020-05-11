@@ -322,7 +322,7 @@ class DlgEditClass(Dialog):
             dlg.Destroy()
 
         # Fill display properties
-        self._chkShowFields.SetValue(self._pyutClassCopy.getShowFields())
+        self._chkShowFields.SetValue(self._pyutClassCopy.showFields)
         self._chkShowMethods.SetValue(self._pyutClassCopy.showMethods)
         self._chkShowStereotype.SetValue(self._pyutClassCopy.getShowStereotype())
 
@@ -727,7 +727,7 @@ class DlgEditClass(Dialog):
         self._pyutClass.description = self._pyutClassCopy.description
 
         # Update display properties
-        self._pyutClass.setShowFields(self._chkShowFields.GetValue())
+        self._pyutClass.showFields  = self._chkShowFields.GetValue()
         self._pyutClass.showMethods = self._chkShowMethods.GetValue()
         self._pyutClass.setShowStereotype(self._chkShowStereotype.GetValue())
 

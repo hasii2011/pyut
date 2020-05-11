@@ -116,7 +116,7 @@ class MiniDomToOgl:
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_METHODS))
             pyutClass.showMethods = value
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS))
-            pyutClass.setShowFields(value)
+            pyutClass.showFields = value
 
             pyutClass.setFilename(xmlClass.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 

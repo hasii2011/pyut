@@ -40,7 +40,7 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
 
         classShowStereotype = repr(pyutClass.getShowStereotype())
         classShowMethods = repr(pyutClass.showMethods)
-        classShowFields = repr(pyutClass.getShowFields())
+        classShowFields = repr(pyutClass.showFields)
 
         fields = []
         for field in pyutClass.fields:
@@ -120,8 +120,8 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
             pyutClass.setStereotype(pyutStereo)
 
         pyutClass.setShowStereotype(classShowStereotype)
-        pyutClass.setShowMethods(classShowMethods)
-        pyutClass.setShowFields(classShowFields)
+        pyutClass.showMethods = classShowMethods
+        pyutClass.showFields  = classShowFields
 
         for field in fields:
 
@@ -170,4 +170,4 @@ class DelOglClassCommand(DelOglLinkedObjectCommand):
             methodsList.append(method)
 
         # add all the methods to the list
-        pyutClass.setMethods(methodsList)
+        pyutClass.methods = methodsList

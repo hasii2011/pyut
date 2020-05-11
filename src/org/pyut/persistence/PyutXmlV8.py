@@ -502,7 +502,7 @@ class PyutXml:
         root.setAttribute('description', pyutClass.description)
         root.setAttribute('filename', pyutClass.getFilename())
         root.setAttribute('showMethods', str(pyutClass.showMethods))
-        root.setAttribute('showFields',  str(pyutClass.getShowFields()))
+        root.setAttribute('showFields',  str(pyutClass.showFields))
         root.setAttribute('showStereotype', str(pyutClass.getShowStereotype()))
 
         # methods
@@ -1153,7 +1153,7 @@ class PyutXml:
             value = secure_bool(xmlClass.getAttribute('showMethods'))
             pyutClass.showMethods = value
             value = secure_bool(xmlClass.getAttribute('showFields'))
-            pyutClass.setShowFields(value)
+            pyutClass.showFields = value
 
             # adding associated filename (lb@alawa.ch)
             pyutClass.setFilename(xmlClass.getAttribute('filename'))

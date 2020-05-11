@@ -135,7 +135,7 @@ class OglClass(OglObject):
         # Init
         dc.SetFont(self._defaultFont)
         dc.SetTextForeground(BLACK)
-        pyutObject = self.getPyutObject()
+
         x, y = self.GetPosition()
         if initialX is not None:
             x = initialX
@@ -155,7 +155,7 @@ class OglClass(OglObject):
             h += lth
 
         # draw pyutClass fields
-        if pyutObject.getShowFields():
+        if PyutClass.showFields is True:
             for field in pyutClass.fields:
                 if draw:
                     dc.DrawText(str(field), x + MARGIN, y + h)
@@ -251,7 +251,7 @@ class OglClass(OglObject):
         (headerX, headerY, headerW, headerH) = self.calculateClassHeader(dc, True)
         y = headerY + headerH
 
-        if pyutObject.getShowFields():
+        if pyutObject.showFields is True:
             # Draw line
             dc.DrawLine(x, y, x + w, y)
 
@@ -278,7 +278,7 @@ class OglClass(OglObject):
         WARNING : Every changes here must be reported in DRAW method
         """
         # Init
-        pyutObject = self.getPyutObject()
+        pyutObject: PyutClass = self.getPyutObject()
         dc = ClientDC(self.GetDiagram().GetPanel())
 
         # Get header size
@@ -286,7 +286,7 @@ class OglClass(OglObject):
         y = headerY + headerH
 
         # Get fields size
-        if pyutObject.getShowFields():
+        if pyutObject.showFields is True:
             (fieldsX, fieldsY, fieldsW, fieldsH) = self.calculateClassFields(dc, False, initialY=y, calcWidth=True)
             y = fieldsY + fieldsH
         else:
@@ -323,7 +323,7 @@ class OglClass(OglObject):
             pyutObject.showMethods = not pyutObject.showMethods     # flip it!!  too cute
             self.autoResize()
         elif event.GetId() == MNU_TOGGLE_FIELDS:
-            pyutObject.setShowFields(not pyutObject.getShowFields())
+            pyutObject.showFields = not pyutObject.showFields       # flip it!! too cute
             self.autoResize()
         elif event.GetId() == MNU_FIT_FIELDS:
             self.autoResize()
@@ -349,7 +349,7 @@ class OglClass(OglObject):
 
         menu.Append(MNU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set on or off the fields display"), True)
         item = menu.FindItemById(MNU_TOGGLE_FIELDS)
-        item.Check(pyutObject.getShowFields())
+        item.Check(pyutObject.showFields)
 
         menu.Append(MNU_TOGGLE_METHODS, _("Toggle methods display"), _("Set on or off the methods display"), True)
         item = menu.FindItemById(MNU_TOGGLE_METHODS)

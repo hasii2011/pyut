@@ -176,30 +176,23 @@ class PyutClass(PyutLinkedObject):
     @showMethods.setter
     def showMethods(self, value: bool):
         """
-        Setter
-
         Args:
             value:  Set to `True` to display the method, else `False`
         """
         self._showMethods = value
 
-    def getShowFields(self):
+    @property
+    def showFields(self) -> bool:
         """
-        Return True if we must display the fields
-
-        @return boolean indicating if we must display the fields
-        @since 1.1.1.2
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Returns:  `True` if we should display the fields, else `False`
         """
         return self._showFields
 
-    def setShowFields(self, value):
+    @showFields.setter
+    def showFields(self, value: bool):
         """
-        Define the showFields property
-
-        @param value : boolean indicating if we must display the fields
-        @since 1.1.1.2
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            value: Indicates if we should display the fields
         """
         self._showFields = value
 
