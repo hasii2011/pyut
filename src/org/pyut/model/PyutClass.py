@@ -1,4 +1,7 @@
 
+from typing import List
+
+from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.model.PyutStereotype import getPyutStereotype
 
@@ -16,13 +19,11 @@ class PyutClass(PyutLinkedObject):
 
     Example::
         myClass = PyutClass("Foo") # this will create a `Foo` class
-        myClass.setDescription("Example class")
-        fields = myClass.getFields() # this is the original fields []
+        myClass.description = "Example class"
+
+        fields = myClass.fields # this is the original fields []
         fields.append(PyutField("bar", "int"))
 
-    :version: $Revision: 1.7 $
-    :author: Laurent Burgbacher
-    :contact: lb@alawa.ch
     """
 
     def __init__(self, name=""):
@@ -32,7 +33,7 @@ class PyutClass(PyutLinkedObject):
             name: class name
         """
         super().__init__(name)
-        self._fields      = []
+        self._fields: List[PyutField] = []
         self._methods     = []
         self._description = ""
         self._stereotype  = None
@@ -68,24 +69,23 @@ class PyutClass(PyutLinkedObject):
         """
         self._description = description
 
-    def getFields(self):
+    @property
+    def fields(self) -> List[PyutField]:
         """
-        Return a list of the fields.
         This is not a copy, but the original one. Any change made to it is
         directly made on the class.
 
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:    a list of the fields.
         """
         return self._fields
 
-    def setFields(self, fields):
+    @fields.setter
+    def fields(self, fields: List[PyutField]):
         """
-        Replace the actual fields by those given in the list.
-        The methods passed are not copied, but used directly.
+        The fields passed are not copied, but used directly.
 
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            fields: Replace the actual fields by those given in the list.
         """
         self._fields = fields
 

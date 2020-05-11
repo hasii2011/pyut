@@ -352,7 +352,7 @@ class PyutXml:
             root.appendChild(self._PyutMethod2xml(method, xmlDoc))
 
         # fields
-        for field in pyutClass.getFields():
+        for field in pyutClass.fields:
             root.appendChild(self._PyutField2xml(field, xmlDoc))
 
         # Append fathers
@@ -718,7 +718,7 @@ class PyutXml:
             pyutClass.setMethods(self._getMethods(xmlClass))
 
             # adding fields for this class
-            pyutClass.setFields(self._getFields(xmlClass))
+            pyutClass.fields = self._getFields(xmlClass)
 
             # adding fathers
             self._getFathers(xmlClass.getElementsByTagName("Father"), dicoFather, pyutClass.getId())

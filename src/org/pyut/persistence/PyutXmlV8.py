@@ -512,7 +512,7 @@ class PyutXml:
             root.appendChild(self._PyutMethod2xml(method, xmlDoc))
 
         # fields
-        for field in pyutClass.getFields():
+        for field in pyutClass.fields:
             root.appendChild(self._PyutField2xml(field, xmlDoc))
 
         return root
@@ -1124,7 +1124,7 @@ class PyutXml:
         """
         for xmlOglClass in xmlOglClasses:
 
-            pyutClass = PyutClass()
+            pyutClass:PyutClass = PyutClass()
 
             # Building OGL class
             height   = float(xmlOglClass.getAttribute('height'))
@@ -1143,7 +1143,7 @@ class PyutXml:
             # print "PyutXml/open-4d00d"
 
             # adding description
-            pyutClass.setDescription(xmlClass.getAttribute('description'))
+            pyutClass.description = xmlClass.getAttribute('description')
 
             # adding stereotype
             if xmlClass.hasAttribute('stereotype'):
@@ -1164,7 +1164,7 @@ class PyutXml:
             pyutClass.setMethods(self._getMethods(xmlClass))
 
             # adding fields for this class
-            pyutClass.setFields(self._getFields(xmlClass))
+            pyutClass.fields = self._getFields(xmlClass)
 
             dicoOglObjects[pyutClass.getId()] = oglClass
 

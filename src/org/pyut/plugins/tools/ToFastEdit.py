@@ -163,7 +163,7 @@ class ToFastEdit(PyutToPlugin):
         methods = []
         fields = []
         pyutClass.setMethods(methods)
-        pyutClass.setFields(fields)
+        pyutClass.fields = fields
 
         # process methods and fields
         visValues: List[str] = PyutVisibilityEnum.values()
@@ -188,6 +188,7 @@ class ToFastEdit(PyutToPlugin):
                 nextStereoType = nextStereoType[pos+1:]
                 pos = nextStereoType.find(")")
 
+                # TODO return typ should be PyutType
                 returnType: str = ""
                 if pos != -1:
                     params = self._findParams(nextStereoType[:pos])
@@ -231,7 +232,7 @@ class ToFastEdit(PyutToPlugin):
             file.write(str(o.getStereotype()) + "\n")
         for method in o.getMethods():
             file.write(method.getString() + "\n")
-        for field in o.getFields():
+        for field in o.fields:
             file.write(str(field) + "\n")
         file.close()
 

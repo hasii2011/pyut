@@ -70,7 +70,7 @@ class TestDTDParser(TestBase):
         """
         pyutClass: PyutClass = treeData.pyutClass
 
-        fields: List[PyutField] = pyutClass.getFields()
+        fields: List[PyutField] = pyutClass.fields
         for pyutField in fields:
             self.assertEqual(fieldName, pyutField.getName(), 'Where is my attribute')
 

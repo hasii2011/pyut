@@ -308,7 +308,7 @@ class DlgEditClass(Dialog):
 
         # Fill the list controls
         try:
-            for el in self._pyutClassCopy.getFields():
+            for el in self._pyutClassCopy.fields:
                 self.logger.debug(f'field: {el}')
                 self._lstFieldList.Append(str(el))
 
@@ -369,7 +369,7 @@ class DlgEditClass(Dialog):
         field = PyutField()
         ret = self._callDlgEditField(field)
         if ret == OK:
-            self._pyutClassCopy.getFields().append(field)
+            self._pyutClassCopy.fields.append(field)
             # Add fields in dialog list
             self._lstFieldList.Append(str(field))
 
@@ -412,7 +412,7 @@ class DlgEditClass(Dialog):
         @author N. Dubois <n_dub@altavista.com>
         """
         selection = self._lstFieldList.GetSelection()
-        field = self._pyutClassCopy.getFields()[selection]
+        field = self._pyutClassCopy.fields[selection]
         ret = self._callDlgEditField(field)
         if ret == OK:
             # Modify field in dialog list
@@ -463,7 +463,7 @@ class DlgEditClass(Dialog):
             self._lstFieldList.SetSelection(index)
 
         # Remove from _pyutClassCopy
-        fields = self._pyutClassCopy.getFields()
+        fields = self._pyutClassCopy.fields
         fields.pop(selection)
 
         # Fix buttons of fields list (enable or not)
@@ -517,7 +517,7 @@ class DlgEditClass(Dialog):
         """
         # Move up the field in _pyutClassCopy
         selection = self._lstFieldList.GetSelection()
-        fields = self._pyutClassCopy.getFields()
+        fields = self._pyutClassCopy.fields
         field = fields[selection]
         fields.pop(selection)
         fields.insert(selection - 1, field)
@@ -577,7 +577,7 @@ class DlgEditClass(Dialog):
         """
         # Move down the field in _pyutClassCopy
         selection = self._lstFieldList.GetSelection()
-        fields = self._pyutClassCopy.getFields()
+        fields = self._pyutClassCopy.fields
         field = fields[selection]
         fields.pop(selection)
         fields.insert(selection + 1, field)
@@ -719,7 +719,7 @@ class DlgEditClass(Dialog):
         else:
             self._pyutClass.setStereotype(getPyutStereotype(strStereotype))
         # Adds all fields in a list
-        self._pyutClass.setFields(self._pyutClassCopy.getFields())
+        self._pyutClass.fields = self._pyutClassCopy.fields
         self._pyutClass.setMethods(self._pyutClassCopy.getMethods())
 
         # Update description (pwaelti@eivd.ch)

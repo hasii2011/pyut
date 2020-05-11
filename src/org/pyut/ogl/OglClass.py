@@ -147,12 +147,13 @@ class OglClass(OglObject):
         lth = dc.GetTextExtent("*")[1] / 2.0
 
         # Add space
-        if len(self.getPyutObject().getFields()) > 0:
+        pyutClass: PyutClass = self.getPyutObject()
+        if len(pyutClass.fields) > 0:
             h += lth
 
         # draw pyutClass fields
         if pyutObject.getShowFields():
-            for field in self.getPyutObject().getFields():
+            for field in pyutClass.fields:
                 if draw:
                     dc.DrawText(str(field), x + MARGIN, y + h)
                 if calcWidth:
@@ -161,7 +162,7 @@ class OglClass(OglObject):
                 h += self.GetTextHeight(dc, str(field))
 
         # Add space
-        if len(self.getPyutObject().getFields()) > 0:
+        if len(pyutClass.fields) > 0:
             h += lth
 
         # Return sizes

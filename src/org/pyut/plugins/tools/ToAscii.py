@@ -102,7 +102,7 @@ class ToAscii(PyutToPlugin):
             if o.getStereotype() is not None:
                 base.append(str(o.getStereotype()))
 
-            fields = [str(x) for x in o.getFields()]
+            fields = [str(x) for x in o.fields]
             methods = [str(x) for x in o.getMethods()]
 
             lineLength = max([len(x) for x in base + fields + methods]) + 4

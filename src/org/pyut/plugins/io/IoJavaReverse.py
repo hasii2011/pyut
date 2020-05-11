@@ -173,7 +173,7 @@ class ReverseJava:
         # Get class fields
         po = self._dicClasses[className]
         pc = po.getPyutObject()
-        classFields = pc.getFields()
+        classFields = pc.fields
 
         # TODO fix this crazy code to use constructor and catch exception on bad input
         # Get visibility

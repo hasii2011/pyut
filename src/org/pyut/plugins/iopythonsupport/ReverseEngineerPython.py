@@ -249,7 +249,7 @@ class ReverseEngineerPython:
         fields = None
         try:
             fe: FieldExtractor = FieldExtractor(pc.getFilename())
-            fields = fe.getFields(pc.getName())
+            fields: PyutField = fe.getFields(pc.getName())
             # fields = FieldExtractor(pc.getFilename()).getFields(pc.getName())
         except IOError:
             import sys
@@ -261,7 +261,6 @@ class ReverseEngineerPython:
 
                     possibleFileName:    str = pc.getFilename()
                     possibleFQNFileName: str = f'{path}{os.sep}{possibleFileName}'
-                    # fields = FieldExtractor(path + os.sep + pc.getFilename()).getFields(pc.getName())
                     fe: FieldExtractor = FieldExtractor(possibleFQNFileName)
                     fields = fe.getFields(pc.getName())
                     break
@@ -272,7 +271,7 @@ class ReverseEngineerPython:
             self.logger.info(f"Could not extract from file {pc.getFilename()}")
         fds = []
         if fields:
-            for name, init in list(fields.items()):
+            for name, init in fields.items():
                 if init == "":
                     init = None
                 vis: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
@@ -288,7 +287,7 @@ class ReverseEngineerPython:
 
         # fds.sort(lambda x, y: cmp(x.getName(), y.getName()))
         sortedFields = sorted(fds, key=lambda fieldToSort: fieldToSort._name)
-        pc.setFields(sortedFields)
+        pc.fields = sortedFields
         return pc
 
     def _addSourceCode(self, pyutMethod: PyutMethod, klassMethod: FunctionType):

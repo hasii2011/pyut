@@ -256,7 +256,7 @@ class OglToMiniDom:
         for method in pyutClass.getMethods():
             root.appendChild(self._pyutMethodToXml(method, xmlDoc))
         # fields
-        for field in pyutClass.getFields():
+        for field in pyutClass.fields:
             root.appendChild(self._pyutFieldToXml(field, xmlDoc))
 
         return root

@@ -420,7 +420,7 @@ class IoCpp(PyutIoPlugin):
         publicFields    = []
         privateFields   = []
         protectedFields = []
-        fields          = pyutClass.getFields()
+        fields          = pyutClass.fields
         defFields       = []
         self._visibility(fields, publicFields, privateFields, protectedFields)
         self._fieldsWDefault(fields, defFields)

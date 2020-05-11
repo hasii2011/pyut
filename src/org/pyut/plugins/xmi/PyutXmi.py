@@ -178,22 +178,21 @@ class PyutXmi:
 
         return root
 
-    def _PyutClass2xml(self, pyutClass):
+    def _PyutClass2xml(self, pyutClass: PyutClass) -> Element:
         """
-        Exporting an PyutClass to an miniDom Element
+        Exporting a PyutClass to a miniDom Element
 
-        @since 2.0
-        @Deve Roux <droux@eivd.ch>
+        Args:
+            pyutClass: The Pyut class
 
-        @param pyutClass
-        @return Element
+        Returns:  The XML element
         """
         root = Element('Class')
 
         # class name
         root.setAttribute('name', pyutClass.getName())
 
-        # classs stereotype
+        # class stereotype
         stereotype = pyutClass.getStereotype()
         if stereotype is not None:
             root.setAttribute('stereotype', stereotype.getStereotype())
@@ -203,7 +202,7 @@ class PyutXmi:
             root.appendChild(self._PyutMethod2xml(i))
 
         # for all the field
-        for i in pyutClass.getFields():
+        for i in pyutClass.fields:
             root.appendChild(self._PyutField2xml(i))
 
         # for fathers
@@ -338,7 +337,7 @@ class PyutXmi:
                 xmiType = aType.getElementsByTagName("Foundation.Core.ModelElement.name")
                 if len(xmiType) > 0:
                     typeName = xmiType[0].firstChild.data
-                    # making link with dictionnary
+                    # making link with dictionary
                     if anId in self.dicoType:
                         self.dicoType[anId].setType(typeName)
                     if anId in self.dicoReturn:
@@ -606,13 +605,13 @@ class PyutXmi:
             pyutClass.setMethods(self._getMethods(xmlOglClasses))
 
             # adding fields for this class
-            pyutClass.setFields(self._getFields(xmlOglClasses))
+            pyutClass.fields = self._getFields(xmlOglClasses)
 
             # for class id
             classId = xmlOglClasses.getAttribute("xmi.id")
             self.logger.debug(f"Class ID: {classId}")
 
-            # for all class whos are inheritance link
+            # for all the classes who are an inheritance link
             for fathers in xmlOglClasses.getElementsByTagName("Foundation.Core.Generalization"):
                 linkId = fathers.getAttribute("xmi.idref")
                 self.logger.debug(f"parent: {linkId}")

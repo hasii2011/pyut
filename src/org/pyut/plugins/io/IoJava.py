@@ -122,7 +122,7 @@ class IoJava(PyutIoPlugin):
         javaFileFD: int = open(fqn, flags)
 
         # Extract the data from the class
-        fields     = pyutClass.getFields()
+        fields     = pyutClass.fields
         methods    = pyutClass.getMethods()
         parents    = pyutClass.getParents()
         allLinks   = pyutClass.getLinks()

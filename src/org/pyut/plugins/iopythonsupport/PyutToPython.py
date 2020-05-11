@@ -111,7 +111,7 @@ class PyutToPython:
             clsMethods[pyutMethod.getName()] = lstCodeMethod
 
         # Add fields
-        if len(pyutClass.getFields()) > 0:
+        if len(pyutClass.fields) > 0:
             # Create method __init__ if it does not exist
             if PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR not in clsMethods:
                 # Separation
@@ -125,7 +125,7 @@ class PyutToPython:
                 clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR] = lstCodeMethod
 
             clsInit = clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR]
-            for pyutField in pyutClass.getFields():
+            for pyutField in pyutClass.fields:
                 clsInit.append(self.__indentStr(self.__indentStr(self.generateFieldPythonCode(pyutField))))
             clsInit.append('\n')
 
