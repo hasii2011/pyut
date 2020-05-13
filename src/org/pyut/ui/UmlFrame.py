@@ -80,7 +80,6 @@ class UmlFrame(UmlFrameShapeHandler):
 
         self._defaultCursor = self.GetCursor()
 
-
     def setCodePath(self, path):
         """
         Set the code path
