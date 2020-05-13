@@ -54,9 +54,6 @@ from wx import Yield as wxYield
 
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
-from org.pyut.general.Mediator import ACTION_DESTINATION_IMPLEMENT_INTERFACE
-from org.pyut.general.Mediator import ACTION_NEW_INTERFACE
-
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
@@ -1004,11 +1001,7 @@ class AppFrame(Frame):
             event:
         """
         currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
-        #
-        # Lollipop interface only has a destination
-        #
-        if currentAction == ACTION_NEW_INTERFACE:
-            currentAction = ACTION_DESTINATION_IMPLEMENT_INTERFACE
+
         self._ctrl.setCurrentAction(currentAction)
         self._ctrl.selectTool(event.GetId())
         self._mainFileHandlingUI.setModified(True)

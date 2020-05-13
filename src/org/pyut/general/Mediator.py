@@ -65,18 +65,17 @@ __PyUtVersion__ = PyutVersion.getPyUtVersion()
     ACTION_NEW_NOTE_LINK,
 
     ACTION_DEST_IMPLEMENT_LINK,
-    ACTION_DESTINATION_IMPLEMENT_INTERFACE,     # 13
     ACTION_DEST_INHERIT_LINK,
     ACTION_DEST_AGGREGATION_LINK,
     ACTION_DEST_COMPOSITION_LINK,
     ACTION_DEST_ASSOCIATION_LINK,
     ACTION_DEST_NOTE_LINK,
-    ACTION_NEW_SD_INSTANCE,                 # 18
-    ACTION_NEW_SD_MESSAGE,                  # 19
+    ACTION_NEW_SD_INSTANCE,
+    ACTION_NEW_SD_MESSAGE,
     ACTION_DEST_SD_MESSAGE,
     ACTION_ZOOM_IN,
     ACTION_ZOOM_OUT
-] = range(24)
+] = range(23)
 
 # a table of the next action to select
 NEXT_ACTION = {
@@ -90,7 +89,6 @@ NEXT_ACTION = {
     ACTION_NEW_ASSOCIATION_LINK:    ACTION_DEST_ASSOCIATION_LINK,
     ACTION_NEW_NOTE_LINK:           ACTION_DEST_NOTE_LINK,
     ACTION_DEST_IMPLEMENT_LINK:             ACTION_SELECTOR,
-    ACTION_DESTINATION_IMPLEMENT_INTERFACE: ACTION_SELECTOR,
 
     ACTION_DEST_INHERIT_LINK:     ACTION_SELECTOR,
     ACTION_DEST_AGGREGATION_LINK: ACTION_SELECTOR,
@@ -120,7 +118,6 @@ SOURCE_ACTIONS = [
 DEST_ACTIONS = [
     ACTION_DEST_IMPLEMENT_LINK,
     ACTION_DEST_INHERIT_LINK,
-    ACTION_DESTINATION_IMPLEMENT_INTERFACE,
     ACTION_DEST_AGGREGATION_LINK,
     ACTION_DEST_COMPOSITION_LINK,
     ACTION_DEST_ASSOCIATION_LINK,
@@ -161,7 +158,6 @@ MESSAGES = {
     ACTION_NEW_ASSOCIATION_LINK: a,
     ACTION_NEW_NOTE_LINK:        a,
     ACTION_DEST_IMPLEMENT_LINK: b,
-    ACTION_DESTINATION_IMPLEMENT_INTERFACE: 'Click on the implementing class',
     ACTION_DEST_INHERIT_LINK:   b,
     ACTION_DEST_AGGREGATION_LINK: b,
     ACTION_DEST_COMPOSITION_LINK: b,
@@ -556,10 +552,7 @@ class Mediator(Singleton):
                 self.selectTool(self._tools[0])
                 self.setStatusText(_("Action cancelled"))
                 return
-            if self._currentAction == ACTION_DESTINATION_IMPLEMENT_INTERFACE:
-                self.setStatusText(f'Do the lollipop')
-            else:
-                self._createLink(umlFrame)
+            self._createLink(umlFrame)
 
             if self._currentActionPersistent:
                 self._currentAction = self._oldAction
