@@ -78,11 +78,11 @@ class CreateOglLinkCommand(Command):
 
     def deserialize(self, serializedInfo: str):
         """
-        unserialize the data needed by the command to undo/redo the created link
+        deserialize the data needed by the command to undo/redo the created link
         @param serializedInfo    :   string representation of the data needed by the command to undo redo a link
         """
 
-        # unserialize the data common to all commands
+        # deserialize the data common to all commands
         Command.deserialize(self, serializedInfo)
         # get the pyutId of the source OglObject of the link
         srcId = eval(getTokenValue("srcId", serializedInfo))

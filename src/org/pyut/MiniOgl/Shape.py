@@ -190,11 +190,12 @@ class Shape:
         # will be attached when Attach is called on the shape.
         return p
 
-    def AddAnchorObject(self, anchor):
+    def AddAnchorPoint(self, anchor):
         """
         Add an anchor point directly.
 
-        @param anchor
+        Args:
+            anchor:
         """
         self._anchors.append(anchor)
 

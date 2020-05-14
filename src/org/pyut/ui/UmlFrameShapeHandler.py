@@ -1,4 +1,6 @@
 
+from typing import Union
+
 from logging import Logger
 from logging import getLogger
 
@@ -14,10 +16,12 @@ from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.general.Globals import _
+from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
+
+from org.pyut.general.Globals import _
 
 
 class UmlFrameShapeHandler(DiagramFrame):
@@ -80,7 +84,7 @@ class UmlFrameShapeHandler(DiagramFrame):
         self.Refresh()
         return pyutUseCase
 
-    def addShape(self, shape: OglObject, x: float, y: float, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
+    def addShape(self, shape: Union[OglObject, OglInterface2], x: float, y: float, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
         """
         Add a shape to the UmlFrame.
 

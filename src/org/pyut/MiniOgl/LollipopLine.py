@@ -41,8 +41,8 @@ class LollipopLine(Shape):
 
         xDest, yDest = self._destinationAnchor.GetPosition()
 
-        xSrc: int = int(xDest - 50)
+        xSrc: int = int(xDest + 50)
         ySrc: int = int(yDest)
         dc.DrawLine(xSrc, ySrc, xDest, yDest)
 
-        dc.DrawCircle(xDest, yDest, 4)
+        dc.DrawCircle(xDest + 50, yDest, 4)

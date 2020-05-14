@@ -1,7 +1,15 @@
+from typing import cast
+
+from wx import Colour
+from wx import DC
+from wx import Pen
+
 from org.pyut.MiniOgl.Shape import Shape
 
 
 class PointShape(Shape):
+
+    SELECTION_ZONE: int = 8     # Make it bigger than in legacy;  It was 5 then
     """
     A point, which is drawn as a little square (3 pixels wide).
 
@@ -14,12 +22,13 @@ class PointShape(Shape):
             y:  y position of the point
             parent:  parent shape
         """
-        #  print ">>>PointShape ", x, y
         super().__init__(x, y, parent)
-        self._selectZone = 5
-        self._visibleWhenSelected = True
+        self._selectZone:           int = PointShape.SELECTION_ZONE
+        self._visibleWhenSelected: bool = True
 
-    def Draw(self, dc, withChildren=True):
+        self.__penSaveColor: Colour = cast(Colour, None)
+
+    def Draw(self, dc: DC, withChildren=True):
         """
         Draw the point on the dc.
 
@@ -28,7 +37,12 @@ class PointShape(Shape):
             withChildren:
         """
         if self._visible or (self._visibleWhenSelected and self._selected):
+
+            self.__penSaveColor = dc.GetPen().GetColour()
             Shape.Draw(self, dc, False)
+
+            self.__resetPenColor(dc)
+
             x, y = self.GetPosition()
             if not self._selected:
                 dc.DrawRectangle(x - 1, y - 1, 3, 3)
@@ -82,3 +96,9 @@ class PointShape(Shape):
         @return bool True if the shape is always visible when selected
         """
         return self._visibleWhenSelected
+
+    def __resetPenColor(self, dc: DC):
+
+        pen: Pen = dc.GetPen()
+        pen.SetColour(self.__penSaveColor)
+        dc.SetPen(pen)

@@ -24,7 +24,6 @@ from org.pyut.MiniOgl.Constants import SKIP_EVENT
 from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 
-
 from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.enums.LinkType import LinkType
@@ -1027,6 +1026,24 @@ class Mediator(Singleton):
             umlFrame.getHistory().addCommandGroup(group)
 
         self._modifyCommand = None
+
+    from org.pyut.ogl.OglClass import OglClass
+
+    def implementInterface(self, implementor: OglClass):
+
+        self.logger.info(f'Implementing class: {implementor}')
+
+        from org.pyut.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+        from org.pyut.commands.CommandGroup import CommandGroup
+
+        cmd = CreateOglInterfaceCommand(implementor)
+        group = CommandGroup("Create Interface")
+        group.addCommand(cmd)
+
+        umlFrame = self._fileHandling.getCurrentFrame()
+
+        umlFrame.getHistory().addCommandGroup(group)
+        umlFrame.getHistory().execute()
 
     def _setShapeSelection(self, selected: bool):
         """
