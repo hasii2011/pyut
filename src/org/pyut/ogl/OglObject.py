@@ -9,10 +9,6 @@ from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
 
-# from OglLink import *
-
-from org.pyut.general.Mediator import getMediator
-from org.pyut.general.Mediator import ACTION_ZOOM_OUT
 from org.pyut.MiniOgl.RectangleShape import RectangleShape
 from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
@@ -99,10 +95,14 @@ class OglObject(RectangleShape, ShapeEventHandler):
     def OnLeftDown(self, event: MouseEvent):
         """
         Handle event on left click.
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+
+        Args:
+            event:
         """
         self.logger.debug(f'OnLeftDown - event - {event}')
+
+        from org.pyut.general.Mediator import getMediator   # avoid circular import
+
         med = getMediator()
         if med.actionWaiting():
             position: Point = event.GetPosition()
@@ -137,6 +137,9 @@ class OglObject(RectangleShape, ShapeEventHandler):
         RectangleShape.SetPosition(self, x, y)
 
     def SetSelected(self, state=True):
+
+        from org.pyut.general.Mediator import getMediator       # avoid circular import
+        from org.pyut.general.Mediator import ACTION_ZOOM_OUT   # avoid circular import
 
         if getMediator().getCurrentAction() != ACTION_ZOOM_OUT:
             RectangleShape.SetSelected(self, state)

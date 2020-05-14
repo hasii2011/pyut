@@ -5,6 +5,7 @@ from logging import Logger
 from logging import getLogger
 
 from wx import BLACK
+from wx import CommandEvent
 from wx import EVT_MENU
 from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
@@ -22,12 +23,20 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.general.Globals import _
 
-from org.pyut.general.Mediator import getMediator
 
 # Menu IDs
-[MNU_TOGGLE_STEREOTYPE, MNU_TOGGLE_FIELDS, MNU_TOGGLE_METHODS, MNU_FIT_FIELDS, MNU_CUT_SHAPE]  = PyutUtils.assignID(5)
+[
+    MENU_TOGGLE_STEREOTYPE,
+    MENU_TOGGLE_FIELDS,
+    MENU_TOGGLE_METHODS,
+    MENU_FIT_FIELDS,
+    MENU_CUT_SHAPE,
+    MENU_IMPLEMENT_INTERFACE
+]  = PyutUtils.assignID(6)
 
-MARGIN = 10.0
+MARGIN:               float = 10.0
+DEFAULT_CLASS_WIDTH:  float = 100.0
+DEFAULT_CLASS_HEIGHT: float = 100.0
 
 
 class OglClass(OglObject):
@@ -44,7 +53,7 @@ class OglClass(OglObject):
     :author: Laurent Burgbacher
     :contact: lb@alawa.ch
     """
-    def __init__(self, pyutClass: PyutClass = None, w: float = 100.0, h: float = 100.0):
+    def __init__(self, pyutClass: PyutClass = None, w: float = DEFAULT_CLASS_WIDTH, h: float = DEFAULT_CLASS_HEIGHT):
         """
 
         Args:
@@ -309,31 +318,38 @@ class OglClass(OglObject):
             self.SetSelected(False)
             self.SetSelected(True)
 
-    def OnMenuClick(self, event):
+    def OnMenuClick(self, event: CommandEvent):
         """
-        Callback for menu clicks.
+        Callback for popup menu on class
 
-        @author C.Dutoit
+        Args:
+            event:
         """
+        from org.pyut.general.Mediator import getMediator   # avoid circular import
+
         pyutObject: PyutClass = self.getPyutObject()
-        if event.GetId() == MNU_TOGGLE_STEREOTYPE:
+        eventId:    int       = event.GetId()
+        if eventId == MENU_TOGGLE_STEREOTYPE:
             pyutObject.setShowStereotype(not pyutObject.getShowStereotype())
             self.autoResize()
-        elif event.GetId() == MNU_TOGGLE_METHODS:
+        elif eventId == MENU_TOGGLE_METHODS:
             pyutObject.showMethods = not pyutObject.showMethods     # flip it!!  too cute
             self.autoResize()
-        elif event.GetId() == MNU_TOGGLE_FIELDS:
+        elif eventId == MENU_TOGGLE_FIELDS:
             pyutObject.showFields = not pyutObject.showFields       # flip it!! too cute
             self.autoResize()
-        elif event.GetId() == MNU_FIT_FIELDS:
+        elif eventId == MENU_FIT_FIELDS:
             self.autoResize()
-        elif event.GetId() == MNU_CUT_SHAPE:
+        elif eventId == MENU_CUT_SHAPE:
             ctrl = getMediator()
             ctrl.deselectAllShapes()
             self.SetSelected(True)
             ctrl.cutSelectedShapes()
+        elif eventId == MENU_IMPLEMENT_INTERFACE:
+            ctrl = getMediator()
+            ctrl.implementInterface(self)
         else:
-            event.skip()
+            event.Skip()
 
     def OnRightDown(self, event):
         """
@@ -342,30 +358,34 @@ class OglClass(OglObject):
         @author C.Dutoit
         """
         pyutObject: PyutClass = self.getPyutObject()
-        menu = Menu()
-        menu.Append(MNU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set on or off the stereotype display"), True)
-        item = menu.FindItemById(MNU_TOGGLE_STEREOTYPE)
+        menu:       Menu      = Menu()
+
+        menu.Append(MENU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set on or off the stereotype display"), True)
+        item = menu.FindItemById(MENU_TOGGLE_STEREOTYPE)
         item.Check(pyutObject.getShowStereotype())
 
-        menu.Append(MNU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set on or off the fields display"), True)
-        item = menu.FindItemById(MNU_TOGGLE_FIELDS)
+        menu.Append(MENU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set on or off the fields display"), True)
+        item = menu.FindItemById(MENU_TOGGLE_FIELDS)
         item.Check(pyutObject.showFields)
 
-        menu.Append(MNU_TOGGLE_METHODS, _("Toggle methods display"), _("Set on or off the methods display"), True)
-        item = menu.FindItemById(MNU_TOGGLE_METHODS)
+        menu.Append(MENU_TOGGLE_METHODS, _("Toggle methods display"), _("Set on or off the methods display"), True)
+        item = menu.FindItemById(MENU_TOGGLE_METHODS)
         item.Check(pyutObject.showMethods)
 
-        menu.Append(MNU_FIT_FIELDS, _("Fit Fields"), _("Fit to see all class fields"))
-        menu.Append(MNU_CUT_SHAPE,  _("Cut shape"),  _("Cut this shape"))
+        menu.Append(MENU_FIT_FIELDS, _("Fit Fields"), _("Fit to see all class fields"))
+        menu.Append(MENU_CUT_SHAPE,  _("Cut shape"), _("Cut this shape"))
+
+        menu.Append(MENU_IMPLEMENT_INTERFACE, _('Implement Interface'), _('Use Existing interface or create new one'))
 
         frame    = self._diagram.GetPanel()
 
         # Callback
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MNU_TOGGLE_STEREOTYPE)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MNU_TOGGLE_FIELDS)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MNU_TOGGLE_METHODS)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MNU_FIT_FIELDS)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MNU_CUT_SHAPE)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_STEREOTYPE)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_FIELDS)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_METHODS)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_FIT_FIELDS)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_CUT_SHAPE)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_IMPLEMENT_INTERFACE)
 
         x: int = event.GetX()
         y: int = event.GetY()
