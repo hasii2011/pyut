@@ -46,5 +46,5 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
         Args:
             event: The mouse event
         """
-        print(f'SelectAnchorPoint left down')
+        print(f'SelectAnchorPoint: {self._attachmentPoint}')
         event.Skip()

@@ -17,12 +17,15 @@ from wx import EndBusyCursor
 from wx import KeyEvent
 
 from wx import TextEntryDialog
+from wx import Yield as wxYield
 
 from org.pyut.MiniOgl.Constants import EVENT_PROCESSED
 from org.pyut.MiniOgl.Constants import SKIP_EVENT
 
 from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 
 from org.pyut.ogl.OglLink import OglLink
 
@@ -1032,18 +1035,18 @@ class Mediator(Singleton):
     def implementInterface(self, implementor: OglClass):
 
         self.logger.info(f'Implementing class: {implementor}')
-
-        from org.pyut.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
-        from org.pyut.commands.CommandGroup import CommandGroup
-
-        cmd = CreateOglInterfaceCommand(implementor)
-        group = CommandGroup("Create Interface")
-        group.addCommand(cmd)
-
-        umlFrame = self._fileHandling.getCurrentFrame()
-
-        umlFrame.getHistory().addCommandGroup(group)
-        umlFrame.getHistory().execute()
+        #
+        # from org.pyut.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+        # from org.pyut.commands.CommandGroup import CommandGroup
+        #
+        # cmd = CreateOglInterfaceCommand(implementor)
+        # group = CommandGroup("Create Interface")
+        # group.addCommand(cmd)
+        #
+        # umlFrame = self._fileHandling.getCurrentFrame()
+        #
+        # umlFrame.getHistory().addCommandGroup(group)
+        # umlFrame.getHistory().execute()
 
     def _setShapeSelection(self, selected: bool):
         """
@@ -1076,3 +1079,53 @@ class Mediator(Singleton):
                 if isinstance(oglObject, OglObject.OglObject):
                     callback(oglObject)
         umlFrame.Refresh()
+
+    def requestLollipopLocation(self, destinationClass: OglClass):
+
+        # from org.pyut.ogl.OglInterface2 import OglInterface2
+        # from org.pyut.model.PyutInterface import PyutInterface
+
+        # destinationPosition: Tuple[float, float] = destinationClass.GetPosition()
+        # anchors = destinationClass.GetAnchors()
+        # self.logger.info(f'implementor: {destinationClass} at {destinationPosition}')
+        #
+        # pyutInterface: PyutInterface = PyutInterface(name='Sin Nombre')
+        # oglInterface:  OglInterface2 = OglInterface2(pyutInterface, anchors[0])
+        #
+        # umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
+        #
+        # x = destinationPosition[0]
+        # y = destinationPosition[1]
+        #
+        # umlFrame.addShape(oglInterface, x, y, withModelUpdate=True)
+        # umlFrame.Refresh()
+        #
+        from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
+        umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
+
+        self.__createPotentialAttachmentPoints(destinationClass=destinationClass, umlFrame=umlFrame)
+        self.setStatusText(f'Select attachment point')
+        wxYield()
+
+    def __createPotentialAttachmentPoints(self, destinationClass: OglClass, umlFrame):
+
+        dw, dh     = destinationClass.GetSize()
+
+        southX, southY = dw / 2, dh
+        northX, northY = dw / 2, 0
+        westX, westY   = 0.0, dh / 2
+        eastX, eastY   = dw, dh / 2
+
+        self.__createAnchorHints(destinationClass, southX, southY, PyutAttachmentPoint.SOUTH, umlFrame)
+        self.__createAnchorHints(destinationClass, northX, northY, PyutAttachmentPoint.NORTH, umlFrame)
+        self.__createAnchorHints(destinationClass, westX,  westY,  PyutAttachmentPoint.WEST,  umlFrame)
+        self.__createAnchorHints(destinationClass, eastX,  eastY,  PyutAttachmentPoint.EAST, umlFrame)
+
+    def __createAnchorHints(self, destinationClass: OglClass, anchorX: float, anchorY: float, attachmentPoint: PyutAttachmentPoint, umlFrame):
+
+        anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=anchorX, y=anchorY, attachmentPoint=attachmentPoint, parent=destinationClass)
+        anchorHint.SetProtected(True)
+
+        destinationClass.AddAnchorPoint(anchorHint)
+        umlFrame.getDiagram().AddShape(anchorHint)
