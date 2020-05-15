@@ -1080,6 +1080,22 @@ class Mediator(Singleton):
                     callback(oglObject)
         umlFrame.Refresh()
 
+    def createLollipopInterface(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
+
+        from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+        from org.pyut.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+        from org.pyut.commands.CommandGroup import CommandGroup
+
+        self.logger.info(f'implementor: {implementor} attachmentAnchor: {attachmentAnchor}')
+        umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
+
+        cmd:  CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor, attachmentAnchor)
+        group: CommandGroup             = CommandGroup("Create class")
+
+        group.addCommand(cmd)
+        umlFrame.getHistory().addCommandGroup(group)
+        umlFrame.getHistory().execute()
+
     def requestLollipopLocation(self, destinationClass: OglClass):
 
         # from org.pyut.ogl.OglInterface2 import OglInterface2
@@ -1106,6 +1122,7 @@ class Mediator(Singleton):
 
         self.__createPotentialAttachmentPoints(destinationClass=destinationClass, umlFrame=umlFrame)
         self.setStatusText(f'Select attachment point')
+        umlFrame.Refresh()
         wxYield()
 
     def __createPotentialAttachmentPoints(self, destinationClass: OglClass, umlFrame):
