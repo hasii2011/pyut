@@ -210,7 +210,8 @@ class Shape:
         """
         Remove an anchor.
 
-        @param  anchor
+        Args:
+            anchor:   The anchor to remove
         """
         if anchor in self._anchors:
             self._anchors.remove(anchor)

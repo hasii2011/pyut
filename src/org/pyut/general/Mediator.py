@@ -1090,11 +1090,13 @@ class Mediator(Singleton):
         umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
 
         cmd:  CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor, attachmentAnchor)
-        group: CommandGroup             = CommandGroup("Create class")
+        group: CommandGroup             = CommandGroup("Create lollipop")
 
         group.addCommand(cmd)
         umlFrame.getHistory().addCommandGroup(group)
         umlFrame.getHistory().execute()
+        self.__removeUnneededAnchorPoints(implementor, attachmentAnchor, umlFrame)
+        umlFrame.Refresh()
 
     def requestLollipopLocation(self, destinationClass: OglClass):
 
@@ -1146,3 +1148,15 @@ class Mediator(Singleton):
 
         destinationClass.AddAnchorPoint(anchorHint)
         umlFrame.getDiagram().AddShape(anchorHint)
+
+    def __removeUnneededAnchorPoints(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint, umlFrame):
+
+        attachmentPoint: PyutAttachmentPoint = attachmentAnchor.attachmentPoint
+        for anchor in implementor.GetAnchors():
+            if isinstance(anchor, SelectAnchorPoint):
+                anchor: SelectAnchorPoint = cast(SelectAnchorPoint, anchor)
+                if anchor.attachmentPoint != attachmentPoint:
+                    anchor.SetProtected(False)
+                    anchor.Detach()
+
+
