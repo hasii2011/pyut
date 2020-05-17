@@ -25,15 +25,12 @@ from org.pyut.MiniOgl.Constants import SKIP_EVENT
 from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
+
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
-
-from org.pyut.ogl.OglLink import OglLink
-
 from org.pyut.enums.LinkType import LinkType
 
-from org.pyut.PyutPreferences import PyutPreferences
-from org.pyut.general.PyutVersion import PyutVersion
-from org.pyut.general.Singleton import Singleton
+from org.pyut.ogl.OglInterface2 import OglInterface2
+from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.model.PyutMethod import WITHOUT_PARAMS
 from org.pyut.model.PyutMethod import WITH_PARAMS
@@ -47,6 +44,10 @@ from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
 from org.pyut.general.Globals import _
+from org.pyut.general.PyutVersion import PyutVersion
+from org.pyut.general.Singleton import Singleton
+
+from org.pyut.PyutPreferences import PyutPreferences
 
 __PyUtVersion__ = PyutVersion.getPyUtVersion()
 
@@ -628,6 +629,8 @@ class Mediator(Singleton):
             pyutObject = diagramShape.getPyutObject()
             self.classEditor(pyutObject)
             self.autoResize(diagramShape)
+        elif isinstance(diagramShape, OglInterface2):
+            self.logger.info(f'Double clicked on lollipop')
         elif isinstance(diagramShape, OglNote):
             pyutObject = diagramShape.getPyutObject()
             dlg = DlgEditNote(umlFrame, -1, pyutObject)

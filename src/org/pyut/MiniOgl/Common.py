@@ -1,5 +1,19 @@
-
+from dataclasses import dataclass
 from math import sqrt
+
+
+@dataclass
+class CommonPoint:
+
+    x: float = 0.0
+    y: float = 0.0
+
+
+@dataclass
+class CommonLine:
+
+    start: CommonPoint = CommonPoint(0, 0)
+    end:   CommonPoint = CommonPoint(0, 0)
 
 
 class Common:
@@ -10,6 +24,21 @@ class Common:
     almost a line.  :-)
 
     """
+
+    def setupInsideCheck(self, clickPointX: float, clickPointY: float, line: CommonLine):
+
+        x1: float = line.start.x
+        y1: float = line.start.y
+        x2: float = line.end.x
+        y2: float = line.end.y
+
+        diffX: float = x2 - x1
+        diffY: float = y2 - y1
+
+        clickDiffStartX: float = clickPointX - x1     # x - x1
+        clickDiffStartY: float = clickPointY - y1     # y - y1
+
+        return clickDiffStartX, clickDiffStartY, diffX, diffY
 
     def insideSegment(self, clickDiffStartX: float, clickDiffStartY: float, diffX: float, diffY: float) -> bool:
         """

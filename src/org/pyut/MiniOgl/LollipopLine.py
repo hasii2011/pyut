@@ -1,4 +1,3 @@
-
 from typing import cast
 
 from logging import Logger
@@ -8,8 +7,12 @@ from wx import DC
 from wx import Pen
 from wx import RED_PEN
 
+from org.pyut.MiniOgl.Common import CommonLine
+from org.pyut.MiniOgl.Common import CommonPoint
+
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.MiniOgl.Shape import Shape
+
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 
 
@@ -36,6 +39,15 @@ class LollipopLine(Shape):
     @destinationAnchor.setter
     def destinationAnchor(self, theNewValue: SelectAnchorPoint):
         self._destinationAnchor = theNewValue
+
+    def lineCoordinates(self) -> CommonLine:
+
+        attachmentPoint: PyutAttachmentPoint = self._destinationAnchor.attachmentPoint
+
+        xDest, yDest = self._destinationAnchor.GetPosition()
+        circleX, circleY, xSrc, ySrc = self._calculateWhereToDrawLollipop(attachmentPoint, xDest, yDest)
+
+        return CommonLine(CommonPoint(xSrc, ySrc), CommonPoint(xDest, yDest))
 
     def Draw(self, dc: DC, withChildren: bool = True):
 
