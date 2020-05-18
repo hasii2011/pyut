@@ -3,6 +3,7 @@ from typing import cast
 
 from logging import Logger
 from logging import getLogger
+from unittest.mock import MagicMock
 
 from wx import DEFAULT_FRAME_STYLE
 from wx import ID_ANY
@@ -12,8 +13,11 @@ from wx import App
 from wx import Frame
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
+from org.pyut.PyutPreferences import PyutPreferences
 
-from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
+from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
+from org.pyut.general.Mediator import Mediator
+from org.pyut.model.PyutInterface import PyutInterface
 
 from tests.TestBase import TestBase
 
@@ -29,6 +33,8 @@ class TestADialog(App):
         frameTop: Frame = Frame(parent=None, id=TestADialog.FRAME_ID, title="Test A Dialog", size=(600, 400), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
 
+        PyutPreferences.determinePreferencesLocation()
+
         diagramFrame: DiagramFrame = DiagramFrame(frameTop)
         diagramFrame.SetSize((1200, 1200))
         diagramFrame.SetScrollbars(10, 10, 100, 100)
@@ -39,12 +45,20 @@ class TestADialog(App):
 
         self._diagramFrame: DiagramFrame = diagramFrame
 
+        #
+        # Introduce a mock
+        #
+        fileHandler = MagicMock()
+        self._mediator = Mediator()
+        self._mediator.registerFileHandling(fileHandler)
         self.initTest()
         return True
 
     def initTest(self):
-        with DlgPyutDebug(self._diagramFrame, ID_ANY) as dlg:
-            dlg: DlgPyutDebug = cast(DlgPyutDebug, dlg)
+        pyutInterface: PyutInterface = PyutInterface()
+
+        with DlgEditInterface(self._diagramFrame, ID_ANY, pyutInterface) as dlg:
+            dlg: DlgEditInterface = cast(DlgEditInterface, dlg)
             if dlg.ShowModal() == OK:
                 self.logger.warning(f'Retrieved data')
             else:

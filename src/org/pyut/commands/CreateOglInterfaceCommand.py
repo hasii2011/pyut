@@ -5,7 +5,6 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 from org.pyut.model.PyutInterface import PyutInterface
 
 from org.pyut.ogl.OglClass import OglClass

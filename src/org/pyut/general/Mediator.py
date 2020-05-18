@@ -180,6 +180,7 @@ BadPracticeType = NewType("BadPracticeType", Union[PyutClass, "OglClass"])
 def getMediator():
     """
     Factory function to get the unique Mediator instance (singleton).
+    TODO:  Don't need this since Mediator is a singleton
 
     @since 1.0
     @author L. Burgbacher <lb@alawa.ch>

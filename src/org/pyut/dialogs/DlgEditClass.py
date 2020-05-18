@@ -4,14 +4,10 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from copy import deepcopy
-
 from wx import ALIGN_CENTER
 from wx import ALIGN_CENTER_HORIZONTAL
-
 from wx import ALIGN_RIGHT
 from wx import ALL
-from wx import CAPTION
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_LISTBOX_DCLICK
@@ -22,9 +18,7 @@ from wx import ID_ANY
 from wx import OK
 from wx import VERTICAL
 from wx import LB_SINGLE
-from wx import RESIZE_BORDER
 from wx import CANCEL
-
 
 from wx import Dialog
 from wx import ListBox
@@ -33,9 +27,10 @@ from wx import TextCtrl
 from wx import Button
 from wx import BoxSizer
 from wx import CheckBox
-
 from wx import StaticText
+from wx import CommandEvent
 
+from org.pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
@@ -43,7 +38,6 @@ from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutStereotype import getPyutStereotype
 
-from org.pyut.dialogs.DlgEditComment import DlgEditComment
 from org.pyut.dialogs.DlgEditField import DlgEditField
 from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
 
@@ -52,18 +46,19 @@ from org.pyut.general.Globals import _
 from org.pyut.PyutUtils import PyutUtils
 
 # Assign constants
+# ID_TXTNAME
 [
-    ID_TXTNAME, ID_TXTSTEREOTYPE,
+    ID_TXTSTEREOTYPE,
     ID_BTNFIELDADD, ID_BTNFIELDEDIT, ID_BTNFIELDREMOVE,
     ID_BTNFIELDUP, ID_BTNFIELDDOWN, ID_LSTFIELDLIST,
 
     ID_BTNMETHODADD, ID_BTNMETHODEDIT, ID_BTNMETHODREMOVE,
     ID_BTNMETHODUP, ID_BTNMETHODDOWN, ID_LSTMETHODLIST,
 
-    ID_BTNDESCRIPTION, ID_BTNOK, ID_BTNCANCEL] = PyutUtils.assignID(17)
+   ] = PyutUtils.assignID(13)
 
 
-class DlgEditClass(Dialog):
+class DlgEditClass(DlgEditClassCommon):
     """
     Dialog for the class edits.
 
@@ -89,31 +84,32 @@ class DlgEditClass(Dialog):
         @since 1.0
         @author N. Dubois <n_dub@altavista.com>
         """
-        super().__init__(parent, windowId, _("Class Edit"), style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Class Edit"), pyutModel=pyutClass)
 
         self.logger:         Logger = getLogger(__name__)
-        self._pyutClass:     PyutClass     = pyutClass
-        self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
-        self._parent        = parent
-        from org.pyut.general import Mediator
+        # self._pyutClass:     PyutClass     = pyutClass
+        # self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
+        # self._parent        = parent
+        # from org.pyut.general import Mediator
+        #
+        # self._ctrl          = Mediator.getMediator()
+        #
+        # self.SetAutoLayout(True)
 
-        self._ctrl          = Mediator.getMediator()
-
-        self.SetAutoLayout(True)
-
-        lblName = StaticText (self, -1, _("Class name"))
-        self._txtName = TextCtrl(self, ID_TXTNAME, "", size=(125, -1))
+        # lblName = StaticText (self, -1, _("Class name"))
+        # self._txtName = TextCtrl(self, ID_TXTNAME, "", size=(125, -1))
 
         # Stereotype
         lblStereotype = StaticText (self, -1, _("Stereotype"))
         self._txtStereotype = TextCtrl(self, ID_TXTSTEREOTYPE, "", size=(125, -1))
 
         # Name and Stereotype sizer
-        szrNameStereotype = BoxSizer (HORIZONTAL)
-        szrNameStereotype.Add(lblName,       0, ALL | ALIGN_CENTER, 5)
-        szrNameStereotype.Add(self._txtName, 1, ALIGN_CENTER)
-        szrNameStereotype.Add(lblStereotype, 0, ALL, 5)   # wxPython 4.1.0 fix -- Horizontal alignment flags are ignored in horizontal sizers
-        szrNameStereotype.Add(self._txtStereotype, 1, ALIGN_CENTER)
+        # szrNameStereotype = BoxSizer (HORIZONTAL)
+
+        # szrNameStereotype.Add(lblName,       0, ALL | ALIGN_CENTER, 5)
+        # szrNameStereotype.Add(self._txtName, 1, ALIGN_CENTER)
+        self._szrNameStereotype.Add(lblStereotype, 0, ALL, 5)   # wxPython 4.1.0 fix -- Horizontal alignment flags are ignored in horizontal sizers
+        self._szrNameStereotype.Add(self._txtStereotype, 1, ALIGN_CENTER)
 
         # ------
         # Fields
@@ -205,32 +201,34 @@ class DlgEditClass(Dialog):
         szrDisplayProperties.Add(self._chkShowFields,    0, ALL, 5)
         szrDisplayProperties.Add(self._chkShowMethods,   0, ALL, 5)
 
-        # Buttons OK, cancel and description
-        self._btnOk = Button(self, ID_BTNOK, _("&Ok"))
-        self.Bind(EVT_BUTTON, self._onOk, id=ID_BTNOK)
-        self._btnOk.SetDefault()
-        self._btnCancel = Button(self, ID_BTNCANCEL, _("&Cancel"))
-        self.Bind(EVT_BUTTON, self._onCancel, id=ID_BTNCANCEL)
-        self._btnDescription = Button(self, ID_BTNDESCRIPTION, _("De&scription..."))
-        self.Bind(EVT_BUTTON, self._onDescription, id=ID_BTNDESCRIPTION)
-        szrButtons = BoxSizer (HORIZONTAL)
-        szrButtons.Add(self._btnDescription, 0, ALL, 5)
-        szrButtons.Add(self._btnOk, 0, ALL, 5)
-        szrButtons.Add(self._btnCancel, 0, ALL, 5)
+        # Buttons OK, cancel and description    -- done in base class
+        # self._btnOk = Button(self, ID_BTNOK, _("&Ok"))
+        # self.Bind(EVT_BUTTON, self._onOk, id=ID_BTNOK)
+        # self._btnOk.SetDefault()
+        # self._btnCancel = Button(self, ID_BTNCANCEL, _("&Cancel"))
+        # self.Bind(EVT_BUTTON, self._onCancel, id=ID_BTNCANCEL)
+        # self._btnDescription = Button(self, ID_BTNDESCRIPTION, _("De&scription..."))
+        # self.Bind(EVT_BUTTON, self._onDescription, id=ID_BTNDESCRIPTION)
+        #
+        # szrButtons = BoxSizer (HORIZONTAL)
+        # szrButtons.Add(self._btnDescription, 0, ALL, 5)
+        # szrButtons.Add(self._btnOk, 0, ALL, 5)
+        # szrButtons.Add(self._btnCancel, 0, ALL, 5)
 
         # -------------------
-        # Main sizer creation
-        szrMain = BoxSizer (VERTICAL)
-        self.SetSizer(szrMain)
-        szrMain.Add(szrNameStereotype, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(lblField, 0, ALL, 5)
-        szrMain.Add(self._lstFieldList, 1, ALL | EXPAND, 5)
-        szrMain.Add(szrFieldButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(lblMethod, 0, ALL, 5)
-        szrMain.Add(self._lstMethodList, 1, ALL | EXPAND, 5)
-        szrMain.Add(szrMethodButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(szrDisplayProperties, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szrMain.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)     # wxPython 4.1.0 Vertical alignment flags are ignored in vertical sizers
+        # Main sizer creation in base class
+        # szrMain = BoxSizer (VERTICAL)
+        # self.SetSizer(szrMain)
+        # szrMain.Add(szrNameStereotype, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+
+        self._szrMain.Add(lblField, 0, ALL, 5)
+        self._szrMain.Add(self._lstFieldList, 1, ALL | EXPAND, 5)
+        self._szrMain.Add(szrFieldButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        self._szrMain.Add(lblMethod, 0, ALL, 5)
+        self._szrMain.Add(self._lstMethodList, 1, ALL | EXPAND, 5)
+        self._szrMain.Add(szrMethodButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        self._szrMain.Add(szrDisplayProperties, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        self._szrMain.Add(self._szrButtons, 0, ALL | ALIGN_RIGHT, 5)     # wxPython 4.1.0 Vertical alignment flags are ignored in vertical sizers
 
         # Fill the txt control with class data
         self._fillAllFields()
@@ -245,12 +243,12 @@ class DlgEditClass(Dialog):
 
         # Help Pycharm
         self._dlgMethod = cast(Dialog, None)
-        szrMain.Fit(self)
+        self._szrMain.Fit(self)     # subclasses need to do this
 
         self.Centre()
         self.ShowModal()
 
-    def _callDlgEditField (self, field: PyutField) -> int:
+    def _callDlgEditField(self, field: PyutField) -> int:
         """
                 Dialog for Field editing
 
@@ -259,10 +257,10 @@ class DlgEditClass(Dialog):
 
         Returns: return code from dialog
         """
-        self._dlgField = DlgEditField(theParent=self, theWindowId=ID_ANY, fieldToEdit=field, theMediator=self._ctrl)
+        self._dlgField = DlgEditField(theParent=self, theWindowId=ID_ANY, fieldToEdit=field, theMediator=self._mediator)
         return self._dlgField.ShowModal()
 
-    def _callDlgEditMethod (self, methodToEdit: PyutMethod) -> int:
+    def _callDlgEditMethod(self, methodToEdit: PyutMethod) -> int:
         """
         Create the dialog for Method editing.
 
@@ -272,10 +270,10 @@ class DlgEditClass(Dialog):
         Returns: return code from dialog
         """
         self.logger.info(f'method to edit: {methodToEdit}')
-        self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=methodToEdit, theMediator=self._ctrl)
+        self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=methodToEdit, theMediator=self._mediator)
         return self._dlgMethod.ShowModal()
 
-    def _dupParams (self, params):
+    def _dupParams(self, params):
         """
         Duplicate a list of params, all params are duplicated too.
 
@@ -288,18 +286,16 @@ class DlgEditClass(Dialog):
             dupParams.append(param)
         return dupParams
 
-    def _fillAllFields (self):
+    def _fillAllFields(self):
         """
-        Fill all controls with _pyutClassCopy data.
+        Fill all controls with _pyutModelCopy data.
 
-        @since 1.6
-        @author N. Dubois <n_dub@altavista.com>
         """
         # Fill Class name
-        self._txtName.SetValue(self._pyutClassCopy.getName())
+        self._txtName.SetValue(self._pyutModelCopy.getName())
 
         # Fill Stereotype
-        stereotype = self._pyutClassCopy.getStereotype()
+        stereotype = self._pyutModelCopy.getStereotype()
         if stereotype is None:
             strStereotype = ""
         else:
@@ -308,11 +304,11 @@ class DlgEditClass(Dialog):
 
         # Fill the list controls
         try:
-            for el in self._pyutClassCopy.fields:
+            for el in self._pyutModelCopy.fields:
                 self.logger.debug(f'field: {el}')
                 self._lstFieldList.Append(str(el))
 
-            for el in self._pyutClassCopy.methods:
+            for el in self._pyutModelCopy.methods:
                 self._lstMethodList.Append(el.getString())
         except (ValueError, Exception) as e:
 
@@ -322,16 +318,13 @@ class DlgEditClass(Dialog):
             dlg.Destroy()
 
         # Fill display properties
-        self._chkShowFields.SetValue(self._pyutClassCopy.showFields)
-        self._chkShowMethods.SetValue(self._pyutClassCopy.showMethods)
-        self._chkShowStereotype.SetValue(self._pyutClassCopy.getShowStereotype())
+        self._chkShowFields.SetValue(self._pyutModelCopy.showFields)
+        self._chkShowMethods.SetValue(self._pyutModelCopy.showMethods)
+        self._chkShowStereotype.SetValue(self._pyutModelCopy.getShowStereotype())
 
-    def _fixBtnFields (self):
+    def _fixBtnFields(self):
         """
-        # Fix buttons of fields list (enable or not).
-
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
+        Fix buttons of fields list (enable or not).
         """
         selection = self._lstFieldList.GetSelection()
         # Button Edit and Remove
@@ -341,12 +334,9 @@ class DlgEditClass(Dialog):
         self._btnFieldUp.Enable(selection > 0)
         self._btnFieldDown.Enable(ans and selection < self._lstFieldList.GetCount() - 1)
 
-    def _fixBtnMethod (self):
+    def _fixBtnMethod(self):
         """
-        # Fix buttons of Method list (enable or not).
-
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
+        Fix buttons of Method list (enable or not).
         """
         selection = self._lstMethodList.GetSelection()
         # Button Edit and Remove
@@ -358,101 +348,86 @@ class DlgEditClass(Dialog):
         self._btnMethodDown.Enable(enabled and selection < self._lstMethodList.GetCount() - 1)
 
     # noinspection PyUnusedLocal
-    def _onFieldAdd (self, event):
+    def _onFieldAdd(self, event: CommandEvent):
         """
         Add a new field in the list.
 
-        @param wx.Event event : event that call this subprogram.
-        @since 1.4
-        @author N. Dubois <n_dub@altavista.com>
+        Args:
+            event:
         """
         field = PyutField()
         ret = self._callDlgEditField(field)
         if ret == OK:
-            self._pyutClassCopy.fields.append(field)
+            self._pyutModelCopy.fields.append(field)
             # Add fields in dialog list
             self._lstFieldList.Append(str(field))
 
             # Tell window that its data has been modified
-            fileHandling = self._ctrl.getFileHandling()
+            fileHandling = self._mediator.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onMethodAdd (self, event):
+    def _onMethodAdd(self, event: CommandEvent):
         """
         Add a new method in the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
+        Args:
+            event:
         """
         # Add fields in PyutClass copy object
         method = PyutMethod()
         ret = self._callDlgEditMethod(method)
         if ret == OK:
-            self._pyutClassCopy.methods.append(method)
+            self._pyutModelCopy.methods.append(method)
             # Add fields in dialog list
             self._lstMethodList.Append(method.getString())
 
             # Tell window that its data has been modified
-            fileHandling = self._ctrl.getFileHandling()
+            fileHandling = self._mediator.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onFieldEdit (self, event):
+    def _onFieldEdit(self, event: CommandEvent):
         """
         Edit a field.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
         """
         selection = self._lstFieldList.GetSelection()
-        field = self._pyutClassCopy.fields[selection]
+        field = self._pyutModelCopy.fields[selection]
         ret = self._callDlgEditField(field)
         if ret == OK:
             # Modify field in dialog list
             self._lstFieldList.SetString(selection, str(field))
             # Tell window that its data has been modified
-            fileHandling = self._ctrl.getFileHandling()
+            fileHandling = self._mediator.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onMethodEdit (self, event):
+    def _onMethodEdit(self, event: CommandEvent):
         """
         Edit a method.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
         """
         selection = self._lstMethodList.GetSelection()
-        method = self._pyutClassCopy.methods[selection]
+        method = self._pyutModelCopy.methods[selection]
 
         ret = self._callDlgEditMethod(method)
         if ret == OK:
             # Modify method in dialog list
             self._lstMethodList.SetString(selection, method.getString())
             # Tell window that its data has been modified
-            fileHandling = self._ctrl.getFileHandling()
+            fileHandling = self._mediator.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onFieldRemove (self, event):
+    def _onFieldRemove(self, event: CommandEvent):
         """
         Remove a field from the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.4
-        @author N. Dubois <n_dub@altavista.com>
         """
         # Remove from list control
         selection = self._lstFieldList.GetSelection()
@@ -463,27 +438,23 @@ class DlgEditClass(Dialog):
             index = min(selection, self._lstFieldList.GetCount()-1)
             self._lstFieldList.SetSelection(index)
 
-        # Remove from _pyutClassCopy
-        fields = self._pyutClassCopy.fields
+        # Remove from _pyutModelCopy
+        fields = self._pyutModelCopy.fields
         fields.pop(selection)
 
         # Fix buttons of fields list (enable or not)
         self._fixBtnFields()
 
         # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
+        fileHandling = self._mediator.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onMethodRemove (self, event):
+    def _onMethodRemove(self, event: CommandEvent):
         """
         Remove a field from the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
         """
         # Remove from list control
         selection = self._lstMethodList.GetSelection()
@@ -494,31 +465,27 @@ class DlgEditClass(Dialog):
             index = min(selection, self._lstMethodList.GetCount()-1)
             self._lstMethodList.SetSelection(index)
 
-        # Remove from _pyutClassCopy
-        methods = self._pyutClassCopy.methods
+        # Remove from _pyutModelCopy
+        methods = self._pyutModelCopy.methods
         methods.pop(selection)
 
         # Fix buttons of methods list (enable or not)
         self._fixBtnMethod()
 
         # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
+        fileHandling = self._mediator.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onFieldUp (self, event):
+    def _onFieldUp(self, event: CommandEvent):
         """
         Move up a field in the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
         """
-        # Move up the field in _pyutClassCopy
+        # Move up the field in _pyutModelCopy
         selection = self._lstFieldList.GetSelection()
-        fields = self._pyutClassCopy.fields
+        fields = self._pyutModelCopy.fields
         field = fields[selection]
         fields.pop(selection)
         fields.insert(selection - 1, field)
@@ -532,23 +499,19 @@ class DlgEditClass(Dialog):
         self._fixBtnFields()
 
         # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
+        fileHandling = self._mediator.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onMethodUp (self, event):
+    def _onMethodUp(self, event: CommandEvent):
         """
         Move up a method in the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
         """
         # Move up the method in _pyutClassCopy
         selection = self._lstMethodList.GetSelection()
-        methods   = self._pyutClassCopy.methods
+        methods   = self._pyutModelCopy.methods
         method    = methods[selection]
         methods.pop(selection)
         methods.insert(selection - 1, method)
@@ -562,23 +525,18 @@ class DlgEditClass(Dialog):
         self._fixBtnMethod()
 
         # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
+        fileHandling = self._mediator.getFileHandling()
         project      = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onFieldDown (self, event):
+    def _onFieldDown(self, event: CommandEvent):
         """
         Move down a field in the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
         """
-        # Move down the field in _pyutClassCopy
         selection = self._lstFieldList.GetSelection()
-        fields = self._pyutClassCopy.fields
+        fields = self._pyutModelCopy.fields
         field = fields[selection]
         fields.pop(selection)
         fields.insert(selection + 1, field)
@@ -592,23 +550,18 @@ class DlgEditClass(Dialog):
         self._fixBtnFields()
 
         # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
+        fileHandling = self._mediator.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onMethodDown (self, event):
+    def _onMethodDown(self, event):
         """
         Move down a method in the list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
         """
-        # Move up the method in _pyutClassCopy
         selection = self._lstMethodList.GetSelection()
-        methods = self._pyutClassCopy.methods
+        methods = self._pyutModelCopy.methods
         method = methods[selection]
         methods.pop(selection)
         methods.insert(selection + 1, method)
@@ -622,57 +575,38 @@ class DlgEditClass(Dialog):
         self._fixBtnMethod()
 
         # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
+        fileHandling = self._mediator.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
     # noinspection PyUnusedLocal
-    def _evtFieldList (self, event):
+    def _evtFieldList(self, event):
         """
         Called when click on Fields list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.4
-        @author N. Dubois <n_dub@altavista.com>
         """
-        # Fix buttons (enable or not)
         self._fixBtnFields()
 
-    def _evtFieldListDClick (self, event):
+    def _evtFieldListDClick(self, event: CommandEvent):
         """
-        Called when double-click on Fields list.
-
-        @param wx.Event event : event that call this subprogram.
-        @author C.Dutoit
+        Called when there is a double-click on Fields list.
         """
-        # Edit field
         self._onFieldEdit(event)
 
     # noinspection PyUnusedLocal
-    def _evtMethodList (self, event):
+    def _evtMethodList(self, event: CommandEvent):
         """
-        Called when click on Methods list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
+        Called when there is a click on Methods list.
         """
-        # Fix buttons (enable or not)
         self._fixBtnMethod()
 
-    def _evtMethodListDClick (self, event):
+    def _evtMethodListDClick(self, event: CommandEvent):
         """
         Called when click on Methods list.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
         """
-        # Edit method
         self._onMethodEdit(event)
 
-    def _convertNone (self, theString):
+    def _convertNone(self, theString):
         """
         Return the same string, if string = None, return an empty string.
 
@@ -686,71 +620,61 @@ class DlgEditClass(Dialog):
         return theString
 
     # noinspection PyUnusedLocal
-    def _onDescription(self, event):
-        """
-        When class description dialog is opened.
-
-        @param wx.Event event : event that call this subprogram.
-        @since 1.22
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        """
-        dlg = DlgEditComment(self, -1, self._pyutClassCopy)
-        dlg.Destroy()
-
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+    # def _onDescription(self, event: CommandEvent):
+    #     """
+    #     When class description dialog is opened.
+    #     """
+    #     dlg = DlgEditComment(self, -1, self._pyutModelCopy)
+    #     dlg.Destroy()
+    #
+    #     # Tell window that its data has been modified
+    #     fileHandling = self._mediator.getFileHandling()
+    #     project = fileHandling.getCurrentProject()
+    #     if project is not None:
+    #         project.setModified()
 
     # noinspection PyUnusedLocal
-    def _onOk (self, event):
+    def _onOk(self, event: CommandEvent):
         """
-        When button OK is clicked.
+        Activated when button OK is clicked.
+        """
+        # self._pyutModel.setName(self._txtName.GetValue())
 
-        @param wx.Event event : event that call this subprogram.
-        @since 1.5
-        @author N. Dubois <n_dub@altavista.com>
-        """
-        # Set name and stereotype
-        self._pyutClass.setName(self._txtName.GetValue())
         strStereotype = self._txtStereotype.GetValue()
         if strStereotype == "":
-            self._pyutClass.setStereotype(None)
+            self._pyutModel.setStereotype(None)
         else:
-            self._pyutClass.setStereotype(getPyutStereotype(strStereotype))
+            self._pyutModel.setStereotype(getPyutStereotype(strStereotype))
         # Adds all fields in a list
-        self._pyutClass.fields = self._pyutClassCopy.fields
-        self._pyutClass.methods = self._pyutClassCopy.methods
+        self._pyutModel.fields = self._pyutModelCopy.fields
+        self._pyutModel.methods = self._pyutModelCopy.methods
 
-        # Update description (pwaelti@eivd.ch)
-        self._pyutClass.description = self._pyutClassCopy.description
+        self._pyutModel.description = self._pyutModelCopy.description
 
         # Update display properties
-        self._pyutClass.showFields  = self._chkShowFields.GetValue()
-        self._pyutClass.showMethods = self._chkShowMethods.GetValue()
-        self._pyutClass.setShowStereotype(self._chkShowStereotype.GetValue())
+        self._pyutModel.showFields  = self._chkShowFields.GetValue()
+        self._pyutModel.showMethods = self._chkShowMethods.GetValue()
+        self._pyutModel.setShowStereotype(self._chkShowStereotype.GetValue())
 
         from org.pyut.PyutPreferences import PyutPreferences
         prefs = PyutPreferences()
         try:
             if prefs["AUTO_RESIZE"]:
-                oglClass = self._ctrl.getOglClass(self._pyutClass)
+                oglClass = self._mediator.getOglClass(self._pyutModel)
                 oglClass.autoResize()
         except (ValueError, Exception) as e:
             self.logger.warning(f'{e}')
 
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
+        fileHandling = self._mediator.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
             project.setModified()
 
-        # Close dialog
-        self._returnAction = OK
-        self.Close()
+        super()._onOk(event)
+        # self._returnAction = OK
+        # self.Close()
 
     # noinspection PyUnusedLocal
-    def _onCancel (self, event):
+    def _onCancel(self, event: CommandEvent):
         self._returnAction = CANCEL
         self.Close()
