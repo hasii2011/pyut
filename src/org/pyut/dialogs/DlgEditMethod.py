@@ -182,7 +182,7 @@ class DlgEditMethod(BaseDlgEdit):
 
     def _callDlgEditParam (self, param: PyutParam) -> int:
         """
-        Creates dialog for editting method parameters
+        Creates dialog for editing method parameters
         Args:
             param:
 
@@ -389,4 +389,3 @@ class DlgEditMethod(BaseDlgEdit):
         self._btnParamRemove.Enable(enabled)
         self._btnParamUp.Enable(selection > 0)
         self._btnParamDown.Enable(enabled and selection < self._lstParams.GetCount() - 1)
-
