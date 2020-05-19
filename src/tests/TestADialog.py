@@ -61,6 +61,7 @@ class TestADialog(App):
             dlg: DlgEditInterface = cast(DlgEditInterface, dlg)
             if dlg.ShowModal() == OK:
                 self.logger.warning(f'Retrieved data')
+                self.logger.info(f'model: {dlg._pyutModel}')
             else:
                 self.logger.warning(f'Cancelled')
 
