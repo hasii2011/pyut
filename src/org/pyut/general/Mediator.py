@@ -4,6 +4,7 @@ from typing import Dict
 from typing import NewType
 from typing import Union
 
+from wx import CANCEL
 from wx import CENTRE
 from wx import WXK_DELETE
 from wx import WXK_INSERT
@@ -28,6 +29,7 @@ from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 from org.pyut.enums.LinkType import LinkType
+from org.pyut.model.PyutMethod import PyutMethod
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
@@ -391,7 +393,7 @@ class Mediator(Singleton):
         umlFrame = self._fileHandling.getCurrentFrame()
         if umlFrame is None:
             return
-        dlg = DlgEditClass(umlFrame, -1, thePyutClass)
+        dlg = DlgEditClass(umlFrame, ID_ANY, thePyutClass)
         dlg.Destroy()
 
     def setCurrentAction(self, action: int):
@@ -1099,7 +1101,7 @@ class Mediator(Singleton):
         group.addCommand(cmd)
         umlFrame.getHistory().addCommandGroup(group)
         umlFrame.getHistory().execute()
-        self.__removeUnneededAnchorPoints(implementor, attachmentAnchor, umlFrame)
+        self.__removeUnneededAnchorPoints(implementor, attachmentAnchor)
         umlFrame.Refresh()
 
     def requestLollipopLocation(self, destinationClass: OglClass):
@@ -1153,7 +1155,7 @@ class Mediator(Singleton):
         destinationClass.AddAnchorPoint(anchorHint)
         umlFrame.getDiagram().AddShape(anchorHint)
 
-    def __removeUnneededAnchorPoints(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint, umlFrame):
+    def __removeUnneededAnchorPoints(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
         attachmentPoint: PyutAttachmentPoint = attachmentAnchor.attachmentPoint
         for anchor in implementor.GetAnchors():
@@ -1162,5 +1164,3 @@ class Mediator(Singleton):
                 if anchor.attachmentPoint != attachmentPoint:
                     anchor.SetProtected(False)
                     anchor.Detach()
-
-

@@ -5,6 +5,7 @@ from wx import BoxSizer
 from wx import Button
 from wx import CANCEL
 from wx import CAPTION
+from wx import CommandEvent
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import Event
@@ -19,6 +20,8 @@ from wx import TextCtrl
 from wx import VERTICAL
 
 from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutType import PyutType
+
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils
@@ -94,7 +97,8 @@ class DlgEditParameter(BaseDlgEdit):
 
         # Fill the text controls with PyutParam data
         self._txtName.SetValue(self._parameterToEdit.getName())
-        self._txtType.SetValue(str(self._parameterToEdit.getType()))
+        paramType: PyutType = self._parameterToEdit.getType()
+        self._txtType.SetValue(paramType.value)
         self._txtDefault.SetValue(self._convertNone(self._parameterToEdit.getDefaultValue()))
 
         # Fix state of buttons (enabled or not)
@@ -116,10 +120,11 @@ class DlgEditParameter(BaseDlgEdit):
         self._btnOk.Enable(self._txtName.GetValue() != "")
 
     # noinspection PyUnusedLocal
-    def _onParamOk (self, event):
+    def _onParamOk (self, event: CommandEvent):
 
         self._parameterToEdit.setName(self._txtName.GetValue())
-        self._parameterToEdit.setType(self._txtType.GetValue())
+        paramType: PyutType = PyutType(self._txtType.GetValue())
+        self._parameterToEdit.setType(paramType)
         if self._txtDefault.GetValue() != "":
             self._parameterToEdit.setDefaultValue(self._txtDefault.GetValue())
         else:

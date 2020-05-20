@@ -18,7 +18,6 @@ from wx import ID_ANY
 from wx import OK
 from wx import VERTICAL
 from wx import LB_SINGLE
-from wx import CANCEL
 
 from wx import Dialog
 from wx import ListBox
@@ -256,19 +255,6 @@ class DlgEditClass(DlgEditClassCommon):
         self._dlgField = DlgEditField(theParent=self, theWindowId=ID_ANY, fieldToEdit=field, theMediator=self._mediator)
         return self._dlgField.ShowModal()
 
-    # def _callDlgEditMethod(self, methodToEdit: PyutMethod) -> int:
-    #     """
-    #     Create the dialog for Method editing.
-    #
-    #     Args:
-    #         methodToEdit: Method to be edited
-    #
-    #     Returns: return code from dialog
-    #     """
-    #     self.logger.info(f'method to edit: {methodToEdit}')
-    #     self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=methodToEdit, theMediator=self._mediator)
-    #     return self._dlgMethod.ShowModal()
-
     def _dupParams(self, params):
         """
         Duplicate a list of params, all params are duplicated too.
@@ -330,19 +316,6 @@ class DlgEditClass(DlgEditClassCommon):
         self._btnFieldUp.Enable(selection > 0)
         self._btnFieldDown.Enable(ans and selection < self._lstFieldList.GetCount() - 1)
 
-    # def _fixBtnMethod(self):
-    #     """
-    #     Fix buttons of Method list (enable or not).
-    #     """
-    #     selection = self._lstMethodList.GetSelection()
-    #     # Button Edit and Remove
-    #     enabled: bool = selection != -1
-    #
-    #     self._btnMethodEdit.Enable(enabled)
-    #     self._btnMethodRemove.Enable(enabled)
-    #     self._btnMethodUp.Enable(selection > 0)
-    #     self._btnMethodDown.Enable(enabled and selection < self._lstMethodList.GetCount() - 1)
-
     # noinspection PyUnusedLocal
     def _onFieldAdd(self, event: CommandEvent):
         """
@@ -364,27 +337,6 @@ class DlgEditClass(DlgEditClassCommon):
             if project is not None:
                 project.setModified()
 
-    # # noinspection PyUnusedLocal
-    # def _onMethodAdd(self, event: CommandEvent):
-    #     """
-    #     Add a new method in the list.
-    #     Args:
-    #         event:
-    #     """
-    #     # Add fields in PyutClass copy object
-    #     method = PyutMethod()
-    #     ret = self._callDlgEditMethod(method)
-    #     if ret == OK:
-    #         self._pyutModelCopy.methods.append(method)
-    #         # Add fields in dialog list
-    #         self._lstMethodList.Append(method.getString())
-    #
-    #         # Tell window that its data has been modified
-    #         fileHandling = self._mediator.getFileHandling()
-    #         project = fileHandling.getCurrentProject()
-    #         if project is not None:
-    #             project.setModified()
-
     # noinspection PyUnusedLocal
     def _onFieldEdit(self, event: CommandEvent):
         """
@@ -401,24 +353,6 @@ class DlgEditClass(DlgEditClassCommon):
             project = fileHandling.getCurrentProject()
             if project is not None:
                 project.setModified()
-
-    # # noinspection PyUnusedLocal
-    # def _onMethodEdit(self, event: CommandEvent):
-    #     """
-    #     Edit a method.
-    #     """
-    #     selection = self._lstMethodList.GetSelection()
-    #     method = self._pyutModelCopy.methods[selection]
-    #
-    #     ret = self._callDlgEditMethod(method)
-    #     if ret == OK:
-    #         # Modify method in dialog list
-    #         self._lstMethodList.SetString(selection, method.getString())
-    #         # Tell window that its data has been modified
-    #         fileHandling = self._mediator.getFileHandling()
-    #         project = fileHandling.getCurrentProject()
-    #         if project is not None:
-    #             project.setModified()
 
     # noinspection PyUnusedLocal
     def _onFieldRemove(self, event: CommandEvent):
@@ -473,32 +407,6 @@ class DlgEditClass(DlgEditClassCommon):
         if project is not None:
             project.setModified()
 
-    # # noinspection PyUnusedLocal
-    # def _onMethodUp(self, event: CommandEvent):
-    #     """
-    #     Move up a method in the list.
-    #     """
-    #     # Move up the method in _pyutClassCopy
-    #     selection = self._lstMethodList.GetSelection()
-    #     methods   = self._pyutModelCopy.methods
-    #     method    = methods[selection]
-    #     methods.pop(selection)
-    #     methods.insert(selection - 1, method)
-    #
-    #     # Move up the method in dialog list
-    #     self._lstMethodList.SetString(selection, methods[selection].getString())
-    #     self._lstMethodList.SetString(selection - 1, methods[selection - 1].getString())
-    #     self._lstMethodList.SetSelection(selection - 1)
-    #
-    #     # Fix buttons (enable or not)
-    #     self._fixBtnMethod()
-    #
-    #     # Tell window that its data has been modified
-    #     fileHandling = self._mediator.getFileHandling()
-    #     project      = fileHandling.getCurrentProject()
-    #     if project is not None:
-    #         project.setModified()
-
     # noinspection PyUnusedLocal
     def _onFieldDown(self, event: CommandEvent):
         """
@@ -524,31 +432,6 @@ class DlgEditClass(DlgEditClassCommon):
         if project is not None:
             project.setModified()
 
-    # # noinspection PyUnusedLocal
-    # def _onMethodDown(self, event):
-    #     """
-    #     Move down a method in the list.
-    #     """
-    #     selection = self._lstMethodList.GetSelection()
-    #     methods = self._pyutModelCopy.methods
-    #     method = methods[selection]
-    #     methods.pop(selection)
-    #     methods.insert(selection + 1, method)
-    #
-    #     # Move up the method in dialog list
-    #     self._lstMethodList.SetString(selection, methods[selection].getString())
-    #     self._lstMethodList.SetString(selection + 1, methods[selection + 1].getString())
-    #     self._lstMethodList.SetSelection(selection + 1)
-    #
-    #     # Fix buttons (enable or not)
-    #     self._fixBtnMethod()
-    #
-    #     # Tell window that its data has been modified
-    #     fileHandling = self._mediator.getFileHandling()
-    #     project = fileHandling.getCurrentProject()
-    #     if project is not None:
-    #         project.setModified()
-
     # noinspection PyUnusedLocal
     def _evtFieldList(self, event):
         """
@@ -561,19 +444,6 @@ class DlgEditClass(DlgEditClassCommon):
         Called when there is a double-click on Fields list.
         """
         self._onFieldEdit(event)
-
-    # # noinspection PyUnusedLocal
-    # def _evtMethodList(self, event: CommandEvent):
-    #     """
-    #     Called when there is a click on Methods list.
-    #     """
-    #     self._fixBtnMethod()
-    #
-    # def _evtMethodListDClick(self, event: CommandEvent):
-    #     """
-    #     Called when click on Methods list.
-    #     """
-    #     self._onMethodEdit(event)
 
     def _convertNone(self, theString):
         """
@@ -589,26 +459,10 @@ class DlgEditClass(DlgEditClassCommon):
         return theString
 
     # noinspection PyUnusedLocal
-    # def _onDescription(self, event: CommandEvent):
-    #     """
-    #     When class description dialog is opened.
-    #     """
-    #     dlg = DlgEditComment(self, -1, self._pyutModelCopy)
-    #     dlg.Destroy()
-    #
-    #     # Tell window that its data has been modified
-    #     fileHandling = self._mediator.getFileHandling()
-    #     project = fileHandling.getCurrentProject()
-    #     if project is not None:
-    #         project.setModified()
-
-    # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):
         """
         Activated when button OK is clicked.
         """
-        # self._pyutModel.setName(self._txtName.GetValue())
-
         strStereotype = self._txtStereotype.GetValue()
         if strStereotype == "":
             self._pyutModel.setStereotype(None)
@@ -640,10 +494,3 @@ class DlgEditClass(DlgEditClassCommon):
             project.setModified()
 
         super()._onOk(event)
-        # self._returnAction = OK
-        # self.Close()
-
-    # noinspection PyUnusedLocal
-    def _onCancel(self, event: CommandEvent):
-        self._returnAction = CANCEL
-        self.Close()

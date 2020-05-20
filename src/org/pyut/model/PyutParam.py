@@ -11,29 +11,21 @@ from org.pyut.model.PyutType import PyutType
 
 class PyutParam(PyutObject):
 
-    def __init__(self, name: str = "", theParameterType: str = "", defaultValue=None):
+    DEFAULT_PARAMETER_NAME: str = 'param'
+
+    def __init__(self, name: str = DEFAULT_PARAMETER_NAME, theParameterType: PyutType = PyutType(""), defaultValue=None):
         """
 
         Args:
             name: init name with the name
-
             theParameterType: the param type
 
-            defaultValue:
         """
+        super().__init__(name)
+
         self.logger: Logger = getLogger(__name__)
-        try:
-            super().__init__(name)
-        except (ValueError, Exception) as e:
 
-            self.logger.error(f'{e}')
-            self.logger.error((exc_info()[0]))
-            self.logger.error((exc_info()[1]))
-            for el in extract_tb(exc_info()[2]):
-                self.logger.error((str(el)))
-            self.logger.error("===========================================")
-
-        self._type = PyutType(theParameterType)
+        self._type: PyutType = theParameterType
         self._defaultValue = defaultValue
 
     def getType(self) -> PyutType:
@@ -46,18 +38,18 @@ class PyutParam(PyutObject):
         """
         return self._type
 
-    def setType(self, theParameterType):
+    def setType(self, theParameterType: PyutType):
         """
-        Set method, used to know initial type.
+        Set parameter type
 
-        @param theParameterType
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            theParameterType:
         """
-        # Python 3 update
-        # if type(theParameterType) == StringType or type(theParameterType) == UnicodeType:
+
         if type(theParameterType) is str:
+            self.logger.warning(f'Setting return type as string is deprecated.  use PyutType')
             theParameterType = PyutType(theParameterType)
+
         self.logger.debug(f'theParameterType: `{theParameterType}`')
         self._type = theParameterType
 
@@ -83,18 +75,13 @@ class PyutParam(PyutObject):
 
     def __str__(self) -> str:
         """
-        Get method, used to know the name.
 
-        @return string param
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        @modified L. Burgbacher <lb@alawa.ch>
-            don't put the : if there's no type defined
+        Returns:  String version of a PyutParm
         """
         s = self.getName()
 
         if str(self._type) != "":
-            s += " : " + str(self._type)
+            s += ": " + str(self._type)
 
         if self._defaultValue is not None:
             s += " = " + self._defaultValue

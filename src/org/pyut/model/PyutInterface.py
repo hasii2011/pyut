@@ -37,3 +37,11 @@ class PyutInterface(PyutClassCommon, PyutObject):
             implementingClass:  The implementor
         """
         self._implementingClass = implementingClass
+
+    def __repr__(self):
+
+        methodsStr = ''
+        for method in self._methods:
+            methodsStr = f'{methodsStr} {method} '
+
+        return f'PyutInterface- - {self._name} {methodsStr}'

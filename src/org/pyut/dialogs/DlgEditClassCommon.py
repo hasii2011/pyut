@@ -208,7 +208,7 @@ class DlgEditClassCommon(Dialog):
             event:
         """
         # Add fields in PyutClass copy object
-        method: PyutMethod = PyutMethod()
+        method: PyutMethod = PyutMethod(PyutMethod.DEFAULT_METHOD_NAME)
         ret = self._invokeEditMethodDialog(method)
         if ret == OK:
             self._pyutModelCopy.methods.append(method)
@@ -332,10 +332,15 @@ class DlgEditClassCommon(Dialog):
         """
         self._pyutModel.setName(self._txtName.GetValue())
 
-        self._returnAction = OK
-        self.Close()
+        self._pyutModel.methods = self._pyutModelCopy.methods
+
+        self._returnAction = OK     # This is probably obsolete
+        event.Skip(skip=True)
+        self.SetReturnCode(OK)
+        self.EndModal(OK)
 
     # noinspection PyUnusedLocal
     def _onCancel(self, event: CommandEvent):
-        self._returnAction = CANCEL
-        self.Close()
+        self._returnAction = CANCEL     # This is probably obsolete
+        self.SetReturnCode(CANCEL)
+        self.EndModal(CANCEL)

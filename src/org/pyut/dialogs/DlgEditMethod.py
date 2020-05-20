@@ -8,41 +8,46 @@ from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALIGN_CENTER_VERTICAL
 from wx import ALIGN_RIGHT
 from wx import ALL
-from wx import BoxSizer
-from wx import Button
 from wx import CANCEL
 from wx import CAPTION
+from wx import CommandEvent
 from wx import DefaultSize
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_TEXT
 from wx import EXPAND
-from wx import Event
-from wx import FlexGridSizer
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import LB_SINGLE
-from wx import ListBox
 from wx import OK
-from wx import Point
+
 from wx import RA_SPECIFY_ROWS
 from wx import RESIZE_BORDER
 from wx import RadioBox
 from wx import STAY_ON_TOP
+from wx import VERTICAL
+
 from wx import StaticText
 from wx import TextCtrl
-from wx import VERTICAL
+from wx import Point
+from wx import ListBox
+from wx import BoxSizer
+from wx import Button
+from wx import Event
+from wx import FlexGridSizer
 
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutType import PyutType
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+
 from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 [
     ID_TXTMETHODNAME,
@@ -163,10 +168,10 @@ class DlgEditMethod(BaseDlgEdit):
         # Fill the text controls with PyutMethod data
         self._txtName.SetValue(self._pyutMethodCopy.getName())
 
-        modifs = self._pyutMethodCopy.getModifiers()
-        modifs = " ".join(map(lambda x: str(x), modifs))
+        modifiers = self._pyutMethodCopy.getModifiers()
+        modifiers = " ".join(map(lambda x: str(x), modifiers))
 
-        self._txtModifiers.SetValue(modifs)
+        self._txtModifiers.SetValue(modifiers)
         self._txtReturn.SetValue(str(self._pyutMethodCopy.getReturns()))
         self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.getVisibility()))
         for i in self._pyutMethodCopy.getParams():
@@ -211,15 +216,14 @@ class DlgEditMethod(BaseDlgEdit):
         self._fixBtnParam()
 
     # noinspection PyUnusedLocal
-    def _onParamAdd (self, event):
+    def _onParamAdd (self, event: CommandEvent):
         """
-        Add a new param in the list.
+        Add a new parameter to the list
 
-        @param wx.Event event : event that call this subprogram.
-        @since 1.8
-        @author N. Dubois <n_dub@altavista.com>
+        Args:
+            event:
         """
-        param = PyutParam()
+        param: PyutParam = PyutParam()
         ret = self._callDlgEditParam(param)
         if ret == OK:
             self._pyutMethodCopy.getParams().append(param)
@@ -348,11 +352,13 @@ class DlgEditMethod(BaseDlgEdit):
             event:
         """
         self._pyutMethod.setName(self._txtName.GetValue())
-        modifs = []
-        for modif in self._txtModifiers.GetValue().split():
-            modifs.append(PyutModifier(modif))
-        self._pyutMethod.setModifiers(modifs)
-        self._pyutMethod.setReturns(self._txtReturn.GetValue())
+        modifiers = []
+        for aModifier in self._txtModifiers.GetValue().split():
+            modifiers.append(PyutModifier(aModifier))
+        self._pyutMethod.setModifiers(modifiers)
+
+        returnType: PyutType = PyutType(self._txtReturn.GetValue())
+        self._pyutMethod.setReturns(returnType)
         self._pyutMethod.setParams(self._pyutMethodCopy.getParams())
 
         visStr:      str               = self._rdbVisibility.GetStringSelection()

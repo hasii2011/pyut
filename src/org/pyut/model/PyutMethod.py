@@ -20,6 +20,8 @@ from org.pyut.model.PyutObject import PyutObject
 
 class PyutMethod(PyutObject):
 
+    DEFAULT_METHOD_NAME: str = 'method'
+
     PyutModifiers  = NewType('PyutModifiers', List[PyutModifier])
     SourceCodeType = NewType('SourceCodeType', List[str])
 
@@ -216,7 +218,7 @@ class PyutMethod(PyutObject):
         string = str(self._visibility) + self._name + "()"
         # add the params
         if str(self._returns) != "":
-            string += " : " + str(self._returns)
+            string += ": " + str(self._returns)
         return string
 
     def __stringWithParams(self):
@@ -235,7 +237,7 @@ class PyutMethod(PyutObject):
             string += str(param) + ", "
         string = string[:-2] + ")"      # remove the last "," and add a )
         if str(self._returns) != "":
-            string += " : " + str(self._returns)
+            string += ": " + str(self._returns)
         return string
 
     def __str__(self):
