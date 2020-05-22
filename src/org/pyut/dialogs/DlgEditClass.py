@@ -44,9 +44,9 @@ from org.pyut.PyutUtils import PyutUtils
 
 # Assign constants
 [
-    ID_TXTSTEREOTYPE,
-    ID_BTNFIELDADD, ID_BTNFIELDEDIT, ID_BTNFIELDREMOVE,
-    ID_BTNFIELDUP, ID_BTNFIELDDOWN, ID_LSTFIELDLIST,
+    ID_TXT_STEREO_TYPE,
+    ID_BTN_FIELD_ADD, ID_BTN_FIELD_EDIT, ID_BTN_FIELD_REMOVE,
+    ID_BTN_FIELD_UP, ID_BTN_FIELD_DOWN, ID_LST_FIELD_LIST,
    ] = PyutUtils.assignID(7)
 
 
@@ -58,8 +58,8 @@ class DlgEditClass(DlgEditClassCommon):
     editing. The PyutClass given in the constructor parameters will be used to fill the
     fields of the dialog, and will be updated when the OK button is clicked.
 
-    Dialogs for methods and fields edition are contained implemented in different classes and
-    created when calling the _callDlgEditMethod and _callDlgEditField methods.
+    Dialogs for methods and fields editing are implemented in different classes and
+    created when invoking the _callDlgEditMethod and _callDlgEditField methods.
 
     Because dialog works on a copy of the PyutClass object, if you cancel the
     dialog any modifications are lost.
@@ -68,71 +68,48 @@ class DlgEditClass(DlgEditClassCommon):
     """
     def __init__(self, parent, windowId, pyutClass: PyutClass):
         """
-        Constructor.
 
-        @param wx.Window   parent    : Parent of the dialog
-        @param wx.WindowID windowId        : Identity of the dialog
-        @param PyutClass  pyutClass : Class modified by dialog
-        @since 1.0
-        @author N. Dubois <n_dub@altavista.com>
+        Args:
+            parent:         dialog parent
+            windowId:       dialog identity
+            pyutClass:      Class modified by dialog
         """
         super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Class Edit"), pyutModel=pyutClass)
 
         self.logger:         Logger = getLogger(__name__)
-        # self._pyutClass:     PyutClass     = pyutClass
-        # self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
-        # self._parent        = parent
-        # from org.pyut.general import Mediator
-        #
-        # self._ctrl          = Mediator.getMediator()
-        #
-        # self.SetAutoLayout(True)
+        lblStereotype:       StaticText = StaticText (self, -1, _("Stereotype"))
+        self._txtStereotype: TextCtrl = TextCtrl(self, ID_TXT_STEREO_TYPE, "", size=(125, -1))
 
-        # lblName = StaticText (self, -1, _("Class name"))
-        # self._txtName = TextCtrl(self, ID_TXTNAME, "", size=(125, -1))
-
-        # Stereotype
-        lblStereotype = StaticText (self, -1, _("Stereotype"))
-        self._txtStereotype = TextCtrl(self, ID_TXTSTEREOTYPE, "", size=(125, -1))
-
-        # Name and Stereotype sizer
-        # szrNameStereotype = BoxSizer (HORIZONTAL)
-
-        # szrNameStereotype.Add(lblName,       0, ALL | ALIGN_CENTER, 5)
-        # szrNameStereotype.Add(self._txtName, 1, ALIGN_CENTER)
-        self._szrNameStereotype.Add(lblStereotype, 0, ALL, 5)   # wxPython 4.1.0 fix -- Horizontal alignment flags are ignored in horizontal sizers
+        self._szrNameStereotype.Add(lblStereotype, 0, ALL, 5)
         self._szrNameStereotype.Add(self._txtStereotype, 1, ALIGN_CENTER)
-
-        # ------
-        # Fields
 
         # Label Fields
         lblField = StaticText (self, -1, _("Fields :"))
 
         # ListBox List
-        self._lstFieldList = ListBox(self, ID_LSTFIELDLIST, choices=[], style=LB_SINGLE)
-        self.Bind(EVT_LISTBOX, self._evtFieldList, id=ID_LSTFIELDLIST)
-        self.Bind(EVT_LISTBOX_DCLICK, self._evtFieldListDClick, id=ID_LSTFIELDLIST)
+        self._lstFieldList = ListBox(self, ID_LST_FIELD_LIST, choices=[], style=LB_SINGLE)
+        self.Bind(EVT_LISTBOX, self._evtFieldList, id=ID_LST_FIELD_LIST)
+        self.Bind(EVT_LISTBOX_DCLICK, self._evtFieldListDClick, id=ID_LST_FIELD_LIST)
 
         # Button Add
-        self._btnFieldAdd = Button(self, ID_BTNFIELDADD, _("&Add"))
-        self.Bind(EVT_BUTTON, self._onFieldAdd, id=ID_BTNFIELDADD)
+        self._btnFieldAdd = Button(self, ID_BTN_FIELD_ADD, _("&Add"))
+        self.Bind(EVT_BUTTON, self._onFieldAdd, id=ID_BTN_FIELD_ADD)
 
         # Button Edit
-        self._btnFieldEdit = Button(self, ID_BTNFIELDEDIT, _("&Edit"))
-        self.Bind(EVT_BUTTON, self._onFieldEdit, id=ID_BTNFIELDEDIT)
+        self._btnFieldEdit = Button(self, ID_BTN_FIELD_EDIT, _("&Edit"))
+        self.Bind(EVT_BUTTON, self._onFieldEdit, id=ID_BTN_FIELD_EDIT)
 
         # Button Remove
-        self._btnFieldRemove = Button(self, ID_BTNFIELDREMOVE, _("&Remove"))
-        self.Bind(EVT_BUTTON, self._onFieldRemove, id=ID_BTNFIELDREMOVE)
+        self._btnFieldRemove = Button(self, ID_BTN_FIELD_REMOVE, _("&Remove"))
+        self.Bind(EVT_BUTTON, self._onFieldRemove, id=ID_BTN_FIELD_REMOVE)
 
         # Button Up
-        self._btnFieldUp = Button(self, ID_BTNFIELDUP, _("&Up"))
-        self.Bind(EVT_BUTTON, self._onFieldUp, id=ID_BTNFIELDUP)
+        self._btnFieldUp = Button(self, ID_BTN_FIELD_UP, _("&Up"))
+        self.Bind(EVT_BUTTON, self._onFieldUp, id=ID_BTN_FIELD_UP)
 
         # Button Down
-        self._btnFieldDown = Button(self, ID_BTNFIELDDOWN, _("&Down"))
-        self.Bind(EVT_BUTTON, self._onFieldDown, id=ID_BTNFIELDDOWN)
+        self._btnFieldDown = Button(self, ID_BTN_FIELD_DOWN, _("&Down"))
+        self.Bind(EVT_BUTTON, self._onFieldDown, id=ID_BTN_FIELD_DOWN)
 
         # Sizer for Fields buttons
         szrFieldButtons = BoxSizer (HORIZONTAL)
@@ -141,42 +118,6 @@ class DlgEditClass(DlgEditClassCommon):
         szrFieldButtons.Add(self._btnFieldRemove, 0, ALL, 5)
         szrFieldButtons.Add(self._btnFieldUp, 0, ALL, 5)
         szrFieldButtons.Add(self._btnFieldDown, 0, ALL, 5)
-
-        # Label Methods
-        # lblMethod = StaticText (self, -1, _("Methods :"))
-
-        # # ListBox List
-        # self._lstMethodList = ListBox(self, ID_LSTMETHODLIST, choices=[], style=LB_SINGLE)
-        # self.Bind(EVT_LISTBOX,        self._evtMethodList,       id=ID_LSTMETHODLIST)
-        # self.Bind(EVT_LISTBOX_DCLICK, self._evtMethodListDClick, id=ID_LSTMETHODLIST)
-        #
-        # # Button Add
-        # self._btnMethodAdd = Button(self, ID_BTNMETHODADD, _("A&dd"))
-        # self.Bind(EVT_BUTTON, self._onMethodAdd, id=ID_BTNMETHODADD)
-        #
-        # # Button Edit
-        # self._btnMethodEdit = Button(self, ID_BTNMETHODEDIT, _("Ed&it"))
-        # self.Bind(EVT_BUTTON, self._onMethodEdit, id=ID_BTNMETHODEDIT)
-        #
-        # # Button Remove
-        # self._btnMethodRemove = Button(self, ID_BTNMETHODREMOVE, _("Re&move"))
-        # self.Bind(EVT_BUTTON, self._onMethodRemove, id=ID_BTNMETHODREMOVE)
-        #
-        # # Button Up
-        # self._btnMethodUp = Button(self, ID_BTNMETHODUP, _("U&p"))
-        # self.Bind(EVT_BUTTON, self._onMethodUp, id=ID_BTNMETHODUP)
-        #
-        # # Button Down
-        # self._btnMethodDown = Button(self, ID_BTNMETHODDOWN, _("Do&wn"))
-        # self.Bind(EVT_BUTTON, self._onMethodDown, id=ID_BTNMETHODDOWN)
-        #
-        # # Sizer for Methods buttons
-        # szrMethodButtons = BoxSizer (HORIZONTAL)
-        # szrMethodButtons.Add(self._btnMethodAdd, 0, ALL, 5)
-        # szrMethodButtons.Add(self._btnMethodEdit, 0, ALL, 5)
-        # szrMethodButtons.Add(self._btnMethodRemove, 0, ALL, 5)
-        # szrMethodButtons.Add(self._btnMethodUp, 0, ALL, 5)
-        # szrMethodButtons.Add(self._btnMethodDown, 0, ALL, 5)
 
         szrMethodButtons: BoxSizer = self._createMethodsUIArtifacts()
         # Show stereotype checkbox
@@ -193,26 +134,6 @@ class DlgEditClass(DlgEditClassCommon):
         szrDisplayProperties.Add(self._chkShowStereotype, 0, ALL, 5)
         szrDisplayProperties.Add(self._chkShowFields,    0, ALL, 5)
         szrDisplayProperties.Add(self._chkShowMethods,   0, ALL, 5)
-
-        # Buttons OK, cancel and description    -- done in base class
-        # self._btnOk = Button(self, ID_BTNOK, _("&Ok"))
-        # self.Bind(EVT_BUTTON, self._onOk, id=ID_BTNOK)
-        # self._btnOk.SetDefault()
-        # self._btnCancel = Button(self, ID_BTNCANCEL, _("&Cancel"))
-        # self.Bind(EVT_BUTTON, self._onCancel, id=ID_BTNCANCEL)
-        # self._btnDescription = Button(self, ID_BTNDESCRIPTION, _("De&scription..."))
-        # self.Bind(EVT_BUTTON, self._onDescription, id=ID_BTNDESCRIPTION)
-        #
-        # szrButtons = BoxSizer (HORIZONTAL)
-        # szrButtons.Add(self._btnDescription, 0, ALL, 5)
-        # szrButtons.Add(self._btnOk, 0, ALL, 5)
-        # szrButtons.Add(self._btnCancel, 0, ALL, 5)
-
-        # -------------------
-        # Main sizer creation in base class
-        # szrMain = BoxSizer (VERTICAL)
-        # self.SetSizer(szrMain)
-        # szrMain.Add(szrNameStereotype, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
 
         self._szrMain.Add(lblField, 0, ALL, 5)
         self._szrMain.Add(self._lstFieldList, 1, ALL | EXPAND, 5)
