@@ -6,13 +6,13 @@ class PyutType:
     def __init__(self, value=''):
         self._value = value
 
-    def getValue(self) -> str:
+    @property
+    def value(self) -> str:
         return self._value
 
-    def setValue(self, theNewValue: str):
+    @value.setter
+    def value(self, theNewValue: str):
         raise NotImplementedError('PyutType is read-only once constructed')
-
-    value = property(getValue, setValue)
 
     def __str__(self) -> str:
         """

@@ -50,15 +50,15 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.general.Globals import _
 
 [
-    ID_TXTMETHODNAME,
-    ID_LSTPARAMLIST,
-    ID_BTNPARAMADD,
-    ID_BTNPARAMEDIT,
-    ID_BTNPARAMREMOVE,
-    ID_BTNPARAMUP,
-    ID_BTNPARAMDOWN,
-    ID_BTNMETHODOK,
-    ID_BTNMETHODCANCEL,
+    ID_TXT_METHOD_NAME,
+    ID_LST_PARAM_LIST,
+    ID_BTN_PARAM_ADD,
+    ID_BTN_PARAM_EDIT,
+    ID_BTN_PARAM_REMOVE,
+    ID_BTN_PARAM_UP,
+    ID_BTN_PARAM_DOWN,
+    ID_BTN_METHOD_OK,
+    ID_BTN_METHOD_CANCEL,
 ] = PyutUtils.assignID(9)
 
 
@@ -84,8 +84,8 @@ class DlgEditMethod(BaseDlgEdit):
 
         # Txt Ctrl Name
         lblName:       StaticText = StaticText (self, ID_ANY, _("Name"))
-        self._txtName: TextCtrl   = TextCtrl(self, ID_TXTMETHODNAME, "", size=(125, -1))
-        self.Bind(EVT_TEXT, self._evtMethodText, id=ID_TXTMETHODNAME)
+        self._txtName: TextCtrl   = TextCtrl(self, ID_TXT_METHOD_NAME, "", size=(125, -1))
+        self.Bind(EVT_TEXT, self._evtMethodText, id=ID_TXT_METHOD_NAME)
 
         # Txt Ctrl Modifiers
         lblModifiers:       StaticText = StaticText (self, ID_ANY, _("Modifiers"))
@@ -102,28 +102,28 @@ class DlgEditMethod(BaseDlgEdit):
         lblParam: StaticText = StaticText (self, ID_ANY, _("Params :"))
 
         # ListBox
-        self._lstParams: ListBox = ListBox(self, ID_LSTPARAMLIST, choices=[],  style=LB_SINGLE)
-        self.Bind(EVT_LISTBOX, self._evtParamList, id=ID_LSTPARAMLIST)
+        self._lstParams: ListBox = ListBox(self, ID_LST_PARAM_LIST, choices=[], style=LB_SINGLE)
+        self.Bind(EVT_LISTBOX, self._evtParamList, id=ID_LST_PARAM_LIST)
 
         # Button Add
-        self._btnParamAdd: Button = Button(self, ID_BTNPARAMADD, _("&Add"))
-        self.Bind(EVT_BUTTON, self._onParamAdd, id=ID_BTNPARAMADD)
+        self._btnParamAdd: Button = Button(self, ID_BTN_PARAM_ADD, _("&Add"))
+        self.Bind(EVT_BUTTON, self._onParamAdd, id=ID_BTN_PARAM_ADD)
 
         # Button Edit
-        self._btnParamEdit = Button(self, ID_BTNPARAMEDIT, _("&Edit"))
-        self.Bind(EVT_BUTTON, self._onParamEdit, id=ID_BTNPARAMEDIT)
+        self._btnParamEdit = Button(self, ID_BTN_PARAM_EDIT, _("&Edit"))
+        self.Bind(EVT_BUTTON, self._onParamEdit, id=ID_BTN_PARAM_EDIT)
 
         # Button Remove
-        self._btnParamRemove = Button(self, ID_BTNPARAMREMOVE, _("&Remove"))
-        self.Bind(EVT_BUTTON, self._onParamRemove, id=ID_BTNPARAMREMOVE)
+        self._btnParamRemove = Button(self, ID_BTN_PARAM_REMOVE, _("&Remove"))
+        self.Bind(EVT_BUTTON, self._onParamRemove, id=ID_BTN_PARAM_REMOVE)
 
         # Button Up
-        self._btnParamUp = Button(self, ID_BTNPARAMUP, _("&Up"))
-        self.Bind(EVT_BUTTON, self._onParamUp, id=ID_BTNPARAMUP)
+        self._btnParamUp = Button(self, ID_BTN_PARAM_UP, _("&Up"))
+        self.Bind(EVT_BUTTON, self._onParamUp, id=ID_BTN_PARAM_UP)
 
         # Button Down
-        self._btnParamDown = Button(self, ID_BTNPARAMDOWN, _("&Down"))
-        self.Bind(EVT_BUTTON, self._onParamDown, id=ID_BTNPARAMDOWN)
+        self._btnParamDown = Button(self, ID_BTN_PARAM_DOWN, _("&Down"))
+        self.Bind(EVT_BUTTON, self._onParamDown, id=ID_BTN_PARAM_DOWN)
 
         # Sizer for Params buttons
         szrParamButtons: BoxSizer = BoxSizer (HORIZONTAL)
@@ -136,11 +136,11 @@ class DlgEditMethod(BaseDlgEdit):
 
         # ---------------------
         # Buttons OK and cancel
-        self._btnMethodOk = Button(self, ID_BTNMETHODOK, _("&Ok"))
-        self.Bind(EVT_BUTTON, self._onMethodOk, id=ID_BTNMETHODOK)
+        self._btnMethodOk = Button(self, ID_BTN_METHOD_OK, _("&Ok"))
+        self.Bind(EVT_BUTTON, self._onMethodOk, id=ID_BTN_METHOD_OK)
         self._btnMethodOk.SetDefault()
-        self._btnMethodCancel = Button(self, ID_BTNMETHODCANCEL, _("&Cancel"))
-        self.Bind(EVT_BUTTON, self._onMethodCancel, id=ID_BTNMETHODCANCEL)
+        self._btnMethodCancel = Button(self, ID_BTN_METHOD_CANCEL, _("&Cancel"))
+        self.Bind(EVT_BUTTON, self._onMethodCancel, id=ID_BTN_METHOD_CANCEL)
 
         szrButtons: BoxSizer = BoxSizer (HORIZONTAL)
         szrButtons.Add(self._btnMethodOk, 0, ALL, 5)

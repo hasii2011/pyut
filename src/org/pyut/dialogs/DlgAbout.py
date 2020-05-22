@@ -63,7 +63,7 @@ class DlgAbout(Dialog):
     """
     DlgAbout : About box for Pyut.
 
-    Instancied from AppFrame.
+    Instantiated from AppFrame.
 
     Use it like a normal dialog box ::
         dlg=DlgAbout(self, -1, "")
@@ -207,14 +207,9 @@ class DlgAbout(Dialog):
                 if -dy < y < FrameHeight:
                     tdc.DrawText(self._textToShow[j], x0, y)
 
-        # end drawing
-        # tdc.EndDrawing()
-
         # Show memory dc to current dc (blit)
         dc = PaintDC(self._panel)
-        # dc.BeginDrawing()
         dc.Blit(0, 0, FrameWidth, FrameHeight, tdc, 0, 0)
-        # dc.EndDrawing()
         tdc.SelectObject(NullBitmap)
 
 
@@ -247,7 +242,7 @@ class AboutDialogThread:
         Start the task.
         """
         self._keepGoing = self._running = True
-        # thread.start_new_thread(self.Run, ())
+
         self.logger.info("Start a new thread")
         x = threading.Thread(target=self.Run, args=())
         x.start()
@@ -278,11 +273,8 @@ class AboutDialogThread:
             # End of text -> restart at top
             if self._position > (len(self._textToShow) + 15) * dy:
                 self._position = 0.0
-            # Ask for update
-            # evt = UpdatePanelEvent()
-            # wx.PostEvent(self._win, evt)
             self._parent.OnPanelUpdate(None)
-            # Wait
+
             wxYield()
             time.sleep(Delay_Unit)
         self._running = False

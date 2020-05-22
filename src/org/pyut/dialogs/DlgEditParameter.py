@@ -29,9 +29,9 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.general.Globals import _
 
 [
-    ID_TXTPARAMNAME,
-    ID_BTNPARAMOK,
-    ID_BTNPARAMCANCEL
+    ID_TXT_PARAM_NAME,
+    ID_BTN_PARAM_OK,
+    ID_BTN_PARAM_CANCEL
  ] = PyutUtils.assignID(3)
 
 
@@ -43,7 +43,7 @@ class DlgEditParameter(BaseDlgEdit):
         Args:
             theParent:
             theWindowId:
-            parameterToEdit:  The parameter that is being edittted
+            parameterToEdit:  The parameter that is being edited
             theMediator:
         """
 
@@ -58,9 +58,9 @@ class DlgEditParameter(BaseDlgEdit):
 
         # Txt Ctrl Name
         lblName:       StaticText = StaticText (self, ID_ANY, _("Name"))
-        self._txtName: TextCtrl   = TextCtrl(self, ID_TXTPARAMNAME, "", size=(125, -1))
+        self._txtName: TextCtrl   = TextCtrl(self, ID_TXT_PARAM_NAME, "", size=(125, -1))
 
-        self.Bind(EVT_TEXT, self._evtParamText, id=ID_TXTPARAMNAME)
+        self.Bind(EVT_TEXT, self._evtParamText, id=ID_TXT_PARAM_NAME)
 
         # Txt Ctrl Type
         lblType:       StaticText = StaticText (self, ID_ANY, _("Type"))
@@ -72,12 +72,12 @@ class DlgEditParameter(BaseDlgEdit):
 
         # ---------------------
         # Buttons OK and cancel
-        self._btnOk: Button = Button(self, ID_BTNPARAMOK, _("&Ok"))
-        self.Bind(EVT_BUTTON, self._onParamOk, id=ID_BTNPARAMOK)
+        self._btnOk: Button = Button(self, ID_BTN_PARAM_OK, _("&Ok"))
+        self.Bind(EVT_BUTTON, self._onParamOk, id=ID_BTN_PARAM_OK)
         self._btnOk.SetDefault()
 
-        self._btnCancel: Button = Button(self, ID_BTNPARAMCANCEL, _("&Cancel"))
-        self.Bind(EVT_BUTTON, self._onParamCancel, id=ID_BTNPARAMCANCEL)
+        self._btnCancel: Button = Button(self, ID_BTN_PARAM_CANCEL, _("&Cancel"))
+        self.Bind(EVT_BUTTON, self._onParamCancel, id=ID_BTN_PARAM_CANCEL)
 
         szrButtons: BoxSizer = BoxSizer (HORIZONTAL)
         szrButtons.Add(self._btnOk, 0, ALL, 5)
@@ -140,7 +140,7 @@ class DlgEditParameter(BaseDlgEdit):
         self.EndModal(OK)
 
     # noinspection PyUnusedLocal
-    def _onParamCancel (self, event):
+    def _onParamCancel (self, event: CommandEvent):
         self.EndModal(CANCEL)
 
     def _fixBtnDlgParams (self):
