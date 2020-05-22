@@ -32,4 +32,8 @@ class DlgEditInterface(DlgEditClassCommon):
 
         self._szrMain.Add(self._szrButtons, 0, ALL | ALIGN_RIGHT, 5)
 
+        # Fill Class name
+        self._txtName.SetValue(self._pyutModelCopy.getName())
+        self._fillMethodList()
+
         self._szrMain.Fit(self)

@@ -29,6 +29,7 @@ class PyutMethod(PyutObject):
     A method representation.
 
     A PyutMethod represents a method of a UML class in Pyut. It manages its:
+    
         - visibility (`PyutVisibility`)
         - modifiers (`PyutModifier`)
         - parameters (`PyutParameter`)
@@ -37,8 +38,8 @@ class PyutMethod(PyutObject):
 
     It has a string mode that influence the way `__str__` works. The two modes
     are:
-        - `WITHOUT_PARAMS` (default) : uml string description without params
-        - `WITH_PARAMS` : uml string description with params
+        - `WITHOUT_PARAMS` (default) : uml string description without parameters
+        - `WITH_PARAMS` : uml string description with parameters
 
     You can change it with the `setStringMode` class method. This means the
     change will be done for each `PyutMethod` instance.
@@ -72,20 +73,17 @@ class PyutMethod(PyutObject):
         else:
             PyutMethod.setStringMode(WITHOUT_PARAMS)
 
-    def _getSourceCode(self) -> SourceCodeType:
+    @property
+    def sourceCode(self) -> SourceCodeType:
         return self._sourceCode
 
-    def _setSourceCode(self, newCode: SourceCodeType):
+    @sourceCode.setter
+    def setSourceCode(self, newCode: SourceCodeType):
         self._sourceCode = newCode
 
-    sourceCode = property(_getSourceCode, _setSourceCode)
-
-    def getString(self):
+    def getString(self) -> str:
         """
-        Return the string with params in all cases.
-
-        @since 1.9
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:  The method representation with parameters
         """
         return self.__stringWithParams()
 

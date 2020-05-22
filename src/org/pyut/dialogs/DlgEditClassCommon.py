@@ -152,6 +152,11 @@ class DlgEditClassCommon(Dialog):
 
         return szrMethodButtons
 
+    def _fillMethodList(self):
+
+        for method in self._pyutModelCopy.methods:
+            self._lstMethodList.Append(method.getString())
+
     # noinspection PyUnusedLocal
     def _onDescription(self, event: CommandEvent):
         """
@@ -332,7 +337,8 @@ class DlgEditClassCommon(Dialog):
         """
         self._pyutModel.setName(self._txtName.GetValue())
 
-        self._pyutModel.methods = self._pyutModelCopy.methods
+        self._pyutModel.methods      = self._pyutModelCopy.methods
+        self._pyutModel.description = self._pyutModelCopy.description
 
         self._returnAction = OK     # This is probably obsolete
         event.Skip(skip=True)

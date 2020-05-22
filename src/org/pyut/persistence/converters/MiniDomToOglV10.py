@@ -494,7 +494,9 @@ class MiniDomToOgl:
             if xmlParam.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):
                 pyutField.setDefaultValue(xmlParam.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE))
             pyutField.setName(xmlParam.getAttribute(PyutXmlConstants.ATTR_NAME))
-            pyutField.setType(xmlParam.getAttribute(PyutXmlConstants.ATTR_TYPE))
+
+            pyutType: PyutType = PyutType(xmlParam.getAttribute(PyutXmlConstants.ATTR_TYPE))
+            pyutField.setType(pyutType)
 
             pyutFields.append(pyutField)
 

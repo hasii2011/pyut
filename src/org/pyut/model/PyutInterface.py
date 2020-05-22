@@ -2,14 +2,15 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutObject import PyutObject
 
 
 class PyutInterface(PyutClassCommon, PyutObject):
 
-    def __init__(self, name=""):
+    DEFAULT_INTERFACE_NAME: str = 'IClassInterface'
+
+    def __init__(self, name: str = DEFAULT_INTERFACE_NAME):
         """
 
         Args:
@@ -19,24 +20,6 @@ class PyutInterface(PyutClassCommon, PyutObject):
         PyutClassCommon.__init__(self)
 
         self.logger: Logger = getLogger(__name__)
-
-        self._implementingClass: PyutClass
-
-    @property
-    def implementor(self) -> PyutClass:
-        """
-
-        Returns: Return the PyutClass that implements this interface
-        """
-        return self._implementingClass
-
-    @implementor.setter
-    def implementor(self, implementingClass: PyutClass):
-        """
-        Args:
-            implementingClass:  The implementor
-        """
-        self._implementingClass = implementingClass
 
     def __repr__(self):
 

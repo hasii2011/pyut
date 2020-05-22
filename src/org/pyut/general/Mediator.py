@@ -22,26 +22,27 @@ from wx import Yield as wxYield
 
 from org.pyut.MiniOgl.Constants import EVENT_PROCESSED
 from org.pyut.MiniOgl.Constants import SKIP_EVENT
-
 from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
 from org.pyut.enums.LinkType import LinkType
+
+from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import WITHOUT_PARAMS
+from org.pyut.model.PyutMethod import WITH_PARAMS
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
-
-from org.pyut.model.PyutMethod import WITHOUT_PARAMS
-from org.pyut.model.PyutMethod import WITH_PARAMS
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.DlgEditLink import DlgEditLink
 from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
+from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
@@ -633,7 +634,16 @@ class Mediator(Singleton):
             self.classEditor(pyutObject)
             self.autoResize(diagramShape)
         elif isinstance(diagramShape, OglInterface2):
+
             self.logger.info(f'Double clicked on lollipop')
+            lollipop:      OglInterface2 = cast(OglInterface2, diagramShape)
+            pyutInterface: PyutInterface = lollipop.pyutInterface
+            with DlgEditInterface(umlFrame, ID_ANY, pyutInterface) as dlg:
+                if dlg.ShowModal() == OK:
+                    self.logger.info(f'model: {pyutInterface}')
+                else:
+                    self.logger.info(f'Cancelled')
+
         elif isinstance(diagramShape, OglNote):
             pyutObject = diagramShape.getPyutObject()
             dlg = DlgEditNote(umlFrame, -1, pyutObject)
@@ -1038,22 +1048,6 @@ class Mediator(Singleton):
 
     from org.pyut.ogl.OglClass import OglClass
 
-    def implementInterface(self, implementor: OglClass):
-
-        self.logger.info(f'Implementing class: {implementor}')
-        #
-        # from org.pyut.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
-        # from org.pyut.commands.CommandGroup import CommandGroup
-        #
-        # cmd = CreateOglInterfaceCommand(implementor)
-        # group = CommandGroup("Create Interface")
-        # group.addCommand(cmd)
-        #
-        # umlFrame = self._fileHandling.getCurrentFrame()
-        #
-        # umlFrame.getHistory().addCommandGroup(group)
-        # umlFrame.getHistory().execute()
-
     def _setShapeSelection(self, selected: bool):
         """
         Either select or deselect all shapes in the current frame
@@ -1095,14 +1089,26 @@ class Mediator(Singleton):
         self.logger.info(f'implementor: {implementor} attachmentAnchor: {attachmentAnchor}')
         umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
 
-        cmd:  CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor, attachmentAnchor)
-        group: CommandGroup             = CommandGroup("Create lollipop")
-
-        group.addCommand(cmd)
-        umlFrame.getHistory().addCommandGroup(group)
-        umlFrame.getHistory().execute()
         self.__removeUnneededAnchorPoints(implementor, attachmentAnchor)
         umlFrame.Refresh()
+
+        pyutInterface: PyutInterface = PyutInterface()
+        with DlgEditInterface(umlFrame, ID_ANY, pyutInterface) as dlg:
+            if dlg.ShowModal() == OK:
+                self.logger.info(f'model: {pyutInterface}')
+                pyutClass: PyutClass = implementor.getPyutObject()
+                pyutClass.addInterface(pyutInterface)
+
+                cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(pyutInterface, attachmentAnchor)
+                group: CommandGroup = CommandGroup("Create lollipop")
+
+                group.addCommand(cmd)
+                umlFrame.getHistory().addCommandGroup(group)
+                umlFrame.getHistory().execute()
+            else:
+                self.logger.info(f'Cancelled')
+                #
+                # TODO Remove the lollipop
 
     def requestLollipopLocation(self, destinationClass: OglClass):
 

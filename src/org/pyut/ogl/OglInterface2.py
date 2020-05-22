@@ -19,6 +19,14 @@ class OglInterface2(LollipopLine, Common):
 
         self._pyutInterface: PyutInterface = pyutInterface
 
+    @property
+    def pyutInterface(self) -> PyutInterface:
+        return self._pyutInterface
+
+    @pyutInterface.setter
+    def pyutInterface(self, theNewValue: PyutInterface):
+        self._pyutInterface = theNewValue
+
     def Inside(self, clickPointX, clickPointY) -> bool:
         """
         Override Shape.Inside

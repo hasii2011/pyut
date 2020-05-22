@@ -3,8 +3,7 @@ from typing import List
 from typing import cast
 
 from org.pyut.model.PyutClassCommon import PyutClassCommon
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.model.PyutStereotype import PyutStereotype
 from org.pyut.model.PyutStereotype import getPyutStereotype
@@ -45,6 +44,18 @@ class PyutClass(PyutClassCommon, PyutLinkedObject):
         self._showStereotype: bool = True
         self._showMethods:    bool = True
         self._showFields:     bool = True
+        self._interfaces:     List[PyutInterface] = []
+
+    @property
+    def interfaces(self) -> List[PyutInterface]:
+        return self._interfaces
+
+    @interfaces.setter
+    def interfaces(self, theNewInterfaces: List[PyutInterface]):
+        self._interfaces = theNewInterfaces
+
+    def addInterface(self, pyutInterface: PyutInterface):
+        self._interfaces.append(pyutInterface)
 
     def getStereotype(self):
         """

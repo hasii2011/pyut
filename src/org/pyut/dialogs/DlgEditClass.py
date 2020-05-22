@@ -226,7 +226,7 @@ class DlgEditClass(DlgEditClassCommon):
         self._szrMain.Add(self._szrButtons, 0, ALL | ALIGN_RIGHT, 5)     # wxPython 4.1.0 Vertical alignment flags are ignored in vertical sizers
 
         # Fill the txt control with class data
-        self._fillAllFields()
+        self._fillAllControls()
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
@@ -268,7 +268,7 @@ class DlgEditClass(DlgEditClassCommon):
             dupParams.append(param)
         return dupParams
 
-    def _fillAllFields(self):
+    def _fillAllControls(self):
         """
         Fill all controls with _pyutModelCopy data.
 
@@ -290,8 +290,7 @@ class DlgEditClass(DlgEditClassCommon):
                 self.logger.debug(f'field: {el}')
                 self._lstFieldList.Append(str(el))
 
-            for el in self._pyutModelCopy.methods:
-                self._lstMethodList.Append(el.getString())
+            self._fillMethodList()
         except (ValueError, Exception) as e:
 
             eMsg: str = _(f"Error: {e}")
@@ -470,9 +469,6 @@ class DlgEditClass(DlgEditClassCommon):
             self._pyutModel.setStereotype(getPyutStereotype(strStereotype))
         # Adds all fields in a list
         self._pyutModel.fields = self._pyutModelCopy.fields
-        self._pyutModel.methods = self._pyutModelCopy.methods
-
-        self._pyutModel.description = self._pyutModelCopy.description
 
         # Update display properties
         self._pyutModel.showFields  = self._chkShowFields.GetValue()
