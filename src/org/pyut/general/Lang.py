@@ -53,7 +53,7 @@ class Lang:
         if language not in LANGUAGES:
             language = DEFAULT_LANG
 
-        # Set language for all application
+        # Set the language for the application
         moduleLogger.debug(f'Installing language <{language}>')
         try:
             wxLangID:     int  = LANGUAGES[language][1]
@@ -63,24 +63,22 @@ class Lang:
             moduleLogger.debug(f'orgDirectory: {orgDirectory}')
 
             localedir: str = f'{orgDirectory}{osSep}{Lang.LOCALE_DIRECTORY}'
-            method = 0          # Really ?
+            method = 1          # Really ?
             if method == 0:
                 # Possibility to load all languages, then do an install on fly
                 tr = gettext.translation(domain, localedir, languages=[language])
                 tr.install(True)
             elif method == 1:
-
                 # Set locale for wxWidget
                 loc = Locale(wxLangID)
                 loc.AddCatalogLookupPathPrefix(localedir)
                 loc.AddCatalog(domain)
 
-                # Set up python's gettext
                 moduleLogger.info(f'Encoding name is {loc.GetCanonicalName()}')
-                mytrans = gettext.translation(domain, localedir, [loc.GetCanonicalName()], fallback=True)
-                mytrans.install(unicode=True)
+                myTrans = gettext.translation(domain, localedir, [loc.GetCanonicalName()], fallback=True)
+                myTrans.install()
         except (ValueError, Exception) as e:
             # If there has been a problem with i18n
-            moduleLogger.error(f'Warning: problem with gettext, i18n not used.  Error: {e}')
+            moduleLogger.error(f'Problem with language setting.  Error: {e}')
             errMsg = ErrorManager.getErrorInfo()
             moduleLogger.error(errMsg)

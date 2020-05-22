@@ -31,7 +31,7 @@ class Pyut:
         self._setupSystemLogging()
         self.logger: Logger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
-        Lang.importLanguage()
+        # Lang.importLanguage()
 
         self._exePath:  str = self._getExePath()
         self._userPath: str = getcwd()      # where the user launched pyut from
@@ -79,6 +79,8 @@ class Pyut:
         self._updateOurDirectoryPreferences()
         self._displayIntro()
         app: PyutApp = PyutApp(redirect=False)
+        Lang.importLanguage()
+
         app.MainLoop()
 
     def _getExePath(self) -> str:
