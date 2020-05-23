@@ -442,25 +442,25 @@ class AppFrame(Frame):
         lst = [
             (ACCEL_CTRL,     ord('n'),   SharedIdentifiers.ID_MNUFILENEWPROJECT),
             (ACCEL_CTRL,     ord('N'),   SharedIdentifiers.ID_MNUFILENEWPROJECT),
-            (ACCEL_CTRL,     ord('l'),   SharedIdentifiers.ID_MNUFILENEWCLASSDIAGRAM),
-            (ACCEL_CTRL,     ord('E'),   SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM),
-            (ACCEL_CTRL,     ord('e'),   SharedIdentifiers.ID_MNUFILENEWSEQUENCEDIAGRAM),
-            (ACCEL_CTRL,     ord('U'),   SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM),
-            (ACCEL_CTRL,     ord('u'),   SharedIdentifiers.ID_MNUFILENEWUSECASEDIAGRAM),
-            (ACCEL_CTRL,     ord('o'),   SharedIdentifiers.ID_MNUFILEOPEN),
-            (ACCEL_CTRL,     ord('O'),   SharedIdentifiers.ID_MNUFILEOPEN),
-            (ACCEL_CTRL,     ord('s'),   SharedIdentifiers.ID_MNUFILESAVE),
-            (ACCEL_CTRL,     ord('S'),   SharedIdentifiers.ID_MNUFILESAVE),
+            (ACCEL_CTRL,     ord('l'),   SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM),
+            (ACCEL_CTRL,     ord('E'),   SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM),
+            (ACCEL_CTRL,     ord('e'),   SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM),
+            (ACCEL_CTRL,     ord('U'),   SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM),
+            (ACCEL_CTRL,     ord('u'),   SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM),
+            (ACCEL_CTRL,     ord('o'),   SharedIdentifiers.ID_MNU_FILE_OPEN),
+            (ACCEL_CTRL,     ord('O'),   SharedIdentifiers.ID_MNU_FILE_OPEN),
+            (ACCEL_CTRL,     ord('s'),   SharedIdentifiers.ID_MNU_FILE_SAVE),
+            (ACCEL_CTRL,     ord('S'),   SharedIdentifiers.ID_MNU_FILE_SAVE),
             (ACCEL_CTRL,     ord('a'),   SharedIdentifiers.ID_MNUFILESAVEAS),
             (ACCEL_CTRL,     ord('A'),   SharedIdentifiers.ID_MNUFILESAVEAS),
-            (ACCEL_CTRL,     ord('p'),   SharedIdentifiers.ID_MNUFILEPRINT),
-            (ACCEL_CTRL,     ord('P'),   SharedIdentifiers.ID_MNUFILEPRINT),
-            (ACCEL_CTRL,     ord('x'),   SharedIdentifiers.ID_MNUEDITCUT),
-            (ACCEL_CTRL,     ord('X'),   SharedIdentifiers.ID_MNUEDITCUT),
-            (ACCEL_CTRL,     ord('c'),   SharedIdentifiers.ID_MNUEDITCOPY),
-            (ACCEL_CTRL,     ord('C'),   SharedIdentifiers.ID_MNUEDITCOPY),
-            (ACCEL_CTRL,     ord('v'),   SharedIdentifiers.ID_MNUEDITPASTE),
-            (ACCEL_CTRL,     ord('V'),   SharedIdentifiers.ID_MNUEDITPASTE),
+            (ACCEL_CTRL,     ord('p'),   SharedIdentifiers.ID_MNU_FILE_PRINT),
+            (ACCEL_CTRL,     ord('P'),   SharedIdentifiers.ID_MNU_FILE_PRINT),
+            (ACCEL_CTRL,     ord('x'),   SharedIdentifiers.ID_MNU_EDIT_CUT),
+            (ACCEL_CTRL,     ord('X'),   SharedIdentifiers.ID_MNU_EDIT_CUT),
+            (ACCEL_CTRL,     ord('c'),   SharedIdentifiers.ID_MNU_EDIT_COPY),
+            (ACCEL_CTRL,     ord('C'),   SharedIdentifiers.ID_MNU_EDIT_COPY),
+            (ACCEL_CTRL,     ord('v'),   SharedIdentifiers.ID_MNU_EDIT_PASTE),
+            (ACCEL_CTRL,     ord('V'),   SharedIdentifiers.ID_MNU_EDIT_PASTE),
             (ACCEL_CTRL,     ord('d'),   SharedIdentifiers.ID_DEBUG),
             (ACCEL_CTRL,     ord('D'),   SharedIdentifiers.ID_DEBUG),
             ]
@@ -688,7 +688,7 @@ class AppFrame(Frame):
         TEMP_PS_FILE:   str = '/tmp/pdfExport.ps'
         TEMP_EPS_FILE:  str = '/tmp/pdfExport.eps'
         EPS_TO_PDF_CMD: str = 'epstopdf'
-        PS_TO_EXT_PS:   str = 'ps2epsi'
+        PS_TO_EXT_PS:   str = 'ps2eps'
 
         # TODO -- externalize this command --
         # TODO -- update for mac
