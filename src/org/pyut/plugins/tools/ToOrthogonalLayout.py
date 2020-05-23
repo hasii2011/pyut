@@ -21,7 +21,7 @@ from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.Shape import Shape
 
 
-from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
 from org.pyut.plugins.orthogonal.DlgOrthogonalOptions import DlgOrthogonalOptions
 from org.pyut.plugins.orthogonal.OrthogonalOptions import OrthogonalOptions
 

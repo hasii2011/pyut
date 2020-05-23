@@ -5,7 +5,7 @@ from wx import RED_PEN
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.Shape import Shape
 from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
-from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
 
 
 class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):

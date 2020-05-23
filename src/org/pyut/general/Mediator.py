@@ -26,7 +26,7 @@ from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 
-from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.model.PyutInterface import PyutInterface

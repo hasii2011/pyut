@@ -14,7 +14,7 @@ from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.model.PyutLink import PyutLink
 
-from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
 from org.pyut.ogl.IllegalOperationException import IllegalOperationException
 
 

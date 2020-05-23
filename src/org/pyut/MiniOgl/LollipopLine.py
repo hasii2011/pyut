@@ -13,7 +13,7 @@ from org.pyut.MiniOgl.Common import CommonPoint
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.MiniOgl.Shape import Shape
 
-from org.pyut.enums.PyutAttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
 
 
 class LollipopLine(Shape):
