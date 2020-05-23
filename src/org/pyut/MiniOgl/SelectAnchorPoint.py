@@ -5,7 +5,7 @@ from wx import RED_PEN
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.Shape import Shape
 from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
-from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 
 class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
@@ -15,7 +15,7 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
     to attach something
 
     """
-    def __init__(self, x: float, y: float, attachmentPoint: PyutAttachmentPoint, parent: Shape = None):
+    def __init__(self, x: float, y: float, attachmentPoint: AttachmentPoint, parent: Shape = None):
         """
 
         Args:
@@ -24,14 +24,14 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
             parent:
         """
         super().__init__(x, y, parent)
-        self._attachmentPoint: PyutAttachmentPoint = attachmentPoint
+        self._attachmentPoint: AttachmentPoint = attachmentPoint
 
     @property
-    def attachmentPoint(self) -> PyutAttachmentPoint:
+    def attachmentPoint(self) -> AttachmentPoint:
         return self._attachmentPoint
 
     @attachmentPoint.setter
-    def attachmentPoint(self, newValue: PyutAttachmentPoint):
+    def attachmentPoint(self, newValue: AttachmentPoint):
         self._attachmentPoint = newValue
 
     def Draw(self, dc, withChildren=True):

@@ -26,7 +26,7 @@ from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 
-from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.model.PyutInterface import PyutInterface
@@ -1148,12 +1148,12 @@ class Mediator(Singleton):
         westX, westY   = 0.0, dh / 2
         eastX, eastY   = dw, dh / 2
 
-        self.__createAnchorHints(destinationClass, southX, southY, PyutAttachmentPoint.SOUTH, umlFrame)
-        self.__createAnchorHints(destinationClass, northX, northY, PyutAttachmentPoint.NORTH, umlFrame)
-        self.__createAnchorHints(destinationClass, westX,  westY,  PyutAttachmentPoint.WEST,  umlFrame)
-        self.__createAnchorHints(destinationClass, eastX,  eastY,  PyutAttachmentPoint.EAST, umlFrame)
+        self.__createAnchorHints(destinationClass, southX, southY, AttachmentPoint.SOUTH, umlFrame)
+        self.__createAnchorHints(destinationClass, northX, northY, AttachmentPoint.NORTH, umlFrame)
+        self.__createAnchorHints(destinationClass, westX, westY, AttachmentPoint.WEST, umlFrame)
+        self.__createAnchorHints(destinationClass, eastX, eastY, AttachmentPoint.EAST, umlFrame)
 
-    def __createAnchorHints(self, destinationClass: OglClass, anchorX: float, anchorY: float, attachmentPoint: PyutAttachmentPoint, umlFrame):
+    def __createAnchorHints(self, destinationClass: OglClass, anchorX: float, anchorY: float, attachmentPoint: AttachmentPoint, umlFrame):
 
         anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=anchorX, y=anchorY, attachmentPoint=attachmentPoint, parent=destinationClass)
         anchorHint.SetProtected(True)
@@ -1163,7 +1163,7 @@ class Mediator(Singleton):
 
     def __removeUnneededAnchorPoints(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
-        attachmentPoint: PyutAttachmentPoint = attachmentAnchor.attachmentPoint
+        attachmentPoint: AttachmentPoint = attachmentAnchor.attachmentPoint
         for anchor in implementor.GetAnchors():
             if isinstance(anchor, SelectAnchorPoint):
                 anchor: SelectAnchorPoint = cast(SelectAnchorPoint, anchor)

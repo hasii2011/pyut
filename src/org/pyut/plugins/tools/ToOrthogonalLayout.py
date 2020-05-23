@@ -21,7 +21,7 @@ from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.Shape import Shape
 
 
-from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.plugins.orthogonal.DlgOrthogonalOptions import DlgOrthogonalOptions
 from org.pyut.plugins.orthogonal.OrthogonalOptions import OrthogonalOptions
 
@@ -254,16 +254,16 @@ class ToOrthogonalLayout(PyutToPlugin):
         sw, sh = srcShape.GetSize()
         dw, dh = destShape.GetSize()
         self.logger.info(f'Source Dimensions(sw-sh): {sw}-{sh} Destination Dimensions(dw-dh) {dw}-{dh}')
-        if orientation == PyutAttachmentPoint.NORTH:
+        if orientation == AttachmentPoint.NORTH:
             srcX, srcY = sw / 2, 0
             dstX, dstY = dw / 2, dh
-        elif orientation == PyutAttachmentPoint.SOUTH:
+        elif orientation == AttachmentPoint.SOUTH:
             srcX, srcY = sw / 2, sh
             dstX, dstY = dw / 2, 0
-        elif orientation == PyutAttachmentPoint.EAST:
+        elif orientation == AttachmentPoint.EAST:
             srcX, srcY = sw, sh / 2
             dstX, dstY = 0, dh / 2
-        elif orientation == PyutAttachmentPoint.WEST:
+        elif orientation == AttachmentPoint.WEST:
             srcX, srcY = 0, sh / 2
             dstX, dstY = dw, dh / 2
 
@@ -271,7 +271,7 @@ class ToOrthogonalLayout(PyutToPlugin):
 
         return srcX, srcY, dstX, dstY
 
-    def _getOrientation(self, srcX, srcY, destX, destY) -> PyutAttachmentPoint:
+    def _getOrientation(self, srcX, srcY, destX, destY) -> AttachmentPoint:
         """
         Given a source and destination, returns where the destination
         is located relative to the source.
@@ -289,15 +289,15 @@ class ToOrthogonalLayout(PyutToPlugin):
         deltaY = srcY - destY
         if deltaX > 0:  # dest is not east
             if deltaX > abs(deltaY):    # dest is west
-                return PyutAttachmentPoint.WEST
+                return AttachmentPoint.WEST
             elif deltaY > 0:
-                return PyutAttachmentPoint.NORTH
+                return AttachmentPoint.NORTH
             else:
-                return PyutAttachmentPoint.SOUTH
+                return AttachmentPoint.SOUTH
         else:   # dest is not west
             if -deltaX > abs(deltaY):   # dest is east
-                return PyutAttachmentPoint.EAST
+                return AttachmentPoint.EAST
             elif deltaY > 0:
-                return PyutAttachmentPoint.NORTH
+                return AttachmentPoint.NORTH
             else:
-                return PyutAttachmentPoint.SOUTH
+                return AttachmentPoint.SOUTH

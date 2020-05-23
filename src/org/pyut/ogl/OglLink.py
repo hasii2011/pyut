@@ -14,11 +14,11 @@ from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.model.PyutLink import PyutLink
 
-from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.ogl.IllegalOperationException import IllegalOperationException
 
 
-def getOrient(srcX, srcY, destX, destY) -> PyutAttachmentPoint:
+def getOrient(srcX, srcY, destX, destY) -> AttachmentPoint:
     """
     Giving a source and destination, returns where the destination
     is located according to the source.
@@ -32,18 +32,18 @@ def getOrient(srcX, srcY, destX, destY) -> PyutAttachmentPoint:
     deltaY = srcY - destY
     if deltaX > 0:  # dest is not east
         if deltaX > abs(deltaY):    # dest is west
-            return PyutAttachmentPoint.WEST
+            return AttachmentPoint.WEST
         elif deltaY > 0:
-            return PyutAttachmentPoint.NORTH
+            return AttachmentPoint.NORTH
         else:
-            return PyutAttachmentPoint.SOUTH
+            return AttachmentPoint.SOUTH
     else:   # dest is not west
         if -deltaX > abs(deltaY):   # dest is east
-            return PyutAttachmentPoint.EAST
+            return AttachmentPoint.EAST
         elif deltaY > 0:
-            return PyutAttachmentPoint.NORTH
+            return AttachmentPoint.NORTH
         else:
-            return PyutAttachmentPoint.SOUTH
+            return AttachmentPoint.SOUTH
 
 
 class OglLink(LineShape, ShapeEventHandler):
@@ -87,16 +87,16 @@ class OglLink(LineShape, ShapeEventHandler):
 
             sw, sh = self._srcShape.GetSize()
             dw, dh = self._destShape.GetSize()
-            if orient == PyutAttachmentPoint.NORTH:
+            if orient == AttachmentPoint.NORTH:
                 srcX, srcY = sw/2, 0
                 dstX, dstY = dw/2, dh
-            elif orient == PyutAttachmentPoint.SOUTH:
+            elif orient == AttachmentPoint.SOUTH:
                 srcX, srcY = sw/2, sh
                 dstX, dstY = dw/2, 0
-            elif orient == PyutAttachmentPoint.EAST:
+            elif orient == AttachmentPoint.EAST:
                 srcX, srcY = sw, sh/2
                 dstX, dstY = 0, dh/2
-            elif orient == PyutAttachmentPoint.WEST:
+            elif orient == AttachmentPoint.WEST:
                 srcX, srcY = 0, sh/2
                 dstX, dstY = dw, dh/2
 

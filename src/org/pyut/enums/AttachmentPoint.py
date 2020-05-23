@@ -2,7 +2,7 @@
 from enum import Enum
 
 
-class PyutAttachmentPoint(Enum):
+class AttachmentPoint(Enum):
     """
     Cardinal points, taken to correspond to the attachment points of the OglClass
     """

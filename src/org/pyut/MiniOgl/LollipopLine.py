@@ -13,7 +13,7 @@ from org.pyut.MiniOgl.Common import CommonPoint
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.MiniOgl.Shape import Shape
 
-from org.pyut.enums.AttachmentPoint import PyutAttachmentPoint
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 
 class LollipopLine(Shape):
@@ -42,7 +42,7 @@ class LollipopLine(Shape):
 
     def lineCoordinates(self) -> CommonLine:
 
-        attachmentPoint: PyutAttachmentPoint = self._destinationAnchor.attachmentPoint
+        attachmentPoint: AttachmentPoint = self._destinationAnchor.attachmentPoint
 
         xDest, yDest = self._destinationAnchor.GetPosition()
         circleX, circleY, xSrc, ySrc = self._calculateWhereToDrawLollipop(attachmentPoint, xDest, yDest)
@@ -56,7 +56,7 @@ class LollipopLine(Shape):
         dc.SetPen(currentPen)
 
         xDest, yDest = self._destinationAnchor.GetPosition()
-        attachmentPoint: PyutAttachmentPoint = self._destinationAnchor.attachmentPoint
+        attachmentPoint: AttachmentPoint = self._destinationAnchor.attachmentPoint
 
         circleX, circleY, xSrc, ySrc = self._calculateWhereToDrawLollipop(attachmentPoint, xDest, yDest)
 
@@ -75,17 +75,17 @@ class LollipopLine(Shape):
         of the line
         """
 
-        if attachmentPoint == PyutAttachmentPoint.EAST:
+        if attachmentPoint == AttachmentPoint.EAST:
             xSrc: int = int(xDest + LollipopLine.LOLLIPOP_LINE_LENGTH)
             ySrc: int = int(yDest)
             circleX: int = int(xDest + LollipopLine.LOLLIPOP_LINE_LENGTH)
             circleY: int = int(yDest)
-        elif attachmentPoint == PyutAttachmentPoint.WEST:
+        elif attachmentPoint == AttachmentPoint.WEST:
             xSrc: int = int(xDest - LollipopLine.LOLLIPOP_LINE_LENGTH)
             ySrc: int = int(yDest)
             circleX: int = int(xDest - LollipopLine.LOLLIPOP_LINE_LENGTH)
             circleY: int = int(yDest)
-        elif attachmentPoint == PyutAttachmentPoint.NORTH:
+        elif attachmentPoint == AttachmentPoint.NORTH:
             xSrc: int = int(xDest)
             ySrc: int = int(yDest - LollipopLine.LOLLIPOP_LINE_LENGTH)
             circleX: int = int(xDest)
