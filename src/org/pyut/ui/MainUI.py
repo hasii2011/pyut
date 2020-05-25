@@ -43,7 +43,7 @@ from wx import SplitterWindow
 from wx import TreeCtrl
 from wx import Notebook
 from wx import MessageDialog
-from wx import Yield
+from wx import Yield as wxYield
 from wx import Menu
 
 from wx._core import BitmapType
@@ -89,13 +89,15 @@ class MainUI:
         self.logger: Logger = getLogger(__name__)
 
         from org.pyut.ui.AppFrame import AppFrame   # Prevent recursion import problem
-        self.__parent: AppFrame = parent
-        self._ctrl    = mediator
+        from org.pyut.general.Mediator import Mediator
+        self.__parent:  AppFrame = parent
+        self._mediator: Mediator = mediator
+
         self._projects:       List[PyutProject] = []
         self._currentProject: PyutProject       = cast(PyutProject, None)
         self._currentFrame:   UmlDiagramsFrame  = cast(UmlDiagramsFrame, None)
 
-        if not self._ctrl.isInScriptMode():
+        if not self._mediator.isInScriptMode():
 
             self.__splitter:          SplitterWindow = cast(SplitterWindow, None)
             self.__projectTree:       TreeCtrl       = cast(TreeCtrl, None)
@@ -187,7 +189,7 @@ class MainUI:
             return False
 
         try:
-            if not self._ctrl.isInScriptMode():
+            if not self._mediator.isInScriptMode():
                 for document in project.getDocuments():
                     diagramTitle: str = document.getTitle()
                     shortName:    str = self.shortenNotebookPageFileName(diagramTitle)
@@ -224,7 +226,7 @@ class MainUI:
             return False
 
         # ...
-        if not self._ctrl.isInScriptMode():
+        if not self._mediator.isInScriptMode():
             try:
                 for document in project.getDocuments()[nbInitialDocuments:]:
                     self.__notebook.AddPage(document.getFrame(), document.getFullyQualifiedName())
@@ -263,12 +265,12 @@ class MainUI:
         Returns:
             `True` if the save succeeds else `False`
         """
-        if self._ctrl.isInScriptMode():
+        if self._mediator.isInScriptMode():
             PyutUtils.displayError(_("Save File As is not accessible in script mode !"))
             return
 
         # Test if no diagram exists
-        if self._ctrl.getDiagram() is None:
+        if self._mediator.getDiagram() is None:
             PyutUtils.displayError(_("No diagram to save !"), _("Error"))
             return
 
@@ -349,11 +351,13 @@ class MainUI:
         self._currentFrame  = frame
         self._currentProject = project
 
-        if not self._ctrl.isInScriptMode():
+        if not self._mediator.isInScriptMode():
             shortName: str = self.shortenNotebookPageFileName(project.getFilename())
             self.__notebook.AddPage(frame, shortName)
-            self.notebookCurrentPage  = self.__notebook.GetPageCount() - 1
-            # self.notebook.SetSelection(self.__notebookCurrentPage)  # maybe __notebook ?  -- hasii
+            wxYield()
+            self.__notebookCurrentPage  = self.__notebook.GetPageCount() - 1
+            self.logger.info(f'Current notebook page: {self.__notebookCurrentPage}')
+            self.__notebook.SetSelection(self.__notebookCurrentPage)
 
     def exportToImageFile(self, extension: str, imageType: BitmapType):
         """
@@ -363,7 +367,7 @@ class MainUI:
             extension:  file name extension string
             imageType:  the wx image type
         """
-        if self._ctrl.isInScriptMode():
+        if self._mediator.isInScriptMode():
             PyutUtils.displayError(_("Export to image file is not implemented in scripting mode now !"))
             return
         else:
@@ -380,7 +384,7 @@ class MainUI:
             filename: str = f'DiagramDump.{extension}'
             emptyBitmap.SaveFile(filename, imageType)
 
-            self._ctrl.setStatusText(f'Diagram written to {filename}')
+            self._mediator.setStatusText(f'Diagram written to {filename}')
 
     def exportToBmp(self):
         """
@@ -468,18 +472,18 @@ class MainUI:
             True if everything is ok
         """
         # Display warning if we are in scripting mode
-        if self._ctrl.isInScriptMode():
+        if self._mediator.isInScriptMode():
             print("WARNING : in script mode, the non-saved projects are closed without warning")
 
         # Close projects and ask for unsaved but modified projects
-        if not self._ctrl.isInScriptMode():
+        if not self._mediator.isInScriptMode():
             for project in self._projects:
                 if project.getModified() is True:
                     frames = project.getFrames()
                     if len(frames) > 0:
                         frame = frames[0]
                         frame.SetFocus()
-                        Yield()
+                        wxYield()
                         # if self._ctrl is not None:
                             # self._ctrl.registerUMLFrame(frame)
                         self.showFrame(frame)
@@ -494,7 +498,7 @@ class MainUI:
 
         # dereference all
         self.__parent = None
-        self._ctrl = None
+        self._mediator = None
         self.__splitter = None
         self.__projectTree = None
         self.__notebook.DeleteAllPages()
@@ -514,7 +518,7 @@ class MainUI:
         """
         if self._currentProject is not None:
             self._currentProject.setModified(theNewValue)
-        self._ctrl.updateTitle()
+        self._mediator.updateTitle()
 
     def closeCurrentProject(self):
         """
@@ -530,11 +534,11 @@ class MainUI:
             return False
 
         # Display warning if we are in scripting mode
-        if self._ctrl.isInScriptMode():
+        if self._mediator.isInScriptMode():
             self.logger.warning("WARNING : in script mode, the non-saved projects are closed without warning")
 
         # Close the file
-        if self._currentProject.getModified() is True and not self._ctrl.isInScriptMode():
+        if self._currentProject.getModified() is True and not self._mediator.isInScriptMode():
             frame = self._currentProject.getFrames()[0]
             frame.SetFocus()
             self.showFrame(frame)
@@ -546,7 +550,7 @@ class MainUI:
                     return False
 
         # Remove the frame in the notebook
-        if not self._ctrl.isInScriptMode():
+        if not self._mediator.isInScriptMode():
             # Python 3 update
             pages = list(range(self.__notebook.GetPageCount()))
             pages.reverse()
@@ -576,7 +580,7 @@ class MainUI:
             self._currentFrame = None
 
         # Exit if we are in scripting mode
-        if self._ctrl.isInScriptMode():
+        if self._mediator.isInScriptMode():
             return
 
         for i in range(self.__notebook.GetPageCount()):
@@ -643,7 +647,7 @@ class MainUI:
             event:
         """
         self.__notebookCurrentPage = self.__notebook.GetSelection()
-        if self._ctrl is not None:      # hasii maybe I got this right from the old pre PEP-8 code
+        if self._mediator is not None:      # hasii maybe I got this right from the old pre PEP-8 code
             #  self._ctrl.registerUMLFrame(self._getCurrentFrame())
             self._currentFrame = self._getCurrentFrameFromNotebook()
             self.__parent.notifyTitleChanged()
@@ -685,7 +689,7 @@ class MainUI:
         Returns:
         """
         # Return None if we are in scripting mode
-        if self._ctrl.isInScriptMode():
+        if self._mediator.isInScriptMode():
             return None
 
         noPage = self.__notebookCurrentPage
@@ -706,6 +710,8 @@ class MainUI:
 
     def __popupProjectMenu(self):
 
+        self._mediator.resetStatusText()
+
         if self.__projectPopupMenu is None:
             self.logger.info(f'Create the project popup menu')
             [closeProjectMenuID] = PyutUtils.assignID(1)
@@ -721,12 +727,19 @@ class MainUI:
     def __popupProjectDocumentMenu(self):
 
         if self.__documentPopupMenu is None:
+
             self.logger.info(f'Create the document popup menu')
-            [editDocumentNameMenuID] = PyutUtils.assignID(1)
+
+            [editDocumentNameMenuID, removeDocumentMenuID] = PyutUtils.assignID(2)
+
             popupMenu: Menu = Menu('Actions')
             popupMenu.AppendSeparator()
             popupMenu.Append(editDocumentNameMenuID, 'Edit Document Name', 'Change document name', ITEM_NORMAL)
+            popupMenu.Append(removeDocumentMenuID,   'Remove Document',    'Delete it',            ITEM_NORMAL)
+
             popupMenu.Bind(EVT_MENU, self.__onEditDocumentName, id=editDocumentNameMenuID)
+            popupMenu.Bind(EVT_MENU, self.__onRemoveDocument,   id=removeDocumentMenuID)
+
             self.__documentPopupMenu = popupMenu
 
         self.logger.info(f'Current Document: `{self.getCurrentDocument()}`')
@@ -739,6 +752,10 @@ class MainUI:
     # noinspection PyUnusedLocal
     def __onEditDocumentName(self, event: CommandEvent):
 
+        self.logger.info(f'self.__notebookCurrentPage: {self.__notebookCurrentPage} nb Selection: {self.__notebook.GetSelection()}')
+        if self.__notebookCurrentPage == -1:
+            self.__notebookCurrentPage = self.__notebook.GetSelection()    # must be default empty project
+
         currentDocument: PyutDocument = self.getCurrentDocument()
         dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.getCurrentFrame(),
                                                            dialogIdentifier=ID_ANY,
@@ -746,6 +763,19 @@ class MainUI:
         dlgEditDocument.Destroy()
 
         self.__notebook.SetPageText(page=self.__notebookCurrentPage, text=currentDocument.title)
+        currentDocument.updateTreeText()
+
+    # noinspection PyUnusedLocal
+    def __onRemoveDocument(self, event: CommandEvent):
+        """
+        Invoked from the popup menu in the tree
+
+        Args:
+            event:
+        """
+        project:         PyutProject  = self.getCurrentProject()
+        currentDocument: PyutDocument = self.getCurrentDocument()
+        project.removeDocument(currentDocument)
 
     def shortenNotebookPageFileName(self, filename: str) -> str:
         """

@@ -51,10 +51,10 @@ class PyutProject:
 
         self._filename: str     = filename      # Project filename
         self._modified: bool    = False         # Was the project modified ?
-        self._codePath: str      = ""
+        self._codePath: str     = ""
         self._treeRootParent: TreeItemId = treeRoot                 # Parent of the project root entry
         self._treeRoot:       TreeItemId = cast(TreeItemId, None)   # Root of the project entry in the tree
-        self._tree          = tree          # Tree I belong to
+        self._tree:           TreeCtrl   = tree                     # Tree I belong to
         self.addToTree()
 
     def setFilename(self, filename):

@@ -42,6 +42,10 @@
             "level":     "WARNING",
             "propagate": "False"
         },
+        "org.pyut.ui": {
+            "level":     "WARNING",
+            "propagate": "False"
+        },
         "org.pyut.general.Mediator": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
