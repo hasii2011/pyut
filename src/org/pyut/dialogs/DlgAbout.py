@@ -4,6 +4,7 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
+
 from pkg_resources import resource_filename
 
 # Todo : change font;  or find a way to not print each character one after the other (not pretty, with, for eg : WiiW)
@@ -12,22 +13,19 @@ from wx import ALL
 from wx import BITMAP_TYPE_BMP
 from wx import BITMAP_TYPE_ICO
 from wx import BRUSHSTYLE_SOLID
-from wx import BoxSizer
-from wx import Brush
-from wx import Button
 from wx import CAPTION
 from wx import BOTH
-from wx import Colour
+from wx import EVT_TIMER
 from wx import FONTFAMILY_MODERN
+from wx import ID_ANY
 from wx import OK
 from wx import VERTICAL
-
-
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import EVT_PAINT
 
 from wx import Bitmap
+from wx import BoxSizer
 from wx import DefaultPosition
 from wx import Dialog
 from wx import MemoryDC
@@ -38,10 +36,14 @@ from wx import StaticBitmap
 from wx import StaticText
 from wx import Icon
 from wx import Panel
+from wx import Brush
+from wx import Button
+from wx import Colour
+from wx import Window
+from wx import Timer
+from wx import TimerEvent
 
 from wx import Yield as wxYield
-
-import threading
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -60,25 +62,25 @@ dy = 20                 # Y increment
 
 
 class DlgAbout(Dialog):
+
+    TIMER_UPDATE_MSECS: int = 20
     """
     DlgAbout : About box for Pyut.
 
-    Instantiated from AppFrame.
-
-    Use it like a normal dialog box ::
+    Use it like a normal dialog box
         dlg=DlgAbout(self, -1, "")
         dlg.ShowModal()
         dlg.Destroy()
     """
-    def __init__(self, parent, ID, title):
+    def __init__(self, parent: Window, wxID: int, title: str):
         """
-        Constructor.
 
-        @param  parent : parent window
-        @param ID : wx ID of this frame
-        @param  title : Title to display
+        Args:
+            parent:     parent window
+            wxID:         wx ID of this frame
+            title:      Title to display
         """
-        super().__init__(parent, ID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
+        super().__init__(parent, wxID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
 
         self.logger:  Logger = getLogger(__name__)
         iconFileName: str    = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.ico')
@@ -90,16 +92,16 @@ class DlgAbout(Dialog):
         longTextStr:      str       = PyutUtils.retrieveResourceText(ResourceTextType.KUDOS_TEXT_TYPE)
         self._textToShow: List[str] = longTextStr.split('\n')
         # Animation panel
-        self._panel = Panel(self, -1, size=(FrameWidth, FrameHeight))
+        self._panel: Panel = Panel(self, ID_ANY, size=(FrameWidth, FrameHeight))
 
         # Picture and text
         # bmp = Bitmap("img" + os.sep + "pyut.bmp", BITMAP_TYPE_BMP)
         fileName = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.bmp')
         bmp = Bitmap(fileName, BITMAP_TYPE_BMP)
 
-        self._picture = StaticBitmap(self, -1, bmp)
-        summaryText: str = "2020 The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
-        self._label   = StaticText(self, -1, summaryText, style=CAPTION)
+        self._picture: StaticBitmap = StaticBitmap(self, ID_ANY, bmp)
+        summaryText:   str = "2020 The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
+        self._label:   StaticText   = StaticText(self, ID_ANY, summaryText, style=CAPTION)
 
         # Main sizer
         self.SetAutoLayout(True)
@@ -108,19 +110,27 @@ class DlgAbout(Dialog):
         sizer.Add(self._panel,   1, ALL | ALIGN_CENTER, 5)
         sizer.Add(self._label,   0, ALL | ALIGN_CENTER, 5)
 
-        btnOk = Button(self, ID_OK, "&Ok")
+        btnOk: Button = Button(self, ID_OK, "&Ok")
         sizer.Add(btnOk, 0, ALL | ALIGN_CENTER, 5)
         self.SetSizer(sizer)
         sizer.Fit(self)
 
-        # Create thread instance
-        self._thread = AboutDialogThread(self._panel, self, self._textToShow)
+        self._textPosition  = 0.0            # Current position
 
-        # Events
+        self._timer: Timer = Timer(self)
+        self.Bind(EVT_TIMER, self._onTimer, self._timer)
+
         self.Bind(EVT_BUTTON, self._onOk, btnOk)
         self._panel.Bind(EVT_PAINT, self.OnRefreshPanel)
-        # TODO self._panel.Bind(wx.EVT_UPDATE_PANEL, self.OnPanelUpdate)
         self.Bind(EVT_CLOSE, self._onOk)
+
+    @property
+    def textPosition(self):
+        return self._textPosition
+
+    @textPosition.setter
+    def textPosition(self, newValue: int):
+        self._textPosition = newValue
 
     # noinspection PyUnusedLocal
     def _onOk(self, event):
@@ -128,30 +138,47 @@ class DlgAbout(Dialog):
         _onOk : Handle user click on the OK button
 
         """
-        import time
+        self._timer.Stop()
+        # import time
         # Halt task
-        self._thread.Stop()
-        while self._thread.isRunning():
-            time.sleep(0.1)
-            wxYield()
+        # self._thread.Stop()
+        # while self._thread.isRunning():
+        #     time.sleep(0.1)
+        #     wxYield()
 
         # Exit modal mode
         self.EndModal(OK)
+
+    # noinspection PyUnusedLocal
+    def _onTimer(self, event: TimerEvent):
+
+        self.textPosition += 1
+
+        # End of text -> restart at top
+        if self.textPosition > (len(self._textToShow) + 15) * dy:
+            self.textPosition = 0.0
+
+        self.OnPanelUpdate(None)
+
+        wxYield()
 
     def ShowModal(self):
         """
         Display this box as modal box
 
         """
-        self._thread.Start()
-        Dialog.ShowModal(self)
+        self._timer.Start(DlgAbout.TIMER_UPDATE_MSECS)
+
+        super().ShowModal()
 
     # noinspection PyUnusedLocal
     def OnPanelUpdate(self, evt):
         """
         Update panel.
         """
-        self._panel.Refresh(False)
+        self.logger.debug('OnPanelUpdate')
+
+        self._panel.Refresh(eraseBackground=False)
 
     # noinspection PyUnusedLocal
     def OnRefreshPanel(self, event):
@@ -161,22 +188,26 @@ class DlgAbout(Dialog):
         """
         import time
         # constants
-        backr = backb = 230     # Background color
-        backg = 255
-        frontr = frontb = 64    # Foreground color
-        frontg = 0
-        FADE_IN_LENGTH = 63
+        backRed:   int = 230
+        backGreen: int = 255
+        backBlue:  int = 230     # Background color
 
+        frontRed:   int = 64
+        frontGreen: int = 0
+        frontBlue:  int = 64    # Foreground color
+
+        FADE_IN_LENGTH: int = 63
+        self.logger.debug(f'Enter OnRefreshPanel')
         # Init memory buffer
-        tdc = MemoryDC()
+        tdc: MemoryDC = MemoryDC()
         tdc.SelectObject(Bitmap(FrameWidth, FrameHeight))
         while not tdc.IsOk():
             time.sleep(0.05)
             tdc = MemoryDC()
             tdc.SelectObject(Bitmap(FrameWidth, FrameHeight))
 
-        tdc.SetTextForeground(Colour(frontr, frontg, frontb))
-        tdc.SetBackground(Brush(Colour(backr, backg, backb), BRUSHSTYLE_SOLID))
+        tdc.SetTextForeground(Colour(frontRed, frontGreen, frontBlue))
+        tdc.SetBackground(Brush(Colour(backRed, backGreen, backBlue), BRUSHSTYLE_SOLID))
         tdc.Clear()
         font = tdc.GetFont()
         font.SetFamily(FONTFAMILY_MODERN)
@@ -184,12 +215,12 @@ class DlgAbout(Dialog):
         tdc.SetFont(font)
 
         # Fade-in
-        position = self._thread.getPosition()
+        position = self.textPosition
         if position < FADE_IN_LENGTH:
             n = float(position) / float(FADE_IN_LENGTH)
-            r = backr - n * (backr - frontr)
-            g = backg - n * (backg - frontg)
-            b = backb - n * (backb - frontb)
+            r = backRed - n * (backRed - frontRed)
+            g = backGreen - n * (backGreen - frontGreen)
+            b = backBlue - n * (backBlue - frontBlue)
             r = int(r)
             g = int(g)
             b = int(b)
@@ -211,70 +242,4 @@ class DlgAbout(Dialog):
         dc = PaintDC(self._panel)
         dc.Blit(0, 0, FrameWidth, FrameHeight, tdc, 0, 0)
         tdc.SelectObject(NullBitmap)
-
-
-class AboutDialogThread:
-
-    def __init__(self, win, parent, textToShow: List[str]):
-        """
-        Thread constructor.
-
-        """
-        # Init
-        self.logger: Logger = getLogger('AboutDialogThread')
-
-        self._textToShow: List[str] = textToShow
-
-        self._win       = win
-        self._parent    = parent
-        self._position  = 0.0            # Current position
-        self._keepGoing = self._running = False
-
-    def getPosition(self):
-        """
-        Return current position
-
-        """
-        return self._position
-
-    def Start(self):
-        """
-        Start the task.
-        """
-        self._keepGoing = self._running = True
-
-        self.logger.info("Start a new thread")
-        x = threading.Thread(target=self.Run, args=())
-        x.start()
-
-    def Stop(self):
-        """
-        Stop the task.
-        """
-        self._keepGoing = False
-
-    def isRunning(self):
-        """
-        Test if the task is currently running.
-        """
-        return self._running
-
-    def Run(self):
-        """
-        main thread, handle text printout
-        """
-        import time
-        Delay_Unit = 2/100.0   # Delay to wait, in second
-        # Note : bug for localisation, so I use 2/100 instead of 0.02 (0,02)
-        while self._keepGoing:
-            # Change state
-            self._position += 1
-
-            # End of text -> restart at top
-            if self._position > (len(self._textToShow) + 15) * dy:
-                self._position = 0.0
-            self._parent.OnPanelUpdate(None)
-
-            wxYield()
-            time.sleep(Delay_Unit)
-        self._running = False
+        self.logger.debug(f'Exit OnRefreshPanel')
