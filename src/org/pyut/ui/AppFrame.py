@@ -49,6 +49,7 @@ from wx import Printer
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
+from wx import Window
 
 from wx import Yield as wxYield
 
@@ -98,7 +99,7 @@ class AppFrame(Frame):
     """
     PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/Pyut'
 
-    def __init__(self, parent, wxID: int, title: str):
+    def __init__(self, parent: Window, wxID: int, title: str):
         """
 
         Args:

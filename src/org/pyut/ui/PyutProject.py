@@ -4,24 +4,24 @@ from typing import Union
 from typing import cast
 
 from wx import ID_NO
-from wx import TreeCtrl
-from wx import TreeItemId
 from wx import YES_NO
 
 from wx import MessageDialog
 from wx import Notebook
-
+from wx import TreeCtrl
+from wx import TreeItemId
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.ui.PyutDocument import PyutDocument
 
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Mediator import getMediator
 from org.pyut.general.Globals import _
+
+from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
@@ -280,7 +280,10 @@ class PyutProject:
         # self._ctrl.registerUMLFrame(frame)
         if confirmation:
             self._ctrl.getFileHandling().showFrame(frame)
-            dlg = MessageDialog(self._parentFrame, _("Are you sure to remove the document ?"), _("Remove a document from a project"), YES_NO)
+
+            # dlg = MessageDialog(self._parentFrame, _("Are you sure to remove the document ?"),
+            dlg = MessageDialog(self._ctrl.getUmlFrame(), _("Are you sure to remove the document ?"),
+                                _("Remove a document from a project"), YES_NO)
             if dlg.ShowModal() == ID_NO:
                 dlg.Destroy()
                 return
