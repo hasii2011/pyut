@@ -35,7 +35,7 @@ class TestPyutType(TestBase):
         """Test PyutType class"""
         a: PyutType = PyutType("salut")
         b: PyutType = PyutType("s" + "alut")
-        self.assertTrue(a.getValue() == b.getValue())
+        self.assertTrue(a.value == b.value)
         try:
             # noinspection PyUnresolvedReferences
             a.setName("Salut")
