@@ -6,5 +6,5 @@ clear
 
 ./cleanup.sh
 
-pyinstaller --onefile --windowed -d all Pyut.spec
+pyinstaller --debug=imports --onefile --windowed  Pyut.spec
 

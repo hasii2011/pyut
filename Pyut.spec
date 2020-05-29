@@ -9,7 +9,7 @@ added_files = [
          ( 'src/org/pyut/resources/Kudos.txt', 'org/pyut/resources/' )
          ]
 a = Analysis(['src/Pyut.py'],
-             pathex=['/Users/humberto.a.sanchez.ii/PycharmProjects/PyUt'],
+             pathex=['/Users/humberto.a.sanchez.ii/PycharmProjects/PyUt/src'],
              binaries=[],
              datas=added_files,
              hiddenimports=[],
