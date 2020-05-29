@@ -1,18 +1,32 @@
 
 from logging import Logger
 from logging import getLogger
-from typing import Tuple
+
+from dataclasses import dataclass
 
 from org.pyut.ui.UmlFrame import DEFAULT_WIDTH
 from org.pyut.ui.UmlFrame import A4_FACTOR
 
-ScreenCoordinates = Tuple[int, int]
 
 SCALE_FACTOR: float = 0.75
 XC:           int   = int(DEFAULT_WIDTH / 2)          # Half the screen size
 YC:           int   = int(DEFAULT_WIDTH / A4_FACTOR)  # Account for A4
 PC_X:         int   = XC   # Center X in Cartesian
 PC_Y:         int   = -YC  # Center Y in Cartesian
+
+
+@dataclass
+class ScreenCoordinates:
+
+    x: int = 0
+    y: int = 0
+
+
+@dataclass
+class CartesianCoordinates:
+
+    x: int = 0
+    y: int = 0
 
 
 class CartesianConverter:
@@ -24,7 +38,7 @@ class CartesianConverter:
         self.logger: Logger = CartesianConverter.clsLogger
 
     @staticmethod
-    def cartesianToScreen(cartesianX: int, cartesianY: int):
+    def cartesianToScreen(cartesianCoordinates: CartesianCoordinates, scaleFactor: float = SCALE_FACTOR) -> ScreenCoordinates:
         """
         ... you need to find the equivalent Cartesian coordinates of the centre point Pc. A translate
         will bring Pc to the centre of the screen, and a scale will bring everything you want to see on the screen.
@@ -43,7 +57,7 @@ class CartesianConverter:
 
         [Reference](https://www.physicsforums.com/threads/screen-coordinates-to-cartesian-coordinates.268633/)
         """
-        xS: float = XC + (cartesianX - PC_X) * SCALE_FACTOR
-        yS: float = YC - (cartesianY - PC_Y) * SCALE_FACTOR
+        xS: float = XC + (cartesianCoordinates.x - PC_X) * scaleFactor
+        yS: float = YC - (cartesianCoordinates.y - PC_Y) * scaleFactor
 
-        return int(xS), int(yS)
+        return ScreenCoordinates(xS, yS)
