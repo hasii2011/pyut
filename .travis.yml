@@ -17,7 +17,7 @@ services:
   - xvfb
 
 python:
-  - "3.7"
+  - "3.8.2"
 
 # command to install dependencies
 install:
