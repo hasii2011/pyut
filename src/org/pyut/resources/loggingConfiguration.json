@@ -46,6 +46,14 @@
             "level":     "WARNING",
             "propagate": "False"
         },
+        "org.pyut.plugins.gml": {
+            "level":     "WARNING",
+            "propagate": "False"
+        },
+        "org.pyut.plugins": {
+            "level":     "INFO",
+            "propagate": "False"
+        },
         "org.pyut.general.Mediator": {
             "level":     "INFO",
             "handlers":  ["consoleHandler"],
