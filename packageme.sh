@@ -12,7 +12,7 @@ else
     if [[ ${1} = 'deploy' ]] ; then
             echo "in deploy mode"
             rm -rf build dist
-            python3 setup.py py2app --packages=wx,xmlschema,pygmlparser --includes=_tulip --iconfile src/org/pyut/resources/img/Pyut.icns
+            python3 setup.py py2app --packages=wx,xmlschema,pygmlparser --iconfile src/org/pyut/resources/img/Pyut.icns
     else
         echo "Unknown command line arguments"
     fi

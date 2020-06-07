@@ -42,7 +42,7 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxZoomOut.py']),
 
               ]
-OPTIONS = {'includes': ['tulip']}
+OPTIONS = {}
 
 setup(
     app=APP,
@@ -74,7 +74,7 @@ setup(
     author='Humberto A. Sanchez II',
     author_email='Humberto.A.Sanchez.II@gmail.com',
     description='The Python UML Tool',
-    options={'py2app': OPTIONS},
+    options={},
     setup_requires=['py2app'],
-    install_requires=['wxPython', 'xmlschema', 'html-testRunner', 'tulip-python', 'pygmlparser']
+    install_requires=['wxPython', 'xmlschema', 'html-testRunner', 'pygmlparser']
 )

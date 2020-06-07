@@ -16,6 +16,7 @@ from networkx import Graph
 
 from orthogonal.mapping.EmbeddedTypes import Position
 from orthogonal.mapping.EmbeddedTypes import Positions
+from orthogonal.mapping.EmbeddedTypes import ScreenCoordinates
 from orthogonal.mapping.EmbeddingToScreen import EmbeddingToScreen
 from orthogonal.mapping.ScreenSize import ScreenSize
 
@@ -29,7 +30,6 @@ from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.gml.GMLExporter import GMLExporter
-from org.pyut.plugins.orthogonal.CartesianConverter import ScreenCoordinates
 
 GraphicsCoordinates = Tuple[int, int]
 LayoutEngineInput   = Dict[str, GraphicsCoordinates]

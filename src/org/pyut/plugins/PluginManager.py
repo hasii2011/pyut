@@ -26,7 +26,6 @@ from org.pyut.plugins.tools.ToCDAutoLayout import ToCDAutoLayout
 from org.pyut.plugins.tools.ToFastEdit import ToFastEdit
 from org.pyut.plugins.tools.ToLayout import ToLayout
 from org.pyut.plugins.tools.ToLayoutSave import ToLayoutSave
-from org.pyut.plugins.tools.ToOrthogonalLayout import ToOrthogonalLayout
 from org.pyut.plugins.tools.ToOrthogonalLayoutV2 import ToOrthogonalLayoutV2
 from org.pyut.plugins.tools.ToPython import ToPython
 from org.pyut.plugins.tools.ToSugiyama import ToSugiyama
@@ -44,7 +43,7 @@ class PluginManager(Singleton):
                               IoPython, IoXmi, IoXmi_OMG, IoXml, IoXSD, IoGML
                               ]
     TOOL_PLUGINS: List[type] = [ToArrangeLinks, ToAscii, ToCDAutoLayout, ToFastEdit, ToLayout, ToLayoutSave,
-                                ToOrthogonalLayout, ToOrthogonalLayoutV2, ToPython, ToSugiyama, ToTransforms
+                                ToOrthogonalLayoutV2, ToPython, ToSugiyama, ToTransforms
                                 ]
 
     """

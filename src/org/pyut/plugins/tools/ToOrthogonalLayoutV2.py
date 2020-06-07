@@ -15,9 +15,9 @@ from org.pyut.MiniOgl.Shape import Shape
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 
-from org.pyut.plugins.orthogonal.alternate.OrthogonalAdapter import OglCoordinate
-from org.pyut.plugins.orthogonal.alternate.OrthogonalAdapter import OglCoordinates
-from org.pyut.plugins.orthogonal.alternate.OrthogonalAdapter import OrthogonalAdapter
+from org.pyut.plugins.orthogonal.OrthogonalAdapter import OglCoordinate
+from org.pyut.plugins.orthogonal.OrthogonalAdapter import OglCoordinates
+from org.pyut.plugins.orthogonal.OrthogonalAdapter import OrthogonalAdapter
 
 from org.pyut.ui.UmlFrame import UmlFrame
 

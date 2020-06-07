@@ -26,7 +26,6 @@ install:
   - pip install xmlschema
   - pip install html-testRunner
   - pip install pygmlparser
-  - pip install tulip-python
 
 # command to run tests
 script: ${TRAVIS_BUILD_DIR}/runtests.sh
