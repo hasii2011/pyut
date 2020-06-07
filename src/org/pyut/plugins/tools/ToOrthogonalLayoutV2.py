@@ -5,6 +5,7 @@ from logging import Logger
 from logging import getLogger
 
 from time import time
+from typing import cast
 
 from wx import Yield as wxYield
 
@@ -13,6 +14,7 @@ from orthogonal.mapping.ScreenSize import ScreenSize
 from org.pyut.MiniOgl.Shape import Shape
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 
 from org.pyut.plugins.orthogonal.OrthogonalAdapter import OglCoordinate
@@ -98,6 +100,7 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
         orthogonalAdapter.doLayout(screenSize)
 
         self._reLayoutNodes(selectedObjects, umlFrame, orthogonalAdapter.oglCoordinates)
+        self._reLayoutLinks(selectedObjects, umlFrame)
 
     def _reLayoutNodes(self, umlObjects: List[OglClass], umlFrame: UmlFrame, oglCoordinates: OglCoordinates):
         """
@@ -113,6 +116,14 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
                 oglCoordinate: OglCoordinate = oglCoordinates[oglName]
 
                 self._stepNodes(umlObj, oglCoordinate)
+            self._animate(umlFrame)
+
+    def _reLayoutLinks(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
+
+        for oglObject in umlObjects:
+            if isinstance(oglObject, OglLink):
+                oglLink: OglLink = cast(OglLink, oglObject)
+                oglLink.optimizeLine()
             self._animate(umlFrame)
 
     def _stepNodes(self, srcShape: Shape, oglCoordinate: OglCoordinate):
