@@ -4,6 +4,10 @@ from logging import getLogger
 
 from os import sep as osSep
 
+from tempfile import gettempdir
+
+from org.pyut.PyutPreferences import PyutPreferences
+
 from org.pyut.commands import CommandGroup
 
 from org.pyut.history.HistoryUtils import GROUP_COMMENT_ID
@@ -20,7 +24,7 @@ class HistoryManager:
     This class is the structure that manages the history of a given frame.
     It creates a file where serialized 'CommandGroups' are stored.  They
     are compound of commands. Each command is able to do the undo/redo
-    operations and is also able to serialize/unserialize itself
+    operations and is also able to serialize/deserialize itself
     (See commandGroup and command).
 
     To see how it works, please see test.TestHistory
@@ -41,7 +45,11 @@ class HistoryManager:
 
         self.logger.debug(f'Base directory: {PyutUtils.getBasePath()}')
 
-        self._fileName: str = f'{PyutUtils.getBasePath()}{osSep}{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
+        if PyutPreferences().useDebugTempFileLocation is True:
+            self._fileName: str = f'{PyutUtils.getBasePath()}{osSep}{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
+        else:
+            tempDir: str = gettempdir()
+            self._fileName: str = f'{tempDir}{osSep}{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
 
         self._frame    = theFrame
         """
