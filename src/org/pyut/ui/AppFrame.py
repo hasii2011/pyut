@@ -9,6 +9,8 @@ from logging import getLogger
 from os import sep as osSeparator
 from os import getcwd
 
+from sys import platform as sysPlatform
+
 from copy import copy
 
 from urllib import request
@@ -53,6 +55,7 @@ from wx import Window
 
 from wx import Yield as wxYield
 
+from org.pyut.PyutConstants import PyutConstants
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
 from org.pyut.ogl.OglActor import OglActor
@@ -115,9 +118,11 @@ class AppFrame(Frame):
 
         self.logger: Logger = getLogger(__name__)
         # Create the application's icon
-        fileName: str  = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
-        icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
-        self.SetIcon(icon)
+        if sysPlatform != PyutConstants.THE_GREAT_MAC_PLATFORM:
+
+            fileName: str  = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
+            icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
+            self.SetIcon(icon)
 
         self.SetThemeEnabled(True)
 

@@ -12,6 +12,7 @@ import os
 
 from configparser import *
 
+from org.pyut.PyutConstants import PyutConstants
 from org.pyut.general.Singleton import Singleton
 
 from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
@@ -117,7 +118,7 @@ class PyutPreferences(Singleton):
         """
         This method MUST (I repeat MUST) be called before attempting to instantiate the preferences Singleton
         """
-        if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == 'darwin':
+        if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
             PyutPreferences.preferencesFileLocationAndName = os.getenv("HOME") + "/.PyutPrefs.dat"
         else:
             PyutPreferences.preferencesFileLocationAndName = "PyutPrefs.dat"
