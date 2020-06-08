@@ -10,8 +10,6 @@ from os import chdir
 from os import getcwd
 from os import sep as osSep
 
-from importlib import import_module
-
 from org.pyut.general.Mediator import Mediator
 from org.pyut.general.Mediator import getMediator
 
@@ -36,7 +34,7 @@ class PyutXmlFinder:
         PyutXmlFinder.clsLogger = getLogger(__name__)
 
     @classmethod
-    def getPyutXmlClass(cls, theVersion: int) -> Any:
+    def getPyutXmlClass(cls, theVersion: str) -> Any:
         """
         Load and return the PyutXml class from the appropriate module that matches the input version
 
@@ -48,16 +46,20 @@ class PyutXmlFinder:
         defeats the purpose of dynamic loading since we would have to import
         the specific types
         """
-        if theVersion == 1:
+        if theVersion == '1':
             from org.pyut.persistence.PyutXml import PyutXml
             myXml = PyutXml()
+        elif theVersion == '8':
+            from org.pyut.persistence.PyutXmlV8 import PyutXml
+            myXml = PyutXml()
+        elif theVersion == '9':
+            from org.pyut.persistence.PyutXmlV9 import PyutXml
+            myXml = PyutXml()
+        elif theVersion == '10':
+            from org.pyut.persistence.PyutXmlV10 import PyutXml
+            myXml = PyutXml()
         else:
-            try:
-                module = import_module(f'{PyutXmlFinder.PERSISTENCE_PACKAGE}.PyutXmlV{str(theVersion)}')
-                myXml = module.PyutXml()
-            except (ValueError, Exception) as e:
-                cls.clsLogger.error(f'{e}')
-                raise UnsupportedXmlFileFormat(f'Version {theVersion}')
+            raise UnsupportedXmlFileFormat(f'Version {theVersion}')
 
         cls.clsLogger.info(f"Using version {theVersion} of the XML import/exporter")
         return myXml
