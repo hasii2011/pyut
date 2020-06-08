@@ -1,5 +1,6 @@
-
+from wx import CANCEL
 from wx import CAPTION
+from wx import CommandEvent
 
 from wx import ID_ANY
 from wx import OK
@@ -25,9 +26,9 @@ class BaseDlgEdit(Dialog):
 
         self._ctrl = theMediator
 
-    def _createDialogButtonsContainer(self) -> Sizer:
+    def _createDialogButtonsContainer(self, buttons=OK) -> Sizer:
 
-        hs: Sizer = self.CreateSeparatedButtonSizer(OK)
+        hs: Sizer = self.CreateSeparatedButtonSizer(buttons)
         return hs
 
     def _convertNone (self, theString: str):
@@ -39,3 +40,17 @@ class BaseDlgEdit(Dialog):
         if theString is None:
             theString = ''
         return theString
+
+    def _OnCmdOk(self, event: CommandEvent):
+        """
+        """
+        event.Skip(skip=True)
+        self.SetReturnCode(OK)
+        self.EndModal(OK)
+
+    # noinspection PyUnusedLocal
+    def _OnClose(self, event: CommandEvent):
+        """
+        """
+        self.SetReturnCode(CANCEL)
+        self.EndModal(CANCEL)

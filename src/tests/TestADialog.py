@@ -6,7 +6,6 @@ from logging import getLogger
 from unittest.mock import MagicMock
 
 from wx import DEFAULT_FRAME_STYLE
-from wx import ID_ANY
 from wx import OK
 
 from wx import App
@@ -15,9 +14,10 @@ from wx import Frame
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
 from org.pyut.PyutPreferences import PyutPreferences
 
-from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
+
 from org.pyut.general.Mediator import Mediator
-from org.pyut.model.PyutInterface import PyutInterface
+
+from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
 from tests.TestBase import TestBase
 
@@ -55,13 +55,12 @@ class TestADialog(App):
         return True
 
     def initTest(self):
-        pyutInterface: PyutInterface = PyutInterface()
 
-        with DlgEditInterface(self._diagramFrame, ID_ANY, pyutInterface) as dlg:
-            dlg: DlgEditInterface = cast(DlgEditInterface, dlg)
+        with DlgLayoutSize(self._diagramFrame) as dlg:
+            dlg: DlgLayoutSize = cast(DlgLayoutSize, dlg)
             if dlg.ShowModal() == OK:
-                self.logger.warning(f'Retrieved data')
-                self.logger.info(f'model: {dlg._pyutModel}')
+                self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
+
             else:
                 self.logger.warning(f'Cancelled')
 

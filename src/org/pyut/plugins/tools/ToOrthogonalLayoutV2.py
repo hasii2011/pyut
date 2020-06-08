@@ -7,6 +7,7 @@ from logging import getLogger
 from time import time
 from typing import cast
 
+from wx import OK
 from wx import Yield as wxYield
 
 from orthogonal.mapping.ScreenSize import ScreenSize
@@ -16,6 +17,7 @@ from org.pyut.MiniOgl.Shape import Shape
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
+from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
 from org.pyut.plugins.orthogonal.OrthogonalAdapter import OglCoordinate
 from org.pyut.plugins.orthogonal.OrthogonalAdapter import OglCoordinates
@@ -42,6 +44,9 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
         super().__init__(umlObjects, umlFrame)
 
         self.logger: Logger = getLogger(__name__)
+
+        self._layoutWidth:  int = 1000
+        self._layoutHeight: int = 1000
 
     def getName(self):
         """
@@ -74,6 +79,16 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
 
         Returns: if False, the import will be cancelled.
         """
+
+        with DlgLayoutSize(self._umlFrame) as dlg:
+            dlg: DlgLayoutSize = cast(DlgLayoutSize, dlg)
+            if dlg.ShowModal() == OK:
+                self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
+                self._layoutWidth  = dlg.layoutWidth
+                self._layoutHeight = dlg._layoutHeight
+            else:
+                self.logger.warning(f'Cancelled')
+
         return True
 
     def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
@@ -96,7 +111,7 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
 
         orthogonalAdapter: OrthogonalAdapter = OrthogonalAdapter(umlObjects=selectedObjects)
 
-        screenSize: ScreenSize = ScreenSize(1000, 1000)     # TODO get user input;  This is really layout area size
+        screenSize: ScreenSize = ScreenSize(self._layoutWidth, self._layoutHeight)
         orthogonalAdapter.doLayout(screenSize)
 
         self._reLayoutNodes(selectedObjects, umlFrame, orthogonalAdapter.oglCoordinates)
