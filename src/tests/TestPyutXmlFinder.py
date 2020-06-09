@@ -17,9 +17,9 @@ from org.pyut.general.PyutXmfFinder import PyutXmlFinder
 
 class TestPyutXmlFinder(TestBase):
 
-    BASIC_VERSION: int = 1       # Supposedly the simplest and includes 3,4 5,6,7
-    FOUND_VERSION: int = 8       # The latest I encountered
-    HASII_VERSION: int = 9       # A version I created with enum support
+    BASIC_VERSION: str = '1'       # Supposedly the simplest and includes 3,4 5,6,7
+    FOUND_VERSION: str = '8'       # The latest I encountered
+    HASII_VERSION: str = '9'       # A version I created with enum support
 
     UNSUPPORTED_VERSION: int = 0xDEADBEEF
 
