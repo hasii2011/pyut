@@ -1,5 +1,44 @@
+Updates at version 5.0:
+=========================
+Issue # Title
+151     Updates kudos.txt
+149     Fix About Dialog
+148     Fix History Manager
+147     Update setup.py for py2app
+146     Don't load Windows icon on Mac
+145     Don't dynamically load PyutXml
+143     Dialog for layout size
+142     Alternate Orthogonal Layout
+141     Continue work on Orthogonal drawing
+140     Fix document rename for default empty project
+138     About Dialog Broken
+135     Extract LineShape.Inside to reusable class
+133     Rename PyutAttachmentPoint
+132     Refactor OglClass
+131     Implement Initial sikulix IDE Test
+130     Implement 'Remove Document' on right click of tree
+129     Fix IDs to read like English
+127     Fix Lang.py
+126     Fix PyutClass in order to refactor with new lollipop interface shape
+125     Rename preference STARTUP_DIRECTORY
+124     Reorganize plugins package
+123     Implement GML Export
+122     Update for wxPython 4.1.0
+120     Alternate resource retrieval method
+119     Bug in Toolbox.py
+117     Update to Python 3.8
+116     Update to Python 3.7.5
+115     Implement dialog interface to debug loggers
+114     Fix TODO in MiniDomToOgl
+110     Implement interface 'lollipop'
+105     Add ScrollPosition to Diagram Save
+100     Fix PyutMethod
+99      Fix unit tests resource discovery
+97      Make static debug flags runtime flags
+88      UnitTest XSD import failing
+72      Fix IOJava plugin
 
-Changed since version 4.0 :
+Changed since version 4.0:
 ========================
 Version #s now match Github Milestone Releases
 Fixes:
