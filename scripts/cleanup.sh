@@ -1,4 +1,14 @@
-#!/bin/bash
+#!/usr/local/bin/bash
+
+function changeToProjectRoot {
+
+    export areHere=`basename ${PWD}`
+    if [[ ${areHere} = "scripts" ]]; then
+        cd ..
+    fi
+}
+
+changeToProjectRoot
 
 rm -rf dist build
 rm -rf Pyut.dist Pyut.build

@@ -1,4 +1,14 @@
-#!/bin/bash
+#!/usr/local/bin/bash
+
+function changeToProjectRoot {
+
+    export areHere=`basename ${PWD}`
+    if [[ ${areHere} = "scripts" ]]; then
+        cd ..
+    fi
+}
+
+changeToProjectRoot
 
 
 cd src > /dev/null 2>&1
@@ -9,7 +19,7 @@ status=$?
 
 cd -  > /dev/null 2>&1
 
-./cleanup.sh
+./scripts/cleanup.sh
 
 echo "Exit with status: ${status}"
 exit ${status}

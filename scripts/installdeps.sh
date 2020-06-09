@@ -1,8 +1,10 @@
-#!/usr/bin/env bash
+#!/usr/local/bin/bash
+
 #
 # Assumes python 3 is on PATH
 # Assumes you are in a virtual environment
 #
+
 clear
 pip3 list > /dev/null 2>&1
 STATUS=$?
@@ -16,7 +18,7 @@ if [[ ${STATUS} -eq 0 ]] ; then
     pip3 install pygmlparser
     pip3 install html-testRunner
     pip3 install py2app
-    pip3 install tulip-python
+    pip3 install orthogonal
 else
     echo "You are not in a virtual environment"
 
