@@ -1,12 +1,9 @@
-from wx import ALIGN_BOTTOM
+
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALL
 from wx import BOTTOM
-from wx import BoxSizer
-from wx import Button
 from wx import CANCEL
 from wx import CAPTION
-from wx import Dialog
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import EXPAND
@@ -14,10 +11,14 @@ from wx import HORIZONTAL
 from wx import OK
 from wx import RESIZE_BORDER
 from wx import RIGHT
-from wx import StaticText
 from wx import TE_MULTILINE
-from wx import TextCtrl
 from wx import VERTICAL
+
+from wx import BoxSizer
+from wx import Button
+from wx import TextCtrl
+from wx import Dialog
+from wx import StaticText
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -81,7 +82,7 @@ class DlgEditUseCase(Dialog):
         szrMain = BoxSizer(VERTICAL)
         szrMain.Add(label, 0, BOTTOM, 5)
         szrMain.Add(self._txtCtrl, 1, EXPAND | BOTTOM, 10)
-        szrMain.Add(szrButtons, 0, ALIGN_CENTER_HORIZONTAL | ALIGN_BOTTOM)
+        szrMain.Add(szrButtons, 0, ALIGN_CENTER_HORIZONTAL)
         # Border
         szrBorder = BoxSizer(VERTICAL)
         szrBorder.Add(szrMain, 1, EXPAND | ALL, 10)
