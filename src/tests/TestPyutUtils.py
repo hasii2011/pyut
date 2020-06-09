@@ -8,14 +8,18 @@ from unittest import TestSuite
 from tests.TestBase import TestBase
 
 from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.enums.ResourceTextType import ResourceTextType
+
+from org.pyut.PyutPreferences import PyutPreferences
 
 
 class TestPyutUtils(TestBase):
 
     clsLogger: Logger = None
 
-    BASE_TEST_PATH: str = '/users/home/hasii'
+    BASE_TEST_PATH:     str = '/users/home/hasii'
+    FAKE_TEST_FILENAME: str = 'hasiiTheGreat.doc'
 
     @classmethod
     def setUpClass(cls):
@@ -24,6 +28,7 @@ class TestPyutUtils(TestBase):
 
     def setUp(self):
         self.logger: Logger = TestPyutUtils.clsLogger
+        PyutPreferences.determinePreferencesLocation()
 
     def tearDown(self):
         pass
@@ -92,6 +97,27 @@ class TestPyutUtils(TestBase):
         expectedName: str = PROJECT_NAME
         actualName:   str = projectName
         self.assertEqual(expectedName, actualName, 'Did not work')
+
+    def testGetTempFilePathDebug(self):
+
+        PyutPreferences.useDebugTempFileLocation = True
+        PyutUtils.setBasePath(TestPyutUtils.BASE_TEST_PATH)
+
+        fqFileName: str = PyutUtils.getTempFilePath(TestPyutUtils.FAKE_TEST_FILENAME)
+        self.assertEqual(f'{TestPyutUtils.BASE_TEST_PATH}/{TestPyutUtils.FAKE_TEST_FILENAME}', fqFileName, 'Should be local path')
+
+    def testGetTempFilePathProduction(self):
+
+        PyutPreferences.useDebugTempFileLocation = False
+        PyutUtils.setBasePath(TestPyutUtils.BASE_TEST_PATH)
+
+        fqFileName: str = PyutUtils.getTempFilePath(TestPyutUtils.FAKE_TEST_FILENAME)
+        #
+        # Going to be something like:
+        # /var/folders/83/_dybkw8115vcgcybw433gs4h0000gn/T/hasiiTheGreat.doc
+        #
+        self.assertNotEqual(f'{TestPyutUtils.BASE_TEST_PATH}/{TestPyutUtils.FAKE_TEST_FILENAME}', fqFileName, 'Should be system temp')
+        self.logger.info(f'temp file name {fqFileName}')
 
 
 def suite() -> TestSuite:

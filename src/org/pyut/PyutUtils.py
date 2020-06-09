@@ -1,4 +1,4 @@
-
+from tempfile import gettempdir
 from typing import List
 
 from logging import Logger
@@ -11,6 +11,7 @@ from pkg_resources import resource_filename
 
 from wx import NewIdRef as wxNewIdRef
 
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
@@ -236,5 +237,16 @@ class PyutUtils:
             from os import environ
             pathToResources: str = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
             fqFileName:      str = f'{pathToResources}/{packageName}/{fileName}'
+
+        return fqFileName
+
+    @classmethod
+    def getTempFilePath(cls, fileName: str) -> str:
+
+        if PyutPreferences().useDebugTempFileLocation is True:
+            fqFileName: str = f'{PyutUtils.getBasePath()}{osSep}{fileName}'
+        else:
+            tempDir: str = gettempdir()
+            fqFileName: str = f'{tempDir}{osSep}{fileName}'
 
         return fqFileName

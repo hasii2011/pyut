@@ -4,14 +4,14 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-
-from pkg_resources import resource_filename
+from sys import platform as sysPlatform
 
 # Todo : change font;  or find a way to not print each character one after the other (not pretty, with, for eg : WiiW)
 from wx import ALIGN_CENTER
 from wx import ALL
 from wx import BITMAP_TYPE_BMP
 from wx import BITMAP_TYPE_ICO
+from wx import BITMAP_TYPE_PNG
 from wx import BRUSHSTYLE_SOLID
 from wx import CAPTION
 from wx import BOTH
@@ -45,6 +45,7 @@ from wx import TimerEvent
 
 from wx import Yield as wxYield
 
+from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.ResourceTextType import ResourceTextType
@@ -52,6 +53,8 @@ from org.pyut.enums.ResourceTextType import ResourceTextType
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 # Constants
+from org.pyut.resources.img import ImgPyut
+
 [ID_OK] = PyutUtils.assignID(1)
 
 FrameWidth  = 400       # Canvas width
@@ -83,10 +86,16 @@ class DlgAbout(Dialog):
         super().__init__(parent, wxID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
 
         self.logger:  Logger = getLogger(__name__)
-        iconFileName: str    = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.ico')
-        icon:         Icon   = Icon(iconFileName, BITMAP_TYPE_ICO)
+        # iconFileName: str    = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.ico')
+        # icon:         Icon   = Icon(iconFileName, BITMAP_TYPE_ICO)
+        #
+        # self.SetIcon(icon)
+        if sysPlatform != PyutConstants.THE_GREAT_MAC_PLATFORM:
 
-        self.SetIcon(icon)
+            fileName: str  = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
+            icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
+            self.SetIcon(icon)
+
         self.Center(BOTH)
 
         longTextStr:      str       = PyutUtils.retrieveResourceText(ResourceTextType.KUDOS_TEXT_TYPE)
@@ -96,10 +105,11 @@ class DlgAbout(Dialog):
 
         # Picture and text
         # bmp = Bitmap("img" + os.sep + "pyut.bmp", BITMAP_TYPE_BMP)
-        fileName = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.bmp')
-        bmp = Bitmap(fileName, BITMAP_TYPE_BMP)
+        # fileName = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.bmp')
+        fileName: str = PyutUtils.getResourcePath(IMAGE_RESOURCES_PACKAGE, 'pyut.png')
+        # bmp = Bitmap(fileName, BITMAP_TYPE_PNG)
 
-        self._picture: StaticBitmap = StaticBitmap(self, ID_ANY, bmp)
+        self._picture: StaticBitmap = StaticBitmap(self, ID_ANY, ImgPyut.embeddedImage.GetBitmap())
         summaryText:   str = "2020 The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
         self._label:   StaticText   = StaticText(self, ID_ANY, summaryText, style=CAPTION)
 
