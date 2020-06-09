@@ -15,8 +15,18 @@
 The Python 3 port Github URL is:
         https://github.com/hasii2011/PyUt/
 
+  Pyut 5.0 Mac OS X Release
+  ====================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+    - Update to Python 3.8.2
+    - Update to wxPython 4.1.0
+    - Orthogonal Layout - beta
+    - Export GML
+    - Additional Pyut preferences
+    - Additional Pyut developer debug options
 
-  Pyut 4.0 Actual Mac Release
+
+  Pyut 4.0 Actual Mac OS X Release
   ====================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
   See Changelog for fixes
