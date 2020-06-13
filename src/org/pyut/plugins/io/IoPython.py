@@ -6,23 +6,29 @@ from typing import Dict
 from logging import Logger
 from logging import getLogger
 
+from json import dumps as jsonDumps
+
 from os import sep as osSep
-from os import path as osPath
-
-from sys import path as sysPath
-
-import importlib
 
 from wx import CENTRE
+from wx import Dialog
+from wx import Gauge
 from wx import ICON_INFORMATION
+from wx import ID_ANY
 from wx import OK
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 from wx import MessageBox
+from wx import Point
+
+from wx import RESIZE_BORDER
+from wx import STAY_ON_TOP
+from wx import Size
 from wx import Yield as wxYield
 
 from org.pyut.model.PyutClass import PyutClass
+
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
@@ -30,7 +36,7 @@ from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 
 from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
 from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
-from org.pyut.plugins.iopythonsupport.ReverseEngineerPython import ReverseEngineerPython
+from org.pyut.plugins.iopythonsupport.ReverseEngineerPython2 import ReverseEngineerPython2
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
@@ -49,7 +55,8 @@ class IoPython(PyutIoPlugin):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._reverseEngineer: ReverseEngineerPython = ReverseEngineerPython()
+        # self._reverseEngineer: ReverseEngineerPython = ReverseEngineerPython()
+
         self._pyutToPython:    PyutToPython           = PyutToPython()
 
     def getName(self):
@@ -183,43 +190,23 @@ class IoPython(PyutIoPlugin):
         if len(lstFiles) == 0:
             return False
 
-        # Add to sys.path
-        sysPath.insert(0, f'{directory}{osSep}')
-
-        self.logger.info(f'Directory added to sysPath = {directory}')
-        umlFrame.setCodePath(directory)
-        lstModules = []
-        files = {}
-        for filename in lstFiles:
-            file = osPath.splitext(filename)[0]
-            self.logger.info(f'Importing file={file}')
-
-            try:
-                module = __import__(file)
-                importlib.reload(module)
-                lstModules.append(module)
-            except (ValueError, Exception) as e:
-                self.logger.error(f"Error while trying to import file {file}, {e}")
-
-        # Get classes
-        classesDic = {}
-        for module in lstModules:
-            for cl in list(module.__dict__.values()):
-                if type(cl) is type:
-                    classesDic[cl] = 1
-                    modname = cl.__module__.replace(".", osSep) + ".py"
-                    files[cl] = modname
-        classes = list(classesDic.keys())
-
-        # Remove wx.Python classes ? TODO
-        classes = self.askWhichClassesToReverse(classes)
-        wxYield()
-        if len(classes) == 0:
-            return
-
         try:
             BeginBusyCursor()
-            self._reverseEngineer.reversePython(umlFrame, classes, files)
+            # self._reverseEngineer.reversePython(umlFrame, classes, files)
+            dlg: Dialog = Dialog(None, ID_ANY, "Reverse Engineer ...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
+            gauge = Gauge(dlg, ID_ANY, 100, pos=Point(2, 5), size=Size(200, 30))
+            dlg.Show(True)
+
+            wxYield()
+            gauge.Pulse()
+            reverseEngineer: ReverseEngineerPython2 = ReverseEngineerPython2()
+            reverseEngineer.reversePython(umlFrame=umlFrame, directoryName=directory, files=lstFiles)
+            gauge.Pulse()
+
+            # TODO: Don't expose the internals
+            # self.logger.info(f'classNames: {reverseEngineer.classNames}')
+            self.logger.info(jsonDumps(reverseEngineer.visitor.parameters, indent=4))
+            dlg.Destroy()
 
         except (ValueError, Exception) as e:
             self.logger.error(f"Error while reversing engineering Python file(s)! {e}")

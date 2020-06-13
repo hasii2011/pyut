@@ -14,6 +14,9 @@ class PyutClassCommon:
         self._fields:  List[PyutField]  = []
         self._methods: List[PyutMethod] = []
 
+    def addMethod(self, newMethod: PyutMethod):
+        self._methods.append(newMethod)
+
     @property
     def description(self) -> str:
         """

@@ -88,3 +88,11 @@ class PyutObject:
             The object ID
         """
         return self._id
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, theNewName: str):
+        self._name = theNewName
