@@ -244,7 +244,7 @@ class ReverseEngineerPython:
                     pyutMethod.setVisibility(PyutVisibilityEnum.PROTECTED)
         # methods.sort(lambda x, y: cmp(x.getName(), y.getName()))
         sortedMethods = sorted(methods, key=lambda methodToSort: methodToSort._name)
-        pc.setMethods(sortedMethods)
+        pc.methods = sortedMethods
 
         fields = None
         try:
