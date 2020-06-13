@@ -28,12 +28,16 @@
             "propagate": "False"
         },
         "org": {
-            "level":     "DEBUG",
+            "level":     "WARNING",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "org.pyut": {
-            "level":     "DEBUG",
+            "level":     "WARNING",
+            "propagate": "False"
+        },
+        "org.pyut.plugins": {
+            "level":     "INFO",
             "propagate": "False"
         },
         "tests": {
