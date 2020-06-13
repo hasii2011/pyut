@@ -29,3 +29,10 @@ package.className and some do not.
 If we define instance loggers then we use just the class name
 If we define class loggers (for parent classes) then we need the full package.className
 specification
+
+
+Note to self:
+
+Antlr Command LIne
+
+java -Xmx500M -cp ./antlr-4.8-complete.jar org.antlr.v4.Tool Python3.g4 -o pythonparser -Dlanguage=Python3
