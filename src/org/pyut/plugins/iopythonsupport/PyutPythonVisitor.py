@@ -17,11 +17,14 @@ class PyutPythonVisitor(Python3Visitor):
     MethodName     = str
     ClassName      = str
     ParameterNames = str                # comma separated parameter names
+    MethodCode     = List[str]
+
     MethodNames    = List[MethodName]
     ParameterNames = List[ParameterNames]
 
     Methods    = Dict[ClassName, MethodNames]
     Parameters = Dict[MethodName, ParameterNames]
+    MethodCode = Dict[MethodName, MethodCode]
 
     def __init__(self):
 
@@ -29,6 +32,7 @@ class PyutPythonVisitor(Python3Visitor):
 
         self.classMethods: PyutPythonVisitor.Methods    = {}
         self.parameters:   PyutPythonVisitor.Parameters = {}
+        self.methodCode:   PyutPythonVisitor.MethodCode = {}
 
     def visitFuncdef(self, ctx: Python3Parser.FuncdefContext):
 
@@ -40,6 +44,9 @@ class PyutPythonVisitor(Python3Visitor):
                 self.classMethods[className] = [methodName]
             else:
                 self.classMethods[className].append(methodName)
+
+            self.__getMethodCode(methodName, ctx)
+
         return super().visitChildren(ctx)
 
     def visitClassdef(self, ctx: Python3Parser.ClassdefContext):
@@ -77,3 +84,13 @@ class PyutPythonVisitor(Python3Visitor):
 
         methodName: PyutPythonVisitor.MethodName = parentCtx.getChild(1).getText()
         return methodName
+
+    def __getMethodCode(self, methodName: MethodName, ctx: Python3Parser.FuncdefContext):
+
+        methodText:     str       = ctx.getText()
+        splitText:      List[str] = methodText.split('\n')
+        justMethodCode: List[str] = splitText[1:len(splitText)]
+
+        self.logger.debug(f'justMethodCode: {justMethodCode}')
+
+        self.methodCode[methodName] = justMethodCode

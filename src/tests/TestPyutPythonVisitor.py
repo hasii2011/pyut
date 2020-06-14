@@ -37,8 +37,8 @@ class TestPyutPythonVisitor(TestBase):
 
     def testOnlyInitHasParameters(self):
 
-        tree: Python3Parser.File_inputContext = self._setupVisitor('Vertex.py')
-        visitor = PyutPythonVisitor()
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('Vertex.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
 
         visitor.visit(tree)
 
@@ -50,8 +50,8 @@ class TestPyutPythonVisitor(TestBase):
 
     def testLargeClassWithMethodsThatHaveParameters(self):
 
-        tree: Python3Parser.File_inputContext = self._setupVisitor('GMLExporter.py')
-        visitor = PyutPythonVisitor()
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('GMLExporter.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
 
         visitor.visit(tree)
 
@@ -62,6 +62,16 @@ class TestPyutPythonVisitor(TestBase):
         self.assertTrue('write' in visitor.parameters, 'I am missing a method')
         self.assertTrue('_generateNodeGraphicsSection' in visitor.parameters, 'I am missing a method')
         self.assertTrue('__generatePoint' in visitor.parameters, 'I am missing a method')
+
+    def testRetrieveCodeFromMethods(self):
+
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('Vertex.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
+
+        visitor.visit(tree)
+
+        expectedNumberOfMethodsWithCode: int = 3
+        self.assertEqual(expectedNumberOfMethodsWithCode, len(visitor.methodCode), 'Not enough code')
 
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 

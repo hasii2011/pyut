@@ -78,7 +78,7 @@ class PyutMethod(PyutObject):
         return self._sourceCode
 
     @sourceCode.setter
-    def setSourceCode(self, newCode: SourceCodeType):
+    def sourceCode(self, newCode: SourceCodeType):
         self._sourceCode = newCode
 
     def getString(self) -> str:

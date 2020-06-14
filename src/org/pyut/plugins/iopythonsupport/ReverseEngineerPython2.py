@@ -87,6 +87,7 @@ class ReverseEngineerPython2:
                 else:
                     pyutMethod.setVisibility(PyutVisibilityEnum.PUBLIC)
                 pyutMethod = self._addParameters(pyutMethod)
+                pyutMethod.sourceCode = self.visitor.methodCode[methodName]
 
                 pyutClass.addMethod(pyutMethod)
             self._pyutClasses[className] = pyutClass
@@ -124,9 +125,6 @@ class ReverseEngineerPython2:
 
     def _methodNames(self, className: str) -> List[str]:
         return self.visitor.classMethods[className]
-
-    def methodArgumentNames(self, methodName: str) -> List[str]:
-        return []
 
     def _classNames(self) -> List[str]:
         retNames = []

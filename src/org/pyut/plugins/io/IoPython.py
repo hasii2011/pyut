@@ -204,8 +204,8 @@ class IoPython(PyutIoPlugin):
             gauge.Pulse()
 
             # TODO: Don't expose the internals
-            # self.logger.info(f'classNames: {reverseEngineer.classNames}')
-            self.logger.info(jsonDumps(reverseEngineer.visitor.parameters, indent=4))
+            self.logger.info(f'classNames: {jsonDumps(reverseEngineer.visitor.classMethods, indent=4)}')
+            self.logger.info(f'methods: {jsonDumps(reverseEngineer.visitor.parameters, indent=4)}')
             dlg.Destroy()
 
         except (ValueError, Exception) as e:
