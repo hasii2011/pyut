@@ -1,0 +1,3 @@
+
+class PythonParseException(Exception):
+    pass

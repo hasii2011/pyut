@@ -10,11 +10,14 @@ from os import sep as osSep
 from antlr4 import CommonTokenStream
 from antlr4 import FileStream
 
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+
+from org.pyut.plugins.iopythonsupport.PythonParseException import PythonParseException
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import PyutPythonVisitor
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Lexer import Python3Lexer
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Parser import Python3Parser
@@ -50,25 +53,30 @@ class ReverseEngineerPython2:
         """
         for fileName in files:
 
-            fqFileName: str = f'{directoryName}{osSep}{fileName}'
-            self.logger.info(f'Processing file: {fqFileName}')
+            try:
+                fqFileName: str = f'{directoryName}{osSep}{fileName}'
+                self.logger.info(f'Processing file: {fqFileName}')
 
-            fileStream: FileStream   = FileStream(fqFileName)
-            lexer:      Python3Lexer = Python3Lexer(fileStream)
+                fileStream: FileStream   = FileStream(fqFileName)
+                lexer:      Python3Lexer = Python3Lexer(fileStream)
 
-            stream: CommonTokenStream = CommonTokenStream(lexer)
-            parser: Python3Parser     = Python3Parser(stream)
+                stream: CommonTokenStream = CommonTokenStream(lexer)
+                parser: Python3Parser     = Python3Parser(stream)
 
-            tree: Python3Parser.File_inputContext = parser.file_input()
-            if parser.getNumberOfSyntaxErrors() != 0:
-                self.logger.error(f"File contains {parser.getNumberOfSyntaxErrors()} syntax errors")
-                # TODO:  Put up a dialog
-                continue
+                tree: Python3Parser.File_inputContext = parser.file_input()
+                if parser.getNumberOfSyntaxErrors() != 0:
+                    self.logger.error(f"File {fileName} contains {parser.getNumberOfSyntaxErrors()} syntax errors")
+                    # TODO:  Put up a dialog
+                    continue
 
-            self.visitor = PyutPythonVisitor()
+                self.visitor = PyutPythonVisitor()
 
-            self.visitor.visit(tree)
-            self._generatePyutClasses()
+                self.visitor.visit(tree)
+                self._generatePyutClasses()
+            except (ValueError, Exception) as e:
+                eMsg: str = f'file: {fileName}\n{e}'
+                self.logger.error(eMsg)
+                raise PythonParseException(eMsg)
 
         self._generateOglClasses(umlFrame)
         self._layoutUmlClasses(umlFrame)
