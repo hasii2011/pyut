@@ -10,6 +10,10 @@ from os import sep as osSep
 from antlr4 import CommonTokenStream
 from antlr4 import FileStream
 
+from wx import PD_APP_MODAL
+from wx import PD_ELAPSED_TIME
+
+from wx import ProgressDialog
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
@@ -51,11 +55,16 @@ class ReverseEngineerPython2:
             directoryName:  The directory name where the selected files reside
             files:          A list of files to parse
         """
+        fileCount: int = len(files)
+        dlg = ProgressDialog('Parsing Files', 'Starting',  parent=umlFrame, style=PD_APP_MODAL | PD_ELAPSED_TIME)
+        dlg.SetRange(fileCount)
+        currentFileCount: int = 0
         for fileName in files:
 
             try:
                 fqFileName: str = f'{directoryName}{osSep}{fileName}'
                 self.logger.info(f'Processing file: {fqFileName}')
+                dlg.Update(currentFileCount, f'Processing: {fileName}')
 
                 fileStream: FileStream   = FileStream(fqFileName)
                 lexer:      Python3Lexer = Python3Lexer(fileStream)
@@ -73,11 +82,13 @@ class ReverseEngineerPython2:
 
                 self.visitor.visit(tree)
                 self._generatePyutClasses()
+                currentFileCount += 1
             except (ValueError, Exception) as e:
                 eMsg: str = f'file: {fileName}\n{e}'
                 self.logger.error(eMsg)
+                dlg.Destroy()
                 raise PythonParseException(eMsg)
-
+        dlg.Destroy()
         self._generateOglClasses(umlFrame)
         self._layoutUmlClasses(umlFrame)
 
@@ -107,7 +118,7 @@ class ReverseEngineerPython2:
         if methodName in self.visitor.parameters:
             parameters: PyutPythonVisitor.Parameters = self.visitor.parameters[methodName]
             for parameter in parameters:
-                self.logger.info(f'parameter: {parameter}')
+                self.logger.debug(f'parameter: {parameter}')
                 paramNameType = parameter.split(':')
                 #
                 # TODO: account for default values

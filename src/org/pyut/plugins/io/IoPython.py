@@ -11,21 +11,14 @@ from json import dumps as jsonDumps
 from os import sep as osSep
 
 from wx import CENTRE
-from wx import Dialog
-from wx import Gauge
 from wx import ICON_ERROR
 
 from wx import ICON_INFORMATION
-from wx import ID_ANY
 from wx import OK
-from wx import RESIZE_BORDER
-from wx import STAY_ON_TOP
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 from wx import MessageBox
-from wx import Point
-from wx import Size
 from wx import Yield as wxYield
 
 from org.pyut.model.PyutClass import PyutClass
@@ -192,23 +185,15 @@ class IoPython(PyutIoPlugin):
             return False
 
         BeginBusyCursor()
-        dlg: Dialog = Dialog(None, ID_ANY, "Reverse Engineer ...", style=STAY_ON_TOP | ICON_INFORMATION | RESIZE_BORDER, size=Size(207, 70))
-        gauge = Gauge(dlg, ID_ANY, 100, pos=Point(2, 5), size=Size(200, 30))
-        dlg.Show(True)
-
         wxYield()
-        gauge.Pulse()
         try:
             reverseEngineer: ReverseEngineerPython2 = ReverseEngineerPython2()
             reverseEngineer.reversePython(umlFrame=umlFrame, directoryName=directory, files=lstFiles)
-            gauge.Pulse()
             # TODO: Don't expose the internals
-            self.logger.info(f'classNames: {jsonDumps(reverseEngineer.visitor.classMethods, indent=4)}')
-            self.logger.info(f'methods: {jsonDumps(reverseEngineer.visitor.parameters, indent=4)}')
+            self.logger.debug(f'classNames: {jsonDumps(reverseEngineer.visitor.classMethods, indent=4)}')
+            self.logger.debug(f'methods: {jsonDumps(reverseEngineer.visitor.parameters, indent=4)}')
         except (ValueError, Exception) as e:
             MessageBox(f'{e}', 'Error', OK | ICON_ERROR)
-
-        dlg.Destroy()
         EndBusyCursor()
 
     def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):
