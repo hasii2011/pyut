@@ -1,9 +1,8 @@
 
+from typing import Any
+
 from logging import Logger
 from logging import getLogger
-
-from sys import exc_info
-from traceback import extract_tb
 
 from org.pyut.model.PyutObject import PyutObject
 from org.pyut.model.PyutType import PyutType
@@ -13,7 +12,7 @@ class PyutParam(PyutObject):
 
     DEFAULT_PARAMETER_NAME: str = 'param'
 
-    def __init__(self, name: str = DEFAULT_PARAMETER_NAME, theParameterType: PyutType = PyutType(""), defaultValue=None):
+    def __init__(self, name: str = DEFAULT_PARAMETER_NAME, theParameterType: PyutType = PyutType(""), defaultValue: Any = None):
         """
 
         Args:
@@ -25,8 +24,8 @@ class PyutParam(PyutObject):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._type: PyutType = theParameterType
-        self._defaultValue = defaultValue
+        self._type:         PyutType = theParameterType
+        self._defaultValue: Any      = defaultValue
 
     def getType(self) -> PyutType:
         """
@@ -38,40 +37,48 @@ class PyutParam(PyutObject):
         """
         return self._type
 
-    def setType(self, theParameterType: PyutType):
+    def setType(self, theType: PyutType):
         """
         Set parameter type
 
         Args:
-            theParameterType:
+            theType:
         """
-
-        if type(theParameterType) is str:
+        if type(theType) is str:
             self.logger.warning(f'Setting return type as string is deprecated.  use PyutType')
-            theParameterType = PyutType(theParameterType)
+            theType = PyutType(theType)
 
-        self.logger.debug(f'theParameterType: `{theParameterType}`')
-        self._type = theParameterType
+        self.logger.debug(f'theType: `{theType}`')
+        self._type = theType
 
-    def getDefaultValue(self) -> str:
+    def getDefaultValue(self) -> Any:
         """
-        Get method, used to know the defaultValue.
-
-        @return string defaultValue
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
         """
         return self._defaultValue
 
-    def setDefaultValue(self, defaultValue: str):
-        """
-        Set method, used to know initialize defaultValue.
-
-        @param  defaultValue
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        """
+    def setDefaultValue(self, defaultValue: Any):
         self._defaultValue = defaultValue
+
+    @property
+    def type(self) -> PyutType:
+        return self._type
+
+    @type.setter
+    def type(self, theType: PyutType):
+        if type(theType) is str:
+            self.logger.warning(f'Setting return type as string is deprecated.  use PyutType')
+            theType = PyutType(theType)
+
+        self.logger.debug(f'theType: `{theType}`')
+        self._type = theType
+
+    @property
+    def defaultValue(self) -> Any:
+        return self._defaultValue
+
+    @defaultValue.setter
+    def defaultValue(self, theNewValue: Any):
+        self._defaultValue = theNewValue
 
     def __str__(self) -> str:
         """

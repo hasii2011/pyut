@@ -2,9 +2,6 @@
 from logging import Logger
 from logging import getLogger
 
-# from pkg_resources import resource_filename
-from json import dumps as jsonDumps
-
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
@@ -72,6 +69,16 @@ class TestPyutPythonVisitor(TestBase):
 
         expectedNumberOfMethodsWithCode: int = 3
         self.assertEqual(expectedNumberOfMethodsWithCode, len(visitor.methodCode), 'Not enough code')
+
+    def testRetrieveMethods(self):
+
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('Vertex.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
+
+        visitor.visit(tree)
+
+        expectedNumberOfFields: int = 3
+        self.assertEqual(expectedNumberOfFields, len(visitor.fields), 'Not enough fields')
 
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 

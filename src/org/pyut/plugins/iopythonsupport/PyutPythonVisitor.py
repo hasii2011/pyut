@@ -1,9 +1,12 @@
 
 from typing import Dict
 from typing import List
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
+
+from antlr4 import ParserRuleContext
 
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Parser import Python3Parser
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Visitor import Python3Visitor
@@ -11,16 +14,20 @@ from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Visitor import Python
 
 class PyutPythonVisitor(Python3Visitor):
 
-    PYTHON_SELF:       str = 'self'
-    PYTHON_SELF_COMMA: str = f'{PYTHON_SELF},'
+    PYTHON_SELF:        str = 'self'
+    PYTHON_SELF_COMMA:  str = f'{PYTHON_SELF},'
+    FIELD_IDENTIFIER:   str = f'{PYTHON_SELF}.'
+    PYTHON_CONSTRUCTOR: str = '__init__'
 
-    MethodName     = str
-    ClassName      = str
-    ParameterNames = str                # comma separated parameter names
+    MethodName          = str
+    ClassName           = str
+    MultiParameterNames = str                # comma separated parameter names
+    Field               = str
+
     MethodCode     = List[str]
-
     MethodNames    = List[MethodName]
-    ParameterNames = List[ParameterNames]
+    ParameterNames = List[MultiParameterNames]
+    Fields         = List[Field]
 
     Methods    = Dict[ClassName, MethodNames]
     Parameters = Dict[MethodName, ParameterNames]
@@ -33,6 +40,7 @@ class PyutPythonVisitor(Python3Visitor):
         self.classMethods: PyutPythonVisitor.Methods    = {}
         self.parameters:   PyutPythonVisitor.Parameters = {}
         self.methodCode:   PyutPythonVisitor.MethodCode = {}
+        self.fields:       PyutPythonVisitor.Fields     = []
 
     def visitFuncdef(self, ctx: Python3Parser.FuncdefContext):
 
@@ -59,16 +67,28 @@ class PyutPythonVisitor(Python3Visitor):
     def visitParameters(self, ctx: Python3Parser.ParametersContext):
 
         if len(ctx.children) > 1:
-            parameterNames: PyutPythonVisitor.ParameterNames = ctx.getChild(1).getText()
-            methodName:     PyutPythonVisitor.MethodName     = self._getParametersMethodName(ctx.parentCtx)
-            self.logger.debug(f'visitParameters: Visited parameterNames: {parameterNames} in method {methodName}')
+            parameterNames: PyutPythonVisitor.MultiParameterNames = ctx.getChild(1).getText()
+            methodName:     PyutPythonVisitor.MethodName          = self._getParametersMethodName(ctx.parentCtx)
+            self.logger.debug(f'visitParameters: parameterNames: {parameterNames} in method {methodName}')
 
             if parameterNames != PyutPythonVisitor.PYTHON_SELF:
-                strippedParameterNames: PyutPythonVisitor.ParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
+                strippedParameterNames: PyutPythonVisitor.MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
                 if strippedParameterNames not in self.parameters:
                     self.parameters[methodName] = [strippedParameterNames]
                 else:
                     self.parameters[methodName].append(strippedParameterNames)
+
+        return super().visitChildren(ctx)
+
+    def visitExpr_stmt(self, ctx: Python3Parser.Expr_stmtContext):
+
+        exprText: str = ctx.getText()
+
+        if exprText.startswith(PyutPythonVisitor.FIELD_IDENTIFIER) is True:
+            areWeAField: bool = self.__isThisInitMethod(ctx)
+            if areWeAField is True:
+                self.logger.info(f'Field expression: {exprText}')
+                self.fields.append(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, ''))
 
         return super().visitChildren(ctx)
 
@@ -94,3 +114,29 @@ class PyutPythonVisitor(Python3Visitor):
         self.logger.debug(f'justMethodCode: {justMethodCode}')
 
         self.methodCode[methodName] = justMethodCode
+
+    def __isThisInitMethod(self, ctx: Python3Parser.Expr_stmtContext) -> bool:
+
+        ans: bool = False
+
+        methodCtx: Python3Parser.FuncdefContext = self.__findMethodContext(ctx)
+        if methodCtx is not None:
+            methodName: str = methodCtx.getChild(1).getText()
+            if methodName == PyutPythonVisitor.PYTHON_CONSTRUCTOR:
+                ans = True
+
+        return ans
+
+    def __findMethodContext(self, ctx: Python3Parser.Expr_stmtContext) -> Python3Parser.FuncdefContext:
+
+        currentCtx: ParserRuleContext = ctx
+
+        while isinstance(currentCtx, Python3Parser.FuncdefContext) is False:
+            currentCtx = currentCtx.parentCtx
+            if currentCtx is None:
+                break
+
+        if currentCtx is not None:
+            self.logger.info(f'Found method: {currentCtx.getChild(1).getText()}')
+
+        return cast(Python3Parser.FuncdefContext, currentCtx)

@@ -16,10 +16,13 @@ from wx import PD_ELAPSED_TIME
 from wx import ProgressDialog
 
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+
+from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.iopythonsupport.PythonParseException import PythonParseException
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import PyutPythonVisitor
@@ -28,14 +31,16 @@ from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Parser import Python3
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from org.pyut.ogl.OglClass import OglClass
-
 
 class ReverseEngineerPython2:
 
     PyutClassName = str
     PyutClasses   = Dict[PyutClassName, PyutClass]
     OglClasses    = List[OglClass]
+
+    PYTHON_ASSIGNMENT:     str = '='
+    PYTHON_TYPE_DELIMITER: str = ':'
+    PYTHON_EOL_COMMENT:    str = '#'
 
     def __init__(self):
 
@@ -97,6 +102,8 @@ class ReverseEngineerPython2:
         for className in self._classNames():
             pyutClass: PyutClass = PyutClass(name=className)
 
+            pyutClass = self._addFields(pyutClass)
+
             for methodName in self._methodNames(className):
                 pyutMethod: PyutMethod = PyutMethod(name=methodName)
                 if methodName[0:2] == "__":
@@ -129,6 +136,26 @@ class ReverseEngineerPython2:
                     pyutMethod.addParam(pyutParam)
 
         return pyutMethod
+
+    def _addFields(self, pyutClass: PyutClass) -> PyutClass:
+        """
+        Can look like this:
+
+           fieldData: x:int=0
+           fieldData = 0
+
+        Args:
+            pyutClass:  Where to add the fields
+
+        Returns:  The updated input class
+
+        """
+        for fieldData in self.visitor.fields:
+            self.logger.info(f'fieldData: {fieldData}')
+            pyutField: PyutField = self._parseFieldToPyut(fieldData)
+            pyutClass.addField(pyutField)
+
+        return pyutClass
 
     def _generateOglClasses(self, umlFrame: UmlClassDiagramsFrame):
 
@@ -178,3 +205,86 @@ class ReverseEngineerPython2:
                 incY = int(sy)
             oglClass.SetPosition(x, y)
             x += incX
+
+    def _parseFieldToPyut(self, fieldData: str) -> PyutField:
+
+        self.logger.info(f'fieldData: {fieldData}')
+
+        if ReverseEngineerPython2.PYTHON_TYPE_DELIMITER in fieldData and ReverseEngineerPython2.PYTHON_ASSIGNMENT in fieldData:
+            pyutField: PyutField = self.__complexParseFieldToPyut(fieldData)
+        else:
+            pyutField: PyutField = self.__simpleParseFieldToPyut(fieldData)
+
+        return pyutField
+
+    def __simpleParseFieldToPyut(self, fieldData: str) -> PyutField:
+
+        pyutField: PyutField = PyutField()
+
+        noCommentFieldData: str = self.__stripEndOfLineComment(fieldData)
+        fieldAndValue: List[str] = noCommentFieldData.split(ReverseEngineerPython2.PYTHON_ASSIGNMENT)
+
+        pyutField.name         = fieldAndValue[0].strip()
+        pyutField.defaultValue = fieldAndValue[1].strip()
+
+        return pyutField
+
+    def __complexParseFieldToPyut(self, fieldData: str) -> PyutField:
+        """
+          Can look like this:
+
+           fieldData: x:int=0
+
+        Args:
+            fieldData:
+
+        Returns:
+        """
+        noCommentFieldData: str = self.__stripEndOfLineComment(fieldData)
+
+        fieldAndType: List[str] = noCommentFieldData.split(ReverseEngineerPython2.PYTHON_TYPE_DELIMITER)
+        fieldName:    str       = fieldAndType[0]
+
+        vis: PyutVisibilityEnum = self.__determineFieldVisibility(fieldName)
+
+        fieldName = self.__appropriatelyCleanupName(vis=vis, fieldName=fieldName)
+
+        pyutField: PyutField = PyutField(name=fieldName, visibility=vis)
+
+        if len(fieldAndType) > 1:
+            typeAndDefaultValue: List[str] = fieldAndType[1].split(ReverseEngineerPython2.PYTHON_ASSIGNMENT)
+
+            pyutType: PyutType = PyutType(value=typeAndDefaultValue[0].strip())
+            pyutField.setType(theType=pyutType)
+            if len(typeAndDefaultValue) > 1:
+                pyutField.setDefaultValue(typeAndDefaultValue[1].strip())
+
+        return pyutField
+
+    def __determineFieldVisibility(self, name: str) -> PyutVisibilityEnum:
+
+        vis: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
+        if len(name) > 1:
+            if name[-2:] != "__":
+                if name[0:2] == "__":
+                    vis: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE
+                elif name[0] == "_":
+                    vis: PyutVisibilityEnum = PyutVisibilityEnum.PROTECTED
+        return vis
+
+    def __appropriatelyCleanupName(self, vis: PyutVisibilityEnum, fieldName: str) -> str:
+
+        if vis == PyutVisibilityEnum.PUBLIC:
+            return fieldName
+        elif vis == PyutVisibilityEnum.PRIVATE:
+            fieldName = fieldName[2:]
+            return fieldName
+        else:
+            fieldName = fieldName[1:]
+            return fieldName
+
+    def __stripEndOfLineComment(self, fieldData: str) -> str:
+
+        fieldAndComment: List[str] = fieldData.split(ReverseEngineerPython2.PYTHON_EOL_COMMENT)
+
+        return fieldAndComment[0]

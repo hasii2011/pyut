@@ -45,7 +45,7 @@
             "handlers": ["consoleHandler"],
             "propagate": "False"
         },
-        "tests.TestAnchorPoint": {
+        "tests.TestPyutPythonVisitor": {
             "level": "INFO",
             "handlers": ["consoleHandler"],
             "propagate": "False"

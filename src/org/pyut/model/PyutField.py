@@ -1,5 +1,6 @@
 
 from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
@@ -17,9 +18,7 @@ class PyutField(PyutParam):
         yourField = PyutField('anotherField', 'str', '', PyutVisibilityEnum.private)
     """
 
-    def __init__(self, name: str = "",
-                 theFieldType: str = "",
-                 defaultValue: str = None,
+    def __init__(self, name: str = "", theFieldType: PyutType = PyutType(''), defaultValue: str = None,
                  visibility: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE):
         """
 
@@ -48,6 +47,14 @@ class PyutField(PyutParam):
         @param visibility
         """
         self._visibility = visibility
+
+    @property
+    def visibility(self) -> PyutVisibilityEnum:
+        return self._visibility
+
+    @visibility.setter
+    def visibility(self, theNewValue: PyutVisibilityEnum):
+        self._visibility = theNewValue
 
     def __str__(self):
         """

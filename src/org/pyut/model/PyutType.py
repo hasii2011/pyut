@@ -22,3 +22,12 @@ class PyutType:
 
     def __repr__(self) -> str:
         return self.__str__()
+
+    def __eq__(self, other):
+        if isinstance(other, PyutType):
+            if self._value == other._value:
+                return True
+            else:
+                return False
+        else:
+            return False
