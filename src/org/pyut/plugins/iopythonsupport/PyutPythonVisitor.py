@@ -21,6 +21,7 @@ class PyutPythonVisitor(Python3Visitor):
 
     MethodName          = str
     ClassName           = str
+    ParentName          = str
     MultiParameterNames = str                # comma separated parameter names
     Field               = str
 
@@ -60,7 +61,11 @@ class PyutPythonVisitor(Python3Visitor):
     def visitClassdef(self, ctx: Python3Parser.ClassdefContext):
 
         className: str = ctx.getChild(1).getText()
-        self.logger.debug(f'visitClassdef: Visited class: {className}')
+        self.logger.info(f'visitClassdef: Visited class: {className}')
+
+        argListCtx: Python3Parser.ArglistContext = self._findArgListContext(ctx)
+        if argListCtx is not None:
+            self.logger.info(f"{argListCtx.getText()} is {className}'s parent")
 
         return super().visitClassdef(ctx)
 
@@ -114,6 +119,16 @@ class PyutPythonVisitor(Python3Visitor):
         self.logger.debug(f'justMethodCode: {justMethodCode}')
 
         self.methodCode[methodName] = justMethodCode
+
+    def _findArgListContext(self, ctx: Python3Parser.ClassdefContext) -> Python3Parser.ArglistContext:
+
+        argListCtx: Python3Parser.ArglistContext = cast(Python3Parser.ArglistContext, None)
+        for childCtx in ctx.children:
+            if isinstance(childCtx, Python3Parser.ArglistContext):
+                argListCtx = childCtx
+                break
+
+        return argListCtx
 
     def __isThisInitMethod(self, ctx: Python3Parser.Expr_stmtContext) -> bool:
 

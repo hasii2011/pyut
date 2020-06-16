@@ -80,6 +80,12 @@ class TestPyutPythonVisitor(TestBase):
         expectedNumberOfFields: int = 3
         self.assertEqual(expectedNumberOfFields, len(visitor.fields), 'Not enough fields')
 
+    def testMultiClassFileWithInheritance(self):
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('Opie.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
+
+        visitor.visit(tree)
+
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 
         # fqFileName = resource_filename(TestBase.RESOURCES_TEST_CLASSES_PACKAGE_NAME, fileName)

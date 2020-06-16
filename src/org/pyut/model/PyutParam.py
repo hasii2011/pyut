@@ -28,13 +28,6 @@ class PyutParam(PyutObject):
         self._defaultValue: Any      = defaultValue
 
     def getType(self) -> PyutType:
-        """
-        Get method, used to know the type.
-
-        @return PyutType type
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
-        """
         return self._type
 
     def setType(self, theType: PyutType):
