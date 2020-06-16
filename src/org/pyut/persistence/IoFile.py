@@ -42,7 +42,7 @@ class IoFile:
         """
         To save diagram in XML file.  Always, uses the latest version
         """
-        lastVersion: int = PyutXmlFinder.getLatestXmlVersion()
+        lastVersion: str = PyutXmlFinder.getLatestXmlVersion()
 
         myXml = PyutXmlFinder.getPyutXmlClass(theVersion=lastVersion)
         doc:  Document = myXml.save(project)

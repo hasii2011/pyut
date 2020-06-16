@@ -24,6 +24,7 @@ class PyutXmlFinder:
     ORIGINAL_XML_PROLOG: str = '<?xml version="1.0" ?>'
     FIXED_XML_PROLOG:    str = '<?xml version="1.0" encoding="iso-8859-1"?>'
 
+    LATEST_XML_VERSION:  str = '10'
     """
     Chunks of code in the source base that are littered all over the place; I'll concentrate them here
     """
@@ -65,27 +66,12 @@ class PyutXmlFinder:
         return myXml
 
     @classmethod
-    def getLatestXmlVersion(cls) -> int:
+    def getLatestXmlVersion(cls) -> str:
         """
-        I tend to unroll 'dotted' method call in order to make the code debuggable
-        Continue to use .getMediator() so I can mock out the mediator in unit testing
-        even though we can just instantiate it directly
-
-        Returns: An integer that is the version number of the latest PyutXml file
+        No longer do this dynamically
+        Returns: A string that is the version number of the latest PyutXml file
         """
-        med:     Mediator = getMediator()
-        oldPath: str = getcwd()
-        appPath: str = med.getAppPath()
-        path:    str = f'{appPath}{osSep}{PyutXmlFinder.PERSISTENCE_DIR}'
-        chdir(path)
-
-        candidates  = glob("PyutXmlV*.py")
-        numbers     = [int(s[8:-3]) for s in candidates]
-        lastVersion = max(numbers)
-
-        chdir(oldPath)
-
-        return lastVersion
+        return PyutXmlFinder.LATEST_XML_VERSION
 
     @classmethod
     def setAsISOLatin(cls, xmlTextToUpdate: str) -> str:
