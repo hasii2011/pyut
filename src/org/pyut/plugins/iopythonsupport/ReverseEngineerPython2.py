@@ -15,6 +15,9 @@ from wx import PD_ELAPSED_TIME
 
 from wx import ProgressDialog
 
+from org.pyut.commands.CommandGroup import CommandGroup
+from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
+from org.pyut.history.HistoryManager import HistoryManager
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
@@ -35,8 +38,9 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 class ReverseEngineerPython2:
 
     PyutClassName = str
+    ClassName     = str
     PyutClasses   = Dict[PyutClassName, PyutClass]
-    OglClasses    = List[OglClass]
+    OglClasses    = Dict[ClassName, OglClass]
 
     PYTHON_ASSIGNMENT:     str = '='
     PYTHON_TYPE_DELIMITER: str = ':'
@@ -49,7 +53,7 @@ class ReverseEngineerPython2:
         self.visitor: PyutPythonVisitor = cast(PyutPythonVisitor, None)
 
         self._pyutClasses: ReverseEngineerPython2.PyutClasses = {}
-        self._oglClasses:  ReverseEngineerPython2.OglClasses  = []
+        self._oglClasses:  ReverseEngineerPython2.OglClasses  = {}
 
     def reversePython(self, umlFrame: UmlClassDiagramsFrame, directoryName: str, files: List[str]):
         """
@@ -96,6 +100,7 @@ class ReverseEngineerPython2:
         dlg.Destroy()
         self._generateOglClasses(umlFrame)
         self._layoutUmlClasses(umlFrame)
+        self._generateInheritanceLinks(umlFrame)
 
     def _generatePyutClasses(self):
 
@@ -165,9 +170,23 @@ class ReverseEngineerPython2:
                 oglClass:  OglClass = OglClass(pyutClass)
                 umlFrame.addShape(oglClass, 0, 0)
                 oglClass.autoResize()
-                self._oglClasses.append(oglClass)
+
+                self._oglClasses[pyutClassName] = oglClass
             except (ValueError, Exception) as e:
                 self.logger.error(f"Error while creating class {pyutClassName},  {e}")
+
+    def _generateInheritanceLinks(self, umlFrame: UmlClassDiagramsFrame):
+
+        parents: PyutPythonVisitor.Parents = self.visitor.parents
+
+        for parentName in parents.keys():
+            self.logger.info(f'parent: {parentName}')
+            children: PyutPythonVisitor.Children = parents[parentName]
+            for childName in children:
+
+                parentOglClass: OglClass = self._oglClasses[parentName]
+                childOglClass:  OglClass = self._oglClasses[childName]
+                self.__createInheritanceLink(child=childOglClass, parent=parentOglClass, umlFrame=umlFrame)
 
     def _methodNames(self, className: str) -> List[str]:
         return self.visitor.classMethods[className]
@@ -186,8 +205,9 @@ class ReverseEngineerPython2:
         Args:
             umlFrame:
         """
+        oglClasses: List[OglClass] = list(self._oglClasses.values())
         # Sort by descending height
-        sortedOglClasses = sorted(self._oglClasses, key=lambda oglClassToSort: oglClassToSort._height, reverse=True)
+        sortedOglClasses = sorted(oglClasses, key=lambda oglClassToSort: oglClassToSort._height, reverse=True)
 
         x: int = 20
         y: int = 20
@@ -288,3 +308,24 @@ class ReverseEngineerPython2:
         fieldAndComment: List[str] = fieldData.split(ReverseEngineerPython2.PYTHON_EOL_COMMENT)
 
         return fieldAndComment[0]
+
+    def __createInheritanceLink(self, child: OglClass, parent: OglClass, umlFrame: UmlClassDiagramsFrame):
+        """
+        Add a paternity link between child and father.
+
+        Args:
+            child:  A child
+            parent: The daddy!!
+
+        Returns: an OgLink
+
+        """
+        cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
+        # inheritance points back to parent
+        cmd: CreateOglLinkCommand = CreateOglLinkCommand(src=child, dst=parent)
+        cmdGroup.addCommand(cmd)
+
+        historyManager: HistoryManager = umlFrame.getHistory()
+        historyManager.addCommandGroup(cmdGroup)
+
+        cmd.execute()

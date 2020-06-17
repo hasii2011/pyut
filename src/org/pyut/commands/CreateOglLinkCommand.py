@@ -30,14 +30,14 @@ class CreateOglLinkCommand(Command):
 
     def __init__(self, src=None, dst=None, linkType: LinkType = LinkType.INHERITANCE, srcPos=None, dstPos=None):
         """
-        Constructor.
-        @param src      :   object from which starts the link
-        @param dst      :   object at which ends the link
-        @param linkType :   type of the link (see OglLinkFactory)
-        @param srcPos   :   start position of the link
-        @param dstPos   :   end position of the link
-        """
 
+        Args:
+            src:        Object from which starts the link
+            dst:        Object at which ends the link
+            linkType:   Type of the link (see OglLinkFactory)
+            srcPos:     Start position of the link
+            dstPos:     End position of the link
+        """
         super().__init__()
 
         # if the command is created from the history for an undo redo
@@ -155,20 +155,16 @@ class CreateOglLinkCommand(Command):
 
     def _createLink(self, src, dst, linkType: LinkType = LinkType.INHERITANCE, srcPos=None, dstPos=None):
         """
-        Add a link between src and dst without adding it the frame.
+        Add a link between src and dst without adding it to the frame.
 
-        @param OglClass src  : source of the link
-        @param OglClass dst  : destination of the link
-        @param  linkType : type of the link
-        @param srcPos : position on source
-        @param dstPos : position destination
+        Args:
+            src:        Source of the link
+            dst:        Destination of the link
+            linkType:   Type of the link
+            srcPos:     Position on source
+            dstPos:     Position destination
 
-        @return OglLink : the link created
-
-        @author L. Burgbacher
-        @modified C.Dutoit 20021125 : added srcPos and dstPos to be compatible with Sequence diagram
-        @modified P.Dabrowski 20051202 : moved from umlFrame to this command in order to be redone/undone. The
-                                         link is not added to the frame anymore.
+        Returns:    The created link
         """
         if linkType == LinkType.INHERITANCE:
             return self._createInheritanceLink(src, dst)
@@ -190,10 +186,11 @@ class CreateOglLinkCommand(Command):
 
     def _createSDMessage(self, src: OglSDInstance, dest: OglSDInstance, srcPos: Point, destPos: Point) -> OglSDMessage:
 
-        srcRelativeCoords: Tuple[int, int] = src.ConvertCoordToRelative(0, srcPos[1])
-        srcY = srcRelativeCoords[1]
-        destRelativeCoords: Tuple[int, int] = dest.ConvertCoordToRelative(0, destPos[1])
-        destY = destRelativeCoords[1]
+        srcRelativeCoordinates:  Tuple[int, int] = src.ConvertCoordToRelative(0, srcPos[1])
+        destRelativeCoordinates: Tuple[int, int] = dest.ConvertCoordToRelative(0, destPos[1])
+
+        srcY  = srcRelativeCoordinates[1]
+        destY = destRelativeCoordinates[1]
 
         pyutSDMessage = PyutSDMessage(CreateOglLinkCommand.NO_NAME_MESSAGE, src.getPyutObject(), srcY, dest.getPyutObject(), destY)
 
