@@ -180,7 +180,6 @@ class ReverseEngineerPython2:
         parents: PyutPythonVisitor.Parents = self.visitor.parents
 
         for parentName in parents.keys():
-            self.logger.info(f'parent: {parentName}')
             children: PyutPythonVisitor.Children = parents[parentName]
             for childName in children:
 

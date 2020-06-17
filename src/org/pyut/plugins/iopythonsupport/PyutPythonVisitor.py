@@ -65,7 +65,7 @@ class PyutPythonVisitor(Python3Visitor):
     def visitClassdef(self, ctx: Python3Parser.ClassdefContext):
 
         className: str = ctx.getChild(1).getText()
-        self.logger.info(f'visitClassdef: Visited class: {className}')
+        self.logger.debug(f'visitClassdef: Visited class: {className}')
 
         argListCtx: Python3Parser.ArglistContext = self._findArgListContext(ctx)
         if argListCtx is not None:
@@ -117,7 +117,7 @@ class PyutPythonVisitor(Python3Visitor):
     def _createParentChildEntry(self, parentCtx: Python3Parser.ArglistContext, childName: str):
 
         parentName: str = parentCtx.getText()
-        self.logger.info(f'Class: {childName} is subclass of {parentName}')
+        self.logger.debug(f'Class: {childName} is subclass of {parentName}')
 
         if parentName in self.parents:
             children: PyutPythonVisitor.Children = self.parents[parentName]
