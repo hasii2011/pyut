@@ -22,6 +22,7 @@ class PyutPythonVisitor(Python3Visitor):
     MethodName          = str
     ClassName           = str
     ParentName          = str
+    ChildName           = str
     MultiParameterNames = str                # comma separated parameter names
     Field               = str
 
@@ -29,10 +30,12 @@ class PyutPythonVisitor(Python3Visitor):
     MethodNames    = List[MethodName]
     ParameterNames = List[MultiParameterNames]
     Fields         = List[Field]
+    Children       = List[ChildName]
 
     Methods    = Dict[ClassName, MethodNames]
     Parameters = Dict[MethodName, ParameterNames]
     MethodCode = Dict[MethodName, MethodCode]
+    Parents    = Dict[ParentName, Children]
 
     def __init__(self):
 
@@ -42,6 +45,7 @@ class PyutPythonVisitor(Python3Visitor):
         self.parameters:   PyutPythonVisitor.Parameters = {}
         self.methodCode:   PyutPythonVisitor.MethodCode = {}
         self.fields:       PyutPythonVisitor.Fields     = []
+        self.parents:      PyutPythonVisitor.Parents    = {}
 
     def visitFuncdef(self, ctx: Python3Parser.FuncdefContext):
 
@@ -65,7 +69,7 @@ class PyutPythonVisitor(Python3Visitor):
 
         argListCtx: Python3Parser.ArglistContext = self._findArgListContext(ctx)
         if argListCtx is not None:
-            self.logger.info(f"{argListCtx.getText()} is {className}'s parent")
+            self._createParentChildEntry(argListCtx, className)
 
         return super().visitClassdef(ctx)
 
@@ -109,6 +113,19 @@ class PyutPythonVisitor(Python3Visitor):
 
         methodName: PyutPythonVisitor.MethodName = parentCtx.getChild(1).getText()
         return methodName
+
+    def _createParentChildEntry(self, parentCtx: Python3Parser.ArglistContext, childName: str):
+
+        parentName: str = parentCtx.getText()
+        self.logger.info(f'Class: {childName} is subclass of {parentName}')
+
+        if parentName in self.parents:
+            children: PyutPythonVisitor.Children = self.parents[parentName]
+            children.append(childName)
+        else:
+            children: PyutPythonVisitor.Children = [childName]
+
+        self.parents[parentName] = children
 
     def __getMethodCode(self, methodName: MethodName, ctx: Python3Parser.FuncdefContext):
 

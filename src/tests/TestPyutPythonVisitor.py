@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -10,6 +12,7 @@ from antlr4 import FileStream
 
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Lexer import Python3Lexer
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Parser import Python3Parser
+
 from tests.TestBase import TestBase
 
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import PyutPythonVisitor
@@ -85,6 +88,42 @@ class TestPyutPythonVisitor(TestBase):
         visitor: PyutPythonVisitor = PyutPythonVisitor()
 
         visitor.visit(tree)
+
+        expectedParentName: str = 'Cat'
+        expectedChildName:  str = 'Opie'
+
+        self.assertTrue(expectedParentName in visitor.parents, 'Missing parent')
+
+        actualChildName: str = visitor.parents[expectedParentName][0]
+
+        self.assertEqual(expectedChildName, actualChildName, 'Missing child')
+
+    def testInheritanceMultiParentMultiChildren(self):
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('DeepInheritance.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
+
+        visitor.visit(tree)
+
+        expectedParentName1: str = 'ParentClass1'
+        expectedParentName2: str = 'ParentClass2'
+
+        self.assertEqual(len(visitor.parents), 2, 'Incorrect parent count')
+        self.assertTrue(expectedParentName1 in visitor.parents, f'Missing parent: {expectedParentName1}')
+        self.assertTrue(expectedParentName2 in visitor.parents, f'Missing parent: {expectedParentName2}')
+
+        parent1Children: List[str] = visitor.parents[expectedParentName1]
+
+        expectedParent1Child1: str = 'ChildClass1'
+        expectedParent1Child2: str = 'ChildClass2'
+        self.assertTrue(expectedParent1Child1 in parent1Children, f'Missing child: {expectedParent1Child1} of parent {expectedParentName1}')
+        self.assertTrue(expectedParent1Child2 in parent1Children, f'Missing child: {expectedParent1Child2} of parent {expectedParentName1}')
+
+        parent2Children: List[str] = visitor.parents[expectedParentName2]
+
+        expectedParent2Child3: str = 'ChildClass3'
+        expectedParent2Child4: str = 'ChildClass4'
+        self.assertTrue(expectedParent2Child3 in parent2Children, f'Missing child: {expectedParent2Child3} of parent {expectedParentName2}')
+        self.assertTrue(expectedParent2Child4 in parent2Children, f'Missing child: {expectedParent2Child4} of parent {expectedParentName2}')
 
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 
