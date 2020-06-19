@@ -19,6 +19,8 @@ class PyutPythonVisitor(Python3Visitor):
     FIELD_IDENTIFIER:   str = f'{PYTHON_SELF}.'
     PYTHON_CONSTRUCTOR: str = '__init__'
 
+    PYTHON_EQUALITY_TOKEN: str = '='
+
     MethodName          = str
     ClassName           = str
     ParentName          = str
@@ -45,7 +47,15 @@ class PyutPythonVisitor(Python3Visitor):
         self.parameters:   PyutPythonVisitor.Parameters = {}
         self.methodCode:   PyutPythonVisitor.MethodCode = {}
         self.fields:       PyutPythonVisitor.Fields     = []
-        self.parents:      PyutPythonVisitor.Parents    = {}
+        self._parents:     PyutPythonVisitor.Parents    = {}
+
+    @property
+    def parents(self) -> Parents:
+        return self._parents
+
+    @parents.setter
+    def parents(self, additionalParents: Parents):
+        self._parents = additionalParents
 
     def visitFuncdef(self, ctx: Python3Parser.FuncdefContext):
 
@@ -94,9 +104,10 @@ class PyutPythonVisitor(Python3Visitor):
         exprText: str = ctx.getText()
 
         if exprText.startswith(PyutPythonVisitor.FIELD_IDENTIFIER) is True:
-            areWeAField: bool = self.__isThisInitMethod(ctx)
-            if areWeAField is True:
-                self.logger.debug(f'Field expression: {exprText}')
+            areWeInInitMethod: bool = self.__isThisInitMethod(ctx)
+            areWeAnAssignment: bool = self.__isThisAFieldAssignment(exprText)
+            if areWeInInitMethod is True and areWeAnAssignment is True:
+                self.logger.info(f'Field expression: {exprText}')
                 self.fields.append(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, ''))
 
         return super().visitChildren(ctx)
@@ -119,13 +130,13 @@ class PyutPythonVisitor(Python3Visitor):
         parentName: str = parentCtx.getText()
         self.logger.debug(f'Class: {childName} is subclass of {parentName}')
 
-        if parentName in self.parents:
-            children: PyutPythonVisitor.Children = self.parents[parentName]
+        if parentName in self._parents:
+            children: PyutPythonVisitor.Children = self._parents[parentName]
             children.append(childName)
         else:
             children: PyutPythonVisitor.Children = [childName]
 
-        self.parents[parentName] = children
+        self._parents[parentName] = children
 
     def __getMethodCode(self, methodName: MethodName, ctx: Python3Parser.FuncdefContext):
 
@@ -156,6 +167,14 @@ class PyutPythonVisitor(Python3Visitor):
             methodName: str = methodCtx.getChild(1).getText()
             if methodName == PyutPythonVisitor.PYTHON_CONSTRUCTOR:
                 ans = True
+
+        return ans
+
+    def __isThisAFieldAssignment(self, exprText: str):
+
+        ans: bool = False
+        if PyutPythonVisitor.PYTHON_EQUALITY_TOKEN in exprText:
+            ans = True
 
         return ans
 

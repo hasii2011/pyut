@@ -68,6 +68,8 @@ class ReverseEngineerPython2:
         dlg = ProgressDialog('Parsing Files', 'Starting',  parent=umlFrame, style=PD_APP_MODAL | PD_ELAPSED_TIME)
         dlg.SetRange(fileCount)
         currentFileCount: int = 0
+
+        onGoingParents: PyutPythonVisitor.Parents = {}
         for fileName in files:
 
             try:
@@ -88,9 +90,11 @@ class ReverseEngineerPython2:
                     continue
 
                 self.visitor = PyutPythonVisitor()
-
+                self.visitor.parents = onGoingParents
                 self.visitor.visit(tree)
                 self._generatePyutClasses()
+
+                onGoingParents = self.visitor.parents
                 currentFileCount += 1
             except (ValueError, Exception) as e:
                 eMsg: str = f'file: {fileName}\n{e}'
