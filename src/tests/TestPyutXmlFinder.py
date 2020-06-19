@@ -21,9 +21,9 @@ class TestPyutXmlFinder(TestBase):
     FOUND_VERSION: str = '8'       # The latest I encountered
     HASII_VERSION: str = '9'       # A version I created with enum support
 
-    UNSUPPORTED_VERSION: int = 0xDEADBEEF
+    UNSUPPORTED_VERSION: str = '0xDEADBEEF'
 
-    LATEST_VERSION: int = 10     # This needs to change every time the XML is updated
+    LATEST_VERSION: str = '10'     # This needs to change every time the XML is updated
 
     XML_TO_FIX:         str = '<?xml version="1.0" ?><PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/></PyutProject>'
     EXPECTED_FIXED_XML: str = '<?xml version="1.0" encoding="iso-8859-1"?><PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/></PyutProject>'
@@ -49,7 +49,7 @@ class TestPyutXmlFinder(TestBase):
 
         with patch('org.pyut.general.Mediator.Mediator') as mockMediator:
             mockMediator.return_value.getAppPath.return_value = self.newAppPath
-            actualVersion: int = PyutXmlFinder.getLatestXmlVersion()
+            actualVersion: str = PyutXmlFinder.getLatestXmlVersion()
             self.assertEqual(TestPyutXmlFinder.LATEST_VERSION, actualVersion, 'Houston, we have a mismatch; check code or update constant')
 
     def testVersionBasicVersion(self):
