@@ -21,6 +21,7 @@ from orthogonal.mapping.EmbeddingToScreen import EmbeddingToScreen
 from orthogonal.mapping.ScreenSize import ScreenSize
 
 from orthogonal.topologyShapeMetric.Compaction import Compaction
+from orthogonal.topologyShapeMetric.OrthogonalException import OrthogonalException
 from orthogonal.topologyShapeMetric.Orthogonalization import Orthogonalization
 from orthogonal.topologyShapeMetric.Planarization import Planarization
 
@@ -30,6 +31,8 @@ from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.gml.GMLExporter import GMLExporter
+
+from org.pyut.plugins.orthogonal.OrthogonalAdapterException import OrthogonalAdapterException
 
 GraphicsCoordinates = Tuple[int, int]
 LayoutEngineInput   = Dict[str, GraphicsCoordinates]
@@ -48,6 +51,13 @@ class OglCoordinate:
 
 
 OglCoordinates = Dict[str, OglCoordinate]
+
+
+@dataclass
+class LayoutAreaSize:
+
+    width:  int = 0
+    height: int = 0
 
 
 class OrthogonalAdapter:
@@ -78,7 +88,7 @@ class OrthogonalAdapter:
     def oglCoordinates(self) -> OglCoordinates:
         return self._oglCoordinates
 
-    def doLayout(self, screenSize: ScreenSize):
+    def doLayout(self, layoutAreaSize: LayoutAreaSize):
 
         self._nxGraph = Graph(read_gml(self._pathToLayout))
 
@@ -91,14 +101,20 @@ class OrthogonalAdapter:
         enginePositions: LayoutEngineOutput = compact.pos
         positions: Positions = self._toEmbeddedPositions(enginePositions)
 
+        screenSize: ScreenSize = ScreenSize(width=layoutAreaSize.width, height=layoutAreaSize.height)
         self._ets = EmbeddingToScreen(screenSize, positions)
         self._oglCoordinates = self._toOglCoordinates(nxGraph=self._nxGraph)
 
     def _runLayout(self, nxGraph: Graph, positions: Dict[str, Tuple]) -> Compaction:
 
-        planar:     Planarization     = Planarization(nxGraph, positions)
-        orthogonal: Orthogonalization = Orthogonalization(planar)
-        compact:    Compaction        = Compaction(orthogonal)
+        try:
+            planar:     Planarization     = Planarization(nxGraph, positions)
+            orthogonal: Orthogonalization = Orthogonalization(planar)
+            compact:    Compaction        = Compaction(orthogonal)
+        except OrthogonalException as oe:
+            eMsg: str = f'{oe}'
+            self.logger.error(eMsg)
+            raise OrthogonalAdapterException(eMsg)
 
         return compact
 

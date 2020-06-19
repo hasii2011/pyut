@@ -1,16 +1,17 @@
 
 from typing import List
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
 from time import time
-from typing import cast
 
+from wx import ICON_ERROR
 from wx import OK
-from wx import Yield as wxYield
 
-from orthogonal.mapping.ScreenSize import ScreenSize
+from wx import MessageBox
+from wx import Yield as wxYield
 
 from org.pyut.MiniOgl.Shape import Shape
 
@@ -22,6 +23,8 @@ from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 from org.pyut.plugins.orthogonal.OrthogonalAdapter import OglCoordinate
 from org.pyut.plugins.orthogonal.OrthogonalAdapter import OglCoordinates
 from org.pyut.plugins.orthogonal.OrthogonalAdapter import OrthogonalAdapter
+from org.pyut.plugins.orthogonal.OrthogonalAdapter import LayoutAreaSize
+from org.pyut.plugins.orthogonal.OrthogonalAdapterException import OrthogonalAdapterException
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -107,15 +110,18 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
             self.displayNoUmlObjects()
             return
 
-        self.logger.info(f'Begin Orthogonal algorithm')
+        try:
+            orthogonalAdapter: OrthogonalAdapter = OrthogonalAdapter(umlObjects=selectedObjects)
 
-        orthogonalAdapter: OrthogonalAdapter = OrthogonalAdapter(umlObjects=selectedObjects)
+            layoutAreaSize: LayoutAreaSize = LayoutAreaSize(self._layoutWidth, self._layoutHeight)
+            orthogonalAdapter.doLayout(layoutAreaSize)
+        except OrthogonalAdapterException as oae:
+            MessageBox(f'{oae}', 'Error', OK | ICON_ERROR)
+            return
 
-        screenSize: ScreenSize = ScreenSize(self._layoutWidth, self._layoutHeight)
-        orthogonalAdapter.doLayout(screenSize)
-
-        self._reLayoutNodes(selectedObjects, umlFrame, orthogonalAdapter.oglCoordinates)
-        self._reLayoutLinks(selectedObjects, umlFrame)
+        if orthogonalAdapter is not None:
+            self._reLayoutNodes(selectedObjects, umlFrame, orthogonalAdapter.oglCoordinates)
+            self._reLayoutLinks(selectedObjects, umlFrame)
 
     def _reLayoutNodes(self, umlObjects: List[OglClass], umlFrame: UmlFrame, oglCoordinates: OglCoordinates):
         """
