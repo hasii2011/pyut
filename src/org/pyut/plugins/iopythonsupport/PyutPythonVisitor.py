@@ -96,7 +96,7 @@ class PyutPythonVisitor(Python3Visitor):
         if exprText.startswith(PyutPythonVisitor.FIELD_IDENTIFIER) is True:
             areWeAField: bool = self.__isThisInitMethod(ctx)
             if areWeAField is True:
-                self.logger.info(f'Field expression: {exprText}')
+                self.logger.debug(f'Field expression: {exprText}')
                 self.fields.append(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, ''))
 
         return super().visitChildren(ctx)
@@ -169,6 +169,6 @@ class PyutPythonVisitor(Python3Visitor):
                 break
 
         if currentCtx is not None:
-            self.logger.info(f'Found method: {currentCtx.getChild(1).getText()}')
+            self.logger.debug(f'Found method: {currentCtx.getChild(1).getText()}')
 
         return cast(Python3Parser.FuncdefContext, currentCtx)

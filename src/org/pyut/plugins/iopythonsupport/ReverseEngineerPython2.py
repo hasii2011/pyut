@@ -156,7 +156,7 @@ class ReverseEngineerPython2:
 
         """
         for fieldData in self.visitor.fields:
-            self.logger.info(f'fieldData: {fieldData}')
+            self.logger.debug(f'fieldData: {fieldData}')
             pyutField: PyutField = self._parseFieldToPyut(fieldData)
             pyutClass.addField(pyutField)
 
