@@ -97,7 +97,8 @@ class ReverseEngineerPython2:
                 onGoingParents = self.visitor.parents
                 currentFileCount += 1
             except (ValueError, Exception) as e:
-                eMsg: str = f'file: {fileName}\n{e}'
+                from org.pyut.errorcontroller.ErrorManager import ErrorManager
+                eMsg: str = f'file: {fileName}\n{e} - {ErrorManager.getErrorInfo()}'
                 self.logger.error(eMsg)
                 dlg.Destroy()
                 raise PythonParseException(eMsg)
@@ -187,19 +188,26 @@ class ReverseEngineerPython2:
             children: PyutPythonVisitor.Children = parents[parentName]
             for childName in children:
 
-                parentOglClass: OglClass = self._oglClasses[parentName]
-                childOglClass:  OglClass = self._oglClasses[childName]
-                self.__createInheritanceLink(child=childOglClass, parent=parentOglClass, umlFrame=umlFrame)
+                try:
+                    parentOglClass: OglClass = self._oglClasses[parentName]
+                    childOglClass:  OglClass = self._oglClasses[childName]
+                    self.__createInheritanceLink(child=childOglClass, parent=parentOglClass, umlFrame=umlFrame)
+                except KeyError as ke:        # Probably there is no parent we are tracking
+                    self.logger.error(f'Apparently we not tracking this parent:  {ke}')
+                    continue
 
     def _methodNames(self, className: str) -> List[str]:
-        return self.visitor.classMethods[className]
+
+        methodNames: List[str] = []
+        try:
+            methodNames = self.visitor.classMethods[className]
+        except KeyError as ke:
+            pass                # A class with no methods ??
+
+        return methodNames
 
     def _classNames(self) -> List[str]:
-        retNames = []
-        for className in self.visitor.classMethods.keys():
-            retNames.append(className)
-
-        return retNames
+        return self.visitor.classNames
 
     def _layoutUmlClasses(self, umlFrame: UmlClassDiagramsFrame):
         """

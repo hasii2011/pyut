@@ -29,6 +29,7 @@ class PyutPythonVisitor(Python3Visitor):
     Field               = str
 
     MethodCode     = List[str]
+    ClassNames     = List[ClassName]
     MethodNames    = List[MethodName]
     ParameterNames = List[MultiParameterNames]
     Fields         = List[Field]
@@ -43,6 +44,7 @@ class PyutPythonVisitor(Python3Visitor):
 
         self.logger: Logger = getLogger(__name__)
 
+        self.classNames:   PyutPythonVisitor.ClassNames = []
         self.classMethods: PyutPythonVisitor.Methods    = {}
         self.parameters:   PyutPythonVisitor.Parameters = {}
         self.methodCode:   PyutPythonVisitor.MethodCode = {}
@@ -75,6 +77,7 @@ class PyutPythonVisitor(Python3Visitor):
     def visitClassdef(self, ctx: Python3Parser.ClassdefContext):
 
         className: str = ctx.getChild(1).getText()
+        self.classNames.append(className)
         self.logger.debug(f'visitClassdef: Visited class: {className}')
 
         argListCtx: Python3Parser.ArglistContext = self._findArgListContext(ctx)
