@@ -12,22 +12,29 @@ from org.pyut.MiniOgl.RectangleShape import RectangleShape
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
+
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
+
 from org.pyut.PyutPreferences import PyutPreferences
 
 
 class TestMiniOglApp(App):
 
-    FRAME_ID: int = 0xDeadBeef
+    FRAME_ID:      int = 0xDeadBeef
+    WINDOW_WIDTH:  int = 900
+    WINDOW_HEIGHT: int = 500
 
     def OnInit(self):
 
         PyutPreferences.determinePreferencesLocation()
 
-        frameTop: Frame = Frame(parent=None, id=TestMiniOglApp.FRAME_ID, title="Test MiniOgl", size=(400, 400), style=DEFAULT_FRAME_STYLE)
+        frameTop: Frame = Frame(parent=None, id=TestMiniOglApp.FRAME_ID, title="Test MiniOgl",
+                                size=(TestMiniOglApp.WINDOW_WIDTH, TestMiniOglApp.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
 
         diagramFrame: DiagramFrame = DiagramFrame(frameTop)
-        diagramFrame.SetSize((1200, 1200))
+        diagramFrame.SetSize((TestMiniOglApp.WINDOW_WIDTH, TestMiniOglApp.WINDOW_HEIGHT))
         diagramFrame.SetScrollbars(10, 10, 100, 100)
 
         diagramFrame.Show(True)
@@ -79,8 +86,16 @@ class TestMiniOglApp(App):
 
         diagramFrame: Diagram = self._diagramFrame.GetDiagram()
 
-        destAnchor = AnchorPoint(350, 50)
-        destAnchor.SetDraggable(True)
+        rectShape: RectangleShape = RectangleShape(400, 50, 130, 80)
+        rectShape.SetDraggable(True)
+        diagramFrame.AddShape(rectShape)
+
+        dw, dh     = rectShape.GetSize()
+
+        eastX, eastY   = dw, dh / 2
+
+        destAnchor = SelectAnchorPoint(parent=rectShape, attachmentPoint=AttachmentPoint.EAST, x=eastX, y=eastY)
+        destAnchor.SetDraggable(False)
 
         lollipopLine: LollipopLine = LollipopLine(destAnchor)
 
