@@ -9,6 +9,7 @@ from logging import getLogger
 from os import path as osPath
 
 from wx import Bitmap
+from wx import Image
 from wx import NullBitmap
 
 from wx import ClientDC
@@ -43,8 +44,10 @@ from wx import SplitterWindow
 from wx import TreeCtrl
 from wx import Notebook
 from wx import MessageDialog
-from wx import Yield as wxYield
+from wx import ScrolledWindow
 from wx import Menu
+
+from wx import Yield as wxYield
 
 from wx._core import BitmapType
 
@@ -371,20 +374,24 @@ class MainUI:
             PyutUtils.displayError(_("Export to image file is not implemented in scripting mode now !"))
             return
         else:
-            window = self.getCurrentFrame()
+            window:  ScrolledWindow = self.getCurrentFrame()
             context: ClientDC = ClientDC(window)
             memory:  MemoryDC = MemoryDC()
 
-            x, y = self.getCurrentFrame().ClientSize
+            x, y = window.ClientSize
             emptyBitmap: Bitmap = Bitmap(x, y, -1)
 
             memory.SelectObject(emptyBitmap)
-            memory.Blit(0, 0, x, y, context, 0, 0)
+            memory.Blit(source=context, xsrc=0, height=y, xdest=0, ydest=0, ysrc=0, width=x)
             memory.SelectObject(NullBitmap)
-            filename: str = f'DiagramDump.{extension}'
-            emptyBitmap.SaveFile(filename, imageType)
 
-            self._mediator.setStatusText(f'Diagram written to {filename}')
+            img:      Image = emptyBitmap.ConvertToImage()
+            filename: str   = f'DiagramDump.{extension}'
+            status:   bool  = img.SaveFile(filename, imageType)
+
+            from os import getcwd
+            cwd: str = getcwd()
+            self._mediator.setStatusText(f'Diagram written to {cwd}/{filename}  status: {status}')
 
     def exportToBmp(self):
         """

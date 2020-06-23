@@ -1150,8 +1150,8 @@ class Mediator(Singleton):
 
         self.__createAnchorHints(destinationClass, southX, southY, AttachmentPoint.SOUTH, umlFrame)
         self.__createAnchorHints(destinationClass, northX, northY, AttachmentPoint.NORTH, umlFrame)
-        self.__createAnchorHints(destinationClass, westX, westY, AttachmentPoint.WEST, umlFrame)
-        self.__createAnchorHints(destinationClass, eastX, eastY, AttachmentPoint.EAST, umlFrame)
+        self.__createAnchorHints(destinationClass, westX,  westY,  AttachmentPoint.WEST, umlFrame)
+        self.__createAnchorHints(destinationClass, eastX,  eastY,  AttachmentPoint.EAST, umlFrame)
 
     def __createAnchorHints(self, destinationClass: OglClass, anchorX: float, anchorY: float, attachmentPoint: AttachmentPoint, umlFrame):
 
