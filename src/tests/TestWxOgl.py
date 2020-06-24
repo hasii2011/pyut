@@ -1,6 +1,7 @@
 
 from sys import argv
 
+import wx
 from wx import App
 from wx import BITMAP_TYPE_PNG
 from wx import Bitmap
@@ -14,6 +15,8 @@ from wx import EVT_CLOSE
 from wx import Frame
 from wx import Image
 from wx import MemoryDC
+from wx import MenuBar
+from wx import Menu
 from wx import NullBitmap
 
 from wx import Rect
@@ -25,6 +28,9 @@ from wx.lib.ogl import Diagram
 from wx.lib.ogl import OGLInitialize
 from wx.lib.ogl import RectangleShape
 from wx.lib.ogl import ShapeCanvas
+
+from wx.lib.mixins.inspection import InspectionMixin
+from wx.lib.inspection import InspectionTool
 
 
 class RoundedRectangleShape(RectangleShape):
@@ -77,13 +83,18 @@ class TestWindow(ShapeCanvas):
         return shape
 
 
-class TestWxOgl(App):
+class TestWxOgl(App, InspectionMixin):
 
     FRAME_ID:      int = 0xDeadBeef
     WINDOW_WIDTH:  int = 900
     WINDOW_HEIGHT: int = 500
 
+    def __init__(self):
+        App.__init__(self, redirect=False)
+
     def OnInit(self):
+
+        self.InitInspection()
 
         frameTop: Frame = Frame(parent=None, id=TestWxOgl.FRAME_ID, title="Test WX Ogl",
                                 size=(TestWxOgl.WINDOW_WIDTH, TestWxOgl.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
@@ -104,6 +115,15 @@ class TestWxOgl(App):
 
         frameTop.Bind(EVT_CLOSE, self._onCloseFrame)
 
+        menuBar: MenuBar = MenuBar()
+        menu:    Menu    = Menu()
+
+        item = menu.Append(-1, "&Widget Inspector\tF6", "Show the wxPython Widget Inspection Tool")
+        self.Bind(wx.EVT_MENU, self.onWidgetInspector, item)
+
+        menuBar.Append(menu, "&File")
+
+        frameTop.SetMenuBar(menuBar)
         frameTop.Show(True)
 
         return True
@@ -128,13 +148,17 @@ class TestWxOgl(App):
         filename: str = f'DiagramDump.{extension}'
         status: bool = img.SaveFile(filename, imageType)
 
+    # noinspection PyUnusedLocal
+    def onWidgetInspector(self, event: CommandEvent):
+        InspectionTool().Show()
+
     def _onCloseFrame(self, evt: CommandEvent):
         evt.Skip()
 
 
 # noinspection PyUnusedLocal
 def main(sysArgv):
-    testApp: App = TestWxOgl(redirect=False)
+    testApp: App = TestWxOgl()
     testApp.MainLoop()
 
 
