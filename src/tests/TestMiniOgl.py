@@ -1,7 +1,18 @@
 from wx import App
+from wx import BITMAP_TYPE_PNG
+from wx import Bitmap
+from wx import Button
+from wx import ClientDC
+from wx import CommandEvent
 
 from wx import DEFAULT_FRAME_STYLE
+from wx import EVT_BUTTON
 from wx import Frame
+from wx import Image
+from wx import MemoryDC
+from wx import NullBitmap
+from wx import ScrolledWindow
+from wx._core import BitmapType
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
 from org.pyut.MiniOgl.Diagram import Diagram
@@ -36,6 +47,10 @@ class TestMiniOglApp(App):
         diagramFrame: DiagramFrame = DiagramFrame(frameTop)
         diagramFrame.SetSize((TestMiniOglApp.WINDOW_WIDTH, TestMiniOglApp.WINDOW_HEIGHT))
         diagramFrame.SetScrollbars(10, 10, 100, 100)
+
+        button = Button(frameTop, 1003, "Draw Me")
+        button.SetPosition((15, 15))
+        self.Bind(EVT_BUTTON, self.onDrawMe, button)
 
         diagramFrame.Show(True)
 
@@ -100,6 +115,26 @@ class TestMiniOglApp(App):
         lollipopLine: LollipopLine = LollipopLine(destAnchor)
 
         diagramFrame.AddShape(lollipopLine)
+
+    # noinspection PyUnusedLocal
+    def onDrawMe(self, event: CommandEvent):
+
+        extension: str = 'png'
+        imageType: BitmapType = BITMAP_TYPE_PNG
+        window: ScrolledWindow = self._diagramFrame
+        context: ClientDC = ClientDC(window)
+        memory: MemoryDC = MemoryDC()
+
+        x, y = window.ClientSize
+        emptyBitmap: Bitmap = Bitmap(x, y, -1)
+
+        memory.SelectObject(emptyBitmap)
+        memory.Blit(source=context, xsrc=0, height=y, xdest=0, ydest=0, ysrc=0, width=x)
+        memory.SelectObject(NullBitmap)
+
+        img: Image = emptyBitmap.ConvertToImage()
+        filename: str = f'DiagramDump.{extension}'
+        status: bool = img.SaveFile(filename, imageType)
 
 
 testApp: App = TestMiniOglApp(redirect=False)
