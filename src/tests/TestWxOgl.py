@@ -85,7 +85,7 @@ class TestWindow(ShapeCanvas):
 
 class TestWxOgl(App, InspectionMixin):
 
-    FRAME_ID:      int = 0xDeadBeef
+    FRAME_ID:      int = wx.ID_ANY
     WINDOW_WIDTH:  int = 900
     WINDOW_HEIGHT: int = 500
 
