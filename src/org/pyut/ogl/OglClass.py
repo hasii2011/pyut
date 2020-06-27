@@ -15,6 +15,7 @@ from wx import Font
 from wx import ClientDC
 from wx import Menu
 
+from org.pyut.model.PyutObject import PyutObject
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
@@ -395,3 +396,36 @@ class OglClass(OglObject):
     def __repr__(self):
         selfName:   str = self.getPyutObject().getName()
         return f'OglClass.{selfName}'
+
+    def __eq__(self, other):
+
+        if isinstance(other, OglClass):
+            if self._isSameName(other) is True and self._isSameId(other) is True:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def __hash__(self):
+
+        selfPyutObj:  PyutObject = self.getPyutObject()
+
+        return hash(selfPyutObj.getName()) + hash(self.GetID())
+
+    def _isSameName(self, other) -> bool:
+
+        ans: bool = False
+        selfPyutObj:  PyutObject = self.getPyutObject()
+        otherPyutObj: PyutObject = other.getPyutObject()
+
+        if selfPyutObj.getName() == otherPyutObj.getName():
+            ans = True
+        return ans
+
+    def _isSameId(self, other):
+
+        ans: bool = False
+        if self.GetID() == other.GetID():
+            ans = True
+        return ans

@@ -198,5 +198,6 @@ class PyutIoPlugin(PyutPlugin):
             else:
                 # write the file
                 self.write(self.__oglObjects)
+                mediator.deselectAllShapes()
         else:
-            PyutIoPlugin.clsLogger.info(f'Output format is None: {outputFormat}')
+            PyutIoPlugin.clsLogger.info(f'Output format is: {outputFormat}')

@@ -26,6 +26,7 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
@@ -46,8 +47,8 @@ from org.pyut.persistence.converters.MiniDomToOgl import OglLinks
 from org.pyut.persistence.converters.MiniDomToOgl import OglClasses
 from org.pyut.persistence.converters.MiniDomToOgl import OglNotes
 
-from org.pyut.persistence.converters.MiniDomToOglV10 import MiniDomToOgl
-from org.pyut.persistence.converters.OglToMiniDomV10 import OglToMiniDom
+from org.pyut.persistence.converters.MiniDomToOglV10 import MiniDomToOgl as MiniDomToOglV10
+from org.pyut.persistence.converters.OglToMiniDomV10 import OglToMiniDom as OglToMiniDomV10
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from org.pyut.ui.PyutDocument import PyutDocument
@@ -114,13 +115,12 @@ class PyutXml:
             dlg.Show(True)
             wxYield()
 
-            toPyutXml: OglToMiniDom = OglToMiniDom()
+            toPyutXml: OglToMiniDomV10 = OglToMiniDomV10()
             # Save all documents in the project
             for document in project.getDocuments():
 
-                document: PyutDocument = cast(PyutDocument, document)
-
-                documentNode: Element = self.__pyutDocumentToPyutXml(xmlDoc=xmlDoc, pyutDocument=document)
+                document:     PyutDocument = cast(PyutDocument, document)
+                documentNode: Element      = self.__pyutDocumentToPyutXml(xmlDoc=xmlDoc, pyutDocument=document)
 
                 top.appendChild(documentNode)
 
@@ -131,6 +131,9 @@ class PyutXml:
                     oglObject = oglObjects[i]
                     if isinstance(oglObject, OglClass):
                         classElement: Element = toPyutXml.oglClassToXml(oglObject, xmlDoc)
+                        documentNode.appendChild(classElement)
+                    elif isinstance(oglObject, OglInterface2):
+                        classElement: Element = toPyutXml.oglInterface2ToXml(oglObject, xmlDoc)
                         documentNode.appendChild(classElement)
                     elif isinstance(oglObject, OglNote):
                         noteElement: Element = toPyutXml.oglNoteToXml(oglObject, xmlDoc)
@@ -153,6 +156,8 @@ class PyutXml:
                     elif isinstance(oglObject, OglLink):
                         linkElement: Element = toPyutXml.oglLinkToXml(oglObject, xmlDoc)
                         documentNode.appendChild(linkElement)
+                    else:
+                        self.logger.warning(f'Unhandled OGL Object: {oglObject}')
         except (ValueError, Exception) as e:
             try:
                 dlg.Destroy()
@@ -181,7 +186,7 @@ class PyutXml:
             project.setCodePath(root.getAttribute("CodePath"))
             self.__updateProgressDialog(newMessage='Reading elements...', newGaugeValue=1)
             wxYield()
-            toOgl: MiniDomToOgl = MiniDomToOgl()
+            toOgl: MiniDomToOglV10 = MiniDomToOglV10()
             for documentNode in dom.getElementsByTagName(PyutXmlConstants.ELEMENT_DOCUMENT):
 
                 documentNode: Element = cast(Element, documentNode)
@@ -236,7 +241,7 @@ class PyutXml:
 
         return documentNode
 
-    def __renderClassDiagram(self, documentNode: Element, toOgl: MiniDomToOgl, umlFrame: UmlDiagramsFrame):
+    def __renderClassDiagram(self, documentNode: Element, toOgl: MiniDomToOglV10, umlFrame: UmlDiagramsFrame):
         """
 
         Args:
@@ -255,7 +260,7 @@ class PyutXml:
         self.__displayTheLinks(oglLinks, umlFrame)
         self.__displayTheNotes(oglNotes, umlFrame)
 
-    def __renderUseCaseDiagram(self, documentNode: Element, toOgl: MiniDomToOgl, umlFrame: UmlDiagramsFrame):
+    def __renderUseCaseDiagram(self, documentNode: Element, toOgl: MiniDomToOglV10, umlFrame: UmlDiagramsFrame):
         """
 
         Args:

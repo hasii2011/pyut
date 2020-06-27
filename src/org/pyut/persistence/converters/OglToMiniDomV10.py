@@ -10,11 +10,16 @@ from xml.dom.minidom import Document
 # noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
+from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.MiniOgl.Shape import Shape
+
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutField import PyutField
+from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
@@ -30,6 +35,7 @@ from org.pyut.ogl.OglAssociation import OglAssociation
 from org.pyut.ogl.OglAssociation import SRC_CARD
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
@@ -75,6 +81,31 @@ class OglToMiniDom:
 
         # adding the data layer object
         root.appendChild(self._pyutClassToXml(oglClass.getPyutObject(), xmlDoc))
+
+        return root
+
+    def oglInterface2ToXml(self, oglInterface: OglInterface2, xmlDoc: Document) -> Element:
+        """
+
+        Args:
+            oglInterface:   Lollipop to convert
+            xmlDoc:         xml document
+
+        Returns:
+            New minidom element
+        """
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_LOLLIPOP)
+
+        destAnchor: SelectAnchorPoint    = oglInterface.destinationAnchor
+        attachmentPoint: AttachmentPoint = destAnchor.attachmentPoint
+        root.setAttribute(PyutXmlConstants.ATTR_LOLLIPOP_ATTACHMENT_POINT, attachmentPoint.__str__())
+
+        parentUmlClass: OglClass = destAnchor.GetParent()
+        parentId:       int      = self._idFactory.getID(parentUmlClass.getPyutObject())
+        self.logger.info(f'Interface implemented by class id: {parentId}')
+
+        root.setAttribute(PyutXmlConstants.ATTR_IMPLEMENTED_BY_CLASS_ID, str(parentId))
+        root.appendChild(self._pyutInterfaceToXml(oglInterface.pyutInterface, xmlDoc))
 
         return root
 
@@ -247,8 +278,10 @@ class OglToMiniDom:
         if stereotype is not None:
             root.setAttribute(PyutXmlConstants.ATTR_STEREOTYPE, stereotype.getStereotype())
 
-        root.setAttribute(PyutXmlConstants.ATTR_DESCRIPTION, pyutClass.description)
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME,    pyutClass.getFilename())
+
+        root = self._pyutClassCommonToXml(pyutClass, root)
+
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_METHODS, str(pyutClass.showMethods))
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS,  str(pyutClass.showFields))
         root.setAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE,   str(pyutClass.getShowStereotype()))
@@ -258,6 +291,28 @@ class OglToMiniDom:
         # fields
         for field in pyutClass.fields:
             root.appendChild(self._pyutFieldToXml(field, xmlDoc))
+
+        return root
+
+    def _pyutInterfaceToXml(self, pyutInterface: PyutInterface, xmlDoc: Document) -> Element:
+
+        root = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_INTERFACE)
+
+        classId: int = self._idFactory.getID(pyutInterface)
+        root.setAttribute(PyutXmlConstants.ATTR_ID, str(classId))
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutInterface.getName())
+
+        root = self._pyutClassCommonToXml(pyutInterface, root)
+
+        for method in pyutInterface.methods:
+            root.appendChild(self._pyutMethodToXml(method, xmlDoc))
+
+        return root
+
+    def _pyutClassCommonToXml(self, classCommon: PyutClassCommon, root: Element) -> Element:
+
+        root.setAttribute(PyutXmlConstants.ATTR_DESCRIPTION, classCommon.description)
+        # root.setAttribute(PyutXmlConstants.ATTR_FILENAME,    pyutInterface.getFilename())
 
         return root
 

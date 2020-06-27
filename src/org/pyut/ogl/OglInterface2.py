@@ -43,3 +43,35 @@ class OglInterface2(LollipopLine, Common):
             return True
 
         return False
+
+    def __repr__(self):
+
+        strMe: str = f'OglInterface2 - "{self._pyutInterface.getName()}"'
+        return strMe
+
+    def __eq__(self, other):
+
+        if isinstance(other, OglInterface2):
+            if self._isSameName(other) is True and self._isSameId(other) is True:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def __hash__(self):
+        return hash(self._pyutInterface.getName()) + hash(self.GetID())
+
+    def _isSameName(self, other) -> bool:
+
+        ans: bool = False
+        if self.pyutInterface.getName() == other.pyutInterface.getName():
+            ans = True
+        return ans
+
+    def _isSameId(self, other):
+
+        ans: bool = False
+        if self.GetID() == other.GetID():
+            ans = True
+        return ans

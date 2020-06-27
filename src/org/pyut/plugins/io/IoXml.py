@@ -110,11 +110,11 @@ class IoXml(PyutIoPlugin):
         if filename == "":
             return False
 
-        lastVersion: int = PyutXmlFinder.getLatestXmlVersion()
+        lastVersion: str = PyutXmlFinder.getLatestXmlVersion()
         myXml = PyutXmlFinder.getPyutXmlClass(theVersion=lastVersion)
         file = open(filename, "w")
 
-        if lastVersion >= 5:   # Python 3 update
+        if int(lastVersion) >= 5:   # Python 3 update
             from org.pyut.general import Mediator
             ctrl         = Mediator.getMediator()
             fileHandling = ctrl.getFileHandling()

@@ -10,6 +10,7 @@ from wx import EndBusyCursor
 from wx import MouseEvent
 from wx import Window
 
+from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ogl.OglLink import OglLink
@@ -225,17 +226,13 @@ class UmlFrame(UmlFrameShapeHandler):
 
     def getUmlObjects(self):
         """
-        To know all OglObject.
-
-        @since 1.19
-        @author L. Burgbacher <lb@alawa.ch>
+        Retrieve UML objects from the UML Frame
         """
-        # umlObjs = [s for s in self._diagram.GetShapes() if isinstance(s, (OglObject, OglLink, OglSDMessage))]
-        umlObjs = []
+        umlObjects = []
         for s in self._diagram.GetShapes():
-            if isinstance(s, (OglObject, OglLink, OglSDMessage)):
-                umlObjs.append(s)
-        return umlObjs
+            if isinstance(s, (OglObject, OglLink, OglSDMessage, OglInterface2)):
+                umlObjects.append(s)
+        return umlObjects
 
     def getWidth(self):
         """

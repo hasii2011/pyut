@@ -90,6 +90,7 @@ class PyutLinkedObject(PyutObject):
         """
         self._parents.append(parent)
 
+    # TODO file name property is in wrong place should be in PyutObject
     def setFilename(self, filename: str):
         """
         Set the associated filename.
