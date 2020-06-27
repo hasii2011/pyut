@@ -22,7 +22,7 @@ class TestAll:
     """
     The class that can run our unit tests in various formats
     """
-    NOT_TESTS: List[str] = ['TestAll', 'TestMiniOgl', 'TestBase',
+    NOT_TESTS: List[str] = ['TestAll', 'TestMiniOgl', 'TestWxOgl', 'TestBase',
                             'TestTemplate', 'TestIoFile', 'TestUmlFrame',
                             'TestAst', 'TestADialog']
 
