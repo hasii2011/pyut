@@ -22,7 +22,6 @@ class PyutLinkedObject(PyutObject):
 
         self._links:    List[PyutLink]         = []
         self._parents:  List[PyutLinkedObject] = []     # Allows for multiple inheritance
-        self._filename: str            = ""
 
     def computeNextSafeID(self):
         """
@@ -89,25 +88,6 @@ class PyutLinkedObject(PyutObject):
             parent:
         """
         self._parents.append(parent)
-
-    # TODO file name property is in wrong place should be in PyutObject
-    def setFilename(self, filename: str):
-        """
-        Set the associated filename.
-        This is used by the reverse engineering plugins.
-
-        Args:
-            filename:  the file name
-        """
-        self._filename = filename
-
-    def getFilename(self) -> str:
-        """
-        Get the associated filename.
-
-        Returns: An empty is returned if there is no filename.
-        """
-        return self._filename
 
     def __getstate__(self):
         """

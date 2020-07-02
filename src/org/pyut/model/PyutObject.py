@@ -9,7 +9,6 @@ class PyutObject:
 
     def __init__(self, name=""):
         """
-
         Args:
             name:   The initial object name
         """
@@ -23,6 +22,7 @@ class PyutObject:
             self._name = name
 
         PyutObject.nextId += 1
+        self._fileName: str = ""
 
     def computeNextSafeID(self):
         """
@@ -89,6 +89,25 @@ class PyutObject:
         """
         return self._id
 
+    # TODO file name property is in wrong place should be in PyutObject
+    def setFilename(self, fileName: str):
+        """
+        Set the associated filename.
+        This is used by the reverse engineering plugins.
+
+        Args:
+            fileName:  the file name
+        """
+        self._fileName = fileName
+
+    def getFilename(self) -> str:
+        """
+        Get the associated fileName.
+
+        Returns: An empty is returned if there is no fileName.
+        """
+        return self._fileName
+
     @property
     def name(self) -> str:
         return self._name
@@ -96,3 +115,11 @@ class PyutObject:
     @name.setter
     def name(self, theNewName: str):
         self._name = theNewName
+
+    @property
+    def fileName(self) -> str:
+        return self._fileName
+
+    @fileName.setter
+    def fileName(self, theNewName: str):
+        self._fileName = theNewName
