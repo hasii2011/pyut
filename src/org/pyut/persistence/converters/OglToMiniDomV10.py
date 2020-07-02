@@ -94,17 +94,21 @@ class OglToMiniDom:
         Returns:
             New minidom element
         """
-        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_LOLLIPOP)
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_LOLLIPOP)
 
-        destAnchor: SelectAnchorPoint    = oglInterface.destinationAnchor
-        attachmentPoint: AttachmentPoint = destAnchor.attachmentPoint
+        destAnchor:      SelectAnchorPoint = oglInterface.destinationAnchor
+        attachmentPoint: AttachmentPoint   = destAnchor.attachmentPoint
+        x, y = destAnchor.GetPosition()
+
         root.setAttribute(PyutXmlConstants.ATTR_LOLLIPOP_ATTACHMENT_POINT, attachmentPoint.__str__())
+        root.setAttribute(PyutXmlConstants.ATTR_X, str(x))
+        root.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
 
-        parentUmlClass: OglClass = destAnchor.GetParent()
-        parentId:       int      = self._idFactory.getID(parentUmlClass.getPyutObject())
-        self.logger.info(f'Interface implemented by class id: {parentId}')
+        # parentUmlClass: OglClass = destAnchor.GetParent()
+        # parentId:       int      = self._idFactory.getID(parentUmlClass.getPyutObject())
+        # self.logger.info(f'Interface implemented by class id: {parentId}')
 
-        root.setAttribute(PyutXmlConstants.ATTR_IMPLEMENTED_BY_CLASS_ID, str(parentId))
+        # root.setAttribute(PyutXmlConstants.ATTR_IMPLEMENTED_BY_CLASS_ID, str(parentId))
         root.appendChild(self._pyutInterfaceToXml(oglInterface.pyutInterface, xmlDoc))
 
         return root
@@ -307,6 +311,10 @@ class OglToMiniDom:
         for method in pyutInterface.methods:
             root.appendChild(self._pyutMethodToXml(method, xmlDoc))
 
+        for className in pyutInterface.implementors:
+            self.logger.info(f'implementing className: {className}')
+            root.appendChild(self._pyutImplementorToXml(className, xmlDoc))
+
         return root
 
     def _pyutClassCommonToXml(self, classCommon: PyutClassCommon, root: Element) -> Element:
@@ -350,6 +358,14 @@ class OglToMiniDom:
 
         for param in pyutMethod.getParams():
             root.appendChild(self._pyutParamToXml(param, xmlDoc))
+
+        return root
+
+    def _pyutImplementorToXml(self, className: PyutInterface.ClassName, xmlDoc: Element) -> Element:
+
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_IMPLEMENTOR)
+
+        root.setAttribute(PyutXmlConstants.ATTR_IMPLEMENTING_CLASS_NAME, className)
 
         return root
 

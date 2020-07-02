@@ -14,11 +14,14 @@ from xml.dom.minidom import Element
 from xml.dom.minidom import NodeList
 
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.MiniOgl.TextShape import TextShape
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
+from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
@@ -35,6 +38,7 @@ from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
@@ -66,6 +70,7 @@ PyutFields     = NewType('PyutFields',     List[PyutField])
 ControlPoints  = NewType('ControlPoints',  List[ControlPoint])
 Links          = NewType('Links',          Union[OglLink, OglSDInstance])
 OglLinks       = NewType('OglLinks',       List[Links])
+OglInterfaces  = NewType('OglInterfaces',  List[OglInterface2])
 
 
 class MiniDomToOgl:
@@ -132,6 +137,28 @@ class MiniDomToOgl:
             oglObjects[pyutClass.getId()] = oglClass
 
         return oglObjects
+
+    def getOglInterfaces(self, xmlOglInterfaces: NodeList) -> OglInterfaces:
+
+        oglInterfaces: OglInterfaces = cast(OglInterfaces, [])
+
+        for xmlOglInterface in xmlOglInterfaces:
+
+            anchorPoint: SelectAnchorPoint  = self.__getAttachmentPoint(xmlOglInterface)
+
+            xmlInterface:  Element = xmlOglInterface.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_INTERFACE)[0]
+
+            pyutInterface: PyutInterface = PyutInterface()
+            pyutInterface.name         = xmlInterface.getAttribute(PyutXmlConstants.ATTR_NAME)
+            pyutInterface.description  = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
+            pyutInterface.methods      = self._getMethods(xmlInterface)
+            pyutInterface.implementors = self._getImplementors(xmlInterface)
+
+            oglInterface: OglInterface2 = OglInterface2(pyutInterface=pyutInterface, destinationAnchor=anchorPoint)
+
+            oglInterfaces.append(oglInterface)
+
+        return oglInterfaces
 
     def getOglLinks(self, xmlOglLinks: NodeList, oglClasses: OglObjects) -> OglLinks:
         """
@@ -450,6 +477,15 @@ class MiniDomToOgl:
 
         return allMethods
 
+    def _getImplementors(self, xmlClass: Element) -> PyutInterface.Implementors:
+
+        implementors: PyutInterface.Implementors = []
+        for xmlImplementor in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_IMPLEMENTOR):
+            className: PyutInterface.ClassName = xmlImplementor.getAttribute(PyutXmlConstants.ATTR_IMPLEMENTING_CLASS_NAME)
+            implementors.append(className)
+
+        return implementors
+
     def _getParam(self, domElement: Element) -> PyutParam:
         """
 
@@ -599,3 +635,17 @@ class MiniDomToOgl:
         self.logger.debug(f'tagName: {tagName} textShape.text: `{textShape.GetText()}`  pos: ({x:.2f},{y:.2f})')
 
         textShape.SetPosition(x, y)
+
+    def __getAttachmentPoint(self, xmlOglInterface: Element) -> SelectAnchorPoint:
+
+        attachmentPointStr: str = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_LOLLIPOP_ATTACHMENT_POINT)
+        xStr:        str = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_X)
+        yStr:        str = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_Y)
+
+        x: float = PyutUtils.secureFloat(xStr)
+        y: float = PyutUtils.secureFloat(yStr)
+
+        attachmentPoint: AttachmentPoint   = AttachmentPoint.toEnum(attachmentPointStr)
+        anchorPoint:     SelectAnchorPoint = SelectAnchorPoint(x=x, y=y, attachmentPoint=attachmentPoint)
+
+        return anchorPoint

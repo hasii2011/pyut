@@ -6,7 +6,7 @@ class PyutXmlConstants:
 
     TOP_LEVEL_ELEMENT:           str = 'PyutProject'
     ELEMENT_GRAPHIC_CLASS:       str = 'GraphicClass'
-    ELEMENT_LOLLIPOP:            str = 'GraphicLollipop'
+    ELEMENT_GRAPHIC_LOLLIPOP:    str = 'GraphicLollipop'
     ELEMENT_GRAPHIC_NOTE:        str = 'GraphicNote'
     ELEMENT_GRAPHIC_ACTOR:       str = 'GraphicActor'
     ELEMENT_GRAPHIC_USE_CASE:    str = 'GraphicUseCase'
@@ -17,6 +17,7 @@ class PyutXmlConstants:
     ELEMENT_DOCUMENT:          str = 'PyutDocument'
     ELEMENT_MODEL_CLASS:       str = 'Class'
     ELEMENT_MODEL_INTERFACE:   str = 'Interface'
+    ELEMENT_IMPLEMENTOR:       str = 'Implementor'
     ELEMENT_MODEL_METHOD:      str = 'Method'
     ELEMENT_MODEL_NOTE:        str = 'Note'
     ELEMENT_MODEL_ACTOR:       str = 'Actor'
@@ -95,4 +96,4 @@ class PyutXmlConstants:
     ATTR_PIXELS_PER_UNIT_Y: str = 'pixelsPerUnitY'
 
     ATTR_LOLLIPOP_ATTACHMENT_POINT: str = 'attachmentPoint'
-    ATTR_IMPLEMENTED_BY_CLASS_ID:   str = 'implementedByClassId'
+    ATTR_IMPLEMENTING_CLASS_NAME:   str = 'implementingClassName'

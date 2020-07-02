@@ -1093,6 +1093,7 @@ class Mediator(Singleton):
         umlFrame.Refresh()
 
         pyutInterface: PyutInterface = PyutInterface()
+        pyutInterface.addImplementor(implementor.getPyutObject().getName())
         with DlgEditInterface(umlFrame, ID_ANY, pyutInterface) as dlg:
             if dlg.ShowModal() == OK:
                 self.logger.info(f'model: {pyutInterface}')

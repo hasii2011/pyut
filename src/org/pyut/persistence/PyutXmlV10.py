@@ -38,17 +38,19 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.persistence.converters.MiniDomToOgl import OglActors
-from org.pyut.persistence.converters.MiniDomToOgl import OglObjects
-from org.pyut.persistence.converters.MiniDomToOgl import OglSDInstances
-from org.pyut.persistence.converters.MiniDomToOgl import OglSDMessages
-from org.pyut.persistence.converters.MiniDomToOgl import OglUseCases
-from org.pyut.persistence.converters.MiniDomToOgl import OglLinks
-from org.pyut.persistence.converters.MiniDomToOgl import OglClasses
-from org.pyut.persistence.converters.MiniDomToOgl import OglNotes
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglActors
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglObjects
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglSDInstances
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglSDMessages
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglUseCases
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglLinks
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglClasses
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglNotes
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglInterfaces
 
 from org.pyut.persistence.converters.MiniDomToOglV10 import MiniDomToOgl as MiniDomToOglV10
 from org.pyut.persistence.converters.OglToMiniDomV10 import OglToMiniDom as OglToMiniDomV10
+
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from org.pyut.ui.PyutDocument import PyutDocument
@@ -249,16 +251,18 @@ class PyutXml:
             toOgl:          The converter class
             umlFrame:       Where to render
         """
-        oglClasses: OglClasses = toOgl.getOglClasses(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_CLASS))
-        oglNotes:   OglNotes   = toOgl.getOglNotes(documentNode.getElementsByTagName('GraphicNote'))
+        oglClasses:    OglClasses    = toOgl.getOglClasses(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_CLASS))
+        oglNotes:      OglNotes      = toOgl.getOglNotes(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_NOTE))
+        oglInterfaces: OglInterfaces = toOgl.getOglInterfaces(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_LOLLIPOP))
 
         mergedOglObjects: OglObjects = cast(OglObjects, oglClasses.copy())
         mergedOglObjects.update(oglNotes)
 
         self.__displayTheClasses(oglClasses, umlFrame)
-        oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName("GraphicLink"), mergedOglObjects)
+        oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_LINK), mergedOglObjects)
         self.__displayTheLinks(oglLinks, umlFrame)
         self.__displayTheNotes(oglNotes, umlFrame)
+        self.__displayTheInterfaces(oglInterfaces, umlFrame)
 
     def __renderUseCaseDiagram(self, documentNode: Element, toOgl: MiniDomToOglV10, umlFrame: UmlDiagramsFrame):
         """
@@ -308,6 +312,15 @@ class PyutXml:
         """
         for oglClass in oglClasses.values():
             self.__displayAnOglObject(oglClass, umlFrame)
+
+    def __displayTheInterfaces(self, oglInterfaces: OglInterfaces, umlFrame: UmlDiagramsFrame):
+
+        for oglInterface in oglInterfaces:
+
+            attachmentAnchor = oglInterface.destinationAnchor
+            x, y = attachmentAnchor.GetPosition()
+
+            umlFrame.addShape(oglInterface, x, y, withModelUpdate=True)
 
     def __displayTheLinks(self, oglLinks: OglLinks, umlFrame: UmlDiagramsFrame):
         """
