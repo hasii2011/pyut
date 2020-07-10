@@ -725,8 +725,9 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        dlg = PrintDialog(self)
-        dlg.GetPrintDialogData().SetSetupDialog(True)
+        dlg: PrintDialog = PrintDialog(self)
+
+        # dlg.GetPrintDialogData().SetSetupDialog(True)
         dlg.GetPrintDialogData().SetPrintData(self._printData)
         dlg.ShowModal()
         self._printData = dlg.GetPrintDialogData().GetPrintData()

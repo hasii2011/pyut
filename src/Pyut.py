@@ -81,6 +81,8 @@ class Pyut:
         app: PyutApp = PyutApp(redirect=False)
         Lang.importLanguage()
 
+        pyut.displaySystemMetrics()
+
         app.MainLoop()
 
     def _getExePath(self) -> str:
@@ -132,6 +134,16 @@ class Pyut:
         print(f'WxPython: {wx.__version__}')
         print(f'Python:   {sys.version.split(" ")[0]}')
 
+    def displaySystemMetrics(self):
+        from wx import ScreenDC
+        from wx import DisplaySize
+        from wx import Size
+
+        size: Size = ScreenDC().GetPPI()
+        print('')
+        print(f'Display Size: {DisplaySize()}')
+        print(f'x-DPI: {size.GetWidth()} y-DPI: {size.GetHeight()}')
+
     def handleCommandLineArguments(self):
         """
         Handle command line arguments, display help, ...
@@ -165,8 +177,8 @@ if __name__ == "__main__":
 
     print(f"Starting {Pyut.MADE_UP_PRETTY_MAIN_NAME}")
 
-    pyut2: Pyut = Pyut()
+    pyut: Pyut = Pyut()
 
     # Launch pyut
-    if pyut2.cmdLineArgsHandled is False:
-        pyut2.startApp()
+    if pyut.cmdLineArgsHandled is False:
+        pyut.startApp()

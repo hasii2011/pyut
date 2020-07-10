@@ -23,7 +23,7 @@ class RotatableShape(RectangleShape):
         RectangleShape.__init__(self, x, y, width, height, parent)
         # this is the definition of the shape
         self._defineShape()
-        self._angle = 0                                 # angle is in [0..3], by steps of 90�
+        self._angle = 0                                 # angle is in [0..3], by steps of 90 degrees
         self._vShapes = self._SHAPES[0]                 # currently used list of shapes
         self._InitRotations()                           # create the other rotations if necessary
         self._scale = 1.0                               # scale of the shape
@@ -53,7 +53,7 @@ class RotatableShape(RectangleShape):
     def SetAngle(self, angle):
         """
         Set the actual angle, in range [0; 3].
-        0 is the initial angle. Each unit is a clockwise 90� rotation.
+        0 is the initial angle. Each unit is a clockwise 90 degree rotation.
 
         @param  angle
         """
@@ -109,7 +109,7 @@ class RotatableShape(RectangleShape):
 
     def Rotate(self, clockwise: bool):
         """
-        Rotate the shape 90� clockwise or counterclockwise.
+        Rotate the shape 90 degrees clockwise or counterclockwise.
 
         @param  clockwise
         """
