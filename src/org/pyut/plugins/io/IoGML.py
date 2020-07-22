@@ -34,19 +34,19 @@ class IoGML(PyutIoPlugin):
         """
         Returns: the name of the plugin.
         """
-        return "No name"
+        return "Output GML"
 
     def getAuthor(self) -> str:
         """
         Returns: The author's name
         """
-        return "No author"
+        return "Humberto A. Sanchez II"
 
     def getVersion(self) -> str:
         """
         Returns: The plugin version string
         """
-        return "0.0"
+        return "1.0"
 
     def getInputFormat(self) -> Tuple[str, str, str]:
         """
