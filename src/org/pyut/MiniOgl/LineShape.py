@@ -41,20 +41,21 @@ class LineShape(Shape):
         if dstAnchor:
             dstAnchor.AddLine(self)
 
-    def getSourceAnchor(self):
+    @property
+    def sourceAnchor(self) -> AnchorPoint:
         return self._srcAnchor
 
-    def setSourceAnchor(self, theNewValue):
+    @sourceAnchor.setter
+    def sourceAnchor(self, theNewValue: AnchorPoint):
         self._srcAnchor = theNewValue
 
-    def getDestinationAnchor(self):
+    @property
+    def destinationAnchor(self) -> AnchorPoint:
         return self._dstAnchor
 
-    def setDestinationAnchor(self, theNewValue):
+    @destinationAnchor.setter
+    def destinationAnchor(self, theNewValue: AnchorPoint):
         self._dstAnchor = theNewValue
-
-    sourceAnchor      = property(getSourceAnchor, setSourceAnchor)
-    destinationAnchor = property(getDestinationAnchor, setDestinationAnchor)
 
     def SetSpline(self, state):
         """

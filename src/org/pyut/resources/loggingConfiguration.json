@@ -53,6 +53,10 @@
         "org.pyut.plugins": {
             "level":     "INFO",
             "propagate": "False"
+        },
+        "org.pyut.plugins.io.pdfsupport.OglToPdfDefinition": {
+            "level":     "INFO",
+            "propagate": "False"
         }
     }
 }

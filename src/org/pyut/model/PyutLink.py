@@ -163,6 +163,14 @@ class PyutLink(PyutObject):
         """
         return self._type
 
+    @property
+    def linkType(self) -> LinkType:
+        return self._type
+
+    @linkType.setter
+    def linkType(self, theType: LinkType):
+        self._type = theType
+
     def __str__(self):
         """
         String representation.

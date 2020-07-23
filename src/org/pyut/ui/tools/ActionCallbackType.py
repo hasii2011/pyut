@@ -32,7 +32,7 @@ class ActionCallbackType(Enum):
     EXPORT_PNG           = 26
     EXPORT_JPG           = 27
     EXPORT_PS            = 28
-    EXPORT_PDF           = 29
+
     EDIT_CUT             = 30
     EDIT_COPY            = 31
     EDIT_PASTE           = 32

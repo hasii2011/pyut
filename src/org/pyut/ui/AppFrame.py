@@ -412,7 +412,6 @@ class AppFrame(Frame):
             ActionCallbackType.EXPORT_JPG:           self._OnMnuFileExportJpg,
             ActionCallbackType.EXPORT_BMP:           self._OnMnuFileExportBmp,
             ActionCallbackType.EXPORT_PS:            self._OnMnuFileExportPs,
-            ActionCallbackType.EXPORT_PDF:           self._OnMnuFileExportPDF,
 
             ActionCallbackType.EDIT_COPY:            self._OnMnuEditCut,
             ActionCallbackType.EDIT_CUT:             self._OnMnuEditCopy,
@@ -665,57 +664,6 @@ class AppFrame(Frame):
 
         # export to PDF
         self.__printDiagramToPostscript(filename)
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileExportPDF(self, event:  CommandEvent):
-        """
-        Display the Export to pdf dialog box
-
-        Args:
-            event:
-        """
-        # Choose filename
-        filename = ""
-        try:
-            dlg = FileDialog(self, _("Save as PDF"), self._lastDir, "", "*.pdf", FD_SAVE | FD_OVERWRITE_PROMPT)
-            if dlg.ShowModal() != ID_OK:
-                dlg.Destroy()
-                return False
-            filename = dlg.GetPath()
-            if len(filename) < 4 or filename[-4:] != ".pdf":
-                filename += ".pdf"
-            dlg.Destroy()
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("Error while displaying pdf saving dialog"), parent=self)
-            self._ctrl.setStatusText(_("Can't export to pdf"))
-            return
-
-        # export to PDF
-        TEMP_PS_FILE:   str = '/tmp/pdfExport.ps'
-        TEMP_EPS_FILE:  str = '/tmp/pdfExport.eps'
-        EPS_TO_PDF_CMD: str = 'epstopdf'
-        PS_TO_EXT_PS:   str = 'ps2eps'
-
-        # TODO -- externalize this command --
-        # TODO -- update for mac
-        # os.system(f'open -W -a {PS_TO_EXT_PS}  {TEMP_PS_FILE}  {TEMP_EPS_FILE}')
-        # os.system(f'open -W -a {EPS_TO_PDF_CMD} {TEMP_EPS_FILE} --outfile={filename}')
-        wxYield()
-        if self.__printDiagramToPostscript(f'{TEMP_PS_FILE}'):
-            # Convert file to pdf
-            import os
-            # noinspection PyUnusedLocal
-            try:
-
-                if os.system(f'{PS_TO_EXT_PS} {TEMP_PS_FILE} {TEMP_EPS_FILE}') != 0:
-                    PyutUtils.displayError(_(f'Can not execute {PS_TO_EXT_PS} !'), parent=self)
-                    return
-                if os.system(f'{EPS_TO_PDF_CMD} {TEMP_EPS_FILE} --outfile={filename}') != 0:
-                    PyutUtils.displayError(_(f'Can not execute {EPS_TO_PDF_CMD} !'), parent=self)
-                    return
-                self._ctrl.setStatusText(_("Exported to pdf"))
-            except (ValueError, Exception) as e:
-                PyutUtils.displayError(_("Can not export to pdf !"), parent=self)
 
     # noinspection PyUnusedLocal
     def _OnMnuFilePrintSetup(self, event: CommandEvent):

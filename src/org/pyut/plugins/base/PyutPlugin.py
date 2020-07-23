@@ -82,8 +82,10 @@ class PyutPlugin:
             [] indicates that the user pressed the cancel button
         """
 
-        inputFormat: Tuple[str, str, str] = self.getInputFormat()
-        defaultDir:  str                  = startDirectory
+        inputFormat: PyutPlugin.INPUT_FORMAT_TYPE = self.getInputFormat()
+
+        defaultDir:  str = startDirectory
+
         if defaultDir is None:
             defaultDir = self._ctrl.getCurrentDir()
         if multiSelect:
@@ -107,20 +109,20 @@ class PyutPlugin:
             )
             return file
 
-    def _askForFileExport(self) -> str:
+    def _askForFileExport(self, defaultFileName: str = '') -> str:
         """
         Called by a plugin to ask for the export file name
 
         Returns:
-
-        """
-        """
         """
         wxYield()
 
-        inputFormat: str = self.getOutputFormat()
-        wildCard:    str = f'{inputFormat[0]} (*. {inputFormat[1]} )|*.{inputFormat[1]}'
-        file:        str = FileSelector("Choose the export file name", wildcard=wildCard, flags=FD_SAVE | FD_OVERWRITE_PROMPT | FD_CHANGE_DIR)
+        outputFormat: PyutPlugin.getOutputFormat = self.getOutputFormat()
+        wildCard:    str = f'{outputFormat[0]} (*. {outputFormat[1]} )|*.{outputFormat[1]}'
+        file:        str = FileSelector("Choose the export file name",
+                                        default_filename=defaultFileName,
+                                        wildcard=wildCard,
+                                        flags=FD_SAVE | FD_OVERWRITE_PROMPT | FD_CHANGE_DIR)
 
         return file
 
