@@ -1,7 +1,6 @@
 
 from typing import cast
 from typing import List
-from typing import NewType
 
 from logging import Logger
 from logging import getLogger
@@ -9,6 +8,7 @@ from logging import getLogger
 from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.model.PyutModifier import PyutModifier
+from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.model.PyutType import PyutType
 
@@ -22,8 +22,9 @@ class PyutMethod(PyutObject):
 
     DEFAULT_METHOD_NAME: str = 'method'
 
-    PyutModifiers  = NewType('PyutModifiers', List[PyutModifier])
-    SourceCodeType = NewType('SourceCodeType', List[str])
+    PyutModifiers  = List[PyutModifier]
+    SourceCodeType = List[str]
+    PyutParameters = List[PyutParam]
 
     """
     A method representation.
@@ -64,8 +65,8 @@ class PyutMethod(PyutObject):
         self._modifiers:  PyutMethod.PyutModifiers  = cast(PyutMethod.PyutModifiers, [])
         self._sourceCode: PyutMethod.SourceCodeType = cast(PyutMethod.SourceCodeType, [])
 
-        self._params            = []
-        self._returns: PyutType = returns
+        self._params:  PyutMethod.PyutParameters = []
+        self._returns: PyutType                  = returns
 
         prefs = PyutPreferences()
         if prefs.showParameters is True:
@@ -106,6 +107,30 @@ class PyutMethod(PyutObject):
             return WITH_PARAMS
         else:
             return WITHOUT_PARAMS
+
+    @property
+    def visibility(self) -> PyutVisibilityEnum:
+        return self._visibility
+
+    @visibility.setter
+    def visibility(self, theNewValue: PyutVisibilityEnum):
+        self._visibility = theNewValue
+
+    @property
+    def returnType(self) -> PyutType:
+        return self._returns
+
+    @returnType.setter
+    def returnType(self, theNewValue: PyutType):
+        self._returns = theNewValue
+
+    @property
+    def parameters(self) -> PyutParameters:
+        return self._params
+
+    @parameters.setter
+    def parameters(self, newParams: PyutParameters):
+        self._params = newParams
 
     def getVisibility(self) -> PyutVisibilityEnum:
         """

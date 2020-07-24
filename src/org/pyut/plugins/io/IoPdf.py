@@ -114,7 +114,7 @@ class IoPdf(PyutIoPlugin):
         self.logger.info(f'export file name: {self._exportFileName}')
         wxYield()
 
-        oglToPdf: OglToPdfDefinition = OglToPdfDefinition(fqFileName=self._exportFileName, dpi=75)  # TODO get this from startup
+        oglToPdf: OglToPdfDefinition = OglToPdfDefinition(fqFileName=self._exportFileName, dpi=75)  # TODO get this from preferences
 
         oglToPdf.toClassDefinitions(oglObjects=oglObjects)
         oglToPdf.layoutLines(oglObjects=oglObjects)
