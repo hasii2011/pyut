@@ -7,10 +7,19 @@ from logging import getLogger
 from math import sqrt
 
 from wx import BLACK_PEN
+from wx import CommandEvent
+from wx import EVT_MENU
+from wx import ID_ANY
+from wx import Menu
+from wx import MouseEvent
 
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
+from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.LineShape import LineShape
 from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
+
+from org.pyut.general.Globals import _
 
 from org.pyut.model.PyutLink import PyutLink
 
@@ -237,6 +246,48 @@ class OglLink(LineShape, ShapeEventHandler):
 
         srcAnchor.SetPosition(optimalSrcX, optimalSrcY)
         dstAnchor.SetPosition(optimalDstX, optimalDstY)
+
+    # noinspection PyUnusedLocal
+    def OnRightDown(self, event: MouseEvent):
+        """
+        Handle right clicks on our UML LineShape-  Override base handler;  It does nothing
+
+        Args:
+            event:
+        """
+        menu: Menu = Menu()
+        menu.Append(ID_ANY, _('Add Bend'), _('Add Bend at right click point'))
+
+        x: int = event.GetX()
+        y: int = event.GetY()
+        clickPoint: Tuple[int, int] = (x, y)
+
+        self.clsLogger.debug(f'OglLink - x,y: {x},{y}')
+        # Callback
+        menu.Bind(EVT_MENU, lambda evt, data=clickPoint: self.onAddBend(evt, data))
+
+        frame = self._diagram.GetPanel()
+        frame.PopupMenu(menu, x, y)
+
+    # noinspection PyUnusedLocal
+    def onAddBend(self, event: CommandEvent, data):
+
+        self.clsLogger.debug(f'Add a bend.  {data=}')
+
+        x = data[0]
+        y = data[1]
+        cp = ControlPoint(x, y)
+
+        cp.SetVisible(True)
+        #
+        # Add it either before the destinationAnchor or the sourceAnchor
+        #
+        lp: LinePoint = self.GetSource()
+        self.AddControl(cp, lp)
+
+        frame = self._diagram.GetPanel()
+        frame.GetDiagram().AddShape(cp)
+        frame.Refresh()
 
     def _computeLinkLength(self, srcPosition: Tuple[float, float], destPosition: Tuple[float, float]) -> float:
         """

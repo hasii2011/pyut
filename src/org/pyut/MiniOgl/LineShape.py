@@ -8,6 +8,7 @@ from wx import BLACK_PEN
 from wx import DC
 from wx import RED_PEN
 
+from org.pyut.MiniOgl.LinePoint import LinePoint
 from org.pyut.MiniOgl.Shape import Shape
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
@@ -93,16 +94,19 @@ class LineShape(Shape):
             # odd number, take the middle point
             return points[middle]
 
-    def AddControl(self, control, after=None):
+    def AddControl(self, control: ControlPoint, after: LinePoint = None):
         """
         Add a control point to the line.
         The control point can be appended (last before the destination anchor)
         or inserted after a given control point.
 
-        @param ControlPoint control : control point to add. This can
-        @param LinePoint after : control point after which to insert. This
+        Args:
+            control:  control point to add
+
+            after:  This can be a control point after which to insert. This
             can also be the source of destination anchors. If it's the
             destination anchor, the point will be inserted BEFORE it.
+
         """
         if after is not None:
             if after is self._srcAnchor:
