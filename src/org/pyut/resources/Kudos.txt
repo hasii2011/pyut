@@ -15,6 +15,14 @@
 The Python 3 port Github URL is:
         https://github.com/hasii2011/PyUt/
 
+  Pyut 6.0 Mac OS X Release
+  ====================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+      - Orthogonal Layout - complete
+      - Updated Python Reverse Engineering - no longer loads modules uses Antlr parsing
+      - PDF generation is internal now;  Does not depend on external command line tools
+      - New UML 2 lollipop interface available - Beta
+
   Pyut 5.0 Mac OS X Release
   ====================
   Humberto A. Sanchez II, Consultant, Python Enthusiast

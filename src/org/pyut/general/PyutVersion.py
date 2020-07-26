@@ -2,7 +2,7 @@
 
 class PyutVersion:
 
-    __PyUtVersion__ = "5.0.1"
+    __PyUtVersion__ = "6.0.0"
 
     @classmethod
     def getPyUtVersion(cls):
