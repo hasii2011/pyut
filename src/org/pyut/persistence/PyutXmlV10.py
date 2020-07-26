@@ -330,8 +330,12 @@ class PyutXml:
             oglLinks:   A dictionary of OGL links
             umlFrame:   The UML Frame to place the OGL objects on
         """
+        umlDiagram = umlFrame.GetDiagram()
         for oglLink in oglLinks:
-            umlFrame.GetDiagram().AddShape(oglLink, withModelUpdate=True)
+            umlDiagram.AddShape(oglLink, withModelUpdate=True)
+            controlPoints = oglLink.GetControlPoints()
+            for controlPoint in controlPoints:
+                umlDiagram.AddShape(controlPoint)
 
     def __displayTheNotes(self, oglNotes: OglNotes, umlFrame: UmlDiagramsFrame):
         for oglNote in oglNotes.values():

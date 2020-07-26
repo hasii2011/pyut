@@ -32,3 +32,6 @@ class ControlPoint(LinePoint):
         super(ControlPoint, self).RemoveLine(line)
         if len(self._lines) == 0:
             self.Detach()
+
+    def __repr__(self):
+        return f'ControlPoint@ {self._x},{self._y} {self._visible=}'

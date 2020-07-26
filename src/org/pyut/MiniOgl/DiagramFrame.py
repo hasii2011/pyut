@@ -159,9 +159,9 @@ class DiagramFrame(ScrolledWindow):
         shape = self.FindShape(x, y)
         event.m_x, event.m_y = x, y
 
-        self.clsLogger.debug(f'GenericHandler - shape: `{shape}` methodName: `{methodName}` x,y: {x},{y}')
+        self.clsLogger.debug(f'GenericHandler - `{shape=}` `{methodName=}` x,y: {x},{y}')
         # if the shape found is a ShapeEventHandler
-        if shape and isinstance(shape, ShapeEventHandler):
+        if shape is not None and isinstance(shape, ShapeEventHandler):
             getattr(shape, methodName)(event)
         else:
             event.Skip()
@@ -198,6 +198,7 @@ class DiagramFrame(ScrolledWindow):
                 shapes.remove(shape.GetParent())
             elif isinstance(shape, ControlPoint):
                 # don't deselect the line of a control point
+                self.clsLogger.debug(f'{shape=}')
                 for line in shape.GetLines():
                     shapes.remove(line)
             # don't call DeselectAllShapes, because we must ensure that
@@ -270,7 +271,8 @@ class DiagramFrame(ScrolledWindow):
         """
         Callback to drag the selected shapes.
 
-        @param  event
+        Args:
+            event:
         """
         x, y = event.GetX(), event.GetY()
         if not self._moving:
@@ -385,13 +387,16 @@ class DiagramFrame(ScrolledWindow):
         """
         Return the shape at (x, y).
 
-        @param x : coord
-        @param y : coord
+        Args:
+            x: coordinate
+            y: coordinate
 
-        @return Shape : found shape or None
+        Returns:  The shape that was found under the coordinates or None
         """
+        self.clsLogger.debug(f'FindShape: @{x},{y}')
         found = None
         shapes = self._diagram.GetShapes()
+        self.clsLogger.debug(f'{shapes=}')
         shapes.reverse()    # to select the one at the top
         for shape in shapes:
             if shape.Inside(x, y):
