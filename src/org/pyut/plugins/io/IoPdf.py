@@ -8,6 +8,7 @@ from logging import getLogger
 
 from wx import Yield as wxYield
 
+from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
@@ -114,7 +115,14 @@ class IoPdf(PyutIoPlugin):
         self.logger.info(f'export file name: {self._exportFileName}')
         wxYield()
 
-        oglToPdf: OglToPdfDefinition = OglToPdfDefinition(fqFileName=self._exportFileName, dpi=75)  # TODO get this from preferences
+        pluginVersion: str = self.getVersion()
+        pyutVersion:   str = PyutVersion.getPyUtVersion()
+
+        oglToPdf: OglToPdfDefinition = OglToPdfDefinition(fqFileName=self._exportFileName,
+                                                          dpi=75,           # TODO get this from runtime query
+                                                          pyutVersion=pyutVersion,
+                                                          pluginVersion=pluginVersion
+                                                          )
 
         oglToPdf.toClassDefinitions(oglObjects=oglObjects)
         oglToPdf.layoutLines(oglObjects=oglObjects)

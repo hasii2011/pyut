@@ -6,6 +6,9 @@ from typing import final
 from logging import Logger
 from logging import getLogger
 
+from time import localtime
+from time import strftime
+
 from pdfdiagrams.Definitions import ClassDefinition
 from pdfdiagrams.Definitions import ClassDefinitions
 from pdfdiagrams.Definitions import DefinitionType
@@ -38,12 +41,15 @@ class OglToPdfDefinition:
 
     INHERITANCE_DESTINATION_POSITION_NUDGE_FACTOR: final = 1
 
-    def __init__(self, fqFileName: str, dpi: int):
+    def __init__(self, fqFileName: str, dpi: int, pyutVersion: str = '', pluginVersion: str = ''):
 
-        self.logger:              Logger           = getLogger(__name__)
-        self._classDefinitions:   ClassDefinitions = []
+        self.logger:              Logger             = getLogger(__name__)
+        self._classDefinitions:   ClassDefinitions   = []
         self._umlLineDefinitions: UmlLineDefinitions = []
-        self._diagram:            Diagram = Diagram(fileName=fqFileName, dpi=dpi)
+
+        today: str = strftime("%d %b %Y %H:%M:%S", localtime())
+
+        self._diagram: Diagram = Diagram(fileName=fqFileName, dpi=dpi, headerText=f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}')
 
     def toClassDefinitions(self, oglObjects: List[OglClass]):
 
