@@ -9,20 +9,20 @@ from logging import getLogger
 from time import localtime
 from time import strftime
 
-from pdfdiagrams.Definitions import ClassDefinition
-from pdfdiagrams.Definitions import ClassDefinitions
-from pdfdiagrams.Definitions import DefinitionType
-from pdfdiagrams.Definitions import MethodDefinition
-from pdfdiagrams.Definitions import Methods
-from pdfdiagrams.Definitions import ParameterDefinition
-from pdfdiagrams.Definitions import Parameters
-from pdfdiagrams.Definitions import Position
-from pdfdiagrams.Definitions import Size
-from pdfdiagrams.Definitions import UmlLineDefinition
-from pdfdiagrams.Definitions import UmlLineDefinitions
-from pdfdiagrams.Definitions import LineType
+from pyumldiagrams.Definitions import ClassDefinition
+from pyumldiagrams.Definitions import ClassDefinitions
+from pyumldiagrams.Definitions import DefinitionType
+from pyumldiagrams.Definitions import MethodDefinition
+from pyumldiagrams.Definitions import Methods
+from pyumldiagrams.Definitions import ParameterDefinition
+from pyumldiagrams.Definitions import Parameters
+from pyumldiagrams.Definitions import Position
+from pyumldiagrams.Definitions import Size
+from pyumldiagrams.Definitions import UmlLineDefinition
+from pyumldiagrams.Definitions import UmlLineDefinitions
+from pyumldiagrams.Definitions import LineType
 
-from pdfdiagrams.Diagram import Diagram
+from pyumldiagrams.pdf.Diagram import Diagram
 
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 
