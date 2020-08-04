@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/hasii2011/PyUt.svg?branch=master)](https://travis-ci.org/hasii2011/PyUt)
 
 𝓟 𝓨 𝓤 𝓣 stands for Python UML Tool. Actually, Pyut is only a class diagram editor
 
