@@ -29,7 +29,6 @@ from wx import EVT_ACTIVATE
 from wx import FD_OPEN
 from wx import FD_SAVE
 from wx import FD_MULTIPLE
-from wx import FD_OVERWRITE_PROMPT
 
 from wx import PrintData
 

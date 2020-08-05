@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -74,7 +76,7 @@ class PyutApp(wxApp):
                 self.splash.Show(True)
                 wxYield()
 
-            self._frame = AppFrame(None, ID_ANY, "Pyut")
+            self._frame: AppFrame = AppFrame(cast(AppFrame, None), ID_ANY, "Pyut")
             self.SetTopWindow(self._frame)
             self._AfterSplash()
 
