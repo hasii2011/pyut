@@ -24,7 +24,7 @@ from org.pyut.ui.UmlFrame import UmlFrame
 
 class PyutPlugin:
 
-    INPUT_FORMAT_TYPE = NewType('INPUT_FORMAT_TYPE', Tuple[str, str, str])
+    INPUT_FORMAT_TYPE  = NewType('INPUT_FORMAT_TYPE', Tuple[str, str, str])
     OUTPUT_FORMAT_TYPE = NewType('OUTPUT_FORMAT_TYPE', Tuple[str, str, str])
 
     """

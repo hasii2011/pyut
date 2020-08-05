@@ -11,6 +11,7 @@ from org.pyut.general.Singleton import Singleton
 from org.pyut.plugins.io.IoCpp import IoCpp
 from org.pyut.plugins.io.IoDTD import IoDTD
 from org.pyut.plugins.io.IoGML import IoGML
+from org.pyut.plugins.io.IoImage import IoImage
 from org.pyut.plugins.io.IoJava import IoJava
 from org.pyut.plugins.io.IoJavaReverse import IoJavaReverse
 from org.pyut.plugins.io.IoJavascript import IoJavascript
@@ -41,7 +42,7 @@ class PluginManager(Singleton):
     PLUGIN_PACKAGE:   str = 'org.pyut.plugins'
 
     IO_PLUGINS: List[type] = [IoCpp, IoDTD, IoJava, IoJavaReverse, IoJavascript,
-                              IoPython, IoXmi, IoXmi_OMG, IoXml, IoXSD, IoGML, IoPdf
+                              IoPython, IoXmi, IoXmi_OMG, IoXml, IoXSD, IoGML, IoPdf, IoImage
                               ]
     TOOL_PLUGINS: List[type] = [ToArrangeLinks, ToAscii, ToCDAutoLayout, ToFastEdit, ToLayout, ToLayoutSave,
                                 ToOrthogonalLayoutV2, ToPython, ToSugiyama, ToTransforms

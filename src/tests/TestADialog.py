@@ -3,6 +3,7 @@ from typing import cast
 
 from logging import Logger
 from logging import getLogger
+
 from unittest.mock import MagicMock
 
 from wx import DEFAULT_FRAME_STYLE
@@ -12,12 +13,13 @@ from wx import App
 from wx import Frame
 
 from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
-from org.pyut.PyutPreferences import PyutPreferences
 
+from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
 
-from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
+from org.pyut.plugins.io.pyumlsupport.DlgImageOptions import DlgImageOptions
+
 
 from tests.TestBase import TestBase
 
@@ -44,7 +46,6 @@ class TestADialog(App):
         self.SetTopWindow(diagramFrame)
 
         self._diagramFrame: DiagramFrame = diagramFrame
-
         #
         # Introduce a mock
         #
@@ -56,13 +57,15 @@ class TestADialog(App):
 
     def initTest(self):
 
-        with DlgLayoutSize(self._diagramFrame) as dlg:
-            dlg: DlgLayoutSize = cast(DlgLayoutSize, dlg)
+        with DlgImageOptions(self._diagramFrame) as dlg:
+            dlg: DlgImageOptions = cast(DlgImageOptions, dlg)
             if dlg.ShowModal() == OK:
-                self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
+                # self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
+                self._diagramFrame.Close(force=True)
 
             else:
                 self.logger.warning(f'Cancelled')
+                self._diagramFrame.Close(force=True)
 
         self.logger.info(f"After dialog show")
 
