@@ -49,7 +49,7 @@ class IoPdf(PyutIoPlugin):
         """
         Returns: The plugin version string
         """
-        return "1.0"
+        return "1.1"
 
     def getInputFormat(self) -> Tuple[str, str, str]:
         """

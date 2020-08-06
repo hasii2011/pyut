@@ -21,7 +21,6 @@ from pyumldiagrams.Definitions import Size
 from pyumldiagrams.Definitions import UmlLineDefinition
 from pyumldiagrams.Definitions import UmlLineDefinitions
 from pyumldiagrams.Definitions import LineType
-from pyumldiagrams.image.ImageFormat import ImageFormat
 
 from pyumldiagrams.pdf.Diagram import Diagram
 
@@ -36,6 +35,8 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.enums.LinkType import LinkType
+
+from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 
 
 class OglToPyUmlDefinition:
@@ -62,7 +63,8 @@ class OglToPyUmlDefinition:
         today: str = strftime("%d %b %Y %H:%M:%S", localtime())
 
         if imageFormat == ImageFormat.PDF:
-            self._diagram: Diagram = Diagram(fileName=fqFileName, dpi=dpi, headerText=f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}')
+            headerText: str = f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}'
+            self._diagram: Diagram = Diagram(fileName=fqFileName, dpi=dpi, headerText=headerText)
         else:
             pass
 
@@ -101,9 +103,9 @@ class OglToPyUmlDefinition:
 
             pyutLink:    PyutLink = oglLink.getPyutObject()
             umlLinkType: LinkType = pyutLink.linkType
-            lineType:    LineType = self._toPdfLineType(umlLinkType)
+            lineType:    LineType = self._toPyUmlLineType(umlLinkType)
 
-            destinationPosition, sourcePosition = self._toPdfPositions(oglLink)
+            destinationPosition, sourcePosition = self._toPyUmlPositions(oglLink)
             self.logger.info(f'{lineType=} {sourcePosition=} {destinationPosition=}')
             line:    UmlLineDefinition = UmlLineDefinition(source=sourcePosition, destination=destinationPosition, lineType=lineType)
 
@@ -115,7 +117,7 @@ class OglToPyUmlDefinition:
     def write(self):
         self._diagram.write()
 
-    def _toPdfLineType(self, umlLinkType) -> LineType:
+    def _toPyUmlLineType(self, umlLinkType) -> LineType:
 
         if umlLinkType == LinkType.INHERITANCE:
             lineType: LineType = LineType.Inheritance
@@ -128,7 +130,7 @@ class OglToPyUmlDefinition:
 
         return lineType
 
-    def _toPdfPositions(self, oglLink):
+    def _toPyUmlPositions(self, oglLink):
 
         srcAnchor:  AnchorPoint = oglLink.sourceAnchor
         destAnchor: AnchorPoint = oglLink.destinationAnchor
