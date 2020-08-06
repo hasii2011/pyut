@@ -21,6 +21,7 @@ from pyumldiagrams.Definitions import Size
 from pyumldiagrams.Definitions import UmlLineDefinition
 from pyumldiagrams.Definitions import UmlLineDefinitions
 from pyumldiagrams.Definitions import LineType
+from pyumldiagrams.image.ImageFormat import ImageFormat
 
 from pyumldiagrams.pdf.Diagram import Diagram
 
@@ -37,11 +38,22 @@ from org.pyut.ogl.OglLink import OglLink
 from org.pyut.enums.LinkType import LinkType
 
 
-class OglToPdfDefinition:
+class OglToPyUmlDefinition:
 
     INHERITANCE_DESTINATION_POSITION_NUDGE_FACTOR: final = 1
 
-    def __init__(self, fqFileName: str, dpi: int, pyutVersion: str = '', pluginVersion: str = ''):
+    def __init__(self, fqFileName: str, dpi: int = 0, imageFormat: ImageFormat = ImageFormat.PDF, pyutVersion: str = '', pluginVersion: str = ''):
+        """
+
+        Args:
+            fqFileName: Fully qualified output file name
+
+            dpi:  Dots per inch;  Only used in PDF generation;  Image generation is in pixels
+
+            pyutVersion:  Information for header
+
+            pluginVersion:  Information for header
+        """
 
         self.logger:              Logger             = getLogger(__name__)
         self._classDefinitions:   ClassDefinitions   = []
@@ -49,7 +61,10 @@ class OglToPdfDefinition:
 
         today: str = strftime("%d %b %Y %H:%M:%S", localtime())
 
-        self._diagram: Diagram = Diagram(fileName=fqFileName, dpi=dpi, headerText=f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}')
+        if imageFormat == ImageFormat.PDF:
+            self._diagram: Diagram = Diagram(fileName=fqFileName, dpi=dpi, headerText=f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}')
+        else:
+            pass
 
     def toClassDefinitions(self, oglObjects: List[OglClass]):
 

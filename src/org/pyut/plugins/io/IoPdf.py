@@ -12,7 +12,7 @@ from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.plugins.io.pyumlsupport.OglToPyUmlDefinition import OglToPdfDefinition
+from org.pyut.plugins.io.pyumlsupport.OglToPyUmlDefinition import OglToPyUmlDefinition
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -118,11 +118,11 @@ class IoPdf(PyutIoPlugin):
         pluginVersion: str = self.getVersion()
         pyutVersion:   str = PyutVersion.getPyUtVersion()
 
-        oglToPdf: OglToPdfDefinition = OglToPdfDefinition(fqFileName=self._exportFileName,
-                                                          dpi=75,           # TODO get this from runtime query
-                                                          pyutVersion=pyutVersion,
-                                                          pluginVersion=pluginVersion
-                                                          )
+        oglToPdf: OglToPyUmlDefinition = OglToPyUmlDefinition(fqFileName=self._exportFileName,
+                                                              dpi=75,  # TODO get this from runtime query
+                                                              pyutVersion=pyutVersion,
+                                                              pluginVersion=pluginVersion
+                                                              )
 
         oglToPdf.toClassDefinitions(oglObjects=oglObjects)
         oglToPdf.layoutLines(oglObjects=oglObjects)
