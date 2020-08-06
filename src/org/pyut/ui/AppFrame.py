@@ -281,9 +281,9 @@ class AppFrame(Frame):
         umlFrame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
         obj = cl(umlObjects, umlFrame)
         # Do plugin functionality
-        BeginBusyCursor()
+        # BeginBusyCursor()
         obj.doExport()
-        EndBusyCursor()
+        # EndBusyCursor()
 
     def OnToolPlugin(self, event: CommandEvent):
         """
