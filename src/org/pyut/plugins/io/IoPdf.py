@@ -12,7 +12,7 @@ from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.plugins.io.pyumlsupport.OglToPdfDefinition import OglToPdfDefinition
+from org.pyut.plugins.io.pyumlsupport.OglToPyUmlDefinition import OglToPdfDefinition
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
