@@ -1,19 +1,22 @@
 
 from dataclasses import dataclass
 
+from pyumldiagrams import Defaults
+
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 
 
 @dataclass
 class ImageOptions:
 
-    outputFileName: str = ''
+    outputFileName: str = Defaults.DEFAULT_FILE_NAME
     """
     This is a fully qualified file name
+
     """
-    imageWidth:     int = 1280
-    imageHeight:    int = 1024
+    imageWidth:     int = Defaults.DEFAULT_IMAGE_WIDTH
+    imageHeight:    int = Defaults.DEFAULT_IMAGE_HEIGHT
     imageFormat:    ImageFormat = ImageFormat.PNG
-    horizontalGap:  int = 60
-    verticalGap:    int = 60
+    horizontalGap:  int = Defaults.DEFAULT_HORIZONTAL_GAP
+    verticalGap:    int = Defaults.DEFAULT_VERTICAL_GAP
 

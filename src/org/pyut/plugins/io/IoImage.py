@@ -6,9 +6,15 @@ from logging import Logger
 from logging import getLogger
 from typing import cast
 
+from pyumldiagrams import Defaults
+from wx import OK
+
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.base.PyutPlugin import PyutPlugin
+from org.pyut.plugins.io.pyumlsupport.DlgImageOptions import DlgImageOptions
+from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -48,7 +54,7 @@ class IoImage(PyutIoPlugin):
         Returns:
             None, I don't read PDF
         """
-        return cast(Tuple[str, str, str], None)
+        return cast(PyutPlugin.INPUT_FORMAT_TYPE, None)
 
     def getOutputFormat(self) -> Tuple[str, str, str]:
         """
@@ -75,6 +81,20 @@ class IoImage(PyutIoPlugin):
         """
         Popup options dialog
         """
+        imageOptions: ImageOptions = ImageOptions()
+
+        imageOptions.horizontalGap = Defaults.DEFAULT_HORIZONTAL_GAP
+        imageOptions.verticalGap   = Defaults.DEFAULT_VERTICAL_GAP
+
+        imageOptions.outputFileName = Defaults.DEFAULT_FILE_NAME
+
+        with DlgImageOptions(self._umlFrame, imageOptions=imageOptions) as dlg:
+            dlg: DlgImageOptions = cast(DlgImageOptions, dlg)
+            if dlg.ShowModal() == OK:
+                self.logger.warning(f'Options: {dlg.imageOptions}')
+            else:
+                self.logger.warning(f'Cancelled')
+
         return True
 
     def read(self, oglObjects: List[OglClass], umlFrame: UmlFrame):
@@ -95,4 +115,3 @@ class IoImage(PyutIoPlugin):
             oglObjects:     list of exported objects
         """
         pass
-

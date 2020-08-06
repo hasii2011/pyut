@@ -7,7 +7,9 @@ from wx import ALIGN_RIGHT
 from wx import ALL
 from wx import CANCEL
 from wx import EVT_BUTTON
+from wx import EVT_CHOICE
 from wx import EVT_CLOSE
+from wx import EVT_MOTION
 from wx import EVT_SPINCTRL
 from wx import EXPAND
 from wx import FD_CHANGE_DIR
@@ -18,6 +20,7 @@ from wx import ID_ANY
 from wx import ID_CANCEL
 from wx import ID_OK
 from wx import OK
+from wx import TE_READONLY
 from wx import VERTICAL
 
 from wx import Button
@@ -31,34 +34,38 @@ from wx import StaticBox
 from wx import StaticBoxSizer
 from wx import TextCtrl
 from wx import SpinEvent
+from wx import MouseEvent
+
 from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
-from org.pyut.general.Globals import _
+
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
+
+from org.pyut.general.Globals import _
 
 
 class DlgImageOptions(BaseDlgEdit):
 
     HORIZONTAL_GAP: int = 5
 
-    DEFAULT_LAYOUT_WIDTH:  int = 1280
-    DEFAULT_LAYOUT_HEIGHT: int = 1024
+    MIN_UML_SHAPE_GAP: int = 0
+    MAX_UML_SHAPE_GAP: int = 100
 
     def __init__(self, theParent, imageOptions: ImageOptions = ImageOptions()):
 
-        [self.__fileSelectId,     self.__selectedFileId,
+        [self.__selectedFileId,
          self.__imageWidthId,    self.__imageHeightId,
          self.__horizontalGapId, self.__verticalGapId,
-         self.__fileSelectBtn
+         self.__fileSelectBtn,   self.__imageFormatChoiceId
          ] = PyutUtils.assignID(7)
 
         super().__init__(theParent, theTitle='UML Image Generation Options')
 
-        self.logger: Logger = getLogger(__name__)
-
+        self.logger:        Logger       = getLogger(__name__)
         self._imageOptions: ImageOptions = imageOptions
 
         fs:   StaticBoxSizer = self.__layoutFileSelection()
@@ -78,6 +85,7 @@ class DlgImageOptions(BaseDlgEdit):
         self.SetSizer(mainSizer)
 
         mainSizer.Fit(self)
+        self._bindEventHandlers()
 
         self.Bind(EVT_BUTTON, self._OnCmdOk, id=ID_OK)
         self.Bind(EVT_CLOSE,  self._OnClose, id=ID_CANCEL)
@@ -90,6 +98,27 @@ class DlgImageOptions(BaseDlgEdit):
     def imageOptions(self, newOptions: ImageOptions):
         self._imageOptions = newOptions
 
+    def _bindEventHandlers(self):
+
+        self.Bind(EVT_BUTTON, self._onFileSelectClick,     id=self.__fileSelectBtn)
+
+        self.Bind(EVT_SPINCTRL, self._onImageSizeChange, id=self.__imageWidthId)
+        self.Bind(EVT_SPINCTRL, self._onImageSizeChange, id=self.__imageHeightId)
+
+        self.Bind(EVT_CHOICE, self._onImageFormatChoice, id=self.__imageFormatChoiceId)
+
+        self.Bind(EVT_SPINCTRL, self._onImagePaddingChange, id=self.__horizontalGapId)
+        self.Bind(EVT_SPINCTRL, self._onImagePaddingChange, id=self.__verticalGapId)
+
+        self._selectedFile.Bind(EVT_MOTION, self._fileSelectionMotion, id=self.__selectedFileId)
+
+    def _fileSelectionMotion(self, event: MouseEvent):
+
+        ctrl: TextCtrl = event.EventObject
+
+        tip = ctrl.GetToolTip()
+        tip.SetTip(self._imageOptions.outputFileName)
+
     # noinspection PyUnusedLocal
     def _onFileSelectClick(self, event: CommandEvent):
 
@@ -99,12 +128,6 @@ class DlgImageOptions(BaseDlgEdit):
         fmtSelIdx:    int = self._imageFormatChoice.GetCurrentSelection()
         outputFormat: str = self._imageFormatChoice.GetString(fmtSelIdx)
 
-        # file:         str = FileSelector(message="Choose the export file name",
-        #                                  default_filename='PyutExport',
-        #                                  default_extension=outputFormat,
-        #                                  flags=FD_SAVE | FD_OVERWRITE_PROMPT | FD_CHANGE_DIR)
-        #
-        wildCard = "Png files (*.png)|*.png|"
         dlg: FileDialog = FileDialog(self,
                                      message='Choose the export file name',
                                      defaultFile='PyutExport',
@@ -114,9 +137,10 @@ class DlgImageOptions(BaseDlgEdit):
             wxYield()
             path:     str = dlg.GetPath()
             fileName: str = dlg.GetFilename()
-            self._selectedFile.SetValue(fileName)
 
-            self._imageOptions.outputFileName = path
+            self._selectedFile.SetValue(fileName)       # for simple viewing
+            self._selectedFile.SetModified(True)
+            self._imageOptions.outputFileName = path    # for actual us
 
         dlg.Destroy()
 
@@ -129,27 +153,50 @@ class DlgImageOptions(BaseDlgEdit):
         elif eventId == self.__imageHeightId:
             self._imageOptions.imageHeight = newValue
         else:
-            self.logger.error(f'Unknown onSizeChange event id: {eventId}')
+            self.logger.error(f'Unknown _onImageSizeChange event id: {eventId}')
+
+    def _onImagePaddingChange(self, event: SpinEvent):
+
+        eventId:  int = event.GetId()
+        newValue: int = event.GetInt()
+        if eventId == self.__horizontalGapId:
+            self._imageOptions.horizontalGap = newValue
+        elif eventId == self.__verticalGapId:
+            self._imageOptions.verticalGap = newValue
+        else:
+            self.logger.error(f'Unknown _onImagePaddingChange event id: {eventId}')
+
+    def _onImageFormatChoice(self, event: CommandEvent):
+
+        ctrl:      Choice = event.EventObject
+        idx:       int    = ctrl.GetCurrentSelection()
+        newValue:  str    = ctrl.GetString(idx)
+
+        newFormat: ImageFormat = ImageFormat(newValue)
+
+        self._imageOptions.imageFormat = newFormat
 
     def __layoutFileSelection(self) -> StaticBoxSizer:
 
         box:                StaticBox      = StaticBox(self, ID_ANY, label="Output Filename")
         fileSelectionSizer: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
-        fileSelectBtn:       Button   = Button(self, label=_("&Select"), id=self.__fileSelectBtn)
-        self._selectedFile:  TextCtrl = TextCtrl(self, value='PyutExport.png', id=self.__fileSelectId)
+        currentFile: str = self._imageOptions.outputFileName
+
+        fileSelectBtn:      Button   = Button(self, label=_("&Select"),  id=self.__fileSelectBtn)
+        self._selectedFile: TextCtrl = TextCtrl(self, value=currentFile, id=self.__selectedFileId, style=TE_READONLY)
+
+        self._selectedFile.SetToolTip(currentFile)
 
         fileSelectionSizer.Add(fileSelectBtn,       proportion=0, flag=ALL, border=5)
         fileSelectionSizer.Add(self._selectedFile,  proportion=1, flag=ALL | EXPAND, border=5)
-
-        self.Bind(EVT_BUTTON, self._onFileSelectClick, id=self.__fileSelectBtn)
 
         return fileSelectionSizer
 
     def __layoutImageSizeControls(self) -> StaticBoxSizer:
 
-        imageWidth  = SpinCtrl(self, self.__imageWidthId,  "")
-        imageHeight = SpinCtrl(self, self.__imageHeightId, "")
+        imageWidth  = SpinCtrl(self, self.__imageWidthId,  value=str(self._imageOptions.imageWidth))
+        imageHeight = SpinCtrl(self, self.__imageHeightId, value=str(self._imageOptions.imageHeight))
 
         imageWidth.SetRange(500, 3000)
         imageHeight.SetRange(500, 3000)
@@ -160,21 +207,12 @@ class DlgImageOptions(BaseDlgEdit):
         szrAppSize.Add(imageWidth, 0, ALL, DlgImageOptions.HORIZONTAL_GAP)
         szrAppSize.Add(imageHeight, 0, ALL, DlgImageOptions.HORIZONTAL_GAP)
 
-        self.__imageWidth  = imageWidth
-        self.__imageHeight = imageHeight
-
-        self.__imageWidth.SetValue(self._imageOptions.imageWidth)
-        self.__imageHeight.SetValue(self._imageOptions.imageHeight)
-
-        self.Bind(EVT_SPINCTRL, self._onImageSizeChange, id=self.__imageWidthId)
-        self.Bind(EVT_SPINCTRL, self._onImageSizeChange, id=self.__imageHeightId)
-
         return szrAppSize
 
     def __layoutImageFormatChoice(self) -> StaticBoxSizer:
 
         imageChoices: List[str] = [ImageFormat.PNG.value, ImageFormat.JPG.value, ImageFormat.BMP.value, ImageFormat.GIF.value]
-        self._imageFormatChoice = Choice(self, ID_ANY, choices=imageChoices)
+        self._imageFormatChoice = Choice(self, self.__imageFormatChoiceId, choices=imageChoices)
 
         box:            StaticBox = StaticBox(self, ID_ANY, "Image Format")
         szrImageFormat: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
@@ -188,10 +226,15 @@ class DlgImageOptions(BaseDlgEdit):
         box:                  StaticBox = StaticBox(self, ID_ANY, "Shape Padding")
         szrImagePaddingSizer: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
-        self._horizontalGap: SpinCtrl = SpinCtrl(self, id=self.__horizontalGapId, value="60", min=0, max=100)
-        self._verticalGap:   SpinCtrl = SpinCtrl(self, id=self.__verticalGapId,   value="60", min=0, max=100)
+        hGap: int = self._imageOptions.horizontalGap
+        vGap: int = self._imageOptions.verticalGap
 
-        szrImagePaddingSizer.Add(self._horizontalGap, flag=ALL, border=5)
-        szrImagePaddingSizer.Add(self._verticalGap,   flag=ALL, border=5)
+        horizontalGap: SpinCtrl = SpinCtrl(self, id=self.__horizontalGapId, value=str(hGap),
+                                           min=DlgImageOptions.MIN_UML_SHAPE_GAP, max=DlgImageOptions.MAX_UML_SHAPE_GAP)
+        verticalGap:   SpinCtrl = SpinCtrl(self, id=self.__verticalGapId,   value=str(vGap),
+                                           min=DlgImageOptions.MIN_UML_SHAPE_GAP, max=DlgImageOptions.MAX_UML_SHAPE_GAP)
+
+        szrImagePaddingSizer.Add(horizontalGap, flag=ALL, border=5)
+        szrImagePaddingSizer.Add(verticalGap,   flag=ALL, border=5)
 
         return szrImagePaddingSizer
