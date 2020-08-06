@@ -4,6 +4,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from sys import exit as sysExit
+
 from unittest.mock import MagicMock
 
 from wx import DEFAULT_FRAME_STYLE
@@ -62,12 +64,14 @@ class TestADialog(App):
             if dlg.ShowModal() == OK:
                 # self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
                 self._diagramFrame.Close(force=True)
+                self.logger.warning(f'Options: {dlg.imageOptions}')
 
             else:
                 self.logger.warning(f'Cancelled')
                 self._diagramFrame.Close(force=True)
 
         self.logger.info(f"After dialog show")
+        sysExit()   # brutal !!
 
 
 testApp: App = TestADialog(redirect=False)
