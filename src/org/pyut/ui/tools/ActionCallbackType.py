@@ -28,10 +28,6 @@ class ActionCallbackType(Enum):
     HELP_WEB             = 22
     ADD_PYUT_HIERARCHY   = 23
     ADD_OGL_HIERARCHY    = 24
-    EXPORT_BMP           = 25
-    EXPORT_PNG           = 26
-    EXPORT_JPG           = 27
-    EXPORT_PS            = 28
 
     EDIT_CUT             = 30
     EDIT_COPY            = 31

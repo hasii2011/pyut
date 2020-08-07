@@ -87,10 +87,6 @@ class MenuCreator:
 
         if sub is None:
             sub = Menu()
-        sub.Append(SharedIdentifiers.ID_MNU_FILE_EXPORT_BMP, "&bmp", _("Export data to a bitmap file"))
-        sub.Append(SharedIdentifiers.ID_MNU_FILE_EXPORT_JPG, "&jpeg", _("Export data to a jpeg file"))
-        sub.Append(SharedIdentifiers.ID_MNU_FILE_EXPORT_PNG, "&png", _("Export data to a png file"))
-        sub.Append(SharedIdentifiers.ID_MNU_FILE_EXPORT_PS, "&Postscript", _("Export data to a postscript file"))
 
         if sub is not None:
             self.fileMenu.Append(NewId(), _("Export"), sub)
@@ -205,11 +201,6 @@ class MenuCreator:
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView,    id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView,   id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
 
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXPORT_BMP], id=SharedIdentifiers.ID_MNU_FILE_EXPORT_BMP)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXPORT_JPG], id=SharedIdentifiers.ID_MNU_FILE_EXPORT_JPG)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXPORT_PNG], id=SharedIdentifiers.ID_MNU_FILE_EXPORT_PNG)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXPORT_PS], id=SharedIdentifiers.ID_MNU_FILE_EXPORT_PS)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXPORT_PDF], id=SharedIdentifiers.ID_MNU_FILE_EXPORT_PDF)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_CUT], id=SharedIdentifiers.ID_MNU_EDIT_CUT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_COPY], id=SharedIdentifiers.ID_MNU_EDIT_COPY)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_PASTE], id=SharedIdentifiers.ID_MNU_EDIT_PASTE)

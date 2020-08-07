@@ -1,13 +1,14 @@
 
 from typing import List
 from typing import Tuple
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
-from typing import cast
+
+from wx import OK
 
 from pyumldiagrams import Defaults
-from wx import OK
 
 from org.pyut.ogl.OglClass import OglClass
 

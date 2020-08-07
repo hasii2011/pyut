@@ -27,7 +27,6 @@ from wx import PORTRAIT
 from wx import PRINT_QUALITY_HIGH
 from wx import EVT_ACTIVATE
 from wx import FD_OPEN
-from wx import FD_SAVE
 from wx import FD_MULTIPLE
 
 from wx import PrintData
@@ -407,10 +406,6 @@ class AppFrame(Frame):
             ActionCallbackType.HELP_WEB:             self._OnMnuHelpWeb,
             ActionCallbackType.ADD_PYUT_HIERARCHY:   self._OnMnuAddPyut,
             ActionCallbackType.ADD_OGL_HIERARCHY:    self._OnMnuAddOgl,
-            ActionCallbackType.EXPORT_PNG:           self._OnMnuFileExportPng,
-            ActionCallbackType.EXPORT_JPG:           self._OnMnuFileExportJpg,
-            ActionCallbackType.EXPORT_BMP:           self._OnMnuFileExportBmp,
-            ActionCallbackType.EXPORT_PS:            self._OnMnuFileExportPs,
 
             ActionCallbackType.EDIT_COPY:            self._OnMnuEditCut,
             ActionCallbackType.EDIT_CUT:             self._OnMnuEditCopy,
@@ -606,63 +601,6 @@ class AppFrame(Frame):
             project.removeDocument(document)
         else:
             PyutUtils.displayWarning(_("No document to remove"))
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileExportBmp(self, event: CommandEvent):
-        """
-        Display the Export to bitmap dialog box
-
-        Args:
-            event:
-        """
-        self._mainFileHandlingUI.exportToBmp()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileExportJpg(self, event: CommandEvent):
-        """
-        Display the Export to jpeg dialog box
-
-        Args:
-            event:
-        """
-        self._mainFileHandlingUI.exportToJpg()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileExportPng(self, event: CommandEvent):
-        """
-        Display the Export to png dialog box
-
-        Args:
-            event:
-        """
-        self._mainFileHandlingUI.exportToPng()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileExportPs(self, event: CommandEvent):
-        """
-        Display the Export to postscript dialog box
-
-        Args:
-            event:
-        """
-        # Choose filename
-        # filename = ""
-        try:
-            dlg = FileDialog(self, _("Save as Postscript"), self._lastDir, "", "*.ps", FD_SAVE)
-            if dlg.ShowModal() != ID_OK:
-                dlg.Destroy()
-                return False
-            filename = dlg.GetPath()
-            if len(filename) < 3 or filename[-3:] != ".ps":
-                filename += ".ps"
-            dlg.Destroy()
-            wxYield()
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("Error while displaying Postscript saving dialog"), parent=self)
-            return
-
-        # export to PDF
-        self.__printDiagramToPostscript(filename)
 
     # noinspection PyUnusedLocal
     def _OnMnuFilePrintSetup(self, event: CommandEvent):
@@ -1118,58 +1056,6 @@ class AppFrame(Frame):
         self._printData.SetOrientation(PORTRAIT)
         self._printData.SetNoCopies(1)
         self._printData.SetCollate(True)
-
-    def __printDiagramToPostscript(self, filename: str):
-        """
-        Print the current diagram to postscript
-        Args:
-            filename:  The temp file name path that holds the post script
-
-        Returns:
-            `True` if the postscript file was successfully created, else `False`
-        """
-        # Verify that we do have a diagram to save
-        if self._ctrl.getDiagram() is None:
-            PyutUtils.displayError(_("No diagram to print !"), parent=self)
-            self._ctrl.setStatusText(_("Error while printing to postscript"))
-            return False
-
-        # Init
-        # printout = None
-        # printer  = None
-        try:
-            self._ctrl.deselectAllShapes()
-
-            printDialogData: PrintDialogData = PrintDialogData()
-
-            printDialogData.SetPrintData(self._printData)
-            printDialogData.SetPrintToFile(True)
-            printDialogData.SetMinPage(1)
-            printDialogData.SetMaxPage(1)
-
-            printData: PrintData = printDialogData.GetPrintData()
-            printData.SetFilename(filename)
-            printData.SetQuality(PRINT_QUALITY_HIGH)
-
-            printDialogData.SetPrintData(printData)
-
-            printer:  Printer      = Printer(printDialogData)
-            printout: PyutPrintout = PyutPrintout(self._ctrl.getUmlFrame())
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("Cannot export to Postscript"), parent=self)
-            self._ctrl.setStatusText(_(f"Error while printing to postscript {e}"))
-            return False
-
-        # Print to postscript
-        if not printer.Print(self, printout, False):
-            PyutUtils.displayError(_("Cannot print"), parent=self)
-            self._ctrl.setStatusText(_("Error while printing to postscript"))
-            return False
-
-        # Return
-        self._ctrl.setStatusText(_("Printed to postscript"))
-        wxYield()
-        return True
 
     def __setLastOpenedFilesItems(self):
         """

@@ -8,11 +8,6 @@ from logging import getLogger
 
 from os import path as osPath
 
-from wx import Bitmap
-from wx import Image
-from wx import NullBitmap
-
-from wx import ClientDC
 from wx import EVT_MENU
 from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import FD_SAVE
@@ -23,7 +18,6 @@ from wx import ID_ANY
 from wx import ID_OK
 from wx import ID_YES
 from wx import ITEM_NORMAL
-from wx import MemoryDC
 from wx import OK
 from wx import YES_NO
 from wx import ICON_ERROR
@@ -31,9 +25,6 @@ from wx import ICON_QUESTION
 from wx import TR_HIDE_ROOT
 from wx import TR_HAS_BUTTONS
 from wx import CLIP_CHILDREN
-from wx import BITMAP_TYPE_BMP
-from wx import BITMAP_TYPE_JPEG
-from wx import BITMAP_TYPE_PNG
 
 from wx import TreeEvent
 from wx import CommandEvent
@@ -44,12 +35,10 @@ from wx import SplitterWindow
 from wx import TreeCtrl
 from wx import Notebook
 from wx import MessageDialog
-from wx import ScrolledWindow
 from wx import Menu
 
 from wx import Yield as wxYield
 
-from wx._core import BitmapType
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
@@ -361,68 +350,6 @@ class MainUI:
             self.__notebookCurrentPage  = self.__notebook.GetPageCount() - 1
             self.logger.info(f'Current notebook page: {self.__notebookCurrentPage}')
             self.__notebook.SetSelection(self.__notebookCurrentPage)
-
-    def exportToImageFile(self, extension: str, imageType: BitmapType):
-        """
-        Export the current diagram to an image file
-
-        Args:
-            extension:  file name extension string
-            imageType:  the wx image type
-        """
-        if self._mediator.isInScriptMode():
-            PyutUtils.displayError(_("Export to image file is not implemented in scripting mode now !"))
-            return
-        else:
-            window:  ScrolledWindow = self.getCurrentFrame()
-            context: ClientDC = ClientDC(window)
-            memory:  MemoryDC = MemoryDC()
-
-            x, y = window.ClientSize
-            emptyBitmap: Bitmap = Bitmap(x, y, -1)
-
-            memory.SelectObject(emptyBitmap)
-            memory.Blit(source=context, xsrc=0, height=y, xdest=0, ydest=0, ysrc=0, width=x)
-            memory.SelectObject(NullBitmap)
-
-            img:      Image = emptyBitmap.ConvertToImage()
-            filename: str   = f'DiagramDump.{extension}'
-            status:   bool  = img.SaveFile(filename, imageType)
-
-            from os import getcwd
-            cwd: str = getcwd()
-            self._mediator.setStatusText(f'Diagram written to {cwd}/{filename}  status: {status}')
-
-    def exportToBmp(self):
-        """
-        Export the current diagram to bitmap
-        """
-        self.exportToImageFile("bmp", BITMAP_TYPE_BMP)
-
-    def exportToJpg(self):
-        """
-        Export the current diagram to a jpeg file
-        """
-        self.exportToImageFile("jpg", BITMAP_TYPE_JPEG)
-
-    def exportToPng(self):
-        """
-        Export the current diagram to a png file
-        """
-        self.exportToImageFile("png", BITMAP_TYPE_PNG)
-
-    # noinspection PyUnusedLocal
-    def exportToPostscript(self, event):
-        """
-        Export the current diagram to postscript
-
-        Args:
-            event:
-        """
-        dlg = MessageDialog(self.__parent, _("Not yet implemented !"), _("Sorry..."), OK | ICON_QUESTION)
-        dlg.ShowModal()
-        dlg.Destroy()
-        return
 
     def getCurrentFrame(self):
         """
