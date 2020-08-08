@@ -21,6 +21,7 @@ from pyumldiagrams.Definitions import Size
 from pyumldiagrams.Definitions import UmlLineDefinition
 from pyumldiagrams.Definitions import UmlLineDefinitions
 from pyumldiagrams.Definitions import LineType
+from pyumldiagrams.image.ImageDiagram import ImageDiagram
 
 from pyumldiagrams.pdf.Diagram import Diagram
 
@@ -61,12 +62,14 @@ class OglToPyUmlDefinition:
         self._umlLineDefinitions: UmlLineDefinitions = []
 
         today: str = strftime("%d %b %Y %H:%M:%S", localtime())
+        headerText: str = f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}'
 
         if imageFormat == ImageFormat.PDF:
-            headerText: str = f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}'
             self._diagram: Diagram = Diagram(fileName=fqFileName, dpi=dpi, headerText=headerText)
         else:
-            pass
+            self._diagram: ImageDiagram = ImageDiagram(fileName=fqFileName,
+                                                       headerText=headerText   # TODO use image size from new method signature
+                                                       )
 
     def toClassDefinitions(self, oglObjects: List[OglClass]):
 
