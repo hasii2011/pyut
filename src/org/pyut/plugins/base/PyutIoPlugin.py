@@ -151,7 +151,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         pass
 
-    def write(self, oglObjects: List[OglClass]):
+    def write(self, oglObjects: PyutPlugin.OglClasses):
         """
          Write data to filename. Abstract.
         Args:
@@ -160,7 +160,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         pass
 
-    def doImport(self) -> List[OglClass]:
+    def doImport(self) -> PyutPlugin.OglClasses:
         """
         Called by Pyut to begin the import process.
 
@@ -169,11 +169,11 @@ class PyutIoPlugin(PyutPlugin):
         """
         if self.getInputFormat() is not None:
             if not self.setImportOptions():
-                return cast(List[OglClass], None)
+                return cast(PyutPlugin.OglClasses, None)
             self.read(self.__oglObjects, self._umlFrame)
             return self.__oglObjects
         else:
-            return cast(List[OglClass], None)
+            return cast(PyutPlugin.OglClasses, None)
 
     def doExport(self):
         """
