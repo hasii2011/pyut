@@ -38,17 +38,18 @@ from org.pyut.ogl.OglLink import OglLink
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
+from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
 
 
 class OglToPyUmlDefinition:
 
     INHERITANCE_DESTINATION_POSITION_NUDGE_FACTOR: final = 1
 
-    def __init__(self, fqFileName: str, dpi: int = 0, imageFormat: ImageFormat = ImageFormat.PDF, pyutVersion: str = '', pluginVersion: str = ''):
+    def __init__(self, imageOptions: ImageOptions, dpi: int = 0, pyutVersion: str = '', pluginVersion: str = ''):
         """
 
         Args:
-            fqFileName: Fully qualified output file name
+            imageOptions: Lots of information on how to draw the diagram
 
             dpi:  Dots per inch;  Only used in PDF generation;  Image generation is in pixels
 
@@ -64,6 +65,8 @@ class OglToPyUmlDefinition:
         today: str = strftime("%d %b %Y %H:%M:%S", localtime())
         headerText: str = f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}'
 
+        fqFileName:  str         = imageOptions.outputFileName
+        imageFormat: ImageFormat = imageOptions.imageFormat
         if imageFormat == ImageFormat.PDF:
             self._diagram: Diagram = Diagram(fileName=fqFileName, dpi=dpi, headerText=headerText)
         else:

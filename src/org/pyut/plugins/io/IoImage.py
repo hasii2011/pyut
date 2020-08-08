@@ -6,7 +6,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from pyumldiagrams.image.ImageFormat import ImageFormat
 from wx import OK
 from wx import Yield as wxYield
 
@@ -130,8 +129,7 @@ class IoImage(PyutIoPlugin):
         pluginVersion: str = self.getVersion()
         pyutVersion:   str = PyutVersion.getPyUtVersion()
 
-        oglToPdf: OglToPyUmlDefinition = OglToPyUmlDefinition(fqFileName=self._imageOptions.outputFileName,
-                                                              imageFormat=ImageFormat.PNG,  # TODO get this from imageOptions
+        oglToPdf: OglToPyUmlDefinition = OglToPyUmlDefinition(imageOptions=self._imageOptions,
                                                               pyutVersion=pyutVersion,
                                                               pluginVersion=pluginVersion
                                                               )

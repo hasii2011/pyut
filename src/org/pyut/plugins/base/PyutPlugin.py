@@ -1,7 +1,5 @@
-
-from typing import NewType
+from typing import List
 from typing import Tuple
-from typing import cast
 
 from wx import FD_OPEN
 from wx import FD_MULTIPLE
@@ -19,14 +17,17 @@ from wx import FileSelector
 from wx import MessageDialog
 from wx import Yield as wxYield
 
+from org.pyut.ogl.OglClass import OglClass
+
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class PyutPlugin:
 
-    INPUT_FORMAT_TYPE  = NewType('INPUT_FORMAT_TYPE', Tuple[str, str, str])
-    OUTPUT_FORMAT_TYPE = NewType('OUTPUT_FORMAT_TYPE', Tuple[str, str, str])
+    INPUT_FORMAT_TYPE  = Tuple[str, str, str]
+    OUTPUT_FORMAT_TYPE = Tuple[str, str, str]
 
+    OglClasses = List[OglClass]
     """
     Standard plugin tools
     """
@@ -52,7 +53,7 @@ class PyutPlugin:
         Returns:
             The input format type
         """
-        return cast(PyutPlugin.INPUT_FORMAT_TYPE, ("*", "*", "All"))
+        return "*", "*", "All"
 
     def getOutputFormat(self) -> OUTPUT_FORMAT_TYPE:
         """
@@ -61,7 +62,7 @@ class PyutPlugin:
         Returns:
             The output format type
         """
-        return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, ("*", "*", "All"))
+        return "*", "*", "All"
 
     @staticmethod
     def displayNoUmlFrame():

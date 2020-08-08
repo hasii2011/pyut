@@ -6,15 +6,21 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+
 from wx import Yield as wxYield
 
-from org.pyut.general.PyutVersion import PyutVersion
+from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
-from org.pyut.ogl.OglClass import OglClass
+from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
+from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
 from org.pyut.plugins.io.pyumlsupport.OglToPyUmlDefinition import OglToPyUmlDefinition
 
 from org.pyut.ui.UmlFrame import UmlFrame
+
+from org.pyut.general.PyutVersion import PyutVersion
 
 
 class IoPdf(PyutIoPlugin):
@@ -31,7 +37,9 @@ class IoPdf(PyutIoPlugin):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._exportFileName: str = ''
+        self._imageOptions: ImageOptions = ImageOptions()
+
+        self._imageOptions.imageFormat = ImageFormat.PDF
 
     def getName(self) -> str:
         """
@@ -51,12 +59,12 @@ class IoPdf(PyutIoPlugin):
         """
         return "1.1"
 
-    def getInputFormat(self) -> Tuple[str, str, str]:
+    def getInputFormat(self) -> PyutPlugin.INPUT_FORMAT_TYPE:
         """
         Returns:
             None, I don't read PDF
         """
-        return cast(Tuple[str, str, str], None)
+        return cast(PyutPlugin.INPUT_FORMAT_TYPE, None)
 
     def getOutputFormat(self) -> Tuple[str, str, str]:
         """
@@ -80,7 +88,7 @@ class IoPdf(PyutIoPlugin):
 
     def setExportOptions(self) -> bool:
         """
-        TODO:  Popup dialog of where to write .pdf file
+        Popup dialog to determine where to write .pdf file
 
         Returns:
             if False, the export will be cancelled.
@@ -91,7 +99,7 @@ class IoPdf(PyutIoPlugin):
             self.logger.debug('Export Cancelled no file name')
             return False
         else:
-            self._exportFileName = fqFileName
+            self._imageOptions.outputFileName = fqFileName
 
         return True
 
@@ -112,13 +120,13 @@ class IoPdf(PyutIoPlugin):
         Args:
             oglObjects:     list of exported objects
         """
-        self.logger.info(f'export file name: {self._exportFileName}')
+        self.logger.info(f'export file name: {self._imageOptions.outputFileName}')
         wxYield()
 
         pluginVersion: str = self.getVersion()
         pyutVersion:   str = PyutVersion.getPyUtVersion()
 
-        oglToPdf: OglToPyUmlDefinition = OglToPyUmlDefinition(fqFileName=self._exportFileName,
+        oglToPdf: OglToPyUmlDefinition = OglToPyUmlDefinition(imageOptions=self._imageOptions,
                                                               dpi=75,  # TODO get this from runtime query
                                                               pyutVersion=pyutVersion,
                                                               pluginVersion=pluginVersion
