@@ -239,7 +239,7 @@ class ReverseEngineerPython2:
 
     def _parseFieldToPyut(self, fieldData: str) -> PyutField:
 
-        self.logger.info(f'fieldData: {fieldData}')
+        self.logger.debug(f'fieldData: {fieldData}')
 
         if ReverseEngineerPython2.PYTHON_TYPE_DELIMITER in fieldData and ReverseEngineerPython2.PYTHON_ASSIGNMENT in fieldData:
             pyutField: PyutField = self.__complexParseFieldToPyut(fieldData)

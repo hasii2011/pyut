@@ -22,6 +22,7 @@ class PyutPythonVisitor(Python3Visitor):
     PYTHON_EQUALITY_TOKEN: str = '='
 
     MethodName          = str
+    PropertyName        = str
     ClassName           = str
     ParentName          = str
     ChildName           = str
@@ -40,6 +41,9 @@ class PyutPythonVisitor(Python3Visitor):
     MethodCode = Dict[MethodName, MethodCode]
     Parents    = Dict[ParentName, Children]
 
+    NamedProperties   = Dict[PropertyName, ClassName]
+    DerivedProperties = Dict[PropertyName, ClassName]
+
     def __init__(self):
 
         self.logger: Logger = getLogger(__name__)
@@ -50,6 +54,9 @@ class PyutPythonVisitor(Python3Visitor):
         self.methodCode:   PyutPythonVisitor.MethodCode = {}
         self.fields:       PyutPythonVisitor.Fields     = []
         self._parents:     PyutPythonVisitor.Parents    = {}
+
+        self.namedProperties:   PyutPythonVisitor.NamedProperties   = {}
+        self.derivedProperties: PyutPythonVisitor.DerivedProperties = {}
 
     @property
     def parents(self) -> Parents:
@@ -64,15 +71,36 @@ class PyutPythonVisitor(Python3Visitor):
         className = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
         if className:
             methodName = ctx.getChild(1).getText()
-            self.logger.debug(f'visitFuncdef: methodName: {methodName}')
-            if className not in self.classMethods:
-                self.classMethods[className] = [methodName]
-            else:
-                self.classMethods[className].append(methodName)
+            if not self.__isProperty(methodName):
+                self.logger.debug(f'visitFuncdef: {methodName=}')
+                if className not in self.classMethods:
+                    self.classMethods[className] = [methodName]
+                else:
+                    self.classMethods[className].append(methodName)
 
-            self.__getMethodCode(methodName, ctx)
+                self.__getMethodCode(methodName, ctx)
 
         return super().visitChildren(ctx)
+
+    def visitDecorated(self, ctx: Python3Parser.DecoratedContext):
+
+        funcDef  = ctx.funcdef()
+        propName = funcDef.getChild(1).getText()
+        child0   = ctx.getChild(0).getText()
+        propCode = ctx.getChild(1).getText()
+
+        self.logger.info(f'visitDecorated - {child0=} {propName=} {propCode=}')
+
+        className = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
+
+        if child0.startswith('@property'):
+            self.logger.info(f'Update DerivedProperty - {propName}')
+            self.derivedProperties[propName] = className
+        else:
+            self.logger.info(f'Update NamedProperty - {propName}')
+            self.namedProperties[propName] = className
+
+        return self.visitChildren(ctx)
 
     def visitClassdef(self, ctx: Python3Parser.ClassdefContext):
 
@@ -91,7 +119,7 @@ class PyutPythonVisitor(Python3Visitor):
         if len(ctx.children) > 1:
             parameterNames: PyutPythonVisitor.MultiParameterNames = ctx.getChild(1).getText()
             methodName:     PyutPythonVisitor.MethodName          = self._getParametersMethodName(ctx.parentCtx)
-            self.logger.debug(f'visitParameters: parameterNames: {parameterNames} in method {methodName}')
+            self.logger.debug(f'visitParameters: method {methodName=} {parameterNames=} ')
 
             if parameterNames != PyutPythonVisitor.PYTHON_SELF:
                 strippedParameterNames: PyutPythonVisitor.MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
@@ -110,18 +138,18 @@ class PyutPythonVisitor(Python3Visitor):
             areWeInInitMethod: bool = self.__isThisInitMethod(ctx)
             areWeAnAssignment: bool = self.__isThisAFieldAssignment(exprText)
             if areWeInInitMethod is True and areWeAnAssignment is True:
-                self.logger.info(f'Field expression: {exprText}')
+                self.logger.debug(f'Field expression: {exprText}')
                 self.fields.append(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, ''))
 
         return super().visitChildren(ctx)
 
-    def _checkIfMethodBelongsToClass(self, node: Python3Parser.FuncdefContext, classType):
+    def _checkIfMethodBelongsToClass(self, node: ParserRuleContext, classType) -> ClassName:
 
         while node.parentCtx:
             if isinstance(node, classType):
                 return node.getChild(1).getText()
             node = node.parentCtx
-        return None
+        return cast(PyutPythonVisitor.ClassName, None)
 
     def _getParametersMethodName(self, parentCtx: Python3Parser.FuncdefContext) -> MethodName:
 
@@ -194,3 +222,14 @@ class PyutPythonVisitor(Python3Visitor):
             self.logger.debug(f'Found method: {currentCtx.getChild(1).getText()}')
 
         return cast(Python3Parser.FuncdefContext, currentCtx)
+
+    def __isProperty(self, methodName: MethodName) -> bool:
+
+        ans: bool = False
+
+        if methodName in self.namedProperties:
+            ans = True
+        if methodName in self.derivedProperties:
+            ans = True
+
+        return ans

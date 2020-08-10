@@ -125,6 +125,17 @@ class TestPyutPythonVisitor(TestBase):
         self.assertTrue(expectedParent2Child3 in parent2Children, f'Missing child: {expectedParent2Child3} of parent {expectedParentName2}')
         self.assertTrue(expectedParent2Child4 in parent2Children, f'Missing child: {expectedParent2Child4} of parent {expectedParentName2}')
 
+    def testDecoratedProperty(self):
+
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('ClassWithProperties.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
+
+        visitor.visit(tree)
+
+        self.logger.info(f'{visitor.classMethods=}')
+        self.logger.info(f'{visitor.namedProperties=}')
+        self.logger.info(f'{visitor.derivedProperties=}')
+
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 
         # fqFileName = resource_filename(TestBase.RESOURCES_TEST_CLASSES_PACKAGE_NAME, fileName)
