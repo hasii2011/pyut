@@ -41,8 +41,8 @@ class PyutPythonVisitor(Python3Visitor):
     MethodCode = Dict[MethodName, MethodCode]
     Parents    = Dict[ParentName, Children]
 
-    NamedProperties   = Dict[PropertyName, ClassName]
-    DerivedProperties = Dict[PropertyName, ClassName]
+    PropertyNames      = Dict[PropertyName, ClassName]
+    PropertyParameters = Dict[PropertyName, ParameterNames]
 
     def __init__(self):
 
@@ -55,8 +55,9 @@ class PyutPythonVisitor(Python3Visitor):
         self.fields:       PyutPythonVisitor.Fields     = []
         self._parents:     PyutPythonVisitor.Parents    = {}
 
-        self.namedProperties:   PyutPythonVisitor.NamedProperties   = {}
-        self.derivedProperties: PyutPythonVisitor.DerivedProperties = {}
+        self.propertyNames:    PyutPythonVisitor.PropertyNames = {}
+        self.setterProperties: PyutPythonVisitor.Parameters    = {}
+        self.getterProperties: PyutPythonVisitor.Parameters    = {}
 
     @property
     def parents(self) -> Parents:
@@ -93,12 +94,8 @@ class PyutPythonVisitor(Python3Visitor):
 
         className = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
 
-        if child0.startswith('@property'):
-            self.logger.info(f'Update DerivedProperty - {propName}')
-            self.derivedProperties[propName] = className
-        else:
-            self.logger.info(f'Update NamedProperty - {propName}')
-            self.namedProperties[propName] = className
+        self.logger.info(f'Update property names - {propName}')
+        self.propertyNames[propName] = className
 
         return self.visitChildren(ctx)
 
@@ -121,12 +118,19 @@ class PyutPythonVisitor(Python3Visitor):
             methodName:     PyutPythonVisitor.MethodName          = self._getParametersMethodName(ctx.parentCtx)
             self.logger.debug(f'visitParameters: method {methodName=} {parameterNames=} ')
 
-            if parameterNames != PyutPythonVisitor.PYTHON_SELF:
-                strippedParameterNames: PyutPythonVisitor.MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
-                if strippedParameterNames not in self.parameters:
-                    self.parameters[methodName] = [strippedParameterNames]
+            if self.__isProperty(methodName=methodName):
+                if parameterNames == PyutPythonVisitor.PYTHON_SELF:
+                    self.getterProperties[methodName] = ['']
                 else:
-                    self.parameters[methodName].append(strippedParameterNames)
+                    strippedParameterNames: PyutPythonVisitor.MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
+                    self.setterProperties[methodName] = [strippedParameterNames]
+            else:
+                if parameterNames != PyutPythonVisitor.PYTHON_SELF:
+                    strippedParameterNames: PyutPythonVisitor.MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
+                    if strippedParameterNames not in self.parameters:
+                        self.parameters[methodName] = [strippedParameterNames]
+                    else:
+                        self.parameters[methodName].append(strippedParameterNames)    # TODO this is does not execute; what was I thinking
 
         return super().visitChildren(ctx)
 
@@ -227,9 +231,7 @@ class PyutPythonVisitor(Python3Visitor):
 
         ans: bool = False
 
-        if methodName in self.namedProperties:
-            ans = True
-        if methodName in self.derivedProperties:
+        if methodName in self.propertyNames:
             ans = True
 
         return ans

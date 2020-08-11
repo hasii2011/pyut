@@ -1,5 +1,7 @@
+
 from typing import Dict
 from typing import List
+from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -126,8 +128,38 @@ class ReverseEngineerPython2:
                 pyutMethod.sourceCode = self.visitor.methodCode[methodName]
 
                 pyutClass.addMethod(pyutMethod)
+            setterProperties: PyutPythonVisitor.Parameters = self.visitor.setterProperties
+            getterProperties: PyutPythonVisitor.Parameters = self.visitor.getterProperties
+            for propName in self.visitor.propertyNames:
+
+                setterParams: List[str] = setterProperties[propName]
+                getterParams: List[str] = getterProperties[propName]
+                self.logger.info(f'Processing - {propName=} {setterParams=} {getterParams=}')
+                setter, getter = self._createProperties(propName=propName, setterParams=setterParams)
+                pyutClass.addMethod(setter)
+                pyutClass.addMethod(getter)
+
             self._pyutClasses[className] = pyutClass
         self.logger.info(f'Generated {len(self._pyutClasses)} classes')
+
+    def _createProperties(self, propName: str, setterParams: List[str]) -> Tuple[PyutMethod, PyutMethod]:
+
+        setter: PyutMethod = PyutMethod(name=propName, visibility=PyutVisibilityEnum.PUBLIC)
+        getter: PyutMethod = PyutMethod(name=propName, visibility=PyutVisibilityEnum.PUBLIC)
+
+        nameType:          str       = setterParams[0]
+        potentialNameType: List[str] = nameType.split(':')
+
+        if len(potentialNameType) == 2:
+
+            param: PyutParam = PyutParam(name=potentialNameType[0], theParameterType=PyutType(value=potentialNameType[1]))
+            setter.addParam(param)
+            getter.returnType = PyutType(value=potentialNameType[1])
+        else:
+            param: PyutParam = PyutParam(name=potentialNameType[0])
+            setter.addParam(param)
+
+        return setter, getter
 
     def _addParameters(self, pyutMethod: PyutMethod) -> PyutMethod:
 
@@ -201,7 +233,7 @@ class ReverseEngineerPython2:
         methodNames: List[str] = []
         try:
             methodNames = self.visitor.classMethods[className]
-        except KeyError as ke:
+        except KeyError:
             pass                # A class with no methods ??
 
         return methodNames

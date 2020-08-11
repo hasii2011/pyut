@@ -7,7 +7,7 @@ class ClassWithProperties:
     Test both using .getter and .setter
     """
 
-    def __init__(self):
+    def __init__(self, simpleParameter: str):
         self._diagramPadding: DiagramPadding = DiagramPadding()
 
     @property

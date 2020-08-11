@@ -57,11 +57,11 @@ class TestPyutPythonVisitor(TestBase):
 
         self.assertTrue('GMLExporter' in visitor.classMethods, 'Oops, I am missing my class key')
 
-        self.assertTrue('translate' in visitor.parameters, 'I am missing a method')
-        self.assertTrue('prettyPrint' in visitor.parameters, 'I am missing a method')
-        self.assertTrue('write' in visitor.parameters, 'I am missing a method')
-        self.assertTrue('_generateNodeGraphicsSection' in visitor.parameters, 'I am missing a method')
-        self.assertTrue('__generatePoint' in visitor.parameters, 'I am missing a method')
+        self.assertTrue('translate' in visitor.parameters, 'I am missing a method - translate')
+        # self.assertTrue('prettyPrint' in visitor.parameters, 'I am missing a method - prettyPrint')   # this is a property
+        self.assertTrue('write' in visitor.parameters, 'I am missing a method - write')
+        self.assertTrue('_generateNodeGraphicsSection' in visitor.parameters, 'I am missing a method - _generateNodeGraphicsSection')
+        self.assertTrue('__generatePoint' in visitor.parameters, 'I am missing a method - __generatePoint')
 
     def testRetrieveCodeFromMethods(self):
 
@@ -133,8 +133,9 @@ class TestPyutPythonVisitor(TestBase):
         visitor.visit(tree)
 
         self.logger.info(f'{visitor.classMethods=}')
-        self.logger.info(f'{visitor.namedProperties=}')
-        self.logger.info(f'{visitor.derivedProperties=}')
+        self.logger.info(f'{visitor.propertyNames=}')
+        self.logger.info(f'{visitor.setterProperties=}')
+        self.logger.info(f'{visitor.getterProperties=}')
 
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 
