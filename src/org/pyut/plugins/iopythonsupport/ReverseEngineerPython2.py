@@ -225,7 +225,7 @@ class ReverseEngineerPython2:
                     childOglClass:  OglClass = self._oglClasses[childName]
                     self.__createInheritanceLink(child=childOglClass, parent=parentOglClass, umlFrame=umlFrame)
                 except KeyError as ke:        # Probably there is no parent we are tracking
-                    self.logger.error(f'Apparently we not tracking this parent:  {ke}')
+                    self.logger.error(f'Apparently we are not tracking this parent:  {ke}')
                     continue
 
     def _methodNames(self, className: str) -> List[str]:

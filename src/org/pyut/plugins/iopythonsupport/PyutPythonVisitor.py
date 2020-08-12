@@ -85,17 +85,23 @@ class PyutPythonVisitor(Python3Visitor):
 
     def visitDecorated(self, ctx: Python3Parser.DecoratedContext):
 
+        self.logger.info(f'{ctx.classdef().getText()=}')
+
         funcDef  = ctx.funcdef()
-        propName = funcDef.getChild(1).getText()
-        child0   = ctx.getChild(0).getText()
-        propCode = ctx.getChild(1).getText()
+        #
+        # Take care of data classes
+        #
+        if funcDef is not None:
+            propName = funcDef.getChild(1).getText()
+            child0   = ctx.getChild(0).getText()
+            propCode = ctx.getChild(1).getText()
 
-        self.logger.info(f'visitDecorated - {child0=} {propName=} {propCode=}')
+            self.logger.info(f'visitDecorated - {child0=} {propName=} {propCode=}')
 
-        className = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
+            className = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
 
-        self.logger.info(f'Update property names - {propName}')
-        self.propertyNames[propName] = className
+            self.logger.info(f'Update property names - {propName}')
+            self.propertyNames[propName] = className
 
         return self.visitChildren(ctx)
 
