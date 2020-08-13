@@ -165,7 +165,7 @@ class OglClass(OglObject):
             h += lth
 
         # draw pyutClass fields
-        if PyutClass.showFields is True:
+        if pyutClass.showFields is True:
             for field in pyutClass.fields:
                 if draw:
                     dc.DrawText(str(field), x + MARGIN, y + h)
