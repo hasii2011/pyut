@@ -137,6 +137,20 @@ class TestPyutPythonVisitor(TestBase):
         self.logger.info(f'{visitor.setterProperties=}')
         self.logger.info(f'{visitor.getterProperties=}')
 
+        self.assertTrue(len(visitor.propertyNames) == 2)
+        self.assertTrue(len(visitor.setterProperties) == 2)
+        self.assertTrue(len(visitor.getterProperties) == 2)
+
+    def testNonPropertyDecorator(self):
+
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('NonPropertyDecoratorClass.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
+
+        visitor.visit(tree)
+
+        actualNumPops: int = len(visitor.propertyNames)
+        self.assertEqual(0, actualNumPops, 'There should be no properties in the test class')
+
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 
         # fqFileName = resource_filename(TestBase.RESOURCES_TEST_CLASSES_PACKAGE_NAME, fileName)

@@ -18,6 +18,7 @@ class PyutPythonVisitor(Python3Visitor):
     PYTHON_SELF_COMMA:  str = f'{PYTHON_SELF},'
     FIELD_IDENTIFIER:   str = f'{PYTHON_SELF}.'
     PYTHON_CONSTRUCTOR: str = '__init__'
+    PROPERTY_DECORATOR: str = '@property'
 
     PYTHON_EQUALITY_TOKEN: str = '='
 
@@ -85,23 +86,21 @@ class PyutPythonVisitor(Python3Visitor):
 
     def visitDecorated(self, ctx: Python3Parser.DecoratedContext):
 
-        self.logger.info(f'{ctx.classdef().getText()=}')
-
         funcDef  = ctx.funcdef()
         #
         # Take care of data classes
         #
         if funcDef is not None:
-            propName = funcDef.getChild(1).getText()
-            child0   = ctx.getChild(0).getText()
-            propCode = ctx.getChild(1).getText()
+            propName:  str = funcDef.getChild(1).getText()
+            decorator: str = ctx.getChild(0).getText()
+            propCode:  str = ctx.getChild(1).getText()
+            if self.__isPropertyDecorator(nameToCheck=decorator) is True:
+                self.logger.info(f'visitDecorated - {decorator=} {propName=} {propCode=}')
 
-            self.logger.info(f'visitDecorated - {child0=} {propName=} {propCode=}')
+                className = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
 
-            className = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
-
-            self.logger.info(f'Update property names - {propName}')
-            self.propertyNames[propName] = className
+                self.logger.info(f'Update property names - {propName}')
+                self.propertyNames[propName] = className
 
         return self.visitChildren(ctx)
 
@@ -234,10 +233,33 @@ class PyutPythonVisitor(Python3Visitor):
         return cast(Python3Parser.FuncdefContext, currentCtx)
 
     def __isProperty(self, methodName: MethodName) -> bool:
+        """
+        Used by the function definition visitor to determine if the method name that is being
+        visited has been marked as a property.
 
+        Args:
+            methodName:  The method name to check
+
+        Returns: True if its is in our know list of property names
+        """
         ans: bool = False
 
         if methodName in self.propertyNames:
             ans = True
+
+        return ans
+
+    def __isPropertyDecorator(self, nameToCheck: str) -> bool:
+
+        ans: bool = False
+
+        if nameToCheck.startswith(PyutPythonVisitor.PROPERTY_DECORATOR):
+            ans = True
+        else:
+            strippedText: str = nameToCheck.lstrip('@')
+            splitText: List[str] = strippedText.split('.')
+            propName: str = splitText[0]
+            if propName in self.propertyNames:
+                ans = True
 
         return ans

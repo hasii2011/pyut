@@ -23,7 +23,7 @@ from pyumldiagrams.Definitions import UmlLineDefinitions
 from pyumldiagrams.Definitions import LineType
 from pyumldiagrams.image.ImageDiagram import ImageDiagram
 
-from pyumldiagrams.pdf.Diagram import Diagram
+from pyumldiagrams.pdf.PdfDiagram import PdfDiagram
 
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
 
@@ -68,7 +68,7 @@ class OglToPyUmlDefinition:
         fqFileName:  str         = imageOptions.outputFileName
         imageFormat: ImageFormat = imageOptions.imageFormat
         if imageFormat == ImageFormat.PDF:
-            self._diagram: Diagram = Diagram(fileName=fqFileName, dpi=dpi, headerText=headerText)
+            self._diagram: PdfDiagram = PdfDiagram(fileName=fqFileName, dpi=dpi, headerText=headerText)
         else:
             self._diagram: ImageDiagram = ImageDiagram(fileName=fqFileName,
                                                        headerText=headerText   # TODO use image size from new method signature
