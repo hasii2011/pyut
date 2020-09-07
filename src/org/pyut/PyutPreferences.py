@@ -1,6 +1,5 @@
 
 from typing import Dict
-from typing import NewType
 from typing import Tuple
 from typing import cast
 
@@ -18,7 +17,7 @@ from org.pyut.general.Singleton import Singleton
 from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
 
 
-PREFS_NAME_VALUES = NewType('PREFS_NAME_VALUES', Dict[str, str])
+PREFS_NAME_VALUES = Dict[str, str]
 
 
 class PyutPreferences(Singleton):
@@ -49,8 +48,8 @@ class PyutPreferences(Singleton):
     STARTUP_X:                  str = 'startup_x'
     STARTUP_Y:                  str = 'startup_y'
 
-    MAIN_PREFERENCES: PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
-        USER_DIRECTORY: '.',
+    MAIN_PREFERENCES: PREFS_NAME_VALUES = {
+        USER_DIRECTORY:            '.',
         SHOW_TIPS_ON_STARTUP:      'False',
         AUTO_RESIZE_SHAPE_ON_EDIT: 'False',
         SHOW_PARAMETERS:           'False',
@@ -64,19 +63,19 @@ class PyutPreferences(Singleton):
         CENTER_APP_ON_STARTUP:     'True',
         STARTUP_X:                 '-1',
         STARTUP_Y:                 '-1'
-    })
+    }
 
     DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # If `True` any created temporary files appear in the current directory
     DEBUG_BASIC_SHAPE:             str = 'debug_basic_shape'              # If `True` turn on debug display code in basic Shape.py
     PYUTIO_PLUGIN_AUTO_SELECT_ALL: str = 'pyutio_plugin_auto_select_all'  # if `True` auto-select shapes in plugins
     DEBUG_DIAGRAM_FRAME:           str = 'debug_diagram_frame'
 
-    DEBUG_PREFERENCES:  PREFS_NAME_VALUES = cast(PREFS_NAME_VALUES, {
+    DEBUG_PREFERENCES:  PREFS_NAME_VALUES = {
         DEBUG_TEMP_FILE_LOCATION:       'False',
         DEBUG_BASIC_SHAPE:              'False',
         PYUTIO_PLUGIN_AUTO_SELECT_ALL:  'False',
         DEBUG_DIAGRAM_FRAME:            'False'
-    })
+    }
 
     preferencesFileLocationAndName: str = None
 

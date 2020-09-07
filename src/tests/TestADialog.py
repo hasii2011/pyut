@@ -14,10 +14,7 @@ from wx import OK
 from wx import App
 from wx import Frame
 
-from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
-
 from org.pyut.PyutPreferences import PyutPreferences
-
 from org.pyut.general.Mediator import Mediator
 
 from org.pyut.plugins.io.pyumlsupport.DlgImageOptions import DlgImageOptions
@@ -35,19 +32,13 @@ class TestADialog(App):
         TestBase.setUpLogging()
         self.logger: Logger = getLogger(__name__)
         frameTop: Frame = Frame(parent=None, id=TestADialog.FRAME_ID, title="Test A Dialog", size=(600, 400), style=DEFAULT_FRAME_STYLE)
-        frameTop.Show(True)
+        frameTop.Show(False)
 
         PyutPreferences.determinePreferencesLocation()
 
-        diagramFrame: DiagramFrame = DiagramFrame(frameTop)
-        diagramFrame.SetSize((1200, 1200))
-        diagramFrame.SetScrollbars(10, 10, 100, 100)
+        self.SetTopWindow(frameTop)
 
-        diagramFrame.Show(True)
-
-        self.SetTopWindow(diagramFrame)
-
-        self._diagramFrame: DiagramFrame = diagramFrame
+        self._frameTop = frameTop
         #
         # Introduce a mock
         #
@@ -59,16 +50,16 @@ class TestADialog(App):
 
     def initTest(self):
 
-        with DlgImageOptions(self._diagramFrame) as dlg:
+        with DlgImageOptions(self._frameTop) as dlg:
             dlg: DlgImageOptions = cast(DlgImageOptions, dlg)
             if dlg.ShowModal() == OK:
                 # self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
-                self._diagramFrame.Close(force=True)
+                self._frameTop.Close(force=True)
                 self.logger.warning(f'Options: {dlg.imageOptions}')
 
             else:
                 self.logger.warning(f'Cancelled')
-                self._diagramFrame.Close(force=True)
+                self._frameTop.Close(force=True)
 
         self.logger.info(f"After dialog show")
         sysExit()   # brutal !!

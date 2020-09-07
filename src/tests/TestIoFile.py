@@ -56,10 +56,10 @@ class TestIoFile(TestBase):
     @patch('wx.Dialog')
     @patch('wx.Gauge')
     @patch('org.pyut.general.Mediator')
-    @patch('org.pyut.persistence.FileHandling.FileHandling')
+    @patch('org.pyut.ui.MainUI.MainUI')
     def testIoFileOpenV8(self, mockFileHandling, mockMediator, wxGauge, wxDialog):
 
-        with patch('org.pyut.PyutProject.PyutProject') as mockPyutProject:
+        with patch('org.pyut.ui.PyutProject.PyutProject') as mockPyutProject:
             self.ioFile.open(filename='testdata/BaseSave_V8.put', project=mockPyutProject)
 
     def testName2(self):
