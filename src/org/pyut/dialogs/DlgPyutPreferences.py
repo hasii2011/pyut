@@ -6,8 +6,6 @@ from logging import getLogger
 
 from sys import platform
 
-from wx import CommandEvent
-
 from wx import ALL
 from wx import CB_READONLY
 from wx import CB_SORT
@@ -23,12 +21,14 @@ from wx import ICON_EXCLAMATION
 from wx import ID_ANY
 from wx import ID_OK
 from wx import OK
+
+from wx import CommandEvent
 from wx import SpinCtrl
 from wx import SpinEvent
 from wx import StaticBox
 from wx import StaticBoxSizer
+from wx import TextCtrl
 from wx import VERTICAL
-
 from wx import BoxSizer
 from wx import Button
 from wx import CheckBox
@@ -63,26 +63,25 @@ class DlgPyutPreferences(Dialog):
     To use it from a wxFrame:
     ```python
 
-        dlg = DlgProperties(self, wx.ID_ANY PyutPreferences(), Mediator())
+        dlg = DlgProperties(self, wx.ID_ANY, Mediator())
         dlg.ShowModal()
         dlg.Destroy()
     ```
     """
-    def __init__(self, parent, ID, ctrl, prefs: PyutPreferences):
+    def __init__(self, parent, ID, ctrl):
         """
 
         Args:
             parent:
             ID:
             ctrl:
-            prefs:   The PyutPreferences
         """
         super().__init__(parent, ID, _("Preferences"))
 
         self.logger: Logger = getLogger(__name__)
 
         self.__ctrl  = ctrl
-        self.__prefs: PyutPreferences = prefs
+        self.__prefs: PyutPreferences = PyutPreferences()
 
         self.__initializeTheControls()
         self.Bind(EVT_CLOSE, self.__OnClose)
@@ -96,8 +95,8 @@ class DlgPyutPreferences(Dialog):
             self.__autoResizeID, self.__showParamsID, self.__languageID,
             self.__maximizeID,   self.__fontSizeID,   self.__showTipsID, self.__centerDiagramID,
             self.__resetTipsID,  self.__scAppWidthID, self.__scAppHeightID,
-            self.__scAppPosXID,  self.__scAppPosYID
-        ] = PyutUtils.assignID(12)
+            self.__scAppPosXID,  self.__scAppPosYID,  self.__pdfFilenameID
+        ] = PyutUtils.assignID(13)
 
         self.__createBooleanControls()
         self.__createFontSizeControl()
@@ -114,6 +113,8 @@ class DlgPyutPreferences(Dialog):
         mainSizer.Add(self.__cbShowParams, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__cbMaximize,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__cbShowTips,   0, ALL, DlgPyutPreferences.VERTICAL_GAP)
+
+        mainSizer.Add(self.__createExportToPdfDefaultFileNameContainer(), 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
 
         mainSizer.Add(self.__cbCenterDiagram, 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__createAppPositionControls(), 0, ALL, DlgPyutPreferences.VERTICAL_GAP)
@@ -197,6 +198,18 @@ class DlgPyutPreferences(Dialog):
         self.__cbCenterDiagram: CheckBox = CheckBox(self, self.__centerDiagramID, _('Center Diagram'))
 
         self.__btnResetTips: Button = Button(self, self.__resetTipsID, _('Reset Tips'))
+
+    def __createExportToPdfDefaultFileNameContainer(self) -> BoxSizer:
+
+        lblDefaultPdfName:     StaticText = StaticText(self, -1, _("Default PDF Filename"))
+        self.__txtPdfFilename: TextCtrl   = TextCtrl(self, self.__pdfFilenameID)
+
+        szrPdfFilename: BoxSizer = BoxSizer(HORIZONTAL)
+
+        szrPdfFilename.Add(lblDefaultPdfName,     0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+        szrPdfFilename.Add(self.__txtPdfFilename, 0, ALL, DlgPyutPreferences.HORIZONTAL_GAP)
+
+        return szrPdfFilename
 
     def __createAppSizeControls(self) -> StaticBoxSizer:
 

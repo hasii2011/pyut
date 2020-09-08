@@ -9,6 +9,7 @@ from sys import exit as sysExit
 from unittest.mock import MagicMock
 
 from wx import DEFAULT_FRAME_STYLE
+from wx import ID_ANY
 from wx import OK
 
 from wx import App
@@ -17,7 +18,7 @@ from wx import Frame
 from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general.Mediator import Mediator
 
-from org.pyut.plugins.io.pyumlsupport.DlgImageOptions import DlgImageOptions
+from org.pyut.dialogs.DlgPyutPreferences import DlgPyutPreferences
 
 
 from tests.TestBase import TestBase
@@ -39,6 +40,7 @@ class TestADialog(App):
         self.SetTopWindow(frameTop)
 
         self._frameTop = frameTop
+        self._preferences: PyutPreferences = PyutPreferences()
         #
         # Introduce a mock
         #
@@ -50,12 +52,12 @@ class TestADialog(App):
 
     def initTest(self):
 
-        with DlgImageOptions(self._frameTop) as dlg:
-            dlg: DlgImageOptions = cast(DlgImageOptions, dlg)
+        with DlgPyutPreferences(self._frameTop, ID_ANY, self._mediator) as dlg:
+            dlg: DlgPyutPreferences = cast(DlgPyutPreferences, dlg)
             if dlg.ShowModal() == OK:
                 # self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
                 self._frameTop.Close(force=True)
-                self.logger.warning(f'Options: {dlg.imageOptions}')
+                self.logger.warning(f'{self._preferences.centerDiagram=}')
 
             else:
                 self.logger.warning(f'Cancelled')

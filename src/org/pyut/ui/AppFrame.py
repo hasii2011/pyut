@@ -1000,7 +1000,7 @@ class AppFrame(Frame):
         from org.pyut.dialogs.DlgPyutPreferences import DlgPyutPreferences
 
         self.logger.debug(f"Before dialog show")
-        with DlgPyutPreferences(self, ID_ANY, self._ctrl, self._prefs) as dlg:
+        with DlgPyutPreferences(self, ID_ANY, self._ctrl) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.debug(f'Waiting for answer')
             else:
