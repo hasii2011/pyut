@@ -5,10 +5,12 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import PyutPythonVisitor
 from org.pyut.plugins.iopythonsupport.ReverseEngineerPython2 import ReverseEngineerPython2
 
 from tests.TestBase import TestBase
@@ -79,6 +81,18 @@ class TestReverseEngineerPython2(TestBase):
         self.assertEqual(expectedFieldVisibility, pyutField.visibility, 'Did not parse visibility correctly')
         self.assertEqual(expectedFieldType, actualFieldType, 'Did not parse field type correctly')
         self.assertEqual('0', pyutField.defaultValue, 'Did not parse field default value correctly')
+
+    def testCreateDataClassPropertiesAsFields(self):
+
+        sampleDataClassProperties: PyutPythonVisitor.DataClassProperties = [
+            ('DataTestClass', 'w="A String"'),
+            ('DataTestClass', 'x:float=0.0'),
+            ('DataTestClass', 'y:float=42.0'),
+            ('DataTestClass', 'z:int')
+        ]
+        pyutClass: PyutClass = PyutClass(name='DataTestClass')
+
+        self.reverseEngineer._createDataClassPropertiesAsFields(pyutClass=pyutClass, dataClassProperties=sampleDataClassProperties)
 
 
 def suite() -> TestSuite:

@@ -20,8 +20,15 @@ from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import PyutPythonVisitor
 
 class TestPyutPythonVisitor(TestBase):
     """
-
     """
+    EXPECTED_DATA_CLASS_PROPERTIES: List[str] = [
+        'z:int',
+        'x:float=0.0',
+        'y:float=42.0',
+        'w="A string"'
+    ]
+    EXPECTED_DATA_CLASS_PROPERTY_COUNT: int = len(EXPECTED_DATA_CLASS_PROPERTIES)
+
     clsLogger: Logger = None
 
     @classmethod
@@ -150,6 +157,24 @@ class TestPyutPythonVisitor(TestBase):
 
         actualNumPops: int = len(visitor.propertyNames)
         self.assertEqual(0, actualNumPops, 'There should be no properties in the test class')
+
+    def testDataClass(self):
+
+        tree:    Python3Parser.File_inputContext = self._setupVisitor('DataTestClass.py')
+        visitor: PyutPythonVisitor = PyutPythonVisitor()
+
+        visitor.visit(tree)
+
+        self.logger.info(f'{visitor.dataClassNames}')
+        self.assertTrue('DataTestClass' in visitor.dataClassNames, 'Bad property count')
+
+        actualNumProps: int = len(visitor.dataClassProperties)
+        self.assertEqual(TestPyutPythonVisitor.EXPECTED_DATA_CLASS_PROPERTY_COUNT, actualNumProps,
+                         f'There should be {TestPyutPythonVisitor.EXPECTED_DATA_CLASS_PROPERTY_COUNT} properties in the test class')
+
+        for dPropertyTuple in visitor.dataClassProperties:
+            actualProp: str = dPropertyTuple[1]
+            self.assertTrue(actualProp in self.EXPECTED_DATA_CLASS_PROPERTIES, 'Missing property')
 
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 

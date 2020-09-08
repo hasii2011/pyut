@@ -139,6 +139,8 @@ class ReverseEngineerPython2:
                 pyutClass.addMethod(setter)
                 pyutClass.addMethod(getter)
 
+            if className in self.visitor.dataClassNames:
+                self._createDataClassPropertiesAsFields(pyutClass, self.visitor.dataClassProperties)
             self._pyutClasses[className] = pyutClass
         self.logger.info(f'Generated {len(self._pyutClasses)} classes')
 
@@ -160,6 +162,25 @@ class ReverseEngineerPython2:
             setter.addParam(param)
 
         return setter, getter
+
+    def _createDataClassPropertiesAsFields(self, pyutClass: PyutClass, dataClassProperties: PyutPythonVisitor.DataClassProperties) -> PyutClass:
+        """
+
+        Args:
+            pyutClass:  The PyutClass to update
+            dataClassProperties:    The dataclass properties to parse
+
+        Returns:
+            Updated PyutClass with new fields
+        """
+        className: str = pyutClass.name
+        for dPropertyTuple in dataClassProperties:
+            if dPropertyTuple[0] == className:
+
+                pyutField: PyutField = self._parseFieldToPyut(fieldData=dPropertyTuple[1])
+                pyutClass.addField(pyutField)
+
+        return pyutClass
 
     def _addParameters(self, pyutMethod: PyutMethod) -> PyutMethod:
 
@@ -287,9 +308,11 @@ class ReverseEngineerPython2:
         noCommentFieldData: str = self.__stripEndOfLineComment(fieldData)
         fieldAndValue: List[str] = noCommentFieldData.split(ReverseEngineerPython2.PYTHON_ASSIGNMENT)
 
-        pyutField.name         = fieldAndValue[0].strip()
-        pyutField.defaultValue = fieldAndValue[1].strip()
-
+        if len(fieldAndValue) == 2:
+            pyutField.name         = fieldAndValue[0].strip()
+            pyutField.defaultValue = fieldAndValue[1].strip()
+        else:   # might just be a declaration
+            pyutField = self.__declarationOnlyParseToPyut(fieldData=fieldAndValue[0])
         return pyutField
 
     def __complexParseFieldToPyut(self, fieldData: str) -> PyutField:
@@ -321,6 +344,17 @@ class ReverseEngineerPython2:
             pyutField.setType(theType=pyutType)
             if len(typeAndDefaultValue) > 1:
                 pyutField.setDefaultValue(typeAndDefaultValue[1].strip())
+
+        return pyutField
+
+    def __declarationOnlyParseToPyut(self, fieldData: str) -> PyutField:
+
+        fieldAndType: List[str] = fieldData.split(ReverseEngineerPython2.PYTHON_TYPE_DELIMITER)
+
+        pyutField: PyutField = PyutField(name=fieldAndType[0])
+
+        pyutField.type       = PyutType(value=fieldAndType[1])
+        pyutField.visibility = PyutVisibilityEnum.PUBLIC
 
         return pyutField
 

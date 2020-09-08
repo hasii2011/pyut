@@ -1,6 +1,7 @@
 
 from typing import Dict
 from typing import List
+from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -14,11 +15,14 @@ from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Visitor import Python
 
 class PyutPythonVisitor(Python3Visitor):
 
-    PYTHON_SELF:        str = 'self'
-    PYTHON_SELF_COMMA:  str = f'{PYTHON_SELF},'
-    FIELD_IDENTIFIER:   str = f'{PYTHON_SELF}.'
-    PYTHON_CONSTRUCTOR: str = '__init__'
-    PROPERTY_DECORATOR: str = '@property'
+    PYTHON_SELF:         str = 'self'
+    PYTHON_SELF_COMMA:   str = f'{PYTHON_SELF},'
+    FIELD_IDENTIFIER:    str = f'{PYTHON_SELF}.'
+    PYTHON_CONSTRUCTOR:  str = '__init__'
+    PROPERTY_DECORATOR:  str = '@property'
+    DATACLASS_DECORATOR: str = '@dataclass'
+
+    NON_PROPERTY_INDICATOR: str = '\n'
 
     PYTHON_EQUALITY_TOKEN: str = '='
 
@@ -29,6 +33,8 @@ class PyutPythonVisitor(Python3Visitor):
     ChildName           = str
     MultiParameterNames = str                # comma separated parameter names
     Field               = str
+    ExpressionText      = str
+    DataClassProperty   = Tuple[ClassName, ExpressionText]
 
     MethodCode     = List[str]
     ClassNames     = List[ClassName]
@@ -45,6 +51,8 @@ class PyutPythonVisitor(Python3Visitor):
     PropertyNames      = Dict[PropertyName, ClassName]
     PropertyParameters = Dict[PropertyName, ParameterNames]
 
+    DataClassProperties = List[DataClassProperty]
+
     def __init__(self):
 
         self.logger: Logger = getLogger(__name__)
@@ -59,6 +67,9 @@ class PyutPythonVisitor(Python3Visitor):
         self.propertyNames:    PyutPythonVisitor.PropertyNames = {}
         self.setterProperties: PyutPythonVisitor.Parameters    = {}
         self.getterProperties: PyutPythonVisitor.Parameters    = {}
+
+        self.dataClassNames:      PyutPythonVisitor.ClassNames          = []
+        self.dataClassProperties: PyutPythonVisitor.DataClassProperties = []
 
     @property
     def parents(self) -> Parents:
@@ -87,12 +98,12 @@ class PyutPythonVisitor(Python3Visitor):
     def visitDecorated(self, ctx: Python3Parser.DecoratedContext):
 
         funcDef  = ctx.funcdef()
+        decorator: str = ctx.getChild(0).getText()
         #
         # Take care of data classes
         #
         if funcDef is not None:
             propName:  str = funcDef.getChild(1).getText()
-            decorator: str = ctx.getChild(0).getText()
             propCode:  str = ctx.getChild(1).getText()
             if self.__isPropertyDecorator(nameToCheck=decorator) is True:
                 self.logger.info(f'visitDecorated - {decorator=} {propName=} {propCode=}')
@@ -101,6 +112,10 @@ class PyutPythonVisitor(Python3Visitor):
 
                 self.logger.info(f'Update property names - {propName}')
                 self.propertyNames[propName] = className
+        elif self.__isDataClassDecorator(nameToCheck=decorator):
+            className: str = ctx.classdef().getChild(1).getText()
+            self.logger.info(f'visitDecorated -- We found dataclass: {className}')
+            self.dataClassNames.append(className)
 
         return self.visitChildren(ctx)
 
@@ -149,6 +164,16 @@ class PyutPythonVisitor(Python3Visitor):
             if areWeInInitMethod is True and areWeAnAssignment is True:
                 self.logger.debug(f'Field expression: {exprText}')
                 self.fields.append(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, ''))
+        else:
+            self.logger.info(f'Non-init:  {exprText=}')
+            isDataClass, dataClassName = self.__isThisADataClassProperty(ctx)
+            self.logger.info(f'{isDataClass=}')
+            if isDataClass is True:
+                if PyutPythonVisitor.NON_PROPERTY_INDICATOR in exprText:
+                    pass
+                else:
+                    dataClassProperty: PyutPythonVisitor.DataClassProperty = dataClassName, exprText
+                    self.dataClassProperties.append(dataClassProperty)
 
         return super().visitChildren(ctx)
 
@@ -263,3 +288,50 @@ class PyutPythonVisitor(Python3Visitor):
                 ans = True
 
         return ans
+
+    def __isDataClassDecorator(self, nameToCheck: str) -> bool:
+
+        ans: bool = False
+
+        if nameToCheck.startswith(PyutPythonVisitor.DATACLASS_DECORATOR):
+            ans = True
+
+        return ans
+
+    def __isThisADataClassProperty(self, startCtx: ParserRuleContext) -> Tuple[bool, str]:
+        """
+
+        Args:
+            startCtx:
+
+        Returns:
+            A Tuple that a boolean answering the question.  If the answer is true
+            then the 2nd value of the tuple is the data class name
+        """
+
+        dataClassName: str = self.__getPotentialDataClassName(startCtx)
+        self.logger.info(f'{dataClassName=}')
+
+        ans: bool = False
+        if dataClassName in self.dataClassNames:
+            ans = True
+
+        return ans, dataClassName
+
+    def __getPotentialDataClassName(self, startCtx: ParserRuleContext):
+
+        potentialDataClassName: str               = ''
+        parentCtx:              ParserRuleContext = startCtx
+
+        while parentCtx is not None:
+            # self.logger.info(f'{parentCtx=}')
+            if isinstance(parentCtx, Python3Parser.ClassdefContext):
+                potentialDataClassName = parentCtx.getChild(1).getText()
+                self.logger.info(f'{potentialDataClassName=}')
+
+            if isinstance(parentCtx, Python3Parser.DecoratedContext):
+                decorator: str = parentCtx.getChild(0).getText()
+                self.logger.info(f'visitSimple_stmt - {decorator=}  {potentialDataClassName=}')
+            parentCtx = parentCtx.parentCtx
+
+        return potentialDataClassName

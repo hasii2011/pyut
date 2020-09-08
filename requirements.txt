@@ -2,7 +2,7 @@ html-testRunner==1.2.1
 xmlschema==1.2.2
 pygmlparser==1.0.0
 wxPython==4.1.0
-pyumldiagrams==1.0.10
+pyumldiagrams==1.1.1
 fpdf2==2.0.5
 orthogonal==1.1.5
 py2app==0.21
