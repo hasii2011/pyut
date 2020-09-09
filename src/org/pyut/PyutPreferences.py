@@ -23,6 +23,9 @@ PREFS_NAME_VALUES = Dict[str, str]
 class PyutPreferences(Singleton):
 
     DEFAULT_NB_LOF: int = 5         # Number of last opened files, by default
+
+    DEFAULT_PDF_EXPORT_FILE_NAME: str = 'PyutExport'
+
     FILE_KEY:       str = "File"
 
     OPENED_FILES_SECTION:       str = "RecentlyOpenedFiles"
@@ -47,6 +50,7 @@ class PyutPreferences(Singleton):
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
     STARTUP_X:                  str = 'startup_x'
     STARTUP_Y:                  str = 'startup_y'
+    PDF_EXPORT_FILE_NAME:       str = 'default_pdf_export_file_name'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = {
         USER_DIRECTORY:            '.',
@@ -62,7 +66,8 @@ class PyutPreferences(Singleton):
         CENTER_DIAGRAM:            'False',
         CENTER_APP_ON_STARTUP:     'True',
         STARTUP_X:                 '-1',
-        STARTUP_Y:                 '-1'
+        STARTUP_Y:                 '-1',
+        PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME
     }
 
     DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # If `True` any created temporary files appear in the current directory
@@ -109,6 +114,9 @@ class PyutPreferences(Singleton):
         """
         """
         self.logger:  Logger = getLogger(__name__)
+
+        self._overrideOnProgramExit: bool = True
+
         self._emptyPrefs()
         self.__loadConfig()
 
@@ -186,13 +194,51 @@ class PyutPreferences(Singleton):
             self._config.set(PyutPreferences.OPENED_FILES_SECTION, fileNameKey, lstFiles[idx])
         self.__saveConfig()
 
+    @property
+    def overrideOnProgramExit(self) -> bool:
+        """
+        Some values like the final application position and size are automatically computed and set
+        when the application exits.  However, these can also be set by the end-user via
+        the preferences dialog.  It is up to Pyut to check the value of this flag to
+        determine if the end-user has manually set these
+
+        Returns: `True` if the application can use the computed values;  Else return `False` as the
+        end-user has manually specified them.
+        """
+        return self._overrideOnProgramExit
+
+    @overrideOnProgramExit.setter
+    def overrideOnProgramExit(self, theNewValue: bool):
+        self._overrideOnProgramExit = theNewValue
+
+    @property
+    def pdfExportFileName(self) -> str:
+        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.PDF_EXPORT_FILE_NAME)
+
+    @pdfExportFileName.setter
+    def pdfExportFileName(self, newValue: str):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.PDF_EXPORT_FILE_NAME, newValue)
+        self.__saveConfig()
+
+    @property
     def showTipsOnStartup(self) -> bool:
         showTips: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.SHOW_TIPS_ON_STARTUP)
         return showTips
 
+    @showTipsOnStartup.setter
+    def showTipsOnStartup(self, newValue: bool):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.SHOW_TIPS_ON_STARTUP, str(newValue))
+        self.__saveConfig()
+
+    @property
     def autoResizeShapesOnEdit(self) -> bool:
         resizeOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT)
         return resizeOrNot
+
+    @autoResizeShapesOnEdit.setter
+    def autoResizeShapesOnEdit(self, newValue: bool):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT, str(newValue))
+        self.__saveConfig()
 
     @property
     def userDirectory(self) -> str:
@@ -230,7 +276,7 @@ class PyutPreferences(Singleton):
 
     @centerDiagram.setter
     def centerDiagram(self, theNewValue: bool):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH, str(theNewValue))
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_DIAGRAM, str(theNewValue))
         self.__saveConfig()
 
     @property
@@ -324,10 +370,7 @@ class PyutPreferences(Singleton):
 
     def __saveConfig(self):
         """
-        Save data to config file
-
-        @since 1.1.2.5
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Save data to the preferences file
         """
         f = open(PyutPreferences.getPreferencesLocation(), "w")
         self._config.write(f)

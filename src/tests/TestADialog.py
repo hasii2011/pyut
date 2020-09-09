@@ -18,7 +18,7 @@ from wx import Frame
 from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.general.Mediator import Mediator
 
-from org.pyut.dialogs.DlgPyutPreferences import DlgPyutPreferences
+from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
 
 from tests.TestBase import TestBase
@@ -52,7 +52,7 @@ class TestADialog(App):
 
     def initTest(self):
 
-        with DlgPyutPreferences(self._frameTop, ID_ANY, self._mediator) as dlg:
+        with DlgPyutPreferences(self._frameTop, ID_ANY) as dlg:
             dlg: DlgPyutPreferences = cast(DlgPyutPreferences, dlg)
             if dlg.ShowModal() == OK:
                 # self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')

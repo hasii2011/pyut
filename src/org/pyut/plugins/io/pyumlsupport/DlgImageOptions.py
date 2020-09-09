@@ -38,6 +38,7 @@ from wx import MouseEvent
 
 from wx import Yield as wxYield
 
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
@@ -66,6 +67,7 @@ class DlgImageOptions(BaseDlgEdit):
         super().__init__(theParent, theTitle='UML Image Generation Options')
 
         self.logger:        Logger       = getLogger(__name__)
+        imageOptions.outputFileName = PyutPreferences().pdfExportFileName
         self._imageOptions: ImageOptions = imageOptions
 
         fs:   StaticBoxSizer = self.__layoutFileSelection()

@@ -9,6 +9,7 @@ from logging import getLogger
 
 from wx import Yield as wxYield
 
+from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
@@ -93,7 +94,8 @@ class IoPdf(PyutIoPlugin):
         Returns:
             if False, the export will be cancelled.
         """
-        fqFileName: str = self._askForFileExport(defaultFileName='PyutExport')  # TODO make this a preference
+        defaultFileName: str = PyutPreferences().pdfExportFileName
+        fqFileName: str = self._askForFileExport(defaultFileName=defaultFileName)
 
         if fqFileName == '':
             self.logger.debug('Export Cancelled no file name')

@@ -228,14 +228,15 @@ class AppFrame(Frame):
         # Close all files
         if self._mainFileHandlingUI.onClose() is False:
             return
-        # Only save position if we are not auto-saving
-        if self._prefs.centerAppOnStartUp is False:
-            pos: Tuple[int, int] = self.GetPosition()
-            self._prefs.appStartupPosition = pos
+        if self._prefs.overrideOnProgramExit is True:
+            # Only save position if we are not auto-saving
+            if self._prefs.centerAppOnStartUp is False:
+                pos: Tuple[int, int] = self.GetPosition()
+                self._prefs.appStartupPosition = pos
 
-        ourSize: Tuple[int, int] = self.GetSize()
-        self._prefs.startupWidth  = ourSize[0]
-        self._prefs.startupHeight = ourSize[1]
+            ourSize: Tuple[int, int] = self.GetSize()
+            self._prefs.startupWidth  = ourSize[0]
+            self._prefs.startupHeight = ourSize[1]
 
         self._clipboard    = None
         self._mainFileHandlingUI = None
@@ -356,8 +357,8 @@ class AppFrame(Frame):
             # Display tips frame
             self._alreadyDisplayedTipsFrame = True
             prefs: PyutPreferences = PyutPreferences()
-            self.logger.debug(f'Show tips on startup: {self._prefs.showTipsOnStartup()}')
-            if prefs.showTipsOnStartup() is True:
+            self.logger.debug(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
+            if prefs.showTipsOnStartup is True:
                 # noinspection PyUnusedLocal
                 tipsFrame = TipsFrame(self)
                 tipsFrame.Show(show=True)
@@ -997,10 +998,10 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        from org.pyut.dialogs.DlgPyutPreferences import DlgPyutPreferences
+        from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
         self.logger.debug(f"Before dialog show")
-        with DlgPyutPreferences(self, ID_ANY, self._ctrl) as dlg:
+        with DlgPyutPreferences(self, ID_ANY) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.debug(f'Waiting for answer')
             else:
