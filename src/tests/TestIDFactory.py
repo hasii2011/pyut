@@ -1,4 +1,8 @@
 
+from typing import List
+from typing import Set
+
+
 from logging import Logger
 from logging import getLogger
 
@@ -11,9 +15,17 @@ from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
+
+from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutField import PyutField
 
 from org.pyut.model.PyutInterface import PyutInterface
+from org.pyut.model.PyutLink import PyutLink
+from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutNote import PyutNote
+from org.pyut.model.PyutUseCase import PyutUseCase
+
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInterface2 import OglInterface2
 
@@ -24,10 +36,6 @@ from tests.TestBase import TestBase
 
 class TestIDFactory(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 
@@ -72,6 +80,40 @@ class TestIDFactory(TestBase):
         nextId:    int = self._idFactory.getID(doppleGanger)
 
         self.assertEqual(initialId, nextId, 'Should be the same')
+
+    def testBasicIDGeneration(self):
+        idFactory: IDFactory = IDFactory()
+
+        pyutClassId: int = idFactory.getID(PyutClass)
+        pyutFieldId: int = idFactory.getID(PyutField)
+
+        self.assertNotEqual(pyutClassId, pyutFieldId, 'ID generator is failing')
+
+    def testBasicIDCaching(self):
+
+        idFactory: IDFactory = IDFactory()
+
+        pyutClassId:  int = idFactory.getID(PyutClass)
+        pyutClassId2: int = idFactory.getID(PyutClass)
+        self.assertEqual(pyutClassId, pyutClassId2, 'ID generator is not caching')
+
+    def testLengthierGeneration(self):
+
+        idFactory: IDFactory = IDFactory()
+
+        longerClassList: List[type] = [
+            PyutMethod,
+            PyutUseCase,
+            PyutActor,
+            PyutNote,
+            PyutLink
+        ]
+        knownIds: Set[int] = set()
+
+        for cls in longerClassList:
+            clsID: int = idFactory.getID(cls)
+            if clsID in knownIds:
+                self.fail('')
 
 
 def suite() -> TestSuite:
