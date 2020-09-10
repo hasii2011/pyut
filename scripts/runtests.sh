@@ -10,7 +10,7 @@ function changeToProjectRoot {
 
 changeToProjectRoot
 
-
+echo "Travis Build directory: ${TRAVIS_BUILD_DIR}"
 cd src > /dev/null 2>&1
 
 
