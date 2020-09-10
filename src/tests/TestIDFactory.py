@@ -51,7 +51,7 @@ class TestIDFactory(TestBase):
         self._pyutClass: PyutClass = PyutClass(name='UnitTestClass')
 
     def tearDown(self):
-        pass
+        del self.app
 
     def testCacheOglInterface(self):
 

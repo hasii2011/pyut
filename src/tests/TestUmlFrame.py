@@ -44,7 +44,7 @@ class TestUmlFrame(unittest.TestCase):
         PyutUtils.setBasePath(whereWeAre)
 
         # Create wx application
-        # For python 3 and wx 4.x we need to save it so it does not get GC'ed
+        # For python 3 and wx 4.x we need to save it so it does not get garbage collected
         self.app = App()
 
         #  Create frame
@@ -55,7 +55,10 @@ class TestUmlFrame(unittest.TestCase):
         self._umlFrame = umlFrame
 
     def tearDown(self):
+
+        del self.app
         for x in range(4):
+
             try:
                 osRemove(f'{HISTORY_FILE_NAME}{x}')
             except (ValueError, Exception):
