@@ -1,8 +1,9 @@
 
-from logging import Logger
-from logging import getLogger
 from typing import List
 from typing import Set
+
+from logging import Logger
+from logging import getLogger
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
@@ -14,6 +15,7 @@ from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutUseCase import PyutUseCase
+
 from tests.TestBase import TestBase
 
 from org.pyut.persistence.converters.IDFactorySingleton import IDFactory
