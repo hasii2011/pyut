@@ -1,14 +1,22 @@
-from tempfile import gettempdir
+
 from typing import List
+from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
+
+from dataclasses import dataclass
 
 from os import sep as osSep
 from os import path as osPath
 
 from pkg_resources import resource_filename
 
+from tempfile import gettempdir
+
+from wx import DisplaySize
+from wx import ScreenDC
+from wx import Size
 from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.PyutPreferences import PyutPreferences
@@ -16,6 +24,15 @@ from org.pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.errorcontroller.ErrorManager import getErrorManager
+
+
+@dataclass
+class ScreenMetrics:
+    screenWidth:  int = 0
+    screenHeight: int = 0
+
+    dpiX: int = 0
+    dpiY: int = 0
 
 
 class PyutUtils:
@@ -250,3 +267,19 @@ class PyutUtils:
             fqFileName: str = f'{tempDir}{osSep}{fileName}'
 
         return fqFileName
+
+    @classmethod
+    def getScreenMetrics(cls) -> ScreenMetrics:
+
+        scrResolution: Size              = ScreenDC().GetPPI()
+        displaySize:   Tuple[int, int]   = DisplaySize()
+
+        screenMetrics: ScreenMetrics = ScreenMetrics()
+
+        screenMetrics.screenWidth  = displaySize[0]
+        screenMetrics.screenHeight = displaySize[1]
+
+        screenMetrics.dpiX = scrResolution.GetWidth()
+        screenMetrics.dpiY = scrResolution.GetHeight()
+
+        return screenMetrics

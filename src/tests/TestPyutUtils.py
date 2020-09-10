@@ -8,6 +8,7 @@ from unittest import TestSuite
 from tests.TestBase import TestBase
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.PyutUtils import ScreenMetrics
 
 from org.pyut.enums.ResourceTextType import ResourceTextType
 
@@ -118,6 +119,26 @@ class TestPyutUtils(TestBase):
         #
         self.assertNotEqual(f'{TestPyutUtils.BASE_TEST_PATH}/{TestPyutUtils.FAKE_TEST_FILENAME}', fqFileName, 'Should be system temp')
         self.logger.info(f'temp file name {fqFileName}')
+
+    def testGetScreenMetrics(self):
+        from wx import App
+
+        # noinspection PyUnusedLocal
+        app = App()
+
+        screenMetrics: ScreenMetrics = PyutUtils.getScreenMetrics()
+
+        self.assertIsNotNone(screenMetrics, 'I must get something back')
+
+        self.assertIsNot(0, screenMetrics.dpiX, 'I need a number')
+        self.assertIsNot(0, screenMetrics.dpiY, 'I need a number')
+
+        self.assertIsNot(0, screenMetrics.screenWidth, 'I need a screen width')
+        self.assertIsNot(0, screenMetrics.screenHeight, 'I need a screen height')
+
+        del app
+
+        self.logger.info(f'{screenMetrics=}')
 
 
 def suite() -> TestSuite:

@@ -6,10 +6,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-
 from wx import Yield as wxYield
 
-from org.pyut.PyutPreferences import PyutPreferences
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
@@ -20,6 +18,11 @@ from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
 from org.pyut.plugins.io.pyumlsupport.OglToPyUmlDefinition import OglToPyUmlDefinition
 
 from org.pyut.ui.UmlFrame import UmlFrame
+
+from org.pyut.PyutPreferences import PyutPreferences
+
+from org.pyut.PyutUtils import PyutUtils
+from org.pyut.PyutUtils import ScreenMetrics
 
 from org.pyut.general.PyutVersion import PyutVersion
 
@@ -128,8 +131,11 @@ class IoPdf(PyutIoPlugin):
         pluginVersion: str = self.getVersion()
         pyutVersion:   str = PyutVersion.getPyUtVersion()
 
+        screenMetrics: ScreenMetrics = PyutUtils.getScreenMetrics()
+        dpi: int = screenMetrics.dpiX
+
         oglToPdf: OglToPyUmlDefinition = OglToPyUmlDefinition(imageOptions=self._imageOptions,
-                                                              dpi=75,  # TODO get this from runtime query
+                                                              dpi=dpi,
                                                               pyutVersion=pyutVersion,
                                                               pluginVersion=pluginVersion
                                                               )
