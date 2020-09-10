@@ -28,6 +28,9 @@ install:
   - pip install pygmlparser
   - pip install orthogonal
   - pip install antlr4-python3-runtime
+  - pip install fpdf2
+  - pip install pyumldiagrams
+  - pip install wxPython
 
 # command to run tests
 script: ${TRAVIS_BUILD_DIR}/scripts/runtests.sh
