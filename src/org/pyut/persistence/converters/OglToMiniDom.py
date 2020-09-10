@@ -35,7 +35,7 @@ from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
-from org.pyut.persistence.converters.IDFactorySingleton import IDFactory
+from org.pyut.persistence.converters.IDFactory import IDFactory
 
 
 class OglToMiniDom:
