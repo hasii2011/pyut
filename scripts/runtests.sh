@@ -12,7 +12,7 @@ changeToProjectRoot
 
 echo "Travis Build directory: ${TRAVIS_BUILD_DIR}"
 cd src > /dev/null 2>&1
-
+echo "current: `pwd`"
 
 python3 -m tests.TestAll $*
 status=$?
