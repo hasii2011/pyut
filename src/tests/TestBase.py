@@ -26,7 +26,7 @@ class TestBase(TestCase):
     def setUpLogging(cls):
         """"""
 
-        PyutPreferences.determinePreferencesLocation()
+        PyutPreferences.determinePreferencesLocation()  # Side effect;  not a good move
 
         loggingConfigFilename: str = cls.findLoggingConfig()
 
