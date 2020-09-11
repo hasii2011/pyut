@@ -8,6 +8,7 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
+from org.pyut.PyutPreferences import PyutPreferences
 from tests.TestBase import TestBase
 
 from org.pyut.ogl.OglLink import OglLink
@@ -28,6 +29,8 @@ class TestOglLink(TestBase):
 
     def setUp(self):
         self.logger: Logger = TestOglLink.clsLogger
+
+        PyutPreferences.determinePreferencesLocation()
 
     def tearDown(self):
         pass

@@ -8,6 +8,8 @@ from unittest import TestCase
 
 from pkg_resources import resource_filename
 
+from org.pyut.PyutPreferences import PyutPreferences
+
 JSON_LOGGING_CONFIG_FILENAME: str = "testLoggingConfig.json"
 TEST_DIRECTORY:               str = 'tests'
 
@@ -23,6 +25,9 @@ class TestBase(TestCase):
     @classmethod
     def setUpLogging(cls):
         """"""
+
+        PyutPreferences.determinePreferencesLocation()
+
         loggingConfigFilename: str = cls.findLoggingConfig()
 
         with open(loggingConfigFilename, 'r') as loggingConfigurationFile:

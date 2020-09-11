@@ -6,12 +6,16 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
+
 from org.pyut.PyutPreferences import PyutPreferences
+
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
+
 from org.pyut.model.PyutInterface import PyutInterface
-from tests.TestBase import TestBase
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
+
+from tests.TestBase import TestBase
 
 
 class TestOglInterface2(TestBase):
