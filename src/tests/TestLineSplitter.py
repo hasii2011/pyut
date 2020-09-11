@@ -9,6 +9,8 @@ from unittest import main as unitTestMain
 
 from unittest.mock import Mock
 
+from wx import App
+
 from tests.TestBase import TestBase
 
 from org.pyut.general.LineSplitter import LineSplitter
@@ -26,10 +28,11 @@ class TestLineSplitter(TestBase):
 
     def setUp(self):
         self.logger:       Logger       = TestLineSplitter.clsLogger
+        self.app:          App          = App()
         self.lineSplitter: LineSplitter = LineSplitter()
 
     def tearDown(self):
-        pass
+        del self.app
 
     def testNoSplit(self):
 
