@@ -23,7 +23,7 @@
             "propagate": "False"
         },
         "__main__": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": ["consoleHandler"],
             "propagate": "False"
         },
@@ -37,20 +37,20 @@
             "propagate": "False"
         },
         "org.pyut.plugins": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "propagate": "False"
         },
         "tests": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": ["consoleHandler"],
             "propagate": "False"
         },
         "tests.TestPyutPythonVisitor": {
-            "level": "INFO",
+            "level": "WARNING",
             "propagate": "False"
         },
         "org.pyut.dialogs.DlgPyutDebug": {
-            "level": "INFO",
+            "level": "WARNING",
             "propagate": "False"
         }
     }
