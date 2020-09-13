@@ -15,6 +15,13 @@
 The Python 3 port Github URL is:
         https://github.com/hasii2011/PyUt/
 
+  Pyut 6.1.1 Mac OS X Release
+  ====================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+      - Update Python import to handle data classes and property annotations
+      - Fix export image and export pdf options; Non-functional in previous versions
+          Now platform independent and does not depend on any CLIs
+
   Pyut 6.0 Mac OS X Release
   ====================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
