@@ -165,10 +165,9 @@ class PyutPythonVisitor(Python3Visitor):
                 self.logger.debug(f'Field expression: {exprText}')
                 self.fields.append(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, ''))
         else:
-            self.logger.info(f'Non-init:  {exprText=}')
             isDataClass, dataClassName = self.__isThisADataClassProperty(ctx)
-            self.logger.info(f'{isDataClass=}')
             if isDataClass is True:
+                self.logger.info(f'Non-init:  {exprText=}')
                 if PyutPythonVisitor.NON_PROPERTY_INDICATOR in exprText:
                     pass
                 else:
@@ -310,11 +309,12 @@ class PyutPythonVisitor(Python3Visitor):
         """
 
         dataClassName: str = self.__getPotentialDataClassName(startCtx)
-        self.logger.info(f'{dataClassName=}')
 
         ans: bool = False
         if dataClassName in self.dataClassNames:
             ans = True
+
+        self.logger.info(f'isDataClass: {ans} - {dataClassName=}')
 
         return ans, dataClassName
 

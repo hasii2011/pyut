@@ -349,11 +349,16 @@ class ReverseEngineerPython2:
 
     def __declarationOnlyParseToPyut(self, fieldData: str) -> PyutField:
 
+        self.logger.info(f'{fieldData=}')
         fieldAndType: List[str] = fieldData.split(ReverseEngineerPython2.PYTHON_TYPE_DELIMITER)
 
         pyutField: PyutField = PyutField(name=fieldAndType[0])
 
-        pyutField.type       = PyutType(value=fieldAndType[1])
+        #
+        # Might be something complex expression as a default value we can't handle it
+        #
+        if len(fieldAndType) > 1:
+            pyutField.type       = PyutType(value=fieldAndType[1])
         pyutField.visibility = PyutVisibilityEnum.PUBLIC
 
         return pyutField
