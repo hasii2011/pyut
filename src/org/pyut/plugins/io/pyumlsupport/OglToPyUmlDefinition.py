@@ -12,6 +12,7 @@ from time import strftime
 from pyumldiagrams.Definitions import ClassDefinition
 from pyumldiagrams.Definitions import ClassDefinitions
 from pyumldiagrams.Definitions import DefinitionType
+from pyumldiagrams.Definitions import LinePositions
 from pyumldiagrams.Definitions import MethodDefinition
 from pyumldiagrams.Definitions import Methods
 from pyumldiagrams.Definitions import ParameterDefinition
@@ -21,11 +22,13 @@ from pyumldiagrams.Definitions import Size
 from pyumldiagrams.Definitions import UmlLineDefinition
 from pyumldiagrams.Definitions import UmlLineDefinitions
 from pyumldiagrams.Definitions import LineType
+
 from pyumldiagrams.image.ImageDiagram import ImageDiagram
 
 from pyumldiagrams.pdf.PdfDiagram import PdfDiagram
 
 from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
+from org.pyut.MiniOgl.ControlPoint import ControlPoint
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutLink import PyutLink
@@ -111,9 +114,10 @@ class OglToPyUmlDefinition:
             umlLinkType: LinkType = pyutLink.linkType
             lineType:    LineType = self._toPyUmlLineType(umlLinkType)
 
-            destinationPosition, sourcePosition = self._toPyUmlPositions(oglLink)
-            self.logger.info(f'{lineType=} {sourcePosition=} {destinationPosition=}')
-            line:    UmlLineDefinition = UmlLineDefinition(source=sourcePosition, destination=destinationPosition, lineType=lineType)
+            linePositions: LinePositions  = self._toPyUmlPositions(oglLink, umlLinkType)
+            self.logger.info(f'{lineType=} {linePositions=}')
+
+            line:    UmlLineDefinition = UmlLineDefinition(lineType=lineType, linePositions=linePositions)
 
             self._diagram.drawUmlLine(lineDefinition=line)
             umlLineDefinitions.append(line)
@@ -136,10 +140,14 @@ class OglToPyUmlDefinition:
 
         return lineType
 
-    def _toPyUmlPositions(self, oglLink):
+    def _toPyUmlPositions(self, oglLink, pyutLinkType: LinkType) -> LinePositions:
 
-        srcAnchor:  AnchorPoint = oglLink.sourceAnchor
-        destAnchor: AnchorPoint = oglLink.destinationAnchor
+        if pyutLinkType == LinkType.INHERITANCE:
+            srcAnchor:  AnchorPoint = oglLink.sourceAnchor
+            destAnchor: AnchorPoint = oglLink.destinationAnchor
+        else:
+            srcAnchor:  AnchorPoint = oglLink.destinationAnchor
+            destAnchor: AnchorPoint = oglLink.sourceAnchor
 
         srcX,  srcY  = srcAnchor.GetPosition()
         destX, destY = destAnchor.GetPosition()
@@ -147,7 +155,22 @@ class OglToPyUmlDefinition:
         sourcePosition:      Position = Position(x=srcX, y=srcY)
         destinationPosition: Position = Position(x=destX, y=destY)
 
-        return destinationPosition, sourcePosition
+        bends: List[ControlPoint] = oglLink.GetControlPoints()
+        if bends is None or len(bends) == 0:
+            linePositions: LinePositions = [sourcePosition, destinationPosition]
+        else:
+            linePositions: LinePositions = [sourcePosition]
+            for bend in bends:
+                bend: ControlPoint = cast(ControlPoint, bend)
+                self.logger.info(f'{bend:}')
+
+                bendX, bendY = bend.GetPosition()
+                bendPosition: Position = Position(x=bendX, y=bendY)
+                linePositions.append(bendPosition)
+
+            linePositions.append(destinationPosition)
+
+        return linePositions
 
     def _addMethods(self, classDefinition: ClassDefinition, pyutClass: PyutClass) -> ClassDefinition:
 
