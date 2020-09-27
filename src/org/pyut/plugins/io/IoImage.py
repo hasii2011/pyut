@@ -129,11 +129,11 @@ class IoImage(PyutIoPlugin):
         pluginVersion: str = self.getVersion()
         pyutVersion:   str = PyutVersion.getPyUtVersion()
 
-        oglToPdf: OglToPyUmlDefinition = OglToPyUmlDefinition(imageOptions=self._imageOptions,
-                                                              pyutVersion=pyutVersion,
-                                                              pluginVersion=pluginVersion
-                                                              )
+        oglToPyUmlDef: OglToPyUmlDefinition = OglToPyUmlDefinition(imageOptions=self._imageOptions,
+                                                                   pyutVersion=pyutVersion,
+                                                                   pluginVersion=pluginVersion
+                                                                   )
 
-        oglToPdf.toClassDefinitions(oglObjects=oglObjects)
-        oglToPdf.layoutLines(oglObjects=oglObjects)
-        oglToPdf.write()
+        oglToPyUmlDef.toClassDefinitions(oglObjects=oglObjects)
+        oglToPyUmlDef.layoutLines(oglObjects=oglObjects)
+        oglToPyUmlDef.write()
