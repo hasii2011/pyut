@@ -2,10 +2,10 @@ html-testRunner==1.2.1
 xmlschema==1.2.3
 pygmlparser==1.0.0
 wxPython==4.1.0
-pyumldiagrams==1.1.1
+pyumldiagrams==2.0.2
 fpdf2==2.0.5
 orthogonal==1.1.5
-py2app==0.21
+py2app==0.22
 setuptools==50.3.0
 epr==0.25
 antlr4-python3-runtime==4.8

@@ -1,13 +1,13 @@
 
 
 class PyutObject:
-    BASE_OBJECT_NAME: str = 'PyutObject_'
+
     """
     Pyut model  base object
     """
     nextId: int = 0
 
-    def __init__(self, name=""):
+    def __init__(self, name: str = ""):
         """
         Args:
             name:   The initial object name
@@ -15,14 +15,11 @@ class PyutObject:
         # Setting an arbitrary ID, for identity purposes
         self.computeNextSafeID()
 
-        self._id: int = PyutObject.nextId
-        if len(name) == 0:
-            self._name = f'{PyutObject.BASE_OBJECT_NAME}{self._id:05}'
-        else:
-            self._name = name
+        self._fileName: str = ""
+        self._id:       int = PyutObject.nextId
+        self._name:     str = name
 
         PyutObject.nextId += 1
-        self._fileName: str = ""
 
     def computeNextSafeID(self):
         """

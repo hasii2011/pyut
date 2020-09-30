@@ -27,7 +27,7 @@ class LinkType(Enum):
         Args:
             strValue:   The serialized string representation
 
-        Returns:  The visibility enumeration
+        Returns:  The link type enumeration
         """
         canonicalStr: str = strValue.lower().strip(' ')
         if canonicalStr == 'association':
