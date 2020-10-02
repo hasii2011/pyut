@@ -696,6 +696,13 @@ class MainUI:
                                                            document=currentDocument)
         dlgEditDocument.Destroy()
 
+        #
+        # TODO can cause
+        #     self.__notebook.SetPageText(page=self.__notebookCurrentPage, text=currentDocument.title)
+        # wx._core.wxAssertionError: C++ assertion ""((nPage) < GetPageCount())""
+        # failed at dist-osx-py38/build/ext/wxWidgets/src/osx/notebook_osx.cpp(120)
+        # in SetPageText(): SetPageText: invalid notebook page
+        #
         self.__notebook.SetPageText(page=self.__notebookCurrentPage, text=currentDocument.title)
         currentDocument.updateTreeText()
 
