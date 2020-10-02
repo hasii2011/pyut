@@ -46,8 +46,6 @@ from wx import Window
 from wx import Pen
 from wx import PenInfo
 
-from wx import __version__
-
 from org.pyut.MiniOgl import Shape
 from org.pyut.MiniOgl.Diagram import Diagram
 from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
@@ -461,11 +459,11 @@ class DiagramFrame(ScrolledWindow):
         else:
             self.RedrawWithBackground()
 
-    def SaveBackground(self, dc):
+    def SaveBackground(self, dc: DC):
         """
-        Save the given dc as the new background image.
 
-        @param DC dc : the dc to save
+        Args:
+            dc: The DC to save
         """
         w, h = self.GetSize()
         bb = self.__backgroundBitmap
@@ -474,11 +472,9 @@ class DiagramFrame(ScrolledWindow):
         mem = MemoryDC()
         mem.SelectObject(bb)
 
-        if __version__ > "2.3.2":
-            x, y = self.CalcUnscrolledPosition(0, 0)
-            mem.Blit(0, 0, w, h, dc, x, y)
-        else:
-            mem.Blit(0, 0, w, h, dc, 0, 0)
+        x, y = self.CalcUnscrolledPosition(0, 0)
+        mem.Blit(0, 0, w, h, dc, x, y)
+
         mem.SelectObject(NullBitmap)
 
     def LoadBackground(self, dc: DC, w: int, h: int):
@@ -547,15 +543,16 @@ class DiagramFrame(ScrolledWindow):
         """
         self.Redraw(cast(DC, None), True, False, True)
 
-    def Redraw(self, dc=None, full=True, saveBackground=False, useBackground=False):
+    def Redraw(self, dc: DC = None, full: bool = True, saveBackground: bool = False, useBackground: bool= False):
         """
-        Refresh the diagram graphically.
-        If a dc is given, use it. Otherwise, a double buffered dc is used.
+        Refresh the diagram.
+        If a DC is given, use it. Otherwise, use a double buffered DC.
 
-        @param DC dc : if None, a default dc will be created
-        @param bool full : if 0, only draws the borders of shapes
-        @param bool saveBackground : if True, the background will be saved
-        @param bool useBackground : if True, the background will be used
+        Args:
+            dc:     If None, a default dc is created
+            full:   If False, only draw the shape borders.
+            saveBackground: If True, save the background
+            useBackground:  If True, use the background
         """
         needBlit = False
         w, h = self.GetSize()
@@ -596,14 +593,10 @@ class DiagramFrame(ScrolledWindow):
                 shape.DrawAnchors(dc)
 
         if needBlit:
-            #  MODIFIED BY C.DUTOIT : Added Python test
             client = ClientDC(self)
 
-            if __version__ > "2.3.2":
-                x, y = self.CalcUnscrolledPosition(0, 0)
-                client.Blit(0, 0, w, h, dc, x, y)
-            else:
-                client.Blit(0, 0, w, h, dc, 0, 0)
+            x, y = self.CalcUnscrolledPosition(0, 0)
+            client.Blit(0, 0, w, h, dc, x, y)
 
     # noinspection PyUnusedLocal
     def OnPaint(self, event: PaintEvent):
@@ -625,10 +618,7 @@ class DiagramFrame(ScrolledWindow):
             self._drawGrid(memDC=mem, width=w, height=h, startX=x, startY=y)
         self.Redraw(mem)
 
-        if __version__ > "2.3.2":
-            dc.Blit(0, 0, w, h, mem, x, y)
-        else:
-            dc.Blit(0, 0, w, h, mem, 0, 0)
+        dc.Blit(0, 0, w, h, mem, x, y)
 
     def GetCurrentZoom(self):
         """
