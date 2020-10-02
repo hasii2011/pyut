@@ -25,7 +25,7 @@ from wx import StaticText
 from wx import VERTICAL
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
 

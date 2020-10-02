@@ -5,7 +5,7 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParam import PyutParam

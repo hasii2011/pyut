@@ -44,7 +44,7 @@ from org.pyut.general.Globals import _
 from org.pyut.general.Globals import secureBool
 from org.pyut.general import Lang
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class DlgPyutPreferences(Dialog):

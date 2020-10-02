@@ -15,7 +15,7 @@ from wx import OK
 from wx import App
 from wx import Frame
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.general.Mediator import Mediator
 
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences

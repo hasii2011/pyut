@@ -15,7 +15,7 @@ from wx import RED_PEN
 from wx import WHITE_BRUSH
 
 from org.pyut.MiniOgl.ShapeModel import ShapeModel
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class Shape:

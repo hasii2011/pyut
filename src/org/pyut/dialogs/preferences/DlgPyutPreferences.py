@@ -30,7 +30,7 @@ from wx.lib.agw.fmresources import INB_FIT_BUTTON
 
 from wx.lib.agw.labelbook import LabelBook
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
 from org.pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousPreferences

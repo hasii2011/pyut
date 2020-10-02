@@ -21,7 +21,7 @@ from wx import Dialog
 from org.pyut.general.Globals import _
 from org.pyut.general.Globals import secureStr
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
 

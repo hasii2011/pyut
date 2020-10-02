@@ -53,7 +53,7 @@ from org.pyut.MiniOgl.SizerShape import SizerShape
 from org.pyut.MiniOgl.ControlPoint import ControlPoint
 from org.pyut.MiniOgl.RectangleShape import RectangleShape
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.dialogs.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 
 LEFT_MARGIN     = 0

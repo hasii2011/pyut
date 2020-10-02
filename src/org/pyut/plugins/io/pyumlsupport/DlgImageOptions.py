@@ -38,7 +38,7 @@ from wx import MouseEvent
 
 from wx import Yield as wxYield
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit

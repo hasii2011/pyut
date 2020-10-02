@@ -24,7 +24,7 @@ from wx import StaticText
 from wx import TextCtrl
 
 from org.pyut.PyutConstants import PyutConstants
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _

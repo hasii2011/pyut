@@ -12,7 +12,7 @@ import logging.config
 from json import load as jsonLoad
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.PyutApp import PyutApp
 

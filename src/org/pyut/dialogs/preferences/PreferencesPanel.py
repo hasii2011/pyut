@@ -4,7 +4,7 @@ from wx import BORDER_SUNKEN
 from wx import Panel
 from wx import Window
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.general.Mediator import Mediator
 
 

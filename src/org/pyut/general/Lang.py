@@ -17,7 +17,7 @@ from wx import LANGUAGE_POLISH
 from wx import LANGUAGE_SPANISH
 from wx import Locale
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager

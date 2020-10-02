@@ -29,7 +29,7 @@ from wx import DefaultSize as wxDefaultSize
 from wx import App as wxApp
 from wx import Yield as wxYield
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
 

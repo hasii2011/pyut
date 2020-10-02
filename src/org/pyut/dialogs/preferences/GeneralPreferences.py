@@ -13,7 +13,7 @@ from wx import CheckBox
 from wx import CommandEvent
 from wx import Window
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.PyutUtils import PyutUtils
 

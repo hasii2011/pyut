@@ -7,7 +7,7 @@ from unittest import main as unitTestMain
 
 from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 

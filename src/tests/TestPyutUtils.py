@@ -12,7 +12,7 @@ from org.pyut.PyutUtils import ScreenMetrics
 
 from org.pyut.enums.ResourceTextType import ResourceTextType
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class TestPyutUtils(TestBase):

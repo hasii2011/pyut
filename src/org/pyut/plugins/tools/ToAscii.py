@@ -8,7 +8,7 @@ from os import path as osPath
 from os import chdir
 from os import getcwd
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 

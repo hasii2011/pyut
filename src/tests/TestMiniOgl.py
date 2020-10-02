@@ -27,7 +27,7 @@ from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class TestMiniOglApp(App):

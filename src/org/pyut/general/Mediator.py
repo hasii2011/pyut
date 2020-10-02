@@ -50,7 +50,7 @@ from org.pyut.general.Globals import _
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.Singleton import Singleton
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 __PyUtVersion__ = PyutVersion.getPyUtVersion()
 

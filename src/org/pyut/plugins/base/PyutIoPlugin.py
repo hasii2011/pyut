@@ -5,7 +5,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.general.Mediator import getMediator
 from org.pyut.ogl.OglClass import OglClass
 

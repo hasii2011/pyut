@@ -19,7 +19,7 @@ from org.pyut.plugins.io.pyumlsupport.OglToPyUmlDefinition import OglToPyUmlDefi
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutUtils import ScreenMetrics

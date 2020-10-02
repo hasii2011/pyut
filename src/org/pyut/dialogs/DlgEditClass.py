@@ -396,7 +396,7 @@ class DlgEditClass(DlgEditClassCommon):
         self._pyutModel.showMethods = self._chkShowMethods.GetValue()
         self._pyutModel.setShowStereotype(self._chkShowStereotype.GetValue())
 
-        from org.pyut.PyutPreferences import PyutPreferences
+        from org.pyut.preferences.PyutPreferences import PyutPreferences
         prefs = PyutPreferences()
         try:
             if prefs["AUTO_RESIZE"]:

@@ -12,7 +12,7 @@ from wx import Menu
 from wx import MenuBar
 from wx import NewId
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
 

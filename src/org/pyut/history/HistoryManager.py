@@ -6,7 +6,7 @@ from os import sep as osSep
 
 from tempfile import gettempdir
 
-from org.pyut.PyutPreferences import PyutPreferences
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.commands import CommandGroup
 
