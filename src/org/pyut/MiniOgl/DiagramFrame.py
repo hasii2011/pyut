@@ -5,6 +5,9 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
+from wx import BLUE
+from wx import WHITE
+
 from wx import EVT_LEFT_DCLICK
 from wx import EVT_LEFT_DOWN
 from wx import EVT_LEFT_UP
@@ -16,7 +19,7 @@ from wx import EVT_PAINT
 from wx import EVT_RIGHT_DCLICK
 from wx import EVT_RIGHT_DOWN
 from wx import EVT_RIGHT_UP
-from wx import WHITE
+from wx import PENSTYLE_DOT
 
 from wx import FONTFAMILY_DEFAULT
 from wx import FONTSTYLE_NORMAL
@@ -40,6 +43,9 @@ from wx import MouseEvent
 from wx import NullBitmap
 from wx import Font
 from wx import Window
+from wx import Pen
+from wx import PenInfo
+
 from wx import __version__
 
 from org.pyut.MiniOgl import Shape
@@ -612,10 +618,14 @@ class DiagramFrame(ScrolledWindow):
         mem = self.CreateDC(False, w, h)
         mem.SetBackground(Brush(self.GetBackgroundColour()))
         mem.Clear()
+
+        x, y = self.CalcUnscrolledPosition(0, 0)
+
+        if self._prefs.backgroundGridEnabled is True:
+            self._drawGrid(memDC=mem, width=w, height=h, startX=x, startY=y)
         self.Redraw(mem)
 
         if __version__ > "2.3.2":
-            x, y = self.CalcUnscrolledPosition(0, 0)
             dc.Blit(0, 0, w, h, mem, x, y)
         else:
             dc.Blit(0, 0, w, h, mem, 0, 0)
@@ -1030,3 +1040,41 @@ class DiagramFrame(ScrolledWindow):
         xView, yView = self.GetViewStart()
         xDelta, yDelta = self.GetScrollPixelsPerUnit()
         return event.GetX() + (xView * xDelta), event.GetY() + (yView * yDelta)
+
+    def _drawGrid(self, memDC: DC, width: int, height: int, startX: int, startY: int):
+
+        # self.clsLogger.info(f'{width=} {height=} {startX=} {startY=}')
+        savePen = memDC.GetPen()
+
+        newPen: Pen = self._getGridPen()
+        memDC.SetPen(newPen)
+
+        self._drawHorizontalLines(memDC=memDC, width=width, height=height, startX=startX, startY=startY)
+        self._drawVerticalLines(memDC=memDC,   width=width, height=height, startX=startX, startY=startY)
+        memDC.SetPen(savePen)
+
+    def _drawHorizontalLines(self, memDC: DC, width: int, height: int, startX: int, startY: int):
+
+        x1:   int = 0
+        x2:   int = startX + width
+        stop: int = height + startY
+        step: int = self._prefs.backgroundGridInterval
+        for movingY in range(startY, stop, step):
+            # self.clsLogger.info(f'{x1=} {movingY=} - {x2=} {movingY=}')
+            memDC.DrawLine(x1, movingY, x2, movingY)
+
+    def _drawVerticalLines(self, memDC: DC, width: int, height: int, startX: int, startY: int):
+
+        y1:   int = 0
+        y2:   int = startY + height
+        stop: int = width + startX
+        step: int = self._prefs.backgroundGridInterval
+
+        for movingX in range(startX, stop, step):
+            memDC.DrawLine(movingX, y1, movingX, y2)
+
+    def _getGridPen(self) -> Pen:
+
+        pen: Pen = Pen(PenInfo(BLUE).Style(PENSTYLE_DOT).Width(1.0))
+
+        return pen

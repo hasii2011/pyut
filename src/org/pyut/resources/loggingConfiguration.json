@@ -46,6 +46,10 @@
             "level":     "WARNING",
             "propagate": "False"
         },
+        "org.pyut.MiniOgl": {
+            "level":     "INFO",
+            "propagate": "False"
+        },
         "org.pyut.plugins.gml": {
             "level":     "WARNING",
             "propagate": "False"
