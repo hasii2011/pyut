@@ -1,23 +1,19 @@
 
-from typing import Dict
+
 from typing import Tuple
 from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
-import sys
-import os
-
 from configparser import *
 
-from org.pyut.PyutConstants import PyutConstants
 from org.pyut.general.Singleton import Singleton
 
-from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
+from org.pyut.preferences.DiagramPreferences import DiagramPreferences
 
-
-PREFS_NAME_VALUES = Dict[str, str]
+from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
+from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
 class PyutPreferences(Singleton):
@@ -71,13 +67,6 @@ class PyutPreferences(Singleton):
         PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME
     }
 
-    BACKGROUND_GRID_ENABLED:  str = 'background_grid_enabled'
-    BACKGROUND_GRID_INTERVAL: str = 'background_grid_interval'
-
-    DIAGRAM_PREFERENCES: PREFS_NAME_VALUES = {
-        BACKGROUND_GRID_ENABLED: 'True',
-        BACKGROUND_GRID_INTERVAL: '15'
-    }
     DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # If `True` any created temporary files appear in the current directory
     DEBUG_BASIC_SHAPE:             str = 'debug_basic_shape'              # If `True` turn on debug display code in basic Shape.py
     PYUTIO_PLUGIN_AUTO_SELECT_ALL: str = 'pyutio_plugin_auto_select_all'  # if `True` auto-select shapes in plugins
@@ -123,9 +112,13 @@ class PyutPreferences(Singleton):
         """
         self.logger:  Logger = getLogger(__name__)
 
-        self._overrideOnProgramExit: bool = True
+        self._overrideOnProgramExit: bool         = True
+        self._config:                ConfigParser = cast(ConfigParser, None)
 
-        self._emptyPrefs()
+        self._createEmptyPreferences()
+
+        self._diagramPrefs: DiagramPreferences = DiagramPreferences(theMasterParser=self._config)
+
         self.__loadConfig()
 
     @staticmethod
@@ -133,17 +126,11 @@ class PyutPreferences(Singleton):
         """
         This method MUST (I repeat MUST) be called before attempting to instantiate the preferences Singleton
         """
-        if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
-            PyutPreferences.preferencesFileLocationAndName = os.getenv("HOME") + "/.PyutPrefs.dat"
-        else:
-            PyutPreferences.preferencesFileLocationAndName = "PyutPrefs.dat"
+        PreferencesCommon.determinePreferencesLocation()
 
     @staticmethod
     def getPreferencesLocation():
-        if PyutPreferences.preferencesFileLocationAndName is None:
-            raise PreferencesLocationNotSet()
-        else:
-            return PyutPreferences.preferencesFileLocationAndName
+        return PreferencesCommon.getPreferencesLocation()
 
     def getNbLOF(self) -> int:
         """
@@ -378,21 +365,19 @@ class PyutPreferences(Singleton):
 
     @property
     def backgroundGridEnabled(self) -> bool:
-        return self._config.getboolean(PyutPreferences.DIAGRAM_SECTION, PyutPreferences.BACKGROUND_GRID_ENABLED)
+        return self._diagramPrefs.backgroundGridEnabled
 
     @backgroundGridEnabled.setter
     def backgroundGridEnabled(self, theNewValue: bool):
-        self._config.set(PyutPreferences.DIAGRAM_SECTION, PyutPreferences.BACKGROUND_GRID_ENABLED, str(theNewValue))
-        self.__saveConfig()
+        self._diagramPrefs.backgroundGridEnabled = theNewValue
 
     @property
     def backgroundGridInterval(self) -> int:
-        return self._config.getint(PyutPreferences.DIAGRAM_SECTION, PyutPreferences.BACKGROUND_GRID_INTERVAL)
+        return self._diagramPrefs.backgroundGridInterval
 
     @backgroundGridInterval.setter
     def backgroundGridInterval(self, theNewValue: int):
-        self._config.set(PyutPreferences.DIAGRAM_SECTION, PyutPreferences.BACKGROUND_GRID_INTERVAL, str(theNewValue))
-        self.__saveConfig()
+        self._diagramPrefs.backgroundGridInterval = theNewValue
 
     def __saveConfig(self):
         """
@@ -422,7 +407,6 @@ class PyutPreferences(Singleton):
                 return
 
         # Read data
-        self._config = ConfigParser()
         self._config.read(PyutPreferences.getPreferencesLocation())
 
         # Create a "LastOpenedFiles" structure ?
@@ -432,7 +416,7 @@ class PyutPreferences(Singleton):
             self.__addOpenedFilesSection()
 
         self.__addAnyMissingMainPreferences()
-        self.__addMissingDiagramPreferences()
+        self._diagramPrefs.addMissingDiagramPreferences()
         self.__addAnyMissingDebugPreferences()
 
     def __addOpenedFilesSection(self):
@@ -460,21 +444,6 @@ class PyutPreferences(Singleton):
     def __addMissingMainPreference(self, preferenceName, value: str):
         self.__addMissingPreference(PyutPreferences.MAIN_SECTION, preferenceName, value)
 
-    def __addMissingDiagramPreferences(self):
-
-        try:
-            if self._config.has_section(PyutPreferences.DIAGRAM_SECTION) is False:
-                self._config.add_section(PyutPreferences.DIAGRAM_SECTION)
-            for prefName in PyutPreferences.DIAGRAM_PREFERENCES:
-                if self._config.has_option(PyutPreferences.DIAGRAM_SECTION, prefName) is False:
-                    self.__addMissingDiagramPreference(prefName, PyutPreferences.DIAGRAM_PREFERENCES[prefName])
-
-        except (ValueError, Exception) as e:
-            self.logger.error(f"Error: {e}")
-
-    def __addMissingDiagramPreference(self, preferenceName, value):
-        self.__addMissingPreference(PyutPreferences.DIAGRAM_SECTION, preferenceName, value)
-
     def __addAnyMissingDebugPreferences(self):
 
         try:
@@ -492,7 +461,7 @@ class PyutPreferences(Singleton):
         self._config.set(sectionName, preferenceName, value)
         self.__saveConfig()
 
-    def _emptyPrefs(self):
+    def _createEmptyPreferences(self):
         self._config: ConfigParser = ConfigParser()
 
     def __getitem__(self, name: str) -> str:

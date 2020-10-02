@@ -192,7 +192,7 @@ class TestPyutPreferences(TestBase):
 
         self.prefs: PyutPreferences = PyutPreferences()
         self.prefs.init()       # it is a singleton so init only runs the first time
-        self.prefs._emptyPrefs()
+        self.prefs._createEmptyPreferences()
 
 
 def suite() -> TestSuite:
