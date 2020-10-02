@@ -5,8 +5,8 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from wx import BLUE
 from wx import WHITE
+from wx import LIGHT_GREY
 
 from wx import EVT_LEFT_DCLICK
 from wx import EVT_LEFT_DOWN
@@ -1065,6 +1065,6 @@ class DiagramFrame(ScrolledWindow):
 
     def _getGridPen(self) -> Pen:
 
-        pen: Pen = Pen(PenInfo(BLUE).Style(PENSTYLE_DOT).Width(1.0))
+        pen: Pen = Pen(PenInfo(LIGHT_GREY).Style(PENSTYLE_DOT).Width(1.0))
 
         return pen
