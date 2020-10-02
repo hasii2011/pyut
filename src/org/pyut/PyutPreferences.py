@@ -31,12 +31,13 @@ class PyutPreferences(Singleton):
     OPENED_FILES_SECTION:       str = "RecentlyOpenedFiles"
     NUMBER_OF_ENTRIES:          str = "Number_of_Recently_Opened_Files"
 
-    MAIN_SECTION:               str = 'Main'
-    DEBUG_SECTION:              str = 'Debug'
+    MAIN_SECTION:    str = 'Main'
+    DEBUG_SECTION:   str = 'Debug'
+    DIAGRAM_SECTION: str = 'Diagram'
 
     ORG_DIRECTORY:              str = 'orgDirectory'
     LAST_DIRECTORY:             str = 'LastDirectory'
-    USER_DIRECTORY:                  str = 'userPath'
+    USER_DIRECTORY:             str = 'userPath'
     SHOW_TIPS_ON_STARTUP:       str = 'Show_Tips_On_Startup'
     AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
     SHOW_PARAMETERS:            str = 'Show_Parameters'
@@ -70,6 +71,13 @@ class PyutPreferences(Singleton):
         PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME
     }
 
+    BACKGROUND_GRID_ENABLED:  str = 'background_grid_enabled'
+    BACKGROUND_GRID_INTERVAL: str = 'background_grid_interval'
+
+    DIAGRAM_PREFERENCES: PREFS_NAME_VALUES = {
+        BACKGROUND_GRID_ENABLED: 'True',
+        BACKGROUND_GRID_INTERVAL: '15'
+    }
     DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # If `True` any created temporary files appear in the current directory
     DEBUG_BASIC_SHAPE:             str = 'debug_basic_shape'              # If `True` turn on debug display code in basic Shape.py
     PYUTIO_PLUGIN_AUTO_SELECT_ALL: str = 'pyutio_plugin_auto_select_all'  # if `True` auto-select shapes in plugins
@@ -368,6 +376,24 @@ class PyutPreferences(Singleton):
         self._config.set(PyutPreferences.DEBUG_SECTION, PyutPreferences.PYUTIO_PLUGIN_AUTO_SELECT_ALL, str(theNewValue))
         self.__saveConfig()
 
+    @property
+    def backgroundGridEnabled(self) -> bool:
+        return self._config.getboolean(PyutPreferences.DIAGRAM_SECTION, PyutPreferences.BACKGROUND_GRID_ENABLED)
+
+    @backgroundGridEnabled.setter
+    def backgroundGridEnabled(self, theNewValue: bool):
+        self._config.set(PyutPreferences.DIAGRAM_SECTION, PyutPreferences.BACKGROUND_GRID_ENABLED, str(theNewValue))
+        self.__saveConfig()
+
+    @property
+    def backgroundGridInterval(self) -> int:
+        return self._config.getint(PyutPreferences.DIAGRAM_SECTION, PyutPreferences.BACKGROUND_GRID_INTERVAL)
+
+    @backgroundGridInterval.setter
+    def backgroundGridInterval(self, theNewValue: int):
+        self._config.set(PyutPreferences.DIAGRAM_SECTION, PyutPreferences.BACKGROUND_GRID_INTERVAL, str(theNewValue))
+        self.__saveConfig()
+
     def __saveConfig(self):
         """
         Save data to the preferences file
@@ -406,6 +432,7 @@ class PyutPreferences(Singleton):
             self.__addOpenedFilesSection()
 
         self.__addAnyMissingMainPreferences()
+        self.__addMissingDiagramPreferences()
         self.__addAnyMissingDebugPreferences()
 
     def __addOpenedFilesSection(self):
@@ -432,6 +459,21 @@ class PyutPreferences(Singleton):
 
     def __addMissingMainPreference(self, preferenceName, value: str):
         self.__addMissingPreference(PyutPreferences.MAIN_SECTION, preferenceName, value)
+
+    def __addMissingDiagramPreferences(self):
+
+        try:
+            if self._config.has_section(PyutPreferences.DIAGRAM_SECTION) is False:
+                self._config.add_section(PyutPreferences.DIAGRAM_SECTION)
+            for prefName in PyutPreferences.DIAGRAM_PREFERENCES:
+                if self._config.has_option(PyutPreferences.DIAGRAM_SECTION, prefName) is False:
+                    self.__addMissingDiagramPreference(prefName, PyutPreferences.DIAGRAM_PREFERENCES[prefName])
+
+        except (ValueError, Exception) as e:
+            self.logger.error(f"Error: {e}")
+
+    def __addMissingDiagramPreference(self, preferenceName, value):
+        self.__addMissingPreference(PyutPreferences.DIAGRAM_SECTION, preferenceName, value)
 
     def __addAnyMissingDebugPreferences(self):
 
