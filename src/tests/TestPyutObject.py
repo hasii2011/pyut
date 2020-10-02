@@ -30,23 +30,23 @@ class TestPyutObject(TestBase):
     def testNoName(self):
         pyutObject: PyutObject = PyutObject()
 
-        expectedNotSize: int = 0
-        actualSize:      int = pyutObject.getName().__len__()
+        expectedSize: int = 0
+        actualSize:   int = pyutObject.getName().__len__()
 
-        self.logger.info(f'Generated PyutObject name: {pyutObject.getName()}')
-
-        self.assertNotEqual(expectedNotSize, actualSize, 'Name should not be empty')
+        self.assertEqual(expectedSize, actualSize, 'Name should be empty')
 
     def testNoNameValue(self):
 
         pyutObject: PyutObject = PyutObject()
 
-        actualName:   str = pyutObject.getName()
-        expectedName: str = f'{PyutObject.BASE_OBJECT_NAME}{pyutObject.nextId - 1:05}'
+        actualName:     str = pyutObject.getName()
 
-        self.logger.info(f'Generated PyutObject name: {pyutObject.getName()}')
+        self.assertIsNotNone(actualName, 'Should have some value')
 
-        self.assertEqual(expectedName, actualName, 'Name generation algorithm changed')
+        expectedLength: int = 0
+        actualLength:   int = len(actualName)
+
+        self.assertEqual(expectedLength, actualLength, 'Should be empty')
 
     def testProvidedName(self):
 
