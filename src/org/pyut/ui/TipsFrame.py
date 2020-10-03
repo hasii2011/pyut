@@ -40,7 +40,7 @@ DEFAULT_HEIGHT = 100
 
 # Tips
 Tips = [
-    _("Welcome in PyUt 1.4 ! You will find some news in this box.\n" +
+    _("Welcome in PyUt 6.x ! You will find some news in this box.\n" +
       "You can activate/deactivate the box display on startup in the " +
       "PyUt preferences dialog"),
     _("Remember, if you do not submit bugs at https://github.com/hasii2011/PyUt/issues, " +
@@ -98,11 +98,12 @@ class TipsFrame(Dialog):
 
         # Set current tips
         self._prefs = PyutPreferences()
-        self._currentTip = self._prefs[PyutPreferences.CURRENT_TIP]
+        # self._currentTip = self._prefs[PyutPreferences.CURRENT_TIP]
+        self._currentTip: int = self._prefs.currentTip
         if self._currentTip is None:
             self._currentTip = 0
         else:
-            self._currentTip = int(self._currentTip)
+            self._currentTip = self._currentTip
 
         # Add icon
         # fileName = resource_filename(IMG_PKG, 'TipsLogo.bmp')
@@ -121,7 +122,7 @@ class TipsFrame(Dialog):
         nextTipButton = Button(self, ID_SET_NEXT_TIP, _("&Next tip"))
         previousTipButton = Button(self, ID_SET_PREVIOUS_TIP, _("&Previous tip"))
         self._chkShowTips = CheckBox(self, ID_CHK_SHOW_TIPS, _("&Show tips at startup"))
-        showTips: bool = self._prefs.showTipsOnStartup()
+        showTips: bool = self._prefs.showTipsOnStartup
         self._chkShowTips.SetValue(showTips)
 
         # Upper sizer
@@ -185,6 +186,9 @@ class TipsFrame(Dialog):
         # Save state
         rationalTipNumber: int = (self._currentTip + 1) % len(Tips)
         currentTipNumber:  str = f'{str(rationalTipNumber)}'
-        self._prefs[PyutPreferences.CURRENT_TIP] = currentTipNumber
-        self._prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = self._chkShowTips.GetValue()
+        # self._prefs[PyutPreferences.CURRENT_TIP] = currentTipNumber
+        # self._prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = self._chkShowTips.GetValue()
+
+        self._prefs.currentTipNumber  = currentTipNumber
+        self._prefs.showTipsOnStartup = self._chkShowTips.GetValue()
         event.Skip()

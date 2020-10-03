@@ -19,7 +19,6 @@ from wx import TextCtrl
 from wx import Dialog
 
 from org.pyut.general.Globals import _
-from org.pyut.general.Globals import secureStr
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
@@ -87,7 +86,9 @@ class DlgFastEditOptions(Dialog):
         """
         Set the default values to the controls.
         """
-        self.__txtEditor.SetValue(secureStr(self.__prefs[PyutPreferences.EDITOR]))
+        # self.__txtEditor.SetValue(secureStr(self.__prefs[PyutPreferences.EDITOR]))
+        self.__txtEditor.SetValue(self.__prefs.editor)
+
         self.__txtEditor.SetInsertionPointEnd()
 
     # noinspection PyUnusedLocal

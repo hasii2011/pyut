@@ -13,8 +13,6 @@ from wx import CheckBox
 from wx import CommandEvent
 from wx import Window
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
@@ -94,7 +92,8 @@ class GeneralPreferencesPanel(PreferencesPanel):
 
     # noinspection PyUnusedLocal
     def __OnBtnResetTips(self, event: CommandEvent):
-        self._prefs[PyutPreferences.CURRENT_TIP] = '0'
+        # self._prefs[PyutPreferences.CURRENT_TIP] = '0'
+        self._prefs.currentTip = 0
 
     def __setControlValues(self):
         """

@@ -104,7 +104,8 @@ class MiscellaneousPreferences(PreferencesPanel):
 
     def __setControlValues(self):
 
-        n = self._prefs[PyutPreferences.I18N]
+        # n = self._prefs[PyutPreferences.I18N]
+        n = self._prefs.i18n
         if n not in LANGUAGES:
             n = DEFAULT_LANG
         self.__cmbLanguage.SetValue(LANGUAGES[n][0])
@@ -120,7 +121,8 @@ class MiscellaneousPreferences(PreferencesPanel):
             for i in list(LANGUAGES.items()):
                 if newLanguage == i[1][0]:
                     # Write the key in preferences file
-                    self._prefs[PyutPreferences.I18N] = i[0]
+                    # self._prefs[PyutPreferences.I18N] = i[0]
+                    self._prefs.i18n = i[0]
 
             dlg: MessageDialog = MessageDialog(self, _("You must restart Pyut for language changes"), _("Warning"), OK | ICON_EXCLAMATION)
             dlg.ShowModal()

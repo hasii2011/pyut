@@ -106,12 +106,14 @@ class Pyut:
             - last opened directory for developers (pyut/src present)
         """
         prefs: PyutPreferences = PyutPreferences()    # Prefs handler
-        prefs[PyutPreferences.ORG_DIRECTORY] = getcwd()
-        if (self._userPath.find('pyut/src') == -1) and (self._userPath.find('pyut2/src') == -1):
+        prefs.orgDirectory = getcwd()
 
-            self.logger.debug(f'self._userPath: {self._userPath}')
-            prefs[PyutPreferences.LAST_DIRECTORY] = self._userPath
-            self.logger.debug(f'prefs: {prefs}')
+        if (self._userPath.find('PyUt/src') == -1) and (self._userPath.find('PyUt2/src') == -1):
+
+            self.logger.debug(f'{self._userPath=}')
+
+            prefs.lastOpenedDirectory = self._userPath
+            self.logger.debug(f'{prefs.lastOpenedDirectory=}')
 
     def _displayIntro(self):
 

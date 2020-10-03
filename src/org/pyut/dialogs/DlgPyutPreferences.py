@@ -288,14 +288,18 @@ class DlgPyutPreferences(Dialog):
         eventID = event.GetId()
         val = event.IsChecked()
         if eventID == self.__autoResizeID:
-            self.__prefs[PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT] = val
+            # self.__prefs[PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT] = val
+            self.__prefs.autoResizeShapesOnEdit = val
         elif eventID == self.__showParamsID:
             self.__ctrl.showParams(val)
-            self.__prefs[PyutPreferences.SHOW_PARAMETERS] = val
+            # self.__prefs[PyutPreferences.SHOW_PARAMETERS] = val
+            self.__prefs.showParameters = val
         elif eventID == self.__maximizeID:
-            self.__prefs[PyutPreferences.FULL_SCREEN] = val
+            # self.__prefs[PyutPreferences.FULL_SCREEN] = val
+            self.__prefs.fullScreen = val
         elif eventID == self.__showTipsID:
-            self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = val
+            # self.__prefs[PyutPreferences.SHOW_TIPS_ON_STARTUP] = val
+            self.__prefs.showTipsOnStartup = val
         elif eventID == self.__centerDiagramID:
             self.__prefs.centerAppOnStartup = val
             self.__setPositionControls()
@@ -335,18 +339,21 @@ class DlgPyutPreferences(Dialog):
 
     # noinspection PyUnusedLocal
     def __OnBtnResetTips(self, event: CommandEvent):
-        self.__prefs[PyutPreferences.CURRENT_TIP] = '0'
+        # self.__prefs[PyutPreferences.CURRENT_TIP] = '0'
+        self.__prefs.currentTip = 0
 
     def __OnLanguageChange(self, event: CommandEvent):
 
         newLanguage: str = event.GetString()
-        actualLanguage: str = self.__prefs[PyutPreferences.I18N]
+        # actualLanguage: str = self.__prefs[PyutPreferences.I18N]
+        actualLanguage: str = self.__prefs.i18n
         if actualLanguage not in Lang.LANGUAGES or newLanguage != Lang.LANGUAGES[actualLanguage][0]:
             # Search the key corresponding to the newLanguage
             for i in list(Lang.LANGUAGES.items()):
                 if newLanguage == i[1][0]:
                     # Write the key in preferences file
-                    self.__prefs[PyutPreferences.I18N] = i[0]
+                    # self.__prefs[PyutPreferences.I18N] = i[0]
+                    self.__prefs.i18n = i[0]
 
             dlg = MessageDialog(self, _("You must restart Pyut for language changes"), _("Warning"), OK | ICON_EXCLAMATION)
             dlg.ShowModal()

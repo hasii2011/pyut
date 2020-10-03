@@ -244,6 +244,24 @@ class PyutPreferences(Singleton):
         self.__saveConfig()
 
     @property
+    def lastOpenedDirectory(self) -> str:
+        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.LAST_DIRECTORY)
+
+    @lastOpenedDirectory.setter
+    def lastOpenedDirectory(self, theNewValue: str):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.LAST_DIRECTORY, theNewValue)
+        self.__saveConfig()
+
+    @property
+    def orgDirectory(self) -> str:
+        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.ORG_DIRECTORY)
+
+    @orgDirectory.setter
+    def orgDirectory(self, theNewValue: str):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.ORG_DIRECTORY, theNewValue)
+        self.__saveConfig()
+
+    @property
     def startupHeight(self) -> int:
         height: str = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_HEIGHT)
         return int(height)
@@ -300,6 +318,33 @@ class PyutPreferences(Singleton):
     @fullScreen.setter
     def fullScreen(self, theNewValue: bool):
         self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.FULL_SCREEN, str(theNewValue))
+        self.__saveConfig()
+
+    @property
+    def i18n(self) -> str:
+        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.I18N)
+
+    @i18n.setter
+    def i18n(self, theNewValue: str):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.I18N, theNewValue)
+        self.__saveConfig()
+
+    @property
+    def currentTip(self) -> int:
+        return self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.CURRENT_TIP)
+
+    @currentTip.setter
+    def currentTip(self, theNewValue: int):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.CURRENT_TIP, str(theNewValue))
+        self.__saveConfig()
+
+    @property
+    def editor(self) -> str:
+        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.EDITOR)
+
+    @editor.setter
+    def editor(self, theNewValue: str):
+        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.EDITOR, theNewValue)
         self.__saveConfig()
 
     @property

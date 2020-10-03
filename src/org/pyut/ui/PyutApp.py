@@ -96,8 +96,8 @@ class PyutApp(wxApp):
         """
         try:
             # Handle application parameters in the command line
-            prefs:  PyutPreferences = PyutPreferences()
-            orgPath: str            = prefs[PyutPreferences.ORG_DIRECTORY]
+            prefs:   PyutPreferences = PyutPreferences()
+            orgPath: str             = prefs.orgDirectory
             for filename in [el for el in argv[1:] if el[0] != '-']:
                 self._frame.loadByFilename(orgPath + osSeparator + filename)
             if self._frame is None:
