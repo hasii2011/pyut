@@ -5,15 +5,13 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from configparser import *
+from configparser import ConfigParser
 
 from org.pyut.general.Singleton import Singleton
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import DiagramPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
-
-from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
@@ -27,44 +25,6 @@ class PyutPreferences(Singleton):
 
     OPENED_FILES_SECTION:       str = "RecentlyOpenedFiles"
     NUMBER_OF_ENTRIES:          str = "Number_of_Recently_Opened_Files"
-
-    MAIN_SECTION:    str = 'Main'
-
-    ORG_DIRECTORY:              str = 'orgDirectory'
-    LAST_DIRECTORY:             str = 'LastDirectory'
-    USER_DIRECTORY:             str = 'userPath'
-    SHOW_TIPS_ON_STARTUP:       str = 'Show_Tips_On_Startup'
-    AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
-    SHOW_PARAMETERS:            str = 'Show_Parameters'
-    FULL_SCREEN:                str = 'Full_Screen'
-    I18N:                       str = 'I18N'
-    CURRENT_TIP:                str = 'Current_Tip'
-    EDITOR:                     str = 'Editor'
-    STARTUP_WIDTH:              str = 'startup_width'
-    STARTUP_HEIGHT:             str = 'startup_height'
-    CENTER_DIAGRAM:             str = 'center_diagram'
-    CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
-    STARTUP_X:                  str = 'startup_x'
-    STARTUP_Y:                  str = 'startup_y'
-    PDF_EXPORT_FILE_NAME:       str = 'default_pdf_export_file_name'
-
-    MAIN_PREFERENCES: PREFS_NAME_VALUES = {
-        USER_DIRECTORY:            '.',
-        SHOW_TIPS_ON_STARTUP:      'False',
-        AUTO_RESIZE_SHAPE_ON_EDIT: 'False',
-        SHOW_PARAMETERS:           'False',
-        FULL_SCREEN:               'False',
-        I18N:                      'en',       # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
-        CURRENT_TIP:               '0',
-        EDITOR:                    'brackets',
-        STARTUP_WIDTH:             '1024',
-        STARTUP_HEIGHT:            '768',
-        CENTER_DIAGRAM:            'False',
-        CENTER_APP_ON_STARTUP:     'True',
-        STARTUP_X:                 '-1',
-        STARTUP_Y:                 '-1',
-        PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME
-    }
 
     """
     The goal of this class is to handle Pyut Preferences, to load them and save
@@ -104,6 +64,8 @@ class PyutPreferences(Singleton):
 
         self._createEmptyPreferences()
 
+        self._preferencesCommon: PreferencesCommon = PreferencesCommon(theMasterParser=self._config)
+
         self._mainPrefs:    MainPreferences    = MainPreferences(theMasterParser=self._config)
         self._diagramPrefs: DiagramPreferences = DiagramPreferences(theMasterParser=self._config)
         self._debugPrefs:   DebugPreferences   = DebugPreferences(theMasterParser=self._config)
@@ -136,7 +98,7 @@ class PyutPreferences(Singleton):
             nbLOF:  The new value for the number or last opened files to remember
         """
         self._config.set(PyutPreferences.OPENED_FILES_SECTION, PyutPreferences.NUMBER_OF_ENTRIES, str(max(nbLOF, 0)))
-        self.__saveConfig()
+        self._preferencesCommon.saveConfig()
 
     def getLastOpenedFilesList(self):
         """
@@ -176,7 +138,7 @@ class PyutPreferences(Singleton):
         for idx in range(PyutPreferences.DEFAULT_NB_LOF):
             fileNameKey: str = f'{PyutPreferences.FILE_KEY}{str(idx+1)}'
             self._config.set(PyutPreferences.OPENED_FILES_SECTION, fileNameKey, lstFiles[idx])
-        self.__saveConfig()
+        self._preferencesCommon.saveConfig()
 
     @property
     def overrideOnProgramExit(self) -> bool:
@@ -197,165 +159,131 @@ class PyutPreferences(Singleton):
 
     @property
     def pdfExportFileName(self) -> str:
-        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.PDF_EXPORT_FILE_NAME)
+        return self._mainPrefs.pdfExportFileName
 
     @pdfExportFileName.setter
     def pdfExportFileName(self, newValue: str):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.PDF_EXPORT_FILE_NAME, newValue)
-        self.__saveConfig()
+        self._mainPrefs.pdfExportFileName = newValue
 
     @property
     def showTipsOnStartup(self) -> bool:
-        showTips: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.SHOW_TIPS_ON_STARTUP)
-        return showTips
+        return self._mainPrefs.showTipsOnStartup
 
     @showTipsOnStartup.setter
     def showTipsOnStartup(self, newValue: bool):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.SHOW_TIPS_ON_STARTUP, str(newValue))
-        self.__saveConfig()
+        self._mainPrefs.showTipsOnStartup = newValue
 
     @property
     def autoResizeShapesOnEdit(self) -> bool:
-        resizeOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT)
-        return resizeOrNot
+        return self._mainPrefs.autoResizeShapesOnEdit
 
     @autoResizeShapesOnEdit.setter
     def autoResizeShapesOnEdit(self, newValue: bool):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.AUTO_RESIZE_SHAPE_ON_EDIT, str(newValue))
-        self.__saveConfig()
+        self._mainPrefs.autoResizeShapesOnEdit = newValue
 
     @property
     def userDirectory(self) -> str:
-        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.USER_DIRECTORY)
+        return self._mainPrefs.userDirectory
 
     @userDirectory.setter
     def userDirectory(self, theNewValue: str):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.USER_DIRECTORY, theNewValue)
-        self.__saveConfig()
-
-    @property
-    def startupWidth(self) -> int:
-        width: str = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH)
-        return int(width)
-
-    @startupWidth.setter
-    def startupWidth(self, newWidth: int):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_WIDTH, str(newWidth))
-        self.__saveConfig()
+        self._mainPrefs.userDirectory = theNewValue
 
     @property
     def lastOpenedDirectory(self) -> str:
-        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.LAST_DIRECTORY)
+        return self._mainPrefs.lastOpenedDirectory
 
     @lastOpenedDirectory.setter
     def lastOpenedDirectory(self, theNewValue: str):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.LAST_DIRECTORY, theNewValue)
-        self.__saveConfig()
+        self._mainPrefs.lastOpenedDirectory = theNewValue
 
     @property
     def orgDirectory(self) -> str:
-        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.ORG_DIRECTORY)
+        return self._mainPrefs.orgDirectory
 
     @orgDirectory.setter
     def orgDirectory(self, theNewValue: str):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.ORG_DIRECTORY, theNewValue)
-        self.__saveConfig()
-
-    @property
-    def startupHeight(self) -> int:
-        height: str = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_HEIGHT)
-        return int(height)
-
-    @startupHeight.setter
-    def startupHeight(self, newHeight: int):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_HEIGHT, str(newHeight))
-        self.__saveConfig()
+        self._mainPrefs.orgDirectory = theNewValue
 
     @property
     def centerDiagram(self):
-        centerDiagram: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_DIAGRAM)
-        return centerDiagram
+        return self._mainPrefs.centerDiagram
 
     @centerDiagram.setter
     def centerDiagram(self, theNewValue: bool):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_DIAGRAM, str(theNewValue))
-        self.__saveConfig()
+        self._mainPrefs.centerDiagram = theNewValue
 
     @property
     def centerAppOnStartUp(self) -> bool:
-        centerApp: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_APP_ON_STARTUP)
-        return centerApp
+        return self._mainPrefs.centerAppOnStartUp
 
     @centerAppOnStartUp.setter
     def centerAppOnStartUp(self, theNewValue: bool):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.CENTER_APP_ON_STARTUP, str(theNewValue))
-        self.__saveConfig()
+        self._mainPrefs.centerAppOnStartUp = theNewValue
 
     @property
     def appStartupPosition(self) -> Tuple[int, int]:
-
-        x: int = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_X)
-        y: int = self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_Y)
-
-        return x, y
+        return self._mainPrefs.appStartupPosition
 
     @appStartupPosition.setter
     def appStartupPosition(self, theNewValue: Tuple[int, int]):
-
-        x: int = theNewValue[0]
-        y: int = theNewValue[1]
-
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_X, str(x))
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.STARTUP_Y, str(y))
-
-        self.__saveConfig()
+        self._mainPrefs.appStartupPosition = theNewValue
 
     @property
     def fullScreen(self) -> bool:
-        fullScreenOrNot: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.FULL_SCREEN)
-        return fullScreenOrNot
+        return self._mainPrefs.fullScreen
 
     @fullScreen.setter
     def fullScreen(self, theNewValue: bool):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.FULL_SCREEN, str(theNewValue))
-        self.__saveConfig()
+        self._mainPrefs.fullScreen = theNewValue
 
     @property
     def i18n(self) -> str:
-        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.I18N)
+        return self._mainPrefs.i18n
 
     @i18n.setter
     def i18n(self, theNewValue: str):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.I18N, theNewValue)
-        self.__saveConfig()
+        self._mainPrefs.i18n = theNewValue
 
     @property
     def currentTip(self) -> int:
-        return self._config.getint(PyutPreferences.MAIN_SECTION, PyutPreferences.CURRENT_TIP)
+        return self._mainPrefs.currentTip
 
     @currentTip.setter
     def currentTip(self, theNewValue: int):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.CURRENT_TIP, str(theNewValue))
-        self.__saveConfig()
+        self._mainPrefs.currentTip = theNewValue
 
     @property
     def editor(self) -> str:
-        return self._config.get(PyutPreferences.MAIN_SECTION, PyutPreferences.EDITOR)
+        return self._mainPrefs.editor
 
     @editor.setter
     def editor(self, theNewValue: str):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.EDITOR, theNewValue)
-        self.__saveConfig()
+        self._mainPrefs.editor = theNewValue
+
+    @property
+    def startupWidth(self) -> int:
+        return self._mainPrefs.startupWidth
+
+    @startupWidth.setter
+    def startupWidth(self, newWidth: int):
+        self._mainPrefs.startupWidth = newWidth
+
+    @property
+    def startupHeight(self) -> int:
+        return self._mainPrefs.startupHeight
+
+    @startupHeight.setter
+    def startupHeight(self, newHeight: int):
+        self._mainPrefs.startupHeight = newHeight
 
     @property
     def showParameters(self) -> bool:
-        ans: bool = self._config.getboolean(PyutPreferences.MAIN_SECTION, PyutPreferences.SHOW_PARAMETERS)
-        return ans
+        return self._mainPrefs.showParameters
 
     @showParameters.setter
     def showParameters(self, theNewValue: bool):
-        self._config.set(PyutPreferences.MAIN_SECTION, PyutPreferences.SHOW_PARAMETERS, str(theNewValue))
-        self.__saveConfig()
+        self._mainPrefs.showParameters = theNewValue
 
     @property
     def useDebugTempFileLocation(self) -> bool:
@@ -405,14 +333,6 @@ class PyutPreferences(Singleton):
     def backgroundGridInterval(self, theNewValue: int):
         self._diagramPrefs.backgroundGridInterval = theNewValue
 
-    def __saveConfig(self):
-        """
-        Save data to the preferences file
-        """
-        f = open(PyutPreferences.getPreferencesLocation(), "w")
-        self._config.write(f)
-        f.close()
-
     def __loadConfig(self):
         """
         Load preferences from configuration file
@@ -441,7 +361,7 @@ class PyutPreferences(Singleton):
         if hasSection is False:
             self.__addOpenedFilesSection()
 
-        self.__addAnyMissingMainPreferences()
+        self._mainPrefs.addAnyMissingMainPreferences()
         self._diagramPrefs.addMissingDiagramPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
 
@@ -453,66 +373,7 @@ class PyutPreferences(Singleton):
         for idx in range(PyutPreferences.DEFAULT_NB_LOF):
             fileNameKey: str = f'{PyutPreferences.FILE_KEY}{str(idx+1)}'
             self._config.set(PyutPreferences.OPENED_FILES_SECTION, fileNameKey, "")
-        self.__saveConfig()
-
-    def __addAnyMissingMainPreferences(self):
-
-        try:
-            if self._config.has_section(PyutPreferences.MAIN_SECTION) is False:
-                self._config.add_section(PyutPreferences.MAIN_SECTION)
-
-            for prefName in PyutPreferences.MAIN_PREFERENCES.keys():
-                if self._config.has_option(PyutPreferences.MAIN_SECTION, prefName) is False:
-                    self.__addMissingMainPreference(prefName, PyutPreferences.MAIN_PREFERENCES[prefName])
-        except (ValueError, Exception) as e:
-            self.logger.error(f"Error: {e}")
-
-    def __addMissingMainPreference(self, preferenceName, value: str):
-        self.__addMissingPreference(PyutPreferences.MAIN_SECTION, preferenceName, value)
-
-    def __addMissingPreference(self, sectionName: str, preferenceName: str, value: str):
-        self._config.set(sectionName, preferenceName, value)
-        self.__saveConfig()
+        self._preferencesCommon.saveConfig()
 
     def _createEmptyPreferences(self):
         self._config: ConfigParser = ConfigParser()
-
-    def __getitem__(self, name: str) -> str:
-        """
-        Magic method
-        Return the pyut preferences for the given item
-
-        Args:
-            name:
-                Name of the item for which we return a value
-        Returns:
-            value of the preference, or None if it is not defined
-        """
-        if not self._config.has_section(PyutPreferences.MAIN_SECTION):
-            return cast(str, None)
-
-        try:
-            return self._config.get(PyutPreferences.MAIN_SECTION, name)
-        except NoOptionError:
-            return cast(str, None)
-
-    def __setitem__(self, name: str, value: str):
-        """
-        Return the pyut preferences for the given item
-
-        @param String name : Name of the item WITHOUT SPACES
-        @param String value : Value for the given name
-        @raises TypeError : if the name contains spaces
-        @since 1.1.2.7
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        # Add 'Main' section ?
-        if not self._config.has_section("Main"):
-            self._config.add_section("Main")
-
-        if " " in list(name):
-            raise TypeError("Name cannot contain a space")
-
-        # Save
-        self._config.set("Main", name, str(value))
-        self.__saveConfig()
