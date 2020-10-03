@@ -46,9 +46,8 @@ class Lang:
     def importLanguage():
 
         moduleLogger: Logger = getLogger(__name__)
-        # Get language from preferences
         prefs: PyutPreferences = PyutPreferences()
-        language = prefs['I18N']
+        language = prefs.i18n
 
         if language not in LANGUAGES:
             language = DEFAULT_LANG
@@ -58,7 +57,7 @@ class Lang:
         try:
             wxLangID:     int  = LANGUAGES[language][1]
             domain:       str = "Pyut"
-            orgDirectory: str = prefs[PyutPreferences.ORG_DIRECTORY]
+            orgDirectory: str = prefs.orgDirectory
 
             moduleLogger.debug(f'orgDirectory: {orgDirectory}')
 

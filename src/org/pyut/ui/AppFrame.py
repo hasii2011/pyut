@@ -143,7 +143,8 @@ class AppFrame(Frame):
         self._clipboard = []
         self._currentDirectory = getcwd()
 
-        self._lastDir = self._prefs["LastDirectory"]
+        self._lastDir = self._prefs.lastOpenedDirectory
+
         if self._lastDir is None:  # Assert that the path is present
             self._lastDir = getcwd()
 
@@ -180,19 +181,16 @@ class AppFrame(Frame):
         self._alreadyDisplayedTipsFrame = False
         self.Bind(EVT_ACTIVATE, self._onActivate)
 
-    def updateCurrentDir(self, fullPath):
+    def updateCurrentDir(self, fullPath: str):
         """
         Set current working directory.
 
-        @param String fullPath : Full path, with filename
-
-        @author P. Waelti <pwaelti@eivd.ch>
-        @since 1.50
+        Args:
+            fullPath:   Full path, with filename
         """
         self._lastDir = fullPath[:fullPath.rindex(osSeparator)]
 
-        # Save last directory
-        self._prefs["LastDirectory"] = self._lastDir
+        self._prefs.lastOpenedDirectory = self._lastDir
 
     def getCurrentDir(self):
         """
