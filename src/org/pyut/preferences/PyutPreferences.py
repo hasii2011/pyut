@@ -8,9 +8,10 @@ from logging import getLogger
 from configparser import *
 
 from org.pyut.general.Singleton import Singleton
-from org.pyut.preferences.DebugPreferences import DebugPreferences
 
+from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import DiagramPreferences
+from org.pyut.preferences.MainPreferences import MainPreferences
 
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
@@ -65,8 +66,6 @@ class PyutPreferences(Singleton):
         PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME
     }
 
-    # preferencesFileLocationAndName: str = None
-
     """
     The goal of this class is to handle Pyut Preferences, to load them and save
     them from/to a file.
@@ -75,10 +74,12 @@ class PyutPreferences(Singleton):
     
       - instantiate a PyutPreferences object :
         prefs: PyutPreferences = PyutPreferences()
+        
       - to get a pyut' preference :
-        prefs = myPP["ma_preference"]
+        prefs = myPP.preferenceName
+        
       - to set a pyut' preference :
-        prefs["ma_preference"] = xxx
+        prefs.preferenceName = xxx
 
       - To change the number of last opened files, use :
         prefs.setNbLOF(x)
@@ -103,6 +104,7 @@ class PyutPreferences(Singleton):
 
         self._createEmptyPreferences()
 
+        self._mainPrefs:    MainPreferences    = MainPreferences(theMasterParser=self._config)
         self._diagramPrefs: DiagramPreferences = DiagramPreferences(theMasterParser=self._config)
         self._debugPrefs:   DebugPreferences   = DebugPreferences(theMasterParser=self._config)
 
