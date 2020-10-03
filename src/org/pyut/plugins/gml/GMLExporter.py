@@ -6,9 +6,9 @@ from typing import Set
 from typing import Tuple
 from typing import cast
 
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
-from org.pyut.MiniOgl.LinePoint import LinePoint
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.ControlPoint import ControlPoint
+from org.pyut.miniogl.LinePoint import LinePoint
 
 from org.pyut.model.PyutObject import PyutObject
 

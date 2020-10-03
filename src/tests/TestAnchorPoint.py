@@ -7,7 +7,7 @@ from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
 
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
 
 
 class TestAnchorPoint(TestBase):

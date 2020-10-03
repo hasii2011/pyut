@@ -23,8 +23,8 @@ from wx import WHITE_BRUSH
 
 from wx import Font
 
-from org.pyut.MiniOgl.TextShape import TextShape
-from org.pyut.MiniOgl.TextShapeModel import TextShapeModel
+from org.pyut.miniogl.TextShape import TextShape
+from org.pyut.miniogl.TextShapeModel import TextShapeModel
 
 from org.pyut.ogl.OglLink import OglLink
 

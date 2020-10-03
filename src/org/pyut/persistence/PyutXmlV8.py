@@ -17,7 +17,7 @@ from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 from wx import Size
 
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory

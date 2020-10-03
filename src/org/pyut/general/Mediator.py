@@ -20,11 +20,11 @@ from wx import KeyEvent
 from wx import TextEntryDialog
 from wx import Yield as wxYield
 
-from org.pyut.MiniOgl.Constants import EVENT_PROCESSED
-from org.pyut.MiniOgl.Constants import SKIP_EVENT
-from org.pyut.MiniOgl.LinePoint import LinePoint
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
-from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.Constants import EVENT_PROCESSED
+from org.pyut.miniogl.Constants import SKIP_EVENT
+from org.pyut.miniogl.LinePoint import LinePoint
+from org.pyut.miniogl.ControlPoint import ControlPoint
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.enums.LinkType import LinkType

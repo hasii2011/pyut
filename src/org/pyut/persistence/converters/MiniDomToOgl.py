@@ -13,8 +13,8 @@ from xml.dom.minidom import Element
 # noinspection PyUnresolvedReferences
 from xml.dom.minidom import NodeList
 
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
-from org.pyut.MiniOgl.TextShape import TextShape
+from org.pyut.miniogl.ControlPoint import ControlPoint
+from org.pyut.miniogl.TextShape import TextShape
 from org.pyut.model.PyutActor import PyutActor
 
 from org.pyut.model.PyutClass import PyutClass

@@ -1,6 +1,6 @@
 
-from org.pyut.MiniOgl.RectangleShape import RectangleShape
-from org.pyut.MiniOgl.VShapes import *
+from org.pyut.miniogl.RectangleShape import RectangleShape
+from org.pyut.miniogl.VShapes import *
 
 
 class RotatableShape(RectangleShape):

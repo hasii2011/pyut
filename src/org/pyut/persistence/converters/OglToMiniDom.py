@@ -7,7 +7,7 @@ from xml.dom.minidom import Document
 # noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
-from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.miniogl.Shape import Shape
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass

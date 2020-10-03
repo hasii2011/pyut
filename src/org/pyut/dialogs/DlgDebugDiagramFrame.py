@@ -58,7 +58,7 @@ class DlgDebugDiagramFrame(Dialog):
         """
         super().__init__(frameToMonitor, dialogIdentifier, _("Debug Diagram"))
 
-        from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
+        from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
         self.logger:        Logger       = getLogger(__name__)
         assert isinstance(frameToMonitor, DiagramFrame)

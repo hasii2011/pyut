@@ -14,8 +14,8 @@ from wx import ID_OK
 from wx import OK
 from wx import TextEntryDialog
 
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.TextShape import TextShape
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.TextShape import TextShape
 
 from org.pyut.model.PyutSDMessage import PyutSDMessage
 

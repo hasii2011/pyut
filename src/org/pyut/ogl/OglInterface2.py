@@ -2,9 +2,9 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.MiniOgl.Common import Common
-from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.MiniOgl.LollipopLine import LollipopLine
+from org.pyut.miniogl.Common import Common
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.LollipopLine import LollipopLine
 
 from org.pyut.model.PyutInterface import PyutInterface
 

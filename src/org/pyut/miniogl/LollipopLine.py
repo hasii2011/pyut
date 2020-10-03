@@ -7,11 +7,11 @@ from wx import DC
 from wx import Pen
 from wx import RED_PEN
 
-from org.pyut.MiniOgl.Common import CommonLine
-from org.pyut.MiniOgl.Common import CommonPoint
+from org.pyut.miniogl.Common import CommonLine
+from org.pyut.miniogl.Common import CommonPoint
 
-from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.Shape import Shape
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 

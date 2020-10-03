@@ -56,7 +56,7 @@ setup(
               'org.pyut.experimental',
               'org.pyut.general', 'org.pyut.general.exceptions',
               'org.pyut.history',
-              'org.pyut.MiniOgl',
+              'org.pyut.miniogl',
               'org.pyut.model',
               'org.pyut.ogl', 'org.pyut.ogl.sd',
               'org.pyut.persistence', 'org.pyut.persistence.converters',

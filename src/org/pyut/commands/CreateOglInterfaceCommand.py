@@ -4,7 +4,7 @@ from typing import Tuple
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.model.PyutInterface import PyutInterface
 
 from org.pyut.commands.Command import Command

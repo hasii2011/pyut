@@ -6,9 +6,9 @@ from wx import Colour
 from wx import PENSTYLE_LONG_DASH
 from wx import Pen
 
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.LineShape import LineShape
-from org.pyut.MiniOgl.RectangleShape import RectangleShape
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.LineShape import LineShape
+from org.pyut.miniogl.RectangleShape import RectangleShape
 
 from org.pyut.ogl.OglObject import OglObject
 

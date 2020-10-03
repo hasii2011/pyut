@@ -1,7 +1,7 @@
 
 from wx import DC
 
-from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.miniogl.Shape import Shape
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.model.PyutLink import PyutLink
 

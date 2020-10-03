@@ -46,12 +46,12 @@ from wx import Window
 from wx import Pen
 from wx import PenInfo
 
-from org.pyut.MiniOgl import Shape
-from org.pyut.MiniOgl.Diagram import Diagram
-from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
-from org.pyut.MiniOgl.SizerShape import SizerShape
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
-from org.pyut.MiniOgl.RectangleShape import RectangleShape
+from org.pyut.miniogl import Shape
+from org.pyut.miniogl.Diagram import Diagram
+from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.miniogl.SizerShape import SizerShape
+from org.pyut.miniogl.ControlPoint import ControlPoint
+from org.pyut.miniogl.RectangleShape import RectangleShape
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.dialogs.DlgDebugDiagramFrame import DlgDebugDiagramFrame
@@ -385,7 +385,7 @@ class DiagramFrame(ScrolledWindow):
         """
         self._diagram = diagram
 
-    from org.pyut.MiniOgl.Shape import Shape
+    from org.pyut.miniogl.Shape import Shape
 
     def FindShape(self, x: int, y: int):
         """

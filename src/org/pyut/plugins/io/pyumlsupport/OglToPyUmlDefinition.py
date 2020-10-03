@@ -27,8 +27,8 @@ from pyumldiagrams.image.ImageDiagram import ImageDiagram
 
 from pyumldiagrams.pdf.PdfDiagram import PdfDiagram
 
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.ControlPoint import ControlPoint
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutLink import PyutLink

@@ -11,8 +11,8 @@ from wx import OK
 
 from wx import TextEntryDialog
 
-from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
-from org.pyut.MiniOgl.TextShape import TextShape
+from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.miniogl.TextShape import TextShape
 
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 

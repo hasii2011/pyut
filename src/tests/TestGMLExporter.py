@@ -8,7 +8,7 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.model.PyutClass import PyutClass

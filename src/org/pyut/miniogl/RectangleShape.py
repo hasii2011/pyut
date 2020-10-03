@@ -2,10 +2,10 @@ from typing import Tuple
 
 from wx import DC
 
-from org.pyut.MiniOgl.Shape import Shape
-from org.pyut.MiniOgl.MiniOglUtils import sign
-from org.pyut.MiniOgl.SizerShape import SizerShape
-from org.pyut.MiniOgl.RectangleShapeModel import RectangleShapeModel
+from org.pyut.miniogl.Shape import Shape
+from org.pyut.miniogl.MiniOglUtils import sign
+from org.pyut.miniogl.SizerShape import SizerShape
+from org.pyut.miniogl.RectangleShapeModel import RectangleShapeModel
 
 
 class RectangleShape(Shape):

@@ -10,8 +10,8 @@ from xml.dom.minidom import Document
 # noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
-from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.Shape import Shape
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 

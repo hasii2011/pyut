@@ -2,7 +2,7 @@
 from org.pyut.plugins.sugiyama.ALayoutLink import ALayoutLink
 
 # Miniogl import
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.miniogl.ControlPoint import ControlPoint
 
 
 class SugiyamaLink(ALayoutLink):

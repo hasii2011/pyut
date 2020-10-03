@@ -9,7 +9,7 @@ from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
 
-from org.pyut.MiniOgl.Common import Common
+from org.pyut.miniogl.Common import Common
 
 
 @dataclass

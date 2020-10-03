@@ -1,5 +1,5 @@
 
-from org.pyut.MiniOgl.LinePoint import LinePoint
+from org.pyut.miniogl.LinePoint import LinePoint
 
 
 class ControlPoint(LinePoint):

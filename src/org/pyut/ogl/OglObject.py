@@ -9,8 +9,8 @@ from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
 
-from org.pyut.MiniOgl.RectangleShape import RectangleShape
-from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.miniogl.RectangleShape import RectangleShape
+from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
 DEFAULT_FONT_SIZE = 10
 

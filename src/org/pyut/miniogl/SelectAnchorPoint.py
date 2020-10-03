@@ -2,9 +2,9 @@
 from wx import MouseEvent
 from wx import RED_PEN
 
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.Shape import Shape
-from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.Shape import Shape
+from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 

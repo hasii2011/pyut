@@ -14,16 +14,16 @@ from wx import NullBitmap
 from wx import ScrolledWindow
 from wx._core import BitmapType
 
-from org.pyut.MiniOgl.DiagramFrame import DiagramFrame
-from org.pyut.MiniOgl.Diagram import Diagram
-from org.pyut.MiniOgl.LollipopLine import LollipopLine
+from org.pyut.miniogl.DiagramFrame import DiagramFrame
+from org.pyut.miniogl.Diagram import Diagram
+from org.pyut.miniogl.LollipopLine import LollipopLine
 
-from org.pyut.MiniOgl.PointShape import PointShape
-from org.pyut.MiniOgl.RectangleShape import RectangleShape
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.LineShape import LineShape
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
-from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.PointShape import PointShape
+from org.pyut.miniogl.RectangleShape import RectangleShape
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.LineShape import LineShape
+from org.pyut.miniogl.ControlPoint import ControlPoint
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
@@ -40,7 +40,7 @@ class TestMiniOglApp(App):
 
         PyutPreferences.determinePreferencesLocation()
 
-        frameTop: Frame = Frame(parent=None, id=TestMiniOglApp.FRAME_ID, title="Test MiniOgl",
+        frameTop: Frame = Frame(parent=None, id=TestMiniOglApp.FRAME_ID, title="Test miniogl",
                                 size=(TestMiniOglApp.WINDOW_WIDTH, TestMiniOglApp.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
 

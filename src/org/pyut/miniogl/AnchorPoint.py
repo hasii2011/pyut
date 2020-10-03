@@ -2,8 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.MiniOgl.LinePoint import LinePoint
-from org.pyut.MiniOgl.Shape import Shape
+from org.pyut.miniogl.LinePoint import LinePoint
+from org.pyut.miniogl.Shape import Shape
 
 
 class AnchorPoint(LinePoint):

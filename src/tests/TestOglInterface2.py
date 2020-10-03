@@ -5,7 +5,7 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.MiniOgl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

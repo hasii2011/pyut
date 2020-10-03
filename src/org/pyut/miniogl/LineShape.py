@@ -8,10 +8,10 @@ from wx import BLACK_PEN
 from wx import DC
 from wx import RED_PEN
 
-from org.pyut.MiniOgl.LinePoint import LinePoint
-from org.pyut.MiniOgl.Shape import Shape
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
+from org.pyut.miniogl.LinePoint import LinePoint
+from org.pyut.miniogl.Shape import Shape
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.ControlPoint import ControlPoint
 
 
 class LineShape(Shape):

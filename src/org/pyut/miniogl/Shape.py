@@ -14,7 +14,7 @@ from wx import RED
 from wx import RED_PEN
 from wx import WHITE_BRUSH
 
-from org.pyut.MiniOgl.ShapeModel import ShapeModel
+from org.pyut.miniogl.ShapeModel import ShapeModel
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
@@ -60,8 +60,8 @@ class Shape:
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
         if PyutPreferences().debugBasicShape is True:
-            from org.pyut.MiniOgl.TextShape import TextShape
-            from org.pyut.MiniOgl.LineShape import LineShape
+            from org.pyut.miniogl.TextShape import TextShape
+            from org.pyut.miniogl.LineShape import LineShape
             if not isinstance(self, (TextShape, LineShape)):
                 t: Union[TextShape, LineShape] = self.AddText(0, -10, str(self._id))
                 t.SetColor(RED)
@@ -177,7 +177,7 @@ class Shape:
 
         @return AnchorPoint : the created anchor
         """
-        from org.pyut.MiniOgl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
+        from org.pyut.miniogl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
 
         if anchorType is None:
             anchorType = AnchorPoint
@@ -263,7 +263,7 @@ class Shape:
         Returns:  TextShape : the created shape
 
         """
-        from org.pyut.MiniOgl.TextShape import TextShape
+        from org.pyut.miniogl.TextShape import TextShape
         t = TextShape(x, y, text, self, font=font)
         if self._diagram is not None:
             self._diagram.AddShape(t)

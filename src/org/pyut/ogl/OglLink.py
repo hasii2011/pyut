@@ -13,11 +13,11 @@ from wx import ID_ANY
 from wx import Menu
 from wx import MouseEvent
 
-from org.pyut.MiniOgl.AnchorPoint import AnchorPoint
-from org.pyut.MiniOgl.ControlPoint import ControlPoint
-from org.pyut.MiniOgl.LinePoint import LinePoint
-from org.pyut.MiniOgl.LineShape import LineShape
-from org.pyut.MiniOgl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from org.pyut.miniogl.ControlPoint import ControlPoint
+from org.pyut.miniogl.LinePoint import LinePoint
+from org.pyut.miniogl.LineShape import LineShape
+from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.general.Globals import _
 
