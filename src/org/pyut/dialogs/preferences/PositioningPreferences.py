@@ -60,7 +60,7 @@ class PositioningPreferences(PreferencesPanel):
 
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
-        mainSizer.Add(self.__cbCenterAppOnStartup, 0, ALL, PositioningPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__cbCenterAppOnStartup,        0, ALL, PositioningPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__createAppPositionControls(), 0, ALL, PositioningPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__createAppSizeControls(),     0, ALL, PositioningPreferences.VERTICAL_GAP)
 

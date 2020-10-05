@@ -46,7 +46,7 @@ class GeneralPreferencesPanel(PreferencesPanel):
 
         self.__cbMaximize:      CheckBox = CheckBox(self, self.__maximizeID,      _("&Full Screen on startup"))
         self.__cbAutoResize:    CheckBox = CheckBox(self, self.__autoResizeID,    _("&Auto resize classes to fit content"))
-        self.__cbShowParams:    CheckBox = CheckBox(self, self.__showParamsID,    _("&Show params in classes"))
+        self.__cbShowParams:    CheckBox = CheckBox(self, self.__showParamsID,    _("&Show method parameters"))
         self.__cbShowTips:      CheckBox = CheckBox(self, self.__showTipsID,      _("Show &Tips on startup"))
         self.__cbCenterDiagram: CheckBox = CheckBox(self, self.__centerDiagramID, _('Center Diagram View'))
 

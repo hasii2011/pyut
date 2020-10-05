@@ -5,12 +5,14 @@ from logging import getLogger
 from wx import ALL
 from wx import CANCEL
 from wx import CENTER
+from wx import DEFAULT_DIALOG_STYLE
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ICON_EXCLAMATION
-from wx import MessageDialog
+from wx import NB_FIXEDWIDTH
+from wx import NB_TOP
 from wx import OK
 from wx import VERTICAL
 from wx import ID_ANY
@@ -20,6 +22,9 @@ from wx import CommandEvent
 from wx import Dialog
 from wx import BoxSizer
 from wx import Button
+from wx import Notebook
+from wx import Size
+from wx import MessageDialog
 
 from wx.lib.agw.fmresources import INB_BORDER
 from wx.lib.agw.fmresources import INB_DRAW_SHADOW
@@ -35,6 +40,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
 from org.pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.dialogs.preferences.PositioningPreferences import PositioningPreferences
+from org.pyut.dialogs.preferences.BackgroundPreferences import BackgroundPreferences
 
 from org.pyut.general.Globals import _
 
@@ -54,7 +60,7 @@ class DlgPyutPreferences(Dialog):
     To use it from a wxFrame:
     ```python
 
-        dlg = DlgProperties(self, wx.ID_ANY, Mediator())
+        dlg = DlgProperties(parent=self, exId=wx.ID_ANY)
         dlg.ShowModal()
         dlg.Destroy()
     ```
@@ -66,7 +72,7 @@ class DlgPyutPreferences(Dialog):
             parent:
             wxId:
         """
-        super().__init__(parent, wxId, _("Preferences"))
+        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=600))
 
         self.logger:    Logger          = getLogger(__name__)
         self.__prefs:   PyutPreferences = PyutPreferences()
@@ -75,7 +81,7 @@ class DlgPyutPreferences(Dialog):
 
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
-        mainSizer.Add(self._createTheControls(), 1, ALL | EXPAND, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self._createTheControls1(), 1, ALL | EXPAND, DlgPyutPreferences.VERTICAL_GAP)
 
         mainSizer.Add(self._createButtonsContainer(), 0, CENTER)
 
@@ -95,12 +101,31 @@ class DlgPyutPreferences(Dialog):
         generalPreferences:     GeneralPreferencesPanel  = GeneralPreferencesPanel(parent=self)
         positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=self)
         miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=self)
+        diagramPreferences:     BackgroundPreferences       = BackgroundPreferences(parent=self)
 
-        book.AddPage(generalPreferences,     text=_('General'),       select=True)
+        book.AddPage(generalPreferences,     text=_('General'),       select=False)
         book.AddPage(positioningPreferences, text=_('Positioning'),   select=False)
         book.AddPage(miscPanel,              text=_('Miscellaneous'), select=False)
+        book.AddPage(diagramPreferences,     text=_('Diagram'),       select=True)
 
         self._positioningPreferences: PositioningPreferences = positioningPreferences
+        return book
+
+    def _createTheControls1(self) -> Notebook:
+
+        style: int = NB_TOP | NB_FIXEDWIDTH
+        book: Notebook = Notebook(parent=self, id=ID_ANY, size=Size(400, 800), style=style)
+
+        generalPreferences:     GeneralPreferencesPanel  = GeneralPreferencesPanel(parent=book)
+        positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=book)
+        miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=book)
+        diagramPreferences:     BackgroundPreferences       = BackgroundPreferences(parent=book)
+
+        book.AddPage(generalPreferences,     _('General'),       select=False)
+        book.AddPage(positioningPreferences, _('Position'),      select=False)
+        book.AddPage(miscPanel,              _('Miscellaneous'), select=False)
+        book.AddPage(diagramPreferences,     _('Background'),    select=True)
+
         return book
 
     def _createButtonsContainer(self) -> BoxSizer:

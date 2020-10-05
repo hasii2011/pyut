@@ -19,7 +19,7 @@ class PyutColorEnum(Enum):
     GREEN           = 'Green'
     MEDIUM_BLUE     = 'Medium Blue'
     MIDNIGHT_BLUE   = 'Midnight Blue'
-    YELLOW         = 'Yellow'
+    YELLOW          = 'Yellow'
 
     SALMON          = 'Salmon'
 
