@@ -10,7 +10,7 @@ from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
-class DiagramPreferences(Singleton):
+class BackgroundPreferences(Singleton):
     """
     """
     DIAGRAM_SECTION: str = 'Diagram'
@@ -32,32 +32,32 @@ class DiagramPreferences(Singleton):
     def addMissingDiagramPreferences(self):
 
         try:
-            if self._config.has_section(DiagramPreferences.DIAGRAM_SECTION) is False:
-                self._config.add_section(DiagramPreferences.DIAGRAM_SECTION)
-            for prefName in DiagramPreferences.DIAGRAM_PREFERENCES:
-                if self._config.has_option(DiagramPreferences.DIAGRAM_SECTION, prefName) is False:
-                    self.__addMissingDiagramPreference(prefName, DiagramPreferences.DIAGRAM_PREFERENCES[prefName])
+            if self._config.has_section(BackgroundPreferences.DIAGRAM_SECTION) is False:
+                self._config.add_section(BackgroundPreferences.DIAGRAM_SECTION)
+            for prefName in BackgroundPreferences.DIAGRAM_PREFERENCES:
+                if self._config.has_option(BackgroundPreferences.DIAGRAM_SECTION, prefName) is False:
+                    self.__addMissingDiagramPreference(prefName, BackgroundPreferences.DIAGRAM_PREFERENCES[prefName])
 
         except (ValueError, Exception) as e:
             self.logger.error(f"Error: {e}")
 
     @property
     def backgroundGridEnabled(self) -> bool:
-        return self._config.getboolean(DiagramPreferences.DIAGRAM_SECTION, DiagramPreferences.BACKGROUND_GRID_ENABLED)
+        return self._config.getboolean(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.BACKGROUND_GRID_ENABLED)
 
     @backgroundGridEnabled.setter
     def backgroundGridEnabled(self, theNewValue: bool):
-        self._config.set(DiagramPreferences.DIAGRAM_SECTION, DiagramPreferences.BACKGROUND_GRID_ENABLED, str(theNewValue))
+        self._config.set(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.BACKGROUND_GRID_ENABLED, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property
     def backgroundGridInterval(self) -> int:
-        return self._config.getint(DiagramPreferences.DIAGRAM_SECTION, DiagramPreferences.BACKGROUND_GRID_INTERVAL)
+        return self._config.getint(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.BACKGROUND_GRID_INTERVAL)
 
     @backgroundGridInterval.setter
     def backgroundGridInterval(self, theNewValue: int):
-        self._config.set(DiagramPreferences.DIAGRAM_SECTION, DiagramPreferences.BACKGROUND_GRID_INTERVAL, str(theNewValue))
+        self._config.set(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.BACKGROUND_GRID_INTERVAL, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     def __addMissingDiagramPreference(self, preferenceName, value):
-        self._preferencesCommon.addMissingPreference(DiagramPreferences.DIAGRAM_SECTION, preferenceName, value)
+        self._preferencesCommon.addMissingPreference(BackgroundPreferences.DIAGRAM_SECTION, preferenceName, value)

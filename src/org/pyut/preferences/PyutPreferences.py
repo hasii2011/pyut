@@ -10,7 +10,7 @@ from configparser import ConfigParser
 from org.pyut.general.Singleton import Singleton
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
-from org.pyut.preferences.DiagramPreferences import DiagramPreferences
+from org.pyut.preferences.BackgroundPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
@@ -67,7 +67,7 @@ class PyutPreferences(Singleton):
         self._preferencesCommon: PreferencesCommon = PreferencesCommon(theMasterParser=self._config)
 
         self._mainPrefs:    MainPreferences    = MainPreferences(theMasterParser=self._config)
-        self._diagramPrefs: DiagramPreferences = DiagramPreferences(theMasterParser=self._config)
+        self._diagramPrefs: BackgroundPreferences = BackgroundPreferences(theMasterParser=self._config)
         self._debugPrefs:   DebugPreferences   = DebugPreferences(theMasterParser=self._config)
 
         self.__loadConfig()
