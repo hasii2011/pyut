@@ -48,7 +48,7 @@ class TestPyutColorEnum(TestBase):
         self.assertTrue(c.IsOk(), 'Wah, wah.  Yellow should be a valid color')
 
     def testUnHandledColor(self):
-        c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.SALMON)
+        c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.NO_COLOR)
 
         self.assertTrue(c.IsOk(), 'Wah, wah.  Salmon should get valid color')
 

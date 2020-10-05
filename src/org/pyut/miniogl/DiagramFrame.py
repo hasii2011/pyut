@@ -5,8 +5,8 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
+from wx import Colour
 from wx import WHITE
-from wx import LIGHT_GREY
 
 from wx import EVT_LEFT_DCLICK
 from wx import EVT_LEFT_DOWN
@@ -19,7 +19,6 @@ from wx import EVT_PAINT
 from wx import EVT_RIGHT_DCLICK
 from wx import EVT_RIGHT_DOWN
 from wx import EVT_RIGHT_UP
-from wx import PENSTYLE_DOT
 
 from wx import FONTFAMILY_DEFAULT
 from wx import FONTSTYLE_NORMAL
@@ -46,14 +45,19 @@ from wx import Window
 from wx import Pen
 from wx import PenInfo
 
+from wx._core import PenStyle
+
 from org.pyut.miniogl import Shape
 from org.pyut.miniogl.Diagram import Diagram
+from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
+from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.miniogl.SizerShape import SizerShape
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.RectangleShape import RectangleShape
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 from org.pyut.dialogs.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 
 LEFT_MARGIN     = 0
@@ -114,10 +118,15 @@ class DiagramFrame(ScrolledWindow):
         self.__backgroundBitmap = Bitmap(w, h)
 
         DEFAULT_FONT_SIZE = 12
-        # self._defaultFont  = Font(DEFAULT_FONT_SIZE, DEFAULT, NORMAL, NORMAL)
         self._defaultFont = Font(DEFAULT_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
         self.SetBackgroundColour(WHITE)
         self._prefs: PyutPreferences = PyutPreferences()
+
+        #
+        # Cache the color & pen style so we don't have to do a look up everytime in the paint event
+        #
+        self._gridLineColor: Colour   = PyutColorEnum.toWxColor(self._prefs.gridLineColor)
+        self._gridLineStyle: PenStyle = PyutPenStyle.toWxPenStyle(self._prefs.gridLineStyle)
 
         # Mouse events
         self.Bind(EVT_LEFT_DOWN,     self.OnLeftDown)
@@ -1065,6 +1074,6 @@ class DiagramFrame(ScrolledWindow):
 
     def _getGridPen(self) -> Pen:
 
-        pen: Pen = Pen(PenInfo(LIGHT_GREY).Style(PENSTYLE_DOT).Width(1.0))
+        pen: Pen = Pen(PenInfo(self._gridLineColor).Style(self._gridLineStyle).Width(1.0))
 
         return pen

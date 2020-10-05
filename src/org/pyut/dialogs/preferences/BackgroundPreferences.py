@@ -5,6 +5,9 @@ from logging import getLogger
 from wx import ALL
 from wx import CB_READONLY
 from wx import CheckBox
+from wx import CommandEvent
+from wx import EVT_CHECKBOX
+from wx import EVT_COMBOBOX
 from wx import EVT_TREE_SEL_CHANGED
 from wx import EXPAND
 from wx import HORIZONTAL
@@ -72,6 +75,10 @@ class BackgroundPreferences(PreferencesPanel):
         self.SetAutoLayout(True)
         self.SetSizer(mainSizer)
 
+        self.Bind(EVT_TREE_SEL_CHANGED, self.onPenStyleSelectionChanged,      self._treeList)
+        self.Bind(EVT_COMBOBOX,         self.onGridLineColorSelectionChanged, self._cmbGridLineColor)
+        self.Bind(EVT_CHECKBOX,         self.onEnableBackgroundGridChanged,   self._cbEnableBackgroundGrid)
+
     def __setControlValues(self):
         """
         TODO:   Set the default values on the controls.
@@ -79,6 +86,7 @@ class BackgroundPreferences(PreferencesPanel):
         if self._prefs.backgroundGridEnabled is True:
             self._cbEnableBackgroundGrid.SetValue(True)
         self._scGridInterval.SetValue(self._prefs.backgroundGridInterval)
+        self._cmbGridLineColor.SetValue(self._prefs.gridLineColor.value)
 
     def __createSimpleGridOptions(self) -> BoxSizer:
 
@@ -98,6 +106,7 @@ class BackgroundPreferences(PreferencesPanel):
 
         self._cbEnableBackgroundGrid: CheckBox = cbEnableBackgroundGrid
         self._scGridInterval:         SpinCtrl = scGridInterval
+
         return szrSimple
 
     def __createGridLineColorContainer(self) -> StaticBoxSizer:
@@ -111,12 +120,12 @@ class BackgroundPreferences(PreferencesPanel):
         for cc in PyutColorEnum:
             colorChoices.append(cc.value)
 
-        self.__cmbGridLineColor: ComboBox = ComboBox(self, self.colorID, choices=colorChoices, style=CB_READONLY)
+        self._cmbGridLineColor: ComboBox = ComboBox(self, self.colorID, choices=colorChoices, style=CB_READONLY)
 
         box:      StaticBox      = StaticBox(self, ID_ANY, _("Grid Line Color"))
         szrColor: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
-        szrColor.Add(self.__cmbGridLineColor, 1, LEFT | RIGHT, BackgroundPreferences.MINI_GAP)
+        szrColor.Add(self._cmbGridLineColor, 1, LEFT | RIGHT, BackgroundPreferences.MINI_GAP)
 
         return szrColor
 
@@ -128,7 +137,6 @@ class BackgroundPreferences(PreferencesPanel):
 
         treeList.AppendItem(treeRoot, PyutPenStyle.SOLID.value)
         treeList.AppendItem(treeRoot, PyutPenStyle.DOT.value)
-        treeList.AppendItem(treeRoot, PyutPenStyle.TRANSPARENT.value)
 
         dashItem: TreeItemId = treeList.AppendItem(treeRoot, BackgroundPreferences.PEN_STYLE_CATEGORY_DASHED_LINES)
         treeList.AppendItem(dashItem, PyutPenStyle.DOT_DASH.value)
@@ -137,9 +145,6 @@ class BackgroundPreferences(PreferencesPanel):
 
         hatchItem: TreeItemId = treeList.AppendItem(treeRoot, BackgroundPreferences.PEN_STYLE_CATEGORY_HATCH_LINES)
         hatchStyles = [
-            PyutPenStyle.BACKWARD_DIAGONAL_HATCH,
-            PyutPenStyle.CROSS_DIAGONAL_HATCH,
-            PyutPenStyle.FORWARD_DIAGONAL_HATCH,
             PyutPenStyle.CROSS_HATCH,
             PyutPenStyle.HORIZONTAL_HATCH,
             PyutPenStyle.VERTICAL_HATCH
@@ -153,12 +158,11 @@ class BackgroundPreferences(PreferencesPanel):
         szrGridStyle: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
         szrGridStyle.Add(treeList, 1, ALL, BackgroundPreferences.HORIZONTAL_GAP)
 
-        self.Bind(EVT_TREE_SEL_CHANGED, self.onSelectionChanged, treeList)
         self._treeList: TreeCtrl = treeList
 
         return szrGridStyle
 
-    def onSelectionChanged(self, event: TreeEvent):
+    def onPenStyleSelectionChanged(self, event: TreeEvent):
 
         item = event.GetItem()
         if item is not None:
@@ -169,5 +173,24 @@ class BackgroundPreferences(PreferencesPanel):
             self.clsLogger.debug(f'OnSelChanged: {itemText}')
             if itemText == BackgroundPreferences.PEN_STYLE_CATEGORY_DASHED_LINES or itemText == BackgroundPreferences.PEN_STYLE_CATEGORY_HATCH_LINES:
                 treeList.Unselect()
+            else:
+                pyutPenStyle: PyutPenStyle = PyutPenStyle(itemText)
+                self._prefs.gridLineStyle = pyutPenStyle
 
+        event.Skip(True)
+
+    def onGridLineColorSelectionChanged(self, event: CommandEvent):
+
+        colorValue: str = event.GetString()
+
+        pyutColorEnum: PyutColorEnum = PyutColorEnum(colorValue)
+
+        self._prefs.gridLineColor = pyutColorEnum
+
+        event.Skip(True)
+
+    def onEnableBackgroundGridChanged(self, event: CommandEvent):
+
+        enabledValue: bool = event.IsChecked()
+        self._prefs.backgroundGridEnabled = enabledValue
         event.Skip(True)

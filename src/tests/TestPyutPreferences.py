@@ -10,6 +10,7 @@ from shutil import copyfile
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
+from org.pyut.preferences.BackgroundPreferences import BackgroundPreferences
 from tests.TestBase import TestBase
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -96,6 +97,14 @@ class TestPyutPreferences(TestBase):
         self.prefs.init()  # reload prefs
         self.prefs.debugBasicShape = False
         self.assertFalse(self.prefs.debugBasicShape, 'Syntactic sugar not working')
+
+    def testTwoColorValue(self):
+
+        self.prefs.init()  # reload prefs
+        expectedColor: str = BackgroundPreferences.DEFAULT_GRID_LINE_COLOR
+        actualColor:   str = self.prefs.gridLineColor.value
+
+        self.assertEqual(expectedColor, actualColor, 'Default must have change')
 
     def _backupPrefs(self):
 

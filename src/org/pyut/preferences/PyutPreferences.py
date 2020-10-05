@@ -8,6 +8,8 @@ from logging import getLogger
 from configparser import ConfigParser
 
 from org.pyut.general.Singleton import Singleton
+from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
+from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.BackgroundPreferences import BackgroundPreferences
@@ -332,6 +334,22 @@ class PyutPreferences(Singleton):
     @backgroundGridInterval.setter
     def backgroundGridInterval(self, theNewValue: int):
         self._diagramPrefs.backgroundGridInterval = theNewValue
+
+    @property
+    def gridLineColor(self) -> PyutColorEnum:
+        return self._diagramPrefs.gridLineColor
+
+    @gridLineColor.setter
+    def gridLineColor(self, theNewValue: PyutColorEnum):
+        self._diagramPrefs.gridLineColor = theNewValue
+
+    @property
+    def gridLineStyle(self) -> PyutPenStyle:
+        return self._diagramPrefs.gridLineStyle
+
+    @gridLineStyle.setter
+    def gridLineStyle(self, theNewValue: PyutPenStyle):
+        self._diagramPrefs.gridLineStyle = theNewValue
 
     def __loadConfig(self):
         """

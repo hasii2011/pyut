@@ -20,8 +20,8 @@ class PyutColorEnum(Enum):
     MEDIUM_BLUE     = 'Medium Blue'
     MIDNIGHT_BLUE   = 'Midnight Blue'
     YELLOW          = 'Yellow'
-
     SALMON          = 'Salmon'
+    NO_COLOR        = 'Bogus'
 
     @staticmethod
     def toWxColor(colorEnum: 'PyutColorEnum') -> Colour:
@@ -42,6 +42,8 @@ class PyutColorEnum(Enum):
             c: Colour = cdb.Find(PyutColorEnum.MIDNIGHT_BLUE.value)
         elif colorEnum == PyutColorEnum.YELLOW:
             c: Colour = cdb.Find(PyutColorEnum.YELLOW.value)
+        elif colorEnum == PyutColorEnum.SALMON:
+            c: Colour = cdb.Find(PyutColorEnum.SALMON.value)
         else:
             c: Colour = cdb.Find(PyutColorEnum.WHITE.value)
 
