@@ -31,7 +31,7 @@ install:
   - pip install orthogonal
   - pip install pygmlparser
   - pip install pyumldiagrams
-  - pip --verbose install wxPython
+  - pip install wxPython
   - pip install xmlschema
 
 # command to run tests
