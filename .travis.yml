@@ -24,7 +24,7 @@ services:
 # command to install dependencies
 install:
   # pip install -r requirements.txt
-  - brew install python
+  - brew install python3
   - pip install antlr4-python3-runtime
   - pip install fpdf2
   - pip install html-testRunner
