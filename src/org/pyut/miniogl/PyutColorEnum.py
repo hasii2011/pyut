@@ -1,7 +1,7 @@
 
 from enum import Enum
 
-from wx import Colour
+# from wx import Colour
 from wx import ColourDatabase
 
 
@@ -24,28 +24,28 @@ class PyutColorEnum(Enum):
     NO_COLOR        = 'Bogus'
 
     @staticmethod
-    def toWxColor(colorEnum: 'PyutColorEnum') -> Colour:
+    def toWxColor(colorEnum: 'PyutColorEnum'):
         """
         """
         cdb: ColourDatabase = ColourDatabase()
         if colorEnum == PyutColorEnum.BLACK:
-            c: Colour = cdb.Find(PyutColorEnum.BLACK.value)
+            c = cdb.Find(PyutColorEnum.BLACK.value)
         elif colorEnum == PyutColorEnum.CORNFLOWER_BLUE:
-            c: Colour = cdb.Find(PyutColorEnum.CORNFLOWER_BLUE.value)
+            c = cdb.Find(PyutColorEnum.CORNFLOWER_BLUE.value)
         elif colorEnum == PyutColorEnum.LIGHT_GREY:
-            c: Colour = cdb.Find(PyutColorEnum.LIGHT_GREY.value)
+            c = cdb.Find(PyutColorEnum.LIGHT_GREY.value)
         elif colorEnum == PyutColorEnum.GREEN:
-            c: Colour = cdb.Find(PyutColorEnum.GREEN.value)
+            c = cdb.Find(PyutColorEnum.GREEN.value)
         elif colorEnum == PyutColorEnum.MEDIUM_BLUE:
-            c: Colour = cdb.Find(PyutColorEnum.MEDIUM_BLUE.value)
+            c = cdb.Find(PyutColorEnum.MEDIUM_BLUE.value)
         elif colorEnum == PyutColorEnum.MIDNIGHT_BLUE:
-            c: Colour = cdb.Find(PyutColorEnum.MIDNIGHT_BLUE.value)
+            c = cdb.Find(PyutColorEnum.MIDNIGHT_BLUE.value)
         elif colorEnum == PyutColorEnum.YELLOW:
-            c: Colour = cdb.Find(PyutColorEnum.YELLOW.value)
+            c = cdb.Find(PyutColorEnum.YELLOW.value)
         elif colorEnum == PyutColorEnum.SALMON:
-            c: Colour = cdb.Find(PyutColorEnum.SALMON.value)
+            c = cdb.Find(PyutColorEnum.SALMON.value)
         else:
-            c: Colour = cdb.Find(PyutColorEnum.WHITE.value)
+            c = cdb.Find(PyutColorEnum.WHITE.value)
 
         del cdb
         assert c.IsOk(), 'Developer Error.  Invalid color'
