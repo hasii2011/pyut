@@ -86,5 +86,13 @@ setup(
     description='The Python UML Tool',
     options={},
     setup_requires=['py2app'],
-    install_requires=['wxPython', 'xmlschema', 'html-testRunner', 'pygmlparser', 'pyumldiagrams']
+    install_requires=['antlr4-python3-runtime',
+                      'fpdf2',
+                      'networkx',
+                      'orthogonal',
+                      'pygmlparser',
+                      'pyumldiagrams',
+                      'wxPython',
+                      'xmlschema',
+                      ]
 )
