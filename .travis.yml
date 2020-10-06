@@ -2,7 +2,7 @@
 # os: osx
 
 # osx_image: xcode11.2
-dist: Bionic
+# dist: Bionic
 
 notifications:
   email:
@@ -31,7 +31,7 @@ install:
   - pip install orthogonal
   - pip install pygmlparser
   - pip install pyumldiagrams
-  - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+  - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython
   - pip install xmlschema
 
 # command to run tests
