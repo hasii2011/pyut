@@ -2,7 +2,7 @@
 # os: osx
 
 # osx_image: xcode11.2
-# dist: Bionic
+dist: Bionic
 
 notifications:
   email:
