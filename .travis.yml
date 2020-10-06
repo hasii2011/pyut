@@ -31,8 +31,8 @@ install:
   - pip install orthogonal
   - pip install pygmlparser
   - pip install pyumldiagrams
-  - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython
-  - pip install wxPython
+  - pip install --verbose -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython
+  - pip install --verbose wxPython
   - pip install xmlschema
 
 # command to run tests
