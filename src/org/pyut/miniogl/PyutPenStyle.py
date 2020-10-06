@@ -9,8 +9,6 @@ from wx import PENSTYLE_SHORT_DASH
 from wx import PENSTYLE_SOLID
 from wx import PENSTYLE_VERTICAL_HATCH
 
-from wx._core import PenStyle
-
 
 class PyutPenStyle(Enum):
 
@@ -26,33 +24,33 @@ class PyutPenStyle(Enum):
     VERTICAL_HATCH          = 'Vertical Hatch'
 
     @staticmethod
-    def toWxPenStyle(penStyleEnum: 'PyutPenStyle') -> PenStyle:
+    def toWxPenStyle(penStyleEnum: 'PyutPenStyle'):
 
         if penStyleEnum == PyutPenStyle.SOLID:
-            wxPenStyle: PenStyle = PENSTYLE_SOLID
+            wxPenStyle = PENSTYLE_SOLID
 
         elif penStyleEnum == PyutPenStyle.DOT:
-            wxPenStyle: PenStyle = PENSTYLE_DOT
+            wxPenStyle = PENSTYLE_DOT
 
         elif penStyleEnum == PyutPenStyle.LONG_DASH:
-            wxPenStyle: PenStyle = PENSTYLE_LONG_DASH
+            wxPenStyle = PENSTYLE_LONG_DASH
 
         elif penStyleEnum == PyutPenStyle.SHORT_DASH:
-            wxPenStyle: PenStyle = PENSTYLE_SHORT_DASH
+            wxPenStyle = PENSTYLE_SHORT_DASH
 
         elif penStyleEnum == PyutPenStyle.DOT_DASH:
-            wxPenStyle: PenStyle = PENSTYLE_DOT_DASH
+            wxPenStyle = PENSTYLE_DOT_DASH
 
         elif penStyleEnum == PyutPenStyle.CROSS_HATCH:
-            wxPenStyle: PenStyle = PENSTYLE_CROSS_HATCH
+            wxPenStyle = PENSTYLE_CROSS_HATCH
 
         elif penStyleEnum == PyutPenStyle.HORIZONTAL_HATCH:
-            wxPenStyle: PenStyle = PENSTYLE_HORIZONTAL_HATCH
+            wxPenStyle = PENSTYLE_HORIZONTAL_HATCH
 
         elif penStyleEnum == PyutPenStyle.VERTICAL_HATCH:
-            wxPenStyle: PenStyle = PENSTYLE_VERTICAL_HATCH
+            wxPenStyle = PENSTYLE_VERTICAL_HATCH
 
         else:
-            wxPenStyle: PenStyle = PENSTYLE_SOLID
+            wxPenStyle = PENSTYLE_SOLID
 
         return wxPenStyle
