@@ -1,8 +1,7 @@
 
-os: osx
+# os: osx
 
-osx_image: xcode12u
-# dist: bionic
+# osx_image: xcode12u
 
 notifications:
   email:
@@ -11,20 +10,21 @@ notifications:
     on_success: change # default: change
     on_failure: always # default: always
 
-# language: python
+language: python
 
 cache: pip
 
 services:
   - xvfb
 
-# python:
-#   - "3.8.5"
+python:
+  - "3.8.5"
 
 # command to install dependencies
 install:
   # pip install -r requirements.txt
-  - brew install python3
+  - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+  - pip install wxPython
   - pip install antlr4-python3-runtime
   - pip install fpdf2
   - pip install html-testRunner
@@ -32,7 +32,6 @@ install:
   - pip install orthogonal
   - pip install pygmlparser
   - pip install pyumldiagrams
-  - pip install wxPython
   - pip install xmlschema
 
 # command to run tests
