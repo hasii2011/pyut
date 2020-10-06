@@ -11,7 +11,7 @@ notifications:
     on_success: change # default: change
     on_failure: always # default: always
 
-language: python
+# language: python
 
 cache: pip
 
@@ -24,6 +24,7 @@ services:
 # command to install dependencies
 install:
   # pip install -r requirements.txt
+  - brew install python
   - pip install antlr4-python3-runtime
   - pip install fpdf2
   - pip install html-testRunner
