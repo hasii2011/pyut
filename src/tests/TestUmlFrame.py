@@ -45,7 +45,7 @@ class TestUmlFrame(unittest.TestCase):
 
         # Create wx application
         # For python 3 and wx 4.x we need to save it so it does not get garbage collected
-        self.app = App()
+        self.app: App = App()
 
         #  Create frame
         # baseFrame = wxFrame(None, -1, "", size=(10, 10))

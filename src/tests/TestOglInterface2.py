@@ -5,6 +5,8 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from wx import App
+
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -33,11 +35,13 @@ class TestOglInterface2(TestBase):
     def setUp(self):
         self.logger: Logger = TestOglInterface2.clsLogger
 
+        self.app: App = App()
+
         self._pyutInterface:    PyutInterface     = PyutInterface()
         self._destinationAnchor: SelectAnchorPoint = SelectAnchorPoint(250, 250, AttachmentPoint.NORTH)
 
     def tearDown(self):
-        pass
+        del self.app
 
     def testEqual(self):
 
