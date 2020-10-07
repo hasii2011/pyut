@@ -25,6 +25,7 @@ python:
 # command to install dependencies
 install:
   # pip install -r requirements.txt
+  - sudo apt-get install -y  libsdl2-dev
   - python3 --version
   - pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython
   - pip3 install wxPython
