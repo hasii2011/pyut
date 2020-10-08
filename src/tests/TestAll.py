@@ -22,7 +22,8 @@ class TestAll:
     """
     The class that can run our unit tests in various formats
     """
-    NOT_TESTS: List[str] = ['TestAll', 'TestMiniOgl', 'TestWxOgl', 'TestBase',
+    NOT_TESTS: List[str] = ['TestAll',
+                            'org/pyut/miniogl/TestMiniOgl', 'TestWxOgl', 'TestBase',
                             'TestTemplate', 'TestIoFile', 'TestUmlFrame',
                             'TestAst', 'TestADialog', 'TestGriddedDiagramApplication']
 
@@ -95,7 +96,7 @@ class TestAll:
         miniOglModules: List[str] = glob('tests/org/pyut/miniogl/Test*.py')
         fModules:       List[str] = glob('tests/Test*.py')
 
-        allModules:     List[str] = fModules + modelModules + oglModules
+        allModules:     List[str] = fModules + modelModules + oglModules + miniOglModules
 
         # remove .py extension
         modules = list(map(lambda x: x[:-3], allModules))
