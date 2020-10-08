@@ -94,6 +94,7 @@ class TestAll:
         modelModules:   List[str] = glob('tests/org/pyut/model/Test*.py')
         oglModules:     List[str] = glob('tests/org/pyut/ogl/Test*.py')
         miniOglModules: List[str] = glob('tests/org/pyut/miniogl/Test*.py')
+        generalModules: List[str] = glob('tests/org/pyut/general/Test*.py')
         fModules:       List[str] = glob('tests/Test*.py')
 
         allModules:     List[str] = fModules + modelModules + oglModules + miniOglModules
