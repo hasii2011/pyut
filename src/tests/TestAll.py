@@ -90,9 +90,12 @@ class TestAll:
         Returns:
             A list of module names that we can find in this package
         """
-        modelModules: List[str] = glob('tests/org/pyut/model/Test*.py')
-        fModules:     List[str] = glob('tests/Test*.py')
-        allModules:   List[str] = fModules + modelModules
+        modelModules:   List[str] = glob('tests/org/pyut/model/Test*.py')
+        oglModules:     List[str] = glob('tests/org/pyut/ogl/Test*.py')
+        miniOglModules: List[str] = glob('tests/org/pyut/miniogl/Test*.py')
+        fModules:       List[str] = glob('tests/Test*.py')
+
+        allModules:     List[str] = fModules + modelModules + oglModules
 
         # remove .py extension
         modules = list(map(lambda x: x[:-3], allModules))
