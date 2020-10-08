@@ -41,7 +41,7 @@ class TestIoFile(TestBase):
 
         oldPath: str = getcwd()
         # Assume we are at src/tests
-        chdir('../..')
+        chdir('../../../../..')
         newAppPath: str = getcwd()
         chdir(oldPath)
 

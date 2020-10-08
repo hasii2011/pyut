@@ -23,9 +23,10 @@ class TestAll:
     The class that can run our unit tests in various formats
     """
     NOT_TESTS: List[str] = ['TestAll',
-                            'org/pyut/miniogl/TestMiniOgl', 'TestWxOgl', 'TestBase',
-                            'TestTemplate', 'TestIoFile', 'TestUmlFrame',
-                            'TestAst', 'TestADialog', 'TestGriddedDiagramApplication']
+                            'org/pyut/miniogl/TestMiniOgl',
+                            'TestWxOgl', 'TestBase', 'TestTemplate',
+                            'org/pyut/persistence/TestIoFile',
+                            'TestUmlFrame', 'TestAst', 'TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
     VERBOSITY_DEFAULT: int = 1  # VERBOSITY_QUIET plus a dot for every successful test or a F for every failure
@@ -91,13 +92,16 @@ class TestAll:
         Returns:
             A list of module names that we can find in this package
         """
-        modelModules:   List[str] = glob('tests/org/pyut/model/Test*.py')
-        oglModules:     List[str] = glob('tests/org/pyut/ogl/Test*.py')
-        miniOglModules: List[str] = glob('tests/org/pyut/miniogl/Test*.py')
-        generalModules: List[str] = glob('tests/org/pyut/general/Test*.py')
+        modelModules:       List[str] = glob('tests/org/pyut/model/Test*.py')
+        oglModules:         List[str] = glob('tests/org/pyut/ogl/Test*.py')
+        miniOglModules:     List[str] = glob('tests/org/pyut/miniogl/Test*.py')
+        generalModules:     List[str] = glob('tests/org/pyut/general/Test*.py')
+        pluginModules:      List[str] = glob('tests/org/pyut/plugins/Test*.py')
+        persistenceModules: List[str] = glob('tests/org/pyut/persistence/Test*.py')
+
         fModules:       List[str] = glob('tests/Test*.py')
 
-        allModules:     List[str] = fModules + modelModules + oglModules + miniOglModules + generalModules
+        allModules:     List[str] = fModules + modelModules + oglModules + miniOglModules + generalModules + pluginModules + persistenceModules
 
         # remove .py extension
         modules = list(map(lambda x: x[:-3], allModules))
