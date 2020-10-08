@@ -6,6 +6,10 @@ function changeToProjectRoot {
     if [[ ${areHere} = "scripts" ]]; then
         cd ..
     fi
+
+    if [[ ${areHere} = "src" ]]; then
+        cd ..
+    fi
 }
 
 changeToProjectRoot

@@ -97,7 +97,7 @@ class TestAll:
         generalModules: List[str] = glob('tests/org/pyut/general/Test*.py')
         fModules:       List[str] = glob('tests/Test*.py')
 
-        allModules:     List[str] = fModules + modelModules + oglModules + miniOglModules
+        allModules:     List[str] = fModules + modelModules + oglModules + miniOglModules + generalModules
 
         # remove .py extension
         modules = list(map(lambda x: x[:-3], allModules))
