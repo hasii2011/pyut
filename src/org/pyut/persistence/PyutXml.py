@@ -2,7 +2,6 @@
 from logging import Logger
 from logging import getLogger
 
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
 
 from org.pyut.model.PyutActor import PyutActor

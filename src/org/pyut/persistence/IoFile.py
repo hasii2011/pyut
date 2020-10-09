@@ -6,9 +6,7 @@ from os import getcwd
 from os import chdir
 
 import zlib
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import parseString
 
 from org.pyut.PyutUtils import PyutUtils

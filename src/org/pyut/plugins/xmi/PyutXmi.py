@@ -5,12 +5,9 @@ from typing import NewType
 from logging import Logger
 from logging import getLogger
 
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
-# noinspection PyUnresolvedReferences
-from xml.dom.minicompat import NodeList
+from xml.dom.minidom import NodeList
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField

@@ -6,9 +6,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
 
 from wx import Dialog
