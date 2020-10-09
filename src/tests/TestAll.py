@@ -92,7 +92,6 @@ class TestAll:
         Returns:
             A list of module names that we can find in this package
         """
-
         pyutModules:            List[str] = glob('tests/org/pyut/Test*.py')
         commandsModules:        List[str] = glob('tests/org/pyut/commands/Test*.py')
         errorControllerModules: List[str] = glob('tests/org/pyut/errorcontroller/Test*.py')
@@ -109,6 +108,7 @@ class TestAll:
         dtdModules:             List[str] = glob('tests/org/pyut/plugins/dtd/Test*.py')
         gmlModules:             List[str] = glob('tests/org/pyut/plugins/gml/Test*.py')
         iopythonSupportModules: List[str] = glob('tests/org/pyut/plugins/iopythonsupport/Test*.py')
+        xsdModules:             List[str] = glob('tests/org/pyut/plugins/xsd/Test*.py')
 
         preferencesModules: List[str] = glob('tests/org/pyut/preferences/Test*.py')
 
@@ -116,7 +116,7 @@ class TestAll:
 
         allModules: List[str] = fModules + \
             pyutModules + commandsModules + \
-            dtdModules + errorControllerModules + generalModules + gmlModules + historyModules + iopythonSupportModules + \
+            dtdModules + errorControllerModules + generalModules + gmlModules + historyModules + iopythonSupportModules + xsdModules + \
             miniOglModules + modelModules + oglModules + persistenceModules + converterModules + pluginModules + \
             preferencesModules
 
