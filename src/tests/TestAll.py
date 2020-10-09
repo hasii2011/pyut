@@ -92,16 +92,23 @@ class TestAll:
         Returns:
             A list of module names that we can find in this package
         """
+
+        historyModules:     List[str] = glob('tests/org/pyut/history/Test*.py')
         modelModules:       List[str] = glob('tests/org/pyut/model/Test*.py')
         oglModules:         List[str] = glob('tests/org/pyut/ogl/Test*.py')
         miniOglModules:     List[str] = glob('tests/org/pyut/miniogl/Test*.py')
         generalModules:     List[str] = glob('tests/org/pyut/general/Test*.py')
         pluginModules:      List[str] = glob('tests/org/pyut/plugins/Test*.py')
+        gmlModules:         List[str] = glob('tests/org/pyut/plugins/gml/Test*.py')
+        dtdModules:         List[str] = glob('tests/org/pyut/plugins/dtd/Test*.py')
         persistenceModules: List[str] = glob('tests/org/pyut/persistence/Test*.py')
+        preferencesModules: List[str] = glob('tests/org/pyut/preferences/Test*.py')
 
         fModules:       List[str] = glob('tests/Test*.py')
 
-        allModules:     List[str] = fModules + modelModules + oglModules + miniOglModules + generalModules + pluginModules + persistenceModules
+        allModules:     List[str] = historyModules + fModules + \
+                                    modelModules + oglModules + miniOglModules + generalModules + pluginModules + gmlModules + dtdModules + \
+                                    persistenceModules + preferencesModules
 
         # remove .py extension
         modules = list(map(lambda x: x[:-3], allModules))
