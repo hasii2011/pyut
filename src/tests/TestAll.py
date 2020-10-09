@@ -26,7 +26,7 @@ class TestAll:
                             'org/pyut/miniogl/TestMiniOgl',
                             'TestWxOgl', 'TestBase', 'TestTemplate',
                             'org/pyut/persistence/TestIoFile',
-                            'TestUmlFrame', 'TestAst', 'TestADialog', 'TestGriddedDiagramApplication']
+                            'TestUmlFrame', 'TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
     VERBOSITY_DEFAULT: int = 1  # VERBOSITY_QUIET plus a dot for every successful test or a F for every failure
@@ -120,7 +120,7 @@ class TestAll:
             miniOglModules + modelModules + oglModules + persistenceModules + converterModules + pluginModules + \
             preferencesModules
 
-        self.logger.info(f'{allModules=}')
+        self.logger.debug(f'{allModules=}')
 
         # remove .py extension
         modules = list(map(lambda x: x[:-3], allModules))
