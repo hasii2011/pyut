@@ -93,22 +93,28 @@ class TestAll:
             A list of module names that we can find in this package
         """
 
-        historyModules:     List[str] = glob('tests/org/pyut/history/Test*.py')
+        dtdModules:             List[str] = glob('tests/org/pyut/errorcontroller/Test*.py')
+        errorcontrollerModules: List[str] = glob('tests/org/pyut/plugins/dtd/Test*.py')
+        generalModules:         List[str] = glob('tests/org/pyut/general/Test*.py')
+        gmlModules:             List[str] = glob('tests/org/pyut/plugins/gml/Test*.py')
+        historyModules:         List[str] = glob('tests/org/pyut/history/Test*.py')
+
+        iopythonSupportModules: List[str] = glob('tests/org/pyut/plugins/iopythonsupport/Test*.py')
+
+        miniOglModules:     List[str] = glob('tests/org/pyut/miniogl/Test*.py')
         modelModules:       List[str] = glob('tests/org/pyut/model/Test*.py')
         oglModules:         List[str] = glob('tests/org/pyut/ogl/Test*.py')
-        miniOglModules:     List[str] = glob('tests/org/pyut/miniogl/Test*.py')
-        generalModules:     List[str] = glob('tests/org/pyut/general/Test*.py')
-        pluginModules:      List[str] = glob('tests/org/pyut/plugins/Test*.py')
-        gmlModules:         List[str] = glob('tests/org/pyut/plugins/gml/Test*.py')
-        dtdModules:         List[str] = glob('tests/org/pyut/plugins/dtd/Test*.py')
         persistenceModules: List[str] = glob('tests/org/pyut/persistence/Test*.py')
+        converterModules:   List[str] = glob('tests/org/pyut/persistence/converters/Test*.py')
+        pluginModules:      List[str] = glob('tests/org/pyut/plugins/Test*.py')
         preferencesModules: List[str] = glob('tests/org/pyut/preferences/Test*.py')
 
-        fModules:       List[str] = glob('tests/Test*.py')
+        fModules:   List[str] = glob('tests/Test*.py')
 
-        allModules:     List[str] = historyModules + fModules + \
-                                    modelModules + oglModules + miniOglModules + generalModules + pluginModules + gmlModules + dtdModules + \
-                                    persistenceModules + preferencesModules
+        allModules: List[str] = fModules + \
+                                dtdModules + errorcontrollerModules + generalModules + gmlModules + historyModules + iopythonSupportModules + \
+                                miniOglModules + modelModules + oglModules + persistenceModules + converterModules + pluginModules + \
+                                preferencesModules
 
         # remove .py extension
         modules = list(map(lambda x: x[:-3], allModules))
