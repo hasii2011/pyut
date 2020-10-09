@@ -23,7 +23,7 @@
             "propagate": "False"
         },
         "__main__": {
-            "level": "WARNING",
+            "level": "INFO",
             "handlers": ["consoleHandler"],
             "propagate": "False"
         },

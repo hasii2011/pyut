@@ -1,6 +1,5 @@
 
 from typing import List
-from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -18,15 +17,10 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.plugins.io.IoPython import IoPython
 from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
-
-from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class TestIoPython(TestBase):
-    """
-    """
     clsLogger: Logger = None
 
     @classmethod
@@ -35,9 +29,7 @@ class TestIoPython(TestBase):
         TestIoPython.clsLogger = getLogger(__name__)
 
     def setUp(self):
-        self.logger: Logger   = TestIoPython.clsLogger
-        self.plugin: IoPython = IoPython(oglObjects=None, umlFrame=cast(UmlFrame, None))
-
+        self.logger:       Logger       = TestIoPython.clsLogger
         self.pyutToPython: PyutToPython = PyutToPython()
         #
         # Ugh -- need this called because PyutMethod instantiates the singleton
@@ -49,7 +41,8 @@ class TestIoPython(TestBase):
 
     def testGetPublicFieldPythonCode(self):
 
-        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("publicField", "", None, PyutVisibilityEnum.PUBLIC))
+        pyutType: PyutType = PyutType(value='')
+        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("publicField", pyutType, None, PyutVisibilityEnum.PUBLIC))
 
         unExpectedValue: int = -1
         actualValue:     int = s.find('self.publicField')
@@ -57,7 +50,9 @@ class TestIoPython(TestBase):
 
     def testGetPrivateFieldPythonCode(self):
 
-        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("privateField", "", None, PyutVisibilityEnum.PRIVATE))
+        pyutType: PyutType = PyutType(value='')
+
+        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("privateField", pyutType, None, PyutVisibilityEnum.PRIVATE))
 
         unExpectedValue: int = -1
         actualValue:     int = s.find('self.__privateField')
@@ -65,7 +60,9 @@ class TestIoPython(TestBase):
 
     def testGetProtectedFieldPythonCode(self):
 
-        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("protectedField", "", None, PyutVisibilityEnum.PROTECTED))
+        pyutType: PyutType = PyutType(value='')
+
+        s: str = self.pyutToPython.generateFieldPythonCode(PyutField("protectedField", pyutType, None, PyutVisibilityEnum.PROTECTED))
 
         unExpectedValue: int = -1
         actualValue:     int = s.find('self._protectedField')
@@ -113,15 +110,6 @@ class TestIoPython(TestBase):
         actualValue:     int = defCode.__contains__('def -protectedMethod')
 
         self.assertNotEqual(unExpectedValue, actualValue, f'Did not code generate protected method correctly: `{defCode}`')
-
-#
-# def testAskWhichClassesToReverse2():
-#     class testClass1: pass
-#     class testClass2: pass
-#     class testClass3: pass
-#     class testClass4: pass
-#     lstClasses = [testClass1(), testClass2(), testClass3(), testClass4()]
-#     ret = askWhichClassesToReverse2(lstClasses)
 
 
 def suite() -> TestSuite:
