@@ -23,6 +23,7 @@ class TestPyutObject(TestBase):
 
     def setUp(self):
         self.logger: Logger = TestPyutObject.clsLogger
+        PyutObject.nextId = 0
 
     def tearDown(self):
         pass
@@ -59,6 +60,20 @@ class TestPyutObject(TestBase):
         actualLength:   int = len(pyutObject.getName())
 
         self.assertEqual(expectedLength, actualLength, 'Our name appears to have NOT been used')
+
+    def testInitialId(self):
+        self.assertEqual(0, PyutObject.nextId, 'Not correctly initialized')
+
+    def testHowIdsIncrement(self):
+
+        pyutObject1: PyutObject = PyutObject(name='pyutObject1')
+        self.assertEqual(1, PyutObject.nextId, f'Not correctly incremented {pyutObject1.name}')
+
+        pyutObject2: PyutObject = PyutObject(name='pyutObject2')
+        self.assertEqual(2, PyutObject.nextId, f'Not correctly incremented {pyutObject2.name}')
+
+        pyutObject3: PyutObject = PyutObject(name='pyutObject3')
+        self.assertEqual(3, PyutObject.nextId, f'Not correctly incremented {pyutObject3.name}')
 
 
 def suite() -> TestSuite:
