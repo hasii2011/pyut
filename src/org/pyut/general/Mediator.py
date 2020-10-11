@@ -600,7 +600,7 @@ class Mediator(Singleton):
         from org.pyut.ogl.OglClass import OglClass
         prefs: PyutPreferences = PyutPreferences()
 
-        if prefs["AUTO_RESIZE"]:
+        if prefs.autoResizeShapesOnEdit is True:
             if isinstance(obj, PyutClass):
                 po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.getPyutObject() is obj]
                 obj = po[0]
