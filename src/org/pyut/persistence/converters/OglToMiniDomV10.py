@@ -35,6 +35,7 @@ from org.pyut.ogl.OglAssociation import OglAssociation
 from org.pyut.ogl.OglAssociation import SRC_CARD
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglDisplayParameters import OglDisplayParameters
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
@@ -78,6 +79,7 @@ class OglToMiniDom:
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_CLASS)
 
         root = self.__appendOglBase(oglClass, root)
+        root = self.__addGraphicClassAttributes(oglClass, root)
 
         # adding the data layer object
         root.appendChild(self._pyutClassToXml(oglClass.getPyutObject(), xmlDoc))
@@ -606,6 +608,14 @@ class OglToMiniDom:
         simpleX, simpleY = self.__getSimpleCoordinates(x, y)
         root.setAttribute(PyutXmlConstants.ATTR_X, simpleX)
         root.setAttribute(PyutXmlConstants.ATTR_Y, simpleY)
+
+        return root
+
+    def __addGraphicClassAttributes(self, oglClass: OglClass, root: Element) -> Element:
+
+        displayParameters: OglDisplayParameters = oglClass.displayParameters
+
+        root.setAttribute(PyutXmlConstants.ATTR_DISPLAY_PARAMETERS, displayParameters.value)
 
         return root
 

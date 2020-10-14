@@ -5,7 +5,6 @@ from logging import Logger
 from logging import getLogger
 
 from wx import BLACK
-from wx import CommandEvent
 from wx import EVT_MENU
 from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
@@ -14,14 +13,18 @@ from wx import FONTWEIGHT_BOLD
 from wx import Font
 from wx import ClientDC
 from wx import Menu
+from wx import CommandEvent
 
 from org.pyut.model.PyutObject import PyutObject
+from org.pyut.model.PyutClass import PyutClass
+
+from org.pyut.ogl.OglDisplayParameters import OglDisplayParameters
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
-from org.pyut.model.PyutClass import PyutClass
 
 from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.general.Globals import _
 
 
@@ -70,6 +73,16 @@ class OglClass(OglObject):
 
         self.logger:    Logger = getLogger(__name__)
         self._nameFont: Font   = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_BOLD)
+
+        self._displayParameters: OglDisplayParameters = OglDisplayParameters.UNSPECIFIED
+
+    @property
+    def displayParameters(self) -> OglDisplayParameters:
+        return self._displayParameters
+
+    @displayParameters.setter
+    def displayParameters(self, newValue: OglDisplayParameters):
+        self._displayParameters = newValue
 
     def GetTextWidth(self, dc, text):
         width = dc.GetTextExtent(text)[0]

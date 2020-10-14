@@ -43,6 +43,8 @@ from org.pyut.enums.LinkType import LinkType
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
 
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 
 class OglToPyUmlDefinition:
 
@@ -64,6 +66,7 @@ class OglToPyUmlDefinition:
         self.logger:              Logger             = getLogger(__name__)
         self._classDefinitions:   ClassDefinitions   = []
         self._umlLineDefinitions: UmlLineDefinitions = []
+        self._prefs:              PyutPreferences    = PyutPreferences()
 
         today: str = strftime("%d %b %Y %H:%M:%S", localtime())
         headerText: str = f'Pyut Version {pyutVersion} Plugin Version {pluginVersion} - {today}'
@@ -92,8 +95,14 @@ class OglToPyUmlDefinition:
             x, y = umlObject.GetPosition()
             w, h = umlObject.GetSize()
             position: Position = Position(x=x, y=y)
-            size: Size = Size(width=int(w), height=int(h))
+            size:     Size     = Size(width=int(w), height=int(h))
+
             classDefinition: ClassDefinition = ClassDefinition(name=pyutClass.name, position=position, size=size)
+
+            classDefinition.displayMethodParameters = self._prefs.showParameters
+
+            classDefinition = self.__addClassDiagramDisplayPreferences(pyutClass=pyutClass, classDefinition=classDefinition)
+
             self._addMethods(classDefinition=classDefinition, pyutClass=pyutClass)
             self._diagram.drawClass(classDefinition=classDefinition)
             classDefinitions.append(classDefinition)
@@ -115,7 +124,7 @@ class OglToPyUmlDefinition:
             lineType:    LineType = self._toPyUmlLineType(umlLinkType)
 
             linePositions: LinePositions  = self._toPyUmlPositions(oglLink, umlLinkType)
-            self.logger.info(f'{lineType=} {linePositions=}')
+            self.logger.debug(f'{lineType=} {linePositions=}')
 
             line:    UmlLineDefinition = UmlLineDefinition(lineType=lineType, linePositions=linePositions)
 
@@ -162,7 +171,7 @@ class OglToPyUmlDefinition:
             linePositions: LinePositions = [sourcePosition]
             for bend in bends:
                 bend: ControlPoint = cast(ControlPoint, bend)
-                self.logger.info(f'{bend:}')
+                self.logger.debug(f'{bend:}')
 
                 bendX, bendY = bend.GetPosition()
                 bendPosition: Position = Position(x=bendX, y=bendY)
@@ -201,10 +210,17 @@ class OglToPyUmlDefinition:
             parameters.append(paramDef)
 
         methodDefinition.parameters = parameters
-        self.logger.info(f'{methodDefinition.name=}  {parameters=}')
+        self.logger.debug(f'{methodDefinition.name=}  {parameters=}')
         return methodDefinition
 
     def __toDefinitionType(self, visibility: PyutVisibilityEnum) -> DefinitionType:
 
         if visibility == PyutVisibilityEnum.PUBLIC:
             return DefinitionType.Public
+
+    def __addClassDiagramDisplayPreferences(self, pyutClass: PyutClass, classDefinition: ClassDefinition) -> ClassDefinition:
+
+        classDefinition.displayMethods    = pyutClass.showMethods
+        classDefinition.displayFields     = pyutClass.showFields
+
+        return classDefinition

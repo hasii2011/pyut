@@ -38,6 +38,7 @@ from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglDisplayParameters import OglDisplayParameters
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
@@ -105,7 +106,16 @@ class MiniDomToOgl:
 
             height: float      = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
             width:  float      = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+
             oglClass: OglClass = OglClass(pyutClass, width, height)
+
+            displayParametersStr: str = xmlOglClass.getAttribute(PyutXmlConstants.ATTR_DISPLAY_PARAMETERS)
+
+            if displayParametersStr is None or displayParametersStr == '':
+                oglClass.displayParameters = OglDisplayParameters.UNSPECIFIED
+            else:
+                displayParameters: OglDisplayParameters = OglDisplayParameters(displayParametersStr)
+                oglClass.displayParameters = displayParameters
 
             xmlClass: Element = xmlOglClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CLASS)[0]
 

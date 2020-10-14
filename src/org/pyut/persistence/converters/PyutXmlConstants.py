@@ -46,6 +46,8 @@ class PyutXmlConstants:
     ATTR_X: str = 'x'
     ATTR_Y: str = 'y'
 
+    ATTR_DISPLAY_PARAMETERS: str = 'displayParameters'
+
     ATTR_STEREOTYPE:  str = 'stereotype'
     ATTR_DESCRIPTION: str = 'description'
     ATTR_VISIBILITY:  str = 'visibility'
