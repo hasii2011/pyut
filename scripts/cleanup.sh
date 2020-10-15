@@ -13,9 +13,6 @@ changeToProjectRoot
 rm -rf dist build
 rm -rf Pyut.dist Pyut.build
 
-find . -type d -name UNKNOWN.egg-info -exec rm -rf {} \; -print
-find . -type d -name .eggs            -exec rm -rf {} \; -print
-
 find . -type f -name pyutHistory"*" -delete
 find . -type f -name "*.log"        -delete
 find . -type f -name UnitTest.gml   -delete

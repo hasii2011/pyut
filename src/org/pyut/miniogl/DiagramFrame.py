@@ -306,6 +306,7 @@ class DiagramFrame(ScrolledWindow):
             sx, sy = shape.GetPosition()
             shape.SetPosition(sx + dx, sy + dy)
 
+        # self.clsLogger.warning(f'OnDrag =========================')
         self.Refresh(False)
         self._lastMousePosition = (x, y)
 
@@ -463,6 +464,7 @@ class DiagramFrame(ScrolledWindow):
         @param bool eraseBackground : if False, the stored background is used
         @param Rect rect : not used
         """
+        # self.clsLogger.warning(f'Refresh - {eraseBackground=}')
         if eraseBackground:
             self.Redraw()
         else:
@@ -552,7 +554,7 @@ class DiagramFrame(ScrolledWindow):
         """
         self.Redraw(cast(DC, None), True, False, True)
 
-    def Redraw(self, dc: DC = None, full: bool = True, saveBackground: bool = False, useBackground: bool= False):
+    def Redraw(self, dc: DC = None, full: bool = True, saveBackground: bool = False, useBackground: bool = False):
         """
         Refresh the diagram.
         If a DC is given, use it. Otherwise, use a double buffered DC.
@@ -573,6 +575,7 @@ class DiagramFrame(ScrolledWindow):
         dc.SetFont(self._defaultFont)
 
         shapes = self._diagram.GetShapes()
+        # self.clsLogger.warning(f'{saveBackground=} - {useBackground=}')
 
         if full:
             # first time, need to create the background
@@ -583,7 +586,7 @@ class DiagramFrame(ScrolledWindow):
                         shape.Draw(dc)
                 # save the background
                 self.SaveBackground(dc)
-                # draw every moving shapes
+                # draw every moving shape
                 for shape in shapes:
                     if shape.IsMoving():
                         shape.Draw(dc)
@@ -592,10 +595,20 @@ class DiagramFrame(ScrolledWindow):
                 for shape in shapes:
                     if shape.IsMoving():
                         shape.Draw(dc)
+                # TODO: This code belongs in OnPaint
+                if self._prefs.backgroundGridEnabled is True:
+                    x, y = self.CalcUnscrolledPosition(0, 0)
+                    self._drawGrid(memDC=dc, width=w, height=h, startX=x, startY=y)
+
             else:  # don't use background
                 # draw all shapes
                 for shape in shapes:
                     shape.Draw(dc)
+                # TODO: This code belongs in OnPaint
+                if self._prefs.backgroundGridEnabled is True:
+                    x, y = self.CalcUnscrolledPosition(0, 0)
+                    self._drawGrid(memDC=dc, width=w, height=h, startX=x, startY=y)
+
         else:  # not full
             for shape in shapes:
                 shape.DrawBorder(dc)
@@ -610,10 +623,10 @@ class DiagramFrame(ScrolledWindow):
     # noinspection PyUnusedLocal
     def OnPaint(self, event: PaintEvent):
         """
-        Callback.
         Refresh the screen when a paint event is issued by the system.
 
-        @param event
+        Args:
+            event:
         """
         dc = PaintDC(self)
         w, h = self.GetSize()
@@ -623,8 +636,9 @@ class DiagramFrame(ScrolledWindow):
 
         x, y = self.CalcUnscrolledPosition(0, 0)
 
-        if self._prefs.backgroundGridEnabled is True:
-            self._drawGrid(memDC=mem, width=w, height=h, startX=x, startY=y)
+        # Paint events don't seem to be generated when Pyut is built for deployment;  So code duplicated in .Redraw()
+        # if self._prefs.backgroundGridEnabled is True:
+        #     self._drawGrid(memDC=mem, width=w, height=h, startX=x, startY=y)
         self.Redraw(mem)
 
         dc.Blit(0, 0, w, h, mem, x, y)

@@ -94,5 +94,5 @@ class OglLinkFactory(Singleton):
         elif linkType == LinkType.SD_MESSAGE:
             return OglSDMessage(srcShape=srcShape, pyutSDMessage=pyutLink, dstShape=destShape)
         else:
-            self.logger.error(f"Unknown OglLinkType into factory: {linkType}")
+            self.logger.error(f"Unknown OglLinkType: {linkType}")
             return None
