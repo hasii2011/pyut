@@ -37,8 +37,8 @@ from org.pyut.resources.img.toolbar import ImgToolboxSequenceDiagramInstance
 from org.pyut.resources.img.toolbar import ImgToolboxSequenceDiagramMessage
 from org.pyut.resources.img.toolbar import ImgToolboxSystem
 from org.pyut.resources.img.toolbar import ImgToolboxUndo
-from org.pyut.resources.img import ImgToolboxZoomIn
-from org.pyut.resources.img import ImgToolboxZoomOut
+from org.pyut.resources.img.toolbar import ImgToolboxZoomIn
+from org.pyut.resources.img.toolbar import ImgToolboxZoomOut
 
 from org.pyut.general.Mediator import Mediator
 
