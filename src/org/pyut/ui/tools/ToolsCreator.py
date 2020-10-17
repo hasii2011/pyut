@@ -19,11 +19,11 @@ from wx import Frame
 from org.pyut.resources.img.toolbar import ImgToolboxActor
 from org.pyut.resources.img.toolbar import ImgToolboxArrow
 from org.pyut.resources.img.toolbar import ImgToolboxClass
-from org.pyut.resources.img import ImgToolboxNewClassDiagram
-from org.pyut.resources.img import ImgToolboxNewProject
-from org.pyut.resources.img import ImgToolboxNewSequenceDiagram
-from org.pyut.resources.img import ImgToolboxNewUseCaseDiagram
-from org.pyut.resources.img import ImgToolboxNote
+from org.pyut.resources.img.toolbar import ImgToolboxNewClassDiagram
+from org.pyut.resources.img.toolbar import ImgToolboxNewProject
+from org.pyut.resources.img.toolbar import ImgToolboxNewSequenceDiagram
+from org.pyut.resources.img.toolbar import ImgToolboxNewUseCaseDiagram
+from org.pyut.resources.img.toolbar import ImgToolboxNote
 from org.pyut.resources.img import ImgToolboxOpenFile
 from org.pyut.resources.img import ImgToolboxRedo
 from org.pyut.resources.img import ImgToolboxRelationshipAggregation
