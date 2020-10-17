@@ -16,8 +16,7 @@ from wx import ToolBar
 from wx import WindowIDRef
 from wx import Frame
 
-
-from org.pyut.resources.img import ImgToolboxActor
+from org.pyut.resources.img.toolbar import ImgToolboxActor
 from org.pyut.resources.img import ImgToolboxArrow
 from org.pyut.resources.img import ImgToolboxClass
 from org.pyut.resources.img import ImgToolboxNewClassDiagram
