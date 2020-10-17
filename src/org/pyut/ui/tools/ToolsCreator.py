@@ -28,9 +28,9 @@ from org.pyut.resources.img.toolbar import ImgToolboxOpenFile
 from org.pyut.resources.img.toolbar import ImgToolboxRedo
 from org.pyut.resources.img.toolbar import ImgToolboxRelationshipAggregation
 from org.pyut.resources.img.toolbar import ImgToolboxRelationshipAssociation
-from org.pyut.resources.img import ImgToolboxRelationshipComposition
-from org.pyut.resources.img import ImgToolboxRelationshipInheritance
-from org.pyut.resources.img import ImgToolboxRelationshipNote
+from org.pyut.resources.img.toolbar import ImgToolboxRelationshipComposition
+from org.pyut.resources.img.toolbar import ImgToolboxRelationshipInheritance
+from org.pyut.resources.img.toolbar import ImgToolboxRelationshipNote
 from org.pyut.resources.img import ImgToolboxRelationshipRealization
 from org.pyut.resources.img import ImgToolboxSaveDiagram
 from org.pyut.resources.img import ImgToolboxSequenceDiagramInstance
