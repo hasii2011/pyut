@@ -53,7 +53,6 @@ from wx import Window
 
 from wx import Yield as wxYield
 
-from org.pyut.PyutConstants import PyutConstants
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
 from org.pyut.ogl.OglActor import OglActor
@@ -79,6 +78,9 @@ from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.PyutConstants import PyutConstants
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType

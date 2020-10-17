@@ -37,7 +37,7 @@ from org.pyut.general.Globals import _
 
 from org.pyut.ui.AppFrame import AppFrame
 
-from org.pyut.resources.img.ImgSplash import embeddedImage as splashImage
+from org.pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 
 
 class PyutApp(wxApp):
