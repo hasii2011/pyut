@@ -14,7 +14,7 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources', ['src/org/pyut/resources/Kudos.txt']),
 
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/pyut.ico']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgSplash.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/splash/Splash6.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgTipsFrameTipsLogo.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxActor.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxArrow.py']),
@@ -32,14 +32,13 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipInheritance.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipNote.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipRealization.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ToolboxSaveDiagram.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxSequenceDiagramInstance.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxSequenceDiagramMessage.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxSystem.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxUndo.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxUnknown.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxZoomIn.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgToolboxZoomOut.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxSaveDiagram.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxSequenceDiagramInstance.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxSequenceDiagramMessage.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxSystem.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxUndo.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxZoomIn.py']),
+              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxZoomOut.py']),
 
               ]
 OPTIONS = {}
