@@ -24,7 +24,7 @@ from org.pyut.resources.img.toolbar import ImgToolboxNewProject
 from org.pyut.resources.img.toolbar import ImgToolboxNewSequenceDiagram
 from org.pyut.resources.img.toolbar import ImgToolboxNewUseCaseDiagram
 from org.pyut.resources.img.toolbar import ImgToolboxNote
-from org.pyut.resources.img import ImgToolboxOpenFile
+from org.pyut.resources.img.toolbar import ImgToolboxOpenFile
 from org.pyut.resources.img import ImgToolboxRedo
 from org.pyut.resources.img import ImgToolboxRelationshipAggregation
 from org.pyut.resources.img import ImgToolboxRelationshipAssociation
