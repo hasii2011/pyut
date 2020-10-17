@@ -18,5 +18,5 @@ def getBitmap():
 
 
 def getImage():
-    return wx.Image("img/unknown.bmp", wx.BITMAP_TYPE_ANY)
+    return wx.Image("img/ToolboxUnknown.bmp", wx.BITMAP_TYPE_ANY)
 
