@@ -18,7 +18,7 @@ from wx import Frame
 
 from org.pyut.resources.img.toolbar import ImgToolboxActor
 from org.pyut.resources.img.toolbar import ImgToolboxArrow
-from org.pyut.resources.img import ImgToolboxClass
+from org.pyut.resources.img.toolbar import ImgToolboxClass
 from org.pyut.resources.img import ImgToolboxNewClassDiagram
 from org.pyut.resources.img import ImgToolboxNewProject
 from org.pyut.resources.img import ImgToolboxNewSequenceDiagram
