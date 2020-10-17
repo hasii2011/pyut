@@ -31,7 +31,7 @@ from org.pyut.resources.img.toolbar import ImgToolboxRelationshipAssociation
 from org.pyut.resources.img.toolbar import ImgToolboxRelationshipComposition
 from org.pyut.resources.img.toolbar import ImgToolboxRelationshipInheritance
 from org.pyut.resources.img.toolbar import ImgToolboxRelationshipNote
-from org.pyut.resources.img import ImgToolboxRelationshipRealization
+from org.pyut.resources.img.toolbar import ImgToolboxRelationshipRealization
 from org.pyut.resources.img import ImgToolboxSaveDiagram
 from org.pyut.resources.img import ImgToolboxSequenceDiagramInstance
 from org.pyut.resources.img import ImgToolboxSequenceDiagramMessage
