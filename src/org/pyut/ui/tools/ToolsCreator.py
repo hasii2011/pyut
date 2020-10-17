@@ -32,9 +32,9 @@ from org.pyut.resources.img.toolbar import ImgToolboxRelationshipComposition
 from org.pyut.resources.img.toolbar import ImgToolboxRelationshipInheritance
 from org.pyut.resources.img.toolbar import ImgToolboxRelationshipNote
 from org.pyut.resources.img.toolbar import ImgToolboxRelationshipRealization
-from org.pyut.resources.img import ImgToolboxSaveDiagram
-from org.pyut.resources.img import ImgToolboxSequenceDiagramInstance
-from org.pyut.resources.img import ImgToolboxSequenceDiagramMessage
+from org.pyut.resources.img.toolbar import ImgToolboxSaveDiagram
+from org.pyut.resources.img.toolbar import ImgToolboxSequenceDiagramInstance
+from org.pyut.resources.img.toolbar import ImgToolboxSequenceDiagramMessage
 from org.pyut.resources.img import ImgToolboxSystem
 from org.pyut.resources.img import ImgToolboxUndo
 from org.pyut.resources.img import ImgToolboxZoomIn
