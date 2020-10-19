@@ -1,7 +1,14 @@
 
+from typing import Tuple
+
+
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
 
 from org.pyut.general.Globals import _
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class CreateOglClassCommand(DelOglClassCommand):
@@ -11,15 +18,24 @@ class CreateOglClassCommand(DelOglClassCommand):
     It creates an OglClass and allowds to undo/redo it.
     """
 
-    def __init__(self, x=0, y=0, forExecute=False, shape=None):
-        """
-        Constructor.
-        @param x     :   abscissa of the class to create
-        @param y     :   ordinate of the class to create
+    def __init__(self, x: float = 0, y: float = 0, createNewClass: bool = False, shape=None):
         """
 
-        if forExecute:
-            self._shape = self._createNewClass(x, y)
+        Args:
+            x:  abscissa of the class to create
+            y:  ordinate of the class to create
+
+            createNewClass: Create new class or create Delete OGL Class command
+            TODO  This is a code smell; Don't do code based on flag
+
+            shape:
+        """
+        self.logger: Logger          = getLogger(__name__)
+        self._prefs: PyutPreferences = PyutPreferences()
+
+        if createNewClass is True:
+            snappedX, snappedY = CreateOglClassCommand.snapCoordinatesToGrid(x, y,self._prefs.backgroundGridInterval)
+            self._shape = self._createNewClass(snappedX, snappedY)
         else:
             DelOglClassCommand.__init__(self, shape)
 
@@ -56,18 +72,32 @@ class CreateOglClassCommand(DelOglClassCommand):
     def execute(self):
         pass
 
-    def _createNewClass(self, x, y):
+    @staticmethod
+    def snapCoordinatesToGrid(x: float, y: float, gridInterval: int) -> Tuple[float, float]:
+
+        xDiff: float = x % gridInterval
+        yDiff: float = y % gridInterval
+
+        snappedX: float = x - xDiff
+        snappedY: float = y - yDiff
+
+        return snappedX, snappedY
+
+    def _createNewClass(self, x: float, y: float):
         """
         Add a new class at (x, y).
 
-        @return PyutClass : the newly created PyutClass
-        @since 1.4
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            x: abscissa of the class to create
+            y: ordinate of the class to create
+
+        Returns: the newly created OgClass
         """
         from org.pyut.general.Mediator import getMediator
         from org.pyut.model.PyutClass import PyutClass
         from org.pyut.ogl.OglClass import OglClass
 
+        self.logger.info(f'{x=},{y=}')
         med = getMediator()
         umlFrame = med.getFileHandling().getCurrentFrame()
 

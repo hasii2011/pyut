@@ -15,7 +15,7 @@ class Command:
     def __init__(self):
         """
         Notes:  Each Command should have at least one constructor with the
-        same profile (no params), because it's this constructor that will
+        same profile (no params), because it is this constructor that will
         be called when the history manager does deserialization.
         """
         self._group = None  # group to which the command is added. Init when added to a group
