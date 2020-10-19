@@ -950,7 +950,10 @@ class Mediator(Singleton):
 
         po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.getPyutObject() is pyutClass]
 
-        return po[0]
+        if len(po) == 0:
+            return None
+        else:
+            return po[0]
 
     def getFileHandling(self):
         """

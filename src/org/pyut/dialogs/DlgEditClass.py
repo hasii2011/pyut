@@ -397,11 +397,13 @@ class DlgEditClass(DlgEditClassCommon):
         self._pyutModel.setShowStereotype(self._chkShowStereotype.GetValue())
 
         from org.pyut.preferences.PyutPreferences import PyutPreferences
-        prefs = PyutPreferences()
+
+        prefs: PyutPreferences = PyutPreferences()
         try:
-            if prefs["AUTO_RESIZE"]:
+            if prefs.autoResizeShapesOnEdit is True:
                 oglClass = self._mediator.getOglClass(self._pyutModel)
-                oglClass.autoResize()
+                if oglClass is not None:
+                    oglClass.autoResize()
         except (ValueError, Exception) as e:
             self.logger.warning(f'{e}')
 
