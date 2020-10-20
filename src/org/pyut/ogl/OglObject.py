@@ -12,44 +12,38 @@ from wx import FONTWEIGHT_NORMAL
 from org.pyut.miniogl.RectangleShape import RectangleShape
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
+from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 DEFAULT_FONT_SIZE = 10
 
 
 class OglObject(RectangleShape, ShapeEventHandler):
     """
     This is the base class for new OGL objects.
-    Every new OGL class must inherate this class and redefines methods if
-    necessary. OGL Objects are automatically wx.RectangleShape for
+    Every new OGL class must inherit this class and redefine methods if
+    necessary. OGL Objects are automatically a RectangleShape for
     global link management.
-
-    This class has been introduced quite late in developement and has
-    caused some refactoring.
-
     """
     def __init__(self, pyutObject=None, width: float = 0, height: float = 0):
         """
-        Constructor
 
-        @param PyutObject pyutObject : Associated PyutObject
-        @param int width  : Initial width
-        @param int height : Initial height
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            pyutObject: Associated PyutObject
+            width:      Initial width
+            height:     Initial height
         """
         RectangleShape.__init__(self, 0, 0, width, height)
 
         self.logger: Logger = getLogger(__name__)
         self._pyutObject = pyutObject
 
-        """
-        Associated PyutObject
-        """
         # Default font
-        self._defaultFont: Font = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
+        self._defaultFont: Font            = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
+        self._prefs:       PyutPreferences = PyutPreferences()
 
-        # Connected links
-        self._oglLinks = []
-        # added by P.Dabrowski 20051202 : it's the command to undo/redo a modification on this object.
+        self._oglLinks = []     # Connected links
         self._modifyCommand = None
 
     def setPyutObject(self, pyutObject):
@@ -110,8 +104,18 @@ class OglObject(RectangleShape, ShapeEventHandler):
             return
         event.Skip()
 
-    def OnLeftUp(self, event):
-        pass
+    def OnLeftUp(self, event: MouseEvent):
+        """
+        Implement this method so we can snap Ogl objects
+
+        Args:
+            event:  the mouse event
+        """
+        gridInterval: int = self._prefs.backgroundGridInterval
+        x, y = self.GetPosition()
+        snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
+
+        self.SetPosition(snappedX, snappedY)
 
     def autoResize(self):
         """
@@ -127,8 +131,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
         Define new position for the object
 
         Args:
-            x:
-            y:
+            x:  The new abscissa
+            y:  The new ordinate
         """
         from org.pyut.general import Mediator
         fileHandling = Mediator.getMediator().getFileHandling()

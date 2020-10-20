@@ -92,7 +92,7 @@ class DiagramFrame(ScrolledWindow):
         self._lastMousePosition = None
         self._selector          = None      # rectangle selector shape
         self._clickedShape      = None      # last clicked shape
-        self._moving            = False     # a drag has been initiated
+        self._moving: bool      = False     # a drag has been initiated
 
         self._xOffset = 0.0     # abscissa offset between the view and the model
         self._yOffset = 0.0     # ordinate offset between the view and the model
@@ -240,8 +240,7 @@ class DiagramFrame(ScrolledWindow):
             self.Bind(EVT_MOTION, self._NullCallback)
             self.clsLogger.warning(f'{self._selector=}')
             rect = self._selector
-            # x, y = rect.GetPosition()     Not used
-            # w, h = rect.GetSize()         Not used
+
             for shape in self._diagram.GetShapes():
                 x0, y0 = shape.GetTopLeft()
                 w0, h0 = shape.GetSize()
@@ -303,8 +302,7 @@ class DiagramFrame(ScrolledWindow):
             ox, oy = self._lastMousePosition
             dx, dy = x - ox, y - oy
             sx, sy = shape.GetPosition()
-            # snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(sx + dx, sy + dy, self._prefs.backgroundGridInterval)
-            # shape.SetPosition(snappedX, snappedY)
+
             shape.SetPosition(sx + dx, sy + dy)
 
         self.Refresh(False)

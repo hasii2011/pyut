@@ -22,13 +22,13 @@ from org.pyut.ogl.OglDisplayParameters import OglDisplayParameters
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
-
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 
 
 # Menu IDs
+
 [
     MENU_TOGGLE_STEREOTYPE,
     MENU_TOGGLE_FIELDS,
@@ -71,8 +71,8 @@ class OglClass(OglObject):
             pyutObject = pyutClass
         super().__init__(pyutObject, w, h)
 
-        self.logger:    Logger = getLogger(__name__)
         self._nameFont: Font   = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_BOLD)
+        self.logger:    Logger = getLogger(__name__)
 
         self._displayParameters: OglDisplayParameters = OglDisplayParameters.UNSPECIFIED
 
