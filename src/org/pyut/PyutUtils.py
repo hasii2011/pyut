@@ -186,7 +186,6 @@ class PyutUtils:
         xDiff: float = x % gridInterval
         yDiff: float = y % gridInterval
 
-        print(f'{xDiff=}  {yDiff=}')
         snappedX: float = x - xDiff
         snappedY: float = y - yDiff
 

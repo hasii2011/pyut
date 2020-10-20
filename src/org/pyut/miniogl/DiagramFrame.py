@@ -60,12 +60,12 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.dialogs.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 
-LEFT_MARGIN     = 0
-RIGHT_MARGIN    = 1
-TOP_MARGIN      = 2
-BOTTOM_MARGIN   = 3
-
-DEFAULT_MARGIN_VALUE = 100
+# LEFT_MARGIN     = 0
+# RIGHT_MARGIN    = 1
+# TOP_MARGIN      = 2
+# BOTTOM_MARGIN   = 3
+#
+# DEFAULT_MARGIN_VALUE = 100
 
 
 class DiagramFrame(ScrolledWindow):
@@ -106,10 +106,10 @@ class DiagramFrame(ScrolledWindow):
         # margins define a perimeter around the work area that must remains
         # blank and hidden. if we scroll beyond the limits, the diagram is
         # resized.
-        self._leftMargin   = DEFAULT_MARGIN_VALUE
-        self._rightMargin  = DEFAULT_MARGIN_VALUE
-        self._topMargin    = DEFAULT_MARGIN_VALUE
-        self._bottomMargin = DEFAULT_MARGIN_VALUE
+        # self._leftMargin   = DEFAULT_MARGIN_VALUE
+        # self._rightMargin  = DEFAULT_MARGIN_VALUE
+        # self._topMargin    = DEFAULT_MARGIN_VALUE
+        # self._bottomMargin = DEFAULT_MARGIN_VALUE
         self._isInfinite = False    # to know if the frame is infinite or not
 
         # paint related
@@ -233,28 +233,27 @@ class DiagramFrame(ScrolledWindow):
         """
         Callback for left up events.
 
-        @param event
+        Args:
+            event:
         """
-        # manage the selector box
         if self._selector is not None:
             self.Bind(EVT_MOTION, self._NullCallback)
+            self.clsLogger.warning(f'{self._selector=}')
             rect = self._selector
             # x, y = rect.GetPosition()     Not used
             # w, h = rect.GetSize()         Not used
             for shape in self._diagram.GetShapes():
                 x0, y0 = shape.GetTopLeft()
                 w0, h0 = shape.GetSize()
-                if shape.GetParent() is None and \
-                   rect.Inside(x0, y0) and \
-                   rect.Inside(x0 + w0, y0) and \
-                   rect.Inside(x0, y0 + h0) and \
-                   rect.Inside(x0 + w0, y0 + h0):
+                # if shape.GetParent() is None and rect.Inside(x0, y0) and rect.Inside(x0 + w0, y0) and rect.Inside(x0, y0 + h0) and rect.Inside(x0 + w0, y0 + h0):
+                if shape.GetParent() is None and self._isShapeInRectangle(rect, x0=x0, y0=y0, w0=w0, h0=h0):
                     shape.SetSelected(True)
                     shape.SetMoving(True)
                     self._selectedShapes.append(shape)
             rect.Detach()
             self._selector = None
         if not self._moving and self._clickedShape:
+            self.clsLogger.warning(f'{self._moving} {self._clickedShape}')
             clicked = self._clickedShape
             if not event.ControlDown():
                 self.DeselectAllShapes()
@@ -304,8 +303,9 @@ class DiagramFrame(ScrolledWindow):
             ox, oy = self._lastMousePosition
             dx, dy = x - ox, y - oy
             sx, sy = shape.GetPosition()
+            # snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(sx + dx, sy + dy, self._prefs.backgroundGridInterval)
+            # shape.SetPosition(snappedX, snappedY)
             shape.SetPosition(sx + dx, sy + dy)
-            self.clsLogger.warning(f'OnDrag {sx=} {dx=} {sy=} {dy=}')
 
         self.Refresh(False)
         self._lastMousePosition = (x, y)
@@ -446,16 +446,16 @@ class DiagramFrame(ScrolledWindow):
         """
         self._selectedShapes = shapes
 
-    def KeepMoving(self, keep):
-        """
-        Tell the frame to continue capturing the mouse movements.
-        Even after a mouse up event.
-
-        @param bool keep : True to continue capturing mouse move events
-        """
-        self.__keepMoving = keep
-        if not keep:
-            self.Bind(EVT_MOTION, self._NullCallback)
+    # def KeepMoving(self, keep):
+    #     """
+    #     Tell the frame to continue capturing the mouse movements.
+    #     Even after a mouse up event.
+    #
+    #     @param bool keep : True to continue capturing mouse move events
+    #     """
+    #     self.__keepMoving = keep
+    #     if not keep:
+    #         self.Bind(EVT_MOTION, self._NullCallback)
 
     def Refresh(self, eraseBackground=True, rect=None):
         """
@@ -575,8 +575,6 @@ class DiagramFrame(ScrolledWindow):
         dc.SetFont(self._defaultFont)
 
         shapes = self._diagram.GetShapes()
-        # self.clsLogger.warning(f'{saveBackground=} - {useBackground=}')
-
         if full:
             # first time, need to create the background
             if saveBackground:
@@ -590,25 +588,23 @@ class DiagramFrame(ScrolledWindow):
                 for shape in shapes:
                     if shape.IsMoving():
                         shape.Draw(dc)
+
+            # x, y = self.CalcUnScrolledPosition(0, 0)
             if useBackground:
                 # draw every moving shapes
                 for shape in shapes:
                     if shape.IsMoving():
                         shape.Draw(dc)
                 # TODO: This code belongs in OnPaint
-                if self._prefs.backgroundGridEnabled is True:
-                    x, y = self.CalcUnscrolledPosition(0, 0)
-                    self._drawGrid(memDC=dc, width=w, height=h, startX=x, startY=y)
-
+                # if self._prefs.backgroundGridEnabled is True:
+                #     self._drawGrid(memDC=dc, width=w, height=h, startX=x, startY=y)
             else:  # don't use background
                 # draw all shapes
                 for shape in shapes:
                     shape.Draw(dc)
                 # TODO: This code belongs in OnPaint
-                if self._prefs.backgroundGridEnabled is True:
-                    x, y = self.CalcUnscrolledPosition(0, 0)
-                    self._drawGrid(memDC=dc, width=w, height=h, startX=x, startY=y)
-
+                # if self._prefs.backgroundGridEnabled is True:
+                #     self._drawGrid(memDC=dc, width=w, height=h, startX=x, startY=y)
         else:  # not full
             for shape in shapes:
                 shape.DrawBorder(dc)
@@ -636,9 +632,10 @@ class DiagramFrame(ScrolledWindow):
 
         x, y = self.CalcUnscrolledPosition(0, 0)
 
+        # self.clsLogger.warning(f'OnPaint - {w=}, {h=} {x=} {y=}')
         # Paint events don't seem to be generated when Pyut is built for deployment;  So code duplicated in .Redraw()
-        # if self._prefs.backgroundGridEnabled is True:
-        #     self._drawGrid(memDC=mem, width=w, height=h, startX=x, startY=y)
+        if self._prefs.backgroundGridEnabled is True:
+            self._drawGrid(memDC=mem, width=w, height=h, startX=x, startY=y)
         self.Redraw(mem)
 
         dc.Blit(0, 0, w, h, mem, x, y)
@@ -964,24 +961,24 @@ class DiagramFrame(ScrolledWindow):
         scrollY = (virtualHeight - clientHeight) // 2 // yUnit
         self.Scroll(scrollX, scrollY)
 
-    def SetMargins(self, left, right, top, bottom):
-        """
-        added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
-        set the size of the margins that can't be reached by the
-        scrollbars if the frame is infinite.
-        """
-        self._leftMargin = left
-        self._topMargin = top
-        self._bottomMargin = bottom
-        self._rightMargin = right
+    # def SetMargins(self, left, right, top, bottom):
+    #     """
+    #     added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
+    #     set the size of the margins that can't be reached by the
+    #     scrollbars if the frame is infinite.
+    #     """
+    #     self._leftMargin = left
+    #     self._topMargin = top
+    #     self._bottomMargin = bottom
+    #     self._rightMargin = right
 
-    def GetMargins(self):
-        """
-        added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
-        @return the size of the margins that can't be reached by the
-        scrollbars if the frame is infinite.
-        """
-        return self._leftMargin, self._rightMargin, self._topMargin, self._bottomMargin
+    # def GetMargins(self):
+    #     """
+    #     added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005
+    #     @return the size of the margins that can't be reached by the
+    #     scrollbars if the frame is infinite.
+    #     """
+    #     return self._leftMargin, self._rightMargin, self._topMargin, self._bottomMargin
 
     def SetInfinite(self, infinite: bool = False):
         """
@@ -1011,11 +1008,11 @@ class DiagramFrame(ScrolledWindow):
             else:
                 self.Scroll(0, 0)
 
-    def IsInfinite(self) -> bool:
-        """
-        Returns:    If this frame is infinite or not
-        """
-        return self._isInfinite
+    # def IsInfinite(self) -> bool:
+    #     """
+    #     Returns:    If this frame is infinite or not
+    #     """
+    #     return self._isInfinite
 
     def _BeginSelect(self, event: MouseEvent):
         """
@@ -1091,3 +1088,11 @@ class DiagramFrame(ScrolledWindow):
         pen: Pen = Pen(PenInfo(self._gridLineColor).Style(self._gridLineStyle).Width(1.0))
 
         return pen
+
+    def _isShapeInRectangle(self, rect: RectangleShape, x0: float, y0: float, w0: float, h0: float) -> bool:
+
+        ans: bool = False
+        if rect.Inside(x0, y0) and rect.Inside(x0 + w0, y0) and rect.Inside(x0, y0 + h0) and rect.Inside(x0 + w0, y0 + h0):
+            ans = True
+
+        return ans
