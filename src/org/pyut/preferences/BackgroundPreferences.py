@@ -27,7 +27,7 @@ class BackgroundPreferences(Singleton):
 
     DIAGRAM_PREFERENCES: PREFS_NAME_VALUES = {
         BACKGROUND_GRID_ENABLED: 'True',
-        BACKGROUND_GRID_INTERVAL: '15',
+        BACKGROUND_GRID_INTERVAL: '25',
         GRID_LINE_COLOR:          DEFAULT_GRID_LINE_COLOR,
         GRID_LINE_STYLE:          DEFAULT_GRID_LINE_STYLE
     }
