@@ -180,6 +180,17 @@ class PyutUtils:
         """
         return osPath.split(filename)[1]
 
+    @staticmethod
+    def snapCoordinatesToGrid(x: float, y: float, gridInterval: int) -> Tuple[float, float]:
+
+        xDiff: float = x % gridInterval
+        yDiff: float = y % gridInterval
+
+        snappedX: float = x - xDiff
+        snappedY: float = y - yDiff
+
+        return snappedX, snappedY
+
     @classmethod
     def getBasePath(cls) -> str:
         return cls._basePath

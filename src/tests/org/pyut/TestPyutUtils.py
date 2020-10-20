@@ -26,10 +26,11 @@ class TestPyutUtils(TestBase):
     def setUpClass(cls):
         TestBase.setUpLogging()
         TestPyutUtils.clsLogger = getLogger(__name__)
+        PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
-        self.logger: Logger = TestPyutUtils.clsLogger
-        PyutPreferences.determinePreferencesLocation()
+        self.logger: Logger          = TestPyutUtils.clsLogger
+        self.prefs:  PyutPreferences = PyutPreferences()
 
     def tearDown(self):
         pass
@@ -139,6 +140,33 @@ class TestPyutUtils(TestBase):
         del app
 
         self.logger.info(f'{screenMetrics=}')
+
+    def testSnapCoordinatesToGrid(self):
+
+        gridInterval: int = self.prefs.backgroundGridInterval
+        x: float = 335
+        y: float = 142
+
+        snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
+
+        expectedX: float = 325
+        expectedY: float = 125
+
+        self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
+        self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
+
+    def testSnapCoordinatesToGridNoSnapping(self):
+        gridInterval: int = self.prefs.backgroundGridInterval
+        x: float = 300
+        y: float = 200
+
+        snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
+
+        expectedX: float = 300
+        expectedY: float = 200
+
+        self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
+        self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
 
 
 def suite() -> TestSuite:

@@ -1,13 +1,13 @@
 
-from typing import Tuple
-
-
 from logging import Logger
 from logging import getLogger
 
 from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
 
+from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.general.Globals import _
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
@@ -15,7 +15,7 @@ class CreateOglClassCommand(DelOglClassCommand):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
-    It creates an OglClass and allowds to undo/redo it.
+    It creates an OglClass and allows to undo/redo it.
     """
 
     def __init__(self, x: float = 0, y: float = 0, createNewClass: bool = False, shape=None):
@@ -34,7 +34,7 @@ class CreateOglClassCommand(DelOglClassCommand):
         self._prefs: PyutPreferences = PyutPreferences()
 
         if createNewClass is True:
-            snappedX, snappedY = CreateOglClassCommand.snapCoordinatesToGrid(x, y,self._prefs.backgroundGridInterval)
+            snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x, y, self._prefs.backgroundGridInterval)
             self._shape = self._createNewClass(snappedX, snappedY)
         else:
             DelOglClassCommand.__init__(self, shape)
@@ -71,17 +71,6 @@ class CreateOglClassCommand(DelOglClassCommand):
 
     def execute(self):
         pass
-
-    @staticmethod
-    def snapCoordinatesToGrid(x: float, y: float, gridInterval: int) -> Tuple[float, float]:
-
-        xDiff: float = x % gridInterval
-        yDiff: float = y % gridInterval
-
-        snappedX: float = x - xDiff
-        snappedY: float = y - yDiff
-
-        return snappedX, snappedY
 
     def _createNewClass(self, x: float, y: float):
         """

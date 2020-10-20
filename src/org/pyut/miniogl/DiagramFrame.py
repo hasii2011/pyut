@@ -305,8 +305,8 @@ class DiagramFrame(ScrolledWindow):
             dx, dy = x - ox, y - oy
             sx, sy = shape.GetPosition()
             shape.SetPosition(sx + dx, sy + dy)
+            self.clsLogger.warning(f'OnDrag {sx=} {dx=} {sy=} {dy=}')
 
-        # self.clsLogger.warning(f'OnDrag =========================')
         self.Refresh(False)
         self._lastMousePosition = (x, y)
 
