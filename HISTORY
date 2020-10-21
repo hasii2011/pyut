@@ -1,7 +1,11 @@
 (this is pyut's HISTORY file. see https://github.com/hasii2011/PyUt/ for more informations)
 This file contain the project history.
 
-V4.0 15 April 2020 -- See the ChangeLog on why big version bump
+V6.2    20 October -- https://github.com/hasii2011/PyUt/releases/tag/6.2
+V6.1.1  12 September -- https://github.com/hasii2011/PyUt/releases/tag/6.1.1
+V6.0   26 July 2020 -- https://github.com/hasii2011/PyUt/wiki/ReleaseNotes-6.0
+V5.0   9 June 2020 --  Python 3.8.2 / wxPython 4.1.0
+V4.0   15 April 2020 -- See the ChangeLog on why big version bump
 V1.9 2020  25 January
 V1.7  2019 Christmas Release - Lots plugins made to work again; Internal maintainability changes
 V1.6  2019 - See https://github.com/hasii2011/PyUt/releases
