@@ -6,7 +6,7 @@ from wx import BoxSizer
 from wx import Button
 from wx import CAPTION
 from wx import CheckBox
-from wx import ClientDC
+
 from wx import CloseEvent
 from wx import CommandEvent
 from wx import DefaultPosition
@@ -45,23 +45,6 @@ DEFAULT_HEIGHT = 100
 # Constants
 [ID_OK, ID_SET_NEXT_TIP, ID_SET_PREVIOUS_TIP, ID_CHK_SHOW_TIPS] = PyutUtils.assignID(4)
 
-# Tips
-Tips = [
-    _("Welcome in PyUt 6.x ! You will find some news in this box.\n" +
-      "You can activate/deactivate the box display on startup in the " +
-      "PyUt preferences dialog"),
-    _("Remember, if you do not submit bugs at https://github.com/hasii2011/PyUt/issues, " +
-      "we can not correct them. You can also submit feature requests."),
-    _("Since PyUt 1.3, you can split lines in multi-lines.\n" +
-      "Select a Line end and press <ins> or <Insert>"),
-    _("You can convert a multiline in a spline by pressing <s>"),
-    _("You can find more plugins like a MySQL exporter or Design Patterns viewer " +
-      "at https://github.com/hasii2011/PyUt/wiki, section download"),
-    _("You can find more tips on the PyUt wiki: https://github.com/hasii2011/PyUt/wiki"),
-    _("You can submit bugs, feature requests and support requests at " +
-      "https://github.com/hasii2011/PyUt/issues")
-]
-
 
 class DlgTips(Dialog):
     """
@@ -74,12 +57,14 @@ class DlgTips(Dialog):
         dialogSize:  Size = Size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
         super().__init__(parent, ID_ANY, _("Tips"), DefaultPosition, dialogSize, dialogStyle)
 
-        self._prefs: PyutPreferences = PyutPreferences()
+        self._prefs:        PyutPreferences = PyutPreferences()
+        self._tipsFileName: str = PyutUtils.retrieveResourcePath('tips.txt')
+        self._tipCount:     int = self._computeTipCount()
+        print(f'{self._tipCount=}')
 
-        self._normalizeTips()
-        self._safelyRetrieveCurrentTip()
+        self._safelyRetrieveCurrentTipNumber()
 
-        upSizer: BoxSizer = self._buildUpperDialog(Tips[self._currentTip])
+        upSizer: BoxSizer = self._buildUpperDialog(self._getCurrentTipText())
         loSizer: BoxSizer = self._buildLowerDialog()
 
         self.SetAutoLayout(True)
@@ -98,25 +83,28 @@ class DlgTips(Dialog):
 
         self._bindEventHandlers()
 
-    def _normalizeTips(self):
+    def _safelyRetrieveCurrentTipNumber(self):
 
-        from org.pyut.general.LineSplitter import LineSplitter
-        ls = LineSplitter()
-        dc = ClientDC(self)
-
-        for i in range(len(Tips)):
-            tip = ls.split(Tips[i], dc, int(DEFAULT_WIDTH * 0.8))
-            Tips[i] = ""
-            for line in tip:
-                Tips[i] += line + "\n"
-
-    def _safelyRetrieveCurrentTip(self):
-
-        self._currentTip: int = self._prefs.currentTip
-        if self._currentTip is None:
-            self._currentTip = 0
+        self._currentTipNumber: int = self._prefs.currentTip
+        if self._currentTipNumber is None:
+            self._currentTipNumber = 0
         else:
-            self._currentTip = self._currentTip
+            self._currentTipNumber = self._currentTipNumber
+        print(f'{self._currentTipNumber=}')
+
+    def _computeTipCount(self) -> int:
+
+        # noinspection PyUnusedLocal
+        numLines = sum(1 for line in open(self._tipsFileName))
+
+        return numLines
+
+    def _getCurrentTipText(self) -> str:
+        import linecache
+
+        tipText: str = linecache.getline(self._tipsFileName, self._currentTipNumber)
+
+        return tipText
 
     def _buildUpperDialog(self, tip: str) -> BoxSizer:
 
@@ -168,24 +156,38 @@ class DlgTips(Dialog):
         """
         Select and display next tip
         """
-        self._currentTip = (self._currentTip + 1) % len(Tips)
-        self._label.SetLabel(Tips[self._currentTip])
+        self._currentTipNumber = self.__incrementTipNumber(1)
+        print(f'{self._currentTipNumber=}')
+        self._label.SetLabel(self._getCurrentTipText())
 
     # noinspection PyUnusedLocal
     def _onPreviousTip(self, event: CommandEvent):
         """
         Select and display previous tip
-
         """
-        self._currentTip = (self._currentTip - 1) % len(Tips)
-        self._label.SetLabel(Tips[self._currentTip])
+        self._currentTipNumber = self.__incrementTipNumber(-1)
+        print(f'{self._currentTipNumber=}')
+        self._label.SetLabel(self._getCurrentTipText())
 
     def _onClose(self, event: CloseEvent):
         """
         Save state
         """
-        rationalTipNumber: int = (self._currentTip + 1) % len(Tips)
-
-        self._prefs.currentTip  = rationalTipNumber
+        self._prefs.currentTip  = self.__incrementTipNumber(1)
         self._prefs.showTipsOnStartup = self._chkShowTips.GetValue()
         event.Skip()
+
+    def __incrementTipNumber(self, byValue: int) -> int:
+        """
+        Increment/Decrement.  Returns non-zero tip number
+
+        Args:
+            byValue:   Use negative number to decrement
+
+        Returns:  The new tip number
+        """
+        tipNumber = (self._currentTipNumber + byValue) % self._tipCount
+        if tipNumber == 0:
+            tipNumber = self._tipCount
+
+        return tipNumber
