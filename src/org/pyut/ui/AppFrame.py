@@ -69,7 +69,7 @@ from org.pyut.ui.MainUI import MainUI
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.PyutPrintout import PyutPrintout
-from org.pyut.ui.DlgTips import DlgTips
+from org.pyut.dialogs.DlgTips import DlgTips
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
