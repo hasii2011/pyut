@@ -9,9 +9,7 @@ Pyut.dist/
 /pyoxidizer-pyut/
 /.eggs/
 UNKNOWN.egg-info
-/venv-3.7.7/
-/venv-pyenv-3.8.2/
-/venv-pyenv-3.8.5/
+/venv-pyenv-3.9.0/
 /venv-pyenv-3.8.5-alternate/
 /site/
 /docs/

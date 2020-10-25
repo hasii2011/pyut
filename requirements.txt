@@ -6,7 +6,7 @@ networkx==2.5
 orthogonal==1.1.5
 py2app==0.22
 pygmlparser==1.0.0
-pyumldiagrams==2.0.2
-setuptools==50.3.0
+pyumldiagrams==2.12
+setuptools==50.3.2
 wxPython==4.1.0
 xmlschema==1.2.5
