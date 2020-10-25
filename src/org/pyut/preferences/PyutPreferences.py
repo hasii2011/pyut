@@ -253,7 +253,7 @@ class PyutPreferences(Singleton):
 
     @currentTip.setter
     def currentTip(self, theNewValue: int):
-        self._mainPrefs.currentTip = theNewValue
+        self._mainPrefs.currentTip = str(theNewValue)
 
     @property
     def editor(self) -> str:
