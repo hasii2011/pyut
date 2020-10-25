@@ -69,7 +69,7 @@ from org.pyut.ui.MainUI import MainUI
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.PyutPrintout import PyutPrintout
-from org.pyut.ui.TipsFrame import TipsFrame
+from org.pyut.ui.DlgTips import DlgTips
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
@@ -360,7 +360,7 @@ class AppFrame(Frame):
             self.logger.debug(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
             if prefs.showTipsOnStartup is True:
                 # noinspection PyUnusedLocal
-                tipsFrame = TipsFrame(self)
+                tipsFrame = DlgTips(self)
                 tipsFrame.Show(show=True)
         except (ValueError, Exception) as e:
             if self._prefs is not None:

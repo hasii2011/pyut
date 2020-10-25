@@ -57,7 +57,7 @@ Tips = [
 ]
 
 
-class TipsFrame(Dialog):
+class DlgTips(Dialog):
     """
     Represents a tips frame, a frame for displaying tips.
 
