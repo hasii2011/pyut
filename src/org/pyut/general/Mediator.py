@@ -1121,7 +1121,7 @@ class Mediator(Singleton):
 
         # destinationPosition: Tuple[float, float] = destinationClass.GetPosition()
         # anchors = destinationClass.GetAnchors()
-        # self.logger.info(f'implementor: {destinationClass} at {destinationPosition}')
+        # self.logger.info(implementer: {destinationClass} at {destinationPosition}')
         #
         # pyutInterface: PyutInterface = PyutInterface(name='Sin Nombre')
         # oglInterface:  OglInterface2 = OglInterface2(pyutInterface, anchors[0])
