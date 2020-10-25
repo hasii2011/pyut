@@ -13,6 +13,7 @@ from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import FRAME_FLOAT_ON_PARENT
 from wx import HORIZONTAL
+from wx import ID_ANY
 
 from wx import RESIZE_BORDER
 from wx import ST_NO_AUTORESIZE
@@ -73,7 +74,7 @@ class TipsFrame(Dialog):
             return
 
         # Initialize the dialog box
-        super().__init__(parent, -1, _("Tips"), DefaultPosition, Size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
+        super().__init__(parent, ID_ANY, _("Tips"), DefaultPosition, Size(DEFAULT_WIDTH, DEFAULT_HEIGHT),
                          RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT | STAY_ON_TOP)
 
         # Normalize tips
@@ -85,60 +86,44 @@ class TipsFrame(Dialog):
             Tips[i] = ""
             for line in tip:
                 Tips[i] += line + "\n"
-            # tip = ""
-            # for line in Tips[i].split("\n"):
-                # newLine = ""
-                # for word in line.split(" "):
-                    # if len(newLine) + len(word) > 59:
-                        # tip += newLine + "\n"
-                        # newLine = ""
-                    # newLine += word + " "
-                # tip += newLine
-            # Tips[i] = tip
 
         # Set current tips
-        self._prefs = PyutPreferences()
-        # self._currentTip = self._prefs[PyutPreferences.CURRENT_TIP]
-        self._currentTip: int = self._prefs.currentTip
+        self._prefs:      PyutPreferences = PyutPreferences()
+        self._currentTip: int             = self._prefs.currentTip
         if self._currentTip is None:
             self._currentTip = 0
         else:
             self._currentTip = self._currentTip
-
-        # Add icon
-        # fileName = resource_filename(IMG_PKG, 'TipsLogo.bmp')
-        # icon = Icon(fileName, BITMAP_TYPE_BMP)
-        # self.SetIcon(icon)
-        # self.Center(BOTH)                     # Center on the screen
+        #
         self.Center(dir=VERTICAL)
         self.AcceptsFocus()
-        # Create controls
-        # bmp: Bitmap = org.pyut.resources.img.ImgTipsFrameTipsLogo.embeddedImage.GetBitmap()
+
         bmp: Bitmap = TipsLogo.GetBitmap()
-        self._picture = StaticBitmap(self, -1, bmp)
+        self._picture: StaticBitmap = StaticBitmap(self, -1, bmp)
         tip = Tips[self._currentTip]
         self._label = StaticText(self, -1, tip, size=Size(DEFAULT_WIDTH * 0.8, DEFAULT_HEIGHT * 0.8), style=ST_NO_AUTORESIZE)
 
-        nextTipButton = Button(self, ID_SET_NEXT_TIP, _("&Next tip"))
-        previousTipButton = Button(self, ID_SET_PREVIOUS_TIP, _("&Previous tip"))
-        self._chkShowTips = CheckBox(self, ID_CHK_SHOW_TIPS, _("&Show tips at startup"))
-        showTips: bool = self._prefs.showTipsOnStartup
+        nextTipButton:     Button   = Button(self, ID_SET_NEXT_TIP, _("&Next tip"))
+        previousTipButton: Button   = Button(self, ID_SET_PREVIOUS_TIP, _("&Previous tip"))
+        self._chkShowTips: CheckBox = CheckBox(self, ID_CHK_SHOW_TIPS, _("&Show tips at startup"))
+        showTips:          bool     = self._prefs.showTipsOnStartup
+
         self._chkShowTips.SetValue(showTips)
 
         # Upper sizer
-        upSizer = BoxSizer(HORIZONTAL)
+        upSizer: BoxSizer = BoxSizer(HORIZONTAL)
         upSizer.Add(self._picture, 0, ALL | ALIGN_CENTER, 5)
         upSizer.Add(self._label,   1, ALL | ALIGN_CENTER, 5)
 
         # Lower sizer
-        loSizer = BoxSizer(HORIZONTAL)
+        loSizer: BoxSizer = BoxSizer(HORIZONTAL)
         loSizer.Add(previousTipButton, 0, ALL | ALIGN_CENTER, 5)
         loSizer.Add(nextTipButton,     0, ALL | ALIGN_CENTER, 5)
         loSizer.Add(Button(self, ID_OK, "&Ok"), 0, ALL | ALIGN_CENTER, 5)
 
         # Main sizer
         self.SetAutoLayout(True)
-        mainSizer = BoxSizer(VERTICAL)
+        mainSizer: BoxSizer = BoxSizer(VERTICAL)
         mainSizer.Add(upSizer, 0, ALL | ALIGN_CENTER, 5)
         mainSizer.Add(self._chkShowTips, 0, ALL | ALIGN_CENTER, 5)
         mainSizer.Add(loSizer, 0, ALL | ALIGN_CENTER, 5)
