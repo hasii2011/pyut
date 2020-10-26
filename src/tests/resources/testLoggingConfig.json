@@ -24,12 +24,10 @@
         },
         "__main__": {
             "level": "INFO",
-            "handlers": ["consoleHandler"],
             "propagate": "False"
         },
         "org": {
             "level":     "WARNING",
-            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "org.pyut": {
@@ -46,7 +44,6 @@
         },
         "tests": {
             "level": "WARNING",
-            "handlers": ["consoleHandler"],
             "propagate": "False"
         },
         "tests.TestPyutPythonVisitor": {
