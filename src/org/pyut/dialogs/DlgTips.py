@@ -1,4 +1,8 @@
 
+from typing import List
+
+from os import linesep as osLineSep
+
 from wx import ALIGN_CENTER
 from wx import ALL
 from wx import Bitmap
@@ -6,6 +10,7 @@ from wx import BoxSizer
 from wx import Button
 from wx import CAPTION
 from wx import CheckBox
+from wx import ClientDC
 
 from wx import CloseEvent
 from wx import CommandEvent
@@ -31,6 +36,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
+from org.pyut.general.LineSplitter import LineSplitter
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -104,7 +110,9 @@ class DlgTips(Dialog):
 
         tipText: str = linecache.getline(self._tipsFileName, self._currentTipNumber)
 
-        return tipText
+        splitTip: str = self.__normalizeTip(tipText)
+
+        return splitTip
 
     def _buildUpperDialog(self, tip: str) -> BoxSizer:
 
@@ -191,3 +199,15 @@ class DlgTips(Dialog):
             tipNumber = self._tipCount
 
         return tipNumber
+
+    def __normalizeTip(self, tip: str) -> str:
+
+        dc:    ClientDC     = ClientDC(self, )
+        ls:    LineSplitter = LineSplitter()
+        lines: List[str]    = ls.split(text=tip, dc=dc, textWidth=int(DEFAULT_WIDTH * 0.8))
+
+        splitTip: str = ''
+        for line in lines:
+            splitTip = f'{splitTip}{line}{osLineSep}'
+
+        return splitTip
