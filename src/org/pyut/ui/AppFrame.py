@@ -843,8 +843,9 @@ class AppFrame(Frame):
             if dlg.ShowModal() != ID_OK:
                 dlg.Destroy()
                 return False
-            self.updateCurrentDir(dlg.GetPath())
+
             fileNames = dlg.GetPaths()
+            self.updateCurrentDir(fileNames[0])
             dlg.Destroy()
 
         self.logger.info(f"loading file(s) {filename}")
