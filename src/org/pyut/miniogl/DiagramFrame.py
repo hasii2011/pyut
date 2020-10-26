@@ -238,7 +238,7 @@ class DiagramFrame(ScrolledWindow):
         """
         if self._selector is not None:
             self.Bind(EVT_MOTION, self._NullCallback)
-            self.clsLogger.warning(f'{self._selector=}')
+            self.clsLogger.debug(f'{self._selector=}')
             rect = self._selector
 
             for shape in self._diagram.GetShapes():
@@ -252,7 +252,7 @@ class DiagramFrame(ScrolledWindow):
             rect.Detach()
             self._selector = None
         if not self._moving and self._clickedShape:
-            self.clsLogger.warning(f'{self._moving} {self._clickedShape}')
+            self.clsLogger.debug(f'{self._moving} {self._clickedShape}')
             clicked = self._clickedShape
             if not event.ControlDown():
                 self.DeselectAllShapes()

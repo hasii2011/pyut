@@ -12,6 +12,7 @@ from time import strftime
 from pyumldiagrams.Definitions import ClassDefinition
 from pyumldiagrams.Definitions import ClassDefinitions
 from pyumldiagrams.Definitions import DefinitionType
+from pyumldiagrams.Definitions import DisplayMethodParameters
 from pyumldiagrams.Definitions import LinePositions
 from pyumldiagrams.Definitions import MethodDefinition
 from pyumldiagrams.Definitions import Methods
@@ -99,7 +100,10 @@ class OglToPyUmlDefinition:
 
             classDefinition: ClassDefinition = ClassDefinition(name=pyutClass.name, position=position, size=size)
 
-            classDefinition.displayMethodParameters = self._prefs.showParameters
+            if self._prefs.showParameters is True:
+                classDefinition.displayMethodParameters = DisplayMethodParameters.DISPLAY
+            else:
+                classDefinition.displayMethodParameters = DisplayMethodParameters.DO_NOT_DISPLAY
 
             classDefinition = self.__addClassDiagramDisplayPreferences(pyutClass=pyutClass, classDefinition=classDefinition)
 

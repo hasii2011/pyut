@@ -12,6 +12,7 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources', ['src/org/pyut/resources/Kilroy-Pyut.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/Help.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/Kudos.txt']),
+              ('org/pyut/resources', ['src/org/pyut/resources/tips.txt']),
 
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/pyut.ico']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/splash/Splash6.py']),
