@@ -66,7 +66,6 @@ class DlgTips(Dialog):
         self._prefs:        PyutPreferences = PyutPreferences()
         self._tipsFileName: str = PyutUtils.retrieveResourcePath('tips.txt')
         self._tipCount:     int = self._computeTipCount()
-        print(f'{self._tipCount=}')
 
         self._safelyRetrieveCurrentTipNumber()
 
@@ -96,7 +95,6 @@ class DlgTips(Dialog):
             self._currentTipNumber = 0
         else:
             self._currentTipNumber = self._currentTipNumber
-        print(f'{self._currentTipNumber=}')
 
     def _computeTipCount(self) -> int:
 
@@ -165,7 +163,6 @@ class DlgTips(Dialog):
         Select and display next tip
         """
         self._currentTipNumber = self.__incrementTipNumber(1)
-        print(f'{self._currentTipNumber=}')
         self._label.SetLabel(self._getCurrentTipText())
 
     # noinspection PyUnusedLocal
@@ -174,7 +171,6 @@ class DlgTips(Dialog):
         Select and display previous tip
         """
         self._currentTipNumber = self.__incrementTipNumber(-1)
-        print(f'{self._currentTipNumber=}')
         self._label.SetLabel(self._getCurrentTipText())
 
     def _onClose(self, event: CloseEvent):
