@@ -137,7 +137,7 @@ class TestWxOgl(App, InspectionMixin):
         context: ClientDC = ClientDC(window)
         memory: MemoryDC = MemoryDC()
 
-        x, y = window.ClientSize()
+        x, y = window.GetSize()
         emptyBitmap: Bitmap = Bitmap(x, y, -1)
 
         memory.SelectObject(emptyBitmap)
