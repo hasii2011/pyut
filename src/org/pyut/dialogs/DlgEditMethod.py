@@ -25,6 +25,7 @@ from wx import RA_SPECIFY_ROWS
 from wx import RESIZE_BORDER
 from wx import RadioBox
 from wx import STAY_ON_TOP
+from wx import Sizer
 from wx import VERTICAL
 
 from wx import StaticText
@@ -36,6 +37,8 @@ from wx import Button
 from wx import Event
 from wx import FlexGridSizer
 
+from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
+from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParam import PyutParam
@@ -72,15 +75,53 @@ class DlgEditMethod(BaseDlgEdit):
 
         self._pyutMethod:     PyutMethod = methodToEdit
         self._pyutMethodCopy: PyutMethod = deepcopy(methodToEdit)
-        # self._fixDeepCopyMethodParametersBug()
 
-        # ----------------
-        # Design of dialog
-        # ----------------
+        szrMethodInformation: FlexGridSizer = self._createMethodInformation()
+        szrMethodVisibility:  BoxSizer      = self._createMethodVisibilityContainer(szrMethodInformation)
+        mainSizer:            BoxSizer      = self._createMainContainer(szrMethodVisibility)
+
+        mainSizer.Fit(self)
+
+        self._initializeDataInControls()
+        self._fixBtnDlgMethods()
+        self._fixBtnParam()
+
         self.SetAutoLayout(True)
+        self.SetSizer(mainSizer)
+        self.SetAutoLayout(True)
+        self._txtName.SetFocus()
+        self.Centre()
+
+    def _initializeDataInControls(self):
+        """
+            Fill the text controls with PyutMethod data
+        """
+
+        self._txtName.SetValue(self._pyutMethodCopy.getName())
+        modifiers: str = self._pyutMethodCopy.getModifiers()
+        modifiers = " ".join(map(lambda x: str(x), modifiers))
+
+        self._txtModifiers.SetValue(modifiers)
+        self._txtReturn.SetValue(str(self._pyutMethodCopy.getReturns()))
+
+        self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.getVisibility()))
+
+        for i in self._pyutMethodCopy.getParams():
+            self._lstParams.Append(str(i))
+
+    def _createMethodVisibilityContainer(self, methodInfoContainer: Sizer) -> BoxSizer:
 
         # RadioBox Visibility
         self._rdbVisibility = RadioBox(self, ID_ANY, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
+
+        szr2: BoxSizer = BoxSizer(HORIZONTAL)
+
+        szr2.Add(self._rdbVisibility, 0, ALL, 5)
+        szr2.Add(methodInfoContainer, 0, ALIGN_CENTER_VERTICAL | ALL, 5)
+
+        return szr2
+
+    def _createMethodInformation(self) -> FlexGridSizer:
 
         # Txt Ctrl Name
         lblName:       StaticText = StaticText (self, ID_ANY, _("Name"))
@@ -95,37 +136,47 @@ class DlgEditMethod(BaseDlgEdit):
         lblReturn:       StaticText = StaticText (self, ID_ANY, _("Return type"))
         self._txtReturn: TextCtrl   = TextCtrl(self, ID_ANY, "", size=(125, -1))
 
-        # ------
-        # Params
+        methodInfoContainer: FlexGridSizer = FlexGridSizer(cols=3, hgap=6, vgap=6)
 
-        # Label Params
-        lblParam: StaticText = StaticText (self, ID_ANY, _("Params :"))
+        methodInfoContainer.AddMany([lblName, lblModifiers, lblReturn, self._txtName, self._txtModifiers, self._txtReturn])
 
-        # ListBox
+        return methodInfoContainer
+
+    def _createMainContainer(self, szrMethodVisibility: BoxSizer) -> BoxSizer:
+
+        lblParam: StaticText = StaticText (self, ID_ANY, _("Parameters:"))
+
         self._lstParams: ListBox = ListBox(self, ID_LST_PARAM_LIST, choices=[], style=LB_SINGLE)
+
+        szrParamButtons: BoxSizer = self._createParameterButtonsContainer()
+        szrButtons:      BoxSizer = self._createDialogButtonsContainer()
+
+        szr3: BoxSizer = BoxSizer(VERTICAL)
+
+        szr3.Add(szrMethodVisibility, 0, ALL, 5)
+        szr3.Add(lblParam,        WX_SIZER_NOT_CHANGEABLE, ALL, 5)
+        szr3.Add(self._lstParams, WX_SIZER_CHANGEABLE,     ALL | EXPAND, 5)
+        szr3.Add(szrParamButtons, WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        szr3.Add(szrButtons,      WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_RIGHT, 5)
+
         self.Bind(EVT_LISTBOX, self._evtParamList, id=ID_LST_PARAM_LIST)
 
-        # Button Add
-        self._btnParamAdd: Button = Button(self, ID_BTN_PARAM_ADD, _("&Add"))
-        self.Bind(EVT_BUTTON, self._onParamAdd, id=ID_BTN_PARAM_ADD)
+        return szr3
 
-        # Button Edit
-        self._btnParamEdit = Button(self, ID_BTN_PARAM_EDIT, _("&Edit"))
-        self.Bind(EVT_BUTTON, self._onParamEdit, id=ID_BTN_PARAM_EDIT)
+    def _createParameterButtonsContainer(self) -> BoxSizer:
 
-        # Button Remove
-        self._btnParamRemove = Button(self, ID_BTN_PARAM_REMOVE, _("&Remove"))
+        self._btnParamAdd:    Button = Button(self, ID_BTN_PARAM_ADD, _("&Add"))
+        self._btnParamEdit:   Button = Button(self, ID_BTN_PARAM_EDIT, _("&Edit"))
+        self._btnParamRemove: Button = Button(self, ID_BTN_PARAM_REMOVE, _("&Remove"))
+        self._btnParamUp:     Button = Button(self, ID_BTN_PARAM_UP, _("&Up"))
+        self._btnParamDown:   Button = Button(self, ID_BTN_PARAM_DOWN, _("&Down"))
+
+        self.Bind(EVT_BUTTON, self._onParamAdd,    id=ID_BTN_PARAM_ADD)
+        self.Bind(EVT_BUTTON, self._onParamEdit,   id=ID_BTN_PARAM_EDIT)
         self.Bind(EVT_BUTTON, self._onParamRemove, id=ID_BTN_PARAM_REMOVE)
+        self.Bind(EVT_BUTTON, self._onParamUp,     id=ID_BTN_PARAM_UP)
+        self.Bind(EVT_BUTTON, self._onParamDown,   id=ID_BTN_PARAM_DOWN)
 
-        # Button Up
-        self._btnParamUp = Button(self, ID_BTN_PARAM_UP, _("&Up"))
-        self.Bind(EVT_BUTTON, self._onParamUp, id=ID_BTN_PARAM_UP)
-
-        # Button Down
-        self._btnParamDown = Button(self, ID_BTN_PARAM_DOWN, _("&Down"))
-        self.Bind(EVT_BUTTON, self._onParamDown, id=ID_BTN_PARAM_DOWN)
-
-        # Sizer for Params buttons
         szrParamButtons: BoxSizer = BoxSizer (HORIZONTAL)
 
         szrParamButtons.Add(self._btnParamAdd,    0, ALL, 5)
@@ -134,56 +185,29 @@ class DlgEditMethod(BaseDlgEdit):
         szrParamButtons.Add(self._btnParamUp,     0, ALL, 5)
         szrParamButtons.Add(self._btnParamDown,   0, ALL, 5)
 
-        # ---------------------
-        # Buttons OK and cancel
-        self._btnMethodOk = Button(self, ID_BTN_METHOD_OK, _("&Ok"))
-        self.Bind(EVT_BUTTON, self._onMethodOk, id=ID_BTN_METHOD_OK)
-        self._btnMethodOk.SetDefault()
-        self._btnMethodCancel = Button(self, ID_BTN_METHOD_CANCEL, _("&Cancel"))
+        return szrParamButtons
+
+    def _createDialogButtonsContainer(self, buttons=OK) -> BoxSizer:
+        """
+        Override base class with our custom version
+        Args:
+            buttons:    Unused in our implementation.
+
+        Returns: The container
+        """
+        self._btnMethodOk:     Button = Button(self, ID_BTN_METHOD_OK, _("&Ok"))
+        self._btnMethodCancel: Button = Button(self, ID_BTN_METHOD_CANCEL, _("&Cancel"))
+
+        self.Bind(EVT_BUTTON, self._onMethodOk,     id=ID_BTN_METHOD_OK)
         self.Bind(EVT_BUTTON, self._onMethodCancel, id=ID_BTN_METHOD_CANCEL)
+
+        self._btnMethodOk.SetDefault()
 
         szrButtons: BoxSizer = BoxSizer (HORIZONTAL)
         szrButtons.Add(self._btnMethodOk, 0, ALL, 5)
         szrButtons.Add(self._btnMethodCancel, 0, ALL, 5)
 
-        szr1: FlexGridSizer = FlexGridSizer(cols=3, hgap=6, vgap=6)
-        szr1.AddMany([lblName, lblModifiers, lblReturn, self._txtName, self._txtModifiers, self._txtReturn])
-
-        szr2: BoxSizer = BoxSizer(HORIZONTAL)
-        szr2.Add(self._rdbVisibility, 0, ALL, 5)
-        szr2.Add(szr1, 0, ALIGN_CENTER_VERTICAL | ALL, 5)
-
-        szr3: BoxSizer = BoxSizer(VERTICAL)
-        szr3.Add(szr2, 0, ALL, 5)
-        szr3.Add(lblParam, 0, ALL, 5)
-        szr3.Add(self._lstParams, 1, EXPAND | ALL, 5)
-        szr3.Add(szrParamButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szr3.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)
-
-        self.SetSizer(szr3)
-        self.SetAutoLayout(True)
-
-        szr3.Fit(self)
-
-        # Fill the text controls with PyutMethod data
-        self._txtName.SetValue(self._pyutMethodCopy.getName())
-
-        modifiers = self._pyutMethodCopy.getModifiers()
-        modifiers = " ".join(map(lambda x: str(x), modifiers))
-
-        self._txtModifiers.SetValue(modifiers)
-        self._txtReturn.SetValue(str(self._pyutMethodCopy.getReturns()))
-        self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.getVisibility()))
-        for i in self._pyutMethodCopy.getParams():
-            self._lstParams.Append(str(i))
-
-        # Fix state of buttons (enabled or not)
-        self._fixBtnDlgMethods()
-        self._fixBtnParam()
-
-        # Fix the focus
-        self._txtName.SetFocus()
-        self.Centre()
+        return szrButtons
 
     def _callDlgEditParam (self, param: PyutParam) -> int:
         """

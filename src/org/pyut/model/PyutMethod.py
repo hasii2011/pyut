@@ -132,6 +132,21 @@ class PyutMethod(PyutObject):
     def parameters(self, newParams: PyutParameters):
         self._params = newParams
 
+    @property
+    def modifiers(self) -> PyutModifiers:
+        """
+        This is not a copy, but the original one. Any change made to it is
+        directly made on the class.
+
+        Returns:
+            Return a list of the modifiers.
+        """
+        return self._modifiers
+
+    @modifiers.setter
+    def modifiers(self, newModifiers: PyutModifiers):
+        self._modifiers = newModifiers
+
     def getVisibility(self) -> PyutVisibilityEnum:
         """
         Return the visibility of the method.

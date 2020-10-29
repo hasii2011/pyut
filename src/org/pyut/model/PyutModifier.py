@@ -16,18 +16,17 @@ class PyutModifier:
         Args:
             modifierTypeName:   for the type
         """
-        self.__name = modifierTypeName
+        self.__name: str = modifierTypeName
+
+    @property
+    def name(self) -> str:
+        return self.__name
 
     def getName(self) -> str:
         """
 
-        Returns:
-             name
-        """
-        """
-        Get method, used to know the name.
+        Returns:  The modifier name
 
-        @return 
         """
         return self.__name
 
