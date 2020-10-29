@@ -74,7 +74,7 @@ class DlgEditClass(DlgEditClassCommon):
             windowId:       dialog identity
             pyutClass:      Class modified by dialog
         """
-        super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Class Edit"), pyutModel=pyutClass)
+        super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Class Edit"), pyutModel=pyutClass, editInterface=False)
 
         self.logger:         Logger = getLogger(__name__)
         lblStereotype:       StaticText = StaticText (self, -1, _("Stereotype"))

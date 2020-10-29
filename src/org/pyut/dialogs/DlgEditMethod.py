@@ -387,9 +387,10 @@ class DlgEditMethod(BaseDlgEdit):
         self._pyutMethod.setReturns(returnType)
         self._pyutMethod.setParams(self._pyutMethodCopy.getParams())
 
-        visStr:      str               = self._rdbVisibility.GetStringSelection()
-        visibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
-        self._pyutMethod.setVisibility(visibility)
+        if self._editInterface is False:
+            visStr:      str               = self._rdbVisibility.GetStringSelection()
+            visibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
+            self._pyutMethod.setVisibility(visibility)
 
         # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()

@@ -53,7 +53,7 @@ class DlgEditClassCommon(Dialog):
 
     clsLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent, windowId, dlgTitle: str, pyutModel: CommonClassType):
+    def __init__(self, parent, windowId, dlgTitle: str, pyutModel: CommonClassType, editInterface: bool = False):
 
         super().__init__(parent, windowId, dlgTitle, style=RESIZE_BORDER | CAPTION)
 
@@ -64,14 +64,15 @@ class DlgEditClassCommon(Dialog):
         self.logger:         Logger          = DlgEditClassCommon.clsLogger
         self._pyutModel:     CommonClassType = pyutModel
         self._pyutModelCopy: CommonClassType = deepcopy(pyutModel)
+        self._editInterface: bool            = editInterface
         self._mediator:      Mediator        = Mediator()
 
         self.SetAutoLayout(True)
 
-        if isinstance(pyutModel, PyutClass):
-            lbl: str = _('Class Name')
-        else:
+        if editInterface is True:
             lbl: str = _('Interface Name')
+        else:
+            lbl: str = _('Class Name')
 
         lblName:       StaticText = StaticText (self, ID_ANY, lbl)
         self._txtName: TextCtrl   = TextCtrl(self, ID_TEXT_NAME, "", size=(125, -1))
@@ -325,7 +326,11 @@ class DlgEditClassCommon(Dialog):
         Returns: The return code from dialog
         """
         self.logger.info(f'method to edit: {methodToEdit}')
-        self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=methodToEdit, theMediator=self._mediator)
+        if self._editInterface is True:
+            editInterface: bool = True
+        else:
+            editInterface: bool = False
+        self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=methodToEdit, theMediator=self._mediator, editInterface=editInterface)
         return self._dlgMethod.ShowModal()
 
     # noinspection PyUnusedLocal

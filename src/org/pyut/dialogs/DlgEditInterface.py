@@ -20,7 +20,7 @@ class DlgEditInterface(DlgEditClassCommon):
 
     def __init__(self, parent, windowId, pyutModel: PyutInterface):
 
-        super().__init__(parent, windowId, _('Interface'), pyutModel)
+        super().__init__(parent, windowId, _('Interface'), pyutModel, editInterface=True)
 
         self.logger: Logger = DlgEditInterface.clsLogger
 
