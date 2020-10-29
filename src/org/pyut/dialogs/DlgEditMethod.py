@@ -67,11 +67,12 @@ from org.pyut.general.Globals import _
 
 class DlgEditMethod(BaseDlgEdit):
 
-    def __init__(self, theParent, theWindowId=ID_ANY, methodToEdit: PyutMethod = None, theMediator=None):
+    def __init__(self, theParent, theWindowId=ID_ANY, methodToEdit: PyutMethod = None, theMediator=None, editInterface: bool = False):
 
         super().__init__(theParent, theWindowId, _("Method Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=theMediator)
 
         self.logger: Logger = getLogger(__name__)
+        self._editInterface: bool = editInterface
 
         self._pyutMethod:     PyutMethod = methodToEdit
         self._pyutMethodCopy: PyutMethod = deepcopy(methodToEdit)
@@ -104,19 +105,20 @@ class DlgEditMethod(BaseDlgEdit):
         self._txtModifiers.SetValue(modifiers)
         self._txtReturn.SetValue(str(self._pyutMethodCopy.getReturns()))
 
-        self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.getVisibility()))
+        if self._editInterface is False:
+            self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.getVisibility()))
 
         for i in self._pyutMethodCopy.getParams():
             self._lstParams.Append(str(i))
 
     def _createMethodVisibilityContainer(self, methodInfoContainer: Sizer) -> BoxSizer:
 
-        # RadioBox Visibility
-        self._rdbVisibility = RadioBox(self, ID_ANY, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
-
         szr2: BoxSizer = BoxSizer(HORIZONTAL)
 
-        szr2.Add(self._rdbVisibility, 0, ALL, 5)
+        if self._editInterface is False:
+            self._rdbVisibility = RadioBox(self, ID_ANY, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
+            szr2.Add(self._rdbVisibility, 0, ALL, 5)
+
         szr2.Add(methodInfoContainer, 0, ALIGN_CENTER_VERTICAL | ALL, 5)
 
         return szr2

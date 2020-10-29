@@ -70,7 +70,7 @@ class TestADialog(App):
 
         pyutMethod.parameters = [pyutParam]
 
-        with DlgEditMethod(theParent=self._frameTop, theWindowId=ID_ANY, methodToEdit=pyutMethod, theMediator=self._mediator) as dlg:
+        with DlgEditMethod(theParent=self._frameTop, theWindowId=ID_ANY, methodToEdit=pyutMethod, theMediator=self._mediator, editInterface=True) as dlg:
             dlg: DlgEditMethod = cast(DlgEditMethod, dlg)
             if dlg.ShowModal() == OK:
                 # self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
