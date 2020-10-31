@@ -1,5 +1,6 @@
 
 from typing import Dict
+from typing import cast
 
 import sys
 
@@ -8,19 +9,21 @@ import os
 from configparser import ConfigParser
 
 from org.pyut.PyutConstants import PyutConstants
-from org.pyut.general.Singleton import Singleton
 from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
+from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 
 PREFS_NAME_VALUES = Dict[str, str]
 
 
-class PreferencesCommon(Singleton):
+class PreferencesCommon(BaseSubPreference):
 
     preferencesFileLocationAndName: str = None
 
-    def init(self, theMasterParser: ConfigParser):
+    def init(self, *args, **kwds):
 
-        self._config = theMasterParser
+        self._config: ConfigParser = cast(ConfigParser, None)
+
+        BaseSubPreference.init(self, *args, **kwds)
 
     @staticmethod
     def determinePreferencesLocation():

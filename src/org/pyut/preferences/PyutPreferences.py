@@ -66,11 +66,10 @@ class PyutPreferences(Singleton):
 
         self._createEmptyPreferences()
 
-        self._preferencesCommon: PreferencesCommon = PreferencesCommon(theMasterParser=self._config)
-
-        self._mainPrefs:    MainPreferences    = MainPreferences(theMasterParser=self._config)
-        self._diagramPrefs: BackgroundPreferences = BackgroundPreferences(theMasterParser=self._config)
-        self._debugPrefs:   DebugPreferences   = DebugPreferences(theMasterParser=self._config)
+        self._preferencesCommon: PreferencesCommon     = PreferencesCommon(config=self._config)
+        self._mainPrefs:         MainPreferences       = MainPreferences(config=self._config)
+        self._diagramPrefs:      BackgroundPreferences = BackgroundPreferences(config=self._config)
+        self._debugPrefs:        DebugPreferences      = DebugPreferences(config=self._config)
 
         self.__loadConfig()
 

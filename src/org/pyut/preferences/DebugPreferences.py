@@ -1,16 +1,18 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
 from configparser import ConfigParser
 
-from org.pyut.general.Singleton import Singleton
+from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
-class DebugPreferences(Singleton):
+class DebugPreferences(BaseSubPreference):
 
     DEBUG_SECTION:   str = 'Debug'
 
@@ -26,11 +28,14 @@ class DebugPreferences(Singleton):
         DEBUG_DIAGRAM_FRAME:            'False'
     }
 
-    def init(self, theMasterParser: ConfigParser):
+    def init(self, *args, **kwds):
 
-        self.logger:             Logger            = getLogger(__name__)
-        self._config:            ConfigParser      = theMasterParser
-        self._preferencesCommon: PreferencesCommon = PreferencesCommon(theMasterParser)
+        self.logger:  Logger       = getLogger(__name__)
+        self._config: ConfigParser = cast(ConfigParser, None)
+
+        BaseSubPreference.init(self, *args, **kwds)
+
+        self._preferencesCommon: PreferencesCommon = PreferencesCommon(self._config)
 
     def addAnyMissingDebugPreferences(self):
 

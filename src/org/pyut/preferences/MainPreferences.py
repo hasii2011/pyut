@@ -4,14 +4,15 @@ from logging import getLogger
 
 from configparser import ConfigParser
 from typing import Tuple
+from typing import cast
 
-from org.pyut.general.Singleton import Singleton
+from org.pyut.preferences.BaseSubPreference import BaseSubPreference
+
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
-
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
-class MainPreferences(Singleton):
+class MainPreferences(BaseSubPreference):
 
     DEFAULT_PDF_EXPORT_FILE_NAME: str = 'PyutExport'
 
@@ -55,11 +56,14 @@ class MainPreferences(Singleton):
         PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME
     }
 
-    def init(self, theMasterParser: ConfigParser):
+    def init(self, *args, **kwds):
 
-        self.logger:             Logger            = getLogger(__name__)
-        self._config:            ConfigParser      = theMasterParser
-        self._preferencesCommon: PreferencesCommon = PreferencesCommon(theMasterParser)
+        self.logger:  Logger            = getLogger(__name__)
+        self._config: ConfigParser = cast(ConfigParser, None)
+
+        BaseSubPreference.init(self, *args, **kwds)
+
+        self._preferencesCommon: PreferencesCommon = PreferencesCommon(self._config)
 
     def addAnyMissingMainPreferences(self):
 
