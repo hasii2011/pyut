@@ -9,6 +9,8 @@ from logging import getLogger
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutType import PyutType
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class PythonMetaClassDataHandler:
@@ -45,15 +47,15 @@ class PythonMetaClassDataHandler:
 
     def getMethodsFromClass(self, clsType) -> List[classmethod]:
 
-        clmethods: List[classmethod] = []
-        for methd in clsType.__dict__.values():
-            if isinstance(methd, Callable):
-                methName: str = methd.__name__
+        clsMethods: List[classmethod] = []
+        for aMethod in clsType.__dict__.values():
+            if isinstance(aMethod, Callable):
+                methName: str = aMethod.__name__
                 self.logger.debug(f'methName: {methName}')
                 if methName != '__str__' and methName != '__repr__':
-                    clmethods.append(methd)
+                    clsMethods.append(aMethod)
 
-        return clmethods
+        return clsMethods
 
     def generatePyutMethods(self, clmethods: List[classmethod]) -> List[PyutMethod]:
 
@@ -75,7 +77,7 @@ class PythonMetaClassDataHandler:
                             defVal = args[3][i - firstDefVal]
                             if isinstance(defVal, str):
                                 defVal = f'"{defVal}"'
-                            param = PyutParam(arg, "", str(defVal))
+                            param = PyutParam(arg, PyutType(""), str(defVal))
                         else:
                             param = PyutParam(arg)
                         meth.addParam(param)
@@ -84,9 +86,9 @@ class PythonMetaClassDataHandler:
             func_name = funcName
             if func_name[-2:] != "__":
                 if func_name[0:2] == "__":
-                    meth.setVisibility("-")
+                    meth.visibility = PyutVisibilityEnum.PRIVATE
                 elif func_name[0] == "_":
-                    meth.setVisibility("#")
+                    meth.visibility = PyutVisibilityEnum.PROTECTED
 
         return methods
 

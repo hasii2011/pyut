@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -8,7 +10,7 @@ from tempfile import gettempdir
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.commands import CommandGroup
+from org.pyut.commands.CommandGroup import CommandGroup
 
 from org.pyut.history.HistoryUtils import GROUP_COMMENT_ID
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
@@ -70,7 +72,7 @@ class HistoryManager:
         """
         index of the command group that will be undone
         """
-        self._groupToExecute: CommandGroup = None
+        self._groupToExecute: CommandGroup = cast(CommandGroup, None)
         """
         reference to the last added group, for execute() method
         """
@@ -259,7 +261,7 @@ class HistoryManager:
 
     def _unserialize(self, serializedGroup):
         """
-        unserialize the specified string to return a command group
+        deserialize the specified string to return a command group
         @param serialized (string)  :   string from which will be
                                         constructed the group
         @return an initialized group (CommandGroup)
@@ -269,10 +271,10 @@ class HistoryManager:
         grpComment = getTokenValue(GROUP_COMMENT_ID, serializedGroup)
 
         # create an initialized group with only its comment
-        group = CommandGroup.CommandGroup(grpComment)
+        group = CommandGroup(grpComment)
         group.setHistory(self)
 
-        # unserialize the commands belonging to the group
+        # deserialize the commands belonging to the group
         group.deserialize(serializedGroup)
 
         return group

@@ -201,7 +201,7 @@ class DebugListControl(ULC.UltimateListCtrl, ListRowHighlighter):
 
         self.logger.info(f'name: {theName}')
 
-        itemList: List[str, str, str] = theName.split('_')    # columnName, row, col
+        itemList: List[str] = theName.split('_')    # columnName, row, col
         self.logger.info(f'itemList: {itemList}')
 
         columnName: str = itemList[0]

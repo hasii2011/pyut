@@ -35,4 +35,4 @@ class AttachmentPoint(Enum):
             return AttachmentPoint.SOUTH
         else:
             print(f'Warning: did not recognize this attachment point: {canonicalStr}')
-            return AttachmentPoint.PUBLIC
+            return AttachmentPoint.NORTH

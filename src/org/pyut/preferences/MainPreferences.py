@@ -169,8 +169,7 @@ class MainPreferences(BaseSubPreference):
 
     @property
     def startupWidth(self) -> int:
-        width: str = self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_WIDTH)
-        return int(width)
+        return self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_WIDTH)
 
     @startupWidth.setter
     def startupWidth(self, newWidth: int):
@@ -179,8 +178,7 @@ class MainPreferences(BaseSubPreference):
 
     @property
     def startupHeight(self) -> int:
-        height: str = self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_HEIGHT)
-        return int(height)
+        return self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_HEIGHT)
 
     @startupHeight.setter
     def startupHeight(self, newHeight: int):
