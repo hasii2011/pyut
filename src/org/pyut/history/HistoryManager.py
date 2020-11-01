@@ -113,7 +113,7 @@ class HistoryManager:
             saveFile.close()
 
             # deserialize the group to undo
-            group = self._unserialize(fileContent[self._groupUndoIndex])
+            group = self._deserialize(fileContent[self._groupUndoIndex])
             group.setHistory(self)
 
             # undo all the commands that are in the group
@@ -138,7 +138,7 @@ class HistoryManager:
             self._groupUndoIndex += 1
 
             # deserialize the group
-            group = self._unserialize(fileContent[self._groupUndoIndex])
+            group = self._deserialize(fileContent[self._groupUndoIndex])
             group.setHistory(self)
 
             # redo all the commands in the group
@@ -225,7 +225,7 @@ class HistoryManager:
             saveFile.close()
 
             # get the group that is next to be redone
-            group = self._unserialize(fileContent[self._groupUndoIndex + 1])
+            group = self._deserialize(fileContent[self._groupUndoIndex + 1])
             group.setHistory(self)
             return group
         else:
@@ -246,7 +246,7 @@ class HistoryManager:
             saveFile.close()
 
             # get the group that is next to be redone
-            group = self._unserialize(fileContent[self._groupUndoIndex])
+            group = self._deserialize(fileContent[self._groupUndoIndex])
             group.setHistory(self)
             return group
         else:
@@ -259,14 +259,15 @@ class HistoryManager:
 
         return self._frame
 
-    def _unserialize(self, serializedGroup):
+    def _deserialize(self, serializedGroup) -> CommandGroup:
         """
         deserialize the specified string to return a command group
-        @param serialized (string)  :   string from which will be
-                                        constructed the group
-        @return an initialized group (CommandGroup)
-        """
 
+        Args:
+            serializedGroup: (string)  :   string from which will be constructed the group
+
+        Returns:    an initialized group (CommandGroup)
+        """
         # get from the string the comment/description for the group
         grpComment = getTokenValue(GROUP_COMMENT_ID, serializedGroup)
 
