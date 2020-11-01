@@ -95,15 +95,20 @@ class PyutApp(wxApp):
         AfterSplash : Occurs after the splash screen is launched; launch the application
         """
         try:
-            # Handle application parameters in the command line
+            # Handle application file names on the command line
             prefs:   PyutPreferences = PyutPreferences()
-            orgPath: str             = prefs.orgDirectory
+            if prefs.userDirectory is not None and len(prefs.userDirectory) != 0:
+                loadDirectory: str = prefs.userDirectory
+            else:
+                loadDirectory: str = prefs.orgDirectory
+
             for filename in [el for el in argv[1:] if el[0] != '-']:
-                self._frame.loadByFilename(orgPath + osSeparator + filename)
+                self._frame.loadByFilename(f'{loadDirectory}{osSeparator}{filename}')
+
             if self._frame is None:
                 self.logger.error("Exiting due to previous errors")
                 return False
-            del orgPath
+
             if self._showMainFrame:
                 self._frame.Show(True)
 
