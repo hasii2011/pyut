@@ -7,17 +7,27 @@ from logging import getLogger
 
 from os import system as osSystem
 from os import remove as osRemove
+from os import linesep as osLineSep
 
 from sys import platform as sysPlatform
 
+from wx import CENTER
+from wx import ICON_ERROR
 from wx import ICON_EXCLAMATION
 from wx import ID_OK
-from wx import MessageDialog
 from wx import OK
 
-from org.pyut.PyutConstants import PyutConstants
+from wx import MessageDialog
+
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutType import PyutType
+from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+
+from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlFrame import UmlFrame
@@ -25,11 +35,7 @@ from org.pyut.ui.UmlFrame import UmlFrame
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 from org.pyut.plugins.fastedit.DlgFastEditOptions import DlgFastEditOptions
 
-from org.pyut.ogl.OglObject import OglObject
-
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
-from org.pyut.model.PyutField import PyutField
+from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.general.Globals import _
 
@@ -60,7 +66,7 @@ class ToFastEdit(PyutToPlugin):
         Returns:
             The name of the plugin.
         """
-        return "Fast text edition"
+        return "Fast Text Edit"
 
     def getAuthor(self) -> str:
         """
@@ -84,15 +90,16 @@ class ToFastEdit(PyutToPlugin):
 
         """
         # Return the menu title as it must be displayed
-        return "Fast text edit"
+        return "Fast Text Edit"
 
     def setOptions(self) -> bool:
         """
         Returns:
-            if `False` the import is cancelled.
+            if `False` the action is cancelled.
         """
         ans: bool = True
-        self.logger.info(f"Before dialog show")
+        self.logger.debug(f"Before dialog show")
+
         with DlgFastEditOptions(self._umlFrame) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.info(f'Waiting for answer')
@@ -102,7 +109,7 @@ class ToFastEdit(PyutToPlugin):
             else:
                 self.logger.info(f'Cancelled')
 
-        self.logger.info(f"After dialog show")
+        self.logger.debug(f"After dialog show")
         return ans
 
     def _findParams(self, line: str):
@@ -126,12 +133,12 @@ class ToFastEdit(PyutToPlugin):
                 p.append((name.strip(), paramType.strip()))
         return p
 
-    def read(self, umlObject, file):
+    def read(self, umlObject: OglClass, file: TextIO):
         """
         Read data from file
 
         format:
-        ```Python
+        ```python
         class name
         <<stereotype_optional>>
         +method([param[:type]]*)[:type_return]
@@ -152,7 +159,7 @@ class ToFastEdit(PyutToPlugin):
         """
         className: str       = file.readline().strip()
         pyutClass: PyutClass = umlObject.getPyutObject()
-        pyutClass.setName(className)
+        pyutClass.name = className
 
         # process stereotype if present
         nextStereoType: str = file.readline().strip()
@@ -161,7 +168,7 @@ class ToFastEdit(PyutToPlugin):
             nextStereoType = file.readline().strip()
 
         methods = []
-        fields = []
+        fields  = []
         pyutClass.methods = methods
         pyutClass.fields  = fields
 
@@ -186,9 +193,8 @@ class ToFastEdit(PyutToPlugin):
                 # process method
                 name = nextStereoType[0:pos].strip()
                 nextStereoType = nextStereoType[pos+1:]
-                pos = nextStereoType.find(")")
+                pos = nextStereoType.find(')')
 
-                # TODO return typ should be PyutType
                 returnType: str = ""
                 if pos != -1:
                     params = self._findParams(nextStereoType[:pos])
@@ -199,7 +205,8 @@ class ToFastEdit(PyutToPlugin):
                         returnType = nextStereoType[pos+1:].strip()
                     else:
                         returnType = ""
-                method = PyutMethod(name, vis, returnType)
+                pyutType: PyutType   = PyutType(value=returnType)
+                method:   PyutMethod = PyutMethod(name=name, visibility=vis, returns=pyutType)
 
                 method.setParams([PyutParam(x[0], x[1]) for x in params])
                 methods.append(method)
@@ -211,62 +218,91 @@ class ToFastEdit(PyutToPlugin):
 
             nextStereoType = file.readline().strip()
 
-    def write(self, oglObject, file):
+    def write(self, oglObject: OglClass, file: TextIO):
         """
         Write data to filename.
 
-        format
+        Format:
+        ```python
         Class Name
         <<stereotype_optional>>
         +method([param[:type]]*)[:type_return]
         +field[:type][=value_initial]
+        ```
 
-        @param oglObject
-        @param file
-
+        Args:
+            oglObject:  The Ogl object to edit
+            file:       The text file to write to
         """
 
         o: PyutClass = oglObject.getPyutObject()
-        file.write(o.getName() + "\n")
+
+        file.write(o.getName() + osLineSep)
+
         if o.getStereotype() is not None:
-            file.write(str(o.getStereotype()) + "\n")
+            file.write(str(o.getStereotype()) + osLineSep)
         for method in o.methods:
-            file.write(method.getString() + "\n")
+            file.write(method.getString() + osLineSep)
         for field in o.fields:
-            file.write(str(field) + "\n")
+            file.write(str(field) + osLineSep)
+
         file.close()
 
-    def doAction(self, umlObjects: List[OglObject], selectedObjects: List[OglObject], umlFrame: UmlFrame):
+    def doAction(self, umlObjects: List[OglObject], selectedObjects: List[OglClass], umlFrame: UmlFrame):
         """
 
         Args:
             umlObjects: list of the uml objects of the diagram
             selectedObjects:  list of the selected objects
             umlFrame: the frame of the diagram
-
         """
         if len(selectedObjects) != 1:
             dlg = MessageDialog(None, _("You must select at most a single class"), _("Warning"), OK | ICON_EXCLAMATION)
             dlg.ShowModal()
             dlg.Destroy()
-
             return
+        oglClass: OglClass = selectedObjects[0]
+
+        if isinstance(oglClass, OglClass) is False:
+            dlg: MessageDialog = MessageDialog(None, _('Must be a UML Class'), _('Bad Selection'), OK | ICON_ERROR | CENTER)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+
         filename: str = ToFastEdit.FAST_EDIT_TEMP_FILE
 
+        self._writeTempTextFileForEditor(filename, oglClass)
+        self._launchAppropriateEditor(filename)
+        self._readTheModifiedTextFile(filename, oglClass)
+
+        self._setProjectModified()
+        self._cleanupTempFile()
+
+    def _writeTempTextFileForEditor(self, filename: str, oglClass: OglClass) -> None:
+
         file: TextIO = open(filename, "w")
-        self.write(selectedObjects[0], file)
+        self.write(oglClass, file)
         file.close()
+
+    def _launchAppropriateEditor(self, filename: str) -> None:
+        """
+        Launches the configured editor in a platform appropriate way.  Assumes this blocks
+        until the end-user exits the launched editor
+
+        Args:
+            filename: The file to pass to the editor
+        """
 
         if sysPlatform == PyutConstants.THE_GREAT_MAC_PLATFORM:
             osSystem(f'open -W -a {self._editor} {filename}')
         else:
             osSystem(f'{self._editor} {filename}')
-        file = open(filename, "r")
-        self.read(selectedObjects[0], file)
-        file.close()
 
-        self._setProjectModified()
-        self._cleanupTempFile()
+    def _readTheModifiedTextFile(self, filename: str, oglClass: OglClass):
+
+        file: TextIO = open(filename, "r")
+        self.read(oglClass, file)
+        file.close()
 
     def _setProjectModified(self):
 
