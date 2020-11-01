@@ -96,14 +96,8 @@ class PyutApp(wxApp):
         """
         try:
             # Handle application file names on the command line
-            prefs:   PyutPreferences = PyutPreferences()
-            if prefs.userDirectory is not None and len(prefs.userDirectory) != 0:
-                loadDirectory: str = prefs.userDirectory
-            else:
-                loadDirectory: str = prefs.orgDirectory
-
-            for filename in [el for el in argv[1:] if el[0] != '-']:
-                self._frame.loadByFilename(f'{loadDirectory}{osSeparator}{filename}')
+            prefs: PyutPreferences = PyutPreferences()
+            self._handleCommandLineFileNames(prefs)
 
             if self._frame is None:
                 self.logger.error("Exiting due to previous errors")
@@ -119,6 +113,7 @@ class PyutApp(wxApp):
                 self._frame.CentreOnScreen()
 
             return True
+        
         except (ValueError, Exception) as e:
             dlg = MessageDialog(None, _(f"The following error occurred : {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
             self.logger.error(f'Exception: {e}')
@@ -130,6 +125,15 @@ class PyutApp(wxApp):
             dlg.ShowModal()
             dlg.Destroy()
             return False
+
+    def _handleCommandLineFileNames(self, prefs: PyutPreferences):
+
+        if prefs.userDirectory is not None and len(prefs.userDirectory) != 0:
+            loadDirectory: str = prefs.userDirectory
+        else:
+            loadDirectory: str = prefs.orgDirectory
+        for filename in [el for el in argv[1:] if el[0] != '-']:
+            self._frame.loadByFilename(f'{loadDirectory}{osSeparator}{filename}')
 
     def OnExit(self):
         """
