@@ -19,7 +19,7 @@ class ShapeEventHandler:
         Args:
             event:
         """
-        self.clsLogger.info("Unhandled left down")
+        ShapeEventHandler.clsLogger.info("Unhandled left down")
         event.Skip()
 
     def OnLeftUp(self, event: MouseEvent):
@@ -29,7 +29,7 @@ class ShapeEventHandler:
         Args:
             event:
         """
-        self.clsLogger.debug("Unhandled left up")
+        ShapeEventHandler.clsLogger.debug("Unhandled left up")
         event.Skip()
 
     def OnLeftDClick(self, event: MouseEvent):
@@ -38,34 +38,37 @@ class ShapeEventHandler:
 
         @param  event
         """
-        self.clsLogger.debug("Unhandled left double click")
+        ShapeEventHandler.clsLogger.debug("Unhandled left double click")
         event.Skip()
 
     def OnMiddleDown(self, event: MouseEvent):
         """
         Callback for middle clicks.
 
-        @param  event
+        Args:
+            event:
         """
-        self.clsLogger.debug("Unhandled middle down")
+        ShapeEventHandler.clsLogger.debug("Unhandled middle down")
         event.Skip()
 
     def OnMiddleUp(self, event: MouseEvent):
         """
         Callback for middle clicks.
 
-        @param  event
+        Args:
+            event:
         """
-        self.clsLogger.debug("Unhandled middle up")
+        ShapeEventHandler.clsLogger.debug("Unhandled middle up")
         event.Skip()
 
     def OnMiddleDClick(self, event: MouseEvent):
         """
         Callback for middle double clicks.
 
-        @param  event
+        Args:
+            event:
         """
-        self.clsLogger.debug("Unhandled middle double click")
+        ShapeEventHandler.clsLogger.debug("Unhandled middle double click")
         event.Skip()
 
     def OnRightDown(self, event: MouseEvent):
@@ -73,10 +76,8 @@ class ShapeEventHandler:
         Callback for right clicks.
         Args:
             event:
-
-
         """
-        self.clsLogger.debug("Unhandled right down")
+        ShapeEventHandler.clsLogger.debug("Unhandled right down")
         event.Skip()
 
     def OnRightUp(self, event: MouseEvent):
@@ -85,7 +86,7 @@ class ShapeEventHandler:
         Args:
             event:
         """
-        self.clsLogger.debug("Unhandled right up")
+        ShapeEventHandler.clsLogger.debug("Unhandled right up")
         event.Skip()
 
     def OnRightDClick(self, event: MouseEvent):
@@ -94,5 +95,5 @@ class ShapeEventHandler:
         Args:
             event:
         """
-        self.clsLogger.debug("Unhandled right double click")
+        ShapeEventHandler.clsLogger.debug("Unhandled right double click")
         event.Skip()

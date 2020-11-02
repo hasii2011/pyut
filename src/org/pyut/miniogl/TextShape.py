@@ -20,9 +20,10 @@ from org.pyut.miniogl.TextShapeModel import TextShapeModel
 
 
 class TextShape(RectangleShape):
+
+    clsLogger: Logger = getLogger(__name__)
     """
     A text shape that can be attached to another shape standalone).
-
     """
     def __init__(self, x: float, y: float, text: str, parent=None, font: Font = None):
         """
@@ -36,7 +37,6 @@ class TextShape(RectangleShape):
         """
         super().__init__(x, y, 0, 0, parent)
 
-        self.logger: Logger = getLogger(__name__)
         self._text:  str    = cast(str, None)
         self._color: Colour = BLACK
         self.SetText(text)
@@ -48,7 +48,7 @@ class TextShape(RectangleShape):
         self._model: TextShapeModel = TextShapeModel(self)
         self._font:  Font = font
 
-        self.logger.debug(f'Initial Text Shape font: {font}')
+        TextShape.clsLogger.debug(f'Initial Text Shape font: {font}')
 
     def Attach(self, diagram):
         """
@@ -112,7 +112,10 @@ class TextShape(RectangleShape):
             dc.SetBackgroundMode(PENSTYLE_SOLID)
             dc.SetTextBackground(self._textBack)
             x, y = self.GetPosition()
-
+            # x = self._x
+            # y = self._y
+            if self._text == 'Is A':
+                TextShape.clsLogger.debug(f'{x=} {y=} {self._text=}')
             # to draw the text shape with its own font size
             saveFont: Font = dc.GetFont()
             if self.GetFont() is not None:
@@ -166,7 +169,7 @@ class TextShape(RectangleShape):
         ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
 
         fontSize = self.GetModel().GetFontSize() * ratio
-        self.logger.debug(f'UpdateFromModel - ratio: {ratio}')
+        TextShape.clsLogger.debug(f'UpdateFromModel - ratio: {ratio}')
 
         # set the new font size
         if self._font is not None:
@@ -184,7 +187,7 @@ class TextShape(RectangleShape):
         # the diagram frame where the shape is displayed.
         ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
 
-        self.logger.debug(f'UpdateModel - ratio: {ratio}')
+        TextShape.clsLogger.debug(f'UpdateModel - ratio: {ratio}')
         if self.GetFont() is not None:
             fontSize = self.GetFont().GetPointSize() / ratio
             self.GetModel().SetFontSize(fontSize)

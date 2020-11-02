@@ -87,7 +87,7 @@ class OglLink(LineShape, ShapeEventHandler):
         self._srcShape  = srcShape
         self._destShape = dstShape
 
-        self.clsLogger.debug(f'Input Override positions - srcPos: {srcPos} dstPos: {dstPos}')
+        OglLink.clsLogger.debug(f'Input Override positions - srcPos: {srcPos} dstPos: {dstPos}')
         if srcPos is None and dstPos is None:
             srcX, srcY = self._srcShape.GetPosition()
             dstX, dstY = self._destShape.GetPosition()
@@ -112,7 +112,7 @@ class OglLink(LineShape, ShapeEventHandler):
             # ============== Avoid over-lining; Added by C.Dutoit ================
             # lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in srcShape.GetAnchors()]
             # while (srcX, srcY) in lstAnchorsPoints:
-            #     self.clsLogger.warning(f'Over-lining in source shape')
+            #     OglLink.clsLogger.warning(f'Over-lining in source shape')
             #     if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
             #         srcX += 10
             #     else:
@@ -122,7 +122,7 @@ class OglLink(LineShape, ShapeEventHandler):
             # while (dstX, dstY) in lstAnchorsPoints:
             #     from org.pyut.ogl.OglClass import OglClass
             #     dstShape: OglClass = cast(OglClass, dstShape)
-            #     self.clsLogger.warning(f'Over-lining in destination shape: {dstShape.getPyutObject}')
+            #     OglLink.clsLogger.warning(f'Over-lining in destination shape: {dstShape.getPyutObject}')
             #     if orient == PyutAttachmentPoint.NORTH or orient == PyutAttachmentPoint.SOUTH:
             #         dstX += 10
             #     else:
@@ -140,7 +140,7 @@ class OglLink(LineShape, ShapeEventHandler):
         dstAnchor.SetPosition(dstX, dstY)
         srcAnchor.SetVisible(False)
         dstAnchor.SetVisible(False)
-        self.clsLogger.debug(f'src anchor pos: {srcAnchor.GetPosition()} dst anchor pos {dstAnchor.GetPosition()}')
+        OglLink.clsLogger.debug(f'src anchor pos: {srcAnchor.GetPosition()} dst anchor pos {dstAnchor.GetPosition()}')
         srcAnchor.SetDraggable(True)
         dstAnchor.SetDraggable(True)
         # Init
@@ -234,7 +234,7 @@ class OglLink(LineShape, ShapeEventHandler):
         srcSize = self._srcShape.GetSize()
         dstSize = self._destShape.GetSize()
 
-        self.clsLogger.info(f"optimizeLine - ({srcX},{srcY}) / ({dstX},{dstY})")
+        OglLink.clsLogger.info(f"optimizeLine - ({srcX},{srcY}) / ({dstX},{dstY})")
         # Find new positions
         # Little tips
         optimalSrcX, optimalSrcY, optimalDstX, optimalDstY = dstX, dstY, srcX, srcY
@@ -262,7 +262,7 @@ class OglLink(LineShape, ShapeEventHandler):
         y: int = event.GetY()
         clickPoint: Tuple[int, int] = (x, y)
 
-        self.clsLogger.debug(f'OglLink - x,y: {x},{y}')
+        OglLink.clsLogger.debug(f'OglLink - x,y: {x},{y}')
         # Callback
         menu.Bind(EVT_MENU, lambda evt, data=clickPoint: self.onAddBend(evt, data))
 
@@ -272,7 +272,7 @@ class OglLink(LineShape, ShapeEventHandler):
     # noinspection PyUnusedLocal
     def onAddBend(self, event: CommandEvent, data):
 
-        self.clsLogger.debug(f'Add a bend.  {data=}')
+        OglLink.clsLogger.debug(f'Add a bend.  {data=}')
 
         x = data[0]
         y = data[1]

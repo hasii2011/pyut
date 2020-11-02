@@ -38,6 +38,7 @@ class OglAssociation(OglLink):
 
     TEXT_SHAPE_FONT_SIZE: int = 12
 
+    clsLogger: Logger = getLogger(__name__)
     """
     Graphical link representation of an association, (simple line, no arrow).
     To get a new link,  use the `OglLinkFactory` and specify
@@ -53,7 +54,6 @@ class OglAssociation(OglLink):
         """
         super().__init__(srcShape, pyutLink, dstShape)
 
-        self.logger: Logger = getLogger(__name__)
         # Add labels
         self._labels: TextShapes = cast(TextShapes, {})
         srcPos  = srcShape.GetPosition()
@@ -65,7 +65,7 @@ class OglAssociation(OglLink):
         # cenLblX = -dy * 5 / linkLength
         # cenLblY = dx * 5 / linkLength
         cenLblX, cenLblY = self._computeMidPoint(srcPosition=srcPos, destPosition=destPos)
-        self.logger.debug(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
+        OglAssociation.clsLogger.debug(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
 
         srcLblX = 20 * dx / linkLength     # - dy*5/l
         srcLblY = 20 * dy / linkLength     # + dx*5/l
@@ -183,7 +183,7 @@ class OglAssociation(OglLink):
         centerTextShape: TextShape      = self._labels[CENTER]
         model:           TextShapeModel = centerTextShape.GetModel()
 
-        self.logger.debug(f'center text position {model.GetPosition()}')
+        OglAssociation.clsLogger.debug(f'center text position {model.GetPosition()}')
         model.SetPosition(cenLblX, cenLblY)
 
     @staticmethod
@@ -199,14 +199,14 @@ class OglAssociation(OglLink):
 
             [Reference]: https://mathbitsnotebook.com/Geometry/CoordinateGeometry/CGmidpoint.html
         """
-
+        OglAssociation.clsLogger.debug(f'{srcPosition=}  {destPosition=}')
         x1 = srcPosition[0]
         y1 = srcPosition[1]
         x2 = destPosition[0]
         y2 = destPosition[1]
 
-        midPointX = (x1 + x2) / 2
-        midPointY = (y1 + y2) / 2
+        midPointX = abs(x1 + x2) / 2
+        midPointY = abs(y1 + y2) / 2
 
         return midPointX, midPointY
 

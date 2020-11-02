@@ -200,7 +200,7 @@ class LineShape(Shape):
         """
         sp = self._srcAnchor.GetPosition()
         dp = self._dstAnchor.GetPosition()
-        self.clsLogger.debug(f'GetSegments --  sp: {sp} dp: {dp}')
+        LineShape.clsLogger.debug(f'GetSegments --  sp: {sp} dp: {dp}')
         return [sp] + list(map(lambda x: x.GetPosition(), self._controls)) + [dp]
 
     def GetControlPoints(self):

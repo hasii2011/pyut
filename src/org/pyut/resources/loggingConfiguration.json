@@ -35,8 +35,7 @@
         },
         "org": {
             "level":     "WARNING",
-            "propagate": "False",
-            "handlers":  ["consoleHandler"]
+            "propagate": "False"
         },
         "org.pyut": {
             "level":     "WARNING",
@@ -47,11 +46,19 @@
             "propagate": "False"
         },
         "org.pyut.commands": {
+            "level":     "ERROR",
+            "propagate": "False"
+        },
+        "org.pyut.miniogl": {
             "level":     "INFO",
             "propagate": "False"
         },
-        "org.pyut.MiniOgl": {
-            "level":     "INFO",
+        "org.pyut.miniogl.TextShape": {
+            "level":     "DEBUG",
+            "propagate": "False"
+        },
+        "org.pyut.ogl.OglAssociation": {
+            "level":     "DEBUG",
             "propagate": "False"
         },
         "org.pyut.plugins.gml": {
@@ -59,11 +66,11 @@
             "propagate": "False"
         },
         "org.pyut.plugins": {
-            "level":     "INFO",
+            "level":     "ERROR",
             "propagate": "False"
         },
         "org.pyut.plugins.io.pdfsupport.OglToPdfDefinition": {
-            "level":     "INFO",
+            "level":     "ERROR",
             "propagate": "False"
         }
     }

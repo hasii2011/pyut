@@ -264,10 +264,10 @@ class Shape:
 
         """
         from org.pyut.miniogl.TextShape import TextShape
-        t = TextShape(x, y, text, self, font=font)
+        t: TextShape = TextShape(x, y, text, self, font=font)
         if self._diagram is not None:
             self._diagram.AddShape(t)
-        self.clsLogger.debug(f"Text: {t} added")
+        Shape.clsLogger.debug(f"Text: {t} added")
         return t
 
     def Attach(self, diagram):
@@ -291,9 +291,9 @@ class Shape:
         removed, and link lines too.
         """
         # do not detach a protected shape
-        self.clsLogger.debug(f"In shape.Detach with: {self}")
+        Shape.clsLogger.debug(f"In shape.Detach with: {self}")
         if self._diagram is not None and not self._protected:
-            self.clsLogger.debug(f"passed first condition")
+            Shape.clsLogger.debug(f"passed first condition")
 
             self.GetModel()._views.remove(self)
 
@@ -311,7 +311,7 @@ class Shape:
                 child.Detach()
                 child.SetProtected(True)
 
-            # self.clsLogger.debug("now, the shapes are", diagram.GetShapes())
+            # Shape.clsLogger.debug("now, the shapes are", diagram.GetShapes())
 
     def Draw(self, dc: DC, withChildren: bool = True):
         """
@@ -542,11 +542,11 @@ class Shape:
             y:  y position to move shape to
         """
         if self._draggable:
-            self.clsLogger.debug(f'_parent: {self._parent}')
+            Shape.clsLogger.debug(f'_parent: {self._parent}')
             if self._parent is None:
                 self._x = x
                 self._y = y
-                self.clsLogger.debug(f'New Position: ({self._x},{self._y})')
+                Shape.clsLogger.debug(f'New Position: ({self._x},{self._y})')
             else:
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
             #  if the shape is attached to a diagramFrame, it means that

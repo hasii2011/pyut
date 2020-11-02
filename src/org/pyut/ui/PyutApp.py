@@ -113,7 +113,7 @@ class PyutApp(wxApp):
                 self._frame.CentreOnScreen()
 
             return True
-        
+
         except (ValueError, Exception) as e:
             dlg = MessageDialog(None, _(f"The following error occurred : {exc_info()[1]}"), _("An error occurred..."), OK | ICON_ERROR)
             self.logger.error(f'Exception: {e}')
