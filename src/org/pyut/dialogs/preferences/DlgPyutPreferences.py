@@ -11,8 +11,8 @@ from wx import EVT_CLOSE
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ICON_EXCLAMATION
-from wx import NB_FIXEDWIDTH
-from wx import NB_TOP
+# from wx import NB_FIXEDWIDTH
+# from wx import NB_TOP
 from wx import OK
 from wx import VERTICAL
 from wx import ID_ANY
@@ -22,7 +22,7 @@ from wx import CommandEvent
 from wx import Dialog
 from wx import BoxSizer
 from wx import Button
-from wx import Notebook
+# from wx import Notebook
 from wx import Size
 from wx import MessageDialog
 
@@ -31,7 +31,6 @@ from wx.lib.agw.fmresources import INB_DRAW_SHADOW
 from wx.lib.agw.fmresources import INB_SHOW_ONLY_TEXT
 from wx.lib.agw.fmresources import INB_BOLD_TAB_SELECTION
 from wx.lib.agw.fmresources import INB_FIT_LABELTEXT
-from wx.lib.agw.fmresources import INB_FIT_BUTTON
 
 from wx.lib.agw.labelbook import LabelBook
 
@@ -67,12 +66,13 @@ class DlgPyutPreferences(Dialog):
     """
     def __init__(self, parent, wxId):
         """
+        TODO:   Need to figure out how to make dialog auto-resize
 
         Args:
             parent:
             wxId:
         """
-        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=600))
+        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=460))
 
         self.logger:    Logger          = getLogger(__name__)
         self.__prefs:   PyutPreferences = PyutPreferences()
@@ -81,7 +81,7 @@ class DlgPyutPreferences(Dialog):
 
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
-        mainSizer.Add(self._createTheControls1(), 1, ALL | EXPAND, DlgPyutPreferences.VERTICAL_GAP)
+        mainSizer.Add(self._createTheControls(), 1, ALL | EXPAND, DlgPyutPreferences.VERTICAL_GAP)
 
         mainSizer.Add(self._createButtonsContainer(), 0, CENTER)
 
@@ -95,13 +95,13 @@ class DlgPyutPreferences(Dialog):
         """
         Initialize the controls.
         """
-        style: int = INB_DRAW_SHADOW | INB_SHOW_ONLY_TEXT | INB_FIT_LABELTEXT | INB_BOLD_TAB_SELECTION | INB_FIT_BUTTON | INB_BORDER
+        style: int = INB_DRAW_SHADOW | INB_SHOW_ONLY_TEXT | INB_FIT_LABELTEXT | INB_BOLD_TAB_SELECTION | INB_BORDER
         book: LabelBook = LabelBook(self, ID_ANY, agwStyle=style)
 
         generalPreferences:     GeneralPreferencesPanel  = GeneralPreferencesPanel(parent=self)
         positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=self)
         miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=self)
-        diagramPreferences:     BackgroundPreferences       = BackgroundPreferences(parent=self)
+        diagramPreferences:     BackgroundPreferences    = BackgroundPreferences(parent=self)
 
         book.AddPage(generalPreferences,     text=_('General'),       select=False)
         book.AddPage(positioningPreferences, text=_('Positioning'),   select=False)
@@ -111,22 +111,22 @@ class DlgPyutPreferences(Dialog):
         self._positioningPreferences: PositioningPreferences = positioningPreferences
         return book
 
-    def _createTheControls1(self) -> Notebook:
-
-        style: int = NB_TOP | NB_FIXEDWIDTH
-        book: Notebook = Notebook(parent=self, id=ID_ANY, size=Size(400, 800), style=style)
-
-        generalPreferences:     GeneralPreferencesPanel  = GeneralPreferencesPanel(parent=book)
-        positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=book)
-        miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=book)
-        diagramPreferences:     BackgroundPreferences       = BackgroundPreferences(parent=book)
-
-        book.AddPage(generalPreferences,     _('General'),       select=False)
-        book.AddPage(positioningPreferences, _('Position'),      select=False)
-        book.AddPage(miscPanel,              _('Miscellaneous'), select=False)
-        book.AddPage(diagramPreferences,     _('Background'),    select=True)
-
-        return book
+    # def _createTheControls1(self) -> Notebook:
+    #
+    #     style: int = NB_TOP | NB_FIXEDWIDTH
+    #     book: Notebook = Notebook(parent=self, id=ID_ANY, size=Size(400, 800), style=style)
+    #
+    #     generalPreferences:     GeneralPreferencesPanel  = GeneralPreferencesPanel(parent=book)
+    #     positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=book)
+    #     miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=book)
+    #     diagramPreferences:     BackgroundPreferences       = BackgroundPreferences(parent=book)
+    #
+    #     book.AddPage(generalPreferences,     _('General'),       select=False)
+    #     book.AddPage(positioningPreferences, _('Position'),      select=False)
+    #     book.AddPage(miscPanel,              _('Miscellaneous'), select=False)
+    #     book.AddPage(diagramPreferences,     _('Background'),    select=True)
+    #
+    #     return book
 
     def _createButtonsContainer(self) -> BoxSizer:
 

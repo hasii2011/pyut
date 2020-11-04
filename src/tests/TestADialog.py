@@ -13,18 +13,11 @@ from wx import OK
 from wx import App
 from wx import Frame
 
-from org.pyut.model.PyutModifier import PyutModifier
-from org.pyut.model.PyutParam import PyutParam
-from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
-
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
 
-from org.pyut.model.PyutMethod import PyutMethod
-
-from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
+from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
 from tests.TestBase import TestBase
 
@@ -59,19 +52,8 @@ class TestADialog(App):
 
     def initTest(self):
 
-        pyutMethod: PyutMethod = PyutMethod(name='TestMethod')
-        pyutMethod.visibility = PyutVisibilityEnum.PRIVATE
-        pyutMethod.returnType = PyutType('float')
-        pyutMethod._modifiers = [PyutModifier('abstract')]
-
-        pyutParam: PyutParam = PyutParam(name='param1')
-        pyutParam.type         = PyutType(value='str')
-        pyutParam.defaultValue = 'bogus'
-
-        pyutMethod.parameters = [pyutParam]
-
-        with DlgEditMethod(theParent=self._frameTop, theWindowId=ID_ANY, methodToEdit=pyutMethod, theMediator=self._mediator, editInterface=True) as dlg:
-            dlg: DlgEditMethod = cast(DlgEditMethod, dlg)
+        with DlgPyutPreferences(parent=self._frameTop, wxId=ID_ANY) as dlg:
+            dlg: DlgPyutPreferences = cast(DlgPyutPreferences, dlg)
             if dlg.ShowModal() == OK:
                 # self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
                 self._frameTop.Close(force=True)
