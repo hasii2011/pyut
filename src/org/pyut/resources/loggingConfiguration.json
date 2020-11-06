@@ -57,6 +57,15 @@
             "level":     "DEBUG",
             "propagate": "False"
         },
+        "org.pyut.miniogl.LineShape": {
+            "level":     "DEBUG",
+            "propagate": "False"
+        },
+                "org.pyut.miniogl.Shape": {
+            "level":     "DEBUG",
+            "propagate": "False"
+        },
+
         "org.pyut.ogl.OglAssociation": {
             "level":     "DEBUG",
             "propagate": "False"

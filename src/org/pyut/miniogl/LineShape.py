@@ -200,7 +200,7 @@ class LineShape(Shape):
         """
         sp = self._srcAnchor.GetPosition()
         dp = self._dstAnchor.GetPosition()
-        LineShape.clsLogger.debug(f'GetSegments --  sp: {sp} dp: {dp}')
+        # LineShape.clsLogger.debug(f'GetSegments --  sp: {sp} dp: {dp}')
         return [sp] + list(map(lambda x: x.GetPosition(), self._controls)) + [dp]
 
     def GetControlPoints(self):
@@ -241,6 +241,7 @@ class LineShape(Shape):
                 u, v = line[-2], line[-1]
                 self.DrawArrow(dc, u, v)
             if withChildren:
+                LineShape.clsLogger.debug(f'Draw Children')
                 self.DrawChildren(dc)
 
     def DrawBorder(self, dc):

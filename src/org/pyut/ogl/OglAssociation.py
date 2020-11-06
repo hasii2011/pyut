@@ -64,7 +64,10 @@ class OglAssociation(OglLink):
 
         # cenLblX = -dy * 5 / linkLength
         # cenLblY = dx * 5 / linkLength
-        cenLblX, cenLblY = self._computeMidPoint(srcPosition=srcPos, destPosition=destPos)
+        sp = self._srcAnchor.GetPosition()
+        dp = self._dstAnchor.GetPosition()
+
+        cenLblX, cenLblY = self._computeMidPoint(srcPosition=sp, destPosition=dp)
         OglAssociation.clsLogger.debug(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
 
         srcLblX = 20 * dx / linkLength     # - dy*5/l

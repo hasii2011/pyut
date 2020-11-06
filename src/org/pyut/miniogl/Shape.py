@@ -346,6 +346,7 @@ class Shape:
         """
         if self._visible:
             for child in self._children + self._anchors + self._privateChildren:
+                Shape.clsLogger.debug(f'Draw {child=}')
                 child.Draw(dc)
 
     def DrawBorder(self, dc):
