@@ -111,8 +111,6 @@ class TextShape(RectangleShape):
             dc.SetTextBackground(self._textBack)
             x, y = self.GetPosition()
 
-            if self._text == 'Is A':
-                TextShape.clsLogger.debug(f'{x=} {y=} {self._text=}')
             # to draw the text shape with its own font size
             saveFont: Font = dc.GetFont()
             if self.GetFont() is not None:
@@ -184,7 +182,7 @@ class TextShape(RectangleShape):
         # the diagram frame where the shape is displayed.
         ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
 
-        TextShape.clsLogger.debug(f'UpdateModel - ratio: {ratio}')
+        # TextShape.clsLogger.debug(f'UpdateModel - ratio: {ratio}')
         if self.GetFont() is not None:
             fontSize = self.GetFont().GetPointSize() / ratio
             self.GetModel().SetFontSize(fontSize)
@@ -199,4 +197,4 @@ class TextShape(RectangleShape):
 
     def __repr__(self):
         x, y = self.GetPosition()
-        return f'text `{self._text}`   position: ({x:.2f},{y:.2f})'
+        return f'text `{self._text}` position: ({x:.2f},{y:.2f})'

@@ -62,11 +62,9 @@ class OglAssociation(OglLink):
         linkLength: float = self._computeLinkLength(srcPosition=srcPos, destPosition=destPos)
         dx, dy            = self._computeDxDy(srcPosition=srcPos, destPosition=destPos)
 
-        # cenLblX = -dy * 5 / linkLength
-        # cenLblY = dx * 5 / linkLength
         sp = self._srcAnchor.GetPosition()
         dp = self._dstAnchor.GetPosition()
-
+        OglAssociation.clsLogger.debug(f'{sp=} {dp=}')
         cenLblX, cenLblY = self._computeMidPoint(srcPosition=sp, destPosition=dp)
         OglAssociation.clsLogger.debug(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
 
@@ -78,9 +76,11 @@ class OglAssociation(OglLink):
         self._defaultFont = Font(OglAssociation.TEXT_SHAPE_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
 
         # Initialize label objects
-        self._labels[CENTER]    = self.AddText(cenLblX, cenLblY, "", font=self._defaultFont)
-        self._labels[SRC_CARD]  = self._srcAnchor.AddText(srcLblX, srcLblY, "", font=self._defaultFont)
-        self._labels[DEST_CARD] = self._dstAnchor.AddText(dstLblX, dstLblY, "", font=self._defaultFont)
+        centerText: TextShape   = self.AddText(cenLblX, cenLblY, "Center", font=self._defaultFont)
+
+        self._labels[CENTER]    = centerText
+        self._labels[SRC_CARD]  = self._srcAnchor.AddText(srcLblX, srcLblY, "Src Card", font=self._defaultFont)
+        self._labels[DEST_CARD] = self._dstAnchor.AddText(dstLblX, dstLblY, "Dst Card", font=self._defaultFont)
         self.updateLabels()
         self.SetDrawArrow(False)
 
@@ -113,7 +113,7 @@ class OglAssociation(OglLink):
         """
         return self._labels
 
-    def Draw(self, dc: DC, withChildren: bool = True):
+    def Draw(self, dc: DC, withChildren: bool = False):
         """
         Called for the content drawing of links.
 
@@ -123,6 +123,8 @@ class OglAssociation(OglLink):
         """
         self.updateLabels()
         OglLink.Draw(self, dc, withChildren)
+        centerTextShape: TextShape = self._labels[CENTER]
+        centerTextShape.Draw(dc, withChildren)
 
     def drawLosange(self, dc: DC, filled: bool = False):
         """
@@ -186,8 +188,8 @@ class OglAssociation(OglLink):
         centerTextShape: TextShape      = self._labels[CENTER]
         model:           TextShapeModel = centerTextShape.GetModel()
 
-        OglAssociation.clsLogger.debug(f'center text position {model.GetPosition()}')
         model.SetPosition(cenLblX, cenLblY)
+        OglAssociation.clsLogger.debug(f'{centerTextShape.GetModel().GetPosition()=}')
 
     @staticmethod
     def _computeMidPoint(srcPosition: Tuple[float, float], destPosition: Tuple[float, float]):

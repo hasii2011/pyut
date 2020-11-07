@@ -1,5 +1,5 @@
 
-class ShapeModel(object):
+class ShapeModel:
     """
     This class is the model of a shape ('view' in a MVC pattern).
     """

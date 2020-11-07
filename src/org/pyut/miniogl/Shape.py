@@ -228,6 +228,7 @@ class Shape:
         Returns:
             The created shape
         """
+        Shape.clsLogger.debug(f'AddText - {text=} {x=} {y=}')
         t = self._CreateTextShape(x, y, text, font=font)
         self._children.append(t)
 
@@ -264,11 +265,11 @@ class Shape:
 
         """
         from org.pyut.miniogl.TextShape import TextShape
-        t: TextShape = TextShape(x, y, text, self, font=font)
+        textShape: TextShape = TextShape(x, y, text, self, font=font)
         if self._diagram is not None:
-            self._diagram.AddShape(t)
-        Shape.clsLogger.debug(f"Text: {t} added")
-        return t
+            self._diagram.AddShape(textShape)
+        Shape.clsLogger.debug(f'_CreateTextShape - {textShape=} added at {x=} {y=}')
+        return textShape
 
     def Attach(self, diagram):
         """
@@ -543,12 +544,12 @@ class Shape:
             y:  y position to move shape to
         """
         if self._draggable:
-            Shape.clsLogger.debug(f'_parent: {self._parent}')
             if self._parent is None:
                 self._x = x
                 self._y = y
-                Shape.clsLogger.debug(f'New Position: ({self._x},{self._y})')
+                Shape.clsLogger.debug(f'{self._id=} Position: ({self._x},{self._y})')
             else:
+                Shape.clsLogger.debug(f'_parent: {self._parent}')
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
             #  if the shape is attached to a diagramFrame, it means that
             #  the model will be initialized correctly.
