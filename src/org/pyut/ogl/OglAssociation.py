@@ -55,7 +55,6 @@ class OglAssociation(OglLink):
         super().__init__(srcShape, pyutLink, dstShape)
 
         # Add labels
-        self._labels: TextShapes = cast(TextShapes, {})
         srcPos  = srcShape.GetPosition()
         destPos = dstShape.GetPosition()
 
@@ -77,6 +76,8 @@ class OglAssociation(OglLink):
 
         # Initialize label objects
         centerText: TextShape   = self.AddText(cenLblX, cenLblY, "Center", font=self._defaultFont)
+
+        self._labels: TextShapes = cast(TextShapes, {})
 
         self._labels[CENTER]    = centerText
         self._labels[SRC_CARD]  = self._srcAnchor.AddText(srcLblX, srcLblY, "Src Card", font=self._defaultFont)
@@ -122,9 +123,15 @@ class OglAssociation(OglLink):
             withChildren:   draw the children or not
         """
         self.updateLabels()
-        OglLink.Draw(self, dc, withChildren)
-        centerTextShape: TextShape = self._labels[CENTER]
-        centerTextShape.Draw(dc, withChildren)
+        #
+        # We are going to draw all of our stuff, cardinality, Link name, etc; So,
+        # no children drawing
+        #
+
+        OglLink.Draw(self, dc, False)
+        #
+        # We are drawing a bunch of text
+        #
 
     def drawLosange(self, dc: DC, filled: bool = False):
         """

@@ -1,6 +1,4 @@
 
-from typing import cast
-
 from logging import Logger
 from logging import getLogger
 
@@ -35,9 +33,10 @@ class TextShape(RectangleShape):
             parent:     parent shape
             font:       Font to use
         """
+        self._text:  str    = ''
+
         super().__init__(x, y, 0, 0, parent)
 
-        self._text:  str    = cast(str, None)
         self._color: Colour = BLACK
         self.SetText(text)
 

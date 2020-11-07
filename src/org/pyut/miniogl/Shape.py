@@ -1,5 +1,4 @@
 
-from typing import Union
 from typing import Tuple
 
 from logging import Logger
@@ -62,8 +61,8 @@ class Shape:
         if PyutPreferences().debugBasicShape is True:
             from org.pyut.miniogl.TextShape import TextShape
             from org.pyut.miniogl.LineShape import LineShape
-            if not isinstance(self, (TextShape, LineShape)):
-                t: Union[TextShape, LineShape] = self.AddText(0, -10, str(self._id))
+            if isinstance(self, (TextShape, LineShape)) is False:
+                t: TextShape = self.AddText(0, -10, str(self._id))
                 t.SetColor(RED)
 
     def SetPen(self, pen: Pen):
