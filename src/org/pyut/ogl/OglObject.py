@@ -34,10 +34,10 @@ class OglObject(RectangleShape, ShapeEventHandler):
             width:      Initial width
             height:     Initial height
         """
+        self._pyutObject = pyutObject
         RectangleShape.__init__(self, 0, 0, width, height)
 
         self.logger: Logger = getLogger(__name__)
-        self._pyutObject = pyutObject
 
         # Default font
         self._defaultFont: Font            = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
