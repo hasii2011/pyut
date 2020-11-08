@@ -19,6 +19,8 @@ from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.LineShape import LineShape
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
+from org.pyut.ogl.OglPosition import OglPosition
+
 from org.pyut.general.Globals import _
 
 from org.pyut.model.PyutLink import PyutLink
@@ -289,7 +291,7 @@ class OglLink(LineShape, ShapeEventHandler):
         frame.GetDiagram().AddShape(cp)
         frame.Refresh()
 
-    def _computeLinkLength(self, srcPosition: Tuple[float, float], destPosition: Tuple[float, float]) -> float:
+    def _computeLinkLength(self, srcPosition: OglPosition, destPosition: OglPosition) -> float:
         """
 
         Returns:  The length of the link between the source shape and destination shape
@@ -301,12 +303,12 @@ class OglLink(LineShape, ShapeEventHandler):
 
         return linkLength
 
-    def _computeDxDy(self, srcPosition: Tuple[float, float], destPosition: Tuple[float, float]) -> Tuple[float, float]:
+    def _computeDxDy(self, srcPosition: OglPosition, destPosition: OglPosition) -> Tuple[float, float]:
         """
 
         Args:
-            srcPosition:    Tuple x,y source position
-            destPosition:   Tuple x,y destination position
+            srcPosition:    source position
+            destPosition:   destination position
 
         Returns:
             A tuple of deltaX and deltaY of the shape position
@@ -314,10 +316,12 @@ class OglLink(LineShape, ShapeEventHandler):
         if self._srcShape is None or self._destShape is None:
             raise IllegalOperationException('Either the source or the destination shape is None')
 
-        srcX, srcY = srcPosition
-        dstX, dstY = destPosition
+        srcX: float = srcPosition.x
+        srcY: float = srcPosition.y
+        dstX: float = destPosition.x
+        dstY: float = destPosition.y
 
-        dx = dstX - srcX
-        dy = dstY - srcY
+        dx: float = dstX - srcX
+        dy: float = dstY - srcY
 
         return dx, dy

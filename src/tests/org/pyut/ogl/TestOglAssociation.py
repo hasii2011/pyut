@@ -7,14 +7,11 @@ from unittest import main as unitTestMain
 from tests.TestBase import TestBase
 
 from org.pyut.ogl.OglAssociation import OglAssociation
+from org.pyut.ogl.OglPosition import OglPosition
 
 
 class TestOglAssociation(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 
@@ -31,8 +28,8 @@ class TestOglAssociation(TestBase):
 
     def testComputeMidPointNorthSouth(self):
 
-        srcPosition  = (0, 100)
-        destPosition = (0, 400)
+        srcPosition:  OglPosition = OglPosition(0, 100)
+        destPosition: OglPosition = OglPosition(0, 400)
 
         midPoint = OglAssociation._computeMidPoint(srcPosition=srcPosition, destPosition=destPosition)
         self.assertEqual(0.0,   midPoint[0], 'X coordinate is not correct')
@@ -41,8 +38,8 @@ class TestOglAssociation(TestBase):
 
     def testComputeMidPointSouthNorth(self):
 
-        srcPosition  = (0, 400)
-        destPosition = (0, 100)
+        srcPosition:  OglPosition = OglPosition(0, 400)
+        destPosition: OglPosition = OglPosition(0, 100)
 
         midPoint = OglAssociation._computeMidPoint(srcPosition=srcPosition, destPosition=destPosition)
         self.assertEqual(0.0,   midPoint[0], 'X coordinate is not correct')
@@ -51,8 +48,8 @@ class TestOglAssociation(TestBase):
 
     def testComputeMidPointEastWest(self):
 
-        srcPosition  = (200, 400)
-        destPosition = (200, 800)
+        srcPosition:  OglPosition = OglPosition(200, 400)
+        destPosition: OglPosition = OglPosition(200, 800)
 
         midPoint = OglAssociation._computeMidPoint(srcPosition=srcPosition, destPosition=destPosition)
         self.assertEqual(200.0, midPoint[0], 'X coordinate is not correct')
@@ -61,8 +58,8 @@ class TestOglAssociation(TestBase):
 
     def testComputeMidPointWestEast(self):
 
-        srcPosition  = (200, 800)
-        destPosition = (200, 400)
+        srcPosition:  OglPosition = OglPosition(200, 800)
+        destPosition: OglPosition = OglPosition(200, 400)
 
         midPoint = OglAssociation._computeMidPoint(srcPosition=srcPosition, destPosition=destPosition)
         self.assertEqual(200.0, midPoint[0], 'X coordinate is not correct')
@@ -71,8 +68,8 @@ class TestOglAssociation(TestBase):
 
     def testComputeMidPointNorthEastToSouthWest(self):
 
-        srcPosition  = (8000, 8000)
-        destPosition = (4000, 4000)
+        srcPosition:  OglPosition = OglPosition(8000, 8000)
+        destPosition: OglPosition = OglPosition(4000, 4000)
 
         midPoint = OglAssociation._computeMidPoint(srcPosition=srcPosition, destPosition=destPosition)
         self.assertEqual(6000.0, midPoint[0], 'X coordinate is not correct')
@@ -81,8 +78,8 @@ class TestOglAssociation(TestBase):
 
     def testComputeMidPointNorthWestToSouthEast(self):
 
-        srcPosition  = (1024, 1024)
-        destPosition = (8092, 8092)
+        srcPosition:  OglPosition = OglPosition(1024, 1024)
+        destPosition: OglPosition = OglPosition(8092, 8092)
 
         midPoint = OglAssociation._computeMidPoint(srcPosition=srcPosition, destPosition=destPosition)
         self.assertEqual(4558.0, midPoint[0], 'X coordinate is not correct')

@@ -8,6 +8,7 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
+from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from tests.TestBase import TestBase
 
@@ -17,8 +18,10 @@ from org.pyut.ogl.OglLink import OglLink
 class TestOglLink(TestBase):
     """
     """
-    MOCK_SOURCE_POSITION:       Tuple[float, float] = (100.0, 100.0)
-    MOCK_DESTINATION_POSITION:  Tuple[float, float] = (500.0, 500.0)
+    # MOCK_SOURCE_POSITION:       Tuple[float, float] = (100.0, 100.0)
+    # MOCK_DESTINATION_POSITION:  Tuple[float, float] = (500.0, 500.0)
+    MOCK_SOURCE_POSITION:       OglPosition = OglPosition(x=100.0, y=100.0)
+    MOCK_DESTINATION_POSITION:  OglPosition = OglPosition(x=500.0, y=500.0)
 
     clsLogger: Logger = None
 
@@ -41,22 +44,23 @@ class TestOglLink(TestBase):
         """
         from org.pyut.ogl.IllegalOperationException import IllegalOperationException
 
-        mockSourceShape:      MagicMock = self._createMockShape((100, 100), (10, 100))
-        mockDestinationShape: MagicMock = self._createMockShape((500, 500), (10, 100))
+        mockSourceShape:      MagicMock = self._createMockShape(OglPosition(x=100, y=100), (10, 100))
+        mockDestinationShape: MagicMock = self._createMockShape(OglPosition(x=500, y=500), (10, 100))
 
         mockPyutLink:         MagicMock = MagicMock()
 
         badOglLink: OglLink = OglLink(srcShape=mockSourceShape, pyutLink=mockPyutLink, dstShape=mockDestinationShape)
-        # cream the source shape
+
         badOglLink._srcShape = None
         self.assertRaises(IllegalOperationException, lambda: self._raiseException(badOglLink))
 
-        badOglLink._srcShape = self._createMockShape((100, 100), (10, 100))
-        # cream the destination shape
+        badOglLink._srcShape = self._createMockShape(OglPosition(x=100, y=100), (10, 100))
+
         badOglLink._destShape = None
         self.assertRaises(IllegalOperationException, lambda: self._raiseException(badOglLink))
 
     def testBasicComputeLinkLength(self):
+
         mockSourceShape:      MagicMock = self._createMockShape(self.MOCK_SOURCE_POSITION, (10, 100))
         mockDestinationShape: MagicMock = self._createMockShape(self.MOCK_DESTINATION_POSITION, (10, 100))
 
@@ -67,11 +71,11 @@ class TestOglLink(TestBase):
         expectedLength: float = 565.685
         self.assertAlmostEqual(expectedLength, actualLength, places=2)
 
-    def _createMockShape(self, position: Tuple[float, float], size: Tuple[int, int]) -> MagicMock:
+    def _createMockShape(self, position: OglPosition, size: Tuple[int, int]) -> MagicMock:
 
         mockShape: MagicMock = MagicMock()
 
-        mockShape.GetPosition.return_value = position
+        mockShape.GetPosition.return_value = (position.x, position.y)
         mockShape.GetSize.return_value     = size
 
         return mockShape

@@ -1,13 +1,10 @@
 
-# from typing import cast
-# from typing import List
-# from typing import NewType
 from typing import Tuple
-
 
 from logging import Logger
 from logging import getLogger
 from logging import INFO
+from logging import DEBUG
 
 from math import pi
 from math import atan
@@ -27,6 +24,7 @@ from wx import Font
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 
 from org.pyut.ogl.OglLink import OglLink
+from org.pyut.ogl.OglPosition import OglPosition
 
 
 class OglAssociation(OglLink):
@@ -96,9 +94,12 @@ class OglAssociation(OglLink):
         sp: Tuple[float, float] = self._srcAnchor.GetPosition()
         dp: Tuple[float, float] = self._dstAnchor.GetPosition()
 
-        self._drawSourceCardinality(dc=dc, sp=sp, dp=dp)
-        self._drawCenterLabel(dc=dc, sp=sp, dp=dp)
-        self._drawDestinationCardinality(dc=dc, sp=sp, dp=dp)
+        oglSp: OglPosition = OglPosition(x=sp[0], y=sp[1])
+        oglDp: OglPosition = OglPosition(x=dp[0], y=dp[1])
+
+        self._drawSourceCardinality(dc=dc, sp=oglSp, dp=oglDp)
+        self._drawCenterLabel(dc=dc, sp=oglSp, dp=oglDp)
+        self._drawDestinationCardinality(dc=dc, sp=oglSp, dp=oglDp)
 
     def drawLosange(self, dc: DC, filled: bool = False):
         """
@@ -147,7 +148,7 @@ class OglAssociation(OglLink):
         dc.DrawPolygon(points)
         dc.SetBrush(WHITE_BRUSH)
 
-    def _drawCenterLabel(self, dc: DC, sp: Tuple[float, float], dp: Tuple[float, float]):
+    def _drawCenterLabel(self, dc: DC, sp: OglPosition, dp: OglPosition):
 
         centerX, centerY = self._computeMidPoint(srcPosition=sp, destPosition=dp)
 
@@ -159,14 +160,14 @@ class OglAssociation(OglLink):
         dc.SetFont(saveFont)
         self._centerLabel = self.__updateAssociationLabel(self._centerLabel, x=centerX, y=centerY, text=centerText)
 
-    def _drawSourceCardinality(self, dc: DC, sp: Tuple[float, float], dp: Tuple[float, float]):
+    def _drawSourceCardinality(self, dc: DC, sp: OglPosition, dp: OglPosition):
 
         dx, dy            = self._computeDxDy(srcPosition=sp, destPosition=dp)
 
         linkLength: float = self._computeLinkLength(srcPosition=sp, destPosition=dp)
 
-        srcLblX = (20 * dx / linkLength - dx * 5 / linkLength) + sp[0]
-        srcLblY = (20 * dy / linkLength + dy * 5 / linkLength) + sp[1]
+        srcLblX = (20 * dx / linkLength - dx * 5 / linkLength) + sp.x
+        srcLblY = (20 * dy / linkLength + dy * 5 / linkLength) + sp.y
 
         if OglAssociation.clsLogger.isEnabledFor(INFO):
             info = (
@@ -187,14 +188,14 @@ class OglAssociation(OglLink):
         dc.SetFont(saveFont)
         self._sourceCardinality = self.__updateAssociationLabel(self._sourceCardinality, x=srcLblX, y=srcLblY, text=sourceCardinalityText)
 
-    def _drawDestinationCardinality(self, dc: DC, sp: Tuple[float, float], dp: Tuple[float, float]):
+    def _drawDestinationCardinality(self, dc: DC, sp: OglPosition, dp: OglPosition):
 
         dx, dy            = self._computeDxDy(srcPosition=sp, destPosition=dp)
 
         linkLength: float = self._computeLinkLength(srcPosition=sp, destPosition=dp)
 
-        dstLblX = (-20 * dx / linkLength + dy * 5 / linkLength) + dp[0]
-        dstLblY = (-20 * dy / linkLength - dy * 5 / linkLength) + dp[1]
+        dstLblX = (-20 * dx / linkLength + dy * 5 / linkLength) + dp.x
+        dstLblY = (-20 * dy / linkLength - dy * 5 / linkLength) + dp.y
 
         saveFont: Font = dc.GetFont()
         dc.SetFont(self._defaultFont)
@@ -213,7 +214,7 @@ class OglAssociation(OglLink):
         return associationLabel
 
     @staticmethod
-    def _computeMidPoint(srcPosition: Tuple[float, float], destPosition: Tuple[float, float]):
+    def _computeMidPoint(srcPosition: OglPosition, destPosition: OglPosition) -> Tuple[float, float]:
         """
 
         Args:
@@ -225,11 +226,12 @@ class OglAssociation(OglLink):
 
             [Reference]: https://mathbitsnotebook.com/Geometry/CoordinateGeometry/CGmidpoint.html
         """
-        OglAssociation.clsLogger.debug(f'{srcPosition=}  {destPosition=}')
-        x1 = srcPosition[0]
-        y1 = srcPosition[1]
-        x2 = destPosition[0]
-        y2 = destPosition[1]
+        if OglAssociation.clsLogger.isEnabledFor(DEBUG):
+            OglAssociation.clsLogger.debug(f'{srcPosition=}  {destPosition=}')
+        x1 = srcPosition.x
+        y1 = srcPosition.y
+        x2 = destPosition.x
+        y2 = destPosition.y
 
         midPointX = abs(x1 + x2) / 2
         midPointY = abs(y1 + y2) / 2

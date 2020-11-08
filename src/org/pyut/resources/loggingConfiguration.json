@@ -67,7 +67,7 @@
         },
 
         "org.pyut.ogl.OglAssociation": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "propagate": "False"
         },
         "org.pyut.plugins.gml": {
