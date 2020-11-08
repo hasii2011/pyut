@@ -8,14 +8,12 @@ from typing import NewType
 from logging import Logger
 from logging import getLogger
 
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import NodeList
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.TextShape import TextShape
+
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.model.PyutActor import PyutActor
@@ -37,6 +35,7 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.ogl.OglActor import OglActor
+from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglDisplayParameters import OglDisplayParameters
 from org.pyut.ogl.OglInterface2 import OglInterface2
@@ -45,12 +44,9 @@ from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglAssociation import CENTER
-from org.pyut.ogl.OglAssociation import DEST_CARD
-from org.pyut.ogl.OglAssociation import SRC_CARD
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
+from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
@@ -622,29 +618,30 @@ class MiniDomToOgl:
             xmlLink:
             oglLink:
         """
-        center: TextShape = oglLink.getLabels()[CENTER]
-        src:    TextShape = oglLink.getLabels()[SRC_CARD]
-        dst:    TextShape = oglLink.getLabels()[DEST_CARD]
+        center: OglAssociationLabel = oglLink.centerLabel
+        src:    OglAssociationLabel = oglLink.sourceCardinality
+        dest:   OglAssociationLabel = oglLink.destinationCardinality
 
         self.__setAssociationLabelPosition(xmlLink, PyutXmlConstants.ELEMENT_ASSOC_CENTER_LABEL,      center)
         self.__setAssociationLabelPosition(xmlLink, PyutXmlConstants.ELEMENT_ASSOC_SOURCE_LABEL,      src)
-        self.__setAssociationLabelPosition(xmlLink, PyutXmlConstants.ELEMENT_ASSOC_DESTINATION_LABEL, dst)
+        self.__setAssociationLabelPosition(xmlLink, PyutXmlConstants.ELEMENT_ASSOC_DESTINATION_LABEL, dest)
 
-    def __setAssociationLabelPosition(self, xmlLink: Element, tagName: str, textShape: TextShape):
+    def __setAssociationLabelPosition(self, xmlLink: Element, tagName: str, associationLabel: OglAssociationLabel):
         """
 
         Args:
             xmlLink:
             tagName:
-            textShape:
+            associationLabel:
         """
         label:  Element   = xmlLink.getElementsByTagName(tagName)[0]
         x = float(label.getAttribute(PyutXmlConstants.ATTR_X))
         y = float(label.getAttribute(PyutXmlConstants.ATTR_Y))
 
-        self.logger.debug(f'tagName: {tagName} textShape.text: `{textShape.GetText()}`  pos: ({x:.2f},{y:.2f})')
+        self.logger.debug(f'tagName: {tagName} `{associationLabel.text=}`  pos: ({x:.2f},{y:.2f})')
 
-        textShape.SetPosition(x, y)
+        associationLabel.x = x
+        associationLabel.y = y
 
     def __getAttachmentPoint(self, xmlOglInterface: Element) -> SelectAnchorPoint:
 

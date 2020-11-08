@@ -2,12 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Document
-# noinspection PyUnresolvedReferences
 from xml.dom.minidom import Element
-
-from org.pyut.miniogl.Shape import Shape
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
@@ -21,16 +17,15 @@ from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglAssociation import CENTER
-from org.pyut.ogl.OglAssociation import DEST_CARD
 from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglAssociation import SRC_CARD
+from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
+
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
@@ -157,13 +152,13 @@ class OglToMiniDom:
 
         if isinstance(oglLink, OglAssociation):
 
-            center = oglLink.getLabels()[CENTER]
-            src    = oglLink.getLabels()[SRC_CARD]
-            dst    = oglLink.getLabels()[DEST_CARD]
+            center: OglAssociationLabel = oglLink.centerLabel
+            src:    OglAssociationLabel = oglLink.sourceCardinality
+            dst:    OglAssociationLabel = oglLink._destinationCardinality
 
             assocLabels = {
-                PyutXmlConstants.ELEMENT_ASSOC_CENTER_LABEL: center,
-                PyutXmlConstants.ELEMENT_ASSOC_SOURCE_LABEL: src,
+                PyutXmlConstants.ELEMENT_ASSOC_CENTER_LABEL:      center,
+                PyutXmlConstants.ELEMENT_ASSOC_SOURCE_LABEL:      src,
                 PyutXmlConstants.ELEMENT_ASSOC_DESTINATION_LABEL: dst
             }
             for eltName in assocLabels:
@@ -470,7 +465,7 @@ class OglToMiniDom:
 
         return root
 
-    def __createAssocLabelElement(self, eltText: str, xmlDoc: Document, miniOglShape: Shape) -> Element:
+    def __createAssocLabelElement(self, eltText: str, xmlDoc: Document, oglLabel: OglAssociationLabel) -> Element:
         """
         Creates an element of the form:
 
@@ -494,7 +489,9 @@ class OglToMiniDom:
         """
         label: Element = xmlDoc.createElement(eltText)
 
-        x, y = miniOglShape.GetModel().GetPosition()
+        x: float = oglLabel.oglPosition.x
+        y: float = oglLabel.oglPosition.y
+
         label.setAttribute(PyutXmlConstants.ATTR_X, str(x))
         label.setAttribute(PyutXmlConstants.ATTR_Y, str(y))
 

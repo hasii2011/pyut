@@ -15,13 +15,11 @@ from wx import Size
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.enums.LinkType import LinkType
+from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglAssociation import CENTER
-from org.pyut.ogl.OglAssociation import DEST_CARD
 from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglAssociation import SRC_CARD
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
@@ -31,7 +29,6 @@ from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.model.PyutStereotype import getPyutStereotype
-from org.pyut.PyutUtils import PyutUtils
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
@@ -42,6 +39,8 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutLink import PyutLink
+
+from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.PyutConstants import PyutConstants
 
@@ -605,24 +604,26 @@ class PyutXml:
         root.setAttribute('spline', str(oglLink.GetSpline()))
 
         if isinstance(oglLink, OglAssociation):
-            center = oglLink.getLabels()[CENTER]
-            src = oglLink.getLabels()[SRC_CARD]
-            dst = oglLink.getLabels()[DEST_CARD]
+
+            center: OglAssociationLabel = oglLink.centerLabel
+            src:    OglAssociationLabel = oglLink.sourceCardinality
+            dst:    OglAssociationLabel = oglLink._destinationCardinality
+
             label = xmlDoc.createElement("LabelCenter")
             root.appendChild(label)
-            x, y = center.GetModel().GetPosition()
-            label.setAttribute("x", str(x))
-            label.setAttribute("y", str(y))
+
+            label.setAttribute("x", str(center.oglPosition.x))
+            label.setAttribute("y", str(center.oglPosition.y))
             label = xmlDoc.createElement("LabelSrc")
             root.appendChild(label)
-            x, y = src.GetModel().GetPosition()
-            label.setAttribute("x", str(x))
-            label.setAttribute("y", str(y))
+
+            label.setAttribute("x", str(src.oglPosition.x))
+            label.setAttribute("y", str(src.oglPosition.y))
             label = xmlDoc.createElement("LabelDst")
             root.appendChild(label)
-            x, y = dst.GetModel().GetPosition()
-            label.setAttribute("x", str(x))
-            label.setAttribute("y", str(y))
+
+            label.setAttribute("x", str(dst.oglPosition.x))
+            label.setAttribute("y", str(dst.oglPosition.y))
 
         # save control points (not anchors!)
         for x, y in oglLink.GetSegments()[1:-1]:
@@ -1000,19 +1001,23 @@ class PyutXml:
                     ctrl.SetPosition(x, y)
 
             if isinstance(oglLink, OglAssociation):
-                center = oglLink.getLabels()[CENTER]
-                src = oglLink.getLabels()[SRC_CARD]
-                dst = oglLink.getLabels()[DEST_CARD]
+                # center = oglLink.getLabels()[CENTER]
+                # src = oglLink.getLabels()[SRC_CARD]
+                # dst = oglLink.getLabels()[DEST_CARD]
 
                 label = link.getElementsByTagName("LabelCenter")[0]
                 x = float(label.getAttribute("x"))
                 y = float(label.getAttribute("y"))
-                center.SetPosition(x, y)
+                # center.SetPosition(x, y)
+                oglLink.centerLabel.oglPosition.x = x
+                oglLink.centerLabel.oglPosition.y = y
 
                 label = link.getElementsByTagName("LabelSrc")[0]
                 x = float(label.getAttribute("x"))
                 y = float(label.getAttribute("y"))
-                src.SetPosition(x, y)
+                # src.SetPosition(x, y)
+                oglLink.sourceCardinality.oglPosition.x = x
+                oglLink.sourceCardinality.oglPosition.y = y
 
                 label = link.getElementsByTagName("LabelDst")[0]
                 x = float(label.getAttribute("x"))

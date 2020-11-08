@@ -1,12 +1,13 @@
 
-from typing import cast
-from typing import List
-from typing import NewType
+# from typing import cast
+# from typing import List
+# from typing import NewType
 from typing import Tuple
 
 
 from logging import Logger
 from logging import getLogger
+from logging import INFO
 
 from math import pi
 from math import atan
@@ -23,15 +24,9 @@ from wx import WHITE_BRUSH
 
 from wx import Font
 
-from org.pyut.miniogl.TextShape import TextShape
-from org.pyut.miniogl.TextShapeModel import TextShapeModel
+from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 
 from org.pyut.ogl.OglLink import OglLink
-
-# label types
-[CENTER, SRC_CARD, DEST_CARD] = list(range(3))
-
-TextShapes = NewType('TextShapes', List[TextShape])
 
 
 class OglAssociation(OglLink):
@@ -54,84 +49,56 @@ class OglAssociation(OglLink):
         """
         super().__init__(srcShape, pyutLink, dstShape)
 
-        # Add labels
-        srcPos  = srcShape.GetPosition()
-        destPos = dstShape.GetPosition()
+        self._centerLabel:            OglAssociationLabel = OglAssociationLabel()
+        self._sourceCardinality:      OglAssociationLabel = OglAssociationLabel()
+        self._destinationCardinality: OglAssociationLabel = OglAssociationLabel()
 
-        linkLength: float = self._computeLinkLength(srcPosition=srcPos, destPosition=destPos)
-        dx, dy            = self._computeDxDy(srcPosition=srcPos, destPosition=destPos)
+        self._defaultFont: Font = Font(OglAssociation.TEXT_SHAPE_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
 
-        sp = self._srcAnchor.GetPosition()
-        dp = self._dstAnchor.GetPosition()
-        OglAssociation.clsLogger.debug(f'{sp=} {dp=}')
-        cenLblX, cenLblY = self._computeMidPoint(srcPosition=sp, destPosition=dp)
-        OglAssociation.clsLogger.debug(f'linkLength:  {linkLength:.2f}  cenLblX: {cenLblX:.2f} cenLblY: {cenLblY:.2f} dx: {dx}  dy: {dy}')
-
-        srcLblX = 20 * dx / linkLength     # - dy*5/l
-        srcLblY = 20 * dy / linkLength     # + dx*5/l
-        dstLblX = -20 * dx / linkLength    # + dy*5/l
-        dstLblY = -20 * dy / linkLength    # - dy*5/l
-
-        self._defaultFont = Font(OglAssociation.TEXT_SHAPE_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
-
-        # Initialize label objects
-        centerText: TextShape   = self.AddText(cenLblX, cenLblY, "Center", font=self._defaultFont)
-
-        self._labels: TextShapes = cast(TextShapes, {})
-
-        self._labels[CENTER]    = centerText
-        self._labels[SRC_CARD]  = self._srcAnchor.AddText(srcLblX, srcLblY, "Src Card", font=self._defaultFont)
-        self._labels[DEST_CARD] = self._dstAnchor.AddText(dstLblX, dstLblY, "Dst Card", font=self._defaultFont)
-        self.updateLabels()
         self.SetDrawArrow(False)
 
-        self.__hackCenterLabelPosition(cenLblX, cenLblY)
+        # self.__hackCenterLabelPosition(cenLblX, cenLblY)
 
-    def updateLabels(self):
-        """
-        Update the labels according to the link.
-        """
-        def updateTheAssociationLabels(textShape: TextShape, text: str):
-            """
-            Update the label text;  Empty labels are rendered invisible
-            """
-            if text.strip() != "":
-                textShape.SetText(text)
-                textShape.SetVisible(True)
-            else:
-                textShape.SetVisible(False)
+    @property
+    def centerLabel(self) -> OglAssociationLabel:
+        return self._centerLabel
 
-        # update the labels
-        updateTheAssociationLabels(self._labels[CENTER],    self._link.getName())
-        updateTheAssociationLabels(self._labels[SRC_CARD],  self._link.sourceCardinality)
-        updateTheAssociationLabels(self._labels[DEST_CARD], self._link.destinationCardinality)
+    @centerLabel.setter
+    def centerLabel(self, newValue: OglAssociationLabel):
+        self._centerLabel = newValue
 
-    def getLabels(self) -> TextShapes:
-        """
+    @property
+    def sourceCardinality(self) -> OglAssociationLabel:
+        return self._sourceCardinality
 
-        Returns:
-            The associated text shapes that are used on Association links
-        """
-        return self._labels
+    @sourceCardinality.setter
+    def sourceCardinality(self, newValue: OglAssociationLabel):
+        self._sourceCardinality = newValue
+
+    @property
+    def destinationCardinality(self) -> OglAssociationLabel:
+        return self._destinationCardinality
+
+    @destinationCardinality.setter
+    def destinationCardinality(self, newValue: OglAssociationLabel):
+        self._destinationCardinality = newValue
 
     def Draw(self, dc: DC, withChildren: bool = False):
         """
         Called for the content drawing of links.
+        We are going to draw all of our stuff, cardinality, Link name, etc; So,
 
         Args:
             dc:     Device context
             withChildren:   draw the children or not
         """
-        self.updateLabels()
-        #
-        # We are going to draw all of our stuff, cardinality, Link name, etc; So,
-        # no children drawing
-        #
+        OglLink.Draw(self, dc, withChildren)
+        sp: Tuple[float, float] = self._srcAnchor.GetPosition()
+        dp: Tuple[float, float] = self._dstAnchor.GetPosition()
 
-        OglLink.Draw(self, dc, False)
-        #
-        # We are drawing a bunch of text
-        #
+        self._drawSourceCardinality(dc=dc, sp=sp, dp=dp)
+        self._drawCenterLabel(dc=dc, sp=sp, dp=dp)
+        self._drawDestinationCardinality(dc=dc, sp=sp, dp=dp)
 
     def drawLosange(self, dc: DC, filled: bool = False):
         """
@@ -180,23 +147,70 @@ class OglAssociation(OglLink):
         dc.DrawPolygon(points)
         dc.SetBrush(WHITE_BRUSH)
 
-    def __hackCenterLabelPosition(self, cenLblX, cenLblY):
-        """
-        This code is a hack because I cannot figure out why some "TextShape"s have their
-        diagram attribute set and some do not;  Having our diagram attribute set means that the
-        model can be updated.
-        So I am manually updating here
+    def _drawCenterLabel(self, dc: DC, sp: Tuple[float, float], dp: Tuple[float, float]):
 
-        Args:
-            cenLblX:    center label X position
-            cenLblY:    center label Y position
+        centerX, centerY = self._computeMidPoint(srcPosition=sp, destPosition=dp)
 
-        """
-        centerTextShape: TextShape      = self._labels[CENTER]
-        model:           TextShapeModel = centerTextShape.GetModel()
+        saveFont: Font = dc.GetFont()
+        dc.SetFont(self._defaultFont)
 
-        model.SetPosition(cenLblX, cenLblY)
-        OglAssociation.clsLogger.debug(f'{centerTextShape.GetModel().GetPosition()=}')
+        centerText: str = self._link.getName()
+        dc.DrawText(centerText, centerX, centerY)
+        dc.SetFont(saveFont)
+        self._centerLabel = self.__updateAssociationLabel(self._centerLabel, x=centerX, y=centerY, text=centerText)
+
+    def _drawSourceCardinality(self, dc: DC, sp: Tuple[float, float], dp: Tuple[float, float]):
+
+        dx, dy            = self._computeDxDy(srcPosition=sp, destPosition=dp)
+
+        linkLength: float = self._computeLinkLength(srcPosition=sp, destPosition=dp)
+
+        srcLblX = (20 * dx / linkLength - dx * 5 / linkLength) + sp[0]
+        srcLblY = (20 * dy / linkLength + dy * 5 / linkLength) + sp[1]
+
+        if OglAssociation.clsLogger.isEnabledFor(INFO):
+            info = (
+                f'{sp=} '
+                f'{dp=} '
+                f'{dx=} '
+                f'{dy=} '
+                f'linkLength={linkLength:.2f} '
+                f'srcLblX={srcLblX:.2f} '
+                f'srcLblY={srcLblY:.2f}'
+            )
+            OglAssociation.clsLogger.info(info)
+        saveFont: Font = dc.GetFont()
+        dc.SetFont(self._defaultFont)
+
+        sourceCardinalityText: str = self._link.sourceCardinality
+        dc.DrawText(sourceCardinalityText, srcLblX, srcLblY)
+        dc.SetFont(saveFont)
+        self._sourceCardinality = self.__updateAssociationLabel(self._sourceCardinality, x=srcLblX, y=srcLblY, text=sourceCardinalityText)
+
+    def _drawDestinationCardinality(self, dc: DC, sp: Tuple[float, float], dp: Tuple[float, float]):
+
+        dx, dy            = self._computeDxDy(srcPosition=sp, destPosition=dp)
+
+        linkLength: float = self._computeLinkLength(srcPosition=sp, destPosition=dp)
+
+        dstLblX = (-20 * dx / linkLength + dy * 5 / linkLength) + dp[0]
+        dstLblY = (-20 * dy / linkLength - dy * 5 / linkLength) + dp[1]
+
+        saveFont: Font = dc.GetFont()
+        dc.SetFont(self._defaultFont)
+
+        destinationCardinalityText: str = self._link.destinationCardinality
+        dc.DrawText(destinationCardinalityText, dstLblX, dstLblY)
+        self._destinationCardinality = self.__updateAssociationLabel(self._destinationCardinality, x=dstLblX, y=dstLblY, text=destinationCardinalityText)
+        dc.SetFont(saveFont)
+
+    def __updateAssociationLabel(self, associationLabel: OglAssociationLabel, x: float, y: float, text: str) -> OglAssociationLabel:
+
+        associationLabel.oglPosition.x = x
+        associationLabel.oglPosition.y = y
+        associationLabel.text          = text
+
+        return associationLabel
 
     @staticmethod
     def _computeMidPoint(srcPosition: Tuple[float, float], destPosition: Tuple[float, float]):
