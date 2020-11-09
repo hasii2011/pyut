@@ -104,12 +104,10 @@ class PositioningPreferences(PreferencesPanel):
         """
         """
         eventID = event.GetId()
-        val = event.IsChecked()
+        val: bool = event.IsChecked()
 
         if eventID == self.__centerAppOnStartupID:
-            self._prefs.centerAppOnStartup = val             # Bug;  setter is not getting invoked
-            self._prefs['center_app_on_startup'] = str(val)  # Do it the non OO way
-
+            self._prefs.centerAppOnStartup = val
             self.__enablePositionControls(val)
         else:
             self.clsLogger.warning(f'Unknown check box ID: {eventID}')
