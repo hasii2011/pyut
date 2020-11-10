@@ -21,7 +21,6 @@ class PyutColorEnum(Enum):
     MIDNIGHT_BLUE   = 'Midnight Blue'
     YELLOW          = 'Yellow'
     SALMON          = 'Salmon'
-    NO_COLOR        = 'Bogus'
 
     @staticmethod
     def toWxColor(colorEnum: 'PyutColorEnum') -> Colour:

@@ -6,7 +6,6 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from wx import App
-from wx import C2S_NAME
 from wx import Colour
 
 from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
@@ -46,16 +45,6 @@ class TestPyutColorEnum(TestBase):
     def testYellow(self):
         c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.YELLOW)
         self.assertTrue(c.IsOk(), 'Wah, wah.  Yellow should be a valid color')
-
-    def testUnHandledColor(self):
-        c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.NO_COLOR)
-
-        self.assertTrue(c.IsOk(), 'Wah, wah.  Salmon should get valid color')
-
-        actualName:   str = c.GetAsString(C2S_NAME)
-        expectedName: str = 'white'
-
-        self.assertEqual(expectedName, actualName, 'I should get white')
 
 
 def suite() -> TestSuite:

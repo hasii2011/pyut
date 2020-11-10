@@ -4,27 +4,28 @@ from logging import getLogger
 
 from wx import ALL
 from wx import CB_READONLY
-from wx import CheckBox
-from wx import CommandEvent
 from wx import EVT_CHECKBOX
 from wx import EVT_COMBOBOX
+from wx import EVT_SPINCTRL
 from wx import EVT_TREE_SEL_CHANGED
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import LEFT
 from wx import RIGHT
-from wx import SpinCtrl
-from wx import StaticBox
-from wx import StaticBoxSizer
 from wx import TOP
-
 from wx import TR_HAS_BUTTONS
 from wx import TR_HIDE_ROOT
 from wx import TR_SINGLE
-from wx import TreeEvent
 from wx import VERTICAL
 
+from wx import CheckBox
+from wx import CommandEvent
+from wx import SpinCtrl
+from wx import SpinEvent
+from wx import StaticBox
+from wx import StaticBoxSizer
+from wx import TreeEvent
 from wx import TreeCtrl
 from wx import BoxSizer
 from wx import ComboBox
@@ -78,6 +79,7 @@ class BackgroundPreferences(PreferencesPanel):
         self.Bind(EVT_TREE_SEL_CHANGED, self.onPenStyleSelectionChanged,      self._treeList)
         self.Bind(EVT_COMBOBOX,         self.onGridLineColorSelectionChanged, self._cmbGridLineColor)
         self.Bind(EVT_CHECKBOX,         self.onEnableBackgroundGridChanged,   self._cbEnableBackgroundGrid)
+        self.Bind(EVT_SPINCTRL,         self.onGridIntervalChanged,           self._scGridInterval)
 
     def __setControlValues(self):
         """
@@ -194,3 +196,10 @@ class BackgroundPreferences(PreferencesPanel):
         enabledValue: bool = event.IsChecked()
         self._prefs.backgroundGridEnabled = enabledValue
         event.Skip(True)
+
+    def onGridIntervalChanged(self, event: SpinEvent):
+
+        newInterval: int = event.GetInt()
+        self._prefs.backgroundGridInterval = newInterval
+        event.Skip(True)
+

@@ -122,12 +122,6 @@ class DiagramFrame(ScrolledWindow):
         self.SetBackgroundColour(WHITE)
         self._prefs: PyutPreferences = PyutPreferences()
 
-        #
-        # Cache the color & pen style so we don't have to do a look up everytime in the paint event
-        #
-        self._gridLineColor: Colour   = PyutColorEnum.toWxColor(self._prefs.gridLineColor)
-        self._gridLineStyle: PenStyle = PyutPenStyle.toWxPenStyle(self._prefs.gridLineStyle)
-
         # Mouse events
         self.Bind(EVT_LEFT_DOWN,     self.OnLeftDown)
         self.Bind(EVT_LEFT_UP,       self.OnLeftUp)
@@ -1083,7 +1077,10 @@ class DiagramFrame(ScrolledWindow):
 
     def _getGridPen(self) -> Pen:
 
-        pen: Pen = Pen(PenInfo(self._gridLineColor).Style(self._gridLineStyle).Width(1.0))
+        gridLineColor: Colour   = PyutColorEnum.toWxColor(self._prefs.gridLineColor)
+        gridLineStyle: PenStyle = PyutPenStyle.toWxPenStyle(self._prefs.gridLineStyle)
+
+        pen:           Pen    = Pen(PenInfo(gridLineColor).Style(gridLineStyle).Width(1.0))
 
         return pen
 

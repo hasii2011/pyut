@@ -11,8 +11,7 @@ from wx import EVT_CLOSE
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ICON_EXCLAMATION
-# from wx import NB_FIXEDWIDTH
-# from wx import NB_TOP
+
 from wx import OK
 from wx import VERTICAL
 from wx import ID_ANY
@@ -22,7 +21,7 @@ from wx import CommandEvent
 from wx import Dialog
 from wx import BoxSizer
 from wx import Button
-# from wx import Notebook
+
 from wx import Size
 from wx import MessageDialog
 
@@ -110,23 +109,6 @@ class DlgPyutPreferences(Dialog):
 
         self._positioningPreferences: PositioningPreferences = positioningPreferences
         return book
-
-    # def _createTheControls1(self) -> Notebook:
-    #
-    #     style: int = NB_TOP | NB_FIXEDWIDTH
-    #     book: Notebook = Notebook(parent=self, id=ID_ANY, size=Size(400, 800), style=style)
-    #
-    #     generalPreferences:     GeneralPreferencesPanel  = GeneralPreferencesPanel(parent=book)
-    #     positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=book)
-    #     miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=book)
-    #     diagramPreferences:     BackgroundPreferences       = BackgroundPreferences(parent=book)
-    #
-    #     book.AddPage(generalPreferences,     _('General'),       select=False)
-    #     book.AddPage(positioningPreferences, _('Position'),      select=False)
-    #     book.AddPage(miscPanel,              _('Miscellaneous'), select=False)
-    #     book.AddPage(diagramPreferences,     _('Background'),    select=True)
-    #
-    #     return book
 
     def _createButtonsContainer(self) -> BoxSizer:
 

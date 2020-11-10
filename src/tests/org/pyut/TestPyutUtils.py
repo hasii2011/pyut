@@ -22,6 +22,8 @@ class TestPyutUtils(TestBase):
     BASE_TEST_PATH:     str = '/users/home/hasii'
     FAKE_TEST_FILENAME: str = 'hasiiTheGreat.doc'
 
+    TEST_GRID_INTERVAL: int = 25
+
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
@@ -143,7 +145,7 @@ class TestPyutUtils(TestBase):
 
     def testSnapCoordinatesToGrid(self):
 
-        gridInterval: int = self.prefs.backgroundGridInterval
+        gridInterval: int = TestPyutUtils.TEST_GRID_INTERVAL
         x: float = 335
         y: float = 142
 
@@ -156,7 +158,7 @@ class TestPyutUtils(TestBase):
         self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
 
     def testSnapCoordinatesToGridNoSnapping(self):
-        gridInterval: int = self.prefs.backgroundGridInterval
+        gridInterval: int = TestPyutUtils.TEST_GRID_INTERVAL
         x: float = 300
         y: float = 200
 
