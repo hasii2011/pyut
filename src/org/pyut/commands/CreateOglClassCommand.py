@@ -93,7 +93,6 @@ class CreateOglClassCommand(DelOglClassCommand):
         pyutClass = PyutClass(_("NoName"))
         oglClass = OglClass(pyutClass)
         med.classEditor(pyutClass)
-        # med.autoResize(pyutClass)
 
         umlFrame.addShape(oglClass, x, y, withModelUpdate=True)
         med.autoResize(pyutClass)
