@@ -38,7 +38,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
 from org.pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.dialogs.preferences.PositioningPreferences import PositioningPreferences
-from org.pyut.dialogs.preferences.BackgroundPreferences import BackgroundPreferences
+from org.pyut.dialogs.preferences.DiagramPreferences import BackgroundPreferences
 
 from org.pyut.general.Globals import _
 
