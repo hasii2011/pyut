@@ -12,7 +12,7 @@ from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
 from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
-from org.pyut.preferences.BackgroundPreferences import BackgroundPreferences
+from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 

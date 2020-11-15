@@ -10,7 +10,7 @@ from shutil import copyfile
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
-from org.pyut.preferences.BackgroundPreferences import BackgroundPreferences
+from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from tests.TestBase import TestBase
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
