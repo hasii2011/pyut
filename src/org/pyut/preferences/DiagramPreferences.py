@@ -24,12 +24,14 @@ class BackgroundPreferences(BaseSubPreference):
     DEFAULT_GRID_LINE_STYLE: str = PyutPenStyle.DOT.value
 
     BACKGROUND_GRID_ENABLED:  str = 'background_grid_enabled'
+    SNAP_TO_GRID:             str = 'snap_to_grid'
     BACKGROUND_GRID_INTERVAL: str = 'background_grid_interval'
     GRID_LINE_COLOR:          str = 'grid_line_color'
     GRID_LINE_STYLE:          str = 'grid_line_style'
 
     DIAGRAM_PREFERENCES: PREFS_NAME_VALUES = {
         BACKGROUND_GRID_ENABLED: 'True',
+        SNAP_TO_GRID:            'True',
         BACKGROUND_GRID_INTERVAL: '25',
         GRID_LINE_COLOR:          DEFAULT_GRID_LINE_COLOR,
         GRID_LINE_STYLE:          DEFAULT_GRID_LINE_STYLE
@@ -63,6 +65,15 @@ class BackgroundPreferences(BaseSubPreference):
     @backgroundGridEnabled.setter
     def backgroundGridEnabled(self, theNewValue: bool):
         self._config.set(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.BACKGROUND_GRID_ENABLED, str(theNewValue))
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def snapToGrid(self) -> bool:
+        return self._config.getboolean(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.SNAP_TO_GRID)
+
+    @snapToGrid.setter
+    def snapToGrid(self, theNewValue: bool):
+        self._config.set(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.SNAP_TO_GRID, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property

@@ -34,8 +34,11 @@ class CreateOglClassCommand(DelOglClassCommand):
         self._prefs: PyutPreferences = PyutPreferences()
 
         if createNewClass is True:
-            snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x, y, self._prefs.backgroundGridInterval)
-            self._shape = self._createNewClass(snappedX, snappedY)
+            if self._prefs.snapToGrid is True:
+                snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x, y, self._prefs.backgroundGridInterval)
+                self._shape = self._createNewClass(snappedX, snappedY)
+            else:
+                self._shape = self._createNewClass(x, y)
         else:
             DelOglClassCommand.__init__(self, shape)
 

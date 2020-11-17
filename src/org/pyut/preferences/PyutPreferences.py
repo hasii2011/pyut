@@ -327,6 +327,14 @@ class PyutPreferences(Singleton):
         self._diagramPrefs.backgroundGridEnabled = theNewValue
 
     @property
+    def snapToGrid(self) -> bool:
+        return self._diagramPrefs.snapToGrid
+
+    @snapToGrid.setter
+    def snapToGrid(self, theNewValue: bool):
+        self._diagramPrefs.snapToGrid = theNewValue
+
+    @property
     def backgroundGridInterval(self) -> int:
         return self._diagramPrefs.backgroundGridInterval
 

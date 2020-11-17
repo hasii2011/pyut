@@ -113,9 +113,11 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         gridInterval: int = self._prefs.backgroundGridInterval
         x, y = self.GetPosition()
-        snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
-
-        self.SetPosition(snappedX, snappedY)
+        if self._prefs.snapToGrid is True:
+            snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
+            self.SetPosition(snappedX, snappedY)
+        else:
+            self.SetPosition(x, y)
 
     def autoResize(self):
         """

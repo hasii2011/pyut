@@ -71,7 +71,7 @@ class DlgPyutPreferences(Dialog):
             parent:
             wxId:
         """
-        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=460))
+        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=490))
 
         self.logger:    Logger          = getLogger(__name__)
         self.__prefs:   PyutPreferences = PyutPreferences()

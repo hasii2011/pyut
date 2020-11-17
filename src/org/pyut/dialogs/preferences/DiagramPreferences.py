@@ -14,10 +14,12 @@ from wx import ID_ANY
 from wx import LEFT
 from wx import RIGHT
 from wx import TOP
+from wx import BOTTOM
 from wx import TR_HAS_BUTTONS
 from wx import TR_HIDE_ROOT
 from wx import TR_SINGLE
 from wx import VERTICAL
+from wx import ALIGN_LEFT
 
 from wx import CheckBox
 from wx import CommandEvent
@@ -58,7 +60,7 @@ class BackgroundPreferences(PreferencesPanel):
 
         super().__init__(parent=parent)
 
-        [self.colorID, self.enableBackgroundGridID, self.scGridIntervalID] = PyutUtils.assignID(3)
+        [self.enableBackgroundGridID, self.snapToGridID, self.scGridIntervalID, self.colorID] = PyutUtils.assignID(4)
 
         self._createControls()
         self.__setControlValues()
@@ -78,7 +80,10 @@ class BackgroundPreferences(PreferencesPanel):
 
         self.Bind(EVT_TREE_SEL_CHANGED, self.onPenStyleSelectionChanged,      self._treeList)
         self.Bind(EVT_COMBOBOX,         self.onGridLineColorSelectionChanged, self._cmbGridLineColor)
-        self.Bind(EVT_CHECKBOX,         self.onEnableBackgroundGridChanged,   self._cbEnableBackgroundGrid)
+
+        self.Bind(EVT_CHECKBOX,         self.onEnableBackgroundGridChanged,   self.enableBackgroundGridID)
+        self.Bind(EVT_CHECKBOX,         self.onSnapToGridChanged,             self.snapToGridID)
+
         self.Bind(EVT_SPINCTRL,         self.onGridIntervalChanged,           self._scGridInterval)
 
     def __setControlValues(self):
@@ -87,6 +92,14 @@ class BackgroundPreferences(PreferencesPanel):
         """
         if self._prefs.backgroundGridEnabled is True:
             self._cbEnableBackgroundGrid.SetValue(True)
+        else:
+            self._cbSnapToGrid.SetValue(False)
+            self._cbSnapToGrid.Enabled = False
+            self._prefs.snapToGrid = False
+
+        if self._prefs.snapToGrid is True:
+            self._cbSnapToGrid.SetValue(True)
+
         self._scGridInterval.SetValue(self._prefs.backgroundGridInterval)
         self._cmbGridLineColor.SetValue(self._prefs.gridLineColor.value)
 
@@ -95,18 +108,23 @@ class BackgroundPreferences(PreferencesPanel):
         szrSimple: BoxSizer = BoxSizer(VERTICAL)
 
         cbEnableBackgroundGrid: CheckBox = CheckBox(self, self.enableBackgroundGridID, _('Enable Background Grid'))
+        cbSnapToGrid:           CheckBox = CheckBox(self, self.snapToGridID,           _('Snap to Grid'))
 
         box:             StaticBox = StaticBox(self, ID_ANY, _("Grid Interval"))
-        szrGridInterval: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
+        szrGridInterval: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL | ALIGN_LEFT)
 
         scGridInterval: SpinCtrl = SpinCtrl(self, self.scGridIntervalID, "")
 
         szrGridInterval.Add(scGridInterval, 0, LEFT | RIGHT, BackgroundPreferences.HORIZONTAL_GAP)
 
         szrSimple.Add(cbEnableBackgroundGrid, 0, LEFT | RIGHT, BackgroundPreferences.VERTICAL_GAP)
+        szrSimple.Add(cbSnapToGrid,           0, LEFT | BOTTOM, BackgroundPreferences.VERTICAL_GAP)
+
+        szrSimple.AddSpacer(BackgroundPreferences.VERTICAL_GAP)
         szrSimple.Add(szrGridInterval, 0, LEFT | RIGHT | TOP, BackgroundPreferences.VERTICAL_GAP)
 
         self._cbEnableBackgroundGrid: CheckBox = cbEnableBackgroundGrid
+        self._cbSnapToGrid:           CheckBox = cbSnapToGrid
         self._scGridInterval:         SpinCtrl = scGridInterval
 
         return szrSimple
@@ -194,7 +212,21 @@ class BackgroundPreferences(PreferencesPanel):
     def onEnableBackgroundGridChanged(self, event: CommandEvent):
 
         enabledValue: bool = event.IsChecked()
+        BackgroundPreferences.clsLogger.warning(f'onEnableBackgroundGridChanged - {enabledValue}')
         self._prefs.backgroundGridEnabled = enabledValue
+        if enabledValue is True:
+            self._cbSnapToGrid.Enabled = True
+        else:
+            self._cbSnapToGrid.SetValue(False)
+            self._cbSnapToGrid.Enabled = False
+            self._prefs.snapToGrid = False
+        event.Skip(True)
+
+    def onSnapToGridChanged(self, event: CommandEvent):
+
+        enabledValue: bool = event.IsChecked()
+        BackgroundPreferences.clsLogger.info(f'onSnapToGridChanged - {enabledValue}')
+        self._prefs.snapToGrid = enabledValue
         event.Skip(True)
 
     def onGridIntervalChanged(self, event: SpinEvent):
@@ -202,4 +234,3 @@ class BackgroundPreferences(PreferencesPanel):
         newInterval: int = event.GetInt()
         self._prefs.backgroundGridInterval = newInterval
         event.Skip(True)
-
