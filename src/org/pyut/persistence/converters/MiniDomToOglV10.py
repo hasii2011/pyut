@@ -18,6 +18,7 @@ from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
@@ -37,7 +38,7 @@ from org.pyut.enums.LinkType import LinkType
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglDisplayParameters import OglDisplayParameters
+
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
@@ -105,14 +106,6 @@ class MiniDomToOgl:
 
             oglClass: OglClass = OglClass(pyutClass, width, height)
 
-            displayParametersStr: str = xmlOglClass.getAttribute(PyutXmlConstants.ATTR_DISPLAY_PARAMETERS)
-
-            if displayParametersStr is None or displayParametersStr == '':
-                oglClass.displayParameters = OglDisplayParameters.UNSPECIFIED
-            else:
-                displayParameters: OglDisplayParameters = OglDisplayParameters(displayParametersStr)
-                oglClass.displayParameters = displayParameters
-
             xmlClass: Element = xmlOglClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CLASS)[0]
 
             pyutClass.setId(int(xmlClass.getAttribute(PyutXmlConstants.ATTR_ID)))
@@ -128,6 +121,14 @@ class MiniDomToOgl:
             pyutClass.showMethods = value
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS))
             pyutClass.showFields = value
+
+            displayParametersStr: str = xmlOglClass.getAttribute(PyutXmlConstants.ATTR_DISPLAY_PARAMETERS)
+
+            if displayParametersStr is None or displayParametersStr == '':
+                pyutClass.displayParameters = PyutDisplayParameters.UNSPECIFIED
+            else:
+                displayParameters: PyutDisplayParameters = PyutDisplayParameters(displayParametersStr)
+                pyutClass.displayParameters = displayParameters
 
             pyutClass.setFilename(xmlClass.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 

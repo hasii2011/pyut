@@ -1,5 +1,6 @@
 
 from typing import Tuple
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -14,13 +15,16 @@ from wx import Font
 from wx import ClientDC
 from wx import Menu
 from wx import CommandEvent
+from wx import MenuItem
 
+from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutObject import PyutObject
 from org.pyut.model.PyutClass import PyutClass
 
-from org.pyut.ogl.OglDisplayParameters import OglDisplayParameters
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
+
+from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -33,10 +37,11 @@ from org.pyut.general.Globals import _
     MENU_TOGGLE_STEREOTYPE,
     MENU_TOGGLE_FIELDS,
     MENU_TOGGLE_METHODS,
+    MENU_TOGGLE_METHOD_PARAMETERS,
     MENU_FIT_FIELDS,
     MENU_CUT_SHAPE,
     MENU_IMPLEMENT_INTERFACE
-]  = PyutUtils.assignID(6)
+]  = PyutUtils.assignID(7)
 
 MARGIN:               float = 10.0
 DEFAULT_CLASS_WIDTH:  float = 100.0
@@ -74,16 +79,6 @@ class OglClass(OglObject):
         self._nameFont: Font   = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_BOLD)
         self.logger:    Logger = getLogger(__name__)
 
-        self._displayParameters: OglDisplayParameters = OglDisplayParameters.UNSPECIFIED
-
-    @property
-    def displayParameters(self) -> OglDisplayParameters:
-        return self._displayParameters
-
-    @displayParameters.setter
-    def displayParameters(self, newValue: OglDisplayParameters):
-        self._displayParameters = newValue
-
     def GetTextWidth(self, dc, text):
         width = dc.GetTextExtent(text)[0]
         return width
@@ -103,7 +98,7 @@ class OglClass(OglObject):
         # Init
         dc.SetFont(self._defaultFont)
         dc.SetTextForeground(BLACK)
-        pyutObject = self.getPyutObject()
+        # pyutObject = self.getPyutObject()
         x, y = self.GetPosition()
         if initialX is not None:
             x = initialX
@@ -121,7 +116,7 @@ class OglClass(OglObject):
         h += lth
 
         # draw a pyutClass name
-        name = self.getPyutObject().getName()
+        name = self.pyutObject.name
         dc.SetFont(self._nameFont)
         nameWidth = self.GetTextWidth(dc, name)
         if draw:
@@ -133,8 +128,10 @@ class OglClass(OglObject):
         h += lth
 
         # draw the stereotype if there's one
-        stereo = self.getPyutObject().getStereotype()
-        if stereo is not None and pyutObject.getShowStereotype():
+        pyutClass: PyutClass = self.pyutObject
+        # stereo = self.getPyutObject().getStereotype()
+        stereo = pyutClass.getStereotype()
+        if stereo is not None and pyutClass.getShowStereotype() is True:
             name = str(stereo)
             nameWidth = self.GetTextWidth(dc, name)
             if draw:
@@ -173,7 +170,7 @@ class OglClass(OglObject):
         lth = dc.GetTextExtent("*")[1] / 2.0
 
         # Add space
-        pyutClass: PyutClass = self.getPyutObject()
+        pyutClass: PyutClass = cast(PyutClass, self.pyutObject)
         if len(pyutClass.fields) > 0:
             h += lth
 
@@ -226,7 +223,7 @@ class OglClass(OglObject):
         lth = dc.GetTextExtent("*")[1] / 2.0
 
         # Add space
-        pyutClass: PyutClass = self.getPyutObject()
+        pyutClass: PyutClass = cast(PyutClass, self.pyutObject)
         if len(pyutClass.methods) > 0:
             h += lth
 
@@ -260,7 +257,7 @@ class OglClass(OglObject):
             withChildren:
         """
 
-        pyutObject: PyutClass = self.getPyutObject()
+        pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
 
         # Draw rectangle shape
         OglObject.Draw(self, dc)
@@ -301,7 +298,7 @@ class OglClass(OglObject):
         WARNING : Every changes here must be reported in DRAW method
         """
         # Init
-        pyutObject: PyutClass = self.getPyutObject()
+        pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
         dc = ClientDC(self.GetDiagram().GetPanel())
 
         # Get header size
@@ -332,6 +329,53 @@ class OglClass(OglObject):
             self.SetSelected(False)
             self.SetSelected(True)
 
+    def OnRightDown(self, event):
+        """
+        Callback for right clicks
+        """
+        pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
+        menu:       Menu      = Menu()
+
+        menu.Append(MENU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set stereotype display on or off"), True)
+        item = menu.FindItemById(MENU_TOGGLE_STEREOTYPE)
+        item.Check(pyutObject.getShowStereotype())
+
+        menu.Append(MENU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set fields display on or off"), True)
+        item = menu.FindItemById(MENU_TOGGLE_FIELDS)
+        item.Check(pyutObject.showFields)
+
+        menu.Append(MENU_TOGGLE_METHODS, _("Toggle methods display"), _("Set methods display on or off "), True)
+        item = menu.FindItemById(MENU_TOGGLE_METHODS)
+        item.Check(pyutObject.showMethods)
+
+        menu.Append(MENU_TOGGLE_METHOD_PARAMETERS, _("Toggle parameter display"), _("Set parameter display on or off"), True)
+
+        itemToggleParameters: MenuItem = menu.FindItemById(MENU_TOGGLE_METHOD_PARAMETERS)
+        displayParameters: PyutDisplayParameters = self.pyutObject.displayParameters
+
+        self._initializeTriStateDisplayParametersMenuItem(displayParameters, itemToggleParameters)
+
+        menu.Append(MENU_FIT_FIELDS, _("Fit Fields"), _("Fit to see all class fields"))
+        menu.Append(MENU_CUT_SHAPE,  _("Cut shape"), _("Cut this shape"))
+
+        menu.Append(MENU_IMPLEMENT_INTERFACE, _('Implement Interface'), _('Use Existing interface or create new one'))
+
+        frame    = self._diagram.GetPanel()
+
+        # Callback
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_STEREOTYPE)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_FIELDS)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_METHODS)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_FIT_FIELDS)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_CUT_SHAPE)
+        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_IMPLEMENT_INTERFACE)
+        menu.Bind(EVT_MENU, self.onDisplayParametersClick, id=MENU_TOGGLE_METHOD_PARAMETERS)
+
+        x: int = event.GetX()
+        y: int = event.GetY()
+        self.logger.debug(f'OglClass - x,y: {x},{y}')
+        frame.PopupMenu(menu, x, y)
+
     def OnMenuClick(self, event: CommandEvent):
         """
         Callback for popup menu on class
@@ -341,7 +385,7 @@ class OglClass(OglObject):
         """
         from org.pyut.general.Mediator import getMediator   # avoid circular import
 
-        pyutObject: PyutClass = self.getPyutObject()
+        pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
         eventId:    int       = event.GetId()
         if eventId == MENU_TOGGLE_STEREOTYPE:
             pyutObject.setShowStereotype(not pyutObject.getShowStereotype())
@@ -365,46 +409,28 @@ class OglClass(OglObject):
         else:
             event.Skip()
 
-    def OnRightDown(self, event):
+    def onDisplayParametersClick(self, event: CommandEvent):
         """
-        Callback for right clicks.
+        This menu item has its own handler because this option is tri-state
 
-        @author C.Dutoit
+        Unspecified --> Display  --> Do Not Display ---|
+            ^------------------------------------------|
+
+        Args:
+            event:
         """
-        pyutObject: PyutClass = self.getPyutObject()
-        menu:       Menu      = Menu()
+        self.logger.warning(f'{event.GetClientObject()=}')
+        pyutClass:         PyutClass             = cast(PyutClass, self.pyutObject)
+        displayParameters: PyutDisplayParameters = pyutClass.displayParameters
 
-        menu.Append(MENU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set on or off the stereotype display"), True)
-        item = menu.FindItemById(MENU_TOGGLE_STEREOTYPE)
-        item.Check(pyutObject.getShowStereotype())
-
-        menu.Append(MENU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set on or off the fields display"), True)
-        item = menu.FindItemById(MENU_TOGGLE_FIELDS)
-        item.Check(pyutObject.showFields)
-
-        menu.Append(MENU_TOGGLE_METHODS, _("Toggle methods display"), _("Set on or off the methods display"), True)
-        item = menu.FindItemById(MENU_TOGGLE_METHODS)
-        item.Check(pyutObject.showMethods)
-
-        menu.Append(MENU_FIT_FIELDS, _("Fit Fields"), _("Fit to see all class fields"))
-        menu.Append(MENU_CUT_SHAPE,  _("Cut shape"), _("Cut this shape"))
-
-        menu.Append(MENU_IMPLEMENT_INTERFACE, _('Implement Interface'), _('Use Existing interface or create new one'))
-
-        frame    = self._diagram.GetPanel()
-
-        # Callback
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_STEREOTYPE)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_FIELDS)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_METHODS)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_FIT_FIELDS)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_CUT_SHAPE)
-        menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_IMPLEMENT_INTERFACE)
-
-        x: int = event.GetX()
-        y: int = event.GetY()
-        self.logger.debug(f'OglClass - x,y: {x},{y}')
-        frame.PopupMenu(menu, x, y)
+        if displayParameters == PyutDisplayParameters.UNSPECIFIED:
+            pyutClass.displayParameters = PyutDisplayParameters.DISPLAY
+        elif displayParameters == PyutDisplayParameters.DISPLAY:
+            pyutClass.displayParameters = PyutDisplayParameters.DO_NOT_DISPLAY
+        elif displayParameters == PyutDisplayParameters.DO_NOT_DISPLAY:
+            pyutClass.displayParameters = PyutDisplayParameters.UNSPECIFIED
+        else:
+            assert False, 'Unknown display type'
 
     def __repr__(self):
         selfName:   str = self.getPyutObject().getName()
@@ -442,3 +468,14 @@ class OglClass(OglObject):
         if self.GetID() == other.GetID():
             ans = True
         return ans
+
+    def _initializeTriStateDisplayParametersMenuItem(self, displayParameters: PyutDisplayParameters, itemToggleParameters: MenuItem):
+
+        if displayParameters == PyutDisplayParameters.UNSPECIFIED:
+            itemToggleParameters.SetBitmap(PyutConstants.unspecifiedDisplayMethodsIcon())
+        elif displayParameters == PyutDisplayParameters.DISPLAY:
+            itemToggleParameters.SetBitmap(PyutConstants.displayMethodsIcon())
+        elif displayParameters == PyutDisplayParameters.DO_NOT_DISPLAY:
+            itemToggleParameters.SetBitmap(PyutConstants.doNotDisplayMethodsIcon())
+        else:
+            assert False, 'Unknown display type'

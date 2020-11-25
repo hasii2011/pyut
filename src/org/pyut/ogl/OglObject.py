@@ -14,6 +14,8 @@ from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.PyutUtils import PyutUtils
 
+from org.pyut.model.PyutObject import PyutObject
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 DEFAULT_FONT_SIZE = 10
@@ -46,25 +48,29 @@ class OglObject(RectangleShape, ShapeEventHandler):
         self._oglLinks = []     # Connected links
         self._modifyCommand = None
 
-    def setPyutObject(self, pyutObject):
+    def setPyutObject(self, pyutObject: PyutObject):
         """
         Set the associated pyut object.
 
         @param PyutObject pyutObject : Associated PyutObject
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         self._pyutObject = pyutObject
 
-    def getPyutObject(self):
+    def getPyutObject(self) -> PyutObject:
         """
         Return the associated pyut object.
 
         @return PyutObject : Associated PyutObject
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         return self._pyutObject
+
+    @property
+    def pyutObject(self):
+        return self._pyutObject
+
+    @pyutObject.setter
+    def pyutObject(self, pyutObject):
+        self._pyutObject = pyutObject
 
     def addLink(self, link):
         """

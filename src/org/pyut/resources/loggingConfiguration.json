@@ -15,11 +15,6 @@
             "class":     "logging.StreamHandler",
             "formatter": "pyutSimple",
             "stream":     "ext://sys.stdout"
-        },
-        "fileHandler": {
-            "class":     "logging.FileHandler",
-            "formatter": "pyutSimple",
-            "filename":  "pyut.log"
         }
     },
     "loggers": {

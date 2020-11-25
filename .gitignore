@@ -21,3 +21,4 @@ pyutHistory*
 *.put copy
 /BaseSave.xml
 junk*.*
+/.mypy_cache/

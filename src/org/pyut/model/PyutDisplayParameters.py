@@ -5,7 +5,7 @@ from typing import cast
 from enum import Enum
 
 
-class OglDisplayParameters(Enum):
+class PyutDisplayParameters(Enum):
     """
     Determines whether a class should display its' methods parameters
     """
@@ -22,13 +22,13 @@ class OglDisplayParameters(Enum):
     @staticmethod
     def values() -> List[str]:
         retList: List[str] = []
-        for val in OglDisplayParameters:
-            val:    OglDisplayParameters = cast(OglDisplayParameters, val)
+        for val in PyutDisplayParameters:
+            val:    PyutDisplayParameters = cast(PyutDisplayParameters, val)
             retList.append(val.__str__())
         return retList
 
     @staticmethod
-    def toEnum(strValue: str) -> 'OglDisplayParameters':
+    def toEnum(strValue: str) -> 'PyutDisplayParameters':
         """
         Converts the input string to the visibility enum
         Args:
@@ -38,11 +38,11 @@ class OglDisplayParameters(Enum):
         """
         canonicalStr: str = strValue.lower().strip(' ')
         if canonicalStr == 'display':
-            return OglDisplayParameters.DISPLAY
+            return PyutDisplayParameters.DISPLAY
         elif canonicalStr == 'donotdisplay':
-            return OglDisplayParameters.DO_NOT_DISPLAY
+            return PyutDisplayParameters.DO_NOT_DISPLAY
         elif canonicalStr == 'unspecified':
-            return OglDisplayParameters.UNSPECIFIED
+            return PyutDisplayParameters.UNSPECIFIED
         else:
             print(f'Warning: did not recognize this parameter visibility type: {canonicalStr}')
-            return OglDisplayParameters.UNSPECIFIED
+            return PyutDisplayParameters.UNSPECIFIED

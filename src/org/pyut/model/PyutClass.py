@@ -3,6 +3,7 @@ from typing import List
 from typing import cast
 
 from org.pyut.model.PyutClassCommon import PyutClassCommon
+from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.model.PyutStereotype import PyutStereotype
@@ -44,7 +45,18 @@ class PyutClass(PyutClassCommon, PyutLinkedObject):
         self._showStereotype: bool = True
         self._showMethods:    bool = True
         self._showFields:     bool = True
+
+        self._displayParameters: PyutDisplayParameters = PyutDisplayParameters.UNSPECIFIED
+
         self._interfaces:     List[PyutInterface] = []
+
+    @property
+    def displayParameters(self) -> PyutDisplayParameters:
+        return self._displayParameters
+
+    @displayParameters.setter
+    def displayParameters(self, newValue: PyutDisplayParameters):
+        self._displayParameters = newValue
 
     @property
     def interfaces(self) -> List[PyutInterface]:
