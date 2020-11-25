@@ -21,14 +21,14 @@ class Singleton(object):
 
         # This class is OK
         class A(Singleton):
-            def init(self, val):
-                self.val = val
+            def init(self, theNewValue):
+                self.theNewValue = theNewValue
 
         # This class will raise AssertionError at first instantiation, because
         # of the __init__ method.
         class B(Singleton):
-            def __init__(self, val):
-                self.val = val
+            def __init__(self, theNewValue):
+                self.theNewValue = theNewValue
     """
     def __new__(cls, *args, **kwds):
         """

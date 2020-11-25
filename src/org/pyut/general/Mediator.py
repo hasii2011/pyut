@@ -29,10 +29,10 @@ from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.enums.LinkType import LinkType
 
+from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutMethod import WITHOUT_PARAMS
-from org.pyut.model.PyutMethod import WITH_PARAMS
+
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
@@ -624,6 +624,8 @@ class Mediator(Singleton):
         from org.pyut.ogl.OglAssociation import OglAssociation
         from org.pyut.ogl.OglInterface import OglInterface
 
+        from org.pyut.model.PyutNote import PyutNote
+
         diagramShape = umlFrame.FindShape(x, y)
 
         if diagramShape is None:
@@ -646,7 +648,7 @@ class Mediator(Singleton):
 
         elif isinstance(diagramShape, OglNote):
             pyutObject = diagramShape.getPyutObject()
-            dlg = DlgEditNote(umlFrame, -1, pyutObject)
+            dlg = DlgEditNote(umlFrame, -1, cast(PyutNote, pyutObject))
             dlg.Destroy()
         elif isinstance(diagramShape, OglUseCase):
             pyutObject = diagramShape.getPyutObject()
@@ -761,18 +763,17 @@ class Mediator(Singleton):
         """
         self._setShapeSelection(True)
 
-    def showParams(self, val):
+    def showParams(self, theNewValue: bool):
         """
-        Choose whether to show the params in the classes or not.
+        Globally choose whether to show the method parameters in classes
 
-        @param val
-        @since 1.17
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            theNewValue:
         """
-        if val:
-            PyutMethod.setStringMode(WITH_PARAMS)
+        if theNewValue is True:
+            PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
         else:
-            PyutMethod.setStringMode(WITHOUT_PARAMS)
+            PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
 
     def getCurrentDir(self):
         """
@@ -1100,7 +1101,8 @@ class Mediator(Singleton):
         with DlgEditInterface(umlFrame, ID_ANY, pyutInterface) as dlg:
             if dlg.ShowModal() == OK:
                 self.logger.info(f'model: {pyutInterface}')
-                pyutClass: PyutClass = implementor.getPyutObject()
+
+                pyutClass: PyutClass = cast(PyutClass, implementor.getPyutObject())
                 pyutClass.addInterface(pyutInterface)
 
                 cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(pyutInterface, attachmentAnchor)

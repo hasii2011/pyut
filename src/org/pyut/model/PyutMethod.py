@@ -9,13 +9,11 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParam import PyutParam
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.model.PyutType import PyutType
+from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.model.PyutObject import PyutObject
-
-
-[WITH_PARAMS, WITHOUT_PARAMS] = range(2)
 
 
 class PyutMethod(PyutObject):
@@ -39,8 +37,8 @@ class PyutMethod(PyutObject):
 
     It has a string mode that influence the way `__str__` works. The two modes
     are:
-        - `WITHOUT_PARAMS` (default) : uml string description without parameters
-        - `WITH_PARAMS` : uml string description with parameters
+        - `PyutGloballyDisplayParameters.WITHOUT_PARAMETERS` (default) uml string description without parameters
+        - `PyutGloballyDisplayParameters.WITH_PARAMETERS`               uml string description with parameters
 
     You can change it with the `setStringMode` class method. This means the
     change will be done for each `PyutMethod` instance.
@@ -70,9 +68,9 @@ class PyutMethod(PyutObject):
 
         prefs = PyutPreferences()
         if prefs.showParameters is True:
-            PyutMethod.setStringMode(WITH_PARAMS)
+            PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
         else:
-            PyutMethod.setStringMode(WITHOUT_PARAMS)
+            PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
 
     @property
     def sourceCode(self) -> SourceCodeType:
@@ -89,24 +87,24 @@ class PyutMethod(PyutObject):
         return self.__stringWithParams()
 
     @classmethod
-    def setStringMode(cls, mode):
+    def setStringMode(cls, mode: PyutGloballyDisplayParameters):
         """
         Set the mode for __str__.
         """
-        if mode == WITH_PARAMS:
+        if mode == PyutGloballyDisplayParameters.WITH_PARAMETERS:
             cls.__selectedStringMode = cls.__stringWithParams
-        elif mode == WITHOUT_PARAMS:
+        elif mode == PyutGloballyDisplayParameters.WITHOUT_PARAMETERS:
             cls.__selectedStringMode = cls.__stringWithoutParams
 
     @classmethod
-    def getStringMode(cls):
+    def getStringMode(cls) -> PyutGloballyDisplayParameters:
         """
         Get the mode for __str__.
         """
         if cls.__selectedStringMode is cls.__stringWithParams:
-            return WITH_PARAMS
+            return PyutGloballyDisplayParameters.WITH_PARAMETERS
         else:
-            return WITHOUT_PARAMS
+            return PyutGloballyDisplayParameters.WITHOUT_PARAMETERS
 
     @property
     def visibility(self) -> PyutVisibilityEnum:
