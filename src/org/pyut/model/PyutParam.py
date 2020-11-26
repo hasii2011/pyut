@@ -81,9 +81,9 @@ class PyutParam(PyutObject):
         s = self.getName()
 
         if str(self._type) != "":
-            s += ": " + str(self._type)
+            s = f'{s}: {self._type}'
 
         if self._defaultValue is not None:
-            s += " = " + self._defaultValue
+            s = f'{s} = {self._defaultValue}'
 
         return s

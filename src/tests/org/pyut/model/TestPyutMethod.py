@@ -5,14 +5,14 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
-
-
+from org.pyut.model.PyutType import PyutType
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
 
 
 class TestPyutMethod(TestBase):
@@ -52,6 +52,40 @@ class TestPyutMethod(TestBase):
         pyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
 
         self.assertEqual(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS, pyutMethod.getStringMode(), 'Did not get set correctly')
+
+    def testStringMethodWithParametersRepresentation(self):
+
+        pyutMethod:     PyutMethod                = self._pyutMethod
+        pyutMethod.returnType = PyutType('float')
+
+        pyutMethod.parameters = self._makeParameters()
+        pyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+
+        expectedRepresentation: str = '+(intParam: int = 0, floatParam: float = 32.0): float'
+        actualRepresentation:   str = pyutMethod.__str__()
+
+        self.assertEqual(expectedRepresentation, actualRepresentation, 'Oops this does not match')
+
+    def testStringMethodWithoutParametersRepresentation(self):
+
+        pyutMethod:     PyutMethod                = self._pyutMethod
+        pyutMethod.returnType = PyutType('float')
+
+        pyutMethod.parameters = self._makeParameters
+        pyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+
+        expectedRepresentation: str = '+(): float'
+        actualRepresentation:   str = pyutMethod.__str__()
+
+        self.assertEqual(expectedRepresentation, actualRepresentation, 'Oops this does not match')
+
+    def _makeParameters(self) -> PyutMethod.PyutParameters:
+
+        pyutParameter1: PyutParam                 = PyutParam(name='intParam',   theParameterType=PyutType("int"),   defaultValue='0')
+        pyutParameter2: PyutParam                 = PyutParam(name='floatParam', theParameterType=PyutType("float"), defaultValue='32.0')
+        parameters:     PyutMethod.PyutParameters = [pyutParameter1, pyutParameter2]
+
+        return parameters
 
 
 def suite() -> TestSuite:

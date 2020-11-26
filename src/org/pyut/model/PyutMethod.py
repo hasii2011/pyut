@@ -66,11 +66,16 @@ class PyutMethod(PyutObject):
         self._params:  PyutMethod.PyutParameters = []
         self._returns: PyutType                  = returns
 
-        prefs = PyutPreferences()
+        prefs: PyutPreferences = PyutPreferences()
+        # if prefs.showParameters is True:
+        #     PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+        # else:
+        #     PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+
         if prefs.showParameters is True:
-            PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+            self._displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
         else:
-            PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+            self._displayParameters = PyutGloballyDisplayParameters.WITHOUT_PARAMETERS
 
     @property
     def sourceCode(self) -> SourceCodeType:
@@ -86,25 +91,24 @@ class PyutMethod(PyutObject):
         """
         return self.__stringWithParams()
 
-    @classmethod
-    def setStringMode(cls, mode: PyutGloballyDisplayParameters):
+    def setStringMode(self, mode: PyutGloballyDisplayParameters):
         """
         Set the mode for __str__.
-        """
-        if mode == PyutGloballyDisplayParameters.WITH_PARAMETERS:
-            cls.__selectedStringMode = cls.__stringWithParams
-        elif mode == PyutGloballyDisplayParameters.WITHOUT_PARAMETERS:
-            cls.__selectedStringMode = cls.__stringWithoutParams
 
-    @classmethod
-    def getStringMode(cls) -> PyutGloballyDisplayParameters:
+        Args:
+            mode:  The new mode
         """
-        Get the mode for __str__.
+        self._displayParameters = mode
+
+    def getStringMode(self) -> PyutGloballyDisplayParameters:
         """
-        if cls.__selectedStringMode is cls.__stringWithParams:
-            return PyutGloballyDisplayParameters.WITH_PARAMETERS
-        else:
-            return PyutGloballyDisplayParameters.WITHOUT_PARAMETERS
+        Returns:    The mode for __str__.
+        """
+        return self._displayParameters
+
+    @property
+    def globallyDisplayParameters(self) -> PyutGloballyDisplayParameters:
+        return self._displayParameters
 
     @property
     def visibility(self) -> PyutVisibilityEnum:
@@ -259,33 +263,32 @@ class PyutMethod(PyutObject):
 
     def __stringWithParams(self):
         """
-        String representation with params.
 
-        @since 1.7
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns: The string representation with parameters
         """
-        string = str(self._visibility) + self._name + "("
+        string = f'{self._visibility}{self._name}('
         # add the params
-        # if self._params == []:
         if not self._params:
             string += "  "  # to compensate the removing [:-2]
         for param in self._params:
-            string += str(param) + ", "
+            string = f'{string}{param}, '
+
         string = string[:-2] + ")"      # remove the last "," and add a )
-        if str(self._returns) != "":
-            string += ": " + str(self._returns)
+        if self._returns != "":
+            string = f'{string}: {self._returns}'
+
         return string
 
     def __str__(self):
         """
-        String representation.
-        Select the wanted representation with setStringMode().
-
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:    The configured representation
         """
         try:
-            return self.__selectedStringMode()
+            if self._displayParameters == PyutGloballyDisplayParameters.WITH_PARAMETERS:
+                return self.__stringWithParams()
+            else:
+                return self.__stringWithoutParams()
+
         except (ValueError, Exception) as e:
             self.logger.error(f'{e}')
             return ""
