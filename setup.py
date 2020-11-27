@@ -16,36 +16,6 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
 
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/pyut.ico']),
 
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/splash/Splash6.py']),
-
-              ('org/pyut/resources/img/methodparameters', ['src/org/pyut/resources/img/methodparameters/Display.py']),
-              ('org/pyut/resources/img/methodparameters', ['src/org/pyut/resources/img/methodparameters/DoNotDisplay.py']),
-              ('org/pyut/resources/img/methodparameters', ['src/org/pyut/resources/img/methodparameters/UnSpecified.py']),
-
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgTipsFrameTipsLogo.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxActor.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxArrow.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxClass.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxNewClassDiagram.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxNewProject.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxNewSequenceDiagram.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxNewUseCaseDiagram.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxNote.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxOpenFile.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRedo.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipAggregation.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipAssociation.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipComposition.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipInheritance.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipNote.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxRelationshipRealization.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxSaveDiagram.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxSequenceDiagramInstance.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxSequenceDiagramMessage.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxSystem.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxUndo.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxZoomIn.py']),
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxZoomOut.py']),
 
               ]
 OPTIONS = {}
@@ -66,6 +36,8 @@ setup(
               'org.pyut.model',
               'org.pyut.ogl', 'org.pyut.ogl.sd',
               'org.pyut.persistence', 'org.pyut.persistence.converters',
+              'org.pyut.resources',
+              'org.pyut.resources.img', 'org.pyut.resources.img.methodparameters', 'org.pyut.resources.img.splash', 'org.pyut.resources.img.toolbar',
               'org.pyut.plugins',
               'org.pyut.plugins.base',
               'org.pyut.plugins.common',
@@ -79,7 +51,7 @@ setup(
               'org.pyut.plugins.tools',
               'org.pyut.plugins.xmi',
               'org.pyut.plugins.xsd',
-              'org.pyut.resources', 'org.pyut.resources.img', 'org.pyut.resources.locale',
+              'org.pyut.resources.locale',
               'org.pyut.ui', 'org.pyut.ui.tools'
               ],
     include_package_data=True,
