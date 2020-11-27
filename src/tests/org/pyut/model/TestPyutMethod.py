@@ -41,7 +41,7 @@ class TestPyutMethod(TestBase):
 
         pyutMethod: PyutMethod = self._pyutMethod
 
-        pyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
 
         self.assertEqual(PyutGloballyDisplayParameters.WITH_PARAMETERS, pyutMethod.getStringMode(), 'Did not get set correctly')
 
@@ -49,7 +49,7 @@ class TestPyutMethod(TestBase):
 
         pyutMethod: PyutMethod = self._pyutMethod
 
-        pyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
 
         self.assertEqual(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS, pyutMethod.getStringMode(), 'Did not get set correctly')
 
@@ -59,7 +59,7 @@ class TestPyutMethod(TestBase):
         pyutMethod.returnType = PyutType('float')
 
         pyutMethod.parameters = self._makeParameters()
-        pyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
 
         expectedRepresentation: str = '+(intParam: int = 0, floatParam: float = 32.0): float'
         actualRepresentation:   str = pyutMethod.__str__()
@@ -72,7 +72,7 @@ class TestPyutMethod(TestBase):
         pyutMethod.returnType = PyutType('float')
 
         pyutMethod.parameters = self._makeParameters
-        pyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
 
         expectedRepresentation: str = '+(): float'
         actualRepresentation:   str = pyutMethod.__str__()

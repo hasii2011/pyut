@@ -44,6 +44,7 @@ class PyutMethod(PyutObject):
     change will be done for each `PyutMethod` instance.
     """
 
+    displayParameters: PyutGloballyDisplayParameters = None
     # define class flag to avoid PyCharm warning in get/set string mode
     __selectedStringMode = None
 
@@ -73,9 +74,9 @@ class PyutMethod(PyutObject):
         #     PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
 
         if prefs.showParameters is True:
-            self._displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
+            PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
         else:
-            self._displayParameters = PyutGloballyDisplayParameters.WITHOUT_PARAMETERS
+            PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITHOUT_PARAMETERS
 
     @property
     def sourceCode(self) -> SourceCodeType:
@@ -91,24 +92,26 @@ class PyutMethod(PyutObject):
         """
         return self.__stringWithParams()
 
-    def setStringMode(self, mode: PyutGloballyDisplayParameters):
+    @staticmethod
+    def setStringMode(mode: PyutGloballyDisplayParameters):
         """
         Set the mode for __str__.
 
         Args:
             mode:  The new mode
         """
-        self._displayParameters = mode
+        PyutMethod.displayParameters = mode
 
-    def getStringMode(self) -> PyutGloballyDisplayParameters:
+    @staticmethod
+    def getStringMode() -> PyutGloballyDisplayParameters:
         """
         Returns:    The mode for __str__.
         """
-        return self._displayParameters
+        return PyutMethod.displayParameters
 
     @property
     def globallyDisplayParameters(self) -> PyutGloballyDisplayParameters:
-        return self._displayParameters
+        return PyutMethod.displayParameters
 
     @property
     def visibility(self) -> PyutVisibilityEnum:
@@ -284,7 +287,7 @@ class PyutMethod(PyutObject):
         Returns:    The configured representation
         """
         try:
-            if self._displayParameters == PyutGloballyDisplayParameters.WITH_PARAMETERS:
+            if PyutMethod.displayParameters == PyutGloballyDisplayParameters.WITH_PARAMETERS:
                 return self.__stringWithParams()
             else:
                 return self.__stringWithoutParams()
