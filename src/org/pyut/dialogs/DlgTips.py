@@ -65,11 +65,13 @@ class DlgTips(Dialog):
 
         self._prefs:        PyutPreferences = PyutPreferences()
         self._tipsFileName: str = PyutUtils.retrieveResourcePath('tips.txt')
-        self._tipCount:     int = self._computeTipCount()
+
+        self._cacheTips(self._tipsFileName)
+        self._tipCount:  int = self._computeTipCount()
 
         self._safelyRetrieveCurrentTipNumber()
 
-        upSizer: BoxSizer = self._buildUpperDialog(self._getCurrentTipText())
+        upSizer: BoxSizer = self._buildUpperDialog(self._getCurrentTipText(self._currentTipNumber))
         loSizer: BoxSizer = self._buildLowerDialog()
 
         self.SetAutoLayout(True)
@@ -88,6 +90,12 @@ class DlgTips(Dialog):
 
         self._bindEventHandlers()
 
+    def _cacheTips(self, fileName: str):
+
+        file = open(fileName)
+        self._tipLines = file.read().split('\n')
+        file.close()
+
     def _safelyRetrieveCurrentTipNumber(self):
 
         self._currentTipNumber: int = self._prefs.currentTip
@@ -97,17 +105,14 @@ class DlgTips(Dialog):
             self._currentTipNumber = self._currentTipNumber
 
     def _computeTipCount(self) -> int:
+        return len(self._tipLines) - 1  # because we use it as a 0-based index
 
-        # noinspection PyUnusedLocal
-        numLines = sum(1 for line in open(self._tipsFileName))
+    def _getCurrentTipText(self, tipNumber: int) -> str:
 
-        return numLines
+        print(f'{tipNumber=}')
+        tipText: str = self._tipLines[tipNumber]
 
-    def _getCurrentTipText(self) -> str:
-        import linecache
-
-        tipText: str = linecache.getline(self._tipsFileName, self._currentTipNumber)
-
+        print(f'{tipText=}')
         splitTip: str = self.__normalizeTip(tipText)
 
         return splitTip
@@ -163,7 +168,7 @@ class DlgTips(Dialog):
         Select and display next tip
         """
         self._currentTipNumber = self.__incrementTipNumber(1)
-        self._label.SetLabel(self._getCurrentTipText())
+        self._label.SetLabel(self._getCurrentTipText(self._currentTipNumber))
 
     # noinspection PyUnusedLocal
     def _onPreviousTip(self, event: CommandEvent):
@@ -171,7 +176,7 @@ class DlgTips(Dialog):
         Select and display previous tip
         """
         self._currentTipNumber = self.__incrementTipNumber(-1)
-        self._label.SetLabel(self._getCurrentTipText())
+        self._label.SetLabel(self._getCurrentTipText(self._currentTipNumber))
 
     def _onClose(self, event: CloseEvent):
         """
@@ -180,6 +185,7 @@ class DlgTips(Dialog):
         self._prefs.currentTip  = self.__incrementTipNumber(1)
         self._prefs.showTipsOnStartup = self._chkShowTips.GetValue()
         event.Skip()
+        self.Destroy()
 
     def __incrementTipNumber(self, byValue: int) -> int:
         """
@@ -191,7 +197,7 @@ class DlgTips(Dialog):
         Returns:  The new tip number
         """
         tipNumber = (self._currentTipNumber + byValue) % self._tipCount
-        if tipNumber == 0:
+        if tipNumber < 0:
             tipNumber = self._tipCount
 
         return tipNumber
