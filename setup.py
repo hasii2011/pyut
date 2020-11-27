@@ -15,7 +15,13 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources', ['src/org/pyut/resources/tips.txt']),
 
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/pyut.ico']),
+
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/splash/Splash6.py']),
+
+              ('org/pyut/resources/img/methodparameters', ['src/org/pyut/resources/img/methodparameters/Display.py']),
+              ('org/pyut/resources/img/methodparameters', ['src/org/pyut/resources/img/methodparameters/DoNotDisplay.py']),
+              ('org/pyut/resources/img/methodparameters', ['src/org/pyut/resources/img/methodparameters/UnSpecified.py']),
+
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/ImgTipsFrameTipsLogo.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxActor.py']),
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/toolbar/ImgToolboxArrow.py']),

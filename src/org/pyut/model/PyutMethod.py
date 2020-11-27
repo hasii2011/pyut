@@ -45,8 +45,6 @@ class PyutMethod(PyutObject):
     """
 
     displayParameters: PyutGloballyDisplayParameters = None
-    # define class flag to avoid PyCharm warning in get/set string mode
-    __selectedStringMode = None
 
     def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returns: PyutType = PyutType('')):
         """
@@ -253,15 +251,13 @@ class PyutMethod(PyutObject):
 
     def __stringWithoutParams(self):
         """
-        String representation without params.
 
-        @since 1.7
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:   String representation without params.
         """
-        string = str(self._visibility) + self._name + "()"
-        # add the params
+        string = f'{self._visibility}{self._name}()'
+        # add the parameters
         if str(self._returns) != "":
-            string += ": " + str(self._returns)
+            string = f'{string}: {self._returns}'
         return string
 
     def __stringWithParams(self):
@@ -272,7 +268,7 @@ class PyutMethod(PyutObject):
         string = f'{self._visibility}{self._name}('
         # add the params
         if not self._params:
-            string += "  "  # to compensate the removing [:-2]
+            string = f'{string}  '  # to compensate the removing [:-2]
         for param in self._params:
             string = f'{string}{param}, '
 
