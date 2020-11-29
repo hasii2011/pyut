@@ -27,8 +27,6 @@ class TipHandler:
         self.logger: Logger          = getLogger(__name__)
         self._prefs: PyutPreferences = PyutPreferences()
 
-        self.logger.setLevel(INFO)      # TEMP TEMP
-
         tipLines: TipLinesType = self._cacheTips(fileName=fqFileName)
         tipCount: int          = self._computeTipCount(tipLines=tipLines)
 
@@ -37,14 +35,15 @@ class TipHandler:
 
         self._currentTipNumber: int = self._safelyRetrieveCurrentTipNumber()
 
+    @property
+    def currentTipNumber(self) -> int:
+        return self._currentTipNumber
+
     def getCurrentTipText(self) -> str:
 
-        tipNumber: int = self._safelyRetrieveCurrentTipNumber()
+        tipText: str = self._tipLines[self._currentTipNumber]
 
-        self.logger.info(f'{tipNumber=}')
-        tipText: str = self._tipLines[tipNumber]
-
-        self.logger.info(f'{tipText=}')
+        self.logger.debug(f'{tipText=}')
 
         return tipText
 
@@ -60,6 +59,7 @@ class TipHandler:
             tipNumber = self._tipCount
 
         self._currentTipNumber = tipNumber
+        self.logger.info(f'{self._currentTipNumber=}')
 
     def _cacheTips(self, fileName: str) -> TipLinesType:
 

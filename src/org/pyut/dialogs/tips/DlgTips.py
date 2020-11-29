@@ -38,6 +38,8 @@ from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
 from org.pyut.general.LineSplitter import LineSplitter
 
+from org.pyut.dialogs.tips.TipHandler import TipHandler
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
@@ -68,12 +70,9 @@ class DlgTips(Dialog):
         self._prefs:        PyutPreferences = PyutPreferences()
         self._tipsFileName: str = PyutUtils.retrieveResourcePath(f'{DlgTips.TIPS_FILENAME}')
 
-        self._cacheTips(self._tipsFileName)
-        self._tipCount:  int = self._computeTipCount()
+        self._tipHandler = TipHandler(fqFileName=self._tipsFileName)
 
-        self._safelyRetrieveCurrentTipNumber()
-
-        upSizer: BoxSizer = self._buildUpperDialog(self._getCurrentTipText(self._currentTipNumber))
+        upSizer: BoxSizer = self._buildUpperDialog(self._tipHandler.getCurrentTipText())
         loSizer: BoxSizer = self._buildLowerDialog()
 
         self.SetAutoLayout(True)
@@ -91,33 +90,6 @@ class DlgTips(Dialog):
         self.SetSizer(mainSizer)
 
         self._bindEventHandlers()
-
-    def _cacheTips(self, fileName: str):
-
-        file = open(fileName)
-        self._tipLines = file.read().split('\n')
-        file.close()
-
-    def _safelyRetrieveCurrentTipNumber(self):
-
-        self._currentTipNumber: int = self._prefs.currentTip
-        if self._currentTipNumber is None:
-            self._currentTipNumber = 0
-        else:
-            self._currentTipNumber = self._currentTipNumber
-
-    def _computeTipCount(self) -> int:
-        return len(self._tipLines) - 1  # because we use it as a 0-based index
-
-    def _getCurrentTipText(self, tipNumber: int) -> str:
-
-        print(f'{tipNumber=}')
-        tipText: str = self._tipLines[tipNumber]
-
-        print(f'{tipText=}')
-        splitTip: str = self.__normalizeTip(tipText)
-
-        return splitTip
 
     def _buildUpperDialog(self, tip: str) -> BoxSizer:
 
@@ -169,40 +141,31 @@ class DlgTips(Dialog):
         """
         Select and display next tip
         """
-        self._currentTipNumber = self.__incrementTipNumber(1)
-        self._label.SetLabel(self._getCurrentTipText(self._currentTipNumber))
+        self._tipHandler.incrementTipNumber(1)
+        self._label.SetLabel(self._getTipText())
 
     # noinspection PyUnusedLocal
     def _onPreviousTip(self, event: CommandEvent):
         """
         Select and display previous tip
         """
-        self._currentTipNumber = self.__incrementTipNumber(-1)
-        self._label.SetLabel(self._getCurrentTipText(self._currentTipNumber))
+        self._tipHandler.incrementTipNumber(-1)
+        self._label.SetLabel(self._getTipText())
 
     def _onClose(self, event: CloseEvent):
         """
         Save state
         """
-        self._prefs.currentTip  = self.__incrementTipNumber(1)
+        self._prefs.currentTip  = self._tipHandler.currentTipNumber
         self._prefs.showTipsOnStartup = self._chkShowTips.GetValue()
         event.Skip()
         self.Destroy()
 
-    def __incrementTipNumber(self, byValue: int) -> int:
-        """
-        Increment/Decrement.  Returns non-zero tip number
+    def _getTipText(self) -> str:
 
-        Args:
-            byValue:   Use negative number to decrement
+        longText: str = self._tipHandler.getCurrentTipText()
 
-        Returns:  The new tip number
-        """
-        tipNumber = (self._currentTipNumber + byValue) % self._tipCount
-        if tipNumber < 0:
-            tipNumber = self._tipCount
-
-        return tipNumber
+        return self.__normalizeTip(longText)
 
     def __normalizeTip(self, tip: str) -> str:
 
