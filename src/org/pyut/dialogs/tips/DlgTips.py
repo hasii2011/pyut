@@ -53,6 +53,8 @@ DEFAULT_HEIGHT = 100
 
 
 class DlgTips(Dialog):
+
+    TIPS_FILENAME: str = 'tips.txt'
     """
     Represents a tips dialog for displaying Pyut features.
     """
@@ -64,7 +66,7 @@ class DlgTips(Dialog):
         super().__init__(parent, ID_ANY, _("Tips"), DefaultPosition, dialogSize, dialogStyle)
 
         self._prefs:        PyutPreferences = PyutPreferences()
-        self._tipsFileName: str = PyutUtils.retrieveResourcePath('tips.txt')
+        self._tipsFileName: str = PyutUtils.retrieveResourcePath(f'{DlgTips.TIPS_FILENAME}')
 
         self._cacheTips(self._tipsFileName)
         self._tipCount:  int = self._computeTipCount()
@@ -204,7 +206,7 @@ class DlgTips(Dialog):
 
     def __normalizeTip(self, tip: str) -> str:
 
-        dc:    ClientDC     = ClientDC(self, )
+        dc:    ClientDC     = ClientDC(self)
         ls:    LineSplitter = LineSplitter()
         lines: List[str]    = ls.split(text=tip, dc=dc, textWidth=int(DEFAULT_WIDTH * 0.8))
 
