@@ -153,19 +153,19 @@ class MenuCreator:
             mnuTools.Append(NewId(), _("toolboxes"), sub)
 
         mnuHelp = Menu()
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_INDEX, _("&Index"), _("Display help index"))
+        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
         mnuHelp.AppendSeparator()
+        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_INDEX, _("&Index"), _("Display help index"))
         mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_VERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
         mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_WEB, _("&Web site"), _("Open PyUt web site"))
-        mnuHelp.Append(SharedIdentifiers.ID_DEBUG,      _("&Debug"), _("Open IPython shell"))
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
+        mnuHelp.Append(SharedIdentifiers.ID_DEBUG,      _("&Debug"), _("Open IPython shell"))
 
         mnuBar = MenuBar()
         mnuBar.Append(self.fileMenu, _("&File"))
         mnuBar.Append(mnuEdit, _("&Edit"))
         mnuBar.Append(mnuTools, _("&Tools"))
-        mnuBar.Append(mnuHelp, "&?")
+        mnuBar.Append(mnuHelp, "&Help")
 
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
