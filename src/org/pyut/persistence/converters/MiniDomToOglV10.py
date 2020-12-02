@@ -7,6 +7,7 @@ from typing import NewType
 
 from logging import Logger
 from logging import getLogger
+from logging import INFO
 
 from xml.dom.minidom import Element
 from xml.dom.minidom import NodeList
@@ -122,8 +123,9 @@ class MiniDomToOgl:
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS))
             pyutClass.showFields = value
 
-            displayParametersStr: str = xmlOglClass.getAttribute(PyutXmlConstants.ATTR_DISPLAY_PARAMETERS)
+            displayParametersStr: str = xmlClass.getAttribute(PyutXmlConstants.ATTR_DISPLAY_PARAMETERS)
 
+            self.logger.info(f'{pyutClass.name=} -- {displayParametersStr=}')
             if displayParametersStr is None or displayParametersStr == '':
                 pyutClass.displayParameters = PyutDisplayParameters.UNSPECIFIED
             else:
@@ -575,11 +577,11 @@ class MiniDomToOgl:
         pyutLink:        PyutLink = oglLink.getPyutObject()
 
         if pyutLink.getType() == LinkType.INHERITANCE:
-            childPyutClass:  PyutClass = srcShape.getPyutObject()
-            parentPyutClass: PyutClass = destShape.getPyutObject()
+            childPyutClass:  PyutClass = cast(PyutClass, srcShape.getPyutObject())
+            parentPyutClass: PyutClass = cast(PyutClass, destShape.getPyutObject())
             childPyutClass.addParent(parentPyutClass)
         else:
-            srcPyutClass:  PyutClass = srcShape.getPyutObject()
+            srcPyutClass:  PyutClass = cast(PyutClass, srcShape.getPyutObject())
             srcPyutClass.addLink(pyutLink)
 
     def _getPyutLink(self, obj: Element):

@@ -6,6 +6,7 @@ from logging import Logger
 from logging import getLogger
 
 from wx import BLACK
+from wx import DC
 from wx import EVT_MENU
 from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
@@ -18,6 +19,7 @@ from wx import CommandEvent
 from wx import MenuItem
 
 from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
+from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutObject import PyutObject
 from org.pyut.model.PyutClass import PyutClass
 
@@ -231,12 +233,12 @@ class OglClass(OglObject):
         self.logger.debug(f"showMethods => {pyutClass.showMethods}")
         if pyutClass.showMethods is True:
             for method in pyutClass.methods:
-                if draw:
-                    dc.DrawText(str(method), x + MARGIN, y + h)
+                if draw is True:
+                    self.__drawMethodSignature(dc, method, pyutClass, x, y, h)
+
                 if calcWidth:
                     w = max(w, self.GetTextWidth(dc, str(method)))
-                # separate two methods
-                # h += height
+
                 h += self.GetTextHeight(dc, str(method))
 
         # Add space
@@ -250,7 +252,7 @@ class OglClass(OglObject):
         """
         Paint handler, draws the content of the shape.
 
-        WARNING : Every changes here must be reported in autoResize method
+        WARNING : Every changes here must be reported in autoResize pyutMethod
 
         Args:
             dc: device context to draw to
@@ -295,7 +297,7 @@ class OglClass(OglObject):
         Auto-resize the class
 
         @author C.Dutoit
-        WARNING : Every changes here must be reported in DRAW method
+        WARNING : Every changes here must be reported in DRAW pyutMethod
         """
         # Init
         pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
@@ -479,3 +481,25 @@ class OglClass(OglObject):
             itemToggleParameters.SetBitmap(PyutConstants.doNotDisplayMethodsIcon())
         else:
             assert False, 'Unknown display type'
+
+    def __drawMethodSignature(self, dc: DC, pyutMethod: PyutMethod, pyutClass: PyutClass, x: float, y: float, h: float):
+        """
+        If preference is not set at individual class level defer to global; Otherwise,
+        respect the class level preference
+
+        Args:
+            dc:
+            pyutMethod:
+            pyutClass:
+            x:
+            y:
+            h:
+        """
+        if pyutClass.displayParameters == PyutDisplayParameters.UNSPECIFIED:
+            dc.DrawText(str(pyutMethod), x + MARGIN, y + h)
+        elif pyutClass.displayParameters == PyutDisplayParameters.DISPLAY:
+            dc.DrawText(pyutMethod.methodWithParameters(), x + MARGIN, y + h)
+        elif pyutClass.displayParameters == PyutDisplayParameters.DO_NOT_DISPLAY:
+            dc.DrawText(pyutMethod.methodWithoutParameters(), x + MARGIN, y + h)
+        else:
+            assert False, 'Internal error unknown pyutMethod parameter display type'

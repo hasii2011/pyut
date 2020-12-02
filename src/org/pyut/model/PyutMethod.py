@@ -249,6 +249,12 @@ class PyutMethod(PyutObject):
 
         self._returns = pyutType
 
+    def methodWithParameters(self) -> str:
+        return self.__stringWithParams()
+
+    def methodWithoutParameters(self) -> str:
+        return self.__stringWithoutParams()
+
     def __stringWithoutParams(self):
         """
 
