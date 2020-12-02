@@ -6,6 +6,7 @@ from logging import getLogger
 
 from wx import EVT_CLOSE
 from wx import EVT_MENU
+from wx import ID_ABOUT
 
 from wx import Frame
 from wx import Menu
@@ -153,7 +154,7 @@ class MenuCreator:
             mnuTools.Append(NewId(), _("toolboxes"), sub)
 
         mnuHelp = Menu()
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
+        mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
         mnuHelp.AppendSeparator()
         mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_INDEX, _("&Index"), _("Display help index"))
         mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_VERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
@@ -188,7 +189,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PYUT_PREFERENCES], id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
         #  EVT_MENU(self, ID_MNU_FILE_DIAGRAM_PROPERTIES,self._OnMnuFileDiagramProperties)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXIT_PROGRAM], id=SharedIdentifiers.ID_MNU_FILE_EXIT)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROGRAM_ABOUT], id=SharedIdentifiers.ID_MNU_HELP_ABOUT)
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROGRAM_ABOUT], id=ID_ABOUT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_INDEX], id=SharedIdentifiers.ID_MNU_HELP_INDEX)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_VERSION], id=SharedIdentifiers.ID_MNU_HELP_VERSION)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_WEB], id=SharedIdentifiers.ID_MNU_HELP_WEB)
