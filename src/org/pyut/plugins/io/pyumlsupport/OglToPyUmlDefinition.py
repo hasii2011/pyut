@@ -74,8 +74,9 @@ class OglToPyUmlDefinition:
 
         fqFileName:  str         = imageOptions.outputFileName
         imageFormat: ImageFormat = imageOptions.imageFormat
+        imageLibShowParameters: DisplayMethodParameters = self.__toImageLibraryEnum(self._prefs.showParameters)
         if imageFormat == ImageFormat.PDF:
-            self._diagram: PdfDiagram = PdfDiagram(fileName=fqFileName, dpi=dpi, headerText=headerText)
+            self._diagram: PdfDiagram = PdfDiagram(fileName=fqFileName, dpi=dpi, headerText=headerText, docDisplayMethodParameters=imageLibShowParameters)
         else:
             self._diagram: ImageDiagram = ImageDiagram(fileName=fqFileName,
                                                        headerText=headerText   # TODO use image size from new method signature
@@ -91,7 +92,7 @@ class OglToPyUmlDefinition:
             if not isinstance(umlObject, OglClass):
                 continue
 
-            pyutClass: PyutClass = umlObject.getPyutObject()
+            pyutClass: PyutClass = cast(PyutClass, umlObject.getPyutObject())
 
             x, y = umlObject.GetPosition()
             w, h = umlObject.GetSize()
@@ -100,7 +101,7 @@ class OglToPyUmlDefinition:
 
             classDefinition: ClassDefinition = ClassDefinition(name=pyutClass.name, position=position, size=size)
 
-            if self._prefs.showParameters is True:
+            if pyutClass.displayParameters is True:
                 classDefinition.displayMethodParameters = DisplayMethodParameters.DISPLAY
             else:
                 classDefinition.displayMethodParameters = DisplayMethodParameters.DO_NOT_DISPLAY
@@ -193,6 +194,7 @@ class OglToPyUmlDefinition:
             pyutMethod: PyutMethod = cast(PyutMethod, pyutMethod)
 
             methodDef: MethodDefinition = MethodDefinition(name=pyutMethod.name)
+
             methodDef.visibility = self.__toDefinitionType(pyutMethod.visibility)
             methodDef.returnType = pyutMethod.returnType.value
 
@@ -228,3 +230,10 @@ class OglToPyUmlDefinition:
         classDefinition.displayFields     = pyutClass.showFields
 
         return classDefinition
+
+    def __toImageLibraryEnum(self, showParameters: bool) -> DisplayMethodParameters:
+
+        if showParameters is True:
+            return DisplayMethodParameters.DISPLAY
+        else:
+            return DisplayMethodParameters.DO_NOT_DISPLAY
