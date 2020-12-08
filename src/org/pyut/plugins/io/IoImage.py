@@ -103,6 +103,7 @@ class IoImage(PyutIoPlugin):
                 self.logger.warning(f'Options: {self._imageOptions}')
             else:
                 self.logger.warning(f'Cancelled')
+                return False
 
         return True
 

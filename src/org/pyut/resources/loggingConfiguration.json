@@ -70,7 +70,7 @@
             "propagate": "False"
         },
         "org.pyut.plugins": {
-            "level":     "ERROR",
+            "level":     "WARNING",
             "propagate": "False"
         },
         "org.pyut.plugins.io.pdfsupport.OglToPdfDefinition": {
