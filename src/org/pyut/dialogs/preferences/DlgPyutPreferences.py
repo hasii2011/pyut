@@ -38,7 +38,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
 from org.pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.dialogs.preferences.PositioningPreferences import PositioningPreferences
-from org.pyut.dialogs.preferences.DiagramPreferences import BackgroundPreferences
+from org.pyut.dialogs.preferences.BackgroundPreferences import BackgroundPreferences
 
 from org.pyut.general.Globals import _
 
@@ -58,7 +58,7 @@ class DlgPyutPreferences(Dialog):
     To use it from a wxFrame:
     ```python
 
-        dlg = DlgProperties(parent=self, exId=wx.ID_ANY)
+        dlg = DlgProperties(parent=self, wxId=wx.ID_ANY)
         dlg.ShowModal()
         dlg.Destroy()
     ```
@@ -72,7 +72,7 @@ class DlgPyutPreferences(Dialog):
             wxId:
         """
         super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=490))
-
+        # super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE)
         self.logger:    Logger          = getLogger(__name__)
         self.__prefs:   PyutPreferences = PyutPreferences()
 
@@ -100,12 +100,12 @@ class DlgPyutPreferences(Dialog):
         generalPreferences:     GeneralPreferencesPanel  = GeneralPreferencesPanel(parent=self)
         positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=self)
         miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=self)
-        diagramPreferences:     BackgroundPreferences    = BackgroundPreferences(parent=self)
+        backgroundPreferences:  BackgroundPreferences    = BackgroundPreferences(parent=self)
 
-        book.AddPage(generalPreferences,     text=_('General'),       select=False)
+        book.AddPage(generalPreferences,     text=_('General'),       select=True)
         book.AddPage(positioningPreferences, text=_('Positioning'),   select=False)
         book.AddPage(miscPanel,              text=_('Miscellaneous'), select=False)
-        book.AddPage(diagramPreferences,     text=_('Diagram'),       select=True)
+        book.AddPage(backgroundPreferences,  text=_('Diagram'),       select=False)
 
         self._positioningPreferences: PositioningPreferences = positioningPreferences
         return book
