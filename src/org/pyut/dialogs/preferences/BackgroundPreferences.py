@@ -1,13 +1,14 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import List
 
 from wx import ALL
 from wx import CB_READONLY
 from wx import EVT_CHECKBOX
+from wx import EVT_CHOICE
 from wx import EVT_COMBOBOX
 from wx import EVT_SPINCTRL
-from wx import EVT_TREE_SEL_CHANGED
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ID_ANY
@@ -15,24 +16,19 @@ from wx import LEFT
 from wx import RIGHT
 from wx import TOP
 from wx import BOTTOM
-from wx import TR_HAS_BUTTONS
-from wx import TR_HIDE_ROOT
-from wx import TR_SINGLE
 from wx import VERTICAL
 from wx import ALIGN_LEFT
 
 from wx import CheckBox
+from wx import Choice
 from wx import CommandEvent
 from wx import SpinCtrl
 from wx import SpinEvent
 from wx import StaticBox
 from wx import StaticBoxSizer
-from wx import TreeEvent
-from wx import TreeCtrl
 from wx import BoxSizer
 from wx import ComboBox
 from wx import Window
-from wx import TreeItemId
 
 from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
@@ -51,9 +47,6 @@ class BackgroundPreferences(PreferencesPanel):
 
     MINI_GAP: int = 3
 
-    PEN_STYLE_CATEGORY_DASHED_LINES: str = 'Dashed Lines'
-    PEN_STYLE_CATEGORY_HATCH_LINES:  str = 'Hatch Lines'
-
     clsLogger: Logger = getLogger(__name__)
 
     def __init__(self, parent: Window):
@@ -71,20 +64,21 @@ class BackgroundPreferences(PreferencesPanel):
         """
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
-        mainSizer.Add(self.__createSimpleGridOptions(),      1, TOP | EXPAND, BackgroundPreferences.VERTICAL_GAP)
-        mainSizer.Add(self.__createGridLineColorContainer(), 1, TOP | EXPAND, BackgroundPreferences.VERTICAL_GAP)
-        mainSizer.Add(self.__createGridStyleComboTree(),     1, TOP | EXPAND, BackgroundPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__createSimpleGridOptions(),      0, TOP | EXPAND, BackgroundPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__createGridLineColorContainer(), 0, TOP | EXPAND, BackgroundPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__createGridStyleChoice(),        0, TOP | EXPAND, BackgroundPreferences.VERTICAL_GAP)
 
         self.SetAutoLayout(True)
         self.SetSizer(mainSizer)
 
-        self.Bind(EVT_TREE_SEL_CHANGED, self.onPenStyleSelectionChanged,      self._treeList)
         self.Bind(EVT_COMBOBOX,         self.onGridLineColorSelectionChanged, self._cmbGridLineColor)
 
         self.Bind(EVT_CHECKBOX,         self.onEnableBackgroundGridChanged,   self.enableBackgroundGridID)
         self.Bind(EVT_CHECKBOX,         self.onSnapToGridChanged,             self.snapToGridID)
 
         self.Bind(EVT_SPINCTRL,         self.onGridIntervalChanged,           self._scGridInterval)
+
+        self.Bind(EVT_CHOICE, self.onGridStyleChanged, self._gridStyleChoice)
 
     def __setControlValues(self):
         """
@@ -102,6 +96,10 @@ class BackgroundPreferences(PreferencesPanel):
 
         self._scGridInterval.SetValue(self._prefs.backgroundGridInterval)
         self._cmbGridLineColor.SetValue(self._prefs.gridLineColor.value)
+
+        gridLineStyles: List[str] = self._gridStyleChoice.GetItems()
+        selectedIndex:  int       = gridLineStyles.index(self._prefs.gridLineStyle.value)
+        self._gridStyleChoice.SetSelection(selectedIndex)
 
     def __createSimpleGridOptions(self) -> BoxSizer:
 
@@ -149,55 +147,19 @@ class BackgroundPreferences(PreferencesPanel):
 
         return szrColor
 
-    def __createGridStyleComboTree(self) -> StaticBoxSizer:
+    def __createGridStyleChoice(self) -> StaticBoxSizer:
 
-        treeList:         TreeCtrl     = TreeCtrl(self, ID_ANY, style=TR_SINGLE | TR_HAS_BUTTONS | TR_HIDE_ROOT)
+        gridStyles = [s.value for s in PyutPenStyle]
 
-        treeRoot = treeList.AddRoot("The Root Item")
-
-        treeList.AppendItem(treeRoot, PyutPenStyle.SOLID.value)
-        treeList.AppendItem(treeRoot, PyutPenStyle.DOT.value)
-
-        dashItem: TreeItemId = treeList.AppendItem(treeRoot, BackgroundPreferences.PEN_STYLE_CATEGORY_DASHED_LINES)
-        treeList.AppendItem(dashItem, PyutPenStyle.DOT_DASH.value)
-        treeList.AppendItem(dashItem, PyutPenStyle.LONG_DASH.value)
-        treeList.AppendItem(dashItem, PyutPenStyle.SHORT_DASH.value)
-
-        hatchItem: TreeItemId = treeList.AppendItem(treeRoot, BackgroundPreferences.PEN_STYLE_CATEGORY_HATCH_LINES)
-        hatchStyles = [
-            PyutPenStyle.CROSS_HATCH,
-            PyutPenStyle.HORIZONTAL_HATCH,
-            PyutPenStyle.VERTICAL_HATCH
-        ]
-        for hStyle in hatchStyles:
-            treeList.AppendItem(hatchItem, hStyle.value)
-
-        treeList.ExpandAll()
+        gridStyleChoice: Choice = Choice(self, ID_ANY, choices=gridStyles)
 
         box:          StaticBox      = StaticBox(self, ID_ANY, _("Grid Line Style"))
         szrGridStyle: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
-        szrGridStyle.Add(treeList, 1, ALL, BackgroundPreferences.HORIZONTAL_GAP)
+        szrGridStyle.Add(gridStyleChoice, 1, ALL, BackgroundPreferences.HORIZONTAL_GAP)
 
-        self._treeList: TreeCtrl = treeList
+        self._gridStyleChoice: Choice = gridStyleChoice
 
         return szrGridStyle
-
-    def onPenStyleSelectionChanged(self, event: TreeEvent):
-
-        item = event.GetItem()
-        if item is not None:
-
-            treeList: TreeCtrl = self._treeList
-            itemText: str      = treeList.GetItemText(item)
-
-            self.clsLogger.debug(f'OnSelChanged: {itemText}')
-            if itemText == BackgroundPreferences.PEN_STYLE_CATEGORY_DASHED_LINES or itemText == BackgroundPreferences.PEN_STYLE_CATEGORY_HATCH_LINES:
-                treeList.Unselect()
-            else:
-                pyutPenStyle: PyutPenStyle = PyutPenStyle(itemText)
-                self._prefs.gridLineStyle = pyutPenStyle
-
-        event.Skip(True)
 
     def onGridLineColorSelectionChanged(self, event: CommandEvent):
 
@@ -234,3 +196,12 @@ class BackgroundPreferences(PreferencesPanel):
         newInterval: int = event.GetInt()
         self._prefs.backgroundGridInterval = newInterval
         event.Skip(True)
+
+    def onGridStyleChanged(self, event):
+
+        styleText: str = event.GetString()
+        self.clsLogger.warning(f'{styleText=}')
+
+        pyutPenStyle: PyutPenStyle = PyutPenStyle(styleText)
+
+        self._prefs.gridLineStyle = pyutPenStyle

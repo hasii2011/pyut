@@ -13,7 +13,8 @@ from wx import OK
 from wx import App
 from wx import Frame
 
-from org.pyut.plugins.io.nativeimagesupport.DlgWxImageOptions import DlgWxImageOptions
+from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
@@ -52,12 +53,11 @@ class TestADialog(App):
 
     def initTest(self):
 
-        with DlgWxImageOptions(parent=self._frameTop) as dlg:
-            dlg: DlgWxImageOptions = cast(DlgWxImageOptions, dlg)
+        with DlgPyutPreferences(parent=self._frameTop, wxId=ID_ANY) as dlg:
+            dlg: DlgPyutPreferences = cast(DlgPyutPreferences, dlg)
             if dlg.ShowModal() == OK:
                 # self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
                 self._frameTop.Close(force=True)
-                self.logger.warning(f'{dlg.imageFormat=} {dlg.outputFileName=}')
 
             else:
                 self.logger.warning(f'Cancelled')

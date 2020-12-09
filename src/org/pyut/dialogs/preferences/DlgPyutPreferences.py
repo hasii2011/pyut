@@ -27,6 +27,7 @@ from wx import MessageDialog
 
 from wx.lib.agw.fmresources import INB_BORDER
 from wx.lib.agw.fmresources import INB_DRAW_SHADOW
+from wx.lib.agw.fmresources import INB_GRADIENT_BACKGROUND
 from wx.lib.agw.fmresources import INB_SHOW_ONLY_TEXT
 from wx.lib.agw.fmresources import INB_BOLD_TAB_SELECTION
 from wx.lib.agw.fmresources import INB_FIT_LABELTEXT
@@ -71,7 +72,7 @@ class DlgPyutPreferences(Dialog):
             parent:
             wxId:
         """
-        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=490))
+        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=320))
         # super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE)
         self.logger:    Logger          = getLogger(__name__)
         self.__prefs:   PyutPreferences = PyutPreferences()
@@ -94,7 +95,7 @@ class DlgPyutPreferences(Dialog):
         """
         Initialize the controls.
         """
-        style: int = INB_DRAW_SHADOW | INB_SHOW_ONLY_TEXT | INB_FIT_LABELTEXT | INB_BOLD_TAB_SELECTION | INB_BORDER
+        style: int = INB_DRAW_SHADOW | INB_SHOW_ONLY_TEXT | INB_FIT_LABELTEXT | INB_BOLD_TAB_SELECTION | INB_BORDER | INB_GRADIENT_BACKGROUND
         book: LabelBook = LabelBook(self, ID_ANY, agwStyle=style)
 
         generalPreferences:     GeneralPreferencesPanel  = GeneralPreferencesPanel(parent=self)
@@ -102,10 +103,10 @@ class DlgPyutPreferences(Dialog):
         miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=self)
         backgroundPreferences:  BackgroundPreferences    = BackgroundPreferences(parent=self)
 
-        book.AddPage(generalPreferences,     text=_('General'),       select=True)
+        book.AddPage(generalPreferences,     text=_('General'),       select=False)
         book.AddPage(positioningPreferences, text=_('Positioning'),   select=False)
         book.AddPage(miscPanel,              text=_('Miscellaneous'), select=False)
-        book.AddPage(backgroundPreferences,  text=_('Diagram'),       select=False)
+        book.AddPage(backgroundPreferences,  text=_('Diagram'),       select=True)
 
         self._positioningPreferences: PositioningPreferences = positioningPreferences
         return book
