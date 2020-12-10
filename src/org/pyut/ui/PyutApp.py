@@ -53,8 +53,8 @@ class PyutApp(wxApp):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._showSplash    = showSplash
-        self._showMainFrame = showMainFrame
+        self._showSplash:    bool = showSplash
+        self._showMainFrame: bool = showMainFrame
 
         super().__init__(redirect)
 
@@ -103,7 +103,7 @@ class PyutApp(wxApp):
                 self.logger.error("Exiting due to previous errors")
                 return False
 
-            if self._showMainFrame:
+            if self._showMainFrame is True:
                 self._frame.Show(True)
 
             # Show full screen ?

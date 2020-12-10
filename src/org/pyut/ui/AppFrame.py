@@ -819,14 +819,14 @@ class AppFrame(Frame):
         """
         load the specified filename
         called by PyutApp
-        This is a simple indirection to __loadFile. Not direct call because
-        it seems to be more logical to let loadFile be private.
-        PyutApp do not need to know the correct name of the __loadFile method.
+        This is a simple indirection to _loadFile. Not direct call because
+        it seems to be more logical to let _loadFile be private.
+        PyutApp do not need to know the correct name of the _loadFile method.
 
         """
         self._loadFile(filename)
 
-    def _loadFile(self, filename=""):
+    def _loadFile(self, filename: str = ""):
         """
         Load the specified filename
 
@@ -836,7 +836,8 @@ class AppFrame(Frame):
         # Make a list to be compatible with multi-files loading
         fileNames = [filename]
 
-        # Ask which filename to load ?
+        # Ask which filename to load
+        # TODO This is bad practice to do something different based on input
         if filename == "":
             dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
 

@@ -156,7 +156,7 @@ class Pyut:
         if len(argv) < 2:
             self.cmdLineArgsHandled = False
             return
-        # Treat command line arguments
+        # Process command line arguments
         if argv[1] == "--version":
             self.displayVersionInformation()
             self.cmdLineArgsHandled = True
