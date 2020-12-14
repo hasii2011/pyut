@@ -64,12 +64,12 @@ class PyutPreferences(Singleton):
         self._overrideOnProgramExit: bool         = True
         self._config:                ConfigParser = cast(ConfigParser, None)
 
-        self._createEmptyPreferences()
-
         self._preferencesCommon: PreferencesCommon     = PreferencesCommon(config=self._config)
         self._mainPrefs:         MainPreferences       = MainPreferences(config=self._config)
         self._diagramPrefs:      BackgroundPreferences = BackgroundPreferences(config=self._config)
         self._debugPrefs:        DebugPreferences      = DebugPreferences(config=self._config)
+
+        self._createEmptyPreferences()
 
         self.__loadConfig()
 
@@ -401,4 +401,10 @@ class PyutPreferences(Singleton):
         self._preferencesCommon.saveConfig()
 
     def _createEmptyPreferences(self):
+
         self._config: ConfigParser = ConfigParser()
+
+        self._preferencesCommon.configParser = self._config
+        self._mainPrefs.configParser         = self._config
+        self._diagramPrefs.configParser      = self._config
+        self._debugPrefs.configParser        = self._config

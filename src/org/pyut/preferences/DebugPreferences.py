@@ -1,10 +1,6 @@
 
-from typing import cast
-
 from logging import Logger
 from logging import getLogger
-
-from configparser import ConfigParser
 
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 
@@ -31,7 +27,6 @@ class DebugPreferences(BaseSubPreference):
     def init(self, *args, **kwds):
 
         self.logger:  Logger       = getLogger(__name__)
-        self._config: ConfigParser = cast(ConfigParser, None)
 
         BaseSubPreference.init(self, *args, **kwds)
 

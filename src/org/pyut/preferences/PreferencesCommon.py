@@ -1,12 +1,9 @@
 
 from typing import Dict
-from typing import cast
 
 import sys
 
 import os
-
-from configparser import ConfigParser
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
@@ -20,8 +17,6 @@ class PreferencesCommon(BaseSubPreference):
     preferencesFileLocationAndName: str = None
 
     def init(self, *args, **kwds):
-
-        self._config: ConfigParser = cast(ConfigParser, None)
 
         BaseSubPreference.init(self, *args, **kwds)
 

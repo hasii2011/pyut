@@ -1,11 +1,6 @@
 
-from typing import cast
-
 from logging import Logger
 from logging import getLogger
-
-from configparser import ConfigParser
-
 
 from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
 from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
@@ -40,7 +35,6 @@ class BackgroundPreferences(BaseSubPreference):
     def init(self, *args, **kwds):
 
         self.logger:  Logger       = getLogger(__name__)
-        self._config: ConfigParser = cast(ConfigParser, None)
 
         BaseSubPreference.init(self, *args, **kwds)
 

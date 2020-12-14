@@ -63,6 +63,8 @@ class TestPyutPreferences(TestBase):
 
     def testAutoResizeOptionIsTrue(self):
 
+        self.prefs.init()  # reload default prefs
+
         self.prefs.autoResizeShapesOnEdit = True
 
         autoResize: bool = self.prefs.autoResizeShapesOnEdit
@@ -70,6 +72,8 @@ class TestPyutPreferences(TestBase):
         self.logger.info(f'{autoResize}')
 
     def testAutoResizeOptionIsFalse(self):
+
+        self.prefs.init()  # reload default prefs
 
         self.prefs.autoResizeShapesOnEdit = False
 
@@ -100,11 +104,12 @@ class TestPyutPreferences(TestBase):
 
     def testTwoColorValue(self):
 
-        self.prefs.init()  # reload prefs
+        self._emptyPrefs()
+        self.prefs.init()  # reload default prefs
         expectedColor: str = BackgroundPreferences.DEFAULT_GRID_LINE_COLOR
         actualColor:   str = self.prefs.gridLineColor.value
 
-        self.assertEqual(expectedColor, actualColor, 'Default must have change')
+        self.assertEqual(expectedColor, actualColor, 'Default must have changed')
 
     def _backupPrefs(self):
 
@@ -135,8 +140,8 @@ class TestPyutPreferences(TestBase):
     def _emptyPrefs(self):
 
         self.prefs: PyutPreferences = PyutPreferences()
-        self.prefs.init()       # it is a singleton so init only runs the first time
         self.prefs._createEmptyPreferences()
+        self.prefs._preferencesCommon.saveConfig()
 
 
 def suite() -> TestSuite:
