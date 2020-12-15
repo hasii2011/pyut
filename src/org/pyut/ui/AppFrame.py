@@ -214,6 +214,47 @@ class AppFrame(Frame):
         """
         self._ctrl.updateTitle()
 
+    def loadByFilename(self, filename):
+        """
+        load the specified filename
+        called by PyutApp
+        This is a simple indirection to _loadFile. Not direct call because
+        it seems to be more logical to let _loadFile be private.
+        PyutApp do not need to know the correct name of the _loadFile method.
+
+        """
+        self._loadFile(filename)
+
+    def removeEmptyProject(self):
+
+        self.logger.info(f'Remove the default project')
+
+        mainUI:   MainUI            = self._mainFileHandlingUI
+
+        defaultProject: PyutProject = mainUI.getProject(PyutConstants.DefaultFilename)
+        if defaultProject is not None:
+
+            self.logger.info(f'Removing: {defaultProject}')
+            mainUI.currentProject = defaultProject
+            mainUI.closeCurrentProject()
+
+            projects: List[PyutProject] = mainUI.getProjects()
+            self.logger.info(f'{projects=}')
+
+            firstProject: PyutProject = projects[0]
+            # mainUI.currentProject = firstProject
+            # firstProject.selectSelf()
+            # mainUI.currentFrame = firstProject.getFrames()[0]
+            self.selectProject(project=firstProject)
+
+    def selectProject(self, project: PyutProject):
+
+        mainUI: MainUI = self._mainFileHandlingUI
+
+        mainUI.currentProject = project
+        project.selectSelf()
+        mainUI.currentFrame = project.getFrames()[0]
+
     def Close(self, force=False):
         """
         Closing handler overload. Save files and ask for confirmation.
@@ -814,17 +855,6 @@ class AppFrame(Frame):
         project.setModified(True)
         self._ctrl.updateTitle()
         frame.Refresh()
-
-    def loadByFilename(self, filename):
-        """
-        load the specified filename
-        called by PyutApp
-        This is a simple indirection to _loadFile. Not direct call because
-        it seems to be more logical to let _loadFile be private.
-        PyutApp do not need to know the correct name of the _loadFile method.
-
-        """
-        self._loadFile(filename)
 
     def _loadFile(self, filename: str = ""):
         """

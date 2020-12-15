@@ -100,6 +100,20 @@ class MainUI:
 
             self._initializeUIElements()
 
+    @property
+    def currentProject(self) -> PyutProject:
+        return self._currentProject
+
+    @currentProject.setter
+    def currentProject(self, newProject: PyutProject):
+        self.logger.info(f'{self.__notebook.GetRowCount()=}')
+        self._currentProject = newProject
+
+        self.__notebookCurrentPage = self.__notebook.GetPageCount() - 1
+        self.__notebook.SetSelection(self.__notebookCurrentPage)
+
+        self.logger.info(f'{self.__notebookCurrentPage=}')
+
     def registerUmlFrame(self, frame):
         """
         Register the current UML Frame
@@ -114,6 +128,22 @@ class MainUI:
         self._frame = frame
         frame.Show()
 
+    @property
+    def currentFrame(self) -> UmlDiagramsFrame:
+        return self._currentFrame
+
+    @currentFrame.setter
+    def currentFrame(self, newFrame: UmlDiagramsFrame):
+        self._currentFrame = newFrame
+
+    def getCurrentFrame(self):
+        """
+        Deprecated use the properties
+        Returns:
+            Get the current frame
+        """
+        return self._currentFrame
+
     def getProjects(self):
         """
 
@@ -121,6 +151,16 @@ class MainUI:
             Return all projects
         """
         return self._projects
+
+    def getProject(self, fileName: str):
+
+        foundProject: PyutProject = cast(PyutProject, None)
+        for currentProject in self._projects:
+            if currentProject.getFilename() == fileName:
+                foundProject = currentProject
+                break
+
+        return foundProject
 
     def isProjectLoaded(self, filename) -> bool:
         """
@@ -158,6 +198,7 @@ class MainUI:
         Returns:
             `True` if operation succeeded
         """
+        self.logger.info(f'{filename=} {project=}')
         # Exit if the file is already loaded
         if not self.isDefaultFilename(filename) and self.isProjectLoaded(filename):
             PyutUtils.displayError(_("The selected file is already loaded !"))
@@ -167,7 +208,6 @@ class MainUI:
         if project is None:
             project = PyutProject(PyutConstants.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
 
-        #  print ">>>FileHandling-openFile-3"
         # Load the project and add it
         try:
             if not project.loadFromFilename(filename):
@@ -183,7 +223,7 @@ class MainUI:
         try:
             if not self._mediator.isInScriptMode():
                 for document in project.getDocuments():
-                    diagramTitle: str = document.getTitle()
+                    diagramTitle: str = document.title
                     shortName:    str = self.shortenNotebookPageFileName(diagramTitle)
                     self.__notebook.AddPage(document.getFrame(), shortName)
 
@@ -306,7 +346,7 @@ class MainUI:
             if len(document) > 0:
                 document = document[0]
                 if frame in project.getFrames():
-                    diagramTitle: str = document.getTitle()
+                    diagramTitle: str = document.title
                     shortName:    str = self.shortenNotebookPageFileName(diagramTitle)
 
                     self.__notebook.SetPageText(i, shortName)
@@ -350,14 +390,6 @@ class MainUI:
             self.__notebookCurrentPage  = self.__notebook.GetPageCount() - 1
             self.logger.info(f'Current notebook page: {self.__notebookCurrentPage}')
             self.__notebook.SetSelection(self.__notebookCurrentPage)
-
-    def getCurrentFrame(self):
-        """
-
-        Returns:
-            Get the current frame
-        """
-        return self._currentFrame
 
     def getCurrentProject(self) -> PyutProject:
         """
@@ -485,7 +517,6 @@ class MainUI:
 
         # Remove the frame in the notebook
         if not self._mediator.isInScriptMode():
-            # Python 3 update
             pages = list(range(self.__notebook.GetPageCount()))
             pages.reverse()
             for i in pages:

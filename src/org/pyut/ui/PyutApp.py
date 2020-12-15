@@ -132,8 +132,16 @@ class PyutApp(wxApp):
             loadDirectory: str = prefs.userDirectory
         else:
             loadDirectory: str = prefs.orgDirectory
+
+        loadedAFile: bool     = False
+        appFrame:    AppFrame = self._frame
         for filename in [el for el in argv[1:] if el[0] != '-']:
-            self._frame.loadByFilename(f'{loadDirectory}{osSeparator}{filename}')
+            self.logger.info('Load file on command line')
+            appFrame.loadByFilename(f'{loadDirectory}{osSeparator}{filename}')
+            loadedAFile = True
+
+        if loadedAFile is True:
+            appFrame.removeEmptyProject()
 
     def OnExit(self):
         """

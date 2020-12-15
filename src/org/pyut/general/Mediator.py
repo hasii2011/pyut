@@ -956,12 +956,9 @@ class Mediator(Singleton):
         else:
             return po[0]
 
-    def getFileHandling(self):
+    def getFileHandling(self):  # -> MainUI:
         """
-        Return the FileHandling class
-
-        @return FileHandling instance
-        @author C.Dutoit
+        Returns:  the FileHandling class
         """
         return self._fileHandling
 

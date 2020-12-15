@@ -30,7 +30,8 @@
         },
         "org": {
             "level":     "WARNING",
-            "propagate": "False"
+            "propagate": "False",
+            "handlers":  ["consoleHandler"]
         },
         "org.pyut": {
             "level":     "WARNING",

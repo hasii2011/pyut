@@ -21,22 +21,24 @@ CreatedClassesType = NewType('CreatedClassTypes', Tuple[UmlClassType])
 
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):
+
+    cdfDebugId: int = 0x000FF   # UML Class Diagrams Frame Debug ID
+
     """
     UmlClassDiagramsFrame : a UML class diagram frame.
 
     This class is the instance of one UML class diagram structure.
     It derives its functionality from UmlDiagramsFrame, but
-    as it know the structure of a class diagram,
-    it can load class diagram data.
+    it knows the structure of a class diagram and it can load class diagram data.
     """
     def __init__(self, parent):
         """
-        Constructor.
-
-        @param wx.Window parent : parent window
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
+
+        self._cdfDebugId: int = UmlClassDiagramsFrame.cdfDebugId
+
+        UmlClassDiagramsFrame.cdfDebugId += 1
+
         super().__init__(parent)
         self.newDiagram()
 
@@ -58,7 +60,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         src.addLink(oglLink)
         dst.addLink(oglLink)
 
-        src.getPyutObject().addLink(pyutLink)
+        # noinspection PyUnresolvedReferences
+        src.getPyutObject().addLink(pyutLink)       # TODO fix this
 
         return oglLink
 
@@ -83,8 +86,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         # add it to the PyutClass
         # child.getPyutObject().addParent(parent.getPyutObject())
-        childPyutClass:  PyutClass = child.getPyutObject()
-        parentPyutClass: PyutClass = parent.getPyutObject()
+        childPyutClass:  PyutClass = cast(PyutClass, child.getPyutObject())
+        parentPyutClass: PyutClass = cast(PyutClass, parent.getPyutObject())
 
         childPyutClass.addParent(parentPyutClass)
 
@@ -136,3 +139,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         retData: CreatedClassesType = cast(CreatedClassesType, (pyutClass, oglClass))
         return retData
+
+    def __repr__(self) -> str:
+
+        debugId: str = f'0x{self._cdfDebugId:06X}'
+        return f'UmlClassDiagramsFrame:[{debugId=}]'

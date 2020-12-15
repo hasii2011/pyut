@@ -83,13 +83,13 @@ class PyutDocument:
         fullyQualifiedName: str = f'{self._project.getFilename()}/{self._title}'
         return fullyQualifiedName
 
-    def getTitle(self) -> str:
+    @property
+    def title(self) -> str:
         return self._title
 
-    def setTitle(self, theNewValue: str):
+    @title.setter
+    def title(self, theNewValue: str):
         self._title = theNewValue
-
-    title = property(getTitle, setTitle)
 
     def getFrame(self) -> UmlDiagramsFrame:
         """
@@ -129,4 +129,11 @@ class PyutDocument:
         self._tree.Delete(self._treeRoot)
 
     def __str__(self) -> str:
-        return f'{self.getFullyQualifiedName()}'
+        from os import path as osPath
+
+        fileName:  str = self._project.getFilename()
+        shortName: str = osPath.basename(fileName)
+        return f'[{self.title=} {self._type=} {shortName=}]'
+
+    def __repr__(self):
+        return self.__str__()

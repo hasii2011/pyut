@@ -1,3 +1,7 @@
+
+from logging import Logger
+from logging import getLogger
+
 from typing import List
 from typing import NewType
 from typing import Union
@@ -17,11 +21,14 @@ from wx import Yield as wxYield
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.DiagramType import DiagramType
+from org.pyut.general.Mediator import Mediator
 
 from org.pyut.general.Mediator import getMediator
+
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.PyutDocument import PyutDocument
+
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
@@ -43,7 +50,7 @@ class PyutProject:
             tree:           The tree control
             treeRoot:       Where to root the tree
         """
-
+        self.logger: Logger = getLogger(__name__)
         self._parentFrame   = parentFrame   # Parent frame
         self._ctrl          = getMediator()
 
@@ -56,6 +63,9 @@ class PyutProject:
         self._treeRoot:       TreeItemId = cast(TreeItemId, None)   # Root of the project entry in the tree
         self._tree:           TreeCtrl   = tree                     # Tree I belong to
         self.addToTree()
+
+    def selectSelf(self):
+        self._tree.SelectItem(self._treeRoot)
 
     def setFilename(self, filename):
         """
@@ -149,6 +159,7 @@ class PyutProject:
             `True` if the operation succeeded
         """
         # Load the file
+        self.logger.info(f'loadFromFilename: {filename=}')
         BeginBusyCursor()
         from org.pyut.persistence.IoFile import IoFile  # Avoid Nuitka cyclical dependency
 
@@ -165,16 +176,24 @@ class PyutProject:
             return False
 
         EndBusyCursor()
-        # Update text
         self.updateTreeText()
+        wxYield()
 
-        # Register to mediator
-        # if len(self._documents)>0:
-        # self._ctrl.registerUMLFrame(self._documents[0].getFrame())
-        # print ">>>PyutProject-loadFromFilename-7"
+        from org.pyut.ui.MainUI import MainUI   # avoid cyclical imports
+
         if len(self._documents) > 0:
-            self._ctrl.getFileHandling().showFrame(self._documents[0].getFrame())
-            self._documents[0].getFrame().Refresh()
+            # self._ctrl.getFileHandling().showFrame(self._documents[0].getFrame())
+            # self._documents[0].getFrame().Refresh()
+            # self._ctrl.getFileHandling().showFrame(documentFrame)
+
+            documentFrame: UmlFrameType = self._documents[0].getFrame()
+            mediator:      Mediator     = self._ctrl
+            mainUI:        MainUI       = mediator.getFileHandling()
+
+            self.logger.info(f'{documentFrame=}')
+            documentFrame.Refresh()
+            mainUI.showFrame(documentFrame)
+
             return True
         else:
             return False
@@ -262,6 +281,7 @@ class PyutProject:
         """
         self._tree.SetItemText(self._treeRoot, PyutUtils.getJustTheFileName(self._filename))
         for document in self._documents:
+            self.logger.info(f'updateTreeText: {document=}')
             document.updateTreeText()
 
     def removeDocument(self, document, confirmation=True):
@@ -307,4 +327,4 @@ class PyutProject:
 
     def __repr__(self):
         projectName: str = PyutUtils.extractFileName(self._filename)
-        return f'Project: {projectName} modified: {self._modified}'
+        return f'[Project: {projectName} modified: {self._modified}]'
