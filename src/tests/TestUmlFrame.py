@@ -12,7 +12,7 @@ from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 from org.pyut.ui.UmlFrame import UmlFrame
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
-from org.pyut.ui.MainUI import MainUI
+from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.general import Mediator
 
 
@@ -36,7 +36,7 @@ class TestUmlFrame(unittest.TestCase):
         # Initialize mediator and error manager
         ctrl = Mediator.getMediator()
         ctrl.setScriptMode()
-        fileHandling = MainUI(None, ctrl)
+        fileHandling = TreeNotebookHandler(None, ctrl)
         ctrl.registerFileHandling(fileHandling)
         errorManager = ctrl.getErrorManager()
         errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)

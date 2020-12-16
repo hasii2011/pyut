@@ -65,7 +65,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutUseCase import PyutUseCase
 
-from org.pyut.ui.MainUI import MainUI
+from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.PyutPrintout import PyutPrintout
@@ -160,7 +160,7 @@ class AppFrame(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        self._mainFileHandlingUI: MainUI = MainUI(self, self._ctrl)
+        self._mainFileHandlingUI: TreeNotebookHandler = TreeNotebookHandler(self, self._ctrl)
         self._ctrl.registerFileHandling(self._mainFileHandlingUI)
 
         # Initialization
@@ -229,7 +229,7 @@ class AppFrame(Frame):
 
         self.logger.info(f'Remove the default project')
 
-        mainUI:   MainUI            = self._mainFileHandlingUI
+        mainUI:   TreeNotebookHandler            = self._mainFileHandlingUI
 
         defaultProject: PyutProject = mainUI.getProject(PyutConstants.DefaultFilename)
         if defaultProject is not None:
@@ -249,7 +249,7 @@ class AppFrame(Frame):
 
     def selectProject(self, project: PyutProject):
 
-        mainUI: MainUI = self._mainFileHandlingUI
+        mainUI: TreeNotebookHandler = self._mainFileHandlingUI
 
         mainUI.currentProject = project
         project.selectSelf()

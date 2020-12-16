@@ -179,7 +179,7 @@ class PyutProject:
         self.updateTreeText()
         wxYield()
 
-        from org.pyut.ui.MainUI import MainUI   # avoid cyclical imports
+        from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler   # avoid cyclical imports
 
         if len(self._documents) > 0:
             # self._ctrl.getFileHandling().showFrame(self._documents[0].getFrame())
@@ -188,7 +188,7 @@ class PyutProject:
 
             documentFrame: UmlFrameType = self._documents[0].getFrame()
             mediator:      Mediator     = self._ctrl
-            mainUI:        MainUI       = mediator.getFileHandling()
+            mainUI:        TreeNotebookHandler       = mediator.getFileHandling()
 
             self.logger.info(f'{documentFrame=}')
             documentFrame.Refresh()

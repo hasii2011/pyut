@@ -10,7 +10,7 @@ from unittest import TestSuite
 from unittest.mock import patch
 from unittest.mock import MagicMock
 
-from org.pyut.ui.MainUI import MainUI
+from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from tests.TestBase import TestBase
 
 from org.pyut.general.Mediator import Mediator
@@ -37,7 +37,7 @@ class TestIoFile(TestBase):
         self.mockFrame:    MagicMock = MagicMock()
         self.mockTree:     MagicMock = MagicMock()
         self.mockTreeRoot: MagicMock = MagicMock()
-        self.fileHandling: MainUI    = MagicMock()
+        self.fileHandling: TreeNotebookHandler    = MagicMock()
 
         oldPath: str = getcwd()
         # Assume we are at src/tests
@@ -56,7 +56,7 @@ class TestIoFile(TestBase):
     @patch('wx.Dialog')
     @patch('wx.Gauge')
     @patch('org.pyut.general.Mediator')
-    @patch('org.pyut.ui.MainUI.MainUI')
+    @patch('org.pyut.ui.TreeNotebookHandler.TreeNotebookHandler')
     def testIoFileOpenV8(self, mockFileHandling, mockMediator, wxGauge, wxDialog):
 
         with patch('org.pyut.ui.PyutProject.PyutProject') as mockPyutProject:

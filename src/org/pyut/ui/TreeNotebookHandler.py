@@ -57,7 +57,7 @@ TreeDataType = TypeVar('TreeDataType', PyutProject, UmlDiagramsFrame)
 DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)
 
 
-class MainUI:
+class TreeNotebookHandler:
     """
     The main portion of the User Interface.
     Used by the main application frame (AppFrame) to host all UML frames,
@@ -762,7 +762,7 @@ class MainUI:
             A better file name
         """
         justFileName: str = osPath.split(filename)[1]
-        if len(justFileName) > MainUI.MAX_NOTEBOOK_PAGE_NAME_LENGTH:
+        if len(justFileName) > TreeNotebookHandler.MAX_NOTEBOOK_PAGE_NAME_LENGTH:
             firstFour: str = justFileName[:4]
             lastEight: str = justFileName[-8:]
             return f'{firstFour}{lastEight}'

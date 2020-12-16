@@ -956,7 +956,7 @@ class Mediator(Singleton):
         else:
             return po[0]
 
-    def getFileHandling(self):  # -> MainUI:
+    def getFileHandling(self):  # -> TreeNotebookHandler:
         """
         Returns:  the FileHandling class
         """
