@@ -35,7 +35,7 @@ from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
 from org.pyut.general.Globals import _
 
-from org.pyut.ui.frame.AppFrame import AppFrame
+from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
 from org.pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 
@@ -76,7 +76,7 @@ class PyutApp(wxApp):
                 self.splash.Show(True)
                 wxYield()
 
-            self._frame: AppFrame = AppFrame(cast(AppFrame, None), ID_ANY, "Pyut")
+            self._frame: PyutApplicationFrame = PyutApplicationFrame(cast(PyutApplicationFrame, None), ID_ANY, "Pyut")
             self.SetTopWindow(self._frame)
             self._AfterSplash()
 
@@ -134,7 +134,7 @@ class PyutApp(wxApp):
             loadDirectory: str = prefs.orgDirectory
 
         loadedAFile: bool     = False
-        appFrame:    AppFrame = self._frame
+        appFrame:    PyutApplicationFrame = self._frame
         for filename in [el for el in argv[1:] if el[0] != '-']:
             self.logger.info('Load file on command line')
             appFrame.loadByFilename(f'{loadDirectory}{osSeparator}{filename}')

@@ -60,14 +60,14 @@ DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)
 class TreeNotebookHandler:
     """
     The main portion of the User Interface.
-    Used by the main application frame (AppFrame) to host all UML frames,
+    Used by the main application frame (PyutApplicationFrame) to host all UML frames,
     the notebook and the project tree.
 
     Handles the the project files, projects, documents and
     their relationship to the various UI Tree elements and the
     notebook tabs in the UI
 
-    All actions called from AppFrame are executed on the current frame
+    All actions called from PyutApplicationFrame are executed on the current frame
     """
     MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12
 
@@ -75,13 +75,13 @@ class TreeNotebookHandler:
         """
 
         Args:
-            parent:     An AppFrame
+            parent:     An PyutApplicationFrame
         """
         self.logger: Logger = getLogger(__name__)
 
-        from org.pyut.ui.frame.AppFrame import AppFrame   # Prevent recursion import problem
+        from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame   # Prevent recursion import problem
         from org.pyut.general.Mediator import Mediator
-        self.__parent:  AppFrame = parent
+        self.__parent:  PyutApplicationFrame = parent
         self._mediator: Mediator = Mediator()
 
         self._projects:       List[PyutProject] = []

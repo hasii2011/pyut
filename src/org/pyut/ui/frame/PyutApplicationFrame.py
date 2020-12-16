@@ -91,13 +91,13 @@ from org.pyut.general.Globals import _
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 
-class AppFrame(Frame):
+class PyutApplicationFrame(Frame):
     """
-    AppFrame : main pyut frame; contain menus, status bar, UML frame, ...
+    PyutApplicationFrame : main pyut frame; contain menus, status bar, UML frame, ...
 
     Instantiated by PyutApp.py
     Use it as a normal Frame
-        dlg=AppFrame(self, wx.ID_ANY, "Pyut")
+        dlg=PyutApplicationFrame(self, wx.ID_ANY, "Pyut")
         dlg.Show()
         dlg.Destroy()
     """
@@ -797,7 +797,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        PyutUtils.displayInformation(f"Please point your browser to {AppFrame.PYUT_WIKI}", "Pyut's new wiki", self)
+        PyutUtils.displayInformation(f"Please point your browser to {PyutApplicationFrame.PYUT_WIKI}", "Pyut's new wiki", self)
 
     # noinspection PyUnusedLocal
     def _OnMnuAddPyut(self, event: CommandEvent):
