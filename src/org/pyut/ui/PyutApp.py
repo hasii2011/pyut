@@ -35,7 +35,7 @@ from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
 from org.pyut.general.Globals import _
 
-from org.pyut.ui.AppFrame import AppFrame
+from org.pyut.ui.frame.AppFrame import AppFrame
 
 from org.pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 

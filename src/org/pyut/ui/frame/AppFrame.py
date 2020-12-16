@@ -96,7 +96,7 @@ class AppFrame(Frame):
     AppFrame : main pyut frame; contain menus, status bar, UML frame, ...
 
     Instantiated by PyutApp.py
-    Use it as a normal Frame ::
+    Use it as a normal Frame
         dlg=AppFrame(self, wx.ID_ANY, "Pyut")
         dlg.Show()
         dlg.Destroy()
