@@ -243,7 +243,7 @@ class Mediator(Singleton):
 
         self.registerClassEditor(self.standardClassEditor)
         self._toolboxOwner = None   # toolbox owner, created when application frame is passed
-        self._fileHandling = None   # File Handler
+        self._treeNotebookHandler = None   # File Handler
         # self.registerClassEditor(self.fastTextClassEditor)
         # Patch from D.Dabrowsky, 20060129
         self._modifyCommand = None  # command for undo/redo a modification on a shape.
@@ -292,11 +292,17 @@ class Mediator(Singleton):
         if self._appFrame is not None:
             self._appFrame.notifyTitleChanged()
 
-    def registerFileHandling(self, mainUI):
+    def registerFileHandling(self, treeNotebookHandler):
         """
         Register the main part of the user interface
         """
-        self._fileHandling = mainUI
+        self._treeNotebookHandler = treeNotebookHandler
+
+    def getFileHandling(self):  # -> TreeNotebookHandler:
+        """
+        Returns:  the FileHandling class
+        """
+        return self._treeNotebookHandler
 
     def registerAppPath(self, path: str):
         """
@@ -391,7 +397,7 @@ class Mediator(Singleton):
         Args:
             thePyutClass:  the class to edit (data model)
         """
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         dlg = DlgEditClass(umlFrame, ID_ANY, thePyutClass)
@@ -426,7 +432,7 @@ class Mediator(Singleton):
             y: y coord where the action must take place
         """
         self.logger.debug(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         self.resetStatusText()
@@ -526,7 +532,7 @@ class Mediator(Singleton):
         Do action when a shape is selected.
         TODO : support each link type
         """
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
 
@@ -611,7 +617,7 @@ class Mediator(Singleton):
         """
         Edit the object at x, y.
         """
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         #
@@ -684,9 +690,9 @@ class Mediator(Singleton):
         @since 1.12
         @author L. Burgbacher <lb@alawa.ch>
         """
-        if self._fileHandling is None:
+        if self._treeNotebookHandler is None:
             return []
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is not None:
             return umlFrame.getUmlObjects()
         else:
@@ -736,7 +742,7 @@ class Mediator(Singleton):
         @return uml diagram if present, None otherwise
         @author L. Burgbacher <lb@alawa.ch>
         """
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return None
         return umlFrame.getDiagram()
@@ -749,7 +755,7 @@ class Mediator(Singleton):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        return self._fileHandling.getCurrentFrame()
+        return self._treeNotebookHandler.getCurrentFrame()
 
     def deselectAllShapes(self):
         """
@@ -827,7 +833,7 @@ class Mediator(Singleton):
         from org.pyut.ogl.OglLink import OglLink
         from org.pyut.commands.CommandGroup import CommandGroup
 
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         selected     = umlFrame.GetSelectedShapes()
@@ -862,7 +868,7 @@ class Mediator(Singleton):
             umlFrame.getHistory().execute()
 
     def insertSelectedShape(self):
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         selected = umlFrame.GetSelectedShapes()
@@ -885,7 +891,7 @@ class Mediator(Singleton):
 
     def toggleSpline(self):
 
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         selected = umlFrame.GetSelectedShapes()
@@ -902,7 +908,7 @@ class Mediator(Singleton):
         @since 1.27.2.28
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToFront)
@@ -914,7 +920,7 @@ class Mediator(Singleton):
         @since 1.27.2.28
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToBack)
@@ -956,12 +962,6 @@ class Mediator(Singleton):
         else:
             return po[0]
 
-    def getFileHandling(self):  # -> TreeNotebookHandler:
-        """
-        Returns:  the FileHandling class
-        """
-        return self._fileHandling
-
     def updateTitle(self):
         """
         Set the application title, function of version and current filename
@@ -974,7 +974,7 @@ class Mediator(Singleton):
             return
 
         # Get filename
-        project = self._fileHandling.getCurrentProject()
+        project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
             filename = project.getFilename()
         else:
@@ -983,8 +983,8 @@ class Mediator(Singleton):
         # Set text
         txt = "PyUt v" + __PyUtVersion__ + " - " + filename
         if (project is not None) and (project.getModified()):
-            if self._fileHandling.getCurrentFrame() is not None:
-                zoom = self._fileHandling.getCurrentFrame().GetCurrentZoom()
+            if self._treeNotebookHandler.getCurrentFrame() is not None:
+                zoom = self._treeNotebookHandler.getCurrentFrame().GetCurrentZoom()
             else:
                 zoom = 1
 
@@ -1056,7 +1056,7 @@ class Mediator(Singleton):
         Args:
             selected: If `True` select all shapes else deselect them
         """
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is not None:
             shapes = umlFrame.GetDiagram().GetShapes()
             for shape in shapes:
@@ -1071,7 +1071,7 @@ class Mediator(Singleton):
         @author C.Dutoit <dutoitc@hotmail.com>
         """
         from org.pyut.ogl import OglObject
-        umlFrame = self._fileHandling.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         selected = umlFrame.GetSelectedShapes()

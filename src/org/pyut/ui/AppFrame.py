@@ -85,7 +85,8 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
+
 from org.pyut.general.Globals import _
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
@@ -117,14 +118,50 @@ class AppFrame(Frame):
         super().__init__(parent=parent, id=wxID, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
         self.logger: Logger = getLogger(__name__)
-        # Create the application's icon
-        if sysPlatform != PyutConstants.THE_GREAT_MAC_PLATFORM:
+        self._createApplicationIcon()
 
-            fileName: str  = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
-            icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
-            self.SetIcon(icon)
+        # Properties
+        from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
 
-        self.SetThemeEnabled(True)
+        self.plugMgr:     PluginManager         = PluginManager()
+        self.plugins:     SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})     # To store the plugins
+        self.mnuFile:     Menu                  = cast(Menu, None)
+
+        self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
+
+        self._clipboard = []
+        self._currentDirectory = getcwd()
+        self._lastDir = self._prefs.lastOpenedDirectory
+
+        if self._lastDir is None:  # Assert that the path is present
+            self._lastDir = getcwd()
+
+        self.CreateStatusBar()
+
+        self._treeNotebookHandler: TreeNotebookHandler = TreeNotebookHandler(self)
+
+        self._mediator: Mediator = Mediator()
+        self._mediator.registerStatusBar(self.GetStatusBar())
+        self._mediator.resetStatusText()
+        self._mediator.registerAppFrame(self)
+        self._mediator.registerFileHandling(self._treeNotebookHandler)
+        self._mediator.registerAppPath(self._currentDirectory)
+
+        # Last opened Files IDs
+        self.lastOpenedFilesID = []
+        for index in range(self._prefs.getNbLOF()):
+            self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
+
+        # Initialization
+        self._initPyutTools()   # Toolboxes, toolbar
+        self._initMenu()        # Menu
+        self._initPrinting()    # Printing data
+
+        self.__setupKeyboardShortcuts()
+
+        # set application title
+        self._treeNotebookHandler.newProject()
+        self._mediator.updateTitle()
 
         if self._prefs.centerAppOnStartUp is True:
             self.Center(BOTH)  # Center on the screen
@@ -132,55 +169,10 @@ class AppFrame(Frame):
             appPosition: Tuple[int, int] = self._prefs.appStartupPosition
             self.SetPosition(pt=appPosition)
 
-        self.CreateStatusBar()
-
-        # Properties
-        from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
-
-        self.plugMgr:     PluginManager            = PluginManager()
-        self.plugins:     SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
-        self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
-        self.mnuFile:     Menu            = cast(Menu, None)
-
-        self._clipboard = []
-        self._currentDirectory = getcwd()
-
-        self._lastDir = self._prefs.lastOpenedDirectory
-
-        if self._lastDir is None:  # Assert that the path is present
-            self._lastDir = getcwd()
-
-        self._ctrl = getMediator()
-        self._ctrl.registerStatusBar(self.GetStatusBar())
-        self._ctrl.resetStatusText()
-        self._ctrl.registerAppFrame(self)
-
-        # Last opened Files IDs
-        self.lastOpenedFilesID = []
-        for index in range(self._prefs.getNbLOF()):
-            self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
-
-        self._mainFileHandlingUI: TreeNotebookHandler = TreeNotebookHandler(self, self._ctrl)
-        self._ctrl.registerFileHandling(self._mainFileHandlingUI)
-
-        # Initialization
-        self._initPyutTools()   # Toolboxes, toolbar
-        self._initMenu()        # Menu
-        self._initPrinting()    # Printing data
-
-        # Accelerators init. (=Keyboards shortcuts)
-        acc = self._createAcceleratorTable()
-        accel_table = AcceleratorTable(acc)
-        self.SetAcceleratorTable(accel_table)
-
-        self._ctrl.registerAppPath(self._currentDirectory)
-
-        # set application title
-        self._mainFileHandlingUI.newProject()
-        self._ctrl.updateTitle()
-
-        # Init tips frame
+        # Initialize the tips frame
         self._alreadyDisplayedTipsFrame = False
+        self.SetThemeEnabled(True)
+
         self.Bind(EVT_ACTIVATE, self._onActivate)
 
     def updateCurrentDir(self, fullPath: str):
@@ -212,7 +204,7 @@ class AppFrame(Frame):
         @since 1.50
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        self._ctrl.updateTitle()
+        self._mediator.updateTitle()
 
     def loadByFilename(self, filename):
         """
@@ -229,7 +221,7 @@ class AppFrame(Frame):
 
         self.logger.info(f'Remove the default project')
 
-        mainUI:   TreeNotebookHandler            = self._mainFileHandlingUI
+        mainUI:   TreeNotebookHandler            = self._treeNotebookHandler
 
         defaultProject: PyutProject = mainUI.getProject(PyutConstants.DefaultFilename)
         if defaultProject is not None:
@@ -249,7 +241,7 @@ class AppFrame(Frame):
 
     def selectProject(self, project: PyutProject):
 
-        mainUI: TreeNotebookHandler = self._mainFileHandlingUI
+        mainUI: TreeNotebookHandler = self._treeNotebookHandler
 
         mainUI.currentProject = project
         project.selectSelf()
@@ -267,7 +259,7 @@ class AppFrame(Frame):
         """
 
         # Close all files
-        if self._mainFileHandlingUI.onClose() is False:
+        if self._treeNotebookHandler.onClose() is False:
             return
         if self._prefs.overrideOnProgramExit is True:
             # Only save position if we are not auto-saving
@@ -280,8 +272,8 @@ class AppFrame(Frame):
             self._prefs.startupHeight = ourSize[1]
 
         self._clipboard    = None
-        self._mainFileHandlingUI = None
-        self._ctrl         = None
+        self._treeNotebookHandler = None
+        self._mediator         = None
         self._prefs        = None
         self.plugMgr       = None
 
@@ -290,12 +282,12 @@ class AppFrame(Frame):
         self.Destroy()
 
     def OnImport(self, event):
-        self._mainFileHandlingUI.newProject()
-        self._mainFileHandlingUI.newDocument(DiagramType.CLASS_DIAGRAM)
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.newProject()
+        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
+        self._mediator.updateTitle()
         cl = self.plugins[event.GetId()]
 
-        obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
+        obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
 
         # Do plugin functionality
         BeginBusyCursor()
@@ -318,8 +310,8 @@ class AppFrame(Frame):
         """
         # Create a plugin instance
         cl = self.plugins[event.GetId()]
-        umlObjects: List[OglClass]      = self._ctrl.getUmlObjects()
-        umlFrame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
+        umlObjects: List[OglClass]      = self._mediator.getUmlObjects()
+        umlFrame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
         obj = cl(umlObjects, umlFrame)
         # Do plugin functionality
         # BeginBusyCursor()
@@ -334,7 +326,7 @@ class AppFrame(Frame):
         """
         # Create a plugin instance
         cl = self.plugins[event.GetId()]
-        obj = cl(self._ctrl.getUmlObjects(), self._ctrl.getUmlFrame())
+        obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
 
         # Do plugin functionality
         BeginBusyCursor()
@@ -347,18 +339,18 @@ class AppFrame(Frame):
         EndBusyCursor()
 
         # Refresh screen
-        umlFrame = self._ctrl.getUmlFrame()
+        umlFrame = self._mediator.getUmlFrame()
         if umlFrame is not None:
             umlFrame.Refresh()
 
     def OnToolboxMenuClick(self, event):
-        self._ctrl.displayToolbox(self._toolboxIds[event.GetId()])
+        self._mediator.displayToolbox(self._toolboxIds[event.GetId()])
 
     def cutSelectedShapes(self):
         """
         Cut all current shapes
         """
-        selected = self._ctrl.getSelectedShapes()
+        selected = self._mediator.getSelectedShapes()
         if len(selected) > 0:
             self._clipboard = []
         else:
@@ -369,22 +361,22 @@ class AppFrame(Frame):
         # specify the canvas on which we will paint
         # dc = wxClientDC(canvas)
         # canvas.PrepareDC(dc)
-        # diagram = self._ctrl.getDiagram()
+        # diagram = self._mediator.getDiagram()
 
         # put the PyutObjects in the clipboard and remove them from the diagram
         for obj in selected:
             # remove the links
             # for each link
             # for link in obj.getLinks()[:]:
-            # self._ctrl.removeLink(link)
+            # self._mediator.removeLink(link)
             obj.Detach()
 
         for obj in selected:
             self._clipboard.append(obj.getPyutObject())
-            # self._ctrl.removeClass(obj)
+            # self._mediator.removeClass(obj)
 
-        self._mainFileHandlingUI.setModified(True)
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.setModified(True)
+        self._mediator.updateTitle()
         canvas.Refresh()
 
     def _onActivate(self, event):
@@ -519,8 +511,8 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._mainFileHandlingUI.newProject()
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.newProject()
+        self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileNewClassDiagram(self, event: CommandEvent):
@@ -530,8 +522,8 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._mainFileHandlingUI.newDocument(DiagramType.CLASS_DIAGRAM)
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
+        self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileNewSequenceDiagram(self, event: CommandEvent):
@@ -541,8 +533,8 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._mainFileHandlingUI.newDocument(DiagramType.SEQUENCE_DIAGRAM)
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.newDocument(DiagramType.SEQUENCE_DIAGRAM)
+        self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileNewUsecaseDiagram(self, event: CommandEvent):
@@ -552,8 +544,8 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._mainFileHandlingUI.newDocument(DiagramType.USECASE_DIAGRAM)
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.newDocument(DiagramType.USECASE_DIAGRAM)
+        self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileInsertProject(self, event: CommandEvent):
@@ -568,7 +560,7 @@ class AppFrame(Frame):
                                    "You risk a shapes ID duplicate with "
                                    "unexpected results !"), parent=self)
 
-        if (self._mainFileHandlingUI.getCurrentProject()) is None:
+        if (self._treeNotebookHandler.getCurrentProject()) is None:
             PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
             return
 
@@ -585,7 +577,7 @@ class AppFrame(Frame):
 
         # Insert the specified files
         try:
-            self._mainFileHandlingUI.insertFile(filename)
+            self._treeNotebookHandler.insertFile(filename)
         except (ValueError, Exception) as e:
             PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
 
@@ -627,7 +619,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._mainFileHandlingUI.closeCurrentProject()
+        self._treeNotebookHandler.closeCurrentProject()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileRemoveDocument(self, event: CommandEvent):
@@ -637,8 +629,8 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        project  = self._mainFileHandlingUI.getCurrentProject()
-        document = self._mainFileHandlingUI.getCurrentDocument()
+        project  = self._treeNotebookHandler.getCurrentProject()
+        document = self._treeNotebookHandler.getCurrentDocument()
         if project is not None and document is not None:
             project.removeDocument(document)
         else:
@@ -668,8 +660,8 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        self._ctrl.deselectAllShapes()
-        frame = self._ctrl.getUmlFrame()
+        self._mediator.deselectAllShapes()
+        frame = self._mediator.getUmlFrame()
         if frame == -1:
             PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
             return
@@ -699,17 +691,17 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        if self._ctrl.getDiagram() is None:
+        if self._mediator.getDiagram() is None:
             PyutUtils.displayError(_("No diagram to print !"), _("Error"), self)
             return
-        self._ctrl.deselectAllShapes()
+        self._mediator.deselectAllShapes()
         printDialogData: PrintDialogData = PrintDialogData()
 
         printDialogData.SetPrintData(self._printData)
         printDialogData.SetMinPage(1)
         printDialogData.SetMaxPage(1)
         printer  = Printer(printDialogData)
-        printout = PyutPrintout(self._ctrl.getUmlFrame())
+        printout = PyutPrintout(self._mediator.getUmlFrame())
 
         if not printer.Print(self, printout, True):
             PyutUtils.displayError(_("Cannot print"), _("Error"), self)
@@ -815,7 +807,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        frame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
+        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
         if self._isDiagramFromOpen(frame) is True:
             frame.addPyutHierarchy()
             self._refreshUI(frame)
@@ -828,7 +820,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        frame: UmlClassDiagramsFrame = self._ctrl.getUmlFrame()
+        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
         if self._isDiagramFromOpen(frame) is True:
             frame.addOglHierarchy()
             self._refreshUI(frame)
@@ -851,9 +843,9 @@ class AppFrame(Frame):
 
     def _refreshUI(self, frame: UmlClassDiagramsFrame):
 
-        project: PyutProject = self._mainFileHandlingUI.getCurrentProject()
+        project: PyutProject = self._treeNotebookHandler.getCurrentProject()
         project.setModified(True)
-        self._ctrl.updateTitle()
+        self._mediator.updateTitle()
         frame.Refresh()
 
     def _loadFile(self, filename: str = ""):
@@ -884,11 +876,11 @@ class AppFrame(Frame):
         # Open the specified files
         for filename in fileNames:
             try:
-                if self._mainFileHandlingUI.openFile(filename):
+                if self._treeNotebookHandler.openFile(filename):
                     # Add to last opened files list
                     self._prefs.addNewLastOpenedFilesEntry(filename)
                     self.__setLastOpenedFilesItems()
-                    self._ctrl.updateTitle()
+                    self._mediator.updateTitle()
             except (ValueError, Exception) as e:
                 PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
                 self.logger.error(f'{e}')
@@ -897,11 +889,11 @@ class AppFrame(Frame):
         """
         Save to the current filename
         """
-        self._mainFileHandlingUI.saveFile()
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.saveFile()
+        self._mediator.updateTitle()
 
         # Add to last opened files list
-        project = self._mainFileHandlingUI.getCurrentProject()
+        project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
             self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
             self.__setLastOpenedFilesItems()
@@ -910,10 +902,10 @@ class AppFrame(Frame):
         """
         Save to the current filename; Ask for the name
         """
-        self._mainFileHandlingUI.saveFileAs()
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.saveFileAs()
+        self._mediator.updateTitle()
 
-        project = self._mainFileHandlingUI.getCurrentProject()
+        project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
             self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
             self.__setLastOpenedFilesItems()
@@ -927,10 +919,10 @@ class AppFrame(Frame):
         """
         currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
 
-        self._ctrl.setCurrentAction(currentAction)
-        self._ctrl.selectTool(event.GetId())
-        self._mainFileHandlingUI.setModified(True)
-        self._ctrl.updateTitle()
+        self._mediator.setCurrentAction(currentAction)
+        self._mediator.selectTool(event.GetId())
+        self._treeNotebookHandler.setModified(True)
+        self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
     def _OnMnuEditCut(self, event: CommandEvent):
@@ -949,7 +941,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        selected = self._ctrl.getSelectedShapes()
+        selected = self._mediator.getSelectedShapes()
         if len(selected) > 0:
             self._clipboard = []
         else:
@@ -972,7 +964,7 @@ class AppFrame(Frame):
         if len(self._clipboard) == 0:
             return
 
-        frame = self._ctrl.getUmlFrame()
+        frame = self._mediator.getUmlFrame()
         if frame == -1:
             PyutUtils.displayError(_("No frame to paste into"))
             return
@@ -992,7 +984,7 @@ class AppFrame(Frame):
             else:
                 self.logger.error("Error when try to paste object")
                 return
-            self._ctrl.getUmlFrame().addShape(po, x, y)
+            self._mediator.getUmlFrame().addShape(po, x, y)
             x += 20
             y += 20
 
@@ -1002,8 +994,8 @@ class AppFrame(Frame):
         dc = ClientDC(canvas)
         canvas.PrepareDC(dc)
 
-        self._mainFileHandlingUI.setModified(True)
-        self._ctrl.updateTitle()
+        self._treeNotebookHandler.setModified(True)
+        self._mediator.updateTitle()
         canvas.Refresh()
         # TODO : What are you doing with the dc ?
 
@@ -1014,7 +1006,7 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        frame = self._ctrl.getUmlFrame()
+        frame = self._mediator.getUmlFrame()
         if frame is None:
             PyutUtils.displayError(_("No frame found !"))
             return
@@ -1039,7 +1031,7 @@ class AppFrame(Frame):
             else:
                 self.logger.debug(f'Cancelled')
 
-        umlFrame = self._ctrl.getUmlFrame()
+        umlFrame = self._mediator.getUmlFrame()
         if umlFrame is not None:
             umlFrame.Refresh()
 
@@ -1062,10 +1054,10 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        if (self._mainFileHandlingUI.getCurrentFrame()) is None:
+        if (self._treeNotebookHandler.getCurrentFrame()) is None:
             PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
             return
-        self._mainFileHandlingUI.getCurrentFrame().getHistory().undo()
+        self._treeNotebookHandler.getCurrentFrame().getHistory().undo()
 
     # noinspection PyUnusedLocal
     def _OnMnuRedo(self, event: CommandEvent):
@@ -1074,10 +1066,10 @@ class AppFrame(Frame):
         Args:
             event:
         """
-        if (self._mainFileHandlingUI.getCurrentFrame()) is None:
+        if (self._treeNotebookHandler.getCurrentFrame()) is None:
             PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
             return
-        self._mainFileHandlingUI.getCurrentFrame().getHistory().redo()
+        self._treeNotebookHandler.getCurrentFrame().getHistory().redo()
 
     def _initPrinting(self):
         """
@@ -1089,6 +1081,21 @@ class AppFrame(Frame):
         self._printData.SetOrientation(PORTRAIT)
         self._printData.SetNoCopies(1)
         self._printData.SetCollate(True)
+
+    def _createApplicationIcon(self):
+
+        if sysPlatform != PyutConstants.THE_GREAT_MAC_PLATFORM:
+            fileName: str = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
+            icon: Icon = Icon(fileName, BITMAP_TYPE_ICO)
+            self.SetIcon(icon)
+
+    def __setupKeyboardShortcuts(self):
+        """
+        Accelerators init. (=Keyboards shortcuts)
+        """
+        acc = self._createAcceleratorTable()
+        accel_table = AcceleratorTable(acc)
+        self.SetAcceleratorTable(accel_table)
 
     def __setLastOpenedFilesItems(self):
         """

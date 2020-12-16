@@ -71,19 +71,18 @@ class TreeNotebookHandler:
     """
     MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12
 
-    def __init__(self, parent, mediator):
+    def __init__(self, parent):
         """
 
         Args:
             parent:     An AppFrame
-            mediator:   Our one and only mediator
         """
         self.logger: Logger = getLogger(__name__)
 
         from org.pyut.ui.AppFrame import AppFrame   # Prevent recursion import problem
         from org.pyut.general.Mediator import Mediator
         self.__parent:  AppFrame = parent
-        self._mediator: Mediator = mediator
+        self._mediator: Mediator = Mediator()
 
         self._projects:       List[PyutProject] = []
         self._currentProject: PyutProject       = cast(PyutProject, None)
