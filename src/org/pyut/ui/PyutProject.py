@@ -21,9 +21,8 @@ from wx import Yield as wxYield
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.DiagramType import DiagramType
-from org.pyut.general.Mediator import Mediator
 
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
 
 from org.pyut.general.Globals import _
 
@@ -50,9 +49,9 @@ class PyutProject:
             tree:           The tree control
             treeRoot:       Where to root the tree
         """
-        self.logger: Logger = getLogger(__name__)
-        self._parentFrame   = parentFrame   # Parent frame
-        self._ctrl          = getMediator()
+        self.logger:       Logger   = getLogger(__name__)
+        self._parentFrame: Notebook = parentFrame   # Parent frame
+        self._mediator:    Mediator = Mediator()
 
         self._documents: List[PyutDocument] = []            # List of documents
 
@@ -182,12 +181,12 @@ class PyutProject:
         from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler   # avoid cyclical imports
 
         if len(self._documents) > 0:
-            # self._ctrl.getFileHandling().showFrame(self._documents[0].getFrame())
+            # self._mediator.getFileHandling().showFrame(self._documents[0].getFrame())
             # self._documents[0].getFrame().Refresh()
-            # self._ctrl.getFileHandling().showFrame(documentFrame)
+            # self._mediator.getFileHandling().showFrame(documentFrame)
 
             documentFrame: UmlFrameType = self._documents[0].getFrame()
-            mediator:      Mediator     = self._ctrl
+            mediator:      Mediator     = self._mediator
             mainUI:        TreeNotebookHandler       = mediator.getFileHandling()
 
             self.logger.info(f'{documentFrame=}')
@@ -228,7 +227,7 @@ class PyutProject:
         # Register to mediator
         if len(self._documents) > 0:
             frame = self._documents[0].getFrame()
-            self._ctrl.getFileHandling().registerUmlFrame(frame)
+            self._mediator.getFileHandling().registerUmlFrame(frame)
 
         # Return
         return True
@@ -247,7 +246,7 @@ class PyutProject:
         self._documents.append(document)
         document.addToTree(self._tree, self._treeRoot)
         frame = document.getFrame()
-        self._ctrl.getFileHandling().registerUmlFrame(frame)
+        self._mediator.getFileHandling().registerUmlFrame(frame)
         return document
 
     def getFrames(self) -> List[UmlFrameType]:
@@ -297,12 +296,12 @@ class PyutProject:
         frame = document.getFrame()
 
         # Confirmation
-        # self._ctrl.registerUMLFrame(frame)
+        # self._mediator.registerUMLFrame(frame)
         if confirmation:
-            self._ctrl.getFileHandling().showFrame(frame)
+            self._mediator.getFileHandling().showFrame(frame)
 
             # dlg = MessageDialog(self._parentFrame, _("Are you sure to remove the document ?"),
-            dlg = MessageDialog(self._ctrl.getUmlFrame(), _("Are you sure to remove the document ?"),
+            dlg = MessageDialog(self._mediator.getUmlFrame(), _("Are you sure to remove the document ?"),
                                 _("Remove a document from a project"), YES_NO)
             if dlg.ShowModal() == ID_NO:
                 dlg.Destroy()
@@ -310,16 +309,10 @@ class PyutProject:
             dlg.Destroy()
 
         # Remove references
-        from org.pyut.general import Mediator
-        ctrl = Mediator.getMediator()
-        fileHandling = ctrl.getFileHandling()
+
+        fileHandling = self._mediator.getFileHandling()
         fileHandling.removeAllReferencesToUmlFrame(frame)
 
-        # Remove frame
-        # frame.Close()  # DONE by fileHandling.removeAllRef...
-        # self._ctrl.registerUMLFrame(None)
-
-        # Remove from tree
         document.removeFromTree()
 
         # Remove document from documents list

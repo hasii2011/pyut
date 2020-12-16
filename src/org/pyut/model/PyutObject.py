@@ -39,11 +39,11 @@ class PyutObject:
         Returns:
             `True` if `idToCheck` is in use, else `False`
         """
-        from org.pyut.general import Mediator
-        ctrl = Mediator.getMediator()
+        from org.pyut.general.Mediator import Mediator
+        mediator: Mediator = Mediator()
         #
         # TODO:  This seems compute heavy;  I wonder if we should have a lookup map
-        for obj in [el for el in ctrl.getUmlObjects() if isinstance(el, PyutObject)]:
+        for obj in [el for el in mediator.getUmlObjects() if isinstance(el, PyutObject)]:
             if obj.getId() == idToCheck:
                 return True
         return False

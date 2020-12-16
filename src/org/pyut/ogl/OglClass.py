@@ -385,7 +385,7 @@ class OglClass(OglObject):
         Args:
             event:
         """
-        from org.pyut.general.Mediator import getMediator   # avoid circular import
+        from org.pyut.general.Mediator import Mediator   # avoid circular import
 
         pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
         eventId:    int       = event.GetId()
@@ -401,12 +401,12 @@ class OglClass(OglObject):
         elif eventId == MENU_FIT_FIELDS:
             self.autoResize()
         elif eventId == MENU_CUT_SHAPE:
-            ctrl = getMediator()
+            ctrl: Mediator = Mediator()
             ctrl.deselectAllShapes()
             self.SetSelected(True)
             ctrl.cutSelectedShapes()
         elif eventId == MENU_IMPLEMENT_INTERFACE:
-            ctrl = getMediator()
+            ctrl: Mediator = Mediator()
             ctrl.requestLollipopLocation(self)
         else:
             event.Skip()

@@ -8,7 +8,7 @@ from wx import EVT_CLOSE
 from wx import EVT_PAINT
 from wx import EndBusyCursor
 from wx import MouseEvent
-from wx import Window
+from wx import Notebook
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglObject import OglObject
@@ -20,7 +20,7 @@ from org.pyut.miniogl.Constants import SKIP_EVENT
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
 from org.pyut.general.Mediator import ACTION_ZOOM_IN
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -48,7 +48,7 @@ class UmlFrame(UmlFrameShapeHandler):
     PIXELS_PER_UNIT_X: int = 20
     PIXELS_PER_UNIT_Y: int = 20
 
-    def __init__(self, parent: Window, frame):
+    def __init__(self, parent: Notebook, frame):
         """
 
         Args:
@@ -59,7 +59,8 @@ class UmlFrame(UmlFrameShapeHandler):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._ctrl = getMediator()
+        self._ctrl: Mediator = Mediator()
+
         self.maxWidth  = DEFAULT_WIDTH
         self.maxHeight = int(self.maxWidth / A4_FACTOR)  # 1.41 is for A4 support
 
@@ -70,7 +71,7 @@ class UmlFrame(UmlFrameShapeHandler):
         self.SetScrollbars(UmlFrame.PIXELS_PER_UNIT_X, UmlFrame.PIXELS_PER_UNIT_Y, nbrUnitsX, nbrUnitsY, initPosX, initPosY, False)
 
         self._frame = frame
-        self._history = HistoryManager(self)
+        self._history: HistoryManager = HistoryManager(self)
 
         # Close event
         self.Bind(EVT_CLOSE, self.evtClose)

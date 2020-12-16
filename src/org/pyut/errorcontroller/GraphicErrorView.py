@@ -20,14 +20,15 @@ class GraphicErrorView(AbstractErrorView):
     wx message dialogs.
 
     To use it, use the mediator methods :
-     - mediator = Mediator.getMediator()
-     -
-     - errorManager = mediator.getErrorManager()
-     - errorManager.changeType(ErrorViewTypes.GRAPHIC_ERROR_VIEW)
-     - errorManager.newFatalError("This is a message", "...")
-     - errorManager.newWarning("This is a message", "...")
-     - errorManager.newInformation("This is a message", "...")
-     -
+    ```python
+     mediator: Mediator = Mediator()
+
+     errorManager = mediator.getErrorManager()
+     errorManager.changeType(ErrorViewTypes.GRAPHIC_ERROR_VIEW)
+     errorManager.newFatalError("This is a message", "...")
+     errorManager.newWarning("This is a message", "...")
+     errorManager.newInformation("This is a message", "...")
+     ```
     """
     def __init__(self):
 

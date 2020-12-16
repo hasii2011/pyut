@@ -16,7 +16,7 @@ from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.general.Lang import Lang
 from org.pyut.general.PyutXmfFinder import PyutXmlFinder
 
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
 
 from org.pyut.general.Globals import _
 
@@ -63,8 +63,9 @@ class IoFile:
             filename: The file name
             project: The project
         """
-        oldPath: str = getcwd()
-        path:    str  = getMediator().getAppPath()
+        oldPath:  str      = getcwd()
+        mediator: Mediator = Mediator()
+        path:     str      = mediator.getAppPath()
         chdir(path)
 
         Lang.importLanguage()

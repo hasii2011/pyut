@@ -8,18 +8,19 @@ class RaiseErrorView(AbstractErrorView):
     This class is an error view which will raise all errors as
     text message box.
 
-    To use it, use the mediator methods :
-     - mediator = Mediator.getMediator()
-     - ...
-     - errorManager = mediator.getErrorManager()
-     - errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)
-     -
-     - errorManager.newFatalError("This is a message", "...")
-     - errorManager.newWarning("This is a message", "...")
-     - errorManager.newInformation("This is a message", "...")
-     -
+    To use it, use the mediator methods:
+    ```python
+      mediator: Mediator = Mediator()
+      ...
+      errorManager = mediator.getErrorManager()
+      errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)
 
-    @author C.Dutoit
+      errorManager.newFatalError("This is a message", "...")
+      errorManager.newWarning("This is a message", "...")
+      errorManager.newInformation("This is a message", "...")
+
+    ```
+
     """
 
     def newFatalError(self, msg, title=None, parent=None):
@@ -30,4 +31,3 @@ class RaiseErrorView(AbstractErrorView):
 
     def displayInformation(self, msg, title=None, parent=None):
         raise PyutException(f"INFORMATION: {title} 0 {msg}")
-

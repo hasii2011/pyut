@@ -4,14 +4,7 @@ from typing import Any
 from logging import Logger
 from logging import getLogger
 
-from glob import glob
-
-from os import chdir
-from os import getcwd
 from os import sep as osSep
-
-from org.pyut.general.Mediator import Mediator
-from org.pyut.general.Mediator import getMediator
 
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 

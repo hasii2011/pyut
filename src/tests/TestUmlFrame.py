@@ -6,14 +6,20 @@ from os import remove as osRemove
 
 from wx import App
 from wx import Frame
+from wx import ID_ANY
 
 from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
+
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
-from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
-from org.pyut.general import Mediator
+
+from org.pyut.general.Mediator import Mediator
 
 
 class PyUtApp(App):
@@ -30,15 +36,16 @@ class TestUmlFrame(unittest.TestCase):
 
     def setUp(self):
         """
-        Initialize.
-        @author C.Dutoit
+
         """
+        PyutPreferences.determinePreferencesLocation()  # Side effect;  not a good move
+
         # Initialize mediator and error manager
-        ctrl = Mediator.getMediator()
-        ctrl.setScriptMode()
-        fileHandling = TreeNotebookHandler(None, ctrl)
-        ctrl.registerFileHandling(fileHandling)
-        errorManager = ctrl.getErrorManager()
+        mediator: Mediator = Mediator()
+        mediator.setScriptMode()
+        fileHandling = TreeNotebookHandler(None)
+        mediator.registerFileHandling(fileHandling)
+        errorManager = mediator.getErrorManager()
         errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)
         whereWeAre: str = getcwd()
         PyutUtils.setBasePath(whereWeAre)
@@ -48,8 +55,7 @@ class TestUmlFrame(unittest.TestCase):
         self.app: App = App()
 
         #  Create frame
-        # baseFrame = wxFrame(None, -1, "", size=(10, 10))
-        baseFrame = Frame(None, -1, "", size=(10, 10))
+        baseFrame = Frame(None, ID_ANY, "", size=(10, 10))
         umlFrame = UmlFrame(baseFrame, None)
         umlFrame.Show(True)
         self._umlFrame = umlFrame

@@ -27,7 +27,7 @@ from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
 from org.pyut.general.Globals import _
 
 
@@ -40,7 +40,7 @@ class ToPython(PyutToPlugin):
 
         Args:
             umlObjects:  list of ogl objects
-            umlFrame:    the umlframe of pyut
+            umlFrame:    Pyut's UML frame
         """
         super().__init__(umlObjects, umlFrame)
 
@@ -82,8 +82,9 @@ class ToPython(PyutToPlugin):
             self.displayNoUmlFrame()
             return
 
-        ctrl = getMediator()
-        project = ctrl.getFileHandling().getProjectFromFrame(umlFrame)
+        mediator: Mediator = Mediator()
+
+        project = mediator.getFileHandling().getProjectFromFrame(umlFrame)
         if project.getCodePath() == "":
             dlg = DirDialog(None, _("Choose the root directory for the code"), getcwd())
             if dlg.ShowModal() == ID_OK:
@@ -116,16 +117,15 @@ class ToPython(PyutToPlugin):
                 self.logger.info(f"Chosen filename is {filename}")
                 pyutClass.setFilename(filename)
                 dlg.Destroy()
-            modulename = filename[:-3]  # remove ".py"
+            moduleName = filename[:-3]  # remove ".py"
             try:
-                # normalDir = getcwd()
-                path, name = osPath.split(osPath.abspath(modulename))
+                path, name = osPath.split(osPath.abspath(moduleName))
                 chdir(path)
                 module = __import__(name)
                 importlib.reload(module)
                 chdir(normalDir)
             except ImportError as ie:
-                self.logger.error(f"Error while trying to import module '{str(modulename)}' --- '{ie}'")
+                self.logger.error(f"Error while trying to import module '{str(moduleName)}' --- '{ie}'")
                 chdir(normalDir)
                 continue
             orgClass = module.__dict__[pyutClass.getName()]

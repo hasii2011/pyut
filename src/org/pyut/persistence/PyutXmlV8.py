@@ -44,7 +44,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.PyutConstants import PyutConstants
 
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
 from org.pyut.general.Globals import _
 
 
@@ -222,8 +222,8 @@ class PyutXml:
                 document = project.newDocument(PyutConstants.diagramTypeFromString(docType))
                 umlFrame = document.getFrame()
 
-                ctrl = getMediator()
-                ctrl.getFileHandling().showFrame(umlFrame)
+                mediator: Mediator = Mediator()
+                mediator.getFileHandling().showFrame(umlFrame)
 
                 self._getOglClasses(documentNode.getElementsByTagName('GraphicClass'),    dicoOglObjects, dicoLink, dicoFather, umlFrame)
                 self._getOglNotes(documentNode.getElementsByTagName('GraphicNote'),       dicoOglObjects, dicoLink, dicoFather, umlFrame)

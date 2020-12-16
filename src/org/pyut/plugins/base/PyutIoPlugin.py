@@ -6,7 +6,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
@@ -64,14 +64,12 @@ class PyutIoPlugin(PyutPlugin):
 
     def __init__(self, oglObjects, umlFrame):
         """
-        Constructor.
 
-        @param oglObjects : list of ogl objects
-        @param umlFrame : the UML Frame of pyut
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
+        Args:
+            oglObjects: list of ogl objects
+            umlFrame:   The Pyut UML Frame
         """
-        super().__init__(umlFrame, getMediator())
+        super().__init__(umlFrame, Mediator())
         self.__oglObjects = oglObjects
 
     def getName(self) -> str:
@@ -188,7 +186,7 @@ class PyutIoPlugin(PyutPlugin):
             if not self.setExportOptions():
                 return None
 
-            mediator = getMediator()
+            mediator: Mediator = Mediator()
             prefs: PyutPreferences = PyutPreferences()
             if prefs.pyutIoPluginAutoSelectAll is True:
                 mediator.selectAllShapes()

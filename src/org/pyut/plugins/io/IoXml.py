@@ -102,7 +102,7 @@ class IoXml(PyutIoPlugin):
         Args:
             oglObjects:
 
-        Returns: True if succeeded, False if error or canceled
+        Returns: True if we succeeded with the write, Returns False if error occurred or if the operation was cancelled
         """
         oldPath = getcwd()
         # Ask the user which destination file he wants
@@ -114,10 +114,12 @@ class IoXml(PyutIoPlugin):
         myXml = PyutXmlFinder.getPyutXmlClass(theVersion=lastVersion)
         file = open(filename, "w")
 
-        if int(lastVersion) >= 5:   # Python 3 update
-            from org.pyut.general import Mediator
-            ctrl         = Mediator.getMediator()
-            fileHandling = ctrl.getFileHandling()
+        if int(lastVersion) >= 5:
+            from org.pyut.general.Mediator import Mediator
+
+            mediator: Mediator = Mediator()
+
+            fileHandling = mediator.getFileHandling()
             project      = fileHandling.getProjectFromOglObjects(oglObjects)
             doc          = myXml.save(project)
         else:
@@ -150,9 +152,11 @@ class IoXml(PyutIoPlugin):
             return False
 
         # Open file
-        from org.pyut.general import Mediator
-        ctrl = Mediator.getMediator()
-        fileHandling = ctrl.getFileHandling()
+        from org.pyut.general.Mediator import Mediator
+
+        mediator: Mediator = Mediator()
+
+        fileHandling = mediator.getFileHandling()
         project = fileHandling.getCurrentProject()
         for document in project.getDocuments():
             project.removeDocument(document, False)

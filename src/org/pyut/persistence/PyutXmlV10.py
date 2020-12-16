@@ -55,7 +55,7 @@ from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
 from org.pyut.general.Globals import _
 
 
@@ -411,8 +411,8 @@ class PyutXml:
     def __showAppropriateUmlFrame(self, document) -> UmlDiagramsFrame:
 
         umlFrame: UmlDiagramsFrame = document.getFrame()
-        ctrl = getMediator()
-        ctrl.getFileHandling().showFrame(umlFrame)
+        mediator: Mediator = Mediator()
+        mediator.getFileHandling().showFrame(umlFrame)
 
         return umlFrame
 

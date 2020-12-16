@@ -26,7 +26,6 @@ class CreateOglInterfaceCommand(Command):
 
     def _createLollipopInterface(self, pyutInterface: PyutInterface, attachmentAnchor: SelectAnchorPoint):
 
-        from org.pyut.general.Mediator import getMediator
         from org.pyut.general.Mediator import Mediator
 
         oglInterface:  OglInterface2 = OglInterface2(pyutInterface, attachmentAnchor)
@@ -36,7 +35,7 @@ class CreateOglInterfaceCommand(Command):
         x = anchorPosition[0]
         y = anchorPosition[1]
 
-        med:      Mediator              = getMediator()
+        med:      Mediator              = Mediator()
         umlFrame: UmlClassDiagramsFrame = med.getFileHandling().getCurrentFrame()
 
         umlFrame.addShape(oglInterface, x, y, withModelUpdate=True)

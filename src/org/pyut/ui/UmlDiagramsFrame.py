@@ -26,7 +26,7 @@ class UmlDiagramsFrame(UmlFrame):
         @since 1.0
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        super().__init__(parent, -1)
+        super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
 
     # noinspection PyUnusedLocal
     def OnClose(self, force=False):

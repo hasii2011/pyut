@@ -47,8 +47,9 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
             event: The mouse event
         """
 
-        from org.pyut.general.Mediator import getMediator   # avoid circular import
+        from org.pyut.general.Mediator import Mediator   # avoid circular import
 
         print(f'SelectAnchorPoint: {self._attachmentPoint}')
 
-        getMediator().createLollipopInterface(implementor=self.GetParent(), attachmentAnchor=self)
+        mediator: Mediator = Mediator()
+        mediator.createLollipopInterface(implementor=self.GetParent(), attachmentAnchor=self)

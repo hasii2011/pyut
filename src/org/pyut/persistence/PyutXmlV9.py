@@ -53,7 +53,7 @@ from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 
-from org.pyut.general.Mediator import getMediator
+from org.pyut.general.Mediator import Mediator
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.UmlFrame import UmlFrame
@@ -381,7 +381,8 @@ class PyutXml:
     def __showAppropriateUmlFrame(self, document) -> UmlFrame:
 
         umlFrame: UmlFrame = document.getFrame()
-        ctrl = getMediator()
-        ctrl.getFileHandling().showFrame(umlFrame)
+        mediator: Mediator = Mediator()
+
+        mediator.getFileHandling().showFrame(umlFrame)
 
         return umlFrame
