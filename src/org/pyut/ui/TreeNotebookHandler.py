@@ -39,7 +39,7 @@ from wx import Menu
 
 from wx import Yield as wxYield
 
-
+from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
@@ -352,7 +352,9 @@ class TreeNotebookHandler:
             else:
                 self.logger.info("Not updating notebook in FileHandling")
 
-        self.__parent.updateCurrentDir(dlg.GetPath())
+        #  self.__parent.updateCurrentDir(dlg.GetPath())   BAD BAD BAD BAD BAD BAD BAD BAD
+        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
+        currentDirectoryHandler.currentDirectory = dlg.GetPath()
 
         project.setModified(False)
         dlg.Destroy()

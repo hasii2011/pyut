@@ -1,0 +1,330 @@
+
+from logging import Logger
+from logging import getLogger
+from typing import List
+
+from wx import BOTH
+from wx import FD_MULTIPLE
+from wx import FD_OPEN
+from wx import ID_OK
+
+from wx import CommandEvent
+from wx import FileDialog
+from wx import Menu
+from wx import PreviewFrame
+from wx import PrintDialog
+from wx import PrintDialogData
+from wx import PrintPreview
+from wx import Printer
+from wx import Window
+
+from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.enums.DiagramType import DiagramType
+
+from org.pyut.general.Globals import _
+from org.pyut.general.Mediator import Mediator
+
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+
+from org.pyut.ui.PyutPrintout import PyutPrintout
+from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+
+
+class FileMenuHandler:
+
+    def __init__(self, fileMenu: Menu, lastOpenFilesIDs: List[int]):
+
+        self.logger: Logger = getLogger(__name__)
+
+        self._fileMenu:           Menu            = fileMenu
+        self._lastOpenedFilesIDs: List[int]       = lastOpenFilesIDs
+        self._mediator:           Mediator        = Mediator()
+        self._preferences:        PyutPreferences = PyutPreferences()
+
+        self._treeNotebookHandler: TreeNotebookHandler = self._mediator.getFileHandling()
+
+    # noinspection PyUnusedLocal
+    def onMenuFileNewProject(self, event: CommandEvent):
+        """
+        Create a new project
+
+        Args:
+            event:
+        """
+        self._treeNotebookHandler.newProject()
+        self._mediator.updateTitle()
+
+    # noinspection PyUnusedLocal
+    def onMenuFileNewClassDiagram(self, event: CommandEvent):
+        """
+        Create a new class diagram
+
+        Args:
+            event:
+        """
+        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
+        self._mediator.updateTitle()
+
+    # noinspection PyUnusedLocal
+    def onMenuFileNewSequenceDiagram(self, event: CommandEvent):
+        """
+        Create a new sequence diagram
+
+        Args:
+            event:
+        """
+        self._treeNotebookHandler.newDocument(DiagramType.SEQUENCE_DIAGRAM)
+        self._mediator.updateTitle()
+
+    # noinspection PyUnusedLocal
+    def onMenuFileNewUsecaseDiagram(self, event: CommandEvent):
+        """
+        Create a new use-case diagram
+
+        Args:
+            event:
+        """
+        self._treeNotebookHandler.newDocument(DiagramType.USECASE_DIAGRAM)
+        self._mediator.updateTitle()
+
+    # noinspection PyUnusedLocal
+    def onMenuFileInsertProject(self, event: CommandEvent):
+        """
+        Insert a project into this one
+
+        Args:
+            event:
+        """
+        PyutUtils.displayWarning(_("The project insert is experimental, "
+                                   "use it at your own risk.\n"
+                                   "You risk a shapes ID duplicate with "
+                                   "unexpected results !"), parent=self)
+
+        if (self._treeNotebookHandler.getCurrentProject()) is None:
+            PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
+            return
+
+        # Ask which project to insert
+        dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN)
+        if dlg.ShowModal() != ID_OK:
+            dlg.Destroy()
+            return False
+        self.updateCurrentDir(dlg.GetPath())
+        filename = dlg.GetPath()
+        dlg.Destroy()
+
+        print(("inserting file", str(filename)))
+
+        # Insert the specified files
+        try:
+            self._treeNotebookHandler.insertFile(filename)
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
+
+    # noinspection PyUnusedLocal
+    def onMenuFileOpen(self, event: CommandEvent):
+        """
+        Open a diagram
+
+        Args:
+            event:
+        """
+        currentDir: str    = self._mediator.getCurrentDir()
+        parent:     Window = self._fileMenu.GetWindow()
+        dlg = FileDialog(parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
+
+        if dlg.ShowModal() != ID_OK:
+            dlg.Destroy()
+            return False
+
+        fileNames = dlg.GetPaths()
+        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
+        # self.updateCurrentDir(fileNames[0])       Old Code
+        CurrentDirectoryHandler.currentDirectory = fileNames[0]
+        dlg.Destroy()
+
+        # Open the specified files
+        for filename in fileNames:
+            try:
+                if self._treeNotebookHandler.openFile(filename):
+                    # Add to last opened files list
+                    self._preferences.addNewLastOpenedFilesEntry(filename)
+                    self._setLastOpenedFilesItems()
+                    self._mediator.updateTitle()
+            except (ValueError, Exception) as e:
+                PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
+                self.logger.error(f'{e}')
+
+    # noinspection PyUnusedLocal
+    def onMenuFileSave(self, event: CommandEvent):
+        """
+        Save the current diagram to a file
+
+        Args:
+            event:
+        """
+        # self._saveFile()
+        self._treeNotebookHandler.saveFile()
+        self._mediator.updateTitle()
+
+        # Add to last opened files list
+        project = self._treeNotebookHandler.getCurrentProject()
+        if project is not None:
+            self._preferences.addNewLastOpenedFilesEntry(project.getFilename())
+            self._setLastOpenedFilesItems()
+
+    # noinspection PyUnusedLocal
+    def onMenuFileSaveAs(self, event: CommandEvent):
+        """
+        Ask and save the current diagram to a file
+
+        Args:
+            event:
+        """
+        self._treeNotebookHandler.saveFileAs()
+        self._mediator.updateTitle()
+
+        project = self._treeNotebookHandler.getCurrentProject()
+        if project is not None:
+            self._preferences.addNewLastOpenedFilesEntry(project.getFilename())
+            self._setLastOpenedFilesItems()
+
+    # noinspection PyUnusedLocal
+    def onMenuFileClose(self, event: CommandEvent):
+        """
+        Close the current file
+
+        Args:
+            event:
+        """
+        self._treeNotebookHandler.closeCurrentProject()
+
+    # noinspection PyUnusedLocal
+    def onMenuFileRemoveDocument(self, event: CommandEvent):
+        """
+        Remove the current document from the current project
+
+        Args:
+            event:
+        """
+        project  = self._treeNotebookHandler.getCurrentProject()
+        document = self._treeNotebookHandler.getCurrentDocument()
+        if project is not None and document is not None:
+            project.removeDocument(document)
+        else:
+            PyutUtils.displayWarning(_("No document to remove"))
+
+    # noinspection PyUnusedLocal
+    def onMenuFilePrintSetup(self, event: CommandEvent):
+        """
+        Display the print setup dialog box
+
+        Args:
+            event:
+        """
+        dlg: PrintDialog = PrintDialog(self)
+
+        # dlg.GetPrintDialogData().SetSetupDialog(True)
+        dlg.GetPrintDialogData().SetPrintData(self._printData)
+        dlg.ShowModal()
+        self._printData = dlg.GetPrintDialogData().GetPrintData()
+        dlg.Destroy()
+
+    # noinspection PyUnusedLocal
+    def onMenuFilePrintPreview(self, event: CommandEvent):
+        """
+        Display the print preview frame; Preview before printing.
+
+        Args:
+            event:
+        """
+        self._mediator.deselectAllShapes()
+        frame = self._mediator.getUmlFrame()
+        if frame == -1:
+            PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
+            return
+
+        printout  = PyutPrintout(frame)
+        printout2 = PyutPrintout(frame)
+        preview   = PrintPreview(printout, printout2, self._printData)
+
+        if not preview.IsOk():
+            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+            return
+
+        frame = PreviewFrame(preview, self, _("Diagram preview"))
+        frame.Initialize()
+        frame.Centre(BOTH)
+
+        try:
+            frame.Show(True)
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+
+    # noinspection PyUnusedLocal
+    def onMenuFilePrint(self, event: CommandEvent):
+        """
+        Print the current diagram
+
+        Args:
+            event:
+        """
+        if self._mediator.getDiagram() is None:
+            PyutUtils.displayError(_("No diagram to print !"), _("Error"), self)
+            return
+        self._mediator.deselectAllShapes()
+        printDialogData: PrintDialogData = PrintDialogData()
+
+        printDialogData.SetPrintData(self._printData)
+        printDialogData.SetMinPage(1)
+        printDialogData.SetMaxPage(1)
+        printer  = Printer(printDialogData)
+        printout = PyutPrintout(self._mediator.getUmlFrame())
+
+        if not printer.Print(self, printout, True):
+            PyutUtils.displayError(_("Cannot print"), _("Error"), self)
+
+    def onMenuLastOpenedFile(self, event: CommandEvent):
+        """
+        Open a file from the last opened files list
+
+        Args:
+            event:
+        """
+        for index in range(self._preferences.getNbLOF()):
+            if event.GetId() == self.lastOpenedFilesID[index]:
+                try:
+                    lst = self._preferences.getLastOpenedFilesList()
+                    self._loadFile(lst[index])
+                    self._preferences.addNewLastOpenedFilesEntry(lst[index])
+                    self.__setLastOpenedFilesItems()
+                except (ValueError, Exception) as e:
+                    self.logger.error(f'{e}')
+
+    # noinspection PyUnusedLocal
+    def _OnMnuFileExit(self, event: CommandEvent):
+        """
+        Exit the program
+
+        Args:
+            event:
+        """
+        self.Close()
+
+    def _setLastOpenedFilesItems(self):
+        """
+        Set the menu last opened files items
+        """
+        self.logger.debug(f'{self._fileMenu=}')
+
+        index = 0
+        for el in self._preferences.getLastOpenedFilesList():
+            openFilesId = self._lastOpenedFilesIDs[index]
+            # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
+            lbl: str = f"&{str(index+1)} {el}"
+            self.logger.debug(f'lbL: {lbl}  openFilesId: {openFilesId}')
+            self._fileMenu.SetLabel(id=openFilesId, label=lbl)
+
+            index += 1

@@ -16,7 +16,7 @@ from wx import NewId
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
-
+from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
@@ -171,16 +171,24 @@ class MenuCreator:
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
 
+        fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+
         cb: SharedTypes.CallbackMap = self._callbackMap
 
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_PROJECT],       id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_PROJECT],       id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_CLASS_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_SEQUENCE_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_USE_CASE_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.INSERT_PROJECT], id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_OPEN], id=SharedIdentifiers.ID_MNU_FILE_OPEN)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE], id=SharedIdentifiers.ID_MNU_FILE_SAVE)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE_AS],    id=SharedIdentifiers.ID_MNUFILESAVEAS)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_OPEN],    id=SharedIdentifiers.ID_MNU_FILE_OPEN)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE],    id=SharedIdentifiers.ID_MNU_FILE_SAVE)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE_AS], id=SharedIdentifiers.ID_MNUFILESAVEAS)
+
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileNewProject, id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileOpen,       id=SharedIdentifiers.ID_MNU_FILE_OPEN)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSave,       id=SharedIdentifiers.ID_MNU_FILE_SAVE)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSaveAs,   id=SharedIdentifiers.ID_MNUFILESAVEAS)
+
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROJECT_CLOSE],   id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REMOVE_DOCUMENT], id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_SETUP], id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)

@@ -6,7 +6,6 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from os import sep as osSeparator
 from os import getcwd
 
 from sys import platform as sysPlatform
@@ -177,14 +176,17 @@ class PyutApplicationFrame(Frame):
 
     def updateCurrentDir(self, fullPath: str):
         """
+        Deprecated use the singleton CurrentDirectoryHandler
+
         Set current working directory.
 
         Args:
             fullPath:   Full path, with filename
         """
-        self._lastDir = fullPath[:fullPath.rindex(osSeparator)]
-
-        self._prefs.lastOpenedDirectory = self._lastDir
+        # self._lastDir = fullPath[:fullPath.rindex(osSeparator)]
+        # self._prefs.lastOpenedDirectory = self._lastDir
+        assert False, 'Deprecated'
+        pass
 
     def getCurrentDir(self):
         """
@@ -419,20 +421,20 @@ class PyutApplicationFrame(Frame):
     def _initMenu(self):
 
         callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-            ActionCallbackType.NEW_PROJECT:          self._OnMnuFileNewProject,
+            # ActionCallbackType.NEW_PROJECT:          self._OnMnuFileNewProject,
             ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
             ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
             ActionCallbackType.NEW_USE_CASE_DIAGRAM: self._OnMnuFileNewUsecaseDiagram,
             ActionCallbackType.INSERT_PROJECT:       self._OnMnuFileInsertProject,
             ActionCallbackType.PROJECT_CLOSE:        self._OnMnuFileClose,
-            ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
-            ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
+            # ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
+            # ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
             ActionCallbackType.FILE_SAVE_AS:         self._OnMnuFileSaveAs,
             ActionCallbackType.REMOVE_DOCUMENT:      self._OnMnuFileRemoveDocument,
             ActionCallbackType.PRINT_SETUP:          self._OnMnuFilePrintSetup,
             ActionCallbackType.PRINT_PREVIEW:        self._OnMnuFilePrintPreview,
             ActionCallbackType.PRINT:                self._OnMnuFilePrint,
-            ActionCallbackType.PYUT_PREFERENCES:      self._OnMnuFilePyutPreferences,
+            ActionCallbackType.PYUT_PREFERENCES:     self._OnMnuFilePyutPreferences,
             ActionCallbackType.EXIT_PROGRAM:         self._OnMnuFileExit,
             ActionCallbackType.PROGRAM_ABOUT:        self._OnMnuHelpAbout,
             ActionCallbackType.HELP_INDEX:           self._OnMnuHelpIndex,
@@ -461,7 +463,7 @@ class PyutApplicationFrame(Frame):
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.initMenus()
         self.mnuFile      = self._menuCreator.fileMenu
-        self.plugins       = self._menuCreator.plugins
+        self.plugins      = self._menuCreator.plugins
         self._toolboxIds = self._menuCreator.toolboxIds
         self.logger.debug(f'self.mnuFile: {self.mnuFile}')
 
@@ -505,14 +507,15 @@ class PyutApplicationFrame(Frame):
 
     # noinspection PyUnusedLocal
     def _OnMnuFileNewProject(self, event: CommandEvent):
-        """
-        Create a new project
-
-        Args:
-            event:
-        """
-        self._treeNotebookHandler.newProject()
-        self._mediator.updateTitle()
+        pass
+    #     """
+    #     Create a new project
+    #
+    #     Args:
+    #         event:
+    #     """
+    #     self._treeNotebookHandler.newProject()
+    #     self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileNewClassDiagram(self, event: CommandEvent):
@@ -583,23 +586,25 @@ class PyutApplicationFrame(Frame):
 
     # noinspection PyUnusedLocal
     def _OnMnuFileOpen(self, event: CommandEvent):
-        """
-        Open a diagram
-
-        Args:
-            event:
-        """
-        self._loadFile()
+        pass
+    #     """
+    #     Open a diagram
+    #
+    #     Args:
+    #         event:
+    #     """
+    #     self._loadFile()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileSave(self, event: CommandEvent):
-        """
-        Save the current diagram to a file
-
-        Args:
-            event:
-        """
-        self._saveFile()
+        pass
+    #     """
+    #     Save the current diagram to a file
+    #
+    #     Args:
+    #         event:
+    #     """
+    #     self._saveFile()
 
     # noinspection PyUnusedLocal
     def _OnMnuFileSaveAs(self, event: CommandEvent):
@@ -609,7 +614,8 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        self._saveFileAs()
+        # self._saveFileAs()
+        pass
 
     # noinspection PyUnusedLocal
     def _OnMnuFileClose(self, event: CommandEvent):
