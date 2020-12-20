@@ -640,12 +640,13 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        project  = self._treeNotebookHandler.getCurrentProject()
-        document = self._treeNotebookHandler.getCurrentDocument()
-        if project is not None and document is not None:
-            project.removeDocument(document)
-        else:
-            PyutUtils.displayWarning(_("No document to remove"))
+        # project  = self._treeNotebookHandler.getCurrentProject()
+        # document = self._treeNotebookHandler.getCurrentDocument()
+        # if project is not None and document is not None:
+        #     project.removeDocument(document)
+        # else:
+        #     PyutUtils.displayWarning(_("No document to remove"))
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFilePrintSetup(self, event: CommandEvent):
