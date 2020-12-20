@@ -29,10 +29,6 @@ NUMBER_OF_COMMANDS_CREATED = 2
 
 class TestCommandGroup(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 

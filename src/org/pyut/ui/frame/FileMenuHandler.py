@@ -26,8 +26,8 @@ from org.pyut.general.Globals import _
 from org.pyut.general.Mediator import Mediator
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
+from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 
@@ -42,6 +42,8 @@ class FileMenuHandler:
         self._lastOpenedFilesIDs: List[int]       = lastOpenFilesIDs
         self._mediator:           Mediator        = Mediator()
         self._preferences:        PyutPreferences = PyutPreferences()
+
+        self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
 
         self._treeNotebookHandler: TreeNotebookHandler = self._mediator.getFileHandling()
 
@@ -107,15 +109,18 @@ class FileMenuHandler:
             return
 
         # Ask which project to insert
-        dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN)
+        defaultDirectory: str    = self._currentDirectoryHandler.currentDirectory
+        parent:           Window = self._fileMenu.GetWindow()
+
+        dlg = FileDialog(parent, _("Choose a project"), defaultDirectory, "", "*.put", FD_OPEN)
         if dlg.ShowModal() != ID_OK:
             dlg.Destroy()
             return False
-        self.updateCurrentDir(dlg.GetPath())
+        self._currentDirectoryHandler.currentDirectory = dlg.GetPath()
         filename = dlg.GetPath()
         dlg.Destroy()
 
-        print(("inserting file", str(filename)))
+        self.logger.warning(f'inserting file: {filename}')
 
         # Insert the specified files
         try:
@@ -140,9 +145,8 @@ class FileMenuHandler:
             return False
 
         fileNames = dlg.GetPaths()
-        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
         # self.updateCurrentDir(fileNames[0])       Old Code
-        CurrentDirectoryHandler.currentDirectory = fileNames[0]
+        self._currentDirectoryHandler.currentDirectory = fileNames[0]
         dlg.Destroy()
 
         # Open the specified files

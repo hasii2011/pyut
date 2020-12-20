@@ -175,21 +175,23 @@ class MenuCreator:
 
         cb: SharedTypes.CallbackMap = self._callbackMap
 
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_PROJECT],       id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_CLASS_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_SEQUENCE_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_USE_CASE_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.INSERT_PROJECT], id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_OPEN],    id=SharedIdentifiers.ID_MNU_FILE_OPEN)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE],    id=SharedIdentifiers.ID_MNU_FILE_SAVE)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE_AS], id=SharedIdentifiers.ID_MNUFILESAVEAS)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_PROJECT],    id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.INSERT_PROJECT], id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_OPEN],      id=SharedIdentifiers.ID_MNU_FILE_OPEN)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE],      id=SharedIdentifiers.ID_MNU_FILE_SAVE)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE_AS],   id=SharedIdentifiers.ID_MNUFILESAVEAS)
+        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROJECT_CLOSE],  id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
 
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileNewProject, id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileOpen,       id=SharedIdentifiers.ID_MNU_FILE_OPEN)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSave,       id=SharedIdentifiers.ID_MNU_FILE_SAVE)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSaveAs,   id=SharedIdentifiers.ID_MNUFILESAVEAS)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileNewProject,    id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileInsertProject, id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileOpen,          id=SharedIdentifiers.ID_MNU_FILE_OPEN)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSave,          id=SharedIdentifiers.ID_MNU_FILE_SAVE)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSaveAs,        id=SharedIdentifiers.ID_MNUFILESAVEAS)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileClose,         id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
 
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROJECT_CLOSE],   id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REMOVE_DOCUMENT], id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_SETUP], id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_PREVIEW], id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)

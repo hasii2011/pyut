@@ -558,31 +558,32 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        PyutUtils.displayWarning(_("The project insert is experimental, "
-                                   "use it at your own risk.\n"
-                                   "You risk a shapes ID duplicate with "
-                                   "unexpected results !"), parent=self)
-
-        if (self._treeNotebookHandler.getCurrentProject()) is None:
-            PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
-            return
-
-        # Ask which project to insert
-        dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN)
-        if dlg.ShowModal() != ID_OK:
-            dlg.Destroy()
-            return False
-        self.updateCurrentDir(dlg.GetPath())
-        filename = dlg.GetPath()
-        dlg.Destroy()
-
-        print(("inserting file", str(filename)))
-
-        # Insert the specified files
-        try:
-            self._treeNotebookHandler.insertFile(filename)
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
+        # PyutUtils.displayWarning(_("The project insert is experimental, "
+        #                            "use it at your own risk.\n"
+        #                            "You risk a shapes ID duplicate with "
+        #                            "unexpected results !"), parent=self)
+        #
+        # if (self._treeNotebookHandler.getCurrentProject()) is None:
+        #     PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
+        #     return
+        #
+        # # Ask which project to insert
+        # dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN)
+        # if dlg.ShowModal() != ID_OK:
+        #     dlg.Destroy()
+        #     return False
+        # self.updateCurrentDir(dlg.GetPath())
+        # filename = dlg.GetPath()
+        # dlg.Destroy()
+        #
+        # print(("inserting file", str(filename)))
+        #
+        # # Insert the specified files
+        # try:
+        #     self._treeNotebookHandler.insertFile(filename)
+        # except (ValueError, Exception) as e:
+        #     PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
+        pass
 
     # noinspection PyUnusedLocal
     def _OnMnuFileOpen(self, event: CommandEvent):
@@ -625,7 +626,8 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        self._treeNotebookHandler.closeCurrentProject()
+        # self._treeNotebookHandler.closeCurrentProject()
+        pass
 
     # noinspection PyUnusedLocal
     def _OnMnuFileRemoveDocument(self, event: CommandEvent):
