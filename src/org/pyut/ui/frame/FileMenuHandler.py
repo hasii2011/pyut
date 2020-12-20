@@ -6,6 +6,7 @@ from typing import List
 from wx import BOTH
 from wx import FD_MULTIPLE
 from wx import FD_OPEN
+from wx import ID_ANY
 from wx import ID_OK
 
 from wx import CommandEvent
@@ -19,6 +20,7 @@ from wx import Printer
 from wx import Window
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
 
@@ -219,6 +221,22 @@ class FileMenuHandler:
             project.removeDocument(document)
         else:
             PyutUtils.displayWarning(_("No document to remove"))
+
+    # noinspection PyUnusedLocal
+    def onMenuFilePyutPreferences(self, event: CommandEvent):
+
+        self.logger.debug(f"Before dialog show")
+        parent:           Window = self._fileMenu.GetWindow()
+
+        with DlgPyutPreferences(parent, ID_ANY) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                self.logger.debug(f'Waiting for answer')
+            else:
+                self.logger.debug(f'Cancelled')
+
+        umlFrame = self._mediator.getUmlFrame()
+        if umlFrame is not None:
+            umlFrame.Refresh()
 
     # noinspection PyUnusedLocal
     def onMenuFilePrintSetup(self, event: CommandEvent):

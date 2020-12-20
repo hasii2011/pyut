@@ -1026,22 +1026,20 @@ class PyutApplicationFrame(Frame):
 
     # noinspection PyUnusedLocal
     def _OnMnuFilePyutPreferences(self, event: CommandEvent):
-        """
-        Args:
-            event:
-        """
-        from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
-        self.logger.debug(f"Before dialog show")
-        with DlgPyutPreferences(self, ID_ANY) as dlg:
-            if dlg.ShowModal() == ID_OK:
-                self.logger.debug(f'Waiting for answer')
-            else:
-                self.logger.debug(f'Cancelled')
-
-        umlFrame = self._mediator.getUmlFrame()
-        if umlFrame is not None:
-            umlFrame.Refresh()
+        # from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
+        #
+        # self.logger.debug(f"Before dialog show")
+        # with DlgPyutPreferences(self, ID_ANY) as dlg:
+        #     if dlg.ShowModal() == ID_OK:
+        #         self.logger.debug(f'Waiting for answer')
+        #     else:
+        #         self.logger.debug(f'Cancelled')
+        #
+        # umlFrame = self._mediator.getUmlFrame()
+        # if umlFrame is not None:
+        #     umlFrame.Refresh()
+        pass
 
     # noinspection PyUnusedLocal
     def _OnMnuDebug(self, event: CommandEvent):

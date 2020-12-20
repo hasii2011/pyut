@@ -184,6 +184,7 @@ class MenuCreator:
         # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE],      id=SharedIdentifiers.ID_MNU_FILE_SAVE)
         # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE_AS],   id=SharedIdentifiers.ID_MNUFILESAVEAS)
         # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROJECT_CLOSE],  id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PYUT_PREFERENCES], id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
 
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileNewProject,    id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileInsertProject, id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
@@ -192,12 +193,15 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSaveAs,        id=SharedIdentifiers.ID_MNUFILESAVEAS)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileClose,         id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
 
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFilePyutPreferences, id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
+
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REMOVE_DOCUMENT], id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_SETUP], id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_PREVIEW], id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT], id=SharedIdentifiers.ID_MNU_FILE_PRINT)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PYUT_PREFERENCES], id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
+
         #  EVT_MENU(self, ID_MNU_FILE_DIAGRAM_PROPERTIES,self._OnMnuFileDiagramProperties)
+
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXIT_PROGRAM], id=SharedIdentifiers.ID_MNU_FILE_EXIT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROGRAM_ABOUT], id=ID_ABOUT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_INDEX], id=SharedIdentifiers.ID_MNU_HELP_INDEX)
