@@ -525,8 +525,9 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
-        self._mediator.updateTitle()
+        # self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
+        # self._mediator.updateTitle()
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFileNewSequenceDiagram(self, event: CommandEvent):
@@ -536,8 +537,9 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        self._treeNotebookHandler.newDocument(DiagramType.SEQUENCE_DIAGRAM)
-        self._mediator.updateTitle()
+        # self._treeNotebookHandler.newDocument(DiagramType.SEQUENCE_DIAGRAM)
+        # self._mediator.updateTitle()
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFileNewUsecaseDiagram(self, event: CommandEvent):
@@ -547,8 +549,9 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        self._treeNotebookHandler.newDocument(DiagramType.USECASE_DIAGRAM)
-        self._mediator.updateTitle()
+        # self._treeNotebookHandler.newDocument(DiagramType.USECASE_DIAGRAM)
+        # self._mediator.updateTitle()
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFileInsertProject(self, event: CommandEvent):
