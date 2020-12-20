@@ -50,7 +50,7 @@ class FileMenuHandler:
         self._treeNotebookHandler: TreeNotebookHandler = self._mediator.getFileHandling()
 
     # noinspection PyUnusedLocal
-    def onMenuFileNewProject(self, event: CommandEvent):
+    def onNewProject(self, event: CommandEvent):
         """
         Create a new project
 
@@ -61,7 +61,7 @@ class FileMenuHandler:
         self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
-    def onMenuFileNewClassDiagram(self, event: CommandEvent):
+    def onNewClassDiagram(self, event: CommandEvent):
         """
         Create a new class diagram
 
@@ -72,7 +72,7 @@ class FileMenuHandler:
         self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
-    def onMenuFileNewSequenceDiagram(self, event: CommandEvent):
+    def onNewSequenceDiagram(self, event: CommandEvent):
         """
         Create a new sequence diagram
 
@@ -83,7 +83,7 @@ class FileMenuHandler:
         self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
-    def onMenuFileNewUsecaseDiagram(self, event: CommandEvent):
+    def onNewUsecaseDiagram(self, event: CommandEvent):
         """
         Create a new use-case diagram
 
@@ -94,7 +94,7 @@ class FileMenuHandler:
         self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
-    def onMenuFileInsertProject(self, event: CommandEvent):
+    def onFileInsertProject(self, event: CommandEvent):
         """
         Insert a project into this one
 
@@ -131,7 +131,7 @@ class FileMenuHandler:
             PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
 
     # noinspection PyUnusedLocal
-    def onMenuFileOpen(self, event: CommandEvent):
+    def onFileOpen(self, event: CommandEvent):
         """
         Open a diagram
 
@@ -141,7 +141,7 @@ class FileMenuHandler:
         self._loadFile()
 
     # noinspection PyUnusedLocal
-    def onMenuFileSave(self, event: CommandEvent):
+    def onFileSave(self, event: CommandEvent):
         """
         Save the current diagram to a file
 
@@ -159,7 +159,7 @@ class FileMenuHandler:
             self._setLastOpenedFilesItems()
 
     # noinspection PyUnusedLocal
-    def onMenuFileSaveAs(self, event: CommandEvent):
+    def onFileSaveAs(self, event: CommandEvent):
         """
         Ask and save the current diagram to a file
 
@@ -175,7 +175,7 @@ class FileMenuHandler:
             self._setLastOpenedFilesItems()
 
     # noinspection PyUnusedLocal
-    def onMenuFileClose(self, event: CommandEvent):
+    def onFileClose(self, event: CommandEvent):
         """
         Close the current file
 
@@ -185,7 +185,7 @@ class FileMenuHandler:
         self._treeNotebookHandler.closeCurrentProject()
 
     # noinspection PyUnusedLocal
-    def onMenuFileRemoveDocument(self, event: CommandEvent):
+    def onRemoveDocument(self, event: CommandEvent):
         """
         Remove the current document from the current project
 
@@ -200,7 +200,7 @@ class FileMenuHandler:
             PyutUtils.displayWarning(_("No document to remove"))
 
     # noinspection PyUnusedLocal
-    def onMenuFilePyutPreferences(self, event: CommandEvent):
+    def onPyutPreferences(self, event: CommandEvent):
 
         self.logger.debug(f"Before dialog show")
         parent:           Window = self._fileMenu.GetWindow()
@@ -216,7 +216,7 @@ class FileMenuHandler:
             umlFrame.Refresh()
 
     # noinspection PyUnusedLocal
-    def onMenuFilePrintSetup(self, event: CommandEvent):
+    def onPrintSetup(self, event: CommandEvent):
         """
         Display the print setup dialog box
 
@@ -232,7 +232,7 @@ class FileMenuHandler:
         dlg.Destroy()
 
     # noinspection PyUnusedLocal
-    def onMenuFilePrintPreview(self, event: CommandEvent):
+    def onPrintPreview(self, event: CommandEvent):
         """
         Display the print preview frame; Preview before printing.
 
@@ -263,7 +263,7 @@ class FileMenuHandler:
             PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
 
     # noinspection PyUnusedLocal
-    def onMenuFilePrint(self, event: CommandEvent):
+    def onPrint(self, event: CommandEvent):
         """
         Print the current diagram
 
@@ -285,7 +285,7 @@ class FileMenuHandler:
         if not printer.Print(self, printout, True):
             PyutUtils.displayError(_("Cannot print"), _("Error"), self)
 
-    def onMenuLastOpenedFile(self, event: CommandEvent):
+    def onRecentlyOpenedFile(self, event: CommandEvent):
         """
         Open a file from the last opened files list
 
@@ -303,7 +303,7 @@ class FileMenuHandler:
                     self.logger.error(f'{e}')
 
     # noinspection PyUnusedLocal
-    def onMenuFileExit(self, event: CommandEvent):
+    def onExit(self, event: CommandEvent):
         """
         Exit the program
 

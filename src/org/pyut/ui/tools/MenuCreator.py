@@ -187,18 +187,18 @@ class MenuCreator:
         # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REMOVE_DOCUMENT], id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
         # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PYUT_PREFERENCES], id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
 
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileNewProject,    id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileNewClassDiagram,    id=SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileNewSequenceDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileNewUsecaseDiagram,  id=SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileInsertProject,  id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileOpen,           id=SharedIdentifiers.ID_MNU_FILE_OPEN)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSave,           id=SharedIdentifiers.ID_MNU_FILE_SAVE)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileSaveAs,         id=SharedIdentifiers.ID_MNUFILESAVEAS)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileClose,          id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFileRemoveDocument, id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewProject, id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewClassDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewSequenceDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewUsecaseDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileInsertProject, id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileOpen, id=SharedIdentifiers.ID_MNU_FILE_OPEN)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSave, id=SharedIdentifiers.ID_MNU_FILE_SAVE)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSaveAs, id=SharedIdentifiers.ID_MNUFILESAVEAS)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileClose, id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onRemoveDocument, id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
 
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuFilePyutPreferences, id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onPyutPreferences, id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
 
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_SETUP], id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_PREVIEW], id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)
@@ -230,7 +230,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REDO], id=SharedIdentifiers.ID_MNU_REDO)
 
         for index in range(self._prefs.getNbLOF()):
-            containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuLastOpenedFile, id=self.lastOpenedFilesID[index])
+            containingFrame.Bind(EVT_MENU, fileMenuHandler.onRecentlyOpenedFile, id=self.lastOpenedFilesID[index])
 
         containingFrame.Bind(EVT_CLOSE, cb[ActionCallbackType.CLOSE])
 
