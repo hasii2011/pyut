@@ -507,7 +507,7 @@ class PyutApplicationFrame(Frame):
 
     # noinspection PyUnusedLocal
     def _OnMnuFileNewProject(self, event: CommandEvent):
-        pass
+        assert False, 'Use the file menu handler'
     #     """
     #     Create a new project
     #
@@ -583,11 +583,11 @@ class PyutApplicationFrame(Frame):
         #     self._treeNotebookHandler.insertFile(filename)
         # except (ValueError, Exception) as e:
         #     PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
-        pass
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFileOpen(self, event: CommandEvent):
-        pass
+        assert False, 'Use the file menu handler'
     #     """
     #     Open a diagram
     #
@@ -598,7 +598,7 @@ class PyutApplicationFrame(Frame):
 
     # noinspection PyUnusedLocal
     def _OnMnuFileSave(self, event: CommandEvent):
-        pass
+        assert False, 'Use the file menu handler'
     #     """
     #     Save the current diagram to a file
     #
@@ -616,7 +616,7 @@ class PyutApplicationFrame(Frame):
             event:
         """
         # self._saveFileAs()
-        pass
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFileClose(self, event: CommandEvent):
@@ -627,7 +627,7 @@ class PyutApplicationFrame(Frame):
             event:
         """
         # self._treeNotebookHandler.closeCurrentProject()
-        pass
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFileRemoveDocument(self, event: CommandEvent):
@@ -721,15 +721,16 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        for index in range(self._prefs.getNbLOF()):
-            if event.GetId() == self.lastOpenedFilesID[index]:
-                try:
-                    lst = self._prefs.getLastOpenedFilesList()
-                    self._loadFile(lst[index])
-                    self._prefs.addNewLastOpenedFilesEntry(lst[index])
-                    self.__setLastOpenedFilesItems()
-                except (ValueError, Exception) as e:
-                    self.logger.error(f'{e}')
+        # for index in range(self._prefs.getNbLOF()):
+        #     if event.GetId() == self.lastOpenedFilesID[index]:
+        #         try:
+        #             lst = self._prefs.getLastOpenedFilesList()
+        #             self._loadFile(lst[index])
+        #             self._prefs.addNewLastOpenedFilesEntry(lst[index])
+        #             self.__setLastOpenedFilesItems()
+        #         except (ValueError, Exception) as e:
+        #             self.logger.error(f'{e}')
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFileExit(self, event: CommandEvent):

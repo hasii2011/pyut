@@ -138,30 +138,7 @@ class FileMenuHandler:
         Args:
             event:
         """
-        currentDir: str    = self._mediator.getCurrentDir()
-        parent:     Window = self._fileMenu.GetWindow()
-        dlg = FileDialog(parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
-
-        if dlg.ShowModal() != ID_OK:
-            dlg.Destroy()
-            return False
-
-        fileNames = dlg.GetPaths()
-        # self.updateCurrentDir(fileNames[0])       Old Code
-        self._currentDirectoryHandler.currentDirectory = fileNames[0]
-        dlg.Destroy()
-
-        # Open the specified files
-        for filename in fileNames:
-            try:
-                if self._treeNotebookHandler.openFile(filename):
-                    # Add to last opened files list
-                    self._preferences.addNewLastOpenedFilesEntry(filename)
-                    self._setLastOpenedFilesItems()
-                    self._mediator.updateTitle()
-            except (ValueError, Exception) as e:
-                PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
-                self.logger.error(f'{e}')
+        self._loadFile()
 
     # noinspection PyUnusedLocal
     def onMenuFileSave(self, event: CommandEvent):
@@ -316,24 +293,65 @@ class FileMenuHandler:
             event:
         """
         for index in range(self._preferences.getNbLOF()):
-            if event.GetId() == self.lastOpenedFilesID[index]:
+            if event.GetId() == self._lastOpenedFilesIDs[index]:
                 try:
                     lst = self._preferences.getLastOpenedFilesList()
                     self._loadFile(lst[index])
                     self._preferences.addNewLastOpenedFilesEntry(lst[index])
-                    self.__setLastOpenedFilesItems()
+                    self._setLastOpenedFilesItems()
                 except (ValueError, Exception) as e:
                     self.logger.error(f'{e}')
 
     # noinspection PyUnusedLocal
-    def _OnMnuFileExit(self, event: CommandEvent):
+    def onMenuFileExit(self, event: CommandEvent):
         """
         Exit the program
 
         Args:
             event:
         """
-        self.Close()
+        # self.Close()
+        assert False, 'Not yet implemented'
+
+    def _loadFile(self, filename: str = ""):
+        """
+        Load the specified filename
+
+        Args:
+            filename: Its name
+        """
+        # Make a list to be compatible with multi-files loading
+        fileNames = [filename]
+
+        currentDir: str    = self._mediator.getCurrentDir()
+        parent:     Window = self._fileMenu.GetWindow()
+        # TODO This is bad practice to do something different based on input
+        if filename == "":
+            dlg = FileDialog(parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
+
+            if dlg.ShowModal() != ID_OK:
+                dlg.Destroy()
+                return False
+
+            fileNames = dlg.GetPaths()
+            # self.updateCurrentDir(fileNames[0])           # Old code
+            self._currentDirectoryHandler.currentDirectory = fileNames[0]
+
+            dlg.Destroy()
+
+        self.logger.info(f"loading file(s) {filename}")
+
+        # Open the specified files
+        for filename in fileNames:
+            try:
+                if self._treeNotebookHandler.openFile(filename):
+                    # Add to last opened files list
+                    self._preferences.addNewLastOpenedFilesEntry(filename)
+                    self._setLastOpenedFilesItems()
+                    self._mediator.updateTitle()
+            except (ValueError, Exception) as e:
+                PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
+                self.logger.error(f'{e}')
 
     def _setLastOpenedFilesItems(self):
         """

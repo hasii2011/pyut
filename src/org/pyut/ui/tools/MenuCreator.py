@@ -226,7 +226,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REDO], id=SharedIdentifiers.ID_MNU_REDO)
 
         for index in range(self._prefs.getNbLOF()):
-            containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.LAST_OPENED_FILES], id=self.lastOpenedFilesID[index])
+            containingFrame.Bind(EVT_MENU, fileMenuHandler.onMenuLastOpenedFile, id=self.lastOpenedFilesID[index])
 
         containingFrame.Bind(EVT_CLOSE, cb[ActionCallbackType.CLOSE])
 
