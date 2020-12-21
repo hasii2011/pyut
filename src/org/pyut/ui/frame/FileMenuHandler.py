@@ -33,12 +33,14 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Globals import _
 from org.pyut.general.Mediator import Mediator
+from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 
@@ -228,7 +230,7 @@ class FileMenuHandler:
 
         # Do plugin functionality
         try:
-            wxYield()  
+            wxYield()
             obj.doImport()
         except (ValueError, Exception) as e:
             PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
@@ -236,6 +238,21 @@ class FileMenuHandler:
 
         parent: Window = self._fileMenu.GetWindow()
         parent.Refresh()
+
+    def onExport(self, event: CommandEvent):
+        """
+        Callback.
+
+        Args:
+            event: A command event
+        """
+        # Create a plugin instance
+        cl = self.plugins[event.GetId()]
+        umlObjects: List[OglClass]      = self._mediator.getUmlObjects()
+        umlFrame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
+        obj = cl(umlObjects, umlFrame)
+
+        obj.doExport()
 
     # noinspection PyUnusedLocal
     def onPyutPreferences(self, event: CommandEvent):

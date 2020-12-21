@@ -86,7 +86,7 @@ class MenuCreator:
 
         fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
 
-        sub = self.makeExportMenu()
+        sub = self.makeExportMenu(fileMenuHandler=fileMenuHandler)
 
         if sub is None:
             sub = Menu()
@@ -225,7 +225,7 @@ class MenuCreator:
 
         return sub
 
-    def makeExportMenu(self):
+    def makeExportMenu(self, fileMenuHandler: FileMenuHandler):
         """
         Make the export submenu.
         """
@@ -234,13 +234,12 @@ class MenuCreator:
         if nb == 0:
             return None
         sub: Menu = Menu()
-        cb:  SharedTypes.CallbackMap = self._callbackMap
 
         for i in range(nb):
             pluginId = NewId()
             obj = plugs[i](None, None)
             sub.Append(pluginId, obj.getOutputFormat()[0])
-            self._containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXPORT], id=pluginId)
+            self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onExport, id=pluginId)
             self.plugins[pluginId] = plugs[i]
         return sub
 
@@ -253,7 +252,6 @@ class MenuCreator:
         if nb == 0:
             return None
         sub: Menu = Menu()
-        cb: SharedTypes.CallbackMap = self._callbackMap
 
         for i in range(nb):
             importId = NewId()

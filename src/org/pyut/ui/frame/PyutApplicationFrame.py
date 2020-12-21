@@ -299,6 +299,7 @@ class PyutApplicationFrame(Frame):
         # self.Refresh()
         assert False, 'Use the file handler class'
 
+    # noinspection PyUnusedLocal
     def OnExport(self, event: CommandEvent):
         """
         Callback.
@@ -307,14 +308,15 @@ class PyutApplicationFrame(Frame):
             event: wxEvent event
         """
         # Create a plugin instance
-        cl = self.plugins[event.GetId()]
-        umlObjects: List[OglClass]      = self._mediator.getUmlObjects()
-        umlFrame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
-        obj = cl(umlObjects, umlFrame)
-        # Do plugin functionality
-        # BeginBusyCursor()
-        obj.doExport()
-        # EndBusyCursor()
+        # cl = self.plugins[event.GetId()]
+        # umlObjects: List[OglClass]      = self._mediator.getUmlObjects()
+        # umlFrame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
+        # obj = cl(umlObjects, umlFrame)
+        # # Do plugin functionality
+        # # BeginBusyCursor()
+        # obj.doExport()
+        # # EndBusyCursor()
+        assert False, 'Use the file handler class'
 
     def OnToolPlugin(self, event: CommandEvent):
         """
