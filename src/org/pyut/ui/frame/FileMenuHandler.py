@@ -1,7 +1,9 @@
 
+from typing import List
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
-from typing import List
 
 from wx import BOTH
 from wx import FD_MULTIPLE
@@ -19,6 +21,11 @@ from wx import PrintPreview
 from wx import Printer
 from wx import Window
 
+# from wx import BeginBusyCursor
+# from wx import EndBusyCursor
+
+from wx import Yield as wxYield
+
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
@@ -32,6 +39,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 
 class FileMenuHandler:
@@ -45,9 +53,19 @@ class FileMenuHandler:
         self._mediator:           Mediator        = Mediator()
         self._preferences:        PyutPreferences = PyutPreferences()
 
+        self._plugins:            SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})     # To store the plugins
+
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
 
         self._treeNotebookHandler: TreeNotebookHandler = self._mediator.getFileHandling()
+
+    @property
+    def plugins(self) -> SharedTypes.PluginMap:
+        return self._plugins
+
+    @plugins.setter
+    def plugins(self, newMap: SharedTypes.PluginMap):
+        self._plugins = newMap
 
     # noinspection PyUnusedLocal
     def onNewProject(self, event: CommandEvent):
@@ -198,6 +216,26 @@ class FileMenuHandler:
             project.removeDocument(document)
         else:
             PyutUtils.displayWarning(_("No document to remove"))
+
+    def onImport(self, event: CommandEvent):
+
+        self._treeNotebookHandler.newProject()
+        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
+        self._mediator.updateTitle()
+        cl = self.plugins[event.GetId()]
+
+        obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
+
+        # Do plugin functionality
+        try:
+            wxYield()  
+            obj.doImport()
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
+            self.logger.error(f'{e}')
+
+        parent: Window = self._fileMenu.GetWindow()
+        parent.Refresh()
 
     # noinspection PyUnusedLocal
     def onPyutPreferences(self, event: CommandEvent):

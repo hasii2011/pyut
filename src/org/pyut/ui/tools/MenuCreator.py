@@ -84,6 +84,8 @@ class MenuCreator:
         self.fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT, _("&Remove document"), _("Remove the document from the project"))
         self.fileMenu.AppendSeparator()
 
+        fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+
         sub = self.makeExportMenu()
 
         if sub is None:
@@ -92,7 +94,7 @@ class MenuCreator:
         if sub is not None:
             self.fileMenu.Append(NewId(), _("Export"), sub)
 
-        sub = self.makeImportMenu()
+        sub = self.makeImportMenu(fileMenuHandler=fileMenuHandler)
         if sub is not None:
             self.fileMenu.Append(NewId(), _("Import"), sub)
 
@@ -105,21 +107,9 @@ class MenuCreator:
         self.fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT, _("&Print\tCtrl-P"), _("Print the current diagram"))
         self.fileMenu.AppendSeparator()
 
-        #  Add Last opened files
-        index = 0
-        #  TODO : does not work ? verify function return...
-        for el in self._prefs.getLastOpenedFilesList():
-            index += 1
-            # self.fileMenu.Append(self.lastOpenedFilesID[index - 1], "&" + str(index) + " " + el)
-            lof: str = f"&{str(index)} {el}"
-            self.logger.debug(f'self.lastOpenedFilesID[index - 1]: {self.lastOpenedFilesID[index - 1]}  lof: {lof}  ')
-            self.fileMenu.Append(self.lastOpenedFilesID[index - 1], lof)
+        sub = self.makeRecentlyOpenedMenu()
 
-        for index in range(index, self._prefs.getNbLOF()):
-            # self.fileMenu.Append(self.lastOpenedFilesID[index], "&" + str(index + 1) + " -")
-            lofAgain: str = f"&{str(index + 1)} -"
-            self.fileMenu.Append(self.lastOpenedFilesID[index], lofAgain)
-
+        self.fileMenu.Append(NewId(), _('Recently Opened'), sub)
         self.fileMenu.AppendSeparator()
         self.fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_EXIT, _("E&xit"), _("Exit PyUt"))
 
@@ -153,6 +143,9 @@ class MenuCreator:
         if sub is not None:
             mnuTools.Append(NewId(), _("toolboxes"), sub)
 
+        # Plugins identified;  The the FileMenuHandler
+        fileMenuHandler.plugins = self.plugins
+
         mnuHelp = Menu()
         mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
         mnuHelp.AppendSeparator()
@@ -171,21 +164,7 @@ class MenuCreator:
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
 
-        fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
-
         cb: SharedTypes.CallbackMap = self._callbackMap
-
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_CLASS_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_SEQUENCE_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_USE_CASE_DIAGRAM], id=SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.NEW_PROJECT],    id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.INSERT_PROJECT], id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_OPEN],      id=SharedIdentifiers.ID_MNU_FILE_OPEN)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE],      id=SharedIdentifiers.ID_MNU_FILE_SAVE)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.FILE_SAVE_AS],   id=SharedIdentifiers.ID_MNUFILESAVEAS)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROJECT_CLOSE],  id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REMOVE_DOCUMENT], id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
-        # containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PYUT_PREFERENCES], id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
 
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewProject, id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewClassDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
@@ -205,8 +184,11 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT], id=SharedIdentifiers.ID_MNU_FILE_PRINT)
 
         #  EVT_MENU(self, ID_MNU_FILE_DIAGRAM_PROPERTIES,self._OnMnuFileDiagramProperties)
+        for index in range(self._prefs.getNbLOF()):
+            containingFrame.Bind(EVT_MENU, fileMenuHandler.onRecentlyOpenedFile, id=self.lastOpenedFilesID[index])
 
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXIT_PROGRAM], id=SharedIdentifiers.ID_MNU_FILE_EXIT)
+
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROGRAM_ABOUT], id=ID_ABOUT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_INDEX], id=SharedIdentifiers.ID_MNU_HELP_INDEX)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_VERSION], id=SharedIdentifiers.ID_MNU_HELP_VERSION)
@@ -229,10 +211,19 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.UNDO], id=SharedIdentifiers.ID_MNU_UNDO)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REDO], id=SharedIdentifiers.ID_MNU_REDO)
 
-        for index in range(self._prefs.getNbLOF()):
-            containingFrame.Bind(EVT_MENU, fileMenuHandler.onRecentlyOpenedFile, id=self.lastOpenedFilesID[index])
-
         containingFrame.Bind(EVT_CLOSE, cb[ActionCallbackType.CLOSE])
+
+    def makeRecentlyOpenedMenu(self):
+
+        sub: Menu = Menu()
+
+        index = 0
+        for index in range(index, self._prefs.getNbLOF()):
+            # self.fileMenu.Append(self.lastOpenedFilesID[index], "&" + str(index + 1) + " -")
+            lofAgain: str = f"&{str(index + 1)} -"
+            sub.Append(self.lastOpenedFilesID[index], lofAgain)
+
+        return sub
 
     def makeExportMenu(self):
         """
@@ -253,7 +244,7 @@ class MenuCreator:
             self.plugins[pluginId] = plugs[i]
         return sub
 
-    def makeImportMenu(self):
+    def makeImportMenu(self, fileMenuHandler: FileMenuHandler):
         """
         Make the import submenu.
         """
@@ -268,7 +259,7 @@ class MenuCreator:
             importId = NewId()
             obj = plugs[i](None, None)
             sub.Append(importId, obj.getInputFormat()[0])
-            self._containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.IMPORT], id=importId)
+            self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onImport, id=importId)
             self.plugins[importId] = plugs[i]
         return sub
 

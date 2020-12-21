@@ -50,8 +50,6 @@ from wx import BeginBusyCursor
 from wx import EndBusyCursor
 from wx import Window
 
-from wx import Yield as wxYield
-
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
 from org.pyut.ogl.OglActor import OglActor
@@ -81,8 +79,6 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-
-from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Mediator import Mediator
 
@@ -174,6 +170,7 @@ class PyutApplicationFrame(Frame):
 
         self.Bind(EVT_ACTIVATE, self._onActivate)
 
+    # noinspection PyUnusedLocal
     def updateCurrentDir(self, fullPath: str):
         """
         Deprecated use the singleton CurrentDirectoryHandler
@@ -183,10 +180,7 @@ class PyutApplicationFrame(Frame):
         Args:
             fullPath:   Full path, with filename
         """
-        # self._lastDir = fullPath[:fullPath.rindex(osSeparator)]
-        # self._prefs.lastOpenedDirectory = self._lastDir
         assert False, 'Deprecated'
-        pass
 
     def getCurrentDir(self):
         """
@@ -283,25 +277,27 @@ class PyutApplicationFrame(Frame):
         # TODO? wx.OGLCleanUp()
         self.Destroy()
 
+    # noinspection PyUnusedLocal
     def OnImport(self, event):
-        self._treeNotebookHandler.newProject()
-        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
-        self._mediator.updateTitle()
-        cl = self.plugins[event.GetId()]
-
-        obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
-
-        # Do plugin functionality
-        BeginBusyCursor()
-        try:
-            wxYield()  # time to process the refresh in newDiagram
-            obj.doImport()
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
-            self.logger.error(f'{e}')
-
-        EndBusyCursor()
-        self.Refresh()
+        # self._treeNotebookHandler.newProject()
+        # self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
+        # self._mediator.updateTitle()
+        # cl = self.plugins[event.GetId()]
+        #
+        # obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
+        #
+        # # Do plugin functionality
+        # BeginBusyCursor()
+        # try:
+        #     wxYield()  # time to process the refresh in newDiagram
+        #     obj.doImport()
+        # except (ValueError, Exception) as e:
+        #     PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
+        #     self.logger.error(f'{e}')
+        #
+        # EndBusyCursor()
+        # self.Refresh()
+        assert False, 'Use the file handler class'
 
     def OnExport(self, event: CommandEvent):
         """
@@ -464,7 +460,7 @@ class PyutApplicationFrame(Frame):
         self._menuCreator.initMenus()
         self.mnuFile      = self._menuCreator.fileMenu
         self.plugins      = self._menuCreator.plugins
-        self._toolboxIds = self._menuCreator.toolboxIds
+        self._toolboxIds  = self._menuCreator.toolboxIds
         self.logger.debug(f'self.mnuFile: {self.mnuFile}')
 
     def _createAcceleratorTable(self):
@@ -718,6 +714,7 @@ class PyutApplicationFrame(Frame):
         if not printer.Print(self, printout, True):
             PyutUtils.displayError(_("Cannot print"), _("Error"), self)
 
+    # noinspection PyUnusedLocal
     def _OnMnuLOF(self, event: CommandEvent):
         """
         Open a file from the last opened files list
