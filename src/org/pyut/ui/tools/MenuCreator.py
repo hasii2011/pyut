@@ -179,15 +179,15 @@ class MenuCreator:
 
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPyutPreferences, id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
 
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_SETUP], id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT_PREVIEW], id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PRINT], id=SharedIdentifiers.ID_MNU_FILE_PRINT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintSetup,   id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintPreview, id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrint,        id=SharedIdentifiers.ID_MNU_FILE_PRINT)
 
         #  EVT_MENU(self, ID_MNU_FILE_DIAGRAM_PROPERTIES,self._OnMnuFileDiagramProperties)
         for index in range(self._prefs.getNbLOF()):
             containingFrame.Bind(EVT_MENU, fileMenuHandler.onRecentlyOpenedFile, id=self.lastOpenedFilesID[index])
 
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EXIT_PROGRAM], id=SharedIdentifiers.ID_MNU_FILE_EXIT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit, id=SharedIdentifiers.ID_MNU_FILE_EXIT)
 
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROGRAM_ABOUT], id=ID_ABOUT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_INDEX], id=SharedIdentifiers.ID_MNU_HELP_INDEX)

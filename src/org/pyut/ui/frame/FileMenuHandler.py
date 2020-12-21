@@ -10,11 +10,15 @@ from wx import FD_MULTIPLE
 from wx import FD_OPEN
 from wx import ID_ANY
 from wx import ID_OK
+from wx import PAPER_A4
+from wx import PORTRAIT
+from wx import PRINT_QUALITY_HIGH
 
 from wx import CommandEvent
 from wx import FileDialog
 from wx import Menu
 from wx import PreviewFrame
+from wx import PrintData
 from wx import PrintDialog
 from wx import PrintDialogData
 from wx import PrintPreview
@@ -58,8 +62,9 @@ class FileMenuHandler:
         self._plugins:            SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})     # To store the plugins
 
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
+        self._treeNotebookHandler:     TreeNotebookHandler     = self._mediator.getFileHandling()
 
-        self._treeNotebookHandler: TreeNotebookHandler = self._mediator.getFileHandling()
+        self._initPrinting()    # Printing data
 
     @property
     def plugins(self) -> SharedTypes.PluginMap:
@@ -237,6 +242,7 @@ class FileMenuHandler:
             self.logger.error(f'{e}')
 
         parent: Window = self._fileMenu.GetWindow()
+
         parent.Refresh()
 
     def onExport(self, event: CommandEvent):
@@ -258,7 +264,7 @@ class FileMenuHandler:
     def onPyutPreferences(self, event: CommandEvent):
 
         self.logger.debug(f"Before dialog show")
-        parent:           Window = self._fileMenu.GetWindow()
+        parent: Window = self._fileMenu.GetWindow()
 
         with DlgPyutPreferences(parent, ID_ANY) as dlg:
             if dlg.ShowModal() == ID_OK:
@@ -278,9 +284,10 @@ class FileMenuHandler:
         Args:
             event:
         """
-        dlg: PrintDialog = PrintDialog(self)
+        parent: Window = self._fileMenu.GetWindow()
 
-        # dlg.GetPrintDialogData().SetSetupDialog(True)
+        dlg: PrintDialog = PrintDialog(parent)
+
         dlg.GetPrintDialogData().SetPrintData(self._printData)
         dlg.ShowModal()
         self._printData = dlg.GetPrintDialogData().GetPrintData()
@@ -294,10 +301,12 @@ class FileMenuHandler:
         Args:
             event:
         """
+        parent: Window = self._fileMenu.GetWindow()
+
         self._mediator.deselectAllShapes()
         frame = self._mediator.getUmlFrame()
         if frame == -1:
-            PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
+            PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), parent)
             return
 
         printout  = PyutPrintout(frame)
@@ -305,10 +314,10 @@ class FileMenuHandler:
         preview   = PrintPreview(printout, printout2, self._printData)
 
         if not preview.IsOk():
-            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), parent)
             return
 
-        frame = PreviewFrame(preview, self, _("Diagram preview"))
+        frame = PreviewFrame(preview, parent, _("Diagram preview"))
         frame.Initialize()
         frame.Centre(BOTH)
 
@@ -325,8 +334,10 @@ class FileMenuHandler:
         Args:
             event:
         """
+        parent: Window = self._fileMenu.GetWindow()
+
         if self._mediator.getDiagram() is None:
-            PyutUtils.displayError(_("No diagram to print !"), _("Error"), self)
+            PyutUtils.displayError(_("No diagram to print !"), _("Error"), parent)
             return
         self._mediator.deselectAllShapes()
         printDialogData: PrintDialogData = PrintDialogData()
@@ -337,8 +348,8 @@ class FileMenuHandler:
         printer  = Printer(printDialogData)
         printout = PyutPrintout(self._mediator.getUmlFrame())
 
-        if not printer.Print(self, printout, True):
-            PyutUtils.displayError(_("Cannot print"), _("Error"), self)
+        if not printer.Print(parent, printout, True):
+            PyutUtils.displayError(_("Cannot print"), _("Error"), parent)
 
     def onRecentlyOpenedFile(self, event: CommandEvent):
         """
@@ -365,8 +376,14 @@ class FileMenuHandler:
         Args:
             event:
         """
-        # self.Close()
-        assert False, 'Not yet implemented'
+        from wx import PostEvent as wxPostEvent
+        from wx import CloseEvent
+        from wx import EVT_CLOSE
+
+        parent:     Window     = self._fileMenu.GetWindow()
+        closeEvent: CloseEvent = CloseEvent(EVT_CLOSE.typeId)
+
+        wxPostEvent(parent, closeEvent)
 
     def _loadFile(self, filename: str = ""):
         """
@@ -380,6 +397,7 @@ class FileMenuHandler:
 
         currentDir: str    = self._mediator.getCurrentDir()
         parent:     Window = self._fileMenu.GetWindow()
+
         # TODO This is bad practice to do something different based on input
         if filename == "":
             dlg = FileDialog(parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
@@ -389,7 +407,6 @@ class FileMenuHandler:
                 return False
 
             fileNames = dlg.GetPaths()
-            # self.updateCurrentDir(fileNames[0])           # Old code
             self._currentDirectoryHandler.currentDirectory = fileNames[0]
 
             dlg.Destroy()
@@ -423,3 +440,14 @@ class FileMenuHandler:
             self._fileMenu.SetLabel(id=openFilesId, label=lbl)
 
             index += 1
+
+    def _initPrinting(self):
+        """
+        printing data initialization
+        """
+        self._printData = PrintData()
+        self._printData.SetPaperId(PAPER_A4)
+        self._printData.SetQuality(PRINT_QUALITY_HIGH)
+        self._printData.SetOrientation(PORTRAIT)
+        self._printData.SetNoCopies(1)
+        self._printData.SetCollate(True)

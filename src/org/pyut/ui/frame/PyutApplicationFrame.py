@@ -21,14 +21,9 @@ from wx import DEFAULT_FRAME_STYLE
 from wx import FRAME_EX_METAL
 from wx import ID_ANY
 from wx import ID_OK
-from wx import PAPER_A4
-from wx import PORTRAIT
-from wx import PRINT_QUALITY_HIGH
 from wx import EVT_ACTIVATE
 from wx import FD_OPEN
 from wx import FD_MULTIPLE
-
-from wx import PrintData
 
 from wx import AcceleratorEntry
 from wx import CommandEvent
@@ -39,12 +34,8 @@ from wx import AcceleratorTable
 from wx import Menu
 
 from wx import FileDialog
-from wx import PrintDialogData
-from wx import PrintDialog
+
 from wx import ClientDC
-from wx import PreviewFrame
-from wx import PrintPreview
-from wx import Printer
 
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
@@ -65,7 +56,7 @@ from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.ui.PyutPrintout import PyutPrintout
+
 from org.pyut.dialogs.tips.DlgTips import DlgTips
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
@@ -150,7 +141,7 @@ class PyutApplicationFrame(Frame):
         # Initialization
         self._initPyutTools()   # Toolboxes, toolbar
         self._initMenu()        # Menu
-        self._initPrinting()    # Printing data
+        # self._initPrinting()    # Printing data
 
         self.__setupKeyboardShortcuts()
 
@@ -273,7 +264,7 @@ class PyutApplicationFrame(Frame):
         self._prefs        = None
         self.plugMgr       = None
 
-        self._printData.Destroy()
+        # self._printData.Destroy()
         # TODO? wx.OGLCleanUp()
         self.Destroy()
 
@@ -654,13 +645,14 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        dlg: PrintDialog = PrintDialog(self)
-
-        # dlg.GetPrintDialogData().SetSetupDialog(True)
-        dlg.GetPrintDialogData().SetPrintData(self._printData)
-        dlg.ShowModal()
-        self._printData = dlg.GetPrintDialogData().GetPrintData()
-        dlg.Destroy()
+        # dlg: PrintDialog = PrintDialog(self)
+        #
+        # # dlg.GetPrintDialogData().SetSetupDialog(True)
+        # dlg.GetPrintDialogData().SetPrintData(self._printData)
+        # dlg.ShowModal()
+        # self._printData = dlg.GetPrintDialogData().GetPrintData()
+        # dlg.Destroy()
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFilePrintPreview(self, event: CommandEvent):
@@ -670,28 +662,29 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        self._mediator.deselectAllShapes()
-        frame = self._mediator.getUmlFrame()
-        if frame == -1:
-            PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
-            return
-
-        printout  = PyutPrintout(frame)
-        printout2 = PyutPrintout(frame)
-        preview   = PrintPreview(printout, printout2, self._printData)
-
-        if not preview.IsOk():
-            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
-            return
-
-        frame = PreviewFrame(preview, self, _("Diagram preview"))
-        frame.Initialize()
-        frame.Centre(BOTH)
-
-        try:
-            frame.Show(True)
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+        # self._mediator.deselectAllShapes()
+        # frame = self._mediator.getUmlFrame()
+        # if frame == -1:
+        #     PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
+        #     return
+        #
+        # printout  = PyutPrintout(frame)
+        # printout2 = PyutPrintout(frame)
+        # preview   = PrintPreview(printout, printout2, self._printData)
+        #
+        # if not preview.IsOk():
+        #     PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+        #     return
+        #
+        # frame = PreviewFrame(preview, self, _("Diagram preview"))
+        # frame.Initialize()
+        # frame.Centre(BOTH)
+        #
+        # try:
+        #     frame.Show(True)
+        # except (ValueError, Exception) as e:
+        #     PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuFilePrint(self, event: CommandEvent):
@@ -701,20 +694,21 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        if self._mediator.getDiagram() is None:
-            PyutUtils.displayError(_("No diagram to print !"), _("Error"), self)
-            return
-        self._mediator.deselectAllShapes()
-        printDialogData: PrintDialogData = PrintDialogData()
-
-        printDialogData.SetPrintData(self._printData)
-        printDialogData.SetMinPage(1)
-        printDialogData.SetMaxPage(1)
-        printer  = Printer(printDialogData)
-        printout = PyutPrintout(self._mediator.getUmlFrame())
-
-        if not printer.Print(self, printout, True):
-            PyutUtils.displayError(_("Cannot print"), _("Error"), self)
+        # if self._mediator.getDiagram() is None:
+        #     PyutUtils.displayError(_("No diagram to print !"), _("Error"), self)
+        #     return
+        # self._mediator.deselectAllShapes()
+        # printDialogData: PrintDialogData = PrintDialogData()
+        #
+        # printDialogData.SetPrintData(self._printData)
+        # printDialogData.SetMinPage(1)
+        # printDialogData.SetMaxPage(1)
+        # printer  = Printer(printDialogData)
+        # printout = PyutPrintout(self._mediator.getUmlFrame())
+        #
+        # if not printer.Print(self, printout, True):
+        #     PyutUtils.displayError(_("Cannot print"), _("Error"), self)
+        assert False, 'Use the file menu handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuLOF(self, event: CommandEvent):
@@ -1081,16 +1075,16 @@ class PyutApplicationFrame(Frame):
             return
         self._treeNotebookHandler.getCurrentFrame().getHistory().redo()
 
-    def _initPrinting(self):
-        """
-        printing data initialization
-        """
-        self._printData = PrintData()
-        self._printData.SetPaperId(PAPER_A4)
-        self._printData.SetQuality(PRINT_QUALITY_HIGH)
-        self._printData.SetOrientation(PORTRAIT)
-        self._printData.SetNoCopies(1)
-        self._printData.SetCollate(True)
+    # def _initPrinting(self):
+    #     """
+    #     printing data initialization
+    #     """
+    #     self._printData = PrintData()
+    #     self._printData.SetPaperId(PAPER_A4)
+    #     self._printData.SetQuality(PRINT_QUALITY_HIGH)
+    #     self._printData.SetOrientation(PORTRAIT)
+    #     self._printData.SetNoCopies(1)
+    #     self._printData.SetCollate(True)
 
     def _createApplicationIcon(self):
 
