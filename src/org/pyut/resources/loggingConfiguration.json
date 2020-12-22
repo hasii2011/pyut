@@ -41,41 +41,8 @@
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.commands": {
-            "level":     "ERROR",
-            "propagate": "False"
-        },
-        "org.pyut.miniogl": {
+        "org.pyut.ui.frame.EditMenuHandler": {
             "level":     "INFO",
-            "propagate": "False"
-        },
-        "org.pyut.miniogl.TextShape": {
-            "level":     "DEBUG",
-            "propagate": "False"
-        },
-        "org.pyut.miniogl.LineShape": {
-            "level":     "INFO",
-            "propagate": "False"
-        },
-        "org.pyut.miniogl.Shape": {
-            "level":     "INFO",
-            "propagate": "False"
-        },
-
-        "org.pyut.ogl.OglAssociation": {
-            "level":     "WARNING",
-            "propagate": "False"
-        },
-        "org.pyut.plugins.gml": {
-            "level":     "WARNING",
-            "propagate": "False"
-        },
-        "org.pyut.plugins": {
-            "level":     "WARNING",
-            "propagate": "False"
-        },
-        "org.pyut.plugins.io.pdfsupport.OglToPdfDefinition": {
-            "level":     "ERROR",
             "propagate": "False"
         }
     }

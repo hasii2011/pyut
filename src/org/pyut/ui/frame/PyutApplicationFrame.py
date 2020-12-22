@@ -10,8 +10,6 @@ from os import getcwd
 
 from sys import platform as sysPlatform
 
-from copy import copy
-
 from urllib import request
 
 from wx import ACCEL_CTRL
@@ -36,23 +34,11 @@ from wx import Menu
 
 from wx import FileDialog
 
-from wx import ClientDC
-
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 from wx import Window
 
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
-
-from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglNote import OglNote
-from org.pyut.ogl.OglUseCase import OglUseCase
-
-from org.pyut.model.PyutActor import PyutActor
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutUseCase import PyutUseCase
 
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.PyutProject import PyutProject
@@ -62,7 +48,6 @@ from org.pyut.dialogs.tips.DlgTips import DlgTips
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
-# from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
@@ -116,7 +101,6 @@ class PyutApplicationFrame(Frame):
 
         self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
 
-        self._clipboard = []
         self._currentDirectory = getcwd()
         self._lastDir = self._prefs.lastOpenedDirectory
 
@@ -163,18 +147,6 @@ class PyutApplicationFrame(Frame):
         self.Bind(EVT_ACTIVATE, self._onActivate)
         self.Bind(EVT_CLOSE, self.Close)
 
-    # noinspection PyUnusedLocal
-    def updateCurrentDir(self, fullPath: str):
-        """
-        Deprecated use the singleton CurrentDirectoryHandler
-
-        Set current working directory.
-
-        Args:
-            fullPath:   Full path, with filename
-        """
-        assert False, 'Deprecated'
-
     def getCurrentDir(self):
         """
         Return current working directory.
@@ -204,7 +176,7 @@ class PyutApplicationFrame(Frame):
         PyutApp do not need to know the correct name of the _loadFile method.
 
         """
-        self._loadFile(filename)
+        self._loadFile(filename)        # TODO TODO TODO Fix this entry point;  Logic moved to FileMenuHandler
 
     def removeEmptyProject(self):
 
@@ -298,39 +270,6 @@ class PyutApplicationFrame(Frame):
     def OnToolboxMenuClick(self, event):
         self._mediator.displayToolbox(self._toolboxIds[event.GetId()])
 
-    def cutSelectedShapes(self):
-        """
-        Cut all current shapes
-        """
-        selected = self._mediator.getSelectedShapes()
-        if len(selected) > 0:
-            self._clipboard = []
-        else:
-            return
-
-        canvas = selected[0].GetDiagram().GetPanel()
-        # the canvas which contain the shape
-        # specify the canvas on which we will paint
-        # dc = wxClientDC(canvas)
-        # canvas.PrepareDC(dc)
-        # diagram = self._mediator.getDiagram()
-
-        # put the PyutObjects in the clipboard and remove them from the diagram
-        for obj in selected:
-            # remove the links
-            # for each link
-            # for link in obj.getLinks()[:]:
-            # self._mediator.removeLink(link)
-            obj.Detach()
-
-        for obj in selected:
-            self._clipboard.append(obj.getPyutObject())
-            # self._mediator.removeClass(obj)
-
-        self._treeNotebookHandler.setModified(True)
-        self._mediator.updateTitle()
-        canvas.Refresh()
-
     def _onActivate(self, event):
         """
         EVT_ACTIVATE Callback; display tips frame.  But only, the first activate
@@ -378,11 +317,6 @@ class PyutApplicationFrame(Frame):
             ActionCallbackType.HELP_WEB:             self._OnMnuHelpWeb,
             ActionCallbackType.ADD_PYUT_HIERARCHY:   self._OnMnuAddPyut,
             ActionCallbackType.ADD_OGL_HIERARCHY:    self._OnMnuAddOgl,
-
-            ActionCallbackType.EDIT_COPY:            self._OnMnuEditCut,
-            ActionCallbackType.EDIT_CUT:             self._OnMnuEditCopy,
-            ActionCallbackType.EDIT_PASTE:           self._OnMnuEditPaste,
-            ActionCallbackType.SELECT_ALL:           self._OnMnuSelectAll,
             ActionCallbackType.DEBUG:                self._OnMnuDebug,
 
             ActionCallbackType.UNDO: self._OnMnuUndo,
@@ -628,99 +562,6 @@ class PyutApplicationFrame(Frame):
         self._mediator.selectTool(event.GetId())
         self._treeNotebookHandler.setModified(True)
         self._mediator.updateTitle()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuEditCut(self, event: CommandEvent):
-        """
-
-        Args:
-            event:
-        """
-        self.cutSelectedShapes()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuEditCopy(self, event: CommandEvent):
-        """
-        TODO : adapt for OglLinks
-
-        Args:
-            event:
-        """
-        selected = self._mediator.getSelectedShapes()
-        if len(selected) > 0:
-            self._clipboard = []
-        else:
-            return
-
-        # put a copy of the PyutObjects in the clipboard
-        for obj in selected:
-            obj = copy(obj.getPyutObject())
-            obj.setLinks([])   # we don't want to copy the links
-            self._clipboard.append(obj)
-
-    # noinspection PyUnboundLocalVariable
-    # noinspection PyUnusedLocal
-    def _OnMnuEditPaste(self, event: CommandEvent):
-        """
-
-        Args:
-            event:
-        """
-        if len(self._clipboard) == 0:
-            return
-
-        frame = self._mediator.getUmlFrame()
-        if frame == -1:
-            PyutUtils.displayError(_("No frame to paste into"))
-            return
-
-        # put the objects in the clipboard and remove them from the diagram
-        x, y = 100, 100
-        for obj in self._clipboard:
-            obj = copy(obj)  # this is a PyutObject
-            if isinstance(obj, PyutClass):
-                po = OglClass(obj)
-            elif isinstance(obj, PyutNote):
-                po = OglNote(obj)
-            elif isinstance(obj, PyutActor):
-                po = OglActor(obj)
-            elif isinstance(obj, PyutUseCase):
-                po = OglUseCase(obj)
-            else:
-                self.logger.error("Error when try to paste object")
-                return
-            self._mediator.getUmlFrame().addShape(po, x, y)
-            x += 20
-            y += 20
-
-        canvas = po.GetDiagram().GetPanel()
-        # the canvas that contain the shape
-        # specify the canvas on which we will paint
-        dc = ClientDC(canvas)
-        canvas.PrepareDC(dc)
-
-        self._treeNotebookHandler.setModified(True)
-        self._mediator.updateTitle()
-        canvas.Refresh()
-        # TODO : What are you doing with the dc ?
-
-    # noinspection PyUnusedLocal
-    def _OnMnuSelectAll(self, event: CommandEvent):
-        """
-
-        Args:
-            event:
-        """
-        # frame = self._mediator.getUmlFrame()
-        # if frame is None:
-        #     PyutUtils.displayError(_("No frame found !"))
-        #     return
-        # diagram = frame.GetDiagram()
-        # shapes = diagram.GetShapes()
-        # for shape in shapes:
-        #     shape.SetSelected(True)
-        # frame.Refresh()
-        assert False, 'Use Edit Menu Handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuDebug(self, event: CommandEvent):

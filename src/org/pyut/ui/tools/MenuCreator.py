@@ -321,9 +321,9 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.UNDO], id=SharedIdentifiers.ID_MNU_UNDO)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REDO], id=SharedIdentifiers.ID_MNU_REDO)
 
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_CUT], id=SharedIdentifiers.ID_MNU_EDIT_CUT)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_COPY], id=SharedIdentifiers.ID_MNU_EDIT_COPY)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_PASTE], id=SharedIdentifiers.ID_MNU_EDIT_PASTE)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onCut,   id=SharedIdentifiers.ID_MNU_EDIT_CUT)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onCopy,  id=SharedIdentifiers.ID_MNU_EDIT_COPY)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onPaste, id=SharedIdentifiers.ID_MNU_EDIT_PASTE)
 
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.ADD_PYUT_HIERARCHY], id=SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.ADD_OGL_HIERARCHY], id=SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY)
@@ -335,4 +335,3 @@ class MenuCreator:
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView, id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView, id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
-
