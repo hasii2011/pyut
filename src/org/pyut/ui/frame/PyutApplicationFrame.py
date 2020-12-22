@@ -18,6 +18,7 @@ from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
+from wx import EVT_CLOSE
 from wx import FRAME_EX_METAL
 from wx import ID_ANY
 from wx import ID_OK
@@ -61,7 +62,7 @@ from org.pyut.dialogs.tips.DlgTips import DlgTips
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
-from org.pyut.ui.tools.ToolsCreator import ToolsCreator
+# from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
@@ -160,6 +161,7 @@ class PyutApplicationFrame(Frame):
         self.SetThemeEnabled(True)
 
         self.Bind(EVT_ACTIVATE, self._onActivate)
+        self.Bind(EVT_CLOSE, self.Close)
 
     # noinspection PyUnusedLocal
     def updateCurrentDir(self, fullPath: str):
@@ -268,47 +270,6 @@ class PyutApplicationFrame(Frame):
         # TODO? wx.OGLCleanUp()
         self.Destroy()
 
-    # noinspection PyUnusedLocal
-    def OnImport(self, event):
-        # self._treeNotebookHandler.newProject()
-        # self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
-        # self._mediator.updateTitle()
-        # cl = self.plugins[event.GetId()]
-        #
-        # obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
-        #
-        # # Do plugin functionality
-        # BeginBusyCursor()
-        # try:
-        #     wxYield()  # time to process the refresh in newDiagram
-        #     obj.doImport()
-        # except (ValueError, Exception) as e:
-        #     PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
-        #     self.logger.error(f'{e}')
-        #
-        # EndBusyCursor()
-        # self.Refresh()
-        assert False, 'Use the file handler class'
-
-    # noinspection PyUnusedLocal
-    def OnExport(self, event: CommandEvent):
-        """
-        Callback.
-
-        Args:
-            event: wxEvent event
-        """
-        # Create a plugin instance
-        # cl = self.plugins[event.GetId()]
-        # umlObjects: List[OglClass]      = self._mediator.getUmlObjects()
-        # umlFrame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
-        # obj = cl(umlObjects, umlFrame)
-        # # Do plugin functionality
-        # # BeginBusyCursor()
-        # obj.doExport()
-        # # EndBusyCursor()
-        assert False, 'Use the file handler class'
-
     def OnToolPlugin(self, event: CommandEvent):
         """
 
@@ -391,40 +352,26 @@ class PyutApplicationFrame(Frame):
                 self.logger.error(f'_onActivate: {e}')
 
     def _initPyutTools(self):
-
-        callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-            ActionCallbackType.NEW_ACTION:           self._OnNewAction,
-            ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
-            ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
-            ActionCallbackType.NEW_USE_CASE_DIAGRAM: self._OnMnuFileNewUsecaseDiagram,
-            ActionCallbackType.NEW_PROJECT:          self._OnMnuFileNewProject,
-            ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
-            ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
-            ActionCallbackType.UNDO:                 self._OnMnuUndo,
-            ActionCallbackType.REDO:                 self._OnMnuRedo,
-        })
-
-        self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
-        self._toolsCreator.initTools()
+        pass
+        # callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
+        #     ActionCallbackType.NEW_ACTION:           self._OnNewAction,
+        #     ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
+        #     ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
+        #     ActionCallbackType.NEW_USE_CASE_DIAGRAM: self._OnMnuFileNewUsecaseDiagram,
+        #     ActionCallbackType.NEW_PROJECT:          self._OnMnuFileNewProject,
+        #     ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
+        #     ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
+        #     ActionCallbackType.UNDO:                 self._OnMnuUndo,
+        #     ActionCallbackType.REDO:                 self._OnMnuRedo,
+        # })
+        #
+        # self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
+        # self._toolsCreator.initTools()
 
     def _initMenu(self):
 
         callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-            # ActionCallbackType.NEW_PROJECT:          self._OnMnuFileNewProject,
-            ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
-            ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
-            ActionCallbackType.NEW_USE_CASE_DIAGRAM: self._OnMnuFileNewUsecaseDiagram,
-            ActionCallbackType.INSERT_PROJECT:       self._OnMnuFileInsertProject,
-            ActionCallbackType.PROJECT_CLOSE:        self._OnMnuFileClose,
-            # ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
-            # ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
-            ActionCallbackType.FILE_SAVE_AS:         self._OnMnuFileSaveAs,
-            ActionCallbackType.REMOVE_DOCUMENT:      self._OnMnuFileRemoveDocument,
-            ActionCallbackType.PRINT_SETUP:          self._OnMnuFilePrintSetup,
-            ActionCallbackType.PRINT_PREVIEW:        self._OnMnuFilePrintPreview,
-            ActionCallbackType.PRINT:                self._OnMnuFilePrint,
-            ActionCallbackType.PYUT_PREFERENCES:     self._OnMnuFilePyutPreferences,
-            ActionCallbackType.EXIT_PROGRAM:         self._OnMnuFileExit,
+
             ActionCallbackType.PROGRAM_ABOUT:        self._OnMnuHelpAbout,
             ActionCallbackType.HELP_INDEX:           self._OnMnuHelpIndex,
             ActionCallbackType.HELP_VERSION:         self._OnMnuHelpVersion,
@@ -441,12 +388,9 @@ class PyutApplicationFrame(Frame):
             ActionCallbackType.UNDO: self._OnMnuUndo,
             ActionCallbackType.REDO: self._OnMnuRedo,
 
-            ActionCallbackType.LAST_OPENED_FILES: self._OnMnuLOF,
-            ActionCallbackType.CLOSE:             self.Close,
-            ActionCallbackType.EXPORT:            self.OnExport,
-            ActionCallbackType.IMPORT:            self.OnImport,
             ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
             ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
+
         })
 
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
@@ -493,251 +437,6 @@ class PyutApplicationFrame(Frame):
             (el1, el2, el3) = el
             acc.append(AcceleratorEntry(el1, el2, el3))
         return acc
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileNewProject(self, event: CommandEvent):
-        assert False, 'Use the file menu handler'
-    #     """
-    #     Create a new project
-    #
-    #     Args:
-    #         event:
-    #     """
-    #     self._treeNotebookHandler.newProject()
-    #     self._mediator.updateTitle()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileNewClassDiagram(self, event: CommandEvent):
-        """
-        Create a new class diagram
-
-        Args:
-            event:
-        """
-        # self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
-        # self._mediator.updateTitle()
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileNewSequenceDiagram(self, event: CommandEvent):
-        """
-        Create a new sequence diagram
-
-        Args:
-            event:
-        """
-        # self._treeNotebookHandler.newDocument(DiagramType.SEQUENCE_DIAGRAM)
-        # self._mediator.updateTitle()
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileNewUsecaseDiagram(self, event: CommandEvent):
-        """
-        Create a new use-case diagram
-
-        Args:
-            event:
-        """
-        # self._treeNotebookHandler.newDocument(DiagramType.USECASE_DIAGRAM)
-        # self._mediator.updateTitle()
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileInsertProject(self, event: CommandEvent):
-        """
-        Insert a project into this one
-
-        Args:
-            event:
-        """
-        # PyutUtils.displayWarning(_("The project insert is experimental, "
-        #                            "use it at your own risk.\n"
-        #                            "You risk a shapes ID duplicate with "
-        #                            "unexpected results !"), parent=self)
-        #
-        # if (self._treeNotebookHandler.getCurrentProject()) is None:
-        #     PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
-        #     return
-        #
-        # # Ask which project to insert
-        # dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN)
-        # if dlg.ShowModal() != ID_OK:
-        #     dlg.Destroy()
-        #     return False
-        # self.updateCurrentDir(dlg.GetPath())
-        # filename = dlg.GetPath()
-        # dlg.Destroy()
-        #
-        # print(("inserting file", str(filename)))
-        #
-        # # Insert the specified files
-        # try:
-        #     self._treeNotebookHandler.insertFile(filename)
-        # except (ValueError, Exception) as e:
-        #     PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileOpen(self, event: CommandEvent):
-        assert False, 'Use the file menu handler'
-    #     """
-    #     Open a diagram
-    #
-    #     Args:
-    #         event:
-    #     """
-    #     self._loadFile()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileSave(self, event: CommandEvent):
-        assert False, 'Use the file menu handler'
-    #     """
-    #     Save the current diagram to a file
-    #
-    #     Args:
-    #         event:
-    #     """
-    #     self._saveFile()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileSaveAs(self, event: CommandEvent):
-        """
-        Ask and save the current diagram to a file
-
-        Args:
-            event:
-        """
-        # self._saveFileAs()
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileClose(self, event: CommandEvent):
-        """
-        Close the current file
-
-        Args:
-            event:
-        """
-        # self._treeNotebookHandler.closeCurrentProject()
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileRemoveDocument(self, event: CommandEvent):
-        """
-        Remove the current document from the current project
-
-        Args:
-            event:
-        """
-        # project  = self._treeNotebookHandler.getCurrentProject()
-        # document = self._treeNotebookHandler.getCurrentDocument()
-        # if project is not None and document is not None:
-        #     project.removeDocument(document)
-        # else:
-        #     PyutUtils.displayWarning(_("No document to remove"))
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFilePrintSetup(self, event: CommandEvent):
-        """
-        Display the print setup dialog box
-
-        Args:
-            event:
-        """
-        # dlg: PrintDialog = PrintDialog(self)
-        #
-        # # dlg.GetPrintDialogData().SetSetupDialog(True)
-        # dlg.GetPrintDialogData().SetPrintData(self._printData)
-        # dlg.ShowModal()
-        # self._printData = dlg.GetPrintDialogData().GetPrintData()
-        # dlg.Destroy()
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFilePrintPreview(self, event: CommandEvent):
-        """
-        Display the print preview frame; Preview before printing.
-
-        Args:
-            event:
-        """
-        # self._mediator.deselectAllShapes()
-        # frame = self._mediator.getUmlFrame()
-        # if frame == -1:
-        #     PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), self)
-        #     return
-        #
-        # printout  = PyutPrintout(frame)
-        # printout2 = PyutPrintout(frame)
-        # preview   = PrintPreview(printout, printout2, self._printData)
-        #
-        # if not preview.IsOk():
-        #     PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
-        #     return
-        #
-        # frame = PreviewFrame(preview, self, _("Diagram preview"))
-        # frame.Initialize()
-        # frame.Centre(BOTH)
-        #
-        # try:
-        #     frame.Show(True)
-        # except (ValueError, Exception) as e:
-        #     PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFilePrint(self, event: CommandEvent):
-        """
-        Print the current diagram
-
-        Args:
-            event:
-        """
-        # if self._mediator.getDiagram() is None:
-        #     PyutUtils.displayError(_("No diagram to print !"), _("Error"), self)
-        #     return
-        # self._mediator.deselectAllShapes()
-        # printDialogData: PrintDialogData = PrintDialogData()
-        #
-        # printDialogData.SetPrintData(self._printData)
-        # printDialogData.SetMinPage(1)
-        # printDialogData.SetMaxPage(1)
-        # printer  = Printer(printDialogData)
-        # printout = PyutPrintout(self._mediator.getUmlFrame())
-        #
-        # if not printer.Print(self, printout, True):
-        #     PyutUtils.displayError(_("Cannot print"), _("Error"), self)
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuLOF(self, event: CommandEvent):
-        """
-        Open a file from the last opened files list
-
-        Args:
-            event:
-        """
-        # for index in range(self._prefs.getNbLOF()):
-        #     if event.GetId() == self.lastOpenedFilesID[index]:
-        #         try:
-        #             lst = self._prefs.getLastOpenedFilesList()
-        #             self._loadFile(lst[index])
-        #             self._prefs.addNewLastOpenedFilesEntry(lst[index])
-        #             self.__setLastOpenedFilesItems()
-        #         except (ValueError, Exception) as e:
-        #             self.logger.error(f'{e}')
-        assert False, 'Use the file menu handler'
-
-    # noinspection PyUnusedLocal
-    def _OnMnuFileExit(self, event: CommandEvent):
-        """
-        Exit the program
-
-        Args:
-            event:
-        """
-        self.Close()
 
     # noinspection PyUnusedLocal
     def _OnMnuHelpAbout(self, event: CommandEvent):
@@ -1023,23 +722,6 @@ class PyutApplicationFrame(Frame):
         frame.Refresh()
 
     # noinspection PyUnusedLocal
-    def _OnMnuFilePyutPreferences(self, event: CommandEvent):
-
-        # from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
-        #
-        # self.logger.debug(f"Before dialog show")
-        # with DlgPyutPreferences(self, ID_ANY) as dlg:
-        #     if dlg.ShowModal() == ID_OK:
-        #         self.logger.debug(f'Waiting for answer')
-        #     else:
-        #         self.logger.debug(f'Cancelled')
-        #
-        # umlFrame = self._mediator.getUmlFrame()
-        # if umlFrame is not None:
-        #     umlFrame.Refresh()
-        pass
-
-    # noinspection PyUnusedLocal
     def _OnMnuDebug(self, event: CommandEvent):
         """
         Open a dialog to access the Pyut loggers
@@ -1074,17 +756,6 @@ class PyutApplicationFrame(Frame):
             PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
             return
         self._treeNotebookHandler.getCurrentFrame().getHistory().redo()
-
-    # def _initPrinting(self):
-    #     """
-    #     printing data initialization
-    #     """
-    #     self._printData = PrintData()
-    #     self._printData.SetPaperId(PAPER_A4)
-    #     self._printData.SetQuality(PRINT_QUALITY_HIGH)
-    #     self._printData.SetOrientation(PORTRAIT)
-    #     self._printData.SetNoCopies(1)
-    #     self._printData.SetCollate(True)
 
     def _createApplicationIcon(self):
 

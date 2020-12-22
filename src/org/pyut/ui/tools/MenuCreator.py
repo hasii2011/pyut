@@ -4,7 +4,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from wx import EVT_CLOSE
 from wx import EVT_MENU
 from wx import ID_ABOUT
 
@@ -45,6 +44,8 @@ class MenuCreator:
         self._plugins:     SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
         self._toolboxesID: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id
 
+        self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+
     @property
     def fileMenu(self) -> Menu:
         return self._mnuFile
@@ -69,6 +70,10 @@ class MenuCreator:
     def toolboxIds(self, theNewValues: SharedTypes.ToolboxIdMap):
         self._toolboxesID = theNewValues
 
+    @property
+    def fileMenuHandler(self) -> FileMenuHandler:
+        return self._fileMenuHandler
+
     def initMenus(self):
 
         self.mnuFileNew = Menu()
@@ -86,7 +91,7 @@ class MenuCreator:
         self.fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT, _("&Remove document"), _("Remove the document from the project"))
         self.fileMenu.AppendSeparator()
 
-        fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+        fileMenuHandler: FileMenuHandler = self._fileMenuHandler
 
         sub = self.makeExportMenu(fileMenuHandler=fileMenuHandler)
 
@@ -212,8 +217,6 @@ class MenuCreator:
 
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.UNDO], id=SharedIdentifiers.ID_MNU_UNDO)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REDO], id=SharedIdentifiers.ID_MNU_REDO)
-
-        containingFrame.Bind(EVT_CLOSE, cb[ActionCallbackType.CLOSE])
 
     def makeRecentlyOpenedMenu(self):
 
