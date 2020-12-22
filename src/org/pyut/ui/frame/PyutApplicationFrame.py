@@ -711,15 +711,16 @@ class PyutApplicationFrame(Frame):
         Args:
             event:
         """
-        frame = self._mediator.getUmlFrame()
-        if frame is None:
-            PyutUtils.displayError(_("No frame found !"))
-            return
-        diagram = frame.GetDiagram()
-        shapes = diagram.GetShapes()
-        for shape in shapes:
-            shape.SetSelected(True)
-        frame.Refresh()
+        # frame = self._mediator.getUmlFrame()
+        # if frame is None:
+        #     PyutUtils.displayError(_("No frame found !"))
+        #     return
+        # diagram = frame.GetDiagram()
+        # shapes = diagram.GetShapes()
+        # for shape in shapes:
+        #     shape.SetSelected(True)
+        # frame.Refresh()
+        assert False, 'Use Edit Menu Handler'
 
     # noinspection PyUnusedLocal
     def _OnMnuDebug(self, event: CommandEvent):
