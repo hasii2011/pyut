@@ -8,6 +8,7 @@ from wx import EVT_MENU
 from wx import ID_ABOUT
 
 from wx import Frame
+from wx import ID_EXIT
 from wx import Menu
 from wx import MenuBar
 from wx import NewId
@@ -15,6 +16,7 @@ from wx import NewId
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
@@ -46,6 +48,7 @@ class MenuCreator:
         self._toolboxesID: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id
 
         self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+        self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=self.editMenu)
 
     @property
     def fileMenu(self) -> Menu:
@@ -78,6 +81,10 @@ class MenuCreator:
     @property
     def fileMenuHandler(self) -> FileMenuHandler:
         return self._fileMenuHandler
+
+    @property
+    def editMenuHandler(self) -> EditMenuHandler:
+        return self._editMenuHandler
 
     def initMenus(self):
 
@@ -125,23 +132,9 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_INDEX], id=SharedIdentifiers.ID_MNU_HELP_INDEX)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_VERSION], id=SharedIdentifiers.ID_MNU_HELP_VERSION)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_WEB], id=SharedIdentifiers.ID_MNU_HELP_WEB)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.ADD_PYUT_HIERARCHY], id=SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.ADD_OGL_HIERARCHY], id=SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY)
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.DEBUG], id=SharedIdentifiers.ID_DEBUG)
 
-        if MenuCreator.DEBUG_ERROR_VIEWS is True:
-            from org.pyut.experimental.DebugErrorViews import DebugErrorViews
-            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
-            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView,    id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
-            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView,   id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
-
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_CUT], id=SharedIdentifiers.ID_MNU_EDIT_CUT)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_COPY], id=SharedIdentifiers.ID_MNU_EDIT_COPY)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_PASTE], id=SharedIdentifiers.ID_MNU_EDIT_PASTE)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.SELECT_ALL], id=SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.DEBUG],         id=SharedIdentifiers.ID_DEBUG)
-
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.UNDO], id=SharedIdentifiers.ID_MNU_UNDO)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REDO], id=SharedIdentifiers.ID_MNU_REDO)
+        self._bindEditMenuHandlers(containingFrame, self.editMenuHandler)
 
     def _initializeFileMenu(self):
 
@@ -185,7 +178,9 @@ class MenuCreator:
         sub = self._makeRecentlyOpenedMenu()
         fileMenu.Append(NewId(), _('Recently Opened'), sub)
         fileMenu.AppendSeparator()
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_EXIT, _("E&xit"), _("Exit PyUt"))
+
+        # fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_EXIT, _("E&xit"), _("Exit PyUt"))
+        fileMenu.Append(ID_EXIT, _("E&xit"), _("Exit PyUt"))
 
     def _initializeEditMenu(self, ):
 
@@ -318,3 +313,26 @@ class MenuCreator:
             containingFrame.Bind(EVT_MENU, fileMenuHandler.onRecentlyOpenedFile, id=self.lastOpenedFilesID[index])
 
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit, id=SharedIdentifiers.ID_MNU_FILE_EXIT)
+
+    def _bindEditMenuHandlers(self, containingFrame: Frame, editMenuHandler: EditMenuHandler):
+
+        cb: SharedTypes.CallbackMap = self._callbackMap
+
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.UNDO], id=SharedIdentifiers.ID_MNU_UNDO)
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REDO], id=SharedIdentifiers.ID_MNU_REDO)
+
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_CUT], id=SharedIdentifiers.ID_MNU_EDIT_CUT)
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_COPY], id=SharedIdentifiers.ID_MNU_EDIT_COPY)
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.EDIT_PASTE], id=SharedIdentifiers.ID_MNU_EDIT_PASTE)
+
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.ADD_PYUT_HIERARCHY], id=SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY)
+        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.ADD_OGL_HIERARCHY], id=SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY)
+
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onSelectAll, id=SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL)
+
+        if MenuCreator.DEBUG_ERROR_VIEWS is True:
+            from org.pyut.experimental.DebugErrorViews import DebugErrorViews
+            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
+            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView, id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
+            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView, id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
+
