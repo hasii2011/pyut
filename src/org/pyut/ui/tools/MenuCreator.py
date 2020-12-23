@@ -13,6 +13,7 @@ from wx import Menu
 from wx import MenuBar
 from wx import NewId
 
+from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
@@ -41,26 +42,25 @@ class MenuCreator:
         self.logger:    Logger          = getLogger(__name__)
         self._prefs:    PyutPreferences = PyutPreferences()
         self.plugMgr:   PluginManager   = PluginManager()
-        self._fileMenu: Menu            = Menu()
-        self._editMenu: Menu            = Menu()
 
         self._plugins:     SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
         self._toolboxesID: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id
 
-        self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
-        self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=self.editMenu)
-
     @property
     def fileMenu(self) -> Menu:
-        return self._fileMenu
+        raise UnsupportedOperation('Property is write only')
 
     @fileMenu.setter
-    def fileMenu(self, theNewValue: Menu):
-        self._fileMenu = theNewValue
+    def fileMenu(self, fileMenu: Menu):
+        self._fileMenu = fileMenu
 
     @property
     def editMenu(self) -> Menu:
-        return self._editMenu
+        raise UnsupportedOperation('Property is write only')
+
+    @editMenu.setter
+    def editMenu(self, editMenu: Menu):
+        self._editMenu = editMenu
 
     @property
     def plugins(self) -> SharedTypes.PluginMap:
@@ -80,11 +80,19 @@ class MenuCreator:
 
     @property
     def fileMenuHandler(self) -> FileMenuHandler:
-        return self._fileMenuHandler
+        raise UnsupportedOperation('Property is write only')
+
+    @fileMenuHandler.setter
+    def fileMenuHandler(self, fileMenuHandler: FileMenuHandler):
+        self._fileMenuHandler = fileMenuHandler
 
     @property
     def editMenuHandler(self) -> EditMenuHandler:
-        return self._editMenuHandler
+        raise UnsupportedOperation('Property is write only')
+
+    @editMenuHandler.setter
+    def editMenuHandler(self, editMenuHandler: EditMenuHandler):
+        self._editMenuHandler = editMenuHandler
 
     def initMenus(self):
 
@@ -104,7 +112,7 @@ class MenuCreator:
             mnuTools.Append(NewId(), _("toolboxes"), sub)
 
         # Plugins identified
-        self.fileMenuHandler.plugins = self.plugins
+        self._fileMenuHandler.plugins = self.plugins
 
         mnuHelp = Menu()
         mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
@@ -116,8 +124,8 @@ class MenuCreator:
         mnuHelp.Append(SharedIdentifiers.ID_DEBUG,      _("&Debug"), _("Open IPython shell"))
 
         mnuBar = MenuBar()
-        mnuBar.Append(self.fileMenu, _("&File"))
-        mnuBar.Append(self.editMenu, _("&Edit"))
+        mnuBar.Append(self._fileMenu, _("&File"))
+        mnuBar.Append(self._editMenu, _("&Edit"))
         mnuBar.Append(mnuTools, _("&Tools"))
         mnuBar.Append(mnuHelp, "&Help")
 
@@ -126,7 +134,7 @@ class MenuCreator:
 
         cb: SharedTypes.CallbackMap = self._callbackMap
 
-        self._bindFileMenuHandlers(containingFrame, self.fileMenuHandler)
+        self._bindFileMenuHandlers(containingFrame, self._fileMenuHandler)
 
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROGRAM_ABOUT], id=ID_ABOUT)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_INDEX], id=SharedIdentifiers.ID_MNU_HELP_INDEX)
@@ -134,11 +142,11 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_WEB], id=SharedIdentifiers.ID_MNU_HELP_WEB)
         containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.DEBUG], id=SharedIdentifiers.ID_DEBUG)
 
-        self._bindEditMenuHandlers(containingFrame, self.editMenuHandler)
+        self._bindEditMenuHandlers(containingFrame, self._editMenuHandler)
 
     def _initializeFileMenu(self):
 
-        fileMenu: Menu = self.fileMenu
+        fileMenu: Menu = self._fileMenu
 
         self.mnuFileNew = Menu()
         self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWPROJECT, _("&New project\tCtrl-N"), _("New project"))
@@ -163,10 +171,10 @@ class MenuCreator:
         if sub is None:
             sub = Menu()
         if sub is not None:
-            self.fileMenu.Append(NewId(), _("Export"), sub)
+            self._fileMenu.Append(NewId(), _("Export"), sub)
         sub = self._makeImportMenu(fileMenuHandler=fileMenuHandler)
         if sub is not None:
-            self.fileMenu.Append(NewId(), _("Import"), sub)
+            self._fileMenu.Append(NewId(), _("Import"), sub)
         fileMenu.AppendSeparator()
         fileMenu.Append(SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES, _("PyUt P&references"), _("PyUt preferences"))
         # fileMenu.Append(ID_MNU_FILE_DIAGRAM_PROPERTIES,_("&Diagram Properties"), _("Diagram properties"))
@@ -199,6 +207,7 @@ class MenuCreator:
 
         if MenuCreator.DEBUG_ERROR_VIEWS is True:
             mnuEdit.AppendSeparator()
+            # noinspection PyUnusedLocal
             mnuEdit = self._initializeErrorViewSubMenu(mnuEdit)
 
     def _initializeErrorViewSubMenu(self, mnuEdit: Menu) -> Menu:

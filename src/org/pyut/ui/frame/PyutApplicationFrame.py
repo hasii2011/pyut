@@ -42,9 +42,9 @@ from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.PyutProject import PyutProject
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.dialogs.tips.DlgTips import DlgTips
+from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
@@ -126,9 +126,37 @@ class PyutApplicationFrame(Frame):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
         # Initialization
-        self._initMenu()        # Menu
+        self.fileMenu: Menu = Menu()
+        self.editMenu: Menu = Menu()
+        self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+        self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=self.editMenu)
+
+        callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
+
+            ActionCallbackType.PROGRAM_ABOUT:        self._OnMnuHelpAbout,
+            ActionCallbackType.HELP_INDEX:           self._OnMnuHelpIndex,
+            ActionCallbackType.HELP_VERSION:         self._OnMnuHelpVersion,
+            ActionCallbackType.HELP_WEB:             self._OnMnuHelpWeb,
+            ActionCallbackType.DEBUG:                self._OnMnuDebug,
+            ActionCallbackType.UNDO: self._OnMnuUndo,
+            ActionCallbackType.REDO: self._OnMnuRedo,
+            ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
+            ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
+
+        })
+
         self._initPyutTools()   # Toolboxes, toolbar
-        # self._initPrinting()    # Printing data
+
+        self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
+        self._menuCreator.fileMenu = self.fileMenu
+        self._menuCreator.editMenu = self.editMenu
+        self._menuCreator.fileMenuHandler = self._fileMenuHandler
+        self._menuCreator.editMenuHandler = self._editMenuHandler
+
+        self._menuCreator.initMenus()
+
+        self.plugins      = self._menuCreator.plugins
+        self._toolboxIds  = self._menuCreator.toolboxIds
 
         self.__setupKeyboardShortcuts()
 
@@ -290,7 +318,7 @@ class PyutApplicationFrame(Frame):
 
     def _initPyutTools(self):
 
-        fileMenuHandler: FileMenuHandler = self._menuCreator.fileMenuHandler
+        fileMenuHandler: FileMenuHandler = self._fileMenuHandler
 
         callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
             ActionCallbackType.NEW_ACTION:           self._OnNewAction,
@@ -306,29 +334,6 @@ class PyutApplicationFrame(Frame):
 
         self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
         self._toolsCreator.initTools()
-
-    def _initMenu(self):
-
-        callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-
-            ActionCallbackType.PROGRAM_ABOUT:        self._OnMnuHelpAbout,
-            ActionCallbackType.HELP_INDEX:           self._OnMnuHelpIndex,
-            ActionCallbackType.HELP_VERSION:         self._OnMnuHelpVersion,
-            ActionCallbackType.HELP_WEB:             self._OnMnuHelpWeb,
-            ActionCallbackType.DEBUG:                self._OnMnuDebug,
-            ActionCallbackType.UNDO: self._OnMnuUndo,
-            ActionCallbackType.REDO: self._OnMnuRedo,
-            ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
-            ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
-
-        })
-
-        self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
-        self._menuCreator.initMenus()
-        self.mnuFile      = self._menuCreator.fileMenu
-        self.plugins      = self._menuCreator.plugins
-        self._toolboxIds  = self._menuCreator.toolboxIds
-        self.logger.debug(f'self.mnuFile: {self.mnuFile}')
 
     def _createAcceleratorTable(self):
         """
@@ -454,7 +459,7 @@ class PyutApplicationFrame(Frame):
                 return False
 
             fileNames = dlg.GetPaths()
-            self.updateCurrentDir(fileNames[0])
+            # self.updateCurrentDir(fileNames[0])   TODO This needs to use handler
             dlg.Destroy()
 
         self.logger.info(f"loading file(s) {filename}")
@@ -565,7 +570,7 @@ class PyutApplicationFrame(Frame):
         """
         Set the menu last opened files items
         """
-        self.logger.debug(f'self.mnuFile: {self.mnuFile}')
+        self.logger.debug(f'{self.fileMenu=}')
 
         index = 0
         for el in self._prefs.getLastOpenedFilesList():
@@ -573,6 +578,6 @@ class PyutApplicationFrame(Frame):
             # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
             lbl: str = f"&{str(index+1)} {el}"
             self.logger.debug(f'lbL: {lbl}  openFilesId: {openFilesId}')
-            self.mnuFile.SetLabel(id=openFilesId, label=lbl)
+            self.fileMenu.SetLabel(id=openFilesId, label=lbl)
 
             index += 1
