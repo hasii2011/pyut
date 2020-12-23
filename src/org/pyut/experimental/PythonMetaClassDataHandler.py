@@ -2,6 +2,7 @@ from inspect import getfullargspec
 
 from typing import List
 from typing import Callable
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -47,20 +48,23 @@ class PythonMetaClassDataHandler:
 
     def getMethodsFromClass(self, clsType) -> List[classmethod]:
 
-        clsMethods: List[classmethod] = []
+        clsMethods: List[classmethod] = cast(List[classmethod], [])
         for aMethod in clsType.__dict__.values():
-            if isinstance(aMethod, Callable):
-                methName: str = aMethod.__name__
-                self.logger.debug(f'methName: {methName}')
-                if methName != '__str__' and methName != '__repr__':
-                    clsMethods.append(aMethod)
+            try:
+                if isinstance(aMethod, Callable):
+                    methName: str = aMethod.__name__
+                    self.logger.debug(f'methName: {methName}')
+                    if methName != '__str__' and methName != '__repr__':
+                        clsMethods.append(aMethod)
+            except AttributeError as e:
+                self.logger.warning(f'Attribute Error: {e}')
 
         return clsMethods
 
-    def generatePyutMethods(self, clmethods: List[classmethod]) -> List[PyutMethod]:
+    def generatePyutMethods(self, clsMethods: List[classmethod]) -> List[PyutMethod]:
 
         methods: List[PyutMethod] = []
-        for me in clmethods:
+        for me in clsMethods:
             funcName: str        = me.__name__
             meth:     PyutMethod = PyutMethod(funcName)
 

@@ -10,6 +10,7 @@ from copy import copy
 from wx import ClientDC
 from wx import CommandEvent
 from wx import Menu
+from wx import Window
 
 from org.pyut.general.Mediator import Mediator
 
@@ -26,6 +27,7 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
+from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -164,4 +166,54 @@ class EditMenuHandler:
             shape: OglObject = cast(OglObject, shape)
             shape.SetSelected(True)
 
+        frame.Refresh()
+
+    # noinspection PyUnusedLocal
+    def onAddPyut(self, event: CommandEvent):
+        """
+        Add Pyut UML Diagram.
+
+        Args:
+            event:
+        """
+        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
+        if self._isDiagramFormOpen(frame) is True:
+            frame.addPyutHierarchy()
+            self._refreshUI(frame)
+
+    # noinspection PyUnusedLocal
+    def onAddOgl(self, event: CommandEvent):
+        """
+        Add Pyut-Ogl UML Diagram.
+
+        Args:
+            event:
+        """
+        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
+        if self._isDiagramFormOpen(frame) is True:
+            frame.addOglHierarchy()
+            self._refreshUI(frame)
+
+    def _isDiagramFormOpen(self, frame: UmlClassDiagramsFrame) -> bool:
+        """
+        Does 2 things, Checks and displays the dialog;  Oh well
+
+        Args:
+            frame:
+
+        Returns: `True` if there is a frame open else, `False`
+        """
+        parent: Window = self._editMenu.GetWindow()
+
+        if frame is None:
+            PyutUtils.displayWarning(msg=_("Please open a diagram to hold the UML"), title=_('Silly User'), parent=parent)
+            return False
+        else:
+            return True
+
+    def _refreshUI(self, frame: UmlClassDiagramsFrame):
+
+        project: PyutProject = self._treeNotebookHandler.getCurrentProject()
+        project.setModified(True)
+        self._mediator.updateTitle()
         frame.Refresh()

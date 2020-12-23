@@ -45,6 +45,7 @@ from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.dialogs.tips.DlgTips import DlgTips
+from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
@@ -61,6 +62,7 @@ from org.pyut.general.Mediator import Mediator
 
 from org.pyut.general.Globals import _
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
+from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 
 
 class PyutApplicationFrame(Frame):
@@ -124,8 +126,8 @@ class PyutApplicationFrame(Frame):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
         # Initialization
-        self._initPyutTools()   # Toolboxes, toolbar
         self._initMenu()        # Menu
+        self._initPyutTools()   # Toolboxes, toolbar
         # self._initPrinting()    # Printing data
 
         self.__setupKeyboardShortcuts()
@@ -287,21 +289,23 @@ class PyutApplicationFrame(Frame):
                 self.logger.error(f'_onActivate: {e}')
 
     def _initPyutTools(self):
-        pass
-        # callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-        #     ActionCallbackType.NEW_ACTION:           self._OnNewAction,
-        #     ActionCallbackType.NEW_CLASS_DIAGRAM:    self._OnMnuFileNewClassDiagram,
-        #     ActionCallbackType.NEW_SEQUENCE_DIAGRAM: self._OnMnuFileNewSequenceDiagram,
-        #     ActionCallbackType.NEW_USE_CASE_DIAGRAM: self._OnMnuFileNewUsecaseDiagram,
-        #     ActionCallbackType.NEW_PROJECT:          self._OnMnuFileNewProject,
-        #     ActionCallbackType.FILE_OPEN:            self._OnMnuFileOpen,
-        #     ActionCallbackType.FILE_SAVE:            self._OnMnuFileSave,
-        #     ActionCallbackType.UNDO:                 self._OnMnuUndo,
-        #     ActionCallbackType.REDO:                 self._OnMnuRedo,
-        # })
-        #
-        # self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
-        # self._toolsCreator.initTools()
+
+        fileMenuHandler: FileMenuHandler = self._menuCreator.fileMenuHandler
+
+        callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
+            ActionCallbackType.NEW_ACTION:           self._OnNewAction,
+            ActionCallbackType.NEW_CLASS_DIAGRAM:    fileMenuHandler.onNewClassDiagram,
+            ActionCallbackType.NEW_SEQUENCE_DIAGRAM: fileMenuHandler.onNewSequenceDiagram,
+            ActionCallbackType.NEW_USE_CASE_DIAGRAM: fileMenuHandler.onNewUsecaseDiagram,
+            ActionCallbackType.NEW_PROJECT:          fileMenuHandler.onNewProject,
+            ActionCallbackType.FILE_OPEN:            fileMenuHandler.onFileOpen,
+            ActionCallbackType.FILE_SAVE:            fileMenuHandler.onFileSave,
+            ActionCallbackType.UNDO:                 self._OnMnuUndo,
+            ActionCallbackType.REDO:                 self._OnMnuRedo,
+        })
+
+        self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
+        self._toolsCreator.initTools()
 
     def _initMenu(self):
 
@@ -311,8 +315,6 @@ class PyutApplicationFrame(Frame):
             ActionCallbackType.HELP_INDEX:           self._OnMnuHelpIndex,
             ActionCallbackType.HELP_VERSION:         self._OnMnuHelpVersion,
             ActionCallbackType.HELP_WEB:             self._OnMnuHelpWeb,
-            ActionCallbackType.ADD_PYUT_HIERARCHY:   self._OnMnuAddPyut,
-            ActionCallbackType.ADD_OGL_HIERARCHY:    self._OnMnuAddOgl,
             ActionCallbackType.DEBUG:                self._OnMnuDebug,
             ActionCallbackType.UNDO: self._OnMnuUndo,
             ActionCallbackType.REDO: self._OnMnuRedo,
@@ -431,55 +433,6 @@ class PyutApplicationFrame(Frame):
             event:
         """
         PyutUtils.displayInformation(f"Please point your browser to {PyutApplicationFrame.PYUT_WIKI}", "Pyut's new wiki", self)
-
-    # noinspection PyUnusedLocal
-    def _OnMnuAddPyut(self, event: CommandEvent):
-        """
-        Add Pyut UML Diagram.
-
-        Args:
-            event:
-        """
-        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
-        if self._isDiagramFromOpen(frame) is True:
-            frame.addPyutHierarchy()
-            self._refreshUI(frame)
-
-    # noinspection PyUnusedLocal
-    def _OnMnuAddOgl(self, event: CommandEvent):
-        """
-        Add Pyut-Ogl UML Diagram.
-
-        Args:
-            event:
-        """
-        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
-        if self._isDiagramFromOpen(frame) is True:
-            frame.addOglHierarchy()
-            self._refreshUI(frame)
-
-    def _isDiagramFromOpen(self, frame: UmlClassDiagramsFrame) -> bool:
-        """
-        Does 2 things, Checks and displays the dialog;  Oh well
-
-        Args:
-            frame:
-
-        Returns: `True` if there is a frame open else, `False`
-
-        """
-        if frame is None:
-            PyutUtils.displayWarning(msg=_("Please open a diagram to hold the UML"), title=_('Silly User'), parent=self)
-            return False
-        else:
-            return True
-
-    def _refreshUI(self, frame: UmlClassDiagramsFrame):
-
-        project: PyutProject = self._treeNotebookHandler.getCurrentProject()
-        project.setModified(True)
-        self._mediator.updateTitle()
-        frame.Refresh()
 
     def _loadFile(self, filename: str = ""):
         """

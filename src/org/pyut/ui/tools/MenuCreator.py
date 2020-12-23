@@ -194,8 +194,12 @@ class MenuCreator:
         mnuEdit.AppendSeparator()
         mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL, _("&Select all"), _("Select all elements"))
         mnuEdit.AppendSeparator()
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY, _("&Add Pyut hierarchy"), _("Add the UML Diagram of Pyut"))
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY, _("Add &Ogl hierarchy"), _("Add the UML Diagram of Pyut - Ogl"))
+
+        sub: Menu = Menu()
+        sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY, _("&Pyut"), _("Add the UML Diagram of Pyut"))
+        sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY, _("&Ogl"), _("Add the UML Diagram of Pyut - Ogl"))
+        mnuEdit.Append(NewId(), _('Add Hierarchy'), sub)
+
         if MenuCreator.DEBUG_ERROR_VIEWS is True:
             mnuEdit.AppendSeparator()
             mnuEdit.Append(SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW, 'Show &Graphic Error View', 'Test graphical error view')
@@ -324,8 +328,8 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, editMenuHandler.onCopy,  id=SharedIdentifiers.ID_MNU_EDIT_COPY)
         containingFrame.Bind(EVT_MENU, editMenuHandler.onPaste, id=SharedIdentifiers.ID_MNU_EDIT_PASTE)
 
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.ADD_PYUT_HIERARCHY], id=SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.ADD_OGL_HIERARCHY], id=SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onAddPyut, id=SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onAddOgl,  id=SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY)
 
         containingFrame.Bind(EVT_MENU, editMenuHandler.onSelectAll, id=SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL)
 

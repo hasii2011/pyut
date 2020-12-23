@@ -1,6 +1,7 @@
 
 from typing import List
 from typing import Dict
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -56,7 +57,7 @@ class GraphicalHandler:
             methods: List[PyutMethod] = cg.generatePyutMethods(klassMethods)
             methods = sorted(methods, key=PyutMethod.getName)
 
-            pyutClassDef.setMethods(methods)
+            pyutClassDef.methods = methods
 
             oglClassDef = self.addToDiagram(pyutClassDef)
             classNameToOglClass[cl.__name__] = oglClassDef
@@ -64,7 +65,7 @@ class GraphicalHandler:
         # now, search for parent links
         for oglClassDef in classNameToOglClass.values():
 
-            pyutClassDef = oglClassDef.getPyutObject()
+            pyutClassDef = cast(PyutClass, oglClassDef.getPyutObject())
             # skip object, it has no parent
             if pyutClassDef.getName() == "object":
                 continue
