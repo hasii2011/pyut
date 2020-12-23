@@ -181,7 +181,7 @@ class MenuCreator:
 
         fileMenu.Append(ID_EXIT, _("E&xit"), _("Exit PyUt"))
 
-    def _initializeEditMenu(self, ):
+    def _initializeEditMenu(self):
 
         mnuEdit: Menu = self._editMenu
 
@@ -195,16 +195,32 @@ class MenuCreator:
         mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL, _("&Select all"), _("Select all elements"))
         mnuEdit.AppendSeparator()
 
-        sub: Menu = Menu()
-        sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY, _("&Pyut"), _("Add the UML Diagram of Pyut"))
-        sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY, _("&Ogl"), _("Add the UML Diagram of Pyut - Ogl"))
-        mnuEdit.Append(NewId(), _('Add Hierarchy'), sub)
+        mnuEdit = self._initializeAddHierarchySubMenu(mnuEdit)
 
         if MenuCreator.DEBUG_ERROR_VIEWS is True:
             mnuEdit.AppendSeparator()
-            mnuEdit.Append(SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW, 'Show &Graphic Error View', 'Test graphical error view')
-            mnuEdit.Append(SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW, 'Show &Text Error View', 'Test text error view')
-            mnuEdit.Append(SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW, 'Show &Exception Error View', 'Test raising exception')
+            mnuEdit = self._initializeErrorViewSubMenu(mnuEdit)
+
+    def _initializeErrorViewSubMenu(self, mnuEdit: Menu) -> Menu:
+
+        sub: Menu = Menu()
+        sub.Append(SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW, '&Graphic Error View',   'Test graphical error view')
+        sub.Append(SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW,    '&Text Error View',      'Test text error view')
+        sub.Append(SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW,   '&Exception Error View', 'Test raising exception')
+
+        mnuEdit.Append(NewId(), _('Show Error View'), sub)
+
+        return mnuEdit
+
+    def _initializeAddHierarchySubMenu(self, mnuEdit: Menu) -> Menu:
+
+        sub: Menu = Menu()
+        sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY, _("&Pyut"), _("Add the UML Diagram of Pyut"))
+        sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY, _("&Ogl"), _("Add the UML Diagram of Pyut - Ogl"))
+
+        mnuEdit.Append(NewId(), _('Add Hierarchy'), sub)
+
+        return mnuEdit
 
     def _makeRecentlyOpenedMenu(self):
 
