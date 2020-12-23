@@ -50,6 +50,30 @@ class EditMenuHandler:
         self._clipboard: List[PyutObject] = []
 
     # noinspection PyUnusedLocal
+    def onUndo(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
+        if (self._treeNotebookHandler.getCurrentFrame()) is None:
+            PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
+            return
+        self._treeNotebookHandler.getCurrentFrame().getHistory().undo()
+
+    # noinspection PyUnusedLocal
+    def onRedo(self, event: CommandEvent):
+        """
+
+        Args:
+            event:
+        """
+        if (self._treeNotebookHandler.getCurrentFrame()) is None:
+            PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
+            return
+        self._treeNotebookHandler.getCurrentFrame().getHistory().redo()
+
+    # noinspection PyUnusedLocal
     def onCut(self, event: CommandEvent):
         """
 

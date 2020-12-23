@@ -344,10 +344,8 @@ class MenuCreator:
 
     def _bindEditMenuHandlers(self, containingFrame: Frame, editMenuHandler: EditMenuHandler):
 
-        cb: SharedTypes.CallbackMap = self._callbackMap
-
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.UNDO], id=SharedIdentifiers.ID_MNU_UNDO)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.REDO], id=SharedIdentifiers.ID_MNU_REDO)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onUndo, id=SharedIdentifiers.ID_MNU_UNDO)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onRedo, id=SharedIdentifiers.ID_MNU_REDO)
 
         containingFrame.Bind(EVT_MENU, editMenuHandler.onCut,   id=SharedIdentifiers.ID_MNU_EDIT_CUT)
         containingFrame.Bind(EVT_MENU, editMenuHandler.onCopy,  id=SharedIdentifiers.ID_MNU_EDIT_COPY)
@@ -361,5 +359,5 @@ class MenuCreator:
         if MenuCreator.DEBUG_ERROR_VIEWS is True:
             from org.pyut.experimental.DebugErrorViews import DebugErrorViews
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
-            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView, id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
-            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView, id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
+            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView,    id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
+            containingFrame.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView,   id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)

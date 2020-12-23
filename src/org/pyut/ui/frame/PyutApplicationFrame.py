@@ -43,7 +43,6 @@ from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.PyutProject import PyutProject
 
-from org.pyut.dialogs.tips.DlgTips import DlgTips
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
@@ -51,6 +50,8 @@ from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+
+from org.pyut.dialogs.tips.DlgTips import DlgTips
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -138,8 +139,6 @@ class PyutApplicationFrame(Frame):
             ActionCallbackType.HELP_VERSION:         self._OnMnuHelpVersion,
             ActionCallbackType.HELP_WEB:             self._OnMnuHelpWeb,
             ActionCallbackType.DEBUG:                self._OnMnuDebug,
-            ActionCallbackType.UNDO: self._OnMnuUndo,
-            ActionCallbackType.REDO: self._OnMnuRedo,
             ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
             ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
 
@@ -319,6 +318,7 @@ class PyutApplicationFrame(Frame):
     def _initPyutTools(self):
 
         fileMenuHandler: FileMenuHandler = self._fileMenuHandler
+        editMenuHandler: EditMenuHandler = self._editMenuHandler
 
         callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
             ActionCallbackType.NEW_ACTION:           self._OnNewAction,
@@ -328,8 +328,8 @@ class PyutApplicationFrame(Frame):
             ActionCallbackType.NEW_PROJECT:          fileMenuHandler.onNewProject,
             ActionCallbackType.FILE_OPEN:            fileMenuHandler.onFileOpen,
             ActionCallbackType.FILE_SAVE:            fileMenuHandler.onFileSave,
-            ActionCallbackType.UNDO:                 self._OnMnuUndo,
-            ActionCallbackType.REDO:                 self._OnMnuRedo,
+            ActionCallbackType.UNDO:                 editMenuHandler.onUndo,
+            ActionCallbackType.REDO:                 editMenuHandler.onRedo,
         })
 
         self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
@@ -476,31 +476,6 @@ class PyutApplicationFrame(Frame):
                 PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
                 self.logger.error(f'{e}')
 
-    def _saveFile(self):
-        """
-        Save to the current filename
-        """
-        self._treeNotebookHandler.saveFile()
-        self._mediator.updateTitle()
-
-        # Add to last opened files list
-        project = self._treeNotebookHandler.getCurrentProject()
-        if project is not None:
-            self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
-            self.__setLastOpenedFilesItems()
-
-    def _saveFileAs(self):
-        """
-        Save to the current filename; Ask for the name
-        """
-        self._treeNotebookHandler.saveFileAs()
-        self._mediator.updateTitle()
-
-        project = self._treeNotebookHandler.getCurrentProject()
-        if project is not None:
-            self._prefs.addNewLastOpenedFilesEntry(project.getFilename())
-            self.__setLastOpenedFilesItems()
-
     def _OnNewAction(self, event: CommandEvent):
         """
         Call the mediator to specify the current action.
@@ -526,30 +501,6 @@ class PyutApplicationFrame(Frame):
         with DlgPyutDebug(self, ID_ANY) as dlg:
             dlg: DlgPyutDebug = cast(DlgPyutDebug, dlg)
             dlg.ShowModal()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuUndo(self, event: CommandEvent):
-        """
-
-        Args:
-            event:
-        """
-        if (self._treeNotebookHandler.getCurrentFrame()) is None:
-            PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
-            return
-        self._treeNotebookHandler.getCurrentFrame().getHistory().undo()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuRedo(self, event: CommandEvent):
-        """
-
-        Args:
-            event:
-        """
-        if (self._treeNotebookHandler.getCurrentFrame()) is None:
-            PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
-            return
-        self._treeNotebookHandler.getCurrentFrame().getHistory().redo()
 
     def _createApplicationIcon(self):
 
