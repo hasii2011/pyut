@@ -18,6 +18,9 @@ from wx import EndBusyCursor
 from wx import KeyEvent
 
 from wx import TextEntryDialog
+
+from wx import PostEvent as wxPostEvent
+from wx import Window
 from wx import Yield as wxYield
 
 from org.pyut.miniogl.Constants import EVENT_PROCESSED
@@ -232,9 +235,8 @@ class Mediator(Singleton):
 
         self.registerClassEditor(self.standardClassEditor)
         self._toolboxOwner = None   # toolbox owner, created when application frame is passed
-        self._treeNotebookHandler = None   # File Handler
-        # self.registerClassEditor(self.fastTextClassEditor)
-        # Patch from D.Dabrowsky, 20060129
+        self._treeNotebookHandler = None
+
         self._modifyCommand = None  # command for undo/redo a modification on a shape.
 
     def setScriptMode(self):
@@ -989,7 +991,17 @@ class Mediator(Singleton):
         self._appFrame.loadByFilename(filename)
 
     def cutSelectedShapes(self):
-        self._appFrame.cutSelectedShapes()
+        """
+        TODO  This event send does not yet work; Fix fix fix
+        """
+
+        # self._appFrame.cutSelectedShapes()
+        from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+
+        parent:   Window     = self._appFrame
+        cutEvent: CommandEvent = CommandEvent(SharedIdentifiers.ID_MNU_EDIT_CUT)
+
+        wxPostEvent(parent, cutEvent)
 
     def getCurrentAction(self):
         return self._currentAction

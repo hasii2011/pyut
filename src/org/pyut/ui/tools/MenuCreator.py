@@ -179,7 +179,6 @@ class MenuCreator:
         fileMenu.Append(NewId(), _('Recently Opened'), sub)
         fileMenu.AppendSeparator()
 
-        # fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_EXIT, _("E&xit"), _("Exit PyUt"))
         fileMenu.Append(ID_EXIT, _("E&xit"), _("Exit PyUt"))
 
     def _initializeEditMenu(self, ):
@@ -312,7 +311,7 @@ class MenuCreator:
         for index in range(self._prefs.getNbLOF()):
             containingFrame.Bind(EVT_MENU, fileMenuHandler.onRecentlyOpenedFile, id=self.lastOpenedFilesID[index])
 
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit, id=SharedIdentifiers.ID_MNU_FILE_EXIT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit, id=ID_EXIT)
 
     def _bindEditMenuHandlers(self, containingFrame: Frame, editMenuHandler: EditMenuHandler):
 

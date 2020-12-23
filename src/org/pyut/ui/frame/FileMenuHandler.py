@@ -13,6 +13,7 @@ from wx import ID_OK
 from wx import PAPER_A4
 from wx import PORTRAIT
 from wx import PRINT_QUALITY_HIGH
+from wx import EVT_CLOSE
 
 from wx import CommandEvent
 from wx import FileDialog
@@ -24,10 +25,9 @@ from wx import PrintDialogData
 from wx import PrintPreview
 from wx import Printer
 from wx import Window
+from wx import CloseEvent
 
-# from wx import BeginBusyCursor
-# from wx import EndBusyCursor
-
+from wx import PostEvent as wxPostEvent
 from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
@@ -376,10 +376,6 @@ class FileMenuHandler:
         Args:
             event:
         """
-        from wx import PostEvent as wxPostEvent
-        from wx import CloseEvent
-        from wx import EVT_CLOSE
-
         parent:     Window     = self._fileMenu.GetWindow()
         closeEvent: CloseEvent = CloseEvent(EVT_CLOSE.typeId)
 

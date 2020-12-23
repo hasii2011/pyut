@@ -214,11 +214,7 @@ class PyutApplicationFrame(Frame):
 
         Args:
             force:
-
-        Returns:
-
         """
-
         # Close all files
         if self._treeNotebookHandler.onClose() is False:
             return
@@ -318,10 +314,8 @@ class PyutApplicationFrame(Frame):
             ActionCallbackType.ADD_PYUT_HIERARCHY:   self._OnMnuAddPyut,
             ActionCallbackType.ADD_OGL_HIERARCHY:    self._OnMnuAddOgl,
             ActionCallbackType.DEBUG:                self._OnMnuDebug,
-
             ActionCallbackType.UNDO: self._OnMnuUndo,
             ActionCallbackType.REDO: self._OnMnuRedo,
-
             ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
             ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
 
