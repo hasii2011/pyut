@@ -320,19 +320,22 @@ class PyutApplicationFrame(Frame):
         fileMenuHandler: FileMenuHandler = self._fileMenuHandler
         editMenuHandler: EditMenuHandler = self._editMenuHandler
 
-        callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-            ActionCallbackType.NEW_ACTION:           self._OnNewAction,
-            ActionCallbackType.NEW_CLASS_DIAGRAM:    fileMenuHandler.onNewClassDiagram,
-            ActionCallbackType.NEW_SEQUENCE_DIAGRAM: fileMenuHandler.onNewSequenceDiagram,
-            ActionCallbackType.NEW_USE_CASE_DIAGRAM: fileMenuHandler.onNewUsecaseDiagram,
-            ActionCallbackType.NEW_PROJECT:          fileMenuHandler.onNewProject,
-            ActionCallbackType.FILE_OPEN:            fileMenuHandler.onFileOpen,
-            ActionCallbackType.FILE_SAVE:            fileMenuHandler.onFileSave,
-            ActionCallbackType.UNDO:                 editMenuHandler.onUndo,
-            ActionCallbackType.REDO:                 editMenuHandler.onRedo,
-        })
+        # callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
+        #     ActionCallbackType.NEW_ACTION:           self._OnNewAction,
+        #     ActionCallbackType.NEW_CLASS_DIAGRAM:    fileMenuHandler.onNewClassDiagram,
+        #     ActionCallbackType.NEW_SEQUENCE_DIAGRAM: fileMenuHandler.onNewSequenceDiagram,
+        #     ActionCallbackType.NEW_USE_CASE_DIAGRAM: fileMenuHandler.onNewUsecaseDiagram,
+        #     ActionCallbackType.NEW_PROJECT:          fileMenuHandler.onNewProject,
+        #     ActionCallbackType.FILE_OPEN:            fileMenuHandler.onFileOpen,
+        #     ActionCallbackType.FILE_SAVE:            fileMenuHandler.onFileSave,
+        #     ActionCallbackType.UNDO:                 editMenuHandler.onUndo,
+        #     ActionCallbackType.REDO:                 editMenuHandler.onRedo,
+        # })
 
-        self._toolsCreator: ToolsCreator = ToolsCreator(frame=self, callbackMap=callbackMap)
+        self._toolsCreator: ToolsCreator = ToolsCreator(frame=self,
+                                                        fileMenuHandler=fileMenuHandler,
+                                                        editMenuHandler=editMenuHandler,
+                                                        newActionCallback=self._OnNewAction)
         self._toolsCreator.initTools()
 
     def _createAcceleratorTable(self):

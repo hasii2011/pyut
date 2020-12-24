@@ -41,21 +41,24 @@ from org.pyut.resources.img.toolbar import ImgToolboxZoomIn
 from org.pyut.resources.img.toolbar import ImgToolboxZoomOut
 
 from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
+from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
-from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
-from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 from org.pyut.general.Globals import _
 
 
 class ToolsCreator:
 
-    def __init__(self, frame: Frame,  callbackMap: SharedTypes.CallbackMap):
+    def __init__(self, frame: Frame,  fileMenuHandler: FileMenuHandler, editMenuHandler: EditMenuHandler, newActionCallback: Callable):
 
         self._containingFrame: Frame = frame
-        self._callbackMap:     SharedTypes.CallbackMap = callbackMap
+
+        self._fileMenuHandler:   FileMenuHandler = fileMenuHandler
+        self._editMenuHandler:   EditMenuHandler = editMenuHandler
+        self._newActionCallback: Callable        = newActionCallback
 
         self.logger: Logger   = getLogger(__name__)
         self._ctrl:  Mediator = Mediator()
@@ -70,49 +73,49 @@ class ToolsCreator:
                          _("Arrow"),
                          _("Select tool"),
                          _("PyUt tools"),
-                         self._callbackMap[ActionCallbackType.NEW_ACTION],
+                         self._newActionCallback,
                          cast(Callable, None), wxID=SharedIdentifiers.ID_ARROW, isToggle=True)
 
         toolClass = Tool("pyut-class", ImgToolboxClass.embeddedImage.GetBitmap(),
                          _("Class"),
                          _("Create a new class"),
                          _("PyUt tools"),
-                         self._callbackMap[ActionCallbackType.NEW_ACTION],
+                         self._newActionCallback,
                          cast(Callable, None), wxID=SharedIdentifiers.ID_CLASS, isToggle=True)
 
         toolActor = Tool("pyut-actor", ImgToolboxActor.embeddedImage.GetBitmap(),
                          _("Actor"),
                          _("Create a new actor"),
                          _("PyUt tools"),
-                         self._callbackMap[ActionCallbackType.NEW_ACTION],
+                         self._newActionCallback,
                          cast(Callable, None), wxID=SharedIdentifiers.ID_ACTOR, isToggle=True)
 
         toolUseCase = Tool("pyut-system", ImgToolboxSystem.embeddedImage.GetBitmap(),
                            _("System"),
                            _("Create a new use case"),
                            _("PyUt tools"),
-                           self._callbackMap[ActionCallbackType.NEW_ACTION],
+                           self._newActionCallback,
                            cast(Callable, None), wxID=SharedIdentifiers.ID_USECASE, isToggle=True)
 
         toolNote = Tool("pyut-note", ImgToolboxNote.embeddedImage.GetBitmap(),
                         _("Note"),
                         _("Create a new note"),
                         _("PyUt tools"),
-                        self._callbackMap[ActionCallbackType.NEW_ACTION],
+                        self._newActionCallback,
                         cast(Callable, None), wxID=SharedIdentifiers.ID_NOTE, isToggle=True)
 
         toolZoomIn = Tool("pyut-zoomIn", ImgToolboxZoomIn.embeddedImage.GetBitmap(),
                           _("Zoom In"),
                           _("Zoom in on the selected area"),
                           _("PyUt tools"),
-                          self._callbackMap[ActionCallbackType.NEW_ACTION],
+                          self._newActionCallback,
                           cast(Callable, None), wxID=SharedIdentifiers.ID_ZOOM_IN, isToggle=True)
 
         toolZoomOut = Tool("pyut-zoomOut", ImgToolboxZoomOut.embeddedImage.GetBitmap(),
                            _("Zoom Out"),
                            _("Zoom out from the clicked point"),
                            _("PyUt tools"),
-                           self._callbackMap[ActionCallbackType.NEW_ACTION],
+                           self._newActionCallback,
                            cast(Callable, None), wxID=SharedIdentifiers.ID_ZOOM_OUT, isToggle=True)
 
         # Menu tools
@@ -120,56 +123,56 @@ class ToolsCreator:
                               _("New Project"),
                               _("Create a new project"),
                               _("PyUt menu"),
-                              self._callbackMap[ActionCallbackType.NEW_PROJECT],
+                              self._fileMenuHandler.onNewProject,
                               cast(Callable, None), wxID=SharedIdentifiers.ID_MNUFILENEWPROJECT)
 
         toolNewClassDiagram = Tool("pyut-new-class-diagram", ImgToolboxNewClassDiagram.embeddedImage.GetBitmap(),
                                    _("New Class Diagram"),
                                    _("Create a new class diagram"),
                                    _("PyUt menu"),
-                                   self._callbackMap[ActionCallbackType.NEW_CLASS_DIAGRAM],
+                                   self._fileMenuHandler.onNewClassDiagram,
                                    cast(Callable, None), wxID=SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
 
         toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", ImgToolboxNewSequenceDiagram.embeddedImage.GetBitmap(),
                                       _("New Sequence Diagram"),
                                       _("Create a new sequence diagram"),
                                       _("PyUt menu"),
-                                      self._callbackMap[ActionCallbackType.NEW_SEQUENCE_DIAGRAM],
+                                      self._fileMenuHandler.onNewSequenceDiagram,
                                       cast(Callable, None), wxID=SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
 
         toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram", ImgToolboxNewUseCaseDiagram.embeddedImage.GetBitmap(),
                                      _("New Use-Case diagram"),
                                      _("Create a new use-case diagram"),
                                      _("PyUt menu"),
-                                     self._callbackMap[ActionCallbackType.NEW_USE_CASE_DIAGRAM],
+                                     self._fileMenuHandler.onNewUsecaseDiagram,
                                      cast(Callable, None), wxID=SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
 
         toolOpen = Tool("pyut-open", ImgToolboxOpenFile.embeddedImage.GetBitmap(),
                         _("Open"),
                         _("Open a file"),
                         _("PyUt menu"),
-                        self._callbackMap[ActionCallbackType.FILE_OPEN],
+                        self._fileMenuHandler.onFileOpen,
                         cast(Callable, None), wxID=SharedIdentifiers.ID_MNU_FILE_OPEN)
 
         toolSave = Tool("pyut-save", ImgToolboxSaveDiagram.embeddedImage.GetBitmap(),
                         _("Save"),
                         _("Save current UML Diagram"),
                         _("PyUt menu"),
-                        (lambda x: self._callbackMap[ActionCallbackType.FILE_SAVE]),
+                        self._fileMenuHandler.onFileSave,
                         cast(Callable, None), wxID=SharedIdentifiers.ID_MNU_FILE_SAVE)
 
         toolUndo = Tool("pyut-undo", ImgToolboxUndo.embeddedImage.GetBitmap(),
                         _("undo"),
                         _("undo the last performed action"),
                         _("PyUt menu"),
-                        self._callbackMap[ActionCallbackType.UNDO],
+                        self._editMenuHandler.onUndo,
                         cast(Callable, None), wxID=SharedIdentifiers.ID_MNU_UNDO)
 
         toolRedo = Tool("pyut-redo", ImgToolboxRedo.embeddedImage.GetBitmap(),
                         _("redo"),
                         _("redo the last undone action"),
                         _("PyUt menu"),
-                        self._callbackMap[ActionCallbackType.REDO],
+                        self._editMenuHandler.onRedo,
                         cast(Callable, None), wxID=SharedIdentifiers.ID_MNU_REDO)
 
         # Relationship tools
@@ -177,56 +180,56 @@ class ToolsCreator:
                                   _("New inheritance relation"),
                                   _("New inheritance relation"),
                                   _("PyUt tools"),
-                                  self._callbackMap[ActionCallbackType.NEW_ACTION],
+                                  self._newActionCallback,
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_INHERITANCE, isToggle=True)
 
         toolRelRealisation = Tool("pyut-rel-realization", ImgToolboxRelationshipRealization.embeddedImage.GetBitmap(),
                                   _("New Realization relation"),
                                   _("New Realization relation"),
                                   _("PyUt tools"),
-                                  self._callbackMap[ActionCallbackType.NEW_ACTION],
+                                  self._newActionCallback,
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_REALISATION, isToggle=True)
 
         toolRelComposition = Tool("pyut-rel-composition", ImgToolboxRelationshipComposition.embeddedImage.GetBitmap(),
                                   _("New composition relation"),
                                   _("New composition relation"),
                                   _("PyUt tools"),
-                                  self._callbackMap[ActionCallbackType.NEW_ACTION],
+                                  self._newActionCallback,
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_COMPOSITION, isToggle=True)
 
         toolRelAggregation = Tool("pyut-rel-aggregation", ImgToolboxRelationshipAggregation.embeddedImage.GetBitmap(),
                                   _("New aggregation relation"),
                                   _("New aggregation relation"),
                                   _("PyUt tools"),
-                                  self._callbackMap[ActionCallbackType.NEW_ACTION],
+                                  self._newActionCallback,
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_AGGREGATION, isToggle=True)
 
         toolRelAssociation = Tool("pyut-rel-association", ImgToolboxRelationshipAssociation.embeddedImage.GetBitmap(),
                                   _("New association relation"),
                                   _("New association relation"),
                                   _("PyUt tools"),
-                                  self._callbackMap[ActionCallbackType.NEW_ACTION],
+                                  self._newActionCallback,
                                   cast(Callable, None), wxID=SharedIdentifiers.ID_REL_ASSOCIATION, isToggle=True)
 
         toolRelNote = Tool("pyut-rel-note", ImgToolboxRelationshipNote.embeddedImage.GetBitmap(),
                            _("New note relation"),
                            _("New note relation"),
                            _("PyUt tools"),
-                           self._callbackMap[ActionCallbackType.NEW_ACTION],
+                           self._newActionCallback,
                            cast(Callable, None), wxID=SharedIdentifiers.ID_REL_NOTE, isToggle=True)
 
         toolSDInstance = Tool("pyut-sd-instance", ImgToolboxSequenceDiagramInstance.embeddedImage.GetBitmap(),
                               _("New sequence diagram instance object"),
                               _("New sequence diagram instance object"),
                               _("PyUt tools"),
-                              self._callbackMap[ActionCallbackType.NEW_ACTION],
+                              self._newActionCallback,
                               cast(Callable, None), wxID=SharedIdentifiers.ID_SD_INSTANCE, isToggle=True)
 
         toolSDMessage = Tool("pyut-sd-message", ImgToolboxSequenceDiagramMessage.embeddedImage.GetBitmap(),
                              _("New sequence diagram message object"),
                              _("New sequence diagram message object"),
                              _("PyUt tools"),
-                             self._callbackMap[ActionCallbackType.NEW_ACTION],
+                             self._newActionCallback,
                              cast(Callable, None), wxID=SharedIdentifiers.ID_SD_MESSAGE, isToggle=True)
 
         self.logger.debug(f'toolSDMessage: {toolSDMessage}')
