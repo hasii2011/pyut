@@ -1,4 +1,5 @@
 
+from typing import Callable
 from typing import List
 from typing import NewType
 
@@ -190,9 +191,12 @@ class Toolbox(Frame):
 
         # Execute callback
         if tool is not None:
-            callback = tool.getActionCallback()
+            # callback = tool.getActionCallback()
+            callback: Callable = tool.actionCallback
             if callback is not None:
-                callback(EventClone(tool.getWxId()))
+                # callback(EventClone(tool.getWxId()))
+                eventClone: EventClone = EventClone(tool.wxID)
+                callback(eventClone)
 
     def evtLeftDown(self, event):
         """
