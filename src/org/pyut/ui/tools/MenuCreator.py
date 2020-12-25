@@ -105,11 +105,11 @@ class MenuCreator:
         mnuTools = Menu()
         sub = self._makeToolsMenu()
         if sub is not None:
-            mnuTools.Append(NewId(), _("Plugins tools"), sub)
+            mnuTools.Append(NewId(), _("Tools"), sub)
 
         sub = self._makeToolboxesMenu()
         if sub is not None:
-            mnuTools.Append(NewId(), _("toolboxes"), sub)
+            mnuTools.Append(NewId(), _("Toolboxes"), sub)
 
         # Plugins identified
         self._fileMenuHandler.plugins = self.plugins
