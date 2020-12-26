@@ -10,15 +10,12 @@ from os import getcwd
 
 from sys import platform as sysPlatform
 
-from urllib import request
-
 from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_CLOSE
 from wx import FRAME_EX_METAL
-from wx import ID_ANY
 from wx import ID_OK
 from wx import EVT_ACTIVATE
 from wx import FD_OPEN
@@ -38,13 +35,12 @@ from wx import BeginBusyCursor
 from wx import EndBusyCursor
 from wx import Window
 
-from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
-
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.PyutProject import PyutProject
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
+from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
@@ -76,7 +72,6 @@ class PyutApplicationFrame(Frame):
         dlg.Show()
         dlg.Destroy()
     """
-    PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/Pyut'
 
     def __init__(self, parent: Window, wxID: int, title: str):
         """
@@ -100,7 +95,6 @@ class PyutApplicationFrame(Frame):
 
         self.plugMgr:     PluginManager         = PluginManager()
         self.plugins:     SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})     # To store the plugins
-        self.mnuFile:     Menu                  = cast(Menu, None)
 
         self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
 
@@ -129,16 +123,13 @@ class PyutApplicationFrame(Frame):
         # Initialization
         self.fileMenu: Menu = Menu()
         self.editMenu: Menu = Menu()
+        self.helpMenu: Menu = Menu()
         self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
         self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=self.editMenu)
+        self._helpMenuHandler: HelpMenuHandler = HelpMenuHandler(helpMenu=self.helpMenu)
 
         callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
 
-            ActionCallbackType.PROGRAM_ABOUT:        self._OnMnuHelpAbout,
-            ActionCallbackType.HELP_INDEX:           self._OnMnuHelpIndex,
-            ActionCallbackType.HELP_VERSION:         self._OnMnuHelpVersion,
-            ActionCallbackType.HELP_WEB:             self._OnMnuHelpWeb,
-            ActionCallbackType.DEBUG:                self._OnMnuDebug,
             ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
             ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
 
@@ -149,8 +140,10 @@ class PyutApplicationFrame(Frame):
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.fileMenu = self.fileMenu
         self._menuCreator.editMenu = self.editMenu
+        self._menuCreator.helpMenu = self.helpMenu
         self._menuCreator.fileMenuHandler = self._fileMenuHandler
         self._menuCreator.editMenuHandler = self._editMenuHandler
+        self._menuCreator.helpMenuHandler = self._helpMenuHandler
 
         self._menuCreator.initMenus()
 
@@ -376,72 +369,6 @@ class PyutApplicationFrame(Frame):
             acc.append(AcceleratorEntry(el1, el2, el3))
         return acc
 
-    # noinspection PyUnusedLocal
-    def _OnMnuHelpAbout(self, event: CommandEvent):
-        """
-        Show the about box
-
-        Args:
-            event:
-        """
-        from org.pyut.dialogs.DlgAbout import DlgAbout
-        from org.pyut.general.PyutVersion import PyutVersion
-        dlg = DlgAbout(self, ID_ANY, _("About PyUt ") + PyutVersion.getPyUtVersion())
-        dlg.ShowModal()
-        dlg.Destroy()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuHelpIndex(self, event: CommandEvent):
-        """
-        Display the help index
-        """
-
-        from org.pyut.dialogs import DlgHelp
-        dlgHelp = DlgHelp.DlgHelp(self, -1, _("Pyut Help"))
-        dlgHelp.Show(True)
-
-    # noinspection PyUnusedLocal
-    def _OnMnuHelpVersion(self, event: CommandEvent):
-        """
-        Check for newer version.
-        Args:
-            event:
-        """
-        # Init
-        FILE_TO_CHECK = "http://pyut.sourceforge.net/backdoors/lastversion"     # TODO FIXME  :-)
-
-        # Get file  -- Python 3 update
-        f = request.urlopen(FILE_TO_CHECK)
-        lstFile = f.readlines()
-        f.close()
-
-        # Verify data coherence
-        if lstFile[0][:15] != "Last version = " or lstFile[1][:15] != "Old versions = ":
-            msg = "Incorrect file on server"
-        else:
-            latestVersion = lstFile[0][15:]
-            oldestVersions = lstFile[1][15:].split()
-            print(oldestVersions)
-
-            from org.pyut.general.PyutVersion import PyutVersion
-            v = PyutVersion.getPyUtVersion()
-            if v in oldestVersions:
-                msg = _("PyUt version ") + str(latestVersion) + _(" is available on http://pyut.sf.net")
-            else:
-                msg = _("No newer version yet !")
-
-        # Display dialog box
-        PyutUtils.displayInformation(msg, _("Check for newer version"), self)
-
-    # noinspection PyUnusedLocal
-    def _OnMnuHelpWeb(self, event: CommandEvent):
-        """
-
-        Args:
-            event:
-        """
-        PyutUtils.displayInformation(f"Please point your browser to {PyutApplicationFrame.PYUT_WIKI}", "Pyut's new wiki", self)
-
     def _loadFile(self, filename: str = ""):
         """
         Load the specified filename
@@ -492,18 +419,6 @@ class PyutApplicationFrame(Frame):
         self._mediator.selectTool(event.GetId())
         self._treeNotebookHandler.setModified(True)
         self._mediator.updateTitle()
-
-    # noinspection PyUnusedLocal
-    def _OnMnuDebug(self, event: CommandEvent):
-        """
-        Open a dialog to access the Pyut loggers
-
-        Args:
-            event:
-        """
-        with DlgPyutDebug(self, ID_ANY) as dlg:
-            dlg: DlgPyutDebug = cast(DlgPyutDebug, dlg)
-            dlg.ShowModal()
 
     def _createApplicationIcon(self):
 

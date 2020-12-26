@@ -19,6 +19,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.general.Mediator import Mediator
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
+from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
 
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
@@ -63,6 +64,14 @@ class MenuCreator:
         self._editMenu = editMenu
 
     @property
+    def helpMenu(self):
+        raise UnsupportedOperation('Property is write only')
+
+    @helpMenu.setter
+    def helpMenu(self, helpMenu: Menu):
+        self._helpMenu = helpMenu
+
+    @property
     def plugins(self) -> SharedTypes.PluginMap:
         return self._plugins
 
@@ -94,6 +103,14 @@ class MenuCreator:
     def editMenuHandler(self, editMenuHandler: EditMenuHandler):
         self._editMenuHandler = editMenuHandler
 
+    @property
+    def helpMenuHandler(self) -> HelpMenuHandler:
+        raise UnsupportedOperation('Property is write only')
+
+    @helpMenuHandler.setter
+    def helpMenuHandler(self, helpMenuHandler: HelpMenuHandler):
+        self._helpMenuHandler = helpMenuHandler
+
     def initMenus(self):
 
         self._initializeFileMenu()
@@ -114,35 +131,20 @@ class MenuCreator:
         # Plugins identified
         self._fileMenuHandler.plugins = self.plugins
 
-        mnuHelp = Menu()
-        mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
-        mnuHelp.AppendSeparator()
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_INDEX, _("&Index"), _("Display help index"))
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_VERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_WEB, _("&Web site"), _("Open PyUt web site"))
-        mnuHelp.AppendSeparator()
-        mnuHelp.Append(SharedIdentifiers.ID_DEBUG,      _("&Debug"), _("Open IPython shell"))
+        self._initializeHelpMenu()
 
         mnuBar = MenuBar()
         mnuBar.Append(self._fileMenu, _("&File"))
         mnuBar.Append(self._editMenu, _("&Edit"))
-        mnuBar.Append(mnuTools, _("&Tools"))
-        mnuBar.Append(mnuHelp, "&Help")
+        mnuBar.Append(mnuTools,       _("&Tools"))
+        mnuBar.Append(self._helpMenu, _("&Help"))
 
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
 
-        cb: SharedTypes.CallbackMap = self._callbackMap
-
         self._bindFileMenuHandlers(containingFrame, self._fileMenuHandler)
-
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.PROGRAM_ABOUT], id=ID_ABOUT)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_INDEX], id=SharedIdentifiers.ID_MNU_HELP_INDEX)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_VERSION], id=SharedIdentifiers.ID_MNU_HELP_VERSION)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.HELP_WEB], id=SharedIdentifiers.ID_MNU_HELP_WEB)
-        containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.DEBUG], id=SharedIdentifiers.ID_DEBUG)
-
         self._bindEditMenuHandlers(containingFrame, self._editMenuHandler)
+        self._bindHelpMenuHandlers(containingFrame, self._helpMenuHandler)
 
     def _initializeFileMenu(self):
 
@@ -209,6 +211,18 @@ class MenuCreator:
             mnuEdit.AppendSeparator()
             # noinspection PyUnusedLocal
             mnuEdit = self._initializeErrorViewSubMenu(mnuEdit)
+
+    def _initializeHelpMenu(self):
+
+        mnuHelp = self._helpMenu
+
+        mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
+        mnuHelp.AppendSeparator()
+        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_INDEX,   _("&Index"), _("Display help index"))
+        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_VERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
+        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_WEB,     _("&Web site"), _("Open PyUt web site"))
+        mnuHelp.AppendSeparator()
+        mnuHelp.Append(SharedIdentifiers.ID_DEBUG, _("&Debug"), _("Open IPython shell"))
 
     def _initializeErrorViewSubMenu(self, mnuEdit: Menu) -> Menu:
 
@@ -361,3 +375,11 @@ class MenuCreator:
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView,    id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView,   id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
+
+    def _bindHelpMenuHandlers(self, containingFrame: Frame, helpMenuHandler: HelpMenuHandler):
+
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onAbout,       id=ID_ABOUT)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpIndex,   id=SharedIdentifiers.ID_MNU_HELP_INDEX)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion, id=SharedIdentifiers.ID_MNU_HELP_VERSION)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,     id=SharedIdentifiers.ID_MNU_HELP_WEB)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug,       id=SharedIdentifiers.ID_DEBUG)
