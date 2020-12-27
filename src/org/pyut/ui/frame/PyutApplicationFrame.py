@@ -24,6 +24,7 @@ from wx import FD_MULTIPLE
 from wx import AcceleratorEntry
 from wx import CommandEvent
 from wx import Frame
+from wx import NewId
 from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
@@ -41,6 +42,7 @@ from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
+from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
@@ -94,7 +96,6 @@ class PyutApplicationFrame(Frame):
         from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
 
         self.plugMgr:     PluginManager         = PluginManager()
-        self.plugins:     SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})     # To store the plugins
 
         self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
 
@@ -120,35 +121,39 @@ class PyutApplicationFrame(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
+        self._toolPlugins: SharedTypes.PluginMap = self.__mapWxIdsToToolPlugins()
+
         # Initialization
-        self.fileMenu: Menu = Menu()
-        self.editMenu: Menu = Menu()
-        self.helpMenu: Menu = Menu()
-        self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
-        self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=self.editMenu)
-        self._helpMenuHandler: HelpMenuHandler = HelpMenuHandler(helpMenu=self.helpMenu)
+        self.fileMenu:  Menu = Menu()
+        self.editMenu:  Menu = Menu()
+        self.toolsMenu: Menu = Menu()
+        self.helpMenu:  Menu = Menu()
+        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+        self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=self.editMenu)
+        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=self.toolsMenu, toolPluginsMap=self._toolPlugins)
+        self._helpMenuHandler:  HelpMenuHandler  = HelpMenuHandler(helpMenu=self.helpMenu)
 
         callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-
-            ActionCallbackType.TOOL_PLUGIN:       self.OnToolPlugin,
             ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
-
         })
 
         self._initPyutTools()   # Toolboxes, toolbar
 
         self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
-        self._menuCreator.fileMenu = self.fileMenu
-        self._menuCreator.editMenu = self.editMenu
-        self._menuCreator.helpMenu = self.helpMenu
-        self._menuCreator.fileMenuHandler = self._fileMenuHandler
-        self._menuCreator.editMenuHandler = self._editMenuHandler
-        self._menuCreator.helpMenuHandler = self._helpMenuHandler
+        self._menuCreator.fileMenu  = self.fileMenu
+        self._menuCreator.editMenu  = self.editMenu
+        self._menuCreator.toolsMenu = self.toolsMenu
+        self._menuCreator.helpMenu  = self.helpMenu
+        self._menuCreator.fileMenuHandler  = self._fileMenuHandler
+        self._menuCreator.editMenuHandler  = self._editMenuHandler
+        self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
+        self._menuCreator.helpMenuHandler  = self._helpMenuHandler
+        self._menuCreator.toolPlugins      = self._toolPlugins
 
         self._menuCreator.initMenus()
 
-        self.plugins      = self._menuCreator.plugins
         self._toolboxIds  = self._menuCreator.toolboxIds
+        self._plugins     = self._menuCreator.plugins
 
         self.__setupKeyboardShortcuts()
 
@@ -259,31 +264,6 @@ class PyutApplicationFrame(Frame):
         # self._printData.Destroy()
         # TODO? wx.OGLCleanUp()
         self.Destroy()
-
-    def OnToolPlugin(self, event: CommandEvent):
-        """
-
-        Args:
-            event:
-        """
-        # Create a plugin instance
-        cl = self.plugins[event.GetId()]
-        obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
-
-        # Do plugin functionality
-        BeginBusyCursor()
-        try:
-            obj.callDoAction()
-            self.logger.debug(f"After tool plugin do action")
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
-            self.logger.error(f'{e}')
-        EndBusyCursor()
-
-        # Refresh screen
-        umlFrame = self._mediator.getUmlFrame()
-        if umlFrame is not None:
-            umlFrame.Refresh()
 
     def OnToolboxMenuClick(self, event):
         self._mediator.displayToolbox(self._toolboxIds[event.GetId()])
@@ -450,3 +430,17 @@ class PyutApplicationFrame(Frame):
             self.fileMenu.SetLabel(id=openFilesId, label=lbl)
 
             index += 1
+
+    def __mapWxIdsToToolPlugins(self) -> SharedTypes.PluginMap:
+
+        plugins = self.plugMgr.getToolPlugins()
+        pluginMap: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})
+
+        nb: int = len(plugins)
+
+        for x in range(nb):
+            wxId: int         = NewId()
+
+            pluginMap[wxId] = plugins[x]
+
+        return pluginMap

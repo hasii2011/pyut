@@ -14,12 +14,14 @@ from wx import MenuBar
 from wx import NewId
 
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
+from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
@@ -64,6 +66,14 @@ class MenuCreator:
         self._editMenu = editMenu
 
     @property
+    def toolsMenu(self) -> Menu:
+        raise UnsupportedOperation('Property is write only')
+
+    @toolsMenu.setter
+    def toolsMenu(self, toolsMenu: Menu):
+        self._toolsMenu: Menu = toolsMenu
+
+    @property
     def helpMenu(self):
         raise UnsupportedOperation('Property is write only')
 
@@ -77,7 +87,15 @@ class MenuCreator:
 
     @plugins.setter
     def plugins(self, theNewValues: SharedTypes.PluginMap):
-        self._plugins = theNewValues
+        raise UnsupportedOperation('Property is read only')
+
+    @property
+    def toolPlugins(self) -> SharedTypes.PluginMap:
+        raise UnsupportedOperation('Property is write only')
+
+    @toolPlugins.setter
+    def toolPlugins(self, toolPlugins: SharedTypes.PluginMap):
+        self._toolPlugins = toolPlugins
 
     @property
     def toolboxIds(self) -> SharedTypes.ToolboxIdMap:
@@ -104,6 +122,14 @@ class MenuCreator:
         self._editMenuHandler = editMenuHandler
 
     @property
+    def toolsMenuHandler(self) -> ToolsMenuHandler:
+        raise UnsupportedOperation('Property is write only')
+
+    @toolsMenuHandler.setter
+    def toolsMenuHandler(self, toolsMenuHandler: ToolsMenuHandler):
+        self._toolsMenuHandler = toolsMenuHandler
+
+    @property
     def helpMenuHandler(self) -> HelpMenuHandler:
         raise UnsupportedOperation('Property is write only')
 
@@ -119,25 +145,25 @@ class MenuCreator:
         # -----------------
         #    Tools menu
         # -----------------
-        mnuTools = Menu()
+        # mnuTools = Menu()
         sub = self._makeToolsMenu()
         if sub is not None:
-            mnuTools.Append(NewId(), _("Tools"), sub)
+            self._toolsMenu.Append(NewId(), _("Tools"), sub)
 
         sub = self._makeToolboxesMenu()
         if sub is not None:
-            mnuTools.Append(NewId(), _("Toolboxes"), sub)
+            self._toolsMenu.Append(NewId(), _("Toolboxes"), sub)
 
         # Plugins identified
-        self._fileMenuHandler.plugins = self.plugins
+        self._fileMenuHandler.plugins = self._plugins
 
         self._initializeHelpMenu()
 
         mnuBar = MenuBar()
-        mnuBar.Append(self._fileMenu, _("&File"))
-        mnuBar.Append(self._editMenu, _("&Edit"))
-        mnuBar.Append(mnuTools,       _("&Tools"))
-        mnuBar.Append(self._helpMenu, _("&Help"))
+        mnuBar.Append(self._fileMenu,  _("&File"))
+        mnuBar.Append(self._editMenu,  _("&Edit"))
+        mnuBar.Append(self._toolsMenu, _("&Tools"))
+        mnuBar.Append(self._helpMenu,  _("&Help"))
 
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
@@ -272,7 +298,7 @@ class MenuCreator:
             obj = plugs[i](None, None)
             sub.Append(pluginId, obj.getOutputFormat()[0])
             self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onExport, id=pluginId)
-            self.plugins[pluginId] = plugs[i]
+            self._plugins[pluginId] = plugs[i]
         return sub
 
     def _makeImportMenu(self, fileMenuHandler: FileMenuHandler):
@@ -290,26 +316,28 @@ class MenuCreator:
             obj = plugs[i](None, None)
             sub.Append(importId, obj.getInputFormat()[0])
             self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onImport, id=importId)
-            self.plugins[importId] = plugs[i]
+            self._plugins[importId] = plugs[i]
         return sub
 
     def _makeToolsMenu(self):
         """
         Make the tools submenu.
         """
-        plugs = self.plugMgr.getToolPlugins()
-        nb = len(plugs)
+        pluginMap = self._toolPlugins
+        nb = len(pluginMap)
         if nb == 0:
             return None
         sub: Menu = Menu()
-        cb: SharedTypes.CallbackMap = self._callbackMap
 
-        for i in range(nb):
-            wxId = NewId()
-            obj = plugs[i](None, None)
-            sub.Append(wxId, obj.getMenuTitle())
-            self._containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.TOOL_PLUGIN], id=wxId)
-            self.plugins[wxId] = plugs[i]
+        for wxId in pluginMap:
+
+            clazz: type = pluginMap[wxId]
+
+            pluginInstance: PyutToPlugin = clazz(None, None)
+            sub.Append(wxId, pluginInstance.getMenuTitle())
+
+            self._containingFrame.Bind(EVT_MENU, self._toolsMenuHandler.onToolPlugin, id=wxId)
+
         return sub
 
     def _makeToolboxesMenu(self):
