@@ -10,12 +10,17 @@ from unittest import main as unitTestMain
 from unittest import TestSuite
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.ui.tools.SharedTypes import SharedTypes
 from tests.TestBase import TestBase
 
 from org.pyut.plugins.PluginManager import PluginManager
 
 
 class TestPluginManager(TestBase):
+
+    EXPECTED_TOOL_COUNT:          int = 10
+    EXPECTED_IMPORT_PLUGIN_COUNT: int = 8
+    EXPECTED_EXPORT_PLUGIN_COUNT: int = 9
     """
     """
     clsLogger: Logger = None
@@ -44,6 +49,21 @@ class TestPluginManager(TestBase):
 
         for info in infoStrings:
             self.logger.info(info)
+
+    def testMapWxIdsToToolPlugins(self):
+
+        toolPluginMap: SharedTypes.PluginMap = self.pluginManager.mapWxIdsToToolPlugins()
+        self.assertEqual(TestPluginManager.EXPECTED_TOOL_COUNT, len(toolPluginMap), 'Incorrect tool count')
+
+    def testMapWxIdsToImportPlugins(self):
+
+        importPluginMap: SharedTypes.PluginMap = self.pluginManager.mapWxIdsToImportPlugins()
+        self.assertEqual(TestPluginManager.EXPECTED_IMPORT_PLUGIN_COUNT, len(importPluginMap), 'Incorrect import plugin count')
+
+    def testMapWxIdsToExportPlugins(self):
+
+        exportPluginMap: SharedTypes.PluginMap = self.pluginManager.mapWxIdsToExportPlugins()
+        self.assertEqual(TestPluginManager.EXPECTED_EXPORT_PLUGIN_COUNT, len(exportPluginMap), 'Incorrect export plugin count')
 
 
 def suite() -> TestSuite:

@@ -37,6 +37,7 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Globals import _
 from org.pyut.general.Mediator import Mediator
+from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -67,12 +68,28 @@ class FileMenuHandler:
         self._initPrinting()    # Printing data
 
     @property
-    def plugins(self) -> SharedTypes.PluginMap:
-        return self._plugins
+    def exportPlugins(self) -> SharedTypes.PluginMap:
+        raise UnsupportedOperation('Property is write only')
 
-    @plugins.setter
-    def plugins(self, newMap: SharedTypes.PluginMap):
-        self._plugins = newMap
+    @exportPlugins.setter
+    def exportPlugins(self, exportPlugins: SharedTypes.PluginMap):
+        self._exportPlugins = exportPlugins
+
+    @property
+    def importPlugins(self) -> SharedTypes.PluginMap:
+        raise UnsupportedOperation('Property is write only')
+
+    @importPlugins.setter
+    def importPlugins(self, importPlugins: SharedTypes.PluginMap):
+        self._importPlugins = importPlugins
+
+    @property
+    def exportPlugins(self) -> SharedTypes.PluginMap:
+        raise UnsupportedOperation('Property is write only')
+
+    @exportPlugins.setter
+    def exportPlugins(self, exportPlugins: SharedTypes.PluginMap):
+        self._exportPlugins = exportPlugins
 
     # noinspection PyUnusedLocal
     def onNewProject(self, event: CommandEvent):
@@ -229,7 +246,7 @@ class FileMenuHandler:
         self._treeNotebookHandler.newProject()
         self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
         self._mediator.updateTitle()
-        cl = self.plugins[event.GetId()]
+        cl = self._importPlugins[event.GetId()]
 
         obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
 
@@ -253,12 +270,16 @@ class FileMenuHandler:
             event: A command event
         """
         # Create a plugin instance
-        cl = self.plugins[event.GetId()]
+        cl = self._exportPlugins[event.GetId()]
         umlObjects: List[OglClass]      = self._mediator.getUmlObjects()
         umlFrame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
         obj = cl(umlObjects, umlFrame)
-
-        obj.doExport()
+        try:
+            wxYield()
+            obj.doExport()
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
+            self.logger.error(f'{e}')
 
     # noinspection PyUnusedLocal
     def onPyutPreferences(self, event: CommandEvent):

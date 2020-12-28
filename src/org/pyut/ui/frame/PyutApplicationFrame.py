@@ -24,7 +24,7 @@ from wx import FD_MULTIPLE
 from wx import AcceleratorEntry
 from wx import CommandEvent
 from wx import Frame
-from wx import NewId
+
 from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
@@ -32,8 +32,6 @@ from wx import Menu
 
 from wx import FileDialog
 
-from wx import BeginBusyCursor
-from wx import EndBusyCursor
 from wx import Window
 
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
@@ -121,7 +119,9 @@ class PyutApplicationFrame(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        self._toolPlugins: SharedTypes.PluginMap = self.__mapWxIdsToToolPlugins()
+        self._toolPlugins:   SharedTypes.PluginMap = self.plugMgr.mapWxIdsToToolPlugins()
+        self._importPlugins: SharedTypes.PluginMap = self.plugMgr.mapWxIdsToImportPlugins()
+        self._exportPlugins: SharedTypes.PluginMap = self.plugMgr.mapWxIdsToExportPlugins()
 
         # Initialization
         self.fileMenu:  Menu = Menu()
@@ -149,11 +149,12 @@ class PyutApplicationFrame(Frame):
         self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
         self._menuCreator.helpMenuHandler  = self._helpMenuHandler
         self._menuCreator.toolPlugins      = self._toolPlugins
+        self._menuCreator.exportPlugins    = self._exportPlugins
+        self._menuCreator.importPlugins    = self._importPlugins
 
         self._menuCreator.initMenus()
 
         self._toolboxIds  = self._menuCreator.toolboxIds
-        self._plugins     = self._menuCreator.plugins
 
         self.__setupKeyboardShortcuts()
 
@@ -431,16 +432,3 @@ class PyutApplicationFrame(Frame):
 
             index += 1
 
-    def __mapWxIdsToToolPlugins(self) -> SharedTypes.PluginMap:
-
-        plugins = self.plugMgr.getToolPlugins()
-        pluginMap: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})
-
-        nb: int = len(plugins)
-
-        for x in range(nb):
-            wxId: int         = NewId()
-
-            pluginMap[wxId] = plugins[x]
-
-        return pluginMap

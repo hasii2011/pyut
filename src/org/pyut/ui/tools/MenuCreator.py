@@ -1,4 +1,5 @@
 
+from typing import Callable
 from typing import cast
 
 from logging import Logger
@@ -6,18 +7,21 @@ from logging import getLogger
 
 from wx import EVT_MENU
 from wx import ID_ABOUT
+from wx import ID_EXIT
 
 from wx import Frame
-from wx import ID_EXIT
 from wx import Menu
 from wx import MenuBar
-from wx import NewId
+from wx import NewIdRef
 
-from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
+from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
@@ -82,20 +86,28 @@ class MenuCreator:
         self._helpMenu = helpMenu
 
     @property
-    def plugins(self) -> SharedTypes.PluginMap:
-        return self._plugins
-
-    @plugins.setter
-    def plugins(self, theNewValues: SharedTypes.PluginMap):
-        raise UnsupportedOperation('Property is read only')
-
-    @property
     def toolPlugins(self) -> SharedTypes.PluginMap:
         raise UnsupportedOperation('Property is write only')
 
     @toolPlugins.setter
     def toolPlugins(self, toolPlugins: SharedTypes.PluginMap):
         self._toolPlugins = toolPlugins
+
+    @property
+    def exportPlugins(self) -> SharedTypes.PluginMap:
+        raise UnsupportedOperation('Property is write only')
+
+    @exportPlugins.setter
+    def exportPlugins(self, exportPlugins: SharedTypes.PluginMap):
+        self._exportPlugins = exportPlugins
+
+    @property
+    def importPlugins(self) -> SharedTypes.PluginMap:
+        raise UnsupportedOperation('Property is write only')
+
+    @importPlugins.setter
+    def importPlugins(self, importPlugins: SharedTypes.PluginMap):
+        self._importPlugins = importPlugins
 
     @property
     def toolboxIds(self) -> SharedTypes.ToolboxIdMap:
@@ -148,14 +160,15 @@ class MenuCreator:
         # mnuTools = Menu()
         sub = self._makeToolsMenu()
         if sub is not None:
-            self._toolsMenu.Append(NewId(), _("Tools"), sub)
+            self._toolsMenu.Append(NewIdRef(), _("Tools"), sub)
 
         sub = self._makeToolboxesMenu()
         if sub is not None:
-            self._toolsMenu.Append(NewId(), _("Toolboxes"), sub)
+            self._toolsMenu.Append(NewIdRef(), _("Toolboxes"), sub)
 
         # Plugins identified
-        self._fileMenuHandler.plugins = self._plugins
+        self._fileMenuHandler.importPlugins = self._importPlugins
+        self._fileMenuHandler.exportPlugins = self._exportPlugins
 
         self._initializeHelpMenu()
 
@@ -183,7 +196,7 @@ class MenuCreator:
                                _("New sequence diagram"))
         self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM, _("New &use-case diagram\tCtrl-U"),
                                _("New use-case diagram"))
-        fileMenu.Append(NewId(), _("&New"), self.mnuFileNew)
+        fileMenu.Append(NewIdRef(), _("&New"), self.mnuFileNew)
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT, _("&Insert a project...\t"),
                         _("Insert a project in the current project..."))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_OPEN, _("&Open...\tCtrl-O"), _("Open a file..."))
@@ -199,10 +212,10 @@ class MenuCreator:
         if sub is None:
             sub = Menu()
         if sub is not None:
-            self._fileMenu.Append(NewId(), _("Export"), sub)
+            self._fileMenu.Append(NewIdRef(), _("Export"), sub)
         sub = self._makeImportMenu(fileMenuHandler=fileMenuHandler)
         if sub is not None:
-            self._fileMenu.Append(NewId(), _("Import"), sub)
+            self._fileMenu.Append(NewIdRef(), _("Import"), sub)
         fileMenu.AppendSeparator()
         fileMenu.Append(SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES, _("PyUt P&references"), _("PyUt preferences"))
         # fileMenu.Append(ID_MNU_FILE_DIAGRAM_PROPERTIES,_("&Diagram Properties"), _("Diagram properties"))
@@ -212,7 +225,7 @@ class MenuCreator:
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT, _("&Print\tCtrl-P"), _("Print the current diagram"))
         fileMenu.AppendSeparator()
         sub = self._makeRecentlyOpenedMenu()
-        fileMenu.Append(NewId(), _('Recently Opened'), sub)
+        fileMenu.Append(NewIdRef(), _('Recently Opened'), sub)
         fileMenu.AppendSeparator()
 
         fileMenu.Append(ID_EXIT, _("E&xit"), _("Exit PyUt"))
@@ -257,7 +270,7 @@ class MenuCreator:
         sub.Append(SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW,    '&Text Error View',      'Test text error view')
         sub.Append(SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW,   '&Exception Error View', 'Test raising exception')
 
-        mnuEdit.Append(NewId(), _('Show Error View'), sub)
+        mnuEdit.Append(NewIdRef(), _('Show Error View'), sub)
 
         return mnuEdit
 
@@ -267,7 +280,7 @@ class MenuCreator:
         sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY, _("&Pyut"), _("Add the UML Diagram of Pyut"))
         sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY, _("&Ogl"), _("Add the UML Diagram of Pyut - Ogl"))
 
-        mnuEdit.Append(NewId(), _('Add Hierarchy'), sub)
+        mnuEdit.Append(NewIdRef(), _('Add Hierarchy'), sub)
 
         return mnuEdit
 
@@ -287,47 +300,47 @@ class MenuCreator:
         """
         Make the export submenu.
         """
-        plugs = self.plugMgr.getOutputPlugins()
-        nb = len(plugs)
-        if nb == 0:
-            return None
-        sub: Menu = Menu()
+        pluginMap: SharedTypes.PluginMap = self._exportPlugins
+        sub:       Menu = Menu()
 
-        for i in range(nb):
-            pluginId = NewId()
-            obj = plugs[i](None, None)
-            sub.Append(pluginId, obj.getOutputFormat()[0])
-            self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onExport, id=pluginId)
-            self._plugins[pluginId] = plugs[i]
+        for wxId in pluginMap:
+
+            clazz: type = pluginMap[wxId]
+            pluginInstance: PyutIoPlugin = clazz(None, None)
+
+            pluginName: str = pluginInstance.getOutputFormat()[0]
+            sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, pluginName=pluginName, callback=fileMenuHandler.onExport)
+            # sub.Append(wxId, pluginName)
+            # self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onExport, id=wxId)
+
         return sub
 
     def _makeImportMenu(self, fileMenuHandler: FileMenuHandler):
         """
         Make the import submenu.
         """
-        plugs = self.plugMgr.getInputPlugins()
-        nb = len(plugs)
-        if nb == 0:
-            return None
+        pluginMap: SharedTypes.PluginMap = self._importPlugins
+
         sub: Menu = Menu()
 
-        for i in range(nb):
-            importId = NewId()
-            obj = plugs[i](None, None)
-            sub.Append(importId, obj.getInputFormat()[0])
-            self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onImport, id=importId)
-            self._plugins[importId] = plugs[i]
+        for wxId in pluginMap:
+
+            clazz: type = pluginMap[wxId]
+            pluginInstance: PyutIoPlugin = clazz(None, None)
+
+            pluginName: str = pluginInstance.getInputFormat()[0]
+
+            # sub.Append(wxId, pluginName)
+            # self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onImport, id=wxId)
+            sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, pluginName=pluginName, callback=fileMenuHandler.onImport)
         return sub
 
     def _makeToolsMenu(self):
         """
         Make the tools submenu.
         """
-        pluginMap = self._toolPlugins
-        nb = len(pluginMap)
-        if nb == 0:
-            return None
-        sub: Menu = Menu()
+        pluginMap: SharedTypes.PluginMap = self._toolPlugins
+        sub:       Menu = Menu()
 
         for wxId in pluginMap:
 
@@ -354,7 +367,7 @@ class MenuCreator:
         cb: SharedTypes.CallbackMap = self._callbackMap
 
         for category in categories:
-            categoryId = NewId()
+            categoryId = NewIdRef()
             self._toolboxesID[categoryId] = category
             sub.Append(categoryId, category)
             self._containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.TOOL_BOX_MENU], id=categoryId)
@@ -411,3 +424,10 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion, id=SharedIdentifiers.ID_MNU_HELP_VERSION)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,     id=SharedIdentifiers.ID_MNU_HELP_WEB)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug,       id=SharedIdentifiers.ID_DEBUG)
+
+    def __makeSubMenuEntry(self, subMenu: Menu, wxId: int, pluginName: str, callback: Callable) -> Menu:
+
+        subMenu.Append(wxId, pluginName)
+        self._containingFrame.Bind(EVT_MENU, callback, id=wxId)
+
+        return subMenu

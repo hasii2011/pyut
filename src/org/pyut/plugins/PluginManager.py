@@ -1,10 +1,13 @@
 
 from typing import List
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
 from os import sep as osSep
+
+from wx import NewIdRef
 
 from org.pyut.general.Singleton import Singleton
 
@@ -33,6 +36,7 @@ from org.pyut.plugins.tools.ToOrthogonalLayoutV2 import ToOrthogonalLayoutV2
 from org.pyut.plugins.tools.ToPython import ToPython
 from org.pyut.plugins.tools.ToSugiyama import ToSugiyama
 from org.pyut.plugins.tools.ToTransforms import ToTransforms
+from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 FileNameListType = List[str]
 
@@ -106,3 +110,40 @@ class PluginManager(Singleton):
         Returns:    A list of classes (the plugins classes).
         """
         return self.TOOL_PLUGINS
+
+    def mapWxIdsToToolPlugins(self) -> SharedTypes.PluginMap:
+
+        plugins: SharedTypes.PluginList = self.getToolPlugins()
+
+        pluginMap: SharedTypes.PluginMap = self.__mapWxIdsToPlugins(plugins)
+
+        return pluginMap
+
+    def mapWxIdsToImportPlugins(self) -> SharedTypes.PluginMap:
+
+        plugins: SharedTypes.PluginList = self.getInputPlugins()
+
+        pluginMap: SharedTypes.PluginMap = self.__mapWxIdsToPlugins(plugins)
+
+        return pluginMap
+
+    def mapWxIdsToExportPlugins(self) -> SharedTypes.PluginMap:
+
+        plugins: SharedTypes.PluginList = self.getOutputPlugins()
+
+        pluginMap: SharedTypes.PluginMap = self.__mapWxIdsToPlugins(plugins)
+
+        return pluginMap
+
+    def __mapWxIdsToPlugins(self, plugins: List[type]) -> SharedTypes.PluginMap:
+
+        pluginMap: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})
+
+        nb: int = len(plugins)
+
+        for x in range(nb):
+            wxId: int = NewIdRef()
+
+            pluginMap[wxId] = plugins[x]
+
+        return pluginMap
