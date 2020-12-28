@@ -46,6 +46,7 @@ from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
 from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 
 from org.pyut.dialogs.tips.DlgTips import DlgTips
 
@@ -56,10 +57,10 @@ from org.pyut.PyutConstants import PyutConstants
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
-
 from org.pyut.general.Globals import _
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
-from org.pyut.ui.tools.ToolsCreator import ToolsCreator
+
+from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager should not be in plugins directory
 
 
 class PyutApplicationFrame(Frame):
@@ -89,12 +90,7 @@ class PyutApplicationFrame(Frame):
 
         self.logger: Logger = getLogger(__name__)
         self._createApplicationIcon()
-
-        # Properties
-        from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
-
-        self.plugMgr:     PluginManager         = PluginManager()
-
+        self._plugMgr:    PluginManager            = PluginManager()
         self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
 
         self._currentDirectory = getcwd()
@@ -119,9 +115,9 @@ class PyutApplicationFrame(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        self._toolPlugins:   SharedTypes.PluginMap = self.plugMgr.mapWxIdsToToolPlugins()
-        self._importPlugins: SharedTypes.PluginMap = self.plugMgr.mapWxIdsToImportPlugins()
-        self._exportPlugins: SharedTypes.PluginMap = self.plugMgr.mapWxIdsToExportPlugins()
+        self._toolPlugins:   SharedTypes.PluginMap = self._plugMgr.mapWxIdsToToolPlugins()
+        self._importPlugins: SharedTypes.PluginMap = self._plugMgr.mapWxIdsToImportPlugins()
+        self._exportPlugins: SharedTypes.PluginMap = self._plugMgr.mapWxIdsToExportPlugins()
 
         # Initialization
         self.fileMenu:  Menu = Menu()
@@ -260,7 +256,7 @@ class PyutApplicationFrame(Frame):
         self._treeNotebookHandler = None
         self._mediator         = None
         self._prefs        = None
-        self.plugMgr       = None
+        self._plugMgr       = None
 
         # self._printData.Destroy()
         # TODO? wx.OGLCleanUp()
