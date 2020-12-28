@@ -180,7 +180,7 @@ class FileMenuHandler:
         Args:
             event:
         """
-        self._loadFile()
+        self.loadFile()
 
     # noinspection PyUnusedLocal
     def onFileSave(self, event: CommandEvent):
@@ -383,7 +383,7 @@ class FileMenuHandler:
             if event.GetId() == self._lastOpenedFilesIDs[index]:
                 try:
                     lst = self._preferences.getLastOpenedFilesList()
-                    self._loadFile(lst[index])
+                    self.loadFile(lst[index])
                     self._preferences.addNewLastOpenedFilesEntry(lst[index])
                     self._setLastOpenedFilesItems()
                 except (ValueError, Exception) as e:
@@ -402,9 +402,10 @@ class FileMenuHandler:
 
         wxPostEvent(parent, closeEvent)
 
-    def _loadFile(self, filename: str = ""):
+    def loadFile(self, filename: str = ""):
         """
-        Load the specified filename
+        Load the specified filename;  This is externally available so that
+        we can open a file from the command line
 
         Args:
             filename: Its name

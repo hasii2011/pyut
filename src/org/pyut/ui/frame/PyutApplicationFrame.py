@@ -16,10 +16,7 @@ from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_CLOSE
 from wx import FRAME_EX_METAL
-from wx import ID_OK
 from wx import EVT_ACTIVATE
-from wx import FD_OPEN
-from wx import FD_MULTIPLE
 
 from wx import AcceleratorEntry
 from wx import CommandEvent
@@ -29,9 +26,6 @@ from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
 from wx import Menu
-
-from wx import FileDialog
-
 from wx import Window
 
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
@@ -57,7 +51,6 @@ from org.pyut.PyutConstants import PyutConstants
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Mediator import Mediator
-from org.pyut.general.Globals import _
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager should not be in plugins directory
@@ -193,14 +186,9 @@ class PyutApplicationFrame(Frame):
 
     def loadByFilename(self, filename):
         """
-        load the specified filename
-        called by PyutApp
-        This is a simple indirection to _loadFile. Not direct call because
-        it seems to be more logical to let _loadFile be private.
-        PyutApp do not need to know the correct name of the _loadFile method.
-
+        Load the specified filename; called by PyutApp
         """
-        self._loadFile(filename)        # TODO TODO TODO Fix this entry point;  Logic moved to FileMenuHandler
+        self._fileMenuHandler.loadFile(filename=filename)
 
     def removeEmptyProject(self):
 
@@ -346,43 +334,6 @@ class PyutApplicationFrame(Frame):
             acc.append(AcceleratorEntry(el1, el2, el3))
         return acc
 
-    def _loadFile(self, filename: str = ""):
-        """
-        Load the specified filename
-
-        Args:
-            filename: Its name
-        """
-        # Make a list to be compatible with multi-files loading
-        fileNames = [filename]
-
-        # Ask which filename to load
-        # TODO This is bad practice to do something different based on input
-        if filename == "":
-            dlg = FileDialog(self, _("Choose a file"), self._lastDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
-
-            if dlg.ShowModal() != ID_OK:
-                dlg.Destroy()
-                return False
-
-            fileNames = dlg.GetPaths()
-            # self.updateCurrentDir(fileNames[0])   TODO This needs to use handler
-            dlg.Destroy()
-
-        self.logger.info(f"loading file(s) {filename}")
-
-        # Open the specified files
-        for filename in fileNames:
-            try:
-                if self._treeNotebookHandler.openFile(filename):
-                    # Add to last opened files list
-                    self._prefs.addNewLastOpenedFilesEntry(filename)
-                    self.__setLastOpenedFilesItems()
-                    self._mediator.updateTitle()
-            except (ValueError, Exception) as e:
-                PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
-                self.logger.error(f'{e}')
-
     def _OnNewAction(self, event: CommandEvent):
         """
         Call the mediator to specify the current action.
@@ -427,4 +378,3 @@ class PyutApplicationFrame(Frame):
             self.fileMenu.SetLabel(id=openFilesId, label=lbl)
 
             index += 1
-
