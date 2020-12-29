@@ -28,7 +28,6 @@ from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
 from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
-from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 from org.pyut.ui.tools.SharedTypes import SharedTypes
 
