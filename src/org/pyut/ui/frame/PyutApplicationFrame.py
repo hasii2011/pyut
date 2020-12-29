@@ -11,6 +11,7 @@ from os import getcwd
 from sys import platform as sysPlatform
 
 from wx import ACCEL_CTRL
+from wx import ActivateEvent
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
@@ -83,7 +84,7 @@ class PyutApplicationFrame(Frame):
 
         self.logger: Logger = getLogger(__name__)
         self._createApplicationIcon()
-        self._plugMgr:    PluginManager            = PluginManager()
+        self._plugMgr: PluginManager = PluginManager()
 
         self.CreateStatusBar()
 
@@ -101,9 +102,9 @@ class PyutApplicationFrame(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        self._toolPlugins:   SharedTypes.PluginMap    = self._plugMgr.mapWxIdsToToolPlugins()
-        self._importPlugins: SharedTypes.PluginMap    = self._plugMgr.mapWxIdsToImportPlugins()
-        self._exportPlugins: SharedTypes.PluginMap    = self._plugMgr.mapWxIdsToExportPlugins()
+        self._toolPlugins:   SharedTypes.PluginMap = self._plugMgr.mapWxIdsToToolPlugins()
+        self._importPlugins: SharedTypes.PluginMap = self._plugMgr.mapWxIdsToImportPlugins()
+        self._exportPlugins: SharedTypes.PluginMap = self._plugMgr.mapWxIdsToExportPlugins()
 
         # Initialization
         fileMenu:  Menu = Menu()
@@ -155,14 +156,33 @@ class PyutApplicationFrame(Frame):
         self.Bind(EVT_ACTIVATE, self._onActivate)
         self.Bind(EVT_CLOSE, self.Close)
 
-    def notifyTitleChanged(self):
+    def Close(self, force=False):
         """
-        Notify that the title changed.
+        Closing handler overload. Save files and ask for confirmation.
 
-        @since 1.50
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            force:
         """
-        self._mediator.updateTitle()
+        # Close all files
+        if self._treeNotebookHandler.onClose() is False:
+            return
+        if self._prefs.overrideOnProgramExit is True:
+            # Only save position if we are not auto-saving
+            if self._prefs.centerAppOnStartUp is False:
+                pos: Tuple[int, int] = self.GetPosition()
+                self._prefs.appStartupPosition = pos
+
+            ourSize: Tuple[int, int] = self.GetSize()
+            self._prefs.startupWidth  = ourSize[0]
+            self._prefs.startupHeight = ourSize[1]
+
+        self._clipboard    = None
+        self._treeNotebookHandler = None
+        self._mediator     = None
+        self._prefs        = None
+        self._plugMgr      = None
+
+        self.Destroy()
 
     def loadByFilename(self, filename):
         """
@@ -200,39 +220,13 @@ class PyutApplicationFrame(Frame):
         project.selectSelf()
         mainUI.currentFrame = project.getFrames()[0]
 
-    def Close(self, force=False):
+    def _onActivate(self, event: ActivateEvent):
         """
-        Closing handler overload. Save files and ask for confirmation.
+        EVT_ACTIVATE Callback; display tips frame.
+        But only, the first activate
 
         Args:
-            force:
-        """
-        # Close all files
-        if self._treeNotebookHandler.onClose() is False:
-            return
-        if self._prefs.overrideOnProgramExit is True:
-            # Only save position if we are not auto-saving
-            if self._prefs.centerAppOnStartUp is False:
-                pos: Tuple[int, int] = self.GetPosition()
-                self._prefs.appStartupPosition = pos
-
-            ourSize: Tuple[int, int] = self.GetSize()
-            self._prefs.startupWidth  = ourSize[0]
-            self._prefs.startupHeight = ourSize[1]
-
-        self._clipboard    = None
-        self._treeNotebookHandler = None
-        self._mediator         = None
-        self._prefs        = None
-        self._plugMgr       = None
-
-        # self._printData.Destroy()
-        # TODO? wx.OGLCleanUp()
-        self.Destroy()
-
-    def _onActivate(self, event):
-        """
-        EVT_ACTIVATE Callback; display tips frame.  But only, the first activate
+            event:
         """
         self.logger.debug(f'_onActivate event: {event}')
         try:
@@ -261,7 +255,7 @@ class PyutApplicationFrame(Frame):
         self._toolsCreator: ToolsCreator = ToolsCreator(frame=self,
                                                         fileMenuHandler=fileMenuHandler,
                                                         editMenuHandler=editMenuHandler,
-                                                        newActionCallback=self._OnNewAction)
+                                                        newActionCallback=self._onNewAction)
         self._toolsCreator.initTools()
 
     def _createAcceleratorTable(self):
@@ -302,7 +296,7 @@ class PyutApplicationFrame(Frame):
             acc.append(AcceleratorEntry(el1, el2, el3))
         return acc
 
-    def _OnNewAction(self, event: CommandEvent):
+    def _onNewAction(self, event: CommandEvent):
         """
         Call the mediator to specify the current action.
 

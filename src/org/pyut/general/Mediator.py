@@ -274,16 +274,6 @@ class Mediator(Singleton):
         """
         return self._appFrame
 
-    def notifyTitleChanged(self):
-        """
-        Notify application frame that the application title has changed
-
-        @since 1.27.2.23
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        if self._appFrame is not None:
-            self._appFrame.notifyTitleChanged()
-
     def registerFileHandling(self, treeNotebookHandler):
         """
         Register the main part of the user interface
@@ -959,9 +949,6 @@ class Mediator(Singleton):
     def updateTitle(self):
         """
         Set the application title, function of version and current filename
-
-        @since 1.4
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         # Exit if we are in scripting mode
         if self.isInScriptMode():

@@ -616,7 +616,8 @@ class TreeNotebookHandler:
         if self._mediator is not None:      # hasii maybe I got this right from the old pre PEP-8 code
             #  self._ctrl.registerUMLFrame(self._getCurrentFrame())
             self._currentFrame = self._getCurrentFrameFromNotebook()
-            self.__parent.notifyTitleChanged()
+
+            self._mediator.updateTitle()
         # self.__projectTree.SelectItem(getID(self.getCurrentFrame()))
         # TODO : how can I do getID ???
 
@@ -659,6 +660,7 @@ class TreeNotebookHandler:
             return None
 
         noPage = self.__notebookCurrentPage
+        self.logger.info(f'{noPage=}')
         if noPage == -1:
             return None
         frame = self.__notebook.GetPage(noPage)
