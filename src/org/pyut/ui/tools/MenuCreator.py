@@ -14,6 +14,7 @@ from wx import Menu
 from wx import MenuBar
 from wx import NewIdRef
 
+from org.pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
@@ -38,20 +39,19 @@ class MenuCreator:
 
     DEBUG_ERROR_VIEWS: bool = True      # TODO Make this a runtime flag
 
-    def __init__(self, frame: Frame,  callbackMap: SharedTypes.CallbackMap, lastOpenFilesID):
+    def __init__(self, frame: Frame, lastOpenFilesID):
 
         from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
 
         self._containingFrame: Frame = frame
-        self._callbackMap:     SharedTypes.CallbackMap = callbackMap
         self.lastOpenedFilesID = lastOpenFilesID
 
         self.logger:    Logger          = getLogger(__name__)
         self._prefs:    PyutPreferences = PyutPreferences()
         self.plugMgr:   PluginManager   = PluginManager()
 
-        self._plugins:     SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
-        self._toolboxesID: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id
+        self._plugins:    SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
+        self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Dictionary id --> toolbox
 
     @property
     def fileMenu(self) -> Menu:
@@ -111,11 +111,11 @@ class MenuCreator:
 
     @property
     def toolboxIds(self) -> SharedTypes.ToolboxIdMap:
-        return self._toolboxesID
+        raise UnsupportedOperation('Property is write only')
 
     @toolboxIds.setter
     def toolboxIds(self, theNewValues: SharedTypes.ToolboxIdMap):
-        self._toolboxesID = theNewValues
+        self._toolboxIds = theNewValues
 
     @property
     def fileMenuHandler(self) -> FileMenuHandler:
@@ -149,7 +149,7 @@ class MenuCreator:
     def helpMenuHandler(self, helpMenuHandler: HelpMenuHandler):
         self._helpMenuHandler = helpMenuHandler
 
-    def initMenus(self):
+    def initializeMenus(self):
 
         self._initializeFileMenu()
         self._initializeEditMenu()
@@ -364,13 +364,12 @@ class MenuCreator:
         if nb == 0:
             return None
         sub: Menu = Menu()
-        cb: SharedTypes.CallbackMap = self._callbackMap
 
         for category in categories:
-            categoryId = NewIdRef()
-            self._toolboxesID[categoryId] = category
+
+            categoryId = self.__getWxId(category)
             sub.Append(categoryId, category)
-            self._containingFrame.Bind(EVT_MENU, cb[ActionCallbackType.TOOL_BOX_MENU], id=categoryId)
+            self._containingFrame.Bind(EVT_MENU, self._toolsMenuHandler.onToolboxMenuClick, id=categoryId)
         return sub
 
     def _bindFileMenuHandlers(self, containingFrame: Frame, fileMenuHandler: FileMenuHandler):
@@ -431,3 +430,11 @@ class MenuCreator:
         self._containingFrame.Bind(EVT_MENU, callback, id=wxId)
 
         return subMenu
+
+    def __getWxId(self, categoryName: str):
+
+        for key, value in self._toolboxIds.items():
+            if categoryName == value:
+                return key
+
+        raise InvalidCategoryException(f'{categoryName} does not exist')

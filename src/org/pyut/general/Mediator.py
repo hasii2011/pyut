@@ -46,6 +46,7 @@ from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.DlgEditLink import DlgEditLink
 from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
+from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
@@ -772,13 +773,15 @@ class Mediator(Singleton):
         else:
             PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
 
-    def getCurrentDir(self):
+    def getCurrentDir(self) -> str:
         """
         Return the application's current directory
 
-        @return String : application's current directory
+        Returns:  application's current directory
         """
-        return self._appFrame.getCurrentDir()
+        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
+
+        return currentDirectoryHandler.currentDirectory
 
     def setCurrentDir(self, directory):
         """

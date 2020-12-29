@@ -1,30 +1,42 @@
 
+from typing import Dict
+from typing import List
+from typing import NewType
+from typing import cast
+
+from wx import Window
+
 from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.tools.Toolbox import Toolbox
 
-# TODO : add observer-observable model to support dynamic plugins
+Category       = NewType('Category',       str)
+Tools          = NewType('NewType',        List[Tool])
+CategoryNames  = NewType('CategoryNames',  List[Category])
+ToolCategories = NewType('ToolCategories', Dict[Category, Tools])
 
 
 class ToolboxOwner:
+
     """
     ToolboxOwner : a toolbox owner
     """
 
-    def __init__(self, parent):
+    def __init__(self, parent: Window):
         """
-        Constructor.
 
-        @param wxWindow parent : parent window
+        Args:
+            parent:  The parent window
         """
-        # Members vars
-        self._toolCategories = {}
-        self._parent = parent
+        self._toolCategories: ToolCategories = cast(ToolCategories, {})
+        self._parent:         Window = parent
 
-    def displayToolbox(self, category):
+    def displayToolbox(self, category: Category):
         """
-        display a toolbox
+        Display a toolbox
+        TODO:  Don't redisplay toolbox if we have already done so
 
-        @param string category : category of tools to display
+        Args:
+            category:  Category of tools to display
         """
         toolbox = Toolbox(self._parent, self)
         toolbox.setCategory(category)
@@ -33,25 +45,32 @@ class ToolboxOwner:
         """
         Add a tool to toolboxes
 
-        @param Tool tool : The tool to add
+        Args:
+            tool: The tool to add
         """
+
         if tool.initialCategory not in self._toolCategories:
             self._toolCategories[tool.initialCategory] = [tool]
+            print(f'{tool.initialCategory=}')
         else:
             self._toolCategories[tool.initialCategory].append(tool)
 
-    def getCategoryTools(self, category):
+    def getCategoryTools(self, category: Category) -> Tools:
         """
-        Return all tools for a specified category
 
-        @param string category : the category of tools to get
-        """
-        return self._toolCategories[category]
+        Args:
+            category:  the category of tools to get
 
-    def getCategories(self):
+        Returns:  all tools for a specified category
         """
-        Return all categories of tools
+        toolsOfCategory: Tools = self._toolCategories[category]
+        return toolsOfCategory
 
-        @return string[] of categories
+    def getCategories(self) -> CategoryNames:
         """
-        return list(self._toolCategories.keys())
+        Return all tool category names
+
+        Returns:  The category names
+        """
+        categoryNames: CategoryNames = cast(CategoryNames, list(self._toolCategories.keys()))
+        return categoryNames

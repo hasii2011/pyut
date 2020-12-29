@@ -305,6 +305,8 @@ class TreeNotebookHandler:
             PyutUtils.displayError(_("No diagram to save !"), _("Error"))
             return
 
+        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
+
         # Ask for filename
         filenameOK = False
         # TODO revisit this to figure out how to get rid of Pycharm warning 'dlg referenced before assignment'
@@ -312,7 +314,7 @@ class TreeNotebookHandler:
         dlg: DialogType = cast(DialogType, None)
         while not filenameOK:
             dlg = FileDialog(self.__parent,
-                             defaultDir=self.__parent.getCurrentDir(),
+                             defaultDir=currentDirectoryHandler.currentDirectory,
                              wildcard=_("Pyut file (*.put)|*.put"),
                              style=FD_SAVE | FD_OVERWRITE_PROMPT)
 
@@ -352,8 +354,6 @@ class TreeNotebookHandler:
             else:
                 self.logger.info("Not updating notebook in FileHandling")
 
-        #  self.__parent.updateCurrentDir(dlg.GetPath())   BAD BAD BAD BAD BAD BAD BAD BAD
-        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
         currentDirectoryHandler.currentDirectory = dlg.GetPath()
 
         project.setModified(False)

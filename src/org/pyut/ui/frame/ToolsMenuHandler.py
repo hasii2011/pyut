@@ -22,12 +22,13 @@ class ToolsMenuHandler(BaseMenuHandler):
     """
     Handles calling Tool plugins and I/O Plugins
     """
-    def __init__(self, toolsMenu: Menu, toolPluginsMap: SharedTypes.PluginMap):
+    def __init__(self, toolsMenu: Menu, toolPluginsMap: SharedTypes.PluginMap, toolboxIds: SharedTypes.ToolboxIdMap):
 
         super().__init__(menu=toolsMenu)
 
-        self.logger:   Logger                       = getLogger(__name__)
-        self._toolPluginsMap: SharedTypes.PluginMap = toolPluginsMap
+        self.logger:          Logger                   = getLogger(__name__)
+        self._toolPluginsMap: SharedTypes.PluginMap    = toolPluginsMap
+        self._toolboxIds:     SharedTypes.ToolboxIdMap = toolboxIds
 
     def onToolPlugin(self, event: CommandEvent):
         """
@@ -56,3 +57,6 @@ class ToolsMenuHandler(BaseMenuHandler):
         umlFrame = self._mediator.getUmlFrame()
         if umlFrame is not None:
             umlFrame.Refresh()
+
+    def onToolboxMenuClick(self, event: CommandEvent):
+        self._mediator.displayToolbox(self._toolboxIds[event.GetId()])

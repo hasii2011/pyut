@@ -21,6 +21,7 @@ from wx import EVT_ACTIVATE
 from wx import AcceleratorEntry
 from wx import CommandEvent
 from wx import Frame
+from wx import NewIdRef
 
 from wx import Size
 from wx import Icon
@@ -38,7 +39,6 @@ from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
-from org.pyut.ui.tools.ActionCallbackType import ActionCallbackType
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 
@@ -84,13 +84,6 @@ class PyutApplicationFrame(Frame):
         self.logger: Logger = getLogger(__name__)
         self._createApplicationIcon()
         self._plugMgr:    PluginManager            = PluginManager()
-        self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Association toolbox id -> category
-
-        self._currentDirectory = getcwd()
-        self._lastDir = self._prefs.lastOpenedDirectory
-
-        if self._lastDir is None:  # Assert that the path is present
-            self._lastDir = getcwd()
 
         self.CreateStatusBar()
 
@@ -101,38 +94,37 @@ class PyutApplicationFrame(Frame):
         self._mediator.resetStatusText()
         self._mediator.registerAppFrame(self)
         self._mediator.registerFileHandling(self._treeNotebookHandler)
-        self._mediator.registerAppPath(self._currentDirectory)
+        self._mediator.registerAppPath(getcwd())
 
         # Last opened Files IDs
         self.lastOpenedFilesID = []
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        self._toolPlugins:   SharedTypes.PluginMap = self._plugMgr.mapWxIdsToToolPlugins()
-        self._importPlugins: SharedTypes.PluginMap = self._plugMgr.mapWxIdsToImportPlugins()
-        self._exportPlugins: SharedTypes.PluginMap = self._plugMgr.mapWxIdsToExportPlugins()
+        self._toolPlugins:   SharedTypes.PluginMap    = self._plugMgr.mapWxIdsToToolPlugins()
+        self._importPlugins: SharedTypes.PluginMap    = self._plugMgr.mapWxIdsToImportPlugins()
+        self._exportPlugins: SharedTypes.PluginMap    = self._plugMgr.mapWxIdsToExportPlugins()
 
         # Initialization
-        self.fileMenu:  Menu = Menu()
-        self.editMenu:  Menu = Menu()
-        self.toolsMenu: Menu = Menu()
-        self.helpMenu:  Menu = Menu()
-        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=self.fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
-        self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=self.editMenu)
-        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=self.toolsMenu, toolPluginsMap=self._toolPlugins)
-        self._helpMenuHandler:  HelpMenuHandler  = HelpMenuHandler(helpMenu=self.helpMenu)
+        fileMenu:  Menu = Menu()
+        editMenu:  Menu = Menu()
+        toolsMenu: Menu = Menu()
+        helpMenu:  Menu = Menu()
+        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+        self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=editMenu)
 
-        callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-            ActionCallbackType.TOOL_BOX_MENU:     self.OnToolboxMenuClick,
-        })
+        self._initializePyutTools()
 
-        self._initPyutTools()   # Toolboxes, toolbar
+        self._toolboxIds:    SharedTypes.ToolboxIdMap = self._createToolboxIdMap()
 
-        self._menuCreator: MenuCreator = MenuCreator(frame=self, callbackMap=callbackMap, lastOpenFilesID=self.lastOpenedFilesID)
-        self._menuCreator.fileMenu  = self.fileMenu
-        self._menuCreator.editMenu  = self.editMenu
-        self._menuCreator.toolsMenu = self.toolsMenu
-        self._menuCreator.helpMenu  = self.helpMenu
+        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, toolPluginsMap=self._toolPlugins, toolboxIds=self._toolboxIds)
+        self._helpMenuHandler:  HelpMenuHandler  = HelpMenuHandler(helpMenu=helpMenu)
+
+        self._menuCreator: MenuCreator = MenuCreator(frame=self, lastOpenFilesID=self.lastOpenedFilesID)
+        self._menuCreator.fileMenu  = fileMenu
+        self._menuCreator.editMenu  = editMenu
+        self._menuCreator.toolsMenu = toolsMenu
+        self._menuCreator.helpMenu  = helpMenu
         self._menuCreator.fileMenuHandler  = self._fileMenuHandler
         self._menuCreator.editMenuHandler  = self._editMenuHandler
         self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
@@ -140,10 +132,9 @@ class PyutApplicationFrame(Frame):
         self._menuCreator.toolPlugins      = self._toolPlugins
         self._menuCreator.exportPlugins    = self._exportPlugins
         self._menuCreator.importPlugins    = self._importPlugins
+        self._menuCreator.toolboxIds       = self._toolboxIds
 
-        self._menuCreator.initMenus()
-
-        self._toolboxIds  = self._menuCreator.toolboxIds
+        self._menuCreator.initializeMenus()
 
         self.__setupKeyboardShortcuts()
 
@@ -163,17 +154,6 @@ class PyutApplicationFrame(Frame):
 
         self.Bind(EVT_ACTIVATE, self._onActivate)
         self.Bind(EVT_CLOSE, self.Close)
-
-    def getCurrentDir(self):
-        """
-        Return current working directory.
-
-        @return String : Current directory
-
-        @author P. Waelti <pwaelti@eivd.ch>
-        @since 1.50
-        """
-        return self._lastDir
 
     def notifyTitleChanged(self):
         """
@@ -250,9 +230,6 @@ class PyutApplicationFrame(Frame):
         # TODO? wx.OGLCleanUp()
         self.Destroy()
 
-    def OnToolboxMenuClick(self, event):
-        self._mediator.displayToolbox(self._toolboxIds[event.GetId()])
-
     def _onActivate(self, event):
         """
         EVT_ACTIVATE Callback; display tips frame.  But only, the first activate
@@ -273,22 +250,13 @@ class PyutApplicationFrame(Frame):
             if self._prefs is not None:
                 self.logger.error(f'_onActivate: {e}')
 
-    def _initPyutTools(self):
+    def _initializePyutTools(self):
+        """
+        Initialize the toolboxes and the tool bar
+        """
 
         fileMenuHandler: FileMenuHandler = self._fileMenuHandler
         editMenuHandler: EditMenuHandler = self._editMenuHandler
-
-        # callbackMap: SharedTypes.CallbackMap = cast(SharedTypes.CallbackMap, {
-        #     ActionCallbackType.NEW_ACTION:           self._OnNewAction,
-        #     ActionCallbackType.NEW_CLASS_DIAGRAM:    fileMenuHandler.onNewClassDiagram,
-        #     ActionCallbackType.NEW_SEQUENCE_DIAGRAM: fileMenuHandler.onNewSequenceDiagram,
-        #     ActionCallbackType.NEW_USE_CASE_DIAGRAM: fileMenuHandler.onNewUsecaseDiagram,
-        #     ActionCallbackType.NEW_PROJECT:          fileMenuHandler.onNewProject,
-        #     ActionCallbackType.FILE_OPEN:            fileMenuHandler.onFileOpen,
-        #     ActionCallbackType.FILE_SAVE:            fileMenuHandler.onFileSave,
-        #     ActionCallbackType.UNDO:                 editMenuHandler.onUndo,
-        #     ActionCallbackType.REDO:                 editMenuHandler.onRedo,
-        # })
 
         self._toolsCreator: ToolsCreator = ToolsCreator(frame=self,
                                                         fileMenuHandler=fileMenuHandler,
@@ -348,6 +316,18 @@ class PyutApplicationFrame(Frame):
         self._treeNotebookHandler.setModified(True)
         self._mediator.updateTitle()
 
+    def _createToolboxIdMap(self) -> SharedTypes.ToolboxIdMap:
+
+        toolBoxIdMap: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})
+
+        categories = self._mediator.getToolboxesCategories()
+
+        for category in categories:
+            categoryId = NewIdRef()
+            toolBoxIdMap[categoryId] = category
+
+        return toolBoxIdMap
+
     def _createApplicationIcon(self):
 
         if sysPlatform != PyutConstants.THE_GREAT_MAC_PLATFORM:
@@ -362,19 +342,3 @@ class PyutApplicationFrame(Frame):
         acc = self._createAcceleratorTable()
         accel_table = AcceleratorTable(acc)
         self.SetAcceleratorTable(accel_table)
-
-    def __setLastOpenedFilesItems(self):
-        """
-        Set the menu last opened files items
-        """
-        self.logger.debug(f'{self.fileMenu=}')
-
-        index = 0
-        for el in self._prefs.getLastOpenedFilesList():
-            openFilesId = self.lastOpenedFilesID[index]
-            # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
-            lbl: str = f"&{str(index+1)} {el}"
-            self.logger.debug(f'lbL: {lbl}  openFilesId: {openFilesId}')
-            self.fileMenu.SetLabel(id=openFilesId, label=lbl)
-
-            index += 1
