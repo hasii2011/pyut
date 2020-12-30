@@ -600,12 +600,12 @@ class TreeNotebookHandler:
         self.__notebookCurrentPage = -1
 
         # Callbacks
-        self.__parent.Bind(EVT_NOTEBOOK_PAGE_CHANGED,      self.__onNotebookPageChanged)
-        self.__parent.Bind(EVT_TREE_SEL_CHANGED,           self.__onProjectTreeSelChanged)
+        self.__parent.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onNotebookPageChanged)
+        self.__parent.Bind(EVT_TREE_SEL_CHANGED, self._onProjectTreeSelChanged)
         self.__projectTree.Bind(EVT_TREE_ITEM_RIGHT_CLICK, self.__onProjectTreeRightClick)
 
     # noinspection PyUnusedLocal
-    def __onNotebookPageChanged(self, event):
+    def _onNotebookPageChanged(self, event):
         """
         Callback for notebook page changed
 
@@ -613,27 +613,29 @@ class TreeNotebookHandler:
             event:
         """
         self.__notebookCurrentPage = self.__notebook.GetSelection()
+        self.logger.info(f'{self.__notebookCurrentPage=}')
         if self._mediator is not None:      # hasii maybe I got this right from the old pre PEP-8 code
             #  self._ctrl.registerUMLFrame(self._getCurrentFrame())
             self._currentFrame = self._getCurrentFrameFromNotebook()
 
             self._mediator.updateTitle()
+        self.__getTreeItemFromFrame(self._currentFrame)
         # self.__projectTree.SelectItem(getID(self.getCurrentFrame()))
         # TODO : how can I do getID ???
 
         # Register the current project
         self._currentProject = self.getProjectFromFrame(self._currentFrame)
 
-    def __onProjectTreeSelChanged(self, event: TreeEvent):
+    def _onProjectTreeSelChanged(self, event: TreeEvent):
         """
         Callback for notebook page changed
 
         Args:
             event:
         """
-        itm: TreeItemId = event.GetItem()
+        itm:      TreeItemId = event.GetItem()
         pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
-        self.logger.debug(f'Clicked on: `{pyutData}`')
+        self.logger.info(f'Clicked on: {itm=} `{pyutData=}`')
         # Use our own base type
         if isinstance(pyutData, UmlDiagramsFrame):
             frame: UmlDiagramsFrame = pyutData
@@ -751,6 +753,18 @@ class TreeNotebookHandler:
         project:         PyutProject  = self.getCurrentProject()
         currentDocument: PyutDocument = self.getCurrentDocument()
         project.removeDocument(currentDocument)
+
+    def __getTreeItemFromFrame(self, frame: UmlDiagramsFrame) -> TreeItemId:
+
+        projectTree: TreeCtrl = self.__projectTree
+
+        treeRootItemId: TreeItemId   = projectTree.GetRootItem()
+        pyutData:       TreeDataType = projectTree.GetItemData(treeRootItemId)
+
+        self.logger.info(f'{treeRootItemId=} {pyutData=} {frame=}')
+
+        self.logger.info(f'{projectTree.GetCount()=}')
+        return treeRootItemId
 
     def shortenNotebookPageFileName(self, filename: str) -> str:
         """

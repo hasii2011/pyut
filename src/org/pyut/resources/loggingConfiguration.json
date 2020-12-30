@@ -41,7 +41,7 @@
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.ui.frame.EditMenuHandler": {
+        "org.pyut.ui.TreeNotebookHandler": {
             "level":     "INFO",
             "propagate": "False"
         }
