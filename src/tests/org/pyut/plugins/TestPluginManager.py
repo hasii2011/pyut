@@ -18,7 +18,7 @@ from org.pyut.plugins.PluginManager import PluginManager
 
 class TestPluginManager(TestBase):
 
-    EXPECTED_TOOL_COUNT:          int = 10
+    EXPECTED_TOOL_COUNT:          int = 9
     EXPECTED_IMPORT_PLUGIN_COUNT: int = 8
     EXPECTED_EXPORT_PLUGIN_COUNT: int = 9
     """

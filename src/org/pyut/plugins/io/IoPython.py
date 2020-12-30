@@ -196,26 +196,6 @@ class IoPython(PyutIoPlugin):
             MessageBox(f'{e}', 'Error', OK | ICON_ERROR)
         EndBusyCursor()
 
-    def getPyutClass(self, oglClass, filename: str = "", pyutClass=None):
-        """
-        TODO: BAD BAD BAD.  The ToPython plugin instantiates this plugin to get access to this method;
-        Since I extracted the code I have to maintain this fiction;  This method probably belongs
-        in a separate class;  However, I intend to separate the reverse engineer code from having
-        to 'import' a class;  Importing means I have to satisfy class dependencies;  I
-        will use the Python AST APIs to create the syntax trees I need for parsing
-
-        If a pyutClass is input, it is modified in place.
-
-        Args:
-            oglClass:
-            filename:   filename of the class
-            pyutClass:  pyutClass to modify
-
-        Returns:
-            A PyutClass constructed from the Python class object OglClass.
-        """
-        return self._reverseEngineer.getPyutClass(oglClass=oglClass, filename=filename, pyutClass=pyutClass)
-
     def askWhichClassesToReverse(self, lstClasses):
         """
         Starts the dialog that asks which classes must be reversed

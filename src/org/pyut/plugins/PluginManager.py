@@ -33,7 +33,6 @@ from org.pyut.plugins.tools.ToFastEdit import ToFastEdit
 from org.pyut.plugins.tools.ToLayout import ToLayout
 from org.pyut.plugins.tools.ToLayoutSave import ToLayoutSave
 from org.pyut.plugins.tools.ToOrthogonalLayoutV2 import ToOrthogonalLayoutV2
-from org.pyut.plugins.tools.ToPython import ToPython
 from org.pyut.plugins.tools.ToSugiyama import ToSugiyama
 from org.pyut.plugins.tools.ToTransforms import ToTransforms
 from org.pyut.ui.tools.SharedTypes import SharedTypes
@@ -46,17 +45,19 @@ class PluginManager(Singleton):
     PLUGIN_DIRECTORY: str = f"org{osSep}pyut{osSep}plugins"
     PLUGIN_PACKAGE:   str = 'org.pyut.plugins'
 
-    IO_PLUGINS: List[type] = [IoCpp, IoDTD, IoJava, IoJavaReverse, IoJavascript,
-                              IoPython, IoXmi, IoXmi_OMG, IoXml, IoXSD, IoGML, IoPdf, IoImage, IoWxImage,
-                              ]
-    TOOL_PLUGINS: List[type] = [ToArrangeLinks, ToAscii, ToCDAutoLayout, ToFastEdit, ToLayout, ToLayoutSave,
-                                ToOrthogonalLayoutV2, ToPython, ToSugiyama, ToTransforms
-                                ]
+    IO_PLUGINS: SharedTypes.PluginList = [IoCpp, IoDTD, IoJava, IoJavaReverse,
+                                          IoJavascript, IoPython, IoXmi, IoXmi_OMG,
+                                          IoXml, IoXSD, IoGML, IoPdf, IoImage, IoWxImage,
+                                          ]
+    TOOL_PLUGINS: SharedTypes.PluginList = [ToArrangeLinks, ToAscii, ToCDAutoLayout,
+                                            ToFastEdit, ToLayout, ToLayoutSave,
+                                            ToOrthogonalLayoutV2, ToSugiyama, ToTransforms
+                                            ]
 
     """
     Interface between the application and the plugins.
 
-    Identifies all the know plugins
+    Identifies all the known plugins
     """
     def init(self):
         """
@@ -76,34 +77,34 @@ class PluginManager(Singleton):
             s.append(f"Plugin : {obj.getName()} version {obj.getVersion()} (c) by {obj.getAuthor()}")
         return s
 
-    def getInputPlugins(self) -> List[type]:
+    def getInputPlugins(self) -> SharedTypes.PluginList:
         """
         Get the input plugins.
 
         Returns:  A list of classes (the plugins classes).
         """
 
-        pluginList = []
+        pluginList = cast(SharedTypes.PluginList, [])
         for plug in self.IO_PLUGINS:
             obj = plug(None, None)
             if obj.getInputFormat() is not None:
                 pluginList.append(plug)
         return pluginList
 
-    def getOutputPlugins(self) -> List[type]:
+    def getOutputPlugins(self) -> SharedTypes.PluginList:
         """
         Get the output plugins.
 
         Returns:  A list of classes (the plugins classes).
         """
-        pluginList = []
+        pluginList = cast(SharedTypes.PluginList, [])
         for plug in self.IO_PLUGINS:
             obj = plug(None, None)
             if obj.getOutputFormat() is not None:
                 pluginList.append(plug)
         return pluginList
 
-    def getToolPlugins(self) -> List[type]:
+    def getToolPlugins(self) -> SharedTypes.PluginList:
         """
         Get the tool plugins.
 
