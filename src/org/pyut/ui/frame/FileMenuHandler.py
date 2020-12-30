@@ -36,8 +36,8 @@ from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Globals import _
-from org.pyut.general.Mediator import Mediator
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -46,18 +46,19 @@ from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 
-class FileMenuHandler:
+class FileMenuHandler(BaseMenuHandler):
 
     def __init__(self, fileMenu: Menu, lastOpenFilesIDs: List[int]):
 
+        super().__init__(menu=fileMenu)
+
         self.logger: Logger = getLogger(__name__)
 
-        self._fileMenu:           Menu            = fileMenu
         self._lastOpenedFilesIDs: List[int]       = lastOpenFilesIDs
-        self._mediator:           Mediator        = Mediator()
         self._preferences:        PyutPreferences = PyutPreferences()
 
         self._plugins:            SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})     # To store the plugins
@@ -82,14 +83,6 @@ class FileMenuHandler:
     @importPlugins.setter
     def importPlugins(self, importPlugins: SharedTypes.PluginMap):
         self._importPlugins = importPlugins
-
-    @property
-    def exportPlugins(self) -> SharedTypes.PluginMap:
-        raise UnsupportedOperation('Property is write only')
-
-    @exportPlugins.setter
-    def exportPlugins(self, exportPlugins: SharedTypes.PluginMap):
-        self._exportPlugins = exportPlugins
 
     # noinspection PyUnusedLocal
     def onNewProject(self, event: CommandEvent):
@@ -154,9 +147,8 @@ class FileMenuHandler:
 
         # Ask which project to insert
         defaultDirectory: str    = self._currentDirectoryHandler.currentDirectory
-        parent:           Window = self._fileMenu.GetWindow()
 
-        dlg = FileDialog(parent, _("Choose a project"), defaultDirectory, "", "*.put", FD_OPEN)
+        dlg = FileDialog(self._parent, _("Choose a project"), defaultDirectory, "", "*.put", FD_OPEN)
         if dlg.ShowModal() != ID_OK:
             dlg.Destroy()
             return False
@@ -258,7 +250,7 @@ class FileMenuHandler:
             PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
             self.logger.error(f'{e}')
 
-        parent: Window = self._fileMenu.GetWindow()
+        parent: Window = self._menu.GetWindow()
 
         parent.Refresh()
 
@@ -285,9 +277,8 @@ class FileMenuHandler:
     def onPyutPreferences(self, event: CommandEvent):
 
         self.logger.debug(f"Before dialog show")
-        parent: Window = self._fileMenu.GetWindow()
 
-        with DlgPyutPreferences(parent, ID_ANY) as dlg:
+        with DlgPyutPreferences(self._parent, ID_ANY) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.debug(f'Waiting for answer')
             else:
@@ -305,9 +296,8 @@ class FileMenuHandler:
         Args:
             event:
         """
-        parent: Window = self._fileMenu.GetWindow()
 
-        dlg: PrintDialog = PrintDialog(parent)
+        dlg: PrintDialog = PrintDialog(self._parent)
 
         dlg.GetPrintDialogData().SetPrintData(self._printData)
         dlg.ShowModal()
@@ -322,7 +312,7 @@ class FileMenuHandler:
         Args:
             event:
         """
-        parent: Window = self._fileMenu.GetWindow()
+        parent: Window = self._parent
 
         self._mediator.deselectAllShapes()
         frame = self._mediator.getUmlFrame()
@@ -355,10 +345,8 @@ class FileMenuHandler:
         Args:
             event:
         """
-        parent: Window = self._fileMenu.GetWindow()
-
         if self._mediator.getDiagram() is None:
-            PyutUtils.displayError(_("No diagram to print !"), _("Error"), parent)
+            PyutUtils.displayError(_("No diagram to print !"), _("Error"), self._parent)
             return
         self._mediator.deselectAllShapes()
         printDialogData: PrintDialogData = PrintDialogData()
@@ -369,8 +357,8 @@ class FileMenuHandler:
         printer  = Printer(printDialogData)
         printout = PyutPrintout(self._mediator.getUmlFrame())
 
-        if not printer.Print(parent, printout, True):
-            PyutUtils.displayError(_("Cannot print"), _("Error"), parent)
+        if not printer.Print(self._parent, printout, True):
+            PyutUtils.displayError(_("Cannot print"), _("Error"), self._parent)
 
     def onRecentlyOpenedFile(self, event: CommandEvent):
         """
@@ -397,10 +385,9 @@ class FileMenuHandler:
         Args:
             event:
         """
-        parent:     Window     = self._fileMenu.GetWindow()
         closeEvent: CloseEvent = CloseEvent(EVT_CLOSE.typeId)
 
-        wxPostEvent(parent, closeEvent)
+        wxPostEvent(self._parent, closeEvent)
 
     def loadFile(self, filename: str = ""):
         """
@@ -414,11 +401,10 @@ class FileMenuHandler:
         fileNames = [filename]
 
         currentDir: str    = self._mediator.getCurrentDir()
-        parent:     Window = self._fileMenu.GetWindow()
 
         # TODO This is bad practice to do something different based on input
         if filename == "":
-            dlg = FileDialog(parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
+            dlg = FileDialog(self._parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
 
             if dlg.ShowModal() != ID_OK:
                 dlg.Destroy()
@@ -447,7 +433,7 @@ class FileMenuHandler:
         """
         Set the menu last opened files items
         """
-        self.logger.debug(f'{self._fileMenu=}')
+        self.logger.debug(f'{self._menu=}')
 
         index = 0
         for el in self._preferences.getLastOpenedFilesList():
@@ -455,7 +441,7 @@ class FileMenuHandler:
             # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
             lbl: str = f"&{str(index+1)} {el}"
             self.logger.debug(f'lbL: {lbl}  openFilesId: {openFilesId}')
-            self._fileMenu.SetLabel(id=openFilesId, label=lbl)
+            self._menu.SetLabel(id=openFilesId, label=lbl)
 
             index += 1
 

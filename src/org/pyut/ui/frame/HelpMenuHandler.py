@@ -9,30 +9,29 @@ from wx import ID_ANY
 
 from wx import CommandEvent
 from wx import Menu
-from wx import Window
 
-from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.DlgAbout import DlgAbout
 from org.pyut.dialogs.DlgHelp import DlgHelp
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
-from org.pyut.general.Mediator import Mediator
-from org.pyut.general.PyutVersion import PyutVersion
 
+from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.Globals import _
 
+from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
-class HelpMenuHandler:
+from org.pyut.PyutUtils import PyutUtils
+
+
+class HelpMenuHandler(BaseMenuHandler):
 
     PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/Pyut'
 
     def __init__(self, helpMenu: Menu):
 
-        self.logger: Logger = getLogger(__name__)
+        super().__init__(menu=helpMenu)
 
-        self._helpMenu: Menu     = helpMenu
-        self._mediator: Mediator = Mediator()
-        self._parent:   Window    = self._helpMenu.GetWindow()
+        self.logger: Logger = getLogger(__name__)
 
     # noinspection PyUnusedLocal
     def onAbout(self, event: CommandEvent):

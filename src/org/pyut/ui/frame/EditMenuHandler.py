@@ -10,9 +10,6 @@ from copy import copy
 from wx import ClientDC
 from wx import CommandEvent
 from wx import Menu
-from wx import Window
-
-from org.pyut.general.Mediator import Mediator
 
 from org.pyut.miniogl.Diagram import Diagram
 
@@ -35,15 +32,16 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
+from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 
-class EditMenuHandler:
+class EditMenuHandler(BaseMenuHandler):
 
     def __init__(self, editMenu: Menu):
 
+        super().__init__(menu=editMenu)
+
         self.logger:    Logger   = getLogger(__name__)
-        self._editMenu: Menu     = editMenu
-        self._mediator: Mediator = Mediator()
 
         self._treeNotebookHandler: TreeNotebookHandler = self._mediator.getFileHandling()
 
@@ -227,10 +225,8 @@ class EditMenuHandler:
 
         Returns: `True` if there is a frame open else, `False`
         """
-        parent: Window = self._editMenu.GetWindow()
-
         if frame is None:
-            PyutUtils.displayWarning(msg=_("Please open a diagram to hold the UML"), title=_('Silly User'), parent=parent)
+            PyutUtils.displayWarning(msg=_("Please open a diagram to hold the UML"), title=_('Silly User'), parent=self._parent)
             return False
         else:
             return True
