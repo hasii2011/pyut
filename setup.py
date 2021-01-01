@@ -69,6 +69,7 @@ setup(
                       'orthogonal',
                       'pygmlparser',
                       'pyumldiagrams',
+                      'PyGithub',
                       'wxPython',
                       'xmlschema',
                       ]
