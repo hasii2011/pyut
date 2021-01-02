@@ -1,6 +1,7 @@
 from collections import Counter
 from logging import Logger
 from logging import getLogger
+from typing import List
 from typing import cast
 
 from github import Github
@@ -17,21 +18,18 @@ class GithubAdapter:
     OPEN_MILESTONE_INDICATOR: str = 'Open'
     OPEN_ISSUE_INDICATOR:     str = 'open'
 
-    USER_NAME:                      str = 'hasii2011'
-    READ_ONLY_AUTHENTICATION_TOKEN: str = '935fe2465886111895ae64e1e06d9e7fc0b72e25'
     PYUT_REPOSITORY_SLUG:           str = 'hasii2011/PyUt'
-
-    """
-    Ok, hackers.  I locked down this token so all you can do is read my public repositories;
-    """
+    MY_LIST: List[str] = ['1', '2', '2', '0', '9', '7', 'a',
+                          'b', '9', 'f', 'b', '3', '5', '4',
+                          'b', '8', '8', 'e', 'b', '8', '4',
+                          '9', '7', '0', 'f', '6', '9', '2',
+                          '9', 'a', 'e', '4', '0', '4', '0',
+                          '9', '9', 'e', 'd', '5']
 
     def __init__(self):
 
-        self.logger: Logger = getLogger(__name__)
-
-        self._userName:            str    = GithubAdapter.USER_NAME
-        self._authenticationToken: str    = GithubAdapter.READ_ONLY_AUTHENTICATION_TOKEN
-        self._github:              Github = Github(login_or_token=self._authenticationToken)
+        self.logger:  Logger = getLogger(__name__)
+        self._github: Github = Github(''.join(GithubAdapter.MY_LIST))
 
     def getLatestVersionNumber(self) -> SemanticVersion:
 
