@@ -66,17 +66,17 @@ class PositioningPreferences(PreferencesPanel):
 
         self.__setControlValues()
 
-        self.Bind(EVT_SPINCTRL, self.__OnValueChanged, id=self.__scAppPosXID)
-        self.Bind(EVT_SPINCTRL, self.__OnValueChanged, id=self.__scAppPosYID)
-        self.Bind(EVT_SPINCTRL, self.__OnValueChanged, id=self.__scAppWidthID)
-        self.Bind(EVT_SPINCTRL, self.__OnValueChanged, id=self.__scAppHeightID)
+        self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppPosXID)
+        self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppPosYID)
+        self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppWidthID)
+        self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppHeightID)
 
-        self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__centerAppOnStartupID)
+        self.Bind(EVT_CHECKBOX, self.__onCenterOnStartupChanged, id=self.__centerAppOnStartupID)
 
         self.SetAutoLayout(True)
         self.SetSizer(mainSizer)
 
-    def __OnValueChanged(self, event: SpinEvent):
+    def __onSpinnerValueChanged(self, event: SpinEvent):
 
         self.__changed = True
         eventId:  int = event.GetId()
@@ -100,14 +100,14 @@ class PositioningPreferences(PreferencesPanel):
         self._prefs.overrideOnProgramExit = False
         self._valuesChanged               = True
 
-    def __OnCheckBox(self, event: CommandEvent):
+    def __onCenterOnStartupChanged(self, event: CommandEvent):
         """
         """
         eventID = event.GetId()
         val: bool = event.IsChecked()
 
         if eventID == self.__centerAppOnStartupID:
-            self._prefs.centerAppOnStartup = val
+            self._prefs.centerAppOnStartUp = val
             self.__enablePositionControls(val)
         else:
             self.clsLogger.warning(f'Unknown check box ID: {eventID}')

@@ -20,7 +20,7 @@ services:
   - xvfb
 
 python:
-  - "3.8.5"
+  - "3.9.0"
 
 # command to install dependencies
 install:

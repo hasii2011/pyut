@@ -42,7 +42,7 @@
             "propagate": "False"
         },
         "org.pyut.ui.TreeNotebookHandler": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "propagate": "False"
         }
     }
