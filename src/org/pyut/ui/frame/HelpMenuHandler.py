@@ -3,12 +3,13 @@ from logging import Logger
 from logging import getLogger
 from typing import cast
 
-from urllib import request
-
 from wx import ID_ANY
 
 from wx import CommandEvent
 from wx import Menu
+from wx import BeginBusyCursor as wxBeginBusyCursor
+from wx import EndBusyCursor as wxEndBusyCursor
+from wx import Yield as wxYield
 
 from org.pyut.dialogs.DlgAbout import DlgAbout
 from org.pyut.dialogs.DlgHelp import DlgHelp
@@ -60,30 +61,22 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        # Init
-        FILE_TO_CHECK = 'https://github.com/hasii2011/PyUt/releases'     # TODO FIXME  :-)
+        from org.pyut.general.PyutVersion import PyutVersion
+        from org.pyut.general.GithubAdapter import GithubAdapter
+        from org.pyut.general.SemanticVersion import SemanticVersion
 
-        # Get file  -- Python 3 update
-        f = request.urlopen(FILE_TO_CHECK)
-        lstFile = f.readlines()
-        f.close()
+        wxBeginBusyCursor()
+        githubAdapter: GithubAdapter   = GithubAdapter()
+        latestVersion: SemanticVersion = githubAdapter.getLatestVersionNumber()
 
-        # Verify data coherence
-        if lstFile[0][:15] != "Last version = " or lstFile[1][:15] != "Old versions = ":
-            msg = "Incorrect file on server"
+        myVersion: SemanticVersion = SemanticVersion(PyutVersion.getPyUtVersion())
+        if myVersion < latestVersion:
+            msg = _("PyUt version ") + str(latestVersion) + _(" is available on https://github.com/hasii2011/PyUt/releases")
         else:
-            latestVersion = lstFile[0][15:]
-            oldestVersions = lstFile[1][15:].split()
-            print(f'{oldestVersions=}')
+            msg = _("No newer version yet !")
 
-            from org.pyut.general.PyutVersion import PyutVersion
-            v = PyutVersion.getPyUtVersion()
-            if v in oldestVersions:
-                msg = _("PyUt version ") + str(latestVersion) + _(" is available on https://github.com/hasii2011/PyUt/releases")
-            else:
-                msg = _("No newer version yet !")
-
-        # Display dialog box
+        wxEndBusyCursor()
+        wxYield()
         PyutUtils.displayInformation(msg, _("Check for newer version"), self._parent)
 
     # noinspection PyUnusedLocal

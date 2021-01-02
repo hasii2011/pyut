@@ -39,6 +39,10 @@ class TestSemanticVersion(TestBase):
     def tearDown(self):
         pass
 
+    def testGoodStr(self):
+
+        self.assertEqual(str(SemanticVersion('0.0.0')),'0.0.0')
+
     def testGoodBasicVersion(self):
 
         try:

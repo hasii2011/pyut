@@ -387,7 +387,8 @@ class FileMenuHandler(BaseMenuHandler):
         """
         closeEvent: CloseEvent = CloseEvent(EVT_CLOSE.typeId)
 
-        wxPostEvent(self._parent, closeEvent)
+        parent: Window = event.GetEventObject().GetWindow()
+        wxPostEvent(parent, closeEvent)
 
     def loadFile(self, filename: str = ""):
         """

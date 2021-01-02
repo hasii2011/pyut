@@ -11,4 +11,4 @@ class BaseMenuHandler:
 
         self._menu:     Menu     = menu
         self._mediator: Mediator = Mediator()
-        self._parent:   Window   = self._menu.GetWindow()
+        self._parent:   Window   = self._menu.GetWindow()   # TODO this does not work at init

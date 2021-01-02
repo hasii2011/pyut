@@ -67,8 +67,8 @@ class SemanticVersion:
         self.minor: int = int(mGroups[1])
         self.patch: int = int(mGroups[2])
 
-        self.pre_release: List[Union[int, str]] = self._makeGroup(match.group(4))
-        self.build:       List[Union[int, str]] = self._makeGroup(match.group(5))
+        self.preRelease: List[Union[int, str]] = self._makeGroup(match.group(4))
+        self.build:      List[Union[int, str]] = self._makeGroup(match.group(5))
 
     def _majorMinorPatch(self) -> List[int]:
         return [self.major, self.minor, self.patch]
@@ -95,7 +95,7 @@ class SemanticVersion:
             other: SemanticVersion = cast(SemanticVersion, other)
             return all([self._majorMinorPatch() == other._majorMinorPatch(),
                         self.build == other.build,
-                        self.pre_release == other.pre_release])
+                        self.preRelease == other.preRelease])
 
     def __lt__(self, other):
 
@@ -104,7 +104,7 @@ class SemanticVersion:
 
         if self._majorMinorPatch() == other._majorMinorPatch():
 
-            if self.pre_release == other.pre_release:
+            if self.preRelease == other.preRelease:
                 if self.build == other.build:
                     return False
                 elif self.build and other.build:
@@ -112,10 +112,10 @@ class SemanticVersion:
                 elif self.build or other.build:
                     return bool(other.build)
                 assert False, 'Should not be reachable'
-            elif self.pre_release and other.pre_release:
-                return self._isSequenceLess(self.pre_release, other.pre_release)
-            elif self.pre_release or other.pre_release:
-                return bool(self.pre_release)
+            elif self.preRelease and other.preRelease:
+                return self._isSequenceLess(self.preRelease, other.preRelease)
+            elif self.preRelease or other.preRelease:
+                return bool(self.preRelease)
             assert False, 'Should not be reachable'
         else:
             return self._majorMinorPatch() < other._majorMinorPatch()
@@ -155,9 +155,9 @@ class SemanticVersion:
         mmp: List[int] = self._majorMinorPatch()
         s:   str       = f'{str(mmp[0])}.{str(mmp[1])}.{str(mmp[2])}'
 
-        if self.pre_release is not None:
-            s += '-%s' % '.'.join(str(s) for s in self.pre_release)
-        if self.build is not None:
+        if len(self.preRelease) > 0:
+            s += '-%s' % '.'.join(str(s) for s in self.preRelease)
+        if len(self.build) > 0:
             s += '+%s' % '.'.join(str(s) for s in self.build)
         return s
 
