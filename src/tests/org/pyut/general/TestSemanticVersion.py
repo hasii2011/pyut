@@ -15,7 +15,7 @@ from tests.TestBase import TestBase
 from org.pyut.general.SemanticVersion import SemanticVersion
 
 GOOD_PREVIOUS_BASIC_VERSION: str = '6.1.0'
-GOOD_BASIC_VERSION:          str = '6.1.1'
+GOOD_BASIC_VERSION:          str = '6.2.1'
 
 GOOD_BUILD_NUMBER:  str = f'{GOOD_BASIC_VERSION}+.5988'
 GOOD_PRE_RELEASE:   str = '7.0.0-Alpha.1.1.1'
@@ -41,7 +41,16 @@ class TestSemanticVersion(TestBase):
 
     def testGoodStr(self):
 
-        self.assertEqual(str(SemanticVersion('0.0.0')),'0.0.0')
+        self.assertEqual(str(SemanticVersion('0.0.0')), '0.0.0')
+
+    def testGoodPatchVersion(self):
+        self.assertEqual(SemanticVersion(GOOD_BASIC_VERSION).patch, 1, 'Must Be true')
+
+    def testGoodMinorVersion(self):
+        self.assertEqual(SemanticVersion(GOOD_BASIC_VERSION).minor, 2, 'Must Be true')
+
+    def testGoodMajorVersion(self):
+        self.assertEqual(SemanticVersion(GOOD_BASIC_VERSION).major, 6, 'Must Be true')
 
     def testGoodBasicVersion(self):
 
