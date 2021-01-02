@@ -27,8 +27,8 @@ install:
   # pip install -r requirements.txt
   - sudo apt-get install -y  libsdl2-dev
   - python3 --version
-  - pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython
-  # - pip3 install wxPython
+  # - pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython
+  - pip3 install wxPython
   - pip3 install antlr4-python3-runtime
   - pip3 install fpdf2
   - pip3 install html-testRunner
