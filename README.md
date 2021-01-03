@@ -5,6 +5,23 @@
 
 This is a Python 3 version of a source forge project.  This is the [original web site](http://pyut.sourceforge.net/whatis.html)
 
+See [documentation](https://github.com/hasii2011/PyUt/wiki)
+
+_Some Updates_
+
+* Better support for orthogonal lines
+* New Orthogonal layout
+* An improved PDF and image generation capability
+* Additional display options for UML diagrams
+* More preferences externalized through preferences
+* Updated to Python 3.9 and wxPython 4.1
+* Improved L & F for mac OS X
+* Source code completely re-organized for maintainability
+
+
+
+
+---------
 I asked the original developers if it was Ok to fork this project.  This is what one replied:
 
 
@@ -18,21 +35,5 @@ I asked the original developers if it was Ok to fork this project.  This is what
 >> Cédric D
 
 
-So this is the fork and I let Cedric know.  
+This is the fork. I let Cedric know.  
 
-------
-Note to self:
-
-In the loggingConfiguration.json configuration file some plugin logging configuration stanzas use the fully qualified
-package.className and some do not.
-
-If we define instance loggers then we use just the class name
-If we define class loggers (for parent classes) then we need the full package.className
-specification
-
-
-Note to self:
-
-Antlr Command LIne
-
-java -Xmx500M -cp ./antlr-4.8-complete.jar org.antlr.v4.Tool Python3.g4 -o pythonparser -Dlanguage=Python3
