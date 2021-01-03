@@ -40,8 +40,8 @@ install:
   - pip3 install pygmlparser
   - pip3 install pyumldiagrams
   - pip3 install xmlschema
-  - pip3 install wxPython
-  # - pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+  # - pip3 install wxPython
+  - pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
 
 # command to run tests
 script: ${TRAVIS_BUILD_DIR}/scripts/runtests.sh
