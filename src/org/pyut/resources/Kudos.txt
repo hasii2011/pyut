@@ -7,7 +7,7 @@
            /____/
 
 
-  About PyUt... and the team behind the success story...
+  About PyUt... and the many developers who have worked on it ...
 
   Don't forget to visit the Pyut's official web site:
                 https://github.com/hasii2011/PyUt/wiki
@@ -15,19 +15,41 @@
 The Python 3 port Github URL is:
         https://github.com/hasii2011/PyUt/
 
+  Pyut 6.3.0. Mac OS X Release
+  ====================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+    - Pyut now runs on Python 3.9
+    - Pyut uses the wxPython 4.1.1 widget set
+    - There is a wxPython native image generation plugin
+    - Pyut acts more like a Mac app by moving the
+    About and Exit sub-menu items to the App Menu
+
+  Pyut 6.2. Mac OS X Release
+  ====================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+    - Diagrams now have an optional and customizable background
+    grid. It is on by default
+    - UML objects on the static diagrams now 'snap' to 'grid'; This
+    is configurable option as is the grid size
+
+
   Pyut 6.1.1 Mac OS X Release
   ====================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
-      - Update Python import to handle data classes and property annotations
-      - Fix export image and export pdf options; Non-functional in previous versions
-          Now platform independent and does not depend on any CLIs
+      - Update Python import to handle data classes and
+      property annotations
+      - Fix export image and export pdf options; Non-functional
+      in previous versions; Now platform independent and
+      does not depend on any CLIs
 
   Pyut 6.0 Mac OS X Release
   ====================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
       - Orthogonal Layout - complete
-      - Updated Python Reverse Engineering - no longer loads modules uses Antlr parsing
-      - PDF generation is internal now;  Does not depend on external command line tools
+      - Updated Python Reverse Engineering - no longer loads
+      modules uses Antlr parsing
+      - PDF generation is internal now;  Does not depend on
+      external command line tools
       - New UML 2 lollipop interface available - Beta
 
   Pyut 5.0 Mac OS X Release

@@ -6,17 +6,16 @@ from logging import getLogger
 
 from sys import platform as sysPlatform
 
-# Todo : change font;  or find a way to not print each character one after the other (not pretty, with, for eg : WiiW)
 from wx import ALIGN_CENTER
 from wx import ALL
-from wx import BITMAP_TYPE_BMP
+
 from wx import BITMAP_TYPE_ICO
-from wx import BITMAP_TYPE_PNG
 from wx import BRUSHSTYLE_SOLID
 from wx import CAPTION
 from wx import BOTH
+from wx import ColourDatabase
 from wx import EVT_TIMER
-from wx import FONTFAMILY_MODERN
+from wx import FONTFAMILY_TELETYPE
 from wx import ID_ANY
 from wx import OK
 from wx import VERTICAL
@@ -52,12 +51,11 @@ from org.pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
-# Constants
 from org.pyut.resources.img import ImgPyut
 
 [ID_OK] = PyutUtils.assignID(1)
 
-FrameWidth  = 400       # Canvas width
+FrameWidth  = 425       # Canvas width
 FrameHeight = 300       # and height
 x0 = 20                 # Initial x
 y0 = 20                 # Initial y
@@ -80,16 +78,13 @@ class DlgAbout(Dialog):
 
         Args:
             parent:     parent window
-            wxID:         wx ID of this frame
+            wxID:        wx ID of this frame
             title:      Title to display
         """
         super().__init__(parent, wxID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
 
         self.logger:  Logger = getLogger(__name__)
-        # iconFileName: str    = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.ico')
-        # icon:         Icon   = Icon(iconFileName, BITMAP_TYPE_ICO)
-        #
-        # self.SetIcon(icon)
+
         if sysPlatform != PyutConstants.THE_GREAT_MAC_PLATFORM:
 
             fileName: str  = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
@@ -100,17 +95,14 @@ class DlgAbout(Dialog):
 
         longTextStr:      str       = PyutUtils.retrieveResourceText(ResourceTextType.KUDOS_TEXT_TYPE)
         self._textToShow: List[str] = longTextStr.split('\n')
+
+        bgWhite: Colour = ColourDatabase().Find('White')
+        self.SetBackgroundColour(bgWhite)
         # Animation panel
         self._panel: Panel = Panel(self, ID_ANY, size=(FrameWidth, FrameHeight))
 
-        # Picture and text
-        # bmp = Bitmap("img" + os.sep + "pyut.bmp", BITMAP_TYPE_BMP)
-        # fileName = resource_filename(IMAGE_RESOURCES_PACKAGE, 'pyut.bmp')
-        fileName: str = PyutUtils.getResourcePath(IMAGE_RESOURCES_PACKAGE, 'pyut.png')
-        # bmp = Bitmap(fileName, BITMAP_TYPE_PNG)
-
         self._picture: StaticBitmap = StaticBitmap(self, ID_ANY, ImgPyut.embeddedImage.GetBitmap())
-        summaryText:   str = "2020 The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
+        summaryText:   str = "2021 The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
         self._label:   StaticText   = StaticText(self, ID_ANY, summaryText, style=CAPTION)
 
         # Main sizer
@@ -197,14 +189,14 @@ class DlgAbout(Dialog):
 
         """
         import time
-        # constants
-        backRed:   int = 230
-        backGreen: int = 255
-        backBlue:  int = 230     # Background color
 
-        frontRed:   int = 64
-        frontGreen: int = 0
-        frontBlue:  int = 64    # Foreground color
+        backRed:   int = 240
+        backGreen: int = 248
+        backBlue:  int = 255    # Background color  -- alice blue 240,248,255)
+
+        frontRed:   int = 105
+        frontGreen: int = 105
+        frontBlue:  int = 105   # Foreground color  -- dim grey
 
         FADE_IN_LENGTH: int = 63
         self.logger.debug(f'Enter OnRefreshPanel')
@@ -220,7 +212,7 @@ class DlgAbout(Dialog):
         tdc.SetBackground(Brush(Colour(backRed, backGreen, backBlue), BRUSHSTYLE_SOLID))
         tdc.Clear()
         font = tdc.GetFont()
-        font.SetFamily(FONTFAMILY_MODERN)
+        font.SetFamily(FONTFAMILY_TELETYPE)
         font.SetPointSize(12)
         tdc.SetFont(font)
 
