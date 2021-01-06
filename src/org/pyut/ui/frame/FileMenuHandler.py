@@ -190,7 +190,7 @@ class FileMenuHandler(BaseMenuHandler):
         project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
             self._preferences.addNewLastOpenedFilesEntry(project.getFilename())
-            self._setLastOpenedFilesItems()
+            self.setLastOpenedFilesItems()
 
     # noinspection PyUnusedLocal
     def onFileSaveAs(self, event: CommandEvent):
@@ -206,7 +206,7 @@ class FileMenuHandler(BaseMenuHandler):
         project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
             self._preferences.addNewLastOpenedFilesEntry(project.getFilename())
-            self._setLastOpenedFilesItems()
+            self.setLastOpenedFilesItems()
 
     # noinspection PyUnusedLocal
     def onFileClose(self, event: CommandEvent):
@@ -373,7 +373,7 @@ class FileMenuHandler(BaseMenuHandler):
                     lst = self._preferences.getLastOpenedFilesList()
                     self.loadFile(lst[index])
                     self._preferences.addNewLastOpenedFilesEntry(lst[index])
-                    self._setLastOpenedFilesItems()
+                    self.setLastOpenedFilesItems()
                 except (ValueError, Exception) as e:
                     self.logger.error(f'{e}')
 
@@ -424,13 +424,13 @@ class FileMenuHandler(BaseMenuHandler):
                 if self._treeNotebookHandler.openFile(filename):
                     # Add to last opened files list
                     self._preferences.addNewLastOpenedFilesEntry(filename)
-                    self._setLastOpenedFilesItems()
+                    self.setLastOpenedFilesItems()
                     self._mediator.updateTitle()
             except (ValueError, Exception) as e:
                 PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
                 self.logger.error(f'{e}')
 
-    def _setLastOpenedFilesItems(self):
+    def setLastOpenedFilesItems(self):
         """
         Set the menu last opened files items
         """

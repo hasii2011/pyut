@@ -180,6 +180,8 @@ class MenuCreator:
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
 
+        self._fileMenuHandler.setLastOpenedFilesItems()
+
         self._bindFileMenuHandlers(containingFrame, self._fileMenuHandler)
         self._bindEditMenuHandlers(containingFrame, self._editMenuHandler)
         self._bindHelpMenuHandlers(containingFrame, self._helpMenuHandler)
