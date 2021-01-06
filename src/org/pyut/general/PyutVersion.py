@@ -1,9 +1,11 @@
 
+from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.enums.ResourceTextType import ResourceTextType
+
 
 class PyutVersion:
 
-    __PyUtVersion__ = "6.3.0"
-
     @classmethod
-    def getPyUtVersion(cls):
-        return cls.__PyUtVersion__
+    def getPyUtVersion(cls) -> str:
+        return PyutUtils.retrieveResourceText(ResourceTextType.VERSION_TEXT_TYPE)

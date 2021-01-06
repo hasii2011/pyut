@@ -13,6 +13,7 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources', ['src/org/pyut/resources/Help.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/Kudos.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/tips.txt']),
+              ('org/pyut/resources', ['src/org/pyut/resources/version.txt']),
 
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/pyut.ico']),
 
