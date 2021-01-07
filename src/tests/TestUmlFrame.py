@@ -59,7 +59,7 @@ class TestUmlFrame(unittest.TestCase):
         self.app: App = App()
 
         #  Create frame
-        baseFrame = Frame(None, ID_ANY, "", size=(10, 10))
+        baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
         umlFrame = UmlFrame(baseFrame, None)
         umlFrame.Show(True)
         self._umlFrame = umlFrame

@@ -26,7 +26,7 @@ class TestAll:
                             'org/pyut/miniogl/TestMiniOgl',
                             'TestWxOgl', 'TestBase', 'TestTemplate',
                             'org/pyut/persistence/TestIoFile',
-                            'TestADialog', 'TestGriddedDiagramApplication']
+                            'TestUmlFrame', 'TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
     VERBOSITY_DEFAULT: int = 1  # VERBOSITY_QUIET plus a dot for every successful test or a F for every failure
