@@ -26,35 +26,8 @@ from org.pyut.general.Globals import _
 from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
+
 from org.pyut.ogl.IllegalOperationException import IllegalOperationException
-
-
-def getOrient(srcX, srcY, destX, destY) -> AttachmentPoint:
-    """
-    Giving a source and destination, returns where the destination
-    is located according to the source.
-
-    @param int srcX  : X pos of src point
-    @param int srcY  : Y pos of src point
-    @param int destX : X pos of dest point
-    @param int destY : Y pos of dest point
-    """
-    deltaX = srcX - destX
-    deltaY = srcY - destY
-    if deltaX > 0:  # dest is not east
-        if deltaX > abs(deltaY):    # dest is west
-            return AttachmentPoint.WEST
-        elif deltaY > 0:
-            return AttachmentPoint.NORTH
-        else:
-            return AttachmentPoint.SOUTH
-    else:   # dest is not west
-        if -deltaX > abs(deltaY):   # dest is east
-            return AttachmentPoint.EAST
-        elif deltaY > 0:
-            return AttachmentPoint.NORTH
-        else:
-            return AttachmentPoint.SOUTH
 
 
 class OglLink(LineShape, ShapeEventHandler):
@@ -94,7 +67,7 @@ class OglLink(LineShape, ShapeEventHandler):
             srcX, srcY = self._srcShape.GetPosition()
             dstX, dstY = self._destShape.GetPosition()
 
-            orient = getOrient(srcX,  srcY, dstX, dstY)
+            orient = OglLink.getOrient(srcX,  srcY, dstX, dstY)
 
             sw, sh = self._srcShape.GetSize()
             dw, dh = self._destShape.GetSize()
@@ -155,6 +128,34 @@ class OglLink(LineShape, ShapeEventHandler):
             self._link = pyutLink
         else:
             self._link = PyutLink()
+
+    @staticmethod
+    def getOrient(srcX, srcY, destX, destY) -> AttachmentPoint:
+        """
+        Giving a source and destination, returns where the destination
+        is located according to the source.
+
+        @param int srcX  : X pos of src point
+        @param int srcY  : Y pos of src point
+        @param int destX : X pos of dest point
+        @param int destY : Y pos of dest point
+        """
+        deltaX = srcX - destX
+        deltaY = srcY - destY
+        if deltaX > 0:  # dest is not east
+            if deltaX > abs(deltaY):  # dest is west
+                return AttachmentPoint.WEST
+            elif deltaY > 0:
+                return AttachmentPoint.NORTH
+            else:
+                return AttachmentPoint.SOUTH
+        else:  # dest is not west
+            if -deltaX > abs(deltaY):  # dest is east
+                return AttachmentPoint.EAST
+            elif deltaY > 0:
+                return AttachmentPoint.NORTH
+            else:
+                return AttachmentPoint.SOUTH
 
     def getSourceShape(self):
         """
