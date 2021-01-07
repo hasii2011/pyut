@@ -46,8 +46,8 @@ from org.pyut.general.Globals import _
 ]  = PyutUtils.assignID(7)
 
 MARGIN:               float = 10.0
-DEFAULT_CLASS_WIDTH:  float = 100.0
-DEFAULT_CLASS_HEIGHT: float = 100.0
+DEFAULT_CLASS_WIDTH:  int = 100
+DEFAULT_CLASS_HEIGHT: int = 100
 
 
 class OglClass(OglObject):
@@ -64,7 +64,7 @@ class OglClass(OglObject):
     :author: Laurent Burgbacher
     :contact: lb@alawa.ch
     """
-    def __init__(self, pyutClass: PyutClass = None, w: float = DEFAULT_CLASS_WIDTH, h: float = DEFAULT_CLASS_HEIGHT):
+    def __init__(self, pyutClass: PyutClass = None, w: int = DEFAULT_CLASS_WIDTH, h: int = DEFAULT_CLASS_HEIGHT):
         """
 
         Args:
@@ -112,7 +112,7 @@ class OglClass(OglObject):
             w = 0
 
         # define space between text and line
-        lth = dc.GetTextExtent("*")[1] / 2.0
+        lth = dc.GetTextExtent("*")[1] // 2
 
         # from where begin the text
         h += lth
@@ -122,7 +122,7 @@ class OglClass(OglObject):
         dc.SetFont(self._nameFont)
         nameWidth = self.GetTextWidth(dc, name)
         if draw:
-            dc.DrawText(name, x + (w - nameWidth) / 2.0, y + h)
+            dc.DrawText(name, x + (w - nameWidth) // 2, y + h)
         if calcWidth:
             w = max(nameWidth, w)
         dc.SetFont(self._defaultFont)

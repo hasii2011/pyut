@@ -13,7 +13,7 @@ from org.pyut.general.LineSplitter import LineSplitter
 
 class OglNote(OglObject):
 
-    MARGIN: int = 10.0
+    MARGIN: int = 10
 
     """
     OGL object that represents a UML note in diagrams.

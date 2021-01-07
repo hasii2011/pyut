@@ -10,7 +10,7 @@ class OglUseCase(OglObject):
     """
     OGL object that represent an UML use case in use case diagrams.
     This class defines OGL objects that represents a use case for Use
-    Cases diagram. You can just instanciate an OGLUseCase and add it to
+    Cases diagram. You can just instantiate an OGLUseCase and add it to
     the diagram, links, resizing, ... are managed by parent class
     `OglObject`.
 
@@ -21,14 +21,13 @@ class OglUseCase(OglObject):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-    def __init__(self, pyutUseCase=None, w: float = 100.0, h: float = 60.0):
+    def __init__(self, pyutUseCase=None, w: int = 100, h: int = 60):
         """
-        Constructor.
-        @param  w : Width of the shape
-        @param  h : Height of the shape
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            pyutUseCase:
+            w: Width of the shape
+            h: Height of the shape
         """
         # Init associated PyutObject
         if pyutUseCase is None:
@@ -60,16 +59,16 @@ class OglUseCase(OglObject):
         x, y = self.GetPosition()
 
         # Draw ellipse
-        dc.DrawEllipse(x + 1.0, y + 1.0, width - 2.0, height - 2.0)
+        dc.DrawEllipse(x + 1, y + 1, width - 2, height - 2)
 
         # Draw text
-        x += 0.25 * width
-        y += 0.25 * height
-        textWidth = 0.6 * width             # Text aera width
+        x += round(0.25 * width)
+        y += round(0.25 * height)
+        textWidth: int = round(0.6 * width)             # Text area width
         space = 1.1 * dc.GetCharHeight()    # Space between lines
 
         # Drawing is restricted in the specified region of the device
-        dc.SetClippingRegion(x, y, textWidth, 0.6 * height)
+        dc.SetClippingRegion(x, y, textWidth, round(0.6 * height))
 
         # Split lines
         lines = LineSplitter().split(self.getPyutObject().getName(), dc, textWidth)

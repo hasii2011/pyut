@@ -15,7 +15,7 @@ class RectangleShape(Shape):
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, x=0.0, y=0.0, width=0, height=0, parent=None):
+    def __init__(self, x=0, y=0, width=0, height=0, parent=None):
         """
         Constructor.
 
@@ -150,7 +150,7 @@ class RectangleShape(Shape):
         d = y > topLeftY + height
         return (a + b) == 1 and (c + d) == 1
 
-    def GetSize(self) -> Tuple[float, float]:
+    def GetSize(self) -> Tuple[int, int]:
         """
         Get the size of the rectangle.
 

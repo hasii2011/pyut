@@ -28,7 +28,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
     necessary. OGL Objects are automatically a RectangleShape for
     global link management.
     """
-    def __init__(self, pyutObject=None, width: float = 0, height: float = 0):
+    def __init__(self, pyutObject=None, width: int = 0, height: int = 0):
         """
 
         Args:

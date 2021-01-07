@@ -26,7 +26,7 @@ class Shape:
     ID = 0  # internal ID number
     clsLogger: Logger = getLogger(__name__)
 
-    def __init__(self, x: float = 0.0, y: float = 0.0, parent=None):
+    def __init__(self, x: int = 0, y: int = 0, parent=None):
         """
         If a parent is given, the position is relative to the parent's origin.
 
@@ -35,10 +35,10 @@ class Shape:
             y: position of the shape on the diagram
             parent:
         """
-        self._x: float = x      # shape position (view)
-        self._y: float = y      # shape position (view)
-        self._ox: float = 0.0   # origin position (view)
-        self._oy: float = 0.0   # origin position (view)
+        self._x: int = x    # shape position (view)
+        self._y: int = y    # shape position (view)
+        self._ox: int = 0   # origin position (view)
+        self._oy: int = 0   # origin position (view)
 
         self._parent = parent       # parent shape
         self._selected = False      # is the shape selected ?
@@ -114,12 +114,14 @@ class Shape:
         self._id = theId
         Shape.ID = max(self._id + 1, Shape.ID)
 
-    def SetOrigin(self, x: float, y: float):
+    def SetOrigin(self, x: int, y: int):
         """
         Set the origin of the shape, from its upper left corner.
 
-        @param  x  new origin
-        @param  y new origin
+        Args:
+            x:  new origin
+            y:  new origin
+
         """
         self._ox, self._oy = x, y
 

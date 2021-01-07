@@ -5,7 +5,7 @@ from org.pyut.ogl.OglObject import OglObject
 from org.pyut.model.PyutActor import PyutActor
 
 
-MARGIN = 10.0
+MARGIN: int = 10
 
 
 class OglActor(OglObject):
@@ -23,15 +23,16 @@ class OglActor(OglObject):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-    def __init__(self, pyutActor=None, w: float = 80.0, h: float = 100.0):
+    def __init__(self, pyutActor=None, w: int = 80, h: int = 100):
         """
-        Constructor.
-        @param Float w : Width of the shape
-        @param Float h : Height of the shape
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            pyutActor:
+
+            w:  width of shape
+            h:  height of shape
         """
+
         # Init associated PyutObject
         if pyutActor is None:
             pyutObject = PyutActor()
@@ -65,31 +66,47 @@ class OglActor(OglObject):
 
         # Our sweet actor size
         actorWidth  = width
-        actorHeight = 0.8 * (height - 2.0 * MARGIN)  # 80 % of total height
+        actorHeight = int(0.8 * (height - 2.0 * MARGIN))  # 80 % of total height
         sizer = min(actorHeight, actorWidth)
 
         # Draw our actor head
         centerX = x + width  // 2
         centerY = y + height // 2
 
-        x = centerX - 0.2 * sizer
+        x = int(centerX - 0.2 * sizer)
         y += MARGIN
-        dc.DrawEllipse(x, y, 0.4 * sizer, 0.4 * sizer)
+        percentageSizer: int = int(0.4 * sizer)
+        # dc.DrawEllipse(x, y, 0.4 * sizer, 0.4 * sizer)
+        dc.DrawEllipse(x, y, percentageSizer, percentageSizer)
 
         # Draw body and arms
         x = centerX
-        y += 0.4 * sizer
-        dc.DrawLine(x, y, x, y + 0.3 * actorHeight)
-        dc.DrawLine(x - 0.25 * actorWidth, y + 0.15 * actorHeight,
-                    x + 0.25 * actorWidth, y + 0.15 * actorHeight)
+        y += round(0.4 * sizer)
+        # dc.DrawLine(x, y, x, y + 0.3 * actorHeight)
+        # dc.DrawLine(x - 0.25 * actorWidth, y + 0.15 * actorHeight,
+        #             x + 0.25 * actorWidth, y + 0.15 * actorHeight)
+        dc.DrawLine(x, y, x, y + round(0.3 * actorHeight))
+        dc.DrawLine(round(x - 0.25 * actorWidth), round(y + 0.15 * actorHeight),
+                    round(x + 0.25 * actorWidth), round(y + 0.15 * actorHeight))
 
         # And the feet
-        y += 0.3 * actorHeight
-        dc.DrawLine(x, y, x - 0.25 * actorWidth, y + 0.3 * actorHeight)
-        dc.DrawLine(x, y, x + 0.25 * actorWidth, y + 0.3 * actorHeight)
+        # y += round(0.3 * actorHeight)
+        # dc.DrawLine(x, y, x - 0.25 * actorWidth, y + 0.3 * actorHeight)
+        # dc.DrawLine(x, y, x + 0.25 * actorWidth, y + 0.3 * actorHeight)
+
+        actorFeetPercentage: int = round(0.3 * actorHeight)
+        y += round(actorFeetPercentage)
+        # dc.DrawLine(x, y, x - 0.25 * actorWidth, y + actorFeetPercentage)
+        # dc.DrawLine(x, y, x + 0.25 * actorWidth, y + actorFeetPercentage)
+        dc.DrawLine(x, y, x - round(0.25 * actorWidth), y + actorFeetPercentage)
+        dc.DrawLine(x, y, x + round(0.25 * actorWidth), y + actorFeetPercentage)
 
         # Draw our buddy name
         textWidth, textHeight = dc.GetTextExtent(self.getPyutObject().getName())
-        y = centerY + 0.5 * height - MARGIN - 0.1 * actorHeight
-        dc.DrawText(self.getPyutObject().getName(), x - 0.5 * textWidth, y)
+
+        # y = centerY + 0.5 * height - MARGIN - 0.1 * actorHeight
+        y = round(centerY + 0.5 * height - MARGIN - 0.1 * actorHeight)
+
+        # dc.DrawText(self.getPyutObject().getName(), x - 0.5 * textWidth, y)
+        dc.DrawText(self.getPyutObject().getName(), round(x - 0.5 * textWidth), y)
         dc.DestroyClippingRegion()

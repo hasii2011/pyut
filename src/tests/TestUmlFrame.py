@@ -9,6 +9,7 @@ from wx import Frame
 from wx import ID_ANY
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 
@@ -43,10 +44,13 @@ class TestUmlFrame(unittest.TestCase):
         # Initialize mediator and error manager
         mediator: Mediator = Mediator()
         mediator.setScriptMode()
-        fileHandling = TreeNotebookHandler(None)
+
+        fileHandling: TreeNotebookHandler = TreeNotebookHandler(None)
         mediator.registerFileHandling(fileHandling)
-        errorManager = mediator.getErrorManager()
+
+        errorManager: ErrorManager = mediator.getErrorManager()
         errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)
+
         whereWeAre: str = getcwd()
         PyutUtils.setBasePath(whereWeAre)
 
@@ -63,6 +67,7 @@ class TestUmlFrame(unittest.TestCase):
     def tearDown(self):
 
         del self.app
+        del self._umlFrame
         for x in range(4):
 
             try:
