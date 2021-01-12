@@ -15,28 +15,30 @@ class RectangleShape(Shape):
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, x=0, y=0, width=0, height=0, parent=None):
+    def __init__(self, x : int = 0, y: int = 0, width: int = 0, height: int = 0, parent=None):
         """
-        Constructor.
 
-        @param  x
-        @param y : position of the point
-        @param width
-        @param height : size of the rectangle
-        @param Shape parent : parent shape
+        Args:
+            x:      Shape's x position
+            y:      Shape's y position
+            width:  Shape's width
+            height: Shape's height
+            parent: The shape's parent, if any
         """
         super().__init__(x, y, parent)
-        self._width = width   # width and height can be < 0 !!!
-        self._height = height
-        self._drawFrame = True
-        self._resizable = True
+
+        self._width:  int = width   # width and height can be < 0 !!!
+        self._height: int = height
+
+        self._drawFrame: bool = True
+        self._resizable: bool = True
 
         self._topLeftSizer  = None
         self._topRightSizer = None
         self._botLeftSizer  = None
         self._botRightSizer = None
         # set the model of the shape (MVC pattern)
-        self._model = RectangleShapeModel(self)
+        self._model: RectangleShapeModel = RectangleShapeModel(self)
 
     def SetResizable(self, state: bool):
         """
@@ -142,13 +144,17 @@ class RectangleShape(Shape):
         width, height = self.GetSize()
         width  = sign(width)  * max(abs(width),  4)
         height = sign(height) * max(abs(height), 4)
-        topLeftX = sx - self._ox
-        topLeftY = sy - self._oy
-        a = x > topLeftX
-        b = x > topLeftX + width
-        c = y > topLeftY
-        d = y > topLeftY + height
-        return (a + b) == 1 and (c + d) == 1
+        topLeftX: int = sx - self._ox
+        topLeftY: int = sy - self._oy
+
+        topXLeftIsInside:  bool  = x > topLeftX
+        topXRightIsInside: bool  = x < topLeftX + width
+        topYLeftIsInside:  bool  = y > topLeftY
+        topYRightIsInside: bool  = y < topLeftY + height
+        if topXLeftIsInside and topXRightIsInside and topYLeftIsInside and topYRightIsInside:
+            return True
+        else:
+            return False
 
     def GetSize(self) -> Tuple[int, int]:
         """
