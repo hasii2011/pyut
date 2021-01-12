@@ -51,7 +51,7 @@ class DlgEditNote(BaseDlgEditText):
         self.Bind(EVT_TEXT, self._onTxtNoteChange, id=TXT_NOTE)
 
         self.Centre()
-        self.ShowModal()
+        # self.ShowModal()
 
     def _onTxtNoteChange(self, event: CommandEvent):
         """

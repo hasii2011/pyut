@@ -92,7 +92,8 @@ class BaseDlgEditText(Dialog):
     def _onCmdOk(self, event: CommandEvent):
 
         self._returnAction = OK
-        self.Close()
+        # self.Close()
+        self.EndModal(OK)
 
     # noinspection PyUnusedLocal
     def _onCmdCancel(self, event: CommandEvent):
@@ -100,4 +101,5 @@ class BaseDlgEditText(Dialog):
         Handle click on "Cancel" button.
         """
         self._returnAction = CANCEL
-        self.Close()
+        # self.Close()
+        self.EndModal(CANCEL)
