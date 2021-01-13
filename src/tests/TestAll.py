@@ -26,7 +26,7 @@ class TestAll:
                             'org/pyut/miniogl/TestMiniOgl',
                             'TestWxOgl', 'TestBase', 'TestTemplate',
                             'org/pyut/persistence/TestIoFile',
-                            'TestUmlFrame', 'TestADialog', 'TestGriddedDiagramApplication']
+                            'TestUmlFrame', 'org/pyut/dialogs/TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
     VERBOSITY_DEFAULT: int = 1  # VERBOSITY_QUIET plus a dot for every successful test or a F for every failure
@@ -94,6 +94,8 @@ class TestAll:
         """
         pyutModules:            List[str] = glob('tests/org/pyut/Test*.py')
         commandsModules:        List[str] = glob('tests/org/pyut/commands/Test*.py')
+        dialogModules:          List[str] = glob('tests/org/pyut/dialogs/Test*.py')
+        tipsModules:            List[str] = glob('tests/org/pyut/dialogs/tips/Test*.py')
         errorControllerModules: List[str] = glob('tests/org/pyut/errorcontroller/Test*.py')
         generalModules:         List[str] = glob('tests/org/pyut/general/Test*.py')
         historyModules:         List[str] = glob('tests/org/pyut/history/Test*.py')
@@ -115,7 +117,7 @@ class TestAll:
         fModules:   List[str] = glob('tests/Test*.py')
 
         allModules: List[str] = fModules + \
-            pyutModules + commandsModules + \
+            pyutModules + commandsModules + dialogModules + tipsModules + \
             dtdModules + errorControllerModules + generalModules + gmlModules + historyModules + iopythonSupportModules + xsdModules + \
             miniOglModules + modelModules + oglModules + persistenceModules + converterModules + pluginModules + \
             preferencesModules
