@@ -13,8 +13,8 @@ from wx import OK
 from wx import App
 from wx import Frame
 
-from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from org.pyut.model.PyutNote import PyutNote
+from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+from org.pyut.model.PyutText import PyutText
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -54,11 +54,12 @@ class TestADialog(App):
 
     def initTest(self):
 
-        pyutNote: PyutNote = PyutNote()
-        with DlgEditNote(parent=self._frameTop, dialogIdentifier=ID_ANY, pyutNote=pyutNote) as dlg:
-            dlg: DlgEditNote = cast(DlgEditNote, dlg)
+        # pyutNote: PyutNote = PyutNote()
+        pyutText: PyutText = PyutText()
+        with DlgEditText(parent=self._frameTop, dialogIdentifier=ID_ANY, pyutText=pyutText) as dlg:
+            dlg: DlgEditText = cast(DlgEditText, dlg)
             if dlg.ShowModal() == OK:
-                self.logger.warning(f'Retrieved data: {pyutNote.content=}')
+                self.logger.warning(f'Retrieved data: {pyutText.content=}')
                 self._frameTop.Close(force=True)
 
             else:
