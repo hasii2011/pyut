@@ -12,6 +12,7 @@ from org.pyut.miniogl.DiagramFrame import DiagramFrame
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
+from org.pyut.model.PyutText import PyutText
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
@@ -19,6 +20,7 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
+from org.pyut.ogl.OglText import OglText
 from org.pyut.ogl.OglUseCase import OglUseCase
 
 from org.pyut.general.Globals import _
@@ -45,18 +47,39 @@ class UmlFrameShapeHandler(DiagramFrame):
         self.Refresh()
         return pyutClass
 
-    def createNewNote(self, x, y):
+    def createNewNote(self, x: int, y: int):
         """
         Add a new note at (x, y).
 
-        @return PyutNote : the newly created PyutNote
+        Args:
+            x:
+            y:
+
+        Returns:    the newly created PyutNote
         """
-        pyutNote: PyutNote = PyutNote("")
+        pyutNote: PyutNote = PyutNote()
         oglNote:  OglNote  = OglNote(pyutNote)
 
         self.addShape(oglNote, x, y)
         self.Refresh()
         return pyutNote
+
+    def createNewText(self, x: int, y: int):
+        """
+        Add some new text at (x, y)
+        Args:
+            x:
+            y:
+
+        Returns:  The new create PyutText
+        """
+        pyutText: PyutText = PyutText()
+        oglText:  OglText  = OglText(pyutText)
+
+        self.addShape(oglText, x, y)
+        self.Refresh()
+
+        return pyutText
 
     def createNewActor(self, x, y):
         """
@@ -84,7 +107,7 @@ class UmlFrameShapeHandler(DiagramFrame):
         self.Refresh()
         return pyutUseCase
 
-    def addShape(self, shape: Union[OglObject, OglInterface2], x: float, y: float, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
+    def addShape(self, shape: Union[OglObject, OglInterface2], x: int, y: int, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
         """
         Add a shape to the UmlFrame.
 
@@ -103,4 +126,3 @@ class UmlFrameShapeHandler(DiagramFrame):
         if brush is not None:
             shape.SetBrush(brush)
         self._diagram.AddShape(shape, withModelUpdate)
-

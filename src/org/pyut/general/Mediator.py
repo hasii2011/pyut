@@ -23,6 +23,7 @@ from wx import PostEvent as wxPostEvent
 from wx import Window
 from wx import Yield as wxYield
 
+from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 from org.pyut.miniogl.Constants import EVENT_PROCESSED
 from org.pyut.miniogl.Constants import SKIP_EVENT
 from org.pyut.miniogl.LinePoint import LinePoint
@@ -35,18 +36,21 @@ from org.pyut.enums.LinkType import LinkType
 from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutMethod import PyutMethod
-
+from org.pyut.model.PyutNote import PyutNote
+from org.pyut.model.PyutText import PyutText
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
-from org.pyut.dialogs.DlgEditNote import DlgEditNote
+from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.DlgEditLink import DlgEditLink
 from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
+from org.pyut.ogl.OglText import OglText
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
@@ -73,6 +77,7 @@ __PyUtVersion__ = PyutVersion.getPyUtVersion()
     ACTION_NEW_COMPOSITION_LINK,
     ACTION_NEW_ASSOCIATION_LINK,
     ACTION_NEW_NOTE_LINK,
+    ACTION_NEW_TEXT,
 
     ACTION_DEST_IMPLEMENT_LINK,
     ACTION_DEST_INHERIT_LINK,
@@ -85,7 +90,7 @@ __PyUtVersion__ = PyutVersion.getPyUtVersion()
     ACTION_DEST_SD_MESSAGE,
     ACTION_ZOOM_IN,
     ACTION_ZOOM_OUT
-] = range(23)
+] = range(24)
 
 # a table of the next action to select
 NEXT_ACTION = {
@@ -157,6 +162,7 @@ MESSAGES = {
     ACTION_NEW_CLASS:   "Click where you want to put the new class",
     ACTION_NEW_NOTE:    "Click where you want to put the new note",
     ACTION_NEW_ACTOR:   "Click where you want to put the new actor",
+    ACTION_NEW_TEXT:    'Click where you want to put the new text',
     ACTION_NEW_USECASE: "Click where you want to put the new use case",
     ACTION_NEW_SD_INSTANCE: "Click where you want to put the new instance",
     ACTION_NEW_SD_MESSAGE:  "Click where you want to put the new message",
@@ -405,7 +411,7 @@ class Mediator(Singleton):
         # put a message in the status bar
         self.setStatusText(MESSAGES[self._currentAction])
 
-    def doAction(self, x: float, y: float):
+    def doAction(self, x: int, y: int):
         """
         Do the current action at coordinates x, y.
 
@@ -432,14 +438,10 @@ class Mediator(Singleton):
             if not self._currentActionPersistent:
                 self._currentAction = ACTION_SELECTOR
                 self.selectTool(self._tools[0])
+        elif self._currentAction == ACTION_NEW_TEXT:
+            self._createNewText(umlFrame, x, y)
         elif self._currentAction == ACTION_NEW_NOTE:
-            pyutNote = umlFrame.createNewNote(x, y)
-            if not self._currentActionPersistent:
-                self._currentAction = ACTION_SELECTOR
-                self.selectTool(self._tools[0])
-            dlg = DlgEditNote(umlFrame, -1, pyutNote)
-            dlg.Destroy()
-            umlFrame.Refresh()
+            self._createNewNote(umlFrame, x, y)
         elif self._currentAction == ACTION_NEW_ACTOR:
             pyutActor = umlFrame.createNewActor(x, y)
             if not self._currentActionPersistent:
@@ -634,29 +636,40 @@ class Mediator(Singleton):
                 else:
                     self.logger.info(f'Cancelled')
 
+        elif isinstance(diagramShape, OglText):
+            oglText:  OglText  = cast(OglText, diagramShape)
+            pyutText: PyutText = oglText.pyutText
+
+            self.logger.info(f'Double clicked on {oglText}')
+
+            dlg: DlgEditText = DlgEditText(parent=umlFrame, dialogIdentifier=ID_ANY, pyutText=pyutText)
+            dlg.ShowModal()
+            dlg.Destroy()
+
         elif isinstance(diagramShape, OglNote):
             pyutObject = diagramShape.getPyutObject()
-            dlg = DlgEditNote(umlFrame, -1, cast(PyutNote, pyutObject))
+            dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, cast(PyutNote, pyutObject))
+            dlg.ShowModal()
             dlg.Destroy()
         elif isinstance(diagramShape, OglUseCase):
             pyutObject = diagramShape.getPyutObject()
-            dlg = DlgEditUseCase(umlFrame, -1, pyutObject)
+            dlg: DlgEditUseCase = DlgEditUseCase(umlFrame, ID_ANY, pyutObject)
             dlg.Destroy()
         elif isinstance(diagramShape, OglActor):
             pyutObject = diagramShape.getPyutObject()
-            dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutObject.getName(), OK | CANCEL | CENTRE)
+            dlg: TextEntryDialog = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutObject.getName(), OK | CANCEL | CENTRE)
             if dlg.ShowModal() == ID_OK:
                 pyutObject.setName(dlg.GetValue())
             dlg.Destroy()
         elif isinstance(diagramShape, OglAssociation):
-            dlg = DlgEditLink(None, -1, diagramShape.getPyutObject())
+            dlg: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.getPyutObject())
             dlg.ShowModal()
             rep = dlg.getReturnAction()
             dlg.Destroy()
             if rep == -1:    # destroy link
                 diagramShape.Detach()
         elif isinstance(diagramShape, OglInterface):
-            dlg = DlgEditLink(None, -1, diagramShape.getPyutObject())
+            dlg: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.getPyutObject())
             dlg.ShowModal()
             rep = dlg.getReturnAction()
             dlg.Destroy()
@@ -1133,6 +1146,41 @@ class Mediator(Singleton):
         umlFrame.Refresh()
         wxYield()
 
+    def _createNewNote(self, umlFrame: UmlFrameShapeHandler, x: int, y: int):
+        """
+        Create a note on the diagram
+
+        Args:
+            umlFrame:  The UML frame knows how to place the new note on diagram
+            x: The x-coordinate
+            y: The y-coordinate
+        """
+
+        pyutNote: PyutNote = umlFrame.createNewNote(x, y)
+
+        self.__resetToActionSelector()
+        dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, pyutNote)
+        dlg.ShowModal()
+        dlg.Destroy()
+        umlFrame.Refresh()
+
+    def _createNewText(self, umlFrame, x: int, y: int):
+        """
+        Create a note on the diagram
+
+        Args:
+            umlFrame:  The UML frame that knows hot to place the new text object on the diagram
+            x: The x-coordinate
+            y: The y-coordinate
+        """
+        pyutText: PyutText = umlFrame.createNewText(x, y)
+
+        self.__resetToActionSelector()
+        dlg: DlgEditText = DlgEditText(parent=umlFrame, dialogIdentifier=ID_ANY, pyutText=pyutText)
+        dlg.ShowModal()
+        dlg.Destroy()
+        umlFrame.Refresh()
+
     def __createPotentialAttachmentPoints(self, destinationClass: OglClass, umlFrame):
 
         dw, dh     = destinationClass.GetSize()
@@ -1164,3 +1212,12 @@ class Mediator(Singleton):
                 if anchor.attachmentPoint != attachmentPoint:
                     anchor.SetProtected(False)
                     anchor.Detach()
+
+    def __resetToActionSelector(self):
+        """
+        For non-persistent tools
+        """
+
+        if not self._currentActionPersistent:
+            self._currentAction = ACTION_SELECTOR
+            self.selectTool(self._tools[0])     # TODO need to fix this in case this moves

@@ -5,6 +5,7 @@ from org.pyut.general.Mediator import ACTION_NEW_ACTOR
 from org.pyut.general.Mediator import ACTION_NEW_INHERIT_LINK
 from org.pyut.general.Mediator import ACTION_NEW_NOTE_LINK
 from org.pyut.general.Mediator import ACTION_NEW_AGGREGATION_LINK
+from org.pyut.general.Mediator import ACTION_NEW_TEXT
 from org.pyut.general.Mediator import ACTION_SELECTOR
 from org.pyut.general.Mediator import ACTION_NEW_CLASS
 from org.pyut.general.Mediator import ACTION_NEW_NOTE
@@ -35,7 +36,8 @@ class SharedIdentifiers:
         ID_REL_COMPOSITION,
         ID_REL_AGGREGATION, ID_REL_ASSOCIATION,
         ID_MNU_PROJECT_CLOSE, ID_NOTE, ID_ACTOR,
-        ID_USECASE, ID_REL_NOTE, ID_MNU_HELP_VERSION,
+        ID_USECASE, ID_REL_NOTE, ID_TEXT,
+        ID_MNU_HELP_VERSION,
         ID_MENU_FILE_PYUT_PREFERENCES,
         ID_MNU_FILE_NEW_CLASS_DIAGRAM, ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM,
         ID_MNU_FILE_NEW_USECASE_DIAGRAM, ID_SD_INSTANCE,
@@ -43,7 +45,7 @@ class SharedIdentifiers:
         ID_MNU_FILE_REMOVE_DOCUMENT, ID_DEBUG,
         ID_ZOOM_IN, ID_ZOOM_OUT, ID_ZOOM_VALUE,
         ID_MNU_REDO, ID_MNU_UNDO
-    ] = PyutUtils.assignID(51)
+    ] = PyutUtils.assignID(52)
 
     ACTIONS = {
         ID_ARROW:           ACTION_SELECTOR,
@@ -57,6 +59,7 @@ class SharedIdentifiers:
         ID_REL_ASSOCIATION: ACTION_NEW_ASSOCIATION_LINK,
         ID_REL_NOTE:        ACTION_NEW_NOTE_LINK,
         ID_ACTOR:           ACTION_NEW_ACTOR,
+        ID_TEXT:            ACTION_NEW_TEXT,
         ID_USECASE:         ACTION_NEW_USECASE,
         ID_SD_INSTANCE:     ACTION_NEW_SD_INSTANCE,
         ID_SD_MESSAGE:      ACTION_NEW_SD_MESSAGE,

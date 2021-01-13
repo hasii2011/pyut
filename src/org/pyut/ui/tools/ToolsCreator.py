@@ -36,6 +36,7 @@ from org.pyut.resources.img.toolbar import ImgToolboxSaveDiagram
 from org.pyut.resources.img.toolbar import ImgToolboxSequenceDiagramInstance
 from org.pyut.resources.img.toolbar import ImgToolboxSequenceDiagramMessage
 from org.pyut.resources.img.toolbar import ImgToolboxSystem
+from org.pyut.resources.img.toolbar import ImgToolboxText
 from org.pyut.resources.img.toolbar import ImgToolboxUndo
 from org.pyut.resources.img.toolbar import ImgToolboxZoomIn
 from org.pyut.resources.img.toolbar import ImgToolboxZoomOut
@@ -218,6 +219,13 @@ class ToolsCreator:
                            self._newActionCallback,
                            cast(Callable, None), wxID=SharedIdentifiers.ID_REL_NOTE, isToggle=True)
 
+        toolText = Tool("pyut-text", ImgToolboxText.embeddedImage.GetBitmap(),
+                        _("New Text Box"),
+                        _("New Text Box"),
+                        _("PyUt tools"),
+                        self._newActionCallback,
+                        cast(Callable, None), wxID=SharedIdentifiers.ID_TEXT, isToggle=True)
+
         toolSDInstance = Tool("pyut-sd-instance", ImgToolboxSequenceDiagramInstance.embeddedImage.GetBitmap(),
                               _("New sequence diagram instance object"),
                               _("New sequence diagram instance object"),
@@ -238,7 +246,7 @@ class ToolsCreator:
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
                      toolNewUseCaseDiagram, toolOpen, toolSave,
                      toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo,
-                     toolClass, toolActor, toolUseCase, toolNote,
+                     toolClass, toolActor, toolUseCase, toolNote, toolText,
                      toolRelInheritance, toolRelRealisation, toolRelComposition,
                      toolRelAggregation, toolRelAssociation, toolRelNote,
                      toolSDInstance, toolSDMessage
@@ -253,7 +261,7 @@ class ToolsCreator:
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
                      toolNewUseCaseDiagram, toolOpen, toolSave, None,
                      toolArrow, toolZoomIn, toolZoomOut, toolUndo, toolRedo, None,
-                     toolClass, toolActor, toolUseCase, toolNote, None,
+                     toolClass, toolActor, toolUseCase, toolNote, toolText, None,
                      toolRelInheritance, toolRelRealisation, toolRelComposition,
                      toolRelAggregation, toolRelAssociation, toolRelNote, None,
                      toolSDInstance, toolSDMessage
