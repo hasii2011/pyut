@@ -11,7 +11,7 @@ from wx import Window
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.dialogs.BaseDlgEditText import BaseDlgEditText
+from org.pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
 from org.pyut.ui.PyutDocument import PyutDocument
 

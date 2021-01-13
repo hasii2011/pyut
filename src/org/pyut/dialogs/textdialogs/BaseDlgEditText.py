@@ -73,12 +73,14 @@ class BaseDlgEditText(Dialog):
 
         return sizerButtons
 
-    def _setupMainDialogLayout(self, textControl: TextCtrl, label: StaticText):
+    def _setupMainDialogLayout(self, textControl: TextCtrl, label: StaticText = None):
 
         sizerButtons: BoxSizer = self._createDialogButtons()
         # Sizer for all components
         szrMain: BoxSizer = BoxSizer(VERTICAL)
-        szrMain.Add(label, 0, BOTTOM, 5)
+        if label is not None:
+            szrMain.Add(label, 0, BOTTOM, 5)
+
         szrMain.Add(textControl, 1, EXPAND | BOTTOM, 10)
         szrMain.Add(sizerButtons, 0, ALIGN_CENTER_HORIZONTAL)
 
