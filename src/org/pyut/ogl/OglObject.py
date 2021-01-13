@@ -28,6 +28,9 @@ class OglObject(RectangleShape, ShapeEventHandler):
     necessary. OGL Objects are automatically a RectangleShape for
     global link management.
     """
+
+    clsLogger: Logger = getLogger(__name__)
+
     def __init__(self, pyutObject=None, width: int = 0, height: int = 0):
         """
 
@@ -38,8 +41,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         self._pyutObject = pyutObject
         RectangleShape.__init__(self, 0, 0, width, height)
-
-        self.logger: Logger = getLogger(__name__)
 
         # Default font
         self._defaultFont: Font            = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
@@ -99,7 +100,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         Args:
             event:
         """
-        self.logger.debug(f'OnLeftDown - event - {event}')
+        OglObject.clsLogger.debug(f'OnLeftDown - event - {event}')
 
         from org.pyut.general.Mediator import Mediator   # avoid circular import
 

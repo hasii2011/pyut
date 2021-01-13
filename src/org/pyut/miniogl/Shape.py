@@ -401,7 +401,7 @@ class Shape:
         """
         self._parent = parent
 
-    def GetPosition(self) -> Tuple[float, float]:
+    def GetPosition(self) -> Tuple[int, int]:
         """
         Return the absolute position of the shape.
         It is in the diagram's coordinate system.
@@ -536,7 +536,7 @@ class Shape:
         """
         self._draggable = drag
 
-    def SetPosition(self, x: float, y: float):
+    def SetPosition(self, x: int, y: int):
         """
         If it's draggable; change the position of the shape;  Upper left corner
 

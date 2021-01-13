@@ -21,10 +21,11 @@ class PyutNote(PyutLinkedObject):
 
         self._content: str = theNoteText
 
-    def _getContent(self) -> str:
+    @property
+    def content(self) -> str:
         return self._content
 
-    def _setContent(self, newContent: str):
+    @content.setter
+    def content(self, newContent: str):
         self._content = newContent
 
-    content: str = property(_getContent, _setContent)

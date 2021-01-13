@@ -61,8 +61,8 @@ class UmlFrame(UmlFrameShapeHandler):
 
         self._ctrl: Mediator = Mediator()
 
-        self.maxWidth  = DEFAULT_WIDTH
-        self.maxHeight = int(self.maxWidth / A4_FACTOR)  # 1.41 is for A4 support
+        self.maxWidth:  int  = DEFAULT_WIDTH
+        self.maxHeight: int = int(self.maxWidth / A4_FACTOR)  # 1.41 is for A4 support
 
         nbrUnitsX: int = int(self.maxWidth / UmlFrame.PIXELS_PER_UNIT_X)
         nbrUnitsY: int = int(self.maxHeight / UmlFrame.PIXELS_PER_UNIT_Y)
@@ -171,10 +171,10 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Manage a left double click mouse event.
 
-        @param  event
-        @since 1.22
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            event:
         """
+
         x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
         self._ctrl.editObject(x, y)
         DiagramFrame.OnLeftDClick(self, event)

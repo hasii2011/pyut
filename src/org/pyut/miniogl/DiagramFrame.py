@@ -148,13 +148,14 @@ class DiagramFrame(ScrolledWindow):
 
     def GenericHandler(self, event: MouseEvent, methodName: str):
         """
-        This handler finds the shape at event coordinates and dispatch the event.
-        The handler will receive an event with coordinates already nog scrolled.
+        This handler finds the shape at event coordinates and dispatches the event.
+        The handler will receive an event with coordinates already scrolled.
 
-        @param event : original event
-        @param methodName : name of the method to invoke in the event handler of the shape
+        Args:
+            event:      The original event
+            methodName: Name of the method to invoke in the event handler of the shape
 
-        @return Shape : the clicked shape
+        Returns:  The clicked shape
         """
         x, y = self.getEventPosition(event)
         shape = self.FindShape(x, y)
@@ -172,7 +173,8 @@ class DiagramFrame(ScrolledWindow):
         """
         Callback for left down events on the diagram.
 
-        @param  event
+        Args:
+            event:
         """
         self.clsLogger.debug("DiagramFrame.OnLeftDown")
 
@@ -309,8 +311,10 @@ class DiagramFrame(ScrolledWindow):
         """
         Callback for left double clicks.
 
-        @param  event
+        Args:
+            event:
         """
+
         self.GenericHandler(event, "OnLeftDClick")
         self._clickedShape = None
         if not self.__keepMoving:
@@ -394,7 +398,7 @@ class DiagramFrame(ScrolledWindow):
         self.clsLogger.debug(f'FindShape: @{x},{y}')
         found = None
         shapes = self._diagram.GetShapes()
-        self.clsLogger.debug(f'{shapes=}')
+        # self.clsLogger.debug(f'{shapes=}')
         shapes.reverse()    # to select the one at the top
         for shape in shapes:
             if shape.Inside(x, y):

@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -12,9 +14,6 @@ from org.pyut.general.LineSplitter import LineSplitter
 
 
 class OglNote(OglObject):
-
-    MARGIN: int = 10
-
     """
     OGL object that represents a UML note in diagrams.
     This class defines OGL object that represents a note. A note may be linked
@@ -23,7 +22,10 @@ class OglNote(OglObject):
     For more instructions about how to create an OGL object, please refer
     to the `OglObject` class.
     """
-    def __init__(self, pyutNote=None, w=100, h=50):
+
+    MARGIN: int = 10
+
+    def __init__(self, pyutNote=None, w=100, h=50):     # TODO make default note size a preference
         """
         Constructor.
 
@@ -59,7 +61,7 @@ class OglNote(OglObject):
         try:
             # lines = LineSplitter().split(self.getPyutObject().getName(), dc, w - 2 * MARGIN)
             # noteName = self.getPyutObject().getName()
-            noteContent = self.getPyutObject().content
+            noteContent = cast(PyutNote, self.getPyutObject()).content
             lines = LineSplitter().split(noteContent, dc, w - 2 * OglNote.MARGIN)
         except (ValueError, Exception) as e:
             self.logger.error(f"Unable to display note - {e}")
@@ -80,7 +82,7 @@ class OglNote(OglObject):
         dc.DestroyClippingRegion()
 
     def __repr__(self):
-        pyutNote: PyutNote = self.getPyutObject()
+        pyutNote: PyutNote = cast(PyutNote, self.getPyutObject())
         if pyutNote is None:
             return f'Anonymous Note'
         else:
