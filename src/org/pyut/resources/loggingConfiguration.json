@@ -30,8 +30,7 @@
         },
         "org": {
             "level":     "WARNING",
-            "propagate": "False",
-            "handlers":  ["consoleHandler"]
+            "propagate": "False"
         },
         "org.pyut": {
             "level":     "WARNING",
@@ -41,7 +40,15 @@
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.ui.TreeNotebookHandler": {
+        "org.pyut.general.Mediator": {
+            "level":     "WARNING",
+            "propagate": "False"
+        },
+        "org.pyut.ogl.OglObject": {
+            "level":     "WARNING",
+            "propagate": "False"
+        },
+        "org.pyut.miniogl.DiagramFrame": {
             "level":     "WARNING",
             "propagate": "False"
         }

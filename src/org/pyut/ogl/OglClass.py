@@ -17,6 +17,7 @@ from wx import ClientDC
 from wx import Menu
 from wx import CommandEvent
 from wx import MenuItem
+from wx import MouseEvent
 
 from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutMethod import PyutMethod
@@ -297,7 +298,7 @@ class OglClass(OglObject):
         Auto-resize the class
 
         @author C.Dutoit
-        WARNING : Every changes here must be reported in DRAW pyutMethod
+        WARNING : Every change here must be reported in DRAW pyutMethod
         """
         # Init
         pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
@@ -331,7 +332,7 @@ class OglClass(OglObject):
             self.SetSelected(False)
             self.SetSelected(True)
 
-    def OnRightDown(self, event):
+    def OnRightDown(self, event: MouseEvent):
         """
         Callback for right clicks
         """
@@ -362,7 +363,7 @@ class OglClass(OglObject):
 
         menu.Append(MENU_IMPLEMENT_INTERFACE, _('Implement Interface'), _('Use Existing interface or create new one'))
 
-        frame    = self._diagram.GetPanel()
+        frame = self._diagram.GetPanel()
 
         # Callback
         menu.Bind(EVT_MENU, self.OnMenuClick, id=MENU_TOGGLE_STEREOTYPE)
