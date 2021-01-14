@@ -1,9 +1,10 @@
 
 from typing import Tuple
+from typing import Union
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
-from typing import Union
 
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
@@ -22,6 +23,7 @@ from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutText import PyutText
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -33,6 +35,7 @@ from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
+from org.pyut.ogl.OglText import OglText
 from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
@@ -74,7 +77,7 @@ class OglToMiniDom:
         root = self.__appendOglBase(oglClass, root)
 
         # adding the data layer object
-        root.appendChild(self._pyutClassToXml(oglClass.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutClassToXml(cast(PyutClass, oglClass.getPyutObject()), xmlDoc))
 
         return root
 
@@ -122,7 +125,16 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglNote, root)
 
-        root.appendChild(self._pyutNoteToXml(oglNote.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutNoteToXml(cast(PyutNote, oglNote.getPyutObject()), xmlDoc))
+
+        return root
+
+    def oglTextToXml(self, oglText: OglText, xmlDoc: Document) -> Element:
+
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_TEXT)
+
+        self.__appendOglBase(oglText, root)
+        root.appendChild(self._pyutTextToXml(oglText.pyutText, xmlDoc))
 
         return root
 
@@ -141,7 +153,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglActor, root)
 
-        root.appendChild(self._pyutActorToXml(oglActor.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutActorToXml(cast(PyutActor, oglActor.getPyutObject()), xmlDoc))
 
         return root
 
@@ -160,7 +172,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglUseCase, root)
 
-        root.appendChild(self._pyutUseCaseToXml(oglUseCase.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutUseCaseToXml(cast(PyutUseCase, oglUseCase.getPyutObject()), xmlDoc))
 
         return root
 
@@ -233,7 +245,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglSDInstance, root)
 
-        root.appendChild(self._pyutSDInstanceToXml(oglSDInstance.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutSDInstanceToXml(cast(PyutSDInstance, oglSDInstance.getPyutObject()), xmlDoc))
 
         return root
 
@@ -422,15 +434,25 @@ class OglToMiniDom:
         noteId: int = self._idFactory.getID(pyutNote)
         root.setAttribute(PyutXmlConstants.ATTR_ID, str(noteId))
 
-        # name: str = pyutNote.getName()
-        # name = name.replace('\n', "\\\\\\\\")
-        # root.setAttribute(PyutXmlConstants.ATTR_NAME, name)
-
         content: str = pyutNote.content
         content = content.replace('\n', "\\\\\\\\")
         root.setAttribute(PyutXmlConstants.ATTR_CONTENT, content)
 
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutNote.getFilename())
+
+        return root
+
+    def _pyutTextToXml(self, pyutText: PyutText, xmlDoc: Document) -> Element:
+
+        root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_TEXT)
+
+        content: str = pyutText.content
+        content = content.replace('\n', "\\\\\\\\")
+
+        root.setAttribute(PyutXmlConstants.ATTR_CONTENT, content)
+        root.setAttribute(PyutXmlConstants.ATTR_TEXT_SIZE,     str(pyutText.textSize))
+        root.setAttribute(PyutXmlConstants.ATTR_IS_BOLD,       str(pyutText.isBold))
+        root.setAttribute(PyutXmlConstants.ATTR_IS_ITALICIZED, str(pyutText.isItalicized))
 
         return root
 

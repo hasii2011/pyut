@@ -8,6 +8,7 @@ class PyutXmlConstants:
     ELEMENT_GRAPHIC_CLASS:       str = 'GraphicClass'
     ELEMENT_GRAPHIC_LOLLIPOP:    str = 'GraphicLollipop'
     ELEMENT_GRAPHIC_NOTE:        str = 'GraphicNote'
+    ELEMENT_GRAPHIC_TEXT:        str = 'GraphicText'
     ELEMENT_GRAPHIC_ACTOR:       str = 'GraphicActor'
     ELEMENT_GRAPHIC_USE_CASE:    str = 'GraphicUseCase'
     ELEMENT_GRAPHIC_LINK:        str = 'GraphicLink'
@@ -20,6 +21,7 @@ class PyutXmlConstants:
     ELEMENT_IMPLEMENTOR:       str = 'Implementor'
     ELEMENT_MODEL_METHOD:      str = 'Method'
     ELEMENT_MODEL_NOTE:        str = 'Note'
+    ELEMENT_MODEL_TEXT:        str = 'Text'
     ELEMENT_MODEL_ACTOR:       str = 'Actor'
     ELEMENT_MODEL_USE_CASE:    str = 'UseCase'
     ELEMENT_MODEL_LINK:        str = 'Link'
@@ -99,3 +101,7 @@ class PyutXmlConstants:
 
     ATTR_LOLLIPOP_ATTACHMENT_POINT: str = 'attachmentPoint'
     ATTR_IMPLEMENTING_CLASS_NAME:   str = 'implementingClassName'
+
+    ATTR_TEXT_SIZE:     str = 'textSize'
+    ATTR_IS_BOLD:       str = 'isBold'
+    ATTR_IS_ITALICIZED: str = 'isItalicized'
