@@ -94,7 +94,6 @@ class BaseDlgEditText(Dialog):
     def _onCmdOk(self, event: CommandEvent):
 
         self._returnAction = OK
-        # self.Close()
         self.EndModal(OK)
 
     # noinspection PyUnusedLocal

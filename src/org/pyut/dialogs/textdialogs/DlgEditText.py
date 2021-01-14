@@ -1,11 +1,9 @@
 
 from wx import EVT_TEXT
-from wx import ID_ANY
 from wx import TE_MULTILINE
 
 from wx import CommandEvent
 from wx import TextCtrl
-from wx import StaticText
 from wx import Window
 
 from org.pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
@@ -27,7 +25,7 @@ class DlgEditText(BaseDlgEditText):
 
 
     Sample use:
-        dlg = DlgEditText(self._uml, ID_ANY, pyuttext)
+        dlg = DlgEditText(self._uml, ID_ANY, pyutText)
         dlg.ShowModal()
         dlg.Destroy()
     """
@@ -43,7 +41,6 @@ class DlgEditText(BaseDlgEditText):
 
         self.pyutText: PyutText = pyutText
 
-        # label: StaticText = StaticText(self, ID_ANY, _("Text to place"))
         self._txtCtrl: TextCtrl = TextCtrl(self, ID_TEXT_LINE, self.pyutText.content, size=(300, 80), style=TE_MULTILINE)
         self._txtCtrl.SetFocus()
 
