@@ -655,8 +655,8 @@ class Shape:
 
         # calculation of the model coordinates in the light of the
         # offsets and ratio and assignment.
-        mx = (x - dx)/ratio
-        my = (y - dy)/ratio
+        mx = round((x - dx)/ratio)
+        my = round((y - dy)/ratio)
         model.SetPosition(mx, my)
 
         # change also the position of the model of the children,

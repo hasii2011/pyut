@@ -319,4 +319,4 @@ class RectangleShape(Shape):
         ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
 
         # set the new size to the model.
-        self.GetModel().SetSize(width/ratio, height/ratio)
+        self.GetModel().SetSize(round(width//ratio), round(height//ratio))

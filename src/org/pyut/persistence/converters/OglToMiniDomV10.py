@@ -644,8 +644,8 @@ class OglToMiniDom:
             Simple formatted string versions of the above
 
         """
-        simpleX: str = f'{x}'
-        simpleY: str = f'{y}'
+        simpleX: str = str(x)
+        simpleY: str = str(y)
 
         return simpleX, simpleY
 
