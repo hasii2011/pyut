@@ -5,5 +5,5 @@ from dataclasses import dataclass
 @dataclass
 class OglPosition:
 
-    x: float = 0.0
-    y: float = 0.0
+    x: int = 0
+    y: int = 0

@@ -594,8 +594,8 @@ class OglToMiniDom:
         """
         label: Element = xmlDoc.createElement(eltText)
 
-        x: float = oglLabel.oglPosition.x
-        y: float = oglLabel.oglPosition.y
+        x: int = oglLabel.oglPosition.x
+        y: int = oglLabel.oglPosition.y
 
         simpleX, simpleY = self.__getSimpleCoordinates(x, y)
         self.logger.info(f'x,y = ({x},{y})   simpleX,simpleY = ({simpleX},{simpleY})')
@@ -629,11 +629,11 @@ class OglToMiniDom:
 
         return root
 
-    def __getSimpleDimensions(self, w: float, h: float) -> Tuple[str, str]:
+    def __getSimpleDimensions(self, w: int, h: int) -> Tuple[str, str]:
         # reuse code but not name
         return self.__getSimpleCoordinates(w, h)
 
-    def __getSimpleCoordinates(self, x: float, y: float) -> Tuple[str, str]:
+    def __getSimpleCoordinates(self, x: int, y: int) -> Tuple[str, str]:
         """
 
         Args:
@@ -644,8 +644,8 @@ class OglToMiniDom:
             Simple formatted string versions of the above
 
         """
-        simpleX: str = f'{x:.2f}'
-        simpleY: str = f'{y:.2f}'
+        simpleX: str = f'{x}'
+        simpleY: str = f'{y}'
 
         return simpleX, simpleY
 

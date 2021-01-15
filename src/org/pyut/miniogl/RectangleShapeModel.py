@@ -1,4 +1,6 @@
 
+from typing import Tuple
+
 from org.pyut.miniogl.ShapeModel import ShapeModel
 
 
@@ -16,10 +18,10 @@ class RectangleShapeModel(ShapeModel):
         """
         super().__init__(viewShape)
 
-        self._width  = 0.0
-        self._height = 0.0
+        self._width:  int = 0
+        self._height: int = 0
 
-    def GetSize(self):
+    def GetSize(self) -> Tuple[int, int]:
         """
 
         Returns:
@@ -27,7 +29,7 @@ class RectangleShapeModel(ShapeModel):
         """
         return self._width, self._height
 
-    def SetSize(self, width, height):
+    def SetSize(self, width: int, height: int):
         """
         Set the size of the model
 

@@ -1,4 +1,7 @@
 
+from typing import Tuple
+
+
 class ShapeModel:
     """
     This class is the model of a shape ('view' in a MVC pattern).
@@ -6,20 +9,20 @@ class ShapeModel:
 
     def __init__(self, viewShape=None):
         """
-        Constructor.
-        @param viewShape       : Shape (view) that represents this model
-        """
+        A model can have many views on different diagram frames
 
-        # a model can have many views on different diagram frames
+        Args:
+            viewShape:  Shape (view) that represents this model
+        """
         self._views = []
 
         if viewShape is not None:
             self._views.append(viewShape)
 
-        self._x = 0
-        self._y = 0
+        self._x: int = 0
+        self._y: int = 0
 
-    def GetPosition(self):
+    def GetPosition(self) -> Tuple[int, int]:
         """
 
         Returns:
@@ -27,7 +30,7 @@ class ShapeModel:
         """
         return self._x, self._y
 
-    def SetPosition(self, x: float, y: float):
+    def SetPosition(self, x: int, y: int):
         """
 
         Args:
@@ -35,7 +38,6 @@ class ShapeModel:
             y:  ordinate of the model.
 
         """
-
         self._x = x
         self._y = y
 
