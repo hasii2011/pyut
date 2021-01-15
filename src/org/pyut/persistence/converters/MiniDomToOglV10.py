@@ -7,7 +7,6 @@ from typing import NewType
 
 from logging import Logger
 from logging import getLogger
-from logging import INFO
 
 from xml.dom.minidom import Element
 from xml.dom.minidom import NodeList
@@ -28,6 +27,7 @@ from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutText import PyutText
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutStereotype import getPyutStereotype
@@ -44,6 +44,7 @@ from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
+from org.pyut.ogl.OglText import OglText
 from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.OglAssociation import OglAssociation
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
@@ -70,6 +71,7 @@ ControlPoints  = NewType('ControlPoints',  List[ControlPoint])
 Links          = NewType('Links',          Union[OglLink, OglSDInstance])
 OglLinks       = NewType('OglLinks',       List[Links])
 OglInterfaces  = NewType('OglInterfaces',  List[OglInterface2])
+OglTextShapes  = NewType('OglTextShapes',  List[OglText])
 
 
 class MiniDomToOgl:
@@ -260,8 +262,8 @@ class MiniDomToOgl:
             pyutNote: PyutNote = PyutNote()
 
             # Building OGL Note
-            height: float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
-            width:  float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            height: int = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  int = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglNote = OglNote(pyutNote, width, height)
 
             xmlNote: Element = xmlOglNote.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_NOTE)[0]
@@ -276,14 +278,31 @@ class MiniDomToOgl:
             pyutNote.setFilename(xmlNote.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
             # Adding properties necessary to place shape on a diagram frame
-            x: float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_X))
-            y: float = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_Y))
+            x: float = int(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_X))
+            y: float = int(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_Y))
 
             oglNote.SetPosition(x, y)
             # Update the dictionary
             oglNotes[pyutNote.getId()] = oglNote
 
         return oglNotes
+
+    def getOglTextShapes(self, xmlOglTextShapes: NodeList) -> OglTextShapes:
+
+        oglTextShapes: OglTextShapes = cast(OglTextShapes, [])
+        for xmlOglTextShape in xmlOglTextShapes:
+
+            pyutText: PyutText = PyutText()
+
+            width:  int = int(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            height: int = int(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+
+            oglText: OglText = OglText(width=width, height=height)
+
+            oglText.pyutText = pyutText
+            oglTextShapes.append(oglText)
+
+        return oglTextShapes
 
     def getOglActors(self, xmlOglActors: NodeList) -> OglActors:
         """
@@ -301,8 +320,8 @@ class MiniDomToOgl:
             pyutActor: PyutActor = PyutActor()
 
             # Building OGL Actor
-            height: float = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
-            width:  float = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            height: int = int(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  int = int(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglActor: OglActor = OglActor(pyutActor, width, height)
 
             xmlActor: Element = xmlOglActor.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_ACTOR)[0]

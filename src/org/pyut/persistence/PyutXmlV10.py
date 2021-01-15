@@ -41,6 +41,7 @@ from org.pyut.persistence.converters.MiniDomToOglV10 import OglActors
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglObjects
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglSDInstances
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglSDMessages
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglTextShapes
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglUseCases
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglLinks
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglClasses
@@ -256,6 +257,7 @@ class PyutXml:
         oglClasses:    OglClasses    = toOgl.getOglClasses(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_CLASS))
         oglNotes:      OglNotes      = toOgl.getOglNotes(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_NOTE))
         oglInterfaces: OglInterfaces = toOgl.getOglInterfaces(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_LOLLIPOP))
+        oglTextShapes: OglTextShapes = toOgl.getOglTextShapes(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_TEXT))
 
         mergedOglObjects: OglObjects = cast(OglObjects, oglClasses.copy())
         mergedOglObjects.update(oglNotes)
