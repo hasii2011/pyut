@@ -445,7 +445,9 @@ class OglToMiniDom:
     def _pyutTextToXml(self, pyutText: PyutText, xmlDoc: Document) -> Element:
 
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_TEXT)
+        textId: int = self._idFactory.getID(pyutText)
 
+        root.setAttribute(PyutXmlConstants.ATTR_ID, str(textId))
         content: str = pyutText.content
         content = content.replace('\n', "\\\\\\\\")
 

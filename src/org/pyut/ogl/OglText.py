@@ -48,20 +48,21 @@ class OglText(OglObject):
     """
     MARGIN: int = 5
 
-    def __init__(self, pyutObject=None, width: int = 125, height: int = 50):    # TODO make default text size a preference
+    def __init__(self, pyutText: PyutText, width: int = 125, height: int = 50):    # TODO make default text size a preference
         """
         Args:
-            pyutObject: Associated PyutObject
+            pyutText:   Associated PyutText instance
             width:      Initial width
             height:     Initial height
         """
-        super().__init__(pyutObject=pyutObject, width=width, height=height)
+        super().__init__(pyutObject=pyutText, width=width, height=height)
 
         self.logger: Logger = getLogger(__name__)
 
         self._drawFrame: bool = False
         self._textFont:  Font = self._defaultFont.GetBaseFont()
 
+        self.__initializeTextDisplay()
         self._menu: Menu = cast(Menu, None)
 
     @property
@@ -136,12 +137,17 @@ class OglText(OglObject):
         decBmp: Bitmap = DecreaseTextSize.GetBitmap()
         decreaseItem.SetBitmap(decBmp)
 
-        menu.AppendCheckItem(ID_MENU_BOLD_TEXT, item=_('Bold Text'), help=_('Set text to bold'))
-        menu.AppendCheckItem(ID_MENU_ITALIC_TEXT, item=_('Italicize Text'), help=_('Set text to italics'))
+        boldItem:       MenuItem = menu.AppendCheckItem(ID_MENU_BOLD_TEXT,   item=_('Bold Text'), help=_('Set text to bold'))
+        italicizedItem: MenuItem = menu.AppendCheckItem(ID_MENU_ITALIC_TEXT, item=_('Italicize Text'), help=_('Set text to italics'))
+
+        if self.pyutText.isBold is True:
+            boldItem.Check(check=True)
+        if self.pyutText.isItalicized is True:
+            italicizedItem.Check(check=True)
 
         menu.Bind(EVT_MENU, self._onChangeTextSize, id=ID_MENU_INCREASE_SIZE)
         menu.Bind(EVT_MENU, self._onChangeTextSize, id=ID_MENU_DECREASE_SIZE)
-        menu.Bind(EVT_MENU, self._onToggleBold, id=ID_MENU_BOLD_TEXT)
+        menu.Bind(EVT_MENU, self._onToggleBold,     id=ID_MENU_BOLD_TEXT)
         menu.Bind(EVT_MENU, self._onToggleItalicize, id=ID_MENU_ITALIC_TEXT)
 
         return menu
@@ -200,6 +206,16 @@ class OglText(OglObject):
 
         frame: DiagramFrame = self._diagram.GetPanel()
         frame.Refresh()
+
+    def __initializeTextDisplay(self):
+
+        pyutText: PyutText = self.pyutText
+
+        self._textFont.SetPointSize(pyutText.textSize)
+        if pyutText.isBold is True:
+            self._textFont.SetWeight(FONTWEIGHT_BOLD)
+        if pyutText.isItalicized is True:
+            self._textFont.SetStyle(FONTSTYLE_ITALIC)
 
     def __repr__(self):
 

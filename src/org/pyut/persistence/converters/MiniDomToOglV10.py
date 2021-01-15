@@ -104,8 +104,8 @@ class MiniDomToOgl:
             xmlOglClass: Element   = cast(Element, xmlOglClass)
             pyutClass:   PyutClass = PyutClass()
 
-            height: float      = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
-            width:  float      = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            height: int      = int(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  int      = int(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_WIDTH))
 
             oglClass: OglClass = OglClass(pyutClass, width, height)
 
@@ -140,8 +140,8 @@ class MiniDomToOgl:
             pyutClass.fields  = self._getFields(xmlClass)
 
             # Adding properties necessary to place shape on a diagram frame
-            x = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_X))
-            y = float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_Y))
+            x = int(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_X))
+            y = int(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_Y))
 
             oglClass.SetPosition(x, y)
 
@@ -262,8 +262,8 @@ class MiniDomToOgl:
             pyutNote: PyutNote = PyutNote()
 
             # Building OGL Note
-            height: int = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
-            width:  int = float(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            height: int = int(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  int = int(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglNote = OglNote(pyutNote, width, height)
 
             xmlNote: Element = xmlOglNote.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_NOTE)[0]
@@ -278,8 +278,8 @@ class MiniDomToOgl:
             pyutNote.setFilename(xmlNote.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
             # Adding properties necessary to place shape on a diagram frame
-            x: float = int(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_X))
-            y: float = int(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_Y))
+            x: int = int(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_X))
+            y: int = int(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_Y))
 
             oglNote.SetPosition(x, y)
             # Update the dictionary
@@ -294,12 +294,33 @@ class MiniDomToOgl:
 
             pyutText: PyutText = PyutText()
 
+            xmlText: Element = xmlOglTextShape.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_TEXT)[0]
+
+            pyutText.setId(int(xmlText.getAttribute(PyutXmlConstants.ATTR_ID)))
+
+            content: str = xmlText.getAttribute(PyutXmlConstants.ATTR_CONTENT)
+            content = content.replace("\\\\\\\\", "\n")
+            pyutText.content = content
+
+            textSizeStr: str = xmlText.getAttribute(PyutXmlConstants.ATTR_TEXT_SIZE)
+            pyutText.textSize = int(textSizeStr)
+
+            value = PyutUtils.secureBoolean(xmlText.getAttribute(PyutXmlConstants.ATTR_IS_BOLD))
+            pyutText.isBold = value
+
+            value = PyutUtils.secureBoolean(xmlText.getAttribute(PyutXmlConstants.ATTR_IS_ITALICIZED))
+            pyutText.isItalicized = value
+
             width:  int = int(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             height: int = int(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
 
-            oglText: OglText = OglText(width=width, height=height)
+            oglText: OglText = OglText(pyutText=pyutText, width=width, height=height)
 
-            oglText.pyutText = pyutText
+            x: int = int(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_X))
+            y: int = int(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_Y))
+
+            oglText.SetPosition(x=x, y=y)
+
             oglTextShapes.append(oglText)
 
         return oglTextShapes
@@ -331,8 +352,8 @@ class MiniDomToOgl:
             pyutActor.setFilename(xmlActor.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
             # Adding properties necessary to place shape on a diagram frame
-            x = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_X))
-            y = float(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_Y))
+            x = int(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_X))
+            y = int(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_Y))
             oglActor.SetPosition(x, y)
 
             oglActors[pyutActor.getId()] = oglActor
@@ -356,8 +377,8 @@ class MiniDomToOgl:
             pyutUseCase: PyutUseCase = PyutUseCase()
 
             # Building OGL UseCase
-            height = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
-            width = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            height: int = int(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  int = int(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             oglUseCase = OglUseCase(pyutUseCase, width, height)
 
             xmlUseCase: Element = xmlOglUseCase.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_USE_CASE)[0]
@@ -366,8 +387,8 @@ class MiniDomToOgl:
             pyutUseCase.setName(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_NAME))
             pyutUseCase.setFilename(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_FILENAME))
 
-            x = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_X))
-            y = float(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_Y))
+            x: int = int(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_X))
+            y: int = int(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_Y))
             oglUseCase.SetPosition(x, y)
 
             oglUseCases[pyutUseCase.getId()] = oglUseCase
@@ -401,16 +422,14 @@ class MiniDomToOgl:
             pyutSDInstance.setInstanceLifeLineLength(lifeLineLength)
 
             # Adding OGL class to UML Frame
-            x = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_X))
-            y = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_Y))
-            w = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_WIDTH))
-            h = float(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            x: int = int(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_X))
+            y: int = int(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_Y))
+            w: int = int(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            h: int = int(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
             oglSDInstance.SetSize(w, h)
             oglSDInstance.SetPosition(x, y)
 
             oglSDInstances[pyutSDInstance.getId()] = oglSDInstance
-
-            # umlFrame.addShape(oglSDInstance, x, y)        # currently SD Instance constructor adds itself
 
         return oglSDInstances
 

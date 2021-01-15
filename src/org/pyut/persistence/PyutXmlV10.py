@@ -266,6 +266,7 @@ class PyutXml:
         oglLinks: OglLinks = toOgl.getOglLinks(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_LINK), mergedOglObjects)
         self.__displayTheLinks(oglLinks, umlFrame)
         self.__displayTheNotes(oglNotes, umlFrame)
+        self.__displayTheTextShapes(oglTextShapes, umlFrame)
         self.__displayTheInterfaces(oglInterfaces, umlFrame)
 
     def __renderUseCaseDiagram(self, documentNode: Element, toOgl: MiniDomToOglV10, umlFrame: UmlDiagramsFrame):
@@ -325,6 +326,11 @@ class PyutXml:
             x, y = attachmentAnchor.GetPosition()
 
             umlFrame.addShape(oglInterface, x, y, withModelUpdate=True)
+
+    def __displayTheTextShapes(self, oglTextShapes: OglTextShapes, umlFrame: UmlDiagramsFrame):
+
+        for oglTextShape in oglTextShapes:
+            self.__displayAnOglObject(oglTextShape, umlFrame)
 
     def __displayTheLinks(self, oglLinks: OglLinks, umlFrame: UmlDiagramsFrame):
         """
