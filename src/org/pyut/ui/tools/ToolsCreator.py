@@ -10,37 +10,38 @@ from wx import EVT_TOOL
 from wx import ITEM_CHECK
 from wx import ITEM_NORMAL
 from wx import NO_BORDER
+from wx import Size
 from wx import TB_FLAT
 from wx import TB_HORIZONTAL
 from wx import ToolBar
 from wx import WindowIDRef
 from wx import Frame
 
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxActor
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxArrow
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxClass
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxNewClassDiagram
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxNewProject
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxNewSequenceDiagram
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxNewUseCaseDiagram
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxNote
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxOpenFile
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxRedo
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxRelationshipAggregation
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxRelationshipAssociation
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxRelationshipComposition
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxRelationshipInheritance
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxRelationshipNote
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxRelationshipRealization
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxSaveDiagram
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxSequenceDiagramInstance
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxSequenceDiagramMessage
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxUseCase
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxActor
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxArrow
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxClass
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxNewClassDiagram
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxNewProject
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxNewSequenceDiagram
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxNewUseCaseDiagram
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxNote
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxOpenFile
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxRedo
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxRelationshipAggregation
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxRelationshipAssociation
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxRelationshipComposition
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxRelationshipInheritance
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxRelationshipNote
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxRelationshipRealization
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxSaveDiagram
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxSequenceDiagramInstance
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxSequenceDiagramMessage
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxUseCase
 
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxText
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxUndo
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxZoomIn
-from org.pyut.resources.img.toolbar.embedded32 import ImgToolboxZoomOut
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxText
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxUndo
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxZoomIn
+from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxZoomOut
 
 from org.pyut.general.Mediator import Mediator
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
@@ -257,6 +258,8 @@ class ToolsCreator:
         # Create toolbar
 
         self._tb: ToolBar = self._containingFrame.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
+        self._tb.SetToolBitmapSize(Size(16, 16))
+
         self._containingFrame.SetToolBar(self._tb)
 
         for tool in [toolNewProject, toolNewClassDiagram, toolNewSequenceDiagram,
