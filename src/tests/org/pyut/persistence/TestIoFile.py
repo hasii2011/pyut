@@ -13,7 +13,7 @@ from unittest.mock import MagicMock
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from tests.TestBase import TestBase
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 from org.pyut.persistence.IoFile import IoFile
 
 

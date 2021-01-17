@@ -1,22 +1,22 @@
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.Mediator import ACTION_NEW_ACTOR
-from org.pyut.general.Mediator import ACTION_NEW_INHERIT_LINK
-from org.pyut.general.Mediator import ACTION_NEW_NOTE_LINK
-from org.pyut.general.Mediator import ACTION_NEW_AGGREGATION_LINK
-from org.pyut.general.Mediator import ACTION_NEW_TEXT
-from org.pyut.general.Mediator import ACTION_SELECTOR
-from org.pyut.general.Mediator import ACTION_NEW_CLASS
-from org.pyut.general.Mediator import ACTION_NEW_NOTE
-from org.pyut.general.Mediator import ACTION_NEW_IMPLEMENT_LINK
-from org.pyut.general.Mediator import ACTION_NEW_COMPOSITION_LINK
-from org.pyut.general.Mediator import ACTION_NEW_ASSOCIATION_LINK
-from org.pyut.general.Mediator import ACTION_ZOOM_OUT
-from org.pyut.general.Mediator import ACTION_ZOOM_IN
-from org.pyut.general.Mediator import ACTION_NEW_SD_MESSAGE
-from org.pyut.general.Mediator import ACTION_NEW_SD_INSTANCE
-from org.pyut.general.Mediator import ACTION_NEW_USECASE
+from org.pyut.ui.Mediator import ACTION_NEW_ACTOR
+from org.pyut.ui.Mediator import ACTION_NEW_INHERIT_LINK
+from org.pyut.ui.Mediator import ACTION_NEW_NOTE_LINK
+from org.pyut.ui.Mediator import ACTION_NEW_AGGREGATION_LINK
+from org.pyut.ui.Mediator import ACTION_NEW_TEXT
+from org.pyut.ui.Mediator import ACTION_SELECTOR
+from org.pyut.ui.Mediator import ACTION_NEW_CLASS
+from org.pyut.ui.Mediator import ACTION_NEW_NOTE
+from org.pyut.ui.Mediator import ACTION_NEW_IMPLEMENT_LINK
+from org.pyut.ui.Mediator import ACTION_NEW_COMPOSITION_LINK
+from org.pyut.ui.Mediator import ACTION_NEW_ASSOCIATION_LINK
+from org.pyut.ui.Mediator import ACTION_ZOOM_OUT
+from org.pyut.ui.Mediator import ACTION_ZOOM_IN
+from org.pyut.ui.Mediator import ACTION_NEW_SD_MESSAGE
+from org.pyut.ui.Mediator import ACTION_NEW_SD_INSTANCE
+from org.pyut.ui.Mediator import ACTION_NEW_USECASE
 
 
 class SharedIdentifiers:

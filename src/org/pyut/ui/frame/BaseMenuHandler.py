@@ -2,7 +2,7 @@
 from wx import Menu
 from wx import Window
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 
 
 class BaseMenuHandler:

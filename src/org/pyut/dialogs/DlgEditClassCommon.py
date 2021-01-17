@@ -59,7 +59,7 @@ class DlgEditClassCommon(Dialog):
 
         self._parent = parent   # TODO  Do I really need to stash this
 
-        from org.pyut.general.Mediator import Mediator
+        from org.pyut.ui.Mediator import Mediator
 
         self.logger:         Logger          = DlgEditClassCommon.clsLogger
         self._pyutModel:     CommonClassType = pyutModel

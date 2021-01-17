@@ -16,7 +16,7 @@ from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.general.Lang import Lang
 from org.pyut.general.PyutXmfFinder import PyutXmlFinder
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.general.Globals import _
 

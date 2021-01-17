@@ -386,7 +386,7 @@ class OglClass(OglObject):
         Args:
             event:
         """
-        from org.pyut.general.Mediator import Mediator   # avoid circular import
+        from org.pyut.ui.Mediator import Mediator   # avoid circular import
 
         pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
         eventId:    int       = event.GetId()

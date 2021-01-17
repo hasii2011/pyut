@@ -5,7 +5,7 @@ from wx import Panel
 from wx import Window
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 
 
 class PreferencesPanel(Panel):

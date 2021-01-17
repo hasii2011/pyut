@@ -115,7 +115,7 @@ class IoXml(PyutIoPlugin):
         file = open(filename, "w")
 
         if int(lastVersion) >= 5:
-            from org.pyut.general.Mediator import Mediator
+            from org.pyut.ui.Mediator import Mediator
 
             mediator: Mediator = Mediator()
 
@@ -152,7 +152,7 @@ class IoXml(PyutIoPlugin):
             return False
 
         # Open file
-        from org.pyut.general.Mediator import Mediator
+        from org.pyut.ui.Mediator import Mediator
 
         mediator: Mediator = Mediator()
 

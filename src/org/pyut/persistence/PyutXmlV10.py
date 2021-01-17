@@ -57,7 +57,7 @@ from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 from org.pyut.general.Globals import _
 
 

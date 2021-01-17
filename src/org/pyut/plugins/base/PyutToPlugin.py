@@ -5,7 +5,7 @@ from wx import ICON_ERROR
 from wx import MessageDialog
 from wx import OK
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 

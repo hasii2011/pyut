@@ -43,7 +43,7 @@ from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxUndo
 from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxZoomIn
 from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxZoomOut
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 

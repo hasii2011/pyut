@@ -51,7 +51,7 @@ from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager should not be in plugins directory

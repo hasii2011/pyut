@@ -47,7 +47,7 @@ class TestPyutXmlFinder(TestBase):
 
     def testBasicGetLatestXmlVersion(self):
 
-        with patch('org.pyut.general.Mediator.Mediator') as mockMediator:
+        with patch('org.pyut.ui.Mediator.Mediator') as mockMediator:
             mockMediator.return_value.getAppPath.return_value = self.newAppPath
             actualVersion: str = PyutXmlFinder.getLatestXmlVersion()
             self.assertEqual(TestPyutXmlFinder.LATEST_VERSION, actualVersion, 'Houston, we have a mismatch; check code or update constant')

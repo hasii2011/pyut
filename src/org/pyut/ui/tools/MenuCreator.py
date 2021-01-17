@@ -20,7 +20,7 @@ from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler

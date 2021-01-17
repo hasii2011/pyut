@@ -53,7 +53,7 @@ from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.UmlFrame import UmlFrame

@@ -44,7 +44,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.PyutConstants import PyutConstants
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 from org.pyut.general.Globals import _
 
 

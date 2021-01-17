@@ -39,7 +39,7 @@ class PyutObject:
         Returns:
             `True` if `idToCheck` is in use, else `False`
         """
-        from org.pyut.general.Mediator import Mediator
+        from org.pyut.ui.Mediator import Mediator
         mediator: Mediator = Mediator()
         #
         # TODO:  This seems compute heavy;  I wonder if we should have a lookup map

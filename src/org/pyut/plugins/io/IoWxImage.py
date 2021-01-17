@@ -17,7 +17,7 @@ from wx import MemoryDC
 from wx import NullBitmap
 from wx import ScrolledWindow
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.ogl.OglClass import OglClass
 

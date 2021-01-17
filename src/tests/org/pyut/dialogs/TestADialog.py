@@ -32,7 +32,7 @@ from org.pyut.model.PyutText import PyutText
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 
 
 from tests.TestBase import TestBase

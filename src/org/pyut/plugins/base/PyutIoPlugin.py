@@ -6,7 +6,7 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin

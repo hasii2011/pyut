@@ -85,7 +85,7 @@ class CreateOglClassCommand(DelOglClassCommand):
 
         Returns: the newly created OgClass
         """
-        from org.pyut.general.Mediator import Mediator
+        from org.pyut.ui.Mediator import Mediator
         from org.pyut.model.PyutClass import PyutClass
         from org.pyut.ogl.OglClass import OglClass
 

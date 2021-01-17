@@ -47,7 +47,7 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
             event: The mouse event
         """
 
-        from org.pyut.general.Mediator import Mediator   # avoid circular import
+        from org.pyut.ui.Mediator import Mediator   # avoid circular import
 
         print(f'SelectAnchorPoint: {self._attachmentPoint}')
 

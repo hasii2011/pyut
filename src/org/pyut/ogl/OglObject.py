@@ -102,7 +102,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         OglObject.clsLogger.debug(f'OnLeftDown - event - {event}')
 
-        from org.pyut.general.Mediator import Mediator   # avoid circular import
+        from org.pyut.ui.Mediator import Mediator   # avoid circular import
 
         med: Mediator = Mediator()
         if med.actionWaiting():
@@ -143,7 +143,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
             x:  The new abscissa
             y:  The new ordinate
         """
-        from org.pyut.general.Mediator import Mediator
+        from org.pyut.ui.Mediator import Mediator
         mediator: Mediator = Mediator()
         fileHandling = mediator.getFileHandling()
         if fileHandling is not None:
@@ -152,8 +152,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
 
     def SetSelected(self, state=True):
 
-        from org.pyut.general.Mediator import Mediator          # avoid circular import
-        from org.pyut.general.Mediator import ACTION_ZOOM_OUT   # avoid circular import
+        from org.pyut.ui.Mediator import Mediator          # avoid circular import
+        from org.pyut.ui.Mediator import ACTION_ZOOM_OUT   # avoid circular import
 
         mediator: Mediator = Mediator()
         if mediator.getCurrentAction() != ACTION_ZOOM_OUT:

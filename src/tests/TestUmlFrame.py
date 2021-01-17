@@ -20,7 +20,7 @@ from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 
 
 class PyUtApp(App):

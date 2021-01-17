@@ -22,7 +22,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.general.Mediator import Mediator
+from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.general.Globals import _
 

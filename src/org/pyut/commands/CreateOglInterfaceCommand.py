@@ -26,7 +26,7 @@ class CreateOglInterfaceCommand(Command):
 
     def _createLollipopInterface(self, pyutInterface: PyutInterface, attachmentAnchor: SelectAnchorPoint):
 
-        from org.pyut.general.Mediator import Mediator
+        from org.pyut.ui.Mediator import Mediator
 
         oglInterface:  OglInterface2 = OglInterface2(pyutInterface, attachmentAnchor)
 

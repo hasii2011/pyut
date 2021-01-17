@@ -80,7 +80,7 @@ class TreeNotebookHandler:
         self.logger: Logger = getLogger(__name__)
 
         from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame   # Prevent recursion import problem
-        from org.pyut.general.Mediator import Mediator
+        from org.pyut.ui.Mediator import Mediator
         self.__parent:  PyutApplicationFrame = parent
         self._mediator: Mediator = Mediator()
 
