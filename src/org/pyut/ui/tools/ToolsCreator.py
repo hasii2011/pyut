@@ -35,7 +35,8 @@ from org.pyut.resources.img.toolbar import ImgToolboxRelationshipRealization
 from org.pyut.resources.img.toolbar import ImgToolboxSaveDiagram
 from org.pyut.resources.img.toolbar import ImgToolboxSequenceDiagramInstance
 from org.pyut.resources.img.toolbar import ImgToolboxSequenceDiagramMessage
-from org.pyut.resources.img.toolbar import ImgToolboxSystem
+from org.pyut.resources.img.toolbar import ImgToolboxUseCase
+
 from org.pyut.resources.img.toolbar import ImgToolboxText
 from org.pyut.resources.img.toolbar import ImgToolboxUndo
 from org.pyut.resources.img.toolbar import ImgToolboxZoomIn
@@ -91,7 +92,7 @@ class ToolsCreator:
                          self._newActionCallback,
                          cast(Callable, None), wxID=SharedIdentifiers.ID_ACTOR, isToggle=True)
 
-        toolUseCase = Tool("pyut-system", ImgToolboxSystem.embeddedImage.GetBitmap(),
+        toolUseCase = Tool("pyut-system", ImgToolboxUseCase.embeddedImage.GetBitmap(),
                            _("System"),
                            _("Create a new use case"),
                            _("PyUt tools"),
