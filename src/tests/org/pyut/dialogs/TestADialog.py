@@ -24,6 +24,7 @@ from wx import StaticBox
 from wx import StaticBoxSizer
 from wx import NewIdRef as wxNewIdRef
 
+from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 from org.pyut.model.PyutNote import PyutNote
@@ -109,6 +110,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditText()
         elif dlgName == DialogNamesEnum.DLG_EDIT_NOTE:
             dlgAnswer = self._testDlgEditNote()
+        elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES:
+            dlgAnswer = self._testDlgPyutPreferences()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -131,6 +134,15 @@ class TestADialog(App):
             dlg: DlgEditNote = cast(DlgEditNote, dlg)
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutNote.content=}'
+            else:
+                return f'Cancelled'
+
+    def _testDlgPyutPreferences(self) -> str:
+
+        with DlgPyutPreferences(parent=self._frameTop, wxId=ID_ANY) as dlg:
+            dlg: DlgPyutPreferences = cast(DlgPyutPreferences, dlg)
+            if dlg.ShowModal() == OK:
+                return f'Preferences returned Ok'
             else:
                 return f'Cancelled'
 

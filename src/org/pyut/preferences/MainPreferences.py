@@ -4,6 +4,7 @@ from logging import getLogger
 
 from typing import Tuple
 
+from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
@@ -33,6 +34,7 @@ class MainPreferences(BaseSubPreference):
     STARTUP_X:                  str = 'startup_x'
     STARTUP_Y:                  str = 'startup_y'
     PDF_EXPORT_FILE_NAME:       str = 'default_pdf_export_file_name'
+    TOOL_BAR_ICON_SIZE:         str = 'tool_bar_icon_size'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = {
         USER_DIRECTORY:            '.',
@@ -51,7 +53,8 @@ class MainPreferences(BaseSubPreference):
         CENTER_APP_ON_STARTUP:     'True',
         STARTUP_X:                 '-1',
         STARTUP_Y:                 '-1',
-        PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME
+        PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME,
+        TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value
     }
 
     def init(self, *args, **kwds):
@@ -228,6 +231,16 @@ class MainPreferences(BaseSubPreference):
     @pdfExportFileName.setter
     def pdfExportFileName(self, newValue: str):
         self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.PDF_EXPORT_FILE_NAME, newValue)
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def toolBarIconSize(self) -> ToolBarIconSize:
+        enumStr: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.TOOL_BAR_ICON_SIZE)
+        return ToolBarIconSize(enumStr)
+
+    @toolBarIconSize.setter
+    def toolBarIconSize(self, newSize: ToolBarIconSize):
+        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.TOOL_BAR_ICON_SIZE, newSize.value)
         self._preferencesCommon.saveConfig()
 
     def __addMissingMainPreference(self, preferenceName, value: str):

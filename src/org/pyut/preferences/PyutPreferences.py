@@ -15,6 +15,7 @@ from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
+from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
 
 
 class PyutPreferences(Singleton):
@@ -173,6 +174,14 @@ class PyutPreferences(Singleton):
     @showTipsOnStartup.setter
     def showTipsOnStartup(self, newValue: bool):
         self._mainPrefs.showTipsOnStartup = newValue
+
+    @property
+    def toolBarIconSize(self) -> ToolBarIconSize:
+        return self._mainPrefs.toolBarIconSize
+
+    @toolBarIconSize.setter
+    def toolBarIconSize(self, newSize: ToolBarIconSize):
+        self._mainPrefs.toolBarIconSize = newSize
 
     @property
     def autoResizeShapesOnEdit(self) -> bool:

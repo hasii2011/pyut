@@ -24,7 +24,6 @@ from wx import StaticText
 from wx import TextCtrl
 
 from org.pyut.PyutConstants import PyutConstants
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
@@ -114,8 +113,8 @@ class MiscellaneousPreferences(PreferencesPanel):
 
     def __OnLanguageChange(self, event: CommandEvent):
 
-        newLanguage: str = event.GetString()
-        actualLanguage: str = self._prefs[PyutPreferences.I18N]
+        newLanguage:    str = event.GetString()
+        actualLanguage: str = self._prefs.i18n
         if actualLanguage not in LANGUAGES or newLanguage != LANGUAGES[actualLanguage][0]:
             # Search the key corresponding to the newLanguage
             for i in list(LANGUAGES.items()):
