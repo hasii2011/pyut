@@ -15,6 +15,7 @@ from wx import EVT_LEFT_UP
 from wx import EVT_PAINT
 from wx import FRAME_FLOAT_ON_PARENT
 from wx import GREY_PEN
+from wx import ID_ANY
 from wx import STATIC_BORDER
 from wx import SYSTEM_MENU
 from wx import WHITE_PEN
@@ -62,7 +63,7 @@ class Toolbox(Frame):
         self.logger: Logger = getLogger(__name__)
 
         windowStyle = STATIC_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT
-        super().__init__(parentWindow, -1, "toolbox", DefaultPosition, Size(100, 200), style=windowStyle)
+        super().__init__(parentWindow, ID_ANY, "Tool Box", DefaultPosition, Size(100, 200), style=windowStyle)
 
         self._tools         = []
         self._category      = ""
