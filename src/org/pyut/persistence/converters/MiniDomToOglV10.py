@@ -104,8 +104,9 @@ class MiniDomToOgl:
             xmlOglClass: Element   = cast(Element, xmlOglClass)
             pyutClass:   PyutClass = PyutClass()
 
-            height: int      = int(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
-            width:  int      = int(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            # Some old files had float sizes and positions
+            height: int      = int(float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_HEIGHT)))
+            width:  int      = int(float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_WIDTH)))
 
             oglClass: OglClass = OglClass(pyutClass, width, height)
 
@@ -140,8 +141,8 @@ class MiniDomToOgl:
             pyutClass.fields  = self._getFields(xmlClass)
 
             # Adding properties necessary to place shape on a diagram frame
-            x = int(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_X))
-            y = int(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_Y))
+            x = int(float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_X)))
+            y = int(float(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_Y)))
 
             oglClass.SetPosition(x, y)
 

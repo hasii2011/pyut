@@ -29,7 +29,7 @@ class Tool:
     """
     A tooltip: tip for this tool
     """
-    initialCategory: str = ''
+    category: str = ''
     """
     A category for this tool 
     """

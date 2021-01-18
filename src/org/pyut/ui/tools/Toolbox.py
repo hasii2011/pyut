@@ -114,7 +114,7 @@ class Toolbox(Frame):
 
             # Draw
             dc.SetPen(BLACK_PEN)
-            categoryStr: str = f'[{tool.initialCategory}]'
+            categoryStr: str = f'[{tool.category}]'
             dc.DrawText(categoryStr, MARGIN, MARGIN)
             dc.SetPen(WHITE_PEN)
             dc.DrawLine(x, y, x+BUTTON_SIZE-1, y)

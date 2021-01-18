@@ -49,11 +49,11 @@ class ToolboxOwner:
             tool: The tool to add
         """
 
-        if tool.initialCategory not in self._toolCategories:
-            self._toolCategories[tool.initialCategory] = [tool]
-            print(f'{tool.initialCategory=}')
+        if tool.category not in self._toolCategories:
+            self._toolCategories[tool.category] = [tool]
+            print(f'{tool.category=}')
         else:
-            self._toolCategories[tool.initialCategory].append(tool)
+            self._toolCategories[tool.category].append(tool)
 
     def getCategoryTools(self, category: Category) -> Tools:
         """
