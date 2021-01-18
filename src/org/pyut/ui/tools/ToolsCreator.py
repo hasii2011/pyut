@@ -15,6 +15,8 @@ from wx import ToolBar
 from wx import WindowIDRef
 from wx import Frame
 
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
 from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxActor
 from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxArrow
 from org.pyut.resources.img.toolbar.embedded16 import ImgToolboxClass
@@ -71,6 +73,11 @@ class ToolsCreator:
         self._tb:       ToolBar  = frame.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
 
         frame.SetToolBar(self._tb)
+        pyutPreferences: PyutPreferences = PyutPreferences()
+        if pyutPreferences.toolBarIconSize == ToolBarIconSize.SIZE_16:
+            self.__loadSmallIcons()
+        elif pyutPreferences.toolBarIconSize == ToolBarIconSize.SIZE_32:
+            self.__loadLargeIcons()
 
     def initTools(self):
         """
@@ -264,3 +271,9 @@ class ToolsCreator:
                 self._containingFrame.Bind(EVT_TOOL, tool.actionCallback, id=tool.wxID)
             else:
                 self._tb.AddSeparator()
+
+    def __loadSmallIcons(self):
+        print(f'Loading small icons')
+
+    def __loadLargeIcons(self):
+        print(f'Loading large icons')

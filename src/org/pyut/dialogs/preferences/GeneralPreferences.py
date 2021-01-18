@@ -5,6 +5,9 @@ from logging import getLogger
 from wx import ALL
 from wx import EVT_BUTTON
 from wx import EVT_CHECKBOX
+from wx import ICON_EXCLAMATION
+from wx import MessageDialog
+from wx import OK
 from wx import VERTICAL
 
 from wx import BoxSizer
@@ -73,6 +76,7 @@ class GeneralPreferencesPanel(PreferencesPanel):
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showParamsID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__maximizeID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showTipsID)
+        self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__toolBarIconSizeID)
 
         self.Bind(EVT_BUTTON,   self.__OnBtnResetTips, id=self.__resetTipsID)
 
@@ -80,8 +84,8 @@ class GeneralPreferencesPanel(PreferencesPanel):
         """
         """
         self.__changed = True
-        eventID = event.GetId()
-        val = event.IsChecked()
+        eventID: int = event.GetId()
+        val:     bool = event.IsChecked()
         if eventID == self.__autoResizeID:
             self._prefs.autoResizeShapesOnEdit = val
         elif eventID == self.__showParamsID:
@@ -91,6 +95,15 @@ class GeneralPreferencesPanel(PreferencesPanel):
             self._prefs.fullScreen = val
         elif eventID == self.__showTipsID:
             self._prefs.showTipsOnStartup = val
+        elif eventID == self.__toolBarIconSizeID:
+            if val is True:
+                self._prefs.toolBarIconSize = ToolBarIconSize.SIZE_32
+            else:
+                self._prefs.toolBarIconSize = ToolBarIconSize.SIZE_16
+            dlg: MessageDialog = MessageDialog(self, _("Icons will change size on next restart"), _("Warning"), OK | ICON_EXCLAMATION)
+            dlg.ShowModal()
+            dlg.Destroy()
+
         else:
             self.clsLogger.warning(f'Unknown combo box ID: {eventID}')
 
