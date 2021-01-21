@@ -646,8 +646,8 @@ class OglToMiniDom:
             Simple formatted string versions of the above
 
         """
-        simpleX: str = str(x)
-        simpleY: str = str(y)
+        simpleX: str = str(int(x))      # some older files have float
+        simpleY: str = str(int(y))      # some older files have float
 
         return simpleX, simpleY
 

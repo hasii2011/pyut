@@ -62,6 +62,27 @@ class PyutUtils:
         PyutUtils.logger = getLogger(__name__)
 
     @staticmethod
+    def strFloatToInt(floatValue: str) -> int:
+        """
+
+        Args:
+            floatValue:
+
+        Returns:  An integer value
+
+        """
+        if floatValue is not None and floatValue != '':
+            try:
+                integerValue: int = int(float(floatValue))
+            except ValueError:
+                PyutUtils.clsLogger.warning(f'Bad float value: {floatValue}')
+                integerValue: int = 0
+        else:
+            integerValue: int = 0
+
+        return integerValue
+
+    @staticmethod
     def extractFileName(fullPath: str) -> str:
         """
         Used to get just the file name for a full path.  Does NOT include the file extension

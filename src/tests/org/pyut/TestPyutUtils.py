@@ -170,6 +170,23 @@ class TestPyutUtils(TestBase):
         self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
         self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
 
+    def testStrFloatToInt(self):
+
+        retValue: int = PyutUtils.strFloatToInt('23.0')
+
+        self.assertEqual(23, retValue, 'Conversion failed')
+
+    def testStrIntLikeFloatToInt(self):
+
+        retValue: int = PyutUtils.strFloatToInt('23')
+
+        self.assertEqual(23, retValue, 'Conversion failed')
+
+    def testStrFloatToIntThrowsException(self):
+
+        retValue: int = PyutUtils.strFloatToInt('aa')
+        self.assertEqual(0, retValue, 'Bad Value should return 0')
+
 
 def suite() -> TestSuite:
 
