@@ -87,7 +87,8 @@ class Toolbox(Frame):
         @param string category : the new category
         """
         self._category = category
-        self._tools = self._toolboxOwner.getCategoryTools(category)
+        toolboxOwner = self._toolboxOwner
+        self._tools = toolboxOwner.getCategoryTools(category)
         self.Refresh()
 
     # noinspection PyUnusedLocal
