@@ -9,7 +9,7 @@ from logging import getLogger
 from wx import Window
 
 from org.pyut.ui.tools.Tool import Tool
-from org.pyut.ui.tools.Toolbox import Toolbox
+from org.pyut.ui.tools.Toolbox2 import Toolbox
 
 Category       = NewType('Category',       str)
 Tools          = NewType('NewType',        List[Tool])
@@ -44,6 +44,7 @@ class ToolboxOwner:
         """
         toolbox = Toolbox(self._parent, self)
         toolbox.setCategory(category)
+        toolbox.Show(True)
 
     def registerTool(self, tool: Tool):
         """

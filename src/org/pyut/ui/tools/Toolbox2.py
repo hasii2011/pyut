@@ -7,17 +7,18 @@ from logging import getLogger
 
 from math import ceil
 
-from wx import BitmapButton
-
-from wx import DEFAULT_FRAME_STYLE
+from wx import CAPTION
+from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import EXPAND
-from wx import FRAME_EX_METAL
 from wx import FRAME_FLOAT_ON_PARENT
-from wx import GridSizer
 from wx import ID_ANY
-from wx import MiniFrame
+from wx import STATIC_BORDER
+from wx import SYSTEM_MENU
 
+from wx import BitmapButton
+from wx import MiniFrame
+from wx import GridSizer
 from wx import Size
 from wx import Window
 from wx import DefaultPosition
@@ -27,6 +28,11 @@ from org.pyut.ui.tools.Tool import Tool
 
 
 class Toolbox(MiniFrame):
+    """
+    This is version 2 of a toolbox.  Rather than manually drawing all the bitmaps, I
+    re-implemented it as a mini frame and used a grid sizer to create it.  Then, a little
+    bit of computational magic to get the window size and the number of columns.
+    """
 
     TOOLBOX_NUM_COLUMNS: int = 4
     TOOLBOX_V_GAP:       int = 2
@@ -46,8 +52,7 @@ class Toolbox(MiniFrame):
 
         self.logger: Logger = getLogger(__name__)
 
-        # windowStyle = STATIC_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT
-        windowStyle = DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_FLOAT_ON_PARENT
+        windowStyle = STATIC_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT
         super().__init__(parentWindow, ID_ANY, "Tool Box", DefaultPosition, Size(100, 200), style=windowStyle)
 
         self._tools         = []
@@ -71,19 +76,20 @@ class Toolbox(MiniFrame):
         self._tools: List[Tool] = self._toolboxOwner.getCategoryTools(category)
 
         rowCount: int = Toolbox.computeToolboxNumberRows(toolCount=len(self._tools), numColumns=Toolbox.TOOLBOX_NUM_COLUMNS)
-        gridSizer: GridSizer = GridSizer(Toolbox.TOOLBOX_NUM_COLUMNS, rowCount, Toolbox.TOOLBOX_V_GAP, Toolbox.TOOLBOX_H_GAP)      # rows, cols, vGap, hGap
+        gridSizer: GridSizer = GridSizer(rowCount, Toolbox.TOOLBOX_NUM_COLUMNS, Toolbox.TOOLBOX_V_GAP, Toolbox.TOOLBOX_H_GAP)      # rows, cols, vGap, hGap
 
         self.SetSizer(gridSizer)
 
         for tool in self._tools:
 
             tool: Tool = cast(Tool, tool)
-            self.logger.warning(f'{tool.caption=}')
+            self.logger.debug(f'{tool.caption=}')
             bitMapButton: BitmapButton = BitmapButton(parent=self, id=tool.wxID, bitmap=tool.img)
             gridSizer.Add(bitMapButton, 0, EXPAND)
 
-        iconSize: int = int(self._preferences.toolBarIconSize.value) + Toolbox.TOOLBOX_SIZE_ADJUSTMENT
+            bitMapButton.Bind(EVT_BUTTON, tool.actionCallback, tool.wxID)
 
+        iconSize:    int  = int(self._preferences.toolBarIconSize.value) + Toolbox.TOOLBOX_SIZE_ADJUSTMENT
         toolBoxSize: Size = Toolbox.computeSizeBasedOnRowColumns(numColumns=Toolbox.TOOLBOX_NUM_COLUMNS, numRows=rowCount, iconSize=iconSize)
 
         self.SetSize(toolBoxSize)

@@ -85,7 +85,7 @@ class TestToolboxFrame(App):
                      ]:
             self._mediator.registerTool(tool)
 
-        # self.displayToolbox(PYUT_MENU_CATEGORY)
+        self.displayToolbox(PYUT_MENU_CATEGORY)
         self.displayToolbox(PYUT_TOOLS_CATEGORY)
 
     def displayToolbox(self, category: str):

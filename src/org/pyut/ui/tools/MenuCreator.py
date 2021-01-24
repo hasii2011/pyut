@@ -10,6 +10,7 @@ from wx import ID_ABOUT
 from wx import ID_EXIT
 
 from wx import Frame
+from wx import ID_PREFERENCES
 from wx import Menu
 from wx import MenuBar
 from wx import NewIdRef
@@ -218,7 +219,7 @@ class MenuCreator:
         if sub is not None:
             self._fileMenu.Append(NewIdRef(), _("Import"), sub)
         fileMenu.AppendSeparator()
-        fileMenu.Append(SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES, _("PyUt P&references"), _("PyUt preferences"))
+        fileMenu.Append(ID_PREFERENCES, _("P&references"), _("PyUt preferences"))
         # fileMenu.Append(ID_MNU_FILE_DIAGRAM_PROPERTIES,_("&Diagram Properties"), _("Diagram properties"))
         fileMenu.AppendSeparator()
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP, _("Print se&tup..."), _("Display the print setup dialog box"))
@@ -385,7 +386,6 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSaveAs,        id=SharedIdentifiers.ID_MNUFILESAVEAS)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileClose,         id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onRemoveDocument,    id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onPyutPreferences,   id=SharedIdentifiers.ID_MENU_FILE_PYUT_PREFERENCES)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintSetup,        id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintPreview,      id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrint,             id=SharedIdentifiers.ID_MNU_FILE_PRINT)
@@ -395,7 +395,8 @@ class MenuCreator:
         for index in range(self._prefs.getNbLOF()):
             containingFrame.Bind(EVT_MENU, fileMenuHandler.onRecentlyOpenedFile, id=self.lastOpenedFilesID[index])
 
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit, id=ID_EXIT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onPyutPreferences, id=ID_PREFERENCES)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit,            id=ID_EXIT)
 
     def _bindEditMenuHandlers(self, containingFrame: Frame, editMenuHandler: EditMenuHandler):
 
