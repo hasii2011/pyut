@@ -23,6 +23,7 @@ from org.pyut.ui.tools.ToolIconOwner import ToolIconOwner
 from org.pyut.ui.tools.ToolsCreator import PYUT_MENU_CATEGORY
 from org.pyut.ui.tools.ToolsCreator import PYUT_TOOLS_CATEGORY
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
+from tests.TestBase import TestBase
 
 
 class TestToolbox(App):
@@ -38,6 +39,8 @@ class TestToolbox(App):
         frameTop: Frame = Frame(parent=None, id=TestToolbox.FRAME_ID, title="Test Toolbox Version 2",
                                 size=(TestToolbox.WINDOW_WIDTH, TestToolbox.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
+
+        TestBase.setUpLogging()
 
         self.logger: Logger = getLogger(__name__)
         diagramFrame: DiagramFrame = DiagramFrame(frameTop)

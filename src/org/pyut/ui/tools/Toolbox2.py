@@ -5,6 +5,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from math import ceil
+
 from wx import BitmapButton
 
 from wx import DEFAULT_FRAME_STYLE
@@ -20,10 +22,17 @@ from wx import Size
 from wx import Window
 from wx import DefaultPosition
 
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.tools.Tool import Tool
 
 
 class Toolbox(MiniFrame):
+
+    TOOLBOX_NUM_COLUMNS: int = 4
+    TOOLBOX_V_GAP:       int = 2
+    TOOLBOX_H_GAP:       int = 2
+
+    TOOLBOX_SIZE_ADJUSTMENT: int = 8    # For toolbox aesthetics
 
     def __init__(self, parentWindow: Window, toolboxOwner):
         """
@@ -44,17 +53,15 @@ class Toolbox(MiniFrame):
         self._tools         = []
         self._category      = ""
 
-        self._parentWindow: Window        = parentWindow
-        self._toolboxOwner: ToolboxOwner  = toolboxOwner
+        self._parentWindow: Window          = parentWindow
+        self._toolboxOwner: ToolboxOwner    = toolboxOwner
+        self._preferences:  PyutPreferences = PyutPreferences()
 
-        self._gridSizer: GridSizer = GridSizer(3, 6, 2, 2)      # rows, cols, vGap, hGap
-
-        self.SetSizer(self._gridSizer)
         self.Bind(EVT_CLOSE, self.eventClose)
 
     def setCategory(self, category):
         """
-        Define the toolbox category for this toolbox.  However, this toolbox has to go to
+        Define the toolbox category for this toolbox.  However this toolbox has to ask
         the toolbox owner to get the tools of type 'category'
 
         Args:
@@ -63,12 +70,23 @@ class Toolbox(MiniFrame):
         self._category = category
         self._tools: List[Tool] = self._toolboxOwner.getCategoryTools(category)
 
+        rowCount: int = Toolbox.computeToolboxNumberRows(toolCount=len(self._tools), numColumns=Toolbox.TOOLBOX_NUM_COLUMNS)
+        gridSizer: GridSizer = GridSizer(Toolbox.TOOLBOX_NUM_COLUMNS, rowCount, Toolbox.TOOLBOX_V_GAP, Toolbox.TOOLBOX_H_GAP)      # rows, cols, vGap, hGap
+
+        self.SetSizer(gridSizer)
+
         for tool in self._tools:
 
             tool: Tool = cast(Tool, tool)
             self.logger.warning(f'{tool.caption=}')
             bitMapButton: BitmapButton = BitmapButton(parent=self, id=tool.wxID, bitmap=tool.img)
-            self._gridSizer.Add(bitMapButton, 0, EXPAND)
+            gridSizer.Add(bitMapButton, 0, EXPAND)
+
+        iconSize: int = int(self._preferences.toolBarIconSize.value) + Toolbox.TOOLBOX_SIZE_ADJUSTMENT
+
+        toolBoxSize: Size = Toolbox.computeSizeBasedOnRowColumns(numColumns=Toolbox.TOOLBOX_NUM_COLUMNS, numRows=rowCount, iconSize=iconSize)
+
+        self.SetSize(toolBoxSize)
 
     # noinspection PyUnusedLocal
     def eventClose(self, event):
@@ -76,3 +94,18 @@ class Toolbox(MiniFrame):
         Clean close, event handler on EVT_CLOSE
         """
         self.Destroy()
+
+    @classmethod
+    def computeToolboxNumberRows(cls, toolCount: int, numColumns: int) -> int:
+
+        rowCount: int = ceil(toolCount / numColumns)
+
+        return rowCount
+
+    @classmethod
+    def computeSizeBasedOnRowColumns(cls, numColumns: int, numRows: int, iconSize: int):
+
+        width:  int = round(iconSize * numColumns) + (numColumns * Toolbox.TOOLBOX_H_GAP)
+        height: int = round(iconSize * numRows)    + (numRows    * Toolbox.TOOLBOX_V_GAP)
+
+        return Size(width, height)
