@@ -58,7 +58,7 @@ class Toolbox(MiniFrame):
         the toolbox owner to get the tools of type 'category'
 
         Args:
-            category:  The new category
+            category:  The category of tools that we want to display
         """
         self._category = category
         self._tools: List[Tool] = self._toolboxOwner.getCategoryTools(category)
