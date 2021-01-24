@@ -6,7 +6,7 @@ from logging import Logger
 from logging import getLogger
 
 from wx import BitmapButton
-from wx import CAPTION
+
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_CLOSE
 from wx import EXPAND
@@ -14,11 +14,7 @@ from wx import FRAME_EX_METAL
 from wx import FRAME_FLOAT_ON_PARENT
 from wx import GridSizer
 from wx import ID_ANY
-from wx import LEFT
 from wx import MiniFrame
-from wx import RIGHT
-from wx import STATIC_BORDER
-from wx import SYSTEM_MENU
 
 from wx import Size
 from wx import Window
@@ -51,7 +47,7 @@ class Toolbox(MiniFrame):
         self._parentWindow: Window        = parentWindow
         self._toolboxOwner: ToolboxOwner  = toolboxOwner
 
-        self._gridSizer: GridSizer = GridSizer(3, 3, 2, 2)      # rows, cols, vgap, hgap
+        self._gridSizer: GridSizer = GridSizer(3, 6, 2, 2)      # rows, cols, vGap, hGap
 
         self.SetSizer(self._gridSizer)
         self.Bind(EVT_CLOSE, self.eventClose)

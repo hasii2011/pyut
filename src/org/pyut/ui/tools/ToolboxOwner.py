@@ -4,6 +4,8 @@ from typing import List
 from typing import NewType
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
 from wx import Window
 
 from org.pyut.ui.tools.Tool import Tool
@@ -30,6 +32,8 @@ class ToolboxOwner:
         self._toolCategories: ToolCategories = cast(ToolCategories, {})
         self._parent:         Window = parent
 
+        self.logger: Logger = getLogger(__name__)
+
     def displayToolbox(self, category: Category):
         """
         Display a toolbox
@@ -51,7 +55,7 @@ class ToolboxOwner:
 
         if tool.category not in self._toolCategories:
             self._toolCategories[tool.category] = [tool]
-            print(f'{tool.category=}')
+            self.logger.info(f'Creating tool category: {tool.category}')
         else:
             self._toolCategories[tool.category].append(tool)
 
