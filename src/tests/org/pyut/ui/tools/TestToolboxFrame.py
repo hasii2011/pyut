@@ -26,7 +26,10 @@ from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
 from tests.TestBase import TestBase
 
 
-class TestToolbox(App):
+class TestToolboxFrame(App):
+    """
+    Test how the main application will popup the Pyut toolboxes as mini-frames
+    """
 
     FRAME_ID:      int = 0xDeadBeef
     WINDOW_WIDTH:  int = 900
@@ -36,15 +39,15 @@ class TestToolbox(App):
 
         PyutPreferences.determinePreferencesLocation()
 
-        frameTop: Frame = Frame(parent=None, id=TestToolbox.FRAME_ID, title="Test Toolbox Version 2",
-                                size=(TestToolbox.WINDOW_WIDTH, TestToolbox.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
+        frameTop: Frame = Frame(parent=None, id=TestToolboxFrame.FRAME_ID, title="Test Toolbox Version 2",
+                                size=(TestToolboxFrame.WINDOW_WIDTH, TestToolboxFrame.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
 
         TestBase.setUpLogging()
 
         self.logger: Logger = getLogger(__name__)
         diagramFrame: DiagramFrame = DiagramFrame(frameTop)
-        diagramFrame.SetSize((TestToolbox.WINDOW_WIDTH, TestToolbox.WINDOW_HEIGHT))
+        diagramFrame.SetSize((TestToolboxFrame.WINDOW_WIDTH, TestToolboxFrame.WINDOW_HEIGHT))
         diagramFrame.SetScrollbars(10, 10, 100, 100)
 
         diagramFrame.Show(True)
@@ -239,6 +242,6 @@ class TestToolbox(App):
         self.Destroy()
 
 
-testApp: App = TestToolbox(redirect=False)
+testApp: App = TestToolboxFrame(redirect=False)
 
 testApp.MainLoop()
