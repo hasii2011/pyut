@@ -29,6 +29,7 @@ from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutText import PyutText
+from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -112,6 +113,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditNote()
         elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES:
             dlgAnswer = self._testDlgPyutPreferences()
+        elif dlgName == DialogNamesEnum.DLG_LAYOUT_SIZE:
+            dlgAnswer = self._testDlgLayoutSize()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -143,6 +146,14 @@ class TestADialog(App):
             dlg: DlgPyutPreferences = cast(DlgPyutPreferences, dlg)
             if dlg.ShowModal() == OK:
                 return f'Preferences returned Ok'
+            else:
+                return f'Cancelled'
+
+    def _testDlgLayoutSize(self):
+        with DlgLayoutSize(theParent=self._frameTop) as dlg:
+            dlg: DlgLayoutSize = cast(DlgLayoutSize, dlg)
+            if dlg.ShowModal() == OK:
+                return f'Retrieved data: width={dlg.layoutWidth}  height={dlg.layoutHeight}'
             else:
                 return f'Cancelled'
 

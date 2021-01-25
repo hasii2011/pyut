@@ -8,6 +8,9 @@ from wx import CENTER
 from wx import EVT_SPINCTRL
 from wx import HORIZONTAL
 from wx import ID_ANY
+from wx import SP_ARROW_KEYS
+from wx import SP_WRAP
+from wx import TE_PROCESS_ENTER
 from wx import VERTICAL
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
@@ -31,6 +34,9 @@ class DlgLayoutSize(BaseDlgEdit):
 
     DEFAULT_LAYOUT_WIDTH:  int = 1000
     DEFAULT_LAYOUT_HEIGHT: int = 1000
+
+    DEFAULT_MAX_LAYOUT_WIDTH: int = 3000
+    DEFAULT_MAX_LAYOUT_HEIGHT: int = 3000
 
     def __init__(self, theParent):
 
@@ -82,20 +88,22 @@ class DlgLayoutSize(BaseDlgEdit):
 
     def __createLayoutSizeControls(self) -> StaticBoxSizer:
 
-        layoutWidth  = SpinCtrl(self, self.__layoutWidthID,  "", (30, 50))
-        layoutHeight = SpinCtrl(self, self.__layoutHeightID, "", (30, 50))
+        spinStyle: int = SP_ARROW_KEYS | SP_WRAP | TE_PROCESS_ENTER
+        layoutWidth  = SpinCtrl(self, self.__layoutWidthID,  "", (30, 50), style=spinStyle)
+        layoutHeight = SpinCtrl(self, self.__layoutHeightID, "", (30, 50), style=spinStyle)
 
-        layoutWidth.SetRange(500, 3000)
-        layoutHeight.SetRange(500, 3000)
-
+        # layoutWidth.SetRange(500, 3000)
+        # layoutHeight.SetRange(500, 3000)
+        layoutWidth.SetMax(DlgLayoutSize.DEFAULT_MAX_LAYOUT_WIDTH)
+        layoutHeight.SetMax(DlgLayoutSize.DEFAULT_MAX_LAYOUT_HEIGHT)
         box:        StaticBox = StaticBox(self, ID_ANY, "Layout Width/Height")
         szrAppSize: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
         szrAppSize.Add(layoutWidth, 0,  ALL, DlgLayoutSize.HORIZONTAL_GAP)
         szrAppSize.Add(layoutHeight, 0, ALL, DlgLayoutSize.HORIZONTAL_GAP)
 
-        self.__layoutWidth  = layoutWidth
-        self.__layoutHeight = layoutHeight
+        self.__layoutWidth:  SpinCtrl = layoutWidth
+        self.__layoutHeight: SpinCtrl = layoutHeight
 
         self.__layoutWidth.SetValue(self._layoutWidth)
         self.__layoutHeight.SetValue(self._layoutHeight)
