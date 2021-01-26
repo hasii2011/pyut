@@ -56,7 +56,7 @@ class BackgroundPreferences(PreferencesPanel):
         [self.enableBackgroundGridID, self.snapToGridID, self.scGridIntervalID, self.colorID] = PyutUtils.assignID(4)
 
         self._createControls()
-        self.__setControlValues()
+        self._setControlValues()
 
     def _createControls(self):
         """
@@ -80,7 +80,7 @@ class BackgroundPreferences(PreferencesPanel):
 
         self.Bind(EVT_CHOICE, self.onGridStyleChanged, self._gridStyleChoice)
 
-    def __setControlValues(self):
+    def _setControlValues(self):
         """
         TODO:   Set the default values on the controls.
         """

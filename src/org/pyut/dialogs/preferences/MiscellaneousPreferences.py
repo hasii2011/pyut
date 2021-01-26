@@ -48,7 +48,7 @@ class MiscellaneousPreferences(PreferencesPanel):
         [self.__languageID, self.__pdfFilenameID] = PyutUtils.assignID(2)
 
         self._createControls()
-        self.__setControlValues()
+        self._setControlValues()
 
     def _createControls(self):
 
@@ -101,7 +101,7 @@ class MiscellaneousPreferences(PreferencesPanel):
 
         return szrLanguage
 
-    def __setControlValues(self):
+    def _setControlValues(self):
 
         # n = self._prefs[PyutPreferences.I18N]
         n = self._prefs.i18n

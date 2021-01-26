@@ -10,7 +10,7 @@ from org.pyut.ui.Mediator import Mediator
 
 class PreferencesPanel(Panel):
 
-    def __init__(self, parent: Window,):
+    def __init__(self, parent: Window):
 
         super().__init__(parent=parent, style=BORDER_SUNKEN)
 
@@ -24,7 +24,7 @@ class PreferencesPanel(Panel):
         """
         pass
 
-    def __setControlValues(self):
+    def _setControlValues(self):
         """
         Set the default values on the controls.
         """

@@ -42,7 +42,7 @@ class GeneralPreferencesPanel(PreferencesPanel):
         ] = PyutUtils.assignID(7)
 
         self._createControls()
-        self.__setControlValues()
+        self._setControlValues()
 
     def _createControls(self):
         """
@@ -112,7 +112,7 @@ class GeneralPreferencesPanel(PreferencesPanel):
         # self._prefs[PyutPreferences.CURRENT_TIP] = '0'
         self._prefs.currentTip = 0
 
-    def __setControlValues(self):
+    def _setControlValues(self):
         """
         Set the default values on the controls.
         """

@@ -64,7 +64,7 @@ class PositioningPreferences(PreferencesPanel):
         mainSizer.Add(self.__createAppPositionControls(), 0, ALL, PositioningPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__createAppSizeControls(),     0, ALL, PositioningPreferences.VERTICAL_GAP)
 
-        self.__setControlValues()
+        self._setControlValues()
 
         self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppPosXID)
         self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppPosYID)
@@ -154,7 +154,7 @@ class PositioningPreferences(PreferencesPanel):
 
         return szrAppSize
 
-    def __setControlValues(self):
+    def _setControlValues(self):
         """
         Set the position controls based on the value of appropriate preference value
         """

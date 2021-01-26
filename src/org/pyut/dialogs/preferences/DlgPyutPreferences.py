@@ -34,6 +34,7 @@ from wx.lib.agw.fmresources import INB_FIT_LABELTEXT
 
 from wx.lib.agw.labelbook import LabelBook
 
+from org.pyut.dialogs.preferences.ValuePreferences import ValuePreferences
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
@@ -102,11 +103,13 @@ class DlgPyutPreferences(Dialog):
         positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=self)
         miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=self)
         backgroundPreferences:  BackgroundPreferences    = BackgroundPreferences(parent=self)
+        valuePreferences:       ValuePreferences         = ValuePreferences(parent=self)
 
-        book.AddPage(generalPreferences,     text=_('General'),       select=True)
-        book.AddPage(positioningPreferences, text=_('Positioning'),   select=False)
-        book.AddPage(miscPanel,              text=_('Miscellaneous'), select=False)
-        book.AddPage(backgroundPreferences,  text=_('Diagram'),       select=False)
+        book.AddPage(generalPreferences,     text=_('General'),        select=False)
+        book.AddPage(positioningPreferences, text=_('Positioning'),    select=False)
+        book.AddPage(miscPanel,              text=_('Miscellaneous'),  select=False)
+        book.AddPage(backgroundPreferences,  text=_('Diagram'),        select=False)
+        book.AddPage(valuePreferences,       text=_('Default Values'), select=True)
 
         self._positioningPreferences: PositioningPreferences = positioningPreferences
         return book
