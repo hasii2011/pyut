@@ -5,7 +5,11 @@ from logging import Logger
 from logging import getLogger
 
 from wx import ALL
+from wx import CB_READONLY
+from wx import ComboBox
+from wx import HORIZONTAL
 from wx import ID_ANY
+from wx import RadioButton
 
 from wx import VERTICAL
 
@@ -15,6 +19,7 @@ from wx import StaticBox
 from wx import StaticBoxSizer
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.dialogs.preferences.TextFontEnum import TextFontEnum
 from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 from org.pyut.dialogs.preferences.TextContainer import TextContainer
 from org.pyut.dialogs.preferences.WidthHeightContainer import WidthHeightContainer
@@ -33,7 +38,7 @@ class ValuePreferences(PreferencesPanel):
 
         super().__init__(parent=parent)
 
-        [self.__defaultNoteTextID, self.__scNoteWidthID, self.__scNoteHeightID
+        [self._cbBoldTextId, self._cbItalicizeTextId, self._rbSelectionId
          ] = PyutUtils.assignID(3)
 
         # Declare controls we need access to and will be created by the createXXXControls methods
@@ -50,6 +55,11 @@ class ValuePreferences(PreferencesPanel):
         self._useCaseNameContainer:   TextContainer = cast(TextContainer, None)
         self._actorNameContainer:     TextContainer = cast(TextContainer, None)
         self._methodNameContainer:    TextContainer = cast(TextContainer, None)
+
+        self._cbBoldText:             RadioButton   = cast(RadioButton, None)
+        self._cbItalicizeText:        RadioButton   = cast(RadioButton, None)
+
+        self._rbSelection:            ComboBox      = cast(ComboBox, None)
 
         self._createControls()
 
@@ -113,11 +123,11 @@ class ValuePreferences(PreferencesPanel):
 
         szrText: StaticBoxSizer = self.__createStaticBoxSizer(_('Text'), direction=VERTICAL)
 
-        textWidthHeight:  WidthHeightContainer = WidthHeightContainer(parent=self, displayText=_('Text Width/Height'), minValue=100, maxValue=300)
+        self._textWidthHeight: WidthHeightContainer = WidthHeightContainer(parent=self, displayText=_('Text Width/Height'), minValue=100, maxValue=300)
 
-        szrText.Add(textWidthHeight, 0, ALL, ValuePreferences.HORIZONTAL_GAP)
-
-        self._textWidthHeight = textWidthHeight
+        szrText.Add(self.__createTextStyleContainer(), 0, ALL, ValuePreferences.HORIZONTAL_GAP)
+        szrText.Add(self.__createTextFontSelector(),   0, ALL, ValuePreferences.HORIZONTAL_GAP)
+        szrText.Add(self._textWidthHeight,             0, ALL, ValuePreferences.HORIZONTAL_GAP)
 
         return szrText
 
@@ -155,6 +165,28 @@ class ValuePreferences(PreferencesPanel):
         self._methodNameContainer:    TextContainer = methodNameContainer
 
         return szrNames
+
+    def __createTextStyleContainer(self) -> BoxSizer:
+
+        styleContainer: BoxSizer = BoxSizer(HORIZONTAL)
+
+        self._cbBoldText:      RadioButton = RadioButton(parent=self, id =self._cbBoldTextId,      label=_('Bold Text'))
+        self._cbItalicizeText: RadioButton = RadioButton(parent=self, id =self._cbItalicizeTextId, label=_('Italicize Text'))
+
+        styleContainer.Add(self._cbBoldText,      0, ALL, ValuePreferences.HORIZONTAL_GAP)
+        styleContainer.Add(self._cbItalicizeText, 0, ALL, ValuePreferences.HORIZONTAL_GAP)
+
+        return styleContainer
+
+    def __createTextFontSelector(self) -> ComboBox:
+
+        fontChoices = []
+        for fontName in TextFontEnum:
+            fontChoices.append(fontName.value)
+
+        self._rbSelection: ComboBox = ComboBox(self, self._rbSelectionId, choices=fontChoices, style=CB_READONLY)
+
+        return self._rbSelection
 
     def __createStaticBoxSizer(self, displayText: str, direction: int) -> StaticBoxSizer:
 
