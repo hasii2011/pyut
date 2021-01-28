@@ -34,7 +34,7 @@ from wx.lib.agw.fmresources import INB_FIT_LABELTEXT
 
 from wx.lib.agw.labelbook import LabelBook
 
-from org.pyut.dialogs.preferences.ValuePreferences import ValuePreferences
+from org.pyut.dialogs.preferences.ValuePreferencesBook import ValuePreferencesBook
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
@@ -73,7 +73,7 @@ class DlgPyutPreferences(Dialog):
             parent:
             wxId:
         """
-        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=740))
+        super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=320))
         # super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE)
         self.logger:    Logger          = getLogger(__name__)
         self.__prefs:   PyutPreferences = PyutPreferences()
@@ -103,7 +103,7 @@ class DlgPyutPreferences(Dialog):
         positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=self)
         miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=self)
         backgroundPreferences:  BackgroundPreferences    = BackgroundPreferences(parent=self)
-        valuePreferences:       ValuePreferences         = ValuePreferences(parent=self)
+        valuePreferences:       ValuePreferencesBook     = ValuePreferencesBook(parent=self, wxId=ID_ANY)
 
         book.AddPage(generalPreferences,     text=_('General'),        select=False)
         book.AddPage(positioningPreferences, text=_('Positioning'),    select=False)
