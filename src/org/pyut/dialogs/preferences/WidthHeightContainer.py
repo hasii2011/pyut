@@ -58,7 +58,7 @@ class WidthHeightContainer(StaticBoxSizer):
         parent.Bind(EVT_SPINCTRL, self._onSpinnerValueChanged, id=self._wxWidthId)
         parent.Bind(EVT_SPINCTRL, self._onSpinnerValueChanged, id=self._wxHeightId)
 
-        self.__change: bool = False
+        self._valueChanged: bool = False
 
         self._widthValue:  int = minValue   # TODO need an initial value
         self._heightValue: int = minValue   # TODO need an initial value
@@ -79,16 +79,20 @@ class WidthHeightContainer(StaticBoxSizer):
     def heightValue(self, newValue: int):
         self._heightValue = newValue
 
+    @property
+    def valueChanged(self) -> bool:
+        return self._valueChanged
+
     def _onSpinnerValueChanged(self, event: SpinEvent):
 
-        self.__changed = True
         eventId:  int = event.GetId()
         newValue: int = event.GetInt()
 
         if eventId == self._wxWidthId:
-            self._widthValue = newValue
+            self._widthValue   = newValue
+            self._valueChanged = True
         elif eventId == self._wxHeightId:
-            self._heightValue = newValue
-
+            self._heightValue  = newValue
+            self._valueChanged = True
         else:
             self.logger.error(f'Unknown height/width event id: {eventId}')

@@ -2,11 +2,17 @@
 from typing import List
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
+
 from wx import ALL
 from wx import BK_DEFAULT
 from wx import CB_READONLY
 from wx import CheckBox
 from wx import ComboBox
+from wx import CommandEvent
+from wx import EVT_CHECKBOX
+from wx import EVT_COMBOBOX
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import RadioButton
@@ -28,6 +34,7 @@ from org.pyut.dialogs.preferences.DirectionEnum import DirectionEnum
 from org.pyut.dialogs.preferences.TextContainer import TextContainer
 from org.pyut.dialogs.preferences.TextFontEnum import TextFontEnum
 from org.pyut.dialogs.preferences.WidthHeightContainer import WidthHeightContainer
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
 
@@ -55,6 +62,9 @@ class ValuePreferencesBook(Toolbook):
     def __init__(self, parent: Window, wxId: int):
 
         super().__init__(parent, wxId, style=BK_DEFAULT)
+
+        self.logger:       Logger          = getLogger(__name__)
+        self._preferences: PyutPreferences = PyutPreferences()
         #
         # Controls we are going to create
         #
@@ -78,7 +88,18 @@ class ValuePreferencesBook(Toolbook):
         self._methodNameContainer:    TextContainer = cast(TextContainer, None)
 
         self._createControls()
+        self._BindControls()
+        self._setControlValues()
 
+    def updatePreferences(self) -> bool:
+        """
+        Called by main dialog to ask it to update any changed preferences
+
+        Returns: `True` if any values were updated else it returns `False`
+        """
+
+        return True
+    
     def _createControls(self):
 
         embeddedImages: List[PyEmbeddedImage] = [ImgToolboxNote, ImgToolboxText, ImgToolboxClass, DefaultPreferences]
@@ -102,11 +123,37 @@ class ValuePreferencesBook(Toolbook):
         self.AddPage(classPanel,        text='Class', select=False, imageId=next(imageIdGenerator))
         self.AddPage(defaultNamesPanel, text='Names', select=False, imageId=next(imageIdGenerator))
 
+    def _BindControls(self):
+
+        self.Bind(EVT_CHECKBOX, self._onTextBoldValueChanged,      id=self._cbBoldTextId)
+        self.Bind(EVT_CHECKBOX, self._onTextItalicizeValueChanged, id=self._cbItalicizeTextId)
+
+        self.Bind(EVT_COMBOBOX, self._onFontSelectionChanged, id=self._cbxFontSelectionId)
+
     def _setControlValues(self):
         """
         Set the default values on the controls.
         """
         pass
+
+    def _onTextBoldValueChanged(self, event: CommandEvent):
+
+        val: bool = event.IsChecked()
+
+        self.logger.warning(f'bold text new value: `{val}`')
+
+    def _onTextItalicizeValueChanged(self, event: CommandEvent):
+
+        val: bool = event.IsChecked()
+        self.logger.warning(f'italicize text new value: `{val}`')
+
+    def _onFontSelectionChanged(self, event: CommandEvent):
+
+        newFontName: str = event.GetString()
+
+        self.logger.warning(f'Font name change: `{newFontName}`')
+
+        event.Skip(True)
 
     def __createNoteControls(self) -> Panel:
 

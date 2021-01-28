@@ -33,8 +33,9 @@ class TextContainer(BoxSizer):
         self.Add(textLabel,   WX_SIZER_CHANGEABLE, ALL | ALIGN_CENTER_VERTICAL, TextContainer.HORIZONTAL_GAP)
         self.Add(textControl, WX_SIZER_CHANGEABLE, ALL, TextContainer.HORIZONTAL_GAP)
 
-        self._textControl: TextCtrl = textControl
-        self._textValue:   str      = ''
+        self._textControl:  TextCtrl = textControl
+        self._textValue:    str      = ''
+        self._valueChanged: bool     = False
 
         parent.Bind(EVT_TEXT, self._onTextValueChanged, id=self._textId)
 
@@ -46,8 +47,13 @@ class TextContainer(BoxSizer):
     def textValue(self, newValue: str):
         self._textValue = newValue
 
+    @property
+    def valueChanged(self) -> bool:
+        return self._valueChanged
+
     def _onTextValueChanged(self, event: CommandEvent):
 
         newValue: str = event.GetString()
 
-        self._textValue = newValue
+        self._textValue    = newValue
+        self._valueChanged = True
