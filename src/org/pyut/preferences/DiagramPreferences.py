@@ -34,7 +34,7 @@ class BackgroundPreferences(BaseSubPreference):
 
     def init(self, *args, **kwds):
 
-        self.logger:  Logger       = getLogger(__name__)
+        self.logger: Logger = getLogger(__name__)
 
         BaseSubPreference.init(self, *args, **kwds)
 

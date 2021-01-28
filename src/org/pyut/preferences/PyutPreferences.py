@@ -16,6 +16,7 @@ from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
+from org.pyut.preferences.ValuePreferences import ValuePreferences
 
 
 class PyutPreferences(Singleton):
@@ -68,6 +69,7 @@ class PyutPreferences(Singleton):
         self._preferencesCommon: PreferencesCommon     = PreferencesCommon(config=self._config)
         self._mainPrefs:         MainPreferences       = MainPreferences(config=self._config)
         self._diagramPrefs:      BackgroundPreferences = BackgroundPreferences(config=self._config)
+        self._valuePrefs:        ValuePreferences      = ValuePreferences(config=self._config)
         self._debugPrefs:        DebugPreferences      = DebugPreferences(config=self._config)
 
         self._createEmptyPreferences()
@@ -397,6 +399,7 @@ class PyutPreferences(Singleton):
 
         self._mainPrefs.addAnyMissingMainPreferences()
         self._diagramPrefs.addMissingDiagramPreferences()
+        self._valuePrefs.addMissingPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
 
     def __addOpenedFilesSection(self):
@@ -416,4 +419,5 @@ class PyutPreferences(Singleton):
         self._preferencesCommon.configParser = self._config
         self._mainPrefs.configParser         = self._config
         self._diagramPrefs.configParser      = self._config
+        self._valuePrefs.configParser        = self._config
         self._debugPrefs.configParser        = self._config
