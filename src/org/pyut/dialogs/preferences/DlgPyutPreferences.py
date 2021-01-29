@@ -78,8 +78,6 @@ class DlgPyutPreferences(Dialog):
         self.logger:    Logger          = getLogger(__name__)
         self.__prefs:   PyutPreferences = PyutPreferences()
 
-        self.book: LabelBook = self._createTheControls()
-
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
         mainSizer.Add(self._createTheControls(), 1, ALL | EXPAND, DlgPyutPreferences.VERTICAL_GAP)

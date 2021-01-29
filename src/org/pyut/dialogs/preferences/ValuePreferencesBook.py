@@ -30,11 +30,12 @@ from wx import Window
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.dialogs.preferences.DirectionEnum import DirectionEnum
 from org.pyut.dialogs.preferences.TextContainer import TextContainer
 from org.pyut.dialogs.preferences.TextFontEnum import TextFontEnum
-from org.pyut.dialogs.preferences.DimensionsContainer import WidthHeightContainer
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.dialogs.preferences.DimensionsContainer import DimensionsContainer
 
 from org.pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
 
@@ -68,19 +69,19 @@ class ValuePreferencesBook(Toolbook):
         #
         # Controls we are going to create
         #
-        self._noteTextContainer:   TextContainer        = cast(TextContainer, None)
-        self._noteWidthHeight:     WidthHeightContainer = cast(WidthHeightContainer, None)
+        self._noteTextContainer: TextContainer        = cast(TextContainer, None)
+        self._noteDimensions:    DimensionsContainer = cast(DimensionsContainer, None)
 
         # Declare controls we need access to and will be created by the createXXXControls methods
         [self._cbBoldTextId, self._cbItalicizeTextId, self._cbxFontSelectionId] = PyutUtils.assignID(3)
 
-        self._textWidthHeight:  WidthHeightContainer = cast(WidthHeightContainer, None)
+        self._textWidthHeight:  DimensionsContainer = cast(DimensionsContainer, None)
         self._cbBoldText:       RadioButton   = cast(RadioButton, None)
         self._cbItalicizeText:  RadioButton   = cast(RadioButton, None)
         self._cbxFontSelection: ComboBox      = cast(ComboBox, None)
 
         self._classNameContainer:  TextContainer        = cast(TextContainer, None)
-        self._classWidthHeight:    WidthHeightContainer = cast(WidthHeightContainer, None)
+        self._classWidthHeight:    DimensionsContainer = cast(DimensionsContainer, None)
 
         self._interfaceNameContainer: TextContainer = cast(TextContainer, None)
         self._useCaseNameContainer:   TextContainer = cast(TextContainer, None)
@@ -140,8 +141,8 @@ class ValuePreferencesBook(Toolbook):
         Set the default values on the controls.
         """
         self._noteTextContainer.textValue = self._preferences.noteText
-        self._noteWidthHeight.widthValue  = self._preferences.noteDimensions.width
-        self._noteWidthHeight.heightValue = self._preferences.noteDimensions.height
+        self._noteDimensions.dimensions   = self._preferences.noteDimensions
+
         self._textWidthHeight.widthValue  = self._preferences.textDimensions.width
         self._textWidthHeight.heightValue = self._preferences.textDimensions.height
 
@@ -172,7 +173,7 @@ class ValuePreferencesBook(Toolbook):
         szrNotes: BoxSizer = BoxSizer(VERTICAL)
 
         szrDefaultNoteText: BoxSizer             = self.__createDefaultNoteTextContainer(parent=p)
-        szrNoteSize:        WidthHeightContainer = self.__createDefaultNoteSizeContainer(parent=p)
+        szrNoteSize:        DimensionsContainer = self.__createDefaultNoteSizeContainer(parent=p)
 
         szrNotes.Add(szrDefaultNoteText, 0, ALL, ValuePreferencesBook.VERTICAL_GAP)
         szrNotes.Add(szrNoteSize,        0, ALL, ValuePreferencesBook.VERTICAL_GAP)
@@ -190,11 +191,11 @@ class ValuePreferencesBook(Toolbook):
 
         return noteTextContainer
 
-    def __createDefaultNoteSizeContainer(self, parent: Window) -> WidthHeightContainer:
+    def __createDefaultNoteSizeContainer(self, parent: Window) -> DimensionsContainer:
 
-        noteWidthHeight:  WidthHeightContainer = WidthHeightContainer(parent=parent, displayText=_('Note Width/Height'), minValue=100, maxValue=300)
+        noteWidthHeight:  DimensionsContainer = DimensionsContainer(parent=parent, displayText=_('Note Width/Height'), minValue=100, maxValue=300)
 
-        self._noteWidthHeight = noteWidthHeight
+        self._noteDimensions = noteWidthHeight
 
         return noteWidthHeight
 
@@ -204,7 +205,7 @@ class ValuePreferencesBook(Toolbook):
         # szrText: StaticBoxSizer = self.__createStaticBoxSizer(_('Text'), direction=VERTICAL)
         szrText: BoxSizer = BoxSizer(VERTICAL)
 
-        self._textWidthHeight: WidthHeightContainer = WidthHeightContainer(parent=p, displayText=_('Text Width/Height'), minValue=100, maxValue=300)
+        self._textWidthHeight: DimensionsContainer = DimensionsContainer(parent=p, displayText=_('Text Width/Height'), minValue=100, maxValue=300)
 
         szrText.Add(self._textWidthHeight,                     0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
         szrText.Add(self.__createTextStyleContainer(parent=p), 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
@@ -244,7 +245,7 @@ class ValuePreferencesBook(Toolbook):
         szrClass: BoxSizer = BoxSizer(VERTICAL)
 
         classNameContainer: TextContainer        = TextContainer(parent=p, labelText=_('Default Name'))
-        classWidthHeight:   WidthHeightContainer = WidthHeightContainer(parent=p, displayText=_('Class Width/Height'), minValue=100, maxValue=300)
+        classWidthHeight:   DimensionsContainer = DimensionsContainer(parent=p, displayText=_('Class Width/Height'), minValue=100, maxValue=300)
 
         szrClass.Add(classNameContainer, 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
         szrClass.Add(classWidthHeight,   0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)

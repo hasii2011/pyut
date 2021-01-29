@@ -15,11 +15,16 @@ from wx import Window
 
 from wx import NewIdRef as wxNewIdRef
 
+from org.pyut.preferences.Dimensions import Dimensions
+
 SPINNER_WIDTH:  int = 30
 SPINNER_HEIGHT: int = 50
 
+DEFAULT_MIN_VALUE: int = 100    # For the control only
+DEFAULT_MAX_VALUE: int = 250    # For the control only
 
-class WidthHeightContainer(StaticBoxSizer):
+
+class DimensionsContainer(StaticBoxSizer):
 
     HORIZONTAL_GAP: int = 5
 
@@ -28,7 +33,7 @@ class WidthHeightContainer(StaticBoxSizer):
     to a width and a height of some visual object
     """
 
-    def __init__(self, parent: Window, displayText: str, minValue: int = 100, maxValue: int = 250):
+    def __init__(self, parent: Window, displayText: str, minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE):
         """
 
         Args:
@@ -49,8 +54,8 @@ class WidthHeightContainer(StaticBoxSizer):
         self._scWidth:  SpinCtrl = SpinCtrl(parent, self._wxWidthId,  "", (SPINNER_WIDTH, SPINNER_HEIGHT))
         self._scHeight: SpinCtrl = SpinCtrl(parent, self._wxHeightId, "", (SPINNER_WIDTH, SPINNER_HEIGHT))
 
-        self.Add(self._scWidth,  0, ALL, WidthHeightContainer.HORIZONTAL_GAP)
-        self.Add(self._scHeight, 0, ALL, WidthHeightContainer.HORIZONTAL_GAP)
+        self.Add(self._scWidth,  0, ALL, DimensionsContainer.HORIZONTAL_GAP)
+        self.Add(self._scHeight, 0, ALL, DimensionsContainer.HORIZONTAL_GAP)
 
         self._scWidth.SetRange(minValue, maxValue)
         self._scHeight.SetRange(minValue, maxValue)
@@ -60,26 +65,18 @@ class WidthHeightContainer(StaticBoxSizer):
 
         self._valueChanged: bool = False
 
-        self._widthValue:  int = minValue   # TODO need an initial value
-        self._heightValue: int = minValue   # TODO need an initial value
+        self._dimensions: Dimensions = Dimensions()
 
     @property
-    def widthValue(self) -> int:
-        return self._widthValue
+    def dimensions(self) -> Dimensions:
+        return self._dimensions
 
-    @widthValue.setter
-    def widthValue(self, newValue: int):
-        self._widthValue = newValue
-        self._scWidth.SetValue(newValue)
+    @dimensions.setter
+    def dimensions(self, newValue: Dimensions):
 
-    @property
-    def heightValue(self) -> int:
-        return self._heightValue
-
-    @heightValue.setter
-    def heightValue(self, newValue: int):
-        self._heightValue = newValue
-        self._scHeight.SetValue(newValue)
+        self._dimensions = newValue
+        self._scWidth.SetValue(newValue.width)
+        self._scHeight.SetValue(newValue.height)
 
     @property
     def valueChanged(self) -> bool:
