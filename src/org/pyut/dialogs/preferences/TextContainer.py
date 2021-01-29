@@ -46,6 +46,7 @@ class TextContainer(BoxSizer):
     @textValue.setter
     def textValue(self, newValue: str):
         self._textValue = newValue
+        self._textControl.SetValue(newValue)
 
     @property
     def valueChanged(self) -> bool:

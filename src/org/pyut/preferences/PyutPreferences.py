@@ -13,6 +13,7 @@ from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
+from org.pyut.preferences.Dimensions import Dimensions
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
@@ -368,6 +369,22 @@ class PyutPreferences(Singleton):
     @gridLineStyle.setter
     def gridLineStyle(self, theNewValue: PyutPenStyle):
         self._diagramPrefs.gridLineStyle = theNewValue
+
+    @property
+    def noteText(self) -> str:
+        return self._valuePrefs.noteText
+
+    @noteText.setter
+    def noteText(self, theNewValue: str):
+        self._valuePrefs.noteText = theNewValue
+
+    @property
+    def noteDimensions(self) -> Dimensions:
+        return self._valuePrefs.noteDimensions
+
+    @noteDimensions.setter
+    def noteDimensions(self, newValue: Dimensions):
+        self._valuePrefs.noteDimensions = newValue
 
     def __loadConfig(self):
         """

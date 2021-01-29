@@ -70,6 +70,7 @@ class WidthHeightContainer(StaticBoxSizer):
     @widthValue.setter
     def widthValue(self, newValue: int):
         self._widthValue = newValue
+        self._scWidth.SetValue(newValue)
 
     @property
     def heightValue(self) -> int:
@@ -78,6 +79,7 @@ class WidthHeightContainer(StaticBoxSizer):
     @heightValue.setter
     def heightValue(self, newValue: int):
         self._heightValue = newValue
+        self._scHeight.SetValue(newValue)
 
     @property
     def valueChanged(self) -> bool:

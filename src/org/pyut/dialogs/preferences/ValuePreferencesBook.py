@@ -99,7 +99,7 @@ class ValuePreferencesBook(Toolbook):
         """
 
         return True
-    
+
     def _createControls(self):
 
         embeddedImages: List[PyEmbeddedImage] = [ImgToolboxNote, ImgToolboxText, ImgToolboxClass, DefaultPreferences]
@@ -134,7 +134,9 @@ class ValuePreferencesBook(Toolbook):
         """
         Set the default values on the controls.
         """
-        pass
+        self._noteTextContainer.textValue = self._preferences.noteText
+        self._noteWidthHeight.widthValue  = self._preferences.noteDimensions.width
+        self._noteWidthHeight.heightValue = self._preferences.noteDimensions.height
 
     def _onTextBoldValueChanged(self, event: CommandEvent):
 
