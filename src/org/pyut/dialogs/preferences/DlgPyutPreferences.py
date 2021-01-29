@@ -112,6 +112,7 @@ class DlgPyutPreferences(Dialog):
         book.AddPage(valuePreferences,       text=_('Default Values'), select=True)
 
         self._positioningPreferences: PositioningPreferences = positioningPreferences
+        self._valuePreferences:       ValuePreferencesBook   = valuePreferences
         return book
 
     def _createButtonsContainer(self) -> BoxSizer:
@@ -135,6 +136,8 @@ class DlgPyutPreferences(Dialog):
     def __OnCmdOk(self, event: CommandEvent):
 
         self.__potentiallyDisplayInfoMessage()
+        self._valuePreferences.updatePreferences()
+
         self.EndModal(OK)
         event.Skip(skip=True)
 

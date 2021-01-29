@@ -18,10 +18,17 @@ from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 
 
 class TextContainer(BoxSizer):
-
+    """
+    """
     HORIZONTAL_GAP: int = 3
 
     def __init__(self, parent: Window, labelText: str):
+        """
+
+        Args:
+            parent:     The parent window
+            labelText:  How to label the text input
+        """
 
         super().__init__(HORIZONTAL)
 

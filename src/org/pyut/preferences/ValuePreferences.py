@@ -14,8 +14,7 @@ class ValuePreferences(BaseSubPreference):
 
     NOTE_TEXT:       str = 'note_text'
     NOTE_DIMENSIONS: str = 'note_dimensions'
-    TEXT_WIDTH:      str = 'text_width'
-    TEXT_HEIGHT:     str = 'text_height'
+    TEXT_DIMENSIONS: str = 'text_dimensions'
     TEXT_BOLD:       str = 'text_bold'
     TEXT_ITALICIZE:  str = 'text_italicize'
     TEXT_FONT:       str = 'text_font'
@@ -31,8 +30,7 @@ class ValuePreferences(BaseSubPreference):
     VALUE_PREFERENCES: PREFS_NAME_VALUES = {
         NOTE_TEXT:       'This is the note text',
         NOTE_DIMENSIONS: Dimensions(100, 100).__str__(),
-        TEXT_WIDTH:      '100',
-        TEXT_HEIGHT:     '100',
+        TEXT_DIMENSIONS: Dimensions(100, 120).__str__(),
         TEXT_BOLD:       'False',
         TEXT_ITALICIZE:  'False',
         TEXT_FONT:      ' Swiss',
@@ -70,6 +68,16 @@ class ValuePreferences(BaseSubPreference):
     @noteDimensions.setter
     def noteDimensions(self, newValue: Dimensions):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.NOTE_DIMENSIONS, newValue.__str__())
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def textDimensions(self) -> Dimensions:
+        serializedDimensions: str = self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_DIMENSIONS)
+        return Dimensions.deSerialize(serializedDimensions)
+
+    @textDimensions.setter
+    def textDimensions(self, newValue: Dimensions):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_DIMENSIONS, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
     def addMissingPreferences(self):

@@ -386,6 +386,14 @@ class PyutPreferences(Singleton):
     def noteDimensions(self, newValue: Dimensions):
         self._valuePrefs.noteDimensions = newValue
 
+    @property
+    def textDimensions(self) -> Dimensions:
+        return self._valuePrefs.textDimensions
+
+    @textDimensions.setter
+    def textDimensions(self, newValue: Dimensions):
+        self._valuePrefs.textDimensions = newValue
+
     def __loadConfig(self):
         """
         Load preferences from configuration file

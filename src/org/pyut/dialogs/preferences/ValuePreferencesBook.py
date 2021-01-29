@@ -91,14 +91,19 @@ class ValuePreferencesBook(Toolbook):
         self._BindControls()
         self._setControlValues()
 
+        self._valueChanged: bool = False
+
     def updatePreferences(self) -> bool:
         """
         Called by main dialog to ask it to update any changed preferences
 
         Returns: `True` if any values were updated else it returns `False`
         """
+        if self._noteTextContainer.valueChanged is True:
+            self._valueChanged = True
+            self._preferences.noteText       = self._noteTextContainer.textValue
 
-        return True
+        return self._valueChanged
 
     def _createControls(self):
 
@@ -137,31 +142,33 @@ class ValuePreferencesBook(Toolbook):
         self._noteTextContainer.textValue = self._preferences.noteText
         self._noteWidthHeight.widthValue  = self._preferences.noteDimensions.width
         self._noteWidthHeight.heightValue = self._preferences.noteDimensions.height
+        self._textWidthHeight.widthValue  = self._preferences.textDimensions.width
+        self._textWidthHeight.heightValue = self._preferences.textDimensions.height
 
     def _onTextBoldValueChanged(self, event: CommandEvent):
 
         val: bool = event.IsChecked()
 
+        self._valueChanged = True
         self.logger.warning(f'bold text new value: `{val}`')
 
     def _onTextItalicizeValueChanged(self, event: CommandEvent):
 
         val: bool = event.IsChecked()
+        self._valueChanged = True
         self.logger.warning(f'italicize text new value: `{val}`')
 
     def _onFontSelectionChanged(self, event: CommandEvent):
 
         newFontName: str = event.GetString()
-
+        self._valueChanged = True
         self.logger.warning(f'Font name change: `{newFontName}`')
 
         event.Skip(True)
 
     def __createNoteControls(self) -> Panel:
 
-        p: Panel = Panel(self, ID_ANY)
-
-        # szrNotes: StaticBoxSizer = self.__createStaticBoxSizer(_('Note'), direction=DirectionEnum.Vertical)
+        p:        Panel    = Panel(self, ID_ANY)
         szrNotes: BoxSizer = BoxSizer(VERTICAL)
 
         szrDefaultNoteText: BoxSizer             = self.__createDefaultNoteTextContainer(parent=p)
