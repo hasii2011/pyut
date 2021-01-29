@@ -33,7 +33,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.preferences.DirectionEnum import DirectionEnum
 from org.pyut.dialogs.preferences.TextContainer import TextContainer
 from org.pyut.dialogs.preferences.TextFontEnum import TextFontEnum
-from org.pyut.dialogs.preferences.WidthHeightContainer import WidthHeightContainer
+from org.pyut.dialogs.preferences.DimensionsContainer import WidthHeightContainer
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
