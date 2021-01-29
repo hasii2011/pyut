@@ -394,6 +394,22 @@ class PyutPreferences(Singleton):
     def textDimensions(self, newValue: Dimensions):
         self._valuePrefs.textDimensions = newValue
 
+    @property
+    def textBold(self) -> bool:
+        return self._valuePrefs.textBold
+
+    @textBold.setter
+    def textBold(self, newValue: bool):
+        self._valuePrefs.textBold = newValue
+
+    @property
+    def textItalicize(self) -> bool:
+        return self._valuePrefs.textItalicize
+
+    @textItalicize.setter
+    def textItalicize(self, newValue: bool):
+        self._valuePrefs.textItalicize = newValue
+
     def __loadConfig(self):
         """
         Load preferences from configuration file

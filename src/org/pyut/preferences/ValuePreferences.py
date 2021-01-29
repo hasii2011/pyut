@@ -80,6 +80,24 @@ class ValuePreferences(BaseSubPreference):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_DIMENSIONS, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
+    @property
+    def textBold(self) -> bool:
+        return self._config.getboolean(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_BOLD)
+
+    @textBold.setter
+    def textBold(self, newValue: bool):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_BOLD, str(newValue))
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def textItalicize(self) -> bool:
+        return self._config.getboolean(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_ITALICIZE)
+
+    @textItalicize.setter
+    def textItalicize(self, newValue: bool):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_ITALICIZE, str(newValue))
+        self._preferencesCommon.saveConfig()
+
     def addMissingPreferences(self):
 
         try:

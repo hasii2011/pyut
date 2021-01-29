@@ -75,7 +75,7 @@ class ValuePreferencesBook(Toolbook):
         # Declare controls we need access to and will be created by the createXXXControls methods
         [self._cbBoldTextId, self._cbItalicizeTextId, self._cbxFontSelectionId] = PyutUtils.assignID(3)
 
-        self._textWidthHeight:  DimensionsContainer = cast(DimensionsContainer, None)
+        self._textDimensions:   DimensionsContainer = cast(DimensionsContainer, None)
         self._cbBoldText:       RadioButton   = cast(RadioButton, None)
         self._cbItalicizeText:  RadioButton   = cast(RadioButton, None)
         self._cbxFontSelection: ComboBox      = cast(ComboBox, None)
@@ -102,7 +102,13 @@ class ValuePreferencesBook(Toolbook):
         """
         if self._noteTextContainer.valueChanged is True:
             self._valueChanged = True
-            self._preferences.noteText       = self._noteTextContainer.textValue
+            self._preferences.noteText = self._noteTextContainer.textValue
+        if self._noteDimensions.valueChanged is True:
+            self._valueChanged = True
+            self._preferences.noteDimensions = self._noteDimensions.dimensions
+        if self._textDimensions.valueChanged is True:
+            self._valueChanged = True
+            self._preferences.textDimensions = self._textDimensions.dimensions
 
         return self._valueChanged
 
@@ -143,21 +149,22 @@ class ValuePreferencesBook(Toolbook):
         self._noteTextContainer.textValue = self._preferences.noteText
         self._noteDimensions.dimensions   = self._preferences.noteDimensions
 
-        self._textWidthHeight.widthValue  = self._preferences.textDimensions.width
-        self._textWidthHeight.heightValue = self._preferences.textDimensions.height
+        self._textDimensions.dimensions  = self._preferences.textDimensions
+        self._cbBoldText.SetValue(self._preferences.textBold)
+        self._cbItalicizeText.SetValue(self._preferences.textItalicize)
 
     def _onTextBoldValueChanged(self, event: CommandEvent):
 
         val: bool = event.IsChecked()
 
         self._valueChanged = True
-        self.logger.warning(f'bold text new value: `{val}`')
+        self._preferences.textBold = val
 
     def _onTextItalicizeValueChanged(self, event: CommandEvent):
 
         val: bool = event.IsChecked()
         self._valueChanged = True
-        self.logger.warning(f'italicize text new value: `{val}`')
+        self._preferences.textItalicize = val
 
     def _onFontSelectionChanged(self, event: CommandEvent):
 
@@ -205,9 +212,9 @@ class ValuePreferencesBook(Toolbook):
         # szrText: StaticBoxSizer = self.__createStaticBoxSizer(_('Text'), direction=VERTICAL)
         szrText: BoxSizer = BoxSizer(VERTICAL)
 
-        self._textWidthHeight: DimensionsContainer = DimensionsContainer(parent=p, displayText=_('Text Width/Height'), minValue=100, maxValue=300)
+        self._textDimensions: DimensionsContainer = DimensionsContainer(parent=p, displayText=_('Text Width/Height'), minValue=100, maxValue=300)
 
-        szrText.Add(self._textWidthHeight,                     0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
+        szrText.Add(self._textDimensions, 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
         szrText.Add(self.__createTextStyleContainer(parent=p), 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
         szrText.Add(self.__createTextFontSelector(parent=p),   0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
 
