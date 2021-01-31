@@ -23,6 +23,7 @@ from wx import Window
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 from org.pyut.dialogs.preferences.TextAttributesContainer import TextAttributesContainer
+from org.pyut.preferences.Dimensions import Dimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.dialogs.preferences.DirectionEnum import DirectionEnum
@@ -65,8 +66,8 @@ class ValuePreferencesBook(Toolbook):
         self._noteDimensions:    DimensionsContainer     = cast(DimensionsContainer, None)
         self._textPanel:         TextAttributesContainer = cast(TextAttributesContainer, None)
 
-        self._classNameContainer:  TextContainer       = cast(TextContainer, None)
-        self._classWidthHeight:    DimensionsContainer = cast(DimensionsContainer, None)
+        self._classNameContainer: TextContainer       = cast(TextContainer, None)
+        self._classDimensionsContainer:    DimensionsContainer = cast(DimensionsContainer, None)
 
         self._interfaceNameContainer: TextContainer = cast(TextContainer, None)
         self._useCaseNameContainer:   TextContainer = cast(TextContainer, None)
@@ -84,13 +85,6 @@ class ValuePreferencesBook(Toolbook):
 
         Returns: `True` if any values were updated else it returns `False`
         """
-        if self._noteTextContainer.valueChanged is True:
-            self._valueChanged = True
-            self._preferences.noteText = self._noteTextContainer.textValue
-        if self._noteDimensions.valueChanged is True:
-            self._valueChanged = True
-            self._preferences.noteDimensions = self._noteDimensions.dimensions
-
         return self._valueChanged
 
     def _createControls(self):
@@ -128,7 +122,11 @@ class ValuePreferencesBook(Toolbook):
         """
         Set the default values on the controls.
         """
-        self._noteTextContainer.textValue = self._preferences.noteText
+        self._noteTextContainer.textValue  = self._preferences.noteText
+        self._noteDimensions.dimensions    = self._preferences.noteDimensions
+
+        self._classNameContainer.textValue        = self._preferences.className
+        self._classDimensionsContainer.dimensions = self._preferences.classDimensions
 
     def __createNoteControls(self) -> Panel:
 
@@ -148,7 +146,7 @@ class ValuePreferencesBook(Toolbook):
 
     def __createDefaultNoteTextContainer(self, parent: Window) -> TextContainer:
 
-        noteTextContainer: TextContainer = TextContainer(parent=parent, labelText=_('Default Note Text'))
+        noteTextContainer: TextContainer = TextContainer(parent=parent, labelText=_('Default Note Text'), valueChangedCallback=self.__noteTextChanged)
 
         self._noteTextContainer = noteTextContainer
 
@@ -156,7 +154,7 @@ class ValuePreferencesBook(Toolbook):
 
     def __createDefaultNoteSizeContainer(self, parent: Window) -> DimensionsContainer:
 
-        noteWidthHeight:  DimensionsContainer = DimensionsContainer(parent=parent, displayText=_('Note Width/Height'), minValue=100, maxValue=300)
+        noteWidthHeight:  DimensionsContainer = DimensionsContainer(parent=parent, displayText=_('Note Width/Height'), valueChangedCallback=self.__noteDimensionsChanged)
 
         self._noteDimensions = noteWidthHeight
 
@@ -164,7 +162,7 @@ class ValuePreferencesBook(Toolbook):
 
     def __createTextControls(self) -> TextAttributesContainer:
 
-        textPanel:         TextAttributesContainer = TextAttributesContainer(parent=self)
+        textPanel: TextAttributesContainer = TextAttributesContainer(parent=self)
 
         self._textPanel: TextAttributesContainer = textPanel
 
@@ -172,17 +170,17 @@ class ValuePreferencesBook(Toolbook):
 
     def __createClassControls(self) -> Panel:
 
-        p: Panel = Panel(self, ID_ANY)
-        # szrClass: StaticBoxSizer = self.__createStaticBoxSizer(_('Class'), direction=VERTICAL)
+        p:        Panel    = Panel(self, ID_ANY)
         szrClass: BoxSizer = BoxSizer(VERTICAL)
 
-        classNameContainer: TextContainer        = TextContainer(parent=p, labelText=_('Default Name'))
-        classWidthHeight:   DimensionsContainer = DimensionsContainer(parent=p, displayText=_('Class Width/Height'), minValue=100, maxValue=300)
+        classNameContainer:       TextContainer       = TextContainer(parent=p, labelText=_('Default Name'), valueChangedCallback=self.__classNameChanged)
+        classDimensionsContainer: DimensionsContainer = DimensionsContainer(parent=p, displayText=_('Class Width/Height'), valueChangedCallback=self.__classDimensionsChanged)
 
         szrClass.Add(classNameContainer, 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-        szrClass.Add(classWidthHeight,   0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
+        szrClass.Add(classDimensionsContainer,   0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
 
-        self._classWidthHeight = szrClass
+        self._classNameContainer       = classNameContainer
+        self._classDimensionsContainer = classDimensionsContainer
 
         p.SetSizer(szrClass)
         p.Fit()
@@ -195,10 +193,10 @@ class ValuePreferencesBook(Toolbook):
         # szrNames: StaticBoxSizer = self.__createStaticBoxSizer(_('Default Names'), direction=VERTICAL)
         szrNames: BoxSizer = BoxSizer(VERTICAL)
 
-        interfaceNameContainer: TextContainer = TextContainer(parent=p, labelText=_('Interface Name'))
-        useCaseNameContainer:   TextContainer = TextContainer(parent=p, labelText=_('Use Case Name'))
-        actorNameContainer:     TextContainer = TextContainer(parent=p, labelText=_('Actor Name'))
-        methodNameContainer:    TextContainer = TextContainer(parent=p, labelText=_('Method Name'))
+        interfaceNameContainer: TextContainer = TextContainer(parent=p, labelText=_('Interface Name'), valueChangedCallback=self.__interfaceNameChanged)
+        useCaseNameContainer:   TextContainer = TextContainer(parent=p, labelText=_('Use Case Name'),  valueChangedCallback=self.__useCaseNameChanged)
+        actorNameContainer:     TextContainer = TextContainer(parent=p, labelText=_('Actor Name'),     valueChangedCallback=self.__actorNameChanged)
+        methodNameContainer:    TextContainer = TextContainer(parent=p, labelText=_('Method Name'),    valueChangedCallback=self.__methodNameChanged)
 
         szrNames.Add(interfaceNameContainer, 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
         szrNames.Add(useCaseNameContainer,   0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
@@ -221,3 +219,27 @@ class ValuePreferencesBook(Toolbook):
         sBoxSizer: StaticBoxSizer = StaticBoxSizer(box, direction.value)
 
         return sBoxSizer
+
+    def __noteTextChanged(self, newValue: str):
+        self._preferences.noteText = newValue
+
+    def __noteDimensionsChanged(self, newValue: Dimensions):
+        self._preferences.noteDimensions = newValue
+
+    def __classNameChanged(self, newValue: str):
+        self._preferences.className = newValue
+
+    def __classDimensionsChanged(self, newValue: Dimensions):
+        self._preferences.classDimensions = newValue
+
+    def __interfaceNameChanged(self, newValue: str):
+        pass
+
+    def __useCaseNameChanged(self, newValue: str):
+        pass
+
+    def __actorNameChanged(self, newValue: str):
+        pass
+
+    def __methodNameChanged(self, newValue: str):
+        pass

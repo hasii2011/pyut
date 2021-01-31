@@ -1,6 +1,7 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import Callable
 
 from wx import ALL
 from wx import EVT_SPINCTRL
@@ -17,32 +18,37 @@ from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.preferences.Dimensions import Dimensions
 
+from org.pyut.dialogs.preferences.WriteOnlyPropertyException import WriteOnlyPropertyException
+
 SPINNER_WIDTH:  int = 30
 SPINNER_HEIGHT: int = 50
-
-DEFAULT_MIN_VALUE: int = 100    # For the control only
-DEFAULT_MAX_VALUE: int = 250    # For the control only
 
 
 class DimensionsContainer(StaticBoxSizer):
 
-    HORIZONTAL_GAP: int = 5
+    HORIZONTAL_GAP:    int = 5
+    DEFAULT_MIN_VALUE: int = 100  # For the control only
+    DEFAULT_MAX_VALUE: int = 300  # For the control only
 
     """
     Create a container that displays a pair of spinners that correspond
     to a width and a height of some visual object
     """
 
-    def __init__(self, parent: Window, displayText: str, minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE):
+    def __init__(self, parent: Window, displayText: str, valueChangedCallback: Callable, minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE):
         """
 
         Args:
             parent          The parent window
             displayText:    The text to display as the static box title
+            valueChangedCallback:  The method to call when the value changes;  The method should expect the
+            first parameter to be a Dimension argument that is the new value
             minValue:       The minimum value for the width/height
             maxValue:       The maximum value for the width/height
+
         """
-        self.logger: Logger = getLogger(__name__)
+        self.logger:    Logger   = getLogger(__name__)
+        self._callback: Callable = valueChangedCallback
 
         box: StaticBox = StaticBox(parent, ID_ANY, displayText)
 
@@ -63,13 +69,11 @@ class DimensionsContainer(StaticBoxSizer):
         parent.Bind(EVT_SPINCTRL, self._onSpinnerValueChanged, id=self._wxWidthId)
         parent.Bind(EVT_SPINCTRL, self._onSpinnerValueChanged, id=self._wxHeightId)
 
-        self._valueChanged: bool = False
-
         self._dimensions: Dimensions = Dimensions()
 
     @property
     def dimensions(self) -> Dimensions:
-        return self._dimensions
+        raise WriteOnlyPropertyException('You can only set the value')
 
     @dimensions.setter
     def dimensions(self, newValue: Dimensions):
@@ -78,20 +82,16 @@ class DimensionsContainer(StaticBoxSizer):
         self._scWidth.SetValue(newValue.width)
         self._scHeight.SetValue(newValue.height)
 
-    @property
-    def valueChanged(self) -> bool:
-        return self._valueChanged
-
     def _onSpinnerValueChanged(self, event: SpinEvent):
 
         eventId:  int = event.GetId()
         newValue: int = event.GetInt()
 
         if eventId == self._wxWidthId:
-            self._widthValue   = newValue
-            self._valueChanged = True
+            self._dimensions.width   = newValue
         elif eventId == self._wxHeightId:
-            self._heightValue  = newValue
-            self._valueChanged = True
+            self._dimensions.height = newValue
         else:
             self.logger.error(f'Unknown height/width event id: {eventId}')
+
+        self._callback(self._dimensions)

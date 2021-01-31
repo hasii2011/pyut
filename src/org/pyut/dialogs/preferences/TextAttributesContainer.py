@@ -25,6 +25,7 @@ from org.pyut.dialogs.preferences.TextFontEnum import TextFontEnum
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
+from org.pyut.preferences.Dimensions import Dimensions
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
@@ -50,7 +51,7 @@ class TextAttributesContainer(Panel):
 
         szrText: BoxSizer = BoxSizer(VERTICAL)
 
-        self._textDimensions: DimensionsContainer = DimensionsContainer(parent=self, displayText=_('Text Width/Height'), minValue=100, maxValue=300)
+        self._textDimensions: DimensionsContainer = DimensionsContainer(parent=self, displayText=_('Text Width/Height'), valueChangedCallback=self._onTextDimensionsChanged)
 
         szrText.Add(self._textDimensions, 0, ALL, TextAttributesContainer.HORIZONTAL_GAP)
         szrText.Add(self.__createTextStyleContainer(parent=self), 0, ALL, TextAttributesContainer.HORIZONTAL_GAP)
@@ -75,6 +76,9 @@ class TextAttributesContainer(Panel):
         self._textDimensions.dimensions = self._preferences.textDimensions
         self._cbBoldText.SetValue(self._preferences.textBold)
         self._cbItalicizeText.SetValue(self._preferences.textItalicize)
+
+    def _onTextDimensionsChanged(self, newValue: Dimensions):
+        self._preferences.textDimensions = newValue
 
     def _onTextBoldValueChanged(self, event: CommandEvent):
 

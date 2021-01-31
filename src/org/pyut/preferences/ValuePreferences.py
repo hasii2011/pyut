@@ -12,15 +12,14 @@ class ValuePreferences(BaseSubPreference):
 
     VALUE_PREFERENCES_SECTION:         str = 'ValuePreferences'
 
-    NOTE_TEXT:       str = 'note_text'
-    NOTE_DIMENSIONS: str = 'note_dimensions'
-    TEXT_DIMENSIONS: str = 'text_dimensions'
-    TEXT_BOLD:       str = 'text_bold'
-    TEXT_ITALICIZE:  str = 'text_italicize'
-    TEXT_FONT:       str = 'text_font'
-    CLASS_NAME:      str = 'class_name'
-    CLASS_WIDTH:     str = 'class_width'
-    CLASS_HEIGHT:    str = 'class_height'
+    NOTE_TEXT:        str = 'note_text'
+    NOTE_DIMENSIONS:  str = 'note_dimensions'
+    TEXT_DIMENSIONS:  str = 'text_dimensions'
+    TEXT_BOLD:        str = 'text_bold'
+    TEXT_ITALICIZE:   str = 'text_italicize'
+    TEXT_FONT:        str = 'text_font'
+    CLASS_NAME:       str = 'class_name'
+    CLASS_DIMENSIONS: str = 'class_dimensions'
 
     DEFAULT_NAME_INTERFACE: str = 'default_name_interface'
     DEFAULT_NAME_USECASE:   str = 'default_name_usecase'
@@ -29,14 +28,13 @@ class ValuePreferences(BaseSubPreference):
 
     VALUE_PREFERENCES: PREFS_NAME_VALUES = {
         NOTE_TEXT:       'This is the note text',
-        NOTE_DIMENSIONS: Dimensions(100, 100).__str__(),
-        TEXT_DIMENSIONS: Dimensions(100, 120).__str__(),
-        TEXT_BOLD:       'False',
-        TEXT_ITALICIZE:  'False',
-        TEXT_FONT:      ' Swiss',
-        CLASS_NAME:      'ClassName',
-        CLASS_WIDTH:     '100',
-        CLASS_HEIGHT:    '100',
+        NOTE_DIMENSIONS:  Dimensions(100, 100).__str__(),
+        TEXT_DIMENSIONS:  Dimensions(100, 120).__str__(),
+        TEXT_BOLD:        'False',
+        TEXT_ITALICIZE:   'False',
+        TEXT_FONT:        ' Swiss',
+        CLASS_NAME:       'ClassName',
+        CLASS_DIMENSIONS: Dimensions(100, 100).__str__(),
         DEFAULT_NAME_INTERFACE: 'InterfaceName',
         DEFAULT_NAME_USECASE:   'UseCaseName',
         DEFAULT_NAME_ACTOR:     'ActorName',
@@ -105,6 +103,25 @@ class ValuePreferences(BaseSubPreference):
     @textFont.setter
     def textFont(self, newValue: str):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, str(newValue))
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def className(self) -> str:
+        return self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.CLASS_NAME)
+
+    @className.setter
+    def className(self, newValue: str):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.CLASS_NAME, str(newValue))
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def classDimensions(self) -> Dimensions:
+        serializedDimensions: str = self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.CLASS_DIMENSIONS)
+        return Dimensions.deSerialize(serializedDimensions)
+
+    @classDimensions.setter
+    def classDimensions(self, newValue: Dimensions):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.CLASS_DIMENSIONS, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
     def addMissingPreferences(self):

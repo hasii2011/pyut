@@ -418,6 +418,22 @@ class PyutPreferences(Singleton):
     def textFont(self, newValue: str):
         self._valuePrefs.textFont = newValue
 
+    @property
+    def className(self) -> str:
+        return self._valuePrefs.className
+
+    @className.setter
+    def className(self, newValue: str):
+        self._valuePrefs.className = newValue
+
+    @property
+    def classDimensions(self) -> Dimensions:
+        return self._valuePrefs.classDimensions
+
+    @classDimensions.setter
+    def classDimensions(self, newValue: Dimensions):
+        self._valuePrefs.classDimensions = newValue
+
     def __loadConfig(self):
         """
         Load preferences from configuration file
