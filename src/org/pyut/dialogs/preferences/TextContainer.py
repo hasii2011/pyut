@@ -19,6 +19,7 @@ from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 
 class TextContainer(BoxSizer):
     """
+    This container is generic 
     """
     HORIZONTAL_GAP: int = 3
 

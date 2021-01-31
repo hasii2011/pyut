@@ -410,6 +410,14 @@ class PyutPreferences(Singleton):
     def textItalicize(self, newValue: bool):
         self._valuePrefs.textItalicize = newValue
 
+    @property
+    def textFont(self):
+        return self._valuePrefs.textFont
+
+    @textFont.setter
+    def textFont(self, newValue: str):
+        self._valuePrefs.textFont = newValue
+
     def __loadConfig(self):
         """
         Load preferences from configuration file

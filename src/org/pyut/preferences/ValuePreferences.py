@@ -98,6 +98,15 @@ class ValuePreferences(BaseSubPreference):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_ITALICIZE, str(newValue))
         self._preferencesCommon.saveConfig()
 
+    @property
+    def textFont(self):
+        return self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT)
+
+    @textFont.setter
+    def textFont(self, newValue: str):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, str(newValue))
+        self._preferencesCommon.saveConfig()
+
     def addMissingPreferences(self):
 
         try:

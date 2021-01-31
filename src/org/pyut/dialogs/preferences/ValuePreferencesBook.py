@@ -7,15 +7,8 @@ from logging import getLogger
 
 from wx import ALL
 from wx import BK_DEFAULT
-from wx import CB_READONLY
-from wx import CheckBox
-from wx import ComboBox
-from wx import CommandEvent
-from wx import EVT_CHECKBOX
-from wx import EVT_COMBOBOX
-from wx import HORIZONTAL
+
 from wx import ID_ANY
-from wx import RadioButton
 from wx import StaticBox
 
 from wx import Bitmap
@@ -29,12 +22,11 @@ from wx import Window
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-from org.pyut.PyutUtils import PyutUtils
+from org.pyut.dialogs.preferences.TextAttributesContainer import TextAttributesContainer
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.dialogs.preferences.DirectionEnum import DirectionEnum
 from org.pyut.dialogs.preferences.TextContainer import TextContainer
-from org.pyut.dialogs.preferences.TextFontEnum import TextFontEnum
 from org.pyut.dialogs.preferences.DimensionsContainer import DimensionsContainer
 
 from org.pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
@@ -69,18 +61,11 @@ class ValuePreferencesBook(Toolbook):
         #
         # Controls we are going to create
         #
-        self._noteTextContainer: TextContainer        = cast(TextContainer, None)
-        self._noteDimensions:    DimensionsContainer = cast(DimensionsContainer, None)
+        self._noteTextContainer: TextContainer           = cast(TextContainer, None)
+        self._noteDimensions:    DimensionsContainer     = cast(DimensionsContainer, None)
+        self._textPanel:         TextAttributesContainer = cast(TextAttributesContainer, None)
 
-        # Declare controls we need access to and will be created by the createXXXControls methods
-        [self._cbBoldTextId, self._cbItalicizeTextId, self._cbxFontSelectionId] = PyutUtils.assignID(3)
-
-        self._textDimensions:   DimensionsContainer = cast(DimensionsContainer, None)
-        self._cbBoldText:       RadioButton   = cast(RadioButton, None)
-        self._cbItalicizeText:  RadioButton   = cast(RadioButton, None)
-        self._cbxFontSelection: ComboBox      = cast(ComboBox, None)
-
-        self._classNameContainer:  TextContainer        = cast(TextContainer, None)
+        self._classNameContainer:  TextContainer       = cast(TextContainer, None)
         self._classWidthHeight:    DimensionsContainer = cast(DimensionsContainer, None)
 
         self._interfaceNameContainer: TextContainer = cast(TextContainer, None)
@@ -89,7 +74,6 @@ class ValuePreferencesBook(Toolbook):
         self._methodNameContainer:    TextContainer = cast(TextContainer, None)
 
         self._createControls()
-        self._BindControls()
         self._setControlValues()
 
         self._valueChanged: bool = False
@@ -106,9 +90,6 @@ class ValuePreferencesBook(Toolbook):
         if self._noteDimensions.valueChanged is True:
             self._valueChanged = True
             self._preferences.noteDimensions = self._noteDimensions.dimensions
-        if self._textDimensions.valueChanged is True:
-            self._valueChanged = True
-            self._preferences.textDimensions = self._textDimensions.dimensions
 
         return self._valueChanged
 
@@ -126,7 +107,7 @@ class ValuePreferencesBook(Toolbook):
         imageIdGenerator = getNextImageID(imageList.GetImageCount())
 
         notePanel:         Panel = self.__createNoteControls()
-        textPanel:         Panel = self.__createTextControls()
+        textPanel:         TextAttributesContainer = self.__createTextControls()
         classPanel:        Panel = self.__createClassControls()
         defaultNamesPanel: Panel = self.__createDefaultNameControls()
 
@@ -135,44 +116,19 @@ class ValuePreferencesBook(Toolbook):
         self.AddPage(classPanel,        text='Class', select=False, imageId=next(imageIdGenerator))
         self.AddPage(defaultNamesPanel, text='Names', select=False, imageId=next(imageIdGenerator))
 
-    def _BindControls(self):
+    def _bindControls(self):
 
-        self.Bind(EVT_CHECKBOX, self._onTextBoldValueChanged,      id=self._cbBoldTextId)
-        self.Bind(EVT_CHECKBOX, self._onTextItalicizeValueChanged, id=self._cbItalicizeTextId)
-
-        self.Bind(EVT_COMBOBOX, self._onFontSelectionChanged, id=self._cbxFontSelectionId)
+        pass
+        # self.Bind(EVT_CHECKBOX, self._onTextBoldValueChanged,      id=self._cbBoldTextId)
+        # self.Bind(EVT_CHECKBOX, self._onTextItalicizeValueChanged, id=self._cbItalicizeTextId)
+        #
+        # self.Bind(EVT_COMBOBOX, self._onFontSelectionChanged, id=self._cbxFontSelectionId)
 
     def _setControlValues(self):
         """
         Set the default values on the controls.
         """
         self._noteTextContainer.textValue = self._preferences.noteText
-        self._noteDimensions.dimensions   = self._preferences.noteDimensions
-
-        self._textDimensions.dimensions  = self._preferences.textDimensions
-        self._cbBoldText.SetValue(self._preferences.textBold)
-        self._cbItalicizeText.SetValue(self._preferences.textItalicize)
-
-    def _onTextBoldValueChanged(self, event: CommandEvent):
-
-        val: bool = event.IsChecked()
-
-        self._valueChanged = True
-        self._preferences.textBold = val
-
-    def _onTextItalicizeValueChanged(self, event: CommandEvent):
-
-        val: bool = event.IsChecked()
-        self._valueChanged = True
-        self._preferences.textItalicize = val
-
-    def _onFontSelectionChanged(self, event: CommandEvent):
-
-        newFontName: str = event.GetString()
-        self._valueChanged = True
-        self.logger.warning(f'Font name change: `{newFontName}`')
-
-        event.Skip(True)
 
     def __createNoteControls(self) -> Panel:
 
@@ -206,44 +162,13 @@ class ValuePreferencesBook(Toolbook):
 
         return noteWidthHeight
 
-    def __createTextControls(self) -> Panel:
+    def __createTextControls(self) -> TextAttributesContainer:
 
-        p: Panel = Panel(self, ID_ANY)
-        # szrText: StaticBoxSizer = self.__createStaticBoxSizer(_('Text'), direction=VERTICAL)
-        szrText: BoxSizer = BoxSizer(VERTICAL)
+        textPanel:         TextAttributesContainer = TextAttributesContainer(parent=self)
 
-        self._textDimensions: DimensionsContainer = DimensionsContainer(parent=p, displayText=_('Text Width/Height'), minValue=100, maxValue=300)
+        self._textPanel: TextAttributesContainer = textPanel
 
-        szrText.Add(self._textDimensions, 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-        szrText.Add(self.__createTextStyleContainer(parent=p), 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-        szrText.Add(self.__createTextFontSelector(parent=p),   0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-
-        p.SetSizer(szrText)
-        p.Fit()
-
-        return p
-
-    def __createTextStyleContainer(self, parent: Window) -> BoxSizer:
-
-        styleContainer: BoxSizer = BoxSizer(HORIZONTAL)
-
-        self._cbBoldText:      CheckBox = CheckBox(parent=parent, id=self._cbBoldTextId, label=_('Bold Text'))
-        self._cbItalicizeText: CheckBox = CheckBox(parent=parent, id=self._cbItalicizeTextId, label=_('Italicize Text'))
-
-        styleContainer.Add(self._cbBoldText, 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-        styleContainer.Add(self._cbItalicizeText, 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-
-        return styleContainer
-
-    def __createTextFontSelector(self, parent: Window) -> ComboBox:
-
-        fontChoices = []
-        for fontName in TextFontEnum:
-            fontChoices.append(fontName.value)
-
-        self._cbxFontSelection: ComboBox = ComboBox(parent, self._cbxFontSelectionId, choices=fontChoices, style=CB_READONLY)
-
-        return self._cbxFontSelection
+        return textPanel
 
     def __createClassControls(self) -> Panel:
 
