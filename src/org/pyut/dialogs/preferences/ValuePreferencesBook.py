@@ -27,9 +27,9 @@ from org.pyut.dialogs.preferences.TextAttributesContainer import TextAttributesC
 from org.pyut.preferences.Dimensions import Dimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.dialogs.preferences.DirectionEnum import DirectionEnum
-from org.pyut.dialogs.preferences.TextContainer import TextContainer
-from org.pyut.dialogs.preferences.DimensionsContainer import DimensionsContainer
+from org.pyut.dialogs.preferences.widgets.DirectionEnum import DirectionEnum
+from org.pyut.dialogs.preferences.widgets.TextContainer import TextContainer
+from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
 
 from org.pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
 

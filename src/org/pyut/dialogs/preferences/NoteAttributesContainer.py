@@ -9,8 +9,8 @@ from wx import Panel
 from wx import VERTICAL
 from wx import Window
 
-from org.pyut.dialogs.preferences.DimensionsContainer import DimensionsContainer
-from org.pyut.dialogs.preferences.TextContainer import TextContainer
+from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
+from org.pyut.dialogs.preferences.widgets.TextContainer import TextContainer
 
 from org.pyut.preferences.Dimensions import Dimensions
 

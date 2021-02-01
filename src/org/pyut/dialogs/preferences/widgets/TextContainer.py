@@ -15,7 +15,7 @@ from wx import Window
 
 from wx import NewIdRef as wxNewIdRef
 
-from org.pyut.dialogs.preferences import WriteOnlyPropertyException
+from org.pyut.dialogs.preferences.WriteOnlyPropertyException import WriteOnlyPropertyException
 from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 
 

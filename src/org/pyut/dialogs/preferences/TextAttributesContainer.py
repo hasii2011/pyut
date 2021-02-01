@@ -19,8 +19,8 @@ from wx import Window
 from wx import CheckBox
 from wx import ComboBox
 
-from org.pyut.dialogs.preferences.DimensionsContainer import DimensionsContainer
-from org.pyut.dialogs.preferences.TextFontEnum import TextFontEnum
+from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
+from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 
 from org.pyut.PyutUtils import PyutUtils
 
