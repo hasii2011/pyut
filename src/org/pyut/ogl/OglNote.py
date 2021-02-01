@@ -11,12 +11,13 @@ from wx import DC
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.general.LineSplitter import LineSplitter
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class OglNote(OglObject):
     """
-    OGL object that represents a UML note in diagrams.
-    This class defines OGL object that represents a note. A note may be linked
+    This is an OGL object that represents a UML note in diagrams.
+    A note may be linked
     with all links except Inheritance and Interface.
 
     For more instructions about how to create an OGL object, please refer
@@ -25,22 +26,32 @@ class OglNote(OglObject):
 
     MARGIN: int = 10
 
-    def __init__(self, pyutNote=None, w=100, h=50):     # TODO make default note size a preference
+    def __init__(self, pyutNote=None, w: int = 0, h: int = 0):
         """
-        Constructor.
 
-        @param pyutNote : a PyutNote object
-        @param  w : Width of the shape
-        @param  h : Height of the shape
-        @since 1.0
-        @author Philippe Waelti<pwaelti@eivd.ch>
+        Args:
+            pyutNote:   A PyutNote Object
+            w:          Default width override
+            h:          Default height override
         """
+
         # Init pyutObject (coming from OglObject)
         if pyutNote is None:
             pyutObject = PyutNote()
         else:
             pyutObject = pyutNote
-        super().__init__(pyutObject, w, h)
+
+        width:  int = w
+        height: int = h
+        prefs: PyutPreferences = PyutPreferences()
+        if width == 0:
+            width = prefs.noteDimensions.width
+        if height == 0:
+            height = prefs.noteDimensions.height
+
+        del prefs
+
+        super().__init__(pyutObject, width, height)
 
         self.logger: Logger = getLogger(__name__)
         self.SetBrush(Brush(Colour(255, 255, 230)))
