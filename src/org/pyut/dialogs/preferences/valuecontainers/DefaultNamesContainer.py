@@ -21,9 +21,7 @@ class DefaultNamesContainer(Panel):
 
         super().__init__(parent, ID_ANY)
         self._preferences: PyutPreferences = PyutPreferences()
-        #
-        # Controls we are going to create
-        #
+
         szrNames: BoxSizer = BoxSizer(VERTICAL)
 
         interfaceNameContainer: TextContainer = TextContainer(parent=self, labelText=_('Interface Name'), valueChangedCallback=self._interfaceNameChanged)

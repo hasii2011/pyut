@@ -46,8 +46,9 @@ class TextAttributesContainer(Panel):
         self.logger:       Logger          = getLogger(__name__)
         self._preferences: PyutPreferences = PyutPreferences()
 
-        self._cbBoldText:      CheckBox = cast(CheckBox, None)
-        self._cbItalicizeText: CheckBox = cast(CheckBox, None)
+        self._cbBoldText:       CheckBox = cast(CheckBox, None)
+        self._cbItalicizeText:  CheckBox = cast(CheckBox, None)
+        self._cbxFontSelection: ComboBox = cast(ComboBox, None)
 
         szrText: BoxSizer = BoxSizer(VERTICAL)
 
@@ -76,6 +77,7 @@ class TextAttributesContainer(Panel):
         self._textDimensions.dimensions = self._preferences.textDimensions
         self._cbBoldText.SetValue(self._preferences.textBold)
         self._cbItalicizeText.SetValue(self._preferences.textItalicize)
+        self._cbxFontSelection.SetValue(self._preferences.textFont)
 
     def _onTextDimensionsChanged(self, newValue: Dimensions):
         self._preferences.textDimensions = newValue
