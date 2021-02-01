@@ -22,6 +22,7 @@ from wx import Window
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
+from org.pyut.dialogs.preferences.NoteAttributesContainer import NoteAttributesContainer
 from org.pyut.dialogs.preferences.TextAttributesContainer import TextAttributesContainer
 from org.pyut.preferences.Dimensions import Dimensions
 
@@ -62,10 +63,6 @@ class ValuePreferencesBook(Toolbook):
         #
         # Controls we are going to create
         #
-        self._noteTextContainer: TextContainer           = cast(TextContainer, None)
-        self._noteDimensions:    DimensionsContainer     = cast(DimensionsContainer, None)
-        self._textPanel:         TextAttributesContainer = cast(TextAttributesContainer, None)
-
         self._classNameContainer: TextContainer       = cast(TextContainer, None)
         self._classDimensionsContainer:    DimensionsContainer = cast(DimensionsContainer, None)
 
@@ -100,8 +97,8 @@ class ValuePreferencesBook(Toolbook):
 
         imageIdGenerator = getNextImageID(imageList.GetImageCount())
 
-        notePanel:         Panel = self.__createNoteControls()
-        textPanel:         TextAttributesContainer = self.__createTextControls()
+        notePanel:         NoteAttributesContainer = NoteAttributesContainer(parent=self)
+        textPanel:         TextAttributesContainer = TextAttributesContainer(parent=self)
         classPanel:        Panel = self.__createClassControls()
         defaultNamesPanel: Panel = self.__createDefaultNameControls()
 
@@ -122,51 +119,11 @@ class ValuePreferencesBook(Toolbook):
         """
         Set the default values on the controls.
         """
-        self._noteTextContainer.textValue  = self._preferences.noteText
-        self._noteDimensions.dimensions    = self._preferences.noteDimensions
+        # self._noteTextContainer.textValue  = self._preferences.noteText
+        # self._noteDimensions.dimensions    = self._preferences.noteDimensions
 
         self._classNameContainer.textValue        = self._preferences.className
         self._classDimensionsContainer.dimensions = self._preferences.classDimensions
-
-    def __createNoteControls(self) -> Panel:
-
-        p:        Panel    = Panel(self, ID_ANY)
-        szrNotes: BoxSizer = BoxSizer(VERTICAL)
-
-        szrDefaultNoteText: BoxSizer             = self.__createDefaultNoteTextContainer(parent=p)
-        szrNoteSize:        DimensionsContainer = self.__createDefaultNoteSizeContainer(parent=p)
-
-        szrNotes.Add(szrDefaultNoteText, 0, ALL, ValuePreferencesBook.VERTICAL_GAP)
-        szrNotes.Add(szrNoteSize,        0, ALL, ValuePreferencesBook.VERTICAL_GAP)
-
-        p.SetSizer(szrNotes)
-        p.Fit()
-
-        return p
-
-    def __createDefaultNoteTextContainer(self, parent: Window) -> TextContainer:
-
-        noteTextContainer: TextContainer = TextContainer(parent=parent, labelText=_('Default Note Text'), valueChangedCallback=self.__noteTextChanged)
-
-        self._noteTextContainer = noteTextContainer
-
-        return noteTextContainer
-
-    def __createDefaultNoteSizeContainer(self, parent: Window) -> DimensionsContainer:
-
-        noteWidthHeight:  DimensionsContainer = DimensionsContainer(parent=parent, displayText=_('Note Width/Height'), valueChangedCallback=self.__noteDimensionsChanged)
-
-        self._noteDimensions = noteWidthHeight
-
-        return noteWidthHeight
-
-    def __createTextControls(self) -> TextAttributesContainer:
-
-        textPanel: TextAttributesContainer = TextAttributesContainer(parent=self)
-
-        self._textPanel: TextAttributesContainer = textPanel
-
-        return textPanel
 
     def __createClassControls(self) -> Panel:
 
@@ -219,12 +176,6 @@ class ValuePreferencesBook(Toolbook):
         sBoxSizer: StaticBoxSizer = StaticBoxSizer(box, direction.value)
 
         return sBoxSizer
-
-    def __noteTextChanged(self, newValue: str):
-        self._preferences.noteText = newValue
-
-    def __noteDimensionsChanged(self, newValue: Dimensions):
-        self._preferences.noteDimensions = newValue
 
     def __classNameChanged(self, newValue: str):
         self._preferences.className = newValue
