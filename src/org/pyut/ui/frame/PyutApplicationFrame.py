@@ -11,7 +11,6 @@ from os import getcwd
 from sys import platform as sysPlatform
 
 from wx import ACCEL_CTRL
-from wx import ActivateEvent
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
@@ -19,11 +18,11 @@ from wx import EVT_CLOSE
 from wx import FRAME_EX_METAL
 from wx import EVT_ACTIVATE
 
+from wx import ActivateEvent
 from wx import AcceleratorEntry
 from wx import CommandEvent
 from wx import Frame
 from wx import NewIdRef
-
 from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
@@ -32,6 +31,7 @@ from wx import Window
 
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.PyutProject import PyutProject
+from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
@@ -50,8 +50,8 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.preferences.Dimensions import Dimensions
 
-from org.pyut.ui.Mediator import Mediator
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager should not be in plugins directory
@@ -78,7 +78,7 @@ class PyutApplicationFrame(Frame):
         """
         self._prefs: PyutPreferences = PyutPreferences()
 
-        appSize: Size = Size(self._prefs.startupWidth, self._prefs.startupHeight)
+        appSize: Size = Size(self._prefs.startupDimensions.width, self._prefs.startupDimensions.height)
 
         super().__init__(parent=parent, id=wxID, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
 
@@ -173,8 +173,9 @@ class PyutApplicationFrame(Frame):
                 self._prefs.appStartupPosition = pos
 
             ourSize: Tuple[int, int] = self.GetSize()
-            self._prefs.startupWidth  = ourSize[0]
-            self._prefs.startupHeight = ourSize[1]
+            # self._prefs.startupWidth  = ourSize[0]
+            # self._prefs.startupHeight = ourSize[1]
+            self._prefs.startupDimensions = Dimensions(ourSize[0], ourSize[1])
 
         self._clipboard    = None
         self._treeNotebookHandler = None

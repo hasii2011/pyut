@@ -4,6 +4,7 @@ from logging import getLogger
 
 from typing import Tuple
 
+from org.pyut.preferences.Dimensions import Dimensions
 from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 
@@ -27,8 +28,7 @@ class MainPreferences(BaseSubPreference):
     I18N:                       str = 'I18N'
     CURRENT_TIP:                str = 'Current_Tip'
     EDITOR:                     str = 'Editor'
-    STARTUP_WIDTH:              str = 'startup_width'
-    STARTUP_HEIGHT:             str = 'startup_height'
+    STARTUP_DIMENSIONS:         str = 'startup_dimensions'
     CENTER_DIAGRAM:             str = 'center_diagram'
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
     STARTUP_X:                  str = 'startup_x'
@@ -47,8 +47,7 @@ class MainPreferences(BaseSubPreference):
         I18N:                      'en',       # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
         CURRENT_TIP:               '0',
         EDITOR:                    'brackets',
-        STARTUP_WIDTH:             '1024',
-        STARTUP_HEIGHT:            '768',
+        STARTUP_DIMENSIONS:        Dimensions(1024, 768).__str__(),
         CENTER_DIAGRAM:            'False',
         CENTER_APP_ON_STARTUP:     'True',
         STARTUP_X:                 '-1',
@@ -168,21 +167,14 @@ class MainPreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def startupWidth(self) -> int:
-        return self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_WIDTH)
+    def startupDimensions(self) -> Dimensions:
 
-    @startupWidth.setter
-    def startupWidth(self, newWidth: int):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_WIDTH, str(newWidth))
-        self._preferencesCommon.saveConfig()
+        serializedDimensions: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_DIMENSIONS)
+        return Dimensions.deSerialize(serializedDimensions)
 
-    @property
-    def startupHeight(self) -> int:
-        return self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_HEIGHT)
-
-    @startupHeight.setter
-    def startupHeight(self, newHeight: int):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_HEIGHT, str(newHeight))
+    @startupDimensions.setter
+    def startupDimensions(self, newValue: Dimensions):
+        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_DIMENSIONS, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
     @property

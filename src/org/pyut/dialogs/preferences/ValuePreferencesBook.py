@@ -1,11 +1,7 @@
 
 from typing import List
 
-from logging import Logger
-from logging import getLogger
-
 from wx import BK_DEFAULT
-
 
 from wx import Bitmap
 from wx import ImageList
@@ -18,8 +14,6 @@ from org.pyut.dialogs.preferences.valuecontainers.ClassContainer import ClassCon
 from org.pyut.dialogs.preferences.valuecontainers.DefaultNamesContainer import DefaultNamesContainer
 from org.pyut.dialogs.preferences.valuecontainers.NoteAttributesContainer import NoteAttributesContainer
 from org.pyut.dialogs.preferences.valuecontainers.TextAttributesContainer import TextAttributesContainer
-
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
 
@@ -45,9 +39,6 @@ class ValuePreferencesBook(Toolbook):
     def __init__(self, parent: Window, wxId: int):
 
         super().__init__(parent, wxId, style=BK_DEFAULT)
-
-        self.logger:       Logger          = getLogger(__name__)
-        self._preferences: PyutPreferences = PyutPreferences()
 
         self._createControls()
 

@@ -74,9 +74,9 @@ class DlgPyutPreferences(Dialog):
             wxId:
         """
         super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE, size=Size(width=400, height=320))
-        # super().__init__(parent, wxId, _("Preferences"), style=DEFAULT_DIALOG_STYLE)
-        self.logger:    Logger          = getLogger(__name__)
-        self.__prefs:   PyutPreferences = PyutPreferences()
+
+        self.logger:  Logger          = getLogger(__name__)
+        self.__prefs: PyutPreferences = PyutPreferences()
 
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
@@ -134,7 +134,6 @@ class DlgPyutPreferences(Dialog):
     def __OnCmdOk(self, event: CommandEvent):
 
         self.__potentiallyDisplayInfoMessage()
-        self._valuePreferences.updatePreferences()
 
         self.EndModal(OK)
         event.Skip(skip=True)

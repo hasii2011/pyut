@@ -5,13 +5,13 @@ from logging import Logger
 from logging import getLogger
 
 from wx import ALL
-from wx import CommandEvent
 from wx import EVT_CHECKBOX
 from wx import EVT_SPINCTRL
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import VERTICAL
 
+from wx import CommandEvent
 from wx import SpinCtrl
 from wx import SpinEvent
 from wx import StaticBox
@@ -21,10 +21,13 @@ from wx import CheckBox
 from wx import Window
 
 from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
+from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
 
-from org.pyut.PyutUtils import PyutUtils
+from org.pyut.preferences.Dimensions import Dimensions
 
 from org.pyut.general.Globals import _
+
+from org.pyut.PyutUtils import PyutUtils
 
 
 class PositioningPreferences(PreferencesPanel):
@@ -76,17 +79,28 @@ class PositioningPreferences(PreferencesPanel):
         self.SetAutoLayout(True)
         self.SetSizer(mainSizer)
 
+    def _setControlValues(self):
+        """
+        Set the position controls based on the value of appropriate preference value
+        """
+        if self._prefs.centerAppOnStartUp is True:
+            self.__scAppPosX.Disable()
+            self.__scAppPosY.Disable()
+            self.__cbCenterAppOnStartup.SetValue(True)
+        else:
+            self.__scAppPosX.Enable()
+            self.__scAppPosY.Enable()
+            self.__cbCenterAppOnStartup.SetValue(False)
+
+        self._appDimensionsContainer.dimensions = self._prefs.startupDimensions
+
     def __onSpinnerValueChanged(self, event: SpinEvent):
 
         self.__changed = True
         eventId:  int = event.GetId()
         newValue: int = event.GetInt()
 
-        if eventId == self.__scAppWidthID:
-            self._prefs.startupWidth = newValue
-        elif eventId == self.__scAppHeightID:
-            self._prefs.startupHeight = newValue
-        elif eventId == self.__scAppPosXID:
+        if eventId == self.__scAppPosXID:
             oldValue:    Tuple[int, int] = self._prefs.appStartupPosition
             newPosition: Tuple[int, int] = (newValue, oldValue[1])
             self._prefs.appStartupPosition = newPosition
@@ -137,38 +151,13 @@ class PositioningPreferences(PreferencesPanel):
 
     def __createAppSizeControls(self) -> StaticBoxSizer:
 
-        scAppWidth  = SpinCtrl(self, self.__scAppWidthID,  "", (30, 50))
-        scAppHeight = SpinCtrl(self, self.__scAppHeightID, "", (30, 50))
+        self._appDimensionsContainer: DimensionsContainer = DimensionsContainer(parent=self, displayText=_("Startup Width/Height"),
+                                                                                minValue=480, maxValue=4096,
+                                                                                valueChangedCallback=self.__appSizeChanged)
+        return self._appDimensionsContainer
 
-        scAppWidth.SetRange(960, 4096)
-        scAppHeight.SetRange(480, 4096)
-
-        box:        StaticBox = StaticBox(self, ID_ANY, _("Startup Width/Height"))
-        szrAppSize: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
-
-        szrAppSize.Add(scAppWidth,  0, ALL, PositioningPreferences.HORIZONTAL_GAP)
-        szrAppSize.Add(scAppHeight, 0, ALL, PositioningPreferences.HORIZONTAL_GAP)
-
-        self.__scAppWidth  = scAppWidth
-        self.__scAppHeight = scAppHeight
-
-        return szrAppSize
-
-    def _setControlValues(self):
-        """
-        Set the position controls based on the value of appropriate preference value
-        """
-        if self._prefs.centerAppOnStartUp is True:
-            self.__scAppPosX.Disable()
-            self.__scAppPosY.Disable()
-            self.__cbCenterAppOnStartup.SetValue(True)
-        else:
-            self.__scAppPosX.Enable()
-            self.__scAppPosY.Enable()
-            self.__cbCenterAppOnStartup.SetValue(False)
-
-        self.__scAppWidth.SetValue(self._prefs.startupWidth)
-        self.__scAppHeight.SetValue(self._prefs.startupHeight)
+    def __appSizeChanged(self, newValue: Dimensions):
+        self._prefs.startupDimensions = newValue
 
     def __enablePositionControls(self, newValue: bool):
         """

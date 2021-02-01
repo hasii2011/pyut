@@ -275,20 +275,12 @@ class PyutPreferences(Singleton):
         self._mainPrefs.editor = theNewValue
 
     @property
-    def startupWidth(self) -> int:
-        return self._mainPrefs.startupWidth
+    def startupDimensions(self) -> Dimensions:
+        return self._mainPrefs.startupDimensions
 
-    @startupWidth.setter
-    def startupWidth(self, newWidth: int):
-        self._mainPrefs.startupWidth = newWidth
-
-    @property
-    def startupHeight(self) -> int:
-        return self._mainPrefs.startupHeight
-
-    @startupHeight.setter
-    def startupHeight(self, newHeight: int):
-        self._mainPrefs.startupHeight = newHeight
+    @startupDimensions.setter
+    def startupDimensions(self, newValue: Dimensions):
+        self._mainPrefs.startupDimensions = newValue
 
     @property
     def showParameters(self) -> bool:
