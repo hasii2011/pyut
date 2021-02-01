@@ -22,8 +22,8 @@ from wx import Window
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-from org.pyut.dialogs.preferences.NoteAttributesContainer import NoteAttributesContainer
-from org.pyut.dialogs.preferences.TextAttributesContainer import TextAttributesContainer
+from org.pyut.dialogs.preferences.valuecontainers.NoteAttributesContainer import NoteAttributesContainer
+from org.pyut.dialogs.preferences.valuecontainers.TextAttributesContainer import TextAttributesContainer
 from org.pyut.preferences.Dimensions import Dimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences

@@ -18,7 +18,7 @@ from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.preferences.Dimensions import Dimensions
 
-from org.pyut.dialogs.preferences.WriteOnlyPropertyException import WriteOnlyPropertyException
+from org.pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
 
 SPINNER_WIDTH:  int = 30
 SPINNER_HEIGHT: int = 50
