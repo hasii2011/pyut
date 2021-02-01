@@ -29,7 +29,7 @@ class ValuePreferences(BaseSubPreference):
     VALUE_PREFERENCES: PREFS_NAME_VALUES = {
         NOTE_TEXT:       'This is the note text',
         NOTE_DIMENSIONS:  Dimensions(100, 50).__str__(),
-        TEXT_DIMENSIONS:  Dimensions(100, 120).__str__(),
+        TEXT_DIMENSIONS:  Dimensions(125, 50).__str__(),
         TEXT_BOLD:        'False',
         TEXT_ITALICIZE:   'False',
         TEXT_FONT:        ' Swiss',

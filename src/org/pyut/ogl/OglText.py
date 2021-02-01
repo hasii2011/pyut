@@ -27,6 +27,7 @@ from org.pyut.model.PyutText import PyutText
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
 from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
@@ -48,19 +49,43 @@ class OglText(OglObject):
     """
     MARGIN: int = 5
 
-    def __init__(self, pyutText: PyutText, width: int = 125, height: int = 50):    # TODO make default text size a preference
+    def __init__(self, pyutText: PyutText, width: int = 0, height: int = 0):    # TODO make default text size a preference
         """
         Args:
             pyutText:   Associated PyutText instance
             width:      Initial width
             height:     Initial height
         """
-        super().__init__(pyutObject=pyutText, width=width, height=height)
+        w: int = width
+        h: int = height
+
+        prefs: PyutPreferences = PyutPreferences()
+        if width == 0:
+            w = prefs.noteDimensions.width
+        if height == 0:
+            h = prefs.noteDimensions.height
+
+        super().__init__(pyutObject=pyutText, width=w, height=h)
 
         self.logger: Logger = getLogger(__name__)
 
         self._drawFrame: bool = False
         self._textFont:  Font = self._defaultFont.GetBaseFont()
+
+        if prefs.textBold is True:
+            self._textFont.SetWeight(FONTWEIGHT_BOLD)
+            pyutText.isBold = True
+
+        else:
+            self._textFont.SetWeight(FONTWEIGHT_NORMAL)
+            pyutText.isBold = False
+
+        if prefs.textItalicize is True:
+            pyutText.isItalicized = True
+            self._textFont.SetStyle(FONTSTYLE_ITALIC)
+        else:
+            pyutText.isItalicized = False
+            self._textFont.SetStyle(FONTSTYLE_NORMAL)
 
         self.__initializeTextDisplay()
         self._menu: Menu = cast(Menu, None)
