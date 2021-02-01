@@ -434,6 +434,38 @@ class PyutPreferences(Singleton):
     def classDimensions(self, newValue: Dimensions):
         self._valuePrefs.classDimensions = newValue
 
+    @property
+    def interfaceName(self) -> str:
+        return self._valuePrefs.interfaceName
+
+    @interfaceName.setter
+    def interfaceName(self, newValue: str):
+        self._valuePrefs.interfaceName = newValue
+
+    @property
+    def useCaseName(self) -> str:
+        return self._valuePrefs.useCaseName
+
+    @useCaseName.setter
+    def useCaseName(self, newValue: str):
+        self._valuePrefs.useCaseName = newValue
+
+    @property
+    def actorName(self) -> str:
+        return self._valuePrefs.actorName
+
+    @actorName.setter
+    def actorName(self, newValue: str):
+        self._valuePrefs.actorName = newValue
+
+    @property
+    def methodName(self) -> str:
+        return self._valuePrefs.methodName
+
+    @methodName.setter
+    def methodName(self, newValue: str):
+        self._valuePrefs.methodName = newValue
+
     def __loadConfig(self):
         """
         Load preferences from configuration file

@@ -22,6 +22,7 @@ from wx import Window
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
+from org.pyut.dialogs.preferences.valuecontainers.DefaultNamesContainer import DefaultNamesContainer
 from org.pyut.dialogs.preferences.valuecontainers.NoteAttributesContainer import NoteAttributesContainer
 from org.pyut.dialogs.preferences.valuecontainers.TextAttributesContainer import TextAttributesContainer
 from org.pyut.preferences.Dimensions import Dimensions
@@ -100,7 +101,7 @@ class ValuePreferencesBook(Toolbook):
         notePanel:         NoteAttributesContainer = NoteAttributesContainer(parent=self)
         textPanel:         TextAttributesContainer = TextAttributesContainer(parent=self)
         classPanel:        Panel = self.__createClassControls()
-        defaultNamesPanel: Panel = self.__createDefaultNameControls()
+        defaultNamesPanel: DefaultNamesContainer   = DefaultNamesContainer(parent=self)
 
         self.AddPage(notePanel,         text='Notes', select=True, imageId=next(imageIdGenerator))
         self.AddPage(textPanel,         text='Text',  select=False, imageId=next(imageIdGenerator))
@@ -144,32 +145,6 @@ class ValuePreferencesBook(Toolbook):
 
         return p
 
-    def __createDefaultNameControls(self) -> Panel:
-
-        p: Panel = Panel(self, ID_ANY)
-        # szrNames: StaticBoxSizer = self.__createStaticBoxSizer(_('Default Names'), direction=VERTICAL)
-        szrNames: BoxSizer = BoxSizer(VERTICAL)
-
-        interfaceNameContainer: TextContainer = TextContainer(parent=p, labelText=_('Interface Name'), valueChangedCallback=self.__interfaceNameChanged)
-        useCaseNameContainer:   TextContainer = TextContainer(parent=p, labelText=_('Use Case Name'),  valueChangedCallback=self.__useCaseNameChanged)
-        actorNameContainer:     TextContainer = TextContainer(parent=p, labelText=_('Actor Name'),     valueChangedCallback=self.__actorNameChanged)
-        methodNameContainer:    TextContainer = TextContainer(parent=p, labelText=_('Method Name'),    valueChangedCallback=self.__methodNameChanged)
-
-        szrNames.Add(interfaceNameContainer, 0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-        szrNames.Add(useCaseNameContainer,   0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-        szrNames.Add(actorNameContainer,     0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-        szrNames.Add(methodNameContainer,    0, ALL, ValuePreferencesBook.HORIZONTAL_GAP)
-
-        self._interfaceNameContainer: TextContainer = interfaceNameContainer
-        self._useCaseNameContainer:   TextContainer = useCaseNameContainer
-        self._actorNameContainer:     TextContainer = actorNameContainer
-        self._methodNameContainer:    TextContainer = methodNameContainer
-
-        p.SetSizer(szrNames)
-        p.Fit()
-
-        return p
-
     def __createStaticBoxSizer(self, displayText: str, direction: DirectionEnum) -> StaticBoxSizer:
 
         box:       StaticBox      = StaticBox(self, ID_ANY, displayText)
@@ -182,15 +157,3 @@ class ValuePreferencesBook(Toolbook):
 
     def __classDimensionsChanged(self, newValue: Dimensions):
         self._preferences.classDimensions = newValue
-
-    def __interfaceNameChanged(self, newValue: str):
-        pass
-
-    def __useCaseNameChanged(self, newValue: str):
-        pass
-
-    def __actorNameChanged(self, newValue: str):
-        pass
-
-    def __methodNameChanged(self, newValue: str):
-        pass

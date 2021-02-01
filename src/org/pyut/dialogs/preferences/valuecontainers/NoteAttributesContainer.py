@@ -41,11 +41,15 @@ class NoteAttributesContainer(Panel):
         szrNotes.Add(szrDefaultNoteText, 0, ALL, NoteAttributesContainer.VERTICAL_GAP)
         szrNotes.Add(szrNoteSize,        0, ALL, NoteAttributesContainer.VERTICAL_GAP)
 
-        self._noteTextContainer.textValue  = self._preferences.noteText
-        self._noteDimensions.dimensions    = self._preferences.noteDimensions
+        self._setControlValues()
 
         self.SetSizer(szrNotes)
         self.Fit()
+
+    def _setControlValues(self):
+
+        self._noteTextContainer.textValue  = self._preferences.noteText
+        self._noteDimensions.dimensions    = self._preferences.noteDimensions
 
     def _createDefaultNoteTextContainer(self, parent: Window) -> TextContainer:
 

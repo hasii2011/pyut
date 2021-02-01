@@ -124,6 +124,42 @@ class ValuePreferences(BaseSubPreference):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.CLASS_DIMENSIONS, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
+    @property
+    def interfaceName(self) -> str:
+        return self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.DEFAULT_NAME_INTERFACE)
+
+    @interfaceName.setter
+    def interfaceName(self, newValue: str):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.DEFAULT_NAME_INTERFACE, newValue)
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def useCaseName(self) -> str:
+        return self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.DEFAULT_NAME_USECASE)
+
+    @useCaseName.setter
+    def useCaseName(self, newValue: str):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.DEFAULT_NAME_USECASE, newValue)
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def actorName(self) -> str:
+        return self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.DEFAULT_NAME_ACTOR)
+
+    @actorName.setter
+    def actorName(self, newValue: str):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.DEFAULT_NAME_ACTOR, newValue)
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def methodName(self) -> str:
+        return self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.DEFAULT_NAME_METHOD)
+
+    @methodName.setter
+    def methodName(self, newValue: str):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.DEFAULT_NAME_METHOD, newValue)
+        self._preferencesCommon.saveConfig()
+
     def addMissingPreferences(self):
 
         try:
