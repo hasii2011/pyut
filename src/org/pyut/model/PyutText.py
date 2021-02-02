@@ -2,12 +2,14 @@
 from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 
 from org.pyut.model.PyutObject import PyutObject
-from org.pyut.preferences.Dimensions import Dimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class PyutText(PyutObject):
+    """
+    The model has to remember additional text attributes
+    """
 
     DEFAULT_TEXT:       str  = 'Text to display'
 
@@ -26,7 +28,6 @@ class PyutText(PyutObject):
         self._isBold:       bool = preferences.textBold
         self._isItalicized: bool = preferences.textItalicize
 
-        self._textDimensions: Dimensions   = preferences.textDimensions
         self._textFont:       TextFontEnum = preferences.textFont
 
     @property
@@ -68,11 +69,3 @@ class PyutText(PyutObject):
     @textFont.setter
     def textFont(self, newValue: TextFontEnum):
         self._textFont = newValue
-
-    @property
-    def textDimensions(self) -> Dimensions:
-        return self._textDimensions
-
-    @textDimensions.setter
-    def textDimensions(self, newValue: Dimensions):
-        self._textDimensions = newValue

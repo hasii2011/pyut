@@ -28,6 +28,7 @@ from org.pyut.model.PyutText import PyutText
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
 from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
@@ -39,8 +40,8 @@ from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as
     ID_MENU_ITALIC_TEXT
 ]  = PyutUtils.assignID(4)
 
-TEXT_SIZE_INCREMENT: int = 2    # TODO should be a preference
-TEXT_SIZE_DECREMENT: int = 2    # TODO should be a preference
+TEXT_SIZE_INCREMENT: int = 2
+TEXT_SIZE_DECREMENT: int = 2
 
 
 class OglText(OglObject):
@@ -59,10 +60,13 @@ class OglText(OglObject):
         w: int = width
         h: int = height
 
+        # Use preferences to get initial size if not specified
+        preferences: PyutPreferences = PyutPreferences()
+
         if width == 0:
-            w = pyutText.textDimensions.width
+            w = preferences.textDimensions.width
         if height == 0:
-            h = pyutText.textDimensions.height
+            h = preferences.textDimensions.height
 
         super().__init__(pyutObject=pyutText, width=w, height=h)
 
@@ -217,6 +221,10 @@ class OglText(OglObject):
         frame.Refresh()
 
     def __initializeTextDisplay(self):
+        """
+        Use the model to get other text attributes; We'll
+        get what was specified or defaults
+        """
 
         pyutText: PyutText = self.pyutText
 
