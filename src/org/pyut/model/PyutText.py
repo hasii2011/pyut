@@ -1,13 +1,15 @@
 
+from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
+
 from org.pyut.model.PyutObject import PyutObject
+from org.pyut.preferences.Dimensions import Dimensions
+
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class PyutText(PyutObject):
 
-    DEFAULT_TEXT:       str  = 'Text to display'    # TODO make this a preference
-    DEFAULT_TEXT_SIZE:  int  = 12                   # TODO make this a preference
-    DEFAULT_BOLD:       bool = False                # TODO make this a preference
-    DEFAULT_ITALICIZED: bool = False                # TODO make this a preference
+    DEFAULT_TEXT:       str  = 'Text to display'
 
     def __init__(self, textContent: str = DEFAULT_TEXT):
         """
@@ -17,10 +19,15 @@ class PyutText(PyutObject):
         """
         super().__init__()
 
-        self._content:      str = textContent
-        self._textSize:     int = PyutText.DEFAULT_TEXT_SIZE
-        self._isBold:       bool = PyutText.DEFAULT_BOLD
-        self._isItalicized: bool = PyutText.DEFAULT_ITALICIZED
+        preferences: PyutPreferences = PyutPreferences()
+
+        self._content:      str  = textContent
+        self._textSize:     int  = preferences.textFontSize
+        self._isBold:       bool = preferences.textBold
+        self._isItalicized: bool = preferences.textItalicize
+
+        self._textDimensions: Dimensions   = preferences.textDimensions
+        self._textFont:       TextFontEnum = preferences.textFont
 
     @property
     def content(self) -> str:
@@ -53,3 +60,19 @@ class PyutText(PyutObject):
     @isItalicized.setter
     def isItalicized(self, newValue: bool):
         self._isItalicized = newValue
+
+    @property
+    def textFont(self) -> TextFontEnum:
+        return self._textFont
+
+    @textFont.setter
+    def textFont(self, newValue: TextFontEnum):
+        self._textFont = newValue
+
+    @property
+    def textDimensions(self) -> Dimensions:
+        return self._textDimensions
+
+    @textDimensions.setter
+    def textDimensions(self, newValue: Dimensions):
+        self._textDimensions = newValue

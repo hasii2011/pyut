@@ -2,6 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
+from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 from org.pyut.preferences.Dimensions import Dimensions
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
@@ -99,12 +100,17 @@ class ValuePreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def textFont(self):
-        return self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT)
+    def textFont(self) -> TextFontEnum:
+
+        fontStr: str = self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT)
+
+        fontEnum: TextFontEnum = TextFontEnum(fontStr)
+
+        return fontEnum
 
     @textFont.setter
-    def textFont(self, newValue: str):
-        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, str(newValue))
+    def textFont(self, newValue: TextFontEnum):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, newValue.value)
         self._preferencesCommon.saveConfig()
 
     @property

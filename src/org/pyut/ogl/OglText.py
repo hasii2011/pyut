@@ -18,6 +18,7 @@ from wx import Menu
 from wx import MenuItem
 from wx import MouseEvent
 
+from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 from org.pyut.general.Globals import _
 from org.pyut.general.LineSplitter import LineSplitter
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
@@ -27,7 +28,6 @@ from org.pyut.model.PyutText import PyutText
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
 from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
@@ -59,11 +59,10 @@ class OglText(OglObject):
         w: int = width
         h: int = height
 
-        self._prefs: PyutPreferences = PyutPreferences()
         if width == 0:
-            w = self._prefs.noteDimensions.width
+            w = pyutText.textDimensions.width
         if height == 0:
-            h = self._prefs.noteDimensions.height
+            h = pyutText.textDimensions.height
 
         super().__init__(pyutObject=pyutText, width=w, height=h)
 
@@ -222,27 +221,19 @@ class OglText(OglObject):
         pyutText: PyutText = self.pyutText
 
         self._textFont.SetPointSize(pyutText.textSize)
+
         if pyutText.isBold is True:
             self._textFont.SetWeight(FONTWEIGHT_BOLD)
         if pyutText.isItalicized is True:
-            self._textFont.SetStyle(FONTSTYLE_ITALIC)
-
-        if self._prefs.textBold is True:
-            self._textFont.SetWeight(FONTWEIGHT_BOLD)
-            pyutText.isBold = True
-        else:
             self._textFont.SetWeight(FONTWEIGHT_NORMAL)
-            pyutText.isBold = False
 
-        if self._prefs.textItalicize is True:
-            pyutText.isItalicized = True
+        if pyutText.isItalicized is True:
             self._textFont.SetStyle(FONTSTYLE_ITALIC)
         else:
-            pyutText.isItalicized = False
             self._textFont.SetStyle(FONTSTYLE_NORMAL)
 
-        pyutText.textSize = self._prefs.textFontSize
         self._textFont.SetPointSize(pyutText.textSize)
+        self._textFont.SetFamily(TextFontEnum.toWxType(pyutText.textFont))
 
     def __repr__(self):
 

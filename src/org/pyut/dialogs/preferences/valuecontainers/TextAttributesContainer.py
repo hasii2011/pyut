@@ -85,7 +85,7 @@ class TextAttributesContainer(Panel):
         self._textDimensions.dimensions = self._preferences.textDimensions
         self._cbBoldText.SetValue(self._preferences.textBold)
         self._cbItalicizeText.SetValue(self._preferences.textItalicize)
-        self._cbxFontSelector.SetValue(self._preferences.textFont)
+        self._cbxFontSelector.SetValue(self._preferences.textFont.value)
         self._cbxFontSizeSelector.SetValue(str(self._preferences.textFontSize))
 
     def _onTextDimensionsChanged(self, newValue: Dimensions):
@@ -104,8 +104,10 @@ class TextAttributesContainer(Panel):
 
     def _onFontSelectionChanged(self, event: CommandEvent):
 
-        newFontName: str = event.GetString()
-        self._preferences.textFont = newFontName
+        newFontName: str          = event.GetString()
+        fontEnum:    TextFontEnum = TextFontEnum(newFontName)
+
+        self._preferences.textFont = fontEnum
 
     def _onFontSizeSelectionChanged(self, event: CommandEvent):
 

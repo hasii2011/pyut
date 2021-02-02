@@ -7,6 +7,7 @@ from logging import getLogger
 
 from configparser import ConfigParser
 
+from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 from org.pyut.general.Singleton import Singleton
 from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
 from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
@@ -403,11 +404,11 @@ class PyutPreferences(Singleton):
         self._valuePrefs.textItalicize = newValue
 
     @property
-    def textFont(self):
+    def textFont(self) -> TextFontEnum:
         return self._valuePrefs.textFont
 
     @textFont.setter
-    def textFont(self, newValue: str):
+    def textFont(self, newValue: TextFontEnum):
         self._valuePrefs.textFont = newValue
 
     @property
