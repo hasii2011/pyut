@@ -114,15 +114,12 @@ class PyutClass(PyutClassCommon, PyutLinkedObject):
 
     def __getstate__(self):
         """
-        For deepcopy operations, tells which fields to avoid copying.
+        For deepcopy operations, specifies which fields to avoid copying.
         Deepcopy must not copy the links to other classes, or it would result
-        in copying all the diagram.
-
-        @since 1.5
-        @author Laurent Burgbacher <lb@alawa.ch>
+        in copying the entire diagram.
         """
         aDict = self.__dict__.copy()
-        aDict["_fathers"]    = []
+        aDict["_parents"]    = []
         return aDict
 
     def __str__(self):

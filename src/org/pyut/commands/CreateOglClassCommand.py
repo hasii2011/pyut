@@ -6,17 +6,15 @@ from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.Globals import _
-
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class CreateOglClassCommand(DelOglClassCommand):
     """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
-    This class is a part of the history system of PyUt.
-    It creates an OglClass and allows to undo/redo it.
+    This class is a part of Pyut's history system.
+    It creates an OglClass and allows undo/redo operations.
     """
+    clsCounter: int = 1
 
     def __init__(self, x: float = 0, y: float = 0, createNewClass: bool = False, shape=None):
         """
@@ -93,7 +91,10 @@ class CreateOglClassCommand(DelOglClassCommand):
         med = Mediator()
         umlFrame = med.getFileHandling().getCurrentFrame()
 
-        pyutClass = PyutClass(_("NoName"))
+        className: str = f'{self._prefs.className}{CreateOglClassCommand.clsCounter}'
+        pyutClass = PyutClass(className)
+        CreateOglClassCommand.clsCounter += 1
+
         oglClass = OglClass(pyutClass)
         med.classEditor(pyutClass)
 

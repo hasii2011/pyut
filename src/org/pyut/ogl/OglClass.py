@@ -35,6 +35,7 @@ from org.pyut.general.Globals import _
 
 
 # Menu IDs
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 [
     MENU_TOGGLE_STEREOTYPE,
@@ -46,9 +47,7 @@ from org.pyut.general.Globals import _
     MENU_IMPLEMENT_INTERFACE
 ]  = PyutUtils.assignID(7)
 
-MARGIN:               float = 10.0
-DEFAULT_CLASS_WIDTH:  int = 100
-DEFAULT_CLASS_HEIGHT: int = 100
+MARGIN:               int = 10
 
 
 class OglClass(OglObject):
@@ -65,7 +64,7 @@ class OglClass(OglObject):
     :author: Laurent Burgbacher
     :contact: lb@alawa.ch
     """
-    def __init__(self, pyutClass: PyutClass = None, w: int = DEFAULT_CLASS_WIDTH, h: int = DEFAULT_CLASS_HEIGHT):
+    def __init__(self, pyutClass: PyutClass = None, w: int = 0, h: int = 0):
         """
 
         Args:
@@ -77,7 +76,20 @@ class OglClass(OglObject):
             pyutObject = PyutClass()
         else:
             pyutObject = pyutClass
-        super().__init__(pyutObject, w, h)
+
+        width:  int = w
+        height: int = h
+
+        # Use preferences to get initial size if not specified
+        # Note: auto_resize_shape_on_edit must be False for this size to actually stick
+        preferences: PyutPreferences = PyutPreferences()
+
+        if w == 0:
+            width = preferences.classDimensions.width
+        if h == 0:
+            height = preferences.classDimensions.height
+
+        super().__init__(pyutObject, width=width, height=height)
 
         self._nameFont: Font   = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_BOLD)
         self.logger:    Logger = getLogger(__name__)
