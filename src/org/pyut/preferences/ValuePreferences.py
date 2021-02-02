@@ -18,6 +18,7 @@ class ValuePreferences(BaseSubPreference):
     TEXT_BOLD:        str = 'text_bold'
     TEXT_ITALICIZE:   str = 'text_italicize'
     TEXT_FONT:        str = 'text_font'
+    TEXT_FONT_SIZE:   str = 'text_font_size'
     CLASS_NAME:       str = 'class_name'
     CLASS_DIMENSIONS: str = 'class_dimensions'
 
@@ -32,7 +33,8 @@ class ValuePreferences(BaseSubPreference):
         TEXT_DIMENSIONS:  Dimensions(125, 50).__str__(),
         TEXT_BOLD:        'False',
         TEXT_ITALICIZE:   'False',
-        TEXT_FONT:        ' Swiss',
+        TEXT_FONT:        'Swiss',
+        TEXT_FONT_SIZE:   '14',
         CLASS_NAME:       'ClassName',
         CLASS_DIMENSIONS: Dimensions(100, 100).__str__(),
         DEFAULT_NAME_INTERFACE: 'InterfaceName',
@@ -103,6 +105,15 @@ class ValuePreferences(BaseSubPreference):
     @textFont.setter
     def textFont(self, newValue: str):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, str(newValue))
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def textFontSize(self) -> int:
+        return self._config.getint(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT_SIZE)
+
+    @textFontSize.setter
+    def textFontSize(self, newValue: int):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT_SIZE, str(newValue))
         self._preferencesCommon.saveConfig()
 
     @property

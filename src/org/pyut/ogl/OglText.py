@@ -59,11 +59,11 @@ class OglText(OglObject):
         w: int = width
         h: int = height
 
-        prefs: PyutPreferences = PyutPreferences()
+        self._prefs: PyutPreferences = PyutPreferences()
         if width == 0:
-            w = prefs.noteDimensions.width
+            w = self._prefs.noteDimensions.width
         if height == 0:
-            h = prefs.noteDimensions.height
+            h = self._prefs.noteDimensions.height
 
         super().__init__(pyutObject=pyutText, width=w, height=h)
 
@@ -71,21 +71,6 @@ class OglText(OglObject):
 
         self._drawFrame: bool = False
         self._textFont:  Font = self._defaultFont.GetBaseFont()
-
-        if prefs.textBold is True:
-            self._textFont.SetWeight(FONTWEIGHT_BOLD)
-            pyutText.isBold = True
-
-        else:
-            self._textFont.SetWeight(FONTWEIGHT_NORMAL)
-            pyutText.isBold = False
-
-        if prefs.textItalicize is True:
-            pyutText.isItalicized = True
-            self._textFont.SetStyle(FONTSTYLE_ITALIC)
-        else:
-            pyutText.isItalicized = False
-            self._textFont.SetStyle(FONTSTYLE_NORMAL)
 
         self.__initializeTextDisplay()
         self._menu: Menu = cast(Menu, None)
@@ -241,6 +226,23 @@ class OglText(OglObject):
             self._textFont.SetWeight(FONTWEIGHT_BOLD)
         if pyutText.isItalicized is True:
             self._textFont.SetStyle(FONTSTYLE_ITALIC)
+
+        if self._prefs.textBold is True:
+            self._textFont.SetWeight(FONTWEIGHT_BOLD)
+            pyutText.isBold = True
+        else:
+            self._textFont.SetWeight(FONTWEIGHT_NORMAL)
+            pyutText.isBold = False
+
+        if self._prefs.textItalicize is True:
+            pyutText.isItalicized = True
+            self._textFont.SetStyle(FONTSTYLE_ITALIC)
+        else:
+            pyutText.isItalicized = False
+            self._textFont.SetStyle(FONTSTYLE_NORMAL)
+
+        pyutText.textSize = self._prefs.textFontSize
+        self._textFont.SetPointSize(pyutText.textSize)
 
     def __repr__(self):
 

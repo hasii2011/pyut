@@ -411,6 +411,14 @@ class PyutPreferences(Singleton):
         self._valuePrefs.textFont = newValue
 
     @property
+    def textFontSize(self) -> int:
+        return self._valuePrefs.textFontSize
+
+    @textFontSize.setter
+    def textFontSize(self, newValue: int):
+        self._valuePrefs.textFontSize = newValue
+
+    @property
     def className(self) -> str:
         return self._valuePrefs.className
 
