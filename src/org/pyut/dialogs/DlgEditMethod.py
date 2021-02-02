@@ -39,6 +39,7 @@ from wx import FlexGridSizer
 
 from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
+
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParam import PyutParam

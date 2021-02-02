@@ -1,11 +1,9 @@
 
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class PyutActor(PyutLinkedObject):
-
-    DEFAULT_ACTOR_NAME: str = 'Actor'
-
     """
     Represents a Use Case actor (data layer).
     An actor, in data layer, only has a name. Linking is resolved by
@@ -14,9 +12,13 @@ class PyutActor(PyutLinkedObject):
 
 
     """
-    def __init__(self, actorName: str = DEFAULT_ACTOR_NAME):
+    def __init__(self, actorName: str = ''):
         """
         Args:
             actorName: The name of the actor
         """
+
+        if actorName is None or actorName == '':
+            actorName = PyutPreferences().actorName
+
         super().__init__(actorName)

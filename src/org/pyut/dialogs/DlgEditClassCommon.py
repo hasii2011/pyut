@@ -30,11 +30,13 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.dialogs.DlgEditComment import DlgEditComment
 from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
 
 from org.pyut.general.Globals import _
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 CommonClassType = Union[PyutClass, PyutInterface]
 
@@ -213,8 +215,9 @@ class DlgEditClassCommon(Dialog):
         Args:
             event:
         """
+        methodName: str = PyutPreferences().methodName
         # Add fields in PyutClass copy object
-        method: PyutMethod = PyutMethod(PyutMethod.DEFAULT_METHOD_NAME)
+        method: PyutMethod = PyutMethod(methodName)
         ret = self._invokeEditMethodDialog(method)
         if ret == OK:
             self._pyutModelCopy.methods.append(method)

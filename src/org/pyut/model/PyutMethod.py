@@ -18,8 +18,6 @@ from org.pyut.model.PyutObject import PyutObject
 
 class PyutMethod(PyutObject):
 
-    DEFAULT_METHOD_NAME: str = 'method'
-
     PyutModifiers  = List[PyutModifier]
     SourceCodeType = List[str]
     PyutParameters = List[PyutParam]
@@ -54,6 +52,11 @@ class PyutMethod(PyutObject):
             visibility: Its visibility public, private, protected
             returns:  Its return value
         """
+        prefs: PyutPreferences = PyutPreferences()
+
+        if name is None or name == '':
+            name = prefs.methodName
+
         super().__init__(name)
 
         self.logger: Logger = getLogger(__name__)
@@ -65,7 +68,6 @@ class PyutMethod(PyutObject):
         self._params:  PyutMethod.PyutParameters = []
         self._returns: PyutType                  = returns
 
-        prefs: PyutPreferences = PyutPreferences()
         # if prefs.showParameters is True:
         #     PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
         # else:

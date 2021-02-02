@@ -61,20 +61,22 @@ class TestPyutMethod(TestBase):
         pyutMethod.parameters = self._makeParameters()
         PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
 
-        expectedRepresentation: str = '+(intParam: int = 0, floatParam: float = 32.0): float'
+        defaultName: str = PyutPreferences().methodName
+        expectedRepresentation: str = f'+{defaultName}(intParam: int = 0, floatParam: float = 32.0): float'
         actualRepresentation:   str = pyutMethod.__str__()
 
         self.assertEqual(expectedRepresentation, actualRepresentation, 'Oops this does not match')
 
     def testStringMethodWithoutParametersRepresentation(self):
 
-        pyutMethod:     PyutMethod                = self._pyutMethod
+        pyutMethod:     PyutMethod = self._pyutMethod
         pyutMethod.returnType = PyutType('float')
 
         pyutMethod.parameters = self._makeParameters
         PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
 
-        expectedRepresentation: str = '+(): float'
+        defaultName: str = PyutPreferences().methodName
+        expectedRepresentation: str = f'+{defaultName}(): float'
         actualRepresentation:   str = pyutMethod.__str__()
 
         self.assertEqual(expectedRepresentation, actualRepresentation, 'Oops this does not match')
