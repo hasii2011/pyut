@@ -12,7 +12,7 @@ from unittest.mock import patch
 
 from tests.TestBase import TestBase
 
-from org.pyut.general.PyutXmfFinder import PyutXmlFinder
+from org.pyut.general.PyutXmlFinder import PyutXmlFinder
 
 
 class TestPyutXmlFinder(TestBase):

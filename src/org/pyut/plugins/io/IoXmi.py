@@ -13,7 +13,7 @@ from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.persistence.PyutXml import PyutXml
 
-from org.pyut.general.PyutXmfFinder import PyutXmlFinder
+from org.pyut.general.PyutXmlFinder import PyutXmlFinder
 
 
 class IoXmi(PyutIoPlugin):

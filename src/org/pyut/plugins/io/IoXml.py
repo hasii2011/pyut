@@ -11,7 +11,7 @@ from wx import YES_NO
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
-from org.pyut.general.PyutXmfFinder import PyutXmlFinder
+from org.pyut.general.PyutXmlFinder import PyutXmlFinder
 
 
 class IoXml(PyutIoPlugin):
