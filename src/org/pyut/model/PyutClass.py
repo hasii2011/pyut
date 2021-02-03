@@ -125,8 +125,5 @@ class PyutClass(PyutClassCommon, PyutLinkedObject):
     def __str__(self):
         """
         String representation.
-
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
         return f"Class : {self.getName()}"

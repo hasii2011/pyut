@@ -105,3 +105,4 @@ class PyutXmlConstants:
     ATTR_TEXT_SIZE:     str = 'textSize'
     ATTR_IS_BOLD:       str = 'isBold'
     ATTR_IS_ITALICIZED: str = 'isItalicized'
+    ATTR_FONT_NAME:     str = 'fontName'

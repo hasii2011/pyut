@@ -8,7 +8,7 @@ class PyutUseCase(PyutLinkedObject):
     """
     def __init__(self, name: str = ''):
 
-        if name is None or name is '':
+        if name is None or name == '':
             name = PyutPreferences().useCaseName
 
         super().__init__(name)

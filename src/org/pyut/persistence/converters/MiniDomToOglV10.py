@@ -11,6 +11,7 @@ from logging import getLogger
 from xml.dom.minidom import Element
 from xml.dom.minidom import NodeList
 
+from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
@@ -311,6 +312,11 @@ class MiniDomToOgl:
 
             value = PyU.secureBoolean(xmlText.getAttribute(PyutXmlConstants.ATTR_IS_ITALICIZED))
             pyutText.isItalicized = value
+
+            value = xmlText.getAttribute(PyutXmlConstants.ATTR_FONT_NAME)
+            if value is not None and value != '':
+                fontEnum: TextFontEnum = TextFontEnum(value)
+                pyutText.textFont = fontEnum
 
             width:  int = PyU.strFloatToInt(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             height: int = PyU.strFloatToInt(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_HEIGHT))

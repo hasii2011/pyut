@@ -455,6 +455,7 @@ class OglToMiniDom:
         root.setAttribute(PyutXmlConstants.ATTR_TEXT_SIZE,     str(pyutText.textSize))
         root.setAttribute(PyutXmlConstants.ATTR_IS_BOLD,       str(pyutText.isBold))
         root.setAttribute(PyutXmlConstants.ATTR_IS_ITALICIZED, str(pyutText.isItalicized))
+        root.setAttribute(PyutXmlConstants.ATTR_FONT_NAME,     pyutText.textFont.value)
 
         return root
 
