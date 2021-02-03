@@ -11,7 +11,6 @@ from logging import getLogger
 from xml.dom.minidom import Element
 from xml.dom.minidom import NodeList
 
-from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
@@ -52,6 +51,8 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+
+from org.pyut.preferences.TextFontEnum import TextFontEnum
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 

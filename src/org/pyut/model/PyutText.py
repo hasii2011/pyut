@@ -1,9 +1,10 @@
 
-from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 
 from org.pyut.model.PyutObject import PyutObject
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+
+from org.pyut.preferences.TextFontEnum import TextFontEnum
 
 
 class PyutText(PyutObject):

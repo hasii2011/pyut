@@ -1,3 +1,4 @@
+
 from typing import List
 from typing import cast
 
@@ -24,12 +25,14 @@ from wx import CheckBox
 from wx import ComboBox
 
 from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
-from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
+
+from org.pyut.preferences.TextFontEnum import TextFontEnum
 from org.pyut.preferences.Dimensions import Dimensions
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 

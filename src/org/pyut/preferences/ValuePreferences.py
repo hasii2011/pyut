@@ -2,11 +2,12 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
-from org.pyut.preferences.Dimensions import Dimensions
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
+
+from org.pyut.preferences.TextFontEnum import TextFontEnum
+from org.pyut.preferences.Dimensions import Dimensions
 
 
 class ValuePreferences(BaseSubPreference):

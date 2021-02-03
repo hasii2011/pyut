@@ -7,18 +7,20 @@ from logging import getLogger
 
 from configparser import ConfigParser
 
-from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
 from org.pyut.general.Singleton import Singleton
+
 from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
 from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
-from org.pyut.preferences.Dimensions import Dimensions
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.ValuePreferences import ValuePreferences
+
+from org.pyut.preferences.Dimensions import Dimensions
+from org.pyut.preferences.TextFontEnum import TextFontEnum
 
 
 class PyutPreferences(Singleton):

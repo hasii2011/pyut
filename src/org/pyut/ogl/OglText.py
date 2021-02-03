@@ -18,7 +18,7 @@ from wx import Menu
 from wx import MenuItem
 from wx import MouseEvent
 
-from org.pyut.dialogs.preferences.widgets.TextFontEnum import TextFontEnum
+from org.pyut.preferences.TextFontEnum import TextFontEnum
 from org.pyut.general.Globals import _
 from org.pyut.general.LineSplitter import LineSplitter
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
