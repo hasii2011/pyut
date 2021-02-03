@@ -38,7 +38,7 @@ class ValuePreferences(BaseSubPreference):
         TEXT_FONT_SIZE:   '14',
         CLASS_NAME:       'ClassName',
         CLASS_DIMENSIONS: Dimensions(100, 100).__str__(),
-        DEFAULT_NAME_INTERFACE: 'InterfaceName',
+        DEFAULT_NAME_INTERFACE: 'IClassInterface',
         DEFAULT_NAME_USECASE:   'UseCaseName',
         DEFAULT_NAME_ACTOR:     'ActorName',
         DEFAULT_NAME_METHOD:    'MethodName',

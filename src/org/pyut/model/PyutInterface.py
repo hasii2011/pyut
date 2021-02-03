@@ -7,6 +7,7 @@ from logging import getLogger
 
 from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutObject import PyutObject
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class PyutInterface(PyutClassCommon, PyutObject):
@@ -14,15 +15,17 @@ class PyutInterface(PyutClassCommon, PyutObject):
     ClassName    = str
     Implementors = List[ClassName]
 
-    DEFAULT_INTERFACE_NAME: str = 'IClassInterface'
-
-    def __init__(self, name: str = DEFAULT_INTERFACE_NAME):
+    def __init__(self, name: str = ''):
         """
 
         Args:
-            name:  The object name
+            name:  The interface name
         """
-        PyutObject.__init__(self, name)
+        interfaceName: str = name
+        if name is None or name == '':
+            interfaceName = PyutPreferences().interfaceName
+
+        PyutObject.__init__(self, name=interfaceName)
         PyutClassCommon.__init__(self)
 
         self.logger: Logger = getLogger(__name__)
