@@ -37,7 +37,8 @@ from org.pyut.PyutUtils import PyutUtils
 [
     MENU_ADD_BEND,
     MENU_REMOVE_BEND,
-]  = PyutUtils.assignID(2)
+    MENU_TOGGLE_SPLINE,
+]  = PyutUtils.assignID(3)
 
 
 class OglLink(LineShape, ShapeEventHandler):
@@ -269,8 +270,9 @@ class OglLink(LineShape, ShapeEventHandler):
             event:
         """
         menu: Menu = Menu()
-        menu.Append(MENU_ADD_BEND,    _('Add Bend'),    _('Add Bend at right click point'))
-        menu.Append(MENU_REMOVE_BEND, _('Remove Bend'), _('Remove Bend closest to click point'))
+        menu.Append(MENU_ADD_BEND,      _('Add Bend'),      _('Add Bend at right click point'))
+        menu.Append(MENU_REMOVE_BEND,   _('Remove Bend'),   _('Remove Bend closest to click point'))
+        menu.Append(MENU_TOGGLE_SPLINE, _('Toggle Spline'), _('Best with at least one bend'))
 
         if len(self._controls) == 0:
             bendItem: MenuItem = menu.FindItemById(MENU_REMOVE_BEND)
@@ -295,6 +297,8 @@ class OglLink(LineShape, ShapeEventHandler):
             self._addBend(data)
         elif eventId == MENU_REMOVE_BEND:
             self._removeBend(data)
+        elif eventId == MENU_TOGGLE_SPLINE:
+            self._toggleSpline()
 
     def _computeLinkLength(self, srcPosition: OglPosition, destPosition: OglPosition) -> float:
         """
@@ -361,6 +365,13 @@ class OglLink(LineShape, ShapeEventHandler):
         self._removeControl(control=cp)
         cp.Detach()
         cp.SetVisible(False)    # Work around still on screen but not visible and not saved
+
+        frame = self._diagram.GetPanel()
+        frame.Refresh()
+
+    def _toggleSpline(self):
+
+        self.SetSpline(not self.GetSpline())
 
         frame = self._diagram.GetPanel()
         frame.Refresh()
