@@ -381,7 +381,7 @@ class OglLink(LineShape, ShapeEventHandler):
 
             dx, dy = self._computeDxDy(srcPosition, destPosition)
             currentDistance = sqrt(dx*dx + dy*dy)
-            self.clsLogger.warning(f'{currentDistance=}')
+            self.clsLogger.debug(f'{currentDistance=}')
             if currentDistance <= distance:
                 distance = currentDistance
                 closestPoint = controlPoint

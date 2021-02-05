@@ -34,5 +34,15 @@ class ControlPoint(LinePoint):
         if len(self._lines) == 0:
             self.Detach()
 
+    def __eq__(self, other) -> bool:
+
+        if isinstance(other, ControlPoint):
+            if self._x == other._x and self._y == other._y and self._id == other._id:
+                return True
+            else:
+                return False
+        else:
+            return False
+
     def __repr__(self):
-        return f'ControlPoint@ {self._x},{self._y} {self._visible=}'
+        return f'ControlPoint@ {self._x},{self._y} {self._id=} {self._visible=}'

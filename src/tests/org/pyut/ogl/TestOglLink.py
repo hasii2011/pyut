@@ -89,12 +89,14 @@ class TestOglLink(TestBase):
         for cp in pointsToAdd:
             oglLink.AddControl(cp)
 
-        self.logger.warning(f'{len(oglLink._controls)=}')
+        self.logger.debug(f'{len(oglLink._controls)=}')
 
-        closestPoint: ControlPoint = oglLink._findClosestControlPoint(clickPoint=(100, 151))
-        self.logger.warning(f'{closestPoint=}')
+        expectedControlPoint: ControlPoint = pointsToAdd[0]
+        closestPoint:         ControlPoint = oglLink._findClosestControlPoint(clickPoint=(100, 151))
 
-        self.assertIsNotNone(closestPoint, 'I know there is a close control point')
+        self.logger.debug(f'{closestPoint=}')
+
+        self.assertEqual(expectedControlPoint, closestPoint, 'Found incorrect control point')
 
     def _createMockShape(self, position: OglPosition, size: Tuple[int, int]) -> MagicMock:
 

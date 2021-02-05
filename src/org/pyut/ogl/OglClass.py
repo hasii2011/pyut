@@ -447,26 +447,6 @@ class OglClass(OglObject):
         else:
             assert False, 'Unknown display type'
 
-    def __repr__(self):
-        selfName:   str = self.getPyutObject().getName()
-        return f'OglClass.{selfName}'
-
-    def __eq__(self, other):
-
-        if isinstance(other, OglClass):
-            if self._isSameName(other) is True and self._isSameId(other) is True:
-                return True
-            else:
-                return False
-        else:
-            return False
-
-    def __hash__(self):
-
-        selfPyutObj:  PyutObject = self.getPyutObject()
-
-        return hash(selfPyutObj.getName()) + hash(self.GetID())
-
     def _isSameName(self, other) -> bool:
 
         ans: bool = False
@@ -516,3 +496,23 @@ class OglClass(OglObject):
             dc.DrawText(pyutMethod.methodWithoutParameters(), x + MARGIN, y + h)
         else:
             assert False, 'Internal error unknown pyutMethod parameter display type'
+
+    def __repr__(self):
+        selfName:   str = self.getPyutObject().getName()
+        return f'OglClass.{selfName}'
+
+    def __eq__(self, other) -> bool:
+
+        if isinstance(other, OglClass):
+            if self._isSameName(other) is True and self._isSameId(other) is True:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def __hash__(self):
+
+        selfPyutObj:  PyutObject = self.getPyutObject()
+
+        return hash(selfPyutObj.getName()) + hash(self.GetID())
