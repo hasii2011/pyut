@@ -10,16 +10,17 @@ class LinePoint(PointShape):
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, x, y, parent=None):
+    def __init__(self, x: int, y: int, parent=None):
         """
-        Constructor.
 
-        @param double x, y : position of the point
-        @param Shape parent : parent shape
+        Args:
+            x:  abscissa of point
+            y:  ordinate of point
+            parent:     parent shape
         """
         #  print ">>>LinePoint ", x, y
         super().__init__(x, y, parent)
-        self._lines = []    # a list of LineShape passing through this point
+        self._lines = []    # a list of LineShape(s) passing through this point
 
     def AddLine(self, line):
         """

@@ -1,9 +1,11 @@
 
+from typing import cast
+from typing import List
+from typing import NewType
 from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
-
 from wx import BLACK_PEN
 from wx import DC
 from wx import RED_PEN
@@ -12,6 +14,8 @@ from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.Shape import Shape
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.ControlPoint import ControlPoint
+
+ControlPoints = NewType('ControlPoints', List[ControlPoint])
 
 
 class LineShape(Shape):
@@ -33,7 +37,7 @@ class LineShape(Shape):
         self._srcAnchor = srcAnchor
         self._dstAnchor = dstAnchor
 
-        self._controls = []
+        self._controls: ControlPoints = cast(ControlPoints, [])
         self._drawArrow = True
         self._arrowSize = 8
         self._spline = False
@@ -203,13 +207,12 @@ class LineShape(Shape):
         # LineShape.clsLogger.debug(f'GetSegments --  sp: {sp} dp: {dp}')
         return [sp] + list(map(lambda x: x.GetPosition(), self._controls)) + [dp]
 
-    def GetControlPoints(self):
+    def GetControlPoints(self) -> ControlPoints:
         """
-        Return a list of the control points.
         This is a copy of the original list, modifying it won't change the
         line, but modifying the control points will !
 
-        @return ControlPoint []
+        Returns:  a list of the control points.
         """
         return self._controls[:]
 
@@ -298,11 +301,12 @@ class LineShape(Shape):
             self._srcAnchor.RemoveLine(self)
             self._dstAnchor.RemoveLine(self)
 
-    def _RemoveControl(self, control):
+    def _removeControl(self, control: ControlPoint):
         """
         Remove a control point from the line.
 
-        @param control
+        Args:
+            control:
         """
         if control in self._controls:
             self._controls.remove(control)
@@ -321,19 +325,20 @@ class LineShape(Shape):
         Remove all the control points of the line.
         """
         while self._controls:
-            self._RemoveControl(self._controls[0])
+            self._removeControl(self._controls[0])
 
     def Remove(self, point):
         """
         Remove a point from the line, either a anchor or control.
         If the remove point is an anchor, the line itself will be detached.
 
-        @param  point
+        Args:
+            point: The point
         """
         if isinstance(point, AnchorPoint):
             self._RemoveAnchor(point)
         elif isinstance(point, ControlPoint):
-            self._RemoveControl(point)
+            self._removeControl(point)
 
     def Inside(self, x, y):
         """

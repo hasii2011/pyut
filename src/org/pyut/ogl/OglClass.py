@@ -33,9 +33,9 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 # Menu IDs
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 [
     MENU_TOGGLE_STEREOTYPE,

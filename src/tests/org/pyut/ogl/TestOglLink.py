@@ -1,4 +1,4 @@
-
+from typing import List
 from typing import Tuple
 
 from logging import Logger
@@ -8,9 +8,14 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
-from org.pyut.ogl.OglPosition import OglPosition
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 from tests.TestBase import TestBase
+
+from org.pyut.miniogl.ControlPoint import ControlPoint
+from org.pyut.miniogl.LineShape import ControlPoints
+
+from org.pyut.ogl.OglPosition import OglPosition
+
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ogl.OglLink import OglLink
 
@@ -18,10 +23,8 @@ from org.pyut.ogl.OglLink import OglLink
 class TestOglLink(TestBase):
     """
     """
-    # MOCK_SOURCE_POSITION:       Tuple[float, float] = (100.0, 100.0)
-    # MOCK_DESTINATION_POSITION:  Tuple[float, float] = (500.0, 500.0)
-    MOCK_SOURCE_POSITION:       OglPosition = OglPosition(x=100.0, y=100.0)
-    MOCK_DESTINATION_POSITION:  OglPosition = OglPosition(x=500.0, y=500.0)
+    MOCK_SOURCE_POSITION:       OglPosition = OglPosition(x=100, y=100)
+    MOCK_DESTINATION_POSITION:  OglPosition = OglPosition(x=500, y=500)
 
     clsLogger: Logger = None
 
@@ -71,6 +74,27 @@ class TestOglLink(TestBase):
         expectedLength: float = 565.685
         self.assertAlmostEqual(expectedLength, actualLength, places=2)
 
+    def testFindClosestControlPoint(self):
+
+        mockSourceShape:      MagicMock = self._createMockShape(self.MOCK_SOURCE_POSITION, (10, 100))
+        mockDestinationShape: MagicMock = self._createMockShape(self.MOCK_DESTINATION_POSITION, (10, 100))
+
+        mockPyutLink:         MagicMock = MagicMock()
+
+        oglLink: OglLink = OglLink(srcShape=mockSourceShape, pyutLink=mockPyutLink, dstShape=mockDestinationShape)
+
+        pointsToAdd: ControlPoints = self._createControlPoints()
+
+        for cp in pointsToAdd:
+            oglLink.AddControl(cp)
+
+        self.logger.warning(f'{len(oglLink._controls)=}')
+
+        closestPoint: ControlPoint = oglLink._findClosestControlPoint(clickPoint=(100, 151))
+        self.logger.warning(f'{closestPoint=}')
+
+        self.assertIsNotNone(closestPoint, 'I know there is a close control point')
+
     def _createMockShape(self, position: OglPosition, size: Tuple[int, int]) -> MagicMock:
 
         mockShape: MagicMock = MagicMock()
@@ -82,6 +106,21 @@ class TestOglLink(TestBase):
 
     def _raiseException(self, badOglLink: OglLink):
         badOglLink._computeDxDy(srcPosition=self.MOCK_SOURCE_POSITION, destPosition=self.MOCK_DESTINATION_POSITION)
+
+    def _createControlPoints(self) -> List[ControlPoint]:
+        """
+        Create a list of control points between the two mock shapes
+
+        Returns:
+        """
+        cp1: ControlPoint = ControlPoint(x=100, y=200)
+        cp2: ControlPoint = ControlPoint(x=200, y=200)
+        cp3: ControlPoint = ControlPoint(x=300, y=300)
+        cp4: ControlPoint = ControlPoint(x=400, y=400)
+
+        controlPoints: List[ControlPoint] = [cp1, cp2, cp3, cp4]
+
+        return controlPoints
 
 
 def suite() -> TestSuite:

@@ -14,7 +14,7 @@ class PointShape(Shape):
     A point, which is drawn as a little square (3 pixels wide).
 
     """
-    def __init__(self, x: float, y: float, parent=None):
+    def __init__(self, x: int, y: int, parent=None):
         """
 
         Args:

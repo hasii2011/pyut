@@ -6,15 +6,16 @@ class ControlPoint(LinePoint):
     """
     This is a point which guides lines.
     A control point must be linked to a line, it has no life by itself.
+
     If you remove the last line of a control point, the control point will
-    be automatically erased.
+    automatically be erased.
     """
-    def __init__(self, x: float, y: float, parent=None):
+    def __init__(self, x: int, y: int, parent=None):
         """
 
         Args:
-            x:  x position of the point
-            y:  y position of the point
+            x:  abscissa of the point
+            y:  ordinate of the point
             parent:     parent Shape
         """
         super().__init__(x, y, parent)

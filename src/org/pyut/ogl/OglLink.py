@@ -1,5 +1,6 @@
 
 from typing import Tuple
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -7,11 +8,13 @@ from logging import getLogger
 from math import sqrt
 
 from wx import BLACK_PEN
-from wx import CommandEvent
 from wx import EVT_MENU
-from wx import ID_ANY
+
+from wx import CommandEvent
 from wx import Menu
+from wx import MenuItem
 from wx import MouseEvent
+
 
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.ControlPoint import ControlPoint
@@ -28,6 +31,13 @@ from org.pyut.model.PyutLink import PyutLink
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.ogl.IllegalOperationException import IllegalOperationException
+
+from org.pyut.PyutUtils import PyutUtils
+
+[
+    MENU_ADD_BEND,
+    MENU_REMOVE_BEND,
+]  = PyutUtils.assignID(2)
 
 
 class OglLink(LineShape, ShapeEventHandler):
@@ -259,38 +269,32 @@ class OglLink(LineShape, ShapeEventHandler):
             event:
         """
         menu: Menu = Menu()
-        menu.Append(ID_ANY, _('Add Bend'), _('Add Bend at right click point'))
+        menu.Append(MENU_ADD_BEND,    _('Add Bend'),    _('Add Bend at right click point'))
+        menu.Append(MENU_REMOVE_BEND, _('Remove Bend'), _('Remove Bend closest to click point'))
+
+        if len(self._controls) == 0:
+            bendItem: MenuItem = menu.FindItemById(MENU_REMOVE_BEND)
+            bendItem.Enable(enable=False)
 
         x: int = event.GetX()
         y: int = event.GetY()
         clickPoint: Tuple[int, int] = (x, y)
 
-        OglLink.clsLogger.debug(f'OglLink - x,y: {x},{y}')
-        # Callback
-        menu.Bind(EVT_MENU, lambda evt, data=clickPoint: self.onAddBend(evt, data))
+        OglLink.clsLogger.debug(f'OglLink - {clickPoint=}')
+        # I hate lambdas -- humberto
+        menu.Bind(EVT_MENU, lambda evt, data=clickPoint: self._onMenuItemSelected(evt, data))
 
         frame = self._diagram.GetPanel()
         frame.PopupMenu(menu, x, y)
 
     # noinspection PyUnusedLocal
-    def onAddBend(self, event: CommandEvent, data):
+    def _onMenuItemSelected(self, event: CommandEvent, data):
 
-        OglLink.clsLogger.debug(f'Add a bend.  {data=}')
-
-        x = data[0]
-        y = data[1]
-        cp = ControlPoint(x, y)
-
-        cp.SetVisible(True)
-        #
-        # Add it either before the destinationAnchor or the sourceAnchor
-        #
-        lp: LinePoint = self.GetSource()
-        self.AddControl(cp, lp)
-
-        frame = self._diagram.GetPanel()
-        frame.GetDiagram().AddShape(cp)
-        frame.Refresh()
+        eventId: int = event.GetId()
+        if eventId == MENU_ADD_BEND:
+            self._addBend(data)
+        elif eventId == MENU_REMOVE_BEND:
+            self._removeBend(data)
 
     def _computeLinkLength(self, srcPosition: OglPosition, destPosition: OglPosition) -> float:
         """
@@ -326,3 +330,60 @@ class OglLink(LineShape, ShapeEventHandler):
         dy: float = dstY - srcY
 
         return dx, dy
+
+    def _addBend(self, clickPoint: Tuple[int, int]):
+
+        OglLink.clsLogger.debug(f'Add a bend.  {clickPoint=}')
+
+        x = clickPoint[0]
+        y = clickPoint[1]
+        cp = ControlPoint(x, y)
+
+        cp.SetVisible(True)
+        #
+        # Add it either before the destinationAnchor or the sourceAnchor
+        #
+        lp: LinePoint = self.GetSource()
+        self.AddControl(control=cp, after=lp)
+
+        frame = self._diagram.GetPanel()
+        frame.GetDiagram().AddShape(cp)
+        frame.Refresh()
+
+    def _removeBend(self, clickPoint: Tuple[int, int]):
+
+        OglLink.clsLogger.debug(f'Remove a bend.  {clickPoint=}')
+
+        cp: ControlPoint = self._findClosestControlPoint(clickPoint=clickPoint)
+
+        assert cp is not None, 'We should have previously verified there was at least one on the line'
+
+        self._removeControl(control=cp)
+        cp.Detach()
+        cp.SetVisible(False)    # Work around still on screen but not visible and not saved
+
+        frame = self._diagram.GetPanel()
+        frame.Refresh()
+
+    def _findClosestControlPoint(self, clickPoint: Tuple[int, int]) -> ControlPoint:
+
+        controlPoints = self.GetControlPoints()
+
+        distance: float = 1000.0    # Impossibly long distance
+        closestPoint: ControlPoint = cast(ControlPoint, None)
+        srcPosition: OglPosition = OglPosition(x=clickPoint[0], y=clickPoint[1])
+
+        for controlPoint in controlPoints:
+            xy:    Tuple[int, int] = controlPoint.GetPosition()
+            destX: int = xy[0]
+            destY: int = xy[1]
+            destPosition: OglPosition = OglPosition(x=destX, y=destY)
+
+            dx, dy = self._computeDxDy(srcPosition, destPosition)
+            currentDistance = sqrt(dx*dx + dy*dy)
+            self.clsLogger.warning(f'{currentDistance=}')
+            if currentDistance <= distance:
+                distance = currentDistance
+                closestPoint = controlPoint
+
+        return closestPoint
