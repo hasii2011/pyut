@@ -1,4 +1,5 @@
-from typing import List
+
+from typing import cast
 from typing import Tuple
 
 from logging import Logger
@@ -107,7 +108,7 @@ class TestOglLink(TestBase):
     def _raiseException(self, badOglLink: OglLink):
         badOglLink._computeDxDy(srcPosition=self.MOCK_SOURCE_POSITION, destPosition=self.MOCK_DESTINATION_POSITION)
 
-    def _createControlPoints(self) -> List[ControlPoint]:
+    def _createControlPoints(self) -> ControlPoints:
         """
         Create a list of control points between the two mock shapes
 
@@ -118,7 +119,7 @@ class TestOglLink(TestBase):
         cp3: ControlPoint = ControlPoint(x=300, y=300)
         cp4: ControlPoint = ControlPoint(x=400, y=400)
 
-        controlPoints: List[ControlPoint] = [cp1, cp2, cp3, cp4]
+        controlPoints: ControlPoints = cast(ControlPoints, [cp1, cp2, cp3, cp4])
 
         return controlPoints
 
