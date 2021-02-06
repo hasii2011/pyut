@@ -4,6 +4,7 @@ from wx import EXPAND
 from wx import ID_ANY
 from wx import VERTICAL
 
+from wx import FileDropTarget
 from wx import App
 from wx import Frame
 from wx import BoxSizer
@@ -14,6 +15,16 @@ from tests.TestBase import TestBase
 
 WINDOW_WIDTH:  int = 900
 WINDOW_HEIGHT: int = 500
+
+
+class PyutFileDropTarget(FileDropTarget):
+
+    def OnDropFiles(self, x, y, filenames):
+
+        for fileName in filenames:
+            print(f'You dropped: {fileName}')
+
+        return True
 
 
 class TestGriddedDiagramApplication(App):
@@ -37,6 +48,8 @@ class TestGriddedDiagramApplication(App):
         mainSizer.Add(diagramFrame, 1, EXPAND | BOTTOM, 10)
         frameTop.SetSizer(mainSizer)
         mainSizer.Fit(frameTop)
+
+        frameTop.SetDropTarget(PyutFileDropTarget())
 
         frameTop.Show(True)
 

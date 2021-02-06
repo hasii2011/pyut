@@ -27,7 +27,10 @@ DiagramsStrings = {
 
 class PyutConstants:
 
-    DefaultFilename:        str = _("Untitled.put")
+    PYUT_EXTENSION:  str = '.put'
+    XML_EXTENSION:   str = '.xml'
+    DEFAULT_FILENAME: str = _('Untitled') + PYUT_EXTENSION
+
     THE_GREAT_MAC_PLATFORM: str = 'darwin'
 
     @staticmethod
@@ -64,5 +67,4 @@ class PyutConstants:
     def unspecifiedDisplayMethodsIcon() -> Bitmap:
         bmp: Bitmap = unSpecifiedImage.GetBitmap()
         return bmp
-
 

@@ -36,6 +36,7 @@ from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
+from org.pyut.ui.frame.PyutFileDropTarget import PyutFileDropTarget
 from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
@@ -151,6 +152,9 @@ class PyutApplicationFrame(Frame):
 
         # Initialize the tips frame
         self._alreadyDisplayedTipsFrame = False
+
+        self.SetDropTarget(PyutFileDropTarget(treeNotebookHandler=self._treeNotebookHandler))
+
         self.SetThemeEnabled(True)
 
         self.Bind(EVT_ACTIVATE, self._onActivate)
@@ -197,7 +201,7 @@ class PyutApplicationFrame(Frame):
 
         mainUI:   TreeNotebookHandler            = self._treeNotebookHandler
 
-        defaultProject: PyutProject = mainUI.getProject(PyutConstants.DefaultFilename)
+        defaultProject: PyutProject = mainUI.getProject(PyutConstants.DEFAULT_FILENAME)
         if defaultProject is not None:
 
             self.logger.info(f'Removing: {defaultProject}')

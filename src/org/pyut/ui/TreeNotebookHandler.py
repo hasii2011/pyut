@@ -135,6 +135,18 @@ class TreeNotebookHandler:
     def currentFrame(self, newFrame: UmlDiagramsFrame):
         self._currentFrame = newFrame
 
+    @property
+    def projectTree(self) -> TreeCtrl:
+        return self.__projectTree
+
+    @property
+    def projectTreeRoot(self) -> TreeItemId:
+        return self.__projectTreeRoot
+
+    @property
+    def notebook(self) -> Notebook:
+        return self.__notebook
+
     def getCurrentFrame(self):
         """
         Deprecated use the properties
@@ -184,7 +196,7 @@ class TreeNotebookHandler:
         Returns:
             `True` if the filename is the default filename
         """
-        return filename == PyutConstants.DefaultFilename
+        return filename == PyutConstants.DEFAULT_FILENAME
 
     def openFile(self, filename, project=None) -> bool:
         """
@@ -205,7 +217,7 @@ class TreeNotebookHandler:
 
         # Create a new project ?
         if project is None:
-            project = PyutProject(PyutConstants.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
+            project = PyutProject(PyutConstants.DEFAULT_FILENAME, self.__notebook, self.__projectTree, self.__projectTreeRoot)
 
         # Load the project and add it
         try:
@@ -284,7 +296,7 @@ class TreeNotebookHandler:
             PyutUtils.displayError(_("No diagram to save !"), _("Error"))
             return False
 
-        if currentProject.getFilename() is None or currentProject.getFilename() == PyutConstants.DefaultFilename:
+        if currentProject.getFilename() is None or currentProject.getFilename() == PyutConstants.DEFAULT_FILENAME:
             return self.saveFileAs()
         else:
             return currentProject.saveXmlPyut()
@@ -364,7 +376,7 @@ class TreeNotebookHandler:
         """
         Begin a new project
         """
-        project = PyutProject(PyutConstants.DefaultFilename, self.__notebook, self.__projectTree, self.__projectTreeRoot)
+        project = PyutProject(PyutConstants.DEFAULT_FILENAME, self.__notebook, self.__projectTree, self.__projectTreeRoot)
         self._projects.append(project)
         self._currentProject = project
         self._currentFrame = None
