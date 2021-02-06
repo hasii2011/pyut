@@ -171,7 +171,7 @@ class PyutProject:
             self._modified = False
         except (ValueError, Exception) as e:
             EndBusyCursor()
-            PyutUtils.displayError(_(f"Error loading file: {e}"))
+            self.logger.error(f"Error loading file: {e}")
             return False
 
         EndBusyCursor()
@@ -291,16 +291,11 @@ class PyutProject:
             document: PyutDocument to remove from this project
             confirmation:  If `True` ask for confirmation
         """
-
-        # Get frame
         frame = document.getFrame()
 
-        # Confirmation
-        # self._mediator.registerUMLFrame(frame)
         if confirmation:
             self._mediator.getFileHandling().showFrame(frame)
 
-            # dlg = MessageDialog(self._parentFrame, _("Are you sure to remove the document ?"),
             dlg = MessageDialog(self._mediator.getUmlFrame(), _("Are you sure to remove the document ?"),
                                 _("Remove a document from a project"), YES_NO)
             if dlg.ShowModal() == ID_NO:

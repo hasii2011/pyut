@@ -9,6 +9,7 @@ import zlib
 from xml.dom.minidom import Document
 from xml.dom.minidom import parseString
 
+from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.DiagramType import DiagramType
@@ -69,8 +70,9 @@ class IoFile:
         chdir(path)
 
         Lang.importLanguage()
-        xmlString = ""
-        if filename[-4:] == ".put":
+        xmlString: str = ""
+        suffix:    str = filename[-4:]
+        if suffix == PyutConstants.PYUT_EXTENSION:
             try:
                 with open(filename, "rb") as dataFile:
                     compressedData: bytes = dataFile.read()
@@ -81,10 +83,10 @@ class IoFile:
                     self.logger.info(f'Document read:\n{xmlString}')
             except (ValueError, Exception) as e:
                 self.logger.error(f'open:  {e}')
-        elif filename[-4:] == ".xml":
+        elif suffix == PyutConstants.XML_EXTENSION:
             xmlString = open(filename, "r").read()
         else:
-            PyutUtils.displayError(_(f"Can't open the unidentified file : {filename}"))
+            PyutUtils.displayError(_(f"This is an unsupported file type: {filename}"))
             return
         dom = parseString(xmlString)
 
@@ -99,7 +101,11 @@ class IoFile:
                 myXml = PyutXml()
             myXml.open(dom, project)
         else:
-            # TODO fix this code to use PyutXmlFinder
+            # TODO fix this code to use PyutXmlFinder;
+            #  I don't think this is used by the Python3 version of this Pyut
+            self.logger.warning('***********************************')
+            self.logger.warning('Using old code !!!')
+            self.logger.warning('***********************************')
             root = dom.getElementsByTagName("Pyut")[0]
             if root.hasAttribute('version'):
                 version = root.getAttribute("version")

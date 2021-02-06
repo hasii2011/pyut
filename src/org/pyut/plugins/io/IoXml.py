@@ -144,7 +144,7 @@ class IoXml(PyutIoPlugin):
             oglObjects:
             umlFrame: Pyut's UmlFrame
 
-        Returns: True if succeeded, False if error or canceled
+        Returns: True if read succeeds, False if error or canceled
         """
         # Ask the user which destination file he wants
         filename = self._askForFileImport()

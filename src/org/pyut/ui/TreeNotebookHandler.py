@@ -222,13 +222,14 @@ class TreeNotebookHandler:
         # Load the project and add it
         try:
             if not project.loadFromFilename(filename):
-                PyutUtils.displayError(_("The specified file can't be loaded !"))
+                eMsg: str = f'{_("The file cannot be loaded !")} - {filename}'
+                PyutUtils.displayError(eMsg)
                 return False
             self._projects.append(project)
             #  self._ctrl.registerCurrentProject(project)
             self._currentProject = project
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_(f"An error occurred while loading the project ! {e}"))
+            self.logger.error(f"An error occurred while loading the project ! {e}")
             return False
 
         try:
@@ -561,7 +562,8 @@ class TreeNotebookHandler:
         if self._mediator.isInScriptMode():
             return
 
-        for i in range(self.__notebook.GetPageCount()):
+        pageCount: int = self.__notebook.GetPageCount()
+        for i in range(pageCount):
             pageFrame = self.__notebook.GetPage(i)
             if pageFrame is umlFrame:
                 self.__notebook.DeletePage(i)

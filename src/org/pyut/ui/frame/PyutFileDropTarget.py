@@ -13,10 +13,18 @@ from wx import FileDropTarget
 from wx import MessageDialog
 from wx import Window
 
-from org.pyut.PyutConstants import PyutConstants
-from org.pyut.general.Globals import _
+from wx import Yield as wxYield
 
+
+from org.pyut.ui.Mediator import Mediator
+from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+
+from org.pyut.enums.DiagramType import DiagramType
+
+from org.pyut.PyutConstants import PyutConstants
+
+from org.pyut.general.Globals import _
 
 FileNames = NewType('FileNames', List[str])
 
@@ -55,6 +63,7 @@ class PyutFileDropTarget(FileDropTarget):
                 badFileNameList.append(fileName)
 
         self._loadPyutFiles(pyutFileNameList)
+        self._loadPyutXmlFiles(xmlFileNameList)
 
         if len(badFileNameList) > 0:
             parent:  Window = self._treeNotebookHandler.notebook
@@ -69,3 +78,25 @@ class PyutFileDropTarget(FileDropTarget):
 
         for pyutFileName in filenames:
             self._treeNotebookHandler.openFile(pyutFileName)
+
+    def _loadPyutXmlFiles(self, xmlFilenames: FileNames):
+
+        mediator: Mediator            = Mediator()
+        tbh:      TreeNotebookHandler = self._treeNotebookHandler
+
+        for xmlFilename in xmlFilenames:
+
+            wxYield()
+            tbh.newProject()
+            tbh.newDocument(DiagramType.CLASS_DIAGRAM)
+            mediator.updateTitle()
+            newProject: PyutProject = tbh.getCurrentProject()
+            #
+            # TODO Fix this out later;  This is duplicate code from the IoXml plugin
+            # This is some kind of bug work around code
+            for document in newProject.getDocuments():
+                newProject.removeDocument(document, False)
+
+                success: bool = tbh.openFile(xmlFilename, newProject)
+                if success is False:
+                    tbh.closeCurrentProject()
