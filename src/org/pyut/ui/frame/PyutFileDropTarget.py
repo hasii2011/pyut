@@ -92,12 +92,12 @@ class PyutFileDropTarget(FileDropTarget):
             mediator.updateTitle()
             newProject: PyutProject = tbh.getCurrentProject()
             #
-            # TODO Fix this out later;  This is duplicate code from the IoXml plugin
+            # TODO Figure this out later;  This is duplicate code from the IoXml plugin
             # This is some kind of bug work around code
             for document in newProject.getDocuments():
                 newProject.removeDocument(document, False)
 
-                success: bool = tbh.openFile(xmlFilename, newProject)
-                self.logger.debug(f'{tbh.currentFrame=} {tbh.currentProject}')
-                if success is False:
-                    tbh.closeCurrentProject()
+            success: bool = tbh.openFile(xmlFilename, newProject)
+            self.logger.debug(f'{tbh.currentFrame=} {tbh.currentProject}')
+            if success is False:
+                tbh.closeCurrentProject()
