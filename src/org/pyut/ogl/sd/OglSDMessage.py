@@ -4,8 +4,7 @@ from typing import Tuple
 from logging import Logger
 from logging import getLogger
 
-# from wx import BLACK_PEN
-from wx import GREEN_PEN
+from wx import BLACK_PEN
 
 from wx import CANCEL
 from wx import CENTRE
@@ -121,7 +120,7 @@ class OglSDMessage(OglLink):
         srcX, srcY = srcAnchor.GetPosition()
         dstX, dstY = dstAnchor.GetPosition()
         self.clsLogger.debug(f'Draw line from: ({srcX},{srcY})  to: ({dstX},{dstY})')
-        dc.SetPen(GREEN_PEN)
+        dc.SetPen(BLACK_PEN)
         dc.DrawLine(srcX, srcY, dstX, dstY)
         self.DrawArrow(dc, srcAnchor.GetPosition(), dstAnchor.GetPosition())
         self.DrawChildren(dc=dc)

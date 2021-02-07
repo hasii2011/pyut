@@ -21,15 +21,20 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         - sdInstances is a set of class diagram instances,
           composed by label and lifeline
     """
+    cdfDebugId: int = 0x00FFF   # UML Sequence Diagrams Frame Debug ID
+
     def __init__(self, parent):
         """
-        Constructor.
 
-        @param wx.Window parent : parent window
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            parent:  The parent window
         """
-        UmlDiagramsFrame.__init__(self, parent)
+        super().__init__(parent)
+
+        self._cdfDebugId: int = UmlSequenceDiagramsFrame.cdfDebugId
+
+        UmlSequenceDiagramsFrame.cdfDebugId += 1
+
         self.newDiagram()
         self._cdInstances = []
 
@@ -39,8 +44,9 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         Create a new sequence diagram instance
         """
         # Create and add instance
-        pyutSDInstance = PyutSDInstance()
-        oglSDInstance  = OglSDInstance(pyutSDInstance, self)
+        pyutSDInstance: PyutSDInstance = PyutSDInstance()
+        oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance, self)
+
         self.addShape(oglSDInstance, x, oglSDInstance.GetPosition()[1])
 
         return pyutSDInstance
@@ -71,3 +77,8 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         self.Refresh()
 
         return oglLink
+
+    def __repr__(self) -> str:
+
+        debugId: str = f'0x{self._cdfDebugId:06X}'
+        return f'UmlSequenceDiagramsFrame:[{debugId=}]'

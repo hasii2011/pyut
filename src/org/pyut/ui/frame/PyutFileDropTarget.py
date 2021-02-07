@@ -98,5 +98,6 @@ class PyutFileDropTarget(FileDropTarget):
                 newProject.removeDocument(document, False)
 
                 success: bool = tbh.openFile(xmlFilename, newProject)
+                self.logger.debug(f'{tbh.currentFrame=} {tbh.currentProject}')
                 if success is False:
                     tbh.closeCurrentProject()

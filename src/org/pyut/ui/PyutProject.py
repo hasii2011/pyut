@@ -1,11 +1,13 @@
 
-from logging import Logger
-from logging import getLogger
-
 from typing import List
 from typing import NewType
 from typing import Union
 from typing import cast
+
+from logging import DEBUG
+from logging import Logger
+from logging import getLogger
+
 
 from wx import ID_NO
 from wx import YES_NO
@@ -16,6 +18,7 @@ from wx import TreeCtrl
 from wx import TreeItemId
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
+
 from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
@@ -23,13 +26,11 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.Mediator import Mediator
-
-from org.pyut.general.Globals import _
-
 from org.pyut.ui.PyutDocument import PyutDocument
-
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
+
+from org.pyut.general.Globals import _
 
 UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])
 
@@ -185,13 +186,17 @@ class PyutProject:
             # self._documents[0].getFrame().Refresh()
             # self._mediator.getFileHandling().showFrame(documentFrame)
 
-            documentFrame: UmlFrameType = self._documents[0].getFrame()
-            mediator:      Mediator     = self._mediator
-            mainUI:        TreeNotebookHandler       = mediator.getFileHandling()
+            documentFrame: UmlFrameType        = self._documents[0].getFrame()
+            mediator:      Mediator            = self._mediator
+            tbh:           TreeNotebookHandler = mediator.getFileHandling()
 
-            self.logger.info(f'{documentFrame=}')
+            self.logger.debug(f'{documentFrame=}')
             documentFrame.Refresh()
-            mainUI.showFrame(documentFrame)
+            tbh.showFrame(documentFrame)
+
+            if self.logger.isEnabledFor(DEBUG):
+                notebook = tbh.notebook
+                self.logger.debug(f'{tbh.currentFrame=} {tbh.currentProject=} {notebook.GetSelection()=}')
 
             return True
         else:

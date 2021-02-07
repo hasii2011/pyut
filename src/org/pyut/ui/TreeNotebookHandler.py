@@ -226,7 +226,6 @@ class TreeNotebookHandler:
                 PyutUtils.displayError(eMsg)
                 return False
             self._projects.append(project)
-            #  self._ctrl.registerCurrentProject(project)
             self._currentProject = project
         except (ValueError, Exception) as e:
             self.logger.error(f"An error occurred while loading the project ! {e}")
@@ -236,7 +235,7 @@ class TreeNotebookHandler:
             if not self._mediator.isInScriptMode():
                 for document in project.getDocuments():
                     diagramTitle: str = document.title
-                    shortName:    str = self.shortenNotebookPageFileName(diagramTitle)
+                    shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
                     self.__notebook.AddPage(document.getFrame(), shortName)
 
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
@@ -244,10 +243,14 @@ class TreeNotebookHandler:
 
             if len(project.getDocuments()) > 0:
                 self._currentFrame = project.getDocuments()[0].getFrame()
+                self._syncPageFrameAndNotebook(frame=self._currentFrame)
 
         except (ValueError, Exception) as e:
             PyutUtils.displayError(_(f"An error occurred while adding the project to the notebook {e}"))
             return False
+
+        self.logger.debug(f'{self.currentFrame=} {self.currentProject=} {self.notebook.GetSelection()=}')
+
         return True
 
     def insertFile(self, filename):
@@ -361,7 +364,7 @@ class TreeNotebookHandler:
                 document = document[0]
                 if frame in project.getFrames():
                     diagramTitle: str = document.title
-                    shortName:    str = self.shortenNotebookPageFileName(diagramTitle)
+                    shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
 
                     self.__notebook.SetPageText(i, shortName)
             else:
@@ -398,7 +401,7 @@ class TreeNotebookHandler:
         self._currentProject = project
 
         if not self._mediator.isInScriptMode():
-            shortName: str = self.shortenNotebookPageFileName(project.getFilename())
+            shortName: str = self.__shortenNotebookPageFileName(project.getFilename())
             self.__notebook.AddPage(frame, shortName)
             wxYield()
             self.__notebookCurrentPage  = self.__notebook.GetPageCount() - 1
@@ -647,23 +650,27 @@ class TreeNotebookHandler:
         Args:
             event:
         """
-        itm:      TreeItemId = event.GetItem()
+        itm:      TreeItemId   = event.GetItem()
         pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
         self.logger.info(f'Clicked on: {itm=} `{pyutData=}`')
+
         # Use our own base type
         if isinstance(pyutData, UmlDiagramsFrame):
             frame: UmlDiagramsFrame = pyutData
             self._currentFrame = frame
             self._currentProject = self.getProjectFromFrame(frame)
 
-            # Select the frame in the notebook
-            for i in range(self.__notebook.GetPageCount()):
-                pageFrame = self.__notebook.GetPage(i)
-                if pageFrame is frame:
-                    self.__notebook.SetSelection(i)
-                    return
+            self._syncPageFrameAndNotebook(frame=frame)
         elif isinstance(pyutData, PyutProject):
             self._currentProject = pyutData
+
+    def _syncPageFrameAndNotebook(self, frame):
+
+        for i in range(self.__notebook.GetPageCount()):
+            pageFrame = self.__notebook.GetPage(i)
+            if pageFrame is frame:
+                self.__notebook.SetSelection(i)
+                break
 
     def _getCurrentFrameFromNotebook(self):
         """
@@ -780,7 +787,7 @@ class TreeNotebookHandler:
         self.logger.info(f'{projectTree.GetCount()=}')
         return treeRootItemId
 
-    def shortenNotebookPageFileName(self, filename: str) -> str:
+    def __shortenNotebookPageFileName(self, filename: str) -> str:
         """
         Return a shorter filename to display; For file names longer
         than `MAX_NOTEBOOK_PAGE_NAME_LENGTH` this method takes the first
