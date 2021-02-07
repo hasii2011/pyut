@@ -11,7 +11,7 @@ class AnchorPoint(LinePoint):
     This is a point which begins or ends a line.
     It is often anchored to a parent shape, but that's not mandatory.
     """
-    def __init__(self, x: float, y: float, parent: Shape = None):
+    def __init__(self, x: int, y: int, parent: Shape = None):
         """
 
         Args:
@@ -60,13 +60,13 @@ class AnchorPoint(LinePoint):
         """
         return self._stayOnBorder
 
-    def SetPosition(self, x, y):
+    def SetPosition(self, x: int, y: int):
         """
         Change the position of the anchor point, if it's draggable.
 
         Args:
-            x:
-            y:
+            x:  Abscissa of anchor point
+            y:  Ordinate of anchor point
         """
 
         self.logger.debug(
@@ -87,11 +87,18 @@ class AnchorPoint(LinePoint):
                 width  = abs(width) - 1
                 height = abs(height) - 1
                 self.logger.debug(f'topLeftX,topLeftY ({topLeftX},{topLeftY}) width,height ({width},{height})')
-                if self._stayInside or self._stayOnBorder:
-                    x = self.stayInside(topLeftX, width, x)
-                    y = self.stayInside(topLeftY, height, y)
-                    if self._stayOnBorder:
-                        x, y = self.stickToBorder(topLeftX, topLeftY, width, height, x, y)
+
+                from org.pyut.miniogl.LineShape import LineShape    # avoid circular import
+
+                if isinstance(self._parent, LineShape):
+                    x = topLeftX
+                else:
+                    if self._stayInside or self._stayOnBorder:
+                        x = self.stayInside(topLeftX, width, x)
+                        y = self.stayInside(topLeftY, height, y)
+                        if self._stayOnBorder:
+                            x, y = self.stickToBorder(topLeftX, topLeftY, width, height, x, y)
+
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
 
                 self.logger.debug(f'Final Position: ({self._x}, {self._y})')
@@ -155,6 +162,10 @@ class AnchorPoint(LinePoint):
         if parent:
             parent.RemoveAnchor(self)
 
-    def __repr__(self):
+    def __str__(self) -> str:
         x, y = self.GetPosition()
-        return f'AnchorPoint at ({x:.2f},{y:.2f})'
+        draggable: bool = self._draggable
+        return f'AnchorPoint[({x},{y}) - {draggable=}]'
+
+    def __repr__(self):
+        return self.__str__()

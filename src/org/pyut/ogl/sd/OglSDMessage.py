@@ -18,6 +18,7 @@ from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.TextShape import TextShape
 
 from org.pyut.model.PyutSDMessage import PyutSDMessage
+from org.pyut.ogl.OglPosition import OglPosition
 
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.OglLink import OglLink
@@ -56,8 +57,10 @@ class OglSDMessage(OglLink):
         self._srcAnchor: AnchorPoint = srcAnchor
         self._dstAnchor: AnchorPoint = dstAnchor
 
-        linkLength: float = self._computeLinkLength(srcPosition=srcAnchorPosition, destPosition=dstAnchorPosition)
-        dx, dy            = self._computeDxDy(srcPosition=srcAnchorPosition, destPosition=dstAnchorPosition)
+        oglSource:      OglPosition = OglPosition.tupleToOglPosition(srcAnchorPosition)
+        oglDestination: OglPosition = OglPosition.tupleToOglPosition(dstAnchorPosition)
+        linkLength: float = self._computeLinkLength(srcPosition=oglSource, destPosition=oglDestination)
+        dx, dy            = self._computeDxDy(srcPosition=oglSource, destPosition=oglDestination)
 
         centerMessageX    = -dy * 5 / linkLength
         centerMessageY    = dx * 5 / linkLength

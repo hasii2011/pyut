@@ -178,3 +178,10 @@ class OglSDInstance(OglObject):
         lifeLineShape.SetVisible(True)
 
         return lifeLineShape
+
+    def __str__(self) -> str:
+        instanceName: str = self._pyutObject.getInstanceName()
+        return f'OglSDInstance[{self._id=} {instanceName=}]'
+
+    def __repr__(self) -> str:
+        return self.__str__()
