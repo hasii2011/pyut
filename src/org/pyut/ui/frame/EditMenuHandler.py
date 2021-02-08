@@ -11,28 +11,32 @@ from wx import ClientDC
 from wx import CommandEvent
 from wx import Menu
 
-from org.pyut.miniogl.Diagram import Diagram
-
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutObject import PyutObject
 from org.pyut.model.PyutUseCase import PyutUseCase
 
+from org.pyut.miniogl.Diagram import Diagram
+
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
+
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
-
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
+from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
-from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
+
+
+from org.pyut.history.HistoryManager import HistoryManager
 
 
 class EditMenuHandler(BaseMenuHandler):
@@ -54,10 +58,15 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        if (self._treeNotebookHandler.getCurrentFrame()) is None:
-            PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
-            return
-        self._treeNotebookHandler.getCurrentFrame().getHistory().undo()
+        currentFrame = self._treeNotebookHandler.getCurrentFrame()
+        if currentFrame is None:
+            PyutUtils.displayWarning(msg=_('No selected/available frame'), title=_('Huh!'))
+        else:
+            historyManager: HistoryManager = currentFrame.getHistory()
+            if historyManager.isUndoPossible() is True:
+                historyManager.undo()
+            else:
+                PyutUtils.displayWarning(msg=_('Nothing to undo'), title=_('Huh!'))
 
     # noinspection PyUnusedLocal
     def onRedo(self, event: CommandEvent):
@@ -66,10 +75,15 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        if (self._treeNotebookHandler.getCurrentFrame()) is None:
-            PyutUtils.displayWarning(msg=_('No selected frame'), title=_('Huh!'))
-            return
-        self._treeNotebookHandler.getCurrentFrame().getHistory().redo()
+        currentFrame = self._treeNotebookHandler.getCurrentFrame()
+        if currentFrame is None:
+            PyutUtils.displayWarning(msg=_('No selected/available frame'), title=_('Huh!'))
+        else:
+            historyManager: HistoryManager = currentFrame.getHistory()
+            if historyManager.isRedoPossible() is True:
+                historyManager.redo()
+            else:
+                PyutUtils.displayWarning(msg=_('Nothing to redo'), title=_('Huh!'))
 
     # noinspection PyUnusedLocal
     def onCut(self, event: CommandEvent):
