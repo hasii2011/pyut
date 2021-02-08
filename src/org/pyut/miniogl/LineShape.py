@@ -227,6 +227,7 @@ class LineShape(Shape):
         if self._visible:
 
             super().Draw(dc=dc, withChildren=withChildren)
+
             line = self.GetSegments()
             if self._selected:
                 dc.SetPen(RED_PEN)
@@ -244,7 +245,7 @@ class LineShape(Shape):
                 u, v = line[-2], line[-1]
                 self.DrawArrow(dc, u, v)
             if withChildren:
-                LineShape.clsLogger.debug(f'Draw Children')
+                # LineShape.clsLogger.debug(f'Call DrawChildren()')
                 self.DrawChildren(dc)
 
     def DrawBorder(self, dc):
@@ -350,33 +351,33 @@ class LineShape(Shape):
 
         @return bool
         """
-        def InsideBoundingBox(x, y, a, b):
-            # check if the point (x, y) is inside a box of origin (0, 0) and
-            # diagonal (a, b) with a tolerance of 4
-            ma, mb = a / 2, b / 2
-            if a > 0:
-                w = max(4, a - 8)
+        def InsideBoundingBox(boxX, boxY, diagonalX, diagonalY):
+            # check if the point (boxX, boxY) is inside a box of origin (0, 0) and
+            # diagonal (diagonalA, diagonalB) with a tolerance of 4
+            ma, mb = diagonalX / 2, diagonalY / 2
+            if diagonalX > 0:
+                w = max(4, diagonalX - 8)
             else:
-                w = min(-4, a + 8)
-            if b > 0:
-                h = max(4, b - 8)
+                w = min(-4, diagonalX + 8)
+            if diagonalY > 0:
+                h = max(4, diagonalY - 8)
             else:
-                h = min(-4, b + 8)
+                h = min(-4, diagonalY + 8)
             topLeftX = ma - w / 2
             topLeftY = mb - h / 2
-            i = x > topLeftX
-            j = x > topLeftX + w
-            k = y > topLeftY
-            ll = y > topLeftY + h
+            i = boxX > topLeftX
+            j = boxX > topLeftX + w
+            k = boxY > topLeftY
+            ll = boxY > topLeftY + h
 
             return (i + j) == 1 and (k + ll) == 1
 
         from math import sqrt
 
-        def InsideSegment(x, y, a, b):
-            den = sqrt(a*a + b*b)
+        def InsideSegment(segX1, segY1, segX2, segY2):
+            den = sqrt(segX2 * segX2 + segY2 * segY2)
             if den != 0.0:
-                d = (x*b - y*a) / den
+                d = (segX1 * segY2 - segY1 * segX2) / den
             else:
                 return False
             return abs(d) < 4.0
@@ -394,10 +395,14 @@ class LineShape(Shape):
 
     def SetSelected(self, state: bool = True):
         """
-        Select the shape.
+        Select the shape (default) or not
 
-        @param  state
+        Args:
+            state:
         """
+        from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+        if isinstance(self, OglSDMessage):
+            LineShape.clsLogger.debug(f'SetSelected - {self} is selected: {state}')
         Shape.SetSelected(self, state)
         for ctrl in self._controls:
             ctrl.SetVisible(state)

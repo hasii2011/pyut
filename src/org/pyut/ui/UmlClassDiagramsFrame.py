@@ -117,7 +117,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         return oglInterface
 
-    def createClasses(self, name: str, x: float, y: float) -> CreatedClassesType:
+    def createClasses(self, name: str, x: int, y: int) -> CreatedClassesType:
         """
         Create a pair of classes (pyutClass and oglClass)
 

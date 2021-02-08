@@ -9,11 +9,9 @@ from org.pyut.general.Globals import _
 
 class PyutSDMessage(PyutLink):
     """
-    A message between two lifeline of two CDInstances.
-    Note : don't use getxxxTime, but getSrcY, getDstY
+    A message between two lifeline of two SDInstances.
+    Note : don't use getxxxTime, use getSrcY, getDstY
 
-    :version: $Revision: 1.11 $
-    :author: C.Dutoit
     """
 
     def __init__(self, message="", src=None, srcTime=0, dst=None, dstTime=0, oglObject=None):
@@ -170,22 +168,21 @@ class PyutSDMessage(PyutLink):
     def setDestination(self, dst=None, dstTime=-1):
         """
         Define the destination
-        @param dst : destination object
-        @param dstTime : Time on the destination
-        @author C.Dutoit
+
+        Args:
+            dst:        destination object
+            dstTime:    Time on the destination
         """
         if dst is not None:
             PyutLink.setDestination(self, dst)
-            # self._dest = dst
         if dstTime != -1:
-            print("PyutSDMessage - Setting dstTime to ", dstTime)
+            self.logger.debug(f"Setting dstTime to {dstTime}")
             self.setDstTime(dstTime)
 
     def __str__(self):
         """
-        String representation.
 
-        @return : string representing this object
-        @author C.Dutoit
+        Returns:    string representing this object
         """
-        return _("(%s) link to %s") % (self._src, self._dest)
+        # return _("(%s) link to %s") % (self._src, self._dest)
+        return f'{self._src} linked to {self._dest}'

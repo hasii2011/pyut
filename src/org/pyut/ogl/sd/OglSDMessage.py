@@ -61,8 +61,8 @@ class OglSDMessage(OglLink):
         linkLength: float = self._computeLinkLength(srcPosition=oglSource, destPosition=oglDestination)
         dx, dy            = self._computeDxDy(srcPosition=oglSource, destPosition=oglDestination)
 
-        centerMessageX    = -dy * 5 / linkLength
-        centerMessageY    = dx * 5 / linkLength
+        centerMessageX: int = round(-dy * 5 / linkLength)
+        centerMessageY: int = round(dx * 5 / linkLength)
 
         self._messageLabel: TextShape = self.AddText(centerMessageX, centerMessageY, pyutSDMessage.getMessage())  # font=self._defaultFont
 
@@ -163,3 +163,7 @@ class OglSDMessage(OglLink):
         dstAnchor.SetDraggable(True)
 
         return srcAnchor, dstAnchor
+
+    def __repr__(self) -> str:
+        msg: str = self._pyutSDMessage.getMessage()
+        return f'OglSDMessage[id: {self._id} {msg=}]'

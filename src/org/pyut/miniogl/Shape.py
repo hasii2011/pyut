@@ -217,7 +217,7 @@ class Shape:
         if anchor in self._anchors:
             self._anchors.remove(anchor)
 
-    def AddText(self, x: float, y: float, text: str, font: Font = None):
+    def AddText(self, x: int, y: int, text: str, font: Font = None):
         """
         Add a text shape to the shape.
         Args:
@@ -235,7 +235,7 @@ class Shape:
 
         return t
 
-    def _AddPrivateText(self, x: float, y: float, text: str, font: Font = None):
+    def _AddPrivateText(self, x: int, y: int, text: str, font: Font = None):
         """
         Add a text shape, putting it in the private children of the shape.
         It won't be saved !!! This is used in constructor of child classes.
@@ -252,7 +252,7 @@ class Shape:
         self._privateChildren.append(t)
         return t
 
-    def _CreateTextShape(self, x: float, y: float, text: str, font: Font = None):
+    def _CreateTextShape(self, x: int, y: int, text: str, font: Font = None):
         """
         Create a text shape and add it to the diagram.
 
@@ -348,7 +348,7 @@ class Shape:
         """
         if self._visible:
             for child in self._children + self._anchors + self._privateChildren:
-                Shape.clsLogger.debug(f'Draw {child=}')
+                # Shape.clsLogger.debug(f'DrawChildren {child=} {child._selected=}')
                 child.Draw(dc)
 
     def DrawBorder(self, dc):
@@ -500,12 +500,14 @@ class Shape:
         """
         return self._visible
 
-    def SetSelected(self, state=True):
+    def SetSelected(self, state: bool = True):
         """
-        Select the shape.
+        Set the shape selected state
 
-        @param state
+        Args:
+            state: `True` if it is selected else `False`
         """
+        Shape.clsLogger.debug(f'SetSelected - {self} is selected: {state}')
         self._selected = state
 
     def IsMoving(self):
@@ -696,10 +698,11 @@ class Shape:
         else:
             return False
 
-    def __repr__(self):
-        """
-        String representation.
-
-        @return String
-        """
-        return object.__repr__(self) + " : " + str(self._id)
+    # def __repr__(self):
+    #     """
+    #     Internal string representation
+    #
+    #     Returns:  String version of us
+    #     """
+    #     # return object.__repr__(self) + " : " + str(self._id)
+    #     return f'{object.__repr__(self)}'

@@ -71,7 +71,7 @@ class UmlFrameShapeHandler(DiagramFrame):
             x:
             y:
 
-        Returns:  The new create PyutText
+        Returns:  The newly created PyutText
         """
         pyutText: PyutText = PyutText()
         oglText:  OglText  = OglText(pyutText)

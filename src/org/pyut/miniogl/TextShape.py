@@ -23,7 +23,7 @@ class TextShape(RectangleShape):
     """
     A text shape that can be attached to another shape standalone).
     """
-    def __init__(self, x: float, y: float, text: str, parent=None, font: Font = None):
+    def __init__(self, x: int, y: int, text: str, parent=None, font: Font = None):
         """
 
         Args:
@@ -196,4 +196,4 @@ class TextShape(RectangleShape):
 
     def __repr__(self):
         x, y = self.GetPosition()
-        return f'text `{self._text}` position: ({x:.2f},{y:.2f})'
+        return f'TextShape[{self._text=} position: ({x},{y}])'
