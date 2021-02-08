@@ -8,7 +8,7 @@ from org.pyut.general.Globals import cmp
 from org.pyut.model.PyutClass import PyutClass
 
 
-class DelOglClassCommand(DelOglLinkedObjectCommand):
+class DeleteOglClassCommand(DelOglLinkedObjectCommand):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.

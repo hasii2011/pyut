@@ -823,7 +823,7 @@ class Mediator(Singleton):
 
     def deleteSelectedShape(self):
         from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
-        from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
+        from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         from org.pyut.ogl.OglClass import OglClass
         from org.pyut.ogl.OglObject import OglObject
@@ -840,7 +840,7 @@ class Mediator(Singleton):
         for shape in selected:
             cmd = None
             if isinstance(shape, OglClass):
-                cmd = DelOglClassCommand(shape)
+                cmd = DeleteOglClassCommand(shape)
             elif isinstance(shape, OglObject):
                 cmd = DelOglObjectCommand(shape)
             elif isinstance(shape, OglLink):
@@ -1011,7 +1011,7 @@ class Mediator(Singleton):
 
     def beginChangeRecording(self, oglObject):
 
-        from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
+        from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
         from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         from org.pyut.ogl.OglClass import OglClass
@@ -1020,7 +1020,7 @@ class Mediator(Singleton):
 
         if isinstance(oglObject, OglClass):
             print("begin")
-            self._modifyCommand = DelOglClassCommand(oglObject)
+            self._modifyCommand = DeleteOglClassCommand(oglObject)
         elif isinstance(oglObject, OglLink):
             self._modifyCommand = DelOglLinkCommand(oglObject)
         elif isinstance(oglObject, OglObject):

@@ -2,14 +2,14 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
+from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
-class CreateOglClassCommand(DelOglClassCommand):
+class CreateOglClassCommand(DeleteOglClassCommand):
     """
     This class is a part of Pyut's history system.
     It creates an OglClass and allows undo/redo operations.
@@ -38,14 +38,14 @@ class CreateOglClassCommand(DelOglClassCommand):
             else:
                 self._shape = self._createNewClass(x, y)
         else:
-            DelOglClassCommand.__init__(self, shape)
+            DeleteOglClassCommand.__init__(self, shape)
 
     def serialize(self):
         """
         serialize the data needed by the command to undo/redo the created link
         """
 
-        return DelOglClassCommand.serialize(self)
+        return DeleteOglClassCommand.serialize(self)
 
     def deserialize(self, serializedData):
         """
@@ -54,21 +54,21 @@ class CreateOglClassCommand(DelOglClassCommand):
                                             by the command to undo redo a link
         """
 
-        DelOglClassCommand.deserialize(self, serializedData)
+        DeleteOglClassCommand.deserialize(self, serializedData)
 
     def redo(self):
         """
         redo the creation of the link.
         """
 
-        DelOglClassCommand.undo(self)
+        DeleteOglClassCommand.undo(self)
 
     def undo(self):
         """
         Undo the creation of link, what means that we destroy the link
         """
 
-        DelOglClassCommand.redo(self)
+        DeleteOglClassCommand.redo(self)
 
     def execute(self):
         pass

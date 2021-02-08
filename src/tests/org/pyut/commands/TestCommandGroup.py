@@ -14,7 +14,7 @@ from unittest.mock import MagicMock
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.commands.Command import Command
-from org.pyut.commands.DelOglClassCommand import DelOglClassCommand
+from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
 from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
 from org.pyut.commands.CommandGroup import CommandGroup
 
@@ -61,7 +61,7 @@ class TestCommandGroup(TestBase):
         self.assertTrue(len(commands) == NUMBER_OF_COMMANDS_CREATED, 'Not enough commands created')
         self.logger.info(f'{commands}')
 
-        self.assertTrue(isinstance(commands[0], DelOglClassCommand), 'Incorrect command created')
+        self.assertTrue(isinstance(commands[0], DeleteOglClassCommand), 'Incorrect command created')
         self.assertTrue(isinstance(commands[1], DelOglLinkCommand),  'Incorrect command created')
 
 
