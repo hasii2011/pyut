@@ -229,6 +229,10 @@ class LineShape(Shape):
             super().Draw(dc=dc, withChildren=withChildren)
 
             line = self.GetSegments()
+            from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+            if isinstance(self, OglSDMessage):
+                LineShape.clsLogger.debug(f'{self} - {self._selected=}')
+
             if self._selected:
                 dc.SetPen(RED_PEN)
             if self._spline:
@@ -400,9 +404,6 @@ class LineShape(Shape):
         Args:
             state:
         """
-        from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
-        if isinstance(self, OglSDMessage):
-            LineShape.clsLogger.debug(f'SetSelected - {self} is selected: {state}')
         Shape.SetSelected(self, state)
         for ctrl in self._controls:
             ctrl.SetVisible(state)

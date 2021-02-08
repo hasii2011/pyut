@@ -229,48 +229,11 @@ class Shape:
         Returns:
             The created shape
         """
-        Shape.clsLogger.debug(f'AddText - {text=} {x=} {y=}')
-        t = self._CreateTextShape(x, y, text, font=font)
+        # Shape.clsLogger.debug(f'AddText - {text=} @ ({x}, {y})')
+        t = self._createTextShape(x, y, text, font=font)
         self._children.append(t)
 
         return t
-
-    def _AddPrivateText(self, x: int, y: int, text: str, font: Font = None):
-        """
-        Add a text shape, putting it in the private children of the shape.
-        It won't be saved !!! This is used in constructor of child classes.
-
-        Args:
-            x,: position of the text, relative to the origin of the shape
-            y : position of the text, relative to the origin of the shape
-            text: text to add
-            font: font to use
-
-        Returns:  TextShape : the created shape
-        """
-        t = self._CreateTextShape(x, y, text, font=font)
-        self._privateChildren.append(t)
-        return t
-
-    def _CreateTextShape(self, x: int, y: int, text: str, font: Font = None):
-        """
-        Create a text shape and add it to the diagram.
-
-        Args:
-            x,: position of the text, relative to the origin of the shape
-            y : position of the text, relative to the origin of the shape
-            text: text to add
-            font: font to use
-
-        Returns:  TextShape : the created shape
-
-        """
-        from org.pyut.miniogl.TextShape import TextShape
-        textShape: TextShape = TextShape(x, y, text, self, font=font)
-        if self._diagram is not None:
-            self._diagram.AddShape(textShape)
-        Shape.clsLogger.debug(f'_CreateTextShape - {textShape=} added at {x=} {y=}')
-        return textShape
 
     def Attach(self, diagram):
         """
@@ -293,10 +256,8 @@ class Shape:
         removed, and link lines too.
         """
         # do not detach a protected shape
-        Shape.clsLogger.debug(f"In shape.Detach with: {self}")
-        if self._diagram is not None and not self._protected:
-            Shape.clsLogger.debug(f"passed first condition")
 
+        if self._diagram is not None and not self._protected:
             self.GetModel()._views.remove(self)
 
             diagram = self._diagram
@@ -507,7 +468,6 @@ class Shape:
         Args:
             state: `True` if it is selected else `False`
         """
-        Shape.clsLogger.debug(f'SetSelected - {self} is selected: {state}')
         self._selected = state
 
     def IsMoving(self):
@@ -550,9 +510,9 @@ class Shape:
             if self._parent is None:
                 self._x = x
                 self._y = y
-                Shape.clsLogger.debug(f'{self._id=} Position: ({self._x},{self._y})')
+                # Shape.clsLogger.debug(f'{self._id=} Position: ({self._x},{self._y})')
             else:
-                Shape.clsLogger.debug(f'_parent: {self._parent}')
+                # Shape.clsLogger.debug(f'_parent: {self._parent}')
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
             #  if the shape is attached to a diagramFrame, it means that
             #  the model will be initialized correctly.
@@ -698,11 +658,43 @@ class Shape:
         else:
             return False
 
-    # def __repr__(self):
-    #     """
-    #     Internal string representation
-    #
-    #     Returns:  String version of us
-    #     """
-    #     # return object.__repr__(self) + " : " + str(self._id)
-    #     return f'{object.__repr__(self)}'
+    def _addPrivateText(self, x: int, y: int, text: str, font: Font = None):
+        """
+        Add a text shape, putting it in the private children of the shape.
+        It won't be saved !!! This is used in constructor of child classes.
+
+        Args:
+            x,: position of the text, relative to the origin of the shape
+            y : position of the text, relative to the origin of the shape
+            text: text to add
+            font: font to use
+
+        Returns:  TextShape : the created shape
+        """
+        from org.pyut.miniogl.TextShape import TextShape
+
+        t: TextShape = self._createTextShape(x, y, text, font=font)
+        self._privateChildren.append(t)
+        return t
+
+    def _createTextShape(self, x: int, y: int, text: str, font: Font = None):
+        """
+        Create a text shape and add it to the diagram.
+
+        Args:
+            x,: position of the text, relative to the origin of the shape
+            y : position of the text, relative to the origin of the shape
+            text: text to add
+            font: font to use
+
+        Returns:  TextShape : the created shape
+
+        """
+        from org.pyut.miniogl.TextShape import TextShape
+
+        textShape: TextShape = TextShape(x, y, text, self, font=font)
+        if self._diagram is not None:
+            self._diagram.AddShape(textShape)
+        # Shape.clsLogger.debug(f'_CreateTextShape - {textShape=} added at {x=} {y=}')
+
+        return textShape

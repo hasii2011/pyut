@@ -11,6 +11,7 @@ from wx import CENTRE
 from wx import DC
 from wx import ID_OK
 from wx import OK
+from wx import RED_PEN
 from wx import TextEntryDialog
 
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
@@ -52,7 +53,7 @@ class OglSDMessage(OglLink):
         srcAnchor, dstAnchor = self._createAnchorPoints(srcShape=srcShape, pyutSDMessage=pyutSDMessage, dstShape=dstShape)
         srcAnchorPosition  = srcAnchor.GetPosition()
         dstAnchorPosition = dstAnchor.GetPosition()
-        self.clsLogger.debug(f'__init__ -  src anchor: {srcAnchorPosition} dest anchor: {dstAnchorPosition}')
+
         self._srcAnchor: AnchorPoint = srcAnchor
         self._dstAnchor: AnchorPoint = dstAnchor
 
@@ -73,7 +74,6 @@ class OglSDMessage(OglLink):
         """
         Define the positions on lifeline (y)
         """
-        self.clsLogger.debug(f'OglMessage - updatePositions')
         src = self.GetSource()
         dst = self.GetDestination()
         srcY = self._pyutSDMessage.getSrcY() + src.GetParent().GetSegments()[0][1]
@@ -119,11 +119,15 @@ class OglSDMessage(OglLink):
 
         srcX, srcY = srcAnchor.GetPosition()
         dstX, dstY = dstAnchor.GetPosition()
-        self.clsLogger.debug(f'Draw line from: ({srcX},{srcY})  to: ({dstX},{dstY})')
-        dc.SetPen(BLACK_PEN)
+
+        if self._selected is True:
+            dc.SetPen(RED_PEN)
+
         dc.DrawLine(srcX, srcY, dstX, dstY)
         self.DrawArrow(dc, srcAnchor.GetPosition(), dstAnchor.GetPosition())
         self.DrawChildren(dc=dc)
+
+        dc.SetPen(BLACK_PEN)
 
     def OnLeftDClick(self, event):
         """
