@@ -13,7 +13,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
+from org.pyut.commands.DeleteOglObjectCommand import DelOglObjectCommand
 
 
 class TestDelOglObjectCommand(TestBase):

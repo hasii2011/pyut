@@ -2,7 +2,7 @@
 from typing import cast
 
 from org.pyut.commands.Command import Command
-from org.pyut.commands.DelOglObjectCommand import DelOglObjectCommand
+from org.pyut.commands.DeleteOglObjectCommand import DelOglObjectCommand
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.ogl.OglLinkFactory import getLinkType
