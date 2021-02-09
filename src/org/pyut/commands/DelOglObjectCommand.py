@@ -21,16 +21,17 @@ class DelOglObjectCommand(Command):
         super().__init__()
         self._shape = shape
 
-    def serialize(self):
+    def serialize(self) -> str:
 
-        serialShape = Command.serialize(self)
+        serialShape = Command.serialize(self)   # Should this be super()
         #
         # serialize the class and module of the ogl and pyut shape to get the
         # constructors for the deserialization
-        oglShapeModule = self._shape.__module__
-        oglShapeClass = self._shape.__class__.__name__
-        pyutShapeModule = self._shape.getPyutObject().__module__
-        pyutShapeClass = self._shape.getPyutObject().__class__.__name__
+        oglShapeModule:  str = self._shape.__module__
+        oglShapeClass:   str = self._shape.__class__.__name__
+        pyutShapeModule: str = self._shape.getPyutObject().__module__
+        pyutShapeClass:  str = self._shape.getPyutObject().__class__.__name__
+
         serialShape += makeValuatedToken("oglShapeModule", oglShapeModule)
         serialShape += makeValuatedToken("oglShapeClass", oglShapeClass)
         serialShape += makeValuatedToken("pyutShapeModule", pyutShapeModule)

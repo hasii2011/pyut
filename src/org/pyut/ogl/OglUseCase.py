@@ -64,8 +64,9 @@ class OglUseCase(OglObject):
         # Draw text
         x += round(0.25 * width)
         y += round(0.25 * height)
-        textWidth: int = round(0.6 * width)             # Text area width
-        space = 1.1 * dc.GetCharHeight()    # Space between lines
+
+        textWidth: int = round(0.6 * width)                 # Text area width
+        space:     int = round(1.1 * dc.GetCharHeight())    # Space between lines
 
         # Drawing is restricted in the specified region of the device
         dc.SetClippingRegion(x, y, textWidth, round(0.6 * height))

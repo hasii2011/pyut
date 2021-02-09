@@ -20,13 +20,14 @@ class Command:
         """
         self._group = None  # group to which the command is added. Init when added to a group
 
-    def serialize(self):
+    def serialize(self) -> str:
         """
-        Return the module name and class name in view to read them during
-        the deserialization and get the right constructor.
+        Serialize the module name and class name
 
-        Notes:  Use makeValuatedToken() from historyUtils for each value
-        you want to serialize, so that you can use the getTokenValue to get
+        Notes:  Use `makeValuatedToken()` from HistoryUtils for each value
+        you want to serialize
+
+        Then you can use the `getTokenValue()` to get
         back the string representation of this value for the deserialization.
 
         Returns:   String representation of the command in view to store it
@@ -35,9 +36,10 @@ class Command:
 
             return Command.serialize + (MyCommand's serialized information)
         """
+        moduleId: str = makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__))
+        classId:  str = makeValuatedToken(COMMAND_CLASS_ID, str(self.__class__.__name__))
 
-        return (makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__)) +
-                makeValuatedToken(COMMAND_CLASS_ID, str(self.__class__.__name__)))
+        return f'{moduleId}{classId}'
 
     def deserialize(self, serializedInfo: str):
         """

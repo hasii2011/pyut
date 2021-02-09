@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -8,7 +10,7 @@ from org.pyut.general.Globals import cmp
    
     This module defines the format of the serialized commands and command groups
     of PyUt's history (undo/redo).
-    It gives also some tools to set keywords in the format automatically.
+    It provides some tools to automatically set keywords in the format.
     
     The format is textual, based on 'tokens' (identifiers) which can have
     two forms (without the spaces):
@@ -17,7 +19,7 @@ from org.pyut.general.Globals import cmp
         2) token_begin token_name token_assign token_value token_end
     
     Where token_begin, token_end and token_assign are special sequences of
-    characters defines in this module.
+    characters defined in this module.
     
     * Token_name is a characters sequence freely chosen by the developer. But be careful
     because some special sequences are defined below.
@@ -28,66 +30,58 @@ from org.pyut.general.Globals import cmp
     Normally, you should not use the first form, but the second one, for e.g. to
     deserialize data used by a command.
     
-    To see how it works, please see `tests.UnitTestHistory`
+    To see how this works, please see `tests.UnitTestHistory`
 """
 
-TOKEN_BEGIN = '<'
-TOKEN_END   = '>'
+TOKEN_BEGIN: str = '<'
+TOKEN_END:   str = '>'
 """
     for serialization :  token delimiters
 """
-
-TOKEN_ASSIGN = "="
+TOKEN_ASSIGN: str = "="
 """
     When a token has an assigned value, we use this symbol for serialization
 """
-
-TOKEN_ESCAPE = "\\"
+TOKEN_ESCAPE: str = "\\"
 """
     It is the escape sequence, used if the token name or value contains a control
     sequence e.g.  TOKEN_ASSIGN
 """
-
-GROUP_BEGIN_ID = "BEGIN_COMMAND_GROUP"
-GROUP_END_ID   = "END_COMMAND_GROUP"
+GROUP_BEGIN_ID: str = "BEGIN_COMMAND_GROUP"
+GROUP_END_ID:   str = "END_COMMAND_GROUP"
 """
     To limit the beginning and the end of a serialized commands group
 """
-
-GROUP_COMMENT_ID = "GROUP_COMMENT"
+GROUP_COMMENT_ID: str = "GROUP_COMMENT"
 """
     to find the comment/description of a command group
 """
-
-COMMAND_BEGIN_ID = "BEGIN_COMMAND"
-COMMAND_END_ID   = "END_COMMAND"
+COMMAND_BEGIN_ID: str = "BEGIN_COMMAND"
+COMMAND_END_ID:   str = "END_COMMAND"
 """
 Attributes limit the beginning and the end of a serialized command
 """
-COMMAND_CLASS_ID  = "COMMAND_CLASS"
-COMMAND_MODULE_ID = "COMMAND_MODULE"
+COMMAND_CLASS_ID:  str  = "COMMAND_CLASS"
+COMMAND_MODULE_ID: str = "COMMAND_MODULE"
 """
     Used in the deserialization to build the correct command
 """
-
-CTRL_SEQUENCES = [TOKEN_ESCAPE, TOKEN_BEGIN, TOKEN_END, TOKEN_ASSIGN]
+CTRL_SEQUENCES: List[str] = [TOKEN_ESCAPE, TOKEN_BEGIN, TOKEN_END, TOKEN_ASSIGN]
 """
     if a sequence contains a control sequence, TOKEN_ESCAPE should
-    be added to at the beginning of the control sequence.
+    be added at the beginning of the control sequence.
 
-    _NOTE:_   TOKEN_ESCAPE must be first in the list
+    _NOTE:   TOKEN_ESCAPE must be first in the list
 """
-RESERVED_SEQUENCES = [GROUP_BEGIN_ID, GROUP_END_ID, GROUP_COMMENT_ID,
-                      COMMAND_BEGIN_ID, COMMAND_END_ID, COMMAND_CLASS_ID,
-                      COMMAND_MODULE_ID]
+RESERVED_SEQUENCES: List[str] = [GROUP_BEGIN_ID, GROUP_END_ID, GROUP_COMMENT_ID,
+                                 COMMAND_BEGIN_ID, COMMAND_END_ID, COMMAND_CLASS_ID, COMMAND_MODULE_ID]
 """
     if a sequence contains a reserved sequence, an exception should be raised.
 """
-HISTORY_FILE_NAME = "pyutHistory"
+HISTORY_FILE_NAME: str = "pyutHistory"
 """
     Defines the base name of the file which contains the serialized commands.
 """
-
 hLogger: Logger = getLogger('HistoryUtils')
 
 
