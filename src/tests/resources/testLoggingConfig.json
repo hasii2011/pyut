@@ -46,8 +46,8 @@
             "level": "WARNING",
             "propagate": "False"
         },
-        "tests.TestPyutPythonVisitor": {
-            "level": "WARNING",
+        "tests.TestCommandGroup": {
+            "level": "INFO",
             "propagate": "False"
         },
         "org.pyut.dialogs.DlgPyutDebug": {

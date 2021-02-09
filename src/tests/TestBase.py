@@ -18,6 +18,7 @@ class TestBase(TestCase):
 
     RESOURCES_PACKAGE_NAME:              str = 'tests.resources'
     RESOURCES_TEST_CLASSES_PACKAGE_NAME: str = 'tests.testclass'
+    RESOURCES_TEST_DATA_PACKAGE_NAME:    str = 'tests.testdata'
 
     """
     A base unit test class to initialize some logging stuff we need

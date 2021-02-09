@@ -24,9 +24,9 @@ class DelOglObjectCommand(Command):
     def serialize(self):
 
         serialShape = Command.serialize(self)
-
+        #
         # serialize the class and module of the ogl and pyut shape to get the
-        # constructors for the unserialization.
+        # constructors for the deserialization
         oglShapeModule = self._shape.__module__
         oglShapeClass = self._shape.__class__.__name__
         pyutShapeModule = self._shape.getPyutObject().__module__
@@ -64,7 +64,7 @@ class DelOglObjectCommand(Command):
 
     def deserialize(self, serializedData):
         """
-        Deserialize the data needed to undo/redo a delete command and createa shape
+        Deserialize the data needed to undo/redo a delete command and create shape
         Args:
             serializedData:
         """
@@ -99,7 +99,7 @@ class DelOglObjectCommand(Command):
 
             pyutShape = pyutShapeClass(shapeName)
             pyutShape.setId(shapeId)
-
+            #
             # build the OglObject : it suppose that every parameter of the
             # constructor has a default value
             self._shape = oglShapeClass()

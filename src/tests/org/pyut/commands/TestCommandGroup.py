@@ -11,6 +11,8 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
+from pkg_resources import resource_filename
+
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.commands.Command import Command
@@ -21,7 +23,6 @@ from org.pyut.commands.CommandGroup import CommandGroup
 from org.pyut.history.HistoryManager import HistoryManager
 
 from tests.TestBase import TestBase
-from tests.TestBase import TEST_DIRECTORY
 
 
 NUMBER_OF_COMMANDS_CREATED = 2
@@ -46,7 +47,9 @@ class TestCommandGroup(TestBase):
         historyMgr: HistoryManager = HistoryManager(theFrame=mockFrame)
         self._cgGroup.setHistory(history=historyMgr)
 
-        saveFile = open(f'{TEST_DIRECTORY}{osSep}testdata{osSep}DeleteShape-Link.txt', 'r')
+        fqFileName = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'DeleteShape-Link.txt')
+
+        saveFile = open(fqFileName)
         self._fileContent = saveFile.read()
         saveFile.close()
 

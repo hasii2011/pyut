@@ -5,11 +5,10 @@ from logging import getLogger
 from org.pyut.general.Globals import cmp
 
 """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (18.11.2005)
-    
+   
     This module defines the format of the serialized commands and command groups
     of PyUt's history (undo/redo).
-    It gives also some tools to set keywords in the format automaticaly.
+    It gives also some tools to set keywords in the format automatically.
     
     The format is textual, based on 'tokens' (identifiers) which can have
     two forms (without the spaces):
@@ -18,9 +17,9 @@ from org.pyut.general.Globals import cmp
         2) token_begin token_name token_assign token_value token_end
     
     Where token_begin, token_end and token_assign are special sequences of
-    charcters defines in this module.
+    characters defines in this module.
     
-    * Token_name is a characters sequence freely choosen by the developer. But be carefull
+    * Token_name is a characters sequence freely chosen by the developer. But be careful
     because some special sequences are defined below.
     * Token_value is only used with the second form of token. It allows setting a
     value to a token. A token value _cannot_ be similar partially or completely to a
@@ -52,7 +51,7 @@ TOKEN_ESCAPE = "\\"
 GROUP_BEGIN_ID = "BEGIN_COMMAND_GROUP"
 GROUP_END_ID   = "END_COMMAND_GROUP"
 """
-    To limit the begining and the end of a serialized commands group
+    To limit the beginning and the end of a serialized commands group
 """
 
 GROUP_COMMENT_ID = "GROUP_COMMENT"
@@ -63,7 +62,7 @@ GROUP_COMMENT_ID = "GROUP_COMMENT"
 COMMAND_BEGIN_ID = "BEGIN_COMMAND"
 COMMAND_END_ID   = "END_COMMAND"
 """
-Attributes limit the begining and the end of a serialized command
+Attributes limit the beginning and the end of a serialized command
 """
 COMMAND_CLASS_ID  = "COMMAND_CLASS"
 COMMAND_MODULE_ID = "COMMAND_MODULE"
@@ -74,7 +73,7 @@ COMMAND_MODULE_ID = "COMMAND_MODULE"
 CTRL_SEQUENCES = [TOKEN_ESCAPE, TOKEN_BEGIN, TOKEN_END, TOKEN_ASSIGN]
 """
     if a sequence contains a control sequence, TOKEN_ESCAPE should
-    be added to at the begining of the control sequence.
+    be added to at the beginning of the control sequence.
 
     _NOTE:_   TOKEN_ESCAPE must be first in the list
 """
@@ -94,9 +93,12 @@ hLogger: Logger = getLogger('HistoryUtils')
 
 def makeToken(tokenId: str):
     """
-    @param tokenId : name (identificator) of the token
 
-    @return a token (string) that is standard for all histories.
+    Args:
+        tokenId:     name (identifier) of the token
+
+    Returns:    a token (string) that is standard for all histories.
+
     """
     # return TOKEN_BEGIN + tokenId + TOKEN_END
     return f'{TOKEN_BEGIN}{tokenId}{TOKEN_END}'
@@ -104,22 +106,26 @@ def makeToken(tokenId: str):
 
 def makeValuatedToken(tokenId: str, value: str):
     """
-    @return a valuated token (string) in the format of the history
-    manager. Use it in the serialize method of a command, so that
+    Use it in the serialize method of a command, so that
     you can get it back with the getTokenValue method.
-    Notes : Raise an exception if tokenId or value are partially or
-    completly a reserved sequence.
 
-    @param tokenId  name of the token
-    @param value value of the token
+    Args:
+        tokenId:    name of the token
+        value:      value of the token
+
+    Returns:    a valuated token (string) in the format of the history
+    manager.
+
+    Raise an exception if tokenId or value are partially or
+    completely a reserved sequence.
     """
-
+    #
     # check if the value isn't a reserved sequence and
     # if it is the case we raise an exception
     for sequence in RESERVED_SEQUENCES:
         if value.find(sequence) > -1:
-            raise RuntimeError("'" + sequence + "' is a reserved sequence.")
-
+            raise RuntimeError(f"{sequence}  is a reserved sequence.")
+    #
     # check if the value isn't a control sequence and
     # if it is the case, an escape sequence is added.
     for sequence in CTRL_SEQUENCES:
@@ -154,7 +160,7 @@ def getTokenValue(tokenId: str, serializedData: str) -> str:
     value = value.replace(TOKEN_ESCAPE + TOKEN_ESCAPE, tempEscape)
 
     # find the start position of the value which is just after the end
-    # of the token name followed by the assignement token.
+    # of the token name followed by the assignment token.
     startPos = value.find(tokenId)
     startPos = startPos + len(tokenId) + len(TOKEN_ASSIGN)
     # value = value[startPos : len(value)]
