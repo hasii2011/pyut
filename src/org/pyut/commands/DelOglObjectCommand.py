@@ -23,7 +23,7 @@ class DelOglObjectCommand(Command):
 
     def serialize(self) -> str:
 
-        serialShape = Command.serialize(self)   # Should this be super()
+        serialShape: str = super().serialize()
         #
         # serialize the class and module of the ogl and pyut shape to get the
         # constructors for the deserialization
@@ -63,9 +63,10 @@ class DelOglObjectCommand(Command):
 
         return serialShape
 
-    def deserialize(self, serializedData):
+    def deserialize(self, serializedData: str):
         """
         Deserialize the data needed to undo/redo a delete command and create shape
+        
         Args:
             serializedData:
         """
@@ -110,7 +111,7 @@ class DelOglObjectCommand(Command):
 
     def redo(self):
         """
-        Delete the shape for which this command has been created. You DON't
+        Delete the shape for which this command has been created. You do not
         need to redefine it.
         """
         from org.pyut.ogl.OglClass import OglClass

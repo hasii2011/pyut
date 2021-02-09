@@ -22,7 +22,9 @@ class Command:
 
     def serialize(self) -> str:
         """
-        Serialize the module name and class name
+
+        Serialize the module name and class name;  All command must call
+        this method in their implementation
 
         Notes:  Use `makeValuatedToken()` from HistoryUtils for each value
         you want to serialize
@@ -30,11 +32,11 @@ class Command:
         Then you can use the `getTokenValue()` to get
         back the string representation of this value for the deserialization.
 
-        Returns:   String representation of the command in view to store it
-        in a file. This method must be redefined in all subclasses in that
-        way :
+        Returns:  String representation of the command in view to store it
+                  in a file. This method must be full implemented in all
+                  subclasses.
 
-            return Command.serialize + (MyCommand's serialized information)
+                `return Command.serialize + (MyCommand's serialized information)`
         """
         moduleId: str = makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__))
         classId:  str = makeValuatedToken(COMMAND_CLASS_ID, str(self.__class__.__name__))

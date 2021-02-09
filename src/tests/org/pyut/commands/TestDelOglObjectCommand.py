@@ -44,7 +44,7 @@ class TestDelOglObjectCommand(TestBase):
         deleteObjectCommand: DelOglObjectCommand = DelOglObjectCommand(shape=oglObject)
 
         serializedOglObject: str = deleteObjectCommand.serialize()
-        self.logger.warning((f'{serializedOglObject=}'))
+        self.logger.warning(f'{serializedOglObject=}')
 
     # def testDeserialize(self):
     #     """Another test"""
