@@ -66,7 +66,7 @@ class DelOglObjectCommand(Command):
     def deserialize(self, serializedData: str):
         """
         Deserialize the data needed to undo/redo a delete command and create shape
-        
+
         Args:
             serializedData:
         """
