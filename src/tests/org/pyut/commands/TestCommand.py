@@ -15,10 +15,6 @@ from tests.testclass.UnitTestCommand import UnitTestCommand
 
 class TestCommand(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
     clsLogger: Logger = None
 
@@ -40,7 +36,7 @@ class TestCommand(TestBase):
 
         serializedCommand: str = baseCommand.serialize()
         expectedBase:      str = '<COMMAND_MODULE=org.pyut.commands.Command><COMMAND_CLASS=Command>'
-        self.logger.warning(f"{serializedCommand}")
+        self.logger.debug(f"{serializedCommand}")
 
         self.assertEqual(expectedBase, serializedCommand, 'Looks like Command Serialization changed')
 
@@ -50,7 +46,7 @@ class TestCommand(TestBase):
 
         serializedCommand: str = unitTestCommand.serialize()
         expectedBase:      str = '<COMMAND_MODULE=tests.testclass.UnitTestCommand><COMMAND_CLASS=UnitTestCommand>'
-        self.logger.warning(f"{serializedCommand}")
+        self.logger.debug(f"{serializedCommand}")
 
         self.assertEqual(expectedBase, serializedCommand, 'Looks like Command Serialization changed')
 

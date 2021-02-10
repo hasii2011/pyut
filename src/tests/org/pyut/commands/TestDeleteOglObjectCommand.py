@@ -18,7 +18,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.commands.DeleteOglObjectCommand import DelOglObjectCommand
+from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 
 
 class TestDeleteOglObjectCommand(TestBase):
@@ -46,7 +46,7 @@ class TestDeleteOglObjectCommand(TestBase):
 
         oglObject: OglObject = OglObject(pyutObject=pyutObject, width=22, height=22)
 
-        deleteObjectCommand: DelOglObjectCommand = DelOglObjectCommand(shape=oglObject)
+        deleteObjectCommand: DeleteOglObjectCommand = DeleteOglObjectCommand(shape=oglObject)
 
         serializedOglObject: str = deleteObjectCommand.serialize()
         self.logger.warning(f'{serializedOglObject=}')
@@ -58,7 +58,7 @@ class TestDeleteOglObjectCommand(TestBase):
         serializedCommand: str = saveFile.read()
         saveFile.close()
 
-        deleteObjectCommand: DelOglObjectCommand = DelOglObjectCommand()
+        deleteObjectCommand: DeleteOglObjectCommand = DeleteOglObjectCommand()
 
         self._setMocksForTest(deleteObjectCommand)
 
@@ -78,7 +78,7 @@ class TestDeleteOglObjectCommand(TestBase):
 
         self.assertEqual('TestPyutObject', pyutObject.name, 'name attribute did not properly deserialize')
 
-    def _setMocksForTest(self, deleteObjectCommand: DelOglObjectCommand) -> DelOglObjectCommand:
+    def _setMocksForTest(self, deleteObjectCommand: DeleteOglObjectCommand) -> DeleteOglObjectCommand:
 
         mockFrame = MagicMock()
         mockHistory = MagicMock()

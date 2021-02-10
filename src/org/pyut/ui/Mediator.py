@@ -822,7 +822,7 @@ class Mediator(Singleton):
             event.Skip()
 
     def deleteSelectedShape(self):
-        from org.pyut.commands.DeleteOglObjectCommand import DelOglObjectCommand
+        from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
         from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         from org.pyut.ogl.OglClass import OglClass
@@ -842,7 +842,7 @@ class Mediator(Singleton):
             if isinstance(shape, OglClass):
                 cmd = DeleteOglClassCommand(shape)
             elif isinstance(shape, OglObject):
-                cmd = DelOglObjectCommand(shape)
+                cmd = DeleteOglObjectCommand(shape)
             elif isinstance(shape, OglLink):
                 dlg: DlgRemoveLink = DlgRemoveLink()
                 rep = dlg.ShowModal()
@@ -1012,7 +1012,7 @@ class Mediator(Singleton):
     def beginChangeRecording(self, oglObject):
 
         from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
-        from org.pyut.commands.DeleteOglObjectCommand import DelOglObjectCommand
+        from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         from org.pyut.ogl.OglClass import OglClass
         from org.pyut.ogl.OglLink import OglLink
@@ -1024,7 +1024,7 @@ class Mediator(Singleton):
         elif isinstance(oglObject, OglLink):
             self._modifyCommand = DelOglLinkCommand(oglObject)
         elif isinstance(oglObject, OglObject):
-            self._modifyCommand = DelOglObjectCommand(oglObject)
+            self._modifyCommand = DeleteOglObjectCommand(oglObject)
         else:
             raise RuntimeError("a non-OglObject has requested for a change recording")
 

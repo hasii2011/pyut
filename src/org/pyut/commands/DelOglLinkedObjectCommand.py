@@ -1,10 +1,10 @@
 
-from org.pyut.commands.DeleteOglObjectCommand import DelOglObjectCommand
+from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 
 from org.pyut.history.HistoryUtils import getTokenValue
 
 
-class DelOglLinkedObjectCommand(DelOglObjectCommand):
+class DelOglLinkedObjectCommand(DeleteOglObjectCommand):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
@@ -27,7 +27,7 @@ class DelOglLinkedObjectCommand(DelOglObjectCommand):
         """
 
         # serialize the data common to all OglObjects
-        serialShape = DelOglObjectCommand.serialize(self)
+        serialShape = DeleteOglObjectCommand.serialize(self)
 
         fileName = self._shape.getPyutObject().getFilename()
         serialShape += getTokenValue("fileName", fileName)
@@ -45,7 +45,7 @@ class DelOglLinkedObjectCommand(DelOglObjectCommand):
 
         """
         # deserialize the data common to all OglObjects
-        DelOglObjectCommand.deserialize(self, serializedData)
+        DeleteOglObjectCommand.deserialize(self, serializedData)
 
         fileName = getTokenValue("fileName", serializedData)
         self._shape.getPyutObject().setFilename(fileName)

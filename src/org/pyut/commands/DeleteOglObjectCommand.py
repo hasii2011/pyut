@@ -9,7 +9,7 @@ from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
 
-class DelOglObjectCommand(Command):
+class DeleteOglObjectCommand(Command):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
@@ -40,7 +40,12 @@ class DelOglObjectCommand(Command):
         # serialize the shape's model size and position and NOT the Ogl(view)'s
         # ones because a zoom could be performed in between.
         #
-        model: RectangleShapeModel = self._shape.GetModel()
+
+        # TODO using the following causes 'Invalid or prematurely-freed autorelease pool 0x7fed3d8f3218.'
+        # boo hoo;  no typing for me
+        # from org.pyut.miniogl.RectangleShapeModel import RectangleShapeModel
+        # model: RectangleShapeModel = self._shape.GetModel()
+        model = self._shape.GetModel()
         pos:   Tuple[int, int]     = model.GetPosition()
         size:  Tuple[int, int]     = model.GetSize()
         serialShape += makeValuatedToken("position", repr(pos))

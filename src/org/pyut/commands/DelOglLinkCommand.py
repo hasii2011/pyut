@@ -2,7 +2,7 @@
 from typing import cast
 
 from org.pyut.commands.Command import Command
-from org.pyut.commands.DeleteOglObjectCommand import DelOglObjectCommand
+from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.ogl.OglLinkFactory import getLinkType
@@ -14,7 +14,7 @@ from org.pyut.history.HistoryUtils import makeValuatedToken
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 
-class DelOglLinkCommand(DelOglObjectCommand):
+class DelOglLinkCommand(DeleteOglObjectCommand):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
@@ -24,7 +24,7 @@ class DelOglLinkCommand(DelOglObjectCommand):
 
     def __init__(self, link=None):
 
-        DelOglObjectCommand.__init__(self, link)
+        DeleteOglObjectCommand.__init__(self, link)
 
         self._srcPosition  = None
         self._destPosition = None
