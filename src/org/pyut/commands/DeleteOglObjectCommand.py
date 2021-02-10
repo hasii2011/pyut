@@ -36,28 +36,32 @@ class DelOglObjectCommand(Command):
         serialShape += makeValuatedToken("oglShapeClass", oglShapeClass)
         serialShape += makeValuatedToken("pyutShapeModule", pyutShapeModule)
         serialShape += makeValuatedToken("pyutShapeClass", pyutShapeClass)
+        # This is interesting:
         # serialize the shape's model size and position and NOT the Ogl(view)'s
         # ones because a zoom could be performed in between.
-        model = self._shape.GetModel()
-        pos = model.GetPosition()
-        size = model.GetSize()
+        #
+        model: RectangleShapeModel = self._shape.GetModel()
+        pos:   Tuple[int, int]     = model.GetPosition()
+        size:  Tuple[int, int]     = model.GetSize()
         serialShape += makeValuatedToken("position", repr(pos))
         serialShape += makeValuatedToken("size", repr(size))
+        #
         # serialize the graphical links (Ogl) attached to the shape
         # and put it in the common data of the group. We have to do
         # so because the link can be rebuilt only after the
         # shape is rebuilt and so the command for link deletion
         # must be placed after this one.
+        #
         from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
         for link in self._shape.getLinks():
             if not link.IsSelected():
-                cmd = DelOglLinkCommand(link)
+                cmd: DelOglLinkCommand = DelOglLinkCommand(link)
                 self.getGroup().addCommand(cmd)
 
-        # serialize data to init the associated pyutObject
+        # serialize data to initialize the associated pyutObject
         pyutObj = self._shape.getPyutObject()
-        shapeId = pyutObj.getId()
-        shapeName = pyutObj.getName()
+        shapeId:   int = pyutObj.getId()
+        shapeName: str = pyutObj.getName()
         serialShape += makeValuatedToken("shapeId", repr(shapeId))
         serialShape += makeValuatedToken("shapeName", shapeName)
 
@@ -94,8 +98,12 @@ class DelOglObjectCommand(Command):
         #
         # build the pyutObject : it assumes that every parameter of the
         # constructor has a default value
+        # break up for testability
         #
-        self._shape = self.getGroup().getHistory().getFrame().getUmlObjectById(shapeId)
+        group   = self._group
+        history = group.getHistory()
+        frame   = history.getFrame()
+        self._shape = frame.getUmlObjectById(shapeId)
 
         if self._shape is None:
 

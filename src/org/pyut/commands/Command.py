@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from org.pyut.history.HistoryUtils import COMMAND_CLASS_ID
 from org.pyut.history.HistoryUtils import COMMAND_MODULE_ID
 from org.pyut.history.HistoryUtils import makeValuatedToken
@@ -18,7 +20,9 @@ class Command:
         same profile (no params), because it is this constructor that will
         be called when the history manager does deserialization.
         """
-        self._group = None  # group to which the command is added. Init when added to a group
+        from org.pyut.commands.CommandGroup import CommandGroup     # Avoid cyclical dependency
+
+        self._group: CommandGroup = cast(CommandGroup, None)    # group to which the command is added. Init when added to a group
 
     def serialize(self) -> str:
         """

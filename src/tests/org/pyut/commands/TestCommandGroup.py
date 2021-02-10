@@ -2,7 +2,6 @@
 from logging import Logger
 from logging import getLogger
 
-from os import sep as osSep
 from os import getcwd as osGetCwd
 
 from typing import List
@@ -47,7 +46,7 @@ class TestCommandGroup(TestBase):
         historyMgr: HistoryManager = HistoryManager(theFrame=mockFrame)
         self._cgGroup.setHistory(history=historyMgr)
 
-        fqFileName = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'DeleteShape-Link.txt')
+        fqFileName: str = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'DeleteShape-Link.txt')
 
         saveFile = open(fqFileName)
         self._fileContent = saveFile.read()
