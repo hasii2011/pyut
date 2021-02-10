@@ -1,14 +1,14 @@
 
 from org.pyut.history.HistoryUtils import getTokenValue
-
-from org.pyut.commands.DelOglLinkedObjectCommand import DelOglLinkedObjectCommand
 from org.pyut.history.HistoryUtils import makeValuatedToken
+
+from org.pyut.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
 
 from org.pyut.general.Globals import cmp
 from org.pyut.model.PyutClass import PyutClass
 
 
-class DeleteOglClassCommand(DelOglLinkedObjectCommand):
+class DeleteOglClassCommand(DeleteOglLinkedObjectCommand):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
@@ -17,18 +17,20 @@ class DeleteOglClassCommand(DelOglLinkedObjectCommand):
 
     def __init__(self, shape=None):
         """
-        Constructor.
-        @param shape    : object that is destroyed
+
+        Args:
+            shape: The shape to serialize/deserialize
         """
         super().__init__(shape)
 
     def serialize(self):
         """
-        Serialize the data needed by the destroyed OglLinkedObject.
-        @return a string representation of the data needed by the command.
+        Serialize an OglClass
+
+        Returns:  A string representation of the data needed by the command.
         """
         # serialize the data common to all OglObjects
-        serialShape = DelOglLinkedObjectCommand.serialize(self)
+        serialShape = DeleteOglLinkedObjectCommand.serialize(self)
 
         pyutClass: PyutClass = self._shape.getPyutObject()
         classDescription = pyutClass.description
@@ -86,7 +88,7 @@ class DeleteOglClassCommand(DelOglLinkedObjectCommand):
 
     def deserialize(self, serializedData):
         """
-        deserialize the data needed by the destroyed OglLinkedObject.
+        Deserialize the data needed by the deleted OglCass
 
         Args:
             serializedData: serialized data needed by the command.
@@ -99,7 +101,7 @@ class DeleteOglClassCommand(DelOglLinkedObjectCommand):
         from org.pyut.model.PyutModifier import PyutModifier
 
         # deserialize the data common to all OglObjects
-        DelOglLinkedObjectCommand.deserialize(self, serializedData)
+        DeleteOglLinkedObjectCommand.deserialize(self, serializedData)
 
         # deserialize properties of the OglClass (first level)
         classDescription    = getTokenValue("classDescription", serializedData)

@@ -4,7 +4,7 @@ from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 from org.pyut.history.HistoryUtils import getTokenValue
 
 
-class DelOglLinkedObjectCommand(DeleteOglObjectCommand):
+class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
