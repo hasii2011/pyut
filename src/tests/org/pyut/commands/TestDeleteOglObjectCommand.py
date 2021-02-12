@@ -7,8 +7,6 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from unittest.mock import MagicMock
-
 from pkg_resources import resource_filename
 from wx import App
 
@@ -19,9 +17,10 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from tests.TestBase import TestBase
 
 from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+from tests.org.pyut.commands.BaseTestDeleteOgl import BaseTestDelete
 
 
-class TestDeleteOglObjectCommand(TestBase):
+class TestDeleteOglObjectCommand(BaseTestDelete):
     """
     """
     clsLogger: Logger = None
@@ -60,7 +59,7 @@ class TestDeleteOglObjectCommand(TestBase):
 
         deleteObjectCommand: DeleteOglObjectCommand = DeleteOglObjectCommand()
 
-        self._setMocksForTest(deleteObjectCommand)
+        self._setMocksForDeleteSerializeTest(deleteObjectCommand)
 
         deleteObjectCommand.deserialize(serializedData=serializedCommand)
 
@@ -77,20 +76,6 @@ class TestDeleteOglObjectCommand(TestBase):
         self.assertIsNotNone(pyutObject, 'Where is my data model object')
 
         self.assertEqual('TestPyutObject', pyutObject.name, 'name attribute did not properly deserialize')
-
-    def _setMocksForTest(self, deleteObjectCommand: DeleteOglObjectCommand) -> DeleteOglObjectCommand:
-
-        mockFrame = MagicMock()
-        mockHistory = MagicMock()
-        mockGroup = MagicMock()
-
-        mockFrame.getUmlObjectById.return_value = None
-        mockHistory.getFrame.return_value = mockFrame
-        mockGroup.getHistory.return_value = mockHistory
-
-        deleteObjectCommand.setGroup(mockGroup)
-
-        return deleteObjectCommand
 
 
 def suite() -> TestSuite:

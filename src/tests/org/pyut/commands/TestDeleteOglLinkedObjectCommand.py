@@ -24,8 +24,10 @@ from tests.TestBase import TestBase
 
 from org.pyut.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
 
+from tests.org.pyut.commands.BaseTestDeleteOgl import BaseTestDelete
 
-class TestDeleteOglLinkedObjectCommand(TestBase):
+
+class TestDeleteOglLinkedObjectCommand(BaseTestDelete):
     """
     """
     clsLogger: Logger = None
@@ -82,22 +84,26 @@ class TestDeleteOglLinkedObjectCommand(TestBase):
         oglLinkedObjectCommand: DeleteOglLinkedObjectCommand = DeleteOglLinkedObjectCommand(shape=oglNote)
 
         serializedShape: str = oglLinkedObjectCommand.serialize()
+        self.logger.warning(f'{serializedShape=}')
 
-        self.logger.debug(f'{serializedShape=}')
-        self.assertIsNotNone(serializedShape, 'Something must come back')
+        import re
+        fixedSerializedShape = re.sub('shapeId=[0-9]', 'shapeId=3', serializedShape)
+        self.logger.warning(f'{fixedSerializedShape=}')
+        self.assertIsNotNone(fixedSerializedShape, 'Something must come back')
 
         self.maxDiff = None
 
-        self.assertEqual(self._serializedCommand, serializedShape, 'Oops, something changed')
+        self.assertEqual(self._serializedCommand, fixedSerializedShape, 'Oops, something changed')
 
     def testDeserialize(self):
-        pass
 
-        # oglLinkedObjectCommand: DeleteOglLinkedObjectCommand = DeleteOglLinkedObjectCommand()
-        #
-        # oglLinkedObjectCommand.deserialize(self._serializedCommand)
-        #
-        # self.assertIsNotNone(oglLinkedObjectCommand._shape, 'Got to have something')
+        oglLinkedObjectCommand: DeleteOglLinkedObjectCommand = DeleteOglLinkedObjectCommand()
+
+        self._setMocksForDeleteSerializeTest(oglLinkedObjectCommand)
+
+        oglLinkedObjectCommand.deserialize(self._serializedCommand)
+
+        self.assertIsNotNone(oglLinkedObjectCommand._shape, 'Got to have something')
 
 
 def suite() -> TestSuite:
