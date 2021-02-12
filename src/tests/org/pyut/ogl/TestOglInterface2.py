@@ -24,24 +24,30 @@ class TestOglInterface2(TestBase):
     """
     """
     clsLogger: Logger = None
+    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestOglInterface2.clsLogger = getLogger(__name__)
 
         PyutPreferences.determinePreferencesLocation()
+        TestBase.setUpLogging()
+        TestOglInterface2.clsLogger = getLogger(__name__)
+        TestOglInterface2.clsApp    = App()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.clsApp.OnExit()
 
     def setUp(self):
         self.logger: Logger = TestOglInterface2.clsLogger
 
-        self.app: App = App()
+        self.app: App = TestOglInterface2.clsApp
 
         self._pyutInterface:    PyutInterface     = PyutInterface()
         self._destinationAnchor: SelectAnchorPoint = SelectAnchorPoint(250, 250, AttachmentPoint.NORTH)
 
     def tearDown(self):
-        del self.app
+        pass
 
     def testEqual(self):
 

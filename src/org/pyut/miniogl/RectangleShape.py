@@ -15,7 +15,7 @@ class RectangleShape(Shape):
 
     @author Laurent Burgbacher <lb@alawa.ch>
     """
-    def __init__(self, x : int = 0, y: int = 0, width: int = 0, height: int = 0, parent=None):
+    def __init__(self, x: int = 0, y: int = 0, width: int = 0, height: int = 0, parent=None):
         """
 
         Args:
@@ -37,6 +37,8 @@ class RectangleShape(Shape):
         self._topRightSizer = None
         self._botLeftSizer  = None
         self._botRightSizer = None
+
+        self._ox: int = 0   # This is done in Shape but Pycharm can't see this in the ShowSizer() code
         # set the model of the shape (MVC pattern)
         self._model: RectangleShapeModel = RectangleShapeModel(self)
 

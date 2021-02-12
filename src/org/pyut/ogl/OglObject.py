@@ -144,10 +144,10 @@ class OglObject(RectangleShape, ShapeEventHandler):
             y:  The new ordinate
         """
         from org.pyut.ui.Mediator import Mediator
-        mediator: Mediator = Mediator()
-        fileHandling = mediator.getFileHandling()
-        if fileHandling is not None:
-            fileHandling.setModified(True)
+        mediator: Mediator = Mediator()             # TODO:
+        fileHandling = mediator.getFileHandling()   # OH NO!!! this is not good
+        if fileHandling is not None:                # Send an event to the mediator for this
+            fileHandling.setModified(True)          # BAD BAD BAD
         RectangleShape.SetPosition(self, x, y)
 
     def SetSelected(self, state=True):

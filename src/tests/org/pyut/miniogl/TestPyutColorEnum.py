@@ -17,18 +17,25 @@ class TestPyutColorEnum(TestBase):
     """
     """
     clsLogger: Logger = None
+    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
         TestPyutColorEnum.clsLogger = getLogger(__name__)
+        TestPyutColorEnum.clsApp    = App()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.clsApp.OnExit()
+        del cls.clsApp
 
     def setUp(self):
         self.logger: Logger = TestPyutColorEnum.clsLogger
-        self.app = App()
+        self.app            = TestPyutColorEnum.clsApp
 
     def tearDown(self):
-        del self.app
+        pass
 
     def testBlack(self):
         c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.BLACK)

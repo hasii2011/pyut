@@ -246,8 +246,7 @@ class Shape:
         """
         self._diagram = diagram
         # add the anchors and the children
-        map(lambda x: diagram.AddShape(x), self._anchors + self._children
-            + self._privateChildren)
+        map(lambda x: diagram.AddShape(x), self._anchors + self._children + self._privateChildren)
 
     def Detach(self):
         """
@@ -608,17 +607,23 @@ class Shape:
         # Get the offsets and the ratio between the shape (view) and the
         # shape model (ShapeModel) given by the frame where the shape
         # is displayed.
-        ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
-        dx = self.GetDiagram().GetPanel().GetXOffset()
-        dy = self.GetDiagram().GetPanel().GetYOffset()
+        diagram = self.GetDiagram()
+        panel   = diagram.GetPanel()   # to enable debugging and unit tests
+
+        # ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
+        # dx = self.GetDiagram().GetPanel().GetXOffset()
+        # dy = self.GetDiagram().GetPanel().GetYOffset()
+        ratio = panel.GetCurrentZoom()
+        dx    = panel.GetXOffset()
+        dy    = panel.GetYOffset()
 
         #  get the coordinates of this shape
         x, y = self.GetPosition()
 
         # calculation of the model coordinates in the light of the
         # offsets and ratio and assignment.
-        mx = round((x - dx)/ratio)
-        my = round((y - dy)/ratio)
+        mx = round(x - dx)/ratio
+        my = round(y - dy)/ratio
         model.SetPosition(mx, my)
 
         # change also the position of the model of the children,
