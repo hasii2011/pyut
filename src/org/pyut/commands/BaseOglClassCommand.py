@@ -19,7 +19,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         """
         super().__init__(shape)
 
-    def serialize(self):
+    def serialize(self) -> str:
         """
         Serialize an OglClass
 

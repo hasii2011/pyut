@@ -2,21 +2,25 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
+from org.pyut.ogl.OglClass import OglClass
+
+from org.pyut.model.PyutClass import PyutClass
+
+from org.pyut.commands.BaseOglClassCommand import BaseOglClassCommand
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
-class CreateOglClassCommand(DeleteOglClassCommand):
+class CreateOglClassCommand(BaseOglClassCommand):
     """
     This class is a part of Pyut's history system.
     It creates an OglClass and allows undo/redo operations.
     """
     clsCounter: int = 1
 
-    def __init__(self, x: float = 0, y: float = 0, createNewClass: bool = False, shape=None):
+    def __init__(self, x: int = 0, y: int = 0, createNewClass: bool = False, shape=None):
         """
 
         Args:
@@ -24,7 +28,7 @@ class CreateOglClassCommand(DeleteOglClassCommand):
             y:  ordinate of the class to create
 
             createNewClass: Create new class or create Delete OGL Class command
-            TODO  This is a code smell; Don't do code based on flag
+            TODO  This is a code smell; Do not execute code based on a flag
 
             shape:
         """
@@ -32,48 +36,45 @@ class CreateOglClassCommand(DeleteOglClassCommand):
         self._prefs: PyutPreferences = PyutPreferences()
 
         if createNewClass is True:
+            assert shape is None, 'Either we create it or you give it to us'
+
             if self._prefs.snapToGrid is True:
                 snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x, y, self._prefs.backgroundGridInterval)
                 self._shape = self._createNewClass(snappedX, snappedY)
             else:
                 self._shape = self._createNewClass(x, y)
         else:
-            DeleteOglClassCommand.__init__(self, shape)
+            super().__init__(shape)
 
-    def serialize(self):
+    def serialize(self) -> str:
         """
-        serialize the data needed by the command to undo/redo the created link
+        Defer serialization
         """
-
-        return DeleteOglClassCommand.serialize(self)
+        return super().serialize()
 
     def deserialize(self, serializedData):
         """
-        deserialize the data needed by the command to undo/redo the created link
-        @param serializedData    :   string representation of the data needed
-                                            by the command to undo redo a link
-        """
+        Defer deserialization
+        Args:
+            serializedData:
 
-        DeleteOglClassCommand.deserialize(self, serializedData)
+        """
+        super().deserialize(serializedData)
 
     def redo(self):
         """
-        redo the creation of the link.
         """
-
-        DeleteOglClassCommand.undo(self)
+        super().redo()
 
     def undo(self):
         """
-        Undo the creation of link, what means that we destroy the link
         """
-
-        DeleteOglClassCommand.redo(self)
+        super().undo()
 
     def execute(self):
         pass
 
-    def _createNewClass(self, x: float, y: float):
+    def _createNewClass(self, x: int, y: int) -> OglClass:
         """
         Add a new class at (x, y).
 
@@ -81,11 +82,9 @@ class CreateOglClassCommand(DeleteOglClassCommand):
             x: abscissa of the class to create
             y: ordinate of the class to create
 
-        Returns: the newly created OgClass
+        Returns: the newly created OglClass
         """
         from org.pyut.ui.Mediator import Mediator
-        from org.pyut.model.PyutClass import PyutClass
-        from org.pyut.ogl.OglClass import OglClass
 
         self.logger.info(f'{x=},{y=}')
         med = Mediator()

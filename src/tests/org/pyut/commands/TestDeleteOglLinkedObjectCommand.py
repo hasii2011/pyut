@@ -84,11 +84,11 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDelete):
         oglLinkedObjectCommand: DeleteOglLinkedObjectCommand = DeleteOglLinkedObjectCommand(shape=oglNote)
 
         serializedShape: str = oglLinkedObjectCommand.serialize()
-        self.logger.warning(f'{serializedShape=}')
+        self.logger.debug(f'{serializedShape=}')
 
         import re
         fixedSerializedShape = re.sub('shapeId=[0-9]', 'shapeId=3', serializedShape)
-        self.logger.warning(f'{fixedSerializedShape=}')
+        self.logger.debug(f'{fixedSerializedShape=}')
         self.assertIsNotNone(fixedSerializedShape, 'Something must come back')
 
         self.maxDiff = None
