@@ -77,6 +77,7 @@ class TestDeleteOglLinkedObjectCommand(TestBase):
         oglNote._diagram = mockDiagram     # Normally should not do this; only in unit tess
         oglNote.SetPosition(1024, 1024)
         oglNote.SetSize(width=100, height=100)
+        oglNote._id = 3     # too match deserialized file
 
         oglLinkedObjectCommand: DeleteOglLinkedObjectCommand = DeleteOglLinkedObjectCommand(shape=oglNote)
 

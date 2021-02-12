@@ -35,12 +35,30 @@ class TestUmlFrame(unittest.TestCase):
     @author C.Dutoit
     """
 
-    def setUp(self):
-        """
+    clsApp:   App = None
+    clsFrame: Frame = None
 
-        """
+    @classmethod
+    def setUpClass(cls):
+
         PyutPreferences.determinePreferencesLocation()  # Side effect;  not a good move
 
+        cls.clsApp = PyUtApp()
+        #  Create frame
+        baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
+        umlFrame = UmlFrame(baseFrame, None)
+        umlFrame.Show(True)
+
+        cls.clsFrame = umlFrame
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.clsApp.OnExit()
+        del cls.clsApp
+
+    def setUp(self):
+        """
+        """
         # Initialize mediator and error manager
         mediator: Mediator = Mediator()
         mediator.setScriptMode()
@@ -54,15 +72,8 @@ class TestUmlFrame(unittest.TestCase):
         whereWeAre: str = getcwd()
         PyutUtils.setBasePath(whereWeAre)
 
-        # Create wx application
-        # For python 3 and wx 4.x we need to save it so it does not get garbage collected
-        self.app: App = App()
-
-        #  Create frame
-        baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
-        umlFrame = UmlFrame(baseFrame, None)
-        umlFrame.Show(True)
-        self._umlFrame = umlFrame
+        self.app = TestUmlFrame.clsApp
+        self._umlFrame = TestUmlFrame.clsFrame
 
     def tearDown(self):
 
