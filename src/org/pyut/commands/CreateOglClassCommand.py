@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -20,31 +22,22 @@ class CreateOglClassCommand(BaseOglClassCommand):
     """
     clsCounter: int = 1
 
-    def __init__(self, x: int = 0, y: int = 0, createNewClass: bool = False, shape=None):
+    def __init__(self, x: int = 0, y: int = 0):
         """
 
         Args:
             x:  abscissa of the class to create
             y:  ordinate of the class to create
 
-            createNewClass: Create new class or create Delete OGL Class command
-            TODO  This is a code smell; Do not execute code based on a flag
-
-            shape:
         """
+        self._classX: int = x
+        self._classY: int = y
         self.logger: Logger          = getLogger(__name__)
         self._prefs: PyutPreferences = PyutPreferences()
 
-        if createNewClass is True:
-            assert shape is None, 'Either we create it or you give it to us'
+        shape: OglClass = self._createNewClass()
 
-            if self._prefs.snapToGrid is True:
-                snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x, y, self._prefs.backgroundGridInterval)
-                self._shape = self._createNewClass(snappedX, snappedY)
-            else:
-                self._shape = self._createNewClass(x, y)
-        else:
-            super().__init__(shape)
+        super().__init__(shape=shape)
 
     def serialize(self) -> str:
         """
@@ -64,41 +57,53 @@ class CreateOglClassCommand(BaseOglClassCommand):
     def redo(self):
         """
         """
-        super().redo()
+        self._shape = self._createNewClass()
+        self._placeShapeOnFrame()
 
     def undo(self):
         """
         """
-        super().undo()
+        self.logger.warning(f'Implement create class UNDO')
+        frame = self.getGroup().getHistory().getFrame()
+        frame.addShape(self._shape, 0, 0, withModelUpdate=False)
+        self._shape.UpdateFromModel()
+        frame.Refresh()
 
     def execute(self):
-        pass
+        self._placeShapeOnFrame()
 
-    def _createNewClass(self, x: int, y: int) -> OglClass:
+    def _createNewClass(self) -> OglClass:
         """
-        Add a new class at (x, y).
-
-        Args:
-            x: abscissa of the class to create
-            y: ordinate of the class to create
+        Create a new class
 
         Returns: the newly created OglClass
         """
-        from org.pyut.ui.Mediator import Mediator
+        className: str       = f'{self._prefs.className}{CreateOglClassCommand.clsCounter}'
+        pyutClass: PyutClass = PyutClass(className)
+        oglClass:  OglClass = OglClass(pyutClass)
 
-        self.logger.info(f'{x=},{y=}')
-        med = Mediator()
-        umlFrame = med.getFileHandling().getCurrentFrame()
-
-        className: str = f'{self._prefs.className}{CreateOglClassCommand.clsCounter}'
-        pyutClass = PyutClass(className)
         CreateOglClassCommand.clsCounter += 1
 
-        oglClass = OglClass(pyutClass)
+        return oglClass
+
+    def _placeShapeOnFrame(self, ):
+        """
+        Place self._shape on the UML frame
+
+        """
+        from org.pyut.ui.Mediator import Mediator
+
+        med:       Mediator  = Mediator()
+        oglClass:  OglClass  = self._shape
+        pyutClass: PyutClass = cast(PyutClass, oglClass.getPyutObject())
+        umlFrame = med.getFileHandling().getCurrentFrame()
         med.classEditor(pyutClass)
 
-        umlFrame.addShape(oglClass, x, y, withModelUpdate=True)
+        if self._prefs.snapToGrid is True:
+            snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(self._classX, self._classY, self._prefs.backgroundGridInterval)
+            umlFrame.addShape(oglClass, snappedX, snappedY, withModelUpdate=True)
+        else:
+            umlFrame.addShape(oglClass, self._classX, self._classY, withModelUpdate=True)
+
         med.autoResize(pyutClass)
         umlFrame.Refresh()
-
-        return oglClass

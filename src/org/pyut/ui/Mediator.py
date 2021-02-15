@@ -41,6 +41,8 @@ from org.pyut.model.PyutText import PyutText
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
+from org.pyut.ogl.OglText import OglText
+from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
@@ -48,12 +50,11 @@ from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.DlgEditLink import DlgEditLink
 from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
-from org.pyut.ogl.OglText import OglText
+
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
-
 from org.pyut.general.Globals import _
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.Singleton import Singleton
@@ -394,13 +395,14 @@ class Mediator(Singleton):
     def setCurrentAction(self, action: int):
         """
         TODO make actions enumerations
-
         Set the new current action.
         This tells the mediator which action to do for the next doAction call.
 
-        @param action : the action from ACTION constants
-        @since 1.0
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            action:  the action from ACTION constants
+
+        Returns:
+
         """
         self.logger.debug(f'Set current action to: {action}')
         if self._currentAction == action:
@@ -408,7 +410,7 @@ class Mediator(Singleton):
         else:
             self._currentAction = action
             self._currentActionPersistent = False
-        # put a message in the status bar
+
         self.setStatusText(MESSAGES[self._currentAction])
 
     def doAction(self, x: int, y: int):
@@ -427,17 +429,7 @@ class Mediator(Singleton):
         if self._currentAction == ACTION_SELECTOR:
             return SKIP_EVENT
         elif self._currentAction == ACTION_NEW_CLASS:
-            from org.pyut.commands.CreateOglClassCommand import CreateOglClassCommand
-            from org.pyut.commands.CommandGroup import CommandGroup
-            cmd = CreateOglClassCommand(x, y, True)
-            group = CommandGroup("Create class")
-            group.addCommand(cmd)
-            umlFrame.getHistory().addCommandGroup(group)
-            umlFrame.getHistory().execute()
-
-            if not self._currentActionPersistent:
-                self._currentAction = ACTION_SELECTOR
-                self.selectTool(self._tools[0])
+            self.createOglClass(umlFrame=umlFrame, x=x, y=y)
         elif self._currentAction == ACTION_NEW_TEXT:
             self._createNewText(umlFrame, x, y)
         elif self._currentAction == ACTION_NEW_NOTE:
@@ -821,6 +813,21 @@ class Mediator(Singleton):
             self.logger.warning(f'Key code not supported: {c}')
             event.Skip()
 
+    def createOglClass(self, umlFrame, x: int, y: int):
+
+        from org.pyut.commands.CreateOglClassCommand import CreateOglClassCommand
+        from org.pyut.commands.CommandGroup import CommandGroup
+
+        cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y)
+        group: CommandGroup          = CommandGroup("Create class")
+        group.addCommand(cmd)
+        umlFrame.getHistory().addCommandGroup(group)
+        umlFrame.getHistory().execute()
+
+        if not self._currentActionPersistent:
+            self._currentAction = ACTION_SELECTOR
+            self.selectTool(self._tools[0])
+
     def deleteSelectedShape(self):
         from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
         from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
@@ -845,9 +852,9 @@ class Mediator(Singleton):
                 cmd = DeleteOglObjectCommand(shape)
             elif isinstance(shape, OglLink):
                 dlg: DlgRemoveLink = DlgRemoveLink()
-                rep = dlg.ShowModal()
+                resp = dlg.ShowModal()
                 dlg.Destroy()
-                if rep == ID_NO:
+                if resp == ID_NO:
                     return
                 else:
                     cmd = DelOglLinkCommand(shape)
@@ -1008,50 +1015,6 @@ class Mediator(Singleton):
 
     def getCurrentAction(self):
         return self._currentAction
-
-    def beginChangeRecording(self, oglObject):
-
-        from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
-        from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-        from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
-        from org.pyut.ogl.OglClass import OglClass
-        from org.pyut.ogl.OglLink import OglLink
-        from org.pyut.ogl.OglObject import OglObject
-
-        if isinstance(oglObject, OglClass):
-            print("begin")
-            self._modifyCommand = DeleteOglClassCommand(oglObject)
-        elif isinstance(oglObject, OglLink):
-            self._modifyCommand = DelOglLinkCommand(oglObject)
-        elif isinstance(oglObject, OglObject):
-            self._modifyCommand = DeleteOglObjectCommand(oglObject)
-        else:
-            raise RuntimeError("a non-OglObject has requested for a change recording")
-
-    def endChangeRecording(self, oglObject):
-
-        from org.pyut.commands.CreateOglClassCommand import CreateOglClassCommand
-        from org.pyut.ogl.OglClass import OglClass
-
-        from org.pyut.commands.CommandGroup import CommandGroup
-
-        cmd = None
-
-        if isinstance(oglObject, OglClass):
-            cmd = CreateOglClassCommand(shape=oglObject)
-
-        if cmd is not None and self._modifyCommand is not None:
-
-            group = CommandGroup("modify " + oglObject.getPyutObject().getName())
-            group.addCommand(self._modifyCommand)
-            group.addCommand(cmd)
-
-            umlFrame = self.getFileHandling().getCurrentFrame()
-            umlFrame.getHistory().addCommandGroup(group)
-
-        self._modifyCommand = None
-
-    from org.pyut.ogl.OglClass import OglClass
 
     def _setShapeSelection(self, selected: bool):
         """

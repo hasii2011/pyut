@@ -145,7 +145,7 @@ class DeleteOglObjectCommand(Command):
 
     def undo(self):
         """
-        Rebuild the OglObject with its associated PyutObject. You DON't
+        Rebuild the OglObject with its associated PyutObject. You do not
         need to redefine it for subclasses.
         """
         # we have to set up the model after the view is attached to the diagram

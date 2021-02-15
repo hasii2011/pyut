@@ -25,11 +25,13 @@ class HistoryManager:
 
     This class is the structure that manages the history of a given frame.
     It creates a file where serialized 'CommandGroups' are stored.  They
-    are compound of commands. Each command is able to do the undo/redo
+    are compound commands. Each command is able to do the undo/redo
     operations and is also able to serialize/deserialize itself
     (See commandGroup and command).
 
-    To see how it works, please see test.TestHistory
+    To see how it works, please see `tests.org.pyut.history.TestHistoryManager`
+
+    TODO: from Humberto.  It appears that `redo` can only redo things that have been undone (`undo`); I do not want it work to work this way
     """
     historyId = 0
     """
