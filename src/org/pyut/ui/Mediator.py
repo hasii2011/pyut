@@ -1054,31 +1054,14 @@ class Mediator(Singleton):
         from org.pyut.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
         from org.pyut.commands.CommandGroup import CommandGroup
 
-        self.logger.info(f'implementor: {implementor} attachmentAnchor: {attachmentAnchor}')
         umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
 
-        self.__removeUnneededAnchorPoints(implementor, attachmentAnchor)
-        umlFrame.Refresh()
+        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor, attachmentAnchor)
+        group: CommandGroup = CommandGroup("Create lollipop")
 
-        pyutInterface: PyutInterface = PyutInterface()
-        pyutInterface.addImplementor(implementor.getPyutObject().getName())
-        with DlgEditInterface(umlFrame, ID_ANY, pyutInterface) as dlg:
-            if dlg.ShowModal() == OK:
-                self.logger.info(f'model: {pyutInterface}')
-
-                pyutClass: PyutClass = cast(PyutClass, implementor.getPyutObject())
-                pyutClass.addInterface(pyutInterface)
-
-                cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(pyutInterface, attachmentAnchor)
-                group: CommandGroup = CommandGroup("Create lollipop")
-
-                group.addCommand(cmd)
-                umlFrame.getHistory().addCommandGroup(group)
-                umlFrame.getHistory().execute()
-            else:
-                self.logger.info(f'Cancelled')
-                #
-                # TODO Remove the lollipop
+        group.addCommand(cmd)
+        umlFrame.getHistory().addCommandGroup(group)
+        umlFrame.getHistory().execute()
 
     def requestLollipopLocation(self, destinationClass: OglClass):
 
@@ -1165,16 +1148,6 @@ class Mediator(Singleton):
 
         destinationClass.AddAnchorPoint(anchorHint)
         umlFrame.getDiagram().AddShape(anchorHint)
-
-    def __removeUnneededAnchorPoints(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
-
-        attachmentPoint: AttachmentPoint = attachmentAnchor.attachmentPoint
-        for anchor in implementor.GetAnchors():
-            if isinstance(anchor, SelectAnchorPoint):
-                anchor: SelectAnchorPoint = cast(SelectAnchorPoint, anchor)
-                if anchor.attachmentPoint != attachmentPoint:
-                    anchor.SetProtected(False)
-                    anchor.Detach()
 
     def __resetToActionSelector(self):
         """
