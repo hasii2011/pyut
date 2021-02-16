@@ -9,10 +9,13 @@ from wx import ID_ANY
 from wx import OK
 
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.model.PyutClass import PyutClass
 
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.history.HistoryUtils import makeValuatedToken
+
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+
+from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
 
 from org.pyut.ogl.OglClass import OglClass
@@ -20,10 +23,10 @@ from org.pyut.ogl.OglInterface2 import OglInterface2
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from org.pyut.commands.Command import Command
+from org.pyut.commands.OglShapeCommand import OglShapeCommand
 
 
-class CreateOglInterfaceCommand(Command):
+class CreateOglInterfaceCommand(OglShapeCommand):
 
     def __init__(self,  implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
@@ -41,7 +44,19 @@ class CreateOglInterfaceCommand(Command):
         self._createLollipopInterface(pyutInterface)
 
     def serialize(self) -> str:
-        return super().serialize()
+
+        serializedShape: str = super().serialize()
+
+        oglInterface: OglInterface2 = self._shape
+
+        destAnchor:      SelectAnchorPoint = oglInterface.destinationAnchor
+        attachmentPoint: AttachmentPoint   = destAnchor.attachmentPoint
+        pos:             Tuple[int, int] = destAnchor.GetPosition()
+
+        serializedShape += makeValuatedToken('attachmentPoint', attachmentPoint.__str__())
+        serializedShape += makeValuatedToken("position", repr(pos))
+
+        return serializedShape
 
     def deserialize(self, serializedData):
         pass

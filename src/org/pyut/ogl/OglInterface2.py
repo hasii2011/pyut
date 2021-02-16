@@ -7,6 +7,7 @@ from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.LollipopLine import LollipopLine
 
 from org.pyut.model.PyutInterface import PyutInterface
+from org.pyut.model.PyutObject import PyutObject
 
 
 class OglInterface2(LollipopLine, Common):
@@ -26,6 +27,25 @@ class OglInterface2(LollipopLine, Common):
     @pyutInterface.setter
     def pyutInterface(self, theNewValue: PyutInterface):
         self._pyutInterface = theNewValue
+
+    @property
+    def pyutObject(self) -> PyutObject:
+        """
+        Synonym for reverse compatibility
+
+        Returns:  The pyut interface
+        """
+        return self.pyutInterface
+
+    @pyutObject.setter
+    def pyutObject(self, newValue: PyutInterface):
+        """
+        Synonym for reverse compatibility
+
+        Args:
+            newValue: The new PyutInterface object
+        """
+        self._pyutInterface = newValue
 
     def Inside(self, clickPointX, clickPointY) -> bool:
         """
