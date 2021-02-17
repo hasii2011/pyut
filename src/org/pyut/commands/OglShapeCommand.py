@@ -29,4 +29,12 @@ class OglShapeCommand(Command):
         serializedShape += makeValuatedToken("pyutShapeModule", pyutShapeModule)
         serializedShape += makeValuatedToken("pyutShapeClass", pyutShapeClass)
 
+        pyutObj = self._shape.pyutObject
+
+        shapeId:   int = pyutObj.getId()
+        serializedShape += makeValuatedToken("shapeId", repr(shapeId))
+
+        shapeName: str = pyutObj.getName()
+        serializedShape += makeValuatedToken("shapeName", shapeName)
+
         return serializedShape

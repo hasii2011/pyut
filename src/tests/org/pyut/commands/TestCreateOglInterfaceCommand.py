@@ -68,14 +68,20 @@ class TestCreateOglInterfaceCommand(TestBase):
 
         serializedShape: str = cOglXFaceCmd.serialize()
 
-        self.logger.debug(f'{serializedShape=}')
+        self.logger.warning(f'{serializedShape=}')
 
         self.assertIsNotNone(serializedShape, 'Something must come back')
 
         # self.maxDiff = None
         self.logger.debug(f'{len(self._serializedCommand)=}  {len(serializedShape)=}')
+
+        import re
+        fixedSerializedShape = re.sub('shapeId=[0-9]', 'shapeId=2', serializedShape)
+
+        self.logger.debug(f'{fixedSerializedShape=}')
+
         expectedValue: str = self._serializedCommand
-        actualValue:   str = serializedShape
+        actualValue:   str = fixedSerializedShape
 
         self.assertEqual(expectedValue, actualValue, 'Oops, something changed')
 
