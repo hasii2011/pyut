@@ -92,9 +92,6 @@ class DeleteOglObjectCommand(Command):
         shapeSize:     Tuple[float, float] = eval(getTokenValue("size", serializedData))
         #
         # Construct the UML objects
-        # import the module which contains the ogl and pyut shape classes and instantiate the classes
-        # oglShapeClass = getattr(__import__(oglShapeModule), oglShapeClassName)
-        # pyutShapeClass = getattr(__import__(pyutShapeModule), pyutShapeClassName)
         oglModule = import_module(oglShapeModuleName)
         oglShapeClass = getattr(oglModule, oglShapeClassName)
 

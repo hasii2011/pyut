@@ -16,6 +16,7 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
+from org.pyut.ogl.OglInterface2 import OglInterface2
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -86,8 +87,26 @@ class TestCreateOglInterfaceCommand(TestBase):
         self.assertEqual(expectedValue, actualValue, 'Oops, something changed')
 
     def testDeserialize(self):
-        """Another test"""
-        pass
+
+        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=None, attachmentAnchor=None)
+
+        cOglXFaceCmd.deserialize(self._serializedCommand)
+
+        oglInterface: OglInterface2 = cOglXFaceCmd._shape
+
+        self.assertIsNotNone(oglInterface, 'Where is my reconstituted shape?')
+
+        attachmentAnchor: SelectAnchorPoint = oglInterface.destinationAnchor
+        self.assertIsNotNone(attachmentAnchor, 'I am missing the interface attachment point !!')
+
+        attachmentPosition = attachmentAnchor.GetPosition()
+
+        self.assertEqual((100,100), attachmentPosition, 'The anchor position is incorrect')
+
+        pyutInterface: PyutInterface = oglInterface.pyutInterface
+        self.assertIsNotNone(pyutInterface, 'Where is my reconstituted model?')
+
+        self.assertEqual('IClassInterface', pyutInterface.name, 'Hey, my name does not match')
 
 
 def suite() -> TestSuite:

@@ -1,5 +1,6 @@
 
 from org.pyut.commands.Command import Command
+from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
 
@@ -8,6 +9,11 @@ class OglShapeCommand(Command):
     def __init__(self, shape=None):
 
         super().__init__()
+
+        self._oglShapeClassName:   str = ''
+        self._oglShapeModuleName:  str = ''
+        self._pyutShapeClassName:  str = ''
+        self._pyutShapeModuleName: str = ''
 
         self._shape = shape
 
@@ -38,3 +44,10 @@ class OglShapeCommand(Command):
         serializedShape += makeValuatedToken("shapeName", shapeName)
 
         return serializedShape
+
+    def deserialize(self, serializedShape: str):
+
+        self._oglShapeClassName   = getTokenValue("oglShapeClass", serializedShape)
+        self._oglShapeModuleName  = getTokenValue("oglShapeModule", serializedShape)
+        self._pyutShapeClassName  = getTokenValue("pyutShapeClass", serializedShape)
+        self._pyutShapeModuleName = getTokenValue("pyutShapeModule", serializedShape)
