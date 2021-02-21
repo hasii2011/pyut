@@ -1,9 +1,14 @@
-
+from typing import List
 from typing import Tuple
 
+from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
 from org.pyut.model.PyutClassCommon import PyutClassCommon
+from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutType import PyutType
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class MethodInformation:
@@ -58,4 +63,35 @@ class MethodInformation:
 
         """
 
+        classDescription  = getTokenValue("classDescription", serializedData)
+
+        pyutObject.description = classDescription
+
+        methods = eval(getTokenValue("methods", serializedData))
+
+        pyutMethods: List[PyutMethod] = []
+
+        for methodProfile in methods:
+
+            # construction of a method
+            methodName:       str = methodProfile[0]
+            methodVisibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(methodProfile[1])
+            methodReturns:    PyutType            = PyutType(value=methodProfile[2])
+
+            pyutMethod: PyutMethod = PyutMethod(name=methodName, visibility=methodVisibility, returns=methodReturns)
+
+            # deserialize method's parameters;  Get the tuple (name, Type, defaultValue)
+            params = eval(methodProfile[3])
+            for param in params:
+                paramName:         str      = param[0]
+                paramType:         PyutType = PyutType(param[1])
+                paramDefaultValue: str      = param[2]
+
+                # creates and add the param to the method
+                pyutParam: PyutParam = PyutParam(name=paramName, theParameterType=paramType, defaultValue=paramDefaultValue)
+                pyutMethod.addParam(pyutParam)
+
+            pyutMethods.append(pyutMethod)
+
+        pyutObject.methods = pyutMethods
         return pyutObject

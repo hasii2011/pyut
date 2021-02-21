@@ -7,6 +7,8 @@ from org.pyut.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObject
 from org.pyut.general.Globals import cmp
 
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutType import PyutType
+from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
@@ -137,10 +139,11 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         for methodProfile in methods:
 
             # construction of a method
-            methodName = methodProfile[0]
-            methodVisibility = methodProfile[1]
-            methodReturns = methodProfile[2]
-            method = PyutMethod(methodName, methodVisibility, methodReturns)
+            methodName:       str                = methodProfile[0]
+            methodVisibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(methodProfile[1])
+            methodReturns:    PyutType           = PyutType(value=methodProfile[2])
+
+            method = PyutMethod(name=methodName, visibility=methodVisibility, returns=methodReturns)
 
             # deserialize method's params so we get a tuple (name, Type, defaultValue)
             params = eval(methodProfile[3])

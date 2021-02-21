@@ -1,9 +1,13 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import List
+from typing import cast
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
+
+from pkg_resources import resource_filename
 
 from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutMethod import PyutMethod
@@ -34,6 +38,11 @@ class TestMethodInformation(TestBase):
     def setUp(self):
         self.logger: Logger = TestMethodInformation.clsLogger
 
+        fqFileName: str = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'MethodInformation.txt')
+        saveFile = open(fqFileName)
+        self._serializedMethodInformation: str = saveFile.read()
+        saveFile.close()
+
     def tearDown(self):
         pass
 
@@ -51,13 +60,27 @@ class TestMethodInformation(TestBase):
         pyutClassCommon.methods = [floatMethod, finalMethod]
         serializedMethods: str = MethodInformation.serialize(pyutClassCommon)
 
-        self.assertNotEqual(0, len(serializedMethods))
+        self.assertNotEqual(0, len(serializedMethods), 'Something should serialize')
 
         self.logger.warning(f'{serializedMethods=}')
 
     def testDeserialize(self):
-        """Another test"""
-        pass
+
+        pyutClassCommon: PyutClassCommon = PyutClassCommon()
+
+        pyutClassCommon = MethodInformation.deserialize(serializedData=self._serializedMethodInformation, pyutObject=pyutClassCommon)
+
+        self.assertEqual('I am a test class', pyutClassCommon.description, 'Who changed the test description')
+
+        pyutMethods: List[PyutMethod] = pyutClassCommon.methods
+        self.assertEqual(2, len(pyutMethods), 'I should only deserialize this many')
+
+        for pyutMethod in pyutMethods:
+            pyutMethod: PyutMethod = cast(PyutMethod, pyutMethod)
+            self.logger.warning(f'{pyutMethod}')
+            self.assertIsNotNone(pyutMethod.name, 'Where is my method name')
+            self.assertIsNotNone(pyutMethod.visibility, 'Where is the method visibility')
+            self.assertIsNotNone(pyutMethod.returnType, 'Where is my return type')
 
     def _createTestMethod(self, name: str, visibility: PyutVisibilityEnum, returnType: PyutType) -> PyutMethod:
 
