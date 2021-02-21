@@ -1,8 +1,8 @@
 
 from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 
 class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):
@@ -34,7 +34,7 @@ class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):
 
         fileName: str = self._shape.getPyutObject().getFilename()
 
-        serializedShape += makeValuatedToken("fileName", fileName)
+        serializedShape += tokenizeValue("fileName", fileName)
 
         return serializedShape
 
@@ -51,5 +51,5 @@ class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):
         # deserialize the data common to all OglObjects
         DeleteOglObjectCommand.deserialize(self, serializedData)
 
-        fileName = getTokenValue("fileName", serializedData)
+        fileName = deTokenize("fileName", serializedData)
         self._shape.getPyutObject().setFilename(fileName)

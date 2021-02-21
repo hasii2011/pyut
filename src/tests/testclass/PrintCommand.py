@@ -6,8 +6,8 @@ from logging import getLogger
 
 from org.pyut.commands.Command import Command
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 
 class PrintCommand(Command):
@@ -48,7 +48,7 @@ class PrintCommand(Command):
         method of command.
         """
 
-        return Command.serialize(self) + makeValuatedToken("message", self._message)
+        return Command.serialize(self) + tokenizeValue("message", self._message)
 
     def deserialize(self, serialCommand):
         """
@@ -57,4 +57,4 @@ class PrintCommand(Command):
         @param serialCommand    :   serialized command
         """
 
-        self._message = getTokenValue("message", serialCommand)
+        self._message = deTokenize("message", serialCommand)

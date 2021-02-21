@@ -16,8 +16,8 @@ from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
@@ -63,8 +63,8 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         attachmentPoint: AttachmentPoint   = destAnchor.attachmentPoint
         pos:             Tuple[int, int]   = destAnchor.GetPosition()
 
-        serializedShape += makeValuatedToken('attachmentPoint', attachmentPoint.__str__())
-        serializedShape += makeValuatedToken("position", repr(pos))
+        serializedShape += tokenizeValue('attachmentPoint', attachmentPoint.__str__())
+        serializedShape += tokenizeValue("position", repr(pos))
 
         return serializedShape
 
@@ -75,7 +75,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         pyutModule:        ModuleType = import_module(self._pyutShapeModuleName)
         pyutInterfaceType: type       = getattr(pyutModule, self._pyutShapeClassName)
 
-        interfaceName: str = getTokenValue("shapeName", serializedShape)
+        interfaceName: str = deTokenize("shapeName", serializedShape)
 
         pyutInterface: PyutInterface = pyutInterfaceType(interfaceName)
 
@@ -84,16 +84,16 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         oglModule:         ModuleType = import_module(self._oglShapeModuleName)
         oglInterface2Type: type       = getattr(oglModule, self._oglShapeClassName)
 
-        attachmentPointName: str = getTokenValue('attachmentPoint', serializedShape)
+        attachmentPointName: str = deTokenize('attachmentPoint', serializedShape)
         attachmentPoint: AttachmentPoint = AttachmentPoint.toEnum(attachmentPointName)
 
-        shapePosition: Tuple[int, int] = eval(getTokenValue("position", serializedShape))
+        shapePosition: Tuple[int, int] = eval(deTokenize("position", serializedShape))
 
         attachmentAnchor: SelectAnchorPoint = SelectAnchorPoint(x=shapePosition[0], y=shapePosition[1], attachmentPoint=attachmentPoint)
 
         oglInterface2: OglInterface2 = oglInterface2Type(pyutInterface=pyutInterface, destinationAnchor=attachmentAnchor)
 
-        shapeId: str = getTokenValue("shapeId", serializedShape)
+        shapeId: str = deTokenize("shapeId", serializedShape)
         oglInterface2.SetID(int(shapeId))
 
         pyutInterface = cast(PyutInterface, MethodInformation.deserialize(serializedData=serializedShape, pyutObject=pyutInterface))

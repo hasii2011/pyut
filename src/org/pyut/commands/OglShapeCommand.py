@@ -1,8 +1,8 @@
 
 from org.pyut.commands.Command import Command
 from org.pyut.commands.MethodInformation import MethodInformation
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 
 class OglShapeCommand(Command):
@@ -31,18 +31,18 @@ class OglShapeCommand(Command):
         pyutShapeModule: str = self._shape.pyutObject.__module__
         pyutShapeClass:  str = self._shape.pyutObject.__class__.__name__
 
-        serializedShape += makeValuatedToken("oglShapeModule", oglShapeModule)
-        serializedShape += makeValuatedToken("oglShapeClass", oglShapeClass)
-        serializedShape += makeValuatedToken("pyutShapeModule", pyutShapeModule)
-        serializedShape += makeValuatedToken("pyutShapeClass", pyutShapeClass)
+        serializedShape += tokenizeValue("oglShapeModule", oglShapeModule)
+        serializedShape += tokenizeValue("oglShapeClass", oglShapeClass)
+        serializedShape += tokenizeValue("pyutShapeModule", pyutShapeModule)
+        serializedShape += tokenizeValue("pyutShapeClass", pyutShapeClass)
 
         pyutObj = self._shape.pyutObject
 
         shapeId:   int = pyutObj.getId()
-        serializedShape += makeValuatedToken("shapeId", repr(shapeId))
+        serializedShape += tokenizeValue("shapeId", repr(shapeId))
 
         shapeName: str = pyutObj.getName()
-        serializedShape += makeValuatedToken("shapeName", shapeName)
+        serializedShape += tokenizeValue("shapeName", shapeName)
 
         methodInformation: str = MethodInformation.serialize(pyutClassCommon=pyutObj)
         serializedShape += methodInformation
@@ -51,7 +51,7 @@ class OglShapeCommand(Command):
 
     def deserialize(self, serializedShape: str):
 
-        self._oglShapeClassName   = getTokenValue("oglShapeClass", serializedShape)
-        self._oglShapeModuleName  = getTokenValue("oglShapeModule", serializedShape)
-        self._pyutShapeClassName  = getTokenValue("pyutShapeClass", serializedShape)
-        self._pyutShapeModuleName = getTokenValue("pyutShapeModule", serializedShape)
+        self._oglShapeClassName   = deTokenize("oglShapeClass", serializedShape)
+        self._oglShapeModuleName  = deTokenize("oglShapeModule", serializedShape)
+        self._pyutShapeClassName  = deTokenize("pyutShapeClass", serializedShape)
+        self._pyutShapeModuleName = deTokenize("pyutShapeModule", serializedShape)

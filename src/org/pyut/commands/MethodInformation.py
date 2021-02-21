@@ -1,8 +1,8 @@
 from typing import List
 from typing import Tuple
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutMethod import PyutMethod
@@ -46,8 +46,8 @@ class MethodInformation:
 
         classDescription:    str = pyutClassCommon.description
 
-        serializedInfo += makeValuatedToken("classDescription", classDescription)
-        serializedInfo += makeValuatedToken("methods",          repr(methods))
+        serializedInfo += tokenizeValue("classDescription", classDescription)
+        serializedInfo += tokenizeValue("methods", repr(methods))
 
         return serializedInfo
 
@@ -63,11 +63,11 @@ class MethodInformation:
 
         """
 
-        classDescription  = getTokenValue("classDescription", serializedData)
+        classDescription  = deTokenize("classDescription", serializedData)
 
         pyutObject.description = classDescription
 
-        methods = eval(getTokenValue("methods", serializedData))
+        methods = eval(deTokenize("methods", serializedData))
 
         pyutMethods: List[PyutMethod] = []
 

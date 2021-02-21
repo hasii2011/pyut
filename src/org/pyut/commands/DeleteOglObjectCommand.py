@@ -5,8 +5,8 @@ from importlib import import_module
 
 from org.pyut.commands.Command import Command
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 
 class DeleteOglObjectCommand(Command):
@@ -32,10 +32,10 @@ class DeleteOglObjectCommand(Command):
         pyutShapeModule: str = self._shape.getPyutObject().__module__
         pyutShapeClass:  str = self._shape.getPyutObject().__class__.__name__
 
-        serialShape += makeValuatedToken("oglShapeModule", oglShapeModule)
-        serialShape += makeValuatedToken("oglShapeClass", oglShapeClass)
-        serialShape += makeValuatedToken("pyutShapeModule", pyutShapeModule)
-        serialShape += makeValuatedToken("pyutShapeClass", pyutShapeClass)
+        serialShape += tokenizeValue("oglShapeModule", oglShapeModule)
+        serialShape += tokenizeValue("oglShapeClass", oglShapeClass)
+        serialShape += tokenizeValue("pyutShapeModule", pyutShapeModule)
+        serialShape += tokenizeValue("pyutShapeClass", pyutShapeClass)
         # This is interesting:
         # serialize the shape's model size and position and NOT the Ogl(view)'s
         # ones because a zoom could be performed in between.
@@ -48,8 +48,8 @@ class DeleteOglObjectCommand(Command):
         model = self._shape.GetModel()
         pos:   Tuple[int, int]     = model.GetPosition()
         size:  Tuple[int, int]     = model.GetSize()
-        serialShape += makeValuatedToken("position", repr(pos))
-        serialShape += makeValuatedToken("size", repr(size))
+        serialShape += tokenizeValue("position", repr(pos))
+        serialShape += tokenizeValue("size", repr(size))
         #
         # serialize the graphical links (Ogl) attached to the shape
         # and put it in the common data of the group. We have to do
@@ -67,8 +67,8 @@ class DeleteOglObjectCommand(Command):
         pyutObj = self._shape.getPyutObject()
         shapeId:   int = pyutObj.getId()
         shapeName: str = pyutObj.getName()
-        serialShape += makeValuatedToken("shapeId", repr(shapeId))
-        serialShape += makeValuatedToken("shapeName", shapeName)
+        serialShape += tokenizeValue("shapeId", repr(shapeId))
+        serialShape += tokenizeValue("shapeName", shapeName)
 
         return serialShape
 
@@ -80,16 +80,16 @@ class DeleteOglObjectCommand(Command):
             serializedData:
         """
 
-        oglShapeClassName:   str = getTokenValue("oglShapeClass", serializedData)
-        oglShapeModuleName:  str = getTokenValue("oglShapeModule", serializedData)
-        pyutShapeClassName:  str = getTokenValue("pyutShapeClass", serializedData)
-        pyutShapeModuleName: str = getTokenValue("pyutShapeModule", serializedData)
+        oglShapeClassName:   str = deTokenize("oglShapeClass", serializedData)
+        oglShapeModuleName:  str = deTokenize("oglShapeModule", serializedData)
+        pyutShapeClassName:  str = deTokenize("pyutShapeClass", serializedData)
+        pyutShapeModuleName: str = deTokenize("pyutShapeModule", serializedData)
 
-        shapeName:     str = getTokenValue("shapeName", serializedData)     # name of the pyutObject
-        shapeId:       int = eval(getTokenValue("shapeId", serializedData))
+        shapeName:     str = deTokenize("shapeName", serializedData)     # name of the pyutObject
+        shapeId:       int = eval(deTokenize("shapeId", serializedData))
 
-        shapePosition: Tuple[float, float] = eval(getTokenValue("position", serializedData))
-        shapeSize:     Tuple[float, float] = eval(getTokenValue("size", serializedData))
+        shapePosition: Tuple[float, float] = eval(deTokenize("position", serializedData))
+        shapeSize:     Tuple[float, float] = eval(deTokenize("size", serializedData))
         #
         # Construct the UML objects
         oglModule = import_module(oglShapeModuleName)

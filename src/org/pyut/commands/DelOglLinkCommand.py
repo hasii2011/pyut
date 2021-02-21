@@ -9,8 +9,8 @@ from org.pyut.ogl.OglLinkFactory import getLinkType
 
 from org.pyut.enums.LinkType import LinkType
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 
@@ -44,12 +44,12 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
         self._linkDestId   = self._shape.getDestinationShape().getPyutObject().getId()
         self._linkId       = self._shape.getPyutObject().getId()
 
-        serialLink += makeValuatedToken("srcPosition",  repr(self._srcPosition))
-        serialLink += makeValuatedToken("destPosition", repr(self._destPosition))
-        serialLink += makeValuatedToken("linkType",     repr(self._linkType))
-        serialLink += makeValuatedToken("linkSrcId",    repr(self._linkSrcId))
-        serialLink += makeValuatedToken("linkDestId",   repr(self._linkDestId))
-        serialLink += makeValuatedToken("linkId",       repr(self._linkId))
+        serialLink += tokenizeValue("srcPosition", repr(self._srcPosition))
+        serialLink += tokenizeValue("destPosition", repr(self._destPosition))
+        serialLink += tokenizeValue("linkType", repr(self._linkType))
+        serialLink += tokenizeValue("linkSrcId", repr(self._linkSrcId))
+        serialLink += tokenizeValue("linkDestId", repr(self._linkDestId))
+        serialLink += tokenizeValue("linkId", repr(self._linkId))
 
         return serialLink
 
@@ -57,15 +57,15 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
 
         umlFrame = self.getGroup().getHistory().getFrame()
 
-        self._srcPosition  = eval(getTokenValue("srcPosition", serializedInfos))
-        self._destPosition = eval(getTokenValue("destPosition", serializedInfos))
+        self._srcPosition  = eval(deTokenize("srcPosition", serializedInfos))
+        self._destPosition = eval(deTokenize("destPosition", serializedInfos))
 
-        linkTypeStr: str = getTokenValue("linkType", serializedInfos)
+        linkTypeStr: str = deTokenize("linkType", serializedInfos)
         self._linkType   = LinkType.toEnum(linkTypeStr)
 
-        self._linkSrcId    = eval(getTokenValue("linkSrcId", serializedInfos))
-        self._linkDestId   = eval(getTokenValue("linkDestId", serializedInfos))
-        self._linkId       = eval(getTokenValue("linkId", serializedInfos))
+        self._linkSrcId    = eval(deTokenize("linkSrcId", serializedInfos))
+        self._linkDestId   = eval(deTokenize("linkDestId", serializedInfos))
+        self._linkId       = eval(deTokenize("linkId", serializedInfos))
 
         self._shape = umlFrame.getUmlObjectById(self._linkId)
 

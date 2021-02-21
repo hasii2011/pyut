@@ -15,8 +15,8 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.enums.LinkType import LinkType
 from org.pyut.model.PyutLink import PyutLink
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
@@ -67,12 +67,12 @@ class CreateOglLinkCommand(Command):
         # get the pyutId of the link
         linkId = self._link.getPyutObject().getId()
         # serialize required data needed to undo/redo the link
-        serialShape += makeValuatedToken("srcId", repr(srcId))
-        serialShape += makeValuatedToken("dstId", repr(dstId))
-        serialShape += makeValuatedToken("srcPos", repr(srcPos))
-        serialShape += makeValuatedToken("dstPos", repr(dstPos))
-        serialShape += makeValuatedToken("linkType", repr(linkType))
-        serialShape += makeValuatedToken("linkId", repr(linkId))
+        serialShape += tokenizeValue("srcId", repr(srcId))
+        serialShape += tokenizeValue("dstId", repr(dstId))
+        serialShape += tokenizeValue("srcPos", repr(srcPos))
+        serialShape += tokenizeValue("dstPos", repr(dstPos))
+        serialShape += tokenizeValue("linkType", repr(linkType))
+        serialShape += tokenizeValue("linkId", repr(linkId))
 
         return serialShape
 
@@ -85,17 +85,17 @@ class CreateOglLinkCommand(Command):
         # deserialize the data common to all commands
         Command.deserialize(self, serializedInfo)
         # get the pyutId of the source OglObject of the link
-        srcId = eval(getTokenValue("srcId", serializedInfo))
+        srcId = eval(deTokenize("srcId", serializedInfo))
         # get the pyutId of the destination OglObject of the link
-        dstId = eval(getTokenValue("dstId", serializedInfo))
+        dstId = eval(deTokenize("dstId", serializedInfo))
         # get the model (MVC pattern) start position of the link
-        srcPos = eval(getTokenValue("srcPos", serializedInfo))
+        srcPos = eval(deTokenize("srcPos", serializedInfo))
         # get the model (MVC pattern) end position of the link
-        dstPos = eval(getTokenValue("dstPos", serializedInfo))
+        dstPos = eval(deTokenize("dstPos", serializedInfo))
         # get the type of the link (see OglLinkFactory)
-        linkType = eval(getTokenValue("linkType", serializedInfo))
+        linkType = eval(deTokenize("linkType", serializedInfo))
         # get the pyutId of the link
-        linkId = eval(getTokenValue("linkId", serializedInfo))
+        linkId = eval(deTokenize("linkId", serializedInfo))
         # get the frame to which belongs the link
         umlFrame = self.getGroup().getHistory().getFrame()
 

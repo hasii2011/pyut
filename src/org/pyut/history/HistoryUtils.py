@@ -85,20 +85,18 @@ HISTORY_FILE_NAME: str = "pyutHistory"
 hLogger: Logger = getLogger('HistoryUtils')
 
 
-def makeToken(tokenId: str):
+def tokenize(tokenId: str):
     """
 
     Args:
         tokenId:     name (identifier) of the token
 
     Returns:    a token (string) that is standard for all histories.
-
     """
-    # return TOKEN_BEGIN + tokenId + TOKEN_END
     return f'{TOKEN_BEGIN}{tokenId}{TOKEN_END}'
 
 
-def makeValuatedToken(tokenId: str, value: str):
+def tokenizeValue(tokenId: str, value: str):
     """
     Use it in the serialize method of a command, so that
     you can get it back with the getTokenValue method.
@@ -107,8 +105,7 @@ def makeValuatedToken(tokenId: str, value: str):
         tokenId:    name of the token
         value:      value of the token
 
-    Returns:    a valuated token (string) in the format of the history
-    manager.
+    Returns:    a valuated token (string) in the format of the history manager.
 
     Raise an exception if tokenId or value are partially or
     completely a reserved sequence.
@@ -125,20 +122,19 @@ def makeValuatedToken(tokenId: str, value: str):
     for sequence in CTRL_SEQUENCES:
         value = value.replace(sequence, TOKEN_ESCAPE + sequence)
 
-    return makeToken(tokenId + TOKEN_ASSIGN + value)
+    return tokenize(tokenId + TOKEN_ASSIGN + value)
 
 
-def getTokenValue(tokenId: str, serializedData: str) -> str:
+def deTokenize(tokenId: str, serializedData: str) -> str:
     """
-    The token has to be created by the `makeToken()` method.  Used in the deserialize method of
+    The token has to be created by the `tokenize()` method.  Used in the deserialize method of
     a command to get back a value.
 
     Args:
         tokenId:    name of the token
         serializedData:  string which contains the information needed to deserialize a command
 
-    Returns: The value (string) of the specified token extracted
-    from the specified string.
+    Returns: The value (string) of the specified token extracted from the specified string.
     """
     # to not to work on the original    -- hasii note, is this true?
     value = serializedData

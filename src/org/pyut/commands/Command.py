@@ -3,7 +3,7 @@ from typing import cast
 
 from org.pyut.history.HistoryUtils import COMMAND_CLASS_ID
 from org.pyut.history.HistoryUtils import COMMAND_MODULE_ID
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 
 class Command:
@@ -42,8 +42,8 @@ class Command:
 
                 `return Command.serialize + (MyCommand's serialized information)`
         """
-        moduleId: str = makeValuatedToken(COMMAND_MODULE_ID, str(self.__module__))
-        classId:  str = makeValuatedToken(COMMAND_CLASS_ID, str(self.__class__.__name__))
+        moduleId: str = tokenizeValue(COMMAND_MODULE_ID, str(self.__module__))
+        classId:  str = tokenizeValue(COMMAND_CLASS_ID, str(self.__class__.__name__))
 
         return f'{moduleId}{classId}'
 

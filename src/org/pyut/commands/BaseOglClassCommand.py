@@ -1,6 +1,6 @@
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 from org.pyut.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
 
@@ -74,13 +74,13 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
 
             methods.append(methodProfile)
 
-        serialShape += makeValuatedToken("classDescription",    classDescription)
-        serialShape += makeValuatedToken("classStereotypeName", classStereotypeName)
-        serialShape += makeValuatedToken("classShowStereotype", classShowStereotype)
-        serialShape += makeValuatedToken("classShowMethods",    classShowMethods)
-        serialShape += makeValuatedToken("classShowFields",     classShowFields)
-        serialShape += makeValuatedToken("fields", repr(fields))
-        serialShape += makeValuatedToken("methods", repr(methods))
+        serialShape += tokenizeValue("classDescription", classDescription)
+        serialShape += tokenizeValue("classStereotypeName", classStereotypeName)
+        serialShape += tokenizeValue("classShowStereotype", classShowStereotype)
+        serialShape += tokenizeValue("classShowMethods", classShowMethods)
+        serialShape += tokenizeValue("classShowFields", classShowFields)
+        serialShape += tokenizeValue("fields", repr(fields))
+        serialShape += tokenizeValue("methods", repr(methods))
 
         return serialShape
 
@@ -102,14 +102,14 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         DeleteOglLinkedObjectCommand.deserialize(self, serializedData)
 
         # deserialize properties of the OglClass (first level)
-        classDescription    = getTokenValue("classDescription", serializedData)
-        classStereotypeName = getTokenValue("classStereotypeName", serializedData)
-        classShowStereotype = eval(getTokenValue("classShowStereotype", serializedData))
-        classShowMethods    = eval(getTokenValue("classShowMethods", serializedData))
-        classShowFields     = eval(getTokenValue("classShowFields", serializedData))
+        classDescription    = deTokenize("classDescription", serializedData)
+        classStereotypeName = deTokenize("classStereotypeName", serializedData)
+        classShowStereotype = eval(deTokenize("classShowStereotype", serializedData))
+        classShowMethods    = eval(deTokenize("classShowMethods", serializedData))
+        classShowFields     = eval(deTokenize("classShowFields", serializedData))
 
-        methods = eval(getTokenValue("methods", serializedData))
-        fields   = eval(getTokenValue("fields", serializedData))
+        methods = eval(deTokenize("methods", serializedData))
+        fields   = eval(deTokenize("fields", serializedData))
 
         # set up the first level properties of the pyutClass
         pyutClass: PyutClass = self._shape.getPyutObject()

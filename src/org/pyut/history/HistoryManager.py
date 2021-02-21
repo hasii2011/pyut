@@ -14,7 +14,7 @@ from org.pyut.commands.CommandGroup import CommandGroup
 
 from org.pyut.history.HistoryUtils import GROUP_COMMENT_ID
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
-from org.pyut.history.HistoryUtils import getTokenValue
+from org.pyut.history.HistoryUtils import deTokenize
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -271,7 +271,7 @@ class HistoryManager:
         Returns:    an initialized group (CommandGroup)
         """
         # get from the string the comment/description for the group
-        grpComment = getTokenValue(GROUP_COMMENT_ID, serializedGroup)
+        grpComment = deTokenize(GROUP_COMMENT_ID, serializedGroup)
 
         # create an initialized group with only its comment
         group = CommandGroup(grpComment)

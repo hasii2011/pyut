@@ -18,9 +18,9 @@ from org.pyut.history.HistoryUtils import GROUP_END_ID
 from org.pyut.history.HistoryUtils import TOKEN_BEGIN
 from org.pyut.history.HistoryUtils import TOKEN_END
 
-from org.pyut.history.HistoryUtils import getTokenValue
-from org.pyut.history.HistoryUtils import makeToken
-from org.pyut.history.HistoryUtils import makeValuatedToken
+from org.pyut.history.HistoryUtils import deTokenize
+from org.pyut.history.HistoryUtils import tokenize
+from org.pyut.history.HistoryUtils import tokenizeValue
 
 
 class CommandGroup:
@@ -82,15 +82,15 @@ class CommandGroup:
         @return a string representing the command.
         """
         # add the beginning information of the group
-        serializedGroup = (makeToken(GROUP_BEGIN_ID) + makeValuatedToken(GROUP_COMMENT_ID, self._comment))
+        serializedGroup = (tokenize(GROUP_BEGIN_ID) + tokenizeValue(GROUP_COMMENT_ID, self._comment))
         # add the beginning information and setup information of
         # each command. After that add the ending information of
         # for each command.
         for command in self._commands:
-            serializedGroup += (makeToken(COMMAND_BEGIN_ID) + command.serialize() + makeToken(COMMAND_END_ID))
+            serializedGroup += (tokenize(COMMAND_BEGIN_ID) + command.serialize() + tokenize(COMMAND_END_ID))
 
         # add the ending information of the group
-        serializedGroup += makeToken(GROUP_END_ID)
+        serializedGroup += tokenize(GROUP_END_ID)
 
         return serializedGroup
 
@@ -121,11 +121,11 @@ class CommandGroup:
             # we work only on the useful data
             serialCommand = serializedCommands[cStart: cEnd]
 
-            commandModuleName = getTokenValue(COMMAND_MODULE_ID, serialCommand)
+            commandModuleName = deTokenize(COMMAND_MODULE_ID, serialCommand)
             self.logger.info(f'commandModuleName: {commandModuleName}')
 
             # get the name of the class of the command
-            commandClassName = getTokenValue(COMMAND_CLASS_ID, serialCommand)
+            commandClassName = deTokenize(COMMAND_CLASS_ID, serialCommand)
             self.logger.info(f'commandClassName: {commandClassName}')
 
             # import the module which contains the command class and get the class (cls)
