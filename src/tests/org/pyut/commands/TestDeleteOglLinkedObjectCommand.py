@@ -87,7 +87,7 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDelete):
         self.logger.debug(f'{serializedShape=}')
 
         import re
-        fixedSerializedShape = re.sub('shapeId=[0-9]', 'shapeId=3', serializedShape)
+        fixedSerializedShape = re.sub('shapeId=[0-9]*', 'shapeId=3', serializedShape)
         self.logger.debug(f'{fixedSerializedShape=}')
         self.assertIsNotNone(fixedSerializedShape, 'Something must come back')
 

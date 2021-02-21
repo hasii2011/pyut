@@ -12,7 +12,6 @@ from pkg_resources import resource_filename
 from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutModifier import PyutModifier
-from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -20,14 +19,15 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from tests.TestBase import TestBase
 
 from org.pyut.commands.MethodInformation import MethodInformation
+from tests.org.pyut.commands.TestCommandCommon import TestCommandCommon
 
 
 class TestMethodInformation(TestBase):
     """
     """
     clsLogger:        Logger = None
-    methodParamNumber: int = 1
-    methodTypeNumber: int = 1
+    # methodParamNumber: int = 1
+    # methodTypeNumber: int = 1
 
     @classmethod
     def setUpClass(cls):
@@ -51,8 +51,8 @@ class TestMethodInformation(TestBase):
         pyutClassCommon: PyutClassCommon = PyutClassCommon()
         pyutClassCommon.description = 'I am a test class'
 
-        floatMethod: PyutMethod = self._createTestMethod('floatMethod', PyutVisibilityEnum.PRIVATE,   PyutType('float'))
-        finalMethod: PyutMethod = self._createTestMethod('finalMethod', PyutVisibilityEnum.PROTECTED, PyutType('int'))
+        floatMethod: PyutMethod = TestCommandCommon.createTestMethod('floatMethod', PyutVisibilityEnum.PRIVATE,   PyutType('float'))
+        finalMethod: PyutMethod = TestCommandCommon.createTestMethod('finalMethod', PyutVisibilityEnum.PROTECTED, PyutType('int'))
 
         pyutModifier: PyutModifier = PyutModifier(modifierTypeName='final')
         finalMethod.addModifier(newModifier=pyutModifier)
@@ -62,7 +62,7 @@ class TestMethodInformation(TestBase):
 
         self.assertNotEqual(0, len(serializedMethods), 'Something should serialize')
 
-        self.logger.warning(f'{serializedMethods=}')
+        self.logger.debug(f'{serializedMethods=}')
 
     def testDeserialize(self):
 
@@ -77,29 +77,10 @@ class TestMethodInformation(TestBase):
 
         for pyutMethod in pyutMethods:
             pyutMethod: PyutMethod = cast(PyutMethod, pyutMethod)
-            self.logger.warning(f'{pyutMethod}')
+            self.logger.debug(f'{pyutMethod}')
             self.assertIsNotNone(pyutMethod.name, 'Where is my method name')
             self.assertIsNotNone(pyutMethod.visibility, 'Where is the method visibility')
             self.assertIsNotNone(pyutMethod.returnType, 'Where is my return type')
-
-    def _createTestMethod(self, name: str, visibility: PyutVisibilityEnum, returnType: PyutType) -> PyutMethod:
-
-        pyutMethod: PyutMethod = PyutMethod()
-
-        pyutMethod.name       = name
-        pyutMethod.visibility = visibility
-        pyutMethod.returnType = returnType
-
-        pyutParam: PyutParam = PyutParam(name=f'param{self.methodParamNumber}',
-                                         theParameterType=PyutType(f'Type{self.methodTypeNumber}'),
-                                         defaultValue='')
-
-        pyutMethod.addParam(pyutParam)
-
-        TestMethodInformation.methodParamNumber += 1
-        TestMethodInformation.methodTypeNumber  += 1
-
-        return pyutMethod
 
 
 def suite() -> TestSuite:

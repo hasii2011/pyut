@@ -27,6 +27,7 @@ class TestAll:
                             'TestWxOgl', 'TestBase', 'TestTemplate',
                             'org/pyut/persistence/TestIoFile',
                             'org/pyut/ui/tools/TestToolboxFrame',
+                            'org/pyut/commands/TestCommandCommon',
                             'TestUmlFrame', 'org/pyut/dialogs/TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result

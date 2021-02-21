@@ -15,6 +15,7 @@ from wx import OK
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
+
 from org.pyut.history.HistoryUtils import getTokenValue
 from org.pyut.history.HistoryUtils import makeValuatedToken
 
@@ -28,6 +29,7 @@ from org.pyut.ogl.OglInterface2 import OglInterface2
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
+from org.pyut.commands.MethodInformation import MethodInformation
 from org.pyut.commands.OglShapeCommand import OglShapeCommand
 
 
@@ -47,7 +49,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
             pyutInterface: PyutInterface = PyutInterface()
             pyutInterface.addImplementor(implementor.getPyutObject().getName())
 
-            self._pyutInterface:    PyutInterface     = pyutInterface
+            self._pyutInterface: PyutInterface = pyutInterface
 
             self._createLollipopInterface(pyutInterface)
 
@@ -73,11 +75,11 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         pyutModule:        ModuleType = import_module(self._pyutShapeModuleName)
         pyutInterfaceType: type       = getattr(pyutModule, self._pyutShapeClassName)
 
-        interfaceName: str             = getTokenValue("shapeName", serializedShape)
+        interfaceName: str = getTokenValue("shapeName", serializedShape)
 
         pyutInterface: PyutInterface = pyutInterfaceType(interfaceName)
 
-        self.logger.warning(f'{interfaceName=} {pyutInterface=}')
+        self.logger.debug(f'{interfaceName=} {pyutInterface=}')
 
         oglModule:         ModuleType = import_module(self._oglShapeModuleName)
         oglInterface2Type: type       = getattr(oglModule, self._oglShapeClassName)
@@ -94,6 +96,9 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         shapeId: str = getTokenValue("shapeId", serializedShape)
         oglInterface2.SetID(int(shapeId))
 
+        pyutInterface = cast(PyutInterface, MethodInformation.deserialize(serializedData=serializedShape, pyutObject=pyutInterface))
+
+        oglInterface2.pyutInterface = pyutInterface
         self._shape = oglInterface2
 
     def redo(self):
