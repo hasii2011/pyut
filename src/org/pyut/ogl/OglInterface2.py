@@ -2,12 +2,16 @@
 from logging import Logger
 from logging import getLogger
 
+from wx import DC
+
 from org.pyut.miniogl.Common import Common
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.LollipopLine import LollipopLine
 
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutObject import PyutObject
+from org.pyut.ogl.OglPosition import OglPosition
+from org.pyut.ogl.OglUtils import OglUtils
 
 
 class OglInterface2(LollipopLine, Common):
@@ -46,6 +50,14 @@ class OglInterface2(LollipopLine, Common):
             newValue: The new PyutInterface object
         """
         self._pyutInterface = newValue
+
+    # def Draw(self, dc: DC, withChildren: bool = True):
+    #
+    #     super().Draw(dc=dc, withChildren=withChildren)
+    #
+    #     xFaceName: str = self.pyutInterface.getName()
+    #
+    #     # dc.DrawText(xFaceName, midPoint.x, midPoint.y)
 
     def Inside(self, clickPointX, clickPointY) -> bool:
         """

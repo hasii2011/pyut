@@ -4,7 +4,6 @@ from typing import Tuple
 from logging import Logger
 from logging import getLogger
 from logging import INFO
-from logging import DEBUG
 
 from math import pi
 from math import atan
@@ -22,9 +21,9 @@ from wx import WHITE_BRUSH
 from wx import Font
 
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
-
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglPosition import OglPosition
+from org.pyut.ogl.OglUtils import OglUtils
 
 
 class OglAssociation(OglLink):
@@ -91,8 +90,8 @@ class OglAssociation(OglLink):
             withChildren:   draw the children or not
         """
         OglLink.Draw(self, dc, withChildren)
-        sp: Tuple[float, float] = self._srcAnchor.GetPosition()
-        dp: Tuple[float, float] = self._dstAnchor.GetPosition()
+        sp: Tuple[int, int] = self._srcAnchor.GetPosition()
+        dp: Tuple[int, int] = self._dstAnchor.GetPosition()
 
         oglSp: OglPosition = OglPosition(x=sp[0], y=sp[1])
         oglDp: OglPosition = OglPosition(x=dp[0], y=dp[1])
@@ -150,15 +149,15 @@ class OglAssociation(OglLink):
 
     def _drawCenterLabel(self, dc: DC, sp: OglPosition, dp: OglPosition):
 
-        centerX, centerY = self._computeMidPoint(srcPosition=sp, destPosition=dp)
+        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=sp, destPosition=dp)
 
         saveFont: Font = dc.GetFont()
         dc.SetFont(self._defaultFont)
 
         centerText: str = self._link.getName()
-        dc.DrawText(centerText, centerX, centerY)
+        dc.DrawText(centerText, midPoint.x, midPoint.y)
         dc.SetFont(saveFont)
-        self._centerLabel = self.__updateAssociationLabel(self._centerLabel, x=centerX, y=centerY, text=centerText)
+        self._centerLabel = self.__updateAssociationLabel(self._centerLabel, x=midPoint.x, y=midPoint.y, text=centerText)
 
     def _drawSourceCardinality(self, dc: DC, sp: OglPosition, dp: OglPosition):
 
@@ -212,31 +211,6 @@ class OglAssociation(OglLink):
         associationLabel.text          = text
 
         return associationLabel
-
-    @staticmethod
-    def _computeMidPoint(srcPosition: OglPosition, destPosition: OglPosition) -> Tuple[float, float]:
-        """
-
-        Args:
-            srcPosition:        Tuple x,y source position
-            destPosition:       Tuple x,y destination position
-
-        Returns:
-                A tuple that is the x,y position between `srcPosition` and `destPosition`
-
-            [Reference]: https://mathbitsnotebook.com/Geometry/CoordinateGeometry/CGmidpoint.html
-        """
-        if OglAssociation.clsLogger.isEnabledFor(DEBUG):
-            OglAssociation.clsLogger.debug(f'{srcPosition=}  {destPosition=}')
-        x1 = srcPosition.x
-        y1 = srcPosition.y
-        x2 = destPosition.x
-        y2 = destPosition.y
-
-        midPointX = abs(x1 + x2) / 2
-        midPointY = abs(y1 + y2) / 2
-
-        return midPointX, midPointY
 
     def __repr__(self):
         return f'OglAssociation - from: {self.getSourceShape()} to: {self.getDestinationShape()}'
