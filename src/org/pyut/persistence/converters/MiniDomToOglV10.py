@@ -44,6 +44,7 @@ from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
+from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.ogl.OglText import OglText
 from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.OglAssociation import OglAssociation
@@ -152,13 +153,11 @@ class MiniDomToOgl:
 
         return oglObjects
 
-    def getOglInterfaces(self, xmlOglInterfaces: NodeList) -> OglInterfaces:
+    def getOglInterfaces(self, xmlOglInterfaces: NodeList, oglClasses: OglClasses) -> OglInterfaces:
 
         oglInterfaces: OglInterfaces = cast(OglInterfaces, [])
 
         for xmlOglInterface in xmlOglInterfaces:
-
-            anchorPoint: SelectAnchorPoint  = self.__getAttachmentPoint(xmlOglInterface)
 
             xmlInterface:  Element = xmlOglInterface.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_INTERFACE)[0]
 
@@ -167,6 +166,12 @@ class MiniDomToOgl:
             pyutInterface.description  = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
             pyutInterface.methods      = self._getMethods(xmlInterface)
             pyutInterface.implementors = self._getImplementors(xmlInterface)
+
+            oglClass: OglClass = self._findImplementor(pyutInterface.implementors[0], oglClasses)
+
+            anchorPoint: SelectAnchorPoint  = self._getAttachmentPoint(xmlOglInterface, oglClass)
+
+            oglClass.AddAnchorPoint(anchorPoint)
 
             oglInterface: OglInterface2 = OglInterface2(pyutInterface=pyutInterface, destinationAnchor=anchorPoint)
 
@@ -630,6 +635,22 @@ class MiniDomToOgl:
             srcPyutClass:  PyutClass = cast(PyutClass, srcShape.getPyutObject())
             srcPyutClass.addLink(pyutLink)
 
+    def _findImplementor(self, implementor: str, oglClasses: OglClasses) -> OglClass:
+
+        matchingOglClass: OglClass = cast(OglClass, None)
+
+        for oglClass in oglClasses.values():
+            oglClass:  OglClass  = cast(OglClass, oglClass)
+            pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
+
+            className: str = pyutClass.name
+            if className == implementor:
+                matchingOglClass = oglClass
+                break
+
+        assert matchingOglClass is not None, 'I really should find one'
+        return matchingOglClass
+
     def _getPyutLink(self, obj: Element):
         """
 
@@ -659,6 +680,48 @@ class MiniDomToOgl:
         destId   = int(link.getAttribute(PyutXmlConstants.ATTR_DESTINATION_ID))
 
         return sourceId, destId, pyutLink
+
+    def _getAttachmentPoint(self, xmlOglInterface: Element, parent: OglClass) -> SelectAnchorPoint:
+
+        attachmentPointStr: str             = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_LOLLIPOP_ATTACHMENT_POINT)
+        attachmentPoint:    AttachmentPoint = AttachmentPoint.toEnum(attachmentPointStr)
+        attachPosition:     OglPosition     = self._determineAttachmentPoint(attachmentPoint=attachmentPoint, oglClass=parent)
+
+        anchorPoint: SelectAnchorPoint = SelectAnchorPoint(x=attachPosition.x, y=attachPosition.y, attachmentPoint=attachmentPoint, parent=parent)
+
+        return anchorPoint
+
+    def _determineAttachmentPoint(self, attachmentPoint: AttachmentPoint, oglClass: OglClass) -> OglPosition:
+
+        oglPosition: OglPosition = OglPosition()
+
+        dw, dh     = oglClass.GetSize()
+
+        if attachmentPoint == AttachmentPoint.NORTH:
+            northX: int = dw // 2
+            northY: int = 0
+            oglPosition.x = northX
+            oglPosition.y = northY
+        elif attachmentPoint == AttachmentPoint.SOUTH:
+            southX = dw // 2
+            southY = dh
+            oglPosition.x = southX
+            oglPosition.y = southY
+        elif attachmentPoint == AttachmentPoint.WEST:
+            westX: int = 0
+            westY: int = dh // 2
+            oglPosition.x = westX
+            oglPosition.y = westY
+        elif attachmentPoint == AttachmentPoint.EAST:
+            eastX: int = dw
+            eastY: int = dh // 2
+            oglPosition.x = eastX
+            oglPosition.y = eastY
+        else:
+            self.logger.warning(f'Unknown attachment point: {attachmentPoint}')
+            assert False, 'Unknown attachment point'
+
+        return oglPosition
 
     def __furtherCustomizeAssociationLink(self, xmlLink: Element, oglLink: OglAssociation):
         """
@@ -691,17 +754,3 @@ class MiniDomToOgl:
 
         associationLabel.x = x
         associationLabel.y = y
-
-    def __getAttachmentPoint(self, xmlOglInterface: Element) -> SelectAnchorPoint:
-
-        attachmentPointStr: str = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_LOLLIPOP_ATTACHMENT_POINT)
-        xStr:        str = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_X)
-        yStr:        str = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_Y)
-
-        x: int = PyU.strFloatToInt(xStr)
-        y: int = PyU.strFloatToInt(yStr)
-
-        attachmentPoint: AttachmentPoint   = AttachmentPoint.toEnum(attachmentPointStr)
-        anchorPoint:     SelectAnchorPoint = SelectAnchorPoint(x=x, y=y, attachmentPoint=attachmentPoint)
-
-        return anchorPoint

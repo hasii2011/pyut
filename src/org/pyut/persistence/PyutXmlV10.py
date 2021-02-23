@@ -256,7 +256,7 @@ class PyutXml:
         """
         oglClasses:    OglClasses    = toOgl.getOglClasses(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_CLASS))
         oglNotes:      OglNotes      = toOgl.getOglNotes(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_NOTE))
-        oglInterfaces: OglInterfaces = toOgl.getOglInterfaces(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_LOLLIPOP))
+        oglInterfaces: OglInterfaces = toOgl.getOglInterfaces(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_LOLLIPOP), oglClasses)
         oglTextShapes: OglTextShapes = toOgl.getOglTextShapes(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_TEXT))
 
         mergedOglObjects: OglObjects = cast(OglObjects, oglClasses.copy())

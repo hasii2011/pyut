@@ -60,6 +60,7 @@ class LollipopLine(Shape):
 
         circleX, circleY, xSrc, ySrc = self._calculateWhereToDrawLollipop(attachmentPoint, xDest, yDest)
 
+        self.logger.warning(f'Source: ({xSrc},{ySrc}) - Dest ({xDest},{yDest})')
         dc.DrawLine(xSrc, ySrc, xDest, yDest)
         dc.DrawCircle(circleX, circleY, LollipopLine.LOLLIPOP_CIRCLE_RADIUS)
 

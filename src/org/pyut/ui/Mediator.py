@@ -1065,24 +1065,6 @@ class Mediator(Singleton):
 
     def requestLollipopLocation(self, destinationClass: OglClass):
 
-        # from org.pyut.ogl.OglInterface2 import OglInterface2
-        # from org.pyut.model.PyutInterface import PyutInterface
-
-        # destinationPosition: Tuple[float, float] = destinationClass.GetPosition()
-        # anchors = destinationClass.GetAnchors()
-        # self.logger.info(implementer: {destinationClass} at {destinationPosition}')
-        #
-        # pyutInterface: PyutInterface = PyutInterface(name='Sin Nombre')
-        # oglInterface:  OglInterface2 = OglInterface2(pyutInterface, anchors[0])
-        #
-        # umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
-        #
-        # x = destinationPosition[0]
-        # y = destinationPosition[1]
-        #
-        # umlFrame.addShape(oglInterface, x, y, withModelUpdate=True)
-        # umlFrame.Refresh()
-        #
         from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
         umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
@@ -1131,17 +1113,21 @@ class Mediator(Singleton):
 
         dw, dh     = destinationClass.GetSize()
 
-        southX, southY = dw / 2, dh
-        northX, northY = dw / 2, 0
-        westX, westY   = 0.0, dh / 2
-        eastX, eastY   = dw, dh / 2
+        southX = dw // 2        # do integer division
+        southY = dh
+        northX = dw // 2
+        northY = 0
+        westX  = 0
+        westY  = dh // 2
+        eastX  = dw
+        eastY  = dh // 2
 
         self.__createAnchorHints(destinationClass, southX, southY, AttachmentPoint.SOUTH, umlFrame)
         self.__createAnchorHints(destinationClass, northX, northY, AttachmentPoint.NORTH, umlFrame)
         self.__createAnchorHints(destinationClass, westX,  westY,  AttachmentPoint.WEST, umlFrame)
         self.__createAnchorHints(destinationClass, eastX,  eastY,  AttachmentPoint.EAST, umlFrame)
 
-    def __createAnchorHints(self, destinationClass: OglClass, anchorX: float, anchorY: float, attachmentPoint: AttachmentPoint, umlFrame):
+    def __createAnchorHints(self, destinationClass: OglClass, anchorX: int, anchorY: int, attachmentPoint: AttachmentPoint, umlFrame):
 
         anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=anchorX, y=anchorY, attachmentPoint=attachmentPoint, parent=destinationClass)
         anchorHint.SetProtected(True)
