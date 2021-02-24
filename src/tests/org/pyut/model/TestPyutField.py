@@ -9,6 +9,7 @@ from unittest import main as unitTestMain
 
 from copy import deepcopy
 
+from org.pyut.model.PyutType import PyutType
 from tests.TestBase import TestBase
 
 from org.pyut.model.PyutField import PyutField
@@ -19,9 +20,11 @@ class TestPyutField(TestBase):
 
     clsLogger: Logger = None
 
-    fieldNames:        List[str] = ['field1', 'field2', 'field3']
-    fieldTypes:        List[str] = ['int', 'bool', 'float']
-    fieldValues:       List[str] = ['22', 'False', '62.34324']
+    fieldNames:        List[str]      = ['field1', 'field2', 'field3']
+    fieldTypes:        List[PyutType] = [PyutType(value='int'),
+                                         PyutType(value='bool'),
+                                         PyutType(value='float')]
+    fieldValues:       List[str]      = ['22', 'False', '62.34324']
     fieldVisibilities: List[PyutVisibilityEnum] = [PyutVisibilityEnum.PRIVATE,
                                                    PyutVisibilityEnum.PUBLIC,
                                                    PyutVisibilityEnum.PROTECTED]
@@ -48,6 +51,10 @@ class TestPyutField(TestBase):
 
         doppleGangers: List[PyutField] = deepcopy(originalFields)
         self.logger.info(f'doppleGangers: {doppleGangers}')
+
+        for pyutField in doppleGangers:
+            self.assertTrue(isinstance(pyutField.type, PyutType), 'Wrong type copied')
+            self.assertTrue(isinstance(pyutField.visibility, PyutVisibilityEnum), 'Wrong visibility type copied')
 
 
 def suite() -> TestSuite:
