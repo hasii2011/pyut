@@ -4,8 +4,7 @@ from logging import Logger
 from logging import getLogger
 
 from wx import DC
-from wx import Pen
-from wx import RED_PEN
+
 
 from org.pyut.miniogl.Common import CommonLine
 from org.pyut.miniogl.Common import CommonPoint
@@ -18,7 +17,7 @@ from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 class LollipopLine(Shape):
 
-    LOLLIPOP_LINE_LENGTH:   int = 50
+    LOLLIPOP_LINE_LENGTH:   int = 60
     LOLLIPOP_CIRCLE_RADIUS: int = 4
 
     def __init__(self, destinationAnchor: SelectAnchorPoint):
@@ -51,16 +50,12 @@ class LollipopLine(Shape):
 
     def Draw(self, dc: DC, withChildren: bool = True):
 
-        currentPen: Pen = RED_PEN
-        currentPen.SetWidth(2)
-        dc.SetPen(currentPen)
-
         xDest, yDest = self._destinationAnchor.GetPosition()
         attachmentPoint: AttachmentPoint = self._destinationAnchor.attachmentPoint
 
         circleX, circleY, xSrc, ySrc = self._calculateWhereToDrawLollipop(attachmentPoint, xDest, yDest)
 
-        self.logger.warning(f'Source: ({xSrc},{ySrc}) - Dest ({xDest},{yDest})')
+        self.logger.debug(f'Source: ({xSrc},{ySrc}) - Dest ({xDest},{yDest})')
         dc.DrawLine(xSrc, ySrc, xDest, yDest)
         dc.DrawCircle(circleX, circleY, LollipopLine.LOLLIPOP_CIRCLE_RADIUS)
 

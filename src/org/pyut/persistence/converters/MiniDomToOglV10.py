@@ -163,7 +163,7 @@ class MiniDomToOgl:
 
             pyutInterface: PyutInterface = PyutInterface()
             pyutInterface.name         = xmlInterface.getAttribute(PyutXmlConstants.ATTR_NAME)
-            pyutInterface.description  = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
+            pyutInterface.description  = xmlInterface.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
             pyutInterface.methods      = self._getMethods(xmlInterface)
             pyutInterface.implementors = self._getImplementors(xmlInterface)
 

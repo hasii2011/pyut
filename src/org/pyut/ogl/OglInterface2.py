@@ -1,8 +1,15 @@
 
+from typing import Tuple
+
 from logging import Logger
 from logging import getLogger
 
 from wx import DC
+from wx import FONTSTYLE_NORMAL
+from wx import FONTWEIGHT_NORMAL
+from wx import Font
+
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.miniogl.Common import Common
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
@@ -10,11 +17,18 @@ from org.pyut.miniogl.LollipopLine import LollipopLine
 
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutObject import PyutObject
+
 from org.pyut.ogl.OglPosition import OglPosition
-from org.pyut.ogl.OglUtils import OglUtils
+
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.preferences.TextFontEnum import TextFontEnum
 
 
 class OglInterface2(LollipopLine, Common):
+
+    ADJUST_AWAY_FROM_IMPLEMENTOR: int = 10
+
+    INTERFACE_FONT_SIZE: int = 12   # TODO:  Make this a preference
 
     def __init__(self, pyutInterface: PyutInterface,  destinationAnchor: SelectAnchorPoint):
 
@@ -23,6 +37,13 @@ class OglInterface2(LollipopLine, Common):
         self.logger: Logger = getLogger(__name__)
 
         self._pyutInterface: PyutInterface = pyutInterface
+
+        preferences: PyutPreferences = PyutPreferences()
+
+        fontStyle:  TextFontEnum = preferences.textFont
+        fontFamily: int          = TextFontEnum.toWxType(fontStyle)
+
+        self._defaultFont: Font = Font(OglInterface2.INTERFACE_FONT_SIZE, fontFamily, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
 
     @property
     def pyutInterface(self) -> PyutInterface:
@@ -51,13 +72,20 @@ class OglInterface2(LollipopLine, Common):
         """
         self._pyutInterface = newValue
 
-    # def Draw(self, dc: DC, withChildren: bool = True):
-    #
-    #     super().Draw(dc=dc, withChildren=withChildren)
-    #
-    #     xFaceName: str = self.pyutInterface.getName()
-    #
-    #     # dc.DrawText(xFaceName, midPoint.x, midPoint.y)
+    def Draw(self, dc: DC, withChildren: bool = True):
+
+        super().Draw(dc=dc, withChildren=withChildren)
+        dc.SetFont(self._defaultFont)
+
+        xFaceName: str = self.pyutInterface.getName()
+
+        extentSize: Tuple[int, int] = dc.GetTextExtent(xFaceName)  # width, height
+
+        pixelSize: Tuple[int, int] = self._defaultFont.GetPixelSize()
+
+        textPosition: OglPosition = self._determineInterfaceNamePosition(self._destinationAnchor, pixelSize=pixelSize, textSize=extentSize)
+
+        dc.DrawText(xFaceName, textPosition.x, textPosition.y)
 
     def Inside(self, clickPointX, clickPointY) -> bool:
         """
@@ -107,3 +135,45 @@ class OglInterface2(LollipopLine, Common):
         if self.GetID() == other.GetID():
             ans = True
         return ans
+
+    def _determineInterfaceNamePosition(self, destinationAnchor: SelectAnchorPoint, pixelSize: Tuple[int, int], textSize: Tuple[int, int]) -> OglPosition:
+
+        oglPosition:     OglPosition     = OglPosition()
+        attachmentPoint: AttachmentPoint = destinationAnchor.attachmentPoint
+
+        x, y = destinationAnchor.GetPosition()
+
+        fWidth, fHeight = pixelSize
+        tWidth, tHeight = textSize
+
+        if attachmentPoint == AttachmentPoint.NORTH:
+            y -= (LollipopLine.LOLLIPOP_LINE_LENGTH + (LollipopLine.LOLLIPOP_CIRCLE_RADIUS * 2) + OglInterface2.ADJUST_AWAY_FROM_IMPLEMENTOR)
+            x -= (tWidth // 2)
+            oglPosition.x = x
+            oglPosition.y = y
+
+        elif attachmentPoint == AttachmentPoint.SOUTH:
+            y += (LollipopLine.LOLLIPOP_LINE_LENGTH + LollipopLine.LOLLIPOP_CIRCLE_RADIUS + OglInterface2.ADJUST_AWAY_FROM_IMPLEMENTOR)
+            x -= (tWidth // 2)
+            oglPosition.x = x
+            oglPosition.y = y
+
+        elif attachmentPoint == AttachmentPoint.WEST:
+            y = y - (fHeight * 2)
+            originalX: int = x
+            x = x - LollipopLine.LOLLIPOP_LINE_LENGTH - (tWidth // 2)
+            while x + tWidth > originalX:
+                x -= OglInterface2.ADJUST_AWAY_FROM_IMPLEMENTOR
+            oglPosition.x = x
+            oglPosition.y = y
+
+        elif attachmentPoint == AttachmentPoint.EAST:
+            y = y - (fHeight * 2)
+            x = x + round(LollipopLine.LOLLIPOP_LINE_LENGTH * 0.8)
+            oglPosition.x = x
+            oglPosition.y = y
+        else:
+            self.logger.warning(f'Unknown attachment point: {attachmentPoint}')
+            assert False, 'Unknown attachment point'
+
+        return oglPosition

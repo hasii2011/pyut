@@ -5,22 +5,23 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from wx import Bitmap
-from wx import CommandEvent
-from wx import DC
 from wx import EVT_MENU
 from wx import FONTSTYLE_ITALIC
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_BOLD
 from wx import FONTWEIGHT_NORMAL
+
+from wx import Bitmap
+from wx import CommandEvent
+from wx import DC
 from wx import Font
 from wx import Menu
 from wx import MenuItem
 from wx import MouseEvent
 
-from org.pyut.preferences.TextFontEnum import TextFontEnum
 from org.pyut.general.Globals import _
 from org.pyut.general.LineSplitter import LineSplitter
+
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
 from org.pyut.model.PyutText import PyutText
@@ -28,7 +29,9 @@ from org.pyut.model.PyutText import PyutText
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.preferences.TextFontEnum import TextFontEnum
 
 from org.pyut.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
 from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
