@@ -108,7 +108,7 @@ class ToolsCreator:
                                 category=PYUT_TOOLS_CATEGORY,
                                 actionCallback=self._newActionCallback, wxID=SID.ID_ZOOM_IN, isToggle=True)
 
-        self._toolZoomOut = Tool("pyut-zoomOut", toolIconOwner.toolZoomIn,
+        self._toolZoomOut = Tool("pyut-zoomOut", toolIconOwner.toolZoomOut,
                                  caption=_("Zoom Out"), tooltip=_("Zoom out from the clicked point"),
                                  category=PYUT_TOOLS_CATEGORY,
                                  actionCallback=self._newActionCallback, wxID=SID.ID_ZOOM_OUT, isToggle=True)
