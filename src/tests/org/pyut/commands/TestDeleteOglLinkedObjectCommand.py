@@ -22,7 +22,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
+from org.pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
 
 from tests.org.pyut.commands.BaseTestDeleteOgl import BaseTestDelete
 

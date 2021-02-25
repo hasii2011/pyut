@@ -14,10 +14,10 @@ from pkg_resources import resource_filename
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.commands.Command import Command
-from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
-from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
-from org.pyut.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.Command import Command
+from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
+from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
+from org.pyut.history.commands.CommandGroup import CommandGroup
 
 from org.pyut.history.HistoryManager import HistoryManager
 

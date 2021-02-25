@@ -1,5 +1,5 @@
 
-from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue

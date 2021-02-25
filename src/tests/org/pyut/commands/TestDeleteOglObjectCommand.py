@@ -16,7 +16,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 from tests.org.pyut.commands.BaseTestDeleteOgl import BaseTestDelete
 
 

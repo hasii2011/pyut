@@ -1,7 +1,7 @@
 
 from unittest.mock import MagicMock
 
-from org.pyut.commands.Command import Command
+from org.pyut.history.commands.Command import Command
 
 from tests.TestBase import TestBase
 

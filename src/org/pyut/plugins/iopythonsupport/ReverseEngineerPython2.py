@@ -17,8 +17,8 @@ from wx import PD_ELAPSED_TIME
 
 from wx import ProgressDialog
 
-from org.pyut.commands.CommandGroup import CommandGroup
-from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
+from org.pyut.history.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 from org.pyut.history.HistoryManager import HistoryManager
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField

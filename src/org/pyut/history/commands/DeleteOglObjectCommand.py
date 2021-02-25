@@ -3,7 +3,7 @@ from typing import Tuple
 
 from importlib import import_module
 
-from org.pyut.commands.Command import Command
+from org.pyut.history.commands.Command import Command
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
@@ -57,7 +57,7 @@ class DeleteOglObjectCommand(Command):
         # shape is rebuilt and so the command for link deletion
         # must be placed after this one.
         #
-        from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
+        from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
         for link in self._shape.getLinks():
             if not link.IsSelected():
                 cmd: DelOglLinkCommand = DelOglLinkCommand(link)

@@ -9,7 +9,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.commands.Command import Command
+from org.pyut.history.commands.Command import Command
 from tests.testclass.UnitTestCommand import UnitTestCommand
 
 
@@ -35,7 +35,7 @@ class TestCommand(TestBase):
         baseCommand:       Command = Command()
 
         serializedCommand: str = baseCommand.serialize()
-        expectedBase:      str = '<COMMAND_MODULE=org.pyut.commands.Command><COMMAND_CLASS=Command>'
+        expectedBase:      str = '<COMMAND_MODULE=org.pyut.history.commands.Command><COMMAND_CLASS=Command>'
         self.logger.debug(f"{serializedCommand}")
 
         self.assertEqual(expectedBase, serializedCommand, 'Looks like Command Serialization changed')

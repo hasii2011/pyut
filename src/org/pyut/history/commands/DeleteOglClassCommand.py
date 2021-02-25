@@ -1,5 +1,5 @@
 
-from org.pyut.commands.BaseOglClassCommand import BaseOglClassCommand
+from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
 
 class DeleteOglClassCommand(BaseOglClassCommand):

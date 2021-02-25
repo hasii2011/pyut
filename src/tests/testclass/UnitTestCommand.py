@@ -1,5 +1,5 @@
 
-from org.pyut.commands.Command import Command
+from org.pyut.history.commands.Command import Command
 
 
 class UnitTestCommand(Command):

@@ -10,7 +10,7 @@ from tempfile import gettempdir
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.CommandGroup import CommandGroup
 
 from org.pyut.history.HistoryUtils import GROUP_COMMENT_ID
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME

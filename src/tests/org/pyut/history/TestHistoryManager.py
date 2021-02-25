@@ -14,7 +14,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.history.HistoryManager import HistoryManager
 
-from org.pyut.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.CommandGroup import CommandGroup
 
 from tests.testclass.PrintCommand import PrintCommand
 

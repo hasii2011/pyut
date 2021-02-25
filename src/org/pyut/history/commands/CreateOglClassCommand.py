@@ -8,7 +8,7 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.model.PyutClass import PyutClass
 
-from org.pyut.commands.BaseOglClassCommand import BaseOglClassCommand
+from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
 from org.pyut.PyutUtils import PyutUtils
 

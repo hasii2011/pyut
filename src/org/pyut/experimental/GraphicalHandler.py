@@ -8,8 +8,8 @@ from logging import getLogger
 
 from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
 
-from org.pyut.commands.CommandGroup import CommandGroup
-from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
+from org.pyut.history.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 from org.pyut.history.HistoryManager import HistoryManager
 

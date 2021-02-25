@@ -556,8 +556,8 @@ class Mediator(Singleton):
 
     def _createLink(self, umlFrame):
 
-        from org.pyut.commands.CreateOglLinkCommand import CreateOglLinkCommand
-        from org.pyut.commands.CommandGroup import CommandGroup
+        from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+        from org.pyut.history.commands.CommandGroup import CommandGroup
 
         linkType = LINK_TYPE[self._currentAction]
         cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
@@ -815,8 +815,8 @@ class Mediator(Singleton):
 
     def createOglClass(self, umlFrame, x: int, y: int):
 
-        from org.pyut.commands.CreateOglClassCommand import CreateOglClassCommand
-        from org.pyut.commands.CommandGroup import CommandGroup
+        from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
+        from org.pyut.history.commands.CommandGroup import CommandGroup
 
         cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y)
         group: CommandGroup          = CommandGroup("Create class")
@@ -829,13 +829,13 @@ class Mediator(Singleton):
             self.selectTool(self._tools[0])
 
     def deleteSelectedShape(self):
-        from org.pyut.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-        from org.pyut.commands.DeleteOglClassCommand import DeleteOglClassCommand
-        from org.pyut.commands.DelOglLinkCommand import DelOglLinkCommand
+        from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+        from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
+        from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
         from org.pyut.ogl.OglClass import OglClass
         from org.pyut.ogl.OglObject import OglObject
         from org.pyut.ogl.OglLink import OglLink
-        from org.pyut.commands.CommandGroup import CommandGroup
+        from org.pyut.history.commands.CommandGroup import CommandGroup
 
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
@@ -1051,8 +1051,8 @@ class Mediator(Singleton):
     def createLollipopInterface(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
         from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-        from org.pyut.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
-        from org.pyut.commands.CommandGroup import CommandGroup
+        from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+        from org.pyut.history.commands.CommandGroup import CommandGroup
 
         umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
 

@@ -1,6 +1,6 @@
 
-from org.pyut.commands.Command import Command
-from org.pyut.commands.MethodInformation import MethodInformation
+from org.pyut.history.commands.Command import Command
+from org.pyut.history.commands.MethodInformation import MethodInformation
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
 
