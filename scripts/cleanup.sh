@@ -20,7 +20,7 @@ find . -type f -name UnitTest.gml   -delete
 
 rm -rf src/UNKNOWN.egg-info
 
-cd src/tests/testdata > /dev/null 2>&1
+cd src/tests/resources/testdata > /dev/null 2>&1
 
 find . -type f -name "*.png" -delete
 

@@ -1,12 +1,16 @@
+
+from typing import Tuple
+
 from dataclasses import dataclass
+
 from math import sqrt
 
 
 @dataclass
 class CommonPoint:
 
-    x: float = 0.0
-    y: float = 0.0
+    x: int = 0
+    y: int = 0
 
 
 @dataclass
@@ -25,18 +29,18 @@ class Common:
 
     """
 
-    def setupInsideCheck(self, clickPointX: float, clickPointY: float, line: CommonLine):
+    def setupInsideCheck(self, clickPointX: int, clickPointY: int, line: CommonLine) -> Tuple[int, int, int, int]:
 
-        x1: float = line.start.x
-        y1: float = line.start.y
-        x2: float = line.end.x
-        y2: float = line.end.y
+        x1: int = line.start.x
+        y1: int = line.start.y
+        x2: int = line.end.x
+        y2: int = line.end.y
 
-        diffX: float = x2 - x1
-        diffY: float = y2 - y1
+        diffX: int = x2 - x1
+        diffY: int = y2 - y1
 
-        clickDiffStartX: float = clickPointX - x1     # x - x1
-        clickDiffStartY: float = clickPointY - y1     # y - y1
+        clickDiffStartX: int = clickPointX - x1     # x - x1
+        clickDiffStartY: int = clickPointY - y1     # y - y1
 
         return clickDiffStartX, clickDiffStartY, diffX, diffY
 

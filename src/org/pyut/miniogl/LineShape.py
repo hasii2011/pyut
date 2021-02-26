@@ -6,10 +6,14 @@ from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
+
 from wx import BLACK_PEN
 from wx import DC
 from wx import RED_PEN
 
+from org.pyut.miniogl.Common import Common
+from org.pyut.miniogl.Common import CommonLine
+from org.pyut.miniogl.Common import CommonPoint
 from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.Shape import Shape
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
@@ -18,7 +22,7 @@ from org.pyut.miniogl.ControlPoint import ControlPoint
 ControlPoints = NewType('ControlPoints', List[ControlPoint])
 
 
-class LineShape(Shape):
+class LineShape(Shape, Common):
     """
     This is a line, passing through control points.
     The line must begin and end with AnchorPoints, and can be guided by
@@ -33,7 +37,7 @@ class LineShape(Shape):
             srcAnchor: the source anchor of the line.
             dstAnchor: the destination anchor of the line.
         """
-        super().__init__()
+        Shape.__init__(self)
         self._srcAnchor = srcAnchor
         self._dstAnchor = dstAnchor
 
@@ -345,56 +349,33 @@ class LineShape(Shape):
         elif isinstance(point, ControlPoint):
             self._removeControl(point)
 
-    def Inside(self, x, y):
+    def Inside(self, x: int, y: int) -> bool:
         """
-        True if (x, y) is inside the line.
         A tolerance of 4 pixels is used.
 
-        @param  x
-        @param  y
+        Args:
+            x:  abscissa click point
+            y:  ordinate click point
 
-        @return bool
+        Returns: True if (x, y) is inside the line.
         """
-        def InsideBoundingBox(boxX, boxY, diagonalX, diagonalY):
-            # check if the point (boxX, boxY) is inside a box of origin (0, 0) and
-            # diagonal (diagonalA, diagonalB) with a tolerance of 4
-            ma, mb = diagonalX / 2, diagonalY / 2
-            if diagonalX > 0:
-                w = max(4, diagonalX - 8)
-            else:
-                w = min(-4, diagonalX + 8)
-            if diagonalY > 0:
-                h = max(4, diagonalY - 8)
-            else:
-                h = min(-4, diagonalY + 8)
-            topLeftX = ma - w / 2
-            topLeftY = mb - h / 2
-            i = boxX > topLeftX
-            j = boxX > topLeftX + w
-            k = boxY > topLeftY
-            ll = boxY > topLeftY + h
-
-            return (i + j) == 1 and (k + ll) == 1
-
-        from math import sqrt
-
-        def InsideSegment(segX1, segY1, segX2, segY2):
-            den = sqrt(segX2 * segX2 + segY2 * segY2)
-            if den != 0.0:
-                d = (segX1 * segY2 - segY1 * segX2) / den
-            else:
-                return False
-            return abs(d) < 4.0
-
         # go through each segment of the line
         points = [self._srcAnchor] + self._controls + [self._dstAnchor]
         while len(points) > 1:
+
             x1, y1 = points[0].GetPosition()
             x2, y2 = points[1].GetPosition()
-            a, b, xx, yy = x2 - x1, y2 - y1, x - x1, y - y1
+
+            startPoint: CommonPoint = CommonPoint(x=x1, y=y1)
+            endPoint:   CommonPoint = CommonPoint(x=x2, y=y2)
+            checkLine:  CommonLine = CommonLine(start=startPoint, end=endPoint)
+
+            clickDiffStartX, clickDiffStartY, diffX, diffY = self.setupInsideCheck(clickPointX=x, clickPointY=y, line=checkLine)
             points = points[1:]
-            if InsideBoundingBox(xx, yy, a, b) and InsideSegment(xx, yy, a, b):
+
+            if self.insideBoundingBox(clickDiffStartX, clickDiffStartY, diffX, diffY) and self.insideSegment(clickDiffStartX, clickDiffStartY, diffX, diffY):
                 return True
+
         return False
 
     def SetSelected(self, state: bool = True):
