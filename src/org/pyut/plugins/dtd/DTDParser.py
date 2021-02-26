@@ -2,9 +2,7 @@
 from typing import cast
 from typing import Dict
 from typing import Tuple
-
 from typing import List
-
 from typing import NewType
 
 from logging import Logger
@@ -12,6 +10,7 @@ from logging import getLogger
 
 from xml.parsers.expat import ParserCreate
 
+from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
@@ -19,17 +18,19 @@ from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.enums.LinkType import LinkType
 
+
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.plugins.dtd.DTDElementTypes import DTDElementTypes
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlClassDiagramsFrame import CreatedClassesType
 
 from org.pyut.plugins.dtd.DTDAttribute import DTDAttribute
+from org.pyut.plugins.dtd.DTDElementTypes import DTDElementTypes
+
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 
 
-DTDElements        = NewType('DTDElements', Dict[str, Tuple])
+DTDElements        = NewType('DTDElements',   Dict[str, Tuple])
 DTDAttributes      = NewType('DTDAttributes', List[DTDAttribute])
 
 
@@ -89,8 +90,9 @@ class DTDParser:
         return True
 
     @staticmethod
-    def startDocTypeHandler(doctypeName, sysId, pubId, hasInternalSubset):
-        dbgStr: str = f'startDocTypeHandler - doctypeName: {doctypeName} sysId: {sysId} pubId: {pubId} hasInternalSubset: {hasInternalSubset}'
+    def startDocTypeHandler(docTypeName, sysId, pubId, hasInternalSubset):
+
+        dbgStr: str = f'startDocTypeHandler - {docTypeName=} {sysId=} {pubId=} {hasInternalSubset=}'
         DTDParser.klsLogger.info(dbgStr)
 
     @staticmethod
@@ -127,11 +129,10 @@ class DTDParser:
 
         DTDParser.attributes.append(dtdAttribute)
 
-    # @staticmethod
     def endDocTypeHandler(self):
 
         self.classTree = self._createClassTree()
-        self.logger.debug(f'elmentsTree: {self.classTree}')
+        self.logger.debug(f'elementsTree: {self.classTree}')
         self._addAttributesToClasses()
         self._addLinks()
 
@@ -140,8 +141,8 @@ class DTDParser:
     def _createClassTree(self) -> Dict[str, ElementTreeData]:
 
         elementsTree: Dict[str, ElementTreeData] = {}
-        x = 50.0
-        y = 50.0
+        x: int = 50
+        y: int = 50
 
         for eltName in list(DTDParser.elementTypes.keys()):
 
@@ -192,7 +193,7 @@ class DTDParser:
             attrValue: str            = typedAttr.attributeValue
 
             pyutField: PyutField = PyutField(name=attrName,
-                                             theFieldType=attrType,
+                                             theFieldType=PyutType(value=attrType),
                                              defaultValue=attrValue,
                                              visibility=PyutVisibilityEnum.PUBLIC)
 

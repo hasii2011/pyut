@@ -2,13 +2,12 @@
 from logging import Logger
 from logging import getLogger
 
-from os import sep as osSep
+from pkg_resources import resource_filename
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
-from tests.TestBase import TEST_DIRECTORY
 
 from org.pyut.plugins.FieldExtractor import FieldExtractor
 
@@ -16,7 +15,6 @@ from org.pyut.plugins.FieldExtractor import FieldExtractor
 class TestFieldExtractor(TestBase):
     """
     """
-    TEST_FILE_NAME: str = f'{TEST_DIRECTORY}{osSep}testclass{osSep}Opie.py'
     clsLogger: Logger = None
 
     @classmethod
@@ -26,13 +24,14 @@ class TestFieldExtractor(TestBase):
 
     def setUp(self):
         self.logger: Logger = TestFieldExtractor.clsLogger
+        self._testFileName: str = resource_filename(TestBase.RESOURCES_TEST_CLASSES_PACKAGE_NAME, 'Opie.py')
 
     def tearDown(self):
         pass
 
     def testBasicFieldFind(self):
 
-        fe: FieldExtractor = FieldExtractor(filename=TestFieldExtractor.TEST_FILE_NAME)
+        fe: FieldExtractor = FieldExtractor(filename=self._testFileName)
 
         fields = fe.getFields(className='Opie')
 
@@ -46,7 +45,7 @@ class TestFieldExtractor(TestBase):
 
     def testRemoveExtraneousNameParts(self):
 
-        fe: FieldExtractor = FieldExtractor(filename=TestFieldExtractor.TEST_FILE_NAME)
+        fe: FieldExtractor = FieldExtractor(filename=self._testFileName)
 
         nameToClean: str = '.([,-*/%'
         cleanedName: str = fe._removeExtraneousNameParts(nameToClean=nameToClean)

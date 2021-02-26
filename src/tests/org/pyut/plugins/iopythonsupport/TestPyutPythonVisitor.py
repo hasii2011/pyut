@@ -4,6 +4,8 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
+from pkg_resources import resource_filename
+
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
@@ -178,9 +180,9 @@ class TestPyutPythonVisitor(TestBase):
 
     def _setupVisitor(self, fileName: str) -> Python3Parser.File_inputContext:
 
-        # fqFileName = resource_filename(TestBase.RESOURCES_TEST_CLASSES_PACKAGE_NAME, fileName)
+        fqFileName = resource_filename(TestBase.RESOURCES_TEST_CLASSES_PACKAGE_NAME, fileName)
 
-        fileStream: FileStream   = FileStream(f'tests/testclass/{fileName}')
+        fileStream: FileStream = FileStream(fqFileName)
         lexer:      Python3Lexer = Python3Lexer(fileStream)
 
         stream: CommonTokenStream = CommonTokenStream(lexer)

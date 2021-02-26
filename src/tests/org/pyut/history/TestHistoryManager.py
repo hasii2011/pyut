@@ -16,7 +16,7 @@ from org.pyut.history.HistoryManager import HistoryManager
 
 from org.pyut.history.commands.CommandGroup import CommandGroup
 
-from tests.testclass.PrintCommand import PrintCommand
+from tests.resources.testclass.PrintCommand import PrintCommand
 
 
 class TestHistory(TestBase):

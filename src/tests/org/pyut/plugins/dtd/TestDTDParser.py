@@ -1,16 +1,16 @@
 
-from logging import Logger
-from logging import getLogger
 from typing import List
 
-from os import sep as osSep
+from logging import Logger
+from logging import getLogger
+
+from pkg_resources import resource_filename
 
 from unittest import main as unitTestMain
 from unittest import TestSuite
 from unittest.mock import MagicMock
 
 from tests.TestBase import TestBase
-from tests.TestBase import TEST_DIRECTORY
 
 
 from org.pyut.model.PyutClass import PyutClass
@@ -41,8 +41,10 @@ class TestDTDParser(TestBase):
 
         mockFrame:    MagicMock = MagicMock()
 
-        dtdReader: DTDParser = DTDParser(umlFrame=mockFrame)
-        dtdReader.open(f'{TEST_DIRECTORY}{osSep}testdata{osSep}AllElements.dtd')
+        dtdReader:  DTDParser = DTDParser(umlFrame=mockFrame)
+        fqFileName: str       = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'AllElements.dtd')
+
+        dtdReader.open(fqFileName)
 
         actualClassCount: int = dtdReader.classTree.__len__()
 

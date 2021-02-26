@@ -4,14 +4,14 @@ from typing import Dict
 from logging import Logger
 from logging import getLogger
 
-from os import sep as osSep
+from pkg_resources import resource_filename
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
+
 from tests.TestBase import TestBase
-from tests.TestBase import TEST_DIRECTORY
 
 from org.pyut.plugins.xsd.XSDParser import XSDParser
 
@@ -30,7 +30,7 @@ class TestXSDParser(TestBase):
         self.logger:    Logger = TestXSDParser.clsLogger
         self.mockFrame: MagicMock = MagicMock()
 
-        self._schemaPath: str = f'{TEST_DIRECTORY}{osSep}testdata{osSep}SimpleSchema.xsd'
+        self._schemaPath: str = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'SimpleSchema.xsd')
 
     def tearDown(self):
         pass
