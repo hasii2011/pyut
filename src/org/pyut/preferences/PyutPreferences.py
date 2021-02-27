@@ -20,7 +20,7 @@ from org.pyut.preferences.datatypes.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.ValuePreferences import ValuePreferences
 
 from org.pyut.preferences.datatypes.Dimensions import Dimensions
-from org.pyut.preferences.TextFontEnum import TextFontEnum
+from org.pyut.preferences.datatypes.TextFontEnum import TextFontEnum
 
 
 class PyutPreferences(Singleton):

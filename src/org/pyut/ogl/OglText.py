@@ -31,7 +31,7 @@ from org.pyut.ogl.OglObject import OglObject
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.preferences.TextFontEnum import TextFontEnum
+from org.pyut.preferences.datatypes.TextFontEnum import TextFontEnum
 
 from org.pyut.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
 from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize

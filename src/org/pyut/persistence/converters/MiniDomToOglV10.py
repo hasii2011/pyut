@@ -53,7 +53,7 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.preferences.TextFontEnum import TextFontEnum
+from org.pyut.preferences.datatypes.TextFontEnum import TextFontEnum
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
