@@ -24,7 +24,7 @@ from tests.TestBase import TestBase
 
 from org.pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
 
-from tests.org.pyut.commands.BaseTestDeleteOgl import BaseTestDelete
+from tests.org.pyut.history.commands.BaseTestDeleteOgl import BaseTestDelete
 
 
 class TestDeleteOglLinkedObjectCommand(BaseTestDelete):

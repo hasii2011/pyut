@@ -19,7 +19,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from tests.TestBase import TestBase
 
 from org.pyut.history.commands.MethodInformation import MethodInformation
-from tests.org.pyut.commands.TestCommandCommon import TestCommandCommon
+from tests.org.pyut.history.commands.TestCommandCommon import TestCommandCommon
 
 
 class TestMethodInformation(TestBase):

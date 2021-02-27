@@ -27,7 +27,7 @@ class TestAll:
                             'TestWxOgl', 'TestBase', 'TestTemplate',
                             'org/pyut/persistence/TestIoFile',
                             'org/pyut/ui/tools/TestToolboxFrame',
-                            'org/pyut/commands/TestCommandCommon',
+                            'org/pyut/history/commands/TestCommandCommon',
                             'TestUmlFrame', 'org/pyut/dialogs/TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
@@ -95,7 +95,7 @@ class TestAll:
             A list of module names that we can find in this package
         """
         pyutModules:            List[str] = glob('tests/org/pyut/Test*.py')
-        commandsModules:        List[str] = glob('tests/org/pyut/commands/Test*.py')
+        commandsModules:        List[str] = glob('tests/org/pyut/history/commands/Test*.py')
         dialogModules:          List[str] = glob('tests/org/pyut/dialogs/Test*.py')
         tipsModules:            List[str] = glob('tests/org/pyut/dialogs/tips/Test*.py')
         errorControllerModules: List[str] = glob('tests/org/pyut/errorcontroller/Test*.py')
