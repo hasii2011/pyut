@@ -1054,6 +1054,8 @@ class Mediator(Singleton):
         from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
         from org.pyut.history.commands.CommandGroup import CommandGroup
 
+        attachmentAnchor.setYouAreTheSelectedAnchor()
+
         umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
 
         cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor, attachmentAnchor)

@@ -1,10 +1,15 @@
 
-from wx import MouseEvent
+
+from wx import BLACK_PEN
 from wx import RED_PEN
 
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from wx import Pen
+from wx import MouseEvent
+
 from org.pyut.miniogl.Shape import Shape
+from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
+
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 
@@ -25,6 +30,7 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
         """
         super().__init__(x, y, parent)
         self._attachmentPoint: AttachmentPoint = attachmentPoint
+        self._pen: Pen = RED_PEN
 
     @property
     def attachmentPoint(self) -> AttachmentPoint:
@@ -34,9 +40,12 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
     def attachmentPoint(self, newValue: AttachmentPoint):
         self._attachmentPoint = newValue
 
+    def setYouAreTheSelectedAnchor(self):
+        self._pen = BLACK_PEN
+
     def Draw(self, dc, withChildren=True):
 
-        dc.SetPen(RED_PEN)
+        dc.SetPen(self._pen)
         super().Draw(dc, withChildren)
 
     def OnLeftDown(self, event: MouseEvent):

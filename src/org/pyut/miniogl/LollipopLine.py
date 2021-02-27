@@ -3,6 +3,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import BLACK_PEN
 from wx import DC
 
 
@@ -50,6 +51,7 @@ class LollipopLine(Shape):
 
     def Draw(self, dc: DC, withChildren: bool = True):
 
+        dc.SetPen(BLACK_PEN)    # for some reason PEN is RED
         xDest, yDest = self._destinationAnchor.GetPosition()
         attachmentPoint: AttachmentPoint = self._destinationAnchor.attachmentPoint
 
