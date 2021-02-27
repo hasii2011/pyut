@@ -40,7 +40,7 @@ class ToolIconOwner:
     def initializeIcons(self):
 
         pyutPreferences: PyutPreferences = PyutPreferences()
-        print(f'toolBarIconSize={pyutPreferences.toolBarIconSize.value}')
+
         if pyutPreferences.toolBarIconSize == ToolBarIconSize.SIZE_16:
             self._loadSmallIcons()
         elif pyutPreferences.toolBarIconSize == ToolBarIconSize.SIZE_32:

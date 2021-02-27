@@ -145,6 +145,7 @@ class Pyut:
         print('')
         print(f'Display Size: {DisplaySize()}')
         print(f'x-DPI: {size.GetWidth()} y-DPI: {size.GetHeight()}')
+        print(f'toolBarIconSize: {PyutPreferences().toolBarIconSize.value}')
 
     def handleCommandLineArguments(self):
         """
