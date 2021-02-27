@@ -68,13 +68,13 @@ class PyutPreferences(Singleton):
         self.logger:  Logger = getLogger(__name__)
 
         self._overrideOnProgramExit: bool         = True
-        self._config:                ConfigParser = cast(ConfigParser, None)
+        self._config:                ConfigParser = cast(ConfigParser, None)    # initialized when empty preferences created
 
-        self._preferencesCommon: PreferencesCommon     = PreferencesCommon(config=self._config)
-        self._mainPrefs:         MainPreferences       = MainPreferences(config=self._config)
-        self._diagramPrefs:      BackgroundPreferences = BackgroundPreferences(config=self._config)
-        self._valuePrefs:        ValuePreferences      = ValuePreferences(config=self._config)
-        self._debugPrefs:        DebugPreferences      = DebugPreferences(config=self._config)
+        self._preferencesCommon: PreferencesCommon     = PreferencesCommon()
+        self._mainPrefs:         MainPreferences       = MainPreferences()
+        self._diagramPrefs:      BackgroundPreferences = BackgroundPreferences()
+        self._valuePrefs:        ValuePreferences      = ValuePreferences()
+        self._debugPrefs:        DebugPreferences      = DebugPreferences()
 
         self._createEmptyPreferences()
 
