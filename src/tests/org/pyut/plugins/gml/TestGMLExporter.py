@@ -8,6 +8,8 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 
+from os import remove as osRemove
+
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.enums.LinkType import LinkType
 
@@ -20,7 +22,6 @@ from org.pyut.ogl.OglLink import OglLink
 from tests.TestBase import TestBase
 
 from org.pyut.plugins.gml.GMLExporter import GMLExporter
-from org.pyut.plugins.gml.GMLExporter import OglClasses
 
 
 class TestGMLExporter(TestBase):
@@ -35,6 +36,8 @@ class TestGMLExporter(TestBase):
     MOCK_INIT_POSITION_Y:     float = 100.0
     MOCK_X_POSITION_INCREMENT: float = 75.0
     MOCK_Y_POSITION_INCREMENT: float = 100.0
+
+    UNIT_TEST_FILENAME: str = 'UnitTest.gml'
     """
     """
     clsLogger: Logger = None
@@ -50,11 +53,11 @@ class TestGMLExporter(TestBase):
         self._linkIDGenerator = self._generateLinkId()
 
     def tearDown(self):
-        pass
+        osRemove(TestGMLExporter.UNIT_TEST_FILENAME)
 
     def testBasicCreation(self):
 
-        umlObjects: OglClasses = self._generateMockNodes(TestGMLExporter.NUMBER_OF_MOCK_CLASSES)
+        umlObjects: List[MagicMock] = self._generateMockNodes(TestGMLExporter.NUMBER_OF_MOCK_CLASSES)
 
         self._addMockLinks(umlObjects)
 
@@ -64,11 +67,11 @@ class TestGMLExporter(TestBase):
 
         self.assertIsNotNone(gml, 'Generate Something!!')
         self.logger.info(f'Generated GML:\n{gml}')
-        self.exporter.write(f'UnitTest.gml')
+        self.exporter.write(TestGMLExporter.UNIT_TEST_FILENAME)
 
-    def _generateMockNodes(self, nbrToGenerate) -> OglClasses:
+    def _generateMockNodes(self, nbrToGenerate) -> List[MagicMock]:
 
-        umlObjects: OglClasses = []
+        umlObjects: List[MagicMock] = []
 
         initId: int                 = TestGMLExporter.MOCK_START_ID_NUMBER
         mockX: float = TestGMLExporter.MOCK_INIT_POSITION_X
