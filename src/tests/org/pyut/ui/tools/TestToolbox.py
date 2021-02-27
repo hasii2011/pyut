@@ -12,7 +12,7 @@ from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
 
 from tests.TestBase import TestBase
 
-from org.pyut.ui.tools.Toolbox2 import Toolbox
+from org.pyut.ui.tools.Toolbox import Toolbox
 
 
 class TestToolbox(TestBase):

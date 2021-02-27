@@ -9,7 +9,7 @@ from logging import getLogger
 from wx import Window
 
 from org.pyut.ui.tools.Tool import Tool
-from org.pyut.ui.tools.Toolbox2 import Toolbox
+from org.pyut.ui.tools.Toolbox import Toolbox
 
 Category       = NewType('Category',       str)
 Tools          = NewType('NewType',        List[Tool])

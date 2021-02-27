@@ -15,7 +15,7 @@ from org.pyut.miniogl.DiagramFrame import DiagramFrame
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.Mediator import Mediator
-from org.pyut.ui.tools.Toolbox2 import Toolbox as Toolbox2
+from org.pyut.ui.tools.Toolbox import Toolbox as Toolbox2
 
 from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.tools.ToolIconOwner import ToolIconOwner
