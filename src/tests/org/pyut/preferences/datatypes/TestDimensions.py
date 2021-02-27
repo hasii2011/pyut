@@ -9,7 +9,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.preferences.Dimensions import Dimensions
+from org.pyut.preferences.datatypes.Dimensions import Dimensions
 
 
 class TestDimensions(TestBase):

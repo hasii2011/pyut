@@ -23,7 +23,7 @@ from wx import Window
 from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
 
-from org.pyut.preferences.Dimensions import Dimensions
+from org.pyut.preferences.datatypes.Dimensions import Dimensions
 
 from org.pyut.general.Globals import _
 

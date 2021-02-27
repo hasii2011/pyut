@@ -4,7 +4,7 @@ from logging import getLogger
 
 from typing import Tuple
 
-from org.pyut.preferences.Dimensions import Dimensions
+from org.pyut.preferences.datatypes.Dimensions import Dimensions
 from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 

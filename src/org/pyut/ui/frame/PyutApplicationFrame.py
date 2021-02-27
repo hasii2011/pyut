@@ -51,7 +51,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.preferences.Dimensions import Dimensions
+from org.pyut.preferences.datatypes.Dimensions import Dimensions
 
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 

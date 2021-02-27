@@ -16,7 +16,7 @@ from wx import Window
 
 from wx import NewIdRef as wxNewIdRef
 
-from org.pyut.preferences.Dimensions import Dimensions
+from org.pyut.preferences.datatypes.Dimensions import Dimensions
 
 from org.pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
 

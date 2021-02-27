@@ -110,6 +110,7 @@ class TestAll:
 
         pluginModules:          List[str] = glob('tests/org/pyut/plugins/Test*.py')
         preferencesModules:     List[str] = glob('tests/org/pyut/preferences/Test*.py')
+        dataTypesModules:       List[str] = glob('tests/org/pyut/preferences/datatypes/Test*.py')
         uiToolsModules:         List[str] = glob('tests/org/pyut/ui/tools/Test*.py')
         dtdModules:             List[str] = glob('tests/org/pyut/plugins/dtd/Test*.py')
         gmlModules:             List[str] = glob('tests/org/pyut/plugins/gml/Test*.py')
@@ -122,7 +123,7 @@ class TestAll:
             pyutModules + commandsModules + dialogModules + tipsModules + \
             dtdModules + errorControllerModules + generalModules + gmlModules + historyModules + iopythonSupportModules + xsdModules + \
             miniOglModules + modelModules + oglModules + persistenceModules + converterModules + pluginModules + \
-            preferencesModules + uiToolsModules
+            preferencesModules + dataTypesModules + uiToolsModules
 
         self.logger.debug(f'{allModules=}')
 
