@@ -8,7 +8,7 @@ from unittest import main as unitTestMain
 from wx import Size
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
+from org.pyut.preferences.datatypes.ToolBarIconSize import ToolBarIconSize
 
 from tests.TestBase import TestBase
 

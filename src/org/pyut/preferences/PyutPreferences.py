@@ -16,7 +16,7 @@ from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
-from org.pyut.preferences.ToolBarIconSize import ToolBarIconSize
+from org.pyut.preferences.datatypes.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.ValuePreferences import ValuePreferences
 
 from org.pyut.preferences.datatypes.Dimensions import Dimensions
