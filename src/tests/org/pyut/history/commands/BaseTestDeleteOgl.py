@@ -6,7 +6,7 @@ from org.pyut.history.commands.Command import Command
 from tests.TestBase import TestBase
 
 
-class BaseTestDelete(TestBase):
+class BaseTestDeleteOgl(TestBase):
 
     def _setMocksForDeleteSerializeTest(self, deleteObjectCommand: Command) -> Command:
 

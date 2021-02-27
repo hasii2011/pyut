@@ -24,10 +24,10 @@ from tests.TestBase import TestBase
 
 from org.pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
 
-from tests.org.pyut.history.commands.BaseTestDeleteOgl import BaseTestDelete
+from tests.org.pyut.history.commands.BaseTestDeleteOgl import BaseTestDeleteOgl
 
 
-class TestDeleteOglLinkedObjectCommand(BaseTestDelete):
+class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
     """
     """
     clsLogger: Logger = None
