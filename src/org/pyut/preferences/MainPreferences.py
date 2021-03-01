@@ -2,9 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
-from typing import Tuple
-
 from org.pyut.preferences.datatypes.Dimensions import Dimensions
+from org.pyut.preferences.datatypes.Position import Position
 from org.pyut.preferences.datatypes.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 
@@ -29,10 +28,9 @@ class MainPreferences(BaseSubPreference):
     CURRENT_TIP:                str = 'Current_Tip'
     EDITOR:                     str = 'Editor'
     STARTUP_DIMENSIONS:         str = 'startup_dimensions'
+    STARTUP_POSITION:           str = 'startup_position'
     CENTER_DIAGRAM:             str = 'center_diagram'
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
-    STARTUP_X:                  str = 'startup_x'
-    STARTUP_Y:                  str = 'startup_y'
     PDF_EXPORT_FILE_NAME:       str = 'default_pdf_export_file_name'
     TOOL_BAR_ICON_SIZE:         str = 'tool_bar_icon_size'
 
@@ -48,10 +46,9 @@ class MainPreferences(BaseSubPreference):
         CURRENT_TIP:               '0',
         EDITOR:                    'brackets',
         STARTUP_DIMENSIONS:        Dimensions(1024, 768).__str__(),
+        STARTUP_POSITION:          Position(5, 5).__str__(),
         CENTER_DIAGRAM:            'False',
         CENTER_APP_ON_STARTUP:     'True',
-        STARTUP_X:                 '-1',
-        STARTUP_Y:                 '-1',
         PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME,
         TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value
     }
@@ -198,22 +195,14 @@ class MainPreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def appStartupPosition(self) -> Tuple[int, int]:
+    def startupPosition(self) -> Position:
 
-        x: int = self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_X)
-        y: int = self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_Y)
+        serializedPosition: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_POSITION)
+        return Position.deSerialize(serializedPosition)
 
-        return x, y
-
-    @appStartupPosition.setter
-    def appStartupPosition(self, theNewValue: Tuple[int, int]):
-
-        x: int = theNewValue[0]
-        y: int = theNewValue[1]
-
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_X, str(x))
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_Y, str(y))
-
+    @startupPosition.setter
+    def startupPosition(self, newValue: Position):
+        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_POSITION, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
     @property

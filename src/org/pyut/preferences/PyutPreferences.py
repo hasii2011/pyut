@@ -1,5 +1,4 @@
 
-from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -16,9 +15,10 @@ from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
-from org.pyut.preferences.datatypes.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.ValuePreferences import ValuePreferences
 
+from org.pyut.preferences.datatypes.Position import Position
+from org.pyut.preferences.datatypes.ToolBarIconSize import ToolBarIconSize
 from org.pyut.preferences.datatypes.Dimensions import Dimensions
 from org.pyut.preferences.datatypes.TextFontEnum import TextFontEnum
 
@@ -238,12 +238,12 @@ class PyutPreferences(Singleton):
         self._mainPrefs.centerAppOnStartUp = theNewValue
 
     @property
-    def appStartupPosition(self) -> Tuple[int, int]:
-        return self._mainPrefs.appStartupPosition
+    def startupPosition(self) -> Position:
+        return self._mainPrefs.startupPosition
 
-    @appStartupPosition.setter
-    def appStartupPosition(self, theNewValue: Tuple[int, int]):
-        self._mainPrefs.appStartupPosition = theNewValue
+    @startupPosition.setter
+    def startupPosition(self, newValue: Position):
+        self._mainPrefs.startupPosition = newValue
 
     @property
     def fullScreen(self) -> bool:

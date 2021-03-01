@@ -23,6 +23,7 @@ from wx import AcceleratorEntry
 from wx import CommandEvent
 from wx import Frame
 from wx import NewIdRef
+from wx import Point
 from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
@@ -52,6 +53,7 @@ from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.preferences.datatypes.Dimensions import Dimensions
+from org.pyut.preferences.datatypes.Position import Position
 
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
@@ -147,8 +149,8 @@ class PyutApplicationFrame(Frame):
         if self._prefs.centerAppOnStartUp is True:
             self.Center(BOTH)  # Center on the screen
         else:
-            appPosition: Tuple[int, int] = self._prefs.appStartupPosition
-            self.SetPosition(pt=appPosition)
+            appPosition: Position = self._prefs.startupPosition
+            self.SetPosition(pt=Point(x=appPosition.x, y=appPosition.y))
 
         # Initialize the tips frame
         self._alreadyDisplayedTipsFrame = False
@@ -173,8 +175,9 @@ class PyutApplicationFrame(Frame):
         if self._prefs.overrideOnProgramExit is True:
             # Only save position if we are not auto-saving
             if self._prefs.centerAppOnStartUp is False:
-                pos: Tuple[int, int] = self.GetPosition()
-                self._prefs.appStartupPosition = pos
+                x, y = self.GetPosition()
+                pos: Position = Position(x=x, y=y)
+                self._prefs.startupPosition = pos
 
             ourSize: Tuple[int, int] = self.GetSize()
             # self._prefs.startupWidth  = ourSize[0]

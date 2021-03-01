@@ -76,6 +76,20 @@ class DualSpinnerContainer(StaticBoxSizer):
 
         self._spinnerValues: SpinnerValues = SpinnerValues(minValue, minValue)
 
+    def enableControls(self, value: bool):
+        """
+        Enable or disable the spinner controls
+
+        Args:
+            value: `True` to enable, else `False`
+        """
+        if value is True:
+            self._scValue0.Enable()
+            self._scValue1.Enable()
+        else:
+            self._scValue0.Disable()
+            self._scValue1.Disable()
+
     @property
     def spinnerValues(self) -> SpinnerValues:
         raise WriteOnlyPropertyException('You can only set the values')

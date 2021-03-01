@@ -7,23 +7,22 @@ from logging import getLogger
 from wx import ALL
 from wx import EVT_CHECKBOX
 from wx import EVT_SPINCTRL
-from wx import HORIZONTAL
-from wx import ID_ANY
 from wx import VERTICAL
 
 from wx import CommandEvent
-from wx import SpinCtrl
 from wx import SpinEvent
-from wx import StaticBox
 from wx import StaticBoxSizer
 from wx import BoxSizer
 from wx import CheckBox
 from wx import Window
 
 from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
+
 from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
+from org.pyut.dialogs.preferences.widgets.PositionContainer import PositionContainer
 
 from org.pyut.preferences.datatypes.Dimensions import Dimensions
+from org.pyut.preferences.datatypes.Position import Position
 
 from org.pyut.general.Globals import _
 
@@ -84,15 +83,14 @@ class PositioningPreferences(PreferencesPanel):
         Set the position controls based on the value of appropriate preference value
         """
         if self._prefs.centerAppOnStartUp is True:
-            self.__scAppPosX.Disable()
-            self.__scAppPosY.Disable()
+            self._appPositionContainer.enableControls(False)
             self.__cbCenterAppOnStartup.SetValue(True)
         else:
-            self.__scAppPosX.Enable()
-            self.__scAppPosY.Enable()
+            self._appPositionContainer.enableControls(True)
             self.__cbCenterAppOnStartup.SetValue(False)
 
         self._appDimensionsContainer.dimensions = self._prefs.startupDimensions
+        self._appPositionContainer.position     = self._prefs.startupPosition
 
     def __onSpinnerValueChanged(self, event: SpinEvent):
 
@@ -130,24 +128,10 @@ class PositioningPreferences(PreferencesPanel):
 
     def __createAppPositionControls(self) -> StaticBoxSizer:
 
-        scAppPosX = SpinCtrl(self, self.__scAppPosXID, "", (30, 50))
-        scAppPosY = SpinCtrl(self, self.__scAppPosYID, "", (30, 50))
+        self._appPositionContainer: PositionContainer = PositionContainer(parent=self, displayText=_('Startup Position'),
+                                                                          minValue=0, maxValue=2048, valueChangedCallback=self.__appPositionChanged)
 
-        scAppPosX.SetRange(0, 4096)
-        scAppPosY.SetRange(0, 4096)
-        scAppPosX.SetValue(self._prefs.appStartupPosition[0])
-        scAppPosY.SetValue(self._prefs.appStartupPosition[1])
-
-        box:            StaticBox = StaticBox(self, ID_ANY, _("Startup Position"))
-        szrAppPosition: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
-
-        szrAppPosition.Add(scAppPosX, 0, ALL, PositioningPreferences.HORIZONTAL_GAP)
-        szrAppPosition.Add(scAppPosY, 0, ALL, PositioningPreferences.HORIZONTAL_GAP)
-
-        self.__scAppPosX = scAppPosX
-        self.__scAppPosY = scAppPosY
-
-        return szrAppPosition
+        return self._appPositionContainer
 
     def __createAppSizeControls(self) -> StaticBoxSizer:
 
@@ -159,16 +143,17 @@ class PositioningPreferences(PreferencesPanel):
     def __appSizeChanged(self, newValue: Dimensions):
         self._prefs.startupDimensions = newValue
 
+    def __appPositionChanged(self, newValue: Position):
+        self._prefs.startupPosition = newValue
+
     def __enablePositionControls(self, newValue: bool):
         """
         Enable/Disable position controls based on the value of appropriate preference value
 
         Args:
-            newValue:  If 'True" enabled else disabled
+            newValue:  If 'True" disabled else enabled
         """
         if newValue is True:
-            self.__scAppPosX.Disable()
-            self.__scAppPosY.Disable()
+            self._appPositionContainer.enableControls(False)
         else:
-            self.__scAppPosX.Enable()
-            self.__scAppPosY.Enable()
+            self._appPositionContainer.enableControls(True)
