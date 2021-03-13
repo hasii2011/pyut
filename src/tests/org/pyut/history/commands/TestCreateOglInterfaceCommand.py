@@ -92,11 +92,11 @@ class TestCreateOglInterfaceCommand(TestBase):
 
         self.assertIsNotNone(serializedShape, 'Something must come back')
 
-        # self.maxDiff = None
+        self.maxDiff = None
         self.logger.debug(f'{len(self._serializedCommand)=}  {len(serializedShape)=}')
 
         import re
-        fixedSerializedShape = re.sub('shapeId=[0-9]', 'shapeId=2', serializedShape)
+        fixedSerializedShape = re.sub('shapeId=[0-9]*', 'shapeId=2', serializedShape)
 
         self.logger.debug(f'{fixedSerializedShape=}')
 

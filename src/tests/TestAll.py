@@ -9,7 +9,10 @@ from sys import argv as sysArgv
 
 from importlib import import_module
 
-from glob import glob
+from os import walk as osWalk
+from os import sep as osSep
+
+from re import search as regExSearch
 
 from unittest import TestResult
 from unittest import TextTestRunner
@@ -92,47 +95,53 @@ class TestAll:
         Removes modules that are not unit tests
 
         Returns:
-            A list of module names that we can find in this package
+            A list of testable module names
         """
-        pyutModules:            List[str] = glob('tests/org/pyut/Test*.py')
-        commandsModules:        List[str] = glob('tests/org/pyut/history/commands/Test*.py')
-        dialogModules:          List[str] = glob('tests/org/pyut/dialogs/Test*.py')
-        tipsModules:            List[str] = glob('tests/org/pyut/dialogs/tips/Test*.py')
-        errorControllerModules: List[str] = glob('tests/org/pyut/errorcontroller/Test*.py')
-        generalModules:         List[str] = glob('tests/org/pyut/general/Test*.py')
-        historyModules:         List[str] = glob('tests/org/pyut/history/Test*.py')
 
-        miniOglModules:     List[str] = glob('tests/org/pyut/miniogl/Test*.py')
-        modelModules:       List[str] = glob('tests/org/pyut/model/Test*.py')
-        oglModules:         List[str] = glob('tests/org/pyut/ogl/Test*.py')
-        persistenceModules: List[str] = glob('tests/org/pyut/persistence/Test*.py')
-        converterModules:   List[str] = glob('tests/org/pyut/persistence/converters/Test*.py')
-
-        pluginModules:          List[str] = glob('tests/org/pyut/plugins/Test*.py')
-        preferencesModules:     List[str] = glob('tests/org/pyut/preferences/Test*.py')
-        dataTypesModules:       List[str] = glob('tests/org/pyut/preferences/datatypes/Test*.py')
-        uiToolsModules:         List[str] = glob('tests/org/pyut/ui/tools/Test*.py')
-        dtdModules:             List[str] = glob('tests/org/pyut/plugins/dtd/Test*.py')
-        gmlModules:             List[str] = glob('tests/org/pyut/plugins/gml/Test*.py')
-        iopythonSupportModules: List[str] = glob('tests/org/pyut/plugins/iopythonsupport/Test*.py')
-        xsdModules:             List[str] = glob('tests/org/pyut/plugins/xsd/Test*.py')
-
-        fModules:   List[str] = glob('tests/Test*.py')
-
-        allModules: List[str] = fModules + \
-            pyutModules + commandsModules + dialogModules + tipsModules + \
-            dtdModules + errorControllerModules + generalModules + gmlModules + historyModules + iopythonSupportModules + xsdModules + \
-            miniOglModules + modelModules + oglModules + persistenceModules + converterModules + pluginModules + \
-            preferencesModules + dataTypesModules + uiToolsModules
+        allModules: List[str] = self.__getModuleNames()
 
         self.logger.debug(f'{allModules=}')
 
-        # remove .py extension
-        modules = list(map(lambda x: x[:-3], allModules))
         for doNotTest in TestAll.NOT_TESTS:
-            modules.remove(f'tests/{doNotTest}')
+            allModules.remove(f'tests/{doNotTest}')
+
+        return allModules
+
+    def __getModuleNames(self) -> List[str]:
+        """
+        Get all likely test modules
+
+        Returns:
+            A list of module names that we can find in this package
+        """
+        testFilenames: List[str] = []
+        rootDir = 'tests'
+        for dirName, subdirList, fileList in osWalk(rootDir):
+            if '__pycache__' in dirName:
+                continue
+            self.logger.debug(f'directory: {dirName}')
+            for fName in fileList:
+                if self.__startsWith('Test', fName) is True:
+                    fqFileName: str = f'{dirName}{osSep}{fName}'
+                    self.logger.debug(f'{fqFileName}')
+                    testFilenames.append(fqFileName)
+
+        # remove .py extension
+        modules = list(map(lambda x: x[:-3], testFilenames))
 
         return modules
+
+    def __startsWith(self, pattern: str, stringToCheck: str) -> bool:
+
+        ans: bool = False
+        if pattern in stringToCheck:
+            # passes first easy test
+            regExp: str = f'^{pattern}'
+            match = regExSearch(regExp, stringToCheck)
+            if match:
+                ans = True
+
+        return ans
 
 
 def main():
