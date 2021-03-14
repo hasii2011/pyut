@@ -104,6 +104,9 @@ class OglInterface2(LollipopLine, Common):
 
         return False
 
+    def UpdateFromModel(self):
+        super().UpdateFromModel()
+
     def __repr__(self):
 
         strMe: str = f'OglInterface2 - "{self._pyutInterface.getName()}"'

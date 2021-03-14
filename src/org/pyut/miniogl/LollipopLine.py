@@ -73,25 +73,32 @@ class LollipopLine(Shape):
         of the line
         """
 
+        diagram = self.GetDiagram()
+        panel   = diagram.GetPanel()   # to enable debugging and unit tests
+        ratio = panel.GetCurrentZoom()
+
+        lollipopLength: int = LollipopLine.LOLLIPOP_LINE_LENGTH * ratio
+        self.logger.warning(f'{lollipopLength}')
+
         if attachmentPoint == AttachmentPoint.EAST:
-            xSrc: int = int(xDest + LollipopLine.LOLLIPOP_LINE_LENGTH)
+            xSrc: int = int(xDest + lollipopLength)
             ySrc: int = int(yDest)
-            circleX: int = int(xDest + LollipopLine.LOLLIPOP_LINE_LENGTH)
+            circleX: int = int(xDest + lollipopLength)
             circleY: int = int(yDest)
         elif attachmentPoint == AttachmentPoint.WEST:
-            xSrc: int = int(xDest - LollipopLine.LOLLIPOP_LINE_LENGTH)
+            xSrc: int = int(xDest - lollipopLength)
             ySrc: int = int(yDest)
-            circleX: int = int(xDest - LollipopLine.LOLLIPOP_LINE_LENGTH)
+            circleX: int = int(xDest - lollipopLength)
             circleY: int = int(yDest)
         elif attachmentPoint == AttachmentPoint.NORTH:
             xSrc: int = int(xDest)
-            ySrc: int = int(yDest - LollipopLine.LOLLIPOP_LINE_LENGTH)
+            ySrc: int = int(yDest - lollipopLength)
             circleX: int = int(xDest)
-            circleY: int = int(yDest - LollipopLine.LOLLIPOP_LINE_LENGTH)
+            circleY: int = int(yDest - lollipopLength)
         else:  # it is South
             xSrc: int = int(xDest)
-            ySrc: int = int(yDest + LollipopLine.LOLLIPOP_LINE_LENGTH)
+            ySrc: int = int(yDest + lollipopLength)
             circleX: int = int(xDest)
-            circleY: int = int(yDest + LollipopLine.LOLLIPOP_LINE_LENGTH)
+            circleY: int = int(yDest + lollipopLength)
 
         return circleX, circleY, xSrc, ySrc

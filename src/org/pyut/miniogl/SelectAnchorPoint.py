@@ -29,8 +29,10 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
             parent:
         """
         super().__init__(x, y, parent)
+
         self._attachmentPoint: AttachmentPoint = attachmentPoint
-        self._pen: Pen = RED_PEN
+        self._pen:             Pen             = RED_PEN
+        self.SetDraggable(True)     # So it sticks on OglClass resize
 
     @property
     def attachmentPoint(self) -> AttachmentPoint:
