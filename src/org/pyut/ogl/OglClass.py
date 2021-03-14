@@ -265,7 +265,7 @@ class OglClass(OglObject):
         """
         Paint handler, draws the content of the shape.
 
-        WARNING : Every changes here must be reported in autoResize pyutMethod
+        WARNING : Every change here must be reported in autoResize pyutMethod
 
         Args:
             dc: device context to draw to

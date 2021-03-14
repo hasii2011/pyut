@@ -44,12 +44,12 @@ class OglActor(OglObject):
 
     def Draw(self, dc: DC, withChildren: bool = False):
         """
-        Draw the actor.
-        @param  dc : Device context
-        @param withChildren Draw the children or not
+        Draw an actor
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            dc:     The device context to draw on
+            withChildren:   Draw the children or not
+
         """
         OglObject.Draw(self, dc)
         # Get current font

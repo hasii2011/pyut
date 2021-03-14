@@ -456,7 +456,7 @@ class TreeNotebookHandler:
         """
         # Display warning if we are in scripting mode
         if self._mediator.isInScriptMode():
-            print("WARNING : in script mode, the non-saved projects are closed without warning")
+            self.logger.warning("WARNING : in script mode, the non-saved projects are closed without warning")
 
         # Close projects and ask for unsaved but modified projects
         if not self._mediator.isInScriptMode():
@@ -467,8 +467,6 @@ class TreeNotebookHandler:
                         frame = frames[0]
                         frame.SetFocus()
                         wxYield()
-                        # if self._ctrl is not None:
-                            # self._ctrl.registerUMLFrame(frame)
                         self.showFrame(frame)
                     dlg = MessageDialog(self.__parent,
                                         _("Your diagram has not been saved! Would you like to save it ?"),
@@ -480,16 +478,18 @@ class TreeNotebookHandler:
                     dlg.Destroy()
 
         # dereference all
-        self.__parent = None
-        self._mediator = None
+        self.__parent   = None
+        self._mediator  = None
         self.__splitter = None
         self.__projectTree = None
         self.__notebook.DeleteAllPages()
         self.__notebook = None
         self.__splitter = None
-        self._projects = None
+        self._projects  = None
         self._currentProject = None
-        self._currentFrame = None
+        self._currentFrame   = None
+
+        return True
 
     def setModified(self, theNewValue: bool = True):
         """
