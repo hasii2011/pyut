@@ -326,6 +326,7 @@ class PyutXml:
             x, y = attachmentAnchor.GetPosition()
 
             umlFrame.addShape(oglInterface, x, y, withModelUpdate=True)
+            umlFrame.addShape(attachmentAnchor, x, y, withModelUpdate=True)
 
     def __displayTheTextShapes(self, oglTextShapes: OglTextShapes, umlFrame: UmlDiagramsFrame):
 

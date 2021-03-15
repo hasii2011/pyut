@@ -170,7 +170,7 @@ class MiniDomToOgl:
             oglClass: OglClass = self._findImplementor(pyutInterface.implementors[0], oglClasses)
 
             anchorPoint: SelectAnchorPoint  = self._getAttachmentPoint(xmlOglInterface, oglClass)
-
+            anchorPoint.setYouAreTheSelectedAnchor()
             oglClass.AddAnchorPoint(anchorPoint)
 
             oglInterface: OglInterface2 = OglInterface2(pyutInterface=pyutInterface, destinationAnchor=anchorPoint)

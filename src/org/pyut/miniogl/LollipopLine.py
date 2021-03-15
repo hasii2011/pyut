@@ -78,7 +78,7 @@ class LollipopLine(Shape):
         ratio = panel.GetCurrentZoom()
 
         lollipopLength: int = LollipopLine.LOLLIPOP_LINE_LENGTH * ratio
-        self.logger.warning(f'{lollipopLength}')
+        self.logger.debug(f'{lollipopLength}')
 
         if attachmentPoint == AttachmentPoint.EAST:
             xSrc: int = int(xDest + lollipopLength)
