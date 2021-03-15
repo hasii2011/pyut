@@ -48,8 +48,10 @@ class TestAll:
 
     def runTextTestRunner(self) -> int:
 
-        status: TestResult = TextTestRunner(verbosity=TestAll.VERBOSITY_QUIET).run(self._testSuite)
-        self.logger.info(f'Test Suite Status: {status}')
+        runner: TextTestRunner = TextTestRunner(verbosity=TestAll.VERBOSITY_QUIET)
+        status: TestResult     = runner.run(self._testSuite)
+        print(f"THE RESULTS ARE IN:")
+        print(f"run: {status.testsRun} errors: {len(status.errors)} failures: {len(status.failures)} skipped: {len(status.skipped)}")
         if len(status.failures) != 0:
             return 1
         else:

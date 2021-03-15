@@ -21,7 +21,7 @@ class Dimensions:
             dimensions.width  = int(widthHeight[0])
             dimensions.height = int(widthHeight[1])
         except ValueError as ve:
-            print(f'Dimensions - {ve}.')
+            print(f'Warning: Dimensions.deSerialize - {ve}')
             dimensions.width  = 0
             dimensions.height = 0
 

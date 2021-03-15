@@ -75,7 +75,7 @@ class PyutUtils:
             try:
                 integerValue: int = int(float(floatValue))
             except ValueError:
-                PyutUtils.clsLogger.warning(f'Bad float value: {floatValue}')
+                print(f'Warning: PyutUtils.strFloatToInt - Bad float value: `{floatValue}`')
                 integerValue: int = 0
         else:
             integerValue: int = 0

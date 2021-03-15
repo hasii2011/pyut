@@ -45,5 +45,5 @@ class LinkType(Enum):
         elif canonicalStr == 'sd_message':
             return LinkType.SD_MESSAGE
         else:
-            print(f'Warning: did not recognize this link type: {canonicalStr}')
+            print(f'Warning: LinkType.toEnum - Do not recognize link type: `{canonicalStr}`')
             return LinkType.ASSOCIATION
