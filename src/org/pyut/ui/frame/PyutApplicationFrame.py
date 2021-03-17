@@ -40,9 +40,10 @@ from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
 from org.pyut.ui.frame.PyutFileDropTarget import PyutFileDropTarget
 from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
-from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.SharedTypes import SharedTypes
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+
+from org.pyut.ui.tools.MenuCreator import MenuCreator
 from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 
 from org.pyut.dialogs.tips.DlgTips import DlgTips
@@ -52,6 +53,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 from org.pyut.preferences.datatypes.Dimensions import Dimensions
 from org.pyut.preferences.datatypes.Position import Position
 
@@ -157,7 +159,8 @@ class PyutApplicationFrame(Frame):
 
         self.SetDropTarget(PyutFileDropTarget(treeNotebookHandler=self._treeNotebookHandler))
 
-        self.SetThemeEnabled(True)
+        if self.GetThemeEnabled() is True:
+            self.SetThemeEnabled(True)
 
         self.Bind(EVT_ACTIVATE, self._onActivate)
         self.Bind(EVT_CLOSE, self.Close)
@@ -227,6 +230,20 @@ class PyutApplicationFrame(Frame):
         mainUI.currentProject = project
         project.selectSelf()
         mainUI.currentFrame = project.getFrames()[0]
+
+    def _onNewAction(self, event: CommandEvent):
+        """
+        Call the mediator to specify the current action.
+
+        Args:
+            event:
+        """
+        currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
+
+        self._mediator.setCurrentAction(currentAction)
+        self._mediator.selectTool(event.GetId())
+        self._treeNotebookHandler.setModified(True)
+        self._mediator.updateTitle()
 
     def _onActivate(self, event: ActivateEvent):
         """
@@ -303,20 +320,6 @@ class PyutApplicationFrame(Frame):
             (el1, el2, el3) = el
             acc.append(AcceleratorEntry(el1, el2, el3))
         return acc
-
-    def _onNewAction(self, event: CommandEvent):
-        """
-        Call the mediator to specify the current action.
-
-        Args:
-            event:
-        """
-        currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
-
-        self._mediator.setCurrentAction(currentAction)
-        self._mediator.selectTool(event.GetId())
-        self._treeNotebookHandler.setModified(True)
-        self._mediator.updateTitle()
 
     def _createToolboxIdMap(self) -> SharedTypes.ToolboxIdMap:
 

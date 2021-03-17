@@ -1,19 +1,24 @@
 
+from typing import List
+from typing import NewType
+from typing import Union
+
 from logging import Logger
 from logging import getLogger
 
-from wx import BeginBusyCursor
 from wx import EVT_CHAR
 from wx import EVT_CLOSE
 from wx import EVT_PAINT
+
+from wx import BeginBusyCursor
 from wx import EndBusyCursor
 from wx import MouseEvent
 from wx import Notebook
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglObject import OglObject
-
 from org.pyut.ogl.OglLink import OglLink
+
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.miniogl.Constants import SKIP_EVENT
@@ -36,6 +41,9 @@ from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
 #  DEFAULT_WIDTH = 5120
 DEFAULT_WIDTH = 3000
 A4_FACTOR:    float = 1.41
+
+UmlObject  = Union[OglObject, OglLink, OglSDMessage, OglInterface2]
+UmlObjects = NewType('UmlObjects', List[UmlObject])
 
 
 class UmlFrame(UmlFrameShapeHandler):
@@ -225,14 +233,18 @@ class UmlFrame(UmlFrameShapeHandler):
 
         EndBusyCursor()
 
-    def getUmlObjects(self):
+    def getUmlObjects(self) -> UmlObjects:
         """
         Retrieve UML objects from the UML Frame
+
+        Returns:  The Uml objects on this diagram
         """
-        umlObjects = []
+        umlObjects: UmlObjects = UmlObjects([])
+
         for s in self._diagram.GetShapes():
             if isinstance(s, (OglObject, OglLink, OglSDMessage, OglInterface2)):
                 umlObjects.append(s)
+
         return umlObjects
 
     def getWidth(self):

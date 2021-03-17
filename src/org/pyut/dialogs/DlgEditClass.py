@@ -28,8 +28,11 @@ from wx import BoxSizer
 from wx import CheckBox
 from wx import StaticText
 from wx import CommandEvent
+from wx import Window
 
+from wx import PostEvent as wxPostEvent
 
+from org.pyut.general.CustomEvents import ClassNameChangedEvent
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 
@@ -55,18 +58,18 @@ class DlgEditClass(DlgEditClassCommon):
     Dialog for the class edits.
 
     Creating a DlgEditClass object will automatically open a dialog for class
-    editing. The PyutClass given in the constructor parameters will be used to fill the
-    fields of the dialog, and will be updated when the OK button is clicked.
+    editing. The PyutClass given in the constructor parameters is used to fill the
+    fields of the dialog, and is updated when the OK button is clicked.
 
-    Dialogs for methods and fields editing are implemented in different classes and
+    Dialogs for methods and fields editing are implemented in different dialog classes and
     created when invoking the _callDlgEditMethod and _callDlgEditField methods.
 
     Because dialog works on a copy of the PyutClass object, if you cancel the
     dialog any modifications are lost.
 
-    Examples of `DlgEditClass` use are in  `Mediator.py`
+    Examples of `DlgEditClass` use are in `Mediator.py`
     """
-    def __init__(self, parent, windowId, pyutClass: PyutClass):
+    def __init__(self, parent: Window, windowId: int, pyutClass: PyutClass):
         """
 
         Args:
@@ -76,9 +79,9 @@ class DlgEditClass(DlgEditClassCommon):
         """
         super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Class Edit"), pyutModel=pyutClass, editInterface=False)
 
-        self.logger:         Logger = getLogger(__name__)
+        self.logger:         Logger     = getLogger(__name__)
         lblStereotype:       StaticText = StaticText (self, -1, _("Stereotype"))
-        self._txtStereotype: TextCtrl = TextCtrl(self, ID_TXT_STEREO_TYPE, "", size=(125, -1))
+        self._txtStereotype: TextCtrl   = TextCtrl(self, ID_TXT_STEREO_TYPE, "", size=(125, -1))
 
         self._szrNameStereotype.Add(lblStereotype, 0, ALL, 5)
         self._szrNameStereotype.Add(self._txtStereotype, 1, ALIGN_CENTER)
@@ -158,8 +161,10 @@ class DlgEditClass(DlgEditClassCommon):
         self._txtName.SetSelection(0, len(self._txtName.GetValue()))
 
         # Help Pycharm
-        self._dlgMethod = cast(Dialog, None)
+        self._dlgMethod: Dialog = cast(Dialog, None)
         self._szrMain.Fit(self)     # subclasses need to do this
+
+        self._oldClassName: str = pyutClass.name
 
         self.Centre()
         self.ShowModal()
@@ -383,7 +388,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         Activated when button OK is clicked.
         """
-        strStereotype = self._txtStereotype.GetValue()
+        strStereotype: str = self._txtStereotype.GetValue()
         if strStereotype == "":
             self._pyutModel.setStereotype(None)
         else:
@@ -405,7 +410,7 @@ class DlgEditClass(DlgEditClassCommon):
                 if oglClass is not None:
                     oglClass.autoResize()
         except (ValueError, Exception) as e:
-            self.logger.warning(f'{e}')
+            self.logger.error(f'{e}')
 
         fileHandling = self._mediator.getFileHandling()
         project = fileHandling.getCurrentProject()
@@ -413,3 +418,8 @@ class DlgEditClass(DlgEditClassCommon):
             project.setModified()
 
         super()._onOk(event)
+
+        if self._oldClassName != self._pyutModel.name:
+            evt: ClassNameChangedEvent = ClassNameChangedEvent(oldClassName=self._oldClassName, newClassName=self._pyutModel.name)
+            parent = self.GetParent()
+            wxPostEvent(parent, evt)

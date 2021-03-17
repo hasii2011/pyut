@@ -4,17 +4,25 @@ from typing import NewType
 from typing import Tuple
 from typing import Union
 
+
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInterface import OglInterface
+from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+
+from org.pyut.general.CustomEvents import ClassNameChangedEvent
+from org.pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
+
+from org.pyut.ui.UmlFrame import UmlObjects
 
 UmlClassType       = NewType('UmlClassType', Union[PyutClass, OglClass])
 CreatedClassesType = NewType('CreatedClassTypes', Tuple[UmlClassType])
@@ -41,6 +49,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         super().__init__(parent)
         self.newDiagram()
+
+        self.Bind(EVT_CLASS_NAME_CHANGED, self._onClassNameChanged)
 
     def createLink(self, src: OglClass, dst: OglClass, linkType: LinkType = LinkType.AGGREGATION):
         """
@@ -139,6 +149,26 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         retData: CreatedClassesType = cast(CreatedClassesType, (pyutClass, oglClass))
         return retData
+
+    def _onClassNameChanged(self, event: ClassNameChangedEvent):
+
+        oldClassName: str = event.oldClassName
+        newClassName: str = event.newClassName
+        self.logger.warning(f'{oldClassName=} {newClassName=}')
+
+        umlObjects: UmlObjects = self.getUmlObjects()
+
+        for umlObject in umlObjects:
+            if isinstance(umlObject, OglInterface2):
+                oglInterface:  OglInterface2 = cast(OglInterface2, umlObject)
+                pyutInterface: PyutInterface = oglInterface.pyutInterface
+
+                implementors: PyutInterface.Implementors = pyutInterface.implementors
+
+                for idx, implementor in enumerate(implementors):
+                    self.logger.warning(f'{idx=} - {pyutInterface.name=} {implementor=}')
+                    if implementor == oldClassName:
+                        pyutInterface.implementors[idx] = newClassName
 
     def __repr__(self) -> str:
 

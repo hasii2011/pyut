@@ -469,8 +469,8 @@ class TreeNotebookHandler:
                         wxYield()
                         self.showFrame(frame)
                     dlg = MessageDialog(self.__parent,
-                                        _("Your diagram has not been saved! Would you like to save it ?"),
-                                        _("Save changes ?"), YES_NO | ICON_QUESTION)
+                                        _("Your diagram has not been saved! Would you like to save it?"),
+                                        _("Save changes?"), YES_NO | ICON_QUESTION)
                     if dlg.ShowModal() == ID_YES:
                         # save
                         if self.saveFile() is False:

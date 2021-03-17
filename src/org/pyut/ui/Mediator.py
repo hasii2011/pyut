@@ -554,21 +554,6 @@ class Mediator(Singleton):
             return
         self.setStatusText(MESSAGES[self._currentAction])
 
-    def _createLink(self, umlFrame):
-
-        from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
-        from org.pyut.history.commands.CommandGroup import CommandGroup
-
-        linkType = LINK_TYPE[self._currentAction]
-        cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
-
-        cmdGroup = CommandGroup("create link")
-        cmdGroup.addCommand(cmd)
-        umlFrame.getHistory().addCommandGroup(cmdGroup)
-        umlFrame.getHistory().execute()
-        self._src = None
-        self._dst = None
-
     def autoResize(self, obj: BadPracticeType):
         """
         Auto-resize the given object.
@@ -1016,19 +1001,16 @@ class Mediator(Singleton):
     def getCurrentAction(self):
         return self._currentAction
 
-    def _setShapeSelection(self, selected: bool):
-        """
-        Either select or deselect all shapes in the current frame
+    def requestLollipopLocation(self, destinationClass: OglClass):
 
-        Args:
-            selected: If `True` select all shapes else deselect them
-        """
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
-        if umlFrame is not None:
-            shapes = umlFrame.GetDiagram().GetShapes()
-            for shape in shapes:
-                shape.SetSelected(selected)
-            umlFrame.Refresh()
+        from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
+        umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
+
+        self.__createPotentialAttachmentPoints(destinationClass=destinationClass, umlFrame=umlFrame)
+        self.setStatusText(f'Select attachment point')
+        umlFrame.Refresh()
+        wxYield()
 
     def _moveSelectedShapeZOrder(self, callback):
         """
@@ -1065,16 +1047,34 @@ class Mediator(Singleton):
         umlFrame.getHistory().addCommandGroup(group)
         umlFrame.getHistory().execute()
 
-    def requestLollipopLocation(self, destinationClass: OglClass):
+    def _setShapeSelection(self, selected: bool):
+        """
+        Either select or deselect all shapes in the current frame
 
-        from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+        Args:
+            selected: If `True` select all shapes else deselect them
+        """
+        umlFrame = self._treeNotebookHandler.getCurrentFrame()
+        if umlFrame is not None:
+            shapes = umlFrame.GetDiagram().GetShapes()
+            for shape in shapes:
+                shape.SetSelected(selected)
+            umlFrame.Refresh()
 
-        umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
+    def _createLink(self, umlFrame):
 
-        self.__createPotentialAttachmentPoints(destinationClass=destinationClass, umlFrame=umlFrame)
-        self.setStatusText(f'Select attachment point')
-        umlFrame.Refresh()
-        wxYield()
+        from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+        from org.pyut.history.commands.CommandGroup import CommandGroup
+
+        linkType = LINK_TYPE[self._currentAction]
+        cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
+
+        cmdGroup = CommandGroup("create link")
+        cmdGroup.addCommand(cmd)
+        umlFrame.getHistory().addCommandGroup(cmdGroup)
+        umlFrame.getHistory().execute()
+        self._src = None
+        self._dst = None
 
     def _createNewNote(self, umlFrame: UmlFrameShapeHandler, x: int, y: int):
         """
