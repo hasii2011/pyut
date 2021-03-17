@@ -42,6 +42,7 @@ from wx import Yield as wxYield
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
+from org.pyut.ui.PyutProject import UmlFrameType
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.PyutUtils import PyutUtils
@@ -231,27 +232,10 @@ class TreeNotebookHandler:
             self.logger.error(f"An error occurred while loading the project ! {e}")
             return False
 
-        try:
-            if not self._mediator.isInScriptMode():
-                for document in project.getDocuments():
-                    diagramTitle: str = document.title
-                    shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
-                    self.__notebook.AddPage(document.getFrame(), shortName)
-
-                self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
-                self.__notebook.SetSelection(self.__notebookCurrentPage)
-
-            if len(project.getDocuments()) > 0:
-                self._currentFrame = project.getDocuments()[0].getFrame()
-                self._syncPageFrameAndNotebook(frame=self._currentFrame)
-
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_(f"An error occurred while adding the project to the notebook {e}"))
-            return False
-
+        success: bool = self.__addProjectToNotebook(project)
         self.logger.debug(f'{self.currentFrame=} {self.currentProject=} {self.notebook.GetSelection()=}')
 
-        return True
+        return success
 
     def insertFile(self, filename):
         """
@@ -544,8 +528,16 @@ class TreeNotebookHandler:
         self._currentProject.removeFromTree()
         self._projects.remove(self._currentProject)
 
+        self.logger.debug(f'{self._currentProject.getFilename()=}')
         self._currentProject = None
         self._currentFrame = None
+
+        nbrProjects: int = len(self._projects)
+        self.logger.debug(f'{nbrProjects=}')
+        if nbrProjects > 0:
+            self.__updateTreeNotebookIfPossible(project=self._projects[0])
+
+        self._mediator.updateTitle()
 
         return True
 
@@ -652,25 +644,23 @@ class TreeNotebookHandler:
         """
         itm:      TreeItemId   = event.GetItem()
         pyutData: TreeDataType = self.__projectTree.GetItemData(itm)
-        self.logger.info(f'Clicked on: {itm=} `{pyutData=}`')
+        self.logger.debug(f'Clicked on: {itm=} `{pyutData=}`')
 
         # Use our own base type
         if isinstance(pyutData, UmlDiagramsFrame):
             frame: UmlDiagramsFrame = pyutData
             self._currentFrame = frame
             self._currentProject = self.getProjectFromFrame(frame)
+            self.__syncPageFrameAndNotebook(frame=frame)
 
-            self._syncPageFrameAndNotebook(frame=frame)
         elif isinstance(pyutData, PyutProject):
-            self._currentProject = pyutData
-
-    def _syncPageFrameAndNotebook(self, frame):
-
-        for i in range(self.__notebook.GetPageCount()):
-            pageFrame = self.__notebook.GetPage(i)
-            if pageFrame is frame:
-                self.__notebook.SetSelection(i)
-                break
+            project: PyutProject = pyutData
+            projectFrames: UmlFrameType = project.getFrames()
+            if len(projectFrames) > 0:
+                self._currentFrame = projectFrames[0]
+                self.__syncPageFrameAndNotebook(frame=self._currentFrame)
+                self._mediator.updateTitle()
+            self._currentProject = project
 
     def _getCurrentFrameFromNotebook(self):
         """
@@ -806,3 +796,40 @@ class TreeNotebookHandler:
             return f'{firstFour}{lastEight}'
         else:
             return justFileName
+
+    def __addProjectToNotebook(self, project: PyutProject) -> bool:
+
+        success: bool = True
+        try:
+            if self._mediator.isInScriptMode() is False:
+                for document in project.getDocuments():
+                    diagramTitle: str = document.title
+                    shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
+                    self.__notebook.AddPage(document.getFrame(), shortName)
+
+                self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
+                self.__notebook.SetSelection(self.__notebookCurrentPage)
+
+                self.__updateTreeNotebookIfPossible(project=project)
+
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(_(f"An error occurred while adding the project to the notebook {e}"))
+            success = False
+
+        return success
+
+    def __updateTreeNotebookIfPossible(self, project: PyutProject):
+
+        project.selectFirstDocument()
+
+        if len(project.getDocuments()) > 0:
+            self._currentFrame = project.getDocuments()[0].getFrame()
+            self.__syncPageFrameAndNotebook(frame=self._currentFrame)
+
+    def __syncPageFrameAndNotebook(self, frame):
+
+        for i in range(self.__notebook.GetPageCount()):
+            pageFrame = self.__notebook.GetPage(i)
+            if pageFrame is frame:
+                self.__notebook.SetSelection(i)
+                break

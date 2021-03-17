@@ -19,8 +19,6 @@ from wx import KeyEvent
 
 from wx import TextEntryDialog
 
-from wx import PostEvent as wxPostEvent
-from wx import Window
 from wx import Yield as wxYield
 
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
@@ -253,7 +251,7 @@ class Mediator(Singleton):
         """
         self._useMode = SCRIPT_MODE
 
-    def isInScriptMode(self):
+    def isInScriptMode(self) -> bool:
         """
         True if the current mode is the scripting mode
         """
@@ -1012,6 +1010,23 @@ class Mediator(Singleton):
         umlFrame.Refresh()
         wxYield()
 
+    def createLollipopInterface(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
+
+        from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+        from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+        from org.pyut.history.commands.CommandGroup import CommandGroup
+
+        attachmentAnchor.setYouAreTheSelectedAnchor()
+
+        umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
+
+        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor, attachmentAnchor)
+        group: CommandGroup = CommandGroup("Create lollipop")
+
+        group.addCommand(cmd)
+        umlFrame.getHistory().addCommandGroup(group)
+        umlFrame.getHistory().execute()
+
     def _moveSelectedShapeZOrder(self, callback):
         """
         Move the selected shape one level in z-order
@@ -1029,23 +1044,6 @@ class Mediator(Singleton):
                 if isinstance(oglObject, OglObject.OglObject):
                     callback(oglObject)
         umlFrame.Refresh()
-
-    def createLollipopInterface(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
-
-        from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-        from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
-        from org.pyut.history.commands.CommandGroup import CommandGroup
-
-        attachmentAnchor.setYouAreTheSelectedAnchor()
-
-        umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
-
-        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor, attachmentAnchor)
-        group: CommandGroup = CommandGroup("Create lollipop")
-
-        group.addCommand(cmd)
-        umlFrame.getHistory().addCommandGroup(group)
-        umlFrame.getHistory().execute()
 
     def _setShapeSelection(self, selected: bool):
         """

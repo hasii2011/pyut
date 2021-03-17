@@ -318,6 +318,17 @@ class PyutProject:
         # Remove document from documents list
         self._documents.remove(document)
 
+    def selectFirstDocument(self):
+
+        treeTuple = self._tree.GetFirstChild(self._treeRoot)
+
+        treeDocItem: TreeItemId = treeTuple[0]
+        # Make sure this project has some documents
+        if treeDocItem.IsOk():
+            treeData = self._tree.GetItemData(treeDocItem)
+            self.logger.debug(f'{treeData}')
+            self._tree.SelectItem(treeDocItem)
+
     def __repr__(self):
         projectName: str = PyutUtils.extractFileName(self._filename)
         return f'[Project: {projectName} modified: {self._modified}]'

@@ -35,8 +35,8 @@ class TestUmlFrame(unittest.TestCase):
     @author C.Dutoit
     """
 
-    clsApp:   App = None
-    clsFrame: Frame = None
+    clsApp:   App      = None
+    clsFrame: UmlFrame = None
 
     @classmethod
     def setUpClass(cls):
@@ -46,6 +46,7 @@ class TestUmlFrame(unittest.TestCase):
         cls.clsApp = PyUtApp()
         #  Create frame
         baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
+        # noinspection PyTypeChecker
         umlFrame = UmlFrame(baseFrame, None)
         umlFrame.Show(True)
 
@@ -73,7 +74,7 @@ class TestUmlFrame(unittest.TestCase):
         PyutUtils.setBasePath(whereWeAre)
 
         self.app = TestUmlFrame.clsApp
-        self._umlFrame = TestUmlFrame.clsFrame
+        self._umlFrame: UmlFrame = TestUmlFrame.clsFrame
 
     def tearDown(self):
 
@@ -95,19 +96,19 @@ class TestUmlFrame(unittest.TestCase):
         try:
             pyutClass = self._umlFrame.createNewClass(10, 10)
         except (ValueError, Exception) as e:
-            self.fail(f"Can't create a PyutClass: {e}")
+            self.fail(f"Cannot create a PyutClass: {e}")
 
         # Get the corresponding OglClass
         try:
             oglClass = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutClass][0]  # Too cute; fix
         except (ValueError, Exception):
-            self.fail("Can't get OglClass")
+            self.fail("Cannot get OglClass")
 
         # Testing position
         try:
             x, y = oglClass.GetPosition()
         except (ValueError, Exception):
-            self.fail("Can't get OglClass position")
+            self.fail("Cannot get OglClass position")
         self.assertTrue(x == 10 and y == 10, "Wrong OglClass position !")
 
     def testNoteCreation(self):
@@ -119,19 +120,19 @@ class TestUmlFrame(unittest.TestCase):
         try:
             pyutNote = self._umlFrame.createNewNote(100, 10)
         except (ValueError, Exception):
-            self.fail("Can't create a PyutNote")
+            self.fail("Cannot create a PyutNote")
 
         # Get OglNote
         try:
             oglNote = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutNote][0]  # Too cute; fix
         except (ValueError, Exception):
-            self.fail("Can't get OglNote")
+            self.fail("Cannot get OglNote")
 
         # Testing position
         try:
             x, y = oglNote.GetPosition()
         except (ValueError, Exception):
-            self.fail("Can't get OglNote position")
+            self.fail("Cannot get OglNote position")
         self.assertTrue(x == 100 and y == 10, "Wrong OglNote position !")
 
     def testActorCreation(self):
