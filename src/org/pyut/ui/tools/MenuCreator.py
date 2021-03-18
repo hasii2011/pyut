@@ -37,8 +37,6 @@ from org.pyut.general.Globals import _
 
 class MenuCreator:
 
-    DEBUG_ERROR_VIEWS: bool = True      # TODO Make this a runtime flag
-
     def __init__(self, frame: Frame, lastOpenFilesID):
 
         from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
@@ -248,7 +246,7 @@ class MenuCreator:
 
         mnuEdit = self._initializeAddHierarchySubMenu(mnuEdit)
 
-        if MenuCreator.DEBUG_ERROR_VIEWS is True:
+        if self._prefs.debugErrorViews is True:
             mnuEdit.AppendSeparator()
             # noinspection PyUnusedLocal
             mnuEdit = self._initializeErrorViewSubMenu(mnuEdit)
@@ -412,7 +410,7 @@ class MenuCreator:
 
         containingFrame.Bind(EVT_MENU, editMenuHandler.onSelectAll, id=SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL)
 
-        if MenuCreator.DEBUG_ERROR_VIEWS is True:
+        if self._prefs.debugErrorViews is True:
             from org.pyut.experimental.DebugErrorViews import DebugErrorViews
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView,    id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)

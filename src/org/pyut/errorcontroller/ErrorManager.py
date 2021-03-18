@@ -89,7 +89,7 @@ class ErrorManager(Singleton):
         return errMsg
 
     @staticmethod
-    def addToLogFile(title, msg):
+    def addToLogFile(title: str, msg: str):
 
         import time
         import codecs
@@ -97,7 +97,7 @@ class ErrorManager(Singleton):
         f = codecs.open('errors.log', encoding='utf-8', mode='a')
 
         f.write("---------------------------\n")
-        f.write(str(time.ctime(time.time())))
+        f.write(str(time.ctime(time.time())) + ' ')
 
         errMsg: str = ErrorManager.getErrorInfo()
 

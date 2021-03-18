@@ -310,6 +310,14 @@ class PyutPreferences(Singleton):
         self._debugPrefs.debugBasicShape = theNewValue
 
     @property
+    def pyutIoPluginAutoSelectAll(self) -> bool:
+        return self._debugPrefs.pyutIoPluginAutoSelectAll
+
+    @pyutIoPluginAutoSelectAll.setter
+    def pyutIoPluginAutoSelectAll(self, theNewValue: bool):
+        self._debugPrefs.pyutIoPluginAutoSelectAll = theNewValue
+
+    @property
     def debugDiagramFrame(self) -> bool:
         return self._debugPrefs.debugDiagramFrame
 
@@ -318,12 +326,12 @@ class PyutPreferences(Singleton):
         self._debugPrefs.debugDiagramFrame = theNewValue
 
     @property
-    def pyutIoPluginAutoSelectAll(self) -> bool:
-        return self._debugPrefs.pyutIoPluginAutoSelectAll
+    def debugErrorViews(self):
+        return self._debugPrefs.debugErrorViews
 
-    @pyutIoPluginAutoSelectAll.setter
-    def pyutIoPluginAutoSelectAll(self, theNewValue: bool):
-        self._debugPrefs.pyutIoPluginAutoSelectAll = theNewValue
+    @debugErrorViews.setter
+    def debugErrorViews(self, theNewValue: bool):
+        self._debugPrefs.debugErrorViews = theNewValue
 
     @property
     def backgroundGridEnabled(self) -> bool:
