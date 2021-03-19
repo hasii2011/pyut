@@ -14,6 +14,7 @@ from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
+from org.pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 from org.pyut.preferences.ValuePreferences import ValuePreferences
 
@@ -70,11 +71,12 @@ class PyutPreferences(Singleton):
         self._overrideOnProgramExit: bool         = True
         self._config:                ConfigParser = cast(ConfigParser, None)    # initialized when empty preferences created
 
-        self._preferencesCommon: PreferencesCommon     = PreferencesCommon()
-        self._mainPrefs:         MainPreferences       = MainPreferences()
-        self._diagramPrefs:      BackgroundPreferences = BackgroundPreferences()
-        self._valuePrefs:        ValuePreferences      = ValuePreferences()
-        self._debugPrefs:        DebugPreferences      = DebugPreferences()
+        self._preferencesCommon:  PreferencesCommon        = PreferencesCommon()
+        self._mainPrefs:          MainPreferences          = MainPreferences()
+        self._diagramPrefs:       BackgroundPreferences    = BackgroundPreferences()
+        self._valuePrefs:         ValuePreferences         = ValuePreferences()
+        self._miscellaneousPrefs: MiscellaneousPreferences = MiscellaneousPreferences()
+        self._debugPrefs:         DebugPreferences         = DebugPreferences()
 
         self._createEmptyPreferences()
 
@@ -167,11 +169,11 @@ class PyutPreferences(Singleton):
 
     @property
     def pdfExportFileName(self) -> str:
-        return self._mainPrefs.pdfExportFileName
+        return self._miscellaneousPrefs.pdfExportFileName
 
     @pdfExportFileName.setter
     def pdfExportFileName(self, newValue: str):
-        self._mainPrefs.pdfExportFileName = newValue
+        self._miscellaneousPrefs.pdfExportFileName = newValue
 
     @property
     def showTipsOnStartup(self) -> bool:
@@ -255,11 +257,11 @@ class PyutPreferences(Singleton):
 
     @property
     def i18n(self) -> str:
-        return self._mainPrefs.i18n
+        return self._miscellaneousPrefs.i18n
 
     @i18n.setter
     def i18n(self, theNewValue: str):
-        self._mainPrefs.i18n = theNewValue
+        self._miscellaneousPrefs.i18n = theNewValue
 
     @property
     def currentTip(self) -> int:
@@ -506,6 +508,7 @@ class PyutPreferences(Singleton):
             self.__addOpenedFilesSection()
 
         self._mainPrefs.addAnyMissingMainPreferences()
+        self._miscellaneousPrefs.addAnyMissingPreferences()
         self._diagramPrefs.addMissingDiagramPreferences()
         self._valuePrefs.addMissingPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
@@ -524,8 +527,10 @@ class PyutPreferences(Singleton):
 
         self._config: ConfigParser = ConfigParser()
 
-        self._preferencesCommon.configParser = self._config
-        self._mainPrefs.configParser         = self._config
-        self._diagramPrefs.configParser      = self._config
-        self._valuePrefs.configParser        = self._config
-        self._debugPrefs.configParser        = self._config
+        self._preferencesCommon.configParser  = self._config
+        self._mainPrefs.configParser          = self._config
+        self._miscellaneousPrefs.configParser = self._config
+
+        self._diagramPrefs.configParser       = self._config
+        self._valuePrefs.configParser         = self._config
+        self._debugPrefs.configParser         = self._config

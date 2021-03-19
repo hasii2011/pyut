@@ -13,8 +13,6 @@ from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
 class MainPreferences(BaseSubPreference):
 
-    DEFAULT_PDF_EXPORT_FILE_NAME: str = 'PyutExport'
-
     MAIN_SECTION:    str = 'Main'
 
     USER_DIRECTORY:             str = 'userPath'
@@ -24,14 +22,12 @@ class MainPreferences(BaseSubPreference):
     AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
     SHOW_PARAMETERS:            str = 'Show_Parameters'
     FULL_SCREEN:                str = 'Full_Screen'
-    I18N:                       str = 'I18N'
     CURRENT_TIP:                str = 'Current_Tip'
     EDITOR:                     str = 'Editor'
     STARTUP_DIMENSIONS:         str = 'startup_dimensions'
     STARTUP_POSITION:           str = 'startup_position'
     CENTER_DIAGRAM:             str = 'center_diagram'
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
-    PDF_EXPORT_FILE_NAME:       str = 'default_pdf_export_file_name'
     TOOL_BAR_ICON_SIZE:         str = 'tool_bar_icon_size'
 
     MAIN_PREFERENCES: PREFS_NAME_VALUES = {
@@ -42,14 +38,12 @@ class MainPreferences(BaseSubPreference):
         AUTO_RESIZE_SHAPE_ON_EDIT: 'True',
         SHOW_PARAMETERS:           'False',
         FULL_SCREEN:               'False',
-        I18N:                      'en',       # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
         CURRENT_TIP:               '0',
         EDITOR:                    'brackets',
         STARTUP_DIMENSIONS:        Dimensions(1024, 768).__str__(),
         STARTUP_POSITION:          Position(5, 5).__str__(),
         CENTER_DIAGRAM:            'False',
         CENTER_APP_ON_STARTUP:     'True',
-        PDF_EXPORT_FILE_NAME:      DEFAULT_PDF_EXPORT_FILE_NAME,
         TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value
     }
 
@@ -136,14 +130,14 @@ class MainPreferences(BaseSubPreference):
         self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.FULL_SCREEN, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
-    @property
-    def i18n(self) -> str:
-        return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.I18N)
-
-    @i18n.setter
-    def i18n(self, theNewValue: str):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.I18N, theNewValue)
-        self._preferencesCommon.saveConfig()
+    # @property
+    # def i18n(self) -> str:
+    #     return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.I18N)
+    #
+    # @i18n.setter
+    # def i18n(self, theNewValue: str):
+    #     self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.I18N, theNewValue)
+    #     self._preferencesCommon.saveConfig()
 
     @property
     def currentTip(self) -> int:
@@ -205,14 +199,14 @@ class MainPreferences(BaseSubPreference):
         self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_POSITION, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
-    @property
-    def pdfExportFileName(self) -> str:
-        return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.PDF_EXPORT_FILE_NAME)
-
-    @pdfExportFileName.setter
-    def pdfExportFileName(self, newValue: str):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.PDF_EXPORT_FILE_NAME, newValue)
-        self._preferencesCommon.saveConfig()
+    # @property
+    # def pdfExportFileName(self) -> str:
+    #     return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.PDF_EXPORT_FILE_NAME)
+    #
+    # @pdfExportFileName.setter
+    # def pdfExportFileName(self, newValue: str):
+    #     self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.PDF_EXPORT_FILE_NAME, newValue)
+    #     self._preferencesCommon.saveConfig()
 
     @property
     def toolBarIconSize(self) -> ToolBarIconSize:
