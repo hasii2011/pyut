@@ -14,11 +14,13 @@ class MiscellaneousPreferences(BaseSubPreference):
 
     I18N:                 str = 'I18N'
     PDF_EXPORT_FILE_NAME: str = 'default_pdf_export_file_name'
+    WX_IMAGE_FILENAME:    str = 'wx_image_filename'
 
     MISCELLANEOUS_PREFERENCES: PREFS_NAME_VALUES = {
 
-        I18N: 'en',  # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
+        I18N:                 'en',  # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
         PDF_EXPORT_FILE_NAME: DEFAULT_PDF_EXPORT_FILE_NAME,
+        WX_IMAGE_FILENAME:    'ImageDump'
     }
 
     def init(self, *args, **kwds):
@@ -58,6 +60,15 @@ class MiscellaneousPreferences(BaseSubPreference):
     @pdfExportFileName.setter
     def pdfExportFileName(self, newValue: str):
         self._config.set(MiscellaneousPreferences.MISCELLANEOUS_SECTION, MiscellaneousPreferences.PDF_EXPORT_FILE_NAME, newValue)
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def wxImageFileName(self) -> str:
+        return self._config.get(MiscellaneousPreferences.MISCELLANEOUS_SECTION, MiscellaneousPreferences.WX_IMAGE_FILENAME)
+
+    @wxImageFileName.setter
+    def wxImageFileName(self, newValue: str):
+        self._config.set(MiscellaneousPreferences.MISCELLANEOUS_SECTION, MiscellaneousPreferences.WX_IMAGE_FILENAME, newValue)
         self._preferencesCommon.saveConfig()
 
     def __addMissingPreference(self, preferenceName, value):

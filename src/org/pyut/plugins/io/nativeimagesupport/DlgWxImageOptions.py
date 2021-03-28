@@ -46,6 +46,8 @@ from org.pyut.plugins.io.nativeimagesupport.WxImageFormat import WxImageFormat
 
 from org.pyut.general.Globals import _
 
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 
 class DlgWxImageOptions(BaseDlgEdit):
 
@@ -53,8 +55,6 @@ class DlgWxImageOptions(BaseDlgEdit):
 
     MIN_UML_SHAPE_GAP: int = 0
     MAX_UML_SHAPE_GAP: int = 100
-
-    DEFAULT_IMAGE_FILENAME: str = 'ImageDump'   # TODO make this a preference
 
     def __init__(self, parent):
 
@@ -67,7 +67,7 @@ class DlgWxImageOptions(BaseDlgEdit):
         super().__init__(parent, theTitle='Native Image Generation Options')
 
         self.logger:          Logger        = getLogger(__name__)
-        self._outputFileName: str           = DlgWxImageOptions.DEFAULT_IMAGE_FILENAME
+        self._outputFileName: str           = PyutPreferences().wxImageFileName
         self._imageFormat:    WxImageFormat = WxImageFormat.PNG
 
         fs:   StaticBoxSizer = self.__layoutFileSelection()
@@ -129,7 +129,7 @@ class DlgWxImageOptions(BaseDlgEdit):
 
         dlg: FileDialog = FileDialog(self,
                                      message='Choose the export file name',
-                                     defaultFile=DlgWxImageOptions.DEFAULT_IMAGE_FILENAME,
+                                     defaultFile=self._outputFileName,
                                      style=FD_SAVE | FD_OVERWRITE_PROMPT | FD_CHANGE_DIR
                                      )
         if dlg.ShowModal() == ID_OK:

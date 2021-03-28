@@ -1,17 +1,20 @@
 
+from typing import Tuple
+
 from logging import Logger
 from logging import getLogger
 
 from sys import platform
 
-from wx import ALIGN_CENTER_VERTICAL
 from wx import ALL
 from wx import CB_READONLY
 from wx import CB_SORT
 from wx import EVT_COMBOBOX
-from wx import EVT_TEXT
+from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ID_ANY
+from wx import StaticBox
+from wx import StaticBoxSizer
 from wx import VERTICAL
 from wx import ICON_EXCLAMATION
 from wx import OK
@@ -25,6 +28,8 @@ from wx import TextCtrl
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.dialogs.preferences.widgets.TextContainer import TextContainer
+from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 
 from org.pyut.general.Globals import _
 
@@ -36,8 +41,8 @@ from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
 class MiscellaneousPreferences(PreferencesPanel):
 
-    VERTICAL_GAP:   int = 5
-    HORIZONTAL_GAP: int = 5
+    VERTICAL_GAP:   int = 2
+    HORIZONTAL_GAP: int = 2
 
     clsLogger: Logger = getLogger(__name__)
 
@@ -45,7 +50,7 @@ class MiscellaneousPreferences(PreferencesPanel):
 
         super().__init__(parent=parent)
 
-        [self.__languageID, self.__pdfFilenameID] = PyutUtils.assignID(2)
+        [self.__languageID, self.__pdfFilenameID, self.__wxImageFileNameID] = PyutUtils.assignID(3)
 
         self._createControls()
         self._setControlValues()
@@ -55,61 +60,75 @@ class MiscellaneousPreferences(PreferencesPanel):
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
         mainSizer.Add(self.__createExportToPdfDefaultFileNameContainer(), 0, ALL, MiscellaneousPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__createWxImageFileNameContainer(),            0, ALL, MiscellaneousPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__createLanguageControlContainer(),            0, ALL, MiscellaneousPreferences.VERTICAL_GAP)
 
         self.SetAutoLayout(True)
         self.SetSizer(mainSizer)
 
         self.Bind(EVT_COMBOBOX, self.__OnLanguageChange, id=self.__languageID)
-        self.Bind(EVT_TEXT,     self.__OnFileNameChange, id=self.__pdfFilenameID)
 
     def __createExportToPdfDefaultFileNameContainer(self) -> BoxSizer:
 
-        lblDefaultPdfName:     StaticText = StaticText(self, ID_ANY, _("Default PDF Filename"))
-        self.__txtPdfFilename: TextCtrl   = TextCtrl(self, self.__pdfFilenameID)
+        pdfFileNameContainer: TextContainer = TextContainer(parent=self, labelText=_('PDF Filename'), valueChangedCallback=self.__onPdfFileNameChange)
 
-        szrPdfFilename: BoxSizer = BoxSizer(HORIZONTAL)
+        self._pdfFileNameContainer = pdfFileNameContainer
 
-        szrPdfFilename.Add(lblDefaultPdfName,     0, ALL | ALIGN_CENTER_VERTICAL, MiscellaneousPreferences.HORIZONTAL_GAP)
-        szrPdfFilename.Add(self.__txtPdfFilename, 0, ALL, MiscellaneousPreferences.HORIZONTAL_GAP)
+        return pdfFileNameContainer
 
-        return szrPdfFilename
+    def __createWxImageFileNameContainer(self) -> BoxSizer:
 
-    def __createLanguageControlContainer(self) -> BoxSizer:
+        wxImageFileNameContainer: TextContainer = TextContainer(parent=self, labelText=_('Image Filename'), valueChangedCallback=self.__onWxImageFileNameChange)
+
+        self._wxImageFileNameContainer = wxImageFileNameContainer
+
+        return wxImageFileNameContainer
+
+    def __createLanguageControlContainer(self) -> StaticBoxSizer:
         """
         Creates the language control inside a container
 
         Returns:
             The sizer that contains the language selection control
         """
-
-        # Language
-        self.__lblLanguage: StaticText = StaticText(self, ID_ANY, _("Language"))
         self.clsLogger.info(f'We are running on: {platform}')
-        #
-        # wx.CB_SORT not currently supported by wxOSX/Cocoa (True even as late as wx 4.0.7
-        #
-        if platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
-            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(LANGUAGES.values())],
-                                          style=CB_READONLY)
-        else:
-            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=[el[0] for el in list(LANGUAGES.values())],
-                                          style=CB_READONLY | CB_SORT)
-        szrLanguage: BoxSizer = BoxSizer(HORIZONTAL)
-        szrLanguage.Add(self.__lblLanguage, 0, ALL, MiscellaneousPreferences.HORIZONTAL_GAP)
-        szrLanguage.Add(self.__cmbLanguage, 0, ALL, MiscellaneousPreferences.HORIZONTAL_GAP)
 
-        return szrLanguage
+        choices = [el[0] for el in list(LANGUAGES.values())]
+
+        if platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=choices, style=CB_READONLY | CB_SORT)
+        else:
+            self.__cmbLanguage = ComboBox(self, self.__languageID, choices=choices, style=CB_READONLY | CB_SORT)
+        box:          StaticBox      = StaticBox(self, ID_ANY, _("Language"))
+        szrGridStyle: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
+
+        szrGridStyle.Add(self.__cmbLanguage, WX_SIZER_CHANGEABLE, ALL, MiscellaneousPreferences.HORIZONTAL_GAP)
+
+        return szrGridStyle
+
+    def __createAFileNameContainer(self, fileNameLabelText: str, textCtrlID: int) -> Tuple[BoxSizer, TextCtrl]:
+
+        lblFileName: StaticText = StaticText(self, ID_ANY, fileNameLabelText)
+
+        textCtrl: TextCtrl = TextCtrl(self, textCtrlID)
+
+        szrFilename: BoxSizer = BoxSizer(VERTICAL)
+
+        szrFilename.Add(lblFileName, 1, ALL | EXPAND, MiscellaneousPreferences.VERTICAL_GAP)
+        szrFilename.Add(textCtrl,    1, ALL, MiscellaneousPreferences.VERTICAL_GAP)
+
+        return szrFilename, textCtrl
 
     def _setControlValues(self):
 
-        # n = self._prefs[PyutPreferences.I18N]
         n = self._prefs.i18n
         if n not in LANGUAGES:
             n = DEFAULT_LANG
+
         self.__cmbLanguage.SetValue(LANGUAGES[n][0])
 
-        self.__txtPdfFilename.SetValue(self._prefs.pdfExportFileName)
+        self._pdfFileNameContainer.textValue = self._prefs.pdfExportFileName
+        self._wxImageFileNameContainer.textValue = self._prefs.wxImageFileName
 
     def __OnLanguageChange(self, event: CommandEvent):
 
@@ -127,8 +146,10 @@ class MiscellaneousPreferences(PreferencesPanel):
             dlg.ShowModal()
             dlg.Destroy()
 
-    def __OnFileNameChange(self, event: CommandEvent):
-
-        newValue: str = event.GetString()
+    def __onPdfFileNameChange(self, newValue: str):
 
         self._prefs.pdfExportFileName = newValue
+
+    def __onWxImageFileNameChange(self, newValue: str):
+
+        self._prefs.wxImageFileName = newValue

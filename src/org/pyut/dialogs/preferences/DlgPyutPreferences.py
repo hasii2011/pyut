@@ -105,9 +105,9 @@ class DlgPyutPreferences(Dialog):
 
         book.AddPage(generalPreferences,     text=_('General'),        select=False)
         book.AddPage(positioningPreferences, text=_('Positioning'),    select=False)
-        book.AddPage(miscPanel,              text=_('Miscellaneous'),  select=False)
+        book.AddPage(miscPanel,              text=_('Miscellaneous'),  select=True)
         book.AddPage(backgroundPreferences,  text=_('Diagram'),        select=False)
-        book.AddPage(valuePreferences,       text=_('Default Values'), select=True)
+        book.AddPage(valuePreferences,       text=_('Default Values'), select=False)
 
         self._positioningPreferences: PositioningPreferences = positioningPreferences
         self._valuePreferences:       ValuePreferencesBook   = valuePreferences

@@ -176,6 +176,14 @@ class PyutPreferences(Singleton):
         self._miscellaneousPrefs.pdfExportFileName = newValue
 
     @property
+    def wxImageFileName(self) -> str:
+        return self._miscellaneousPrefs.wxImageFileName
+
+    @wxImageFileName.setter
+    def wxImageFileName(self, newValue: str):
+        self._miscellaneousPrefs.wxImageFileName = newValue
+
+    @property
     def showTipsOnStartup(self) -> bool:
         return self._mainPrefs.showTipsOnStartup
 
