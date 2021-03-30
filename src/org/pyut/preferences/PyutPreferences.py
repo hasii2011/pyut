@@ -18,10 +18,10 @@ from org.pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferenc
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 from org.pyut.preferences.ValuePreferences import ValuePreferences
 
-from org.pyut.preferences.datatypes.Position import Position
-from org.pyut.preferences.datatypes.ToolBarIconSize import ToolBarIconSize
-from org.pyut.preferences.datatypes.Dimensions import Dimensions
-from org.pyut.preferences.datatypes.TextFontEnum import TextFontEnum
+from org.pyut.general.datatypes.Position import Position
+from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
+from org.pyut.general.datatypes.Dimensions import Dimensions
+from org.pyut.general.datatypes.TextFontEnum import TextFontEnum
 
 
 class PyutPreferences(Singleton):

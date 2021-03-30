@@ -21,7 +21,7 @@ from org.pyut.model.PyutObject import PyutObject
 from org.pyut.ogl.OglPosition import OglPosition
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.preferences.datatypes.TextFontEnum import TextFontEnum
+from org.pyut.general.datatypes.TextFontEnum import TextFontEnum
 
 
 class OglInterface2(LollipopLine, Common):

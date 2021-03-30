@@ -16,7 +16,7 @@ from wx import BoxSizer
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.preferences.datatypes.Dimensions import Dimensions
+from org.pyut.general.datatypes.Dimensions import Dimensions
 
 from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 

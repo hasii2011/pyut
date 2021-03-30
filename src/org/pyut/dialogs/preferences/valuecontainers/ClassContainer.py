@@ -10,7 +10,7 @@ from wx import Window
 from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 from org.pyut.ui.widgets.TextContainer import TextContainer
 
-from org.pyut.preferences.datatypes.Dimensions import Dimensions
+from org.pyut.general.datatypes.Dimensions import Dimensions
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.Globals import _

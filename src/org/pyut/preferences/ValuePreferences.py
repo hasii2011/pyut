@@ -6,8 +6,8 @@ from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from org.pyut.preferences.datatypes.TextFontEnum import TextFontEnum
-from org.pyut.preferences.datatypes.Dimensions import Dimensions
+from org.pyut.general.datatypes.TextFontEnum import TextFontEnum
+from org.pyut.general.datatypes.Dimensions import Dimensions
 
 
 class ValuePreferences(BaseSubPreference):

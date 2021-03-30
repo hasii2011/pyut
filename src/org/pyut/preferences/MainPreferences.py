@@ -2,9 +2,11 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.preferences.datatypes.Dimensions import Dimensions
-from org.pyut.preferences.datatypes.Position import Position
-from org.pyut.preferences.datatypes.ToolBarIconSize import ToolBarIconSize
+from org.pyut.general.datatypes.Dimensions import Dimensions
+from org.pyut.general.datatypes.Position import Position
+
+from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
+
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES

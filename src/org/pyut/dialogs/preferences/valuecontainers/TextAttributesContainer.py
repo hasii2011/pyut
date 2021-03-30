@@ -30,8 +30,8 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 
-from org.pyut.preferences.datatypes.TextFontEnum import TextFontEnum
-from org.pyut.preferences.datatypes.Dimensions import Dimensions
+from org.pyut.general.datatypes.TextFontEnum import TextFontEnum
+from org.pyut.general.datatypes.Dimensions import Dimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

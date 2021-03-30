@@ -21,8 +21,8 @@ from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 from org.pyut.ui.widgets.PositionContainer import PositionContainer
 
-from org.pyut.preferences.datatypes.Dimensions import Dimensions
-from org.pyut.preferences.datatypes.Position import Position
+from org.pyut.general.datatypes.Dimensions import Dimensions
+from org.pyut.general.datatypes.Position import Position
 
 from org.pyut.general.Globals import _
 
