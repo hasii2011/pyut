@@ -24,7 +24,7 @@ from wx import Window
 from wx import CheckBox
 from wx import ComboBox
 
-from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
+from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 
 from org.pyut.PyutUtils import PyutUtils
 

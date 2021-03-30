@@ -26,13 +26,15 @@ from wx import MessageDialog
 from wx import StaticText
 from wx import TextCtrl
 
+from org.pyut.ui.widgets.TextContainer import TextContainer
+
 from org.pyut.PyutConstants import PyutConstants
+
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.dialogs.preferences.widgets.TextContainer import TextContainer
+
 from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 
 from org.pyut.general.Globals import _
-
 from org.pyut.general.Lang import LANGUAGES
 from org.pyut.general.Lang import DEFAULT_LANG
 

@@ -7,8 +7,8 @@ from wx import BoxSizer
 from wx import Panel
 from wx import Window
 
-from org.pyut.dialogs.preferences.widgets.DimensionsContainer import DimensionsContainer
-from org.pyut.dialogs.preferences.widgets.TextContainer import TextContainer
+from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
+from org.pyut.ui.widgets.TextContainer import TextContainer
 
 from org.pyut.preferences.datatypes.Dimensions import Dimensions
 from org.pyut.preferences.PyutPreferences import PyutPreferences
