@@ -17,6 +17,7 @@ from wx import BoxSizer
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.datatypes.Dimensions import Dimensions
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 
@@ -41,10 +42,11 @@ class DlgLayoutSize(BaseDlgEdit):
 
         super().__init__(theParent, theTitle='Layout Size')
 
-        self.logger: Logger = getLogger(__name__)
+        self.logger:       Logger          = getLogger(__name__)
+        self._preferences: PyutPreferences = PyutPreferences()
 
-        self._layoutWidth:  int = DlgLayoutSize.DEFAULT_LAYOUT_WIDTH
-        self._layoutHeight: int = DlgLayoutSize.DEFAULT_LAYOUT_HEIGHT
+        self._layoutWidth:  int = self._preferences.orthogonalLayoutSize.width
+        self._layoutHeight: int = self._preferences.orthogonalLayoutSize.height
 
         hs:             Sizer               = self._createDialogButtonsContainer(buttons=OK | CANCEL)
         layoutControls: DimensionsContainer = self.__createLayoutSizeControls()
@@ -76,10 +78,14 @@ class DlgLayoutSize(BaseDlgEdit):
                                                                              maxValue=4096,
                                                                              valueChangedCallback=self.__onSizeChange)
 
-        self._layoutSizeContainer.dimensions = Dimensions(width=DlgLayoutSize.DEFAULT_LAYOUT_WIDTH, height=DlgLayoutSize.DEFAULT_LAYOUT_HEIGHT)
+        layoutWidth:  int = self._preferences.orthogonalLayoutSize.width
+        layoutHeight: int = self._preferences.orthogonalLayoutSize.height
+        self._layoutSizeContainer.dimensions = Dimensions(width=layoutWidth, height=layoutHeight)
         return self._layoutSizeContainer
 
     def __onSizeChange(self, newValue: Dimensions):
 
         self._layoutWidth  = newValue.width
         self._layoutHeight = newValue.height
+
+        self._preferences.orthogonalLayoutSize = newValue

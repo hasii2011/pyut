@@ -1,6 +1,7 @@
 from logging import Logger
 from logging import getLogger
 
+from org.pyut.general.datatypes.Dimensions import Dimensions
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
@@ -12,15 +13,17 @@ class MiscellaneousPreferences(BaseSubPreference):
 
     DEFAULT_PDF_EXPORT_FILE_NAME: str = 'PyutExport'
 
-    I18N:                 str = 'I18N'
-    PDF_EXPORT_FILE_NAME: str = 'default_pdf_export_file_name'
-    WX_IMAGE_FILENAME:    str = 'wx_image_filename'
+    I18N:                   str = 'I18N'
+    PDF_EXPORT_FILE_NAME:   str = 'default_pdf_export_file_name'
+    WX_IMAGE_FILENAME:      str = 'wx_image_filename'
+    ORTHOGONAL_LAYOUT_SIZE: str = 'orthogonal_layout_size'
 
     MISCELLANEOUS_PREFERENCES: PREFS_NAME_VALUES = {
 
-        I18N:                 'en',  # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
-        PDF_EXPORT_FILE_NAME: DEFAULT_PDF_EXPORT_FILE_NAME,
-        WX_IMAGE_FILENAME:    'ImageDump'
+        I18N:                   'en',  # TODO: I think this should be 'English' if I look at the preferences dialog `Close` code
+        PDF_EXPORT_FILE_NAME:   DEFAULT_PDF_EXPORT_FILE_NAME,
+        WX_IMAGE_FILENAME:      'ImageDump',
+        ORTHOGONAL_LAYOUT_SIZE: Dimensions(1000, 1000).__str__(),
     }
 
     def init(self, *args, **kwds):
@@ -69,6 +72,17 @@ class MiscellaneousPreferences(BaseSubPreference):
     @wxImageFileName.setter
     def wxImageFileName(self, newValue: str):
         self._config.set(MiscellaneousPreferences.MISCELLANEOUS_SECTION, MiscellaneousPreferences.WX_IMAGE_FILENAME, newValue)
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def orthogonalLayoutSize(self) -> Dimensions:
+
+        serializedDimensions: str = self._config.get(MiscellaneousPreferences.MISCELLANEOUS_SECTION, MiscellaneousPreferences.ORTHOGONAL_LAYOUT_SIZE)
+        return Dimensions.deSerialize(serializedDimensions)
+
+    @orthogonalLayoutSize.setter
+    def orthogonalLayoutSize(self, newValue: Dimensions):
+        self._config.set(MiscellaneousPreferences.MISCELLANEOUS_SECTION, MiscellaneousPreferences.ORTHOGONAL_LAYOUT_SIZE, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
     def __addMissingPreference(self, preferenceName, value):

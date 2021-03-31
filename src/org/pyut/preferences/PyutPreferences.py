@@ -184,6 +184,14 @@ class PyutPreferences(Singleton):
         self._miscellaneousPrefs.wxImageFileName = newValue
 
     @property
+    def orthogonalLayoutSize(self) -> Dimensions:
+        return self._miscellaneousPrefs.orthogonalLayoutSize
+
+    @orthogonalLayoutSize.setter
+    def orthogonalLayoutSize(self, newValue: Dimensions):
+        self._miscellaneousPrefs.orthogonalLayoutSize = newValue
+
+    @property
     def showTipsOnStartup(self) -> bool:
         return self._mainPrefs.showTipsOnStartup
 
