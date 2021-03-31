@@ -34,6 +34,7 @@ install:
   - python3 --version
   - pip3 install antlr4-python3-runtime
   - pip3 install fpdf2
+  - pip3 install PyGithub
   - pip3 install html-testRunner
   - pip3 install networkx
   - pip3 install orthogonal
