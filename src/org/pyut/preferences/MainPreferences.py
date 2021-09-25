@@ -132,15 +132,6 @@ class MainPreferences(BaseSubPreference):
         self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.FULL_SCREEN, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
-    # @property
-    # def i18n(self) -> str:
-    #     return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.I18N)
-    #
-    # @i18n.setter
-    # def i18n(self, theNewValue: str):
-    #     self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.I18N, theNewValue)
-    #     self._preferencesCommon.saveConfig()
-
     @property
     def currentTip(self) -> int:
         return self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.CURRENT_TIP)

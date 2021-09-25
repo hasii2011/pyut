@@ -18,13 +18,15 @@ class GithubAdapter:
     OPEN_MILESTONE_INDICATOR: str = 'Open'
     OPEN_ISSUE_INDICATOR:     str = 'open'
 
-    PYUT_REPOSITORY_SLUG:           str = 'hasii2011/PyUt'
-    MY_LIST: List[str] = ['1', '2', '2', '0', '9', '7', 'a',
-                          'b', '9', 'f', 'b', '3', '5', '4',
-                          'b', '8', '8', 'e', 'b', '8', '4',
-                          '9', '7', '0', 'f', '6', '9', '2',
-                          '9', 'a', 'e', '4', '0', '4', '0',
-                          '9', '9', 'e', 'd', '5']
+    PYUT_REPOSITORY_SLUG:   str       = 'hasii2011/PyUt'
+    MY_LIST:                List[str] = ['g', 'h', 'p', '_', 'B',
+                                         'i', 'M', 'm', 'Z', 'N',
+                                         's', '1', 'U', 'A', 'o',
+                                         's', 'o', 'V', '6', 'a',
+                                         'c', 'r', 'U', '1', 'o',
+                                         'B', 'H', 'e', 'x', 'I',
+                                         'r', 'S', 'x', 'H', '2',
+                                         '8', 'K', 'z', 'Z', 'W']
 
     def __init__(self):
 
