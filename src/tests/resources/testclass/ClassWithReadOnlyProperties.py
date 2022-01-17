@@ -1,7 +1,7 @@
 
 class ClassWithProperties:
     """
-    Test both using .getter and .setter
+    Test with a read-only property
     """
 
     def __init__(self,):
@@ -11,10 +11,6 @@ class ClassWithProperties:
     @property
     def fontSize(self) -> int:
         return self._fontSize
-
-    @fontSize.setter
-    def fontSize(self, newSize: int):
-        self._fontSize = newSize
 
     @property
     def verticalGap(self, newValue):

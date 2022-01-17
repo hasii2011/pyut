@@ -128,38 +128,58 @@ class ReverseEngineerPython2:
                 pyutMethod.sourceCode = self.visitor.methodCode[methodName]
 
                 pyutClass.addMethod(pyutMethod)
+
             setterProperties: PyutPythonVisitor.Parameters = self.visitor.setterProperties
             getterProperties: PyutPythonVisitor.Parameters = self.visitor.getterProperties
-            for propName in self.visitor.propertyNames:
 
-                setterParams: List[str] = setterProperties[propName]
-                getterParams: List[str] = getterProperties[propName]
-                self.logger.info(f'Processing - {propName=} {setterParams=} {getterParams=}')
-                setter, getter = self._createProperties(propName=propName, setterParams=setterParams)
-                pyutClass.addMethod(setter)
-                pyutClass.addMethod(getter)
+            pyutClass = self._generatePropertiesAsMethods(pyutClass, getterProperties, setterProperties)
 
             if className in self.visitor.dataClassNames:
                 self._createDataClassPropertiesAsFields(pyutClass, self.visitor.dataClassProperties)
+
             self._pyutClasses[className] = pyutClass
         self.logger.info(f'Generated {len(self._pyutClasses)} classes')
 
+    def _generatePropertiesAsMethods(self, pyutClass: PyutClass, getterProperties, setterProperties) -> PyutClass:
+
+        for propName in self.visitor.propertyNames:
+            # Might be a read-only property
+            try:
+                setterParams: List[str] = setterProperties[propName]
+            except KeyError:
+                setterParams = []
+
+            getterParams: List[str] = getterProperties[propName]
+            self.logger.info(f'Processing - {propName=} {setterParams=} {getterParams=}')
+            setter, getter = self._createProperties(propName=propName, setterParams=setterParams)
+            if setter is not None:
+                setter.isProperty = True
+                pyutClass.addMethod(setter)
+            getter.isProperty = True
+            pyutClass.addMethod(getter)
+
+        return pyutClass
+
     def _createProperties(self, propName: str, setterParams: List[str]) -> Tuple[PyutMethod, PyutMethod]:
 
-        setter: PyutMethod = PyutMethod(name=propName, visibility=PyutVisibilityEnum.PUBLIC)
         getter: PyutMethod = PyutMethod(name=propName, visibility=PyutVisibilityEnum.PUBLIC)
-
-        nameType:          str       = setterParams[0]
-        potentialNameType: List[str] = nameType.split(':')
-
-        if len(potentialNameType) == 2:
-
-            param: PyutParam = PyutParam(name=potentialNameType[0], theParameterType=PyutType(value=potentialNameType[1]))
-            setter.addParam(param)
-            getter.returnType = PyutType(value=potentialNameType[1])
+        if len(setterParams) == 0:
+            setter: PyutMethod = cast(PyutMethod, None)
         else:
-            param: PyutParam = PyutParam(name=potentialNameType[0])
-            setter.addParam(param)
+            setter: PyutMethod = PyutMethod(name=propName, visibility=PyutVisibilityEnum.PUBLIC)
+
+        if setter is not None:
+            nameType: str = setterParams[0]
+            potentialNameType: List[str] = nameType.split(':')
+
+            if len(potentialNameType) == 2:
+
+                param: PyutParam = PyutParam(name=potentialNameType[0], theParameterType=PyutType(value=potentialNameType[1]))
+                setter.addParam(param)
+                getter.returnType = PyutType(value=potentialNameType[1])
+            else:
+                param: PyutParam = PyutParam(name=potentialNameType[0])
+                setter.addParam(param)
 
         return setter, getter
 
@@ -271,7 +291,7 @@ class ReverseEngineerPython2:
         """
         oglClasses: List[OglClass] = list(self._oglClasses.values())
         # Sort by descending height
-        sortedOglClasses = sorted(oglClasses, key=lambda oglClassToSort: oglClassToSort._height, reverse=True)
+        sortedOglClasses = sorted(oglClasses, key=lambda oglClassToSort: oglClassToSort.GetHeight, reverse=True)
 
         x: int = 20
         y: int = 20

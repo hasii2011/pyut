@@ -68,10 +68,7 @@ class PyutMethod(PyutObject):
         self._params:  PyutMethod.PyutParameters = []
         self._returns: PyutType                  = returns
 
-        # if prefs.showParameters is True:
-        #     PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
-        # else:
-        #     PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+        self._isProperty: bool = False
 
         if prefs.showParameters is True:
             PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
@@ -159,6 +156,14 @@ class PyutMethod(PyutObject):
         @return PyutVisibility
         """
         return self._visibility
+
+    @property
+    def isProperty(self) -> bool:
+        return self._isProperty
+
+    @isProperty.setter
+    def isProperty(self, newValue: bool):
+        self._isProperty = newValue
 
     def setVisibility(self, visibility: PyutVisibilityEnum):
         """

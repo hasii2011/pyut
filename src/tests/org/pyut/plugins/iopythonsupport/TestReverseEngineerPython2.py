@@ -1,3 +1,5 @@
+from typing import Dict
+from typing import List
 
 from logging import Logger
 from logging import getLogger
@@ -5,8 +7,13 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from unittest.mock import Mock
+from unittest.mock import PropertyMock
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
+from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
+from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -19,6 +26,8 @@ from tests.TestBase import TestBase
 class TestReverseEngineerPython2(TestBase):
     """
     """
+    PROPERTY_NAMES: List[str] = ['fontSize', 'verticalGap']
+
     clsLogger: Logger = None
 
     @classmethod
@@ -93,6 +102,102 @@ class TestReverseEngineerPython2(TestBase):
         pyutClass: PyutClass = PyutClass(name='DataTestClass')
 
         self.reverseEngineer._createDataClassPropertiesAsFields(pyutClass=pyutClass, dataClassProperties=sampleDataClassProperties)
+
+    def testCreatePropertiesNormal(self):
+
+        PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
+
+        propName:     str       = 'fontSize'
+        setterParams: List[str] = ['newSize:int']
+
+        setter, getter = self.reverseEngineer._createProperties(propName=propName, setterParams=setterParams)
+        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+
+        self.logger.info(f'setter={setter.__str__()} getter={getter.__str__()}')
+
+        self.assertEqual('+fontSize(newSize: int): ', setter.getString(), 'Incorrect setter generated')
+        self.assertEqual('+fontSize(): int', getter.getString(), 'Incorrect getter generated')
+
+    def testCreatePropertiesReadOnly(self):
+
+        propName:      str = 'fontSize'
+        setterParams: List[str] = []
+
+        setter, getter = self.reverseEngineer._createProperties(propName=propName, setterParams=setterParams)
+        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+
+        self.assertIsNone(setter)
+        self.assertIsNotNone(getter)
+
+    def testGeneratePropertiesAsMethodsNormaCorrectCount(self):
+
+        pyutClass: PyutClass = self._generateNormalMethods()
+
+        pyutMethods:         List[PyutMethod] = pyutClass.methods
+        expectedMethodCount: int = 4
+        actualMethodCount:   int = len(pyutMethods)
+
+        self.assertEqual(expectedMethodCount, actualMethodCount, 'Generated incorrect # of methods')
+
+    def testGeneratePropertiesAsMethodsNormalDesignatedAsProperties(self):
+
+        pyutClass: PyutClass = self._generateNormalMethods()
+
+        pyutMethods: List[PyutMethod] = pyutClass.methods
+        for pyutMethod in pyutMethods:
+            self.assertTrue(pyutMethod.isProperty, 'Not correctly identified')
+
+    def testGeneratePropertiesAsMethodsReadOnlyPropertiesCorrectCount(self):
+
+        pyutClass: PyutClass = self._generateReadOnlyMethods()
+
+        pyutMethods:         List[PyutMethod] = pyutClass.methods
+        expectedMethodCount: int              = 3
+        actualMethodCount:   int              = len(pyutMethods)
+
+        self.assertEqual(expectedMethodCount, actualMethodCount, 'Generated incorrect # of methods')
+
+    def testGeneratePropertiesAsMethodsReadOnlyPropertiesCorrectPyutMethods(self):
+
+        pyutClass:   PyutClass = self._generateReadOnlyMethods()
+        pyutMethods: List[PyutMethod] = pyutClass.methods
+
+        for pyutMethod in  pyutMethods:
+            generatedMethodName: str = pyutMethod.name
+            self.assertIn(member=generatedMethodName, container=TestReverseEngineerPython2.PROPERTY_NAMES)
+
+    def _generateReadOnlyMethods(self):
+        # Note the missing setter for fontSize
+        getterProperties: Dict[str, List] = {'fontSize': [''], 'verticalGap': ['']}
+        setterProperties: Dict[str, List] = {'verticalGap': ['newValue']}
+        pyutClass:        PyutClass       = PyutClass(name='NormalPropertiesClass')
+
+        self.__setMockVisitorPropertyNames()
+
+        pyutClass = self.reverseEngineer._generatePropertiesAsMethods(pyutClass=pyutClass,
+                                                                      getterProperties=getterProperties,
+                                                                      setterProperties=setterProperties
+                                                                      )
+        return pyutClass
+
+    def _generateNormalMethods(self):
+
+        getterProperties: Dict[str, List] = {'fontSize': [''], 'verticalGap': ['']}
+        setterProperties: Dict[str, List] = {'fontSize': ['newSize:int'], 'verticalGap': ['newValue']}
+
+        pyutClass:   PyutClass = PyutClass(name='NormalPropertiesClass')
+        self.__setMockVisitorPropertyNames()
+
+        pyutClass = self.reverseEngineer._generatePropertiesAsMethods(pyutClass=pyutClass,
+                                                                      getterProperties=getterProperties,
+                                                                      setterProperties=setterProperties
+                                                                      )
+        return pyutClass
+
+    def __setMockVisitorPropertyNames(self):
+        mockVisitor: Mock = Mock(spec=PyutPythonVisitor)
+        type(mockVisitor).propertyNames = PropertyMock(return_value=TestReverseEngineerPython2.PROPERTY_NAMES)
+        self.reverseEngineer.visitor = mockVisitor
 
 
 def suite() -> TestSuite:
