@@ -291,7 +291,8 @@ class ReverseEngineerPython2:
         """
         oglClasses: List[OglClass] = list(self._oglClasses.values())
         # Sort by descending height
-        sortedOglClasses = sorted(oglClasses, key=lambda oglClassToSort: oglClassToSort.GetHeight, reverse=True)
+        # noinspection PyProtectedMember
+        sortedOglClasses = sorted(oglClasses, key=lambda oglClassToSort: oglClassToSort._height, reverse=True)
 
         x: int = 20
         y: int = 20

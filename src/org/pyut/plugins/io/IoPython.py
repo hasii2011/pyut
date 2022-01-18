@@ -34,6 +34,7 @@ from org.pyut.plugins.iopythonsupport.ReverseEngineerPython2 import ReverseEngin
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -123,7 +124,7 @@ class IoPython(PyutIoPlugin):
         for oglClass in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
 
             oglClass:  OglClass  = cast(OglClass, oglClass)
-            pyutClass: PyutClass = oglClass.getPyutObject()
+            pyutClass: PyutClass = cast(PyutClass, oglClass.getPyutObject())
 
             generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
             generatedClassCode: List[str] = [generatedStanza]
@@ -147,7 +148,7 @@ class IoPython(PyutIoPlugin):
                         self.logger.warning(f'{e}')
 
             generatedClassCode.append("\n\n")
-            # Save to classes dictionary
+            # Save into classes dictionary
             classes[pyutClass.getName()] = generatedClassCode
 
         # Write class code to a file
