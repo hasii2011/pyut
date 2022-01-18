@@ -102,7 +102,7 @@ class DlgAbout(Dialog):
         self._panel: Panel = Panel(self, ID_ANY, size=(FrameWidth, FrameHeight))
 
         self._picture: StaticBitmap = StaticBitmap(self, ID_ANY, ImgPyut.embeddedImage.GetBitmap())
-        summaryText:   str = "2021 The PyUt team and Humberto Sanchez II.\nPublished under the GNU General Public License"
+        summaryText:   str = "2022 Humberto Sanchez II and the PyUt team.\nPublished under the GNU General Public License"
         self._label:   StaticText   = StaticText(self, ID_ANY, summaryText, style=CAPTION)
 
         # Main sizer

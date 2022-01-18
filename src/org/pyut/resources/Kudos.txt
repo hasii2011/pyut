@@ -15,6 +15,11 @@
 The Python 3 port Github URL is:
         https://github.com/hasii2011/PyUt/
 
+  Pyut 6.5.2 Mac OS X Release
+  ====================
+    - Minor update to fix read-only properties in Python
+    reverse engineering plugin
+
   Pyut 6.5.1 Mac OS X Release
   ====================
   Humberto A. Sanchez II, Consultant, Python Enthusiast

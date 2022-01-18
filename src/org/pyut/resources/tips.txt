@@ -1,4 +1,4 @@
-Welcome in PyUt 6.x ! You will find news in this dialog.  You can activate/deactivate the startup tip display via the PyUt preferences dialog
+Welcome to PyUt 6.x ! You will find news in this dialog.  You can activate/deactivate the startup tip display via the PyUt preferences dialog
 Remember, if you do not submit bugs at https://github.com/hasii2011/PyUt/issues, we can not correct them. You can also submit feature requests.
 Left-Click on a line to add or remove bends
 You can split lines in multi-lines. Select a Line end and press <ins> or <Insert>
