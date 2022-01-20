@@ -112,11 +112,8 @@ class PyutPreferences(Singleton):
 
     def getLastOpenedFilesList(self):
         """
-        Return the list of files"
 
-        @return list Last Opened files list
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Returns:          Return the list of files
         """
         lstFiles = []
 
@@ -155,7 +152,7 @@ class PyutPreferences(Singleton):
         """
         Some values like the final application position and size are automatically computed and set
         when the application exits.  However, these can also be set by the end-user via
-        the preferences dialog.  It is up to Pyut to check the value of this flag to
+        the preferences' dialog.  It is up to Pyut to check the value of this flag to
         determine if the end-user has manually set these
 
         Returns: `True` if the application can use the computed values;  Else return `False` as the
