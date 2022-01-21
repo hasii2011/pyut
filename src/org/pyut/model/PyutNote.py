@@ -3,7 +3,8 @@ from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
-class PyutNote(PyutLinkedObject):
+class \
+        PyutNote(PyutLinkedObject):
     """
     A data model representation of a UML note.
 
@@ -23,7 +24,7 @@ class PyutNote(PyutLinkedObject):
         if theNoteText is None or theNoteText == '':
             self._content = PyutPreferences().noteText
         else:
-            self._content: str = theNoteText
+            self._content = theNoteText
 
     @property
     def content(self) -> str:

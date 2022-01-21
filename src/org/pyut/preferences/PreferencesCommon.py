@@ -4,6 +4,7 @@ from typing import Dict
 import sys
 
 import os
+from typing import cast
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
@@ -16,7 +17,7 @@ class PreferencesCommon(BaseSubPreference):
 
     PREFERENCES_FILENAME: str = 'PyutPrefs.dat'
 
-    preferencesFileLocationAndName: str = None
+    preferencesFileLocationAndName: str = cast(str, None)
 
     def init(self, *args, **kwds):
 

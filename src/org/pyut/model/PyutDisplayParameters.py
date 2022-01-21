@@ -22,8 +22,9 @@ class PyutDisplayParameters(Enum):
     @staticmethod
     def values() -> List[str]:
         retList: List[str] = []
-        for val in PyutDisplayParameters:
-            val:    PyutDisplayParameters = cast(PyutDisplayParameters, val)
+        for pdp in PyutDisplayParameters:
+
+            val:    PyutDisplayParameters = cast(PyutDisplayParameters, pdp)
             retList.append(val.__str__())
         return retList
 

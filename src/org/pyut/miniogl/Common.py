@@ -83,12 +83,12 @@ class Common:
         if diffX > 0:
             w: int = max(4, int(diffX - 8))
         else:
-            w: int = min(-4, int(diffX + 8))
+            w = min(-4, int(diffX + 8))
 
         if diffY > 0:
             h: int = max(4, int(diffY - 8))
         else:
-            h: int = min(-4, int(diffY + 8))
+            h = min(-4, int(diffY + 8))
 
         topLeftX: float = ma - w / 2
         topLeftY: float = mb - h / 2

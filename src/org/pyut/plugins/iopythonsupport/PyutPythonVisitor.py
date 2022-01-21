@@ -1,6 +1,7 @@
 
 from typing import Dict
 from typing import List
+from typing import NewType
 from typing import Tuple
 from typing import cast
 
@@ -26,15 +27,15 @@ class PyutPythonVisitor(Python3Visitor):
 
     PYTHON_EQUALITY_TOKEN: str = '='
 
-    MethodName          = str
-    PropertyName        = str
-    ClassName           = str
+    MethodName          = NewType('MethodName', str)
+    PropertyName        = NewType('PropertyName', str)
+    ClassName           = NewType('ClassName', str)
     ParentName          = str
     ChildName           = str
-    MultiParameterNames = str                # comma separated parameter names
-    Field               = str
-    ExpressionText      = str
-    DataClassProperty   = Tuple[ClassName, ExpressionText]
+    MultiParameterNames = NewType('MultiParameterNames', str)                # comma separated parameter names
+    Field               = NewType('Field', str)
+    ExpressionText      = NewType('ExpressionText', str)
+    DataClassProperty   = NewType('DataClassProperty', Tuple[ClassName, ExpressionText])
 
     MethodCode     = List[str]
     ClassNames     = List[ClassName]

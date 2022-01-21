@@ -24,8 +24,8 @@ from org.pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
 
 from org.pyut.ui.UmlFrame import UmlObjects
 
-UmlClassType       = NewType('UmlClassType', Union[PyutClass, OglClass])
-CreatedClassesType = NewType('CreatedClassTypes', Tuple[UmlClassType])
+UmlClassType       = NewType('UmlClassType', Union[PyutClass, OglClass])     # type: ignore
+CreatedClassesType = NewType('CreatedClassesType', Tuple[UmlClassType])
 
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):

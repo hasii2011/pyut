@@ -143,9 +143,9 @@ class CreateOglInterfaceCommand(OglShapeCommand):
     def _removeUnneededAnchorPoints(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
         attachmentPoint: AttachmentPoint = attachmentAnchor.attachmentPoint
-        for anchor in implementor.GetAnchors():
-            if isinstance(anchor, SelectAnchorPoint):
-                anchor: SelectAnchorPoint = cast(SelectAnchorPoint, anchor)
+        for iAnchor in implementor.GetAnchors():
+            if isinstance(iAnchor, SelectAnchorPoint):
+                anchor: SelectAnchorPoint = cast(SelectAnchorPoint, iAnchor)
                 if anchor.attachmentPoint != attachmentPoint:
                     anchor.SetProtected(False)
                     anchor.Detach()

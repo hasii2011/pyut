@@ -419,7 +419,7 @@ class OglClass(OglObject):
             self.SetSelected(True)
             ctrl.cutSelectedShapes()
         elif eventId == MENU_IMPLEMENT_INTERFACE:
-            ctrl: Mediator = Mediator()
+            ctrl = Mediator()
             ctrl.requestLollipopLocation(self)
         else:
             event.Skip()

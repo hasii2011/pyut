@@ -35,8 +35,8 @@ class LineSplitter:
             words:     List[str] = line.split()
             lineWidth: int       = 0
             newLine:   str       = ""
-            for word in words:
-                word: str = f'{word} '
+            for wordX in words:
+                word: str = f'{wordX} '
 
                 extentSize: Tuple[int, int] = dc.GetTextExtent(word)        # width, height
                 wordWidth:  int             = extentSize[0]

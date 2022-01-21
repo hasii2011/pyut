@@ -48,7 +48,7 @@ class Shape:
         self._moving = False        # is this shape moving now ?
         self._diagram = None        # associated diagram
         self._protected = False     # to protect against deletion
-        self._children = []         # children shapes
+        self._children = []         # child shapes
         self._privateChildren = []  # private children, not saved
 
         self._pen:   Pen   = BLACK_PEN    # pen to use

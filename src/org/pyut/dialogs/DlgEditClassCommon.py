@@ -74,7 +74,7 @@ class DlgEditClassCommon(Dialog):
         if editInterface is True:
             lbl: str = _('Interface Name')
         else:
-            lbl: str = _('Class Name')
+            lbl = _('Class Name')
 
         lblName:       StaticText = StaticText (self, ID_ANY, lbl)
         self._txtName: TextCtrl   = TextCtrl(self, ID_TEXT_NAME, "", size=(125, -1))
@@ -332,7 +332,7 @@ class DlgEditClassCommon(Dialog):
         if self._editInterface is True:
             editInterface: bool = True
         else:
-            editInterface: bool = False
+            editInterface = False
         self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=methodToEdit, theMediator=self._mediator, editInterface=editInterface)
         return self._dlgMethod.ShowModal()
 

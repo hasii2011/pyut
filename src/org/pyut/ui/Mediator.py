@@ -186,7 +186,7 @@ MESSAGES = {
 # Define current use mode
 [SCRIPT_MODE, NORMAL_MODE] = PyutUtils.assignID(2)
 
-BadPracticeType = NewType("BadPracticeType", Union[PyutClass, "OglClass"])
+BadPracticeType = NewType("BadPracticeType", Union[PyutClass, "OglClass"])  # type: ignore
 
 
 class Mediator(Singleton):

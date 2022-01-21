@@ -24,6 +24,7 @@ from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
 from org.pyut.ogl.OglPosition import OglPosition
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.model.PyutLink import PyutLink
@@ -201,7 +202,8 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         Sets the associated PyutLink.
 
-        @param PyutLink pyutLink : link to associate
+        Args:
+            pyutLink: link to associate
         """
         self._link = pyutLink
 
@@ -264,7 +266,7 @@ class OglLink(LineShape, ShapeEventHandler):
     # noinspection PyUnusedLocal
     def OnRightDown(self, event: MouseEvent):
         """
-        Handle right clicks on our UML LineShape-  Override base handler;  It does nothing
+        Handle right-clicks on our UML LineShape-  Override base handler;  It does nothing
 
         Args:
             event:

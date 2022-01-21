@@ -16,6 +16,7 @@ from org.pyut.miniogl.TextShape import TextShape
 
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -25,7 +26,7 @@ class OglInstanceName(TextShape, ShapeEventHandler):
     """
     TextShape that supports text editing
     """
-    def __init__(self, pyutObject: PyutSDInstance, x: float, y: float, text: str, parent=None):
+    def __init__(self, pyutObject: PyutSDInstance, x: int, y: int, text: str, parent=None):
         """
         """
         self._pyutObject = pyutObject

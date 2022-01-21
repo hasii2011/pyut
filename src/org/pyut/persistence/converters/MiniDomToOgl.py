@@ -12,7 +12,6 @@ from xml.dom.minidom import Element
 from xml.dom.minidom import NodeList
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.miniogl.TextShape import TextShape
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
@@ -141,9 +140,9 @@ class MiniDomToOgl:
         """
         oglLinks: OglLinks = cast(OglLinks, [])
 
-        for xmlLink in xmlOglLinks:
+        for xmlOglLink in xmlOglLinks:
             # src and dst anchor position
-            xmlLink: Element = cast(Element, xmlLink)
+            xmlLink: Element = cast(Element, xmlOglLink)
 
             sx = PyutUtils.secureFloat(xmlLink.getAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_X))
             sy = PyutUtils.secureFloat(xmlLink.getAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_Y))

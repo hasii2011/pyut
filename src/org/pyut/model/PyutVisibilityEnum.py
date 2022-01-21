@@ -20,8 +20,8 @@ class PyutVisibilityEnum(Enum):
     @staticmethod
     def values() -> List[str]:
         retList: List[str] = []
-        for val in PyutVisibilityEnum:
-            val:    PyutVisibilityEnum = cast(PyutVisibilityEnum, val)
+        for valEnum in PyutVisibilityEnum:
+            val:    PyutVisibilityEnum = cast(PyutVisibilityEnum, valEnum)
             retList.append(val.__str__())
         return retList
 
