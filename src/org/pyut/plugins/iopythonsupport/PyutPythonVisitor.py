@@ -103,7 +103,7 @@ class PyutPythonVisitor(Python3Visitor):
         # Take care of data classes
         #
         if funcDef is not None:
-            propName:  str = funcDef.getChild(1).getText()
+            propName:  PropertyName = funcDef.getChild(1).getText()
             propCode:  str = ctx.getChild(1).getText()
             if self.__isPropertyDecorator(nameToCheck=decorator) is True:
                 self.logger.info(f'visitDecorated - {decorator=} {propName=} {propCode=}')
@@ -142,11 +142,11 @@ class PyutPythonVisitor(Python3Visitor):
                 if parameterNames == PyutPythonVisitor.PYTHON_SELF:
                     self.getterProperties[methodName] = ['']
                 else:
-                    strippedParameterNames: MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
+                    strippedParameterNames: MultiParameterNames = MultiParameterNames(parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, ""))
                     self.setterProperties[methodName] = [strippedParameterNames]
             else:
                 if parameterNames != PyutPythonVisitor.PYTHON_SELF:
-                    strippedParameterNames: MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
+                    strippedParameterNames: MultiParameterNames = MultiParameterNames(parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, ""))
                     if strippedParameterNames not in self.parameters:
                         self.parameters[methodName] = [strippedParameterNames]
                     else:
@@ -163,7 +163,7 @@ class PyutPythonVisitor(Python3Visitor):
             areWeAnAssignment: bool = self.__isThisAFieldAssignment(exprText)
             if areWeInInitMethod is True and areWeAnAssignment is True:
                 self.logger.debug(f'Field expression: {exprText}')
-                self.fields.append(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, ''))
+                self.fields.append(Field(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, '')))
         else:
             isDataClass, dataClassName = self.__isThisADataClassProperty(ctx)
             if isDataClass is True:
