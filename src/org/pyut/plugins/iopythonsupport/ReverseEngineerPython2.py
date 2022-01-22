@@ -30,6 +30,11 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.iopythonsupport.PythonParseException import PythonParseException
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import Children
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import DataClassProperties
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import MethodName
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import Parameters
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import Parents
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import PyutPythonVisitor
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Lexer import Python3Lexer
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Parser import Python3Parser
@@ -71,7 +76,7 @@ class ReverseEngineerPython2:
         dlg.SetRange(fileCount)
         currentFileCount: int = 0
 
-        onGoingParents: PyutPythonVisitor.Parents = {}
+        onGoingParents: Parents = {}
         for fileName in files:
 
             try:
@@ -129,8 +134,8 @@ class ReverseEngineerPython2:
 
                 pyutClass.addMethod(pyutMethod)
 
-            setterProperties: PyutPythonVisitor.Parameters = self.visitor.setterProperties
-            getterProperties: PyutPythonVisitor.Parameters = self.visitor.getterProperties
+            setterProperties: Parameters = self.visitor.setterProperties
+            getterProperties: Parameters = self.visitor.getterProperties
 
             pyutClass = self._generatePropertiesAsMethods(pyutClass, getterProperties, setterProperties)
 
@@ -183,7 +188,7 @@ class ReverseEngineerPython2:
 
         return setter, getter
 
-    def _createDataClassPropertiesAsFields(self, pyutClass: PyutClass, dataClassProperties: PyutPythonVisitor.DataClassProperties) -> PyutClass:
+    def _createDataClassPropertiesAsFields(self, pyutClass: PyutClass, dataClassProperties: DataClassProperties) -> PyutClass:
         """
 
         Args:
@@ -204,9 +209,9 @@ class ReverseEngineerPython2:
 
     def _addParameters(self, pyutMethod: PyutMethod) -> PyutMethod:
 
-        methodName: str = pyutMethod.name
+        methodName: MethodName = MethodName(pyutMethod.name)
         if methodName in self.visitor.parameters:
-            parameters: PyutPythonVisitor.Parameters = self.visitor.parameters[methodName]
+            parameters: Parameters = self.visitor.parameters[methodName]
             for parameter in parameters:
                 self.logger.debug(f'parameter: {parameter}')
                 paramNameType = parameter.split(':')
@@ -255,10 +260,10 @@ class ReverseEngineerPython2:
 
     def _generateInheritanceLinks(self, umlFrame: UmlClassDiagramsFrame):
 
-        parents: PyutPythonVisitor.Parents = self.visitor.parents
+        parents: Parents = self.visitor.parents
 
         for parentName in parents.keys():
-            children: PyutPythonVisitor.Children = parents[parentName]
+            children: Children = parents[parentName]
             for childName in children:
 
                 try:
@@ -269,7 +274,7 @@ class ReverseEngineerPython2:
                     self.logger.error(f'Apparently we are not tracking this parent:  {ke}')
                     continue
 
-    def _methodNames(self, className: str) -> List[str]:
+    def _methodNames(self, className: ClassName) -> List[str]:
 
         methodNames: List[str] = []
         try:

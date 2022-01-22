@@ -13,6 +13,32 @@ from antlr4 import ParserRuleContext
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Parser import Python3Parser
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Visitor import Python3Visitor
 
+MethodName          = NewType('MethodName', str)
+PropertyName        = NewType('PropertyName', str)
+ClassName           = NewType('ClassName', str)
+ParentName          = str
+ChildName           = str
+MultiParameterNames = NewType('MultiParameterNames', str)  # comma separated parameter names
+Field               = NewType('Field', str)
+ExpressionText      = NewType('ExpressionText', str)
+DataClassProperty   = NewType('DataClassProperty', Tuple[ClassName, ExpressionText])
+
+ClassNames     = List[ClassName]
+MethodNames    = List[MethodName]
+ParameterNames = List[MultiParameterNames]
+Fields         = List[Field]
+Children       = List[ChildName]
+
+Methods    = NewType('Methods', Dict[ClassName, MethodNames])
+Parameters = NewType('Parameters', Dict[MethodName, ParameterNames])
+MethodCode = NewType('MethodCode', Dict[MethodName, str])
+Parents    = Dict[ParentName, Children]
+
+PropertyNames      = Dict[PropertyName, ClassName]
+PropertyParameters = Dict[PropertyName, ParameterNames]
+
+DataClassProperties = List[DataClassProperty]
+
 
 class PyutPythonVisitor(Python3Visitor):
 
@@ -27,50 +53,23 @@ class PyutPythonVisitor(Python3Visitor):
 
     PYTHON_EQUALITY_TOKEN: str = '='
 
-    MethodName          = NewType('MethodName', str)
-    PropertyName        = NewType('PropertyName', str)
-    ClassName           = NewType('ClassName', str)
-    ParentName          = str
-    ChildName           = str
-    MultiParameterNames = NewType('MultiParameterNames', str)                # comma separated parameter names
-    Field               = NewType('Field', str)
-    ExpressionText      = NewType('ExpressionText', str)
-    DataClassProperty   = NewType('DataClassProperty', Tuple[ClassName, ExpressionText])
-
-    MethodCode     = List[str]
-    ClassNames     = List[ClassName]
-    MethodNames    = List[MethodName]
-    ParameterNames = List[MultiParameterNames]
-    Fields         = List[Field]
-    Children       = List[ChildName]
-
-    Methods    = Dict[ClassName, MethodNames]
-    Parameters = Dict[MethodName, ParameterNames]
-    MethodCode = Dict[MethodName, MethodCode]
-    Parents    = Dict[ParentName, Children]
-
-    PropertyNames      = Dict[PropertyName, ClassName]
-    PropertyParameters = Dict[PropertyName, ParameterNames]
-
-    DataClassProperties = List[DataClassProperty]
-
     def __init__(self):
 
         self.logger: Logger = getLogger(__name__)
 
-        self.classNames:   PyutPythonVisitor.ClassNames = []
-        self.classMethods: PyutPythonVisitor.Methods    = {}
-        self.parameters:   PyutPythonVisitor.Parameters = {}
-        self.methodCode:   PyutPythonVisitor.MethodCode = {}
-        self.fields:       PyutPythonVisitor.Fields     = []
-        self._parents:     PyutPythonVisitor.Parents    = {}
+        self.classNames:   ClassNames = []
+        self.classMethods: Methods    = Methods({})
+        self.parameters:   Parameters = Parameters({})
+        self.methodCode:   MethodCode = MethodCode({})
+        self.fields:       Fields     = []
+        self._parents:     Parents    = {}
 
-        self.propertyNames:    PyutPythonVisitor.PropertyNames = {}
-        self.setterProperties: PyutPythonVisitor.Parameters    = {}
-        self.getterProperties: PyutPythonVisitor.Parameters    = {}
+        self.propertyNames:    PropertyNames = {}
+        self.setterProperties: Parameters    = Parameters({})
+        self.getterProperties: Parameters    = Parameters({})
 
-        self.dataClassNames:      PyutPythonVisitor.ClassNames          = []
-        self.dataClassProperties: PyutPythonVisitor.DataClassProperties = []
+        self.dataClassNames:      ClassNames          = []
+        self.dataClassProperties: DataClassProperties = []
 
     @property
     def parents(self) -> Parents:
@@ -135,19 +134,19 @@ class PyutPythonVisitor(Python3Visitor):
     def visitParameters(self, ctx: Python3Parser.ParametersContext):
 
         if len(ctx.children) > 1:
-            parameterNames: PyutPythonVisitor.MultiParameterNames = ctx.getChild(1).getText()
-            methodName:     PyutPythonVisitor.MethodName          = self._getParametersMethodName(ctx.parentCtx)
+            parameterNames: MultiParameterNames = ctx.getChild(1).getText()
+            methodName:     MethodName          = self._getParametersMethodName(ctx.parentCtx)
             self.logger.debug(f'visitParameters: method {methodName=} {parameterNames=} ')
 
             if self.__isProperty(methodName=methodName):
                 if parameterNames == PyutPythonVisitor.PYTHON_SELF:
                     self.getterProperties[methodName] = ['']
                 else:
-                    strippedParameterNames: PyutPythonVisitor.MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
+                    strippedParameterNames: MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
                     self.setterProperties[methodName] = [strippedParameterNames]
             else:
                 if parameterNames != PyutPythonVisitor.PYTHON_SELF:
-                    strippedParameterNames: PyutPythonVisitor.MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
+                    strippedParameterNames: MultiParameterNames = parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, "")
                     if strippedParameterNames not in self.parameters:
                         self.parameters[methodName] = [strippedParameterNames]
                     else:
@@ -172,7 +171,7 @@ class PyutPythonVisitor(Python3Visitor):
                 if PyutPythonVisitor.NON_PROPERTY_INDICATOR in exprText:
                     pass
                 else:
-                    dataClassProperty: PyutPythonVisitor.DataClassProperty = dataClassName, exprText
+                    dataClassProperty: DataClassProperty = dataClassName, exprText
                     self.dataClassProperties.append(dataClassProperty)
 
         return super().visitChildren(ctx)
@@ -183,11 +182,11 @@ class PyutPythonVisitor(Python3Visitor):
             if isinstance(node, classType):
                 return node.getChild(1).getText()
             node = node.parentCtx
-        return cast(PyutPythonVisitor.ClassName, None)
+        return cast(ClassName, None)
 
     def _getParametersMethodName(self, parentCtx: Python3Parser.FuncdefContext) -> MethodName:
 
-        methodName: PyutPythonVisitor.MethodName = parentCtx.getChild(1).getText()
+        methodName: MethodName = parentCtx.getChild(1).getText()
         return methodName
 
     def _createParentChildEntry(self, parentCtx: Python3Parser.ArglistContext, childName: str):
@@ -196,7 +195,7 @@ class PyutPythonVisitor(Python3Visitor):
         self.logger.debug(f'Class: {childName} is subclass of {parentName}')
 
         if parentName in self._parents:
-            children: PyutPythonVisitor.Children = self._parents[parentName]
+            children: Children = self._parents[parentName]
             children.append(childName)
         else:
             children = [childName]
