@@ -9,7 +9,7 @@ from logging import Logger
 from logging import getLogger
 
 from xml.dom.minidom import Element
-# from xml.dom.minidom import NodeList
+from xml.dom.minicompat import NodeList
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
@@ -107,9 +107,9 @@ class MiniDomToOgl:
             xmlOglClass: Element   = cast(Element, xmlOglClass)
             pyutClass:   PyutClass = PyutClass()
 
-            # Some old files had float sizes and positions
-            height: int      = PyU.strFloatToInt(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
-            width:  int      = PyU.strFloatToInt(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_WIDTH))
+            # Some old files used float sizes and positions
+            height: int = PyU.strFloatToInt(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
+            width:  int = PyU.strFloatToInt(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_WIDTH))
 
             oglClass: OglClass = OglClass(pyutClass, width, height)
 
@@ -539,7 +539,7 @@ class MiniDomToOgl:
 
     def _getImplementors(self, xmlClass: Element) -> PyutInterface.Implementors:
 
-        implementors: PyutInterface.Implementors = []
+        implementors: PyutInterface.Implementors = PyutInterface.Implementors([])
         for xmlImplementor in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_IMPLEMENTOR):
             className: PyutInterface.ClassName = xmlImplementor.getAttribute(PyutXmlConstants.ATTR_IMPLEMENTING_CLASS_NAME)
             implementors.append(className)

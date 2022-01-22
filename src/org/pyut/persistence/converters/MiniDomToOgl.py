@@ -9,7 +9,7 @@ from logging import Logger
 from logging import getLogger
 
 from xml.dom.minidom import Element
-from xml.dom.minidom import NodeList
+from xml.dom.minicompat import NodeList
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
 
@@ -587,4 +587,3 @@ class MiniDomToOgl:
 
         associationLabel.x = x
         associationLabel.y = y
-

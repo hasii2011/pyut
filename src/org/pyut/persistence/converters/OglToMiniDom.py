@@ -42,7 +42,7 @@ class OglToMiniDom:
         * renamed for clarity
         * uses typing for developer clarity
         * removes 'magic' strings shared between it and the ToOgl/ToPyutXml classes
-        * Updated to use google docstrings
+        * Updated using google docstrings
 
     """
     def __init__(self):
@@ -154,7 +154,7 @@ class OglToMiniDom:
 
             center: OglAssociationLabel = oglLink.centerLabel
             src:    OglAssociationLabel = oglLink.sourceCardinality
-            dst:    OglAssociationLabel = oglLink._destinationCardinality
+            dst:    OglAssociationLabel = oglLink.destinationCardinality
 
             assocLabels = {
                 PyutXmlConstants.ELEMENT_ASSOC_CENTER_LABEL:      center,
@@ -199,7 +199,7 @@ class OglToMiniDom:
 
     def oglSDMessageToXml(self, oglSDMessage: OglSDMessage, xmlDoc: Document) -> Element:
         """
-        Export an OglSDMessage to an minidom Element.
+        Export an OglSDMessage to a minidom Element.
 
         Args:
             oglSDMessage:   Message to convert
