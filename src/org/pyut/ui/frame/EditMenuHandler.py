@@ -33,6 +33,7 @@ from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.PyutUtils import PyutUtils
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -198,8 +199,8 @@ class EditMenuHandler(BaseMenuHandler):
             return
         diagram: Diagram         = frame.GetDiagram()
         shapes:  List[OglObject] = diagram.GetShapes()
-        for shape in shapes:
-            shape: OglObject = cast(OglObject, shape)
+        for oglShape in shapes:
+            shape: OglObject = cast(OglObject, oglShape)
             shape.SetSelected(True)
 
         frame.Refresh()

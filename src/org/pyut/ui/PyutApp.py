@@ -131,7 +131,7 @@ class PyutApp(wxApp):
         if prefs.userDirectory is not None and len(prefs.userDirectory) != 0:
             loadDirectory: str = prefs.userDirectory
         else:
-            loadDirectory: str = prefs.orgDirectory
+            loadDirectory = prefs.orgDirectory
 
         loadedAFile: bool     = False
         appFrame:    PyutApplicationFrame = self._frame

@@ -185,7 +185,7 @@ class ToFastEdit(PyutToPlugin):
                 vis: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
                 nextStereoType = nextStereoType[1:]
             else:
-                vis: PyutVisibilityEnum = PyutVisibilityEnum.PUBLIC
+                vis = PyutVisibilityEnum.PUBLIC
 
             pos = nextStereoType.find("(")
             params = []
@@ -257,14 +257,14 @@ class ToFastEdit(PyutToPlugin):
             umlFrame: the frame of the diagram
         """
         if len(selectedObjects) != 1:
-            dlg = MessageDialog(None, _("You must select at most a single class"), _("Warning"), OK | ICON_EXCLAMATION)
+            dlg: MessageDialog = MessageDialog(None, _("You must select at most a single class"), _("Warning"), OK | ICON_EXCLAMATION)
             dlg.ShowModal()
             dlg.Destroy()
             return
         oglClass: OglClass = selectedObjects[0]
 
         if isinstance(oglClass, OglClass) is False:
-            dlg: MessageDialog = MessageDialog(None, _('Must be a UML Class'), _('Bad Selection'), OK | ICON_ERROR | CENTER)
+            dlg = MessageDialog(None, _('Must be a UML Class'), _('Bad Selection'), OK | ICON_ERROR | CENTER)
             dlg.ShowModal()
             dlg.Destroy()
             return
