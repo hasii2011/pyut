@@ -108,7 +108,7 @@ class PyutPythonVisitor(Python3Visitor):
             if self.__isPropertyDecorator(nameToCheck=decorator) is True:
                 self.logger.info(f'visitDecorated - {decorator=} {propName=} {propCode=}')
 
-                className: str = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
+                className: ClassName = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
 
                 self.logger.info(f'Update property names - {propName}')
                 self.propertyNames[propName] = className
@@ -121,7 +121,7 @@ class PyutPythonVisitor(Python3Visitor):
 
     def visitClassdef(self, ctx: Python3Parser.ClassdefContext):
 
-        className: str = ctx.getChild(1).getText()
+        className: ClassName = ClassName(ctx.getChild(1).getText())
         self.classNames.append(className)
         self.logger.debug(f'visitClassdef: Visited class: {className}')
 
@@ -171,7 +171,7 @@ class PyutPythonVisitor(Python3Visitor):
                 if PyutPythonVisitor.NON_PROPERTY_INDICATOR in exprText:
                     pass
                 else:
-                    dataClassProperty: DataClassProperty = dataClassName, exprText
+                    dataClassProperty: DataClassProperty = DataClassProperty((dataClassName, exprText))
                     self.dataClassProperties.append(dataClassProperty)
 
         return super().visitChildren(ctx)
