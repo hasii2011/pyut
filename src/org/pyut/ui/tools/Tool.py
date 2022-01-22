@@ -2,10 +2,14 @@
 from dataclasses import dataclass
 
 from typing import Callable
+from typing import NewType
 from typing import cast
 
 from wx import Bitmap
 from wx import WindowIDRef
+
+
+Category       = NewType('Category',       str)
 
 
 @dataclass
@@ -29,7 +33,7 @@ class Tool:
     """
     A tooltip: tip for this tool
     """
-    category: str = ''
+    category: Category = Category('')
     """
     A category for this tool 
     """

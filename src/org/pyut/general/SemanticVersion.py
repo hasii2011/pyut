@@ -57,7 +57,7 @@ class SemanticVersion:
                                 '(\+[0-9A-Za-z-\.]+)?'    # build
                                 '$')
 
-        match: regexMatch = self._re.match(version)
+        match: regexMatch = self._re.match(version)     # type: ignore
         if match is None:
             raise SemanticVersionError(f'Invalid Version: `{version}`')
 
@@ -102,6 +102,7 @@ class SemanticVersion:
         if self._comparable(other) is False:
             return False
 
+        # noinspection PyProtectedMember
         if self._majorMinorPatch() == other._majorMinorPatch():
 
             if self.preRelease == other.preRelease:
@@ -118,6 +119,7 @@ class SemanticVersion:
                 return bool(self.preRelease)
             assert False, 'Should not be reachable'
         else:
+            # noinspection PyProtectedMember
             return self._majorMinorPatch() < other._majorMinorPatch()
 
     def __gt__(self, other):

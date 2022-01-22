@@ -28,6 +28,7 @@ from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 
 from org.pyut.PyutUtils import PyutUtils
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.general.datatypes.TextFontEnum import TextFontEnum
@@ -63,7 +64,10 @@ class TextAttributesContainer(Panel):
 
         szrText: BoxSizer = BoxSizer(VERTICAL)
 
-        self._textDimensions: DimensionsContainer = DimensionsContainer(parent=self, displayText=_('Text Width/Height'), valueChangedCallback=self._onTextDimensionsChanged)
+        self._textDimensions: DimensionsContainer = DimensionsContainer(parent=self,
+                                                                        displayText=_('Text Width/Height'),
+                                                                        valueChangedCallback=self._onTextDimensionsChanged
+                                                                        )
 
         szrText.Add(self._textDimensions, 0, ALL, TextAttributesContainer.HORIZONTAL_GAP)
         szrText.Add(self.__createTextStyleContainer(parent=self), 0, ALL, TextAttributesContainer.HORIZONTAL_GAP)

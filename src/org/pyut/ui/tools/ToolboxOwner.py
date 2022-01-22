@@ -1,20 +1,18 @@
 
-from typing import Dict
-from typing import List
-from typing import NewType
 from typing import cast
 
 from logging import Logger
 from logging import getLogger
+
 from wx import Window
 
+from org.pyut.ui.tools.Tool import Category
 from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.tools.Toolbox import Toolbox
 
-Category       = NewType('Category',       str)
-Tools          = NewType('Tools',          List[Tool])
-CategoryNames  = NewType('CategoryNames',  List[Category])
-ToolCategories = NewType('ToolCategories', Dict[Category, Tools])
+from org.pyut.ui.tools.ToolboxTypes import CategoryNames
+from org.pyut.ui.tools.ToolboxTypes import ToolCategories
+from org.pyut.ui.tools.ToolboxTypes import Tools
 
 
 class ToolboxOwner:
@@ -55,7 +53,7 @@ class ToolboxOwner:
         """
 
         if tool.category not in self._toolCategories:
-            self._toolCategories[tool.category] = [tool]
+            self._toolCategories[tool.category] = Tools([tool])
             self.logger.info(f'Creating tool category: {tool.category}')
         else:
             self._toolCategories[tool.category].append(tool)

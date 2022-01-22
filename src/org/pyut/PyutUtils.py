@@ -1,5 +1,7 @@
 
+from typing import cast
 from typing import List
+from typing import Optional
 from typing import Tuple
 
 from logging import Logger
@@ -76,9 +78,9 @@ class PyutUtils:
                 integerValue: int = int(float(floatValue))
             except ValueError:
                 print(f'Warning: PyutUtils.strFloatToInt - Bad float value: `{floatValue}`')
-                integerValue: int = 0
+                integerValue = 0
         else:
-            integerValue: int = 0
+            integerValue = 0
 
         return integerValue
 
@@ -228,10 +230,10 @@ class PyutUtils:
             retPath: str = originalPath.rstrip(PyutUtils.STRIP_SRC_PATH_SUFFIX)
             retPath = PyutUtils._stripSrcOrTest(retPath)
         elif originalPath.endswith(PyutUtils.STRIP_TEST_PATH_SUFFIX):
-            retPath: str = originalPath.rstrip(PyutUtils.STRIP_TEST_PATH_SUFFIX)
+            retPath = originalPath.rstrip(PyutUtils.STRIP_TEST_PATH_SUFFIX)
             retPath = PyutUtils._stripSrcOrTest(retPath)
         else:
-            retPath: str = originalPath
+            retPath = originalPath
 
         return retPath
 
@@ -263,16 +265,16 @@ class PyutUtils:
         # configFilePath: str  = files('org.pyut.resources').joinpath(Pyut.JSON_LOGGING_CONFIG_FILENAME)
 
         try:
-            fqFileName: str = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, bareFileName)
+            fqFileName: Optional[str] = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, bareFileName)
         except (ValueError, Exception):
             #
             # Maybe we are in an app
             #
             from os import environ
-            pathToResources: str = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
-            fqFileName:      str = f'{pathToResources}/{PyutUtils.RESOURCES_PATH}/{bareFileName}'
+            pathToResources: Optional[str] = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
+            fqFileName = f'{pathToResources}/{PyutUtils.RESOURCES_PATH}/{bareFileName}'
 
-        return fqFileName
+        return cast(str, fqFileName)
 
     @classmethod
     def getResourcePath(cls, packageName: str, fileName: str):
@@ -284,8 +286,8 @@ class PyutUtils:
             # Maybe we are in an app
             #
             from os import environ
-            pathToResources: str = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
-            fqFileName:      str = f'{pathToResources}/{packageName}/{fileName}'
+            pathToResources: Optional[str] = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
+            fqFileName = f'{pathToResources}/{packageName}/{fileName}'
 
         return fqFileName
 
@@ -296,15 +298,15 @@ class PyutUtils:
             fqFileName: str = f'{PyutUtils.getBasePath()}{osSep}{fileName}'
         else:
             tempDir: str = gettempdir()
-            fqFileName: str = f'{tempDir}{osSep}{fileName}'
+            fqFileName = f'{tempDir}{osSep}{fileName}'
 
         return fqFileName
 
     @classmethod
     def getScreenMetrics(cls) -> ScreenMetrics:
 
-        scrResolution: Size              = ScreenDC().GetPPI()
-        displaySize:   Tuple[int, int]   = DisplaySize()
+        scrResolution: Size            = ScreenDC().GetPPI()
+        displaySize:   Tuple[int, int] = DisplaySize()
 
         screenMetrics: ScreenMetrics = ScreenMetrics()
 
