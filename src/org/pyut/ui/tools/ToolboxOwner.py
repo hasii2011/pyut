@@ -12,7 +12,7 @@ from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.tools.Toolbox import Toolbox
 
 Category       = NewType('Category',       str)
-Tools          = NewType('NewType',        List[Tool])
+Tools          = NewType('Tools',          List[Tool])
 CategoryNames  = NewType('CategoryNames',  List[Category])
 ToolCategories = NewType('ToolCategories', Dict[Category, Tools])
 

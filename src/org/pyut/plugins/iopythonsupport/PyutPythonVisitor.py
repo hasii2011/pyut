@@ -109,12 +109,12 @@ class PyutPythonVisitor(Python3Visitor):
             if self.__isPropertyDecorator(nameToCheck=decorator) is True:
                 self.logger.info(f'visitDecorated - {decorator=} {propName=} {propCode=}')
 
-                className = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
+                className: str = self._checkIfMethodBelongsToClass(ctx, Python3Parser.ClassdefContext)
 
                 self.logger.info(f'Update property names - {propName}')
                 self.propertyNames[propName] = className
         elif self.__isDataClassDecorator(nameToCheck=decorator):
-            className: str = ctx.classdef().getChild(1).getText()
+            className = ctx.classdef().getChild(1).getText()
             self.logger.info(f'visitDecorated -- We found dataclass: {className}')
             self.dataClassNames.append(className)
 
@@ -199,7 +199,7 @@ class PyutPythonVisitor(Python3Visitor):
             children: PyutPythonVisitor.Children = self._parents[parentName]
             children.append(childName)
         else:
-            children: PyutPythonVisitor.Children = [childName]
+            children = [childName]
 
         self._parents[parentName] = children
 

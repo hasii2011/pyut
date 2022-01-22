@@ -87,12 +87,12 @@ class SemanticVersion:
         except ValueError:
             return s
 
-    def __eq__(self, other: object):
+    def __eq__(self, alien: object):
 
-        if self._comparable(other) is False:
+        if self._comparable(alien) is False:
             return False
         else:
-            other: SemanticVersion = cast(SemanticVersion, other)
+            other: SemanticVersion = cast(SemanticVersion, alien)
             return all([self._majorMinorPatch() == other._majorMinorPatch(),
                         self.build == other.build,
                         self.preRelease == other.preRelease])
@@ -143,6 +143,7 @@ class SemanticVersion:
                 return type(lStr) is int
             elif lStr != rStr:
                 return lStr < rStr
+        return False
 
     def _comparable(self, other: object) -> bool:
 
