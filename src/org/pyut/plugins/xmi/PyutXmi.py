@@ -7,7 +7,8 @@ from logging import getLogger
 
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
-from xml.dom.minidom import NodeList
+
+from xml.dom.minicompat import NodeList
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
