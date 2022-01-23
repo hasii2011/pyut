@@ -5,6 +5,7 @@ from logging import getLogger
 from org.pyut.model.PyutObject import PyutObject
 from org.pyut.enums.LinkType import LinkType
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -24,7 +25,7 @@ class PyutLink(PyutObject):
     # noinspection PyUnresolvedReferences
     def __init__(self, name="", linkType: LinkType = LinkType.INHERITANCE,
                  cardSrc: str = "", cardDest: str = "",
-                 bidir: bool = False, source: "PyutLinkedObject" = None, destination: "PyutLinkedObject" = None):
+                 bidir: bool = False, source: "PyutLinkedObject" = None, destination: "PyutLinkedObject" = None):  # type: ignore
         """
 
         Args:

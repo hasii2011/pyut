@@ -35,7 +35,8 @@ from org.pyut.plugins.tools.ToLayoutSave import ToLayoutSave
 from org.pyut.plugins.tools.ToOrthogonalLayoutV2 import ToOrthogonalLayoutV2
 from org.pyut.plugins.tools.ToSugiyama import ToSugiyama
 from org.pyut.plugins.tools.ToTransforms import ToTransforms
-from org.pyut.ui.tools.SharedTypes import SharedTypes
+from org.pyut.ui.tools.SharedTypes import PluginList
+from org.pyut.ui.tools.SharedTypes import PluginMap
 
 FileNameListType = List[str]
 
@@ -45,14 +46,14 @@ class PluginManager(Singleton):
     PLUGIN_DIRECTORY: str = f"org{osSep}pyut{osSep}plugins"
     PLUGIN_PACKAGE:   str = 'org.pyut.plugins'
 
-    IO_PLUGINS: SharedTypes.PluginList = [IoCpp, IoDTD, IoJava, IoJavaReverse,
-                                          IoJavascript, IoPython, IoXmi, IoXmi_OMG,
-                                          IoXml, IoXSD, IoGML, IoPdf, IoImage, IoWxImage,
-                                          ]
-    TOOL_PLUGINS: SharedTypes.PluginList = [ToArrangeLinks, ToAscii, ToCDAutoLayout,
-                                            ToFastEdit, ToLayout, ToLayoutSave,
-                                            ToOrthogonalLayoutV2, ToSugiyama, ToTransforms
-                                            ]
+    IO_PLUGINS: PluginList = PluginList([IoCpp, IoDTD, IoJava, IoJavaReverse,
+                                         IoJavascript, IoPython, IoXmi, IoXmi_OMG,
+                                         IoXml, IoXSD, IoGML, IoPdf, IoImage, IoWxImage,
+                                         ])
+    TOOL_PLUGINS: PluginList = PluginList([ToArrangeLinks, ToAscii, ToCDAutoLayout,
+                                           ToFastEdit, ToLayout, ToLayoutSave,
+                                           ToOrthogonalLayoutV2, ToSugiyama, ToTransforms
+                                           ])
 
     """
     Interface between the application and the plugins.
@@ -77,34 +78,34 @@ class PluginManager(Singleton):
             s.append(f"Plugin : {obj.getName()} version {obj.getVersion()} (c) by {obj.getAuthor()}")
         return s
 
-    def getInputPlugins(self) -> SharedTypes.PluginList:
+    def getInputPlugins(self) -> PluginList:
         """
         Get the input plugins.
 
         Returns:  A list of classes (the plugins classes).
         """
 
-        pluginList = cast(SharedTypes.PluginList, [])
+        pluginList = cast(PluginList, [])
         for plug in self.IO_PLUGINS:
             obj = plug(None, None)
             if obj.getInputFormat() is not None:
                 pluginList.append(plug)
         return pluginList
 
-    def getOutputPlugins(self) -> SharedTypes.PluginList:
+    def getOutputPlugins(self) -> PluginList:
         """
         Get the output plugins.
 
         Returns:  A list of classes (the plugins classes).
         """
-        pluginList = cast(SharedTypes.PluginList, [])
+        pluginList = cast(PluginList, [])
         for plug in self.IO_PLUGINS:
             obj = plug(None, None)
             if obj.getOutputFormat() is not None:
                 pluginList.append(plug)
         return pluginList
 
-    def getToolPlugins(self) -> SharedTypes.PluginList:
+    def getToolPlugins(self) -> PluginList:
         """
         Get the tool plugins.
 
@@ -112,33 +113,33 @@ class PluginManager(Singleton):
         """
         return self.TOOL_PLUGINS
 
-    def mapWxIdsToToolPlugins(self) -> SharedTypes.PluginMap:
+    def mapWxIdsToToolPlugins(self) -> PluginMap:
 
-        plugins: SharedTypes.PluginList = self.getToolPlugins()
+        plugins: PluginList = self.getToolPlugins()
 
-        pluginMap: SharedTypes.PluginMap = self.__mapWxIdsToPlugins(plugins)
-
-        return pluginMap
-
-    def mapWxIdsToImportPlugins(self) -> SharedTypes.PluginMap:
-
-        plugins: SharedTypes.PluginList = self.getInputPlugins()
-
-        pluginMap: SharedTypes.PluginMap = self.__mapWxIdsToPlugins(plugins)
+        pluginMap: PluginMap = self.__mapWxIdsToPlugins(plugins)
 
         return pluginMap
 
-    def mapWxIdsToExportPlugins(self) -> SharedTypes.PluginMap:
+    def mapWxIdsToImportPlugins(self) -> PluginMap:
 
-        plugins: SharedTypes.PluginList = self.getOutputPlugins()
+        plugins: PluginList = self.getInputPlugins()
 
-        pluginMap: SharedTypes.PluginMap = self.__mapWxIdsToPlugins(plugins)
+        pluginMap: PluginMap = self.__mapWxIdsToPlugins(plugins)
 
         return pluginMap
 
-    def __mapWxIdsToPlugins(self, plugins: List[type]) -> SharedTypes.PluginMap:
+    def mapWxIdsToExportPlugins(self) -> PluginMap:
 
-        pluginMap: SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})
+        plugins: PluginList = self.getOutputPlugins()
+
+        pluginMap: PluginMap = self.__mapWxIdsToPlugins(plugins)
+
+        return pluginMap
+
+    def __mapWxIdsToPlugins(self, plugins: List[type]) -> PluginMap:
+
+        pluginMap: PluginMap = cast(PluginMap, {})
 
         nb: int = len(plugins)
 

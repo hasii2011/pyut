@@ -10,11 +10,11 @@ class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):
     This class is a part of Pyut's history system.
 
     It executes /undo/redo deletion of an OglLinkedObject
-    PyutLikedObjects do not exist as stand alone objects but they represent every OglObject that has a
+    PyutLikedObjects do not exist as standalone objects, but they represent every OglObject that has a
     pyutLinkedObject as pyutObject
     """
 
-    def __init__(self, shape=None) -> str:
+    def __init__(self, shape=None):
         """
 
         Args:

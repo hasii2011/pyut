@@ -1,6 +1,5 @@
 
 from typing import Callable
-from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -30,9 +29,11 @@ from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
 from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
-from org.pyut.ui.tools.SharedTypes import SharedTypes
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+from org.pyut.ui.tools.SharedTypes import PluginMap
+from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
 
 
 class MenuCreator:
@@ -48,8 +49,8 @@ class MenuCreator:
         self._prefs:    PyutPreferences = PyutPreferences()
         self.plugMgr:   PluginManager   = PluginManager()
 
-        self._plugins:    SharedTypes.PluginMap    = cast(SharedTypes.PluginMap, {})     # To store the plugins
-        self._toolboxIds: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})  # Dictionary id --> toolbox
+        self._plugins:    PluginMap    = PluginMap({})     # To store the plugins
+        self._toolboxIds: ToolboxIdMap = ToolboxIdMap({})  # Dictionary id --> toolbox
 
     @property
     def fileMenu(self) -> Menu:
@@ -84,35 +85,35 @@ class MenuCreator:
         self._helpMenu = helpMenu
 
     @property
-    def toolPlugins(self) -> SharedTypes.PluginMap:
+    def toolPlugins(self) -> PluginMap:
         raise UnsupportedOperation('Property is write only')
 
     @toolPlugins.setter
-    def toolPlugins(self, toolPlugins: SharedTypes.PluginMap):
+    def toolPlugins(self, toolPlugins: PluginMap):
         self._toolPlugins = toolPlugins
 
     @property
-    def exportPlugins(self) -> SharedTypes.PluginMap:
+    def exportPlugins(self) -> PluginMap:
         raise UnsupportedOperation('Property is write only')
 
     @exportPlugins.setter
-    def exportPlugins(self, exportPlugins: SharedTypes.PluginMap):
+    def exportPlugins(self, exportPlugins: PluginMap):
         self._exportPlugins = exportPlugins
 
     @property
-    def importPlugins(self) -> SharedTypes.PluginMap:
+    def importPlugins(self) -> PluginMap:
         raise UnsupportedOperation('Property is write only')
 
     @importPlugins.setter
-    def importPlugins(self, importPlugins: SharedTypes.PluginMap):
+    def importPlugins(self, importPlugins: PluginMap):
         self._importPlugins = importPlugins
 
     @property
-    def toolboxIds(self) -> SharedTypes.ToolboxIdMap:
+    def toolboxIds(self) -> ToolboxIdMap:
         raise UnsupportedOperation('Property is write only')
 
     @toolboxIds.setter
-    def toolboxIds(self, theNewValues: SharedTypes.ToolboxIdMap):
+    def toolboxIds(self, theNewValues: ToolboxIdMap):
         self._toolboxIds = theNewValues
 
     @property
@@ -300,7 +301,7 @@ class MenuCreator:
         """
         Make the export submenu.
         """
-        pluginMap: SharedTypes.PluginMap = self._exportPlugins
+        pluginMap: PluginMap = self._exportPlugins
         sub:       Menu = Menu()
 
         for wxId in pluginMap:
@@ -319,7 +320,7 @@ class MenuCreator:
         """
         Make the import submenu.
         """
-        pluginMap: SharedTypes.PluginMap = self._importPlugins
+        pluginMap: PluginMap = self._importPlugins
 
         sub: Menu = Menu()
 
@@ -337,9 +338,9 @@ class MenuCreator:
 
     def _makeToolsMenu(self):
         """
-        Make the tools submenu.
+        Make the Tools submenu.
         """
-        pluginMap: SharedTypes.PluginMap = self._toolPlugins
+        pluginMap: PluginMap = self._toolPlugins
         sub:       Menu = Menu()
 
         for wxId in pluginMap:
@@ -355,7 +356,7 @@ class MenuCreator:
 
     def _makeToolboxesMenu(self):
         """
-        Make the toolboxes submenu.
+        Make the Toolboxes submenu.
         """
         mediator: Mediator = Mediator()
         # Get categories

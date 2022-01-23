@@ -11,24 +11,27 @@ from wx import EndBusyCursor
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
-from org.pyut.ui.tools.SharedTypes import SharedTypes
 
 from org.pyut.PyutUtils import PyutUtils
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+
+from org.pyut.ui.tools.SharedTypes import PluginMap
+from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
 
 
 class ToolsMenuHandler(BaseMenuHandler):
     """
     Handles calling Tool plugins and I/O Plugins
     """
-    def __init__(self, toolsMenu: Menu, toolPluginsMap: SharedTypes.PluginMap, toolboxIds: SharedTypes.ToolboxIdMap):
+    def __init__(self, toolsMenu: Menu, toolPluginsMap: PluginMap, toolboxIds: ToolboxIdMap):
 
         super().__init__(menu=toolsMenu)
 
-        self.logger:          Logger                   = getLogger(__name__)
-        self._toolPluginsMap: SharedTypes.PluginMap    = toolPluginsMap
-        self._toolboxIds:     SharedTypes.ToolboxIdMap = toolboxIds
+        self.logger:          Logger       = getLogger(__name__)
+        self._toolPluginsMap: PluginMap    = toolPluginsMap
+        self._toolboxIds:     ToolboxIdMap = toolboxIds
 
     def onToolPlugin(self, event: CommandEvent):
         """

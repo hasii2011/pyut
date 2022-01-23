@@ -1,4 +1,5 @@
 
+from typing import List
 
 from org.pyut.miniogl.PointShape import PointShape
 
@@ -20,7 +21,7 @@ class LinePoint(PointShape):
         """
         #  print ">>>LinePoint ", x, y
         super().__init__(x, y, parent)
-        self._lines = []    # a list of LineShape(s) passing through this point
+        self._lines: List = []    # a list of LineShape(s) passing through this point
 
     def AddLine(self, line):
         """

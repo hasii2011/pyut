@@ -35,6 +35,7 @@ from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
 from org.pyut.enums.DiagramType import DiagramType
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
@@ -47,7 +48,8 @@ from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
-from org.pyut.ui.tools.SharedTypes import SharedTypes
+
+from org.pyut.ui.tools.SharedTypes import PluginMap
 
 
 class FileMenuHandler(BaseMenuHandler):
@@ -60,8 +62,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         self._lastOpenedFilesIDs: List[int]       = lastOpenFilesIDs
         self._preferences:        PyutPreferences = PyutPreferences()
-
-        self._plugins:            SharedTypes.PluginMap = cast(SharedTypes.PluginMap, {})     # To store the plugins
+        self._plugins:            PluginMap       = cast(PluginMap, {})     # To store the plugins
 
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
         self._treeNotebookHandler:     TreeNotebookHandler     = self._mediator.getFileHandling()
@@ -69,19 +70,19 @@ class FileMenuHandler(BaseMenuHandler):
         self._initPrinting()    # Printing data
 
     @property
-    def exportPlugins(self) -> SharedTypes.PluginMap:
+    def exportPlugins(self) -> PluginMap:
         raise UnsupportedOperation('Property is write only')
 
     @exportPlugins.setter
-    def exportPlugins(self, exportPlugins: SharedTypes.PluginMap):
+    def exportPlugins(self, exportPlugins: PluginMap):
         self._exportPlugins = exportPlugins
 
     @property
-    def importPlugins(self) -> SharedTypes.PluginMap:
+    def importPlugins(self) -> PluginMap:
         raise UnsupportedOperation('Property is write only')
 
     @importPlugins.setter
-    def importPlugins(self, importPlugins: SharedTypes.PluginMap):
+    def importPlugins(self, importPlugins: PluginMap):
         self._importPlugins = importPlugins
 
     # noinspection PyUnusedLocal

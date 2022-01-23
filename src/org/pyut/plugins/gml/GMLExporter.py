@@ -9,6 +9,7 @@ from typing import cast
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.LinePoint import LinePoint
+from org.pyut.miniogl.LineShape import ControlPoints
 
 from org.pyut.model.PyutObject import PyutObject
 
@@ -204,7 +205,7 @@ class GMLExporter:
         srcAnchor:  AnchorPoint = oglLink.sourceAnchor
         destAnchor: AnchorPoint = oglLink.destinationAnchor
 
-        controlPoints: List[ControlPoint] = oglLink.GetControlPoints()
+        controlPoints: ControlPoints = oglLink.GetControlPoints()
 
         edgeGml: str = (
             f'{GMLExporter.doubleTab}{GMLExporter.GRAPHICS_TOKEN} {GMLExporter.START_TOKEN}\n'

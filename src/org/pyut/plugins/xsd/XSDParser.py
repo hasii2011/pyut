@@ -1,3 +1,4 @@
+# type: ignore
 from typing import Dict
 from typing import cast
 from typing import List

@@ -40,10 +40,11 @@ from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
 from org.pyut.ui.frame.PyutFileDropTarget import PyutFileDropTarget
 from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
-from org.pyut.ui.tools.SharedTypes import SharedTypes
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
+from org.pyut.ui.tools.SharedTypes import PluginMap
+from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
 from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 
 from org.pyut.dialogs.tips.DlgTips import DlgTips
@@ -107,9 +108,9 @@ class PyutApplicationFrame(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        self._toolPlugins:   SharedTypes.PluginMap = self._plugMgr.mapWxIdsToToolPlugins()
-        self._importPlugins: SharedTypes.PluginMap = self._plugMgr.mapWxIdsToImportPlugins()
-        self._exportPlugins: SharedTypes.PluginMap = self._plugMgr.mapWxIdsToExportPlugins()
+        self._toolPlugins:   PluginMap = self._plugMgr.mapWxIdsToToolPlugins()
+        self._importPlugins: PluginMap = self._plugMgr.mapWxIdsToImportPlugins()
+        self._exportPlugins: PluginMap = self._plugMgr.mapWxIdsToExportPlugins()
 
         # Initialization
         fileMenu:  Menu = Menu()
@@ -121,7 +122,7 @@ class PyutApplicationFrame(Frame):
 
         self._initializePyutTools()
 
-        self._toolboxIds:    SharedTypes.ToolboxIdMap = self._createToolboxIdMap()
+        self._toolboxIds: ToolboxIdMap = self._createToolboxIdMap()
 
         self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, toolPluginsMap=self._toolPlugins, toolboxIds=self._toolboxIds)
         self._helpMenuHandler:  HelpMenuHandler  = HelpMenuHandler(helpMenu=helpMenu)
@@ -271,7 +272,7 @@ class PyutApplicationFrame(Frame):
 
     def _initializePyutTools(self):
         """
-        Initialize the toolboxes and the tool bar
+        Initialize the toolboxes and the toolbar
         """
 
         fileMenuHandler: FileMenuHandler = self._fileMenuHandler
@@ -321,9 +322,9 @@ class PyutApplicationFrame(Frame):
             acc.append(AcceleratorEntry(el1, el2, el3))
         return acc
 
-    def _createToolboxIdMap(self) -> SharedTypes.ToolboxIdMap:
+    def _createToolboxIdMap(self) -> ToolboxIdMap:
 
-        toolBoxIdMap: SharedTypes.ToolboxIdMap = cast(SharedTypes.ToolboxIdMap, {})
+        toolBoxIdMap: ToolboxIdMap = cast(ToolboxIdMap, {})
 
         categories = self._mediator.getToolboxesCategories()
 

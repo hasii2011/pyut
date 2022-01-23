@@ -1,4 +1,4 @@
-
+from typing import List
 from typing import Tuple
 
 from logging import Logger
@@ -20,7 +20,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 class Shape:
     """
     Shape is the basic graphical block. It is also the view in
-    a MVC pattern, so it has has a relative model (ShapeModel).
+    an MVC pattern, so it has a relative model (ShapeModel).
     """
 
     ID = 0  # internal ID number
@@ -40,16 +40,17 @@ class Shape:
         self._ox: int = 0   # origin position (view)
         self._oy: int = 0   # origin position (view)
 
-        self._parent = parent       # parent shape
-        self._selected = False      # is the shape selected ?
-        self._anchors = []          # anchors of the shape
-        self._visible = True        # is the shape visible ?
-        self._draggable = True      # can the shape be dragged ?
-        self._moving = False        # is this shape moving now ?
-        self._diagram = None        # associated diagram
-        self._protected = False     # to protect against deletion
-        self._children = []         # child shapes
-        self._privateChildren = []  # private children, not saved
+        self._parent    = parent     # parent shape
+        self._selected  = False      # is the shape selected ?
+        self._visible   = True       # is the shape visible ?
+        self._draggable = True       # can the shape be dragged ?
+        self._moving    = False      # is this shape moving now ?
+        self._diagram   = None       # associated diagram
+        self._protected = False      # to protect against deletion
+
+        self._anchors:         List = []   # anchors of the shape
+        self._children:        List = []   # child shapes
+        self._privateChildren: List = []   # private children, not saved
 
         self._pen:   Pen   = BLACK_PEN    # pen to use
         self._brush: Brush = WHITE_BRUSH  # brush to use
@@ -257,6 +258,7 @@ class Shape:
         # do not detach a protected shape
 
         if self._diagram is not None and not self._protected:
+            # noinspection PyProtectedMember
             self.GetModel()._views.remove(self)
 
             diagram = self._diagram
@@ -280,7 +282,7 @@ class Shape:
         Draw the shape.
         For a shape, only the anchors are drawn. Nothing is drawn if the
         shape is set invisible.
-        For children classes, the main classes would normally call it's
+        For children classes, the main classes would normally call its
         parent's Draw method, passing withChildren = False, and finally
         calling itself the DrawChildren method.
 
@@ -411,7 +413,7 @@ class Shape:
 
     def GetRelativePosition(self):
         """
-        Return the position of the shape, relative to it's parent.
+        Return the position of the shape, relative to its parent.
 
         @return (double, double)
         """
