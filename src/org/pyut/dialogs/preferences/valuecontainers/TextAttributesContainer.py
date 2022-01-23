@@ -119,14 +119,15 @@ class TextAttributesContainer(Panel):
     def _onFontSizeSelectionChanged(self, event: CommandEvent):
 
         newFontSize: str = event.GetString()
-        self._preferences.textFontSize = newFontSize
+
+        self._preferences.textFontSize = int(newFontSize)
 
     def __createTextStyleContainer(self, parent: Window) -> BoxSizer:
 
         styleContainer: BoxSizer = BoxSizer(HORIZONTAL)
 
-        self._cbBoldText:      CheckBox = CheckBox(parent=parent, id=self._cbBoldTextId,      label=_('Bold Text'))
-        self._cbItalicizeText: CheckBox = CheckBox(parent=parent, id=self._cbItalicizeTextId, label=_('Italicize Text'))
+        self._cbBoldText      = CheckBox(parent=parent, id=self._cbBoldTextId,      label=_('Bold Text'))
+        self._cbItalicizeText = CheckBox(parent=parent, id=self._cbItalicizeTextId, label=_('Italicize Text'))
 
         styleContainer.Add(self._cbBoldText,      0, ALL, TextAttributesContainer.HORIZONTAL_GAP)
         styleContainer.Add(self._cbItalicizeText, 0, ALL, TextAttributesContainer.HORIZONTAL_GAP)
@@ -151,7 +152,7 @@ class TextAttributesContainer(Panel):
         box:     StaticBox      = StaticBox(self, ID_ANY, _("Text Font"))
         szrFont: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
-        self._cbxFontSelector: ComboBox = ComboBox(parent, self._cbxFontSelectorId, choices=fontChoices, style=CB_READONLY)
+        self._cbxFontSelector = ComboBox(parent, self._cbxFontSelectorId, choices=fontChoices, style=CB_READONLY)
 
         szrFont.Add(self._cbxFontSelector, 1, LEFT | RIGHT, TextAttributesContainer.MINI_GAP)
 
@@ -162,8 +163,8 @@ class TextAttributesContainer(Panel):
         box:         StaticBox      = StaticBox(self, ID_ANY, _("Font Size"))
         szrFontSize: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
-        fontSizes: List[int] = ['8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
-        self._cbxFontSizeSelector: ComboBox = ComboBox(parent, self._cbxFontSizeSelectorId, choices=fontSizes, style=CB_READONLY)
+        fontSizes: List[str] = ['8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+        self._cbxFontSizeSelector = ComboBox(parent, self._cbxFontSizeSelectorId, choices=fontSizes, style=CB_READONLY)
 
         szrFontSize.Add(self._cbxFontSizeSelector, 1, LEFT | RIGHT, TextAttributesContainer.MINI_GAP)
 
