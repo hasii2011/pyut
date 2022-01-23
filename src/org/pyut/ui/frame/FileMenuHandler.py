@@ -67,6 +67,8 @@ class FileMenuHandler(BaseMenuHandler):
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
         self._treeNotebookHandler:     TreeNotebookHandler     = self._mediator.getFileHandling()
 
+        self._printData: PrintData = cast(PrintData, None)
+
         self._initPrinting()    # Printing data
 
     @property

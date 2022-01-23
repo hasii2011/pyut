@@ -157,10 +157,10 @@ class EditMenuHandler(BaseMenuHandler):
 
         # put the objects in the clipboard and remove them from the diagram
         x, y = 100, 100
-        for obj in self._clipboard:
-            obj = copy(obj)  # this is a PyutObject
+        for clipboardObject in self._clipboard:
+            obj: PyutObject = copy(clipboardObject)
             if isinstance(obj, PyutClass):
-                po = OglClass(obj)
+                po: OglObject = OglClass(obj)
             elif isinstance(obj, PyutNote):
                 po = OglNote(obj)
             elif isinstance(obj, PyutActor):
@@ -168,7 +168,7 @@ class EditMenuHandler(BaseMenuHandler):
             elif isinstance(obj, PyutUseCase):
                 po = OglUseCase(obj)
             else:
-                self.logger.error("Error when try to paste object")
+                self.logger.error(f'Error when try to paste object: {obj}')
                 return
             self.logger.info(f'Pasting: {po=}')
             self._mediator.getUmlFrame().addShape(po, x, y)
