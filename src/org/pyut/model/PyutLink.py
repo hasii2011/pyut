@@ -138,22 +138,23 @@ class PyutLink(PyutObject):
         """
         self._bidirectional = bidirectional
 
-    def setType(self, theType: LinkType):
+    def setType(self, linkType: LinkType):
         """
         Update the link type
 
         Args:
-              theType : Type of the link
+              linkType : Type of the link
         """
         # Python 3 update
         # if type(theType) == StringType or type(theType) == UnicodeType:
-        if type(theType) is int:
+        if type(linkType) is int:
             try:
-                theType: LinkType = LinkType(theType)
+                self._type = LinkType(linkType)
             except (ValueError, Exception) as e:
                 self.logger.error(f'setType: {e}')
-                theType = LinkType.INHERITANCE
-        self._type = theType
+                self._type = LinkType.INHERITANCE
+        else:
+            self._type = linkType
 
     def getType(self) -> LinkType:
         """

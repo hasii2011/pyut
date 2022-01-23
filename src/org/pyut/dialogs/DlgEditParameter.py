@@ -35,7 +35,8 @@ from org.pyut.general.Globals import _
  ] = PyutUtils.assignID(3)
 
 
-class DlgEditParameter(BaseDlgEdit):
+class \
+        DlgEditParameter(BaseDlgEdit):
 
     def __init__(self, theParent, theWindowId=ID_ANY, parameterToEdit: PyutParam = None, theMediator=None):
         """
