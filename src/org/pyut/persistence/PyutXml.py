@@ -29,7 +29,7 @@ import wx
 class PyutXml:
     """
     Class for saving and loading a PyUT UML diagram in XML.
-    This class offers two main methods that are save() and load().
+    This class offers two main methods that are `save` and `load`.
     Using the dom XML model, you can, with the saving method, get the
     diagram corresponding XML view. For loading, you have to parse
     the file and indicate the UML frame on which you want to draw
@@ -134,8 +134,9 @@ class PyutXml:
         """
         To save save diagram in XML file.
 
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            oglObjects:
+            umlFrame:
         """
         root    = Document()
         top     = root.createElement("Pyut")
@@ -164,14 +165,19 @@ class PyutXml:
         return root
 
     def _appendLinks(self, pyutLinkedObject, root, xmlDoc):
+
         """
         Write the links connected to the PyutLinkedObject.
 
-        @param PyutLinkedObject pyutLinkedObject : Object which contains
-        @param xmlDoc : xml Document instance
-        @param Element root : XML node to write
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            pyutLinkedObject: Object which contains
+            root:             XML node to write
+            xmlDoc:           xml Document instance
+
+        Returns:
+
         """
+
         # for all links
         for link in pyutLinkedObject.getLinks():
             xmlLink = self._PyutLink2xml(link, xmlDoc)
@@ -196,17 +202,16 @@ class PyutXml:
 
     def _PyutLink2xml(self, pyutLink, xmlDoc):
         """
-        Exporting an PyutLink to an miniDom Element.
+        Exporting a PyutLink to a miniDom Element.
 
-        @param PyutLink pyutLink : Link to save
-        @param xmlDoc : xml Document instance
-        @return Element : XML Node
-        @since 2.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            pyutLink: Link to save
+            xmlDoc:   xml Document instance
+
+        Returns:   XML Node
+
         """
-        # lang.importLanguage()
-
-        # Add link to saved links (avoid to save one twice)
+        # Add link to saved links (avoid saving one twice)
         if pyutLink in self.__savedLinks:
             return None
         self.__savedLinks[pyutLink] = 1
@@ -261,13 +266,13 @@ class PyutXml:
 
     def _PyutField2xml(self, pyutField, xmlDoc):
         """
-        Exporting a PyutField to an miniDom Element
+        Export a PyutField to an miniDom Element
 
-        @param PyutField pyutField : Field to save
-        @param xmlDoc : xml Document instance
-        @return Element : XML Node
-        @since 2.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            pyutField:  Field to save
+            xmlDoc:     xml Document instance
+
+        Returns:    XML Node
         """
         root = xmlDoc.createElement('Field')
 
@@ -580,9 +585,9 @@ class PyutXml:
             for Param in Method.getElementsByTagName("Param"):
                 allParams.append(self._getParam(Param))
 
-            # setting de params for thiy method
+            # setting the params for this method
             aMethod.setParams(allParams)
-            # hadding this method in all class methods
+            # adding this method in all class methods
             allMethods.append(aMethod)
 
         return allMethods
@@ -638,7 +643,7 @@ class PyutXml:
         @param String obj : Name of the object.
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
-        @changed Philippe Waelti <pwaelti@eivd.ch> : Refactoring campain
+        @changed Philippe Waelti <pwaelti@eivd.ch> : Refactoring campaign
         """
         allLinks = []
         for link in obj.getElementsByTagName("Link"):
@@ -697,7 +702,7 @@ class PyutXml:
             xmlClass = xmlOglClass.getElementsByTagName('Class')[0]
 
             # Backward compatibility (pyut v1.0). If id not present,
-            # auto set by the instanciation of object
+            # auto set by the instantiation of object
             if xmlClass.hasAttribute('id'):
                 pyutClass.setId(int(xmlClass.getAttribute('id')))
             else:
@@ -763,7 +768,7 @@ class PyutXml:
             xmlNote = xmlOglNote.getElementsByTagName('Note')[0]
 
             # Backward compatibility (pyut v1.0). If id not present,
-            # auto set by the instanciation of object
+            # auto set by the instantiation of object
             if xmlNote.hasAttribute('id'):
                 pyutNote.setId(int(xmlNote.getAttribute('id')))
             else:
@@ -811,7 +816,7 @@ class PyutXml:
             xmlActor = xmlOglActor.getElementsByTagName('Actor')[0]
 
             # Backward compatibility (pyut v1.0). If id not present,
-            # auto set by the instanciation of object
+            # auto set by the instantiation of object
             if xmlActor.hasAttribute('id'):
                 pyutActor.setId(int(xmlActor.getAttribute('id')))
             else:
@@ -859,7 +864,7 @@ class PyutXml:
             xmlUseCase = xmlOglUseCase.getElementsByTagName('UseCase')[0]
 
             # Backward compatibility (pyut v1.0). If id not present,
-            # auto set by the instanciation of object
+            # auto set by the instantiation of object
             if xmlUseCase.hasAttribute('id'):
                 pyutUseCase.setId(int(xmlUseCase.getAttribute('id')))
             else:
@@ -886,7 +891,7 @@ class PyutXml:
     def _fixVersion(self, dicoLink, dicoOglObjects, dicoFather):
         """
         Fix links if old version of pyut (v1.0) has been detected.
-        It replace the name in dicos with id's.
+        It replaceS the name in the dictionary with id's.
 
         @param {srcName, OglObject} dicoOglObjects : OGL objects loaded
         @param {srcName, OglLink} dicoLink : OGL links loaded
@@ -894,7 +899,7 @@ class PyutXml:
         @since 2.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        # This works because destinaton of link is the NAME of dest
+        # This works because destination of link is the NAME of dest
         # This is fixed just below
         for links in list(dicoLink.values()):
             for link in links:

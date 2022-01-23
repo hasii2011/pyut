@@ -58,6 +58,7 @@ from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.ui.Mediator import Mediator
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -77,7 +78,7 @@ class PyutXml:
     the XML file and indicate the UML frame onto which you want to draw
     (See `UmlDiagramsFrame`).
 
-    This module is dynamically loaded based on the input XML's version number.  This
+    This module is dynamically loaded based on the input XML version number.  This
     class supports `PyutXml.VERSION`  10
     
     """
