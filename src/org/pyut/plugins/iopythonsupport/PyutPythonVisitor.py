@@ -140,13 +140,13 @@ class PyutPythonVisitor(Python3Visitor):
 
             if self.__isProperty(methodName=methodName):
                 if parameterNames == PyutPythonVisitor.PYTHON_SELF:
-                    self.getterProperties[methodName] = ['']
+                    self.getterProperties[methodName] = [MultiParameterNames('')]
                 else:
                     strippedParameterNames: MultiParameterNames = MultiParameterNames(parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, ""))
                     self.setterProperties[methodName] = [strippedParameterNames]
             else:
                 if parameterNames != PyutPythonVisitor.PYTHON_SELF:
-                    strippedParameterNames: MultiParameterNames = MultiParameterNames(parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, ""))
+                    strippedParameterNames = MultiParameterNames(parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, ""))
                     if strippedParameterNames not in self.parameters:
                         self.parameters[methodName] = [strippedParameterNames]
                     else:
@@ -156,7 +156,7 @@ class PyutPythonVisitor(Python3Visitor):
 
     def visitExpr_stmt(self, ctx: Python3Parser.Expr_stmtContext):
 
-        exprText: str = ctx.getText()
+        exprText: ExpressionText = cast(ExpressionText, ctx.getText())
 
         if exprText.startswith(PyutPythonVisitor.FIELD_IDENTIFIER) is True:
             areWeInInitMethod: bool = self.__isThisInitMethod(ctx)
@@ -165,12 +165,13 @@ class PyutPythonVisitor(Python3Visitor):
                 self.logger.debug(f'Field expression: {exprText}')
                 self.fields.append(Field(exprText.replace(PyutPythonVisitor.FIELD_IDENTIFIER, '')))
         else:
-            isDataClass, dataClassName = self.__isThisADataClassProperty(ctx)
+            isDataClass, className = self.__isThisADataClassProperty(ctx)
             if isDataClass is True:
                 self.logger.info(f'Non-init:  {exprText=}')
                 if PyutPythonVisitor.NON_PROPERTY_INDICATOR in exprText:
                     pass
                 else:
+                    dataClassName:     ClassName         = cast(ClassName, className)
                     dataClassProperty: DataClassProperty = DataClassProperty((dataClassName, exprText))
                     self.dataClassProperties.append(dataClassProperty)
 
@@ -207,10 +208,10 @@ class PyutPythonVisitor(Python3Visitor):
         methodText:     str       = ctx.getText()
         splitText:      List[str] = methodText.split('\n')
         justMethodCode: List[str] = splitText[1:len(splitText)]
-
+        # TODO; Put in an option to use justMethodCode
         self.logger.debug(f'justMethodCode: {justMethodCode}')
 
-        self.methodCode[methodName] = justMethodCode
+        self.methodCode[methodName] = methodText
 
     def _findArgListContext(self, ctx: Python3Parser.ClassdefContext) -> Python3Parser.ArglistContext:
 
