@@ -1,7 +1,6 @@
 
 from logging import Logger
 from logging import getLogger
-from typing import cast
 
 from wx import ID_ANY
 
@@ -17,6 +16,8 @@ from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
 
 from org.pyut.general.PyutVersion import PyutVersion
+
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
@@ -37,7 +38,7 @@ class HelpMenuHandler(BaseMenuHandler):
     # noinspection PyUnusedLocal
     def onAbout(self, event: CommandEvent):
         """
-        Show the about box
+        Show the Pyut about dialog
 
         Args:
             event:
@@ -97,5 +98,4 @@ class HelpMenuHandler(BaseMenuHandler):
             event:
         """
         with DlgPyutDebug(self._parent, ID_ANY) as dlg:
-            dlg: DlgPyutDebug = cast(DlgPyutDebug, dlg)
             dlg.ShowModal()

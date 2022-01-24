@@ -12,6 +12,7 @@ from os import sep as osSep
 from os import O_WRONLY
 from os import O_CREAT
 
+from org.pyut.model.ModelTypes import PyutLinks
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
@@ -104,7 +105,8 @@ class IoJava(PyutIoPlugin):
                 oglClasses.append(oglObject)
 
         for el in oglClasses:
-            self._writeClass(el.getPyutObject())
+            oglClass: OglClass = cast(OglClass, el.getPyutObject())
+            self._writeClass(oglClass)
 
     def _writeClass(self, pyutClass: PyutClass):
         """
@@ -125,13 +127,13 @@ class IoJava(PyutIoPlugin):
         fields     = pyutClass.fields
         methods    = pyutClass.methods
         parents    = pyutClass.getParents()
-        allLinks   = pyutClass.getLinks()
+        allLinks: PyutLinks   = pyutClass.getLinks()
 
         stereotype: PyutStereotype = pyutClass.getStereotype()
 
         # List of links
-        interfaces = []     # List of interfaces implemented by the class
-        links      = []     # Aggregation and compositions
+        interfaces: PyutLinks = PyutLinks([])     # List of interfaces implemented by the class
+        links:      PyutLinks = PyutLinks([])     # Aggregation and compositions
         self._separateLinks(allLinks, interfaces, links)
 
         # Is it an interface
@@ -231,11 +233,9 @@ class IoJava(PyutIoPlugin):
         """
         Write fields in file.
 
-        @param file file:
-        @param [PyutField, ...] fields : list of all fields of a class
-
-        @author N. Dubois <nicdub@gmx.ch>
-        @since 1.1
+        Args:
+            file:   file object to write to
+            fields: list of all fields of a class
         """
         # Write fields header
         if len(fields) > 0:
@@ -324,8 +324,8 @@ class IoJava(PyutIoPlugin):
             write(file, header.encode())
 
         # for all method in methods list
-        for method in methods:
-            method: PyutMethod = cast(PyutMethod, method)
+        for aMethod in methods:
+            method: PyutMethod = cast(PyutMethod, aMethod)
             self.logger.info(f'method: {method}')
             self._writeMethodComment(file, method, self.__tab)
             self._writeMethod(file, method)

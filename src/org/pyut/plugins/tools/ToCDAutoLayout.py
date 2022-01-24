@@ -1,12 +1,15 @@
+
+from typing import List
+
 from logging import Logger
 from logging import getLogger
-from typing import List
 
 from time import time
 from math import sqrt
 
 from wx import Yield as wxYield
 
+from org.pyut.plugins.base.PluginTypes import OglClasses
 from org.pyut.ui.UmlFrame import UmlFrame
 
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
@@ -18,11 +21,11 @@ class ToCDAutoLayout(PyutToPlugin):
     """
     Auto-layout tool
     """
-    def __init__(self, oglObjects: List[OglClass], umlFrame: UmlFrame):
+    def __init__(self, oglObjects: OglClasses, umlFrame: UmlFrame):
         """
         Args:
             oglObjects: list of ogl objects
-            umlFrame: PyUt's UML Frame
+            umlFrame: Pyut's UML Frame
         """
         super().__init__(oglObjects, umlFrame)
         self.logger: Logger = getLogger(__name__)

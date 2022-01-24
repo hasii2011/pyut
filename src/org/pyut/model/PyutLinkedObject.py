@@ -1,6 +1,8 @@
 
 from typing import List
 
+from org.pyut.model.ModelTypes import PyutLinks
+
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutObject import PyutObject
 
@@ -20,7 +22,7 @@ class PyutLinkedObject(PyutObject):
         """
         super().__init__(name)
 
-        self._links:    List[PyutLink]         = []
+        self._links:    PyutLinks              = PyutLinks([])
         self._parents:  List[PyutLinkedObject] = []     # Allows for multiple inheritance
 
     def computeNextSafeID(self):
@@ -33,7 +35,7 @@ class PyutLinkedObject(PyutObject):
         while self.isIDUsed(PyutLinkedObject.nextId):
             PyutLinkedObject.nextId += 1
 
-    def getLinks(self) -> List[PyutLink]:
+    def getLinks(self) -> PyutLinks:
         """
         This is not a copy, but the original one. Any change made to it is
         directly made on the class.
@@ -42,7 +44,7 @@ class PyutLinkedObject(PyutObject):
         """
         return self._links
 
-    def setLinks(self, links: List[PyutLink]):
+    def setLinks(self, links: PyutLinks):
         """
         Replace the actual links by those given in the list.
         The methods passed are not copied, but used directly.

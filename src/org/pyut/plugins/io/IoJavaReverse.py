@@ -1,9 +1,11 @@
 
+from typing import Dict
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
 from os import sep as osSep
-from typing import cast
 
 from wx import BeginBusyCursor as wxBeginBusyCursor
 from wx import EndBusyCursor as wxEndBusyCursor
@@ -107,7 +109,7 @@ class ReverseJava:
 
         self.logger: Logger = getLogger(__name__)
 
-        self._dicClasses = {}                     # Dictionary of classes
+        self._classes:  Dict[str, OglClass]   = {}
         self._umlFrame: UmlClassDiagramsFrame = umlFrame
 
     def _addClass(self, className: str) -> OglClass:
@@ -121,15 +123,15 @@ class ReverseJava:
 
         """
         # If the class name exists already, return the instance
-        if className in self._dicClasses:
-            return self._dicClasses[className]
+        if className in self._classes:
+            return self._classes[className]
 
         # Create the class
         pc: PyutClass = PyutClass(className)        # A new PyutClass
-        po: OglClass = OglClass(pc)                 # A new OglClass
+        po: OglClass  = OglClass(pc)                 # A new OglClass
         self._umlFrame.addShape(po, 0, 0)
         po.autoResize()
-        self._dicClasses[className] = po
+        self._classes[className] = po
 
         return po
 
@@ -145,11 +147,11 @@ class ReverseJava:
         self._logMessage(f'Adding father {parentName} for class {className}')
 
         # Get the OglClass object for the child class
-        po = self._dicClasses[className]
+        po = self._classes[className]
 
         # Create parent class ?
-        if parentName in self._dicClasses:
-            father = self._dicClasses[parentName]
+        if parentName in self._classes:
+            father = self._classes[parentName]
         else:
             father = self._addClass(parentName)
 
@@ -171,8 +173,8 @@ class ReverseJava:
 
         """
         # Get class fields
-        po = self._dicClasses[className]
-        pc = po.getPyutObject()
+        po: OglClass  = self._classes[className]
+        pc: PyutClass = cast(PyutClass, po.getPyutObject())
         classFields = pc.fields
 
         # TODO fix this crazy code to use constructor and catch exception on bad input
@@ -192,30 +194,31 @@ class ReverseJava:
 
     def _addClassMethod(self, className, modifiers, returnType, name, lstFields):
         """
-        Add Method to a class
-
-        Parameters example :
+        Add a method to a class
+        Parameters example:
+        ```
             - static private int getName(int a, long b)
             - className = name of the class which own this method
             - static private => modifiers
             - int            => return type
             - getName        => name
             - int a, long b  => lstFields => ["int a", "long b"]
-
+        ```
         Note : Default value can be None. (see names_values)
 
-        @param String className : Name of the class to be added
-        @param List of string modifiers : Method modifiers
-        @param String returnType        : Method returnType
-        @param String name              : Method name
-        @param List of string lstFields : Method fields
-
+        Args:
+            className:  Name of the class to add
+            modifiers:  Method modifiers
+            returnType: Method returnType
+            name:       Method name
+            lstFields:  List of string lstFields : Method fields
         """
+
         self._logMessage("Adding method %s for class %s" % (name, className))
         self._logMessage("(modifiers=%s; returnType=%s)" % (modifiers, returnType))
         # Get class fields
-        po: OglClass  = self._dicClasses[className]
-        pc: PyutClass = po.getPyutObject()
+        po: OglClass  = self._classes[className]
+        pc: PyutClass = cast(PyutClass, po.getPyutObject())
 
         # TODO fix this crazy code to use constructor and catch exception on bad input
         # Get visibility
@@ -268,10 +271,10 @@ class ReverseJava:
 
     def _readParagraph(self, lstFile, currentPos, paragraphStart, paragraphStop):
         """
-        Read a paragraph; Handle sub-levels;
+        Read a paragraph; Handle sublevels;
         Read a paragraph. A paragraph is limited by two specific tokens.
         As a paragraph can include itself a paragraph, this function
-        do read sub-paragraphs.
+        does read sub-paragraphs.
 
         @param lstFile : list of instructions read from the file to analyze
         @param currentPos : current position in the list
@@ -683,7 +686,7 @@ class ReverseJava:
 
     def _mySplit(self, lstIn):
         """
-        Do more splits on a list of String.
+        Do more splitting on a list of String.
         Split elements like [")};"]     into    ¨[")", "}", ";"]
 
         or
@@ -761,12 +764,14 @@ class ReverseJava:
             x      = Margin
             y      = Margin
             dy     = 10
-            for po in list(self._dicClasses.values()):
+            for po in list(self._classes.values()):
                 self._logMessage(".")
                 try:  # Catch exceptions
                     (w, h) = po.GetSize()
                     dy = max(dy, h+Margin)
-                    po.SetPosition(x + w/2, y + h/2)
+                    adjustedX: int = round(x + w/2)
+                    adjustedY: int = round(y + h/2)
+                    po.SetPosition(adjustedX, adjustedY)
                     po.autoResize()
                     x += w + Margin
                     if x > 200:
