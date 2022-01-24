@@ -1,8 +1,12 @@
+from typing import List
+from typing import cast
 
 import os
 
 from org.pyut.enums.LinkType import LinkType
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutField import PyutField
+from org.pyut.model.PyutMethod import PyutMethod
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
@@ -27,13 +31,12 @@ class IoCpp(PyutIoPlugin):
 
     def getAuthor(self):
         """
-        This method returns the author of the plugin.
+        This method returns the plugin's author.
 
-        @return string
-        @author D.Roux - droux@eivd.ch
-        @since 1.1
+        Returns:  The author string
+
         """
-        return "deve <droux@eivd.ch>"
+        return "<droux@eivd.ch>"
 
     def getVersion(self):
         """
@@ -64,9 +67,66 @@ class IoCpp(PyutIoPlugin):
     def setExportOptions(self) -> bool:
         return True
 
+    def write(self, oglObjects):
+        """
+        Data Saving
+        Args:
+            oglObjects:  list of exported objects
+        """
+
+        print("Saving...")
+
+        self._dir = self._askForDirectoryExport()
+        try:
+            os.mkdir(self._dir)
+        except OSError:
+            pass
+
+        self._srcDir = self._dir + os.sep + "src"
+        self._headerDir = self._dir + os.sep + "include"
+
+        try:
+            os.mkdir(self._srcDir)
+        except OSError:
+            pass
+
+        try:
+            os.mkdir(self._headerDir)
+        except OSError:
+            pass
+
+        # defining constant
+        self.__tab = "    "
+        self.__demiTab = "  "
+        self.__className = []
+
+        for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
+            self._writeClass(cast(PyutClass, el.getPyutObject()))
+
+        self.writeMain()
+        self.writeMakefile()
+
+        print("done !")
+
+    def writeMain(self):
+        main = open(self._srcDir + os.sep + 'main.cpp', 'w')
+
+        for i in self.__className:
+            main.write('#include "' + i + '.h"\n')
+
+        main.write("""
+
+int main(int argc, char** argv)
+{
+    ; //code here
+}
+        """)
+
     def _visibility(self, elements, public, private, protected):
         """
-        Put all element of elements list to list public, private, protected.
+        TODO:  Fix this method so it returns a data structure that has this in/out lists
+
+        Set all elements list in the lists to the appropriate visibility
 
         @param elements  : []  of object who has getVisibility methods.
         @param public    : []  list of public element
@@ -277,18 +337,19 @@ class IoCpp(PyutIoPlugin):
             file.write(linkName + ' ')
             file.write(";\n")
 
+    # noinspection SpellCheckingInspection
     def _writeDefine(self, file, className):
         """
         Writing define instruction for pre-processor
 
-        @param file
-        @param className : string the name of a class
+        is writing in file :
+        #ifndef __CLASSNAME_H__
+        #define __CLASSNAME_H__
 
-        @author D.Roux - droux@eivd.ch
-        @since 1.1
+        Args:
+            file:
+            className: string the name of a class
         """
-        # is writing in file : #ifndef __CLASSNAME_H__
-        #                       #define __CLASSNAME_H__
         define = "__"+className.upper()+"_H__"
         file.write("#ifndef "+define+"\n#define "+define+"\n\n\n")
 
@@ -412,24 +473,25 @@ class IoCpp(PyutIoPlugin):
         className = pyutClass.getName()
         self.__className.append(className)
 
-        # the two files an header (className.h) and
+        # the two files and header (className.h) and
         #               a source (className.cpp) file
         headerFile = open(self._headerDir + os.sep+className + '.h',   'w')
         srcFile    = open(self._srcDir    + os.sep+className + '.cpp', 'w')
 
         # lists for files if there ar public, private or protected
-        publicFields    = []
-        privateFields   = []
-        protectedFields = []
-        fields          = pyutClass.fields
-        defFields       = []
+        publicFields:    List[PyutField] = []
+        privateFields:   List[PyutField] = []
+        protectedFields: List[PyutField] = []
+        defFields:       List[PyutField] = []
+
+        fields: List[PyutField]  = pyutClass.fields
         self._visibility(fields, publicFields, privateFields, protectedFields)
         self._fieldsWDefault(fields, defFields)
 
         # lists for method if there ar public, private or protected
-        publicMethods     = []
-        privateMethods    = []
-        protectedMethods  = []
+        publicMethods:    List[PyutMethod] = []
+        privateMethods:   List[PyutMethod] = []
+        protectedMethods: List[PyutMethod] = []
         self._visibility(pyutClass.methods, publicMethods, privateMethods, protectedMethods)
 
         fathers = pyutClass.getParents()
@@ -480,20 +542,6 @@ class IoCpp(PyutIoPlugin):
         # end of class
         headerFile.write("\n\n};\n#endif")
 
-    def writeMain(self):
-        main = open(self._srcDir + os.sep + 'main.cpp', 'w')
-
-        for i in self.__className:
-            main.write('#include "' + i + '.h"\n')
-
-        main.write("""
-
-int main(int argc, char** argv)
-{
-    ; //code here
-}
-        """)
-
     def writeMakefile(self):
         makefile = open(self._dir + os.sep + 'Makefile', 'w')
         makefile.write("OBJS = ")
@@ -502,7 +550,6 @@ int main(int argc, char** argv)
             makefile.write('src' + os.sep + i + ".o ")
 
         makefile.write(" src" + os.sep + "main.o")
-        # OBJS = ChildClass.o Other.o SomeClass.o  Youpiii.o main.o
 
         makefile.write("""
 
@@ -519,44 +566,3 @@ all: $(FILENAME)
 $(FILENAME): $(OBJS)
     $(COMP) $(OPTIONS) $(OBJS) -o src/$(FILENAME) $(LIBS)
         """)
-
-    def write(self, oglObjects):
-        """
-        Data Saving
-        Args:
-            oglObjects:  list of exported objects
-        """
-
-        print("Saving...")
-
-        self._dir = self._askForDirectoryExport()
-        try:
-            os.mkdir(self._dir)
-        except OSError:
-            pass
-
-        self._srcDir = self._dir + os.sep + "src"
-        self._headerDir = self._dir + os.sep + "include"
-
-        try:
-            os.mkdir(self._srcDir)
-        except OSError:
-            pass
-
-        try:
-            os.mkdir(self._headerDir)
-        except OSError:
-            pass
-
-        # defining constant
-        self.__tab = "    "
-        self.__demiTab = "  "
-        self.__className = []
-
-        for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
-            self._writeClass(el.getPyutObject())
-
-        self.writeMain()
-        self.writeMakefile()
-
-        print("done !")

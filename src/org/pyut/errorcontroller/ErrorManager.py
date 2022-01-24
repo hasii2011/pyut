@@ -32,7 +32,7 @@ class ErrorManager(Singleton):
         Singleton constructor
         """
         self.changeType(view)
-        self._view: AbstractErrorView = cast(AbstractErrorView, None)
+        self._view: AbstractErrorView = GraphicErrorView()
 
     def changeType(self, view: ErrorViewTypes):
 

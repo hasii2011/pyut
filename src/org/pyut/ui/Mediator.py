@@ -761,13 +761,15 @@ class Mediator(Singleton):
 
         return currentDirectoryHandler.currentDirectory
 
-    def setCurrentDir(self, directory):
+    def setCurrentDir(self, directory: str):
         """
         Set the application's current directory
 
-        @param String directory : New application's current directory
+        Args:
+            directory:  New application current directory
         """
-        return self._appFrame.updateCurrentDir(directory)
+        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
+        currentDirectoryHandler.currentDirectory = directory
 
     def processChar(self, event: KeyEvent):
         """

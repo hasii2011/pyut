@@ -273,7 +273,7 @@ class FileMenuHandler(BaseMenuHandler):
             wxYield()
             obj.doExport()
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
+            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."))
             self.logger.error(f'{e}')
 
     # noinspection PyUnusedLocal
