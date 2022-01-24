@@ -1,13 +1,9 @@
 
-from typing import List
-
+from org.pyut.plugins.base.PluginTypes import OglClasses
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
-
 from org.pyut.plugins.dtd.DTDParser import DTDParser
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-
-from org.pyut.ogl.OglObject import OglObject
 
 
 class IoDTD(PyutIoPlugin):
@@ -48,14 +44,14 @@ class IoDTD(PyutIoPlugin):
 
     def getInputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
-        @return tupple
+        @return tuple
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.2
         """
         # return None if this plugin can't read.
-        # otherwise, return a tupple with
+        # otherwise, return a tuple with
         # - name of the input format
         # - extension of the input format
         # - textual description of the plugin input format
@@ -64,9 +60,9 @@ class IoDTD(PyutIoPlugin):
 
     def getOutputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
-        @return tupple
+        @return tuple
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.2
         """
@@ -87,14 +83,15 @@ class IoDTD(PyutIoPlugin):
         """
         Write data to filename. Abstract.
 
-        @return True if succeeded, False if error or canceled
-        @param oglObjects : list of exported objects
-        @author Deve Roux <droux@eivd.ch>
-        @since 1.0
+        Args:
+            oglObjects: list of exported objects
+
+        Returns:  True if write was successful, False if error or canceled
+
         """
         return False
 
-    def read(self, oglObjects: List[OglObject], umlFrame: UmlClassDiagramsFrame):
+    def read(self, oglObjects: OglClasses, umlFrame: UmlClassDiagramsFrame):
         """
 
         Args:
