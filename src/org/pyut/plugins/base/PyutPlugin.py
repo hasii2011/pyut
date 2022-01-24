@@ -1,4 +1,4 @@
-from typing import List
+
 from typing import Tuple
 
 from wx import FD_OPEN
@@ -17,8 +17,6 @@ from wx import FileSelector
 from wx import MessageDialog
 from wx import Yield as wxYield
 
-from org.pyut.ogl.OglClass import OglClass
-
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
@@ -27,15 +25,11 @@ class PyutPlugin:
     INPUT_FORMAT_TYPE  = Tuple[str, str, str]
     OUTPUT_FORMAT_TYPE = Tuple[str, str, str]
 
-    OglClasses = List[OglClass]
-    """
-    Standard plugin tools
-    """
     def __init__(self, umlFrame: UmlFrame, ctrl):
         """
 
         Args:
-            umlFrame:   PyUt's UML frame
+            umlFrame:   Pyut's UML frame
             ctrl:       The mediator to use
         """
         self._umlFrame = umlFrame

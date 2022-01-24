@@ -1,6 +1,4 @@
 
-from typing import List
-
 from wx import ICON_ERROR
 from wx import MessageDialog
 from wx import OK
@@ -8,8 +6,7 @@ from wx import OK
 from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
-
-from org.pyut.ogl.OglObject import OglObject
+from org.pyut.plugins.base.PluginTypes import OglClasses
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -18,7 +15,7 @@ class PyutToPlugin(PyutPlugin):
     """
     Note : Merge with PyutToPlugin
     """
-    def __init__(self, umlObjects: List[OglObject], umlFrame: UmlFrame):
+    def __init__(self, umlObjects: OglClasses, umlFrame: UmlFrame):
         """
 
         Args:
@@ -91,10 +88,12 @@ class PyutToPlugin(PyutPlugin):
         """
         Do the tool's action
 
-        @param OglObject [] umlObjects : list of the uml objects of the diagram
-        @param OglObject [] selectedObjects : list of the selected objects
-        @param UmlFrame umlFrame : the frame of the diagram
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            umlObjects:         list of the uml objects of the diagram
+            selectedObjects:    list of the selected objects
+            umlFrame:           The diagram's frame
+
+        Returns:
+
         """
         pass

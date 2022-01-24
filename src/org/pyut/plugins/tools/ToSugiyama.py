@@ -3,7 +3,9 @@ from typing import List
 
 from logging import Logger
 from logging import getLogger
+from typing import Union
 
+from org.pyut.plugins.base.PluginTypes import OglClasses
 from org.pyut.plugins.sugiyama.RealSugiyamaNode import RealSugiyamaNode
 from org.pyut.plugins.sugiyama.VirtualSugiyamaNode import VirtualSugiyamaNode
 from org.pyut.plugins.sugiyama.SugiyamaLink import SugiyamaLink
@@ -40,30 +42,30 @@ class ToSugiyama(PyutToPlugin):
     a lot of hierarchical relations (inheritance and interface), and poor
     association relations.
     """
-    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
+    def __init__(self, umlObjects: OglClasses, umlFrame: UmlFrame):
         """
         Args:
             umlObjects: list of ogl objects
-            umlFrame: PyUt's UML Frame
+            umlFrame: A PyUt UML Frame
         """
         super().__init__(umlObjects, umlFrame)
 
         self.logger: Logger = getLogger(__name__)
 
         # Sugiyama nodes and links
-        self.__realSugiyamaNodesList = []   # List of all RealSugiyamaNode
-        self.__sugiyamaLinksList = []       # List of all SugiyamaLink
+        self.__realSugiyamaNodesList: List[RealSugiyamaNode] = []   # List of all RealSugiyamaNode
+        self.__sugiyamaLinksList:     List[SugiyamaLink]     = []   # List of all SugiyamaLink
 
         #  Hierarchy graph
         #  List of Real and Virtual Sugiyama nodes that take part in hierarchy
-        self.__hierarchyGraphNodesList = []
-        #  List of Sugiyama nodes that aren't in hierarchy
-        self.__nonHierarchyGraphNodesList = []
-        self.__nonHierarchyGraphLinksList = []
+        self.__hierarchyGraphNodesList:    List[Union[RealSugiyamaNode, VirtualSugiyamaNode]] = []
+        #  List of Sugiyama nodes that are not in hierarchy
+        self.__nonHierarchyGraphNodesList: List[VirtualSugiyamaNode] = []
+        self.__nonHierarchyGraphLinksList: List[SugiyamaLink]        = []
 
         #  All nodes of the hierarchy are assigned to a level.
         #  A level is a list of nodes (real or virtual).
-        self.__levels = []  # List of levels
+        self.__levels: List = []  # List of levels
 
     def getName(self) -> str:
         """
@@ -106,7 +108,7 @@ class ToSugiyama(PyutToPlugin):
         # Create the sub-graph containing the hierarchical relations
         self.__createInterfaceOglALayout(umlObjects)
 
-        # Compute the best level for each nodes
+        # Compute the best level for each node
         if not self.__levelFind():
             self.logger.error('Error: there is a cycle in hierarchical links. Sugiyama,  algorithm could not be applied')
             return
@@ -119,7 +121,7 @@ class ToSugiyama(PyutToPlugin):
         self.__barycenter()
         self.logger.info(f'Number of hierarchical intersections: {self.__getNbIntersectAll()}')
 
-        # Add non hierarchical nodes to levels
+        # Add non-hierarchical nodes to levels
         self.logger.info(f'non hierarchy graph nodes list: {self.__nonHierarchyGraphNodesList}')
         self.logger.info(f'non hierarchy graph links list{self.__nonHierarchyGraphLinksList}')
         self.__addNonHierarchicalNodes()
@@ -212,7 +214,7 @@ class ToSugiyama(PyutToPlugin):
                     addNode2HierarchyGraph(srcSugiyamaNode, dictSugiyamaHierarchy)
                     addNode2HierarchyGraph(dstSugiyamaNode, dictSugiyamaHierarchy)
 
-                # Non hierarchical links
+                # Non-hierarchical links
                 else:
 
                     # Add link between source and destination interface
@@ -222,7 +224,7 @@ class ToSugiyama(PyutToPlugin):
                     # Add link into non-hierarchical links' list
                     self.__nonHierarchyGraphLinksList.append(link)
 
-        # Create list of non hierarchical nodes
+        # Create list of non-hierarchical nodes
 
         # For each class or note
         for sugiyamaNode in list(dictOgl.values()):
@@ -316,7 +318,7 @@ class ToSugiyama(PyutToPlugin):
             # Add the current level to the list
             self.__levels.append(level)
 
-        # Fix nodes index and level for each nodes
+        # Fix nodes index and level for each node
         for idx in range(len(self.__levels)):
             level = self.__levels[idx]
             for i in range(len(level)):
@@ -397,7 +399,7 @@ class ToSugiyama(PyutToPlugin):
             summation = 0
             nodes     = []  # List of connected internal nodes
 
-            # For all non hierarchical links
+            # For all non-hierarchical links
             for (zDstNode, zLink) in zExtNode.getNonHierarchicalLink():
                 # If node linked to internal nodes
                 if zDstNode in zInternalNodes:
@@ -442,7 +444,7 @@ class ToSugiyama(PyutToPlugin):
             # Return average of nodes' level
             return bestLevel, levelNodes[len(levelNodes) // 2].getIndex()
 
-        # Function for getting level that has less nodes in.
+        # Function for getting level that has fewer nodes.
 
         def getLessFilledLevel():
 
@@ -652,10 +654,10 @@ class ToSugiyama(PyutToPlugin):
     def __sortSameBarycenter(self, indexLevel):
         """
 
-        @param indexLevel : index of level
-        @author Nicolas Dubois
+        Args:
+            indexLevel:   index of level
         """
-        level = self.__levels[indexLevel]
+        level: List = self.__levels[indexLevel]
 
         # A group is a list of nodes that have the same barycenter value
         # groups is a list of all group
@@ -679,8 +681,8 @@ class ToSugiyama(PyutToPlugin):
                 index += 1
                 barycenter = node.getBarycenter()
 
-        # Compute new barycenter value = average of parents'down-barycenter
-        # and sons'up-barycenter
+        # Compute new barycenter value = average of parents down-barycenter
+        # and sons up-barycenter
         for node in level:
             node.barycenterIndex()
 
@@ -699,7 +701,7 @@ class ToSugiyama(PyutToPlugin):
                 index += 1
 
         # Sort level on new indexes
-        level.sort(SugiyamaGlobals.cmpIndex)
+        level.sort(key=SugiyamaGlobals.cmpIndex)
 
         return moved
 
@@ -892,7 +894,7 @@ class ToSugiyama(PyutToPlugin):
                 # Compute up-barycenter on current level
                 self.__downBarycenterLevel(i)
                 #  ~ if self.__sortNeeded(i):
-                    #  ~ moved = 1
+                #  ~ moved = 1
                 self.__sortLevel(i)
                 if shiftOnUpward and self.__getNbIntersectAll():
                     self.__shiftSameBarycenter(i)
@@ -900,7 +902,7 @@ class ToSugiyama(PyutToPlugin):
                 else:
                     self.__sortSameBarycenter(i)
                     #  ~ if self.__sortSameBarycenter(i):
-                        #  ~ moved = 1
+                    #  ~ moved = 1
 
                 # Check if order of nodes has been changed
                 if levelState != self.__levels[i]:

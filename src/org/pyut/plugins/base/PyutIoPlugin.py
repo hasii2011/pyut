@@ -1,4 +1,4 @@
-from typing import List
+
 from typing import Tuple
 from typing import cast
 
@@ -6,12 +6,12 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.ui.Mediator import Mediator
-from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
+from org.pyut.plugins.base.PluginTypes import OglClasses
 
 from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.Mediator import Mediator
 
 
 class PyutIoPlugin(PyutPlugin):
@@ -140,7 +140,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         return False
 
-    def read(self, oglObjects: List[OglClass], umlFrame: UmlFrame):
+    def read(self, oglObjects: OglClasses, umlFrame: UmlFrame):
         """
 
         Args:
@@ -149,7 +149,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         pass
 
-    def write(self, oglObjects: PyutPlugin.OglClasses):
+    def write(self, oglObjects: OglClasses):
         """
          Write data to filename. Abstract.
         Args:
@@ -158,7 +158,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         pass
 
-    def doImport(self) -> PyutPlugin.OglClasses:
+    def doImport(self) -> OglClasses:
         """
         Called by Pyut to begin the import process.
 
@@ -167,11 +167,11 @@ class PyutIoPlugin(PyutPlugin):
         """
         if self.getInputFormat() is not None:
             if not self.setImportOptions():
-                return cast(PyutPlugin.OglClasses, None)
+                return cast(OglClasses, None)
             self.read(self.__oglObjects, self._umlFrame)
             return self.__oglObjects
         else:
-            return cast(PyutPlugin.OglClasses, None)
+            return cast(OglClasses, None)
 
     def doExport(self):
         """

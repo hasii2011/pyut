@@ -29,6 +29,7 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglObject import OglObject
+from org.pyut.plugins.base.PyutToPlugin import OglClasses
 
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlFrame import UmlFrame
@@ -47,7 +48,7 @@ class ToFastEdit(PyutToPlugin):
 
     """
     """
-    def __init__(self, umlObjects: List[OglObject], umlFrame: UmlFrame):
+    def __init__(self, umlObjects: OglClasses, umlFrame: UmlFrame):
         """
         Constructor.
 
