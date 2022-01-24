@@ -121,9 +121,9 @@ class IoPython(PyutIoPlugin):
         generatedClassDoc: List[str] = self._pyutToPython.generateTopCode()
 
         # Create classes code for each object
-        for oglClass in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
+        for oglObject in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
 
-            oglClass:  OglClass  = cast(OglClass, oglClass)
+            oglClass:  OglClass  = cast(OglClass, oglObject)
             pyutClass: PyutClass = cast(PyutClass, oglClass.getPyutObject())
 
             generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
@@ -142,8 +142,8 @@ class IoPython(PyutIoPlugin):
                 methodName: str = pyutMethod.getName()
                 if methodName != PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR:
                     try:
-                        methodCode: List[str] = clsMethods[methodName]
-                        generatedClassCode += methodCode
+                        otherMethodCode: List[str] = clsMethods[methodName]
+                        generatedClassCode += otherMethodCode
                     except (ValueError, Exception, KeyError) as e:
                         self.logger.warning(f'{e}')
 

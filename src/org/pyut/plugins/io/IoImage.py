@@ -98,7 +98,6 @@ class IoImage(PyutIoPlugin):
         """
 
         with DlgImageOptions(self._umlFrame, imageOptions=self._imageOptions) as dlg:
-            dlg: DlgImageOptions = cast(DlgImageOptions, dlg)
             if dlg.ShowModal() == OK:
                 self.logger.warning(f'Options: {self._imageOptions}')
             else:

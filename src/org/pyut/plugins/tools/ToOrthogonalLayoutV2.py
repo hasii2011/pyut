@@ -18,6 +18,7 @@ from org.pyut.miniogl.Shape import Shape
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
+
 from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
 from org.pyut.plugins.orthogonal.OrthogonalAdapter import OglCoordinate
@@ -29,15 +30,16 @@ from org.pyut.plugins.orthogonal.OrthogonalAdapterException import OrthogonalAda
 from org.pyut.ui.UmlFrame import UmlFrame
 
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PluginTypes import OglClasses
 
 
 class ToOrthogonalLayoutV2(PyutToPlugin):
     """
-    Version 2 of this plugin.  Does not depend on python-tulip.  Instead it depends on a homegrown
+    Version 2 of this plugin.  Does not depend on python-tulip.  Instead, it depends on a homegrown
     version
     """
 
-    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
+    def __init__(self, umlObjects: OglClasses, umlFrame: UmlFrame):
         """
 
         Args:
@@ -88,7 +90,7 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
             if dlg.ShowModal() == OK:
                 self.logger.warning(f'Retrieved data: layoutWidth: {dlg.layoutWidth} layoutHeight: {dlg.layoutHeight}')
                 self._layoutWidth  = dlg.layoutWidth
-                self._layoutHeight = dlg._layoutHeight
+                self._layoutHeight = dlg.layoutHeight
             else:
                 self.logger.warning(f'Cancelled')
 

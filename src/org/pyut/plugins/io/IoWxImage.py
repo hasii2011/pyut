@@ -6,6 +6,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyProtectedMember
 from wx._core import BitmapType
 
 from wx import OK
@@ -101,7 +102,6 @@ class IoWxImage(PyutIoPlugin):
             if False, the export will be cancelled.
         """
         with DlgWxImageOptions(self._umlFrame) as dlg:
-            dlg: DlgWxImageOptions = cast(DlgWxImageOptions, dlg)
             if dlg.ShowModal() == OK:
                 self.logger.warning(f'{dlg.imageFormat=} {dlg.outputFileName=}')
                 self._imageFormat:    WxImageFormat = dlg.imageFormat

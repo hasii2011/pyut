@@ -7,10 +7,13 @@ from math import ceil
 from os import path as osPath
 from os import chdir
 from os import getcwd
+from typing import cast
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.model.PyutClass import PyutClass
+
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PluginTypes import OglClasses
 
 from org.pyut.ogl.OglClass import OglClass
 
@@ -21,7 +24,7 @@ class ToAscii(PyutToPlugin):
     """
     Python code generation/reverse engineering
     """
-    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
+    def __init__(self, umlObjects: OglClasses, umlFrame: UmlFrame):
         """
 
         Args:
@@ -85,7 +88,7 @@ class ToAscii(PyutToPlugin):
             if not isinstance(oglObject, OglClass):
                 continue
 
-            o: PyutClass = oglObject.getPyutObject()
+            o: PyutClass = cast(PyutClass, oglObject.getPyutObject())
 
             suffix = 2
             filename = o.getName()
