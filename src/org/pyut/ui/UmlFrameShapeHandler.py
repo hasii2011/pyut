@@ -9,6 +9,7 @@ from wx import Pen
 from wx import Window
 
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
@@ -107,7 +108,8 @@ class UmlFrameShapeHandler(DiagramFrame):
         self.Refresh()
         return pyutUseCase
 
-    def addShape(self, shape: Union[OglObject, OglInterface2], x: int, y: int, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
+    def addShape(self, shape: Union[OglObject, OglInterface2, SelectAnchorPoint],
+                 x: int, y: int, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
         """
         Add a shape to the UmlFrame.
 

@@ -1,6 +1,6 @@
+
 from typing import Dict
 from typing import List
-
 from typing import cast
 
 from logging import Logger
@@ -120,14 +120,16 @@ class PyutXml:
 
             toPyutXml: OglToMiniDomV10 = OglToMiniDomV10()
             # Save all documents in the project
-            for document in project.getDocuments():
+            for pyutDocument in project.getDocuments():
 
-                document:     PyutDocument = cast(PyutDocument, document)
+                document:     PyutDocument = cast(PyutDocument, pyutDocument)
                 documentNode: Element      = self.__pyutDocumentToPyutXml(xmlDoc=xmlDoc, pyutDocument=document)
 
                 top.appendChild(documentNode)
 
-                oglObjects: List[OglObject] = document.getFrame().getUmlObjects()
+                from org.pyut.ui.UmlFrame import UmlObjects
+
+                oglObjects: UmlObjects = document.getFrame().getUmlObjects()
                 for i in range(len(oglObjects)):
                     gauge.SetValue(i * 100 / len(oglObjects))
                     wxYield()
@@ -136,7 +138,7 @@ class PyutXml:
                         classElement: Element = toPyutXml.oglClassToXml(oglObject, xmlDoc)
                         documentNode.appendChild(classElement)
                     elif isinstance(oglObject, OglInterface2):
-                        classElement: Element = toPyutXml.oglInterface2ToXml(oglObject, xmlDoc)
+                        classElement = toPyutXml.oglInterface2ToXml(oglObject, xmlDoc)
                         documentNode.appendChild(classElement)
                     elif isinstance(oglObject, OglNote):
                         noteElement: Element = toPyutXml.oglNoteToXml(oglObject, xmlDoc)
@@ -193,9 +195,9 @@ class PyutXml:
             self.__updateProgressDialog(newMessage='Reading elements...', newGaugeValue=1)
             wxYield()
             toOgl: MiniDomToOglV10 = MiniDomToOglV10()
-            for documentNode in dom.getElementsByTagName(PyutXmlConstants.ELEMENT_DOCUMENT):
+            for element in dom.getElementsByTagName(PyutXmlConstants.ELEMENT_DOCUMENT):
 
-                documentNode: Element = cast(Element, documentNode)
+                documentNode: Element = cast(Element, element)
                 docTypeStr:   str     = documentNode.getAttribute(PyutXmlConstants.ATTR_TYPE)
                 self.__updateProgressDialog(newMessage=f'Determine Title for document type: {docTypeStr}', newGaugeValue=2)
                 wxYield()
@@ -204,7 +206,7 @@ class PyutXml:
                 document: PyutDocument = project.newDocument(docType)
                 document.title = self.__determineDocumentTitle(documentNode)
 
-                umlFrame: UmlDiagramsFrame = self.__showAppropriateUmlFrame(document)
+                umlFrame = self.__showAppropriateUmlFrame(document)
                 self.__positionAndSetupDiagramFrame(umlFrame=umlFrame, documentNode=documentNode)
 
                 self.__updateProgressDialog(newMessage='Start Conversion...', newGaugeValue=3)
@@ -362,8 +364,8 @@ class PyutXml:
             self.__displayAnOglObject(oglUseCase, umlFrame)
 
     def __displayTheSDMessages(self, oglSDMessages: OglSDMessages, umlFrame: UmlDiagramsFrame):
+
         for oglSDMessage in oglSDMessages.values():
-            oglSDMessage: OglSDMessage = cast(OglSDMessage, oglSDMessage)
             umlFrame.getDiagram().AddShape(oglSDMessage)
 
     def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlDiagramsFrame):

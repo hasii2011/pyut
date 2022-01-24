@@ -1,6 +1,7 @@
 
 from typing import List
 from typing import TypeVar
+from typing import Union
 from typing import cast
 
 from logging import Logger
@@ -52,9 +53,10 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
-TreeDataType = TypeVar('TreeDataType', PyutProject, UmlDiagramsFrame)
+TreeDataType = Union[PyutProject, UmlDiagramsFrame]
 DialogType   = TypeVar('DialogType', FileDialog, MessageDialog)
 
 
@@ -64,7 +66,7 @@ class TreeNotebookHandler:
     Used by the main application frame (PyutApplicationFrame) to host all UML frames,
     the notebook and the project tree.
 
-    Handles the the project files, projects, documents and
+    Handles the project files, projects, documents and
     their relationship to the various UI Tree elements and the
     notebook tabs in the UI
 
@@ -461,17 +463,22 @@ class TreeNotebookHandler:
                             return False
                     dlg.Destroy()
 
+        from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame   # Prevent recursion import problem
+        from org.pyut.ui.Mediator import Mediator
+
         # dereference all
-        self.__parent   = None
-        self._mediator  = None
-        self.__splitter = None
-        self.__projectTree = None
         self.__notebook.DeleteAllPages()
         self.__notebook = None
+
+        self.__parent   = cast(PyutApplicationFrame, None)
+        self._projects  = cast(List[PyutProject], None)
+        self._mediator  = cast(Mediator, None)
+        self._currentProject = cast(PyutProject, None)
+        self._currentFrame   = cast(UmlDiagramsFrame, None)
+
         self.__splitter = None
-        self._projects  = None
-        self._currentProject = None
-        self._currentFrame   = None
+        self.__projectTree = None
+        self.__splitter = None
 
         return True
 
@@ -655,7 +662,7 @@ class TreeNotebookHandler:
 
         elif isinstance(pyutData, PyutProject):
             project: PyutProject = pyutData
-            projectFrames: UmlFrameType = project.getFrames()
+            projectFrames: List[UmlFrameType] = project.getFrames()
             if len(projectFrames) > 0:
                 self._currentFrame = projectFrames[0]
                 self.__syncPageFrameAndNotebook(frame=self._currentFrame)

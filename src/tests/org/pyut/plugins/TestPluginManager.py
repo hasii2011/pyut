@@ -1,3 +1,4 @@
+
 from typing import List
 
 from logging import Logger
@@ -10,7 +11,9 @@ from unittest import main as unitTestMain
 from unittest import TestSuite
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.ui.tools.SharedTypes import SharedTypes
+
+from org.pyut.ui.tools.SharedTypes import PluginMap
+
 from tests.TestBase import TestBase
 
 from org.pyut.plugins.PluginManager import PluginManager
@@ -52,17 +55,17 @@ class TestPluginManager(TestBase):
 
     def testMapWxIdsToToolPlugins(self):
 
-        toolPluginMap: SharedTypes.PluginMap = self.pluginManager.mapWxIdsToToolPlugins()
+        toolPluginMap: PluginMap = self.pluginManager.mapWxIdsToToolPlugins()
         self.assertEqual(TestPluginManager.EXPECTED_TOOL_COUNT, len(toolPluginMap), 'Incorrect tool count')
 
     def testMapWxIdsToImportPlugins(self):
 
-        importPluginMap: SharedTypes.PluginMap = self.pluginManager.mapWxIdsToImportPlugins()
+        importPluginMap: PluginMap = self.pluginManager.mapWxIdsToImportPlugins()
         self.assertEqual(TestPluginManager.EXPECTED_IMPORT_PLUGIN_COUNT, len(importPluginMap), 'Incorrect import plugin count')
 
     def testMapWxIdsToExportPlugins(self):
 
-        exportPluginMap: SharedTypes.PluginMap = self.pluginManager.mapWxIdsToExportPlugins()
+        exportPluginMap: PluginMap = self.pluginManager.mapWxIdsToExportPlugins()
         self.assertEqual(TestPluginManager.EXPECTED_EXPORT_PLUGIN_COUNT, len(exportPluginMap), 'Incorrect export plugin count')
 
 

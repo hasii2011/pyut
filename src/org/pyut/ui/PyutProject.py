@@ -32,7 +32,8 @@ from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
 from org.pyut.general.Globals import _
 
-UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])
+# Until I figure out how to stop mypy from complaining
+UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])  # type: ignore
 
 
 class PyutProject:
@@ -106,11 +107,11 @@ class PyutProject:
         """
         self._codePath = codePath
 
-    def getDocuments(self):
+    def getDocuments(self) -> List[PyutDocument]:
         """
         Return the documents
 
-        @author C.Dutoit
+        Returns:  A list of documents
         """
         return self._documents
 

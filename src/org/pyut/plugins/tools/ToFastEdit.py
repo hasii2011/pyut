@@ -10,6 +10,7 @@ from os import remove as osRemove
 from os import linesep as osLineSep
 
 from sys import platform as sysPlatform
+from typing import cast
 
 from wx import CENTER
 from wx import ICON_ERROR
@@ -158,7 +159,7 @@ class ToFastEdit(PyutToPlugin):
             file:
         """
         className: str       = file.readline().strip()
-        pyutClass: PyutClass = umlObject.getPyutObject()
+        pyutClass: PyutClass = cast(PyutClass, umlObject.getPyutObject())
         pyutClass.name = className
 
         # process stereotype if present
@@ -167,8 +168,8 @@ class ToFastEdit(PyutToPlugin):
             pyutClass.setStereotype(nextStereoType[2:-2].strip())
             nextStereoType = file.readline().strip()
 
-        methods = []
-        fields  = []
+        methods: List[PyutMethod] = []
+        fields:  List[PyutField]  = []
         pyutClass.methods = methods
         pyutClass.fields  = fields
 
@@ -235,7 +236,7 @@ class ToFastEdit(PyutToPlugin):
             file:       The text file to write to
         """
 
-        o: PyutClass = oglObject.getPyutObject()
+        o: PyutClass = cast(PyutClass, oglObject.getPyutObject())
 
         file.write(o.getName() + osLineSep)
 

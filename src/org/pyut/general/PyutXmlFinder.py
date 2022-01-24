@@ -36,21 +36,21 @@ class PyutXmlFinder:
             theVersion:  The version of the XML file we want to process
 
         Returns:  Returns the matching PyutXml`x` class  `Any` type is specified
-        although they would be some version of the above;  Creating a TypeVar
+        although, they would be some version of the above;  Creating a TypeVar
         defeats the purpose of dynamic loading since we would have to import
         the specific types
         """
         if theVersion == '1':
-            from org.pyut.persistence.PyutXml import PyutXml
+            from org.pyut.persistence.PyutXml import PyutXml    # type: ignore
             myXml = PyutXml()
         elif theVersion == '8':
-            from org.pyut.persistence.PyutXmlV8 import PyutXml
+            from org.pyut.persistence.PyutXmlV8 import PyutXml  # type: ignore
             myXml = PyutXml()
         elif theVersion == '9':
-            from org.pyut.persistence.PyutXmlV9 import PyutXml
+            from org.pyut.persistence.PyutXmlV9 import PyutXml  # type: ignore
             myXml = PyutXml()
         elif theVersion == '10':
-            from org.pyut.persistence.PyutXmlV10 import PyutXml
+            from org.pyut.persistence.PyutXmlV10 import PyutXml # type: ignore
             myXml = PyutXml()
         else:
             raise UnsupportedXmlFileFormat(f'Version {theVersion}')
