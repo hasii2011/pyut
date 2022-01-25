@@ -1,7 +1,7 @@
 
 from typing import NewType
+from typing import Optional
 from typing import Tuple
-from typing import Type
 
 from wx import FD_OPEN
 from wx import FD_MULTIPLE
@@ -78,10 +78,8 @@ class PyutPlugin:
             "",
             [] indicates that the user pressed the cancel button
         """
-
         inputFormat: InputFormatType = self.getInputFormat()
-
-        defaultDir:  str = startDirectory
+        defaultDir:  Optional[str]   = startDirectory
 
         if defaultDir is None:
             defaultDir = self._ctrl.getCurrentDir()
@@ -114,7 +112,8 @@ class PyutPlugin:
         """
         wxYield()
 
-        outputFormat: PyutPlugin.getOutputFormat = self.getOutputFormat()
+        outputFormat: OutputFormatType = self.getOutputFormat()
+
         wildCard:    str = f'{outputFormat[0]} (*. {outputFormat[1]} )|*.{outputFormat[1]}'
         file:        str = FileSelector("Choose the export file name",
                                         default_filename=defaultFileName,
