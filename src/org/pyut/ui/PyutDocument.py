@@ -107,11 +107,9 @@ class PyutDocument:
             tree:   The tree control
             root:   The itemId of the parent root
         """
-        self._tree: TreeCtrl = tree
-        self._treeRootParent: TreeItemId = root
-
-        # Add the project to the project tree
-        self._treeRoot: TreeItemId = tree.AppendItem(self._treeRootParent, self._title)
+        self._tree           = tree
+        self._treeRootParent = root
+        self._treeRoot       = tree.AppendItem(self._treeRootParent, self._title)   # Add the project to the project tree
         # self._tree.Expand(self._treeRoot)
         # self._tree.SetPyData(self._treeRoot, self._frame)
         self._tree.SetItemData(self._treeRoot, self._frame)

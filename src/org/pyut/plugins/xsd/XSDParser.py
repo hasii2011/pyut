@@ -133,8 +133,8 @@ class XSDParser:
         """
         classTreeData:  ElementTreeData = self.classTree[className]
         pyutClass: PyutClass       = classTreeData.pyutClass
-        for xsdElement in content:
-            xsdElement: XsdElement = cast(XsdElement, xsdElement)
+        for contentElement in content:
+            xsdElement: XsdElement = cast(XsdElement, contentElement)
             self.logger.info(f'xsdElement: {xsdElement} {xsdElement.local_name} {xsdElement.type}')
 
             defaultValue = xsdElement.default

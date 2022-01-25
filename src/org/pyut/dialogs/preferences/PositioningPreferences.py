@@ -1,5 +1,4 @@
 
-from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
@@ -24,6 +23,7 @@ from org.pyut.ui.widgets.PositionContainer import PositionContainer
 from org.pyut.general.datatypes.Dimensions import Dimensions
 from org.pyut.general.datatypes.Position import Position
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.PyutUtils import PyutUtils
@@ -99,13 +99,13 @@ class PositioningPreferences(PreferencesPanel):
         newValue: int = event.GetInt()
 
         if eventId == self.__scAppPosXID:
-            oldValue:    Tuple[int, int] = self._prefs.appStartupPosition
-            newPosition: Tuple[int, int] = (newValue, oldValue[1])
-            self._prefs.appStartupPosition = newPosition
+            oldValue:    Position = self._prefs.startupPosition
+            newPosition: Position = Position(x=newValue, y=oldValue.y)
+            self._prefs.startupPosition = newPosition
         elif eventId == self.__scAppPosYID:
-            oldValue:    Tuple[int, int] = self._prefs.appStartupPosition
-            newPosition: Tuple[int, int] = (oldValue[0], newValue)
-            self._prefs.appStartupPosition = newPosition
+            oldValue    = self._prefs.startupPosition
+            newPosition = Position(x=oldValue.x, y=newValue)
+            self._prefs.startupPosition = newPosition
         else:
             self.clsLogger.error(f'Unknown __OnValueChanged event id: {eventId}')
 
@@ -151,7 +151,7 @@ class PositioningPreferences(PreferencesPanel):
         Enable/Disable position controls based on the value of appropriate preference value
 
         Args:
-            newValue:  If 'True" disabled else enabled
+            newValue:  If 'True' disabled else enabled
         """
         if newValue is True:
             self._appPositionContainer.enableControls(False)
