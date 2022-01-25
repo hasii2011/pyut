@@ -1,7 +1,9 @@
 
 from typing import Dict
 from typing import List
+from typing import NewType
 from typing import Tuple
+from typing import Union
 from typing import cast
 
 from logging import Logger
@@ -19,7 +21,9 @@ from wx import ProgressDialog
 
 from org.pyut.history.commands.CommandGroup import CommandGroup
 from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+
 from org.pyut.history.HistoryManager import HistoryManager
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
@@ -30,24 +34,31 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.iopythonsupport.PythonParseException import PythonParseException
+
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import ChildName
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import Children
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import ClassName
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import ClassNames
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import DataClassProperties
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import MethodName
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import MethodNames
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import ParameterNames
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import Parameters
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import ParentName
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import Parents
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import PyutPythonVisitor
+
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Lexer import Python3Lexer
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Parser import Python3Parser
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
+PyutClassName = NewType('PyutClassName', str)
+PyutClasses = NewType('PyutClasses', Dict[PyutClassName, PyutClass])
+OglClasses = NewType('OglClasses', Dict[Union[PyutClassName, ParentName, ChildName, ClassName], OglClass])
+
 
 class ReverseEngineerPython2:
-
-    PyutClassName = str
-    ClassName     = str
-    PyutClasses   = Dict[PyutClassName, PyutClass]
-    OglClasses    = Dict[ClassName, OglClass]
 
     PYTHON_ASSIGNMENT:     str = '='
     PYTHON_TYPE_DELIMITER: str = ':'
@@ -59,8 +70,8 @@ class ReverseEngineerPython2:
 
         self.visitor: PyutPythonVisitor = cast(PyutPythonVisitor, None)
 
-        self._pyutClasses: ReverseEngineerPython2.PyutClasses = {}
-        self._oglClasses:  ReverseEngineerPython2.OglClasses  = {}
+        self._pyutClasses: PyutClasses = PyutClasses({})
+        self._oglClasses:  OglClasses  = OglClasses({})
 
     def reversePython(self, umlFrame: UmlClassDiagramsFrame, directoryName: str, files: List[str]):
         """
@@ -76,7 +87,7 @@ class ReverseEngineerPython2:
         dlg.SetRange(fileCount)
         currentFileCount: int = 0
 
-        onGoingParents: Parents = {}
+        onGoingParents: Parents = Parents({})
         for fileName in files:
 
             try:
@@ -211,7 +222,7 @@ class ReverseEngineerPython2:
 
         methodName: MethodName = MethodName(pyutMethod.name)
         if methodName in self.visitor.parameters:
-            parameters: Parameters = self.visitor.parameters[methodName]
+            parameters: ParameterNames = self.visitor.parameters[methodName]
             for parameter in parameters:
                 self.logger.debug(f'parameter: {parameter}')
                 paramNameType = parameter.split(':')
@@ -274,17 +285,17 @@ class ReverseEngineerPython2:
                     self.logger.error(f'Apparently we are not tracking this parent:  {ke}')
                     continue
 
-    def _methodNames(self, className: ClassName) -> List[str]:
+    def _methodNames(self, className: ClassName) -> MethodNames:
 
-        methodNames: List[str] = []
+        methodNames: MethodNames = MethodNames([])
         try:
             methodNames = self.visitor.classMethods[className]
         except KeyError:
-            pass                # A class with no methods ??
+            self.logger.warning(f'{className} has no methods')
 
         return methodNames
 
-    def _classNames(self) -> List[str]:
+    def _classNames(self) -> ClassNames:
         return self.visitor.classNames
 
     def _layoutUmlClasses(self, umlFrame: UmlClassDiagramsFrame):
@@ -395,7 +406,7 @@ class ReverseEngineerPython2:
         if len(name) > 1:
             if name[-2:] != "__":
                 if name[0:2] == "__":
-                    vis: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE
+                    vis = PyutVisibilityEnum.PRIVATE
                 elif name[0] == "_":
                     vis = PyutVisibilityEnum.PROTECTED
         return vis

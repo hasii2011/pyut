@@ -3,6 +3,7 @@ from typing import Dict
 from typing import List
 from typing import NewType
 from typing import Tuple
+from typing import Union
 from typing import cast
 
 from logging import Logger
@@ -16,15 +17,15 @@ from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Visitor import Python
 MethodName          = NewType('MethodName', str)
 PropertyName        = NewType('PropertyName', str)
 ClassName           = NewType('ClassName', str)
-ParentName          = str
-ChildName           = str
+ParentName          = NewType('ParentName', str)
+ChildName           = NewType('ChildName', str)
 MultiParameterNames = NewType('MultiParameterNames', str)  # comma separated parameter names
 Field               = NewType('Field', str)
 ExpressionText      = NewType('ExpressionText', str)
 DataClassProperty   = NewType('DataClassProperty', Tuple[ClassName, ExpressionText])
 
-ClassNames     = List[ClassName]
-MethodNames    = List[MethodName]
+ClassNames     = NewType('ClassNames', List[ClassName])
+MethodNames    = NewType('MethodNames', List[MethodName])
 ParameterNames = List[MultiParameterNames]
 Fields         = List[Field]
 Children       = List[ChildName]
@@ -32,7 +33,7 @@ Children       = List[ChildName]
 Methods    = NewType('Methods', Dict[ClassName, MethodNames])
 Parameters = NewType('Parameters', Dict[MethodName, ParameterNames])
 MethodCode = NewType('MethodCode', Dict[MethodName, str])
-Parents    = Dict[ParentName, Children]
+Parents    = NewType('Parents', Dict[ParentName, Children])
 
 PropertyNames      = Dict[PropertyName, ClassName]
 PropertyParameters = Dict[PropertyName, ParameterNames]
@@ -57,18 +58,18 @@ class PyutPythonVisitor(Python3Visitor):
 
         self.logger: Logger = getLogger(__name__)
 
-        self.classNames:   ClassNames = []
+        self.classNames:   ClassNames = ClassNames([])
         self.classMethods: Methods    = Methods({})
         self.parameters:   Parameters = Parameters({})
         self.methodCode:   MethodCode = MethodCode({})
         self.fields:       Fields     = []
-        self._parents:     Parents    = {}
+        self._parents:     Parents    = Parents({})
 
         self.propertyNames:    PropertyNames = {}
         self.setterProperties: Parameters    = Parameters({})
         self.getterProperties: Parameters    = Parameters({})
 
-        self.dataClassNames:      ClassNames          = []
+        self.dataClassNames:      ClassNames          = ClassNames([])
         self.dataClassProperties: DataClassProperties = []
 
     @property
@@ -190,7 +191,7 @@ class PyutPythonVisitor(Python3Visitor):
         methodName: MethodName = parentCtx.getChild(1).getText()
         return methodName
 
-    def _createParentChildEntry(self, parentCtx: Python3Parser.ArglistContext, childName: str):
+    def _createParentChildEntry(self, parentCtx: Python3Parser.ArglistContext, childName: Union[ClassName, ChildName]):
 
         parentName: str = parentCtx.getText()
         self.logger.debug(f'Class: {childName} is subclass of {parentName}')
