@@ -1,5 +1,7 @@
 
+from typing import NewType
 from typing import Tuple
+from typing import Type
 
 from wx import FD_OPEN
 from wx import FD_MULTIPLE
@@ -19,11 +21,11 @@ from wx import Yield as wxYield
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
+InputFormatType  = NewType('InputFormatType', Tuple[str, str, str])
+OutputFormatType = NewType('OutputFormatType', Tuple[str, str, str])
+
 
 class PyutPlugin:
-
-    INPUT_FORMAT_TYPE  = Tuple[str, str, str]
-    OUTPUT_FORMAT_TYPE = Tuple[str, str, str]
 
     def __init__(self, umlFrame: UmlFrame, ctrl):
         """
@@ -40,23 +42,23 @@ class PyutPlugin:
         if self._verbose:
             print(f'{module}> {msg}')
 
-    def getInputFormat(self) -> INPUT_FORMAT_TYPE:
+    def getInputFormat(self) -> InputFormatType:
         """
         Implementations probably need to override this
 
         Returns:
             The input format type
         """
-        return "*", "*", "All"
+        return InputFormatType(("*", "*", "All"))
 
-    def getOutputFormat(self) -> OUTPUT_FORMAT_TYPE:
+    def getOutputFormat(self) -> OutputFormatType:
         """
         Implementations probably need to override this
 
         Returns:
             The output format type
         """
-        return "*", "*", "All"
+        return OutputFormatType(("*", "*", "All"))
 
     @staticmethod
     def displayNoUmlFrame():
@@ -77,7 +79,7 @@ class PyutPlugin:
             [] indicates that the user pressed the cancel button
         """
 
-        inputFormat: PyutPlugin.INPUT_FORMAT_TYPE = self.getInputFormat()
+        inputFormat: InputFormatType = self.getInputFormat()
 
         defaultDir:  str = startDirectory
 

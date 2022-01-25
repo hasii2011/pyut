@@ -5,6 +5,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from org.pyut.plugins.base.PyutPlugin import InputFormatType
+from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
@@ -90,7 +92,7 @@ class PyutIoPlugin(PyutPlugin):
         """
         return "0.0"
 
-    def getInputFormat(self) -> PyutPlugin.INPUT_FORMAT_TYPE:
+    def getInputFormat(self) -> InputFormatType:
         """
         return None if this plugin can't read.
         otherwise, return a tuple with
@@ -103,9 +105,9 @@ class PyutIoPlugin(PyutPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(PyutPlugin.INPUT_FORMAT_TYPE, None)
+        return cast(InputFormatType, None)
 
-    def getOutputFormat(self) -> PyutPlugin.OUTPUT_FORMAT_TYPE:
+    def getOutputFormat(self) -> OutputFormatType:
         """
         return None if this plugin can't write.
         otherwise, return a tuple with
@@ -118,7 +120,7 @@ class PyutIoPlugin(PyutPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, None)
+        return cast(OutputFormatType, None)
 
     def setImportOptions(self) -> bool:
         """

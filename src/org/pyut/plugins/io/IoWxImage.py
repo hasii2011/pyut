@@ -1,6 +1,5 @@
 
 from typing import List
-from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -18,6 +17,8 @@ from wx import MemoryDC
 from wx import NullBitmap
 from wx import ScrolledWindow
 
+from org.pyut.plugins.base.PyutPlugin import InputFormatType
+from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.ogl.OglClass import OglClass
@@ -63,15 +64,15 @@ class IoWxImage(PyutIoPlugin):
         """
         return "0.9b"
 
-    def getInputFormat(self) -> Tuple[str, str, str]:
+    def getInputFormat(self) -> InputFormatType:
         """
         I return none.  I am strictly write-only.
         Returns:
             Return a specification tuple.
         """
-        return cast(Tuple[str, str, str], None)
+        return cast(InputFormatType, None)
 
-    def getOutputFormat(self) -> Tuple[str, str, str]:
+    def getOutputFormat(self) -> OutputFormatType:
         """
         A Tuple with
 
@@ -82,7 +83,7 @@ class IoWxImage(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return 'Wx Image', 'png', 'png, bmp, gif, or jpg'
+        return OutputFormatType(('Wx Image', 'png', 'png, bmp, gif, or jpg'))
 
     def setImportOptions(self) -> bool:
         """

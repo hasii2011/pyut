@@ -26,7 +26,8 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
-from org.pyut.plugins.base.PyutPlugin import PyutPlugin
+from org.pyut.plugins.base.PyutPlugin import InputFormatType
+from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 
 from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
 from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
@@ -78,7 +79,7 @@ class IoPython(PyutIoPlugin):
         """
         return "1.0"
 
-    def getInputFormat(self) -> PyutPlugin.INPUT_FORMAT_TYPE:
+    def getInputFormat(self) -> InputFormatType:
         """
         Return a specification tuple.
             name of the input format
@@ -88,9 +89,9 @@ class IoPython(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(PyutPlugin.INPUT_FORMAT_TYPE, ("Python File(s)", "py", "Syntactically correct Python File"))
+        return InputFormatType(("Python File(s)", "py", "Syntactically correct Python File"))
 
-    def getOutputFormat(self) -> PyutPlugin.OUTPUT_FORMAT_TYPE:
+    def getOutputFormat(self) -> OutputFormatType:
         """
         Return a specification tuple.
             name of the output format
@@ -100,7 +101,7 @@ class IoPython(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(PyutPlugin.OUTPUT_FORMAT_TYPE, ("Python File(s)", "py", "Syntactically correct Python File"))
+        return OutputFormatType(("Python File(s)", "py", "Syntactically correct Python File"))
 
     def setExportOptions(self) -> bool:
         return True

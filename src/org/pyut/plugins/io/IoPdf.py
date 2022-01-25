@@ -1,6 +1,5 @@
 
 from typing import List
-from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -9,8 +8,9 @@ from logging import getLogger
 from wx import Yield as wxYield
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.plugins.base.PyutPlugin import InputFormatType
+from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 
-from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
@@ -63,14 +63,14 @@ class IoPdf(PyutIoPlugin):
         """
         return "1.1"
 
-    def getInputFormat(self) -> PyutPlugin.INPUT_FORMAT_TYPE:
+    def getInputFormat(self) -> InputFormatType:
         """
         Returns:
             None, I don't read PDF
         """
-        return cast(PyutPlugin.INPUT_FORMAT_TYPE, None)
+        return cast(InputFormatType, None)
 
-    def getOutputFormat(self) -> Tuple[str, str, str]:
+    def getOutputFormat(self) -> OutputFormatType:
         """
         A Tuple with
 
@@ -81,7 +81,7 @@ class IoPdf(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return 'PDF', 'pdf', 'A simple PDF for UML diagrams'
+        return OutputFormatType(('PDF', 'pdf', 'A simple PDF for UML diagrams'))
 
     def setImportOptions(self) -> bool:
         """

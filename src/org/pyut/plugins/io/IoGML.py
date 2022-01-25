@@ -1,6 +1,5 @@
 
 from typing import List
-from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -8,6 +7,8 @@ from logging import getLogger
 
 from org.pyut.plugins.base.PluginTypes import OglClasses
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
+from org.pyut.plugins.base.PyutPlugin import InputFormatType
+from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 
 from org.pyut.plugins.gml.GMLExporter import GMLExporter
 
@@ -49,20 +50,20 @@ class IoGML(PyutIoPlugin):
         """
         return "1.0"
 
-    def getInputFormat(self) -> Tuple[str, str, str]:
+    def getInputFormat(self) -> InputFormatType:
         """
         Returns:
             None, I don't read GML
         """
-        return cast(Tuple[str, str, str], None)
+        return cast(InputFormatType, None)
 
-    def getOutputFormat(self) -> Tuple[str, str, str]:
+    def getOutputFormat(self) -> OutputFormatType:
         """
 
         Returns:
             Return a specification tuple.
         """
-        return 'GML', 'gml', 'Graph Modeling Language - Portable Format for Graphs'
+        return OutputFormatType(('GML', 'gml', 'Graph Modeling Language - Portable Format for Graphs'))
 
     def setImportOptions(self) -> bool:
         """

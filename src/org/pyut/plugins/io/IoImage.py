@@ -1,6 +1,5 @@
 
 from typing import List
-from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -14,7 +13,8 @@ from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
-from org.pyut.plugins.base.PyutPlugin import PyutPlugin
+from org.pyut.plugins.base.PyutPlugin import InputFormatType
+from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 
 from org.pyut.plugins.io.pyumlsupport.DlgImageOptions import DlgImageOptions
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
@@ -64,14 +64,14 @@ class IoImage(PyutIoPlugin):
         """
         return "1.0"
 
-    def getInputFormat(self) -> Tuple[str, str, str]:
+    def getInputFormat(self) -> InputFormatType:
         """
         Returns:
             None, I don't read images
         """
-        return cast(PyutPlugin.INPUT_FORMAT_TYPE, None)
+        return cast(InputFormatType, None)
 
-    def getOutputFormat(self) -> Tuple[str, str, str]:
+    def getOutputFormat(self) -> OutputFormatType:
         """
         A Tuple with
 
@@ -82,7 +82,7 @@ class IoImage(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return 'Image', 'png', 'png, bmp, gif, or jpg'
+        return OutputFormatType(('Image', 'png', 'png, bmp, gif, or jpg'))
 
     def setImportOptions(self) -> bool:
         """
