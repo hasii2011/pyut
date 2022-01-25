@@ -6,6 +6,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from org.pyut.plugins.base.PluginTypes import OglClasses
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.plugins.gml.GMLExporter import GMLExporter
@@ -93,7 +94,7 @@ class IoGML(PyutIoPlugin):
         """
         pass
 
-    def write(self, oglObjects: List[OglClass]):
+    def write(self, oglObjects: OglClasses):
         """
         Write data
 

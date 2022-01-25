@@ -1,11 +1,12 @@
-from dataclasses import dataclass
+from typing import NewType
 from typing import cast
 from typing import Dict
-from typing import List
 from typing import Tuple
 
 from logging import Logger
 from logging import getLogger
+
+from dataclasses import dataclass
 
 from tempfile import gettempdir
 
@@ -25,20 +26,18 @@ from orthogonal.topologyShapeMetric.OrthogonalException import OrthogonalExcepti
 from orthogonal.topologyShapeMetric.Orthogonalization import Orthogonalization
 from orthogonal.topologyShapeMetric.Planarization import Planarization
 
-
+from org.pyut.plugins.base.PluginTypes import OglClasses
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-
-from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.gml.GMLExporter import GMLExporter
 
 from org.pyut.plugins.orthogonal.OrthogonalAdapterException import OrthogonalAdapterException
 
-GraphicsCoordinates = Tuple[int, int]
-LayoutEngineInput   = Dict[str, GraphicsCoordinates]
+GraphicsCoordinates = NewType('GraphicsCoordinates', Tuple[int, int])
+LayoutEngineInput   = NewType('LayoutEngineInput', Dict[str, GraphicsCoordinates])
 
-EngineCoordinates  = Tuple[int, int]
-LayoutEngineOutput = Dict[str, EngineCoordinates]
+EngineCoordinates  = NewType('EngineCoordinates', Tuple[int, int])
+LayoutEngineOutput = NewType('LayoutEngineOutput', Dict[str, EngineCoordinates])
 
 
 @dataclass
@@ -64,7 +63,7 @@ class OrthogonalAdapter:
 
     TEMPORARY_GML_LAYOUT_FILENAME: str = 'toOrthogonalLayoutV2.gml'
 
-    def __init__(self, umlObjects: List[OglClass]):
+    def __init__(self, umlObjects: OglClasses):
 
         self.logger: Logger      = getLogger(__name__)
         gmlExporter: GMLExporter = GMLExporter()
@@ -98,14 +97,14 @@ class OrthogonalAdapter:
 
         compact: Compaction = self._runLayout(nxGraph=self._nxGraph, positions=positions)
 
-        enginePositions: LayoutEngineOutput = compact.pos
-        positions: Positions = self._toEmbeddedPositions(enginePositions)
+        enginePositions:   LayoutEngineOutput = compact.pos
+        embeddedPositions: Positions = self._toEmbeddedPositions(enginePositions)
 
         screenSize: ScreenSize = ScreenSize(width=layoutAreaSize.width, height=layoutAreaSize.height)
-        self._ets = EmbeddingToScreen(screenSize, positions)
+        self._ets = EmbeddingToScreen(screenSize, embeddedPositions)
         self._oglCoordinates = self._toOglCoordinates(nxGraph=self._nxGraph)
 
-    def _runLayout(self, nxGraph: Graph, positions: Dict[str, Tuple]) -> Compaction:
+    def _runLayout(self, nxGraph: Graph, positions: LayoutEngineInput) -> Compaction:
 
         try:
             planar:     Planarization     = Planarization(nxGraph, positions)
@@ -120,12 +119,12 @@ class OrthogonalAdapter:
 
     def _toLayoutEngineInput(self, nxGraph: Graph) -> LayoutEngineInput:
 
-        positions: LayoutEngineInput = {}
+        positions: LayoutEngineInput = LayoutEngineInput({})
         for node in nxGraph:
             self.logger.debug(f'node: {node}')
             x: int = nxGraph.nodes[node]['graphics']['x']
             y: int = nxGraph.nodes[node]['graphics']['y']
-            positions[node] = (x, y)
+            positions[node] = GraphicsCoordinates((x, y))
 
         return positions
 

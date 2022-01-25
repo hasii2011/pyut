@@ -96,7 +96,7 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
 
         return True
 
-    def doAction(self, umlObjects: List[OglClass], selectedObjects: List[OglClass], umlFrame: UmlFrame):
+    def doAction(self, umlObjects: OglClasses, selectedObjects: OglClasses, umlFrame: UmlFrame):
         """
         Do the tool's action
 

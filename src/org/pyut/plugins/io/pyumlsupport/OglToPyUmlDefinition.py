@@ -174,8 +174,8 @@ class OglToPyUmlDefinition:
             linePositions: LinePositions = [sourcePosition, destinationPosition]
         else:
             linePositions: LinePositions = [sourcePosition]
-            for bend in bends:
-                bend: ControlPoint = cast(ControlPoint, bend)
+            for cp in bends:
+                bend: ControlPoint = cast(ControlPoint, cp)
                 self.logger.debug(f'{bend:}')
 
                 bendX, bendY = bend.GetPosition()
@@ -189,9 +189,9 @@ class OglToPyUmlDefinition:
     def _addMethods(self, classDefinition: ClassDefinition, pyutClass: PyutClass) -> ClassDefinition:
 
         methods: Methods = []
-        for pyutMethod in pyutClass.methods:
+        for method in pyutClass.methods:
 
-            pyutMethod: PyutMethod = cast(PyutMethod, pyutMethod)
+            pyutMethod: PyutMethod = cast(PyutMethod, method)
 
             methodDef: MethodDefinition = MethodDefinition(name=pyutMethod.name)
 

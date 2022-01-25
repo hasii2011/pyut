@@ -1,13 +1,12 @@
-from logging import Logger
-from logging import getLogger
 
-from typing import List
 from typing import Set
 from typing import Tuple
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.LineShape import ControlPoints
 
@@ -20,8 +19,7 @@ from org.pyut.ogl.OglNote import OglNote
 
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
-
-OglClasses = List[OglClass]
+from org.pyut.plugins.base.PluginTypes import OglClasses
 
 
 class GMLExporter:
@@ -221,7 +219,7 @@ class GMLExporter:
 
         return edgeGml
 
-    def __generatePoints(self, points: List[LinePoint]) -> str:
+    def __generatePoints(self, points: ControlPoints) -> str:
 
         pointsGml: str = ''
         for point in points:

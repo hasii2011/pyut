@@ -171,7 +171,7 @@ class ReverseEngineerPython2:
         if len(setterParams) == 0:
             setter: PyutMethod = cast(PyutMethod, None)
         else:
-            setter: PyutMethod = PyutMethod(name=propName, visibility=PyutVisibilityEnum.PUBLIC)
+            setter = PyutMethod(name=propName, visibility=PyutVisibilityEnum.PUBLIC)
 
         if setter is not None:
             nameType: str = setterParams[0]
@@ -183,7 +183,7 @@ class ReverseEngineerPython2:
                 setter.addParam(param)
                 getter.returnType = PyutType(value=potentialNameType[1])
             else:
-                param: PyutParam = PyutParam(name=potentialNameType[0])
+                param = PyutParam(name=potentialNameType[0])
                 setter.addParam(param)
 
         return setter, getter
@@ -323,7 +323,7 @@ class ReverseEngineerPython2:
         if ReverseEngineerPython2.PYTHON_TYPE_DELIMITER in fieldData and ReverseEngineerPython2.PYTHON_ASSIGNMENT in fieldData:
             pyutField: PyutField = self.__complexParseFieldToPyut(fieldData)
         else:
-            pyutField: PyutField = self.__simpleParseFieldToPyut(fieldData)
+            pyutField = self.__simpleParseFieldToPyut(fieldData)
 
         return pyutField
 
@@ -397,7 +397,7 @@ class ReverseEngineerPython2:
                 if name[0:2] == "__":
                     vis: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE
                 elif name[0] == "_":
-                    vis: PyutVisibilityEnum = PyutVisibilityEnum.PROTECTED
+                    vis = PyutVisibilityEnum.PROTECTED
         return vis
 
     def __appropriatelyCleanupName(self, vis: PyutVisibilityEnum, fieldName: str) -> str:

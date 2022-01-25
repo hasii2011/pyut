@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -484,7 +486,8 @@ class PyutXml:
         self._appendOglBase(oglClass, root)
 
         # adding the data layer object
-        root.appendChild(self._PyutClass2xml(oglClass.getPyutObject(), xmlDoc))
+        pyutClass: PyutClass = cast(PyutClass, oglClass.getPyutObject())
+        root.appendChild(self._PyutClass2xml(pyutClass, xmlDoc))
 
         return root
 
@@ -566,7 +569,7 @@ class PyutXml:
         @since 1.0
         @author Deve Roux <droux@eivd.ch>
         """
-        # class methods for this currente class
+        # class methods for this current class
         allMethods = []
         for Method in Class.getElementsByTagName("Method"):
 
