@@ -344,7 +344,7 @@ class PyutXmi:
         parse(theDom, "Foundation.Core.DataType")
         parse(theDom, "Foundation.Data_Types.Enumeration")
 
-    TypeIdObject = NewType('TypeIdObject', Union[PyutMethod, PyutParam, PyutField])
+    TypeIdObject = NewType('TypeIdObject', Union[PyutMethod, PyutParam, PyutField])   # type: ignore
 
     def _getTypeId(self, xmiElement: Element, typeIdObject: TypeIdObject, dico):
         """

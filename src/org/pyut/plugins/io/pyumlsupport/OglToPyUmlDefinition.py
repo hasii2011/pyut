@@ -1,7 +1,6 @@
 
 from typing import cast
 from typing import List
-from typing import final
 
 from logging import Logger
 from logging import getLogger
@@ -9,6 +8,7 @@ from logging import getLogger
 from time import localtime
 from time import strftime
 
+from pyumldiagrams.BaseDiagram import BaseDiagram
 from pyumldiagrams.Definitions import ClassDefinition
 from pyumldiagrams.Definitions import ClassDefinitions
 from pyumldiagrams.Definitions import DefinitionType
@@ -49,7 +49,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 class OglToPyUmlDefinition:
 
-    INHERITANCE_DESTINATION_POSITION_NUDGE_FACTOR: final = 1
+    INHERITANCE_DESTINATION_POSITION_NUDGE_FACTOR: int = 1
 
     def __init__(self, imageOptions: ImageOptions, dpi: int = 0, pyutVersion: str = '', pluginVersion: str = ''):
         """
@@ -76,19 +76,17 @@ class OglToPyUmlDefinition:
         imageFormat: ImageFormat = imageOptions.imageFormat
         imageLibShowParameters: DisplayMethodParameters = self.__toImageLibraryEnum(self._prefs.showParameters)
         if imageFormat == ImageFormat.PDF:
-            self._diagram: PdfDiagram = PdfDiagram(fileName=fqFileName, dpi=dpi, headerText=headerText, docDisplayMethodParameters=imageLibShowParameters)
+            self._diagram: BaseDiagram = PdfDiagram(fileName=fqFileName, dpi=dpi, headerText=headerText, docDisplayMethodParameters=imageLibShowParameters)
         else:
-            self._diagram: ImageDiagram = ImageDiagram(fileName=fqFileName,
-                                                       headerText=headerText   # TODO use image size from new method signature
-                                                       )
+            self._diagram = ImageDiagram(fileName=fqFileName, headerText=headerText)   # TODO use image size from new method signature)
 
     def toClassDefinitions(self, oglObjects: List[OglClass]):
 
         classDefinitions: ClassDefinitions = []
 
-        for umlObject in oglObjects:
+        for oglObject in oglObjects:
 
-            umlObject: OglClass  = cast(OglClass, umlObject)
+            umlObject: OglClass  = cast(OglClass, oglObject)
             if not isinstance(umlObject, OglClass):
                 continue
 
@@ -146,11 +144,11 @@ class OglToPyUmlDefinition:
         if umlLinkType == LinkType.INHERITANCE:
             lineType: LineType = LineType.Inheritance
         elif umlLinkType == LinkType.COMPOSITION:
-            lineType: LineType = LineType.Composition
+            lineType = LineType.Composition
         elif umlLinkType == LinkType.AGGREGATION:
-            lineType: LineType = LineType.Aggregation
+            lineType = LineType.Aggregation
         else:
-            lineType: LineType = LineType.Association   # This won't happen yet
+            lineType = LineType.Association   # This won't happen yet
 
         return lineType
 
@@ -160,8 +158,8 @@ class OglToPyUmlDefinition:
             srcAnchor:  AnchorPoint = oglLink.sourceAnchor
             destAnchor: AnchorPoint = oglLink.destinationAnchor
         else:
-            srcAnchor:  AnchorPoint = oglLink.destinationAnchor
-            destAnchor: AnchorPoint = oglLink.sourceAnchor
+            srcAnchor  = oglLink.destinationAnchor
+            destAnchor = oglLink.sourceAnchor
 
         srcX,  srcY  = srcAnchor.GetPosition()
         destX, destY = destAnchor.GetPosition()
@@ -173,7 +171,7 @@ class OglToPyUmlDefinition:
         if bends is None or len(bends) == 0:
             linePositions: LinePositions = [sourcePosition, destinationPosition]
         else:
-            linePositions: LinePositions = [sourcePosition]
+            linePositions = [sourcePosition]
             for cp in bends:
                 bend: ControlPoint = cast(ControlPoint, cp)
                 self.logger.debug(f'{bend:}')
