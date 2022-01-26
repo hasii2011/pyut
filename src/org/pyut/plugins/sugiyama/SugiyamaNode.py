@@ -8,8 +8,8 @@ from org.pyut.plugins.sugiyama.SugiyamaConstants import H_SPACE
 
 from org.pyut.plugins.sugiyama.SugiyamaLink import SugiyamaLink
 
-SugiyamaVertixEdge = NewType("SugiyamaVertixEdge", Tuple["SugiyamaNode", SugiyamaLink])
-SugiyamaVEs        = NewType("SugiyamaVEs",         List[SugiyamaVertixEdge])
+SugiyamaVertexEdge = NewType("SugiyamaVertexEdge", Tuple["SugiyamaNode", SugiyamaLink])
+SugiyamaVEs        = NewType("SugiyamaVEs", List[SugiyamaVertexEdge])
 
 
 class SugiyamaNode:
@@ -49,20 +49,20 @@ class SugiyamaNode:
         # A child is derived from a parent. There is a hierarchical link,
         # Realization or Inheritance, from source to parent.
         # Each node can have parents and children.
-        self.__parents: SugiyamaVEs = cast(SugiyamaVEs, [])
+        self.__parents: SugiyamaVEs = SugiyamaVEs([])
         """
         List of parents
         """
-        self.__children: SugiyamaVEs = cast(SugiyamaVEs, [])
+        self.__children: SugiyamaVEs = SugiyamaVEs([])
         """
         List of children : [(SugiyamaNode, SugiyamaLink), ...]
         """
-        self.__links: SugiyamaVEs = cast(SugiyamaVEs, [])
+        self.__links:    SugiyamaVEs = SugiyamaVEs([])
         """
         List of non-hierarchical links : [(SugiyamaNode, SugiyamaLink), ...]
         """
 
-    def getSize(self):
+    def getSize(self) -> Tuple[int, int]:
         """
         Get the size of the node.
 
@@ -82,8 +82,9 @@ class SugiyamaNode:
             x: x position in absolute coordinates
             y: y position in absolute coordinates
         """
+        pass
 
-    def getPosition(self):
+    def getPosition(self) -> Tuple[float, float]:
         """
         Get position of node.
 
@@ -103,7 +104,7 @@ class SugiyamaNode:
             parent:  The parent
             link:   Link between self and parent
         """
-        sugiyamaData: SugiyamaVertixEdge = cast(SugiyamaVertixEdge, (parent, link))
+        sugiyamaData: SugiyamaVertexEdge = cast(SugiyamaVertexEdge, (parent, link))
         self.__parents.append(sugiyamaData)
 
     def getParents(self) -> SugiyamaVEs:
@@ -123,7 +124,7 @@ class SugiyamaNode:
             child:  The child
             link:   Its Link
         """
-        sugiyamaData: SugiyamaVertixEdge = cast(SugiyamaVertixEdge, (child, link))
+        sugiyamaData: SugiyamaVertexEdge = cast(SugiyamaVertexEdge, (child, link))
         self.__children.append(sugiyamaData)
 
     def getChildren(self) -> SugiyamaVEs:
@@ -136,20 +137,18 @@ class SugiyamaNode:
 
     def addNonHierarchicalLink(self, node: "SugiyamaNode", link: SugiyamaLink):
         """
-        Add a non hierarchical link, ie not a parent or child relation.
+        Add a non-hierarchical link, ie not a parent or child relation.
 
         Args:
             node:   linked node
             link:   link between the two nodes
-
-        Returns:
-
         """
-        self.__links.append((node, link))
+        vertexEdge: SugiyamaVertexEdge = SugiyamaVertexEdge((node, link))
+        self.__links.append(vertexEdge)
 
     def getNonHierarchicalLink(self) -> SugiyamaVEs:
         """
-        Get non hierarchical links, ie not parent or child relationship
+        Get non-hierarchical links, ie not parent or child relationship
 
         Returns: [(SugiyamaNode, SugiyamaLink), ...] : list of tuple
 
@@ -290,7 +289,7 @@ class SugiyamaNode:
         Compute the average of parents down-barycenter and sons up-barycenter.
 
         Before calling this function, you have to call downBarycenterIndex
-        on each fathers and upBarycenterIndex on each sons.
+        on each parent and upBarycenterIndex on each child.
 
         For reading this value, use getBarycenter()
 

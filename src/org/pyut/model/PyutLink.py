@@ -1,4 +1,6 @@
 
+from typing import Optional
+
 from logging import Logger
 from logging import getLogger
 
@@ -24,8 +26,10 @@ class PyutLink(PyutObject):
 
     # noinspection PyUnresolvedReferences
     def __init__(self, name="", linkType: LinkType = LinkType.INHERITANCE,
-                 cardSrc: str = "", cardDest: str = "",
-                 bidir: bool = False, source: "PyutLinkedObject" = None, destination: "PyutLinkedObject" = None):  # type: ignore
+                 cardSrc:      str = "", cardDest: str = "",
+                 bidir:        bool = False,
+                 source:       Optional["PyutLinkedObject"] = None,
+                 destination: "PyutLinkedObject" = None):
         """
 
         Args:
@@ -47,8 +51,8 @@ class PyutLink(PyutObject):
 
         from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 
-        self._src:  PyutLinkedObject = source
-        self._dest: PyutLinkedObject = destination
+        self._src:  Optional[PyutLinkedObject] = source
+        self._dest: Optional[PyutLinkedObject] = destination
 
     def _getSourceCardinality(self) -> str:
         """
