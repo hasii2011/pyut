@@ -28,7 +28,7 @@ ClassNames     = NewType('ClassNames', List[ClassName])
 MethodNames    = NewType('MethodNames', List[MethodName])
 ParameterNames = List[MultiParameterNames]
 Fields         = List[Field]
-Children       = List[ChildName]
+Children       = List[Union[ClassName, ChildName]]
 
 Methods    = NewType('Methods', Dict[ClassName, MethodNames])
 Parameters = NewType('Parameters', Dict[MethodName, ParameterNames])
@@ -88,7 +88,7 @@ class PyutPythonVisitor(Python3Visitor):
             if not self.__isProperty(methodName):
                 self.logger.debug(f'visitFuncdef: {methodName=}')
                 if className not in self.classMethods:
-                    self.classMethods[className] = [methodName]
+                    self.classMethods[className] = MethodNames([methodName])
                 else:
                     self.classMethods[className].append(methodName)
 
@@ -193,7 +193,7 @@ class PyutPythonVisitor(Python3Visitor):
 
     def _createParentChildEntry(self, parentCtx: Python3Parser.ArglistContext, childName: Union[ClassName, ChildName]):
 
-        parentName: str = parentCtx.getText()
+        parentName: ParentName = cast(ParentName, parentCtx.getText())
         self.logger.debug(f'Class: {childName} is subclass of {parentName}')
 
         if parentName in self._parents:
