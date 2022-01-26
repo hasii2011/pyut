@@ -1,4 +1,5 @@
 
+
 from typing import cast
 from typing import Dict
 from typing import List
@@ -71,7 +72,7 @@ OglSDMessages  = NewType('OglSDMessages',  Dict[int, OglSDMessage])
 PyutMethods    = NewType('PyutMethods',    List[PyutMethod])
 PyutFields     = NewType('PyutFields',     List[PyutField])
 ControlPoints  = NewType('ControlPoints',  List[ControlPoint])
-Links          = NewType('Links',          Union[OglLink, OglSDInstance])
+Links          = NewType('Links',          Union[OglLink, OglSDInstance])   # type: ignore
 OglLinks       = NewType('OglLinks',       List[Links])
 OglInterfaces  = NewType('OglInterfaces',  List[OglInterface2])
 OglTextShapes  = NewType('OglTextShapes',  List[OglText])
@@ -102,9 +103,9 @@ class MiniDomToOgl:
         """
         oglObjects: OglClasses = cast(OglClasses, {})
 
-        for xmlOglClass in xmlOglClasses:
+        for element in xmlOglClasses:
 
-            xmlOglClass: Element   = cast(Element, xmlOglClass)
+            xmlOglClass: Element   = cast(Element, element)
             pyutClass:   PyutClass = PyutClass()
 
             # Some old files used float sizes and positions
@@ -192,9 +193,9 @@ class MiniDomToOgl:
         """
         oglLinks: OglLinks = cast(OglLinks, [])
 
-        for xmlLink in xmlOglLinks:
+        for element in xmlOglLinks:
             # src and dst anchor position
-            xmlLink: Element = cast(Element, xmlLink)
+            xmlLink: Element = cast(Element, element)
 
             sx = PyU.strFloatToInt(xmlLink.getAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_X))
             sy = PyU.strFloatToInt(xmlLink.getAttribute(PyutXmlConstants.ATTR_LINK_SOURCE_ANCHOR_Y))
@@ -207,8 +208,8 @@ class MiniDomToOgl:
             srcId, dstId, assocPyutLink = self._getPyutLink(xmlLink)
 
             try:
-                src: OglClass = oglClasses[srcId]
-                dst: OglClass = oglClasses[dstId]
+                src: OglClass = cast(OglClass, oglClasses[srcId])
+                dst: OglClass = cast(OglClass, oglClasses[dstId])
             except KeyError as ke:
                 self.logger.error(f'Developer Error -- srcId: {srcId} - dstId: {dstId}  error: {ke}')
                 continue
@@ -520,8 +521,8 @@ class MiniDomToOgl:
             #  Code supports multiple modifiers, but the dialog allows input of only one
             #
             modifiers: NodeList = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_MODIFIER)
-            for xmlModifier in modifiers:
-                xmlModifier: Element = cast(Element, xmlModifier)
+            for element in modifiers:
+                xmlModifier: Element = cast(Element, element)
                 modName:  str        = xmlModifier.getAttribute(PyutXmlConstants.ATTR_NAME)
 
                 pyutModifier: PyutModifier = PyutModifier(modName)
@@ -578,9 +579,9 @@ class MiniDomToOgl:
         """
         pyutFields: PyutFields = cast(PyutFields, [])
 
-        for xmlField in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_FIELD):
+        for element in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_FIELD):
 
-            xmlField:   Element  = cast(Element, xmlField)
+            xmlField:   Element  = cast(Element, element)
             pyutField: PyutField = PyutField()
 
             strVis: str                = xmlField.getAttribute(PyutXmlConstants.ATTR_VISIBILITY)
@@ -639,8 +640,8 @@ class MiniDomToOgl:
 
         matchingOglClass: OglClass = cast(OglClass, None)
 
-        for oglClass in oglClasses.values():
-            oglClass:  OglClass  = cast(OglClass, oglClass)
+        for graphicClass in oglClasses.values():
+            oglClass:  OglClass  = cast(OglClass, graphicClass)
             pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
 
             className: str = pyutClass.name
@@ -752,5 +753,7 @@ class MiniDomToOgl:
 
         self.logger.debug(f'tagName: {tagName} `{associationLabel.text=}`  pos: ({x:.2f},{y:.2f})')
 
-        associationLabel.x = x
-        associationLabel.y = y
+        # associationLabel.x = x
+        # associationLabel.y = y
+        associationLabel.oglPosition.x = x
+        associationLabel.oglPosition.y = y

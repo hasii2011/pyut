@@ -665,6 +665,6 @@ class OglToMiniDom:
         if isinstance(visibility, str):
             visStr: str = PyutVisibilityEnum.toEnum(visibility).name
         else:
-            visStr: str = visibility.name
+            visStr = visibility.name
 
         return visStr
