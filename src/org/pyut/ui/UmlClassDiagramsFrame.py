@@ -2,8 +2,6 @@
 from typing import cast
 from typing import NewType
 from typing import Tuple
-from typing import Union
-
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
@@ -24,8 +22,8 @@ from org.pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
 
 from org.pyut.ui.UmlFrame import UmlObjects
 
-UmlClassType       = NewType('UmlClassType', Union[PyutClass, OglClass])     # type: ignore
-CreatedClassesType = NewType('CreatedClassesType', Tuple[UmlClassType])
+
+CreatedClassesType = NewType('CreatedClassesType', Tuple[PyutClass, OglClass])      # TODO make this a NamedTuple
 
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):

@@ -42,11 +42,11 @@ class DTDParser:
 
     MODEL_CHILDREN_INDEX:           int = 3
 
-    klsLogger: Logger = None
-    classParser       = None
+    klsLogger: Logger = cast(Logger, None)
+    classParser       = ParserCreate()
 
-    elementTypes: DTDElements   = {}
-    attributes:   DTDAttributes = []
+    elementTypes: DTDElements   = DTDElements({})
+    attributes:   DTDAttributes = DTDAttributes([])
 
     def __init__(self, umlFrame: UmlClassDiagramsFrame):
         """
@@ -61,15 +61,18 @@ class DTDParser:
         self.logger: Logger = getLogger(__name__)
         DTDParser.klsLogger = self.logger
 
-        self.dtdParser = ParserCreate()
-        DTDParser.classParser = self.dtdParser
+        self.dtdParser = DTDParser.classParser
 
         self._umlFrame: UmlClassDiagramsFrame      = umlFrame
         self.classTree: Dict[str, ElementTreeData] = {}
 
+        # noinspection SpellCheckingInspection
         self.dtdParser.StartDoctypeDeclHandler = DTDParser.startDocTypeHandler
+        # noinspection SpellCheckingInspection
         self.dtdParser.ElementDeclHandler      = DTDParser.elementHandler
+        # noinspection SpellCheckingInspection
         self.dtdParser.AttlistDeclHandler      = DTDParser.attributeListHandler
+        # noinspection SpellCheckingInspection
         self.dtdParser.EndDoctypeDeclHandler   = self.endDocTypeHandler   # DTDReader.endDocTypeHandler
 
     def open(self, filename: str) -> bool:
@@ -97,6 +100,7 @@ class DTDParser:
 
     @staticmethod
     def elementHandler(elementName: str, model):
+        # noinspection SpellCheckingInspection
         """
 
         Args:
@@ -105,12 +109,9 @@ class DTDParser:
             ANY content models are represented as None, and EMPTYs as ("",[],"").
 
             (name , descr , (attribute | attribute-group-ref)* , )
-
-        Returns:
-
         """
         currentLineNumber: int = DTDParser.classParser.CurrentLineNumber
-        DTDParser.klsLogger.debug(f'eltHndlr - {currentLineNumber:{2}} name: {elementName:{12}} model: {model}')
+        DTDParser.klsLogger.debug(f'elementHandler - {currentLineNumber:{2}} name: {elementName:{12}} model: {model}')
 
         DTDParser.elementTypes[elementName] = model
 
@@ -153,6 +154,7 @@ class DTDParser:
             elementTreeData: ElementTreeData = ElementTreeData(pyutClass=pyutClass, oglClass=oglClass)
 
             model = DTDParser.elementTypes[eltName]
+            # noinspection SpellCheckingInspection
             chillunNames: List[str] = self._getChildElementNames(eltName=eltName, model=model)
             elementTreeData.childElementNames = chillunNames
 
@@ -203,10 +205,11 @@ class DTDParser:
 
     def _getChildElementNames(self, eltName, model) -> List[str]:
 
-        self.logger.debug(f'_getChildElementNames - eltName: {eltName:{12}}\n model[0]: `{model[0]}`\n model[1]: `{model[1]}`\n model[2]: `{model[2]}`\n model[3]" `{model[3]}`')
+        self.logger.debug(f'_getChildElementNames - {eltName=}\n {model[0]=}\n {model[1]=}\n {model[2]=}\n {model[3]=}')
 
         children = model[DTDParser.MODEL_CHILDREN_INDEX]
         self.logger.info(f'children {children}')
+        # noinspection SpellCheckingInspection
         chillunNames: List[str] = []
         for child in children:
 
@@ -215,11 +218,11 @@ class DTDParser:
             dtdElementType: DTDElementTypes = DTDElementTypes(child[DTDParser.MODEL_CHILD_ELEMENT_TYPE_INDEX])
             childName = child[DTDParser.MODEL_CHILD_ELEMENT_NAME_INDEX]
             self.logger.info(f'eltName: {eltName} child: `{child}` eltType: `{dtdElementType.__repr__()}` childName: `{childName}`')
-            addlElts = child[DTDParser.MODEL_CHILD_ELEMENT_ADDITIONAL_ELEMENTS_INDEX]
-            if len(addlElts) != 0:
-                for additionChildren in addlElts:
-                    addlChildName = additionChildren[DTDParser.MODEL_CHILD_ELEMENT_NAME_INDEX]
-                    chillunNames.append(addlChildName)
+            additionalElements = child[DTDParser.MODEL_CHILD_ELEMENT_ADDITIONAL_ELEMENTS_INDEX]
+            if len(additionalElements) != 0:
+                for additionChildren in additionalElements:
+                    additionalChildName = additionChildren[DTDParser.MODEL_CHILD_ELEMENT_NAME_INDEX]
+                    chillunNames.append(additionalChildName)
             else:
                 chillunNames.append(childName)
 
