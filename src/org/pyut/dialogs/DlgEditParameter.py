@@ -1,23 +1,25 @@
+
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALIGN_RIGHT
 from wx import ALL
-from wx import BoxSizer
-from wx import Button
 from wx import CANCEL
 from wx import CAPTION
-from wx import CommandEvent
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
-from wx import Event
-from wx import FlexGridSizer
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import OK
 from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
+from wx import VERTICAL
+
+from wx import BoxSizer
+from wx import Button
 from wx import StaticText
 from wx import TextCtrl
-from wx import VERTICAL
+from wx import Event
+from wx import FlexGridSizer
+from wx import CommandEvent
 
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
@@ -26,6 +28,7 @@ from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 [
@@ -35,22 +38,21 @@ from org.pyut.general.Globals import _
  ] = PyutUtils.assignID(3)
 
 
-class \
-        DlgEditParameter(BaseDlgEdit):
+class DlgEditParameter(BaseDlgEdit):
 
-    def __init__(self, theParent, theWindowId=ID_ANY, parameterToEdit: PyutParam = None, theMediator=None):
+    def __init__(self, parent, windowId, parameterToEdit: PyutParam, mediator=None):
         """
         The Dialog for parameter editing
         Args:
-            theParent:
-            theWindowId:
+            parent:
+            windowId:
             parameterToEdit:  The parameter that is being edited
-            theMediator:
+            mediator:
         """
 
-        super().__init__(theParent, theWindowId, _("Parameter Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=theMediator)
+        super().__init__(parent, windowId, _("Parameter Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=mediator)
 
-        self._parameterToEdit = parameterToEdit
+        self._parameterToEdit: PyutParam = parameterToEdit
 
         # ----------------
         # Design of dialog

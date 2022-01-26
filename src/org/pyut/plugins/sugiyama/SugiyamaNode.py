@@ -306,7 +306,7 @@ class SugiyamaNode:
             # ~ print self.__index, float(sum) / len(nodeList)
             self.__barycenter = float(summation) / len(nodeList)
 
-    def __getAverageX(self, nodeList: SugiyamaVEs):
+    def __getAverageX(self, nodeList: SugiyamaVEs) -> float:
         """
         Compute the average of x coordinates on all the given nodes.
 
@@ -317,9 +317,9 @@ class SugiyamaNode:
                     None if nodeList is empty.
         """
         if len(nodeList) == 0:
-            return None
+            return cast(float, None)
         else:
-            summation = 0
+            summation: float = 0
             for (node, link) in nodeList:
                 summation += node.getPosition()[0] + node.getSize()[0] / 2
             return summation / len(nodeList) - self.getSize()[0] / 2

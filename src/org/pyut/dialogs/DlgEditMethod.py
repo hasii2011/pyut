@@ -220,7 +220,7 @@ class DlgEditMethod(BaseDlgEdit):
 
         Returns: return code from dialog
         """
-        self._dlgParam: DlgEditParameter = DlgEditParameter(theParent=self, theWindowId=ID_ANY, parameterToEdit=param, theMediator=self._ctrl)
+        self._dlgParam: DlgEditParameter = DlgEditParameter(parent=self, windowId=ID_ANY, parameterToEdit=param, mediator=self._ctrl)
         return self._dlgParam.ShowModal()
 
     # noinspection PyUnusedLocal

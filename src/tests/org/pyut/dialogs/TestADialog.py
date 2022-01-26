@@ -24,11 +24,15 @@ from wx import StaticBox
 from wx import StaticBoxSizer
 from wx import NewIdRef as wxNewIdRef
 
+from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+
 from org.pyut.model.PyutNote import PyutNote
+from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutText import PyutText
+
 from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -88,7 +92,7 @@ class TestADialog(App):
 
         self._cmbDlgName: ComboBox = ComboBox(parentFrame, self._dlgSelectionId, choices=dialogChoices, style=CB_READONLY)
 
-        box:      StaticBox      = StaticBox(parentFrame, ID_ANY, "Dialog Selection")
+        box:      StaticBox    = StaticBox(parentFrame, ID_ANY, "Dialog Selection")
         szrDlg: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
         szrDlg.Add(self._cmbDlgName, 1, LEFT | RIGHT, TestADialog.MINI_GAP)
@@ -115,6 +119,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgPyutPreferences()
         elif dlgName == DialogNamesEnum.DLG_LAYOUT_SIZE:
             dlgAnswer = self._testDlgLayoutSize()
+        elif dlgName == DialogNamesEnum.DLG_EDIT_PARAMETER:
+            dlgAnswer = self._testDlgEditParameter()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -154,6 +160,14 @@ class TestADialog(App):
             dlg: DlgLayoutSize = cast(DlgLayoutSize, dlg)
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: width={dlg.layoutWidth}  height={dlg.layoutHeight}'
+            else:
+                return f'Cancelled'
+
+    def _testDlgEditParameter(self) -> str:
+        pyutParameter: PyutParam = PyutParam()
+        with DlgEditParameter(parent=self._frameTop, windowId=ID_ANY, parameterToEdit=pyutParameter, mediator=Mediator()) as dlg:
+            if dlg.ShowModal() == OK:
+                return f'Retrieved data: {pyutParameter}'
             else:
                 return f'Cancelled'
 
