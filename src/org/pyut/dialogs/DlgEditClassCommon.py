@@ -1,6 +1,9 @@
+
+from typing import Union
+from typing import TypeVar
+
 from logging import Logger
 from logging import getLogger
-from typing import Union
 
 from copy import deepcopy
 
@@ -33,9 +36,11 @@ from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
-
-from org.pyut.general.Globals import _
 from org.pyut.model.PyutMethod import PyutMethod
+
+# noinspection PyProtectedMember
+from org.pyut.general.Globals import _
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 CommonClassType = Union[PyutClass, PyutInterface]
@@ -55,7 +60,7 @@ class DlgEditClassCommon(Dialog):
 
     clsLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent, windowId, dlgTitle: str, pyutModel: CommonClassType, editInterface: bool = False):
+    def __init__(self, parent, windowId, dlgTitle: str, pyutModel: Union[PyutClass, PyutInterface], editInterface: bool = False):
 
         super().__init__(parent, windowId, dlgTitle, style=RESIZE_BORDER | CAPTION)
 
@@ -64,10 +69,11 @@ class DlgEditClassCommon(Dialog):
         from org.pyut.ui.Mediator import Mediator
 
         self.logger:         Logger          = DlgEditClassCommon.clsLogger
-        self._pyutModel:     CommonClassType = pyutModel
-        self._pyutModelCopy: CommonClassType = deepcopy(pyutModel)
         self._editInterface: bool            = editInterface
         self._mediator:      Mediator        = Mediator()
+
+        self._pyutModel:     CommonClassType = pyutModel
+        self._pyutModelCopy: CommonClassType = deepcopy(pyutModel)
 
         self.SetAutoLayout(True)
 
@@ -333,7 +339,9 @@ class DlgEditClassCommon(Dialog):
             editInterface: bool = True
         else:
             editInterface = False
-        self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=methodToEdit, theMediator=self._mediator, editInterface=editInterface)
+        self._dlgMethod: DlgEditMethod = DlgEditMethod(theParent=self, theWindowId=ID_ANY, methodToEdit=methodToEdit,
+                                                       theMediator=self._mediator, editInterface=editInterface
+                                                       )
         return self._dlgMethod.ShowModal()
 
     # noinspection PyUnusedLocal
@@ -345,7 +353,7 @@ class DlgEditClassCommon(Dialog):
         """
         self._pyutModel.setName(self._txtName.GetValue())
 
-        self._pyutModel.methods      = self._pyutModelCopy.methods
+        self._pyutModel.methods     = self._pyutModelCopy.methods
         self._pyutModel.description = self._pyutModelCopy.description
 
         self._returnAction = OK     # This is probably obsolete

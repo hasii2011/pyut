@@ -33,6 +33,7 @@ from wx import Window
 from wx import PostEvent as wxPostEvent
 
 from org.pyut.general.CustomEvents import ClassNameChangedEvent
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 
@@ -42,6 +43,7 @@ from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from org.pyut.dialogs.DlgEditField import DlgEditField
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 from org.pyut.PyutUtils import PyutUtils
 
@@ -59,7 +61,7 @@ class DlgEditClass(DlgEditClassCommon):
 
     Creating a DlgEditClass object will automatically open a dialog for class
     editing. The PyutClass given in the constructor parameters is used to fill the
-    fields of the dialog, and is updated when the OK button is clicked.
+    fields with the dialog, and is updated when the OK button is clicked.
 
     Dialogs for methods and fields editing are implemented in different dialog classes and
     created when invoking the _callDlgEditMethod and _callDlgEditField methods.
@@ -123,14 +125,10 @@ class DlgEditClass(DlgEditClassCommon):
         szrFieldButtons.Add(self._btnFieldDown, 0, ALL, 5)
 
         szrMethodButtons: BoxSizer = self._createMethodsUIArtifacts()
-        # Show stereotype checkbox
-        self._chkShowStereotype = CheckBox(self, -1, _("Show stereotype"))
 
-        # Show fields checkbox
-        self._chkShowFields = CheckBox(self, -1, _("Show fields"))
-
-        # Show methods checkbox
-        self._chkShowMethods = CheckBox(self, -1, _("Show methods"))
+        self._chkShowStereotype: CheckBox = CheckBox(self, ID_ANY, _("Show stereotype"))    # Show stereotype checkbox
+        self._chkShowFields:     CheckBox = CheckBox(self, ID_ANY, _("Show fields"))        # Show fields checkbox
+        self._chkShowMethods:    CheckBox = CheckBox(self, ID_ANY, _("Show methods"))       # Show methods checkbox
 
         # Sizer for display properties
         szrDisplayProperties = BoxSizer (VERTICAL)
@@ -366,7 +364,7 @@ class DlgEditClass(DlgEditClassCommon):
 
     def _evtFieldListDClick(self, event: CommandEvent):
         """
-        Called when there is a double-click on Fields list.
+        Called when there is a double click on Fields list.
         """
         self._onFieldEdit(event)
 

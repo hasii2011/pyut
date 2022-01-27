@@ -24,10 +24,12 @@ from wx import StaticBox
 from wx import StaticBoxSizer
 from wx import NewIdRef as wxNewIdRef
 
+from org.pyut.dialogs.DlgEditClass import DlgEditClass
 from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+from org.pyut.model.PyutClass import PyutClass
 
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
@@ -121,6 +123,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgLayoutSize()
         elif dlgName == DialogNamesEnum.DLG_EDIT_PARAMETER:
             dlgAnswer = self._testDlgEditParameter()
+        elif dlgName == DialogNamesEnum.DLG_EDIT_CLASS:
+            dlgAnswer = self._testDlgEditClass()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -168,6 +172,14 @@ class TestADialog(App):
         with DlgEditParameter(parent=self._frameTop, windowId=ID_ANY, parameterToEdit=pyutParameter, mediator=Mediator()) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutParameter}'
+            else:
+                return f'Cancelled'
+
+    def _testDlgEditClass(self):
+        pyutClass: PyutClass = PyutClass(name='Ozzee')
+        with DlgEditClass(parent=self._frameTop, windowId=ID_ANY, pyutClass=pyutClass) as dlg:
+            if dlg.ShowModal() == OK:
+                return f'Retrieved data: {pyutClass}'
             else:
                 return f'Cancelled'
 

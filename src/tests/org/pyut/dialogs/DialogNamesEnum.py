@@ -9,3 +9,4 @@ class DialogNamesEnum(Enum):
     DLG_PYUT_PREFERENCES = 'DlgPyutPreferences'
     DLG_LAYOUT_SIZE      = 'DlgLayoutSize'
     DLG_EDIT_PARAMETER   = 'DlgEditParameter'
+    DLG_EDIT_CLASS       = 'DlgEditClass'
