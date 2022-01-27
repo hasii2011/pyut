@@ -1,6 +1,5 @@
 
 from typing import Union
-from typing import NewType
 
 from logging import Logger
 from logging import getLogger
@@ -23,11 +22,14 @@ from org.pyut.ogl.OglClass import OglClass
 
 import wx
 
+DefaultValueType = Union[PyutField, PyutParam]
+TypeIdObject     = Union[PyutMethod, PyutParam, PyutField]
+
 
 class PyutXmi:
     """
     Class for saving and loading a UMI diagram.
-    This class offers two main methods that are save() and open().
+    This class offers two main methods that are `save` and `open`.
     Using the dom XMI model, you can, with the saving method, get the
     diagram corresponding XMI view. For loading, you have to parse
     the file and indicate the UML frame on which you want to draw
@@ -67,7 +69,7 @@ class PyutXmi:
         @return Element
         """
 
-        # hadding links in dictionnary
+        # adding links in dictionary
         if pyutLink in self.__savedLinks:
             return None
         self.__savedLinks[pyutLink] = 1
@@ -112,7 +114,7 @@ class PyutXmi:
         # param type
         root.setAttribute('type', str(pyutParam.getType()))
 
-        # param defaulf value
+        # param default value
         defaultValue = pyutParam.getDefaultValue()
         if defaultValue is not None:
             root.setAttribute('defaultValue', defaultValue)
@@ -281,7 +283,7 @@ class PyutXmi:
         Translates Xmi visibility string to a Pyut visibility enumeration
 
         Args:
-            visibility: the string 'public', 'prviate', or 'protected'
+            visibility: the string 'public', 'private', or 'protected'
 
         Returns:  The appropriate enumeration value
         """
@@ -295,8 +297,6 @@ class PyutXmi:
         #     return "#"
         #
         # return ""
-
-    DefaultValueType = NewType('DefaultValueType', Union[PyutField, PyutParam])
 
     def _getDefaultValue(self, xmiElement: Element, defaultValueModelType: DefaultValueType):
         """
@@ -344,11 +344,9 @@ class PyutXmi:
         parse(theDom, "Foundation.Core.DataType")
         parse(theDom, "Foundation.Data_Types.Enumeration")
 
-    TypeIdObject = NewType('TypeIdObject', Union[PyutMethod, PyutParam, PyutField])   # type: ignore
-
     def _getTypeId(self, xmiElement: Element, typeIdObject: TypeIdObject, dico):
         """
-        Parse xmiParam and making link in dico between param and xmiParam Id.
+        Parse xmiParam and making link in dico between param and xmiParam id.
 
         Args:
             xmiElement:
@@ -466,7 +464,7 @@ class PyutXmi:
 
             if name.nodeType == name.TEXT_NODE:
                 aField.setName(name.data)
-            # field visibility  --  Be verbose for debugability
+            # field visibility  --  Be verbose for maintainability
             # visibility = Field.getElementsByTagName ("Foundation.Core.ModelElement.visibility")[0]
             # aField.setVisibility(self._xmiVisibility2PyutVisibility(visibility.getAttribute('xmi.value')))
 
@@ -539,7 +537,7 @@ class PyutXmi:
             linkId = association.getAttribute("xmi.id")
             if linkId == "":
                 return
-            print("liinId " + linkId)
+            self.logger.debug(f"{linkId=}")
 
             linkName = ""
             xmiName = association.getElementsByTagName\
@@ -549,7 +547,7 @@ class PyutXmi:
                 if name is not None:
                     if name.nodeType == name.TEXT_NODE:
                         linkName = name.data
-            print("link name : "+linkName)
+            self.logger.debug(f"{linkName=}")
 
             src = None
             dest = None
@@ -569,6 +567,7 @@ class PyutXmi:
             createdLink = umlFrame.createNewLink(src, dest)
             createdLink.setName(linkName)
             createdLink.setDestination(src.getPyutObject())
+            createdLink.linkType = linkType
 
     # noinspection PyUnusedLocal
     def _getOglClasses(self, xmlOglClasses, dicoOglObjects, umlFrame, oldData):
@@ -600,7 +599,7 @@ class PyutXmi:
             oglClass = OglClass(pyutClass, 50, 50)
 
             # adding methods for this class
-            pyutClass.setMethods(self._getMethods(xmlOglClasses))
+            pyutClass.methods = self._getMethods(xmlOglClasses)
 
             # adding fields for this class
             pyutClass.fields = self._getFields(xmlOglClasses)
@@ -617,7 +616,7 @@ class PyutXmi:
                     self.dicoFather[linkId] = {}
                 self.dicoFather[linkId][classId] = oglClass
 
-            # for all class whos are link
+            # for all classes who are links
             for links in xmlOglClasses.getElementsByTagName("Foundation.Core.Classifier.associationEnd"):
                 for link in links.getElementsByTagName("Foundation.Core.AssociationEnd"):
                     linkId = link.getAttribute("xmi.idref")
