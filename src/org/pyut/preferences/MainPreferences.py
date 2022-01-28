@@ -26,7 +26,7 @@ class MainPreferences(BaseSubPreference):
     FULL_SCREEN:                str = 'Full_Screen'
     CURRENT_TIP:                str = 'Current_Tip'
     EDITOR:                     str = 'Editor'
-    STARTUP_DIMENSIONS:         str = 'startup_dimensions'
+    STARTUP_SIZE:               str = 'startup_size'
     STARTUP_POSITION:           str = 'startup_position'
     CENTER_DIAGRAM:             str = 'center_diagram'
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
@@ -42,7 +42,7 @@ class MainPreferences(BaseSubPreference):
         FULL_SCREEN:               'False',
         CURRENT_TIP:               '0',
         EDITOR:                    'brackets',
-        STARTUP_DIMENSIONS:        Dimensions(1024, 768).__str__(),
+        STARTUP_SIZE:              Dimensions(1024, 768).__str__(),
         STARTUP_POSITION:          Position(5, 5).__str__(),
         CENTER_DIAGRAM:            'False',
         CENTER_APP_ON_STARTUP:     'True',
@@ -151,14 +151,14 @@ class MainPreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def startupDimensions(self) -> Dimensions:
+    def startupSize(self) -> Dimensions:
 
-        serializedDimensions: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_DIMENSIONS)
+        serializedDimensions: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_SIZE)
         return Dimensions.deSerialize(serializedDimensions)
 
-    @startupDimensions.setter
-    def startupDimensions(self, newValue: Dimensions):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_DIMENSIONS, newValue.__str__())
+    @startupSize.setter
+    def startupSize(self, newValue: Dimensions):
+        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_SIZE, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
     @property

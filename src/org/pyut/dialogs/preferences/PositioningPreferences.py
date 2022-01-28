@@ -78,7 +78,7 @@ class PositioningPreferences(PreferencesPanel):
             self._appPositionContainer.enableControls(True)
             self.__cbCenterAppOnStartup.SetValue(False)
 
-        self._appDimensionsContainer.dimensions = self._prefs.startupDimensions
+        self._appDimensionsContainer.dimensions = self._prefs.startupSize
         self._appPositionContainer.position     = self._prefs.startupPosition
 
     def __onCenterOnStartupChanged(self, event: CommandEvent):
@@ -106,7 +106,7 @@ class PositioningPreferences(PreferencesPanel):
         return self._appDimensionsContainer
 
     def __appSizeChanged(self, newValue: Dimensions):
-        self._prefs.startupDimensions = newValue
+        self._prefs.startupSize = newValue
         self._valuesChanged = True
 
     def __appPositionChanged(self, newValue: Position):

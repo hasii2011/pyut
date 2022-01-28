@@ -68,8 +68,8 @@ class PyutPreferences(Singleton):
         """
         self.logger:  Logger = getLogger(__name__)
 
-        self._overrideOnProgramExitSize:     bool = False
-        self._overrideOnProgramExitPosition: bool = False
+        self._overrideProgramExitSize:     bool = False
+        self._overrideProgramExitPosition: bool = False
         """
         Set to `True` by the preferences dialog when the end-user either manually specifies
         the size or position of the Pyut application.  If it is False, then normal end
@@ -154,7 +154,7 @@ class PyutPreferences(Singleton):
         self._preferencesCommon.saveConfig()
 
     @property
-    def overrideOnProgramExitSize(self) -> bool:
+    def overrideProgramExitSize(self) -> bool:
         """
         Some values like the final application position and size are automatically computed and set
         when the application exits.  However, these can also be set by the end-user via
@@ -164,21 +164,21 @@ class PyutPreferences(Singleton):
         Returns: `True` if the application can use the computed values;  Else return `False` as the
         end-user has manually specified them.
         """
-        return self._overrideOnProgramExitSize
+        return self._overrideProgramExitSize
 
-    @overrideOnProgramExitSize.setter
-    def overrideOnProgramExitSize(self, theNewValue: bool):
-        self._overrideOnProgramExitSize = theNewValue
+    @overrideProgramExitSize.setter
+    def overrideProgramExitSize(self, theNewValue: bool):
+        self._overrideProgramExitSize = theNewValue
 
     @property
-    def overrideOnProgramExitPosition(self) -> bool:
+    def overrideProgramExitPosition(self) -> bool:
         """
         """
-        return self._overrideOnProgramExitPosition
+        return self._overrideProgramExitPosition
 
-    @overrideOnProgramExitPosition.setter
-    def overrideOnProgramExitPosition(self, theNewValue: bool):
-        self._overrideOnProgramExitPosition = theNewValue
+    @overrideProgramExitPosition.setter
+    def overrideProgramExitPosition(self, theNewValue: bool):
+        self._overrideProgramExitPosition = theNewValue
 
     @property
     def pdfExportFileName(self) -> str:
@@ -275,16 +275,16 @@ class PyutPreferences(Singleton):
     @startupPosition.setter
     def startupPosition(self, newValue: Position):
         self._mainPrefs.startupPosition = newValue
-        self.overrideOnProgramExitPosition = True
+        self.overrideProgramExitPosition = True
 
     @property
-    def startupDimensions(self) -> Dimensions:
-        return self._mainPrefs.startupDimensions
+    def startupSize(self) -> Dimensions:
+        return self._mainPrefs.startupSize
 
-    @startupDimensions.setter
-    def startupDimensions(self, newValue: Dimensions):
-        self._mainPrefs.startupDimensions = newValue
-        self.overrideOnProgramExitSize = True
+    @startupSize.setter
+    def startupSize(self, newValue: Dimensions):
+        self._mainPrefs.startupSize = newValue
+        self.overrideProgramExitSize = True
 
     @property
     def fullScreen(self) -> bool:
