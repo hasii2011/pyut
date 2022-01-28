@@ -192,15 +192,6 @@ class MainPreferences(BaseSubPreference):
         self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_POSITION, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
-    # @property
-    # def pdfExportFileName(self) -> str:
-    #     return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.PDF_EXPORT_FILE_NAME)
-    #
-    # @pdfExportFileName.setter
-    # def pdfExportFileName(self, newValue: str):
-    #     self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.PDF_EXPORT_FILE_NAME, newValue)
-    #     self._preferencesCommon.saveConfig()
-
     @property
     def toolBarIconSize(self) -> ToolBarIconSize:
         enumStr: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.TOOL_BAR_ICON_SIZE)

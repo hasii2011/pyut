@@ -59,7 +59,7 @@ class DualSpinnerContainer(StaticBoxSizer):
 
         super().__init__(box, HORIZONTAL)
 
-        self._wxValue0SpinnerId:  int = wxNewIdRef()
+        self._wxValue0SpinnerId: int = wxNewIdRef()
         self._wxValue1SpinnerId: int = wxNewIdRef()
 
         self._scValue0: SpinCtrl = SpinCtrl(parent, self._wxValue0SpinnerId, "", (SPINNER_WIDTH, SPINNER_HEIGHT))

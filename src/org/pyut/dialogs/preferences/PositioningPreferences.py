@@ -1,19 +1,18 @@
 
-
 from logging import Logger
 from logging import getLogger
 
 from wx import ALL
 from wx import EVT_CHECKBOX
-from wx import EVT_SPINCTRL
 from wx import VERTICAL
 
 from wx import CommandEvent
-from wx import SpinEvent
 from wx import StaticBoxSizer
 from wx import BoxSizer
 from wx import CheckBox
 from wx import Window
+
+from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
@@ -26,8 +25,6 @@ from org.pyut.general.datatypes.Position import Position
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
-from org.pyut.PyutUtils import PyutUtils
-
 
 class PositioningPreferences(PreferencesPanel):
 
@@ -39,11 +36,8 @@ class PositioningPreferences(PreferencesPanel):
     def __init__(self, parent: Window):
 
         super().__init__(parent=parent)
-        [
-            self.__centerAppOnStartupID,
-            self.__scAppWidthID, self.__scAppHeightID,
-            self.__scAppPosXID,  self.__scAppPosYID
-        ] = PyutUtils.assignID(5)
+
+        self.__centerAppOnStartupId: int = wxNewIdRef()
 
         self._createControls()
 
@@ -58,7 +52,7 @@ class PositioningPreferences(PreferencesPanel):
         Creates the main control and stashes them as private instance variables
         """
 
-        self.__cbCenterAppOnStartup: CheckBox = CheckBox(self, self.__centerAppOnStartupID, _('Center Pyut on Startup'))
+        self.__cbCenterAppOnStartup: CheckBox = CheckBox(self, self.__centerAppOnStartupId, _('Center Pyut on Startup'))
 
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
@@ -68,12 +62,7 @@ class PositioningPreferences(PreferencesPanel):
 
         self._setControlValues()
 
-        self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppPosXID)
-        self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppPosYID)
-        self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppWidthID)
-        self.Bind(EVT_SPINCTRL, self.__onSpinnerValueChanged, id=self.__scAppHeightID)
-
-        self.Bind(EVT_CHECKBOX, self.__onCenterOnStartupChanged, id=self.__centerAppOnStartupID)
+        self.Bind(EVT_CHECKBOX, self.__onCenterOnStartupChanged, id=self.__centerAppOnStartupId)
 
         self.SetAutoLayout(True)
         self.SetSizer(mainSizer)
@@ -92,37 +81,13 @@ class PositioningPreferences(PreferencesPanel):
         self._appDimensionsContainer.dimensions = self._prefs.startupDimensions
         self._appPositionContainer.position     = self._prefs.startupPosition
 
-    def __onSpinnerValueChanged(self, event: SpinEvent):
-
-        self.__changed = True
-        eventId:  int = event.GetId()
-        newValue: int = event.GetInt()
-
-        if eventId == self.__scAppPosXID:
-            oldValue:    Position = self._prefs.startupPosition
-            newPosition: Position = Position(x=newValue, y=oldValue.y)
-            self._prefs.startupPosition = newPosition
-        elif eventId == self.__scAppPosYID:
-            oldValue    = self._prefs.startupPosition
-            newPosition = Position(x=oldValue.x, y=newValue)
-            self._prefs.startupPosition = newPosition
-        else:
-            self.clsLogger.error(f'Unknown __OnValueChanged event id: {eventId}')
-
-        self._prefs.overrideOnProgramExit = False
-        self._valuesChanged               = True
-
     def __onCenterOnStartupChanged(self, event: CommandEvent):
         """
         """
-        eventID = event.GetId()
         val: bool = event.IsChecked()
 
-        if eventID == self.__centerAppOnStartupID:
-            self._prefs.centerAppOnStartUp = val
-            self.__enablePositionControls(val)
-        else:
-            self.clsLogger.warning(f'Unknown check box ID: {eventID}')
+        self._prefs.centerAppOnStartUp = val
+        self.__enablePositionControls(val)
 
         self._valuesChanged = True
 
@@ -142,16 +107,18 @@ class PositioningPreferences(PreferencesPanel):
 
     def __appSizeChanged(self, newValue: Dimensions):
         self._prefs.startupDimensions = newValue
+        self._valuesChanged = True
 
     def __appPositionChanged(self, newValue: Position):
         self._prefs.startupPosition = newValue
+        self._valuesChanged = True
 
     def __enablePositionControls(self, newValue: bool):
         """
         Enable/Disable position controls based on the value of appropriate preference value
 
         Args:
-            newValue:  If 'True' disabled else enabled
+            newValue:  If 'True' position controls are disabled else they are enabled
         """
         if newValue is True:
             self._appPositionContainer.enableControls(False)

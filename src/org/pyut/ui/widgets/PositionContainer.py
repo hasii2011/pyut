@@ -16,7 +16,7 @@ from org.pyut.general.datatypes.Position import Position
 
 class PositionContainer(DualSpinnerContainer):
     """
-    A Positions facade around the basic dual spinner control
+    A facade around the basic dual spinner control
     """
     DEFAULT_MIN_VALUE: int = 100  # For the control only
     DEFAULT_MAX_VALUE: int = 300  # For the control only
@@ -51,6 +51,6 @@ class PositionContainer(DualSpinnerContainer):
 
     def _onValueChanged(self, spinnerValues: SpinnerValues):
         self._position.x = spinnerValues.value0
-        self._position.x = spinnerValues.value1
+        self._position.y = spinnerValues.value1
 
         self._callback(self._position)

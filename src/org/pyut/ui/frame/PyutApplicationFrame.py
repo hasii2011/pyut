@@ -176,23 +176,21 @@ class PyutApplicationFrame(Frame):
         # Close all files
         if self._treeNotebookHandler.onClose() is False:
             return
-        if self._prefs.overrideOnProgramExit is True:
+        if self._prefs.overrideOnProgramExitPosition is False:
             # Only save position if we are not auto-saving
             if self._prefs.centerAppOnStartUp is False:
                 x, y = self.GetPosition()
                 pos: Position = Position(x=x, y=y)
                 self._prefs.startupPosition = pos
-
+        if self._prefs.overrideOnProgramExitSize is False:
             ourSize: Tuple[int, int] = self.GetSize()
-            # self._prefs.startupWidth  = ourSize[0]
-            # self._prefs.startupHeight = ourSize[1]
             self._prefs.startupDimensions = Dimensions(ourSize[0], ourSize[1])
 
         self._clipboard    = None
-        self._treeNotebookHandler = None
         self._mediator     = None
         self._prefs        = None
         self._plugMgr      = None
+        self._treeNotebookHandler = None
 
         self.Destroy()
 
