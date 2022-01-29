@@ -31,7 +31,7 @@ Fields         = List[Field]
 Children       = List[Union[ClassName, ChildName]]
 
 Methods    = NewType('Methods', Dict[ClassName, MethodNames])
-Parameters = NewType('Parameters', Dict[MethodName, ParameterNames])
+Parameters = NewType('Parameters', Dict[MethodName, MultiParameterNames])
 MethodCode = NewType('MethodCode', Dict[MethodName, str])
 Parents    = NewType('Parents', Dict[ParentName, Children])
 

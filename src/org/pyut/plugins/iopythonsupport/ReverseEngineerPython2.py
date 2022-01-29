@@ -42,7 +42,7 @@ from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import ClassNames
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import DataClassProperties
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import MethodName
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import MethodNames
-from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import ParameterNames
+from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import MultiParameterNames
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import Parameters
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import ParentName
 from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import Parents
@@ -222,17 +222,10 @@ class ReverseEngineerPython2:
 
         methodName: MethodName = MethodName(pyutMethod.name)
         if methodName in self.visitor.parameters:
-            parameters: ParameterNames = self.visitor.parameters[methodName]
-            for parameter in parameters:
-                self.logger.debug(f'parameter: {parameter}')
-                paramNameType = parameter.split(':')
-                #
-                # TODO: account for default values
-                #
-                if len(paramNameType) == 2:         # Somebody is good and did typing
-                    pyutType: PyutType = PyutType(paramNameType[1])
-                    pyutParam: PyutParam = PyutParam(name=paramNameType[0], theParameterType=pyutType)
-                    pyutMethod.addParam(pyutParam)
+            parameterList: MultiParameterNames = self.visitor.parameters[methodName]
+            for parameters in parameterList:        # list of 1 ?
+                pyutParameters: List[PyutParam] = self._generateParameters(parameters)
+                pyutMethod.parameters = pyutParameters
 
         return pyutMethod
 
@@ -337,6 +330,62 @@ class ReverseEngineerPython2:
             pyutField = self.__simpleParseFieldToPyut(fieldData)
 
         return pyutField
+
+    def _generateParameters(self, multiParameterNames: str) -> List[PyutParam]:
+        """
+        Handles the following 4 cases:
+        Simple:                       param
+        Typed:                        param: float
+        SimpleDefaultValue:           param=0.0
+        ComplexTypedAndDefaultValue: param: float = 0.0
+        Args:
+            multiParameterNames:
+
+        Returns:  A list of PyutParam objects
+        """
+        parameterNameList: List[str] = multiParameterNames.split(',')
+        pyutParams:        List[PyutParam] = []
+        for parameterStr in parameterNameList:
+            if ':' in parameterStr and '=' in parameterStr:
+                pyutParam: PyutParam = self.__complexTypedAndDefaultValue(parameterStr)
+            elif '=' in parameterStr:
+                pyutParam = self._simpleDefaultValue(parameterStr)
+            elif ':' in parameterStr:
+                pyutParam = self._typedParameter(parameterStr)
+            else:
+                pyutParam = PyutParam(parameterStr)
+            pyutParams.append(pyutParam)
+
+        return pyutParams
+
+    def __complexTypedAndDefaultValue(self, complexParam: str) -> PyutParam:
+
+        paramNameType:  List[str] = complexParam.split(':')
+        paramName:      str = paramNameType[0]
+        paramTypeValue: List[str] = paramNameType[1].split('=')
+        paramType:      str = paramTypeValue[0]
+        paramValue:     str = paramTypeValue[1]
+
+        pyutType: PyutType = PyutType(paramType)
+        return PyutParam(name=paramName, theParameterType=pyutType, defaultValue=paramValue)
+
+    def _simpleDefaultValue(self, simpleDefaultValueParam: str) -> PyutParam:
+
+        pyutParamAndValue: List[str] = simpleDefaultValueParam.split('=')
+        paramName:  str = pyutParamAndValue[0]
+        paramValue: str = pyutParamAndValue[1]
+
+        pyutParam: PyutParam = PyutParam(name=paramName, defaultValue=paramValue)
+
+        return pyutParam
+
+    def _typedParameter(self, typedParam: str) -> PyutParam:
+        pyutParamAndType: List[str] = typedParam.split(':')
+        paramName:        str = pyutParamAndType[0]
+        paramType:        str = pyutParamAndType[1]
+
+        pyutParam: PyutParam = PyutParam(name=paramName, theParameterType=PyutType(value=paramType))
+        return pyutParam
 
     def __simpleParseFieldToPyut(self, fieldData: str) -> PyutField:
 
