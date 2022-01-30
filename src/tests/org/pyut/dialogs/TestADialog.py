@@ -25,11 +25,13 @@ from wx import StaticBoxSizer
 from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.dialogs.DlgEditClass import DlgEditClass
+from org.pyut.dialogs.DlgEditField import DlgEditField
 from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutField import PyutField
 
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
@@ -125,6 +127,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditParameter()
         elif dlgName == DialogNamesEnum.DLG_EDIT_CLASS:
             dlgAnswer = self._testDlgEditClass()
+        elif dlgName == DialogNamesEnum.DLG_EDIT_FIELD:
+            dlgAnswer = self._testDlgEditField()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -149,6 +153,14 @@ class TestADialog(App):
                 return f'Retrieved data: {pyutNote.content=}'
             else:
                 return f'Cancelled'
+
+    def _testDlgEditField(self) -> str:
+        pyutField: PyutField = PyutField()
+        with DlgEditField(theParent=self._frameTop, theWindowId=ID_ANY, fieldToEdit=pyutField) as dlg:
+            if dlg.ShowModal() == OK:
+                return f'{pyutField=}'
+            else:
+                return 'Cancelled'
 
     def _testDlgPyutPreferences(self) -> str:
 

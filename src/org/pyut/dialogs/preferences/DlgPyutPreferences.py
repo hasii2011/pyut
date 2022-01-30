@@ -42,6 +42,7 @@ from org.pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousP
 from org.pyut.dialogs.preferences.PositioningPreferences import PositioningPreferences
 from org.pyut.dialogs.preferences.BackgroundPreferences import BackgroundPreferences
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -103,9 +104,9 @@ class DlgPyutPreferences(Dialog):
         backgroundPreferences:  BackgroundPreferences    = BackgroundPreferences(parent=self)
         valuePreferences:       ValuePreferencesBook     = ValuePreferencesBook(parent=self, wxId=ID_ANY)
 
-        book.AddPage(generalPreferences,     text=_('General'),        select=False)
+        book.AddPage(generalPreferences,     text=_('General'),        select=True)
         book.AddPage(positioningPreferences, text=_('Positioning'),    select=False)
-        book.AddPage(miscPanel,              text=_('Miscellaneous'),  select=True)
+        book.AddPage(miscPanel,              text=_('Miscellaneous'),  select=False)
         book.AddPage(backgroundPreferences,  text=_('Diagram'),        select=False)
         book.AddPage(valuePreferences,       text=_('Default Values'), select=False)
 

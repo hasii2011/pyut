@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import Tuple
 
 from logging import Logger
@@ -34,7 +35,9 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+
 from org.pyut.general.Lang import LANGUAGES
 from org.pyut.general.Lang import DEFAULT_LANG
 
@@ -54,6 +57,10 @@ class MiscellaneousPreferences(PreferencesPanel):
 
         [self.__languageID, self.__pdfFilenameID, self.__wxImageFileNameID] = PyutUtils.assignID(3)
 
+        self._pdfFileNameContainer:        TextContainer = cast(TextContainer, None)
+        self._wxImageFileNameContainer:    TextContainer = cast(TextContainer, None)
+        self._fastEditEditorNameContainer: TextContainer = cast(TextContainer, None)
+
         self._createControls()
         self._setControlValues()
 
@@ -63,6 +70,7 @@ class MiscellaneousPreferences(PreferencesPanel):
 
         mainSizer.Add(self.__createExportToPdfDefaultFileNameContainer(), 0, ALL, MiscellaneousPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__createWxImageFileNameContainer(),            0, ALL, MiscellaneousPreferences.VERTICAL_GAP)
+        mainSizer.Add(self.__createFastEditEditorNameContainer(),         0, ALL, MiscellaneousPreferences.VERTICAL_GAP)
         mainSizer.Add(self.__createLanguageControlContainer(),            0, ALL, MiscellaneousPreferences.VERTICAL_GAP)
 
         self.SetAutoLayout(True)
@@ -70,7 +78,7 @@ class MiscellaneousPreferences(PreferencesPanel):
 
         self.Bind(EVT_COMBOBOX, self.__OnLanguageChange, id=self.__languageID)
 
-    def __createExportToPdfDefaultFileNameContainer(self) -> BoxSizer:
+    def __createExportToPdfDefaultFileNameContainer(self) -> TextContainer:
 
         pdfFileNameContainer: TextContainer = TextContainer(parent=self, labelText=_('PDF Filename'), valueChangedCallback=self.__onPdfFileNameChange)
 
@@ -78,13 +86,22 @@ class MiscellaneousPreferences(PreferencesPanel):
 
         return pdfFileNameContainer
 
-    def __createWxImageFileNameContainer(self) -> BoxSizer:
+    def __createWxImageFileNameContainer(self) -> TextContainer:
 
         wxImageFileNameContainer: TextContainer = TextContainer(parent=self, labelText=_('Image Filename'), valueChangedCallback=self.__onWxImageFileNameChange)
 
         self._wxImageFileNameContainer = wxImageFileNameContainer
 
         return wxImageFileNameContainer
+
+    def __createFastEditEditorNameContainer(self) -> TextContainer:
+
+        editorNameContainer: TextContainer = TextContainer(parent=self, labelText=_('FastEdit Editor Name'),
+                                                           valueChangedCallback=self.__onFastEditEditorNameChange)
+
+        self._fastEditEditorNameContainer = editorNameContainer
+
+        return editorNameContainer
 
     def __createLanguageControlContainer(self) -> StaticBoxSizer:
         """
@@ -129,8 +146,9 @@ class MiscellaneousPreferences(PreferencesPanel):
 
         self.__cmbLanguage.SetValue(LANGUAGES[n][0])
 
-        self._pdfFileNameContainer.textValue = self._prefs.pdfExportFileName
-        self._wxImageFileNameContainer.textValue = self._prefs.wxImageFileName
+        self._pdfFileNameContainer.textValue        = self._prefs.pdfExportFileName
+        self._wxImageFileNameContainer.textValue    = self._prefs.wxImageFileName
+        self._fastEditEditorNameContainer.textValue = self._prefs.editor
 
     def __OnLanguageChange(self, event: CommandEvent):
 
@@ -155,3 +173,6 @@ class MiscellaneousPreferences(PreferencesPanel):
     def __onWxImageFileNameChange(self, newValue: str):
 
         self._prefs.wxImageFileName = newValue
+
+    def __onFastEditEditorNameChange(self, newValue: str):
+        self._prefs.editor = newValue

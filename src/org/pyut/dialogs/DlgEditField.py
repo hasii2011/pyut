@@ -30,6 +30,7 @@ from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 [

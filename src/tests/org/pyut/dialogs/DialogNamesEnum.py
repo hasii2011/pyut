@@ -5,8 +5,9 @@ from enum import Enum
 class DialogNamesEnum(Enum):
 
     DLG_EDIT_NOTE        = 'DlgEditNote'
-    DLG_EDIT_TEXT        = 'DlgEditText'
     DLG_PYUT_PREFERENCES = 'DlgPyutPreferences'
+    DLG_EDIT_TEXT        = 'DlgEditText'
     DLG_LAYOUT_SIZE      = 'DlgLayoutSize'
     DLG_EDIT_PARAMETER   = 'DlgEditParameter'
     DLG_EDIT_CLASS       = 'DlgEditClass'
+    DLG_EDIT_FIELD       = 'DlgEditField'
