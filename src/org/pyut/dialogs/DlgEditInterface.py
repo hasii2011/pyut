@@ -7,6 +7,7 @@ from copy import deepcopy
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALIGN_RIGHT
 from wx import ALL
+from wx import CANCEL
 from wx import EXPAND
 from wx import OK
 
@@ -65,3 +66,9 @@ class DlgEditInterface(DlgEditClassCommon):
         self._returnAction = OK     # This is probably obsolete
         self.SetReturnCode(OK)
         self.EndModal(OK)
+
+    # noinspection PyUnusedLocal
+    def _onCancel(self, event: CommandEvent):
+        self._returnAction = CANCEL
+        self.SetReturnCode(CANCEL)
+        self.EndModal(CANCEL)
