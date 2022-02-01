@@ -61,7 +61,13 @@ setup(
     author='Humberto A. Sanchez II',
     author_email='Humberto.A.Sanchez.II@gmail.com',
     description='The Python UML Tool',
-    options={},
+    options=dict(py2app=dict(
+        plist=dict(
+            CFBundleGetInfoString='Edits Pyut UML Files',
+            CFBundleIdentifier='org.pyut',
+            LSMinimumSystemVersion='12'
+        )),
+    ),
     setup_requires=['py2app'],
     install_requires=['antlr4-python3-runtime',
                       'fpdf2',

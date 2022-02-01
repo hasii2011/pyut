@@ -199,6 +199,11 @@ class TestADialog(App):
                     f'{pyutClass.description=} '
                     f'stereotype={pyutClass.getStereotype()} '
                 )
+                if len(pyutClass.methods) > 0:
+                    addedMethods: str = f''
+                    for method in pyutClass.methods:
+                        addedMethods = f'{addedMethods} {method} '
+                    classStr = f'{classStr} Methods - {addedMethods}'
                 return f'Retrieved data: {classStr}'
             else:
                 classStr = (
