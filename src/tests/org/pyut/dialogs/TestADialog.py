@@ -26,12 +26,14 @@ from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.dialogs.DlgEditClass import DlgEditClass
 from org.pyut.dialogs.DlgEditField import DlgEditField
+from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
+from org.pyut.model.PyutInterface import PyutInterface
 
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
@@ -127,12 +129,12 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditParameter()
         elif dlgName == DialogNamesEnum.DLG_EDIT_CLASS:
             dlgAnswer = self._testDlgEditClass()
+        elif dlgName == DialogNamesEnum.DLG_EDIT_INTERFACE:
+            dlgAnswer = self._testDlgEditInterface()
         elif dlgName == DialogNamesEnum.DLG_EDIT_FIELD:
             dlgAnswer = self._testDlgEditField()
 
         self.logger.warning(f'{dlgAnswer=}')
-
-        event.Skip(True)
 
     def _testDlgEditText(self) -> str:
 
@@ -189,9 +191,28 @@ class TestADialog(App):
 
     def _testDlgEditClass(self):
         pyutClass: PyutClass = PyutClass(name='Ozzee')
+
         with DlgEditClass(parent=self._frameTop, windowId=ID_ANY, pyutClass=pyutClass) as dlg:
             if dlg.ShowModal() == OK:
-                return f'Retrieved data: {pyutClass}'
+                classStr: str = (
+                    f'{pyutClass.name=} '
+                    f'{pyutClass.description=} '
+                    f'stereotype={pyutClass.getStereotype()} '
+                )
+                return f'Retrieved data: {classStr}'
+            else:
+                classStr = (
+                    f'{pyutClass.name=} '
+                    f'{pyutClass.description=} '
+                    f'stereotype={pyutClass.getStereotype()} '
+                )
+                return f'Cancelled:  {classStr}'
+
+    def _testDlgEditInterface(self):
+        pyutInterface: PyutInterface = PyutInterface(name='Ozzee')
+        with DlgEditInterface(parent=self._frameTop, windowId=ID_ANY, pyutInterface=pyutInterface) as dlg:
+            if dlg.ShowModal() == OK:
+                return f'Retrieved data: {pyutInterface}'
             else:
                 return f'Cancelled'
 

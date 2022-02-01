@@ -10,4 +10,5 @@ class DialogNamesEnum(Enum):
     DLG_LAYOUT_SIZE      = 'DlgLayoutSize'
     DLG_EDIT_PARAMETER   = 'DlgEditParameter'
     DLG_EDIT_CLASS       = 'DlgEditClass'
+    DLG_EDIT_INTERFACE   = 'DlgEditInterface'
     DLG_EDIT_FIELD       = 'DlgEditField'

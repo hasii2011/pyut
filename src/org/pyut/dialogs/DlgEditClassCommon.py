@@ -1,6 +1,5 @@
 
 from typing import Union
-from typing import TypeVar
 
 from logging import Logger
 from logging import getLogger
@@ -12,7 +11,6 @@ from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALL
 from wx import BoxSizer
 from wx import Button
-from wx import CANCEL
 from wx import CAPTION
 from wx import CommandEvent
 from wx import Dialog
@@ -57,6 +55,18 @@ CommonClassType = Union[PyutClass, PyutInterface]
 
 
 class DlgEditClassCommon(Dialog):
+    """
+    This parent class is responsible for the comment attributes that Classes and Interfaces share.
+    These are
+        * Description
+        * Methods
+    This class creates deep copies of the input model class
+
+    Subclasses need to override the `onOk` and `onCancel` handlers
+
+    `onOk` the subclasses should retrieve the common attributes from _pyutModelCopy
+    `onCancel` the subclasses should restore the common attributes from _pyutModel
+    """
 
     clsLogger: Logger = getLogger(__name__)
 
@@ -347,22 +357,12 @@ class DlgEditClassCommon(Dialog):
     # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):
         """
-        Called when the Ok button is pressed
+        Called when the Ok button is pressed;  Subclasses must implement
         Args:
             event:
         """
-        self._pyutModel.setName(self._txtName.GetValue())
-
-        self._pyutModel.methods     = self._pyutModelCopy.methods
-        self._pyutModel.description = self._pyutModelCopy.description
-
-        self._returnAction = OK     # This is probably obsolete
-        event.Skip(skip=True)
-        self.SetReturnCode(OK)
-        self.EndModal(OK)
+        pass
 
     # noinspection PyUnusedLocal
     def _onCancel(self, event: CommandEvent):
-        self._returnAction = CANCEL     # This is probably obsolete
-        self.SetReturnCode(CANCEL)
-        self.EndModal(CANCEL)
+        pass

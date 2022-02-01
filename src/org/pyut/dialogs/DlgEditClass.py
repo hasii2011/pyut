@@ -4,10 +4,13 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from copy import deepcopy
+
 from wx import ALIGN_CENTER
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALIGN_RIGHT
 from wx import ALL
+from wx import CANCEL
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_LISTBOX_DCLICK
@@ -48,6 +51,7 @@ from org.pyut.general.Globals import _
 from org.pyut.PyutUtils import PyutUtils
 
 # Assign constants
+
 [
     ID_TXT_STEREO_TYPE,
     ID_BTN_FIELD_ADD, ID_BTN_FIELD_EDIT, ID_BTN_FIELD_REMOVE,
@@ -79,9 +83,12 @@ class DlgEditClass(DlgEditClassCommon):
             windowId:       dialog identity
             pyutClass:      Class modified by dialog
         """
-        super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Class Edit"), pyutModel=pyutClass, editInterface=False)
+        self.logger:         Logger    = getLogger(__name__)
+        self._pyutClass:     PyutClass = pyutClass
+        self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
 
-        self.logger:         Logger     = getLogger(__name__)
+        super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Edit Class"), pyutModel=self._pyutClassCopy, editInterface=False)
+
         lblStereotype:       StaticText = StaticText (self, -1, _("Stereotype"))
         self._txtStereotype: TextCtrl   = TextCtrl(self, ID_TXT_STEREO_TYPE, "", size=(125, -1))
 
@@ -165,7 +172,7 @@ class DlgEditClass(DlgEditClassCommon):
         self._oldClassName: str = pyutClass.name
 
         self.Centre()
-        self.ShowModal()
+        # self.ShowModal()
 
     def _callDlgEditField(self, field: PyutField) -> int:
         """
@@ -198,10 +205,10 @@ class DlgEditClass(DlgEditClassCommon):
 
         """
         # Fill Class name
-        self._txtName.SetValue(self._pyutModelCopy.getName())
+        self._txtName.SetValue(self._pyutClassCopy.getName())
 
         # Fill Stereotype
-        stereotype = self._pyutModelCopy.getStereotype()
+        stereotype = self._pyutClassCopy.getStereotype()
         if stereotype is None:
             strStereotype = ""
         else:
@@ -223,9 +230,9 @@ class DlgEditClass(DlgEditClassCommon):
             dlg.Destroy()
 
         # Fill display properties
-        self._chkShowFields.SetValue(self._pyutModelCopy.showFields)
-        self._chkShowMethods.SetValue(self._pyutModelCopy.showMethods)
-        self._chkShowStereotype.SetValue(self._pyutModelCopy.getShowStereotype())
+        self._chkShowFields.SetValue(self._pyutClassCopy.showFields)
+        self._chkShowMethods.SetValue(self._pyutClassCopy.showMethods)
+        self._chkShowStereotype.SetValue(self._pyutClassCopy.getShowStereotype())
 
     def _fixBtnFields(self):
         """
@@ -247,7 +254,7 @@ class DlgEditClass(DlgEditClassCommon):
         Args:
             event:
         """
-        field = PyutField()
+        field: PyutField = PyutField()
         ret = self._callDlgEditField(field)
         if ret == OK:
             self._pyutModelCopy.fields.append(field)
@@ -266,7 +273,7 @@ class DlgEditClass(DlgEditClassCommon):
         Edit a field.
         """
         selection = self._lstFieldList.GetSelection()
-        field = self._pyutModelCopy.fields[selection]
+        field = self._pyutClassCopy.fields[selection]
         ret = self._callDlgEditField(field)
         if ret == OK:
             # Modify field in dialog list
@@ -292,7 +299,7 @@ class DlgEditClass(DlgEditClassCommon):
             self._lstFieldList.SetSelection(index)
 
         # Remove from _pyutModelCopy
-        fields = self._pyutModelCopy.fields
+        fields = self._pyutClassCopy.fields
         fields.pop(selection)
 
         # Fix buttons of fields list (enable or not)
@@ -311,7 +318,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         # Move up the field in _pyutModelCopy
         selection = self._lstFieldList.GetSelection()
-        fields = self._pyutModelCopy.fields
+        fields = self._pyutClassCopy.fields
         field = fields[selection]
         fields.pop(selection)
         fields.insert(selection - 1, field)
@@ -336,7 +343,7 @@ class DlgEditClass(DlgEditClassCommon):
         Move down a field in the list.
         """
         selection = self._lstFieldList.GetSelection()
-        fields = self._pyutModelCopy.fields
+        fields = self._pyutClassCopy.fields
         field = fields[selection]
         fields.pop(selection)
         fields.insert(selection + 1, field)
@@ -388,36 +395,57 @@ class DlgEditClass(DlgEditClassCommon):
         """
         strStereotype: str = self._txtStereotype.GetValue()
         if strStereotype == "":
-            self._pyutModel.setStereotype(None)
+            self._pyutClass.setStereotype(None)
         else:
-            self._pyutModel.setStereotype(getPyutStereotype(strStereotype))
+            self._pyutClass.setStereotype(getPyutStereotype(strStereotype))
         # Adds all fields in a list
-        self._pyutModel.fields = self._pyutModelCopy.fields
+        self._pyutClass.fields = self._pyutClassCopy.fields
 
         # Update display properties
-        self._pyutModel.showFields  = self._chkShowFields.GetValue()
-        self._pyutModel.showMethods = self._chkShowMethods.GetValue()
-        self._pyutModel.setShowStereotype(self._chkShowStereotype.GetValue())
+        self._pyutClass.showFields  = self._chkShowFields.GetValue()
+        self._pyutClass.showMethods = self._chkShowMethods.GetValue()
+        self._pyutClass.setShowStereotype(self._chkShowStereotype.GetValue())
+
+        #
+        # Get common stuff from base class
+        #
+        self._pyutClass.name        = self._pyutModelCopy.name
+        self._pyutClass.methods     = self._pyutModelCopy.methods
+        self._pyutClass.description = self._pyutModelCopy.description
 
         from org.pyut.preferences.PyutPreferences import PyutPreferences
 
         prefs: PyutPreferences = PyutPreferences()
         try:
             if prefs.autoResizeShapesOnEdit is True:
-                oglClass = self._mediator.getOglClass(self._pyutModel)
+                oglClass = self._mediator.getOglClass(self._pyutClass)
                 if oglClass is not None:
                     oglClass.autoResize()
         except (ValueError, Exception) as e:
             self.logger.error(f'{e}')
 
-        fileHandling = self._mediator.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self.__setProjectModified()
 
-        super()._onOk(event)
-
-        if self._oldClassName != self._pyutModel.name:
-            evt: ClassNameChangedEvent = ClassNameChangedEvent(oldClassName=self._oldClassName, newClassName=self._pyutModel.name)
+        if self._oldClassName != self._pyutClass.name:
+            evt: ClassNameChangedEvent = ClassNameChangedEvent(oldClassName=self._oldClassName, newClassName=self._pyutClass.name)
             parent = self.GetParent()
             wxPostEvent(parent, evt)
+
+        self._returnAction = OK     # This is probably obsolete
+        self.SetReturnCode(OK)
+        self.EndModal(OK)
+
+    # noinspection PyUnusedLocal
+    def _onCancel(self, event: CommandEvent):
+        self._returnAction = CANCEL
+        self.SetReturnCode(CANCEL)
+        self.EndModal(CANCEL)
+
+    def __setProjectModified(self):
+        fileHandling = self._mediator.getFileHandling()
+
+        from org.pyut.ui.PyutProject import PyutProject
+
+        project: PyutProject = fileHandling.getCurrentProject()
+        if project is not None:
+            project.setModified()

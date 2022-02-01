@@ -388,6 +388,7 @@ class Mediator(Singleton):
         if umlFrame is None:
             return
         dlg = DlgEditClass(umlFrame, ID_ANY, thePyutClass)
+        dlg.ShowModal()
         dlg.Destroy()
 
     def setCurrentAction(self, action: int):

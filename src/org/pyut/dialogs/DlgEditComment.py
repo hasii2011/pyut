@@ -1,3 +1,5 @@
+from typing import Union
+
 from wx import Button
 from wx import CANCEL
 from wx import Dialog
@@ -13,6 +15,7 @@ from wx import TextCtrl
 
 from org.pyut.general.Globals import _
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutInterface import PyutInterface
 
 TXT_COMMENT = wxNewIdRef()
 
@@ -22,24 +25,24 @@ class DlgEditComment(Dialog):
     Dialog for the class comment edition.
     """
 
-    def __init__(self, parent, ID, pyutClass: PyutClass):
+    def __init__(self, parent, ID, pyutModel: Union[PyutClass, PyutInterface]):
         """
 
         Args:
             parent:
             ID:
-            pyutClass:
+            pyutModel:
         """
 
         super().__init__(parent, ID, _("Description Edit"))
 
         # Associated PyutLink
-        self._pyutClass: PyutClass = pyutClass
+        self._pyutModel: Union[PyutClass, PyutInterface] = pyutModel
 
         self.SetSize(Size(416, 200))
 
         # init members vars
-        self._text = self._pyutClass.description
+        self._text = self._pyutModel.description
         self._returnAction = -1   # describe how the user exited the dialog box
 
         # labels
@@ -83,7 +86,7 @@ class DlgEditComment(Dialog):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
 
-        self._pyutClass.description = self._text
+        self._pyutModel.description = self._text
 
         self._returnAction = OK
         self.Close()
