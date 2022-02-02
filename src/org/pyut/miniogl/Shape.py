@@ -1,4 +1,6 @@
+
 from typing import List
+from typing import cast
 from typing import Tuple
 
 from logging import Logger
@@ -41,12 +43,11 @@ class Shape:
         self._oy: int = 0   # origin position (view)
 
         self._parent    = parent     # parent shape
-        self._selected  = False      # is the shape selected ?
-        self._visible   = True       # is the shape visible ?
-        self._draggable = True       # can the shape be dragged ?
-        self._moving    = False      # is this shape moving now ?
-        self._diagram   = None       # associated diagram
-        self._protected = False      # to protect against deletion
+        self._selected:  bool = False      # is the shape selected ?
+        self._visible:   bool = True       # is the shape visible ?
+        self._draggable: bool = True       # can the shape be dragged ?
+        self._moving:    bool = False      # is this shape moving now ?
+        self._protected: bool = False      # to protect against deletion
 
         self._anchors:         List = []   # anchors of the shape
         self._children:        List = []   # child shapes
@@ -55,7 +56,11 @@ class Shape:
         self._pen:   Pen   = BLACK_PEN    # pen to use
         self._brush: Brush = WHITE_BRUSH  # brush to use
 
-        self._model = ShapeModel(self)  # model of the shape (MVC pattern)
+        self._model: ShapeModel = ShapeModel(self)  # model of the shape (MVC pattern)
+
+        from org.pyut.miniogl.Diagram import Diagram
+
+        self._diagram: Diagram = cast(Diagram, None)       # associated diagram
 
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
@@ -521,13 +526,14 @@ class Shape:
             if self.HasDiagramFrame():
                 self.UpdateModel()
 
-    def SetRelativePosition(self, x: float, y: float):
+    def SetRelativePosition(self, x: int, y: int):
         """
         Set the position of the shape, relative to the parent.
         Only works if the shape is draggable.
 
-        @param x
-        @param y
+        Args:
+            x:
+            y:
         """
         if self._draggable:
             self._x = x

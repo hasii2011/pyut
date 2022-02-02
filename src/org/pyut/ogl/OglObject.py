@@ -2,6 +2,11 @@
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyPackageRequirements
+from typing import List
+
+from deprecated import deprecated
+
 from wx import MouseEvent
 from wx import Point
 from wx import Font
@@ -15,6 +20,7 @@ from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.model.PyutObject import PyutObject
+from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -46,17 +52,14 @@ class OglObject(RectangleShape, ShapeEventHandler):
         self._defaultFont: Font            = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
         self._prefs:       PyutPreferences = PyutPreferences()
 
-        self._oglLinks = []     # Connected links
+        self._oglLinks: List[OglLink] = []     # Connected links
         self._modifyCommand = None
 
+    @deprecated(reason='Use the properties')
     def setPyutObject(self, pyutObject: PyutObject):
-        """
-        Set the associated pyut object.
-
-        @param PyutObject pyutObject : Associated PyutObject
-        """
         self._pyutObject = pyutObject
 
+    @deprecated(reason='Use the properties')
     def getPyutObject(self) -> PyutObject:
         """
         Return the associated pyut object.
@@ -145,7 +148,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         from org.pyut.ui.Mediator import Mediator
         mediator: Mediator = Mediator()             # TODO:
-        fileHandling = mediator.getFileHandling()   # OH NO!!! this is not good
+        fileHandling = mediator.getFileHandling()   #
         if fileHandling is not None:                # Send an event to the mediator for this
             fileHandling.setModified(True)          # BAD BAD BAD
         RectangleShape.SetPosition(self, x, y)

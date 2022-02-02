@@ -1,5 +1,4 @@
 
-from typing import cast
 from typing import List
 from typing import NewType
 from typing import Tuple
@@ -41,10 +40,10 @@ class LineShape(Shape, Common):
         self._srcAnchor = srcAnchor
         self._dstAnchor = dstAnchor
 
-        self._controls: ControlPoints = cast(ControlPoints, [])
-        self._drawArrow = True
-        self._arrowSize = 8
-        self._spline = False
+        self._controls:  ControlPoints = ControlPoints([])
+        self._drawArrow: bool = True
+        self._arrowSize: int = 8
+        self._spline:    bool = False
         if srcAnchor:
             srcAnchor.AddLine(self)
         if dstAnchor:
@@ -338,7 +337,7 @@ class LineShape(Shape, Common):
 
     def Remove(self, point):
         """
-        Remove a point from the line, either a anchor or control.
+        Remove a point from the line, either an anchor or control.
         If the remove point is an anchor, the line itself will be detached.
 
         Args:
