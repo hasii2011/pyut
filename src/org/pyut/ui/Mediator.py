@@ -1023,7 +1023,7 @@ class Mediator(Singleton):
 
         umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
 
-        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor, attachmentAnchor)
+        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=implementor, attachmentAnchor=attachmentAnchor)
         group: CommandGroup = CommandGroup("Create lollipop")
 
         group.addCommand(cmd)

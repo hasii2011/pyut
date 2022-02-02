@@ -42,7 +42,7 @@ class PyutMethod(PyutObject):
     change will be done for each `PyutMethod` instance.
     """
 
-    displayParameters: PyutGloballyDisplayParameters = None
+    displayParameters: PyutGloballyDisplayParameters = cast(PyutGloballyDisplayParameters, None)
 
     def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returns: PyutType = PyutType('')):
         """

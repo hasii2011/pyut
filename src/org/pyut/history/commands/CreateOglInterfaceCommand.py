@@ -35,7 +35,7 @@ from org.pyut.history.commands.OglShapeCommand import OglShapeCommand
 
 class CreateOglInterfaceCommand(OglShapeCommand):
 
-    def __init__(self,  implementor: OglClass = None, attachmentAnchor: SelectAnchorPoint = None):
+    def __init__(self,  implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
         super().__init__()
         self.logger: Logger = getLogger(__name__)
