@@ -1,6 +1,9 @@
 
 from typing import Any
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
+
 from logging import Logger
 from logging import getLogger
 
@@ -27,9 +30,11 @@ class PyutParam(PyutObject):
         self._type:         PyutType = theParameterType
         self._defaultValue: Any      = defaultValue
 
+    @deprecated(reason='Use the properties')
     def getType(self) -> PyutType:
         return self._type
 
+    @deprecated(reason='Use the properties')
     def setType(self, theType: PyutType):
         """
         Set parameter type
@@ -44,11 +49,13 @@ class PyutParam(PyutObject):
         self.logger.debug(f'theType: `{theType}`')
         self._type = theType
 
+    @deprecated(reason='Use the properties')
     def getDefaultValue(self) -> Any:
         """
         """
         return self._defaultValue
 
+    @deprecated(reason='Use the properties')
     def setDefaultValue(self, defaultValue: Any):
         self._defaultValue = defaultValue
 

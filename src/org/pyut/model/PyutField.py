@@ -1,4 +1,7 @@
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
+
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
@@ -6,40 +9,43 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 class PyutField(PyutParam):
     """
-    Field of a class.
+    A class field
 
-    A PyutField represents a UML field in a Class of Pyut program
+    A PyutField represents a UML field
         - parent (`PyutParam`)
         - field  visibility
 
     Example:
         myField = PyutField("aField", "integer", "55")
         or
-        yourField = PyutField('anotherField', 'str', '', PyutVisibilityEnum.private)
+        yourField = PyutField('anotherField', 'str', '', PyutVisibilityEnum.Private)
     """
 
-    def __init__(self, name: str = "", theFieldType: PyutType = PyutType(''), defaultValue: str = None,
+    def __init__(self, name: str = "", fieldType: PyutType = PyutType(''), defaultValue: str = None,
                  visibility: PyutVisibilityEnum = PyutVisibilityEnum.PRIVATE):
         """
 
         Args:
             name:   The name of the field
-            theFieldType: The field type
+            fieldType: The field type
             defaultValue: Its default value if any
             visibility:  The field visibility (private, public, protected)
         """
-        super().__init__(name, theFieldType, defaultValue)
+        super().__init__(name, fieldType, defaultValue)
 
         self._visibility: PyutVisibilityEnum = visibility
 
+    @deprecated(reason='Use the properties')
     def getVisibility(self) -> PyutVisibilityEnum:
         """
-        Get Visibility, used to know the visibility protected, private, or public
+
+        Get Visibility, used to retrieve the visibility protected, private, or public
 
         @return PyutVisibility
         """
         return self._visibility
 
+    @deprecated(reason='Use the properties')
     def setVisibility(self, visibility: PyutVisibilityEnum):
         """
         Set method, used to change the visibility.

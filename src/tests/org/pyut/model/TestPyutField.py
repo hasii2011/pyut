@@ -42,7 +42,7 @@ class TestPyutField(TestBase):
         originalFields: List[PyutField] = []
         for x in range(len(TestPyutField.fieldNames)):
             field: PyutField = PyutField(name=TestPyutField.fieldNames[x],
-                                         theFieldType=TestPyutField.fieldTypes[x],
+                                         fieldType=TestPyutField.fieldTypes[x],
                                          defaultValue=TestPyutField.fieldValues[x],
                                          visibility=TestPyutField.fieldVisibilities[x]
                                          )

@@ -54,3 +54,19 @@ class BaseDlgEdit(Dialog):
         """
         self.SetReturnCode(CANCEL)
         self.EndModal(CANCEL)
+
+    def _setProjectModified(self):
+        """
+        Tell window that its data has been modified
+        """
+        #
+        # Check because test programs do not pass this in
+        #
+        if self._ctrl is not None:
+            fileHandling = self._ctrl.getFileHandling()
+
+            from org.pyut.ui.PyutProject import PyutProject
+
+            project: PyutProject = fileHandling.getCurrentProject()
+            if project is not None:
+                project.setModified()

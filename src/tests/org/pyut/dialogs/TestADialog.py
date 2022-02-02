@@ -38,6 +38,7 @@ from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutText import PyutText
+from org.pyut.model.PyutType import PyutType
 
 from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
@@ -157,7 +158,7 @@ class TestADialog(App):
                 return f'Cancelled'
 
     def _testDlgEditField(self) -> str:
-        pyutField: PyutField = PyutField()
+        pyutField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
         with DlgEditField(theParent=self._frameTop, theWindowId=ID_ANY, fieldToEdit=pyutField) as dlg:
             if dlg.ShowModal() == OK:
                 return f'{pyutField=}'

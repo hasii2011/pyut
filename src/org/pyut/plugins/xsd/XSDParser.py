@@ -1,5 +1,6 @@
 
 from typing import Dict
+from typing import Tuple
 from typing import cast
 from typing import List
 
@@ -19,6 +20,7 @@ from xmlschema.validators import XsdType
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
+from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.LinkType import LinkType
@@ -33,11 +35,11 @@ from org.pyut.ui.UmlClassDiagramsFrame import CreatedClassesType
 
 class XSDParser:
 
-    X_INCREMENT_VALUE:  float = 80.0
-    Y_INCREMENT_VALUE:  float = 80.0
-    INITIAL_Y_POSITION: float = 50.0
-    INITIAL_X_POSITION: float = 50.0
-    MAX_X_POSITION:     float = 800
+    X_INCREMENT_VALUE:  int = 80
+    Y_INCREMENT_VALUE:  int = 80
+    INITIAL_Y_POSITION: int = 50
+    INITIAL_X_POSITION: int = 50
+    MAX_X_POSITION:     int = 800
 
     ENUMERATION_STEREOTYPE: str = 'Enumeration'
     SUBCLASS_INDICATOR:     str = 'extension'
@@ -50,9 +52,9 @@ class XSDParser:
 
         self.schema: XMLSchema = XMLSchema(filename)
 
-        self.position = self._positionGenerator()
+        self.position:         Tuple[int, int] = self._positionGenerator()
         self._schemaTypeNames: List[str] = []
-        self.classTree: Dict[str, ElementTreeData] = {}
+        self.classTree:        Dict[str, ElementTreeData] = {}
 
     def process(self):
 
@@ -115,17 +117,15 @@ class XSDParser:
 
         contentType: XsdGroup = xsdComplexType.content_type
         self.logger.info(f'contentType: {contentType}')
+        # noinspection PyProtectedMember
         grp: List[XsdElement] = contentType._group
         self._addFields(className=localName, content=grp)
-        #
-        # attrGroup: XsdAttributeGroup = xsdComplexType.attributes
-        # self.logger.info(f'attrGroup: {attrGroup}')
 
         self.logger.info(f'--------- End _handleComplexTypes ---------')
 
     def _addFields(self, className: str, content: List[XsdElement]):
         """
-        Has the side effect that it updates the classtree data with the class names of the children
+        Has the side effect that it updates the class tree data with the class names of the children
 
         Args:
             className: The class name for which we are adding fields to
@@ -145,8 +145,8 @@ class XSDParser:
             xsdType: XsdType = xsdElement.type
             childClassName: str = xsdElement.local_name
 
-            pyutField: PyutField = PyutField(name=childClassName,
-                                             theFieldType=xsdType.local_name, defaultValue=defaultValue, visibility=PyutVisibilityEnum.PUBLIC)
+            pyutField: PyutField = PyutField(name=childClassName, fieldType=xsdType.local_name,
+                                             defaultValue=defaultValue, visibility=PyutVisibilityEnum.PUBLIC)
 
             #
             # SIDE EFFECT !!!!!
@@ -161,7 +161,7 @@ class XSDParser:
 
         Args:
             classTreeData:  our class tree data for this particular type
-            xsdElement:  an xsd element that is contained by this class
+            xsdElement:  An xsd element that is contained by this class
 
         """
         childTypeName: str = xsdElement.type.local_name
@@ -191,7 +191,7 @@ class XSDParser:
         for className in self.classTree.keys():
             childTreeData: ElementTreeData = self.classTree[className]
             pyutClass: PyutClass = childTreeData.pyutClass
-            parents: List[str] = pyutClass.getParents()
+            parents: List[PyutLinkedObject] = pyutClass.getParents()
             for parentName in parents:
                 self.logger.info(f'class: {pyutClass.getName()} is a subclass of: {parentName}')
                 parentTreeData: ElementTreeData = self.classTree[parentName]

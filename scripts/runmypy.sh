@@ -13,7 +13,8 @@ changeToProjectRoot
 cd src > /dev/null 2>&1
 echo "current: `pwd`"
 
-mypy --config-file .mypi.ini --show-error-codes Pyut.py
+# mypy --config-file .mypi.ini --pretty --no-color-output  --show-error-codes Pyut.py
+mypy --config-file .mypi.ini --pretty  --show-error-codes Pyut.py
 status=$?
 
 echo "Exit with status: ${status}"

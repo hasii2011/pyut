@@ -108,7 +108,7 @@ class DTDParser:
             model:  The element content model in (sep,cont,mod) format, where cont is a list of (name,mod) and (sep,cont,mod) tuples.
             ANY content models are represented as None, and EMPTYs as ("",[],"").
 
-            (name , descr , (attribute | attribute-group-ref)* , )
+            (name , descr , (attribute | attribute-group-ref)*)
         """
         currentLineNumber: int = DTDParser.classParser.CurrentLineNumber
         DTDParser.klsLogger.debug(f'elementHandler - {currentLineNumber:{2}} name: {elementName:{12}} model: {model}')
@@ -195,7 +195,7 @@ class DTDParser:
             attrValue: str            = typedAttr.attributeValue
 
             pyutField: PyutField = PyutField(name=attrName,
-                                             theFieldType=PyutType(value=attrType),
+                                             fieldType=PyutType(value=attrType),
                                              defaultValue=attrValue,
                                              visibility=PyutVisibilityEnum.PUBLIC)
 

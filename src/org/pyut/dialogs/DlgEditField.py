@@ -22,7 +22,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-from org.pyut.model import PyutField
+from org.pyut.model.PyutField import PyutField
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -42,12 +42,11 @@ from org.pyut.general.Globals import _
 
 class DlgEditField(BaseDlgEdit):
 
-    def __init__(self, theParent, theWindowId=ID_ANY, fieldToEdit: PyutField = None, theMediator=None):
+    def __init__(self, theParent, theWindowId, fieldToEdit: PyutField, theMediator=None):
 
         super().__init__(theParent, theWindowId, _("Field Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=theMediator)
 
-        self.fieldToEdit = fieldToEdit
-
+        self._fieldToEdit: PyutField = fieldToEdit
         # ----------------
         # Design of dialog
         # ----------------
@@ -100,10 +99,10 @@ class DlgEditField(BaseDlgEdit):
         szrField3.Fit(self)
 
         # Fill the text controls with PyutField data
-        self._txtFieldName.SetValue(self.fieldToEdit.getName())
-        self._txtFieldType.SetValue(str(self.fieldToEdit.getType()))
-        self._txtFieldDefault.SetValue(self._convertNone(self.fieldToEdit.getDefaultValue()))
-        self._rdbFieldVisibility.SetStringSelection(str(self.fieldToEdit.getVisibility()))
+        self._txtFieldName.SetValue(self._fieldToEdit.getName())
+        self._txtFieldType.SetValue(str(self._fieldToEdit.getType()))
+        self._txtFieldDefault.SetValue(self._convertNone(self._fieldToEdit.getDefaultValue()))
+        self._rdbFieldVisibility.SetStringSelection(str(self._fieldToEdit.visibility))
 
         # Fix state of buttons (enabled or not)
         self._fixBtnDlgFields()
@@ -131,25 +130,20 @@ class DlgEditField(BaseDlgEdit):
             event:  Associated event
         """
 
-        self.fieldToEdit.setName(self._txtFieldName.GetValue().strip())
+        self._fieldToEdit.setName(self._txtFieldName.GetValue().strip())
         from org.pyut.model.PyutType import PyutType
 
-        self.fieldToEdit.setType(PyutType(self._txtFieldType.GetValue().strip()))
+        self._fieldToEdit.setType(PyutType(self._txtFieldType.GetValue().strip()))
         visStr: str = self._rdbFieldVisibility.GetStringSelection()
         vis:    PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
-        self.fieldToEdit.setVisibility(vis)
+        self._fieldToEdit.setVisibility(vis)
 
         if self._txtFieldDefault.GetValue().strip() != "":
-            self.fieldToEdit.setDefaultValue(self._txtFieldDefault.GetValue().strip())
+            self._fieldToEdit.setDefaultValue(self._txtFieldDefault.GetValue().strip())
         else:
-            self.fieldToEdit.setDefaultValue(None)
+            self._fieldToEdit.setDefaultValue(None)
 
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-
-        if project is not None:
-            project.setModified()
+        self._setProjectModified()
 
         # Close dialog
         self.EndModal(OK)
