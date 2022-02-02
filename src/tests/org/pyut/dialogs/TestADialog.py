@@ -27,6 +27,7 @@ from wx import NewIdRef as wxNewIdRef
 from org.pyut.dialogs.DlgEditClass import DlgEditClass
 from org.pyut.dialogs.DlgEditField import DlgEditField
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
+from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
 from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
@@ -34,6 +35,7 @@ from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutInterface import PyutInterface
+from org.pyut.model.PyutMethod import PyutMethod
 
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
@@ -134,6 +136,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditInterface()
         elif dlgName == DialogNamesEnum.DLG_EDIT_FIELD:
             dlgAnswer = self._testDlgEditField()
+        elif dlgName == DialogNamesEnum.DLG_EDIT_METHOD:
+            dlgAnswer = self._testDlgEditMethod()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -221,6 +225,15 @@ class TestADialog(App):
                 return f'Retrieved data: {pyutInterface}'
             else:
                 return f'Cancelled'
+
+    def _testDlgEditMethod(self):
+        pyutMethod: PyutMethod = PyutMethod(name='OzzeeMethod')
+        with DlgEditMethod(parent=self._frameTop, windowId=ID_ANY, pyutMethod=pyutMethod) as dlg:
+            if dlg.ShowModal() == OK:
+                return f'Retrieved data: {pyutMethod}'
+            else:
+                return f'Cancelled'
+
 
 
 testApp: App = TestADialog(redirect=False)

@@ -51,6 +51,7 @@ from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 [
@@ -68,15 +69,15 @@ from org.pyut.general.Globals import _
 
 class DlgEditMethod(BaseDlgEdit):
 
-    def __init__(self, theParent, theWindowId=ID_ANY, methodToEdit: PyutMethod = None, theMediator=None, editInterface: bool = False):
+    def __init__(self, parent, windowId, pyutMethod: PyutMethod, mediator=None, editInterface: bool = False):
 
-        super().__init__(theParent, theWindowId, _("Method Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=theMediator)
+        super().__init__(parent, windowId, _("Method Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=mediator)
 
-        self.logger: Logger = getLogger(__name__)
-        self._editInterface: bool = editInterface
+        self.logger:         Logger = getLogger(__name__)
+        self._editInterface: bool   = editInterface
 
-        self._pyutMethod:     PyutMethod = methodToEdit
-        self._pyutMethodCopy: PyutMethod = deepcopy(methodToEdit)
+        self._pyutMethod:     PyutMethod = pyutMethod
+        self._pyutMethodCopy: PyutMethod = deepcopy(pyutMethod)
 
         szrMethodInformation: FlexGridSizer = self._createMethodInformation()
         szrMethodVisibility:  BoxSizer      = self._createMethodVisibilityContainer(szrMethodInformation)
@@ -238,7 +239,8 @@ class DlgEditMethod(BaseDlgEdit):
         """
         Called when click on Params list.  Fix buttons (enable or not)
 
-        @param wx.Event event : event that call this subprogram.
+        Args:
+            event: The Event that invoked this method
         """
         self._fixBtnParam()
 
@@ -256,12 +258,7 @@ class DlgEditMethod(BaseDlgEdit):
             self._pyutMethodCopy.getParams().append(param)
             # Add fields in dialog list
             self._lstParams.Append(str(param))
-
-            # Tell window that its data has been modified
-            fileHandling = self._ctrl.getFileHandling()
-            project = fileHandling.getCurrentProject()
-            if project is not None:
-                project.setModified()
+            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onParamEdit (self, event: Event):
@@ -276,11 +273,7 @@ class DlgEditMethod(BaseDlgEdit):
         if ret == OK:
             # Modify param in dialog list
             self._lstParams.SetString(selection, str(param))
-            # Tell window that its data has been modified
-            fileHandling = self._ctrl.getFileHandling()
-            project = fileHandling.getCurrentProject()
-            if project is not None:
-                project.setModified()
+            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onParamRemove (self, event: Event):
@@ -306,11 +299,7 @@ class DlgEditMethod(BaseDlgEdit):
         # Fix buttons of params list (enable or not)
         self._fixBtnParam()
 
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onParamUp (self, event: Event):
@@ -335,11 +324,7 @@ class DlgEditMethod(BaseDlgEdit):
         # Fix buttons (enable or not)
         self._fixBtnParam()
 
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onParamDown (self, event: Event):
@@ -364,11 +349,7 @@ class DlgEditMethod(BaseDlgEdit):
         # Fix buttons (enable or not)
         self._fixBtnParam()
 
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onMethodOk (self, event: Event):
@@ -393,12 +374,7 @@ class DlgEditMethod(BaseDlgEdit):
             visibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
             self._pyutMethod.setVisibility(visibility)
 
-        # Tell window that its data has been modified
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
-
+        self._setProjectModified()
         # Close dialog
         self.EndModal(OK)
 
