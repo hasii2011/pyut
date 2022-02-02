@@ -222,10 +222,10 @@ class ReverseEngineerPython2:
 
         methodName: MethodName = MethodName(pyutMethod.name)
         if methodName in self.visitor.parameters:
-            parameterList: MultiParameterNames = self.visitor.parameters[methodName]
-            for parameters in parameterList:        # list of 1 ?
-                pyutParameters: List[PyutParam] = self._generateParameters(parameters)
-                pyutMethod.parameters = pyutParameters
+            multiParameterNames: MultiParameterNames = self.visitor.parameters[methodName]
+
+            pyutParameters: List[PyutParam] = self._generateParameters(multiParameterNames)
+            pyutMethod.parameters = pyutParameters
 
         return pyutMethod
 

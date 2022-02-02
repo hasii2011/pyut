@@ -141,17 +141,14 @@ class PyutPythonVisitor(Python3Visitor):
 
             if self.__isProperty(methodName=methodName):
                 if parameterNames == PyutPythonVisitor.PYTHON_SELF:
-                    self.getterProperties[methodName] = [MultiParameterNames('')]
+                    self.getterProperties[methodName] = MultiParameterNames('')
                 else:
                     strippedParameterNames: MultiParameterNames = MultiParameterNames(parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, ""))
-                    self.setterProperties[methodName] = [strippedParameterNames]
+                    self.setterProperties[methodName] = strippedParameterNames
             else:
                 if parameterNames != PyutPythonVisitor.PYTHON_SELF:
                     strippedParameterNames = MultiParameterNames(parameterNames.replace(PyutPythonVisitor.PYTHON_SELF_COMMA, ""))
-                    if strippedParameterNames not in self.parameters:
-                        self.parameters[methodName] = [strippedParameterNames]
-                    else:
-                        self.parameters[methodName].append(strippedParameterNames)    # TODO this is does not execute; what was I thinking
+                    self.parameters[methodName] = strippedParameterNames
 
         return super().visitChildren(ctx)
 
