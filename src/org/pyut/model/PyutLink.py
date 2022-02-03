@@ -1,10 +1,12 @@
 
 from typing import Optional
+from typing import Union
 
 from logging import Logger
 from logging import getLogger
 
 from org.pyut.model.PyutObject import PyutObject
+
 from org.pyut.enums.LinkType import LinkType
 
 # noinspection PyProtectedMember
@@ -13,9 +15,9 @@ from org.pyut.general.Globals import _
 
 class PyutLink(PyutObject):
     """
-    A standard link between Class or Note.
+    A standard link between a Class or Note.
 
-    A PyutLink represents a UML link between Class in Pyut.
+    A PyutLink represents a UML link between a Class or a Note in Pyut.
 
     Example:
     ```python
@@ -28,8 +30,8 @@ class PyutLink(PyutObject):
     def __init__(self, name="", linkType: LinkType = LinkType.INHERITANCE,
                  cardSrc:      str = "", cardDest: str = "",
                  bidir:        bool = False,
-                 source:       Optional["PyutLinkedObject"] = None,
-                 destination: "PyutLinkedObject" = None):
+                 source:       'PyutClass' = None,    # type ignore
+                 destination:  Union['PyutClass', 'PyutNote'] = None):  # type ignore
         """
 
         Args:

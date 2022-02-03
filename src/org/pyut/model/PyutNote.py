@@ -3,8 +3,7 @@ from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
-class \
-        PyutNote(PyutLinkedObject):
+class PyutNote(PyutLinkedObject):
     """
     A data model representation of a UML note.
 
