@@ -20,6 +20,7 @@ from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.model.ModelTypes import ClassName
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
@@ -47,7 +48,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
             self._implementor:      OglClass          = implementor
 
             pyutInterface: PyutInterface = PyutInterface()
-            pyutInterface.addImplementor(implementor.getPyutObject().getName())
+            pyutInterface.addImplementor(ClassName(implementor.getPyutObject().getName()))
 
             self._pyutInterface: PyutInterface = pyutInterface
 

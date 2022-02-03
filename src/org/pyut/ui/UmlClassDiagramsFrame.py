@@ -3,6 +3,8 @@ from typing import cast
 from typing import NewType
 from typing import Tuple
 
+from org.pyut.model.ModelTypes import ClassName
+from org.pyut.model.ModelTypes import Implementors
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
@@ -68,8 +70,9 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         src.addLink(oglLink)
         dst.addLink(oglLink)
 
-        # noinspection PyUnresolvedReferences
-        src.getPyutObject().addLink(pyutLink)       # TODO fix this
+        # src.getPyutObject().addLink(pyutLink)       # TODO fix this
+        pyutClass: PyutClass = cast(PyutClass, src.getPyutObject())
+        pyutClass.addLink(pyutLink)
 
         return oglLink
 
@@ -150,8 +153,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
     def _onClassNameChanged(self, event: ClassNameChangedEvent):
 
-        oldClassName: str = event.oldClassName
-        newClassName: str = event.newClassName
+        oldClassName: ClassName = ClassName(event.oldClassName)
+        newClassName: ClassName = ClassName(event.newClassName)
         self.logger.warning(f'{oldClassName=} {newClassName=}')
 
         umlObjects: UmlObjects = self.getUmlObjects()
@@ -161,7 +164,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
                 oglInterface:  OglInterface2 = cast(OglInterface2, umlObject)
                 pyutInterface: PyutInterface = oglInterface.pyutInterface
 
-                implementors: PyutInterface.Implementors = pyutInterface.implementors
+                implementors: Implementors = pyutInterface.implementors
 
                 for idx, implementor in enumerate(implementors):
                     self.logger.warning(f'{idx=} - {pyutInterface.name=} {implementor=}')

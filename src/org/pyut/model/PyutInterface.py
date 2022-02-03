@@ -1,10 +1,9 @@
 
-from typing import List
-
 from logging import Logger
 from logging import getLogger
-from typing import NewType
 
+from org.pyut.model.ModelTypes import ClassName
+from org.pyut.model.ModelTypes import Implementors
 from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutObject import PyutObject
 
@@ -12,9 +11,6 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class PyutInterface(PyutClassCommon, PyutObject):
-
-    ClassName    = NewType('ClassName', str)
-    Implementors = NewType('Implementors', List[ClassName])
 
     def __init__(self, name: str = ''):
         """
@@ -31,7 +27,7 @@ class PyutInterface(PyutClassCommon, PyutObject):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._implementors: PyutInterface.Implementors = PyutInterface.Implementors([])
+        self._implementors: Implementors = Implementors([])
 
     @property
     def implementors(self) -> Implementors:

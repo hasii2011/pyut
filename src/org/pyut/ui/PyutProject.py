@@ -30,6 +30,7 @@ from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 # Until I figure out how to stop mypy from complaining
@@ -90,7 +91,7 @@ class PyutProject:
     def getCodePath(self) -> str:
         """
 
-        Returns: The root path where the corresponding code relies.
+        Returns: The root path where the corresponding code resides.
 
         """
         return self._codePath

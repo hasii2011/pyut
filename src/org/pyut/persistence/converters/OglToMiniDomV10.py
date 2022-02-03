@@ -12,6 +12,7 @@ from xml.dom.minidom import Element
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.model.ModelTypes import ClassName
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
@@ -369,7 +370,7 @@ class OglToMiniDom:
 
         return root
 
-    def _pyutImplementorToXml(self, className: PyutInterface.ClassName, xmlDoc: Document) -> Element:
+    def _pyutImplementorToXml(self, className: ClassName, xmlDoc: Document) -> Element:
 
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_IMPLEMENTOR)
 

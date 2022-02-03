@@ -15,7 +15,8 @@ from xml.dom.minicompat import NodeList
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.model.ModelTypes import ClassName
+from org.pyut.model.ModelTypes import Implementors
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
@@ -36,6 +37,7 @@ from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
@@ -538,11 +540,11 @@ class MiniDomToOgl:
 
         return allMethods
 
-    def _getImplementors(self, xmlClass: Element) -> PyutInterface.Implementors:
+    def _getImplementors(self, xmlClass: Element) -> Implementors:
 
-        implementors: PyutInterface.Implementors = PyutInterface.Implementors([])
+        implementors: Implementors = Implementors([])
         for xmlImplementor in xmlClass.getElementsByTagName(PyutXmlConstants.ELEMENT_IMPLEMENTOR):
-            className: PyutInterface.ClassName = xmlImplementor.getAttribute(PyutXmlConstants.ATTR_IMPLEMENTING_CLASS_NAME)
+            className: ClassName = xmlImplementor.getAttribute(PyutXmlConstants.ATTR_IMPLEMENTING_CLASS_NAME)
             implementors.append(className)
 
         return implementors
