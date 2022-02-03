@@ -1,4 +1,5 @@
 
+from typing import Tuple
 from typing import cast
 from typing import List
 
@@ -6,6 +7,7 @@ from logging import Logger
 from logging import getLogger
 
 from wx import Colour
+from wx import Rect
 from wx import WHITE
 
 from wx import EVT_LEFT_DCLICK
@@ -45,6 +47,7 @@ from wx import Window
 from wx import Pen
 from wx import PenInfo
 
+# noinspection PyProtectedMember
 from wx._core import PenStyle
 
 from org.pyut.miniogl.Shape import Shape
@@ -83,10 +86,13 @@ class DiagramFrame(ScrolledWindow):
 
         self.__keepMoving       = False
         self._selectedShapes    = []        # list of the shapes that are selected
-        self._lastMousePosition = None
-        self._selector          = None      # rectangle selector shape
-        self._clickedShape      = None      # last clicked shape
-        self._moving: bool      = False     # a drag has been initiated
+
+        self._lastMousePosition: Tuple[int, int] = cast(Tuple, None)
+        self._selector:          RectangleShape  = cast(RectangleShape, None)     # rectangle selector shape
+
+        # self._clickedShape: ShapeEventHandler = cast(ShapeEventHandler, None)      # last clicked shape
+        self._clickedShape = None      # last clicked shape
+        self._moving:       bool              = False     # a drag has been initiated
 
         self._xOffset = 0.0     # abscissa offset between the view and the model
         self._yOffset = 0.0     # ordinate offset between the view and the model
@@ -204,16 +210,16 @@ class DiagramFrame(ScrolledWindow):
                 self.clsLogger.debug(f'{shape=}')
                 for line in shape.GetLines():
                     shapes.remove(line)
-            # don't call DeselectAllShapes, because we must ensure that
+            # do not call DeselectAllShapes, because we must ensure that
             # the sizer won't be deselected (because they are detached when they are deselected)
-            # deselect all other shapes
+            # deselect every other shape
             for s in shapes:
                 s.SetSelected(False)
                 s.SetMoving(False)
 
             self._selectedShapes = [shape]
             shape.SetSelected(True)
-            shape.SetMoving(True)
+            cast(Shape, shape).SetMoving(True)
             self._clickedShape = None
             self.Refresh()
 
@@ -240,7 +246,7 @@ class DiagramFrame(ScrolledWindow):
                     shape.SetMoving(True)
                     self._selectedShapes.append(shape)
             rect.Detach()
-            self._selector = None
+            self._selector = cast(RectangleShape, None)
         if not self._moving and self._clickedShape:
             self.clsLogger.debug(f'{self._moving} {self._clickedShape}')
             clicked = self._clickedShape
@@ -434,13 +440,14 @@ class DiagramFrame(ScrolledWindow):
         """
         self._selectedShapes = shapes
 
-    def Refresh(self, eraseBackground=True, rect=None):
+    def Refresh(self, eraseBackground: bool = True, rect: Rect = None):
         """
-        This refresh is done immediately, not through an event.
+        not used
+        Args:
+            eraseBackground:    if False, the stored background is used
+            rect:               not used
+        """
 
-        @param bool eraseBackground : if False, the stored background is used
-        @param Rect rect : not used
-        """
         # self.clsLogger.warning(f'Refresh - {eraseBackground=}')
         if eraseBackground:
             self.Redraw()
@@ -555,7 +562,7 @@ class DiagramFrame(ScrolledWindow):
         if full:
             # first time, need to create the background
             if saveBackground:
-                # first, draw every non moving shapes
+                # first, draw every non-moving shapes
                 for shape in shapes:
                     if not shape.IsMoving():
                         shape.Draw(dc)
@@ -630,29 +637,30 @@ class DiagramFrame(ScrolledWindow):
 
     def GetXOffset(self):
         """
-        added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
-        @return the x offset between the model an the view of the shapes (MVC)
+
+        Returns: the x offset between the model and the shapes view (MVC)
+
         """
         return self._xOffset
 
     def GetYOffset(self):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
-        @return the y offset between the model an the view of the shapes (MVC)
+        @return the y offset between the model and the view of the shapes (MVC)
         """
         return self._yOffset
 
     def SetXOffset(self, offset):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
-        Set the x offset between the model an the view of the shapes (MVC)
+        Set the x offset between the model and the view of the shapes (MVC)
         """
         self._xOffset = offset
 
     def SetYOffset(self, offset):
         """
         added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
-        Set the y offset between the model an the view of the shapes (MVC)
+        Set the y offset between the model and the view of the shapes (MVC)
         """
         self._yOffset = offset
 
@@ -811,8 +819,8 @@ class DiagramFrame(ScrolledWindow):
             dx = virtualWidth/2 - x - (clientWidth / zoomFactor / 2.0)
             dy = virtualHeight/2 - y - (clientHeight / zoomFactor / 2.0)
 
-            # we have to check if the "zoom in" on a reduced view produce
-            # an other less reduced view or an enlarged view. For this, we
+            # we have to check if the "zoom in" on a reduced view produces
+            # another less reduced view or an enlarged view. For this, we
             # get the global current zoom, multiply by the zoom factor to
             # obtain only one zoom factor.
             if self._zoomLevel < 0:
@@ -917,7 +925,7 @@ class DiagramFrame(ScrolledWindow):
                     self._zoomStack.append(zoomFactor)
                     self._zoomLevel -= 1
 
-        # set the offsets between the view and the model of the
+        # set the offsets between the view and the model for
         # each shape on this diagram frame.
         self.SetXOffset((self.GetXOffset() + dx) * zoomFactor)
         self.SetYOffset((self.GetYOffset() + dy) * zoomFactor)
@@ -976,7 +984,9 @@ class DiagramFrame(ScrolledWindow):
         if not event.ControlDown():
             self.DeselectAllShapes()
         x, y = event.GetX(), event.GetY()   # event position has been modified
-        self._selector = rect = RectangleShape(x, y, 0, 0)
+
+        rect: RectangleShape = RectangleShape(x, y, 0, 0)
+        self._selector = rect
         rect.SetDrawFrame(True)
         rect.SetBrush(TRANSPARENT_BRUSH)
         rect.SetMoving(True)

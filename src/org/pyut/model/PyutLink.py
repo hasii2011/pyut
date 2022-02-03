@@ -5,6 +5,9 @@ from typing import Union
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
+
 from org.pyut.model.PyutObject import PyutObject
 
 from org.pyut.enums.LinkType import LinkType
@@ -144,6 +147,7 @@ class PyutLink(PyutObject):
         """
         self._bidirectional = bidirectional
 
+    @deprecated(reason='Use the properties')
     def setType(self, linkType: LinkType):
         """
         Update the link type
@@ -162,6 +166,7 @@ class PyutLink(PyutObject):
         else:
             self._type = linkType
 
+    @deprecated(reason='Use the properties')
     def getType(self) -> LinkType:
         """
         Get the link type.

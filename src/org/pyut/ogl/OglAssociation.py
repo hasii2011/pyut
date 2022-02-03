@@ -82,8 +82,8 @@ class OglAssociation(OglLink):
 
     def Draw(self, dc: DC, withChildren: bool = False):
         """
-        Called for the content drawing of links.
-        We are going to draw all of our stuff, cardinality, Link name, etc; So,
+        Called to draw the link content.
+        We are going to draw all of our stuff, cardinality, Link name, etc.
 
         Args:
             dc:     Device context
@@ -165,8 +165,8 @@ class OglAssociation(OglLink):
 
         linkLength: float = self._computeLinkLength(srcPosition=sp, destPosition=dp)
 
-        srcLblX = (20 * dx / linkLength - dx * 5 / linkLength) + sp.x
-        srcLblY = (20 * dy / linkLength + dy * 5 / linkLength) + sp.y
+        srcLblX: int = round((20 * dx / linkLength - dx * 5 / linkLength) + sp.x)
+        srcLblY: int = round((20 * dy / linkLength + dy * 5 / linkLength) + sp.y)
 
         if OglAssociation.clsLogger.isEnabledFor(INFO):
             info = (
@@ -193,18 +193,20 @@ class OglAssociation(OglLink):
 
         linkLength: float = self._computeLinkLength(srcPosition=sp, destPosition=dp)
 
-        dstLblX = (-20 * dx / linkLength + dy * 5 / linkLength) + dp.x
-        dstLblY = (-20 * dy / linkLength - dy * 5 / linkLength) + dp.y
+        dstLblX: int = round((-20 * dx / linkLength + dy * 5 / linkLength) + dp.x)
+        dstLblY: int = round((-20 * dy / linkLength - dy * 5 / linkLength) + dp.y)
 
         saveFont: Font = dc.GetFont()
         dc.SetFont(self._defaultFont)
 
         destinationCardinalityText: str = self._link.destinationCardinality
         dc.DrawText(destinationCardinalityText, dstLblX, dstLblY)
-        self._destinationCardinality = self.__updateAssociationLabel(self._destinationCardinality, x=dstLblX, y=dstLblY, text=destinationCardinalityText)
+        self._destinationCardinality = self.__updateAssociationLabel(self._destinationCardinality,
+                                                                     x=dstLblX, y=dstLblY,
+                                                                     text=destinationCardinalityText)
         dc.SetFont(saveFont)
 
-    def __updateAssociationLabel(self, associationLabel: OglAssociationLabel, x: float, y: float, text: str) -> OglAssociationLabel:
+    def __updateAssociationLabel(self, associationLabel: OglAssociationLabel, x: int, y: int, text: str) -> OglAssociationLabel:
 
         associationLabel.oglPosition.x = x
         associationLabel.oglPosition.y = y

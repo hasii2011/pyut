@@ -1,4 +1,6 @@
+
 from typing import Tuple
+from typing import cast
 
 from wx import DC
 
@@ -11,9 +13,6 @@ from org.pyut.miniogl.RectangleShapeModel import RectangleShapeModel
 class RectangleShape(Shape):
     """
     A rectangle shape.
-
-
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
     def __init__(self, x: int = 0, y: int = 0, width: int = 0, height: int = 0, parent=None):
         """
@@ -33,10 +32,10 @@ class RectangleShape(Shape):
         self._drawFrame: bool = True
         self._resizable: bool = True
 
-        self._topLeftSizer  = None
-        self._topRightSizer = None
-        self._botLeftSizer  = None
-        self._botRightSizer = None
+        self._topLeftSizer:  SizerShape = cast(SizerShape, None)
+        self._topRightSizer: SizerShape = cast(SizerShape, None)
+        self._botLeftSizer:  SizerShape = cast(SizerShape, None)
+        self._botRightSizer: SizerShape = cast(SizerShape, None)
 
         self._ox: int = 0   # This is done in Shape but Pycharm can't see this in the ShowSizer() code
         # set the model of the shape (MVC pattern)
@@ -210,13 +209,14 @@ class RectangleShape(Shape):
             self._diagram.AddShape(self._botRightSizer)
         elif not state and self._topLeftSizer is not None:
             self._topLeftSizer.Detach()
-            self._topLeftSizer = None
             self._topRightSizer.Detach()
-            self._topRightSizer = None
             self._botLeftSizer.Detach()
-            self._botLeftSizer = None
             self._botRightSizer.Detach()
-            self._botRightSizer = None
+
+            self._topLeftSizer  = cast(SizerShape, None)
+            self._topRightSizer = cast(SizerShape, None)
+            self._botLeftSizer  = cast(SizerShape, None)
+            self._botRightSizer = cast(SizerShape, None)
 
     def SetSize(self, width, height):
         """

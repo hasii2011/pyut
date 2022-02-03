@@ -2,6 +2,7 @@
 from typing import List
 from typing import NewType
 from typing import Tuple
+from typing import Union
 
 from logging import Logger
 from logging import getLogger
@@ -101,7 +102,7 @@ class LineShape(Shape, Common):
             # odd number, take the middle point
             return points[middle]
 
-    def AddControl(self, control: ControlPoint, after: LinePoint = None):
+    def AddControl(self, control: ControlPoint, after: Union[ControlPoint, LinePoint] = None):
         """
         Add a control point to the line.
         The control point can be appended (last before the destination anchor)
@@ -217,7 +218,7 @@ class LineShape(Shape, Common):
 
         Returns:  a list of the control points.
         """
-        return self._controls[:]
+        return ControlPoints(self._controls[:])
 
     def Draw(self, dc: DC, withChildren: bool = True):
         """
