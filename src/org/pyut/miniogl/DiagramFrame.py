@@ -90,8 +90,8 @@ class DiagramFrame(ScrolledWindow):
         self._lastMousePosition: Tuple[int, int] = cast(Tuple, None)
         self._selector:          RectangleShape  = cast(RectangleShape, None)     # rectangle selector shape
 
-        # self._clickedShape: ShapeEventHandler = cast(ShapeEventHandler, None)      # last clicked shape
-        self._clickedShape = None      # last clicked shape
+        self._clickedShape: Shape = cast(Shape, None)      # last clicked shape
+        # self._clickedShape = None      # last clicked shape
         self._moving:       bool              = False     # a drag has been initiated
 
         self._xOffset = 0.0     # abscissa offset between the view and the model
@@ -173,6 +173,7 @@ class DiagramFrame(ScrolledWindow):
             getattr(shape, methodName)(event)
         else:
             event.Skip()
+
         return shape
 
     def OnLeftDown(self, event: MouseEvent):
@@ -218,7 +219,7 @@ class DiagramFrame(ScrolledWindow):
                 s.SetMoving(False)
 
             self._selectedShapes = [shape]
-            shape.SetSelected(True)
+            cast(Shape, shape).SetSelected(True)
             cast(Shape, shape).SetMoving(True)
             self._clickedShape = None
             self.Refresh()

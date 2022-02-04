@@ -1,30 +1,33 @@
 
 from typing import Tuple
+from typing import cast
 
 from wx import Point
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutLink import PyutLink
+
 from org.pyut.history.commands.Command import Command
+
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
-
 from org.pyut.ogl.OglLinkFactory import getLinkType
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
+from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
+from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+
 from org.pyut.enums.LinkType import LinkType
-from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 
 class CreateOglLinkCommand(Command):
     """
     This class is a part of the PyUt history system.
-    It creates every kind of OglLink and allows undo/redo actions.
+    It creates every kind of OglLink and allows Pyut to undo and redo actions.
     """
     NO_NAME_MESSAGE: str = "testMessage()"
 
@@ -40,9 +43,9 @@ class CreateOglLinkCommand(Command):
         """
         super().__init__()
 
-        # if the command is created from the history for an undo redo
+        # If the command is created from the history for the undo command or redo command
         # the constructor will have no parameters and so the link
-        # will be created or got in the deserialize method.
+        # will be created or retrieved in the deserialize method.
         if src is None or dst is None:
             self._link = None
         else:
@@ -99,19 +102,19 @@ class CreateOglLinkCommand(Command):
         # get the frame to which belongs the link
         umlFrame = self.getGroup().getHistory().getFrame()
 
-        # if the link has been created it already exist on the frame.
-        # But if an undo has been performed, we have to rebuild the link.
+        # if the link has been created it already exists in the frame.
+        # But if an undo command has been performed, we have to rebuild the link.
         self._link = umlFrame.getUmlObjectById(linkId)
         if self._link is None:
 
             # get the source and destination OglObjects of the link
             src = umlFrame.getUmlObjectById(srcId)
             dst = umlFrame.getUmlObjectById(dstId)
-            # create the link, but don't add it to the frame.
-            # the model position is assigned to temporary to
+            # create the link, but do not add it to the frame.
+            # the model position is assigned to a temporary to
             # view, but will be reassigned to the model, after
             # it has been added to the frame, because the zoom
-            # could have change and we have to update from the
+            # could have changed, and we have to update from the
             # model (see redo() method).
             self._link = self._createLink(src, dst, linkType,
                                           srcPos, dstPos)
@@ -219,8 +222,8 @@ class CreateOglLinkCommand(Command):
 
         # add it to the PyutClass
         # child.getPyutObject().addParent(parent.getPyutObject())
-        childPyutClass:  PyutClass = child.getPyutObject()
-        parentPyutClass: PyutClass = parent.getPyutObject()
+        childPyutClass:  PyutClass = cast(PyutClass, child.getPyutObject())
+        parentPyutClass: PyutClass = cast(PyutClass, parent.getPyutObject())
 
         childPyutClass.addParent(parentPyutClass)
 
