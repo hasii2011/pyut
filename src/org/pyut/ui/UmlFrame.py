@@ -211,7 +211,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Calls addHierarchy with the Pyut class list.
         """
-        import org.pyut.experimental.PyutDataClasses as pdc
+        import org.pyut.experimental.PyutModelClasses as pdc
 
         BeginBusyCursor()
 
@@ -224,7 +224,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Calls addHierarchy with the Ogl class list.
         """
-        import org.pyut.experimental.PyutDataClasses as pdc
+        import org.pyut.experimental.PyutModelClasses as pdc
 
         BeginBusyCursor()
 

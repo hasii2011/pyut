@@ -36,7 +36,7 @@ class PythonMetaClassDataHandler:
         Returns:
 
         """
-        import org.pyut.experimental.PyutDataClasses as pdc
+        import org.pyut.experimental.PyutModelClasses as pdc
 
         self.logger.debug(f'pdc value {pdc.__dict__.values()}')
 
@@ -102,7 +102,7 @@ class PythonMetaClassDataHandler:
 
     def getParentClassNames(self, classes: List[type], classDefinition: Union[OglClass, PyutClass]) -> List[str]:
 
-        import org.pyut.experimental.PyutDataClasses
+        import org.pyut.experimental.PyutModelClasses
 
         #  I do not like 'magic'
         currentClass = PyutDataClasses.__dict__[classDefinition.getName()]
