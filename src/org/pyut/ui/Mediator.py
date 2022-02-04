@@ -1,10 +1,8 @@
 
 from typing import Callable
 from typing import Dict
-from typing import NewType
 from typing import Union
 
-from wx import CANCEL
 from wx import CENTRE
 from wx import WXK_DELETE
 from wx import WXK_INSERT
@@ -53,6 +51,8 @@ from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
+
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.Singleton import Singleton
@@ -185,8 +185,6 @@ MESSAGES = {
 
 # Define current use mode
 [SCRIPT_MODE, NORMAL_MODE] = PyutUtils.assignID(2)
-
-BadPracticeType = NewType("BadPracticeType", Union[PyutClass, "OglClass"])  # type: ignore
 
 
 class Mediator(Singleton):
@@ -345,7 +343,7 @@ class Mediator(Singleton):
         Register a function to invoke a class editor.
         This function takes one parameter, the pyutClass to edit.
 
-        @param classEditor  PyutClass)
+        @param classEditor  PyutClass
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
@@ -353,11 +351,11 @@ class Mediator(Singleton):
 
     def registerTool(self, tool):
         """
-        Add a tool to toolboxes
+        Add a tool to a toolbox
 
-        @param Tool tool : The tool to add
-        @since 1.3
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            tool:  The tool to add
+
         """
         self._toolboxOwner.registerTool(tool)
 
@@ -553,7 +551,7 @@ class Mediator(Singleton):
             return
         self.setStatusText(MESSAGES[self._currentAction])
 
-    def autoResize(self, obj: BadPracticeType):
+    def autoResize(self, obj: Union[PyutClass, "OglClass"]):
         """
         Auto-resize the given object.
 
@@ -561,7 +559,7 @@ class Mediator(Singleton):
 
         Notes: Don't really like methods with signatures likes this;  Where the input parameter
         can be one of two things;  I suspect this is some legacy thing;  When I become more
-        familiar with the code base I need to fix this.   Humbert
+        familiar with the code base I need to fix this.   Humberto
         """
         from org.pyut.ogl.OglClass import OglClass
         prefs: PyutPreferences = PyutPreferences()

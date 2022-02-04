@@ -65,7 +65,7 @@ from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 # noinspection PyUnresolvedReferences
 from org.pyut.ogl.OglLinkFactory import OglLinkFactory
 
-display: List[str] = [
+displayPyut: List[str] = [
     "PyutClass",
     "PyutField",
     "PyutLink",
