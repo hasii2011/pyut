@@ -216,7 +216,7 @@ class UmlFrame(UmlFrameShapeHandler):
         BeginBusyCursor()
 
         gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
-        gh.addHierarchy(pdc.displayPyut)
+        gh.addHierarchy(pdc.PyutClassNames)
 
         EndBusyCursor()
 
@@ -229,7 +229,7 @@ class UmlFrame(UmlFrameShapeHandler):
         BeginBusyCursor()
 
         gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
-        gh.addHierarchy(pdc.displayOgl)
+        gh.addHierarchy(pdc.OglClassNames)
 
         EndBusyCursor()
 

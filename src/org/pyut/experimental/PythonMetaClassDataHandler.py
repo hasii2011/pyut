@@ -1,9 +1,8 @@
-
+# type: ignore
 from inspect import getfullargspec
 
 from typing import List
 from typing import Callable
-from typing import Union
 from typing import cast
 
 from logging import Logger
@@ -14,8 +13,6 @@ from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
-
-from org.pyut.ogl.OglClass import OglClass
 
 
 class PythonMetaClassDataHandler:
@@ -100,12 +97,12 @@ class PythonMetaClassDataHandler:
 
         return methods
 
-    def getParentClassNames(self, classes: List[type], classDefinition: Union[OglClass, PyutClass]) -> List[str]:
+    def getParentClassNames(self, classes: List[type], classDefinition: PyutClass) -> List[str]:
 
-        import org.pyut.experimental.PyutModelClasses
+        from org.pyut.experimental import PyutModelClasses
 
         #  I do not like 'magic'
-        currentClass = PyutDataClasses.__dict__[classDefinition.getName()]
+        currentClass = PyutModelClasses.__dict__[classDefinition.getName()]
         parentClasses = [cl for cl in classes if cl.__name__ in map(lambda z: z.__name__, currentClass.__bases__)]
 
         self.logger.debug(f'parentClasses: `{parentClasses}`')

@@ -9,6 +9,8 @@ from xml.dom.minidom import Element
 
 from xml.dom.minicompat import NodeList
 
+from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
@@ -49,26 +51,19 @@ class PyutXmi:
 
         myXmi = PyutXmi()
         myXmi.open(dom, umlFrame)
-
-    :version: $Revision: 1.6 $
-    :author: Deve Roux
-    :contact: droux@eivd.ch
-    @modified C.Dutoit feb 2003 : updated, fixed, improved
     """
     def __init__(self):
         self.logger: Logger = getLogger(__name__)
 
     def _PyutLink2xml(self, pyutLink: PyutLink):
         """
-        Exporting an PyutLink to an miniDom Element
+        Convert a PyutLink to an miniDom Element
 
-        @since 2.0
-        @Deve Roux <droux@eivd.ch>
+        Args:
+            pyutLink:
 
-        @param pyutLink
-        @return Element
+        Returns:    An XML element
         """
-
         # adding links in dictionary
         if pyutLink in self.__savedLinks:
             return None
@@ -98,13 +93,10 @@ class PyutXmi:
 
     def _PyutParam2xml(self, pyutParam):
         """
-        Exporting an PyutParam to an miniDom Element
+        Convert a PyutParam to a miniDom Element
 
-        @since 2.0
-        @Deve Roux <droux@eivd.ch>
-
-        @param pyutParam
-        @return Element
+        Args:
+            pyutParam:
         """
         root = Element('Param')
 
@@ -141,13 +133,12 @@ class PyutXmi:
 
     def _PyutMethod2xml(self, pyutMethod):
         """
-        Exporting an PyutMethod to an miniDom Element
+        Convert a PyutMethod to a miniDom Element
 
-        @since 2.0
-        @Deve Roux <droux@eivd.ch>
+        Args:
+            pyutMethod:
 
-        @param pyutMethod
-        @return Element
+        Returns: An XML element
         """
         root = Element('Method')
 
@@ -198,12 +189,12 @@ class PyutXmi:
             root.setAttribute('stereotype', stereotype.getStereotype())
 
         # methods methods
-        for i in pyutClass.methods:
-            root.appendChild(self._PyutMethod2xml(i))
+        for method in pyutClass.methods:
+            root.appendChild(self._PyutMethod2xml(method))
 
         # for all the field
-        for i in pyutClass.fields:
-            root.appendChild(self._PyutField2xml(i))
+        for field in pyutClass.fields:
+            root.appendChild(self._PyutField2xml(field))
 
         # for fathers
         fathers = pyutClass.getParents()
@@ -224,13 +215,12 @@ class PyutXmi:
 
     def _OglClass2xml(self, oglClass):
         """
-        Exporting an OglClass to an miniDom Element
+        Export an OglClass to a miniDom Element
 
-        @since 2.0
-        @Deve Roux <droux@eivd.ch>
+        Args:
+            oglClass:
 
-        @param oglClass
-        @return Element
+        Returns:  A minidom element
         """
         root = Element('GraphicClass')
 
@@ -253,11 +243,11 @@ class PyutXmi:
 
     def save(self, oglObjects):
         """
-        To save save diagram in XML file.
+        Saves save diagram in XML file.
         TODO:  Does not generate 'real' XMI
 
-        @since 1.0
-        @Deve Roux <droux@eivd.ch>
+        Args:
+            oglObjects:
         """
         root    = Document()
         top     = Element("Pyut")
@@ -307,12 +297,9 @@ class PyutXmi:
             xmiElement:   An XMI Element
 
             defaultValueModelType:  PyutField or PyutParam
-
-        Returns: None
         """
-        # value = xmiParam.getElementsByTagName("Foundation.Data_Types.Expression.body")[0].firstChild
-        bodyElts: NodeList = xmiElement.getElementsByTagName("Foundation.Data_Types.Expression.body")
-        bodyElt:  Element  = bodyElts.item(0)
+        bodyElements: NodeList = xmiElement.getElementsByTagName("Foundation.Data_Types.Expression.body")
+        bodyElt:  Element  = bodyElements.item(0)
         if bodyElt is not None:
             value = bodyElt.firstChild
             if value is not None:
@@ -321,12 +308,11 @@ class PyutXmi:
 
     def _getType(self, theDom):
         """
-        Parse dom document for all type ID  and update methods and params
+        Parse a dom document for all type ID  and update methods and params
 
-        @param   theDom
+        Args:
+            theDom:
 
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
         """
         # parse to find type name using tag name
         def parse(dom, tag):
@@ -355,7 +341,9 @@ class PyutXmi:
         """
         def parse(theXmiParam, localTypedIdObject, inDict, tag):
             for xmiType in theXmiParam.getElementsByTagName(tag):
+                # noinspection SpellCheckingInspection
                 zId = xmiType.getAttribute("xmi.idref")
+                # noinspection SpellCheckingInspection
                 self.logger.debug(f'xmi.idref: {zId}')
                 inDict[zId] = localTypedIdObject
 
@@ -363,16 +351,15 @@ class PyutXmi:
         parse(xmiElement, typeIdObject, dico, "Foundation.Core.DataType")
         parse(xmiElement, typeIdObject, dico, "Foundation.Data_Types.Enumeration")
 
-    def _getParam(self, Param, pyutMethod):
+    def _getParam(self, Param: Element, pyutMethod: PyutMethod):
         """
         Extract param from Xmi file from Class part.
 
-        @param   minidom.Element  : Param
-        @param   pyutMethod for returned type
-        @return  PyutParam
+        Args:
+            Param:
+            pyutMethod:
 
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Returns: PyutParam
         """
         aParam = PyutParam()
 
@@ -396,13 +383,12 @@ class PyutXmi:
 
     def _getMethods(self, Class):
         """
-        Extract method from Xmi file from Class part.
+        Extract a method from a Xmi file from Class part.
 
-        @param   minidom.Element  : Class
-        @return  [] with PyutMethod
+        Args:
+            Class:  An XML Class
 
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Returns:  A PyutMethod
         """
         # class methods for this current class
         allMethods = []
@@ -411,12 +397,12 @@ class PyutXmi:
 
             self.logger.debug(f'_getMethods - Method: {Method}')
             # name = Method.getElementsByTagName("Foundation.Core.ModelElement.name")[0].firstChild
-            methElts: NodeList = Method.getElementsByTagName("Foundation.Core.ModelElement.name")
+            methodElements: NodeList = Method.getElementsByTagName("Foundation.Core.ModelElement.name")
 
-            self.logger.debug(f'_getMethods - methElts: {methElts} methElts Length: {methElts.length}  type(methElts): {type(methElts)}')
-            if methElts.length == 0:
+            self.logger.debug(f'_getMethods - {methodElements=}  {methodElements.length=}  type(methodElements): {type(methodElements)}')
+            if methodElements.length == 0:
                 continue
-            elt = methElts.item(0)
+            elt = methodElements.item(0)
             self.logger.debug(f'_getMethods - elt: {elt}')
             name = elt.firstChild
 
@@ -443,23 +429,22 @@ class PyutXmi:
 
         return allMethods
 
-    def _getFields(self, Class):
+    def _getFields(self, elementClass: Element):
         """
-        To extract fields from Class.
+        Extract fields from Class.
 
-        @param   minidom.Element  : Class
-        @return  [] with PyutField
+        Args:
+            elementClass:
 
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Returns: A list of PyutField's
         """
         allFields = []
-        for Field in Class.getElementsByTagName("Foundation.Core.Attribute"):
-            aField = PyutField()
+        for Field in elementClass.getElementsByTagName("Foundation.Core.Attribute"):
+            aField: PyutField = PyutField()
             # name = Field.getElementsByTagName("Foundation.Core.ModelElement.name")[0].firstChild
-            fieldElts: NodeList = Field.getElementsByTagName("Foundation.Core.ModelElement.name")
-            self.logger.debug(f'_getFields - fieldElts: {fieldElts}  fieldElts.length: {fieldElts.length}  type(fieldElts): {type(fieldElts)}')
-            fieldElt:  Element = fieldElts.item(0)
+            fieldElements: NodeList = Field.getElementsByTagName("Foundation.Core.ModelElement.name")
+            self.logger.debug(f'_getFields - {fieldElements=}  {fieldElements.length=}  type(fieldElements): {type(fieldElements)}')
+            fieldElt:  Element = fieldElements.item(0)
             name = fieldElt.firstChild
 
             if name.nodeType == name.TEXT_NODE:
@@ -468,12 +453,12 @@ class PyutXmi:
             # visibility = Field.getElementsByTagName ("Foundation.Core.ModelElement.visibility")[0]
             # aField.setVisibility(self._xmiVisibility2PyutVisibility(visibility.getAttribute('xmi.value')))
 
-            visElts: NodeList = Field.getElementsByTagName("Foundation.Core.ModelElement.visibility")
-            visElt: Element   = visElts.item(0)
+            visibilityElements: NodeList = Field.getElementsByTagName("Foundation.Core.ModelElement.visibility")
+            visElt:             Element  = visibilityElements.item(0)
             if visElt is None:
                 visStr: str = 'public'
             else:
-                visStr: str = visElt.getAttribute('xmi.value')
+                visStr = visElt.getAttribute('xmi.value')
             vis:    PyutVisibilityEnum = self._xmiVisibility2PyutVisibility(visStr)
             aField.setVisibility(vis)
 
@@ -485,19 +470,21 @@ class PyutXmi:
             allFields.append(aField)
         return allFields
 
-    def _getFathers(self, dom, umlFrame):
+    def _getFathers(self, dom, umlFrame: UmlClassDiagramsFrame):
         """
-        To extract fathers form Class.
+        To extract parents from a Class.
 
-        @param dom xml.dom.minidom   : dom
-        @param umlFrame UmlFrame umlFrame
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            dom:
+            umlFrame:
+
+        Returns:
         """
         # find id from class in src
         def parse(src, generalizationType: str):
             parent = src.getElementsByTagName(generalizationType)
             if len(parent) > 0:
+                # noinspection SpellCheckingInspection
                 klass = parent[0].getElementsByTagName ("Foundation.Core.Class")[0].getAttribute("xmi.idref")
                 return klass
 
@@ -520,17 +507,16 @@ class PyutXmi:
                 # Adding father in pyutClass
                 pyutSon.getPyutObject().addParent(pyutFather)
 
-                # hadding link in uml frame
+                # adding link in uml frame
                 umlFrame.createInheritanceLink(pyutSon, pyutFather)
 
     def _getLinks(self, dom, umlFrame):
         """
-        To extract links form an OGL object.
+        Extract links from an OGL object.
 
-        @param  dom  : xml.dom.minidom
-        @param  umlFrame  UmlFrame
-        @since 1.0
-        @author Deve Roux <droux@eivd.ch>
+        Args:
+            dom:
+            umlFrame:
         """
         for association in dom.getElementsByTagName("Foundation.Core.Association"):
 
@@ -551,8 +537,8 @@ class PyutXmi:
 
             src = None
             dest = None
-            for extremite in association.getElementsByTagName("Foundation.Core.AssociationEnd"):
-                classId = extremite.getAttribute("xmi.id")
+            for associationEnd in association.getElementsByTagName("Foundation.Core.AssociationEnd"):
+                classId = associationEnd.getAttribute("xmi.id")
                 if not src:
                     src = self.dicoLinks[classId]
 
@@ -572,20 +558,18 @@ class PyutXmi:
     # noinspection PyUnusedLocal
     def _getOglClasses(self, xmlOglClasses, dicoOglObjects, umlFrame, oldData):
         """
-        Parse the XMI elements given and build data layer for PyUT classes.
-        If file is version 1.0, the dictionary given will contain, for key,
+        Parse the given XMI elements and build the data layer of PyuT classes.
+        If file is version 1.0, the dictionary given will contain for a key
         the name of the OGL object. Otherwise, it will be the ID
         (multi-same-name support from version 1.1). Everything is fixed
         later.
 
-        @param Element[] xmlOglClasses : XMI 'GraphicClass' elements
-        @param {id / srcName, OglObject} dicoOglObjects : OGL objects loaded
-        @param UmlFrame umlFrame : Where to draw
-        @param int oldData : If old data (v1.0), 1 else 0
-        @since 2.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            xmlOglClasses:  XMI 'GraphicClass' elements
+            dicoOglObjects: Loaded OGL objects
+            umlFrame:       Where to draw
+            oldData:        If old data (v1.0), 1 else 0
         """
-
         pyutClass = PyutClass()
 
         # adding name for this class
@@ -610,6 +594,7 @@ class PyutXmi:
 
             # for all the classes who are an inheritance link
             for fathers in xmlOglClasses.getElementsByTagName("Foundation.Core.Generalization"):
+                # noinspection SpellCheckingInspection
                 linkId = fathers.getAttribute("xmi.idref")
                 self.logger.debug(f"parent: {linkId}")
                 if linkId not in self.dicoFather:
@@ -619,6 +604,7 @@ class PyutXmi:
             # for all classes who are links
             for links in xmlOglClasses.getElementsByTagName("Foundation.Core.Classifier.associationEnd"):
                 for link in links.getElementsByTagName("Foundation.Core.AssociationEnd"):
+                    # noinspection SpellCheckingInspection
                     linkId = link.getAttribute("xmi.idref")
                     self.logger.debug(f"linkId: {linkId}")
                     if linkId not in self.dicoLinks:
@@ -631,10 +617,12 @@ class PyutXmi:
 
     def open(self, dom, umlFrame):
         """
-        To open a file and creating diagram.
+        Open a file and create a diagram.
 
-        @since 1.0
-        @Deve Roux <droux@eivd.ch>
+        Args:
+            dom:
+            umlFrame:
+
         """
         dicoOglObjects = {}     # format {name : oglClass}
         oldData = 0             # 1 if PyUT v1.0 files
