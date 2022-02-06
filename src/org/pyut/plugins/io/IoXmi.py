@@ -8,7 +8,7 @@ from wx import YES
 from wx import YES_NO
 from wx import CANCEL
 
-from org.pyut.plugins.xmi.PyutXmi import PyutXmi
+from org.pyut.plugins.xmi.PyutXmi import PyutXmi    # type: ignore
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 

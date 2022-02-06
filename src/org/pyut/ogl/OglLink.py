@@ -382,9 +382,9 @@ class OglLink(LineShape, ShapeEventHandler):
 
         controlPoints = self.GetControlPoints()
 
-        distance: float = 1000.0    # Impossibly long distance
+        distance:     float        = 1000.0    # Impossibly long distance
         closestPoint: ControlPoint = cast(ControlPoint, None)
-        srcPosition: OglPosition = OglPosition(x=clickPoint[0], y=clickPoint[1])
+        srcPosition:  OglPosition  = OglPosition(x=clickPoint[0], y=clickPoint[1])
 
         for controlPoint in controlPoints:
             xy:    Tuple[int, int] = controlPoint.GetPosition()
@@ -397,6 +397,6 @@ class OglLink(LineShape, ShapeEventHandler):
             self.clsLogger.debug(f'{currentDistance=}')
             if currentDistance <= distance:
                 distance = currentDistance
-                closestPoint = controlPoint
+                closestPoint = cast(ControlPoint, controlPoint)
 
         return closestPoint

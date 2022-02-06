@@ -19,7 +19,7 @@ from org.pyut.miniogl.Shape import Shape
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.ControlPoint import ControlPoint
 
-ControlPoints = NewType('ControlPoints', List[ControlPoint])
+ControlPoints = NewType('ControlPoints', List[LinePoint])
 
 
 class LineShape(Shape, Common):
@@ -38,8 +38,8 @@ class LineShape(Shape, Common):
             dstAnchor: the destination anchor of the line.
         """
         Shape.__init__(self)
-        self._srcAnchor = srcAnchor
-        self._dstAnchor = dstAnchor
+        self._srcAnchor: AnchorPoint = srcAnchor
+        self._dstAnchor: AnchorPoint = dstAnchor
 
         self._controls:  ControlPoints = ControlPoints([])
         self._drawArrow: bool = True
@@ -359,8 +359,9 @@ class LineShape(Shape, Common):
 
         Returns: True if (x, y) is inside the line.
         """
-        # go through each segment of the line
-        points = [self._srcAnchor] + self._controls + [self._dstAnchor]
+        # Go through each segment of the line
+        points: ControlPoints = self._mergeControlPoints()
+
         while len(points) > 1:
 
             x1, y1 = points[0].GetPosition()
@@ -368,15 +369,34 @@ class LineShape(Shape, Common):
 
             startPoint: CommonPoint = CommonPoint(x=x1, y=y1)
             endPoint:   CommonPoint = CommonPoint(x=x2, y=y2)
-            checkLine:  CommonLine = CommonLine(start=startPoint, end=endPoint)
+            checkLine:  CommonLine  = CommonLine(start=startPoint, end=endPoint)
 
             clickDiffStartX, clickDiffStartY, diffX, diffY = self.setupInsideCheck(clickPointX=x, clickPointY=y, line=checkLine)
-            points = points[1:]
+            # points = points[1:]
+            points.pop(0)       # do this method instead of above to quiesce mypy
 
             if self.insideBoundingBox(clickDiffStartX, clickDiffStartY, diffX, diffY) and self.insideSegment(clickDiffStartX, clickDiffStartY, diffX, diffY):
                 return True
 
         return False
+
+    def _mergeControlPoints(self) -> ControlPoints:
+        """
+        points: ControlPoints = [self._srcAnchor] + self._controls + [self._dstAnchor]
+        do this method instead of above to quiesce mypy
+
+        Returns:  All the shape control points
+        """
+        points: ControlPoints = ControlPoints([])
+
+        points.append(self._srcAnchor)
+
+        for cp in self._controls:
+            points.append(cp)
+
+        points.append(self._dstAnchor)
+
+        return points
 
     def SetSelected(self, state: bool = True):
         """
