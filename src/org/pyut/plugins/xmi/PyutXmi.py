@@ -1,3 +1,4 @@
+# type: ignore
 
 from typing import Union
 
@@ -54,6 +55,140 @@ class PyutXmi:
     """
     def __init__(self):
         self.logger: Logger = getLogger(__name__)
+
+    def save(self, oglObjects):
+        """
+        Saves save diagram in XML file.
+        TODO:  Does not generate 'real' XMI
+
+        Args:
+            oglObjects:
+        """
+        root    = Document()
+        top     = Element("Pyut")
+        root.appendChild(top)
+
+        self.__savedLinks = {}
+
+        # gauge
+        dlg   = wx.Dialog(None, -1, "Saving...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.RESIZE_BORDER, size=wx.Size(207, 70))
+        gauge = wx.Gauge(dlg, -1, len(oglObjects), pos=wx.Point(2, 5), size=wx.Size(200, 30))
+
+        dlg.Show(True)
+        for i in range(len(oglObjects)):
+            gauge.SetValue(i)
+            top.appendChild(self._oglClassToXml(oglObjects[i]))
+        dlg.Destroy()
+
+        self.__savedLinks = None
+        return root
+
+    def open(self, dom, umlFrame):
+        """
+        Open a file and create a diagram.
+
+        Args:
+            dom:
+            umlFrame:
+
+        """
+        dicoOglObjects = {}     # format {name : oglClass}
+        oldData = 0             # 1 if PyUT v1.0 files
+        self.dicoLinks = {}     # format [name : PyutLink}
+        self.dicoFather = {}    # format {child oglClass : [fathers names]}
+        self.dicoType = {}
+        self.dicoReturn = {}
+
+        # Load OGL Classes
+        for Class in dom.getElementsByTagName("Foundation.Core.Class"):
+            self._getOglClasses(Class, dicoOglObjects, umlFrame, oldData)
+
+        # making link with xmi idType and method return and field
+        self._getType(dom)
+
+        self._getFathers(dom, umlFrame)
+        self._getLinks(dom, umlFrame)
+
+        # to draw diagram
+        umlFrame.Refresh()
+
+        # cleaning dico
+        self.dicoType.clear()
+        self.dicoReturn.clear()
+        self.dicoFather.clear()
+        self.dicoLinks.clear()
+
+    def _oglClassToXml(self, oglClass):
+        """
+        Export an OglClass to a miniDom Element
+
+        Args:
+            oglClass:
+
+        Returns:  A minidom element
+        """
+        root = Element('GraphicClass')
+
+        # class definition
+        # adding width and height
+        w, h = oglClass.GetBoundingBoxMin()
+        root.setAttribute('width', str(int(w)))
+        root.setAttribute('height', str(int(h)))
+
+        # calculate the top right corner of the shape
+        x = int(oglClass.GetX())
+        y = int(oglClass.GetY())
+        root.setAttribute('x', str(int(x)))
+        root.setAttribute('y', str(int(y)))
+
+        # adding the class
+        root.appendChild(self._pyutClassToXml(oglClass.getPyutClass()))
+
+        return root
+
+    def _pyutClassToXml(self, pyutClass: PyutClass) -> Element:
+        """
+        Exporting a PyutClass to a miniDom Element
+
+        Args:
+            pyutClass: The Pyut class
+
+        Returns:  The XML element
+        """
+        root = Element('Class')
+
+        # class name
+        root.setAttribute('name', pyutClass.getName())
+
+        # class stereotype
+        stereotype = pyutClass.getStereotype()
+        if stereotype is not None:
+            root.setAttribute('stereotype', stereotype.getStereotype())
+
+        # methods methods
+        for method in pyutClass.methods:
+            root.appendChild(self._PyutMethod2xml(method))
+
+        # for all the field
+        for field in pyutClass.fields:
+            root.appendChild(self._PyutField2xml(field))
+
+        # for fathers
+        fathers = pyutClass.getParents()
+        if len(fathers) > 0:
+            for i in fathers:
+                father = Element('Father')
+                father.setAttribute('name', i.getName())
+                root.appendChild(father)
+
+        # for all links
+        links = pyutClass.getLinks()
+        for link in links:
+            res = self._PyutLink2xml(link)
+            if res is not None:
+                root.appendChild(res)
+
+        return root
 
     def _PyutLink2xml(self, pyutLink: PyutLink):
         """
@@ -167,105 +302,6 @@ class PyutXmi:
         for para in pyutMethod.getParams():
             root.appendChild(self._PyutParam2xml(para))
 
-        return root
-
-    def _PyutClass2xml(self, pyutClass: PyutClass) -> Element:
-        """
-        Exporting a PyutClass to a miniDom Element
-
-        Args:
-            pyutClass: The Pyut class
-
-        Returns:  The XML element
-        """
-        root = Element('Class')
-
-        # class name
-        root.setAttribute('name', pyutClass.getName())
-
-        # class stereotype
-        stereotype = pyutClass.getStereotype()
-        if stereotype is not None:
-            root.setAttribute('stereotype', stereotype.getStereotype())
-
-        # methods methods
-        for method in pyutClass.methods:
-            root.appendChild(self._PyutMethod2xml(method))
-
-        # for all the field
-        for field in pyutClass.fields:
-            root.appendChild(self._PyutField2xml(field))
-
-        # for fathers
-        fathers = pyutClass.getParents()
-        if len(fathers) > 0:
-            for i in fathers:
-                father = Element('Father')
-                father.setAttribute('name', i.getName())
-                root.appendChild(father)
-
-        # for all links
-        links = pyutClass.getLinks()
-        for i in links:
-            res = self._PyutLink2xml(i)
-            if res is not None:
-                root.appendChild(res)
-
-        return root
-
-    def _OglClass2xml(self, oglClass):
-        """
-        Export an OglClass to a miniDom Element
-
-        Args:
-            oglClass:
-
-        Returns:  A minidom element
-        """
-        root = Element('GraphicClass')
-
-        # class definition
-        # adding width and height
-        w, h = oglClass.GetBoundingBoxMin()
-        root.setAttribute('width', str(int(w)))
-        root.setAttribute('height', str(int(h)))
-
-        # calculate the top right corner of the shape
-        x = int(oglClass.GetX())
-        y = int(oglClass.GetY())
-        root.setAttribute('x', str(int(x)))
-        root.setAttribute('y', str(int(y)))
-
-        # adding the class
-        root.appendChild(self._PyutClass2xml(oglClass.getPyutClass()))
-
-        return root
-
-    def save(self, oglObjects):
-        """
-        Saves save diagram in XML file.
-        TODO:  Does not generate 'real' XMI
-
-        Args:
-            oglObjects:
-        """
-        root    = Document()
-        top     = Element("Pyut")
-        root.appendChild(top)
-
-        self.__savedLinks = {}
-
-        # gauge
-        dlg   = wx.Dialog(None, -1, "Saving...", style=wx.STAY_ON_TOP | wx.CAPTION | wx.RESIZE_BORDER, size=wx.Size(207, 70))
-        gauge = wx.Gauge(dlg, -1, len(oglObjects), pos=wx.Point(2, 5), size=wx.Size(200, 30))
-
-        dlg.Show(True)
-        for i in range(len(oglObjects)):
-            gauge.SetValue(i)
-            top.appendChild(self._OglClass2xml(oglObjects[i]))
-        dlg.Destroy()
-
-        self.__savedLinks = None
         return root
 
     def _xmiVisibility2PyutVisibility(self, visibility: str = "private") -> PyutVisibilityEnum:
@@ -614,38 +650,3 @@ class PyutXmi:
             dicoOglObjects[pyutClassId] = oglClass
 
             umlFrame.addShape(oglClass, 100, 100)
-
-    def open(self, dom, umlFrame):
-        """
-        Open a file and create a diagram.
-
-        Args:
-            dom:
-            umlFrame:
-
-        """
-        dicoOglObjects = {}     # format {name : oglClass}
-        oldData = 0             # 1 if PyUT v1.0 files
-        self.dicoLinks = {}     # format [name : PyutLink}
-        self.dicoFather = {}    # format {child oglClass : [fathers names]}
-        self.dicoType = {}
-        self.dicoReturn = {}
-
-        # Load OGL Classes
-        for Class in dom.getElementsByTagName("Foundation.Core.Class"):
-            self._getOglClasses(Class, dicoOglObjects, umlFrame, oldData)
-
-        # making link with xmi idType and method return and field
-        self._getType(dom)
-
-        self._getFathers(dom, umlFrame)
-        self._getLinks(dom, umlFrame)
-
-        # to draw diagram
-        umlFrame.Refresh()
-
-        # cleaning dico
-        self.dicoType.clear()
-        self.dicoReturn.clear()
-        self.dicoFather.clear()
-        self.dicoLinks.clear()

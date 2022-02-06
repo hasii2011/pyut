@@ -2,8 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.miniogl import Shape
-from org.pyut.miniogl import SizerShape
+from org.pyut.miniogl.Shape import Shape
+from org.pyut.miniogl.SizerShape import SizerShape
 
 
 class Diagram:

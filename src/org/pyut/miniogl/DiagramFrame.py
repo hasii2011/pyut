@@ -84,19 +84,18 @@ class DiagramFrame(ScrolledWindow):
 
         self._diagram = Diagram(self)
 
-        self.__keepMoving       = False
-        self._selectedShapes    = []        # list of the shapes that are selected
+        self.__keepMoving:    bool        = False
+        self._selectedShapes: List[Shape] = []        # list of the shapes that are selected
 
-        self._lastMousePosition: Tuple[int, int] = cast(Tuple, None)
+        self._lastMousePosition: Tuple[int, int] = cast(Tuple[int, int], None)
         self._selector:          RectangleShape  = cast(RectangleShape, None)     # rectangle selector shape
 
         self._clickedShape: Shape = cast(Shape, None)      # last clicked shape
-        # self._clickedShape = None      # last clicked shape
-        self._moving:       bool              = False     # a drag has been initiated
+        self._moving:       bool  = False     # a drag has been initiated
 
-        self._xOffset = 0.0     # abscissa offset between the view and the model
-        self._yOffset = 0.0     # ordinate offset between the view and the model
-        self._zoomStack = []    # store all zoom factors applied
+        self._xOffset:   float       = 0.0   # abscissa offset between the view and the model
+        self._yOffset:   float       = 0.0   # ordinate offset between the view and the model
+        self._zoomStack: List[float] = []    # store all zoom factors applied
 
         self._zoomLevel = 0             # number of zoom factors applied
         self._maxZoomFactor = 6         # can zoom in beyond 600%
@@ -187,7 +186,7 @@ class DiagramFrame(ScrolledWindow):
 
         # First, call the generic handler for OnLeftDown
         shape: ShapeEventHandler = self.GenericHandler(event, "OnLeftDown")
-        self._clickedShape = shape  # store the last clicked shape
+        self._clickedShape = cast(Shape, shape)  # store the last clicked shape
         if not event.GetSkipped():
             return
         if shape is None:
@@ -218,10 +217,10 @@ class DiagramFrame(ScrolledWindow):
                 s.SetSelected(False)
                 s.SetMoving(False)
 
-            self._selectedShapes = [shape]
+            self._selectedShapes = [cast(Shape, shape)]
             cast(Shape, shape).SetSelected(True)
             cast(Shape, shape).SetMoving(True)
-            self._clickedShape = None
+            self._clickedShape = cast(Shape, None)
             self.Refresh()
 
         self.Bind(EVT_MOTION, self.OnMove)
@@ -264,7 +263,7 @@ class DiagramFrame(ScrolledWindow):
                     self._selectedShapes.append(clicked)
                 elif not sel and clicked in self._selectedShapes:
                     self._selectedShapes.remove(clicked)
-            self._clickedShape = None
+            self._clickedShape = cast(Shape, None)
             self.Refresh()
 
         self._moving = False
@@ -291,7 +290,7 @@ class DiagramFrame(ScrolledWindow):
             self._selectedShapes.append(clicked)
             clicked.SetSelected(True)
             clicked.SetMoving(True)
-        self._clickedShape = None
+        self._clickedShape = cast(Shape, None)
         for shape in self._selectedShapes:
             parent = shape.GetParent()
             if parent is not None and parent.IsSelected() and not isinstance(shape, SizerShape):
@@ -323,7 +322,7 @@ class DiagramFrame(ScrolledWindow):
         """
 
         self.GenericHandler(event, "OnLeftDClick")
-        self._clickedShape = None
+        self._clickedShape = cast(Shape, None)
         if not self.__keepMoving:
             self.Bind(EVT_MOTION, self._NullCallback)
 

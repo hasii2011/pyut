@@ -9,6 +9,7 @@ from wx import YES_NO
 from wx import CANCEL
 
 from org.pyut.plugins.xmi.PyutXmi import PyutXmi
+
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.persistence.PyutXml import PyutXml
@@ -40,7 +41,7 @@ class IoXmi(PyutIoPlugin):
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.2
         """
-        return "Deve Roux <droux@eivd.ch>"
+        return "Unknown"
 
     def getVersion(self):
         """
@@ -54,9 +55,9 @@ class IoXmi(PyutIoPlugin):
 
     def getInputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
-        @return tupple
+        @return tuple
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.2
         """
@@ -64,9 +65,9 @@ class IoXmi(PyutIoPlugin):
 
     def getOutputFormat(self):
         """
-        Return a specification tupple.
+        Return a specification tuple.
 
-        @return tupple
+        @return tuple
         @author Laurent Burgbacher <lb@alawa.ch>
         @since 1.2
         """
@@ -89,10 +90,10 @@ class IoXmi(PyutIoPlugin):
         """
         Write data to filename. Abstract.
 
-        @return True if succeeded, False if error or canceled
-        @param oglObjects : list of exported objects
-        @author Deve Roux <droux@eivd.ch>
-        @since 1.0
+        Args:
+            oglObjects: list of exported objects
+
+        Returns:    True if operation succeeded, False if error or canceled
         """
         # Ask the user which destination file he wants
         filename = self._askForFileExport()
@@ -117,11 +118,11 @@ class IoXmi(PyutIoPlugin):
         """
         Read data from filename. Abstract.
 
-        @return True if succeeded, False if error or canceled
-        @param oglObjects : list of imported objects
-        @param umlFrame : Pyut's UmlFrame
-        @author Deve Roux <droux@eivd.ch>
-        @since 1.0
+        Args:
+            oglObjects: list of imported objects
+            umlFrame:   Pyut's UmlFrame
+
+        Returns:    True if operation succeeded, False if error or canceled
         """
         from xml.dom.minidom import parse
 
