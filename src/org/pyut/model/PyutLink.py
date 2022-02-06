@@ -1,6 +1,7 @@
 
 from typing import Optional
 from typing import Union
+from typing import TYPE_CHECKING
 
 from logging import Logger
 from logging import getLogger
@@ -10,6 +11,10 @@ from deprecated import deprecated
 
 from org.pyut.model.PyutObject import PyutObject
 
+if TYPE_CHECKING:
+    from org.pyut.model.PyutClass import PyutClass
+    from org.pyut.model.PyutNote import PyutNote
+    
 from org.pyut.enums.LinkType import LinkType
 
 # noinspection PyProtectedMember
@@ -33,8 +38,8 @@ class PyutLink(PyutObject):
     def __init__(self, name="", linkType: LinkType = LinkType.INHERITANCE,
                  cardSrc:      str = "", cardDest: str = "",
                  bidir:        bool = False,
-                 source:       'PyutClass' = None,    # type ignore
-                 destination:  Union['PyutClass', 'PyutNote'] = None):  # type ignore
+                 source:       'PyutClass' = None,
+                 destination:  Union['PyutClass', 'PyutNote'] = None):
         """
 
         Args:

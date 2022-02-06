@@ -62,7 +62,10 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
             dst:        The destination OglClass
             linkType:   The type of link
         """
-        pyutLink = PyutLink("", linkType=linkType, source=src.getPyutObject(), destination=dst.getPyutObject())
+        sourceClass:      PyutClass = cast(PyutClass, src.getPyutObject())
+        destinationClass: PyutClass = cast(PyutClass, dst.getPyutObject())
+
+        pyutLink: PyutLink = PyutLink("", linkType=linkType, source=sourceClass, destination=destinationClass)
 
         oglLinkFactory = getOglLinkFactory()
         oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)
@@ -78,7 +81,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
     def createInheritanceLink(self, child: OglClass, parent: OglClass) -> OglLink:
         """
-        TODO: this is a duplicate of CreateOglLinkCommandCommand._createInheritanceLink (this code adds it to the frame)
+            TODO: this is a duplicate of CreateOglLinkCommandCommand._createInheritanceLink (this code adds it to the frame)
 
         Add a parent link between the child and parent objects.
 
@@ -89,8 +92,11 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         Returns:
             The inheritance OglLink
         """
-        pyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=child.getPyutObject(), destination=parent.getPyutObject())
-        oglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, LinkType.INHERITANCE)
+        sourceClass:      PyutClass = cast(PyutClass, child.getPyutObject())
+        destinationClass: PyutClass = cast(PyutClass, parent.getPyutObject())
+
+        pyutLink: PyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
+        oglLink:  OglLink  = getOglLinkFactory().getOglLink(child, pyutLink, parent, LinkType.INHERITANCE)
 
         child.addLink(oglLink)
         parent.addLink(oglLink)
@@ -117,7 +123,10 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         Returns: the created OglInterface link
         """
-        pyutLink:     PyutLink     = PyutLink(linkType=LinkType.INTERFACE, source=src, destination=dst)
+        sourceClass:      PyutClass = cast(PyutClass, src.getPyutObject())
+        destinationClass: PyutClass = cast(PyutClass, dst.getPyutObject())
+
+        pyutLink:     PyutLink     = PyutLink(linkType=LinkType.INTERFACE, source=sourceClass, destination=destinationClass)
         oglInterface: OglInterface = OglInterface(srcShape=src, pyutLink=pyutLink, dstShape=dst)
 
         src.addLink(oglInterface)

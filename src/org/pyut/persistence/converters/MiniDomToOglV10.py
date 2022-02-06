@@ -216,12 +216,14 @@ class MiniDomToOgl:
                 self.logger.error(f'Developer Error -- srcId: {srcId} - dstId: {dstId}  error: {ke}')
                 continue
 
-            linkType: LinkType = assocPyutLink.getType()
+            linkType:         LinkType  = assocPyutLink.getType()
+            sourceClass:      PyutClass = cast(PyutClass, src.getPyutObject())
+            destinationClass: PyutClass = cast(PyutClass, dst.getPyutObject())
             pyutLink: PyutLink = PyutLink(name=assocPyutLink.getName(),
                                           linkType=linkType,
                                           cardSrc=assocPyutLink.sourceCardinality,
                                           cardDest=assocPyutLink.destinationCardinality,
-                                          source=src.getPyutObject(), destination=dst.getPyutObject())
+                                          source=sourceClass, destination=destinationClass)
 
             oglLinkFactory = getOglLinkFactory()
             oglLink = oglLinkFactory.getOglLink(src, pyutLink, dst, linkType)

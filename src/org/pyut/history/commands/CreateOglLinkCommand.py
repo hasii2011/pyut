@@ -214,8 +214,10 @@ class CreateOglLinkCommand(Command):
         Returns:
             The inheritance OglLink
         """
-        pyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=child.getPyutObject(), destination=parent.getPyutObject())
-        oglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, LinkType.INHERITANCE)
+        sourceClass:      PyutClass = cast(PyutClass, child.getPyutObject())
+        destinationClass: PyutClass = cast(PyutClass, parent.getPyutObject())
+        pyutLink:         PyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
+        oglLink:          OglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, LinkType.INHERITANCE)
 
         child.addLink(oglLink)
         parent.addLink(oglLink)
