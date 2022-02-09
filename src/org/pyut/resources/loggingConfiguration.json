@@ -55,6 +55,11 @@
         "org.pyut.miniogl.LineShape": {
             "level":     "DEBUG",
             "propagate": "False"
+        },
+        "org.pyut.plugins.io.javasupport.ReverseJava": {
+            "level":     "INFO",
+            "propagate": "False"
         }
+
     }
 }

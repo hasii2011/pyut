@@ -24,6 +24,7 @@ from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglText import OglText
 from org.pyut.ogl.OglUseCase import OglUseCase
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 

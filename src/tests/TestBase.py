@@ -16,9 +16,10 @@ TEST_DIRECTORY:               str = 'tests'
 
 class TestBase(TestCase):
 
-    RESOURCES_PACKAGE_NAME:              str = 'tests.resources'
-    RESOURCES_TEST_CLASSES_PACKAGE_NAME: str = 'tests.resources.testclass'
-    RESOURCES_TEST_DATA_PACKAGE_NAME:    str = 'tests.resources.testdata'
+    RESOURCES_PACKAGE_NAME:                   str = 'tests.resources'
+    RESOURCES_TEST_CLASSES_PACKAGE_NAME:      str = 'tests.resources.testclass'
+    RESOURCES_TEST_JAVA_CLASSES_PACKAGE_NAME: str = 'tests.resources.testclass.ozzee'
+    RESOURCES_TEST_DATA_PACKAGE_NAME:         str = 'tests.resources.testdata'
 
     """
     A base unit test class to initialize some logging stuff we need
