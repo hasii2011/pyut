@@ -1,5 +1,7 @@
 
 from typing import Dict
+from typing import NewType
+from typing import Set
 from typing import cast
 
 from logging import Logger
@@ -16,6 +18,12 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
+Implementors = NewType('Implementors', Set[OglClass])
+Extenders    = NewType('Extenders', Set[OglClass])
+
+SubClassMap  = NewType('SubClassMap', Dict[OglClass, Extenders])
+InterfaceMap = NewType('InterfaceMap', Dict[OglClass, Implementors])
+
 # Constants
 CLASS_MODIFIER = ["public", "protected", "private", "abstract", "final", "static", "strictfp"]
 FIELD_MODIFIERS = ["public", "protected", "private", "static", "final", "transient", "volatile"]
@@ -28,7 +36,10 @@ class ReverseJava:
 
         self.logger: Logger = getLogger(__name__)
 
-        self._classes: Dict[str, OglClass] = {}
+        self._classes:     Dict[str, OglClass] = {}
+        self._subClassMap:  SubClassMap  = SubClassMap({})
+        self._interfaceMap: InterfaceMap = InterfaceMap({})
+
         self._umlFrame: UmlClassDiagramsFrame = umlFrame
 
     @property
@@ -75,6 +86,11 @@ class ReverseJava:
             # self.layoutDiagram()
 
     def layoutDiagram(self):
+
+        for oglClass in list(self._classes.values()):
+            self._umlFrame.addShape(oglClass, 0, 0)
+            oglClass.autoResize()
+
         self.__logMessage("Improving display")
         Margin = 10
         x = Margin
@@ -141,6 +157,18 @@ class ReverseJava:
                 # Create a class object
                 self.__addClass(superClass)
                 self.__addClassParent(className, superClass)
+
+                oglSuperClass: OglClass = self._classes[superClass]
+                oglClass:      OglClass = self._classes[className]
+                if oglSuperClass in self._subClassMap:
+                    extenders: Extenders = self._subClassMap[superClass]
+                    extenders.update([oglClass])
+                else:
+                    extenders: Extenders = Extenders(set())
+                    extenders.update([oglClass])
+
+                self._subClassMap[oglSuperClass] = extenders
+
             else:  # implements
                 shouldExit: bool = False
                 self.__logMessage(f"Reading interface... {lstFile[currentPos:currentPos + 5]}")
@@ -506,8 +534,8 @@ class ReverseJava:
         # Create the class
         pc: PyutClass = PyutClass(className)  # A new PyutClass
         po: OglClass = OglClass(pc)  # A new OglClass
-        self._umlFrame.addShape(po, 0, 0)
-        po.autoResize()
+        # self._umlFrame.addShape(po, 0, 0)
+        # po.autoResize()
         self._classes[className] = po
 
         return po
@@ -528,15 +556,15 @@ class ReverseJava:
 
         # Create parent class ?
         if parentName in self._classes:
-            father = self._classes[parentName]
+            parent: OglClass = self._classes[parentName]
         else:
-            father = self.__addClass(parentName)
+            parent = self.__addClass(parentName)
 
         # Create the interface/inheritance link
         if isInterface is True:
-            self._umlFrame.createInterfaceLink(po, father)
+            self._umlFrame.createInterfaceLink(src=po, dst=parent)
         else:
-            self._umlFrame.createInheritanceLink(po, father)
+            self._umlFrame.createInheritanceLink(child=po, parent=parent)
 
     def __addClassFields(self, className, modifiers, fieldType, names_values):
         """
@@ -551,7 +579,7 @@ class ReverseJava:
         """
         # Get class fields
         po: OglClass = self._classes[className]
-        pc: PyutClass = cast(PyutClass, po.getPyutObject())
+        pc: PyutClass = cast(PyutClass, po.pyutObject)
         classFields = pc.fields
 
         # TODO fix this crazy code to use constructor and catch exception on bad input
@@ -595,7 +623,7 @@ class ReverseJava:
         self.__logMessage("(modifiers=%s; returnType=%s)" % (modifiers, returnType))
         # Get class fields
         po: OglClass = self._classes[className]
-        pc: PyutClass = cast(PyutClass, po.getPyutObject())
+        pc: PyutClass = cast(PyutClass, po.pyutObject)
 
         # TODO fix this crazy code to use constructor and catch exception on bad input
         # Get visibility
