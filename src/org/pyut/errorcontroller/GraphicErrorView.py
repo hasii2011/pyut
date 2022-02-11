@@ -11,6 +11,7 @@ from wx import OK
 
 from org.pyut.errorcontroller.AbstractErrorView import AbstractErrorView
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 

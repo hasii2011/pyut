@@ -61,7 +61,7 @@ class TestReverseJava(TestBase):
 
         self.assertEqual(1, len(reverseJava.reversedClasses))
 
-    def testName2(self):
+    def testExtenderCorrectlySetup(self):
         """Another test"""
         pass
 

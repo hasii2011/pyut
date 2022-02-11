@@ -145,7 +145,7 @@ class FileMenuHandler(BaseMenuHandler):
                                    "unexpected results !"), parent=self)
 
         if (self._treeNotebookHandler.getCurrentProject()) is None:
-            PyutUtils.displayError(_("No project to insert this file into !"), parent=self)
+            PyutUtils.displayError(_("No project to insert this file into !"))
             return
 
         # Ask which project to insert
@@ -165,7 +165,7 @@ class FileMenuHandler(BaseMenuHandler):
         try:
             self._treeNotebookHandler.insertFile(filename)
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"), parent=self)
+            PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"))
 
     # noinspection PyUnusedLocal
     def onFileOpen(self, event: CommandEvent):
@@ -250,7 +250,7 @@ class FileMenuHandler(BaseMenuHandler):
             wxYield()
             obj.doImport()
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self)
+            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."))
             self.logger.error(f'{e}')
 
         parent: Window = self._menu.GetWindow()
@@ -320,7 +320,7 @@ class FileMenuHandler(BaseMenuHandler):
         self._mediator.deselectAllShapes()
         frame = self._mediator.getUmlFrame()
         if frame == -1:
-            PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."), parent)
+            PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."))
             return
 
         printout  = PyutPrintout(frame)
@@ -328,7 +328,7 @@ class FileMenuHandler(BaseMenuHandler):
         preview   = PrintPreview(printout, printout2, self._printData)
 
         if not preview.IsOk():
-            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), parent)
+            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."))
             return
 
         frame = PreviewFrame(preview, parent, _("Diagram preview"))
@@ -338,7 +338,7 @@ class FileMenuHandler(BaseMenuHandler):
         try:
             frame.Show(True)
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."), self)
+            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."))
 
     # noinspection PyUnusedLocal
     def onPrint(self, event: CommandEvent):
@@ -349,7 +349,7 @@ class FileMenuHandler(BaseMenuHandler):
             event:
         """
         if self._mediator.getDiagram() is None:
-            PyutUtils.displayError(_("No diagram to print !"), _("Error"), self._parent)
+            PyutUtils.displayError(_("No diagram to print !"), _("Error"))
             return
         self._mediator.deselectAllShapes()
         printDialogData: PrintDialogData = PrintDialogData()
@@ -361,7 +361,7 @@ class FileMenuHandler(BaseMenuHandler):
         printout = PyutPrintout(self._mediator.getUmlFrame())
 
         if not printer.Print(self._parent, printout, True):
-            PyutUtils.displayError(_("Cannot print"), _("Error"), self._parent)
+            PyutUtils.displayError(_("Cannot print"), _("Error"))
 
     def onRecentlyOpenedFile(self, event: CommandEvent):
         """
@@ -430,7 +430,7 @@ class FileMenuHandler(BaseMenuHandler):
                     self.setLastOpenedFilesItems()
                     self._mediator.updateTitle()
             except (ValueError, Exception) as e:
-                PyutUtils.displayError(_("An error occurred while loading the project !"), parent=self)
+                PyutUtils.displayError(_("An error occurred while loading the project !"))
                 self.logger.error(f'{e}')
 
     def setLastOpenedFilesItems(self):

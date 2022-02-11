@@ -67,20 +67,24 @@ class ReverseJava:
 
         # Read file
         currentPos = 0
-        # try:
-        while currentPos < len(lstFile):
-            # Analyze word
-            self.__logMessage(f"\n analyzing word {currentPos}")
-            self.__logMessage("***")
-            self.__logMessage(f"{lstFile}")
+        try:
+            while currentPos < len(lstFile):
+                # Analyze word
+                self.__logMessage(f"\n analyzing word {currentPos}")
+                self.__logMessage("***")
+                self.__logMessage(f"{lstFile}")
 
-            # Read comments
-            currentPos = self._readComments(lstFile, currentPos)
+                # Read comments
+                currentPos = self._readComments(lstFile, currentPos)
 
-            # new class ?
-            if self._isClassBeginning(lstFile, currentPos):
-                currentPos = self._readClass(lstFile, currentPos)
-            currentPos += 1
+                # new class ?
+                if self._isClassBeginning(lstFile, currentPos):
+                    currentPos = self._readClass(lstFile, currentPos)
+                currentPos += 1
+        except (ValueError, Exception) as e:
+            self.logger.error(f'Error in ReverseJava - {type(e)} {e}')
+            raise e
+
         # finally:
             # Best display
             # self.layoutDiagram()
@@ -118,12 +122,11 @@ class ReverseJava:
         Read a class from a list of strings, beginning on a given position.
         This class reads one class from lstFile, from currentLine.
 
-        @param lstFile : list of instructions read from the file to analyze
-        @param currentPos : current position in the list
-        @return tuple : int : last read line pointer, Pyut's OglClass object,
-                        class name
-        @author C.Dutoit
-        @since 1.0
+        Args:
+            lstFile:    list of instructions read from the file to analyze
+            currentPos: last read line pointer, Pyut's OglClass object, class name
+
+        Returns:  Returns the updated current position (read line pointer)
         """
         # Pass modifiers
         while lstFile[currentPos] in CLASS_MODIFIER:
@@ -158,16 +161,7 @@ class ReverseJava:
                 self.__addClass(superClass)
                 self.__addClassParent(className, superClass)
 
-                oglSuperClass: OglClass = self._classes[superClass]
-                oglClass:      OglClass = self._classes[className]
-                if oglSuperClass in self._subClassMap:
-                    extenders: Extenders = self._subClassMap[superClass]
-                    extenders.update([oglClass])
-                else:
-                    extenders: Extenders = Extenders(set())
-                    extenders.update([oglClass])
-
-                self._subClassMap[oglSuperClass] = extenders
+                self.__updateExtendersMap(className, superClass)
 
             else:  # implements
                 shouldExit: bool = False
@@ -711,7 +705,6 @@ class ReverseJava:
             lstIn: list of String to be split
 
         Returns: the split list
-
         """
         TO_BE_SPLIT = ['{', '}', ';', ')', '(', ',']
         lstOut = []
@@ -734,6 +727,27 @@ class ReverseJava:
 
         # Return split list
         return lstOut
+
+    def __updateExtendersMap(self, className: str, superClass: str):
+        """
+        Update the map of superclasses (base classes) and the classes that extend
+        it (subclasses)
+        Args:
+            className:  The original class
+            superClass: The name of the super class
+        """
+        oglSuperClass: OglClass = self._classes[superClass]
+        oglClass:      OglClass = self._classes[className]
+
+        if oglSuperClass in self._subClassMap:
+            extenders: Extenders = self._subClassMap[oglSuperClass]
+            extenders.update([oglClass])
+        else:
+            extenders = Extenders(set())
+            extenders.update([oglClass])
+
+        self.logger.info(f'Make extender entry for {superClass} - subclass: {className}')
+        self._subClassMap[oglSuperClass] = extenders
 
     def __logMessage(self, theMessage: str):
         """

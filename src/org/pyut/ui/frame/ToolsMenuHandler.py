@@ -52,7 +52,7 @@ class ToolsMenuHandler(BaseMenuHandler):
             pluginInstance.callDoAction()
             self.logger.debug(f"After tool plugin do action")
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."), self._parent)
+            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."))
             self.logger.error(f'{e}')
         EndBusyCursor()
 
