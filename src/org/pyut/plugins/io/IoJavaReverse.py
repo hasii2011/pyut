@@ -1,4 +1,5 @@
-
+from logging import Logger
+from logging import getLogger
 from typing import cast
 
 from os import sep as osSep
@@ -14,6 +15,13 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 
 class IoJavaReverse(PyutIoPlugin):
+
+    def __init__(self, oglObjects, umlFrame):
+
+        super().__init__(oglObjects=oglObjects, umlFrame=umlFrame)
+
+        self.logger: Logger = getLogger(__name__)
+
     """
     Java reverse engineering plugin.
     """
@@ -83,5 +91,7 @@ class IoJavaReverse(PyutIoPlugin):
                 fqnName: str = f'{directory}{osSep}{filename}'
                 rj.analyseFile(fqnName)
                 rj.layoutDiagram()
+            # noinspection PyProtectedMember
+            self.logger.warning(f'{len(rj._subClassMap)=}')
         finally:
             wxEndBusyCursor()

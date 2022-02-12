@@ -31,6 +31,7 @@ from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.PyutUtils import PyutUtils
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -52,7 +53,7 @@ MARGIN:               int = 10
 
 class OglClass(OglObject):
     """
-    OGL object that represent an UML class in class diagrams.
+    OGL object that represents a UML class in class diagrams.
     This class defines OGL objects that represents a class. You can just
     instantiate an OGL class and add it to the diagram, links, resizing,
     ... are managed by parent class `OglObject`.
@@ -513,6 +514,6 @@ class OglClass(OglObject):
 
     def __hash__(self):
 
-        selfPyutObj:  PyutObject = self.getPyutObject()
+        selfPyutObj:  PyutObject = self.pyutObject
 
         return hash(selfPyutObj.getName()) + hash(self.GetID())
