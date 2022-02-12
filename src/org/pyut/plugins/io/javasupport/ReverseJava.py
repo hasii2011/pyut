@@ -95,9 +95,13 @@ class ReverseJava:
             self._umlFrame.addShape(oglClass, 0, 0)
             oglClass.autoResize()
 
-        self.__logMessage('List subclass map keys')
-        for x in self._subClassMap.keys():
-            self.__logMessage(f'subclasses: {x}')
+        self.__logMessage('Layout subclasses map keys')
+        for parent in self._subClassMap.keys():
+            self.__logMessage(f'BaseClass: {parent}')
+            extenders: Extenders = self._subClassMap[parent]
+            for child in extenders:
+                self.__logMessage(f'{parent} <--- {child}')
+                self._umlFrame.createInheritanceLink(child=child, parent=parent)
 
         self.__logMessage("Improving display")
         Margin = 10
@@ -561,8 +565,8 @@ class ReverseJava:
         # Create the interface/inheritance link
         if isInterface is True:
             self._umlFrame.createInterfaceLink(src=po, dst=parent)
-        else:
-            self._umlFrame.createInheritanceLink(child=po, parent=parent)
+        # else:
+        #     self._umlFrame.createInheritanceLink(child=po, parent=parent)
 
     def __addClassFields(self, className, modifiers, fieldType, names_values):
         """
