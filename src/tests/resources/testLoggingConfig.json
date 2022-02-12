@@ -53,6 +53,11 @@
         "org.pyut.dialogs.DlgPyutDebug": {
             "level": "WARNING",
             "propagate": "False"
+        },
+        "org.pyut.plugins.io.javasupport.ReverseJava": {
+            "level":     "INFO",
+            "propagate": "False"
         }
+
     }
 }

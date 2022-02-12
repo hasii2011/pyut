@@ -499,7 +499,7 @@ class OglClass(OglObject):
             assert False, 'Internal error unknown pyutMethod parameter display type'
 
     def __repr__(self):
-        selfName:   str = self.getPyutObject().getName()
+        selfName:   str = self.pyutObject.getName()
         return f'OglClass.{selfName}'
 
     def __eq__(self, other) -> bool:

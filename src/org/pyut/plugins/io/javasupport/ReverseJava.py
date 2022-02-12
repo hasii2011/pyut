@@ -95,6 +95,10 @@ class ReverseJava:
             self._umlFrame.addShape(oglClass, 0, 0)
             oglClass.autoResize()
 
+        self.__logMessage('List subclass map keys')
+        for x in self._subClassMap.keys():
+            self.__logMessage(f'subclasses: {x}')
+
         self.__logMessage("Improving display")
         Margin = 10
         x = Margin
@@ -595,8 +599,8 @@ class ReverseJava:
         """
         Add a method to a class
         Parameters example:
-        ```
-            - static private int getName(int a, long b)
+        ```java
+            static private int getName(int a, long b)
             - className = name of the class which own this method
             - static private => modifiers
             - int            => return type

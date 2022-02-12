@@ -72,12 +72,10 @@ class IoJavaReverse(PyutIoPlugin):
         """
         reverse engineering
 
-        @param oglObjects list of imported objects
-        @param umlFrame : Pyut's UmlFrame
-        @author C.Dutoit <dutoitc@hotmail.com>
-        @since 1.6.2.1
+        Args:
+            oglObjects:     list of imported objects
+            umlFrame:       a Pyut UmlFrame
         """
-
         # Ask for file import
         fileNames, directory = self._askForFileImport(True)
         if len(fileNames) == 0:
