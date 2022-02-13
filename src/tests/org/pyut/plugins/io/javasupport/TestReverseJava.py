@@ -64,7 +64,7 @@ class TestReverseJava(TestBase):
 
         basicClassPath: str = resource_filename(TestBase.RESOURCES_TEST_JAVA_CLASSES_PACKAGE_NAME, 'Tenant.java')
 
-        reverseJava.analyseFile(basicClassPath)
+        reverseJava.parseFile(basicClassPath)
 
         self.assertEqual(1, len(reverseJava.reversedClasses))
 
@@ -97,6 +97,17 @@ class TestReverseJava(TestBase):
 
         self.assertEqual(expectedLength, actualLength, "Incorrect number of subclasses")
 
+    def testCorrectlyGeneratedInterfaceMap(self):
+
+        reverseJava: ReverseJava = self._createReversedOglClasses()
+
+        expectedLength: int = 3
+        actualLength:   int = len(reverseJava.interfaceMap())
+        self.assertEqual(expectedLength, actualLength, 'Incorrect number of interfaces detected')
+
+    def testCorrectlyGeneratedInterfaceEntries(self):
+        reverseJava: ReverseJava = self._createReversedOglClasses()
+
     def _createReversedOglClasses(self) -> ReverseJava:
 
         fileNames: List[str] = [f'{TEST_BASE_CLASS_NAME}.java', 'Feature.java', 'ICreated.java',
@@ -105,7 +116,7 @@ class TestReverseJava(TestBase):
         reverseJava: ReverseJava = ReverseJava(umlFrame=self._mockFrame)
         for fileName in fileNames:
             testFileName: str = resource_filename(TestBase.RESOURCES_TEST_JAVA_CLASSES_PACKAGE_NAME, fileName)
-            reverseJava.analyseFile(testFileName)
+            reverseJava.parseFile(testFileName)
 
         return reverseJava
 

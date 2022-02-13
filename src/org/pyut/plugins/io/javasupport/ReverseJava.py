@@ -36,7 +36,7 @@ class ReverseJava:
 
         self.logger: Logger = getLogger(__name__)
 
-        self._classes:     Dict[str, OglClass] = {}
+        self._classes:      Dict[str, OglClass] = {}
         self._subClassMap:  SubClassMap  = SubClassMap({})
         self._interfaceMap: InterfaceMap = InterfaceMap({})
 
@@ -46,13 +46,22 @@ class ReverseJava:
     def reversedClasses(self) -> Dict[str, OglClass]:
         return self._classes
 
-    def analyseFile(self, filename):
-        """
-        Analyze a file from the specified filename.
+    @property
+    def subClassMap(self) -> SubClassMap:
+        return self._subClassMap
 
-        @param filename : Filename to analyze
-        @author C.Dutoit
-        @since 1.0
+    def interfaceMap(self) -> InterfaceMap:
+        return self._interfaceMap
+
+    def parseFile(self, filename):
+        """
+        Creates entries accessible via the reverseClasses property.
+        Superclass and subclass relationships are captured in the subClassMap property
+        Interface relationships are captured in the interfaceMap property.
+
+        Args:
+            filename:  The java file to parse
+
         """
         # Read the file in lstFile
         f = open(filename, "r")
@@ -90,6 +99,10 @@ class ReverseJava:
             # self.layoutDiagram()
 
     def layoutDiagram(self):
+        """
+        Layout out the generated OglClasses and their inheritance and interface relationships
+
+        """
 
         for oglClass in list(self._classes.values()):
             self._umlFrame.addShape(oglClass, 0, 0)
@@ -187,6 +200,8 @@ class ReverseJava:
                     # Create a class object
                     self.__addClass(interfaceName)
                     self.__addClassParent(className, interfaceName, True)
+
+                    self.__updateInterfaceMap(className, interfaceName)
 
                     # Read comments
                     currentPos = self._readComments(lstFile, currentPos)
@@ -756,6 +771,21 @@ class ReverseJava:
 
         self.logger.info(f'Make extender entry for {superClass} - subclass: {className}')
         self._subClassMap[oglSuperClass] = extenders
+
+    def __updateInterfaceMap(self, className: str, interfaceName: str):
+
+        interfaceClass: OglClass = self._classes[interfaceName]
+        implementor:    OglClass = self._classes[className]
+
+        if interfaceClass in self._interfaceMap:
+            implementors: Implementors = self._interfaceMap[interfaceClass]
+            implementors.update([implementor])
+        else:
+            implementors = Implementors(set())
+            implementors.update([implementor])
+
+        self.logger.info(f'Class {className} implements {interfaceName}')
+        self._interfaceMap[interfaceClass] = implementors
 
     def __logMessage(self, theMessage: str):
         """

@@ -87,7 +87,7 @@ class IoJavaReverse(PyutIoPlugin):
             rj: ReverseJava = ReverseJava(cast(UmlClassDiagramsFrame, umlFrame))
             for filename in fileNames:
                 fqnName: str = f'{directory}{osSep}{filename}'
-                rj.analyseFile(fqnName)
+                rj.parseFile(fqnName)
             rj.layoutDiagram()
             # noinspection PyProtectedMember
             self.logger.warning(f'{len(rj._subClassMap)=}')
