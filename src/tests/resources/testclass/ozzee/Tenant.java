@@ -1,6 +1,6 @@
 package ozzee;
 
-public class Tenant {
+public class Tenant extends BaseModel {
 
     private String name;
 

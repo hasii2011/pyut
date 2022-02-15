@@ -65,14 +65,15 @@ class TestReverseJava(TestBase):
         pass
 
     def testBasicClass(self):
-        # rj: ReverseJava = ReverseJava(cast(UmlClassDiagramsFrame, umlFrame))
+
         reverseJava: ReverseJava = ReverseJava(umlFrame=self._mockFrame)
 
         basicClassPath: str = resource_filename(TestBase.RESOURCES_TEST_JAVA_CLASSES_PACKAGE_NAME, 'Tenant.java')
 
         reverseJava.parseFile(basicClassPath)
 
-        self.assertEqual(1, len(reverseJava.reversedClasses))
+        # 2 because implements BaseModel
+        self.assertEqual(2, len(reverseJava.reversedClasses))
 
     def testCorrectlyGeneratedSingleSubclassMap(self):
 
@@ -98,7 +99,7 @@ class TestReverseJava(TestBase):
 
         extenders: Extenders = reverseJava._subClassMap[testBaseClass]
 
-        expectedLength: int = 2
+        expectedLength: int = 3     # Because Tenant also extends BaseModel
         actualLength:   int = len(extenders)
 
         self.assertEqual(expectedLength, actualLength, "Incorrect number of subclasses")

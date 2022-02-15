@@ -1,7 +1,9 @@
 
 from typing import Dict
+from typing import List
 from typing import NewType
 from typing import Set
+from typing import TextIO
 from typing import cast
 
 from logging import Logger
@@ -54,7 +56,7 @@ class ReverseJava:
     def interfaceMap(self) -> InterfaceMap:
         return self._interfaceMap
 
-    def parseFile(self, filename):
+    def parseFile(self, filename: str):
         """
         Creates entries accessible via the reverseClasses property.
         Superclass and subclass relationships are captured in the subClassMap property
@@ -64,40 +66,37 @@ class ReverseJava:
             filename:  The java file to parse
 
         """
-        # Read the file in lstFile
-        f = open(filename, "r")
-        lstFileTempo = f.readlines()
-        f.close()
-        lstFile = []
-        for el in lstFileTempo:
+        # Read the file into a list of strings one for each line
+        reader:       TextIO = open(filename, "r")
+        temporaryList: List[str] = reader.readlines()
+        reader.close()
+        #
+        # Split file into many words
+        wordList: List[str] = []
+        for el in temporaryList:
             fraction = el.split()
-            lstFile += self.__mySplit(fraction)
-            lstFile.append("\n")
-        # lstFileTempo = None
+            wordList += self.__mySplit(fraction)
+            wordList.append("\n")
 
-        # Read file
+        # parse the file
         currentPos = 0
         try:
-            while currentPos < len(lstFile):
+            while currentPos < len(wordList):
                 # Analyze word
                 self.__logMessage(f"\n analyzing word {currentPos}")
                 self.__logMessage("***")
-                self.__logMessage(f"{lstFile}")
+                self.__logMessage(f"{wordList}")
 
                 # Read comments
-                currentPos = self._readComments(lstFile, currentPos)
+                currentPos = self._readComments(wordList, currentPos)
 
                 # new class ?
-                if self._isClassBeginning(lstFile, currentPos):
-                    currentPos = self._readClass(lstFile, currentPos)
+                if self._isClassBeginning(wordList, currentPos):
+                    currentPos = self._readClass(wordList, currentPos)
                 currentPos += 1
         except (ValueError, Exception) as e:
             self.logger.error(f'Error in ReverseJava - {type(e)} {e}')
             raise e
-
-        # finally:
-            # Best display
-            # self.layoutDiagram()
 
     def layoutDiagram(self):
         """
@@ -105,11 +104,13 @@ class ReverseJava:
 
         """
 
+        self.__logMessage('Add the classes')
+
         for oglClass in list(self._classes.values()):
             self._umlFrame.addShape(oglClass, 0, 0)
             oglClass.autoResize()
 
-        self.__logMessage('Layout subclasses map keys')
+        self.__logMessage('Connect subclasses')
         for parent in self._subClassMap.keys():
             self.__logMessage(f'BaseClass: {parent}')
             extenders: Extenders = self._subClassMap[parent]
@@ -117,16 +118,17 @@ class ReverseJava:
                 self.__logMessage(f'{parent} <--- {child}')
                 self._umlFrame.createInheritanceLink(child=child, parent=parent)
 
+        self.__logMessage('Connect interfaces')
         for interface in self._interfaceMap.keys():
             implementors: Implementors = self._interfaceMap[interface]
             for implementor in implementors:
                 self._umlFrame.createInterfaceLink(src=implementor, dst=interface)
 
-        self.__logMessage("Improving display")
-        Margin = 10
-        x = Margin
-        y = Margin
-        dy = 10
+        self.__logMessage("Relay-out to improve display")
+        Margin: int = 10
+        x:      int = Margin
+        y:      int = Margin
+        dy:     int = 10
         for po in list(self._classes.values()):
             self.__logMessage(".")
             try:  # Catch exceptions
@@ -144,26 +146,26 @@ class ReverseJava:
             except (ValueError, Exception) as e:
                 self.__logMessage(f"Error in IoJavaReverse.py {e}. Please report !")
 
-    def _readClass(self, lstFile, currentPos):
+    def _readClass(self, wordList: List[str], currentPos: int):
         """
         Read a class from a list of strings, beginning on a given position.
         This class reads one class from lstFile, from currentLine.
 
         Args:
-            lstFile:    list of instructions read from the file to analyze
+            wordList:   list of instructions read from the file to analyze
             currentPos: last read line pointer, Pyut's OglClass object, class name
 
         Returns:  Returns the updated current position (read line pointer)
         """
         # Pass modifiers
-        while lstFile[currentPos] in CLASS_MODIFIER:
+        while wordList[currentPos] in CLASS_MODIFIER:
             currentPos += 1
 
         # Read "class"
         currentPos += 1
 
         # Read class name
-        className = lstFile[currentPos]
+        className = wordList[currentPos]
         self.__logMessage(f"Reading className {className}")
         currentPos += 1
 
@@ -171,16 +173,16 @@ class ReverseJava:
         self.__addClass(className)
 
         # Remove end of lines
-        currentPos = self.__selectNextAfter(lstFile, currentPos, ['\n', ''])
+        currentPos = self.__selectNextAfter(wordList, currentPos, ['\n', ''])
 
         # Read inheritance and interface parameters
-        while lstFile[currentPos] in ["extends", "implements"]:
-            if lstFile[currentPos] == "extends":
+        while wordList[currentPos] in ["extends", "implements"]:
+            if wordList[currentPos] == "extends":
                 # Next token, points on superClass name
                 currentPos += 1
 
                 # Get superclass
-                superClass = lstFile[currentPos]
+                superClass = wordList[currentPos]
                 currentPos += 1
                 self.__logMessage(f' - superclass={superClass}')
 
@@ -190,14 +192,14 @@ class ReverseJava:
 
             else:  # implements
                 shouldExit: bool = False
-                self.__logMessage(f"Reading interface... {lstFile[currentPos:currentPos + 5]}")
+                self.__logMessage(f"Reading interface... {wordList[currentPos:currentPos + 5]}")
                 while not shouldExit:
                     # Next token, points on first interface name
                     currentPos += 1
-                    currentPos = self.__selectNextAfter(lstFile, currentPos, ['\n', ''])
+                    currentPos = self.__selectNextAfter(wordList, currentPos, ['\n', ''])
 
                     # Get interface name
-                    interfaceName = lstFile[currentPos]
+                    interfaceName = wordList[currentPos]
                     self.__logMessage(f" - interface={interfaceName}")
                     currentPos += 1
 
@@ -206,63 +208,63 @@ class ReverseJava:
                     self.__updateInterfaceMap(className, interfaceName)
 
                     # Read comments
-                    currentPos = self._readComments(lstFile, currentPos)
-                    currentPos = self.__selectNextAfter(lstFile, currentPos, ['\n', ''])
+                    currentPos = self._readComments(wordList, currentPos)
+                    currentPos = self.__selectNextAfter(wordList, currentPos, ['\n', ''])
 
                     # Exit if no more implementations
-                    if lstFile[currentPos] != ",":
+                    if wordList[currentPos] != ",":
                         shouldExit = True
 
             # Remove end of lines
-            currentPos = self.__selectNextAfter(lstFile, currentPos, ['\n', ''])
+            currentPos = self.__selectNextAfter(wordList, currentPos, ['\n', ''])
 
         # Read comments
-        currentPos = self._readComments(lstFile, currentPos)
+        currentPos = self._readComments(wordList, currentPos)
 
         # Remove end of lines
-        currentPos = self.__selectNextAfter(lstFile, currentPos, ['\n', ''])
+        currentPos = self.__selectNextAfter(wordList, currentPos, ['\n', ''])
 
         # End of class ?
-        if lstFile[currentPos] == ";":
+        if wordList[currentPos] == ";":
             return currentPos
 
         # Remove end of lines
-        currentPos = self.__selectNextAfter(lstFile, currentPos, ['\n', ''])
+        currentPos = self.__selectNextAfter(wordList, currentPos, ['\n', ''])
 
         # Read comments
-        currentPos = self._readComments(lstFile, currentPos)
+        currentPos = self._readComments(wordList, currentPos)
 
         # Class beginning ?
-        self.__logMessage("lstFile=%s" % lstFile[currentPos:currentPos + 5])
-        if lstFile[currentPos] != "{":
-            self.__logMessage(f"DBG class >> {lstFile[currentPos]}")
-            self.__logMessage(f"Unexpected characters : {lstFile[currentPos:currentPos + 5]}")
+        self.__logMessage("lstFile=%s" % wordList[currentPos:currentPos + 5])
+        if wordList[currentPos] != "{":
+            self.__logMessage(f"DBG class >> {wordList[currentPos]}")
+            self.__logMessage(f"Unexpected characters : {wordList[currentPos:currentPos + 5]}")
             self.__logMessage("   exiting class reader !\n")
             return currentPos
         currentPos += 1
 
         # Read class
         level = 1  # level of indentation
-        while level > 0 and currentPos < len(lstFile):
+        while level > 0 and currentPos < len(wordList):
             # Read comments
-            currentPos = self._readComments(lstFile, currentPos)
+            currentPos = self._readComments(wordList, currentPos)
 
             # Change level ?
-            if lstFile[currentPos] == "{":
+            if wordList[currentPos] == "{":
                 level += 1
-            elif lstFile[currentPos] == "}":
+            elif wordList[currentPos] == "}":
                 level -= 1
             elif level == 1:
-                (succeeded, aTuple, currentPos) = self._readVariable(lstFile, currentPos, True)
+                (succeeded, aTuple, currentPos) = self._readVariable(wordList, currentPos, True)
                 if succeeded:
                     (modifiers, fieldType, names_values) = aTuple
                     self.__addClassFields(className, modifiers, fieldType, names_values)
                 else:
                     # Read comments
-                    currentPos = self._readComments(lstFile, currentPos)
+                    currentPos = self._readComments(wordList, currentPos)
 
                     # Read method
-                    (succeeded, aTuple, currentPos) = self._readMethod(lstFile, currentPos, className, True)
+                    (succeeded, aTuple, currentPos) = self._readMethod(wordList, currentPos, className, True)
                     if succeeded:
                         (modifiers, methodType, name, lstFields) = aTuple
                         self.__addClassMethod(className, modifiers, methodType, name, lstFields)
