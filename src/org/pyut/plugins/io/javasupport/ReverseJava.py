@@ -117,6 +117,11 @@ class ReverseJava:
                 self.__logMessage(f'{parent} <--- {child}')
                 self._umlFrame.createInheritanceLink(child=child, parent=parent)
 
+        for interface in self._interfaceMap.keys():
+            implementors: Implementors = self._interfaceMap[interface]
+            for implementor in implementors:
+                self._umlFrame.createInterfaceLink(src=implementor, dst=interface)
+
         self.__logMessage("Improving display")
         Margin = 10
         x = Margin
@@ -181,8 +186,6 @@ class ReverseJava:
 
                 # Create a class object
                 self.__addClass(superClass)
-                self.__addClassParent(className, superClass)
-
                 self.__updateExtendersMap(className, superClass)
 
             else:  # implements
@@ -200,8 +203,6 @@ class ReverseJava:
 
                     # Create a class object
                     self.__addClass(interfaceName)
-                    self.__addClassParent(className, interfaceName, True)
-
                     self.__updateInterfaceMap(className, interfaceName)
 
                     # Read comments
@@ -552,37 +553,10 @@ class ReverseJava:
         # Create the class
         pc: PyutClass = PyutClass(className)  # A new PyutClass
         po: OglClass = OglClass(pc)  # A new OglClass
-        # self._umlFrame.addShape(po, 0, 0)
-        # po.autoResize()
+
         self._classes[className] = po
 
         return po
-
-    def __addClassParent(self, className, parentName, isInterface: bool = False):
-        """
-
-        Args:
-            className:  Name of the class to be added
-            parentName: Name of the parent
-            isInterface:  True if the link must be for an interface
-
-        """
-        self.__logMessage(f'Adding father {parentName} for class {className}')
-
-        # Get the OglClass object for the child class
-        po = self._classes[className]
-
-        # Create parent class ?
-        if parentName in self._classes:
-            parent: OglClass = self._classes[parentName]
-        else:
-            parent = self.__addClass(parentName)
-
-        # Create the interface/inheritance link
-        if isInterface is True:
-            self._umlFrame.createInterfaceLink(src=po, dst=parent)
-        # else:
-        #     self._umlFrame.createInheritanceLink(child=po, parent=parent)
 
     def __addClassFields(self, className, modifiers, fieldType, names_values):
         """
@@ -765,10 +739,10 @@ class ReverseJava:
 
         if oglSuperClass in self._subClassMap:
             extenders: Extenders = self._subClassMap[oglSuperClass]
-            extenders.update([oglClass])
+            extenders.add(oglClass)
         else:
             extenders = Extenders(set())
-            extenders.update([oglClass])
+            extenders.add(oglClass)
 
         self.logger.debug(f'Make extender entry for {superClass} - subclass: {className}')
         self._subClassMap[oglSuperClass] = extenders
@@ -780,10 +754,10 @@ class ReverseJava:
 
         if interfaceClass in self._interfaceMap:
             implementors: Implementors = self._interfaceMap[interfaceClass]
-            implementors.update([implementor])
+            implementors.add(implementor)
         else:
             implementors = Implementors(set())
-            implementors.update([implementor])
+            implementors.add(implementor)
 
         self.logger.debug(f'Class {className} implements {interfaceName}')
         self._interfaceMap[interfaceClass] = implementors
