@@ -21,12 +21,13 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 Implementors = NewType('Implementors', Set[OglClass])
 Extenders    = NewType('Extenders', Set[OglClass])
 
-SubClassMap  = NewType('SubClassMap', Dict[OglClass, Extenders])
-InterfaceMap = NewType('InterfaceMap', Dict[OglClass, Implementors])
+ReversedClasses = NewType('ReversedClasses', Dict[str, OglClass])
+SubClassMap     = NewType('SubClassMap', Dict[OglClass, Extenders])
+InterfaceMap    = NewType('InterfaceMap', Dict[OglClass, Implementors])
 
 # Constants
-CLASS_MODIFIER = ["public", "protected", "private", "abstract", "final", "static", "strictfp"]
-FIELD_MODIFIERS = ["public", "protected", "private", "static", "final", "transient", "volatile"]
+CLASS_MODIFIER   = ["public", "protected", "private", "abstract", "final", "static", "strictfp"]
+FIELD_MODIFIERS  = ["public", "protected", "private", "static", "final", "transient", "volatile"]
 METHOD_MODIFIERS = ["public", "protected", "private", "abstract", "static", "final", "synchronized", "native", "strictfp"]
 
 
@@ -36,14 +37,14 @@ class ReverseJava:
 
         self.logger: Logger = getLogger(__name__)
 
-        self._classes:      Dict[str, OglClass] = {}
+        self._classes:      ReversedClasses = ReversedClasses({})
         self._subClassMap:  SubClassMap  = SubClassMap({})
         self._interfaceMap: InterfaceMap = InterfaceMap({})
 
         self._umlFrame: UmlClassDiagramsFrame = umlFrame
 
     @property
-    def reversedClasses(self) -> Dict[str, OglClass]:
+    def reversedClasses(self) -> ReversedClasses:
         return self._classes
 
     @property
@@ -769,7 +770,7 @@ class ReverseJava:
             extenders = Extenders(set())
             extenders.update([oglClass])
 
-        self.logger.info(f'Make extender entry for {superClass} - subclass: {className}')
+        self.logger.debug(f'Make extender entry for {superClass} - subclass: {className}')
         self._subClassMap[oglSuperClass] = extenders
 
     def __updateInterfaceMap(self, className: str, interfaceName: str):
@@ -784,7 +785,7 @@ class ReverseJava:
             implementors = Implementors(set())
             implementors.update([implementor])
 
-        self.logger.info(f'Class {className} implements {interfaceName}')
+        self.logger.debug(f'Class {className} implements {interfaceName}')
         self._interfaceMap[interfaceClass] = implementors
 
     def __logMessage(self, theMessage: str):
@@ -794,4 +795,4 @@ class ReverseJava:
             theMessage:
 
         """
-        self.logger.info(f"{theMessage}")
+        self.logger.debug(f"{theMessage}")

@@ -12,10 +12,13 @@ from pkg_resources import resource_filename
 
 from wx import App
 
+from org.pyut.model.ModelTypes import Implementors
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.io.javasupport.ReverseJava import Extenders
+from org.pyut.plugins.io.javasupport.ReverseJava import InterfaceMap
 from org.pyut.plugins.io.javasupport.ReverseJava import ReverseJava
+from org.pyut.plugins.io.javasupport.ReverseJava import ReversedClasses
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -23,7 +26,10 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from tests.TestBase import TestBase
 
-TEST_BASE_CLASS_NAME: str = 'BaseModel'
+TEST_BASE_CLASS_NAME:  str = 'BaseModel'
+TEST_INTERFACE_NAME_1: str = 'IModified'
+TEST_INTERFACE_NAME_2: str = 'ICreated'
+TEST_INTERFACE_NAME_3: str = 'Tenancy'
 
 
 class TestReverseJava(TestBase):
@@ -108,10 +114,29 @@ class TestReverseJava(TestBase):
     def testCorrectlyGeneratedInterfaceEntries(self):
         reverseJava: ReverseJava = self._createReversedOglClasses()
 
+        reversedClasses: ReversedClasses = reverseJava.reversedClasses
+        interfaceMap:    InterfaceMap    = reverseJava.interfaceMap()
+
+        self._checkInterface(reversedClasses, interfaceMap, TEST_INTERFACE_NAME_1)
+        self._checkInterface(reversedClasses, interfaceMap, TEST_INTERFACE_NAME_2)
+        self._checkInterface(reversedClasses, interfaceMap, TEST_INTERFACE_NAME_3)
+
+    def testCorrectlyGeneratedImplementors(self):
+
+        reverseJava: ReverseJava = self._createReversedOglClasses()
+
+        reversedClasses: ReversedClasses = reverseJava.reversedClasses
+        interfaceMap:    InterfaceMap    = reverseJava.interfaceMap()
+
+        self._checkImplementors(interfaceMap, reversedClasses, TEST_INTERFACE_NAME_1, TEST_BASE_CLASS_NAME)
+        self._checkImplementors(interfaceMap, reversedClasses, TEST_INTERFACE_NAME_2, TEST_BASE_CLASS_NAME)
+        self._checkImplementors(interfaceMap, reversedClasses, TEST_INTERFACE_NAME_3, 'Feature')
+
     def _createReversedOglClasses(self) -> ReverseJava:
 
-        fileNames: List[str] = [f'{TEST_BASE_CLASS_NAME}.java', 'Feature.java', 'ICreated.java',
-                                'IModified.java', 'Tenancy.java', 'Tenant.java', 'User.java'
+        fileNames: List[str] = [f'{TEST_BASE_CLASS_NAME}.java', 'Feature.java', f'{TEST_INTERFACE_NAME_2}.java',
+                                f'{TEST_INTERFACE_NAME_1}.java',
+                                f'{TEST_INTERFACE_NAME_3}.java', 'Tenant.java', 'User.java'
                                 ]
         reverseJava: ReverseJava = ReverseJava(umlFrame=self._mockFrame)
         for fileName in fileNames:
@@ -119,6 +144,21 @@ class TestReverseJava(TestBase):
             reverseJava.parseFile(testFileName)
 
         return reverseJava
+
+    def _checkInterface(self, reversedClasses, interfaceMap, interfaceName: str):
+
+        interfaces = interfaceMap.keys()
+
+        interfaceClass: OglClass = reversedClasses[interfaceName]
+        self.assertIn(interfaceClass, interfaces)
+
+    def _checkImplementors(self, interfaceMap, reversedClasses, interfaceName, implementorName):
+
+        interfaceClass:    OglClass     = reversedClasses[interfaceName]
+        implementingClass: OglClass     = reversedClasses[implementorName]
+        implementors:      Implementors = interfaceMap[interfaceClass]
+
+        self.assertIn(implementingClass, implementors)
 
 
 def suite() -> TestSuite:
