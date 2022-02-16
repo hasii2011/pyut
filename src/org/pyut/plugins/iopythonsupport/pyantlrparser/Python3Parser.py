@@ -1,4 +1,4 @@
-# Generated from Python3.g4 by ANTLR 4.8
+# Generated from Python3.g4 by ANTLR 4.9.3
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -590,44 +590,44 @@ class Python3Parser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
-                     "'def'", "'return'", "'raise'", "'from'", "'import'",
-                     "'as'", "'global'", "'nonlocal'", "'assert'", "'if'",
-                     "'elif'", "'else'", "'while'", "'for'", "'in'", "'try'",
-                     "'finally'", "'with'", "'except'", "'lambda'", "'or'",
-                     "'and'", "'not'", "'is'", "'None'", "'True'", "'False'",
-                     "'class'", "'yield'", "'del'", "'pass'", "'continue'",
-                     "'break'", "'async'", "'await'", "<INVALID>", "<INVALID>",
-                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
-                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
-                     "'.'", "'...'", "'*'", "'('", "')'", "','", "':'",
-                     "';'", "'**'", "'='", "'['", "']'", "'|'", "'^'", "'&'",
-                     "'<<'", "'>>'", "'+'", "'-'", "'/'", "'%'", "'//'",
-                     "'~'", "'{'", "'}'", "'<'", "'>'", "'=='", "'>='",
-                     "'<='", "'<>'", "'!='", "'@'", "'->'", "'+='", "'-='",
-                     "'*='", "'@='", "'/='", "'%='", "'&='", "'|='", "'^='",
+    literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "'def'", "'return'", "'raise'", "'from'", "'import'", 
+                     "'as'", "'global'", "'nonlocal'", "'assert'", "'if'", 
+                     "'elif'", "'else'", "'while'", "'for'", "'in'", "'try'", 
+                     "'finally'", "'with'", "'except'", "'lambda'", "'or'", 
+                     "'and'", "'not'", "'is'", "'None'", "'True'", "'False'", 
+                     "'class'", "'yield'", "'del'", "'pass'", "'continue'", 
+                     "'break'", "'async'", "'await'", "<INVALID>", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "'.'", "'...'", "'*'", "'('", "')'", "','", "':'", 
+                     "';'", "'**'", "'='", "'['", "']'", "'|'", "'^'", "'&'", 
+                     "'<<'", "'>>'", "'+'", "'-'", "'/'", "'%'", "'//'", 
+                     "'~'", "'{'", "'}'", "'<'", "'>'", "'=='", "'>='", 
+                     "'<='", "'<>'", "'!='", "'@'", "'->'", "'+='", "'-='", 
+                     "'*='", "'@='", "'/='", "'%='", "'&='", "'|='", "'^='", 
                      "'<<='", "'>>='", "'**='", "'//='" ]
 
-    symbolicNames = [ "<INVALID>", "STRING", "NUMBER", "INTEGER", "DEF",
-                      "RETURN", "RAISE", "FROM", "IMPORT", "AS", "GLOBAL",
-                      "NONLOCAL", "ASSERT", "IF", "ELIF", "ELSE", "WHILE",
-                      "FOR", "IN", "TRY", "FINALLY", "WITH", "EXCEPT", "LAMBDA",
-                      "OR", "AND", "NOT", "IS", "NONE", "TRUE", "FALSE",
-                      "CLASS", "YIELD", "DEL", "PASS", "CONTINUE", "BREAK",
-                      "ASYNC", "AWAIT", "NEWLINE", "NAME", "STRING_LITERAL",
-                      "BYTES_LITERAL", "DECIMAL_INTEGER", "OCT_INTEGER",
-                      "HEX_INTEGER", "BIN_INTEGER", "FLOAT_NUMBER", "IMAG_NUMBER",
-                      "DOT", "ELLIPSIS", "STAR", "OPEN_PAREN", "CLOSE_PAREN",
-                      "COMMA", "COLON", "SEMI_COLON", "POWER", "ASSIGN",
-                      "OPEN_BRACK", "CLOSE_BRACK", "OR_OP", "XOR", "AND_OP",
-                      "LEFT_SHIFT", "RIGHT_SHIFT", "ADD", "MINUS", "DIV",
-                      "MOD", "IDIV", "NOT_OP", "OPEN_BRACE", "CLOSE_BRACE",
-                      "LESS_THAN", "GREATER_THAN", "EQUALS", "GT_EQ", "LT_EQ",
-                      "NOT_EQ_1", "NOT_EQ_2", "AT", "ARROW", "ADD_ASSIGN",
-                      "SUB_ASSIGN", "MULT_ASSIGN", "AT_ASSIGN", "DIV_ASSIGN",
-                      "MOD_ASSIGN", "AND_ASSIGN", "OR_ASSIGN", "XOR_ASSIGN",
-                      "LEFT_SHIFT_ASSIGN", "RIGHT_SHIFT_ASSIGN", "POWER_ASSIGN",
-                      "IDIV_ASSIGN", "SKIP_", "UNKNOWN_CHAR", "INDENT",
+    symbolicNames = [ "<INVALID>", "STRING", "NUMBER", "INTEGER", "DEF", 
+                      "RETURN", "RAISE", "FROM", "IMPORT", "AS", "GLOBAL", 
+                      "NONLOCAL", "ASSERT", "IF", "ELIF", "ELSE", "WHILE", 
+                      "FOR", "IN", "TRY", "FINALLY", "WITH", "EXCEPT", "LAMBDA", 
+                      "OR", "AND", "NOT", "IS", "NONE", "TRUE", "FALSE", 
+                      "CLASS", "YIELD", "DEL", "PASS", "CONTINUE", "BREAK", 
+                      "ASYNC", "AWAIT", "NEWLINE", "NAME", "STRING_LITERAL", 
+                      "BYTES_LITERAL", "DECIMAL_INTEGER", "OCT_INTEGER", 
+                      "HEX_INTEGER", "BIN_INTEGER", "FLOAT_NUMBER", "IMAG_NUMBER", 
+                      "DOT", "ELLIPSIS", "STAR", "OPEN_PAREN", "CLOSE_PAREN", 
+                      "COMMA", "COLON", "SEMI_COLON", "POWER", "ASSIGN", 
+                      "OPEN_BRACK", "CLOSE_BRACK", "OR_OP", "XOR", "AND_OP", 
+                      "LEFT_SHIFT", "RIGHT_SHIFT", "ADD", "MINUS", "DIV", 
+                      "MOD", "IDIV", "NOT_OP", "OPEN_BRACE", "CLOSE_BRACE", 
+                      "LESS_THAN", "GREATER_THAN", "EQUALS", "GT_EQ", "LT_EQ", 
+                      "NOT_EQ_1", "NOT_EQ_2", "AT", "ARROW", "ADD_ASSIGN", 
+                      "SUB_ASSIGN", "MULT_ASSIGN", "AT_ASSIGN", "DIV_ASSIGN", 
+                      "MOD_ASSIGN", "AND_ASSIGN", "OR_ASSIGN", "XOR_ASSIGN", 
+                      "LEFT_SHIFT_ASSIGN", "RIGHT_SHIFT_ASSIGN", "POWER_ASSIGN", 
+                      "IDIV_ASSIGN", "SKIP_", "UNKNOWN_CHAR", "INDENT", 
                       "DEDENT" ]
 
     RULE_single_input = 0
@@ -717,25 +717,25 @@ class Python3Parser ( Parser ):
     RULE_yield_expr = 84
     RULE_yield_arg = 85
 
-    ruleNames =  [ "single_input", "file_input", "eval_input", "decorator",
-                   "decorators", "decorated", "async_funcdef", "funcdef",
-                   "parameters", "typedargslist", "tfpdef", "varargslist",
-                   "vfpdef", "stmt", "simple_stmt", "small_stmt", "expr_stmt",
-                   "annassign", "testlist_star_expr", "augassign", "del_stmt",
-                   "pass_stmt", "flow_stmt", "break_stmt", "continue_stmt",
-                   "return_stmt", "yield_stmt", "raise_stmt", "import_stmt",
-                   "import_name", "import_from", "import_as_name", "dotted_as_name",
-                   "import_as_names", "dotted_as_names", "dotted_name",
-                   "global_stmt", "nonlocal_stmt", "assert_stmt", "compound_stmt",
-                   "async_stmt", "if_stmt", "while_stmt", "for_stmt", "try_stmt",
-                   "with_stmt", "with_item", "except_clause", "suite", "test",
-                   "test_nocond", "lambdef", "lambdef_nocond", "or_test",
-                   "and_test", "not_test", "comparison", "comp_op", "star_expr",
-                   "expr", "xor_expr", "and_expr", "shift_expr", "arith_expr",
-                   "term", "factor", "power", "atom_expr", "atom", "testlist_comp",
-                   "trailer", "subscriptlist", "subscript", "sliceop", "exprlist",
-                   "testlist", "dictorsetmaker", "classdef", "arglist",
-                   "argument", "comp_iter", "comp_for", "comp_if", "encoding_decl",
+    ruleNames =  [ "single_input", "file_input", "eval_input", "decorator", 
+                   "decorators", "decorated", "async_funcdef", "funcdef", 
+                   "parameters", "typedargslist", "tfpdef", "varargslist", 
+                   "vfpdef", "stmt", "simple_stmt", "small_stmt", "expr_stmt", 
+                   "annassign", "testlist_star_expr", "augassign", "del_stmt", 
+                   "pass_stmt", "flow_stmt", "break_stmt", "continue_stmt", 
+                   "return_stmt", "yield_stmt", "raise_stmt", "import_stmt", 
+                   "import_name", "import_from", "import_as_name", "dotted_as_name", 
+                   "import_as_names", "dotted_as_names", "dotted_name", 
+                   "global_stmt", "nonlocal_stmt", "assert_stmt", "compound_stmt", 
+                   "async_stmt", "if_stmt", "while_stmt", "for_stmt", "try_stmt", 
+                   "with_stmt", "with_item", "except_clause", "suite", "test", 
+                   "test_nocond", "lambdef", "lambdef_nocond", "or_test", 
+                   "and_test", "not_test", "comparison", "comp_op", "star_expr", 
+                   "expr", "xor_expr", "and_expr", "shift_expr", "arith_expr", 
+                   "term", "factor", "power", "atom_expr", "atom", "testlist_comp", 
+                   "trailer", "subscriptlist", "subscript", "sliceop", "exprlist", 
+                   "testlist", "dictorsetmaker", "classdef", "arglist", 
+                   "argument", "comp_iter", "comp_for", "comp_if", "encoding_decl", 
                    "yield_expr", "yield_arg" ]
 
     EOF = Token.EOF
@@ -841,7 +841,7 @@ class Python3Parser ( Parser ):
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.8")
+        self.checkVersion("4.9.3")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -849,6 +849,7 @@ class Python3Parser ( Parser ):
 
 
     class Single_inputContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -923,6 +924,7 @@ class Python3Parser ( Parser ):
 
 
     class File_inputContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1005,6 +1007,7 @@ class Python3Parser ( Parser ):
 
 
     class Eval_inputContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1074,6 +1077,7 @@ class Python3Parser ( Parser ):
 
 
     class DecoratorContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1160,6 +1164,7 @@ class Python3Parser ( Parser ):
 
 
     class DecoratorsContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1199,13 +1204,13 @@ class Python3Parser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 209
+            self.state = 209 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
                 self.state = 208
                 self.decorator()
-                self.state = 211
+                self.state = 211 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if not (_la==Python3Parser.AT):
@@ -1221,6 +1226,7 @@ class Python3Parser ( Parser ):
 
 
     class DecoratedContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1298,6 +1304,7 @@ class Python3Parser ( Parser ):
 
 
     class Async_funcdefContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1350,6 +1357,7 @@ class Python3Parser ( Parser ):
 
 
     class FuncdefContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1436,6 +1444,7 @@ class Python3Parser ( Parser ):
 
 
     class ParametersContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1500,6 +1509,7 @@ class Python3Parser ( Parser ):
 
 
     class TypedargslistContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1598,7 +1608,7 @@ class Python3Parser ( Parser ):
                             self.state = 246
                             self.test()
 
-
+                 
                     self.state = 253
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,12,self._ctx)
@@ -1641,7 +1651,7 @@ class Python3Parser ( Parser ):
                                     self.state = 262
                                     self.test()
 
-
+                         
                             self.state = 269
                             self._errHandler.sync(self)
                             _alt = self._interp.adaptivePredict(self._input,15,self._ctx)
@@ -1723,7 +1733,7 @@ class Python3Parser ( Parser ):
                             self.state = 296
                             self.test()
 
-
+                 
                     self.state = 303
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,24,self._ctx)
@@ -1782,6 +1792,7 @@ class Python3Parser ( Parser ):
 
 
     class TfpdefContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1846,6 +1857,7 @@ class Python3Parser ( Parser ):
 
 
     class VarargslistContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1944,7 +1956,7 @@ class Python3Parser ( Parser ):
                             self.state = 334
                             self.test()
 
-
+                 
                     self.state = 341
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,33,self._ctx)
@@ -1987,7 +1999,7 @@ class Python3Parser ( Parser ):
                                     self.state = 350
                                     self.test()
 
-
+                         
                             self.state = 357
                             self._errHandler.sync(self)
                             _alt = self._interp.adaptivePredict(self._input,36,self._ctx)
@@ -2069,7 +2081,7 @@ class Python3Parser ( Parser ):
                             self.state = 384
                             self.test()
 
-
+                 
                     self.state = 391
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,45,self._ctx)
@@ -2128,6 +2140,7 @@ class Python3Parser ( Parser ):
 
 
     class VfpdefContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2174,6 +2187,7 @@ class Python3Parser ( Parser ):
 
 
     class StmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2238,6 +2252,7 @@ class Python3Parser ( Parser ):
 
 
     class Simple_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2296,7 +2311,7 @@ class Python3Parser ( Parser ):
                     self.state = 416
                     self.match(Python3Parser.SEMI_COLON)
                     self.state = 417
-                    self.small_stmt()
+                    self.small_stmt() 
                 self.state = 422
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,52,self._ctx)
@@ -2321,6 +2336,7 @@ class Python3Parser ( Parser ):
 
 
     class Small_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2432,6 +2448,7 @@ class Python3Parser ( Parser ):
 
 
     class Expr_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2562,6 +2579,7 @@ class Python3Parser ( Parser ):
 
 
     class AnnassignContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2631,6 +2649,7 @@ class Python3Parser ( Parser ):
 
 
     class Testlist_star_exprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2717,7 +2736,7 @@ class Python3Parser ( Parser ):
                         pass
                     else:
                         raise NoViableAltException(self)
-
+             
                 self.state = 476
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,62,self._ctx)
@@ -2740,6 +2759,7 @@ class Python3Parser ( Parser ):
 
 
     class AugassignContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2828,6 +2848,7 @@ class Python3Parser ( Parser ):
 
 
     class Del_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2880,6 +2901,7 @@ class Python3Parser ( Parser ):
 
 
     class Pass_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2926,6 +2948,7 @@ class Python3Parser ( Parser ):
 
 
     class Flow_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3017,6 +3040,7 @@ class Python3Parser ( Parser ):
 
 
     class Break_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3063,6 +3087,7 @@ class Python3Parser ( Parser ):
 
 
     class Continue_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3109,6 +3134,7 @@ class Python3Parser ( Parser ):
 
 
     class Return_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3168,6 +3194,7 @@ class Python3Parser ( Parser ):
 
 
     class Yield_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3215,6 +3242,7 @@ class Python3Parser ( Parser ):
 
 
     class Raise_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3290,6 +3318,7 @@ class Python3Parser ( Parser ):
 
 
     class Import_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3354,6 +3383,7 @@ class Python3Parser ( Parser ):
 
 
     class Import_nameContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3406,6 +3436,7 @@ class Python3Parser ( Parser ):
 
 
     class Import_fromContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3499,7 +3530,7 @@ class Python3Parser ( Parser ):
                 pass
 
             elif la_ == 2:
-                self.state = 528
+                self.state = 528 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
@@ -3510,7 +3541,7 @@ class Python3Parser ( Parser ):
                     else:
                         self._errHandler.reportMatch(self)
                         self.consume()
-                    self.state = 530
+                    self.state = 530 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==Python3Parser.DOT or _la==Python3Parser.ELLIPSIS):
@@ -3553,6 +3584,7 @@ class Python3Parser ( Parser ):
 
 
     class Import_as_nameContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3616,6 +3648,7 @@ class Python3Parser ( Parser ):
 
 
     class Dotted_as_nameContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3680,6 +3713,7 @@ class Python3Parser ( Parser ):
 
 
     class Import_as_namesContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3735,7 +3769,7 @@ class Python3Parser ( Parser ):
                     self.state = 554
                     self.match(Python3Parser.COMMA)
                     self.state = 555
-                    self.import_as_name()
+                    self.import_as_name() 
                 self.state = 560
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,75,self._ctx)
@@ -3758,6 +3792,7 @@ class Python3Parser ( Parser ):
 
 
     class Dotted_as_namesContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3827,6 +3862,7 @@ class Python3Parser ( Parser ):
 
 
     class Dotted_nameContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3895,6 +3931,7 @@ class Python3Parser ( Parser ):
 
 
     class Global_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -3968,6 +4005,7 @@ class Python3Parser ( Parser ):
 
 
     class Nonlocal_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4041,6 +4079,7 @@ class Python3Parser ( Parser ):
 
 
     class Assert_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4110,6 +4149,7 @@ class Python3Parser ( Parser ):
 
 
     class Compound_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4237,6 +4277,7 @@ class Python3Parser ( Parser ):
 
 
     class Async_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4313,6 +4354,7 @@ class Python3Parser ( Parser ):
 
 
     class If_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4423,6 +4465,7 @@ class Python3Parser ( Parser ):
 
 
     class While_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4508,6 +4551,7 @@ class Python3Parser ( Parser ):
 
 
     class For_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4604,6 +4648,7 @@ class Python3Parser ( Parser ):
 
 
     class Try_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4675,7 +4720,7 @@ class Python3Parser ( Parser ):
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [Python3Parser.EXCEPT]:
-                self.state = 667
+                self.state = 667 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
@@ -4685,7 +4730,7 @@ class Python3Parser ( Parser ):
                     self.match(Python3Parser.COLON)
                     self.state = 665
                     self.suite()
-                    self.state = 669
+                    self.state = 669 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==Python3Parser.EXCEPT):
@@ -4737,6 +4782,7 @@ class Python3Parser ( Parser ):
 
 
     class With_stmtContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4822,6 +4868,7 @@ class Python3Parser ( Parser ):
 
 
     class With_itemContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4887,6 +4934,7 @@ class Python3Parser ( Parser ):
 
 
     class Except_clauseContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -4962,6 +5010,7 @@ class Python3Parser ( Parser ):
 
 
     class SuiteContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5027,13 +5076,13 @@ class Python3Parser ( Parser ):
                 self.match(Python3Parser.NEWLINE)
                 self.state = 713
                 self.match(Python3Parser.INDENT)
-                self.state = 715
+                self.state = 715 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
                     self.state = 714
                     self.stmt()
-                    self.state = 717
+                    self.state = 717 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << Python3Parser.STRING) | (1 << Python3Parser.NUMBER) | (1 << Python3Parser.DEF) | (1 << Python3Parser.RETURN) | (1 << Python3Parser.RAISE) | (1 << Python3Parser.FROM) | (1 << Python3Parser.IMPORT) | (1 << Python3Parser.GLOBAL) | (1 << Python3Parser.NONLOCAL) | (1 << Python3Parser.ASSERT) | (1 << Python3Parser.IF) | (1 << Python3Parser.WHILE) | (1 << Python3Parser.FOR) | (1 << Python3Parser.TRY) | (1 << Python3Parser.WITH) | (1 << Python3Parser.LAMBDA) | (1 << Python3Parser.NOT) | (1 << Python3Parser.NONE) | (1 << Python3Parser.TRUE) | (1 << Python3Parser.FALSE) | (1 << Python3Parser.CLASS) | (1 << Python3Parser.YIELD) | (1 << Python3Parser.DEL) | (1 << Python3Parser.PASS) | (1 << Python3Parser.CONTINUE) | (1 << Python3Parser.BREAK) | (1 << Python3Parser.ASYNC) | (1 << Python3Parser.AWAIT) | (1 << Python3Parser.NAME) | (1 << Python3Parser.ELLIPSIS) | (1 << Python3Parser.STAR) | (1 << Python3Parser.OPEN_PAREN) | (1 << Python3Parser.OPEN_BRACK))) != 0) or ((((_la - 66)) & ~0x3f) == 0 and ((1 << (_la - 66)) & ((1 << (Python3Parser.ADD - 66)) | (1 << (Python3Parser.MINUS - 66)) | (1 << (Python3Parser.NOT_OP - 66)) | (1 << (Python3Parser.OPEN_BRACE - 66)) | (1 << (Python3Parser.AT - 66)))) != 0)):
@@ -5055,6 +5104,7 @@ class Python3Parser ( Parser ):
 
 
     class TestContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5147,6 +5197,7 @@ class Python3Parser ( Parser ):
 
 
     class Test_nocondContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5211,6 +5262,7 @@ class Python3Parser ( Parser ):
 
 
     class LambdefContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5281,6 +5333,7 @@ class Python3Parser ( Parser ):
 
 
     class Lambdef_nocondContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5351,6 +5404,7 @@ class Python3Parser ( Parser ):
 
 
     class Or_testContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5420,6 +5474,7 @@ class Python3Parser ( Parser ):
 
 
     class And_testContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5489,6 +5544,7 @@ class Python3Parser ( Parser ):
 
 
     class Not_testContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5558,6 +5614,7 @@ class Python3Parser ( Parser ):
 
 
     class ComparisonContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5628,6 +5685,7 @@ class Python3Parser ( Parser ):
 
 
     class Comp_opContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5772,6 +5830,7 @@ class Python3Parser ( Parser ):
 
 
     class Star_exprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5824,6 +5883,7 @@ class Python3Parser ( Parser ):
 
 
     class ExprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5893,6 +5953,7 @@ class Python3Parser ( Parser ):
 
 
     class Xor_exprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -5962,6 +6023,7 @@ class Python3Parser ( Parser ):
 
 
     class And_exprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6031,6 +6093,7 @@ class Python3Parser ( Parser ):
 
 
     class Shift_exprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6111,6 +6174,7 @@ class Python3Parser ( Parser ):
 
 
     class Arith_exprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6191,6 +6255,7 @@ class Python3Parser ( Parser ):
 
 
     class TermContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6289,6 +6354,7 @@ class Python3Parser ( Parser ):
 
 
     class FactorContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6370,6 +6436,7 @@ class Python3Parser ( Parser ):
 
 
     class PowerContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6435,6 +6502,7 @@ class Python3Parser ( Parser ):
 
 
     class Atom_exprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6511,6 +6579,7 @@ class Python3Parser ( Parser ):
 
 
     class AtomContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6658,13 +6727,13 @@ class Python3Parser ( Parser ):
                 self.match(Python3Parser.NUMBER)
                 pass
             elif token in [Python3Parser.STRING]:
-                self.state = 887
+                self.state = 887 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
                     self.state = 886
                     self.match(Python3Parser.STRING)
-                    self.state = 889
+                    self.state = 889 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==Python3Parser.STRING):
@@ -6700,6 +6769,7 @@ class Python3Parser ( Parser ):
 
 
     class Testlist_compContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6798,7 +6868,7 @@ class Python3Parser ( Parser ):
                             pass
                         else:
                             raise NoViableAltException(self)
-
+                 
                     self.state = 911
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,125,self._ctx)
@@ -6825,6 +6895,7 @@ class Python3Parser ( Parser ):
 
 
     class TrailerContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6929,6 +7000,7 @@ class Python3Parser ( Parser ):
 
 
     class SubscriptlistContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -6984,7 +7056,7 @@ class Python3Parser ( Parser ):
                     self.state = 931
                     self.match(Python3Parser.COMMA)
                     self.state = 932
-                    self.subscript()
+                    self.subscript() 
                 self.state = 937
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,130,self._ctx)
@@ -7007,6 +7079,7 @@ class Python3Parser ( Parser ):
 
 
     class SubscriptContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7102,6 +7175,7 @@ class Python3Parser ( Parser ):
 
 
     class SliceopContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7161,6 +7235,7 @@ class Python3Parser ( Parser ):
 
 
     class ExprlistContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7247,7 +7322,7 @@ class Python3Parser ( Parser ):
                         pass
                     else:
                         raise NoViableAltException(self)
-
+             
                 self.state = 971
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,139,self._ctx)
@@ -7270,6 +7345,7 @@ class Python3Parser ( Parser ):
 
 
     class TestlistContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7325,7 +7401,7 @@ class Python3Parser ( Parser ):
                     self.state = 976
                     self.match(Python3Parser.COMMA)
                     self.state = 977
-                    self.test()
+                    self.test() 
                 self.state = 982
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,141,self._ctx)
@@ -7348,6 +7424,7 @@ class Python3Parser ( Parser ):
 
 
     class DictorsetmakerContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7481,7 +7558,7 @@ class Python3Parser ( Parser ):
                                 pass
                             else:
                                 raise NoViableAltException(self)
-
+                     
                         self.state = 1008
                         self._errHandler.sync(self)
                         _alt = self._interp.adaptivePredict(self._input,145,self._ctx)
@@ -7543,7 +7620,7 @@ class Python3Parser ( Parser ):
                                 pass
                             else:
                                 raise NoViableAltException(self)
-
+                     
                         self.state = 1028
                         self._errHandler.sync(self)
                         _alt = self._interp.adaptivePredict(self._input,150,self._ctx)
@@ -7573,6 +7650,7 @@ class Python3Parser ( Parser ):
 
 
     class ClassdefContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7664,6 +7742,7 @@ class Python3Parser ( Parser ):
 
 
     class ArglistContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7719,7 +7798,7 @@ class Python3Parser ( Parser ):
                     self.state = 1049
                     self.match(Python3Parser.COMMA)
                     self.state = 1050
-                    self.argument()
+                    self.argument() 
                 self.state = 1055
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,156,self._ctx)
@@ -7742,6 +7821,7 @@ class Python3Parser ( Parser ):
 
 
     class ArgumentContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7844,6 +7924,7 @@ class Python3Parser ( Parser ):
 
 
     class Comp_iterContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7908,6 +7989,7 @@ class Python3Parser ( Parser ):
 
 
     class Comp_forContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -7995,6 +8077,7 @@ class Python3Parser ( Parser ):
 
 
     class Comp_ifContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -8060,6 +8143,7 @@ class Python3Parser ( Parser ):
 
 
     class Encoding_declContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -8106,6 +8190,7 @@ class Python3Parser ( Parser ):
 
 
     class Yield_exprContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -8165,6 +8250,7 @@ class Python3Parser ( Parser ):
 
 
     class Yield_argContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)

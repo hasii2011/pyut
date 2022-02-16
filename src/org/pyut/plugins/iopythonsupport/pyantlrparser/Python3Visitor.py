@@ -1,4 +1,4 @@
-# Generated from Python3.g4 by ANTLR 4.8
+# Generated from Python3.g4 by ANTLR 4.9.3
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .Python3Parser import Python3Parser
@@ -393,9 +393,11 @@ class Python3Visitor(ParseTreeVisitor):
     def visitDictorsetmaker(self, ctx:Python3Parser.DictorsetmakerContext):
         return self.visitChildren(ctx)
 
+
     # Visit a parse tree produced by Python3Parser#classdef.
-    def visitClassdef(self, ctx: Python3Parser.ClassdefContext):
+    def visitClassdef(self, ctx:Python3Parser.ClassdefContext):
         return self.visitChildren(ctx)
+
 
     # Visit a parse tree produced by Python3Parser#arglist.
     def visitArglist(self, ctx:Python3Parser.ArglistContext):
