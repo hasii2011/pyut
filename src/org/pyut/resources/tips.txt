@@ -6,4 +6,4 @@ You can convert a multiline in a spline by pressing <s>
 You can find more tips on the PyUt wiki: https://github.com/hasii2011/PyUt/wiki
 You can submit bugs, feature requests and support requests at https://github.com/hasii2011/PyUt/issues
 The File->Open menu item allows you to select multiple projects
-Left Click on a UML class and use the experimental Add lollipop type interface
+Left-Click on a UML class and use the experimental Add lollipop type interface
