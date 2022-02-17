@@ -15,7 +15,7 @@ PREFS_NAME_VALUES = Dict[str, str]
 
 class PreferencesCommon(BaseSubPreference):
 
-    PREFERENCES_FILENAME: str = 'PyutPrefs.dat'
+    PREFERENCES_FILENAME: str = 'pyut.ini'
 
     preferencesFileLocationAndName: str = cast(str, None)
 
