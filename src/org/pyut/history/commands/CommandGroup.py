@@ -25,12 +25,14 @@ from org.pyut.history.HistoryUtils import tokenizeValue
 
 class CommandGroup:
     """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (17.11.2005)
+
+
     This class is a part of the history system of PyUt. It brings together
-    different commands used for doing a undo or redo. For example, when we
-    select many shapes and we delete them, then there is a command 'created'
+    different commands used for doing undo or redo.
+    For example, when we
+    select many shapes, and we delete them, then there is a command 'created'
     for each one that is added to a CommandGroup. This way, when we want
-    to do an undo, all the deleted shapes will be reconstructed in one action.
+    to undo, all the deleted shapes will be reconstructed in one action.
     """
     def __init__(self, comment=""):
         """
@@ -111,7 +113,7 @@ class CommandGroup:
         # while there is still a command beginning token we can proceed to the deserialization.
         while cStart > -1:
 
-            # we don't need anymore of the beginning token
+            # we do not need any more of the beginning token
             cStart += len(commandBegin)
             self.logger.info(f'cStart - commandBegin: {cStart}')
 
@@ -159,14 +161,14 @@ class CommandGroup:
 
     def undo(self):
         """
-        Call the undo() method of all commands belonging to the group
+        Call the `undo` method of all commands belonging to the group
         """
         for command in self._commands:
             command.undo()
 
     def execute(self):
         """
-        Call the execute() method of all commands belonging to the group
+        Call the `execute` method of all commands belonging to the group
         """
         for command in self._commands:
             command.execute()
@@ -223,11 +225,13 @@ class CommandGroup:
 
     def getCommonData(self) -> List:
         """
-        @return a list of common data, so a command can use information
-        produced by an other command in the same group.
-        WARNING : the common data is NOT serialized, so they are lost after
-        an deserialization. You have to use these data in a command before
+        WARNING : The common data is NOT serialized, so it is lost after
+        a deserialization. You have to use these data in a command before
         the serialization of the group.
+
+        Returns: A list of common data, so a command can use information
+        produced by another command in the same group.
+
         """
         return self._commonData
 
