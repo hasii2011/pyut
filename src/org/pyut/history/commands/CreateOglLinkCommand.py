@@ -95,8 +95,11 @@ class CreateOglLinkCommand(Command):
         srcPos = eval(deTokenize("srcPos", serializedInfo))
         # get the model (MVC pattern) end position of the link
         dstPos = eval(deTokenize("dstPos", serializedInfo))
-        # get the type of the link (see OglLinkFactory)
-        linkType = eval(deTokenize("linkType", serializedInfo))
+
+        # get the type of the link (see LinkType enumeration)
+        linkValue: str = deTokenize("linkType", serializedInfo)
+        linkType: LinkType = LinkType.toEnum(linkValue)
+
         # get the pyutId of the link
         linkId = eval(deTokenize("linkId", serializedInfo))
         # get the frame to which belongs the link
@@ -116,10 +119,11 @@ class CreateOglLinkCommand(Command):
             # it has been added to the frame, because the zoom
             # could have changed, and we have to update from the
             # model (see redo() method).
-            self._link = self._createLink(src, dst, linkType,
-                                          srcPos, dstPos)
+            self._link = self._createLink(src, dst, linkType, srcPos, dstPos)
             # we set the pyutId that the link has at its first creation
-            self._link.getPyutObject().setId(linkId)
+            pyutObject = self._link.getPyutObject()
+            pyutObject.setId(linkId)
+            # self._link.getPyutObject().setId(linkId)
 
     def redo(self):
         """
@@ -214,8 +218,8 @@ class CreateOglLinkCommand(Command):
         Returns:
             The inheritance OglLink
         """
-        sourceClass:      PyutClass = cast(PyutClass, child.getPyutObject())
-        destinationClass: PyutClass = cast(PyutClass, parent.getPyutObject())
+        sourceClass:      PyutClass = cast(PyutClass, child.pyutObject)
+        destinationClass: PyutClass = cast(PyutClass, parent.pyutObject)
         pyutLink:         PyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
         oglLink:          OglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, LinkType.INHERITANCE)
 
@@ -224,8 +228,8 @@ class CreateOglLinkCommand(Command):
 
         # add it to the PyutClass
         # child.getPyutObject().addParent(parent.getPyutObject())
-        childPyutClass:  PyutClass = cast(PyutClass, child.getPyutObject())
-        parentPyutClass: PyutClass = cast(PyutClass, parent.getPyutObject())
+        childPyutClass:  PyutClass = cast(PyutClass, child.pyutObject)
+        parentPyutClass: PyutClass = cast(PyutClass, parent.pyutObject)
 
         childPyutClass.addParent(parentPyutClass)
 

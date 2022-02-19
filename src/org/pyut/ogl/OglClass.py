@@ -500,7 +500,7 @@ class OglClass(OglObject):
 
     def __repr__(self):
         selfName:   str = self.pyutObject.getName()
-        return f'OglClass.{selfName}'
+        return f'OglClass.{selfName} id: {self.GetID()}'
 
     def __eq__(self, other) -> bool:
 
