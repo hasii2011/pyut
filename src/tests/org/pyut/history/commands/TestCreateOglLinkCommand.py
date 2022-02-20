@@ -10,9 +10,13 @@ from wx import App
 
 from org.pyut.history.HistoryManager import HistoryManager
 from org.pyut.history.commands.CommandGroup import CommandGroup
+
+from org.pyut.miniogl.Shape import Shape
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInheritance import OglInheritance
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from tests.TestBase import TestBase
@@ -59,6 +63,8 @@ class TestCreateOglLinkCommand(TestBase):
         mockUmlFrame.getUmlObjectById.side_effect = self._getUmlObjectByIdSideEffect
         mockCommandGroup.getHistory.return_value = mockHistoryManager
         mockHistoryManager.getFrame.return_value = mockUmlFrame
+
+        Shape.ID = 0    # reset this since it runs in the entire unit test context
 
         self._parent: OglClass = OglClass()
         self._child:  OglClass = OglClass()

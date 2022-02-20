@@ -102,11 +102,11 @@ class OglActor(OglObject):
         dc.DrawLine(x, y, x + round(0.25 * actorWidth), y + actorFeetPercentage)
 
         # Draw our buddy name
-        textWidth, textHeight = dc.GetTextExtent(self.getPyutObject().getName())
+        textWidth, textHeight = dc.GetTextExtent(self.pyutObject.getName())
 
         # y = centerY + 0.5 * height - MARGIN - 0.1 * actorHeight
         y = round(centerY + 0.5 * height - MARGIN - 0.1 * actorHeight)
 
         # dc.DrawText(self.getPyutObject().getName(), x - 0.5 * textWidth, y)
-        dc.DrawText(self.getPyutObject().getName(), round(x - 0.5 * textWidth), y)
+        dc.DrawText(self.pyutObject.getName(), round(x - 0.5 * textWidth), y)
         dc.DestroyClippingRegion()

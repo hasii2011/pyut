@@ -72,7 +72,7 @@ class OglUseCase(OglObject):
         dc.SetClippingRegion(x, y, textWidth, round(0.6 * height))
 
         # Split lines
-        lines = LineSplitter().split(self.getPyutObject().getName(), dc, textWidth)
+        lines = LineSplitter().split(self.pyutObject.getName(), dc, textWidth)
 
         # Draw text
         for line in lines:

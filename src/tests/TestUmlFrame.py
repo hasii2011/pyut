@@ -100,7 +100,7 @@ class TestUmlFrame(unittest.TestCase):
 
         # Get the corresponding OglClass
         try:
-            oglClass = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutClass][0]  # Too cute; fix
+            oglClass = [s for s in self._umlFrame.getDiagram().GetShapes() if s.pyutObject is pyutClass][0]  # Too cute; fix
         except (ValueError, Exception):
             self.fail("Cannot get OglClass")
 
@@ -148,7 +148,7 @@ class TestUmlFrame(unittest.TestCase):
 
         # Get the corresponding OglActor
         try:
-            oglActor = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutActor][0]  # Too cute; fix
+            oglActor = [s for s in self._umlFrame.getDiagram().GetShapes() if s.pyutObject is pyutActor][0]  # Too cute; fix
         except (ValueError, Exception):
             self.fail("Can't get OglActor")
 
@@ -172,7 +172,7 @@ class TestUmlFrame(unittest.TestCase):
 
         # Get the corresponding OglUseCase
         try:
-            oglUseCase = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutUseCase][0]  # Too cute; fix
+            oglUseCase = [s for s in self._umlFrame.getDiagram().GetShapes() if s.pyutObject is pyutUseCase][0]  # Too cute; fix
         except (ValueError, Exception):
             self.fail("Can't get OglUseCase")
 
@@ -208,7 +208,7 @@ class TestUmlFrame(unittest.TestCase):
     #     try:
     #         self._umlFrame.createInheritanceLink(oglClass1, oglClass2)
     #     except (ValueError, Exception) as e:
-    #         self.fail(f"Can't create a inheritance link;  {e}")
+    #         self.fail(f"Can't create an inheritance link;  {e}")
 
     # def testNewLinkCreation(self):
     #     """
