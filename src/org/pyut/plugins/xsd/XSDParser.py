@@ -77,8 +77,8 @@ class XSDParser:
 
             createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=className, x=pos['x'], y=pos['y'])
 
-            pyutClass:  PyutClass  = createdClasses[0]
-            oglClass:   OglClass   = createdClasses[1]
+            pyutClass:  PyutClass  = createdClasses.pyutClass
+            oglClass:   OglClass   = createdClasses.oglClass
             schemaType: XsdType    = self.schema.types[className]
             if schemaType.derivation == XSDParser.SUBCLASS_INDICATOR:
                 baseType: XsdType = schemaType.base_type

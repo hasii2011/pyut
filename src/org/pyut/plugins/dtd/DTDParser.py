@@ -148,8 +148,8 @@ class DTDParser:
         for eltName in list(DTDParser.elementTypes.keys()):
 
             createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=eltName, x=x, y=y)
-            pyutClass: PyutClass = createdClasses[0]
-            oglClass:  OglClass  = createdClasses[1]
+            pyutClass: PyutClass = createdClasses.pyutClass
+            oglClass:  OglClass  = createdClasses.oglClass
 
             elementTreeData: ElementTreeData = ElementTreeData(pyutClass=pyutClass, oglClass=oglClass)
 

@@ -1,7 +1,7 @@
 
 from typing import cast
-from typing import NewType
-from typing import Tuple
+
+from collections import namedtuple
 
 from org.pyut.history.commands.CommandGroup import CommandGroup
 from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
@@ -26,7 +26,7 @@ from org.pyut.general.CustomEvents import ClassNameChangedEvent
 from org.pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
 
 
-CreatedClassesType = NewType('CreatedClassesType', Tuple[PyutClass, OglClass])      # TODO make this a NamedTuple
+CreatedClassesType = namedtuple('CreatedClassesType', 'pyutClass, oglClass')
 
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):
@@ -130,7 +130,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
             x:  x-coordinate on the uml frame  oglClass
             y:  y coordinate on the uml frame  oglClass
 
-        Returns: A tuple with one of each:  pyutClass and oglClass
+        Returns: A named tuple with attributes:  pyutClass and oglClass
         """
         pyutClass: PyutClass = PyutClass()
         pyutClass.setName(name)
@@ -140,8 +140,9 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         oglClass.SetPosition(x=x, y=y)
         self.addShape(oglClass, x, y)
 
-        retData: CreatedClassesType = cast(CreatedClassesType, (pyutClass, oglClass))
-        return retData
+        createdClasses: CreatedClassesType = CreatedClassesType(pyutClass=pyutClass, oglClass=oglClass)
+
+        return createdClasses
 
     def _onClassNameChanged(self, event: ClassNameChangedEvent):
 
