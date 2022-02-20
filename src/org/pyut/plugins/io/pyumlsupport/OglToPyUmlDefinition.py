@@ -90,7 +90,7 @@ class OglToPyUmlDefinition:
             if not isinstance(umlObject, OglClass):
                 continue
 
-            pyutClass: PyutClass = cast(PyutClass, umlObject.getPyutObject())
+            pyutClass: PyutClass = cast(PyutClass, umlObject.pyutObject)
 
             x, y = umlObject.GetPosition()
             w, h = umlObject.GetSize()

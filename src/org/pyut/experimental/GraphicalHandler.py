@@ -65,7 +65,7 @@ class GraphicalHandler:
         # now, search for parent links
         for oglClassDef in classNameToOglClass.values():
 
-            pyutClassDef = cast(PyutClass, oglClassDef.getPyutObject())
+            pyutClassDef = cast(PyutClass, oglClassDef.pyutObject)
             # skip object, it has no parent
             if pyutClassDef.getName() == "object":
                 continue
