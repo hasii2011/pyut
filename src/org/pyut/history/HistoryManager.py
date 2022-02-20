@@ -195,10 +195,10 @@ class HistoryManager:
 
     def isUndoPossible(self):
         """
-        @return a boolean indicating if a undo is possible. Use it for e.g.
-        (un)enable the undo item in a menu.
-        """
+        Enables or disables the undo item in the application menuItem
 
+        Returns: 'True' if undo is possible, else 'False'
+        """
         # the first group added has the index 0...
         return self._groupUndoIndex > -1
 
@@ -208,17 +208,17 @@ class HistoryManager:
         (un)enable the redo item in a menu.
         """
         # groupToUndo index begins at 0 so the count is bigger of one if
-        # groupToUndo is on the last group added. If it's the case, the
+        # groupToUndo is on the last group added. If it's the case, then
         # it means that the last group hadn't been undone and so there is
         # no group to redo.
         return self._groupUndoIndex < self._groupCount - 1
 
     def getCommandGroupToRedo(self):
         """
-        @return the the group (CommandGroup) that will be redone if we call
+        @return the group (CommandGroup) that will be redone if we call
         the undo method. If all the groups have been undone None is returned.
         """
-        # check if there a group to redo
+        # check if there is a group to redo
         if self.isRedoPossible():
 
             # open the file to get its current content in a list
@@ -235,7 +235,7 @@ class HistoryManager:
 
     def getCommandGroupToUndo(self):
         """
-        @return the the group (CommandGroup) that will be redone if we call
+        @return The group (CommandGroup) that will be redone if we call
         the undo method. If all the groups have been undone None is returned.
         """
 

@@ -3,6 +3,9 @@ from typing import cast
 from typing import NewType
 from typing import Tuple
 
+from org.pyut.history.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+
 from org.pyut.model.ModelTypes import ClassName
 from org.pyut.model.ModelTypes import Implementors
 from org.pyut.model.PyutClass import PyutClass
@@ -14,15 +17,13 @@ from org.pyut.enums.LinkType import LinkType
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglInterface2 import OglInterface2
-from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.ui.UmlFrame import UmlObjects
 
 from org.pyut.general.CustomEvents import ClassNameChangedEvent
 from org.pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
-
-from org.pyut.ui.UmlFrame import UmlObjects
 
 
 CreatedClassesType = NewType('CreatedClassesType', Tuple[PyutClass, OglClass])      # TODO make this a NamedTuple
@@ -79,39 +80,21 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         return oglLink
 
-    def createInheritanceLink(self, child: OglClass, parent: OglClass) -> OglLink:
+    def createInheritanceLink(self, child: OglClass, parent: OglClass):
         """
-            TODO: this is a duplicate of CreateOglLinkCommandCommand._createInheritanceLink (this code adds it to the frame)
-
         Add a parent link between the child and parent objects.
 
         Args:
             child:  Child PyutClass
             parent: Parent PyutClass
 
-        Returns:
-            The inheritance OglLink
         """
-        sourceClass:      PyutClass = cast(PyutClass, child.getPyutObject())
-        destinationClass: PyutClass = cast(PyutClass, parent.getPyutObject())
+        cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
+        cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=child, dst=parent)    # inheritance points back to parent
+        cmdGroup.addCommand(cmd)
+        self._history.addCommandGroup(cmdGroup)
 
-        pyutLink: PyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
-        oglLink:  OglLink  = getOglLinkFactory().getOglLink(child, pyutLink, parent, LinkType.INHERITANCE)
-
-        child.addLink(oglLink)
-        parent.addLink(oglLink)
-
-        # add it to the PyutClass
-        # child.getPyutObject().addParent(parent.getPyutObject())
-        childPyutClass:  PyutClass = cast(PyutClass, child.getPyutObject())
-        parentPyutClass: PyutClass = cast(PyutClass, parent.getPyutObject())
-
-        childPyutClass.addParent(parentPyutClass)
-
-        self._diagram.AddShape(oglLink)
-        self.Refresh()
-
-        return oglLink
+        cmd.execute()
 
     def createInterfaceLink(self, src: OglClass, dst: OglClass) -> OglInterface:
         """
