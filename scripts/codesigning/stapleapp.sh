@@ -1,13 +1,3 @@
+#!/usr/bin/env bash
 
-function changeToProjectRoot {
-
-    export areHere=`basename ${PWD}`
-    if [[ ${areHere} = "codsigning" ]]; then
-        cd ../..
-    fi
-}
-
-
-export APP=Pyut.app
-
-xcrun stapler staple dist/${APP}
+echo 'Please use the scripts and instructions at: https://github.com/hasii2011/CodeSigningScripts'
