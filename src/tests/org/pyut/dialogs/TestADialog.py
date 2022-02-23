@@ -36,6 +36,8 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import PyutModifiers
+from org.pyut.model.PyutModifier import PyutModifier
 
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
@@ -228,12 +230,18 @@ class TestADialog(App):
 
     def _testDlgEditMethod(self):
         pyutMethod: PyutMethod = PyutMethod(name='OzzeeMethod')
+        pyutMethod.modifiers = PyutModifiers(
+            [
+                PyutModifier('modifier1'),
+                PyutModifier('modifier2'),
+                PyutModifier('modifier3')
+            ]
+        )
         with DlgEditMethod(parent=self._frameTop, windowId=ID_ANY, pyutMethod=pyutMethod) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutMethod}'
             else:
                 return f'Cancelled'
-
 
 
 testApp: App = TestADialog(redirect=False)

@@ -1,9 +1,13 @@
 
+from typing import NewType
 from typing import cast
 from typing import List
 
 from logging import Logger
 from logging import getLogger
+
+# noinspection PyPackageRequirements
+from deprecated import deprecated
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -15,12 +19,12 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.model.PyutObject import PyutObject
 
+SourceCode     = NewType('SourceCode',     List[str])
+PyutModifiers  = NewType('PyutModifiers',  List[PyutModifier])
+PyutParameters = NewType('PyutParameters', List[PyutParam])
+
 
 class PyutMethod(PyutObject):
-
-    PyutModifiers  = List[PyutModifier]
-    SourceCodeType = List[str]
-    PyutParameters = List[PyutParam]
 
     """
     A method representation.
@@ -62,11 +66,11 @@ class PyutMethod(PyutObject):
         self.logger: Logger = getLogger(__name__)
 
         self._visibility: PyutVisibilityEnum = visibility
-        self._modifiers:  PyutMethod.PyutModifiers  = cast(PyutMethod.PyutModifiers, [])
-        self._sourceCode: PyutMethod.SourceCodeType = cast(PyutMethod.SourceCodeType, [])
+        self._modifiers:  PyutModifiers  = PyutModifiers([])
+        self._sourceCode: SourceCode     = SourceCode([])
 
-        self._params:  PyutMethod.PyutParameters = []
-        self._returns: PyutType                  = returns
+        self._params:  PyutParameters = PyutParameters([])
+        self._returns: PyutType       = returns
 
         self._isProperty: bool = False
 
@@ -76,11 +80,11 @@ class PyutMethod(PyutObject):
             PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITHOUT_PARAMETERS
 
     @property
-    def sourceCode(self) -> SourceCodeType:
+    def sourceCode(self) -> SourceCode:
         return self._sourceCode
 
     @sourceCode.setter
-    def sourceCode(self, newCode: SourceCodeType):
+    def sourceCode(self, newCode: SourceCode):
         self._sourceCode = newCode
 
     def getString(self) -> str:
@@ -171,6 +175,7 @@ class PyutMethod(PyutObject):
         """
         self._visibility = visibility
 
+    @deprecated('Use the property')
     def getModifiers(self) -> PyutModifiers:
         """
         This is not a copy, but the original one. Any change made to it is
@@ -181,6 +186,7 @@ class PyutMethod(PyutObject):
         """
         return self._modifiers
 
+    @deprecated('Use the property')
     def setModifiers(self, modifiers: PyutModifiers):
         """
         Replace the actual modifiers by those given in the list.

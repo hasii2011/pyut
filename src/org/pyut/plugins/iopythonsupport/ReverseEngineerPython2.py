@@ -27,6 +27,7 @@ from org.pyut.history.HistoryManager import HistoryManager
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import PyutParameters
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
@@ -224,7 +225,7 @@ class ReverseEngineerPython2:
         if methodName in self.visitor.parameters:
             multiParameterNames: MultiParameterNames = self.visitor.parameters[methodName]
 
-            pyutParameters: List[PyutParam] = self._generateParameters(multiParameterNames)
+            pyutParameters: PyutParameters = self._generateParameters(multiParameterNames)
             pyutMethod.parameters = pyutParameters
 
         return pyutMethod
@@ -331,7 +332,7 @@ class ReverseEngineerPython2:
 
         return pyutField
 
-    def _generateParameters(self, multiParameterNames: str) -> List[PyutParam]:
+    def _generateParameters(self, multiParameterNames: str) -> PyutParameters:
         """
         Handles the following 4 cases:
         Simple:                       param
@@ -344,7 +345,7 @@ class ReverseEngineerPython2:
         Returns:  A list of PyutParam objects
         """
         parameterNameList: List[str] = multiParameterNames.split(',')
-        pyutParams:        List[PyutParam] = []
+        pyutParams:        PyutParameters = PyutParameters([])
         for parameterStr in parameterNameList:
             if ':' in parameterStr and '=' in parameterStr:
                 pyutParam: PyutParam = self.__complexTypedAndDefaultValue(parameterStr)

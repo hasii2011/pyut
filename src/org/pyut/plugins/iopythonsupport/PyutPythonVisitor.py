@@ -32,7 +32,7 @@ Children       = List[Union[ClassName, ChildName]]
 
 Methods    = NewType('Methods', Dict[ClassName, MethodNames])
 Parameters = NewType('Parameters', Dict[MethodName, MultiParameterNames])
-MethodCode = NewType('MethodCode', Dict[MethodName, str])
+MethodCode = NewType('MethodCode', Dict[MethodName, List[str]])
 Parents    = NewType('Parents', Dict[ParentName, Children])
 
 PropertyNames      = Dict[PropertyName, ClassName]
@@ -206,10 +206,10 @@ class PyutPythonVisitor(Python3Visitor):
         methodText:     str       = ctx.getText()
         splitText:      List[str] = methodText.split('\n')
         justMethodCode: List[str] = splitText[1:len(splitText)]
-        # TODO; Put in an option to use justMethodCode
+
         self.logger.debug(f'justMethodCode: {justMethodCode}')
 
-        self.methodCode[methodName] = methodText
+        self.methodCode[methodName] = justMethodCode
 
     def _findArgListContext(self, ctx: Python3Parser.ClassdefContext) -> Python3Parser.ArglistContext:
 

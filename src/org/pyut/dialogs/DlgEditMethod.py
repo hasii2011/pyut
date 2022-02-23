@@ -1,4 +1,5 @@
 
+
 from logging import Logger
 from logging import getLogger
 
@@ -41,6 +42,7 @@ from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
 
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import PyutModifiers
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
@@ -101,10 +103,10 @@ class DlgEditMethod(BaseDlgEdit):
         """
 
         self._txtName.SetValue(self._pyutMethodCopy.getName())
-        modifiers: str = self._pyutMethodCopy.getModifiers()
-        modifiers = " ".join(map(lambda x: str(x), modifiers))
+        modifiers: PyutModifiers = self._pyutMethodCopy.modifiers
+        singleModifierString: str  = " ".join(map(lambda x: str(x), modifiers))
 
-        self._txtModifiers.SetValue(modifiers)
+        self._txtModifiers.SetValue(singleModifierString)
         self._txtReturn.SetValue(str(self._pyutMethodCopy.getReturns()))
 
         if self._editInterface is False:
@@ -360,7 +362,7 @@ class DlgEditMethod(BaseDlgEdit):
             event:
         """
         self._pyutMethod.setName(self._txtName.GetValue())
-        modifiers = []
+        modifiers: PyutModifiers = PyutModifiers([])
         for aModifier in self._txtModifiers.GetValue().split():
             modifiers.append(PyutModifier(aModifier))
         self._pyutMethod.setModifiers(modifiers)
