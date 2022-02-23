@@ -4,6 +4,7 @@ from typing import cast
 from collections import namedtuple
 
 from org.pyut.history.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
 from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 from org.pyut.model.ModelTypes import ClassName
@@ -52,6 +53,16 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         self.newDiagram()
 
         self.Bind(EVT_CLASS_NAME_CHANGED, self._onClassNameChanged)
+
+    def createClass(self, oglClass: OglClass):
+
+        x, y = oglClass.GetPosition()
+
+        cmdGroup: CommandGroup         = CommandGroup("Create class")
+        cmd:     CreateOglClassCommand = CreateOglClassCommand(x=x, y=y, oglClass=oglClass)
+        cmdGroup.addCommand(cmd)
+        self.getHistory().addCommandGroup(cmdGroup)
+        cmd.execute()
 
     def createLink(self, src: OglClass, dst: OglClass, linkType: LinkType = LinkType.AGGREGATION):
         """

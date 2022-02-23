@@ -107,7 +107,7 @@ class ReverseJava:
         self.__logMessage('Add the classes')
 
         for oglClass in list(self._classes.values()):
-            self._umlFrame.addShape(oglClass, 0, 0)
+            self._umlFrame.createClass(oglClass=oglClass)
             oglClass.autoResize()
 
         self.__logMessage('Connect subclasses')
