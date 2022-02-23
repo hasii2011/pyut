@@ -1,4 +1,7 @@
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
+
 
 class PyutObject:
 
@@ -48,6 +51,7 @@ class PyutObject:
                 return True
         return False
 
+    @deprecated('Use the property')
     def getName(self) -> str:
         """
 
@@ -60,6 +64,7 @@ class PyutObject:
             print(f'PyutObject warning: {e}')
             return ""
 
+    @deprecated('Use the property')
     def setName(self, theName: str):
         """
         Set method, used to know initialize name.
