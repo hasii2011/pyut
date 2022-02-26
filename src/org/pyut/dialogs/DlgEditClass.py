@@ -195,7 +195,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         dupParams = []
         for i in params:
-            param: PyutParam = PyutParam(name=i.getName(), theParameterType=i.getType(), defaultValue=i.getDefaultValue())
+            param: PyutParam = PyutParam(name=i.getName(), parameterType=i.getType(), defaultValue=i.getDefaultValue())
             dupParams.append(param)
         return dupParams
 

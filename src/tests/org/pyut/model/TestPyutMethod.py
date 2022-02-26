@@ -5,6 +5,7 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
@@ -83,11 +84,42 @@ class TestPyutMethod(TestBase):
 
         self.assertEqual(expectedRepresentation, actualRepresentation, 'Oops this does not match')
 
+    def testStashSourceCode(self):
+
+        pyutMethod:        PyutMethod = self._generateAMethod()
+        expectedLineCount: int = 5
+        actualLineCount:   int = len(pyutMethod.sourceCode)
+        self.assertEqual(expectedLineCount, actualLineCount, 'Method source code not accurate')
+
+    def testChangeSourceCode(self):
+        pyutMethod:        PyutMethod = self._generateAMethod()
+        #
+        # This is NOT the recommended way to update the source code
+        #
+        pyutMethod.sourceCode.insert(2, '# I am a comment')
+        expectedLineCount: int = 6
+        actualLineCount:   int = len(pyutMethod.sourceCode)
+        self.assertEqual(expectedLineCount, actualLineCount, 'Method source code not accurate')
+
+    def _generateAMethod(self) -> PyutMethod:
+        pyutMethod: PyutMethod    = PyutMethod(name='OzzeeElGatoDiablo')
+
+        pyutMethod.sourceCode = SourceCode(
+            [
+                'weLeft:           bool = True',
+                'isOzzeeAGoodGato: bool = False',
+                'if weLeft is True:',
+                '    isOzzeeAGoodGato = True',
+                'return isOzzeeAGoodGato'
+            ]
+        )
+        return pyutMethod
+
     def _makeParameters(self) -> PyutParameters:
 
-        pyutParameter1: PyutParam                 = PyutParam(name='intParam',   theParameterType=PyutType("int"),   defaultValue='0')
-        pyutParameter2: PyutParam                 = PyutParam(name='floatParam', theParameterType=PyutType("float"), defaultValue='32.0')
-        parameters:     PyutParameters = [pyutParameter1, pyutParameter2]
+        pyutParameter1: PyutParam      = PyutParam(name='intParam', parameterType=PyutType("int"), defaultValue='0')
+        pyutParameter2: PyutParam      = PyutParam(name='floatParam', parameterType=PyutType("float"), defaultValue='32.0')
+        parameters:     PyutParameters = PyutParameters([pyutParameter1, pyutParameter2])
 
         return parameters
 

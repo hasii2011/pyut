@@ -21,7 +21,7 @@ class TestCommandCommon:
         pyutMethod.returnType = returnType
 
         pyutParam: PyutParam = PyutParam(name=f'param{TestCommandCommon.methodParamNumber}',
-                                         theParameterType=PyutType(f'Type{TestCommandCommon.methodTypeNumber}'),
+                                         parameterType=PyutType(f'Type{TestCommandCommon.methodTypeNumber}'),
                                          defaultValue='')
 
         pyutMethod.addParam(pyutParam)

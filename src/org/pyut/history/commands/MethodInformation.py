@@ -88,7 +88,7 @@ class MethodInformation:
                 paramDefaultValue: str      = param[2]
 
                 # creates and add the param to the method
-                pyutParam: PyutParam = PyutParam(name=paramName, theParameterType=paramType, defaultValue=paramDefaultValue)
+                pyutParam: PyutParam = PyutParam(name=paramName, parameterType=paramType, defaultValue=paramDefaultValue)
                 pyutMethod.addParam(pyutParam)
 
             pyutMethods.append(pyutMethod)

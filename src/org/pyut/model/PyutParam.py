@@ -12,22 +12,25 @@ from org.pyut.model.PyutType import PyutType
 
 
 class PyutParam(PyutObject):
+    """
+    TODO:  Rename this to PyutParameter
+    """
 
     DEFAULT_PARAMETER_NAME: str = 'param'
 
-    def __init__(self, name: str = DEFAULT_PARAMETER_NAME, theParameterType: PyutType = PyutType(""), defaultValue: Any = None):
+    def __init__(self, name: str = DEFAULT_PARAMETER_NAME, parameterType: PyutType = PyutType(""), defaultValue: Any = None):
         """
 
         Args:
             name: init name with the name
-            theParameterType: the param type
+            parameterType: the param type
 
         """
         super().__init__(name)
 
         self.logger: Logger = getLogger(__name__)
 
-        self._type:         PyutType = theParameterType
+        self._type:         PyutType = parameterType
         self._defaultValue: Any      = defaultValue
 
     @deprecated(reason='Use the properties')

@@ -713,7 +713,7 @@ class PyutXml:
 
     def _getParam(self, domElement: Element) -> PyutParam:
 
-        pyutParam: PyutParam = PyutParam(name=domElement.getAttribute('name'), theParameterType=domElement.getAttribute('type'))
+        pyutParam: PyutParam = PyutParam(name=domElement.getAttribute('name'), parameterType=domElement.getAttribute('type'))
 
         if domElement.hasAttribute('defaultValue'):
             pyutParam.setDefaultValue(domElement.getAttribute('defaultValue'))

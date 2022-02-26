@@ -191,7 +191,7 @@ class ReverseEngineerPython2:
 
             if len(potentialNameType) == 2:
 
-                param: PyutParam = PyutParam(name=potentialNameType[0], theParameterType=PyutType(value=potentialNameType[1]))
+                param: PyutParam = PyutParam(name=potentialNameType[0], parameterType=PyutType(value=potentialNameType[1]))
                 setter.addParam(param)
                 getter.returnType = PyutType(value=potentialNameType[1])
             else:
@@ -368,7 +368,7 @@ class ReverseEngineerPython2:
         paramValue:     str = paramTypeValue[1]
 
         pyutType: PyutType = PyutType(paramType)
-        return PyutParam(name=paramName, theParameterType=pyutType, defaultValue=paramValue)
+        return PyutParam(name=paramName, parameterType=pyutType, defaultValue=paramValue)
 
     def _simpleDefaultValue(self, simpleDefaultValueParam: str) -> PyutParam:
 
@@ -385,7 +385,7 @@ class ReverseEngineerPython2:
         paramName:        str = pyutParamAndType[0]
         paramType:        str = pyutParamAndType[1]
 
-        pyutParam: PyutParam = PyutParam(name=paramName, theParameterType=PyutType(value=paramType))
+        pyutParam: PyutParam = PyutParam(name=paramName, parameterType=PyutType(value=paramType))
         return pyutParam
 
     def __simpleParseFieldToPyut(self, fieldData: str) -> PyutField:

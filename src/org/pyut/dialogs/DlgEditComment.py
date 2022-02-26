@@ -1,19 +1,24 @@
 from typing import Union
 
-from wx import Button
 from wx import CANCEL
-from wx import Dialog
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
-from wx import NewIdRef as wxNewIdRef
+from wx import ID_ANY
 from wx import OK
+from wx import TE_MULTILINE
+
+from wx import TextCtrl
+from wx import StaticText
+from wx import Button
 from wx import Point
 from wx import Size
-from wx import StaticText
-from wx import TE_MULTILINE
-from wx import TextCtrl
+from wx import Dialog
 
+from wx import NewIdRef as wxNewIdRef
+
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
 
@@ -43,10 +48,10 @@ class DlgEditComment(Dialog):
 
         # init members vars
         self._text = self._pyutModel.description
-        self._returnAction = -1   # describe how the user exited the dialog box
+        self._returnAction = OK   # describe how the user exited the dialog box
 
         # labels
-        StaticText(self, -1, _("Class description"),  Point(8, 8))
+        StaticText(self, ID_ANY, _("Class description"),  Point(8, 8))
 
         # text
         self._txtCtrl: TextCtrl = TextCtrl(self, TXT_COMMENT, self._text, Point(8, 24), Size(392, 100), TE_MULTILINE)

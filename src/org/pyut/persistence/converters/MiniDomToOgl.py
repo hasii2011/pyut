@@ -452,7 +452,7 @@ class MiniDomToOgl:
             A parameter model object
         """
         pyutParam: PyutParam = PyutParam(name=domElement.getAttribute(PyutXmlConstants.ATTR_NAME),
-                                         theParameterType=domElement.getAttribute(PyutXmlConstants.ATTR_TYPE))
+                                         parameterType=domElement.getAttribute(PyutXmlConstants.ATTR_TYPE))
 
         if domElement.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):
             pyutParam.setDefaultValue(domElement.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE))

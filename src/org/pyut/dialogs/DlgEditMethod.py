@@ -1,5 +1,4 @@
 
-
 from logging import Logger
 from logging import getLogger
 
@@ -11,24 +10,24 @@ from wx import ALIGN_RIGHT
 from wx import ALL
 from wx import CANCEL
 from wx import CAPTION
-from wx import CommandEvent
-from wx import DefaultSize
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_TEXT
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ID_ANY
+from wx import ID_OK
 from wx import LB_SINGLE
 from wx import OK
-
 from wx import RA_SPECIFY_ROWS
 from wx import RESIZE_BORDER
-from wx import RadioBox
 from wx import STAY_ON_TOP
-from wx import Sizer
 from wx import VERTICAL
 
+from wx import Sizer
+from wx import RadioBox
+from wx import CommandEvent
+from wx import DefaultSize
 from wx import StaticText
 from wx import TextCtrl
 from wx import Point
@@ -43,11 +42,13 @@ from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
 
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutMethod import PyutModifiers
+from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
+from org.pyut.dialogs.DlgEditCode import DlgEditCode
 from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
@@ -64,9 +65,10 @@ from org.pyut.general.Globals import _
     ID_BTN_PARAM_REMOVE,
     ID_BTN_PARAM_UP,
     ID_BTN_PARAM_DOWN,
+    ID_BTN_METHOD_CODE,
     ID_BTN_METHOD_OK,
     ID_BTN_METHOD_CANCEL,
-] = PyutUtils.assignID(9)
+] = PyutUtils.assignID(10)
 
 
 class DlgEditMethod(BaseDlgEdit):
@@ -201,15 +203,18 @@ class DlgEditMethod(BaseDlgEdit):
 
         Returns: The container
         """
-        self._btnMethodOk:     Button = Button(self, ID_BTN_METHOD_OK, _("&Ok"))
-        self._btnMethodCancel: Button = Button(self, ID_BTN_METHOD_CANCEL, _("&Cancel"))
+        self._btnMethodCode:   Button = Button(self, ID_BTN_METHOD_CODE, _('C&ode'))
+        self._btnMethodOk:     Button = Button(self, ID_BTN_METHOD_OK, _('&Ok'))
+        self._btnMethodCancel: Button = Button(self, ID_BTN_METHOD_CANCEL, _('&Cancel'))
 
+        self.Bind(EVT_BUTTON, self._onMethodCode,   id=ID_BTN_METHOD_CODE)
         self.Bind(EVT_BUTTON, self._onMethodOk,     id=ID_BTN_METHOD_OK)
         self.Bind(EVT_BUTTON, self._onMethodCancel, id=ID_BTN_METHOD_CANCEL)
 
         self._btnMethodOk.SetDefault()
 
         szrButtons: BoxSizer = BoxSizer (HORIZONTAL)
+        szrButtons.Add(self._btnMethodCode, 0, ALL, 5)
         szrButtons.Add(self._btnMethodOk, 0, ALL, 5)
         szrButtons.Add(self._btnMethodCancel, 0, ALL, 5)
 
@@ -354,6 +359,16 @@ class DlgEditMethod(BaseDlgEdit):
         self._setProjectModified()
 
     # noinspection PyUnusedLocal
+    def _onMethodCode(self, event: CommandEvent):
+        sourceCode: SourceCode = self._pyutMethodCopy.sourceCode
+        with DlgEditCode(parent=self, wxID=ID_ANY, sourceCode=sourceCode) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                self.logger.debug(f'Answered Ok')
+                self._pyutMethodCopy.sourceCode = dlg.sourceCode
+            else:
+                self.logger.debug(f'Do nothing code dialog cancelled')
+
+    # noinspection PyUnusedLocal
     def _onMethodOk (self, event: Event):
         """
         When button OK from dlgEditMethod is clicked.
@@ -361,7 +376,7 @@ class DlgEditMethod(BaseDlgEdit):
         Args:
             event:
         """
-        self._pyutMethod.setName(self._txtName.GetValue())
+        self._pyutMethod.name = self._txtName.GetValue()
         modifiers: PyutModifiers = PyutModifiers([])
         for aModifier in self._txtModifiers.GetValue().split():
             modifiers.append(PyutModifier(aModifier))
@@ -375,6 +390,8 @@ class DlgEditMethod(BaseDlgEdit):
             visStr:      str               = self._rdbVisibility.GetStringSelection()
             visibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
             self._pyutMethod.setVisibility(visibility)
+
+        self._pyutMethod.sourceCode = self._pyutMethodCopy.sourceCode
 
         self._setProjectModified()
         # Close dialog

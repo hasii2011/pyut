@@ -51,6 +51,7 @@ class PyutMethod(PyutObject):
     def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returns: PyutType = PyutType('')):
         """
 
+        TODO: rename `returns` to `returnType`
         Args:
             name:       The method name
             visibility: Its visibility public, private, protected
@@ -222,6 +223,8 @@ class PyutMethod(PyutObject):
         """
         Add a param.
 
+        TODO: rename this to `addParameter`
+
         @param PyutParam param : param to add
         @since 1.6
         @author Laurent Burgbacher <lb@alawa.ch>
@@ -233,6 +236,8 @@ class PyutMethod(PyutObject):
         Replace the actual params by those given in the list.
         The methods passed are not copied, but used directly.
 
+        TODO: rename this to `setParameters`
+
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
@@ -241,6 +246,8 @@ class PyutMethod(PyutObject):
     def getReturns(self) -> PyutType:
         """
         Return the return type.
+
+        TODO:  deprecate get/set Returns and create `returnType` property
 
         Returns:
             The method return type
@@ -297,8 +304,10 @@ class PyutMethod(PyutObject):
 
         return string
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
+        TODO:  Remove try/except clause;  Not necessary since now using enumeration
+
         Returns:    The configured representation
         """
         try:
@@ -310,3 +319,11 @@ class PyutMethod(PyutObject):
         except (ValueError, Exception) as e:
             self.logger.error(f'{e}')
             return ""
+
+    def __repr__(self) -> str:
+        internalRepresentation: str = (
+            f'{self.__str__()} '
+            f'{self.modifiers} '
+            f'{self.sourceCode}'
+        )
+        return internalRepresentation

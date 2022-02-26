@@ -6,11 +6,11 @@ from logging import getLogger
 
 from wx import ALL
 from wx import CB_READONLY
-from wx import CommandEvent
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_COMBOBOX
 from wx import HORIZONTAL
 from wx import ID_ANY
+from wx import ID_OK
 from wx import LEFT
 from wx import OK
 from wx import RIGHT
@@ -18,6 +18,7 @@ from wx import VERTICAL
 
 from wx import App
 from wx import Frame
+from wx import CommandEvent
 from wx import ComboBox
 from wx import BoxSizer
 from wx import StaticBox
@@ -25,6 +26,7 @@ from wx import StaticBoxSizer
 from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.dialogs.DlgEditClass import DlgEditClass
+from org.pyut.dialogs.DlgEditCode import DlgEditCode
 from org.pyut.dialogs.DlgEditField import DlgEditField
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
@@ -32,17 +34,21 @@ from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
+from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutMethod import PyutModifiers
+from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.model.PyutModifier import PyutModifier
 
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutText import PyutText
 from org.pyut.model.PyutType import PyutType
+
 
 from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
@@ -140,6 +146,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditField()
         elif dlgName == DialogNamesEnum.DLG_EDIT_METHOD:
             dlgAnswer = self._testDlgEditMethod()
+        elif dlgName == DialogNamesEnum.DLG_EDIT_CODE:
+            dlgAnswer = self._testDlgEditCode()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -229,7 +237,9 @@ class TestADialog(App):
                 return f'Cancelled'
 
     def _testDlgEditMethod(self):
-        pyutMethod: PyutMethod = PyutMethod(name='OzzeeMethod')
+        pyutMethod:     PyutMethod    = PyutMethod(name='OzzeeMethod')
+        pyutParameter: PyutParam = PyutParam(name='testMethod', parameterType=PyutType("int"), defaultValue=42)
+        pyutMethod.addParam(pyutParameter)
         pyutMethod.modifiers = PyutModifiers(
             [
                 PyutModifier('modifier1'),
@@ -237,9 +247,42 @@ class TestADialog(App):
                 PyutModifier('modifier3')
             ]
         )
+        pyutMethod.sourceCode = SourceCode(
+            [
+                'ans: bool = False',
+                'if param1 > 23:',
+                '    ans = False',
+                '',
+                'return ans'
+            ]
+        )
+        savePreference: PyutGloballyDisplayParameters = PyutMethod.displayParameters
+        PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
         with DlgEditMethod(parent=self._frameTop, windowId=ID_ANY, pyutMethod=pyutMethod) as dlg:
-            if dlg.ShowModal() == OK:
-                return f'Retrieved data: {pyutMethod}'
+            ans = dlg.ShowModal()
+
+            if ans == OK:
+                retrievedData: str = f'Retrieved data: {pyutMethod.__repr__()}'
+            else:
+                retrievedData = f'Cancelled'
+
+        PyutMethod.displayParameters = savePreference
+        return retrievedData
+
+    def _testDlgEditCode(self):
+
+        sourceCode: SourceCode = SourceCode(
+            [
+                'ans: bool = False',
+                'if param1 > 23:',
+                '    ans = False',
+                '',
+                'return ans'
+            ]
+        )
+        with DlgEditCode(self._frameTop, ID_ANY, sourceCode) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                return f'Retrieved data: {dlg.sourceCode}'
             else:
                 return f'Cancelled'
 
