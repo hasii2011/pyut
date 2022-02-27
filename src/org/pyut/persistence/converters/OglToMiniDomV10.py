@@ -78,7 +78,7 @@ class OglToMiniDom:
         root = self.__appendOglBase(oglClass, root)
 
         # adding the data layer object
-        root.appendChild(self._pyutClassToXml(cast(PyutClass, oglClass.getPyutObject()), xmlDoc))
+        root.appendChild(self._pyutClassToXml(cast(PyutClass, oglClass.pyutObject), xmlDoc))
 
         return root
 
@@ -283,7 +283,7 @@ class OglToMiniDom:
 
         classId: int = self._idFactory.getID(pyutClass)
         root.setAttribute(PyutXmlConstants.ATTR_ID, str(classId))
-        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutClass.getName())
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutClass.name)
 
         stereotype = pyutClass.getStereotype()
         if stereotype is not None:
