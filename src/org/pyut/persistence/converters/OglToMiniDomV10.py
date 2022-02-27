@@ -346,7 +346,7 @@ class OglToMiniDom:
         """
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_METHOD)
 
-        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutMethod.getName())
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutMethod.name)
 
         visibility: PyutVisibilityEnum = pyutMethod.getVisibility()
         visName:    str                = self.__safeVisibilityToName(visibility)
@@ -354,9 +354,9 @@ class OglToMiniDom:
         if visibility is not None:
             root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visName)
 
-        for modifier in pyutMethod.getModifiers():
+        for modifier in pyutMethod.modifiers:
             xmlModifier: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_MODIFIER)
-            xmlModifier.setAttribute(PyutXmlConstants.ATTR_NAME, modifier.getName())
+            xmlModifier.setAttribute(PyutXmlConstants.ATTR_NAME, modifier.name)
             root.appendChild(xmlModifier)
 
         returnType = pyutMethod.getReturns()

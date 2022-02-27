@@ -34,6 +34,8 @@ from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 from org.pyut.general.Globals import _
 
 # Until I figure out how to stop mypy from complaining
+# TODO:   This should just be the following:
+#          UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]
 UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])  # type: ignore
 
 

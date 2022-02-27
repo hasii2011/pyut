@@ -1,4 +1,7 @@
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
+
 
 class PyutModifier:
     """
@@ -22,6 +25,7 @@ class PyutModifier:
     def name(self) -> str:
         return self.__name
 
+    @deprecated('Use read only property')
     def getName(self) -> str:
         """
 
