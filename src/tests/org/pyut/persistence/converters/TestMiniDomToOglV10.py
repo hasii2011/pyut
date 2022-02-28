@@ -1,10 +1,27 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import List
+from typing import cast
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
 from unittest.mock import Mock
+
+from wx import App
+
+from xml.dom.minidom import Element
+from xml.dom.minidom import parseString
+from xml.dom.minidom import Document
+
+from pkg_resources import resource_filename
+
+from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import SourceCode
+
+from org.pyut.persistence.converters.MiniDomToOglV10 import OglClasses
+from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.ogl.OglPosition import OglPosition
@@ -31,6 +48,7 @@ class TestMiniDomToOglV10(TestBase):
     """
     """
     clsLogger: Logger = None
+    clsApp:    App = None
 
     @classmethod
     def setUpClass(cls):
@@ -38,12 +56,44 @@ class TestMiniDomToOglV10(TestBase):
         TestMiniDomToOglV10.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
+        TestMiniDomToOglV10.clsApp = App()
+
     def setUp(self):
         self.logger:   Logger       = TestMiniDomToOglV10.clsLogger
         self._converter: MiniDomToOgl = MiniDomToOgl()
 
     def tearDown(self):
         pass
+
+    def testSourceCodeInclusion(self):
+        fqFileName: str = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'MiniDomToOglTest.xml')
+        fd = open(fqFileName)
+        xmlString:  str = fd.read()
+        fd.close()
+
+        dom:   Document = parseString(xmlString)
+        toOgl: MiniDomToOgl = MiniDomToOgl()
+
+        # for element in dom.getElementsByTagName(PyutXmlConstants.ELEMENT_DOCUMENT):
+
+        for element in dom.getElementsByTagName(PyutXmlConstants.ELEMENT_DOCUMENT):
+
+            documentNode: Element = cast(Element, element)
+
+            oglClasses: OglClasses = toOgl.getOglClasses(documentNode.getElementsByTagName(PyutXmlConstants.ELEMENT_GRAPHIC_CLASS))
+
+            self.assertEqual(1, len(oglClasses), 'I should only get 1 class back')
+
+            for oglClass in oglClasses.values():
+                self.logger.info(f'{oglClass=}')
+                pyutClass:  PyutClass = oglClass.pyutObject
+                self.logger.info(f'{pyutClass=}')
+
+                methods: List[PyutMethod] = pyutClass.methods
+                method: PyutMethod = methods.pop(0)
+                sourceCode: SourceCode = method.sourceCode
+                self.assertEqual(5, len(sourceCode), 'Should have 5 lines of source code')
+                self.logger.info(f'{sourceCode=}')
 
     def testAttachEast(self):
 

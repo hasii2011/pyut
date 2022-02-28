@@ -11,6 +11,7 @@ from logging import getLogger
 
 from xml.dom.minidom import Element
 from xml.dom.minicompat import NodeList
+from xml.dom.minidom import Text
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
@@ -25,6 +26,7 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutSDInstance import PyutSDInstance
@@ -119,7 +121,7 @@ class MiniDomToOgl:
             xmlClass: Element = xmlOglClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CLASS)[0]
 
             pyutClass.setId(int(xmlClass.getAttribute(PyutXmlConstants.ATTR_ID)))
-            pyutClass.setName(xmlClass.getAttribute(PyutXmlConstants.ATTR_NAME))
+            pyutClass.name = xmlClass.getAttribute(PyutXmlConstants.ATTR_NAME)
             pyutClass.description = xmlClass.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
             if xmlClass.hasAttribute(PyutXmlConstants.ATTR_STEREOTYPE):
                 pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute(PyutXmlConstants.ATTR_STEREOTYPE)))
@@ -141,10 +143,10 @@ class MiniDomToOgl:
                 displayParameters: PyutDisplayParameters = PyutDisplayParameters(displayParametersStr)
                 pyutClass.displayParameters = displayParameters
 
-            pyutClass.setFilename(xmlClass.getAttribute(PyutXmlConstants.ATTR_FILENAME))
+            pyutClass.fileName = xmlClass.getAttribute(PyutXmlConstants.ATTR_FILENAME)
 
-            pyutClass.methods = self._getMethods(xmlClass)
-            pyutClass.fields  = self._getFields(xmlClass)
+            pyutClass.methods    = self._getMethods(xmlClass)
+            pyutClass.fields     = self._getFields(xmlClass)
 
             # Adding properties necessary to place shape on a diagram frame
             x = PyutUtils.strFloatToInt(xmlOglClass.getAttribute(PyutXmlConstants.ATTR_X))
@@ -538,6 +540,9 @@ class MiniDomToOgl:
 
             pyutMethod.setParams(methodParameters)
 
+            sourceCodeXmlList: NodeList = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SOURCE_CODE)
+            pyutMethod.sourceCode = self._getSourceCode(sourceCodeXmlList)
+
             allMethods.append(pyutMethod)
 
         return allMethods
@@ -604,6 +609,19 @@ class MiniDomToOgl:
             pyutFields.append(pyutField)
 
         return pyutFields
+
+    def _getSourceCode(self, sourceCodeXmlList: NodeList) -> SourceCode:
+
+        xmlCode:    Element    = cast(Element, sourceCodeXmlList.item(0))
+        codeNodes:  NodeList   = xmlCode.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CODE)
+
+        sourceCode: SourceCode = SourceCode([])
+        for node in codeNodes:
+            textNodeElement: Element = cast(Element, node)
+            textNode:        Text    = textNodeElement.childNodes[0]
+            text:            str     = textNode.data
+            sourceCode.append(text)
+        return sourceCode
 
     def _generateControlPoints(self, link: Element) -> ControlPoints:
 
