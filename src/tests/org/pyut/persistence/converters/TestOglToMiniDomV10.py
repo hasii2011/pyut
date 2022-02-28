@@ -76,12 +76,15 @@ class TestOglToMiniDomV10(TestBase):
                 classElement: Element = toPyutXml.oglClassToXml(oglObject, xmlDoc)
                 documentNode.appendChild(classElement)
 
-        sourceCodeElt: Element = xmlDoc.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SOURCE_CODE)
-        self.assertIsNotNone(sourceCodeElt, "We should create a source code element")
-        childNodes = sourceCodeElt[0].childNodes
+        sourceCodeElements: Element = xmlDoc.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SOURCE_CODE)
+        self.assertIsNotNone(sourceCodeElements, "We should create a source code element")
+
+        # childNodes = sourceCodeElements[0].childNodes
+        # noinspection PyUnresolvedReferences
+        childNodes = sourceCodeElements.item(0).childNodes
         self.assertEqual(5, len(childNodes), 'Incorrect number of source code lines')
         text = xmlDoc.toprettyxml()
-        self.logger.debug(f'xml: {text}')
+        self.logger.info(f'xml: {text}')
 
     def testName2(self):
         """Another test"""
