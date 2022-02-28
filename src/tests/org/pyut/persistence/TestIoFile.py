@@ -62,9 +62,6 @@ class TestIoFile(TestBase):
         with patch('org.pyut.ui.PyutProject.PyutProject') as mockPyutProject:
             self.ioFile.open(filename='testdata/BaseSave_V8.put', project=mockPyutProject)
 
-    def testName2(self):
-        pass
-
 
 def suite() -> TestSuite:
 

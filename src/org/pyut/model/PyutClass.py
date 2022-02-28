@@ -29,7 +29,6 @@ class PyutClass(PyutClassCommon, PyutLinkedObject):
         fields.append(PyutField("bar", "int"))
 
     """
-
     def __init__(self, name=""):
         """
 
@@ -126,4 +125,7 @@ class PyutClass(PyutClassCommon, PyutLinkedObject):
         """
         String representation.
         """
-        return f"Class : {self.getName()}"
+        return f"Class : {self.name}"
+
+    def __repr__(self):
+        return self.__str__()
