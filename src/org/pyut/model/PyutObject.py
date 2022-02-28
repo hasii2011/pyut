@@ -91,7 +91,7 @@ class PyutObject:
         """
         return self._id
 
-    # TODO file name property is in wrong place should be in PyutObject
+    @deprecated('Use the property')
     def setFilename(self, fileName: str):
         """
         Set the associated filename.
@@ -102,6 +102,7 @@ class PyutObject:
         """
         self._fileName = fileName
 
+    @deprecated('Use the property')
     def getFilename(self) -> str:
         """
         Get the associated fileName.

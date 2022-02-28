@@ -20,6 +20,7 @@ from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
+from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParam import PyutParam
 from org.pyut.model.PyutSDInstance import PyutSDInstance
@@ -289,7 +290,7 @@ class OglToMiniDom:
         if stereotype is not None:
             root.setAttribute(PyutXmlConstants.ATTR_STEREOTYPE, stereotype.getStereotype())
 
-        root.setAttribute(PyutXmlConstants.ATTR_FILENAME,    pyutClass.getFilename())
+        root.setAttribute(PyutXmlConstants.ATTR_FILENAME,    pyutClass.fileName)
 
         root = self._pyutClassCommonToXml(pyutClass, root)
 
@@ -368,7 +369,20 @@ class OglToMiniDom:
         for param in pyutMethod.getParams():
             root.appendChild(self._pyutParamToXml(param, xmlDoc))
 
+        codeRoot: Element = self._pyutSourceCodeToXml(pyutMethod.sourceCode, xmlDoc)
+        root.appendChild(codeRoot)
         return root
+
+    def _pyutSourceCodeToXml(self, sourceCode: SourceCode, xmlDoc: Document) -> Element:
+
+        codeRoot: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_SOURCE_CODE)
+        for code in sourceCode:
+            codeElement:  Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_CODE)
+            textCodeNode: Element = xmlDoc.createTextNode(code)
+            codeElement.appendChild(textCodeNode)
+            codeRoot.appendChild(codeElement)
+
+        return codeRoot
 
     def _pyutImplementorToXml(self, className: ClassName, xmlDoc: Document) -> Element:
 

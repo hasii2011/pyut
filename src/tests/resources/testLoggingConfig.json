@@ -50,6 +50,10 @@
             "level": "INFO",
             "propagate": "False"
         },
+        "tests.org.pyut.persistence.converters.TestOglToMiniDomV10": {
+            "level": "INFO",
+            "propagate": "False"
+        },
         "org.pyut.dialogs.DlgPyutDebug": {
             "level": "WARNING",
             "propagate": "False"

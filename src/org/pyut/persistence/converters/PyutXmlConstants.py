@@ -29,6 +29,8 @@ class PyutXmlConstants:
     ELEMENT_MODEL_PARAM:       str = 'Param'
     ELEMENT_MODEL_RETURN:      str = 'Return'
     ELEMENT_MODEL_MODIFIER:    str = 'Modifier'
+    ELEMENT_MODEL_SOURCE_CODE: str = 'SourceCode'
+    ELEMENT_MODEL_CODE:        str = 'Code'
 
     ELEMENT_MODEL_SD_INSTANCE:   str = 'SDInstance'
     ELEMENT_MODEL_SD_MESSAGE:    str = 'SDMessage'
