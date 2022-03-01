@@ -8,7 +8,7 @@ from org.pyut.general.LineSplitter import LineSplitter
 
 class OglUseCase(OglObject):
     """
-    OGL object that represent an UML use case in use case diagrams.
+    OGL object that represent a UML use case in use case diagrams.
     This class defines OGL objects that represents a use case for Use
     Cases diagram. You can just instantiate an OGLUseCase and add it to
     the diagram, links, resizing, ... are managed by parent class
@@ -72,7 +72,7 @@ class OglUseCase(OglObject):
         dc.SetClippingRegion(x, y, textWidth, round(0.6 * height))
 
         # Split lines
-        lines = LineSplitter().split(self.pyutObject.getName(), dc, textWidth)
+        lines = LineSplitter().split(self.pyutObject.name, dc, textWidth)
 
         # Draw text
         for line in lines:

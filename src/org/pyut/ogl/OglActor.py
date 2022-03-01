@@ -10,9 +10,9 @@ MARGIN: int = 10
 
 class OglActor(OglObject):
     """
-    OGL object that represent an UML actor in use case diagrams.
+    OGL object that represent a UML actor in use case diagrams.
     This class defines OGL objects that represents an actor for Use
-    Cases diagram. You can just instanciate an OGL actor and add it to
+    Cases diagram. You can just instantiate an OGL actor and add it to
     the diagram, links, resizing, ... are managed by parent class
     `OglObject`.
 
@@ -102,11 +102,11 @@ class OglActor(OglObject):
         dc.DrawLine(x, y, x + round(0.25 * actorWidth), y + actorFeetPercentage)
 
         # Draw our buddy name
-        textWidth, textHeight = dc.GetTextExtent(self.pyutObject.getName())
+        textWidth, textHeight = dc.GetTextExtent(self.pyutObject.name)
 
         # y = centerY + 0.5 * height - MARGIN - 0.1 * actorHeight
         y = round(centerY + 0.5 * height - MARGIN - 0.1 * actorHeight)
 
         # dc.DrawText(self.getPyutObject().getName(), x - 0.5 * textWidth, y)
-        dc.DrawText(self.pyutObject.getName(), round(x - 0.5 * textWidth), y)
+        dc.DrawText(self.pyutObject.name, round(x - 0.5 * textWidth), y)
         dc.DestroyClippingRegion()

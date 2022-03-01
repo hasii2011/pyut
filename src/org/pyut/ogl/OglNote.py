@@ -70,7 +70,7 @@ class OglNote(OglObject):
         try:
             # lines = LineSplitter().split(self.getPyutObject().getName(), dc, w - 2 * MARGIN)
             # noteName = self.getPyutObject().getName()
-            noteContent = cast(PyutNote, self.getPyutObject()).content
+            noteContent = cast(PyutNote, self.pyutObject).content
             lines = LineSplitter().split(noteContent, dc, w - 2 * OglNote.MARGIN)
         except (ValueError, Exception) as e:
             self.logger.error(f"Unable to display note - {e}")
@@ -91,8 +91,8 @@ class OglNote(OglObject):
         dc.DestroyClippingRegion()
 
     def __repr__(self):
-        pyutNote: PyutNote = cast(PyutNote, self.getPyutObject())
+        pyutNote: PyutNote = cast(PyutNote, self.pyutObject)
         if pyutNote is None:
             return f'Anonymous Note'
         else:
-            return f'{pyutNote._name}'
+            return f'{pyutNote.name}'

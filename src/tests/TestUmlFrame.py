@@ -124,7 +124,7 @@ class TestUmlFrame(unittest.TestCase):
 
         # Get OglNote
         try:
-            oglNote = [s for s in self._umlFrame.getDiagram().GetShapes() if s.getPyutObject() is pyutNote][0]  # Too cute; fix
+            oglNote = [s for s in self._umlFrame.getDiagram().GetShapes() if s.pyutObject is pyutNote][0]  # Too cute; fix
         except (ValueError, Exception):
             self.fail("Cannot get OglNote")
 
