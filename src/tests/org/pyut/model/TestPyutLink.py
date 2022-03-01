@@ -23,6 +23,12 @@ class TestPyutLink(TestBase):
         TestPyutLink.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
+        import warnings
+        # To ignore this warning:
+        # DeprecationWarning
+        # Since this is legacy stuff;  May go away
+        warnings.simplefilter("ignore", category=DeprecationWarning)
+
     def setUp(self):
         self.logger: Logger = TestPyutLink.clsLogger
 

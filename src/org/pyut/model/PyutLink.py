@@ -166,7 +166,7 @@ class PyutLink(PyutObject):
             try:
                 self._type = LinkType(linkType)
             except (ValueError, Exception) as e:
-                self.logger.error(f'setType: {e}')
+                self.logger.warning(f'setType: {e}')
                 self._type = LinkType.INHERITANCE
         else:
             self._type = linkType

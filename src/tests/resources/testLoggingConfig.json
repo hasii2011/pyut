@@ -55,7 +55,7 @@
             "propagate": "False"
         },
         "tests.org.pyut.persistence.converters.TestMiniDomToOglV10": {
-            "level": "INFO",
+            "level": "WARNING",
             "propagate": "False"
         },
 

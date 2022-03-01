@@ -24,6 +24,11 @@ class TestGithubAdapter(TestBase):
         TestGithubAdapter.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
+        import warnings
+        # To ignore this warning:
+        # GithubAdapter.py:60: ResourceWarning: unclosed <ssl.SSLSocket fd=5,
+        warnings.filterwarnings(action="ignore", message="unclosed", category=ResourceWarning)
+
     def setUp(self):
         self.logger:        Logger        = TestGithubAdapter.clsLogger
         self.githubAdapter: GithubAdapter = GithubAdapter()

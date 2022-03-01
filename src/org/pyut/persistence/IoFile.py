@@ -6,6 +6,7 @@ from os import getcwd
 from os import chdir
 
 import zlib
+from typing import TextIO
 from xml.dom.minidom import Document
 from xml.dom.minidom import parseString
 
@@ -19,6 +20,7 @@ from org.pyut.general.PyutXmlFinder import PyutXmlFinder
 
 from org.pyut.ui.Mediator import Mediator
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -84,7 +86,9 @@ class IoFile:
             except (ValueError, Exception) as e:
                 self.logger.error(f'open:  {e}')
         elif suffix == PyutConstants.XML_EXTENSION:
-            xmlString = open(filename, "r").read()
+            fd:        TextIO = open(filename, "r")
+            xmlString: str = fd.read()
+            fd.close()
         else:
             PyutUtils.displayError(_(f"This is an unsupported file type: {filename}"))
             return
