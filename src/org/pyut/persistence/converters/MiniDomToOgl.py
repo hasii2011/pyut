@@ -19,7 +19,7 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.model.PyutUseCase import PyutUseCase
@@ -442,7 +442,7 @@ class MiniDomToOgl:
 
         return allMethods
 
-    def _getParam(self, domElement: Element) -> PyutParam:
+    def _getParam(self, domElement: Element) -> PyutParameter:
         """
 
         Args:
@@ -451,8 +451,8 @@ class MiniDomToOgl:
         Returns:
             A parameter model object
         """
-        pyutParam: PyutParam = PyutParam(name=domElement.getAttribute(PyutXmlConstants.ATTR_NAME),
-                                         parameterType=domElement.getAttribute(PyutXmlConstants.ATTR_TYPE))
+        pyutParam: PyutParameter = PyutParameter(name=domElement.getAttribute(PyutXmlConstants.ATTR_NAME),
+                                                 parameterType=domElement.getAttribute(PyutXmlConstants.ATTR_TYPE))
 
         if domElement.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):
             pyutParam.setDefaultValue(domElement.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE))

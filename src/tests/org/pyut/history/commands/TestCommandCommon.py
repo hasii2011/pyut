@@ -1,6 +1,6 @@
 
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
@@ -20,9 +20,9 @@ class TestCommandCommon:
         pyutMethod.visibility = visibility
         pyutMethod.returnType = returnType
 
-        pyutParam: PyutParam = PyutParam(name=f'param{TestCommandCommon.methodParamNumber}',
-                                         parameterType=PyutType(f'Type{TestCommandCommon.methodTypeNumber}'),
-                                         defaultValue='')
+        pyutParam: PyutParameter = PyutParameter(name=f'param{TestCommandCommon.methodParamNumber}',
+                                                 parameterType=PyutType(f'Type{TestCommandCommon.methodTypeNumber}'),
+                                                 defaultValue='')
 
         pyutMethod.addParam(pyutParam)
 

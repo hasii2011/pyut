@@ -22,7 +22,7 @@ from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.model.PyutText import PyutText
@@ -411,7 +411,7 @@ class OglToMiniDom:
 
         return root
 
-    def _pyutParamToXml(self, pyutParam: PyutParam, xmlDoc: Document) -> Element:
+    def _pyutParamToXml(self, pyutParam: PyutParameter, xmlDoc: Document) -> Element:
         """
         Export a PyutParam to a miniDom Element
 

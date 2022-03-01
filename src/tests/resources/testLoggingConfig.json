@@ -47,13 +47,18 @@
             "propagate": "False"
         },
         "tests.TestCommandGroup": {
-            "level": "INFO",
+            "level": "WARNING",
             "propagate": "False"
         },
         "tests.org.pyut.persistence.converters.TestOglToMiniDomV10": {
+            "level": "WARNING",
+            "propagate": "False"
+        },
+        "tests.org.pyut.persistence.converters.TestMiniDomToOglV10": {
             "level": "INFO",
             "propagate": "False"
         },
+
         "org.pyut.dialogs.DlgPyutDebug": {
             "level": "WARNING",
             "propagate": "False"

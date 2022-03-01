@@ -40,7 +40,7 @@ from org.pyut.general.CustomEvents import ClassNameChangedEvent
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutStereotype import getPyutStereotype
 
 from org.pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
@@ -195,7 +195,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         dupParams = []
         for i in params:
-            param: PyutParam = PyutParam(name=i.getName(), parameterType=i.getType(), defaultValue=i.getDefaultValue())
+            param: PyutParameter = PyutParameter(name=i.getName(), parameterType=i.getType(), defaultValue=i.getDefaultValue())
             dupParams.append(param)
         return dupParams
 

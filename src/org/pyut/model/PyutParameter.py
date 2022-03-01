@@ -11,9 +11,8 @@ from org.pyut.model.PyutObject import PyutObject
 from org.pyut.model.PyutType import PyutType
 
 
-class PyutParam(PyutObject):
+class PyutParameter(PyutObject):
     """
-    TODO:  Rename this to PyutParameter
     """
 
     DEFAULT_PARAMETER_NAME: str = 'param'

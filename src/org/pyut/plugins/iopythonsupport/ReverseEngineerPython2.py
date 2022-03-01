@@ -28,7 +28,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutMethod import PyutParameters
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -191,11 +191,11 @@ class ReverseEngineerPython2:
 
             if len(potentialNameType) == 2:
 
-                param: PyutParam = PyutParam(name=potentialNameType[0], parameterType=PyutType(value=potentialNameType[1]))
+                param: PyutParameter = PyutParameter(name=potentialNameType[0], parameterType=PyutType(value=potentialNameType[1]))
                 setter.addParam(param)
                 getter.returnType = PyutType(value=potentialNameType[1])
             else:
-                param = PyutParam(name=potentialNameType[0])
+                param = PyutParameter(name=potentialNameType[0])
                 setter.addParam(param)
 
         return setter, getter
@@ -348,18 +348,18 @@ class ReverseEngineerPython2:
         pyutParams:        PyutParameters = PyutParameters([])
         for parameterStr in parameterNameList:
             if ':' in parameterStr and '=' in parameterStr:
-                pyutParam: PyutParam = self.__complexTypedAndDefaultValue(parameterStr)
+                pyutParam: PyutParameter = self.__complexTypedAndDefaultValue(parameterStr)
             elif '=' in parameterStr:
                 pyutParam = self._simpleDefaultValue(parameterStr)
             elif ':' in parameterStr:
                 pyutParam = self._typedParameter(parameterStr)
             else:
-                pyutParam = PyutParam(parameterStr)
+                pyutParam = PyutParameter(parameterStr)
             pyutParams.append(pyutParam)
 
         return pyutParams
 
-    def __complexTypedAndDefaultValue(self, complexParam: str) -> PyutParam:
+    def __complexTypedAndDefaultValue(self, complexParam: str) -> PyutParameter:
 
         paramNameType:  List[str] = complexParam.split(':')
         paramName:      str = paramNameType[0]
@@ -368,24 +368,24 @@ class ReverseEngineerPython2:
         paramValue:     str = paramTypeValue[1]
 
         pyutType: PyutType = PyutType(paramType)
-        return PyutParam(name=paramName, parameterType=pyutType, defaultValue=paramValue)
+        return PyutParameter(name=paramName, parameterType=pyutType, defaultValue=paramValue)
 
-    def _simpleDefaultValue(self, simpleDefaultValueParam: str) -> PyutParam:
+    def _simpleDefaultValue(self, simpleDefaultValueParam: str) -> PyutParameter:
 
         pyutParamAndValue: List[str] = simpleDefaultValueParam.split('=')
         paramName:  str = pyutParamAndValue[0]
         paramValue: str = pyutParamAndValue[1]
 
-        pyutParam: PyutParam = PyutParam(name=paramName, defaultValue=paramValue)
+        pyutParam: PyutParameter = PyutParameter(name=paramName, defaultValue=paramValue)
 
         return pyutParam
 
-    def _typedParameter(self, typedParam: str) -> PyutParam:
+    def _typedParameter(self, typedParam: str) -> PyutParameter:
         pyutParamAndType: List[str] = typedParam.split(':')
         paramName:        str = pyutParamAndType[0]
         paramType:        str = pyutParamAndType[1]
 
-        pyutParam: PyutParam = PyutParam(name=paramName, parameterType=PyutType(value=paramType))
+        pyutParam: PyutParameter = PyutParameter(name=paramName, parameterType=PyutType(value=paramType))
         return pyutParam
 
     def __simpleParseFieldToPyut(self, fieldData: str) -> PyutField:

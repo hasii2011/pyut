@@ -12,7 +12,7 @@ from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
@@ -238,20 +238,20 @@ class PyutToPython:
 
         return currentCode
 
-    def _generateParametersCode(self, currentCode: str, params: List[PyutParam]):
+    def _generateParametersCode(self, currentCode: str, params: List[PyutParameter]):
 
         if len(params) > 0:
             currentCode = f'{currentCode}, '
         # Add parameter code
         for i in range(len(params)):
-            pyutParam: PyutParam = params[i]
+            pyutParam: PyutParameter = params[i]
             numParams: int = len(params)
             paramCode: str = self.__generateParameter(currentParamNumber=i, numberOfParameters=numParams, pyutParam=pyutParam)
 
             currentCode = self.__addParamToMethodSignature(currentCode, paramCode)
         return currentCode
 
-    def __generateParameter(self, currentParamNumber: int, numberOfParameters: int, pyutParam: PyutParam) -> str:
+    def __generateParameter(self, currentParamNumber: int, numberOfParameters: int, pyutParam: PyutParameter) -> str:
         """
 
         Args:
@@ -281,13 +281,13 @@ class PyutToPython:
 
         methodCode.append(self.__indentStr('(TODO : add description)\n\n'))
 
-        params: List[PyutParam] = pyutMethod.getParams()
+        params: List[PyutParameter] = pyutMethod.getParams()
 
         if len(params) > 0:
             methodCode.append(self.__indentStr(f'Args:\n'))
 
         for i in range(len(params)):
-            param: PyutParam = params[i]
+            param: PyutParameter = params[i]
             methodCode.append(self.__indentStr(f'{param.getName()}:\n', 2))
         # Add others
         if pyutMethod.getReturns() is not None and len(str(pyutMethod.getReturns())) > 0:

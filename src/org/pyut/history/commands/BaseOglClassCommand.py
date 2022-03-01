@@ -92,7 +92,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
             serializedData: serialized data needed by the command.
         """
         from org.pyut.model.PyutMethod import PyutMethod
-        from org.pyut.model.PyutParam import PyutParam
+        from org.pyut.model.PyutParameter import PyutParameter
         from org.pyut.model.PyutField import PyutField
 
         from org.pyut.model.PyutStereotype import PyutStereotype
@@ -156,7 +156,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
                 paramDefaultValue = param[2]
 
                 # creates and add the param to the method
-                method.addParam(PyutParam(paramName, paramType, paramDefaultValue))
+                method.addParam(PyutParameter(paramName, paramType, paramDefaultValue))
 
             # deserialize method's modifiers so we get a list of names
             # that we have to transform into a list of PyutModifiers.

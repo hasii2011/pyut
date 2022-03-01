@@ -12,7 +12,7 @@ from deprecated import deprecated
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.model.PyutModifier import PyutModifier
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
@@ -21,7 +21,7 @@ from org.pyut.model.PyutObject import PyutObject
 
 SourceCode     = NewType('SourceCode',     List[str])
 PyutModifiers  = NewType('PyutModifiers',  List[PyutModifier])
-PyutParameters = NewType('PyutParameters', List[PyutParam])
+PyutParameters = NewType('PyutParameters', List[PyutParameter])
 
 
 class PyutMethod(PyutObject):
@@ -225,7 +225,7 @@ class PyutMethod(PyutObject):
 
         TODO: rename this to `addParameter`
 
-        @param PyutParam param : param to add
+        @param PyutParameter param : param to add
         @since 1.6
         @author Laurent Burgbacher <lb@alawa.ch>
         """

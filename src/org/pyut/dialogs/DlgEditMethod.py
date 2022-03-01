@@ -44,7 +44,7 @@ from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutMethod import PyutModifiers
 from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.model.PyutModifier import PyutModifier
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -220,7 +220,7 @@ class DlgEditMethod(BaseDlgEdit):
 
         return szrButtons
 
-    def _callDlgEditParam (self, param: PyutParam) -> int:
+    def _callDlgEditParam (self, param: PyutParameter) -> int:
         """
         Creates dialog for editing method parameters
         Args:
@@ -259,7 +259,7 @@ class DlgEditMethod(BaseDlgEdit):
         Args:
             event:
         """
-        param: PyutParam = PyutParam()
+        param: PyutParameter = PyutParameter()
         ret = self._callDlgEditParam(param)
         if ret == OK:
             self._pyutMethodCopy.getParams().append(param)

@@ -12,7 +12,7 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
@@ -246,7 +246,7 @@ class PyutXml:
         """
         Exporting a PyutParam to an miniDom Element.
 
-        @param PyutParam pyutParam : Parameters to save
+        @param PyutParameter pyutParam : Parameters to save
         @param xmlDoc : xml Document instance
         @return Element : XML Node
         @author Deve Roux <droux@eivd.ch>
@@ -555,7 +555,7 @@ class PyutXml:
         return root
 
     def _getParam(self, Param):
-        aParam = PyutParam()
+        aParam = PyutParameter()
         if Param.hasAttribute('defaultValue'):
             aParam.setDefaultValue(Param.getAttribute('defaultValue'))
         aParam.setName(Param.getAttribute('name'))

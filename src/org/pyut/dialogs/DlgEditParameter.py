@@ -21,7 +21,7 @@ from wx import Event
 from wx import FlexGridSizer
 from wx import CommandEvent
 
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
@@ -40,7 +40,7 @@ from org.pyut.general.Globals import _
 
 class DlgEditParameter(BaseDlgEdit):
 
-    def __init__(self, parent, windowId, parameterToEdit: PyutParam, mediator=None):
+    def __init__(self, parent, windowId, parameterToEdit: PyutParameter, mediator=None):
         """
         The Dialog for parameter editing
         Args:
@@ -52,7 +52,7 @@ class DlgEditParameter(BaseDlgEdit):
 
         super().__init__(parent, windowId, _("Parameter Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=mediator)
 
-        self._parameterToEdit: PyutParam = parameterToEdit
+        self._parameterToEdit: PyutParameter = parameterToEdit
 
         # ----------------
         # Design of dialog

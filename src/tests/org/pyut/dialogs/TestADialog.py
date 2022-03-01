@@ -45,7 +45,7 @@ from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.model.PyutModifier import PyutModifier
 
 from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutText import PyutText
 from org.pyut.model.PyutType import PyutType
 
@@ -197,7 +197,7 @@ class TestADialog(App):
                 return f'Cancelled'
 
     def _testDlgEditParameter(self) -> str:
-        pyutParameter: PyutParam = PyutParam()
+        pyutParameter: PyutParameter = PyutParameter()
         with DlgEditParameter(parent=self._frameTop, windowId=ID_ANY, parameterToEdit=pyutParameter, mediator=Mediator()) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutParameter}'
@@ -238,7 +238,7 @@ class TestADialog(App):
 
     def _testDlgEditMethod(self):
         pyutMethod:     PyutMethod    = PyutMethod(name='OzzeeMethod')
-        pyutParameter: PyutParam = PyutParam(name='testMethod', parameterType=PyutType("int"), defaultValue=42)
+        pyutParameter: PyutParameter = PyutParameter(name='testMethod', parameterType=PyutType("int"), defaultValue=42)
         pyutMethod.addParam(pyutParameter)
         pyutMethod.modifiers = PyutModifiers(
             [

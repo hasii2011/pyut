@@ -2,12 +2,12 @@
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 
-class PyutField(PyutParam):
+class PyutField(PyutParameter):
     """
     A class field
 
@@ -69,7 +69,7 @@ class PyutField(PyutParam):
         @return string field
         """
         # return str(self._visibility) + PyutParam.__str__(self)
-        return f'{self._visibility}{PyutParam.__str__(self)}'
+        return f'{self._visibility}{PyutParameter.__str__(self)}'
 
     def __repr__(self):
         return self.__str__()

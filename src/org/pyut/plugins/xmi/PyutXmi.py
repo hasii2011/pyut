@@ -16,7 +16,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.enums.LinkType import LinkType
@@ -25,8 +25,8 @@ from org.pyut.ogl.OglClass import OglClass
 
 import wx
 
-DefaultValueType = Union[PyutField, PyutParam]
-TypeIdObject     = Union[PyutMethod, PyutParam, PyutField]
+DefaultValueType = Union[PyutField, PyutParameter]
+TypeIdObject     = Union[PyutMethod, PyutParameter, PyutField]
 
 
 class PyutXmi:
@@ -397,7 +397,7 @@ class PyutXmi:
 
         Returns: PyutParam
         """
-        aParam = PyutParam()
+        aParam = PyutParameter()
 
         # param's name
         name = Param.getElementsByTagName("Foundation.Core.ModelElement.name")[0].firstChild

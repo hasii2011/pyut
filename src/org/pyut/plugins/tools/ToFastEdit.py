@@ -23,7 +23,7 @@ from wx import MessageDialog
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -210,7 +210,7 @@ class ToFastEdit(PyutToPlugin):
                 pyutType: PyutType   = PyutType(value=returnType)
                 method:   PyutMethod = PyutMethod(name=name, visibility=vis, returns=pyutType)
 
-                method.setParams([PyutParam(x[0], x[1]) for x in params])
+                method.setParams([PyutParameter(x[0], x[1]) for x in params])
                 methods.append(method)
             else:
                 # process field

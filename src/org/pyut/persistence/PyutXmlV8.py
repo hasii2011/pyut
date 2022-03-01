@@ -29,7 +29,7 @@ from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.model.PyutStereotype import getPyutStereotype
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
 from org.pyut.model.PyutUseCase import PyutUseCase
@@ -711,9 +711,9 @@ class PyutXml:
 
         return root
 
-    def _getParam(self, domElement: Element) -> PyutParam:
+    def _getParam(self, domElement: Element) -> PyutParameter:
 
-        pyutParam: PyutParam = PyutParam(name=domElement.getAttribute('name'), parameterType=domElement.getAttribute('type'))
+        pyutParam: PyutParameter = PyutParameter(name=domElement.getAttribute('name'), parameterType=domElement.getAttribute('type'))
 
         if domElement.hasAttribute('defaultValue'):
             pyutParam.setDefaultValue(domElement.getAttribute('defaultValue'))

@@ -15,7 +15,7 @@ from os import O_CREAT
 from org.pyut.model.ModelTypes import PyutLinks
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutStereotype import PyutStereotype
 from org.pyut.model.PyutLink import PyutLink
 
@@ -382,7 +382,7 @@ class IoJava(PyutIoPlugin):
 
         write(file, f') {{\n{self.__tab}}}\n\n'.encode())
 
-    def _writeParam(self, file: int, param: PyutParam):
+    def _writeParam(self, file: int, param: PyutParameter):
         """
         Writing params to file.
 

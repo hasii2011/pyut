@@ -6,7 +6,7 @@ from org.pyut.history.HistoryUtils import tokenizeValue
 
 from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -88,7 +88,7 @@ class MethodInformation:
                 paramDefaultValue: str      = param[2]
 
                 # creates and add the param to the method
-                pyutParam: PyutParam = PyutParam(name=paramName, parameterType=paramType, defaultValue=paramDefaultValue)
+                pyutParam: PyutParameter = PyutParameter(name=paramName, parameterType=paramType, defaultValue=paramDefaultValue)
                 pyutMethod.addParam(pyutParam)
 
             pyutMethods.append(pyutMethod)

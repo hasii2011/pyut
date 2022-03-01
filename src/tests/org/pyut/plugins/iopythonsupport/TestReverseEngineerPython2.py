@@ -14,7 +14,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -175,19 +175,19 @@ class TestReverseEngineerPython2(TestBase):
 
         # multiParameterNames: MultiParameterNames = MultiParameterNames('param1,param2:float,param3=57.0,param4:float=42.0')
         multiParameterNames: MultiParameterNames = MultiParameterNames('param4:float=42.0')
-        pyutParameters: List[PyutParam] = self.reverseEngineer._generateParameters(multiParameterNames=multiParameterNames)
+        pyutParameters: List[PyutParameter] = self.reverseEngineer._generateParameters(multiParameterNames=multiParameterNames)
         self.logger.debug(f'{pyutParameters=}')
 
-        pyutParameter: PyutParam = pyutParameters[0]
+        pyutParameter: PyutParameter = pyutParameters[0]
         self.assertEqual('param4', pyutParameter.name, 'Name is incorrect')
         self.assertEqual(PyutType(value='float'), pyutParameter.type, 'We parsed the type incorrectly')
         self.assertEqual('42.0', pyutParameter.defaultValue, 'Did not default value correctly')
 
     def testGenerateParametersSimple(self):
         multiParameterNames: MultiParameterNames = MultiParameterNames('param')
-        pyutParameters:      List[PyutParam]     = self.reverseEngineer._generateParameters(multiParameterNames=multiParameterNames)
+        pyutParameters:      List[PyutParameter]     = self.reverseEngineer._generateParameters(multiParameterNames=multiParameterNames)
 
-        pyutParameter: PyutParam = pyutParameters[0]
+        pyutParameter: PyutParameter = pyutParameters[0]
 
         self.assertEqual('param', pyutParameter.name, 'Name is incorrect')
         self.assertIsNone(pyutParameter.defaultValue, 'There should be no default value')
@@ -195,9 +195,9 @@ class TestReverseEngineerPython2(TestBase):
 
     def testGenerateParametersSimpleDefaultValue(self):
         multiParameterNames: MultiParameterNames = MultiParameterNames('param3=57.0')
-        pyutParameters:      List[PyutParam]     = self.reverseEngineer._generateParameters(multiParameterNames=multiParameterNames)
+        pyutParameters:      List[PyutParameter]     = self.reverseEngineer._generateParameters(multiParameterNames=multiParameterNames)
 
-        pyutParameter: PyutParam = pyutParameters[0]
+        pyutParameter: PyutParameter = pyutParameters[0]
 
         self.assertEqual('param3', pyutParameter.name, 'Name is incorrect')
         self.assertEqual('57.0', pyutParameter.defaultValue)
@@ -205,9 +205,9 @@ class TestReverseEngineerPython2(TestBase):
 
     def testGenerateParametersTypedParameter(self):
         typedParameterName: MultiParameterNames = MultiParameterNames('param2:float')
-        pyutParameters:      List[PyutParam]     = self.reverseEngineer._generateParameters(multiParameterNames=typedParameterName)
+        pyutParameters:      List[PyutParameter]     = self.reverseEngineer._generateParameters(multiParameterNames=typedParameterName)
 
-        pyutParameter: PyutParam = pyutParameters[0]
+        pyutParameter: PyutParameter = pyutParameters[0]
         self.assertEqual('param2', pyutParameter.name, 'Name is incorrect')
 
         expectedType: PyutType = PyutType(value='float')

@@ -10,7 +10,7 @@ from logging import getLogger
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParam import PyutParam
+from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -82,9 +82,9 @@ class PythonMetaClassDataHandler:
                             defVal = args[3][i - firstDefVal]
                             if isinstance(defVal, str):
                                 defVal = f'"{defVal}"'
-                            param = PyutParam(arg, PyutType(""), str(defVal))
+                            param = PyutParameter(arg, PyutType(""), str(defVal))
                         else:
-                            param = PyutParam(arg)
+                            param = PyutParameter(arg)
                         meth.addParam(param)
             methods.append(meth)
             # set the visibility according to naming conventions
