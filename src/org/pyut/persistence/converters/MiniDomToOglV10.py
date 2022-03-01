@@ -618,9 +618,10 @@ class MiniDomToOgl:
         sourceCode: SourceCode = SourceCode([])
         for node in codeNodes:
             textNodeElement: Element = cast(Element, node)
-            textNode:        Text    = textNodeElement.childNodes[0]
-            text:            str     = textNode.data
-            sourceCode.append(text)
+            if len(textNodeElement.childNodes) > 0:
+                textNode:        Text    = textNodeElement.childNodes[0]
+                text:            str     = textNode.data
+                sourceCode.append(text)
         return sourceCode
 
     def _generateControlPoints(self, link: Element) -> ControlPoints:

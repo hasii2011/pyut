@@ -22,6 +22,9 @@ class EventLoopParams:
     def publicMethod(self) -> str:
         return "bogus"
 
+    def publicSingleQuoteMethod(self) -> str:
+        return 'bogus'
+
     def _protectedMethod(self) -> float:
         return 1.0
 
