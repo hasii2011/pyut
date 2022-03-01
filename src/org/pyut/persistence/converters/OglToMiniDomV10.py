@@ -366,7 +366,7 @@ class OglToMiniDom:
             xmlReturnType.setAttribute(PyutXmlConstants.ATTR_TYPE, str(returnType))
             root.appendChild(xmlReturnType)
 
-        for param in pyutMethod.getParams():
+        for param in pyutMethod.parameters:
             root.appendChild(self._pyutParamToXml(param, xmlDoc))
 
         codeRoot: Element = self._pyutSourceCodeToXml(pyutMethod.sourceCode, xmlDoc)

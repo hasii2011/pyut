@@ -1,5 +1,4 @@
 
-
 from typing import cast
 from typing import Dict
 from typing import List
@@ -26,6 +25,7 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
+from org.pyut.model.PyutMethod import PyutParameters
 from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParameter import PyutParameter
@@ -218,10 +218,10 @@ class MiniDomToOgl:
                 self.logger.error(f'Developer Error -- srcId: {srcId} - dstId: {dstId}  error: {ke}')
                 continue
 
-            linkType:         LinkType  = assocPyutLink.getType()
-            sourceClass:      PyutClass = cast(PyutClass, src.getPyutObject())
-            destinationClass: PyutClass = cast(PyutClass, dst.getPyutObject())
-            pyutLink: PyutLink = PyutLink(name=assocPyutLink.getName(),
+            linkType:         LinkType  = assocPyutLink.linkType
+            sourceClass:      PyutClass = cast(PyutClass, src.pyutObject)
+            destinationClass: PyutClass = cast(PyutClass, dst.pyutObject)
+            pyutLink: PyutLink = PyutLink(name=assocPyutLink.name,
                                           linkType=linkType,
                                           cardSrc=assocPyutLink.sourceCardinality,
                                           cardDest=assocPyutLink.destinationCardinality,
@@ -290,7 +290,7 @@ class MiniDomToOgl:
 
             pyutNote.content = content
 
-            pyutNote.setFilename(xmlNote.getAttribute(PyutXmlConstants.ATTR_FILENAME))
+            pyutNote.fileName = xmlNote.getAttribute(PyutXmlConstants.ATTR_FILENAME)
 
             # Adding properties necessary to place shape on a diagram frame
             x: int = PyutUtils.strFloatToInt(xmlOglNote.getAttribute(PyutXmlConstants.ATTR_X))
@@ -534,11 +534,11 @@ class MiniDomToOgl:
                 pyutModifier: PyutModifier = PyutModifier(modName)
                 pyutMethod.addModifier(pyutModifier)
 
-            methodParameters = []
+            methodParameters: PyutParameters = PyutParameters([])
             for xmlParam in xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_PARAM):
                 methodParameters.append(self._getParam(xmlParam))
 
-            pyutMethod.setParams(methodParameters)
+            pyutMethod.parameters = methodParameters
 
             sourceCodeXmlList: NodeList = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SOURCE_CODE)
             pyutMethod.sourceCode = self._getSourceCode(sourceCodeXmlList)
@@ -571,7 +571,7 @@ class MiniDomToOgl:
                                                  parameterType=paramType)
 
         if domElement.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):
-            pyutParam.setDefaultValue(domElement.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE))
+            pyutParam.defaultValue = domElement.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE)
 
         return pyutParam
 
@@ -596,15 +596,15 @@ class MiniDomToOgl:
             strVis: str                = xmlField.getAttribute(PyutXmlConstants.ATTR_VISIBILITY)
             vis:    PyutVisibilityEnum = PyutVisibilityEnum.toEnum(strVis)
 
-            pyutField.setVisibility(vis)
+            pyutField.visibility = vis
             xmlParam: Element = xmlField.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_PARAM)[0]
 
             if xmlParam.hasAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE):
-                pyutField.setDefaultValue(xmlParam.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE))
-            pyutField.setName(xmlParam.getAttribute(PyutXmlConstants.ATTR_NAME))
+                pyutField.defaultValue = xmlParam.getAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE)
+            pyutField.name = xmlParam.getAttribute(PyutXmlConstants.ATTR_NAME)
 
             pyutType: PyutType = PyutType(xmlParam.getAttribute(PyutXmlConstants.ATTR_TYPE))
-            pyutField.setType(pyutType)
+            pyutField.type = pyutType
 
             pyutFields.append(pyutField)
 
@@ -650,14 +650,14 @@ class MiniDomToOgl:
         destShape: OglClass = oglLink.getDestinationShape()
         self.logger.debug(f'source ID: {srcShape.GetID()} - destination ID: {destShape.GetID()}')
 
-        pyutLink:        PyutLink = oglLink.getPyutObject()
+        pyutLink: PyutLink = oglLink.pyutObject
 
-        if pyutLink.getType() == LinkType.INHERITANCE:
-            childPyutClass:  PyutClass = cast(PyutClass, srcShape.getPyutObject())
-            parentPyutClass: PyutClass = cast(PyutClass, destShape.getPyutObject())
+        if pyutLink.linkType == LinkType.INHERITANCE:
+            childPyutClass:  PyutClass = cast(PyutClass, srcShape.pyutObject)
+            parentPyutClass: PyutClass = cast(PyutClass, destShape.pyutObject)
             childPyutClass.addParent(parentPyutClass)
         else:
-            srcPyutClass:  PyutClass = cast(PyutClass, srcShape.getPyutObject())
+            srcPyutClass:  PyutClass = cast(PyutClass, srcShape.pyutObject)
             srcPyutClass.addLink(pyutLink)
 
     def _findImplementor(self, implementor: str, oglClasses: OglClasses) -> OglClass:
@@ -694,11 +694,11 @@ class MiniDomToOgl:
         pyutLink.destinationCardinality = link.getAttribute(PyutXmlConstants.ATTR_CARDINALITY_DESTINATION)
         pyutLink.sourceCardinality      = link.getAttribute(PyutXmlConstants.ATTR_CARDINALITY_SOURCE)
 
-        pyutLink.setName(link.getAttribute(PyutXmlConstants.ATTR_NAME))
+        pyutLink.name = link.getAttribute(PyutXmlConstants.ATTR_NAME)
 
         strLinkType: str         = link.getAttribute(PyutXmlConstants.ATTR_TYPE)
         linkType:    LinkType    = LinkType.toEnum(strValue=strLinkType)
-        pyutLink.setType(linkType)
+        pyutLink.linkType = linkType
 
         # source and destination will be reconstructed by _getOglLinks
         sourceId = int(link.getAttribute(PyutXmlConstants.ATTR_SOURCE_ID))

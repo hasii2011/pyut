@@ -146,7 +146,7 @@ class PyutToPython:
 
         currentCode: str = self._generateMethodDefinitionStanza(pyutMethod)
         # Add parameters (parameter, parameter, parameter, ...)
-        params = pyutMethod.getParams()
+        params = pyutMethod.parameters
         currentCode = self._generateParametersCode(currentCode, params)
         currentCode = f'{currentCode})'
 
@@ -182,10 +182,10 @@ class PyutToPython:
         """
         fieldCode: str = "self."
 
-        fieldCode = f'{fieldCode}{self.generateVisibilityPrefix(pyutField.getVisibility())}'
-        fieldCode = f'{fieldCode}{pyutField.getName()}: {pyutField.getType()}'
+        fieldCode = f'{fieldCode}{self.generateVisibilityPrefix(pyutField.visibility)}'
+        fieldCode = f'{fieldCode}{pyutField.name}: {pyutField.type}'
 
-        value = pyutField.getDefaultValue()
+        value = pyutField.defaultValue
         if value == '':
             fieldCode = f'{fieldCode} = None'
         else:
@@ -222,9 +222,9 @@ class PyutToPython:
 
         Something like:
         ```python
-            def publicMethod(self
-            def _protectedMethod(self
-            def __privateMethod(self
+            def publicMethod(self)
+            def _protectedMethod(self)
+            def __privateMethod(self)
         ```
         Args:
             pyutMethod: The method whose code we are generating
@@ -234,7 +234,7 @@ class PyutToPython:
         """
         currentCode: str = "def "
         currentCode = f'{currentCode}{self.generateVisibilityPrefix(pyutMethod.getVisibility())}'
-        currentCode = f'{currentCode}{pyutMethod.getName()}(self'
+        currentCode = f'{currentCode}{pyutMethod.name}(self'
 
         return currentCode
 
@@ -281,7 +281,7 @@ class PyutToPython:
 
         methodCode.append(self.__indentStr('(TODO : add description)\n\n'))
 
-        params: List[PyutParameter] = pyutMethod.getParams()
+        params: List[PyutParameter] = pyutMethod.parameters
 
         if len(params) > 0:
             methodCode.append(self.__indentStr(f'Args:\n'))

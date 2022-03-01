@@ -91,7 +91,7 @@ class PyutObject:
         """
         return self._id
 
-    @deprecated('Use the property')
+    @deprecated('Use the fileName property')
     def setFilename(self, fileName: str):
         """
         Set the associated filename.
@@ -102,7 +102,7 @@ class PyutObject:
         """
         self._fileName = fileName
 
-    @deprecated('Use the property')
+    @deprecated('Use the fileName property')
     def getFilename(self) -> str:
         """
         Get the associated fileName.

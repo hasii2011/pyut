@@ -152,7 +152,7 @@ class PyutLink(PyutObject):
         """
         self._bidirectional = bidirectional
 
-    @deprecated(reason='Use the properties')
+    @deprecated(reason='Use linkType')
     def setType(self, linkType: LinkType):
         """
         Update the link type
@@ -171,7 +171,7 @@ class PyutLink(PyutObject):
         else:
             self._type = linkType
 
-    @deprecated(reason='Use the properties')
+    @deprecated(reason='Use linkType')
     def getType(self) -> LinkType:
         """
         Get the link type.

@@ -451,10 +451,10 @@ class OglClass(OglObject):
     def _isSameName(self, other) -> bool:
 
         ans: bool = False
-        selfPyutObj:  PyutObject = self.getPyutObject()
-        otherPyutObj: PyutObject = other.getPyutObject()
+        selfPyutObj:  PyutObject = self.pyutObject
+        otherPyutObj: PyutObject = other.pyutObject
 
-        if selfPyutObj.getName() == otherPyutObj.getName():
+        if selfPyutObj.name == otherPyutObj.name:
             ans = True
         return ans
 
@@ -516,4 +516,4 @@ class OglClass(OglObject):
 
         selfPyutObj:  PyutObject = self.pyutObject
 
-        return hash(selfPyutObj.getName()) + hash(self.GetID())
+        return hash(selfPyutObj.name) + hash(self.GetID())

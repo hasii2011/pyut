@@ -13,7 +13,7 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 class MethodInformation:
     """
-    Can deserializes the common information shared by an
+    Can deserialize the common shared information shared
     """
 
     @classmethod
@@ -23,21 +23,21 @@ class MethodInformation:
 
         methods = []
         for method in pyutClassCommon.methods:
-            methodName:       str = method.getName()
-            methodVisibility: str = method.getVisibility().__str__()
+            methodName:       str = method.name
+            methodVisibility: str = method.visibility.__str__()
             methodReturns:    str = method.getReturns().__str__()
 
             params = []
-            for param in method.getParams():
-                paramName: str = param.getName()
-                paramType: str = param.getType().__str__()
-                paramDefaultValue: str = param.getDefaultValue()
+            for param in method.parameters:
+                paramName: str = param.name
+                paramType: str = param.type.__str__()
+                paramDefaultValue: str = param.defaultValue
 
                 params.append((paramName, paramType, paramDefaultValue))
 
             modifiers = []
-            for modifier in method.getModifiers():
-                modifierName = modifier.getName()
+            for modifier in method.modifiers:
+                modifierName = modifier.name
                 modifiers.append(modifierName)
 
             methodProfile: Tuple[str, str, str, str, str] = (methodName, methodVisibility, methodReturns, repr(params), repr(modifiers))

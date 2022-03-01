@@ -7,6 +7,9 @@ from logging import getLogger
 
 from math import sqrt
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
+
 from wx import BLACK_PEN
 from wx import EVT_MENU
 
@@ -189,6 +192,7 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         return self._destShape
 
+    @deprecated
     def getPyutObject(self):
         """
         Returns the associated PyutLink.
@@ -205,6 +209,14 @@ class OglLink(LineShape, ShapeEventHandler):
         Args:
             pyutLink: link to associate
         """
+        self._link = pyutLink
+
+    @property
+    def pyutObject(self) -> PyutLink:
+        return self._link
+
+    @pyutObject.setter
+    def pyutObject(self, pyutLink: PyutLink):
         self._link = pyutLink
 
     def getAnchors(self) -> Tuple[AnchorPoint, AnchorPoint]:

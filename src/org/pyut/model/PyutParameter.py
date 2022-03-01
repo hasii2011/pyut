@@ -87,7 +87,7 @@ class PyutParameter(PyutObject):
 
         Returns:  String version of a PyutParm
         """
-        s = self.getName()
+        s = self.name
 
         if str(self._type) != "":
             s = f'{s}: {self._type}'

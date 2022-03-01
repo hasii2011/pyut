@@ -2,19 +2,21 @@
 from typing import Tuple
 
 from importlib import import_module
+from typing import cast
 
 from org.pyut.history.commands.Command import Command
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
+from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 
 
 class DeleteOglObjectCommand(Command):
     """
     @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
-    It execute/undo/redo the deletion of an OglObject. It is to be considered
-    as an abstract class, because OglObject is abstract.
+    It implements undo & redo of and OglObject deletion. Consider this
+    an abstract class, because OglObject is abstract.
     """
 
     def __init__(self, shape=None):
@@ -29,8 +31,8 @@ class DeleteOglObjectCommand(Command):
         # constructors for the deserialization
         oglShapeModule:  str = self._shape.__module__
         oglShapeClass:   str = self._shape.__class__.__name__
-        pyutShapeModule: str = self._shape.getPyutObject().__module__
-        pyutShapeClass:  str = self._shape.getPyutObject().__class__.__name__
+        pyutShapeModule: str = self._shape.pyutObject.__module__
+        pyutShapeClass:  str = self._shape.pyutObject.__class__.__name__
 
         serialShape += tokenizeValue("oglShapeModule", oglShapeModule)
         serialShape += tokenizeValue("oglShapeClass", oglShapeClass)
@@ -64,9 +66,9 @@ class DeleteOglObjectCommand(Command):
                 self.getGroup().addCommand(cmd)
 
         # serialize data to initialize the associated pyutObject
-        pyutObj = self._shape.getPyutObject()
+        pyutObj = self._shape.pyutObject
         shapeId:   int = pyutObj.getId()
-        shapeName: str = pyutObj.getName()
+        shapeName: str = pyutObj.name
         serialShape += tokenizeValue("shapeId", repr(shapeId))
         serialShape += tokenizeValue("shapeName", shapeName)
 
@@ -112,10 +114,10 @@ class DeleteOglObjectCommand(Command):
             pyutShape = pyutShapeClass(shapeName)
             pyutShape.setId(shapeId)
             #
-            # build the OglObject : it suppose that every parameter of the
+            # build the OglObject : it assumes that every parameter of the
             # constructor has a default value
             self._shape = oglShapeClass()
-            self._shape.setPyutObject(pyutShape)
+            self._shape.pyutObject = pyutShape
             self._shape.GetModel().SetPosition(shapePosition[0], shapePosition[1])
             self._shape.GetModel().SetSize(shapeSize[0], shapeSize[1])
 
@@ -135,8 +137,9 @@ class DeleteOglObjectCommand(Command):
             for klass in [s.getPyutObject()
                           for s in umlFrame.getUmlObjects()
                           if isinstance(s, OglClass)]:
-                if pyutClass in klass.getParents():
-                    klass.getParents().remove(pyutClass)
+                pyutLinkedObject: PyutLinkedObject = cast(PyutLinkedObject, klass)
+                if pyutClass in pyutLinkedObject.getParents():
+                    pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
         shape.Detach()
         umlFrame.Refresh()
 

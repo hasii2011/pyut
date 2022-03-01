@@ -10,7 +10,8 @@ from tests.TestBase import TestBase
 from org.pyut.model.PyutObject import PyutObject
 
 
-class TestPyutObject(TestBase):
+class \
+        TestPyutObject(TestBase):
     """
 
     """
@@ -32,7 +33,7 @@ class TestPyutObject(TestBase):
         pyutObject: PyutObject = PyutObject()
 
         expectedSize: int = 0
-        actualSize:   int = pyutObject.getName().__len__()
+        actualSize:   int = pyutObject.name.__len__()
 
         self.assertEqual(expectedSize, actualSize, 'Name should be empty')
 
@@ -40,7 +41,7 @@ class TestPyutObject(TestBase):
 
         pyutObject: PyutObject = PyutObject()
 
-        actualName:     str = pyutObject.getName()
+        actualName:     str = pyutObject.name
 
         self.assertIsNotNone(actualName, 'Should have some value')
 
@@ -57,7 +58,7 @@ class TestPyutObject(TestBase):
         pyutObject: PyutObject = PyutObject(providedName)
 
         expectedLength: int = nameLength
-        actualLength:   int = len(pyutObject.getName())
+        actualLength:   int = len(pyutObject.name)
 
         self.assertEqual(expectedLength, actualLength, 'Our name appears to have NOT been used')
 

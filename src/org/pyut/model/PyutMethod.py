@@ -208,6 +208,7 @@ class PyutMethod(PyutObject):
         """
         self._modifiers.append(newModifier)
 
+    @deprecated('Use parameters property')
     def getParams(self):
         """
         Return a list of the params.
@@ -218,6 +219,17 @@ class PyutMethod(PyutObject):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         return self._params
+
+    @deprecated('Use parameters property')
+    def setParams(self, params):
+        """
+        Replace the actual params by those given in the list.
+        The methods passed are not copied, but used directly.
+
+        @since 1.0
+        @author Laurent Burgbacher <lb@alawa.ch>
+        """
+        self._params = params
 
     def addParam(self, param):
         """
@@ -230,18 +242,6 @@ class PyutMethod(PyutObject):
         @author Laurent Burgbacher <lb@alawa.ch>
         """
         self._params.append(param)
-
-    def setParams(self, params):
-        """
-        Replace the actual params by those given in the list.
-        The methods passed are not copied, but used directly.
-
-        TODO: rename this to `setParameters`
-
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
-        """
-        self._params = params
 
     def getReturns(self) -> PyutType:
         """

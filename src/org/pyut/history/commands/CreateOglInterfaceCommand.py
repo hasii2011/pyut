@@ -48,7 +48,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
             self._implementor:      OglClass          = implementor
 
             pyutInterface: PyutInterface = PyutInterface()
-            pyutInterface.addImplementor(ClassName(implementor.getPyutObject().getName()))
+            pyutInterface.addImplementor(ClassName(implementor.pyutObject.name))
 
             self._pyutInterface: PyutInterface = pyutInterface
 

@@ -428,9 +428,9 @@ class ReverseEngineerPython2:
             typeAndDefaultValue: List[str] = fieldAndType[1].split(ReverseEngineerPython2.PYTHON_ASSIGNMENT)
 
             pyutType: PyutType = PyutType(value=typeAndDefaultValue[0].strip())
-            pyutField.setType(theType=pyutType)
+            pyutField.type = pyutType
             if len(typeAndDefaultValue) > 1:
-                pyutField.setDefaultValue(typeAndDefaultValue[1].strip())
+                pyutField.defaultValue = typeAndDefaultValue[1].strip()
 
         return pyutField
 

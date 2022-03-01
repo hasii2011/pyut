@@ -123,12 +123,12 @@ class OglInterface2(LollipopLine, Common):
             return False
 
     def __hash__(self):
-        return hash(self._pyutInterface.getName()) + hash(self.GetID())
+        return hash(self._pyutInterface.name) + hash(self.GetID())
 
     def _isSameName(self, other) -> bool:
 
         ans: bool = False
-        if self.pyutInterface.getName() == other.pyutInterface.getName():
+        if self.pyutInterface.name == other.pyutInterface.name:
             ans = True
         return ans
 

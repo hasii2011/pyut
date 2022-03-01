@@ -41,7 +41,7 @@ class OglShapeCommand(Command):
         shapeId:   int = pyutObj.getId()
         serializedShape += tokenizeValue("shapeId", repr(shapeId))
 
-        shapeName: str = pyutObj.getName()
+        shapeName: str = pyutObj.name
         serializedShape += tokenizeValue("shapeName", shapeName)
 
         methodInformation: str = MethodInformation.serialize(pyutClassCommon=pyutObj)

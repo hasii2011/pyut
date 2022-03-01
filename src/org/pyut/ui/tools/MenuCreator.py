@@ -197,7 +197,7 @@ class MenuCreator:
                                _("New sequence diagram"))
         self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM, _("New &use-case diagram\tCtrl-U"),
                                _("New use-case diagram"))
-        fileMenu.Append(NewIdRef(), _("&New"), self.mnuFileNew)
+        fileMenu.AppendSubMenu(self.mnuFileNew, _("&New") )
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT, _("&Insert a project...\t"),
                         _("Insert a project in the current project..."))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_OPEN, _("&Open...\tCtrl-O"), _("Open a file..."))
@@ -213,10 +213,11 @@ class MenuCreator:
         if sub is None:
             sub = Menu()
         if sub is not None:
-            self._fileMenu.Append(NewIdRef(), _("Export"), sub)
+            self._fileMenu.AppendSubMenu(sub, _("Export"))
         sub = self._makeImportMenu(fileMenuHandler=fileMenuHandler)
         if sub is not None:
-            self._fileMenu.Append(NewIdRef(), _("Import"), sub)
+            # self._fileMenu.AppendSubMenu(NewIdRef(), _("Import"), sub)
+            self._fileMenu.AppendSubMenu(sub, _("Import"))
         fileMenu.AppendSeparator()
         fileMenu.Append(ID_PREFERENCES, _("P&references"), _("PyUt preferences"))
         # fileMenu.Append(ID_MNU_FILE_DIAGRAM_PROPERTIES,_("&Diagram Properties"), _("Diagram properties"))
@@ -226,7 +227,7 @@ class MenuCreator:
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT, _("&Print\tCtrl-P"), _("Print the current diagram"))
         fileMenu.AppendSeparator()
         sub = self._makeRecentlyOpenedMenu()
-        fileMenu.Append(NewIdRef(), _('Recently Opened'), sub)
+        fileMenu.AppendSubMenu(sub, _('Recently Opened'))
         fileMenu.AppendSeparator()
 
         fileMenu.Append(ID_EXIT, _("E&xit"), _("Exit PyUt"))
@@ -281,7 +282,7 @@ class MenuCreator:
         sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY, _("&Pyut"), _("Add the UML Diagram of Pyut"))
         sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY, _("&Ogl"), _("Add the UML Diagram of Pyut - Ogl"))
 
-        mnuEdit.Append(NewIdRef(), _('Add Hierarchy'), sub)
+        mnuEdit.AppendSubMenu(sub,  _('Add Hierarchy'))
 
         return mnuEdit
 

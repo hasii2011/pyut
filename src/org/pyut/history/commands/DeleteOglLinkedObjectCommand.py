@@ -32,7 +32,7 @@ class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):
         # serialize the common data common
         serializedShape: str = DeleteOglObjectCommand.serialize(self)
 
-        fileName: str = self._shape.getPyutObject().getFilename()
+        fileName: str = self._shape.pyutObject.fileName
 
         serializedShape += tokenizeValue("fileName", fileName)
 
@@ -52,4 +52,4 @@ class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):
         DeleteOglObjectCommand.deserialize(self, serializedData)
 
         fileName = deTokenize("fileName", serializedData)
-        self._shape.getPyutObject().setFilename(fileName)
+        self._shape.pyutObject.fileName = fileName          # Ugh, chained calls
