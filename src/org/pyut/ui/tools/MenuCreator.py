@@ -202,7 +202,7 @@ class MenuCreator:
                         _("Insert a project in the current project..."))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_OPEN, _("&Open...\tCtrl-O"), _("Open a file..."))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_SAVE, _("&Save\tCtrl-S"), _("Save current data"))
-        fileMenu.Append(SharedIdentifiers.ID_MNUFILESAVEAS, _("Save &As...\tCtrl-A"), _("Save current data"))
+        fileMenu.Append(SharedIdentifiers.ID_MNUFILESAVEAS, _("Save &As..."), _("Save current data"))
         fileMenu.Append(SharedIdentifiers.ID_MNU_PROJECT_CLOSE, _("&Close project\tCtrl-W"), _("Close current project"))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT, _("&Remove document"), _("Remove the document from the project"))
         fileMenu.AppendSeparator()
@@ -242,7 +242,7 @@ class MenuCreator:
         mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_COPY, _("&Copy\tCtrl-C"), _("Copy selected data"))
         mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_PASTE, _("&Paste\tCtrl-V"), _("Paste selected data"))
         mnuEdit.AppendSeparator()
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL, _("&Select all"), _("Select all elements"))
+        mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL, _("&Select all\tCtrl-A"), _("Select all elements"))
         mnuEdit.AppendSeparator()
 
         mnuEdit = self._initializeAddHierarchySubMenu(mnuEdit)
