@@ -613,15 +613,16 @@ class MiniDomToOgl:
     def _getSourceCode(self, sourceCodeXmlList: NodeList) -> SourceCode:
 
         xmlCode:    Element    = cast(Element, sourceCodeXmlList.item(0))
-        codeNodes:  NodeList   = xmlCode.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CODE)
-
         sourceCode: SourceCode = SourceCode([])
-        for node in codeNodes:
-            textNodeElement: Element = cast(Element, node)
-            if len(textNodeElement.childNodes) > 0:
-                textNode:        Text    = textNodeElement.childNodes[0]
-                text:            str     = textNode.data
-                sourceCode.append(text)
+        if xmlCode is not None:
+            codeNodes:  NodeList   = xmlCode.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CODE)
+
+            for node in codeNodes:
+                textNodeElement: Element = cast(Element, node)
+                if len(textNodeElement.childNodes) > 0:
+                    textNode:        Text    = textNodeElement.childNodes[0]
+                    text:            str     = textNode.data
+                    sourceCode.append(text)
         return sourceCode
 
     def _generateControlPoints(self, link: Element) -> ControlPoints:
