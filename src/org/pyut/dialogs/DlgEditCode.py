@@ -13,6 +13,7 @@ from wx import EVT_TEXT
 from wx import ID_CANCEL
 from wx import ID_OK
 from wx import OK
+from wx import Size
 
 from wx import TE_MULTILINE
 from wx import TextCtrl
@@ -56,6 +57,13 @@ class DlgEditCode(SizedDialog):
         # This method is there but PyCharm cannot find it
         # noinspection PyUnresolvedReferences
         self._txtCtrl.SetSizerProps(expand=True)
+        print(f'{self._txtCtrl.GetSize()=}')
+
+        txtCtrlSize: Size = self._txtCtrl.GetSize()
+        newSize:     Size = Size()
+        newSize.SetWidth(txtCtrlSize.GetWidth() * 4)
+        newSize.SetHeight(txtCtrlSize.GetHeight())
+        self._txtCtrl.SetMinSize(newSize)
 
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(OK | CANCEL))
 
