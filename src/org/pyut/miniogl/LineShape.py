@@ -262,13 +262,14 @@ class LineShape(Shape, Common):
         """
         self.Draw(dc)
 
-    def DrawArrow(self, dc: DC, u: Tuple[float, float], v: Tuple[float, float]):
+    def DrawArrow(self, dc: DC, u: Tuple[int, int], v: Tuple[int, int]):
         """
         Draw an arrow at the end of the segment uv.
 
-        @param dc
-        @param  u: points of the segment
-        @param  v: points of the segment
+        Args:
+            dc:
+            u: points of the segment
+            v: points of the segment
         """
         from math import pi, atan, cos, sin
         pi_6 = pi/6
@@ -292,9 +293,9 @@ class LineShape(Shape, Common):
         alpha1 = alpha + pi_6
         alpha2 = alpha - pi_6
         size = self._arrowSize
-        points.append((x2 + size * cos(alpha1), y2 + size * sin(alpha1)))
+        points.append((x2 + round(size * cos(alpha1)), y2 + round(size * sin(alpha1))))
         points.append((x2, y2))
-        points.append((x2 + size * cos(alpha2), y2 + size * sin(alpha2)))
+        points.append((x2 + round(size * cos(alpha2)), y2 + round(size * sin(alpha2))))
         dc.DrawPolygon(points)
 
     def Detach(self):

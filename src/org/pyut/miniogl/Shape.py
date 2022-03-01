@@ -393,14 +393,14 @@ class Shape:
         y -= self._oy
         return x, y
 
-    def GetSize(self) -> Tuple[float, float]:
+    def GetSize(self) -> Tuple[int, int]:
         """
         Get the size of the shape.
 
         Returns:  a width, height tuple
 
         """
-        return 0.0, 0.0
+        return 0, 0
 
     def ConvertCoordToRelative(self, x, y):
         """

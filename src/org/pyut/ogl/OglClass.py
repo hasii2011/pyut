@@ -48,7 +48,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
     MENU_IMPLEMENT_INTERFACE
 ]  = PyutUtils.assignID(7)
 
-MARGIN:               int = 10
+MARGIN: int = 10
 
 
 class OglClass(OglObject):
@@ -183,7 +183,7 @@ class OglClass(OglObject):
             w = 0
 
         # define space between text and line
-        lth = dc.GetTextExtent("*")[1] / 2.0
+        lth: int = dc.GetTextExtent("*")[1] // 2
 
         # Add space
         pyutClass: PyutClass = cast(PyutClass, self.pyutObject)
@@ -236,7 +236,7 @@ class OglClass(OglObject):
             w = 0
 
         # define space between text and line
-        lth = dc.GetTextExtent("*")[1] / 2.0
+        lth = dc.GetTextExtent("*")[1] // 2
 
         # Add space
         pyutClass: PyutClass = cast(PyutClass, self.pyutObject)
@@ -476,7 +476,7 @@ class OglClass(OglObject):
         else:
             assert False, 'Unknown display type'
 
-    def __drawMethodSignature(self, dc: DC, pyutMethod: PyutMethod, pyutClass: PyutClass, x: float, y: float, h: float):
+    def __drawMethodSignature(self, dc: DC, pyutMethod: PyutMethod, pyutClass: PyutClass, x: int, y: int, h: int):
         """
         If preference is not set at individual class level defer to global; Otherwise,
         respect the class level preference

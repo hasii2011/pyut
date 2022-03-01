@@ -135,10 +135,10 @@ class OglAssociation(OglLink):
         alpha1 = alpha + pi_6
         alpha2 = alpha - pi_6
         size = 8
-        points.append((x2 + size * cos(alpha1), y2 + size * sin(alpha1)))
+        points.append((x2 + round(size * cos(alpha1)), y2 + round(size * sin(alpha1))))
         points.append((x2, y2))
-        points.append((x2 + size * cos(alpha2), y2 + size * sin(alpha2)))
-        points.append((x2 + 2*size * cos(alpha),  y2 + 2*size * sin(alpha)))
+        points.append((x2 + round(size * cos(alpha2)), y2 + round(size * sin(alpha2))))
+        points.append((x2 + 2 * round(size * cos(alpha)),  y2 + 2 * round(size * sin(alpha))))
         dc.SetPen(BLACK_PEN)
         if filled:
             dc.SetBrush(BLACK_BRUSH)
@@ -154,7 +154,7 @@ class OglAssociation(OglLink):
         saveFont: Font = dc.GetFont()
         dc.SetFont(self._defaultFont)
 
-        centerText: str = self._link.getName()
+        centerText: str = self._link.name
         dc.DrawText(centerText, midPoint.x, midPoint.y)
         dc.SetFont(saveFont)
         self._centerLabel = self.__updateAssociationLabel(self._centerLabel, x=midPoint.x, y=midPoint.y, text=centerText)

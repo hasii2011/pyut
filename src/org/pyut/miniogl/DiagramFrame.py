@@ -47,8 +47,9 @@ from wx import Window
 from wx import Pen
 from wx import PenInfo
 
-# noinspection PyProtectedMember
-from wx._core import PenStyle
+# I know it is there
+# noinspection PyUnresolvedReferences
+from wx.core import PenStyle
 
 from org.pyut.miniogl.Shape import Shape
 
@@ -1051,7 +1052,7 @@ class DiagramFrame(ScrolledWindow):
         gridLineColor: Colour   = PyutColorEnum.toWxColor(self._prefs.gridLineColor)
         gridLineStyle: PenStyle = PyutPenStyle.toWxPenStyle(self._prefs.gridLineStyle)
 
-        pen:           Pen    = Pen(PenInfo(gridLineColor).Style(gridLineStyle).Width(1.0))
+        pen:           Pen    = Pen(PenInfo(gridLineColor).Style(gridLineStyle).Width(1))
 
         return pen
 
