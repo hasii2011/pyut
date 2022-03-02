@@ -42,24 +42,14 @@ class DTDParser:
 
     MODEL_CHILDREN_INDEX:           int = 3
 
-    klsLogger: Logger = cast(Logger, None)
-    classParser       = None
-
-    elementTypes: DTDElements   = DTDElements({})
-    attributes:   DTDAttributes = DTDAttributes([])
-
     def __init__(self, umlFrame: UmlClassDiagramsFrame):
         """
-        In order for all of this to work you actually have to instantiate the class in
-        order to get the 'class' variables initialized;  Failure to do so will cause an
-        ugly mess
         Also, I use the pycharm noinspection pragma because I cannot get the correct
         type imported for the parser; I think because the code is 'generated' with
         some kind of C language binder;
 
         """
         self.logger: Logger = getLogger(__name__)
-        DTDParser.klsLogger = self.logger
 
         # noinspection SpellCheckingInspection
         """
@@ -68,19 +58,20 @@ class DTDParser:
         only be used to parse a single XML document.Call ParserCreate for each document to provide unique
         parser instances.
         """
+        self.elementTypes: DTDElements = DTDElements({})
+        self.attributes: DTDAttributes = DTDAttributes([])
 
         self.dtdParser = ParserCreate()
-        DTDParser.classParser = self.dtdParser
 
         self._umlFrame: UmlClassDiagramsFrame      = umlFrame
         self.classTree: Dict[str, ElementTreeData] = {}
 
         # noinspection SpellCheckingInspection
-        self.dtdParser.StartDoctypeDeclHandler = DTDParser.startDocTypeHandler
+        self.dtdParser.StartDoctypeDeclHandler = self.startDocTypeHandler
         # noinspection SpellCheckingInspection
-        self.dtdParser.ElementDeclHandler      = DTDParser.elementHandler
+        self.dtdParser.ElementDeclHandler      = self.elementHandler
         # noinspection SpellCheckingInspection
-        self.dtdParser.AttlistDeclHandler      = DTDParser.attributeListHandler
+        self.dtdParser.AttlistDeclHandler      = self.attributeListHandler
         # noinspection SpellCheckingInspection
         self.dtdParser.EndDoctypeDeclHandler   = self.endDocTypeHandler   # DTDReader.endDocTypeHandler
 
@@ -101,14 +92,12 @@ class DTDParser:
 
         return True
 
-    @staticmethod
-    def startDocTypeHandler(docTypeName, sysId, pubId, hasInternalSubset):
+    def startDocTypeHandler(self, docTypeName, sysId, pubId, hasInternalSubset):
 
         dbgStr: str = f'startDocTypeHandler - {docTypeName=} {sysId=} {pubId=} {hasInternalSubset=}'
-        DTDParser.klsLogger.info(dbgStr)
+        self.logger.info(dbgStr)
 
-    @staticmethod
-    def elementHandler(elementName: str, model):
+    def elementHandler(self, elementName: str, model):
         # noinspection SpellCheckingInspection
         """
 
@@ -119,13 +108,12 @@ class DTDParser:
 
             (name , descr , (attribute | attribute-group-ref)*)
         """
-        currentLineNumber: int = DTDParser.classParser.CurrentLineNumber
-        DTDParser.klsLogger.debug(f'elementHandler - {currentLineNumber:{2}} name: {elementName:{12}} model: {model}')
+        currentLineNumber: int = self.dtdParser.CurrentLineNumber
+        self.logger.debug(f'elementHandler - {currentLineNumber:{2}} name: {elementName:{12}} model: {model}')
 
-        DTDParser.elementTypes[elementName] = model
+        self.elementTypes[elementName] = model
 
-    @staticmethod
-    def attributeListHandler(eltName, attrName, attrType, attrValue, valType: int):
+    def attributeListHandler(self, eltName, attrName, attrType, attrValue, valType: int):
 
         dtdAttribute: DTDAttribute = DTDAttribute()
 
@@ -135,9 +123,9 @@ class DTDParser:
         dtdAttribute.attributeValue = attrValue
         dtdAttribute.valueType      = valType
 
-        DTDParser.klsLogger.debug(dtdAttribute)
+        self.logger.debug(dtdAttribute)
 
-        DTDParser.attributes.append(dtdAttribute)
+        self.attributes.append(dtdAttribute)
 
     def endDocTypeHandler(self):
 
@@ -146,7 +134,7 @@ class DTDParser:
         self._addAttributesToClasses()
         self._addLinks()
 
-        self.logger.info(f'attributes: {DTDParser.attributes}')
+        self.logger.info(f'attributes: {self.attributes}')
 
     def _createClassTree(self) -> Dict[str, ElementTreeData]:
 
@@ -154,7 +142,7 @@ class DTDParser:
         x: int = 50
         y: int = 50
 
-        for eltName in list(DTDParser.elementTypes.keys()):
+        for eltName in list(self.elementTypes.keys()):
 
             createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=eltName, x=x, y=y)
             pyutClass: PyutClass = createdClasses.pyutClass
@@ -162,7 +150,7 @@ class DTDParser:
 
             elementTreeData: ElementTreeData = ElementTreeData(pyutClass=pyutClass, oglClass=oglClass)
 
-            model = DTDParser.elementTypes[eltName]
+            model = self.elementTypes[eltName]
             # noinspection SpellCheckingInspection
             chillunNames: List[str] = self._getChildElementNames(eltName=eltName, model=model)
             elementTreeData.childElementNames = chillunNames
@@ -195,7 +183,7 @@ class DTDParser:
 
     def _addAttributesToClasses(self):
 
-        for classAttr in DTDParser.attributes:
+        for classAttr in self.attributes:
             typedAttr: DTDAttribute   = cast(DTDAttribute, classAttr)
             className: str            = typedAttr.elementName
             treeData: ElementTreeData = self.classTree[className]
