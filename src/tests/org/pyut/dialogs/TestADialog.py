@@ -239,7 +239,7 @@ class TestADialog(App):
     def _testDlgEditMethod(self):
         pyutMethod:     PyutMethod    = PyutMethod(name='OzzeeMethod')
         pyutParameter: PyutParameter = PyutParameter(name='testMethod', parameterType=PyutType("int"), defaultValue=42)
-        pyutMethod.addParam(pyutParameter)
+        pyutMethod.addParameter(pyutParameter)
         pyutMethod.modifiers = PyutModifiers(
             [
                 PyutModifier('modifier1'),

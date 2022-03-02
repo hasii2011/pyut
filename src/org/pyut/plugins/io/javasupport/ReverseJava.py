@@ -641,7 +641,7 @@ class ReverseJava:
 
         for (paramType, name, defaultValue) in lstFields:
             param = PyutParameter(name, paramType, defaultValue)
-            pm.addParam(param)
+            pm.addParameter(param)
         methods.append(pm)
 
     def __readParagraph(self, lstFile, currentPos, paragraphStart, paragraphStop):

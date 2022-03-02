@@ -230,29 +230,26 @@ class PyutMethod(PyutObject):
         """
         self._params = params
 
-    def addParam(self, param):
+    def addParameter(self, parameter: PyutParameter):
         """
-        Add a param.
+        Add a parameter.
 
-        TODO: rename this to `addParameter`
-
-        @param PyutParameter param : param to add
-        @since 1.6
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            parameter: parameter to add
         """
-        self._params.append(param)
+        self._params.append(parameter)
 
+    @deprecated('Use')
     def getReturns(self) -> PyutType:
         """
         Return the return type.
-
-        TODO:  deprecate get/set Returns and create `returnType` property
 
         Returns:
             The method return type
         """
         return self._returns
 
+    @deprecated('Use')
     def setReturns(self, returnType: PyutType):
         """
         Set the return type of the method.
@@ -267,6 +264,14 @@ class PyutMethod(PyutObject):
             self.logger.warning(f'Setting return type as string is deprecated.  use PyutType')
 
         self._returns = pyutType
+
+    @property
+    def returnType(self) -> PyutType:
+        return self._returns
+
+    @returnType.setter
+    def returnType(self, newValue: PyutType):
+        self._returns = newValue
 
     def methodWithParameters(self) -> str:
         return self.__stringWithParams()

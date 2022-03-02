@@ -192,11 +192,11 @@ class ReverseEngineerPython2:
             if len(potentialNameType) == 2:
 
                 param: PyutParameter = PyutParameter(name=potentialNameType[0], parameterType=PyutType(value=potentialNameType[1]))
-                setter.addParam(param)
+                setter.addParameter(param)
                 getter.returnType = PyutType(value=potentialNameType[1])
             else:
                 param = PyutParameter(name=potentialNameType[0])
-                setter.addParam(param)
+                setter.addParameter(param)
 
         return setter, getter
 

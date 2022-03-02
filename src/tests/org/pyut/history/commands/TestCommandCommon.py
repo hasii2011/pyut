@@ -24,7 +24,7 @@ class TestCommandCommon:
                                                  parameterType=PyutType(f'Type{TestCommandCommon.methodTypeNumber}'),
                                                  defaultValue='')
 
-        pyutMethod.addParam(pyutParam)
+        pyutMethod.addParameter(pyutParam)
 
         TestCommandCommon.methodParamNumber += 1
         TestCommandCommon.methodTypeNumber  += 1

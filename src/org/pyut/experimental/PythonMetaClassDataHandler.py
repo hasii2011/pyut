@@ -85,7 +85,7 @@ class PythonMetaClassDataHandler:
                             param = PyutParameter(arg, PyutType(""), str(defVal))
                         else:
                             param = PyutParameter(arg)
-                        meth.addParam(param)
+                        meth.addParameter(param)
             methods.append(meth)
             # set the visibility according to naming conventions
             func_name = funcName

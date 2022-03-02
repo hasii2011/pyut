@@ -89,7 +89,7 @@ class MethodInformation:
 
                 # creates and add the param to the method
                 pyutParam: PyutParameter = PyutParameter(name=paramName, parameterType=paramType, defaultValue=paramDefaultValue)
-                pyutMethod.addParam(pyutParam)
+                pyutMethod.addParameter(pyutParam)
 
             pyutMethods.append(pyutMethod)
 

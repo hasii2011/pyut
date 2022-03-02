@@ -157,7 +157,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
                 paramDefaultValue = param[2]
 
                 # creates and add the param to the method
-                method.addParam(PyutParameter(paramName, paramType, paramDefaultValue))
+                method.addParameter(PyutParameter(paramName, paramType, paramDefaultValue))
 
             # deserialize method's modifiers, so we get a list of names
             # that we have to transform into a list of PyutModifiers.
