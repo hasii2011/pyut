@@ -43,7 +43,7 @@ class DTDParser:
     MODEL_CHILDREN_INDEX:           int = 3
 
     klsLogger: Logger = cast(Logger, None)
-    classParser       = ParserCreate()
+    classParser       = None
 
     elementTypes: DTDElements   = DTDElements({})
     attributes:   DTDAttributes = DTDAttributes([])
@@ -61,7 +61,16 @@ class DTDParser:
         self.logger: Logger = getLogger(__name__)
         DTDParser.klsLogger = self.logger
 
-        self.dtdParser = DTDParser.classParser
+        # noinspection SpellCheckingInspection
+        """
+        pyexpat.xmlparser
+        Due to limitations in the Expat library used by pyexpat, the xmlparser instance returned can
+        only be used to parse a single XML document.Call ParserCreate for each document to provide unique
+        parser instances.
+        """
+
+        self.dtdParser = ParserCreate()
+        DTDParser.classParser = self.dtdParser
 
         self._umlFrame: UmlClassDiagramsFrame      = umlFrame
         self.classTree: Dict[str, ElementTreeData] = {}
@@ -86,8 +95,8 @@ class DTDParser:
         """
         self.logger.info(f'filename: {filename}')
 
-        with open(filename, "rb") as dataFile:
-            dtdData: bytes = dataFile.read()
+        with open(filename, "r") as dataFile:
+            dtdData: str = dataFile.read()
             self.dtdParser.Parse(dtdData)
 
         return True
