@@ -117,8 +117,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         Returns: the created OglInterface link
         """
-        sourceClass:      PyutClass = cast(PyutClass, src.getPyutObject())
-        destinationClass: PyutClass = cast(PyutClass, dst.getPyutObject())
+        sourceClass:      PyutClass = cast(PyutClass, src.pyutObject)
+        destinationClass: PyutClass = cast(PyutClass, dst.pyutObject)
 
         pyutLink:     PyutLink     = PyutLink(linkType=LinkType.INTERFACE, source=sourceClass, destination=destinationClass)
         oglInterface: OglInterface = OglInterface(srcShape=src, pyutLink=pyutLink, dstShape=dst)

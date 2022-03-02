@@ -87,17 +87,17 @@ class OglLink(LineShape, ShapeEventHandler):
             sw, sh = self._srcShape.GetSize()
             dw, dh = self._destShape.GetSize()
             if orient == AttachmentPoint.NORTH:
-                srcX, srcY = sw/2, 0
-                dstX, dstY = dw/2, dh
+                srcX, srcY = sw//2, 0
+                dstX, dstY = dw//2, dh
             elif orient == AttachmentPoint.SOUTH:
-                srcX, srcY = sw/2, sh
-                dstX, dstY = dw/2, 0
+                srcX, srcY = sw//2, sh
+                dstX, dstY = dw//2, 0
             elif orient == AttachmentPoint.EAST:
-                srcX, srcY = sw, sh/2
-                dstX, dstY = 0, dh/2
+                srcX, srcY = sw, sh//2
+                dstX, dstY = 0, dh//2
             elif orient == AttachmentPoint.WEST:
-                srcX, srcY = 0, sh/2
-                dstX, dstY = dw, dh/2
+                srcX, srcY = 0, sh//2
+                dstX, dstY = dw, dh//2
 
             # ============== Avoid over-lining; Added by C.Dutoit ================
             # lstAnchorsPoints = [anchor.GetRelativePosition() for anchor in srcShape.GetAnchors()]

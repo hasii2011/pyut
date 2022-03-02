@@ -100,7 +100,7 @@ class CreateOglClassCommand(BaseOglClassCommand):
 
         med:       Mediator  = Mediator()
         oglClass:  OglClass  = self._shape
-        pyutClass: PyutClass = cast(PyutClass, oglClass.getPyutObject())
+        pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
         umlFrame = med.getFileHandling().getCurrentFrame()
         if self._invokeEditDialog is True:
             med.classEditor(pyutClass)

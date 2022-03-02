@@ -151,7 +151,7 @@ class OglClass(OglObject):
             name = str(stereo)
             nameWidth = self.GetTextWidth(dc, name)
             if draw:
-                dc.DrawText(name, x + (w - nameWidth) / 2.0, y + h)
+                dc.DrawText(name, x + (w - nameWidth) // 2, y + h)
             if calcWidth:
                 w = max(nameWidth, w)
             h += self.GetTextHeight(dc, str(name))
@@ -337,7 +337,7 @@ class OglClass(OglObject):
 
         w = max(headerW, fieldsW, methodW)
         h = y - headerY
-        w += 2.0 * MARGIN
+        w += 2 * MARGIN
         self.SetSize(w, h)
 
         # to automatically replace the sizers at a correct place

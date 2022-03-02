@@ -147,6 +147,12 @@ class Pyut:
         print(f'x-DPI: {size.GetWidth()} y-DPI: {size.GetHeight()}')
         print(f'toolBarIconSize: {PyutPreferences().toolBarIconSize.value}')
 
+        # noinspection PyUnreachableCode
+        if __debug__:
+            print("Assertion are turned on")
+        else:
+            print("Assertions are turned off")
+
     def handleCommandLineArguments(self):
         """
         Handle command line arguments, display help, ...

@@ -7,6 +7,7 @@ from org.pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLink
 from org.pyut.general.Globals import cmp
 
 from org.pyut.model.PyutClass import PyutClass
+from org.pyut.model.PyutMethod import PyutModifiers
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -30,7 +31,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         # serialize the data common to all OglObjects
         serialShape = DeleteOglLinkedObjectCommand.serialize(self)
 
-        pyutClass: PyutClass = self._shape.getPyutObject()
+        pyutClass: PyutClass = self._shape.pyutObject
         classDescription = pyutClass.description
 
         if pyutClass.getStereotype() is not None:
@@ -44,27 +45,27 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
 
         fields = []
         for field in pyutClass.fields:
-            fieldName = field.getName()
-            fieldType = field.getType().__str__()
-            fieldDefaultValue = field.getDefaultValue()
-            fieldVisibility = field.getVisibility().__str__()
+            fieldName = field.name
+            fieldType = field.type.__str__()
+            fieldDefaultValue = field.defaultValue
+            fieldVisibility = field.visibility.__str__()
             fields.append((fieldName, fieldType, fieldDefaultValue, fieldVisibility))
 
         methods = []
         for method in pyutClass.methods:
-            methodName = method.getName()
+            methodName = method.name
             methodVisibility = method.getVisibility().__str__()
             methodReturns = method.getReturns().__str__()
 
             params = []
-            for param in method.getParams():
-                paramName = param.getName()
-                paramType = param.getType().__str__()
-                paramDefaultValue = param.getDefaultValue()
+            for param in method.parameters:
+                paramName = param.name
+                paramType = param.type.__str__()
+                paramDefaultValue = param.defaultValue
                 params.append((paramName, paramType, paramDefaultValue))
 
             modifiers = []
-            for modifier in method.getModifiers():
+            for modifier in method.modifiers:
                 modifierName = modifier.getName()
                 modifiers.append(modifierName)
 
@@ -158,10 +159,10 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
                 # creates and add the param to the method
                 method.addParam(PyutParameter(paramName, paramType, paramDefaultValue))
 
-            # deserialize method's modifiers so we get a list of names
+            # deserialize method's modifiers, so we get a list of names
             # that we have to transform into a list of PyutModifiers.
             modifiersNames = eval(methodProfile[4])
-            modifiers = []
+            modifiers: PyutModifiers = PyutModifiers([])
             for modifierName in modifiersNames:
                 modifiers.append(PyutModifier(modifierName))
 

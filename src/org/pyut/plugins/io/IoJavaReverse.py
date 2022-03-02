@@ -90,6 +90,6 @@ class IoJavaReverse(PyutIoPlugin):
                 rj.parseFile(fqnName)
             rj.layoutDiagram()
             # noinspection PyProtectedMember
-            self.logger.warning(f'{len(rj._subClassMap)=}')
+            self.logger.debug(f'{len(rj._subClassMap)=}')
         finally:
             wxEndBusyCursor()

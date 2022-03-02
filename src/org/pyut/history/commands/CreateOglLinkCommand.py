@@ -58,9 +58,9 @@ class CreateOglLinkCommand(Command):
         # serialize the data common to all commands
         serialShape = Command.serialize(self)
         # get the pyutId of the source OglObject of the link
-        srcId = self._link.getSourceShape().getPyutObject().getId()
+        srcId = self._link.getSourceShape().pyutObject.getId()
         # get the pyutId of the destination OglObject of the link
-        dstId = self._link.getDestinationShape().getPyutObject().getId()
+        dstId = self._link.getDestinationShape().pyutObject.getId()
         # get the model start position of the link
         srcPos = self._link.GetSource().GetModel().GetPosition()
         # get the model end position of the link
@@ -68,7 +68,7 @@ class CreateOglLinkCommand(Command):
         # get the type of the link (see OglLinkFactory)
         linkType = getLinkType(self._link)
         # get the pyutId of the link
-        linkId = self._link.getPyutObject().getId()
+        linkId = self._link.pyutObject.getId()
         # serialize required data needed to undo/redo the link
         serialShape += tokenizeValue("srcId", repr(srcId))
         serialShape += tokenizeValue("dstId", repr(dstId))

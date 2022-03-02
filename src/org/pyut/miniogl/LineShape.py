@@ -203,13 +203,15 @@ class LineShape(Shape, Common):
         """
         Return a list of tuples which are the coordinates of the control points.
 
-        Returns:  A list of float tuples
+        Returns:  A list of int tuples
 
         """
+        srcAnchorPosition = self._srcAnchor.GetPosition()
         sp = self._srcAnchor.GetPosition()
         dp = self._dstAnchor.GetPosition()
         # LineShape.clsLogger.debug(f'GetSegments --  sp: {sp} dp: {dp}')
-        return [sp] + list(map(lambda x: x.GetPosition(), self._controls)) + [dp]
+        retList = [sp] + list(map(lambda x: x.GetPosition(), self._controls)) + [dp]
+        return retList
 
     def GetControlPoints(self) -> ControlPoints:
         """

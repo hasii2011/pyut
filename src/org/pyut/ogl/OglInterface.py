@@ -71,7 +71,7 @@ class OglInterface(OglLink):
                 textShape.SetVisible(False)
 
         # Prepares labels
-        prepareLabel(self._labels[CENTER], self._link.getName())
+        prepareLabel(self._labels[CENTER], self._link.name)
 
     def getLabels(self):
         """

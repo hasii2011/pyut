@@ -566,7 +566,7 @@ class Mediator(Singleton):
 
         if prefs.autoResizeShapesOnEdit is True:
             if isinstance(obj, PyutClass):
-                po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.getPyutObject() is obj]
+                po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.pyutObject is obj]
                 obj = po[0]
 
             obj.autoResize()
