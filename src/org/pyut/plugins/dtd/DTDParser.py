@@ -1,4 +1,4 @@
-
+from pyexpat import XMLParserType
 from typing import cast
 from typing import Dict
 from typing import Tuple
@@ -52,27 +52,26 @@ class DTDParser:
         self.logger:    Logger                = getLogger(__name__)
         self._umlFrame: UmlClassDiagramsFrame = umlFrame
 
-        # noinspection SpellCheckingInspection
-        """
-        pyexpat.xmlparser
-        Due to limitations in the Expat library used by pyexpat, the xmlparser instance returned can
-        only be used to parse a single XML document.Call ParserCreate for each document to provide unique
-        parser instances.
-        """
         self._elementTypes: DTDElements   = DTDElements({})
         self._attributes:   DTDAttributes = DTDAttributes([])
         self._classTree:    Dict[str, ElementTreeData] = {}
 
-        self._dtdParser = ParserCreate()
+        # noinspection SpellCheckingInspection
+        """
+        Due to limitations in the Expat library used by pyexpat, the xmlparser instance returned can
+        only be used to parse a single XML document.Call ParserCreate for each document to provide unique
+        parser instances.
+        """
+        self._dtdParser: XMLParserType = ParserCreate()
 
         # noinspection SpellCheckingInspection
-        self._dtdParser.StartDoctypeDeclHandler = self.startDocTypeHandler
+        self._dtdParser.StartDoctypeDeclHandler = self.startDocumentTypeHandler
         # noinspection SpellCheckingInspection
         self._dtdParser.ElementDeclHandler      = self.elementHandler
         # noinspection SpellCheckingInspection
         self._dtdParser.AttlistDeclHandler      = self.attributeListHandler
         # noinspection SpellCheckingInspection
-        self._dtdParser.EndDoctypeDeclHandler   = self.endDocTypeHandler   # DTDReader.endDocTypeHandler
+        self._dtdParser.EndDoctypeDeclHandler   = self.endDocumentTypeHandler
 
     def open(self, filename: str) -> bool:
         """
@@ -91,7 +90,7 @@ class DTDParser:
 
         return True
 
-    def startDocTypeHandler(self, docTypeName, sysId, pubId, hasInternalSubset):
+    def startDocumentTypeHandler(self, docTypeName, sysId, pubId, hasInternalSubset):
 
         dbgStr: str = f'startDocTypeHandler - {docTypeName=} {sysId=} {pubId=} {hasInternalSubset=}'
         self.logger.info(dbgStr)
@@ -126,7 +125,7 @@ class DTDParser:
 
         self._attributes.append(dtdAttribute)
 
-    def endDocTypeHandler(self):
+    def endDocumentTypeHandler(self):
 
         self._classTree = self._createClassTree()
         self.logger.debug(f'elementsTree: {self._classTree}')
