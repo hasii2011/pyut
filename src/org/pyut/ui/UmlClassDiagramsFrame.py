@@ -74,8 +74,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
             dst:        The destination OglClass
             linkType:   The type of link
         """
-        sourceClass:      PyutClass = cast(PyutClass, src.getPyutObject())
-        destinationClass: PyutClass = cast(PyutClass, dst.getPyutObject())
+        sourceClass:      PyutClass = cast(PyutClass, src.pyutObject)
+        destinationClass: PyutClass = cast(PyutClass, dst.pyutObject)
 
         pyutLink: PyutLink = PyutLink("", linkType=linkType, source=sourceClass, destination=destinationClass)
 
@@ -85,8 +85,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         src.addLink(oglLink)
         dst.addLink(oglLink)
 
-        # src.getPyutObject().addLink(pyutLink)       # TODO fix this
-        pyutClass: PyutClass = cast(PyutClass, src.getPyutObject())
+        pyutClass: PyutClass = cast(PyutClass, src.pyutObject)
         pyutClass.addLink(pyutLink)
 
         return oglLink
@@ -144,7 +143,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         Returns: A named tuple with attributes:  pyutClass and oglClass
         """
         pyutClass: PyutClass = PyutClass()
-        pyutClass.setName(name)
+        pyutClass.name = name
 
         oglClass: OglClass = OglClass(pyutClass, 50, 50)
         # To make this code capable of being debugged

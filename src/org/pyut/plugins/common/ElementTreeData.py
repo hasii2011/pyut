@@ -30,7 +30,7 @@ class ElementTreeData:
     childElementNames = property(getChildElementNames, setChildElementNames)
 
     def __str__(self):
-        retStr: str = f'ElementTreeData - ClassName: {self.pyutClass.getName()} oglClass position: {self.oglClass.GetPosition()}\n'
+        retStr: str = f'ElementTreeData - ClassName: {self.pyutClass.name} oglClass position: {self.oglClass.GetPosition()}\n'
 
         for childName in self.childElementNames:
             retStr += f'\t\tchildName: {childName}\n'
