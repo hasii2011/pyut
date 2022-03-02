@@ -48,14 +48,13 @@ class PyutMethod(PyutObject):
 
     displayParameters: PyutGloballyDisplayParameters = cast(PyutGloballyDisplayParameters, None)
 
-    def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returns: PyutType = PyutType('')):
+    def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returnType: PyutType = PyutType('')):
         """
 
-        TODO: rename `returns` to `returnType`
         Args:
             name:       The method name
             visibility: Its visibility public, private, protected
-            returns:  Its return value
+            returnType:  Its return value
         """
         prefs: PyutPreferences = PyutPreferences()
 
@@ -71,7 +70,7 @@ class PyutMethod(PyutObject):
         self._sourceCode: SourceCode     = SourceCode([])
 
         self._params:  PyutParameters = PyutParameters([])
-        self._returns: PyutType       = returns
+        self._returns: PyutType       = returnType
 
         self._isProperty: bool = False
 

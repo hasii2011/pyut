@@ -78,7 +78,7 @@ class TestIoPython(TestBase):
     def testGetOneMethodCodePublic(self):
 
         pyutType: PyutType = PyutType(value='str')
-        publicMethod: PyutMethod = PyutMethod(name='publicMethod', visibility=PyutVisibilityEnum.PUBLIC, returns=pyutType)
+        publicMethod: PyutMethod = PyutMethod(name='publicMethod', visibility=PyutVisibilityEnum.PUBLIC, returnType=pyutType)
 
         defCode: List[str] = self.pyutToPython.generateASingleMethodsCode(publicMethod, writePass=False)
         self.logger.info(f'Generated definition: {defCode}')
@@ -90,7 +90,7 @@ class TestIoPython(TestBase):
     def testGetOneMethodCodePrivate(self):
 
         pyutType: PyutType = PyutType(value='str')
-        publicMethod: PyutMethod = PyutMethod(name='privateMethod', visibility=PyutVisibilityEnum.PRIVATE, returns=pyutType)
+        publicMethod: PyutMethod = PyutMethod(name='privateMethod', visibility=PyutVisibilityEnum.PRIVATE, returnType=pyutType)
 
         defCode: List[str] = self.pyutToPython.generateASingleMethodsCode(publicMethod, writePass=False)
         self.logger.info(f'Generated definition: {defCode}')
@@ -102,7 +102,7 @@ class TestIoPython(TestBase):
     def testGetOneMethodCodeProtected(self):
 
         pyutType: PyutType = PyutType(value='str')
-        publicMethod: PyutMethod = PyutMethod(name='protectedMethod', visibility=PyutVisibilityEnum.PROTECTED, returns=pyutType)
+        publicMethod: PyutMethod = PyutMethod(name='protectedMethod', visibility=PyutVisibilityEnum.PROTECTED, returnType=pyutType)
 
         defCode: List[str] = self.pyutToPython.generateASingleMethodsCode(publicMethod, writePass=False)
         self.logger.info(f'Generated definition: {defCode}')

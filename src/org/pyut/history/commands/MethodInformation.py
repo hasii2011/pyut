@@ -78,7 +78,7 @@ class MethodInformation:
             methodVisibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(methodProfile[1])
             methodReturns:    PyutType            = PyutType(value=methodProfile[2])
 
-            pyutMethod: PyutMethod = PyutMethod(name=methodName, visibility=methodVisibility, returns=methodReturns)
+            pyutMethod: PyutMethod = PyutMethod(name=methodName, visibility=methodVisibility, returnType=methodReturns)
 
             # deserialize method's parameters;  Get the tuple (name, Type, defaultValue)
             params = eval(methodProfile[3])

@@ -144,7 +144,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
             methodVisibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(methodProfile[1])
             methodReturns:    PyutType           = PyutType(value=methodProfile[2])
 
-            method = PyutMethod(name=methodName, visibility=methodVisibility, returns=methodReturns)
+            method = PyutMethod(name=methodName, visibility=methodVisibility, returnType=methodReturns)
 
             # deserialize method's params so we get a tuple (name, Type, defaultValue)
             params = eval(methodProfile[3])

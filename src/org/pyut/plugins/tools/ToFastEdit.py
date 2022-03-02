@@ -208,7 +208,7 @@ class ToFastEdit(PyutToPlugin):
                     else:
                         returnType = ""
                 pyutType: PyutType   = PyutType(value=returnType)
-                method:   PyutMethod = PyutMethod(name=name, visibility=vis, returns=pyutType)
+                method:   PyutMethod = PyutMethod(name=name, visibility=vis, returnType=pyutType)
 
                 method.setParams([PyutParameter(x[0], x[1]) for x in params])
                 methods.append(method)
