@@ -69,8 +69,8 @@ class PyutMethod(PyutObject):
         self._modifiers:  PyutModifiers  = PyutModifiers([])
         self._sourceCode: SourceCode     = SourceCode([])
 
-        self._params:  PyutParameters = PyutParameters([])
-        self._returns: PyutType       = returnType
+        self._parameters:  PyutParameters = PyutParameters([])
+        self._returnType: PyutType       = returnType
 
         self._isProperty: bool = False
 
@@ -124,19 +124,19 @@ class PyutMethod(PyutObject):
 
     @property
     def returnType(self) -> PyutType:
-        return self._returns
+        return self._returnType
 
     @returnType.setter
     def returnType(self, theNewValue: PyutType):
-        self._returns = theNewValue
+        self._returnType = theNewValue
 
     @property
     def parameters(self) -> PyutParameters:
-        return self._params
+        return self._parameters
 
     @parameters.setter
     def parameters(self, newParams: PyutParameters):
-        self._params = newParams
+        self._parameters = newParams
 
     @property
     def modifiers(self) -> PyutModifiers:
@@ -217,7 +217,7 @@ class PyutMethod(PyutObject):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        return self._params
+        return self._parameters
 
     @deprecated('Use parameters property')
     def setParams(self, params):
@@ -228,7 +228,7 @@ class PyutMethod(PyutObject):
         @since 1.0
         @author Laurent Burgbacher <lb@alawa.ch>
         """
-        self._params = params
+        self._parameters = params
 
     def addParameter(self, parameter: PyutParameter):
         """
@@ -237,7 +237,7 @@ class PyutMethod(PyutObject):
         Args:
             parameter: parameter to add
         """
-        self._params.append(parameter)
+        self._parameters.append(parameter)
 
     @deprecated('Use')
     def getReturns(self) -> PyutType:
@@ -247,7 +247,7 @@ class PyutMethod(PyutObject):
         Returns:
             The method return type
         """
-        return self._returns
+        return self._returnType
 
     @deprecated('Use')
     def setReturns(self, returnType: PyutType):
@@ -263,15 +263,7 @@ class PyutMethod(PyutObject):
             pyutType = PyutType(returnType)
             self.logger.warning(f'Setting return type as string is deprecated.  use PyutType')
 
-        self._returns = pyutType
-
-    @property
-    def returnType(self) -> PyutType:
-        return self._returns
-
-    @returnType.setter
-    def returnType(self, newValue: PyutType):
-        self._returns = newValue
+        self._returnType = pyutType
 
     def methodWithParameters(self) -> str:
         return self.__stringWithParams()
@@ -286,8 +278,8 @@ class PyutMethod(PyutObject):
         """
         string = f'{self._visibility}{self._name}()'
         # add the parameters
-        if str(self._returns) != "":
-            string = f'{string}: {self._returns}'
+        if str(self._returnType) != "":
+            string = f'{string}: {self._returnType}'
         return string
 
     def __stringWithParams(self):
@@ -297,32 +289,25 @@ class PyutMethod(PyutObject):
         """
         string = f'{self._visibility}{self._name}('
         # add the params
-        if not self._params:
+        if not self._parameters:
             string = f'{string}  '  # to compensate the removing [:-2]
-        for param in self._params:
+        for param in self._parameters:
             string = f'{string}{param}, '
 
         string = string[:-2] + ")"      # remove the last "," and add a )
-        if self._returns != "":
-            string = f'{string}: {self._returns}'
+        if self._returnType != "":
+            string = f'{string}: {self._returnType}'
 
         return string
 
     def __str__(self) -> str:
         """
-        TODO:  Remove try/except clause;  Not necessary since now using enumeration
-
         Returns:    The configured representation
         """
-        try:
-            if PyutMethod.displayParameters == PyutGloballyDisplayParameters.WITH_PARAMETERS:
-                return self.__stringWithParams()
-            else:
-                return self.__stringWithoutParams()
-
-        except (ValueError, Exception) as e:
-            self.logger.error(f'{e}')
-            return ""
+        if PyutMethod.displayParameters == PyutGloballyDisplayParameters.WITH_PARAMETERS:
+            return self.__stringWithParams()
+        else:
+            return self.__stringWithoutParams()
 
     def __repr__(self) -> str:
         internalRepresentation: str = (
