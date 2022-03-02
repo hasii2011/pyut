@@ -360,10 +360,9 @@ class OglToMiniDom:
             xmlModifier.setAttribute(PyutXmlConstants.ATTR_NAME, modifier.name)
             root.appendChild(xmlModifier)
 
-        returnType = pyutMethod.getReturns()
-        if returnType is not None:
+        if pyutMethod.returnType is not None:
             xmlReturnType: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_RETURN)
-            xmlReturnType.setAttribute(PyutXmlConstants.ATTR_TYPE, str(returnType))
+            xmlReturnType.setAttribute(PyutXmlConstants.ATTR_TYPE, str(pyutMethod.returnType))
             root.appendChild(xmlReturnType)
 
         for param in pyutMethod.parameters:

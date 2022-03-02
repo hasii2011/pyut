@@ -150,7 +150,7 @@ class PyutToPython:
         currentCode = self._generateParametersCode(currentCode, params)
         currentCode = f'{currentCode})'
 
-        returnType: PyutType = pyutMethod.getReturns()
+        returnType: PyutType = pyutMethod.returnType
         if returnType is not None and returnType.value != '':
             currentCode = f'{currentCode} -> {returnType.value}'
 
@@ -289,10 +289,12 @@ class PyutToPython:
         for i in range(len(params)):
             param: PyutParameter = params[i]
             methodCode.append(self.__indentStr(f'{param.getName()}:\n', 2))
+
         # Add others
-        if pyutMethod.getReturns() is not None and len(str(pyutMethod.getReturns())) > 0:
+        returnType: PyutType = pyutMethod.returnType
+        if returnType is not None and len(str(returnType)) > 0:
             methodCode.append(self.__indentStr('Returns:\n'))
-            methodCode.append(self.__indentStr(f'{pyutMethod.getReturns()}\n', 2))
+            methodCode.append(self.__indentStr(f'{returnType}\n', 2))
 
         return methodCode
 

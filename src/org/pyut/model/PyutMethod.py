@@ -239,7 +239,7 @@ class PyutMethod(PyutObject):
         """
         self._parameters.append(parameter)
 
-    @deprecated('Use')
+    @deprecated('Use returnType property')
     def getReturns(self) -> PyutType:
         """
         Return the return type.
@@ -249,7 +249,7 @@ class PyutMethod(PyutObject):
         """
         return self._returnType
 
-    @deprecated('Use')
+    @deprecated('Use returnType property')
     def setReturns(self, returnType: PyutType):
         """
         Set the return type of the method.

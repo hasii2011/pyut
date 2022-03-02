@@ -519,9 +519,8 @@ class MiniDomToOgl:
             pyutMethod.setVisibility(visibility=vis)
 
             returnElt:  Element  = xmlMethod.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_RETURN)[0]
-            retTypeStr: str      = returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE)
-            retType:    PyutType = PyutType(retTypeStr)
-            pyutMethod.setReturns(retType)
+            retTypeStr: str       = returnElt.getAttribute(PyutXmlConstants.ATTR_TYPE)
+            pyutMethod.returnType = PyutType(retTypeStr)
 
             #
             #  Code supports multiple modifiers, but the dialog allows input of only one

@@ -55,7 +55,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         for method in pyutClass.methods:
             methodName = method.name
             methodVisibility = method.getVisibility().__str__()
-            methodReturns = method.getReturns().__str__()
+            methodReturns = method.returnType.__str__()
 
             params = []
             for param in method.parameters:
