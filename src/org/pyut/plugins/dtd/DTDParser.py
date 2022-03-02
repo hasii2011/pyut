@@ -49,7 +49,8 @@ class DTDParser:
         some kind of C language binder;
 
         """
-        self.logger: Logger = getLogger(__name__)
+        self.logger:    Logger                = getLogger(__name__)
+        self._umlFrame: UmlClassDiagramsFrame = umlFrame
 
         # noinspection SpellCheckingInspection
         """
@@ -58,22 +59,20 @@ class DTDParser:
         only be used to parse a single XML document.Call ParserCreate for each document to provide unique
         parser instances.
         """
-        self.elementTypes: DTDElements = DTDElements({})
-        self.attributes: DTDAttributes = DTDAttributes([])
+        self._elementTypes: DTDElements   = DTDElements({})
+        self._attributes:   DTDAttributes = DTDAttributes([])
+        self._classTree:    Dict[str, ElementTreeData] = {}
 
-        self.dtdParser = ParserCreate()
-
-        self._umlFrame: UmlClassDiagramsFrame      = umlFrame
-        self.classTree: Dict[str, ElementTreeData] = {}
+        self._dtdParser = ParserCreate()
 
         # noinspection SpellCheckingInspection
-        self.dtdParser.StartDoctypeDeclHandler = self.startDocTypeHandler
+        self._dtdParser.StartDoctypeDeclHandler = self.startDocTypeHandler
         # noinspection SpellCheckingInspection
-        self.dtdParser.ElementDeclHandler      = self.elementHandler
+        self._dtdParser.ElementDeclHandler      = self.elementHandler
         # noinspection SpellCheckingInspection
-        self.dtdParser.AttlistDeclHandler      = self.attributeListHandler
+        self._dtdParser.AttlistDeclHandler      = self.attributeListHandler
         # noinspection SpellCheckingInspection
-        self.dtdParser.EndDoctypeDeclHandler   = self.endDocTypeHandler   # DTDReader.endDocTypeHandler
+        self._dtdParser.EndDoctypeDeclHandler   = self.endDocTypeHandler   # DTDReader.endDocTypeHandler
 
     def open(self, filename: str) -> bool:
         """
@@ -88,7 +87,7 @@ class DTDParser:
 
         with open(filename, "r") as dataFile:
             dtdData: str = dataFile.read()
-            self.dtdParser.Parse(dtdData)
+            self._dtdParser.Parse(dtdData)
 
         return True
 
@@ -108,10 +107,10 @@ class DTDParser:
 
             (name , descr , (attribute | attribute-group-ref)*)
         """
-        currentLineNumber: int = self.dtdParser.CurrentLineNumber
+        currentLineNumber: int = self._dtdParser.CurrentLineNumber
         self.logger.debug(f'elementHandler - {currentLineNumber:{2}} name: {elementName:{12}} model: {model}')
 
-        self.elementTypes[elementName] = model
+        self._elementTypes[elementName] = model
 
     def attributeListHandler(self, eltName, attrName, attrType, attrValue, valType: int):
 
@@ -125,16 +124,16 @@ class DTDParser:
 
         self.logger.debug(dtdAttribute)
 
-        self.attributes.append(dtdAttribute)
+        self._attributes.append(dtdAttribute)
 
     def endDocTypeHandler(self):
 
-        self.classTree = self._createClassTree()
-        self.logger.debug(f'elementsTree: {self.classTree}')
+        self._classTree = self._createClassTree()
+        self.logger.debug(f'elementsTree: {self._classTree}')
         self._addAttributesToClasses()
         self._addLinks()
 
-        self.logger.info(f'attributes: {self.attributes}')
+        self.logger.info(f'attributes: {self._attributes}')
 
     def _createClassTree(self) -> Dict[str, ElementTreeData]:
 
@@ -142,7 +141,7 @@ class DTDParser:
         x: int = 50
         y: int = 50
 
-        for eltName in list(self.elementTypes.keys()):
+        for eltName in list(self._elementTypes.keys()):
 
             createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=eltName, x=x, y=y)
             pyutClass: PyutClass = createdClasses.pyutClass
@@ -150,7 +149,7 @@ class DTDParser:
 
             elementTreeData: ElementTreeData = ElementTreeData(pyutClass=pyutClass, oglClass=oglClass)
 
-            model = self.elementTypes[eltName]
+            model = self._elementTypes[eltName]
             # noinspection SpellCheckingInspection
             chillunNames: List[str] = self._getChildElementNames(eltName=eltName, model=model)
             elementTreeData.childElementNames = chillunNames
@@ -168,14 +167,14 @@ class DTDParser:
 
     def _addLinks(self):
 
-        for className in list(self.classTree.keys()):
+        for className in list(self._classTree.keys()):
 
-            eltTreeData: ElementTreeData = self.classTree[className]
+            eltTreeData: ElementTreeData = self._classTree[className]
 
             for associatedClassName in eltTreeData.childElementNames:
                 self.logger.info(f'{className} associated with {associatedClassName}')
                 parent: OglClass = eltTreeData.oglClass
-                destTreeData: ElementTreeData = self.classTree[associatedClassName]
+                destTreeData: ElementTreeData = self._classTree[associatedClassName]
                 child: OglClass = destTreeData.oglClass
 
                 link: PyutLink = self._umlFrame.createLink(parent, child, LinkType.AGGREGATION)
@@ -183,10 +182,10 @@ class DTDParser:
 
     def _addAttributesToClasses(self):
 
-        for classAttr in self.attributes:
+        for classAttr in self._attributes:
             typedAttr: DTDAttribute   = cast(DTDAttribute, classAttr)
             className: str            = typedAttr.elementName
-            treeData: ElementTreeData = self.classTree[className]
+            treeData: ElementTreeData = self._classTree[className]
             attrName: str             = typedAttr.attributeName
             attrType: str             = typedAttr.attributeType
             attrValue: str            = typedAttr.attributeValue

@@ -46,13 +46,13 @@ class TestDTDParser(TestBase):
 
         dtdReader.open(fqFileName)
 
-        actualClassCount: int = dtdReader.classTree.__len__()
+        actualClassCount: int = dtdReader._classTree.__len__()
 
         self.assertEqual(TestDTDParser.EXPECTED_CLASS_COUNT, actualClassCount, "Created class count does not match")
 
-        emailTreeData: ElementTreeData = dtdReader.classTree['email']
-        phoneTreeData: ElementTreeData = dtdReader.classTree['phone']
-        eventTreeData: ElementTreeData = dtdReader.classTree['event']
+        emailTreeData: ElementTreeData = dtdReader._classTree['email']
+        phoneTreeData: ElementTreeData = dtdReader._classTree['phone']
+        eventTreeData: ElementTreeData = dtdReader._classTree['event']
 
         self.assertIsNotNone(emailTreeData, 'Missing Pyut Information')
         self.assertIsNotNone(phoneTreeData, 'Missing Pyut Information')
