@@ -1,4 +1,4 @@
-from pyexpat import XMLParserType
+
 from typing import cast
 from typing import Dict
 from typing import Tuple
@@ -9,6 +9,7 @@ from logging import Logger
 from logging import getLogger
 
 from xml.parsers.expat import ParserCreate
+from pyexpat import XMLParserType
 
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
@@ -17,7 +18,6 @@ from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.enums.LinkType import LinkType
-
 
 from org.pyut.ogl.OglClass import OglClass
 
@@ -30,8 +30,9 @@ from org.pyut.plugins.dtd.DTDElementTypes import DTDElementTypes
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 
 
-DTDElements        = NewType('DTDElements',   Dict[str, Tuple])
-DTDAttributes      = NewType('DTDAttributes', List[DTDAttribute])
+DTDElements   = NewType('DTDElements',   Dict[str, Tuple])
+DTDAttributes = NewType('DTDAttributes', List[DTDAttribute])
+ClassTree     = NewType('ClassTree',     Dict[str, ElementTreeData])    # string is ClassName
 
 
 class DTDParser:
@@ -54,7 +55,7 @@ class DTDParser:
 
         self._elementTypes: DTDElements   = DTDElements({})
         self._attributes:   DTDAttributes = DTDAttributes([])
-        self._classTree:    Dict[str, ElementTreeData] = {}
+        self._classTree:    ClassTree     = ClassTree({})
 
         # noinspection SpellCheckingInspection
         """
@@ -134,9 +135,9 @@ class DTDParser:
 
         self.logger.info(f'attributes: {self._attributes}')
 
-    def _createClassTree(self) -> Dict[str, ElementTreeData]:
+    def _createClassTree(self) -> ClassTree:
 
-        elementsTree: Dict[str, ElementTreeData] = {}
+        elementsTree: ClassTree = ClassTree({})
         x: int = 50
         y: int = 50
 
