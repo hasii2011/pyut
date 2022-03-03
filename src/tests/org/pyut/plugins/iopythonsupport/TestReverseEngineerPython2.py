@@ -12,7 +12,7 @@ from unittest.mock import PropertyMock
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
+from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
@@ -110,13 +110,13 @@ class TestReverseEngineerPython2(TestBase):
 
     def testCreatePropertiesNormal(self):
 
-        PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
+        PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
 
         propName:     str       = 'fontSize'
         setterParams: List[str] = ['newSize:int']
 
         setter, getter = self.reverseEngineer._createProperties(propName=propName, setterParams=setterParams)
-        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+        PyutMethod.setStringMode(DisplayMethodParameters.WITH_PARAMETERS)
 
         self.logger.info(f'setter={setter.__str__()} getter={getter.__str__()}')
 
@@ -129,7 +129,7 @@ class TestReverseEngineerPython2(TestBase):
         setterParams: List[str] = []
 
         setter, getter = self.reverseEngineer._createProperties(propName=propName, setterParams=setterParams)
-        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+        PyutMethod.setStringMode(DisplayMethodParameters.WITH_PARAMETERS)
 
         self.assertIsNone(setter)
         self.assertIsNotNone(getter)

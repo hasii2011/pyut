@@ -37,7 +37,7 @@ from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
+from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutMethod import PyutModifiers
@@ -256,8 +256,8 @@ class TestADialog(App):
                 'return ans'
             ]
         )
-        savePreference: PyutGloballyDisplayParameters = PyutMethod.displayParameters
-        PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
+        savePreference: DisplayMethodParameters = PyutMethod.displayParameters
+        PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
         with DlgEditMethod(parent=self._frameTop, windowId=ID_ANY, pyutMethod=pyutMethod) as dlg:
             ans = dlg.ShowModal()
 

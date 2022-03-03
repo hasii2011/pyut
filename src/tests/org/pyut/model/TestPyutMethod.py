@@ -15,7 +15,7 @@ from org.pyut.model.PyutMethod import PyutParameters
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutParameter import PyutParameter
 
-from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
+from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
 
 
 class TestPyutMethod(TestBase):
@@ -44,17 +44,17 @@ class TestPyutMethod(TestBase):
 
         pyutMethod: PyutMethod = self._pyutMethod
 
-        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+        PyutMethod.setStringMode(DisplayMethodParameters.WITH_PARAMETERS)
 
-        self.assertEqual(PyutGloballyDisplayParameters.WITH_PARAMETERS, pyutMethod.getStringMode(), 'Did not get set correctly')
+        self.assertEqual(DisplayMethodParameters.WITH_PARAMETERS, pyutMethod.getStringMode(), 'Did not get set correctly')
 
     def testStringMethodWithoutParameters(self):
 
         pyutMethod: PyutMethod = self._pyutMethod
 
-        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+        PyutMethod.setStringMode(DisplayMethodParameters.WITHOUT_PARAMETERS)
 
-        self.assertEqual(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS, pyutMethod.getStringMode(), 'Did not get set correctly')
+        self.assertEqual(DisplayMethodParameters.WITHOUT_PARAMETERS, pyutMethod.getStringMode(), 'Did not get set correctly')
 
     def testStringMethodWithParametersRepresentation(self):
 
@@ -62,7 +62,7 @@ class TestPyutMethod(TestBase):
         pyutMethod.returnType = PyutType('float')
 
         pyutMethod.parameters = self._makeParameters()
-        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+        PyutMethod.setStringMode(DisplayMethodParameters.WITH_PARAMETERS)
 
         defaultName: str = PyutPreferences().methodName
         expectedRepresentation: str = f'+{defaultName}(intParam: int = 0, floatParam: float = 32.0): float'
@@ -76,7 +76,7 @@ class TestPyutMethod(TestBase):
         pyutMethod.returnType = PyutType('float')
 
         pyutMethod.parameters = self._makeParameters
-        PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+        PyutMethod.setStringMode(DisplayMethodParameters.WITHOUT_PARAMETERS)
 
         defaultName: str = PyutPreferences().methodName
         expectedRepresentation: str = f'+{defaultName}(): float'

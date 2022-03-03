@@ -14,7 +14,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
+from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.model.PyutObject import PyutObject
@@ -46,7 +46,7 @@ class PyutMethod(PyutObject):
     change will be done for each `PyutMethod` instance.
     """
 
-    displayParameters: PyutGloballyDisplayParameters = cast(PyutGloballyDisplayParameters, None)
+    displayParameters: DisplayMethodParameters = cast(DisplayMethodParameters, None)
 
     def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returnType: PyutType = PyutType('')):
         """
@@ -75,9 +75,9 @@ class PyutMethod(PyutObject):
         self._isProperty: bool = False
 
         if prefs.showParameters is True:
-            PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITH_PARAMETERS
+            PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
         else:
-            PyutMethod.displayParameters = PyutGloballyDisplayParameters.WITHOUT_PARAMETERS
+            PyutMethod.displayParameters = DisplayMethodParameters.WITHOUT_PARAMETERS
 
     @property
     def sourceCode(self) -> SourceCode:
@@ -94,7 +94,7 @@ class PyutMethod(PyutObject):
         return self.__stringWithParams()
 
     @staticmethod
-    def setStringMode(mode: PyutGloballyDisplayParameters):
+    def setStringMode(mode: DisplayMethodParameters):
         """
         Set the mode for __str__.
 
@@ -104,14 +104,14 @@ class PyutMethod(PyutObject):
         PyutMethod.displayParameters = mode
 
     @staticmethod
-    def getStringMode() -> PyutGloballyDisplayParameters:
+    def getStringMode() -> DisplayMethodParameters:
         """
         Returns:    The mode for __str__.
         """
         return PyutMethod.displayParameters
 
     @property
-    def globallyDisplayParameters(self) -> PyutGloballyDisplayParameters:
+    def globallyDisplayParameters(self) -> DisplayMethodParameters:
         return PyutMethod.displayParameters
 
     @property
@@ -304,7 +304,7 @@ class PyutMethod(PyutObject):
         """
         Returns:    The configured representation
         """
-        if PyutMethod.displayParameters == PyutGloballyDisplayParameters.WITH_PARAMETERS:
+        if PyutMethod.displayParameters == DisplayMethodParameters.WITH_PARAMETERS:
             return self.__stringWithParams()
         else:
             return self.__stringWithoutParams()

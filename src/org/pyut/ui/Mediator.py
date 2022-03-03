@@ -29,7 +29,7 @@ from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.enums.LinkType import LinkType
 
-from org.pyut.model.PyutGloballyDisplayParameters import PyutGloballyDisplayParameters
+from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
@@ -746,9 +746,9 @@ class Mediator(Singleton):
             theNewValue:
         """
         if theNewValue is True:
-            PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITH_PARAMETERS)
+            PyutMethod.setStringMode(DisplayMethodParameters.WITH_PARAMETERS)
         else:
-            PyutMethod.setStringMode(PyutGloballyDisplayParameters.WITHOUT_PARAMETERS)
+            PyutMethod.setStringMode(DisplayMethodParameters.WITHOUT_PARAMETERS)
 
     def getCurrentDir(self) -> str:
         """
