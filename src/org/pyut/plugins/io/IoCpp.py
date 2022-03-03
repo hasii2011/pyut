@@ -101,7 +101,7 @@ class IoCpp(PyutIoPlugin):
         self.__className = []
 
         for el in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
-            self._writeClass(cast(PyutClass, el.getPyutObject()))
+            self._writeClass(cast(PyutClass, el.pyutObject))
 
         self.writeMain()
         self.writeMakefile()
@@ -109,6 +109,7 @@ class IoCpp(PyutIoPlugin):
         print("done !")
 
     def writeMain(self):
+
         main = open(self._srcDir + os.sep + 'main.cpp', 'w')
 
         for i in self.__className:
@@ -121,6 +122,7 @@ int main(int argc, char** argv)
     ; //code here
 }
         """)
+        main.close()
 
     def _visibility(self, elements, public, private, protected):
         """
@@ -140,7 +142,7 @@ int main(int argc, char** argv)
         for element in elements:
 
             # getting element visibility
-            visibility = str(element.getVisibility())
+            visibility = str(element.visibility)
 
             # public case
             if visibility == '+':
@@ -181,9 +183,9 @@ int main(int argc, char** argv)
         @since 1.1
         """
         # writing the objType
-        self._writeType(file, str(param.getType()))
+        self._writeType(file, str(param.type))
         # writing the param name
-        file.write(param.getName())
+        file.write(param.name)
 
     def _writeMethod(self, file, method):
         """
@@ -196,16 +198,16 @@ int main(int argc, char** argv)
         @since 1.1
         """
         # writing method name
-        file.write(method.getName() + "(")
+        file.write(method.name + "(")
         # for all param
-        nbParam = len(method.getParams())
-        for param in method.getParams():
+        nbParam = len(method.parameters)
+        for param in method.parameters:
             # writing param
             self._writeParam(file, param)
 
             # default value
-            if param.getDefaultValue():
-                file.write(" = " + param.getDefaultValue())
+            if param.defaultValue is not None:
+                file.write(" = " + param.defaultValue)
 
             # comma between param
             nbParam = nbParam - 1
@@ -215,7 +217,7 @@ int main(int argc, char** argv)
 
     def _fieldsWDefault(self, fields, defFields):
         for i in fields:
-            if i.getDefaultValue() is not None:
+            if i.defaultValue is not None:
                 defFields.append(i)
 
     def _writeSrcMethods(self, file, methods, className, fields):
@@ -236,10 +238,10 @@ int main(int argc, char** argv)
             # writing objType
             # constructor case
             constructor = 1
-            name = method.getName()
+            name = method.name
             if name != className and name != '~' + className:
                 constructor = 0
-                self._writeType(file, str(method.getReturns()))
+                self._writeType(file, str(method.returnType))
 
             # writing class name
             file.write(className+"::")
@@ -282,9 +284,9 @@ int main(int argc, char** argv)
 
             # writing objType
             # constructor case
-            name = method.getName()
+            name = method.name
             if name != className and name != '~'+className:
-                self._writeType(file, str(method.getReturns()))
+                self._writeType(file, str(method.returnType))
 
             # writing method
             self._writeMethod(file, method)
@@ -302,7 +304,7 @@ int main(int argc, char** argv)
         """
         # for all field in fields list
         for field in fields:
-            self._writeFieldComment(file, field.getName(), self.__tab)
+            self._writeFieldComment(file, field.name, self.__tab)
             file.write(self.__tab)
             self._writeParam(file, field)
             file.write(";\n")
@@ -319,10 +321,10 @@ int main(int argc, char** argv)
         """
         # for all field in fields list
         for link in links:
-            name = link.getDestination().getName()
+            name = link.getDestination().name
 
             # for field name
-            linkName = link.getName()
+            linkName = link.name
             if linkName == "":
                 linkName = name[0].lower() + name[1:]
 
@@ -331,7 +333,7 @@ int main(int argc, char** argv)
             file.write(name + ' ')
 
             # *
-            if link.getType() == LinkType.ASSOCIATION or link.getType() == LinkType.AGGREGATION:
+            if link.linkType == LinkType.ASSOCIATION or link.linkType == LinkType.AGGREGATION:
                 file.write("*")
 
             file.write(linkName + ' ')
@@ -371,7 +373,7 @@ int main(int argc, char** argv)
 
         for father in fathers:
             # writing fathers with public mode
-            file.write("public " + father.getName())
+            file.write("public " + father.name)
 
             # writing ',' between fathers
             nbr = nbr - 1
@@ -401,12 +403,12 @@ int main(int argc, char** argv)
 
         # include father
         for father in fathers:
-            name = father.getName()
+            name = father.name
             writeName()
 
         # include link
         for link in links:
-            name = link.getDestination().getName()
+            name = link.getDestination().name
             writeName()
 
         file.write('\n')
@@ -434,16 +436,17 @@ int main(int argc, char** argv)
         @author D.Roux - droux@eivd.ch
         @since 1.1
         """
+        # TODO use os.sep instead of hard code line feed
         file.write(tab + "/**\n")
-        file.write(tab + " * method " + method.getName()+"\n")
+        file.write(tab + " * method " + method.name+"\n")
         file.write(tab + " * More info here.\n")
-        for param in method.getParams():
-            file.write(tab + " * @param "+param.getName()+"   : ")
-            self._writeType(file, str(param.getType()))
+        for param in method.parameters:
+            file.write(tab + " * @param "+param.name + "   : ")
+            self._writeType(file, str(param.type))
             file.write("\n")
 
-        if str(method.getReturns()) != '':
-            file.write(tab + " * @return "+str(method.getReturns())+"\n")
+        if str(method.returnType) != '':
+            file.write(tab + " * @return " + str(method.returnType) + "\n")
         file.write(tab+" */\n")
 
     def _writeFieldComment(self, file, name, tab=""):
@@ -470,7 +473,7 @@ int main(int argc, char** argv)
             pyutClass:  an object pyutClass
         """
 
-        className = pyutClass.getName()
+        className = pyutClass.name
         self.__className.append(className)
 
         # the two files and header (className.h) and
@@ -542,6 +545,9 @@ int main(int argc, char** argv)
         # end of class
         headerFile.write("\n\n};\n#endif")
 
+        headerFile.close()
+        srcFile.close()
+
     def writeMakefile(self):
         makefile = open(self._dir + os.sep + 'Makefile', 'w')
         makefile.write("OBJS = ")
@@ -566,3 +572,5 @@ all: $(FILENAME)
 $(FILENAME): $(OBJS)
     $(COMP) $(OPTIONS) $(OBJS) -o src/$(FILENAME) $(LIBS)
         """)
+
+        makefile.close()
