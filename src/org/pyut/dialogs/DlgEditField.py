@@ -99,9 +99,9 @@ class DlgEditField(BaseDlgEdit):
         szrField3.Fit(self)
 
         # Fill the text controls with PyutField data
-        self._txtFieldName.SetValue(self._fieldToEdit.getName())
-        self._txtFieldType.SetValue(str(self._fieldToEdit.getType()))
-        self._txtFieldDefault.SetValue(self._convertNone(self._fieldToEdit.getDefaultValue()))
+        self._txtFieldName.SetValue(self._fieldToEdit.name)
+        self._txtFieldType.SetValue(str(self._fieldToEdit.type))
+        self._txtFieldDefault.SetValue(self._convertNone(self._fieldToEdit.defaultValue))
         self._rdbFieldVisibility.SetStringSelection(str(self._fieldToEdit.visibility))
 
         # Fix state of buttons (enabled or not)

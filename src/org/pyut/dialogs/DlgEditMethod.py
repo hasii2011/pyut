@@ -104,17 +104,17 @@ class DlgEditMethod(BaseDlgEdit):
             Fill the text controls with PyutMethod data
         """
 
-        self._txtName.SetValue(self._pyutMethodCopy.getName())
+        self._txtName.SetValue(self._pyutMethodCopy.name)
         modifiers: PyutModifiers = self._pyutMethodCopy.modifiers
         singleModifierString: str  = " ".join(map(lambda x: str(x), modifiers))
 
         self._txtModifiers.SetValue(singleModifierString)
-        self._txtReturn.SetValue(str(self._pyutMethodCopy.getReturns()))
+        self._txtReturn.SetValue(str(self._pyutMethodCopy.returnType))
 
         if self._editInterface is False:
-            self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.getVisibility()))
+            self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.visibility))
 
-        for i in self._pyutMethodCopy.getParams():
+        for i in self._pyutMethodCopy.parameters:
             self._lstParams.Append(str(i))
 
     def _createMethodVisibilityContainer(self, methodInfoContainer: Sizer) -> BoxSizer:

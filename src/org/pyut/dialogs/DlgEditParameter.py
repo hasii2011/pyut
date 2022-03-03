@@ -99,10 +99,10 @@ class DlgEditParameter(BaseDlgEdit):
         szr2.Fit(self)
 
         # Fill the text controls with PyutParam data
-        self._txtName.SetValue(self._parameterToEdit.getName())
-        paramType: PyutType = self._parameterToEdit.getType()
+        self._txtName.SetValue(self._parameterToEdit.name)
+        paramType: PyutType = self._parameterToEdit.type
         self._txtType.SetValue(paramType.value)
-        self._txtDefault.SetValue(self._convertNone(self._parameterToEdit.getDefaultValue()))
+        self._txtDefault.SetValue(self._convertNone(self._parameterToEdit.defaultValue))
 
         # Fix state of buttons (enabled or not)
         self._fixBtnDlgParams()

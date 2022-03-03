@@ -19,6 +19,7 @@ from wx import Menu
 from wx import MenuItem
 from wx import MouseEvent
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 from org.pyut.general.LineSplitter import LineSplitter
 
@@ -130,7 +131,7 @@ class OglText(OglObject):
 
         dc.SetClippingRegion(baseX, baseY, w, h)
 
-        noteContent = cast(PyutText, self.getPyutObject()).content
+        noteContent = self.pyutObject.content
         lines = LineSplitter().split(noteContent, dc, w - 2 * OglText.MARGIN)
 
         x = baseX + OglText.MARGIN
@@ -248,5 +249,5 @@ class OglText(OglObject):
 
     def __repr__(self):
 
-        strMe: str = f"[OglText - name: '{self._pyutObject.name}' id: '{self._pyutObject._id}']"
+        strMe: str = f"[OglText - name: '{self._pyutObject.name}' id: '{self._pyutObject.getId()}']"
         return strMe

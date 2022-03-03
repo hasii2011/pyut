@@ -206,7 +206,6 @@ class LineShape(Shape, Common):
         Returns:  A list of int tuples
 
         """
-        srcAnchorPosition = self._srcAnchor.GetPosition()
         sp = self._srcAnchor.GetPosition()
         dp = self._dstAnchor.GetPosition()
         # LineShape.clsLogger.debug(f'GetSegments --  sp: {sp} dp: {dp}')
@@ -274,7 +273,7 @@ class LineShape(Shape, Common):
             v: points of the segment
         """
         from math import pi, atan, cos, sin
-        pi_6 = pi/6
+        pi_6 = pi // 6
         points = []
         x1, y1 = u
         x2, y2 = v
@@ -292,8 +291,8 @@ class LineShape(Shape, Common):
                 alpha = atan(b/a)
         if a > 0:
             alpha += pi
-        alpha1 = alpha + pi_6
-        alpha2 = alpha - pi_6
+        alpha1 = round(alpha + pi_6)
+        alpha2 = round(alpha - pi_6)
         size = self._arrowSize
         points.append((x2 + round(size * cos(alpha1)), y2 + round(size * sin(alpha1))))
         points.append((x2, y2))

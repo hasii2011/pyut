@@ -177,7 +177,7 @@ class CreateOglLinkCommand(Command):
             return self._createInheritanceLink(src, dst)
         elif linkType == LinkType.SD_MESSAGE:
             return self._createSDMessage(src=src, dest=dst, srcPos=srcPos, destPos=dstPos)
-        pyutLink = PyutLink("", linkType=linkType, source=src.getPyutObject(), destination=dst.getPyutObject())
+        pyutLink = PyutLink("", linkType=linkType, source=src.pyutObject, destination=dst.pyutObject)
 
         # Call the factory to create OGL Link
         oglLinkFactory = getOglLinkFactory()
@@ -187,7 +187,7 @@ class CreateOglLinkCommand(Command):
         src.addLink(oglLink)  # add it to the source OglShape
         dst.addLink(oglLink)  # add it to the destination OglShape
 
-        src.getPyutObject().addLink(pyutLink)   # add it to the PyutClass
+        src.pyutObject.addLink(pyutLink)   # add it to the PyutClass
 
         return oglLink
 
@@ -199,7 +199,7 @@ class CreateOglLinkCommand(Command):
         srcY  = srcRelativeCoordinates[1]
         destY = destRelativeCoordinates[1]
 
-        pyutSDMessage = PyutSDMessage(CreateOglLinkCommand.NO_NAME_MESSAGE, src.getPyutObject(), srcY, dest.getPyutObject(), destY)
+        pyutSDMessage = PyutSDMessage(CreateOglLinkCommand.NO_NAME_MESSAGE, src.pyutObject, srcY, dest.pyutObject, destY)
 
         oglLinkFactory = getOglLinkFactory()
         oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest,

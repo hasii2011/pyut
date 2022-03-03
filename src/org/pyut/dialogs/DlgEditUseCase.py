@@ -57,7 +57,7 @@ class DlgEditUseCase(Dialog):
 
         self.SetAutoLayout(True)
 
-        self._text = self._pyutUseCase.getName()
+        self._text: str = self._pyutUseCase.name
         self._returnAction = -1   # describe how the user exited the dialog box
 
         label = StaticText(self, -1, _("Use case text"))
@@ -110,7 +110,7 @@ class DlgEditUseCase(Dialog):
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
 
-        self._pyutUseCase.setName(self._text)
+        self._pyutUseCase.name =self._text
         self._returnAction = OK
         self.Close()
 

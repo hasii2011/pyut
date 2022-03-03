@@ -253,8 +253,8 @@ class RectangleShape(Shape):
         if sizer is self._topLeftSizer:
             nw = sw * (w - x + tlx)
             nh = sh * (h - y + tly)
-            self._ox = self._ox * nw / w
-            self._oy = self._oy * nh / h
+            self._ox = self._ox * nw // w
+            self._oy = self._oy * nh // h
             self.SetSize(nw, nh)
             self.SetTopLeft(x, y)
             self._topRightSizer.SetRelativePosition(nw - 1, 0)

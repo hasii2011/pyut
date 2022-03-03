@@ -162,7 +162,7 @@ class TextShape(RectangleShape):
         # get the diagram frame ratio between the shape and the model
         ratio = self.GetDiagram().GetPanel().GetCurrentZoom()
 
-        fontSize = self.GetModel().GetFontSize() * ratio
+        fontSize = round(self.GetModel().GetFontSize() * ratio)
         TextShape.clsLogger.debug(f'UpdateFromModel - ratio: {ratio}')
 
         # set the new font size
@@ -183,7 +183,7 @@ class TextShape(RectangleShape):
 
         # TextShape.clsLogger.debug(f'UpdateModel - ratio: {ratio}')
         if self.GetFont() is not None:
-            fontSize = self.GetFont().GetPointSize() / ratio
+            fontSize = self.GetFont().GetPointSize() // ratio
             self.GetModel().SetFontSize(fontSize)
 
     def GetFont(self) -> Font:

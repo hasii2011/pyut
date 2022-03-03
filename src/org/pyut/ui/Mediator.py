@@ -436,10 +436,10 @@ class Mediator(Singleton):
             if not self._currentActionPersistent:
                 self._currentAction = ACTION_SELECTOR
                 self.selectTool(self._tools[0])
-            dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.getName(), OK | CANCEL | CENTRE)
+            dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
 
             if dlg.ShowModal() == ID_OK:
-                pyutActor.setName(dlg.GetValue())
+                pyutActor.name = dlg.GetValue()
             dlg.Destroy()
             umlFrame.Refresh()
         elif self._currentAction == ACTION_NEW_USECASE:
@@ -596,7 +596,7 @@ class Mediator(Singleton):
             return
 
         if isinstance(diagramShape, OglClass):
-            pyutObject = diagramShape.getPyutObject()
+            pyutObject = diagramShape.pyutObject
             self.classEditor(pyutObject)
             self.autoResize(diagramShape)
         elif isinstance(diagramShape, OglInterface2):
@@ -943,7 +943,7 @@ class Mediator(Singleton):
         """
         from org.pyut.ogl.OglClass import OglClass
 
-        po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.getPyutObject() is pyutClass]
+        po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.pyutObject is pyutClass]
 
         if len(po) == 0:
             return None

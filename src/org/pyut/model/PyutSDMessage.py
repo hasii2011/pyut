@@ -4,28 +4,24 @@ from logging import getLogger
 
 from org.pyut.model.PyutLink import PyutLink
 
-from org.pyut.general.Globals import _
-
 
 class PyutSDMessage(PyutLink):
     """
     A message between two lifeline of two SDInstances.
-    Note : don't use getxxxTime, use getSrcY, getDstY
+    Note : Use getSrcY, getDstY
 
     """
 
     def __init__(self, message="", src=None, srcTime=0, dst=None, dstTime=0, oglObject=None):
         """
-        Constructor.
-
-        @param string message  : for the message
-        @param PyutCDInstance src : source of the link
-        @param int srcTime : time on the source
-        @param PyutCDInstance dst : where goes the link
-        @param int dstTime : time on the destination
-        @param oglObject : my OGL parent object
-        @author C.Dutoit
-        @tips : add time scale zoomer ?! and ofset..ter ?
+        TODO:  add timescale zoomer ?! and offset ?
+        Args:
+            message: for the message
+            src:     source of the link
+            srcTime: time on the source
+            dst:     where the link goes
+            dstTime: time on the destination
+            oglObject: OGL parent object
         """
         self.logger: Logger = getLogger(__name__)
 

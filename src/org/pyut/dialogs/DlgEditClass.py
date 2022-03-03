@@ -205,7 +205,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         """
         # Fill Class name
-        self._txtName.SetValue(self._pyutClassCopy.getName())
+        self._txtName.SetValue(self._pyutClassCopy.name)
 
         # Fill Stereotype
         stereotype = self._pyutClassCopy.getStereotype()
