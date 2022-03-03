@@ -51,15 +51,16 @@ class PointShape(Shape):
             if withChildren:
                 self.DrawChildren(dc)
 
-    def GetSelectionZone(self):
+    def GetSelectionZone(self) -> int:
         """
         Get the selection tolerance zone, in pixels.
 
-        @return float : half of the selection zone.
+        Returns: half of the selection zone.
         """
+
         return self._selectZone
 
-    def SetSelectionZone(self, halfWidth):
+    def SetSelectionZone(self, halfWidth: int):
         """
         Set the selection tolerance zone, in pixels.
 
@@ -67,7 +68,7 @@ class PointShape(Shape):
         """
         self._selectZone = halfWidth
 
-    def Inside(self, x: float, y: float):
+    def Inside(self, x: int, y: int):
         """
 
         Args:

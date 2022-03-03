@@ -23,6 +23,7 @@ from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.OglLink import OglLink
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 # TODO : Find a way to report moves from AnchorPoints to PyutSDMessage
@@ -51,7 +52,7 @@ class OglSDMessage(OglLink):
         # Override OglLink anchors
         #
         srcAnchor, dstAnchor = self._createAnchorPoints(srcShape=srcShape, pyutSDMessage=pyutSDMessage, dstShape=dstShape)
-        srcAnchorPosition  = srcAnchor.GetPosition()
+        srcAnchorPosition = srcAnchor.GetPosition()
         dstAnchorPosition = dstAnchor.GetPosition()
 
         self._srcAnchor: AnchorPoint = srcAnchor
@@ -62,8 +63,8 @@ class OglSDMessage(OglLink):
         linkLength: float = self._computeLinkLength(srcPosition=oglSource, destPosition=oglDestination)
         dx, dy            = self._computeDxDy(srcPosition=oglSource, destPosition=oglDestination)
 
-        centerMessageX: int = round(-dy * 5 / linkLength)
-        centerMessageY: int = round(dx * 5 / linkLength)
+        centerMessageX: int = round(-dy * 5 // linkLength)
+        centerMessageY: int = round(dx * 5 // linkLength)
 
         self._messageLabel: TextShape = self.AddText(centerMessageX, centerMessageY, pyutSDMessage.getMessage())  # font=self._defaultFont
 

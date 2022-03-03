@@ -57,7 +57,7 @@ class RectangleShape(Shape):
         """
         return self._resizable
 
-    def GetTopLeft(self):
+    def GetTopLeft(self) -> Tuple[int, int]:
         """
         Get the coordinates of the top left point in diagram coordinates.
 

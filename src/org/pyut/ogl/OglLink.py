@@ -267,10 +267,10 @@ class OglLink(LineShape, ShapeEventHandler):
         # Little tips
         optimalSrcX, optimalSrcY, optimalDstX, optimalDstY = dstX, dstY, srcX, srcY
 
-        optimalSrcX += dstSize[0]/2
-        optimalSrcY += dstSize[1]/2
-        optimalDstX += srcSize[0]/2
-        optimalDstY += srcSize[1]/2
+        optimalSrcX += dstSize[0] // 2
+        optimalSrcY += dstSize[1] // 2
+        optimalDstX += srcSize[0] // 2
+        optimalDstY += srcSize[1] // 2
 
         srcAnchor.SetPosition(optimalSrcX, optimalSrcY)
         dstAnchor.SetPosition(optimalDstX, optimalDstY)
@@ -314,19 +314,19 @@ class OglLink(LineShape, ShapeEventHandler):
         elif eventId == MENU_TOGGLE_SPLINE:
             self._toggleSpline()
 
-    def _computeLinkLength(self, srcPosition: OglPosition, destPosition: OglPosition) -> float:
+    def _computeLinkLength(self, srcPosition: OglPosition, destPosition: OglPosition) -> int:
         """
 
         Returns:  The length of the link between the source shape and destination shape
         """
         dx, dy = self._computeDxDy(srcPosition, destPosition)
-        linkLength = sqrt(dx*dx + dy*dy)
+        linkLength = round(sqrt(dx*dx + dy*dy))
         if linkLength == 0:
-            linkLength = 0.01
+            linkLength = 1
 
         return linkLength
 
-    def _computeDxDy(self, srcPosition: OglPosition, destPosition: OglPosition) -> Tuple[float, float]:
+    def _computeDxDy(self, srcPosition: OglPosition, destPosition: OglPosition) -> Tuple[int, int]:
         """
 
         Args:
@@ -339,13 +339,13 @@ class OglLink(LineShape, ShapeEventHandler):
         if self._srcShape is None or self._destShape is None:
             raise IllegalOperationException('Either the source or the destination shape is None')
 
-        srcX: float = srcPosition.x
-        srcY: float = srcPosition.y
-        dstX: float = destPosition.x
-        dstY: float = destPosition.y
+        srcX: int = srcPosition.x
+        srcY: int = srcPosition.y
+        dstX: int = destPosition.x
+        dstY: int = destPosition.y
 
-        dx: float = dstX - srcX
-        dy: float = dstY - srcY
+        dx: int = dstX - srcX
+        dy: int = dstY - srcY
 
         return dx, dy
 

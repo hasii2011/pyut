@@ -171,18 +171,19 @@ class Shape:
         """
         return self._children[:]
 
-    def AddAnchor(self, x, y, anchorType=None):
+    def AddAnchor(self, x: int, y: int, anchorType=None):
         """
         Add an anchor point to the shape.
         A line can be linked to it. The anchor point will stay bound to the
         shape and move with it. It is protected against deletion (by default)
         and not movable by itself.
 
-        @param double x : position of the new point, relative to the origin of the shape
-        @param double y : position of the new point, relative to the origin of the shape
-        @param class anchorType : class to use as anchor point, or None for default (AnchorPoint)
+        Args:
+            x: position of the new point, relative to the origin of the shape
+            y: position of the new point, relative to the origin of the shape
+            anchorType:  class to use as anchor point, or None for default (AnchorPoint)
 
-        @return AnchorPoint : the created anchor
+        Returns:    the created anchor
         """
         from org.pyut.miniogl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
 

@@ -306,7 +306,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
         for shape in self.GetDiagram().GetShapes():
             if isinstance(shape, (OglObject, OglLink)):
-                if shape.getPyutObject().getId() == objectId:
+                if shape.pyutObject.getId() == objectId:
                     return shape
         return None
 

@@ -97,7 +97,7 @@ class LineShape(Shape, Common):
             # even number of points, take the two at the center
             sx, sy = points[middle-1]
             dx, dy = points[middle]
-            return (sx + dx) / 2, (sy + dy) / 2
+            return (sx + dx) // 2, (sy + dy) // 2
         else:
             # odd number, take the middle point
             return points[middle]
@@ -281,14 +281,14 @@ class LineShape(Shape, Common):
         b = y2 - y1
         if abs(a) < 0.01:   # vertical segment
             if b > 0:
-                alpha = -pi/2
+                alpha = -pi//2
             else:
-                alpha = pi/2
+                alpha = pi//2
         else:
             if a == 0:
-                alpha = pi/2  # TODO ?
+                alpha = pi//2  # TODO ?
             else:
-                alpha = atan(b/a)
+                alpha = round(atan(b/a))
         if a > 0:
             alpha += pi
         alpha1 = round(alpha + pi_6)

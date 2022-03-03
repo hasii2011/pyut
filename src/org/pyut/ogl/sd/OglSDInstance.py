@@ -66,7 +66,7 @@ class OglSDInstance(OglObject):
 
         # Text of the instance box
         text = self._pyutObject.getInstanceName()
-        self._instanceBoxText = OglInstanceName(pyutObject, 20.0, 20.0, text, self._instanceBox)
+        self._instanceBoxText = OglInstanceName(pyutObject, 20, 20, text, self._instanceBox)
         self.AppendChild(self._instanceBoxText)
         diagram.AddShape(self._instanceBoxText)
         # TODO : set instance box size to the size of the text
@@ -153,9 +153,9 @@ class OglSDInstance(OglObject):
 
     def _createAnchorPoints(self):
 
-        srcX = OglSDInstance.DEFAULT_WIDTH / 2
+        srcX = OglSDInstance.DEFAULT_WIDTH // 2
         srcY = 0
-        dstX = OglSDInstance.DEFAULT_WIDTH / 2
+        dstX = OglSDInstance.DEFAULT_WIDTH // 2
         dstY = OglSDInstance.DEFAULT_HEIGHT
         srcAnchorPoint: AnchorPoint = AnchorPoint(srcX, srcY, self)
         dstAnchorPoint: AnchorPoint = AnchorPoint(dstX, dstY, self)
