@@ -27,6 +27,7 @@ from org.pyut.enums.LinkType import LinkType
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
+from org.pyut.plugins.common.Types import ClassTree
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
@@ -54,7 +55,7 @@ class XSDParser:
 
         self.position:         Tuple[int, int] = self._positionGenerator()
         self._schemaTypeNames: List[str] = []
-        self.classTree:        Dict[str, ElementTreeData] = {}
+        self.classTree:        ClassTree = ClassTree({})
 
     def process(self):
 
@@ -73,7 +74,7 @@ class XSDParser:
 
         for className in self._schemaTypeNames:
 
-            pos: Dict[str, float] = next(self.position)
+            pos: Dict[str, int] = next(self.position)
 
             createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=className, x=pos['x'], y=pos['y'])
 
@@ -193,7 +194,7 @@ class XSDParser:
             pyutClass: PyutClass = childTreeData.pyutClass
             parents: List[PyutLinkedObject] = pyutClass.getParents()
             for parentName in parents:
-                self.logger.info(f'class: {pyutClass.getName()} is a subclass of: {parentName}')
+                self.logger.info(f'class: {pyutClass.name} is a subclass of: {parentName}')
                 parentTreeData: ElementTreeData = self.classTree[parentName]
 
                 childOglClass:  OglClass = childTreeData.oglClass

@@ -28,11 +28,11 @@ from org.pyut.plugins.dtd.DTDAttribute import DTDAttribute
 from org.pyut.plugins.dtd.DTDElementTypes import DTDElementTypes
 
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
+from org.pyut.plugins.common.Types import ClassTree
 
 
 DTDElements   = NewType('DTDElements',   Dict[str, Tuple])
 DTDAttributes = NewType('DTDAttributes', List[DTDAttribute])
-ClassTree     = NewType('ClassTree',     Dict[str, ElementTreeData])    # string is ClassName
 
 
 class DTDParser:
