@@ -130,18 +130,18 @@ class DlgEditField(BaseDlgEdit):
             event:  Associated event
         """
 
-        self._fieldToEdit.setName(self._txtFieldName.GetValue().strip())
+        self._fieldToEdit.name = self._txtFieldName.GetValue().strip()
         from org.pyut.model.PyutType import PyutType
 
-        self._fieldToEdit.setType(PyutType(self._txtFieldType.GetValue().strip()))
+        self._fieldToEdit.type = PyutType(self._txtFieldType.GetValue().strip())
         visStr: str = self._rdbFieldVisibility.GetStringSelection()
         vis:    PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
-        self._fieldToEdit.setVisibility(vis)
+        self._fieldToEdit.visibility = vis
 
         if self._txtFieldDefault.GetValue().strip() != "":
-            self._fieldToEdit.setDefaultValue(self._txtFieldDefault.GetValue().strip())
+            self._fieldToEdit.defaultValue = self._txtFieldDefault.GetValue().strip()
         else:
-            self._fieldToEdit.setDefaultValue(None)
+            self._fieldToEdit.defaultValue = None
 
         self._setProjectModified()
 

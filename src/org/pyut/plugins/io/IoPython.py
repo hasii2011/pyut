@@ -140,7 +140,7 @@ class IoPython(PyutIoPlugin):
 
             # Add others methods in order
             for pyutMethod in pyutClass.methods:
-                methodName: str = pyutMethod.getName()
+                methodName: str = pyutMethod.name
                 if methodName != PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR:
                     try:
                         otherMethodCode: List[str] = clsMethods[methodName]
@@ -150,7 +150,7 @@ class IoPython(PyutIoPlugin):
 
             generatedClassCode.append("\n\n")
             # Save into classes dictionary
-            classes[pyutClass.getName()] = generatedClassCode
+            classes[pyutClass.name] = generatedClassCode
 
         # Write class code to a file
         for (className, classCode) in list(classes.items()):

@@ -125,11 +125,11 @@ class DlgEditParameter(BaseDlgEdit):
     # noinspection PyUnusedLocal
     def _onParamOk (self, event: CommandEvent):
 
-        self._parameterToEdit.setName(self._txtName.GetValue())
+        self._parameterToEdit.name = self._txtName.GetValue()
         paramType: PyutType = PyutType(self._txtType.GetValue())
-        self._parameterToEdit.setType(paramType)
+        self._parameterToEdit.type = paramType
         if self._txtDefault.GetValue() != "":
-            self._parameterToEdit.setDefaultValue(self._txtDefault.GetValue())
+            self._parameterToEdit.defaultValue = self._txtDefault.GetValue()
         else:
             self._parameterToEdit.setDefaultValue('')
 

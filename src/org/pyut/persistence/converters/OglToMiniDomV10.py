@@ -314,7 +314,7 @@ class OglToMiniDom:
 
         classId: int = self._idFactory.getID(pyutInterface)
         root.setAttribute(PyutXmlConstants.ATTR_ID, str(classId))
-        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutInterface.getName())
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutInterface.name)
 
         root = self._pyutClassCommonToXml(pyutInterface, root)
 
@@ -487,8 +487,8 @@ class OglToMiniDom:
 
         actorId = self._idFactory.getID(pyutActor)
         root.setAttribute(PyutXmlConstants.ATTR_ID, str(actorId))
-        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutActor.getName())
-        root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutActor.getFilename())
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutActor.name)
+        root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutActor.fileName)
 
         return root
 
@@ -507,8 +507,8 @@ class OglToMiniDom:
 
         useCaseId = self._idFactory.getID(pyutUseCase)
         root.setAttribute(PyutXmlConstants.ATTR_ID,       str(useCaseId))
-        root.setAttribute(PyutXmlConstants.ATTR_NAME,     pyutUseCase.getName())
-        root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutUseCase.getFilename())
+        root.setAttribute(PyutXmlConstants.ATTR_NAME,     pyutUseCase.name)
+        root.setAttribute(PyutXmlConstants.ATTR_FILENAME, pyutUseCase.fileName)
 
         return root
 

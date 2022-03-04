@@ -102,7 +102,8 @@ class PythonMetaClassDataHandler:
         from org.pyut.experimental import PyutModelClasses
 
         #  I do not like 'magic'
-        currentClass = PyutModelClasses.__dict__[classDefinition.getName()]
+        # currentClass = PyutModelClasses.__dict__[classDefinition.getName()]
+        currentClass = PyutModelClasses.__dict__[classDefinition.name]
         parentClasses = [cl for cl in classes if cl.__name__ in map(lambda z: z.__name__, currentClass.__bases__)]
 
         self.logger.debug(f'parentClasses: `{parentClasses}`')

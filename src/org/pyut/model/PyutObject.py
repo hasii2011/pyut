@@ -51,7 +51,7 @@ class PyutObject:
                 return True
         return False
 
-    @deprecated('Use the property')
+    @deprecated('Use the property "name"')
     def getName(self) -> str:
         """
 
@@ -64,7 +64,7 @@ class PyutObject:
             print(f'PyutObject warning: {e}')
             return ""
 
-    @deprecated('Use the property')
+    @deprecated('Use the property "name"')
     def setName(self, theName: str):
         """
         Set method, used to know initialize name.

@@ -28,7 +28,10 @@ from wx import TextCtrl
 from wx import VERTICAL
 
 from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.model.PyutLink import PyutLink
+
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from copy import deepcopy
@@ -46,7 +49,7 @@ from copy import deepcopy
 
 class DlgEditLink (Dialog):
     """
-    Dialog for the link (between classes) editting.
+    Dialog for the link (between classes) editing.
 
     to use it :
         dlg=DlgEditLink(...)
@@ -77,7 +80,7 @@ class DlgEditLink (Dialog):
         # Associated PyutLink
         self._pyutLink: PyutLink = pyutLink
 
-        self._relationship = self._pyutLink.getName()
+        self._relationship = self._pyutLink.name
         self._aRoleInB = ""
         self._bRoleInA = ""
         # self._cardinalityA = self._pyutLink.getSourceCardinality()
@@ -206,7 +209,7 @@ class DlgEditLink (Dialog):
 
     def _onTxtCardinalityAChange(self, event):
         """
-        Event occuring when TXT_CARDINALITY_A change
+        Event occurring when TXT_CARDINALITY_A change
 
         @since 1.2
         @author C.Dutoit<dutoitc@hotmail.com>
@@ -215,37 +218,25 @@ class DlgEditLink (Dialog):
 
     def _onTxtCardinalityBChange(self, event):
         """
-        Event occuring when TXT_CARDINALITY_B change
-
-        @since 1.2
-        @author C.Dutoit<dutoitc@hotmail.com>
+        Event occurring when TXT_CARDINALITY_B change
         """
         self._cardinalityB = event.GetString()
 
     def _onTxtRelationshipChange(self, event):
         """
-        Event occuring when TXT_RELATIONSHIP change
-
-        @since 1.2
-        @author C.Dutoit<dutoitc@hotmail.com>
+        Event occurring when TXT_RELATIONSHIP change
         """
         self._relationship = event.GetString()
 
     def _onTxtARoleBChange(self, event):
         """
-        Event occuring when TXT_A_ROLE_IN_B change
-
-        @since 1.2
-        @author C.Dutoit<dutoitc@hotmail.com>
+        Event occurring when TXT_A_ROLE_IN_B change
         """
         self._aRoleInB = event.GetString()
 
     def _onTxtBRoleAChange(self, event):
         """
-        Event occuring when TXT_B_ROLE_IN_A change
-
-        @since 1.2
-        @author C.Dutoit<dutoitc@hotmail.com>
+        Event occurring when TXT_B_ROLE_IN_A change
         """
         self._bRoleInA = event.GetString()
 
@@ -257,7 +248,7 @@ class DlgEditLink (Dialog):
         Args:
             event:
         """
-        self._pyutLink.setName(self._relationship)
+        self._pyutLink.name = self._relationship
 
         self._pyutLink.sourceCardinality      = self._cardinalityA
         self._pyutLink.destinationCardinality = self._cardinalityB

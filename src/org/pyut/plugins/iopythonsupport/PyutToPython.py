@@ -70,13 +70,13 @@ class PyutToPython:
         Returns:
             The Python class start stanza
         """
-        generatedCode:     str             = f'class {pyutClass.getName()}'
+        generatedCode:     str             = f'class {pyutClass.name}'
         parentPyutClasses: List[PyutClass] = cast(List[PyutClass], pyutClass.getParents())
 
         if len(parentPyutClasses) > 0:  # Add parents
             generatedCode = f'{generatedCode}('
             for i in range(len(parentPyutClasses)):
-                generatedCode = f'{generatedCode}{parentPyutClasses[i].getName()}'
+                generatedCode = f'{generatedCode}{parentPyutClasses[i].name}'
                 if i < len(parentPyutClasses) - 1:
                     generatedCode = f'{generatedCode},'
             generatedCode = f'{generatedCode})'
@@ -108,7 +108,7 @@ class PyutToPython:
             subCode:       List[str] = self.generateASingleMethodsCode(pyutMethod)
             lstCodeMethod += self.indent(subCode)
 
-            clsMethods[pyutMethod.getName()] = lstCodeMethod
+            clsMethods[pyutMethod.name] = lstCodeMethod
 
         # Add fields
         if len(pyutClass.fields) > 0:

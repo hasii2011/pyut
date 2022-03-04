@@ -238,9 +238,9 @@ class ToFastEdit(PyutToPlugin):
             file:       The text file to write to
         """
 
-        o: PyutClass = cast(PyutClass, oglObject.getPyutObject())
+        o: PyutClass = cast(PyutClass, oglObject.pyutObject)
 
-        file.write(o.getName() + osLineSep)
+        file.write(o.name + osLineSep)
 
         if o.getStereotype() is not None:
             file.write(str(o.getStereotype()) + osLineSep)

@@ -35,7 +35,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         classDescription = pyutClass.description
 
         if pyutClass.getStereotype() is not None:
-            classStereotypeName = pyutClass.getStereotype().getName()
+            classStereotypeName = pyutClass.getStereotype().name
         else:
             classStereotypeName = ""
 

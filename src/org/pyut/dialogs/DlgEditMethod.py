@@ -262,7 +262,7 @@ class DlgEditMethod(BaseDlgEdit):
         param: PyutParameter = PyutParameter()
         ret = self._callDlgEditParam(param)
         if ret == OK:
-            self._pyutMethodCopy.getParams().append(param)
+            self._pyutMethodCopy.parameters.append(param)
             # Add fields in dialog list
             self._lstParams.Append(str(param))
             self._setProjectModified()
@@ -380,11 +380,11 @@ class DlgEditMethod(BaseDlgEdit):
         modifiers: PyutModifiers = PyutModifiers([])
         for aModifier in self._txtModifiers.GetValue().split():
             modifiers.append(PyutModifier(aModifier))
-        self._pyutMethod.setModifiers(modifiers)
+        self._pyutMethod.modifiers = modifiers
 
         returnType: PyutType = PyutType(self._txtReturn.GetValue())
-        self._pyutMethod.setReturns(returnType)
-        self._pyutMethod.setParams(self._pyutMethodCopy.getParams())
+        self._pyutMethod.returnType = returnType
+        self._pyutMethod.parameters = self._pyutMethodCopy.parameters
 
         if self._editInterface is False:
             visStr:      str               = self._rdbVisibility.GetStringSelection()

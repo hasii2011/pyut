@@ -589,7 +589,8 @@ class ReverseJava:
 
         # Add all
         for (name, value) in names_values:
-            classFields.append(PyutField(name, fieldType, value, visibility))
+            pyutType: PyutType = PyutType(fieldType)
+            classFields.append(PyutField(name, pyutType, value, visibility))
 
     def __addClassMethod(self, className, modifiers, returnType, name, lstFields):
         """

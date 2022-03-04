@@ -1,5 +1,7 @@
 
 from io import StringIO
+from typing import TextIO
+from xml.dom.minidom import Document
 
 from wx import CENTRE
 from wx import ICON_QUESTION
@@ -19,7 +21,7 @@ from org.pyut.general.PyutXmlFinder import PyutXmlFinder
 
 class IoXmi(PyutIoPlugin):
     """
-    To save XML file format.
+    To save XMI file format.
 
     @version $Revision: 1.5 $
     """
@@ -131,7 +133,9 @@ class IoXmi(PyutIoPlugin):
         if filename == "":
             return False
 
-        dom = parse(StringIO(open(filename).read()))
+        fd:  TextIO   = open(filename)
+        dom: Document = parse(StringIO(fd.read()))
+        fd.close()
 
         myXmi: PyutXmi = PyutXmi()
         myXmi.open(dom, umlFrame)

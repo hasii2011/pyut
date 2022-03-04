@@ -105,8 +105,8 @@ class IoJava(PyutIoPlugin):
                 oglClasses.append(oglObject)
 
         for el in oglClasses:
-            oglClass: OglClass = cast(OglClass, el.pyutObject)
-            self._writeClass(oglClass)
+            pyutClass: PyutClass = cast(PyutClass, el.pyutObject)
+            self._writeClass(pyutClass)
 
     def _writeClass(self, pyutClass: PyutClass):
         """
@@ -116,7 +116,7 @@ class IoJava(PyutIoPlugin):
             pyutClass:  The PyutClass object to write
 
         """
-        className = pyutClass.getName()
+        className = pyutClass.name
 
         # Opening a file for each class
         fqn:        str = f'{self._dir}{osSep}{className}.java'
@@ -204,7 +204,7 @@ class IoJava(PyutIoPlugin):
 
             # Only one parent allowed
             parent: PyutClass = parents[0]
-            name:   str       = parent.getName()
+            name:   str       = parent.name
             write(file, name.encode())
 
     def _writeInterfaces(self, file: int, interfaces: List[PyutLink]):
@@ -222,12 +222,12 @@ class IoJava(PyutIoPlugin):
             write(file, " implements ".encode())
 
             # Write the first interface
-            interfaceName: str = interfaces[0].getDestination().getName()
+            interfaceName: str = interfaces[0].getDestination().name
             write(file, interfaceName.encode())
 
             # For all next interfaces, write the name separated by a ','
             for interface in interfaces[1:]:
-                write(file, f', {interface.getDestination().getName()}'.encode())
+                write(file, f', {interface.getDestination().name}'.encode())
 
     def _writeFields(self, file: int, fields):
         """
@@ -243,17 +243,17 @@ class IoJava(PyutIoPlugin):
         # Write all fields in file
         for field in fields:
             # Visibility converted from "+" to "public", ...
-            visibility = self.__visibility[str(field.getVisibility())]
+            visibility = self.__visibility[str(field.visibility)]
 
             # Type
-            fieldType: str = str(field.getType())
+            fieldType: str = str(field.type)    # TODO could just be field.type.value
             self.logger.info(f'fieldType: {fieldType}')
 
             # Name
-            name = field.getName()
+            name = field.name
 
             # Default value
-            default = field.getDefaultValue()
+            default = field.defaultValue
             if default is not None and default != "":
                 if fieldType.lower() == 'string':
                     default = f' = "{default}"'
@@ -299,9 +299,9 @@ class IoJava(PyutIoPlugin):
         for link in links:
             link = cast(PyutLink, link)
             # Get Class linked (type of variable)
-            destinationLinkName = link.getDestination().getName()
+            destinationLinkName = link.getDestination().name
             # Get name of aggregation
-            name = link.getName()
+            name = link.name
             # Array or single variable
             if link.destinationCardinality.find('n') != -1 or link.destinationCardinality.find('*') != -1:
                 array = "[]"
@@ -341,14 +341,14 @@ class IoJava(PyutIoPlugin):
 
         """
         write(file, f'{tab}/**\n'.encode())
-        write(file, f'{tab} * method {method.getName()}\n'.encode())
+        write(file, f'{tab} * method {method.name}\n'.encode())
         write(file, f'{tab} * More info here.\n'.encode())
 
-        for param in method.getParams():
-            write(file, f'{tab} * @param {param.getName()} : {str(param.getType())}\n'.encode())
+        for param in method.parameters:
+            write(file, f'{tab} * @param {param.name} : {str(param.type)}\n'.encode())
 
-        if str(method.getReturns()) != '':
-            write(file, f'{tab} * @return {str(method.getReturns())}\n'.encode())
+        if str(method.returnType.value) != '':
+            write(file, f'{tab} * @return {str(method.returnType)}\n'.encode())
 
         write(file, f'{tab} */\n'.encode())
 
@@ -360,18 +360,18 @@ class IoJava(PyutIoPlugin):
             file:       File descriptor
             method:     method object
         """
-        name:       str = method.getName()
+        name:       str = method.name
         visibility: str = self.__visibility[str(method.getVisibility())]
-        returnType: str = str(method.getReturns())
+        returnType: str = str(method.returnType)
         if returnType == "":
             returnType = "void"
 
         write(file, f'{self.__tab}{visibility} {returnType} {name}('.encode())
 
         # for all param
-        nbParam = len(method.getParams())
+        nbParam = len(method.parameters)
         self.logger.info(f'# params: {nbParam}')
-        for param in method.getParams():
+        for param in method.parameters:
             # writing param
             self._writeParam(file, param)
 
@@ -390,6 +390,6 @@ class IoJava(PyutIoPlugin):
             file:   file descriptor
             param:  pyut parameter object to write
         """
-        paramType: str = param.getType().__str__()
-        paramName: str = param.getName()
+        paramType: str = param.type.__str__()
+        paramName: str = param.name
         write(file, f'{paramType} {paramName}'.encode())

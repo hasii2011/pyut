@@ -196,4 +196,4 @@ class PyutLink(PyutObject):
         Returns:
              string representing link
         """
-        return _(f'("{self.getName()}") links from {self._src} to {self._dest}')
+        return _(f'("{self.name}") links from {self._src} to {self._dest}')

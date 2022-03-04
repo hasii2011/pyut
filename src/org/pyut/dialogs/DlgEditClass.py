@@ -212,7 +212,7 @@ class DlgEditClass(DlgEditClassCommon):
         if stereotype is None:
             strStereotype = ""
         else:
-            strStereotype = stereotype.getName()
+            strStereotype = stereotype.name
         self._txtStereotype.SetValue(strStereotype)
 
         # Fill the list controls

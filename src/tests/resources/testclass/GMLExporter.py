@@ -107,12 +107,12 @@ class GMLExporter:
         for umlClass in umlObjects:
             if isinstance(umlClass, OglClass) or isinstance(umlClass, OglNote):
                 oglObject:  OglObject  = cast(OglObject, umlClass)
-                pyutObject: PyutObject = oglObject.getPyutObject()
+                pyutObject: PyutObject = oglObject.pyutObject
                 nodeGml = (
                     f'{nodeGml}'
                     f'{GMLExporter.singleTab}{GMLExporter.NODE_TOKEN} {GMLExporter.START_TOKEN}\n'
                     f'{GMLExporter.doubleTab}{GMLExporter.ID_TOKEN} {oglObject.GetID()}\n'
-                    f'{GMLExporter.doubleTab}{GMLExporter.LABEL_TOKEN} "{pyutObject.getName()}"\n'
+                    f'{GMLExporter.doubleTab}{GMLExporter.LABEL_TOKEN} "{pyutObject.name}"\n'
                     f'{self._generateNodeGraphicsSection(oglObject)}'
                     f'{GMLExporter.singleTab}{GMLExporter.END_TOKEN}\n'
                 )

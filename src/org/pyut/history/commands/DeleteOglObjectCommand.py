@@ -132,7 +132,7 @@ class DeleteOglObjectCommand(Command):
         if isinstance(shape, OglClass):
             # need to check if the class has children, and remove the
             # refs in the children
-            pyutClass = shape.getPyutObject()
+            pyutClass = shape.pyutObject
             # TODO: Fix this inscrutable piece of code
             for klass in [s.pyutObject
                           for s in umlFrame.getUmlObjects()

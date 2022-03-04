@@ -368,8 +368,8 @@ class MiniDomToOgl:
             xmlActor: Element = xmlOglActor.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_ACTOR)[0]
 
             pyutActor.setId(int(xmlActor.getAttribute(PyutXmlConstants.ATTR_ID)))
-            pyutActor.setName(xmlActor.getAttribute(PyutXmlConstants.ATTR_NAME))
-            pyutActor.setFilename(xmlActor.getAttribute(PyutXmlConstants.ATTR_FILENAME))
+            pyutActor.name     = xmlActor.getAttribute(PyutXmlConstants.ATTR_NAME)
+            pyutActor.fileName = xmlActor.getAttribute(PyutXmlConstants.ATTR_FILENAME)
 
             # Adding properties necessary to place shape on a diagram frame
             x = PyutUtils.strFloatToInt(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_X))
@@ -404,8 +404,8 @@ class MiniDomToOgl:
             xmlUseCase: Element = xmlOglUseCase.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_USE_CASE)[0]
 
             pyutUseCase.setId(int(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_ID)))
-            pyutUseCase.setName(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_NAME))
-            pyutUseCase.setFilename(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_FILENAME))
+            pyutUseCase.name     = xmlUseCase.getAttribute(PyutXmlConstants.ATTR_NAME)
+            pyutUseCase.fileName = xmlUseCase.getAttribute(PyutXmlConstants.ATTR_FILENAME)
 
             x: int = PyutUtils.strFloatToInt(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_X))
             y: int = PyutUtils.strFloatToInt(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_Y))

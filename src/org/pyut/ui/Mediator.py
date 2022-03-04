@@ -631,7 +631,7 @@ class Mediator(Singleton):
             dlg.Destroy()
         elif isinstance(diagramShape, OglActor):
             pyutObject = diagramShape.pyutObject
-            dlg: TextEntryDialog = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutObject.getName(), OK | CANCEL | CENTRE)
+            dlg: TextEntryDialog = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutObject.name, OK | CANCEL | CENTRE)
             if dlg.ShowModal() == ID_OK:
                 pyutObject.setName(dlg.GetValue())
             dlg.Destroy()

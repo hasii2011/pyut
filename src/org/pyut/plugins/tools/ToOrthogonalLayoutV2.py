@@ -135,7 +135,7 @@ class ToOrthogonalLayoutV2(PyutToPlugin):
 
         for umlObj in umlObjects:
             if isinstance(umlObj, OglClass) or isinstance(umlObj, OglNote):
-                oglName: str = umlObj.getPyutObject().getName()
+                oglName: str = umlObj.pyutObject.name
                 oglCoordinate: OglCoordinate = oglCoordinates[oglName]
 
                 self._stepNodes(umlObj, oglCoordinate)

@@ -55,6 +55,7 @@ class GraphicalHandler:
 
             # add the methods
             methods: List[PyutMethod] = cg.generatePyutMethods(klassMethods)
+            # TODO:  Figure out how to use property name as callable
             methods = sorted(methods, key=PyutMethod.getName)
 
             pyutClassDef.methods = methods
@@ -67,7 +68,7 @@ class GraphicalHandler:
 
             pyutClassDef = cast(PyutClass, oglClassDef.pyutObject)
             # skip object, it has no parent
-            if pyutClassDef.getName() == "object":
+            if pyutClassDef.name == "object":
                 continue
 
             parentNames = cg.getParentClassNames(classes, pyutClassDef)

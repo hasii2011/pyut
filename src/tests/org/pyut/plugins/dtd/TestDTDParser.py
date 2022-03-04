@@ -74,7 +74,7 @@ class TestDTDParser(TestBase):
 
         fields: List[PyutField] = pyutClass.fields
         for pyutField in fields:
-            self.assertEqual(fieldName, pyutField.getName(), 'Where is my attribute')
+            self.assertEqual(fieldName, pyutField.name, 'Where is my attribute')
 
 
 def suite() -> TestSuite:

@@ -158,7 +158,7 @@ class PyutXmi:
         root = Element('Class')
 
         # class name
-        root.setAttribute('name', pyutClass.getName())
+        root.setAttribute('name', pyutClass.name)
 
         # class stereotype
         stereotype = pyutClass.getStereotype()
@@ -178,7 +178,7 @@ class PyutXmi:
         if len(fathers) > 0:
             for i in fathers:
                 father = Element('Father')
-                father.setAttribute('name', i.getName())
+                father.setAttribute('name', i.name)
                 root.appendChild(father)
 
         # for all links
@@ -206,7 +206,7 @@ class PyutXmi:
 
         root = Element('Link')
         # link name
-        root.setAttribute('name', pyutLink.getName())
+        root.setAttribute('name', pyutLink.name)
 
         # link type
         root.setAttribute('type', str(pyutLink.getType()))
@@ -222,7 +222,7 @@ class PyutXmi:
         root.setAttribute('bidir', str(pyutLink.getBidir()))
 
         # link destination
-        root.setAttribute('destination', pyutLink.getDestination().getName())
+        root.setAttribute('destination', pyutLink.getDestination().name)
 
         return root
 
@@ -407,7 +407,7 @@ class PyutXmi:
                 self._getTypeId(Param, pyutMethod, self.dicoReturn)
                 return None
             else:
-                aParam.setName(name.data)
+                aParam.name = name.data
 
         # default value
         self._getDefaultValue(Param, aParam)
@@ -458,7 +458,7 @@ class PyutXmi:
                     if pyutParam is not None:
                         allParams.append(pyutParam)
 
-                aMethod.setParams(allParams)
+                aMethod.parameters = allParams
 
                 # adding this method in all class methods
                 allMethods.append(aMethod)
@@ -484,7 +484,7 @@ class PyutXmi:
             name = fieldElt.firstChild
 
             if name.nodeType == name.TEXT_NODE:
-                aField.setName(name.data)
+                aField.name = name.data
             # field visibility  --  Be verbose for maintainability
             # visibility = Field.getElementsByTagName ("Foundation.Core.ModelElement.visibility")[0]
             # aField.setVisibility(self._xmiVisibility2PyutVisibility(visibility.getAttribute('xmi.value')))
@@ -496,7 +496,7 @@ class PyutXmi:
             else:
                 visStr = visElt.getAttribute('xmi.value')
             vis:    PyutVisibilityEnum = self._xmiVisibility2PyutVisibility(visStr)
-            aField.setVisibility(vis)
+            aField.visibility = vis
 
             # default value
             self._getDefaultValue(Field, aField)
@@ -614,7 +614,7 @@ class PyutXmi:
         if len(className) > 0:
             name = className[0].firstChild
             if name.nodeType == name.TEXT_NODE:
-                pyutClass.setName(name.data)
+                pyutClass.name = name.data
 
             oglClass = OglClass(pyutClass, 50, 50)
 
