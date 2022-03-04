@@ -113,7 +113,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         fields   = eval(deTokenize("fields", serializedData))
 
         # set up the first level properties of the pyutClass
-        pyutClass: PyutClass = self._shape.getPyutObject()
+        pyutClass: PyutClass = self._shape.pyutObject
         pyutClass.description = classDescription
 
         if cmp(classStereotypeName, ""):

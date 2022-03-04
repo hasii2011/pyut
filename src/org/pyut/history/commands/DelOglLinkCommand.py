@@ -79,7 +79,7 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
             self._shape = umlFrame.createLink(src=src, dst=dest, linkType=self._linkType)
             umlFrame.GetDiagram().AddShape(shape=self._shape, withModelUpdate=True)
 
-        self._shape.getPyutObject().setId(self._linkId)
+        self._shape.pyutObject.setId(self._linkId)
         self._shape.GetSource().GetModel().SetPosition(self._srcPosition[0], self._srcPosition[1])
         self._shape.GetDestination().GetModel().SetPosition(self._destPosition[0], self._destPosition[1])
         self._shape.GetSource().UpdateFromModel()

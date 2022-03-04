@@ -120,7 +120,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
             if dlg.ShowModal() == OK:
                 self.logger.info(f'model: {self._pyutInterface}')
 
-                pyutClass: PyutClass = cast(PyutClass, self._implementor.getPyutObject())
+                pyutClass: PyutClass = cast(PyutClass, self._implementor.pyutObject)
                 pyutClass.addInterface(self._pyutInterface)
 
         umlFrame: UmlClassDiagramsFrame = med.getFileHandling().getCurrentFrame()

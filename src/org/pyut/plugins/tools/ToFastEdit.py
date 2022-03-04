@@ -39,6 +39,7 @@ from org.pyut.plugins.fastedit.DlgFastEditOptions import DlgFastEditOptions
 
 from org.pyut.PyutConstants import PyutConstants
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -160,7 +161,7 @@ class ToFastEdit(PyutToPlugin):
             file:
         """
         className: str       = file.readline().strip()
-        pyutClass: PyutClass = cast(PyutClass, umlObject.getPyutObject())
+        pyutClass: PyutClass = cast(PyutClass, umlObject.pyutObject)
         pyutClass.name = className
 
         # process stereotype if present

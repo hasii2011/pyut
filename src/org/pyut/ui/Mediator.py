@@ -621,16 +621,16 @@ class Mediator(Singleton):
             dlg.Destroy()
 
         elif isinstance(diagramShape, OglNote):
-            pyutObject = diagramShape.getPyutObject()
+            pyutObject = diagramShape.pyutObject
             dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, cast(PyutNote, pyutObject))
             dlg.ShowModal()
             dlg.Destroy()
         elif isinstance(diagramShape, OglUseCase):
-            pyutObject = diagramShape.getPyutObject()
+            pyutObject = diagramShape.pyutObject
             dlg: DlgEditUseCase = DlgEditUseCase(umlFrame, ID_ANY, pyutObject)
             dlg.Destroy()
         elif isinstance(diagramShape, OglActor):
-            pyutObject = diagramShape.getPyutObject()
+            pyutObject = diagramShape.pyutObject
             dlg: TextEntryDialog = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutObject.getName(), OK | CANCEL | CENTRE)
             if dlg.ShowModal() == ID_OK:
                 pyutObject.setName(dlg.GetValue())

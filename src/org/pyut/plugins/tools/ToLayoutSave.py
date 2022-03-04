@@ -90,7 +90,7 @@ class ToLayoutSave(PyutToPlugin):
 
         f = open(file, "w")
         for el in umlObjects:
-            f.write(el.getPyutObject().getName() + "," +
+            f.write(el.pyutObject.name + "," +
                     str(el.GetPosition()[0]) + "," +
                     str(el.GetPosition()[1]) + "," +
                     str(el.GetSize()[0]) + "," +

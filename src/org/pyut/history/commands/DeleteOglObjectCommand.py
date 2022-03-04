@@ -134,7 +134,7 @@ class DeleteOglObjectCommand(Command):
             # refs in the children
             pyutClass = shape.getPyutObject()
             # TODO: Fix this inscrutable piece of code
-            for klass in [s.getPyutObject()
+            for klass in [s.pyutObject
                           for s in umlFrame.getUmlObjects()
                           if isinstance(s, OglClass)]:
                 pyutLinkedObject: PyutLinkedObject = cast(PyutLinkedObject, klass)

@@ -127,7 +127,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglNote, root)
 
-        root.appendChild(self._pyutNoteToXml(cast(PyutNote, oglNote.getPyutObject()), xmlDoc))
+        root.appendChild(self._pyutNoteToXml(cast(PyutNote, oglNote.pyutObject), xmlDoc))
 
         return root
 
@@ -155,7 +155,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglActor, root)
 
-        root.appendChild(self._pyutActorToXml(cast(PyutActor, oglActor.getPyutObject()), xmlDoc))
+        root.appendChild(self._pyutActorToXml(cast(PyutActor, oglActor.pyutObject), xmlDoc))
 
         return root
 
@@ -174,7 +174,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglUseCase, root)
 
-        root.appendChild(self._pyutUseCaseToXml(cast(PyutUseCase, oglUseCase.getPyutObject()), xmlDoc))
+        root.appendChild(self._pyutUseCaseToXml(cast(PyutUseCase, oglUseCase.pyutObject), xmlDoc))
 
         return root
 
@@ -247,7 +247,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglSDInstance, root)
 
-        root.appendChild(self._pyutSDInstanceToXml(cast(PyutSDInstance, oglSDInstance.getPyutObject()), xmlDoc))
+        root.appendChild(self._pyutSDInstanceToXml(cast(PyutSDInstance, oglSDInstance.pyutObject), xmlDoc))
 
         return root
 

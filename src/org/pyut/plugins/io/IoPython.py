@@ -125,7 +125,7 @@ class IoPython(PyutIoPlugin):
         for oglObject in [oglObject for oglObject in oglObjects if isinstance(oglObject, OglClass)]:
 
             oglClass:  OglClass  = cast(OglClass, oglObject)
-            pyutClass: PyutClass = cast(PyutClass, oglClass.getPyutObject())
+            pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
 
             generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
             generatedClassCode: List[str] = [generatedStanza]

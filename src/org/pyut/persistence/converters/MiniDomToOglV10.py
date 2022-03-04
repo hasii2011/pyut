@@ -483,8 +483,8 @@ class MiniDomToOgl:
 
             oglSDMessage: OglSDMessage = OglSDMessage(srcOgl, pyutSDMessage, dstOgl)
             pyutSDMessage.setOglObject(oglSDMessage)
-            pyutSDMessage.setSource(srcOgl.getPyutObject(), srcTime)
-            pyutSDMessage.setDestination(dstOgl.getPyutObject(), dstTime)
+            pyutSDMessage.setSource(srcOgl.pyutObject, srcTime)
+            pyutSDMessage.setDestination(dstOgl.pyutObject, dstTime)
 
             # Pyut Data
             pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_ID)))

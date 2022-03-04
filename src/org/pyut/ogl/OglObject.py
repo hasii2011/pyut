@@ -2,9 +2,9 @@
 from logging import Logger
 from logging import getLogger
 
-# noinspection PyPackageRequirements
 from typing import List
 
+# noinspection PyPackageRequirements
 from deprecated import deprecated
 
 from wx import MouseEvent

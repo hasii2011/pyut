@@ -105,7 +105,7 @@ class IoJava(PyutIoPlugin):
                 oglClasses.append(oglObject)
 
         for el in oglClasses:
-            oglClass: OglClass = cast(OglClass, el.getPyutObject())
+            oglClass: OglClass = cast(OglClass, el.pyutObject)
             self._writeClass(oglClass)
 
     def _writeClass(self, pyutClass: PyutClass):

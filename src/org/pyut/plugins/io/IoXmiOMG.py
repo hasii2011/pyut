@@ -401,7 +401,7 @@ class XmiImporter:
                 oglLink = self._umlFrame.createNewLink(srcOgl, dstOgl)
 
             # Add parameters
-            pyutLink: PyutLink = oglLink.getPyutObject()
+            pyutLink: PyutLink = oglLink.pyutObject
             # pyutLink.setSourceCardinality(endsValues[0][1])
             # pyutLink.setDestinationCardinality(endsValues[1][1])
             pyutLink.sourceCardinality      = endsValues[0][1]

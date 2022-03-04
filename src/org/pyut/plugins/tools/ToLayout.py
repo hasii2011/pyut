@@ -14,14 +14,7 @@ class ToLayout(PyutToPlugin):
     """
     def __init__(self, umlObjects, umlFrame):
         """
-        Constructor.
-
-        @param umlObjects  : list of ogl objects
-        @param umlFrame umlFrame : the umlframe of pyut
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @since 1.0
         """
-        # PyutToPlugin.__init__(self, umlObjects, umlFrame)
         super().__init__(umlObjects, umlFrame)
         self._umlFrame = umlFrame
 
@@ -78,12 +71,12 @@ class ToLayout(PyutToPlugin):
         """
         Do the tool's action
 
-        @param OglObject [] umlObjects : list of the uml objects of the diagram
-        @param OglObject [] selectedObjects : list of the selected objects
-        @param UmlFrame umlFrame : the frame of the diagram
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            umlObjects:      list of the uml objects of the diagram
+            selectedObjects: list of the selected objects
+            umlFrame:        the diagram frame
         """
+
         filename = FileSelector("Choose a layout file to import",
                                 wildcard="Layout file (*.lay) | *.lay",
                                 flags=FD_OPEN | FD_FILE_MUST_EXIST | FD_CHANGE_DIR)
@@ -99,6 +92,6 @@ class ToLayout(PyutToPlugin):
 
         for oglObject in umlObjects:
             for line in lst:
-                if line[0] == oglObject.getPyutObject().getName():
+                if line[0] == oglObject.pyutObject.name:
                     oglObject.SetPosition(float(line[1]), float(line[2]))
                     oglObject.SetSize(float(line[3]), float(line[4]))

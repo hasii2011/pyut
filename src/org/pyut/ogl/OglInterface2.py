@@ -77,7 +77,7 @@ class OglInterface2(LollipopLine, Common):
         super().Draw(dc=dc, withChildren=withChildren)
         dc.SetFont(self._defaultFont)
 
-        xFaceName: str = self.pyutInterface.getName()
+        xFaceName: str = self.pyutInterface.name
 
         extentSize: Tuple[int, int] = dc.GetTextExtent(xFaceName)  # width, height
 
@@ -109,7 +109,7 @@ class OglInterface2(LollipopLine, Common):
 
     def __repr__(self):
 
-        strMe: str = f'OglInterface2 - "{self._pyutInterface.getName()}"'
+        strMe: str = f'OglInterface2 - "{self._pyutInterface.name}"'
         return strMe
 
     def __eq__(self, other):

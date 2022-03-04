@@ -122,7 +122,7 @@ class OglToPyUmlDefinition:
                 continue
             oglLink: OglLink = cast(OglLink, umlObject)
 
-            pyutLink:    PyutLink = oglLink.getPyutObject()
+            pyutLink:    PyutLink = oglLink.pyutObject
             umlLinkType: LinkType = pyutLink.linkType
             lineType:    LineType = self._toPyUmlLineType(umlLinkType)
 
