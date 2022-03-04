@@ -79,7 +79,6 @@ class ToCDAutoLayout(PyutToPlugin):
             self.displayNothingSelected()
             return
 
-        # for i in range(20):     # len(umlObjects)):
         for i in range(len(umlObjects)):  # len(umlObjects)):
 
             for obj in selectedObjects:
@@ -88,9 +87,10 @@ class ToCDAutoLayout(PyutToPlugin):
             self._animate(umlFrame)
 
     def _step(self, srcShape):
-        ForceField = 200
-        vx = 0
-        vy = 0
+
+        ForceField: int = 200
+        vx:         int = 0
+        vy:         int = 0
         srcX, srcY = srcShape.GetPosition()
 
         self.logger.debug(f'src: ({srcX},{srcY})')
@@ -99,15 +99,16 @@ class ToCDAutoLayout(PyutToPlugin):
             dstShape = link.getDestinationShape()
             if dstShape != srcShape:
                 dstX, dstY = dstShape.GetPosition()
-                linkSize = sqrt((dstX-srcX) * (dstX-srcX) + (dstY-srcY) * (dstY-srcY))
+                linkSize = round(sqrt((dstX-srcX) * (dstX-srcX) + (dstY-srcY) * (dstY-srcY)))
+
                 self.logger.debug(f'dst = ({dstX},{dstY}  LinkSize = {linkSize}')
 
                 n = linkSize-ForceField
-                attraction = max(-ForceField/8, min(ForceField/8, n*n*n))
+                attraction = max(-ForceField // 8, min(ForceField // 8, n*n*n))
                 self.logger.debug(f'attraction = {attraction}')
 
-                vx += attraction * (dstX-srcX) / linkSize
-                vy += attraction * (dstY-srcY) / linkSize
+                vx += attraction * (dstX-srcX) // linkSize
+                vy += attraction * (dstY-srcY) // linkSize
 
         self.logger.debug(f'vx,vy = {vx},{vy}')
         srcShape.SetPosition(srcX + vx, srcY + vy)

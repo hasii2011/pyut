@@ -6,10 +6,9 @@ class ALayoutNode:
     """
     def __init__(self, oglObject):
         """
-        Constructor.
 
-        @param OglObject oglObject: interfaced ogl object
-        @author Nicolas Dubois
+        Args:
+            oglObject: interfaced ogl object
         """
         self._oglObject = oglObject
 
@@ -44,7 +43,6 @@ class ALayoutNode:
         """
         Get the name of the class.
 
-        @return String: name of the class
-        @author Nicolas Dubois
+        Returns: name of the class
         """
-        return self._oglObject.getPyutObject().getName()
+        return self._oglObject.pyutObject.name

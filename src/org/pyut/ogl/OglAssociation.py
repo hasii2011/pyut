@@ -110,7 +110,7 @@ class OglAssociation(OglLink):
 
         Note:  Losange is French for 'diamond'
         """
-        pi_6 = pi/6
+        pi_6 = pi // 6
         points = []
         line = self.GetSegments()
         x1, y1 = line[1]
@@ -119,17 +119,17 @@ class OglAssociation(OglLink):
         b = y2 - y1
         if abs(a) < 0.01:  # vertical segment
             if b > 0:
-                alpha = -pi/2
+                alpha = -pi // 2
             else:
-                alpha = pi/2
+                alpha = pi // 2
         else:
             if a == 0:
                 if b > 0:
-                    alpha = pi/2
+                    alpha = pi // 2
                 else:
-                    alpha = 3 * pi / 2
+                    alpha = 3 * pi // 2
             else:
-                alpha = atan(b/a)
+                alpha = round(atan(b/a))
         if a > 0:
             alpha += pi
         alpha1 = alpha + pi_6

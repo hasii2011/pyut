@@ -1,6 +1,5 @@
 
 from typing import Dict
-from typing import List
 from typing import cast
 
 from logging import Logger
@@ -131,7 +130,7 @@ class PyutXml:
 
                 oglObjects: UmlObjects = document.getFrame().getUmlObjects()
                 for i in range(len(oglObjects)):
-                    gauge.SetValue(i * 100 / len(oglObjects))
+                    gauge.SetValue(i * 100 // len(oglObjects))
                     wxYield()
                     oglObject = oglObjects[i]
                     if isinstance(oglObject, OglClass):

@@ -71,9 +71,9 @@ class TestOglLink(TestBase):
         mockPyutLink:         MagicMock = MagicMock()
 
         oglLink: OglLink = OglLink(srcShape=mockSourceShape, pyutLink=mockPyutLink, dstShape=mockDestinationShape)
-        actualLength:   float = oglLink._computeLinkLength(self.MOCK_SOURCE_POSITION, self.MOCK_DESTINATION_POSITION)
-        expectedLength: float = 565.685
-        self.assertAlmostEqual(expectedLength, actualLength, places=2)
+        actualLength:   int = oglLink._computeLinkLength(self.MOCK_SOURCE_POSITION, self.MOCK_DESTINATION_POSITION)
+        expectedLength: int = 566
+        self.assertEqual(expectedLength, actualLength, 'Did not match')
 
     def testFindClosestControlPoint(self):
 

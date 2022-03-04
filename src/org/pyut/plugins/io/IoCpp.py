@@ -557,6 +557,7 @@ int main(int argc, char** argv)
 
         makefile.write(" src" + os.sep + "main.o")
 
+        # TODO Leave tabs in this string;  Better yet externalize this as a file
         makefile.write("""
 
 FILENAME = executable 
@@ -567,10 +568,10 @@ LIBS = -lm
 all: $(FILENAME)
 
 %.o : %.cpp
-    $(COMP) -c $(OPTIONS) $< -o src/$(@F)
+	$(COMP) -c $(OPTIONS) $< -o src/$(@F)
 
 $(FILENAME): $(OBJS)
-    $(COMP) $(OPTIONS) $(OBJS) -o src/$(FILENAME) $(LIBS)
+	$(COMP) $(OPTIONS) $(OBJS) -o src/$(FILENAME) $(LIBS)
         """)
 
         makefile.close()

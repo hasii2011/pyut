@@ -88,10 +88,10 @@ class ToAscii(PyutToPlugin):
             if not isinstance(oglObject, OglClass):
                 continue
 
-            o: PyutClass = cast(PyutClass, oglObject.getPyutObject())
+            o: PyutClass = cast(PyutClass, oglObject.pyutObject)
 
             suffix = 2
-            filename = o.getName()
+            filename = o.name
 
             while osPath.exists(filename + ".acl"):
                 print("File exists")
@@ -101,7 +101,7 @@ class ToAscii(PyutToPlugin):
             file = open(filename + ".acl", "w")
 
             # base = []
-            base = [o.getName()]
+            base = [o.name]
             if o.getStereotype() is not None:
                 base.append(str(o.getStereotype()))
 

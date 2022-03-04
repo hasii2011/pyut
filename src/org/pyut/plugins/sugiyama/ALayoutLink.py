@@ -129,4 +129,4 @@ class ALayoutLink:
         @return int : Link type
         @author Nicolas Dubois
         """
-        return self._oglLink.getPyutObject().getType()
+        return self._oglLink.pyutObject.linkType

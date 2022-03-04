@@ -228,7 +228,7 @@ class OglToMiniDom:
 
         # adding the data layer object
 
-        root.appendChild(self._pyutLinkToXml(oglLink.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutLinkToXml(oglLink.pyutObject, xmlDoc))
 
         return root
 
@@ -404,7 +404,7 @@ class OglToMiniDom:
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_FIELD)
 
         root.appendChild(self._pyutParamToXml(pyutField, xmlDoc))
-        visibility: PyutVisibilityEnum = pyutField.getVisibility()
+        visibility: PyutVisibilityEnum = pyutField.visibility
         visName:    str                = self.__safeVisibilityToName(visibility)
         root.setAttribute(PyutXmlConstants.ATTR_VISIBILITY, visName)
 
@@ -423,10 +423,10 @@ class OglToMiniDom:
         """
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_PARAM)
 
-        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutParam.getName())
-        root.setAttribute(PyutXmlConstants.ATTR_TYPE, str(pyutParam.getType()))
+        root.setAttribute(PyutXmlConstants.ATTR_NAME, pyutParam.name)
+        root.setAttribute(PyutXmlConstants.ATTR_TYPE, str(pyutParam.type))
 
-        defaultValue = pyutParam.getDefaultValue()
+        defaultValue = pyutParam.defaultValue
         if defaultValue is not None:
             root.setAttribute(PyutXmlConstants.ATTR_DEFAULT_VALUE, defaultValue)
 
@@ -525,8 +525,8 @@ class OglToMiniDom:
         """
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_MODEL_LINK)
 
-        root.setAttribute(PyutXmlConstants.ATTR_NAME,            pyutLink.getName())
-        root.setAttribute(PyutXmlConstants.ATTR_TYPE,            pyutLink.getType().name)
+        root.setAttribute(PyutXmlConstants.ATTR_NAME,            pyutLink.name)
+        root.setAttribute(PyutXmlConstants.ATTR_TYPE,            pyutLink.linkType.name)
         root.setAttribute(PyutXmlConstants.ATTR_CARDINALITY_SOURCE,      pyutLink.sourceCardinality)
         root.setAttribute(PyutXmlConstants.ATTR_CARDINALITY_DESTINATION, pyutLink.destinationCardinality)
         root.setAttribute(PyutXmlConstants.ATTR_BIDIRECTIONAL,           str(pyutLink.getBidir()))
