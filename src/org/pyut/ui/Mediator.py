@@ -636,14 +636,14 @@ class Mediator(Singleton):
                 pyutObject.setName(dlg.GetValue())
             dlg.Destroy()
         elif isinstance(diagramShape, OglAssociation):
-            dlg: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.getPyutObject())
+            dlg: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.pyutObject)
             dlg.ShowModal()
             rep = dlg.getReturnAction()
             dlg.Destroy()
             if rep == -1:    # destroy link
                 diagramShape.Detach()
         elif isinstance(diagramShape, OglInterface):
-            dlg: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.getPyutObject())
+            dlg: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.pyutObject)
             dlg.ShowModal()
             rep = dlg.getReturnAction()
             dlg.Destroy()

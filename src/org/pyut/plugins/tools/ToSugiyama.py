@@ -395,8 +395,8 @@ class ToSugiyama(PyutToPlugin):
 
             Returns: (level, index)
             """
-            nb        = 0
-            summation = 0
+            nb:        int = 0
+            summation: int = 0
             nodes     = []  # List of connected internal nodes
 
             # For all non-hierarchical links
@@ -414,7 +414,7 @@ class ToSugiyama(PyutToPlugin):
                 return None, None
 
             # Find closer node to average position
-            avgLevel = float(summation) / nb
+            avgLevel = summation // nb
             levelNodes = []  # List of nodes on same level
             bestLevel = None
             # Fix best level on first node

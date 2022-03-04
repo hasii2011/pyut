@@ -231,11 +231,11 @@ class GMLExporter:
 
     def __generatePoint(self, linePoint: LinePoint) -> str:
 
-        position: Tuple[float, float] = linePoint.GetPosition()
+        position: Tuple[int, int] = linePoint.GetPosition()
 
-        x:        float = position[0]
-        y:        float = position[1]
-        z:        float = 0.0
+        x:        int = position[0]
+        y:        int = position[1]
+        z:        int = 0
         pointGml: str = (
             f'{GMLExporter.quadrupleTab}{GMLExporter.POINT_DEFINITION_TOKEN} {GMLExporter.START_TOKEN}\n'
             f'{GMLExporter.quintupleTab}{GMLExporter.X_POSITION_TOKEN} {x}\n'

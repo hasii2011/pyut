@@ -64,7 +64,8 @@ class PointShape(Shape):
         """
         Set the selection tolerance zone, in pixels.
 
-        @param float halfWidth : half of the selection zone.
+        Args:
+            halfWidth: half of the selection zone.
         """
         self._selectZone = halfWidth
 
