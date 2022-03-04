@@ -52,6 +52,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         self._defaultFont: Font            = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
         self._prefs:       PyutPreferences = PyutPreferences()
 
+        # TODO This is also used by sequence diagrams to store OglSDMessage links
         self._oglLinks: List[OglLink] = []     # Connected links
         self._modifyCommand = None
 
