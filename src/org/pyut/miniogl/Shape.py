@@ -548,12 +548,13 @@ class Shape:
         """
         self._protected = newValue
 
-    def SetSize(self, w: float, h: float):
+    def SetSize(self, w: int, h: int):
         """
         Set the size of the shape.
 
-        @param  w, width
-        @param h : height of the shape
+        Args:
+            w: width
+            h: height of the shape
         """
         pass
 

@@ -30,12 +30,13 @@ class ALayoutNode:
         """
         return self._oglObject.GetPosition()
 
-    def setPosition(self, x: float, y: float):
+    def setPosition(self, x: int, y: int):
         """
         Set the class position.
 
-        @param  x: absolute coordinates
-        @param  y : absolute coordinates
+        Args:
+            x: absolute coordinates
+            y: absolute coordinates
         """
         self._oglObject.SetPosition(x, y)
 

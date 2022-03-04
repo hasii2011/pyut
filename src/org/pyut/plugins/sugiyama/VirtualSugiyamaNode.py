@@ -1,3 +1,4 @@
+from typing import Tuple
 
 from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
 
@@ -9,19 +10,12 @@ class VirtualSugiyamaNode(SugiyamaNode):
     for the links drawing.
     """
     def __init__(self):
-        """
-        Constructor.
-
-        @author Nicolas Dubois
-        """
-        # Call parent class initialization
         super().__init__()
 
-        # Self fields
-        self.__position = (0, 0)
-        self.__size = (1, 1)
+        self.__position: Tuple[int, int] = (0, 0)
+        self.__size:     Tuple[int, int] = (1, 1)
 
-    def setSize(self, width: float, height: float):
+    def setSize(self, width: int, height: int):
         """
         Set the size of the node.
 
@@ -31,31 +25,30 @@ class VirtualSugiyamaNode(SugiyamaNode):
         """
         self.__size = (width, height)
 
-    def getSize(self):
+    def getSize(self) -> Tuple[int, int]:
         """
         Get size of node.
 
-        @return (float, float) : (width, height)
-        @author Nicolas Dubois
+        Returns: A tuple (int, int) : (width, height)
+
         """
         return self.__size
 
-    def setPosition(self, x, y):
+    def setPosition(self, x: int, y: int):
         """
         Set node position.
 
         Args:
-            x: position in absolute coordinate
-            y: position in absolute coordinate
+            x: position in absolute coordinates
+            y: position in absolute coordinates
         """
         self.__position = (x, y)
 
-    def getPosition(self):
+    def getPosition(self) -> Tuple[int, int]:
         """
         Get node position.
 
-        @return (float, float) : (x, y) in absolute coordinate
-        @author Nicolas Dubois
+        Returns:    (int, int) : (x, y) in absolute coordinate
         """
         return self.__position
 

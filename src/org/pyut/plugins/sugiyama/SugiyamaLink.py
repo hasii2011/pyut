@@ -9,7 +9,7 @@ class SugiyamaLink(ALayoutLink):
     """
     SugiyamaLink: link of the Sugiyama graph.
 
-    Instancied by: ../ToSugiyama.py
+    Instantiated by: ../ToSugiyama.py
 
     :author: Nicolas Dubois
     :contact: nicdub@gmx.ch

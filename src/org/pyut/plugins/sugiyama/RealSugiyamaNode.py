@@ -94,7 +94,7 @@ class RealSugiyamaNode(SugiyamaNode):
             (child, link) = children[i]
             # Fix anchors coordinates
             link.setDestAnchorPos(
-                x + width * (i + 1) / (nChildren + 1), y + height)
+                x + width * (i + 1) // (nChildren + 1), y + height)
 
         # Parent anchors position
         # Sort parents list to eliminate crossing
@@ -106,7 +106,7 @@ class RealSugiyamaNode(SugiyamaNode):
             (parent, link) = parents[i]
             # Fix anchors coordinates
             link.setSrcAnchorPos(
-                x + width * (i + 1) / (nParents + 1), y)
+                x + width * (i + 1) // (nParents + 1), y)
 
     def __repr__(self):
         return f'RealSugiyamaNode name: {self.getName()} level: {self.getLevel()}'

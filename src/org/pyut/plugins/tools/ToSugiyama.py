@@ -999,7 +999,7 @@ class ToSugiyama(PyutToPlugin):
                 maxHeight = max(maxHeight, height)
             y += maxHeight + V_SPACE
 
-        if ToSugiyama.STEP_BY_STEP:
+        if ToSugiyama.STEP_BY_STEP:     # TODO Make this a User/Plugin Preference
             SugiyamaGlobals.waitKey(self._umlFrame)
         else:
             self.logger.info(f'.__fixNodesPositions() is complete')

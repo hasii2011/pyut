@@ -466,7 +466,7 @@ class SugiyamaNode:
             xDeltaSum += (wantedXPos - x) * nbFathersAndSons
             # Update number of fathers and sons who are pushing
             nbLinks += nbFathersAndSons
-        xDelta = xDeltaSum / nbLinks
+        xDelta = xDeltaSum // nbLinks
 
         # If the node has to be moved to the right
         if xDelta > 0:
