@@ -54,7 +54,7 @@ class ToLayout(PyutToPlugin):
         @since 1.0
         """
         # Return the menu title as it must be displayed
-        return "Layout"
+        return "Layout (read)"
 
     def setOptions(self):
         """
@@ -78,9 +78,11 @@ class ToLayout(PyutToPlugin):
         """
 
         filename = FileSelector("Choose a layout file to import",
-                                wildcard="Layout file (*.lay) | *.lay",
+                                # wildcard="Layout file (*.lay) | *.lay",    # temp on OS X fixes it
                                 flags=FD_OPEN | FD_FILE_MUST_EXIST | FD_CHANGE_DIR)
 
+        if filename == '':
+            return False
         f = open(filename, "r")
         lstFile = f.readlines()
         f.close()
@@ -93,5 +95,5 @@ class ToLayout(PyutToPlugin):
         for oglObject in umlObjects:
             for line in lst:
                 if line[0] == oglObject.pyutObject.name:
-                    oglObject.SetPosition(float(line[1]), float(line[2]))
-                    oglObject.SetSize(float(line[3]), float(line[4]))
+                    oglObject.SetPosition(int(line[1]), int(line[2]))
+                    oglObject.SetSize(int(line[3]), int(line[4]))
