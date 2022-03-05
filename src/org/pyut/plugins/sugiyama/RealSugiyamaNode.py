@@ -1,3 +1,4 @@
+from typing import Tuple
 
 from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
 from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaVEs
@@ -23,27 +24,23 @@ class RealSugiyamaNode(SugiyamaNode):
     """
     def __init__(self, oglObject):
         """
-        Constructor.
 
-        @param OglObject oglObject: class or note of the diagram
-        @author Nicolas Dubois
+        Args:
+            oglObject: oglObject: diagram class or note
         """
-        # Call parent class initialization
         super().__init__()
 
-        # Self fields
         self.__aLayoutNode = ALayoutNode(oglObject)
 
-    def getSize(self):
+    def getSize(self) -> Tuple[int, int]:
         """
         Get the size of the node.
 
-        @return (float, float) : tuple (width, height)
-        @author Nicolas Dubois
+        Returns: (int, int) : tuple (width, height)
         """
         return self.__aLayoutNode.getSize()
 
-    def setPosition(self, xCoord, yCoord):
+    def setPosition(self, xCoord: int, yCoord: int):
         """
         Set node position.
 
@@ -53,16 +50,15 @@ class RealSugiyamaNode(SugiyamaNode):
         """
         self.__aLayoutNode.setPosition(xCoord, yCoord)
 
-    def getPosition(self):
+    def getPosition(self) -> Tuple[int, int]:
         """
         Get node position.
 
-        @return (float, float) : tuple (x, y) in absolute coordinates
-        @author Nicolas Dubois
+        Returns: (int, int) : tuple (x, y) in absolute coordinates
         """
         return self.__aLayoutNode.getPosition()
 
-    def getName(self):
+    def getName(self) -> str:
         """
         Get the name of the OglObject.
 
@@ -88,25 +84,24 @@ class RealSugiyamaNode(SugiyamaNode):
         # Sort child list to eliminate crossing
         children: SugiyamaVEs = self.getChildren()
         children.sort(key=SugiyamaGlobals.cmpIndex)
-        nChildren = len(children)
+
+        nChildren: int = len(children)
         # For all children
         for i in range(nChildren):
             (child, link) = children[i]
             # Fix anchors coordinates
-            link.setDestAnchorPos(
-                x + width * (i + 1) // (nChildren + 1), y + height)
+            link.setDestAnchorPos(x + width * (i + 1) // (nChildren + 1), y + height)
 
         # Parent anchors position
         # Sort parents list to eliminate crossing
         parents: SugiyamaVEs = self.getParents()
         parents.sort(key=SugiyamaGlobals.cmpIndex)
-        nParents = len(parents)
+        nParents: int = len(parents)
         # For all parents
         for i in range(nParents):
             (parent, link) = parents[i]
             # Fix anchors coordinates
-            link.setSrcAnchorPos(
-                x + width * (i + 1) // (nParents + 1), y)
+            link.setSrcAnchorPos(x + width * (i + 1) // (nParents + 1), y)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'RealSugiyamaNode name: {self.getName()} level: {self.getLevel()}'

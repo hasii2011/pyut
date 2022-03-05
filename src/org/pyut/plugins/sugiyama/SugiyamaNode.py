@@ -376,7 +376,7 @@ class SugiyamaNode:
         """
         Compute average of parents and children x coordinates.
 
-        Returns:    tuple (float, int) : (x average, number of fathers and sons)
+        Returns:    tuple (int, int) : (x average, number of parents and children)
         """
         # Create list of parents and children
         parentsAndChildren = self.getParents() + self.getChildren()
@@ -391,10 +391,10 @@ class SugiyamaNode:
         # For all his parents and children
         for (node, link) in parentsAndChildren:
             # Get horizontal center coordinate of the node
-            xCenterNode = node.getPosition()[0] + node.getSize()[0] / 2
+            xCenterNode = node.getPosition()[0] + node.getSize()[0] // 2
             summation += xCenterNode
 
-        return summation / nbParentsAndChildren - self.getSize()[0] / 2, nbParentsAndChildren
+        return summation // nbParentsAndChildren - self.getSize()[0] // 2, nbParentsAndChildren
 
     def balance(self):
         """
@@ -439,15 +439,13 @@ class SugiyamaNode:
         # Return true if node has been moved
         return self.getPosition()[0] - x > 3
 
-    def __pushToRight(self, xDeltaSum: float, nbLinks: int):
+    def __pushToRight(self, xDeltaSum: int, nbLinks: int):
         """
         Called by the left neighbor, that function tries to push the node to
         the right for the balancing. If there is not enough space, try to
         push the next node.
 
         xDelta is the ideal delta on x coordinate for reaching the best balance.
-
-        xDeltaSum
 
         Args:
             xDeltaSum:  is xDelta multiplied by the number of parents and sons

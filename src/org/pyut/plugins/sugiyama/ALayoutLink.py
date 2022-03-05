@@ -1,4 +1,6 @@
 
+from org.pyut.enums.LinkType import LinkType
+
 
 class ALayoutLink:
     """
@@ -57,12 +59,13 @@ class ALayoutLink:
         """
         return self.__dstNode
 
-    def setSrcAnchorPos(self, x: float, y: float):
+    def setSrcAnchorPos(self, x: int, y: int):
         """
         Set anchor position (absolute coordinates) on source class.
 
-        @param  x: absolute coordinates
-        @param  y : absolute coordinates
+        Args:
+            x:
+            y:
         """
         self._oglLink.GetSource().SetPosition(x, y)
 
@@ -70,17 +73,18 @@ class ALayoutLink:
         """
         Get anchor position (absolute coordinates) on source class.
 
-        @return (float, float) : tuple with (x, y) coordinates
-        @author Nicolas Dubois
+        Returns:    (int, int) : tuple with (x, y) coordinates
         """
+
         return self._oglLink.GetSource().GetPosition()
 
-    def setDestAnchorPos(self, x: float, y: float):
+    def setDestAnchorPos(self, x: int, y: int):
         """
         Set anchor position (absolute coordinates) on destination class.
 
-        @param  x: absolute coordinates
-        @param  y : absolute coordinates
+        Args:
+            x:
+            y:
         """
         self._oglLink.GetDestination().SetPosition(x, y)
 
@@ -120,13 +124,10 @@ class ALayoutLink:
         """
         self._oglLink.RemoveAllControlPoints()
 
-    def getType(self):
+    def getType(self) -> LinkType:
         """
-        Return the type of the link.
+        Return the link type
 
-        The possible types are defined in ../../PyutConsts.py
-
-        @return int : Link type
-        @author Nicolas Dubois
+        Returns: Link type
         """
         return self._oglLink.pyutObject.linkType

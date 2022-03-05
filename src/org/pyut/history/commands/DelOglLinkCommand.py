@@ -40,9 +40,9 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
         self._srcPosition  = self._shape.GetSource().GetModel().GetPosition()
         self._destPosition = self._shape.GetDestination().GetModel().GetPosition()
         self._linkType     = getLinkType(self._shape)
-        self._linkSrcId    = self._shape.getSourceShape().getPyutObject().getId()
-        self._linkDestId   = self._shape.getDestinationShape().getPyutObject().getId()
-        self._linkId       = self._shape.getPyutObject().getId()
+        self._linkSrcId    = self._shape.getSourceShape().pyutObject.getId()
+        self._linkDestId   = self._shape.getDestinationShape().pyutObject.getId()
+        self._linkId       = self._shape.pyutObject.getId()
 
         serialLink += tokenizeValue("srcPosition", repr(self._srcPosition))
         serialLink += tokenizeValue("destPosition", repr(self._destPosition))

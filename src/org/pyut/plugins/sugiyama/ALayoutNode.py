@@ -16,8 +16,7 @@ class ALayoutNode:
         """
         Return the class size.
 
-        @return (float, float): tuple (width, height)
-        @author Nicolas Dubois
+        Returns: (int, int): tuple (width, height)
         """
         return self._oglObject.GetSize()
 
@@ -25,8 +24,7 @@ class ALayoutNode:
         """
         Get class position.
 
-        @return (float, float): tuple (x, y) coordinates
-        @author Nicolas Dubois
+        Returns: (int, int): tuple (x, y) coordinates
         """
         return self._oglObject.GetPosition()
 
@@ -40,7 +38,7 @@ class ALayoutNode:
         """
         self._oglObject.SetPosition(x, y)
 
-    def getName(self):
+    def getName(self) -> str:
         """
         Get the name of the class.
 

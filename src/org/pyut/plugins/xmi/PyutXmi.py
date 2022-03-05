@@ -541,7 +541,7 @@ class PyutXmi:
                 pyutSon    = self.dicoFather[linkId][son]
 
                 # Adding father in pyutClass
-                pyutSon.getPyutObject().addParent(pyutFather)
+                pyutSon.pyutObject.addParent(pyutFather)
 
                 # adding link in uml frame
                 umlFrame.createInheritanceLink(pyutSon, pyutFather)

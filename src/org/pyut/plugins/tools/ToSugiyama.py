@@ -184,7 +184,6 @@ class ToSugiyama(PyutToPlugin):
             # Class or Note :
             if isinstance(oglObject, OglObject):
                 createSugiyamaNode(oglObject, dictOgl)
-
             # Links
             elif isinstance(oglObject, OglLink):
 
@@ -758,7 +757,7 @@ class ToSugiyama(PyutToPlugin):
 
         return 0
 
-    def __fixXCoord(self, indexLevel):
+    def __fixXCoord(self, indexLevel: int):
         """
         Fix temporary x coord for each node on the level, packed on the left.
 
@@ -766,7 +765,7 @@ class ToSugiyama(PyutToPlugin):
         @author Nicolas Dubois
         """
         level = self.__levels[indexLevel]
-        x = 0
+        x: int = 0
 
         # For each node on level
         for node in level:
@@ -830,86 +829,6 @@ class ToSugiyama(PyutToPlugin):
                     indFatherR += 1
 
         return count
-
-    def __barycenter_(self):
-        """
-        Find nodes index for minimizing hierarchical links crossing.
-
-        @author Nicolas Dubois
-        """
-
-        MAX_ITER = 20       # Max number of iterations
-        moved = 1           # There has been a move during a phase
-        shiftOnUpward = 0   # Shift nodes only on ascending phase
-
-        # While classes are moved and MAX_ITER not reached
-        while moved and MAX_ITER:
-
-            # Downward phase
-
-            moved = 0
-            # For each level except the first one
-            for i in range(1, len(self.__levels)):
-
-                # Memorize level state
-                levelState = self.__levels[i][:]
-
-                # Compute parents down-barycenter
-                if i > 0:
-                    self.__downBarycenterLevel(i - 1)
-                # Compute sons up-barycenter
-                if i < len(self.__levels) - 1:
-                    self.__upBarycenterLevel(i + 1)
-
-                # Compute up-barycenter on current level
-                self.__upBarycenterLevel(i)
-                self.__sortLevel(i)
-
-                #
-                if not shiftOnUpward and self.__getNbIntersectAll():
-                    self.__shiftSameBarycenter(i)
-                #
-                else:
-                    self.__sortSameBarycenter(i)
-
-                # Check if order of nodes has been changed
-                if levelState != self.__levels[i]:
-                    moved = 1
-
-            # Upward phase
-
-            # For each level except last
-            for i in range(len(self.__levels) - 2, -1, -1):
-
-                # Memorize level state
-                levelState = self.__levels[i][:]
-
-                # Compute parents down-barycenter
-                if i > 0:
-                    self.__downBarycenterLevel(i - 1)
-                # Compute sons up-barycenter
-                if i < len(self.__levels) - 1:
-                    self.__upBarycenterLevel(i + 1)
-
-                # Compute up-barycenter on current level
-                self.__downBarycenterLevel(i)
-                #  ~ if self.__sortNeeded(i):
-                #  ~ moved = 1
-                self.__sortLevel(i)
-                if shiftOnUpward and self.__getNbIntersectAll():
-                    self.__shiftSameBarycenter(i)
-                #
-                else:
-                    self.__sortSameBarycenter(i)
-                    #  ~ if self.__sortSameBarycenter(i):
-                    #  ~ moved = 1
-
-                # Check if order of nodes has been changed
-                if levelState != self.__levels[i]:
-                    moved = 1
-
-            MAX_ITER -= 1
-            shiftOnUpward = not shiftOnUpward
 
     def __barycenter(self):
         """
@@ -988,10 +907,11 @@ class ToSugiyama(PyutToPlugin):
     def __fixNodesPositions(self):
 
         # Compute start positions packed on left
-        y = UP_MARGIN
+        y: int = UP_MARGIN
         for level in self.__levels:
-            x = LEFT_MARGIN
-            maxHeight = 0
+            x:         int = LEFT_MARGIN
+            maxHeight: int = 0
+
             for node in level:
                 (width, height) = node.getSize()
                 node.setPosition(x, y)
@@ -1018,50 +938,6 @@ class ToSugiyama(PyutToPlugin):
                             SugiyamaGlobals.waitKey(self._umlFrame, msg)
                         else:
                             self.logger.info(msg)
-
-    def __fixNodesPositions_(self):
-        """
-        Compute coordinates for each node.
-
-        @author Nicolas Dubois
-        """
-        y = UP_MARGIN
-        for level in self.__levels:
-            x = LEFT_MARGIN
-            maxHeight = 0
-            for node in level:
-                (width, height) = node.getSize()
-                node.setPosition(x, y)
-                x += width + H_SPACE
-                maxHeight = max(maxHeight, height)
-            y += maxHeight + V_SPACE
-
-        # Balance the graph with the barycenter value
-
-        # Downward phase
-        for lvl in range(1, len(self.__levels)):
-
-            level = self.__levels[lvl]
-            # Compute the barycenter on all nodes of the level before trying to balance them
-            for node in level:
-                node.upBarycenterX()
-
-            # Balance each node on level
-            for node in level:
-                node.balance()
-
-        # Upward phase
-        for lvl in range(len(self.__levels) - 2, -1, -1):
-
-            level = self.__levels[lvl]
-            # Compute the barycenter on all nodes of the level before trying
-            # to balance them
-            for node in level:
-                node.downBarycenterX()
-
-            # Balance each node on level
-            for node in level:
-                node.balance()
 
     def __fixLinksPositions(self):
         """
