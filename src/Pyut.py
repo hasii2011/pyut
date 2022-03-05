@@ -149,7 +149,7 @@ class Pyut:
 
         # noinspection PyUnreachableCode
         if __debug__:
-            print("Assertion are turned on")
+            print("Assertions are turned on")
         else:
             print("Assertions are turned off")
 
