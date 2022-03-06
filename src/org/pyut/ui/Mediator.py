@@ -359,9 +359,10 @@ class Mediator(Singleton):
         """
         self._toolboxOwner.registerTool(tool)
 
+    # TODO this is an used method.  Note the bad plugin name
     def fastTextClassEditor(self, thePyutClass: PyutClass):
         plugs = self._appFrame.plugs
-        cl = [s for s in plugs.values() if s(None, None).getName() == "Fast text edition"]
+        cl = [s for s in plugs.values() if s(None, None).name == "Fast text edition"]
         if cl:
             obj = cl[0](self.getUmlObjects(), self.getUmlFrame())
         else:

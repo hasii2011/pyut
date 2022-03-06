@@ -186,17 +186,14 @@ class DlgEditClass(DlgEditClassCommon):
         self._dlgField = DlgEditField(theParent=self, theWindowId=ID_ANY, fieldToEdit=field, theMediator=self._mediator)
         return self._dlgField.ShowModal()
 
-    def _dupParams(self, params):
+    def _dupParams(self, parameters):
         """
         Duplicate a list of params, all params are duplicated too.
-
-        @since 1.9
-        @author N. Dubois <n_dub@altavista.com>
         """
         dupParams = []
-        for i in params:
-            param: PyutParameter = PyutParameter(name=i.getName(), parameterType=i.getType(), defaultValue=i.getDefaultValue())
-            dupParams.append(param)
+        for parameter in parameters:
+            duplicate: PyutParameter = PyutParameter(name=parameter.name, parameterType=parameter.type, defaultValue=parameter.defaultValue)
+            dupParams.append(duplicate)
         return dupParams
 
     def _fillAllControls(self):

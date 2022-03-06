@@ -236,10 +236,10 @@ class PyutXmi:
         root = Element('Param')
 
         # param name
-        root.setAttribute('name', pyutParam.getName())
+        root.setAttribute('name', pyutParam.name)
 
         # param type
-        root.setAttribute('type', str(pyutParam.getType()))
+        root.setAttribute('type', str(pyutParam.type))
 
         # param default value
         defaultValue = pyutParam.getDefaultValue()
@@ -278,7 +278,7 @@ class PyutXmi:
         root = Element('Method')
 
         # method name
-        root.setAttribute('name', pyutMethod.getName())
+        root.setAttribute('name', pyutMethod.name)
 
         # method visibility
         visibility = pyutMethod.getVisibility()
@@ -288,11 +288,11 @@ class PyutXmi:
         # for all modifiers
         for i in pyutMethod.getModifiers():
             modifier = Element('Modifier')
-            modifier.setAttribute('name', i.getName())
+            modifier.setAttribute('name', i.name)
             root.appendChild(modifier)
 
         # method return type
-        ret = pyutMethod.getReturns()
+        ret = pyutMethod.returnType
         if ret is not None:
             eleRet = Element('Return')
             eleRet.setAttribute('type', str(ret))

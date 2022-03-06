@@ -66,7 +66,7 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
 
             modifiers = []
             for modifier in method.modifiers:
-                modifierName = modifier.getName()
+                modifierName = modifier.name
                 modifiers.append(modifierName)
 
             methodProfile = (methodName, methodVisibility,

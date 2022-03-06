@@ -257,7 +257,7 @@ int main(int argc, char** argv)
                 # for all fields who have a default value
                 for field in fields:
                     if field.getDefaultValue() is not None:
-                        file.write(field.getName() + '('+field.getDefaultValue() + ')')
+                        file.write(field.name + '('+field.defaultValue + ')')
                         nbFields = nbFields - 1
                         if nbFields > 0:
                             file.write(" , ")

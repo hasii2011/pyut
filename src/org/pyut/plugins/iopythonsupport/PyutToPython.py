@@ -265,7 +265,7 @@ class PyutToPython:
 
         paramCode: str = ""
 
-        paramCode = f'{paramCode}{pyutParam.getName()}'
+        paramCode = f'{paramCode}{pyutParam.name}'
 
         paramType: PyutType = pyutParam.getType()
         if paramType is not None and paramType.value != '':
@@ -288,7 +288,7 @@ class PyutToPython:
 
         for i in range(len(params)):
             param: PyutParameter = params[i]
-            methodCode.append(self.__indentStr(f'{param.getName()}:\n', 2))
+            methodCode.append(self.__indentStr(f'{param.name}:\n', 2))
 
         # Add others
         returnType: PyutType = pyutMethod.returnType
