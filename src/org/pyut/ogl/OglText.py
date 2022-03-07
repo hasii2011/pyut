@@ -249,5 +249,5 @@ class OglText(OglObject):
 
     def __repr__(self):
 
-        strMe: str = f"[OglText - name: '{self._pyutObject.name}' id: '{self._pyutObject.getId()}']"
+        strMe: str = f"[OglText - name: '{self._pyutObject.name}' id: '{self._pyutObject.id}']"
         return strMe
