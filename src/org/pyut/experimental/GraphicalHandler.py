@@ -1,4 +1,4 @@
-
+from typing import Callable
 from typing import List
 from typing import Dict
 from typing import cast
@@ -51,13 +51,13 @@ class GraphicalHandler:
             # create objects
             pyutClassDef: PyutClass = PyutClass(cl.__name__)
 
-            klassMethods: List[classmethod] = cg.getMethodsFromClass(cl)
+            klassMethods: List[Callable] = cg.getMethodsFromClass(cl)
 
             # add the methods
             methods: List[PyutMethod] = cg.generatePyutMethods(klassMethods)
             # TODO:  Figure out how to use property name as callable
-            methods = sorted(methods, key=PyutMethod.getName)
-
+            # methods = sorted(methods, key=PyutMethod.getName)
+            methods.sort(key=lambda pyutMethod: pyutMethod.name, reverse=False)
             pyutClassDef.methods = methods
 
             oglClassDef = self.addToDiagram(pyutClassDef)
