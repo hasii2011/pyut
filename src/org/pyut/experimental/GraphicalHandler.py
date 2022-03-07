@@ -55,7 +55,8 @@ class GraphicalHandler:
 
             # add the methods
             methods: List[PyutMethod] = cg.generatePyutMethods(klassMethods)
-            # TODO:  Figure out how to use property name as callable
+
+            # TODO:  Figure out how to use property name as callable -- Kind of works
             # methods = sorted(methods, key=PyutMethod.getName)
             methods.sort(key=lambda pyutMethod: pyutMethod.name, reverse=False)
             pyutClassDef.methods = methods
