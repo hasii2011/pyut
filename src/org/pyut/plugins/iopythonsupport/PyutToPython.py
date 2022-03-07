@@ -267,11 +267,11 @@ class PyutToPython:
 
         paramCode = f'{paramCode}{pyutParam.name}'
 
-        paramType: PyutType = pyutParam.getType()
+        paramType: PyutType = pyutParam.type
         if paramType is not None and paramType.value != '':
             paramCode = f'{paramCode}: {paramType.value}'
-        if pyutParam.getDefaultValue() is not None:
-            paramCode = f'{paramCode} = {pyutParam.getDefaultValue()}'
+        if pyutParam.defaultValue is not None:
+            paramCode = f'{paramCode} = {pyutParam.defaultValue}'
         if currentParamNumber < numberOfParameters - 1:
             paramCode = f'{paramCode}, '
 

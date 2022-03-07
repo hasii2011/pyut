@@ -74,6 +74,7 @@ class PyutObject:
         """
         self._name = theName
 
+    @deprecated('Use the id property')
     def setId(self, theId: int):
         """
 
@@ -82,6 +83,7 @@ class PyutObject:
         """
         self._id = theId
 
+    @deprecated('Use the id property')
     def getId(self) -> int:
         """
         Get object ID.
@@ -118,6 +120,20 @@ class PyutObject:
     @name.setter
     def name(self, theNewName: str):
         self._name = theNewName
+
+    @property
+    def id(self) -> int:
+        """
+        Returns: The object ID.
+        """
+        return self._id
+
+    @id.setter
+    def id(self, newValue: int):
+        """
+        Returns: Sets object ID.
+        """
+        self._id = newValue
 
     @property
     def fileName(self) -> str:

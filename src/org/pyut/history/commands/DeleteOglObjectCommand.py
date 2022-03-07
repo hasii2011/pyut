@@ -67,7 +67,7 @@ class DeleteOglObjectCommand(Command):
 
         # serialize data to initialize the associated pyutObject
         pyutObj = self._shape.pyutObject
-        shapeId:   int = pyutObj.getId()
+        shapeId:   int = pyutObj.id
         shapeName: str = pyutObj.name
         serialShape += tokenizeValue("shapeId", repr(shapeId))
         serialShape += tokenizeValue("shapeName", shapeName)
@@ -90,8 +90,8 @@ class DeleteOglObjectCommand(Command):
         shapeName:     str = deTokenize("shapeName", serializedData)     # name of the pyutObject
         shapeId:       int = eval(deTokenize("shapeId", serializedData))
 
-        shapePosition: Tuple[float, float] = eval(deTokenize("position", serializedData))
-        shapeSize:     Tuple[float, float] = eval(deTokenize("size", serializedData))
+        shapePosition: Tuple[int, int] = eval(deTokenize("position", serializedData))
+        shapeSize:     Tuple[int, int] = eval(deTokenize("size", serializedData))
         #
         # Construct the UML objects
         oglModule = import_module(oglShapeModuleName)
@@ -112,7 +112,7 @@ class DeleteOglObjectCommand(Command):
         if self._shape is None:
 
             pyutShape = pyutShapeClass(shapeName)
-            pyutShape.setId(shapeId)
+            pyutShape.id = shapeId
             #
             # build the OglObject : it assumes that every parameter of the
             # constructor has a default value

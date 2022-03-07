@@ -120,7 +120,7 @@ class MiniDomToOgl:
 
             xmlClass: Element = xmlOglClass.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CLASS)[0]
 
-            pyutClass.setId(int(xmlClass.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutClass.id = int(xmlClass.getAttribute(PyutXmlConstants.ATTR_ID))
             pyutClass.name = xmlClass.getAttribute(PyutXmlConstants.ATTR_NAME)
             pyutClass.description = xmlClass.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
             if xmlClass.hasAttribute(PyutXmlConstants.ATTR_STEREOTYPE):
@@ -154,7 +154,7 @@ class MiniDomToOgl:
 
             oglClass.SetPosition(x, y)
 
-            oglObjects[pyutClass.getId()] = oglClass
+            oglObjects[pyutClass.id] = oglClass
 
         return oglObjects
 
@@ -283,7 +283,7 @@ class MiniDomToOgl:
 
             xmlNote: Element = xmlOglNote.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_NOTE)[0]
 
-            pyutNote.setId(int(xmlNote.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutNote.id = int(xmlNote.getAttribute(PyutXmlConstants.ATTR_ID))
 
             content: str = xmlNote.getAttribute(PyutXmlConstants.ATTR_CONTENT)
             content = content.replace("\\\\\\\\", "\n")
@@ -298,7 +298,7 @@ class MiniDomToOgl:
 
             oglNote.SetPosition(x, y)
             # Update the dictionary
-            oglNotes[pyutNote.getId()] = oglNote
+            oglNotes[pyutNote.id] = oglNote
 
         return oglNotes
 
@@ -311,7 +311,7 @@ class MiniDomToOgl:
 
             xmlText: Element = xmlOglTextShape.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_TEXT)[0]
 
-            pyutText.setId(int(xmlText.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutText.id = int(xmlText.getAttribute(PyutXmlConstants.ATTR_ID))
 
             content: str = xmlText.getAttribute(PyutXmlConstants.ATTR_CONTENT)
             content = content.replace("\\\\\\\\", "\n")
@@ -367,7 +367,7 @@ class MiniDomToOgl:
 
             xmlActor: Element = xmlOglActor.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_ACTOR)[0]
 
-            pyutActor.setId(int(xmlActor.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutActor.id       = int(xmlActor.getAttribute(PyutXmlConstants.ATTR_ID))
             pyutActor.name     = xmlActor.getAttribute(PyutXmlConstants.ATTR_NAME)
             pyutActor.fileName = xmlActor.getAttribute(PyutXmlConstants.ATTR_FILENAME)
 
@@ -376,7 +376,7 @@ class MiniDomToOgl:
             y = PyutUtils.strFloatToInt(xmlOglActor.getAttribute(PyutXmlConstants.ATTR_Y))
             oglActor.SetPosition(x, y)
 
-            oglActors[pyutActor.getId()] = oglActor
+            oglActors[pyutActor.id] = oglActor
 
         return oglActors
 
@@ -403,7 +403,7 @@ class MiniDomToOgl:
 
             xmlUseCase: Element = xmlOglUseCase.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_USE_CASE)[0]
 
-            pyutUseCase.setId(int(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutUseCase.id = int(xmlUseCase.getAttribute(PyutXmlConstants.ATTR_ID))
             pyutUseCase.name     = xmlUseCase.getAttribute(PyutXmlConstants.ATTR_NAME)
             pyutUseCase.fileName = xmlUseCase.getAttribute(PyutXmlConstants.ATTR_FILENAME)
 
@@ -411,7 +411,7 @@ class MiniDomToOgl:
             y: int = PyutUtils.strFloatToInt(xmlOglUseCase.getAttribute(PyutXmlConstants.ATTR_Y))
             oglUseCase.SetPosition(x, y)
 
-            oglUseCases[pyutUseCase.getId()] = oglUseCase
+            oglUseCases[pyutUseCase.id] = oglUseCase
 
         return oglUseCases
 
@@ -435,7 +435,7 @@ class MiniDomToOgl:
 
             xmlSDInstance = xmlOglSDInstance.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SD_INSTANCE)[0]
 
-            pyutSDInstance.setId(int(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutSDInstance.id = int(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_ID))
             pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_INSTANCE_NAME))
 
             lifeLineLength: int = PyutUtils.secureInteger(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_LIFE_LINE_LENGTH))
@@ -449,7 +449,7 @@ class MiniDomToOgl:
             oglSDInstance.SetSize(w, h)
             oglSDInstance.SetPosition(x, y)
 
-            oglSDInstances[pyutSDInstance.getId()] = oglSDInstance
+            oglSDInstances[pyutSDInstance.id] = oglSDInstance
 
         return oglSDInstances
 
@@ -487,10 +487,10 @@ class MiniDomToOgl:
             pyutSDMessage.setDestination(dstOgl.pyutObject, dstTime)
 
             # Pyut Data
-            pyutSDMessage.setId(int(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_ID)))
+            pyutSDMessage.id = int(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_ID))
             pyutSDMessage.setMessage(xmlPyutSDMessage.getAttribute(PyutXmlConstants.ATTR_MESSAGE))
 
-            oglSDMessages[pyutSDMessage.getId()] = oglSDMessage
+            oglSDMessages[pyutSDMessage.id] = oglSDMessage
 
             # Adding OGL class to UML Frame
             # diagram = umlFrame.GetDiagram()

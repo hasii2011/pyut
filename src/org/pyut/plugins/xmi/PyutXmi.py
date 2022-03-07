@@ -645,7 +645,7 @@ class PyutXmi:
                     self.logger.debug(f"linkId: {linkId}")
                     if linkId not in self.dicoLinks:
                         self.dicoLinks[linkId] = oglClass
-            pyutClassId = pyutClass.getId()
+            pyutClassId = pyutClass.id
             self.logger.debug(f'pyutClassId: {pyutClassId}')
             dicoOglObjects[pyutClassId] = oglClass
 

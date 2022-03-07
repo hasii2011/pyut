@@ -192,7 +192,7 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         return self._destShape
 
-    @deprecated
+    @deprecated('Use pyutObject property')
     def getPyutObject(self):
         """
         Returns the associated PyutLink.
@@ -202,6 +202,7 @@ class OglLink(LineShape, ShapeEventHandler):
         """
         return self._link
 
+    @deprecated('Use pyutObject property')
     def setPyutObject(self, pyutLink):
         """
         Sets the associated PyutLink.

@@ -9,7 +9,7 @@ from org.pyut.general.Globals import cmp
 """
    
     This module defines the format of the serialized commands and command groups
-    of PyUt's history (undo/redo).
+    for PyUt history (undo/redo).
     It provides some tools to automatically set keywords in the format.
     
     The format is textual, based on 'tokens' (identifiers) which can have
@@ -136,7 +136,7 @@ def deTokenize(tokenId: str, serializedData: str) -> str:
 
     Returns: The value (string) of the specified token extracted from the specified string.
     """
-    # to not to work on the original    -- hasii note, is this true?
+    # to not work on the original    -- hasii note, is this true?
     value = serializedData
     hLogger.info(f'tokenId: `{tokenId}`')
     hLogger.debug(f'value: {value}')
@@ -158,8 +158,8 @@ def deTokenize(tokenId: str, serializedData: str) -> str:
     # find the end position which is just before TOKEN_ASSIGN
     endPos = value.find(TOKEN_END, startPos)
 
-    # check if there isn't a escape token before TOKEN_END what
-    # would means that the TOKEN_END sequence is a part of the
+    # check if there is not an escape token before TOKEN_END what
+    # would mean that the TOKEN_END sequence is a part of the
     # value, so we check for the next TOKEN_END.
     while cmp(value[endPos - len(TOKEN_ESCAPE): endPos], TOKEN_ESCAPE) == 0:
         endPos = value.find(TOKEN_END, endPos + 1)
@@ -167,7 +167,7 @@ def deTokenize(tokenId: str, serializedData: str) -> str:
 
     # remove all the escape sequences
     value = value.replace(TOKEN_ESCAPE, "")
-    # add simple escape sequences where they where double
+    # add simple escape sequences where they were double
     value = value.replace(tempEscape, TOKEN_ESCAPE)
 
     hLogger.info(f'return value: {value}')

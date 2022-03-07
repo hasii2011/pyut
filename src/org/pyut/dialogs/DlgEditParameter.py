@@ -131,7 +131,7 @@ class DlgEditParameter(BaseDlgEdit):
         if self._txtDefault.GetValue() != "":
             self._parameterToEdit.defaultValue = self._txtDefault.GetValue()
         else:
-            self._parameterToEdit.setDefaultValue('')
+            self._parameterToEdit.defaultValue = ''
 
         # Tell window that its data has been modified
         fileHandling = self._ctrl.getFileHandling()

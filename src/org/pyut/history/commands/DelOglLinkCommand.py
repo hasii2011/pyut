@@ -40,9 +40,9 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
         self._srcPosition  = self._shape.GetSource().GetModel().GetPosition()
         self._destPosition = self._shape.GetDestination().GetModel().GetPosition()
         self._linkType     = getLinkType(self._shape)
-        self._linkSrcId    = self._shape.getSourceShape().pyutObject.getId()
-        self._linkDestId   = self._shape.getDestinationShape().pyutObject.getId()
-        self._linkId       = self._shape.pyutObject.getId()
+        self._linkSrcId    = self._shape.getSourceShape().pyutObject.id
+        self._linkDestId   = self._shape.getDestinationShape().pyutObject.id
+        self._linkId       = self._shape.pyutObject.id
 
         serialLink += tokenizeValue("srcPosition", repr(self._srcPosition))
         serialLink += tokenizeValue("destPosition", repr(self._destPosition))
@@ -53,19 +53,19 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
 
         return serialLink
 
-    def deserialize(self, serializedInfos):
+    def deserialize(self, serializedInformation):
 
         umlFrame = self.getGroup().getHistory().getFrame()
 
-        self._srcPosition  = eval(deTokenize("srcPosition", serializedInfos))
-        self._destPosition = eval(deTokenize("destPosition", serializedInfos))
+        self._srcPosition  = eval(deTokenize("srcPosition", serializedInformation))
+        self._destPosition = eval(deTokenize("destPosition", serializedInformation))
 
-        linkTypeStr: str = deTokenize("linkType", serializedInfos)
+        linkTypeStr: str = deTokenize("linkType", serializedInformation)
         self._linkType   = LinkType.toEnum(linkTypeStr)
 
-        self._linkSrcId    = eval(deTokenize("linkSrcId", serializedInfos))
-        self._linkDestId   = eval(deTokenize("linkDestId", serializedInfos))
-        self._linkId       = eval(deTokenize("linkId", serializedInfos))
+        self._linkSrcId    = eval(deTokenize("linkSrcId", serializedInformation))
+        self._linkDestId   = eval(deTokenize("linkDestId", serializedInformation))
+        self._linkId       = eval(deTokenize("linkId", serializedInformation))
 
         self._shape = umlFrame.getUmlObjectById(self._linkId)
 
@@ -79,7 +79,7 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
             self._shape = umlFrame.createLink(src=src, dst=dest, linkType=self._linkType)
             umlFrame.GetDiagram().AddShape(shape=self._shape, withModelUpdate=True)
 
-        self._shape.pyutObject.setId(self._linkId)
+        self._shape.pyutObject.id = self._linkId
         self._shape.GetSource().GetModel().SetPosition(self._srcPosition[0], self._srcPosition[1])
         self._shape.GetDestination().GetModel().SetPosition(self._destPosition[0], self._destPosition[1])
         self._shape.GetSource().UpdateFromModel()
