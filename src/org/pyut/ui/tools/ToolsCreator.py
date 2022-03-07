@@ -4,29 +4,33 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
-from wx import Bitmap
 from wx import EVT_TOOL
 from wx import ITEM_CHECK
 from wx import ITEM_NORMAL
 from wx import NO_BORDER
 from wx import TB_FLAT
 from wx import TB_HORIZONTAL
+
+from wx import Bitmap
 from wx import ToolBar
 from wx import WindowIDRef
 from wx import Frame
 
 from org.pyut.ui.Mediator import Mediator
+
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
+from org.pyut.ui.tools.Tool import Category
 from org.pyut.ui.tools.Tool import Tool
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
-
-from org.pyut.general.Globals import _
 from org.pyut.ui.tools.ToolIconOwner import ToolIconOwner
 
-PYUT_TOOLS_CATEGORY: str = 'Pyut Tools'
-PYUT_MENU_CATEGORY:  str = 'PyUt Menu'
+# noinspection PyProtectedMember
+from org.pyut.general.Globals import _
+
+PYUT_TOOLS_CATEGORY: Category = Category('Pyut Tools')
+PYUT_MENU_CATEGORY:  Category = Category('PyUt Menu')
 
 
 class ToolsCreator:
