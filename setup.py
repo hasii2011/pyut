@@ -22,6 +22,8 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
 OPTIONS = {}
 
 setup(
+    name='Pyut',
+    version='6.5.4',
     app=APP,
     data_files=DATA_FILES,
     packages=['org',
@@ -65,8 +67,13 @@ setup(
         plist=dict(
             CFBundleGetInfoString='Edits Pyut UML Files',
             CFBundleIdentifier='org.pyut',
-            LSMinimumSystemVersion='12'
-        )),
+            LSMinimumSystemVersion='12',
+            LSEnvironment=dict(
+                APP_MODE='True',
+                PYTHONOPTIMIZE='1',
+            )
+        )
+    ),
     ),
     setup_requires=['py2app'],
     install_requires=['antlr4-python3-runtime',

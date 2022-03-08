@@ -15,17 +15,37 @@
             "class":     "logging.StreamHandler",
             "formatter": "pyutSimple",
             "stream":     "ext://sys.stdout"
+        },
+        "syslogHandler": {
+            "class":      "logging.handlers.SysLogHandler",
+            "formatter":  "pyutSimple"
+        },
+        "fileHandler": {
+            "class": "logging.handlers.WatchedFileHandler",
+            "formatter": "pyutSimple",
+            "filename": "/tmp/pyut.log",
+            "mode": "a",
+            "encoding": "utf-8"
+        },
+        "rotatingFileHandler": {
+            "class": "logging.handlers.logging.handlers.RotatingFileHandler",
+            "formatter": "pyutSimple",
+            "filename": "/tmp/pyut.log",
+            "mode": "a",
+            "maxBytes": 10240,
+            "backupCount": 5,
+            "encoding": "utf-8"
         }
+
     },
     "loggers": {
         "root": {
             "level":     "ERROR",
-            "handlers":  ["consoleHandler"],
+            "handlers":  ["rotatingFileHandler"],
             "propagate": "False"
         },
         "Pyut": {
             "level":     "INFO",
-            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "org": {

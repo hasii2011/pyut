@@ -5,6 +5,7 @@ from org.pyut.resources.img.methodparameters.Display import embeddedImage as dis
 from org.pyut.resources.img.methodparameters.DoNotDisplay import embeddedImage as doNotDisplayImage
 from org.pyut.resources.img.methodparameters.UnSpecified import embeddedImage as unSpecifiedImage
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.enums.DiagramType import DiagramType
@@ -30,6 +31,9 @@ class PyutConstants:
     PYUT_EXTENSION:  str = '.put'
     XML_EXTENSION:   str = '.xml'
     DEFAULT_FILENAME: str = _('Untitled') + PYUT_EXTENSION
+    APP_MODE:         str = 'APP_MODE'
+    # noinspection SpellCheckingInspection
+    PYTHON_OPTIMIZE:  str = 'PYTHONOPTIMIZE'
 
     THE_GREAT_MAC_PLATFORM: str = 'darwin'
 
@@ -67,4 +71,3 @@ class PyutConstants:
     def unspecifiedDisplayMethodsIcon() -> Bitmap:
         bmp: Bitmap = unSpecifiedImage.GetBitmap()
         return bmp
-

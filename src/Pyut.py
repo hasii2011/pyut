@@ -1,6 +1,8 @@
 
 from os import chdir
 from os import getcwd
+from os import environ
+
 from sys import path as sysPath
 from sys import argv
 
@@ -11,6 +13,7 @@ import logging.config
 
 from json import load as jsonLoad
 
+from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -29,7 +32,7 @@ class Pyut:
 
     def __init__(self):
         self._setupSystemLogging()
-        self.logger: Logger = getLogger(__name__)
+        self.logger: Logger = getLogger(Pyut.MADE_UP_PRETTY_MAIN_NAME)
         PyutPreferences.determinePreferencesLocation()
         # Lang.importLanguage()
 
@@ -44,6 +47,9 @@ class Pyut:
         TODO:  Perhaps rename this to `_startupUI` or `_fullStartup` or `_startUI`
         """
         self.handleCommandLineArguments()
+
+        optimize: str = environ.get(f'{PyutConstants.PYTHON_OPTIMIZE}')
+        self.logger.warning(f'{PyutConstants.PYTHON_OPTIMIZE}={optimize}')
 
     @property
     def userPath(self) -> str:
@@ -93,11 +99,14 @@ class Pyut:
         return absPath
 
     def _setOurSysPath(self):
-        try:
-            sysPath.append(self._exePath)
-            chdir(self._exePath)
-        except OSError as msg:
-            self.logger.error(f"Error while setting path: {msg}")
+        appMode: str = environ.get(f'{PyutConstants.APP_MODE}')
+        self.logger.warning(f'{{PyutConstants.APP_MODE}}={appMode}')
+        if appMode != 'True':
+            try:
+                sysPath.append(self._exePath)
+                chdir(self._exePath)
+            except OSError as msg:
+                self.logger.error(f"_setOurSysPath - Error while setting path: {msg}")
 
     def _updateOurDirectoryPreferences(self):
         """
@@ -149,9 +158,9 @@ class Pyut:
 
         # noinspection PyUnreachableCode
         if __debug__:
-            print("Assertions are turned on")
+            self.logger.warning("Assertions are turned on")
         else:
-            print("Assertions are turned off")
+            self.logger.warning("Assertions are turned off")
 
     def handleCommandLineArguments(self):
         """
