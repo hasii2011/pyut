@@ -67,11 +67,15 @@ setup(
         plist=dict(
             CFBundleGetInfoString='Edits Pyut UML Files',
             CFBundleIdentifier='org.pyut',
+            CFBundleDocumentTypes=[
+                {'CFBundleTypeName': 'Pyut'},
+                {'CFBundleTypeExtensions':  ['put', 'xml']}
+            ],
             LSMinimumSystemVersion='12',
             LSEnvironment=dict(
                 APP_MODE='True',
                 PYTHONOPTIMIZE='1',
-            )
+            ),
         )
     ),
     ),
