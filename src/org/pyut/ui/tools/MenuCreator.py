@@ -12,7 +12,6 @@ from wx import Frame
 from wx import ID_PREFERENCES
 from wx import Menu
 from wx import MenuBar
-from wx import NewIdRef
 
 from org.pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
@@ -197,7 +196,7 @@ class MenuCreator:
                                _("New sequence diagram"))
         self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM, _("New &use-case diagram\tCtrl-U"),
                                _("New use-case diagram"))
-        fileMenu.AppendSubMenu(self.mnuFileNew, _("&New") )
+        fileMenu.AppendSubMenu(self.mnuFileNew, _("&New"))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT, _("&Insert a project...\t"),
                         _("Insert a project in the current project..."))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_OPEN, _("&Open...\tCtrl-O"), _("Open a file..."))
@@ -272,7 +271,7 @@ class MenuCreator:
         sub.Append(SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW,    '&Text Error View',      'Test text error view')
         sub.Append(SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW,   '&Exception Error View', 'Test raising exception')
 
-        mnuEdit.Append(NewIdRef(), _('Show Error View'), sub)
+        mnuEdit.AppendSubMenu(sub, _('Show Error View'))
 
         return mnuEdit
 
