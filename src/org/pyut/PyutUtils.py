@@ -25,7 +25,6 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
-from org.pyut.errorcontroller.ErrorManager import getErrorManager
 
 
 @dataclass
@@ -140,7 +139,7 @@ class PyutUtils:
         """
         Display information
         """
-        em: ErrorManager = getErrorManager()
+        em: ErrorManager = ErrorManager()
         em.newInformation(msg, title, parent)
 
     @staticmethod
@@ -148,7 +147,7 @@ class PyutUtils:
         """
         Display a warning
         """
-        em: ErrorManager = getErrorManager()
+        em: ErrorManager = ErrorManager()
         em.newWarning(msg, title, parent)
 
     @staticmethod
@@ -158,7 +157,7 @@ class PyutUtils:
         """
         errMsg: str = ErrorManager.getErrorInfo()
         try:
-            em = getErrorManager()
+            em: ErrorManager = ErrorManager()
             em.newFatalError(msg, title, parent)
         except (ValueError, Exception) as e:
             eLog: Logger = getLogger(__name__)

@@ -9,17 +9,9 @@ from org.pyut.errorcontroller.AbstractErrorView import AbstractErrorView
 from org.pyut.errorcontroller.GraphicErrorView import GraphicErrorView
 from org.pyut.errorcontroller.TextErrorView import TextErrorView
 from org.pyut.errorcontroller.RaiseErrorView import RaiseErrorView
-
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from org.pyut.general.Singleton import Singleton
-
-
-def getErrorManager():
-    """
-    Get the error manager
-    """
-    return ErrorManager()
 
 
 class ErrorManager(Singleton):

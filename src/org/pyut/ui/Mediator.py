@@ -20,6 +20,7 @@ from wx import TextEntryDialog
 from wx import Yield as wxYield
 
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+
 from org.pyut.miniogl.Constants import EVENT_PROCESSED
 from org.pyut.miniogl.Constants import SKIP_EVENT
 from org.pyut.miniogl.LinePoint import LinePoint
@@ -222,9 +223,10 @@ class Mediator(Singleton):
         """
         self.logger: Logger = getLogger(__name__)
 
-        from org.pyut.errorcontroller.ErrorManager import getErrorManager
+        from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
-        self._errorManager  = getErrorManager()
+        self._errorManager: ErrorManager  = ErrorManager()
+
         self._currentAction = ACTION_SELECTOR
         self._useMode       = NORMAL_MODE   # Define current use mode
         self._currentActionPersistent = False
