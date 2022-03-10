@@ -429,6 +429,8 @@ class FileMenuHandler(BaseMenuHandler):
                     self._preferences.addNewLastOpenedFilesEntry(filename)
                     self.setLastOpenedFilesItems()
                     self._mediator.updateTitle()
+                else:
+                    PyutUtils.displayError(msg='File not loaded', title='Error')
             except (ValueError, Exception) as e:
                 PyutUtils.displayError(_("An error occurred while loading the project !"))
                 self.logger.error(f'{e}')

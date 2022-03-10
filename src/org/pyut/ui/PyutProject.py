@@ -177,7 +177,7 @@ class PyutProject:
         except (ValueError, Exception) as e:
             EndBusyCursor()
             self.logger.error(f"Error loading file: {e}")
-            return False
+            raise e
 
         EndBusyCursor()
         self.updateTreeText()

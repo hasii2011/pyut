@@ -232,7 +232,7 @@ class TreeNotebookHandler:
             self._currentProject = project
         except (ValueError, Exception) as e:
             self.logger.error(f"An error occurred while loading the project ! {e}")
-            return False
+            raise e
 
         success: bool = self.__addProjectToNotebook(project)
         self.logger.debug(f'{self.currentFrame=} {self.currentProject=} {self.notebook.GetSelection()=}')
