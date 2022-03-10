@@ -5,8 +5,7 @@ from org.pyut.errorcontroller.PyutException import PyutException
 
 class RaiseErrorView(AbstractErrorView):
     """
-    This class is an error view which will raise all errors as
-    text message box.
+    This class is an error view which will raise all errors as exceptions
 
     To use it, use the mediator methods:
     ```python

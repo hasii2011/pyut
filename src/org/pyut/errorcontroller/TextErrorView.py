@@ -9,8 +9,8 @@ from org.pyut.general.Globals import _
 
 class TextErrorView(AbstractErrorView):
     """
-    This class is an error view which will display error as
-    text message box.
+    This class is an error view which will display an error as entries
+    in the debug log file.
 
     To use it, use the mediator methods:
     ```python

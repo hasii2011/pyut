@@ -17,7 +17,7 @@ from org.pyut.general.Globals import _
 
 class GraphicErrorView(AbstractErrorView):
     """
-    This class is an error view which will display error as
+    This class is an error view which will display errors as
     wx message dialogs.
 
     To use it, use the mediator methods :
