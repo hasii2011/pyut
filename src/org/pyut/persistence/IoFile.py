@@ -68,9 +68,9 @@ class IoFile:
         """
         oldPath:  str      = getcwd()
         mediator: Mediator = Mediator()
-        path:     str      = mediator.getAppPath()
-        chdir(path)
-
+        path:     str      = mediator.getAppPath()  # TODO I do not think we need to do this
+        chdir(path)                                 #
+        
         Lang.importLanguage()
         xmlString: str = ""
         suffix:    str = filename[-4:]
@@ -84,7 +84,7 @@ class IoFile:
                     xmlString: str = xmlBytes.decode()
                     self.logger.info(f'Document read:\n{xmlString}')
             except (ValueError, Exception) as e:
-                self.logger.error(f'open:  {e}')
+                self.logger.error(f'open/decompress:  {e}')
         elif suffix == PyutConstants.XML_EXTENSION:
             fd:        TextIO = open(filename, "r")
             xmlString: str = fd.read()
@@ -125,4 +125,4 @@ class IoFile:
             umlFrame = project.getDocuments()[0].getFrame()
             myXml.open(dom, umlFrame)
 
-        chdir(oldPath)
+        chdir(oldPath)              # TODO remove this also if above removed

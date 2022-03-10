@@ -37,6 +37,11 @@ class PyutConstants:
 
     THE_GREAT_MAC_PLATFORM: str = 'darwin'
 
+    # Used to log error messages or general logging messages by using the standard
+    # Python logging mechanism
+    # Needs to match the name in loggingConfiguration.json
+    MAIN_LOGGING_NAME:     str = "Pyut"
+
     @staticmethod
     def diagramTypeAsString(inType):
         return DiagramsStrings[inType]

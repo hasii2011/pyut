@@ -28,11 +28,10 @@ from org.pyut.general.PyutVersion import PyutVersion
 class Pyut:
 
     JSON_LOGGING_CONFIG_FILENAME: str = "loggingConfiguration.json"
-    MADE_UP_PRETTY_MAIN_NAME:     str = "Pyut"
 
     def __init__(self):
         self._setupSystemLogging()
-        self.logger: Logger = getLogger(Pyut.MADE_UP_PRETTY_MAIN_NAME)
+        self.logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
         PyutPreferences.determinePreferencesLocation()
         # Lang.importLanguage()
 
@@ -193,7 +192,7 @@ class Pyut:
 
 if __name__ == "__main__":
 
-    print(f"Starting {Pyut.MADE_UP_PRETTY_MAIN_NAME}")
+    print(f'Starting Pyut')
 
     pyut: Pyut = Pyut()
 

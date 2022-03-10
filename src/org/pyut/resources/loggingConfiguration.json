@@ -16,17 +16,6 @@
             "formatter": "pyutSimple",
             "stream":     "ext://sys.stdout"
         },
-        "syslogHandler": {
-            "class":      "logging.handlers.SysLogHandler",
-            "formatter":  "pyutSimple"
-        },
-        "fileHandler": {
-            "class": "logging.handlers.WatchedFileHandler",
-            "formatter": "pyutSimple",
-            "filename": "/tmp/pyut.log",
-            "mode": "a",
-            "encoding": "utf-8"
-        },
         "rotatingFileHandler": {
             "class": "logging.handlers.logging.handlers.RotatingFileHandler",
             "formatter": "pyutSimple",
@@ -36,7 +25,6 @@
             "backupCount": 5,
             "encoding": "utf-8"
         }
-
     },
     "loggers": {
         "root": {

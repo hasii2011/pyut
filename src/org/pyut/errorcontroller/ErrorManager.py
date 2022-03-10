@@ -1,6 +1,9 @@
 
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
+
 from sys import exc_info
 
 from traceback import extract_tb
@@ -11,6 +14,8 @@ from org.pyut.errorcontroller.TextErrorView import TextErrorView
 from org.pyut.errorcontroller.RaiseErrorView import RaiseErrorView
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
+from org.pyut.PyutConstants import PyutConstants
+
 from org.pyut.general.Singleton import Singleton
 
 
@@ -18,6 +23,7 @@ class ErrorManager(Singleton):
     """
     This class handle errors.
     """
+    clsLogger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
 
     def init(self, view=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
         """
@@ -85,17 +91,10 @@ class ErrorManager(Singleton):
     @staticmethod
     def addToLogFile(title: str, msg: str):
 
-        import time
-        import codecs
-
-        f = codecs.open('errors.log', encoding='utf-8', mode='a')
-
-        f.write("---------------------------\n")
-        f.write(str(time.ctime(time.time())) + ' ')
+        ErrorManager.clsLogger.info("---------------------------")
 
         errMsg: str = ErrorManager.getErrorInfo()
 
-        f.write(f'{title} - {msg}\n')
+        ErrorManager.clsLogger.info(f'{title} - {msg}\n')
         if errMsg is not None:
-            f.write(errMsg)
-        f.close()
+            ErrorManager.clsLogger.info(errMsg)
