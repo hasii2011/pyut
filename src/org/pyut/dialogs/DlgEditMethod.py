@@ -275,7 +275,7 @@ class DlgEditMethod(BaseDlgEdit):
         @param event : event that invokes this method
         """
         selection = self._lstParams.GetSelection()
-        param = self._pyutMethodCopy.getParams()[selection]
+        param = self._pyutMethodCopy.parameters[selection]
         ret = self._callDlgEditParam(param)
         if ret == OK:
             # Modify param in dialog list
