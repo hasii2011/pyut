@@ -1,4 +1,5 @@
 
+from typing import List
 from typing import Tuple
 
 from logging import Logger
@@ -110,35 +111,38 @@ class OglAssociation(OglLink):
 
         Note:  Losange is French for 'diamond'
         """
-        pi_6 = pi // 6
-        points = []
+        pi_6 = pi / 6
+
         line = self.GetSegments()
         x1, y1 = line[1]
         x2, y2 = line[0]
-        a = x2 - x1
-        b = y2 - y1
+        a: int = x2 - x1
+        b: int = y2 - y1
         if abs(a) < 0.01:  # vertical segment
             if b > 0:
-                alpha = -pi // 2
+                alpha: float = -pi / 2
             else:
-                alpha = pi // 2
+                alpha = pi / 2
         else:
             if a == 0:
                 if b > 0:
-                    alpha = pi // 2
+                    alpha = pi / 2
                 else:
-                    alpha = 3 * pi // 2
+                    alpha = 3 * pi / 2
             else:
-                alpha = round(atan(b/a))
+                alpha = atan(b/a)
         if a > 0:
             alpha += pi
-        alpha1 = alpha + pi_6
-        alpha2 = alpha - pi_6
-        size = 8
-        points.append((x2 + round(size * cos(alpha1)), y2 + round(size * sin(alpha1))))
-        points.append((x2, y2))
-        points.append((x2 + round(size * cos(alpha2)), y2 + round(size * sin(alpha2))))
-        points.append((x2 + 2 * round(size * cos(alpha)),  y2 + 2 * round(size * sin(alpha))))
+        alpha1: float = alpha + pi_6
+        alpha2: float = alpha - pi_6
+        size:   int   = 8               # TODO:  Fix this magic number
+
+        points: List[Tuple[int, int]] = [
+            (x2 + round(size * cos(alpha1)), y2 + round(size * sin(alpha1))), (x2, y2),
+            (x2 + round(size * cos(alpha2)), y2 + round(size * sin(alpha2))),
+            (x2 + 2 * round(size * cos(alpha)), y2 + 2 * round(size * sin(alpha)))
+                                         ]
+
         dc.SetPen(BLACK_PEN)
         if filled:
             dc.SetBrush(BLACK_BRUSH)

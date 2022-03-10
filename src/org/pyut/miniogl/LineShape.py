@@ -273,30 +273,34 @@ class LineShape(Shape, Common):
             v: points of the segment
         """
         from math import pi, atan, cos, sin
-        pi_6 = pi // 6
-        points = []
+
+        pi_6: float = pi / 6
         x1, y1 = u
         x2, y2 = v
         a = x2 - x1
         b = y2 - y1
         if abs(a) < 0.01:   # vertical segment
             if b > 0:
-                alpha = -pi//2
+                alpha: float = -pi / 2
             else:
-                alpha = pi//2
+                alpha = pi / 2
         else:
             if a == 0:
-                alpha = pi//2  # TODO ?
+                alpha = pi / 2  # TODO ?
             else:
-                alpha = round(atan(b/a))
+                alpha = atan(b/a)
         if a > 0:
             alpha += pi
-        alpha1 = round(alpha + pi_6)
-        alpha2 = round(alpha - pi_6)
-        size = self._arrowSize
-        points.append((x2 + round(size * cos(alpha1)), y2 + round(size * sin(alpha1))))
-        points.append((x2, y2))
-        points.append((x2 + round(size * cos(alpha2)), y2 + round(size * sin(alpha2))))
+        alpha1: float = alpha + pi_6
+        alpha2: float = alpha - pi_6
+        size:   int   = self._arrowSize
+
+        points: List[Tuple[int, int]] = [
+            (x2 + round(size * cos(alpha1)), y2 + round(size * sin(alpha1))),
+            (x2, y2),
+            (x2 + round(size * cos(alpha2)), y2 + round(size * sin(alpha2)))
+                                         ]
+
         dc.DrawPolygon(points)
 
     def Detach(self):
