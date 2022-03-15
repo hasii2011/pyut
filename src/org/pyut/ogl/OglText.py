@@ -50,7 +50,8 @@ TEXT_SIZE_DECREMENT: int = 2
 
 class OglText(OglObject):
     """
-        Draws resizeable boxes of text with no visible boundaries
+    Draws resizeable boxes of text with no visible boundaries
+    PyutText should not have graphical attributes.
     """
     MARGIN: int = 5
 

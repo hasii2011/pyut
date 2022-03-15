@@ -3,9 +3,9 @@ from logging import Logger
 from logging import getLogger
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.model.PyutObject import *
+from org.pyut.model.PyutObject import PyutObject
 
-
+# TODO: Fix this;  No need for integers;  This should be an enumeration
 [INSTANCE_TYPE_ACTOR, INSTANCE_TYPE_CLASS] = PyutUtils.assignID(2)
 
 # List of possible instance type

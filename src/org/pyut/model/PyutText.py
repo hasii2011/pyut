@@ -22,6 +22,8 @@ class PyutText(PyutObject):
         """
         super().__init__()
 
+        # TODO: move preferences out of the model;  These should be set by
+        # the code that instantiates this class;  This really belongs in OglText
         preferences: PyutPreferences = PyutPreferences()
 
         self._content:      str  = textContent

@@ -17,9 +17,6 @@ if TYPE_CHECKING:
     
 from org.pyut.enums.LinkType import LinkType
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
-
 
 class PyutLink(PyutObject):
     """
@@ -196,4 +193,4 @@ class PyutLink(PyutObject):
         Returns:
              string representing link
         """
-        return _(f'("{self.name}") links from {self._src} to {self._dest}')
+        return f'("{self.name}") links from {self._src} to {self._dest}'

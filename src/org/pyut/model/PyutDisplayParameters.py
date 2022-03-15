@@ -7,7 +7,7 @@ from enum import Enum
 
 class PyutDisplayParameters(Enum):
     """
-    Determines whether a class should display its' methods parameters
+    Determines whether a class should display its methods parameters
     """
     DISPLAY        = 'Display'
     DO_NOT_DISPLAY = 'DoNotDisplay'

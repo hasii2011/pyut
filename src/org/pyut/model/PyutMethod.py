@@ -56,6 +56,7 @@ class PyutMethod(PyutObject):
             visibility: Its visibility public, private, protected
             returnType:  Its return value
         """
+        # TODO:  Do not access preferences in the data model
         prefs: PyutPreferences = PyutPreferences()
 
         if name is None or name == '':
@@ -113,6 +114,10 @@ class PyutMethod(PyutObject):
     @property
     def globallyDisplayParameters(self) -> DisplayMethodParameters:
         return PyutMethod.displayParameters
+
+    @globallyDisplayParameters.setter
+    def globallyDisplayParameters(self, newValue: DisplayMethodParameters):
+        PyutMethod.displayParameters = newValue
 
     @property
     def visibility(self) -> PyutVisibilityEnum:
