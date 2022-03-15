@@ -9,11 +9,22 @@
 
   About PyUt... and the many developers who have worked on it ...
 
-  Don't forget to visit the Pyut's official web site:
+  Don't forget to visit the Pyut's official website:
                 https://github.com/hasii2011/PyUt/wiki
 
-The Python 3 port Github URL is:
+The Python 3 port GitHub URL is:
         https://github.com/hasii2011/PyUt/
+
+  Pyut 6.5.3 Mac OS X Release
+  ====================
+  This was an update longer overdue. Over the last couple of releases
+     - We had dropped the editor preferences
+     - How Pyut saved its position was broken as was the preference
+     settings for it
+     - Python reverse engineering was not generating method
+     parameters correctly
+     - Importing of xml documents and in essence saving Pyut
+     diagrams was broken
 
   Pyut 6.5.2 Mac OS X Release
   ====================
@@ -57,8 +68,8 @@ The Python 3 port Github URL is:
   Pyut 6.1.1 Mac OS X Release
   ====================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
-      - Update Python import to handle data classes and
-        property annotations
+      - Update Python import feature to handle data classes
+        and property annotations
       - Fix export image and export pdf options; Non-functional
         in previous versions; Now platform independent and
         does not depend on any CLIs
@@ -68,7 +79,7 @@ The Python 3 port Github URL is:
   Humberto A. Sanchez II, Consultant, Python Enthusiast
       - Orthogonal Layout - complete
       - Updated Python Reverse Engineering - no longer loads
-        modules uses Antlr parsing
+        modules; uses Antlr parsing
       - PDF generation is internal now;  Does not depend on
         external command line tools
       - New UML 2 lollipop interface available - Beta
@@ -256,5 +267,5 @@ The Python 3 port Github URL is:
 
  EIVD : Ecole d'ing�nieurs de l'�tat de Vaud, Yverdon
  (http://www.eivd.ch)
- to have given us the oportunity to develop PyUt
+ to have given us the opportunity to develop PyUt
 
