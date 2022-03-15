@@ -31,10 +31,9 @@ class PreferencesCommon(BaseSubPreference):
         if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
             homeDir:  str = os.getenv('HOME')
             fullName: str = f'{homeDir}/{PreferencesCommon.PREFERENCES_FILENAME}'
-            # PreferencesCommon.preferencesFileLocationAndName = os.getenv("HOME") + "/.PyutPrefs.dat"
             PreferencesCommon.preferencesFileLocationAndName = fullName
         else:
-            PreferencesCommon.preferencesFileLocationAndName = "PyutPrefs.dat"
+            PreferencesCommon.preferencesFileLocationAndName = PreferencesCommon.PREFERENCES_FILENAME
 
     @staticmethod
     def getPreferencesLocation():
