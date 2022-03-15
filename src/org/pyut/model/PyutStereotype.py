@@ -1,5 +1,9 @@
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
 
+
+@deprecated('Just instantiate a new class')
 def getPyutStereotype(name):
     """
     Factory method to return a new or existing PyutStereotype for the given
@@ -28,6 +32,7 @@ class PyutStereotype:
         Get method, used to know the stereotype.
 
         TODO:  This method name is confusing;  How to fix it.  -- hasii
+        Fix this before externalizing data model
 
         Returns:  The name
         """
