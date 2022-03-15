@@ -28,7 +28,7 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.model.PyutStereotype import getPyutStereotype
+from org.pyut.model.PyutStereotype import PyutStereotype
 from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
@@ -492,7 +492,7 @@ class PyutXml:
         # class stereotype
         stereotype = pyutClass.getStereotype()
         if stereotype is not None:
-            root.setAttribute('stereotype', stereotype.getStereotype())
+            root.setAttribute('stereotype', stereotype.name)
 
         root.setAttribute('description', pyutClass.description)
         root.setAttribute('filename', pyutClass.getFilename())
@@ -1146,7 +1146,7 @@ class PyutXml:
 
             # adding stereotype
             if xmlClass.hasAttribute('stereotype'):
-                pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute('stereotype')))
+                pyutClass.setStereotype(PyutStereotype(xmlClass.getAttribute('stereotype')))
 
             # adding display properties (cd)
             value = secure_bool(xmlClass.getAttribute('showStereotype'))

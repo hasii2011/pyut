@@ -41,7 +41,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 
 from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutStereotype import getPyutStereotype
+from org.pyut.model.PyutStereotype import PyutStereotype
 
 from org.pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from org.pyut.dialogs.DlgEditField import DlgEditField
@@ -394,7 +394,7 @@ class DlgEditClass(DlgEditClassCommon):
         if strStereotype == "":
             self._pyutClass.setStereotype(None)
         else:
-            self._pyutClass.setStereotype(getPyutStereotype(strStereotype))
+            self._pyutClass.setStereotype(PyutStereotype(strStereotype))
         # Adds all fields in a list
         self._pyutClass.fields = self._pyutClassCopy.fields
 

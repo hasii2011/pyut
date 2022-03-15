@@ -163,7 +163,7 @@ class PyutXmi:
         # class stereotype
         stereotype = pyutClass.getStereotype()
         if stereotype is not None:
-            root.setAttribute('stereotype', stereotype.getStereotype())
+            root.setAttribute('stereotype', stereotype.name)
 
         # methods methods
         for method in pyutClass.methods:

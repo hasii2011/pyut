@@ -13,7 +13,7 @@ from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutStereotype import getPyutStereotype
+from org.pyut.model.PyutStereotype import PyutStereotype
 from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -348,7 +348,7 @@ class PyutXml:
         # class stereotype
         stereotype = pyutClass.getStereotype()
         if stereotype is not None:
-            root.setAttribute('stereotype', stereotype.getStereotype())
+            root.setAttribute('stereotype', stereotype.name)
 
         # description (pwaelti@eivd.ch)
         root.setAttribute('description', pyutClass.description)
@@ -719,7 +719,7 @@ class PyutXml:
 
             # adding stereotype
             if xmlClass.hasAttribute('stereotype'):
-                pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute('stereotype')))
+                pyutClass.setStereotype(PyutStereotype(xmlClass.getAttribute('stereotype')))
 
             # adding methods for this class
             pyutClass.setMethods(self._getMethods(xmlClass))

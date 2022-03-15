@@ -234,7 +234,7 @@ class OglToMiniDom:
 
         stereotype = pyutClass.getStereotype()
         if stereotype is not None:
-            root.setAttribute(PyutXmlConstants.ATTR_STEREOTYPE, stereotype.getStereotype())
+            root.setAttribute(PyutXmlConstants.ATTR_STEREOTYPE, stereotype.name)
 
         root.setAttribute(PyutXmlConstants.ATTR_DESCRIPTION, pyutClass.description)
         root.setAttribute(PyutXmlConstants.ATTR_FILENAME,    pyutClass.getFilename())

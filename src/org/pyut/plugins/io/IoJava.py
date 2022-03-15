@@ -139,7 +139,7 @@ class IoJava(PyutIoPlugin):
         # Is it an interface
         classInterface = "class"
         if stereotype is not None:
-            stereotypeName: str = stereotype.getStereotype()
+            stereotypeName: str = stereotype.name
             if stereotypeName.lower() == "interface":
                 classInterface = "interface"
 

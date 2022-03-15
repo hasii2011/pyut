@@ -7,7 +7,6 @@ from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.model.PyutStereotype import PyutStereotype
-from org.pyut.model.PyutStereotype import getPyutStereotype
 
 
 class PyutClass(PyutClassCommon, PyutLinkedObject):
@@ -88,7 +87,7 @@ class PyutClass(PyutClassCommon, PyutLinkedObject):
         # Python 3 update
         # if type(stereotype) == StringType or type(stereotype) == UnicodeType:
         if type(stereotype) is str:
-            stereotype = getPyutStereotype(stereotype)
+            stereotype = PyutStereotype(stereotype)
         self._stereotype = stereotype
 
     def getShowStereotype(self):

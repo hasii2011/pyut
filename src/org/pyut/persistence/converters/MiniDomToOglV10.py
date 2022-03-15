@@ -31,10 +31,10 @@ from org.pyut.model.PyutNote import PyutNote
 from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 from org.pyut.model.PyutSDMessage import PyutSDMessage
+from org.pyut.model.PyutStereotype import PyutStereotype
 from org.pyut.model.PyutText import PyutText
 from org.pyut.model.PyutType import PyutType
 from org.pyut.model.PyutUseCase import PyutUseCase
-from org.pyut.model.PyutStereotype import getPyutStereotype
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -124,7 +124,7 @@ class MiniDomToOgl:
             pyutClass.name = xmlClass.getAttribute(PyutXmlConstants.ATTR_NAME)
             pyutClass.description = xmlClass.getAttribute(PyutXmlConstants.ATTR_DESCRIPTION)
             if xmlClass.hasAttribute(PyutXmlConstants.ATTR_STEREOTYPE):
-                pyutClass.setStereotype(getPyutStereotype(xmlClass.getAttribute(PyutXmlConstants.ATTR_STEREOTYPE)))
+                pyutClass.setStereotype(PyutStereotype(xmlClass.getAttribute(PyutXmlConstants.ATTR_STEREOTYPE)))
 
             # adding display properties (cd)
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE))
