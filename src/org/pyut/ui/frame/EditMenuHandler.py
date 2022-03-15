@@ -132,7 +132,7 @@ class EditMenuHandler(BaseMenuHandler):
 
         # put a copy of the PyutObjects in the clipboard
         for obj in selected:
-            obj = copy(obj.getPyutObject())
+            obj = copy(obj.yutObject)
             obj.setLinks([])   # we don't want to copy the links
             self._clipboard.append(obj)
 
