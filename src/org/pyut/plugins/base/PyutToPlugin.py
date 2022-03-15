@@ -94,6 +94,5 @@ class PyutToPlugin(PyutPlugin):
             umlFrame:           The diagram's frame
 
         Returns:
-
         """
         pass
