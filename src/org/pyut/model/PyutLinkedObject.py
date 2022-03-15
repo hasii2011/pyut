@@ -25,16 +25,6 @@ class PyutLinkedObject(PyutObject):
         self._links:    PyutLinks              = PyutLinks([])
         self._parents:  List[PyutLinkedObject] = []     # Allows for multiple inheritance
 
-    def computeNextSafeID(self):
-        """
-        Get the next safe id
-
-        @author C.Dutoit
-        """
-        # Verify that next id is not already used
-        while self.isIDUsed(PyutLinkedObject.nextId):
-            PyutLinkedObject.nextId += 1
-
     def getLinks(self) -> PyutLinks:
         """
         This is not a copy, but the original one. Any change made to it is
