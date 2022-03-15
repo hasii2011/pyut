@@ -154,7 +154,7 @@ class PyutIoPlugin(PyutPlugin):
     def write(self, oglObjects: OglClasses):
         """
          Write data to filename. Abstract.
-        Args:
+         Args:
             oglObjects:  list of exported objects
 
         """
