@@ -39,11 +39,11 @@ class ToolsMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        # Create a plugin instance
         wxId: int = event.GetId()
         self.logger.warning(f'{wxId=}')
 
-        clazz:          type         = self._toolPluginsMap[wxId]
+        clazz: type = self._toolPluginsMap[wxId]
+        # Create a plugin instance
         pluginInstance: PyutToPlugin = clazz(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
 
         # Do plugin functionality
