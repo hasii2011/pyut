@@ -10,7 +10,7 @@ from wx import FONTFAMILY_SCRIPT
 from wx import FONTFAMILY_SWISS
 from wx import FONTFAMILY_TELETYPE
 
-from org.pyut.model.OglTextFontType import OglTextFontType
+from org.pyut.ogl.OglTextFontType import OglTextFontType
 from org.pyut.ogl.OglPosition import OglPosition
 
 

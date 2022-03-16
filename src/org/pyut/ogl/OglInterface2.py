@@ -22,7 +22,7 @@ from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.ogl.OglUtils import OglUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.model.OglTextFontType import OglTextFontType
+from org.pyut.ogl.OglTextFontType import OglTextFontType
 
 
 class OglInterface2(LollipopLine, Common):

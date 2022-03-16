@@ -58,7 +58,7 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.model.OglTextFontType import OglTextFontType
+from org.pyut.ogl.OglTextFontType import OglTextFontType
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 

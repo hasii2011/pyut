@@ -4,7 +4,7 @@ from org.pyut.model.PyutObject import PyutObject
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.model.OglTextFontType import OglTextFontType
+from org.pyut.ogl.OglTextFontType import OglTextFontType
 
 
 class PyutText(PyutObject):

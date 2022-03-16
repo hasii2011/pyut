@@ -11,7 +11,7 @@ from org.pyut.general.Singleton import Singleton
 from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
 from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 
-from org.pyut.model.OglTextFontType import OglTextFontType
+from org.pyut.ogl.OglTextFontType import OglTextFontType
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
