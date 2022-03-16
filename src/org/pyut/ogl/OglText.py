@@ -25,11 +25,11 @@ from org.pyut.general.LineSplitter import LineSplitter
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
 from org.pyut.model.PyutText import PyutText
-from org.pyut.model.PyutTextFontType import PyutTextFontType
 
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.ogl.OglUtils import OglUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -245,7 +245,7 @@ class OglText(OglObject):
             self._textFont.SetStyle(FONTSTYLE_NORMAL)
 
         self._textFont.SetPointSize(pyutText.textSize)
-        self._textFont.SetFamily(PyutTextFontType.toWxType(pyutText.textFont))
+        self._textFont.SetFamily(OglUtils.pyutFontTypeToWxFontType(pyutText.textFont))
 
     def __repr__(self):
 
