@@ -1,5 +1,4 @@
 
-
 from typing import cast
 
 from logging import Logger
@@ -26,13 +25,13 @@ from org.pyut.general.LineSplitter import LineSplitter
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
 from org.pyut.model.PyutText import PyutText
+from org.pyut.model.TextFontEnum import TextFontEnum
 
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.general.datatypes.TextFontEnum import TextFontEnum
 
 from org.pyut.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
 from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize

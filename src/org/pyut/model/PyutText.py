@@ -4,7 +4,7 @@ from org.pyut.model.PyutObject import PyutObject
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.general.datatypes.TextFontEnum import TextFontEnum
+from org.pyut.model.TextFontEnum import TextFontEnum
 
 
 class PyutText(PyutObject):

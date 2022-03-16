@@ -11,6 +11,8 @@ from org.pyut.general.Singleton import Singleton
 from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
 from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 
+from org.pyut.model.TextFontEnum import TextFontEnum
+
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
@@ -21,7 +23,6 @@ from org.pyut.preferences.ValuePreferences import ValuePreferences
 from org.pyut.general.datatypes.Position import Position
 from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 from org.pyut.general.datatypes.Dimensions import Dimensions
-from org.pyut.general.datatypes.TextFontEnum import TextFontEnum
 
 
 class PyutPreferences(Singleton):
