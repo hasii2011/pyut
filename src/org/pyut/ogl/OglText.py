@@ -25,7 +25,7 @@ from org.pyut.general.LineSplitter import LineSplitter
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
 from org.pyut.model.PyutText import PyutText
-from org.pyut.model.TextFontEnum import TextFontEnum
+from org.pyut.model.PyutTextFontType import PyutTextFontType
 
 from org.pyut.ogl.OglObject import OglObject
 
@@ -245,7 +245,7 @@ class OglText(OglObject):
             self._textFont.SetStyle(FONTSTYLE_NORMAL)
 
         self._textFont.SetPointSize(pyutText.textSize)
-        self._textFont.SetFamily(TextFontEnum.toWxType(pyutText.textFont))
+        self._textFont.SetFamily(PyutTextFontType.toWxType(pyutText.textFont))
 
     def __repr__(self):
 

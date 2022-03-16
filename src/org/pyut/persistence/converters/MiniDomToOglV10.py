@@ -58,7 +58,7 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.model.TextFontEnum import TextFontEnum
+from org.pyut.model.PyutTextFontType import PyutTextFontType
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
@@ -328,7 +328,7 @@ class MiniDomToOgl:
 
             value = xmlText.getAttribute(PyutXmlConstants.ATTR_FONT_NAME)
             if value is not None and value != '':
-                fontEnum: TextFontEnum = TextFontEnum(value)
+                fontEnum: PyutTextFontType = PyutTextFontType(value)
                 pyutText.textFont = fontEnum
 
             width:  int = PyutUtils.strFloatToInt(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_WIDTH))

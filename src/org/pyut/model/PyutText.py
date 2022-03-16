@@ -4,7 +4,7 @@ from org.pyut.model.PyutObject import PyutObject
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.model.TextFontEnum import TextFontEnum
+from org.pyut.model.PyutTextFontType import PyutTextFontType
 
 
 class PyutText(PyutObject):
@@ -31,7 +31,7 @@ class PyutText(PyutObject):
         self._isBold:       bool = preferences.textBold
         self._isItalicized: bool = preferences.textItalicize
 
-        self._textFont:       TextFontEnum = preferences.textFont
+        self._textFont:       PyutTextFontType = preferences.textFont
 
     @property
     def content(self) -> str:
@@ -66,9 +66,9 @@ class PyutText(PyutObject):
         self._isItalicized = newValue
 
     @property
-    def textFont(self) -> TextFontEnum:
+    def textFont(self) -> PyutTextFontType:
         return self._textFont
 
     @textFont.setter
-    def textFont(self, newValue: TextFontEnum):
+    def textFont(self, newValue: PyutTextFontType):
         self._textFont = newValue

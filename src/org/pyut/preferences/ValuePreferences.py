@@ -6,7 +6,7 @@ from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from org.pyut.model.TextFontEnum import TextFontEnum
+from org.pyut.model.PyutTextFontType import PyutTextFontType
 from org.pyut.general.datatypes.Dimensions import Dimensions
 
 
@@ -101,16 +101,16 @@ class ValuePreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def textFont(self) -> TextFontEnum:
+    def textFont(self) -> PyutTextFontType:
 
         fontStr: str = self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT)
 
-        fontEnum: TextFontEnum = TextFontEnum(fontStr)
+        fontEnum: PyutTextFontType = PyutTextFontType(fontStr)
 
         return fontEnum
 
     @textFont.setter
-    def textFont(self, newValue: TextFontEnum):
+    def textFont(self, newValue: PyutTextFontType):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, newValue.value)
         self._preferencesCommon.saveConfig()
 

@@ -21,7 +21,7 @@ from org.pyut.model.PyutObject import PyutObject
 from org.pyut.ogl.OglPosition import OglPosition
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.model.TextFontEnum import TextFontEnum
+from org.pyut.model.PyutTextFontType import PyutTextFontType
 
 
 class OglInterface2(LollipopLine, Common):
@@ -40,8 +40,8 @@ class OglInterface2(LollipopLine, Common):
 
         preferences: PyutPreferences = PyutPreferences()
 
-        fontStyle:  TextFontEnum = preferences.textFont
-        fontFamily: int          = TextFontEnum.toWxType(fontStyle)
+        fontStyle:  PyutTextFontType = preferences.textFont
+        fontFamily: int          = PyutTextFontType.toWxType(fontStyle)
 
         self._defaultFont: Font = Font(OglInterface2.INTERFACE_FONT_SIZE, fontFamily, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
 
