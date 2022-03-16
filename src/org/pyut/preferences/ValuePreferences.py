@@ -6,7 +6,7 @@ from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from org.pyut.model.PyutTextFontType import PyutTextFontType
+from org.pyut.model.OglTextFontType import OglTextFontType
 from org.pyut.general.datatypes.Dimensions import Dimensions
 
 
@@ -101,16 +101,16 @@ class ValuePreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def textFont(self) -> PyutTextFontType:
+    def textFont(self) -> OglTextFontType:
 
         fontStr: str = self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT)
 
-        fontEnum: PyutTextFontType = PyutTextFontType(fontStr)
+        fontEnum: OglTextFontType = OglTextFontType(fontStr)
 
         return fontEnum
 
     @textFont.setter
-    def textFont(self, newValue: PyutTextFontType):
+    def textFont(self, newValue: OglTextFontType):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, newValue.value)
         self._preferencesCommon.saveConfig()
 

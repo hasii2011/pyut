@@ -11,7 +11,7 @@ from org.pyut.general.Singleton import Singleton
 from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
 from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
 
-from org.pyut.model.PyutTextFontType import PyutTextFontType
+from org.pyut.model.OglTextFontType import OglTextFontType
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
@@ -448,11 +448,11 @@ class PyutPreferences(Singleton):
         self._valuePrefs.textItalicize = newValue
 
     @property
-    def textFont(self) -> PyutTextFontType:
+    def textFont(self) -> OglTextFontType:
         return self._valuePrefs.textFont
 
     @textFont.setter
-    def textFont(self, newValue: PyutTextFontType):
+    def textFont(self, newValue: OglTextFontType):
         self._valuePrefs.textFont = newValue
 
     @property

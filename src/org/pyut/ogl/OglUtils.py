@@ -10,7 +10,7 @@ from wx import FONTFAMILY_SCRIPT
 from wx import FONTFAMILY_SWISS
 from wx import FONTFAMILY_TELETYPE
 
-from org.pyut.model.PyutTextFontType import PyutTextFontType
+from org.pyut.model.OglTextFontType import OglTextFontType
 from org.pyut.ogl.OglPosition import OglPosition
 
 
@@ -44,17 +44,17 @@ class OglUtils:
         return OglPosition(x=midPointX, y=midPointY)
 
     @classmethod
-    def pyutFontTypeToWxFontType(cls, enumValue: PyutTextFontType) -> int:
+    def pyutFontTypeToWxFontType(cls, enumValue: OglTextFontType) -> int:
 
-        if enumValue == PyutTextFontType.SWISS:
+        if enumValue == OglTextFontType.SWISS:
             return FONTFAMILY_SWISS
-        elif enumValue == PyutTextFontType.MODERN:
+        elif enumValue == OglTextFontType.MODERN:
             return FONTFAMILY_MODERN
-        elif enumValue == PyutTextFontType.ROMAN:
+        elif enumValue == OglTextFontType.ROMAN:
             return FONTFAMILY_ROMAN
-        elif enumValue == PyutTextFontType.SCRIPT:
+        elif enumValue == OglTextFontType.SCRIPT:
             return FONTFAMILY_SCRIPT
-        elif enumValue == PyutTextFontType.TELETYPE:
+        elif enumValue == OglTextFontType.TELETYPE:
             return FONTFAMILY_TELETYPE
         else:
             return FONTFAMILY_DEFAULT

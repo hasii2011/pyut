@@ -31,7 +31,7 @@ from org.pyut.PyutUtils import PyutUtils
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
-from org.pyut.model.PyutTextFontType import PyutTextFontType
+from org.pyut.model.OglTextFontType import OglTextFontType
 from org.pyut.general.datatypes.Dimensions import Dimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -112,7 +112,7 @@ class TextAttributesContainer(Panel):
     def _onFontSelectionChanged(self, event: CommandEvent):
 
         newFontName: str          = event.GetString()
-        fontEnum:    PyutTextFontType = PyutTextFontType(newFontName)
+        fontEnum:    OglTextFontType = OglTextFontType(newFontName)
 
         self._preferences.textFont = fontEnum
 
@@ -146,7 +146,7 @@ class TextAttributesContainer(Panel):
     def __createTextFontSelectorContainer(self, parent: Window) -> StaticBoxSizer:
 
         fontChoices = []
-        for fontName in PyutTextFontType:
+        for fontName in OglTextFontType:
             fontChoices.append(fontName.value)
 
         box:     StaticBox      = StaticBox(self, ID_ANY, _("Text Font"))

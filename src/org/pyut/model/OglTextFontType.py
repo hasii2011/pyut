@@ -2,7 +2,7 @@
 from enum import Enum
 
 
-class PyutTextFontType(Enum):
+class OglTextFontType(Enum):
     """
     How we specify fonts for Pyut
     """
