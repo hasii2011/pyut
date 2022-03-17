@@ -1,8 +1,5 @@
 
-
 from org.pyut.model.PyutObject import PyutObject
-
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ogl.OglTextFontType import OglTextFontType
 
@@ -21,17 +18,7 @@ class PyutText(PyutObject):
             textContent: The text string to display
         """
         super().__init__()
-
-        # TODO: move preferences out of the model;  These should be set by
-        # the code that instantiates this class;  This really belongs in OglText
-        preferences: PyutPreferences = PyutPreferences()
-
         self._content:      str  = textContent
-        self._textSize:     int  = preferences.textFontSize
-        self._isBold:       bool = preferences.textBold
-        self._isItalicized: bool = preferences.textItalicize
-
-        self._textFont:       OglTextFontType = preferences.textFont
 
     @property
     def content(self) -> str:

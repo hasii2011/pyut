@@ -27,6 +27,8 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 
 class UmlFrameShapeHandler(DiagramFrame):
 
@@ -34,7 +36,8 @@ class UmlFrameShapeHandler(DiagramFrame):
 
         super().__init__(parent)
 
-        self.logger: Logger = getLogger(__name__)
+        self.logger:       Logger = getLogger(__name__)
+        self._preferences: PyutPreferences = PyutPreferences()
 
     def createNewClass(self, x, y):
         """
@@ -69,14 +72,22 @@ class UmlFrameShapeHandler(DiagramFrame):
     def createNewText(self, x: int, y: int):
         """
         Add some new text at (x, y)
+        TODO:  the text attributes belong on the OGL object
         Args:
             x:
             y:
 
-        Returns:  The newly created PyutText
+        Returns:  The newly created PyutText data model class
         """
+        preferences: PyutPreferences = self._preferences
+
         pyutText: PyutText = PyutText()
-        oglText:  OglText  = OglText(pyutText)
+        pyutText.textFont     = preferences.textFont
+        pyutText.textSize     = preferences.textFontSize
+        pyutText.isBold       = preferences.textBold
+        pyutText.isItalicized = preferences.textItalicize
+
+        oglText: OglText = OglText(pyutText)
 
         self.addShape(oglText, x, y)
         self.Refresh()
