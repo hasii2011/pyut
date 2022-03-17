@@ -7,8 +7,6 @@ from org.pyut.model.ModelTypes import Implementors
 from org.pyut.model.PyutClassCommon import PyutClassCommon
 from org.pyut.model.PyutObject import PyutObject
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
 
 class PyutInterface(PyutClassCommon, PyutObject):
 
@@ -19,8 +17,6 @@ class PyutInterface(PyutClassCommon, PyutObject):
             name:  The interface name
         """
         interfaceName: str = name
-        if name is None or name == '':
-            interfaceName = PyutPreferences().interfaceName
 
         PyutObject.__init__(self, name=interfaceName)
         PyutClassCommon.__init__(self)

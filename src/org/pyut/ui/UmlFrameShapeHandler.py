@@ -24,9 +24,6 @@ from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglText import OglText
 from org.pyut.ogl.OglUseCase import OglUseCase
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
-
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
@@ -45,7 +42,7 @@ class UmlFrameShapeHandler(DiagramFrame):
 
         @return PyutClass : the newly created PyutClass
         """
-        pyutClass: PyutClass = PyutClass(_("NoName"))
+        pyutClass: PyutClass = PyutClass(PyutPreferences().className)
         oglClass:  OglClass  = OglClass(pyutClass)
 
         self.addShape(oglClass, x, y)
@@ -62,7 +59,7 @@ class UmlFrameShapeHandler(DiagramFrame):
 
         Returns:    the newly created PyutNote
         """
-        pyutNote: PyutNote = PyutNote()
+        pyutNote: PyutNote = PyutNote(noteText=self._preferences.noteText)
         oglNote:  OglNote  = OglNote(pyutNote)
 
         self.addShape(oglNote, x, y)
@@ -100,7 +97,7 @@ class UmlFrameShapeHandler(DiagramFrame):
 
         @return PyutActor : the newly created PyutActor
         """
-        pyutActor: PyutActor = PyutActor()
+        pyutActor: PyutActor = PyutActor(PyutPreferences().actorName)
         oglActor:  OglActor  = OglActor(pyutActor)
 
         self.addShape(oglActor, x, y)
@@ -113,7 +110,7 @@ class UmlFrameShapeHandler(DiagramFrame):
 
         @return PyutUseCase : the newly created PyutUseCase
         """
-        pyutUseCase: PyutUseCase = PyutUseCase()
+        pyutUseCase: PyutUseCase = PyutUseCase(PyutPreferences().useCaseName)
         oglUseCase:  OglUseCase  = OglUseCase(pyutUseCase)
 
         self.addShape(oglUseCase, x, y)

@@ -35,7 +35,7 @@ class TestPyutMethod(TestBase):
 
     def setUp(self):
         self.logger:      Logger     = TestPyutMethod.clsLogger
-        self._pyutMethod: PyutMethod = PyutMethod()
+        self._pyutMethod: PyutMethod = PyutMethod(name=PyutPreferences().methodName)
 
     def tearDown(self):
         pass
@@ -58,7 +58,7 @@ class TestPyutMethod(TestBase):
 
     def testStringMethodWithParametersRepresentation(self):
 
-        pyutMethod:     PyutMethod                = self._pyutMethod
+        pyutMethod: PyutMethod = self._pyutMethod
         pyutMethod.returnType = PyutType('float')
 
         pyutMethod.parameters = self._makeParameters()

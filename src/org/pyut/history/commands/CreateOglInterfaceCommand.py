@@ -33,6 +33,8 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.history.commands.MethodInformation import MethodInformation
 from org.pyut.history.commands.OglShapeCommand import OglShapeCommand
 
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 
 class CreateOglInterfaceCommand(OglShapeCommand):
 
@@ -47,7 +49,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
             self._attachmentAnchor: SelectAnchorPoint = attachmentAnchor
             self._implementor:      OglClass          = implementor
 
-            pyutInterface: PyutInterface = PyutInterface()
+            pyutInterface: PyutInterface = PyutInterface(name=PyutPreferences().interfaceName)
             pyutInterface.addImplementor(ClassName(implementor.pyutObject.name))
 
             self._pyutInterface: PyutInterface = pyutInterface

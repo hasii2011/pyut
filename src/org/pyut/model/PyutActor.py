@@ -1,6 +1,5 @@
 
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class PyutActor(PyutLinkedObject):
@@ -17,8 +16,4 @@ class PyutActor(PyutLinkedObject):
         Args:
             actorName: The name of the actor
         """
-
-        if actorName is None or actorName == '':
-            actorName = PyutPreferences().actorName
-
         super().__init__(actorName)

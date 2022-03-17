@@ -1,6 +1,5 @@
 
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class PyutNote(PyutLinkedObject):
@@ -12,18 +11,15 @@ class PyutNote(PyutLinkedObject):
     `.setName()` methods and raises exceptions if code calls them.  In this manner, I can catch and change all
     the current code to use the new property
     """
-    def __init__(self, theNoteText: str = ''):
+    def __init__(self, noteText: str = ''):
         """
 
         Args:
-            theNoteText: The Note
+            noteText: The Note
         """
         super().__init__()
 
-        if theNoteText is None or theNoteText == '':
-            self._content = PyutPreferences().noteText
-        else:
-            self._content = theNoteText
+        self._content = noteText
 
     @property
     def content(self) -> str:
@@ -32,4 +28,3 @@ class PyutNote(PyutLinkedObject):
     @content.setter
     def content(self, newContent: str):
         self._content = newContent
-

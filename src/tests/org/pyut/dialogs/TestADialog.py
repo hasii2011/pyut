@@ -68,7 +68,8 @@ class TestADialog(App):
 
     FRAME_ID: int = ID_ANY
 
-    MINI_GAP: int = 3
+    MINI_GAP:         int = 3
+    NOTHING_SELECTED: int = -1
 
     def OnInit(self):
 
@@ -108,6 +109,8 @@ class TestADialog(App):
             dialogChoices.append(dlgName.value)
 
         self._cmbDlgName: ComboBox = ComboBox(parentFrame, self._dlgSelectionId, choices=dialogChoices, style=CB_READONLY)
+
+        self._cmbDlgName.SetSelection(TestADialog.NOTHING_SELECTED)
 
         box:      StaticBox    = StaticBox(parentFrame, ID_ANY, "Dialog Selection")
         szrDlg: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
@@ -163,7 +166,7 @@ class TestADialog(App):
 
     def _testDlgEditNote(self) -> str:
 
-        pyutNote: PyutNote = PyutNote()
+        pyutNote: PyutNote = PyutNote(noteText=self._preferences.noteText)
         with DlgEditNote(parent=self._frameTop, dialogIdentifier=ID_ANY, pyutNote=pyutNote) as dlg:
             dlg: DlgEditNote = cast(DlgEditNote, dlg)
             if dlg.ShowModal() == OK:

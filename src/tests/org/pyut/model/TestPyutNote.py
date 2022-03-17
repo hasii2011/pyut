@@ -33,7 +33,9 @@ class TestPyutNote(TestBase):
 
     def testDefaultNoteContent(self):
 
-        pyutNote: PyutNote = PyutNote()
+        expectedContent: str = PyutPreferences().noteText
+
+        pyutNote: PyutNote = PyutNote(noteText=expectedContent)
 
         expectedContent: str = PyutPreferences().noteText
         actualContent:   str = pyutNote.content
@@ -41,16 +43,16 @@ class TestPyutNote(TestBase):
         self.assertEqual(expectedContent, actualContent, 'Did not use preferences note content')
 
     def testNoneNoteContent(self):
-        pyutNote: PyutNote = PyutNote(theNoteText=cast(str, None))
+        pyutNote: PyutNote = PyutNote(noteText=cast(str, None))
 
-        expectedContent: str = PyutPreferences().noteText
+        expectedContent: str = cast(str, None)
         actualContent:   str = pyutNote.content
 
         self.assertEqual(expectedContent, actualContent, 'Did not use preferences note content')
 
     def testOurNoteContent(self):
 
-        pyutNote: PyutNote = PyutNote(theNoteText='Humberto the Pythonista')
+        pyutNote: PyutNote = PyutNote(noteText='Humberto the Pythonista')
 
         expectedContent: str = 'Humberto the Pythonista'
         actualContent:   str = pyutNote.content

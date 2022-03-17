@@ -27,7 +27,8 @@ from org.pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLink
 from tests.org.pyut.history.commands.BaseTestDeleteOgl import BaseTestDeleteOgl
 
 
-class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
+class \
+        TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
     """
     """
     clsLogger: Logger = None
@@ -61,7 +62,7 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
 
     def testSerialize(self):
 
-        pyutNote: PyutNote = PyutNote(theNoteText='Some note text')
+        pyutNote: PyutNote = PyutNote(noteText='Some note text')
         pyutNote.fileName  = '/Users/hasii/code/PyutNote.java'
         pyutNote.name      = 'UnitTestNote'
 

@@ -9,8 +9,6 @@ from logging import getLogger
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutType import PyutType
@@ -25,7 +23,6 @@ PyutParameters = NewType('PyutParameters', List[PyutParameter])
 
 
 class PyutMethod(PyutObject):
-
     """
     A method representation.
 
@@ -46,7 +43,7 @@ class PyutMethod(PyutObject):
     change will be done for each `PyutMethod` instance.
     """
 
-    displayParameters: DisplayMethodParameters = cast(DisplayMethodParameters, None)
+    displayParameters: DisplayMethodParameters = DisplayMethodParameters.WITH_PARAMETERS
 
     def __init__(self, name="", visibility=PyutVisibilityEnum.PUBLIC, returnType: PyutType = PyutType('')):
         """
@@ -56,12 +53,6 @@ class PyutMethod(PyutObject):
             visibility: Its visibility public, private, protected
             returnType:  Its return value
         """
-        # TODO:  Do not access preferences in the data model
-        prefs: PyutPreferences = PyutPreferences()
-
-        if name is None or name == '':
-            name = prefs.methodName
-
         super().__init__(name)
 
         self.logger: Logger = getLogger(__name__)
@@ -71,14 +62,9 @@ class PyutMethod(PyutObject):
         self._sourceCode: SourceCode     = SourceCode([])
 
         self._parameters:  PyutParameters = PyutParameters([])
-        self._returnType: PyutType       = returnType
+        self._returnType: PyutType        = returnType
 
         self._isProperty: bool = False
-
-        if prefs.showParameters is True:
-            PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
-        else:
-            PyutMethod.displayParameters = DisplayMethodParameters.WITHOUT_PARAMETERS
 
     @property
     def sourceCode(self) -> SourceCode:
