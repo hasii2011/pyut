@@ -136,6 +136,12 @@ class OglToMiniDom:
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_TEXT)
 
         self.__appendOglBase(oglText, root)
+
+        root.setAttribute(PyutXmlConstants.ATTR_TEXT_SIZE,     str(oglText.textSize))
+        root.setAttribute(PyutXmlConstants.ATTR_IS_BOLD,       str(oglText.isBold))
+        root.setAttribute(PyutXmlConstants.ATTR_IS_ITALICIZED, str(oglText.isItalicized))
+        root.setAttribute(PyutXmlConstants.ATTR_FONT_FAMILY,   oglText.textFontFamily.value)
+
         root.appendChild(self._pyutTextToXml(oglText.pyutText, xmlDoc))
 
         return root
@@ -466,10 +472,6 @@ class OglToMiniDom:
         content = content.replace('\n', "\\\\\\\\")
 
         root.setAttribute(PyutXmlConstants.ATTR_CONTENT, content)
-        root.setAttribute(PyutXmlConstants.ATTR_TEXT_SIZE,     str(pyutText.textSize))
-        root.setAttribute(PyutXmlConstants.ATTR_IS_BOLD,       str(pyutText.isBold))
-        root.setAttribute(PyutXmlConstants.ATTR_IS_ITALICIZED, str(pyutText.isItalicized))
-        root.setAttribute(PyutXmlConstants.ATTR_FONT_NAME,     pyutText.textFont.value)
 
         return root
 

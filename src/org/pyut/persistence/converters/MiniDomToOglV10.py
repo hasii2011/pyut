@@ -58,7 +58,7 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.ogl.OglTextFontType import OglTextFontType
+from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
@@ -307,29 +307,7 @@ class MiniDomToOgl:
         oglTextShapes: OglTextShapes = cast(OglTextShapes, [])
         for xmlOglTextShape in xmlOglTextShapes:
 
-            pyutText: PyutText = PyutText()
-
-            xmlText: Element = xmlOglTextShape.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_TEXT)[0]
-
-            pyutText.id = int(xmlText.getAttribute(PyutXmlConstants.ATTR_ID))
-
-            content: str = xmlText.getAttribute(PyutXmlConstants.ATTR_CONTENT)
-            content = content.replace("\\\\\\\\", "\n")
-            pyutText.content = content
-
-            textSizeStr: str = xmlText.getAttribute(PyutXmlConstants.ATTR_TEXT_SIZE)
-            pyutText.textSize = int(textSizeStr)
-
-            value = PyutUtils.secureBoolean(xmlText.getAttribute(PyutXmlConstants.ATTR_IS_BOLD))
-            pyutText.isBold = value
-
-            value = PyutUtils.secureBoolean(xmlText.getAttribute(PyutXmlConstants.ATTR_IS_ITALICIZED))
-            pyutText.isItalicized = value
-
-            value = xmlText.getAttribute(PyutXmlConstants.ATTR_FONT_NAME)
-            if value is not None and value != '':
-                fontEnum: OglTextFontType = OglTextFontType(value)
-                pyutText.textFont = fontEnum
+            pyutText = self._getPyutText(xmlOglTextShape)
 
             width:  int = PyutUtils.strFloatToInt(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_WIDTH))
             height: int = PyutUtils.strFloatToInt(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_HEIGHT))
@@ -341,9 +319,39 @@ class MiniDomToOgl:
 
             oglText.SetPosition(x=x, y=y)
 
+            textSizeStr: str = xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_TEXT_SIZE)
+            if textSizeStr is None or textSizeStr == '':
+                oglText.textSize = 12       # TODO I do not want to pull in Preferences here
+            else:
+                oglText.textSize = int(textSizeStr)
+
+            value = PyutUtils.secureBoolean(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_IS_BOLD))
+            oglText.isBold = value
+
+            value = PyutUtils.secureBoolean(xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_IS_ITALICIZED))
+            oglText.isItalicized = value
+
+            value = xmlOglTextShape.getAttribute(PyutXmlConstants.ATTR_FONT_FAMILY)
+            if value is not None and value != '':
+                fontEnum: OglTextFontFamily = OglTextFontFamily(value)
+                oglText.textFontFamily = fontEnum
+
             oglTextShapes.append(oglText)
 
         return oglTextShapes
+
+    def _getPyutText(self, xmlOglTextShape):
+
+        pyutText: PyutText = PyutText()
+
+        xmlText: Element = xmlOglTextShape.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_TEXT)[0]
+
+        pyutText.id = int(xmlText.getAttribute(PyutXmlConstants.ATTR_ID))
+        content: str = xmlText.getAttribute(PyutXmlConstants.ATTR_CONTENT)
+
+        pyutText.content = content.replace("\\\\\\\\", "\n")
+
+        return pyutText
 
     def getOglActors(self, xmlOglActors: NodeList) -> OglActors:
         """

@@ -29,6 +29,7 @@ from org.pyut.model.PyutText import PyutText
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 from org.pyut.ogl.OglUtils import OglUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -76,8 +77,14 @@ class OglText(OglObject):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._drawFrame: bool = False
-        self._textFont:  Font = self._defaultFont.GetBaseFont()
+        self._drawFrame:      bool = False
+        self._textFontFamily: OglTextFontFamily = preferences.textFont
+        self._textSize:       int  = preferences.textFontSize
+        self._isBold:         bool = preferences.textBold
+        self._isItalicized:   bool = preferences.textItalicize
+
+        self._textFont:  Font            = self._defaultFont.GetBaseFont()
+        self._textFont.SetFamily(OglUtils.oglFontFamilyToWxFontFamily(self._textFontFamily))
 
         self.__initializeTextDisplay()
         self._menu: Menu = cast(Menu, None)
@@ -89,6 +96,38 @@ class OglText(OglObject):
     @pyutText.setter
     def pyutText(self, newValue: PyutText):
         self._pyutObject = newValue
+
+    @property
+    def textSize(self) -> int:
+        return self._textSize
+
+    @textSize.setter
+    def textSize(self, newSize: int):
+        self._textSize = newSize
+
+    @property
+    def isBold(self) -> bool:
+        return self._isBold
+
+    @isBold.setter
+    def isBold(self, newValue: bool):
+        self._isBold = newValue
+
+    @property
+    def isItalicized(self) -> bool:
+        return self._isItalicized
+
+    @isItalicized.setter
+    def isItalicized(self, newValue: bool):
+        self._isItalicized = newValue
+
+    @property
+    def textFontFamily(self) -> OglTextFontFamily:
+        return self._textFontFamily
+
+    @textFontFamily.setter
+    def textFontFamily(self, newValue: OglTextFontFamily):
+        self._textFontFamily = newValue
 
     def OnLeftUp(self, event: MouseEvent):
         """
@@ -157,9 +196,9 @@ class OglText(OglObject):
         boldItem:       MenuItem = menu.AppendCheckItem(ID_MENU_BOLD_TEXT,   item=_('Bold Text'), help=_('Set text to bold'))
         italicizedItem: MenuItem = menu.AppendCheckItem(ID_MENU_ITALIC_TEXT, item=_('Italicize Text'), help=_('Set text to italics'))
 
-        if self.pyutText.isBold is True:
+        if self.isBold is True:
             boldItem.Check(check=True)
-        if self.pyutText.isItalicized is True:
+        if self.isItalicized is True:
             italicizedItem.Check(check=True)
 
         menu.Bind(EVT_MENU, self._onChangeTextSize, id=ID_MENU_INCREASE_SIZE)
@@ -176,29 +215,26 @@ class OglText(OglObject):
         Args:
             event:
         """
-        pyutText: PyutText = self.pyutText
         eventId:  int      = event.GetId()
 
         if eventId == ID_MENU_INCREASE_SIZE:
-            pyutText.textSize += TEXT_SIZE_INCREMENT
+            self.textSize += TEXT_SIZE_INCREMENT
         elif eventId == ID_MENU_DECREASE_SIZE:
-            pyutText.textSize -= TEXT_SIZE_DECREMENT
+            self.textSize -= TEXT_SIZE_DECREMENT
         else:
             assert False, f'Unhandled text size event: {eventId}'
 
-        self._textFont.SetPointSize(pyutText.textSize)
+        self._textFont.SetPointSize(self.textSize)
         self.__updateDisplay()
 
     # noinspection PyUnusedLocal
     def _onToggleBold(self, event: CommandEvent):
 
-        pyutText: PyutText = self.pyutText
-
-        if pyutText.isBold is True:
-            pyutText.isBold = False
+        if self.isBold is True:
+            self.isBold = False
             self._textFont.SetWeight(FONTWEIGHT_NORMAL)
         else:
-            pyutText.isBold = True
+            self.isBold = True
             self._textFont.SetWeight(FONTWEIGHT_BOLD)
 
         self.__updateDisplay()
@@ -206,13 +242,11 @@ class OglText(OglObject):
     # noinspection PyUnusedLocal
     def _onToggleItalicize(self, event: CommandEvent):
 
-        pyutText: PyutText = self.pyutText
-
-        if pyutText.isItalicized is True:
-            pyutText.isItalicized = False
+        if self.isItalicized is True:
+            self.isItalicized = False
             self._textFont.SetStyle(FONTSTYLE_NORMAL)
         else:
-            pyutText.isItalicized = True
+            self.isItalicized = True
             self._textFont.SetStyle(FONTSTYLE_ITALIC)
 
         self.__updateDisplay()
@@ -230,22 +264,20 @@ class OglText(OglObject):
         get what was specified or defaults
         """
 
-        pyutText: PyutText = self.pyutText
+        self._textFont.SetPointSize(self.textSize)
 
-        self._textFont.SetPointSize(pyutText.textSize)
-
-        if pyutText.isBold is True:
+        if self.isBold is True:
             self._textFont.SetWeight(FONTWEIGHT_BOLD)
-        if pyutText.isItalicized is True:
+        if self.isItalicized is True:
             self._textFont.SetWeight(FONTWEIGHT_NORMAL)
 
-        if pyutText.isItalicized is True:
+        if self.isItalicized is True:
             self._textFont.SetStyle(FONTSTYLE_ITALIC)
         else:
             self._textFont.SetStyle(FONTSTYLE_NORMAL)
 
-        self._textFont.SetPointSize(pyutText.textSize)
-        self._textFont.SetFamily(OglUtils.pyutFontTypeToWxFontType(pyutText.textFont))
+        self._textFont.SetPointSize(self.textSize)
+        self._textFont.SetFamily(OglUtils.oglFontFamilyToWxFontFamily(self.textFontFamily))
 
     def __repr__(self):
 

@@ -1,7 +1,7 @@
 
 from org.pyut.model.PyutObject import PyutObject
 
-from org.pyut.ogl.OglTextFontType import OglTextFontType
+from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 
 
 class PyutText(PyutObject):
@@ -27,35 +27,3 @@ class PyutText(PyutObject):
     @content.setter
     def content(self, newContent: str):
         self._content = newContent
-
-    @property
-    def textSize(self) -> int:
-        return self._textSize
-
-    @textSize.setter
-    def textSize(self, newSize: int):
-        self._textSize = newSize
-
-    @property
-    def isBold(self) -> bool:
-        return self._isBold
-
-    @isBold.setter
-    def isBold(self, newValue: bool):
-        self._isBold = newValue
-
-    @property
-    def isItalicized(self) -> bool:
-        return self._isItalicized
-
-    @isItalicized.setter
-    def isItalicized(self, newValue: bool):
-        self._isItalicized = newValue
-
-    @property
-    def textFont(self) -> OglTextFontType:
-        return self._textFont
-
-    @textFont.setter
-    def textFont(self, newValue: OglTextFontType):
-        self._textFont = newValue

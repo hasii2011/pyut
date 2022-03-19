@@ -6,7 +6,7 @@ from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from org.pyut.ogl.OglTextFontType import OglTextFontType
+from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 from org.pyut.general.datatypes.Dimensions import Dimensions
 
 
@@ -35,7 +35,7 @@ class ValuePreferences(BaseSubPreference):
         TEXT_DIMENSIONS:  Dimensions(125, 50).__str__(),
         TEXT_BOLD:        'False',
         TEXT_ITALICIZE:   'False',
-        TEXT_FONT:        'Swiss',
+        TEXT_FONT:        'Swiss',              # TODO rename to TEXT_FONT_FAMILY
         TEXT_FONT_SIZE:   '14',
         CLASS_NAME:       'ClassName',
         CLASS_DIMENSIONS: Dimensions(100, 100).__str__(),
@@ -101,16 +101,21 @@ class ValuePreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def textFont(self) -> OglTextFontType:
+    def textFont(self) -> OglTextFontFamily:
+        """
+        TODO:   Rename to textFontFamily
+
+        Returns: The Text Font Family
+        """
 
         fontStr: str = self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT)
 
-        fontEnum: OglTextFontType = OglTextFontType(fontStr)
+        fontEnum: OglTextFontFamily = OglTextFontFamily(fontStr)
 
         return fontEnum
 
     @textFont.setter
-    def textFont(self, newValue: OglTextFontType):
+    def textFont(self, newValue: OglTextFontFamily):
         self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, newValue.value)
         self._preferencesCommon.saveConfig()
 
