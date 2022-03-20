@@ -4,17 +4,19 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ui.UmlFrame import UmlFrame
 
+from org.pyut.ogl.OglClass import OglClass
+
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
+from org.pyut.plugins.base.PluginTypes import OglClasses
 
 
 class PluginToTemplate(PyutToPlugin):
     """
-    Sample class for tool plugin.
+    Template class for tool plugin that a developer can copy, rename, and fill in
     """
-    def __init__(self, umlObjects: List[OglClass], umlFrame: UmlFrame):
+    def __init__(self, umlObjects: OglClasses, umlFrame: UmlFrame):
         """
 
         Args:

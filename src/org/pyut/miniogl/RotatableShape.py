@@ -24,7 +24,7 @@ class RotatableShape(RectangleShape):
         # this is the definition of the shape
         self._defineShape()
         self._angle = 0                                 # angle is in [0..3], by steps of 90 degrees
-        self._vShapes = self._SHAPES[0]                 # currently used list of shapes
+        self._vShapes = self._SHAPES[0]                 # currently, used list of shapes
         self._InitRotations()                           # create the other rotations if necessary
         self._scale = 1.0                               # scale of the shape
         self._sox, self._soy = self._ox, self._oy       # ox, oy with scale == 1
@@ -53,7 +53,7 @@ class RotatableShape(RectangleShape):
     def SetAngle(self, angle):
         """
         Set the actual angle, in range [0; 3].
-        0 is the initial angle. Each unit is a clockwise 90 degree rotation.
+        0 is the initial angle. Each unit is a clockwise 90-degree rotation.
 
         @param  angle
         """
@@ -78,14 +78,15 @@ class RotatableShape(RectangleShape):
         """
         return self._scale
 
-    def SetOrigin(self, x: float, y: float):
+    def SetOrigin(self, x: int, y: int):
         """
         Set the origin of the shape, from its upper left corner.
-
-        @param x: new origin
-        @param y: new origin
+        Args:
+            x: new origin abscissa
+            y: new origin ordinate
         """
-        self._ox, self._oy = x, y
+        self._ox = x
+        self._oy = y
         scale = self._scale
         if scale != 0:
             self._sox, self._soy = x / scale, y / scale

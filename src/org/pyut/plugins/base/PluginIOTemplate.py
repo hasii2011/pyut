@@ -9,13 +9,15 @@ from logging import getLogger
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.plugins.base.PyutPlugin import InputFormatType
+from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class PluginIoTemplate(PyutIoPlugin):
     """
-    Sample class for input/output plug-ins.
+    Template class for input/output plug-ins that a developer can copy, rename, and fill in
     """
     def __init__(self, oglObjects: List[OglClass], umlFrame: UmlFrame):
         """
@@ -46,7 +48,7 @@ class PluginIoTemplate(PyutIoPlugin):
         """
         return "0.0"
 
-    def getInputFormat(self) -> Tuple[str, str, str]:
+    def getInputFormat(self) -> InputFormatType:
         """
         return None if this plugin can't read.
         otherwise, return a tuple with
@@ -59,9 +61,9 @@ class PluginIoTemplate(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(Tuple[str, str, str], None)
+        return cast(InputFormatType, None)
 
-    def getOutputFormat(self) -> Tuple[str, str, str]:
+    def getOutputFormat(self) -> OutputFormatType:
         """
         return None if this plugin can't write.
         otherwise, return a Tuple with
@@ -74,7 +76,7 @@ class PluginIoTemplate(PyutIoPlugin):
         Returns:
             Return a specification tuple.
         """
-        return cast(Tuple[str, str, str], None)
+        return cast(OutputFormatType, None)
 
     def setImportOptions(self) -> bool:
         """

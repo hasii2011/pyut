@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -66,7 +68,7 @@ class OglToMiniDom:
         root = self.__appendOglBase(oglClass, root)
 
         # adding the data layer object
-        root.appendChild(self._pyutClassToXml(oglClass.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutClassToXml(cast(PyutClass, oglClass.getPyutObject()), xmlDoc))
 
         return root
 
@@ -85,7 +87,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglNote, root)
 
-        root.appendChild(self._pyutNoteToXml(oglNote.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutNoteToXml(cast(PyutNote, oglNote.getPyutObject()), xmlDoc))
 
         return root
 
@@ -104,7 +106,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglActor, root)
 
-        root.appendChild(self._pyutActorToXml(oglActor.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutActorToXml(cast(PyutActor, oglActor.getPyutObject()), xmlDoc))
 
         return root
 
@@ -123,7 +125,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglUseCase, root)
 
-        root.appendChild(self._pyutUseCaseToXml(oglUseCase.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutUseCaseToXml(cast(PyutUseCase, oglUseCase.getPyutObject()), xmlDoc))
 
         return root
 
@@ -193,7 +195,7 @@ class OglToMiniDom:
 
         self.__appendOglBase(oglSDInstance, root)
 
-        root.appendChild(self._pyutSDInstanceToXml(oglSDInstance.getPyutObject(), xmlDoc))
+        root.appendChild(self._pyutSDInstanceToXml(cast(PyutSDInstance, oglSDInstance.getPyutObject()), xmlDoc))
 
         return root
 
@@ -472,7 +474,6 @@ class OglToMiniDom:
         ```html
         `<eltText x="nnnn.n" y="nnnn.n"/>`
         ```
-
         e.g.
 
         ```html
@@ -480,9 +481,9 @@ class OglToMiniDom:
         ```
 
         Args:
-            eltText:        The element name
-            xmlDoc:         The minidom document
-            miniOglShape:   The shape for which we are extracting a position
+            eltText:  The element name
+            xmlDoc:   The minidom document
+            oglLabel: The shape for which we are extracting a position
 
         Returns:
             A new minidom element

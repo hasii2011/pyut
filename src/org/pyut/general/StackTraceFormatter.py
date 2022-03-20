@@ -163,9 +163,9 @@ class StackTraceFormatter:
         else:
             osSepIdx: int = longFileName.find(osSep)
             if osSepIdx == -1:
-                modifiedFileName: str = longFileName
+                modifiedFileName = longFileName
             else:
-                modifiedFileName: str = longFileName[osSepIdx:]
+                modifiedFileName = longFileName[osSepIdx:]
 
         return modifiedFileName
 
