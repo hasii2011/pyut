@@ -99,7 +99,7 @@ class Pyut:
 
     def _setOurSysPath(self):
         appMode: str = environ.get(f'{PyutConstants.APP_MODE}')
-        self.logger.warning(f'{{PyutConstants.APP_MODE}}={appMode}')
+        self.logger.warning(f'{{PyutConstants.APP_MODE}}={appMode}  {self._exePath=}')
         if appMode != 'True':
             try:
                 sysPath.append(self._exePath)

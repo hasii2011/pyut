@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 
-APP = ['src/Pyut.py']
+APP = ['src/org/pyut/Pyut.py']
 DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfiguration.json']),
               ('org/pyut/resources', ['src/org/pyut/resources/Kilroy-Pyut.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/Help.txt']),
@@ -28,11 +28,13 @@ setup(
     data_files=DATA_FILES,
     packages=['org',
               'org.pyut',
-              'org.pyut.dialogs', 'org.pyut.dialogs.preferences', 'org.pyut.dialogs.tips',
+              'org.pyut.dialogs', 'org.pyut.dialogs.preferences', 'org.pyut.dialogs.preferences.valuecontainers',
+              'org.pyut.dialogs.textdialogs',
+              'org.pyut.dialogs.tips',
               'org.pyut.enums',
               'org.pyut.errorcontroller',
               'org.pyut.experimental',
-              'org.pyut.general', 'org.pyut.general.exceptions',
+              'org.pyut.general', 'org.pyut.general.datatypes', 'org.pyut.general.exceptions',
               'org.pyut.history', 'org.pyut.history.commands',
               'org.pyut.miniogl',
               'org.pyut.model',
@@ -45,15 +47,24 @@ setup(
               'org.pyut.plugins.fastedit',
               'org.pyut.plugins.gml',
               'org.pyut.plugins.io',
-              'org.pyut.plugins.iopythonsupport',
+              'org.pyut.plugins.io.javasupport',
+              'org.pyut.plugins.io.nativeimagesupport',
+              'org.pyut.plugins.io.pyumlsupport',
+              'org.pyut.plugins.iopythonsupport', 'org.pyut.plugins.iopythonsupport.pyantlrparser',
               'org.pyut.plugins.orthogonal',
               'org.pyut.plugins.sugiyama',
               'org.pyut.plugins.tools',
               'org.pyut.plugins.xmi',
               'org.pyut.plugins.xsd',
-              'org.pyut.resources', 'org.pyut.resources.img', 'org.pyut.resources.img.methodparameters', 'org.pyut.resources.img.splash',
-              'org.pyut.resources.img.toolbar', 'org.pyut.resources.locale',
-              'org.pyut.ui', 'org.pyut.ui.tools'
+              'org.pyut.preferences',
+              'org.pyut.resources',
+              'org.pyut.resources.img',
+              'org.pyut.resources.img.methodparameters',
+              'org.pyut.resources.img.splash',
+              'org.pyut.resources.img.textdetails',
+              'org.pyut.resources.img.toolbar', 'org.pyut.resources.img.toolbar.embedded16', 'org.pyut.resources.img.toolbar.embedded32',
+              'org.pyut.resources.locale',
+              'org.pyut.ui', 'org.pyut.ui.frame', 'org.pyut.ui.tools', 'org.pyut.ui.widgets'
               ],
     include_package_data=True,
     zip_safe=False,
