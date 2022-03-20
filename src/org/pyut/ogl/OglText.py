@@ -78,7 +78,7 @@ class OglText(OglObject):
         self.logger: Logger = getLogger(__name__)
 
         self._drawFrame:      bool = False
-        self._textFontFamily: OglTextFontFamily = preferences.textFont
+        self._textFontFamily: OglTextFontFamily = preferences.textFontFamily
         self._textSize:       int  = preferences.textFontSize
         self._isBold:         bool = preferences.textBold
         self._isItalicized:   bool = preferences.textItalicize

@@ -41,7 +41,7 @@ class OglInterface2(LollipopLine, Common):
 
         preferences: PyutPreferences = PyutPreferences()
 
-        fontStyle:  OglTextFontFamily = preferences.textFont
+        fontStyle:  OglTextFontFamily = preferences.textFontFamily
         fontFamily: int              = OglUtils.oglFontFamilyToWxFontFamily(fontStyle)
 
         self._defaultFont: Font = Font(OglInterface2.INTERFACE_FONT_SIZE, fontFamily, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)

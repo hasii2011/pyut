@@ -92,7 +92,7 @@ class TextAttributesContainer(Panel):
         self._textDimensions.dimensions = self._preferences.textDimensions
         self._cbBoldText.SetValue(self._preferences.textBold)
         self._cbItalicizeText.SetValue(self._preferences.textItalicize)
-        self._cbxFontSelector.SetValue(self._preferences.textFont.value)
+        self._cbxFontSelector.SetValue(self._preferences.textFontFamily.value)
         self._cbxFontSizeSelector.SetValue(str(self._preferences.textFontSize))
 
     def _onTextDimensionsChanged(self, newValue: Dimensions):
@@ -114,7 +114,7 @@ class TextAttributesContainer(Panel):
         newFontName: str          = event.GetString()
         fontEnum:    OglTextFontFamily = OglTextFontFamily(newFontName)
 
-        self._preferences.textFont = fontEnum
+        self._preferences.textFontFamily = fontEnum
 
     def _onFontSizeSelectionChanged(self, event: CommandEvent):
 
@@ -149,7 +149,7 @@ class TextAttributesContainer(Panel):
         for fontName in OglTextFontFamily:
             fontChoices.append(fontName.value)
 
-        box:     StaticBox      = StaticBox(self, ID_ANY, _("Text Font"))
+        box:     StaticBox      = StaticBox(self, ID_ANY, _("Text Font Family"))
         szrFont: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
         self._cbxFontSelector = ComboBox(parent, self._cbxFontSelectorId, choices=fontChoices, style=CB_READONLY)

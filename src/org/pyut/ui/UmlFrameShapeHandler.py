@@ -81,7 +81,7 @@ class UmlFrameShapeHandler(DiagramFrame):
         pyutText: PyutText = PyutText(textContent=preferences.noteText)
 
         oglText: OglText       = OglText(pyutText)
-        oglText.textFontFamily = preferences.textFont
+        oglText.textFontFamily = preferences.textFontFamily
         oglText.textSize       = preferences.textFontSize
         oglText.isBold         = preferences.textBold
         oglText.isItalicized   = preferences.textItalicize

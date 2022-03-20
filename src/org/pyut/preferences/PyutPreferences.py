@@ -448,16 +448,15 @@ class PyutPreferences(Singleton):
         self._valuePrefs.textItalicize = newValue
 
     @property
-    def textFont(self) -> OglTextFontFamily:
-        """
-        TODO rename to textFontFamily
+    def textFontFamily(self) -> OglTextFontFamily:
+        """T
         Returns: The text font family
         """
-        return self._valuePrefs.textFont
+        return self._valuePrefs.textFontFamily
 
-    @textFont.setter
-    def textFont(self, newValue: OglTextFontFamily):
-        self._valuePrefs.textFont = newValue
+    @textFontFamily.setter
+    def textFontFamily(self, newValue: OglTextFontFamily):
+        self._valuePrefs.textFontFamily = newValue
 
     @property
     def textFontSize(self) -> int:

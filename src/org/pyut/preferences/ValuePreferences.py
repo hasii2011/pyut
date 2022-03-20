@@ -19,7 +19,7 @@ class ValuePreferences(BaseSubPreference):
     TEXT_DIMENSIONS:  str = 'text_dimensions'
     TEXT_BOLD:        str = 'text_bold'
     TEXT_ITALICIZE:   str = 'text_italicize'
-    TEXT_FONT:        str = 'text_font'
+    TEXT_FONT_FAMILY:        str = 'text_font_family'
     TEXT_FONT_SIZE:   str = 'text_font_size'
     CLASS_NAME:       str = 'class_name'
     CLASS_DIMENSIONS: str = 'class_dimensions'
@@ -30,15 +30,15 @@ class ValuePreferences(BaseSubPreference):
     DEFAULT_NAME_METHOD:    str = 'default_name_method'
 
     VALUE_PREFERENCES: PREFS_NAME_VALUES = {
-        NOTE_TEXT:       'This is the note text',
-        NOTE_DIMENSIONS:  Dimensions(100, 50).__str__(),
-        TEXT_DIMENSIONS:  Dimensions(125, 50).__str__(),
-        TEXT_BOLD:        'False',
-        TEXT_ITALICIZE:   'False',
-        TEXT_FONT:        'Swiss',              # TODO rename to TEXT_FONT_FAMILY
-        TEXT_FONT_SIZE:   '14',
-        CLASS_NAME:       'ClassName',
-        CLASS_DIMENSIONS: Dimensions(100, 100).__str__(),
+        NOTE_TEXT:              'This is the note text',
+        NOTE_DIMENSIONS:        Dimensions(100, 50).__str__(),
+        TEXT_DIMENSIONS:        Dimensions(125, 50).__str__(),
+        TEXT_BOLD:              'False',
+        TEXT_ITALICIZE:         'False',
+        TEXT_FONT_FAMILY:       'Swiss',
+        TEXT_FONT_SIZE:         '14',
+        CLASS_NAME:             'ClassName',
+        CLASS_DIMENSIONS:       Dimensions(100, 100).__str__(),
         DEFAULT_NAME_INTERFACE: 'IClassInterface',
         DEFAULT_NAME_USECASE:   'UseCaseName',
         DEFAULT_NAME_ACTOR:     'ActorName',
@@ -101,22 +101,21 @@ class ValuePreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def textFont(self) -> OglTextFontFamily:
+    def textFontFamily(self) -> OglTextFontFamily:
         """
-        TODO:   Rename to textFontFamily
 
         Returns: The Text Font Family
         """
 
-        fontStr: str = self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT)
+        fontStr: str = self._config.get(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT_FAMILY)
 
         fontEnum: OglTextFontFamily = OglTextFontFamily(fontStr)
 
         return fontEnum
 
-    @textFont.setter
-    def textFont(self, newValue: OglTextFontFamily):
-        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT, newValue.value)
+    @textFontFamily.setter
+    def textFontFamily(self, newValue: OglTextFontFamily):
+        self._config.set(ValuePreferences.VALUE_PREFERENCES_SECTION, ValuePreferences.TEXT_FONT_FAMILY, newValue.value)
         self._preferencesCommon.saveConfig()
 
     @property
