@@ -1,17 +1,20 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
-from typing import cast
+
+from traceback import StackSummary
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.general.StackTraceFormatter import CompressedLines
 from tests.TestBase import TestBase
 
 from org.pyut.general.StackTraceFormatter import StackTraceFormatter
 from org.pyut.general.StackTraceFormatter import StackTraceList
 from org.pyut.general.StackTraceFormatter import CodeLines
+from org.pyut.general.StackTraceFormatter import CompressedLines
 
 
 class TestStackTraceFormatter(TestBase):
@@ -33,9 +36,9 @@ class TestStackTraceFormatter(TestBase):
     def testBasic(self):
 
         import traceback
-        trString: str = traceback.extract_stack()
+        stackSummary: StackSummary = traceback.extract_stack()
 
-        stackTraceList: StackTraceList = traceback.format_list(trString)
+        stackTraceList: StackTraceList = traceback.format_list(stackSummary)
 
         stackTraceFormatter: StackTraceFormatter = StackTraceFormatter(stackTraceList=stackTraceList)
 
@@ -47,13 +50,11 @@ class TestStackTraceFormatter(TestBase):
         self.assertEqual(expectedCodeLineCount, actualCodeLineCount, 'Did not process entire stack trace list')
 
     def testLineNumbersAreNumbers(self):
-        """Another test"""
-        pass
 
         import traceback
-        trString: str = traceback.extract_stack()
+        stackSummary: StackSummary = traceback.extract_stack()
 
-        stackTraceList: StackTraceList = traceback.format_list(trString)
+        stackTraceList: StackTraceList = traceback.format_list(stackSummary)
 
         stackTraceFormatter: StackTraceFormatter = StackTraceFormatter(stackTraceList=stackTraceList)
 
@@ -65,14 +66,14 @@ class TestStackTraceFormatter(TestBase):
                 # noinspection PyUnusedLocal
                 lineNumber: int = int(codeLine.lineNumber)
             except ValueError as ve:
-                self.fail(f'Bad line number: {codeLine.lineNumber}')
+                self.fail(f'Bad line number: {codeLine.lineNumber} {ve}')
 
     def testRetrievedFileName(self):
 
         import traceback
-        trString: str = traceback.extract_stack()
+        stackSummary: StackSummary = traceback.extract_stack()
 
-        stackTraceList: StackTraceList = traceback.format_list(trString)
+        stackTraceList: StackTraceList = traceback.format_list(stackSummary)
 
         stackTraceFormatter: StackTraceFormatter = StackTraceFormatter(stackTraceList=stackTraceList)
 
@@ -85,9 +86,9 @@ class TestStackTraceFormatter(TestBase):
     def testRetrievedMethod(self):
 
         import traceback
-        trString: str = traceback.extract_stack()
+        stackSummary: StackSummary = traceback.extract_stack()
 
-        stackTraceList: StackTraceList = traceback.format_list(trString)
+        stackTraceList: StackTraceList = traceback.format_list(stackSummary)
 
         stackTraceFormatter: StackTraceFormatter = StackTraceFormatter(stackTraceList=stackTraceList)
 
@@ -99,21 +100,22 @@ class TestStackTraceFormatter(TestBase):
 
     def testCodeLineRepr(self):
         import traceback
-        trString: str = traceback.extract_stack()
+        stackSummary: StackSummary = traceback.extract_stack()
 
-        stackTraceList: StackTraceList = traceback.format_list(trString)
+        stackTraceList: StackTraceList = traceback.format_list(stackSummary)
 
         stackTraceFormatter: StackTraceFormatter = StackTraceFormatter(stackTraceList=stackTraceList)
 
         codeLines: CodeLines = stackTraceFormatter.codeLines
         for codeLine in codeLines:
             self.logger.debug(f'{codeLine}')
+            print(f'{codeLine}')
 
     def testCompressedCodeLines(self):
         import traceback
-        trString: str = traceback.extract_stack()
+        stackSummary: StackSummary = traceback.extract_stack()
 
-        stackTraceList: StackTraceList = traceback.format_list(trString)
+        stackTraceList: StackTraceList = traceback.format_list(stackSummary)
 
         stackTraceFormatter: StackTraceFormatter = StackTraceFormatter(stackTraceList=stackTraceList)
 
@@ -124,9 +126,9 @@ class TestStackTraceFormatter(TestBase):
     def testDumpedStackList(self):
 
         import traceback
-        trString: str = traceback.extract_stack()
+        stackSummary: StackSummary = traceback.extract_stack()
 
-        stackTraceList: StackTraceList = traceback.format_list(trString)
+        stackTraceList: StackTraceList = traceback.format_list(stackSummary)
 
         stackTraceFormatter: StackTraceFormatter = StackTraceFormatter(stackTraceList=stackTraceList)
 
