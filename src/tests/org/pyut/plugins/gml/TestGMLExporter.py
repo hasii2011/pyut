@@ -3,6 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from typing import List
+from typing import cast
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
@@ -23,6 +24,8 @@ from tests.TestBase import TestBase
 
 from org.pyut.plugins.gml.GMLExporter import GMLExporter
 
+from tests.resources.testclass.GMLExporter import OglClasses
+
 
 class TestGMLExporter(TestBase):
 
@@ -40,7 +43,7 @@ class TestGMLExporter(TestBase):
     UNIT_TEST_FILENAME: str = 'UnitTest.gml'
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):
@@ -62,7 +65,7 @@ class TestGMLExporter(TestBase):
         self._addMockLinks(umlObjects)
 
         self.exporter.prettyPrint = True
-        self.exporter.translate(umlObjects)
+        self.exporter.translate(cast(OglClasses, umlObjects))
         gml: str = self.exporter.gml
 
         self.assertIsNotNone(gml, 'Generate Something!!')

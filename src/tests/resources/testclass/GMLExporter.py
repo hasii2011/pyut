@@ -1,14 +1,14 @@
-from logging import Logger
-from logging import getLogger
 
-from typing import List
 from typing import Set
 from typing import Tuple
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
+
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.LinePoint import LinePoint
+from org.pyut.miniogl.LineShape import ControlPoints
 
 from org.pyut.model.PyutObject import PyutObject
 
@@ -19,8 +19,7 @@ from org.pyut.ogl.OglNote import OglNote
 
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
-
-OglClasses = List[OglClass]
+from org.pyut.plugins.base.PluginTypes import OglClasses
 
 
 class GMLExporter:
@@ -204,7 +203,7 @@ class GMLExporter:
         srcAnchor:  AnchorPoint = oglLink.sourceAnchor
         destAnchor: AnchorPoint = oglLink.destinationAnchor
 
-        controlPoints: List[ControlPoint] = oglLink.GetControlPoints()
+        controlPoints: ControlPoints = oglLink.GetControlPoints()
 
         edgeGml: str = (
             f'{GMLExporter.doubleTab}{GMLExporter.GRAPHICS_TOKEN} {GMLExporter.START_TOKEN}\n'
@@ -220,7 +219,7 @@ class GMLExporter:
 
         return edgeGml
 
-    def __generatePoints(self, points: List[LinePoint]) -> str:
+    def __generatePoints(self, points: ControlPoints) -> str:
 
         pointsGml: str = ''
         for point in points:
@@ -232,11 +231,11 @@ class GMLExporter:
 
     def __generatePoint(self, linePoint: LinePoint) -> str:
 
-        position: Tuple[float, float] = linePoint.GetPosition()
+        position: Tuple[int, int] = linePoint.GetPosition()
 
-        x:        float = position[0]
-        y:        float = position[1]
-        z:        float = 0.0
+        x:        int = position[0]
+        y:        int = position[1]
+        z:        int = 0
         pointGml: str = (
             f'{GMLExporter.quadrupleTab}{GMLExporter.POINT_DEFINITION_TOKEN} {GMLExporter.START_TOKEN}\n'
             f'{GMLExporter.quintupleTab}{GMLExporter.X_POSITION_TOKEN} {x}\n'

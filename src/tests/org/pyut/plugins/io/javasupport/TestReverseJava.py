@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import List
 
 from logging import Logger
@@ -34,12 +35,8 @@ TEST_INTERFACE_NAME_3: str = 'Tenancy'
 
 class TestReverseJava(TestBase):
     """
-    You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
-
-    See existing tests for more information.
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App    = None
 
     @classmethod

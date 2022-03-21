@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -17,7 +19,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 class TestPyutUtils(TestBase):
 
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     BASE_TEST_PATH:     str = '/users/home/hasii'
     FAKE_TEST_FILENAME: str = 'hasiiTheGreat.doc'
@@ -146,26 +148,26 @@ class TestPyutUtils(TestBase):
     def testSnapCoordinatesToGrid(self):
 
         gridInterval: int = TestPyutUtils.TEST_GRID_INTERVAL
-        x: float = 335
-        y: float = 142
+        x: int = 335
+        y: int = 142
 
         snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
 
-        expectedX: float = 325
-        expectedY: float = 125
+        expectedX: int = 325
+        expectedY: int = 125
 
         self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
         self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
 
     def testSnapCoordinatesToGridNoSnapping(self):
         gridInterval: int = TestPyutUtils.TEST_GRID_INTERVAL
-        x: float = 300
-        y: float = 200
+        x: int = 300
+        y: int = 200
 
         snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
 
-        expectedX: float = 300
-        expectedY: float = 200
+        expectedX: int = 300
+        expectedY: int = 200
 
         self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
         self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')

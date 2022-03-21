@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import List
 from typing import Set
 
@@ -37,7 +38,7 @@ from tests.TestBase import TestBase
 class TestIDFactory(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App    = None
 
     @classmethod

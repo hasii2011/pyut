@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -8,6 +10,7 @@ from unittest import main as unitTestMain
 from unittest.mock import Mock
 
 from pkg_resources import resource_filename
+
 from wx import App
 
 from org.pyut.miniogl.Diagram import Diagram
@@ -27,11 +30,10 @@ from org.pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLink
 from tests.org.pyut.history.commands.BaseTestDeleteOgl import BaseTestDeleteOgl
 
 
-class \
-        TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
+class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App    = None
 
     @classmethod
@@ -80,7 +82,7 @@ class \
         oglNote._diagram = mockDiagram     # Normally should not do this; only in unit tess
         oglNote.SetPosition(1024, 1024)
         oglNote.SetSize(width=100, height=100)
-        oglNote._id = 3     # too match deserialized file
+        oglNote._id = 3     # must match deserialized file
 
         oglLinkedObjectCommand: DeleteOglLinkedObjectCommand = DeleteOglLinkedObjectCommand(shape=oglNote)
 

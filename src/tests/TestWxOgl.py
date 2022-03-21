@@ -1,6 +1,4 @@
 
-from sys import argv
-
 import wx
 from wx import App
 from wx import BITMAP_TYPE_PNG
@@ -22,6 +20,7 @@ from wx import NullBitmap
 from wx import Rect
 from wx import CommandEvent
 from wx import ScrolledWindow
+# noinspection PyProtectedMember
 from wx._core import BitmapType
 
 from wx.lib.ogl import Diagram
@@ -56,8 +55,7 @@ class TestWindow(ShapeCanvas):
         self.SetDiagram(self.diagram)
         self.diagram.SetCanvas(self)
 
-        self.shapes   = []
-        self.save_gdi = []
+        self.shapes   = []  # type: ignore
 
         self.SetScrollbars(20, 20, maxWidth//20, maxHeight//20)
         self.SetBackgroundColour("LIGHT BLUE")
@@ -157,10 +155,6 @@ class TestWxOgl(App, InspectionMixin):
 
 
 # noinspection PyUnusedLocal
-def main(sysArgv):
-    testApp: App = TestWxOgl()
-    testApp.MainLoop()
 
-
-if __name__ == "__main__":
-    main(argv)
+testApp: App = TestWxOgl()
+testApp.MainLoop()

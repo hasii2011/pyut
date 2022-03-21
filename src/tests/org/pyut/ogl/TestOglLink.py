@@ -27,7 +27,7 @@ class TestOglLink(TestBase):
     MOCK_SOURCE_POSITION:       OglPosition = OglPosition(x=100, y=100)
     MOCK_DESTINATION_POSITION:  OglPosition = OglPosition(x=500, y=500)
 
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

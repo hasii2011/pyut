@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -16,7 +18,7 @@ from tests.TestBase import TestBase
 class TestPyutColorEnum(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App    = None
 
     @classmethod

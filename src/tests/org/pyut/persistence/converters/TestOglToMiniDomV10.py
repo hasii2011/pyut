@@ -1,4 +1,7 @@
 
+from typing import cast
+
+
 from logging import Logger
 from logging import getLogger
 
@@ -35,7 +38,7 @@ class TestOglToMiniDomV10(TestBase):
     """
     OGL_CLASSES_TO_CREATE: int = 1
 
-    clsLogger:  Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsCounter: int    = 0
     clsApp:     App    = None
 

@@ -1,6 +1,8 @@
 
+from typing import cast
 
 import unittest
+
 from os import getcwd
 from os import remove as osRemove
 
@@ -36,7 +38,7 @@ class TestUmlFrame(unittest.TestCase):
     """
 
     clsApp:   App      = None
-    clsFrame: UmlFrame = None
+    clsFrame: UmlFrame = cast(UmlFrame, None)
 
     @classmethod
     def setUpClass(cls):

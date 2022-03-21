@@ -3,6 +3,7 @@ from typing import Dict
 
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from pkg_resources import resource_filename
 
@@ -19,7 +20,7 @@ from org.pyut.plugins.xsd.XSDParser import XSDParser
 class TestXSDParser(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

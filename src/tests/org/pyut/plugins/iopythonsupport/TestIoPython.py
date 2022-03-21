@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import List
 
 from logging import Logger
@@ -7,21 +8,20 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from tests.TestBase import TestBase
-
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.model.PyutType import PyutType
-
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
 
+from tests.TestBase import TestBase
+
 
 class TestIoPython(TestBase):
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

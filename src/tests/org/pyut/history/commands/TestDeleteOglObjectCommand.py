@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import Tuple
 
 from logging import Logger
@@ -23,7 +24,7 @@ from tests.org.pyut.history.commands.BaseTestDeleteOgl import BaseTestDeleteOgl
 class TestDeleteOglObjectCommand(BaseTestDeleteOgl):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

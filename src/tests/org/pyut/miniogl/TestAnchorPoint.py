@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -15,7 +17,7 @@ from org.pyut.miniogl.AnchorPoint import AnchorPoint
 class TestAnchorPoint(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App    = None
 
     @classmethod
@@ -39,7 +41,7 @@ class TestAnchorPoint(TestBase):
     def tearDown(self):
         pass
 
-    EXPECTED_X: int = 268.0
+    EXPECTED_X: int = 268
     EXPECTED_Y: int = 1044
 
     def testStayInside(self):

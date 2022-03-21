@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import List
 
 from logging import Logger
@@ -10,15 +11,16 @@ from unittest import main as unitTestMain
 from copy import deepcopy
 
 from org.pyut.model.PyutType import PyutType
-from tests.TestBase import TestBase
 
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
+from tests.TestBase import TestBase
+
 
 class TestPyutField(TestBase):
 
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     fieldNames:        List[str]      = ['field1', 'field2', 'field3']
     fieldTypes:        List[PyutType] = [PyutType(value='int'),

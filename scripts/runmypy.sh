@@ -13,8 +13,8 @@ changeToProjectRoot
 cd src > /dev/null 2>&1
 echo "current: `pwd`"
 
-# mypy --config-file .mypi.ini --pretty --no-color-output  --show-error-codes Pyut.py
-mypy --config-file .mypi.ini --pretty  --show-error-codes org
+mypy --config-file .mypi.ini --pretty --no-color-output  --show-error-codes org tests
+# mypy --config-file .mypi.ini --pretty                    --show-error-codes org tests
 status=$?
 
 echo "Exit with status: ${status}"

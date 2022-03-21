@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import List
 
 from logging import Logger
@@ -9,15 +10,15 @@ from unittest import TestSuite
 
 from copy import deepcopy
 
-from tests.TestBase import TestBase
-
 from org.pyut.model.PyutType import PyutType
+
+from tests.TestBase import TestBase
 
 
 class TestPyutType(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

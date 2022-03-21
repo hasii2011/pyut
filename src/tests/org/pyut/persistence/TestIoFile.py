@@ -1,6 +1,9 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
+
 from os import chdir
 from os import getcwd
 
@@ -23,7 +26,7 @@ class TestIoFile(TestBase):
     test that the data model has been built correctly
     But, I did learn a bit about Python mocking !!
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import List
 
 from logging import Logger
@@ -19,7 +20,7 @@ from org.pyut.general.LineSplitter import LineSplitter
 class TestLineSplitter(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App    = None
 
     @classmethod

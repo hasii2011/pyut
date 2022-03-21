@@ -15,9 +15,8 @@ from org.pyut.persistence.PyutXmlV10 import PyutXml
 
 class TestPyutXmlV10(TestBase):
     """
-
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

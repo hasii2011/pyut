@@ -1,5 +1,5 @@
 
-
+from typing import cast
 from typing import Tuple
 
 from logging import Logger
@@ -30,7 +30,7 @@ from tests.TestBase import TestBase
 class TestOglInterface2(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App    = None
 
     @classmethod
@@ -83,7 +83,7 @@ class TestOglInterface2(TestBase):
         type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.EAST)
         mockDestinationAnchor.GetPosition.return_value = (437, 144)
 
-        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(destinationAnchor=mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
+        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
 
         self.assertIsNotNone(namePosition, 'Minimally return an object')
         self.assertEqual(485, namePosition.x, 'East name position X is bad')
@@ -100,7 +100,7 @@ class TestOglInterface2(TestBase):
         type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.WEST)
         mockDestinationAnchor.GetPosition.return_value = (735, 275)
 
-        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(destinationAnchor=mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
+        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
 
         self.assertIsNotNone(namePosition, 'Minimally return an object')
         self.assertEqual(622, namePosition.x, 'West name position X is bad')
@@ -117,7 +117,7 @@ class TestOglInterface2(TestBase):
         type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.NORTH)
         mockDestinationAnchor.GetPosition.return_value = (248, 315)
 
-        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(destinationAnchor=mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
+        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
 
         self.assertIsNotNone(namePosition, 'Minimally return an object')
         self.assertEqual(194, namePosition.x, 'West name position X is bad')
@@ -134,7 +134,7 @@ class TestOglInterface2(TestBase):
         type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.SOUTH)
         mockDestinationAnchor.GetPosition.return_value = (738, 451)
 
-        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(destinationAnchor=mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
+        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
 
         self.assertIsNotNone(namePosition, 'Minimally return an object')
         self.assertEqual(683, namePosition.x, 'South name position X is bad')
@@ -151,7 +151,7 @@ class TestOglInterface2(TestBase):
         type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.WEST)
         mockDestinationAnchor.GetPosition.return_value = (330, 573)
 
-        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(destinationAnchor=mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
+        namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
 
         self.assertIsNotNone(namePosition, 'Minimally return an object')
         self.assertEqual(193, namePosition.x, 'West name position X is bad')

@@ -1,6 +1,7 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
@@ -16,7 +17,7 @@ from org.pyut.general.GithubAdapter import GithubAdapter
 class TestGithubAdapter(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

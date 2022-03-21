@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import List
 
 from logging import Logger
@@ -26,7 +27,7 @@ class TestPluginManager(TestBase):
     EXPECTED_EXPORT_PLUGIN_COUNT: int = 9
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

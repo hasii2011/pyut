@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -9,16 +11,16 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from tests.TestBase import TestBase
-
 from org.pyut.dialogs.tips.DlgTips import DlgTips
 from org.pyut.dialogs.tips.TipHandler import TipHandler
+
+from tests.TestBase import TestBase
 
 
 class TestTipHandler(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

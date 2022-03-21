@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import List
 
 from logging import Logger
@@ -31,7 +32,7 @@ class TestPyutPythonVisitor(TestBase):
     ]
     EXPECTED_DATA_CLASS_PROPERTY_COUNT: int = len(EXPECTED_DATA_CLASS_PROPERTIES)
 
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

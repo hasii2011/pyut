@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -21,7 +23,7 @@ class TestPyutPreferences(TestBase):
     """
     BACKUP_SUFFIX: str = '.backup'
 
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):
@@ -46,7 +48,7 @@ class TestPyutPreferences(TestBase):
 
     def testLastOpenedFiles(self):
         """
-        Test the last opened files management.
+        Test the management of last opened file.
         """
         files = [
             "uno", "dos", "tres", "quattro", "cinco", "seis"

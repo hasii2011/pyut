@@ -1,10 +1,11 @@
 
+from typing import List
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
 from os import getcwd as osGetCwd
-
-from typing import List
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
@@ -30,7 +31,8 @@ NUMBER_OF_COMMANDS_CREATED = 2
 class TestCommandGroup(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
+    cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

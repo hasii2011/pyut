@@ -1,21 +1,22 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from tests.TestBase import TestBase
-
 from org.pyut.model.PyutObject import PyutObject
 
+from tests.TestBase import TestBase
 
-class \
-        TestPyutObject(TestBase):
+
+class TestPyutObject(TestBase):
     """
 
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

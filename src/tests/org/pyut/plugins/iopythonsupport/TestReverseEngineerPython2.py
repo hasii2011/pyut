@@ -1,3 +1,5 @@
+
+from typing import cast
 from typing import Dict
 from typing import List
 
@@ -33,7 +35,7 @@ class TestReverseEngineerPython2(TestBase):
     """
     PROPERTY_NAMES: List[str] = ['fontSize', 'verticalGap']
 
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

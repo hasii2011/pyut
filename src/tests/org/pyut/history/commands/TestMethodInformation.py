@@ -1,8 +1,9 @@
 
-from logging import Logger
-from logging import getLogger
 from typing import List
 from typing import cast
+
+from logging import Logger
+from logging import getLogger
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
@@ -25,9 +26,7 @@ from tests.org.pyut.history.commands.TestCommandCommon import TestCommandCommon
 class TestMethodInformation(TestBase):
     """
     """
-    clsLogger:        Logger = None
-    # methodParamNumber: int = 1
-    # methodTypeNumber: int = 1
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -10,21 +11,20 @@ from unittest import main as unitTestMain
 from unittest import TestSuite
 from unittest.mock import MagicMock
 
-from tests.TestBase import TestBase
-
-
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 
 from org.pyut.plugins.dtd.DTDParser import DTDParser
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 
+from tests.TestBase import TestBase
+
 
 class TestDTDParser(TestBase):
 
     EXPECTED_CLASS_COUNT: int = 17
 
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

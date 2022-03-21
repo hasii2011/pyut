@@ -9,6 +9,7 @@ from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_CLOSE
 from wx import Frame
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
@@ -28,7 +29,7 @@ from tests.TestBase import TestBase
 
 class TestToolboxFrame(App):
     """
-    Test how the main application will popup the Pyut toolboxes as mini-frames
+    Test how the main application will pop up the Pyut toolboxes as mini-frames
     """
 
     FRAME_ID:      int = 0xDeadBeef
@@ -92,6 +93,7 @@ class TestToolboxFrame(App):
         """
         Emulate call from mediator
         """
+        # noinspection PyProtectedMember
         toolbox: Toolbox2 = Toolbox2(parentWindow=self._diagramFrame, toolboxOwner=self._mediator._toolboxOwner)    # Non-Pythonic usage of protected variable
         toolbox.setCategory(category)
 

@@ -47,7 +47,7 @@ SOUTH_HEIGHT: int = 200
 class TestMiniDomToOglV10(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App = None
 
     @classmethod

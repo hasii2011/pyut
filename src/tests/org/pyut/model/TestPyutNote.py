@@ -17,7 +17,7 @@ from org.pyut.model.PyutNote import PyutNote
 class TestPyutNote(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

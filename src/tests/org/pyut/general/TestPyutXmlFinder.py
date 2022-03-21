@@ -1,10 +1,13 @@
-from os import chdir
-from os import getcwd
-
-from typing import Any
 
 from logging import Logger
 from logging import getLogger
+
+from typing import Any
+from typing import cast
+
+from os import chdir
+from os import getcwd
+
 from unittest import TestSuite
 
 from unittest import main as unitTestMain
@@ -26,8 +29,13 @@ class TestPyutXmlFinder(TestBase):
     LATEST_VERSION: str = '10'     # This needs to change every time the XML is updated
 
     XML_TO_FIX:         str = '<?xml version="1.0" ?><PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/></PyutProject>'
-    EXPECTED_FIXED_XML: str = '<?xml version="1.0" encoding="iso-8859-1"?><PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/></PyutProject>'
-    clsLogger: Logger = None
+    EXPECTED_FIXED_XML: str = (
+        '<?xml version="1.0" encoding="iso-8859-1"?>'
+        '<PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/>'
+        '</PyutProject>'
+                               )
+
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

@@ -33,7 +33,7 @@ class TestHistory(TestBase):
     COMMAND_GROUP1_STR: str = 'cg1'
     COMMAND_GROUP0_STR: str = 'cg0'
 
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

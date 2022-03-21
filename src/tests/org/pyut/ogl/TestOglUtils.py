@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -8,15 +10,15 @@ from unittest import main as unitTestMain
 from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from tests.TestBase import TestBase
-
 from org.pyut.ogl.OglUtils import OglUtils
+
+from tests.TestBase import TestBase
 
 
 class TestOglUtils(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

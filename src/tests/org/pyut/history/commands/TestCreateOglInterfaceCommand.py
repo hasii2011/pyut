@@ -37,7 +37,7 @@ from tests.org.pyut.history.commands.TestCommandCommon import TestCommandCommon
 class TestCreateOglInterfaceCommand(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
     clsApp:    App    = None
 
     @classmethod

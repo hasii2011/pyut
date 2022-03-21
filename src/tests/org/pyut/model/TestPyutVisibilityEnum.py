@@ -1,8 +1,10 @@
 
+from typing import cast
 from typing import List
 
 from logging import Logger
 from logging import getLogger
+
 from unittest import TestSuite
 
 from unittest import main as unitTestMain
@@ -15,7 +17,7 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 class TestPyutVisibilityEnum(TestBase):
     """
     """
-    clsLogger: Logger = None
+    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

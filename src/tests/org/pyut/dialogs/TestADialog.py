@@ -158,7 +158,7 @@ class TestADialog(App):
 
         pyutText: PyutText = PyutText()
         with DlgEditText(parent=self._frameTop, dialogIdentifier=ID_ANY, pyutText=pyutText) as dlg:
-            dlg: DlgEditText = cast(DlgEditText, dlg)
+
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutText.content=}'
             else:
@@ -168,7 +168,6 @@ class TestADialog(App):
 
         pyutNote: PyutNote = PyutNote(noteText=self._preferences.noteText)
         with DlgEditNote(parent=self._frameTop, dialogIdentifier=ID_ANY, pyutNote=pyutNote) as dlg:
-            dlg: DlgEditNote = cast(DlgEditNote, dlg)
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutNote.content=}'
             else:
@@ -185,7 +184,6 @@ class TestADialog(App):
     def _testDlgPyutPreferences(self) -> str:
 
         with DlgPyutPreferences(parent=self._frameTop, wxId=ID_ANY) as dlg:
-            dlg: DlgPyutPreferences = cast(DlgPyutPreferences, dlg)
             if dlg.ShowModal() == OK:
                 return f'Preferences returned Ok'
             else:
