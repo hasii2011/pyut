@@ -14,7 +14,7 @@ from tests.TestBase import TestBase
 from org.pyut.general.GitHubAdapter import GitHubAdapter
 
 
-class TestGithubAdapter(TestBase):
+class TestGitHubAdapter(TestBase):
     """
     """
     clsLogger: Logger = cast(Logger, None)
@@ -22,7 +22,7 @@ class TestGithubAdapter(TestBase):
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
-        TestGithubAdapter.clsLogger = getLogger(__name__)
+        TestGitHubAdapter.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
         import warnings
@@ -31,7 +31,7 @@ class TestGithubAdapter(TestBase):
         warnings.filterwarnings(action="ignore", message="unclosed", category=ResourceWarning)
 
     def setUp(self):
-        self.logger:        Logger        = TestGithubAdapter.clsLogger
+        self.logger:        Logger        = TestGitHubAdapter.clsLogger
         self.githubAdapter: GitHubAdapter = GitHubAdapter()
 
     def tearDown(self):
@@ -52,7 +52,7 @@ def suite() -> TestSuite:
 
     testSuite: TestSuite = TestSuite()
     # noinspection PyUnresolvedReferences
-    testSuite.addTest(unittest.makeSuite(TestGithubAdapter))
+    testSuite.addTest(unittest.makeSuite(TestGitHubAdapter))
 
     return testSuite
 
