@@ -11,7 +11,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.general.GithubAdapter import GithubAdapter
+from org.pyut.general.GitHubAdapter import GitHubAdapter
 
 
 class TestGithubAdapter(TestBase):
@@ -32,7 +32,7 @@ class TestGithubAdapter(TestBase):
 
     def setUp(self):
         self.logger:        Logger        = TestGithubAdapter.clsLogger
-        self.githubAdapter: GithubAdapter = GithubAdapter()
+        self.githubAdapter: GitHubAdapter = GitHubAdapter()
 
     def tearDown(self):
         self.githubAdapter.cleanUp()

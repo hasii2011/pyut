@@ -63,11 +63,11 @@ class HelpMenuHandler(BaseMenuHandler):
             event:
         """
         from org.pyut.general.PyutVersion import PyutVersion
-        from org.pyut.general.GithubAdapter import GithubAdapter
+        from org.pyut.general.GitHubAdapter import GitHubAdapter
         from org.pyut.general.SemanticVersion import SemanticVersion
 
         wxBeginBusyCursor()
-        githubAdapter: GithubAdapter   = GithubAdapter()
+        githubAdapter: GitHubAdapter   = GitHubAdapter()
         latestVersion: SemanticVersion = githubAdapter.getLatestVersionNumber()
 
         myVersion: SemanticVersion = SemanticVersion(PyutVersion.getPyUtVersion())

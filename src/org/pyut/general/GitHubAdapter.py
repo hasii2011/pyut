@@ -12,7 +12,7 @@ from github.Repository import Repository
 from org.pyut.general.SemanticVersion import SemanticVersion
 
 
-class GithubAdapter:
+class GitHubAdapter:
 
     ALL_ISSUES_INDICATOR:     str = 'All'
     OPEN_MILESTONE_INDICATOR: str = 'Open'
@@ -31,11 +31,11 @@ class GithubAdapter:
     def __init__(self):
 
         self.logger:  Logger = getLogger(__name__)
-        self._github: Github = Github(''.join(GithubAdapter.MY_LIST))
+        self._github: Github = Github(''.join(GitHubAdapter.MY_LIST))
 
     def getLatestVersionNumber(self) -> SemanticVersion:
 
-        repo: Repository = self._github.get_repo(GithubAdapter.PYUT_REPOSITORY_SLUG)
+        repo: Repository = self._github.get_repo(GitHubAdapter.PYUT_REPOSITORY_SLUG)
         self.logger.info(f'{repo.full_name=}')
 
         releases: PaginatedList = repo.get_releases()
