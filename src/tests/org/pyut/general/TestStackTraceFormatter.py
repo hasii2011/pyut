@@ -109,7 +109,6 @@ class TestStackTraceFormatter(TestBase):
         codeLines: CodeLines = stackTraceFormatter.codeLines
         for codeLine in codeLines:
             self.logger.debug(f'{codeLine}')
-            print(f'{codeLine}')
 
     def testCompressedCodeLines(self):
         import traceback

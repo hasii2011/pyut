@@ -108,6 +108,16 @@ class OglInterface2(LollipopLine, Common):
     def UpdateFromModel(self):
         super().UpdateFromModel()
 
+    def Remove(self, point):
+        """
+        Need an empty implementation of this to allow adding of additional interfaces
+        on an OglClass;  This confirms I really do not understand the MiniOgl structure
+
+        Args:
+            point:
+        """
+        self.logger.debug(f'{point=}')
+
     def __repr__(self):
 
         strMe: str = f'OglInterface2 - "{self._pyutInterface.name}"'
