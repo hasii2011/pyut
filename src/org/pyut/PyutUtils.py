@@ -65,21 +65,18 @@ class PyutUtils:
     @staticmethod
     def strFloatToInt(floatValue: str) -> int:
         """
+        Will fail during development with assertions turned on
 
         Args:
             floatValue:
 
         Returns:  An integer value
-
         """
-        if floatValue is not None and floatValue != '':
-            try:
-                integerValue: int = int(float(floatValue))
-            except ValueError:
-                print(f'Warning: PyutUtils.strFloatToInt - Bad float value: `{floatValue}`')
-                integerValue = 0
-        else:
-            integerValue = 0
+        assert floatValue is not None, 'Cannot be None'
+        assert floatValue != '', 'Cannot be empty string'
+        assert floatValue.replace('.', '', 1).isdigit(), 'String must be numeric'
+
+        integerValue: int = int(float(floatValue))
 
         return integerValue
 

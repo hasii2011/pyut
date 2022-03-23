@@ -185,9 +185,22 @@ class TestPyutUtils(TestBase):
         self.assertEqual(23, retValue, 'Conversion failed')
 
     def testStrFloatToIntThrowsException(self):
+        """
+        Assumes assertions turned on
+        """
 
+        self.assertRaises(AssertionError, lambda: self._failsOnAlphaInput())
+
+    def testDoubleDecimalPoints(self):
+        self.assertRaises(AssertionError, lambda: self._failsOnDoubleDecimalPoints())
+
+    # noinspection PyUnusedLocal
+    def _failsOnAlphaInput(self):
         retValue: int = PyutUtils.strFloatToInt('aa')
-        self.assertEqual(0, retValue, 'Bad Value should return 0')
+
+    # noinspection PyUnusedLocal
+    def _failsOnDoubleDecimalPoints(self):
+        retValue: int = PyutUtils.strFloatToInt('23.0.0')
 
 
 def suite() -> TestSuite:
