@@ -104,7 +104,6 @@ class TestPyutVisibilityEnum(TestBase):
         self._testEnum(expectedValue, 'PUBLIC', 'All upper case public failed')
         self._testEnum(expectedValue, 'public', 'All lower case public failed')
         self._testEnum(expectedValue, 'PuBlIc', 'Mixed case public failed')
-        self._testEnum(expectedValue, 'B ogus', 'Unknown public value failed')
 
     def testToEnumPrivate(self):
 
@@ -162,11 +161,19 @@ class TestPyutVisibilityEnum(TestBase):
         val: PyutVisibilityEnum = PyutVisibilityEnum.toEnum('#')
         self.assertEqual(PyutVisibilityEnum.PROTECTED, val, 'Protected to enum value fail')
 
+    def testEnumFail(self):
+
+        self.assertRaises(AssertionError, lambda: self._enumFail())
+
     def _testEnum(self, expectedValue: PyutVisibilityEnum, stringToTest: str, assertMessage: str):
 
         actualValue:   PyutVisibilityEnum = PyutVisibilityEnum.toEnum(stringToTest)
 
         self.assertEqual(expectedValue, actualValue, assertMessage)
+
+    # noinspection PyUnusedLocal
+    def _enumFail(self):
+        actualValue:   PyutVisibilityEnum = PyutVisibilityEnum.toEnum('B ogus')
 
 
 def suite() -> TestSuite:

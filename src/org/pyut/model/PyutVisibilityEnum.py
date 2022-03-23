@@ -48,5 +48,4 @@ class PyutVisibilityEnum(Enum):
         elif canonicalStr == '#':
             return PyutVisibilityEnum.PROTECTED
         else:
-            print(f'Warning: PyutVisibilityEnum.toEnum - Do not recognize visibility type: `{canonicalStr}`')
-            return PyutVisibilityEnum.PUBLIC
+            assert False, f'Warning: PyutVisibilityEnum.toEnum - Do not recognize visibility type: `{canonicalStr}`'
