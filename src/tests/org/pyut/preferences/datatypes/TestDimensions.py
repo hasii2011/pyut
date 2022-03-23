@@ -51,12 +51,13 @@ class TestDimensions(TestBase):
 
     def testDeSerializeFail(self):
 
+        self.assertRaises(AssertionError, lambda: self._deSerializeFail())
+
+    # noinspection PyUnusedLocal
+    def _deSerializeFail(self):
         serializedValue: str = '150,bogus'
 
         dimensions: Dimensions = Dimensions.deSerialize(serializedValue)
-
-        self.assertEqual(0, dimensions.width,  'Width incorrectly deserialized')
-        self.assertEqual(0, dimensions.height, 'Height incorrectly deserialized')
 
 
 def suite() -> TestSuite:

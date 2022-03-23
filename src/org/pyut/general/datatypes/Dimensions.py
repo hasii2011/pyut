@@ -16,14 +16,10 @@ class Dimensions:
         widthHeight: List[str] = value.split(sep=',')
 
         assert len(widthHeight) == 2, 'Incorrectly formatted dimensions'
+        assert value.replace(',', '', 1).isdigit(), 'String must be numeric'
 
-        try:
-            dimensions.width  = int(widthHeight[0])
-            dimensions.height = int(widthHeight[1])
-        except ValueError as ve:
-            print(f'Warning: Dimensions.deSerialize - {ve}')
-            dimensions.width  = 0
-            dimensions.height = 0
+        dimensions.width  = int(widthHeight[0])
+        dimensions.height = int(widthHeight[1])
 
         return dimensions
 
