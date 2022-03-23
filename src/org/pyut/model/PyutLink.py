@@ -157,13 +157,11 @@ class PyutLink(PyutObject):
         Args:
               linkType : Type of the link
         """
-        # Python 3 update
-        # if type(theType) == StringType or type(theType) == UnicodeType:
         if type(linkType) is int:
             try:
                 self._type = LinkType(linkType)
             except (ValueError, Exception) as e:
-                self.logger.warning(f'setType: {e}')
+                self.logger.info(f'setType: {e}')
                 self._type = LinkType.INHERITANCE
         else:
             self._type = linkType
