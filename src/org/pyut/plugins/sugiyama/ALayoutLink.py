@@ -1,5 +1,5 @@
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 
 class ALayoutLink:
@@ -124,7 +124,7 @@ class ALayoutLink:
         """
         self._oglLink.RemoveAllControlPoints()
 
-    def getType(self) -> LinkType:
+    def getType(self) -> PyutLinkType:
         """
         Return the link type
 

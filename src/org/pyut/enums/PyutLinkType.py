@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class LinkType(Enum):
+class PyutLinkType(Enum):
 
     """
      Types of UML Links
@@ -21,7 +21,7 @@ class LinkType(Enum):
         return self.name
 
     @staticmethod
-    def toEnum(strValue: str) -> 'LinkType':
+    def toEnum(strValue: str) -> 'PyutLinkType':
         """
         Converts the input string to the link type enum
         Args:
@@ -31,19 +31,19 @@ class LinkType(Enum):
         """
         canonicalStr: str = strValue.lower().strip(' ')
         if canonicalStr == 'association':
-            return LinkType.ASSOCIATION
+            return PyutLinkType.ASSOCIATION
         elif canonicalStr == 'aggregation':
-            return LinkType.AGGREGATION
+            return PyutLinkType.AGGREGATION
         elif canonicalStr == 'composition':
-            return LinkType.COMPOSITION
+            return PyutLinkType.COMPOSITION
         elif canonicalStr == 'inheritance':
-            return LinkType.INHERITANCE
+            return PyutLinkType.INHERITANCE
         elif canonicalStr == 'interface':
-            return LinkType.INTERFACE
+            return PyutLinkType.INTERFACE
         elif canonicalStr == 'notelink':
-            return LinkType.NOTELINK
+            return PyutLinkType.NOTELINK
         elif canonicalStr == 'sd_message':
-            return LinkType.SD_MESSAGE
+            return PyutLinkType.SD_MESSAGE
         else:
             print(f'Warning: LinkType.toEnum - Do not recognize link type: `{canonicalStr}`')
-            return LinkType.ASSOCIATION
+            return PyutLinkType.ASSOCIATION

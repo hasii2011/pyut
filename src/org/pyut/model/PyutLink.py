@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from org.pyut.model.PyutClass import PyutClass
     from org.pyut.model.PyutNote import PyutNote
     
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 
 class PyutLink(PyutObject):
@@ -32,7 +32,7 @@ class PyutLink(PyutObject):
     """
 
     # noinspection PyUnresolvedReferences
-    def __init__(self, name="", linkType: LinkType = LinkType.INHERITANCE,
+    def __init__(self, name="", linkType: PyutLinkType = PyutLinkType.INHERITANCE,
                  cardSrc:      str = "", cardDest: str = "",
                  bidir:        bool = False,
                  source:       'PyutClass' = None,
@@ -50,7 +50,7 @@ class PyutLink(PyutObject):
         """
         super().__init__(name)
         self.logger: Logger       = getLogger(__name__)
-        self._type:  LinkType = linkType
+        self._type:  PyutLinkType = linkType
 
         self._sourceCardinality:      str  = cardSrc
         self._destinationCardinality: str  = cardDest
@@ -150,7 +150,7 @@ class PyutLink(PyutObject):
         self._bidirectional = bidirectional
 
     @deprecated(reason='Use linkType')
-    def setType(self, linkType: LinkType):
+    def setType(self, linkType: PyutLinkType):
         """
         Update the link type
 
@@ -159,15 +159,15 @@ class PyutLink(PyutObject):
         """
         if type(linkType) is int:
             try:
-                self._type = LinkType(linkType)
+                self._type = PyutLinkType(linkType)
             except (ValueError, Exception) as e:
                 self.logger.info(f'setType: {e}')
-                self._type = LinkType.INHERITANCE
+                self._type = PyutLinkType.INHERITANCE
         else:
             self._type = linkType
 
     @deprecated(reason='Use linkType')
-    def getType(self) -> LinkType:
+    def getType(self) -> PyutLinkType:
         """
         Get the link type.
 
@@ -177,11 +177,11 @@ class PyutLink(PyutObject):
         return self._type
 
     @property
-    def linkType(self) -> LinkType:
+    def linkType(self) -> PyutLinkType:
         return self._type
 
     @linkType.setter
-    def linkType(self, theType: LinkType):
+    def linkType(self, theType: PyutLinkType):
         self._type = theType
 
     def __str__(self):

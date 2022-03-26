@@ -9,7 +9,7 @@ from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglNoteLink import OglNoteLink
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.general.Singleton import Singleton
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
@@ -25,7 +25,7 @@ def getOglLinkFactory():
     return OglLinkFactory()
 
 
-def getLinkType(link: OglAssociation) -> LinkType:
+def getLinkType(link: OglAssociation) -> PyutLinkType:
     """
 
     Args:
@@ -36,17 +36,17 @@ def getLinkType(link: OglAssociation) -> LinkType:
     """
 
     if isinstance(link, OglAggregation):
-        return LinkType.AGGREGATION
+        return PyutLinkType.AGGREGATION
     elif isinstance(link, OglComposition):
-        return LinkType.COMPOSITION
+        return PyutLinkType.COMPOSITION
     elif isinstance(link, OglInheritance):
-        return LinkType.INHERITANCE
+        return PyutLinkType.INHERITANCE
     elif isinstance(link, OglAssociation):
-        return LinkType.ASSOCIATION
+        return PyutLinkType.ASSOCIATION
     elif isinstance(link, OglInterface):
-        return LinkType.INTERFACE
+        return PyutLinkType.INTERFACE
     elif isinstance(link, OglNoteLink):
-        return LinkType.NOTELINK
+        return PyutLinkType.NOTELINK
 
 
 class OglLinkFactory(Singleton):
@@ -59,7 +59,7 @@ class OglLinkFactory(Singleton):
         self.logger: Logger = getLogger(__name__)
 
     # noinspection PyUnusedLocal
-    def getOglLink(self, srcShape, pyutLink, destShape, linkType: LinkType, srcPos=None, dstPos=None):
+    def getOglLink(self, srcShape, pyutLink, destShape, linkType: PyutLinkType, srcPos=None, dstPos=None):
         """
         Used to get a OglLink of the given linkType.
 
@@ -73,25 +73,25 @@ class OglLinkFactory(Singleton):
 
         Returns:  The requested link
         """
-        if linkType == LinkType.AGGREGATION:
+        if linkType == PyutLinkType.AGGREGATION:
             return OglAggregation(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.COMPOSITION:
+        elif linkType == PyutLinkType.COMPOSITION:
             return OglComposition(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.INHERITANCE:
+        elif linkType == PyutLinkType.INHERITANCE:
             return OglInheritance(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.ASSOCIATION:
+        elif linkType == PyutLinkType.ASSOCIATION:
             return OglAssociation(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.INTERFACE:
+        elif linkType == PyutLinkType.INTERFACE:
             return OglInterface(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.NOTELINK:
+        elif linkType == PyutLinkType.NOTELINK:
             return OglNoteLink(srcShape, pyutLink, destShape)
 
-        elif linkType == LinkType.SD_MESSAGE:
+        elif linkType == PyutLinkType.SD_MESSAGE:
             return OglSDMessage(srcShape=srcShape, pyutSDMessage=pyutLink, dstShape=destShape)
         else:
             self.logger.error(f"Unknown OglLinkType: {linkType}")

@@ -13,7 +13,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutLink import PyutLink
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInterface import OglInterface
@@ -64,7 +64,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         self.getHistory().addCommandGroup(cmdGroup)
         cmd.execute()
 
-    def createLink(self, src: OglClass, dst: OglClass, linkType: LinkType = LinkType.AGGREGATION):
+    def createLink(self, src: OglClass, dst: OglClass, linkType: PyutLinkType = PyutLinkType.AGGREGATION):
         """
         Used to create links;  It is still the caller's responsibility to add the created shape to the
         appropriate diagram
@@ -119,7 +119,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         sourceClass:      PyutClass = cast(PyutClass, src.pyutObject)
         destinationClass: PyutClass = cast(PyutClass, dst.pyutObject)
 
-        pyutLink:     PyutLink     = PyutLink(linkType=LinkType.INTERFACE, source=sourceClass, destination=destinationClass)
+        pyutLink:     PyutLink     = PyutLink(linkType=PyutLinkType.INTERFACE, source=sourceClass, destination=destinationClass)
         oglInterface: OglInterface = OglInterface(srcShape=src, pyutLink=pyutLink, dstShape=dst)
 
         src.addLink(oglInterface)

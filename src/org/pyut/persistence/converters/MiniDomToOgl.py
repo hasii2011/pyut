@@ -27,7 +27,7 @@ from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
@@ -161,7 +161,7 @@ class MiniDomToOgl:
                 self.logger.error(f'Developer Error -- srcId: {srcId} - dstId: {dstId}  error: {ke}')
                 continue
 
-            linkType: LinkType = assocPyutLink.getType()
+            linkType: PyutLinkType = assocPyutLink.getType()
             pyutLink: PyutLink = PyutLink(name=assocPyutLink.getName(),
                                           linkType=linkType,
                                           cardSrc=assocPyutLink.sourceCardinality,
@@ -518,7 +518,7 @@ class MiniDomToOgl:
 
         pyutLink:        PyutLink = oglLink.getPyutObject()
 
-        if pyutLink.getType() == LinkType.INHERITANCE:
+        if pyutLink.getType() == PyutLinkType.INHERITANCE:
             childPyutClass:  PyutClass = srcShape.getPyutObject()
             parentPyutClass: PyutClass = destShape.getPyutObject()
             childPyutClass.addParent(parentPyutClass)
@@ -548,7 +548,7 @@ class MiniDomToOgl:
 
         strLinkType: str         = link.getAttribute(PyutXmlConstants.ATTR_TYPE)
         strLinkType = strLinkType.replace(PyutXmlConstants.V9_LINK_PREFIX, '')
-        linkType:    LinkType    = LinkType.toEnum(strValue=strLinkType)
+        linkType:    PyutLinkType    = PyutLinkType.toEnum(strValue=strLinkType)
         pyutLink.setType(linkType)
 
         # source and destination will be reconstructed by _getOglLinks

@@ -39,7 +39,7 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
@@ -123,7 +123,7 @@ class OglToPyUmlDefinition:
             oglLink: OglLink = cast(OglLink, umlObject)
 
             pyutLink:    PyutLink = oglLink.pyutObject
-            umlLinkType: LinkType = pyutLink.linkType
+            umlLinkType: PyutLinkType = pyutLink.linkType
             lineType:    LineType = self._toPyUmlLineType(umlLinkType)
 
             linePositions: LinePositions  = self._toPyUmlPositions(oglLink, umlLinkType)
@@ -141,20 +141,20 @@ class OglToPyUmlDefinition:
 
     def _toPyUmlLineType(self, umlLinkType) -> LineType:
 
-        if umlLinkType == LinkType.INHERITANCE:
+        if umlLinkType == PyutLinkType.INHERITANCE:
             lineType: LineType = LineType.Inheritance
-        elif umlLinkType == LinkType.COMPOSITION:
+        elif umlLinkType == PyutLinkType.COMPOSITION:
             lineType = LineType.Composition
-        elif umlLinkType == LinkType.AGGREGATION:
+        elif umlLinkType == PyutLinkType.AGGREGATION:
             lineType = LineType.Aggregation
         else:
             lineType = LineType.Association   # This won't happen yet
 
         return lineType
 
-    def _toPyUmlPositions(self, oglLink, pyutLinkType: LinkType) -> LinePositions:
+    def _toPyUmlPositions(self, oglLink, pyutLinkType: PyutLinkType) -> LinePositions:
 
-        if pyutLinkType == LinkType.INHERITANCE:
+        if pyutLinkType == PyutLinkType.INHERITANCE:
             srcAnchor:  AnchorPoint = oglLink.sourceAnchor
             destAnchor: AnchorPoint = oglLink.destinationAnchor
         else:

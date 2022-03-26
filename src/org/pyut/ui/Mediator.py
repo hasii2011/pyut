@@ -28,7 +28,7 @@ from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
 from org.pyut.model.PyutInterface import PyutInterface
@@ -144,13 +144,13 @@ DEST_ACTIONS = [
 
 # OglLink enumerations according to the current action
 LINK_TYPE = {
-    ACTION_DEST_IMPLEMENT_LINK:     LinkType.INTERFACE,
-    ACTION_DEST_INHERIT_LINK:       LinkType.INHERITANCE,
-    ACTION_DEST_AGGREGATION_LINK:   LinkType.AGGREGATION,
-    ACTION_DEST_COMPOSITION_LINK:   LinkType.COMPOSITION,
-    ACTION_DEST_ASSOCIATION_LINK:   LinkType.ASSOCIATION,
-    ACTION_DEST_NOTE_LINK:          LinkType.NOTELINK,
-    ACTION_DEST_SD_MESSAGE:         LinkType.SD_MESSAGE,
+    ACTION_DEST_IMPLEMENT_LINK:     PyutLinkType.INTERFACE,
+    ACTION_DEST_INHERIT_LINK:       PyutLinkType.INHERITANCE,
+    ACTION_DEST_AGGREGATION_LINK:   PyutLinkType.AGGREGATION,
+    ACTION_DEST_COMPOSITION_LINK:   PyutLinkType.COMPOSITION,
+    ACTION_DEST_ASSOCIATION_LINK:   PyutLinkType.ASSOCIATION,
+    ACTION_DEST_NOTE_LINK:          PyutLinkType.NOTELINK,
+    ACTION_DEST_SD_MESSAGE:         PyutLinkType.SD_MESSAGE,
 }
 
 # messages for the status bar

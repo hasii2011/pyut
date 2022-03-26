@@ -17,7 +17,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutLink import PyutLink
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 
@@ -177,7 +177,7 @@ class DTDParser:
                 destTreeData: ElementTreeData = self._classTree[associatedClassName]
                 child: OglClass = destTreeData.oglClass
 
-                link: PyutLink = self._umlFrame.createLink(parent, child, LinkType.AGGREGATION)
+                link: PyutLink = self._umlFrame.createLink(parent, child, PyutLinkType.AGGREGATION)
                 self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
 
     def _addAttributesToClasses(self):

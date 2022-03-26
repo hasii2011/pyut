@@ -7,7 +7,7 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.ogl.OglLinkFactory import getLinkType
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
@@ -28,7 +28,7 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
 
         self._srcPosition  = None
         self._destPosition = None
-        self._linkType: LinkType = cast(LinkType, None)
+        self._linkType: PyutLinkType = cast(PyutLinkType, None)
         self._linkSrcId    = None
         self._linkDestId   = None
         self._linkId       = None
@@ -61,7 +61,7 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
         self._destPosition = eval(deTokenize("destPosition", serializedInformation))
 
         linkTypeStr: str = deTokenize("linkType", serializedInformation)
-        self._linkType   = LinkType.toEnum(linkTypeStr)
+        self._linkType   = PyutLinkType.toEnum(linkTypeStr)
 
         self._linkSrcId    = eval(deTokenize("linkSrcId", serializedInformation))
         self._linkDestId   = eval(deTokenize("linkDestId", serializedInformation))

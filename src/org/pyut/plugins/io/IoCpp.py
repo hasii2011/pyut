@@ -3,7 +3,7 @@ from typing import cast
 
 import os
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutField import PyutField
 from org.pyut.model.PyutMethod import PyutMethod
@@ -333,7 +333,7 @@ int main(int argc, char** argv)
             file.write(name + ' ')
 
             # *
-            if link.linkType == LinkType.ASSOCIATION or link.linkType == LinkType.AGGREGATION:
+            if link.linkType == PyutLinkType.ASSOCIATION or link.linkType == PyutLinkType.AGGREGATION:
                 file.write("*")
 
             file.write(linkName + ' ')

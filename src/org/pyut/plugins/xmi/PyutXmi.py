@@ -19,7 +19,7 @@ from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 
@@ -581,10 +581,10 @@ class PyutXmi:
                 else:
                     dest = self.dicoLinks[classId]
 
-            linkType: LinkType = LinkType.ASSOCIATION
+            linkType: PyutLinkType = PyutLinkType.ASSOCIATION
             xmiType = association.getElementsByTagName("Foundation.Core.AssociationEnd.aggregation")
             if xmiType[0].getAttribute("xmi.value") == 'shared':
-                linkType = LinkType.AGGREGATION
+                linkType = PyutLinkType.AGGREGATION
 
             createdLink = umlFrame.createNewLink(src, dest)
             createdLink.setName(linkName)

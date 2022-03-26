@@ -12,7 +12,7 @@ from unittest.mock import MagicMock
 from os import remove as osRemove
 
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutLink import PyutLink
@@ -148,7 +148,7 @@ class TestGMLExporter(TestBase):
         oglLink.getDestinationShape.return_value = dest
         #
         # PyutLink object simple enough so create real one
-        pyutLink: PyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=src.getPyutObject(), destination=dest.getPyutObject())
+        pyutLink: PyutLink = PyutLink("", linkType=PyutLinkType.INHERITANCE, source=src.getPyutObject(), destination=dest.getPyutObject())
 
         src.getLinks.return_value  = [oglLink]
         dest.getLinks.return_value = [oglLink]

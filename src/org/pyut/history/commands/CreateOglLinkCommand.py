@@ -18,7 +18,7 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
@@ -31,7 +31,7 @@ class CreateOglLinkCommand(Command):
     """
     NO_NAME_MESSAGE: str = "testMessage()"
 
-    def __init__(self, src=None, dst=None, linkType: LinkType = LinkType.INHERITANCE, srcPos=None, dstPos=None):
+    def __init__(self, src=None, dst=None, linkType: PyutLinkType = PyutLinkType.INHERITANCE, srcPos=None, dstPos=None):
         """
 
         Args:
@@ -98,7 +98,7 @@ class CreateOglLinkCommand(Command):
 
         # get the type of the link (see LinkType enumeration)
         linkValue: str = deTokenize("linkType", serializedInfo)
-        linkType: LinkType = LinkType.toEnum(linkValue)
+        linkType: PyutLinkType = PyutLinkType.toEnum(linkValue)
 
         # get the pyutId of the link
         linkId = eval(deTokenize("linkId", serializedInfo))
@@ -160,7 +160,7 @@ class CreateOglLinkCommand(Command):
     def execute(self):
         self.redo()
 
-    def _createLink(self, src, dst, linkType: LinkType = LinkType.INHERITANCE, srcPos=None, dstPos=None):
+    def _createLink(self, src, dst, linkType: PyutLinkType = PyutLinkType.INHERITANCE, srcPos=None, dstPos=None):
         """
         Add a link between src and dst without adding it to the frame.
 
@@ -173,9 +173,9 @@ class CreateOglLinkCommand(Command):
 
         Returns:    The created link
         """
-        if linkType == LinkType.INHERITANCE:
+        if linkType == PyutLinkType.INHERITANCE:
             return self._createInheritanceLink(src, dst)
-        elif linkType == LinkType.SD_MESSAGE:
+        elif linkType == PyutLinkType.SD_MESSAGE:
             return self._createSDMessage(src=src, dest=dst, srcPos=srcPos, destPos=dstPos)
         pyutLink = PyutLink("", linkType=linkType, source=src.pyutObject, destination=dst.pyutObject)
 
@@ -203,7 +203,7 @@ class CreateOglLinkCommand(Command):
 
         oglLinkFactory = getOglLinkFactory()
         oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest,
-                                                               linkType=LinkType.SD_MESSAGE, srcPos=srcPos, dstPos=destPos)
+                                                               linkType=PyutLinkType.SD_MESSAGE, srcPos=srcPos, dstPos=destPos)
 
         return oglSdMessage
 
@@ -220,8 +220,8 @@ class CreateOglLinkCommand(Command):
         """
         sourceClass:      PyutClass = cast(PyutClass, child.pyutObject)
         destinationClass: PyutClass = cast(PyutClass, parent.pyutObject)
-        pyutLink:         PyutLink = PyutLink("", linkType=LinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
-        oglLink:          OglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, LinkType.INHERITANCE)
+        pyutLink:         PyutLink = PyutLink("", linkType=PyutLinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
+        oglLink:          OglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, PyutLinkType.INHERITANCE)
 
         child.addLink(oglLink)
         parent.addLink(oglLink)

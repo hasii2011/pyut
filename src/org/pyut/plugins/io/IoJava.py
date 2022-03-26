@@ -23,7 +23,7 @@ from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -172,9 +172,9 @@ class IoJava(PyutIoPlugin):
         for link in allLinks:
             linkType = link.getType()
             self.logger.info(f'Found linkType: `{linkType}`')
-            if linkType == LinkType.INTERFACE:
+            if linkType == PyutLinkType.INTERFACE:
                 interfaces.append(link)
-            elif linkType == LinkType.COMPOSITION or linkType == LinkType.AGGREGATION:
+            elif linkType == PyutLinkType.COMPOSITION or linkType == PyutLinkType.AGGREGATION:
                 links.append(link)
 
     def _writeClassComment(self, file: int, className, classInterface):

@@ -23,7 +23,7 @@ from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
@@ -182,7 +182,7 @@ class XSDParser:
                     childTreeData: ElementTreeData = self.classTree[childName]
 
                     childOglClass: OglClass = childTreeData.oglClass
-                    link: PyutLink = self._umlFrame.createLink(parentOglClass, childOglClass, LinkType.AGGREGATION)
+                    link: PyutLink = self._umlFrame.createLink(parentOglClass, childOglClass, PyutLinkType.AGGREGATION)
                     self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
                 except KeyError:
                     self.logger.info(f'No problem {childName} is not in this hierarchy')
@@ -200,7 +200,7 @@ class XSDParser:
                 childOglClass:  OglClass = childTreeData.oglClass
                 parentOglClass: OglClass = parentTreeData.oglClass
 
-                link: PyutLink = self._umlFrame.createLink(parentOglClass, childOglClass, LinkType.INHERITANCE)
+                link: PyutLink = self._umlFrame.createLink(parentOglClass, childOglClass, PyutLinkType.INHERITANCE)
                 self._umlFrame.GetDiagram().AddShape(shape=link, withModelUpdate=True)
 
     def _createEnumerationFields(self, pyutClass: PyutClass, enumValues: List[str]):

@@ -14,7 +14,7 @@ from wx import STAY_ON_TOP
 from wx import Size
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
@@ -908,7 +908,7 @@ class PyutXml:
 
         aLink.setName(link.getAttribute('name'))
         strLinkType: str = link.getAttribute('type')
-        linkType: LinkType = LinkType(int(strLinkType))
+        linkType: PyutLinkType = PyutLinkType(int(strLinkType))
         aLink.setType(linkType)
         # source and destination will be reconstructed by _getOglLinks
 

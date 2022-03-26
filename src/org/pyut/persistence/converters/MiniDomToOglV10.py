@@ -38,7 +38,7 @@ from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.enums.LinkType import LinkType
+from org.pyut.enums.PyutLinkType import PyutLinkType
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.ogl.OglActor import OglActor
@@ -218,7 +218,7 @@ class MiniDomToOgl:
                 self.logger.error(f'Developer Error -- srcId: {srcId} - dstId: {dstId}  error: {ke}')
                 continue
 
-            linkType:         LinkType  = assocPyutLink.linkType
+            linkType:         PyutLinkType  = assocPyutLink.linkType
             sourceClass:      PyutClass = cast(PyutClass, src.pyutObject)
             destinationClass: PyutClass = cast(PyutClass, dst.pyutObject)
             pyutLink: PyutLink = PyutLink(name=assocPyutLink.name,
@@ -659,7 +659,7 @@ class MiniDomToOgl:
 
         pyutLink: PyutLink = oglLink.pyutObject
 
-        if pyutLink.linkType == LinkType.INHERITANCE:
+        if pyutLink.linkType == PyutLinkType.INHERITANCE:
             childPyutClass:  PyutClass = cast(PyutClass, srcShape.pyutObject)
             parentPyutClass: PyutClass = cast(PyutClass, destShape.pyutObject)
             childPyutClass.addParent(parentPyutClass)
@@ -704,7 +704,7 @@ class MiniDomToOgl:
         pyutLink.name = link.getAttribute(PyutXmlConstants.ATTR_NAME)
 
         strLinkType: str         = link.getAttribute(PyutXmlConstants.ATTR_TYPE)
-        linkType:    LinkType    = LinkType.toEnum(strValue=strLinkType)
+        linkType:    PyutLinkType    = PyutLinkType.toEnum(strValue=strLinkType)
         pyutLink.linkType = linkType
 
         # source and destination will be reconstructed by _getOglLinks
