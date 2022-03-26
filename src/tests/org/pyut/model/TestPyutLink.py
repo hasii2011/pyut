@@ -7,7 +7,7 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 from org.pyut.model.PyutLink import PyutLink
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

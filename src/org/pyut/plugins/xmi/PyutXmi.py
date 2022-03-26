@@ -19,7 +19,7 @@ from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutParameter import PyutParameter
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 

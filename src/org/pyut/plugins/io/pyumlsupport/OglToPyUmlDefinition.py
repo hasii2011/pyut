@@ -39,7 +39,7 @@ from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions

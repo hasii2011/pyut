@@ -23,7 +23,7 @@ from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 
 from org.pyut.ui.UmlFrame import UmlFrame
 

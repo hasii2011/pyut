@@ -12,7 +12,7 @@ from unittest.mock import MagicMock
 from os import remove as osRemove
 
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutLink import PyutLink

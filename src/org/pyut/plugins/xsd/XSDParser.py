@@ -23,7 +23,7 @@ from org.pyut.model.PyutLink import PyutLink
 from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData

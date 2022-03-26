@@ -38,7 +38,7 @@ from org.pyut.model.PyutUseCase import PyutUseCase
 from org.pyut.model.PyutModifier import PyutModifier
 from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.ogl.OglActor import OglActor

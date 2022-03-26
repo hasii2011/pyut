@@ -24,7 +24,7 @@ from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglLink import OglLink
 
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 
 
 from org.pyut.ui.UmlFrame import UmlFrame

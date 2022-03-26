@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from org.pyut.model.PyutClass import PyutClass
     from org.pyut.model.PyutNote import PyutNote
     
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 
 
 class PyutLink(PyutObject):

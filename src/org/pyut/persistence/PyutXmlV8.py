@@ -14,7 +14,7 @@ from wx import STAY_ON_TOP
 from wx import Size
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.enums.PyutLinkType import PyutLinkType
+from org.pyut.model.PyutLinkType import PyutLinkType
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
