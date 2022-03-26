@@ -361,7 +361,7 @@ class Mediator(Singleton):
         """
         self._toolboxOwner.registerTool(tool)
 
-    # TODO this is an used method.  Note the bad plugin name
+    # TODO this is an unused method.  Note the bad plugin name
     def fastTextClassEditor(self, thePyutClass: PyutClass):
         plugs = self._appFrame.plugs
         cl = [s for s in plugs.values() if s(None, None).name == "Fast text edition"]
@@ -1098,7 +1098,7 @@ class Mediator(Singleton):
 
     def _createNewText(self, umlFrame, x: int, y: int):
         """
-        Create a note on the diagram
+        Create a text box on the diagram
 
         Args:
             umlFrame:  The UML frame that knows hot to place the new text object on the diagram

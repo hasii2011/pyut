@@ -267,6 +267,8 @@ class UmlFrame(UmlFrameShapeHandler):
 
     def getObjectsBoundaries(self):
         """
+        TODO:  This appears to be an unused method
+
         Return object boundaries (coordinates)
 
         @since 1.35.2.25

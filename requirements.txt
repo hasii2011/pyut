@@ -1,6 +1,8 @@
 wheel~=0.37.1
 setuptools~=60.6.0
 epr~=0.25
+pyut2xml~=0.1.0
+epr2md~=0.1.0
 html-testRunner~=1.2.1
 orthogonal~=1.1.6
 pygmlparser~=1.0.0

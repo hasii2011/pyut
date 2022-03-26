@@ -4,6 +4,9 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import BLACK_PEN
+from wx import Colour
+from wx import ColourDatabase
 from wx import EVT_MENU
 from wx import FONTSTYLE_ITALIC
 from wx import FONTSTYLE_NORMAL
@@ -17,6 +20,8 @@ from wx import Font
 from wx import Menu
 from wx import MenuItem
 from wx import MouseEvent
+
+from wx import RED_PEN
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
@@ -85,6 +90,9 @@ class OglText(OglObject):
 
         self._textFont:  Font            = self._defaultFont.GetBaseFont()
         self._textFont.SetFamily(OglUtils.oglFontFamilyToWxFontFamily(self._textFontFamily))
+
+        self._redColor:   Colour  = ColourDatabase().Find('Red')
+        self._blackColor: Colour = ColourDatabase().Find('Black')
 
         self.__initializeTextDisplay()
         self._menu: Menu = cast(Menu, None)
@@ -161,6 +169,13 @@ class OglText(OglObject):
             dc:     device context to draw to
             withChildren:   Redraw children or not
         """
+        if self._selected:
+            dc.SetPen(RED_PEN)
+            dc.SetTextForeground(self._redColor)
+        else:
+            dc.SetPen(BLACK_PEN)
+            dc.SetTextForeground(self._blackColor)
+
         OglObject.Draw(self, dc)
         dc.SetFont(self._textFont)
 

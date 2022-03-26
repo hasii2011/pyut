@@ -62,14 +62,12 @@ class OglNote(OglObject):
             dc:     device context to draw to
             withChildren:   Redraw children or not
         """
-        OglObject.Draw(self, dc)
+        super().Draw(dc)
         dc.SetFont(self._defaultFont)
 
         w, h = self.GetSize()
 
         try:
-            # lines = LineSplitter().split(self.getPyutObject().getName(), dc, w - 2 * MARGIN)
-            # noteName = self.getPyutObject().getName()
             noteContent = cast(PyutNote, self.pyutObject).content
             lines = LineSplitter().split(noteContent, dc, w - 2 * OglNote.MARGIN)
         except (ValueError, Exception) as e:
