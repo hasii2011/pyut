@@ -10,12 +10,12 @@ from logging import getLogger
 from deprecated import deprecated
 
 from org.pyut.model.PyutObject import PyutObject
+from org.pyut.model.PyutLinkType import PyutLinkType
 
 if TYPE_CHECKING:
     from org.pyut.model.PyutClass import PyutClass
     from org.pyut.model.PyutNote import PyutNote
-    
-from org.pyut.model.PyutLinkType import PyutLinkType
+    from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 
 
 class PyutLink(PyutObject):
@@ -33,7 +33,8 @@ class PyutLink(PyutObject):
 
     # noinspection PyUnresolvedReferences
     def __init__(self, name="", linkType: PyutLinkType = PyutLinkType.INHERITANCE,
-                 cardSrc:      str = "", cardDest: str = "",
+                 cardSrc:      str = "",
+                 cardDest:     str = "",
                  bidir:        bool = False,
                  source:       'PyutClass' = None,
                  destination:  Union['PyutClass', 'PyutNote'] = None):
@@ -56,10 +57,8 @@ class PyutLink(PyutObject):
         self._destinationCardinality: str  = cardDest
         self._bidirectional:          bool = bidir
 
-        from org.pyut.model.PyutLinkedObject import PyutLinkedObject
-
-        self._src:  Optional[PyutLinkedObject] = source
-        self._dest: Optional[PyutLinkedObject] = destination
+        self._src:  Optional['PyutLinkedObject'] = source
+        self._dest: Optional['PyutLinkedObject'] = destination
 
     def _getSourceCardinality(self) -> str:
         """
