@@ -444,10 +444,10 @@ class MiniDomToOgl:
             xmlSDInstance = xmlOglSDInstance.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SD_INSTANCE)[0]
 
             pyutSDInstance.id = int(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_ID))
-            pyutSDInstance.setInstanceName(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_INSTANCE_NAME))
+            pyutSDInstance.instanceName = xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_INSTANCE_NAME)
 
             lifeLineLength: int = PyutUtils.secureInteger(xmlSDInstance.getAttribute(PyutXmlConstants.ATTR_LIFE_LINE_LENGTH))
-            pyutSDInstance.setInstanceLifeLineLength(lifeLineLength)
+            pyutSDInstance.instanceLifeLineLength = lifeLineLength
 
             # Adding OGL class to UML Frame
             x: int = PyutUtils.strFloatToInt(xmlOglSDInstance.getAttribute(PyutXmlConstants.ATTR_X))

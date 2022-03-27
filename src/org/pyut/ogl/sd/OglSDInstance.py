@@ -78,7 +78,7 @@ class OglSDInstance(OglObject):
         diagram.AddShape(self._instanceBox)
 
         # Text of the instance box
-        text = self._pyutObject.getInstanceName()
+        text = self._pyutObject.instanceName
         self._instanceBoxText: OglInstanceName = OglInstanceName(pyutObject, 0, 20, text, self._instanceBox)
         self.AppendChild(self._instanceBoxText)
         diagram.AddShape(self._instanceBoxText)
@@ -160,7 +160,7 @@ class OglSDInstance(OglObject):
         Draw overload; update labels
         """
         # Update labels
-        self._instanceBoxText.SetText(self._pyutObject.getInstanceName())
+        self._instanceBoxText.SetText(self._pyutObject.instanceName)
 
         # Call parent's Draw method
         if self.IsSelected():
@@ -178,7 +178,7 @@ class OglSDInstance(OglObject):
         self.SetPosition(self.GetPosition()[0], self._instanceYPosition)
 
     def __str__(self) -> str:
-        instanceName: str = self._pyutObject.getInstanceName()
+        instanceName: str = self._pyutObject.instanceName
         return f'OglSDInstance[{self._id=} {instanceName=}]'
 
     def __repr__(self) -> str:

@@ -556,8 +556,8 @@ class OglToMiniDom:
         eltId: int     = self._idFactory.getID(pyutSDInstance)
 
         root.setAttribute(PyutXmlConstants.ATTR_ID,               str(eltId))
-        root.setAttribute(PyutXmlConstants.ATTR_INSTANCE_NAME,    pyutSDInstance.getInstanceName())
-        root.setAttribute(PyutXmlConstants.ATTR_LIFE_LINE_LENGTH, str(pyutSDInstance.getInstanceLifeLineLength()))
+        root.setAttribute(PyutXmlConstants.ATTR_INSTANCE_NAME,    pyutSDInstance.instanceName)
+        root.setAttribute(PyutXmlConstants.ATTR_LIFE_LINE_LENGTH, str(pyutSDInstance.instanceLifeLineLength))
 
         return root
 
