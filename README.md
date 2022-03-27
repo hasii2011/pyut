@@ -6,6 +6,10 @@
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
+<a href="https://gitmoji.dev">
+  <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
+</a>
+
 𝓟 𝓨 𝓤 𝓣 stands for Python UML Tool. Actually, Pyut is only a class diagram editor
 
 
