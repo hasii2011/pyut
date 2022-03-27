@@ -135,7 +135,7 @@ class OglSDMessage(OglLink):
         Callback for left double clicks.
 
         """
-        dlg = TextEntryDialog(None, _("Message"), _("Enter message"), self._pyutSDMessage.getMessage(), OK | CANCEL | CENTRE)
+        dlg = TextEntryDialog(None, _("Message"), _("Enter message name"), self._pyutSDMessage.getMessage(), OK | CANCEL | CENTRE)
         if dlg.ShowModal() == ID_OK:
             self._pyutSDMessage.setMessage(dlg.GetValue())
         dlg.Destroy()

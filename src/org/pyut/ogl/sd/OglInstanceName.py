@@ -38,7 +38,7 @@ class OglInstanceName(TextShape, ShapeEventHandler):
     def OnLeftDClick(self, event):
         """
         """
-        dlg = TextEntryDialog(None, _("Message"), _("Enter message"), self._pyutObject.getInstanceName(), OK | CANCEL | CENTRE)
+        dlg = TextEntryDialog(None, _("Message"), _("Enter instance name"), self._pyutObject.getInstanceName(), OK | CANCEL | CENTRE)
         if dlg.ShowModal() == ID_OK:
             self._pyutObject.setInstanceName(dlg.GetValue())
         dlg.Destroy()
