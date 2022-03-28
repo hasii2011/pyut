@@ -105,10 +105,7 @@ class EditMenuHandler(BaseMenuHandler):
         # put the PyutObjects in the clipboard and remove their graphical representation from the diagram
         for obj in selected:
             obj.Detach()
-            self._clipboard.append(obj.getPyutObject())
-
-        # for obj in selected:
-        #     self._clipboard.append(obj.getPyutObject())
+            self._clipboard.append(obj.pyutObject)
 
         self.logger.info(f'Cut {len(self._clipboard)} objects')
 

@@ -18,6 +18,7 @@ from wx import Menu
 from wx import CommandEvent
 from wx import MenuItem
 from wx import MouseEvent
+from wx import PostEvent
 
 from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutMethod import PyutMethod
@@ -26,6 +27,9 @@ from org.pyut.model.PyutClass import PyutClass
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
+
+from org.pyut.ogl.events.OglEvents import CutOglClassEvent
+from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
 
 from org.pyut.PyutConstants import PyutConstants
 
@@ -399,10 +403,14 @@ class OglClass(OglObject):
         Args:
             event:
         """
-        from org.pyut.ui.Mediator import Mediator   # avoid circular import
+        # from org.pyut.ui.Mediator import Mediator   # avoid circular import
+        from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 
-        pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
-        eventId:    int       = event.GetId()
+        pyutObject:   PyutClass = cast(PyutClass, self.pyutObject)
+        eventId:      int       = event.GetId()
+        menuWindow:   Menu      = event.GetEventObject()
+        parentWindow: UmlDiagramsFrame = menuWindow.GetWindow()
+
         if eventId == MENU_TOGGLE_STEREOTYPE:
             pyutObject.setShowStereotype(not pyutObject.getShowStereotype())
             self.autoResize()
@@ -415,13 +423,11 @@ class OglClass(OglObject):
         elif eventId == MENU_FIT_FIELDS:
             self.autoResize()
         elif eventId == MENU_CUT_SHAPE:
-            ctrl: Mediator = Mediator()
-            ctrl.deselectAllShapes()
-            self.SetSelected(True)
-            ctrl.cutSelectedShapes()
+            cutOglClassEvent: CutOglClassEvent = CutOglClassEvent(selectedShape=self)
+            PostEvent(dest=parentWindow, event=cutOglClassEvent)
         elif eventId == MENU_IMPLEMENT_INTERFACE:
-            ctrl = Mediator()
-            ctrl.requestLollipopLocation(self)
+            eventToPost: RequestLollipopLocationEvent = RequestLollipopLocationEvent(shape=self)
+            PostEvent(dest=parentWindow, event=eventToPost)
         else:
             event.Skip()
 

@@ -3,8 +3,16 @@ from logging import getLogger
 
 from wx import Notebook
 
+from org.pyut.ogl.OglClass import OglClass
+
 from org.pyut.ogl.events.OglEvents import EVT_SHAPE_SELECTED
+from org.pyut.ogl.events.OglEvents import EVT_CUT_OGL_CLASS
+from org.pyut.ogl.events.OglEvents import EVT_REQUEST_LOLLIPOP_LOCATION
+
 from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
+from org.pyut.ogl.events.OglEvents import CutOglClassEvent
+from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
+
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 from org.pyut.ui.UmlFrame import UmlFrame
@@ -31,6 +39,8 @@ class UmlDiagramsFrame(UmlFrame):
         super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
 
         self.Bind(EVT_SHAPE_SELECTED, self._onShapeSelected)
+        self.Bind(EVT_CUT_OGL_CLASS,  self._onCutOglClassShape)
+        self.Bind(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
 
     # noinspection PyUnusedLocal
     def OnClose(self, force=False):
@@ -53,3 +63,15 @@ class UmlDiagramsFrame(UmlFrame):
         if self._ctrl.actionWaiting():
             UmlDiagramsFrame.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
             self._ctrl.shapeSelected(shapeSelectedData.shape, shapeSelectedData.position)
+
+    def _onCutOglClassShape(self, cutOglClassEvent: CutOglClassEvent):
+
+        selectedOglClass: OglClass = cutOglClassEvent.selectedShape
+        self._ctrl.deselectAllShapes()
+        selectedOglClass.SetSelected(True)
+        self._ctrl.cutSelectedShapes()
+
+    def _onRequestLollipopLocation(self, event: RequestLollipopLocationEvent):
+
+        shape = event.shape
+        self._ctrl.requestLollipopLocation(shape)

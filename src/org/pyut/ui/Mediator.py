@@ -991,14 +991,16 @@ class Mediator(Singleton):
         """
         TODO  This event send does not yet work; Fix fix fix
         """
+        from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
-        # self._appFrame.cutSelectedShapes()
-        from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
-
-        parent:   Window     = self._appFrame
-        cutEvent: CommandEvent = CommandEvent(SharedIdentifiers.ID_MNU_EDIT_CUT)
-
-        wxPostEvent(parent, cutEvent)
+        self._appFrame.hackCut()
+        # from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+        #
+        # parent:   PyutApplicationFrame     = self._appFrame
+        # menu = self._appFrame._editMenuHandler._menu
+        # cutEvent: CommandEvent = CommandEvent(id=SharedIdentifiers.ID_MNU_EDIT_CUT)
+        #
+        # wxPostEvent(dest=menu, event=cutEvent)
 
     def getCurrentAction(self):
         return self._currentAction
