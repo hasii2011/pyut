@@ -33,6 +33,7 @@ from org.pyut.history.HistoryManager import HistoryManager
 
 from org.pyut.experimental.GraphicalHandler import GraphicalHandler
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
@@ -249,53 +250,50 @@ class UmlFrame(UmlFrameShapeHandler):
 
     def getWidth(self):
         """
-        Knowing Width.
 
-        @since 1.19
-        @author Deve Roux <droux@eivd.ch>
+        Returns:  The frame width
+
         """
         return self.maxWidth
 
     def getHeight(self):
         """
-        Knowing Height.
 
-        @since 1.19
-        @author Deve Roux <droux@eivd.ch>
+        Returns: The frame height
         """
         return self.maxHeight
 
-    def getObjectsBoundaries(self):
-        """
-        TODO:  This appears to be an unused method
-
-        Return object boundaries (coordinates)
-
-        @since 1.35.2.25
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        infinite = 1e9
-        minx     = infinite
-        maxx     = -infinite
-        miny     = infinite
-        maxy     = -infinite
-
-        # Get boundaries
-        for shapeObject in self._diagram.GetShapes():
-            # Get object limits
-            ox1, oy1 = shapeObject.GetPosition()
-            ox2, oy2 = shapeObject.GetSize()
-            ox2 += ox1
-            oy2 += oy1
-
-            # Update min-max
-            minx = min(minx, ox1)
-            maxx = max(maxx, ox2)
-            miny = min(miny, oy1)
-            maxy = max(maxy, oy2)
-
-        # Return values
-        return minx, miny, maxx, maxy
+    # def getObjectsBoundaries(self):
+    #     """
+    #     TODO:  This appears to be an unused method
+    #
+    #     Return object boundaries (coordinates)
+    #
+    #     @since 1.35.2.25
+    #     @author C.Dutoit <dutoitc@hotmail.com>
+    #     """
+    #     infinite = 1e9
+    #     minx     = infinite
+    #     maxX     = -infinite
+    #     miny     = infinite
+    #     maxy     = -infinite
+    #
+    #     # Get boundaries
+    #     for shapeObject in self._diagram.GetShapes():
+    #         # Get object limits
+    #         ox1, oy1 = shapeObject.GetPosition()
+    #         ox2, oy2 = shapeObject.GetSize()
+    #         ox2 += ox1
+    #         oy2 += oy1
+    #
+    #         # Update min-max
+    #         minx = min(minx, ox1)
+    #         maxX = max(maxX, ox2)
+    #         miny = min(miny, oy1)
+    #         maxy = max(maxy, oy2)
+    #
+    #     # Return values
+    #     return minx, miny, maxX, maxy
 
     def getUmlObjectById(self, objectId: int):
         """

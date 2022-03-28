@@ -68,7 +68,7 @@ from org.pyut.dialogs.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 
 class DiagramFrame(ScrolledWindow):
 
-    clsLogger: Logger = getLogger(__name__)
+    diagramFrameLogger: Logger = getLogger(__name__)
 
     """
     A frame to draw simulation diagrams.
@@ -167,7 +167,7 @@ class DiagramFrame(ScrolledWindow):
         shape = self.FindShape(x, y)
         event.m_x, event.m_y = x, y
 
-        self.clsLogger.debug(f'GenericHandler - `{shape=}` `{methodName=}` x,y: {x},{y}')
+        self.diagramFrameLogger.debug(f'GenericHandler - `{shape=}` `{methodName=}` x,y: {x},{y}')
         # if the shape found is a ShapeEventHandler
         if shape is not None and isinstance(shape, ShapeEventHandler):
             getattr(shape, methodName)(event)
@@ -183,7 +183,7 @@ class DiagramFrame(ScrolledWindow):
         Args:
             event:
         """
-        self.clsLogger.debug("DiagramFrame.OnLeftDown")
+        self.diagramFrameLogger.debug("DiagramFrame.OnLeftDown")
 
         # First, call the generic handler for OnLeftDown
         shape: ShapeEventHandler = self.GenericHandler(event, "OnLeftDown")
@@ -208,7 +208,7 @@ class DiagramFrame(ScrolledWindow):
                 shapes.remove(shape.GetParent())
             elif isinstance(shape, ControlPoint):
                 # don't deselect the line of a control point
-                self.clsLogger.debug(f'{shape=}')
+                self.diagramFrameLogger.debug(f'{shape=}')
                 for line in shape.GetLines():
                     shapes.remove(line)
             # do not call DeselectAllShapes, because we must ensure that
@@ -235,7 +235,7 @@ class DiagramFrame(ScrolledWindow):
         """
         if self._selector is not None:
             self.Bind(EVT_MOTION, self._NullCallback)
-            self.clsLogger.debug(f'{self._selector=}')
+            self.diagramFrameLogger.debug(f'{self._selector=}')
             rect = self._selector
 
             for shape in self._diagram.GetShapes():
@@ -249,7 +249,7 @@ class DiagramFrame(ScrolledWindow):
             rect.Detach()
             self._selector = cast(RectangleShape, None)
         if not self._moving and self._clickedShape:
-            self.clsLogger.debug(f'{self._moving} {self._clickedShape}')
+            self.diagramFrameLogger.debug(f'{self._moving} {self._clickedShape}')
             clicked = self._clickedShape
             if not event.ControlDown():
                 self.DeselectAllShapes()
@@ -402,14 +402,14 @@ class DiagramFrame(ScrolledWindow):
 
         Returns:  The shape that was found under the coordinates or None
         """
-        self.clsLogger.debug(f'FindShape: @{x},{y}')
+        self.diagramFrameLogger.debug(f'FindShape: @{x},{y}')
         found = None
         shapes = self._diagram.GetShapes()
         # self.clsLogger.debug(f'{shapes=}')
         shapes.reverse()    # to select the one at the top
         for shape in shapes:
             if shape.Inside(x, y):
-                self.clsLogger.debug(f"Inside: {shape}")
+                self.diagramFrameLogger.debug(f"Inside: {shape}")
                 found = shape
                 break   # only select the first one
         return found

@@ -8,11 +8,12 @@ from typing import List
 from deprecated import deprecated
 
 from wx import MouseEvent
-from wx import Point
+# from wx import Point
 from wx import Font
 from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
+from wx import PostEvent
 
 from org.pyut.miniogl.RectangleShape import RectangleShape
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
@@ -20,6 +21,10 @@ from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.model.PyutObject import PyutObject
+
+from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
+from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
+
 from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -100,19 +105,28 @@ class OglObject(RectangleShape, ShapeEventHandler):
     def OnLeftDown(self, event: MouseEvent):
         """
         Handle event on left click.
+        Note to self.  This method used to call only  call event.Skip() if there was an action waiting
+        Now I do it regardless;  Seem to be no ill effects
 
         Args:
-            event:
+            event:  The mouse event
         """
-        OglObject.clsLogger.debug(f'OnLeftDown - event - {event}')
+        OglObject.clsLogger.debug(f'OglObject.OnLeftDown  - {event.GetEventObject()=}')
 
-        from org.pyut.ui.Mediator import Mediator   # avoid circular import
-
-        med: Mediator = Mediator()
-        if med.actionWaiting():
-            position: Point = event.GetPosition()
-            med.shapeSelected(self, position)
-            return
+        # from org.pyut.ui.Mediator import Mediator   # avoid circular import
+        #
+        # med: Mediator = Mediator()
+        # if med.actionWaiting():
+        #     position: Point = event.GetPosition()
+        #     med.shapeSelected(self, position)
+        #
+        #
+        #
+        eventData:     ShapeSelectedEventData = ShapeSelectedEventData(shape=self, position=event.GetPosition())
+        selectedEvent: ShapeSelectedEvent     = ShapeSelectedEvent(shapeSelectedData=eventData)
+        parentWindow = event.GetEventObject()
+        PostEvent(dest=parentWindow, event=selectedEvent)
+        # return
         event.Skip()
 
     def OnLeftUp(self, event: MouseEvent):

@@ -1,44 +1,55 @@
+from logging import Logger
+from logging import getLogger
 
-from wx import Window
+from wx import Notebook
+
+from org.pyut.ogl.events.OglEvents import EVT_SHAPE_SELECTED
+from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
+from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class UmlDiagramsFrame(UmlFrame):
+
     """
     ClassFrame : class diagram frame.
 
     This class is a frame where we can draw Class diagrams.
-    It can load and save class diagrams datas.
+
     It is used by UmlClassDiagramsFrame
-
-    :author: C.Dutoit
-    :contact: dutoitc@hotmail.com
-    :version: $Revision: 1.6 $
     """
+    umlDiagramFrameLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent: Window):
+    def __init__(self, parent: Notebook):
         """
-        Constructor.
 
-        @param  parent : wx.Window parent window
-
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            parent: wx.Window parent window;  In practice this is always wx.Notebook instance
         """
+
         super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
+
+        self.Bind(EVT_SHAPE_SELECTED, self._onShapeSelected)
 
     # noinspection PyUnusedLocal
     def OnClose(self, force=False):
         """
         Closing handler (must be called explicitly).
-        Save files and ask for confirmation.
 
-        @return True if the close succeeded
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            force:
+
+        Returns: True if the close succeeded
         """
         self.cleanUp()
-
         self.Destroy()
         return True
+
+    def _onShapeSelected(self, event: ShapeSelectedEvent):
+
+        shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
+
+        if self._ctrl.actionWaiting():
+            UmlDiagramsFrame.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
+            self._ctrl.shapeSelected(shapeSelectedData.shape, shapeSelectedData.position)

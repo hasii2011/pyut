@@ -53,9 +53,22 @@
             "propagate": "False"
         },
         "org.pyut.ogl.OglObject": {
-            "level":     "WARNING",
+            "level":     "DEBUG",
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
+        "org.pyut.ui.UmlDiagramsFrame": {
+            "level":     "DEBUG",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+
+        "org.pyut.miniogl.DiagramFrame": {
+            "level":     "WARNING",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+
         "org.pyut.miniogl.Shape": {
             "level":     "DEBUG",
             "propagate": "False"
