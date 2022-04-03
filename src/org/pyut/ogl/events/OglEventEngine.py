@@ -13,6 +13,8 @@ from org.pyut.general.Singleton import Singleton
 from org.pyut.miniogl.Shape import Shape
 
 from org.pyut.ogl.events.IEventEngine import IEventEngine
+from org.pyut.ogl.events.OglEvents import CutOglClassEvent
+from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
 from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
@@ -40,3 +42,11 @@ class OglEventEngine(Singleton, IEventEngine):
         selectedEvent: ShapeSelectedEvent     = ShapeSelectedEvent(shapeSelectedData=eventData)
 
         PostEvent(dest=self._listeningWindow, event=selectedEvent)
+
+    def sendCutShapeEvent(self, shapeToCut: Shape):
+        cutOglClassEvent: CutOglClassEvent = CutOglClassEvent(selectedShape=shapeToCut)
+        PostEvent(dest=self._listeningWindow, event=cutOglClassEvent)
+
+    def sendRequestLollipopLocationEvent(self, requestShape: Shape):
+        eventToPost: RequestLollipopLocationEvent = RequestLollipopLocationEvent(shape=requestShape)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)

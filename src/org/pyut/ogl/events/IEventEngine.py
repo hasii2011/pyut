@@ -21,3 +21,11 @@ class IEventEngine(ABC):
     @abstractmethod
     def sendSelectedShapeEvent(self, shape: Shape, position: Point):
         pass
+
+    @abstractmethod
+    def sendCutShapeEvent(self, shapeToCut: Shape):
+        pass
+
+    @abstractmethod
+    def sendRequestLollipopLocationEvent(self, requestShape: Shape):
+        pass

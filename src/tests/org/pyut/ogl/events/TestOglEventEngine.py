@@ -34,7 +34,11 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
+from org.pyut.ogl.events.OglEvents import CutOglClassEvent
+from org.pyut.ogl.events.OglEvents import EVT_CUT_OGL_CLASS
+from org.pyut.ogl.events.OglEvents import EVT_REQUEST_LOLLIPOP_LOCATION
 from org.pyut.ogl.events.OglEvents import EVT_SHAPE_SELECTED
+from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
 from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
@@ -63,6 +67,8 @@ class TestOglEventEngine(App):
         self._eventManager: OglEventEngine = OglEventEngine(listeningWindow=self._sizedFrame)
 
         self._eventManager.registerListener(EVT_SHAPE_SELECTED, self._onAShapeWasSelected)
+        self._eventManager.registerListener(EVT_CUT_OGL_CLASS,  self._onShapeCut)
+        self._eventManager.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
 
         return True
 
@@ -114,16 +120,37 @@ class TestOglEventEngine(App):
         oglClass:  OglClass  = OglClass(pyutClass=pyutClass)
         self._eventManager.sendSelectedShapeEvent(shape=oglClass, position=Point(100, 100))
 
+    # noinspection PyUnusedLocal
     def _onSendCutOglClassShape(self, event: CommandEvent):
-        self.logger.info(f'{event=}')
+        pyutClass: PyutClass = PyutClass(name='OglTestClass')
+        oglClass:  OglClass  = OglClass(pyutClass=pyutClass)
+        self._eventManager.sendCutShapeEvent(shapeToCut=oglClass)
 
+    # noinspection PyUnusedLocal
     def _onSendRequestLollipopLocation(self, event: CommandEvent):
-        self.logger.info(f'{event=}')
+        pyutClass: PyutClass = PyutClass(name='ClassRequestingLollipopLocation')
+        oglClass:  OglClass  = OglClass(pyutClass=pyutClass)
+        self._eventManager.sendRequestLollipopLocationEvent(requestShape=oglClass)
 
     def _onAShapeWasSelected(self, event: ShapeSelectedEvent):
 
         shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
         msg: str = f'{shapeSelectedData.shape}{osLineSep}position{shapeSelectedData.position}'
+        dlg: MessageDialog = MessageDialog(self._sizedFrame, msg, 'Success', OK | ICON_INFORMATION)
+        dlg.ShowModal()
+        dlg.Destroy()
+
+    def _onShapeCut(self, cutOglClassEvent: CutOglClassEvent):
+
+        shapeToCut: OglClass = cutOglClassEvent.selectedShape
+        msg: str = f'{shapeToCut=}'
+        dlg: MessageDialog = MessageDialog(self._sizedFrame, msg, 'Success', OK | ICON_INFORMATION)
+        dlg.ShowModal()
+        dlg.Destroy()
+
+    def _onRequestLollipopLocation(self, event: RequestLollipopLocationEvent):
+        requestingShape = event.shape
+        msg: str = f'{requestingShape=}'
         dlg: MessageDialog = MessageDialog(self._sizedFrame, msg, 'Success', OK | ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
