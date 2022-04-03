@@ -31,6 +31,7 @@ class TestAll:
                             'org/pyut/persistence/TestIoFile',
                             'org/pyut/ui/tools/TestToolboxFrame',
                             'org/pyut/history/commands/TestCommandCommon',
+                            'org/pyut/ogl/events/TestOglEventEngine',
                             'TestUmlFrame', 'org/pyut/dialogs/TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
