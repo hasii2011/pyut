@@ -38,6 +38,7 @@ class UmlDiagramsFrame(UmlFrame):
 
         super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
 
+        print(f'{type(EVT_SHAPE_SELECTED)=}')
         self.Bind(EVT_SHAPE_SELECTED, self._onShapeSelected)
         self.Bind(EVT_CUT_OGL_CLASS,  self._onCutOglClassShape)
         self.Bind(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
@@ -57,6 +58,13 @@ class UmlDiagramsFrame(UmlFrame):
         return True
 
     def _onShapeSelected(self, event: ShapeSelectedEvent):
+        """
+        In practice this is only used on UML Class diagrams when the user
+        wants to create links between classes;  For example, associations and inheritance
+        x
+        Args:
+            event:   Event which contains data on the selected shape
+        """
 
         shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
 

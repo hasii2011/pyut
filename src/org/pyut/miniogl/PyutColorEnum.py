@@ -12,15 +12,21 @@ class PyutColorEnum(Enum):
     the user visible portions of the preferences dialog
     """
 
-    BLACK           = 'Black'
-    CORNFLOWER_BLUE = 'Cornflower Blue'
-    WHITE           = 'White'
-    LIGHT_GREY      = 'Light Grey'
-    GREEN           = 'Green'
-    MEDIUM_BLUE     = 'Medium Blue'
-    MIDNIGHT_BLUE   = 'Midnight Blue'
-    YELLOW          = 'Yellow'
-    SALMON          = 'Salmon'
+    BLACK             = 'Black'
+    CORNFLOWER_BLUE   = 'Cornflower Blue'
+    WHITE             = 'White'
+    LIGHT_GREY        = 'Light Grey'
+    DARK_GREY         = 'Dark Grey'
+    DIM_GREY          = 'Dim Grey'
+    GREEN             = 'Green'
+    MEDIUM_BLUE       = 'Medium Blue'
+    MIDNIGHT_BLUE     = 'Midnight Blue'
+    LIGHT_BLUE        = 'Light Blue'
+    LIGHT_STEEL_BLUE  = 'Light Steel Blue'
+    DARK_SLATE_BLUE   = 'Dark Slate Blue'
+    MEDIUM_SLATE_BLUE = 'Medium Slate Blue'
+    YELLOW            = 'Yellow'
+    SALMON            = 'Salmon'
 
     @staticmethod
     def toWxColor(colorEnum: 'PyutColorEnum') -> Colour:

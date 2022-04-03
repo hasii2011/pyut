@@ -20,6 +20,7 @@ class TestBase(TestCase):
     RESOURCES_TEST_CLASSES_PACKAGE_NAME:      str = 'tests.resources.testclass'
     RESOURCES_TEST_JAVA_CLASSES_PACKAGE_NAME: str = 'tests.resources.testclass.ozzee'
     RESOURCES_TEST_DATA_PACKAGE_NAME:         str = 'tests.resources.testdata'
+    RESOURCES_TEST_IMAGES_PACKAGE_NAME:       str = 'tests.resources.testimages'
 
     """
     A base unit test class to initialize some logging stuff we need

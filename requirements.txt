@@ -15,7 +15,7 @@ antlr4-python3-runtime==4.9.3
 PyGithub==1.54.1
 xmlschema==1.4.2
 Deprecated==1.2.13
-mypy~=0.931
+mypy~=0.942
 mypy-extensions~= 0.4.3
 types-Deprecated~=1.2.5
 types-setuptools~=57.4.9

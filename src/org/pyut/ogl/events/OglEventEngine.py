@@ -1,0 +1,42 @@
+
+from typing import Callable
+
+from logging import Logger
+from logging import getLogger
+
+from wx import Point
+from wx import PostEvent
+from wx import Window
+from wx import PyEventBinder
+
+from org.pyut.general.Singleton import Singleton
+from org.pyut.miniogl.Shape import Shape
+
+from org.pyut.ogl.events.IEventEngine import IEventEngine
+from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
+from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
+
+
+class OglEventEngine(Singleton, IEventEngine):
+    """
+    The rationale for this class is to isolate the underlying implementation
+    of events.  Currently, it depends on the wxPython event loop.  This leaves
+    it open to other implementations;
+
+    Get one of these for each Window you want to listen on
+    """
+
+    def init(self, *args, **kwargs):
+
+        self._listeningWindow: Window = kwargs['listeningWindow']
+        self.logger: Logger = getLogger(__name__)
+
+    def registerListener(self, event: PyEventBinder, callback: Callable):
+        self._listeningWindow.Bind(event, callback)
+
+    def sendSelectedShapeEvent(self, shape: Shape, position: Point):
+
+        eventData:     ShapeSelectedEventData = ShapeSelectedEventData(shape=shape, position=position)
+        selectedEvent: ShapeSelectedEvent     = ShapeSelectedEvent(shapeSelectedData=eventData)
+
+        PostEvent(dest=self._listeningWindow, event=selectedEvent)

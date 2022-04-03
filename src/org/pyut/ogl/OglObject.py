@@ -21,6 +21,7 @@ from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.model.PyutObject import PyutObject
+from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
 from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
@@ -122,10 +123,11 @@ class OglObject(RectangleShape, ShapeEventHandler):
         #
         #
         #
-        eventData:     ShapeSelectedEventData = ShapeSelectedEventData(shape=self, position=event.GetPosition())
-        selectedEvent: ShapeSelectedEvent     = ShapeSelectedEvent(shapeSelectedData=eventData)
-        parentWindow = event.GetEventObject()
-        PostEvent(dest=parentWindow, event=selectedEvent)
+        # eventData:     ShapeSelectedEventData = ShapeSelectedEventData(shape=self, position=event.GetPosition())
+        # selectedEvent: ShapeSelectedEvent     = ShapeSelectedEvent(shapeSelectedData=eventData)
+        # parentWindow = event.GetEventObject()
+        # PostEvent(dest=parentWindow, event=selectedEvent)
+        OglEventEngine().sendSelectedShapeEvent(shape=self, position=event.GetPosition())
         # return
         event.Skip()
 
