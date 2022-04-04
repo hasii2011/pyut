@@ -8,12 +8,10 @@ from typing import List
 from deprecated import deprecated
 
 from wx import MouseEvent
-# from wx import Point
 from wx import Font
 from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
-from wx import PostEvent
 
 from org.pyut.miniogl.RectangleShape import RectangleShape
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
@@ -22,9 +20,6 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.model.PyutObject import PyutObject
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
-
-from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
-from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 from org.pyut.ogl.OglLink import OglLink
 
@@ -87,9 +82,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         Add a link to an ogl object.
 
-        @param OglLink link : the link to add
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            link:  the link to add
         """
         self._oglLinks.append(link)
 
@@ -97,16 +91,14 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         Return the links.
 
-        @return OglLink[] : Links connected to object
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Returns: OglLink[] : Links connected to object
         """
         return self._oglLinks
 
     def OnLeftDown(self, event: MouseEvent):
         """
         Handle event on left click.
-        Note to self.  This method used to call only  call event.Skip() if there was an action waiting
+        Note to self.  This method used to call only call event.Skip() if there was an action waiting
         Now I do it regardless;  Seem to be no ill effects
 
         Args:
@@ -114,21 +106,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         OglObject.clsLogger.debug(f'OglObject.OnLeftDown  - {event.GetEventObject()=}')
 
-        # from org.pyut.ui.Mediator import Mediator   # avoid circular import
-        #
-        # med: Mediator = Mediator()
-        # if med.actionWaiting():
-        #     position: Point = event.GetPosition()
-        #     med.shapeSelected(self, position)
-        #
-        #
-        #
-        # eventData:     ShapeSelectedEventData = ShapeSelectedEventData(shape=self, position=event.GetPosition())
-        # selectedEvent: ShapeSelectedEvent     = ShapeSelectedEvent(shapeSelectedData=eventData)
-        # parentWindow = event.GetEventObject()
-        # PostEvent(dest=parentWindow, event=selectedEvent)
         OglEventEngine().sendSelectedShapeEvent(shape=self, position=event.GetPosition())
-        # return
+
         event.Skip()
 
     def OnLeftUp(self, event: MouseEvent):
@@ -148,10 +127,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
 
     def autoResize(self):
         """
-        Find the right size to see all the content, and resize self.
+        Find the right size to see all the content and resize self.
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
         """
         pass
 

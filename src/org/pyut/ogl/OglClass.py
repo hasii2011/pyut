@@ -65,10 +65,6 @@ class OglClass(OglObject):
 
     For more instructions about how to create an OGL object, please refer
     to the `OglObject` class.
-
-    :version: $Revision: 1.21 $
-    :author: Laurent Burgbacher
-    :contact: lb@alawa.ch
     """
     def __init__(self, pyutClass: PyutClass = None, w: int = 0, h: int = 0):
         """
@@ -110,11 +106,17 @@ class OglClass(OglObject):
 
     def calculateClassHeader(self, dc, draw=False, initialX=None, initialY=None, calcWidth=False):
         """
-        Calculate the class header position and size adn display it if
+        Calculate the class header position and size and display it if
         a draw is True
 
-        @return tuple : (x, y, w, h) = position and size of the header
-        @author C.Dutoit
+        Args:
+            dc:
+            draw:
+            initialX:
+            initialY:
+            calcWidth:
+
+        Returns:    tuple (x, y, w, h) = position and size of the header
         """
         # Init
         dc.SetFont(self._defaultFont)
@@ -170,8 +172,14 @@ class OglClass(OglObject):
         Calculate the class fields position and size and display it if
         a draw is True
 
-        @return tuple : (x, y, w, h) = position and size of the field
-        @author C.Dutoit
+        Args:
+            dc:
+            draw:
+            initialX:
+            initialY:
+            calcWidth:
+
+        Returns:    tuple : (x, y, w, h) = position and size of the field
         """
         # Init
         dc.SetFont(self._defaultFont)
@@ -315,7 +323,6 @@ class OglClass(OglObject):
         """
         Auto-resize the class
 
-        @author C.Dutoit
         WARNING : Every change here must be reported in DRAW pyutMethod
         """
         # Init
@@ -404,13 +411,8 @@ class OglClass(OglObject):
         Args:
             event:
         """
-        # from org.pyut.ui.Mediator import Mediator   # avoid circular import
-        # from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
-
         pyutObject:   PyutClass = cast(PyutClass, self.pyutObject)
         eventId:      int       = event.GetId()
-        # menuWindow:   Menu      = event.GetEventObject()
-        # parentWindow: UmlDiagramsFrame = menuWindow.GetWindow()
 
         if eventId == MENU_TOGGLE_STEREOTYPE:
             pyutObject.setShowStereotype(not pyutObject.getShowStereotype())
@@ -424,12 +426,8 @@ class OglClass(OglObject):
         elif eventId == MENU_FIT_FIELDS:
             self.autoResize()
         elif eventId == MENU_CUT_SHAPE:
-            # cutOglClassEvent: CutOglClassEvent = CutOglClassEvent(selectedShape=self)
-            # PostEvent(dest=parentWindow, event=cutOglClassEvent)
             OglEventEngine().sendCutShapeEvent(shapeToCut=self)
         elif eventId == MENU_IMPLEMENT_INTERFACE:
-            # eventToPost: RequestLollipopLocationEvent = RequestLollipopLocationEvent(shape=self)
-            # PostEvent(dest=parentWindow, event=eventToPost)
             OglEventEngine().sendRequestLollipopLocationEvent(requestShape=self)
         else:
             event.Skip()

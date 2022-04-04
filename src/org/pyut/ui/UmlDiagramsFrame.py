@@ -4,6 +4,7 @@ from logging import getLogger
 from wx import Notebook
 
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
 from org.pyut.ogl.events.OglEvents import EVT_SHAPE_SELECTED
 from org.pyut.ogl.events.OglEvents import EVT_CUT_OGL_CLASS
@@ -38,10 +39,16 @@ class UmlDiagramsFrame(UmlFrame):
 
         super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
 
-        print(f'{type(EVT_SHAPE_SELECTED)=}')
-        self.Bind(EVT_SHAPE_SELECTED, self._onShapeSelected)
-        self.Bind(EVT_CUT_OGL_CLASS,  self._onCutOglClassShape)
-        self.Bind(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
+        # print(f'{type(EVT_SHAPE_SELECTED)=}')
+        # self.Bind(EVT_SHAPE_SELECTED, self._onShapeSelected)
+        # self.Bind(EVT_CUT_OGL_CLASS,  self._onCutOglClassShape)
+        # self.Bind(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
+
+        self._eventManager: OglEventEngine = OglEventEngine(listeningWindow=self)
+
+        self._eventManager.registerListener(EVT_SHAPE_SELECTED, self._onShapeSelected)
+        self._eventManager.registerListener(EVT_CUT_OGL_CLASS,  self._onCutOglClassShape)
+        self._eventManager.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
 
     # noinspection PyUnusedLocal
     def OnClose(self, force=False):
