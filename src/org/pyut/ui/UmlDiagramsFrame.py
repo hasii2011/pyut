@@ -1,3 +1,4 @@
+
 from logging import Logger
 from logging import getLogger
 
@@ -5,6 +6,7 @@ from wx import Notebook
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
+from org.pyut.ogl.events.OglEvents import EVT_PROJECT_MODIFIED
 
 from org.pyut.ogl.events.OglEvents import EVT_SHAPE_SELECTED
 from org.pyut.ogl.events.OglEvents import EVT_CUT_OGL_CLASS
@@ -12,6 +14,7 @@ from org.pyut.ogl.events.OglEvents import EVT_REQUEST_LOLLIPOP_LOCATION
 
 from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
 from org.pyut.ogl.events.OglEvents import CutOglClassEvent
+from org.pyut.ogl.events.OglEvents import ProjectModifiedEvent
 from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
 
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
@@ -39,15 +42,11 @@ class UmlDiagramsFrame(UmlFrame):
 
         super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
 
-        # print(f'{type(EVT_SHAPE_SELECTED)=}')
-        # self.Bind(EVT_SHAPE_SELECTED, self._onShapeSelected)
-        # self.Bind(EVT_CUT_OGL_CLASS,  self._onCutOglClassShape)
-        # self.Bind(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
-
         self._eventManager: OglEventEngine = OglEventEngine(listeningWindow=self)
 
         self._eventManager.registerListener(EVT_SHAPE_SELECTED, self._onShapeSelected)
         self._eventManager.registerListener(EVT_CUT_OGL_CLASS,  self._onCutOglClassShape)
+        self._eventManager.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
         self._eventManager.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
 
     # noinspection PyUnusedLocal
@@ -85,6 +84,13 @@ class UmlDiagramsFrame(UmlFrame):
         self._ctrl.deselectAllShapes()
         selectedOglClass.SetSelected(True)
         self._ctrl.cutSelectedShapes()
+
+    # noinspection PyUnusedLocal
+    def _onProjectModified(self, event: ProjectModifiedEvent):
+        fileHandling = self._ctrl.getFileHandling()
+
+        if fileHandling is not None:
+            fileHandling.setModified(True)
 
     def _onRequestLollipopLocation(self, event: RequestLollipopLocationEvent):
 

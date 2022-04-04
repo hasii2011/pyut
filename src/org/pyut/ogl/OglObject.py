@@ -140,11 +140,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
             x:  The new abscissa
             y:  The new ordinate
         """
-        from org.pyut.ui.Mediator import Mediator
-        mediator: Mediator = Mediator()             # TODO:
-        fileHandling = mediator.getFileHandling()   #
-        if fileHandling is not None:                # Send an event to the mediator for this
-            fileHandling.setModified(True)          # BAD BAD BAD
+        OglEventEngine().sendProjectModifiedEvent()
         RectangleShape.SetPosition(self, x, y)
 
     def SetSelected(self, state=True):

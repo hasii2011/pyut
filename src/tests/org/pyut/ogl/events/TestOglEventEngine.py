@@ -36,8 +36,10 @@ from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 from org.pyut.ogl.events.OglEvents import CutOglClassEvent
 from org.pyut.ogl.events.OglEvents import EVT_CUT_OGL_CLASS
+from org.pyut.ogl.events.OglEvents import EVT_PROJECT_MODIFIED
 from org.pyut.ogl.events.OglEvents import EVT_REQUEST_LOLLIPOP_LOCATION
 from org.pyut.ogl.events.OglEvents import EVT_SHAPE_SELECTED
+from org.pyut.ogl.events.OglEvents import ProjectModifiedEvent
 from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
 from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
@@ -66,8 +68,9 @@ class TestOglEventEngine(App):
 
         self._eventManager: OglEventEngine = OglEventEngine(listeningWindow=self._sizedFrame)
 
-        self._eventManager.registerListener(EVT_SHAPE_SELECTED, self._onAShapeWasSelected)
-        self._eventManager.registerListener(EVT_CUT_OGL_CLASS,  self._onShapeCut)
+        self._eventManager.registerListener(EVT_SHAPE_SELECTED,   self._onAShapeWasSelected)
+        self._eventManager.registerListener(EVT_CUT_OGL_CLASS,    self._onShapeCut)
+        self._eventManager.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
         self._eventManager.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
 
         return True
@@ -81,11 +84,14 @@ class TestOglEventEngine(App):
         b1: GenBitmapTextButton = self._createButton(parentPanel=sizedPanel, label='Select Shape', imageFileName='ShapeSelected.png')
         b2: GenBitmapTextButton = self._createButton(parentPanel=sizedPanel, label='Cut Ogl Class', imageFileName='CutOglClass.png')
         b3: GenBitmapTextButton = self._createButton(parentPanel=sizedPanel, label='Request Lollipop Location', imageFileName='RequestLollipopLocation.png')
+        b4: GenBitmapTextButton = self._createButton(parentPanel=sizedPanel, label='Project Modified', imageFileName='ProjectModified.png')
 
         self._createBackGroundColorSelector(sizedFrame, sizedPanel)
         self.Bind(EVT_BUTTON, self._onSendShapeSelected, b1)
         self.Bind(EVT_BUTTON, self._onSendCutOglClassShape, b2)
         self.Bind(EVT_BUTTON, self._onSendRequestLollipopLocation, b3)
+        self.Bind(EVT_BUTTON, self._onSendProjectModified, b4)
+
 
         sizedFrame.Show(True)
 
@@ -127,6 +133,10 @@ class TestOglEventEngine(App):
         self._eventManager.sendCutShapeEvent(shapeToCut=oglClass)
 
     # noinspection PyUnusedLocal
+    def _onSendProjectModified(self, event: CommandEvent):
+        self._eventManager.sendProjectModifiedEvent()
+
+    # noinspection PyUnusedLocal
     def _onSendRequestLollipopLocation(self, event: CommandEvent):
         pyutClass: PyutClass = PyutClass(name='ClassRequestingLollipopLocation')
         oglClass:  OglClass  = OglClass(pyutClass=pyutClass)
@@ -145,6 +155,11 @@ class TestOglEventEngine(App):
         shapeToCut: OglClass = cutOglClassEvent.selectedShape
         msg: str = f'{shapeToCut=}'
         dlg: MessageDialog = MessageDialog(self._sizedFrame, msg, 'Success', OK | ICON_INFORMATION)
+        dlg.ShowModal()
+        dlg.Destroy()
+
+    def _onProjectModified(self, event: ProjectModifiedEvent):
+        dlg: MessageDialog = MessageDialog(self._sizedFrame, 'Project Modified!', 'Success', OK | ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
 

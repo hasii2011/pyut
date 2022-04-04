@@ -18,7 +18,6 @@ from wx import Menu
 from wx import CommandEvent
 from wx import MenuItem
 from wx import MouseEvent
-# from wx import PostEvent
 
 from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutMethod import PyutMethod
@@ -27,10 +26,8 @@ from org.pyut.model.PyutClass import PyutClass
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
-from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
-# from org.pyut.ogl.events.OglEvents import CutOglClassEvent
-# from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
+from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
 from org.pyut.PyutConstants import PyutConstants
 
