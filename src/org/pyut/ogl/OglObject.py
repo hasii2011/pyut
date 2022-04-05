@@ -1,8 +1,9 @@
 
+from typing import cast
+from typing import List
+
 from logging import Logger
 from logging import getLogger
-
-from typing import List
 
 # noinspection PyPackageRequirements
 from deprecated import deprecated
@@ -57,6 +58,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
         self._oglLinks: List[OglLink] = []     # Connected links
         self._modifyCommand = None
 
+        self._eventEngine: OglEventEngine = cast(OglEventEngine, None)
+
     @deprecated(reason='Use the properties')
     def setPyutObject(self, pyutObject: PyutObject):
         self._pyutObject = pyutObject
@@ -77,6 +80,24 @@ class OglObject(RectangleShape, ShapeEventHandler):
     @pyutObject.setter
     def pyutObject(self, pyutObject):
         self._pyutObject = pyutObject
+
+    @property
+    def eventEngine(self) -> OglEventEngine:
+        """
+        This property necessary because the diagram is not added until the
+        object is' attached'
+
+        Returns:
+
+        """
+        if self.HasDiagramFrame() is True:
+
+            panel = self.GetDiagram().GetPanel()
+            if panel is not None:
+                if self._eventEngine is None:
+                    self._eventEngine = panel.eventEngine
+
+        return self._eventEngine
 
     def addLink(self, link):
         """
@@ -106,7 +127,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         OglObject.clsLogger.debug(f'OglObject.OnLeftDown  - {event.GetEventObject()=}')
 
-        OglEventEngine().sendSelectedShapeEvent(shape=self, position=event.GetPosition())
+        self.eventEngine.sendSelectedShapeEvent(shape=self, position=event.GetPosition())
 
         event.Skip()
 
@@ -140,7 +161,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
             x:  The new abscissa
             y:  The new ordinate
         """
-        OglEventEngine().sendProjectModifiedEvent()
+        if self.eventEngine is not None:        # we might be associated with a diagram yet
+            self.eventEngine.sendProjectModifiedEvent()
         RectangleShape.SetPosition(self, x, y)
 
     def SetSelected(self, state=True):

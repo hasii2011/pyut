@@ -49,6 +49,10 @@ class UmlDiagramsFrame(UmlFrame):
         self._eventManager.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
         self._eventManager.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
 
+    @property
+    def eventManager(self) -> OglEventEngine:
+        return self._eventManager
+
     # noinspection PyUnusedLocal
     def OnClose(self, force=False):
         """

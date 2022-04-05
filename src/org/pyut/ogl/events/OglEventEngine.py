@@ -20,7 +20,7 @@ from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 
-class OglEventEngine(Singleton, IEventEngine):
+class OglEventEngine(IEventEngine):
     """
     The rationale for this class is to isolate the underlying implementation
     of events.  Currently, it depends on the wxPython event loop.  This leaves
@@ -28,10 +28,9 @@ class OglEventEngine(Singleton, IEventEngine):
 
     Get one of these for each Window you want to listen on
     """
+    def __init__(self, listeningWindow: Window):
 
-    def init(self, *args, **kwargs):
-
-        self._listeningWindow: Window = kwargs['listeningWindow']
+        self._listeningWindow: Window = listeningWindow
         self.logger: Logger = getLogger(__name__)
 
     def registerListener(self, event: PyEventBinder, callback: Callable):

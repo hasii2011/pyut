@@ -8,6 +8,7 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from unittest.mock import Mock
+from unittest.mock import PropertyMock
 
 from pkg_resources import resource_filename
 
@@ -73,16 +74,20 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
         mockFrame.GetXOffset.return_value     = 0
         mockFrame.GetYOffset.return_value     = 0
         mockFrame.GetCurrentZoom.return_value = 1.0
+        mockFrame.eventEngine                 = PropertyMock(return_value=None)
 
         mockDiagram: Mock = Mock(spec=Diagram)
         mockDiagram.GetPanel.return_value = mockFrame
+        mockDiagram.eventEngine = PropertyMock(return_value=None)
 
         oglNote: OglNote = OglNote(pyutNote=pyutNote, w=100, h=100)
 
-        oglNote._diagram = mockDiagram     # Normally should not do this; only in unit tess
+        oglNote._diagram = mockDiagram     # Normally should not do this; only in unit test
+        oglNote._eventEngine = None
         oglNote.SetPosition(1024, 1024)
         oglNote.SetSize(width=100, height=100)
         oglNote._id = 3     # must match deserialized file
+
 
         oglLinkedObjectCommand: DeleteOglLinkedObjectCommand = DeleteOglLinkedObjectCommand(shape=oglNote)
 
