@@ -168,9 +168,10 @@ class OglObject(RectangleShape, ShapeEventHandler):
 
     def SetSelected(self, state=True):
 
-        from org.pyut.ui.Mediator import Mediator          # avoid circular import
-        from org.pyut.ui.Mediator import ACTION_ZOOM_OUT   # avoid circular import
+        # from org.pyut.ui.Mediator import Mediator          # avoid circular import
+        # from org.pyut.ui.Mediator import ACTION_ZOOM_OUT   # avoid circular import
 
-        mediator: Mediator = Mediator()
-        if mediator.getCurrentAction() != ACTION_ZOOM_OUT:
-            RectangleShape.SetSelected(self, state)
+        # mediator: Mediator = Mediator()
+        # if mediator.getCurrentAction() != ACTION_ZOOM_OUT:
+        # TODO:  I took this out because could never cause this to happen;  Conveniently, this removes all mediator calls
+        RectangleShape.SetSelected(self, state)
