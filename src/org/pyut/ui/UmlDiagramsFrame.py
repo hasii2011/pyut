@@ -42,16 +42,16 @@ class UmlDiagramsFrame(UmlFrame):
 
         super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
 
-        self._eventManager: OglEventEngine = OglEventEngine(listeningWindow=self)
+        self._eventEngine: OglEventEngine = OglEventEngine(listeningWindow=self)
 
-        self._eventManager.registerListener(EVT_SHAPE_SELECTED, self._onShapeSelected)
-        self._eventManager.registerListener(EVT_CUT_OGL_CLASS,  self._onCutOglClassShape)
-        self._eventManager.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
-        self._eventManager.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
+        self._eventEngine.registerListener(EVT_SHAPE_SELECTED, self._onShapeSelected)
+        self._eventEngine.registerListener(EVT_CUT_OGL_CLASS, self._onCutOglClassShape)
+        self._eventEngine.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
+        self._eventEngine.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
 
     @property
-    def eventManager(self) -> OglEventEngine:
-        return self._eventManager
+    def eventEngine(self) -> OglEventEngine:
+        return self._eventEngine
 
     # noinspection PyUnusedLocal
     def OnClose(self, force=False):

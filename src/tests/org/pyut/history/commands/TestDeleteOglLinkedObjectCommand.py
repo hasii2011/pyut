@@ -74,7 +74,7 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
         mockFrame.GetXOffset.return_value     = 0
         mockFrame.GetYOffset.return_value     = 0
         mockFrame.GetCurrentZoom.return_value = 1.0
-        mockFrame.eventEngine                 = PropertyMock(return_value=None)
+        mockFrame.eventEngine                = PropertyMock(return_value=None)
 
         mockDiagram: Mock = Mock(spec=Diagram)
         mockDiagram.GetPanel.return_value = mockFrame

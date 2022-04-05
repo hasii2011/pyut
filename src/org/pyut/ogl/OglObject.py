@@ -92,7 +92,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         if self.HasDiagramFrame() is True:
 
-            panel = self.GetDiagram().GetPanel()
+            from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+            panel: UmlDiagramsFrame = self.GetDiagram().GetPanel()
             if panel is not None:
                 if self._eventEngine is None:
                     self._eventEngine = panel.eventEngine
