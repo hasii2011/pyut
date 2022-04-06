@@ -234,9 +234,6 @@ class LineShape(Shape, Common):
             super().Draw(dc=dc, withChildren=withChildren)
 
             line = self.GetSegments()
-            from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
-            if isinstance(self, OglSDMessage):
-                LineShape.clsLogger.debug(f'{self} - {self._selected=}')
 
             if self._selected:
                 dc.SetPen(RED_PEN)
