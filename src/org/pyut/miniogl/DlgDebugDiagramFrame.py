@@ -1,7 +1,9 @@
-from logging import Logger
-from logging import getLogger
+
 from typing import Tuple
 from typing import cast
+
+from logging import Logger
+from logging import getLogger
 
 from wx import ALL
 from wx import BoxSizer
@@ -29,18 +31,18 @@ from wx import Window
 from wx import Dialog
 from wx import CommandEvent
 
-from org.pyut.PyutUtils import PyutUtils
+from wx import NewIdRef as wxNewIdRef
 
 
 class DlgDebugDiagramFrame(Dialog):
     """
     Use as follows:
 
-    debugDialog: DlgDebugDiagramFrame = DlgDebugDiagramFrame(self, ID_ANY)
+    debugDialog: DlgDebugDiagramFrame = DlgDebugDiagramFrame(frameToMonitor, ID_ANY)
     debugDialog.startMonitor()
     debugDialog.Show(True)
 
-    The self parameter is the window to monitor
+    The self parameter is the UML frame to monitor
     """
 
     CONTAINER_GAP:         int = 3
@@ -113,9 +115,8 @@ class DlgDebugDiagramFrame(Dialog):
         Initialize the controls.
         """
         # IDs
-        [
-            self.__xId, self.__yId
-        ] = PyutUtils.assignID(2)
+        self.__xId: wxNewIdRef = wxNewIdRef()
+        self.__yId: wxNewIdRef = wxNewIdRef()
 
         xBox, self.__x = self.__createPositionContainer('Frame X Position: ', self.__xId)
         yBox, self.__y = self.__createPositionContainer('Frame Y Position: ', self.__yId)
