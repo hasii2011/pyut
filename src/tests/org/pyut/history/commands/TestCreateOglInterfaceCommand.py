@@ -12,7 +12,7 @@ from pkg_resources import resource_filename
 
 from wx import App
 
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.model.PyutMethod import PyutMethod
@@ -68,7 +68,7 @@ class TestCreateOglInterfaceCommand(TestBase):
         pyutClass:    PyutClass     = PyutClass(name='Implementor')
         implementor:  OglClass      = OglClass(pyutClass=pyutClass)
 
-        attachmentAnchor: SelectAnchorPoint = SelectAnchorPoint(x=100, y=100, attachmentPoint=AttachmentPoint.NORTH)
+        attachmentAnchor: SelectAnchorPoint = SelectAnchorPoint(x=100, y=100, attachmentPoint=AttachmentLocation.NORTH)
 
         cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=implementor, attachmentAnchor=attachmentAnchor)
 

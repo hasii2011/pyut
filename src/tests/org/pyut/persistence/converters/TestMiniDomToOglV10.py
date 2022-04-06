@@ -23,7 +23,7 @@ from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglClasses
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -100,7 +100,7 @@ class TestMiniDomToOglV10(TestBase):
         mockOglClass: Mock = Mock()
 
         mockOglClass.GetSize.return_value = (EAST_WIDTH, EAST_HEIGHT)
-        attachPosition: OglPosition = self._converter._determineAttachmentPoint(attachmentPoint=AttachmentPoint.EAST, oglClass=mockOglClass)
+        attachPosition: OglPosition = self._converter._determineAttachmentPoint(attachmentPoint=AttachmentLocation.EAST, oglClass=mockOglClass)
 
         self.assertIsNotNone(attachPosition)
         self.assertEqual(EAST_WIDTH,       attachPosition.x, 'Incorrect east x position')
@@ -111,7 +111,7 @@ class TestMiniDomToOglV10(TestBase):
         mockOglClass: Mock = Mock()
 
         mockOglClass.GetSize.return_value = (WEST_WIDTH, WEST_HEIGHT)
-        attachPosition: OglPosition = self._converter._determineAttachmentPoint(attachmentPoint=AttachmentPoint.WEST, oglClass=mockOglClass)
+        attachPosition: OglPosition = self._converter._determineAttachmentPoint(attachmentPoint=AttachmentLocation.WEST, oglClass=mockOglClass)
 
         self.assertIsNotNone(attachPosition)
         self.assertEqual(0,                attachPosition.x, 'Incorrect west x position')
@@ -122,7 +122,7 @@ class TestMiniDomToOglV10(TestBase):
         mockOglClass: Mock = Mock()
 
         mockOglClass.GetSize.return_value = (NORTH_WIDTH, NORTH_HEIGHT)
-        attachPosition: OglPosition = self._converter._determineAttachmentPoint(attachmentPoint=AttachmentPoint.NORTH, oglClass=mockOglClass)
+        attachPosition: OglPosition = self._converter._determineAttachmentPoint(attachmentPoint=AttachmentLocation.NORTH, oglClass=mockOglClass)
 
         self.assertIsNotNone(attachPosition)
         self.assertEqual(NORTH_WIDTH // 2, attachPosition.x, 'Incorrect north x position')
@@ -133,7 +133,7 @@ class TestMiniDomToOglV10(TestBase):
         mockOglClass: Mock = Mock()
 
         mockOglClass.GetSize.return_value = (SOUTH_WIDTH, SOUTH_HEIGHT)
-        attachPosition: OglPosition = self._converter._determineAttachmentPoint(attachmentPoint=AttachmentPoint.SOUTH, oglClass=mockOglClass)
+        attachPosition: OglPosition = self._converter._determineAttachmentPoint(attachmentPoint=AttachmentLocation.SOUTH, oglClass=mockOglClass)
 
         self.assertIsNotNone(attachPosition)
         self.assertEqual(SOUTH_WIDTH // 2, attachPosition.x, 'Incorrect south x position')

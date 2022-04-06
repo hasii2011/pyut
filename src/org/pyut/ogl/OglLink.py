@@ -24,7 +24,7 @@ from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.LineShape import LineShape
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.ogl.OglPosition import OglPosition
 
@@ -85,16 +85,16 @@ class OglLink(LineShape, ShapeEventHandler):
 
             sw, sh = self._srcShape.GetSize()
             dw, dh = self._destShape.GetSize()
-            if orient == AttachmentPoint.NORTH:
+            if orient == AttachmentLocation.NORTH:
                 srcX, srcY = sw//2, 0
                 dstX, dstY = dw//2, dh
-            elif orient == AttachmentPoint.SOUTH:
+            elif orient == AttachmentLocation.SOUTH:
                 srcX, srcY = sw//2, sh
                 dstX, dstY = dw//2, 0
-            elif orient == AttachmentPoint.EAST:
+            elif orient == AttachmentLocation.EAST:
                 srcX, srcY = sw, sh//2
                 dstX, dstY = 0, dh//2
-            elif orient == AttachmentPoint.WEST:
+            elif orient == AttachmentLocation.WEST:
                 srcX, srcY = 0, sh//2
                 dstX, dstY = dw, dh//2
 
@@ -144,7 +144,7 @@ class OglLink(LineShape, ShapeEventHandler):
             self._link = PyutLink()
 
     @staticmethod
-    def getOrient(srcX, srcY, destX, destY) -> AttachmentPoint:
+    def getOrient(srcX, srcY, destX, destY) -> AttachmentLocation:
         """
         Giving a source and destination, returns where the destination
         is located according to the source.
@@ -158,18 +158,18 @@ class OglLink(LineShape, ShapeEventHandler):
         deltaY = srcY - destY
         if deltaX > 0:  # dest is not east
             if deltaX > abs(deltaY):  # dest is west
-                return AttachmentPoint.WEST
+                return AttachmentLocation.WEST
             elif deltaY > 0:
-                return AttachmentPoint.NORTH
+                return AttachmentLocation.NORTH
             else:
-                return AttachmentPoint.SOUTH
+                return AttachmentLocation.SOUTH
         else:  # dest is not west
             if -deltaX > abs(deltaY):  # dest is east
-                return AttachmentPoint.EAST
+                return AttachmentLocation.EAST
             elif deltaY > 0:
-                return AttachmentPoint.NORTH
+                return AttachmentLocation.NORTH
             else:
-                return AttachmentPoint.SOUTH
+                return AttachmentLocation.SOUTH
 
     def getSourceShape(self):
         """

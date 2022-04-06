@@ -9,7 +9,7 @@ from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
 from wx import Font
 
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 from org.pyut.miniogl.Common import Common
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.LollipopLine import LollipopLine
@@ -152,26 +152,26 @@ class OglInterface2(LollipopLine, Common):
     def _determineInterfaceNamePosition(self, destinationAnchor: SelectAnchorPoint, pixelSize: Tuple[int, int], textSize: Tuple[int, int]) -> OglPosition:
 
         oglPosition:     OglPosition     = OglPosition()
-        attachmentPoint: AttachmentPoint = destinationAnchor.attachmentPoint
+        attachmentPoint: AttachmentLocation = destinationAnchor.attachmentPoint
 
         x, y = destinationAnchor.GetPosition()
 
         fWidth, fHeight = pixelSize
         tWidth, tHeight = textSize
 
-        if attachmentPoint == AttachmentPoint.NORTH:
+        if attachmentPoint == AttachmentLocation.NORTH:
             y -= (LollipopLine.LOLLIPOP_LINE_LENGTH + (LollipopLine.LOLLIPOP_CIRCLE_RADIUS * 2) + OglInterface2.ADJUST_AWAY_FROM_IMPLEMENTOR)
             x -= (tWidth // 2)
             oglPosition.x = x
             oglPosition.y = y
 
-        elif attachmentPoint == AttachmentPoint.SOUTH:
+        elif attachmentPoint == AttachmentLocation.SOUTH:
             y += (LollipopLine.LOLLIPOP_LINE_LENGTH + LollipopLine.LOLLIPOP_CIRCLE_RADIUS + OglInterface2.ADJUST_AWAY_FROM_IMPLEMENTOR)
             x -= (tWidth // 2)
             oglPosition.x = x
             oglPosition.y = y
 
-        elif attachmentPoint == AttachmentPoint.WEST:
+        elif attachmentPoint == AttachmentLocation.WEST:
             y = y - (fHeight * 2)
             originalX: int = x
             x = x - LollipopLine.LOLLIPOP_LINE_LENGTH - (tWidth // 2)
@@ -180,7 +180,7 @@ class OglInterface2(LollipopLine, Common):
             oglPosition.x = x
             oglPosition.y = y
 
-        elif attachmentPoint == AttachmentPoint.EAST:
+        elif attachmentPoint == AttachmentLocation.EAST:
             y = y - (fHeight * 2)
             x = x + round(LollipopLine.LOLLIPOP_LINE_LENGTH * 0.8)
             oglPosition.x = x

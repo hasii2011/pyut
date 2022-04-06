@@ -24,7 +24,7 @@ from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.LineShape import LineShape
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -108,7 +108,7 @@ class TestMiniOglApp(App):
 
         eastX, eastY   = dw, dh / 2
 
-        destAnchor = SelectAnchorPoint(parent=rectShape, attachmentPoint=AttachmentPoint.EAST, x=eastX, y=eastY)
+        destAnchor = SelectAnchorPoint(parent=rectShape, attachmentPoint=AttachmentLocation.EAST, x=eastX, y=eastY)
         destAnchor.SetDraggable(False)
 
         lollipopLine: LollipopLine = LollipopLine(destAnchor)

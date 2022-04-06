@@ -14,7 +14,7 @@ from xml.dom.minidom import Text
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.model.ModelTypes import ClassName
 from org.pyut.model.ModelTypes import Implementors
@@ -716,35 +716,35 @@ class MiniDomToOgl:
     def _getAttachmentPoint(self, xmlOglInterface: Element, parent: OglClass) -> SelectAnchorPoint:
 
         attachmentPointStr: str             = xmlOglInterface.getAttribute(PyutXmlConstants.ATTR_LOLLIPOP_ATTACHMENT_POINT)
-        attachmentPoint:    AttachmentPoint = AttachmentPoint.toEnum(attachmentPointStr)
+        attachmentPoint:    AttachmentLocation = AttachmentLocation.toEnum(attachmentPointStr)
         attachPosition:     OglPosition     = self._determineAttachmentPoint(attachmentPoint=attachmentPoint, oglClass=parent)
 
         anchorPoint: SelectAnchorPoint = SelectAnchorPoint(x=attachPosition.x, y=attachPosition.y, attachmentPoint=attachmentPoint, parent=parent)
 
         return anchorPoint
 
-    def _determineAttachmentPoint(self, attachmentPoint: AttachmentPoint, oglClass: OglClass) -> OglPosition:
+    def _determineAttachmentPoint(self, attachmentPoint: AttachmentLocation, oglClass: OglClass) -> OglPosition:
 
         oglPosition: OglPosition = OglPosition()
 
         dw, dh     = oglClass.GetSize()
 
-        if attachmentPoint == AttachmentPoint.NORTH:
+        if attachmentPoint == AttachmentLocation.NORTH:
             northX: int = dw // 2
             northY: int = 0
             oglPosition.x = northX
             oglPosition.y = northY
-        elif attachmentPoint == AttachmentPoint.SOUTH:
+        elif attachmentPoint == AttachmentLocation.SOUTH:
             southX = dw // 2
             southY = dh
             oglPosition.x = southX
             oglPosition.y = southY
-        elif attachmentPoint == AttachmentPoint.WEST:
+        elif attachmentPoint == AttachmentLocation.WEST:
             westX: int = 0
             westY: int = dh // 2
             oglPosition.x = westX
             oglPosition.y = westY
-        elif attachmentPoint == AttachmentPoint.EAST:
+        elif attachmentPoint == AttachmentLocation.EAST:
             eastX: int = dw
             eastY: int = dh // 2
             oglPosition.x = eastX

@@ -13,7 +13,7 @@ from unittest import main as unitTestMain
 from wx import App
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -62,7 +62,7 @@ class TestIDFactory(TestBase):
         self._idFactory: IDFactory = IDFactory()
 
         self._pyutInterface:     PyutInterface     = PyutInterface()
-        self._destinationAnchor: SelectAnchorPoint = SelectAnchorPoint(250, 250, AttachmentPoint.NORTH)
+        self._destinationAnchor: SelectAnchorPoint = SelectAnchorPoint(250, 250, AttachmentLocation.NORTH)
 
         self._pyutClass: PyutClass = PyutClass(name='UnitTestClass')
 

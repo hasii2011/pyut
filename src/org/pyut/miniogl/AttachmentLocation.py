@@ -2,7 +2,7 @@
 from enum import Enum
 
 
-class AttachmentPoint(Enum):
+class AttachmentLocation(Enum):
     """
     Cardinal points, taken to correspond to the attachment points of the OglClass
     """
@@ -15,7 +15,7 @@ class AttachmentPoint(Enum):
         return str(self.name)
 
     @staticmethod
-    def toEnum(strValue: str) -> 'AttachmentPoint':
+    def toEnum(strValue: str) -> 'AttachmentLocation':
         """
         Converts the input string to the attachment location
         Args:
@@ -26,13 +26,13 @@ class AttachmentPoint(Enum):
         canonicalStr: str = strValue.strip(' ')
 
         if canonicalStr == 'NORTH':
-            return AttachmentPoint.NORTH
+            return AttachmentLocation.NORTH
         elif canonicalStr == 'EAST':
-            return AttachmentPoint.EAST
+            return AttachmentLocation.EAST
         elif canonicalStr == 'WEST':
-            return AttachmentPoint.WEST
+            return AttachmentLocation.WEST
         elif canonicalStr == 'SOUTH':
-            return AttachmentPoint.SOUTH
+            return AttachmentLocation.SOUTH
         else:
             print(f'Warning: did not recognize this attachment point: {canonicalStr}')
-            return AttachmentPoint.NORTH
+            return AttachmentLocation.NORTH

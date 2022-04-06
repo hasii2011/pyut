@@ -26,7 +26,7 @@ from org.pyut.miniogl.Constants import SKIP_EVENT
 from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.model.PyutLinkType import PyutLinkType
 from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
@@ -1126,12 +1126,12 @@ class Mediator(Singleton):
         eastX  = dw
         eastY  = dh // 2
 
-        self.__createAnchorHints(destinationClass, southX, southY, AttachmentPoint.SOUTH, umlFrame)
-        self.__createAnchorHints(destinationClass, northX, northY, AttachmentPoint.NORTH, umlFrame)
-        self.__createAnchorHints(destinationClass, westX,  westY,  AttachmentPoint.WEST, umlFrame)
-        self.__createAnchorHints(destinationClass, eastX,  eastY,  AttachmentPoint.EAST, umlFrame)
+        self.__createAnchorHints(destinationClass, southX, southY, AttachmentLocation.SOUTH, umlFrame)
+        self.__createAnchorHints(destinationClass, northX, northY, AttachmentLocation.NORTH, umlFrame)
+        self.__createAnchorHints(destinationClass, westX, westY, AttachmentLocation.WEST, umlFrame)
+        self.__createAnchorHints(destinationClass, eastX, eastY, AttachmentLocation.EAST, umlFrame)
 
-    def __createAnchorHints(self, destinationClass: OglClass, anchorX: int, anchorY: int, attachmentPoint: AttachmentPoint, umlFrame):
+    def __createAnchorHints(self, destinationClass: OglClass, anchorX: int, anchorY: int, attachmentPoint: AttachmentLocation, umlFrame):
 
         anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=anchorX, y=anchorY, attachmentPoint=attachmentPoint, parent=destinationClass)
         anchorHint.SetProtected(True)

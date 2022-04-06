@@ -10,7 +10,7 @@ from org.pyut.miniogl.Shape import Shape
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 
 class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
@@ -20,7 +20,7 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
     to attach something
 
     """
-    def __init__(self, x: int, y: int, attachmentPoint: AttachmentPoint, parent: Shape = None):
+    def __init__(self, x: int, y: int, attachmentPoint: AttachmentLocation, parent: Shape = None):
         """
 
         Args:
@@ -30,16 +30,16 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
         """
         super().__init__(x, y, parent)
 
-        self._attachmentPoint: AttachmentPoint = attachmentPoint
+        self._attachmentPoint: AttachmentLocation = attachmentPoint
         self._pen:             Pen             = RED_PEN
         self.SetDraggable(True)     # So it sticks on OglClass resize
 
     @property
-    def attachmentPoint(self) -> AttachmentPoint:
+    def attachmentPoint(self) -> AttachmentLocation:
         return self._attachmentPoint
 
     @attachmentPoint.setter
-    def attachmentPoint(self, newValue: AttachmentPoint):
+    def attachmentPoint(self, newValue: AttachmentLocation):
         self._attachmentPoint = newValue
 
     def setYouAreTheSelectedAnchor(self):

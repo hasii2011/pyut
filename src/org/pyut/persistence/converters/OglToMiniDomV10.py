@@ -10,7 +10,7 @@ from xml.dom.minidom import Document
 from xml.dom.minidom import Element
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.model.ModelTypes import ClassName
 from org.pyut.model.PyutActor import PyutActor
@@ -95,7 +95,7 @@ class OglToMiniDom:
         root: Element = xmlDoc.createElement(PyutXmlConstants.ELEMENT_GRAPHIC_LOLLIPOP)
 
         destAnchor:      SelectAnchorPoint = oglInterface.destinationAnchor
-        attachmentPoint: AttachmentPoint   = destAnchor.attachmentPoint
+        attachmentPoint: AttachmentLocation   = destAnchor.attachmentPoint
         x, y = destAnchor.GetPosition()
 
         root.setAttribute(PyutXmlConstants.ATTR_LOLLIPOP_ATTACHMENT_POINT, attachmentPoint.__str__())

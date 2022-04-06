@@ -14,7 +14,7 @@ from wx import OK
 
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
@@ -63,7 +63,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         oglInterface: OglInterface2 = self._shape
 
         destAnchor:      SelectAnchorPoint = oglInterface.destinationAnchor
-        attachmentPoint: AttachmentPoint   = destAnchor.attachmentPoint
+        attachmentPoint: AttachmentLocation   = destAnchor.attachmentPoint
         pos:             Tuple[int, int]   = destAnchor.GetPosition()
 
         serializedShape += tokenizeValue('attachmentPoint', attachmentPoint.__str__())
@@ -88,7 +88,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         oglInterface2Type: type       = getattr(oglModule, self._oglShapeClassName)
 
         attachmentPointName: str = deTokenize('attachmentPoint', serializedShape)
-        attachmentPoint: AttachmentPoint = AttachmentPoint.toEnum(attachmentPointName)
+        attachmentPoint: AttachmentLocation = AttachmentLocation.toEnum(attachmentPointName)
 
         shapePosition: Tuple[int, int] = eval(deTokenize("position", serializedShape))
 
@@ -145,7 +145,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
 
     def _removeUnneededAnchorPoints(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
-        attachmentPoint: AttachmentPoint = attachmentAnchor.attachmentPoint
+        attachmentPoint: AttachmentLocation = attachmentAnchor.attachmentPoint
         for iAnchor in implementor.GetAnchors():
             if isinstance(iAnchor, SelectAnchorPoint):
                 anchor: SelectAnchorPoint = cast(SelectAnchorPoint, iAnchor)

@@ -18,7 +18,7 @@ from org.pyut.ogl.OglPosition import OglPosition
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.model.PyutInterface import PyutInterface
 
@@ -51,7 +51,7 @@ class TestOglInterface2(TestBase):
         self.app: App = TestOglInterface2.clsApp
 
         self._pyutInterface:    PyutInterface     = PyutInterface()
-        self._destinationAnchor: SelectAnchorPoint = SelectAnchorPoint(250, 250, AttachmentPoint.NORTH)
+        self._destinationAnchor: SelectAnchorPoint = SelectAnchorPoint(250, 250, AttachmentLocation.NORTH)
 
     def tearDown(self):
         pass
@@ -80,7 +80,7 @@ class TestOglInterface2(TestBase):
         textSize:  Tuple[int, int] = (80, 12)
         mockDestinationAnchor: Mock = Mock()
 
-        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.EAST)
+        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentLocation.EAST)
         mockDestinationAnchor.GetPosition.return_value = (437, 144)
 
         namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
@@ -97,7 +97,7 @@ class TestOglInterface2(TestBase):
         textSize:  Tuple[int, int] = (107, 12)
         mockDestinationAnchor: Mock = Mock()
 
-        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.WEST)
+        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentLocation.WEST)
         mockDestinationAnchor.GetPosition.return_value = (735, 275)
 
         namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
@@ -114,7 +114,7 @@ class TestOglInterface2(TestBase):
         textSize:  Tuple[int, int] = (109, 12)
         mockDestinationAnchor: Mock = Mock()
 
-        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.NORTH)
+        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentLocation.NORTH)
         mockDestinationAnchor.GetPosition.return_value = (248, 315)
 
         namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
@@ -131,7 +131,7 @@ class TestOglInterface2(TestBase):
         textSize:  Tuple[int, int] = (111, 12)
         mockDestinationAnchor: Mock = Mock()
 
-        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.SOUTH)
+        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentLocation.SOUTH)
         mockDestinationAnchor.GetPosition.return_value = (738, 451)
 
         namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)
@@ -148,7 +148,7 @@ class TestOglInterface2(TestBase):
         textSize:  Tuple[int, int] = (135, 12)
         mockDestinationAnchor: Mock = Mock()
 
-        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentPoint.WEST)
+        type(mockDestinationAnchor).attachmentPoint    = PropertyMock(return_value=AttachmentLocation.WEST)
         mockDestinationAnchor.GetPosition.return_value = (330, 573)
 
         namePosition: OglPosition = oglInterface._determineInterfaceNamePosition(mockDestinationAnchor, pixelSize=pixelSize, textSize=textSize)

@@ -14,7 +14,7 @@ from org.pyut.miniogl.Common import CommonPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.Shape import Shape
 
-from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 
 class LollipopLine(Shape):
@@ -43,7 +43,7 @@ class LollipopLine(Shape):
 
     def lineCoordinates(self) -> CommonLine:
 
-        attachmentPoint: AttachmentPoint = self._destinationAnchor.attachmentPoint
+        attachmentPoint: AttachmentLocation = self._destinationAnchor.attachmentPoint
 
         xDest, yDest = self._destinationAnchor.GetPosition()
         circleX, circleY, xSrc, ySrc = self._calculateWhereToDrawLollipop(attachmentPoint, xDest, yDest)
@@ -58,7 +58,7 @@ class LollipopLine(Shape):
             dc.SetPen(BLACK_PEN)
 
         xDest, yDest = self._destinationAnchor.GetPosition()
-        attachmentPoint: AttachmentPoint = self._destinationAnchor.attachmentPoint
+        attachmentPoint: AttachmentLocation = self._destinationAnchor.attachmentPoint
 
         circleX, circleY, xSrc, ySrc = self._calculateWhereToDrawLollipop(attachmentPoint, xDest, yDest)
 
@@ -85,17 +85,17 @@ class LollipopLine(Shape):
         lollipopLength: int = LollipopLine.LOLLIPOP_LINE_LENGTH * ratio
         self.logger.debug(f'{lollipopLength}')
 
-        if attachmentPoint == AttachmentPoint.EAST:
+        if attachmentPoint == AttachmentLocation.EAST:
             xSrc: int = int(xDest + lollipopLength)
             ySrc: int = int(yDest)
             circleX: int = int(xDest + lollipopLength)
             circleY: int = int(yDest)
-        elif attachmentPoint == AttachmentPoint.WEST:
+        elif attachmentPoint == AttachmentLocation.WEST:
             xSrc: int = int(xDest - lollipopLength)
             ySrc: int = int(yDest)
             circleX: int = int(xDest - lollipopLength)
             circleY: int = int(yDest)
-        elif attachmentPoint == AttachmentPoint.NORTH:
+        elif attachmentPoint == AttachmentLocation.NORTH:
             xSrc: int = int(xDest)
             ySrc: int = int(yDest - lollipopLength)
             circleX: int = int(xDest)
