@@ -63,7 +63,7 @@ from org.pyut.miniogl.RectangleShape import RectangleShape
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.dialogs.DlgDebugDiagramFrame import DlgDebugDiagramFrame
+from org.pyut.miniogl.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 
 
 class DiagramFrame(ScrolledWindow):

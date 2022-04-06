@@ -31,10 +31,17 @@ from wx import CommandEvent
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.Globals import _
-
 
 class DlgDebugDiagramFrame(Dialog):
+    """
+    Use as follows:
+
+    debugDialog: DlgDebugDiagramFrame = DlgDebugDiagramFrame(self, ID_ANY)
+    debugDialog.startMonitor()
+    debugDialog.Show(True)
+
+    The self parameter is the window to monitor
+    """
 
     CONTAINER_GAP:         int = 3
     VERTICAL_GAP:          int = 2
@@ -56,7 +63,7 @@ class DlgDebugDiagramFrame(Dialog):
             frameToMonitor:     parent window to center on and the one to monitor
             dialogIdentifier:   An identifier for the dialog
         """
-        super().__init__(frameToMonitor, dialogIdentifier, _("Debug Diagram"))
+        super().__init__(frameToMonitor, dialogIdentifier, "Debug Diagram")
 
         from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
@@ -131,7 +138,7 @@ class DlgDebugDiagramFrame(Dialog):
 
         hs: BoxSizer = BoxSizer(HORIZONTAL)
 
-        btnOk: Button = Button(self, ID_OK, _("&OK"))
+        btnOk: Button = Button(self, ID_OK, '&OK')
         hs.Add(btnOk, 0, ALL, DlgDebugDiagramFrame.CONTAINER_GAP)
         return hs
 
