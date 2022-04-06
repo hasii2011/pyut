@@ -10,10 +10,9 @@ from xml.dom.minidom import Document
 from xml.dom.minidom import Element
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.model.ModelTypes import ClassName
-
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutClassCommon import PyutClassCommon

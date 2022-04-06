@@ -13,9 +13,9 @@ from unittest import main as unitTestMain
 from wx import App
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass

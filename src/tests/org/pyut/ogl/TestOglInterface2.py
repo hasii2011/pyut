@@ -18,7 +18,7 @@ from org.pyut.ogl.OglPosition import OglPosition
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
 from org.pyut.model.PyutInterface import PyutInterface
 

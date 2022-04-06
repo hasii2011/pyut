@@ -23,7 +23,7 @@ from org.pyut.model.PyutMethod import SourceCode
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglClasses
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

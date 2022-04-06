@@ -24,8 +24,7 @@ from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.LineShape import LineShape
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

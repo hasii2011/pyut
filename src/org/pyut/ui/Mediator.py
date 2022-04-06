@@ -26,10 +26,9 @@ from org.pyut.miniogl.Constants import SKIP_EVENT
 from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
 from org.pyut.model.PyutLinkType import PyutLinkType
-
 from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
 from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutMethod import PyutMethod
@@ -991,7 +990,6 @@ class Mediator(Singleton):
         """
         TODO  This event send does not yet work; Fix fix fix
         """
-        from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
         self._appFrame.hackCut()
         # from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers

@@ -24,6 +24,7 @@ from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.LineShape import LineShape
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
 from org.pyut.ogl.OglPosition import OglPosition
 
@@ -31,8 +32,6 @@ from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.general.Globals import _
 
 from org.pyut.model.PyutLink import PyutLink
-
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
 
 from org.pyut.ogl.IllegalOperationException import IllegalOperationException
 

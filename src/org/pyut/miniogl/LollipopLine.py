@@ -14,7 +14,7 @@ from org.pyut.miniogl.Common import CommonPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.Shape import Shape
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
 
 class LollipopLine(Shape):

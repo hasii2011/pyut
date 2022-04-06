@@ -14,7 +14,7 @@ from wx import OK
 
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue

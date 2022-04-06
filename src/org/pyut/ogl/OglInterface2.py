@@ -9,8 +9,7 @@ from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
 from wx import Font
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
-
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 from org.pyut.miniogl.Common import Common
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.LollipopLine import LollipopLine

@@ -10,7 +10,7 @@ from org.pyut.miniogl.Shape import Shape
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 
 
 class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):

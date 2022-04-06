@@ -12,8 +12,7 @@ from pkg_resources import resource_filename
 
 from wx import App
 
-from org.pyut.enums.AttachmentPoint import AttachmentPoint
-
+from org.pyut.miniogl.AttachmentPoint import AttachmentPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.model.PyutMethod import PyutMethod
