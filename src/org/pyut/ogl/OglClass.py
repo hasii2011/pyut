@@ -423,9 +423,9 @@ class OglClass(OglObject):
         elif eventId == MENU_FIT_FIELDS:
             self.autoResize()
         elif eventId == MENU_CUT_SHAPE:
-            self._eventEngine.sendCutShapeEvent(shapeToCut=self)
+            self.eventEngine.sendCutShapeEvent(shapeToCut=self)
         elif eventId == MENU_IMPLEMENT_INTERFACE:
-            self._eventEngine.sendRequestLollipopLocationEvent(requestShape=self)
+            self.eventEngine.sendRequestLollipopLocationEvent(requestShape=self)
         else:
             event.Skip()
 
