@@ -43,11 +43,10 @@ class TestIDFactory(TestBase):
 
     @classmethod
     def setUpClass(cls):
+        PyutPreferences.determinePreferencesLocation()
         TestBase.setUpLogging()
         TestIDFactory.clsLogger = getLogger(__name__)
-
-        PyutPreferences.determinePreferencesLocation()
-        TestIDFactory.clsApp = App()
+        TestIDFactory.clsApp    = App()
 
     @classmethod
     def tearDownClass(cls):
