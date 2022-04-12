@@ -38,6 +38,7 @@
         },
         "org": {
             "level":     "WARNING",
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "org.pyut": {
@@ -52,33 +53,24 @@
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.ogl.OglObject": {
-            "level":     "DEBUG",
-            "handlers":  ["consoleHandler"],
+        "org.pyut.ogl.OglClass": {
+            "level":     "INFO",
             "propagate": "False"
         },
         "org.pyut.ui.UmlDiagramsFrame": {
             "level":     "DEBUG",
-            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-
         "org.pyut.miniogl.DiagramFrame": {
             "level":     "WARNING",
-            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
-
         "org.pyut.miniogl.Shape": {
             "level":     "DEBUG",
             "propagate": "False"
         },
-        "org.pyut.miniogl.LineShape": {
+        "org.pyut.miniogl.SelectAnchorPoint": {
             "level":     "DEBUG",
-            "propagate": "False"
-        },
-        "org.pyut.plugins.io.javasupport.ReverseJava": {
-            "level":     "INFO",
             "propagate": "False"
         }
 

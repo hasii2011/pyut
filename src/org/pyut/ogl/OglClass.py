@@ -5,6 +5,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from dataclasses import dataclass
+
 from wx import BLACK
 from wx import DC
 from wx import EVT_MENU
@@ -18,7 +20,9 @@ from wx import Menu
 from wx import CommandEvent
 from wx import MenuItem
 from wx import MouseEvent
+from wx import Point
 
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutObject import PyutObject
@@ -26,8 +30,6 @@ from org.pyut.model.PyutClass import PyutClass
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
-
-from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
 from org.pyut.PyutConstants import PyutConstants
 
@@ -51,6 +53,12 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 ]  = PyutUtils.assignID(7)
 
 MARGIN: int = 10
+
+
+@dataclass
+class ClickedOnSelectAnchorPointData:
+    clicked:           bool             = False
+    selectAnchorPoint: SelectAnchorPoint = cast(SelectAnchorPoint, None)
 
 
 class OglClass(OglObject):
@@ -401,6 +409,20 @@ class OglClass(OglObject):
         self.logger.debug(f'OglClass - x,y: {x},{y}')
         frame.PopupMenu(menu, x, y)
 
+    def OnLeftDown(self, event: MouseEvent):
+        """
+        May be called (inexcusably bad form) by the selection anchor point left down handler
+        and using its parent protected attribute
+        Args:
+            event:
+        """
+        self.logger.info(f'OnLeftDown: {event=}')
+        # noinspection PyPropertyAccess
+        clickPoint: Point = event.Position
+        selectData: ClickedOnSelectAnchorPointData = self._didWeClickOnSelectAnchorPoint(clickPoint=clickPoint)
+        if selectData.clicked is True:
+            self.eventEngine.sendCreateLollipopInterfaceEvent(implementor=self, attachmentPoint=selectData.selectAnchorPoint)    # invoke event engine
+
     def OnMenuClick(self, event: CommandEvent):
         """
         Callback for popup menu on class
@@ -451,6 +473,31 @@ class OglClass(OglObject):
             pyutClass.displayParameters = PyutDisplayParameters.UNSPECIFIED
         else:
             assert False, 'Unknown display type'
+
+    def _didWeClickOnSelectAnchorPoint(self, clickPoint: Point) -> ClickedOnSelectAnchorPointData:
+        """
+
+        Args:
+            clickPoint:
+
+        Returns:  Data class with relevant information
+        """
+
+        from org.pyut.miniogl.Shape import Shape
+
+        selectData: ClickedOnSelectAnchorPointData = ClickedOnSelectAnchorPointData(clicked=False)
+        anchors = self.GetAnchors()
+        for shape in anchors:
+            child: Shape = cast(Shape, shape)
+            if isinstance(child, SelectAnchorPoint):
+                selectAnchorPoint: SelectAnchorPoint = cast(SelectAnchorPoint, child)
+                x, y = clickPoint.Get()
+                if selectAnchorPoint.Inside(x=x, y=y):
+                    selectData.selectAnchorPoint = child
+                    selectData.clicked           = True
+                    break
+
+        return selectData
 
     def _isSameName(self, other) -> bool:
 

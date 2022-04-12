@@ -9,10 +9,11 @@ from wx import PostEvent
 from wx import Window
 from wx import PyEventBinder
 
-from org.pyut.general.Singleton import Singleton
+
 from org.pyut.miniogl.Shape import Shape
 
 from org.pyut.ogl.events.IEventEngine import IEventEngine
+from org.pyut.ogl.events.OglEvents import CreateLollipopInterfaceEvent
 from org.pyut.ogl.events.OglEvents import CutOglClassEvent
 from org.pyut.ogl.events.OglEvents import ProjectModifiedEvent
 from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
@@ -53,4 +54,9 @@ class OglEventEngine(IEventEngine):
 
     def sendRequestLollipopLocationEvent(self, requestShape: Shape):
         eventToPost: RequestLollipopLocationEvent = RequestLollipopLocationEvent(shape=requestShape)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def sendCreateLollipopInterfaceEvent(self, implementor, attachmentPoint):
+
+        eventToPost: CreateLollipopInterfaceEvent = CreateLollipopInterfaceEvent(implementor=implementor, attachmentPoint=attachmentPoint)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
