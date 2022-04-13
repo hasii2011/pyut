@@ -68,25 +68,25 @@ class TestIDFactory(TestBase):
     def tearDown(self):
         pass
 
-    def testCacheOglInterface(self):
-
-        oglInterface: OglInterface2 = OglInterface2(pyutInterface=self._pyutInterface,  destinationAnchor=self._destinationAnchor)
-        doppleGanger: OglInterface2 = oglInterface
-
-        initialId: int = self._idFactory.getID(oglInterface)
-        nextId:    int = self._idFactory.getID(doppleGanger)
-
-        self.assertEqual(initialId, nextId, 'Should be the same')
-
-    def testCacheOglClass(self):
-
-        oglClass:     OglClass = OglClass(pyutClass=self._pyutClass)
-        doppleGanger: OglClass = oglClass
-
-        initialId: int = self._idFactory.getID(oglClass)
-        nextId:    int = self._idFactory.getID(doppleGanger)
-
-        self.assertEqual(initialId, nextId, 'Should be the same')
+    # def testCacheOglInterface(self):
+    #
+    #     oglInterface: OglInterface2 = OglInterface2(pyutInterface=self._pyutInterface,  destinationAnchor=self._destinationAnchor)
+    #     doppleGanger: OglInterface2 = oglInterface
+    #
+    #     initialId: int = self._idFactory.getID(oglInterface)
+    #     nextId:    int = self._idFactory.getID(doppleGanger)
+    #
+    #     self.assertEqual(initialId, nextId, 'Should be the same')
+    #
+    # def testCacheOglClass(self):
+    #
+    #     oglClass:     OglClass = OglClass(pyutClass=self._pyutClass)
+    #     doppleGanger: OglClass = oglClass
+    #
+    #     initialId: int = self._idFactory.getID(oglClass)
+    #     nextId:    int = self._idFactory.getID(doppleGanger)
+    #
+    #     self.assertEqual(initialId, nextId, 'Should be the same')
 
     def testBasicIDGeneration(self):
         idFactory: IDFactory = IDFactory()
