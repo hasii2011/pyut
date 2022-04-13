@@ -70,6 +70,7 @@ class TestIDFactory(TestBase):
 
     def testCacheOglInterface(self):
 
+        app: App = App()
         oglInterface: OglInterface2 = OglInterface2(pyutInterface=self._pyutInterface,  destinationAnchor=self._destinationAnchor)
         doppleGanger: OglInterface2 = oglInterface
 
