@@ -39,24 +39,21 @@ class TestIDFactory(TestBase):
     """
     """
     clsLogger: Logger = cast(Logger, None)
-    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
         PyutPreferences.determinePreferencesLocation()
         TestBase.setUpLogging()
         TestIDFactory.clsLogger = getLogger(__name__)
-        TestIDFactory.clsApp    = App()
 
     @classmethod
     def tearDownClass(cls):
-        cls.clsApp.OnExit()
-        del cls.clsApp
+        pass
 
     def setUp(self):
         self.logger: Logger = TestIDFactory.clsLogger
 
-        self.app: App = TestIDFactory.clsApp
+        self.app: App = App()
 
         self._idFactory: IDFactory = IDFactory()
 
@@ -66,11 +63,11 @@ class TestIDFactory(TestBase):
         self._pyutClass: PyutClass = PyutClass(name='UnitTestClass')
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testCacheOglInterface(self):
 
-        app: App = App()
         oglInterface: OglInterface2 = OglInterface2(pyutInterface=self._pyutInterface,  destinationAnchor=self._destinationAnchor)
         doppleGanger: OglInterface2 = oglInterface
 
