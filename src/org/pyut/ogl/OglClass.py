@@ -416,12 +416,14 @@ class OglClass(OglObject):
         Args:
             event:
         """
-        self.logger.info(f'OnLeftDown: {event=}')
+        self.logger.info(f'OnLeftDown: {event.GetPosition()}')
         # noinspection PyPropertyAccess
         clickPoint: Point = event.Position
         selectData: ClickedOnSelectAnchorPointData = self._didWeClickOnSelectAnchorPoint(clickPoint=clickPoint)
         if selectData.clicked is True:
             self.eventEngine.sendCreateLollipopInterfaceEvent(implementor=self, attachmentPoint=selectData.selectAnchorPoint)    # invoke event engine
+        else:
+            event.Skip(skip=True)   # keep propagating upwards
 
     def OnMenuClick(self, event: CommandEvent):
         """
@@ -482,7 +484,6 @@ class OglClass(OglObject):
 
         Returns:  Data class with relevant information
         """
-
         from org.pyut.miniogl.Shape import Shape
 
         selectData: ClickedOnSelectAnchorPointData = ClickedOnSelectAnchorPointData(clicked=False)

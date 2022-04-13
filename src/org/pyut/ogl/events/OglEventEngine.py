@@ -1,5 +1,6 @@
 
 from typing import Callable
+from typing import TYPE_CHECKING
 
 from logging import Logger
 from logging import getLogger
@@ -9,10 +10,14 @@ from wx import PostEvent
 from wx import Window
 from wx import PyEventBinder
 
+if TYPE_CHECKING:
+    from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+    from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.miniogl.Shape import Shape
 
 from org.pyut.ogl.events.IEventEngine import IEventEngine
+from org.pyut.ogl.events.OglEventType import OglEventType
 from org.pyut.ogl.events.OglEvents import CreateLollipopInterfaceEvent
 from org.pyut.ogl.events.OglEvents import CutOglClassEvent
 from org.pyut.ogl.events.OglEvents import ProjectModifiedEvent
@@ -37,6 +42,13 @@ class OglEventEngine(IEventEngine):
     def registerListener(self, event: PyEventBinder, callback: Callable):
         self._listeningWindow.Bind(event, callback)
 
+    def sendEvent(self, eventType: OglEventType, **kwargs):
+
+        if eventType == OglEventType.ProjectModified:
+            eventToPost: ProjectModifiedEvent = ProjectModifiedEvent()
+            PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+
     def sendSelectedShapeEvent(self, shape: Shape, position: Point):
 
         eventData:     ShapeSelectedEventData = ShapeSelectedEventData(shape=shape, position=position)
@@ -56,7 +68,7 @@ class OglEventEngine(IEventEngine):
         eventToPost: RequestLollipopLocationEvent = RequestLollipopLocationEvent(shape=requestShape)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
-    def sendCreateLollipopInterfaceEvent(self, implementor, attachmentPoint):
+    def sendCreateLollipopInterfaceEvent(self, implementor: 'OglClass', attachmentPoint: 'SelectAnchorPoint'):
 
         eventToPost: CreateLollipopInterfaceEvent = CreateLollipopInterfaceEvent(implementor=implementor, attachmentPoint=attachmentPoint)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

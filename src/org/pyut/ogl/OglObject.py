@@ -20,9 +20,11 @@ from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.model.PyutObject import PyutObject
-from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
 from org.pyut.ogl.OglLink import OglLink
+
+from org.pyut.ogl.events.OglEventType import OglEventType
+from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -163,7 +165,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
             y:  The new ordinate
         """
         if self.eventEngine is not None:        # we might be associated with a diagram yet
-            self.eventEngine.sendProjectModifiedEvent()
+            self.eventEngine.sendEvent(OglEventType.ProjectModified)
         RectangleShape.SetPosition(self, x, y)
 
     def SetSelected(self, state=True):

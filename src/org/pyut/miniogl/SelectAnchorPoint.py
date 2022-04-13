@@ -60,7 +60,7 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
         Args:
             event: The mouse event
         """
-        self.logger.debug(f'SelectAnchorPoint.OnLeftDown:  {self._parent=}')
+        self.logger.debug(f'SelectAnchorPoint.OnLeftDown:  {self._parent=} {event.GetPosition()=}')
         self._parent.OnLeftDown(event)      # bad form;  but anything to get rid of mediator
 
     def __str__(self) -> str:

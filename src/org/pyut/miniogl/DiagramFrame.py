@@ -189,6 +189,7 @@ class DiagramFrame(ScrolledWindow):
         shape: ShapeEventHandler = self.GenericHandler(event, "OnLeftDown")
         self._clickedShape = cast(Shape, shape)  # store the last clicked shape
         if not event.GetSkipped():
+            self.diagramFrameLogger.debug(f'{event.GetSkipped()=}')
             return
         if shape is None:
             self._BeginSelect(event)

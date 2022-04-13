@@ -21,9 +21,9 @@ class AnchorPoint(LinePoint):
         """
         super().__init__(x, y, parent)
 
-        self.logger: Logger = getLogger(__name__)
+        self.apLogger: Logger = getLogger(__name__)
 
-        self.logger.debug(f'AnchorPoint __init__  x: {x}, y: {y} parent: {parent}')
+        self.apLogger.debug(f'AnchorPoint __init__  x: {x}, y: {y} parent: {parent}')
         self._protected:    bool = True  # protected by default
         self._stayInside:   bool = True
         self._stayOnBorder: bool = True
@@ -69,7 +69,7 @@ class AnchorPoint(LinePoint):
             y:  Ordinate of anchor point
         """
 
-        self.logger.debug(
+        self.apLogger.debug(
             (
                 f'x,y: ({x},{y}) '
                 f'parent: {self._parent} '
@@ -86,7 +86,7 @@ class AnchorPoint(LinePoint):
                 width, height      = self._parent.GetSize()
                 width  = abs(width) - 1
                 height = abs(height) - 1
-                self.logger.debug(f'topLeftX,topLeftY ({topLeftX},{topLeftY}) width,height ({width},{height})')
+                self.apLogger.debug(f'topLeftX,topLeftY ({topLeftX},{topLeftY}) width,height ({width},{height})')
 
                 from org.pyut.miniogl.LineShape import LineShape    # avoid circular import
 
@@ -101,7 +101,7 @@ class AnchorPoint(LinePoint):
 
                 self._x, self._y = self.ConvertCoordToRelative(x, y)
 
-                self.logger.debug(f'Final Position: ({self._x}, {self._y})')
+                self.apLogger.debug(f'Final Position: ({self._x}, {self._y})')
 
             if self.HasDiagramFrame():
                 self.UpdateModel()
@@ -149,7 +149,7 @@ class AnchorPoint(LinePoint):
             down: lambda xDown, yDown: (x, oy + height),
         }
         lesser = min(left, right, up, down)
-        self.logger.debug(f'lesser: {lesser}')
+        self.apLogger.debug(f'lesser: {lesser}')
         return choice[lesser](x, y)
 
     def Detach(self):
