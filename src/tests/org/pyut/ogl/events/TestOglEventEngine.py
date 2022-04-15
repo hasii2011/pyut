@@ -35,6 +35,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
+from org.pyut.ogl.events.OglEventType import OglEventType
 from org.pyut.ogl.events.OglEvents import CreateLollipopInterfaceEvent
 from org.pyut.ogl.events.OglEvents import CutOglClassEvent
 from org.pyut.ogl.events.OglEvents import EVT_CREATE_LOLLIPOP_INTERFACE
@@ -69,13 +70,13 @@ class TestOglEventEngine(App):
 
         self._setupTheUI(sizedFrame=self._sizedFrame)
 
-        self._eventManager: OglEventEngine = OglEventEngine(listeningWindow=self._sizedFrame)
+        self._eventEngine: OglEventEngine = OglEventEngine(listeningWindow=self._sizedFrame)
 
-        self._eventManager.registerListener(EVT_SHAPE_SELECTED,   self._onAShapeWasSelected)
-        self._eventManager.registerListener(EVT_CUT_OGL_CLASS,    self._onShapeCut)
-        self._eventManager.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
-        self._eventManager.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
-        self._eventManager.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
+        self._eventEngine.registerListener(EVT_SHAPE_SELECTED, self._onAShapeWasSelected)
+        self._eventEngine.registerListener(EVT_CUT_OGL_CLASS, self._onShapeCut)
+        self._eventEngine.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
+        self._eventEngine.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
+        self._eventEngine.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
 
         return True
 
@@ -130,31 +131,32 @@ class TestOglEventEngine(App):
 
         pyutClass: PyutClass = PyutClass(name='TestShape')
         oglClass:  OglClass  = OglClass(pyutClass=pyutClass)
-        self._eventManager.sendSelectedShapeEvent(shape=oglClass, position=Point(100, 100))
+        self._eventEngine.sendEvent(OglEventType.ShapeSelected, selectedShape=oglClass, selectedShapePosition=Point(100, 100))
 
     # noinspection PyUnusedLocal
     def _onSendCutOglClassShape(self, event: GenButtonEvent):
         pyutClass: PyutClass = PyutClass(name='OglTestClass')
         oglClass:  OglClass  = OglClass(pyutClass=pyutClass)
-        self._eventManager.sendCutShapeEvent(shapeToCut=oglClass)
+        self._eventEngine.sendEvent(OglEventType.CutOglClass, shapeToCut=oglClass)
 
     # noinspection PyUnusedLocal
     def _onSendProjectModified(self, event: GenButtonEvent):
-        self._eventManager.sendProjectModifiedEvent()
+        self._eventEngine.sendEvent(OglEventType.ProjectModified)
 
     # noinspection PyUnusedLocal
     def _onSendRequestLollipopLocation(self, event: GenButtonEvent):
         pyutClass: PyutClass = PyutClass(name='ClassRequestingLollipopLocation')
         oglClass:  OglClass  = OglClass(pyutClass=pyutClass)
-        self._eventManager.sendRequestLollipopLocationEvent(requestShape=oglClass)
+        self._eventEngine.sendEvent(OglEventType.RequestLollipopLocation, requestShape=oglClass)
 
     # noinspection PyUnusedLocal
     def _onSendCreateLollipop(self, event: GenButtonEvent):
-        pyutClass:       PyutClass        = PyutClass(name='Implementor')
+        pyutClass:       PyutClass         = PyutClass(name='Implementor')
         implementor:     OglClass          = OglClass(pyutClass=pyutClass)
         attachmentPoint: SelectAnchorPoint = SelectAnchorPoint(x=100, y=100, attachmentPoint=AttachmentLocation.SOUTH, parent=implementor)
 
-        self._eventManager.sendCreateLollipopInterfaceEvent(implementor=implementor, attachmentPoint=attachmentPoint)
+        self._eventEngine.sendEvent(OglEventType.CreateLollipopInterface, implementor=implementor, attachmentPoint=attachmentPoint)
+        # self._eventEngine.sendCreateLollipopInterfaceEvent(implementor=implementor, attachmentPoint=attachmentPoint)
 
     def _onAShapeWasSelected(self, event: ShapeSelectedEvent):
 

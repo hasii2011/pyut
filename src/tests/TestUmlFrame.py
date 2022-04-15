@@ -43,7 +43,6 @@ class TestUmlFrame(unittest.TestCase):
 
         PyutPreferences.determinePreferencesLocation()  # Side effect;  not a good move
 
-
     @classmethod
     def tearDownClass(cls):
         pass

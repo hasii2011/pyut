@@ -1,12 +1,11 @@
 from typing import Callable
 
-from wx import Point
-from wx import PyEventBinder
-
-from org.pyut.miniogl.Shape import Shape
-
 from abc import ABC
 from abc import abstractmethod
+
+from wx import PyEventBinder
+
+from org.pyut.ogl.events.OglEventType import OglEventType
 
 
 class IEventEngine(ABC):
@@ -19,13 +18,5 @@ class IEventEngine(ABC):
         pass
 
     @abstractmethod
-    def sendSelectedShapeEvent(self, shape: Shape, position: Point):
-        pass
-
-    @abstractmethod
-    def sendCutShapeEvent(self, shapeToCut: Shape):
-        pass
-
-    @abstractmethod
-    def sendRequestLollipopLocationEvent(self, requestShape: Shape):
+    def sendEvent(self, eventType: OglEventType, **kwargs):
         pass

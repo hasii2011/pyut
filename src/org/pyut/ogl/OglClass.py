@@ -37,6 +37,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+from org.pyut.ogl.events.OglEventType import OglEventType
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -100,6 +101,22 @@ class OglClass(OglObject):
 
         self._nameFont: Font   = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_BOLD)
         self.logger:    Logger = getLogger(__name__)
+
+    def handleSelectAnchorPointSelection(self, event: MouseEvent):
+        """
+        May be called (inexcusably bad form) by the selection anchor point left down handler
+        by using its parent protected attribute
+
+        Args:
+            event:
+        """
+        self.logger.info(f'OnLeftDown: {event.GetPosition()}')
+        # noinspection PyPropertyAccess
+        clickPoint: Point = event.Position
+        selectData: ClickedOnSelectAnchorPointData = self._didWeClickOnSelectAnchorPoint(clickPoint=clickPoint)
+        if selectData.clicked is True:
+            self.eventEngine.sendEvent(OglEventType.CreateLollipopInterface, implementor=self, attachmentPoint=selectData.selectAnchorPoint)
+            # self.eventEngine.sendCreateLollipopInterfaceEvent(implementor=self, attachmentPoint=selectData.selectAnchorPoint)
 
     def GetTextWidth(self, dc, text):
         width = dc.GetTextExtent(text)[0]
@@ -409,22 +426,6 @@ class OglClass(OglObject):
         self.logger.debug(f'OglClass - x,y: {x},{y}')
         frame.PopupMenu(menu, x, y)
 
-    def OnLeftDown(self, event: MouseEvent):
-        """
-        May be called (inexcusably bad form) by the selection anchor point left down handler
-        and using its parent protected attribute
-        Args:
-            event:
-        """
-        self.logger.info(f'OnLeftDown: {event.GetPosition()}')
-        # noinspection PyPropertyAccess
-        clickPoint: Point = event.Position
-        selectData: ClickedOnSelectAnchorPointData = self._didWeClickOnSelectAnchorPoint(clickPoint=clickPoint)
-        if selectData.clicked is True:
-            self.eventEngine.sendCreateLollipopInterfaceEvent(implementor=self, attachmentPoint=selectData.selectAnchorPoint)    # invoke event engine
-        else:
-            event.Skip(skip=True)   # keep propagating upwards
-
     def OnMenuClick(self, event: CommandEvent):
         """
         Callback for popup menu on class
@@ -447,9 +448,11 @@ class OglClass(OglObject):
         elif eventId == MENU_FIT_FIELDS:
             self.autoResize()
         elif eventId == MENU_CUT_SHAPE:
-            self.eventEngine.sendCutShapeEvent(shapeToCut=self)
+            self.eventEngine.sendEvent(OglEventType.CutOglClass, shapeToCut=self)
+            # self.eventEngine.sendCutShapeEvent(shapeToCut=self)
         elif eventId == MENU_IMPLEMENT_INTERFACE:
-            self.eventEngine.sendRequestLollipopLocationEvent(requestShape=self)
+            self.eventEngine.sendEvent(OglEventType.RequestLollipopLocation, requestShape=self)
+            # self.eventEngine.sendRequestLollipopLocationEvent(requestShape=self)
         else:
             event.Skip()
 
