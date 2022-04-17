@@ -230,13 +230,6 @@ class PyutApplicationFrame(Frame):
         project.selectSelf()
         mainUI.currentFrame = project.getFrames()[0]
 
-    def hackCut(self):
-        """
-        Because I cannot seem to post events to the Edit Menu
-        """
-        # noinspection PyTypeChecker
-        self._editMenuHandler.onCut(None)
-
     def _onNewAction(self, event: CommandEvent):
         """
         Call the mediator to specify the current action.

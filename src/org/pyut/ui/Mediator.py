@@ -7,6 +7,7 @@ from wx import CENTRE
 from wx import WXK_DELETE
 from wx import WXK_INSERT
 from wx import WXK_BACK
+from wx import wxEVT_MENU
 
 from wx import ID_OK
 from wx import ID_NO
@@ -988,17 +989,17 @@ class Mediator(Singleton):
 
     def cutSelectedShapes(self):
         """
-        TODO  This event send does not yet work; Fix fix fix
+
         """
 
-        self._appFrame.hackCut()
-        # from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
-        #
-        # parent:   PyutApplicationFrame     = self._appFrame
-        # menu = self._appFrame._editMenuHandler._menu
-        # cutEvent: CommandEvent = CommandEvent(id=SharedIdentifiers.ID_MNU_EDIT_CUT)
-        #
-        # wxPostEvent(dest=menu, event=cutEvent)
+        from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+        from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
+
+        parent:   PyutApplicationFrame = self._appFrame
+        cutEvent: CommandEvent         = CommandEvent(id=SharedIdentifiers.ID_MNU_EDIT_CUT)
+        cutEvent.SetEventType(wxEVT_MENU)   # This is some magic number
+
+        wxPostEvent(dest=parent, event=cutEvent)
 
     def getCurrentAction(self):
         return self._currentAction
