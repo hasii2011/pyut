@@ -1,4 +1,6 @@
 
+from logging import Logger
+from logging import getLogger
 
 from wx import BLACK_PEN
 from wx import RED_PEN
@@ -30,9 +32,10 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
         """
         super().__init__(x, y, parent)
 
+        self.logger: Logger = getLogger(__name__)
         self._attachmentPoint: AttachmentLocation = attachmentPoint
-        self._pen:             Pen             = RED_PEN
-        self.SetDraggable(True)     # So it sticks on OglClass resize
+        self._pen:             Pen                = RED_PEN
+        self.SetDraggable(True)     # So it sticks on OglClass resize;  But now the user can move it !!
 
     @property
     def attachmentPoint(self) -> AttachmentLocation:
@@ -57,10 +60,13 @@ class SelectAnchorPoint(AnchorPoint, ShapeEventHandler):
         Args:
             event: The mouse event
         """
+        self.logger.debug(f'SelectAnchorPoint.OnLeftDown:  {self._parent=} {event.GetPosition()=}')
+        self._parent.handleSelectAnchorPointSelection(event)      # bad form;  but anything to get rid of mediator
 
-        from org.pyut.ui.Mediator import Mediator   # avoid circular import
+    def __str__(self) -> str:
+        x, y = self.GetPosition()
+        draggable: bool = self._draggable
+        return f'SelectAnchorPoint[({x},{y}) - {draggable=}]'
 
-        print(f'SelectAnchorPoint: {self._attachmentPoint}')
-
-        mediator: Mediator = Mediator()
-        mediator.createLollipopInterface(implementor=self.GetParent(), attachmentAnchor=self)
+    def __repr__(self):
+        return self.__str__()

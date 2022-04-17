@@ -6,8 +6,9 @@ from wx import Notebook
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
-from org.pyut.ogl.events.OglEvents import EVT_PROJECT_MODIFIED
 
+from org.pyut.ogl.events.OglEvents import EVT_CREATE_LOLLIPOP_INTERFACE
+from org.pyut.ogl.events.OglEvents import EVT_PROJECT_MODIFIED
 from org.pyut.ogl.events.OglEvents import EVT_SHAPE_SELECTED
 from org.pyut.ogl.events.OglEvents import EVT_CUT_OGL_CLASS
 from org.pyut.ogl.events.OglEvents import EVT_REQUEST_LOLLIPOP_LOCATION
@@ -16,6 +17,7 @@ from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
 from org.pyut.ogl.events.OglEvents import CutOglClassEvent
 from org.pyut.ogl.events.OglEvents import ProjectModifiedEvent
 from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
+from org.pyut.ogl.events.OglEvents import CreateLollipopInterfaceEvent
 
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
@@ -31,7 +33,6 @@ class UmlDiagramsFrame(UmlFrame):
 
     It is used by UmlClassDiagramsFrame
     """
-    umlDiagramFrameLogger: Logger = getLogger(__name__)
 
     def __init__(self, parent: Notebook):
         """
@@ -39,6 +40,7 @@ class UmlDiagramsFrame(UmlFrame):
         Args:
             parent: wx.Window parent window;  In practice this is always wx.Notebook instance
         """
+        self.umlDiagramFrameLogger: Logger = getLogger(__name__)
 
         super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
 
@@ -48,6 +50,7 @@ class UmlDiagramsFrame(UmlFrame):
         self._eventEngine.registerListener(EVT_CUT_OGL_CLASS, self._onCutOglClassShape)
         self._eventEngine.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
         self._eventEngine.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
+        self._eventEngine.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
 
     @property
     def eventEngine(self) -> OglEventEngine:
@@ -79,7 +82,7 @@ class UmlDiagramsFrame(UmlFrame):
         shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
 
         if self._ctrl.actionWaiting():
-            UmlDiagramsFrame.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
+            self.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
             self._ctrl.shapeSelected(shapeSelectedData.shape, shapeSelectedData.position)
 
     def _onCutOglClassShape(self, cutOglClassEvent: CutOglClassEvent):
@@ -100,3 +103,11 @@ class UmlDiagramsFrame(UmlFrame):
 
         shape = event.shape
         self._ctrl.requestLollipopLocation(shape)
+
+    def _onCreateLollipopInterface(self, event: CreateLollipopInterfaceEvent):
+
+        attachmentPoint = event.attachmentPoint
+        implementor     = event.implementor
+        self.umlDiagramFrameLogger.info(f'{attachmentPoint=} {implementor=}')
+
+        self._ctrl.createLollipopInterface(implementor=implementor, attachmentAnchor=attachmentPoint)

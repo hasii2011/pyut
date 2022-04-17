@@ -6,3 +6,4 @@ CutOglClassEvent,     EVT_CUT_OGL_CLASS    = NewEvent()
 ProjectModifiedEvent, EVT_PROJECT_MODIFIED = NewEvent()
 
 RequestLollipopLocationEvent, EVT_REQUEST_LOLLIPOP_LOCATION = NewEvent()
+CreateLollipopInterfaceEvent, EVT_CREATE_LOLLIPOP_INTERFACE = NewEvent()

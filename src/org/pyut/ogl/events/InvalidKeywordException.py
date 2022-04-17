@@ -1,0 +1,3 @@
+
+class InvalidKeywordException(Exception):
+    pass

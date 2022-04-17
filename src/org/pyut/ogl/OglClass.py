@@ -5,6 +5,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from dataclasses import dataclass
+
 from wx import BLACK
 from wx import DC
 from wx import EVT_MENU
@@ -18,7 +20,9 @@ from wx import Menu
 from wx import CommandEvent
 from wx import MenuItem
 from wx import MouseEvent
+from wx import Point
 
+from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutObject import PyutObject
@@ -27,14 +31,13 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
-from org.pyut.ogl.events.OglEventEngine import OglEventEngine
-
 from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+from org.pyut.ogl.events.OglEventType import OglEventType
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -51,6 +54,12 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 ]  = PyutUtils.assignID(7)
 
 MARGIN: int = 10
+
+
+@dataclass
+class ClickedOnSelectAnchorPointData:
+    clicked:           bool             = False
+    selectAnchorPoint: SelectAnchorPoint = cast(SelectAnchorPoint, None)
 
 
 class OglClass(OglObject):
@@ -92,6 +101,22 @@ class OglClass(OglObject):
 
         self._nameFont: Font   = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_BOLD)
         self.logger:    Logger = getLogger(__name__)
+
+    def handleSelectAnchorPointSelection(self, event: MouseEvent):
+        """
+        May be called (inexcusably bad form) by the selection anchor point left down handler
+        by using its parent protected attribute
+
+        Args:
+            event:
+        """
+        self.logger.info(f'OnLeftDown: {event.GetPosition()}')
+        # noinspection PyPropertyAccess
+        clickPoint: Point = event.Position
+        selectData: ClickedOnSelectAnchorPointData = self._didWeClickOnSelectAnchorPoint(clickPoint=clickPoint)
+        if selectData.clicked is True:
+            self.eventEngine.sendEvent(OglEventType.CreateLollipopInterface, implementor=self, attachmentPoint=selectData.selectAnchorPoint)
+            # self.eventEngine.sendCreateLollipopInterfaceEvent(implementor=self, attachmentPoint=selectData.selectAnchorPoint)
 
     def GetTextWidth(self, dc, text):
         width = dc.GetTextExtent(text)[0]
@@ -423,9 +448,11 @@ class OglClass(OglObject):
         elif eventId == MENU_FIT_FIELDS:
             self.autoResize()
         elif eventId == MENU_CUT_SHAPE:
-            self.eventEngine.sendCutShapeEvent(shapeToCut=self)
+            self.eventEngine.sendEvent(OglEventType.CutOglClass, shapeToCut=self)
+            # self.eventEngine.sendCutShapeEvent(shapeToCut=self)
         elif eventId == MENU_IMPLEMENT_INTERFACE:
-            self.eventEngine.sendRequestLollipopLocationEvent(requestShape=self)
+            self.eventEngine.sendEvent(OglEventType.RequestLollipopLocation, requestShape=self)
+            # self.eventEngine.sendRequestLollipopLocationEvent(requestShape=self)
         else:
             event.Skip()
 
@@ -451,6 +478,30 @@ class OglClass(OglObject):
             pyutClass.displayParameters = PyutDisplayParameters.UNSPECIFIED
         else:
             assert False, 'Unknown display type'
+
+    def _didWeClickOnSelectAnchorPoint(self, clickPoint: Point) -> ClickedOnSelectAnchorPointData:
+        """
+
+        Args:
+            clickPoint:
+
+        Returns:  Data class with relevant information
+        """
+        from org.pyut.miniogl.Shape import Shape
+
+        selectData: ClickedOnSelectAnchorPointData = ClickedOnSelectAnchorPointData(clicked=False)
+        anchors = self.GetAnchors()
+        for shape in anchors:
+            child: Shape = cast(Shape, shape)
+            if isinstance(child, SelectAnchorPoint):
+                selectAnchorPoint: SelectAnchorPoint = cast(SelectAnchorPoint, child)
+                x, y = clickPoint.Get()
+                if selectAnchorPoint.Inside(x=x, y=y):
+                    selectData.selectAnchorPoint = child
+                    selectData.clicked           = True
+                    break
+
+        return selectData
 
     def _isSameName(self, other) -> bool:
 

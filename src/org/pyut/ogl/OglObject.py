@@ -20,9 +20,11 @@ from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.model.PyutObject import PyutObject
-from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
 from org.pyut.ogl.OglLink import OglLink
+
+from org.pyut.ogl.events.OglEventType import OglEventType
+from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -128,8 +130,11 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         OglObject.clsLogger.debug(f'OglObject.OnLeftDown  - {event.GetEventObject()=}')
 
-        self.eventEngine.sendSelectedShapeEvent(shape=self, position=event.GetPosition())
-
+        from org.pyut.ui.Mediator import Mediator
+        if Mediator().actionWaiting() is True:
+            self.eventEngine.sendEvent(OglEventType.ShapeSelected, selectedShape=self, selectedShapePosition=event.GetPosition())
+            # self.eventEngine.sendSelectedShapeEvent(shape=self, position=event.GetPosition())
+            return
         event.Skip()
 
     def OnLeftUp(self, event: MouseEvent):
@@ -163,7 +168,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
             y:  The new ordinate
         """
         if self.eventEngine is not None:        # we might be associated with a diagram yet
-            self.eventEngine.sendProjectModifiedEvent()
+            self.eventEngine.sendEvent(OglEventType.ProjectModified)
         RectangleShape.SetPosition(self, x, y)
 
     def SetSelected(self, state=True):

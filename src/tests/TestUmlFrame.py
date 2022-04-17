@@ -34,10 +34,8 @@ class TestUmlFrame(unittest.TestCase):
     """
     This class do basic tests on UmlFrame :
     it creates classes, actors, notes, links, etc...
-    @author C.Dutoit
     """
 
-    clsApp:   App      = None
     clsFrame: UmlFrame = cast(UmlFrame, None)
 
     @classmethod
@@ -45,19 +43,9 @@ class TestUmlFrame(unittest.TestCase):
 
         PyutPreferences.determinePreferencesLocation()  # Side effect;  not a good move
 
-        cls.clsApp = PyUtApp()
-        #  Create frame
-        baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
-        # noinspection PyTypeChecker
-        umlFrame = UmlFrame(baseFrame, None)
-        umlFrame.Show(True)
-
-        cls.clsFrame = umlFrame
-
     @classmethod
     def tearDownClass(cls):
-        cls.clsApp.OnExit()
-        del cls.clsApp
+        pass
 
     def setUp(self):
         """
@@ -75,10 +63,18 @@ class TestUmlFrame(unittest.TestCase):
         whereWeAre: str = getcwd()
         PyutUtils.setBasePath(whereWeAre)
 
-        self.app = TestUmlFrame.clsApp
-        self._umlFrame: UmlFrame = TestUmlFrame.clsFrame
+        self.app: App = App()
+        #  Create frame
+        baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
+        # noinspection PyTypeChecker
+        umlFrame = UmlFrame(baseFrame, None)
+        umlFrame.Show(True)
+
+        self._umlFrame: UmlFrame = umlFrame
 
     def tearDown(self):
+
+        self.app.OnExit()
 
         del self.app
         del self._umlFrame
@@ -92,7 +88,6 @@ class TestUmlFrame(unittest.TestCase):
     def testClassCreation(self):
         """
         Test Class Creation
-        @author C.Dutoit
         """
         # Create a PyutClass
         try:
@@ -116,7 +111,6 @@ class TestUmlFrame(unittest.TestCase):
     def testNoteCreation(self):
         """
         Test Note Creation
-        @author C.Dutoit
         """
         # PyutNote creation
         try:
@@ -140,7 +134,6 @@ class TestUmlFrame(unittest.TestCase):
     def testActorCreation(self):
         """
         Test Actor Creation
-        @author C.Dutoit
         """
         # Create a PyutActor
         try:
@@ -164,7 +157,6 @@ class TestUmlFrame(unittest.TestCase):
     def testUseCaseCreation(self):
         """
         Test UseCase Creation
-        @author C.Dutoit
         """
         # Create a PyutUseCase
         try:
@@ -188,7 +180,6 @@ class TestUmlFrame(unittest.TestCase):
     # def testInheritanceLinkCreation(self):
     #     """
     #     Test Inheritance link Creation
-    #     @author C.Dutoit
     #     """
     #     # Create two PyutClass
     #     try:
@@ -215,7 +206,6 @@ class TestUmlFrame(unittest.TestCase):
     # def testNewLinkCreation(self):
     #     """
     #     Test new link Creation
-    #     @author C.Dutoit
     #     """
     #     # Create two PyutClass
     #     try:

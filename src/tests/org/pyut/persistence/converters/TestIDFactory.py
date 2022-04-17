@@ -37,27 +37,27 @@ from tests.TestBase import TestBase
 
 class TestIDFactory(TestBase):
     """
+    Create App for each test that needs it.  Tried using a class instance but the
+    Travis CI build complains:
+
+        wx._core.PyNoAppError: The wx.App object must be created first!
+
+    Although, my local OS X test works ok.   Travis CI is running the Linux variant bionic.
     """
     clsLogger: Logger = cast(Logger, None)
-    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
+        PyutPreferences.determinePreferencesLocation()
         TestBase.setUpLogging()
         TestIDFactory.clsLogger = getLogger(__name__)
 
-        PyutPreferences.determinePreferencesLocation()
-        TestIDFactory.clsApp = App()
-
     @classmethod
     def tearDownClass(cls):
-        cls.clsApp.OnExit()
-        del cls.clsApp
+        pass
 
     def setUp(self):
         self.logger: Logger = TestIDFactory.clsLogger
-
-        self.app: App = TestIDFactory.clsApp
 
         self._idFactory: IDFactory = IDFactory()
 
@@ -71,6 +71,8 @@ class TestIDFactory(TestBase):
 
     def testCacheOglInterface(self):
 
+        app: App = App()
+
         oglInterface: OglInterface2 = OglInterface2(pyutInterface=self._pyutInterface,  destinationAnchor=self._destinationAnchor)
         doppleGanger: OglInterface2 = oglInterface
 
@@ -79,7 +81,12 @@ class TestIDFactory(TestBase):
 
         self.assertEqual(initialId, nextId, 'Should be the same')
 
+        app.OnExit()
+        del app
+
     def testCacheOglClass(self):
+
+        app: App = App()
 
         oglClass:     OglClass = OglClass(pyutClass=self._pyutClass)
         doppleGanger: OglClass = oglClass
@@ -88,6 +95,9 @@ class TestIDFactory(TestBase):
         nextId:    int = self._idFactory.getID(doppleGanger)
 
         self.assertEqual(initialId, nextId, 'Should be the same')
+
+        app.OnExit()
+        del app
 
     def testBasicIDGeneration(self):
         idFactory: IDFactory = IDFactory()
