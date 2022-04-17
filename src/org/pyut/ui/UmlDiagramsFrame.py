@@ -81,20 +81,20 @@ class UmlDiagramsFrame(UmlFrame):
 
         shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
 
-        if self._ctrl.actionWaiting():
+        if self._mediator.actionWaiting():
             self.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
-            self._ctrl.shapeSelected(shapeSelectedData.shape, shapeSelectedData.position)
+            self._mediator.shapeSelected(shapeSelectedData.shape, shapeSelectedData.position)
 
     def _onCutOglClassShape(self, cutOglClassEvent: CutOglClassEvent):
 
         selectedOglClass: OglClass = cutOglClassEvent.selectedShape
-        self._ctrl.deselectAllShapes()
+        self._mediator.deselectAllShapes()
         selectedOglClass.SetSelected(True)
-        self._ctrl.cutSelectedShapes()
+        self._mediator.cutSelectedShapes()
 
     # noinspection PyUnusedLocal
     def _onProjectModified(self, event: ProjectModifiedEvent):
-        fileHandling = self._ctrl.getFileHandling()
+        fileHandling = self._mediator.getFileHandling()
 
         if fileHandling is not None:
             fileHandling.setModified(True)
@@ -102,7 +102,7 @@ class UmlDiagramsFrame(UmlFrame):
     def _onRequestLollipopLocation(self, event: RequestLollipopLocationEvent):
 
         shape = event.shape
-        self._ctrl.requestLollipopLocation(shape)
+        self._mediator.requestLollipopLocation(shape)
 
     def _onCreateLollipopInterface(self, event: CreateLollipopInterfaceEvent):
 
@@ -110,4 +110,4 @@ class UmlDiagramsFrame(UmlFrame):
         implementor     = event.implementor
         self.umlDiagramFrameLogger.info(f'{attachmentPoint=} {implementor=}')
 
-        self._ctrl.createLollipopInterface(implementor=implementor, attachmentAnchor=attachmentPoint)
+        self._mediator.createLollipopInterface(implementor=implementor, attachmentAnchor=attachmentPoint)

@@ -68,7 +68,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._ctrl: Mediator = Mediator()
+        self._mediator: Mediator = Mediator()
 
         self.maxWidth:  int  = DEFAULT_WIDTH
         self.maxHeight: int = int(self.maxWidth / A4_FACTOR)  # 1.41 is for A4 support
@@ -85,7 +85,7 @@ class UmlFrame(UmlFrameShapeHandler):
         # Close event
         self.Bind(EVT_CLOSE, self.evtClose)
         self.Bind(EVT_PAINT, self.OnPaint)
-        self.Bind(EVT_CHAR, self._ctrl.processChar)
+        self.Bind(EVT_CHAR, self._mediator.processChar)
 
         self.SetInfinite(True)
 
@@ -97,7 +97,7 @@ class UmlFrame(UmlFrameShapeHandler):
         DEPRECATED
         @author C.Dutoit
         """
-        project = self._ctrl.getFileHandling().getProjectFromFrame(self)
+        project = self._mediator.getFileHandling().getProjectFromFrame(self)
         if project is not None:
             project.setCodePath(path)
         else:
@@ -119,7 +119,7 @@ class UmlFrame(UmlFrameShapeHandler):
         @modified C.Dutoit <dutoitc@hotmail.com>
             Added clean destroy code
         """
-        self._ctrl = None
+        self._mediator = None
         self._frame = None
 
     # noinspection PyUnusedLocal
@@ -146,11 +146,11 @@ class UmlFrame(UmlFrameShapeHandler):
         @author L. Burgbacher <lb@alawa.ch>
         """
 
-        if self._ctrl.actionWaiting():
+        if self._mediator.actionWaiting():
             x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
-            skip = self._ctrl.doAction(x, y)
+            skip = self._mediator.doAction(x, y)
 
-            if self._ctrl.getCurrentAction() == ACTION_ZOOM_IN:
+            if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
                 DiagramFrame._BeginSelect(self, event)
 
             if skip == SKIP_EVENT:
@@ -164,14 +164,14 @@ class UmlFrame(UmlFrameShapeHandler):
         Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
         to make the right action if it is a selection or a zoom.
         """
-        if self._ctrl.getCurrentAction() == ACTION_ZOOM_IN:
+        if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
             width, height = self._selector.GetSize()
             x, y = self._selector.GetPosition()
             self._selector.Detach()
             self._selector = None
             self.DoZoomIn(x, y, width, height)
             self.Refresh()
-            self._ctrl.updateTitle()
+            self._mediator.updateTitle()
         else:
 
             DiagramFrame.OnLeftUp(self, event)
@@ -185,7 +185,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
 
         x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
-        self._ctrl.editObject(x, y)
+        self._mediator.editObject(x, y)
         DiagramFrame.OnLeftDClick(self, event)
 
     def newDiagram(self):
