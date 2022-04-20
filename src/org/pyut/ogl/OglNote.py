@@ -49,7 +49,7 @@ class OglNote(OglObject):
         if height == 0:
             height = prefs.noteDimensions.height
 
-        super().__init__(pyutObject, width, height)
+        super().__init__(pyutObject, width=width, height=height)
 
         self.logger: Logger = getLogger(__name__)
         self.SetBrush(Brush(Colour(255, 255, 230)))

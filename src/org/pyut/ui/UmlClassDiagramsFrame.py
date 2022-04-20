@@ -102,7 +102,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
         cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=child, dst=parent)    # inheritance points back to parent
         cmdGroup.addCommand(cmd)
-        self._history.addCommandGroup(cmdGroup)
+        self._historyManager.addCommandGroup(cmdGroup)
 
         cmd.execute()
 

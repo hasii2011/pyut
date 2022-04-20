@@ -159,7 +159,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         pass
 
-    def SetPosition(self, x, y):
+    def SetPosition(self, x: int, y: int):
         """
         Define new position for the object
 

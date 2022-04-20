@@ -29,7 +29,7 @@ class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):
         Returns: A string representation of the data needed by the command.
         """
 
-        # serialize the common data common
+        # serialize the common data
         serializedShape: str = DeleteOglObjectCommand.serialize(self)
 
         fileName: str = self._shape.pyutObject.fileName

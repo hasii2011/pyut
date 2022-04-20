@@ -9,8 +9,12 @@ from copy import copy
 
 from wx import ClientDC
 from wx import CommandEvent
+
 from wx import Menu
 
+from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
+from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
+from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
@@ -21,6 +25,7 @@ from org.pyut.miniogl.Diagram import Diagram
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
@@ -28,8 +33,10 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
+
+from org.pyut.history.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -49,8 +56,7 @@ class EditMenuHandler(BaseMenuHandler):
         self.logger:    Logger   = getLogger(__name__)
 
         self._treeNotebookHandler: TreeNotebookHandler = self._mediator.getFileHandling()
-
-        self._clipboard: List[PyutObject] = []
+        self._clipboard:           List[PyutObject]    = []
 
     # noinspection PyUnusedLocal
     def onUndo(self, event: CommandEvent):
@@ -100,18 +106,41 @@ class EditMenuHandler(BaseMenuHandler):
             self.logger.warning(f'No selected objects')
             return
 
-        canvas = selected[0].GetDiagram().GetPanel()
+        umlFrame:       UmlClassDiagramsFrame = selected[0].GetDiagram().GetPanel()
+        historyManager: HistoryManager        = umlFrame.historyManager
+        cmdGroup:       CommandGroup          = CommandGroup("Delete UML object(s)")
 
         # put the PyutObjects in the clipboard and remove their graphical representation from the diagram
         for obj in selected:
+
+            if isinstance(obj, OglClass):
+                oglClass: OglClass              = cast(OglClass, obj)
+                cmd:      DeleteOglClassCommand = DeleteOglClassCommand(oglClass)
+                cmdGroup.addCommand(cmd)
+            elif isinstance(obj, OglNote):
+                oglNote: OglNote = cast(OglNote, obj)
+                delNoteCmd: DeleteOglNoteCommand = DeleteOglNoteCommand(oglNote)
+                cmdGroup.addCommand(delNoteCmd)
+            elif isinstance(obj, OglLink):
+                oglLink: OglLink = cast(OglLink, obj)
+                delOglLinkCmd: DelOglLinkCommand = DelOglLinkCommand(oglLink)
+                cmdGroup.addCommand(delOglLinkCmd)
+            elif isinstance(obj, OglObject):
+                delObjCmd: DeleteOglObjectCommand = DeleteOglObjectCommand(obj)
+                cmdGroup.addCommand(delObjCmd)
+            else:
+                assert False, 'Unknown OGL Object'
             obj.Detach()
             self._clipboard.append(obj.pyutObject)
+
+        historyManager.addCommandGroup(cmdGroup)
+        historyManager.execute()
 
         self.logger.info(f'Cut {len(self._clipboard)} objects')
 
         self._treeNotebookHandler.setModified(True)
         self._mediator.updateTitle()
-        canvas.Refresh()
+        umlFrame.Refresh()
 
     # noinspection PyUnusedLocal
     def onCopy(self, event: CommandEvent):
@@ -129,7 +158,7 @@ class EditMenuHandler(BaseMenuHandler):
 
         # put a copy of the PyutObjects in the clipboard
         for obj in selected:
-            obj = copy(obj.yutObject)
+            obj = copy(obj.pyutObject)
             obj.setLinks([])   # we don't want to copy the links
             self._clipboard.append(obj)
 

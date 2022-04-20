@@ -632,8 +632,8 @@ class Shape:
 
         # calculation of the model coordinates in the light of the
         # offsets and ratio and assignment.
-        mx = round(x - dx)/ratio
-        my = round(y - dy)/ratio
+        mx = round(x - dx) // ratio
+        my = round(y - dy) // ratio
         model.SetPosition(mx, my)
 
         # change also the position of the model of the children,
@@ -641,8 +641,8 @@ class Shape:
         # and so their update model is not called
         for child in self._anchors:
             cx, cy = child.GetPosition()
-            cmx = (cx - dx) / ratio
-            cmy = (cy - dy) / ratio
+            cmx = (cx - dx) // ratio
+            cmy = (cy - dy) // ratio
             child.GetModel().SetPosition(cmx, cmy)
 
     def GetModel(self):

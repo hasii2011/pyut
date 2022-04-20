@@ -6,6 +6,9 @@ from typing import Union
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
+
 from wx import EVT_CHAR
 from wx import EVT_CLOSE
 from wx import EVT_PAINT
@@ -80,7 +83,7 @@ class UmlFrame(UmlFrameShapeHandler):
         self.SetScrollbars(UmlFrame.PIXELS_PER_UNIT_X, UmlFrame.PIXELS_PER_UNIT_Y, nbrUnitsX, nbrUnitsY, initPosX, initPosY, False)
 
         self._frame = frame
-        self._history: HistoryManager = HistoryManager(self)
+        self._historyManager: HistoryManager = HistoryManager(self)
 
         # Close event
         self.Bind(EVT_CLOSE, self.evtClose)
@@ -90,6 +93,15 @@ class UmlFrame(UmlFrameShapeHandler):
         self.SetInfinite(True)
 
         self._defaultCursor = self.GetCursor()
+
+    @property
+    def historyManager(self) -> HistoryManager:
+        """
+        Read-only as this is created on the frame initialization.
+
+        Returns:  The frame's history manager.
+        """
+        return self._historyManager
 
     def setCodePath(self, path):
         """
@@ -130,7 +142,7 @@ class UmlFrame(UmlFrameShapeHandler):
         @since 1.35.2.8
         @author C.Dutoit <dutoitc@hotmail.com>
         """
-        self._history.destroy()
+        self._historyManager.destroy()
 
         self.cleanUp()
         self.Destroy()
@@ -216,7 +228,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
         BeginBusyCursor()
 
-        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
+        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
         gh.addHierarchy(pdc.PyutClassNames)
 
         EndBusyCursor()
@@ -229,7 +241,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
         BeginBusyCursor()
 
-        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._history)
+        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
         gh.addHierarchy(pdc.OglClassNames)
 
         EndBusyCursor()
@@ -310,9 +322,8 @@ class UmlFrame(UmlFrameShapeHandler):
                     return shape
         return None
 
+    @deprecated('Use the historyManager property')
     def getHistory(self):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (20.11.2005)
-        @return the history associated to this frame
         """
-        return self._history
+        return self._historyManager

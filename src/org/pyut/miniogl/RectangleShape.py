@@ -40,6 +40,8 @@ class RectangleShape(Shape):
         self._ox: int = 0   # This is done in Shape but Pycharm can't see this in the ShowSizer() code
         # set the model of the shape (MVC pattern)
         self._model: RectangleShapeModel = RectangleShapeModel(self)
+        self._model.SetPosition(x=x, y=y)
+        self._model.SetSize(width=width, height=height)
 
     def SetResizable(self, state: bool):
         """
@@ -286,8 +288,6 @@ class RectangleShape(Shape):
 
     def UpdateFromModel(self):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
-
         Updates the shape position and size from the model in the light of a
         change of state of the diagram frame (here it's only for the zoom)
         """
@@ -306,8 +306,6 @@ class RectangleShape(Shape):
 
     def UpdateModel(self):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
-
         Updates the model when the shape (view) is moved or resized.
         """
         #  change the coordinates of model

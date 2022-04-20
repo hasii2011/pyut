@@ -8,19 +8,14 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from unittest.mock import Mock
-from unittest.mock import PropertyMock
 
 from pkg_resources import resource_filename
 
 from wx import App
 
-from org.pyut.miniogl.Diagram import Diagram
-
 from org.pyut.model.PyutNote import PyutNote
 
 from org.pyut.ogl.OglNote import OglNote
-
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -69,16 +64,7 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
         pyutNote.fileName  = '/Users/hasii/code/PyutNote.java'
         pyutNote.name      = 'UnitTestNote'
 
-        mockFrame: Mock = Mock(spec=UmlClassDiagramsFrame)
-
-        mockFrame.GetXOffset.return_value     = 0
-        mockFrame.GetYOffset.return_value     = 0
-        mockFrame.GetCurrentZoom.return_value = 1.0
-        mockFrame.eventEngine                = PropertyMock(return_value=None)
-
-        mockDiagram: Mock = Mock(spec=Diagram)
-        mockDiagram.GetPanel.return_value = mockFrame
-        mockDiagram.eventEngine = PropertyMock(return_value=None)
+        mockDiagram: Mock = self._createMockDiagram()
 
         oglNote: OglNote = OglNote(pyutNote=pyutNote, w=100, h=100)
 
@@ -87,7 +73,6 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
         oglNote.SetPosition(1024, 1024)
         oglNote.SetSize(width=100, height=100)
         oglNote._id = 3     # must match deserialized file
-
 
         oglLinkedObjectCommand: DeleteOglLinkedObjectCommand = DeleteOglLinkedObjectCommand(shape=oglNote)
 

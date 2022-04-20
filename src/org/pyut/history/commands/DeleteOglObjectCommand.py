@@ -13,7 +13,6 @@ from org.pyut.model.PyutLinkedObject import PyutLinkedObject
 
 class DeleteOglObjectCommand(Command):
     """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
     This class is a part of the history system of PyUt.
     It implements undo & redo of and OglObject deletion. Consider this
     an abstract class, because OglObject is abstract.
