@@ -17,6 +17,7 @@ from wx import Dialog
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_LISTBOX_DCLICK
+from wx import EVT_TEXT
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import LB_SINGLE
@@ -94,6 +95,9 @@ class DlgEditClassCommon(Dialog):
 
         lblName:       StaticText = StaticText (self, ID_ANY, lbl)
         self._txtName: TextCtrl   = TextCtrl(self, ID_TEXT_NAME, "", size=(125, -1))
+
+        # text events
+        self.Bind(EVT_TEXT, self._onNameChange, id=ID_TEXT_NAME)
 
         # Name and Stereotype sizer
         self._szrNameStereotype: BoxSizer = BoxSizer(HORIZONTAL)
@@ -175,6 +179,9 @@ class DlgEditClassCommon(Dialog):
 
         for method in self._pyutModelCopy.methods:
             self._lstMethodList.Append(method.getString())
+
+    def _onNameChange(self, event):
+        self._pyutModelCopy.name = event.GetString()
 
     # noinspection PyUnusedLocal
     def _onDescription(self, event: CommandEvent):
