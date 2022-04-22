@@ -408,6 +408,7 @@ class DlgEditClass(DlgEditClassCommon):
         #
         self._pyutClass.name        = self._pyutModelCopy.name
         self._pyutClass.methods     = self._pyutModelCopy.methods
+        self._pyutClass.fields      = self._pyutModelCopy.fields
         self._pyutClass.description = self._pyutModelCopy.description
 
         from org.pyut.preferences.PyutPreferences import PyutPreferences
