@@ -266,7 +266,7 @@ class FileMenuHandler(BaseMenuHandler):
         """
         # Create a plugin instance
         cl = self._exportPlugins[event.GetId()]
-        umlObjects: List[OglClass]      = self._mediator.getUmlObjects()
+        umlObjects: List[OglClass]      = cast(List[OglClass], self._mediator.getUmlObjects())
         umlFrame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
         obj = cl(umlObjects, umlFrame)
         try:

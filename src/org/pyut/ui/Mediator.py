@@ -1,10 +1,14 @@
 
 from typing import Callable
 from typing import Dict
+from typing import List
 from typing import TYPE_CHECKING
 from typing import Union
 
 from wx import CENTRE
+from wx import Frame
+from wx import StatusBar
+from wx import ToolBar
 from wx import WXK_DELETE
 from wx import WXK_INSERT
 from wx import WXK_BACK
@@ -13,23 +17,21 @@ from wx import wxEVT_MENU
 from wx import ID_OK
 from wx import ID_NO
 
-from wx import BeginBusyCursor
-from wx import EndBusyCursor
 from wx import KeyEvent
 
 from wx import TextEntryDialog
 
 from wx import Yield as wxYield
+from wx import NewIdRef as wxNewIdRef
 
+from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.history.commands.CommandGroup import CommandGroup
 
 from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
-# from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
-# from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
-# from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 
 from org.pyut.miniogl.Constants import EVENT_PROCESSED
 from org.pyut.miniogl.Constants import SKIP_EVENT
+from org.pyut.miniogl.Diagram import Diagram
 from org.pyut.miniogl.LinePoint import LinePoint
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
@@ -46,8 +48,12 @@ from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglText import OglText
 from org.pyut.ogl.OglClass import OglClass
+from org.pyut.ui.tools.ToolboxTypes import CategoryNames
+
 if TYPE_CHECKING:
     from org.pyut.ogl.OglObject import OglObject
+    from org.pyut.ui.UmlFrame import UmlObjects
+    from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
@@ -89,15 +95,15 @@ __PyUtVersion__ = PyutVersion.getPyUtVersion()
     ACTION_NEW_NOTE_LINK,
     ACTION_NEW_TEXT,
 
-    ACTION_DEST_IMPLEMENT_LINK,
-    ACTION_DEST_INHERIT_LINK,
-    ACTION_DEST_AGGREGATION_LINK,
-    ACTION_DEST_COMPOSITION_LINK,
-    ACTION_DEST_ASSOCIATION_LINK,
-    ACTION_DEST_NOTE_LINK,
+    ACTION_DESTINATION_IMPLEMENT_LINK,
+    ACTION_DESTINATION_INHERIT_LINK,
+    ACTION_DESTINATION_AGGREGATION_LINK,
+    ACTION_DESTINATION_COMPOSITION_LINK,
+    ACTION_DESTINATION_ASSOCIATION_LINK,
+    ACTION_DESTINATION_NOTE_LINK,
     ACTION_NEW_SD_INSTANCE,
     ACTION_NEW_SD_MESSAGE,
-    ACTION_DEST_SD_MESSAGE,
+    ACTION_DESTINATION_SD_MESSAGE,
     ACTION_ZOOM_IN,
     ACTION_ZOOM_OUT
 ] = range(24)
@@ -107,24 +113,24 @@ NEXT_ACTION = {
     ACTION_SELECTOR:    ACTION_SELECTOR,
     ACTION_NEW_CLASS:   ACTION_SELECTOR,
     ACTION_NEW_NOTE:    ACTION_SELECTOR,
-    ACTION_NEW_IMPLEMENT_LINK:      ACTION_DEST_IMPLEMENT_LINK,
-    ACTION_NEW_INHERIT_LINK:        ACTION_DEST_INHERIT_LINK,
-    ACTION_NEW_AGGREGATION_LINK:    ACTION_DEST_AGGREGATION_LINK,
-    ACTION_NEW_COMPOSITION_LINK:    ACTION_DEST_COMPOSITION_LINK,
-    ACTION_NEW_ASSOCIATION_LINK:    ACTION_DEST_ASSOCIATION_LINK,
-    ACTION_NEW_NOTE_LINK:           ACTION_DEST_NOTE_LINK,
-    ACTION_DEST_IMPLEMENT_LINK:             ACTION_SELECTOR,
+    ACTION_NEW_IMPLEMENT_LINK:          ACTION_DESTINATION_IMPLEMENT_LINK,
+    ACTION_NEW_INHERIT_LINK:            ACTION_DESTINATION_INHERIT_LINK,
+    ACTION_NEW_AGGREGATION_LINK:        ACTION_DESTINATION_AGGREGATION_LINK,
+    ACTION_NEW_COMPOSITION_LINK:        ACTION_DESTINATION_COMPOSITION_LINK,
+    ACTION_NEW_ASSOCIATION_LINK:        ACTION_DESTINATION_ASSOCIATION_LINK,
+    ACTION_NEW_NOTE_LINK:               ACTION_DESTINATION_NOTE_LINK,
+    ACTION_DESTINATION_IMPLEMENT_LINK:  ACTION_SELECTOR,
 
-    ACTION_DEST_INHERIT_LINK:     ACTION_SELECTOR,
-    ACTION_DEST_AGGREGATION_LINK: ACTION_SELECTOR,
-    ACTION_DEST_COMPOSITION_LINK: ACTION_SELECTOR,
-    ACTION_DEST_ASSOCIATION_LINK: ACTION_SELECTOR,
-    ACTION_DEST_NOTE_LINK:  ACTION_SELECTOR,
-    ACTION_NEW_ACTOR:       ACTION_SELECTOR,
-    ACTION_NEW_USECASE:     ACTION_SELECTOR,
+    ACTION_DESTINATION_INHERIT_LINK:     ACTION_SELECTOR,
+    ACTION_DESTINATION_AGGREGATION_LINK: ACTION_SELECTOR,
+    ACTION_DESTINATION_COMPOSITION_LINK: ACTION_SELECTOR,
+    ACTION_DESTINATION_ASSOCIATION_LINK: ACTION_SELECTOR,
+    ACTION_DESTINATION_NOTE_LINK:        ACTION_SELECTOR,
+    ACTION_NEW_ACTOR:                    ACTION_SELECTOR,
+    ACTION_NEW_USECASE:                  ACTION_SELECTOR,
 
     ACTION_NEW_SD_INSTANCE: ACTION_SELECTOR,
-    ACTION_NEW_SD_MESSAGE:  ACTION_DEST_SD_MESSAGE,
+    ACTION_NEW_SD_MESSAGE:  ACTION_DESTINATION_SD_MESSAGE,
 
     ACTION_ZOOM_IN: ACTION_ZOOM_IN
 }
@@ -140,27 +146,27 @@ SOURCE_ACTIONS = [
     ACTION_NEW_SD_MESSAGE,
 ]
 # list of actions which are destination events
-DEST_ACTIONS = [
-    ACTION_DEST_IMPLEMENT_LINK,
-    ACTION_DEST_INHERIT_LINK,
-    ACTION_DEST_AGGREGATION_LINK,
-    ACTION_DEST_COMPOSITION_LINK,
-    ACTION_DEST_ASSOCIATION_LINK,
-    ACTION_DEST_NOTE_LINK,
-    ACTION_DEST_SD_MESSAGE,
+DESTINATION_ACTIONS = [
+    ACTION_DESTINATION_IMPLEMENT_LINK,
+    ACTION_DESTINATION_INHERIT_LINK,
+    ACTION_DESTINATION_AGGREGATION_LINK,
+    ACTION_DESTINATION_COMPOSITION_LINK,
+    ACTION_DESTINATION_ASSOCIATION_LINK,
+    ACTION_DESTINATION_NOTE_LINK,
+    ACTION_DESTINATION_SD_MESSAGE,
     ACTION_ZOOM_IN,
     ACTION_ZOOM_OUT
 ]
 
 # OglLink enumerations according to the current action
 LINK_TYPE = {
-    ACTION_DEST_IMPLEMENT_LINK:     PyutLinkType.INTERFACE,
-    ACTION_DEST_INHERIT_LINK:       PyutLinkType.INHERITANCE,
-    ACTION_DEST_AGGREGATION_LINK:   PyutLinkType.AGGREGATION,
-    ACTION_DEST_COMPOSITION_LINK:   PyutLinkType.COMPOSITION,
-    ACTION_DEST_ASSOCIATION_LINK:   PyutLinkType.ASSOCIATION,
-    ACTION_DEST_NOTE_LINK:          PyutLinkType.NOTELINK,
-    ACTION_DEST_SD_MESSAGE:         PyutLinkType.SD_MESSAGE,
+    ACTION_DESTINATION_IMPLEMENT_LINK:     PyutLinkType.INTERFACE,
+    ACTION_DESTINATION_INHERIT_LINK:       PyutLinkType.INHERITANCE,
+    ACTION_DESTINATION_AGGREGATION_LINK:   PyutLinkType.AGGREGATION,
+    ACTION_DESTINATION_COMPOSITION_LINK:   PyutLinkType.COMPOSITION,
+    ACTION_DESTINATION_ASSOCIATION_LINK:   PyutLinkType.ASSOCIATION,
+    ACTION_DESTINATION_NOTE_LINK:          PyutLinkType.NOTELINK,
+    ACTION_DESTINATION_SD_MESSAGE:         PyutLinkType.SD_MESSAGE,
 }
 
 # messages for the status bar
@@ -168,27 +174,27 @@ a = "Click on the source class"
 b = "Now, click on the destination class"
 
 MESSAGES = {
-    ACTION_SELECTOR:    "Ready",
-    ACTION_NEW_CLASS:   "Click where you want to put the new class",
-    ACTION_NEW_NOTE:    "Click where you want to put the new note",
-    ACTION_NEW_ACTOR:   "Click where you want to put the new actor",
-    ACTION_NEW_TEXT:    'Click where you want to put the new text',
-    ACTION_NEW_USECASE: "Click where you want to put the new use case",
+    ACTION_SELECTOR:        "Ready",
+    ACTION_NEW_CLASS:       "Click where you want to put the new class",
+    ACTION_NEW_NOTE:        "Click where you want to put the new note",
+    ACTION_NEW_ACTOR:       "Click where you want to put the new actor",
+    ACTION_NEW_TEXT:        'Click where you want to put the new text',
+    ACTION_NEW_USECASE:     "Click where you want to put the new use case",
     ACTION_NEW_SD_INSTANCE: "Click where you want to put the new instance",
     ACTION_NEW_SD_MESSAGE:  "Click inside the lifeline for the new message",
-    ACTION_DEST_SD_MESSAGE: "Click inside the lifeline for the destination of the message",
+    ACTION_DESTINATION_SD_MESSAGE: "Click inside the lifeline for the destination of the message",
     ACTION_NEW_IMPLEMENT_LINK:   a,
     ACTION_NEW_INHERIT_LINK:     a,
     ACTION_NEW_AGGREGATION_LINK: a,
     ACTION_NEW_COMPOSITION_LINK: a,
     ACTION_NEW_ASSOCIATION_LINK: a,
     ACTION_NEW_NOTE_LINK:        a,
-    ACTION_DEST_IMPLEMENT_LINK: b,
-    ACTION_DEST_INHERIT_LINK:   b,
-    ACTION_DEST_AGGREGATION_LINK: b,
-    ACTION_DEST_COMPOSITION_LINK: b,
-    ACTION_DEST_ASSOCIATION_LINK: b,
-    ACTION_DEST_NOTE_LINK: b,
+    ACTION_DESTINATION_IMPLEMENT_LINK:   b,
+    ACTION_DESTINATION_INHERIT_LINK:     b,
+    ACTION_DESTINATION_AGGREGATION_LINK: b,
+    ACTION_DESTINATION_COMPOSITION_LINK: b,
+    ACTION_DESTINATION_ASSOCIATION_LINK: b,
+    ACTION_DESTINATION_NOTE_LINK:        b,
     ACTION_ZOOM_IN:     "Select the area to fit on",
     ACTION_ZOOM_OUT:    "Select the central point",
 
@@ -214,7 +220,7 @@ class Mediator(Singleton):
 
     The `NEXT_ACTION` dictionary supplies the next action based on the given
     one. For example, after an `ACTION_NEW_NOTE_LINK`, you get an
-    `ACTION_DEST_NOTE_LINK` this way::
+    `ACTION_DESTINATION_NOTE_LINK` this way::
 
         nextAction = NEXT_ACTION[ACTION_NEW_NOTE_LINK]
 
@@ -226,14 +232,11 @@ class Mediator(Singleton):
     def init(self):
         """
         Singleton constructor.
-
-        @since 1.0
-        @author L. Burgbacher <lb@alawa.ch>
-        @modified C.Dutoit 20021121 Added self._project
         """
         self.logger: Logger = getLogger(__name__)
 
         from org.pyut.errorcontroller.ErrorManager import ErrorManager
+        from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
         self._errorManager: ErrorManager  = ErrorManager()
 
@@ -246,8 +249,9 @@ class Mediator(Singleton):
         self._status   = None   # application status bar
         self._src      = None   # source of a two-objects action
         self._dst      = None   # destination of a two-objects action
-        self._appFrame = None   # Application's main frame
         self._appPath  = None   # Application files' path
+
+        self._appFrame: PyutApplicationFrame = cast(PyutApplicationFrame, None)   # Application's main frame
 
         self.registerClassEditor(self.standardClassEditor)
         self._toolboxOwner = None   # toolbox owner, created when application frame is passed
@@ -267,24 +271,21 @@ class Mediator(Singleton):
         """
         return self._useMode == SCRIPT_MODE
 
-    def getErrorManager(self):
+    def getErrorManager(self) -> ErrorManager:
         """
-        Return the current error manager
-
-        @author C.Dutoit
+        Returns:  The current error manager
         """
         return self._errorManager
 
-    def getAppPath(self):
+    def getAppPath(self) -> str:
         """
         Return the path of the application files.
 
-        @return string
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns: a string
         """
         return self._appPath
 
-    def getAppFrame(self):
+    def getAppFrame(self) -> 'PyutApplicationFrame':
         """
         """
         return self._appFrame
@@ -305,59 +306,55 @@ class Mediator(Singleton):
         """
         Register the path of the application files.
 
-        @param path
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            path:
         """
         self._appPath = path
 
-    def registerAppFrame(self, appFrame):
+    def registerAppFrame(self, appFrame: Frame):
         """
         Register the application's main frame.
 
-        @param wxFrame appFrame : Application's main frame
-        @since 1.27.2.4
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            appFrame:  Application's main frame
         """
         self._appFrame = appFrame
         if self._toolboxOwner is None:
             self._toolboxOwner = ToolboxOwner(appFrame)
 
-    def registerToolBar(self, tb):
+    def registerToolBar(self, tb: ToolBar):
         """
         Register the toolbar.
 
-        @param wxToolbar tb : the toolbar
-        @since 1.0
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            tb: The toolbar
         """
         self._toolBar = tb
 
-    def registerToolBarTools(self, tools):
+    def registerToolBarTools(self, tools: List[wxNewIdRef]):
         """
         Register the toolbar tools.
 
-        @param int[] tools : a list of the tools IDs
-        @author L. Burgbacher
+        Args:
+            tools:  a list of the tools IDs
         """
         self._tools = tools
 
-    def registerStatusBar(self, statusBar):
+    def registerStatusBar(self, statusBar: StatusBar):
         """
         Register the status bar.
 
-        @param wxStatusBar statusBar : the status bar
-        @author L. Burgbacher
+        Args:
+            statusBar: The status bar to register
         """
         self._status = statusBar
 
-    def registerClassEditor(self, classEditor):
+    def registerClassEditor(self, classEditor: Callable):
         """
         Register a function to invoke a class editor.
-        This function takes one parameter, the pyutClass to edit.
 
-        @param classEditor  PyutClass
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Args:
+            classEditor: This function takes one parameter, the pyutClass to edit.
         """
         self.classEditor = classEditor
 
@@ -372,21 +369,21 @@ class Mediator(Singleton):
         self._toolboxOwner.registerTool(tool)
 
     # TODO this is an unused method.  Note the bad plugin name
-    def fastTextClassEditor(self, thePyutClass: PyutClass):
-        plugs = self._appFrame.plugs
-        cl = [s for s in plugs.values() if s(None, None).name == "Fast text edition"]
-        if cl:
-            obj = cl[0](self.getUmlObjects(), self.getUmlFrame())
-        else:
-            # fallback
-            self.standardClassEditor(thePyutClass)
-            return
-
-        # Do plugin functionality
-        BeginBusyCursor()
-        obj.callDoAction()
-        EndBusyCursor()
-        self.getUmlFrame().Refresh()
+    # def fastTextClassEditor(self, thePyutClass: PyutClass):
+    #     plugs = self._appFrame.plugs
+    #     cl = [s for s in plugs.values() if s(None, None).name == "Fast text edition"]
+    #     if cl:
+    #         obj = cl[0](self.getUmlObjects(), self.getUmlFrame())
+    #     else:
+    #         # fallback
+    #         self.standardClassEditor(thePyutClass)
+    #         return
+    #
+    #     # Do plugin functionality
+    #     BeginBusyCursor()
+    #     obj.callDoAction()
+    #     EndBusyCursor()
+    #     self.getUmlFrame().Refresh()
 
     def standardClassEditor(self, thePyutClass: PyutClass):
         """
@@ -493,25 +490,22 @@ class Mediator(Singleton):
             return SKIP_EVENT
         return EVENT_PROCESSED
 
-    def actionWaiting(self):
+    def actionWaiting(self) -> bool:
         """
-        Return True if there's an action waiting to be completed.
-
-        @since 1.2
-        @author L. Burgbacher <lb@alawa.ch>
+        Returns: `True` if there's an action waiting to be completed, else `False`
         """
         return self._currentAction != ACTION_SELECTOR
 
-    def selectTool(self, ID):
+    def selectTool(self, toolId: int):
         """
         Select the tool of given ID from the toolbar, and deselect the others.
 
-        @since 1.9
-        @author L. Burgbacher <lb@alawa.ch>
+        Args:
+            toolId:  The tool id
         """
-        for toolId in self._tools:
-            self._toolBar.ToggleTool(toolId, False)
-        self._toolBar.ToggleTool(ID, True)
+        for deselectedToolId in self._tools:
+            self._toolBar.ToggleTool(deselectedToolId, False)
+        self._toolBar.ToggleTool(toolId, True)
 
     def shapeSelected(self, shape, position=None):
         """
@@ -540,7 +534,7 @@ class Mediator(Singleton):
                 self.logger.debug(f'Store source - shape {shape}  position: {position}')
                 self._src    = shape
                 self._srcPos = position
-        elif self._currentAction in DEST_ACTIONS:
+        elif self._currentAction in DESTINATION_ACTIONS:
             self.logger.debug(f'Current action in destination actions')
             # store the destination object
             self._dst    = shape
@@ -665,27 +659,27 @@ class Mediator(Singleton):
 
         umlFrame.Refresh()
 
-    def getUmlObjects(self):
+    def getUmlObjects(self) -> 'UmlObjects':
         """
-        Return the list of UmlObjects in the diagram.
+        May be empty
 
-        @since 1.12
-        @author L. Burgbacher <lb@alawa.ch>
+        Returns: Return the list of UmlObjects in the diagram.
         """
+        from org.pyut.ui.UmlFrame import UmlObjects
+
         if self._treeNotebookHandler is None:
-            return []
+            return UmlObjects([])
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is not None:
-            return umlFrame.getUmlObjects()
+            return cast(UmlObjects, umlFrame.getUmlObjects())
         else:
-            return []
+            return UmlObjects([])
 
     def getSelectedShapes(self):
         """
         Return the list of selected OglObjects in the diagram.
 
-        @since 1.12
-        @author L. Burgbacher <lb@alawa.ch>
+        Returns:  May be empty
         """
         umlObjects = self.getUmlObjects()
         if umlObjects is not None:
@@ -710,32 +704,26 @@ class Mediator(Singleton):
     def resetStatusText(self):
         """
         Reset the text in the status bar.
-
-        @since 1.12
-        @author L. Burgbacher <lb@alawa.ch>
         """
         self._status.SetStatusText(_("Ready"))
 
-    def getDiagram(self):
+    def getDiagram(self) -> Diagram:
         """
         Return the uml diagram.
 
-        @since 1.12
-        @return uml diagram if present, None otherwise
-        @author L. Burgbacher <lb@alawa.ch>
+        Returns: The active uml diagram if present, None otherwise
         """
+
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
-            return None
+            return cast(Diagram, None)
         return umlFrame.getDiagram()
 
     def getUmlFrame(self):
         """
         Return the active uml frame.
 
-        @return UmlFrame
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns: a UmlFrame
         """
         return self._treeNotebookHandler.getCurrentFrame()
 
@@ -951,9 +939,6 @@ class Mediator(Singleton):
     def moveSelectedShapeUp(self):
         """
         Move the selected shape one level up in z-order
-
-        @since 1.27.2.28
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
@@ -963,9 +948,6 @@ class Mediator(Singleton):
     def moveSelectedShapeDown(self):
         """
         Move the selected shape one level down in z-order
-
-        @since 1.27.2.28
-        @author C.Dutoit <dutoitc@hotmail.com>
         """
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
@@ -976,36 +958,32 @@ class Mediator(Singleton):
         """
         Display a toolbox
 
-        @param String category : category of tool to display
-        @since 1.3
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            category:  The tool category to display
         """
         self._toolboxOwner.displayToolbox(category)
 
-    def getToolboxesCategories(self):
+    def getToolboxesCategories(self) -> CategoryNames:
         """
-        Return all categories of toolboxes
+        Return all toolbox categories
 
-        @return string[] of categories
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Returns:  The category names
         """
         return self._toolboxOwner.getCategories()
 
-    def getOglClass(self, pyutClass):
+    def getOglClass(self, pyutClass) -> OglClass:
         """
         Return an OGLClass instance corresponding to a pyutClass
 
-        @param pyutClass : the pyutClass to get OGLClass
-        @return OGLClass
-        @author C.Dutoit <dutoitc@hotmail.com>
-        """
-        from org.pyut.ogl.OglClass import OglClass
+        Args:
+            pyutClass: The pyutClass we must match to get OGLClass
 
+        Returns: The appropriate OGLClass
+        """
         po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.pyutObject is pyutClass]
 
         if len(po) == 0:
-            return None
+            return cast(OglClass, None)
         else:
             return po[0]
 
@@ -1098,14 +1076,14 @@ class Mediator(Singleton):
             callback:
 
         """
-        from org.pyut.ogl import OglObject
+        from org.pyut.ogl.OglObject import OglObject
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return
         selected = umlFrame.GetSelectedShapes()
         if len(selected) > 0:
             for oglObject in selected:
-                if isinstance(oglObject, OglObject.OglObject):
+                if isinstance(oglObject, OglObject):
                     callback(oglObject)
         umlFrame.Refresh()
 

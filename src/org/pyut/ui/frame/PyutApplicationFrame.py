@@ -285,8 +285,6 @@ class PyutApplicationFrame(Frame):
     def _createAcceleratorTable(self):
         """
         Accelerator table initialization
-
-        @author C.Dutoit
         """
         #  init accelerator table
         lst = [
