@@ -84,6 +84,10 @@ class OglObject(RectangleShape, ShapeEventHandler):
         self._pyutObject = pyutObject
 
     @property
+    def links(self):
+        return self._oglLinks
+
+    @property
     def eventEngine(self) -> OglEventEngine:
         """
         This property necessary because the diagram is not added until the
@@ -111,6 +115,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         self._oglLinks.append(link)
 
+    @deprecated(reason='Use the property links')
     def getLinks(self):
         """
         Return the links.

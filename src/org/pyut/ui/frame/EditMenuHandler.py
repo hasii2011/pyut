@@ -12,9 +12,6 @@ from wx import CommandEvent
 
 from wx import Menu
 
-from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
-from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
-from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 from org.pyut.model.PyutActor import PyutActor
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.model.PyutNote import PyutNote
@@ -25,7 +22,6 @@ from org.pyut.miniogl.Diagram import Diagram
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglUseCase import OglUseCase
@@ -36,7 +32,6 @@ from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.history.commands.CommandGroup import CommandGroup
-from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -113,25 +108,9 @@ class EditMenuHandler(BaseMenuHandler):
         # put the PyutObjects in the clipboard and remove their graphical representation from the diagram
         for obj in selected:
 
-            if isinstance(obj, OglClass):
-                oglClass: OglClass              = cast(OglClass, obj)
-                cmd:      DeleteOglClassCommand = DeleteOglClassCommand(oglClass)
-                cmdGroup.addCommand(cmd)
-            elif isinstance(obj, OglNote):
-                oglNote: OglNote = cast(OglNote, obj)
-                delNoteCmd: DeleteOglNoteCommand = DeleteOglNoteCommand(oglNote)
-                cmdGroup.addCommand(delNoteCmd)
-            elif isinstance(obj, OglLink):
-                oglLink: OglLink = cast(OglLink, obj)
-                delOglLinkCmd: DelOglLinkCommand = DelOglLinkCommand(oglLink)
-                cmdGroup.addCommand(delOglLinkCmd)
-            elif isinstance(obj, OglObject):
-                delObjCmd: DeleteOglObjectCommand = DeleteOglObjectCommand(obj)
-                cmdGroup.addCommand(delObjCmd)
-            else:
-                assert False, 'Unknown OGL Object'
-            obj.Detach()
             self._clipboard.append(obj.pyutObject)
+
+            cmdGroup = self._mediator.deleteShapeFromFrame(oglObjectToDelete=obj, cmdGroup=cmdGroup)
 
         historyManager.addCommandGroup(cmdGroup)
         historyManager.execute()
