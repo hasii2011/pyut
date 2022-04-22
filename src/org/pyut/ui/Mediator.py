@@ -148,8 +148,8 @@ DEST_ACTIONS = [
     ACTION_DEST_ASSOCIATION_LINK,
     ACTION_DEST_NOTE_LINK,
     ACTION_DEST_SD_MESSAGE,
-    ACTION_ZOOM_IN,     # Patch from D.Dabrowsky, 20060129
-    ACTION_ZOOM_OUT     # Patch from D.Dabrowsky, 20060129
+    ACTION_ZOOM_IN,
+    ACTION_ZOOM_OUT
 ]
 
 # OglLink enumerations according to the current action
@@ -1036,10 +1036,12 @@ class Mediator(Singleton):
 
         self._appFrame.SetTitle(txt)
 
-    def loadByFilename(self, filename):
+    def loadByFilename(self, filename: str):
         """
         Load a file from its filename
-        @author C.Dutoit
+
+        Args:
+            filename:  Fully qualified file name
         """
         self._appFrame.loadByFilename(filename)
 
@@ -1088,12 +1090,13 @@ class Mediator(Singleton):
         umlFrame.getHistory().addCommandGroup(group)
         umlFrame.getHistory().execute()
 
-    def _moveSelectedShapeZOrder(self, callback):
+    def _moveSelectedShapeZOrder(self, callback: Callable):
         """
         Move the selected shape one level in z-order
 
-        @since 1.27.2.28
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            callback:
+
         """
         from org.pyut.ogl import OglObject
         umlFrame = self._treeNotebookHandler.getCurrentFrame()

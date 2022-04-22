@@ -90,7 +90,7 @@ class EditMenuHandler(BaseMenuHandler):
     # noinspection PyUnusedLocal
     def onCut(self, event: CommandEvent):
         """
-
+        May be invoked directly from a menu item or from another component by posting the appropriate event
         Args:
             event:
         """
