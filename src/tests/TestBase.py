@@ -8,7 +8,7 @@ from unittest import TestCase
 
 from pkg_resources import resource_filename
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
 JSON_LOGGING_CONFIG_FILENAME: str = "testLoggingConfig.json"
 TEST_DIRECTORY:               str = 'tests'
@@ -29,7 +29,7 @@ class TestBase(TestCase):
     def setUpLogging(cls):
         """"""
 
-        PyutPreferences.determinePreferencesLocation()  # Side effect;  not a good move
+        OglPreferences.determinePreferencesLocation()  # Side effect;  not a good move
 
         loggingConfigFilename: str = cls.findLoggingConfig()
 

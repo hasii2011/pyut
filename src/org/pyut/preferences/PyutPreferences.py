@@ -130,13 +130,12 @@ class PyutPreferences(Singleton):
             lstFiles.append(self._config.get(PyutPreferences.OPENED_FILES_SECTION, fileNameKey))
         return lstFiles
 
-    def addNewLastOpenedFilesEntry(self, filename):
+    def addNewLastOpenedFilesEntry(self, filename: str):
         """
         Add a file to the list of last opened files
 
-        @param String filename : filename to be added
-        @since 1.0
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            filename:   The file name to add
         """
         # Get list
         lstFiles = self.getLastOpenedFilesList()
@@ -449,7 +448,7 @@ class PyutPreferences(Singleton):
 
     @property
     def textFontFamily(self) -> OglTextFontFamily:
-        """T
+        """
         Returns: The text font family
         """
         return self._valuePrefs.textFontFamily

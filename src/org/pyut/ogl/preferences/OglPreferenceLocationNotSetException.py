@@ -1,0 +1,4 @@
+
+
+class OglPreferencesLocationNotSetException(Exception):
+    pass

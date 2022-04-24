@@ -5,15 +5,15 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Dimensions:
+class OglDimensions:
 
     width:  int = 0
     height: int = 0
 
     @classmethod
-    def deSerialize(cls, value: str) -> 'Dimensions':
+    def deSerialize(cls, value: str) -> 'OglDimensions':
 
-        dimensions: Dimensions = Dimensions()
+        dimensions: OglDimensions = OglDimensions()
 
         widthHeight: List[str] = value.split(sep=',')
 
