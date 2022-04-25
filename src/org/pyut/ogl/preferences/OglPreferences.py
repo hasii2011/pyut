@@ -1,5 +1,4 @@
 from typing import Dict
-from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -9,10 +8,10 @@ from sys import platform as sysPlatform
 from os import getenv as osGetEnv
 
 from configparser import ConfigParser
+from typing import Optional
 
 from org.pyut.ogl.OglDimensions import OglDimensions
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
-from org.pyut.ogl.preferences.OglPreferenceLocationNotSetException import OglPreferencesLocationNotSetException
 
 
 OGL_PREFS_NAME_VALUES = Dict[str, str]
@@ -56,33 +55,25 @@ class OglPreferences:
         DEFAULT_NAME_METHOD:    'MethodName',
     }
 
-    preferencesFileLocationAndName: str = cast(str, None)
-
     def __init__(self):
 
         self.logger:  Logger       = getLogger(__name__)
         self._config: ConfigParser = ConfigParser()
 
+        self._preferencesFileName: str = self._getPreferencesLocation()
+
         self._loadPreferences()
 
-    @staticmethod
-    def getPreferencesLocation():
-        if OglPreferences.preferencesFileLocationAndName is None:
-            raise OglPreferencesLocationNotSetException()
-        else:
-            return OglPreferences.preferencesFileLocationAndName
+    def _getPreferencesLocation(self) -> str:
 
-    @staticmethod
-    def determinePreferencesLocation():
-        """
-        This method MUST (I repeat MUST) be called before attempting to instantiate the preferences Singleton
-        """
         if sysPlatform == "linux2" or sysPlatform == "linux" or sysPlatform == OglPreferences.THE_GREAT_MAC_PLATFORM:
-            homeDir:  str = osGetEnv('HOME')
-            fullName: str = f'{homeDir}/{OglPreferences.PREFERENCES_FILENAME}'
-            OglPreferences.preferencesFileLocationAndName = fullName
+            homeDir:  Optional[str] = osGetEnv('HOME')
+            fullName: str           = f'{homeDir}/{OglPreferences.PREFERENCES_FILENAME}'
+            preferencesFileName: str = fullName
         else:
-            OglPreferences.preferencesFileLocationAndName = OglPreferences.PREFERENCES_FILENAME
+            preferencesFileName = OglPreferences.PREFERENCES_FILENAME
+
+        return preferencesFileName
 
     @property
     def noteText(self) -> str:
@@ -218,18 +209,18 @@ class OglPreferences:
         self._ensurePreferenceFileExists()
 
         # Read data
-        self._config.read(OglPreferences.getPreferencesLocation())
+        self._config.read(self._preferencesFileName)
         self._addMissingPreferences()
         self.__saveConfig()
 
     def _ensurePreferenceFileExists(self):
 
         try:
-            f = open(OglPreferences.getPreferencesLocation(), "r")
+            f = open(self._preferencesFileName, "r")
             f.close()
         except (ValueError, Exception):
             try:
-                f = open(OglPreferences.getPreferencesLocation(), "w")
+                f = open(self._preferencesFileName, "w")
                 f.write("")
                 f.close()
                 self.logger.warning(f'Preferences file re-created')
@@ -260,6 +251,6 @@ class OglPreferences:
         """
         Save data to the preferences file
         """
-        f = open(OglPreferences.getPreferencesLocation(), "w")
+        f = open(self._preferencesFileName, "w")
         self._config.write(f)
         f.close()

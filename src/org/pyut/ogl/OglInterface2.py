@@ -9,8 +9,8 @@ from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
 from wx import Font
 
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 from org.pyut.miniogl.Common import Common
+from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.LollipopLine import LollipopLine
 
@@ -18,10 +18,11 @@ from org.pyut.model.PyutInterface import PyutInterface
 from org.pyut.model.PyutObject import PyutObject
 
 from org.pyut.ogl.OglPosition import OglPosition
-from org.pyut.ogl.OglUtils import OglUtils
-
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
+
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+
+from org.pyut.ogl.OglUtils import OglUtils
 
 
 class OglInterface2(LollipopLine, Common):
@@ -38,7 +39,7 @@ class OglInterface2(LollipopLine, Common):
 
         self._pyutInterface: PyutInterface = pyutInterface
 
-        preferences: PyutPreferences = PyutPreferences()
+        preferences: OglPreferences = OglPreferences()
 
         fontStyle:  OglTextFontFamily = preferences.textFontFamily
         fontFamily: int              = OglUtils.oglFontFamilyToWxFontFamily(fontStyle)

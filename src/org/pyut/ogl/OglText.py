@@ -33,11 +33,10 @@ from org.pyut.model.PyutText import PyutText
 
 from org.pyut.ogl.OglObject import OglObject
 
-from org.pyut.PyutUtils import PyutUtils
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 from org.pyut.ogl.OglUtils import OglUtils
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
 from org.pyut.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
 from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
@@ -47,7 +46,7 @@ from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as
     ID_MENU_DECREASE_SIZE,
     ID_MENU_BOLD_TEXT,
     ID_MENU_ITALIC_TEXT
-]  = PyutUtils.assignID(4)
+]  = OglUtils.assignID(4)
 
 TEXT_SIZE_INCREMENT: int = 2
 TEXT_SIZE_DECREMENT: int = 2
@@ -71,7 +70,7 @@ class OglText(OglObject):
         h: int = height
 
         # Use preferences to get initial size if not specified
-        preferences: PyutPreferences = PyutPreferences()
+        preferences: OglPreferences = OglPreferences()
 
         if width == 0:
             w = preferences.textDimensions.width

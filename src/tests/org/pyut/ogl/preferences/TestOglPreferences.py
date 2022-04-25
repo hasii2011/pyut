@@ -40,8 +40,6 @@ class TestOglPreferences(TestCase):
     def setUpLogging(cls):
         """"""
 
-        OglPreferences.determinePreferencesLocation()  # Side effect;  not a good move
-
         loggingConfigFilename: str = cls.findLoggingConfig()
 
         with open(loggingConfigFilename, 'r') as loggingConfigurationFile:
@@ -62,13 +60,12 @@ class TestOglPreferences(TestCase):
     def setUpClass(cls):
         TestBase.setUpLogging()
         TestOglPreferences.clsLogger = getLogger(__name__)
-        OglPreferences.determinePreferencesLocation()
 
     def setUp(self):
         self.logger: Logger = TestOglPreferences.clsLogger
-        self._backupPrefs()
-
         self.oglPreferences: OglPreferences = OglPreferences()
+
+        self._backupPrefs()
 
     def tearDown(self):
         self._restoreBackup()
@@ -96,7 +93,7 @@ class TestOglPreferences(TestCase):
 
     def _backupPrefs(self):
 
-        prefsFileName: str = OglPreferences.getPreferencesLocation()
+        prefsFileName: str = self.oglPreferences._preferencesFileName
         source: str = prefsFileName
         target: str = f"{prefsFileName}{TestOglPreferences.BACKUP_SUFFIX}"
         if osPath.exists(source):
@@ -107,7 +104,7 @@ class TestOglPreferences(TestCase):
 
     def _restoreBackup(self):
 
-        prefsFileName: str = OglPreferences.getPreferencesLocation()
+        prefsFileName: str = self.oglPreferences._preferencesFileName
         source: str = f"{prefsFileName}{TestOglPreferences.BACKUP_SUFFIX}"
         target: str = prefsFileName
         if osPath.exists(source):

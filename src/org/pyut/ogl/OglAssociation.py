@@ -153,7 +153,7 @@ class OglAssociation(OglLink):
 
     def _drawCenterLabel(self, dc: DC, sp: OglPosition, dp: OglPosition):
 
-        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=sp, destPosition=dp)
+        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=sp, dstPosition=dp)
 
         saveFont: Font = dc.GetFont()
         dc.SetFont(self._defaultFont)

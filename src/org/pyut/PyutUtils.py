@@ -255,11 +255,20 @@ class PyutUtils:
 
     @classmethod
     def retrieveResourcePath(cls, bareFileName: str) -> str:
+        # noinspection SpellCheckingInspection
+        """
 
-        # Use this method in Python 3.9
-        # from importlib_resources import files
-        # configFilePath: str  = files('org.pyut.resources').joinpath(Pyut.JSON_LOGGING_CONFIG_FILENAME)
+        TODO:
+        Use this method in Python 3.9
+        from importlib_resources import files
+        configFilePath: str  = files('org.pyut.resources').joinpath(Pyut.JSON_LOGGING_CONFIG_FILENAME)
 
+        Args:
+            bareFileName:  Simple file name
+
+        Returns:  The fully qualified file name
+
+        """
         try:
             fqFileName: Optional[str] = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, bareFileName)
         except (ValueError, Exception):

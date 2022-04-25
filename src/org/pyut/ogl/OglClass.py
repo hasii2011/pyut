@@ -33,16 +33,15 @@ from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
 from org.pyut.PyutConstants import PyutConstants
 
-from org.pyut.PyutUtils import PyutUtils
+from org.pyut.ogl.OglUtils import OglUtils
+from org.pyut.ogl.events.OglEventType import OglEventType
+
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
-from org.pyut.ogl.events.OglEventType import OglEventType
-
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 # Menu IDs
-
 [
     MENU_TOGGLE_STEREOTYPE,
     MENU_TOGGLE_FIELDS,
@@ -51,7 +50,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
     MENU_FIT_FIELDS,
     MENU_CUT_SHAPE,
     MENU_IMPLEMENT_INTERFACE
-]  = PyutUtils.assignID(7)
+]  = OglUtils.assignID(7)
 
 MARGIN: int = 10
 
@@ -88,14 +87,14 @@ class OglClass(OglObject):
         width:  int = w
         height: int = h
 
+        self._oglPreferences: OglPreferences = OglPreferences()
+
         # Use preferences to get initial size if not specified
         # Note: auto_resize_shape_on_edit must be False for this size to actually stick
-        preferences: PyutPreferences = PyutPreferences()
-
         if w == 0:
-            width = preferences.classDimensions.width
+            width = self._oglPreferences.classDimensions.width
         if h == 0:
-            height = preferences.classDimensions.height
+            height = self._oglPreferences.classDimensions.height
 
         super().__init__(pyutObject, width=width, height=height)
 

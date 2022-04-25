@@ -9,9 +9,12 @@ from wx import Colour
 from wx import DC
 
 from org.pyut.ogl.OglObject import OglObject
+
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+
 from org.pyut.model.PyutNote import PyutNote
-from org.pyut.general.LineSplitter import LineSplitter
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+
+from org.pyut.ogl.OglUtils import OglUtils
 
 
 class OglNote(OglObject):
@@ -43,7 +46,7 @@ class OglNote(OglObject):
 
         width:  int = w
         height: int = h
-        prefs: PyutPreferences = PyutPreferences()
+        prefs: OglPreferences = OglPreferences()
         if width == 0:
             width = prefs.noteDimensions.width
         if height == 0:
@@ -69,7 +72,7 @@ class OglNote(OglObject):
 
         try:
             noteContent = cast(PyutNote, self.pyutObject).content
-            lines = LineSplitter().split(noteContent, dc, w - 2 * OglNote.MARGIN)
+            lines = OglUtils.lineSplitter(noteContent, dc, w - 2 * OglNote.MARGIN)
         except (ValueError, Exception) as e:
             self.logger.error(f"Unable to display note - {e}")
             return
