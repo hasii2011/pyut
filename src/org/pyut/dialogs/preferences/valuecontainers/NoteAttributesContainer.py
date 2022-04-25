@@ -12,10 +12,11 @@ from wx import Window
 from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 from org.pyut.ui.widgets.TextContainer import TextContainer
 
-from org.pyut.general.datatypes.Dimensions import Dimensions
+from org.pyut.ogl.OglDimensions import OglDimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -61,7 +62,8 @@ class NoteAttributesContainer(Panel):
 
     def _createDefaultNoteSizeContainer(self, parent: Window) -> DimensionsContainer:
 
-        noteWidthHeight:  DimensionsContainer = DimensionsContainer(parent=parent, displayText=_('Note Width/Height'), valueChangedCallback=self.__noteDimensionsChanged)
+        noteWidthHeight:  DimensionsContainer = DimensionsContainer(parent=parent, displayText=_('Note Width/Height'),
+                                                                    valueChangedCallback=self.__noteDimensionsChanged)
 
         self._noteDimensions = noteWidthHeight
 
@@ -70,5 +72,5 @@ class NoteAttributesContainer(Panel):
     def __noteTextChanged(self, newValue: str):
         self._preferences.noteText = newValue
 
-    def __noteDimensionsChanged(self, newValue: Dimensions):
+    def __noteDimensionsChanged(self, newValue: OglDimensions):
         self._preferences.noteDimensions = newValue

@@ -10,9 +10,11 @@ from wx import Window
 from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 from org.pyut.ui.widgets.TextContainer import TextContainer
 
-from org.pyut.general.datatypes.Dimensions import Dimensions
+from org.pyut.ogl.OglDimensions import OglDimensions
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
@@ -27,8 +29,10 @@ class ClassContainer(Panel):
 
         szrClass: BoxSizer = BoxSizer(VERTICAL)
 
-        classNameContainer:       TextContainer       = TextContainer(parent=self,       labelText=_('Default Name'),         valueChangedCallback=self._classNameChanged)
-        classDimensionsContainer: DimensionsContainer = DimensionsContainer(parent=self, displayText=_('Class Width/Height'), valueChangedCallback=self._classDimensionsChanged)
+        classNameContainer:       TextContainer       = TextContainer(parent=self,       labelText=_('Default Name'),
+                                                                      valueChangedCallback=self._classNameChanged)
+        classDimensionsContainer: DimensionsContainer = DimensionsContainer(parent=self, displayText=_('Class Width/Height'),
+                                                                            valueChangedCallback=self._classDimensionsChanged)
 
         szrClass.Add(classNameContainer,       0, ALL, ClassContainer.HORIZONTAL_GAP)
         szrClass.Add(classDimensionsContainer, 0, ALL, ClassContainer.HORIZONTAL_GAP)
@@ -49,5 +53,5 @@ class ClassContainer(Panel):
     def _classNameChanged(self, newValue: str):
         self._preferences.className = newValue
 
-    def _classDimensionsChanged(self, newValue: Dimensions):
+    def _classDimensionsChanged(self, newValue: OglDimensions):
         self._preferences.classDimensions = newValue

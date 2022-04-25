@@ -32,7 +32,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.general.Globals import _
 
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
-from org.pyut.general.datatypes.Dimensions import Dimensions
+from org.pyut.ogl.OglDimensions import OglDimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -95,7 +95,7 @@ class TextAttributesContainer(Panel):
         self._cbxFontSelector.SetValue(self._preferences.textFontFamily.value)
         self._cbxFontSizeSelector.SetValue(str(self._preferences.textFontSize))
 
-    def _onTextDimensionsChanged(self, newValue: Dimensions):
+    def _onTextDimensionsChanged(self, newValue: OglDimensions):
         self._preferences.textDimensions = newValue
 
     def _onTextBoldValueChanged(self, event: CommandEvent):

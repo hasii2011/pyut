@@ -10,6 +10,7 @@ from org.pyut.general.Singleton import Singleton
 
 from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
 from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
+from org.pyut.ogl.OglDimensions import OglDimensions
 
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 
@@ -18,7 +19,8 @@ from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
-from org.pyut.preferences.ValuePreferences import ValuePreferences
+
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
 from org.pyut.general.datatypes.Position import Position
 from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
@@ -81,9 +83,10 @@ class PyutPreferences(Singleton):
         self._preferencesCommon:  PreferencesCommon        = PreferencesCommon()
         self._mainPrefs:          MainPreferences          = MainPreferences()
         self._diagramPrefs:       BackgroundPreferences    = BackgroundPreferences()
-        self._valuePrefs:         ValuePreferences         = ValuePreferences()
         self._miscellaneousPrefs: MiscellaneousPreferences = MiscellaneousPreferences()
         self._debugPrefs:         DebugPreferences         = DebugPreferences()
+
+        self._oglPrefs: OglPreferences = OglPreferences()
 
         self._createEmptyPreferences()
 
@@ -408,110 +411,110 @@ class PyutPreferences(Singleton):
 
     @property
     def noteText(self) -> str:
-        return self._valuePrefs.noteText
+        return self._oglPrefs.noteText
 
     @noteText.setter
     def noteText(self, theNewValue: str):
-        self._valuePrefs.noteText = theNewValue
+        self._oglPrefs.noteText = theNewValue
 
     @property
-    def noteDimensions(self) -> Dimensions:
-        return self._valuePrefs.noteDimensions
+    def noteDimensions(self) -> OglDimensions:
+        return self._oglPrefs.noteDimensions
 
     @noteDimensions.setter
-    def noteDimensions(self, newValue: Dimensions):
-        self._valuePrefs.noteDimensions = newValue
+    def noteDimensions(self, newValue: OglDimensions):
+        self._oglPrefs.noteDimensions = newValue
 
     @property
-    def textDimensions(self) -> Dimensions:
-        return self._valuePrefs.textDimensions
+    def textDimensions(self) -> OglDimensions:
+        return self._oglPrefs.textDimensions
 
     @textDimensions.setter
-    def textDimensions(self, newValue: Dimensions):
-        self._valuePrefs.textDimensions = newValue
+    def textDimensions(self, newValue: OglDimensions):
+        self._oglPrefs.textDimensions = newValue
 
     @property
     def textBold(self) -> bool:
-        return self._valuePrefs.textBold
+        return self._oglPrefs.textBold
 
     @textBold.setter
     def textBold(self, newValue: bool):
-        self._valuePrefs.textBold = newValue
+        self._oglPrefs.textBold = newValue
 
     @property
     def textItalicize(self) -> bool:
-        return self._valuePrefs.textItalicize
+        return self._oglPrefs.textItalicize
 
     @textItalicize.setter
     def textItalicize(self, newValue: bool):
-        self._valuePrefs.textItalicize = newValue
+        self._oglPrefs.textItalicize = newValue
 
     @property
     def textFontFamily(self) -> OglTextFontFamily:
         """
         Returns: The text font family
         """
-        return self._valuePrefs.textFontFamily
+        return self._oglPrefs.textFontFamily
 
     @textFontFamily.setter
     def textFontFamily(self, newValue: OglTextFontFamily):
-        self._valuePrefs.textFontFamily = newValue
+        self._oglPrefs.textFontFamily = newValue
 
     @property
     def textFontSize(self) -> int:
-        return self._valuePrefs.textFontSize
+        return self._oglPrefs.textFontSize
 
     @textFontSize.setter
     def textFontSize(self, newValue: int):
-        self._valuePrefs.textFontSize = newValue
+        self._oglPrefs.textFontSize = newValue
 
     @property
     def className(self) -> str:
-        return self._valuePrefs.className
+        return self._oglPrefs.className
 
     @className.setter
     def className(self, newValue: str):
-        self._valuePrefs.className = newValue
+        self._oglPrefs.className = newValue
 
     @property
-    def classDimensions(self) -> Dimensions:
-        return self._valuePrefs.classDimensions
+    def classDimensions(self) -> OglDimensions:
+        return self._oglPrefs.classDimensions
 
     @classDimensions.setter
-    def classDimensions(self, newValue: Dimensions):
-        self._valuePrefs.classDimensions = newValue
+    def classDimensions(self, newValue: OglDimensions):
+        self._oglPrefs.classDimensions = newValue
 
     @property
     def interfaceName(self) -> str:
-        return self._valuePrefs.interfaceName
+        return self._oglPrefs.interfaceName
 
     @interfaceName.setter
     def interfaceName(self, newValue: str):
-        self._valuePrefs.interfaceName = newValue
+        self._oglPrefs.interfaceName = newValue
 
     @property
     def useCaseName(self) -> str:
-        return self._valuePrefs.useCaseName
+        return self._oglPrefs.useCaseName
 
     @useCaseName.setter
     def useCaseName(self, newValue: str):
-        self._valuePrefs.useCaseName = newValue
+        self._oglPrefs.useCaseName = newValue
 
     @property
     def actorName(self) -> str:
-        return self._valuePrefs.actorName
+        return self._oglPrefs.actorName
 
     @actorName.setter
     def actorName(self, newValue: str):
-        self._valuePrefs.actorName = newValue
+        self._oglPrefs.actorName = newValue
 
     @property
     def methodName(self) -> str:
-        return self._valuePrefs.methodName
+        return self._oglPrefs.methodName
 
     @methodName.setter
     def methodName(self, newValue: str):
-        self._valuePrefs.methodName = newValue
+        self._oglPrefs.methodName = newValue
 
     def __loadConfig(self):
         """
@@ -544,7 +547,6 @@ class PyutPreferences(Singleton):
         self._mainPrefs.addAnyMissingMainPreferences()
         self._miscellaneousPrefs.addAnyMissingPreferences()
         self._diagramPrefs.addMissingDiagramPreferences()
-        self._valuePrefs.addMissingPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
 
     def __addOpenedFilesSection(self):
@@ -566,5 +568,4 @@ class PyutPreferences(Singleton):
         self._miscellaneousPrefs.configParser = self._config
 
         self._diagramPrefs.configParser       = self._config
-        self._valuePrefs.configParser         = self._config
         self._debugPrefs.configParser         = self._config
