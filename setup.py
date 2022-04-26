@@ -38,7 +38,7 @@ setup(
               'org.pyut.history', 'org.pyut.history.commands',
               'org.pyut.miniogl',
               'org.pyut.model',
-              'org.pyut.ogl', 'org.pyut.ogl.events', 'org.pyut.ogl.sd',
+              'org.pyut.ogl', 'org.pyut.ogl.events', 'org.pyut.ogl.preferences', 'org.pyut.ogl.sd',
               'org.pyut.persistence', 'org.pyut.persistence.converters',
               'org.pyut.plugins',
               'org.pyut.plugins.base',
