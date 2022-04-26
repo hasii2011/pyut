@@ -4,9 +4,7 @@ from logging import getLogger
 from wx import WHITE_BRUSH
 
 from org.pyut.miniogl.Shape import Shape
-
 from org.pyut.model.PyutLink import PyutLink
-
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 
@@ -15,7 +13,7 @@ class OglInheritance(OglLink):
     """
     Graphical OGL representation of an inheritance link.
     This class provide the methods for drawing an inheritance link between
-    two classes of an UML diagram. Add labels to an OglLink.
+    two classes of a UML diagram. Add labels to an OglLink.
     """
     def __init__(self, srcShape: OglClass, pyutLink: PyutLink, dstShape: OglClass):
         """
@@ -34,7 +32,7 @@ class OglInheritance(OglLink):
 
     def __repr__(self):
         srcShape:  Shape = self.getSourceShape()
-        destShape: Shape = self.getDestinationShape()
+        dstShape: Shape  = self.getDestinationShape()
         sourceId:  int   = srcShape.GetID()
-        destId:    int   = destShape.GetID()
-        return f'OglInheritance[from: id: {sourceId} {self.getSourceShape()} to: id: {destId} {self.getDestinationShape()}]'
+        dstId:    int    = dstShape.GetID()
+        return f'OglInheritance[from: id: {sourceId} {self.getSourceShape()} to: id: {dstId} {self.getDestinationShape()}]'

@@ -38,9 +38,6 @@ from org.pyut.ogl.events.OglEventType import OglEventType
 
 from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
-
 # Menu IDs
 [
     MENU_TOGGLE_STEREOTYPE,
@@ -385,29 +382,29 @@ class OglClass(OglObject):
         pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
         menu:       Menu      = Menu()
 
-        menu.Append(MENU_TOGGLE_STEREOTYPE, _("Toggle stereotype display"), _("Set stereotype display on or off"), True)
+        menu.Append(MENU_TOGGLE_STEREOTYPE, "Toggle stereotype display", "Set stereotype display on or off", True)
         item = menu.FindItemById(MENU_TOGGLE_STEREOTYPE)
         item.Check(pyutObject.getShowStereotype())
 
-        menu.Append(MENU_TOGGLE_FIELDS, _("Toggle fields display"), _("Set fields display on or off"), True)
+        menu.Append(MENU_TOGGLE_FIELDS, "Toggle fields display", "Set fields display on or off", True)
         item = menu.FindItemById(MENU_TOGGLE_FIELDS)
         item.Check(pyutObject.showFields)
 
-        menu.Append(MENU_TOGGLE_METHODS, _("Toggle methods display"), _("Set methods display on or off "), True)
+        menu.Append(MENU_TOGGLE_METHODS, "Toggle methods display", "Set methods display on or off ", True)
         item = menu.FindItemById(MENU_TOGGLE_METHODS)
         item.Check(pyutObject.showMethods)
 
-        menu.Append(MENU_TOGGLE_METHOD_PARAMETERS, _("Toggle parameter display"), _("Set parameter display on or off"), True)
+        menu.Append(MENU_TOGGLE_METHOD_PARAMETERS, "Toggle parameter display", "Set parameter display on or off", True)
 
         itemToggleParameters: MenuItem = menu.FindItemById(MENU_TOGGLE_METHOD_PARAMETERS)
         displayParameters: PyutDisplayParameters = self.pyutObject.displayParameters
 
         self._initializeTriStateDisplayParametersMenuItem(displayParameters, itemToggleParameters)
 
-        menu.Append(MENU_FIT_FIELDS, _("Fit Fields"), _("Fit to see all class fields"))
-        menu.Append(MENU_CUT_SHAPE,  _("Cut shape"), _("Cut this shape"))
+        menu.Append(MENU_FIT_FIELDS, "Fit Fields", "Fit to see all class fields")
+        menu.Append(MENU_CUT_SHAPE,  "Cut shape",  "Cut this shape")
 
-        menu.Append(MENU_IMPLEMENT_INTERFACE, _('Implement Interface'), _('Use Existing interface or create new one'))
+        menu.Append(MENU_IMPLEMENT_INTERFACE, 'Implement Interface', 'Use Existing interface or create new one')
 
         frame = self._diagram.GetPanel()
 
