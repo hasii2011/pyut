@@ -20,6 +20,7 @@ from unittest import TestCase
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
 from org.pyut.ogl.OglDimensions import OglDimensions
 from tests.TestBase import TestBase
 
@@ -90,6 +91,11 @@ class TestOglPreferences(TestCase):
         self.oglPreferences.methodName = 'I changed you'
         actualName: str = self.oglPreferences.methodName
         self.assertEqual('I changed you', actualName, 'The default method name did not change')
+
+    def testChangeGridLineStyle(self):
+        self.oglPreferences.gridLineStyle = MiniOglPenStyle.CROSS_HATCH
+        actualStyle: MiniOglPenStyle = self.oglPreferences.gridLineStyle
+        self.assertEqual(MiniOglPenStyle.CROSS_HATCH, actualStyle, 'Grid line style did not change')
 
     def _backupPrefs(self):
 

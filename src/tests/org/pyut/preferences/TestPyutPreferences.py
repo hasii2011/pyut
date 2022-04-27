@@ -12,7 +12,7 @@ from shutil import copyfile
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
-from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 from tests.TestBase import TestBase
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
@@ -108,7 +108,7 @@ class TestPyutPreferences(TestBase):
 
         self._emptyPrefs()
         self.prefs.init()  # reload default prefs
-        expectedColor: str = BackgroundPreferences.DEFAULT_GRID_LINE_COLOR
+        expectedColor: str = OglPreferences.DEFAULT_GRID_LINE_COLOR
         actualColor:   str = self.prefs.gridLineColor.value
 
         self.assertEqual(expectedColor, actualColor, 'Default must have changed')

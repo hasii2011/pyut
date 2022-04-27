@@ -15,7 +15,6 @@ from org.pyut.ogl.OglDimensions import OglDimensions
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
-from org.pyut.preferences.DiagramPreferences import BackgroundPreferences
 from org.pyut.preferences.MainPreferences import MainPreferences
 from org.pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
@@ -82,7 +81,6 @@ class PyutPreferences(Singleton):
 
         self._preferencesCommon:  PreferencesCommon        = PreferencesCommon()
         self._mainPrefs:          MainPreferences          = MainPreferences()
-        self._diagramPrefs:       BackgroundPreferences    = BackgroundPreferences()
         self._miscellaneousPrefs: MiscellaneousPreferences = MiscellaneousPreferences()
         self._debugPrefs:         DebugPreferences         = DebugPreferences()
 
@@ -371,43 +369,43 @@ class PyutPreferences(Singleton):
 
     @property
     def backgroundGridEnabled(self) -> bool:
-        return self._diagramPrefs.backgroundGridEnabled
+        return self._oglPrefs.backgroundGridEnabled
 
     @backgroundGridEnabled.setter
     def backgroundGridEnabled(self, theNewValue: bool):
-        self._diagramPrefs.backgroundGridEnabled = theNewValue
+        self._oglPrefs.backgroundGridEnabled = theNewValue
 
     @property
     def snapToGrid(self) -> bool:
-        return self._diagramPrefs.snapToGrid
+        return self._oglPrefs.snapToGrid
 
     @snapToGrid.setter
     def snapToGrid(self, theNewValue: bool):
-        self._diagramPrefs.snapToGrid = theNewValue
+        self._oglPrefs.snapToGrid = theNewValue
 
     @property
     def backgroundGridInterval(self) -> int:
-        return self._diagramPrefs.backgroundGridInterval
+        return self._oglPrefs.backgroundGridInterval
 
     @backgroundGridInterval.setter
     def backgroundGridInterval(self, theNewValue: int):
-        self._diagramPrefs.backgroundGridInterval = theNewValue
+        self._oglPrefs.backgroundGridInterval = theNewValue
 
     @property
     def gridLineColor(self) -> MiniOglColorEnum:
-        return self._diagramPrefs.gridLineColor
+        return self._oglPrefs.gridLineColor
 
     @gridLineColor.setter
     def gridLineColor(self, theNewValue: MiniOglColorEnum):
-        self._diagramPrefs.gridLineColor = theNewValue
+        self._oglPrefs.gridLineColor = theNewValue
 
     @property
     def gridLineStyle(self) -> MiniOglPenStyle:
-        return self._diagramPrefs.gridLineStyle
+        return self._oglPrefs.gridLineStyle
 
     @gridLineStyle.setter
     def gridLineStyle(self, theNewValue: MiniOglPenStyle):
-        self._diagramPrefs.gridLineStyle = theNewValue
+        self._oglPrefs.gridLineStyle = theNewValue
 
     @property
     def noteText(self) -> str:
@@ -546,7 +544,6 @@ class PyutPreferences(Singleton):
 
         self._mainPrefs.addAnyMissingMainPreferences()
         self._miscellaneousPrefs.addAnyMissingPreferences()
-        self._diagramPrefs.addMissingDiagramPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
 
     def __addOpenedFilesSection(self):
@@ -566,6 +563,4 @@ class PyutPreferences(Singleton):
         self._preferencesCommon.configParser  = self._config
         self._mainPrefs.configParser          = self._config
         self._miscellaneousPrefs.configParser = self._config
-
-        self._diagramPrefs.configParser       = self._config
         self._debugPrefs.configParser         = self._config

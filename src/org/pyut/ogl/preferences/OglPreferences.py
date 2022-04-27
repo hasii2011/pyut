@@ -25,7 +25,7 @@ class OglPreferences:
     PREFERENCES_FILENAME:   str = 'ogl.ini'
     THE_GREAT_MAC_PLATFORM: str = 'darwin'
 
-    OGL_PREFERENCES_SECTION: str = 'OglPreferences'
+    OGL_PREFERENCES_SECTION: str = 'Ogl'
     DIAGRAM_SECTION:         str = 'Diagram'
 
     NOTE_TEXT:        str = 'note_text'
@@ -225,6 +225,60 @@ class OglPreferences:
         self._config.set(OglPreferences.OGL_PREFERENCES_SECTION, OglPreferences.DEFAULT_NAME_METHOD, newValue)
         self.__saveConfig()
 
+    @property
+    def backgroundGridEnabled(self) -> bool:
+        return self._config.getboolean(OglPreferences.DIAGRAM_SECTION, OglPreferences.BACKGROUND_GRID_ENABLED)
+
+    @backgroundGridEnabled.setter
+    def backgroundGridEnabled(self, theNewValue: bool):
+        self._config.set(OglPreferences.DIAGRAM_SECTION, OglPreferences.BACKGROUND_GRID_ENABLED, str(theNewValue))
+        self.__saveConfig()
+
+    @property
+    def snapToGrid(self) -> bool:
+        return self._config.getboolean(OglPreferences.DIAGRAM_SECTION, OglPreferences.SNAP_TO_GRID)
+
+    @snapToGrid.setter
+    def snapToGrid(self, theNewValue: bool):
+        self._config.set(OglPreferences.DIAGRAM_SECTION, OglPreferences.SNAP_TO_GRID, str(theNewValue))
+        self.__saveConfig()
+
+    @property
+    def backgroundGridInterval(self) -> int:
+        return self._config.getint(OglPreferences.DIAGRAM_SECTION, OglPreferences.BACKGROUND_GRID_INTERVAL)
+
+    @backgroundGridInterval.setter
+    def backgroundGridInterval(self, theNewValue: int):
+        self._config.set(OglPreferences.DIAGRAM_SECTION, OglPreferences.BACKGROUND_GRID_INTERVAL, str(theNewValue))
+        self.__saveConfig()
+
+    @property
+    def gridLineColor(self) -> MiniOglColorEnum:
+
+        colorName:     str           = self._config.get(OglPreferences.DIAGRAM_SECTION, OglPreferences.GRID_LINE_COLOR)
+        pyutColorEnum: MiniOglColorEnum = MiniOglColorEnum(colorName)
+        return pyutColorEnum
+
+    @gridLineColor.setter
+    def gridLineColor(self, theNewValue: MiniOglColorEnum):
+
+        colorName: str = theNewValue.value
+        self._config.set(OglPreferences.DIAGRAM_SECTION, OglPreferences.GRID_LINE_COLOR, colorName)
+        self.__saveConfig()
+
+    @property
+    def gridLineStyle(self) -> MiniOglPenStyle:
+        penStyleName: str          = self._config.get(OglPreferences.DIAGRAM_SECTION, OglPreferences.GRID_LINE_STYLE)
+        pyutPenStyle: MiniOglPenStyle = MiniOglPenStyle(penStyleName)
+        return pyutPenStyle
+
+    @gridLineStyle.setter
+    def gridLineStyle(self, theNewValue: MiniOglPenStyle):
+
+        penStyleName: str = theNewValue.value
+        self._config.set(OglPreferences.DIAGRAM_SECTION, OglPreferences.GRID_LINE_STYLE, penStyleName)
+        self.__saveConfig()
+
     def _loadPreferences(self):
 
         self._ensurePreferenceFileExists()
@@ -258,11 +312,21 @@ class OglPreferences:
                 if self._config.has_option(OglPreferences.OGL_PREFERENCES_SECTION, prefName) is False:
                     self.__addMissingOglPreference(prefName, OglPreferences.OGL_PREFERENCES[prefName])
 
+            if self._config.has_section(OglPreferences.DIAGRAM_SECTION) is False:
+                self._config.add_section(OglPreferences.DIAGRAM_SECTION)
+
+            for prefName in OglPreferences.DIAGRAM_PREFERENCES:
+                if self._config.has_option(OglPreferences.DIAGRAM_SECTION, prefName) is False:
+                    self.__addMissingDiagramPreference(prefName, OglPreferences.DIAGRAM_PREFERENCES[prefName])
+
         except (ValueError, Exception) as e:
             self.logger.error(f"Error: {e}")
 
     def __addMissingOglPreference(self, preferenceName, value):
         self.__addMissingPreference(OglPreferences.OGL_PREFERENCES_SECTION, preferenceName, value)
+
+    def __addMissingDiagramPreference(self, preferenceName, value):
+        self.__addMissingPreference(OglPreferences.DIAGRAM_SECTION, preferenceName, value)
 
     def __addMissingPreference(self, sectionName: str, preferenceName: str, value: str):
         self._config.set(sectionName, preferenceName, value)
