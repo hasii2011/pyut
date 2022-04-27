@@ -28,20 +28,17 @@ from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.ogl.OglPosition import OglPosition
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
-
 from org.pyut.model.PyutLink import PyutLink
 
 from org.pyut.ogl.IllegalOperationException import IllegalOperationException
 
-from org.pyut.PyutUtils import PyutUtils
+from org.pyut.ogl.OglUtils import OglUtils
 
 [
     MENU_ADD_BEND,
     MENU_REMOVE_BEND,
     MENU_TOGGLE_SPLINE,
-]  = PyutUtils.assignID(3)
+]  = OglUtils.assignID(3)
 
 
 class OglLink(LineShape, ShapeEventHandler):
@@ -284,9 +281,9 @@ class OglLink(LineShape, ShapeEventHandler):
             event:
         """
         menu: Menu = Menu()
-        menu.Append(MENU_ADD_BEND,      _('Add Bend'),      _('Add Bend at right click point'))
-        menu.Append(MENU_REMOVE_BEND,   _('Remove Bend'),   _('Remove Bend closest to click point'))
-        menu.Append(MENU_TOGGLE_SPLINE, _('Toggle Spline'), _('Best with at least one bend'))
+        menu.Append(MENU_ADD_BEND,      'Add Bend',      'Add Bend at right click point')
+        menu.Append(MENU_REMOVE_BEND,   'Remove Bend',   'Remove Bend closest to click point')
+        menu.Append(MENU_TOGGLE_SPLINE, 'Toggle Spline', 'Best with at least one bend')
 
         if len(self._controls) == 0:
             bendItem: MenuItem = menu.FindItemById(MENU_REMOVE_BEND)

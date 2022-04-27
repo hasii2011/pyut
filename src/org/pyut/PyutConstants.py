@@ -1,10 +1,3 @@
-
-from wx import Bitmap
-
-from org.pyut.resources.img.methodparameters.Display import embeddedImage as displayImage
-from org.pyut.resources.img.methodparameters.DoNotDisplay import embeddedImage as doNotDisplayImage
-from org.pyut.resources.img.methodparameters.UnSpecified import embeddedImage as unSpecifiedImage
-
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
@@ -61,18 +54,3 @@ class PyutConstants:
             if DiagramsStrings[key] == string:
                 return key
         return DiagramType.UNKNOWN_DIAGRAM
-
-    @staticmethod
-    def displayMethodsIcon() -> Bitmap:
-        bmp: Bitmap = displayImage.GetBitmap()
-        return bmp
-
-    @staticmethod
-    def doNotDisplayMethodsIcon() -> Bitmap:
-        bmp: Bitmap = doNotDisplayImage.GetBitmap()
-        return bmp
-
-    @staticmethod
-    def unspecifiedDisplayMethodsIcon() -> Bitmap:
-        bmp: Bitmap = unSpecifiedImage.GetBitmap()
-        return bmp

@@ -30,30 +30,25 @@ class Singleton(object):
             def __init__(self, theNewValue):
                 self.theNewValue = theNewValue
     """
-    def __new__(cls, *args, **kwds):
+    def __new__(cls, *args, **kwargs):
         """
         New operator of a singleton class.
         Will return the only instance, or create it if needed.
 
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
         instance = cls.__dict__.get("__instance__")
         if instance is None:
             instance = object.__new__(cls)
             assert type(instance.__init__) != MethodType, f"Error, your singleton class {cls} cannot contain a __init__ method."
             try:
-                instance.init(*args, **kwds)
+                instance.init(*args, **kwargs)
             except Exception as e:
                 raise e
             cls.__instance__ = instance
         return instance
 
-    def init(self, *args, **kwds):
+    def init(self, *args, **kwargs):
         """
         Constructor of a singleton class.
-
-        @since 1.0
-        @author Laurent Burgbacher <lb@alawa.ch>
         """
         pass

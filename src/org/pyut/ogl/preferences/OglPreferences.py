@@ -10,6 +10,9 @@ from os import getenv as osGetEnv
 from configparser import ConfigParser
 from typing import Optional
 
+from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
+from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
+
 from org.pyut.ogl.OglDimensions import OglDimensions
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 
@@ -22,14 +25,15 @@ class OglPreferences:
     PREFERENCES_FILENAME:   str = 'ogl.ini'
     THE_GREAT_MAC_PLATFORM: str = 'darwin'
 
-    OGL_PREFERENCES_SECTION:         str = 'OglPreferences'
+    OGL_PREFERENCES_SECTION: str = 'OglPreferences'
+    DIAGRAM_SECTION:         str = 'Diagram'
 
     NOTE_TEXT:        str = 'note_text'
     NOTE_DIMENSIONS:  str = 'note_dimensions'
     TEXT_DIMENSIONS:  str = 'text_dimensions'
     TEXT_BOLD:        str = 'text_bold'
     TEXT_ITALICIZE:   str = 'text_italicize'
-    TEXT_FONT_FAMILY:        str = 'text_font_family'
+    TEXT_FONT_FAMILY: str = 'text_font_family'
     TEXT_FONT_SIZE:   str = 'text_font_size'
     CLASS_NAME:       str = 'class_name'
     CLASS_DIMENSIONS: str = 'class_dimensions'
@@ -53,6 +57,23 @@ class OglPreferences:
         DEFAULT_NAME_USECASE:   'UseCaseName',
         DEFAULT_NAME_ACTOR:     'ActorName',
         DEFAULT_NAME_METHOD:    'MethodName',
+    }
+
+    DEFAULT_GRID_LINE_COLOR: str = PyutColorEnum.LIGHT_GREY.value
+    DEFAULT_GRID_LINE_STYLE: str = PyutPenStyle.DOT.value
+
+    BACKGROUND_GRID_ENABLED:  str = 'background_grid_enabled'
+    SNAP_TO_GRID:             str = 'snap_to_grid'
+    BACKGROUND_GRID_INTERVAL: str = 'background_grid_interval'
+    GRID_LINE_COLOR:          str = 'grid_line_color'
+    GRID_LINE_STYLE:          str = 'grid_line_style'
+
+    DIAGRAM_PREFERENCES: OGL_PREFS_NAME_VALUES = {
+        BACKGROUND_GRID_ENABLED: 'True',
+        SNAP_TO_GRID:            'True',
+        BACKGROUND_GRID_INTERVAL: '25',
+        GRID_LINE_COLOR:          DEFAULT_GRID_LINE_COLOR,
+        GRID_LINE_STYLE:          DEFAULT_GRID_LINE_STYLE
     }
 
     def __init__(self):

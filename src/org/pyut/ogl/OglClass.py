@@ -23,6 +23,7 @@ from wx import MouseEvent
 from wx import Point
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+
 from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
 from org.pyut.model.PyutMethod import PyutMethod
 from org.pyut.model.PyutObject import PyutObject
@@ -31,8 +32,7 @@ from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
 
-from org.pyut.PyutConstants import PyutConstants
-
+from org.pyut.ogl.OglConstants import OglConstants
 from org.pyut.ogl.OglUtils import OglUtils
 from org.pyut.ogl.events.OglEventType import OglEventType
 
@@ -370,7 +370,7 @@ class OglClass(OglObject):
         w += 2 * MARGIN
         self.SetSize(w, h)
 
-        # to automatically replace the sizers at a correct place
+        # to automatically replace the sizer objects at a correct place
         if self.IsSelected():
             self.SetSelected(False)
             self.SetSelected(True)
@@ -519,11 +519,11 @@ class OglClass(OglObject):
     def _initializeTriStateDisplayParametersMenuItem(self, displayParameters: PyutDisplayParameters, itemToggleParameters: MenuItem):
 
         if displayParameters == PyutDisplayParameters.UNSPECIFIED:
-            itemToggleParameters.SetBitmap(PyutConstants.unspecifiedDisplayMethodsIcon())
+            itemToggleParameters.SetBitmap(OglConstants.unspecifiedDisplayMethodsIcon())
         elif displayParameters == PyutDisplayParameters.DISPLAY:
-            itemToggleParameters.SetBitmap(PyutConstants.displayMethodsIcon())
+            itemToggleParameters.SetBitmap(OglConstants.displayMethodsIcon())
         elif displayParameters == PyutDisplayParameters.DO_NOT_DISPLAY:
-            itemToggleParameters.SetBitmap(PyutConstants.doNotDisplayMethodsIcon())
+            itemToggleParameters.SetBitmap(OglConstants.doNotDisplayMethodsIcon())
         else:
             assert False, 'Unknown display type'
 
