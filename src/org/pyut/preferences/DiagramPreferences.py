@@ -2,8 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
-from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
+from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
+from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
 
 from org.pyut.preferences.BaseSubPreference import BaseSubPreference
 
@@ -15,8 +15,8 @@ class BackgroundPreferences(BaseSubPreference):
     """
     """
     DIAGRAM_SECTION:         str = 'Diagram'
-    DEFAULT_GRID_LINE_COLOR: str = PyutColorEnum.LIGHT_GREY.value
-    DEFAULT_GRID_LINE_STYLE: str = PyutPenStyle.DOT.value
+    DEFAULT_GRID_LINE_COLOR: str = MiniOglColorEnum.LIGHT_GREY.value
+    DEFAULT_GRID_LINE_STYLE: str = MiniOglPenStyle.DOT.value
 
     BACKGROUND_GRID_ENABLED:  str = 'background_grid_enabled'
     SNAP_TO_GRID:             str = 'snap_to_grid'
@@ -80,27 +80,27 @@ class BackgroundPreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def gridLineColor(self) -> PyutColorEnum:
+    def gridLineColor(self) -> MiniOglColorEnum:
 
         colorName:     str           = self._config.get(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.GRID_LINE_COLOR)
-        pyutColorEnum: PyutColorEnum = PyutColorEnum(colorName)
+        pyutColorEnum: MiniOglColorEnum = MiniOglColorEnum(colorName)
         return pyutColorEnum
 
     @gridLineColor.setter
-    def gridLineColor(self, theNewValue: PyutColorEnum):
+    def gridLineColor(self, theNewValue: MiniOglColorEnum):
 
         colorName: str = theNewValue.value
         self._config.set(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.GRID_LINE_COLOR, colorName)
         self._preferencesCommon.saveConfig()
 
     @property
-    def gridLineStyle(self) -> PyutPenStyle:
+    def gridLineStyle(self) -> MiniOglPenStyle:
         penStyleName: str          = self._config.get(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.GRID_LINE_STYLE)
-        pyutPenStyle: PyutPenStyle = PyutPenStyle(penStyleName)
+        pyutPenStyle: MiniOglPenStyle = MiniOglPenStyle(penStyleName)
         return pyutPenStyle
 
     @gridLineStyle.setter
-    def gridLineStyle(self, theNewValue: PyutPenStyle):
+    def gridLineStyle(self, theNewValue: MiniOglPenStyle):
 
         penStyleName: str = theNewValue.value
         self._config.set(BackgroundPreferences.DIAGRAM_SECTION, BackgroundPreferences.GRID_LINE_STYLE, penStyleName)

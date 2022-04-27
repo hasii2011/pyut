@@ -10,7 +10,7 @@ from wx import PENSTYLE_SOLID
 from wx import PENSTYLE_VERTICAL_HATCH
 
 
-class PyutPenStyle(Enum):
+class MiniOglPenStyle(Enum):
 
     SOLID                   = 'Solid'
     DOT                     = 'Dot'
@@ -24,30 +24,30 @@ class PyutPenStyle(Enum):
     VERTICAL_HATCH          = 'Vertical Hatch'
 
     @staticmethod
-    def toWxPenStyle(penStyleEnum: 'PyutPenStyle'):
+    def toWxPenStyle(penStyleEnum: 'MiniOglPenStyle'):
 
-        if penStyleEnum == PyutPenStyle.SOLID:
+        if penStyleEnum == MiniOglPenStyle.SOLID:
             wxPenStyle = PENSTYLE_SOLID
 
-        elif penStyleEnum == PyutPenStyle.DOT:
+        elif penStyleEnum == MiniOglPenStyle.DOT:
             wxPenStyle = PENSTYLE_DOT
 
-        elif penStyleEnum == PyutPenStyle.LONG_DASH:
+        elif penStyleEnum == MiniOglPenStyle.LONG_DASH:
             wxPenStyle = PENSTYLE_LONG_DASH
 
-        elif penStyleEnum == PyutPenStyle.SHORT_DASH:
+        elif penStyleEnum == MiniOglPenStyle.SHORT_DASH:
             wxPenStyle = PENSTYLE_SHORT_DASH
 
-        elif penStyleEnum == PyutPenStyle.DOT_DASH:
+        elif penStyleEnum == MiniOglPenStyle.DOT_DASH:
             wxPenStyle = PENSTYLE_DOT_DASH
 
-        elif penStyleEnum == PyutPenStyle.CROSS_HATCH:
+        elif penStyleEnum == MiniOglPenStyle.CROSS_HATCH:
             wxPenStyle = PENSTYLE_CROSS_HATCH
 
-        elif penStyleEnum == PyutPenStyle.HORIZONTAL_HATCH:
+        elif penStyleEnum == MiniOglPenStyle.HORIZONTAL_HATCH:
             wxPenStyle = PENSTYLE_HORIZONTAL_HATCH
 
-        elif penStyleEnum == PyutPenStyle.VERTICAL_HATCH:
+        elif penStyleEnum == MiniOglPenStyle.VERTICAL_HATCH:
             wxPenStyle = PENSTYLE_VERTICAL_HATCH
 
         else:

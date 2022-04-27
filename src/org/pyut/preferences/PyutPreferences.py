@@ -8,8 +8,8 @@ from configparser import ConfigParser
 
 from org.pyut.general.Singleton import Singleton
 
-from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
-from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
+from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
+from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
 from org.pyut.ogl.OglDimensions import OglDimensions
 
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
@@ -394,19 +394,19 @@ class PyutPreferences(Singleton):
         self._diagramPrefs.backgroundGridInterval = theNewValue
 
     @property
-    def gridLineColor(self) -> PyutColorEnum:
+    def gridLineColor(self) -> MiniOglColorEnum:
         return self._diagramPrefs.gridLineColor
 
     @gridLineColor.setter
-    def gridLineColor(self, theNewValue: PyutColorEnum):
+    def gridLineColor(self, theNewValue: MiniOglColorEnum):
         self._diagramPrefs.gridLineColor = theNewValue
 
     @property
-    def gridLineStyle(self) -> PyutPenStyle:
+    def gridLineStyle(self) -> MiniOglPenStyle:
         return self._diagramPrefs.gridLineStyle
 
     @gridLineStyle.setter
-    def gridLineStyle(self, theNewValue: PyutPenStyle):
+    def gridLineStyle(self, theNewValue: MiniOglPenStyle):
         self._diagramPrefs.gridLineStyle = theNewValue
 
     @property

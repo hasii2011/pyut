@@ -54,8 +54,8 @@ from wx.core import PenStyle
 from org.pyut.miniogl.Shape import Shape
 
 from org.pyut.miniogl.Diagram import Diagram
-from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
-from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
+from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
+from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.miniogl.SizerShape import SizerShape
 from org.pyut.miniogl.ControlPoint import ControlPoint
@@ -1050,8 +1050,8 @@ class DiagramFrame(ScrolledWindow):
 
     def _getGridPen(self) -> Pen:
 
-        gridLineColor: Colour   = PyutColorEnum.toWxColor(self._prefs.gridLineColor)
-        gridLineStyle: PenStyle = PyutPenStyle.toWxPenStyle(self._prefs.gridLineStyle)
+        gridLineColor: Colour   = MiniOglColorEnum.toWxColor(self._prefs.gridLineColor)
+        gridLineStyle: PenStyle = MiniOglPenStyle.toWxPenStyle(self._prefs.gridLineStyle)
 
         pen:           Pen    = Pen(PenInfo(gridLineColor).Style(gridLineStyle).Width(1))
 

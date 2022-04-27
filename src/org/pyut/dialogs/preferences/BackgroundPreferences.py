@@ -32,12 +32,12 @@ from wx import Window
 
 from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
-from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
+from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
-from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
+from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
 
 
 class BackgroundPreferences(PreferencesPanel):
@@ -135,7 +135,7 @@ class BackgroundPreferences(PreferencesPanel):
             The sizer that contains the language selection control
         """
         colorChoices = []
-        for cc in PyutColorEnum:
+        for cc in MiniOglColorEnum:
             colorChoices.append(cc.value)
 
         self._cmbGridLineColor: ComboBox = ComboBox(self, self.colorID, choices=colorChoices, style=CB_READONLY)
@@ -149,7 +149,7 @@ class BackgroundPreferences(PreferencesPanel):
 
     def __createGridStyleChoice(self) -> StaticBoxSizer:
 
-        gridStyles = [s.value for s in PyutPenStyle]
+        gridStyles = [s.value for s in MiniOglPenStyle]
 
         gridStyleChoice: Choice = Choice(self, ID_ANY, choices=gridStyles)
 
@@ -165,7 +165,7 @@ class BackgroundPreferences(PreferencesPanel):
 
         colorValue: str = event.GetString()
 
-        pyutColorEnum: PyutColorEnum = PyutColorEnum(colorValue)
+        pyutColorEnum: MiniOglColorEnum = MiniOglColorEnum(colorValue)
 
         self._prefs.gridLineColor = pyutColorEnum
 
@@ -202,6 +202,6 @@ class BackgroundPreferences(PreferencesPanel):
         styleText: str = event.GetString()
         self.clsLogger.warning(f'{styleText=}')
 
-        pyutPenStyle: PyutPenStyle = PyutPenStyle(styleText)
+        pyutPenStyle: MiniOglPenStyle = MiniOglPenStyle(styleText)
 
         self._prefs.gridLineStyle = pyutPenStyle

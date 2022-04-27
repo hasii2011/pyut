@@ -10,12 +10,12 @@ from unittest import main as unitTestMain
 from wx import App
 from wx import Colour
 
-from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
+from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
 
 from tests.TestBase import TestBase
 
 
-class TestPyutColorEnum(TestBase):
+class TestMiniOglColorEnum(TestBase):
     """
     """
     clsLogger: Logger = cast(Logger, None)
@@ -24,8 +24,8 @@ class TestPyutColorEnum(TestBase):
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
-        TestPyutColorEnum.clsLogger = getLogger(__name__)
-        TestPyutColorEnum.clsApp    = App()
+        TestMiniOglColorEnum.clsLogger = getLogger(__name__)
+        TestMiniOglColorEnum.clsApp    = App()
 
     @classmethod
     def tearDownClass(cls):
@@ -33,26 +33,26 @@ class TestPyutColorEnum(TestBase):
         del cls.clsApp
 
     def setUp(self):
-        self.logger: Logger = TestPyutColorEnum.clsLogger
-        self.app            = TestPyutColorEnum.clsApp
+        self.logger: Logger = TestMiniOglColorEnum.clsLogger
+        self.app            = TestMiniOglColorEnum.clsApp
 
     def tearDown(self):
         pass
 
     def testBlack(self):
-        c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.BLACK)
+        c: Colour = MiniOglColorEnum.toWxColor(MiniOglColorEnum.BLACK)
         self.assertTrue(c.IsOk(), 'Wah, wah.  Black should be a valid color')
 
     def testLightGrey(self):
-        c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.LIGHT_GREY)
+        c: Colour = MiniOglColorEnum.toWxColor(MiniOglColorEnum.LIGHT_GREY)
         self.assertTrue(c.IsOk(), 'Wah, wah.  Light Grey should be a valid color')
 
     def testCornFlowerBlue(self):
-        c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.CORNFLOWER_BLUE)
+        c: Colour = MiniOglColorEnum.toWxColor(MiniOglColorEnum.CORNFLOWER_BLUE)
         self.assertTrue(c.IsOk(), 'Wah, wah.  Corn Flower Blue should be a valid color')
 
     def testYellow(self):
-        c: Colour = PyutColorEnum.toWxColor(PyutColorEnum.YELLOW)
+        c: Colour = MiniOglColorEnum.toWxColor(MiniOglColorEnum.YELLOW)
         self.assertTrue(c.IsOk(), 'Wah, wah.  Yellow should be a valid color')
 
 
@@ -62,7 +62,7 @@ def suite() -> TestSuite:
 
     testSuite: TestSuite = TestSuite()
     # noinspection PyUnresolvedReferences
-    testSuite.addTest(unittest.makeSuite(TestPyutColorEnum))
+    testSuite.addTest(unittest.makeSuite(TestMiniOglColorEnum))
 
     return testSuite
 

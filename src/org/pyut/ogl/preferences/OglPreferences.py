@@ -10,8 +10,8 @@ from os import getenv as osGetEnv
 from configparser import ConfigParser
 from typing import Optional
 
-from org.pyut.miniogl.PyutColorEnum import PyutColorEnum
-from org.pyut.miniogl.PyutPenStyle import PyutPenStyle
+from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
+from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
 
 from org.pyut.ogl.OglDimensions import OglDimensions
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
@@ -59,8 +59,8 @@ class OglPreferences:
         DEFAULT_NAME_METHOD:    'MethodName',
     }
 
-    DEFAULT_GRID_LINE_COLOR: str = PyutColorEnum.LIGHT_GREY.value
-    DEFAULT_GRID_LINE_STYLE: str = PyutPenStyle.DOT.value
+    DEFAULT_GRID_LINE_COLOR: str = MiniOglColorEnum.LIGHT_GREY.value
+    DEFAULT_GRID_LINE_STYLE: str = MiniOglPenStyle.DOT.value
 
     BACKGROUND_GRID_ENABLED:  str = 'background_grid_enabled'
     SNAP_TO_GRID:             str = 'snap_to_grid'
