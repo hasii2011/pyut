@@ -11,7 +11,7 @@ from org.pyut.model.PyutClass import PyutClass
 
 from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
-from org.pyut.PyutUtils import PyutUtils
+from org.pyut.ogl.OglUtils import OglUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -106,7 +106,7 @@ class CreateOglClassCommand(BaseOglClassCommand):
             med.classEditor(pyutClass)
 
         if self._prefs.snapToGrid is True:
-            snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(self._classX, self._classY, self._prefs.backgroundGridInterval)
+            snappedX, snappedY = OglUtils.snapCoordinatesToGrid(self._classX, self._classY, self._prefs.backgroundGridInterval)
             umlFrame.addShape(oglClass, snappedX, snappedY, withModelUpdate=True)
         else:
             umlFrame.addShape(oglClass, self._classX, self._classY, withModelUpdate=True)

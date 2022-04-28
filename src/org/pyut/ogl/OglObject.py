@@ -136,10 +136,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         OglObject.clsLogger.debug(f'OglObject.OnLeftDown  - {event.GetEventObject()=}')
 
-        from org.pyut.ui.Mediator import Mediator
-        if Mediator().actionWaiting() is True:
-            self.eventEngine.sendEvent(OglEventType.ShapeSelected, selectedShape=self, selectedShapePosition=event.GetPosition())
-            return
+        self.eventEngine.sendEvent(OglEventType.ShapeSelected, selectedShape=self, selectedShapePosition=event.GetPosition())
         event.Skip()
 
     def OnLeftUp(self, event: MouseEvent):
