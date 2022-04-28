@@ -23,8 +23,6 @@ from wx import MouseEvent
 
 from wx import RED_PEN
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
 from org.pyut.general.LineSplitter import LineSplitter
 
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
@@ -34,12 +32,13 @@ from org.pyut.model.PyutText import PyutText
 from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
+
 from org.pyut.ogl.OglUtils import OglUtils
 
 from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
-from org.pyut.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
-from org.pyut.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
+from org.pyut.ogl.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
+from org.pyut.ogl.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
 
 [
     ID_MENU_INCREASE_SIZE,
@@ -199,16 +198,16 @@ class OglText(OglObject):
 
         menu: Menu = Menu()
 
-        increaseItem: MenuItem = menu.Append(ID_MENU_INCREASE_SIZE, _('Increase Size'), _('Increase Text Size by 2 points'))
-        decreaseItem: MenuItem = menu.Append(ID_MENU_DECREASE_SIZE, _('Decrease Size'), _('Decrease Text Size by 2 points'))
+        increaseItem: MenuItem = menu.Append(ID_MENU_INCREASE_SIZE, 'Increase Size', 'Increase Text Size by 2 points')
+        decreaseItem: MenuItem = menu.Append(ID_MENU_DECREASE_SIZE, 'Decrease Size', 'Decrease Text Size by 2 points')
 
         incBmp: Bitmap = IncreaseTextSize.GetBitmap()
         increaseItem.SetBitmap(incBmp)
         decBmp: Bitmap = DecreaseTextSize.GetBitmap()
         decreaseItem.SetBitmap(decBmp)
 
-        boldItem:       MenuItem = menu.AppendCheckItem(ID_MENU_BOLD_TEXT,   item=_('Bold Text'), help=_('Set text to bold'))
-        italicizedItem: MenuItem = menu.AppendCheckItem(ID_MENU_ITALIC_TEXT, item=_('Italicize Text'), help=_('Set text to italics'))
+        boldItem:       MenuItem = menu.AppendCheckItem(ID_MENU_BOLD_TEXT,   item='Bold Text',      help='Set text to bold')
+        italicizedItem: MenuItem = menu.AppendCheckItem(ID_MENU_ITALIC_TEXT, item='Italicize Text', help='Set text to italics')
 
         if self.isBold is True:
             boldItem.Check(check=True)

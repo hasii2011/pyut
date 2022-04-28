@@ -24,8 +24,6 @@ class TestPyutUtils(TestBase):
     BASE_TEST_PATH:     str = '/users/home/hasii'
     FAKE_TEST_FILENAME: str = 'hasiiTheGreat.doc'
 
-    TEST_GRID_INTERVAL: int = 25
-
     @classmethod
     def setUpClass(cls):
         TestBase.setUpLogging()
@@ -144,33 +142,6 @@ class TestPyutUtils(TestBase):
         del app
 
         self.logger.info(f'{screenMetrics=}')
-
-    def testSnapCoordinatesToGrid(self):
-
-        gridInterval: int = TestPyutUtils.TEST_GRID_INTERVAL
-        x: int = 335
-        y: int = 142
-
-        snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
-
-        expectedX: int = 325
-        expectedY: int = 125
-
-        self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
-        self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
-
-    def testSnapCoordinatesToGridNoSnapping(self):
-        gridInterval: int = TestPyutUtils.TEST_GRID_INTERVAL
-        x: int = 300
-        y: int = 200
-
-        snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
-
-        expectedX: int = 300
-        expectedY: int = 200
-
-        self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
-        self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
 
     def testStrFloatToInt(self):
 

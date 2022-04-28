@@ -16,9 +16,6 @@ from org.pyut.miniogl.TextShape import TextShape
 
 from org.pyut.model.PyutSDInstance import PyutSDInstance
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
-
 
 class OglInstanceName(TextShape, ShapeEventHandler):
 
@@ -38,7 +35,7 @@ class OglInstanceName(TextShape, ShapeEventHandler):
     def OnLeftDClick(self, event):
         """
         """
-        dlg = TextEntryDialog(None, _("Message"), _("Enter instance name"), self._pyutObject.getInstanceName(), OK | CANCEL | CENTRE)
+        dlg = TextEntryDialog(None, "Message", "Enter instance name", self._pyutObject.getInstanceName(), OK | CANCEL | CENTRE)
         if dlg.ShowModal() == ID_OK:
             self._pyutObject.setInstanceName(dlg.GetValue())
         dlg.Destroy()

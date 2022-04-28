@@ -17,16 +17,16 @@ from wx import FONTWEIGHT_NORMAL
 from org.pyut.miniogl.RectangleShape import RectangleShape
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 
-from org.pyut.PyutUtils import PyutUtils
-
 from org.pyut.model.PyutObject import PyutObject
 
 from org.pyut.ogl.OglLink import OglLink
+from org.pyut.ogl.OglUtils import OglUtils
 
 from org.pyut.ogl.events.OglEventType import OglEventType
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+
 
 DEFAULT_FONT_SIZE = 10
 
@@ -53,8 +53,8 @@ class OglObject(RectangleShape, ShapeEventHandler):
         RectangleShape.__init__(self, 0, 0, width, height)
 
         # Default font
-        self._defaultFont: Font            = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
-        self._prefs:       PyutPreferences = PyutPreferences()
+        self._defaultFont: Font           = Font(DEFAULT_FONT_SIZE, FONTFAMILY_SWISS, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
+        self._prefs:       OglPreferences = OglPreferences()
 
         # TODO This is also used by sequence diagrams to store OglSDMessage links
         self._oglLinks: List[OglLink] = []     # Connected links
@@ -98,8 +98,9 @@ class OglObject(RectangleShape, ShapeEventHandler):
         """
         if self.HasDiagramFrame() is True:
 
-            from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
-            panel: UmlDiagramsFrame = self.GetDiagram().GetPanel()
+            # from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+            # panel: UmlDiagramsFrame = self.GetDiagram().GetPanel()
+            panel = self.GetDiagram().GetPanel()
             if panel is not None:
                 if self._eventEngine is None:
                     self._eventEngine = panel.eventEngine
@@ -138,7 +139,6 @@ class OglObject(RectangleShape, ShapeEventHandler):
         from org.pyut.ui.Mediator import Mediator
         if Mediator().actionWaiting() is True:
             self.eventEngine.sendEvent(OglEventType.ShapeSelected, selectedShape=self, selectedShapePosition=event.GetPosition())
-            # self.eventEngine.sendSelectedShapeEvent(shape=self, position=event.GetPosition())
             return
         event.Skip()
 
@@ -152,7 +152,7 @@ class OglObject(RectangleShape, ShapeEventHandler):
         gridInterval: int = self._prefs.backgroundGridInterval
         x, y = self.GetPosition()
         if self._prefs.snapToGrid is True:
-            snappedX, snappedY = PyutUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
+            snappedX, snappedY = OglUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
             self.SetPosition(snappedX, snappedY)
         else:
             self.SetPosition(x, y)

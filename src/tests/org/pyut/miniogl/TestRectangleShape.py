@@ -7,6 +7,8 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from wx import App
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
@@ -32,11 +34,14 @@ class TestRectangleShape(TestBase):
         PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
-        self.logger:          Logger         = TestRectangleShape.clsLogger
+        self.logger: Logger = TestRectangleShape.clsLogger
+        self.app:    App    = App()
+
         self._rectangleShape: RectangleShape = RectangleShape(x=CANONICAL_X, y=CANONICAL_Y, width=CANONICAL_WIDTH, height=CANONICAL_HEIGHT, parent=None)
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testInsideTrue(self):
 

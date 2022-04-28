@@ -28,7 +28,6 @@ class MainPreferences(BaseSubPreference):
     EDITOR:                     str = 'Editor'
     STARTUP_SIZE:               str = 'startup_size'
     STARTUP_POSITION:           str = 'startup_position'
-    CENTER_DIAGRAM:             str = 'center_diagram'
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
     TOOL_BAR_ICON_SIZE:         str = 'tool_bar_icon_size'
 
@@ -44,7 +43,6 @@ class MainPreferences(BaseSubPreference):
         EDITOR:                    'brackets',
         STARTUP_SIZE:              Dimensions(1024, 768).__str__(),
         STARTUP_POSITION:          Position(5, 5).__str__(),
-        CENTER_DIAGRAM:            'False',
         CENTER_APP_ON_STARTUP:     'True',
         TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value
     }
@@ -159,16 +157,6 @@ class MainPreferences(BaseSubPreference):
     @startupSize.setter
     def startupSize(self, newValue: Dimensions):
         self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_SIZE, newValue.__str__())
-        self._preferencesCommon.saveConfig()
-
-    @property
-    def centerDiagram(self):
-        centerDiagram: bool = self._config.getboolean(MainPreferences.MAIN_SECTION, MainPreferences.CENTER_DIAGRAM)
-        return centerDiagram
-
-    @centerDiagram.setter
-    def centerDiagram(self, theNewValue: bool):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.CENTER_DIAGRAM, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property

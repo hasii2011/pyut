@@ -16,7 +16,8 @@ from wx import RED_PEN
 from wx import WHITE_BRUSH
 
 from org.pyut.miniogl.ShapeModel import ShapeModel
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
 
 class Shape:
@@ -64,7 +65,7 @@ class Shape:
 
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
-        if PyutPreferences().debugBasicShape is True:
+        if OglPreferences().debugBasicShape is True:
             from org.pyut.miniogl.TextShape import TextShape
             from org.pyut.miniogl.LineShape import LineShape
             if isinstance(self, (TextShape, LineShape)) is False:

@@ -23,8 +23,6 @@ from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.OglLink import OglLink
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
 
 # TODO : Find a way to report moves from AnchorPoints to PyutSDMessage
 
@@ -135,7 +133,7 @@ class OglSDMessage(OglLink):
         Callback for left double clicks.
 
         """
-        dlg = TextEntryDialog(None, _("Message"), _("Enter message name"), self._pyutSDMessage.getMessage(), OK | CANCEL | CENTRE)
+        dlg = TextEntryDialog(None, "Message", "Enter message name", self._pyutSDMessage.getMessage(), OK | CANCEL | CENTRE)
         if dlg.ShowModal() == ID_OK:
             self._pyutSDMessage.setMessage(dlg.GetValue())
         dlg.Destroy()

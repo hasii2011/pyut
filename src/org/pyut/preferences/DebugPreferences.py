@@ -13,14 +13,12 @@ class DebugPreferences(BaseSubPreference):
     DEBUG_SECTION:   str = 'Debug'
 
     DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # If `True` any created temporary files appear in the current directory
-    DEBUG_BASIC_SHAPE:             str = 'debug_basic_shape'              # If `True` turn on debug display code in basic Shape.py
     PYUTIO_PLUGIN_AUTO_SELECT_ALL: str = 'pyutio_plugin_auto_select_all'  # if `True` auto-select shapes in plugins
     DEBUG_DIAGRAM_FRAME:           str = 'debug_diagram_frame'
     DEBUG_ERROR_VIEWS:             str = 'debug_error_views'              # If true allows testing of the error views through Pyut
 
     DEBUG_PREFERENCES:  PREFS_NAME_VALUES = {
         DEBUG_TEMP_FILE_LOCATION:       'False',
-        DEBUG_BASIC_SHAPE:              'False',
         PYUTIO_PLUGIN_AUTO_SELECT_ALL:  'False',
         DEBUG_DIAGRAM_FRAME:            'False',
         DEBUG_ERROR_VIEWS:              'False'
@@ -58,16 +56,6 @@ class DebugPreferences(BaseSubPreference):
         self._preferencesCommon.saveConfig()
 
     @property
-    def debugBasicShape(self):
-        ans: bool = self._config.getboolean(DebugPreferences.DEBUG_SECTION, DebugPreferences.DEBUG_BASIC_SHAPE)
-        return ans
-
-    @debugBasicShape.setter
-    def debugBasicShape(self, theNewValue: bool):
-        self._config.set(DebugPreferences.DEBUG_SECTION, DebugPreferences.DEBUG_BASIC_SHAPE, str(theNewValue))
-        self._preferencesCommon.saveConfig()
-
-    @property
     def pyutIoPluginAutoSelectAll(self) -> bool:
         ans: bool = self._config.getboolean(DebugPreferences.DEBUG_SECTION, DebugPreferences.PYUTIO_PLUGIN_AUTO_SELECT_ALL)
         return ans
@@ -75,16 +63,6 @@ class DebugPreferences(BaseSubPreference):
     @pyutIoPluginAutoSelectAll.setter
     def pyutIoPluginAutoSelectAll(self, theNewValue: bool):
         self._config.set(DebugPreferences.DEBUG_SECTION, DebugPreferences.PYUTIO_PLUGIN_AUTO_SELECT_ALL, str(theNewValue))
-        self._preferencesCommon.saveConfig()
-
-    @property
-    def debugDiagramFrame(self) -> bool:
-        ans: bool = self._config.getboolean(DebugPreferences.DEBUG_SECTION, DebugPreferences.DEBUG_DIAGRAM_FRAME)
-        return ans
-
-    @debugDiagramFrame.setter
-    def debugDiagramFrame(self, theNewValue: bool):
-        self._config.set(DebugPreferences.DEBUG_SECTION, DebugPreferences.DEBUG_DIAGRAM_FRAME, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property

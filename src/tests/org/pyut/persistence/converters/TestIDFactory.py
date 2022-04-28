@@ -58,6 +58,7 @@ class TestIDFactory(TestBase):
 
     def setUp(self):
         self.logger: Logger = TestIDFactory.clsLogger
+        self.app:    App    = App()
 
         self._idFactory: IDFactory = IDFactory()
 
@@ -67,7 +68,8 @@ class TestIDFactory(TestBase):
         self._pyutClass: PyutClass = PyutClass(name='UnitTestClass')
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testCacheOglInterface(self):
 

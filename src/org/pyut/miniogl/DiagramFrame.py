@@ -61,7 +61,7 @@ from org.pyut.miniogl.SizerShape import SizerShape
 from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.RectangleShape import RectangleShape
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
 from org.pyut.miniogl.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 
@@ -120,7 +120,7 @@ class DiagramFrame(ScrolledWindow):
         DEFAULT_FONT_SIZE = 12
         self._defaultFont = Font(DEFAULT_FONT_SIZE, FONTFAMILY_DEFAULT, FONTSTYLE_NORMAL, FONTWEIGHT_NORMAL)
         self.SetBackgroundColour(WHITE)
-        self._prefs: PyutPreferences = PyutPreferences()
+        self._prefs: OglPreferences = OglPreferences()
 
         # Mouse events
         self.Bind(EVT_LEFT_DOWN,     self.OnLeftDown)

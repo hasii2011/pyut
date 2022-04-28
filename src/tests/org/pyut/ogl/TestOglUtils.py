@@ -18,6 +18,8 @@ from tests.TestBase import TestBase
 class TestOglUtils(TestBase):
     """
     """
+    TEST_GRID_INTERVAL: int = 25
+
     clsLogger: Logger = cast(Logger, None)
 
     @classmethod
@@ -34,10 +36,10 @@ class TestOglUtils(TestBase):
 
     def testComputeMidPointNorthSouth(self):
 
-        srcPosition:  OglPosition = OglPosition(0, 100)
-        destPosition: OglPosition = OglPosition(0, 400)
+        srcPosition: OglPosition = OglPosition(0, 100)
+        dstPosition: OglPosition = OglPosition(0, 400)
 
-        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=destPosition)
+        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=dstPosition)
 
         self.assertEqual(0.0,   midPoint.x, 'X coordinate is not correct')
         self.assertEqual(250.0, midPoint.y, 'Y coordinate is not correct')
@@ -46,10 +48,10 @@ class TestOglUtils(TestBase):
 
     def testComputeMidPointSouthNorth(self):
 
-        srcPosition:  OglPosition = OglPosition(0, 400)
-        destPosition: OglPosition = OglPosition(0, 100)
+        srcPosition: OglPosition = OglPosition(0, 400)
+        dstPosition: OglPosition = OglPosition(0, 100)
 
-        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=destPosition)
+        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=dstPosition)
         self.assertEqual(0.0,   midPoint.x, 'X coordinate is not correct')
         self.assertEqual(250.0, midPoint.y, 'Y coordinate is not correct')
 
@@ -57,10 +59,10 @@ class TestOglUtils(TestBase):
 
     def testComputeMidPointEastWest(self):
 
-        srcPosition:  OglPosition = OglPosition(200, 400)
-        destPosition: OglPosition = OglPosition(200, 800)
+        srcPosition: OglPosition = OglPosition(200, 400)
+        dstPosition: OglPosition = OglPosition(200, 800)
 
-        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=destPosition)
+        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=dstPosition)
         self.assertEqual(200.0, midPoint.x, 'X coordinate is not correct')
         self.assertEqual(600.0, midPoint.y, 'Y coordinate is not correct')
 
@@ -68,10 +70,10 @@ class TestOglUtils(TestBase):
 
     def testComputeMidPointWestEast(self):
 
-        srcPosition:  OglPosition = OglPosition(200, 800)
-        destPosition: OglPosition = OglPosition(200, 400)
+        srcPosition: OglPosition = OglPosition(200, 800)
+        dstPosition: OglPosition = OglPosition(200, 400)
 
-        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=destPosition)
+        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=dstPosition)
         self.assertEqual(200.0, midPoint.x, 'X coordinate is not correct')
         self.assertEqual(600.0, midPoint.y, 'Y coordinate is not correct')
 
@@ -79,10 +81,10 @@ class TestOglUtils(TestBase):
 
     def testComputeMidPointNorthEastToSouthWest(self):
 
-        srcPosition:  OglPosition = OglPosition(8000, 8000)
-        destPosition: OglPosition = OglPosition(4000, 4000)
+        srcPosition: OglPosition = OglPosition(8000, 8000)
+        dstPosition: OglPosition = OglPosition(4000, 4000)
 
-        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=destPosition)
+        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=dstPosition)
         self.assertEqual(6000.0, midPoint.x, 'X coordinate is not correct')
         self.assertEqual(6000.0, midPoint.y, 'Y coordinate is not correct')
 
@@ -90,14 +92,41 @@ class TestOglUtils(TestBase):
 
     def testComputeMidPointNorthWestToSouthEast(self):
 
-        srcPosition:  OglPosition = OglPosition(1024, 1024)
-        destPosition: OglPosition = OglPosition(8092, 8092)
+        srcPosition: OglPosition = OglPosition(1024, 1024)
+        dstPosition: OglPosition = OglPosition(8092, 8092)
 
-        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=destPosition)
+        midPoint: OglPosition = OglUtils.computeMidPoint(srcPosition=srcPosition, dstPosition=dstPosition)
         self.assertEqual(4558.0, midPoint.x, 'X coordinate is not correct')
         self.assertEqual(4558.0, midPoint.y, 'Y coordinate is not correct')
 
         self.logger.info(f'midPoint: {midPoint}')
+
+    def testSnapCoordinatesToGrid(self):
+
+        gridInterval: int = TestOglUtils.TEST_GRID_INTERVAL
+        x: int = 335
+        y: int = 142
+
+        snappedX, snappedY = OglUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
+
+        expectedX: int = 325
+        expectedY: int = 125
+
+        self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
+        self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
+
+    def testSnapCoordinatesToGridNoSnapping(self):
+        gridInterval: int = TestOglUtils.TEST_GRID_INTERVAL
+        x: int = 300
+        y: int = 200
+
+        snappedX, snappedY = OglUtils.snapCoordinatesToGrid(x=x, y=y, gridInterval=gridInterval)
+
+        expectedX: int = 300
+        expectedY: int = 200
+
+        self.assertEqual(expectedX, snappedX, 'X coordinate not correctly snapped')
+        self.assertEqual(expectedY, snappedY, 'Y coordinate not correctly snapped')
 
 
 def suite() -> TestSuite:

@@ -27,6 +27,7 @@ class OglPreferences:
 
     OGL_PREFERENCES_SECTION: str = 'Ogl'
     DIAGRAM_SECTION:         str = 'Diagram'
+    DEBUG_SECTION:           str = 'Debug'
 
     NOTE_TEXT:        str = 'note_text'
     NOTE_DIMENSIONS:  str = 'note_dimensions'
@@ -67,13 +68,23 @@ class OglPreferences:
     BACKGROUND_GRID_INTERVAL: str = 'background_grid_interval'
     GRID_LINE_COLOR:          str = 'grid_line_color'
     GRID_LINE_STYLE:          str = 'grid_line_style'
+    CENTER_DIAGRAM:           str = 'center_diagram'
 
     DIAGRAM_PREFERENCES: OGL_PREFS_NAME_VALUES = {
+        CENTER_DIAGRAM:          'False',
         BACKGROUND_GRID_ENABLED: 'True',
         SNAP_TO_GRID:            'True',
         BACKGROUND_GRID_INTERVAL: '25',
         GRID_LINE_COLOR:          DEFAULT_GRID_LINE_COLOR,
         GRID_LINE_STYLE:          DEFAULT_GRID_LINE_STYLE
+    }
+
+    DEBUG_DIAGRAM_FRAME:           str = 'debug_diagram_frame'
+    DEBUG_BASIC_SHAPE:             str = 'debug_basic_shape'              # If `True` turn on debug display code in basic Shape.py
+
+    DEBUG_PREFERENCES: OGL_PREFS_NAME_VALUES = {
+        DEBUG_DIAGRAM_FRAME: 'False',
+        DEBUG_BASIC_SHAPE:   'False',
     }
 
     def __init__(self):
@@ -226,6 +237,16 @@ class OglPreferences:
         self.__saveConfig()
 
     @property
+    def centerDiagram(self):
+        centerDiagram: bool = self._config.getboolean(OglPreferences.DIAGRAM_SECTION, OglPreferences.CENTER_DIAGRAM)
+        return centerDiagram
+
+    @centerDiagram.setter
+    def centerDiagram(self, theNewValue: bool):
+        self._config.set(OglPreferences.DIAGRAM_SECTION, OglPreferences.CENTER_DIAGRAM, str(theNewValue))
+        self.__saveConfig()
+
+    @property
     def backgroundGridEnabled(self) -> bool:
         return self._config.getboolean(OglPreferences.DIAGRAM_SECTION, OglPreferences.BACKGROUND_GRID_ENABLED)
 
@@ -279,6 +300,26 @@ class OglPreferences:
         self._config.set(OglPreferences.DIAGRAM_SECTION, OglPreferences.GRID_LINE_STYLE, penStyleName)
         self.__saveConfig()
 
+    @property
+    def debugDiagramFrame(self) -> bool:
+        ans: bool = self._config.getboolean(OglPreferences.DEBUG_SECTION, OglPreferences.DEBUG_DIAGRAM_FRAME)
+        return ans
+
+    @debugDiagramFrame.setter
+    def debugDiagramFrame(self, theNewValue: bool):
+        self._config.set(OglPreferences.DEBUG_SECTION, OglPreferences.DEBUG_DIAGRAM_FRAME, str(theNewValue))
+        self.__saveConfig()
+
+    @property
+    def debugBasicShape(self):
+        ans: bool = self._config.getboolean(OglPreferences.DEBUG_SECTION, OglPreferences.DEBUG_BASIC_SHAPE)
+        return ans
+
+    @debugBasicShape.setter
+    def debugBasicShape(self, theNewValue: bool):
+        self._config.set(OglPreferences.DEBUG_SECTION, OglPreferences.DEBUG_BASIC_SHAPE, str(theNewValue))
+        self.__saveConfig()
+
     def _loadPreferences(self):
 
         self._ensurePreferenceFileExists()
@@ -319,6 +360,13 @@ class OglPreferences:
                 if self._config.has_option(OglPreferences.DIAGRAM_SECTION, prefName) is False:
                     self.__addMissingDiagramPreference(prefName, OglPreferences.DIAGRAM_PREFERENCES[prefName])
 
+            if self._config.has_section(OglPreferences.DEBUG_SECTION) is False:
+                self._config.add_section(OglPreferences.DEBUG_SECTION)
+
+            for prefName in OglPreferences.DEBUG_PREFERENCES:
+                if self._config.has_option(OglPreferences.DEBUG_SECTION, prefName) is False:
+                    self.__addMissingDebugPreference(prefName, OglPreferences.DEBUG_PREFERENCES[prefName])
+
         except (ValueError, Exception) as e:
             self.logger.error(f"Error: {e}")
 
@@ -327,6 +375,9 @@ class OglPreferences:
 
     def __addMissingDiagramPreference(self, preferenceName, value):
         self.__addMissingPreference(OglPreferences.DIAGRAM_SECTION, preferenceName, value)
+
+    def __addMissingDebugPreference(self, preferenceName, value):
+        self.__addMissingPreference(OglPreferences.DEBUG_SECTION, preferenceName, value)
 
     def __addMissingPreference(self, sectionName: str, preferenceName: str, value: str):
         self._config.set(sectionName, preferenceName, value)

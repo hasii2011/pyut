@@ -95,14 +95,19 @@ class TestPyutPreferences(TestBase):
         self.assertFalse(self.prefs.useDebugTempFileLocation, 'Syntactic sugar not working')
 
     def testDebugBasicShapeTrue(self):
+        # TODO move to TestOglPreferences
         self.prefs.init()  # reload prefs
+        oldValue: bool = self.prefs.debugBasicShape
         self.prefs.debugBasicShape = True
         self.assertTrue(self.prefs.debugBasicShape, 'Syntactic sugar not working')
+        self.prefs.debugBasicShape = oldValue
 
     def testDebugBasicShapeFalse(self):
         self.prefs.init()  # reload prefs
+        oldValue: bool = self.prefs.debugBasicShape
         self.prefs.debugBasicShape = False
         self.assertFalse(self.prefs.debugBasicShape, 'Syntactic sugar not working')
+        self.prefs.debugBasicShape = oldValue
 
     def testTwoColorValue(self):
 

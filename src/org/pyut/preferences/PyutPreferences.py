@@ -255,11 +255,11 @@ class PyutPreferences(Singleton):
 
     @property
     def centerDiagram(self):
-        return self._mainPrefs.centerDiagram
+        return self._oglPrefs.centerDiagram
 
     @centerDiagram.setter
     def centerDiagram(self, theNewValue: bool):
-        self._mainPrefs.centerDiagram = theNewValue
+        self._oglPrefs.centerDiagram = theNewValue
 
     @property
     def centerAppOnStartUp(self) -> bool:
@@ -337,11 +337,11 @@ class PyutPreferences(Singleton):
 
     @property
     def debugBasicShape(self):
-        return self._debugPrefs.debugBasicShape
+        return self._oglPrefs.debugBasicShape
 
     @debugBasicShape.setter
     def debugBasicShape(self, theNewValue: bool):
-        self._debugPrefs.debugBasicShape = theNewValue
+        self._oglPrefs.debugBasicShape = theNewValue
 
     @property
     def pyutIoPluginAutoSelectAll(self) -> bool:
@@ -353,11 +353,11 @@ class PyutPreferences(Singleton):
 
     @property
     def debugDiagramFrame(self) -> bool:
-        return self._debugPrefs.debugDiagramFrame
+        return self._oglPrefs.debugDiagramFrame
 
     @debugDiagramFrame.setter
     def debugDiagramFrame(self, theNewValue: bool):
-        self._debugPrefs.debugDiagramFrame = theNewValue
+        self._oglPrefs.debugDiagramFrame = theNewValue
 
     @property
     def debugErrorViews(self):

@@ -23,6 +23,17 @@ class OglUtils:
 
     clsLogger: Logger = getLogger(__name__)
 
+    @staticmethod
+    def snapCoordinatesToGrid(x: int, y: int, gridInterval: int) -> Tuple[int, int]:
+
+        xDiff: float = x % gridInterval
+        yDiff: float = y % gridInterval
+
+        snappedX: int = round(x - xDiff)
+        snappedY: int = round(y - yDiff)
+
+        return snappedX, snappedY
+
     @classmethod
     def computeMidPoint(cls, srcPosition: OglPosition, dstPosition: OglPosition) -> OglPosition:
         """

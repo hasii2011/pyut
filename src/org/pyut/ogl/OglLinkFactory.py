@@ -18,9 +18,6 @@ from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 def getOglLinkFactory():
     """
     Function to get the unique OglLinkFactory instance (singleton).
-
-    @since 1.0
-    @author P. Waelti <pwaelti@eivd.ch>
     """
     return OglLinkFactory()
 
@@ -53,9 +50,9 @@ class OglLinkFactory(Singleton):
     """
     This class is a factory to produce `OglLink` objects.
     It works under the Factory Design Pattern model. Ask for a link
-    from this object and it will return you what you was asking for.
+    from this object, and it will return you what you was asking for.
     """
-    def init(self, *args, **kwds):
+    def init(self, *args, **kwargs):
         self.logger: Logger = getLogger(__name__)
 
     # noinspection PyUnusedLocal

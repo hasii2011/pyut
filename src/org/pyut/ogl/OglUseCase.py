@@ -3,7 +3,7 @@ from wx import DC
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.model.PyutUseCase import PyutUseCase
-from org.pyut.general.LineSplitter import LineSplitter
+from org.pyut.ogl.OglUtils import OglUtils
 
 
 class OglUseCase(OglObject):
@@ -16,10 +16,6 @@ class OglUseCase(OglObject):
 
     For more instructions about how to create an OGL object, please refer
     to the `OglObject` class.
-
-    :version: $Revision: 1.8 $
-    :author: Philippe Waelti
-    :contact: pwaelti@eivd.ch
     """
     def __init__(self, pyutUseCase=None, w: int = 100, h: int = 60):
         """
@@ -43,11 +39,10 @@ class OglUseCase(OglObject):
     def Draw(self, dc: DC, withChildren=False):
         """
         Draw the actor.
-        @param dc : Device context
-        @param withChildren
 
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
+        Args:
+            dc:      Device context
+            withChildren:
         """
         OglObject.Draw(self, dc, withChildren)
         dc.SetFont(self._defaultFont)
@@ -72,7 +67,7 @@ class OglUseCase(OglObject):
         dc.SetClippingRegion(x, y, textWidth, round(0.6 * height))
 
         # Split lines
-        lines = LineSplitter().split(self.pyutObject.name, dc, textWidth)
+        lines = OglUtils.lineSplitter(self.pyutObject.name, dc, textWidth)
 
         # Draw text
         for line in lines:
