@@ -80,7 +80,7 @@ class PyutPreferences(Singleton):
         self._config:                ConfigParser = cast(ConfigParser, None)    # initialized when empty preferences created
 
         self._preferencesCommon:  PreferencesCommon        = PreferencesCommon()
-        self._mainPrefs:          GeneralPreferences          = GeneralPreferences()
+        self._generalPrefs:       GeneralPreferences       = GeneralPreferences()
         self._miscellaneousPrefs: MiscellaneousPreferences = MiscellaneousPreferences()
         self._debugPrefs:         DebugPreferences         = DebugPreferences()
 
@@ -207,59 +207,59 @@ class PyutPreferences(Singleton):
 
     @property
     def showTipsOnStartup(self) -> bool:
-        return self._mainPrefs.showTipsOnStartup
+        return self._generalPrefs.showTipsOnStartup
 
     @showTipsOnStartup.setter
     def showTipsOnStartup(self, newValue: bool):
-        self._mainPrefs.showTipsOnStartup = newValue
+        self._generalPrefs.showTipsOnStartup = newValue
 
     @property
     def loadLastOpenedFile(self) -> bool:
-        return self._mainPrefs.loadLastOpenedProject
+        return self._generalPrefs.loadLastOpenedProject
 
     @loadLastOpenedFile.setter
     def loadLastOpenedFile(self, newValue: bool):
-        self._mainPrefs.loadLastOpenedProject = newValue
+        self._generalPrefs.loadLastOpenedProject = newValue
 
     @property
     def toolBarIconSize(self) -> ToolBarIconSize:
-        return self._mainPrefs.toolBarIconSize
+        return self._generalPrefs.toolBarIconSize
 
     @toolBarIconSize.setter
     def toolBarIconSize(self, newSize: ToolBarIconSize):
-        self._mainPrefs.toolBarIconSize = newSize
+        self._generalPrefs.toolBarIconSize = newSize
 
     @property
     def autoResizeShapesOnEdit(self) -> bool:
-        return self._mainPrefs.autoResizeShapesOnEdit
+        return self._generalPrefs.autoResizeShapesOnEdit
 
     @autoResizeShapesOnEdit.setter
     def autoResizeShapesOnEdit(self, newValue: bool):
-        self._mainPrefs.autoResizeShapesOnEdit = newValue
+        self._generalPrefs.autoResizeShapesOnEdit = newValue
 
     @property
     def userDirectory(self) -> str:
-        return self._mainPrefs.userDirectory
+        return self._generalPrefs.userDirectory
 
     @userDirectory.setter
     def userDirectory(self, theNewValue: str):
-        self._mainPrefs.userDirectory = theNewValue
+        self._generalPrefs.userDirectory = theNewValue
 
     @property
     def lastOpenedDirectory(self) -> str:
-        return self._mainPrefs.lastOpenedDirectory
+        return self._generalPrefs.lastOpenedDirectory
 
     @lastOpenedDirectory.setter
     def lastOpenedDirectory(self, theNewValue: str):
-        self._mainPrefs.lastOpenedDirectory = theNewValue
+        self._generalPrefs.lastOpenedDirectory = theNewValue
 
     @property
     def orgDirectory(self) -> str:
-        return self._mainPrefs.orgDirectory
+        return self._generalPrefs.orgDirectory
 
     @orgDirectory.setter
     def orgDirectory(self, theNewValue: str):
-        self._mainPrefs.orgDirectory = theNewValue
+        self._generalPrefs.orgDirectory = theNewValue
 
     @property
     def centerDiagram(self):
@@ -271,37 +271,37 @@ class PyutPreferences(Singleton):
 
     @property
     def centerAppOnStartUp(self) -> bool:
-        return self._mainPrefs.centerAppOnStartUp
+        return self._generalPrefs.centerAppOnStartUp
 
     @centerAppOnStartUp.setter
     def centerAppOnStartUp(self, theNewValue: bool):
-        self._mainPrefs.centerAppOnStartUp = theNewValue
+        self._generalPrefs.centerAppOnStartUp = theNewValue
 
     @property
     def startupPosition(self) -> Position:
-        return self._mainPrefs.startupPosition
+        return self._generalPrefs.startupPosition
 
     @startupPosition.setter
     def startupPosition(self, newValue: Position):
-        self._mainPrefs.startupPosition = newValue
+        self._generalPrefs.startupPosition = newValue
         self.overrideProgramExitPosition = True
 
     @property
     def startupSize(self) -> Dimensions:
-        return self._mainPrefs.startupSize
+        return self._generalPrefs.startupSize
 
     @startupSize.setter
     def startupSize(self, newValue: Dimensions):
-        self._mainPrefs.startupSize = newValue
+        self._generalPrefs.startupSize = newValue
         self.overrideProgramExitSize = True
 
     @property
     def fullScreen(self) -> bool:
-        return self._mainPrefs.fullScreen
+        return self._generalPrefs.fullScreen
 
     @fullScreen.setter
     def fullScreen(self, theNewValue: bool):
-        self._mainPrefs.fullScreen = theNewValue
+        self._generalPrefs.fullScreen = theNewValue
 
     @property
     def i18n(self) -> str:
@@ -313,27 +313,27 @@ class PyutPreferences(Singleton):
 
     @property
     def currentTip(self) -> int:
-        return self._mainPrefs.currentTip
+        return self._generalPrefs.currentTip
 
     @currentTip.setter
     def currentTip(self, theNewValue: int):
-        self._mainPrefs.currentTip = theNewValue
+        self._generalPrefs.currentTip = theNewValue
 
     @property
     def editor(self) -> str:
-        return self._mainPrefs.editor
+        return self._generalPrefs.editor
 
     @editor.setter
     def editor(self, theNewValue: str):
-        self._mainPrefs.editor = theNewValue
+        self._generalPrefs.editor = theNewValue
 
     @property
     def showParameters(self) -> bool:
-        return self._mainPrefs.showParameters
+        return self._generalPrefs.showParameters
 
     @showParameters.setter
     def showParameters(self, theNewValue: bool):
-        self._mainPrefs.showParameters = theNewValue
+        self._generalPrefs.showParameters = theNewValue
 
     @property
     def useDebugTempFileLocation(self) -> bool:
@@ -550,7 +550,7 @@ class PyutPreferences(Singleton):
         if hasSection is False:
             self.__addOpenedFilesSection()
 
-        self._mainPrefs.addAnyMissingMainPreferences()
+        self._generalPrefs.addAnyMissingMainPreferences()
         self._miscellaneousPrefs.addAnyMissingPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
 
@@ -569,6 +569,6 @@ class PyutPreferences(Singleton):
         self._config: ConfigParser = ConfigParser()
 
         self._preferencesCommon.configParser  = self._config
-        self._mainPrefs.configParser          = self._config
+        self._generalPrefs.configParser          = self._config
         self._miscellaneousPrefs.configParser = self._config
         self._debugPrefs.configParser         = self._config

@@ -32,7 +32,7 @@ class GeneralPreferences(BaseSubPreference):
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
     TOOL_BAR_ICON_SIZE:         str = 'tool_bar_icon_size'
 
-    MAIN_PREFERENCES: PREFS_NAME_VALUES = {
+    GENERAL_PREFERENCES: PREFS_NAME_VALUES = {
         USER_DIRECTORY:            '.',
         ORG_DIRECTORY:             '.',
         LAST_DIRECTORY:            '.',
@@ -63,9 +63,9 @@ class GeneralPreferences(BaseSubPreference):
             if self._config.has_section(GeneralPreferences.MAIN_SECTION) is False:
                 self._config.add_section(GeneralPreferences.MAIN_SECTION)
 
-            for prefName in GeneralPreferences.MAIN_PREFERENCES.keys():
+            for prefName in GeneralPreferences.GENERAL_PREFERENCES.keys():
                 if self._config.has_option(GeneralPreferences.MAIN_SECTION, prefName) is False:
-                    self.__addMissingMainPreference(prefName, GeneralPreferences.MAIN_PREFERENCES[prefName])
+                    self.__addMissingMainPreference(prefName, GeneralPreferences.GENERAL_PREFERENCES[prefName])
         except (ValueError, Exception) as e:
             self.logger.error(f"Error: {e}")
 
