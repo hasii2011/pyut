@@ -38,7 +38,9 @@ setup(
               'org.pyut.history', 'org.pyut.history.commands',
               'org.pyut.miniogl',
               'org.pyut.model',
-              'org.pyut.ogl', 'org.pyut.ogl.events', 'org.pyut.ogl.preferences', 'org.pyut.ogl.resources', 'org.pyut.ogl.resources.img', 'org.pyut.ogl.sd',
+              'org.pyut.ogl', 'org.pyut.ogl.events', 'org.pyut.ogl.preferences', 'org.pyut.ogl.resources',
+              'org.pyut.ogl.resources.img', 'org.pyut.ogl.resources.img.textdetails',
+              'org.pyut.ogl.sd',
               'org.pyut.persistence', 'org.pyut.persistence.converters',
               'org.pyut.plugins',
               'org.pyut.plugins.base',
@@ -61,7 +63,6 @@ setup(
               'org.pyut.resources.img',
               'org.pyut.resources.img.methodparameters',
               'org.pyut.resources.img.splash',
-              'org.pyut.resources.img.textdetails',
               'org.pyut.resources.img.toolbar', 'org.pyut.resources.img.toolbar.embedded16', 'org.pyut.resources.img.toolbar.embedded32',
               'org.pyut.resources.locale',
               'org.pyut.ui', 'org.pyut.ui.frame', 'org.pyut.ui.tools', 'org.pyut.ui.widgets'

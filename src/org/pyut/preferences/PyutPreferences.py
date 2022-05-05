@@ -214,6 +214,14 @@ class PyutPreferences(Singleton):
         self._mainPrefs.showTipsOnStartup = newValue
 
     @property
+    def loadLastOpenedFile(self) -> bool:
+        return self._mainPrefs.loadLastOpenedProject
+
+    @loadLastOpenedFile.setter
+    def loadLastOpenedFile(self, newValue: bool):
+        self._mainPrefs.loadLastOpenedProject = newValue
+
+    @property
     def toolBarIconSize(self) -> ToolBarIconSize:
         return self._mainPrefs.toolBarIconSize
 

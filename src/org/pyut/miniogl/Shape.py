@@ -577,8 +577,6 @@ class Shape:
 
     def UpdateFromModel(self):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
-
         Updates the shape position from the model in the light of a
         change of state of the diagram frame (here it's only for the zoom)
         """
@@ -607,7 +605,6 @@ class Shape:
 
     def UpdateModel(self):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         Updates the coordinates of the model (ShapeModel) when the Shape (view)
         is moved.
         """
@@ -648,25 +645,24 @@ class Shape:
 
     def GetModel(self):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
-        @return the model of the shape (MVC pattern)
+
+        Returns:  he model of the shape (MVC pattern)
         """
         return self._model
 
     def SetModel(self, modelShape):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
         Set the specified model associated to this shape (MVC pattern)
 
-        @param modelShape : model to set
+        Args:
+            modelShape:  model to set
         """
         self._model = modelShape
 
     def HasDiagramFrame(self):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (12.11.2005)
 
-        @return true if the shape has a diagram and if this diagram has
+        Returns: `True` if the shape has a diagram and if this diagram has
         a diagram frame.
         """
         if self.GetDiagram() is not None:

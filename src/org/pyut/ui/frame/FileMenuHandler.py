@@ -402,9 +402,8 @@ class FileMenuHandler(BaseMenuHandler):
             filename: Its name
         """
         # Make a list to be compatible with multi-files loading
-        fileNames = [filename]
-
-        currentDir: str    = self._mediator.getCurrentDir()
+        fileNames:  List[str] = [filename]
+        currentDir: str       = self._mediator.getCurrentDir()
 
         # TODO This is bad practice to do something different based on input
         if filename == "":

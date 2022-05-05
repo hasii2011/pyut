@@ -33,6 +33,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
@@ -133,8 +134,14 @@ class PyutApp(wxApp):
         else:
             loadDirectory = prefs.orgDirectory
 
-        loadedAFile: bool     = False
+        loadedAFile: bool                 = False
         appFrame:    PyutApplicationFrame = self._frame
+
+        if prefs.loadLastOpenedFile is True:
+            lstProjects = prefs.getLastOpenedFilesList()
+            lastProjectLoaded: str = lstProjects[0]
+            appFrame.loadByFilename(lastProjectLoaded)
+            loadedAFile = True
         for filename in [el for el in argv[1:] if el[0] != '-']:
             self.logger.info('Load file on command line')
             appFrame.loadByFilename(f'{loadDirectory}{osSeparator}{filename}')
@@ -149,7 +156,7 @@ class PyutApp(wxApp):
         self.__do    = None
         self._frame  = None
         self.splash  = None
-        # Seemed to be removed in latest versions of wxPython ???
+        # Seemed to be removed in the latest versions of wxPython ???
         try:
             return wxApp.OnExit(self)
         except (ValueError, Exception) as e:

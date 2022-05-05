@@ -21,6 +21,7 @@ class MainPreferences(BaseSubPreference):
     ORG_DIRECTORY:              str = 'orgDirectory'
     LAST_DIRECTORY:             str = 'LastDirectory'
     SHOW_TIPS_ON_STARTUP:       str = 'Show_Tips_On_Startup'
+    LOAD_LAST_OPENED_PROJECT:   str = 'load_last_opened_project'
     AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
     SHOW_PARAMETERS:            str = 'Show_Parameters'
     FULL_SCREEN:                str = 'Full_Screen'
@@ -36,6 +37,7 @@ class MainPreferences(BaseSubPreference):
         ORG_DIRECTORY:             '.',
         LAST_DIRECTORY:            '.',
         SHOW_TIPS_ON_STARTUP:      'False',
+        LOAD_LAST_OPENED_PROJECT:  'True',
         AUTO_RESIZE_SHAPE_ON_EDIT: 'True',
         SHOW_PARAMETERS:           'False',
         FULL_SCREEN:               'False',
@@ -44,14 +46,14 @@ class MainPreferences(BaseSubPreference):
         STARTUP_SIZE:              Dimensions(1024, 768).__str__(),
         STARTUP_POSITION:          Position(5, 5).__str__(),
         CENTER_APP_ON_STARTUP:     'True',
-        TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value
+        TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value,
     }
 
-    def init(self, *args, **kwds):
+    def init(self, *args, **kwargs):
 
         self.logger:  Logger            = getLogger(__name__)
 
-        BaseSubPreference.init(self, *args, **kwds)
+        BaseSubPreference.init(self, *args, **kwargs)
 
         self._preferencesCommon: PreferencesCommon = PreferencesCommon(self._config)
 
@@ -101,6 +103,15 @@ class MainPreferences(BaseSubPreference):
     @showTipsOnStartup.setter
     def showTipsOnStartup(self, newValue: bool):
         self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.SHOW_TIPS_ON_STARTUP, str(newValue))
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def loadLastOpenedProject(self) -> bool:
+        return self._config.getboolean(MainPreferences.MAIN_SECTION, MainPreferences.LOAD_LAST_OPENED_PROJECT)
+
+    @loadLastOpenedProject.setter
+    def loadLastOpenedProject(self, newValue: bool):
+        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.LOAD_LAST_OPENED_PROJECT, str(newValue))
         self._preferencesCommon.saveConfig()
 
     @property
