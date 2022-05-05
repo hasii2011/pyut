@@ -15,7 +15,7 @@ from org.pyut.ogl.OglDimensions import OglDimensions
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
-from org.pyut.preferences.MainPreferences import MainPreferences
+from org.pyut.preferences.GeneralPreferences import GeneralPreferences
 from org.pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
@@ -80,7 +80,7 @@ class PyutPreferences(Singleton):
         self._config:                ConfigParser = cast(ConfigParser, None)    # initialized when empty preferences created
 
         self._preferencesCommon:  PreferencesCommon        = PreferencesCommon()
-        self._mainPrefs:          MainPreferences          = MainPreferences()
+        self._mainPrefs:          GeneralPreferences          = GeneralPreferences()
         self._miscellaneousPrefs: MiscellaneousPreferences = MiscellaneousPreferences()
         self._debugPrefs:         DebugPreferences         = DebugPreferences()
 

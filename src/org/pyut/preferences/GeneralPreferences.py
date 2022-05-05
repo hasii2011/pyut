@@ -13,7 +13,7 @@ from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
-class MainPreferences(BaseSubPreference):
+class GeneralPreferences(BaseSubPreference):
 
     MAIN_SECTION:    str = 'Main'
 
@@ -60,146 +60,146 @@ class MainPreferences(BaseSubPreference):
     def addAnyMissingMainPreferences(self):
 
         try:
-            if self._config.has_section(MainPreferences.MAIN_SECTION) is False:
-                self._config.add_section(MainPreferences.MAIN_SECTION)
+            if self._config.has_section(GeneralPreferences.MAIN_SECTION) is False:
+                self._config.add_section(GeneralPreferences.MAIN_SECTION)
 
-            for prefName in MainPreferences.MAIN_PREFERENCES.keys():
-                if self._config.has_option(MainPreferences.MAIN_SECTION, prefName) is False:
-                    self.__addMissingMainPreference(prefName, MainPreferences.MAIN_PREFERENCES[prefName])
+            for prefName in GeneralPreferences.MAIN_PREFERENCES.keys():
+                if self._config.has_option(GeneralPreferences.MAIN_SECTION, prefName) is False:
+                    self.__addMissingMainPreference(prefName, GeneralPreferences.MAIN_PREFERENCES[prefName])
         except (ValueError, Exception) as e:
             self.logger.error(f"Error: {e}")
 
     @property
     def userDirectory(self) -> str:
-        return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.USER_DIRECTORY)
+        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.USER_DIRECTORY)
 
     @userDirectory.setter
     def userDirectory(self, theNewValue: str):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.USER_DIRECTORY, theNewValue)
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.USER_DIRECTORY, theNewValue)
         self._preferencesCommon.saveConfig()
 
     @property
     def orgDirectory(self) -> str:
-        return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.ORG_DIRECTORY)
+        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.ORG_DIRECTORY)
 
     @orgDirectory.setter
     def orgDirectory(self, theNewValue: str):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.ORG_DIRECTORY, theNewValue)
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.ORG_DIRECTORY, theNewValue)
         self._preferencesCommon.saveConfig()
 
     @property
     def lastOpenedDirectory(self) -> str:
-        return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.LAST_DIRECTORY)
+        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.LAST_DIRECTORY)
 
     @lastOpenedDirectory.setter
     def lastOpenedDirectory(self, theNewValue: str):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.LAST_DIRECTORY, theNewValue)
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.LAST_DIRECTORY, theNewValue)
         self._preferencesCommon.saveConfig()
 
     @property
     def showTipsOnStartup(self) -> bool:
-        return self._config.getboolean(MainPreferences.MAIN_SECTION, MainPreferences.SHOW_TIPS_ON_STARTUP)
+        return self._config.getboolean(GeneralPreferences.MAIN_SECTION, GeneralPreferences.SHOW_TIPS_ON_STARTUP)
 
     @showTipsOnStartup.setter
     def showTipsOnStartup(self, newValue: bool):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.SHOW_TIPS_ON_STARTUP, str(newValue))
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.SHOW_TIPS_ON_STARTUP, str(newValue))
         self._preferencesCommon.saveConfig()
 
     @property
     def loadLastOpenedProject(self) -> bool:
-        return self._config.getboolean(MainPreferences.MAIN_SECTION, MainPreferences.LOAD_LAST_OPENED_PROJECT)
+        return self._config.getboolean(GeneralPreferences.MAIN_SECTION, GeneralPreferences.LOAD_LAST_OPENED_PROJECT)
 
     @loadLastOpenedProject.setter
     def loadLastOpenedProject(self, newValue: bool):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.LOAD_LAST_OPENED_PROJECT, str(newValue))
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.LOAD_LAST_OPENED_PROJECT, str(newValue))
         self._preferencesCommon.saveConfig()
 
     @property
     def autoResizeShapesOnEdit(self) -> bool:
-        return self._config.getboolean(MainPreferences.MAIN_SECTION, MainPreferences.AUTO_RESIZE_SHAPE_ON_EDIT)
+        return self._config.getboolean(GeneralPreferences.MAIN_SECTION, GeneralPreferences.AUTO_RESIZE_SHAPE_ON_EDIT)
 
     @autoResizeShapesOnEdit.setter
     def autoResizeShapesOnEdit(self, newValue: bool):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.AUTO_RESIZE_SHAPE_ON_EDIT, str(newValue))
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.AUTO_RESIZE_SHAPE_ON_EDIT, str(newValue))
         self._preferencesCommon.saveConfig()
 
     @property
     def showParameters(self) -> bool:
-        return self._config.getboolean(MainPreferences.MAIN_SECTION, MainPreferences.SHOW_PARAMETERS)
+        return self._config.getboolean(GeneralPreferences.MAIN_SECTION, GeneralPreferences.SHOW_PARAMETERS)
 
     @showParameters.setter
     def showParameters(self, theNewValue: bool):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.SHOW_PARAMETERS, str(theNewValue))
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.SHOW_PARAMETERS, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property
     def fullScreen(self) -> bool:
-        return self._config.getboolean(MainPreferences.MAIN_SECTION, MainPreferences.FULL_SCREEN)
+        return self._config.getboolean(GeneralPreferences.MAIN_SECTION, GeneralPreferences.FULL_SCREEN)
 
     @fullScreen.setter
     def fullScreen(self, theNewValue: bool):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.FULL_SCREEN, str(theNewValue))
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.FULL_SCREEN, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property
     def currentTip(self) -> int:
-        return self._config.getint(MainPreferences.MAIN_SECTION, MainPreferences.CURRENT_TIP)
+        return self._config.getint(GeneralPreferences.MAIN_SECTION, GeneralPreferences.CURRENT_TIP)
 
     @currentTip.setter
     def currentTip(self, theNewValue: int):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.CURRENT_TIP, str(theNewValue))
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.CURRENT_TIP, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property
     def editor(self) -> str:
-        return self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.EDITOR)
+        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.EDITOR)
 
     @editor.setter
     def editor(self, theNewValue: str):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.EDITOR, theNewValue)
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.EDITOR, theNewValue)
         self._preferencesCommon.saveConfig()
 
     @property
     def startupSize(self) -> Dimensions:
 
-        serializedDimensions: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_SIZE)
+        serializedDimensions: str = self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.STARTUP_SIZE)
         return Dimensions.deSerialize(serializedDimensions)
 
     @startupSize.setter
     def startupSize(self, newValue: Dimensions):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_SIZE, newValue.__str__())
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.STARTUP_SIZE, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
     @property
     def centerAppOnStartUp(self) -> bool:
-        centerApp: bool = self._config.getboolean(MainPreferences.MAIN_SECTION, MainPreferences.CENTER_APP_ON_STARTUP)
+        centerApp: bool = self._config.getboolean(GeneralPreferences.MAIN_SECTION, GeneralPreferences.CENTER_APP_ON_STARTUP)
         return centerApp
 
     @centerAppOnStartUp.setter
     def centerAppOnStartUp(self, theNewValue: bool):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.CENTER_APP_ON_STARTUP, str(theNewValue))
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.CENTER_APP_ON_STARTUP, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property
     def startupPosition(self) -> Position:
 
-        serializedPosition: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_POSITION)
+        serializedPosition: str = self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.STARTUP_POSITION)
         return Position.deSerialize(serializedPosition)
 
     @startupPosition.setter
     def startupPosition(self, newValue: Position):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.STARTUP_POSITION, newValue.__str__())
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.STARTUP_POSITION, newValue.__str__())
         self._preferencesCommon.saveConfig()
 
     @property
     def toolBarIconSize(self) -> ToolBarIconSize:
-        enumStr: str = self._config.get(MainPreferences.MAIN_SECTION, MainPreferences.TOOL_BAR_ICON_SIZE)
+        enumStr: str = self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.TOOL_BAR_ICON_SIZE)
         return ToolBarIconSize(enumStr)
 
     @toolBarIconSize.setter
     def toolBarIconSize(self, newSize: ToolBarIconSize):
-        self._config.set(MainPreferences.MAIN_SECTION, MainPreferences.TOOL_BAR_ICON_SIZE, newSize.value)
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.TOOL_BAR_ICON_SIZE, newSize.value)
         self._preferencesCommon.saveConfig()
 
     def __addMissingMainPreference(self, preferenceName, value: str):
-        self._preferencesCommon.addMissingPreference(MainPreferences.MAIN_SECTION, preferenceName, value)
+        self._preferencesCommon.addMissingPreference(GeneralPreferences.MAIN_SECTION, preferenceName, value)
