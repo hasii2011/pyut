@@ -214,11 +214,11 @@ class PyutPreferences(Singleton):
         self._generalPrefs.showTipsOnStartup = newValue
 
     @property
-    def loadLastOpenedFile(self) -> bool:
+    def loadLastOpenedProject(self) -> bool:
         return self._generalPrefs.loadLastOpenedProject
 
-    @loadLastOpenedFile.setter
-    def loadLastOpenedFile(self, newValue: bool):
+    @loadLastOpenedProject.setter
+    def loadLastOpenedProject(self, newValue: bool):
         self._generalPrefs.loadLastOpenedProject = newValue
 
     @property

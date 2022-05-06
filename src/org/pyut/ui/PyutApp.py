@@ -137,7 +137,7 @@ class PyutApp(wxApp):
         loadedAFile: bool                 = False
         appFrame:    PyutApplicationFrame = self._frame
 
-        if prefs.loadLastOpenedFile is True:
+        if prefs.loadLastOpenedProject is True:
             lstProjects = prefs.getLastOpenedFilesList()
             lastProjectLoaded: str = lstProjects[0]
             appFrame.loadByFilename(lastProjectLoaded)
