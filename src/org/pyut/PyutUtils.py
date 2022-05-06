@@ -10,7 +10,6 @@ from logging import getLogger
 from dataclasses import dataclass
 
 from os import sep as osSep
-from os import path as osPath
 
 from pkg_resources import resource_filename
 
@@ -185,19 +184,6 @@ class PyutUtils:
             retList.append(wxNewIdRef())
             x += 1
         return retList
-
-    @staticmethod
-    def getJustTheFileName(filename):
-        """
-        Return just the file name portion of the fully qualified path
-
-        Args:
-            filename:  file name to display
-
-        Returns:
-            A better file name
-        """
-        return osPath.split(filename)[1]
 
     @classmethod
     def getBasePath(cls) -> str:

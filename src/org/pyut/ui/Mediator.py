@@ -995,16 +995,18 @@ class Mediator(Singleton):
         if self.isInScriptMode():
             return
 
+        from org.pyut.ui.PyutProject import PyutProject
+
         # Get filename
-        project = self._treeNotebookHandler.getCurrentProject()
+        project: PyutProject = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
-            filename = project.getFilename()
+            filename = project.filename
         else:
             filename = ""
 
         # Set text
         txt = "PyUt v" + __PyUtVersion__ + " - " + filename
-        if (project is not None) and (project.getModified()):
+        if (project is not None) and (project.modified is True):
             if self._treeNotebookHandler.getCurrentFrame() is not None:
                 zoom = self._treeNotebookHandler.getCurrentFrame().GetCurrentZoom()
             else:

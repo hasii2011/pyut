@@ -13,6 +13,8 @@ from xml.dom.minidom import parseString
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
+from org.pyut.ui.PyutProject import PyutProject
+
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.general.Lang import Lang
@@ -39,7 +41,7 @@ class IoFile:
 
         self.logger: Logger = getLogger(__name__)
 
-    def save(self, project):
+    def save(self, project: PyutProject):
         """
         To save diagram in XML file.  Always, uses the latest version
         """
@@ -54,7 +56,7 @@ class IoFile:
         byteText   = updatedText.encode()
         compressed = zlib.compress(byteText)
 
-        file = open(project.getFilename(), "wb")
+        file = open(project.filename, "wb")
         file.write(compressed)
         file.close()
 

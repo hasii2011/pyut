@@ -254,6 +254,6 @@ class EditMenuHandler(BaseMenuHandler):
     def _refreshUI(self, frame: UmlClassDiagramsFrame):
 
         project: PyutProject = self._treeNotebookHandler.getCurrentProject()
-        project.setModified(True)
+        project.modified = True
         self._mediator.updateTitle()
         frame.Refresh()

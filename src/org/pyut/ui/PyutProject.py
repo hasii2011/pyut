@@ -4,6 +4,8 @@ from typing import NewType
 from typing import Union
 from typing import cast
 
+from os import path as osPath
+
 from logging import DEBUG
 from logging import Logger
 from logging import getLogger
@@ -24,6 +26,7 @@ from wx import Yield as wxYield
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.DiagramType import DiagramType
+from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.PyutDocument import PyutDocument
@@ -71,24 +74,23 @@ class PyutProject:
     def selectSelf(self):
         self._tree.SelectItem(self._treeRoot)
 
-    def setFilename(self, filename):
+    @property
+    def filename(self) -> str:
         """
-        Get the project's filename
+        Returns:  The project's filename
+        """
+        return self._filename
 
-        @author C.Dutoit
-        @return String : The project filename
+    @filename.setter
+    def filename(self, filename: str):
+        """
+        Set the project's filename
+
+        Args:
+            filename:
         """
         self._filename = filename
         self.updateTreeText()
-
-    def getFilename(self):
-        """
-        Get the project's filename
-
-        @author C.Dutoit
-        @return String : The project filename
-        """
-        return self._filename
 
     def getCodePath(self) -> str:
         """
@@ -118,27 +120,28 @@ class PyutProject:
         """
         return self._documents
 
-    def setModified(self, value=True):
+    @property
+    def modified(self) -> bool:
         """
-        Define the modified attribute
 
-        @author C.Dutoit
-        """
-        self._modified = value
-
-    def getModified(self):
-        """
-        Return the modified attribute
-
-        @author C.Dutoit
+        Returns:  'True' if it has been else 'False'
         """
         return self._modified
+
+    @modified.setter
+    def modified(self, value: bool = True):
+        """
+        Set that the project has been modified
+        Args:
+            value:  'True' if it has been else 'False'
+        """
+        self._modified = value
 
     def addToTree(self):
         """
         Add the project to the project tree
         """
-        justTheFileName: str = PyutUtils.getJustTheFileName(self._filename)
+        justTheFileName: str = self._justTheFileName(self._filename)
         self._treeRoot = self._tree.AppendItem(self._treeRootParent, justTheFileName, data=self)
         self._tree.Expand(self._treeRoot)
 
@@ -287,7 +290,7 @@ class PyutProject:
         """
         Update the tree text for this document
         """
-        self._tree.SetItemText(self._treeRoot, PyutUtils.getJustTheFileName(self._filename))
+        self._tree.SetItemText(self._treeRoot, self._justTheFileName(self._filename))
         for document in self._documents:
             self.logger.info(f'updateTreeText: {document=}')
             document.updateTreeText()
@@ -332,6 +335,22 @@ class PyutProject:
             treeData = self._tree.GetItemData(treeDocItem)
             self.logger.debug(f'{treeData}')
             self._tree.SelectItem(treeDocItem)
+
+    def _justTheFileName(self, filename):
+        """
+        Return just the file name portion of the fully qualified path
+
+        Args:
+            filename:  file name to display
+
+        Returns:
+            A better file name
+        """
+        regularFileName: str = osPath.split(filename)[1]
+        if PyutPreferences().displayProjectExtension is False:
+            regularFileName = osPath.splitext(regularFileName)[0]
+
+        return regularFileName
 
     def __repr__(self):
         projectName: str = PyutUtils.extractFileName(self._filename)

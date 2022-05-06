@@ -222,6 +222,14 @@ class PyutPreferences(Singleton):
         self._generalPrefs.loadLastOpenedProject = newValue
 
     @property
+    def displayProjectExtension(self) -> bool:
+        return self._generalPrefs.displayProjectExtension
+
+    @displayProjectExtension.setter
+    def displayProjectExtension(self, newValue: bool):
+        self._generalPrefs.displayProjectExtension = newValue
+
+    @property
     def toolBarIconSize(self) -> ToolBarIconSize:
         return self._generalPrefs.toolBarIconSize
 

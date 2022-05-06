@@ -170,7 +170,7 @@ class TreeNotebookHandler:
 
         foundProject: PyutProject = cast(PyutProject, None)
         for currentProject in self._projects:
-            if currentProject.getFilename() == fileName:
+            if currentProject.filename == fileName:
                 foundProject = currentProject
                 break
 
@@ -186,7 +186,7 @@ class TreeNotebookHandler:
             `True` if the project is already loaded
         """
         for project in self._projects:
-            if project.getFilename == filename:
+            if project.filename == filename:
                 return True
         return False
 
@@ -286,7 +286,7 @@ class TreeNotebookHandler:
             PyutUtils.displayError(_("No diagram to save !"), _("Error"))
             return False
 
-        if currentProject.getFilename() is None or currentProject.getFilename() == PyutConstants.DEFAULT_FILENAME:
+        if currentProject.filename is None or currentProject.filename == PyutConstants.DEFAULT_FILENAME:
             return self.saveFileAs()
         else:
             return currentProject.saveXmlPyut()
@@ -328,7 +328,7 @@ class TreeNotebookHandler:
             # Find if a specified filename is already opened
             filename = dlg.GetPath()
 
-            if len([project for project in self._projects if project.getFilename() == filename]) > 0:
+            if len([project for project in self._projects if project.filename == filename]) > 0:
                 dlg = MessageDialog(self.__parent,
                                     _("Error ! The filename '%s" + "' correspond to a project which is currently opened !" +
                                       " Please choose another filename !") % str(filename),
@@ -339,7 +339,7 @@ class TreeNotebookHandler:
             filenameOK = True
 
         project = self._currentProject
-        project.setFilename(dlg.GetPath())
+        project.filename = dlg.GetPath()
         project.saveXmlPyut()
 
         # Modify notebook text
@@ -358,7 +358,7 @@ class TreeNotebookHandler:
 
         currentDirectoryHandler.currentDirectory = dlg.GetPath()
 
-        project.setModified(False)
+        project.modified = False
         dlg.Destroy()
         return True
 
@@ -387,7 +387,7 @@ class TreeNotebookHandler:
         self._currentProject = project
 
         if not self._mediator.isInScriptMode():
-            shortName: str = self.__shortenNotebookPageFileName(project.getFilename())
+            shortName: str = self.__shortenNotebookPageFileName(project.filename)
             self.__notebook.AddPage(frame, shortName)
             wxYield()
             self.__notebookCurrentPage  = self.__notebook.GetPageCount() - 1
@@ -447,7 +447,7 @@ class TreeNotebookHandler:
         # Close projects and ask for unsaved but modified projects
         if not self._mediator.isInScriptMode():
             for project in self._projects:
-                if project.getModified() is True:
+                if project.modified is True:
                     frames = project.getFrames()
                     if len(frames) > 0:
                         frame = frames[0]
@@ -491,7 +491,7 @@ class TreeNotebookHandler:
 
         """
         if self._currentProject is not None:
-            self._currentProject.setModified(theNewValue)
+            self._currentProject.modified = theNewValue
         self._mediator.updateTitle()
 
     def closeCurrentProject(self):
@@ -512,7 +512,7 @@ class TreeNotebookHandler:
             self.logger.warning("WARNING : in script mode, the non-saved projects are closed without warning")
 
         # Close the file
-        if self._currentProject.getModified() is True and not self._mediator.isInScriptMode():
+        if self._currentProject.modified is True and not self._mediator.isInScriptMode():
             frame = self._currentProject.getFrames()[0]
             frame.SetFocus()
             self.showFrame(frame)
@@ -535,7 +535,7 @@ class TreeNotebookHandler:
         self._currentProject.removeFromTree()
         self._projects.remove(self._currentProject)
 
-        self.logger.debug(f'{self._currentProject.getFilename()=}')
+        self.logger.debug(f'{self._currentProject.filename=}')
         self._currentProject = None
         self._currentFrame = None
 

@@ -30,9 +30,11 @@ class PyutDocument:
             project:        The project
             docType:        The enumeration value for the diagram type
         """
-        self.logger:       Logger           = getLogger(__name__)
-        self._parentFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
-        self._project        = project
+        from org.pyut.ui.PyutProject import PyutProject
+
+        self.logger:               Logger           = getLogger(__name__)
+        self._parentFrame:         UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
+        self._project: PyutProject = project
 
         self._type: DiagramType = docType
         """
@@ -80,7 +82,7 @@ class PyutDocument:
         Returns:
             The diagram's fully qualified file name
         """
-        fullyQualifiedName: str = f'{self._project.getFilename()}/{self._title}'
+        fullyQualifiedName: str = f'{self._project.filename}/{self._title}'
         return fullyQualifiedName
 
     @property
@@ -129,7 +131,7 @@ class PyutDocument:
     def __str__(self) -> str:
         from os import path as osPath
 
-        fileName:  str = self._project.getFilename()
+        fileName:  str = self._project.filename
         shortName: str = osPath.basename(fileName)
         return f'[{self.title=} {self._type=} {shortName=}]'
 

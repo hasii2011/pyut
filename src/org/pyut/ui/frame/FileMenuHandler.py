@@ -192,7 +192,7 @@ class FileMenuHandler(BaseMenuHandler):
         # Add to last opened files list
         project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
-            self._preferences.addNewLastOpenedFilesEntry(project.getFilename())
+            self._preferences.addNewLastOpenedFilesEntry(project.filename)
             self.setLastOpenedFilesItems()
 
     # noinspection PyUnusedLocal
@@ -208,7 +208,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
-            self._preferences.addNewLastOpenedFilesEntry(project.getFilename())
+            self._preferences.addNewLastOpenedFilesEntry(project.filename)
             self.setLastOpenedFilesItems()
 
     # noinspection PyUnusedLocal

@@ -22,6 +22,7 @@ class GeneralPreferences(BaseSubPreference):
     LAST_DIRECTORY:             str = 'LastDirectory'
     SHOW_TIPS_ON_STARTUP:       str = 'Show_Tips_On_Startup'
     LOAD_LAST_OPENED_PROJECT:   str = 'load_last_opened_project'
+    DISPLAY_PROJECT_EXTENSION:  str = 'display_project_extension'
     AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
     SHOW_PARAMETERS:            str = 'Show_Parameters'
     FULL_SCREEN:                str = 'Full_Screen'
@@ -38,6 +39,7 @@ class GeneralPreferences(BaseSubPreference):
         LAST_DIRECTORY:            '.',
         SHOW_TIPS_ON_STARTUP:      'False',
         LOAD_LAST_OPENED_PROJECT:  'True',
+        DISPLAY_PROJECT_EXTENSION: 'False',
         AUTO_RESIZE_SHAPE_ON_EDIT: 'True',
         SHOW_PARAMETERS:           'False',
         FULL_SCREEN:               'False',
@@ -112,6 +114,15 @@ class GeneralPreferences(BaseSubPreference):
     @loadLastOpenedProject.setter
     def loadLastOpenedProject(self, newValue: bool):
         self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.LOAD_LAST_OPENED_PROJECT, str(newValue))
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def displayProjectExtension(self) -> bool:
+        return self._config.getboolean(GeneralPreferences.MAIN_SECTION, GeneralPreferences.DISPLAY_PROJECT_EXTENSION)
+
+    @displayProjectExtension.setter
+    def displayProjectExtension(self, newValue: bool):
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.DISPLAY_PROJECT_EXTENSION, str(newValue))
         self._preferencesCommon.saveConfig()
 
     @property

@@ -41,7 +41,8 @@ class GeneralPreferencesPanel(PreferencesPanel):
             self.__maximizeID,        self.__showTipsID,
             self.__resetTipsID,       self.__centerDiagramID,
             self.__toolBarIconSizeID, self.__loadLastOpenedProjectID,
-        ] = PyutUtils.assignID(8)
+            self.__displayProjectExtensionID
+        ] = PyutUtils.assignID(9)
 
         self._createControls()
         self._setControlValues()
@@ -51,25 +52,27 @@ class GeneralPreferencesPanel(PreferencesPanel):
         Creates the main control and stashes them as private instance variables
         """
 
-        self.__cbMaximize:              CheckBox = CheckBox(self, self.__maximizeID,        _('&Full Screen on startup'))
-        self.__cbAutoResize:            CheckBox = CheckBox(self, self.__autoResizeID,      _('&Auto resize classes to fit content'))
-        self.__cbShowParams:            CheckBox = CheckBox(self, self.__showParamsID,      _("&Show method parameters"))
-        self.__cbShowTips:              CheckBox = CheckBox(self, self.__showTipsID,        _("Show &Tips on startup"))
-        self.__cbCenterDiagram:         CheckBox = CheckBox(self, self.__centerDiagramID,   _('&Center Diagram View'))
-        self.__cbToolBarIconSize:       CheckBox = CheckBox(self, self.__toolBarIconSizeID, _('&Large Toolbar Icons'))
-        self.__cbLoadLastOpenedProject: CheckBox = CheckBox(self, self.__loadLastOpenedProjectID, _('&Load Last Opened Project'))
+        self.__cbMaximize:                CheckBox = CheckBox(self, self.__maximizeID,        _('&Full Screen on startup'))
+        self.__cbAutoResize:              CheckBox = CheckBox(self, self.__autoResizeID,      _('&Auto resize classes to fit content'))
+        self.__cbShowParams:              CheckBox = CheckBox(self, self.__showParamsID,      _("&Show method parameters"))
+        self.__cbShowTips:                CheckBox = CheckBox(self, self.__showTipsID,        _("Show &Tips on startup"))
+        self.__cbCenterDiagram:           CheckBox = CheckBox(self, self.__centerDiagramID,   _('&Center Diagram View'))
+        self.__cbToolBarIconSize:         CheckBox = CheckBox(self, self.__toolBarIconSizeID, _('&Large Toolbar Icons'))
+        self.__cbLoadLastOpenedProject:   CheckBox = CheckBox(self, self.__loadLastOpenedProjectID,   _('Load Last &Opened Project'))
+        self.__cbDisplayProjectExtension: CheckBox = CheckBox(self, self.__displayProjectExtensionID, _('&Display Project Extension'))
 
         self.__btnResetTips: Button = Button(self, self.__resetTipsID, _('Reset Tips'))
 
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
-        mainSizer.Add(self.__cbAutoResize,            0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
-        mainSizer.Add(self.__cbShowParams,            0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
-        mainSizer.Add(self.__cbMaximize,              0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
-        mainSizer.Add(self.__cbCenterDiagram,         0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
-        mainSizer.Add(self.__cbShowTips,              0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
-        mainSizer.Add(self.__cbToolBarIconSize,       0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
-        mainSizer.Add(self.__cbLoadLastOpenedProject, 0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
+        mainSizer.Add(self.__cbAutoResize,              0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
+        mainSizer.Add(self.__cbShowParams,              0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
+        mainSizer.Add(self.__cbMaximize,                0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
+        mainSizer.Add(self.__cbCenterDiagram,           0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
+        mainSizer.Add(self.__cbShowTips,                0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
+        mainSizer.Add(self.__cbToolBarIconSize,         0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
+        mainSizer.Add(self.__cbLoadLastOpenedProject,   0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
+        mainSizer.Add(self.__cbDisplayProjectExtension, 0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
 
         mainSizer.Add(self.__btnResetTips,   0, ALL, GeneralPreferencesPanel.VERTICAL_GAP)
 
@@ -82,6 +85,7 @@ class GeneralPreferencesPanel(PreferencesPanel):
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__showTipsID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__toolBarIconSizeID)
         self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__loadLastOpenedProjectID)
+        self.Bind(EVT_CHECKBOX, self.__OnCheckBox, id=self.__displayProjectExtensionID)
 
         self.Bind(EVT_BUTTON,   self.__OnBtnResetTips, id=self.__resetTipsID)
 
@@ -102,6 +106,8 @@ class GeneralPreferencesPanel(PreferencesPanel):
             self._prefs.showTipsOnStartup = val
         elif eventID == self.__loadLastOpenedProjectID:
             self._prefs.loadLastOpenedProject = val
+        elif eventID == self.__displayProjectExtensionID:
+            self._prefs.displayProjectExtension = val
         elif eventID == self.__toolBarIconSizeID:
             if val is True:
                 self._prefs.toolBarIconSize = ToolBarIconSize.SIZE_32
@@ -136,3 +142,4 @@ class GeneralPreferencesPanel(PreferencesPanel):
             self.__cbToolBarIconSize.SetValue(False)
 
         self.__cbLoadLastOpenedProject.SetValue(self._prefs.loadLastOpenedProject)
+        self.__cbDisplayProjectExtension.SetValue(self._prefs.displayProjectExtension)
