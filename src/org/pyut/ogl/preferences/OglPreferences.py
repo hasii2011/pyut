@@ -10,6 +10,8 @@ from os import getenv as osGetEnv
 from configparser import ConfigParser
 from typing import Optional
 
+from org.pyut.general.Singleton import Singleton
+
 from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
 from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
 
@@ -20,7 +22,7 @@ from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
 OGL_PREFS_NAME_VALUES = Dict[str, str]
 
 
-class OglPreferences:
+class OglPreferences(Singleton):
 
     PREFERENCES_FILENAME:   str = 'ogl.ini'
     THE_GREAT_MAC_PLATFORM: str = 'darwin'
@@ -87,7 +89,7 @@ class OglPreferences:
         DEBUG_BASIC_SHAPE:   'False',
     }
 
-    def __init__(self):
+    def init(self, *args, **kwargs):
 
         self.logger:  Logger       = getLogger(__name__)
         self._config: ConfigParser = ConfigParser()
