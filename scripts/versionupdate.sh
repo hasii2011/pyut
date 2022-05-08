@@ -2,7 +2,8 @@
 
 function changeToProjectRoot {
 
-    export areHere=`basename ${PWD}`
+    areHere=$(basename "${PWD}")
+    export areHere
     if [[ ${areHere} = "scripts" ]]; then
         cd ..
     fi

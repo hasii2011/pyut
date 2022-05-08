@@ -2,7 +2,8 @@
 
 function changeToProjectRoot {
 
-    export areHere=`basename ${PWD}`
+    areHere=$(basename "${PWD}")
+    export areHere
     if [[ ${areHere} = "scripts" ]]; then
         cd ..
     fi
@@ -20,9 +21,9 @@ find . -type f -name UnitTest.gml   -delete
 
 rm -rf src/UNKNOWN.egg-info
 
-cd src/tests/resources/testdata > /dev/null 2>&1
+cd src/tests/resources/testdata > /dev/null 2>&1 || ! echo "No such directory"
 
 find . -type f -name "*.png" -delete
 
-cd - > /dev/null 2>&1
+cd - > /dev/null 2>&1 || ! echo "No such directory"
 find . -type f -name "translationGraph.gml" -delete

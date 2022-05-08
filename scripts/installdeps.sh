@@ -6,7 +6,8 @@
 #
 function changeToProjectRoot {
 
-    export areHere=`basename ${PWD}`
+    areHere=$(basename "${PWD}")
+    export areHere
     if [[ ${areHere} = "scripts" ]]; then
         cd ..
     fi
@@ -17,14 +18,14 @@ function changeToProjectRoot {
 }
 
 clear
-pip3 list > /dev/null 2>&1
+pip list > /dev/null 2>&1
 STATUS=$?
 
 if [[ ${STATUS} -eq 0 ]] ; then
     echo "in virtual environment"
-    pip3 install --upgrade pip
-    pip3 install wheel
-    pip3 install -r requirements.txt
+    pip install --upgrade pip
+    pip install wheel
+    pip install -r requirements.txt
 else
     echo "You are not in a virtual environment"
 

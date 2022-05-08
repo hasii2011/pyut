@@ -2,7 +2,8 @@
 
 function changeToProjectRoot {
 
-    export areHere=`basename ${PWD}`
+    areHere=$(basename "${PWD}")
+    export areHere
     if [[ ${areHere} = "scripts" ]]; then
         cd ..
     fi
@@ -24,6 +25,9 @@ else
             echo "in deploy mode"
             rm -rf build dist
             python -O setup.py py2app --packages=wx,xmlschema,pygmlparser --iconfile src/org/pyut/resources/img/Pyut.icns
+            echo "remove invalid link that code signing complains about"
+            cd "dist/Pyut.app/Contents/Resources/lib/python3.9"  || ! echo "No such directory"
+            rm -rfv site.pyo
     else
         echo "Unknown command line arguments"
     fi

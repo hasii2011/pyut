@@ -2,7 +2,8 @@
 
 function changeToProjectRoot {
 
-    export areHere=`basename ${PWD}`
+    areHere=$(basename "${PWD}")
+    export areHere
     if [[ ${areHere} = "scripts" ]]; then
         cd ..
     fi
@@ -11,7 +12,7 @@ function changeToProjectRoot {
 changeToProjectRoot
 
 cd src > /dev/null 2>&1
-echo "current: `pwd`"
+echo "current: $(pwd)"
 
 mypy --config-file .mypi.ini --pretty --no-color-output  --show-error-codes org tests
 # mypy --config-file .mypi.ini --pretty                    --show-error-codes org tests

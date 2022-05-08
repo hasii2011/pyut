@@ -2,7 +2,8 @@
 
 function changeToProjectRoot {
 
-    export areHere=`basename ${PWD}`
+    areHere=$(basename "${PWD}")
+    export areHere
     if [[ ${areHere} = "scripts" ]]; then
         cd ..
     fi
@@ -18,9 +19,9 @@ function checkStatus {
     testName=$2
 
     echo "checkStatus ${testName} -- ${status}"
-    if [ ${status} -ne 0 ]
+    if [ "${status}" -ne 0 ]
     then
-        exit ${status}
+        exit "${status}"
     fi
 }
 
@@ -46,15 +47,15 @@ function manuallyRunSomeTests {
 changeToProjectRoot
 
 echo "Travis Build directory: ${TRAVIS_BUILD_DIR}"
-cd src > /dev/null 2>&1
-echo "current: `pwd`"
+cd src > /dev/null 2>&1  || ! echo "No such directory"
+echo "current: $(pwd)"
 
-python3 -m tests.TestAll $*
+python3 -m tests.TestAll "$*"
 
 manuallyRunSomeTests
 
 
-cd -  > /dev/null 2>&1
+cd -  > /dev/null 2>&1 || ! echo "No such directory"
 
 ./scripts/cleanup.sh
 
