@@ -258,7 +258,6 @@ class MenuCreator:
 
         mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_INDEX,   _("&Index"), _("Display help index"))
         mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_VERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
         mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_WEB,     _("&Web site"), _("Open PyUt web site"))
         mnuHelp.AppendSeparator()
@@ -420,7 +419,6 @@ class MenuCreator:
     def _bindHelpMenuHandlers(self, containingFrame: Frame, helpMenuHandler: HelpMenuHandler):
 
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onAbout,       id=ID_ABOUT)
-        containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpIndex,   id=SharedIdentifiers.ID_MNU_HELP_INDEX)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion, id=SharedIdentifiers.ID_MNU_HELP_VERSION)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,     id=SharedIdentifiers.ID_MNU_HELP_WEB)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug,       id=SharedIdentifiers.ID_DEBUG)

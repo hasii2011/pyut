@@ -11,7 +11,6 @@ from wx import EndBusyCursor as wxEndBusyCursor
 from wx import Yield as wxYield
 
 from org.pyut.dialogs.DlgAbout import DlgAbout
-from org.pyut.dialogs.DlgHelp import DlgHelp
 from org.pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
 
@@ -27,7 +26,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 class HelpMenuHandler(BaseMenuHandler):
 
-    PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/Pyut'
+    PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/'
 
     def __init__(self, helpMenu: Menu):
 
@@ -46,14 +45,6 @@ class HelpMenuHandler(BaseMenuHandler):
         dlg = DlgAbout(self._parent, ID_ANY, _("About PyUt ") + PyutVersion.getPyUtVersion())
         dlg.ShowModal()
         dlg.Destroy()
-
-    # noinspection PyUnusedLocal
-    def onHelpIndex(self, event: CommandEvent):
-        """
-        Display the help index
-        """
-        dlgHelp: DlgHelp = DlgHelp(self._parent, ID_ANY, _("Pyut Help"))
-        dlgHelp.Show(True)
 
     # noinspection PyUnusedLocal
     def onHelpVersion(self, event: CommandEvent):
