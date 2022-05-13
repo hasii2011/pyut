@@ -129,11 +129,6 @@ class PyutApp(wxApp):
 
     def _handleCommandLineFileNames(self, prefs: PyutPreferences):
 
-        if prefs.userDirectory is not None and len(prefs.userDirectory) != 0:
-            loadDirectory: str = prefs.userDirectory
-        else:
-            loadDirectory = prefs.orgDirectory
-
         loadedAFile: bool                 = False
         appFrame:    PyutApplicationFrame = self._frame
 
@@ -142,9 +137,10 @@ class PyutApp(wxApp):
             lastProjectLoaded: str = lstProjects[0]
             appFrame.loadByFilename(lastProjectLoaded)
             loadedAFile = True
+        self.logger.info(f'{argv=}')
         for filename in [el for el in argv[1:] if el[0] != '-']:
             self.logger.info('Load file on command line')
-            appFrame.loadByFilename(f'{loadDirectory}{osSeparator}{filename}')
+            appFrame.loadByFilename(f'{filename}')
             loadedAFile = True
 
         if loadedAFile is True:

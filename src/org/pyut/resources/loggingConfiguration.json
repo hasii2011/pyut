@@ -21,7 +21,7 @@
             "formatter": "pyutSimple",
             "filename": "/tmp/pyut.log",
             "mode": "a",
-            "maxBytes": 10240,
+            "maxBytes": 20480,
             "backupCount": 5,
             "encoding": "utf-8"
         }
@@ -49,16 +49,20 @@
             "level":     "WARNING",
             "propagate": "False"
         },
+        "org.pyut.ui.PyutApp": {
+            "level":     "INFO",
+            "propagate": "False"
+        },
+        "org.pyut.ui.UmlDiagramsFrame": {
+            "level":     "WARNING",
+            "propagate": "False"
+        },
         "org.pyut.general.Mediator": {
             "level":     "WARNING",
             "propagate": "False"
         },
         "org.pyut.ogl.OglClass": {
             "level":     "INFO",
-            "propagate": "False"
-        },
-        "org.pyut.ui.UmlDiagramsFrame": {
-            "level":     "DEBUG",
             "propagate": "False"
         },
         "org.pyut.miniogl.DiagramFrame": {
