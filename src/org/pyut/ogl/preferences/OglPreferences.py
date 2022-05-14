@@ -46,6 +46,8 @@ class OglPreferences(Singleton):
     DEFAULT_NAME_ACTOR:     str = 'default_name_actor'
     DEFAULT_NAME_METHOD:    str = 'default_name_method'
 
+    SHOW_PARAMETERS:            str = 'Show_Parameters'
+
     OGL_PREFERENCES: OGL_PREFS_NAME_VALUES = {
         NOTE_TEXT:              'This is the note text',
         NOTE_DIMENSIONS:        OglDimensions(100, 50).__str__(),
@@ -60,6 +62,7 @@ class OglPreferences(Singleton):
         DEFAULT_NAME_USECASE:   'UseCaseName',
         DEFAULT_NAME_ACTOR:     'ActorName',
         DEFAULT_NAME_METHOD:    'MethodName',
+        SHOW_PARAMETERS: 'False',
     }
 
     DEFAULT_GRID_LINE_COLOR: str = MiniOglColorEnum.LIGHT_GREY.value
@@ -236,6 +239,15 @@ class OglPreferences(Singleton):
     @methodName.setter
     def methodName(self, newValue: str):
         self._config.set(OglPreferences.OGL_PREFERENCES_SECTION, OglPreferences.DEFAULT_NAME_METHOD, newValue)
+        self.__saveConfig()
+
+    @property
+    def showParameters(self) -> bool:
+        return self._config.getboolean(OglPreferences.OGL_PREFERENCES_SECTION, OglPreferences.SHOW_PARAMETERS)
+
+    @showParameters.setter
+    def showParameters(self, theNewValue: bool):
+        self._config.set(OglPreferences.OGL_PREFERENCES_SECTION, OglPreferences.SHOW_PARAMETERS, str(theNewValue))
         self.__saveConfig()
 
     @property

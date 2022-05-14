@@ -345,7 +345,8 @@ class OglClass(OglObject):
         """
         # Init
         pyutObject: PyutClass = cast(PyutClass, self.pyutObject)
-        dc = ClientDC(self.GetDiagram().GetPanel())
+        umlFrame = self.GetDiagram().GetPanel()
+        dc = ClientDC(umlFrame)
 
         # Get header size
         (headerX, headerY, headerW, headerH) = self.calculateClassHeader(dc, False, calcWidth=True)
@@ -452,6 +453,7 @@ class OglClass(OglObject):
         else:
             event.Skip()
 
+    # noinspection PyUnusedLocal
     def onDisplayParametersClick(self, event: CommandEvent):
         """
         This menu item has its own handler because this option is tri-state
@@ -462,9 +464,9 @@ class OglClass(OglObject):
         Args:
             event:
         """
-        self.logger.warning(f'{event.GetClientObject()=}')
         pyutClass:         PyutClass             = cast(PyutClass, self.pyutObject)
         displayParameters: PyutDisplayParameters = pyutClass.displayParameters
+        self.logger.debug(f'Current: {displayParameters=}')
 
         if displayParameters == PyutDisplayParameters.UNSPECIFIED:
             pyutClass.displayParameters = PyutDisplayParameters.DISPLAY
@@ -474,6 +476,7 @@ class OglClass(OglObject):
             pyutClass.displayParameters = PyutDisplayParameters.UNSPECIFIED
         else:
             assert False, 'Unknown display type'
+        self.logger.warning(f'New: {pyutClass.displayParameters=}')
 
     def _didWeClickOnSelectAnchorPoint(self, clickPoint: Point) -> ClickedOnSelectAnchorPointData:
         """
@@ -540,8 +543,12 @@ class OglClass(OglObject):
             y:
             h:
         """
+        self.logger.debug(f'{pyutClass.displayParameters=} - {self._oglPreferences.showParameters=}')
         if pyutClass.displayParameters == PyutDisplayParameters.UNSPECIFIED:
-            dc.DrawText(str(pyutMethod), x + MARGIN, y + h)
+            if self._oglPreferences.showParameters is True:
+                dc.DrawText(pyutMethod.methodWithParameters(), x + MARGIN, y + h)
+            else:
+                dc.DrawText(pyutMethod.methodWithoutParameters(), x + MARGIN, y + h)
         elif pyutClass.displayParameters == PyutDisplayParameters.DISPLAY:
             dc.DrawText(pyutMethod.methodWithParameters(), x + MARGIN, y + h)
         elif pyutClass.displayParameters == PyutDisplayParameters.DO_NOT_DISPLAY:

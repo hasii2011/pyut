@@ -337,11 +337,11 @@ class PyutPreferences(Singleton):
 
     @property
     def showParameters(self) -> bool:
-        return self._generalPrefs.showParameters
+        return self._oglPrefs.showParameters
 
     @showParameters.setter
     def showParameters(self, theNewValue: bool):
-        self._generalPrefs.showParameters = theNewValue
+        self._oglPrefs.showParameters = theNewValue
 
     @property
     def useDebugTempFileLocation(self) -> bool:

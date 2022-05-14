@@ -1,6 +1,5 @@
 
 from typing import NewType
-from typing import cast
 from typing import List
 
 from logging import Logger

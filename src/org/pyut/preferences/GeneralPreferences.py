@@ -24,7 +24,6 @@ class GeneralPreferences(BaseSubPreference):
     LOAD_LAST_OPENED_PROJECT:   str = 'load_last_opened_project'
     DISPLAY_PROJECT_EXTENSION:  str = 'display_project_extension'
     AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
-    SHOW_PARAMETERS:            str = 'Show_Parameters'
     FULL_SCREEN:                str = 'Full_Screen'
     CURRENT_TIP:                str = 'Current_Tip'
     EDITOR:                     str = 'Editor'
@@ -41,7 +40,6 @@ class GeneralPreferences(BaseSubPreference):
         LOAD_LAST_OPENED_PROJECT:  'True',
         DISPLAY_PROJECT_EXTENSION: 'False',
         AUTO_RESIZE_SHAPE_ON_EDIT: 'True',
-        SHOW_PARAMETERS:           'False',
         FULL_SCREEN:               'False',
         CURRENT_TIP:               '0',
         EDITOR:                    'brackets',
@@ -132,15 +130,6 @@ class GeneralPreferences(BaseSubPreference):
     @autoResizeShapesOnEdit.setter
     def autoResizeShapesOnEdit(self, newValue: bool):
         self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.AUTO_RESIZE_SHAPE_ON_EDIT, str(newValue))
-        self._preferencesCommon.saveConfig()
-
-    @property
-    def showParameters(self) -> bool:
-        return self._config.getboolean(GeneralPreferences.MAIN_SECTION, GeneralPreferences.SHOW_PARAMETERS)
-
-    @showParameters.setter
-    def showParameters(self, theNewValue: bool):
-        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.SHOW_PARAMETERS, str(theNewValue))
         self._preferencesCommon.saveConfig()
 
     @property
