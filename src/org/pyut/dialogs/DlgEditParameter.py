@@ -137,7 +137,7 @@ class DlgEditParameter(BaseDlgEdit):
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
-            project.setModified()
+            project.modified = True
 
         # Close dialog
         self.EndModal(OK)

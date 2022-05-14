@@ -262,7 +262,7 @@ class DlgEditClass(DlgEditClassCommon):
             fileHandling = self._mediator.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
-                project.setModified()
+                project.modified = True
 
     # noinspection PyUnusedLocal
     def _onFieldEdit(self, event: CommandEvent):

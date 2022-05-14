@@ -69,4 +69,4 @@ class BaseDlgEdit(Dialog):
 
             project: PyutProject = fileHandling.getCurrentProject()
             if project is not None:
-                project.setModified()
+                project.modified = True

@@ -229,7 +229,7 @@ class DlgEditClassCommon(Dialog):
             fileHandling = self._mediator.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
-                project.setModified()
+                project.modified = True
 
     # noinspection PyUnusedLocal
     def _onMethodAdd(self, event: CommandEvent):
@@ -251,7 +251,7 @@ class DlgEditClassCommon(Dialog):
             fileHandling = self._mediator.getFileHandling()
             project = fileHandling.getCurrentProject()
             if project is not None:
-                project.setModified()
+                project.modified = True
 
     # noinspection PyUnusedLocal
     def _onMethodDown(self, event):
