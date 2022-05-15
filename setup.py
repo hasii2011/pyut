@@ -23,7 +23,7 @@ OPTIONS = {}
 
 setup(
     name='Pyut',
-    version='6.5.4',
+    version='6.6.0',
     app=APP,
     data_files=DATA_FILES,
     packages=['org',

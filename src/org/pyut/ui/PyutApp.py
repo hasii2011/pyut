@@ -4,8 +4,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from os import sep as osSeparator
-
 from sys import argv
 from sys import exc_info
 from traceback import extract_tb
