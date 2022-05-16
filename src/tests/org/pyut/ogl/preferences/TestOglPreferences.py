@@ -97,6 +97,15 @@ class TestOglPreferences(TestCase):
         actualStyle: MiniOglPenStyle = self.oglPreferences.gridLineStyle
         self.assertEqual(MiniOglPenStyle.CROSS_HATCH, actualStyle, 'Grid line style did not change')
 
+    def testTwoColorValue(self):
+
+        self._createDefaultPreferences()
+        self.prefs.init()  # reload default prefs
+        expectedColor: str = OglPreferences.DEFAULT_GRID_LINE_COLOR
+        actualColor:   str = self.prefs.gridLineColor.value
+
+        self.assertEqual(expectedColor, actualColor, 'Default must have changed')
+
     def _backupPrefs(self):
 
         prefsFileName: str = self.oglPreferences._preferencesFileName
@@ -122,6 +131,15 @@ class TestOglPreferences(TestCase):
             osRemove(source)
         else:
             osRemove(target)
+
+    def _createDefaultPreferences(self):
+        """
+        Delete the file and force creation of a default one
+        """
+        prefsFileName: str = self.oglPreferences._preferencesFileName
+
+        osRemove(prefsFileName)
+        self.prefs: OglPreferences = OglPreferences()
 
 
 def suite() -> TestSuite:

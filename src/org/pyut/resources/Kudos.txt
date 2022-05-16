@@ -7,24 +7,58 @@
            /____/
 
 
-  About PyUt... and the many developers who have worked on it ...
+  About Pyut... and the many developers who have worked on it ...
 
   Don't forget to visit the Pyut's official website:
-                https://github.com/hasii2011/PyUt/wiki
+        https://github.com/hasii2011/PyUt/wiki
 
 The Python 3 port GitHub URL is:
         https://github.com/hasii2011/PyUt/
 
+
+  Pyut 6.6.0 Mac OS X Release
+  ====================
+   Major items done are:
+
+   - Cutting a class now creates a history entry
+   - Fixed bug where once text placed on diagram it could
+   not be moved
+   - Fixed bug -- Selecting text should display red boundary
+   - Removed obsolete in-line help; Now point to wiki
+   - License from changed from LGPL to GPL
+   - Lots of internal work to isolate the data model and graphical
+   model in anticipation of Release 7.0.0
+
+
+  Pyut 6.5.4 Mac OS X Release
+  ====================
+  - Our preferences file now ends in .ini instead of .dat; It
+  is in .ini format
+  - When you import Python code Pyut saves the code; It restores
+  it on export; You can change the code in Pyut; This is
+  called round trip engineering for Python code
+  - Undo of a class when clicking on toolbar now works
+  - Undo of links now workq correctly
+  - Command-A is now "Select All" like most OS X applications
+  - Errors are now also logged to a Pyut rotating log file
+  - Adding of multiple lollipop interfaces to a class failed;
+  Fixed
+  - Selection of lollipop interfaces either by selection or
+  single click causes them to turn red
+  - Resizing sequence diagram instances now correctly works
+
   Pyut 6.5.3 Mac OS X Release
   ====================
-  This was an update longer overdue. Over the last couple of releases
-     - We had dropped the editor preferences
-     - How Pyut saved its position was broken as was the preference
-     settings for it
-     - Python reverse engineering was not generating method
-     parameters correctly
-     - Importing of xml documents and in essence saving Pyut
-     diagrams was broken
+  This was an update longer overdue. Over the last couple of
+  releases
+
+  - We had dropped the editor preferences
+  - How Pyut saved its position was broken as was the preference
+  settings for it
+  - Python reverse engineering was not generating method
+  parameters correctly
+  - Importing of xml documents and in essence saving Pyut
+  diagrams was broken
 
   Pyut 6.5.2 Mac OS X Release
   ====================

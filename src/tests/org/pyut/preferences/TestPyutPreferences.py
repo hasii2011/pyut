@@ -109,15 +109,6 @@ class TestPyutPreferences(TestBase):
         self.assertFalse(self.prefs.debugBasicShape, 'Syntactic sugar not working')
         self.prefs.debugBasicShape = oldValue
 
-    def testTwoColorValue(self):
-
-        self._emptyPrefs()
-        self.prefs.init()  # reload default prefs
-        expectedColor: str = OglPreferences.DEFAULT_GRID_LINE_COLOR
-        actualColor:   str = self.prefs.gridLineColor.value
-
-        self.assertEqual(expectedColor, actualColor, 'Default must have changed')
-
     def _backupPrefs(self):
 
         prefsFileName: str = PyutPreferences.getPreferencesLocation()

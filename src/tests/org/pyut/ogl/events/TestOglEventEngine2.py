@@ -12,11 +12,11 @@ from wx import Frame
 from wx import ID_ANY
 
 from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
+from org.pyut.miniogl.DiagramFrame import DiagramFrame
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.model.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.events.InvalidKeywordException import InvalidKeywordException
-from org.pyut.ui.UmlFrame import UmlFrame
 from tests.TestBase import TestBase
 
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
@@ -44,10 +44,10 @@ class TestOglEventEngine2(TestBase):
         #  Create frame
         baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
         # noinspection PyTypeChecker
-        umlFrame = UmlFrame(baseFrame, None)
+        umlFrame = DiagramFrame(baseFrame)
         umlFrame.Show(True)
 
-        self._umlFrame: UmlFrame = umlFrame
+        self._umlFrame: DiagramFrame = umlFrame
 
         self._eventEngine: OglEventEngine = OglEventEngine(listeningWindow=self._umlFrame)
 

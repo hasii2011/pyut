@@ -184,7 +184,7 @@ class OglText(OglObject):
         dc.SetClippingRegion(baseX, baseY, w, h)
 
         noteContent = self.pyutObject.content
-        lines = LineSplitter().split(noteContent, dc, w - 2 * OglText.MARGIN)
+        lines = OglUtils.lineSplitter(noteContent, dc, w - 2 * OglText.MARGIN)
 
         x = baseX + OglText.MARGIN
         y = baseY + OglText.MARGIN

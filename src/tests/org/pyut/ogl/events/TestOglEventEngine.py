@@ -48,8 +48,6 @@ from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
 from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
 from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
 from tests.TestBase import TestBase
 
 WINDOW_WIDTH:  int = 900
@@ -59,8 +57,6 @@ WINDOW_HEIGHT: int = 500
 class TestOglEventEngine(App):
 
     def OnInit(self):
-
-        PyutPreferences.determinePreferencesLocation()
 
         TestBase.setUpLogging()
 

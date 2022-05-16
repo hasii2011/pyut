@@ -1,4 +1,6 @@
+
 from typing import Dict
+from typing import Optional
 
 from logging import Logger
 from logging import getLogger
@@ -8,7 +10,6 @@ from sys import platform as sysPlatform
 from os import getenv as osGetEnv
 
 from configparser import ConfigParser
-from typing import Optional
 
 from org.pyut.general.Singleton import Singleton
 
