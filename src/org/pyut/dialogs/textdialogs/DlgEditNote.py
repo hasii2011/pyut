@@ -10,7 +10,7 @@ from wx import Window
 
 from org.pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
-from org.pyut.model.PyutNote import PyutNote
+from pyutmodel.PyutNote import PyutNote
 
 from org.pyut.PyutUtils import PyutUtils
 

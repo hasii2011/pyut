@@ -6,10 +6,10 @@ from org.pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLink
 
 from org.pyut.general.Globals import cmp
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutMethod import PyutModifiers
-from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutMethod import PyutModifiers
+from pyutmodel.PyutType import PyutType
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
@@ -92,12 +92,12 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         Args:
             serializedData: serialized data needed by the command.
         """
-        from org.pyut.model.PyutMethod import PyutMethod
-        from org.pyut.model.PyutParameter import PyutParameter
-        from org.pyut.model.PyutField import PyutField
+        from pyutmodel.PyutMethod import PyutMethod
+        from pyutmodel.PyutParameter import PyutParameter
+        from pyutmodel.PyutField import PyutField
 
-        from org.pyut.model.PyutStereotype import PyutStereotype
-        from org.pyut.model.PyutModifier import PyutModifier
+        from pyutmodel.PyutStereotype import PyutStereotype
+        from pyutmodel.PyutModifier import PyutModifier
 
         # deserialize the data common to all OglObjects
         DeleteOglLinkedObjectCommand.deserialize(self, serializedData)

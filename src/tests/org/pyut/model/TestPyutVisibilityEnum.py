@@ -11,7 +11,7 @@ from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
 
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class TestPyutVisibilityEnum(TestBase):

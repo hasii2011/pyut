@@ -12,11 +12,11 @@ from wx import CommandEvent
 
 from wx import Menu
 
-from org.pyut.model.PyutActor import PyutActor
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutObject import PyutObject
-from org.pyut.model.PyutUseCase import PyutUseCase
+from pyutmodel.PyutActor import PyutActor
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutObject import PyutObject
+from pyutmodel.PyutUseCase import PyutUseCase
 
 from org.pyut.miniogl.Diagram import Diagram
 

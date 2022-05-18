@@ -22,13 +22,13 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
 
-from org.pyut.model.PyutField import PyutField
+from pyutmodel.PyutField import PyutField
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
@@ -131,7 +131,7 @@ class DlgEditField(BaseDlgEdit):
         """
 
         self._fieldToEdit.name = self._txtFieldName.GetValue().strip()
-        from org.pyut.model.PyutType import PyutType
+        from pyutmodel.PyutType import PyutType
 
         self._fieldToEdit.type = PyutType(self._txtFieldType.GetValue().strip())
         visStr: str = self._rdbFieldVisibility.GetStringSelection()

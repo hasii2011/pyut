@@ -11,7 +11,7 @@ from wx import RED_PEN
 from wx import BLACK_PEN
 from wx import WHITE_BRUSH
 
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutLink import PyutLink
 
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglClass import OglClass

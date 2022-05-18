@@ -11,7 +11,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.model.PyutNote import PyutNote
+from pyutmodel.PyutNote import PyutNote
 
 
 class TestPyutNote(TestBase):

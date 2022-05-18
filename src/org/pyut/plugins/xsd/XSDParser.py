@@ -17,13 +17,13 @@ from xmlschema.validators import XsdAtomicRestriction
 
 from xmlschema.validators import XsdType
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutLink import PyutLink
-from org.pyut.model.PyutLinkedObject import PyutLinkedObject
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutLink import PyutLink
+from pyutmodel.PyutLinkedObject import PyutLinkedObject
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData

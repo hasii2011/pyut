@@ -14,8 +14,8 @@ from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.LollipopLine import LollipopLine
 
-from org.pyut.model.PyutInterface import PyutInterface
-from org.pyut.model.PyutObject import PyutObject
+from pyutmodel.PyutInterface import PyutInterface
+from pyutmodel.PyutObject import PyutObject
 
 from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily

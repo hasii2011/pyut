@@ -1,10 +1,10 @@
 
 from typing import List
 
-from org.pyut.model.ModelTypes import PyutLinks
+from pyutmodel.ModelTypes import PyutLinks
 
-from org.pyut.model.PyutLink import PyutLink
-from org.pyut.model.PyutObject import PyutObject
+from pyutmodel.PyutLink import PyutLink
+from pyutmodel.PyutObject import PyutObject
 
 
 class PyutLinkedObject(PyutObject):

@@ -9,7 +9,7 @@ from org.pyut.ogl.OglInheritance import OglInheritance
 from org.pyut.ogl.OglInterface import OglInterface
 from org.pyut.ogl.OglNoteLink import OglNoteLink
 
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.general.Singleton import Singleton
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage

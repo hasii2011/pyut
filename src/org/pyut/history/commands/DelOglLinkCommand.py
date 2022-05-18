@@ -7,7 +7,7 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.ogl.OglLinkFactory import getLinkType
 
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue

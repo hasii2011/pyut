@@ -15,11 +15,11 @@ from wx import App
 from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutInterface import PyutInterface
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutType import PyutType
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutInterface import PyutInterface
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInterface2 import OglInterface2
@@ -106,7 +106,7 @@ class TestCreateOglInterfaceCommand(TestBase):
 
     def testDeserialize(self):
 
-        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=None, attachmentAnchor=None)
+        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=cast(OglClass, None), attachmentAnchor=cast(SelectAnchorPoint, None))
 
         cOglXFaceCmd.deserialize(self._serializedCommand)
 

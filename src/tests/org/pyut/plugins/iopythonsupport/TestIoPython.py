@@ -10,10 +10,10 @@ from unittest import main as unitTestMain
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutType import PyutType
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
 

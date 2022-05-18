@@ -24,13 +24,13 @@ from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 from org.pyut.history.HistoryManager import HistoryManager
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutMethod import PyutParameters
-from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutParameters
+from pyutmodel.PyutParameter import PyutParameter
+from pyutmodel.PyutType import PyutType
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglClass import OglClass
 

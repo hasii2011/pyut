@@ -20,10 +20,10 @@ from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.model.ModelTypes import ClassName
+from pyutmodel.ModelTypes import ClassName
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutInterface import PyutInterface
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutInterface import PyutInterface
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInterface2 import OglInterface2

@@ -19,8 +19,8 @@ from wx import NewIdRef as wxNewIdRef
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutInterface import PyutInterface
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutInterface import PyutInterface
 
 TXT_COMMENT = wxNewIdRef()
 

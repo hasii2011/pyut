@@ -7,13 +7,13 @@ from org.pyut.history.commands.CommandGroup import CommandGroup
 from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
 from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
-from org.pyut.model.ModelTypes import ClassName
-from org.pyut.model.ModelTypes import Implementors
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutInterface import PyutInterface
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.ModelTypes import ClassName
+from pyutmodel.ModelTypes import Implementors
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutInterface import PyutInterface
+from pyutmodel.PyutLink import PyutLink
 
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInterface import OglInterface

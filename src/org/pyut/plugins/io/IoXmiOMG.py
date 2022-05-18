@@ -12,9 +12,9 @@ from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutLink import PyutLink
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 

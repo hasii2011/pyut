@@ -28,7 +28,7 @@ from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.ogl.OglPosition import OglPosition
 
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutLink import PyutLink
 
 from org.pyut.ogl.IllegalOperationException import IllegalOperationException
 

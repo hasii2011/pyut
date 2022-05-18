@@ -14,12 +14,12 @@ from xml.dom.minidom import Element
 from wx import App
 
 from org.pyut.enums.DiagramType import DiagramType
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutMethod import PyutModifiers
-from org.pyut.model.PyutMethod import SourceCode
-from org.pyut.model.PyutModifier import PyutModifier
-from org.pyut.model.PyutType import PyutType
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutModifiers
+from pyutmodel.PyutMethod import SourceCode
+from pyutmodel.PyutModifier import PyutModifier
+from pyutmodel.PyutType import PyutType
 
 from org.pyut.ogl.OglClass import OglClass
 

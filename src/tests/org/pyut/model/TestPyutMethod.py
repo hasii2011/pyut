@@ -7,17 +7,17 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.model.PyutMethod import SourceCode
+from pyutmodel.PyutMethod import SourceCode
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutMethod import PyutParameters
-from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutParameter import PyutParameter
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutParameters
+from pyutmodel.PyutType import PyutType
+from pyutmodel.PyutParameter import PyutParameter
 
-from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
+from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 
 
 class TestPyutMethod(TestBase):

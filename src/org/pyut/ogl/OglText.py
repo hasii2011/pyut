@@ -23,11 +23,9 @@ from wx import MouseEvent
 
 from wx import RED_PEN
 
-from org.pyut.general.LineSplitter import LineSplitter
-
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
 
-from org.pyut.model.PyutText import PyutText
+from pyutmodel.PyutText import PyutText
 
 from org.pyut.ogl.OglObject import OglObject
 

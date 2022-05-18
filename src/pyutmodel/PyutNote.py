@@ -1,5 +1,5 @@
 
-from org.pyut.model.PyutLinkedObject import PyutLinkedObject
+from pyutmodel.PyutLinkedObject import PyutLinkedObject
 
 
 class PyutNote(PyutLinkedObject):

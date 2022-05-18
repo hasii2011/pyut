@@ -20,7 +20,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
-from org.pyut.model.PyutInterface import PyutInterface
+from pyutmodel.PyutInterface import PyutInterface
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 

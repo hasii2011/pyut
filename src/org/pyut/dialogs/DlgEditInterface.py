@@ -16,7 +16,7 @@ from wx import CommandEvent
 
 from org.pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 
-from org.pyut.model.PyutInterface import PyutInterface
+from pyutmodel.PyutInterface import PyutInterface
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

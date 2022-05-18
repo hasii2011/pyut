@@ -12,18 +12,18 @@ from os import sep as osSep
 from os import O_WRONLY
 from os import O_CREAT
 
-from org.pyut.model.ModelTypes import PyutLinks
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutStereotype import PyutStereotype
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.ModelTypes import PyutLinks
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutParameter import PyutParameter
+from pyutmodel.PyutStereotype import PyutStereotype
+from pyutmodel.PyutLink import PyutLink
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.ui.UmlFrame import UmlFrame
 

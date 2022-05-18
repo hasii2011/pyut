@@ -21,7 +21,7 @@ from wx import EndBusyCursor
 from wx import MessageBox
 from wx import Yield as wxYield
 
-from org.pyut.model.PyutClass import PyutClass
+from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.ogl.OglClass import OglClass
 

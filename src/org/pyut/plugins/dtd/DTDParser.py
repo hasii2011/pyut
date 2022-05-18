@@ -11,13 +11,13 @@ from logging import getLogger
 from xml.parsers.expat import ParserCreate
 from pyexpat import XMLParserType
 
-from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutType import PyutType
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutLink import PyutLink
 
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.ogl.OglClass import OglClass
 

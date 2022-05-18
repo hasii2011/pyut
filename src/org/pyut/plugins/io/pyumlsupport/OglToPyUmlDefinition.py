@@ -31,15 +31,15 @@ from pyumldiagrams.pdf.PdfDiagram import PdfDiagram
 from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from org.pyut.miniogl.ControlPoint import ControlPoint
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutLink import PyutLink
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutLink import PyutLink
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions

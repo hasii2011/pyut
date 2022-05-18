@@ -11,7 +11,7 @@ from unittest import main as unitTestMain
 from pkg_resources import resource_filename
 from wx import App
 
-from org.pyut.model.PyutObject import PyutObject
+from pyutmodel.PyutObject import PyutObject
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

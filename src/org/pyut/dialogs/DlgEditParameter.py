@@ -21,8 +21,8 @@ from wx import Event
 from wx import FlexGridSizer
 from wx import CommandEvent
 
-from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutType import PyutType
+from pyutmodel.PyutParameter import PyutParameter
+from pyutmodel.PyutType import PyutType
 
 from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 

@@ -11,7 +11,7 @@ from unittest.mock import Mock
 from pkg_resources import resource_filename
 from wx import App
 
-from org.pyut.model.PyutNote import PyutNote
+from pyutmodel.PyutNote import PyutNote
 from org.pyut.ogl.OglNote import OglNote
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

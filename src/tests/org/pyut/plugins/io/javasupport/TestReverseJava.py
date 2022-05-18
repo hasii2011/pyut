@@ -13,7 +13,7 @@ from pkg_resources import resource_filename
 
 from wx import App
 
-from org.pyut.model.ModelTypes import Implementors
+from pyutmodel.ModelTypes import Implementors
 from org.pyut.ogl.OglClass import OglClass
 
 from org.pyut.plugins.io.javasupport.ReverseJava import Extenders

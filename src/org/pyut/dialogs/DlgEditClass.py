@@ -37,11 +37,11 @@ from wx import PostEvent as wxPostEvent
 
 from org.pyut.general.CustomEvents import ClassNameChangedEvent
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutField import PyutField
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutField import PyutField
 
-from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutStereotype import PyutStereotype
+from pyutmodel.PyutParameter import PyutParameter
+from pyutmodel.PyutStereotype import PyutStereotype
 
 from org.pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from org.pyut.dialogs.DlgEditField import DlgEditField

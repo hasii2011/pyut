@@ -4,9 +4,9 @@ from typing import cast
 
 from wx import Point
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutSDMessage import PyutSDMessage
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutSDMessage import PyutSDMessage
+from pyutmodel.PyutLink import PyutLink
 
 from org.pyut.history.commands.Command import Command
 
@@ -18,7 +18,7 @@ from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue

@@ -8,7 +8,7 @@ from org.pyut.history.commands.Command import Command
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
-from org.pyut.model.PyutLinkedObject import PyutLinkedObject
+from pyutmodel.PyutLinkedObject import PyutLinkedObject
 
 
 class DeleteOglObjectCommand(Command):
@@ -59,7 +59,9 @@ class DeleteOglObjectCommand(Command):
         # must be placed after this one.
         #
         from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
-        for link in self._shape.getLinks():
+        # for link in self._shape.getLinks():
+        for link in self._shape.links:
+
             if not link.IsSelected():
                 cmd: DelOglLinkCommand = DelOglLinkCommand(link)
                 self.getGroup().addCommand(cmd)

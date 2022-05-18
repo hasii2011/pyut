@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutLink import PyutLink
 
 
 class PyutSDMessage(PyutLink):

@@ -10,10 +10,10 @@ from unittest import main as unitTestMain
 
 from copy import deepcopy
 
-from org.pyut.model.PyutType import PyutType
+from pyutmodel.PyutType import PyutType
 
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from tests.TestBase import TestBase
 

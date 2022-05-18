@@ -3,10 +3,10 @@ from typing import cast
 
 import os
 
-from org.pyut.model.PyutLinkType import PyutLinkType
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutMethod import PyutMethod
+from pyutmodel.PyutLinkType import PyutLinkType
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutMethod import PyutMethod
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 

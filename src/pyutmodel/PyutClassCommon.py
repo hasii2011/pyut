@@ -1,8 +1,8 @@
 
 from typing import List
 
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutMethod import PyutMethod
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutMethod import PyutMethod
 
 
 class PyutClassCommon:

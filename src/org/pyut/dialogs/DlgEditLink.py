@@ -29,7 +29,7 @@ from wx import VERTICAL
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutLink import PyutLink
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

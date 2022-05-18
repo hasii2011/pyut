@@ -1,7 +1,5 @@
 
-from org.pyut.model.PyutObject import PyutObject
-
-from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
+from pyutmodel.PyutObject import PyutObject
 
 
 class PyutText(PyutObject):

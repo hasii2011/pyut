@@ -4,7 +4,7 @@ from wx import PENSTYLE_LONG_DASH
 from wx import Pen
 
 from org.pyut.miniogl.Shape import Shape
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutLink import PyutLink
 from org.pyut.ogl.OglLink import OglLink
 from org.pyut.ogl.OglObject import OglObject
 

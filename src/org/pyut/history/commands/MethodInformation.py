@@ -4,11 +4,11 @@ from typing import Tuple
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
 
-from org.pyut.model.PyutClassCommon import PyutClassCommon
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutType import PyutType
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutClassCommon import PyutClassCommon
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutParameter import PyutParameter
+from pyutmodel.PyutType import PyutType
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 
 class MethodInformation:
@@ -25,7 +25,7 @@ class MethodInformation:
         for method in pyutClassCommon.methods:
             methodName:       str = method.name
             methodVisibility: str = method.visibility.__str__()
-            methodReturns:    str = method.getReturns().__str__()
+            methodReturns:    str = method.returnType.__str__()
 
             params = []
             for param in method.parameters:

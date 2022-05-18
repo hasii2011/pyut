@@ -10,7 +10,7 @@ from unittest import TestSuite
 
 from copy import deepcopy
 
-from org.pyut.model.PyutType import PyutType
+from pyutmodel.PyutType import PyutType
 
 from tests.TestBase import TestBase
 

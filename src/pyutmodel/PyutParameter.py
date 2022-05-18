@@ -7,8 +7,8 @@ from deprecated import deprecated
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.model.PyutObject import PyutObject
-from org.pyut.model.PyutType import PyutType
+from pyutmodel.PyutObject import PyutObject
+from pyutmodel.PyutType import PyutType
 
 
 class PyutParameter(PyutObject):

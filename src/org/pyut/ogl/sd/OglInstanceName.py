@@ -14,7 +14,7 @@ from wx import TextEntryDialog
 from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
 from org.pyut.miniogl.TextShape import TextShape
 
-from org.pyut.model.PyutSDInstance import PyutSDInstance
+from pyutmodel.PyutSDInstance import PyutSDInstance
 
 
 class OglInstanceName(TextShape, ShapeEventHandler):

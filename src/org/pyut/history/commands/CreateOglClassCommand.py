@@ -7,7 +7,7 @@ from logging import getLogger
 
 from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.model.PyutClass import PyutClass
+from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 

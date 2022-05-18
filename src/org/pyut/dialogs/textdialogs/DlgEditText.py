@@ -8,7 +8,7 @@ from wx import Window
 
 from org.pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
-from org.pyut.model.PyutText import PyutText
+from pyutmodel.PyutText import PyutText
 
 from org.pyut.PyutUtils import PyutUtils
 

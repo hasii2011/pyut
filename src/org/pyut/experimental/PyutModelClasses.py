@@ -3,33 +3,33 @@ from typing import List
 
 # These unused imports add in the classes so that the test code in UmlFrame.addHierarchy can do an introspection
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutClass import PyutClass
+from pyutmodel.PyutClass import PyutClass
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutField import PyutField
+from pyutmodel.PyutField import PyutField
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutLink import PyutLink
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutLinkedObject import PyutLinkedObject
+from pyutmodel.PyutLinkedObject import PyutLinkedObject
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutNote import PyutNote
+from pyutmodel.PyutNote import PyutNote
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutUseCase import PyutUseCase
+from pyutmodel.PyutUseCase import PyutUseCase
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutActor import PyutActor
+from pyutmodel.PyutActor import PyutActor
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutMethod
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutModifier import PyutModifier
+from pyutmodel.PyutModifier import PyutModifier
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutObject import PyutObject
+from pyutmodel.PyutObject import PyutObject
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutParameter import PyutParameter
+from pyutmodel.PyutParameter import PyutParameter
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutStereotype import PyutStereotype
+from pyutmodel.PyutStereotype import PyutStereotype
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutType import PyutType
+from pyutmodel.PyutType import PyutType
 # noinspection PyUnresolvedReferences
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 # noinspection PyUnresolvedReferences
 from org.pyut.ui.Mediator import Mediator
 # noinspection PyUnresolvedReferences

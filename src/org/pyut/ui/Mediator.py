@@ -37,12 +37,12 @@ from org.pyut.miniogl.ControlPoint import ControlPoint
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
-from org.pyut.model.PyutLinkType import PyutLinkType
-from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
-from org.pyut.model.PyutInterface import PyutInterface
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutText import PyutText
+from pyutmodel.PyutLinkType import PyutLinkType
+from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
+from pyutmodel.PyutInterface import PyutInterface
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutText import PyutText
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglLink import OglLink
@@ -595,7 +595,7 @@ class Mediator(Singleton):
         from org.pyut.ogl.OglAssociation import OglAssociation
         from org.pyut.ogl.OglInterface import OglInterface
 
-        from org.pyut.model.PyutNote import PyutNote
+        from pyutmodel.PyutNote import PyutNote
 
         diagramShape = umlFrame.FindShape(x, y)
 

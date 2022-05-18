@@ -35,19 +35,19 @@ from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.DisplayMethodParameters import DisplayMethodParameters
-from org.pyut.model.PyutInterface import PyutInterface
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutMethod import PyutModifiers
-from org.pyut.model.PyutMethod import SourceCode
-from org.pyut.model.PyutModifier import PyutModifier
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutField import PyutField
+from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
+from pyutmodel.PyutInterface import PyutInterface
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutModifiers
+from pyutmodel.PyutMethod import SourceCode
+from pyutmodel.PyutModifier import PyutModifier
 
-from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutText import PyutText
-from org.pyut.model.PyutType import PyutType
+from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutParameter import PyutParameter
+from pyutmodel.PyutText import PyutText
+from pyutmodel.PyutType import PyutType
 
 
 from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize

@@ -33,9 +33,9 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.DlgEditComment import DlgEditComment
 from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutInterface import PyutInterface
-from org.pyut.model.PyutMethod import PyutMethod
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutInterface import PyutInterface
+from pyutmodel.PyutMethod import PyutMethod
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

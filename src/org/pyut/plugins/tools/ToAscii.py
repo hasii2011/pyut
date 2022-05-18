@@ -10,7 +10,7 @@ from os import getcwd
 from typing import cast
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.model.PyutClass import PyutClass
+from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 from org.pyut.plugins.base.PluginTypes import OglClasses

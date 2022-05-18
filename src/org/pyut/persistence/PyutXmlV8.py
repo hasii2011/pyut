@@ -14,7 +14,7 @@ from wx import STAY_ON_TOP
 from wx import Size
 
 from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.model.PyutLinkType import PyutLinkType
+from pyutmodel.PyutLinkType import PyutLinkType
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 
 from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
@@ -28,17 +28,17 @@ from org.pyut.ogl.OglUseCase import OglUseCase
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.model.PyutStereotype import PyutStereotype
-from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutSDInstance import PyutSDInstance
-from org.pyut.model.PyutSDMessage import PyutSDMessage
-from org.pyut.model.PyutUseCase import PyutUseCase
-from org.pyut.model.PyutActor import PyutActor
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutLink import PyutLink
+from pyutmodel.PyutStereotype import PyutStereotype
+from pyutmodel.PyutParameter import PyutParameter
+from pyutmodel.PyutSDInstance import PyutSDInstance
+from pyutmodel.PyutSDMessage import PyutSDMessage
+from pyutmodel.PyutUseCase import PyutUseCase
+from pyutmodel.PyutActor import PyutActor
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutLink import PyutLink
 
 from org.pyut.PyutUtils import PyutUtils
 

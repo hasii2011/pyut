@@ -3,7 +3,7 @@ from typing import cast
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
 from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-from org.pyut.model.PyutNote import PyutNote
+from pyutmodel.PyutNote import PyutNote
 from org.pyut.ogl.OglNote import OglNote
 
 

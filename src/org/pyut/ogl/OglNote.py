@@ -12,7 +12,7 @@ from org.pyut.ogl.OglObject import OglObject
 
 from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
-from org.pyut.model.PyutNote import PyutNote
+from pyutmodel.PyutNote import PyutNote
 
 from org.pyut.ogl.OglUtils import OglUtils
 

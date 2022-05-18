@@ -12,21 +12,21 @@ from xml.dom.minidom import Element
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 
-from org.pyut.model.ModelTypes import ClassName
-from org.pyut.model.PyutActor import PyutActor
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutClassCommon import PyutClassCommon
-from org.pyut.model.PyutField import PyutField
-from org.pyut.model.PyutInterface import PyutInterface
-from org.pyut.model.PyutLink import PyutLink
-from org.pyut.model.PyutMethod import SourceCode
-from org.pyut.model.PyutNote import PyutNote
-from org.pyut.model.PyutParameter import PyutParameter
-from org.pyut.model.PyutSDInstance import PyutSDInstance
-from org.pyut.model.PyutSDMessage import PyutSDMessage
-from org.pyut.model.PyutText import PyutText
-from org.pyut.model.PyutUseCase import PyutUseCase
-from org.pyut.model.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.ModelTypes import ClassName
+from pyutmodel.PyutActor import PyutActor
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutClassCommon import PyutClassCommon
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutInterface import PyutInterface
+from pyutmodel.PyutLink import PyutLink
+from pyutmodel.PyutMethod import SourceCode
+from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutParameter import PyutParameter
+from pyutmodel.PyutSDInstance import PyutSDInstance
+from pyutmodel.PyutSDMessage import PyutSDMessage
+from pyutmodel.PyutText import PyutText
+from pyutmodel.PyutUseCase import PyutUseCase
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglAssociation import OglAssociation

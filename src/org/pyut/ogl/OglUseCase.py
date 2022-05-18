@@ -2,7 +2,7 @@
 from wx import DC
 
 from org.pyut.ogl.OglObject import OglObject
-from org.pyut.model.PyutUseCase import PyutUseCase
+from pyutmodel.PyutUseCase import PyutUseCase
 from org.pyut.ogl.OglUtils import OglUtils
 
 

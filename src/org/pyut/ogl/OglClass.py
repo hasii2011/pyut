@@ -24,10 +24,10 @@ from wx import Point
 
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 
-from org.pyut.model.PyutDisplayParameters import PyutDisplayParameters
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutObject import PyutObject
-from org.pyut.model.PyutClass import PyutClass
+from pyutmodel.PyutDisplayParameters import PyutDisplayParameters
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutObject import PyutObject
+from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.ogl.OglObject import OglObject
 from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE

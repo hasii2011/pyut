@@ -14,7 +14,7 @@ from wx import ID_ANY
 from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
 from org.pyut.miniogl.DiagramFrame import DiagramFrame
 from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.model.PyutClass import PyutClass
+from pyutmodel.PyutClass import PyutClass
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.events.InvalidKeywordException import InvalidKeywordException
 from tests.TestBase import TestBase

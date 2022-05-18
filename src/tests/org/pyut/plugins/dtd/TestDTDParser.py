@@ -11,8 +11,8 @@ from unittest import main as unitTestMain
 from unittest import TestSuite
 from unittest.mock import MagicMock
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutField import PyutField
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutField import PyutField
 
 from org.pyut.plugins.dtd.DTDParser import DTDParser
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData

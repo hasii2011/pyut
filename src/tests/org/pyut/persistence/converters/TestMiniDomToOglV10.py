@@ -16,9 +16,9 @@ from xml.dom.minidom import Document
 
 from pkg_resources import resource_filename
 
-from org.pyut.model.PyutClass import PyutClass
-from org.pyut.model.PyutMethod import PyutMethod
-from org.pyut.model.PyutMethod import SourceCode
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import SourceCode
 
 from org.pyut.persistence.converters.MiniDomToOglV10 import OglClasses
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
