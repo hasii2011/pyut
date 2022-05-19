@@ -51,19 +51,19 @@ from wx import PenInfo
 # noinspection PyUnresolvedReferences
 from wx.core import PenStyle
 
-from org.pyut.miniogl.Shape import Shape
+from miniogl.Shape import Shape
 
-from org.pyut.miniogl.Diagram import Diagram
-from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
-from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
-from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
-from org.pyut.miniogl.SizerShape import SizerShape
-from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.miniogl.RectangleShape import RectangleShape
+from miniogl.Diagram import Diagram
+from miniogl.MiniOglColorEnum import MiniOglColorEnum
+from miniogl.MiniOglPenStyle import MiniOglPenStyle
+from miniogl.ShapeEventHandler import ShapeEventHandler
+from miniogl.SizerShape import SizerShape
+from miniogl.ControlPoint import ControlPoint
+from miniogl.RectangleShape import RectangleShape
 
 from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
-from org.pyut.miniogl.DlgDebugDiagramFrame import DlgDebugDiagramFrame
+from miniogl.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 
 
 class DiagramFrame(ScrolledWindow):

@@ -11,7 +11,7 @@ from wx import Frame
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
-from org.pyut.miniogl.DiagramFrame import DiagramFrame
+from miniogl import DiagramFrame
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

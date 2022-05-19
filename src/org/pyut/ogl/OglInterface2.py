@@ -9,10 +9,10 @@ from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
 from wx import Font
 
-from org.pyut.miniogl.Common import Common
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.LollipopLine import LollipopLine
+from miniogl.Common import Common
+from miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.LollipopLine import LollipopLine
 
 from pyutmodel.PyutInterface import PyutInterface
 from pyutmodel.PyutObject import PyutObject

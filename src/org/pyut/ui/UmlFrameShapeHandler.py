@@ -8,8 +8,6 @@ from wx import Brush
 from wx import Pen
 from wx import Window
 
-from org.pyut.miniogl.DiagramFrame import DiagramFrame
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from pyutmodel.PyutActor import PyutActor
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutNote import PyutNote
@@ -17,6 +15,9 @@ from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutUseCase import PyutUseCase
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass
+
+from miniogl.DiagramFrame import DiagramFrame
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from org.pyut.ogl.OglInterface2 import OglInterface2
 from org.pyut.ogl.OglNote import OglNote

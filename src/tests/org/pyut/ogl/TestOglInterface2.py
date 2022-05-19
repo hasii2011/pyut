@@ -13,12 +13,12 @@ from unittest.mock import PropertyMock
 
 from wx import App
 
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from org.pyut.ogl.OglPosition import OglPosition
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.AttachmentLocation import AttachmentLocation
 
 from pyutmodel.PyutInterface import PyutInterface
 

@@ -14,7 +14,7 @@ changeToProjectRoot
 cd src > /dev/null 2>&1
 echo "current: $(pwd)"
 
-mypy --config-file .mypi.ini --pretty --no-color-output  --show-error-codes org pyutmodel tests
+mypy --config-file .mypi.ini --pretty --no-color-output  --show-error-codes org pyutmodel miniogl tests
 # mypy --config-file .mypi.ini --pretty                    --show-error-codes org pyutmodel tests
 status=$?
 

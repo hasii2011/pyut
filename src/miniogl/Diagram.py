@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.miniogl.Shape import Shape
+from miniogl.Shape import Shape
 
 
 class Diagram:

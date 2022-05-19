@@ -19,12 +19,12 @@ from wx import MenuItem
 from wx import MouseEvent
 
 
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.miniogl.LinePoint import LinePoint
-from org.pyut.miniogl.LineShape import LineShape
-from org.pyut.miniogl.ShapeEventHandler import ShapeEventHandler
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.AnchorPoint import AnchorPoint
+from miniogl.ControlPoint import ControlPoint
+from miniogl.LinePoint import LinePoint
+from miniogl.LineShape import LineShape
+from miniogl.ShapeEventHandler import ShapeEventHandler
+from miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.ogl.OglPosition import OglPosition
 

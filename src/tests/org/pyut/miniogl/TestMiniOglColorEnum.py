@@ -10,7 +10,7 @@ from unittest import main as unitTestMain
 from wx import App
 from wx import Colour
 
-from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
+from miniogl.MiniOglColorEnum import MiniOglColorEnum
 
 from tests.TestBase import TestBase
 

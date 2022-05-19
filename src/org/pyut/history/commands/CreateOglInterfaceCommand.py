@@ -14,12 +14,12 @@ from wx import OK
 
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
 
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from pyutmodel.ModelTypes import ClassName
 
 from pyutmodel.PyutClass import PyutClass

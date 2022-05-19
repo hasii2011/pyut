@@ -4,10 +4,10 @@ from typing import cast
 
 from wx import DC
 
-from org.pyut.miniogl.Shape import Shape
-from org.pyut.miniogl.MiniOglUtils import sign
-from org.pyut.miniogl.SizerShape import SizerShape
-from org.pyut.miniogl.RectangleShapeModel import RectangleShapeModel
+from miniogl.Shape import Shape
+from miniogl.MiniOglUtils import sign
+from miniogl.SizerShape import SizerShape
+from miniogl.RectangleShapeModel import RectangleShapeModel
 
 
 class RectangleShape(Shape):

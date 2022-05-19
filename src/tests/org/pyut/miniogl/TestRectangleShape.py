@@ -9,11 +9,9 @@ from unittest import main as unitTestMain
 
 from wx import App
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
 from tests.TestBase import TestBase
 
-from org.pyut.miniogl.RectangleShape import RectangleShape
+from miniogl.RectangleShape import RectangleShape
 
 CANONICAL_X: int = 10
 CANONICAL_Y: int = 10
@@ -31,7 +29,6 @@ class TestRectangleShape(TestBase):
     def setUpClass(cls):
         TestBase.setUpLogging()
         TestRectangleShape.clsLogger = getLogger(__name__)
-        PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
         self.logger: Logger = TestRectangleShape.clsLogger

@@ -29,13 +29,13 @@ from org.pyut.history.commands.CommandGroup import CommandGroup
 
 from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
 
-from org.pyut.miniogl.Constants import EVENT_PROCESSED
-from org.pyut.miniogl.Constants import SKIP_EVENT
-from org.pyut.miniogl.Diagram import Diagram
-from org.pyut.miniogl.LinePoint import LinePoint
-from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.Constants import EVENT_PROCESSED
+from miniogl.Constants import SKIP_EVENT
+from miniogl.Diagram import Diagram
+from miniogl.LinePoint import LinePoint
+from miniogl.ControlPoint import ControlPoint
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.AttachmentLocation import AttachmentLocation
 
 from pyutmodel.PyutLinkType import PyutLinkType
 from pyutmodel.DisplayMethodParameters import DisplayMethodParameters

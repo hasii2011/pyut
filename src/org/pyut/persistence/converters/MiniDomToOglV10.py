@@ -12,10 +12,6 @@ from xml.dom.minidom import Element
 from xml.dom.minicompat import NodeList
 from xml.dom.minidom import Text
 
-from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
-
 from pyutmodel.ModelTypes import ClassName
 from pyutmodel.ModelTypes import Implementors
 
@@ -38,8 +34,11 @@ from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutModifier import PyutModifier
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
-
 from pyutmodel.PyutLinkType import PyutLinkType
+
+from miniogl.ControlPoint import ControlPoint
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel

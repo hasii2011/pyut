@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from wx import Point
 
-from org.pyut.miniogl.Shape import Shape
+from miniogl.Shape import Shape
 
 
 @dataclass

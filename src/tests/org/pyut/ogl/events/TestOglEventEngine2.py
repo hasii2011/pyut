@@ -11,17 +11,21 @@ from wx import App
 from wx import Frame
 from wx import ID_ANY
 
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
-from org.pyut.miniogl.DiagramFrame import DiagramFrame
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
 from pyutmodel.PyutClass import PyutClass
+
+from miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.DiagramFrame import DiagramFrame
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+
 from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.events.InvalidKeywordException import InvalidKeywordException
-from tests.TestBase import TestBase
 
 from org.pyut.ogl.events.OglEventEngine import OglEventEngine
 from org.pyut.ogl.events.OglEventType import OglEventType
+from org.pyut.ogl.events.InvalidKeywordException import InvalidKeywordException
+
 from tests.org.pyut.miniogl.TestMiniOglCommon import Point
+
+from tests.TestBase import TestBase
 
 
 class TestOglEventEngine2(TestBase):

@@ -18,7 +18,7 @@ from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutObject import PyutObject
 from pyutmodel.PyutUseCase import PyutUseCase
 
-from org.pyut.miniogl.Diagram import Diagram
+from miniogl.Diagram import Diagram
 
 from org.pyut.ogl.OglActor import OglActor
 from org.pyut.ogl.OglClass import OglClass

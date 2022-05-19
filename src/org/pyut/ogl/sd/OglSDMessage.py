@@ -14,12 +14,12 @@ from wx import OK
 from wx import RED_PEN
 from wx import TextEntryDialog
 
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.miniogl.TextShape import TextShape
-
 from pyutmodel.PyutSDMessage import PyutSDMessage
-from org.pyut.ogl.OglPosition import OglPosition
 
+from miniogl.AnchorPoint import AnchorPoint
+from miniogl.TextShape import TextShape
+
+from org.pyut.ogl.OglPosition import OglPosition
 from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
 from org.pyut.ogl.OglLink import OglLink
 

@@ -9,8 +9,8 @@ from logging import getLogger
 from xml.dom.minidom import Document
 from xml.dom.minidom import Element
 
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.AttachmentLocation import AttachmentLocation
 
 from pyutmodel.ModelTypes import ClassName
 from pyutmodel.PyutActor import PyutActor

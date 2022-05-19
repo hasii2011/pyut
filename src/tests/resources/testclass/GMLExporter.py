@@ -6,9 +6,9 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.miniogl.LinePoint import LinePoint
-from org.pyut.miniogl.LineShape import ControlPoints
+from miniogl.AnchorPoint import AnchorPoint
+from miniogl.LinePoint import LinePoint
+from miniogl.LineShape import ControlPoints
 
 from pyutmodel.PyutObject import PyutObject
 

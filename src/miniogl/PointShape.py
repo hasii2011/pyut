@@ -4,7 +4,7 @@ from wx import Colour
 from wx import DC
 from wx import Pen
 
-from org.pyut.miniogl.Shape import Shape
+from miniogl.Shape import Shape
 
 
 class PointShape(Shape):

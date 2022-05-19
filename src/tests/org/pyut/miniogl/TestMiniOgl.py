@@ -14,17 +14,17 @@ from wx import NullBitmap
 from wx import ScrolledWindow
 from wx._core import BitmapType
 
-from org.pyut.miniogl.DiagramFrame import DiagramFrame
-from org.pyut.miniogl.Diagram import Diagram
-from org.pyut.miniogl.LollipopLine import LollipopLine
+from miniogl import DiagramFrame
+from miniogl import Diagram
+from miniogl.LollipopLine import LollipopLine
 
-from org.pyut.miniogl.PointShape import PointShape
-from org.pyut.miniogl.RectangleShape import RectangleShape
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.miniogl.LineShape import LineShape
-from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
+from miniogl import PointShape
+from miniogl import RectangleShape
+from miniogl import AnchorPoint
+from miniogl import LineShape
+from miniogl import ControlPoint
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.AttachmentLocation import AttachmentLocation
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

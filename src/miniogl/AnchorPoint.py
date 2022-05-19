@@ -2,8 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.miniogl.LinePoint import LinePoint
-from org.pyut.miniogl.Shape import Shape
+from miniogl.LinePoint import LinePoint
+from miniogl.Shape import Shape
 
 
 class AnchorPoint(LinePoint):
@@ -88,7 +88,7 @@ class AnchorPoint(LinePoint):
                 height = abs(height) - 1
                 self.apLogger.debug(f'topLeftX,topLeftY ({topLeftX},{topLeftY}) width,height ({width},{height})')
 
-                from org.pyut.miniogl.LineShape import LineShape    # avoid circular import
+                from miniogl.LineShape import LineShape    # avoid circular import
 
                 if isinstance(self._parent, LineShape):
                     x = topLeftX

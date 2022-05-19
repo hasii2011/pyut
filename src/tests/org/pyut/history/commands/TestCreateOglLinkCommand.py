@@ -13,7 +13,8 @@ from wx import App
 from org.pyut.history.HistoryManager import HistoryManager
 from org.pyut.history.commands.CommandGroup import CommandGroup
 
-from org.pyut.miniogl.Shape import Shape
+from miniogl.Shape import Shape
+
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglInheritance import OglInheritance
 

@@ -4,7 +4,9 @@ from unittest.mock import Mock
 from unittest.mock import PropertyMock
 
 from org.pyut.history.commands.Command import Command
-from org.pyut.miniogl.Diagram import Diagram
+
+from miniogl.Diagram import Diagram
+
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from tests.TestBase import TestBase

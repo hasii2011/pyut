@@ -12,9 +12,9 @@ from wx import Colour
 from wx import DC
 from wx import MemoryDC
 
-from org.pyut.miniogl.Shape import Shape
-from org.pyut.miniogl.RectangleShape import RectangleShape
-from org.pyut.miniogl.TextShapeModel import TextShapeModel
+from miniogl.Shape import Shape
+from miniogl.RectangleShape import RectangleShape
+from miniogl.TextShapeModel import TextShapeModel
 
 
 class TextShape(RectangleShape):

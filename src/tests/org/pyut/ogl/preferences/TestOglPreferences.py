@@ -20,7 +20,7 @@ from unittest import TestCase
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
+from miniogl.MiniOglPenStyle import MiniOglPenStyle
 from org.pyut.ogl.OglDimensions import OglDimensions
 from tests.TestBase import TestBase
 

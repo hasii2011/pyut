@@ -28,8 +28,8 @@ from wx.lib.buttons import GenButtonEvent
 from wx.lib.sized_controls import SizedFrame
 from wx.lib.sized_controls import SizedPanel
 
-from org.pyut.miniogl.AttachmentLocation import AttachmentLocation
-from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.ogl.OglClass import OglClass

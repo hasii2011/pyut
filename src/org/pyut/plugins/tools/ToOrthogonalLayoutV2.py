@@ -13,7 +13,7 @@ from wx import OK
 from wx import MessageBox
 from wx import Yield as wxYield
 
-from org.pyut.miniogl.Shape import Shape
+from miniogl.Diagram import Shape
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink

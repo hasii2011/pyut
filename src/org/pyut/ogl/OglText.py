@@ -23,7 +23,7 @@ from wx import MouseEvent
 
 from wx import RED_PEN
 
-from org.pyut.miniogl.DiagramFrame import DiagramFrame
+from miniogl import DiagramFrame
 
 from pyutmodel.PyutText import PyutText
 

@@ -11,7 +11,7 @@ from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
 
-from org.pyut.miniogl.Common import Common
+from miniogl.Common import Common
 
 
 @dataclass

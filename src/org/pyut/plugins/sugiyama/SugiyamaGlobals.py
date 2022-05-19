@@ -9,7 +9,7 @@ from wx import OK
 from wx import Yield as wxYield
 from wx import MessageBox
 
-from org.pyut.miniogl.DiagramFrame import DiagramFrame
+from miniogl.DiagramFrame import DiagramFrame
 from org.pyut.plugins.sugiyama.SugiyamaNode import SugiyamaNode
 
 from org.pyut.general.Globals import cmp

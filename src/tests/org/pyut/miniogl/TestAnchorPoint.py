@@ -11,7 +11,7 @@ from wx import App
 
 from tests.TestBase import TestBase
 
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
+from miniogl.AnchorPoint import AnchorPoint
 
 
 class TestAnchorPoint(TestBase):

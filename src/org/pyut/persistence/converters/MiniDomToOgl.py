@@ -11,7 +11,7 @@ from logging import getLogger
 from xml.dom.minidom import Element
 from xml.dom.minicompat import NodeList
 
-from org.pyut.miniogl.ControlPoint import ControlPoint
+from miniogl.ControlPoint import ControlPoint
 
 from pyutmodel.PyutActor import PyutActor
 from pyutmodel.PyutClass import PyutClass

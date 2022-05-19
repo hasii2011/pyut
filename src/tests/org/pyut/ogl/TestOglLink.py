@@ -11,8 +11,8 @@ from unittest.mock import MagicMock
 
 from tests.TestBase import TestBase
 
-from org.pyut.miniogl.ControlPoint import ControlPoint
-from org.pyut.miniogl.LineShape import ControlPoints
+from miniogl.ControlPoint import ControlPoint
+from miniogl.LineShape import ControlPoints
 
 from org.pyut.ogl.OglPosition import OglPosition
 

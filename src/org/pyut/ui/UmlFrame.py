@@ -24,8 +24,8 @@ from org.pyut.ogl.OglLink import OglLink
 
 from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.miniogl.Constants import SKIP_EVENT
-from org.pyut.miniogl.DiagramFrame import DiagramFrame
+from miniogl.Constants import SKIP_EVENT
+from miniogl.DiagramFrame import DiagramFrame
 
 from org.pyut.ui.Mediator import ACTION_ZOOM_IN
 from org.pyut.ui.Mediator import Mediator

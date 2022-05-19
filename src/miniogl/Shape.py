@@ -15,7 +15,7 @@ from wx import RED
 from wx import RED_PEN
 from wx import WHITE_BRUSH
 
-from org.pyut.miniogl.ShapeModel import ShapeModel
+from miniogl.ShapeModel import ShapeModel
 
 from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 
@@ -59,15 +59,15 @@ class Shape:
 
         self._model: ShapeModel = ShapeModel(self)  # model of the shape (MVC pattern)
 
-        from org.pyut.miniogl.Diagram import Diagram
+        from miniogl.Diagram import Diagram
 
         self._diagram: Diagram = cast(Diagram, None)       # associated diagram
 
         self._id = Shape.ID     # unique ID number
         Shape.ID += 1
         if OglPreferences().debugBasicShape is True:
-            from org.pyut.miniogl.TextShape import TextShape
-            from org.pyut.miniogl.LineShape import LineShape
+            from miniogl.TextShape import TextShape
+            from miniogl.LineShape import LineShape
             if isinstance(self, (TextShape, LineShape)) is False:
                 t: TextShape = self.AddText(0, -10, str(self._id))
                 t.SetColor(RED)
@@ -186,7 +186,7 @@ class Shape:
 
         Returns:    the created anchor
         """
-        from org.pyut.miniogl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
+        from miniogl.AnchorPoint import AnchorPoint     # I don't like in module imports but there is a cyclical dependency somewhere
 
         if anchorType is None:
             anchorType = AnchorPoint
@@ -683,7 +683,7 @@ class Shape:
 
         Returns:  TextShape : the created shape
         """
-        from org.pyut.miniogl.TextShape import TextShape
+        from miniogl.TextShape import TextShape
 
         t: TextShape = self._createTextShape(x, y, text, font=font)
         self._privateChildren.append(t)
@@ -702,7 +702,7 @@ class Shape:
         Returns:  TextShape : the created shape
 
         """
-        from org.pyut.miniogl.TextShape import TextShape
+        from miniogl.TextShape import TextShape
 
         textShape: TextShape = TextShape(x, y, text, self, font=font)
         if self._diagram is not None:

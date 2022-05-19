@@ -11,13 +11,13 @@ from wx import BLACK_PEN
 from wx import DC
 from wx import RED_PEN
 
-from org.pyut.miniogl.Common import Common
-from org.pyut.miniogl.Common import CommonLine
-from org.pyut.miniogl.Common import CommonPoint
-from org.pyut.miniogl.LinePoint import LinePoint
-from org.pyut.miniogl.Shape import Shape
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.miniogl.ControlPoint import ControlPoint
+from miniogl.Common import Common
+from miniogl.Common import CommonLine
+from miniogl.Common import CommonPoint
+from miniogl.LinePoint import LinePoint
+from miniogl.Shape import Shape
+from miniogl.AnchorPoint import AnchorPoint
+from miniogl.ControlPoint import ControlPoint
 
 ControlPoints = NewType('ControlPoints', List[LinePoint])
 

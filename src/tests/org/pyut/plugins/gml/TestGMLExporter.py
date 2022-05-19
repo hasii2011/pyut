@@ -11,11 +11,11 @@ from unittest.mock import MagicMock
 
 from os import remove as osRemove
 
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
 from pyutmodel.PyutLinkType import PyutLinkType
-
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutLink import PyutLink
+
+from miniogl.AnchorPoint import AnchorPoint
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink

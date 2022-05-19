@@ -28,18 +28,18 @@ from pyumldiagrams.image.ImageDiagram import ImageDiagram
 
 from pyumldiagrams.pdf.PdfDiagram import PdfDiagram
 
-from org.pyut.miniogl.AnchorPoint import AnchorPoint
-from org.pyut.miniogl.ControlPoint import ControlPoint
-
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutLink import PyutLink
 from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodel.PyutLinkType import PyutLinkType
+
+from miniogl.AnchorPoint import AnchorPoint
+from miniogl.ControlPoint import ControlPoint
 
 from org.pyut.ogl.OglClass import OglClass
 from org.pyut.ogl.OglLink import OglLink
 
-from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions

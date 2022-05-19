@@ -32,12 +32,12 @@ from wx import Window
 
 from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
-from org.pyut.miniogl.MiniOglColorEnum import MiniOglColorEnum
+from miniogl.MiniOglColorEnum import MiniOglColorEnum
 
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
-from org.pyut.miniogl.MiniOglPenStyle import MiniOglPenStyle
+from miniogl.MiniOglPenStyle import MiniOglPenStyle
 
 
 class BackgroundPreferences(PreferencesPanel):

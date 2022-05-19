@@ -13,10 +13,10 @@ from wx import PyEventBinder
 from org.pyut.ogl.events.InvalidKeywordException import InvalidKeywordException
 
 if TYPE_CHECKING:
-    from org.pyut.miniogl.SelectAnchorPoint import SelectAnchorPoint
+    from miniogl.SelectAnchorPoint import SelectAnchorPoint
     from org.pyut.ogl.OglClass import OglClass
 
-from org.pyut.miniogl.Shape import Shape
+from miniogl.Shape import Shape
 
 from org.pyut.ogl.events.IEventEngine import IEventEngine
 from org.pyut.ogl.events.OglEventType import OglEventType

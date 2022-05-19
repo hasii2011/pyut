@@ -1,7 +1,7 @@
 
 from typing import Tuple
 
-from org.pyut.miniogl.ShapeModel import ShapeModel
+from miniogl.ShapeModel import ShapeModel
 
 
 class RectangleShapeModel(ShapeModel):

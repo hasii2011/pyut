@@ -1,5 +1,5 @@
 
-from org.pyut.miniogl.PointShape import PointShape
+from miniogl.PointShape import PointShape
 
 
 class SizerShape(PointShape):

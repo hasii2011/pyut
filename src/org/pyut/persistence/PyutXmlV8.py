@@ -13,7 +13,7 @@ from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 from wx import Size
 
-from org.pyut.miniogl.ControlPoint import ControlPoint
+from miniogl import ControlPoint
 from pyutmodel.PyutLinkType import PyutLinkType
 from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
 
