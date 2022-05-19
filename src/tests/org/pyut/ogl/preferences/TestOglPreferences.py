@@ -21,10 +21,10 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from miniogl.MiniOglPenStyle import MiniOglPenStyle
-from org.pyut.ogl.OglDimensions import OglDimensions
+from ogl.OglDimensions import OglDimensions
 from tests.TestBase import TestBase
 
-from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
 JSON_LOGGING_CONFIG_FILENAME: str = "testLoggingConfig.json"
 TEST_DIRECTORY:               str = 'tests'

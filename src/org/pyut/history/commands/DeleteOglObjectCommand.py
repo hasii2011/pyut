@@ -127,7 +127,7 @@ class DeleteOglObjectCommand(Command):
         Delete the shape for which this command has been created. You do not
         need to redefine it.
         """
-        from org.pyut.ogl.OglClass import OglClass
+        from ogl import OglClass
         umlFrame = self.getGroup().getHistory().getFrame()
         shape = self._shape
         if isinstance(shape, OglClass):

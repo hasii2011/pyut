@@ -10,7 +10,7 @@ from wx import Yield as wxYield
 
 from org.pyut.general.PyutVersion import PyutVersion
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.base.PyutPlugin import InputFormatType

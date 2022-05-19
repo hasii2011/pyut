@@ -14,7 +14,7 @@ from org.pyut.ui.UmlFrame import UmlFrame
 
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 
 class ToCDAutoLayout(PyutToPlugin):

@@ -13,17 +13,17 @@ from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutUseCase import PyutUseCase
-from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglClass import OglClass
 
 from miniogl.DiagramFrame import DiagramFrame
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 
-from org.pyut.ogl.OglInterface2 import OglInterface2
-from org.pyut.ogl.OglNote import OglNote
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglText import OglText
-from org.pyut.ogl.OglUseCase import OglUseCase
+from ogl.OglActor import OglActor
+from ogl.OglClass import OglClass
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglNote import OglNote
+from ogl.OglObject import OglObject
+from ogl.OglText import OglText
+from ogl.OglUseCase import OglUseCase
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

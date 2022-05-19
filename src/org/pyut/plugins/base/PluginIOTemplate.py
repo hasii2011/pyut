@@ -1,14 +1,13 @@
 
 from typing import List
-from typing import Tuple
 from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
+from ogl.OglClass import OglClass
 
-from org.pyut.ogl.OglClass import OglClass
+from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.base.PyutPlugin import InputFormatType
 from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 

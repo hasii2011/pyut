@@ -16,7 +16,7 @@ from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 

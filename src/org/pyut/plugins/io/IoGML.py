@@ -12,7 +12,7 @@ from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 
 from org.pyut.plugins.gml.GMLExporter import GMLExporter
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.ui.UmlFrame import UmlFrame
 

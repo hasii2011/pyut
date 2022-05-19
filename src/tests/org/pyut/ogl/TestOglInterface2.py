@@ -13,16 +13,13 @@ from unittest.mock import PropertyMock
 
 from wx import App
 
-from miniogl.SelectAnchorPoint import SelectAnchorPoint
-from org.pyut.ogl.OglPosition import OglPosition
-
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
-from miniogl.AttachmentLocation import AttachmentLocation
-
 from pyutmodel.PyutInterface import PyutInterface
 
-from org.pyut.ogl.OglInterface2 import OglInterface2
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.AttachmentLocation import AttachmentLocation
+
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglPosition import OglPosition
 
 from tests.TestBase import TestBase
 
@@ -36,7 +33,6 @@ class TestOglInterface2(TestBase):
     @classmethod
     def setUpClass(cls):
 
-        PyutPreferences.determinePreferencesLocation()
         TestBase.setUpLogging()
         TestOglInterface2.clsLogger = getLogger(__name__)
         TestOglInterface2.clsApp    = App()

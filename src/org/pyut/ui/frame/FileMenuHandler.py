@@ -39,7 +39,7 @@ from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.general.Globals import _
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

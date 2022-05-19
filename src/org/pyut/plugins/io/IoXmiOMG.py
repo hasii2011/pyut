@@ -8,7 +8,7 @@ from io import StringIO
 
 import wx
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl import OglClass
 
 from org.pyut.PyutUtils import PyutUtils
 

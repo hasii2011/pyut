@@ -19,7 +19,7 @@ from pyutmodel.PyutLink import PyutLink
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlClassDiagramsFrame import CreatedClassesType

@@ -15,10 +15,10 @@ from pyutmodel.PyutLink import PyutLink
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglInterface import OglInterface
-from org.pyut.ogl.OglInterface2 import OglInterface2
-from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
+from ogl.OglClass import OglClass
+from ogl.OglInterface import OglInterface
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglLinkFactory import getOglLinkFactory
 
 from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.UmlFrame import UmlObjects

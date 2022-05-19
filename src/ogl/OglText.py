@@ -27,16 +27,16 @@ from miniogl import DiagramFrame
 
 from pyutmodel.PyutText import PyutText
 
-from org.pyut.ogl.OglObject import OglObject
+from ogl.OglObject import OglObject
 
-from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
+from ogl.OglTextFontFamily import OglTextFontFamily
 
-from org.pyut.ogl.OglUtils import OglUtils
+from ogl.OglUtils import OglUtils
 
-from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
-from org.pyut.ogl.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
-from org.pyut.ogl.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
+from ogl.resources.img.textdetails.DecreaseTextSize import embeddedImage as DecreaseTextSize
+from ogl.resources.img.textdetails.IncreaseTextSize import embeddedImage as IncreaseTextSize
 
 [
     ID_MENU_INCREASE_SIZE,

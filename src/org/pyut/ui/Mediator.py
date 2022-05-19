@@ -44,14 +44,15 @@ from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
 
-from org.pyut.ogl.OglInterface2 import OglInterface2
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglText import OglText
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglLink import OglLink
+from ogl.OglText import OglText
+from ogl.OglClass import OglClass
+
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
-    from org.pyut.ogl.OglObject import OglObject
+    from ogl.OglObject import OglObject
     from org.pyut.ui.UmlFrame import UmlObjects
     from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
@@ -568,7 +569,7 @@ class Mediator(Singleton):
         can be one of two things;  I suspect this is some legacy thing;  When I become more
         familiar with the code base I need to fix this.   Humberto
         """
-        from org.pyut.ogl.OglClass import OglClass
+        from ogl.OglClass import OglClass
         prefs: PyutPreferences = PyutPreferences()
 
         if prefs.autoResizeShapesOnEdit is True:
@@ -588,12 +589,12 @@ class Mediator(Singleton):
         #
         # TODO I don't like in-line imports but moving them to top file causes a cyclic dependency error
         #
-        from org.pyut.ogl.OglClass import OglClass
-        from org.pyut.ogl.OglNote import OglNote
-        from org.pyut.ogl.OglUseCase import OglUseCase
-        from org.pyut.ogl.OglActor import OglActor
-        from org.pyut.ogl.OglAssociation import OglAssociation
-        from org.pyut.ogl.OglInterface import OglInterface
+        from ogl import OglClass
+        from ogl import OglNote
+        from ogl.OglUseCase import OglUseCase
+        from ogl.OglActor import OglActor
+        from ogl.OglAssociation import OglAssociation
+        from ogl.OglInterface import OglInterface
 
         from pyutmodel.PyutNote import PyutNote
 
@@ -817,9 +818,9 @@ class Mediator(Singleton):
         from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
         from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
         from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
-        from org.pyut.ogl.OglClass import OglClass
-        from org.pyut.ogl.OglObject import OglObject
-        from org.pyut.ogl.OglLink import OglLink
+        from ogl import OglClass
+        from ogl.OglObject import OglObject
+        from ogl.OglLink import OglLink
         from org.pyut.history.commands.CommandGroup import CommandGroup
 
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
@@ -867,8 +868,8 @@ class Mediator(Singleton):
 
         Returns:    The updated command group
         """
-        from org.pyut.ogl.OglNote import OglNote
-        from org.pyut.ogl.OglObject import OglObject
+        from ogl.OglNote import OglNote
+        from ogl.OglObject import OglObject
 
         from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
         from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
@@ -1078,7 +1079,7 @@ class Mediator(Singleton):
             callback:
 
         """
-        from org.pyut.ogl.OglObject import OglObject
+        from ogl.OglObject import OglObject
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
         if umlFrame is None:
             return

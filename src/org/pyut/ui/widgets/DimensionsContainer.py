@@ -10,7 +10,7 @@ from org.pyut.general.datatypes.Dimensions import Dimensions
 from org.pyut.ui.widgets.DualSpinnerContainer import DualSpinnerContainer
 from org.pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
 
-from org.pyut.ogl.OglDimensions import OglDimensions
+from ogl.OglDimensions import OglDimensions
 
 from org.pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
 

@@ -18,11 +18,11 @@ from wx import EndBusyCursor
 from wx import MouseEvent
 from wx import Notebook
 
-from org.pyut.ogl.OglInterface2 import OglInterface2
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglLink import OglLink
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglObject import OglObject
+from ogl.OglLink import OglLink
 
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+from ogl.sd.OglSDMessage import OglSDMessage
 
 from miniogl.Constants import SKIP_EVENT
 from miniogl.DiagramFrame import DiagramFrame

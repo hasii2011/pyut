@@ -25,8 +25,8 @@ from pyutmodel.ModelTypes import ClassName
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglInterface2 import OglInterface2
+from ogl.OglClass import OglClass
+from ogl.OglInterface2 import OglInterface2
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 

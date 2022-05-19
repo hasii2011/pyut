@@ -18,11 +18,11 @@ from org.pyut.plugins.sugiyama.SugiyamaConstants import H_SPACE
 from org.pyut.plugins.sugiyama.SugiyamaConstants import V_SPACE
 from org.pyut.plugins.sugiyama.SugiyamaConstants import LEFT_MARGIN
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglInheritance import OglInheritance
-from org.pyut.ogl.OglInterface import OglInterface
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglLink import OglLink
+from ogl.OglClass import OglClass
+from ogl.OglInheritance import OglInheritance
+from ogl.OglInterface import OglInterface
+from ogl.OglObject import OglObject
+from ogl.OglLink import OglLink
 
 from pyutmodel.PyutLinkType import PyutLinkType
 

@@ -5,7 +5,7 @@ from logging import Logger
 from logging import getLogger
 
 from pyutmodel.PyutClass import PyutClass
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 
 class ElementTreeData:

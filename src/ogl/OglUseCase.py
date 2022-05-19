@@ -1,9 +1,9 @@
 
 from wx import DC
 
-from org.pyut.ogl.OglObject import OglObject
+from ogl.OglObject import OglObject
 from pyutmodel.PyutUseCase import PyutUseCase
-from org.pyut.ogl.OglUtils import OglUtils
+from ogl.OglUtils import OglUtils
 
 
 class OglUseCase(OglObject):

@@ -1,10 +1,13 @@
+
 from typing import cast
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
 from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+
 from pyutmodel.PyutNote import PyutNote
-from org.pyut.ogl.OglNote import OglNote
+
+from ogl.OglNote import OglNote
 
 
 class DeleteOglNoteCommand(DeleteOglObjectCommand):

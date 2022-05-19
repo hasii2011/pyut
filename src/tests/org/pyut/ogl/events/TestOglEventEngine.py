@@ -32,21 +32,21 @@ from miniogl.AttachmentLocation import AttachmentLocation
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from pyutmodel.PyutClass import PyutClass
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
-from org.pyut.ogl.events.OglEventEngine import OglEventEngine
-from org.pyut.ogl.events.OglEventType import OglEventType
-from org.pyut.ogl.events.OglEvents import CreateLollipopInterfaceEvent
-from org.pyut.ogl.events.OglEvents import CutOglClassEvent
-from org.pyut.ogl.events.OglEvents import EVT_CREATE_LOLLIPOP_INTERFACE
-from org.pyut.ogl.events.OglEvents import EVT_CUT_OGL_CLASS
-from org.pyut.ogl.events.OglEvents import EVT_PROJECT_MODIFIED
-from org.pyut.ogl.events.OglEvents import EVT_REQUEST_LOLLIPOP_LOCATION
-from org.pyut.ogl.events.OglEvents import EVT_SHAPE_SELECTED
-from org.pyut.ogl.events.OglEvents import ProjectModifiedEvent
-from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
-from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
-from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
+from ogl.events.OglEventEngine import OglEventEngine
+from ogl.events.OglEventType import OglEventType
+from ogl.events.OglEvents import CreateLollipopInterfaceEvent
+from ogl.events.OglEvents import CutOglClassEvent
+from ogl.events.OglEvents import EVT_CREATE_LOLLIPOP_INTERFACE
+from ogl.events.OglEvents import EVT_CUT_OGL_CLASS
+from ogl.events.OglEvents import EVT_PROJECT_MODIFIED
+from ogl.events.OglEvents import EVT_REQUEST_LOLLIPOP_LOCATION
+from ogl.events.OglEvents import EVT_SHAPE_SELECTED
+from ogl.events.OglEvents import ProjectModifiedEvent
+from ogl.events.OglEvents import RequestLollipopLocationEvent
+from ogl.events.OglEvents import ShapeSelectedEvent
+from ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 from tests.TestBase import TestBase
 

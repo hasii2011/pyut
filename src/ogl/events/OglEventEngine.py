@@ -10,22 +10,22 @@ from wx import PostEvent
 from wx import Window
 from wx import PyEventBinder
 
-from org.pyut.ogl.events.InvalidKeywordException import InvalidKeywordException
+from ogl.events.InvalidKeywordException import InvalidKeywordException
 
 if TYPE_CHECKING:
     from miniogl.SelectAnchorPoint import SelectAnchorPoint
-    from org.pyut.ogl.OglClass import OglClass
+    from ogl.OglClass import OglClass
 
 from miniogl.Shape import Shape
 
-from org.pyut.ogl.events.IEventEngine import IEventEngine
-from org.pyut.ogl.events.OglEventType import OglEventType
-from org.pyut.ogl.events.OglEvents import CreateLollipopInterfaceEvent
-from org.pyut.ogl.events.OglEvents import CutOglClassEvent
-from org.pyut.ogl.events.OglEvents import ProjectModifiedEvent
-from org.pyut.ogl.events.OglEvents import RequestLollipopLocationEvent
-from org.pyut.ogl.events.OglEvents import ShapeSelectedEvent
-from org.pyut.ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
+from ogl.events.IEventEngine import IEventEngine
+from ogl.events.OglEventType import OglEventType
+from ogl.events.OglEvents import CreateLollipopInterfaceEvent
+from ogl.events.OglEvents import CutOglClassEvent
+from ogl.events.OglEvents import ProjectModifiedEvent
+from ogl.events.OglEvents import RequestLollipopLocationEvent
+from ogl.events.OglEvents import ShapeSelectedEvent
+from ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 CUT_OGL_CLASS_PARAMETER:                    str = 'shapeToCut'
 REQUEST_LOLLIPOP_LOCATION_PARAMETER:        str = 'requestShape'

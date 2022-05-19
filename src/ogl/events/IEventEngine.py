@@ -5,7 +5,7 @@ from abc import abstractmethod
 
 from wx import PyEventBinder
 
-from org.pyut.ogl.events.OglEventType import OglEventType
+from ogl.events.OglEventType import OglEventType
 
 
 class IEventEngine(ABC):

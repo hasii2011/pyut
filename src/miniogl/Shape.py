@@ -17,7 +17,7 @@ from wx import WHITE_BRUSH
 
 from miniogl.ShapeModel import ShapeModel
 
-from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
 
 class Shape:

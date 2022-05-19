@@ -14,11 +14,9 @@ from tests.TestBase import TestBase
 from miniogl.ControlPoint import ControlPoint
 from miniogl.LineShape import ControlPoints
 
-from org.pyut.ogl.OglPosition import OglPosition
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
-from org.pyut.ogl.OglLink import OglLink
+from ogl.OglLink import OglLink
+from ogl.OglPosition import OglPosition
 
 
 class TestOglLink(TestBase):
@@ -37,8 +35,6 @@ class TestOglLink(TestBase):
     def setUp(self):
         self.logger: Logger = TestOglLink.clsLogger
 
-        PyutPreferences.determinePreferencesLocation()
-
     def tearDown(self):
         pass
 
@@ -46,7 +42,7 @@ class TestOglLink(TestBase):
         """
         https://ongspxm.github.io/blog/2016/11/assertraises-testing-for-errors-in-unittest/
         """
-        from org.pyut.ogl.IllegalOperationException import IllegalOperationException
+        from ogl.IllegalOperationException import IllegalOperationException
 
         mockSourceShape:      MagicMock = self._createMockShape(OglPosition(x=100, y=100), (10, 100))
         mockDestinationShape: MagicMock = self._createMockShape(OglPosition(x=500, y=500), (10, 100))

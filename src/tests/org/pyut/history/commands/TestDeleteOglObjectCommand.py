@@ -9,10 +9,13 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from pkg_resources import resource_filename
+
 from wx import App
 
 from pyutmodel.PyutObject import PyutObject
-from org.pyut.ogl.OglObject import OglObject
+
+from ogl.OglObject import OglObject
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase

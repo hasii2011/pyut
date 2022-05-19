@@ -15,8 +15,8 @@ from wx import FONTFAMILY_TELETYPE
 
 from wx import NewIdRef as wxNewIdRef
 
-from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
-from org.pyut.ogl.OglPosition import OglPosition
+from ogl.OglTextFontFamily import OglTextFontFamily
+from ogl.OglPosition import OglPosition
 
 
 class OglUtils:

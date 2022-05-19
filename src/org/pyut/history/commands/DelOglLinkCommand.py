@@ -3,9 +3,9 @@ from typing import cast
 
 from org.pyut.history.commands.Command import Command
 from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-from org.pyut.ogl.OglClass import OglClass
+from ogl import OglClass
 
-from org.pyut.ogl.OglLinkFactory import getLinkType
+from ogl.OglLinkFactory import getLinkType
 
 from pyutmodel.PyutLinkType import PyutLinkType
 

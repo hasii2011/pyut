@@ -4,8 +4,8 @@ from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
 from pyutmodel.PyutSDInstance import PyutSDInstance
 from pyutmodel.PyutSDMessage import PyutSDMessage
 
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 
 
 class UmlSequenceDiagramsFrame(UmlDiagramsFrame):

@@ -21,10 +21,10 @@ from wx import WHITE_BRUSH
 
 from wx import Font
 
-from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglPosition import OglPosition
-from org.pyut.ogl.OglUtils import OglUtils
+from ogl.OglAssociationLabel import OglAssociationLabel
+from ogl.OglLink import OglLink
+from ogl.OglPosition import OglPosition
+from ogl.OglUtils import OglUtils
 
 
 class OglAssociation(OglLink):

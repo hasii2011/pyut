@@ -25,7 +25,7 @@ from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 from org.pyut.plugins.common.Types import ClassTree
 

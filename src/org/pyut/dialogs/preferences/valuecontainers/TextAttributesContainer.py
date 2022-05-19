@@ -31,8 +31,8 @@ from org.pyut.PyutUtils import PyutUtils
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
-from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
-from org.pyut.ogl.OglDimensions import OglDimensions
+from ogl.OglTextFontFamily import OglTextFontFamily
+from ogl.OglDimensions import OglDimensions
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

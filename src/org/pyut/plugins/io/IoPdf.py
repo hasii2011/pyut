@@ -7,7 +7,7 @@ from logging import getLogger
 
 from wx import Yield as wxYield
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 from org.pyut.plugins.base.PyutPlugin import InputFormatType
 from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 

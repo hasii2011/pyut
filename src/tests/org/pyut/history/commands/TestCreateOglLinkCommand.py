@@ -15,8 +15,8 @@ from org.pyut.history.commands.CommandGroup import CommandGroup
 
 from miniogl.Shape import Shape
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglInheritance import OglInheritance
+from ogl.OglClass import OglClass
+from ogl.OglInheritance import OglInheritance
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

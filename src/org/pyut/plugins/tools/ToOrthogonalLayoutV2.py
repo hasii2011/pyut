@@ -15,9 +15,9 @@ from wx import Yield as wxYield
 
 from miniogl.Diagram import Shape
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglNote import OglNote
+from ogl.OglClass import OglClass
+from ogl.OglLink import OglLink
+from ogl.OglNote import OglNote
 
 from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 

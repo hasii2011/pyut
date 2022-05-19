@@ -21,7 +21,7 @@ from pyutmodel.PyutMethod import SourceCode
 from pyutmodel.PyutModifier import PyutModifier
 from pyutmodel.PyutType import PyutType
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.persistence.converters.OglToMiniDomV10 import OglToMiniDom as OglToMiniDomV10
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants

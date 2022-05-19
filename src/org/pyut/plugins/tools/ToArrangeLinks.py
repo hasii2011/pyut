@@ -4,7 +4,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.ogl.OglLink import OglLink
+from ogl.OglLink import OglLink
 
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 

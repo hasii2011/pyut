@@ -21,7 +21,7 @@ from org.pyut.plugins.base.PyutPlugin import InputFormatType
 from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 from org.pyut.ui.Mediator import Mediator
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.plugins.io.nativeimagesupport.DlgWxImageOptions import DlgWxImageOptions
 from org.pyut.plugins.io.nativeimagesupport.WxImageFormat import WxImageFormat

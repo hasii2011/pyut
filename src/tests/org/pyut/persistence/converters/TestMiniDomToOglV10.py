@@ -24,7 +24,7 @@ from org.pyut.persistence.converters.MiniDomToOglV10 import OglClasses
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from miniogl.AttachmentLocation import AttachmentLocation
-from org.pyut.ogl.OglPosition import OglPosition
+from ogl import OglPosition
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.persistence.converters.MiniDomToOglV10 import MiniDomToOgl

@@ -10,16 +10,16 @@ from org.pyut.general.Singleton import Singleton
 
 from miniogl.MiniOglColorEnum import MiniOglColorEnum
 from miniogl.MiniOglPenStyle import MiniOglPenStyle
-from org.pyut.ogl.OglDimensions import OglDimensions
+from ogl.OglDimensions import OglDimensions
 
-from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
+from ogl.OglTextFontFamily import OglTextFontFamily
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
 from org.pyut.preferences.GeneralPreferences import GeneralPreferences
 from org.pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
 from org.pyut.general.datatypes.Position import Position
 from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize

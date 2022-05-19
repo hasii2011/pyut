@@ -15,9 +15,9 @@ from miniogl.Diagram import Diagram
 from miniogl.LineShape import LineShape
 from miniogl.RectangleShape import RectangleShape
 
-from org.pyut.ogl.OglObject import OglObject
+from ogl.OglObject import OglObject
 
-from org.pyut.ogl.sd.OglInstanceName import OglInstanceName
+from ogl.sd.OglInstanceName import OglInstanceName
 
 
 class OglSDInstance(OglObject):
@@ -137,7 +137,7 @@ class OglSDInstance(OglObject):
         lineSrc.SetDraggable(False)
         lineDst.SetDraggable(False)
 
-        from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+        from ogl.sd.OglSDMessage import OglSDMessage
         # Update all OglSDMessage positions
         for link in self._oglLinks:
             try:

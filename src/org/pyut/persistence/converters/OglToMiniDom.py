@@ -18,18 +18,18 @@ from pyutmodel.PyutSDMessage import PyutSDMessage
 from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
+from ogl.OglActor import OglActor
+from ogl.OglAssociation import OglAssociation
+from ogl.OglAssociationLabel import OglAssociationLabel
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglNote import OglNote
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglUseCase import OglUseCase
+from ogl.OglClass import OglClass
+from ogl.OglLink import OglLink
+from ogl.OglNote import OglNote
+from ogl.OglObject import OglObject
+from ogl.OglUseCase import OglUseCase
 
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.persistence.converters.IDFactory import IDFactory

@@ -12,10 +12,10 @@ from miniogl.LineShape import ControlPoints
 
 from pyutmodel.PyutObject import PyutObject
 
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglNote import OglNote
+from ogl.OglObject import OglObject
+from ogl.OglClass import OglClass
+from ogl.OglLink import OglLink
+from ogl.OglNote import OglNote
 
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation

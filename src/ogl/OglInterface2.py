@@ -17,12 +17,12 @@ from miniogl.LollipopLine import LollipopLine
 from pyutmodel.PyutInterface import PyutInterface
 from pyutmodel.PyutObject import PyutObject
 
-from org.pyut.ogl.OglPosition import OglPosition
-from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
+from ogl.OglPosition import OglPosition
+from ogl.OglTextFontFamily import OglTextFontFamily
 
-from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
-from org.pyut.ogl.OglUtils import OglUtils
+from ogl.OglUtils import OglUtils
 
 
 class OglInterface2(LollipopLine, Common):

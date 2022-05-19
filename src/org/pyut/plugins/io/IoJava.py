@@ -21,7 +21,7 @@ from pyutmodel.PyutLink import PyutLink
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl import OglClass
 
 from pyutmodel.PyutLinkType import PyutLinkType
 

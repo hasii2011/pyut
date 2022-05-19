@@ -17,11 +17,11 @@ from pyutmodel.PyutStereotype import PyutStereotype
 from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglNote import OglNote
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglUseCase import OglUseCase
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglActor import OglActor
+from ogl.OglNote import OglNote
+from ogl.OglObject import OglObject
+from ogl.OglUseCase import OglUseCase
+from ogl.OglClass import OglClass
 
 from org.pyut.ui.UmlFrame import UmlFrame
 
@@ -486,7 +486,7 @@ class PyutXml:
         self._appendOglBase(oglClass, root)
 
         # adding the data layer object
-        pyutClass: PyutClass = cast(PyutClass, oglClass.getPyutObject())
+        pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
         root.appendChild(self._PyutClass2xml(pyutClass, xmlDoc))
 
         return root

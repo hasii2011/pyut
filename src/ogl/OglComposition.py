@@ -3,8 +3,8 @@ from wx import DC
 
 from miniogl import Shape
 from pyutmodel.PyutLink import PyutLink
-from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglAssociation import OglAssociation
+from ogl.OglClass import OglClass
 
 
 class OglComposition(OglAssociation):

@@ -13,21 +13,22 @@ from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 from wx import Size
 
-from miniogl import ControlPoint
+from miniogl.ControlPoint import ControlPoint
+
+from ogl.OglAssociationLabel import OglAssociationLabel
+
+from ogl.OglLinkFactory import getOglLinkFactory
+from ogl.OglActor import OglActor
+from ogl.OglAssociation import OglAssociation
+from ogl.OglClass import OglClass
+from ogl.OglLink import OglLink
+from ogl.OglNote import OglNote
+from ogl.OglUseCase import OglUseCase
+
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
+
 from pyutmodel.PyutLinkType import PyutLinkType
-from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
-
-from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
-from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglNote import OglNote
-from org.pyut.ogl.OglUseCase import OglUseCase
-
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
-
 from pyutmodel.PyutStereotype import PyutStereotype
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutSDInstance import PyutSDInstance

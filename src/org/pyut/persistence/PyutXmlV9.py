@@ -22,16 +22,16 @@ from wx import ID_ANY
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.ogl.OglActor import OglActor
+from ogl.OglActor import OglActor
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglNote import OglNote
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglUseCase import OglUseCase
+from ogl import OglClass
+from ogl.OglLink import OglLink
+from ogl import OglNote
+from ogl.OglObject import OglObject
+from ogl.OglUseCase import OglUseCase
 
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils

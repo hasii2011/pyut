@@ -2,17 +2,17 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglAggregation import OglAggregation
-from org.pyut.ogl.OglComposition import OglComposition
-from org.pyut.ogl.OglInheritance import OglInheritance
-from org.pyut.ogl.OglInterface import OglInterface
-from org.pyut.ogl.OglNoteLink import OglNoteLink
+from ogl.OglAssociation import OglAssociation
+from ogl.OglAggregation import OglAggregation
+from ogl.OglComposition import OglComposition
+from ogl.OglInheritance import OglInheritance
+from ogl.OglInterface import OglInterface
+from ogl.OglNoteLink import OglNoteLink
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
 from org.pyut.general.Singleton import Singleton
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+from ogl.sd.OglSDMessage import OglSDMessage
 
 
 def getOglLinkFactory():

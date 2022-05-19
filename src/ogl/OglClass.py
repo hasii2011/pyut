@@ -29,14 +29,14 @@ from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutObject import PyutObject
 from pyutmodel.PyutClass import PyutClass
 
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglObject import DEFAULT_FONT_SIZE
+from ogl.OglObject import OglObject
+from ogl.OglObject import DEFAULT_FONT_SIZE
 
-from org.pyut.ogl.OglConstants import OglConstants
-from org.pyut.ogl.OglUtils import OglUtils
-from org.pyut.ogl.events.OglEventType import OglEventType
+from ogl.OglConstants import OglConstants
+from ogl.OglUtils import OglUtils
+from ogl.events.OglEventType import OglEventType
 
-from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
 # Menu IDs
 [

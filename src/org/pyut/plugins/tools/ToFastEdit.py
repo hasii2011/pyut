@@ -27,13 +27,13 @@ from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.plugins.base.PyutToPlugin import OglClasses
+from ogl.OglClass import OglClass
+from ogl.OglObject import OglObject
 
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.UmlFrame import UmlFrame
 
+from org.pyut.plugins.base.PyutToPlugin import OglClasses
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 from org.pyut.plugins.fastedit.DlgFastEditOptions import DlgFastEditOptions
 

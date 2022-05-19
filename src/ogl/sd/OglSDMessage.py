@@ -19,9 +19,9 @@ from pyutmodel.PyutSDMessage import PyutSDMessage
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.TextShape import TextShape
 
-from org.pyut.ogl.OglPosition import OglPosition
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from org.pyut.ogl.OglLink import OglLink
+from ogl.OglPosition import OglPosition
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.OglLink import OglLink
 
 
 # TODO : Find a way to report moves from AnchorPoints to PyutSDMessage

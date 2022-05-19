@@ -5,8 +5,8 @@ from wx import Pen
 
 from miniogl import Shape
 from pyutmodel.PyutLink import PyutLink
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglObject import OglObject
+from ogl.OglLink import OglLink
+from ogl.OglObject import OglObject
 
 
 class OglNoteLink(OglLink):

@@ -12,7 +12,6 @@ from shutil import copyfile
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
-from org.pyut.ogl.preferences.OglPreferences import OglPreferences
 from tests.TestBase import TestBase
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences

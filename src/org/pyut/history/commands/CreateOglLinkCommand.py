@@ -10,13 +10,13 @@ from pyutmodel.PyutLink import PyutLink
 
 from org.pyut.history.commands.Command import Command
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglLinkFactory import getLinkType
-from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
+from ogl.OglClass import OglClass
+from ogl.OglLink import OglLink
+from ogl.OglLinkFactory import getLinkType
+from ogl.OglLinkFactory import getOglLinkFactory
 
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 
 from pyutmodel.PyutLinkType import PyutLinkType
 

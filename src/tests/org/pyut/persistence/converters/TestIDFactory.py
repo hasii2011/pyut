@@ -27,8 +27,8 @@ from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutUseCase import PyutUseCase
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglInterface2 import OglInterface2
+from ogl.OglClass import OglClass
+from ogl.OglInterface2 import OglInterface2
 
 from org.pyut.persistence.converters.IDFactory import IDFactory
 

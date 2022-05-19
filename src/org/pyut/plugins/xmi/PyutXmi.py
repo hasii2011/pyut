@@ -21,7 +21,7 @@ from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl import OglClass
 
 import wx
 

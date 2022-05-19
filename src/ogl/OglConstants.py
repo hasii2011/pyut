@@ -1,9 +1,9 @@
 
 from wx import Bitmap
 
-from org.pyut.ogl.resources.img.Display import embeddedImage as displayImage
-from org.pyut.ogl.resources.img.DoNotDisplay import embeddedImage as doNotDisplayImage
-from org.pyut.ogl.resources.img.UnSpecified import embeddedImage as unSpecifiedImage
+from ogl.resources.img.Display import embeddedImage as displayImage
+from ogl.resources.img.DoNotDisplay import embeddedImage as doNotDisplayImage
+from ogl.resources.img.UnSpecified import embeddedImage as unSpecifiedImage
 
 
 class OglConstants:

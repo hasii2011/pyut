@@ -61,7 +61,7 @@ from miniogl.SizerShape import SizerShape
 from miniogl.ControlPoint import ControlPoint
 from miniogl.RectangleShape import RectangleShape
 
-from org.pyut.ogl.preferences.OglPreferences import OglPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
 from miniogl.DlgDebugDiagramFrame import DlgDebugDiagramFrame
 

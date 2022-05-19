@@ -5,7 +5,7 @@ from logging import getLogger
 from wx import DC
 
 from miniogl import Shape
-from org.pyut.ogl.OglAssociation import OglAssociation
+from ogl.OglAssociation import OglAssociation
 
 
 class OglAggregation(OglAssociation):

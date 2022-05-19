@@ -20,11 +20,11 @@ from pyutmodel.PyutUseCase import PyutUseCase
 
 from miniogl.Diagram import Diagram
 
-from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglNote import OglNote
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglUseCase import OglUseCase
+from ogl.OglActor import OglActor
+from ogl.OglClass import OglClass
+from ogl.OglNote import OglNote
+from ogl.OglObject import OglObject
+from ogl.OglUseCase import OglUseCase
 
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler

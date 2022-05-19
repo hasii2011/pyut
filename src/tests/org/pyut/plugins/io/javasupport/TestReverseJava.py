@@ -14,7 +14,7 @@ from pkg_resources import resource_filename
 from wx import App
 
 from pyutmodel.ModelTypes import Implementors
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.plugins.io.javasupport.ReverseJava import Extenders
 from org.pyut.plugins.io.javasupport.ReverseJava import InterfaceMap

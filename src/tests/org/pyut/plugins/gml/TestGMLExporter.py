@@ -17,8 +17,8 @@ from pyutmodel.PyutLink import PyutLink
 
 from miniogl.AnchorPoint import AnchorPoint
 
-from org.pyut.ogl.OglClass import OglClass
-from org.pyut.ogl.OglLink import OglLink
+from ogl.OglClass import OglClass
+from ogl.OglLink import OglLink
 
 from tests.TestBase import TestBase
 

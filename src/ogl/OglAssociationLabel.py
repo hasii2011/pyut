@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass
 
-from org.pyut.ogl.OglPosition import OglPosition
+from ogl.OglPosition import OglPosition
 
 
 @dataclass

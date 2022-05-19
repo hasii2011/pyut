@@ -36,34 +36,34 @@ from org.pyut.ui.Mediator import Mediator
 from org.pyut.general.Singleton import Singleton
 
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglObject import OglObject
+from ogl.OglObject import OglObject
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglClass import OglClass
+from ogl import OglClass
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglNote import OglNote
+from ogl import OglNote
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglActor import OglActor
+from ogl.OglActor import OglActor
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglUseCase import OglUseCase
+from ogl.OglUseCase import OglUseCase
 
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglLink import OglLink
+from ogl.OglLink import OglLink
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglNoteLink import OglNoteLink
+from ogl import OglNoteLink
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglAssociation import OglAssociation
+from ogl.OglAssociation import OglAssociation
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglAggregation import OglAggregation
+from ogl import OglAggregation
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglComposition import OglComposition
+from ogl.OglComposition import OglComposition
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglInheritance import OglInheritance
+from ogl.OglInheritance import OglInheritance
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglInterface import OglInterface
+from ogl.OglInterface import OglInterface
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDInstance import OglSDInstance
 # noinspection PyUnresolvedReferences
-from org.pyut.ogl.OglLinkFactory import OglLinkFactory
+from ogl import OglLinkFactory
 
 PyutClassNames: List[str] = [
     "PyutClass",

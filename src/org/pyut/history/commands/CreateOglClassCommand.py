@@ -5,13 +5,13 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
-from org.pyut.ogl.OglUtils import OglUtils
+from ogl import OglUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

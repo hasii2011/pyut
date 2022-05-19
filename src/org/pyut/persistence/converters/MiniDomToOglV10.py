@@ -40,24 +40,24 @@ from miniogl.ControlPoint import ControlPoint
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from miniogl.AttachmentLocation import AttachmentLocation
 
-from org.pyut.ogl.OglActor import OglActor
-from org.pyut.ogl.OglAssociationLabel import OglAssociationLabel
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglActor import OglActor
+from ogl.OglAssociationLabel import OglAssociationLabel
+from ogl.OglClass import OglClass
 
-from org.pyut.ogl.OglInterface2 import OglInterface2
-from org.pyut.ogl.OglLink import OglLink
-from org.pyut.ogl.OglNote import OglNote
-from org.pyut.ogl.OglObject import OglObject
-from org.pyut.ogl.OglPosition import OglPosition
-from org.pyut.ogl.OglText import OglText
-from org.pyut.ogl.OglUseCase import OglUseCase
-from org.pyut.ogl.OglAssociation import OglAssociation
-from org.pyut.ogl.OglLinkFactory import getOglLinkFactory
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglLink import OglLink
+from ogl.OglNote import OglNote
+from ogl.OglObject import OglObject
+from ogl.OglPosition import OglPosition
+from ogl.OglText import OglText
+from ogl.OglUseCase import OglUseCase
+from ogl.OglAssociation import OglAssociation
+from ogl.OglLinkFactory import getOglLinkFactory
 
-from org.pyut.ogl.sd.OglSDInstance import OglSDInstance
-from org.pyut.ogl.sd.OglSDMessage import OglSDMessage
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 
-from org.pyut.ogl.OglTextFontFamily import OglTextFontFamily
+from ogl.OglTextFontFamily import OglTextFontFamily
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 

@@ -16,7 +16,7 @@ from org.pyut.history.HistoryManager import HistoryManager
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutMethod import PyutMethod
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 
 class GraphicalHandler:

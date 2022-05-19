@@ -15,7 +15,7 @@ from pyutmodel.PyutClass import PyutClass
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 from org.pyut.plugins.base.PluginTypes import OglClasses
 
-from org.pyut.ogl.OglClass import OglClass
+from ogl.OglClass import OglClass
 
 from org.pyut.ui.UmlFrame import UmlFrame
 

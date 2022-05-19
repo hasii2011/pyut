@@ -15,7 +15,7 @@ from wx import App
 
 from pyutmodel.PyutNote import PyutNote
 
-from org.pyut.ogl.OglNote import OglNote
+from ogl.OglNote import OglNote
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
