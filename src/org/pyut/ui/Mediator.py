@@ -589,8 +589,8 @@ class Mediator(Singleton):
         #
         # TODO I don't like in-line imports but moving them to top file causes a cyclic dependency error
         #
-        from ogl import OglClass
-        from ogl import OglNote
+        from ogl.OglClass import OglClass
+        from ogl.OglNote import OglNote
         from ogl.OglUseCase import OglUseCase
         from ogl.OglActor import OglActor
         from ogl.OglAssociation import OglAssociation
@@ -818,7 +818,7 @@ class Mediator(Singleton):
         from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
         from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
         from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
-        from ogl import OglClass
+        from ogl.OglClass import OglClass
         from ogl.OglObject import OglObject
         from ogl.OglLink import OglLink
         from org.pyut.history.commands.CommandGroup import CommandGroup

@@ -12,17 +12,18 @@ from wx import Image
 from wx import MemoryDC
 from wx import NullBitmap
 from wx import ScrolledWindow
+# noinspection PyProtectedMember
 from wx._core import BitmapType
 
-from miniogl import DiagramFrame
-from miniogl import Diagram
+from miniogl.DiagramFrame import DiagramFrame
+from miniogl.Diagram import Diagram
 from miniogl.LollipopLine import LollipopLine
 
-from miniogl import PointShape
-from miniogl import RectangleShape
-from miniogl import AnchorPoint
-from miniogl import LineShape
-from miniogl import ControlPoint
+from miniogl.PointShape import PointShape
+from miniogl.RectangleShape import RectangleShape
+from miniogl.AnchorPoint import AnchorPoint
+from miniogl.LineShape import LineShape
+from miniogl.ControlPoint import ControlPoint
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from miniogl.AttachmentLocation import AttachmentLocation
 
@@ -106,12 +107,12 @@ class TestMiniOglApp(App):
 
         dw, dh     = rectShape.GetSize()
 
-        eastX, eastY   = dw, dh / 2
+        eastX, eastY   = dw, dh // 2
 
-        destAnchor = SelectAnchorPoint(parent=rectShape, attachmentPoint=AttachmentLocation.EAST, x=eastX, y=eastY)
-        destAnchor.SetDraggable(False)
+        dstAnchor = SelectAnchorPoint(parent=rectShape, attachmentPoint=AttachmentLocation.EAST, x=eastX, y=eastY)
+        dstAnchor.SetDraggable(False)
 
-        lollipopLine: LollipopLine = LollipopLine(destAnchor)
+        lollipopLine: LollipopLine = LollipopLine(dstAnchor)
 
         diagramFrame.AddShape(lollipopLine)
 

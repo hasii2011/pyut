@@ -112,7 +112,7 @@ class TestADialog(App):
 
         self._cmbDlgName.SetSelection(TestADialog.NOTHING_SELECTED)
 
-        box:      StaticBox    = StaticBox(parentFrame, ID_ANY, "Dialog Selection")
+        box:    StaticBox      = StaticBox(parentFrame, ID_ANY, "Dialog Selection")
         szrDlg: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
 
         szrDlg.Add(self._cmbDlgName, 1, LEFT | RIGHT, TestADialog.MINI_GAP)

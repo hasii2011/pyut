@@ -9,7 +9,7 @@ from wx import App
 from wx import Frame
 from wx import BoxSizer
 
-from miniogl import DiagramFrame
+from miniogl.DiagramFrame import DiagramFrame
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from tests.TestBase import TestBase
 

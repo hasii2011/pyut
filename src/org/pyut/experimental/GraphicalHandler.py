@@ -23,10 +23,10 @@ class GraphicalHandler:
 
     def __init__(self, umlFrame: UmlFrameShapeHandler, maxWidth: int, historyManager: HistoryManager):
 
-        self.logger:    Logger   = getLogger(__name__)
-        self._umlFrame: UmlFrameShapeHandler = umlFrame
-        self._maxWidth: int      = maxWidth
-        self._historyManager: HistoryManager = historyManager
+        self.logger:          Logger               = getLogger(__name__)
+        self._umlFrame:       UmlFrameShapeHandler = umlFrame
+        self._historyManager: HistoryManager       = historyManager
+        self._maxWidth:       int                  = maxWidth
 
     def addHierarchy(self, display):
         """
