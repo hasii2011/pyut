@@ -23,10 +23,12 @@ OPTIONS = {}
 
 setup(
     name='Pyut',
-    version='6.6.0',
+    version='6.7.0',
     app=APP,
     data_files=DATA_FILES,
     packages=['pyutmodel',
+              'miniogl',
+              'ogl', 'ogl.events', 'ogl.preferences', 'ogl.resources', 'ogl.resources.img', 'ogl.resources.img.textdetails', 'ogl.sd',
               'org',
               'org.pyut',
               'org.pyut.dialogs', 'org.pyut.dialogs.preferences', 'org.pyut.dialogs.preferences.valuecontainers',
@@ -37,11 +39,7 @@ setup(
               'org.pyut.experimental',
               'org.pyut.general', 'org.pyut.general.datatypes', 'org.pyut.general.exceptions',
               'org.pyut.history', 'org.pyut.history.commands',
-              'org.pyut.miniogl',
               'org.pyut.model',
-              'org.pyut.ogl', 'org.pyut.ogl.events', 'org.pyut.ogl.preferences', 'org.pyut.ogl.resources',
-              'org.pyut.ogl.resources.img', 'org.pyut.ogl.resources.img.textdetails',
-              'org.pyut.ogl.sd',
               'org.pyut.persistence', 'org.pyut.persistence.converters',
               'org.pyut.plugins',
               'org.pyut.plugins.base',
@@ -82,6 +80,7 @@ setup(
             CFBundleIdentifier='org.pyut',
             CFBundleDocumentTypes=[
                 {'CFBundleTypeName': 'Pyut'},
+                {'CFBundleTypeRole': 'Editor'},
                 {'CFBundleTypeExtensions':  ['put', 'xml']}
             ],
             LSMinimumSystemVersion='12',
@@ -94,8 +93,6 @@ setup(
     ),
     setup_requires=['py2app'],
     install_requires=['antlr4-python3-runtime',
-                      'fpdf2',
-                      'networkx',
                       'orthogonal',
                       'pygmlparser',
                       'pyumldiagrams',

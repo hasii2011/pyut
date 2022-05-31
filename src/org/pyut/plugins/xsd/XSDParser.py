@@ -1,6 +1,7 @@
 
 from typing import Dict
-from typing import Tuple
+from typing import Optional
+from typing import Union
 from typing import cast
 from typing import List
 
@@ -14,6 +15,7 @@ from xmlschema.validators import XsdElement
 from xmlschema.validators import XsdEnumerationFacets
 from xmlschema.validators import XsdGroup
 from xmlschema.validators import XsdAtomicRestriction
+from xmlschema.validators import XsdSimpleType
 
 from xmlschema.validators import XsdType
 
@@ -21,6 +23,7 @@ from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutLink import PyutLink
 from pyutmodel.PyutLinkedObject import PyutLinkedObject
+from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from pyutmodel.PyutLinkType import PyutLinkType
@@ -35,6 +38,10 @@ from org.pyut.ui.UmlClassDiagramsFrame import CreatedClassesType
 
 
 class XSDParser:
+    """
+    Lots of type ignores in file;  Not going to fix them unless I get many people
+    using XSD import plugin
+    """
 
     X_INCREMENT_VALUE:  int = 80
     Y_INCREMENT_VALUE:  int = 80
@@ -53,7 +60,8 @@ class XSDParser:
 
         self.schema: XMLSchema = XMLSchema(filename)
 
-        self.position:         Tuple[int, int] = self._positionGenerator()
+        # self.position:         Tuple[int, int] = self._positionGenerator()
+        self.position: Dict[str, int] = self._positionGenerator()  # type: ignore
         self._schemaTypeNames: List[str] = []
         self.classTree:        ClassTree = ClassTree({})
 
@@ -74,7 +82,8 @@ class XSDParser:
 
         for className in self._schemaTypeNames:
 
-            pos: Dict[str, int] = next(self.position)
+            # not going to fix this unless many start using XSD imports
+            pos: Dict[str, int] = next(self.position)  # type: ignore
 
             createdClasses: CreatedClassesType = self._umlFrame.createClasses(name=className, x=pos['x'], y=pos['y'])
 
@@ -84,7 +93,8 @@ class XSDParser:
             if schemaType.derivation == XSDParser.SUBCLASS_INDICATOR:
                 baseType: XsdType = schemaType.base_type
                 self.logger.debug(f'class: {className} is a subclass of: {baseType.local_name}')
-                pyutClass.addParent(baseType.local_name)
+                # I think this is wrong;  But XSD import does not use this
+                pyutClass.addParent(baseType.local_name)  # type: ignore
 
             treeData: ElementTreeData = ElementTreeData(pyutClass=pyutClass, oglClass=oglClass)
             self.classTree[className] = treeData
@@ -101,9 +111,9 @@ class XSDParser:
             elif isinstance(schemaType, XsdAtomicRestriction):
                 xsdAtomRestriction: XsdAtomicRestriction = cast(XsdAtomicRestriction, schemaType)
                 self.logger.info(f'{xsdAtomRestriction.local_name}')
-                facets: XsdEnumerationFacets = xsdAtomRestriction.facets
+                facets: XsdEnumerationFacets = xsdAtomRestriction.facets  # type: ignore
                 for facetName in facets:
-                    facet: XsdEnumerationFacets = facets[facetName]
+                    facet: XsdEnumerationFacets = facets[facetName]     # type: ignore
                     if isinstance(facet, XsdEnumerationFacets):
                         self.logger.info(f'enumeration facet element enumeration: {facet.enumeration}')
                         self._createEnumerationFields(self.classTree[className].pyutClass, facet.enumeration)
@@ -111,16 +121,17 @@ class XSDParser:
     def _handleComplexTypes(self, xsdComplexType: XsdComplexType):
 
         self.logger.info(f'--------- Start _handleComplexTypes ---------')
-        localName:     str  = xsdComplexType.local_name
+        localName:     Optional[str]  = xsdComplexType.local_name
         isElementOnly: bool = xsdComplexType.is_element_only()
 
         self.logger.info(f'localName: `{localName}` isElementOnly: `{isElementOnly}` open_content: {xsdComplexType.open_content}')
 
-        contentType: XsdGroup = xsdComplexType.content_type
-        self.logger.info(f'contentType: {contentType}')
+        content: Union[XsdGroup, XsdSimpleType] = xsdComplexType.content
+        self.logger.info(f'contentType: {content}')
+        xsdGroup: XsdGroup = cast(XsdGroup, content)
         # noinspection PyProtectedMember
-        grp: List[XsdElement] = contentType._group
-        self._addFields(className=localName, content=grp)
+        grp: List[XsdElement] = cast(List[XsdElement], xsdGroup._group)
+        self._addFields(className=cast(str, localName), content=grp)
 
         self.logger.info(f'--------- End _handleComplexTypes ---------')
 
@@ -146,7 +157,8 @@ class XSDParser:
             xsdType: XsdType = xsdElement.type
             childClassName: str = xsdElement.local_name
 
-            pyutField: PyutField = PyutField(name=childClassName, fieldType=xsdType.local_name,
+            pyutType: PyutType = PyutType(xsdType.local_name)
+            pyutField: PyutField = PyutField(name=childClassName, fieldType=pyutType,
                                              defaultValue=defaultValue, visibility=PyutVisibilityEnum.PUBLIC)
 
             #
@@ -165,9 +177,9 @@ class XSDParser:
             xsdElement:  An xsd element that is contained by this class
 
         """
-        childTypeName: str = xsdElement.type.local_name
+        childTypeName: Optional[str] = xsdElement.type.local_name
         if not classTreeData.childElementNames.__contains__(childTypeName):
-            classTreeData.addChild(childTypeName)
+            classTreeData.addChild(cast(str, childTypeName))
 
     def _generateAggregationLinks(self):
 
