@@ -6,12 +6,12 @@ from logging import Logger
 from logging import getLogger
 
 from ogl.OglClass import OglClass
+from ogl.OglUtils import OglUtils
 
 from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
-from ogl import OglUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

@@ -57,6 +57,11 @@
             "level":     "WARNING",
             "propagate": "False"
         },
+        "org.pyut.ui.UmlFrame": {
+            "level":     "DEBUG",
+            "propagate": "False",
+            "handlers":  ["consoleHandler"]
+        },
         "org.pyut.general.Mediator": {
             "level":     "WARNING",
             "propagate": "False"

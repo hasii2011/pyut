@@ -2,6 +2,7 @@
 from typing import List
 from typing import NewType
 from typing import Union
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -26,6 +27,7 @@ from ogl.sd.OglSDMessage import OglSDMessage
 
 from miniogl.Constants import SKIP_EVENT
 from miniogl.DiagramFrame import DiagramFrame
+from miniogl.RectangleShape import RectangleShape
 
 from org.pyut.ui.Mediator import ACTION_ZOOM_IN
 from org.pyut.ui.Mediator import Mediator
@@ -41,8 +43,6 @@ from org.pyut.general.Globals import _
 
 from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
 
-#  DEFAULT_WIDTH = 1280
-#  DEFAULT_WIDTH = 5120
 DEFAULT_WIDTH = 3000
 A4_FACTOR:    float = 1.41
 
@@ -60,6 +60,8 @@ class UmlFrame(UmlFrameShapeHandler):
     PIXELS_PER_UNIT_X: int = 20
     PIXELS_PER_UNIT_Y: int = 20
 
+    clsUmlFrameLogger: Logger = getLogger(__name__)
+
     def __init__(self, parent: Notebook, frame):
         """
 
@@ -69,7 +71,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         super().__init__(parent)
 
-        self.logger: Logger = getLogger(__name__)
+        self.logger: Logger = UmlFrame.clsUmlFrameLogger
 
         self._mediator: Mediator = Mediator()
 
@@ -103,33 +105,28 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         return self._historyManager
 
-    def setCodePath(self, path):
+    def setCodePath(self, path: str):
         """
         Set the code path
-        DEPRECATED
-        @author C.Dutoit
+
+        Args:
+            path:
         """
         project = self._mediator.getFileHandling().getProjectFromFrame(self)
         if project is not None:
             project.setCodePath(path)
         else:
-            print("Passing setCodePath in UmlFrame-setCodePath")
+            self.logger.info("Passing setCodePath in UmlFrame-setCodePath")
 
     def displayDiagramProperties(self):
         """
         Display class diagram properties
-        @author C.Dutoit
         """
         PyutUtils.displayError(_("Not yet implemented !"))
 
     def cleanUp(self):
         """
         Clean up object references before quitting.
-
-        @since 1.23
-        @author Laurent Burgbacher <lb@alawa.ch>
-        @modified C.Dutoit <dutoitc@hotmail.com>
-            Added clean destroy code
         """
         self._mediator = None
         self._frame = None
@@ -139,25 +136,21 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Clean close, event handler on EVT_CLOSE
 
-        @since 1.35.2.8
-        @author C.Dutoit <dutoitc@hotmail.com>
+        Args:
+            event:
         """
         self._historyManager.destroy()
 
         self.cleanUp()
         self.Destroy()
 
-    def OnLeftDown(self, event):
+    def OnLeftDown(self, event: MouseEvent):
         """
         Manage a left down mouse event.
         If there's an action pending in the mediator, give it the event, else
         let it go to the next handler.
-
-        @param  event
-        @since 1.4
-        @author L. Burgbacher <lb@alawa.ch>
         """
-
+        self.logger.debug(f'leftDown - action waiting: {self._mediator.actionWaiting()}')
         if self._mediator.actionWaiting():
             x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
             skip = self._mediator.doAction(x, y)
@@ -169,24 +162,25 @@ class UmlFrame(UmlFrameShapeHandler):
                 DiagramFrame.OnLeftDown(self, event)
 
         else:
-            DiagramFrame.OnLeftDown(self, event)
+            # DiagramFrame.OnLeftDown(self, event)
+            super().OnLeftDown(event)
 
-    def OnLeftUp(self, event):
+    def OnLeftUp(self, event: MouseEvent):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (11.11.2005)
-        to make the right action if it is a selection or a zoom.
+        To make the right action if it is a selection or a zoom.
         """
+        self.logger.debug(f'leftUp - current action: {self._mediator.getCurrentAction()}')
         if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
             width, height = self._selector.GetSize()
             x, y = self._selector.GetPosition()
             self._selector.Detach()
-            self._selector = None
+            self._selector = cast(RectangleShape, None)
             self.DoZoomIn(x, y, width, height)
             self.Refresh()
             self._mediator.updateTitle()
         else:
-
-            DiagramFrame.OnLeftUp(self, event)
+            # DiagramFrame.OnLeftUp(self, event)
+            super().OnLeftUp(event)
 
     def OnLeftDClick(self, event: MouseEvent):
         """
@@ -195,28 +189,25 @@ class UmlFrame(UmlFrameShapeHandler):
         Args:
             event:
         """
-
         x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
+        self.logger.debug(f'leftDoubleClick - {x},{y}')
         self._mediator.editObject(x, y)
-        DiagramFrame.OnLeftDClick(self, event)
+        # DiagramFrame.OnLeftDClick(self, event)
+        super().OnLeftDClick(event)
 
     def newDiagram(self):
         """
         Remove all shapes, get a brand new empty diagram.
-
-        @since 1.31
-        @author Laurent Burgbacher <lb@alawa.ch>
+        TODO:  rename to clearDiagram
         """
         self._diagram.DeleteAllShapes()
         self.Refresh()
 
     def getDiagram(self):
         """
-        Return the diagram of this frame.
+        Returns this frame's diagram
 
-        @return wx.Diagram
-        @since 1.23
-        @author Laurent Burgbacher <lb@alawa.ch>
+        Returns:  wx.Diagram
         """
         return self._diagram
 
@@ -281,8 +272,6 @@ class UmlFrame(UmlFrameShapeHandler):
     #
     #     Return object boundaries (coordinates)
     #
-    #     @since 1.35.2.25
-    #     @author C.Dutoit <dutoitc@hotmail.com>
     #     """
     #     infinite = 1e9
     #     minx     = infinite
@@ -309,11 +298,12 @@ class UmlFrame(UmlFrameShapeHandler):
 
     def getUmlObjectById(self, objectId: int):
         """
-        Added by P. Dabrowski <przemek.dabrowski@destroy-display.com> (20.11.2005)
-        @param objectId    :   id for which we want to get an object
 
-        @return the uml object that has the specified id. If there is no
-        matching object, None is returned.
+        Args:
+            objectId:  The id of the object we want
+
+        Returns:  The uml object that has the specified id. If there is no
+        matching object returns `None`
         """
 
         for shape in self.GetDiagram().GetShapes():
