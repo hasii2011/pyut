@@ -20,18 +20,14 @@ from org.pyut.general.PyutXmlFinder import PyutXmlFinder
 
 class TestPyutXmlFinder(TestBase):
 
-    BASIC_VERSION: str = '1'       # Supposedly the simplest and includes 3,4 5,6,7
-    FOUND_VERSION: str = '8'       # The latest I encountered
-    HASII_VERSION: str = '9'       # A version I created with enum support
-
     UNSUPPORTED_VERSION: str = '0xDEADBEEF'
 
     LATEST_VERSION: str = '10'     # This needs to change every time the XML is updated
 
-    XML_TO_FIX:         str = '<?xml version="1.0" ?><PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/></PyutProject>'
+    XML_TO_FIX:         str = '<?xml version="1.0" ?><PyutProject CodePath="" version="10"><PyutDocument type="CLASS_DIAGRAM"/></PyutProject>'
     EXPECTED_FIXED_XML: str = (
         '<?xml version="1.0" encoding="iso-8859-1"?>'
-        '<PyutProject CodePath="" version="9"><PyutDocument type="CLASS_DIAGRAM"/>'
+        '<PyutProject CodePath="" version="10"><PyutDocument type="CLASS_DIAGRAM"/>'
         '</PyutProject>'
                                )
 
@@ -59,21 +55,6 @@ class TestPyutXmlFinder(TestBase):
             mockMediator.return_value.getAppPath.return_value = self.newAppPath
             actualVersion: str = PyutXmlFinder.getLatestXmlVersion()
             self.assertEqual(TestPyutXmlFinder.LATEST_VERSION, actualVersion, 'Houston, we have a mismatch; check code or update constant')
-
-    def testVersionBasicVersion(self):
-
-        pyutXML: Any = PyutXmlFinder.getPyutXmlClass(TestPyutXmlFinder.BASIC_VERSION)
-        self.assertIsNotNone(pyutXML, f'I expected version: {TestPyutXmlFinder.BASIC_VERSION}')
-
-    def testVersionFoundVersion(self):
-
-        pyutXML: Any = PyutXmlFinder.getPyutXmlClass(TestPyutXmlFinder.FOUND_VERSION)
-        self.assertIsNotNone(pyutXML, f'I expected version: {TestPyutXmlFinder.FOUND_VERSION}')
-
-    def testVersionHasiiVersion(self):
-
-        pyutXML: Any = PyutXmlFinder.getPyutXmlClass(TestPyutXmlFinder.HASII_VERSION)
-        self.assertIsNotNone(pyutXML, f'I expected version: {TestPyutXmlFinder.HASII_VERSION}')
 
     def testVersionUnsupportedVersion(self):
         """

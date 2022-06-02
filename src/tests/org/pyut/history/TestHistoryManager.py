@@ -1,3 +1,4 @@
+from os import getcwd
 from typing import cast
 
 from sys import path as sysPath
@@ -45,6 +46,9 @@ class TestHistory(TestBase):
     def setUp(self):
         """"""
         self.logger: Logger = TestHistory.clsLogger
+        path: str = getcwd()
+        assert path != '/', 'Oops we are trying to write to root directory'
+        PyutUtils.setBasePath(path)
         self.historyManager = HistoryManager(None)
 
     def testInitialize(self):

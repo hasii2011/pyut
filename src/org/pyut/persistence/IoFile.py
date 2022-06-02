@@ -1,13 +1,14 @@
 
+from typing import TextIO
+
 from logging import Logger
 from logging import getLogger
 
-from os import getcwd
-from os import chdir
-
 import zlib
-from typing import TextIO
+from xml.dom.minicompat import NodeList
+
 from xml.dom.minidom import Document
+from xml.dom.minidom import Element
 from xml.dom.minidom import parseString
 
 from org.pyut.PyutConstants import PyutConstants
@@ -15,12 +16,8 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.ui.PyutProject import PyutProject
 
-from org.pyut.enums.DiagramType import DiagramType
-
 from org.pyut.general.Lang import Lang
 from org.pyut.general.PyutXmlFinder import PyutXmlFinder
-
-from org.pyut.ui.Mediator import Mediator
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
@@ -65,16 +62,12 @@ class IoFile:
         To open a compressed file and create diagram.
 
         Args:
-            filename: The file name
+            filename: A fully qualified filename
             project: The project
         """
-        oldPath:  str      = getcwd()
-        mediator: Mediator = Mediator()
-        path:     str      = mediator.getAppPath()  # TODO I do not think we need to do this
-        chdir(path)                                 #
-        
+
         Lang.importLanguage()
-        xmlString: str = ""
+
         suffix:    str = filename[-4:]
         if suffix == PyutConstants.PYUT_EXTENSION:
             try:
@@ -87,6 +80,7 @@ class IoFile:
                     self.logger.info(f'Document read:\n{xmlString}')
             except (ValueError, Exception) as e:
                 self.logger.error(f'open/decompress:  {e}')
+                raise e
         elif suffix == PyutConstants.XML_EXTENSION:
             fd:        TextIO = open(filename, "r")
             xmlString: str = fd.read()
@@ -94,37 +88,11 @@ class IoFile:
         else:
             PyutUtils.displayError(_(f"This is an unsupported file type: {filename}"))
             return
-        dom = parseString(xmlString)
+        dom: Document = parseString(xmlString)
 
-        root = dom.getElementsByTagName("PyutProject")
-        if len(root) > 0:
-            root = root[0]
-            if root.hasAttribute('version'):
-                version = root.getAttribute("version")
-                myXml = PyutXmlFinder.getPyutXmlClass(theVersion=version)
-            else:
-                from org.pyut.persistence.PyutXml import PyutXml
-                myXml = PyutXml()
-            myXml.open(dom, project)
-        else:
-            # TODO fix this code to use PyutXmlFinder;
-            #  I don't think this is used by the Python3 version of this Pyut
-            self.logger.warning('***********************************')
-            self.logger.warning('Using old code !!!')
-            self.logger.warning('***********************************')
-            root = dom.getElementsByTagName("Pyut")[0]
-            if root.hasAttribute('version'):
-                version = root.getAttribute("version")
-                self.logger.info(f"Using version {version} of the importer")
-                module = __import__("PyutXmlV" + str(version))
-                # noinspection PyUnresolvedReferences
-                myXml = module.PyutXml()
-            else:
-                from org.pyut.persistence.PyutXml import PyutXml  # don't like it here but at top of file not recognized -- hasii
-                # version = 1
-                myXml = PyutXml()
-            project.newDocument(DiagramType.CLASS_DIAGRAM)
-            umlFrame = project.getDocuments()[0].getFrame()
-            myXml.open(dom, umlFrame)
+        rootList: NodeList = dom.getElementsByTagName("PyutProject")
+        root:     Element = rootList.item(0)
+        version:  str     = root.getAttribute("version")
+        myXml = PyutXmlFinder.getPyutXmlClass(theVersion=version)
 
-        chdir(oldPath)              # TODO remove this also if above removed
+        myXml.open(dom, project)

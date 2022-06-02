@@ -40,17 +40,8 @@ class PyutXmlFinder:
         defeats the purpose of dynamic loading since we would have to import
         the specific types
         """
-        if theVersion == '1':
-            from org.pyut.persistence.PyutXml import PyutXml    # type: ignore
-            myXml = PyutXml()
-        elif theVersion == '8':
-            from org.pyut.persistence.PyutXmlV8 import PyutXml  # type: ignore
-            myXml = PyutXml()
-        elif theVersion == '9':
-            from org.pyut.persistence.PyutXmlV9 import PyutXml  # type: ignore
-            myXml = PyutXml()
-        elif theVersion == '10':
-            from org.pyut.persistence.PyutXmlV10 import PyutXml # type: ignore
+        if theVersion == '10':
+            from org.pyut.persistence.PyutXmlV10 import PyutXml  # type: ignore
             myXml = PyutXml()
         else:
             raise UnsupportedXmlFileFormat(f'Version {theVersion}')

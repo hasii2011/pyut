@@ -39,7 +39,7 @@ class TestAnchorPoint(TestBase):
         self.anchorPoint: AnchorPoint = AnchorPoint(x=93, y=276, parent=None)
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
 
     EXPECTED_X: int = 268
     EXPECTED_Y: int = 1044

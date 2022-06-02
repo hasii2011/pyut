@@ -4,14 +4,14 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from os import chdir
-from os import getcwd
-
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
 from unittest.mock import patch
 from unittest.mock import MagicMock
+
+from pkg_resources import resource_filename
+from wx import App
 
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 from tests.TestBase import TestBase
@@ -42,28 +42,25 @@ class TestIoFile(TestBase):
         self.mockTreeRoot: MagicMock = MagicMock()
         self.fileHandling: TreeNotebookHandler    = MagicMock()
 
-        oldPath: str = getcwd()
-        # Assume we are at src/tests
-        chdir('../../../../..')
-        newAppPath: str = getcwd()
-        chdir(oldPath)
-
         self.mediator = Mediator()      # It's a Singleton, I can do this
-        self.mediator.registerAppPath(newAppPath)
+        self.mediator.registerAppPath('./')
         self.mediator.registerFileHandling(self.fileHandling)
 
+        self.app: App = App()
+
     def tearDown(self):
-        pass
+        self.app.OnExit()
 
     # noinspection PyUnusedLocal
     @patch('wx.Dialog')
     @patch('wx.Gauge')
-    @patch('org.pyut.general.Mediator')
+    @patch('org.pyut.ui.Mediator')
     @patch('org.pyut.ui.TreeNotebookHandler.TreeNotebookHandler')
-    def testIoFileOpenV8(self, mockFileHandling, mockMediator, wxGauge, wxDialog):
+    def testIoFileOpenV10(self, mockFileHandling, mockMediator, wxGauge, wxDialog):
+        fqFileName = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'IoFileTest.put')
 
         with patch('org.pyut.ui.PyutProject.PyutProject') as mockPyutProject:
-            self.ioFile.open(filename='testdata/BaseSave_V8.put', project=mockPyutProject)
+            self.ioFile.open(filename=fqFileName, project=mockPyutProject)
 
 
 def suite() -> TestSuite:

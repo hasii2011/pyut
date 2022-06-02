@@ -28,7 +28,6 @@ class TestAll:
     NOT_TESTS: List[str] = ['TestAll',
                             'org/pyut/miniogl/TestMiniOgl',
                             'TestWxOgl', 'TestBase', 'TestTemplate',
-                            'org/pyut/persistence/TestIoFile',
                             'org/pyut/ui/tools/TestToolboxFrame',
                             'org/pyut/history/commands/TestCommandCommon',
                             'org/pyut/ogl/events/TestOglEventEngine',
@@ -49,7 +48,7 @@ class TestAll:
 
     def runTextTestRunner(self) -> int:
 
-        runner: TextTestRunner = TextTestRunner(verbosity=TestAll.VERBOSITY_QUIET)
+        runner: TextTestRunner = TextTestRunner(verbosity=TestAll.VERBOSITY_DEFAULT)
         status: TestResult     = runner.run(self._testSuite)
         print(f"THE RESULTS ARE IN:")
         print(f"run: {status.testsRun} errors: {len(status.errors)} failures: {len(status.failures)} skipped: {len(status.skipped)}")
