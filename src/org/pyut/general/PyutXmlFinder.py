@@ -44,7 +44,7 @@ class PyutXmlFinder:
             from org.pyut.persistence.PyutXmlV10 import PyutXml  # type: ignore
             myXml = PyutXml()
         else:
-            raise UnsupportedXmlFileFormat(f'Version {theVersion}')
+            raise UnsupportedXmlFileFormat(f'Unsupported Version {theVersion}')
 
         cls.clsLogger.info(f"Using version {theVersion} of the XML import/exporter")
         return myXml

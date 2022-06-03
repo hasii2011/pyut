@@ -1,6 +1,4 @@
 
-from typing import TextIO
-
 from logging import Logger
 from logging import getLogger
 
@@ -13,6 +11,8 @@ from xml.dom.minidom import parseString
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 
 from org.pyut.ui.PyutProject import PyutProject
 
@@ -70,21 +70,12 @@ class IoFile:
 
         suffix:    str = filename[-4:]
         if suffix == PyutConstants.PYUT_EXTENSION:
-            try:
-                with open(filename, "rb") as dataFile:
-                    compressedData: bytes = dataFile.read()
-                    # noinspection PyUnresolvedReferences
-                    self.logger.info(f'zlib.__version__: {zlib.__version__}')
-                    xmlBytes = zlib.decompress(compressedData)    # has b'....' around it
-                    xmlString: str = xmlBytes.decode()
-                    self.logger.info(f'Document read:\n{xmlString}')
-            except (ValueError, Exception) as e:
-                self.logger.error(f'open/decompress:  {e}')
-                raise e
+            xmlString: str = self._decompressFile(fqFileName=filename)
         elif suffix == PyutConstants.XML_EXTENSION:
-            fd:        TextIO = open(filename, "r")
-            xmlString: str = fd.read()
-            fd.close()
+            # fd:        TextIO = open(filename, "r")
+            # xmlString: str = fd.read()
+            # fd.close()
+            xmlString: str = self._readXmlFile(fqFileName=filename)
         else:
             PyutUtils.displayError(_(f"This is an unsupported file type: {filename}"))
             return
@@ -93,6 +84,37 @@ class IoFile:
         rootList: NodeList = dom.getElementsByTagName("PyutProject")
         root:     Element = rootList.item(0)
         version:  str     = root.getAttribute("version")
-        myXml = PyutXmlFinder.getPyutXmlClass(theVersion=version)
 
-        myXml.open(dom, project)
+        try:
+            myXml = PyutXmlFinder.getPyutXmlClass(theVersion=version)
+            myXml.open(dom, project)
+        except (ValueError, Exception, UnsupportedXmlFileFormat) as e:
+            self.logger.error(f'Invalid XML:  {e}')
+            raise e
+
+    def _decompressFile(self, fqFileName: str) -> str:
+
+        try:
+            with open(fqFileName, "rb") as compressedFile:
+                compressedData: bytes = compressedFile.read()
+        except (ValueError, Exception) as e:
+            self.logger.error(f'decompress open:  {e}')
+            raise e
+        else:
+            # noinspection PyUnresolvedReferences
+            self.logger.info(f'zlib.__version__: {zlib.__version__}')       # type: ignore
+            xmlBytes:  bytes = zlib.decompress(compressedData)  # has b'....' around it
+            xmlString: str   = xmlBytes.decode()
+            self.logger.info(f'Document read:\n{xmlString}')
+
+        return xmlString
+
+    def _readXmlFile(self, fqFileName: str) -> str:
+        try:
+            with open(fqFileName, 'r') as xmlFile:
+                xmlString: str = xmlFile.read()
+        except (ValueError, Exception) as e:
+            self.logger.error(f'Xml Open:  {e}')
+            raise e
+        else:
+            return xmlString

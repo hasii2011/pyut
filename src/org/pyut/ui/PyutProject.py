@@ -26,6 +26,7 @@ from wx import Yield as wxYield
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.enums.DiagramType import DiagramType
+from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.Mediator import Mediator
@@ -177,7 +178,7 @@ class PyutProject:
         try:
             io.open(filename, self)
             self._modified = False
-        except (ValueError, Exception) as e:
+        except (ValueError, Exception, UnsupportedXmlFileFormat) as e:
             EndBusyCursor()
             self.logger.error(f"Error loading file: {e}")
             raise e

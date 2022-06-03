@@ -15,7 +15,8 @@ from wx import Window
 
 from wx import Yield as wxYield
 
-
+from org.pyut.PyutUtils import PyutUtils
+from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
@@ -24,6 +25,7 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.PyutConstants import PyutConstants
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 FileNames = NewType('FileNames', List[str])
@@ -77,7 +79,10 @@ class PyutFileDropTarget(FileDropTarget):
     def _loadPyutFiles(self, filenames: FileNames):
 
         for pyutFileName in filenames:
-            self._treeNotebookHandler.openFile(pyutFileName)
+            try:
+                self._treeNotebookHandler.openFile(pyutFileName)
+            except UnsupportedXmlFileFormat as e:
+                PyutUtils.displayError(msg=f'{e}', title='Bad Drop File')
 
     def _loadPyutXmlFiles(self, xmlFilenames: FileNames):
 
