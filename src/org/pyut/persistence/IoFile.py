@@ -2,7 +2,10 @@
 from logging import Logger
 from logging import getLogger
 
-import zlib
+from zlib import compress
+from zlib import decompress
+from zlib import __version__ as zlibVersion     # type: ignore
+
 from xml.dom.minicompat import NodeList
 
 from xml.dom.minidom import Document
@@ -50,12 +53,11 @@ class IoFile:
 
         updatedText: str = PyutXmlFinder.setAsISOLatin(xmlTextToUpdate=text)
         self.logger.info(f'Document Save: \n{updatedText}')
-        byteText   = updatedText.encode()
-        compressed = zlib.compress(byteText)
+        byteText:   bytes   = updatedText.encode()
+        compressed: bytes = compress(byteText)
 
-        file = open(project.filename, "wb")
-        file.write(compressed)
-        file.close()
+        with open(project.filename, "wb") as binaryIO:
+            binaryIO.write(compressed)
 
     def open(self, filename, project):
         """
@@ -65,16 +67,12 @@ class IoFile:
             filename: A fully qualified filename
             project: The project
         """
-
         Lang.importLanguage()
 
-        suffix:    str = filename[-4:]
+        suffix: str = filename[-4:]
         if suffix == PyutConstants.PYUT_EXTENSION:
             xmlString: str = self._decompressFile(fqFileName=filename)
         elif suffix == PyutConstants.XML_EXTENSION:
-            # fd:        TextIO = open(filename, "r")
-            # xmlString: str = fd.read()
-            # fd.close()
             xmlString: str = self._readXmlFile(fqFileName=filename)
         else:
             PyutUtils.displayError(_(f"This is an unsupported file type: {filename}"))
@@ -101,9 +99,9 @@ class IoFile:
             self.logger.error(f'decompress open:  {e}')
             raise e
         else:
-            # noinspection PyUnresolvedReferences
-            self.logger.info(f'zlib.__version__: {zlib.__version__}')       # type: ignore
-            xmlBytes:  bytes = zlib.decompress(compressedData)  # has b'....' around it
+
+            self.logger.warning(f'{zlibVersion=}')       # type: ignore
+            xmlBytes:  bytes = decompress(compressedData)  # has b'....' around it
             xmlString: str   = xmlBytes.decode()
             self.logger.info(f'Document read:\n{xmlString}')
 
