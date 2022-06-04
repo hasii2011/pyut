@@ -9,13 +9,13 @@ from wx import ICON_INFORMATION
 from wx import MessageDialog
 from wx import OK
 
-from org.pyut.errorcontroller.AbstractErrorView import AbstractErrorView
+from org.pyut.errorcontroller.IErrorView import IErrorView
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 
-class GraphicErrorView(AbstractErrorView):
+class GraphicErrorView(IErrorView):
     """
     This class is an error view which will display errors as
     wx message dialogs.

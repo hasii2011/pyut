@@ -8,7 +8,7 @@ from sys import exc_info
 
 from traceback import extract_tb
 
-from org.pyut.errorcontroller.AbstractErrorView import AbstractErrorView
+from org.pyut.errorcontroller.IErrorView import IErrorView
 from org.pyut.errorcontroller.GraphicErrorView import GraphicErrorView
 from org.pyut.errorcontroller.TextErrorView import TextErrorView
 from org.pyut.errorcontroller.RaiseErrorView import RaiseErrorView
@@ -30,7 +30,7 @@ class ErrorManager(Singleton):
         Singleton constructor
         """
         self.changeType(view)
-        self._view: AbstractErrorView = GraphicErrorView()
+        self._view: IErrorView = GraphicErrorView()
 
     def changeType(self, view: ErrorViewTypes):
 

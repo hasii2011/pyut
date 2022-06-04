@@ -1,7 +1,7 @@
 from wx import Frame
 
 
-class AbstractErrorView:
+class IErrorView:
     """
     Prototypical abstract class
     """

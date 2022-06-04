@@ -1,9 +1,9 @@
 
-from org.pyut.errorcontroller.AbstractErrorView import AbstractErrorView
+from org.pyut.errorcontroller.IErrorView import IErrorView
 from org.pyut.errorcontroller.PyutException import PyutException
 
 
-class RaiseErrorView(AbstractErrorView):
+class RaiseErrorView(IErrorView):
     """
     This class is an error view which will raise all errors as exceptions
 

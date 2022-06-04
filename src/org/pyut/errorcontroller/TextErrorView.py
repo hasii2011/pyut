@@ -2,12 +2,12 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.errorcontroller.AbstractErrorView import AbstractErrorView
+from org.pyut.errorcontroller.IErrorView import IErrorView
 
 from org.pyut.general.Globals import _
 
 
-class TextErrorView(AbstractErrorView):
+class TextErrorView(IErrorView):
     """
     This class is an error view which will display an error as entries
     in the debug log file.
