@@ -1,9 +1,12 @@
+
+from abc import ABC
+
 from wx import Frame
 
 
-class IErrorView:
+class IErrorView(ABC):
     """
-    Prototypical abstract class
+    Prototypical interface
     """
     def newFatalError(self, msg: str, title: str = None, parent: Frame = None):
         pass
