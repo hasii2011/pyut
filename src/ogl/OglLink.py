@@ -280,6 +280,10 @@ class OglLink(LineShape, ShapeEventHandler):
         Args:
             event:
         """
+        from ogl.sd.OglSDMessage import OglSDMessage
+
+        if isinstance(self, OglSDMessage) is True:
+            return
         menu: Menu = Menu()
         menu.Append(MENU_ADD_BEND,      'Add Bend',      'Add Bend at right click point')
         menu.Append(MENU_REMOVE_BEND,   'Remove Bend',   'Remove Bend closest to click point')
