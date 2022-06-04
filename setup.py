@@ -39,7 +39,6 @@ setup(
               'org.pyut.experimental',
               'org.pyut.general', 'org.pyut.general.datatypes', 'org.pyut.general.exceptions',
               'org.pyut.history', 'org.pyut.history.commands',
-              'org.pyut.model',
               'org.pyut.persistence', 'org.pyut.persistence.converters',
               'org.pyut.plugins',
               'org.pyut.plugins.base',
