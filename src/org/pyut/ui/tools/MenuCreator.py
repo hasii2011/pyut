@@ -11,12 +11,14 @@ from wx import ID_COPY
 from wx import ID_OPEN
 from wx import ID_PASTE
 from wx import ID_EXIT
+from wx import ID_REDO
 from wx import ID_SAVE
 from wx import ID_SAVEAS
 from wx import ID_SELECTALL
 from wx import ID_PREFERENCES
 
 from wx import Frame
+from wx import ID_UNDO
 from wx import Menu
 from wx import MenuBar
 
@@ -243,8 +245,8 @@ class MenuCreator:
 
         mnuEdit: Menu = self._editMenu
 
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_UNDO, _("&Undo\tCtrl-Z"), _("Undo the last performed action"))
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_REDO, _("&Redo\tCtrl-Y"), _("Redo the last undone action"))
+        mnuEdit.Append(ID_UNDO)
+        mnuEdit.Append(ID_REDO)
         mnuEdit.AppendSeparator()
         # mnuEdit.Append(ID_CUT, _("Cu&t\tCtrl-X"), _("Cut selected data"))
         # mnuEdit.Append(ID_COPY)
@@ -415,8 +417,8 @@ class MenuCreator:
 
     def _bindEditMenuHandlers(self, containingFrame: Frame, editMenuHandler: EditMenuHandler):
 
-        containingFrame.Bind(EVT_MENU, editMenuHandler.onUndo, id=SharedIdentifiers.ID_MNU_UNDO)
-        containingFrame.Bind(EVT_MENU, editMenuHandler.onRedo, id=SharedIdentifiers.ID_MNU_REDO)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onUndo, id=ID_UNDO)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onRedo, id=ID_REDO)
 
         containingFrame.Bind(EVT_MENU, editMenuHandler.onCut,   id=ID_CUT)
         containingFrame.Bind(EVT_MENU, editMenuHandler.onCopy,  id=ID_COPY)

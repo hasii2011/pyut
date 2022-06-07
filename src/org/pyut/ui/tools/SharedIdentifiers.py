@@ -41,8 +41,7 @@ class SharedIdentifiers:
         ID_MNU_FILE_INSERT_PROJECT, ID_SD_MESSAGE,
         ID_MNU_FILE_REMOVE_DOCUMENT, ID_DEBUG,
         ID_ZOOM_IN, ID_ZOOM_OUT, ID_ZOOM_VALUE,
-        ID_MNU_REDO, ID_MNU_UNDO
-    ] = PyutUtils.assignID(43)
+    ] = PyutUtils.assignID(41)
 
     ACTIONS = {
         ID_ARROW:           ACTION_SELECTOR,

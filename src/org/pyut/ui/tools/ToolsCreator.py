@@ -6,7 +6,9 @@ from logging import getLogger
 
 from wx import EVT_TOOL
 from wx import ID_OPEN
+from wx import ID_REDO
 from wx import ID_SAVE
+from wx import ID_UNDO
 from wx import ITEM_CHECK
 from wx import ITEM_NORMAL
 from wx import NO_BORDER
@@ -156,12 +158,12 @@ class ToolsCreator:
         self._toolUndo = Tool("pyut-undo", toolIconOwner.toolUndo,
                               caption=_("Undo"), tooltip=_("Undo the last performed action"),
                               category=PYUT_MENU_CATEGORY,
-                              actionCallback=self._editMenuHandler.onUndo, wxID=SID.ID_MNU_UNDO)
+                              actionCallback=self._editMenuHandler.onUndo, wxID=ID_UNDO)
 
         self._toolRedo = Tool("pyut-redo", toolIconOwner.toolRedo,
                               caption=_("Redo"), tooltip=_("Redo the last undone action"),
                               category=PYUT_MENU_CATEGORY,
-                              actionCallback=self._editMenuHandler.onRedo, wxID=SID.ID_MNU_REDO)
+                              actionCallback=self._editMenuHandler.onRedo, wxID=ID_REDO)
 
     def _createRelationshipTools(self):
 
