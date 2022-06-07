@@ -8,6 +8,7 @@ from org.pyut.history.commands.Command import Command
 
 from org.pyut.history.HistoryUtils import deTokenize
 from org.pyut.history.HistoryUtils import tokenizeValue
+
 from pyutmodel.PyutLinkedObject import PyutLinkedObject
 
 
@@ -127,7 +128,7 @@ class DeleteOglObjectCommand(Command):
         Delete the shape for which this command has been created. You do not
         need to redefine it.
         """
-        from ogl import OglClass
+        from ogl.OglClass import OglClass
         umlFrame = self.getGroup().getHistory().getFrame()
         shape = self._shape
         if isinstance(shape, OglClass):

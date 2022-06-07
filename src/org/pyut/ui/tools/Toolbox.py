@@ -21,6 +21,8 @@ from wx import GridSizer
 from wx import Size
 from wx import Window
 from wx import DefaultPosition
+from wx import WindowIDRef
+from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.tools.Tool import Category
@@ -86,10 +88,16 @@ class Toolbox(MiniFrame):
 
             tool: Tool = cast(Tool, tool)
             self.logger.debug(f'{tool.caption=}')
-            bitMapButton: BitmapButton = BitmapButton(parent=self, id=tool.wxID, bitmap=tool.img)
-            gridSizer.Add(bitMapButton, 0, EXPAND)
+            if isinstance(tool.wxID, WindowIDRef) is True:
+                buttonID = tool.wxID
+            else:
+                buttonID = wxNewIdRef()
 
-            bitMapButton.Bind(EVT_BUTTON, tool.actionCallback, tool.wxID)
+            bitMapButton: BitmapButton = BitmapButton(parent=self, id=buttonID, bitmap=tool.img)
+            self.logger.warning(f'{buttonID=} - {tool.actionCallback=}')
+            bitMapButton.Bind(EVT_BUTTON, tool.actionCallback, buttonID)
+
+            gridSizer.Add(bitMapButton, 0, EXPAND)
 
         iconSize:    int  = int(self._preferences.toolBarIconSize.value) + Toolbox.TOOLBOX_SIZE_ADJUSTMENT
         toolBoxSize: Size = Toolbox.computeSizeBasedOnRowColumns(numColumns=Toolbox.TOOLBOX_NUM_COLUMNS, numRows=rowCount, iconSize=iconSize)

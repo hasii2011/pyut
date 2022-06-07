@@ -16,6 +16,7 @@ from wx import wxEVT_MENU
 
 from wx import ID_OK
 from wx import ID_NO
+from wx import ID_CUT
 
 from wx import KeyEvent
 
@@ -1030,12 +1031,10 @@ class Mediator(Singleton):
         """
 
         """
-
-        from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
         from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
         parent:   PyutApplicationFrame = self._appFrame
-        cutEvent: CommandEvent         = CommandEvent(id=SharedIdentifiers.ID_MNU_EDIT_CUT)
+        cutEvent: CommandEvent         = CommandEvent(id=ID_CUT)
         cutEvent.SetEventType(wxEVT_MENU)   # This is some magic number
 
         wxPostEvent(dest=parent, event=cutEvent)

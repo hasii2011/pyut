@@ -9,9 +9,11 @@ from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_CLOSE
 from wx import Frame
 
+from wx import NewIdRef as wxNewIdRef
+
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
-from miniogl import DiagramFrame
+from miniogl.DiagramFrame import DiagramFrame
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -123,15 +125,16 @@ class TestToolboxFrame(App):
                                            category=PYUT_MENU_CATEGORY,
                                            actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
 
+        # Shared ID do not ave IDs for stock IDs
         self._toolOpen = Tool("pyut-open", toolIconOwner.toolOpen,
                               caption=_("Open"), tooltip=_("Open a file"),
                               category=PYUT_MENU_CATEGORY,
-                              actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_FILE_OPEN)
+                              actionCallback=self.__onToolActionCallback, wxID=wxNewIdRef())
 
         self._toolSave = Tool("pyut-save", toolIconOwner.toolSave,
                               caption=_("Save"), tooltip=_("Save current UML Diagram"),
                               category=PYUT_MENU_CATEGORY,
-                              actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_FILE_SAVE)
+                              actionCallback=self.__onToolActionCallback, wxID=wxNewIdRef())
 
         self._toolUndo = Tool("pyut-undo", toolIconOwner.toolUndo,
                               caption=_("Undo"), tooltip=_("Undo the last performed action"),

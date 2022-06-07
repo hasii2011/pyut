@@ -5,6 +5,8 @@ from logging import Logger
 from logging import getLogger
 
 from wx import EVT_TOOL
+from wx import ID_OPEN
+from wx import ID_SAVE
 from wx import ITEM_CHECK
 from wx import ITEM_NORMAL
 from wx import NO_BORDER
@@ -144,12 +146,12 @@ class ToolsCreator:
         self._toolOpen = Tool("pyut-open", toolIconOwner.toolOpen,
                               caption=_("Open"), tooltip=_("Open a file"),
                               category=PYUT_MENU_CATEGORY,
-                              actionCallback=self._fileMenuHandler.onFileOpen, wxID=SID.ID_MNU_FILE_OPEN)
+                              actionCallback=self._fileMenuHandler.onFileOpen, wxID=ID_OPEN)
 
         self._toolSave = Tool("pyut-save", toolIconOwner.toolSave,
                               caption=_("Save"), tooltip=_("Save current UML Diagram"),
                               category=PYUT_MENU_CATEGORY,
-                              actionCallback=self._fileMenuHandler.onFileSave, wxID=SID.ID_MNU_FILE_SAVE)
+                              actionCallback=self._fileMenuHandler.onFileSave, wxID=ID_SAVE)
 
         self._toolUndo = Tool("pyut-undo", toolIconOwner.toolUndo,
                               caption=_("Undo"), tooltip=_("Undo the last performed action"),

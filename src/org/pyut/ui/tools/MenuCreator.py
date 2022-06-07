@@ -6,10 +6,17 @@ from logging import getLogger
 
 from wx import EVT_MENU
 from wx import ID_ABOUT
+from wx import ID_CUT
+from wx import ID_COPY
+from wx import ID_OPEN
+from wx import ID_PASTE
 from wx import ID_EXIT
+from wx import ID_SAVE
+from wx import ID_SAVEAS
+from wx import ID_SELECTALL
+from wx import ID_PREFERENCES
 
 from wx import Frame
-from wx import ID_PREFERENCES
 from wx import Menu
 from wx import MenuBar
 
@@ -199,9 +206,10 @@ class MenuCreator:
         fileMenu.AppendSubMenu(self.mnuFileNew, _("&New"))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT, _("&Insert a project...\t"),
                         _("Insert a project in the current project..."))
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_OPEN, _("&Open...\tCtrl-O"), _("Open a file..."))
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_SAVE, _("&Save\tCtrl-S"), _("Save current data"))
-        fileMenu.Append(SharedIdentifiers.ID_MNUFILESAVEAS, _("Save &As..."), _("Save current data"))
+        # Use stock identifier and properties
+        fileMenu.Append(ID_OPEN)
+        fileMenu.Append(ID_SAVE)
+        fileMenu.Append(ID_SAVEAS)
         fileMenu.Append(SharedIdentifiers.ID_MNU_PROJECT_CLOSE, _("&Close project\tCtrl-W"), _("Close current project"))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT, _("&Remove document"), _("Remove the document from the project"))
         fileMenu.AppendSeparator()
@@ -238,11 +246,18 @@ class MenuCreator:
         mnuEdit.Append(SharedIdentifiers.ID_MNU_UNDO, _("&Undo\tCtrl-Z"), _("Undo the last performed action"))
         mnuEdit.Append(SharedIdentifiers.ID_MNU_REDO, _("&Redo\tCtrl-Y"), _("Redo the last undone action"))
         mnuEdit.AppendSeparator()
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_CUT, _("Cu&t\tCtrl-X"), _("Cut selected data"))
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_COPY, _("&Copy\tCtrl-C"), _("Copy selected data"))
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_PASTE, _("&Paste\tCtrl-V"), _("Paste selected data"))
+        # mnuEdit.Append(ID_CUT, _("Cu&t\tCtrl-X"), _("Cut selected data"))
+        # mnuEdit.Append(ID_COPY)
+        # mnuEdit.Append(ID_PASTE, _("&Paste\tCtrl-V"), _("Paste selected data"))
+        # mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL, _("&Select all\tCtrl-A"), _("Select all elements"))
+        #
+        # Use all the stock properties
+        #
+        mnuEdit.Append(ID_CUT)
+        mnuEdit.Append(ID_COPY)
+        mnuEdit.Append(ID_PASTE)
         mnuEdit.AppendSeparator()
-        mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL, _("&Select all\tCtrl-A"), _("Select all elements"))
+        mnuEdit.Append(ID_SELECTALL)
         mnuEdit.AppendSeparator()
 
         mnuEdit = self._initializeAddHierarchySubMenu(mnuEdit)
@@ -256,7 +271,9 @@ class MenuCreator:
 
         mnuHelp = self._helpMenu
 
-        mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
+        # mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
+        # Use the stock properties
+        mnuHelp.Append(ID_ABOUT)
         mnuHelp.AppendSeparator()
         mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_VERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
         mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_WEB,     _("&Web site"), _("Open PyUt web site"))
@@ -379,9 +396,9 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewSequenceDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewUsecaseDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileInsertProject, id=SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileOpen,          id=SharedIdentifiers.ID_MNU_FILE_OPEN)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSave,          id=SharedIdentifiers.ID_MNU_FILE_SAVE)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSaveAs,        id=SharedIdentifiers.ID_MNUFILESAVEAS)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileOpen,          id=ID_OPEN)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSave,          id=ID_SAVE)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSaveAs,        id=ID_SAVEAS)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileClose,         id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onRemoveDocument,    id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintSetup,        id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
@@ -401,14 +418,14 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, editMenuHandler.onUndo, id=SharedIdentifiers.ID_MNU_UNDO)
         containingFrame.Bind(EVT_MENU, editMenuHandler.onRedo, id=SharedIdentifiers.ID_MNU_REDO)
 
-        containingFrame.Bind(EVT_MENU, editMenuHandler.onCut,   id=SharedIdentifiers.ID_MNU_EDIT_CUT)
-        containingFrame.Bind(EVT_MENU, editMenuHandler.onCopy,  id=SharedIdentifiers.ID_MNU_EDIT_COPY)
-        containingFrame.Bind(EVT_MENU, editMenuHandler.onPaste, id=SharedIdentifiers.ID_MNU_EDIT_PASTE)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onCut,   id=ID_CUT)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onCopy,  id=ID_COPY)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onPaste, id=ID_PASTE)
 
         containingFrame.Bind(EVT_MENU, editMenuHandler.onAddPyut, id=SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY)
         containingFrame.Bind(EVT_MENU, editMenuHandler.onAddOgl,  id=SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY)
 
-        containingFrame.Bind(EVT_MENU, editMenuHandler.onSelectAll, id=SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onSelectAll, id=ID_SELECTALL)
 
         if self._prefs.debugErrorViews is True:
             from org.pyut.experimental.DebugErrorViews import DebugErrorViews
