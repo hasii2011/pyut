@@ -16,8 +16,6 @@ DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfigurati
               ('org/pyut/resources', ['src/org/pyut/resources/version.txt']),
 
               ('org/pyut/resources/img', ['src/org/pyut/resources/img/pyut.ico']),
-
-
               ]
 OPTIONS = {}
 
@@ -26,7 +24,7 @@ setup(
     version='6.7.0',
     app=APP,
     data_files=DATA_FILES,
-    packages=['pyutmodel',
+    packages=[
               'miniogl',
               'ogl', 'ogl.events', 'ogl.preferences', 'ogl.resources', 'ogl.resources.img', 'ogl.resources.img.textdetails', 'ogl.sd',
               'org',
@@ -98,5 +96,6 @@ setup(
                       'PyGithub',
                       'wxPython',
                       'xmlschema',
+                      'pyutmodel'
                       ]
 )

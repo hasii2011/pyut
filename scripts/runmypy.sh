@@ -14,7 +14,7 @@ changeToProjectRoot
 cd src > /dev/null 2>&1 || ! echo "No such directory"
 echo "current: $(pwd)"
 
-mypy --config-file .mypi.ini --pretty --no-color-output  --show-error-codes org pyutmodel miniogl ogl tests
+mypy --config-file .mypi.ini --pretty --no-color-output  --show-error-codes org miniogl ogl tests
 # mypy --config-file .mypi.ini --pretty                    --show-error-codes org pyutmodel tests
 status=$?
 
