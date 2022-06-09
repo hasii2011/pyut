@@ -14,8 +14,6 @@ from wx import FONTFAMILY_SWISS
 from wx import FONTSTYLE_NORMAL
 from wx import FONTWEIGHT_NORMAL
 
-from pyutmodel.PyutObject import PyutObject
-
 from miniogl.RectangleShape import RectangleShape
 from miniogl.ShapeEventHandler import ShapeEventHandler
 
@@ -26,6 +24,8 @@ from ogl.events.OglEventType import OglEventType
 from ogl.events.OglEventEngine import OglEventEngine
 
 from ogl.preferences.OglPreferences import OglPreferences
+
+from pyutmodel.PyutObject import PyutObject
 
 
 DEFAULT_FONT_SIZE = 10

@@ -3,7 +3,8 @@ from logging import getLogger
 
 from wx import WHITE_BRUSH
 
-from miniogl import Shape
+from miniogl.Shape import Shape
+
 from pyutmodel.PyutLink import PyutLink
 from ogl.OglClass import OglClass
 from ogl.OglLink import OglLink

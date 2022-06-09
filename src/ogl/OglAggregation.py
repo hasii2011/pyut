@@ -4,7 +4,7 @@ from logging import getLogger
 
 from wx import DC
 
-from miniogl import Shape
+from miniogl.Shape import Shape
 from ogl.OglAssociation import OglAssociation
 
 

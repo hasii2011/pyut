@@ -13,6 +13,7 @@ from wx import WHITE_BRUSH
 
 from pyutmodel.PyutLink import PyutLink
 
+
 from ogl.OglLink import OglLink
 from ogl.OglClass import OglClass
 
