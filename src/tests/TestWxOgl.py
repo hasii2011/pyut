@@ -20,6 +20,7 @@ from wx import NullBitmap
 from wx import Rect
 from wx import CommandEvent
 from wx import ScrolledWindow
+# noinspection PyUnresolvedReferences
 # noinspection PyProtectedMember
 from wx._core import BitmapType
 

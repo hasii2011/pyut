@@ -7,14 +7,12 @@ from wx import BLACK_PEN
 from wx import RED_PEN
 from wx import DC
 
-
+from miniogl.AttachmentLocation import AttachmentLocation
 from miniogl.Common import CommonLine
 from miniogl.Common import CommonPoint
 
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from miniogl.Shape import Shape
-
-from miniogl.AttachmentLocation import AttachmentLocation
 
 
 class LollipopLine(Shape):

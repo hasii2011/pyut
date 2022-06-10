@@ -3,6 +3,7 @@ from logging import Logger
 from logging import getLogger
 
 from miniogl.Shape import Shape
+from miniogl.SizerShape import SizerShape
 
 
 class Diagram:
@@ -54,7 +55,7 @@ class Diagram:
         self._shapes = []
         self._parentShapes = []
 
-    def RemoveShape(self, shape: Shape):
+    def RemoveShape(self, shape: SizerShape):
         """
         Remove a shape from the diagram. Use Shape.Detach() instead!
         This also works, but it not the better way.

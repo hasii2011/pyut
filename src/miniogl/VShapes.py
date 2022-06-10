@@ -10,7 +10,6 @@ class VShape:
     """
     Base VShape class.
 
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
     def __init__(self):
         self._data = ()

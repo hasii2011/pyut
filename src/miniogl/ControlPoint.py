@@ -37,6 +37,7 @@ class ControlPoint(LinePoint):
     def __eq__(self, other) -> bool:
 
         if isinstance(other, ControlPoint):
+            # noinspection PyProtectedMember
             if self._x == other._x and self._y == other._y and self._id == other._id:
                 return True
             else:

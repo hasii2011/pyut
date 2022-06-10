@@ -7,9 +7,6 @@ from miniogl.PointShape import PointShape
 class LinePoint(PointShape):
     """
     This is a point guiding a line.
-
-
-    @author Laurent Burgbacher <lb@alawa.ch>
     """
     def __init__(self, x: int, y: int, parent=None):
         """

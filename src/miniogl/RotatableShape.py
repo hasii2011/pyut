@@ -1,5 +1,6 @@
 
 from miniogl.RectangleShape import RectangleShape
+
 from miniogl.VShapes import VShape
 
 
