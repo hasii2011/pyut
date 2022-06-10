@@ -37,7 +37,6 @@ class TestCreateOglInterfaceCommand(TestBase):
     """
     """
     clsLogger: Logger = cast(Logger, None)
-    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
@@ -46,14 +45,13 @@ class TestCreateOglInterfaceCommand(TestBase):
         TestCreateOglInterfaceCommand.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
-        TestCreateOglInterfaceCommand.clsApp    = App()
-
     @classmethod
     def tearDownClass(cls):
-        cls.clsApp.OnExit()
+        pass
 
     def setUp(self):
         self.logger: Logger = TestCreateOglInterfaceCommand.clsLogger
+        self.app:    App    = App()
 
         fqFileName: str = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'OglInterface2.txt')
         saveFile = open(fqFileName)
@@ -61,7 +59,8 @@ class TestCreateOglInterfaceCommand(TestBase):
         saveFile.close()
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testSerialize(self):
 

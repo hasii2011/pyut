@@ -100,7 +100,7 @@ class IoFile:
             raise e
         else:
 
-            self.logger.warning(f'{zlibVersion=}')       # type: ignore
+            self.logger.debug(f'{zlibVersion=}')       # type: ignore
             xmlBytes:  bytes = decompress(compressedData)  # has b'....' around it
             xmlString: str   = xmlBytes.decode()
             self.logger.info(f'Document read:\n{xmlString}')

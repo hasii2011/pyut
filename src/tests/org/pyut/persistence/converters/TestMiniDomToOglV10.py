@@ -48,7 +48,6 @@ class TestMiniDomToOglV10(TestBase):
     """
     """
     clsLogger: Logger = cast(Logger, None)
-    clsApp:    App = None
 
     @classmethod
     def setUpClass(cls):
@@ -56,14 +55,14 @@ class TestMiniDomToOglV10(TestBase):
         TestMiniDomToOglV10.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
-        TestMiniDomToOglV10.clsApp = App()
-
     def setUp(self):
-        self.logger:   Logger       = TestMiniDomToOglV10.clsLogger
+        self.logger:     Logger       = TestMiniDomToOglV10.clsLogger
+        self.app:        App          = App()
         self._converter: MiniDomToOgl = MiniDomToOgl()
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testSourceCodeInclusion(self):
         fqFileName: str = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'MiniDomToOglTest.xml')

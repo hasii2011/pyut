@@ -21,26 +21,25 @@ class TestLineSplitter(TestBase):
     """
     """
     clsLogger: Logger = cast(Logger, None)
-    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
 
         TestBase.setUpLogging()
         TestLineSplitter.clsLogger = getLogger(__name__)
-        TestLineSplitter.clsApp    = App()
 
     @classmethod
     def tearDownClass(cls):
-        cls.clsApp.OnExit()
+        pass
 
     def setUp(self):
         self.logger:       Logger       = TestLineSplitter.clsLogger
-        self.app:          App          = TestLineSplitter.clsApp
+        self.app:          App          = App()
         self.lineSplitter: LineSplitter = LineSplitter()
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testNoSplit(self):
 

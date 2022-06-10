@@ -30,7 +30,6 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
     """
     """
     clsLogger: Logger = cast(Logger, None)
-    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
@@ -40,15 +39,13 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
 
         PyutPreferences.determinePreferencesLocation()
 
-        TestDeleteOglLinkedObjectCommand.clsApp = App()
-
     @classmethod
     def tearDownClass(cls):
-        cls.clsApp.OnExit()
+        pass
 
     def setUp(self):
         self.logger: Logger = TestDeleteOglLinkedObjectCommand.clsLogger
-        self.app:    App    = TestDeleteOglLinkedObjectCommand.clsApp
+        self.app:    App    = App()
 
         fqFileName: str = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'OglLinkedObject.txt')
         saveFile = open(fqFileName)
@@ -56,7 +53,8 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
         saveFile.close()
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testSerialize(self):
 

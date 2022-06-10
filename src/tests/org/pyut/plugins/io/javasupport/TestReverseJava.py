@@ -37,7 +37,6 @@ class TestReverseJava(TestBase):
     """
     """
     clsLogger: Logger = cast(Logger, None)
-    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
@@ -45,21 +44,19 @@ class TestReverseJava(TestBase):
         TestReverseJava.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
-        TestReverseJava.clsApp = App()
-
     @classmethod
     def tearDownClass(cls):
-        cls.clsApp.OnExit()
-        del cls.clsApp
+        pass
 
     def setUp(self):
         self.logger:     Logger = TestReverseJava.clsLogger
         self._mockFrame: Mock   = Mock(spec=UmlClassDiagramsFrame)
 
-        self._app: App = TestReverseJava.clsApp
+        self._app: App = App()
 
     def tearDown(self):
-        pass
+        self._app.OnExit()
+        del self._app
 
     def testBasicClass(self):
 

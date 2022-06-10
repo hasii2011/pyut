@@ -40,7 +40,6 @@ class TestOglToMiniDomV10(TestBase):
 
     clsLogger: Logger = cast(Logger, None)
     clsCounter: int    = 0
-    clsApp:     App    = None
 
     @classmethod
     def setUpClass(cls):
@@ -48,14 +47,14 @@ class TestOglToMiniDomV10(TestBase):
         TestOglToMiniDomV10.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
-        TestOglToMiniDomV10.clsApp    = App()
-
     def setUp(self):
         self.logger:       Logger          = TestOglToMiniDomV10.clsLogger
+        self.app:          App             = App()
         self._preferences: PyutPreferences = PyutPreferences()
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testBasicClass(self):
         from org.pyut.persistence.PyutXmlV10 import PyutXml

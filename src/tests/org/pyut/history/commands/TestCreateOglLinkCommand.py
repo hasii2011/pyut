@@ -36,7 +36,6 @@ class TestCreateOglLinkCommand(TestBase):
     """
     """
     clsLogger: Logger = cast(Logger, None)
-    clsApp:    App    = None
 
     @classmethod
     def setUpClass(cls):
@@ -44,13 +43,13 @@ class TestCreateOglLinkCommand(TestBase):
         TestCreateOglLinkCommand.clsLogger = getLogger(__name__)
         PyutPreferences.determinePreferencesLocation()
 
-        TestCreateOglLinkCommand.clsApp = App()
-
     def setUp(self):
         self.logger: Logger = TestCreateOglLinkCommand.clsLogger
+        self.app:    App    = App()
 
     def tearDown(self):
-        pass
+        self.app.OnExit()
+        del self.app
 
     def testDeSerializeLink(self):
         """
