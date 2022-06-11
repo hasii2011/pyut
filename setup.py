@@ -25,8 +25,6 @@ setup(
     app=APP,
     data_files=DATA_FILES,
     packages=[
-              'miniogl',
-              'ogl', 'ogl.events', 'ogl.preferences', 'ogl.resources', 'ogl.resources.img', 'ogl.resources.img.textdetails', 'ogl.sd',
               'org',
               'org.pyut',
               'org.pyut.dialogs', 'org.pyut.dialogs.preferences', 'org.pyut.dialogs.preferences.valuecontainers',
@@ -96,6 +94,7 @@ setup(
                       'PyGithub',
                       'wxPython',
                       'xmlschema',
-                      'pyutmodel'
+                      'pyutmodel',
+                      'ogl',
                       ]
 )
