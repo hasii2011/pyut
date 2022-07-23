@@ -334,7 +334,7 @@ class MenuCreator:
 
         return sub
 
-    def _makeImportMenu(self, fileMenuHandler: FileMenuHandler):
+    def _makeImportMenu(self, fileMenuHandler: FileMenuHandler) -> Menu:
         """
         Make the import submenu.
         """
@@ -352,6 +352,7 @@ class MenuCreator:
             # sub.Append(wxId, pluginName)
             # self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onImport, id=wxId)
             sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, pluginName=pluginName, callback=fileMenuHandler.onImport)
+
         return sub
 
     def _makeToolsMenu(self):

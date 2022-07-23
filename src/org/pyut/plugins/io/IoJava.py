@@ -134,6 +134,7 @@ class IoJava(PyutIoPlugin):
         # List of links
         interfaces: PyutLinks = PyutLinks([])     # List of interfaces implemented by the class
         links:      PyutLinks = PyutLinks([])     # Aggregation and compositions
+
         self._separateLinks(allLinks, interfaces, links)
 
         # Is it an interface

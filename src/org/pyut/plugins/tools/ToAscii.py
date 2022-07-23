@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import cast
 
 from math import floor
 from math import ceil
@@ -7,7 +8,6 @@ from math import ceil
 from os import path as osPath
 from os import chdir
 from os import getcwd
-from typing import cast
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from pyutmodel.PyutClass import PyutClass

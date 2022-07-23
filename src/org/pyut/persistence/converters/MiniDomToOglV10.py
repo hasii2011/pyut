@@ -633,7 +633,7 @@ class MiniDomToOgl:
 
     def _generateControlPoints(self, link: Element) -> ControlPoints:
 
-        controlPoints: ControlPoints = cast(ControlPoints, [])
+        controlPoints: ControlPoints = ControlPoints([])
 
         for controlPoint in link.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_CONTROL_POINT):
             x = PyutUtils.strFloatToInt(controlPoint.getAttribute(PyutXmlConstants.ATTR_X))
