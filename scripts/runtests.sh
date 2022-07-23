@@ -51,9 +51,9 @@ cd src > /dev/null 2>&1  || ! echo "No such directory"
 echo "current: $(pwd)"
 
 python -m tests.TestAll
+status=$?
 
 manuallyRunSomeTests
-
 
 cd -  > /dev/null 2>&1 || ! echo "No such directory"
 
