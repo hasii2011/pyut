@@ -4,8 +4,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from copy import deepcopy
-
 from wx import ALIGN_CENTER
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALIGN_RIGHT
@@ -85,9 +83,9 @@ class DlgEditClass(DlgEditClassCommon):
         """
         self.logger:         Logger    = getLogger(__name__)
         self._pyutClass:     PyutClass = pyutClass
-        self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
+        # self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
 
-        super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Edit Class"), pyutModel=self._pyutClassCopy, editInterface=False)
+        super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Edit Class"), pyutModel=self._pyutClass, editInterface=False)
 
         lblStereotype:       StaticText = StaticText (self, -1, _("Stereotype"))
         self._txtStereotype: TextCtrl   = TextCtrl(self, ID_TXT_STEREO_TYPE, "", size=(125, -1))
@@ -202,10 +200,10 @@ class DlgEditClass(DlgEditClassCommon):
 
         """
         # Fill Class name
-        self._txtName.SetValue(self._pyutClassCopy.name)
+        self._txtName.SetValue(self._pyutModelCopy.name)
 
         # Fill Stereotype
-        stereotype = self._pyutClassCopy.getStereotype()
+        stereotype = self._pyutModelCopy.getStereotype()
         if stereotype is None:
             strStereotype = ""
         else:
@@ -227,9 +225,9 @@ class DlgEditClass(DlgEditClassCommon):
             dlg.Destroy()
 
         # Fill display properties
-        self._chkShowFields.SetValue(self._pyutClassCopy.showFields)
-        self._chkShowMethods.SetValue(self._pyutClassCopy.showMethods)
-        self._chkShowStereotype.SetValue(self._pyutClassCopy.getShowStereotype())
+        self._chkShowFields.SetValue(self._pyutModelCopy.showFields)
+        self._chkShowMethods.SetValue(self._pyutModelCopy.showMethods)
+        self._chkShowStereotype.SetValue(self._pyutModelCopy.getShowStereotype())
 
     def _fixBtnFields(self):
         """
@@ -270,7 +268,7 @@ class DlgEditClass(DlgEditClassCommon):
         Edit a field.
         """
         selection = self._lstFieldList.GetSelection()
-        field = self._pyutClassCopy.fields[selection]
+        field = self._pyutModelCopy.fields[selection]
         ret = self._callDlgEditField(field)
         if ret == OK:
             # Modify field in dialog list
@@ -296,7 +294,7 @@ class DlgEditClass(DlgEditClassCommon):
             self._lstFieldList.SetSelection(index)
 
         # Remove from _pyutModelCopy
-        fields = self._pyutClassCopy.fields
+        fields = self._pyutModelCopy.fields
         fields.pop(selection)
 
         # Fix buttons of fields list (enable or not)
@@ -315,7 +313,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         # Move up the field in _pyutModelCopy
         selection = self._lstFieldList.GetSelection()
-        fields = self._pyutClassCopy.fields
+        fields = self._pyutModelCopy.fields
         field = fields[selection]
         fields.pop(selection)
         fields.insert(selection - 1, field)
@@ -340,7 +338,7 @@ class DlgEditClass(DlgEditClassCommon):
         Move down a field in the list.
         """
         selection = self._lstFieldList.GetSelection()
-        fields = self._pyutClassCopy.fields
+        fields = self._pyutModelCopy.fields
         field = fields[selection]
         fields.pop(selection)
         fields.insert(selection + 1, field)
@@ -396,7 +394,7 @@ class DlgEditClass(DlgEditClassCommon):
         else:
             self._pyutClass.setStereotype(PyutStereotype(strStereotype))
         # Adds all fields in a list
-        self._pyutClass.fields = self._pyutClassCopy.fields
+        self._pyutClass.fields = self._pyutModelCopy.fields
 
         # Update display properties
         self._pyutClass.showFields  = self._chkShowFields.GetValue()
