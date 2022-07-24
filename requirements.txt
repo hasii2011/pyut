@@ -5,7 +5,7 @@ orthogonal~=1.1.6
 pyumldiagrams~=2.30.6
 pygmlparser==1.0.1
 pyutmodel==1.0.4
-ogl==0.53.2
+ogl==0.53.5
 
 antlr4-python3-runtime==4.9.3
 PyGithub==1.55

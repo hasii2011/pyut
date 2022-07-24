@@ -17,10 +17,10 @@ from pyutmodel.PyutType import PyutType
 
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
+MethodsCodeType = NewType('MethodsCodeType', Dict[str, List[str]])
+
 
 class PyutToPython:
-
-    MethodsCodeType = NewType('MethodsCodeType', Dict[str, List[str]])
 
     MAX_WIDTH:            int = 120
     CLASS_COMMENTS_START: str = '"""'
@@ -92,13 +92,13 @@ class PyutToPython:
         Return a dictionary of method code for a given class
 
         Args:
-            pyutClass:  The data model class for which we have to generate a bunch fo code for
+            pyutClass:  The data model class for which we have to generate a bunch of code
 
         Returns:
             A bunch of code that is the code for this class; The map key is the method name the
             value is a list of the method code
         """
-        clsMethods = cast(PyutToPython.MethodsCodeType, {})
+        clsMethods: MethodsCodeType = MethodsCodeType({})
         for pyutMethod in pyutClass.methods:
             # Separation
             txt = ""
@@ -110,24 +110,36 @@ class PyutToPython:
 
             clsMethods[pyutMethod.name] = lstCodeMethod
 
-        # Add fields
+        # Create method __init__ if it does not exist
+        if PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR not in clsMethods:
+            clsMethods = self.generatePythonInitMethod(clsMethods)
+
         if len(pyutClass.fields) > 0:
-            # Create method __init__ if it does not exist
-            if PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR not in clsMethods:
-                # Separation
-                lstCodeMethod = []
+            # Add fields
 
-                subCode = self.generateASingleMethodsCode(PyutMethod(PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR), False)
-
-                for el in self.indent(subCode):
-                    lstCodeMethod.append(str(el))
-
-                clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR] = lstCodeMethod
-
-            clsInit = clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR]
+            clsInitMethod: List[str] = clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR]
             for pyutField in pyutClass.fields:
-                clsInit.append(self.__indentStr(self.__indentStr(self.generateFieldPythonCode(pyutField))))
-            clsInit.append('\n')
+                clsInitMethod.append(self.__indentStr(self.__indentStr(self.generateFieldPythonCode(pyutField))))
+            # This is the actual entry;  So no need to put it back in clsMethods
+            clsInitMethod.append('\n')
+
+        return clsMethods
+
+    def generatePythonInitMethod(self, clsMethods: MethodsCodeType) -> MethodsCodeType:
+        """
+
+        Args:
+            clsMethods:  The current in progress dictionary
+
+        Returns:  The updated dictionary
+        """
+        lstCodeMethod = []
+        subCode = self.generateASingleMethodsCode(PyutMethod(PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR), False)
+
+        for el in self.indent(subCode):
+            lstCodeMethod.append(str(el))
+
+        clsMethods[PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR] = lstCodeMethod
 
         return clsMethods
 
@@ -183,7 +195,10 @@ class PyutToPython:
         fieldCode: str = "self."
 
         fieldCode = f'{fieldCode}{self.generateVisibilityPrefix(pyutField.visibility)}'
-        fieldCode = f'{fieldCode}{pyutField.name}: {pyutField.type}'
+        if pyutField.type.value == '':
+            fieldCode = f'{fieldCode}{pyutField.name}'
+        else:
+            fieldCode = f'{fieldCode}{pyutField.name}: {pyutField.type}'
 
         value = pyutField.defaultValue
         if value == '':

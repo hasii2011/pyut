@@ -29,8 +29,9 @@ from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.base.PyutPlugin import InputFormatType
 from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 
-from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
+from org.pyut.plugins.iopythonsupport.PyutToPython import MethodsCodeType
 from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
+from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
 from org.pyut.plugins.iopythonsupport.ReverseEngineerPython2 import ReverseEngineerPython2
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -130,7 +131,7 @@ class IoPython(PyutIoPlugin):
             generatedStanza:    str       = self._pyutToPython.generateClassStanza(pyutClass)
             generatedClassCode: List[str] = [generatedStanza]
 
-            clsMethods: PyutToPython.MethodsCodeType = self._pyutToPython.generateMethodsCode(pyutClass)
+            clsMethods: MethodsCodeType = self._pyutToPython.generateMethodsCode(pyutClass)
 
             # Add __init__ Method
             if PyutToPython.SPECIAL_PYTHON_CONSTRUCTOR in clsMethods:
