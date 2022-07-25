@@ -77,7 +77,6 @@ setup(
     maintainer_email='humberto.a.sanchez.ii@gmail.com',
     description='The Python UML Tool',
     long_description=README,
-    license=LICENSE,
     options=dict(py2app=dict(
         plist=dict(
             CFBundleGetInfoString='Edits Pyut UML Files',
@@ -103,7 +102,7 @@ setup(
                       'PyGithub==1.55',
                       'wxPython==4.1.1',
                       'xmlschema==1.11.1',
-                      'pyutmodel==1.0.4',
-                      'ogl==0.53.5',
+                      'pyutmodel==1.1.0',
+                      'ogl==0.54.9',
                       ]
 )
