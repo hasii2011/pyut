@@ -6,6 +6,7 @@ from wx import BITMAP_TYPE_JPEG
 from wx import BITMAP_TYPE_PNG
 from wx import BITMAP_TYPE_TIFF
 
+# noinspection PyProtectedMember
 from wx._core import BitmapType
 
 

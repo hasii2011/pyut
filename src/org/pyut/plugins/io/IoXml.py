@@ -102,7 +102,7 @@ class IoXml(PyutIoPlugin):
         Args:
             oglObjects:
 
-        Returns: True if we succeeded with the write, Returns False if error occurred or if the operation was cancelled
+        Returns: True if we succeeded with the write ope, Returns False if error occurred or if the operation was cancelled
         """
         oldPath = getcwd()
         # Ask the user which destination file he wants

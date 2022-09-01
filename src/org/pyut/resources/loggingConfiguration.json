@@ -66,22 +66,13 @@
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.ogl.OglClass": {
-            "level":     "INFO",
+        "ogl.OglAggregation": {
+            "level": "DEBUG",
             "propagate": "False"
         },
-        "org.pyut.miniogl.DiagramFrame": {
-            "level":     "WARNING",
-            "propagate": "False"
-        },
-        "org.pyut.miniogl.Shape": {
-            "level":     "DEBUG",
-            "propagate": "False"
-        },
-        "org.pyut.miniogl.SelectAnchorPoint": {
-            "level":     "DEBUG",
+        "ogl.OglAssociation": {
+            "level": "DEBUG",
             "propagate": "False"
         }
-
     }
 }

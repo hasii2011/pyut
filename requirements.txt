@@ -1,11 +1,9 @@
 wheel~=0.37.1
-setuptools==63.2.0
+setuptools==65.3.0
 
-orthogonal~=1.1.6
+orthogonal~=1.1.7
 pyumldiagrams~=2.30.6
 pygmlparser==1.0.1
-ogl~=0.54.9
-pyutmodel~=1.1.0
 
 antlr4-python3-runtime==4.9.3
 PyGithub==1.55
@@ -22,7 +20,9 @@ html-testRunner~=1.2.1
 mypy==0.971
 mypy-extensions~=0.4.3
 types-Deprecated==1.2.9
-types-setuptools==63.2.1
+types-setuptools==65.3.0
 typing_extensions==4.3.0
 
-wxPython==4.1.1
+wxPython==4.2.0
+pyutmodel==1.1.0
+ogl==0.60.1

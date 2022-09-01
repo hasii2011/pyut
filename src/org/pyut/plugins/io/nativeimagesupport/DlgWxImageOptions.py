@@ -113,7 +113,7 @@ class DlgWxImageOptions(BaseDlgEdit):
 
     def _fileSelectionMotion(self, event: MouseEvent):
 
-        ctrl: TextCtrl = event.EventObject
+        ctrl: TextCtrl = event.GetEventObject()
 
         tip = ctrl.GetToolTip()
         tip.SetTip(self._outputFileName)
@@ -145,7 +145,7 @@ class DlgWxImageOptions(BaseDlgEdit):
 
     def _onImageFormatChoice(self, event: CommandEvent):
 
-        ctrl:      Choice = event.EventObject
+        ctrl:      Choice = event.GetEventObject()
         idx:       int    = ctrl.GetCurrentSelection()
         newValue:  str    = ctrl.GetString(idx)
 
@@ -171,6 +171,7 @@ class DlgWxImageOptions(BaseDlgEdit):
         return fileSelectionSizer
 
     def __layoutImageFormatChoice(self) -> StaticBoxSizer:
+        # noinspection PyTypeChecker
 
         imageChoices: List[str] = [WxImageFormat.PNG.value, WxImageFormat.JPG.value, WxImageFormat.BMP.value, WxImageFormat.TIFF.value]
         self._imageFormatChoice = Choice(self, self.__imageFormatChoiceId, choices=imageChoices)
