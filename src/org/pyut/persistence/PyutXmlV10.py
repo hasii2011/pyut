@@ -306,7 +306,8 @@ class PyutXml:
             umlFrame:       Where to render
         """
         oglSDInstances: OglSDInstances = toOgl.getOglSDInstances(documentNode.getElementsByTagName("GraphicSDInstance"), umlFrame)
-        oglSDMessages: OglSDMessages = toOgl.getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances)
+        oglSDMessages:  OglSDMessages = toOgl.getOglSDMessages(documentNode.getElementsByTagName("GraphicSDMessage"), oglSDInstances)
+        self.__displayTheSDInstances(oglSDInstances, umlFrame)
         self.__displayTheSDMessages(oglSDMessages, umlFrame)
 
     def __displayTheClasses(self, oglClasses: OglClasses, umlFrame: UmlDiagramsFrame):
@@ -366,6 +367,10 @@ class PyutXml:
 
         for oglSDMessage in oglSDMessages.values():
             umlFrame.getDiagram().AddShape(oglSDMessage)
+
+    def __displayTheSDInstances(self, oglSDInstances: OglSDInstances, umlFrame: UmlDiagramsFrame):
+        for oglSDInstance in oglSDInstances.values():
+            umlFrame.getDiagram().AddShape(oglSDInstance)
 
     def __displayAnOglObject(self, oglObject: OglObject, umlFrame: UmlDiagramsFrame):
         x, y = oglObject.GetPosition()

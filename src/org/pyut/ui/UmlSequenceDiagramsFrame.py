@@ -17,7 +17,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     it knows the structure of a sequence diagram,
     It can load sequence diagram data
 
-    :Note on data
+    Note on data
         - sdInstances is a set of class diagram instances,
           composed by label and lifeline
     """
@@ -45,7 +45,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         """
         # Create and add instance
         pyutSDInstance: PyutSDInstance = PyutSDInstance()
-        oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance, self)
+        oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance)
 
         self.addShape(oglSDInstance, x, oglSDInstance.GetPosition()[1])
 

@@ -217,9 +217,18 @@ class OglToPyUmlDefinition:
         return methodDefinition
 
     def __toDefinitionType(self, visibility: PyutVisibilityEnum) -> DefinitionType:
+        """
+        TODO: Used to always return public;  Not sure why; fix later
+        Args:
+            visibility:  The pyut visibility enumeration value
+
+        Returns: The visibility enumeration value for the interchange
+        """
 
         if visibility == PyutVisibilityEnum.PUBLIC:
             return DefinitionType.Public
+        else:
+            return DefinitionType.Private
 
     def __addClassDiagramDisplayPreferences(self, pyutClass: PyutClass, classDefinition: ClassDefinition) -> ClassDefinition:
 

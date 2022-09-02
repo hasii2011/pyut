@@ -100,9 +100,9 @@ setup(
                       'pygmlparser==1.0.1',
                       'pyumldiagrams==2.30.8',
                       'PyGithub==1.55',
-                      'wxPython==4.1.1',
+                      'wxPython==4.2.0',
                       'xmlschema==1.11.1',
                       'pyutmodel==1.1.0',
-                      'ogl==0.54.9',
+                      'ogl==0.60.2',
                       ]
 )

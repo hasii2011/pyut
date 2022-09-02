@@ -438,7 +438,7 @@ class MiniDomToOgl:
         for xmlOglSDInstance in xmlOglSDInstances:
 
             pyutSDInstance: PyutSDInstance = PyutSDInstance()
-            oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance, umlFrame)
+            oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance)
 
             xmlSDInstance = xmlOglSDInstance.getElementsByTagName(PyutXmlConstants.ELEMENT_MODEL_SD_INSTANCE)[0]
 

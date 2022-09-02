@@ -25,4 +25,4 @@ typing_extensions==4.3.0
 
 wxPython==4.2.0
 pyutmodel==1.1.0
-ogl==0.60.1
+ogl==0.60.2
