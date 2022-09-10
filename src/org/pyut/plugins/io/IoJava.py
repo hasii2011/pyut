@@ -25,7 +25,7 @@ from ogl import OglClass
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 
 class IoJava(PyutIoPlugin):

@@ -27,7 +27,7 @@ from org.pyut.plugins.orthogonal.OrthogonalAdapter import OrthogonalAdapter
 from org.pyut.plugins.orthogonal.OrthogonalAdapter import LayoutAreaSize
 from org.pyut.plugins.orthogonal.OrthogonalAdapterException import OrthogonalAdapterException
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 from org.pyut.plugins.base.PluginTypes import OglClasses

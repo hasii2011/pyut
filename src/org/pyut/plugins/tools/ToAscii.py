@@ -17,7 +17,7 @@ from org.pyut.plugins.base.PluginTypes import OglClasses
 
 from ogl.OglClass import OglClass
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 
 class ToAscii(PyutToPlugin):

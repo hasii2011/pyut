@@ -54,7 +54,7 @@ from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
     from ogl.OglObject import OglObject
-    from org.pyut.ui.UmlFrame import UmlObjects
+    from org.pyut.ui.umlframes.UmlFrame import UmlObjects
     from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
@@ -667,7 +667,7 @@ class Mediator(Singleton):
 
         Returns: Return the list of UmlObjects in the diagram.
         """
-        from org.pyut.ui.UmlFrame import UmlObjects
+        from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
         if self._treeNotebookHandler is None:
             return UmlObjects([])

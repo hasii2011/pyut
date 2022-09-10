@@ -126,7 +126,7 @@ class PyutXml:
 
                 top.appendChild(documentNode)
 
-                from org.pyut.ui.UmlFrame import UmlObjects
+                from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
                 oglObjects: UmlObjects = document.getFrame().getUmlObjects()
                 for i in range(len(oglObjects)):

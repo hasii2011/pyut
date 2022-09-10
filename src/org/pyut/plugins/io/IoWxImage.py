@@ -28,7 +28,7 @@ from org.pyut.plugins.io.nativeimagesupport.WxImageFormat import WxImageFormat
 
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 
 class IoWxImage(PyutIoPlugin):

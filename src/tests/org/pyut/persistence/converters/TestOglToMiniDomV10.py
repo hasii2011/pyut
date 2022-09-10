@@ -28,7 +28,7 @@ from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.UmlFrame import UmlObjects
+from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from tests.TestBase import TestBase
 

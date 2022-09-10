@@ -11,7 +11,7 @@ from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.base.PyutPlugin import InputFormatType
 from org.pyut.plugins.base.PyutPlugin import OutputFormatType
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 
 class PluginIoTemplate(PyutIoPlugin):

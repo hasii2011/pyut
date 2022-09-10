@@ -12,7 +12,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 from org.pyut.plugins.base.PluginTypes import OglClasses
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 from org.pyut.ui.Mediator import Mediator
 
 

@@ -21,7 +21,7 @@ from ogl.events.OglEvents import CreateLollipopInterfaceEvent
 
 from ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 
 class UmlDiagramsFrame(UmlFrame):

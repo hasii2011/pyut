@@ -27,7 +27,7 @@ from ogl.OglLink import OglLink
 from pyutmodel.PyutLinkType import PyutLinkType
 
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 
 class ToSugiyama(PyutToPlugin):

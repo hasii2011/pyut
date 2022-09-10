@@ -14,7 +14,7 @@ from org.pyut.plugins.gml.GMLExporter import GMLExporter
 
 from ogl.OglClass import OglClass
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 
 class IoGML(PyutIoPlugin):

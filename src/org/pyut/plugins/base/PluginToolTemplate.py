@@ -4,7 +4,7 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from ogl.OglClass import OglClass
 

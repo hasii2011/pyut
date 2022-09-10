@@ -31,7 +31,7 @@ from ogl.OglClass import OglClass
 from ogl.OglObject import OglObject
 
 from org.pyut.ui.PyutProject import PyutProject
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from org.pyut.plugins.base.PyutToPlugin import OglClasses
 from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin

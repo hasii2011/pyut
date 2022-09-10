@@ -19,7 +19,7 @@ from wx import FileSelector
 from wx import MessageDialog
 from wx import Yield as wxYield
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 InputFormatType  = NewType('InputFormatType', Tuple[str, str, str])
 OutputFormatType = NewType('OutputFormatType', Tuple[str, str, str])

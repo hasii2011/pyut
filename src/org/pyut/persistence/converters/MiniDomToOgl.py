@@ -46,7 +46,7 @@ from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 OglObjects     = NewType('OglObjects',     Dict[int, OglObject])
 OglClasses     = NewType('OglClasses',     Dict[int, OglClass])

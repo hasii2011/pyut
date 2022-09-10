@@ -17,7 +17,7 @@ from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
 from org.pyut.plugins.io.pyumlsupport.OglToPyUmlDefinition import OglToPyUmlDefinition
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

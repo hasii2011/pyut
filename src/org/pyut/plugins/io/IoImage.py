@@ -20,7 +20,7 @@ from org.pyut.plugins.io.pyumlsupport.DlgImageOptions import DlgImageOptions
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
 from org.pyut.plugins.io.pyumlsupport.OglToPyUmlDefinition import OglToPyUmlDefinition
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from pyumldiagrams import Defaults
 

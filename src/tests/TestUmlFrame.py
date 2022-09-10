@@ -17,7 +17,7 @@ from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
