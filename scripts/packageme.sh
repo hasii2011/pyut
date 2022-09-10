@@ -24,10 +24,11 @@ else
     if [[ ${1} = 'deploy' ]] ; then
             echo "in deploy mode"
             rm -rf build dist
-            python -O setup.py py2app --packages=wx,xmlschema,pygmlparser --iconfile src/org/pyut/resources/img/Pyut.icns
-            echo "remove invalid link that code signing complains about"
-            cd "dist/Pyut.app/Contents/Resources/lib/python3.9"  || ! echo "No such directory"
-            rm -rfv site.pyo
+            PACKAGES='wx,xmlschema,pygmlparser,pyutmodel,ogl'
+            python -O setup.py py2app --packages=${PACKAGES} --iconfile src/org/pyut/resources/img/Pyut.icns
+            # echo "remove invalid link that code signing complains about"
+            # cd "dist/Pyut.app/Contents/Resources/lib/python3.9"  || ! echo "No such directory"
+            # rm -rfv site.pyo
     else
         echo "Unknown command line arguments"
     fi

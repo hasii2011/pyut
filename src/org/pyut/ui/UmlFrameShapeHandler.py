@@ -31,6 +31,11 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 class UmlFrameShapeHandler(DiagramFrame):
 
     def __init__(self, parent: Window):
+        """
+
+        Args:
+            parent:  The window where we put the UML Diagram Frames
+        """
 
         super().__init__(parent)
 

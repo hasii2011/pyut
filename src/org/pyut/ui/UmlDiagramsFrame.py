@@ -25,7 +25,6 @@ from org.pyut.ui.UmlFrame import UmlFrame
 
 
 class UmlDiagramsFrame(UmlFrame):
-
     """
     ClassFrame : class diagram frame.
 

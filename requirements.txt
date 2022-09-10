@@ -2,7 +2,7 @@ wheel~=0.37.1
 setuptools==65.3.0
 
 orthogonal~=1.1.7
-pyumldiagrams~=2.30.6
+pyumldiagrams==2.30.8
 pygmlparser==1.0.1
 
 antlr4-python3-runtime==4.9.3
@@ -10,15 +10,15 @@ PyGithub==1.55
 xmlschema==1.11.1
 Deprecated==1.2.13
 
-pyut2xml~=0.1.0
-epr2md~=0.1.1
+pyut2xml==0.1.1
+epr2md==0.1.2
 traviscli==0.3.2
 pkgversions==0.2.2
 py2app~=0.28.2
 
 html-testRunner~=1.2.1
 mypy==0.971
-mypy-extensions~=0.4.3
+mypy-extensions==0.4.3
 types-Deprecated==1.2.9
 types-setuptools==65.3.0
 typing_extensions==4.3.0
