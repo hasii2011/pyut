@@ -19,7 +19,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.PyutProject import PyutProject
-from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+from org.pyut.ui.PyutUI import PyutUI
 
 from org.pyut.enums.DiagramType import DiagramType
 
@@ -33,14 +33,14 @@ FileNames = NewType('FileNames', List[str])
 
 class PyutFileDropTarget(FileDropTarget):
 
-    def __init__(self, treeNotebookHandler: TreeNotebookHandler):
+    def __init__(self, treeNotebookHandler: PyutUI):
 
         super().__init__()
 
         self.logger: Logger = getLogger(__name__)
         self.logger.setLevel(INFO)
 
-        self._treeNotebookHandler: TreeNotebookHandler = treeNotebookHandler
+        self._treeNotebookHandler: PyutUI = treeNotebookHandler
 
     def OnDropFiles(self, x: int, y: int, filenames: FileNames) -> bool:
         """
@@ -87,7 +87,7 @@ class PyutFileDropTarget(FileDropTarget):
     def _loadPyutXmlFiles(self, xmlFilenames: FileNames):
 
         mediator: Mediator            = Mediator()
-        tbh:      TreeNotebookHandler = self._treeNotebookHandler
+        tbh:      PyutUI = self._treeNotebookHandler
 
         for xmlFilename in xmlFilenames:
 

@@ -18,7 +18,7 @@ from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
-from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+from org.pyut.ui.PyutUI import PyutUI
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
@@ -54,7 +54,7 @@ class TestUmlFrame(unittest.TestCase):
         mediator: Mediator = Mediator()
         mediator.setScriptMode()
 
-        fileHandling: TreeNotebookHandler = TreeNotebookHandler(None)
+        fileHandling: PyutUI = PyutUI(None)
         mediator.registerFileHandling(fileHandling)
 
         errorManager: ErrorManager = mediator.getErrorManager()

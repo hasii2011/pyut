@@ -27,7 +27,7 @@ from ogl.OglObject import OglObject
 from ogl.OglUseCase import OglUseCase
 
 from org.pyut.ui.PyutProject import PyutProject
-from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+from org.pyut.ui.PyutUI import PyutUI
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
@@ -50,7 +50,7 @@ class EditMenuHandler(BaseMenuHandler):
 
         self.logger:    Logger   = getLogger(__name__)
 
-        self._treeNotebookHandler: TreeNotebookHandler = self._mediator.getFileHandling()
+        self._treeNotebookHandler: PyutUI = self._mediator.getFileHandling()
         self._clipboard:           List[PyutObject]    = []
 
     # noinspection PyUnusedLocal

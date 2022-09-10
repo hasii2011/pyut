@@ -45,7 +45,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutPrintout import PyutPrintout
-from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+from org.pyut.ui.PyutUI import PyutUI
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
@@ -65,7 +65,7 @@ class FileMenuHandler(BaseMenuHandler):
         self._plugins:            PluginMap       = cast(PluginMap, {})     # To store the plugins
 
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
-        self._treeNotebookHandler:     TreeNotebookHandler     = self._mediator.getFileHandling()
+        self._treeNotebookHandler:     PyutUI     = self._mediator.getFileHandling()
 
         self._printData: PrintData = cast(PrintData, None)
 

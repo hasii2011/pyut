@@ -31,7 +31,7 @@ from wx import AcceleratorTable
 from wx import Menu
 from wx import Window
 
-from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+from org.pyut.ui.PyutUI import PyutUI
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.Mediator import Mediator
 
@@ -95,7 +95,7 @@ class PyutApplicationFrame(Frame):
 
         self.CreateStatusBar()
 
-        self._treeNotebookHandler: TreeNotebookHandler = TreeNotebookHandler(self)
+        self._treeNotebookHandler: PyutUI = PyutUI(self)
 
         self._mediator: Mediator = Mediator()
         self._mediator.registerStatusBar(self.GetStatusBar())
@@ -205,7 +205,7 @@ class PyutApplicationFrame(Frame):
 
         self.logger.info(f'Remove the default project')
 
-        mainUI:   TreeNotebookHandler            = self._treeNotebookHandler
+        mainUI:   PyutUI            = self._treeNotebookHandler
 
         defaultProject: PyutProject = mainUI.getProject(PyutConstants.DEFAULT_FILENAME)
         if defaultProject is not None:
@@ -225,7 +225,7 @@ class PyutApplicationFrame(Frame):
 
     def selectProject(self, project: PyutProject):
 
-        mainUI: TreeNotebookHandler = self._treeNotebookHandler
+        mainUI: PyutUI = self._treeNotebookHandler
 
         mainUI.currentProject = project
         project.selectSelf()

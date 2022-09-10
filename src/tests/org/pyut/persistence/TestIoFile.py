@@ -13,7 +13,7 @@ from unittest.mock import MagicMock
 from pkg_resources import resource_filename
 from wx import App
 
-from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
+from org.pyut.ui.PyutUI import PyutUI
 from tests.TestBase import TestBase
 
 from org.pyut.ui.Mediator import Mediator
@@ -40,7 +40,7 @@ class TestIoFile(TestBase):
         self.mockFrame:    MagicMock = MagicMock()
         self.mockTree:     MagicMock = MagicMock()
         self.mockTreeRoot: MagicMock = MagicMock()
-        self.fileHandling: TreeNotebookHandler    = MagicMock()
+        self.fileHandling: PyutUI    = MagicMock()
 
         self.mediator = Mediator()      # It's a Singleton, I can do this
         self.mediator.registerAppPath('./')
