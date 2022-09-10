@@ -6,7 +6,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
+from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from org.pyut.history.commands.CommandGroup import CommandGroup
 from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand

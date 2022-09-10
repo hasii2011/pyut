@@ -41,7 +41,7 @@ from org.pyut.experimental.GraphicalHandler import GraphicalHandler
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
-from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
+from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 DEFAULT_WIDTH = 3000
 A4_FACTOR:    float = 1.41

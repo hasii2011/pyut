@@ -67,7 +67,7 @@ from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
-from org.pyut.ui.UmlFrameShapeHandler import UmlFrameShapeHandler
+from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
