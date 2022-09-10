@@ -44,7 +44,7 @@ from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.PyutProject import UmlFrameType
-from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import PyutConstants

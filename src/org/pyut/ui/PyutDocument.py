@@ -12,7 +12,7 @@ from org.pyut.PyutConstants import DiagramsLabels
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.ui.UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
 from org.pyut.PyutUtils import PyutUtils
