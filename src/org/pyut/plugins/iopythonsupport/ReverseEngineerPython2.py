@@ -52,7 +52,7 @@ from org.pyut.plugins.iopythonsupport.PyutPythonVisitor import PyutPythonVisitor
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Lexer import Python3Lexer
 from org.pyut.plugins.iopythonsupport.pyantlrparser.Python3Parser import Python3Parser
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 PyutClassName = NewType('PyutClassName', str)
 PyutClasses = NewType('PyutClasses', Dict[PyutClassName, PyutClass])

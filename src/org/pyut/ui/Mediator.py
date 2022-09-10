@@ -1044,7 +1044,7 @@ class Mediator(Singleton):
 
     def requestLollipopLocation(self, destinationClass: OglClass):
 
-        from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+        from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
         umlFrame: UmlClassDiagramsFrame = self.getFileHandling().getCurrentFrame()
 
@@ -1055,7 +1055,7 @@ class Mediator(Singleton):
 
     def createLollipopInterface(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
-        from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+        from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
         from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
         from org.pyut.history.commands.CommandGroup import CommandGroup
 

@@ -11,7 +11,7 @@ from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 
 from org.pyut.plugins.io.javasupport.ReverseJava import ReverseJava
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 
 class IoJavaReverse(PyutIoPlugin):

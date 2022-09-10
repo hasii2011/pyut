@@ -28,7 +28,7 @@ from pyutmodel.PyutInterface import PyutInterface
 from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.history.commands.MethodInformation import MethodInformation
 from org.pyut.history.commands.OglShapeCommand import OglShapeCommand

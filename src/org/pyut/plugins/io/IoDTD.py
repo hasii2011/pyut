@@ -3,7 +3,7 @@ from org.pyut.plugins.base.PluginTypes import OglClasses
 from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
 from org.pyut.plugins.dtd.DTDParser import DTDParser
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 
 class IoDTD(PyutIoPlugin):

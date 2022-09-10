@@ -21,8 +21,8 @@ from pyutmodel.PyutLinkType import PyutLinkType
 
 from ogl.OglClass import OglClass
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.ui.UmlClassDiagramsFrame import CreatedClassesType
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import CreatedClassesType
 
 from org.pyut.plugins.dtd.DTDAttribute import DTDAttribute
 from org.pyut.plugins.dtd.DTDElementTypes import DTDElementTypes

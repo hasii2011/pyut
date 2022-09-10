@@ -28,7 +28,7 @@ from ogl.OglUseCase import OglUseCase
 
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.history.commands.CommandGroup import CommandGroup

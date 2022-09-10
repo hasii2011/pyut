@@ -31,7 +31,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.PyutDocument import PyutDocument
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
 # noinspection PyProtectedMember

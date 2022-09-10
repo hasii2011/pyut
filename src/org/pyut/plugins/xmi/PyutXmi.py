@@ -10,7 +10,7 @@ from xml.dom.minidom import Element
 
 from xml.dom.minicompat import NodeList
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField

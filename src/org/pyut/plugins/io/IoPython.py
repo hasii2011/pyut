@@ -34,7 +34,7 @@ from org.pyut.plugins.iopythonsupport.PyutToPython import PyutToPython
 from org.pyut.plugins.iopythonsupport.DlgAskWhichClassesToReverse import DlgAskWhichClassesToReverse
 from org.pyut.plugins.iopythonsupport.ReverseEngineerPython2 import ReverseEngineerPython2
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

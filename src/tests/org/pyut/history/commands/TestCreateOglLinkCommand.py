@@ -20,7 +20,7 @@ from ogl.OglInheritance import OglInheritance
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from tests.TestBase import TestBase
 

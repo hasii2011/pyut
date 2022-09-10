@@ -18,7 +18,7 @@ from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from ogl.OglClass import OglClass
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 Implementors = NewType('Implementors', Set[OglClass])
 Extenders    = NewType('Extenders', Set[OglClass])

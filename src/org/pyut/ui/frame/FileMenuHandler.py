@@ -46,7 +46,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.TreeNotebookHandler import TreeNotebookHandler
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.ui.tools.SharedTypes import PluginMap

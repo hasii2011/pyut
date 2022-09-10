@@ -32,9 +32,9 @@ from ogl.OglClass import OglClass
 from org.pyut.plugins.common.ElementTreeData import ElementTreeData
 from org.pyut.plugins.common.Types import ClassTree
 
-from org.pyut.ui.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from org.pyut.ui.UmlClassDiagramsFrame import CreatedClassesType
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import CreatedClassesType
 
 
 class XSDParser:
