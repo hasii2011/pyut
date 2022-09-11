@@ -128,7 +128,7 @@ class PyutXml:
 
                 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
-                oglObjects: UmlObjects = document.getFrame().getUmlObjects()
+                oglObjects: UmlObjects = document.diagramFrame.getUmlObjects()
                 for i in range(len(oglObjects)):
                     gauge.SetValue(i * 100 // len(oglObjects))
                     wxYield()
@@ -236,7 +236,7 @@ class PyutXml:
         documentNode.setAttribute(PyutXmlConstants.ATTR_TYPE, docType)
         documentNode.setAttribute(PyutXmlConstants.ATTR_TITLE, pyutDocument.title)
 
-        docFrame: UmlDiagramsFrame = pyutDocument.getFrame()
+        docFrame: UmlDiagramsFrame = pyutDocument.diagramFrame
         scrollPosX, scrollPosY = docFrame.GetViewStart()
         documentNode.setAttribute(PyutXmlConstants.ATTR_SCROLL_POSITION_X, str(scrollPosX))
         documentNode.setAttribute(PyutXmlConstants.ATTR_SCROLL_POSITION_Y, str(scrollPosY))
@@ -430,7 +430,7 @@ class PyutXml:
 
     def __showAppropriateUmlFrame(self, document) -> UmlDiagramsFrame:
 
-        umlFrame: UmlDiagramsFrame = document.getFrame()
+        umlFrame: UmlDiagramsFrame = document.diagramFrame
         mediator: Mediator = Mediator()
         mediator.getFileHandling().showFrame(umlFrame)
 

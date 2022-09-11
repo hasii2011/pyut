@@ -194,7 +194,7 @@ class PyutProject:
             # self._documents[0].getFrame().Refresh()
             # self._mediator.getFileHandling().showFrame(documentFrame)
 
-            documentFrame: UmlFrameType        = self._documents[0].getFrame()
+            documentFrame: UmlFrameType        = self._documents[0].diagramFrame
             mediator:      Mediator            = self._mediator
             tbh:           PyutUI = mediator.getFileHandling()
 
@@ -239,7 +239,7 @@ class PyutProject:
 
         # Register to mediator
         if len(self._documents) > 0:
-            frame = self._documents[0].getFrame()
+            frame = self._documents[0].diagramFrame
             self._mediator.getFileHandling().registerUmlFrame(frame)
 
         # Return
@@ -258,7 +258,7 @@ class PyutProject:
         document = PyutDocument(self._parentFrame, self, documentType)
         self._documents.append(document)
         document.addToTree(self._tree, self._treeRoot)
-        frame = document.getFrame()
+        frame = document.diagramFrame
         self._mediator.getFileHandling().registerUmlFrame(frame)
         return document
 
@@ -269,7 +269,7 @@ class PyutProject:
         Returns:
             List of frames
         """
-        frameList = [document.getFrame() for document in self._documents]
+        frameList = [document.diagramFrame for document in self._documents]
         return frameList
 
     def saveXmlPyut(self):
@@ -304,7 +304,7 @@ class PyutProject:
             document: PyutDocument to remove from this project
             confirmation:  If `True` ask for confirmation
         """
-        frame = document.getFrame()
+        frame = document.diagramFrame()
 
         if confirmation:
             self._mediator.getFileHandling().showFrame(frame)

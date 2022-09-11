@@ -262,7 +262,7 @@ class PyutUI:
         if not self._mediator.isInScriptMode():
             try:
                 for document in project.getDocuments()[nbInitialDocuments:]:
-                    self.__notebook.AddPage(document.getFrame(), document.getFullyQualifiedName())
+                    self.__notebook.AddPage(document.diagramFrame, document.getFullyQualifiedName())
 
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
@@ -272,7 +272,7 @@ class PyutUI:
 
         # Select first frame as current frame
         if len(project.getDocuments()) > nbInitialDocuments:
-            self._frame = project.getDocuments()[nbInitialDocuments].getFrame()
+            self._frame = project.getDocuments()[nbInitialDocuments].diagramFrame
 
     def saveFile(self) -> bool:
         """
@@ -345,7 +345,7 @@ class PyutUI:
         # Modify notebook text
         for i in range(self.__notebook.GetPageCount()):
             frame = self.__notebook.GetPage(i)
-            document = [document for document in project.getDocuments() if document.getFrame() is frame]
+            document = [document for document in project.getDocuments() if document.diagramFrame is frame]
             if len(document) > 0:
                 document = document[0]
                 if frame in project.getFrames():
@@ -382,7 +382,7 @@ class PyutUI:
         if project is None:
             self.newProject()
             project = self.getCurrentProject()
-        frame = project.newDocument(docType).getFrame()
+        frame = project.newDocument(docType).diagramFrame
         self._currentFrame  = frame
         self._currentProject = project
 
@@ -429,7 +429,7 @@ class PyutUI:
         if project is None:
             return cast(PyutDocument, None)
         for document in project.getDocuments():
-            if document.getFrame() is self._currentFrame:
+            if document.diagramFrame is self._currentFrame:
                 return document
         return cast(PyutDocument, None)
 
@@ -812,7 +812,7 @@ class PyutUI:
                 for document in project.getDocuments():
                     diagramTitle: str = document.title
                     shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
-                    self.__notebook.AddPage(document.getFrame(), shortName)
+                    self.__notebook.AddPage(document.diagramFrame, shortName)
 
                 self.__notebookCurrentPage = self.__notebook.GetPageCount()-1
                 self.__notebook.SetSelection(self.__notebookCurrentPage)
@@ -830,7 +830,7 @@ class PyutUI:
         project.selectFirstDocument()
 
         if len(project.getDocuments()) > 0:
-            self._currentFrame = project.getDocuments()[0].getFrame()
+            self._currentFrame = project.getDocuments()[0].diagramFrame
             self.__syncPageFrameAndNotebook(frame=self._currentFrame)
 
     def __syncPageFrameAndNotebook(self, frame):

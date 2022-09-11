@@ -54,7 +54,7 @@ class TestIoFile(TestBase):
     # noinspection PyUnusedLocal
     @patch('wx.Dialog')
     @patch('wx.Gauge')
-    @patch('org.pyut.ui.TreeNotebookHandler.TreeNotebookHandler')
+    @patch('org.pyut.ui.PyutUI.PyutUI')
     def testIoFileOpenV10(self, mockFileHandling, wxGauge, wxDialog):
         fqFileName = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'IoFileTest.put')
 
