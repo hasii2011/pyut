@@ -105,7 +105,7 @@ class PyutXml:
         try:
             top = xmlDoc.createElement(PyutXmlConstants.TOP_LEVEL_ELEMENT)
             top.setAttribute(PyutXmlConstants.ATTR_VERSION, str(PyutXml.VERSION))
-            codePath: str = project.getCodePath()
+            codePath: str = project.codePath
             if codePath is None:
                 top.setAttribute(PyutXmlConstants.ATTR_CODE_PATH, '')
             else:
@@ -190,7 +190,7 @@ class PyutXml:
         umlFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, None)  # avoid Pycharm warning
         root = self.__validateXmlVersion(dom)
         try:
-            project.setCodePath(root.getAttribute("CodePath"))
+            project.codePath = root.getAttribute("CodePath")
             self.__updateProgressDialog(newMessage='Reading elements...', newGaugeValue=1)
             wxYield()
             toOgl: MiniDomToOglV10 = MiniDomToOglV10()

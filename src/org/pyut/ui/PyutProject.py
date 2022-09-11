@@ -10,7 +10,7 @@ from logging import DEBUG
 from logging import Logger
 from logging import getLogger
 
-
+from deprecated import deprecated
 from wx import ID_NO
 from wx import YES_NO
 
@@ -93,23 +93,20 @@ class PyutProject:
         self._filename = filename
         self.updateTreeText()
 
+    @deprecated(reason='use the "codePath" property')
     def getCodePath(self) -> str:
         """
-
         Returns: The root path where the corresponding code resides.
-
         """
         return self._codePath
 
+    @deprecated(reason='use the "codePath" property')
     def setCodePath(self, codePath: str):
         """
         Set the root path where the corresponding code resides.
 
         Args:
             codePath:
-
-        Returns:
-
         """
         self._codePath = codePath
 
@@ -120,6 +117,14 @@ class PyutProject:
         Returns:  A list of documents
         """
         return self._documents
+
+    @property
+    def codePath(self) -> str:
+        return self._codePath
+
+    @codePath.setter
+    def codePath(self, newValue: str ):
+        self._codePath = newValue
 
     @property
     def modified(self) -> bool:
