@@ -40,6 +40,9 @@ from wx import Menu
 
 from wx import Yield as wxYield
 
+# noinspection PyPackageRequirements
+from deprecated import deprecated
+
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
@@ -394,6 +397,7 @@ class PyutUI:
             self.logger.info(f'Current notebook page: {self.__notebookCurrentPage}')
             self.__notebook.SetSelection(self.__notebookCurrentPage)
 
+    @deprecated(reason='use property .currentProject')
     def getCurrentProject(self) -> PyutProject:
         """
         Get the current working project
