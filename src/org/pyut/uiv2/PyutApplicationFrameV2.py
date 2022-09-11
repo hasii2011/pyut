@@ -144,8 +144,6 @@ class PyutApplicationFrameV2(Frame):
 
         self.__setupKeyboardShortcuts()
 
-        # set application title
-        # TODO fix later
         self._pyutUIV2.newProject()
         self._mediator.updateTitle()
 
@@ -158,7 +156,7 @@ class PyutApplicationFrameV2(Frame):
         # Initialize the tips frame
         self._alreadyDisplayedTipsFrame = False
 
-        # TODO:  Fix later
+        # TODO:  Fix later for V2
         # self.SetDropTarget(PyutFileDropTarget(treeNotebookHandler=self._treeNotebookHandler))
 
         if self.GetThemeEnabled() is True:

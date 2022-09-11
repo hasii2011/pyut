@@ -8,6 +8,10 @@
         "pyutSimple": {
             "format": "%(asctime)s.%(msecs)03d %(levelname)s %(module)s: %(message)s",
             "datefmt" : "%H:%M:%S"
+        },
+         "functionNames": {
+            "format": "%(asctime)s.%(msecs)03d %(levelname)s %(module)s.%(funcName)s() %(message)s",
+            "datefmt" : "%H:%M:%S"
         }
     },
     "handlers": {
@@ -16,6 +20,12 @@
             "formatter": "pyutSimple",
             "stream":     "ext://sys.stdout"
         },
+        "consoleHandlerFunctionNames": {
+            "class": "logging.StreamHandler",
+            "formatter": "functionNames",
+            "stream": "ext://sys.stdout"
+        },
+
         "rotatingFileHandler": {
             "class": "logging.handlers.logging.handlers.RotatingFileHandler",
             "formatter": "pyutSimple",
@@ -62,6 +72,12 @@
             "propagate": "False",
             "handlers":  ["consoleHandler"]
         },
+        "org.pyut.uiv2.PyutUIV2": {
+            "level":     "INFO",
+            "propagate": "False",
+            "handlers":  ["consoleHandlerFunctionNames"]
+        },
+
         "org.pyut.general.Mediator": {
             "level":     "WARNING",
             "propagate": "False"

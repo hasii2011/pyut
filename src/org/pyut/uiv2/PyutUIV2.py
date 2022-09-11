@@ -16,7 +16,10 @@ from wx import SplitterWindow
 from wx import Frame
 from wx import TreeItemId
 
+from wx import Yield as wxYield
+
 from org.pyut.PyutConstants import PyutConstants
+from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
@@ -89,6 +92,28 @@ class PyutUIV2(SplitterWindow):
         self._currentProject = project
         self._currentFrame = None
 
+    def newDocument(self, docType: DiagramType):
+        """
+        Begin a new document
+
+        Args:
+            docType:  Type of document
+        """
+        project = self._currentProject
+        if project is None:
+            self.newProject()
+            project = self.getCurrentProject()
+        frame = project.newDocument(docType).diagramFrame
+        self._currentFrame  = frame
+        self._currentProject = project
+
+        shortName: str = self.__shortenNotebookPageFileName(project.filename)
+        self._diagramNotebook.AddPage(frame, shortName)
+        wxYield()
+        self.__notebookCurrentPage  = self._diagramNotebook.GetPageCount() - 1
+        self.logger.info(f'Current notebook page: {self.__notebookCurrentPage}')
+        self._diagramNotebook.SetSelection(self.__notebookCurrentPage)
+
     @deprecated(reason='use property .currentProject')
     def getCurrentProject(self) -> PyutProject:
         """
@@ -111,7 +136,7 @@ class PyutUIV2(SplitterWindow):
         self.logger.info(f'{self._notebookCurrentPageNumber=}')
         self._currentFrame = self._getCurrentFrameFromNotebook()
 
-        # self._mediator.updateTitle()
+        # self._mediator.updateTitle()      # TODO to fill out V2
         self._getTreeItemFromFrame(self._currentFrame)
 
         # Register the current project
