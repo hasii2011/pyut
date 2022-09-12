@@ -96,7 +96,7 @@ class UmlDiagramsFrame(UmlFrame):
         fileHandling = self._mediator.getFileHandling()
 
         if fileHandling is not None:
-            fileHandling.setModified(True)
+            fileHandling.modified = True
 
     def _onRequestLollipopLocation(self, event: RequestLollipopLocationEvent):
 

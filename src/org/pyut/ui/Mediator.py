@@ -394,7 +394,7 @@ class Mediator(Singleton):
         Args:
             thePyutClass:  the class to edit (data model)
         """
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.currentFrame
         if umlFrame is None:
             return
         dlg = DlgEditClass(umlFrame, ID_ANY, thePyutClass)
@@ -431,7 +431,7 @@ class Mediator(Singleton):
             y: y coord where the action must take place
         """
         self.logger.debug(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.currentFrame
         if umlFrame is None:
             return
         self.resetStatusText()
@@ -671,7 +671,7 @@ class Mediator(Singleton):
 
         if self._treeNotebookHandler is None:
             return UmlObjects([])
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.currentFrame
         if umlFrame is not None:
             return cast(UmlObjects, umlFrame.getUmlObjects())
         else:
@@ -1000,7 +1000,7 @@ class Mediator(Singleton):
         from org.pyut.ui.PyutProject import PyutProject
 
         # Get filename
-        project: PyutProject = self._treeNotebookHandler.getCurrentProject()
+        project: PyutProject = self._treeNotebookHandler.currentProject
         if project is not None:
             filename = project.filename
         else:

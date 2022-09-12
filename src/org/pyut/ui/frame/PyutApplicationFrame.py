@@ -242,7 +242,7 @@ class PyutApplicationFrame(Frame):
 
         self._mediator.setCurrentAction(currentAction)
         self._mediator.selectTool(event.GetId())
-        self._treeNotebookHandler.setModified(True)
+        self._treeNotebookHandler.modified = True
         self._mediator.updateTitle()
 
     def _onActivate(self, event: ActivateEvent):

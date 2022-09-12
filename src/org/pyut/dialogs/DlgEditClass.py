@@ -442,6 +442,6 @@ class DlgEditClass(DlgEditClassCommon):
 
         from org.pyut.ui.PyutProject import PyutProject
 
-        project: PyutProject = fileHandling.getCurrentProject()
+        project: PyutProject = fileHandling.currentProject
         if project is not None:
             project.modified = True

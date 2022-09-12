@@ -153,6 +153,25 @@ class PyutUI:
     def notebook(self) -> Notebook:
         return self.__notebook
 
+    @property
+    def modified(self) -> bool:
+        if self._currentProject is not None:
+            return self._currentProject.modified
+        else:
+            return False
+
+    @modified.setter
+    def modified(self, theNewValue: bool = True):
+        """
+        Set the modified flag of the currently opened project
+
+        Args:
+            theNewValue:
+        """
+        if self._currentProject is not None:
+            self._currentProject.modified = theNewValue
+        self._mediator.updateTitle()
+
     def getCurrentFrame(self):
         """
         Deprecated use the properties
@@ -486,6 +505,7 @@ class PyutUI:
 
         return True
 
+    @deprecated(reason='Use .modified property')
     def setModified(self, theNewValue: bool = True):
         """
         Set the Modified flag of the currently opened diagram
