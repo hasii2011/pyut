@@ -6,6 +6,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from os import path as osPath
+
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 
@@ -19,15 +21,18 @@ from wx import TreeItemId
 from wx import Yield as wxYield
 
 from org.pyut.PyutConstants import PyutConstants
+from org.pyut.PyutUtils import PyutUtils
 from org.pyut.enums.DiagramType import DiagramType
-from org.pyut.ui.PyutProject import PyutProject
+
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectTree import ProjectTree
+from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 
-TreeDataType = Union[PyutProject, UmlDiagramsFrame]
+TreeDataType = Union[PyutProjectV2, UmlDiagramsFrame]
 
-SASH_POSITION: int = 160        # TODO make this a preference and remember it
+SASH_POSITION:                 int = 160        # TODO make this a preference and remember it
+MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12         # TODO make this a preference
 
 
 class PyutUIV2(SplitterWindow):
@@ -47,18 +52,18 @@ class PyutUIV2(SplitterWindow):
         self.SplitVertically(self._projectTree, self._diagramNotebook, SASH_POSITION)
 
         self._notebookCurrentPageNumber: int               = -1
-        self._projects:                  List[PyutProject] = []
-        self._currentProject:            PyutProject       = cast(PyutProject, None)
+        self._projects:                  List[PyutProjectV2] = []
+        self._currentProject:            PyutProjectV2     = cast(PyutProjectV2, None)
         self._currentFrame:              UmlDiagramsFrame  = cast(UmlDiagramsFrame, None)
 
         self._parentWindow.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onNotebookPageChanged)
 
     @property
-    def currentProject(self) -> PyutProject:
+    def currentProject(self) -> PyutProjectV2:
         return self._currentProject
 
     @currentProject.setter
-    def currentProject(self, newProject: PyutProject):
+    def currentProject(self, newProject: PyutProjectV2):
 
         self.logger.info(f'{self._diagramNotebook.GetRowCount()=}')
         self._currentProject = newProject
@@ -68,7 +73,44 @@ class PyutUIV2(SplitterWindow):
 
         self.logger.info(f'{self._notebookCurrentPageNumber=}')
 
-    def getProjectFromFrame(self, frame: UmlDiagramsFrame) -> PyutProject:
+    @property
+    def currentFrame(self) -> UmlDiagramsFrame:
+        return self._currentFrame
+
+    @currentFrame.setter
+    def currentFrame(self, newFrame: UmlDiagramsFrame):
+        self._currentFrame = newFrame
+
+    @property
+    def modified(self) -> bool:
+        if self._currentProject is not None:
+            return self._currentProject.modified
+        else:
+            return False
+
+    @modified.setter
+    def modified(self, theNewValue: bool = True):
+        """
+        Set the modified flag of the currently opened project
+
+        Args:
+            theNewValue:
+        """
+        if self._currentProject is not None:
+            self._currentProject.modified = theNewValue
+        # self._mediator.updateTitle()      TODO Fix V2 version
+
+    def registerUmlFrame(self, frame: UmlDiagramsFrame):
+        """
+        Register the current UML Frame
+
+        Args:
+            frame:
+        """
+        self._currentFrame = frame
+        self._currentProject = self.getProjectFromFrame(frame)
+
+    def getProjectFromFrame(self, frame: UmlDiagramsFrame) -> PyutProjectV2:
         """
         Return the project that owns a given frame
 
@@ -81,16 +123,16 @@ class PyutUIV2(SplitterWindow):
         for project in self._projects:
             if frame in project.getFrames():
                 return project
-        return cast(PyutProject, None)
+        return cast(PyutProjectV2, None)
 
     def newProject(self):
         """
         Begin a new project
         """
-        project = PyutProject(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
+        project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
         self._projects.append(project)
         self._currentProject = project
-        self._currentFrame = None
+        self._currentFrame   = None
 
     def newDocument(self, docType: DiagramType):
         """
@@ -110,12 +152,12 @@ class PyutUIV2(SplitterWindow):
         shortName: str = self.__shortenNotebookPageFileName(project.filename)
         self._diagramNotebook.AddPage(frame, shortName)
         wxYield()
-        self.__notebookCurrentPage  = self._diagramNotebook.GetPageCount() - 1
-        self.logger.info(f'Current notebook page: {self.__notebookCurrentPage}')
-        self._diagramNotebook.SetSelection(self.__notebookCurrentPage)
+        self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
+        self.logger.info(f'Current notebook page: {self._notebookCurrentPageNumber}')
+        self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
     @deprecated(reason='use property .currentProject')
-    def getCurrentProject(self) -> PyutProject:
+    def getCurrentProject(self) -> PyutProjectV2:
         """
         Get the current working project
 
@@ -123,6 +165,54 @@ class PyutUIV2(SplitterWindow):
             the current project or None if not found
         """
         return self._currentProject
+
+    def isProjectLoaded(self, filename: str) -> bool:
+        """
+
+        Args:
+            filename:
+
+        Returns:
+            `True` if the project is already loaded
+        """
+        for project in self._projects:
+            if project.filename == filename:
+                return True
+        return False
+
+    def openFile(self, filename, project: PyutProjectV2) -> bool:
+        """
+        Open a file
+
+        Args:
+            filename:
+            project:
+
+        Returns:
+            `True` if operation succeeded
+        """
+        self.logger.info(f'{filename=} {project=}')
+        # Exit if the file is already loaded
+        if self.isProjectLoaded(filename) is True:
+            PyutUtils.displayError("The selected file is already loaded !")
+            return False
+
+        # Load the project and add it
+        try:
+            if not project.loadFromFilename(filename):
+                eMsg: str = f'{"The file cannot be loaded !"} - {filename}'
+                PyutUtils.displayError(eMsg)
+                return False
+            self._projects.append(project)
+            self._currentProject = project
+        except (ValueError, Exception) as e:
+            self.logger.error(f"An error occurred while loading the project ! {e}")
+            raise e
+
+        success: bool = self._addProjectToNotebook(project)
+        self.logger.debug(f'{self._currentFrame=} {self.currentProject=} {self._diagramNotebook.GetSelection()=}')
+
+        return success
 
     # noinspection PyUnusedLocal
     def _onNotebookPageChanged(self, event):
@@ -167,3 +257,68 @@ class PyutUIV2(SplitterWindow):
 
         self.logger.info(f'{projectTree.GetCount()=}')
         return treeRootItemId
+
+    def _addProjectToNotebook(self, project: PyutProjectV2) -> bool:
+
+        success: bool = True
+        try:
+            for document in project.getDocuments():
+                diagramTitle: str = document.title
+                shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
+                self._diagramNotebook.AddPage(document.diagramFrame, shortName)
+
+            self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount()-1
+            self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
+
+            self._updateTreeNotebookIfPossible(project=project)
+
+        except (ValueError, Exception) as e:
+            PyutUtils.displayError(f"An error occurred while adding the project to the notebook {e}")
+            success = False
+
+        return success
+
+    def __shortenNotebookPageFileName(self, filename: str) -> str:
+        """
+        Return a shorter filename to display; For file names longer
+        than `MAX_NOTEBOOK_PAGE_NAME_LENGTH` this method takes the first
+        four characters and the last eight as the shortened file name
+
+        Args:
+            filename:  The file name to display
+
+        Returns:
+            A better file name
+        """
+        justFileName: str = osPath.split(filename)[1]
+        if len(justFileName) > MAX_NOTEBOOK_PAGE_NAME_LENGTH:
+            firstFour: str = justFileName[:4]
+            lastEight: str = justFileName[-8:]
+            return f'{firstFour}{lastEight}'
+        else:
+            return justFileName
+
+    def _updateTreeNotebookIfPossible(self, project: PyutProjectV2):
+        """
+
+        Args:
+            project:
+        """
+        project.selectFirstDocument()
+
+        if len(project.getDocuments()) > 0:
+            self._currentFrame = project.getDocuments()[0].diagramFrame
+            self._syncPageFrameAndNotebook(frame=self._currentFrame)
+
+    def _syncPageFrameAndNotebook(self, frame: UmlDiagramsFrame):
+        """
+
+        Args:
+            frame:
+        """
+
+        for i in range(self._diagramNotebook.GetPageCount()):
+            pageFrame = self._diagramNotebook.GetPage(i)
+            if pageFrame is frame:
+                self._diagramNotebook.SetSelection(i)
+                break
