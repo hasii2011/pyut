@@ -130,6 +130,11 @@ class PyutUIV2(SplitterWindow):
         Begin a new project
         """
         project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
+
+        projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=project)
+
+        project.projectTreeRoot = projectTreeRoot
+
         self._projects.append(project)
         self._currentProject = project
         self._currentFrame   = None
@@ -144,7 +149,7 @@ class PyutUIV2(SplitterWindow):
         project = self._currentProject
         if project is None:
             self.newProject()
-            project = self.getCurrentProject()
+            project = self.currentProject
         frame = project.newDocument(docType).diagramFrame
         self._currentFrame  = frame
         self._currentProject = project

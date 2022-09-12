@@ -31,7 +31,7 @@ class ProjectTree(TreeCtrl):
     def projectTreeRoot(self) -> TreeItemId:
         return self._projectTreeRoot
 
-    def addProjectToTree(self, pyutProject: PyutProjectV2):
+    def addProjectToTree(self, pyutProject: PyutProjectV2) -> TreeItemId:
         """
         Add the project to the project tree
         """
@@ -42,6 +42,8 @@ class ProjectTree(TreeCtrl):
         # Add the frames
         for document in pyutProject.documents:
             document.addToTree(self, projectTreeRoot)
+
+        return projectTreeRoot
 
     def _justTheFileName(self, filename):
         """

@@ -70,10 +70,11 @@ class PyutProjectV2:
         self._filename: str     = filename      # Project filename
         self._modified: bool    = False         # Was the project modified ?
         self._codePath: str     = ""
-        self._treeRootParent: TreeItemId = treeRoot                 # Parent of the project root entry
-        self._treeRoot:       TreeItemId = cast(TreeItemId, None)   # Root of the project entry in the tree
-        self._tree:           TreeCtrl   = tree                     # Tree I belong to
-        self.addToTree()
+
+        self._treeRootParent:  TreeItemId = treeRoot                 # Parent of the project root entry
+        self._projectTreeRoot: TreeItemId = cast(TreeItemId, None)   # Root of the project entry in the tree
+        self._tree:            TreeCtrl   = tree                     # Tree I belong to
+        # self.addToTree()
 
     @property
     def filename(self) -> str:
@@ -118,6 +119,28 @@ class PyutProjectV2:
         """
         self._modified = value
 
+    @property
+    def documents(self) -> PyutDocuments:
+        """
+        Return the documents
+
+        Returns:  A list of documents
+        """
+        return self._documents
+
+    @property
+    def projectTreeRoot(self) -> TreeItemId:
+        """
+        A piece of UI information needed to communicate with the UI component
+
+        Returns: The opaque item where this project's documents are display on the UI Tree
+        """
+        return self._projectTreeRoot
+
+    @projectTreeRoot.setter
+    def projectTreeRoot(self, newValue: TreeItemId):
+        self._projectTreeRoot = newValue
+
     @deprecated(reason='use the "codePath" property')
     def getCodePath(self) -> str:
         """
@@ -135,11 +158,8 @@ class PyutProjectV2:
         """
         self._codePath = codePath
 
-    def documents(self) -> PyutDocuments:
-        return self._documents
-
     def selectSelf(self):
-        self._tree.SelectItem(self._treeRoot)
+        self._tree.SelectItem(self._projectTreeRoot)
 
     @deprecated(reason='Use .documents property')
     def getDocuments(self) -> List[PyutDocument]:
@@ -150,23 +170,23 @@ class PyutProjectV2:
         """
         return self._documents
 
-    def addToTree(self):
-        """
-        Add the project to the project tree
-        """
-        justTheFileName: str = self._justTheFileName(self._filename)
-        self._treeRoot = self._tree.AppendItem(self._treeRootParent, justTheFileName, data=self)
-        self._tree.Expand(self._treeRoot)
-
-        # Add the frames
-        for document in self._documents:
-            document.addToTree(self._tree, self._treeRoot)
+    # def addToTree(self):
+    #     """
+    #     Add the project to the project tree
+    #     """
+    #     justTheFileName: str = self._justTheFileName(self._filename)
+    #     self._treeRoot = self._tree.AppendItem(self._treeRootParent, justTheFileName, data=self)
+    #     self._tree.Expand(self._treeRoot)
+    #
+    #     # Add the frames
+    #     for document in self._documents:
+    #         document.addToTree(self._tree, self._treeRoot)
 
     def removeFromTree(self):
         """
         Remove the project from the tree
         """
-        self._tree.Delete(self._treeRoot)
+        self._tree.Delete(self._projectTreeRoot)
 
     def insertProject(self, filename: str) -> bool:
         """
@@ -215,7 +235,7 @@ class PyutProjectV2:
         """
         document = PyutDocument(self._parentFrame, self, documentType)
         self._documents.append(document)
-        document.addToTree(self._tree, self._treeRoot)
+        document.addToTree(self._tree, self._projectTreeRoot)
         frame = document.diagramFrame
         self._mediator.getFileHandling().registerUmlFrame(frame)
         return document
@@ -306,7 +326,7 @@ class PyutProjectV2:
         """
         Update the tree text for this document
         """
-        self._tree.SetItemText(self._treeRoot, self._justTheFileName(self._filename))
+        self._tree.SetItemText(self._projectTreeRoot, self._justTheFileName(self._filename))
         for document in self._documents:
             self.logger.info(f'updateTreeText: {document=}')
             document.updateTreeText()
@@ -343,7 +363,7 @@ class PyutProjectV2:
 
     def selectFirstDocument(self):
 
-        treeTuple = self._tree.GetFirstChild(self._treeRoot)
+        treeTuple = self._tree.GetFirstChild(self._projectTreeRoot)
 
         treeDocItem: TreeItemId = treeTuple[0]
         # Make sure this project has some documents
