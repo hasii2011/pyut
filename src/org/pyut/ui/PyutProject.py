@@ -309,7 +309,7 @@ class PyutProject:
             document: PyutDocument to remove from this project
             confirmation:  If `True` ask for confirmation
         """
-        frame = document.diagramFrame()
+        frame = document.diagramFrame
 
         if confirmation:
             self._mediator.getFileHandling().showFrame(frame)
