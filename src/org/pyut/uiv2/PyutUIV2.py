@@ -27,6 +27,7 @@ from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectTree import ProjectTree
+from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 
 TreeDataType = Union[PyutProjectV2, UmlDiagramsFrame]
@@ -146,16 +147,22 @@ class PyutUIV2(SplitterWindow):
         Args:
             docType:  Type of document
         """
-        project = self._currentProject
-        if project is None:
+        pyutProject: PyutProjectV2 = self._currentProject
+        if pyutProject is None:
             self.newProject()
-            project = self.currentProject
-        frame = project.newDocument(docType).diagramFrame
-        self._currentFrame  = frame
-        self._currentProject = project
+            pyutProject = self.currentProject
 
-        shortName: str = self.__shortenNotebookPageFileName(project.filename)
-        self._diagramNotebook.AddPage(frame, shortName)
+        document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, project=pyutProject, docType=docType)
+        pyutProject.documents.append(document)
+        document.addToTree(self._projectTree, pyutProject.projectTreeRoot)
+
+        diagramFrame:    UmlDiagramsFrame = document.diagramFrame
+
+        self.currentFrame   = diagramFrame
+        self._currentProject = pyutProject      # TODO do not use property it does a bunch of stuff
+
+        shortName: str = self.__shortenNotebookPageFileName(pyutProject.filename)
+        self._diagramNotebook.AddPage(diagramFrame, shortName)
         wxYield()
         self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
         self.logger.info(f'Current notebook page: {self._notebookCurrentPageNumber}')

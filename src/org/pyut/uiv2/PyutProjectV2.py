@@ -3,6 +3,7 @@ from typing import List
 from typing import NewType
 from typing import Union
 from typing import cast
+from typing import TYPE_CHECKING
 
 from os import path as osPath
 
@@ -18,7 +19,6 @@ from wx import YES_NO
 
 from wx import MessageDialog
 from wx import Notebook
-from wx import TreeCtrl
 from wx import TreeItemId
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
@@ -27,14 +27,17 @@ from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.Mediator import Mediator
-from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
+
+if TYPE_CHECKING:
+    from org.pyut.uiv2.ProjectTree import ProjectTree
+
+from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
@@ -43,7 +46,7 @@ from org.pyut.general.Globals import _
 # TODO:   This should just be the following:
 #          UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]
 UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])  # type: ignore
-PyutDocuments = NewType('PyutDocuments', List[PyutDocument])
+PyutDocuments = NewType('PyutDocuments', List[PyutDocumentV2])
 
 
 class PyutProjectV2:
@@ -52,7 +55,7 @@ class PyutProjectV2:
 
     """
 
-    def __init__(self, filename: str, parentFrame: Notebook, tree: TreeCtrl, treeRoot: TreeItemId):
+    def __init__(self, filename: str, parentFrame: Notebook, tree: 'ProjectTree', treeRoot: TreeItemId):
         """
 
         Args:
@@ -71,9 +74,9 @@ class PyutProjectV2:
         self._modified: bool    = False         # Was the project modified ?
         self._codePath: str     = ""
 
-        self._treeRootParent:  TreeItemId = treeRoot                 # Parent of the project root entry
-        self._projectTreeRoot: TreeItemId = cast(TreeItemId, None)   # Root of the project entry in the tree
-        self._tree:            TreeCtrl   = tree                     # Tree I belong to
+        self._treeRootParent:  TreeItemId  = treeRoot                 # Parent of the project root entry
+        self._projectTreeRoot: TreeItemId  = cast(TreeItemId, None)   # Root of the project entry in the tree
+        self._tree:            'ProjectTree' = tree                     # Tree I belong to
         # self.addToTree()
 
     @property
@@ -162,7 +165,7 @@ class PyutProjectV2:
         self._tree.SelectItem(self._projectTreeRoot)
 
     @deprecated(reason='Use .documents property')
-    def getDocuments(self) -> List[PyutDocument]:
+    def getDocuments(self) -> PyutDocuments:
         """
         Return the documents
 
@@ -223,22 +226,22 @@ class PyutProjectV2:
         # Return
         return True
 
-    def newDocument(self, documentType: DiagramType) -> PyutDocument:
-        """
-        Create a new document
-
-        Args:
-            documentType: The document type to create
-
-        Returns:
-            the newly created PyutDocument
-        """
-        document = PyutDocument(self._parentFrame, self, documentType)
-        self._documents.append(document)
-        document.addToTree(self._tree, self._projectTreeRoot)
-        frame = document.diagramFrame
-        self._mediator.getFileHandling().registerUmlFrame(frame)
-        return document
+    # def newDocument(self, documentType: DiagramType) -> PyutDocument:
+    #     """
+    #     Create a new document
+    #
+    #     Args:
+    #         documentType: The document type to create
+    #
+    #     Returns:
+    #         the newly created PyutDocument
+    #     """
+    #     document = PyutDocument(self._parentFrame, self, documentType)
+    #     self._documents.append(document)
+    #     document.addToTree(self._tree, self._projectTreeRoot)
+    #     frame = document.diagramFrame
+    #     self._mediator.getFileHandling().registerUmlFrame(frame)
+    #     return document
 
     def getFrames(self) -> List[UmlFrameType]:
         """
