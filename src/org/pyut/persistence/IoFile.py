@@ -16,8 +16,8 @@ from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
+from org.pyut.ui.IPyutProject import IPyutProject
 
-from org.pyut.ui.PyutProject import PyutProject
 
 from org.pyut.general.Lang import Lang
 from org.pyut.general.PyutXmlFinder import PyutXmlFinder
@@ -41,7 +41,7 @@ class IoFile:
 
         self.logger: Logger = getLogger(__name__)
 
-    def save(self, project: PyutProject):
+    def save(self, project: IPyutProject):
         """
         To save diagram in XML file.  Always, uses the latest version
         """

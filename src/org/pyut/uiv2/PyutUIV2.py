@@ -23,6 +23,8 @@ from wx import Yield as wxYield
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.enums.DiagramType import DiagramType
+from org.pyut.ui.IPyutDocument import IPyutDocument
+from org.pyut.ui.IPyutProject import IPyutProject
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
@@ -111,6 +113,10 @@ class PyutUIV2(SplitterWindow):
         self._currentFrame = frame
         self._currentProject = self.getProjectFromFrame(frame)
 
+    def showFrame(self, frame: UmlDiagramsFrame):
+        self._frame = frame
+        frame.Show()
+
     def getProjectFromFrame(self, frame: UmlDiagramsFrame) -> PyutProjectV2:
         """
         Return the project that owns a given frame
@@ -126,7 +132,7 @@ class PyutUIV2(SplitterWindow):
                 return project
         return cast(PyutProjectV2, None)
 
-    def newProject(self):
+    def newProject(self) -> IPyutProject:
         """
         Begin a new project
         """
@@ -138,9 +144,10 @@ class PyutUIV2(SplitterWindow):
 
         self._projects.append(project)
         self._currentProject = project
-        self._currentFrame   = None
+        self._currentFrame   = cast(UmlDiagramsFrame, None)
+        return project
 
-    def newDocument(self, docType: DiagramType):
+    def newDocument(self, docType: DiagramType) -> IPyutDocument:
         """
         Begin a new document
 
@@ -168,6 +175,8 @@ class PyutUIV2(SplitterWindow):
         self.logger.info(f'Current notebook page: {self._notebookCurrentPageNumber}')
         self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
+        return document
+
     @deprecated(reason='use property .currentProject')
     def getCurrentProject(self) -> PyutProjectV2:
         """
@@ -192,9 +201,10 @@ class PyutUIV2(SplitterWindow):
                 return True
         return False
 
-    def openFile(self, filename, project: PyutProjectV2) -> bool:
+    def openFile(self, filename, project: PyutProjectV2 = None) -> bool:
         """
         Open a file
+        TODO:  Fix V2 this does 2 things loads from a file or from a project
 
         Args:
             filename:
@@ -208,6 +218,10 @@ class PyutUIV2(SplitterWindow):
         if self.isProjectLoaded(filename) is True:
             PyutUtils.displayError("The selected file is already loaded !")
             return False
+
+        # Create a new project ?
+        if project is None:
+            project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
 
         # Load the project and add it
         try:
@@ -225,6 +239,24 @@ class PyutUIV2(SplitterWindow):
         self.logger.debug(f'{self._currentFrame=} {self.currentProject=} {self._diagramNotebook.GetSelection()=}')
 
         return success
+
+    def removeAllReferencesToUmlFrame(self, umlFrame: UmlDiagramsFrame):
+        """
+        Remove all my references to a given uml frame
+
+        Args:
+            umlFrame:
+        """
+        # Current frame ?
+        if self._currentFrame is umlFrame:
+            self._currentFrame = cast(UmlDiagramsFrame, None)
+
+        pageCount: int = self._diagramNotebook.GetPageCount()
+        for i in range(pageCount):
+            pageFrame = self._diagramNotebook.GetPage(i)
+            if pageFrame is umlFrame:
+                self._diagramNotebook.DeletePage(i)
+                break
 
     # noinspection PyUnusedLocal
     def _onNotebookPageChanged(self, event):

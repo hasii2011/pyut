@@ -8,22 +8,24 @@ from logging import getLogger
 from wx import TreeCtrl
 from wx import TreeItemId
 
-from org.pyut.PyutConstants import DiagramsLabels
-
 from org.pyut.enums.DiagramType import DiagramType
 
+from org.pyut.ui.IPyutDocument import IPyutDocument
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
-from org.pyut.PyutUtils import PyutUtils
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
+
+from org.pyut.PyutUtils import PyutUtils
+
+from org.pyut.PyutConstants import DiagramsLabels
 
 if TYPE_CHECKING:
     from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 
 
-class PyutDocumentV2:
+class PyutDocumentV2(IPyutDocument):
     """
     Document : Contain a document : frames, properties, ...
     """

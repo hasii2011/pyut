@@ -15,6 +15,7 @@ from ogl.OglDimensions import OglDimensions
 from ogl.OglTextFontFamily import OglTextFontFamily
 
 from org.pyut.preferences.DebugPreferences import DebugPreferences
+from org.pyut.preferences.FeaturePreferences import FeaturePreferences
 from org.pyut.preferences.GeneralPreferences import GeneralPreferences
 from org.pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from org.pyut.preferences.PreferencesCommon import PreferencesCommon
@@ -83,6 +84,7 @@ class PyutPreferences(Singleton):
         self._generalPrefs:       GeneralPreferences       = GeneralPreferences()
         self._miscellaneousPrefs: MiscellaneousPreferences = MiscellaneousPreferences()
         self._debugPrefs:         DebugPreferences         = DebugPreferences()
+        self._featurePrefs:       FeaturePreferences       = FeaturePreferences()
 
         self._oglPrefs: OglPreferences = OglPreferences()
 
@@ -384,6 +386,14 @@ class PyutPreferences(Singleton):
         self._debugPrefs.debugErrorViews = theNewValue
 
     @property
+    def usev2ui(self) -> bool:
+        return self._featurePrefs.usev2ui
+
+    @usev2ui.setter
+    def usev2ui(self, newValue: bool):
+        self._featurePrefs.usev2ui = newValue
+
+    @property
     def backgroundGridEnabled(self) -> bool:
         return self._oglPrefs.backgroundGridEnabled
 
@@ -561,6 +571,7 @@ class PyutPreferences(Singleton):
         self._generalPrefs.addAnyMissingMainPreferences()
         self._miscellaneousPrefs.addAnyMissingPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
+        self._featurePrefs.addAnyMissingFeaturePreferences()
 
     def __addOpenedFilesSection(self):
 
@@ -577,6 +588,10 @@ class PyutPreferences(Singleton):
         self._config: ConfigParser = ConfigParser()
 
         self._preferencesCommon.configParser  = self._config
-        self._generalPrefs.configParser          = self._config
+        self._generalPrefs.configParser       = self._config
         self._miscellaneousPrefs.configParser = self._config
         self._debugPrefs.configParser         = self._config
+        self._featurePrefs.configParser       = self._config
+        #
+        # OGL is its own preferences
+        #

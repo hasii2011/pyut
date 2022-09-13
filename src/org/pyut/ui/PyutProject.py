@@ -10,7 +10,9 @@ from logging import DEBUG
 from logging import Logger
 from logging import getLogger
 
+# noinspection PyPackageRequirements
 from deprecated import deprecated
+
 from wx import ID_NO
 from wx import YES_NO
 
@@ -28,6 +30,8 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ui.IPyutProject import IPyutProject
+from org.pyut.ui.IPyutProject import PyutDocuments
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.PyutDocument import PyutDocument
@@ -43,7 +47,7 @@ from org.pyut.general.Globals import _
 UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])  # type: ignore
 
 
-class PyutProject:
+class PyutProject(IPyutProject):
     """
     Project : contain multiple documents
 
@@ -58,11 +62,13 @@ class PyutProject:
             tree:           The tree control
             treeRoot:       Where to root the tree
         """
+        super().__init__()
+
         self.logger:       Logger   = getLogger(__name__)
         self._parentFrame: Notebook = parentFrame   # Parent frame
         self._mediator:    Mediator = Mediator()
 
-        self._documents: List[PyutDocument] = []            # List of documents
+        self._documents: PyutDocuments = PyutDocuments([])            # List of documents
 
         self._filename: str     = filename      # Project filename
         self._modified: bool    = False         # Was the project modified ?
@@ -93,6 +99,15 @@ class PyutProject:
         self._filename = filename
         self.updateTreeText()
 
+    @property
+    def documents(self) -> PyutDocuments:
+        """
+        Return the documents
+
+        Returns:  A list of documents
+        """
+        return self._documents
+
     @deprecated(reason='use the "codePath" property')
     def getCodePath(self) -> str:
         """
@@ -110,7 +125,8 @@ class PyutProject:
         """
         self._codePath = codePath
 
-    def getDocuments(self) -> List[PyutDocument]:
+    @deprecated(reason='Use .documents property')
+    def getDocuments(self) -> PyutDocuments:
         """
         Return the documents
 
@@ -123,7 +139,7 @@ class PyutProject:
         return self._codePath
 
     @codePath.setter
-    def codePath(self, newValue: str ):
+    def codePath(self, newValue: str):
         self._codePath = newValue
 
     @property

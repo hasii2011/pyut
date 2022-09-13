@@ -11,6 +11,7 @@ from wx import TreeItemId
 from org.pyut.PyutConstants import DiagramsLabels
 
 from org.pyut.enums.DiagramType import DiagramType
+from org.pyut.ui.IPyutDocument import IPyutDocument
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
@@ -19,7 +20,7 @@ from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFr
 from org.pyut.PyutUtils import PyutUtils
 
 
-class PyutDocument:
+class PyutDocument(IPyutDocument):
     """
     Document : Contain a document : frames, properties, ...
     """
@@ -32,6 +33,8 @@ class PyutDocument:
             docType:        The enumeration value for the diagram type
         """
         from org.pyut.ui.PyutProject import PyutProject
+
+        super().__init__()
 
         self.logger:               Logger   = getLogger(__name__)
         self._parentFrame:         Notebook = cast(Notebook, None)

@@ -2,7 +2,6 @@
 from typing import List
 from typing import NewType
 from typing import Union
-from typing import cast
 from typing import TYPE_CHECKING
 
 from os import path as osPath
@@ -29,6 +28,8 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ui.IPyutProject import IPyutProject
+from org.pyut.ui.IPyutProject import PyutDocuments
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -37,19 +38,13 @@ from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFr
 if TYPE_CHECKING:
     from org.pyut.uiv2.ProjectTree import ProjectTree
 
-from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
-
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
-
 # Until I figure out how to stop mypy from complaining
 # TODO:   This should just be the following:
 #          UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]
 UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])  # type: ignore
-PyutDocuments = NewType('PyutDocuments', List[PyutDocumentV2])
 
 
-class PyutProjectV2:
+class PyutProjectV2(IPyutProject):
     """
     Project : contain multiple documents
 
@@ -64,6 +59,7 @@ class PyutProjectV2:
             tree:           The tree control
             treeRoot:       Where to root the tree
         """
+        super().__init__()
         self.logger:       Logger   = getLogger(__name__)
         self._parentFrame: Notebook = parentFrame   # Parent frame
         self._mediator:    Mediator = Mediator()
@@ -75,7 +71,7 @@ class PyutProjectV2:
         self._codePath: str     = ""
 
         self._treeRootParent:  TreeItemId  = treeRoot                 # Parent of the project root entry
-        self._projectTreeRoot: TreeItemId  = cast(TreeItemId, None)   # Root of the project entry in the tree
+        # self._projectTreeRoot: TreeItemId  = cast(TreeItemId, None)   # Root of the project entry in the tree
         self._tree:            'ProjectTree' = tree                     # Tree I belong to
         # self.addToTree()
 
@@ -210,7 +206,7 @@ class PyutProjectV2:
             io.open(filename, self)
             self._modified = False
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_(f"Error loading file {e}"))
+            PyutUtils.displayError(f"Error loading file {e}")
             EndBusyCursor()
             return False
         EndBusyCursor()
@@ -266,7 +262,7 @@ class PyutProjectV2:
             self._modified = False
             self.updateTreeText()
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_(f"An error occurred while saving project {e}"))
+            PyutUtils.displayError(f"An error occurred while saving project {e}")
         EndBusyCursor()
 
     def loadFromFilename(self, filename: str) -> bool:
@@ -305,10 +301,6 @@ class PyutProjectV2:
         from org.pyut.ui.PyutUI import PyutUI  # avoid cyclical imports
 
         if len(self._documents) > 0:
-            # self._mediator.getFileHandling().showFrame(self._documents[0].getFrame())
-            # self._documents[0].getFrame().Refresh()
-            # self._mediator.getFileHandling().showFrame(documentFrame)
-
             documentFrame: UmlFrameType = self._documents[0].diagramFrame
             mediator: Mediator = self._mediator
             tbh: PyutUI = mediator.getFileHandling()
@@ -329,7 +321,7 @@ class PyutProjectV2:
         """
         Update the tree text for this document
         """
-        self._tree.SetItemText(self._projectTreeRoot, self._justTheFileName(self._filename))
+        self._tree.SetItemText(self._tree.projectTreeRoot, self._justTheFileName(self._filename))
         for document in self._documents:
             self.logger.info(f'updateTreeText: {document=}')
             document.updateTreeText()
@@ -342,13 +334,13 @@ class PyutProjectV2:
             document: PyutDocument to remove from this project
             confirmation:  If `True` ask for confirmation
         """
-        frame = document.diagramFrame()
+        frame = document.diagramFrame
 
         if confirmation:
             self._mediator.getFileHandling().showFrame(frame)
 
-            dlg = MessageDialog(self._mediator.getUmlFrame(), _("Are you sure to remove the document ?"),
-                                _("Remove a document from a project"), YES_NO)
+            dlg = MessageDialog(self._mediator.getUmlFrame(), "Are you sure to remove the document ?",
+                                "Remove a document from a project", YES_NO)
             if dlg.ShowModal() == ID_NO:
                 dlg.Destroy()
                 return
@@ -366,7 +358,7 @@ class PyutProjectV2:
 
     def selectFirstDocument(self):
 
-        treeTuple = self._tree.GetFirstChild(self._projectTreeRoot)
+        treeTuple = self._tree.GetFirstChild(self._tree.projectTreeRoot)
 
         treeDocItem: TreeItemId = treeTuple[0]
         # Make sure this project has some documents

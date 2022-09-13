@@ -24,11 +24,11 @@ class DebugPreferences(BaseSubPreference):
         DEBUG_ERROR_VIEWS:              'False'
     }
 
-    def init(self, *args, **kwds):
+    def init(self, *args, **kwargs):
 
         self.logger:  Logger       = getLogger(__name__)
 
-        BaseSubPreference.init(self, *args, **kwds)
+        BaseSubPreference.init(self, *args, **kwargs)
 
         self._preferencesCommon: PreferencesCommon = PreferencesCommon(self._config)
 

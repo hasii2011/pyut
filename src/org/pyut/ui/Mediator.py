@@ -25,6 +25,7 @@ from wx import TextEntryDialog
 from wx import Yield as wxYield
 from wx import NewIdRef as wxNewIdRef
 
+from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from org.pyut.history.commands.CommandGroup import CommandGroup
 
@@ -50,12 +51,14 @@ from ogl.OglLink import OglLink
 from ogl.OglText import OglText
 from ogl.OglClass import OglClass
 
+
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
     from ogl.OglObject import OglObject
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
     from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
+    from org.pyut.ui.IPyutProject import IPyutProject
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
@@ -727,7 +730,7 @@ class Mediator(Singleton):
 
         Returns: a UmlFrame
         """
-        return self._treeNotebookHandler.getCurrentFrame()
+        return self._treeNotebookHandler.currentFrame
 
     def deselectAllShapes(self):
         """
@@ -1069,6 +1072,17 @@ class Mediator(Singleton):
         group.addCommand(cmd)
         umlFrame.getHistory().addCommandGroup(group)
         umlFrame.getHistory().execute()
+
+    def createProject(self) -> 'IPyutProject':
+        """
+        V2 UI entry point;  Will eventually be replaced by an event
+
+        Returns:  Returns a PyutProjectV2 instance
+        """
+        return self._treeNotebookHandler.newProject()
+
+    def createDocument(self, diagramType: DiagramType):
+        return self._treeNotebookHandler.newDocument(diagramType)
 
     def _moveSelectedShapeZOrder(self, callback: Callable):
         """

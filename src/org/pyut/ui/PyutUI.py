@@ -44,6 +44,7 @@ from wx import Yield as wxYield
 from deprecated import deprecated
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from org.pyut.ui.IPyutDocument import IPyutDocument
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.PyutProject import UmlFrameType
@@ -441,7 +442,7 @@ class PyutUI:
                 return project
         return cast(PyutProject, None)
 
-    def getCurrentDocument(self) -> PyutDocument:
+    def getCurrentDocument(self) -> IPyutDocument:
         """
         Get the current document.
 
@@ -768,10 +769,10 @@ class PyutUI:
         if self.__notebookCurrentPage == -1:
             self.__notebookCurrentPage = self.__notebook.GetSelection()    # must be default empty project
 
-        currentDocument: PyutDocument = self.getCurrentDocument()
+        currentDocument: IPyutDocument = self.getCurrentDocument()
         dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.getCurrentFrame(),
                                                            dialogIdentifier=ID_ANY,
-                                                           document=currentDocument)
+                                                           document=cast(PyutDocument, currentDocument))   # TODO V2 Fix
         dlgEditDocument.Destroy()
 
         #
@@ -792,8 +793,8 @@ class PyutUI:
         Args:
             event:
         """
-        project:         PyutProject  = self.getCurrentProject()
-        currentDocument: PyutDocument = self.getCurrentDocument()
+        project:         PyutProject   = self.getCurrentProject()
+        currentDocument: IPyutDocument = self.getCurrentDocument()
         project.removeDocument(currentDocument)
 
     def __getTreeItemFromFrame(self, frame: UmlDiagramsFrame) -> TreeItemId:

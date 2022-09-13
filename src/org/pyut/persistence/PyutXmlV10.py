@@ -51,6 +51,8 @@ from org.pyut.persistence.converters.MiniDomToOglV10 import MiniDomToOgl as Mini
 from org.pyut.persistence.converters.OglToMiniDomV10 import OglToMiniDom as OglToMiniDomV10
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
+from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ui.IPyutDocument import IPyutDocument
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
@@ -85,8 +87,9 @@ class PyutXml:
         """
         Constructor
         """
-        self.logger: Logger = getLogger(__name__)
-        self._dlgGauge: Dialog = cast(Dialog, None)
+        self.logger:    Logger          = getLogger(__name__)
+        self._prefs:    PyutPreferences = PyutPreferences()
+        self._dlgGauge: Dialog          = cast(Dialog, None)
 
     def save(self, project: PyutProject) -> Document:
         """
@@ -202,7 +205,12 @@ class PyutXml:
                 wxYield()
 
                 docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
-                document: PyutDocument = project.newDocument(docType)
+                if self._prefs.usev2ui is True:
+                    document: IPyutDocument = Mediator().createDocument(diagramType=docType)
+                    project.documents.append(document)
+                else:
+                    document = project.newDocument(docType)
+
                 document.title = self.__determineDocumentTitle(documentNode)
 
                 umlFrame = self.__showAppropriateUmlFrame(document)
