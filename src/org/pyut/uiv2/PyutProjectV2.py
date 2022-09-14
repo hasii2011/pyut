@@ -2,6 +2,7 @@
 from typing import List
 from typing import NewType
 from typing import Union
+from typing import cast
 from typing import TYPE_CHECKING
 
 from os import path as osPath
@@ -71,9 +72,9 @@ class PyutProjectV2(IPyutProject):
         self._codePath: str     = ""
 
         self._treeRootParent:  TreeItemId  = treeRoot                 # Parent of the project root entry
-        # self._projectTreeRoot: TreeItemId  = cast(TreeItemId, None)   # Root of the project entry in the tree
-        self._tree:            'ProjectTree' = tree                     # Tree I belong to
-        # self.addToTree()
+        self._tree:            'ProjectTree' = tree                    # Tree I belong to
+
+        self._projectTreeRoot:  TreeItemId = cast(TreeItemId, None)   # Root of this project entry in the tree
 
     @property
     def filename(self) -> str:
@@ -169,18 +170,6 @@ class PyutProjectV2(IPyutProject):
         """
         return self._documents
 
-    # def addToTree(self):
-    #     """
-    #     Add the project to the project tree
-    #     """
-    #     justTheFileName: str = self._justTheFileName(self._filename)
-    #     self._treeRoot = self._tree.AppendItem(self._treeRootParent, justTheFileName, data=self)
-    #     self._tree.Expand(self._treeRoot)
-    #
-    #     # Add the frames
-    #     for document in self._documents:
-    #         document.addToTree(self._tree, self._treeRoot)
-
     def removeFromTree(self):
         """
         Remove the project from the tree
@@ -221,23 +210,6 @@ class PyutProjectV2(IPyutProject):
 
         # Return
         return True
-
-    # def newDocument(self, documentType: DiagramType) -> PyutDocument:
-    #     """
-    #     Create a new document
-    #
-    #     Args:
-    #         documentType: The document type to create
-    #
-    #     Returns:
-    #         the newly created PyutDocument
-    #     """
-    #     document = PyutDocument(self._parentFrame, self, documentType)
-    #     self._documents.append(document)
-    #     document.addToTree(self._tree, self._projectTreeRoot)
-    #     frame = document.diagramFrame
-    #     self._mediator.getFileHandling().registerUmlFrame(frame)
-    #     return document
 
     def getFrames(self) -> List[UmlFrameType]:
         """
@@ -319,9 +291,11 @@ class PyutProjectV2(IPyutProject):
 
     def updateTreeText(self):
         """
-        Update the tree text for this document
+        Update the tree text for this project
         """
-        self._tree.SetItemText(self._tree.projectTreeRoot, self._justTheFileName(self._filename))
+        self.logger.info(f'{self._projectTreeRoot}')
+
+        self._tree.SetItemText(self.projectTreeRoot, self._justTheFileName(self._filename))
         for document in self._documents:
             self.logger.info(f'updateTreeText: {document=}')
             document.updateTreeText()
@@ -358,7 +332,7 @@ class PyutProjectV2(IPyutProject):
 
     def selectFirstDocument(self):
 
-        treeTuple = self._tree.GetFirstChild(self._tree.projectTreeRoot)
+        treeTuple = self._tree.GetFirstChild(self._projectTreeRoot)
 
         treeDocItem: TreeItemId = treeTuple[0]
         # Make sure this project has some documents

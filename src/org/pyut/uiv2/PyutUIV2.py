@@ -12,10 +12,12 @@ from os import path as osPath
 from deprecated import deprecated
 
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
+from wx import EVT_TREE_SEL_CHANGED
 from wx import ID_ANY
 
 from wx import SplitterWindow
 from wx import Frame
+from wx import TreeEvent
 from wx import TreeItemId
 
 from wx import Yield as wxYield
@@ -31,6 +33,7 @@ from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
+from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 
 TreeDataType = Union[PyutProjectV2, UmlDiagramsFrame]
 
@@ -59,7 +62,8 @@ class PyutUIV2(SplitterWindow):
         self._currentProject:            PyutProjectV2     = cast(PyutProjectV2, None)
         self._currentFrame:              UmlDiagramsFrame  = cast(UmlDiagramsFrame, None)
 
-        self._parentWindow.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onNotebookPageChanged)
+        self._parentWindow.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onDiagramNotebookPageChanged)
+        self._parentWindow.Bind(EVT_TREE_SEL_CHANGED,      self._onProjectTreeSelectionChanged)
 
     @property
     def currentProject(self) -> PyutProjectV2:
@@ -149,8 +153,8 @@ class PyutUIV2(SplitterWindow):
 
     def newDocument(self, docType: DiagramType) -> IPyutDocument:
         """
-        Begin a new document
-
+        Create a new document;  It is up to the caller to update the PyutProject document list
+        It is up to the caller to add it to the notebook
         Args:
             docType:  Type of document
         """
@@ -160,7 +164,7 @@ class PyutUIV2(SplitterWindow):
             pyutProject = self.currentProject
 
         document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, project=pyutProject, docType=docType)
-        pyutProject.documents.append(document)
+        # pyutProject.documents.append(document)
         document.addToTree(self._projectTree, pyutProject.projectTreeRoot)
 
         diagramFrame:    UmlDiagramsFrame = document.diagramFrame
@@ -168,12 +172,12 @@ class PyutUIV2(SplitterWindow):
         self.currentFrame   = diagramFrame
         self._currentProject = pyutProject      # TODO do not use property it does a bunch of stuff
 
-        shortName: str = self.__shortenNotebookPageFileName(pyutProject.filename)
-        self._diagramNotebook.AddPage(diagramFrame, shortName)
+        # shortName: str = self.__shortenNotebookPageFileName(pyutProject.filename)
+        # self._diagramNotebook.AddPage(diagramFrame, shortName)
         wxYield()
         self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
         self.logger.info(f'Current notebook page: {self._notebookCurrentPageNumber}')
-        self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
+        # self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
         return document
 
@@ -221,7 +225,8 @@ class PyutUIV2(SplitterWindow):
 
         # Create a new project ?
         if project is None:
-            project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
+            # project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
+            project = self.newProject()
 
         # Load the project and add it
         try:
@@ -259,7 +264,7 @@ class PyutUIV2(SplitterWindow):
                 break
 
     # noinspection PyUnusedLocal
-    def _onNotebookPageChanged(self, event):
+    def _onDiagramNotebookPageChanged(self, event):
         """
         Callback for notebook page changed
 
@@ -275,6 +280,33 @@ class PyutUIV2(SplitterWindow):
 
         # Register the current project
         self._currentProject = self.getProjectFromFrame(self._currentFrame)
+
+    def _onProjectTreeSelectionChanged(self, event: TreeEvent):
+        """
+        Called when the selection in the project changes
+
+        Args:
+            event:
+        """
+        itm:      TreeItemId   = event.GetItem()
+        pyutData: TreeDataType = self._projectTree.GetItemData(itm)
+        self.logger.debug(f'Clicked on: {itm=} `{pyutData=}`')
+
+        # Use our own base type
+        if isinstance(pyutData, UmlDiagramsFrame):
+            frame: UmlDiagramsFrame = pyutData
+            self._currentFrame = frame
+            self._currentProject = self.getProjectFromFrame(frame)
+            self._syncPageFrameAndNotebook(frame=frame)
+
+        elif isinstance(pyutData, PyutProjectV2):
+            project: PyutProjectV2 = pyutData
+            projectFrames: List[UmlFrameType] = project.getFrames()
+            if len(projectFrames) > 0:
+                self._currentFrame = projectFrames[0]
+                self._syncPageFrameAndNotebook(frame=self._currentFrame)
+                # self._mediator.updateTitle()      TODO: V2 needs update
+            self._currentProject = project
 
     def _getCurrentFrameFromNotebook(self):
         """
@@ -305,8 +337,9 @@ class PyutUIV2(SplitterWindow):
     def _addProjectToNotebook(self, project: PyutProjectV2) -> bool:
 
         success: bool = True
+        self.logger.info(f'{project=}')
         try:
-            for document in project.getDocuments():
+            for document in project.documents:
                 diagramTitle: str = document.title
                 shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
                 self._diagramNotebook.AddPage(document.diagramFrame, shortName)
@@ -350,8 +383,8 @@ class PyutUIV2(SplitterWindow):
         """
         project.selectFirstDocument()
 
-        if len(project.getDocuments()) > 0:
-            self._currentFrame = project.getDocuments()[0].diagramFrame
+        if len(project.documents) > 0:
+            self._currentFrame = project.documents[0].diagramFrame
             self._syncPageFrameAndNotebook(frame=self._currentFrame)
 
     def _syncPageFrameAndNotebook(self, frame: UmlDiagramsFrame):

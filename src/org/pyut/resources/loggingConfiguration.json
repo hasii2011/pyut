@@ -43,15 +43,6 @@
             "propagate": "False"
         },
         "Pyut": {
-            "level":     "INFO",
-            "propagate": "False"
-        },
-        "org": {
-            "level":     "WARNING",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
-        "org.pyut": {
             "level":     "WARNING",
             "propagate": "False"
         },
@@ -59,26 +50,16 @@
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.ui.PyutApp": {
-            "level":     "INFO",
-            "propagate": "False"
-        },
-        "org.pyut.ui.UmlDiagramsFrame": {
+        "org.pyut.uiv2.PyutUIV2": {
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.ui.UmlFrame": {
-            "level":     "DEBUG",
-            "propagate": "False",
-            "handlers":  ["consoleHandler"]
-        },
-        "org.pyut.uiv2.PyutUIV2": {
+        "org.pyut.uiv2.PyutProjectV2": {
             "level":     "INFO",
-            "propagate": "False",
-            "handlers":  ["consoleHandlerFunctionNames"]
+            "handlers":  ["consoleHandlerFunctionNames"],
+            "propagate": "False"
         },
-
-        "org.pyut.general.Mediator": {
+        "org.pyut.uiv2.PyutDocumentV2": {
             "level":     "WARNING",
             "propagate": "False"
         },

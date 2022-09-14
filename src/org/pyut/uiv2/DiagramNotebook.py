@@ -4,6 +4,7 @@ from logging import getLogger
 
 from wx import CLIP_CHILDREN
 from wx import ID_ANY
+from wx import NO_IMAGE
 from wx import Notebook
 from wx import Window
 
@@ -26,3 +27,15 @@ class DiagramNotebook(Notebook):
         """
         frame = self.GetCurrentPage()
         return frame
+
+    def AddPage(self, page, text, select=False, imageId=NO_IMAGE):
+        """
+        Override so we can catch double add;  Originally for debugging
+
+        Args:
+            page:
+            text:
+            select:
+            imageId:
+        """
+        super().AddPage(page, text, select, imageId)

@@ -11,7 +11,6 @@ from wx import OK
 
 from wx import FileDropTarget
 from wx import MessageDialog
-from wx import Window
 
 from wx import Yield as wxYield
 
@@ -68,10 +67,9 @@ class PyutFileDropTarget(FileDropTarget):
         self._loadPyutXmlFiles(xmlFileNameList)
 
         if len(badFileNameList) > 0:
-            parent:  Window = self._treeNotebookHandler.notebook
             message: str    = _('Only .put and .xml files are supported')
             caption: str    = _('Unsupported File')
-            booBoo: MessageDialog = MessageDialog(parent=parent, message=message, caption=caption, style=OK | ICON_ERROR)
+            booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption=caption, style=OK | ICON_ERROR)
             booBoo.ShowModal()
 
         return True

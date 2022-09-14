@@ -127,7 +127,8 @@ class MiniDomToOgl:
 
             # adding display properties (cd)
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_STEREOTYPE))
-            pyutClass.setShowStereotype(value)
+            # pyutClass.setShowStereotype(value)
+            pyutClass._displayStereotype = value
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_METHODS))
             pyutClass.showMethods = value
             value = PyutUtils.secureBoolean(xmlClass.getAttribute(PyutXmlConstants.ATTR_SHOW_FIELDS))
