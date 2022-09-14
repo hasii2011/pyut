@@ -57,20 +57,20 @@ class PyutUIV2(SplitterWindow):
         self.SetMinimumPaneSize(20)
         self.SplitVertically(self._projectTree, self._diagramNotebook, SASH_POSITION)
 
-        self._notebookCurrentPageNumber: int               = -1
-        self._projects:                  List[PyutProjectV2] = []
-        self._currentProject:            PyutProjectV2     = cast(PyutProjectV2, None)
-        self._currentFrame:              UmlDiagramsFrame  = cast(UmlDiagramsFrame, None)
+        self._notebookCurrentPageNumber: int                = -1
+        self._projects:                  List[IPyutProject] = []
+        self._currentProject:            IPyutProject       = cast(IPyutProject, None)
+        self._currentFrame:              UmlDiagramsFrame   = cast(UmlDiagramsFrame, None)
 
         self._parentWindow.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onDiagramNotebookPageChanged)
         self._parentWindow.Bind(EVT_TREE_SEL_CHANGED,      self._onProjectTreeSelectionChanged)
 
     @property
-    def currentProject(self) -> PyutProjectV2:
+    def currentProject(self) -> IPyutProject:
         return self._currentProject
 
     @currentProject.setter
-    def currentProject(self, newProject: PyutProjectV2):
+    def currentProject(self, newProject: IPyutProject):
 
         self.logger.info(f'{self._diagramNotebook.GetRowCount()=}')
         self._currentProject = newProject
@@ -104,7 +104,8 @@ class PyutUIV2(SplitterWindow):
             theNewValue:
         """
         if self._currentProject is not None:
-            self._currentProject.modified = theNewValue
+            # mypy does not handle property setters
+            self._currentProject.modified = theNewValue     # type: ignore
         # self._mediator.updateTitle()      TODO Fix V2 version
 
     def registerUmlFrame(self, frame: UmlDiagramsFrame):
@@ -121,7 +122,7 @@ class PyutUIV2(SplitterWindow):
         self._frame = frame
         frame.Show()
 
-    def getProjectFromFrame(self, frame: UmlDiagramsFrame) -> PyutProjectV2:
+    def getProjectFromFrame(self, frame: UmlDiagramsFrame) -> IPyutProject:
         """
         Return the project that owns a given frame
 
@@ -158,7 +159,7 @@ class PyutUIV2(SplitterWindow):
         Args:
             docType:  Type of document
         """
-        pyutProject: PyutProjectV2 = self._currentProject
+        pyutProject: IPyutProject = self._currentProject
         if pyutProject is None:
             self.newProject()
             pyutProject = self.currentProject
@@ -182,7 +183,7 @@ class PyutUIV2(SplitterWindow):
         return document
 
     @deprecated(reason='use property .currentProject')
-    def getCurrentProject(self) -> PyutProjectV2:
+    def getCurrentProject(self) -> IPyutProject:
         """
         Get the current working project
 
@@ -205,7 +206,7 @@ class PyutUIV2(SplitterWindow):
                 return True
         return False
 
-    def openFile(self, filename, project: PyutProjectV2 = None) -> bool:
+    def openFile(self, filename, project: IPyutProject = None) -> bool:
         """
         Open a file
         TODO:  Fix V2 this does 2 things loads from a file or from a project
@@ -334,7 +335,7 @@ class PyutUIV2(SplitterWindow):
         self.logger.info(f'{projectTree.GetCount()=}')
         return treeRootItemId
 
-    def _addProjectToNotebook(self, project: PyutProjectV2) -> bool:
+    def _addProjectToNotebook(self, project: IPyutProject) -> bool:
 
         success: bool = True
         self.logger.info(f'{project=}')
@@ -375,7 +376,7 @@ class PyutUIV2(SplitterWindow):
         else:
             return justFileName
 
-    def _updateTreeNotebookIfPossible(self, project: PyutProjectV2):
+    def _updateTreeNotebookIfPossible(self, project: IPyutProject):
         """
 
         Args:

@@ -11,6 +11,7 @@ from wx import TreeItemId
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.IPyutDocument import IPyutDocument
+
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
@@ -22,14 +23,14 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import DiagramsLabels
 
 if TYPE_CHECKING:
-    from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
+    from org.pyut.ui.IPyutProject import IPyutProject
 
 
 class PyutDocumentV2(IPyutDocument):
     """
     Document : Contain a document : frames, properties, ...
     """
-    def __init__(self, parentFrame: DiagramNotebook, project: 'PyutProjectV2', docType: DiagramType):
+    def __init__(self, parentFrame: DiagramNotebook, project: 'IPyutProject', docType: DiagramType):
         """
 
         Args:
@@ -37,11 +38,11 @@ class PyutDocumentV2(IPyutDocument):
             project:        The project
             docType:        The enumeration value for the diagram type
         """
-
+        super().__init__()
         self.logger:       Logger   = getLogger(__name__)
 
         self._parentFrame: DiagramNotebook = parentFrame
-        self._project:     'PyutProjectV2'   = project
+        self._project:     'IPyutProject'   = project
 
         self._type: DiagramType = docType
         """

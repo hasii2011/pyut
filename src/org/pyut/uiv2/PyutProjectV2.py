@@ -1,7 +1,5 @@
 
 from typing import List
-from typing import NewType
-from typing import Union
 from typing import cast
 from typing import TYPE_CHECKING
 
@@ -31,18 +29,12 @@ from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlF
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.IPyutProject import IPyutProject
 from org.pyut.ui.IPyutProject import PyutDocuments
+from org.pyut.ui.IPyutProject import UmlFrameType
 
 from org.pyut.ui.Mediator import Mediator
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
 if TYPE_CHECKING:
     from org.pyut.uiv2.ProjectTree import ProjectTree
-
-# Until I figure out how to stop mypy from complaining
-# TODO:   This should just be the following:
-#          UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]
-UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])  # type: ignore
 
 
 class PyutProjectV2(IPyutProject):

@@ -159,6 +159,15 @@ class PyutProject(IPyutProject):
         """
         self._modified = value
 
+    @property
+    def projectTreeRoot(self) -> TreeItemId:
+        """
+        V2 method needed, but not used
+
+        Returns:
+        """
+        return cast(TreeItemId, None)
+
     def addToTree(self):
         """
         Add the project to the project tree

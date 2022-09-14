@@ -211,7 +211,8 @@ class PyutXml:
                 else:
                     document = project.newDocument(docType)
 
-                document.title = self.__determineDocumentTitle(documentNode)
+                # mypy does not handle property setters
+                document.title = self.__determineDocumentTitle(documentNode)    # type: ignore
 
                 umlFrame = self.__showAppropriateUmlFrame(document)
                 self.__positionAndSetupDiagramFrame(umlFrame=umlFrame, documentNode=documentNode)

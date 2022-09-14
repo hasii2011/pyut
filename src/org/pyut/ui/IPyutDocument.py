@@ -45,4 +45,5 @@ class IPyutDocument(ABC):
     def addToTree(self, tree: TreeCtrl, root: TreeItemId):
         pass
 
+
 PyutDocuments = NewType('PyutDocuments', List[IPyutDocument])
