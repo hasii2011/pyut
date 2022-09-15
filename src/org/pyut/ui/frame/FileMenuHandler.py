@@ -106,7 +106,12 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
+        from org.pyut.ui.Mediator import Mediator
+
+        if self._preferences.usev2ui is True:
+            Mediator().newDocument(DiagramType.CLASS_DIAGRAM)
+        else:
+            self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
         self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal

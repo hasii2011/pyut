@@ -108,6 +108,15 @@ class PyutUIV2(SplitterWindow):
             self._currentProject.modified = theNewValue     # type: ignore
         # self._mediator.updateTitle()      TODO Fix V2 version
 
+    @property
+    def diagramNotebook(self) -> DiagramNotebook:
+        """
+        This will be removed when we use eventing from the mediator to send messages
+
+        Returns:  The UI component
+        """
+        return self._diagramNotebook
+
     def registerUmlFrame(self, frame: UmlDiagramsFrame):
         """
         Register the current UML Frame
@@ -156,8 +165,11 @@ class PyutUIV2(SplitterWindow):
         """
         Create a new document;  It is up to the caller to update the PyutProject document list
         It is up to the caller to add it to the notebook
+
         Args:
             docType:  Type of document
+
+        Returns: The newly created document
         """
         pyutProject: IPyutProject = self._currentProject
         if pyutProject is None:

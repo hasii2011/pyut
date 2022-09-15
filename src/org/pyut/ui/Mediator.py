@@ -51,7 +51,6 @@ from ogl.OglLink import OglLink
 from ogl.OglText import OglText
 from ogl.OglClass import OglClass
 
-
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
@@ -264,6 +263,23 @@ class Mediator(Singleton):
 
         self._modifyCommand = None  # command for undo/redo a modification on a shape.
 
+    def newDocument(self, diagramType: DiagramType):
+        """
+        New API for V2 UI;  Mediator does not provide access to any UI component
+        TODO post v2 UI we will send message to UI component
+        Args:
+            diagramType:
+        """
+        from org.pyut.ui.IPyutDocument import IPyutDocument
+
+        pyutDocument:   IPyutDocument = self._treeNotebookHandler.newDocument(docType=diagramType)
+        currentProject: IPyutProject = self._treeNotebookHandler.currentProject
+
+        currentProject.documents.append(pyutDocument)
+        # TODO use messages post V2 UI
+        self._treeNotebookHandler.diagramNotebook.AddPage(page=pyutDocument.diagramFrame, text=pyutDocument.title)
+        # shortName: str = self.__shortenNotebookPageFileName(pyutProject.filename)
+
     def setScriptMode(self):
         """
         Define the script mode, to use PyUt without graphical elements
@@ -372,23 +388,6 @@ class Mediator(Singleton):
 
         """
         self._toolboxOwner.registerTool(tool)
-
-    # TODO this is an unused method.  Note the bad plugin name
-    # def fastTextClassEditor(self, thePyutClass: PyutClass):
-    #     plugs = self._appFrame.plugs
-    #     cl = [s for s in plugs.values() if s(None, None).name == "Fast text edition"]
-    #     if cl:
-    #         obj = cl[0](self.getUmlObjects(), self.getUmlFrame())
-    #     else:
-    #         # fallback
-    #         self.standardClassEditor(thePyutClass)
-    #         return
-    #
-    #     # Do plugin functionality
-    #     BeginBusyCursor()
-    #     obj.callDoAction()
-    #     EndBusyCursor()
-    #     self.getUmlFrame().Refresh()
 
     def standardClassEditor(self, thePyutClass: PyutClass):
         """

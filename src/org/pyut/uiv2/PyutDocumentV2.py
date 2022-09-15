@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from logging import Logger
 from logging import getLogger
 
+# from deprecated import deprecated
 from wx import TreeCtrl
 from wx import TreeItemId
 
@@ -112,6 +113,7 @@ class PyutDocumentV2(IPyutDocument):
         """
         return self._diagramFrame
 
+    # @deprecated('Use the mediator call instead')
     def addToTree(self, tree: TreeCtrl, root: TreeItemId):
         """
 

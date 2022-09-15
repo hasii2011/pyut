@@ -1,8 +1,9 @@
 
-from abc import ABC
-from abc import abstractmethod
 from typing import List
 from typing import NewType
+
+from abc import ABC
+from abc import abstractmethod
 
 from wx import TreeCtrl
 from wx import TreeItemId
