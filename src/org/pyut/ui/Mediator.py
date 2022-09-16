@@ -1011,23 +1011,14 @@ class Mediator(Singleton):
         # Set text
         txt = "PyUt v" + __PyUtVersion__ + " - " + filename
         if (project is not None) and (project.modified is True):
-            if self._treeNotebookHandler.getCurrentFrame() is not None:
-                zoom = self._treeNotebookHandler.getCurrentFrame().GetCurrentZoom()
+            if self._treeNotebookHandler.currentFrame is not None:
+                zoom = self._treeNotebookHandler.currentFrame.GetCurrentZoom()
             else:
                 zoom = 1
 
             txt = txt + f' ( {int(zoom * 100)}%) *'
 
         self._appFrame.SetTitle(txt)
-
-    def loadByFilename(self, filename: str):
-        """
-        Load a file from its filename
-
-        Args:
-            filename:  Fully qualified file name
-        """
-        self._appFrame.loadByFilename(filename)
 
     def cutSelectedShapes(self):
         """
@@ -1082,6 +1073,13 @@ class Mediator(Singleton):
 
     def createDocument(self, diagramType: DiagramType):
         return self._treeNotebookHandler.newDocument(diagramType)
+
+    def saveProject(self) -> 'IPyutProject':
+
+        self._treeNotebookHandler.saveFile()
+        self.updateTitle()
+
+        return self._treeNotebookHandler.currentProject
 
     def _moveSelectedShapeZOrder(self, callback: Callable):
         """

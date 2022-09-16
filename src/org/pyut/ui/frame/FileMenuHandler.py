@@ -44,6 +44,7 @@ from ogl.OglClass import OglClass
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from org.pyut.ui.IPyutProject import IPyutProject
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.PyutUI import PyutUI
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -202,11 +203,16 @@ class FileMenuHandler(BaseMenuHandler):
             event:
         """
         # self._saveFile()
-        self._treeNotebookHandler.saveFile()
-        self._mediator.updateTitle()
+        if self._preferences.usev2ui is True:
+            from org.pyut.ui.Mediator import Mediator
+
+            project: IPyutProject = Mediator().saveProject()           # TODO use mediator;  might need more code
+        else:
+            self._treeNotebookHandler.saveFile()
+            self._mediator.updateTitle()
+            project = self._treeNotebookHandler.getCurrentProject()
 
         # Add to last opened files list
-        project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
             self._preferences.addNewLastOpenedFilesEntry(project.filename)
             self.setLastOpenedFilesItems()
