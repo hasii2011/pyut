@@ -11,14 +11,19 @@ from os import path as osPath
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 
+from wx import EVT_MENU
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
+from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import EVT_TREE_SEL_CHANGED
 from wx import ID_ANY
+from wx import ITEM_NORMAL
+from wx import Menu
 
 from wx import SplitterWindow
 from wx import Frame
 from wx import TreeEvent
 from wx import TreeItemId
+from wx import CommandEvent
 
 from wx import Yield as wxYield
 
@@ -61,9 +66,12 @@ class PyutUIV2(SplitterWindow):
         self._projects:                  List[IPyutProject] = []
         self._currentProject:            IPyutProject       = cast(IPyutProject, None)
         self._currentFrame:              UmlDiagramsFrame   = cast(UmlDiagramsFrame, None)
+        self._projectPopupMenu:          Menu               = cast(Menu, None)
+        self._documentPopupMenu:         Menu               = cast(Menu, None)
 
         self._parentWindow.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onDiagramNotebookPageChanged)
         self._parentWindow.Bind(EVT_TREE_SEL_CHANGED,      self._onProjectTreeSelectionChanged)
+        self._projectTree.Bind(EVT_TREE_ITEM_RIGHT_CLICK,  self._onProjectTreeRightClick)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -177,22 +185,68 @@ class PyutUIV2(SplitterWindow):
             pyutProject = self.currentProject
 
         document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, project=pyutProject, docType=docType)
-        # pyutProject.documents.append(document)
+
         document.addToTree(self._projectTree, pyutProject.projectTreeRoot)
 
-        diagramFrame:    UmlDiagramsFrame = document.diagramFrame
-
-        self.currentFrame   = diagramFrame
+        self.currentFrame    = document.diagramFrame
         self._currentProject = pyutProject      # TODO do not use property it does a bunch of stuff
 
-        # shortName: str = self.__shortenNotebookPageFileName(pyutProject.filename)
-        # self._diagramNotebook.AddPage(diagramFrame, shortName)
         wxYield()
         self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
         self.logger.info(f'Current notebook page: {self._notebookCurrentPageNumber}')
         # self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
         return document
+
+    def closeCurrentProject(self):
+        """
+        Close the current project
+
+        Returns:
+            True if everything is ok
+        """
+        if self._currentProject is None and self._currentFrame is not None:
+            self._currentProject = self.getProjectFromFrame(self._currentFrame)
+        if self._currentProject is None:
+            PyutUtils.displayError("No frame to close !", "Error...")
+            return False
+
+        # Close the file
+        # if self._currentProject.modified is True
+        #     frame = self._currentProject.getFrames()[0]
+        #     frame.SetFocus()
+        #     self.showFrame(frame)
+        #
+        #     dlg = MessageDialog(self.__parent, _("Your project has not been saved. "
+        #                                          "Would you like to save it ?"), _("Save changes ?"), YES_NO | ICON_QUESTION)
+        #     if dlg.ShowModal() == ID_YES:
+        #         if self.saveFile() is False:
+        #             return False
+
+        # Remove the frame in the notebook
+        pages = list(range(self._diagramNotebook.GetPageCount()))
+        pages.reverse()
+        for i in pages:
+            pageFrame = self._diagramNotebook.GetPage(i)
+            if pageFrame in self._currentProject.getFrames():
+                self._diagramNotebook.DeletePage(i)
+
+        # self._currentProject.removeFromTree()
+        self._removeProjectFromTree(pyutProject=self._currentProject)
+        self._projects.remove(self._currentProject)
+
+        self.logger.debug(f'{self._currentProject.filename=}')
+        self._currentProject = None
+        self._currentFrame = None
+
+        nbrProjects: int = len(self._projects)
+        self.logger.debug(f'{nbrProjects=}')
+        if nbrProjects > 0:
+            self._updateTreeNotebookIfPossible(project=self._projects[0])
+
+        # self._mediator.updateTitle()  TODO V2 API update needed
+
+        return True
 
     @deprecated(reason='use property .currentProject')
     def getCurrentProject(self) -> IPyutProject:
@@ -321,6 +375,36 @@ class PyutUIV2(SplitterWindow):
                 # self._mediator.updateTitle()      TODO: V2 needs update
             self._currentProject = project
 
+    def _onProjectTreeRightClick(self, treeEvent: TreeEvent):
+
+        itemId: TreeItemId = treeEvent.GetItem()
+        data = self._projectTree.GetItemData(item=itemId)
+        self.logger.info(f'Item Data: `{data}`')
+        if isinstance(data, IPyutProject):
+            self._popupProjectMenu()
+        elif isinstance(data, UmlDiagramsFrame):            # TODO  We should put the IPyutDocument on the node
+            self._popupProjectDocumentMenu()
+
+    def _popupProjectMenu(self):
+
+        # self._mediator.resetStatusText()      TODO V2 UI;  should send message
+
+        if self._projectPopupMenu is None:
+            self.logger.info(f'Create the project popup menu')
+            [closeProjectMenuID] = PyutUtils.assignID(1)
+            popupMenu: Menu = Menu('Actions')
+            popupMenu.AppendSeparator()
+            popupMenu.Append(closeProjectMenuID, 'Close Project', 'Remove project from tree', ITEM_NORMAL)
+            popupMenu.Bind(EVT_MENU, self.__onCloseProject, id=closeProjectMenuID)
+            self._projectPopupMenu = popupMenu
+
+        self.logger.info(f'currentProject: `{self._currentProject}`')
+        self._parentWindow.PopupMenu(self._projectPopupMenu)
+
+    # noinspection PyUnusedLocal
+    def __onCloseProject(self, event: CommandEvent):
+        self.closeCurrentProject()
+
     def _getCurrentFrameFromNotebook(self):
         """
         Get the current frame in the notebook
@@ -354,7 +438,7 @@ class PyutUIV2(SplitterWindow):
         try:
             for document in project.documents:
                 diagramTitle: str = document.title
-                shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
+                shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
                 self._diagramNotebook.AddPage(document.diagramFrame, shortName)
 
             self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount()-1
@@ -367,26 +451,6 @@ class PyutUIV2(SplitterWindow):
             success = False
 
         return success
-
-    def __shortenNotebookPageFileName(self, filename: str) -> str:
-        """
-        Return a shorter filename to display; For file names longer
-        than `MAX_NOTEBOOK_PAGE_NAME_LENGTH` this method takes the first
-        four characters and the last eight as the shortened file name
-
-        Args:
-            filename:  The file name to display
-
-        Returns:
-            A better file name
-        """
-        justFileName: str = osPath.split(filename)[1]
-        if len(justFileName) > MAX_NOTEBOOK_PAGE_NAME_LENGTH:
-            firstFour: str = justFileName[:4]
-            lastEight: str = justFileName[-8:]
-            return f'{firstFour}{lastEight}'
-        else:
-            return justFileName
 
     def _updateTreeNotebookIfPossible(self, project: IPyutProject):
         """
@@ -412,3 +476,36 @@ class PyutUIV2(SplitterWindow):
             if pageFrame is frame:
                 self._diagramNotebook.SetSelection(i)
                 break
+
+    def _shortenNotebookPageDiagramName(self, diagramTitle: str) -> str:
+        """
+        Return a shorter filename to display; For file names longer
+        than `MAX_NOTEBOOK_PAGE_NAME_LENGTH` this method takes the first
+        four characters and the last eight as the shortened file name
+
+        Args:
+            diagramTitle:  The diagram name to display
+
+        Returns:
+            A short diagram name
+        """
+        justFileName: str = osPath.split(diagramTitle)[1]
+        if len(justFileName) > MAX_NOTEBOOK_PAGE_NAME_LENGTH:
+            firstFour: str = justFileName[:4]
+            lastEight: str = justFileName[-8:]
+            return f'{firstFour}{lastEight}'
+        else:
+            return justFileName
+
+    def _removeProjectFromTree(self, pyutProject: IPyutProject):
+        """
+        Remove the project from the tree
+        TODO: V2 UI this belongs in the project tree component itself
+        Args:
+            pyutProject:
+
+        """
+        """
+        """
+        projectTreeRoot: TreeItemId = pyutProject.projectTreeRoot
+        self._projectTree.Delete(projectTreeRoot)

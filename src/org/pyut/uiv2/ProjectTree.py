@@ -36,7 +36,7 @@ class ProjectTree(TreeCtrl):
         Add the project to the project tree
         """
         justTheFileName: str        = self._justTheFileName(pyutProject.filename)
-        projectTreeRoot: TreeItemId = self.AppendItem(self._projectTreeRoot, justTheFileName, data=self)
+        projectTreeRoot: TreeItemId = self.AppendItem(self._projectTreeRoot, justTheFileName, data=pyutProject)
         self.Expand(projectTreeRoot)
 
         # Add the frames

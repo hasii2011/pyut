@@ -162,12 +162,6 @@ class PyutProjectV2(IPyutProject):
         """
         return self._documents
 
-    def removeFromTree(self):
-        """
-        Remove the project from the tree
-        """
-        self._tree.Delete(self._projectTreeRoot)
-
     def insertProject(self, filename: str) -> bool:
         """
         Insert another project into this one
