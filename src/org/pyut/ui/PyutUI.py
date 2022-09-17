@@ -191,6 +191,7 @@ class PyutUI:
             self._currentProject.modified = theNewValue
         self._mediator.updateTitle()
 
+    @deprecated(reason='Use .currentFrameProperty')
     def getCurrentFrame(self):
         """
         Deprecated use the properties

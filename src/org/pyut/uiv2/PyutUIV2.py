@@ -18,8 +18,11 @@ from wx import EVT_TREE_SEL_CHANGED
 from wx import FD_OVERWRITE_PROMPT
 from wx import FD_SAVE
 from wx import ICON_ERROR
+from wx import ICON_QUESTION
 from wx import ID_ANY
 from wx import ID_OK
+from wx import ID_YES
+from wx import YES_NO
 from wx import ITEM_NORMAL
 from wx import OK
 
@@ -47,9 +50,9 @@ from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.IPyutDocument import IPyutDocument
 from org.pyut.ui.IPyutProject import IPyutProject
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectTree import ProjectTree
@@ -189,7 +192,13 @@ class PyutUIV2(SplitterWindow):
 
     def newProject(self) -> IPyutProject:
         """
-        Begin a new project
+        Create a new project;  Adds it to the Project Tree;
+        The caller should be responsible
+        for updating ._currentProject and the _projects list; but because of
+        architecture problems I have to do it here;
+        TODO V2 UI refactor needs to fix this
+
+        Returns:  A default empty project
         """
         project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
 
@@ -200,6 +209,7 @@ class PyutUIV2(SplitterWindow):
         self._projects.append(project)
         self._currentProject = project
         self._currentFrame   = cast(UmlDiagramsFrame, None)
+
         return project
 
     def newDocument(self, docType: DiagramType) -> IPyutDocument:
@@ -244,17 +254,16 @@ class PyutUIV2(SplitterWindow):
             PyutUtils.displayError("No frame to close !", "Error...")
             return False
 
-        # Close the file
-        # if self._currentProject.modified is True
-        #     frame = self._currentProject.getFrames()[0]
-        #     frame.SetFocus()
-        #     self.showFrame(frame)
-        #
-        #     dlg = MessageDialog(self.__parent, _("Your project has not been saved. "
-        #                                          "Would you like to save it ?"), _("Save changes ?"), YES_NO | ICON_QUESTION)
-        #     if dlg.ShowModal() == ID_YES:
-        #         if self.saveFile() is False:
-        #             return False
+        # Close the project
+        if self._currentProject.modified is True:
+            frame = self._currentProject.getFrames()[0]
+            frame.SetFocus()
+            self.showFrame(frame)
+
+            dlg = MessageDialog(None, "Your project has not been saved. Would you like to save it ?", "Save changes ?", YES_NO | ICON_QUESTION)
+            if dlg.ShowModal() == ID_YES:
+                if self.saveFile() is False:
+                    return False
 
         # Remove the frame in the notebook
         pages = list(range(self._diagramNotebook.GetPageCount()))
@@ -334,7 +343,12 @@ class PyutUIV2(SplitterWindow):
                 eMsg: str = f'{"The file cannot be loaded !"} - {filename}'
                 PyutUtils.displayError(eMsg)
                 return False
-            self._projects.append(project)
+            # TODO V2 UI bogus fix .newProject added to the list
+            # Need to keep it this way unit we get the new IOXml plug
+            if project in self._projects:
+                pass
+            else:
+                self._projects.append(project)
             self._currentProject = project
         except (ValueError, Exception) as e:
             self.logger.error(f"An error occurred while loading the project ! {e}")
