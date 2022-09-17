@@ -55,6 +55,8 @@ from org.pyut.ui.IPyutDocument import IPyutDocument
 from org.pyut.ui.IPyutProject import IPyutProject
 
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
+from org.pyut.uiv2.ProjectManager import ProjectManager
+from org.pyut.uiv2.ProjectManager import PyutProjects
 from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
@@ -83,11 +85,15 @@ class PyutUIV2(SplitterWindow):
         self.SplitVertically(self._projectTree, self._diagramNotebook, SASH_POSITION)
 
         self._notebookCurrentPageNumber: int                = -1
-        self._projects:                  List[IPyutProject] = []
-        self._currentProject:            IPyutProject       = cast(IPyutProject, None)
+
+        # self._projects:                  List[IPyutProject] = []
+        # self._currentProject:            IPyutProject       = cast(IPyutProject, None)
+
         self._currentFrame:              UmlDiagramsFrame   = cast(UmlDiagramsFrame, None)
         self._projectPopupMenu:          Menu               = cast(Menu, None)
         self._documentPopupMenu:         Menu               = cast(Menu, None)
+
+        self._projectManager: ProjectManager = ProjectManager(projectTree=self._projectTree)
 
         self._parentWindow.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onDiagramNotebookPageChanged)
         self._parentWindow.Bind(EVT_TREE_SEL_CHANGED,      self._onProjectTreeSelectionChanged)
@@ -95,13 +101,13 @@ class PyutUIV2(SplitterWindow):
 
     @property
     def currentProject(self) -> IPyutProject:
-        return self._currentProject
+        return self._projectManager.currentProject
 
     @currentProject.setter
     def currentProject(self, newProject: IPyutProject):
 
         self.logger.info(f'{self._diagramNotebook.GetRowCount()=}')
-        self._currentProject = newProject
+        self._projectManager.currentProject = newProject
 
         self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount() - 1
         self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
@@ -116,7 +122,7 @@ class PyutUIV2(SplitterWindow):
         Returns:
             the current document or None if not found
         """
-        project: IPyutProject = self.currentProject
+        project: IPyutProject = self._projectManager.currentProject
         if project is None:
             return cast(IPyutDocument, None)
         for document in project.documents:
@@ -134,8 +140,8 @@ class PyutUIV2(SplitterWindow):
 
     @property
     def modified(self) -> bool:
-        if self._currentProject is not None:
-            return self._currentProject.modified
+        if self._projectManager.currentProject is not None:
+            return self._projectManager.currentProject.modified
         else:
             return False
 
@@ -147,9 +153,9 @@ class PyutUIV2(SplitterWindow):
         Args:
             theNewValue:
         """
-        if self._currentProject is not None:
+        if self._projectManager.currentProject is not None:
             # mypy does not handle property setters
-            self._currentProject.modified = theNewValue     # type: ignore
+            self._projectManager.currentProject.modified = theNewValue     # type: ignore
         # self._mediator.updateTitle()      TODO Fix V2 version
 
     @property
@@ -185,7 +191,8 @@ class PyutUIV2(SplitterWindow):
         Returns:
             PyutProject or None if not found
         """
-        for project in self._projects:
+        # for project in self._projects:
+        for project in self._projectManager.projects:
             if frame in project.getFrames():
                 return project
         return cast(PyutProjectV2, None)
@@ -206,8 +213,11 @@ class PyutUIV2(SplitterWindow):
 
         project.projectTreeRoot = projectTreeRoot
 
-        self._projects.append(project)
-        self._currentProject = project
+        # self._projects.append(project)
+        # self._currentProject = project
+        self._projectManager.addProject(project)
+        self._projectManager.currentProject = project
+
         self._currentFrame   = cast(UmlDiagramsFrame, None)
 
         return project
@@ -222,10 +232,10 @@ class PyutUIV2(SplitterWindow):
 
         Returns: The newly created document
         """
-        pyutProject: IPyutProject = self._currentProject
+        pyutProject: IPyutProject = self._projectManager.currentProject
         if pyutProject is None:
             self.newProject()
-            pyutProject = self.currentProject
+            pyutProject = self._projectManager.currentProject
 
         document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, project=pyutProject, docType=docType)
 
@@ -248,15 +258,17 @@ class PyutUIV2(SplitterWindow):
         Returns:
             True if everything is ok
         """
-        if self._currentProject is None and self._currentFrame is not None:
-            self._currentProject = self.getProjectFromFrame(self._currentFrame)
-        if self._currentProject is None:
+        currentProject: IPyutProject = self._projectManager.currentProject
+        if currentProject is None and self._currentFrame is not None:
+            currentProject = self.getProjectFromFrame(self._currentFrame)
+        if currentProject is None:
             PyutUtils.displayError("No frame to close !", "Error...")
             return False
 
         # Close the project
-        if self._currentProject.modified is True:
-            frame = self._currentProject.getFrames()[0]
+        if currentProject.modified is True:
+            # frame = self._currentProject.getFrames()[0]
+            frame = self._projectManager.currentProject.getFrames()[0]
             frame.SetFocus()
             self.showFrame(frame)
 
@@ -270,23 +282,28 @@ class PyutUIV2(SplitterWindow):
         pages.reverse()
         for i in pages:
             pageFrame = self._diagramNotebook.GetPage(i)
-            if pageFrame in self._currentProject.getFrames():
+            if pageFrame in self._projectManager.currentProject.getFrames():
                 self._diagramNotebook.DeletePage(i)
 
         # self._currentProject.removeFromTree()
-        self._removeProjectFromTree(pyutProject=self._currentProject)
-        self._projects.remove(self._currentProject)
+        self._removeProjectFromTree(pyutProject=currentProject)
+        # self._projects.remove(self._currentProject)
+        self._projectManager.removeProject(self._projectManager.currentProject)
 
-        self.logger.debug(f'{self._currentProject.filename=}')
-        self._currentProject = None
+        self.logger.debug(f'{self._projectManager.currentProject.filename=}')
+        # self._currentProject = None
+
         self._currentFrame = None
 
-        nbrProjects: int = len(self._projects)
+        # nbrProjects: int = len(self._projects)
+        currentProjects: PyutProjects = self._projectManager.projects
+        nbrProjects: int = len(currentProjects)
         self.logger.debug(f'{nbrProjects=}')
         if nbrProjects > 0:
-            self._updateTreeNotebookIfPossible(project=self._projects[0])
+            newCurrentProject: IPyutProject = currentProjects[0]
+            self._updateTreeNotebookIfPossible(project=newCurrentProject)
 
-        # self._mediator.updateTitle()  TODO V2 API update needed
+        # self._mediator.updateTitle()  TODO V2 API update needed  Send event
 
         return True
 
@@ -309,7 +326,8 @@ class PyutUIV2(SplitterWindow):
         Returns:
             `True` if the project is already loaded
         """
-        for project in self._projects:
+        # for project in self._projects:
+        for project in self._projectManager.projects:
             if project.filename == filename:
                 return True
         return False
@@ -345,18 +363,20 @@ class PyutUIV2(SplitterWindow):
                 return False
             # TODO V2 UI bogus fix .newProject added to the list
             # Need to keep it this way unit we get the new IOXml plug
-            if project in self._projects:
+            if project in self._projectManager.projects:
                 pass
             else:
-                self._projects.append(project)
-            self._currentProject = project
+                # self._projects.append(project)
+                self._projectManager.addProject(project)
+            # self._currentProject = project
+            self._projectManager.currentProject = project
         except (ValueError, Exception) as e:
             self.logger.error(f"An error occurred while loading the project ! {e}")
             raise e
 
         success: bool = self._addProjectToNotebook(project)
-        self.logger.debug(f'{self._currentFrame=} {self.currentProject=} {self._diagramNotebook.GetSelection()=}')
-
+        # self.logger.debug(f'{self._currentFrame=} {self.currentProject=} {self._diagramNotebook.GetSelection()=}')
+        self.logger.debug(f'{self._currentFrame=} {project=} {self._diagramNotebook.GetSelection()=}')
         return success
 
     def saveFile(self) -> bool:
@@ -367,7 +387,7 @@ class PyutUIV2(SplitterWindow):
         Returns:
             `True` if the save succeeds else `False`
         """
-        currentProject = self._currentProject
+        currentProject = self._projectManager.currentProject
         if currentProject is None:
             PyutUtils.displayError("No diagram to save !", "Error")
             return False
@@ -385,7 +405,7 @@ class PyutUIV2(SplitterWindow):
         Returns:
             `True` if the save succeeds else `False`
         """
-        project: IPyutProject = self._currentProject
+        project: IPyutProject = self._projectManager.currentProject
         if len(project.documents) == 0:
             PyutUtils.displayError("No diagram to save !", "Error")
             return
@@ -406,14 +426,15 @@ class PyutUIV2(SplitterWindow):
         # Find if a specified filename is already opened
         filename = fDialog.GetPath()
 
-        if len([project for project in self._projects if project.filename == filename]) > 0:
+        # if len([project for project in self._projects if project.filename == filename]) > 0:
+        if len([project for project in self._projectManager.projects if project.filename == filename]) > 0:
             eMsg: str = f'Error ! This project {filename} is currently open.  Please choose another project name !'
             dlg: MessageDialog = MessageDialog(None, eMsg, "Save change, filename error", OK | ICON_ERROR)
             dlg.ShowModal()
             dlg.Destroy()
             return
 
-        project = self._currentProject
+        project = self._projectManager.currentProject
         project.filename = fDialog.GetPath()
         # project.saveXmlPyut()
         self.saveProject(pyutProject=project)
@@ -481,7 +502,7 @@ class PyutUIV2(SplitterWindow):
         # self._tree.SetItemText(self._treeRoot, self._justTheFileName(self._filename))
         self._projectTree.SetItemText(pyutProject.projectTreeRoot, self._justTheFileName(pyutProject.filename))
         for document in pyutProject.documents:
-            self.logger.info(f'updateTreeText: {document=}')
+            self.logger.debug(f'updateTreeText: {document=}')
             document.updateTreeText()
 
     def _justTheFileName(self, filename):
@@ -568,7 +589,7 @@ class PyutUIV2(SplitterWindow):
             popupMenu.Bind(EVT_MENU, self._onCloseProject, id=closeProjectMenuID)
             self._projectPopupMenu = popupMenu
 
-        self.logger.info(f'currentProject: `{self._currentProject}`')
+        self.logger.info(f'currentProject: `{self._projectManager.currentProject}`')
         self._parentWindow.PopupMenu(self._projectPopupMenu)
 
     def _popupProjectDocumentMenu(self):
@@ -625,7 +646,7 @@ class PyutUIV2(SplitterWindow):
         Args:
             event:
         """
-        project:         IPyutProject  = self.currentProject
+        project:         IPyutProject  = self._projectManager.currentProject
         currentDocument: IPyutDocument = self.currentDocument
         project.removeDocument(currentDocument)
 

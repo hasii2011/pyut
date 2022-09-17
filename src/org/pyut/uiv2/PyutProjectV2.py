@@ -279,7 +279,7 @@ class PyutProjectV2(IPyutProject):
         """
         Update the tree text for this project
         """
-        self.logger.info(f'{self._projectTreeRoot}')
+        self.logger.debug(f'{self._projectTreeRoot}')
 
         self._tree.SetItemText(self.projectTreeRoot, self._justTheFileName(self._filename))
         for document in self._documents:
