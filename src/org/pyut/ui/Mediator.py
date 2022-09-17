@@ -516,7 +516,7 @@ class Mediator(Singleton):
         Do action when a shape is selected.
         TODO : support each link type
         """
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.currentFrame
         if umlFrame is None:
             return
 
