@@ -21,6 +21,7 @@ from wx import EVT_ACTIVATE
 from wx import ActivateEvent
 from wx import AcceleratorEntry
 from wx import CommandEvent
+from wx import FRAME_TOOL_WINDOW
 from wx import Frame
 from wx import ID_ANY
 
@@ -85,7 +86,8 @@ class PyutApplicationFrameV2(Frame):
 
         appSize: Size = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
 
-        super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL)
+        # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the tool bar
+        super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_TOOL_WINDOW)
 
         self.logger: Logger = getLogger(__name__)
         self._createApplicationIcon()

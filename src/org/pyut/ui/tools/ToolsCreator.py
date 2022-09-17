@@ -238,10 +238,10 @@ class ToolsCreator:
                      ]:
 
             if tool is not None:
-                toolId: WindowIDRef = tool.wxID
-                bitMap: Bitmap = tool.img
-                caption: str = tool.caption
-                isToggle: bool = tool.isToggle
+                toolId:   WindowIDRef = tool.wxID
+                bitMap:   Bitmap      = tool.img
+                caption:  str         = tool.caption
+                isToggle: bool        = tool.isToggle
                 if isToggle is True:
                     itemKind = ITEM_CHECK
                 else:
