@@ -13,8 +13,9 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
-from org.pyut.ui.PyutDocument import PyutDocument
+from org.pyut.ui.IPyutDocument import IPyutDocument
 
+# noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 [
@@ -24,7 +25,7 @@ from org.pyut.general.Globals import _
 
 class DlgEditDocument(BaseDlgEditText):
 
-    def __init__(self, parent: Window, dialogIdentifier, document: PyutDocument):
+    def __init__(self, parent: Window, dialogIdentifier: int, document: IPyutDocument):
         """
 
         Args:
@@ -35,7 +36,7 @@ class DlgEditDocument(BaseDlgEditText):
         super().__init__(parent, dialogIdentifier, _("Document Edit"))
 
         self.logger:    Logger       = getLogger(__name__)
-        self._document: PyutDocument = document
+        self._document: IPyutDocument = document
 
         label: StaticText = StaticText(self, ID_ANY, _("Document Name"))
         self._nameEntry: TextCtrl = TextCtrl(parent=self, id=TXT_DOCUMENT_NAME, value=document.title)

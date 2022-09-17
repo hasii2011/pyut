@@ -40,6 +40,7 @@ from wx import Yield as wxYield
 from org.pyut.PyutConstants import PyutConstants
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
 from org.pyut.enums.DiagramType import DiagramType
 
@@ -103,6 +104,22 @@ class PyutUIV2(SplitterWindow):
         self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
         self.logger.info(f'{self._notebookCurrentPageNumber=}')
+
+    @property
+    def currentDocument(self) -> IPyutDocument:
+        """
+        Get the current document.
+
+        Returns:
+            the current document or None if not found
+        """
+        project: IPyutProject = self.currentProject
+        if project is None:
+            return cast(IPyutDocument, None)
+        for document in project.documents:
+            if document.diagramFrame is self._currentFrame:
+                return document
+        return cast(IPyutDocument, None)
 
     @property
     def currentFrame(self) -> UmlDiagramsFrame:
@@ -534,15 +551,69 @@ class PyutUIV2(SplitterWindow):
             popupMenu: Menu = Menu('Actions')
             popupMenu.AppendSeparator()
             popupMenu.Append(closeProjectMenuID, 'Close Project', 'Remove project from tree', ITEM_NORMAL)
-            popupMenu.Bind(EVT_MENU, self.__onCloseProject, id=closeProjectMenuID)
+            popupMenu.Bind(EVT_MENU, self._onCloseProject, id=closeProjectMenuID)
             self._projectPopupMenu = popupMenu
 
         self.logger.info(f'currentProject: `{self._currentProject}`')
         self._parentWindow.PopupMenu(self._projectPopupMenu)
 
+    def _popupProjectDocumentMenu(self):
+
+        if self._documentPopupMenu is None:
+
+            self.logger.info(f'Create the document popup menu')
+
+            [editDocumentNameMenuID, removeDocumentMenuID] = PyutUtils.assignID(2)
+
+            popupMenu: Menu = Menu('Actions')
+            popupMenu.AppendSeparator()
+            popupMenu.Append(editDocumentNameMenuID, 'Edit Document Name', 'Change document name', ITEM_NORMAL)
+            popupMenu.Append(removeDocumentMenuID,   'Remove Document',    'Delete it',            ITEM_NORMAL)
+
+            popupMenu.Bind(EVT_MENU, self._onEditDocumentName, id=editDocumentNameMenuID)
+            popupMenu.Bind(EVT_MENU, self._onRemoveDocument,   id=removeDocumentMenuID)
+
+            self.__documentPopupMenu = popupMenu
+
+        self.logger.info(f'Current Document: `{self.currentDocument}`')
+        self._parentWindow.PopupMenu(self.__documentPopupMenu)
+
     # noinspection PyUnusedLocal
-    def __onCloseProject(self, event: CommandEvent):
+    def _onCloseProject(self, event: CommandEvent):
         self.closeCurrentProject()
+
+    # noinspection PyUnusedLocal
+    def _onEditDocumentName(self, event: CommandEvent):
+
+        self.logger.info(f'{self._notebookCurrentPageNumber=}  {self._diagramNotebook.GetSelection()=}')
+        if self._notebookCurrentPageNumber == -1:
+            self._notebookCurrentPageNumber = self._diagramNotebook.GetSelection()    # must be default empty project
+
+        currentDocument: IPyutDocument   = self.currentDocument
+        dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
+        dlgEditDocument.Destroy()
+
+        #
+        # TODO can cause
+        #     self.__notebook.SetPageText(page=self.__notebookCurrentPage, text=currentDocument.title)
+        # wx._core.wxAssertionError: C++ assertion ""((nPage) < GetPageCount())""
+        # failed at dist-osx-py38/build/ext/wxWidgets/src/osx/notebook_osx.cpp(120)
+        # in SetPageText(): SetPageText: invalid notebook page
+        #
+        self._diagramNotebook.SetPageText(page=self._notebookCurrentPageNumber, text=currentDocument.title)
+        currentDocument.updateTreeText()
+
+    # noinspection PyUnusedLocal
+    def _onRemoveDocument(self, event: CommandEvent):
+        """
+        Invoked from the popup menu in the tree
+
+        Args:
+            event:
+        """
+        project:         IPyutProject  = self.currentProject
+        currentDocument: IPyutDocument = self.currentDocument
+        project.removeDocument(currentDocument)
 
     def _getCurrentFrameFromNotebook(self):
         """

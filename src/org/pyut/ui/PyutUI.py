@@ -45,6 +45,7 @@ from deprecated import deprecated
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.IPyutDocument import IPyutDocument
+from org.pyut.ui.IPyutProject import IPyutProject
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.PyutProject import UmlFrameType
@@ -119,6 +120,23 @@ class PyutUI:
         self.__notebook.SetSelection(self.__notebookCurrentPage)
 
         self.logger.info(f'{self.__notebookCurrentPage=}')
+
+    @property
+    def currentDocument(self) -> IPyutDocument:
+        """
+        Get the current document.
+
+        Returns:
+            the current document or None if not found
+        """
+        project: IPyutProject = self.currentProject
+        if project is None:
+            return cast(IPyutDocument, None)
+        for document in project.documents:
+            if document.diagramFrame is self._currentFrame:
+                return document
+
+        return cast(IPyutDocument, None)
 
     def registerUmlFrame(self, frame):
         """
@@ -442,6 +460,7 @@ class PyutUI:
                 return project
         return cast(PyutProject, None)
 
+    @deprecated(reason='use the .currentDocument property')
     def getCurrentDocument(self) -> IPyutDocument:
         """
         Get the current document.
@@ -770,9 +789,7 @@ class PyutUI:
             self.__notebookCurrentPage = self.__notebook.GetSelection()    # must be default empty project
 
         currentDocument: IPyutDocument = self.getCurrentDocument()
-        dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.getCurrentFrame(),
-                                                           dialogIdentifier=ID_ANY,
-                                                           document=cast(PyutDocument, currentDocument))   # TODO V2 Fix
+        dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.getCurrentFrame(), dialogIdentifier=ID_ANY, document=currentDocument)
         dlgEditDocument.Destroy()
 
         #
@@ -834,7 +851,7 @@ class PyutUI:
         success: bool = True
         try:
             if self._mediator.isInScriptMode() is False:
-                for document in project.getDocuments():
+                for document in project.documents:
                     diagramTitle: str = document.title
                     shortName:    str = self.__shortenNotebookPageFileName(diagramTitle)
                     self.__notebook.AddPage(document.diagramFrame, shortName)
@@ -854,8 +871,8 @@ class PyutUI:
 
         project.selectFirstDocument()
 
-        if len(project.getDocuments()) > 0:
-            self._currentFrame = project.getDocuments()[0].diagramFrame
+        if len(project.documents) > 0:
+            self._currentFrame = project.documents[0].diagramFrame
             self.__syncPageFrameAndNotebook(frame=self._currentFrame)
 
     def __syncPageFrameAndNotebook(self, frame):
