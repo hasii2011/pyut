@@ -123,26 +123,6 @@ class PyutUIV2(SplitterWindow):
     def currentFrame(self, newFrame: UmlDiagramsFrame):
         self._projectManager.currentFrame = newFrame
 
-    # @property
-    # def modified(self) -> bool:
-    #     if self._projectManager.currentProject is not None:
-    #         return self._projectManager.currentProject.modified
-    #     else:
-    #         return False
-    #
-    # @modified.setter
-    # def modified(self, theNewValue: bool = True):
-    #     """
-    #     Set the modified flag of the currently opened project
-    #
-    #     Args:
-    #         theNewValue:
-    #     """
-    #     if self._projectManager.currentProject is not None:
-    #         # mypy does not handle property setters
-    #         self._projectManager.currentProject.modified = theNewValue     # type: ignore
-    #     # self._mediator.updateTitle()      TODO Fix V2 version
-
     @property
     def diagramNotebook(self) -> DiagramNotebook:
         """

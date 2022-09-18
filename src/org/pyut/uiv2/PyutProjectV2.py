@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 from os import path as osPath
 
-from logging import DEBUG
 from logging import Logger
 from logging import getLogger
 
@@ -20,11 +19,8 @@ from wx import TreeItemId
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
-from wx import Yield as wxYield
-
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.IPyutProject import IPyutProject
 from org.pyut.ui.IPyutProject import PyutDocuments
@@ -52,7 +48,7 @@ class PyutProjectV2(IPyutProject):
         """
         super().__init__()
         self.logger:       Logger   = getLogger(__name__)
-        self._mediator:    Mediator = Mediator()
+        # self._mediator:    Mediator = Mediator()
 
         self._documents: PyutDocuments = PyutDocuments([])
 
@@ -203,74 +199,6 @@ class PyutProjectV2(IPyutProject):
         """
         frameList = [document.diagramFrame for document in self._documents]
         return frameList
-
-    # def saveXmlPyut(self):
-    #     """
-    #     TODO - This code does not belong here  V2
-    #     save the project
-    #     """
-    #     from org.pyut.persistence.IoFile import IoFile
-    #     io: IoFile = IoFile()
-    #     BeginBusyCursor()
-    #     try:
-    #         io.save(self)
-    #         self._modified = False
-    #         self.updateTreeText()
-    #     except (ValueError, Exception) as e:
-    #         PyutUtils.displayError(f"An error occurred while saving project {e}")
-    #     EndBusyCursor()
-
-    def loadFromFilename(self, filename: str) -> bool:
-        """
-        TODO:  V2 update -- this code does not belong here !!
-
-        Load a project from a file
-
-        Args:
-            filename: filename to open
-
-        Returns:
-            `True` if the operation succeeded
-        """
-        # Load the file
-        self.logger.info(f'loadFromFilename: {filename=}')
-        BeginBusyCursor()
-        from org.pyut.persistence.IoFile import IoFile  # Avoid Nuitka cyclical dependency
-
-        io: IoFile = IoFile()
-        wxYield()  # to treat the uml frame refresh in newDiagram before loading
-        # Load the file
-        self._filename = filename
-        try:
-            io.open(filename, self)
-            self._modified = False
-        except (ValueError, Exception, UnsupportedXmlFileFormat) as e:
-            EndBusyCursor()
-            self.logger.error(f"Error loading file: {e}")
-            raise e
-
-        EndBusyCursor()
-        self.updateTreeText()
-        wxYield()
-
-        from org.pyut.ui.PyutUI import PyutUI  # avoid cyclical imports
-
-        if len(self._documents) > 0:
-            documentFrame: UmlFrameType = self._documents[0].diagramFrame
-            mediator: Mediator = self._mediator
-            tbh: PyutUI = mediator.getFileHandling()
-
-            self.logger.debug(f'{documentFrame=}')
-            documentFrame.Refresh()
-            tbh.showFrame(documentFrame)
-
-            if self.logger.isEnabledFor(DEBUG):
-                notebook = tbh.notebook
-                self.logger.debug(f'{tbh.currentFrame=} {tbh.currentProject=} {notebook.GetSelection()=}')
-
-            return True
-        else:
-            return False
 
     def updateTreeText(self):
         """

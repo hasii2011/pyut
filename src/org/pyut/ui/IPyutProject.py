@@ -102,21 +102,6 @@ class IPyutProject(ABC):
         pass
 
     @abstractmethod
-    def loadFromFilename(self, filename: str) -> bool:
-        """
-        TODO:  V2 update -- this code does not belong here !!
-
-        Load a project from a file
-
-        Args:
-            filename: filename to open
-
-        Returns:
-            `True` if the operation succeeded
-        """
-        pass
-
-    @abstractmethod
     def removeDocument(self, document, confirmation=True):
         """
         Remove a given document from the project.
