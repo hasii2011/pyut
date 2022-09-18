@@ -123,25 +123,25 @@ class PyutUIV2(SplitterWindow):
     def currentFrame(self, newFrame: UmlDiagramsFrame):
         self._projectManager.currentFrame = newFrame
 
-    @property
-    def modified(self) -> bool:
-        if self._projectManager.currentProject is not None:
-            return self._projectManager.currentProject.modified
-        else:
-            return False
-
-    @modified.setter
-    def modified(self, theNewValue: bool = True):
-        """
-        Set the modified flag of the currently opened project
-
-        Args:
-            theNewValue:
-        """
-        if self._projectManager.currentProject is not None:
-            # mypy does not handle property setters
-            self._projectManager.currentProject.modified = theNewValue     # type: ignore
-        # self._mediator.updateTitle()      TODO Fix V2 version
+    # @property
+    # def modified(self) -> bool:
+    #     if self._projectManager.currentProject is not None:
+    #         return self._projectManager.currentProject.modified
+    #     else:
+    #         return False
+    #
+    # @modified.setter
+    # def modified(self, theNewValue: bool = True):
+    #     """
+    #     Set the modified flag of the currently opened project
+    #
+    #     Args:
+    #         theNewValue:
+    #     """
+    #     if self._projectManager.currentProject is not None:
+    #         # mypy does not handle property setters
+    #         self._projectManager.currentProject.modified = theNewValue     # type: ignore
+    #     # self._mediator.updateTitle()      TODO Fix V2 version
 
     @property
     def diagramNotebook(self) -> DiagramNotebook:
@@ -324,11 +324,6 @@ class PyutUIV2(SplitterWindow):
                 self._diagramNotebook.DeletePage(i)
                 break
 
-    # def updateTreeText(self, pyutProject: IPyutProject):
-    #     """
-    #     """
-    #     self._projectManager.updateTreeText(pyutProject=pyutProject)
-
     # noinspection PyUnusedLocal
     def _onDiagramNotebookPageChanged(self, event):
         """
@@ -363,8 +358,7 @@ class PyutUIV2(SplitterWindow):
             frame: UmlDiagramsFrame = pyutData
             self.currentFrame = frame
             # self._currentProject = self.getProjectFromFrame(frame)
-            # self._projectManager.currentProject = self.getProjectFromFrame(frame)
-            # self._syncPageFrameAndNotebook(frame=frame)
+            self._projectManager.currentProject = self.getProjectFromFrame(frame)
             self._projectManager.syncPageFrameAndNotebook(frame=frame)
 
         elif isinstance(pyutData, PyutProjectV2):
@@ -374,7 +368,7 @@ class PyutUIV2(SplitterWindow):
                 self.currentFrame = projectFrames[0]
                 self._projectManager.syncPageFrameAndNotebook(frame=self.currentFrame)
                 # self._mediator.updateTitle()      TODO: V2 needs update
-            self._currentProject = project
+            self._projectManager.currentProject = project
 
     def _onProjectTreeRightClick(self, treeEvent: TreeEvent):
 
