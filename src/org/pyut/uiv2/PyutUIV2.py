@@ -192,7 +192,7 @@ class PyutUIV2(SplitterWindow):
         self.currentFrame    = document.diagramFrame
         self._currentProject = pyutProject      # TODO do not use property it does a bunch of stuff
 
-        self.currentFrame.Refresh()     # Hmm should I really do this
+        self.currentFrame.Refresh()     # Hmm... should I really do this
         wxYield()
         self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
         self.logger.warning(f'Current notebook page: {self._notebookCurrentPageNumber}')
@@ -285,24 +285,6 @@ class PyutUIV2(SplitterWindow):
         self._projectManager.openProject(filename=filename, project=project)
 
         return True
-
-    def removeAllReferencesToUmlFrame(self, umlFrame: UmlDiagramsFrame):
-        """
-        Remove all my references to a given uml frame
-
-        Args:
-            umlFrame:
-        """
-        # Current frame ?
-        if self.currentFrame is umlFrame:
-            self.currentFrame = cast(UmlDiagramsFrame, None)
-
-        pageCount: int = self._diagramNotebook.GetPageCount()
-        for i in range(pageCount):
-            pageFrame = self._diagramNotebook.GetPage(i)
-            if pageFrame is umlFrame:
-                self._diagramNotebook.DeletePage(i)
-                break
 
     # noinspection PyUnusedLocal
     def _onDiagramNotebookPageChanged(self, event):
@@ -425,14 +407,16 @@ class PyutUIV2(SplitterWindow):
     # noinspection PyUnusedLocal
     def _onRemoveDocument(self, event: CommandEvent):
         """
-        Invoked from the popup menu in the tree
+        Invoked from the popup menu in the tree;  Right-clicking on the document made
+        the current document
 
         Args:
             event:
         """
         project:         IPyutProject  = self._projectManager.currentProject
         currentDocument: IPyutDocument = self.currentDocument
-        project.removeDocument(currentDocument)
+
+        self._projectManager.deleteDocument(project=project, document=currentDocument)
 
     def _getCurrentFrameFromNotebook(self):
         """

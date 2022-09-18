@@ -100,14 +100,3 @@ class IPyutProject(ABC):
     @abstractmethod
     def selectFirstDocument(self):
         pass
-
-    @abstractmethod
-    def removeDocument(self, document, confirmation=True):
-        """
-        Remove a given document from the project.
-
-        Args:
-            document: PyutDocument to remove from this project
-            confirmation:  If `True` ask for confirmation
-        """
-        pass

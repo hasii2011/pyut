@@ -3,7 +3,6 @@ from typing import List
 from typing import NewType
 from typing import cast
 
-# from logging import DEBUG
 from logging import Logger
 from logging import getLogger
 
@@ -13,10 +12,13 @@ from os import path as osPath
 
 from wx import FD_OVERWRITE_PROMPT
 from wx import FD_SAVE
-from wx import FileDialog
 from wx import ICON_ERROR
-from wx import MessageDialog
+from wx import ID_NO
 from wx import OK
+from wx import YES_NO
+
+from wx import FileDialog
+from wx import MessageDialog
 from wx import TreeItemId
 
 from wx import BeginBusyCursor
@@ -25,12 +27,19 @@ from wx import EndBusyCursor
 from wx import Yield as wxYield
 
 from org.pyut.PyutConstants import PyutConstants
+
 from org.pyut.dialogs.DlgAbout import ID_OK
+
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
+
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from org.pyut.ui.IPyutDocument import IPyutDocument
 from org.pyut.ui.IPyutProject import IPyutProject
+
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
@@ -131,6 +140,31 @@ class ProjectManager:
         """
         assert project in self._projects
         self._projects.remove(project)
+
+    def deleteDocument(self, project: IPyutProject, document: IPyutDocument, confirmation: bool = True):
+        """
+        Remove a given document from the project.
+
+        Args:
+            project
+            document: PyutDocument to remove from this project
+            confirmation:  If `True` ask for confirmation
+        """
+        if confirmation:
+            dlg = MessageDialog(None, f'Are you sure to remove "{document.title}"?', "Remove a document from a project", YES_NO)
+            if dlg.ShowModal() == ID_NO:
+                dlg.Destroy()
+                return
+            dlg.Destroy()
+
+        # Remove references
+
+        self._removeAllReferencesToUmlFrame(document.diagramFrame)
+
+        document.removeFromTree()
+
+        # Remove document from documents list
+        project.documents.remove(document)
 
     def updateTreeText(self, pyutProject: IPyutProject):
         """
@@ -414,6 +448,24 @@ class ProjectManager:
         self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
         self.updateTreeNotebookIfPossible(project=project)
+
+    def _removeAllReferencesToUmlFrame(self, umlFrame: UmlDiagramsFrame):
+        """
+        Remove all my references to a given uml frame
+
+        Args:
+            umlFrame:
+        """
+        # Current frame ?
+        if self.currentFrame is umlFrame:
+            self.currentFrame = cast(UmlDiagramsFrame, None)
+
+        pageCount: int = self._diagramNotebook.GetPageCount()
+        for i in range(pageCount):
+            pageFrame = self._diagramNotebook.GetPage(i)
+            if pageFrame is umlFrame:
+                self._diagramNotebook.DeletePage(i)
+                break
 
     def _displayError(self, message: str):
 

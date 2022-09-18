@@ -11,10 +11,6 @@ from logging import getLogger
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 
-from wx import ID_NO
-from wx import YES_NO
-
-from wx import MessageDialog
 from wx import TreeItemId
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
@@ -22,6 +18,7 @@ from wx import EndBusyCursor
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ui.IPyutDocument import IPyutDocument
 from org.pyut.ui.IPyutProject import IPyutProject
 from org.pyut.ui.IPyutProject import PyutDocuments
 from org.pyut.ui.IPyutProject import UmlFrameType
@@ -48,7 +45,7 @@ class PyutProjectV2(IPyutProject):
         """
         super().__init__()
         self.logger:       Logger   = getLogger(__name__)
-        # self._mediator:    Mediator = Mediator()
+        self._mediator:    Mediator = Mediator()
 
         self._documents: PyutDocuments = PyutDocuments([])
 
@@ -155,6 +152,9 @@ class PyutProjectV2(IPyutProject):
         """
         return self._documents
 
+    def deleteDocument(self, document: IPyutDocument):
+        self._documents.remove(document)
+
     def insertProject(self, filename: str) -> bool:
         """
         Insert another project into this one
@@ -210,36 +210,6 @@ class PyutProjectV2(IPyutProject):
         for document in self._documents:
             self.logger.info(f'updateTreeText: {document=}')
             document.updateTreeText()
-
-    def removeDocument(self, document, confirmation=True):
-        """
-        Remove a given document from the project.
-
-        Args:
-            document: PyutDocument to remove from this project
-            confirmation:  If `True` ask for confirmation
-        """
-        frame = document.diagramFrame
-
-        if confirmation:
-            self._mediator.getFileHandling().showFrame(frame)
-
-            dlg = MessageDialog(self._mediator.getUmlFrame(), "Are you sure to remove the document ?",
-                                "Remove a document from a project", YES_NO)
-            if dlg.ShowModal() == ID_NO:
-                dlg.Destroy()
-                return
-            dlg.Destroy()
-
-        # Remove references
-
-        fileHandling = self._mediator.getFileHandling()
-        fileHandling.removeAllReferencesToUmlFrame(frame)
-
-        document.removeFromTree()
-
-        # Remove document from documents list
-        self._documents.remove(document)
 
     def selectFirstDocument(self):
 

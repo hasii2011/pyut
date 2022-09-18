@@ -46,5 +46,14 @@ class IPyutDocument(ABC):
     def addToTree(self, tree: TreeCtrl, root: TreeItemId):
         pass
 
+    @abstractmethod
+    def removeFromTree(self):
+        """
+        TODO: This does not belong here
+
+        Returns:
+        """
+        pass
+
 
 PyutDocuments = NewType('PyutDocuments', List[IPyutDocument])
