@@ -15,28 +15,19 @@ from wx import EVT_MENU
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
 from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import EVT_TREE_SEL_CHANGED
-from wx import FD_OVERWRITE_PROMPT
-from wx import FD_SAVE
-from wx import ICON_ERROR
 from wx import ICON_QUESTION
 from wx import ID_ANY
-from wx import ID_OK
 from wx import ID_YES
 from wx import YES_NO
 from wx import ITEM_NORMAL
-from wx import OK
 
 from wx import SplitterWindow
 from wx import Frame
 from wx import TreeEvent
 from wx import TreeItemId
 from wx import CommandEvent
-from wx import FileDialog
 from wx import Menu
 from wx import MessageDialog
-
-from wx import BeginBusyCursor
-from wx import EndBusyCursor
 
 from wx import Yield as wxYield
 
@@ -45,9 +36,7 @@ from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.IPyutDocument import IPyutDocument
 from org.pyut.ui.IPyutProject import IPyutProject
@@ -91,7 +80,7 @@ class PyutUIV2(SplitterWindow):
         self._projectPopupMenu:          Menu               = cast(Menu, None)
         self._documentPopupMenu:         Menu               = cast(Menu, None)
 
-        self._projectManager: ProjectManager = ProjectManager(projectTree=self._projectTree)
+        self._projectManager: ProjectManager = ProjectManager(projectTree=self._projectTree, diagramNoteBook=self._diagramNotebook)
 
         self._parentWindow.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onDiagramNotebookPageChanged)
         self._parentWindow.Bind(EVT_TREE_SEL_CHANGED,      self._onProjectTreeSelectionChanged)
@@ -306,6 +295,9 @@ class PyutUIV2(SplitterWindow):
                 return True
         return False
 
+    def saveFile(self):
+        self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
+
     def openFile(self, filename, project: IPyutProject = None) -> bool:
         """
         Open a file
@@ -353,87 +345,6 @@ class PyutUIV2(SplitterWindow):
         self.logger.debug(f'{self._currentFrame=} {project=} {self._diagramNotebook.GetSelection()=}')
         return success
 
-    def saveFile(self):
-        self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
-
-    def saveFileAs(self):
-        """
-        Ask for a filename and save the diagram data
-        TODO:  method is too big and too complicated fix in V2 UI
-        Returns:
-            `True` if the save succeeds else `False`
-        """
-        project: IPyutProject = self._projectManager.currentProject
-        if len(project.documents) == 0:
-            PyutUtils.displayError("No diagram to save !", "Error")
-            return
-
-        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
-
-        # Ask for filename
-
-        fDialog: FileDialog = FileDialog(self, defaultDir=currentDirectoryHandler.currentDirectory,
-                                         wildcard="Pyut file (*.put)|*.put",
-                                         style=FD_SAVE | FD_OVERWRITE_PROMPT)
-
-        # Return False if canceled
-        if fDialog.ShowModal() != ID_OK:
-            fDialog.Destroy()
-            return False
-
-        # Find if a specified filename is already opened
-        filename = fDialog.GetPath()
-
-        # if len([project for project in self._projects if project.filename == filename]) > 0:
-        if len([project for project in self._projectManager.projects if project.filename == filename]) > 0:
-            eMsg: str = f'Error ! This project {filename} is currently open.  Please choose another project name !'
-            dlg: MessageDialog = MessageDialog(None, eMsg, "Save change, filename error", OK | ICON_ERROR)
-            dlg.ShowModal()
-            dlg.Destroy()
-            return
-
-        project = self._projectManager.currentProject
-        project.filename = fDialog.GetPath()
-        # project.saveXmlPyut()
-        self.saveProject(pyutProject=project)
-
-        # Modify notebook text
-        for i in range(self._diagramNotebook.GetPageCount()):
-            frame = self._diagramNotebook.GetPage(i)
-            document = [document for document in project.documents if document.diagramFrame is frame]
-            if len(document) > 0:
-                document = document[0]
-                if frame in project.getFrames():
-                    diagramTitle: str = document.title
-                    shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
-
-                    self._diagramNotebook.SetPageText(i, shortName)
-            else:
-                self.logger.info("Not updating notebook in FileHandling")
-
-        currentDirectoryHandler.currentDirectory = fDialog.GetPath()
-
-        project.modified = False
-        # dlg.Destroy()
-        return True
-
-    def saveProject(self, pyutProject: IPyutProject) -> bool:
-        """
-        save the project
-        """
-        from org.pyut.persistence.IoFile import IoFile
-        io: IoFile = IoFile()
-        BeginBusyCursor()
-        try:
-            io.save(pyutProject)
-            self._modified = False
-            self.updateTreeText(pyutProject=pyutProject)
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(f"An error occurred while saving project {e}")
-        EndBusyCursor()
-
-        return True
-
     def removeAllReferencesToUmlFrame(self, umlFrame: UmlDiagramsFrame):
         """
         Remove all my references to a given uml frame
@@ -454,30 +365,8 @@ class PyutUIV2(SplitterWindow):
 
     def updateTreeText(self, pyutProject: IPyutProject):
         """
-        TODO: V2 moved it out of PyutProject
-        Update the tree text for this document
         """
-        # self._tree.SetItemText(self._treeRoot, self._justTheFileName(self._filename))
-        self._projectTree.SetItemText(pyutProject.projectTreeRoot, self._justTheFileName(pyutProject.filename))
-        for document in pyutProject.documents:
-            self.logger.debug(f'updateTreeText: {document=}')
-            document.updateTreeText()
-
-    def _justTheFileName(self, filename):
-        """
-        Return just the file name portion of the fully qualified path
-
-        Args:
-            filename:  file name to display
-
-        Returns:
-            A better file name
-        """
-        regularFileName: str = osPath.split(filename)[1]
-        if PyutPreferences().displayProjectExtension is False:
-            regularFileName = osPath.splitext(regularFileName)[0]
-
-        return regularFileName
+        self._projectManager.updateTreeText(pyutProject=pyutProject)
 
     # noinspection PyUnusedLocal
     def _onDiagramNotebookPageChanged(self, event):
