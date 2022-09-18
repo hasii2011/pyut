@@ -40,8 +40,6 @@ from wx import EndBusyCursor
 
 from wx import Yield as wxYield
 
-from org.pyut.PyutConstants import PyutConstants
-
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
@@ -199,28 +197,11 @@ class PyutUIV2(SplitterWindow):
 
     def newProject(self) -> IPyutProject:
         """
-        Create a new project;  Adds it to the Project Tree;
-        The caller should be responsible
-        for updating ._currentProject and the _projects list; but because of
-        architecture problems I have to do it here;
-        TODO V2 UI refactor needs to fix this
-
         Returns:  A default empty project
         """
-        project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
-
-        projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=project)
-
-        project.projectTreeRoot = projectTreeRoot
-
-        # self._projects.append(project)
-        # self._currentProject = project
-        self._projectManager.addProject(project)
-        self._projectManager.currentProject = project
-
         self._currentFrame   = cast(UmlDiagramsFrame, None)
 
-        return project
+        return self._projectManager.newProject()
 
     def newDocument(self, docType: DiagramType) -> IPyutDocument:
         """
@@ -234,7 +215,7 @@ class PyutUIV2(SplitterWindow):
         """
         pyutProject: IPyutProject = self._projectManager.currentProject
         if pyutProject is None:
-            self.newProject()
+            self._projectManager.newProject()
             pyutProject = self._projectManager.currentProject
 
         document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, project=pyutProject, docType=docType)
@@ -246,7 +227,7 @@ class PyutUIV2(SplitterWindow):
 
         wxYield()
         self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
-        self.logger.info(f'Current notebook page: {self._notebookCurrentPageNumber}')
+        self.logger.warning(f'Current notebook page: {self._notebookCurrentPageNumber}')
         # self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
         return document
@@ -274,8 +255,7 @@ class PyutUIV2(SplitterWindow):
 
             dlg = MessageDialog(None, "Your project has not been saved. Would you like to save it ?", "Save changes ?", YES_NO | ICON_QUESTION)
             if dlg.ShowModal() == ID_YES:
-                if self.saveFile() is False:
-                    return False
+                self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
 
         # Remove the frame in the notebook
         pages = list(range(self._diagramNotebook.GetPageCount()))
@@ -285,17 +265,13 @@ class PyutUIV2(SplitterWindow):
             if pageFrame in self._projectManager.currentProject.getFrames():
                 self._diagramNotebook.DeletePage(i)
 
-        # self._currentProject.removeFromTree()
         self._removeProjectFromTree(pyutProject=currentProject)
-        # self._projects.remove(self._currentProject)
         self._projectManager.removeProject(self._projectManager.currentProject)
 
         self.logger.debug(f'{self._projectManager.currentProject.filename=}')
-        # self._currentProject = None
 
         self._currentFrame = None
 
-        # nbrProjects: int = len(self._projects)
         currentProjects: PyutProjects = self._projectManager.projects
         nbrProjects: int = len(currentProjects)
         self.logger.debug(f'{nbrProjects=}')
@@ -304,8 +280,6 @@ class PyutUIV2(SplitterWindow):
             self._updateTreeNotebookIfPossible(project=newCurrentProject)
 
         # self._mediator.updateTitle()  TODO V2 API update needed  Send event
-
-        return True
 
     @deprecated(reason='use property .currentProject')
     def getCurrentProject(self) -> IPyutProject:
@@ -379,24 +353,8 @@ class PyutUIV2(SplitterWindow):
         self.logger.debug(f'{self._currentFrame=} {project=} {self._diagramNotebook.GetSelection()=}')
         return success
 
-    def saveFile(self) -> bool:
-        """
-        Save the current project
-        TODO: Fix V2 code
-
-        Returns:
-            `True` if the save succeeds else `False`
-        """
-        currentProject = self._projectManager.currentProject
-        if currentProject is None:
-            PyutUtils.displayError("No diagram to save !", "Error")
-            return False
-
-        if currentProject.filename is None or currentProject.filename == PyutConstants.DEFAULT_FILENAME:
-            return self.saveFileAs()
-        else:
-            # return currentProject.saveXmlPyut()
-            return self.saveProject(pyutProject=currentProject)
+    def saveFile(self):
+        self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
 
     def saveFileAs(self):
         """

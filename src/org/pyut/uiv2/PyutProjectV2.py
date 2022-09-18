@@ -16,7 +16,6 @@ from wx import ID_NO
 from wx import YES_NO
 
 from wx import MessageDialog
-from wx import Notebook
 from wx import TreeItemId
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
@@ -43,18 +42,16 @@ class PyutProjectV2(IPyutProject):
 
     """
 
-    def __init__(self, filename: str, parentFrame: Notebook, tree: 'ProjectTree', treeRoot: TreeItemId):
+    def __init__(self, filename: str, tree: 'ProjectTree', treeRoot: TreeItemId):
         """
 
         Args:
             filename:       The project file name
-            parentFrame:
             tree:           The tree control
             treeRoot:       Where to root the tree
         """
         super().__init__()
         self.logger:       Logger   = getLogger(__name__)
-        self._parentFrame: Notebook = parentFrame   # Parent frame
         self._mediator:    Mediator = Mediator()
 
         self._documents: PyutDocuments = PyutDocuments([])
