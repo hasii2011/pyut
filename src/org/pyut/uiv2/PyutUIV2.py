@@ -6,8 +6,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from os import path as osPath
-
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 
@@ -75,8 +73,8 @@ class PyutUIV2(SplitterWindow):
 
         # self._projects:                  List[IPyutProject] = []
         # self._currentProject:            IPyutProject       = cast(IPyutProject, None)
+        # self._currentFrame:              UmlDiagramsFrame   = cast(UmlDiagramsFrame, None)
 
-        self._currentFrame:              UmlDiagramsFrame   = cast(UmlDiagramsFrame, None)
         self._projectPopupMenu:          Menu               = cast(Menu, None)
         self._documentPopupMenu:         Menu               = cast(Menu, None)
 
@@ -113,17 +111,17 @@ class PyutUIV2(SplitterWindow):
         if project is None:
             return cast(IPyutDocument, None)
         for document in project.documents:
-            if document.diagramFrame is self._currentFrame:
+            if document.diagramFrame is self.currentFrame:
                 return document
         return cast(IPyutDocument, None)
 
     @property
     def currentFrame(self) -> UmlDiagramsFrame:
-        return self._currentFrame
+        return self._projectManager.currentFrame
 
     @currentFrame.setter
     def currentFrame(self, newFrame: UmlDiagramsFrame):
-        self._currentFrame = newFrame
+        self._projectManager.currentFrame = newFrame
 
     @property
     def modified(self) -> bool:
@@ -161,7 +159,7 @@ class PyutUIV2(SplitterWindow):
         Args:
             frame:
         """
-        self._currentFrame = frame
+        self.currentFrame = frame
         self._currentProject = self.getProjectFromFrame(frame)
 
     def showFrame(self, frame: UmlDiagramsFrame):
@@ -188,7 +186,7 @@ class PyutUIV2(SplitterWindow):
         """
         Returns:  A default empty project
         """
-        self._currentFrame   = cast(UmlDiagramsFrame, None)
+        self.currentFrame   = cast(UmlDiagramsFrame, None)
 
         return self._projectManager.newProject()
 
@@ -214,6 +212,7 @@ class PyutUIV2(SplitterWindow):
         self.currentFrame    = document.diagramFrame
         self._currentProject = pyutProject      # TODO do not use property it does a bunch of stuff
 
+        self.currentFrame.Refresh()     # Hmm should I really do this
         wxYield()
         self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
         self.logger.warning(f'Current notebook page: {self._notebookCurrentPageNumber}')
@@ -229,8 +228,8 @@ class PyutUIV2(SplitterWindow):
             True if everything is ok
         """
         currentProject: IPyutProject = self._projectManager.currentProject
-        if currentProject is None and self._currentFrame is not None:
-            currentProject = self.getProjectFromFrame(self._currentFrame)
+        if currentProject is None and self.currentFrame is not None:
+            currentProject = self.getProjectFromFrame(self.currentFrame)
         if currentProject is None:
             PyutUtils.displayError("No frame to close !", "Error...")
             return False
@@ -259,14 +258,15 @@ class PyutUIV2(SplitterWindow):
 
         self.logger.debug(f'{self._projectManager.currentProject.filename=}')
 
-        self._currentFrame = None
+        self.currentFrame = None
 
         currentProjects: PyutProjects = self._projectManager.projects
         nbrProjects: int = len(currentProjects)
         self.logger.debug(f'{nbrProjects=}')
         if nbrProjects > 0:
             newCurrentProject: IPyutProject = currentProjects[0]
-            self._updateTreeNotebookIfPossible(project=newCurrentProject)
+            # self._updateTreeNotebookIfPossible(project=newCurrentProject)
+            self._projectManager.updateTreeNotebookIfPossible(project=newCurrentProject)
 
         # self._mediator.updateTitle()  TODO V2 API update needed  Send event
 
@@ -282,27 +282,19 @@ class PyutUIV2(SplitterWindow):
 
     def isProjectLoaded(self, filename: str) -> bool:
         """
-
         Args:
             filename:
 
         Returns:
             `True` if the project is already loaded
         """
-        # for project in self._projects:
-        for project in self._projectManager.projects:
-            if project.filename == filename:
-                return True
-        return False
+        return self._projectManager.isProjectLoaded(filename=filename)
 
     def saveFile(self):
         self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
 
     def openFile(self, filename, project: IPyutProject = None) -> bool:
         """
-        Open a file
-        TODO:  Fix V2 this does 2 things loads from a file or from a project
-
         Args:
             filename:
             project:
@@ -310,40 +302,9 @@ class PyutUIV2(SplitterWindow):
         Returns:
             `True` if operation succeeded
         """
-        self.logger.info(f'{filename=} {project=}')
-        # Exit if the file is already loaded
-        if self.isProjectLoaded(filename) is True:
-            PyutUtils.displayError("The selected file is already loaded !")
-            return False
+        self._projectManager.openProject(filename=filename, project=project)
 
-        # Create a new project ?
-        if project is None:
-            # project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._diagramNotebook, self._projectTree, self._projectTree.projectTreeRoot)
-            project = self.newProject()
-
-        # Load the project and add it
-        try:
-            if not project.loadFromFilename(filename):
-                eMsg: str = f'{"The file cannot be loaded !"} - {filename}'
-                PyutUtils.displayError(eMsg)
-                return False
-            # TODO V2 UI bogus fix .newProject added to the list
-            # Need to keep it this way unit we get the new IOXml plug
-            if project in self._projectManager.projects:
-                pass
-            else:
-                # self._projects.append(project)
-                self._projectManager.addProject(project)
-            # self._currentProject = project
-            self._projectManager.currentProject = project
-        except (ValueError, Exception) as e:
-            self.logger.error(f"An error occurred while loading the project ! {e}")
-            raise e
-
-        success: bool = self._addProjectToNotebook(project)
-        # self.logger.debug(f'{self._currentFrame=} {self.currentProject=} {self._diagramNotebook.GetSelection()=}')
-        self.logger.debug(f'{self._currentFrame=} {project=} {self._diagramNotebook.GetSelection()=}')
-        return success
+        return True
 
     def removeAllReferencesToUmlFrame(self, umlFrame: UmlDiagramsFrame):
         """
@@ -353,8 +314,8 @@ class PyutUIV2(SplitterWindow):
             umlFrame:
         """
         # Current frame ?
-        if self._currentFrame is umlFrame:
-            self._currentFrame = cast(UmlDiagramsFrame, None)
+        if self.currentFrame is umlFrame:
+            self.currentFrame = cast(UmlDiagramsFrame, None)
 
         pageCount: int = self._diagramNotebook.GetPageCount()
         for i in range(pageCount):
@@ -363,10 +324,10 @@ class PyutUIV2(SplitterWindow):
                 self._diagramNotebook.DeletePage(i)
                 break
 
-    def updateTreeText(self, pyutProject: IPyutProject):
-        """
-        """
-        self._projectManager.updateTreeText(pyutProject=pyutProject)
+    # def updateTreeText(self, pyutProject: IPyutProject):
+    #     """
+    #     """
+    #     self._projectManager.updateTreeText(pyutProject=pyutProject)
 
     # noinspection PyUnusedLocal
     def _onDiagramNotebookPageChanged(self, event):
@@ -378,13 +339,13 @@ class PyutUIV2(SplitterWindow):
         """
         self._notebookCurrentPageNumber = self._diagramNotebook.GetSelection()
         self.logger.info(f'{self._notebookCurrentPageNumber=}')
-        self._currentFrame = self._getCurrentFrameFromNotebook()
+        self.currentFrame = self._getCurrentFrameFromNotebook()
 
         # self._mediator.updateTitle()      # TODO to fill out V2
-        self._getTreeItemFromFrame(self._currentFrame)
+        self._getTreeItemFromFrame(self.currentFrame)
 
         # Register the current project
-        self._currentProject = self.getProjectFromFrame(self._currentFrame)
+        self._currentProject = self.getProjectFromFrame(self.currentFrame)
 
     def _onProjectTreeSelectionChanged(self, event: TreeEvent):
         """
@@ -400,16 +361,18 @@ class PyutUIV2(SplitterWindow):
         # Use our own base type
         if isinstance(pyutData, UmlDiagramsFrame):
             frame: UmlDiagramsFrame = pyutData
-            self._currentFrame = frame
-            self._currentProject = self.getProjectFromFrame(frame)
-            self._syncPageFrameAndNotebook(frame=frame)
+            self.currentFrame = frame
+            # self._currentProject = self.getProjectFromFrame(frame)
+            # self._projectManager.currentProject = self.getProjectFromFrame(frame)
+            # self._syncPageFrameAndNotebook(frame=frame)
+            self._projectManager.syncPageFrameAndNotebook(frame=frame)
 
         elif isinstance(pyutData, PyutProjectV2):
             project: PyutProjectV2 = pyutData
             projectFrames: List[UmlFrameType] = project.getFrames()
             if len(projectFrames) > 0:
-                self._currentFrame = projectFrames[0]
-                self._syncPageFrameAndNotebook(frame=self._currentFrame)
+                self.currentFrame = projectFrames[0]
+                self._projectManager.syncPageFrameAndNotebook(frame=self.currentFrame)
                 # self._mediator.updateTitle()      TODO: V2 needs update
             self._currentProject = project
 
@@ -522,72 +485,6 @@ class PyutUIV2(SplitterWindow):
 
         self.logger.info(f'{projectTree.GetCount()=}')
         return treeRootItemId
-
-    def _addProjectToNotebook(self, project: IPyutProject) -> bool:
-
-        success: bool = True
-        self.logger.info(f'{project=}')
-        try:
-            for document in project.documents:
-                diagramTitle: str = document.title
-                shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
-                self._diagramNotebook.AddPage(document.diagramFrame, shortName)
-
-            self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount()-1
-            self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
-
-            self._updateTreeNotebookIfPossible(project=project)
-
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(f"An error occurred while adding the project to the notebook {e}")
-            success = False
-
-        return success
-
-    def _updateTreeNotebookIfPossible(self, project: IPyutProject):
-        """
-
-        Args:
-            project:
-        """
-        project.selectFirstDocument()
-
-        if len(project.documents) > 0:
-            self._currentFrame = project.documents[0].diagramFrame
-            self._syncPageFrameAndNotebook(frame=self._currentFrame)
-
-    def _syncPageFrameAndNotebook(self, frame: UmlDiagramsFrame):
-        """
-
-        Args:
-            frame:
-        """
-
-        for i in range(self._diagramNotebook.GetPageCount()):
-            pageFrame = self._diagramNotebook.GetPage(i)
-            if pageFrame is frame:
-                self._diagramNotebook.SetSelection(i)
-                break
-
-    def _shortenNotebookPageDiagramName(self, diagramTitle: str) -> str:
-        """
-        Return a shorter filename to display; For file names longer
-        than `MAX_NOTEBOOK_PAGE_NAME_LENGTH` this method takes the first
-        four characters and the last eight as the shortened file name
-
-        Args:
-            diagramTitle:  The diagram name to display
-
-        Returns:
-            A short diagram name
-        """
-        justFileName: str = osPath.split(diagramTitle)[1]
-        if len(justFileName) > MAX_NOTEBOOK_PAGE_NAME_LENGTH:
-            firstFour: str = justFileName[:4]
-            lastEight: str = justFileName[-8:]
-            return f'{firstFour}{lastEight}'
-        else:
-            return justFileName
 
     def _removeProjectFromTree(self, pyutProject: IPyutProject):
         """

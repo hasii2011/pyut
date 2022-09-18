@@ -1081,6 +1081,9 @@ class Mediator(Singleton):
 
         return self._treeNotebookHandler.currentProject
 
+    def openProject(self, fileName: str, pyutProject: 'IPyutProject'):
+        self._treeNotebookHandler.openFile(filename=fileName, project=pyutProject)
+
     def _moveSelectedShapeZOrder(self, callback: Callable):
         """
         Move the selected shape one level in z-order

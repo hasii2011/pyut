@@ -81,7 +81,7 @@ class PyutProjectV2(IPyutProject):
             filename:
         """
         self._filename = filename
-        self.updateTreeText()
+        # self.updateTreeText()
 
     @property
     def codePath(self) -> str:
@@ -204,21 +204,21 @@ class PyutProjectV2(IPyutProject):
         frameList = [document.diagramFrame for document in self._documents]
         return frameList
 
-    def saveXmlPyut(self):
-        """
-        TODO - This code does not belong here  V2
-        save the project
-        """
-        from org.pyut.persistence.IoFile import IoFile
-        io: IoFile = IoFile()
-        BeginBusyCursor()
-        try:
-            io.save(self)
-            self._modified = False
-            self.updateTreeText()
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(f"An error occurred while saving project {e}")
-        EndBusyCursor()
+    # def saveXmlPyut(self):
+    #     """
+    #     TODO - This code does not belong here  V2
+    #     save the project
+    #     """
+    #     from org.pyut.persistence.IoFile import IoFile
+    #     io: IoFile = IoFile()
+    #     BeginBusyCursor()
+    #     try:
+    #         io.save(self)
+    #         self._modified = False
+    #         self.updateTreeText()
+    #     except (ValueError, Exception) as e:
+    #         PyutUtils.displayError(f"An error occurred while saving project {e}")
+    #     EndBusyCursor()
 
     def loadFromFilename(self, filename: str) -> bool:
         """

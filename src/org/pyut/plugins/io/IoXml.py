@@ -157,7 +157,8 @@ class IoXml(PyutIoPlugin):
         mediator: Mediator = Mediator()
 
         fileHandling = mediator.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        for document in project.getDocuments():
-            project.removeDocument(document, False)
-        fileHandling.openFile(filename, project)
+        # project = fileHandling.getCurrentProject()
+        # for document in project.getDocuments():
+        #     project.removeDocument(document, False)
+        project = fileHandling.currentProject
+        mediator.openProject(filename, project)

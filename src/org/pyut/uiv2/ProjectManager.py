@@ -3,6 +3,7 @@ from typing import List
 from typing import NewType
 from typing import cast
 
+# from logging import DEBUG
 from logging import Logger
 from logging import getLogger
 
@@ -21,11 +22,15 @@ from wx import TreeItemId
 from wx import BeginBusyCursor
 from wx import EndBusyCursor
 
+from wx import Yield as wxYield
+
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.dialogs.DlgAbout import ID_OK
+from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.IPyutProject import IPyutProject
+from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
@@ -54,8 +59,9 @@ class ProjectManager:
         self._projectTree:     ProjectTree    = projectTree
         self._diagramNotebook: DiagramNotebook = diagramNoteBook
 
-        self._projects:       PyutProjects = PyutProjects([])
-        self._currentProject: IPyutProject = cast(IPyutProject, None)
+        self._projects:       PyutProjects     = PyutProjects([])
+        self._currentProject: IPyutProject     = cast(IPyutProject, None)
+        self._currentFrame:   UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
 
     @property
     def projects(self) -> PyutProjects:
@@ -83,6 +89,28 @@ class ProjectManager:
         """
         assert newProject in self._projects
         self._currentProject = newProject
+
+    @property
+    def currentFrame(self) -> UmlDiagramsFrame:
+        return self._currentFrame
+
+    @currentFrame.setter
+    def currentFrame(self, newFrame: UmlDiagramsFrame):
+        self._currentFrame = newFrame
+
+    def isProjectLoaded(self, filename: str) -> bool:
+        """
+
+        Args:
+            filename:
+
+        Returns:
+            `True` if the project is already loaded
+        """
+        for project in self.projects:
+            if project.filename == filename:
+                return True
+        return False
 
     def addProject(self, project: IPyutProject):
         """
@@ -112,6 +140,31 @@ class ProjectManager:
             self.logger.debug(f'updateTreeText: {document=}')
             document.updateTreeText()
 
+    def updateTreeNotebookIfPossible(self, project: IPyutProject):
+        """
+
+        Args:
+            project:
+        """
+        project.selectFirstDocument()
+
+        if len(project.documents) > 0:
+            self._currentFrame = project.documents[0].diagramFrame
+            self.syncPageFrameAndNotebook(frame=self._currentFrame)
+
+    def syncPageFrameAndNotebook(self, frame: UmlDiagramsFrame):
+        """
+
+        Args:
+            frame:
+        """
+
+        for i in range(self._diagramNotebook.GetPageCount()):
+            pageFrame = self._diagramNotebook.GetPage(i)
+            if pageFrame is frame:
+                self._diagramNotebook.SetSelection(i)
+                break
+
     def newProject(self) -> IPyutProject:
         """
         Create a new project;  Adds it to the Project Tree;
@@ -130,7 +183,7 @@ class ProjectManager:
         self.currentProject = project
 
         # self._currentFrame   = cast(UmlDiagramsFrame, None)   Caller needs to do this
-
+        wxYield()
         return project
 
     def saveProject(self, projectToSave: IPyutProject):
@@ -153,6 +206,44 @@ class ProjectManager:
             self._writeProject(projectToWrite=projectToSave)
             # 'Fixed in mypy 0.980'
             projectToSave.modified = False       # type: ignore
+
+    def openProject(self, filename, project: IPyutProject = None):
+        """
+        Open a file
+        TODO:  Fix V2 this does 2 things loads from a file or from a project
+
+        Args:
+            filename:
+            project:
+        """
+        self.logger.info(f'{filename=} {project=}')
+        # Exit if the file is already loaded
+        if self.isProjectLoaded(filename) is True:
+            self._displayError("The selected project is already loaded !")
+            return
+        # Create a new project ?
+        if project is None:
+            project = self.newProject()
+        # Load the project and add it
+        try:
+            self._readProject(filename=filename, projectToRead=project)
+            # if not project.loadFromFilename(filename):
+            #     eMsg: str = f'{"The file cannot be loaded !"} - {filename}'
+            #     self._displayError(eMsg)
+            #     return
+            # TODO V2 UI bogus fix .newProject added to the list
+            # Need to keep it this way unit we get the new IOXml plug
+            if project in self.projects:
+                pass
+            else:
+                self.addProject(project)
+            self.currentProject = project
+        except (ValueError, Exception) as e:
+            self.logger.error(f"An error occurred while loading the project ! {e}")
+            raise e
+
+        self._addProjectDocumentsToNotebook(project)
+        # self.logger.debug(f'{self._currentFrame=} {self.currentProject=} {self._diagramNotebook.GetSelection()=}')
 
     def saveProjectAs(self, projectToSave: IPyutProject):
         """
@@ -210,6 +301,7 @@ class ProjectManager:
     def _writeProject(self, projectToWrite: IPyutProject):
         """
         Interface to the actual I/O code
+
         Args:
             projectToWrite:
         """
@@ -218,7 +310,7 @@ class ProjectManager:
         try:
             io.save(projectToWrite)
             self._modified = False
-            self._updateTreeText(pyutProject=projectToWrite)
+            self.updateTreeText(pyutProject=projectToWrite)
         except (ValueError, Exception) as e:
             msg:     str = f"An error occurred while saving project {e}"
             caption: str = 'Error from IoFile'
@@ -227,13 +319,52 @@ class ProjectManager:
         finally:
             EndBusyCursor()
 
-    def _updateTreeText(self, pyutProject: IPyutProject):
+    # def loadFromFilename(self, filename: str) -> bool:
+    def _readProject(self, filename: str, projectToRead: IPyutProject):
         """
+        Interface to the actual I/O code
+
+        Load a project from a file
+
+        Args:
+            filename: filename to open
+
+        Returns:
+            `True` if the operation succeeded
         """
-        self._projectTree.SetItemText(pyutProject.projectTreeRoot, self._justTheFileName(pyutProject.filename))
-        for document in pyutProject.documents:
-            self.logger.debug(f'updateTreeText: {document=}')
-            document.updateTreeText()
+        self.logger.info(f'loadFromFilename: {filename=}')
+        BeginBusyCursor()
+        from org.pyut.persistence.IoFile import IoFile  # Avoid Nuitka cyclical dependency
+
+        io: IoFile = IoFile()
+        wxYield()
+        # TODO Fix when mypy is fixed
+        projectToRead.filename = filename        # type: ignore
+        try:
+            io.open(filename, projectToRead)
+            self._modified = False
+        except (ValueError, Exception, UnsupportedXmlFileFormat) as e:
+            EndBusyCursor()
+            self.logger.error(f"Error loading file: {e}")
+            raise e
+
+        EndBusyCursor()
+        self.updateTreeText(pyutProject=projectToRead)
+        wxYield()
+
+        # TODO:  Refresh frame --- Probably should be done by caller
+        # if len(self._documents) > 0:
+        #     documentFrame: UmlFrameType = self._documents[0].diagramFrame
+        #     mediator: Mediator = self._mediator
+        #     tbh: PyutUI = mediator.getFileHandling()
+        #
+        #     self.logger.debug(f'{documentFrame=}')
+        #     documentFrame.Refresh()
+        #     tbh.showFrame(documentFrame)
+        #
+        #     if self.logger.isEnabledFor(DEBUG):
+        #         notebook = tbh.notebook
+        #         self.logger.debug(f'{tbh.currentFrame=} {tbh.currentProject=} {notebook.GetSelection()=}')
 
     def _justTheFileName(self, filename):
         """
@@ -269,3 +400,22 @@ class ProjectManager:
             return f'{firstFour}{lastEight}'
         else:
             return justFileName
+
+    def _addProjectDocumentsToNotebook(self, project: IPyutProject):
+
+        self.logger.info(f'{project=}')
+
+        for document in project.documents:
+            diagramTitle: str = document.title
+            shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
+            self._diagramNotebook.AddPage(document.diagramFrame, shortName)
+
+        self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount()-1
+        self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
+
+        self.updateTreeNotebookIfPossible(project=project)
+
+    def _displayError(self, message: str):
+
+        booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
+        booBoo.ShowModal()
