@@ -32,7 +32,6 @@ from wx import Icon
 from wx import AcceleratorTable
 from wx import Menu
 
-from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
@@ -86,7 +85,7 @@ class PyutApplicationFrameV2(Frame):
 
         appSize: Size = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
 
-        # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the tool bar
+        # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
         super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_TOOL_WINDOW)
 
         self.logger: Logger = getLogger(__name__)
@@ -221,15 +220,6 @@ class PyutApplicationFrameV2(Frame):
         #
         #     firstProject: PyutProject = projects[0]
         #     self.selectProject(project=firstProject)
-
-    def selectProject(self, project: PyutProject):
-
-        # mainUI: PyutUIV2 = self._treeNotebookHandler
-        #
-        # mainUI.currentProject = project
-        # project.selectSelf()
-        # mainUI.currentFrame = project.getFrames()[0]
-        pass
 
     def _onNewAction(self, event: CommandEvent):
         """

@@ -141,8 +141,6 @@ class ProjectManager:
         nodeID: TreeItemId = self._projectTree.AppendItem(pyutProject.projectTreeRoot, documentNode.title)
         # mypy please oh I beg you please fix this
         documentNode.treeRoot = nodeID  # type: ignore
-        # V2 Update put document on node
-        # self._projectTree.SetItemData(nodeID, documentNode.diagramFrame)
         self._projectTree.SetItemData(nodeID, documentNode)
 
     def removeProject(self, project: IPyutProject):
@@ -173,10 +171,8 @@ class ProjectManager:
             dlg.Destroy()
 
         # Remove references
-
         self._removeAllReferencesToUmlFrame(document.diagramFrame)
         # update the UI
-        # document.removeFromTree()
         self._projectTree.Delete(document.treeRoot)
 
         # Remove document from documents list
@@ -194,7 +190,6 @@ class ProjectManager:
         for document in pyutProject.documents:
             self.logger.debug(f'Update document name: {document=}')
             self._projectTree.SetItemText(document.treeRoot, document.title)
-            # document.updateTreeText()
 
     # noinspection PyUnusedLocal
     def updateTreeText(self, pyutProject: IPyutProject):
@@ -221,7 +216,6 @@ class ProjectManager:
         Args:
             frame:
         """
-
         for i in range(self._diagramNotebook.GetPageCount()):
             pageFrame = self._diagramNotebook.GetPage(i)
             if pageFrame is frame:
@@ -242,7 +236,6 @@ class ProjectManager:
         self.addProject(project)
         self.currentProject = project
 
-        # self._currentFrame   = cast(UmlDiagramsFrame, None)   Caller needs to do this
         wxYield()
         return project
 
@@ -277,7 +270,7 @@ class ProjectManager:
             project:
         """
         self.logger.info(f'{filename=} {project=}')
-        # Exit if the file is already loaded
+        # Exit if the project is already loaded
         if self.isProjectLoaded(filename) is True:
             self._displayError("The selected project is already loaded !")
             return
@@ -287,12 +280,9 @@ class ProjectManager:
         # Load the project and add it
         try:
             self._readProject(filename=filename, projectToRead=project)
-            # if not project.loadFromFilename(filename):
-            #     eMsg: str = f'{"The file cannot be loaded !"} - {filename}'
-            #     self._displayError(eMsg)
-            #     return
+
             # TODO V2 UI bogus fix .newProject added to the list
-            # Need to keep it this way unit we get the new IOXml plug
+            # Need to keep it this way until we get the new IOXml plug
             if project in self.projects:
                 pass
             else:
@@ -326,7 +316,7 @@ class ProjectManager:
         if fDialog.ShowModal() != ID_OK:
             fDialog.Destroy()
             return
-        # Find if a specified filename is already opened
+        # Find if a specified project is already open
         filename = fDialog.GetPath()
         if len([project for project in self.projects if project.filename == filename]) > 0:
             eMsg: str = f'Error ! This project {filename} is currently open.  Please choose another project name !'
@@ -411,20 +401,6 @@ class ProjectManager:
         EndBusyCursor()
         self.updateProjectTreeText(pyutProject=projectToRead)
         wxYield()
-
-        # TODO:  Refresh frame --- Probably should be done by caller
-        # if len(self._documents) > 0:
-        #     documentFrame: UmlFrameType = self._documents[0].diagramFrame
-        #     mediator: Mediator = self._mediator
-        #     tbh: PyutUI = mediator.getFileHandling()
-        #
-        #     self.logger.debug(f'{documentFrame=}')
-        #     documentFrame.Refresh()
-        #     tbh.showFrame(documentFrame)
-        #
-        #     if self.logger.isEnabledFor(DEBUG):
-        #         notebook = tbh.notebook
-        #         self.logger.debug(f'{tbh.currentFrame=} {tbh.currentProject=} {notebook.GetSelection()=}')
 
     def _justTheFileName(self, filename):
         """

@@ -69,14 +69,9 @@ class PyutUIV2(SplitterWindow):
         self.SetMinimumPaneSize(20)
         self.SplitVertically(self._projectTree, self._diagramNotebook, SASH_POSITION)
 
-        self._notebookCurrentPageNumber: int                = -1
-
-        # self._projects:                  List[IPyutProject] = []
-        # self._currentProject:            IPyutProject       = cast(IPyutProject, None)
-        # self._currentFrame:              UmlDiagramsFrame   = cast(UmlDiagramsFrame, None)
-
-        self._projectPopupMenu:          Menu               = cast(Menu, None)
-        self._documentPopupMenu:         Menu               = cast(Menu, None)
+        self._notebookCurrentPageNumber: int  = -1
+        self._projectPopupMenu:          Menu = cast(Menu, None)
+        self._documentPopupMenu:         Menu = cast(Menu, None)
 
         self._projectManager: ProjectManager = ProjectManager(projectTree=self._projectTree, diagramNoteBook=self._diagramNotebook)
 
@@ -184,9 +179,8 @@ class PyutUIV2(SplitterWindow):
             self._projectManager.newProject()
             pyutProject = self._projectManager.currentProject
 
-        document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, project=pyutProject, docType=docType)
+        document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, docType=docType)
 
-        # document.addToTree(self._projectTree, pyutProject.projectTreeRoot)
         self._projectManager.addDocumentNodeToTree(pyutProject=pyutProject, documentNode=document)
 
         self.currentFrame    = document.diagramFrame
@@ -321,7 +315,6 @@ class PyutUIV2(SplitterWindow):
         if isinstance(pyutData, IPyutDocument):
             frame: UmlDiagramsFrame = pyutData.diagramFrame
             self.currentFrame = frame
-            # self._currentProject = self.getProjectFromFrame(frame)
             self._projectManager.currentProject = self.getProjectFromFrame(frame)
             self._projectManager.syncPageFrameAndNotebook(frame=frame)
 
