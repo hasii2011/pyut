@@ -1,7 +1,5 @@
 
 from typing import List
-from typing import NewType
-from typing import Union
 from typing import cast
 
 from os import path as osPath
@@ -35,16 +33,11 @@ from org.pyut.ui.IPyutProject import PyutDocuments
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.PyutDocument import PyutDocument
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
-
-# Until I figure out how to stop mypy from complaining
-# TODO:   This should just be the following:
-#          UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]
-UmlFrameType = NewType('UmlFrameType', Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame])  # type: ignore
+from org.pyut.uiv2.Types import Frames
+from org.pyut.uiv2.Types import UmlFrameType
 
 
 class PyutProject(IPyutProject):
@@ -167,6 +160,13 @@ class PyutProject(IPyutProject):
         Returns:
         """
         return cast(TreeItemId, None)
+
+    @property
+    def frames(self) -> Frames:
+        """
+        """
+        frameList: Frames = Frames([document.diagramFrame for document in self._documents])
+        return frameList
 
     def addToTree(self):
         """
@@ -292,6 +292,7 @@ class PyutProject(IPyutProject):
         self._mediator.getFileHandling().registerUmlFrame(frame)
         return document
 
+    @deprecated(reason='use .frames property')
     def getFrames(self) -> List[UmlFrameType]:
         """
         Get all the project's frames

@@ -141,7 +141,9 @@ class ProjectManager:
         nodeID: TreeItemId = self._projectTree.AppendItem(pyutProject.projectTreeRoot, documentNode.title)
         # mypy please oh I beg you please fix this
         documentNode.treeRoot = nodeID  # type: ignore
-        self._projectTree.SetItemData(nodeID, documentNode.diagramFrame)
+        # V2 Update put document on node
+        # self._projectTree.SetItemData(nodeID, documentNode.diagramFrame)
+        self._projectTree.SetItemData(nodeID, documentNode)
 
     def removeProject(self, project: IPyutProject):
         """
@@ -181,14 +183,22 @@ class ProjectManager:
         project.documents.remove(document)
         # TODO Mark document as updated
 
-    def updateTreeText(self, pyutProject: IPyutProject):
+    def updateProjectTreeText(self, pyutProject: IPyutProject):
         """
+        Updates the project's name and all of its document names
+
+        Args:
+            pyutProject:  The project data to use
         """
         self._projectTree.SetItemText(pyutProject.projectTreeRoot, self._justTheFileName(pyutProject.filename))
         for document in pyutProject.documents:
             self.logger.debug(f'Update document name: {document=}')
             self._projectTree.SetItemText(document.treeRoot, document.title)
             # document.updateTreeText()
+
+    # noinspection PyUnusedLocal
+    def updateTreeText(self, pyutProject: IPyutProject):
+        assert False, 'Use .updateProjectTreeText'
 
     def updateDocumentName(self, pyutDocument: IPyutDocument):
         self._projectTree.SetItemText(pyutDocument.treeRoot, pyutDocument.title)
@@ -360,7 +370,7 @@ class ProjectManager:
         try:
             io.save(projectToWrite)
             self._modified = False
-            self.updateTreeText(pyutProject=projectToWrite)
+            self.updateProjectTreeText(pyutProject=projectToWrite)
         except (ValueError, Exception) as e:
             msg:     str = f"An error occurred while saving project {e}"
             caption: str = 'Error from IoFile'
@@ -399,7 +409,7 @@ class ProjectManager:
             raise e
 
         EndBusyCursor()
-        self.updateTreeText(pyutProject=projectToRead)
+        self.updateProjectTreeText(pyutProject=projectToRead)
         wxYield()
 
         # TODO:  Refresh frame --- Probably should be done by caller

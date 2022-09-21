@@ -156,9 +156,8 @@ class PyutUIV2(SplitterWindow):
         Returns:
             PyutProject or None if not found
         """
-        # for project in self._projects:
         for project in self._projectManager.projects:
-            if frame in project.getFrames():
+            if frame in project.frames:
                 return project
         return cast(PyutProjectV2, None)
 
@@ -319,8 +318,8 @@ class PyutUIV2(SplitterWindow):
         self.logger.debug(f'Clicked on: {itm=} `{pyutData=}`')
 
         # Use our own base type
-        if isinstance(pyutData, UmlDiagramsFrame):
-            frame: UmlDiagramsFrame = pyutData
+        if isinstance(pyutData, IPyutDocument):
+            frame: UmlDiagramsFrame = pyutData.diagramFrame
             self.currentFrame = frame
             # self._currentProject = self.getProjectFromFrame(frame)
             self._projectManager.currentProject = self.getProjectFromFrame(frame)
@@ -342,7 +341,7 @@ class PyutUIV2(SplitterWindow):
         self.logger.info(f'Item Data: `{data}`')
         if isinstance(data, IPyutProject):
             self._popupProjectMenu()
-        elif isinstance(data, UmlDiagramsFrame):            # TODO  We should put the IPyutDocument on the node
+        elif isinstance(data, IPyutDocument):
             self._popupProjectDocumentMenu()
 
     def _popupProjectMenu(self):
@@ -395,6 +394,7 @@ class PyutUIV2(SplitterWindow):
 
         currentDocument: IPyutDocument   = self.currentDocument
         dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
+
         dlgEditDocument.Destroy()
         #
         # TODO can cause

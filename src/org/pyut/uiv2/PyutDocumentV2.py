@@ -10,6 +10,7 @@ from wx import TreeItemId
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.IPyutDocument import IPyutDocument
+from org.pyut.ui.IPyutProject import UmlFrameType
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
@@ -102,7 +103,7 @@ class PyutDocumentV2(IPyutDocument):
         self._treeRoot = value
 
     @property
-    def diagramFrame(self) -> UmlDiagramsFrame:
+    def diagramFrame(self) -> UmlFrameType:
         """
         Return the document's frame
 

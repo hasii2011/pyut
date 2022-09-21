@@ -7,7 +7,7 @@ from abc import abstractmethod
 
 from wx import TreeItemId
 
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.uiv2.Types import UmlFrameType
 
 
 class IPyutDocument(ABC):
@@ -19,7 +19,7 @@ class IPyutDocument(ABC):
 
     @property               # type: ignore
     @abstractmethod
-    def diagramFrame(self) -> UmlDiagramsFrame:
+    def diagramFrame(self) -> UmlFrameType:
         """
         Return the document's frame
 

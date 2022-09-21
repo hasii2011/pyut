@@ -24,6 +24,7 @@ from org.pyut.ui.IPyutProject import PyutDocuments
 from org.pyut.ui.IPyutProject import UmlFrameType
 
 from org.pyut.ui.Mediator import Mediator
+from org.pyut.uiv2.Types import Frames
 
 if TYPE_CHECKING:
     from org.pyut.uiv2.ProjectTree import ProjectTree
@@ -123,6 +124,18 @@ class PyutProjectV2(IPyutProject):
     def projectTreeRoot(self, newValue: TreeItemId):
         self._projectTreeRoot = newValue
 
+    @property
+    def frames(self) -> Frames:
+        """
+        Return every frame from the project's documents
+
+        Returns:
+            List of frames
+        """
+        frameList: Frames = Frames([document.diagramFrame for document in self._documents])
+
+        return frameList
+
     @deprecated(reason='use the "codePath" property')
     def getCodePath(self) -> str:
         """
@@ -190,6 +203,7 @@ class PyutProjectV2(IPyutProject):
         # Return
         return True
 
+    @deprecated(reason='Use .frames property')
     def getFrames(self) -> List[UmlFrameType]:
         """
         Get all the project's frames
@@ -199,17 +213,6 @@ class PyutProjectV2(IPyutProject):
         """
         frameList = [document.diagramFrame for document in self._documents]
         return frameList
-
-    def updateTreeText(self):
-        """
-        Update the tree text for this project
-        """
-        self.logger.debug(f'{self._projectTreeRoot}')
-
-        self._tree.SetItemText(self.projectTreeRoot, self._justTheFileName(self._filename))
-        for document in self._documents:
-            self.logger.info(f'updateTreeText: {document=}')
-            document.updateTreeText()
 
     def selectFirstDocument(self):
 

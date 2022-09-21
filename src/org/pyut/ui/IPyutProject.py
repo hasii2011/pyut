@@ -1,6 +1,5 @@
 
 from typing import List
-from typing import Union
 
 from abc import ABC
 from abc import abstractmethod
@@ -8,13 +7,8 @@ from abc import abstractmethod
 from wx import TreeItemId
 
 from org.pyut.ui.IPyutDocument import PyutDocuments
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
-
-# Until I figure out how to stop mypy from complaining
-# TODO:   This should just be the following:
-UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]
-# UmlFrameType = NewType('UmlFrameType', UmlFrames)
+from org.pyut.uiv2.Types import Frames
+from org.pyut.uiv2.Types import UmlFrameType
 
 
 class IPyutProject(ABC):
@@ -74,6 +68,11 @@ class IPyutProject(ABC):
     @projectTreeRoot.setter     # type: ignore
     @abstractmethod
     def projectTreeRoot(self, newValue: TreeItemId):
+        pass
+
+    @property           # type: ignore
+    @abstractmethod
+    def frames(self) -> Frames:
         pass
 
     @property               # type: ignore
