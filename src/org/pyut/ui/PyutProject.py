@@ -28,8 +28,8 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.ui.IPyutProject import IPyutProject
-from org.pyut.ui.IPyutProject import PyutDocuments
+from org.pyut.uiv2.IPyutProject import IPyutProject
+from org.pyut.uiv2.IPyutProject import PyutDocuments
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.PyutDocument import PyutDocument

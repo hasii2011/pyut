@@ -16,7 +16,7 @@ from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
-from org.pyut.ui.IPyutProject import IPyutProject
+from org.pyut.uiv2.IPyutProject import IPyutProject
 
 
 from org.pyut.general.Lang import Lang

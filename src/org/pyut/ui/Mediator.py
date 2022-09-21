@@ -57,7 +57,7 @@ if TYPE_CHECKING:
     from ogl.OglObject import OglObject
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
     from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
-    from org.pyut.ui.IPyutProject import IPyutProject
+    from org.pyut.uiv2.IPyutProject import IPyutProject
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote

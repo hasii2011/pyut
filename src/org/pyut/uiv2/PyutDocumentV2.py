@@ -10,7 +10,7 @@ from wx import TreeItemId
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
-from org.pyut.ui.IPyutProject import UmlFrameType
+from org.pyut.uiv2.IPyutProject import UmlFrameType
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
@@ -23,7 +23,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutConstants import DiagramsLabels
 
 if TYPE_CHECKING:
-    from org.pyut.ui.IPyutProject import IPyutProject
+    from org.pyut.uiv2.IPyutProject import IPyutProject
 
 
 class PyutDocumentV2(IPyutDocument):

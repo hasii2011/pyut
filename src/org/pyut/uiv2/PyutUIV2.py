@@ -37,7 +37,7 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
-from org.pyut.ui.IPyutProject import IPyutProject
+from org.pyut.uiv2.IPyutProject import IPyutProject
 
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectManager import ProjectManager

@@ -45,7 +45,7 @@ from deprecated import deprecated
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
-from org.pyut.ui.IPyutProject import IPyutProject
+from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
 from org.pyut.ui.PyutProject import UmlFrameType

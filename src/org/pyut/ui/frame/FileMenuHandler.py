@@ -44,7 +44,7 @@ from ogl.OglClass import OglClass
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
-from org.pyut.ui.IPyutProject import IPyutProject
+from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.PyutUI import PyutUI
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame

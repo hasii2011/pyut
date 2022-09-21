@@ -19,9 +19,9 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
-from org.pyut.ui.IPyutProject import IPyutProject
-from org.pyut.ui.IPyutProject import PyutDocuments
-from org.pyut.ui.IPyutProject import UmlFrameType
+from org.pyut.uiv2.IPyutProject import IPyutProject
+from org.pyut.uiv2.IPyutProject import PyutDocuments
+from org.pyut.uiv2.IPyutProject import UmlFrameType
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.uiv2.Types import Frames
