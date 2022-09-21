@@ -50,17 +50,20 @@ class IPyutDocument(ABC):
     def treeRoot(self, value: TreeItemId):
         pass
 
-    @abstractmethod
-    def removeFromTree(self):
-        """
-        TODO: This does not belong here
-
-        Returns:
-        """
-        pass
-
+    # @abstractmethod
+    # def removeFromTree(self):
+    #     """
+    #     TODO: This does not belong here
+    #
+    #     Returns:
+    #     """
+    #     pass
+    #
     @abstractmethod
     def updateTreeText(self):
+        """
+        Implemented only by legacy Pyut
+        """
         pass
 
 

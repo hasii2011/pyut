@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from logging import Logger
 from logging import getLogger
 
-from wx import TreeCtrl
 from wx import TreeItemId
 
 from org.pyut.enums.DiagramType import DiagramType
@@ -47,10 +46,9 @@ class PyutDocumentV2(IPyutDocument):
         self._type:           DiagramType = docType                 # This document's diagram type
         self._treeRoot:       TreeItemId = cast(TreeItemId, None)   # The document entry in the tree
         self._treeRootParent: TreeItemId = cast(TreeItemId, None)   # Project  entry
-        self._tree:           TreeCtrl   = cast(TreeCtrl, None)     # The project Tree  TODO get rid of this
 
         self._diagramFrame:   UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
-        self._title:           str              = cast(str, None)
+        self._title:          str              = cast(str, None)
 
         self.logger.debug(f'Project: {project} PyutDocument using type {docType}')
         if docType == DiagramType.CLASS_DIAGRAM:
@@ -114,16 +112,15 @@ class PyutDocumentV2(IPyutDocument):
 
     def updateTreeText(self):
         """
-        Update the tree text for this document
-        TODO: Gets removed post V2 UI
         """
         assert False, 'Do not use this method'
 
     def removeFromTree(self):
         """
-        Remove this document.
+
         """
-        self._tree.Delete(self._treeRoot)
+        # self._tree.Delete(self._treeRoot)
+        assert False, 'Do not use this method'
 
     def __str__(self) -> str:
         from os import path as osPath

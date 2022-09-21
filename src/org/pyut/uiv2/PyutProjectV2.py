@@ -179,8 +179,8 @@ class PyutProjectV2(IPyutProject):
             return False
         EndBusyCursor()
 
-        # Update text
-        self.updateTreeText()
+        # Update text   TODO caller must ue project manager call
+        # self.updateTreeText()
 
         # Register to mediator
         if len(self._documents) > 0:

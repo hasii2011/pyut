@@ -173,11 +173,13 @@ class ProjectManager:
         # Remove references
 
         self._removeAllReferencesToUmlFrame(document.diagramFrame)
-
-        document.removeFromTree()
+        # update the UI
+        # document.removeFromTree()
+        self._projectTree.Delete(document.treeRoot)
 
         # Remove document from documents list
         project.documents.remove(document)
+        # TODO Mark document as updated
 
     def updateTreeText(self, pyutProject: IPyutProject):
         """
