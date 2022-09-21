@@ -88,7 +88,7 @@ class PyutApplicationFrame(Frame):
 
         appSize: Size = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
 
-        # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the tool bar
+        # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
         super().__init__(parent=parent, id=wxID, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_TOOL_WINDOW)
 
         self.logger: Logger = getLogger(__name__)
@@ -161,7 +161,7 @@ class PyutApplicationFrame(Frame):
         # Initialize the tips frame
         self._alreadyDisplayedTipsFrame = False
 
-        self.SetDropTarget(PyutFileDropTarget(treeNotebookHandler=self._treeNotebookHandler))
+        self.SetDropTarget(PyutFileDropTarget(treeNotebookHandler=self._treeNotebookHandler))   # type: ignore
 
         if self.GetThemeEnabled() is True:
             self.SetThemeEnabled(True)

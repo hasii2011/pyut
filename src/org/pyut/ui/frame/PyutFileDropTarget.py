@@ -14,32 +14,23 @@ from wx import MessageDialog
 
 from wx import Yield as wxYield
 
-from org.pyut.PyutUtils import PyutUtils
-from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
-from org.pyut.ui.Mediator import Mediator
-from org.pyut.ui.PyutProject import PyutProject
-from org.pyut.ui.PyutUI import PyutUI
-
-from org.pyut.enums.DiagramType import DiagramType
-
 from org.pyut.PyutConstants import PyutConstants
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from org.pyut.uiv2.IPyutUI import IPyutUI
 
 FileNames = NewType('FileNames', List[str])
 
 
 class PyutFileDropTarget(FileDropTarget):
 
-    def __init__(self, treeNotebookHandler: PyutUI):
+    def __init__(self, treeNotebookHandler: IPyutUI):
 
         super().__init__()
 
         self.logger: Logger = getLogger(__name__)
         self.logger.setLevel(INFO)
 
-        self._treeNotebookHandler: PyutUI = treeNotebookHandler
+        self._pyutUI: IPyutUI = treeNotebookHandler
 
     def OnDropFiles(self, x: int, y: int, filenames: FileNames) -> bool:
         """
@@ -51,56 +42,37 @@ class PyutFileDropTarget(FileDropTarget):
         """
 
         badFileNameList:  FileNames = FileNames([])
-        pyutFileNameList: FileNames = FileNames([])
-        xmlFileNameList:  FileNames = FileNames([])
+        fileNameList: FileNames = FileNames([])
 
         for fileName in filenames:
             self.logger.info(f'You dropped: {fileName}')
-            if fileName.endswith(PyutConstants.PYUT_EXTENSION):
-                pyutFileNameList.append(fileName)
-            elif fileName.endswith(PyutConstants.XML_EXTENSION):
-                xmlFileNameList.append(fileName)
+            if fileName.endswith(PyutConstants.PYUT_EXTENSION) or fileName.endswith(PyutConstants.XML_EXTENSION):
+                fileNameList.append(fileName)
             else:
                 badFileNameList.append(fileName)
 
-        self._loadPyutFiles(pyutFileNameList)
-        self._loadPyutXmlFiles(xmlFileNameList)
+        self._loadFiles(fileNameList)
 
         if len(badFileNameList) > 0:
-            message: str    = _('Only .put and .xml files are supported')
-            caption: str    = _('Unsupported File')
+            message: str    = 'Only .put and .xml files are supported'
+            caption: str    = 'Unsupported File'
             booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption=caption, style=OK | ICON_ERROR)
             booBoo.ShowModal()
 
         return True
 
-    def _loadPyutFiles(self, filenames: FileNames):
+    def _loadFiles(self, filenames: FileNames):
 
-        for pyutFileName in filenames:
-            try:
-                self._treeNotebookHandler.openFile(pyutFileName)
-            except UnsupportedXmlFileFormat as e:
-                PyutUtils.displayError(msg=f'{e}', title='Bad Drop File')
+        pyutUI: IPyutUI = self._pyutUI
 
-    def _loadPyutXmlFiles(self, xmlFilenames: FileNames):
-
-        mediator: Mediator            = Mediator()
-        tbh:      PyutUI = self._treeNotebookHandler
-
-        for xmlFilename in xmlFilenames:
-
+        for xmlFilename in filenames:
             wxYield()
-            tbh.newProject()
-            tbh.newDocument(DiagramType.CLASS_DIAGRAM)
-            mediator.updateTitle()
-            newProject: PyutProject = tbh.getCurrentProject()
-            #
-            # TODO Figure this out later;  This is duplicate code from the IoXml plugin
-            # This is some kind of bug work around code
-            for document in newProject.getDocuments():
-                newProject.removeDocument(document, False)
 
-            success: bool = tbh.openFile(xmlFilename, newProject)
-            self.logger.debug(f'{tbh.currentFrame=} {tbh.currentProject}')
+            success: bool = pyutUI.openFile(xmlFilename)    # TODO V2 should send a message
             if success is False:
-                tbh.closeCurrentProject()
+                self._displayError(message="Error on drag and drop")
+
+    def _displayError(self, message: str):
+
+        booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Bad Drop File', style=OK | ICON_ERROR)
+        booBoo.ShowModal()

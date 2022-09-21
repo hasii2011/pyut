@@ -37,7 +37,7 @@ from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
-# from org.pyut.ui.frame.PyutFileDropTarget import PyutFileDropTarget
+from org.pyut.ui.frame.PyutFileDropTarget import PyutFileDropTarget
 from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
@@ -158,7 +158,7 @@ class PyutApplicationFrameV2(Frame):
         self._alreadyDisplayedTipsFrame = False
 
         # TODO:  Fix later for V2
-        # self.SetDropTarget(PyutFileDropTarget(treeNotebookHandler=self._treeNotebookHandler))
+        self.SetDropTarget(PyutFileDropTarget(treeNotebookHandler=self._pyutUIV2))
 
         if self.GetThemeEnabled() is True:
             self.SetThemeEnabled(True)

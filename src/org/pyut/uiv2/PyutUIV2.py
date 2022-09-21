@@ -19,7 +19,6 @@ from wx import ID_YES
 from wx import YES_NO
 from wx import ITEM_NORMAL
 
-from wx import SplitterWindow
 from wx import Frame
 from wx import TreeEvent
 from wx import TreeItemId
@@ -39,6 +38,7 @@ from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.IPyutProject import IPyutProject
 
+from org.pyut.uiv2.IPyutUI import IPyutUI
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectManager import ProjectManager
 from org.pyut.uiv2.ProjectManager import PyutProjects
@@ -53,11 +53,11 @@ SASH_POSITION:                 int = 160        # TODO make this a preference an
 MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12         # TODO make this a preference
 
 
-class PyutUIV2(SplitterWindow):
+class PyutUIV2(IPyutUI):
 
     def __init__(self, topLevelWindow: Frame):
 
-        super().__init__(parent=topLevelWindow, id=ID_ANY)
+        super().__init__(topLevelWindow=topLevelWindow)
 
         self.logger: Logger = getLogger(__name__)
 
