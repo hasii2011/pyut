@@ -13,7 +13,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
-from org.pyut.ui.IPyutDocument import IPyutDocument
+from org.pyut.uiv2.IPyutDocument import IPyutDocument
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

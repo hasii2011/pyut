@@ -270,7 +270,7 @@ class Mediator(Singleton):
         Args:
             diagramType:
         """
-        from org.pyut.ui.IPyutDocument import IPyutDocument
+        from org.pyut.uiv2.IPyutDocument import IPyutDocument
 
         pyutDocument:   IPyutDocument = self._treeNotebookHandler.newDocument(docType=diagramType)
         currentProject: IPyutProject = self._treeNotebookHandler.currentProject

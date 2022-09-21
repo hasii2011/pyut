@@ -35,7 +35,7 @@ from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlF
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
-from org.pyut.ui.IPyutDocument import IPyutDocument
+from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.ui.IPyutProject import IPyutProject
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame

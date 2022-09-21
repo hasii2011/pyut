@@ -44,7 +44,7 @@ from wx import Yield as wxYield
 from deprecated import deprecated
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
-from org.pyut.ui.IPyutDocument import IPyutDocument
+from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.ui.IPyutProject import IPyutProject
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject

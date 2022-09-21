@@ -52,7 +52,7 @@ from org.pyut.persistence.converters.OglToMiniDomV10 import OglToMiniDom as OglT
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.ui.IPyutDocument import IPyutDocument
+from org.pyut.uiv2.IPyutDocument import IPyutDocument
 
 from org.pyut.ui.PyutDocument import PyutDocument
 from org.pyut.ui.PyutProject import PyutProject
