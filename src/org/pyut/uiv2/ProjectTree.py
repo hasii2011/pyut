@@ -41,7 +41,11 @@ class ProjectTree(TreeCtrl):
 
         # Add the frames
         for document in pyutProject.documents:
-            document.addToTree(self, projectTreeRoot)
+            docTreeId: TreeItemId = self.AppendItem(projectTreeRoot, document.title, data=document)
+
+            # document.addToTree(self, projectTreeRoot)
+            # wish mypy would fix this
+            document.treeRoot = docTreeId   # type: ignore
 
         return projectTreeRoot
 

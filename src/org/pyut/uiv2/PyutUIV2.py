@@ -187,7 +187,8 @@ class PyutUIV2(SplitterWindow):
 
         document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, project=pyutProject, docType=docType)
 
-        document.addToTree(self._projectTree, pyutProject.projectTreeRoot)
+        # document.addToTree(self._projectTree, pyutProject.projectTreeRoot)
+        self._projectManager.addDocumentNodeToTree(pyutProject=pyutProject, documentNode=document)
 
         self.currentFrame    = document.diagramFrame
         self._currentProject = pyutProject      # TODO do not use property it does a bunch of stuff
@@ -233,7 +234,9 @@ class PyutUIV2(SplitterWindow):
             if pageFrame in self._projectManager.currentProject.getFrames():
                 self._diagramNotebook.DeletePage(i)
 
-        self._removeProjectFromTree(pyutProject=currentProject)
+        projectTreeRoot: TreeItemId = currentProject.projectTreeRoot
+        self._projectTree.Delete(projectTreeRoot)
+
         self._projectManager.removeProject(self._projectManager.currentProject)
 
         self.logger.debug(f'{self._projectManager.currentProject.filename=}')
@@ -393,7 +396,6 @@ class PyutUIV2(SplitterWindow):
         currentDocument: IPyutDocument   = self.currentDocument
         dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
         dlgEditDocument.Destroy()
-
         #
         # TODO can cause
         #     self.__notebook.SetPageText(page=self.__notebookCurrentPage, text=currentDocument.title)
@@ -402,7 +404,8 @@ class PyutUIV2(SplitterWindow):
         # in SetPageText(): SetPageText: invalid notebook page
         #
         self._diagramNotebook.SetPageText(page=self._notebookCurrentPageNumber, text=currentDocument.title)
-        currentDocument.updateTreeText()
+        # currentDocument.updateTreeText()
+        self._projectManager.updateDocumentName(pyutDocument=currentDocument)
 
     # noinspection PyUnusedLocal
     def _onRemoveDocument(self, event: CommandEvent):
@@ -443,16 +446,3 @@ class PyutUIV2(SplitterWindow):
 
         self.logger.info(f'{projectTree.GetCount()=}')
         return treeRootItemId
-
-    def _removeProjectFromTree(self, pyutProject: IPyutProject):
-        """
-        Remove the project from the tree
-        TODO: V2 UI this belongs in the project tree component itself
-        Args:
-            pyutProject:
-
-        """
-        """
-        """
-        projectTreeRoot: TreeItemId = pyutProject.projectTreeRoot
-        self._projectTree.Delete(projectTreeRoot)

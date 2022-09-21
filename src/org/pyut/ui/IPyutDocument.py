@@ -5,7 +5,6 @@ from typing import NewType
 from abc import ABC
 from abc import abstractmethod
 
-from wx import TreeCtrl
 from wx import TreeItemId
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
@@ -38,12 +37,17 @@ class IPyutDocument(ABC):
     def title(self, theNewValue: str):
         pass
 
+    @property               # type: ignore
     @abstractmethod
-    def updateTreeText(self):
+    def treeRoot(self) -> TreeItemId:
+        """
+        Returns: The tree root ItemId for this document's node
+        """
         pass
 
+    @treeRoot.setter        # type: ignore
     @abstractmethod
-    def addToTree(self, tree: TreeCtrl, root: TreeItemId):
+    def treeRoot(self, value: TreeItemId):
         pass
 
     @abstractmethod
@@ -53,6 +57,10 @@ class IPyutDocument(ABC):
 
         Returns:
         """
+        pass
+
+    @abstractmethod
+    def updateTreeText(self):
         pass
 
 

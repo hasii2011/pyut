@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from logging import Logger
 from logging import getLogger
 
-# from deprecated import deprecated
 from wx import TreeCtrl
 from wx import TreeItemId
 
@@ -43,26 +42,15 @@ class PyutDocumentV2(IPyutDocument):
         self.logger:       Logger   = getLogger(__name__)
 
         self._parentFrame: DiagramNotebook = parentFrame
-        self._project:     'IPyutProject'   = project
+        self._project:     'IPyutProject'   = project       # TODO I should not know this
 
-        self._type: DiagramType = docType
-        """
-        This document's diagram type
-        """
-        self._treeRoot:       TreeItemId = cast(TreeItemId, None)
-        """
-        Root of the project entry in the tree
-        """
-        self._treeRootParent: TreeItemId = cast(TreeItemId, None)
-        """
-        Parent of the project root entry
-        """
-        self._tree:           TreeCtrl   = cast(TreeCtrl, None)
-        """
-        Tree I belong to
-        """
-        self._diagramFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
-        self._title:        str              = cast(str, None)
+        self._type:           DiagramType = docType                 # This document's diagram type
+        self._treeRoot:       TreeItemId = cast(TreeItemId, None)   # The document entry in the tree
+        self._treeRootParent: TreeItemId = cast(TreeItemId, None)   # Project  entry
+        self._tree:           TreeCtrl   = cast(TreeCtrl, None)     # The project Tree  TODO get rid of this
+
+        self._diagramFrame:   UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
+        self._title:           str              = cast(str, None)
 
         self.logger.debug(f'Project: {project} PyutDocument using type {docType}')
         if docType == DiagramType.CLASS_DIAGRAM:
@@ -105,6 +93,17 @@ class PyutDocumentV2(IPyutDocument):
         self._title = theNewValue
 
     @property
+    def treeRoot(self) -> TreeItemId:
+        """
+        Returns: The tree root ItemId for this document's node
+        """
+        return self._treeRoot
+
+    @treeRoot.setter
+    def treeRoot(self, value: TreeItemId):
+        self._treeRoot = value
+
+    @property
     def diagramFrame(self) -> UmlDiagramsFrame:
         """
         Return the document's frame
@@ -113,26 +112,12 @@ class PyutDocumentV2(IPyutDocument):
         """
         return self._diagramFrame
 
-    # @deprecated('Use the mediator call instead')
-    def addToTree(self, tree: TreeCtrl, root: TreeItemId):
-        """
-
-        Args:
-            tree:   The tree control
-            root:   The itemId of the parent root
-        """
-        self._tree           = tree
-        self._treeRootParent = root
-        self._treeRoot       = tree.AppendItem(self._treeRootParent, self._title)   # Add the project to the project tree
-        # self._tree.Expand(self._treeRoot)
-        # self._tree.SetPyData(self._treeRoot, self._frame)
-        self._tree.SetItemData(self._treeRoot, self._diagramFrame)
-
     def updateTreeText(self):
         """
         Update the tree text for this document
+        TODO: Gets removed post V2 UI
         """
-        self._tree.SetItemText(self._treeRoot, self._title)
+        assert False, 'Do not use this method'
 
     def removeFromTree(self):
         """

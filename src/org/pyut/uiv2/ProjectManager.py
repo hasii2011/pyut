@@ -130,6 +130,19 @@ class ProjectManager:
         assert project not in self._projects
         self._projects.append(project)
 
+    def addDocumentNodeToTree(self, pyutProject: IPyutProject, documentNode: IPyutDocument):
+        """
+
+        Args:
+            pyutProject:
+            documentNode:
+
+        """
+        nodeID: TreeItemId = self._projectTree.AppendItem(pyutProject.projectTreeRoot, documentNode.title)
+        # mypy please oh I beg you please fix this
+        documentNode.treeRoot = nodeID  # type: ignore
+        self._projectTree.SetItemData(nodeID, documentNode.diagramFrame)
+
     def removeProject(self, project: IPyutProject):
         """
         Remove a project from our purview
@@ -171,8 +184,12 @@ class ProjectManager:
         """
         self._projectTree.SetItemText(pyutProject.projectTreeRoot, self._justTheFileName(pyutProject.filename))
         for document in pyutProject.documents:
-            self.logger.debug(f'updateTreeText: {document=}')
-            document.updateTreeText()
+            self.logger.debug(f'Update document name: {document=}')
+            self._projectTree.SetItemText(document.treeRoot, document.title)
+            # document.updateTreeText()
+
+    def updateDocumentName(self, pyutDocument: IPyutDocument):
+        self._projectTree.SetItemText(pyutDocument.treeRoot, pyutDocument.title)
 
     def updateTreeNotebookIfPossible(self, project: IPyutProject):
         """
@@ -210,9 +227,6 @@ class ProjectManager:
         projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=project)
 
         project.projectTreeRoot = projectTreeRoot
-
-        # self._projects.append(project)
-        # self._currentProject = project
         self.addProject(project)
         self.currentProject = project
 

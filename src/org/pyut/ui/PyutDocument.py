@@ -46,7 +46,7 @@ class PyutDocument(IPyutDocument):
         """
         self._treeRoot:       TreeItemId = cast(TreeItemId, None)
         """
-        Root of the project entry in the tree
+        Root of the document entry in the tree
         """
         self._treeRootParent: TreeItemId = cast(TreeItemId, None)
         """
@@ -107,6 +107,17 @@ class PyutDocument(IPyutDocument):
         Returns:    this document's uml frame
         """
         return self._diagramFrame
+
+    @property
+    def treeRoot(self) -> TreeItemId:
+        """
+        Returns: The tree root ItemId for this document's node
+        """
+        return self._treeRoot
+
+    @treeRoot.setter
+    def treeRoot(self, value: TreeItemId):
+        self._treeRoot = value
 
     def addToTree(self, tree: TreeCtrl, root: TreeItemId):
         """
