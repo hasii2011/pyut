@@ -46,6 +46,8 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 TreeDataType = Union[PyutProjectV2, UmlDiagramsFrame]
 
@@ -55,13 +57,14 @@ MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12         # TODO make this a preference
 
 class PyutUIV2(IPyutUI):
 
-    def __init__(self, topLevelWindow: Frame):
+    def __init__(self, topLevelWindow: Frame, eventEngine: IEventEngine):
 
         super().__init__(topLevelWindow=topLevelWindow)
 
         self.logger: Logger = getLogger(__name__)
 
         self._parentWindow:    Frame           = topLevelWindow
+        self._eventEngine:     IEventEngine    = eventEngine
         self._projectTree:     ProjectTree     = ProjectTree(parentWindow=self)
         self._diagramNotebook: DiagramNotebook = DiagramNotebook(parentWindow=self)
 
@@ -325,6 +328,10 @@ class PyutUIV2(IPyutUI):
                 self.currentFrame = projectFrames[0]
                 self._projectManager.syncPageFrameAndNotebook(frame=self.currentFrame)
                 # self._mediator.updateTitle()      TODO: V2 needs update
+                self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationTitle,
+                                            newFilename=project.filename,
+                                            currentFrameZoomFactor=self.currentFrame.GetCurrentZoom(),
+                                            projectModified=self._projectManager.currentProject.modified)
             self._projectManager.currentProject = project
 
     def _onProjectTreeRightClick(self, treeEvent: TreeEvent):

@@ -8,16 +8,19 @@ from wx import PyEventBinder
 from wx import TreeItemId
 from wx import Window
 
-from core.types.Types import PluginProject
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import NewProjectEvent
+from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
+from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-from tests.scaffoldv2.eventengine.EventType import EventType
-from tests.scaffoldv2.eventengine.Events import LoadProjectEvent
-from tests.scaffoldv2.eventengine.Events import NewProjectEvent
-from tests.scaffoldv2.eventengine.IEventEngine import IEventEngine
-
-NEW_NAME_PARAMETER:     str = 'newName'
-TREE_ITEM_ID_PARAMETER: str = 'treeItemId'
+NEW_NAME_PARAMETER:       str = 'newName'
+TREE_ITEM_ID_PARAMETER:   str = 'treeItemId'
 PLUGIN_PROJECT_PARAMETER: str = 'pluginProject'
+
+NEW_FILENAME_PARAMETER:              str = 'newFilename'
+CURRENT_FRAME_ZOOM_FACTOR_PARAMETER: str = 'currentFrameZoomFactor'
+PROJECT_MODIFIED_PARAMETER:          str = 'projectModified'
 
 
 class EventEngine(IEventEngine):
@@ -27,12 +30,17 @@ class EventEngine(IEventEngine):
     it open to other implementations;
 
     Get one of these for each Window you want to listen on
+    In practice, Pyut always listens on the top level application Frame
+
+    Additionally, when UI components on different parts of the UI hierarchy need to communicate with
+    each other, they should use the eventing mechanism rather than incestuously embedding references
+    to each other (after all we are Republicans, not Demo-rats
     """
 
     def __init__(self, listeningWindow: Window):
 
         self._listeningWindow: Window = listeningWindow
-        self.logger: Logger = getLogger(__name__)
+        self.logger:           Logger = getLogger(__name__)
 
     def registerListener(self, event: PyEventBinder, callback: Callable):
         self._listeningWindow.Bind(event, callback)
@@ -43,19 +51,27 @@ class EventEngine(IEventEngine):
             newName:    str        = kwargs[NEW_NAME_PARAMETER]
             treeItemId: TreeItemId = kwargs[TREE_ITEM_ID_PARAMETER]
             self._sendUpdateTreeItemNameEvent(newName=newName, treeItemId=treeItemId)
-        elif eventType == EventType.LoadProjectEvent:
-            pluginProject: PluginProject = kwargs[PLUGIN_PROJECT_PARAMETER]
-            self._sendLoadProjectEvent(pluginProject=pluginProject)
+        elif eventType == EventType.UpdateApplicationTitle:
+            self._sendNewTitleEvent(**kwargs)
+
         elif eventType == EventType.NewProject:
             self._sendNewProjectEvent()
+        else:
+            assert False, f'Unknown event type: {eventType}'
 
     def _sendUpdateTreeItemNameEvent(self, newName: str, treeItemId: TreeItemId):
-        pass
+        eventToPost: UpdateTreeItemNameEvent = UpdateTreeItemNameEvent(newName=newName, treeItemId=treeItemId)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendNewTitleEvent(self, **kwargs):
+        newFilename:             str  = kwargs[NEW_FILENAME_PARAMETER]
+        currentFrameZoomFactor: float = kwargs[CURRENT_FRAME_ZOOM_FACTOR_PARAMETER]
+        projectModified:        bool  = kwargs[PROJECT_MODIFIED_PARAMETER]
+        eventToPost: UpdateApplicationTitleEvent = UpdateApplicationTitleEvent(newFilename=newFilename,
+                                                                               currentFrameZoomFactor=currentFrameZoomFactor,
+                                                                               projectModified=projectModified)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendNewProjectEvent(self):
         eventToPost: NewProjectEvent = NewProjectEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendLoadProjectEvent(self, pluginProject: PluginProject):
-        eventToPost: LoadProjectEvent = LoadProjectEvent(pluginProject=pluginProject)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

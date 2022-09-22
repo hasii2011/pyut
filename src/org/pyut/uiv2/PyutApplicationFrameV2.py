@@ -7,6 +7,7 @@ from logging import Logger
 from logging import getLogger
 
 from os import getcwd
+from os import path as osPath
 
 from sys import platform as sysPlatform
 
@@ -32,6 +33,7 @@ from wx import Icon
 from wx import AcceleratorTable
 from wx import Menu
 
+from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
@@ -62,6 +64,10 @@ from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager should not be in plugins directory
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2
+from org.pyut.uiv2.eventengine.EventEngine import EventEngine
+from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
+from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class PyutApplicationFrameV2(Frame):
@@ -94,7 +100,8 @@ class PyutApplicationFrameV2(Frame):
 
         self.CreateStatusBar()
 
-        self._pyutUIV2: PyutUIV2 = PyutUIV2(self)
+        self._eventEngine: IEventEngine = EventEngine(listeningWindow=self)
+        self._pyutUIV2:    PyutUIV2     = PyutUIV2(self, eventEngine=self._eventEngine)
 
         self._mediator: Mediator = Mediator()
         self._mediator.registerStatusBar(self.GetStatusBar())
@@ -163,6 +170,7 @@ class PyutApplicationFrameV2(Frame):
         if self.GetThemeEnabled() is True:
             self.SetThemeEnabled(True)
 
+        self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_TITLE, self._onUpdateTitle)
         self.Bind(EVT_ACTIVATE, self._onActivate)
         self.Bind(EVT_CLOSE, self.Close)
 
@@ -220,6 +228,26 @@ class PyutApplicationFrameV2(Frame):
         #
         #     firstProject: PyutProject = projects[0]
         #     self.selectProject(project=firstProject)
+
+    def _onUpdateTitle(self, event: UpdateApplicationTitleEvent):
+        """
+        This is a remake of the original mediator method
+        Args:
+            event:
+        """
+        filename:               str   = event.newFilename
+        currentFrameZoomFactor: float = event.currentFrameZoomFactor
+        projectModified:        bool  = event.projectModified
+        projectName:            str   = self._justTheFileName(filename=filename)
+        pyutVersion:            str   = PyutVersion.getPyUtVersion()
+
+        txt:       str = f'Pyut v{pyutVersion} - {projectName}'
+        indicator: str = ''
+        if projectModified is True:
+            indicator = '*'
+        fullText: str  = f'{txt} ( {int(currentFrameZoomFactor * 100)}%) {indicator}'
+
+        self.SetTitle(fullText)
 
     def _onNewAction(self, event: CommandEvent):
         """
@@ -325,3 +353,19 @@ class PyutApplicationFrameV2(Frame):
         acc = self._createAcceleratorTable()
         accel_table = AcceleratorTable(acc)
         self.SetAcceleratorTable(accel_table)
+
+    def _justTheFileName(self, filename):
+        """
+        Return just the file name portion of the fully qualified path
+        TODO: This is a dupe of what is in ProjectTree
+        Args:
+            filename:  file name to display
+
+        Returns:
+            A better file name
+        """
+        regularFileName: str = osPath.split(filename)[1]
+        if PyutPreferences().displayProjectExtension is False:
+            regularFileName = osPath.splitext(regularFileName)[0]
+
+        return regularFileName
