@@ -60,7 +60,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        currentFrame = self._treeNotebookHandler.getCurrentFrame()
+        currentFrame = self._treeNotebookHandler.currentFrame
         if currentFrame is None:
             PyutUtils.displayWarning(msg=_('No selected/available frame'), title=_('Huh!'))
         else:
@@ -77,7 +77,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        currentFrame = self._treeNotebookHandler.getCurrentFrame()
+        currentFrame = self._treeNotebookHandler.currentFrame
         if currentFrame is None:
             PyutUtils.displayWarning(msg=_('No selected/available frame'), title=_('Huh!'))
         else:

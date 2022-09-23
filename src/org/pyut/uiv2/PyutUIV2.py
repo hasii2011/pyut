@@ -247,7 +247,7 @@ class PyutUIV2(IPyutUI):
             # self._updateTreeNotebookIfPossible(project=newCurrentProject)
             self._projectManager.updateTreeNotebookIfPossible(project=newCurrentProject)
 
-        # self._mediator.updateTitle()  TODO V2 API update needed  Send event
+        self._updateApplicationTitle()
 
     @deprecated(reason='use property .currentProject')
     def getCurrentProject(self) -> IPyutProject:
@@ -295,13 +295,12 @@ class PyutUIV2(IPyutUI):
         """
         self._notebookCurrentPageNumber = self._diagramNotebook.GetSelection()
         self.logger.info(f'{self._notebookCurrentPageNumber=}')
-        self.currentFrame = self._getCurrentFrameFromNotebook()
 
-        # self._mediator.updateTitle()      # TODO to fill out V2
+        self._projectManager.currentFrame = self._getCurrentFrameFromNotebook()
         self._getTreeItemFromFrame(self.currentFrame)
 
-        # Register the current project
-        self._currentProject = self.getProjectFromFrame(self.currentFrame)
+        self._projectManager.currentProject = self.getProjectFromFrame(self.currentFrame)
+        self._updateApplicationTitle()
 
     def _onProjectTreeSelectionChanged(self, event: TreeEvent):
         """
@@ -327,11 +326,7 @@ class PyutUIV2(IPyutUI):
             if len(projectFrames) > 0:
                 self.currentFrame = projectFrames[0]
                 self._projectManager.syncPageFrameAndNotebook(frame=self.currentFrame)
-                # self._mediator.updateTitle()      TODO: V2 needs update
-                self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationTitle,
-                                            newFilename=project.filename,
-                                            currentFrameZoomFactor=self.currentFrame.GetCurrentZoom(),
-                                            projectModified=self._projectManager.currentProject.modified)
+                self._updateApplicationTitle()
             self._projectManager.currentProject = project
 
     def _onProjectTreeRightClick(self, treeEvent: TreeEvent):
@@ -446,3 +441,10 @@ class PyutUIV2(IPyutUI):
 
         self.logger.info(f'{projectTree.GetCount()=}')
         return treeRootItemId
+
+    def _updateApplicationTitle(self, ):
+
+        self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationTitle,
+                                    newFilename=self._projectManager.currentProject.filename,
+                                    currentFrameZoomFactor=self.currentFrame.GetCurrentZoom(),
+                                    projectModified=self._projectManager.currentProject.modified)

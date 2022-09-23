@@ -994,11 +994,7 @@ class Mediator(Singleton):
     def updateTitle(self):
         """
         Set the application title, function of version and current filename
-        TODO:  Remove this when we have eventing in place in UI V2
         """
-        # Exit if we are in scripting mode
-        if self.isInScriptMode():
-            return
 
         from org.pyut.ui.PyutProject import PyutProject
 
