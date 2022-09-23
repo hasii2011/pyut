@@ -5,6 +5,7 @@ from typing import cast
 
 from logging import Logger
 from logging import getLogger
+from logging import DEBUG
 
 # noinspection PyPackageRequirements
 from deprecated import deprecated
@@ -13,9 +14,11 @@ from wx import EVT_MENU
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
 from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import EVT_TREE_SEL_CHANGED
+from wx import ICON_ERROR
 from wx import ICON_QUESTION
 from wx import ID_ANY
 from wx import ID_YES
+from wx import OK
 from wx import YES_NO
 from wx import ITEM_NORMAL
 
@@ -29,12 +32,13 @@ from wx import MessageDialog
 from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
+
 from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
 from org.pyut.enums.DiagramType import DiagramType
 
-
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.IPyutProject import IPyutProject
 
@@ -46,13 +50,18 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
+
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-TreeDataType = Union[PyutProjectV2, UmlDiagramsFrame]
+TreeDataType        = Union[PyutProjectV2, PyutDocumentV2]
 
 SASH_POSITION:                 int = 160        # TODO make this a preference and remember it
 MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12         # TODO make this a preference
+
+NO_DIAGRAM_FRAME: UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
+NO_PYUT_PROJECT:  IPyutProject     = cast(IPyutProject, None)
+NO_MENU:          Menu             = cast(Menu, None)
 
 
 class PyutUIV2(IPyutUI):
@@ -73,8 +82,8 @@ class PyutUIV2(IPyutUI):
         self.SplitVertically(self._projectTree, self._diagramNotebook, SASH_POSITION)
 
         self._notebookCurrentPageNumber: int  = -1
-        self._projectPopupMenu:          Menu = cast(Menu, None)
-        self._documentPopupMenu:         Menu = cast(Menu, None)
+        self._projectPopupMenu:          Menu = NO_MENU
+        self._documentPopupMenu:         Menu = NO_MENU
 
         self._projectManager: ProjectManager = ProjectManager(projectTree=self._projectTree, diagramNoteBook=self._diagramNotebook)
 
@@ -89,13 +98,12 @@ class PyutUIV2(IPyutUI):
     @currentProject.setter
     def currentProject(self, newProject: IPyutProject):
 
-        self.logger.info(f'{self._diagramNotebook.GetRowCount()=}')
         self._projectManager.currentProject = newProject
 
         self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount() - 1
         self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
-        self.logger.info(f'{self._notebookCurrentPageNumber=}')
+        self.logger.debug(f'{self._notebookCurrentPageNumber=}')
 
     @property
     def currentDocument(self) -> IPyutDocument:
@@ -105,13 +113,7 @@ class PyutUIV2(IPyutUI):
         Returns:
             the current document or None if not found
         """
-        project: IPyutProject = self._projectManager.currentProject
-        if project is None:
-            return cast(IPyutDocument, None)
-        for document in project.documents:
-            if document.diagramFrame is self.currentFrame:
-                return document
-        return cast(IPyutDocument, None)
+        return self._projectManager.currentDocument
 
     @property
     def currentFrame(self) -> UmlDiagramsFrame:
@@ -157,13 +159,13 @@ class PyutUIV2(IPyutUI):
         for project in self._projectManager.projects:
             if frame in project.frames:
                 return project
-        return cast(PyutProjectV2, None)
+        return NO_PYUT_PROJECT
 
     def newProject(self) -> IPyutProject:
         """
         Returns:  A default empty project
         """
-        self.currentFrame   = cast(UmlDiagramsFrame, None)
+        self._projectManager.currentFrame = NO_DIAGRAM_FRAME
 
         return self._projectManager.newProject()
 
@@ -186,13 +188,12 @@ class PyutUIV2(IPyutUI):
 
         self._projectManager.addDocumentNodeToTree(pyutProject=pyutProject, documentNode=document)
 
-        self.currentFrame    = document.diagramFrame
-        self._currentProject = pyutProject      # TODO do not use property it does a bunch of stuff
-
-        self.currentFrame.Refresh()     # Hmm... should I really do this
+        self._projectManager.currentFrame   = document.diagramFrame
+        self._projectManager.currentProject = pyutProject
+        self._projectManager.currentFrame.Refresh()
         wxYield()
-        self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
-        self.logger.warning(f'Current notebook page: {self._notebookCurrentPageNumber}')
+        self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1         # TODO do not need to maintain this state
+        self.logger.debug(f'Current notebook page: {self._notebookCurrentPageNumber}')
         # self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
         return document
@@ -200,52 +201,50 @@ class PyutUIV2(IPyutUI):
     def closeCurrentProject(self):
         """
         Close the current project
-
-        Returns:
-            True if everything is ok
         """
         currentProject: IPyutProject = self._projectManager.currentProject
         if currentProject is None and self.currentFrame is not None:
             currentProject = self.getProjectFromFrame(self.currentFrame)
         if currentProject is None:
-            PyutUtils.displayError("No frame to close !", "Error...")
-            return False
+            self._displayError(message='No frame to close!')
+            return
 
         # Close the project
         if currentProject.modified is True:
-            # frame = self._currentProject.getFrames()[0]
             frame = self._projectManager.currentProject.getFrames()[0]
             frame.SetFocus()
             self.showFrame(frame)
 
             dlg = MessageDialog(None, "Your project has not been saved. Would you like to save it ?", "Save changes ?", YES_NO | ICON_QUESTION)
             if dlg.ShowModal() == ID_YES:
-                self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
+                self._projectManager.saveProject(projectToSave=currentProject)
 
         # Remove the frame in the notebook
         pages = list(range(self._diagramNotebook.GetPageCount()))
         pages.reverse()
         for i in pages:
             pageFrame = self._diagramNotebook.GetPage(i)
-            if pageFrame in self._projectManager.currentProject.getFrames():
+            if pageFrame in currentProject.frames:
                 self._diagramNotebook.DeletePage(i)
 
         projectTreeRoot: TreeItemId = currentProject.projectTreeRoot
         self._projectTree.Delete(projectTreeRoot)
 
-        self._projectManager.removeProject(self._projectManager.currentProject)
+        self._projectManager.removeProject(currentProject)
 
-        self.logger.debug(f'{self._projectManager.currentProject.filename=}')
+        self.logger.debug(f'{currentProject.filename=}')
 
-        self.currentFrame = None
+        self._projectManager.currentFrame = NO_DIAGRAM_FRAME
 
         currentProjects: PyutProjects = self._projectManager.projects
-        nbrProjects: int = len(currentProjects)
-        self.logger.debug(f'{nbrProjects=}')
+        nbrProjects:     int          = len(currentProjects)
+        if self.logger.isEnabledFor(DEBUG) is True:
+            self.logger.debug(f'{nbrProjects=}')
+
         if nbrProjects > 0:
             newCurrentProject: IPyutProject = currentProjects[0]
-            # self._updateTreeNotebookIfPossible(project=newCurrentProject)
-            self._projectManager.updateTreeNotebookIfPossible(project=newCurrentProject)
+            self._projectManager.currentProject = newCurrentProject
+            self._projectManager.updateDiagramNotebookIfPossible(project=newCurrentProject)
 
         self._updateApplicationTitle()
 
@@ -257,7 +256,7 @@ class PyutUIV2(IPyutUI):
         Returns:
             the current project or None if not found
         """
-        return self._currentProject
+        return self._projectManager.currentProject
 
     def isProjectLoaded(self, filename: str) -> bool:
         """
@@ -294,12 +293,13 @@ class PyutUIV2(IPyutUI):
             event:
         """
         self._notebookCurrentPageNumber = self._diagramNotebook.GetSelection()
-        self.logger.info(f'{self._notebookCurrentPageNumber=}')
 
         self._projectManager.currentFrame = self._getCurrentFrameFromNotebook()
-        self._getTreeItemFromFrame(self.currentFrame)
+        frameTreeItem: TreeItemId = self._projectTree.getTreeItemFromFrame(self._projectManager.currentFrame)
+        self._projectTree.SelectItem(frameTreeItem)
 
-        self._projectManager.currentProject = self.getProjectFromFrame(self.currentFrame)
+        self._projectManager.currentProject = self.getProjectFromFrame(self._projectManager.currentFrame)
+        self._projectManager.syncPageFrameAndNotebook(frame=self._projectManager.currentFrame)
         self._updateApplicationTitle()
 
     def _onProjectTreeSelectionChanged(self, event: TreeEvent):
@@ -315,25 +315,33 @@ class PyutUIV2(IPyutUI):
 
         # Use our own base type
         if isinstance(pyutData, IPyutDocument):
-            frame: UmlDiagramsFrame = pyutData.diagramFrame
-            self.currentFrame = frame
-            self._projectManager.currentProject = self.getProjectFromFrame(frame)
+            pyutDocument: IPyutDocument    = cast(IPyutDocument, pyutData)
+            frame:        UmlDiagramsFrame = pyutDocument.diagramFrame
+
+            self._projectManager.currentFrame    = frame
+            self._projectManager.currentProject  = self.getProjectFromFrame(frame)
+            self._projectManager.currentDocument = pyutDocument
+
             self._projectManager.syncPageFrameAndNotebook(frame=frame)
 
         elif isinstance(pyutData, PyutProjectV2):
             project: PyutProjectV2 = pyutData
+            self._projectManager.currentProject = project
             projectFrames: List[UmlFrameType] = project.getFrames()
             if len(projectFrames) > 0:
-                self.currentFrame = projectFrames[0]
-                self._projectManager.syncPageFrameAndNotebook(frame=self.currentFrame)
-                self._updateApplicationTitle()
+                self._projectManager.currentFrame = projectFrames[0]
+            else:
+                self._projectManager.currentFrame = NO_DIAGRAM_FRAME
+
+            self._projectManager.syncPageFrameAndNotebook(frame=self.currentFrame)
+            self._updateApplicationTitle()
             self._projectManager.currentProject = project
 
     def _onProjectTreeRightClick(self, treeEvent: TreeEvent):
 
         itemId: TreeItemId = treeEvent.GetItem()
         data = self._projectTree.GetItemData(item=itemId)
-        self.logger.info(f'Item Data: `{data}`')
+        self.logger.debug(f'Item Data: `{data}`')
         if isinstance(data, IPyutProject):
             self._popupProjectMenu()
         elif isinstance(data, IPyutDocument):
@@ -359,7 +367,7 @@ class PyutUIV2(IPyutUI):
 
         if self._documentPopupMenu is None:
 
-            self.logger.info(f'Create the document popup menu')
+            self.logger.debug(f'Create the document popup menu')
 
             [editDocumentNameMenuID, removeDocumentMenuID] = PyutUtils.assignID(2)
 
@@ -373,7 +381,7 @@ class PyutUIV2(IPyutUI):
 
             self.__documentPopupMenu = popupMenu
 
-        self.logger.info(f'Current Document: `{self.currentDocument}`')
+        self.logger.debug(f'Current Document: `{self.currentDocument}`')
         self._parentWindow.PopupMenu(self.__documentPopupMenu)
 
     # noinspection PyUnusedLocal
@@ -383,11 +391,11 @@ class PyutUIV2(IPyutUI):
     # noinspection PyUnusedLocal
     def _onEditDocumentName(self, event: CommandEvent):
 
-        self.logger.info(f'{self._notebookCurrentPageNumber=}  {self._diagramNotebook.GetSelection()=}')
-        if self._notebookCurrentPageNumber == -1:
+        self.logger.debug(f'{self._notebookCurrentPageNumber=}  {self._diagramNotebook.GetSelection()=}')
+        if self._notebookCurrentPageNumber == -1:       # TODO do not need this state
             self._notebookCurrentPageNumber = self._diagramNotebook.GetSelection()    # must be default empty project
 
-        currentDocument: IPyutDocument   = self.currentDocument
+        currentDocument: IPyutDocument   = self._projectManager.currentDocument
         dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
 
         dlgEditDocument.Destroy()
@@ -416,35 +424,30 @@ class PyutUIV2(IPyutUI):
 
         self._projectManager.deleteDocument(project=project, document=currentDocument)
 
-    def _getCurrentFrameFromNotebook(self):
+    def _getCurrentFrameFromNotebook(self) -> UmlDiagramsFrame:
         """
+        TODO: Move this to DiagramNotebook
+
         Get the current frame in the notebook
 
         Returns:
         """
-
-        noPage: int = self._notebookCurrentPageNumber
-        self.logger.info(f'{noPage=}')
-        if noPage == -1:
-            return None
-        frame = self._diagramNotebook.GetPage(noPage)
+        frame: UmlDiagramsFrame = self._diagramNotebook.GetPage(self._diagramNotebook.GetSelection())
         return frame
-
-    def _getTreeItemFromFrame(self, frame: UmlDiagramsFrame) -> TreeItemId:
-
-        projectTree: ProjectTree = self._projectTree
-
-        treeRootItemId: TreeItemId   = projectTree.GetRootItem()
-        pyutData:       TreeDataType = projectTree.GetItemData(treeRootItemId)
-
-        self.logger.info(f'{treeRootItemId=} {pyutData=} {frame=}')
-
-        self.logger.info(f'{projectTree.GetCount()=}')
-        return treeRootItemId
 
     def _updateApplicationTitle(self, ):
 
+        # Account for "Untitled" project with no frame
+        if self._projectManager.currentFrame is None:
+            currentZoom: float = 1.0
+        else:
+            currentZoom = self._projectManager.currentFrame.GetCurrentZoom()
         self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationTitle,
                                     newFilename=self._projectManager.currentProject.filename,
-                                    currentFrameZoomFactor=self.currentFrame.GetCurrentZoom(),
+                                    currentFrameZoomFactor=currentZoom,
                                     projectModified=self._projectManager.currentProject.modified)
+
+    def _displayError(self, message: str):
+
+        booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
+        booBoo.ShowModal()

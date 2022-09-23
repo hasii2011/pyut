@@ -68,9 +68,10 @@ class ProjectManager:
         self._projectTree:     ProjectTree    = projectTree
         self._diagramNotebook: DiagramNotebook = diagramNoteBook
 
-        self._projects:       PyutProjects     = PyutProjects([])
-        self._currentProject: IPyutProject     = cast(IPyutProject, None)
-        self._currentFrame:   UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
+        self._projects:        PyutProjects     = PyutProjects([])
+        self._currentProject:  IPyutProject     = cast(IPyutProject, None)
+        self._currentDocument: IPyutDocument    = cast(IPyutDocument, None)
+        self._currentFrame:    UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
 
     @property
     def projects(self) -> PyutProjects:
@@ -98,6 +99,14 @@ class ProjectManager:
         """
         assert newProject in self._projects
         self._currentProject = newProject
+
+    @property
+    def currentDocument(self) -> IPyutDocument:
+        return self._currentDocument
+
+    @currentDocument.setter
+    def currentDocument(self, newDocument: IPyutDocument):
+        self._currentDocument = newDocument
 
     @property
     def currentFrame(self) -> UmlDiagramsFrame:
@@ -198,7 +207,7 @@ class ProjectManager:
     def updateDocumentName(self, pyutDocument: IPyutDocument):
         self._projectTree.SetItemText(pyutDocument.treeRoot, pyutDocument.title)
 
-    def updateTreeNotebookIfPossible(self, project: IPyutProject):
+    def updateDiagramNotebookIfPossible(self, project: IPyutProject):
         """
 
         Args:
@@ -449,7 +458,7 @@ class ProjectManager:
         self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount()-1
         self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
 
-        self.updateTreeNotebookIfPossible(project=project)
+        self.updateDiagramNotebookIfPossible(project=project)
 
     def _removeAllReferencesToUmlFrame(self, umlFrame: UmlDiagramsFrame):
         """

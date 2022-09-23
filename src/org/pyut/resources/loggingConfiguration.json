@@ -52,6 +52,12 @@
         },
         "org.pyut.uiv2.PyutUIV2": {
             "level":     "WARNING",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
+        },
+        "org.pyut.uiv2.ProjectTree": {
+            "level":     "WARNING",
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "org.pyut.uiv2.PyutProjectV2": {
