@@ -10,6 +10,7 @@ from wx import Window
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
+from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -21,6 +22,8 @@ PLUGIN_PROJECT_PARAMETER: str = 'pluginProject'
 NEW_FILENAME_PARAMETER:              str = 'newFilename'
 CURRENT_FRAME_ZOOM_FACTOR_PARAMETER: str = 'currentFrameZoomFactor'
 PROJECT_MODIFIED_PARAMETER:          str = 'projectModified'
+
+APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
 
 
 class EventEngine(IEventEngine):
@@ -53,7 +56,8 @@ class EventEngine(IEventEngine):
             self._sendUpdateTreeItemNameEvent(newName=newName, treeItemId=treeItemId)
         elif eventType == EventType.UpdateApplicationTitle:
             self._sendNewTitleEvent(**kwargs)
-
+        elif eventType == EventType.UpdateApplicationStatus:
+            self._sendUpdateApplicationStatusEvent(**kwargs)
         elif eventType == EventType.NewProject:
             self._sendNewProjectEvent()
         else:
@@ -64,12 +68,18 @@ class EventEngine(IEventEngine):
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendNewTitleEvent(self, **kwargs):
-        newFilename:             str  = kwargs[NEW_FILENAME_PARAMETER]
+        newFilename:            str  = kwargs[NEW_FILENAME_PARAMETER]
         currentFrameZoomFactor: float = kwargs[CURRENT_FRAME_ZOOM_FACTOR_PARAMETER]
         projectModified:        bool  = kwargs[PROJECT_MODIFIED_PARAMETER]
         eventToPost: UpdateApplicationTitleEvent = UpdateApplicationTitleEvent(newFilename=newFilename,
                                                                                currentFrameZoomFactor=currentFrameZoomFactor,
                                                                                projectModified=projectModified)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendUpdateApplicationStatusEvent(self, **kwargs):
+        newMessage:  str = kwargs[APPLICATION_STATUS_MSG_PARAMETER]
+
+        eventToPost: UpdateApplicationStatusEvent = UpdateApplicationStatusEvent(applicationStatusMsg=newMessage)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendNewProjectEvent(self):

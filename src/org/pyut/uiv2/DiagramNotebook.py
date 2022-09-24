@@ -19,7 +19,8 @@ class DiagramNotebook(Notebook):
 
         self.logger: Logger = getLogger(__name__)
 
-    def getCurrentFrameFromNotebook(self) -> UmlDiagramsFrame:
+    @property
+    def currentNotebookFrame(self) -> UmlDiagramsFrame:
         """
         Get the current frame in the notebook;  May
 

@@ -63,11 +63,16 @@ from org.pyut.general.datatypes.Position import Position
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager should not be in plugins directory
+
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2
+
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine
-from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
-from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
+from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
+from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
+from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 
 
 class PyutApplicationFrameV2(Frame):
@@ -170,7 +175,9 @@ class PyutApplicationFrameV2(Frame):
         if self.GetThemeEnabled() is True:
             self.SetThemeEnabled(True)
 
-        self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_TITLE, self._onUpdateTitle)
+        self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_TITLE,  self._onUpdateTitle)
+        self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_STATUS, self._onUpdateStatus)
+
         self.Bind(EVT_ACTIVATE, self._onActivate)
         self.Bind(EVT_CLOSE, self.Close)
 
@@ -248,6 +255,10 @@ class PyutApplicationFrameV2(Frame):
         fullText: str  = f'{txt} ( {int(currentFrameZoomFactor * 100)}%) {indicator}'
 
         self.SetTitle(fullText)
+
+    def _onUpdateStatus(self, event: UpdateApplicationStatusEvent):
+        msg: str = event.applicationStatusMsg
+        self.GetStatusBar().SetStatusText(msg)
 
     def _onNewAction(self, event: CommandEvent):
         """

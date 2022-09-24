@@ -11,6 +11,7 @@ from logging import DEBUG
 from deprecated import deprecated
 
 from wx import EVT_MENU
+from wx import EVT_MENU_CLOSE
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
 from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import EVT_TREE_SEL_CHANGED
@@ -26,6 +27,7 @@ from wx import Frame
 from wx import TreeEvent
 from wx import TreeItemId
 from wx import CommandEvent
+from wx import MenuEvent
 from wx import Menu
 from wx import MessageDialog
 
@@ -297,7 +299,7 @@ class PyutUIV2(IPyutUI):
         """
         self._notebookCurrentPageNumber = self._diagramNotebook.GetSelection()
 
-        self._projectManager.currentFrame = self._getCurrentFrameFromNotebook()
+        self._projectManager.currentFrame = self._diagramNotebook.currentNotebookFrame
         frameTreeItem: TreeItemId = self._projectTree.getTreeItemFromFrame(self._projectManager.currentFrame)
         self._projectTree.SelectItem(frameTreeItem)
 
@@ -352,22 +354,26 @@ class PyutUIV2(IPyutUI):
 
     def _popupProjectMenu(self):
 
-        # self._mediator.resetStatusText()      TODO V2 UI;  should send message
-
+        self._updateApplicationStatus(statusMessage='Select Project Action')
         if self._projectPopupMenu is None:
-            self.logger.info(f'Create the project popup menu')
+
+            self.logger.debug(f'Create the project popup menu')
             [closeProjectMenuID] = PyutUtils.assignID(1)
             popupMenu: Menu = Menu('Actions')
             popupMenu.AppendSeparator()
             popupMenu.Append(closeProjectMenuID, 'Close Project', 'Remove project from tree', ITEM_NORMAL)
             popupMenu.Bind(EVT_MENU, self._onCloseProject, id=closeProjectMenuID)
+
+            popupMenu.Bind(EVT_MENU_CLOSE, self._onPopupMenuClose)
             self._projectPopupMenu = popupMenu
 
         self.logger.info(f'currentProject: `{self._projectManager.currentProject}`')
+
         self._parentWindow.PopupMenu(self._projectPopupMenu)
 
     def _popupProjectDocumentMenu(self):
 
+        self._updateApplicationStatus(statusMessage='Select Document Action')
         if self._documentPopupMenu is None:
 
             self.logger.debug(f'Create the document popup menu')
@@ -381,6 +387,8 @@ class PyutUIV2(IPyutUI):
 
             popupMenu.Bind(EVT_MENU, self._onEditDocumentName, id=editDocumentNameMenuID)
             popupMenu.Bind(EVT_MENU, self._onRemoveDocument,   id=removeDocumentMenuID)
+
+            popupMenu.Bind(EVT_MENU_CLOSE, self._onPopupMenuClose)
 
             self.__documentPopupMenu = popupMenu
 
@@ -417,16 +425,14 @@ class PyutUIV2(IPyutUI):
 
         self._projectManager.deleteDocument(project=project, document=currentDocument)
 
-    def _getCurrentFrameFromNotebook(self) -> UmlDiagramsFrame:
+    # noinspection PyUnusedLocal
+    def _onPopupMenuClose(self, event: MenuEvent):
         """
-        TODO: Move this to DiagramNotebook
-
-        Get the current frame in the notebook
-
-        Returns:
+        I want to clean up my messages
+        Args:
+            event:
         """
-        frame: UmlDiagramsFrame = self._diagramNotebook.GetPage(self._diagramNotebook.GetSelection())
-        return frame
+        self._updateApplicationStatus(statusMessage='')
 
     def _updateApplicationTitle(self, ):
 
@@ -439,6 +445,10 @@ class PyutUIV2(IPyutUI):
                                     newFilename=self._projectManager.currentProject.filename,
                                     currentFrameZoomFactor=currentZoom,
                                     projectModified=self._projectManager.currentProject.modified)
+
+    def _updateApplicationStatus(self, statusMessage: str):
+
+        self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationStatus, applicationStatusMsg=statusMessage)
 
     def _displayError(self, message: str):
 
