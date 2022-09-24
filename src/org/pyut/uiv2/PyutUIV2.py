@@ -192,9 +192,12 @@ class PyutUIV2(IPyutUI):
         self._projectManager.currentProject = pyutProject
         self._projectManager.currentFrame.Refresh()
         wxYield()
-        self._notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1         # TODO do not need to maintain this state
-        self.logger.debug(f'Current notebook page: {self._notebookCurrentPageNumber}')
-        # self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
+
+        notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
+        if notebookCurrentPageNumber >= 0:
+            if self.logger.isEnabledFor(DEBUG):
+                self.logger.debug(f'Current notebook page: {notebookCurrentPageNumber}')
+            self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
 
         return document
 
@@ -391,23 +394,13 @@ class PyutUIV2(IPyutUI):
     # noinspection PyUnusedLocal
     def _onEditDocumentName(self, event: CommandEvent):
 
-        self.logger.debug(f'{self._notebookCurrentPageNumber=}  {self._diagramNotebook.GetSelection()=}')
-        if self._notebookCurrentPageNumber == -1:       # TODO do not need this state
-            self._notebookCurrentPageNumber = self._diagramNotebook.GetSelection()    # must be default empty project
-
         currentDocument: IPyutDocument   = self._projectManager.currentDocument
         dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
 
         dlgEditDocument.Destroy()
-        #
-        # TODO can cause
-        #     self.__notebook.SetPageText(page=self.__notebookCurrentPage, text=currentDocument.title)
-        # wx._core.wxAssertionError: C++ assertion ""((nPage) < GetPageCount())""
-        # failed at dist-osx-py38/build/ext/wxWidgets/src/osx/notebook_osx.cpp(120)
-        # in SetPageText(): SetPageText: invalid notebook page
-        #
-        self._diagramNotebook.SetPageText(page=self._notebookCurrentPageNumber, text=currentDocument.title)
-        # currentDocument.updateTreeText()
+
+        notebookCurrentPageNumber: int = self._diagramNotebook.GetSelection()
+        self._diagramNotebook.SetPageText(page=notebookCurrentPageNumber, text=currentDocument.title)
         self._projectManager.updateDocumentName(pyutDocument=currentDocument)
 
     # noinspection PyUnusedLocal

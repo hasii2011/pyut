@@ -455,8 +455,8 @@ class ProjectManager:
             shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
             self._diagramNotebook.AddPage(document.diagramFrame, shortName)
 
-        self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount()-1
-        self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
+        notebookCurrentPageNumber: int  = self._diagramNotebook.GetPageCount()-1
+        self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
 
         self.updateDiagramNotebookIfPossible(project=project)
 
