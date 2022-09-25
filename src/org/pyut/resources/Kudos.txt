@@ -7,83 +7,131 @@
            /____/
 
 
-  About Pyut... and the many developers who have worked on it ...
+  About Pyut... and the many developers who have
+  contributed ...
 
   Don't forget to visit the Pyut's official website:
         https://github.com/hasii2011/PyUt/wiki
 
-The Python 3 port GitHub URL is:
+The GitHub URL is:
         https://github.com/hasii2011/PyUt/
 
 
+  Pyut 6.8.1 Mac OS X Release
+  ===========================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+
+    - No functionality updates. This is just an
+    architecture update of the Pyut UI.
+    - We will use an eventing mechanism to communicate
+    between the UI components.
+    - This is a precursor to integrating external Pyut
+    plugins which depend on an eventing mechanism.
+    - Additionally, this version uses the latest
+    wxPython (4.20) and a late version of Python
+    (3.10.6). We are trying to get onto the latest version
+     of our dependencies
+
+  Pyut 6.7.0 Mac OS X Release
+  ===========================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+
+   Major items done are:
+
+    - SDMessage should not pop up menu
+    -  File Export/Import menu item should be disabled
+    for Sequence Diagrams
+    - Association diamonds are too long
+    - Updated to software license from GPL 3.0 to AGPL
+    3.0
+    - Discontinued support for version 8 and 9 of the
+     .put file format
+    - Updated the Edit submenu menu items to properly
+    conform with Apple guidelines
+
+
   Pyut 6.6.0 Mac OS X Release
-  ====================
+  ===========================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+
    Major items done are:
 
    - Cutting a class now creates a history entry
-   - Fixed bug where once text placed on diagram it could
-   not be moved
-   - Fixed bug -- Selecting text should display red boundary
+   - Fixed bug where once text placed on diagram it
+   could not be moved
+   - Fixed bug -- Selecting text should display red
+   boundary
    - Removed obsolete in-line help; Now point to wiki
    - License from changed from LGPL to GPL
-   - Lots of internal work to isolate the data model and graphical
-   model in anticipation of Release 7.0.0
+   - Lots of internal work to isolate the data model and
+    graphical model in anticipation of Release 7.0.0
 
 
   Pyut 6.5.4 Mac OS X Release
-  ====================
-  - Our preferences file now ends in .ini instead of .dat; It
-  is in .ini format
-  - When you import Python code Pyut saves the code; It restores
-  it on export; You can change the code in Pyut; This is
-  called round trip engineering for Python code
+  ===========================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+
+  - Our preferences file now ends in .ini instead of
+  .dat; It is in .ini format
+  - When you import Python code Pyut saves the code;
+  It restores it on export; You can change the code in
+  Pyut; This is called round trip engineering for Python
+  code
   - Undo of a class when clicking on toolbar now works
   - Undo of links now workq correctly
-  - Command-A is now "Select All" like most OS X applications
-  - Errors are now also logged to a Pyut rotating log file
-  - Adding of multiple lollipop interfaces to a class failed;
-  Fixed
-  - Selection of lollipop interfaces either by selection or
-  single click causes them to turn red
-  - Resizing sequence diagram instances now correctly works
+  - Command-A is now "Select All" like most OS X
+  applications
+  - Errors are now also logged to a Pyut rotating log
+  file
+  - Adding of multiple lollipop interfaces to a class
+  failed;
+  Fixed:
+  - Selection of lollipop interfaces either by selection
+   or single click causes them to turn red
+  - Resizing sequence diagram instances now correctly
+  works
 
   Pyut 6.5.3 Mac OS X Release
-  ====================
-  This was an update longer overdue. Over the last couple of
-  releases
+  ===========================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+
+  This was an update longer overdue. Over the last
+  couple of releases
 
   - We had dropped the editor preferences
-  - How Pyut saved its position was broken as was the preference
-  settings for it
+  - How Pyut saved its position was broken as was the
+  preference settings for it
   - Python reverse engineering was not generating method
   parameters correctly
-  - Importing of xml documents and in essence saving Pyut
-  diagrams was broken
+  - Importing of xml documents and in essence saving
+  Pyut diagrams was broken
 
   Pyut 6.5.2 Mac OS X Release
-  ====================
+  ===========================
     - Minor update to fix read-only properties in Python
     reverse engineering plugin
 
   Pyut 6.5.1 Mac OS X Release
-  ====================
+  ============================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
     - Apple Code Signed
 
   Pyut 6.3.5 Mac OS X Release
-  ====================
+  ===========================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
 
     - Updated toolbar cleaner more MAC like; Option
       to have large icons or small icons in toolbar
     - Added new Text element to allow putting free text
-      in dialogs; Can resize text size, bold and italicize
+      in dialogs; Can resize text size, bold and
+      italicize
     - New PyutVersion now include a build number
 
 
   Pyut 6.3.0. Mac OS X Release
-  ====================
+  ============================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
+
     - Pyut now runs on Python 3.9
     - Pyut uses the wxPython 4.1.1 widget set
     - There is a wxPython native image generation plugin
@@ -91,36 +139,41 @@ The Python 3 port GitHub URL is:
       About and Exit sub-menu items to the App Menu
 
   Pyut 6.2. Mac OS X Release
-  ====================
+  ==========================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
-    - Diagrams now have an optional and customizable background
-      grid. It is on by default
-    - UML objects on the static diagrams now 'snap' to 'grid'; This
-      is configurable option as is the grid size
+
+    - Diagrams now have an optional and customizable
+    background grid. It is on by default
+    - UML objects on the static diagrams now 'snap' to
+    'grid'; This is configurable option as is the grid
+    size
 
 
   Pyut 6.1.1 Mac OS X Release
-  ====================
+  ===========================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
-      - Update Python import feature to handle data classes
-        and property annotations
-      - Fix export image and export pdf options; Non-functional
-        in previous versions; Now platform independent and
-        does not depend on any CLIs
+
+      - Update Python import feature to handle data
+      classes and property annotations
+      - Fix export image and export pdf options;
+      Non-functional in previous versions; Now platform
+      independent and does not depend on any CLIs
 
   Pyut 6.0 Mac OS X Release
-  ====================
+  =========================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
+
       - Orthogonal Layout - complete
-      - Updated Python Reverse Engineering - no longer loads
-        modules; uses Antlr parsing
+      - Updated Python Reverse Engineering - no longer
+      loads modules; uses Antlr parsing
       - PDF generation is internal now;  Does not depend on
         external command line tools
       - New UML 2 lollipop interface available - Beta
 
   Pyut 5.0 Mac OS X Release
-  ====================
+  ==========================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
+
     - Update to Python 3.8.2
     - Update to wxPython 4.1.0
     - Orthogonal Layout - beta
@@ -130,12 +183,13 @@ The Python 3 port GitHub URL is:
 
 
   Pyut 4.0 Actual Mac OS X Release
-  ====================
+  ==================================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
+
   See Changelog for fixes
 
   PyUt 1.5 Port to Python 3.7 Credits:
-  ====================
+  ====================================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
 
 
@@ -299,7 +353,7 @@ The Python 3 port GitHub URL is:
  |______| |_____|     \/     |_____/
 
 
- EIVD : Ecole d'ing�nieurs de l'�tat de Vaud, Yverdon
+ EIVD : Ecole d'ingenieurs de l'Etat de Vaud, Yverdon
  (http://www.eivd.ch)
  to have given us the opportunity to develop PyUt
 

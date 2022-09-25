@@ -55,11 +55,14 @@ from org.pyut.resources.img import ImgPyut
 
 [ID_OK] = PyutUtils.assignID(1)
 
-FrameWidth  = 425       # Canvas width
-FrameHeight = 300       # and height
-x0 = 20                 # Initial x
-y0 = 20                 # Initial y
-dy = 20                 # Y increment
+FrameWidth:  int = 425       # Canvas width
+FrameHeight: int = 300       # and height
+
+FADE_IN_LENGTH: int = 63
+
+x0: int = 20                 # Initial x
+y0: int = 20                 # Initial y
+dy: int = 20                 # Y increment
 
 
 class DlgAbout(Dialog):
@@ -102,7 +105,7 @@ class DlgAbout(Dialog):
         self._panel: Panel = Panel(self, ID_ANY, size=(FrameWidth, FrameHeight))
 
         self._picture: StaticBitmap = StaticBitmap(self, ID_ANY, ImgPyut.embeddedImage.GetBitmap())
-        summaryText:   str = "2022 Humberto Sanchez II and the PyUt team.\nPublished under the GNU General Public License"
+        summaryText:   str = "2022 Humberto Sanchez II and the PyUt team.\nGNU AFFERO GENERAL PUBLIC LICENSE"
         self._label:   StaticText   = StaticText(self, ID_ANY, summaryText, style=CAPTION)
 
         # Main sizer
@@ -117,7 +120,7 @@ class DlgAbout(Dialog):
         self.SetSizer(sizer)
         sizer.Fit(self)
 
-        self._textPosition  = 0.0            # Current position
+        self._textPosition: int = 0            # Current position
 
         self._timer: Timer = Timer(self)
         self.Bind(EVT_TIMER, self._onTimer, self._timer)
@@ -127,7 +130,7 @@ class DlgAbout(Dialog):
         self.Bind(EVT_CLOSE, self._onOk)
 
     @property
-    def textPosition(self):
+    def textPosition(self) -> int:
         return self._textPosition
 
     @textPosition.setter
@@ -158,7 +161,7 @@ class DlgAbout(Dialog):
 
         # End of text -> restart at top
         if self.textPosition > (len(self._textToShow) + 15) * dy:
-            self.textPosition = 0.0
+            self.textPosition = 0
 
         self.OnPanelUpdate(None)
 
@@ -198,7 +201,6 @@ class DlgAbout(Dialog):
         frontGreen: int = 105
         frontBlue:  int = 105   # Foreground color  -- dim grey
 
-        FADE_IN_LENGTH: int = 63
         self.logger.debug(f'Enter OnRefreshPanel')
         # Init memory buffer
         tdc: MemoryDC = MemoryDC()
@@ -217,9 +219,9 @@ class DlgAbout(Dialog):
         tdc.SetFont(font)
 
         # Fade-in
-        position = self.textPosition
+        position: int = self.textPosition
         if position < FADE_IN_LENGTH:
-            n = float(position) / float(FADE_IN_LENGTH)
+            n = position // FADE_IN_LENGTH
             r = backRed - n * (backRed - frontRed)
             g = backGreen - n * (backGreen - frontGreen)
             b = backBlue - n * (backBlue - frontBlue)
