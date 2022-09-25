@@ -8,7 +8,7 @@ import pathlib
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 
-APP = ['src/org/pyut/Pyut.py']
+APP = ['src/org/pyut/PyutV2.py']
 DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfiguration.json']),
               ('org/pyut/resources', ['src/org/pyut/resources/Kilroy-Pyut.txt']),
               ('org/pyut/resources', ['src/org/pyut/resources/Help.txt']),
@@ -26,7 +26,7 @@ LICENSE = (HERE / 'LICENSE').read_text()
 
 setup(
     name='Pyut',
-    version='7.0.0',
+    version='6.8.1',
     app=APP,
     data_files=DATA_FILES,
     packages=[
@@ -64,7 +64,8 @@ setup(
               'org.pyut.resources.img.splash',
               'org.pyut.resources.img.toolbar', 'org.pyut.resources.img.toolbar.embedded16', 'org.pyut.resources.img.toolbar.embedded32',
               'org.pyut.resources.locale',
-              'org.pyut.ui', 'org.pyut.ui.frame', 'org.pyut.ui.tools', 'org.pyut.ui.widgets'
+              'org.pyut.ui',   'org.pyut.ui.frame', 'org.pyut.ui.tools', 'org.pyut.ui.umlframes', 'org.pyut.ui.widgets',
+              'org.pyut.uiv2', 'org.pyut.uiv2.eventengine'
               ],
     include_package_data=True,
     zip_safe=False,
@@ -95,7 +96,7 @@ setup(
     ),
     ),
     setup_requires=['py2app'],
-    install_requires=['antlr4-python3-runtime',
+    install_requires=['antlr4-python3-runtime==4.9.3',
                       'orthogonal==1.1.7',
                       'pygmlparser==1.0.1',
                       'pyumldiagrams==2.30.8',
