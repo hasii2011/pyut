@@ -44,20 +44,24 @@ from ogl.OglClass import OglClass
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
-from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.ui.PyutPrintout import PyutPrintout
-from org.pyut.ui.PyutUI import PyutUI
+
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.ui.tools.SharedTypes import PluginMap
 
+from org.pyut.uiv2.PyutUIV2 import PyutUIV2
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from org.pyut.uiv2.IPyutProject import IPyutProject
+
 
 class FileMenuHandler(BaseMenuHandler):
 
-    def __init__(self, fileMenu: Menu, lastOpenFilesIDs: List[int]):
+    def __init__(self, fileMenu: Menu, lastOpenFilesIDs: List[int], eventEngine: IEventEngine = None):
 
-        super().__init__(menu=fileMenu)
+        super().__init__(menu=fileMenu, eventEngine=eventEngine)
 
         self.logger: Logger = getLogger(__name__)
 
@@ -66,7 +70,7 @@ class FileMenuHandler(BaseMenuHandler):
         self._plugins:            PluginMap       = cast(PluginMap, {})     # To store the plugins
 
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
-        self._treeNotebookHandler:     PyutUI     = self._mediator.getFileHandling()
+        self._treeNotebookHandler:     PyutUIV2    = self._mediator.getFileHandling()
 
         self._printData: PrintData = cast(PrintData, None)
 
@@ -247,16 +251,10 @@ class FileMenuHandler(BaseMenuHandler):
     def onRemoveDocument(self, event: CommandEvent):
         """
         Remove the current document from the current project
-
         Args:
             event:
         """
-        project  = self._treeNotebookHandler.getCurrentProject()
-        document = self._treeNotebookHandler.getCurrentDocument()
-        if project is not None and document is not None:
-            project.removeDocument(document)
-        else:
-            PyutUtils.displayWarning(_("No document to remove"))
+        self._eventEngine.sendEvent(EventType.RemoveDocument)
 
     def onImport(self, event: CommandEvent):
 

@@ -22,15 +22,16 @@ from org.pyut.general.Globals import _
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class HelpMenuHandler(BaseMenuHandler):
 
     PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/'
 
-    def __init__(self, helpMenu: Menu):
+    def __init__(self, helpMenu: Menu, eventEngine: IEventEngine = None):
 
-        super().__init__(menu=helpMenu)
+        super().__init__(menu=helpMenu, eventEngine=eventEngine)
 
         self.logger: Logger = getLogger(__name__)
 

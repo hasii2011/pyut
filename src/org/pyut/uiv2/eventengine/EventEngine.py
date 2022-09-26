@@ -10,6 +10,7 @@ from wx import Window
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
+from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
@@ -45,8 +46,8 @@ class EventEngine(IEventEngine):
         self._listeningWindow: Window = listeningWindow
         self.logger:           Logger = getLogger(__name__)
 
-    def registerListener(self, event: PyEventBinder, callback: Callable):
-        self._listeningWindow.Bind(event, callback)
+    def registerListener(self, pyEventBinder: PyEventBinder, callback: Callable):
+        self._listeningWindow.Bind(pyEventBinder, callback)
 
     def sendEvent(self, eventType: EventType, **kwargs):
 
@@ -60,6 +61,8 @@ class EventEngine(IEventEngine):
             self._sendUpdateApplicationStatusEvent(**kwargs)
         elif eventType == EventType.NewProject:
             self._sendNewProjectEvent()
+        elif eventType == EventType.RemoveDocument:
+            self._sendRemoveDocumentEvent()
         else:
             assert False, f'Unknown event type: {eventType}'
 
@@ -84,4 +87,8 @@ class EventEngine(IEventEngine):
 
     def _sendNewProjectEvent(self):
         eventToPost: NewProjectEvent = NewProjectEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendRemoveDocumentEvent(self):
+        eventToPost: RemoveDocumentEvent = RemoveDocumentEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)

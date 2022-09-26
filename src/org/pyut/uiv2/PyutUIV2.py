@@ -52,6 +52,7 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
+from org.pyut.uiv2.eventengine.Events import EVENT_REMOVE_DOCUMENT
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -92,6 +93,11 @@ class PyutUIV2(IPyutUI):
         self._parentWindow.Bind(EVT_NOTEBOOK_PAGE_CHANGED, self._onDiagramNotebookPageChanged)
         self._parentWindow.Bind(EVT_TREE_SEL_CHANGED,      self._onProjectTreeSelectionChanged)
         self._projectTree.Bind(EVT_TREE_ITEM_RIGHT_CLICK,  self._onProjectTreeRightClick)
+        #
+        # Register listeners for things I do that the rest of the application wants
+        #
+        # Reuse the event handler on the popup menu;  It does not used the passed in event
+        self._eventEngine.registerListener(pyEventBinder=EVENT_REMOVE_DOCUMENT, callback=self._onRemoveDocument)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -173,8 +179,8 @@ class PyutUIV2(IPyutUI):
 
     def newDocument(self, docType: DiagramType) -> IPyutDocument:
         """
-        Create a new document;  It is up to the caller to update the PyutProject document list
-        It is up to the caller to add it to the notebook
+        Create a new document;
+        Adds the tree entry
 
         Args:
             docType:  Type of document
@@ -416,7 +422,7 @@ class PyutUIV2(IPyutUI):
         """
         Invoked from the popup menu in the tree;  Right-clicking on the document made
         the current document
-
+        May be invoked via the event engine with a RemoveDocumentEvent
         Args:
             event:
         """

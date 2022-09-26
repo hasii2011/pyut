@@ -129,7 +129,7 @@ class PyutApplicationFrameV2(Frame):
         editMenu:  Menu = Menu()
         toolsMenu: Menu = Menu()
         helpMenu:  Menu = Menu()
-        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID)
+        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID, eventEngine=self._eventEngine)
         self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=editMenu)
 
         self._initializePyutTools()

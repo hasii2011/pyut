@@ -1,6 +1,5 @@
 
 from enum import Enum
-from typing import Type
 
 from wx import CommandEvent
 from wx import PyEventBinder
@@ -12,7 +11,9 @@ from wx.lib.newevent import NewEvent
 #
 NewProjectEvent,              EVENT_NEW_PROJECT               = NewEvent()
 NewDocumentEvent,             EVENT_NEW_DOCUMENT              = NewEvent()
+RemoveDocumentEvent,          EVENT_REMOVE_DOCUMENT           = NewEvent()
 LoadProjectEvent,             EVENT_LOAD_PROJECT              = NewEvent()
+CloseProjectEvent,            EVENT_CLOSE_PROJECT             = NewEvent()
 UpdateTreeItemNameEvent,      EVENT_UPDATE_TREE_ITEM_NAME     = NewEvent()
 UpdateApplicationTitleEvent,  EVENT_UPDATE_APPLICATION_TITLE  = NewEvent()
 UpdateApplicationStatusEvent, EVENT_UPDATE_APPLICATION_STATUS = NewEvent()
@@ -21,10 +22,14 @@ UpdateApplicationStatusEvent, EVENT_UPDATE_APPLICATION_STATUS = NewEvent()
 class EventType(str, Enum):
     """
     UpdateApplicationTitleEvent
+        Updates the application title
         parameters:
             newFilename: str
             currentFrameZoomFactor : float
             projectModified : bool
+
+    RemoveDocumentEvent
+        Removes the currently selected document
     """
 
     commandEvent:  CommandEvent
@@ -40,6 +45,7 @@ class EventType(str, Enum):
 
     NewProject              = ('NewProject',              NewProjectEvent,              EVENT_NEW_PROJECT)
     NewDocument             = ('NewDocument',             NewDocumentEvent,             EVENT_NEW_DOCUMENT)
+    RemoveDocument          = ('RemoveDocument',          RemoveDocumentEvent,          EVENT_REMOVE_DOCUMENT)
     LoadProject             = ('LoadProjectEvent',        LoadProjectEvent,             EVENT_LOAD_PROJECT)
     UpdateTreeItemName      = ('UpdateTreeItemName',      UpdateTreeItemNameEvent,      EVENT_UPDATE_TREE_ITEM_NAME)
     UpdateApplicationTitle  = ('UpdateApplicationTitle',  UpdateApplicationTitleEvent,  EVENT_UPDATE_APPLICATION_TITLE)

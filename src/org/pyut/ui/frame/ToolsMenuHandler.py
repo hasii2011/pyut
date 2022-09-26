@@ -19,15 +19,16 @@ from org.pyut.general.Globals import _
 
 from org.pyut.ui.tools.SharedTypes import PluginMap
 from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class ToolsMenuHandler(BaseMenuHandler):
     """
     Handles calling Tool plugins and I/O Plugins
     """
-    def __init__(self, toolsMenu: Menu, toolPluginsMap: PluginMap, toolboxIds: ToolboxIdMap):
+    def __init__(self, toolsMenu: Menu, toolPluginsMap: PluginMap, toolboxIds: ToolboxIdMap, eventEngine: IEventEngine =  None):
 
-        super().__init__(menu=toolsMenu)
+        super().__init__(menu=toolsMenu, eventEngine=eventEngine)
 
         self.logger:          Logger       = getLogger(__name__)
         self._toolPluginsMap: PluginMap    = toolPluginsMap

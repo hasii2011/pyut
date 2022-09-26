@@ -40,13 +40,14 @@ from org.pyut.general.Globals import _
 
 
 from org.pyut.history.HistoryManager import HistoryManager
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class EditMenuHandler(BaseMenuHandler):
 
-    def __init__(self, editMenu: Menu):
+    def __init__(self, editMenu: Menu, eventEngine: IEventEngine = None):
 
-        super().__init__(menu=editMenu)
+        super().__init__(menu=editMenu, eventEngine=eventEngine)
 
         self.logger:    Logger   = getLogger(__name__)
 

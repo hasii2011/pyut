@@ -15,7 +15,7 @@ class IEventEngine(ABC):
     and python interface could not handle subclasses
     """
     @abstractmethod
-    def registerListener(self, event: PyEventBinder, callback: Callable):
+    def registerListener(self, pyEventBinder: PyEventBinder, callback: Callable):
         pass
 
     @abstractmethod
