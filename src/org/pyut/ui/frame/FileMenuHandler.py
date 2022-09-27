@@ -167,12 +167,10 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        PyutUtils.displayWarning(_("The project insert is experimental, "
-                                   "use it at your own risk.\n"
-                                   "You risk a shapes ID duplicate with "
-                                   "unexpected results !"), parent=self)
+        PyutUtils.displayWarning(_("The project insert is experimental, use it at your own risk.\n"
+                                   "You risk a shapes ID duplicate with unexpected results !"))
 
-        if (self._treeNotebookHandler.getCurrentProject()) is None:
+        if self._treeNotebookHandler.currentProject is None:
             PyutUtils.displayError(_("No project to insert this file into !"))
             return
 
@@ -189,11 +187,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         self.logger.warning(f'inserting file: {filename}')
 
-        # Insert the specified files
-        try:
-            self._treeNotebookHandler.insertFile(filename)
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_(f"An error occurred while loading the project!  {e}"))
+        self._eventEngine.sendEvent(EventType.InsertProject, projectFilename=filename)
 
     # noinspection PyUnusedLocal
     def onFileOpen(self, event: CommandEvent):

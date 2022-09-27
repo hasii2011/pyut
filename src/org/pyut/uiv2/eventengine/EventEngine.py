@@ -10,6 +10,7 @@ from wx import Window
 
 from org.pyut.uiv2.eventengine.Events import CloseProjectEvent
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
 from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
@@ -28,6 +29,8 @@ CURRENT_FRAME_ZOOM_FACTOR_PARAMETER: str = 'currentFrameZoomFactor'
 PROJECT_MODIFIED_PARAMETER:          str = 'projectModified'
 
 APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
+
+INSERT_PROJECT_FILENAME_PARAMETER:   str = 'projectFilename'
 
 
 class EventEngine(IEventEngine):
@@ -72,6 +75,8 @@ class EventEngine(IEventEngine):
                 self._sendSaveProjectAsEvent()
             case EventType.UpdateRecentProjects:
                 self._sendUpdateRecentProjectsEvent()
+            case EventType.InsertProject:
+                self._sendInsertProjectEvent(**kwargs)
             case _:
                 assert False, f'Unknown event type: {eventType}'
 
@@ -116,4 +121,10 @@ class EventEngine(IEventEngine):
 
     def _sendUpdateRecentProjectsEvent(self):
         eventToPost: UpdateRecentProjectsEvent = UpdateRecentProjectsEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendInsertProjectEvent(self, **kwargs):
+
+        projectFilename: str                = kwargs[INSERT_PROJECT_FILENAME_PARAMETER]
+        eventToPost:     InsertProjectEvent = InsertProjectEvent(projectFilename=projectFilename)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

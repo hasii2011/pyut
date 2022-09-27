@@ -13,6 +13,7 @@ NewProjectEvent,              EVENT_NEW_PROJECT               = NewEvent()
 NewDocumentEvent,             EVENT_NEW_DOCUMENT              = NewEvent()
 RemoveDocumentEvent,          EVENT_REMOVE_DOCUMENT           = NewEvent()
 LoadProjectEvent,             EVENT_LOAD_PROJECT              = NewEvent()
+InsertProjectEvent,           EVENT_INSERT_PROJECT            = NewEvent()
 SaveProjectEvent,             EVENT_SAVE_PROJECT              = NewEvent()
 SaveProjectAsEvent,           EVENT_SAVE_PROJECT_AS           = NewEvent()
 CloseProjectEvent,            EVENT_CLOSE_PROJECT             = NewEvent()
@@ -34,6 +35,11 @@ class EventType(str, Enum):
 
     RemoveDocumentEvent
         Removes the currently selected document
+
+    InsertProjectEvent
+        parameter:
+            projectFilename:  Fully qualified name
+
     """
 
     commandEvent:  CommandEvent
@@ -51,6 +57,7 @@ class EventType(str, Enum):
     NewDocument             = ('NewDocument',             NewDocumentEvent,             EVENT_NEW_DOCUMENT)
     RemoveDocument          = ('RemoveDocument',          RemoveDocumentEvent,          EVENT_REMOVE_DOCUMENT)
     LoadProject             = ('LoadProject',             LoadProjectEvent,             EVENT_LOAD_PROJECT)
+    InsertProject           = ('InsertProject',           InsertProjectEvent,           EVENT_INSERT_PROJECT)
     SaveProject             = ('SaveProject',             SaveProjectEvent,             EVENT_SAVE_PROJECT)
     SaveProjectAs           = ('SaveProjectAs',           SaveProjectAsEvent,           EVENT_SAVE_PROJECT_AS)
     CloseProject            = ('CloseProject',            CloseProjectEvent,            EVENT_CLOSE_PROJECT)

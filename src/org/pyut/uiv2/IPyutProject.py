@@ -99,3 +99,7 @@ class IPyutProject(ABC):
     @abstractmethod
     def selectFirstDocument(self):
         pass
+
+    @abstractmethod
+    def insertProject(self, filename: str):
+        pass

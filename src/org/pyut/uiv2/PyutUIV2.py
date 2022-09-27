@@ -53,10 +53,12 @@ from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
+from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_REMOVE_DOCUMENT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -103,6 +105,7 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_REMOVE_DOCUMENT, callback=self._onRemoveDocument)
         self._eventEngine.registerListener(pyEventBinder=EVENT_CLOSE_PROJECT,   callback=self._onCloseProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT_AS, callback=self._onSaveProjectAs)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_INSERT_PROJECT,  callback=self._onInsertProject)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -457,6 +460,40 @@ class PyutUIV2(IPyutUI):
         self._projectManager.saveProjectAs(projectToSave=currentProject)
         self._updateApplicationTitle()
         self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
+
+    def _onInsertProject(self, event: InsertProjectEvent):
+        """
+        Insert a file into the current project
+
+        Args:
+            event: The project filename to insert
+
+        """
+        filename: str = event.projectFilename
+        # Get current project
+        project: IPyutProject = self._projectManager.currentProject
+
+        # Save number of initial documents
+        nbInitialDocuments = len(project.documents)
+
+        # Load data...
+        if not project.insertProject(filename):
+            self._displayError("The specified file can't be loaded !")
+            return False
+
+        try:
+            for document in project.documents[nbInitialDocuments:]:
+                self._diagramNotebook.AddPage(document.diagramFrame, document.title)
+
+            self.__notebookCurrentPage = self._diagramNotebook.GetPageCount()-1
+            self._diagramNotebook.SetSelection(self.__notebookCurrentPage)
+        except (ValueError, Exception) as e:
+            self._displayError(f"An error occurred while adding the project to the notebook {e}")
+            return False
+
+        # Select first frame as current frame
+        if len(project.documents) > nbInitialDocuments:
+            self._frame = project.documents[nbInitialDocuments].diagramFrame
 
     def _updateApplicationTitle(self):
 
