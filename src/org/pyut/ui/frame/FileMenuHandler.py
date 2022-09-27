@@ -52,7 +52,6 @@ from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 from org.pyut.ui.tools.SharedTypes import PluginMap
 
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2
-from org.pyut.uiv2.IPyutProject import IPyutProject
 
 from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
 from org.pyut.uiv2.eventengine.Events import EventType
@@ -202,43 +201,22 @@ class FileMenuHandler(BaseMenuHandler):
     # noinspection PyUnusedLocal
     def onFileSave(self, event: CommandEvent):
         """
-        Save the current diagram to a file
+        Save the current project
 
         Args:
             event:
         """
-        # self._saveFile()
-        if self._preferences.usev2ui is True:
-            from org.pyut.ui.Mediator import Mediator
-
-            project: IPyutProject = Mediator().saveProject()           # TODO use mediator;  might need more code
-        else:
-            self._treeNotebookHandler.saveFile()
-            self._mediator.updateTitle()
-            project = self._treeNotebookHandler.getCurrentProject()
-
-        # Add to last opened files list
-        if project is not None:
-            self._preferences.addNewLastOpenedFilesEntry(project.filename)
-            self._updateRecentlyOpenedMenuItems()
+        self._eventEngine.sendEvent(EventType.SaveProject)
 
     # noinspection PyUnusedLocal
     def onFileSaveAs(self, event: CommandEvent):
         """
-        Ask and save the current diagram to a file
+        Rename the current project
 
         Args:
             event:
         """
-        # self._treeNotebookHandler.saveFileAs()
-        # self._mediator.updateTitle()
-
         self._eventEngine.sendEvent(EventType.SaveProjectAs)
-
-        # project = self._treeNotebookHandler.getCurrentProject()
-        # if project is not None:
-        #     self._preferences.addNewLastOpenedFilesEntry(project.filename)
-        #     self.setLastOpenedFilesItems()
 
     # noinspection PyUnusedLocal
     def onFileClose(self, event: CommandEvent):

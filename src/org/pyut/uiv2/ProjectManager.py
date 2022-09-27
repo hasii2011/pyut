@@ -265,6 +265,7 @@ class ProjectManager:
             return
         else:
             self._writeProject(projectToWrite=projectToSave)
+            PyutPreferences().addNewLastOpenedFilesEntry(projectToSave.filename)
             # 'Fixed in mypy 0.980'
             projectToSave.modified = False       # type: ignore
 

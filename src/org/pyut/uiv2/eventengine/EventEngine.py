@@ -1,7 +1,8 @@
 
+from typing import Callable
+
 from logging import Logger
 from logging import getLogger
-from typing import Callable
 
 from wx import PostEvent
 from wx import PyEventBinder
@@ -14,6 +15,7 @@ from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
 from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
+from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 from org.pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
@@ -71,6 +73,8 @@ class EventEngine(IEventEngine):
                 self._sendRemoveDocumentEvent()
             case EventType.CloseProject:
                 self._sendCloseProjectEvent()
+            case EventType.SaveProject:
+                self._sendSaveProjectEvent()
             case EventType.SaveProjectAs:
                 self._sendSaveProjectAsEvent()
             case EventType.UpdateRecentProjects:
@@ -113,6 +117,10 @@ class EventEngine(IEventEngine):
 
     def _sendCloseProjectEvent(self):
         eventToPost: CloseProjectEvent = CloseProjectEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendSaveProjectEvent(self):
+        eventToPost: SaveProjectEvent = SaveProjectEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendSaveProjectAsEvent(self):

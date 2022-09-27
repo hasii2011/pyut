@@ -157,7 +157,7 @@ class PyutApplicationFrameV2(Frame):
 
         self.__setupKeyboardShortcuts()
 
-        self._pyutUIV2.newProject()
+        self._pyutUIV2.newProject()     # TODO  Replace these with events
         self._mediator.updateTitle()
 
         if self._prefs.centerAppOnStartUp is True:

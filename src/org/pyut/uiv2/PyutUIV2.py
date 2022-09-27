@@ -55,11 +55,13 @@ from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_REMOVE_DOCUMENT
+from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
+from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 TreeDataType        = Union[PyutProjectV2, PyutDocumentV2]
@@ -104,6 +106,7 @@ class PyutUIV2(IPyutUI):
         # Reuse the event handlers on the popup menu;  It does not use the passed in event
         self._eventEngine.registerListener(pyEventBinder=EVENT_REMOVE_DOCUMENT, callback=self._onRemoveDocument)
         self._eventEngine.registerListener(pyEventBinder=EVENT_CLOSE_PROJECT,   callback=self._onCloseProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT,    callback=self._onSaveProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT_AS, callback=self._onSaveProjectAs)
         self._eventEngine.registerListener(pyEventBinder=EVENT_INSERT_PROJECT,  callback=self._onInsertProject)
 
@@ -236,9 +239,6 @@ class PyutUIV2(IPyutUI):
             `True` if the project is already loaded
         """
         return self._projectManager.isProjectLoaded(filename=filename)
-
-    def saveFile(self):
-        self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
 
     def openFile(self, filename, project: IPyutProject = None) -> bool:
         """
@@ -452,6 +452,13 @@ class PyutUIV2(IPyutUI):
             self._projectManager.updateDiagramNotebookIfPossible(project=newCurrentProject)
 
         self._updateApplicationTitle()
+
+    # noinspection PyUnusedLocal
+    def _onSaveProject(self, event: SaveProjectEvent):
+
+        self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
+        self._updateApplicationTitle()
+        self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
 
     # noinspection PyUnusedLocal
     def _onSaveProjectAs(self, event: SaveProjectAsEvent):
