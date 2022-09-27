@@ -14,6 +14,7 @@ from wx import FD_OVERWRITE_PROMPT
 from wx import FD_SAVE
 from wx import ICON_ERROR
 from wx import ID_NO
+from wx import ID_OK
 from wx import OK
 from wx import YES_NO
 
@@ -28,17 +29,15 @@ from wx import Yield as wxYield
 
 from org.pyut.PyutConstants import PyutConstants
 
-from org.pyut.dialogs.DlgAbout import ID_OK
-
 from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.IPyutProject import IPyutProject
-
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectTree import ProjectTree
@@ -308,6 +307,10 @@ class ProjectManager:
         """
         Will always query user for new project name
 
+        TODO:  Break up in sub methods
+            1 Get a new project name (or not)
+            2 Update the Notebook view (I do not think we need to do this)
+        TODO:  Do we really need to keep track of the current directory
         Args:
             projectToSave:
         """
@@ -337,20 +340,22 @@ class ProjectManager:
         # 'Fixed in mypy 0.980'
         projectToSave.filename = fDialog.GetPath()  # type: ignore
         self._writeProject(projectToWrite=projectToSave)
+        self.updateProjectTreeText(pyutProject=projectToSave)
 
+        PyutPreferences().addNewLastOpenedFilesEntry(projectToSave.filename)
         # Modify notebook text
-        for i in range(self._diagramNotebook.GetPageCount()):
-            frame = self._diagramNotebook.GetPage(i)
-            documents = [document for document in projectToSave.documents if document.diagramFrame is frame]
-            if len(documents) > 0:
-                document = documents[0]
-                if frame in projectToSave.getFrames():
-                    diagramTitle: str = document.title
-                    shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
-
-                    self._diagramNotebook.SetPageText(i, shortName)
-            else:
-                self.logger.info("Not updating notebook in FileHandling")
+        # for i in range(self._diagramNotebook.GetPageCount()):
+        #     frame = self._diagramNotebook.GetPage(i)
+        #     documents = [document for document in projectToSave.documents if document.diagramFrame is frame]
+        #     if len(documents) > 0:
+        #         document = documents[0]
+        #         if frame in projectToSave.getFrames():
+        #             diagramTitle: str = document.title
+        #             shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
+        #
+        #             self._diagramNotebook.SetPageText(i, shortName)
+        #     else:
+        #         self.logger.info("Not updating notebook in FileHandling")
 
         currentDirectoryHandler.currentDirectory = fDialog.GetPath()
 
@@ -369,7 +374,6 @@ class ProjectManager:
         try:
             io.save(projectToWrite)
             self._modified = False
-            self.updateProjectTreeText(pyutProject=projectToWrite)
         except (ValueError, Exception) as e:
             msg:     str = f"An error occurred while saving project {e}"
             caption: str = 'Error from IoFile'

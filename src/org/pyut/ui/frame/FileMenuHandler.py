@@ -229,8 +229,10 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        self._treeNotebookHandler.saveFileAs()
-        self._mediator.updateTitle()
+        # self._treeNotebookHandler.saveFileAs()
+        # self._mediator.updateTitle()
+
+        self._eventEngine.sendEvent(EventType.SaveProjectAs)
 
         project = self._treeNotebookHandler.getCurrentProject()
         if project is not None:
@@ -245,7 +247,8 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        self._treeNotebookHandler.closeCurrentProject()
+        # self._treeNotebookHandler.closeCurrentProject()
+        self._eventEngine.sendEvent(EventType.CloseProject)
 
     # noinspection PyUnusedLocal
     def onRemoveDocument(self, event: CommandEvent):

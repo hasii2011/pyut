@@ -8,17 +8,19 @@ from wx import PyEventBinder
 from wx import TreeItemId
 from wx import Window
 
+from org.pyut.uiv2.eventengine.Events import CloseProjectEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
 from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
+from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
+
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 NEW_NAME_PARAMETER:       str = 'newName'
 TREE_ITEM_ID_PARAMETER:   str = 'treeItemId'
-PLUGIN_PROJECT_PARAMETER: str = 'pluginProject'
 
 NEW_FILENAME_PARAMETER:              str = 'newFilename'
 CURRENT_FRAME_ZOOM_FACTOR_PARAMETER: str = 'currentFrameZoomFactor'
@@ -51,22 +53,30 @@ class EventEngine(IEventEngine):
 
     def sendEvent(self, eventType: EventType, **kwargs):
 
-        if eventType == EventType.UpdateTreeItemName:
-            newName:    str        = kwargs[NEW_NAME_PARAMETER]
-            treeItemId: TreeItemId = kwargs[TREE_ITEM_ID_PARAMETER]
-            self._sendUpdateTreeItemNameEvent(newName=newName, treeItemId=treeItemId)
-        elif eventType == EventType.UpdateApplicationTitle:
-            self._sendNewTitleEvent(**kwargs)
-        elif eventType == EventType.UpdateApplicationStatus:
-            self._sendUpdateApplicationStatusEvent(**kwargs)
-        elif eventType == EventType.NewProject:
-            self._sendNewProjectEvent()
-        elif eventType == EventType.RemoveDocument:
-            self._sendRemoveDocumentEvent()
-        else:
-            assert False, f'Unknown event type: {eventType}'
+        match eventType:
 
-    def _sendUpdateTreeItemNameEvent(self, newName: str, treeItemId: TreeItemId):
+            case EventType.UpdateTreeItemName:
+                self._sendUpdateTreeItemNameEvent(**kwargs)
+            case EventType.UpdateApplicationTitle:
+                self._sendNewTitleEvent(**kwargs)
+            case EventType.UpdateApplicationStatus:
+                self._sendUpdateApplicationStatusEvent(**kwargs)
+            case EventType.NewProject:
+                self._sendNewProjectEvent()
+            case EventType.RemoveDocument:
+                self._sendRemoveDocumentEvent()
+            case EventType.CloseProject:
+                self._sendCloseProjectEvent()
+            case EventType.SaveProjectAs:
+                self._sendSaveProjectAsEvent()
+            case _:
+                assert False, f'Unknown event type: {eventType}'
+
+    def _sendUpdateTreeItemNameEvent(self, **kwargs):
+
+        newName: str = kwargs[NEW_NAME_PARAMETER]
+        treeItemId: TreeItemId = kwargs[TREE_ITEM_ID_PARAMETER]
+
         eventToPost: UpdateTreeItemNameEvent = UpdateTreeItemNameEvent(newName=newName, treeItemId=treeItemId)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
@@ -91,4 +101,12 @@ class EventEngine(IEventEngine):
 
     def _sendRemoveDocumentEvent(self):
         eventToPost: RemoveDocumentEvent = RemoveDocumentEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendCloseProjectEvent(self):
+        eventToPost: CloseProjectEvent = CloseProjectEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendSaveProjectAsEvent(self):
+        eventToPost: SaveProjectAsEvent = SaveProjectAsEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)

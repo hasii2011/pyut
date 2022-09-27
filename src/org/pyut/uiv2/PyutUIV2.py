@@ -52,9 +52,12 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
+from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_REMOVE_DOCUMENT
+from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 TreeDataType        = Union[PyutProjectV2, PyutDocumentV2]
@@ -96,8 +99,10 @@ class PyutUIV2(IPyutUI):
         #
         # Register listeners for things I do that the rest of the application wants
         #
-        # Reuse the event handler on the popup menu;  It does not used the passed in event
+        # Reuse the event handlers on the popup menu;  It does not use the passed in event
         self._eventEngine.registerListener(pyEventBinder=EVENT_REMOVE_DOCUMENT, callback=self._onRemoveDocument)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CLOSE_PROJECT,   callback=self._onCloseProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT_AS, callback=self._onSaveProjectAs)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -208,56 +213,6 @@ class PyutUIV2(IPyutUI):
             self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
 
         return document
-
-    def closeCurrentProject(self):
-        """
-        Close the current project
-        """
-        currentProject: IPyutProject = self._projectManager.currentProject
-        if currentProject is None and self.currentFrame is not None:
-            currentProject = self.getProjectFromFrame(self.currentFrame)
-        if currentProject is None:
-            self._displayError(message='No frame to close!')
-            return
-
-        # Close the project
-        if currentProject.modified is True:
-            frame = self._projectManager.currentProject.getFrames()[0]
-            frame.SetFocus()
-            self.showFrame(frame)
-
-            dlg = MessageDialog(None, "Your project has not been saved. Would you like to save it ?", "Save changes ?", YES_NO | ICON_QUESTION)
-            if dlg.ShowModal() == ID_YES:
-                self._projectManager.saveProject(projectToSave=currentProject)
-
-        # Remove the frame in the notebook
-        pages = list(range(self._diagramNotebook.GetPageCount()))
-        pages.reverse()
-        for i in pages:
-            pageFrame = self._diagramNotebook.GetPage(i)
-            if pageFrame in currentProject.frames:
-                self._diagramNotebook.DeletePage(i)
-
-        projectTreeRoot: TreeItemId = currentProject.projectTreeRoot
-        self._projectTree.Delete(projectTreeRoot)
-
-        self._projectManager.removeProject(currentProject)
-
-        self.logger.debug(f'{currentProject.filename=}')
-
-        self._projectManager.currentFrame = NO_DIAGRAM_FRAME
-
-        currentProjects: PyutProjects = self._projectManager.projects
-        nbrProjects:     int          = len(currentProjects)
-        if self.logger.isEnabledFor(DEBUG) is True:
-            self.logger.debug(f'{nbrProjects=}')
-
-        if nbrProjects > 0:
-            newCurrentProject: IPyutProject = currentProjects[0]
-            self._projectManager.currentProject = newCurrentProject
-            self._projectManager.updateDiagramNotebookIfPossible(project=newCurrentProject)
-
-        self._updateApplicationTitle()
 
     @deprecated(reason='use property .currentProject')
     def getCurrentProject(self) -> IPyutProject:
@@ -403,7 +358,12 @@ class PyutUIV2(IPyutUI):
 
     # noinspection PyUnusedLocal
     def _onCloseProject(self, event: CommandEvent):
-        self.closeCurrentProject()
+        """
+
+        Args:
+            event:  May also be a  CloseProjectEvent
+        """
+        self._closeCurrentProject()
 
     # noinspection PyUnusedLocal
     def _onEditDocumentName(self, event: CommandEvent):
@@ -420,11 +380,11 @@ class PyutUIV2(IPyutUI):
     # noinspection PyUnusedLocal
     def _onRemoveDocument(self, event: CommandEvent):
         """
-        Invoked from the popup menu in the tree;  Right-clicking on the document made
+        Invoked from the popup menu in the tree;  Right-clicking on the document makes it
         the current document
-        May be invoked via the event engine with a RemoveDocumentEvent
+
         Args:
-            event:
+            event:  May be invoked via the event engine with a RemoveDocumentEvent
         """
         project:         IPyutProject  = self._projectManager.currentProject
         currentDocument: IPyutDocument = self.currentDocument
@@ -440,7 +400,64 @@ class PyutUIV2(IPyutUI):
         """
         self._updateApplicationStatus(statusMessage='')
 
-    def _updateApplicationTitle(self, ):
+    def _closeCurrentProject(self):
+        """
+        Close the current project
+        """
+        currentProject: IPyutProject = self._projectManager.currentProject
+        if currentProject is None and self.currentFrame is not None:
+            currentProject = self.getProjectFromFrame(self.currentFrame)
+        if currentProject is None:
+            self._displayError(message='No frame to close!')
+            return
+
+        # Close the project
+        if currentProject.modified is True:
+            frame = self._projectManager.currentProject.getFrames()[0]
+            frame.SetFocus()
+            self.showFrame(frame)
+
+            dlg = MessageDialog(None, "Your project has not been saved. Would you like to save it ?", "Save changes ?", YES_NO | ICON_QUESTION)
+            if dlg.ShowModal() == ID_YES:
+                self._projectManager.saveProject(projectToSave=currentProject)
+
+        # Remove the frame in the notebook
+        pages = list(range(self._diagramNotebook.GetPageCount()))
+        pages.reverse()
+        for i in pages:
+            pageFrame = self._diagramNotebook.GetPage(i)
+            if pageFrame in currentProject.frames:
+                self._diagramNotebook.DeletePage(i)
+
+        projectTreeRoot: TreeItemId = currentProject.projectTreeRoot
+        self._projectTree.Delete(projectTreeRoot)
+
+        self._projectManager.removeProject(currentProject)
+
+        self.logger.debug(f'{currentProject.filename=}')
+
+        self._projectManager.currentFrame = NO_DIAGRAM_FRAME
+
+        currentProjects: PyutProjects = self._projectManager.projects
+        nbrProjects:     int          = len(currentProjects)
+        if self.logger.isEnabledFor(DEBUG) is True:
+            self.logger.debug(f'{nbrProjects=}')
+
+        if nbrProjects > 0:
+            newCurrentProject: IPyutProject = currentProjects[0]
+            self._projectManager.currentProject = newCurrentProject
+            self._projectManager.updateDiagramNotebookIfPossible(project=newCurrentProject)
+
+        self._updateApplicationTitle()
+
+    # noinspection PyUnusedLocal
+    def _onSaveProjectAs(self, event: SaveProjectAsEvent):
+        currentProject: IPyutProject = self._projectManager.currentProject
+
+        self._projectManager.saveProjectAs(projectToSave=currentProject)
+        self._updateApplicationTitle()
+
+    def _updateApplicationTitle(self):
 
         # Account for "Untitled" project with no frame
         if self._projectManager.currentFrame is None:
