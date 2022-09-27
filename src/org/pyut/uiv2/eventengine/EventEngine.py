@@ -15,6 +15,7 @@ from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
+from org.pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -69,6 +70,8 @@ class EventEngine(IEventEngine):
                 self._sendCloseProjectEvent()
             case EventType.SaveProjectAs:
                 self._sendSaveProjectAsEvent()
+            case EventType.UpdateRecentProjects:
+                self._sendUpdateRecentProjectsEvent()
             case _:
                 assert False, f'Unknown event type: {eventType}'
 
@@ -109,4 +112,8 @@ class EventEngine(IEventEngine):
 
     def _sendSaveProjectAsEvent(self):
         eventToPost: SaveProjectAsEvent = SaveProjectAsEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendUpdateRecentProjectsEvent(self):
+        eventToPost: UpdateRecentProjectsEvent = UpdateRecentProjectsEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)

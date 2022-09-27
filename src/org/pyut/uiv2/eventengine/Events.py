@@ -20,7 +20,7 @@ UpdateTreeItemNameEvent,      EVENT_UPDATE_TREE_ITEM_NAME     = NewEvent()
 UpdateApplicationTitleEvent,  EVENT_UPDATE_APPLICATION_TITLE  = NewEvent()
 UpdateApplicationStatusEvent, EVENT_UPDATE_APPLICATION_STATUS = NewEvent()
 
-UpdateRecentlyOpenedProjectsListEvent, EVENT_UPDATE_RECENTLY_OPENED_PROJECTS_LIST = NewEvent()
+UpdateRecentProjectsEvent, EVENT_UPDATE_RECENT_PROJECTS = NewEvent()
 
 
 class EventType(str, Enum):
@@ -58,4 +58,4 @@ class EventType(str, Enum):
     UpdateApplicationTitle  = ('UpdateApplicationTitle',  UpdateApplicationTitleEvent,  EVENT_UPDATE_APPLICATION_TITLE)
     UpdateApplicationStatus = ('UpdateApplicationStatus', UpdateApplicationStatusEvent, EVENT_UPDATE_APPLICATION_STATUS)
 
-    UpdateRecentlyOpenedProjectsList = ('UpdateRecentlyOpenedProjectsList', UpdateRecentlyOpenedProjectsListEvent, EVENT_UPDATE_RECENTLY_OPENED_PROJECTS_LIST)
+    UpdateRecentProjects    = ('UpdateRecentProjects', UpdateRecentProjectsEvent, EVENT_UPDATE_RECENT_PROJECTS)

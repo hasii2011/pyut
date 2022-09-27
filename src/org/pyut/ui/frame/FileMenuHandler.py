@@ -52,9 +52,12 @@ from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 from org.pyut.ui.tools.SharedTypes import PluginMap
 
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from org.pyut.uiv2.IPyutProject import IPyutProject
+
+from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class FileMenuHandler(BaseMenuHandler):
@@ -75,6 +78,7 @@ class FileMenuHandler(BaseMenuHandler):
         self._printData: PrintData = cast(PrintData, None)
 
         self._initPrinting()    # Printing data
+        self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS, self._onUpdateRecentProjects)
 
     @property
     def exportPlugins(self) -> PluginMap:
@@ -91,6 +95,9 @@ class FileMenuHandler(BaseMenuHandler):
     @importPlugins.setter
     def importPlugins(self, importPlugins: PluginMap):
         self._importPlugins = importPlugins
+
+    def createTheLastOpenedFilesMenuItems(self):
+        self._updateRecentlyOpenedMenuItems()
 
     # noinspection PyUnusedLocal
     def onNewProject(self, event: CommandEvent):
@@ -219,7 +226,7 @@ class FileMenuHandler(BaseMenuHandler):
         # Add to last opened files list
         if project is not None:
             self._preferences.addNewLastOpenedFilesEntry(project.filename)
-            self.setLastOpenedFilesItems()
+            self._updateRecentlyOpenedMenuItems()
 
     # noinspection PyUnusedLocal
     def onFileSaveAs(self, event: CommandEvent):
@@ -234,10 +241,10 @@ class FileMenuHandler(BaseMenuHandler):
 
         self._eventEngine.sendEvent(EventType.SaveProjectAs)
 
-        project = self._treeNotebookHandler.getCurrentProject()
-        if project is not None:
-            self._preferences.addNewLastOpenedFilesEntry(project.filename)
-            self.setLastOpenedFilesItems()
+        # project = self._treeNotebookHandler.getCurrentProject()
+        # if project is not None:
+        #     self._preferences.addNewLastOpenedFilesEntry(project.filename)
+        #     self.setLastOpenedFilesItems()
 
     # noinspection PyUnusedLocal
     def onFileClose(self, event: CommandEvent):
@@ -399,7 +406,7 @@ class FileMenuHandler(BaseMenuHandler):
                     lst = self._preferences.getLastOpenedFilesList()
                     self.loadFile(lst[index])
                     self._preferences.addNewLastOpenedFilesEntry(lst[index])
-                    self.setLastOpenedFilesItems()
+                    self._updateRecentlyOpenedMenuItems()
                 except (ValueError, Exception) as e:
                     self.logger.error(f'{e}')
 
@@ -449,7 +456,7 @@ class FileMenuHandler(BaseMenuHandler):
                 if self._treeNotebookHandler.openFile(filename):
                     # Add to last opened files list
                     self._preferences.addNewLastOpenedFilesEntry(filename)
-                    self.setLastOpenedFilesItems()
+                    self._updateRecentlyOpenedMenuItems()
                     self._mediator.updateTitle()
                 else:
                     PyutUtils.displayError(msg='File not loaded', title='Error')
@@ -457,19 +464,25 @@ class FileMenuHandler(BaseMenuHandler):
                 PyutUtils.displayError(_("An error occurred while loading the project !"))
                 self.logger.error(f'{e}')
 
-    def setLastOpenedFilesItems(self):
+    # noinspection PyUnusedLocal
+    def _onUpdateRecentProjects(self, event: UpdateRecentProjectsEvent):
+        self._updateRecentlyOpenedMenuItems()
+
+    def _updateRecentlyOpenedMenuItems(self):
         """
-        Set the menu last opened files items
+        Set the menu items for the last opened files
         """
+
         self.logger.debug(f'{self._menu=}')
 
-        index = 0
-        for el in self._preferences.getLastOpenedFilesList():
-            openFilesId = self._lastOpenedFilesIDs[index]
-            # self.mnuFile.SetLabel(id=openFilesId, label="&" + str(index+1) + " " + el)
-            lbl: str = f"&{str(index+1)} {el}"
-            self.logger.debug(f'lbL: {lbl}  openFilesId: {openFilesId}')
-            self._menu.SetLabel(id=openFilesId, label=lbl)
+        index: int = 0
+        files: List[str] = self._preferences.getLastOpenedFilesList()
+        for fileName in files:
+
+            openFilesId: int = self._lastOpenedFilesIDs[index]
+            menuLabel: str = f"&{str(index + 1)} {fileName}"
+            self.logger.debug(f'lbL: {menuLabel}  openFilesId: {openFilesId}')
+            self._menu.SetLabel(id=openFilesId, label=menuLabel)
 
             index += 1
 

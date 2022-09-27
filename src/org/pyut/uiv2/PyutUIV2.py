@@ -456,6 +456,7 @@ class PyutUIV2(IPyutUI):
 
         self._projectManager.saveProjectAs(projectToSave=currentProject)
         self._updateApplicationTitle()
+        self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
 
     def _updateApplicationTitle(self):
 

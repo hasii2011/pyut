@@ -188,7 +188,7 @@ class MenuCreator:
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
 
-        self._fileMenuHandler.setLastOpenedFilesItems()
+        self._fileMenuHandler.createTheLastOpenedFilesMenuItems()   # TODO move this call into the handler constructor
 
         self._bindFileMenuHandlers(containingFrame, self._fileMenuHandler)
         self._bindEditMenuHandlers(containingFrame, self._editMenuHandler)
