@@ -147,8 +147,8 @@ class ProjectManager:
 
         """
         nodeID: TreeItemId = self._projectTree.AppendItem(pyutProject.projectTreeRoot, documentNode.title)
-        # mypy please oh I beg you please fix this
-        documentNode.treeRoot = nodeID  # type: ignore
+
+        documentNode.treeRoot = nodeID
         self._projectTree.SetItemData(nodeID, documentNode)
 
     def removeProject(self, project: IPyutProject):
@@ -185,7 +185,7 @@ class ProjectManager:
 
         # Remove document from documents list
         project.documents.remove(document)
-        # TODO Mark document as updated
+        project.modified = True
 
     def updateProjectTreeText(self, pyutProject: IPyutProject):
         """
@@ -266,8 +266,8 @@ class ProjectManager:
         else:
             self._writeProject(projectToWrite=projectToSave)
             PyutPreferences().addNewLastOpenedFilesEntry(projectToSave.filename)
-            # 'Fixed in mypy 0.980'
-            projectToSave.modified = False       # type: ignore
+
+            projectToSave.modified = False
 
     def openProject(self, filename, project: IPyutProject = None):
         """
@@ -338,8 +338,7 @@ class ProjectManager:
             dlg.Destroy()
             return
 
-        # 'Fixed in mypy 0.980'
-        projectToSave.filename = fDialog.GetPath()  # type: ignore
+        projectToSave.filename = fDialog.GetPath()
         self._writeProject(projectToWrite=projectToSave)
         self.updateProjectTreeText(pyutProject=projectToSave)
 
@@ -360,8 +359,7 @@ class ProjectManager:
 
         currentDirectoryHandler.currentDirectory = fDialog.GetPath()
 
-        # 'Fixed in mypy 0.980'
-        projectToSave.modified = False       # type: ignore
+        projectToSave.modified = False
 
     def _writeProject(self, projectToWrite: IPyutProject):
         """
@@ -402,8 +400,8 @@ class ProjectManager:
 
         io: IoFile = IoFile()
         wxYield()
-        # TODO Fix when mypy is fixed
-        projectToRead.filename = filename        # type: ignore
+
+        projectToRead.filename = filename
         try:
             io.open(filename, projectToRead)
             self._modified = False

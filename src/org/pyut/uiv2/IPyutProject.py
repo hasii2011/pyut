@@ -18,7 +18,7 @@ class IPyutProject(ABC):
     def __init__(self):
         pass
 
-    @property               # type: ignore
+    @property
     @abstractmethod
     def filename(self) -> str:
         """
@@ -26,7 +26,7 @@ class IPyutProject(ABC):
         """
         pass
 
-    @filename.setter        # type: ignore
+    @filename.setter
     @abstractmethod
     def filename(self, filename: str):
         """
@@ -37,7 +37,7 @@ class IPyutProject(ABC):
         """
         pass
 
-    @property               # type: ignore
+    @property
     @abstractmethod
     def modified(self) -> bool:
         """
@@ -45,7 +45,7 @@ class IPyutProject(ABC):
         """
         pass
 
-    @modified.setter        # type: ignore
+    @modified.setter
     @abstractmethod
     def modified(self, value: bool = True):
         """
@@ -55,7 +55,7 @@ class IPyutProject(ABC):
         """
         pass
 
-    @property               # type: ignore
+    @property
     @abstractmethod
     def projectTreeRoot(self) -> TreeItemId:
         """
@@ -65,17 +65,17 @@ class IPyutProject(ABC):
         """
         pass
 
-    @projectTreeRoot.setter     # type: ignore
+    @projectTreeRoot.setter
     @abstractmethod
     def projectTreeRoot(self, newValue: TreeItemId):
         pass
 
-    @property           # type: ignore
+    @property
     @abstractmethod
     def frames(self) -> Frames:
         pass
 
-    @property               # type: ignore
+    @property
     @abstractmethod
     def documents(self) -> PyutDocuments:
         """

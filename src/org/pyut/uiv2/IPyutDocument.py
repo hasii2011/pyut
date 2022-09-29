@@ -17,7 +17,7 @@ class IPyutDocument(ABC):
     def __init__(self):
         pass
 
-    @property               # type: ignore
+    @property
     @abstractmethod
     def diagramFrame(self) -> UmlFrameType:
         """
@@ -27,17 +27,17 @@ class IPyutDocument(ABC):
         """
         pass
 
-    @property               # type: ignore
+    @property
     @abstractmethod
     def title(self) -> str:
         pass
 
-    @title.setter           # type: ignore
+    @title.setter
     @abstractmethod
     def title(self, theNewValue: str):
         pass
 
-    @property               # type: ignore
+    @property
     @abstractmethod
     def treeRoot(self) -> TreeItemId:
         """
@@ -45,20 +45,11 @@ class IPyutDocument(ABC):
         """
         pass
 
-    @treeRoot.setter        # type: ignore
+    @treeRoot.setter
     @abstractmethod
     def treeRoot(self, value: TreeItemId):
         pass
 
-    # @abstractmethod
-    # def removeFromTree(self):
-    #     """
-    #     TODO: This does not belong here
-    #
-    #     Returns:
-    #     """
-    #     pass
-    #
     @abstractmethod
     def updateTreeText(self):
         """
