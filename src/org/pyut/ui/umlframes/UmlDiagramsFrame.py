@@ -22,6 +22,8 @@ from ogl.events.OglEvents import CreateLollipopInterfaceEvent
 from ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class UmlDiagramsFrame(UmlFrame):
@@ -33,27 +35,32 @@ class UmlDiagramsFrame(UmlFrame):
     It is used by UmlClassDiagramsFrame
     """
 
-    def __init__(self, parent: Notebook):
+    def __init__(self, parent: Notebook, eventEngine: IEventEngine):
         """
+        This class sits at the crux between the underlying OGL layer and the overarching
+        Pyut UI.  Thus, it registers to listen for Ogl Events
+        and where necessary uses the PyutUI event engine to forward events
 
         Args:
             parent: wx.Window parent window;  In practice this is always wx.Notebook instance
+            eventEngine: Pyut event engine
         """
         self.umlDiagramFrameLogger: Logger = getLogger(__name__)
 
         super().__init__(parent, -1)    # TODO Fix this sending in -1 for a frame
 
-        self._eventEngine: OglEventEngine = OglEventEngine(listeningWindow=self)
+        self._eventEngine:    IEventEngine   = eventEngine
+        self._oglEventEngine: OglEventEngine = OglEventEngine(listeningWindow=self)
 
-        self._eventEngine.registerListener(EVT_SHAPE_SELECTED, self._onShapeSelected)
-        self._eventEngine.registerListener(EVT_CUT_OGL_CLASS, self._onCutOglClassShape)
-        self._eventEngine.registerListener(EVT_PROJECT_MODIFIED, self._onProjectModified)
-        self._eventEngine.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
-        self._eventEngine.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
+        self._oglEventEngine.registerListener(EVT_SHAPE_SELECTED,            self._onShapeSelected)
+        self._oglEventEngine.registerListener(EVT_CUT_OGL_CLASS,             self._onCutOglClassShape)
+        self._oglEventEngine.registerListener(EVT_PROJECT_MODIFIED,          self._onProjectModified)
+        self._oglEventEngine.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
+        self._oglEventEngine.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
 
     @property
     def eventEngine(self) -> OglEventEngine:
-        return self._eventEngine
+        return self._oglEventEngine
 
     # noinspection PyUnusedLocal
     def OnClose(self, force=False):
@@ -93,10 +100,13 @@ class UmlDiagramsFrame(UmlFrame):
 
     # noinspection PyUnusedLocal
     def _onProjectModified(self, event: ProjectModifiedEvent):
-        fileHandling = self._mediator.getFileHandling()
-
-        if fileHandling is not None:
-            fileHandling.modified = True
+        """
+        Receives the project modified event from the Ogl Layer.  We
+        have to forward a Pyut specific event
+        Args:
+            event:
+        """
+        self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _onRequestLollipopLocation(self, event: RequestLollipopLocationEvent):
 

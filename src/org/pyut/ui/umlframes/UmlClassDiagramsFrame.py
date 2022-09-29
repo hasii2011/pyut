@@ -25,7 +25,7 @@ from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from org.pyut.general.CustomEvents import ClassNameChangedEvent
 from org.pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
-
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 CreatedClassesType = namedtuple('CreatedClassesType', 'pyutClass, oglClass')
 
@@ -41,15 +41,18 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
     It derives its functionality from UmlDiagramsFrame, but
     it knows the structure of a class diagram and it can load class diagram data.
     """
-    def __init__(self, parent):
-        """
+    def __init__(self, parent, eventEngine: IEventEngine = None):
         """
 
+        Args:
+            parent:
+            eventEngine: Pyut event engine  TODO, set to None for UI V1 code
+        """
         self._cdfDebugId: int = UmlClassDiagramsFrame.cdfDebugId
 
         UmlClassDiagramsFrame.cdfDebugId += 1
 
-        super().__init__(parent)
+        super().__init__(parent, eventEngine=eventEngine)   # type: ignore
         self.newDiagram()
 
         self.Bind(EVT_CLASS_NAME_CHANGED, self._onClassNameChanged)

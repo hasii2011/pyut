@@ -57,11 +57,13 @@ from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_REMOVE_DOCUMENT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
+from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
+from org.pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 TreeDataType        = Union[PyutProjectV2, PyutDocumentV2]
@@ -109,6 +111,7 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT,    callback=self._onSaveProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT_AS, callback=self._onSaveProjectAs)
         self._eventEngine.registerListener(pyEventBinder=EVENT_INSERT_PROJECT,  callback=self._onInsertProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -203,7 +206,7 @@ class PyutUIV2(IPyutUI):
             self._projectManager.newProject()
             pyutProject = self._projectManager.currentProject
 
-        document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, docType=docType)
+        document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, docType=docType, eventEngine=self._eventEngine)
 
         self._projectManager.addDocumentNodeToTree(pyutProject=pyutProject, documentNode=document)
 
@@ -501,6 +504,11 @@ class PyutUIV2(IPyutUI):
         # Select first frame as current frame
         if len(project.documents) > nbInitialDocuments:
             self._frame = project.documents[nbInitialDocuments].diagramFrame
+
+    # noinspection PyUnusedLocal
+    def _onDiagramModified(self, event: UMLDiagramModifiedEvent):
+        self._projectManager.currentProject.modified = True
+        self._updateApplicationTitle()
 
     def _updateApplicationTitle(self):
 

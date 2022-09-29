@@ -161,6 +161,15 @@ class PyutProject(IPyutProject):
         """
         return cast(TreeItemId, None)
 
+    @projectTreeRoot.setter
+    def projectTreeRoot(self, newValue: TreeItemId):
+        """
+        V2 method unneeded
+        Args:
+            newValue:
+        """
+        pass
+
     @property
     def frames(self) -> Frames:
         """

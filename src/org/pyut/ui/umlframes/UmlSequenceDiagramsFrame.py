@@ -7,6 +7,8 @@ from pyutmodel.PyutSDMessage import PyutSDMessage
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
 
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
 
 class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     """
@@ -23,20 +25,21 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     """
     cdfDebugId: int = 0x00FFF   # UML Sequence Diagrams Frame Debug ID
 
-    def __init__(self, parent):
+    def __init__(self, parent, eventEngine: IEventEngine = None):
         """
 
         Args:
             parent:  The parent window
+            eventEngine: Pyut event engine  TODO Set to None for UI V1 code;  Remove ignore
         """
-        super().__init__(parent)
+        super().__init__(parent, eventEngine=eventEngine)       # type: ignore
 
         self._cdfDebugId: int = UmlSequenceDiagramsFrame.cdfDebugId
 
         UmlSequenceDiagramsFrame.cdfDebugId += 1
 
         self.newDiagram()
-        self._cdInstances = []
+        self._cdInstances = []  # type: ignore
 
     # noinspection PyUnusedLocal
     def createNewSDInstance(self, x, y):
