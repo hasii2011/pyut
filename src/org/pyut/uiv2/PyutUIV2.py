@@ -54,6 +54,7 @@ from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
+from org.pyut.uiv2.eventengine.Events import EVENT_OPEN_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_REMOVE_DOCUMENT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
@@ -61,6 +62,7 @@ from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
+from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
 from org.pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
@@ -107,6 +109,7 @@ class PyutUIV2(IPyutUI):
         #
         # Reuse the event handlers on the popup menu;  It does not use the passed in event
         self._eventEngine.registerListener(pyEventBinder=EVENT_REMOVE_DOCUMENT, callback=self._onRemoveDocument)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_OPEN_PROJECT,    callback=self._onOpenProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_CLOSE_PROJECT,   callback=self._onCloseProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT,    callback=self._onSaveProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT_AS, callback=self._onSaveProjectAs)
@@ -455,6 +458,18 @@ class PyutUIV2(IPyutUI):
             self._projectManager.updateDiagramNotebookIfPossible(project=newCurrentProject)
 
         self._updateApplicationTitle()
+
+    def _onOpenProject(self, event: OpenProjectEvent):
+
+        projectFilename = event.projectFilename
+        self._projectManager.openProject(filename=projectFilename)
+
+        self._updateApplicationTitle()
+        self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
+
+        # self._preferences.addNewLastOpenedFilesEntry(filename)
+        # self._updateRecentlyOpenedMenuItems()
+        # self._mediator.updateTitle()
 
     # noinspection PyUnusedLocal
     def _onSaveProject(self, event: SaveProjectEvent):

@@ -13,6 +13,7 @@ from org.pyut.uiv2.eventengine.Events import CloseProjectEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
+from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
 from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
@@ -34,6 +35,7 @@ PROJECT_MODIFIED_PARAMETER:          str = 'projectModified'
 APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
 
 INSERT_PROJECT_FILENAME_PARAMETER:   str = 'projectFilename'
+OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
 
 
 class EventEngine(IEventEngine):
@@ -84,6 +86,8 @@ class EventEngine(IEventEngine):
                 self._sendUpdateRecentProjectsEvent()
             case EventType.InsertProject:
                 self._sendInsertProjectEvent(**kwargs)
+            case EventType.OpenProject:
+                self._sendOpenProjectEvent(**kwargs)
             case _:
                 assert False, f'Unknown event type: {eventType}'
 
@@ -142,4 +146,10 @@ class EventEngine(IEventEngine):
 
         projectFilename: str                = kwargs[INSERT_PROJECT_FILENAME_PARAMETER]
         eventToPost:     InsertProjectEvent = InsertProjectEvent(projectFilename=projectFilename)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendOpenProjectEvent(self, **kwargs):
+
+        projectFilename: str              = kwargs[OPEN_PROJECT_FILENAME_PARAMETER]
+        eventToPost:     OpenProjectEvent = OpenProjectEvent(projectFilename=projectFilename)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

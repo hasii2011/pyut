@@ -297,6 +297,8 @@ class ProjectManager:
             else:
                 self.addProject(project)
             self.currentProject = project
+            PyutPreferences().addNewLastOpenedFilesEntry(project.filename)
+
         except (ValueError, Exception) as e:
             self.logger.error(f"An error occurred while loading the project ! {e}")
             raise e

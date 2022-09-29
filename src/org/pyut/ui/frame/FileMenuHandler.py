@@ -408,18 +408,8 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             fileNames: A list of files to load
         """
-        for filename in fileNames:
-            try:
-                if self._treeNotebookHandler.openFile(filename):
-                    # Add to last opened files list
-                    self._preferences.addNewLastOpenedFilesEntry(filename)
-                    self._updateRecentlyOpenedMenuItems()
-                    self._mediator.updateTitle()
-                else:
-                    PyutUtils.displayError(msg='File not loaded', title='Error')
-            except (ValueError, Exception) as e:
-                PyutUtils.displayError(_("An error occurred while loading the project !"))
-                self.logger.error(f'{e}')
+        for fileName in fileNames:
+            self._eventEngine.sendEvent(EventType.OpenProject, projectFilename=fileName)
 
     def _askForFilesToLoad(self) -> FileNames:
         """
