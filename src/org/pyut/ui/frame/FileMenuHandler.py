@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import NewType
 from typing import cast
 
 from logging import Logger
@@ -57,6 +58,8 @@ from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+FileNames = NewType('FileNames', List[str])
 
 
 class FileMenuHandler(BaseMenuHandler):
@@ -196,7 +199,9 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        self.loadFile()
+        fileNames: FileNames = self._askForFilesToLoad()
+        if len(fileNames) > 0:
+            self.loadFile(fileNames)
 
     # noinspection PyUnusedLocal
     def onFileSave(self, event: CommandEvent):
@@ -395,34 +400,14 @@ class FileMenuHandler(BaseMenuHandler):
         parent: Window = event.GetEventObject().GetWindow()
         wxPostEvent(parent, closeEvent)
 
-    def loadFile(self, filename: str = ""):
+    def loadFile(self, fileNames: FileNames):
         """
         Load the specified filename;  This is externally available so that
         we can open a file from the command line
 
         Args:
-            filename: Its name
+            fileNames: A list of files to load
         """
-        # Make a list to be compatible with multi-files loading
-        fileNames:  List[str] = [filename]
-        currentDir: str       = self._mediator.getCurrentDir()
-
-        # TODO This is bad practice to do something different based on input
-        if filename == "":
-            dlg = FileDialog(self._parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
-
-            if dlg.ShowModal() != ID_OK:
-                dlg.Destroy()
-                return False
-
-            fileNames = dlg.GetPaths()
-            self._currentDirectoryHandler.currentDirectory = fileNames[0]
-
-            dlg.Destroy()
-
-        self.logger.info(f"loading file(s) {filename}")
-
-        # Open the specified files
         for filename in fileNames:
             try:
                 if self._treeNotebookHandler.openFile(filename):
@@ -435,6 +420,23 @@ class FileMenuHandler(BaseMenuHandler):
             except (ValueError, Exception) as e:
                 PyutUtils.displayError(_("An error occurred while loading the project !"))
                 self.logger.error(f'{e}')
+
+    def _askForFilesToLoad(self) -> FileNames:
+        """
+        Ask for the files to load.
+
+        Returns:    The list will be empty if the user cancelled the request
+        """
+        currentDir: str       = self._mediator.getCurrentDir()
+
+        dlg = FileDialog(self._parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
+        fileNames: FileNames = FileNames([])
+        if dlg.ShowModal() == ID_OK:
+            fileNames = dlg.GetPaths()
+            self._currentDirectoryHandler.currentDirectory = fileNames[0]
+
+        dlg.Destroy()
+        return fileNames
 
     # noinspection PyUnusedLocal
     def _onUpdateRecentProjects(self, event: UpdateRecentProjectsEvent):

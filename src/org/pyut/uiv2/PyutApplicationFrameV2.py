@@ -215,7 +215,8 @@ class PyutApplicationFrameV2(Frame):
         """
         Load the specified filename; called by PyutApp
         """
-        self._fileMenuHandler.loadFile(filename=filename)
+        # ignore until I find a good place for FileNames
+        self._fileMenuHandler.loadFile(fileNames=[filename])  # type: ignore
 
     def removeEmptyProject(self):
 
