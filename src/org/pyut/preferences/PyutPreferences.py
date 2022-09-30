@@ -1,4 +1,5 @@
 
+from typing import List
 from typing import cast
 
 from logging import Logger
@@ -120,7 +121,7 @@ class PyutPreferences(Singleton):
         self._config.set(PyutPreferences.OPENED_FILES_SECTION, PyutPreferences.NUMBER_OF_ENTRIES, str(max(nbLOF, 0)))
         self._preferencesCommon.saveConfig()
 
-    def getLastOpenedFilesList(self):
+    def getLastOpenedFilesList(self) -> List[str]:
         """
 
         Returns:          Return the list of files

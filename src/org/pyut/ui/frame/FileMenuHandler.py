@@ -381,8 +381,9 @@ class FileMenuHandler(BaseMenuHandler):
         for index in range(self._preferences.getNbLOF()):
             if event.GetId() == self._lastOpenedFilesIDs[index]:
                 try:
-                    lst = self._preferences.getLastOpenedFilesList()
-                    self.loadFile(lst[index])
+                    lst:      List[str] = self._preferences.getLastOpenedFilesList()
+                    fileName: str = lst[index]
+                    self.loadFile(FileNames(FileNames([fileName])))
                     self._preferences.addNewLastOpenedFilesEntry(lst[index])
                     self._updateRecentlyOpenedMenuItems()
                 except (ValueError, Exception) as e:
