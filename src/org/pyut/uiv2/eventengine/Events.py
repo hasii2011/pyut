@@ -25,6 +25,8 @@ UMLDiagramModifiedEvent, EVENT_UML_DIAGRAM_MODIFIED    = NewEvent()
 
 UpdateRecentProjectsEvent,    EVENT_UPDATE_RECENT_PROJECTS    = NewEvent()
 
+SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES = NewEvent()
+
 
 class EventType(str, Enum):
     """
@@ -70,3 +72,5 @@ class EventType(str, Enum):
     UpdateRecentProjects    = ('UpdateRecentProjects', UpdateRecentProjectsEvent, EVENT_UPDATE_RECENT_PROJECTS)
 
     UMLDiagramModified      = ('UMLDiagramModified',   UMLDiagramModifiedEvent,   EVENT_UML_DIAGRAM_MODIFIED)
+
+    SelectAllShapes         = ('SelectAllShapes', SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES)

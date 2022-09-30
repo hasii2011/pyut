@@ -1,6 +1,5 @@
 
 from typing import List
-from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -17,8 +16,6 @@ from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutObject import PyutObject
 from pyutmodel.PyutUseCase import PyutUseCase
-
-from miniogl.Diagram import Diagram
 
 from ogl.OglActor import OglActor
 from ogl.OglClass import OglClass
@@ -38,8 +35,8 @@ from org.pyut.PyutUtils import PyutUtils
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
-
 from org.pyut.history.HistoryManager import HistoryManager
+from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
@@ -174,7 +171,7 @@ class EditMenuHandler(BaseMenuHandler):
             elif isinstance(obj, PyutUseCase):
                 po = OglUseCase(obj)
             else:
-                self.logger.error(f'Error when try to paste object: {obj}')
+                self.logger.error(f'Error when trying to paste object: {obj}')
                 return
             self.logger.info(f'Pasting: {po=}')
             self._mediator.getUmlFrame().addShape(po, x, y)
@@ -198,18 +195,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
-
-        if frame is None:
-            PyutUtils.displayError(_("No frame found !"))
-            return
-        diagram: Diagram         = frame.GetDiagram()
-        shapes:  List[OglObject] = diagram.GetShapes()
-        for oglShape in shapes:
-            shape: OglObject = cast(OglObject, oglShape)
-            shape.SetSelected(True)
-
-        frame.Refresh()
+        self._eventEngine.sendEvent(EventType.SelectAllShapes)
 
     # noinspection PyUnusedLocal
     def onAddPyut(self, event: CommandEvent):

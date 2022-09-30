@@ -56,6 +56,7 @@ class PythonMetaClassDataHandler:
                     methName: str = aMethod.__name__
                     self.logger.debug(f'methName: {methName}')
                     if methName != '__str__' and methName != '__repr__':
+                        # noinspection PyTypeChecker
                         clsMethods.append(aMethod)
             except AttributeError as e:
                 self.logger.warning(f'Attribute Error: {e}')
@@ -70,6 +71,13 @@ class PythonMetaClassDataHandler:
             meth:     PyutMethod = PyutMethod(funcName)
 
             if me is not None:
+                # TODO: Python 3.10 changed.  getfullargspec does not like
+                # staticmethod anymore
+                # do some typechecking and directly retrieve the .__func__ attribute of the staticmethod.
+                # https://stackoverflow.com/questions/57248314/get-signature-of-staticmethod-before-metaclass-instance-is-created
+                if isinstance(me, staticmethod):
+                    self.logger.warning(f'Unsupported static method parsing: {me}')
+                    continue
                 args = getfullargspec(me)
                 if args[3] is None:
                     firstDefVal = len(args[0])

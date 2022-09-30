@@ -17,6 +17,7 @@ from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
 from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
+from org.pyut.uiv2.eventengine.Events import SelectAllShapesEvent
 from org.pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
@@ -88,8 +89,10 @@ class EventEngine(IEventEngine):
                 self._sendInsertProjectEvent(**kwargs)
             case EventType.OpenProject:
                 self._sendOpenProjectEvent(**kwargs)
+            case EventType.SelectAllShapes:
+                self._sendSelectAllShapesEvent()
             case _:
-                assert False, f'Unknown event type: {eventType}'
+                assert False, f'Unknown event type: `{eventType}`'
 
     def _sendUpdateTreeItemNameEvent(self, **kwargs):
 
@@ -152,4 +155,8 @@ class EventEngine(IEventEngine):
 
         projectFilename: str              = kwargs[OPEN_PROJECT_FILENAME_PARAMETER]
         eventToPost:     OpenProjectEvent = OpenProjectEvent(projectFilename=projectFilename)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendSelectAllShapesEvent(self):
+        eventToPost: SelectAllShapesEvent = SelectAllShapesEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)

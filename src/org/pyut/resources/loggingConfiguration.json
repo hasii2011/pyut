@@ -38,7 +38,7 @@
     },
     "loggers": {
         "root": {
-            "level":     "ERROR",
+            "level":     "WARNING",
             "handlers":  ["rotatingFileHandler"],
             "propagate": "False"
         },
@@ -46,7 +46,7 @@
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.ui": {
+        "org.pyut": {
             "level":     "WARNING",
             "propagate": "False"
         },
@@ -67,14 +67,6 @@
         },
         "org.pyut.uiv2.PyutDocumentV2": {
             "level":     "WARNING",
-            "propagate": "False"
-        },
-        "ogl.OglAggregation": {
-            "level": "DEBUG",
-            "propagate": "False"
-        },
-        "ogl.OglAssociation": {
-            "level": "DEBUG",
             "propagate": "False"
         }
     }

@@ -80,7 +80,8 @@ class FileMenuHandler(BaseMenuHandler):
         self._printData: PrintData = cast(PrintData, None)
 
         self._initPrinting()    # Printing data
-        self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS, self._onUpdateRecentProjects)
+        if self._preferences.usev2ui is True:
+            self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS, self._onUpdateRecentProjects)
 
     @property
     def exportPlugins(self) -> PluginMap:

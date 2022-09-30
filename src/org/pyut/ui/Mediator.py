@@ -306,11 +306,6 @@ class Mediator(Singleton):
         """
         return self._appPath
 
-    def getAppFrame(self) -> 'PyutApplicationFrame':
-        """
-        """
-        return self._appFrame
-
     def registerFileHandling(self, treeNotebookHandler):
         """
         Register the main part of the user interface

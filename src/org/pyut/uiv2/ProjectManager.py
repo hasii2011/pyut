@@ -461,7 +461,8 @@ class ProjectManager:
             self._diagramNotebook.AddPage(document.diagramFrame, shortName)
 
         notebookCurrentPageNumber: int  = self._diagramNotebook.GetPageCount()-1
-        self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
+        if notebookCurrentPageNumber >= 0:
+            self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
 
         self.updateDiagramNotebookIfPossible(project=project)
 
