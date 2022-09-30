@@ -26,6 +26,7 @@ UMLDiagramModifiedEvent, EVENT_UML_DIAGRAM_MODIFIED    = NewEvent()
 UpdateRecentProjectsEvent,    EVENT_UPDATE_RECENT_PROJECTS    = NewEvent()
 
 SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES = NewEvent()
+CopyShapesEvent,      EVENT_COPY_SHAPES       = NewEvent()
 
 
 class EventType(str, Enum):
@@ -73,4 +74,5 @@ class EventType(str, Enum):
 
     UMLDiagramModified      = ('UMLDiagramModified',   UMLDiagramModifiedEvent,   EVENT_UML_DIAGRAM_MODIFIED)
 
-    SelectAllShapes         = ('SelectAllShapes', SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES)
+    SelectAllShapes = ('SelectAllShapes', SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES)
+    CopyShapes      = ('CopyShapes',      CopyShapesEvent,      EVENT_COPY_SHAPES)

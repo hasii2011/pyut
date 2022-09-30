@@ -5,6 +5,9 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from copy import copy
+
+from ogl.OglClass import OglClass
 from wx import CLIP_CHILDREN
 from wx import ICON_ERROR
 from wx import ID_ANY
@@ -20,8 +23,14 @@ from miniogl.Diagram import Diagram
 from ogl.OglObject import OglObject
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+
+from org.pyut.uiv2.eventengine.Events import EVENT_COPY_SHAPES
 from org.pyut.uiv2.eventengine.Events import EVENT_SELECT_ALL_SHAPES
+from org.pyut.uiv2.eventengine.Events import CopyShapesEvent
+from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import SelectAllShapesEvent
+
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
@@ -34,7 +43,10 @@ class DiagramNotebook(Notebook):
         self._eventEngine: IEventEngine = eventEngine
         self.logger:       Logger       = getLogger(__name__)
 
+        self._clipboard: UmlObjects = UmlObjects([])            # will be re-created at every copy and cut
+
         self._eventEngine.registerListener(pyEventBinder=EVENT_SELECT_ALL_SHAPES, callback=self._onSelectAllShapes)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_COPY_SHAPES,       callback=self._onCopy)
 
     @property
     def currentNotebookFrame(self) -> UmlDiagramsFrame:
@@ -76,7 +88,62 @@ class DiagramNotebook(Notebook):
 
         frame.Refresh()
 
+    # noinspection PyUnusedLocal
+    def _onCopy(self, event: CopyShapesEvent):
+        """
+        Copy the selected UML Objects into an internal clipboard
+
+        TODO : adapt for OglLinks
+
+        Args:
+            event:
+        """
+        selectedUmlObjects: UmlObjects = self._getSelectedUmlObjects()
+        if len(selectedUmlObjects) > 0:
+            self._clipboard = UmlObjects([])
+            # put a copy of the PyutObjects in the clipboard
+            for umlObject in selectedUmlObjects:
+                if isinstance(umlObject, OglClass):
+                    umlObjectCopy = copy(umlObject.pyutObject)
+                    umlObjectCopy.setLinks([])              # we don't want to copy the links
+                    self._clipboard.append(umlObjectCopy)
+
+            self._updateApplicationStatus(f'Copied {len(self._clipboard)} objects')
+
+    def _getSelectedUmlObjects(self) -> UmlObjects:
+        """
+        Return the list of selected OglObjects in the diagram.
+
+        Returns:  May be empty
+        """
+        umlObjects:      UmlObjects = self.getUmlObjects()
+        selectedObjects: UmlObjects = UmlObjects([])
+
+        if umlObjects is not None:
+            for umlObject in umlObjects:
+                if umlObject.IsSelected():
+                    selectedObjects.append(umlObject)
+
+        return selectedObjects
+
+    def getUmlObjects(self) -> UmlObjects:
+        """
+        May be empty
+
+        Returns: Return the list of UmlObjects in the diagram.
+        """
+        umlFrame:   UmlDiagramsFrame = self.currentNotebookFrame
+        umlObjects: UmlObjects       = UmlObjects([])
+        if umlFrame is not None:
+            umlObjects = umlFrame.getUmlObjects()
+
+        return umlObjects
+
     def _displayError(self, message: str):
 
         booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
         booBoo.ShowModal()
+
+    def _updateApplicationStatus(self, statusMessage: str):
+
+        self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationStatus, applicationStatusMsg=statusMessage)

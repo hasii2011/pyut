@@ -127,19 +127,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        selected = self._mediator.getSelectedShapes()
-        if len(selected) > 0:
-            self._clipboard = []
-        else:
-            return
-
-        # put a copy of the PyutObjects in the clipboard
-        for obj in selected:
-            obj = copy(obj.pyutObject)
-            obj.setLinks([])   # we don't want to copy the links
-            self._clipboard.append(obj)
-
-        self.logger.info(f'Copied {len(self._clipboard)} objects')
+        self._eventEngine.sendEvent(EventType.CopyShapes)
 
     # noinspection PyUnboundLocalVariable
     # noinspection PyUnusedLocal

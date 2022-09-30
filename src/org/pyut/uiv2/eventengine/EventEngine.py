@@ -10,6 +10,7 @@ from wx import TreeItemId
 from wx import Window
 
 from org.pyut.uiv2.eventengine.Events import CloseProjectEvent
+from org.pyut.uiv2.eventengine.Events import CopyShapesEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
@@ -91,6 +92,8 @@ class EventEngine(IEventEngine):
                 self._sendOpenProjectEvent(**kwargs)
             case EventType.SelectAllShapes:
                 self._sendSelectAllShapesEvent()
+            case EventType.CopyShapes:
+                self._sendCopyShapesEvent()
             case _:
                 assert False, f'Unknown event type: `{eventType}`'
 
@@ -159,4 +162,8 @@ class EventEngine(IEventEngine):
 
     def _sendSelectAllShapesEvent(self):
         eventToPost: SelectAllShapesEvent = SelectAllShapesEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendCopyShapesEvent(self):
+        eventToPost: CopyShapesEvent = CopyShapesEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)
