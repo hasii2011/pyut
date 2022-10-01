@@ -1,8 +1,4 @@
 
-os: osx
-
-osx_image: xcode13.4
-
 notifications:
   email:
     recipients:
@@ -10,37 +6,26 @@ notifications:
     on_success: change # default: change
     on_failure: always # default: always
 
-matrix:  # or you can replace `matrix` with `jobs`
-  include:
-    - name: "Python: 3.10"
-      os: osx
-      language: shell
-      python: 3.10.4
-      env: PYTHONVERSION=3.10.4
-      cache:
-        - directories:
-          - $HOME/Library/Caches/pip
+dist: jammy
 
 language: python
 
 cache: pip
 
+services:
+  - xvfb
+
 python:
   - "3.10"
 
 before_install:
-  - brew list
-  - export PYTHON_CONFIGURE_OPTS="--enable-framework"
-  - eval "$(pyenv init -)"
-  - pyenv install $PYTHONVERSION
-  - pyenv local $PYTHONVERSION
-  # - brew upgrade python
-  - curl https://bootstrap.pypa.io/get-pip.py | python3
+  - sudo apt install libgtk-3-dev
+  - sudo apt-get install python-wxgtk3.0
+  - sudo apt-get install -y  libsdl2-dev
 
 # command to install dependencies
 install:
   - python3 --version
-  - pyenv --version
   - pip install -r requirements.txt
 
 # command to run tests
