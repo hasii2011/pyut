@@ -12,15 +12,18 @@ notifications:
 
 cache: pip
 
+python:
+  - "3.10"
 
 before_install:
   - brew list
-  - brew upgrade python
+  # - brew upgrade python
   - curl https://bootstrap.pypa.io/get-pip.py | python3
 
 # command to install dependencies
 install:
   - python3 --version
+  - pyenv --version
   - pip install -r requirements.txt
 
 # command to run tests
