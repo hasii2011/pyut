@@ -30,9 +30,9 @@ python:
 
 before_install:
   - brew list
-    eval "$(pyenv init -)"
-    pyenv install $PYTHONVERSION
-    pyenv local $PYTHONVERSION
+  - eval "$(pyenv init -)"
+  - pyenv install $PYTHONVERSION
+  - pyenv local $PYTHONVERSION
   # - brew upgrade python
   - curl https://bootstrap.pypa.io/get-pip.py | python3
 
