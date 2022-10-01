@@ -30,6 +30,7 @@ python:
 
 before_install:
   - brew list
+  - export PYTHON_CONFIGURE_OPTS="--enable-framework"
   - eval "$(pyenv init -)"
   - pyenv install $PYTHONVERSION
   - pyenv local $PYTHONVERSION
