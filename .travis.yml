@@ -10,6 +10,16 @@ notifications:
     on_success: change # default: change
     on_failure: always # default: always
 
+matrix:  # or you can replace `matrix` with `jobs`
+  include:
+    - name: "Python: 3.10"
+      os: osx
+      language: shell
+      python: 3.10
+      cache:
+        - directories:
+          - $HOME/Library/Caches/pip
+
 language: python
 
 cache: pip
