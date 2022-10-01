@@ -16,6 +16,7 @@ matrix:  # or you can replace `matrix` with `jobs`
       os: osx
       language: shell
       python: 3.10
+      env: PYTHONVERSION=3.10
       cache:
         - directories:
           - $HOME/Library/Caches/pip
@@ -29,6 +30,9 @@ python:
 
 before_install:
   - brew list
+    eval "$(pyenv init -)"
+    pyenv install $PYTHONVERSION
+    pyenv local $PYTHONVERSION
   # - brew upgrade python
   - curl https://bootstrap.pypa.io/get-pip.py | python3
 
