@@ -10,6 +10,8 @@ notifications:
     on_success: change # default: change
     on_failure: always # default: always
 
+language: python
+
 cache: pip
 
 python:
