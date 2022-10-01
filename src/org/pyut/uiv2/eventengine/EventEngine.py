@@ -15,6 +15,7 @@ from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
 from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
+from org.pyut.uiv2.eventengine.Events import PasteShapesEvent
 from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
@@ -94,6 +95,8 @@ class EventEngine(IEventEngine):
                 self._sendSelectAllShapesEvent()
             case EventType.CopyShapes:
                 self._sendCopyShapesEvent()
+            case EventType.PasteShapes:
+                self._sendPasteShapesEvent()
             case _:
                 assert False, f'Unknown event type: `{eventType}`'
 
@@ -166,4 +169,8 @@ class EventEngine(IEventEngine):
 
     def _sendCopyShapesEvent(self):
         eventToPost: CopyShapesEvent = CopyShapesEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendPasteShapesEvent(self):
+        eventToPost: PasteShapesEvent = PasteShapesEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)
