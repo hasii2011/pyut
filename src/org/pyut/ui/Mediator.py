@@ -1,6 +1,5 @@
 
 from typing import Callable
-from typing import Dict
 from typing import List
 from typing import TYPE_CHECKING
 from typing import Union
@@ -9,16 +8,9 @@ from wx import CENTRE
 from wx import Frame
 from wx import StatusBar
 from wx import ToolBar
-from wx import WXK_DELETE
-from wx import WXK_INSERT
-from wx import WXK_BACK
-from wx import wxEVT_MENU
 
 from wx import ID_OK
 from wx import ID_NO
-from wx import ID_CUT
-
-from wx import KeyEvent
 
 from wx import TextEntryDialog
 
@@ -31,8 +23,6 @@ from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from miniogl.Constants import EVENT_PROCESSED
 from miniogl.Constants import SKIP_EVENT
 from miniogl.Diagram import Diagram
-from miniogl.LinePoint import LinePoint
-from miniogl.ControlPoint import ControlPoint
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from miniogl.AttachmentLocation import AttachmentLocation
 
@@ -44,7 +34,6 @@ from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
 
 from ogl.OglInterface2 import OglInterface2
-from ogl.OglLink import OglLink
 from ogl.OglText import OglText
 from ogl.OglClass import OglClass
 
@@ -768,33 +757,6 @@ class Mediator(Singleton):
         currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
         currentDirectoryHandler.currentDirectory = directory
 
-    def processChar(self, event: KeyEvent):
-        """
-        Process the keyboard events.
-        TODO:  Build the callable dictionary once and use it here.  This code builds it every time the
-        user presses a key.  Eeks;
-
-        Args:
-            event:  The wxPython key event
-        """
-        c: int = event.GetKeyCode()
-        funcs: Dict[int, Callable] = {
-            WXK_DELETE: self.deleteSelectedShape,
-            WXK_BACK:   self.deleteSelectedShape,
-            WXK_INSERT: self.insertSelectedShape,
-            ord('i'):   self.insertSelectedShape,
-            ord('I'):   self.insertSelectedShape,
-            ord('s'):   self.toggleSpline,
-            ord('S'):   self.toggleSpline,
-            ord('<'):   self.moveSelectedShapeDown,
-            ord('>'):   self.moveSelectedShapeUp,
-        }
-        if c in funcs:
-            funcs[c]()
-        else:
-            self.logger.warning(f'Key code not supported: {c}')
-            event.Skip()
-
     def createOglClass(self, umlFrame, x: int, y: int):
 
         from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
@@ -852,58 +814,6 @@ class Mediator(Singleton):
         if cmdGroupInit:
             umlFrame.getHistory().addCommandGroup(cmdGroup)
             umlFrame.getHistory().execute()
-
-    def insertSelectedShape(self):
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
-        if umlFrame is None:
-            return
-        selected = umlFrame.GetSelectedShapes()
-        if len(selected) != 1:
-            return
-        selected = selected.pop()
-        if isinstance(selected, LinePoint):
-            px, py = selected.GetPosition()
-            # add a control point and make it child of the shape if it's a
-            # self link
-            line = selected.GetLines()[0]
-            if line.GetSource().GetParent() is line.GetDestination().GetParent():
-                cp = ControlPoint(0, 0, line.GetSource().GetParent())
-                cp.SetPosition(px + 20, py + 20)
-            else:
-                cp = ControlPoint(px + 20, py + 20)
-            line.AddControl(cp, selected)
-            umlFrame.GetDiagram().AddShape(cp)
-            umlFrame.Refresh()
-
-    def toggleSpline(self):
-
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
-        if umlFrame is None:
-            return
-        selected = umlFrame.GetSelectedShapes()
-        self.logger.info(f'Selected Shape: {selected}')
-        for shape in selected:
-            if isinstance(shape, OglLink):
-                shape.SetSpline(not shape.GetSpline())
-        umlFrame.Refresh()
-
-    def moveSelectedShapeUp(self):
-        """
-        Move the selected shape one level up in z-order
-        """
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
-        if umlFrame is None:
-            return
-        self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToFront)
-
-    def moveSelectedShapeDown(self):
-        """
-        Move the selected shape one level down in z-order
-        """
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
-        if umlFrame is None:
-            return
-        self._moveSelectedShapeZOrder(umlFrame.GetDiagram().MoveToBack)
 
     def displayToolbox(self, category):
         """
@@ -964,18 +874,6 @@ class Mediator(Singleton):
 
         self._appFrame.SetTitle(txt)
 
-    def cutSelectedShapes(self):
-        """
-
-        """
-        from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
-
-        parent:   PyutApplicationFrame = self._appFrame
-        cutEvent: CommandEvent         = CommandEvent(id=ID_CUT)
-        cutEvent.SetEventType(wxEVT_MENU)   # This is some magic number
-
-        wxPostEvent(dest=parent, event=cutEvent)
-
     def getCurrentAction(self):
         return self._currentAction
 
@@ -1028,25 +926,6 @@ class Mediator(Singleton):
     def openProject(self, fileName: str, pyutProject: 'IPyutProject'):
         self._treeNotebookHandler.openFile(filename=fileName, project=pyutProject)
 
-    def _moveSelectedShapeZOrder(self, callback: Callable):
-        """
-        Move the selected shape one level in z-order
-
-        Args:
-            callback:
-
-        """
-        from ogl.OglObject import OglObject
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
-        if umlFrame is None:
-            return
-        selected = umlFrame.GetSelectedShapes()
-        if len(selected) > 0:
-            for oglObject in selected:
-                if isinstance(oglObject, OglObject):
-                    callback(oglObject)
-        umlFrame.Refresh()
-
     def _setShapeSelection(self, selected: bool):
         """
         Either select or deselect all shapes in the current frame
@@ -1054,7 +933,7 @@ class Mediator(Singleton):
         Args:
             selected: If `True` select all shapes else deselect them
         """
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.currentFrame
         if umlFrame is not None:
             shapes = umlFrame.GetDiagram().GetShapes()
             for shape in shapes:

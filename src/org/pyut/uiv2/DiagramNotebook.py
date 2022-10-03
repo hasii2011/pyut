@@ -12,6 +12,7 @@ from ogl.OglLink import OglLink
 from wx import CLIP_CHILDREN
 from wx import ICON_ERROR
 from wx import ID_ANY
+from wx import ID_NO
 from wx import NO_IMAGE
 from wx import OK
 
@@ -34,7 +35,9 @@ from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutObject import PyutObject
 from pyutmodel.PyutUseCase import PyutUseCase
 
+from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 from org.pyut.history.HistoryManager import HistoryManager
+from org.pyut.history.commands.Command import Command
 from org.pyut.history.commands.CommandGroup import CommandGroup
 from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
 from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
@@ -198,30 +201,46 @@ class DiagramNotebook(Notebook):
 
     # noinspection PyUnusedLocal
     def _onCut(self, event: CutShapesEvent):
+        """
 
-        selectedUmlObjects: UmlObjects       = self._getSelectedUmlObjects()
-        umlFrame:           UmlDiagramsFrame = self.currentNotebookFrame
-        historyManager:     HistoryManager   = umlFrame.historyManager
-        cmdGroup:           CommandGroup     = CommandGroup("Delete UML object(s)")
+        Args:
+            event:
+        """
+        umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
+        if umlFrame is None:
+            return
+        selected     = umlFrame.GetSelectedShapes()
+        cmdGroup     = CommandGroup("Delete UML object(s)")
+        cmdGroupInit = False  # added by hasii to avoid Pycharm warning about cmdGroupInit not set
+        #
+        # TODO: Fix this convoluted code with the cmdGroupInit variable
+        #
+        for shape in selected:
+            cmd: Command = cast(Command, None)
+            if isinstance(shape, OglClass):
+                cmd = DeleteOglClassCommand(shape)
+            elif isinstance(shape, OglObject):
+                cmd = DeleteOglObjectCommand(shape)
+            elif isinstance(shape, OglLink):
+                dlg: DlgRemoveLink = DlgRemoveLink()
+                resp = dlg.ShowModal()
+                dlg.Destroy()
+                if resp == ID_NO:
+                    return
+                else:
+                    cmd = DelOglLinkCommand(shape)
 
-        if len(selectedUmlObjects) > 0:
-            self._clipboard = PyutObjects([])
-            # put the PyutObjects in the clipboard and remove their graphical representation from the diagram
-            for umlObject in selectedUmlObjects:
+            # if the shape is not an Ogl instance no command has been created.
+            if cmd is not None:
+                cmdGroup.addCommand(cmd)
+                cmdGroupInit = True
+            else:
+                shape.Detach()
+                umlFrame.Refresh()
 
-                self._clipboard.append(umlObject.pyutObject)
-                cmdGroup = self._deleteShapeFromFrame(oglObjectToDelete=umlObject, cmdGroup=cmdGroup)
-
-            historyManager.addCommandGroup(cmdGroup)
-            historyManager.execute()
-
-            self.logger.info(f'Cut {len(self._clipboard)} objects')
-
-            # self._treeNotebookHandler.setModified(True)
-            # self._mediator.updateTitle()
-            self._eventEngine.sendEvent(EventType.UMLDiagramModified)  # will also cause title to be updated
-
-            umlFrame.Refresh()
+        if cmdGroupInit:
+            umlFrame.getHistory().addCommandGroup(cmdGroup)
+            umlFrame.getHistory().execute()
 
     def _getSelectedUmlObjects(self) -> UmlObjects:
         """

@@ -10,7 +10,6 @@ from logging import getLogger
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 
-from wx import EVT_CHAR
 from wx import EVT_CLOSE
 from wx import EVT_PAINT
 
@@ -62,12 +61,11 @@ class UmlFrame(UmlFrameShapeHandler):
 
     clsUmlFrameLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent: Notebook, frame):
+    def __init__(self, parent: Notebook):
         """
 
         Args:
             parent: The parent window
-            frame:  The uml frame
         """
         super().__init__(parent)
 
@@ -84,13 +82,11 @@ class UmlFrame(UmlFrameShapeHandler):
         initPosY:  int = 0
         self.SetScrollbars(UmlFrame.PIXELS_PER_UNIT_X, UmlFrame.PIXELS_PER_UNIT_Y, nbrUnitsX, nbrUnitsY, initPosX, initPosY, False)
 
-        self._frame = frame
         self._historyManager: HistoryManager = HistoryManager(self)
 
         # Close event
         self.Bind(EVT_CLOSE, self.evtClose)
         self.Bind(EVT_PAINT, self.OnPaint)
-        self.Bind(EVT_CHAR, self._mediator.processChar)
 
         self.SetInfinite(True)
 
@@ -124,13 +120,6 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         PyutUtils.displayError(_("Not yet implemented !"))
 
-    def cleanUp(self):
-        """
-        Clean up object references before quitting.
-        """
-        self._mediator = None
-        self._frame = None
-
     # noinspection PyUnusedLocal
     def evtClose(self, event):
         """
@@ -141,7 +130,6 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         self._historyManager.destroy()
 
-        self.cleanUp()
         self.Destroy()
 
     def OnLeftDown(self, event: MouseEvent):
