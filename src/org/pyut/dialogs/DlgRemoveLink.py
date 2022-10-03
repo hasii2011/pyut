@@ -5,17 +5,15 @@ from wx import YES_NO
 
 from wx import MessageDialog
 
-from org.pyut.general.Globals import _
-
 
 class DlgRemoveLink(MessageDialog):
     """
     Dialog for the inheritance-interface links removal.
     """
-    def __init__(self):
+    def __init__(self, linkName: str):
         """
         """
         super().__init__(None,
-                         _("Are you sure you want to remove this link ?"),
-                         _("Remove link confirmation"),
+                         f"Are you sure you want to remove link {linkName} ?",
+                         "Confirm link removal",
                          style=YES_NO | ICON_QUESTION | NO_DEFAULT)

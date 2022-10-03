@@ -772,49 +772,6 @@ class Mediator(Singleton):
             self._currentAction = ACTION_SELECTOR
             self.selectTool(self._tools[0])
 
-    def deleteSelectedShape(self):
-        from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-        from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
-        from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
-        from ogl.OglClass import OglClass
-        from ogl.OglObject import OglObject
-        from ogl.OglLink import OglLink
-        from org.pyut.history.commands.CommandGroup import CommandGroup
-
-        umlFrame = self._treeNotebookHandler.currentFrame
-        if umlFrame is None:
-            return
-        selected     = umlFrame.GetSelectedShapes()
-        cmdGroup     = CommandGroup("Delete UML object(s)")
-        cmdGroupInit = False  # added by hasii to avoid Pycharm warning about cmdGroupInit not set
-
-        for shape in selected:
-            cmd = None
-            if isinstance(shape, OglClass):
-                cmd = DeleteOglClassCommand(shape)
-            elif isinstance(shape, OglObject):
-                cmd = DeleteOglObjectCommand(shape)
-            elif isinstance(shape, OglLink):
-                dlg: DlgRemoveLink = DlgRemoveLink()
-                resp = dlg.ShowModal()
-                dlg.Destroy()
-                if resp == ID_NO:
-                    return
-                else:
-                    cmd = DelOglLinkCommand(shape)
-
-            # if the shape is not an Ogl instance no command has been created.
-            if cmd is not None:
-                cmdGroup.addCommand(cmd)
-                cmdGroupInit = True
-            else:
-                shape.Detach()
-                umlFrame.Refresh()
-
-        if cmdGroupInit:
-            umlFrame.getHistory().addCommandGroup(cmdGroup)
-            umlFrame.getHistory().execute()
-
     def displayToolbox(self, category):
         """
         Display a toolbox
