@@ -104,6 +104,6 @@ setup(
                       'wxPython==4.2.0',
                       'xmlschema==1.11.1',
                       'pyutmodel==1.1.0',
-                      'ogl==0.60.2',
+                      'ogl==0.60.5',
                       ]
 )

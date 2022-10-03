@@ -11,6 +11,7 @@ from wx import Window
 
 from org.pyut.uiv2.eventengine.Events import CloseProjectEvent
 from org.pyut.uiv2.eventengine.Events import CopyShapesEvent
+from org.pyut.uiv2.eventengine.Events import CutShapesEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
@@ -97,6 +98,8 @@ class EventEngine(IEventEngine):
                 self._sendCopyShapesEvent()
             case EventType.PasteShapes:
                 self._sendPasteShapesEvent()
+            case EventType.CutShapes:
+                self._sendCutShapesEvent()
             case _:
                 assert False, f'Unknown event type: `{eventType}`'
 
@@ -173,4 +176,8 @@ class EventEngine(IEventEngine):
 
     def _sendPasteShapesEvent(self):
         eventToPost: PasteShapesEvent = PasteShapesEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendCutShapesEvent(self):
+        eventToPost: CutShapesEvent = CutShapesEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)

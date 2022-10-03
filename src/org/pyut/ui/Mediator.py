@@ -27,9 +27,6 @@ from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.errorcontroller.ErrorManager import ErrorManager
-from org.pyut.history.commands.CommandGroup import CommandGroup
-
-from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
 
 from miniogl.Constants import EVENT_PROCESSED
 from miniogl.Constants import SKIP_EVENT
@@ -58,6 +55,7 @@ if TYPE_CHECKING:
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
     from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
     from org.pyut.uiv2.IPyutProject import IPyutProject
+    from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
@@ -310,7 +308,7 @@ class Mediator(Singleton):
         """
         Register the main part of the user interface
         """
-        self._treeNotebookHandler = treeNotebookHandler
+        self._treeNotebookHandler: PyutUIV2 = treeNotebookHandler
 
     def getFileHandling(self):  # -> TreeNotebookHandler:
         """
@@ -821,7 +819,7 @@ class Mediator(Singleton):
         from ogl.OglLink import OglLink
         from org.pyut.history.commands.CommandGroup import CommandGroup
 
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.currentFrame
         if umlFrame is None:
             return
         selected     = umlFrame.GetSelectedShapes()
@@ -854,52 +852,6 @@ class Mediator(Singleton):
         if cmdGroupInit:
             umlFrame.getHistory().addCommandGroup(cmdGroup)
             umlFrame.getHistory().execute()
-
-    def deleteShapeFromFrame(self, oglObjectToDelete: 'OglObject', cmdGroup: CommandGroup) -> CommandGroup:
-        """
-        This is the common method to delete a shape from a UML frame. In addition, this method
-        adds the appropriate history commands in order to support undo
-
-        Args:
-            oglObjectToDelete:  The Ogl object to remove from the frame
-            cmdGroup:   The command group to update with an appropriate delete command
-
-        Returns:    The updated command group
-        """
-        from ogl.OglNote import OglNote
-        from ogl.OglObject import OglObject
-
-        from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
-        from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-
-        if isinstance(oglObjectToDelete, OglClass):
-
-            oglClass: OglClass = cast(OglClass, oglObjectToDelete)
-            cmd: DeleteOglClassCommand = DeleteOglClassCommand(oglClass)
-            cmdGroup.addCommand(cmd)
-            links = oglClass.links
-            for link in links:
-                cmdGroup = self._addADeleteLinkCommand(oglLink=link, cmdGroup=cmdGroup)
-
-        elif isinstance(oglObjectToDelete, OglNote):
-            oglNote: 'OglNote' = cast(OglNote, oglObjectToDelete)
-            delNoteCmd: DeleteOglNoteCommand = DeleteOglNoteCommand(oglNote)
-            cmdGroup.addCommand(delNoteCmd)
-
-        elif isinstance(oglObjectToDelete, OglLink):
-            oglLink: OglLink = cast(OglLink, oglObjectToDelete)
-            cmdGroup = self._addADeleteLinkCommand(oglLink=oglLink, cmdGroup=cmdGroup)
-
-        elif isinstance(oglObjectToDelete, OglObject):
-            delObjCmd: DeleteOglObjectCommand = DeleteOglObjectCommand(oglObjectToDelete)
-            cmdGroup.addCommand(delObjCmd)
-
-        else:
-            assert False, 'Unknown OGL Object'
-
-        oglObjectToDelete.Detach()
-
-        return cmdGroup
 
     def insertSelectedShape(self):
         umlFrame = self._treeNotebookHandler.getCurrentFrame()
@@ -1158,15 +1110,6 @@ class Mediator(Singleton):
         dlg.ShowModal()
         dlg.Destroy()
         umlFrame.Refresh()
-
-    def _addADeleteLinkCommand(self, oglLink: OglLink, cmdGroup: CommandGroup) -> CommandGroup:
-
-        from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
-
-        delOglLinkCmd: DelOglLinkCommand = DelOglLinkCommand(oglLink)
-        cmdGroup.addCommand(delOglLinkCmd)
-
-        return cmdGroup
 
     def __createPotentialAttachmentPoints(self, destinationClass: OglClass, umlFrame):
 

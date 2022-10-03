@@ -28,6 +28,7 @@ UpdateRecentProjectsEvent,    EVENT_UPDATE_RECENT_PROJECTS    = NewEvent()
 SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES = NewEvent()
 CopyShapesEvent,      EVENT_COPY_SHAPES       = NewEvent()
 PasteShapesEvent,     EVENT_PASTE_SHAPES      = NewEvent()
+CutShapesEvent,       EVENT_CUT_SHAPES        = NewEvent()
 
 
 class EventType(str, Enum):
@@ -78,3 +79,4 @@ class EventType(str, Enum):
     SelectAllShapes = ('SelectAllShapes', SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES)
     CopyShapes      = ('CopyShapes',      CopyShapesEvent,      EVENT_COPY_SHAPES)
     PasteShapes     = ('PasteShapes',     PasteShapesEvent,     EVENT_PASTE_SHAPES)
+    CutShapes       = ('CutShapes',       CutShapesEvent,       EVENT_CUT_SHAPES)

@@ -80,32 +80,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        selected = self._mediator.getSelectedShapes()
-        if len(selected) > 0:
-            self._clipboard = []
-        else:
-            self.logger.warning(f'No selected objects')
-            return
-
-        umlFrame:       UmlClassDiagramsFrame = selected[0].GetDiagram().GetPanel()
-        historyManager: HistoryManager        = umlFrame.historyManager
-        cmdGroup:       CommandGroup          = CommandGroup("Delete UML object(s)")
-
-        # put the PyutObjects in the clipboard and remove their graphical representation from the diagram
-        for obj in selected:
-
-            self._clipboard.append(obj.pyutObject)
-
-            cmdGroup = self._mediator.deleteShapeFromFrame(oglObjectToDelete=obj, cmdGroup=cmdGroup)
-
-        historyManager.addCommandGroup(cmdGroup)
-        historyManager.execute()
-
-        self.logger.info(f'Cut {len(self._clipboard)} objects')
-
-        self._treeNotebookHandler.setModified(True)
-        self._mediator.updateTitle()
-        umlFrame.Refresh()
+        self._eventEngine.sendEvent(EventType.CutShapes)
 
     # noinspection PyUnusedLocal
     def onCopy(self, event: CommandEvent):

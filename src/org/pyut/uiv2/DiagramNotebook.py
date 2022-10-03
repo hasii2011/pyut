@@ -8,6 +8,7 @@ from logging import getLogger
 
 from copy import copy
 
+from ogl.OglLink import OglLink
 from wx import CLIP_CHILDREN
 from wx import ICON_ERROR
 from wx import ID_ANY
@@ -22,9 +23,10 @@ from miniogl.Diagram import Diagram
 
 from ogl.OglActor import OglActor
 from ogl.OglClass import OglClass
-from ogl.OglNote import OglNote
 from ogl.OglUseCase import OglUseCase
+from ogl.OglNote import OglNote
 from ogl.OglObject import OglObject
+
 
 from pyutmodel.PyutActor import PyutActor
 from pyutmodel.PyutClass import PyutClass
@@ -32,10 +34,22 @@ from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutObject import PyutObject
 from pyutmodel.PyutUseCase import PyutUseCase
 
+from org.pyut.history.HistoryManager import HistoryManager
+from org.pyut.history.commands.CommandGroup import CommandGroup
+from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
+from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
+from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
+
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlObject
 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from org.pyut.uiv2.eventengine.Events import CutShapesEvent
+
 from org.pyut.uiv2.eventengine.Events import EVENT_COPY_SHAPES
+from org.pyut.uiv2.eventengine.Events import EVENT_CUT_SHAPES
 from org.pyut.uiv2.eventengine.Events import EVENT_PASTE_SHAPES
 from org.pyut.uiv2.eventengine.Events import EVENT_SELECT_ALL_SHAPES
 
@@ -44,7 +58,6 @@ from org.pyut.uiv2.eventengine.Events import CopyShapesEvent
 from org.pyut.uiv2.eventengine.Events import PasteShapesEvent
 from org.pyut.uiv2.eventengine.Events import SelectAllShapesEvent
 
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 PyutObjects = NewType('PyutObjects', List[PyutObject])
 
@@ -63,6 +76,7 @@ class DiagramNotebook(Notebook):
         self._eventEngine.registerListener(pyEventBinder=EVENT_SELECT_ALL_SHAPES, callback=self._onSelectAllShapes)
         self._eventEngine.registerListener(pyEventBinder=EVENT_COPY_SHAPES,       callback=self._onCopy)
         self._eventEngine.registerListener(pyEventBinder=EVENT_PASTE_SHAPES,      callback=self._onPaste)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CUT_SHAPES,        callback=self._onCut)
 
     @property
     def currentNotebookFrame(self) -> UmlDiagramsFrame:
@@ -73,6 +87,20 @@ class DiagramNotebook(Notebook):
         """
         frame = self.GetCurrentPage()
         return frame
+
+    @property
+    def umlObjects(self) -> UmlObjects:
+        """
+        May be empty
+
+        Returns: Return the list of UmlObjects in the diagram.
+        """
+        umlFrame:   UmlDiagramsFrame = self.currentNotebookFrame
+        umlObjects: UmlObjects       = UmlObjects([])
+        if umlFrame is not None:
+            umlObjects = umlFrame.getUmlObjects()
+
+        return umlObjects
 
     def AddPage(self, page, text, select=False, imageId=NO_IMAGE):
         """
@@ -168,13 +196,40 @@ class DiagramNotebook(Notebook):
         self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
         self._updateApplicationStatus(f'Pasted {numbObjectsPasted} objects')
 
+    # noinspection PyUnusedLocal
+    def _onCut(self, event: CutShapesEvent):
+
+        selectedUmlObjects: UmlObjects       = self._getSelectedUmlObjects()
+        umlFrame:           UmlDiagramsFrame = self.currentNotebookFrame
+        historyManager:     HistoryManager   = umlFrame.historyManager
+        cmdGroup:           CommandGroup     = CommandGroup("Delete UML object(s)")
+
+        if len(selectedUmlObjects) > 0:
+            self._clipboard = PyutObjects([])
+            # put the PyutObjects in the clipboard and remove their graphical representation from the diagram
+            for umlObject in selectedUmlObjects:
+
+                self._clipboard.append(umlObject.pyutObject)
+                cmdGroup = self._deleteShapeFromFrame(oglObjectToDelete=umlObject, cmdGroup=cmdGroup)
+
+            historyManager.addCommandGroup(cmdGroup)
+            historyManager.execute()
+
+            self.logger.info(f'Cut {len(self._clipboard)} objects')
+
+            # self._treeNotebookHandler.setModified(True)
+            # self._mediator.updateTitle()
+            self._eventEngine.sendEvent(EventType.UMLDiagramModified)  # will also cause title to be updated
+
+            umlFrame.Refresh()
+
     def _getSelectedUmlObjects(self) -> UmlObjects:
         """
         Return the list of selected OglObjects in the diagram.
 
         Returns:  May be empty
         """
-        umlObjects:      UmlObjects = self.getUmlObjects()
+        umlObjects:      UmlObjects = self.umlObjects
         selectedObjects: UmlObjects = UmlObjects([])
 
         if umlObjects is not None:
@@ -184,19 +239,6 @@ class DiagramNotebook(Notebook):
 
         return selectedObjects
 
-    def getUmlObjects(self) -> UmlObjects:
-        """
-        May be empty
-
-        Returns: Return the list of UmlObjects in the diagram.
-        """
-        umlFrame:   UmlDiagramsFrame = self.currentNotebookFrame
-        umlObjects: UmlObjects       = UmlObjects([])
-        if umlFrame is not None:
-            umlObjects = umlFrame.getUmlObjects()
-
-        return umlObjects
-
     def _displayError(self, message: str):
 
         booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
@@ -205,3 +247,50 @@ class DiagramNotebook(Notebook):
     def _updateApplicationStatus(self, statusMessage: str):
 
         self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationStatus, applicationStatusMsg=statusMessage)
+
+    def _deleteShapeFromFrame(self, oglObjectToDelete: UmlObject, cmdGroup: CommandGroup) -> CommandGroup:
+        """
+        This is the common method to delete a shape from a UML frame. In addition, this method
+        adds the appropriate history commands in order to support undo
+
+        Args:
+            oglObjectToDelete:  The Ogl object to remove from the frame
+            cmdGroup:   The command group to update with an appropriate delete command
+
+        Returns:    The updated command group
+        """
+        if isinstance(oglObjectToDelete, OglClass):
+
+            oglClass: OglClass = cast(OglClass, oglObjectToDelete)
+            cmd: DeleteOglClassCommand = DeleteOglClassCommand(oglClass)
+            cmdGroup.addCommand(cmd)
+            links = oglClass.links
+            for link in links:
+                cmdGroup = self._addADeleteLinkCommand(oglLink=link, cmdGroup=cmdGroup)
+
+        elif isinstance(oglObjectToDelete, OglNote):
+            oglNote: 'OglNote' = cast(OglNote, oglObjectToDelete)
+            delNoteCmd: DeleteOglNoteCommand = DeleteOglNoteCommand(oglNote)
+            cmdGroup.addCommand(delNoteCmd)
+
+        elif isinstance(oglObjectToDelete, OglLink):
+            oglLink: OglLink = cast(OglLink, oglObjectToDelete)
+            cmdGroup = self._addADeleteLinkCommand(oglLink=oglLink, cmdGroup=cmdGroup)
+
+        elif isinstance(oglObjectToDelete, OglObject):
+            delObjCmd: DeleteOglObjectCommand = DeleteOglObjectCommand(oglObjectToDelete)
+            cmdGroup.addCommand(delObjCmd)
+
+        else:
+            assert False, 'Unknown OGL Object'
+
+        oglObjectToDelete.Detach()
+
+        return cmdGroup
+
+    def _addADeleteLinkCommand(self, oglLink: OglLink, cmdGroup: CommandGroup) -> CommandGroup:
+
+        delOglLinkCmd: DelOglLinkCommand = DelOglLinkCommand(oglLink)
+        cmdGroup.addCommand(delOglLinkCmd)
+
+        return cmdGroup
