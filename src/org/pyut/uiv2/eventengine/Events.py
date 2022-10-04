@@ -30,6 +30,9 @@ CopyShapesEvent,      EVENT_COPY_SHAPES       = NewEvent()
 PasteShapesEvent,     EVENT_PASTE_SHAPES      = NewEvent()
 CutShapesEvent,       EVENT_CUT_SHAPES        = NewEvent()
 
+AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
+AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
+
 
 class EventType(str, Enum):
     """
@@ -47,6 +50,8 @@ class EventType(str, Enum):
         parameter:
             projectFilename:  Fully qualified name
 
+    Events with no parameters get stuffed into the enumeration as instance so they can be used
+    event engine simple send method
     """
 
     commandEvent:  CommandEvent
@@ -80,3 +85,6 @@ class EventType(str, Enum):
     CopyShapes      = ('CopyShapes',      CopyShapesEvent,      EVENT_COPY_SHAPES)
     PasteShapes     = ('PasteShapes',     PasteShapesEvent,     EVENT_PASTE_SHAPES)
     CutShapes       = ('CutShapes',       CutShapesEvent,       EVENT_CUT_SHAPES)
+
+    AddPyutDiagram = ('AddPyutDiagram', AddPyutDiagramEvent(), EVENT_ADD_PYUT_DIAGRAM)
+    AddOglDiagram  = ('AddOglDiagram',  AddOglDiagramEvent(),  EVENT_ADD_OGL_DIAGRAM)

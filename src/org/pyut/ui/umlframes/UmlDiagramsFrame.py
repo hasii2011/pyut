@@ -1,14 +1,20 @@
 
-from logging import Logger
-from logging import getLogger
 from typing import Callable
 from typing import Dict
 
+from logging import Logger
+from logging import getLogger
+
 from wx import EVT_CHAR
+from wx import WXK_BACK
+from wx import WXK_DELETE
+from wx import WXK_INSERT
+
 from wx import KeyEvent
 from wx import Notebook
 
 from ogl.OglClass import OglClass
+
 from ogl.events.OglEventEngine import OglEventEngine
 
 from ogl.events.OglEvents import EVT_CREATE_LOLLIPOP_INTERFACE
@@ -24,11 +30,11 @@ from ogl.events.OglEvents import RequestLollipopLocationEvent
 from ogl.events.OglEvents import CreateLollipopInterfaceEvent
 
 from ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
-from wx import WXK_BACK
-from wx import WXK_DELETE
-from wx import WXK_INSERT
 
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
+
+from org.pyut.uiv2.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
+from org.pyut.uiv2.eventengine.Events import EVENT_ADD_PYUT_DIAGRAM
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -56,6 +62,9 @@ class UmlDiagramsFrame(UmlFrame):
         self._eventEngine:          IEventEngine = eventEngine
 
         super().__init__(parent)
+
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM, callback=self._onAddPyutDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,  callback=self._onAddOglDiagram)
 
         self._oglEventEngine: OglEventEngine = OglEventEngine(listeningWindow=self)
 

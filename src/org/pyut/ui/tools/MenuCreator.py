@@ -262,7 +262,7 @@ class MenuCreator:
         mnuEdit.Append(ID_SELECTALL)
         mnuEdit.AppendSeparator()
 
-        mnuEdit = self._initializeAddHierarchySubMenu(mnuEdit)
+        mnuEdit = self._initializeAddDiagramSubMenu(mnuEdit)
 
         if self._prefs.debugErrorViews is True:
             mnuEdit.AppendSeparator()
@@ -293,13 +293,13 @@ class MenuCreator:
 
         return mnuEdit
 
-    def _initializeAddHierarchySubMenu(self, mnuEdit: Menu) -> Menu:
+    def _initializeAddDiagramSubMenu(self, mnuEdit: Menu) -> Menu:
 
         sub: Menu = Menu()
-        sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY, _("&Pyut"), _("Add the UML Diagram of Pyut"))
-        sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY, _("&Ogl"), _("Add the UML Diagram of Pyut - Ogl"))
+        sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_DIAGRAM, _("&Pyut Data Model"), _("Add the Pyut UML Diagram"))
+        sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_DIAGRAM,  _("&Ogl Graphical Model"), _("Add the Ogl UML Diagram"))
 
-        mnuEdit.AppendSubMenu(sub,  _('Add Hierarchy'))
+        mnuEdit.AppendSubMenu(sub,  _('Add Diagram'))
 
         return mnuEdit
 
@@ -425,8 +425,8 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, editMenuHandler.onCopy,  id=ID_COPY)
         containingFrame.Bind(EVT_MENU, editMenuHandler.onPaste, id=ID_PASTE)
 
-        containingFrame.Bind(EVT_MENU, editMenuHandler.onAddPyut, id=SharedIdentifiers.ID_MNU_ADD_PYUT_HIERARCHY)
-        containingFrame.Bind(EVT_MENU, editMenuHandler.onAddOgl,  id=SharedIdentifiers.ID_MNU_ADD_OGL_HIERARCHY)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onAddPyut, id=SharedIdentifiers.ID_MNU_ADD_PYUT_DIAGRAM)
+        containingFrame.Bind(EVT_MENU, editMenuHandler.onAddOgl, id=SharedIdentifiers.ID_MNU_ADD_OGL_DIAGRAM)
 
         containingFrame.Bind(EVT_MENU, editMenuHandler.onSelectAll, id=ID_SELECTALL)
 

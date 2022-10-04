@@ -100,6 +100,10 @@ class EventEngine(IEventEngine):
                 self._sendPasteShapesEvent()
             case EventType.CutShapes:
                 self._sendCutShapesEvent()
+            case EventType.AddOglDiagram:
+                self._simpleSendEvent(eventType=eventType)
+            case EventType.AddPyutDiagram:
+                self._simpleSendEvent(eventType=eventType)
             case _:
                 assert False, f'Unknown event type: `{eventType}`'
 
@@ -180,4 +184,8 @@ class EventEngine(IEventEngine):
 
     def _sendCutShapesEvent(self):
         eventToPost: CutShapesEvent = CutShapesEvent()
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _simpleSendEvent(self, eventType: EventType):
+        eventToPost = eventType.commandEvent
         PostEvent(dest=self._listeningWindow, event=eventToPost)

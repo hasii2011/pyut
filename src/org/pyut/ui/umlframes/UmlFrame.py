@@ -41,6 +41,8 @@ from org.pyut.experimental.GraphicalHandler import GraphicalHandler
 from org.pyut.general.Globals import _
 
 from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
+from org.pyut.uiv2.eventengine.Events import AddOglDiagramEvent
+from org.pyut.uiv2.eventengine.Events import AddPyutDiagramEvent
 
 DEFAULT_WIDTH = 3000
 A4_FACTOR:    float = 1.41
@@ -199,32 +201,6 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         return self._diagram
 
-    def addPyutHierarchy(self):
-        """
-        Calls addHierarchy with the Pyut class list.
-        """
-        import org.pyut.experimental.PyutModelClasses as pdc
-
-        BeginBusyCursor()
-
-        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
-        gh.addHierarchy(pdc.PyutClassNames)
-
-        EndBusyCursor()
-
-    def addOglHierarchy(self):
-        """
-        Calls addHierarchy with the Ogl class list.
-        """
-        import org.pyut.experimental.PyutModelClasses as pdc
-
-        BeginBusyCursor()
-
-        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
-        gh.addHierarchy(pdc.OglClassNames)
-
-        EndBusyCursor()
-
     def getUmlObjects(self) -> UmlObjects:
         """
         Retrieve UML objects from the UML Frame
@@ -305,3 +281,31 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         """
         return self._historyManager
+
+    # noinspection PyUnusedLocal
+    def _onAddPyutDiagram(self, event: AddPyutDiagramEvent):
+        """
+        Calls addHierarchy with the Pyut class list.
+        """
+        import org.pyut.experimental.PyutModelClasses as pdc
+
+        BeginBusyCursor()
+
+        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
+        gh.addHierarchy(pdc.PyutClassNames)
+
+        EndBusyCursor()
+
+    # noinspection PyUnusedLocal
+    def _onAddOglDiagram(self, event: AddOglDiagramEvent):
+        """
+        Calls addHierarchy with the Ogl class list.
+        """
+        import org.pyut.experimental.PyutModelClasses as pdc
+
+        BeginBusyCursor()
+
+        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
+        gh.addHierarchy(pdc.OglClassNames)
+
+        EndBusyCursor()

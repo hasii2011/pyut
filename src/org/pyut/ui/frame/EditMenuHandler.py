@@ -16,8 +16,6 @@ from org.pyut.ui.PyutUI import PyutUI
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
-from org.pyut.history.commands.CommandGroup import CommandGroup
-
 from org.pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
@@ -85,14 +83,11 @@ class EditMenuHandler(BaseMenuHandler):
     # noinspection PyUnusedLocal
     def onCopy(self, event: CommandEvent):
         """
-        TODO : adapt for OglLinks
-
         Args:
             event:
         """
         self._eventEngine.sendEvent(EventType.CopyShapes)
 
-    # noinspection PyUnboundLocalVariable
     # noinspection PyUnusedLocal
     def onPaste(self, event: CommandEvent):
         """
@@ -105,7 +100,6 @@ class EditMenuHandler(BaseMenuHandler):
     # noinspection PyUnusedLocal
     def onSelectAll(self, event: CommandEvent):
         """
-
         Args:
             event:
         """
@@ -119,10 +113,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
-        if self._isDiagramFormOpen(frame) is True:
-            frame.addPyutHierarchy()
-            self._refreshUI(frame)
+        self._eventEngine.sendEvent(EventType.AddOglDiagram)
 
     # noinspection PyUnusedLocal
     def onAddOgl(self, event: CommandEvent):
@@ -132,10 +123,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        frame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
-        if self._isDiagramFormOpen(frame) is True:
-            frame.addOglHierarchy()
-            self._refreshUI(frame)
+        self._eventEngine.sendEvent(EventType.AddOglDiagram)
 
     def _isDiagramFormOpen(self, frame: UmlClassDiagramsFrame) -> bool:
         """
