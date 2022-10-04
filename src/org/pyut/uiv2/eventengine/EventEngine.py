@@ -9,22 +9,11 @@ from wx import PyEventBinder
 from wx import TreeItemId
 from wx import Window
 
-from org.pyut.uiv2.eventengine.Events import CloseProjectEvent
-from org.pyut.uiv2.eventengine.Events import CopyShapesEvent
-from org.pyut.uiv2.eventengine.Events import CutShapesEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
-from org.pyut.uiv2.eventengine.Events import NewProjectEvent
 from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
-from org.pyut.uiv2.eventengine.Events import PasteShapesEvent
-from org.pyut.uiv2.eventengine.Events import RemoveDocumentEvent
-from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
-from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
-from org.pyut.uiv2.eventengine.Events import SelectAllShapesEvent
-from org.pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
-from org.pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -75,31 +64,35 @@ class EventEngine(IEventEngine):
             case EventType.UpdateApplicationStatus:
                 self._sendUpdateApplicationStatusEvent(**kwargs)
             case EventType.NewProject:
-                self._sendNewProjectEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.RemoveDocument:
-                self._sendRemoveDocumentEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.CloseProject:
-                self._sendCloseProjectEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.SaveProject:
-                self._sendSaveProjectEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.SaveProjectAs:
-                self._sendSaveProjectAsEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.UMLDiagramModified:
-                self._sendUmlDiagramModifiedEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.UpdateRecentProjects:
-                self._sendUpdateRecentProjectsEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.InsertProject:
                 self._sendInsertProjectEvent(**kwargs)
             case EventType.OpenProject:
                 self._sendOpenProjectEvent(**kwargs)
             case EventType.SelectAllShapes:
-                self._sendSelectAllShapesEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.CopyShapes:
-                self._sendCopyShapesEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.PasteShapes:
-                self._sendPasteShapesEvent()
+                self._simpleSendEvent(eventType=eventType)
+            case EventType.Undo:
+                self._simpleSendEvent(eventType=eventType)
+            case EventType.Redo:
+                self._simpleSendEvent(eventType=eventType)
             case EventType.CutShapes:
-                self._sendCutShapesEvent()
+                self._simpleSendEvent(eventType=eventType)
             case EventType.AddOglDiagram:
                 self._simpleSendEvent(eventType=eventType)
             case EventType.AddPyutDiagram:
@@ -116,7 +109,7 @@ class EventEngine(IEventEngine):
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendNewTitleEvent(self, **kwargs):
-        newFilename:            str  = kwargs[NEW_FILENAME_PARAMETER]
+        newFilename:            str   = kwargs[NEW_FILENAME_PARAMETER]
         currentFrameZoomFactor: float = kwargs[CURRENT_FRAME_ZOOM_FACTOR_PARAMETER]
         projectModified:        bool  = kwargs[PROJECT_MODIFIED_PARAMETER]
         eventToPost: UpdateApplicationTitleEvent = UpdateApplicationTitleEvent(newFilename=newFilename,
@@ -130,34 +123,6 @@ class EventEngine(IEventEngine):
         eventToPost: UpdateApplicationStatusEvent = UpdateApplicationStatusEvent(applicationStatusMsg=newMessage)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
-    def _sendNewProjectEvent(self):
-        eventToPost: NewProjectEvent = NewProjectEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendRemoveDocumentEvent(self):
-        eventToPost: RemoveDocumentEvent = RemoveDocumentEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendCloseProjectEvent(self):
-        eventToPost: CloseProjectEvent = CloseProjectEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendSaveProjectEvent(self):
-        eventToPost: SaveProjectEvent = SaveProjectEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendSaveProjectAsEvent(self):
-        eventToPost: SaveProjectAsEvent = SaveProjectAsEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendUmlDiagramModifiedEvent(self):
-        eventToPost: UMLDiagramModifiedEvent = UMLDiagramModifiedEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendUpdateRecentProjectsEvent(self):
-        eventToPost: UpdateRecentProjectsEvent = UpdateRecentProjectsEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
     def _sendInsertProjectEvent(self, **kwargs):
 
         projectFilename: str                = kwargs[INSERT_PROJECT_FILENAME_PARAMETER]
@@ -168,22 +133,6 @@ class EventEngine(IEventEngine):
 
         projectFilename: str              = kwargs[OPEN_PROJECT_FILENAME_PARAMETER]
         eventToPost:     OpenProjectEvent = OpenProjectEvent(projectFilename=projectFilename)
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendSelectAllShapesEvent(self):
-        eventToPost: SelectAllShapesEvent = SelectAllShapesEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendCopyShapesEvent(self):
-        eventToPost: CopyShapesEvent = CopyShapesEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendPasteShapesEvent(self):
-        eventToPost: PasteShapesEvent = PasteShapesEvent()
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _sendCutShapesEvent(self):
-        eventToPost: CutShapesEvent = CutShapesEvent()
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _simpleSendEvent(self, eventType: EventType):

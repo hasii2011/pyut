@@ -29,6 +29,8 @@ SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES = NewEvent()
 CopyShapesEvent,      EVENT_COPY_SHAPES       = NewEvent()
 PasteShapesEvent,     EVENT_PASTE_SHAPES      = NewEvent()
 CutShapesEvent,       EVENT_CUT_SHAPES        = NewEvent()
+UndoEvent,            EVENT_UNDO              = NewEvent()
+RedoEvent,            EVENT_REDO              = NewEvent()
 
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
@@ -50,8 +52,9 @@ class EventType(str, Enum):
         parameter:
             projectFilename:  Fully qualified name
 
-    Events with no parameters get stuffed into the enumeration as instance so they can be used
-    event engine simple send method
+    Events with no parameters get stuffed into the enumeration as instances, so they can be used
+    event engine simple send method;  To simplify enumeration creation I create instances for all
+    event types
     """
 
     commandEvent:  CommandEvent
@@ -65,26 +68,28 @@ class EventType(str, Enum):
         obj.pyEventBinder = binder
         return obj
 
-    NewProject              = ('NewProject',              NewProjectEvent,              EVENT_NEW_PROJECT)
-    NewDocument             = ('NewDocument',             NewDocumentEvent,             EVENT_NEW_DOCUMENT)
-    RemoveDocument          = ('RemoveDocument',          RemoveDocumentEvent,          EVENT_REMOVE_DOCUMENT)
-    OpenProject             = ('OpenProject',             OpenProjectEvent,             EVENT_OPEN_PROJECT)
-    InsertProject           = ('InsertProject',           InsertProjectEvent,           EVENT_INSERT_PROJECT)
-    SaveProject             = ('SaveProject',             SaveProjectEvent,             EVENT_SAVE_PROJECT)
-    SaveProjectAs           = ('SaveProjectAs',           SaveProjectAsEvent,           EVENT_SAVE_PROJECT_AS)
-    CloseProject            = ('CloseProject',            CloseProjectEvent,            EVENT_CLOSE_PROJECT)
-    UpdateTreeItemName      = ('UpdateTreeItemName',      UpdateTreeItemNameEvent,      EVENT_UPDATE_TREE_ITEM_NAME)
-    UpdateApplicationTitle  = ('UpdateApplicationTitle',  UpdateApplicationTitleEvent,  EVENT_UPDATE_APPLICATION_TITLE)
-    UpdateApplicationStatus = ('UpdateApplicationStatus', UpdateApplicationStatusEvent, EVENT_UPDATE_APPLICATION_STATUS)
+    NewProject              = ('NewProject',              NewProjectEvent(),              EVENT_NEW_PROJECT)
+    NewDocument             = ('NewDocument',             NewDocumentEvent(),             EVENT_NEW_DOCUMENT)
+    RemoveDocument          = ('RemoveDocument',          RemoveDocumentEvent(),          EVENT_REMOVE_DOCUMENT)
+    OpenProject             = ('OpenProject',             OpenProjectEvent(),             EVENT_OPEN_PROJECT)
+    InsertProject           = ('InsertProject',           InsertProjectEvent(),           EVENT_INSERT_PROJECT)
+    SaveProject             = ('SaveProject',             SaveProjectEvent(),             EVENT_SAVE_PROJECT)
+    SaveProjectAs           = ('SaveProjectAs',           SaveProjectAsEvent(),           EVENT_SAVE_PROJECT_AS)
+    CloseProject            = ('CloseProject',            CloseProjectEvent(),            EVENT_CLOSE_PROJECT)
+    UpdateTreeItemName      = ('UpdateTreeItemName',      UpdateTreeItemNameEvent(),      EVENT_UPDATE_TREE_ITEM_NAME)
+    UpdateApplicationTitle  = ('UpdateApplicationTitle',  UpdateApplicationTitleEvent(),  EVENT_UPDATE_APPLICATION_TITLE)
+    UpdateApplicationStatus = ('UpdateApplicationStatus', UpdateApplicationStatusEvent(), EVENT_UPDATE_APPLICATION_STATUS)
 
-    UpdateRecentProjects    = ('UpdateRecentProjects', UpdateRecentProjectsEvent, EVENT_UPDATE_RECENT_PROJECTS)
+    UpdateRecentProjects    = ('UpdateRecentProjects', UpdateRecentProjectsEvent(), EVENT_UPDATE_RECENT_PROJECTS)
 
-    UMLDiagramModified      = ('UMLDiagramModified',   UMLDiagramModifiedEvent,   EVENT_UML_DIAGRAM_MODIFIED)
+    UMLDiagramModified      = ('UMLDiagramModified',   UMLDiagramModifiedEvent(),   EVENT_UML_DIAGRAM_MODIFIED)
 
-    SelectAllShapes = ('SelectAllShapes', SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES)
-    CopyShapes      = ('CopyShapes',      CopyShapesEvent,      EVENT_COPY_SHAPES)
-    PasteShapes     = ('PasteShapes',     PasteShapesEvent,     EVENT_PASTE_SHAPES)
-    CutShapes       = ('CutShapes',       CutShapesEvent,       EVENT_CUT_SHAPES)
+    SelectAllShapes = ('SelectAllShapes', SelectAllShapesEvent(), EVENT_SELECT_ALL_SHAPES)
+    CopyShapes      = ('CopyShapes',      CopyShapesEvent(),      EVENT_COPY_SHAPES)
+    PasteShapes     = ('PasteShapes',     PasteShapesEvent(),     EVENT_PASTE_SHAPES)
+    CutShapes       = ('CutShapes',       CutShapesEvent(),       EVENT_CUT_SHAPES)
+    Undo            = ('Undo',            UndoEvent(),            EVENT_UNDO)
+    Redo            = ('Redo',            RedoEvent(),            EVENT_REDO)
 
     AddPyutDiagram = ('AddPyutDiagram', AddPyutDiagramEvent(), EVENT_ADD_PYUT_DIAGRAM)
     AddOglDiagram  = ('AddOglDiagram',  AddOglDiagramEvent(),  EVENT_ADD_OGL_DIAGRAM)

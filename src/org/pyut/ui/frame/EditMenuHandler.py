@@ -44,15 +44,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        currentFrame = self._treeNotebookHandler.currentFrame
-        if currentFrame is None:
-            PyutUtils.displayWarning(msg=_('No selected/available frame'), title=_('Huh!'))
-        else:
-            historyManager: HistoryManager = currentFrame.getHistory()
-            if historyManager.isUndoPossible() is True:
-                historyManager.undo()
-            else:
-                PyutUtils.displayWarning(msg=_('Nothing to undo'), title=_('Huh!'))
+        self._eventEngine.sendEvent(EventType.Undo)
 
     # noinspection PyUnusedLocal
     def onRedo(self, event: CommandEvent):
@@ -61,15 +53,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        currentFrame = self._treeNotebookHandler.currentFrame
-        if currentFrame is None:
-            PyutUtils.displayWarning(msg=_('No selected/available frame'), title=_('Huh!'))
-        else:
-            historyManager: HistoryManager = currentFrame.getHistory()
-            if historyManager.isRedoPossible() is True:
-                historyManager.redo()
-            else:
-                PyutUtils.displayWarning(msg=_('Nothing to redo'), title=_('Huh!'))
+        self._eventEngine.sendEvent(EventType.Redo)
 
     # noinspection PyUnusedLocal
     def onCut(self, event: CommandEvent):

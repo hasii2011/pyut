@@ -10,6 +10,7 @@ from copy import copy
 
 from wx import CLIP_CHILDREN
 from wx import ICON_ERROR
+from wx import ICON_WARNING
 from wx import ID_ANY
 from wx import ID_YES
 from wx import NO_IMAGE
@@ -18,6 +19,12 @@ from wx import OK
 from wx import MessageDialog
 from wx import Notebook
 from wx import Window
+
+from pyutmodel.PyutActor import PyutActor
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutObject import PyutObject
+from pyutmodel.PyutUseCase import PyutUseCase
 
 from miniogl.Diagram import Diagram
 
@@ -28,14 +35,8 @@ from ogl.OglNote import OglNote
 from ogl.OglObject import OglObject
 from ogl.OglLink import OglLink
 
-
-from pyutmodel.PyutActor import PyutActor
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutObject import PyutObject
-from pyutmodel.PyutUseCase import PyutUseCase
-
 from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
+
 from org.pyut.history.commands.Command import Command
 from org.pyut.history.commands.CommandGroup import CommandGroup
 from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
@@ -44,21 +45,26 @@ from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectComm
 from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
 from org.pyut.ui.umlframes.UmlFrame import UmlObject
 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
-from org.pyut.uiv2.eventengine.Events import CutShapesEvent
 
 from org.pyut.uiv2.eventengine.Events import EVENT_COPY_SHAPES
 from org.pyut.uiv2.eventengine.Events import EVENT_CUT_SHAPES
 from org.pyut.uiv2.eventengine.Events import EVENT_PASTE_SHAPES
 from org.pyut.uiv2.eventengine.Events import EVENT_SELECT_ALL_SHAPES
+from org.pyut.uiv2.eventengine.Events import EVENT_REDO
+from org.pyut.uiv2.eventengine.Events import EVENT_UNDO
 
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import CutShapesEvent
 from org.pyut.uiv2.eventengine.Events import CopyShapesEvent
 from org.pyut.uiv2.eventengine.Events import PasteShapesEvent
 from org.pyut.uiv2.eventengine.Events import SelectAllShapesEvent
+from org.pyut.uiv2.eventengine.Events import RedoEvent
+from org.pyut.uiv2.eventengine.Events import UndoEvent
 
 
 PyutObjects = NewType('PyutObjects', List[PyutObject])
@@ -79,6 +85,8 @@ class DiagramNotebook(Notebook):
         self._eventEngine.registerListener(pyEventBinder=EVENT_COPY_SHAPES,       callback=self._onCopy)
         self._eventEngine.registerListener(pyEventBinder=EVENT_PASTE_SHAPES,      callback=self._onPaste)
         self._eventEngine.registerListener(pyEventBinder=EVENT_CUT_SHAPES,        callback=self._onCut)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_UNDO,              callback=self._onUndo)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_REDO,              callback=self._onRedo)
 
     @property
     def currentNotebookFrame(self) -> UmlDiagramsFrame:
@@ -158,6 +166,11 @@ class DiagramNotebook(Notebook):
 
     # noinspection PyUnusedLocal
     def _onPaste(self, event: PasteShapesEvent):
+        """
+        Paste any objects in the internal clipboard to the current frame
+        Args:
+            event:
+        """
 
         if len(self._clipboard) == 0:
             return
@@ -169,7 +182,7 @@ class DiagramNotebook(Notebook):
 
         # put the objects in the clipboard and remove them from the diagram
         x: int = 100
-        y: int = 1000
+        y: int = 100
         numbObjectsPasted: int = 0
         for clipboardObject in self._clipboard:
             pyutObject: PyutObject = copy(clipboardObject)
@@ -201,6 +214,9 @@ class DiagramNotebook(Notebook):
     # noinspection PyUnusedLocal
     def _onCut(self, event: CutShapesEvent):
         """
+        Remove any selected objects from the current frame and save them in the
+        internal clipboard
+
         Args:
             event:
         """
@@ -223,6 +239,42 @@ class DiagramNotebook(Notebook):
             umlFrame.getHistory().execute()
         self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
 
+    # noinspection PyUnusedLocal
+    def _onUndo(self, event: UndoEvent):
+        """
+        Args:
+            event:
+        """
+        from org.pyut.history.HistoryManager import HistoryManager
+
+        currentFrame: UmlDiagramsFrame = self.currentNotebookFrame
+        if currentFrame is None:
+            self._displayWarning(message='No selected/available frame')
+        else:
+            historyManager: HistoryManager = currentFrame.getHistory()
+            if historyManager.isUndoPossible() is True:
+                historyManager.undo()
+            else:
+                self._displayWarning(message='Nothing to undo')
+
+    # noinspection PyUnusedLocal
+    def _onRedo(self, event: RedoEvent):
+        """
+        Args:
+            event:
+        """
+        from org.pyut.history.HistoryManager import HistoryManager
+
+        currentFrame: UmlDiagramsFrame = self.currentNotebookFrame
+        if currentFrame is None:
+            self._displayWarning(message='No selected/available frame')
+        else:
+            historyManager: HistoryManager = currentFrame.getHistory()
+            if historyManager.isRedoPossible() is True:
+                historyManager.redo()
+            else:
+                self._displayWarning(message='Nothing to redo')
+
     def _getSelectedUmlObjects(self) -> UmlObjects:
         """
         Return the list of selected OglObjects in the diagram.
@@ -239,9 +291,14 @@ class DiagramNotebook(Notebook):
 
         return selectedObjects
 
-    def _displayError(self, message: str):
+    def _displayWarning(self, message: str):
+        self._displayMessage(message=message, caption='Huh?', iconType=ICON_WARNING)
 
-        booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
+    def _displayError(self, message: str):
+        self._displayMessage(message=message, caption='Error!', iconType=ICON_ERROR)
+
+    def _displayMessage(self, caption: str, message: str, iconType: int):
+        booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption=caption, style=OK | iconType)
         booBoo.ShowModal()
 
     def _updateApplicationStatus(self, statusMessage: str):

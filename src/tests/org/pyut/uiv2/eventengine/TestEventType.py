@@ -36,12 +36,10 @@ class TestEventType(TestBase):
         pass
 
     def testNewProjectEventType(self):
-        smartEnum: EventType = EventType.NewProject
+        smartEnum:          EventType    = EventType.NewProject
+        actualCommandEvent: CommandEvent = smartEnum.NewProject.commandEvent
 
-        expectedCommandEvent: CommandEvent = NewProjectEvent
-        actualCommandEvent:   CommandEvent = smartEnum.NewProject.commandEvent
-
-        self.assertEqual(expectedCommandEvent, actualCommandEvent, 'The custom enumeration is broken - Bad Event')
+        self.assertTrue(isinstance(actualCommandEvent, NewProjectEvent), 'The custom enumeration is broken - Bad Event')
 
     def testNewProjectEventBinder(self):
 
@@ -53,12 +51,10 @@ class TestEventType(TestBase):
         self.assertEqual(expectedBinder, actualBinder, 'The custom enumeration is busted - Bad Binder')
 
     def testUpdateTreeItemNameEvent(self):
-        smartEnum: EventType = EventType.UpdateTreeItemName
+        smartEnum:          EventType    = EventType.UpdateTreeItemName
+        actualCommandEvent: CommandEvent = smartEnum.UpdateTreeItemName.commandEvent
 
-        expectedCommandEvent: CommandEvent = UpdateTreeItemNameEvent
-        actualCommandEvent:   CommandEvent = smartEnum.UpdateTreeItemName.commandEvent
-
-        self.assertEqual(expectedCommandEvent, actualCommandEvent, 'The custom enumeration is broken - Bad Event')
+        self.assertTrue(isinstance(actualCommandEvent, UpdateTreeItemNameEvent), 'The custom enumeration is broken - Bad Event')
 
     def testUpdateTreeItemNameEventBinder(self):
 

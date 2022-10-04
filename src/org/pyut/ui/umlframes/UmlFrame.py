@@ -131,7 +131,6 @@ class UmlFrame(UmlFrameShapeHandler):
             event:
         """
         self._historyManager.destroy()
-
         self.Destroy()
 
     def OnLeftDown(self, event: MouseEvent):
