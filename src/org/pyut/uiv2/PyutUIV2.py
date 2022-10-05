@@ -112,7 +112,7 @@ class PyutUIV2(IPyutUI):
         # Register listeners for things I do that the rest of the application wants
         #
         # Reuse the event handlers on the popup menu;  It does not use the passed in event
-        self._eventEngine.registerListener(pyEventBinder=EVENT_DELETE_DIAGRAM, callback=self._onRemoveDocument)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_DELETE_DIAGRAM, callback=self._onDeleteDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_PROJECT,     callback=self._onNewProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_DIAGRAM,     callback=self._onNewDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_OPEN_PROJECT,    callback=self._onOpenProject)
@@ -341,7 +341,7 @@ class PyutUIV2(IPyutUI):
         if isinstance(data, IPyutProject):
             self._popupProjectMenu()
         elif isinstance(data, IPyutDocument):
-            self._popupProjectDocumentMenu()
+            self._popupProjectDiagramMenu()
 
     def _popupProjectMenu(self):
 
@@ -362,12 +362,12 @@ class PyutUIV2(IPyutUI):
 
         self._parentWindow.PopupMenu(self._projectPopupMenu)
 
-    def _popupProjectDocumentMenu(self):
+    def _popupProjectDiagramMenu(self):
 
         self._updateApplicationStatus(statusMessage='Select Document Action')
         if self._documentPopupMenu is None:
 
-            self.logger.debug(f'Create the document popup menu')
+            self.logger.debug(f'Create the diagram popup menu')
 
             [editDiagramNameMenuID, deleteDiagramMenuID] = PyutUtils.assignID(2)
 
@@ -376,14 +376,14 @@ class PyutUIV2(IPyutUI):
             popupMenu.Append(editDiagramNameMenuID, 'Edit Diagram Name', 'Change diagram name', ITEM_NORMAL)
             popupMenu.Append(deleteDiagramMenuID,   'Delete Diagram',    'Delete it',           ITEM_NORMAL)
 
-            popupMenu.Bind(EVT_MENU, self._onEditDocumentName, id=editDiagramNameMenuID)
-            popupMenu.Bind(EVT_MENU, self._onRemoveDocument,   id=deleteDiagramMenuID)
+            popupMenu.Bind(EVT_MENU, self._onEditDiagramName, id=editDiagramNameMenuID)
+            popupMenu.Bind(EVT_MENU, self._onDeleteDiagram, id=deleteDiagramMenuID)
 
             popupMenu.Bind(EVT_MENU_CLOSE, self._onPopupMenuClose)
 
             self.__documentPopupMenu = popupMenu
 
-        self.logger.debug(f'Current Document: `{self.currentDocument}`')
+        self.logger.debug(f'Current diagram: `{self.currentDocument}`')
         self._parentWindow.PopupMenu(self.__documentPopupMenu)
 
     # noinspection PyUnusedLocal
@@ -396,7 +396,7 @@ class PyutUIV2(IPyutUI):
         self._closeCurrentProject()
 
     # noinspection PyUnusedLocal
-    def _onEditDocumentName(self, event: CommandEvent):
+    def _onEditDiagramName(self, event: CommandEvent):
 
         currentDocument: IPyutDocument   = self._projectManager.currentDocument
         dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
@@ -408,7 +408,7 @@ class PyutUIV2(IPyutUI):
         self._projectManager.updateDocumentName(pyutDocument=currentDocument)
 
     # noinspection PyUnusedLocal
-    def _onRemoveDocument(self, event: CommandEvent):
+    def _onDeleteDiagram(self, event: CommandEvent):
         """
         Invoked from the popup menu in the tree;  Right-clicking on the document makes it
         the current document
