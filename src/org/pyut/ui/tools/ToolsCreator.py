@@ -128,7 +128,7 @@ class ToolsCreator:
         self._toolNewProject = Tool("pyut-new-project", toolIconOwner.toolNewProject,
                                     caption=_("New Project"), tooltip=_("Create a new project"),
                                     category=PYUT_MENU_CATEGORY,
-                                    actionCallback=self._fileMenuHandler.onNewProject, wxID=SID.ID_MNUFILENEWPROJECT)
+                                    actionCallback=self._fileMenuHandler.onNewProject, wxID=SID.ID_MNU_FILE_NEW_PROJECT)
 
         self._toolNewClassDiagram = Tool("pyut-new-class-diagram", toolIconOwner.toolNewClassDiagram,
                                          caption=_("New Class Diagram"), tooltip=_("Create a new class diagram"),

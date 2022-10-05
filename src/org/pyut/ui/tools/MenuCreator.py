@@ -199,7 +199,7 @@ class MenuCreator:
         fileMenu: Menu = self._fileMenu
 
         self.mnuFileNew = Menu()
-        self.mnuFileNew.Append(SharedIdentifiers.ID_MNUFILENEWPROJECT, _("&New project\tCtrl-N"), _("New project"))
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_PROJECT, _("&New project\tCtrl-N"), _("New project"))
         self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM, _("New c&lass diagram\tCtrl-L"), _("New class diagram"))
         self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM, _("New s&equence diagram\tCtrl-E"),
                                _("New sequence diagram"))
@@ -213,7 +213,7 @@ class MenuCreator:
         fileMenu.Append(ID_SAVE)
         fileMenu.Append(ID_SAVEAS)
         fileMenu.Append(SharedIdentifiers.ID_MNU_PROJECT_CLOSE, _("&Close project\tCtrl-W"), _("Close current project"))
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT, _("&Remove document"), _("Remove the document from the project"))
+        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_REMOVE_DIAGRAM, _("&Delete diagram"), _("Delete the diagram from the project"))
         fileMenu.AppendSeparator()
 
         fileMenuHandler: FileMenuHandler = self._fileMenuHandler
@@ -394,7 +394,7 @@ class MenuCreator:
 
     def _bindFileMenuHandlers(self, containingFrame: Frame, fileMenuHandler: FileMenuHandler):
 
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewProject,        id=SharedIdentifiers.ID_MNUFILENEWPROJECT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewProject, id=SharedIdentifiers.ID_MNU_FILE_NEW_PROJECT)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewClassDiagram,   id=SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewSequenceDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onNewUsecaseDiagram, id=SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
@@ -403,7 +403,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSave,          id=ID_SAVE)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSaveAs,        id=ID_SAVEAS)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileClose,         id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onRemoveDocument,    id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DOCUMENT)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onRemoveDocument, id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintSetup,        id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintPreview,      id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrint,             id=SharedIdentifiers.ID_MNU_FILE_PRINT)

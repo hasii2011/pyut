@@ -57,7 +57,7 @@ from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_DIAGRAM
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_OPEN_PROJECT
-from org.pyut.uiv2.eventengine.Events import EVENT_REMOVE_DOCUMENT
+from org.pyut.uiv2.eventengine.Events import EVENT_DELETE_DIAGRAM
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
@@ -112,7 +112,7 @@ class PyutUIV2(IPyutUI):
         # Register listeners for things I do that the rest of the application wants
         #
         # Reuse the event handlers on the popup menu;  It does not use the passed in event
-        self._eventEngine.registerListener(pyEventBinder=EVENT_REMOVE_DOCUMENT, callback=self._onRemoveDocument)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_DELETE_DIAGRAM, callback=self._onRemoveDocument)
         self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_PROJECT,     callback=self._onNewProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_DIAGRAM,     callback=self._onNewDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_OPEN_PROJECT,    callback=self._onOpenProject)
@@ -369,15 +369,15 @@ class PyutUIV2(IPyutUI):
 
             self.logger.debug(f'Create the document popup menu')
 
-            [editDocumentNameMenuID, removeDocumentMenuID] = PyutUtils.assignID(2)
+            [editDiagramNameMenuID, deleteDiagramMenuID] = PyutUtils.assignID(2)
 
             popupMenu: Menu = Menu('Actions')
             popupMenu.AppendSeparator()
-            popupMenu.Append(editDocumentNameMenuID, 'Edit Document Name', 'Change document name', ITEM_NORMAL)
-            popupMenu.Append(removeDocumentMenuID,   'Remove Document',    'Delete it',            ITEM_NORMAL)
+            popupMenu.Append(editDiagramNameMenuID, 'Edit Diagram Name', 'Change diagram name', ITEM_NORMAL)
+            popupMenu.Append(deleteDiagramMenuID,   'Delete Diagram',    'Delete it',           ITEM_NORMAL)
 
-            popupMenu.Bind(EVT_MENU, self._onEditDocumentName, id=editDocumentNameMenuID)
-            popupMenu.Bind(EVT_MENU, self._onRemoveDocument,   id=removeDocumentMenuID)
+            popupMenu.Bind(EVT_MENU, self._onEditDocumentName, id=editDiagramNameMenuID)
+            popupMenu.Bind(EVT_MENU, self._onRemoveDocument,   id=deleteDiagramMenuID)
 
             popupMenu.Bind(EVT_MENU_CLOSE, self._onPopupMenuClose)
 

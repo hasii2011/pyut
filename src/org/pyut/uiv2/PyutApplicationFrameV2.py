@@ -321,8 +321,8 @@ class PyutApplicationFrameV2(Frame):
         #  initialize the accelerator table
         # Since we are using the stock IDs we do not need to set up those accelerators
         lst = [
-            (ACCEL_CTRL,     ord('n'),   SharedIdentifiers.ID_MNUFILENEWPROJECT),
-            (ACCEL_CTRL,     ord('N'),   SharedIdentifiers.ID_MNUFILENEWPROJECT),
+            (ACCEL_CTRL,     ord('n'),   SharedIdentifiers.ID_MNU_FILE_NEW_PROJECT),
+            (ACCEL_CTRL,     ord('N'),   SharedIdentifiers.ID_MNU_FILE_NEW_PROJECT),
             (ACCEL_CTRL,     ord('l'),   SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM),
             (ACCEL_CTRL,     ord('E'),   SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM),
             (ACCEL_CTRL,     ord('e'),   SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM),

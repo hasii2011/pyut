@@ -235,7 +235,7 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        self._eventEngine.sendEvent(EventType.RemoveDocument)
+        self._eventEngine.sendEvent(EventType.DeleteDiagram)
 
     def onImport(self, event: CommandEvent):
 

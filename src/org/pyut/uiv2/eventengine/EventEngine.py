@@ -70,7 +70,7 @@ class EventEngine(IEventEngine):
                 self._sendNewDiagramEvent(**kwargs)
             case EventType.NewProject:
                 self._simpleSendEvent(eventType=eventType)
-            case EventType.RemoveDocument:
+            case EventType.DeleteDiagram:
                 self._simpleSendEvent(eventType=eventType)
             case EventType.CloseProject:
                 self._simpleSendEvent(eventType=eventType)

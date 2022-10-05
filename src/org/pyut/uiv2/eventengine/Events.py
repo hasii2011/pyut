@@ -11,7 +11,7 @@ from wx.lib.newevent import NewEvent
 #
 NewProjectEvent,              EVENT_NEW_PROJECT               = NewEvent()
 NewDiagramEvent,              EVENT_NEW_DIAGRAM               = NewEvent()
-RemoveDocumentEvent,          EVENT_REMOVE_DOCUMENT           = NewEvent()
+DeleteDiagramEvent,           EVENT_DELETE_DIAGRAM            = NewEvent()
 OpenProjectEvent,             EVENT_OPEN_PROJECT              = NewEvent()
 InsertProjectEvent,           EVENT_INSERT_PROJECT            = NewEvent()
 SaveProjectEvent,             EVENT_SAVE_PROJECT              = NewEvent()
@@ -75,7 +75,7 @@ class EventType(str, Enum):
 
     NewProject              = ('NewProject',              NewProjectEvent(),              EVENT_NEW_PROJECT)
     NewDiagram              = ('NewDiagram',              NewDiagramEvent(),              EVENT_NEW_DIAGRAM)
-    RemoveDocument          = ('RemoveDocument',          RemoveDocumentEvent(),          EVENT_REMOVE_DOCUMENT)
+    DeleteDiagram           = ('DeleteDiagram',           DeleteDiagramEvent(),           EVENT_DELETE_DIAGRAM)
     OpenProject             = ('OpenProject',             OpenProjectEvent(),             EVENT_OPEN_PROJECT)
     InsertProject           = ('InsertProject',           InsertProjectEvent(),           EVENT_INSERT_PROJECT)
     SaveProject             = ('SaveProject',             SaveProjectEvent(),             EVENT_SAVE_PROJECT)
