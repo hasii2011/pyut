@@ -216,7 +216,7 @@ class FileMenuHandler(BaseMenuHandler):
         self._eventEngine.sendEvent(EventType.CloseProject)
 
     # noinspection PyUnusedLocal
-    def onRemoveDocument(self, event: CommandEvent):
+    def onDeleteDiagram(self, event: CommandEvent):
         """
         Remove the current document from the current project
         Args:
@@ -231,7 +231,7 @@ class FileMenuHandler(BaseMenuHandler):
         self._mediator.updateTitle()
         cl = self._importPlugins[event.GetId()]
 
-        obj = cl(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
+        obj = cl(self._mediator.getUmlObjects(), self._mediator.activeUmlFrame)
 
         # Do plugin functionality
         try:
@@ -255,7 +255,7 @@ class FileMenuHandler(BaseMenuHandler):
         # Create a plugin instance
         cl = self._exportPlugins[event.GetId()]
         umlObjects: List[OglClass]      = cast(List[OglClass], self._mediator.getUmlObjects())
-        umlFrame: UmlClassDiagramsFrame = self._mediator.getUmlFrame()
+        umlFrame: UmlClassDiagramsFrame = self._mediator.activeUmlFrame
         obj = cl(umlObjects, umlFrame)
         try:
             wxYield()
@@ -274,10 +274,6 @@ class FileMenuHandler(BaseMenuHandler):
                 self.logger.debug(f'Waiting for answer')
             else:
                 self.logger.debug(f'Cancelled')
-
-        umlFrame = self._mediator.getUmlFrame()
-        if umlFrame is not None:
-            umlFrame.Refresh()
 
     # noinspection PyUnusedLocal
     def onPrintSetup(self, event: CommandEvent):
@@ -305,8 +301,8 @@ class FileMenuHandler(BaseMenuHandler):
         """
         parent: Window = self._parent
 
-        self._mediator.deselectAllShapes()
-        frame = self._mediator.getUmlFrame()
+        # self._mediator.deselectAllShapes()
+        frame = self._mediator.activeUmlFrame
         if frame == -1:
             PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."))
             return
@@ -339,14 +335,14 @@ class FileMenuHandler(BaseMenuHandler):
         if self._mediator.getDiagram() is None:
             PyutUtils.displayError(_("No diagram to print !"), _("Error"))
             return
-        self._mediator.deselectAllShapes()
+        # self._mediator.deselectAllShapes()
         printDialogData: PrintDialogData = PrintDialogData()
 
         printDialogData.SetPrintData(self._printData)
         printDialogData.SetMinPage(1)
         printDialogData.SetMaxPage(1)
         printer  = Printer(printDialogData)
-        printout = PyutPrintout(self._mediator.getUmlFrame())
+        printout = PyutPrintout(self._mediator.activeUmlFrame)
 
         if not printer.Print(self._parent, printout, True):
             PyutUtils.displayError(_("Cannot print"), _("Error"))

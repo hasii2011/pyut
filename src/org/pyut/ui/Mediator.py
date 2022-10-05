@@ -10,7 +10,6 @@ from wx import StatusBar
 from wx import ToolBar
 
 from wx import ID_OK
-from wx import ID_NO
 
 from wx import TextEntryDialog
 
@@ -40,7 +39,6 @@ from ogl.OglClass import OglClass
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
-    from ogl.OglObject import OglObject
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
     from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
     from org.pyut.uiv2.IPyutProject import IPyutProject
@@ -50,7 +48,6 @@ from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid c
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.DlgEditLink import DlgEditLink
-from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
 
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
@@ -250,6 +247,15 @@ class Mediator(Singleton):
 
         self._modifyCommand = None  # command for undo/redo a modification on a shape.
 
+    @property
+    def activeUmlFrame(self):
+        """
+        Return the active UML frame.
+
+        Returns:  The UML frame
+        """
+        return self._treeNotebookHandler.currentFrame
+
     def newDocument(self, diagramType: DiagramType):
         """
         New API for V2 UI;  Mediator does not provide access to any UI component
@@ -257,15 +263,7 @@ class Mediator(Singleton):
         Args:
             diagramType:
         """
-        from org.pyut.uiv2.IPyutDocument import IPyutDocument
-
-        pyutDocument:   IPyutDocument = self._treeNotebookHandler.newDocument(docType=diagramType)
-        # currentProject: IPyutProject = self._treeNotebookHandler.currentProject
-        #
-        # currentProject.documents.append(pyutDocument)
-        # # TODO use messages post V2 UI
-        # self._treeNotebookHandler.diagramNotebook.AddPage(page=pyutDocument.diagramFrame, text=pyutDocument.title)
-        # shortName: str = self.__shortenNotebookPageFileName(pyutProject.filename)
+        self._treeNotebookHandler.newDocument(docType=diagramType)
 
     def setScriptMode(self):
         """
@@ -700,19 +698,10 @@ class Mediator(Singleton):
         Returns: The active uml diagram if present, None otherwise
         """
 
-        umlFrame = self._treeNotebookHandler.getCurrentFrame()
+        umlFrame = self._treeNotebookHandler.currentFrame
         if umlFrame is None:
             return cast(Diagram, None)
         return umlFrame.getDiagram()
-
-    def getUmlFrame(self):
-        """
-        Return the active uml frame.
-
-        Returns: a UmlFrame
-        """
-        return self._treeNotebookHandler.currentFrame
-
     def deselectAllShapes(self):
         """
         Deselect all shapes in the current diagram.

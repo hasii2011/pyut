@@ -403,7 +403,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSave,          id=ID_SAVE)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSaveAs,        id=ID_SAVEAS)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileClose,         id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onRemoveDocument, id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DIAGRAM)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onDeleteDiagram, id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintSetup,        id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintPreview,      id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrint,             id=SharedIdentifiers.ID_MNU_FILE_PRINT)

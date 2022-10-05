@@ -45,7 +45,7 @@ class ToolsMenuHandler(BaseMenuHandler):
 
         clazz: type = self._toolPluginsMap[wxId]
         # Create a plugin instance
-        pluginInstance: PyutToPlugin = clazz(self._mediator.getUmlObjects(), self._mediator.getUmlFrame())
+        pluginInstance: PyutToPlugin = clazz(self._mediator.getUmlObjects(), self._mediator.activeUmlFrame)
 
         # Do plugin functionality
         BeginBusyCursor()
@@ -58,7 +58,7 @@ class ToolsMenuHandler(BaseMenuHandler):
         EndBusyCursor()
 
         # Refresh screen
-        umlFrame = self._mediator.getUmlFrame()
+        umlFrame = self._mediator.activeUmlFrame
         if umlFrame is not None:
             umlFrame.Refresh()
 
