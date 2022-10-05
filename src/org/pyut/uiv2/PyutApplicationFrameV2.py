@@ -67,6 +67,7 @@ from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager shoul
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine
+from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
@@ -157,8 +158,7 @@ class PyutApplicationFrameV2(Frame):
 
         self.__setupKeyboardShortcuts()
 
-        self._pyutUIV2.newProject()     # TODO  Replace these with events
-        self._mediator.updateTitle()
+        self._eventEngine.sendEvent(EventType.NewProject)
 
         if self._prefs.centerAppOnStartUp is True:
             self.Center(BOTH)  # Center on the screen

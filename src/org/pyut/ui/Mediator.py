@@ -260,11 +260,11 @@ class Mediator(Singleton):
         from org.pyut.uiv2.IPyutDocument import IPyutDocument
 
         pyutDocument:   IPyutDocument = self._treeNotebookHandler.newDocument(docType=diagramType)
-        currentProject: IPyutProject = self._treeNotebookHandler.currentProject
-
-        currentProject.documents.append(pyutDocument)
-        # TODO use messages post V2 UI
-        self._treeNotebookHandler.diagramNotebook.AddPage(page=pyutDocument.diagramFrame, text=pyutDocument.title)
+        # currentProject: IPyutProject = self._treeNotebookHandler.currentProject
+        #
+        # currentProject.documents.append(pyutDocument)
+        # # TODO use messages post V2 UI
+        # self._treeNotebookHandler.diagramNotebook.AddPage(page=pyutDocument.diagramFrame, text=pyutDocument.title)
         # shortName: str = self.__shortenNotebookPageFileName(pyutProject.filename)
 
     def setScriptMode(self):

@@ -207,7 +207,7 @@ class PyutXml:
                 docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
                 if self._prefs.usev2ui is True:
                     document: IPyutDocument = Mediator().createDocument(diagramType=docType)
-                    project.documents.append(document)
+                    # project.documents.append(document)
                 else:
                     document = project.newDocument(docType)
 

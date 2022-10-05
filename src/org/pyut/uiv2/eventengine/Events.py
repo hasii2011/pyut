@@ -10,7 +10,7 @@ from wx.lib.newevent import NewEvent
 # Constructor return Tuple; First is the event,  The second is the binder
 #
 NewProjectEvent,              EVENT_NEW_PROJECT               = NewEvent()
-NewDocumentEvent,             EVENT_NEW_DOCUMENT              = NewEvent()
+NewDiagramEvent,              EVENT_NEW_DIAGRAM               = NewEvent()
 RemoveDocumentEvent,          EVENT_REMOVE_DOCUMENT           = NewEvent()
 OpenProjectEvent,             EVENT_OPEN_PROJECT              = NewEvent()
 InsertProjectEvent,           EVENT_INSERT_PROJECT            = NewEvent()
@@ -52,6 +52,11 @@ class EventType(str, Enum):
         parameter:
             projectFilename:  Fully qualified name
 
+    NewDiagramEvent
+        Creates a new diagram on the current project
+        parameter:
+            diagramType:   A value from the DiagramType enumeration
+
     Events with no parameters get stuffed into the enumeration as instances, so they can be used
     event engine simple send method;  To simplify enumeration creation I create instances for all
     event types
@@ -69,7 +74,7 @@ class EventType(str, Enum):
         return obj
 
     NewProject              = ('NewProject',              NewProjectEvent(),              EVENT_NEW_PROJECT)
-    NewDocument             = ('NewDocument',             NewDocumentEvent(),             EVENT_NEW_DOCUMENT)
+    NewDiagram              = ('NewDiagram',              NewDiagramEvent(),              EVENT_NEW_DIAGRAM)
     RemoveDocument          = ('RemoveDocument',          RemoveDocumentEvent(),          EVENT_REMOVE_DOCUMENT)
     OpenProject             = ('OpenProject',             OpenProjectEvent(),             EVENT_OPEN_PROJECT)
     InsertProject           = ('InsertProject',           InsertProjectEvent(),           EVENT_INSERT_PROJECT)

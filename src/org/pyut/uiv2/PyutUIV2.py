@@ -54,6 +54,8 @@ from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
+from org.pyut.uiv2.eventengine.Events import EVENT_NEW_DIAGRAM
+from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_OPEN_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_REMOVE_DOCUMENT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
@@ -62,6 +64,8 @@ from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
+from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
+from org.pyut.uiv2.eventengine.Events import NewProjectEvent
 from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
@@ -109,6 +113,8 @@ class PyutUIV2(IPyutUI):
         #
         # Reuse the event handlers on the popup menu;  It does not use the passed in event
         self._eventEngine.registerListener(pyEventBinder=EVENT_REMOVE_DOCUMENT, callback=self._onRemoveDocument)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_PROJECT,     callback=self._onNewProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_DIAGRAM,     callback=self._onNewDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_OPEN_PROJECT,    callback=self._onOpenProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_CLOSE_PROJECT,   callback=self._onCloseProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT,    callback=self._onSaveProject)
@@ -186,30 +192,39 @@ class PyutUIV2(IPyutUI):
                 return project
         return NO_PYUT_PROJECT
 
-    def newProject(self) -> IPyutProject:
+    def newDocument(self, docType: DiagramType):
         """
-        Returns:  A default empty project
+        Maintained for PyutXmlV10, until we can fix that;  Probably with oglio
+
+        Args:
+            docType:
+
+        Returns:  The created diagram
+
         """
-        self._projectManager.currentFrame = NO_DIAGRAM_FRAME
+        newDiagramEvent: NewDiagramEvent = NewDiagramEvent(diagramType=docType)
+        return self._onNewDiagram(event=newDiagramEvent)
 
-        return self._projectManager.newProject()
-
-    def newDocument(self, docType: DiagramType) -> IPyutDocument:
+    def _onNewDiagram(self, event: NewDiagramEvent) -> IPyutDocument:
         """
         Create a new document;
         Adds the tree entry
+        Selects the tree entry
+        Selects the appropriate notebook frame
+
+        TODO:  Event handler should not return a value;  temporarily does
 
         Args:
-            docType:  Type of document
+           event    The event which contains the diagram type to create
 
-        Returns: The newly created document
         """
+        diagramType: DiagramType = event.diagramType
         pyutProject: IPyutProject = self._projectManager.currentProject
         if pyutProject is None:
             self._projectManager.newProject()
             pyutProject = self._projectManager.currentProject
 
-        document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, docType=docType, eventEngine=self._eventEngine)
+        document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, docType=diagramType, eventEngine=self._eventEngine)
 
         self._projectManager.addDocumentNodeToTree(pyutProject=pyutProject, documentNode=document)
 
@@ -218,11 +233,17 @@ class PyutUIV2(IPyutUI):
         self._projectManager.currentFrame.Refresh()
         wxYield()
 
+        pyutProject.documents.append(document)
+
+        self._diagramNotebook.AddPage(page=document.diagramFrame, text=document.title)
+
         notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
         if notebookCurrentPageNumber >= 0:
             if self.logger.isEnabledFor(DEBUG):
                 self.logger.debug(f'Current notebook page: {notebookCurrentPageNumber}')
             self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
+
+        self._updateApplicationTitle()
 
         return document
 
@@ -458,6 +479,15 @@ class PyutUIV2(IPyutUI):
             self._projectManager.updateDiagramNotebookIfPossible(project=newCurrentProject)
 
         self._updateApplicationTitle()
+
+    # noinspection PyUnusedLocal
+    def _onNewProject(self, event: NewProjectEvent):
+        """
+        Returns:  A default empty project
+        """
+        self._projectManager.currentFrame = NO_DIAGRAM_FRAME
+
+        return self._projectManager.newProject()
 
     def _onOpenProject(self, event: OpenProjectEvent):
 

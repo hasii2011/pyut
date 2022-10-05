@@ -110,8 +110,7 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        self._treeNotebookHandler.newProject()
-        self._mediator.updateTitle()
+        self._eventEngine.sendEvent(EventType.NewProject)
 
     # noinspection PyUnusedLocal
     def onNewClassDiagram(self, event: CommandEvent):
@@ -121,13 +120,7 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        from org.pyut.ui.Mediator import Mediator
-
-        if self._preferences.usev2ui is True:
-            Mediator().newDocument(DiagramType.CLASS_DIAGRAM)
-        else:
-            self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
-        self._mediator.updateTitle()
+        self._eventEngine.sendEvent(EventType.NewDiagram, diagramType=DiagramType.CLASS_DIAGRAM)
 
     # noinspection PyUnusedLocal
     def onNewSequenceDiagram(self, event: CommandEvent):
@@ -246,8 +239,8 @@ class FileMenuHandler(BaseMenuHandler):
 
     def onImport(self, event: CommandEvent):
 
-        self._treeNotebookHandler.newProject()
-        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)
+        self._treeNotebookHandler.newProject()                              # TODO  Use events
+        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)    # TODO
         self._mediator.updateTitle()
         cl = self._importPlugins[event.GetId()]
 

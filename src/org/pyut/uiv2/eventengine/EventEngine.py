@@ -9,8 +9,10 @@ from wx import PyEventBinder
 from wx import TreeItemId
 from wx import Window
 
+from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
+from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
 from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
@@ -19,6 +21,7 @@ from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 NEW_NAME_PARAMETER:       str = 'newName'
+DIAGRAM_TYPE_PARAMETER:   str = 'diagramType'
 TREE_ITEM_ID_PARAMETER:   str = 'treeItemId'
 
 NEW_FILENAME_PARAMETER:              str = 'newFilename'
@@ -63,6 +66,8 @@ class EventEngine(IEventEngine):
                 self._sendNewTitleEvent(**kwargs)
             case EventType.UpdateApplicationStatus:
                 self._sendUpdateApplicationStatusEvent(**kwargs)
+            case EventType.NewDiagram:
+                self._sendNewDiagramEvent(**kwargs)
             case EventType.NewProject:
                 self._simpleSendEvent(eventType=eventType)
             case EventType.RemoveDocument:
@@ -133,6 +138,12 @@ class EventEngine(IEventEngine):
 
         projectFilename: str              = kwargs[OPEN_PROJECT_FILENAME_PARAMETER]
         eventToPost:     OpenProjectEvent = OpenProjectEvent(projectFilename=projectFilename)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendNewDiagramEvent(self, **kwargs):
+
+        diagramType: DiagramType     = kwargs[DIAGRAM_TYPE_PARAMETER]
+        eventToPost: NewDiagramEvent = NewDiagramEvent(diagramType=diagramType)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _simpleSendEvent(self, eventType: EventType):

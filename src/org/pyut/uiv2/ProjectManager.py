@@ -303,7 +303,7 @@ class ProjectManager:
             self.logger.error(f"An error occurred while loading the project ! {e}")
             raise e
 
-        self._addProjectDocumentsToNotebook(project)
+        # self._addProjectDocumentsToNotebook(project)
         # self.logger.debug(f'{self._currentFrame=} {self.currentProject=} {self._diagramNotebook.GetSelection()=}')
 
     def saveProjectAs(self, projectToSave: IPyutProject):
