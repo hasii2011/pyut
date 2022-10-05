@@ -13,7 +13,7 @@ from unittest.mock import MagicMock
 from pkg_resources import resource_filename
 from wx import App
 
-from org.pyut.ui.PyutUI import PyutUI
+from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 from tests.TestBase import TestBase
 
 from org.pyut.ui.Mediator import Mediator
@@ -40,7 +40,7 @@ class TestIoFile(TestBase):
         self.mockFrame:    MagicMock = MagicMock()
         self.mockTree:     MagicMock = MagicMock()
         self.mockTreeRoot: MagicMock = MagicMock()
-        self.fileHandling: PyutUI    = MagicMock()
+        self.fileHandling: PyutUIV2    = MagicMock()
 
         self.mediator = Mediator()      # It's a Singleton, I can do this
         self.mediator.registerAppPath('./')
@@ -54,7 +54,7 @@ class TestIoFile(TestBase):
     # noinspection PyUnusedLocal
     @patch('wx.Dialog')
     @patch('wx.Gauge')
-    @patch('org.pyut.ui.PyutUI.PyutUI')
+    @patch('org.pyut.uiv2.PyutUIV2.PyutUIV2')
     def testIoFileOpenV10(self, mockFileHandling, wxGauge, wxDialog):
         fqFileName = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'IoFileTest.put')
 

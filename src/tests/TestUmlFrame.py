@@ -18,11 +18,12 @@ from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
-from org.pyut.ui.PyutUI import PyutUI
+from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from org.pyut.ui.Mediator import Mediator
+from org.pyut.uiv2.eventengine.EventEngine import EventEngine
 
 
 class PyUtApp(App):
@@ -54,9 +55,6 @@ class TestUmlFrame(unittest.TestCase):
         mediator: Mediator = Mediator()
         mediator.setScriptMode()
 
-        fileHandling: PyutUI = PyutUI(None)
-        mediator.registerFileHandling(fileHandling)
-
         errorManager: ErrorManager = mediator.getErrorManager()
         errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)
 
@@ -69,6 +67,10 @@ class TestUmlFrame(unittest.TestCase):
         # noinspection PyTypeChecker
         umlFrame = UmlFrame(baseFrame)
         umlFrame.Show(True)
+
+        appFrame: Frame = Frame(parent=None, id=ID_ANY, title='')
+        fileHandling: PyutUIV2 = PyutUIV2(appFrame,  EventEngine(listeningWindow=umlFrame))
+        mediator.registerFileHandling(fileHandling)
 
         self._umlFrame: UmlFrame = umlFrame
 

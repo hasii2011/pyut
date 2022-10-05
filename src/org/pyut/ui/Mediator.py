@@ -40,7 +40,7 @@ from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
-    from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
+    from org.pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
     from org.pyut.uiv2.IPyutProject import IPyutProject
     from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
@@ -221,10 +221,11 @@ class Mediator(Singleton):
         """
         Singleton constructor.
         """
+        from org.pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
+
         self.logger: Logger = getLogger(__name__)
 
         from org.pyut.errorcontroller.ErrorManager import ErrorManager
-        from org.pyut.ui.frame.PyutApplicationFrame import PyutApplicationFrame
 
         self._errorManager: ErrorManager  = ErrorManager()
 
@@ -239,7 +240,7 @@ class Mediator(Singleton):
         self._dst      = None   # destination of a two-objects action
         self._appPath  = None   # Application files' path
 
-        self._appFrame: PyutApplicationFrame = cast(PyutApplicationFrame, None)   # Application's main frame
+        self._appFrame: PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)   # Application's main frame
 
         self.registerClassEditor(self.standardClassEditor)
         self._toolboxOwner = None   # toolbox owner, created when application frame is passed
@@ -702,6 +703,7 @@ class Mediator(Singleton):
         if umlFrame is None:
             return cast(Diagram, None)
         return umlFrame.getDiagram()
+
     def deselectAllShapes(self):
         """
         Deselect all shapes in the current diagram.
