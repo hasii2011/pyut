@@ -163,6 +163,28 @@ class PyutUIV2(IPyutUI):
         """
         return self._diagramNotebook
 
+    def handleUnsavedProjects(self):
+        """
+        Close all files
+
+        Returns:
+            True if everything is ok
+        """
+        # Close projects and ask how to handle unsaved, modified projects
+        projects: PyutProjects = self._projectManager.projects
+        for project in projects:
+            pyutProject: IPyutProject = cast(IPyutProject, project)
+            if pyutProject.modified is True:
+                dlg: MessageDialog = MessageDialog(self._parentWindow,
+                                                   f"Project `{pyutProject.projectName}` has not been saved! Would you like to save it?",
+                                                   "Save changes?",
+                                                   YES_NO | ICON_QUESTION)
+                if dlg.ShowModal() == ID_YES:
+                    self._projectManager.saveProject(projectToSave=pyutProject)
+                dlg.Destroy()
+
+        self.diagramNotebook.DeleteAllPages()
+
     def registerUmlFrame(self, frame: UmlDiagramsFrame):
         """
         Register the current UML Frame

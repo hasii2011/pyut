@@ -39,6 +39,16 @@ class IPyutProject(ABC):
 
     @property
     @abstractmethod
+    def projectName(self) -> str:
+        """
+        Truncates to just the file name and less the suffix.
+
+        Returns:   Nice short hane
+        """
+        pass
+
+    @property
+    @abstractmethod
     def modified(self) -> bool:
         """
         Returns:  'True' if it has been else 'False'

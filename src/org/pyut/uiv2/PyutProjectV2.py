@@ -78,6 +78,15 @@ class PyutProjectV2(IPyutProject):
         # self.updateTreeText()
 
     @property
+    def projectName(self) -> str:
+        """
+        Truncates to just the file name and less the suffix.
+
+        Returns:   Nice short hane
+        """
+        return self._justTheFileName(self.filename)
+
+    @property
     def codePath(self) -> str:
         return self._codePath
 

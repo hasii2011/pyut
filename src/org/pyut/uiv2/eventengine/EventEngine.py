@@ -10,6 +10,7 @@ from wx import TreeItemId
 from wx import Window
 
 from org.pyut.enums.DiagramType import DiagramType
+from org.pyut.uiv2.eventengine.Events import CutShapeEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
@@ -32,6 +33,8 @@ APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
 
 INSERT_PROJECT_FILENAME_PARAMETER:   str = 'projectFilename'
 OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
+
+SHAPE_TO_CUT_PARAMETER: str = 'shapeToCut'
 
 
 class EventEngine(IEventEngine):
@@ -88,6 +91,8 @@ class EventEngine(IEventEngine):
                 self._sendOpenProjectEvent(**kwargs)
             case EventType.SelectAllShapes:
                 self._simpleSendEvent(eventType=eventType)
+            case EventType.DeSelectAllShapes:
+                self._simpleSendEvent(eventType=eventType)
             case EventType.CopyShapes:
                 self._simpleSendEvent(eventType=eventType)
             case EventType.PasteShapes:
@@ -96,6 +101,8 @@ class EventEngine(IEventEngine):
                 self._simpleSendEvent(eventType=eventType)
             case EventType.Redo:
                 self._simpleSendEvent(eventType=eventType)
+            case EventType.CutShape:
+                self._sendCutShapeEvent(**kwargs)
             case EventType.CutShapes:
                 self._simpleSendEvent(eventType=eventType)
             case EventType.AddOglDiagram:
@@ -148,4 +155,9 @@ class EventEngine(IEventEngine):
 
     def _simpleSendEvent(self, eventType: EventType):
         eventToPost = eventType.commandEvent
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendCutShapeEvent(self, **kwargs):
+        shapeToCut = kwargs[SHAPE_TO_CUT_PARAMETER]
+        eventToPost: CutShapeEvent = CutShapeEvent(shapeToCut=shapeToCut)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

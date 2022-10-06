@@ -146,10 +146,10 @@ class UmlDiagramsFrame(UmlFrame):
 
         """
         selectedOglClass: OglClass = cutOglClassEvent.selectedShape
-        self._mediator.deselectAllShapes()      # TODO move this code here
+        self._eventEngine.sendEvent(EventType.DeSelectAllShapes)
+
         selectedOglClass.SetSelected(True)
-        # self._mediator.cutSelectedShapes()
-        self._eventEngine.sendEvent(EventType.CutShapes)
+        self._eventEngine.sendEvent(EventType.CutShape, shapeToCut=selectedOglClass)
 
     # noinspection PyUnusedLocal
     def _onProjectModified(self, event: ProjectModifiedEvent):

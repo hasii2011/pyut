@@ -853,23 +853,8 @@ class Mediator(Singleton):
         umlFrame.getHistory().addCommandGroup(group)
         umlFrame.getHistory().execute()
 
-    def createProject(self) -> 'IPyutProject':
-        """
-        V2 UI entry point;  Will eventually be replaced by an event
-
-        Returns:  Returns a PyutProjectV2 instance
-        """
-        return self._treeNotebookHandler.newProject()
-
     def createDocument(self, diagramType: DiagramType):
         return self._treeNotebookHandler.newDocument(diagramType)
-
-    def saveProject(self) -> 'IPyutProject':
-
-        self._treeNotebookHandler.saveFile()
-        self.updateTitle()
-
-        return self._treeNotebookHandler.currentProject
 
     def openProject(self, fileName: str, pyutProject: 'IPyutProject'):
         self._treeNotebookHandler.openFile(filename=fileName, project=pyutProject)

@@ -189,9 +189,7 @@ class PyutApplicationFrameV2(Frame):
             force:
         """
         # Close all files
-        # TODO - till we get a better V2 ui
-        # if self._treeNotebookHandler.onClose() is False:
-        #     return
+        self._pyutUIV2.handleUnsavedProjects()
 
         if self._prefs.overrideProgramExitPosition is False:
             # Only save position if we are not auto-saving
@@ -203,11 +201,11 @@ class PyutApplicationFrameV2(Frame):
             ourSize: Tuple[int, int] = self.GetSize()
             self._prefs.startupSize = Dimensions(ourSize[0], ourSize[1])
 
-        self._clipboard    = None
-        self._mediator     = None
-        self._prefs        = None
-        self._plugMgr      = None
-        self._pyutUIV2 = None
+        self._clipboard = None
+        self._mediator  = None
+        self._prefs     = None
+        self._plugMgr   = None
+        self._pyutUIV2  = None
 
         self.Destroy()
 
@@ -272,9 +270,6 @@ class PyutApplicationFrameV2(Frame):
 
         self._mediator.setCurrentAction(currentAction)
         self._mediator.selectTool(event.GetId())
-        # TODO Need better V2 UI
-        # self._treeNotebookHandler.setModified(True)
-        self._mediator.updateTitle()
 
     def _onActivate(self, event: ActivateEvent):
         """

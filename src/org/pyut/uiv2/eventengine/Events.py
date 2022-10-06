@@ -25,12 +25,15 @@ UMLDiagramModifiedEvent, EVENT_UML_DIAGRAM_MODIFIED    = NewEvent()
 
 UpdateRecentProjectsEvent,    EVENT_UPDATE_RECENT_PROJECTS    = NewEvent()
 
-SelectAllShapesEvent, EVENT_SELECT_ALL_SHAPES = NewEvent()
+SelectAllShapesEvent,   EVENT_SELECT_ALL_SHAPES   = NewEvent()
+DeSelectAllShapesEvent, EVENT_DESELECT_ALL_SHAPES = NewEvent()
+
 CopyShapesEvent,      EVENT_COPY_SHAPES       = NewEvent()
 PasteShapesEvent,     EVENT_PASTE_SHAPES      = NewEvent()
 CutShapesEvent,       EVENT_CUT_SHAPES        = NewEvent()
 UndoEvent,            EVENT_UNDO              = NewEvent()
 RedoEvent,            EVENT_REDO              = NewEvent()
+CutShapeEvent,        EVENT_CUT_SHAPE         = NewEvent()
 
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
@@ -56,6 +59,11 @@ class EventType(str, Enum):
         Creates a new diagram on the current project
         parameter:
             diagramType:   A value from the DiagramType enumeration
+
+    CutShapeEvent
+        Cuts only the specified shape
+        parameter:
+            shapeToCut
 
     Events with no parameters get stuffed into the enumeration as instances, so they can be used
     event engine simple send method;  To simplify enumeration creation I create instances for all
@@ -89,12 +97,14 @@ class EventType(str, Enum):
 
     UMLDiagramModified      = ('UMLDiagramModified',   UMLDiagramModifiedEvent(),   EVENT_UML_DIAGRAM_MODIFIED)
 
-    SelectAllShapes = ('SelectAllShapes', SelectAllShapesEvent(), EVENT_SELECT_ALL_SHAPES)
-    CopyShapes      = ('CopyShapes',      CopyShapesEvent(),      EVENT_COPY_SHAPES)
-    PasteShapes     = ('PasteShapes',     PasteShapesEvent(),     EVENT_PASTE_SHAPES)
-    CutShapes       = ('CutShapes',       CutShapesEvent(),       EVENT_CUT_SHAPES)
-    Undo            = ('Undo',            UndoEvent(),            EVENT_UNDO)
-    Redo            = ('Redo',            RedoEvent(),            EVENT_REDO)
+    SelectAllShapes   = ('SelectAllShapes',        SelectAllShapesEvent(),   EVENT_SELECT_ALL_SHAPES)
+    DeSelectAllShapes = ('DeSelectAllShapesEvent', DeSelectAllShapesEvent(), EVENT_DESELECT_ALL_SHAPES)
+    CopyShapes        = ('CopyShapes',             CopyShapesEvent(),        EVENT_COPY_SHAPES)
+    PasteShapes       = ('PasteShapes',            PasteShapesEvent(),       EVENT_PASTE_SHAPES)
+    CutShapes         = ('CutShapes',              CutShapesEvent(),         EVENT_CUT_SHAPES)
+    Undo              = ('Undo',                   UndoEvent(),              EVENT_UNDO)
+    Redo              = ('Redo',                   RedoEvent(),              EVENT_REDO)
+    CutShape          = ('CutShape',               CutShapeEvent(),          EVENT_CUT_SHAPE)
 
     AddPyutDiagram = ('AddPyutDiagram', AddPyutDiagramEvent(), EVENT_ADD_PYUT_DIAGRAM)
     AddOglDiagram  = ('AddOglDiagram',  AddOglDiagramEvent(),  EVENT_ADD_OGL_DIAGRAM)

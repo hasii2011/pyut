@@ -9,6 +9,7 @@ from logging import getLogger
 from copy import copy
 
 from wx import CLIP_CHILDREN
+from wx import EVT_CLOSE
 from wx import ICON_ERROR
 from wx import ICON_WARNING
 from wx import ID_ANY
@@ -57,6 +58,8 @@ from org.pyut.uiv2.eventengine.Events import EVENT_PASTE_SHAPES
 from org.pyut.uiv2.eventengine.Events import EVENT_SELECT_ALL_SHAPES
 from org.pyut.uiv2.eventengine.Events import EVENT_REDO
 from org.pyut.uiv2.eventengine.Events import EVENT_UNDO
+from org.pyut.uiv2.eventengine.Events import EVENT_CUT_SHAPE
+from org.pyut.uiv2.eventengine.Events import EVENT_DESELECT_ALL_SHAPES
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import CutShapesEvent
@@ -65,6 +68,8 @@ from org.pyut.uiv2.eventengine.Events import PasteShapesEvent
 from org.pyut.uiv2.eventengine.Events import SelectAllShapesEvent
 from org.pyut.uiv2.eventengine.Events import RedoEvent
 from org.pyut.uiv2.eventengine.Events import UndoEvent
+from org.pyut.uiv2.eventengine.Events import CutShapeEvent
+from org.pyut.uiv2.eventengine.Events import DeSelectAllShapesEvent
 
 
 PyutObjects = NewType('PyutObjects', List[PyutObject])
@@ -81,12 +86,16 @@ class DiagramNotebook(Notebook):
 
         self._clipboard: PyutObjects = PyutObjects([])            # will be re-created at every copy and cut
 
-        self._eventEngine.registerListener(pyEventBinder=EVENT_SELECT_ALL_SHAPES, callback=self._onSelectAllShapes)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_COPY_SHAPES,       callback=self._onCopy)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_PASTE_SHAPES,      callback=self._onPaste)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_CUT_SHAPES,        callback=self._onCut)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_UNDO,              callback=self._onUndo)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_REDO,              callback=self._onRedo)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SELECT_ALL_SHAPES,   callback=self._onSelectAllShapes)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_DESELECT_ALL_SHAPES, callback=self._onDeSelectAllShapes)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_COPY_SHAPES,         callback=self._onCopy)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_PASTE_SHAPES,        callback=self._onPaste)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CUT_SHAPES,          callback=self._onCutSelectedShapes)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_UNDO,                callback=self._onUndo)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_REDO,                callback=self._onRedo)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CUT_SHAPE,           callback=self._onCutShape)
+
+        self.Bind(EVT_CLOSE, self.Close)
 
     @property
     def currentNotebookFrame(self) -> UmlDiagramsFrame:
@@ -129,18 +138,11 @@ class DiagramNotebook(Notebook):
         """
         Select all Ogl shapes on the current frame
         """
-        frame: UmlDiagramsFrame = self.GetCurrentPage()
+        self._setShapeSelected(True)
 
-        if frame is None:
-            self._displayError("No frame found !")
-            return
-        diagram: Diagram         = frame.GetDiagram()
-        shapes:  List[OglObject] = diagram.GetShapes()
-        for oglShape in shapes:
-            shape: OglObject = cast(OglObject, oglShape)
-            shape.SetSelected(True)
-
-        frame.Refresh()
+    # noinspection PyUnusedLocal
+    def _onDeSelectAllShapes(self, event: DeSelectAllShapesEvent):
+        self._setShapeSelected(False)
 
     # noinspection PyUnusedLocal
     def _onCopy(self, event: CopyShapesEvent):
@@ -211,8 +213,14 @@ class DiagramNotebook(Notebook):
         self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
         self._updateApplicationStatus(f'Pasted {numbObjectsPasted} objects')
 
+    def _onCutShape(self, event: CutShapeEvent):
+
+        umlObject:  UmlObject  = event.shapeToCut
+        umlObjects: UmlObjects = UmlObjects([umlObject])
+        self._doCut(objectsToCut=umlObjects)
+
     # noinspection PyUnusedLocal
-    def _onCut(self, event: CutShapesEvent):
+    def _onCutSelectedShapes(self, event: CutShapesEvent):
         """
         Remove any selected objects from the current frame and save them in the
         internal clipboard
@@ -221,23 +229,9 @@ class DiagramNotebook(Notebook):
             event:
         """
         umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
-        if umlFrame is None:
-            return
-        selectedShapes = umlFrame.GetSelectedShapes()
-
-        cmdGroup:     CommandGroup = CommandGroup("Delete UML object(s)")
-        cmdGroupInit: bool         = False
-
-        for shape in selectedShapes:
-            cmd: Command = self._createDeleteCommand(shape, umlFrame)
-            if cmd is not None:
-                cmdGroup.addCommand(cmd)
-                cmdGroupInit = True
-
-        if cmdGroupInit is True:
-            umlFrame.getHistory().addCommandGroup(cmdGroup)
-            umlFrame.getHistory().execute()
-        self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
+        if umlFrame is not None:
+            selectedShapes = umlFrame.GetSelectedShapes()
+            self._doCut(objectsToCut=selectedShapes)
 
     # noinspection PyUnusedLocal
     def _onUndo(self, event: UndoEvent):
@@ -290,16 +284,6 @@ class DiagramNotebook(Notebook):
                     selectedObjects.append(umlObject)
 
         return selectedObjects
-
-    def _displayWarning(self, message: str):
-        self._displayMessage(message=message, caption='Huh?', iconType=ICON_WARNING)
-
-    def _displayError(self, message: str):
-        self._displayMessage(message=message, caption='Error!', iconType=ICON_ERROR)
-
-    def _displayMessage(self, caption: str, message: str, iconType: int):
-        booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption=caption, style=OK | iconType)
-        booBoo.ShowModal()
 
     def _updateApplicationStatus(self, statusMessage: str):
 
@@ -380,3 +364,57 @@ class DiagramNotebook(Notebook):
                 umlFrame.Refresh()
 
         return cmd
+
+    def _setShapeSelected(self, selectValue: bool):
+        """
+        Set the current frames selected value to `selectValue`
+        Args:
+            selectValue:    Either `True` or `False`
+
+        """
+        frame: UmlDiagramsFrame = self.GetCurrentPage()
+
+        if frame is None:
+            self._displayError("No frame found !")
+        else:
+            diagram: Diagram         = frame.GetDiagram()
+            shapes:  List[OglObject] = diagram.GetShapes()
+            for oglShape in shapes:
+                shape: OglObject = cast(OglObject, oglShape)
+                shape.SetSelected(selectValue)
+
+            frame.Refresh()
+
+    def _doCut(self, objectsToCut: UmlObjects):
+        """
+        The common cut code;  No need to check valid UML frame because ._onCutSelectedShapes
+        validated it and the event CutShape from an open frame
+
+        Args:
+            objectsToCut:
+        """
+        cmdGroup:     CommandGroup = CommandGroup("Delete UML object(s)")
+        cmdGroupInit: bool         = False
+
+        umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
+
+        for shape in objectsToCut:
+            cmd: Command = self._createDeleteCommand(cast(OglObject, shape), umlFrame)
+            if cmd is not None:
+                cmdGroup.addCommand(cmd)
+                cmdGroupInit = True
+
+        if cmdGroupInit is True:
+            umlFrame.getHistory().addCommandGroup(cmdGroup)
+            umlFrame.getHistory().execute()
+        self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
+
+    def _displayWarning(self, message: str):
+        self._displayMessage(message=message, caption='Huh?', iconType=ICON_WARNING)
+
+    def _displayError(self, message: str):
+        self._displayMessage(message=message, caption='Error!', iconType=ICON_ERROR)
+
+    def _displayMessage(self, caption: str, message: str, iconType: int):
+        booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption=caption, style=OK | iconType)
+        booBoo.ShowModal()
