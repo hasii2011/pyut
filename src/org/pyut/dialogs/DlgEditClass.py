@@ -440,8 +440,8 @@ class DlgEditClass(DlgEditClassCommon):
     def __setProjectModified(self):
         fileHandling = self._mediator.getFileHandling()
 
-        from org.pyut.ui.PyutProject import PyutProject
+        from org.pyut.uiv2.IPyutProject import IPyutProject
 
-        project: PyutProject = fileHandling.currentProject
+        project: IPyutProject = fileHandling.currentProject
         if project is not None:
             project.modified = True

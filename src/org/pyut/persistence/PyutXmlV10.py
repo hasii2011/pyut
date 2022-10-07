@@ -55,7 +55,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 
 from org.pyut.ui.PyutDocument import PyutDocument
-from org.pyut.ui.PyutProject import PyutProject
+from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.ui.Mediator import Mediator
@@ -91,7 +91,7 @@ class PyutXml:
         self._prefs:    PyutPreferences = PyutPreferences()
         self._dlgGauge: Dialog          = cast(Dialog, None)
 
-    def save(self, project: PyutProject) -> Document:
+    def save(self, project: IPyutProject) -> Document:
         """
         Save diagram in XML file.
 
@@ -122,7 +122,7 @@ class PyutXml:
 
             toPyutXml: OglToMiniDomV10 = OglToMiniDomV10()
             # Save all documents in the project
-            for pyutDocument in project.getDocuments():
+            for pyutDocument in project.documents:
 
                 document:     PyutDocument = cast(PyutDocument, pyutDocument)
                 documentNode: Element      = self.__pyutDocumentToPyutXml(xmlDoc=xmlDoc, pyutDocument=document)
@@ -181,7 +181,7 @@ class PyutXml:
 
         return xmlDoc
 
-    def open(self, dom: Document, project: PyutProject):
+    def open(self, dom: Document, project: IPyutProject):
         """
         Open a file and create a diagram.
 
@@ -204,15 +204,10 @@ class PyutXml:
                 self.__updateProgressDialog(newMessage=f'Determine Title for document type: {docTypeStr}', newGaugeValue=2)
                 wxYield()
 
-                docType:  DiagramType  = PyutConstants.diagramTypeFromString(docTypeStr)
-                if self._prefs.usev2ui is True:
-                    document: IPyutDocument = Mediator().createDocument(diagramType=docType)
-                    # project.documents.append(document)
-                else:
-                    document = project.newDocument(docType)
+                docType:  DiagramType   = PyutConstants.diagramTypeFromString(docTypeStr)
+                document: IPyutDocument = Mediator().createDocument(diagramType=docType)
 
-                # mypy does not handle property setters
-                document.title = self.__determineDocumentTitle(documentNode)    # type: ignore
+                document.title = self.__determineDocumentTitle(documentNode)
 
                 umlFrame = self.__showAppropriateUmlFrame(document)
                 self.__positionAndSetupDiagramFrame(umlFrame=umlFrame, documentNode=documentNode)

@@ -65,8 +65,8 @@ class BaseDlgEdit(Dialog):
         if self._ctrl is not None:
             fileHandling = self._ctrl.getFileHandling()
 
-            from org.pyut.ui.PyutProject import PyutProject
+            from org.pyut.uiv2.IPyutProject import IPyutProject
 
-            project: PyutProject = fileHandling.getCurrentProject()
+            project: IPyutProject = fileHandling.currentProject
             if project is not None:
                 project.modified = True

@@ -30,7 +30,7 @@ from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 from ogl.OglClass import OglClass
 from ogl.OglObject import OglObject
 
-from org.pyut.ui.PyutProject import PyutProject
+from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from org.pyut.plugins.base.PyutToPlugin import OglClasses
@@ -310,9 +310,9 @@ class ToFastEdit(PyutToPlugin):
     def _setProjectModified(self):
 
         fileHandling = self._ctrl.getFileHandling()
-        project: PyutProject = fileHandling.getCurrentProject()
+        project: IPyutProject = fileHandling.getCurrentProject()
         if project is not None:
-            project.setModified()
+            project.modified = True
 
     def _cleanupTempFile(self):
         osRemove(ToFastEdit.FAST_EDIT_TEMP_FILE)

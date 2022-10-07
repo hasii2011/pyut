@@ -58,7 +58,7 @@ class TestIoFile(TestBase):
     def testIoFileOpenV10(self, mockFileHandling, wxGauge, wxDialog):
         fqFileName = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'IoFileTest.put')
 
-        with patch('org.pyut.ui.PyutProject.PyutProject') as mockPyutProject:
+        with patch('org.pyut.uiv2.PyutProjectV2.PyutProjectV2') as mockPyutProject:
             self.ioFile.open(filename=fqFileName, project=mockPyutProject)
 
 

@@ -49,6 +49,16 @@ class IPyutProject(ABC):
 
     @property
     @abstractmethod
+    def codePath(self) -> str:
+        pass
+
+    @codePath.setter
+    @abstractmethod
+    def codePath(self, newValue: str):
+        pass
+
+    @property
+    @abstractmethod
     def modified(self) -> bool:
         """
         Returns:  'True' if it has been else 'False'

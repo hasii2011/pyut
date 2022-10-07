@@ -32,13 +32,13 @@ class PyutDocument(IPyutDocument):
             project:        The project
             docType:        The enumeration value for the diagram type
         """
-        from org.pyut.ui.PyutProject import PyutProject
+        from org.pyut.uiv2.IPyutProject import IPyutProject
 
         super().__init__()
 
         self.logger:               Logger   = getLogger(__name__)
         self._parentFrame:         Notebook = cast(Notebook, None)
-        self._project: PyutProject = project
+        self._project: IPyutProject = project
 
         self._type: DiagramType = docType
         """

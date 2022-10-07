@@ -801,10 +801,10 @@ class Mediator(Singleton):
         Set the application title, function of version and current filename
         """
 
-        from org.pyut.ui.PyutProject import PyutProject
+        from org.pyut.uiv2.IPyutProject import IPyutProject
 
         # Get filename
-        project: PyutProject = self._treeNotebookHandler.currentProject
+        project: IPyutProject = self._treeNotebookHandler.currentProject
         if project is not None:
             filename = project.filename
         else:
