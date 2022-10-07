@@ -1,4 +1,3 @@
-
 from typing import Callable
 
 from logging import Logger
@@ -21,18 +20,18 @@ from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-NEW_NAME_PARAMETER:       str = 'newName'
-DIAGRAM_TYPE_PARAMETER:   str = 'diagramType'
-TREE_ITEM_ID_PARAMETER:   str = 'treeItemId'
+NEW_NAME_PARAMETER: str = 'newName'
+DIAGRAM_TYPE_PARAMETER: str = 'diagramType'
+TREE_ITEM_ID_PARAMETER: str = 'treeItemId'
 
-NEW_FILENAME_PARAMETER:              str = 'newFilename'
+NEW_FILENAME_PARAMETER: str = 'newFilename'
 CURRENT_FRAME_ZOOM_FACTOR_PARAMETER: str = 'currentFrameZoomFactor'
-PROJECT_MODIFIED_PARAMETER:          str = 'projectModified'
+PROJECT_MODIFIED_PARAMETER: str = 'projectModified'
 
-APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
+APPLICATION_STATUS_MSG_PARAMETER: str = 'applicationStatusMsg'
 
-INSERT_PROJECT_FILENAME_PARAMETER:   str = 'projectFilename'
-OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
+INSERT_PROJECT_FILENAME_PARAMETER: str = 'projectFilename'
+OPEN_PROJECT_FILENAME_PARAMETER: str = INSERT_PROJECT_FILENAME_PARAMETER
 
 SHAPE_TO_CUT_PARAMETER: str = 'shapeToCut'
 
@@ -54,7 +53,7 @@ class EventEngine(IEventEngine):
     def __init__(self, listeningWindow: Window):
 
         self._listeningWindow: Window = listeningWindow
-        self.logger:           Logger = getLogger(__name__)
+        self.logger: Logger = getLogger(__name__)
 
     def registerListener(self, pyEventBinder: PyEventBinder, callback: Callable):
         self._listeningWindow.Bind(pyEventBinder, callback)
@@ -71,43 +70,17 @@ class EventEngine(IEventEngine):
                 self._sendUpdateApplicationStatusEvent(**kwargs)
             case EventType.NewDiagram:
                 self._sendNewDiagramEvent(**kwargs)
-            case EventType.NewProject:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.DeleteDiagram:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.CloseProject:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.SaveProject:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.SaveProjectAs:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.UMLDiagramModified:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.UpdateRecentProjects:
-                self._simpleSendEvent(eventType=eventType)
             case EventType.InsertProject:
                 self._sendInsertProjectEvent(**kwargs)
             case EventType.OpenProject:
                 self._sendOpenProjectEvent(**kwargs)
-            case EventType.SelectAllShapes:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.DeSelectAllShapes:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.CopyShapes:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.PasteShapes:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.Undo:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.Redo:
-                self._simpleSendEvent(eventType=eventType)
             case EventType.CutShape:
                 self._sendCutShapeEvent(**kwargs)
-            case EventType.CutShapes:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.AddOglDiagram:
-                self._simpleSendEvent(eventType=eventType)
-            case EventType.AddPyutDiagram:
+
+            case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
+                    EventType.UMLDiagramModified | EventType.UpdateRecentProjects | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
+                    EventType.CopyShapes | EventType.PasteShapes | EventType.Undo | EventType.Redo | EventType.CutShapes | \
+                    EventType.AddOglDiagram | EventType.AddPyutDiagram:
                 self._simpleSendEvent(eventType=eventType)
             case _:
                 assert False, f'Unknown event type: `{eventType}`'
@@ -121,35 +94,35 @@ class EventEngine(IEventEngine):
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendNewTitleEvent(self, **kwargs):
-        newFilename:            str   = kwargs[NEW_FILENAME_PARAMETER]
+        newFilename: str = kwargs[NEW_FILENAME_PARAMETER]
         currentFrameZoomFactor: float = kwargs[CURRENT_FRAME_ZOOM_FACTOR_PARAMETER]
-        projectModified:        bool  = kwargs[PROJECT_MODIFIED_PARAMETER]
+        projectModified: bool = kwargs[PROJECT_MODIFIED_PARAMETER]
         eventToPost: UpdateApplicationTitleEvent = UpdateApplicationTitleEvent(newFilename=newFilename,
                                                                                currentFrameZoomFactor=currentFrameZoomFactor,
                                                                                projectModified=projectModified)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendUpdateApplicationStatusEvent(self, **kwargs):
-        newMessage:  str = kwargs[APPLICATION_STATUS_MSG_PARAMETER]
+        newMessage: str = kwargs[APPLICATION_STATUS_MSG_PARAMETER]
 
         eventToPost: UpdateApplicationStatusEvent = UpdateApplicationStatusEvent(applicationStatusMsg=newMessage)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendInsertProjectEvent(self, **kwargs):
 
-        projectFilename: str                = kwargs[INSERT_PROJECT_FILENAME_PARAMETER]
-        eventToPost:     InsertProjectEvent = InsertProjectEvent(projectFilename=projectFilename)
+        projectFilename: str = kwargs[INSERT_PROJECT_FILENAME_PARAMETER]
+        eventToPost: InsertProjectEvent = InsertProjectEvent(projectFilename=projectFilename)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendOpenProjectEvent(self, **kwargs):
 
-        projectFilename: str              = kwargs[OPEN_PROJECT_FILENAME_PARAMETER]
-        eventToPost:     OpenProjectEvent = OpenProjectEvent(projectFilename=projectFilename)
+        projectFilename: str = kwargs[OPEN_PROJECT_FILENAME_PARAMETER]
+        eventToPost: OpenProjectEvent = OpenProjectEvent(projectFilename=projectFilename)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendNewDiagramEvent(self, **kwargs):
 
-        diagramType: DiagramType     = kwargs[DIAGRAM_TYPE_PARAMETER]
+        diagramType: DiagramType = kwargs[DIAGRAM_TYPE_PARAMETER]
         eventToPost: NewDiagramEvent = NewDiagramEvent(diagramType=diagramType)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 

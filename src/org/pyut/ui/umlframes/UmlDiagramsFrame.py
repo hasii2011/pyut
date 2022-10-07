@@ -1,6 +1,5 @@
 
 from typing import Callable
-from typing import Dict
 
 from logging import Logger
 from logging import getLogger
@@ -8,6 +7,8 @@ from logging import getLogger
 from wx import EVT_CHAR
 from wx import WXK_BACK
 from wx import WXK_DELETE
+from wx import WXK_DOWN
+from wx import WXK_UP
 from wx import WXK_INSERT
 
 from wx import KeyEvent
@@ -47,6 +48,16 @@ class UmlDiagramsFrame(UmlFrame):
 
     It is used by UmlClassDiagramsFrame
     """
+
+    KEY_CODE_DELETE:       int = WXK_DELETE
+    KEY_CODE_BACK:         int = WXK_BACK
+    KEY_CODE_INSERT:       int = WXK_INSERT
+    KEY_CODE_CAPITAL_I:    int = ord('I')
+    KEY_CODE_LOWER_CASE_I: int = ord('i')
+    KEY_CODE_CAPITAL_S:    int = ord('S')
+    KEY_CODE_LOWER_CASE_S: int = ord('s')
+    KEY_CODE_UP:           int = WXK_UP
+    KEY_CODE_DOWN:         int = WXK_DOWN
 
     def __init__(self, parent: Notebook, eventEngine: IEventEngine):
         """
@@ -103,22 +114,29 @@ class UmlDiagramsFrame(UmlFrame):
             event:  The wxPython key event
         """
         c: int = event.GetKeyCode()
-        funcs: Dict[int, Callable] = {
-            WXK_DELETE: self._onCutShape,
-            WXK_BACK:   self._onCutShape,
-            WXK_INSERT: self._insertSelectedShape,
-            ord('i'):   self._insertSelectedShape,
-            ord('I'):   self._insertSelectedShape,
-            ord('s'):   self._toggleSpline,
-            ord('S'):   self._toggleSpline,
-            ord('<'):   self._moveSelectedShapeDown,
-            ord('>'):   self._moveSelectedShapeUp,
-        }
-        if c in funcs:
-            funcs[c]()
-        else:
-            self.logger.warning(f'Key code not supported: {c}')
-            event.Skip()
+        # print(f'{WXK_DELETE=} {WXK_BACK=} {WXK_INSERT=}')
+        match c:
+            case UmlDiagramsFrame.KEY_CODE_DELETE:
+                self._onCutShape()
+            case UmlDiagramsFrame.KEY_CODE_BACK:
+                self._onCutShape()
+            case UmlDiagramsFrame.KEY_CODE_INSERT:
+                self._insertSelectedShape()
+            case UmlDiagramsFrame.KEY_CODE_LOWER_CASE_I:
+                self._insertSelectedShape()
+            case UmlDiagramsFrame.KEY_CODE_CAPITAL_I:
+                self._insertSelectedShape()
+            case UmlDiagramsFrame.KEY_CODE_LOWER_CASE_S:
+                self._toggleSpline()
+            case UmlDiagramsFrame.KEY_CODE_INSERT:
+                self._toggleSpline()
+            case UmlDiagramsFrame.KEY_CODE_DOWN:
+                self._moveSelectedShapeDown()
+            case UmlDiagramsFrame.KEY_CODE_UP:
+                self._moveSelectedShapeUp()
+            case _:
+                self.logger.warning(f'Key code not supported: {c}')
+                event.Skip()
 
     def _onCutShape(self):
         self._eventEngine.sendEvent(EventType.CutShapes)
