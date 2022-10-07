@@ -19,7 +19,6 @@ from wx import ScrolledWindow
 
 from org.pyut.plugins.base.PyutPlugin import InputFormatType
 from org.pyut.plugins.base.PyutPlugin import OutputFormatType
-from org.pyut.ui.Mediator import Mediator
 
 from ogl.OglClass import OglClass
 
@@ -132,8 +131,8 @@ class IoWxImage(PyutIoPlugin):
             oglObjects:     list of exported objects
         """
 
-        mediator: Mediator = self._ctrl
-        mediator.deselectAllShapes()
+        # mediator: Mediator = self._ctrl
+        # mediator.deselectAllShapes()
 
         imageType: BitmapType     = WxImageFormat.toWxBitMapType(self._imageFormat)
 

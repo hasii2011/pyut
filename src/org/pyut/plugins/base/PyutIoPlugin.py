@@ -7,7 +7,6 @@ from logging import getLogger
 
 from org.pyut.plugins.base.PyutPlugin import InputFormatType
 from org.pyut.plugins.base.PyutPlugin import OutputFormatType
-from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.plugins.base.PyutPlugin import PyutPlugin
 from org.pyut.plugins.base.PluginTypes import OglClasses
@@ -189,15 +188,15 @@ class PyutIoPlugin(PyutPlugin):
                 return None
 
             mediator: Mediator = Mediator()
-            prefs: PyutPreferences = PyutPreferences()
-            if prefs.pyutIoPluginAutoSelectAll is True:
-                mediator.selectAllShapes()
+            # prefs: PyutPreferences = PyutPreferences()
+            # if prefs.pyutIoPluginAutoSelectAll is True:
+            #     mediator.selectAllShapes()
             self.__oglObjects = mediator.getSelectedShapes()
             if len(self.__oglObjects) == 0:
                 self.displayNoSelectedUmlObjects()
             else:
                 # write the file
                 self.write(self.__oglObjects)
-                mediator.deselectAllShapes()
+                # mediator.deselectAllShapes()
         else:
             PyutIoPlugin.clsLogger.info(f'Output format is: {outputFormat}')

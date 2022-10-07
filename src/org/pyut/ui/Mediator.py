@@ -704,18 +704,6 @@ class Mediator(Singleton):
             return cast(Diagram, None)
         return umlFrame.getDiagram()
 
-    def deselectAllShapes(self):
-        """
-        Deselect all shapes in the current diagram.
-        """
-        self._setShapeSelection(False)
-
-    def selectAllShapes(self):
-        """
-        Select all shapes in the current diagram.
-        """
-        self._setShapeSelection(True)
-
     def showParams(self, theNewValue: bool):
         """
         Globally choose whether to show the method parameters in classes
@@ -855,9 +843,6 @@ class Mediator(Singleton):
 
     def createDocument(self, diagramType: DiagramType):
         return self._treeNotebookHandler.newDocument(diagramType)
-
-    def openProject(self, fileName: str, pyutProject: 'IPyutProject'):
-        self._treeNotebookHandler.openFile(filename=fileName, project=pyutProject)
 
     def _setShapeSelection(self, selected: bool):
         """
