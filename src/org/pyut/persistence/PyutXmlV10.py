@@ -52,9 +52,8 @@ from org.pyut.persistence.converters.OglToMiniDomV10 import OglToMiniDom as OglT
 
 from org.pyut.persistence.converters.PyutXmlConstants import PyutXmlConstants
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.uiv2.IPyutDocument import IPyutDocument
 
-from org.pyut.ui.PyutDocument import PyutDocument
+from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
@@ -124,7 +123,7 @@ class PyutXml:
             # Save all documents in the project
             for pyutDocument in project.documents:
 
-                document:     PyutDocument = cast(PyutDocument, pyutDocument)
+                document:     IPyutDocument = cast(IPyutDocument, pyutDocument)
                 documentNode: Element      = self.__pyutDocumentToPyutXml(xmlDoc=xmlDoc, pyutDocument=document)
 
                 top.appendChild(documentNode)
@@ -231,11 +230,11 @@ class PyutXml:
 
         self.__cleanupProgressDialog(umlFrame)
 
-    def __pyutDocumentToPyutXml(self, xmlDoc: Document, pyutDocument: PyutDocument) -> Element:
+    def __pyutDocumentToPyutXml(self, xmlDoc: Document, pyutDocument: IPyutDocument) -> Element:
 
         documentNode = xmlDoc.createElement(PyutXmlConstants.ELEMENT_DOCUMENT)
 
-        docType: str = pyutDocument.getType().__str__()
+        docType: str = pyutDocument.diagramType.__str__()
 
         documentNode.setAttribute(PyutXmlConstants.ATTR_TYPE, docType)
         documentNode.setAttribute(PyutXmlConstants.ATTR_TITLE, pyutDocument.title)

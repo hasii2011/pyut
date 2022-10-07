@@ -7,6 +7,7 @@ from abc import abstractmethod
 
 from wx import TreeItemId
 
+from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.uiv2.Types import UmlFrameType
 
 
@@ -48,6 +49,15 @@ class IPyutDocument(ABC):
     @treeRoot.setter
     @abstractmethod
     def treeRoot(self, value: TreeItemId):
+        pass
+
+    @property
+    @abstractmethod
+    def diagramType(self) -> DiagramType:
+        """
+        Returns:
+                The document type
+        """
         pass
 
     @abstractmethod
