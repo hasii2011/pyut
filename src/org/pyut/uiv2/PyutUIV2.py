@@ -54,6 +54,7 @@ from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 from org.pyut.uiv2.eventengine.CurrentProjectInformation import CurrentProjectInformation
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
+from org.pyut.uiv2.eventengine.Events import EVENT_GET_ACTIVE_UML_FRAME
 from org.pyut.uiv2.eventengine.Events import EVENT_GET_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_DIAGRAM
@@ -65,6 +66,7 @@ from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import GetActiveUmlFrameEvent
 from org.pyut.uiv2.eventengine.Events import GetProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
@@ -126,6 +128,7 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_GET_PROJECT_INFORMATION, callback=self._onGetProjectInformation)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_GET_ACTIVE_UML_FRAME,    callback=self._onGetActivateUmlFrame)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -591,6 +594,10 @@ class PyutUIV2(IPyutUI):
 
         cb = event.callback
         cb(projectInformation)
+
+    def _onGetActivateUmlFrame(self, event: GetActiveUmlFrameEvent):
+        cb = event.callback
+        cb(self._projectManager.currentFrame)
 
     def _updateApplicationTitle(self):
 

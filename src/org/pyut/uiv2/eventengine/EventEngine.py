@@ -1,3 +1,4 @@
+from typing import Any
 from typing import Callable
 
 from logging import Logger
@@ -12,6 +13,7 @@ from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.uiv2.eventengine.CurrentProjectInformation import CurrentProjectInformation
 from org.pyut.uiv2.eventengine.Events import CutShapeEvent
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import GetActiveUmlFrameEvent
 from org.pyut.uiv2.eventengine.Events import GetProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
@@ -41,6 +43,7 @@ CALLBACK_PARAMETER:                  str = 'callback'
 
 # EventCallback = NewType('EventCallback', Callable[[CurrentProjectInformation], None])
 ProjectInformationCallback = Callable[[CurrentProjectInformation], None]
+ActiveUmlFrameCallback     = Callable[[Any], None]
 
 
 class EventEngine(IEventEngine):
@@ -89,6 +92,8 @@ class EventEngine(IEventEngine):
                 self._sendSetToolActionEvent(**kwargs)
             case EventType.GetProjectInformation:
                 self._sendGetProjectInformationRequestEvent(**kwargs)
+            case EventType.GetActiveUmlFrame:
+                self._sendGetActiveUmlFrameEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.UpdateRecentProjects | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
@@ -161,6 +166,12 @@ class EventEngine(IEventEngine):
 
     def _sendGetProjectInformationRequestEvent(self, **kwargs):
 
-        cb: ProjectInformationCallback = kwargs[CALLBACK_PARAMETER]
+        cb:          ProjectInformationCallback = kwargs[CALLBACK_PARAMETER]
         eventToPost: GetProjectInformationEvent = GetProjectInformationEvent(callback=cb)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendGetActiveUmlFrameEvent(self, **kwargs):
+
+        cb:          ActiveUmlFrameCallback = kwargs[CALLBACK_PARAMETER]
+        eventToPost: GetActiveUmlFrameEvent = GetActiveUmlFrameEvent(callback=cb)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

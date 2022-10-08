@@ -28,8 +28,6 @@ from pyutmodel.PyutInterface import PyutInterface
 from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
 
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-
 from org.pyut.history.commands.MethodInformation import MethodInformation
 from org.pyut.history.commands.OglShapeCommand import OglShapeCommand
 
@@ -38,11 +36,19 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 class CreateOglInterfaceCommand(OglShapeCommand):
 
-    def __init__(self,  implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
+    def __init__(self,  umlFrame, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
+        """
+
+        Args:
+            umlFrame:       Going to cheat since lollipop interfaces are a hack
+            implementor:
+            attachmentAnchor:
+        """
 
         super().__init__()
         self.logger: Logger = getLogger(__name__)
 
+        self._umlFrame = umlFrame
         if implementor is None and attachmentAnchor is None:
             pass
         else:
@@ -106,15 +112,11 @@ class CreateOglInterfaceCommand(OglShapeCommand):
 
     def redo(self):
 
-        from org.pyut.ui.Mediator import Mediator
-
-        med: Mediator = Mediator()
-
         attachmentAnchor: SelectAnchorPoint = self._attachmentAnchor
 
         self.logger.info(f'implementor: {self._implementor} attachmentAnchor: {attachmentAnchor}')
-        umlFrame: UmlClassDiagramsFrame = med.getFileHandling().getCurrentFrame()
-
+        # umlFrame: UmlClassDiagramsFrame = med.getFileHandling().getCurrentFrame()
+        umlFrame = self._umlFrame
         self._removeUnneededAnchorPoints(self._implementor, attachmentAnchor)
         umlFrame.Refresh()
 
@@ -125,7 +127,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
                 pyutClass: PyutClass = cast(PyutClass, self._implementor.pyutObject)
                 pyutClass.addInterface(self._pyutInterface)
 
-        umlFrame: UmlClassDiagramsFrame = med.getFileHandling().getCurrentFrame()
+        # umlFrame: UmlClassDiagramsFrame = med.getFileHandling().getCurrentFrame()
 
         anchorPosition: Tuple[int, int] = attachmentAnchor.GetPosition()
         self.logger.info(f'anchorPosition: {anchorPosition}')

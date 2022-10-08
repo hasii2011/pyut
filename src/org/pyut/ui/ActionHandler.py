@@ -4,6 +4,34 @@ from typing import TYPE_CHECKING
 from logging import Logger
 from logging import getLogger
 
+from wx import ID_OK
+from wx import CANCEL
+from wx import CENTRE
+from wx import ID_ANY
+from wx import OK
+
+from wx import TextEntryDialog
+
+from wx import Yield as wxYield
+
+from miniogl.AttachmentLocation import AttachmentLocation
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.Constants import EVENT_PROCESSED
+from miniogl.Constants import SKIP_EVENT
+
+from ogl.OglClass import OglClass
+
+from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
+
+if TYPE_CHECKING:
+    from org.pyut.ui.umlframes.UmlFrame import UmlFrame
+    from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
+from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutText import PyutText
+from pyutmodel.PyutLinkType import PyutLinkType
+
+
 from org.pyut.ui.Actions import ACTION_DESTINATION_AGGREGATION_LINK
 from org.pyut.ui.Actions import ACTION_DESTINATION_ASSOCIATION_LINK
 from org.pyut.ui.Actions import ACTION_DESTINATION_COMPOSITION_LINK
@@ -36,27 +64,11 @@ from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import SetToolActionEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-if TYPE_CHECKING:
-    from org.pyut.ui.umlframes.UmlFrame import UmlFrame
-
-from miniogl.Constants import EVENT_PROCESSED
-from miniogl.Constants import SKIP_EVENT
-
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutText import PyutText
-
-from wx import CANCEL
-from wx import CENTRE
-from wx import ID_ANY
-from wx import OK
-from wx import TextEntryDialog
-
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.dialogs.DlgAbout import ID_OK
+
 from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
-from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 # messages for the status bar
 a = "Click on the source class"
@@ -87,6 +99,67 @@ MESSAGES = {
     ACTION_ZOOM_IN:     "Select the area to fit on",
     ACTION_ZOOM_OUT:    "Select the central point",
 
+}
+
+# a table of the next action to select
+NEXT_ACTION = {
+    ACTION_SELECTOR:    ACTION_SELECTOR,
+    ACTION_NEW_CLASS:   ACTION_SELECTOR,
+    ACTION_NEW_NOTE:    ACTION_SELECTOR,
+    ACTION_NEW_IMPLEMENT_LINK:          ACTION_DESTINATION_IMPLEMENT_LINK,
+    ACTION_NEW_INHERIT_LINK:            ACTION_DESTINATION_INHERIT_LINK,
+    ACTION_NEW_AGGREGATION_LINK:        ACTION_DESTINATION_AGGREGATION_LINK,
+    ACTION_NEW_COMPOSITION_LINK:        ACTION_DESTINATION_COMPOSITION_LINK,
+    ACTION_NEW_ASSOCIATION_LINK:        ACTION_DESTINATION_ASSOCIATION_LINK,
+    ACTION_NEW_NOTE_LINK:               ACTION_DESTINATION_NOTE_LINK,
+    ACTION_DESTINATION_IMPLEMENT_LINK:  ACTION_SELECTOR,
+
+    ACTION_DESTINATION_INHERIT_LINK:     ACTION_SELECTOR,
+    ACTION_DESTINATION_AGGREGATION_LINK: ACTION_SELECTOR,
+    ACTION_DESTINATION_COMPOSITION_LINK: ACTION_SELECTOR,
+    ACTION_DESTINATION_ASSOCIATION_LINK: ACTION_SELECTOR,
+    ACTION_DESTINATION_NOTE_LINK:        ACTION_SELECTOR,
+    ACTION_NEW_ACTOR:                    ACTION_SELECTOR,
+    ACTION_NEW_USECASE:                  ACTION_SELECTOR,
+
+    ACTION_NEW_SD_INSTANCE: ACTION_SELECTOR,
+    ACTION_NEW_SD_MESSAGE:  ACTION_DESTINATION_SD_MESSAGE,
+
+    ACTION_ZOOM_IN: ACTION_ZOOM_IN
+}
+
+# list of actions which are source events
+SOURCE_ACTIONS = [
+    ACTION_NEW_IMPLEMENT_LINK,
+    ACTION_NEW_INHERIT_LINK,
+    ACTION_NEW_AGGREGATION_LINK,
+    ACTION_NEW_COMPOSITION_LINK,
+    ACTION_NEW_ASSOCIATION_LINK,
+    ACTION_NEW_NOTE_LINK,
+    ACTION_NEW_SD_MESSAGE,
+]
+# list of actions which are destination events
+DESTINATION_ACTIONS = [
+    ACTION_DESTINATION_IMPLEMENT_LINK,
+    ACTION_DESTINATION_INHERIT_LINK,
+    ACTION_DESTINATION_AGGREGATION_LINK,
+    ACTION_DESTINATION_COMPOSITION_LINK,
+    ACTION_DESTINATION_ASSOCIATION_LINK,
+    ACTION_DESTINATION_NOTE_LINK,
+    ACTION_DESTINATION_SD_MESSAGE,
+    ACTION_ZOOM_IN,
+    ACTION_ZOOM_OUT
+]
+
+# OglLink enumerations according to the current action
+LINK_TYPE = {
+    ACTION_DESTINATION_IMPLEMENT_LINK:     PyutLinkType.INTERFACE,
+    ACTION_DESTINATION_INHERIT_LINK:       PyutLinkType.INHERITANCE,
+    ACTION_DESTINATION_AGGREGATION_LINK:   PyutLinkType.AGGREGATION,
+    ACTION_DESTINATION_COMPOSITION_LINK:   PyutLinkType.COMPOSITION,
+    ACTION_DESTINATION_ASSOCIATION_LINK:   PyutLinkType.ASSOCIATION,
+    ACTION_DESTINATION_NOTE_LINK:          PyutLinkType.NOTELINK,
+    ACTION_DESTINATION_SD_MESSAGE:         PyutLinkType.SD_MESSAGE,
 }
 
 
@@ -134,8 +207,12 @@ class ActionHandler:
         msg: str = MESSAGES[self._currentAction]
         self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg=msg)
 
-    def _onSetToolAction(self, event: SetToolActionEvent):
-        self.currentAction = event.action
+    def updateTitle(self):
+        """
+        Set the application title, function of version and current project name
+        """
+
+        self._eventEngine.sendEvent(EventType.GetProjectInformation, callback=self._doUpdate)
 
     def doAction(self, umlFrame: 'UmlFrame', x: int, y: int):
         """
@@ -163,7 +240,7 @@ class ActionHandler:
             pyutActor = umlFrame.createNewActor(x, y)
             if not self._currentActionPersistent:
                 self._currentAction = ACTION_SELECTOR
-                self._selectTool(SharedIdentifiers.ID_ARROW)
+                self._selectActionSelectorTool()
             dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
 
             if dlg.ShowModal() == ID_OK:
@@ -207,6 +284,81 @@ class ActionHandler:
         else:
             return SKIP_EVENT
         return EVENT_PROCESSED
+
+    def shapeSelected(self, umlFrame, shape, position=None):
+        """
+        Do action when a shape is selected.
+        TODO : support each link type
+        """
+        # umlFrame = self._treeNotebookHandler.currentFrame
+        # if umlFrame is None:
+        #     return
+
+        # do the right action
+        if self._currentAction in SOURCE_ACTIONS:
+            self.logger.debug(f'Current action in source actions')
+            # get the next action needed to complete the whole action
+            if self._currentActionPersistent:
+                self._oldAction = self._currentAction
+            self._currentAction = NEXT_ACTION[self._currentAction]
+
+            # if no source, cancel action
+            if shape is None:
+                self.logger.info("Action cancelled (no source)")
+                self._currentAction = ACTION_SELECTOR
+                self._selectActionSelectorTool()
+                self._setStatusText("Action cancelled")
+            else:   # store source
+                self.logger.debug(f'Store source - shape {shape}  position: {position}')
+                self._src    = shape
+                self._srcPos = position
+        elif self._currentAction in DESTINATION_ACTIONS:
+            self.logger.debug(f'Current action in destination actions')
+            # store the destination object
+            self._dst    = shape
+            self._dstPos = position
+            # if no destination, cancel action
+            if self._dst is None:
+                self._currentAction = ACTION_SELECTOR
+                self._selectActionSelectorTool()
+                self._setStatusText("Action cancelled")
+                return
+            self._createLink(umlFrame)
+
+            if self._currentActionPersistent:
+                self._currentAction = self._oldAction
+                del self._oldAction
+            else:
+                self._currentAction = ACTION_SELECTOR
+                self._selectActionSelectorTool()
+        else:
+            self._setStatusText("Error : Action not supported by the mediator")
+            return
+        self._setStatusText(MESSAGES[self._currentAction])
+
+    def requestLollipopLocation(self, umlFrame: 'UmlDiagramsFrame', destinationClass: OglClass):
+
+        self.__createPotentialAttachmentPoints(destinationClass=destinationClass, umlFrame=umlFrame)
+        self._setStatusText(f'Select attachment point')
+        umlFrame.Refresh()
+        wxYield()
+
+    def createLollipopInterface(self, umlFrame: 'UmlDiagramsFrame', implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
+
+        from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+        from org.pyut.history.commands.CommandGroup import CommandGroup
+
+        attachmentAnchor.setYouAreTheSelectedAnchor()
+
+        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(umlFrame=umlFrame, implementor=implementor, attachmentAnchor=attachmentAnchor)
+        group: CommandGroup = CommandGroup("Create lollipop")
+
+        group.addCommand(cmd)
+        umlFrame.getHistory().addCommandGroup(group)
+        umlFrame.getHistory().execute()
+
+    def _onSetToolAction(self, event: SetToolActionEvent):
+        self.currentAction = event.action
 
     def _createOglClass(self, umlFrame, x: int, y: int):
 
@@ -259,37 +411,26 @@ class ActionHandler:
         dlg.Destroy()
         umlFrame.Refresh()
 
+    def _createLink(self, umlFrame):
+
+        from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+        from org.pyut.history.commands.CommandGroup import CommandGroup
+
+        linkType = LINK_TYPE[self._currentAction]
+        cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
+
+        cmdGroup = CommandGroup("create link")
+        cmdGroup.addCommand(cmd)
+        umlFrame.getHistory().addCommandGroup(cmdGroup)
+        umlFrame.getHistory().execute()
+        self._src = None
+        self._dst = None
+
+    def _setStatusText(self, msg: str):
+        self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg=msg)
+
     def _resetStatusText(self):
-        pass        # TODO send event
-
-    def updateTitle(self):
-        """
-        Set the application title, function of version and current project name
-        """
-
-        self._eventEngine.sendEvent(EventType.GetProjectInformation, callback=self._doUpdate)
-        # from org.pyut.uiv2.IPyutProject import IPyutProject
-        #
-        # # Get filename
-        # project: IPyutProject = self._treeNotebookHandler.currentProject
-        # if project is not None:
-        #     filename = project.filename
-        # else:
-        #     filename = ""
-        #
-        # pyutVersion: str = PyutVersion.getPyUtVersion()
-        # # Set text
-        # # txt = "PyUt v" + pyutVersion + " - " + filename
-        # txt: str = f'Pyut v{pyutVersion}- {filename}'
-        # if (project is not None) and (project.modified is True):
-        #     if self._treeNotebookHandler.currentFrame is not None:
-        #         zoom = self._treeNotebookHandler.currentFrame.GetCurrentZoom()
-        #     else:
-        #         zoom = 1
-        #
-        #     txt = txt + f' ( {int(zoom * 100)}%) *'
-        #
-        # # self._appFrame.SetTitle(txt)      TODO: send message
+        self._setStatusText('')
 
     def _doUpdate(self, projectInformation: CurrentProjectInformation):
         pass
@@ -302,6 +443,9 @@ class ActionHandler:
             self._currentAction = ACTION_SELECTOR
             self._selectTool(SharedIdentifiers.ID_ARROW)
 
+    def _selectActionSelectorTool(self):
+        self._selectTool(SharedIdentifiers.ID_ARROW)
+
     def _selectTool(self, toolId: int):
         """
         Select the tool of given ID from the toolbar, and deselect the others.
@@ -313,3 +457,29 @@ class ActionHandler:
         # for deselectedToolId in self._tools:
         #     self._toolBar.ToggleTool(deselectedToolId, False)
         # self._toolBar.ToggleTool(toolId, True)
+
+    def __createPotentialAttachmentPoints(self, destinationClass: OglClass, umlFrame):
+
+        dw, dh     = destinationClass.GetSize()
+
+        southX = dw // 2        # do integer division
+        southY = dh
+        northX = dw // 2
+        northY = 0
+        westX  = 0
+        westY  = dh // 2
+        eastX  = dw
+        eastY  = dh // 2
+
+        self.__createAnchorHints(destinationClass, southX, southY, AttachmentLocation.SOUTH, umlFrame)
+        self.__createAnchorHints(destinationClass, northX, northY, AttachmentLocation.NORTH, umlFrame)
+        self.__createAnchorHints(destinationClass, westX, westY, AttachmentLocation.WEST, umlFrame)
+        self.__createAnchorHints(destinationClass, eastX, eastY, AttachmentLocation.EAST, umlFrame)
+
+    def __createAnchorHints(self, destinationClass: OglClass, anchorX: int, anchorY: int, attachmentPoint: AttachmentLocation, umlFrame):
+
+        anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=anchorX, y=anchorY, attachmentPoint=attachmentPoint, parent=destinationClass)
+        anchorHint.SetProtected(True)
+
+        destinationClass.AddAnchorPoint(anchorHint)
+        umlFrame.getDiagram().AddShape(anchorHint)

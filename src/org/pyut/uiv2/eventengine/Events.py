@@ -40,6 +40,7 @@ AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
 SelectToolEvent,            EVENT_SELECT_TOOL             = NewEvent()
 SetToolActionEvent,         EVENT_SET_TOOL_ACTION         = NewEvent()
 GetProjectInformationEvent, EVENT_GET_PROJECT_INFORMATION = NewEvent()
+GetActiveUmlFrameEvent,     EVENT_GET_ACTIVE_UML_FRAME    = NewEvent()
 
 
 class EventType(str, Enum):
@@ -84,10 +85,14 @@ class EventType(str, Enum):
             action The action identifier from Actions
 
     GetProjectInformationEvent:
-        Use to get some project data;
-        parameter
-            EventCallback - Callback that is invoked with a parameter of type
-            CurrentProjectInformation
+        Used to get some project data;
+        parameters
+            callback - Callback that is invoked with a parameter of type CurrentProjectInformation
+
+    GetActiveUmlFrameEvent
+        Use to retrieve the currently active frame
+        parameters:
+            callback - Callback this is invoked with a parameter of type UmlDiagramsFrame
 
     Events with no parameters get stuffed into the enumeration as instances, so they can be used
     event engine simple send method;  To simplify enumeration creation I create instances for all
@@ -136,3 +141,4 @@ class EventType(str, Enum):
     SelectTool            = ('SelectTool',            SelectToolEvent(),            EVENT_SELECT_TOOL)
     SetToolAction         = ('SetToolAction',         SetToolActionEvent(),         EVENT_SET_TOOL_ACTION)
     GetProjectInformation = ('GetProjectInformation', GetProjectInformationEvent(), EVENT_GET_PROJECT_INFORMATION)
+    GetActiveUmlFrame     = ('GetActiveUmlFrame',     GetActiveUmlFrameEvent(),     EVENT_GET_ACTIVE_UML_FRAME)

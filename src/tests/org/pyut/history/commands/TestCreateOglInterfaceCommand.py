@@ -69,7 +69,7 @@ class TestCreateOglInterfaceCommand(TestBase):
 
         attachmentAnchor: SelectAnchorPoint = SelectAnchorPoint(x=100, y=100, attachmentPoint=AttachmentLocation.NORTH)
 
-        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=implementor, attachmentAnchor=attachmentAnchor)
+        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=implementor, attachmentAnchor=attachmentAnchor, umlFrame=None)
 
         #
         # Override the created OglInterface2
@@ -105,7 +105,8 @@ class TestCreateOglInterfaceCommand(TestBase):
 
     def testDeserialize(self):
 
-        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=cast(OglClass, None), attachmentAnchor=cast(SelectAnchorPoint, None))
+        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=cast(OglClass, None), attachmentAnchor=cast(SelectAnchorPoint, None),
+                                                                            umlFrame=None)
 
         cOglXFaceCmd.deserialize(self._serializedCommand)
 

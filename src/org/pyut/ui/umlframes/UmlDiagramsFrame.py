@@ -151,9 +151,9 @@ class UmlDiagramsFrame(UmlFrame):
 
         shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
 
-        if self._mediator.actionWaiting():
+        if self._actionHandler.actionWaiting:
             self.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
-            self._mediator.shapeSelected(shapeSelectedData.shape, shapeSelectedData.position)
+            self._actionHandler.shapeSelected(self, shapeSelectedData.shape, shapeSelectedData.position)
 
     def _onCutOglClassShape(self, cutOglClassEvent: CutOglClassEvent):
         """
@@ -181,7 +181,7 @@ class UmlDiagramsFrame(UmlFrame):
     def _onRequestLollipopLocation(self, event: RequestLollipopLocationEvent):
 
         shape = event.shape
-        self._mediator.requestLollipopLocation(shape)
+        self._actionHandler.requestLollipopLocation(self, shape)
 
     def _onCreateLollipopInterface(self, event: CreateLollipopInterfaceEvent):
 
@@ -189,7 +189,7 @@ class UmlDiagramsFrame(UmlFrame):
         implementor     = event.implementor
         self.umlDiagramFrameLogger.info(f'{attachmentPoint=} {implementor=}')
 
-        self._mediator.createLollipopInterface(implementor=implementor, attachmentAnchor=attachmentPoint)
+        self._actionHandler.createLollipopInterface(self, implementor=implementor, attachmentAnchor=attachmentPoint)
 
     def _toggleSpline(self):
 
