@@ -52,7 +52,9 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
+from org.pyut.uiv2.eventengine.CurrentProjectInformation import CurrentProjectInformation
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
+from org.pyut.uiv2.eventengine.Events import EVENT_GET_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_DIAGRAM
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
@@ -63,6 +65,7 @@ from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import GetProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
@@ -121,6 +124,8 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT_AS, callback=self._onSaveProjectAs)
         self._eventEngine.registerListener(pyEventBinder=EVENT_INSERT_PROJECT,  callback=self._onInsertProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
+
+        self._eventEngine.registerListener(pyEventBinder=EVENT_GET_PROJECT_INFORMATION, callback=self._onGetProjectInformation)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -576,6 +581,16 @@ class PyutUIV2(IPyutUI):
     def _onDiagramModified(self, event: UMLDiagramModifiedEvent):
         self._projectManager.currentProject.modified = True
         self._updateApplicationTitle()
+
+    def _onGetProjectInformation(self, event: GetProjectInformationEvent):
+        projectInformation: CurrentProjectInformation  = CurrentProjectInformation()
+
+        projectInformation.projectName     = self._projectManager.currentProject.projectName
+        projectInformation.projectModified = self._projectManager.currentProject.modified
+        projectInformation.frameZoom       = self._projectManager.currentFrame.GetCurrentZoom()
+
+        cb = event.callback
+        cb(projectInformation)
 
     def _updateApplicationTitle(self):
 

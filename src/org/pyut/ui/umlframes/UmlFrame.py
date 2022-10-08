@@ -28,7 +28,9 @@ from miniogl.Constants import SKIP_EVENT
 from miniogl.DiagramFrame import DiagramFrame
 from miniogl.RectangleShape import RectangleShape
 
-from org.pyut.ui.Mediator import ACTION_ZOOM_IN
+from org.pyut.ui.ActionHandler import ActionHandler
+from org.pyut.ui.Actions import ACTION_ZOOM_IN
+
 from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.PyutUtils import PyutUtils
@@ -43,6 +45,7 @@ from org.pyut.general.Globals import _
 from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 from org.pyut.uiv2.eventengine.Events import AddOglDiagramEvent
 from org.pyut.uiv2.eventengine.Events import AddPyutDiagramEvent
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 DEFAULT_WIDTH = 3000
 A4_FACTOR:    float = 1.41
@@ -63,7 +66,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
     clsUmlFrameLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent: Notebook):
+    def __init__(self, parent: Notebook, eventEngine: IEventEngine):
         """
 
         Args:
@@ -71,9 +74,11 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         super().__init__(parent)
 
-        self.logger: Logger = UmlFrame.clsUmlFrameLogger
+        self.logger:       Logger       = UmlFrame.clsUmlFrameLogger
+        self._eventEngine: IEventEngine = eventEngine
 
-        self._mediator: Mediator = Mediator()
+        # self._mediator:      Mediator      = Mediator()
+        self._actionHandler: ActionHandler = ActionHandler(eventEngine=eventEngine)
 
         self.maxWidth:  int  = DEFAULT_WIDTH
         self.maxHeight: int = int(self.maxWidth / A4_FACTOR)  # 1.41 is for A4 support
@@ -103,6 +108,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         return self._historyManager
 
+    # noinspection PyUnusedLocal
     def setCodePath(self, path: str):
         """
         Set the code path
@@ -110,11 +116,12 @@ class UmlFrame(UmlFrameShapeHandler):
         Args:
             path:
         """
-        project = self._mediator.getFileHandling().getProjectFromFrame(self)
-        if project is not None:
-            project.setCodePath(path)
-        else:
-            self.logger.info("Passing setCodePath in UmlFrame-setCodePath")
+        assert False, 'This method is unsupported'
+        # project = self._mediator.getFileHandling().getProjectFromFrame(self)
+        # if project is not None:
+        #     project.setCodePath(path)
+        # else:
+        #     self.logger.info("Passing setCodePath in UmlFrame-setCodePath")
 
     def displayDiagramProperties(self):
         """
@@ -139,12 +146,16 @@ class UmlFrame(UmlFrameShapeHandler):
         If there's an action pending in the mediator, give it the event, else
         let it go to the next handler.
         """
-        self.logger.debug(f'leftDown - action waiting: {self._mediator.actionWaiting()}')
-        if self._mediator.actionWaiting():
+        # self.logger.debug(f' leftDown - action waiting: {self._mediator.actionWaiting()}')
+        # self.logger.debug(f' leftDown - action waiting: {self._actionHandler.actionWaiting}')
+        # if self._mediator.actionWaiting():
+        if self._actionHandler.actionWaiting:
             x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
-            skip = self._mediator.doAction(x, y)
+            # skip = self._mediator.doAction(x, y)
+            skip = self._actionHandler.doAction(self, x, y)
 
-            if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
+            # if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
+            if self._actionHandler.currentAction == ACTION_ZOOM_IN:
                 DiagramFrame._BeginSelect(self, event)
 
             if skip == SKIP_EVENT:
@@ -158,15 +169,18 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         To make the right action if it is a selection or a zoom.
         """
-        self.logger.debug(f'leftUp - current action: {self._mediator.getCurrentAction()}')
-        if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
+        # self.logger.debug(f' leftUp - current action: {self._mediator.getCurrentAction()}')
+        # self.logger.debug(f' leftDown - action waiting: {self._actionHandler.actionWaiting}')
+        # if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
+        if self._actionHandler.currentAction == ACTION_ZOOM_IN:
             width, height = self._selector.GetSize()
             x, y = self._selector.GetPosition()
             self._selector.Detach()
             self._selector = cast(RectangleShape, None)
             self.DoZoomIn(x, y, width, height)
             self.Refresh()
-            self._mediator.updateTitle()
+            # self._mediator.updateTitle()
+            self._actionHandler.updateTitle()
         else:
             # DiagramFrame.OnLeftUp(self, event)
             super().OnLeftUp(event)

@@ -3,6 +3,7 @@ from typing import Callable
 
 from logging import Logger
 from logging import getLogger
+from typing import List
 
 from wx import EVT_TOOL
 from wx import ID_OPEN
@@ -36,6 +37,18 @@ from org.pyut.general.Globals import _
 PYUT_TOOLS_CATEGORY: Category = Category('Pyut Tools')
 PYUT_MENU_CATEGORY:  Category = Category('PyUt Menu')
 
+TOOL_BAR_IDs: List[int] = [
+            SID.ID_ARROW,
+            SID.ID_CLASS,
+            SID.ID_NOTE,
+            SID.ID_REL_INHERITANCE, SID.ID_REL_REALISATION,
+            SID.ID_REL_COMPOSITION, SID.ID_REL_AGGREGATION, SID.ID_REL_ASSOCIATION,
+            SID.ID_REL_NOTE, SID.ID_ACTOR, SID.ID_TEXT,
+            SID.ID_USECASE,
+            SID.ID_SD_INSTANCE, SID.ID_SD_MESSAGE,
+            SID.ID_ZOOM_IN, SID.ID_ZOOM_OUT
+        ]
+
 
 class ToolsCreator:
 
@@ -56,6 +69,14 @@ class ToolsCreator:
         self._toolIconOwner: ToolIconOwner = ToolIconOwner()
         self._toolIconOwner.initializeIcons()
 
+    @property
+    def toolBar(self) -> ToolBar:
+        return self._tb
+
+    @property
+    def toolBarIds(self) -> List[int]:
+        return TOOL_BAR_IDs
+
     def initTools(self):
         """
         Initialize all PyUt tools for the toolbar and the toolboxes
@@ -70,17 +91,7 @@ class ToolsCreator:
         self._tb.Realize()
 
         self._mediator.registerToolBar(self._tb)
-        self._mediator.registerToolBarTools([
-            SID.ID_ARROW,
-            SID.ID_CLASS,
-            SID.ID_NOTE,
-            SID.ID_REL_INHERITANCE, SID.ID_REL_REALISATION,
-            SID.ID_REL_COMPOSITION, SID.ID_REL_AGGREGATION, SID.ID_REL_ASSOCIATION,
-            SID.ID_REL_NOTE, SID.ID_ACTOR, SID.ID_TEXT,
-            SID.ID_USECASE,
-            SID.ID_SD_INSTANCE, SID.ID_SD_MESSAGE,
-            SID.ID_ZOOM_IN, SID.ID_ZOOM_OUT
-        ])
+        self._mediator.registerToolBarTools(TOOL_BAR_IDs)
 
     def _createElementTools(self):
 

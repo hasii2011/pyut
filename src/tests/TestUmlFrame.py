@@ -65,7 +65,7 @@ class TestUmlFrame(unittest.TestCase):
         #  Create frame
         baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
         # noinspection PyTypeChecker
-        umlFrame = UmlFrame(baseFrame)
+        umlFrame = UmlFrame(baseFrame, EventEngine(listeningWindow=baseFrame))
         umlFrame.Show(True)
 
         appFrame: Frame = Frame(parent=None, id=ID_ANY, title='')
@@ -188,7 +188,7 @@ class TestUmlFrame(unittest.TestCase):
     #         pyutClass1 = self._umlFrame.createNewClass(20, 10)
     #         pyutClass2 = self._umlFrame.createNewClass(30, 10)
     #     except (ValueError, Exception) as e:
-    #         self.fail(f"Can't create two PyutClass;  {e}")
+    #         self.fail(f" Can't create two PyutClass;  {e}")
     #
     #     # Get OglObject
     #     try:

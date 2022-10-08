@@ -36,6 +36,29 @@ from ogl.OglInterface2 import OglInterface2
 from ogl.OglText import OglText
 from ogl.OglClass import OglClass
 
+from org.pyut.ui.Actions import ACTION_DESTINATION_AGGREGATION_LINK
+from org.pyut.ui.Actions import ACTION_DESTINATION_ASSOCIATION_LINK
+from org.pyut.ui.Actions import ACTION_DESTINATION_COMPOSITION_LINK
+from org.pyut.ui.Actions import ACTION_DESTINATION_IMPLEMENT_LINK
+from org.pyut.ui.Actions import ACTION_DESTINATION_INHERIT_LINK
+from org.pyut.ui.Actions import ACTION_DESTINATION_NOTE_LINK
+from org.pyut.ui.Actions import ACTION_DESTINATION_SD_MESSAGE
+from org.pyut.ui.Actions import ACTION_NEW_ACTOR
+from org.pyut.ui.Actions import ACTION_NEW_AGGREGATION_LINK
+from org.pyut.ui.Actions import ACTION_NEW_ASSOCIATION_LINK
+from org.pyut.ui.Actions import ACTION_NEW_CLASS
+from org.pyut.ui.Actions import ACTION_NEW_COMPOSITION_LINK
+from org.pyut.ui.Actions import ACTION_NEW_IMPLEMENT_LINK
+from org.pyut.ui.Actions import ACTION_NEW_INHERIT_LINK
+from org.pyut.ui.Actions import ACTION_NEW_NOTE
+from org.pyut.ui.Actions import ACTION_NEW_NOTE_LINK
+from org.pyut.ui.Actions import ACTION_NEW_SD_INSTANCE
+from org.pyut.ui.Actions import ACTION_NEW_SD_MESSAGE
+from org.pyut.ui.Actions import ACTION_NEW_TEXT
+from org.pyut.ui.Actions import ACTION_NEW_USECASE
+from org.pyut.ui.Actions import ACTION_SELECTOR
+from org.pyut.ui.Actions import ACTION_ZOOM_IN
+from org.pyut.ui.Actions import ACTION_ZOOM_OUT
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
@@ -65,36 +88,6 @@ from org.pyut.general.Singleton import Singleton
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 __PyUtVersion__ = PyutVersion.getPyUtVersion()
-
-# an enum of the supported actions
-# TODO make real enumerations
-[
-    ACTION_SELECTOR,
-    ACTION_NEW_CLASS,                   # 1
-    ACTION_NEW_ACTOR,                   # 2
-    ACTION_NEW_USECASE,                 # 3
-    ACTION_NEW_NOTE,                    # 4
-    ACTION_NEW_IMPLEMENT_LINK,          # 5
-    ACTION_NEW_INTERFACE,               # 6
-    ACTION_NEW_INHERIT_LINK,
-    ACTION_NEW_AGGREGATION_LINK,
-    ACTION_NEW_COMPOSITION_LINK,
-    ACTION_NEW_ASSOCIATION_LINK,
-    ACTION_NEW_NOTE_LINK,
-    ACTION_NEW_TEXT,
-
-    ACTION_DESTINATION_IMPLEMENT_LINK,
-    ACTION_DESTINATION_INHERIT_LINK,
-    ACTION_DESTINATION_AGGREGATION_LINK,
-    ACTION_DESTINATION_COMPOSITION_LINK,
-    ACTION_DESTINATION_ASSOCIATION_LINK,
-    ACTION_DESTINATION_NOTE_LINK,
-    ACTION_NEW_SD_INSTANCE,
-    ACTION_NEW_SD_MESSAGE,
-    ACTION_DESTINATION_SD_MESSAGE,
-    ACTION_ZOOM_IN,
-    ACTION_ZOOM_OUT
-] = range(24)
 
 # a table of the next action to select
 NEXT_ACTION = {
@@ -405,75 +398,75 @@ class Mediator(Singleton):
 
         self.setStatusText(MESSAGES[self._currentAction])
 
-    def doAction(self, x: int, y: int):
-        """
-        Do the current action at coordinates x, y.
-
-        Args:
-            x: x coord where the action must take place
-            y: y coord where the action must take place
-        """
-        self.logger.debug(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
-        umlFrame = self._treeNotebookHandler.currentFrame
-        if umlFrame is None:
-            return
-        self.resetStatusText()
-        if self._currentAction == ACTION_SELECTOR:
-            return SKIP_EVENT
-        elif self._currentAction == ACTION_NEW_CLASS:
-            self.createOglClass(umlFrame=umlFrame, x=x, y=y)
-        elif self._currentAction == ACTION_NEW_TEXT:
-            self._createNewText(umlFrame, x, y)
-        elif self._currentAction == ACTION_NEW_NOTE:
-            self._createNewNote(umlFrame, x, y)
-        elif self._currentAction == ACTION_NEW_ACTOR:
-            pyutActor = umlFrame.createNewActor(x, y)
-            if not self._currentActionPersistent:
-                self._currentAction = ACTION_SELECTOR
-                self.selectTool(self._tools[0])
-            dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
-
-            if dlg.ShowModal() == ID_OK:
-                pyutActor.name = dlg.GetValue()
-            dlg.Destroy()
-            umlFrame.Refresh()
-        elif self._currentAction == ACTION_NEW_USECASE:
-            pyutUseCase = umlFrame.createNewUseCase(x, y)
-            if not self._currentActionPersistent:
-                self._currentAction = ACTION_SELECTOR
-                self.selectTool(self._tools[0])
-            dlg = DlgEditUseCase(umlFrame, -1, pyutUseCase)
-            dlg.Destroy()
-            umlFrame.Refresh()
-        elif self._currentAction == ACTION_NEW_SD_INSTANCE:
-            try:
-                from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
-                if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
-                    PyutUtils.displayError(_("A SD INSTANCE can't be added to a class diagram. You must create a sequence diagram."))
-                    return
-                instance = umlFrame.createNewSDInstance(x, y)
-                if not self._currentActionPersistent:
-                    self._currentAction = ACTION_SELECTOR
-                    self.selectTool(self._tools[0])
-
-                dlg = TextEntryDialog(umlFrame, "Instance name", "Enter instance name", instance.getInstanceName(), OK | CANCEL | CENTRE)
-
-                if dlg.ShowModal() == ID_OK:
-                    instance.setInstanceName(dlg.GetValue())
-                dlg.Destroy()
-                umlFrame.Refresh()
-            except (ValueError, Exception) as e:
-                PyutUtils.displayError(_(f"An error occurred while trying to do this action {e}"))
-                umlFrame.Refresh()
-        elif self._currentAction == ACTION_ZOOM_IN:
-            return SKIP_EVENT
-        elif self._currentAction == ACTION_ZOOM_OUT:
-            umlFrame.DoZoomOut(x, y)
-            umlFrame.Refresh()
-            self.updateTitle()
-        else:
-            return SKIP_EVENT
-        return EVENT_PROCESSED
+    # def doAction(self, x: int, y: int):
+    #     """
+    #     Do the current action at coordinates x, y.
+    #
+    #     Args:
+    #         x: x coord where the action must take place
+    #         y: y coord where the action must take place
+    #     """
+    #     self.logger.debug(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
+    #     umlFrame = self._treeNotebookHandler.currentFrame
+    #     if umlFrame is None:
+    #         return
+    #     self.resetStatusText()
+    #     if self._currentAction == ACTION_SELECTOR:
+    #         return SKIP_EVENT
+    #     elif self._currentAction == ACTION_NEW_CLASS:
+    #         self.createOglClass(umlFrame=umlFrame, x=x, y=y)
+    #     elif self._currentAction == ACTION_NEW_TEXT:
+    #         self._createNewText(umlFrame, x, y)
+    #     elif self._currentAction == ACTION_NEW_NOTE:
+    #         self._createNewNote(umlFrame, x, y)
+    #     elif self._currentAction == ACTION_NEW_ACTOR:
+    #         pyutActor = umlFrame.createNewActor(x, y)
+    #         if not self._currentActionPersistent:
+    #             self._currentAction = ACTION_SELECTOR
+    #             self.selectTool(self._tools[0])
+    #         dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
+    #
+    #         if dlg.ShowModal() == ID_OK:
+    #             pyutActor.name = dlg.GetValue()
+    #         dlg.Destroy()
+    #         umlFrame.Refresh()
+    #     elif self._currentAction == ACTION_NEW_USECASE:
+    #         pyutUseCase = umlFrame.createNewUseCase(x, y)
+    #         if not self._currentActionPersistent:
+    #             self._currentAction = ACTION_SELECTOR
+    #             self.selectTool(self._tools[0])
+    #         dlg = DlgEditUseCase(umlFrame, -1, pyutUseCase)
+    #         dlg.Destroy()
+    #         umlFrame.Refresh()
+    #     elif self._currentAction == ACTION_NEW_SD_INSTANCE:
+    #         try:
+    #             from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
+    #             if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
+    #                 PyutUtils.displayError(_("A SD INSTANCE can't be added to a class diagram. You must create a sequence diagram."))
+    #                 return
+    #             instance = umlFrame.createNewSDInstance(x, y)
+    #             if not self._currentActionPersistent:
+    #                 self._currentAction = ACTION_SELECTOR
+    #                 self.selectTool(self._tools[0])
+    #
+    #             dlg = TextEntryDialog(umlFrame, "Instance name", "Enter instance name", instance.getInstanceName(), OK | CANCEL | CENTRE)
+    #
+    #             if dlg.ShowModal() == ID_OK:
+    #                 instance.setInstanceName(dlg.GetValue())
+    #             dlg.Destroy()
+    #             umlFrame.Refresh()
+    #         except (ValueError, Exception) as e:
+    #             PyutUtils.displayError(_(f"An error occurred while trying to do this action {e}"))
+    #             umlFrame.Refresh()
+    #     elif self._currentAction == ACTION_ZOOM_IN:
+    #         return SKIP_EVENT
+    #     elif self._currentAction == ACTION_ZOOM_OUT:
+    #         umlFrame.DoZoomOut(x, y)
+    #         umlFrame.Refresh()
+    #         self.updateTitle()
+    #     else:
+    #         return SKIP_EVENT
+    #     return EVENT_PROCESSED
 
     def actionWaiting(self) -> bool:
         """
@@ -736,20 +729,20 @@ class Mediator(Singleton):
         currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
         currentDirectoryHandler.currentDirectory = directory
 
-    def createOglClass(self, umlFrame, x: int, y: int):
-
-        from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
-        from org.pyut.history.commands.CommandGroup import CommandGroup
-
-        cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y)
-        group: CommandGroup          = CommandGroup("Create class")
-        group.addCommand(cmd)
-        umlFrame.getHistory().addCommandGroup(group)
-        umlFrame.getHistory().execute()
-
-        if not self._currentActionPersistent:
-            self._currentAction = ACTION_SELECTOR
-            self.selectTool(self._tools[0])
+    # def createOglClass(self, umlFrame, x: int, y: int):
+    #
+    #     from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
+    #     from org.pyut.history.commands.CommandGroup import CommandGroup
+    #
+    #     cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y)
+    #     group: CommandGroup          = CommandGroup("Create class")
+    #     group.addCommand(cmd)
+    #     umlFrame.getHistory().addCommandGroup(group)
+    #     umlFrame.getHistory().execute()
+    #
+    #     if not self._currentActionPersistent:
+    #         self._currentAction = ACTION_SELECTOR
+    #         self.selectTool(self._tools[0])
 
     def displayToolbox(self, category):
         """
@@ -873,40 +866,40 @@ class Mediator(Singleton):
         self._src = None
         self._dst = None
 
-    def _createNewNote(self, umlFrame: UmlFrameShapeHandler, x: int, y: int):
-        """
-        Create a note on the diagram
+    # def _createNewNote(self, umlFrame: UmlFrameShapeHandler, x: int, y: int):
+    #     """
+    #     Create a note on the diagram
+    #
+    #     Args:
+    #         umlFrame:  The UML frame knows how to place the new note on diagram
+    #         x: The x-coordinate
+    #         y: The y-coordinate
+    #     """
+    #
+    #     pyutNote: PyutNote = umlFrame.createNewNote(x, y)
+    #
+    #     self.__resetToActionSelector()
+    #     dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, pyutNote)
+    #     dlg.ShowModal()
+    #     dlg.Destroy()
+    #     umlFrame.Refresh()
 
-        Args:
-            umlFrame:  The UML frame knows how to place the new note on diagram
-            x: The x-coordinate
-            y: The y-coordinate
-        """
-
-        pyutNote: PyutNote = umlFrame.createNewNote(x, y)
-
-        self.__resetToActionSelector()
-        dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, pyutNote)
-        dlg.ShowModal()
-        dlg.Destroy()
-        umlFrame.Refresh()
-
-    def _createNewText(self, umlFrame, x: int, y: int):
-        """
-        Create a text box on the diagram
-
-        Args:
-            umlFrame:  The UML frame that knows hot to place the new text object on the diagram
-            x: The x-coordinate
-            y: The y-coordinate
-        """
-        pyutText: PyutText = umlFrame.createNewText(x, y)
-
-        self.__resetToActionSelector()
-        dlg: DlgEditText = DlgEditText(parent=umlFrame, dialogIdentifier=ID_ANY, pyutText=pyutText)
-        dlg.ShowModal()
-        dlg.Destroy()
-        umlFrame.Refresh()
+    # def _createNewText(self, umlFrame, x: int, y: int):
+    #     """
+    #     Create a text box on the diagram
+    #
+    #     Args:
+    #         umlFrame:  The UML frame that knows hot to place the new text object on the diagram
+    #         x: The x-coordinate
+    #         y: The y-coordinate
+    #     """
+    #     pyutText: PyutText = umlFrame.createNewText(x, y)
+    #
+    #     self.__resetToActionSelector()
+    #     dlg: DlgEditText = DlgEditText(parent=umlFrame, dialogIdentifier=ID_ANY, pyutText=pyutText)
+    #     dlg.ShowModal()
+    #     dlg.Destroy()
+    #     umlFrame.Refresh()
 
     def __createPotentialAttachmentPoints(self, destinationClass: OglClass, umlFrame):
 

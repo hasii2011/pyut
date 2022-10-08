@@ -1,7 +1,7 @@
 
+from typing import List
 from typing import Tuple
 from typing import cast
-# from typing import List
 
 from logging import Logger
 from logging import getLogger
@@ -32,6 +32,9 @@ from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
 from wx import Menu
+from wx import ToolBar
+
+from wx import Yield as wxYield
 
 from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.ui.Mediator import Mediator
@@ -67,7 +70,9 @@ from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager shoul
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine
+from org.pyut.uiv2.eventengine.Events import EVENT_SELECT_TOOL
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import SelectToolEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
@@ -177,6 +182,7 @@ class PyutApplicationFrameV2(Frame):
 
         self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_TITLE,  self._onUpdateTitle)
         self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_STATUS, self._onUpdateStatus)
+        self._eventEngine.registerListener(EVENT_SELECT_TOOL,               self._onSelectTool)
 
         self.Bind(EVT_ACTIVATE, self._onActivate)
         self.Bind(EVT_CLOSE, self.Close)
@@ -259,6 +265,24 @@ class PyutApplicationFrameV2(Frame):
         msg: str = event.applicationStatusMsg
         self.GetStatusBar().SetStatusText(msg)
 
+    def _onSelectTool(self, event: SelectToolEvent):
+        """
+        First clean them all, then select the required one
+
+        Args:
+            event:  Contains the ID of the icon to toggle
+        """
+
+        toolId: int = event.toolId
+        self._doToolSelect(toolId=toolId)
+        # toolBar:    ToolBar   = self._toolsCreator.toolBar
+        # toolBarIds: List[int] = self._toolsCreator.toolBarIds
+        #
+        # for deselectedToolId in toolBarIds:
+        #     toolBar.ToggleTool(deselectedToolId, False)
+        #
+        # toolBar.ToggleTool(toolId, True)
+
     def _onNewAction(self, event: CommandEvent):
         """
         Call the mediator to specify the current action.
@@ -268,8 +292,21 @@ class PyutApplicationFrameV2(Frame):
         """
         currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
 
-        self._mediator.setCurrentAction(currentAction)
-        self._mediator.selectTool(event.GetId())
+        # self._mediator.setCurrentAction(currentAction)
+        # self._mediator.selectTool(event.GetId())
+        self._eventEngine.sendEvent(EventType.SetToolAction, action=currentAction)
+        self._doToolSelect(toolId=event.GetId())
+        wxYield()
+
+    def _doToolSelect(self, toolId: int):
+
+        toolBar:    ToolBar   = self._toolsCreator.toolBar
+        toolBarIds: List[int] = self._toolsCreator.toolBarIds
+
+        for deselectedToolId in toolBarIds:
+            toolBar.ToggleTool(deselectedToolId, False)
+
+        toolBar.ToggleTool(toolId, True)
 
     def _onActivate(self, event: ActivateEvent):
         """

@@ -70,9 +70,8 @@ class UmlDiagramsFrame(UmlFrame):
             eventEngine: Pyut event engine
         """
         self.umlDiagramFrameLogger: Logger       = getLogger(__name__)
-        self._eventEngine:          IEventEngine = eventEngine
 
-        super().__init__(parent)
+        super().__init__(parent, eventEngine=eventEngine)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM, callback=self._onAddPyutDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,  callback=self._onAddOglDiagram)
