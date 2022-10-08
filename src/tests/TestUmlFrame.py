@@ -53,7 +53,7 @@ class TestUmlFrame(unittest.TestCase):
         """
         # Initialize mediator and error manager
         mediator: Mediator = Mediator()
-        mediator.setScriptMode()
+        # mediator.setScriptMode()
 
         errorManager: ErrorManager = mediator.getErrorManager()
         errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)

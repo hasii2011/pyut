@@ -97,15 +97,10 @@ class Mediator(Singleton):
 
         self._errorManager: ErrorManager  = ErrorManager()
 
-        self._currentAction = ACTION_SELECTOR
         self._useMode       = NORMAL_MODE   # Define current use mode
-        self._currentActionPersistent = False
 
         self._toolBar  = None   # toolbar
         self._tools    = None   # toolbar tools
-        # self._status   = None   # application status bar
-        self._src      = None   # source of a two-objects action
-        self._dst      = None   # destination of a two-objects action
         self._appPath  = None   # Application files' path
 
         self._appFrame: PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)   # Application's main frame
@@ -113,8 +108,6 @@ class Mediator(Singleton):
         self.registerClassEditor(self.standardClassEditor)
         self._toolboxOwner = None   # toolbox owner, created when application frame is passed
         self._treeNotebookHandler = None
-
-        self._modifyCommand = None  # command for undo/redo a modification on a shape.
 
     @property
     def activeUmlFrame(self):
@@ -133,18 +126,6 @@ class Mediator(Singleton):
             diagramType:
         """
         self._treeNotebookHandler.newDocument(docType=diagramType)
-
-    def setScriptMode(self):
-        """
-        Define the script mode, to use PyUt without graphical elements
-        """
-        self._useMode = SCRIPT_MODE
-
-    def isInScriptMode(self) -> bool:
-        """
-        True if the current mode is the scripting mode
-        """
-        return self._useMode == SCRIPT_MODE
 
     def getErrorManager(self) -> ErrorManager:
         """
@@ -209,15 +190,6 @@ class Mediator(Singleton):
             tools:  a list of the tools IDs
         """
         self._tools = tools
-
-    # def registerStatusBar(self, statusBar: StatusBar):
-    #     """
-    #     Register the status bar.
-    #
-    #     Args:
-    #         statusBar: The status bar to register
-    #     """
-    #     self._status = statusBar
 
     def registerClassEditor(self, classEditor: Callable):
         """
@@ -462,32 +434,6 @@ class Mediator(Singleton):
             return cast(OglClass, None)
         else:
             return po[0]
-
-    def updateTitle(self):
-        """
-        Set the application title, function of version and current filename
-        """
-
-        from org.pyut.uiv2.IPyutProject import IPyutProject
-
-        # Get filename
-        project: IPyutProject = self._treeNotebookHandler.currentProject
-        if project is not None:
-            filename = project.filename
-        else:
-            filename = ""
-
-        # Set text
-        txt = "PyUt v" + __PyUtVersion__ + " - " + filename
-        if (project is not None) and (project.modified is True):
-            if self._treeNotebookHandler.currentFrame is not None:
-                zoom = self._treeNotebookHandler.currentFrame.GetCurrentZoom()
-            else:
-                zoom = 1
-
-            txt = txt + f' ( {int(zoom * 100)}%) *'
-
-        self._appFrame.SetTitle(txt)
 
     def createDocument(self, diagramType: DiagramType):
         return self._treeNotebookHandler.newDocument(diagramType)

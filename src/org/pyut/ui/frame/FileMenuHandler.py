@@ -226,9 +226,9 @@ class FileMenuHandler(BaseMenuHandler):
 
     def onImport(self, event: CommandEvent):
 
-        self._treeNotebookHandler.newProject()                              # TODO  Use events
+        # self._treeNotebookHandler.newProject()                              # TODO  Use events
         self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)    # TODO
-        self._mediator.updateTitle()
+        # self._mediator.updateTitle()
         cl = self._importPlugins[event.GetId()]
 
         obj = cl(self._mediator.getUmlObjects(), self._mediator.activeUmlFrame)
