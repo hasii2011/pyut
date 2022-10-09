@@ -22,6 +22,7 @@ from miniogl.Constants import SKIP_EVENT
 from ogl.OglClass import OglClass
 
 from org.pyut.general.Singleton import Singleton
+
 from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 if TYPE_CHECKING:

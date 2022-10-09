@@ -81,6 +81,8 @@ class DlgEditClassCommon(Dialog):
 
         self.logger:         Logger          = DlgEditClassCommon.clsLogger
         self._editInterface: bool            = editInterface
+        #
+        # TODO remove this
         self._mediator:      Mediator        = Mediator()
 
         self._pyutModel:     CommonClassType = pyutModel

@@ -71,7 +71,6 @@ class DlgEditClass(DlgEditClassCommon):
     Because dialog works on a copy of the PyutClass object, if you cancel the
     dialog any modifications are lost.
 
-    Examples of `DlgEditClass` use are in `Mediator.py`
     """
     def __init__(self, parent: Window, windowId: int, pyutClass: PyutClass):
         """
@@ -81,11 +80,16 @@ class DlgEditClass(DlgEditClassCommon):
             windowId:       dialog identity
             pyutClass:      Class modified by dialog
         """
+        from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
         self.logger:         Logger    = getLogger(__name__)
         self._pyutClass:     PyutClass = pyutClass
         # self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
 
         super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Edit Class"), pyutModel=self._pyutClass, editInterface=False)
+
+        assert isinstance(parent, UmlDiagramsFrame), 'Developer error.  Must be a Uml Diagram Frame'
+        self._umlFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, parent)
 
         lblStereotype:       StaticText = StaticText (self, -1, _("Stereotype"))
         self._txtStereotype: TextCtrl   = TextCtrl(self, ID_TXT_STEREO_TYPE, "", size=(125, -1))

@@ -70,12 +70,15 @@ class UmlFrame(UmlFrameShapeHandler):
         Args:
             parent: The parent window
         """
+        from org.pyut.ui.EditObjectHandler import EditObjectHandler
+
         super().__init__(parent)
 
         self.logger:       Logger       = UmlFrame.clsUmlFrameLogger
         self._eventEngine: IEventEngine = eventEngine
 
-        self._actionHandler: ActionHandler = ActionHandler(eventEngine=eventEngine)
+        self._actionHandler:      ActionHandler    = ActionHandler(eventEngine=eventEngine)
+        self._editObjectHandler: EditObjectHandler = EditObjectHandler(eventEngine=eventEngine)
 
         self.maxWidth:  int  = DEFAULT_WIDTH
         self.maxHeight: int = int(self.maxWidth / A4_FACTOR)  # 1.41 is for A4 support
@@ -191,7 +194,8 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
         self.logger.debug(f'leftDoubleClick - {x},{y}')
-        self._mediator.editObject(x, y)     # TODO send event to a dialog handler
+        # self._mediator.editObject(x, y)     # TODO send event to a dialog handler
+        self._editObjectHandler.editObject(x, y)
         # DiagramFrame.OnLeftDClick(self, event)
         super().OnLeftDClick(event)
 

@@ -4,13 +4,8 @@ from typing import List
 from typing import TYPE_CHECKING
 from typing import Union
 
-from wx import CENTRE
 from wx import Frame
 from wx import ToolBar
-
-from wx import ID_OK
-
-from wx import TextEntryDialog
 
 from wx import NewIdRef as wxNewIdRef
 
@@ -20,12 +15,8 @@ from org.pyut.errorcontroller.ErrorManager import ErrorManager
 from miniogl.Diagram import Diagram
 
 from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
-from pyutmodel.PyutInterface import PyutInterface
 from pyutmodel.PyutMethod import PyutMethod
-from pyutmodel.PyutText import PyutText
 
-from ogl.OglInterface2 import OglInterface2
-from ogl.OglText import OglText
 from ogl.OglClass import OglClass
 
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
@@ -36,12 +27,6 @@ if TYPE_CHECKING:
     from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
-from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
-from org.pyut.dialogs.DlgEditLink import DlgEditLink
-from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
-
-from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
@@ -241,87 +226,6 @@ class Mediator(Singleton):
                 obj = po[0]
 
             obj.autoResize()
-
-    def editObject(self, x, y):
-        """
-        Edit the object at x, y.
-        """
-        umlFrame = self._treeNotebookHandler.currentFrame
-        if umlFrame is None:
-            return
-        #
-        # TODO I don't like in-line imports but moving them to top file causes a cyclic dependency error
-        #
-        from ogl.OglClass import OglClass
-        from ogl.OglNote import OglNote
-        from ogl.OglUseCase import OglUseCase
-        from ogl.OglActor import OglActor
-        from ogl.OglAssociation import OglAssociation
-        from ogl.OglInterface import OglInterface
-
-        from pyutmodel.PyutNote import PyutNote
-
-        diagramShape = umlFrame.FindShape(x, y)
-
-        if diagramShape is None:
-            return
-
-        if isinstance(diagramShape, OglClass):
-            pyutObject = diagramShape.pyutObject
-            self.classEditor(pyutObject)
-            self.autoResize(diagramShape)
-        elif isinstance(diagramShape, OglInterface2):
-
-            self.logger.info(f'Double clicked on lollipop')
-            lollipop:      OglInterface2 = cast(OglInterface2, diagramShape)
-            pyutInterface: PyutInterface = lollipop.pyutInterface
-            with DlgEditInterface(umlFrame, ID_ANY, pyutInterface) as dlg:
-                if dlg.ShowModal() == OK:
-                    self.logger.info(f'model: {pyutInterface}')
-                else:
-                    self.logger.info(f'Cancelled')
-
-        elif isinstance(diagramShape, OglText):
-            oglText:  OglText  = cast(OglText, diagramShape)
-            pyutText: PyutText = oglText.pyutText
-
-            self.logger.info(f'Double clicked on {oglText}')
-
-            dlg: DlgEditText = DlgEditText(parent=umlFrame, dialogIdentifier=ID_ANY, pyutText=pyutText)
-            dlg.ShowModal()
-            dlg.Destroy()
-
-        elif isinstance(diagramShape, OglNote):
-            pyutObject = diagramShape.pyutObject
-            dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, cast(PyutNote, pyutObject))
-            dlg.ShowModal()
-            dlg.Destroy()
-        elif isinstance(diagramShape, OglUseCase):
-            pyutObject = diagramShape.pyutObject
-            dlg: DlgEditUseCase = DlgEditUseCase(umlFrame, ID_ANY, pyutObject)
-            dlg.Destroy()
-        elif isinstance(diagramShape, OglActor):
-            pyutObject = diagramShape.pyutObject
-            dlg: TextEntryDialog = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutObject.name, OK | CANCEL | CENTRE)
-            if dlg.ShowModal() == ID_OK:
-                pyutObject.setName(dlg.GetValue())
-            dlg.Destroy()
-        elif isinstance(diagramShape, OglAssociation):
-            dlg: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.pyutObject)
-            dlg.ShowModal()
-            rep = dlg.getReturnAction()
-            dlg.Destroy()
-            if rep == -1:    # destroy link
-                diagramShape.Detach()
-        elif isinstance(diagramShape, OglInterface):
-            dlg: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.pyutObject)
-            dlg.ShowModal()
-            rep = dlg.getReturnAction()
-            dlg.Destroy()
-            if rep == -1:  # destroy link
-                diagramShape.Detach()
-
-        umlFrame.Refresh()
 
     def getUmlObjects(self) -> 'UmlObjects':
         """

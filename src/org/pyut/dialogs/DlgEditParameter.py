@@ -134,6 +134,7 @@ class DlgEditParameter(BaseDlgEdit):
             self._parameterToEdit.defaultValue = ''
 
         # Tell window that its data has been modified
+        # TODO use event handling
         fileHandling = self._ctrl.getFileHandling()
         project = fileHandling.getCurrentProject()
         if project is not None:
