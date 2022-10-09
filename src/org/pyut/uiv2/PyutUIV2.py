@@ -38,6 +38,8 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
 from org.pyut.enums.DiagramType import DiagramType
+from org.pyut.ui.Actions import ACTION_SELECTOR
+from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
@@ -362,6 +364,9 @@ class PyutUIV2(IPyutUI):
             self._projectManager.syncPageFrameAndNotebook(frame=self.currentFrame)
             self._updateApplicationTitle()
             self._projectManager.currentProject = project
+
+        self._eventEngine.sendEvent(EventType.SetToolAction, action=ACTION_SELECTOR)
+        self._eventEngine.sendEvent(EventType.SelectTool, toolId=SharedIdentifiers.ID_ARROW)
 
     def _onProjectTreeRightClick(self, treeEvent: TreeEvent):
 

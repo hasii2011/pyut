@@ -28,13 +28,11 @@ from ogl.OglInterface2 import OglInterface2
 from ogl.OglText import OglText
 from ogl.OglClass import OglClass
 
-from org.pyut.ui.Actions import ACTION_SELECTOR
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
     from org.pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
-    from org.pyut.uiv2.IPyutProject import IPyutProject
     from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency

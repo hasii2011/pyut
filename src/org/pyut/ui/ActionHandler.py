@@ -21,6 +21,7 @@ from miniogl.Constants import SKIP_EVENT
 
 from ogl.OglClass import OglClass
 
+from org.pyut.general.Singleton import Singleton
 from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 if TYPE_CHECKING:
@@ -163,12 +164,12 @@ LINK_TYPE = {
 }
 
 
-class ActionHandler:
+class ActionHandler(Singleton):
 
-    def __init__(self, eventEngine: IEventEngine):
+    def init(self, **kwargs):
 
         self.logger:       Logger       = getLogger(__name__)
-        self._eventEngine: IEventEngine = eventEngine
+        self._eventEngine: IEventEngine = kwargs['eventEngine']
 
         self._currentAction:           int  = ACTION_SELECTOR
         self._currentActionPersistent: bool = False

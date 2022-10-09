@@ -31,8 +31,6 @@ from miniogl.RectangleShape import RectangleShape
 from org.pyut.ui.ActionHandler import ActionHandler
 from org.pyut.ui.Actions import ACTION_ZOOM_IN
 
-from org.pyut.ui.Mediator import Mediator
-
 from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.history.HistoryManager import HistoryManager
@@ -77,7 +75,6 @@ class UmlFrame(UmlFrameShapeHandler):
         self.logger:       Logger       = UmlFrame.clsUmlFrameLogger
         self._eventEngine: IEventEngine = eventEngine
 
-        # self._mediator:      Mediator      = Mediator()
         self._actionHandler: ActionHandler = ActionHandler(eventEngine=eventEngine)
 
         self.maxWidth:  int  = DEFAULT_WIDTH
@@ -194,7 +191,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
         self.logger.debug(f'leftDoubleClick - {x},{y}')
-        self._mediator.editObject(x, y)
+        self._mediator.editObject(x, y)     # TODO send event to a dialog handler
         # DiagramFrame.OnLeftDClick(self, event)
         super().OnLeftDClick(event)
 
