@@ -60,7 +60,7 @@ from org.pyut.ui.Actions import ACTION_ZOOM_OUT
 
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
-from org.pyut.uiv2.eventengine.CurrentProjectInformation import CurrentProjectInformation
+from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from org.pyut.uiv2.eventengine.Events import EVENT_SET_TOOL_ACTION
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import SetToolActionEvent
@@ -434,7 +434,7 @@ class ActionHandler(Singleton):
     def _resetStatusText(self):
         self._setStatusText('')
 
-    def _doUpdate(self, projectInformation: CurrentProjectInformation):
+    def _doUpdate(self, projectInformation: MiniProjectInformation):
         pass
 
     def _resetToActionSelector(self):

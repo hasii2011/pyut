@@ -54,7 +54,7 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
-from org.pyut.uiv2.eventengine.CurrentProjectInformation import CurrentProjectInformation
+from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_GET_ACTIVE_UML_FRAME
 from org.pyut.uiv2.eventengine.Events import EVENT_GET_PROJECT_INFORMATION
@@ -591,7 +591,7 @@ class PyutUIV2(IPyutUI):
         self._updateApplicationTitle()
 
     def _onGetProjectInformation(self, event: GetProjectInformationEvent):
-        projectInformation: CurrentProjectInformation  = CurrentProjectInformation()
+        projectInformation: MiniProjectInformation  = MiniProjectInformation()
 
         projectInformation.projectName     = self._projectManager.currentProject.projectName
         projectInformation.projectModified = self._projectManager.currentProject.modified

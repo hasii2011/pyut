@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class CurrentProjectInformation:
+class MiniProjectInformation:
     """
     Typical use is by code that wants to update the application title
     """

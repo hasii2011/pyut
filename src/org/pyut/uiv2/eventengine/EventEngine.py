@@ -10,7 +10,7 @@ from wx import TreeItemId
 from wx import Window
 
 from org.pyut.enums.DiagramType import DiagramType
-from org.pyut.uiv2.eventengine.CurrentProjectInformation import CurrentProjectInformation
+from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from org.pyut.uiv2.eventengine.Events import CutShapeEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import GetActiveUmlFrameEvent
@@ -42,7 +42,7 @@ OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
 CALLBACK_PARAMETER:                  str = 'callback'
 
 # EventCallback = NewType('EventCallback', Callable[[CurrentProjectInformation], None])
-ProjectInformationCallback = Callable[[CurrentProjectInformation], None]
+ProjectInformationCallback = Callable[[MiniProjectInformation], None]
 ActiveUmlFrameCallback     = Callable[[Any], None]
 
 

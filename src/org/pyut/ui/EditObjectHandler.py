@@ -136,7 +136,7 @@ class EditObjectHandler:
         elif isinstance(diagramShape, OglInterface):
             dlgEditInterface: DlgEditLink = DlgEditLink(None, ID_ANY, diagramShape.pyutObject)
             dlgEditInterface.ShowModal()
-            rep = dlg.getReturnAction()
+            rep = dlgEditInterface.getReturnAction()
             dlgEditInterface.Destroy()
             if rep == -1:  # destroy link
                 diagramShape.Detach()
