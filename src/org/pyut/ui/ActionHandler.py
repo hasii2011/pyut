@@ -214,7 +214,7 @@ class ActionHandler(Singleton):
         Set the application title, function of version and current project name
         """
 
-        self._eventEngine.sendEvent(EventType.GetProjectInformation, callback=self._doUpdate)
+        self._eventEngine.sendEvent(EventType.MiniProjectInformation, callback=self._doUpdate)
 
     def doAction(self, umlFrame: 'UmlFrame', x: int, y: int):
         """

@@ -37,10 +37,10 @@ CutShapeEvent,        EVENT_CUT_SHAPE         = NewEvent()
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
 
-SelectToolEvent,            EVENT_SELECT_TOOL             = NewEvent()
-SetToolActionEvent,         EVENT_SET_TOOL_ACTION         = NewEvent()
-GetProjectInformationEvent, EVENT_GET_PROJECT_INFORMATION = NewEvent()
-GetActiveUmlFrameEvent,     EVENT_GET_ACTIVE_UML_FRAME    = NewEvent()
+SelectToolEvent,             EVENT_SELECT_TOOL              = NewEvent()
+SetToolActionEvent,          EVENT_SET_TOOL_ACTION          = NewEvent()
+MiniProjectInformationEvent, EVENT_MINI_PROJECT_INFORMATION = NewEvent()
+GetActiveUmlFrameEvent,      EVENT_GET_ACTIVE_UML_FRAME     = NewEvent()
 
 
 class EventType(str, Enum):
@@ -84,10 +84,10 @@ class EventType(str, Enum):
         parameter
             action The action identifier from Actions
 
-    GetProjectInformationEvent:
+    MiniProjectInformationEvent:
         Used to get some project data;
         parameters
-            callback - Callback that is invoked with a parameter of type CurrentProjectInformation
+            callback - Callback that is invoked with a parameter of type MiniProjectInformation
 
     GetActiveUmlFrameEvent
         Use to retrieve the currently active frame
@@ -138,7 +138,7 @@ class EventType(str, Enum):
     AddPyutDiagram = ('AddPyutDiagram', AddPyutDiagramEvent(), EVENT_ADD_PYUT_DIAGRAM)
     AddOglDiagram  = ('AddOglDiagram',  AddOglDiagramEvent(),  EVENT_ADD_OGL_DIAGRAM)
 
-    SelectTool            = ('SelectTool',            SelectToolEvent(),            EVENT_SELECT_TOOL)
-    SetToolAction         = ('SetToolAction',         SetToolActionEvent(),         EVENT_SET_TOOL_ACTION)
-    GetProjectInformation = ('GetProjectInformation', GetProjectInformationEvent(), EVENT_GET_PROJECT_INFORMATION)
-    GetActiveUmlFrame     = ('GetActiveUmlFrame',     GetActiveUmlFrameEvent(),     EVENT_GET_ACTIVE_UML_FRAME)
+    SelectTool             = ('SelectTool',            SelectToolEvent(),            EVENT_SELECT_TOOL)
+    SetToolAction          = ('SetToolAction',         SetToolActionEvent(),         EVENT_SET_TOOL_ACTION)
+    MiniProjectInformation = ('MiniProjectInformation', MiniProjectInformationEvent(), EVENT_MINI_PROJECT_INFORMATION)
+    GetActiveUmlFrame      = ('GetActiveUmlFrame',     GetActiveUmlFrameEvent(),     EVENT_GET_ACTIVE_UML_FRAME)

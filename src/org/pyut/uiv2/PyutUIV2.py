@@ -57,7 +57,7 @@ from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_GET_ACTIVE_UML_FRAME
-from org.pyut.uiv2.eventengine.Events import EVENT_GET_PROJECT_INFORMATION
+from org.pyut.uiv2.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_DIAGRAM
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
@@ -69,7 +69,7 @@ from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import GetActiveUmlFrameEvent
-from org.pyut.uiv2.eventengine.Events import GetProjectInformationEvent
+from org.pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
@@ -129,7 +129,7 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_INSERT_PROJECT,  callback=self._onInsertProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
 
-        self._eventEngine.registerListener(pyEventBinder=EVENT_GET_PROJECT_INFORMATION, callback=self._onGetProjectInformation)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_MINI_PROJECT_INFORMATION, callback=self._onMiniProjectInformation)
         self._eventEngine.registerListener(pyEventBinder=EVENT_GET_ACTIVE_UML_FRAME,    callback=self._onGetActivateUmlFrame)
 
     @property
@@ -590,7 +590,7 @@ class PyutUIV2(IPyutUI):
         self._projectManager.currentProject.modified = True
         self._updateApplicationTitle()
 
-    def _onGetProjectInformation(self, event: GetProjectInformationEvent):
+    def _onMiniProjectInformation(self, event: MiniProjectInformationEvent):
         projectInformation: MiniProjectInformation  = MiniProjectInformation()
 
         projectInformation.projectName     = self._projectManager.currentProject.projectName

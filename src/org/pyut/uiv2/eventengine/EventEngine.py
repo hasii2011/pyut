@@ -14,7 +14,7 @@ from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformat
 from org.pyut.uiv2.eventengine.Events import CutShapeEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import GetActiveUmlFrameEvent
-from org.pyut.uiv2.eventengine.Events import GetProjectInformationEvent
+from org.pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
 from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
@@ -42,8 +42,8 @@ OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
 CALLBACK_PARAMETER:                  str = 'callback'
 
 # EventCallback = NewType('EventCallback', Callable[[CurrentProjectInformation], None])
-ProjectInformationCallback = Callable[[MiniProjectInformation], None]
-ActiveUmlFrameCallback     = Callable[[Any], None]
+MiniProjectInformationCallback = Callable[[MiniProjectInformation], None]
+ActiveUmlFrameCallback         = Callable[[Any], None]
 
 
 class EventEngine(IEventEngine):
@@ -90,8 +90,8 @@ class EventEngine(IEventEngine):
                 self._sendSelectToolEvent(**kwargs)
             case EventType.SetToolAction:
                 self._sendSetToolActionEvent(**kwargs)
-            case EventType.GetProjectInformation:
-                self._sendGetProjectInformationRequestEvent(**kwargs)
+            case EventType.MiniProjectInformation:
+                self._sendMiniProjectInformationEvent(**kwargs)
             case EventType.GetActiveUmlFrame:
                 self._sendGetActiveUmlFrameEvent(**kwargs)
 
@@ -164,10 +164,10 @@ class EventEngine(IEventEngine):
         eventToPost: SetToolActionEvent = SetToolActionEvent(action=action)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
-    def _sendGetProjectInformationRequestEvent(self, **kwargs):
+    def _sendMiniProjectInformationEvent(self, **kwargs):
 
-        cb:          ProjectInformationCallback = kwargs[CALLBACK_PARAMETER]
-        eventToPost: GetProjectInformationEvent = GetProjectInformationEvent(callback=cb)
+        cb:          MiniProjectInformationCallback = kwargs[CALLBACK_PARAMETER]
+        eventToPost: MiniProjectInformationEvent = MiniProjectInformationEvent(callback=cb)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendGetActiveUmlFrameEvent(self, **kwargs):
