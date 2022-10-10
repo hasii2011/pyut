@@ -27,7 +27,7 @@ before_install:
 # command to install dependencies
 install:
   - python3 --version
-  - pip download wxPython-4.2.0-cp39-cp39-linux_x86_64.whl
+  - pip download --verbose wxPython-4.2.0-cp39-cp39-linux_x86_64.whl
   - pip install mkdocs-material==8.4
   - pip install attrdict
   - pip install setuptools==65.4.1
