@@ -27,6 +27,7 @@ before_install:
 # command to install dependencies
 install:
   - python3 --version
+  - pip install mkdocs-material<8.5
   - pip install six wheel setuptools
   - pip install orthogonal~=1.1.7
   - pip install pyumldiagrams==2.30.8
