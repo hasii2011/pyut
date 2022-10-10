@@ -29,7 +29,9 @@ install:
   - python3 --version
   # - pip install mkdocs-material==8.4
   - pip install attrdict
-  - pip install six wheel setuptools
+  - pip install setuptools==65.4.1
+  - pip install wheel==0.37.1
+  - pip install six ==1.16.0
   - pip install orthogonal~=1.1.7
   - pip install pyumldiagrams==2.30.8
   - pip install pygmlparser==1.0.1
@@ -37,9 +39,9 @@ install:
   # - pip install PyGithub==1.55
   - pip install xmlschema==1.11.1
   - pip install Deprecated==1.2.13
+  - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/ wxPython
   - pip install pyutmodel==1.1.0
   - pip install ogl==0.60.2
-  - pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/ wxPython
 
   # - pip install -r requirements.txt
 
