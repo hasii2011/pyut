@@ -27,13 +27,13 @@ before_install:
 # command to install dependencies
 install:
   - python3 --version
-  - pip install mkdocs-material==8.4
+  # - pip install mkdocs-material==8.4
   - pip install six wheel setuptools
   - pip install orthogonal~=1.1.7
   - pip install pyumldiagrams==2.30.8
   - pip install pygmlparser==1.0.1
   - pip install antlr4-python3-runtime==4.9.3
-  - pip install PyGithub==1.55
+  # - pip install PyGithub==1.55
   - pip install xmlschema==1.11.1
   - pip install Deprecated==1.2.13
   - pip install pyutmodel==1.1.0
