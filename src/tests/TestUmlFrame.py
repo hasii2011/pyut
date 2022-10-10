@@ -55,7 +55,7 @@ class TestUmlFrame(unittest.TestCase):
         mediator: Mediator = Mediator()
         # mediator.setScriptMode()
 
-        errorManager: ErrorManager = mediator.getErrorManager()
+        errorManager: ErrorManager = ErrorManager()
         errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)
 
         whereWeAre: str = getcwd()

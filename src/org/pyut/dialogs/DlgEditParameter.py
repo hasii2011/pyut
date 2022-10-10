@@ -50,7 +50,7 @@ class DlgEditParameter(BaseDlgEdit):
             mediator:
         """
 
-        super().__init__(parent, windowId, _("Parameter Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=mediator)
+        super().__init__(parent, windowId, _("Parameter Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self._parameterToEdit: PyutParameter = parameterToEdit
 

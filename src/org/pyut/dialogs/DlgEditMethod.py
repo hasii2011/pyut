@@ -73,9 +73,9 @@ from org.pyut.general.Globals import _
 
 class DlgEditMethod(BaseDlgEdit):
 
-    def __init__(self, parent, windowId, pyutMethod: PyutMethod, mediator=None, editInterface: bool = False):
+    def __init__(self, parent, pyutMethod: PyutMethod, editInterface: bool = False):
 
-        super().__init__(parent, windowId, _("Method Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=mediator)
+        super().__init__(parent, ID_ANY, _("Method Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self.logger:         Logger = getLogger(__name__)
         self._editInterface: bool   = editInterface

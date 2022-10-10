@@ -1,4 +1,5 @@
 
+from typing import List
 from typing import cast
 
 from logging import Logger
@@ -37,16 +38,22 @@ from org.pyut.general.CustomEvents import ClassNameChangedEvent
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
-
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutStereotype import PyutStereotype
+
+from ogl.OglClass import OglClass
 
 from org.pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from org.pyut.dialogs.DlgEditField import DlgEditField
 
+from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 from org.pyut.PyutUtils import PyutUtils
+from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 # Assign constants
 
@@ -72,21 +79,21 @@ class DlgEditClass(DlgEditClassCommon):
     dialog any modifications are lost.
 
     """
-    def __init__(self, parent: Window, windowId: int, pyutClass: PyutClass):
+    def __init__(self, parent: Window, eventEngine: IEventEngine, pyutClass: PyutClass):
         """
 
         Args:
             parent:         dialog parent
-            windowId:       dialog identity
+            eventEngine:
             pyutClass:      Class modified by dialog
         """
         from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-        self.logger:         Logger    = getLogger(__name__)
-        self._pyutClass:     PyutClass = pyutClass
-        # self._pyutClassCopy: PyutClass = deepcopy(pyutClass)
+        self.logger:       Logger       = getLogger(__name__)
+        self._eventEngine: IEventEngine = eventEngine
+        self._pyutClass:   PyutClass    = pyutClass
 
-        super().__init__(parent=parent, windowId=windowId, dlgTitle=_("Edit Class"), pyutModel=self._pyutClass, editInterface=False)
+        super().__init__(parent=parent, windowId=ID_ANY, dlgTitle=_("Edit Class"), pyutModel=self._pyutClass, editInterface=False)
 
         assert isinstance(parent, UmlDiagramsFrame), 'Developer error.  Must be a Uml Diagram Frame'
         self._umlFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, parent)
@@ -185,7 +192,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         Returns: return code from dialog
         """
-        self._dlgField = DlgEditField(theParent=self, theWindowId=ID_ANY, fieldToEdit=field, theMediator=self._mediator)
+        self._dlgField = DlgEditField(theParent=self, fieldToEdit=field)
         return self._dlgField.ShowModal()
 
     def _dupParams(self, parameters):
@@ -259,12 +266,7 @@ class DlgEditClass(DlgEditClassCommon):
             self._pyutModelCopy.fields.append(field)
             # Add fields in dialog list
             self._lstFieldList.Append(str(field))
-
-            # Tell window that its data has been modified
-            fileHandling = self._mediator.getFileHandling()
-            project = fileHandling.getCurrentProject()
-            if project is not None:
-                project.modified = True
+            self.__setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldEdit(self, event: CommandEvent):
@@ -277,11 +279,7 @@ class DlgEditClass(DlgEditClassCommon):
         if ret == OK:
             # Modify field in dialog list
             self._lstFieldList.SetString(selection, str(field))
-            # Tell window that its data has been modified
-            fileHandling = self._mediator.getFileHandling()
-            project = fileHandling.getCurrentProject()
-            if project is not None:
-                project.setModified()
+            self.__setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldRemove(self, event: CommandEvent):
@@ -303,12 +301,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons of fields list (enable or not)
         self._fixBtnFields()
-
-        # Tell window that its data has been modified
-        fileHandling = self._mediator.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self.__setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldUp(self, event: CommandEvent):
@@ -329,12 +322,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
-
-        # Tell window that its data has been modified
-        fileHandling = self._mediator.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self.__setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldDown(self, event: CommandEvent):
@@ -354,12 +342,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
-
-        # Tell window that its data has been modified
-        fileHandling = self._mediator.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self.__setProjectModified()
 
     # noinspection PyUnusedLocal
     def _evtFieldList(self, event):
@@ -393,10 +376,7 @@ class DlgEditClass(DlgEditClassCommon):
         Activated when button OK is clicked.
         """
         strStereotype: str = self._txtStereotype.GetValue()
-        if strStereotype == "":
-            self._pyutClass.setStereotype(None)
-        else:
-            self._pyutClass.setStereotype(PyutStereotype(strStereotype))
+        self._pyutClass.stereotype = PyutStereotype(strStereotype)
         # Adds all fields in a list
         self._pyutClass.fields = self._pyutModelCopy.fields
 
@@ -416,13 +396,10 @@ class DlgEditClass(DlgEditClassCommon):
         from org.pyut.preferences.PyutPreferences import PyutPreferences
 
         prefs: PyutPreferences = PyutPreferences()
-        try:
-            if prefs.autoResizeShapesOnEdit is True:
-                oglClass = self._mediator.getOglClass(self._pyutClass)
-                if oglClass is not None:
-                    oglClass.autoResize()
-        except (ValueError, Exception) as e:
-            self.logger.error(f'{e}')
+        if prefs.autoResizeShapesOnEdit is True:
+            oglClass: OglClass = self._getAssociatedOglClass(self._pyutClass)
+
+            oglClass.autoResize()
 
         self.__setProjectModified()
 
@@ -441,11 +418,39 @@ class DlgEditClass(DlgEditClassCommon):
         self.SetReturnCode(CANCEL)
         self.EndModal(CANCEL)
 
+    def _getAssociatedOglClass(self, pyutClass: PyutClass) -> OglClass:
+        """
+        Return the OglClass that represents pyutClass
+
+        Args:
+            pyutClass:  Model class
+
+        Returns:    The appropriate graphical class
+        """
+        oglClasses: List[OglClass] = [po for po in self._getUmlObjects() if isinstance(po, OglClass) and po.pyutObject is pyutClass]
+
+        assert len(oglClasses) == 1, 'Cannot have more then one ogl class per pyut class'
+        return oglClasses.pop(0)
+
+    def _getUmlObjects(self) -> UmlObjects:
+        """
+        May be empty
+
+        Returns: Return the list of UmlObjects in the diagram.
+        """
+        return cast(UmlObjects, self._umlFrame.getUmlObjects())
+
     def __setProjectModified(self):
-        fileHandling = self._mediator.getFileHandling()
+        """
+        We need to request some information
+        """
+        self._eventEngine.sendEvent(EventType.ActiveProjectInformation, callback=self.__markProjectAsModified)
 
-        from org.pyut.uiv2.IPyutProject import IPyutProject
+    def __markProjectAsModified(self, activeProjectInformation: ActiveProjectInformation):
+        """
+        Now we can mark the project as modified
+        Args:
+            activeProjectInformation:
+        """
 
-        project: IPyutProject = fileHandling.currentProject
-        if project is not None:
-            project.modified = True
+        activeProjectInformation.pyutProject.modified = True

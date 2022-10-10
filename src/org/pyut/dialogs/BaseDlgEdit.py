@@ -20,11 +20,13 @@ class BaseDlgEdit(Dialog):
     """
     Provides a common place to host duplicate code
     """
-    def __init__(self, theParent, theWindowId=ID_ANY, theTitle=None, theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=None):
+    def __init__(self, theParent, theWindowId=ID_ANY, theTitle=None, theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP):
+
+        from org.pyut.ui.Mediator import Mediator
 
         super().__init__(theParent, theWindowId, title=theTitle, style=theStyle)
 
-        self._ctrl = theMediator
+        self._ctrl = Mediator()
 
     def _createDialogButtonsContainer(self, buttons=OK) -> Sizer:
 

@@ -103,7 +103,7 @@ class CreateOglClassCommand(BaseOglClassCommand):
         pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
         umlFrame = med.getFileHandling().currentFrame
         if self._invokeEditDialog is True:
-            med.classEditor(pyutClass)
+            med.classEditor(pyutClass)      # TODO send message to pop up dialog
 
         if self._prefs.snapToGrid is True:
             snappedX, snappedY = OglUtils.snapCoordinatesToGrid(self._classX, self._classY, self._prefs.backgroundGridInterval)
@@ -111,5 +111,8 @@ class CreateOglClassCommand(BaseOglClassCommand):
         else:
             umlFrame.addShape(oglClass, self._classX, self._classY, withModelUpdate=True)
 
-        med.autoResize(pyutClass)
+        # med.autoResize(pyutClass)
+        if self._prefs.autoResizeShapesOnEdit is True:
+            oglClass.autoResize()
+
         umlFrame.Refresh()

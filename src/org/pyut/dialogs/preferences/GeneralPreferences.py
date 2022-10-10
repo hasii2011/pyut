@@ -18,6 +18,9 @@ from wx import Window
 
 from org.pyut.PyutUtils import PyutUtils
 
+from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
+from pyutmodel.PyutMethod import PyutMethod
+
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
@@ -98,7 +101,7 @@ class GeneralPreferencesPanel(PreferencesPanel):
         if eventID == self.__autoResizeID:
             self._prefs.autoResizeShapesOnEdit = val
         elif eventID == self.__showParamsID:
-            self._mediator.showParams(val)
+            self._showParams(val)
             self._prefs.showParameters = val
         elif eventID == self.__maximizeID:
             self._prefs.fullScreen = val
@@ -143,3 +146,15 @@ class GeneralPreferencesPanel(PreferencesPanel):
 
         self.__cbLoadLastOpenedProject.SetValue(self._prefs.loadLastOpenedProject)
         self.__cbDisplayProjectExtension.SetValue(self._prefs.displayProjectExtension)
+
+    def _showParams(self, theNewValue: bool):
+        """
+        Globally choose whether to show the method parameters in classes
+
+        Args:
+            theNewValue:
+        """
+        if theNewValue is True:
+            PyutMethod.setStringMode(DisplayMethodParameters.WITH_PARAMETERS)
+        else:
+            PyutMethod.setStringMode(DisplayMethodParameters.WITHOUT_PARAMETERS)

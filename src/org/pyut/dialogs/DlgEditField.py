@@ -1,3 +1,6 @@
+
+from typing import TYPE_CHECKING
+
 from wx import ALIGN_CENTER_VERTICAL
 from wx import ALIGN_RIGHT
 from wx import ALL
@@ -33,6 +36,7 @@ from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
+
 [
     ID_TXT_FIELD_NAME,
     ID_BTN_FIELD_OK,
@@ -42,9 +46,9 @@ from org.pyut.general.Globals import _
 
 class DlgEditField(BaseDlgEdit):
 
-    def __init__(self, theParent, theWindowId, fieldToEdit: PyutField, theMediator=None):
+    def __init__(self, theParent, fieldToEdit: PyutField):
 
-        super().__init__(theParent, theWindowId, _("Field Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP, theMediator=theMediator)
+        super().__init__(theParent, ID_ANY, _("Field Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self._fieldToEdit: PyutField = fieldToEdit
         # ----------------

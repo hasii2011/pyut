@@ -55,7 +55,8 @@ from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.Mediator import Mediator
-
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from org.pyut.uiv2.eventengine.EventEngine import EventEngine
 
 from tests.TestBase import TestBase
 
@@ -175,7 +176,7 @@ class TestADialog(App):
 
     def _testDlgEditField(self) -> str:
         pyutField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
-        with DlgEditField(theParent=self._frameTop, theWindowId=ID_ANY, fieldToEdit=pyutField) as dlg:
+        with DlgEditField(theParent=self._frameTop, fieldToEdit=pyutField) as dlg:
             if dlg.ShowModal() == OK:
                 return f'{pyutField=}'
             else:
@@ -208,7 +209,11 @@ class TestADialog(App):
     def _testDlgEditClass(self):
         pyutClass: PyutClass = PyutClass(name='Ozzee')
 
-        with DlgEditClass(parent=self._frameTop, windowId=ID_ANY, pyutClass=pyutClass) as dlg:
+        eventEngine: EventEngine = EventEngine(listeningWindow=self._frameTop)
+        # Not a notebook
+        # noinspection PyTypeChecker
+        umlFrame:    UmlClassDiagramsFrame = UmlClassDiagramsFrame(parent=self._frameTop, eventEngine=eventEngine)
+        with DlgEditClass(parent=umlFrame, pyutClass=pyutClass, eventEngine=eventEngine) as dlg:
             if dlg.ShowModal() == OK:
                 classStr: str = (
                     f'{pyutClass.name=} '
@@ -225,7 +230,7 @@ class TestADialog(App):
                 classStr = (
                     f'{pyutClass.name=} '
                     f'{pyutClass.description=} '
-                    f'stereotype={pyutClass.getStereotype()} '
+                    f'stereotype={pyutClass.stereotype} '
                 )
                 return f'Cancelled:  {classStr}'
 
@@ -259,7 +264,7 @@ class TestADialog(App):
         )
         savePreference: DisplayMethodParameters = PyutMethod.displayParameters
         PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
-        with DlgEditMethod(parent=self._frameTop, windowId=ID_ANY, pyutMethod=pyutMethod) as dlg:
+        with DlgEditMethod(parent=self._frameTop, pyutMethod=pyutMethod) as dlg:
             ans = dlg.ShowModal()
 
             if ans == OK:

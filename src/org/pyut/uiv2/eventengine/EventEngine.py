@@ -10,6 +10,8 @@ from wx import TreeItemId
 from wx import Window
 
 from org.pyut.enums.DiagramType import DiagramType
+from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from org.pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
 from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from org.pyut.uiv2.eventengine.Events import CutShapeEvent
 from org.pyut.uiv2.eventengine.Events import EventType
@@ -42,8 +44,9 @@ OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
 CALLBACK_PARAMETER:                  str = 'callback'
 
 # EventCallback = NewType('EventCallback', Callable[[CurrentProjectInformation], None])
-MiniProjectInformationCallback = Callable[[MiniProjectInformation], None]
-ActiveUmlFrameCallback         = Callable[[Any], None]
+MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
+ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for callback
+ActiveProjectInformationCallback  = Callable[[ActiveProjectInformation], None]
 
 
 class EventEngine(IEventEngine):
@@ -94,6 +97,8 @@ class EventEngine(IEventEngine):
                 self._sendMiniProjectInformationEvent(**kwargs)
             case EventType.GetActiveUmlFrame:
                 self._sendGetActiveUmlFrameEvent(**kwargs)
+            case EventType.ActiveProjectInformation:
+                self._sendActiveProjectInformationEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.UpdateRecentProjects | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
@@ -174,4 +179,10 @@ class EventEngine(IEventEngine):
 
         cb:          ActiveUmlFrameCallback = kwargs[CALLBACK_PARAMETER]
         eventToPost: GetActiveUmlFrameEvent = GetActiveUmlFrameEvent(callback=cb)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendActiveProjectInformationEvent(self, **kwargs):
+
+        cb:          ActiveUmlFrameCallback         = kwargs[CALLBACK_PARAMETER]
+        eventToPost: ActiveProjectInformationEvent = ActiveProjectInformationEvent(callback=cb)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

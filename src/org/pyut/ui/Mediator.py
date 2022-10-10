@@ -1,8 +1,5 @@
 
-from typing import Callable
-from typing import List
 from typing import TYPE_CHECKING
-from typing import Union
 
 from wx import Frame
 from wx import ToolBar
@@ -10,14 +7,11 @@ from wx import ToolBar
 from wx import NewIdRef as wxNewIdRef
 
 from org.pyut.enums.DiagramType import DiagramType
-from org.pyut.errorcontroller.ErrorManager import ErrorManager
 
 from miniogl.Diagram import Diagram
 
 from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 from pyutmodel.PyutMethod import PyutMethod
-
-from ogl.OglClass import OglClass
 
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
@@ -32,12 +26,7 @@ from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
 from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
-from org.pyut.general.PyutVersion import PyutVersion
 from org.pyut.general.Singleton import Singleton
-
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
-__PyUtVersion__ = PyutVersion.getPyUtVersion()
 
 # Define current use mode
 [SCRIPT_MODE, NORMAL_MODE] = PyutUtils.assignID(2)
@@ -76,10 +65,6 @@ class Mediator(Singleton):
 
         self.logger: Logger = getLogger(__name__)
 
-        from org.pyut.errorcontroller.ErrorManager import ErrorManager
-
-        self._errorManager: ErrorManager  = ErrorManager()
-
         self._useMode       = NORMAL_MODE   # Define current use mode
 
         self._toolBar  = None   # toolbar
@@ -88,7 +73,6 @@ class Mediator(Singleton):
 
         self._appFrame: PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)   # Application's main frame
 
-        self.registerClassEditor(self.standardClassEditor)
         self._toolboxOwner = None   # toolbox owner, created when application frame is passed
         self._treeNotebookHandler = None
 
@@ -109,12 +93,6 @@ class Mediator(Singleton):
             diagramType:
         """
         self._treeNotebookHandler.newDocument(docType=diagramType)
-
-    def getErrorManager(self) -> ErrorManager:
-        """
-        Returns:  The current error manager
-        """
-        return self._errorManager
 
     def getAppPath(self) -> str:
         """
@@ -174,15 +152,6 @@ class Mediator(Singleton):
         """
         self._tools = tools
 
-    def registerClassEditor(self, classEditor: Callable):
-        """
-        Register a function to invoke a class editor.
-
-        Args:
-            classEditor: This function takes one parameter, the pyutClass to edit.
-        """
-        self.classEditor = classEditor
-
     def registerTool(self, tool):
         """
         Add a tool to a toolbox
@@ -192,40 +161,6 @@ class Mediator(Singleton):
 
         """
         self._toolboxOwner.registerTool(tool)
-
-    def standardClassEditor(self, thePyutClass: PyutClass):
-        """
-        The standard class editor dialog, for registerClassEditor.
-
-        Args:
-            thePyutClass:  the class to edit (data model)
-        """
-        umlFrame = self._treeNotebookHandler.currentFrame
-        if umlFrame is None:
-            return
-        dlg = DlgEditClass(umlFrame, ID_ANY, thePyutClass)
-        dlg.ShowModal()
-        dlg.Destroy()
-
-    def autoResize(self, obj: Union[PyutClass, "OglClass"]):
-        """
-        Auto-resize the given object.
-
-        @param obj
-
-        Notes: Don't really like methods with signatures likes this;  Where the input parameter
-        can be one of two things;  I suspect this is some legacy thing;  When I become more
-        familiar with the code base I need to fix this.   Humberto
-        """
-        from ogl.OglClass import OglClass
-        prefs: PyutPreferences = PyutPreferences()
-
-        if prefs.autoResizeShapesOnEdit is True:
-            if isinstance(obj, PyutClass):
-                po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.pyutObject is obj]
-                obj = po[0]
-
-            obj.autoResize()
 
     def getUmlObjects(self) -> 'UmlObjects':
         """
@@ -272,18 +207,6 @@ class Mediator(Singleton):
             return cast(Diagram, None)
         return umlFrame.getDiagram()
 
-    def showParams(self, theNewValue: bool):
-        """
-        Globally choose whether to show the method parameters in classes
-
-        Args:
-            theNewValue:
-        """
-        if theNewValue is True:
-            PyutMethod.setStringMode(DisplayMethodParameters.WITH_PARAMETERS)
-        else:
-            PyutMethod.setStringMode(DisplayMethodParameters.WITHOUT_PARAMETERS)
-
     def getCurrentDir(self) -> str:
         """
         Return the application's current directory
@@ -320,22 +243,6 @@ class Mediator(Singleton):
         Returns:  The category names
         """
         return self._toolboxOwner.getCategories()
-
-    def getOglClass(self, pyutClass) -> OglClass:
-        """
-        Return an OGLClass instance corresponding to a pyutClass
-
-        Args:
-            pyutClass: The pyutClass we must match to get OGLClass
-
-        Returns: The appropriate OGLClass
-        """
-        po = [po for po in self.getUmlObjects() if isinstance(po, OglClass) and po.pyutObject is pyutClass]
-
-        if len(po) == 0:
-            return cast(OglClass, None)
-        else:
-            return po[0]
 
     def createDocument(self, diagramType: DiagramType):
         return self._treeNotebookHandler.newDocument(diagramType)

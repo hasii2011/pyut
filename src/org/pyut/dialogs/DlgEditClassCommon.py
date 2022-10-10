@@ -358,10 +358,7 @@ class DlgEditClassCommon(Dialog):
             editInterface: bool = True
         else:
             editInterface = False
-        self._dlgMethod: DlgEditMethod = DlgEditMethod(parent=self, windowId=ID_ANY,
-                                                       pyutMethod=methodToEdit,
-                                                       editInterface=editInterface,
-                                                       mediator=self._mediator)
+        self._dlgMethod: DlgEditMethod = DlgEditMethod(parent=self, pyutMethod=methodToEdit, editInterface=editInterface,)
         return self._dlgMethod.ShowModal()
 
     # noinspection PyUnusedLocal

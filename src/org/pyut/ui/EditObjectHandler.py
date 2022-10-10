@@ -86,6 +86,7 @@ class EditObjectHandler:
         if diagramShape is None:
             return
 
+        # TODO:  Convert this to a switch statement;  Move the case code to sub-methods
         if isinstance(diagramShape, OglClass):
             pyutObject = diagramShape.pyutObject
             self._editClass(umlFrame, pyutObject)
@@ -153,7 +154,7 @@ class EditObjectHandler:
         # umlFrame = self._treeNotebookHandler.currentFrame
         # if umlFrame is None:
         #     return
-        dlg: DlgEditClass = DlgEditClass(umlFrame, ID_ANY, thePyutClass)
+        dlg: DlgEditClass = DlgEditClass(umlFrame, self._eventEngine, thePyutClass)
         dlg.ShowModal()
         dlg.Destroy()
 
