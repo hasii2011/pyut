@@ -31,7 +31,7 @@ install:
   - pip install attrdict
   - pip install setuptools==65.4.1
   - pip install wheel==0.37.1
-  - pip install six ==1.16.0
+  - pip install six==1.16.0
   - pip install orthogonal~=1.1.7
   - pip install pyumldiagrams==2.30.8
   - pip install pygmlparser==1.0.1
