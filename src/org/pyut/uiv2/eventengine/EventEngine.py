@@ -4,6 +4,7 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
+from pyutmodel.PyutClass import PyutClass
 from wx import PostEvent
 from wx import PyEventBinder
 from wx import TreeItemId
@@ -12,6 +13,7 @@ from wx import Window
 from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
 from org.pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
+from org.pyut.uiv2.eventengine.Events import EditClassEvent
 from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from org.pyut.uiv2.eventengine.Events import CutShapeEvent
 from org.pyut.uiv2.eventengine.Events import EventType
@@ -42,6 +44,7 @@ APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
 INSERT_PROJECT_FILENAME_PARAMETER:   str = 'projectFilename'
 OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
 CALLBACK_PARAMETER:                  str = 'callback'
+PYUT_CLASS_PARAMETER:                str = 'pyutClass'
 
 # EventCallback = NewType('EventCallback', Callable[[CurrentProjectInformation], None])
 MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
@@ -99,6 +102,8 @@ class EventEngine(IEventEngine):
                 self._sendGetActiveUmlFrameEvent(**kwargs)
             case EventType.ActiveProjectInformation:
                 self._sendActiveProjectInformationEvent(**kwargs)
+            case EventType.EditClass:
+                self._sendEditClassEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.UpdateRecentProjects | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
@@ -185,4 +190,9 @@ class EventEngine(IEventEngine):
 
         cb:          ActiveUmlFrameCallback         = kwargs[CALLBACK_PARAMETER]
         eventToPost: ActiveProjectInformationEvent = ActiveProjectInformationEvent(callback=cb)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendEditClassEvent(self, **kwargs):
+        pyutClass: PyutClass = kwargs[PYUT_CLASS_PARAMETER]
+        eventToPost: EditClassEvent = EditClassEvent(pyutClass=pyutClass)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

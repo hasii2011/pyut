@@ -367,7 +367,7 @@ class ActionHandler(Singleton):
         from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
         from org.pyut.history.commands.CommandGroup import CommandGroup
 
-        cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y)
+        cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y, eventEngine=self._eventEngine)
         group: CommandGroup          = CommandGroup("Create class")
         group.addCommand(cmd)
         umlFrame.getHistory().addCommandGroup(group)

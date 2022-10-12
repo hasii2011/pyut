@@ -62,7 +62,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         x, y = oglClass.GetPosition()
 
         cmdGroup: CommandGroup         = CommandGroup("Create class")
-        cmd:     CreateOglClassCommand = CreateOglClassCommand(x=x, y=y, oglClass=oglClass)
+        cmd:     CreateOglClassCommand = CreateOglClassCommand(x=x, y=y, eventEngine=self._eventEngine, oglClass=oglClass)
         cmdGroup.addCommand(cmd)
         self.getHistory().addCommandGroup(cmdGroup)
         cmd.execute()

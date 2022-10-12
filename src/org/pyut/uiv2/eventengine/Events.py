@@ -33,6 +33,7 @@ CutShapesEvent,       EVENT_CUT_SHAPES        = NewEvent()
 UndoEvent,            EVENT_UNDO              = NewEvent()
 RedoEvent,            EVENT_REDO              = NewEvent()
 CutShapeEvent,        EVENT_CUT_SHAPE         = NewEvent()
+EditClassEvent,       EVENT_EDIT_CLASS,       = NewEvent()
 
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
@@ -150,3 +151,4 @@ class EventType(str, Enum):
     MiniProjectInformation   = ('MiniProjectInformation',   MiniProjectInformationEvent(),   EVENT_MINI_PROJECT_INFORMATION)
     GetActiveUmlFrame        = ('GetActiveUmlFrame',        GetActiveUmlFrameEvent(),        EVENT_GET_ACTIVE_UML_FRAME)
     ActiveProjectInformation = ('ActiveProjectInformation', ActiveProjectInformationEvent(), EVENT_ACTIVE_PROJECT_INFORMATION)
+    EditClass                = ('EditClass',                EditClassEvent(),                EVENT_EDIT_CLASS)

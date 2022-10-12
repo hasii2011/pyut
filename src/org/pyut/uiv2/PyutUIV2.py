@@ -33,8 +33,11 @@ from wx import MessageDialog
 
 from wx import Yield as wxYield
 
+from pyutmodel.PyutClass import PyutClass
+
 from org.pyut.PyutUtils import PyutUtils
 
+from org.pyut.dialogs.DlgEditClass import DlgEditClass
 from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
 from org.pyut.enums.DiagramType import DiagramType
@@ -55,11 +58,10 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
-from org.pyut.uiv2.eventengine.EventEngine import ActiveProjectInformationCallback
-from org.pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
 
 from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
+from org.pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
 from org.pyut.uiv2.eventengine.Events import EVENT_GET_ACTIVE_UML_FRAME
 from org.pyut.uiv2.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
@@ -71,9 +73,6 @@ from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
-from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
-from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
-
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import GetActiveUmlFrameEvent
 from org.pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
@@ -84,6 +83,13 @@ from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
 from org.pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
+from org.pyut.uiv2.eventengine.Events import EditClassEvent
+from org.pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
+
+from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
+from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+
+from org.pyut.uiv2.eventengine.EventEngine import ActiveProjectInformationCallback
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -140,6 +146,8 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_MINI_PROJECT_INFORMATION,   callback=self._onMiniProjectInformation)
         self._eventEngine.registerListener(pyEventBinder=EVENT_GET_ACTIVE_UML_FRAME,       callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
+
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -621,6 +629,16 @@ class PyutUIV2(IPyutUI):
         activeProjectInformation.pyutProject = self._projectManager.currentProject
 
         cb(activeProjectInformation)
+
+    def _onEditClass(self, event: EditClassEvent):
+        pyutClass: PyutClass = event.pyutClass
+        umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
+
+        self.logger.debug(f"Edit: {pyutClass}")
+
+        dlg: DlgEditClass = DlgEditClass(umlFrame, self._eventEngine, pyutClass)
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def _updateApplicationTitle(self):
 

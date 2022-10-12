@@ -12,8 +12,10 @@ from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
-
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.uiv2.eventengine.Events import EventType
+
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class CreateOglClassCommand(BaseOglClassCommand):
@@ -23,7 +25,7 @@ class CreateOglClassCommand(BaseOglClassCommand):
     """
     clsCounter: int = 1
 
-    def __init__(self, x: int = 0, y: int = 0, oglClass: Optional[OglClass] = None):
+    def __init__(self, x: int, y: int, eventEngine: IEventEngine, oglClass: Optional[OglClass] = None):
         """
         If the caller provides a ready-made class this command uses it and does not
         invoke the class editor
@@ -35,6 +37,8 @@ class CreateOglClassCommand(BaseOglClassCommand):
         """
         self._classX: int = x
         self._classY: int = y
+        self._eventEngine: IEventEngine = eventEngine
+
         self.logger:  Logger          = getLogger(__name__)
         self._prefs:  PyutPreferences = PyutPreferences()
 
@@ -103,7 +107,8 @@ class CreateOglClassCommand(BaseOglClassCommand):
         pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
         umlFrame = med.getFileHandling().currentFrame
         if self._invokeEditDialog is True:
-            med.classEditor(pyutClass)      # TODO send message to pop up dialog
+
+            self._eventEngine.sendEvent(EventType.EditClass, pyutClass=pyutClass)
 
         if self._prefs.snapToGrid is True:
             snappedX, snappedY = OglUtils.snapCoordinatesToGrid(self._classX, self._classY, self._prefs.backgroundGridInterval)
