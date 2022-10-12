@@ -120,7 +120,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         self._removeUnneededAnchorPoints(self._implementor, attachmentAnchor)
         umlFrame.Refresh()
 
-        with DlgEditInterface(umlFrame, ID_ANY, self._pyutInterface) as dlg:
+        with DlgEditInterface(umlFrame, self._pyutInterface) as dlg:
             if dlg.ShowModal() == OK:
                 self.logger.info(f'model: {self._pyutInterface}')
 

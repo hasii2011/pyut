@@ -20,18 +20,19 @@ from pyutmodel.PyutInterface import PyutInterface
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class DlgEditInterface(DlgEditClassCommon):
 
     clsLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent, windowId, pyutInterface: PyutInterface):
+    def __init__(self, parent, eventEngine: IEventEngine, pyutInterface: PyutInterface):
 
         self._pyutInterface:     PyutInterface = pyutInterface
         self._pyutInterfaceCopy: PyutInterface = deepcopy(pyutInterface)
 
-        super().__init__(parent, windowId, _('Edit Interface'), pyutModel=self._pyutInterfaceCopy, editInterface=True)
+        super().__init__(parent, eventEngine=eventEngine, dlgTitle=_('Edit Interface'), pyutModel=self._pyutInterfaceCopy, editInterface=True)
 
         self.logger: Logger = DlgEditInterface.clsLogger
 

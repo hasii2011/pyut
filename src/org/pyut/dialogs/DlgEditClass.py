@@ -51,8 +51,7 @@ from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
-from org.pyut.uiv2.eventengine.Events import EventType
+
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 # Assign constants
@@ -90,10 +89,9 @@ class DlgEditClass(DlgEditClassCommon):
         from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
         self.logger:       Logger       = getLogger(__name__)
-        self._eventEngine: IEventEngine = eventEngine
         self._pyutClass:   PyutClass    = pyutClass
 
-        super().__init__(parent=parent, windowId=ID_ANY, dlgTitle=_("Edit Class"), pyutModel=self._pyutClass, editInterface=False)
+        super().__init__(parent=parent, eventEngine=eventEngine, dlgTitle=_("Edit Class"), pyutModel=self._pyutClass, editInterface=False)
 
         assert isinstance(parent, UmlDiagramsFrame), 'Developer error.  Must be a Uml Diagram Frame'
         self._umlFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, parent)
@@ -266,7 +264,7 @@ class DlgEditClass(DlgEditClassCommon):
             self._pyutModelCopy.fields.append(field)
             # Add fields in dialog list
             self._lstFieldList.Append(str(field))
-            self.__setProjectModified()
+            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldEdit(self, event: CommandEvent):
@@ -279,7 +277,7 @@ class DlgEditClass(DlgEditClassCommon):
         if ret == OK:
             # Modify field in dialog list
             self._lstFieldList.SetString(selection, str(field))
-            self.__setProjectModified()
+            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldRemove(self, event: CommandEvent):
@@ -301,7 +299,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons of fields list (enable or not)
         self._fixBtnFields()
-        self.__setProjectModified()
+        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldUp(self, event: CommandEvent):
@@ -322,7 +320,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
-        self.__setProjectModified()
+        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldDown(self, event: CommandEvent):
@@ -342,7 +340,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
-        self.__setProjectModified()
+        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _evtFieldList(self, event):
@@ -401,7 +399,7 @@ class DlgEditClass(DlgEditClassCommon):
 
             oglClass.autoResize()
 
-        self.__setProjectModified()
+        self._setProjectModified()
 
         if self._oldClassName != self._pyutClass.name:
             evt: ClassNameChangedEvent = ClassNameChangedEvent(oldClassName=self._oldClassName, newClassName=self._pyutClass.name)
@@ -429,6 +427,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         oglClasses: List[OglClass] = [po for po in self._getUmlObjects() if isinstance(po, OglClass) and po.pyutObject is pyutClass]
 
+        # This will pop in the TestADialog application since it has no frame
         assert len(oglClasses) == 1, 'Cannot have more then one ogl class per pyut class'
         return oglClasses.pop(0)
 
@@ -439,18 +438,3 @@ class DlgEditClass(DlgEditClassCommon):
         Returns: Return the list of UmlObjects in the diagram.
         """
         return cast(UmlObjects, self._umlFrame.getUmlObjects())
-
-    def __setProjectModified(self):
-        """
-        We need to request some information
-        """
-        self._eventEngine.sendEvent(EventType.ActiveProjectInformation, callback=self.__markProjectAsModified)
-
-    def __markProjectAsModified(self, activeProjectInformation: ActiveProjectInformation):
-        """
-        Now we can mark the project as modified
-        Args:
-            activeProjectInformation:
-        """
-
-        activeProjectInformation.pyutProject.modified = True

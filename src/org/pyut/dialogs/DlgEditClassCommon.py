@@ -41,6 +41,9 @@ from pyutmodel.PyutMethod import PyutMethod
 from org.pyut.general.Globals import _
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 CommonClassType = Union[PyutClass, PyutInterface]
 
@@ -71,16 +74,17 @@ class DlgEditClassCommon(Dialog):
 
     clsLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent, windowId, dlgTitle: str, pyutModel: Union[PyutClass, PyutInterface], editInterface: bool = False):
+    def __init__(self, parent, eventEngine: IEventEngine, dlgTitle: str, pyutModel: Union[PyutClass, PyutInterface], editInterface: bool = False,):
 
-        super().__init__(parent, windowId, dlgTitle, style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, ID_ANY, dlgTitle, style=RESIZE_BORDER | CAPTION)
 
         self._parent = parent   # TODO  Do I really need to stash this
 
         from org.pyut.ui.Mediator import Mediator
 
-        self.logger:         Logger          = DlgEditClassCommon.clsLogger
-        self._editInterface: bool            = editInterface
+        self.logger:         Logger       = DlgEditClassCommon.clsLogger
+        self._editInterface: bool         = editInterface
+        self._eventEngine:   IEventEngine = eventEngine
         #
         # TODO remove this
         self._mediator:      Mediator        = Mediator()
@@ -196,11 +200,11 @@ class DlgEditClassCommon(Dialog):
         dlg = DlgEditComment(self, ID_ANY, self._pyutModelCopy)
         dlg.Destroy()
 
-        # Tell window that its data has been modified
-        fileHandling = self._mediator.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self._setProjectModified()
+        # fileHandling = self._mediator.getFileHandling()
+        # project = fileHandling.getCurrentProject()
+        # if project is not None:
+        #     project.setModified()
 
     # noinspection PyUnusedLocal
     def _evtMethodList(self, event: CommandEvent):
@@ -227,11 +231,7 @@ class DlgEditClassCommon(Dialog):
         if ret == OK:
             # Modify method in dialog list
             self._lstMethodList.SetString(selection, method.getString())
-            # Tell window that its data has been modified
-            fileHandling = self._mediator.getFileHandling()
-            project = fileHandling.getCurrentProject()
-            if project is not None:
-                project.modified = True
+            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onMethodAdd(self, event: CommandEvent):
@@ -248,12 +248,7 @@ class DlgEditClassCommon(Dialog):
             self._pyutModelCopy.methods.append(method)
             # Add fields in dialog list
             self._lstMethodList.Append(method.getString())
-
-            # Tell window that its data has been modified
-            fileHandling = self._mediator.getFileHandling()
-            project = fileHandling.getCurrentProject()
-            if project is not None:
-                project.modified = True
+            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onMethodDown(self, event):
@@ -274,11 +269,7 @@ class DlgEditClassCommon(Dialog):
         # Fix buttons (enable or not)
         self._fixBtnMethod()
 
-        # Tell window that its data has been modified
-        fileHandling = self._mediator.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onMethodRemove(self, event: CommandEvent):
@@ -299,12 +290,7 @@ class DlgEditClassCommon(Dialog):
 
         # Fix buttons of methods list (enable or not)
         self._fixBtnMethod()
-
-        # Tell window that its data has been modified
-        fileHandling = self._mediator.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onMethodUp(self, event: CommandEvent):
@@ -324,12 +310,7 @@ class DlgEditClassCommon(Dialog):
 
         # Fix buttons (enable or not)
         self._fixBtnMethod()
-
-        # Tell window that its data has been modified
-        fileHandling = self._mediator.getFileHandling()
-        project      = fileHandling.getCurrentProject()
-        if project is not None:
-            project.setModified()
+        self._setProjectModified()
 
     def _fixBtnMethod(self):
         """
@@ -373,3 +354,18 @@ class DlgEditClassCommon(Dialog):
     # noinspection PyUnusedLocal
     def _onCancel(self, event: CommandEvent):
         pass
+
+    def _setProjectModified(self):
+        """
+        We need to request some information
+        """
+        self._eventEngine.sendEvent(EventType.ActiveProjectInformation, callback=self.__markProjectAsModified)
+
+    def __markProjectAsModified(self, activeProjectInformation: ActiveProjectInformation):
+        """
+        Now we can mark the project as modified
+        Args:
+            activeProjectInformation:
+        """
+
+        activeProjectInformation.pyutProject.modified = True

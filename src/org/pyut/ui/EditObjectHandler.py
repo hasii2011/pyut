@@ -96,7 +96,7 @@ class EditObjectHandler:
             self.logger.info(f'Double clicked on lollipop')
             lollipop:      OglInterface2 = cast(OglInterface2, diagramShape)
             pyutInterface: PyutInterface = lollipop.pyutInterface
-            with DlgEditInterface(umlFrame, ID_ANY, pyutInterface) as dlg:
+            with DlgEditInterface(umlFrame, self._eventEngine, pyutInterface) as dlg:
                 if dlg.ShowModal() == OK:
                     self.logger.info(f'model: {pyutInterface}')
                 else:

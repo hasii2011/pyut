@@ -2,6 +2,7 @@
 from logging import Logger
 from logging import getLogger
 from typing import List
+from typing import cast
 
 from wx import ALIGN_RIGHT
 from wx import ALL
@@ -47,6 +48,10 @@ from org.pyut.plugins.io.pyumlsupport.ImageFormat import ImageFormat
 from org.pyut.plugins.io.pyumlsupport.ImageOptions import ImageOptions
 
 from org.pyut.general.Globals import _
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+# Until I get the new Plugins
+NO_EVENT_ENGINE = cast(IEventEngine, None)
 
 
 class DlgImageOptions(BaseDlgEdit):
@@ -64,7 +69,7 @@ class DlgImageOptions(BaseDlgEdit):
          self.__fileSelectBtn,   self.__imageFormatChoiceId
          ] = PyutUtils.assignID(7)
 
-        super().__init__(theParent, theTitle='UML Image Generation Options')
+        super().__init__(theParent, NO_EVENT_ENGINE, theTitle='UML Image Generation Options')
 
         self.logger:        Logger       = getLogger(__name__)
         imageOptions.outputFileName = PyutPreferences().pdfExportFileName

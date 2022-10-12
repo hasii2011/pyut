@@ -10,6 +10,10 @@ from wx import STAY_ON_TOP
 from wx import Dialog
 from wx import Sizer
 
+from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
 
 class BaseDlgEdit(Dialog):
 
@@ -20,11 +24,11 @@ class BaseDlgEdit(Dialog):
     """
     Provides a common place to host duplicate code
     """
-    def __init__(self, theParent, theWindowId=ID_ANY, theTitle=None, theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP):
+    def __init__(self, theParent, eventEngine: IEventEngine, theTitle=None, theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP):
 
         from org.pyut.ui.Mediator import Mediator
 
-        super().__init__(theParent, theWindowId, title=theTitle, style=theStyle)
+        super().__init__(theParent, ID_ANY, title=theTitle, style=theStyle)
 
         self._ctrl = Mediator()
 
@@ -59,16 +63,15 @@ class BaseDlgEdit(Dialog):
 
     def _setProjectModified(self):
         """
-        Tell window that its data has been modified
+        We need to request some information
         """
-        #
-        # Check because test programs do not pass this in
-        #
-        if self._ctrl is not None:
-            fileHandling = self._ctrl.getFileHandling()
+        self._eventEngine.sendEvent(EventType.ActiveProjectInformation, callback=self.__markProjectAsModified)
 
-            from org.pyut.uiv2.IPyutProject import IPyutProject
+    def __markProjectAsModified(self, activeProjectInformation: ActiveProjectInformation):
+        """
+        Now we can mark the project as modified
+        Args:
+            activeProjectInformation:
+        """
 
-            project: IPyutProject = fileHandling.currentProject
-            if project is not None:
-                project.modified = True
+        activeProjectInformation.pyutProject.modified = True

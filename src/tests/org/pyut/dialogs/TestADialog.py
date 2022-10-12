@@ -235,8 +235,11 @@ class TestADialog(App):
                 return f'Cancelled:  {classStr}'
 
     def _testDlgEditInterface(self):
+
+        eventEngine: EventEngine = EventEngine(listeningWindow=self._frameTop)
+
         pyutInterface: PyutInterface = PyutInterface(name='Ozzee')
-        with DlgEditInterface(parent=self._frameTop, windowId=ID_ANY, pyutInterface=pyutInterface) as dlg:
+        with DlgEditInterface(parent=self._frameTop, eventEngine=eventEngine, pyutInterface=pyutInterface) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutInterface}'
             else:
