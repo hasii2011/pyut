@@ -115,10 +115,7 @@ class PyutApplicationFrameV2(Frame):
         self._pyutUIV2:    PyutUIV2     = PyutUIV2(self, eventEngine=self._eventEngine)
 
         self._mediator: Mediator = Mediator()
-        # self._mediator.registerStatusBar(self.GetStatusBar())
-        # self._mediator.resetStatusText()
         self._mediator.registerAppFrame(self)
-        self._mediator.registerFileHandling(self._pyutUIV2)
         self._mediator.registerAppPath(getcwd())
 
         self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg='')

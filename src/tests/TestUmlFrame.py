@@ -18,7 +18,6 @@ from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
-from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
 from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
@@ -69,8 +68,8 @@ class TestUmlFrame(unittest.TestCase):
         umlFrame.Show(True)
 
         appFrame: Frame = Frame(parent=None, id=ID_ANY, title='')
-        fileHandling: PyutUIV2 = PyutUIV2(appFrame,  EventEngine(listeningWindow=umlFrame))
-        mediator.registerFileHandling(fileHandling)
+        # fileHandling: PyutUIV2 = PyutUIV2(appFrame,  EventEngine(listeningWindow=umlFrame))
+        # mediator.registerFileHandling(fileHandling)
 
         self._umlFrame: UmlFrame = umlFrame
 

@@ -13,6 +13,7 @@ from pyutmodel.PyutClass import PyutClass
 from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
+from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.uiv2.eventengine.Events import EventType
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -100,15 +101,18 @@ class CreateOglClassCommand(BaseOglClassCommand):
         Place self._shape on the UML frame
 
         """
-        from org.pyut.ui.Mediator import Mediator
-
-        med:       Mediator  = Mediator()
         oglClass:  OglClass  = self._shape
         pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
-        umlFrame = med.getFileHandling().currentFrame
+        # umlFrame = med.getFileHandling().currentFrame
         if self._invokeEditDialog is True:
-
             self._eventEngine.sendEvent(EventType.EditClass, pyutClass=pyutClass)
+
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrame)
+
+    def _cbGetActiveUmlFrame(self, umlFrame: UmlDiagramsFrame):
+
+        self.logger.info(f'{umlFrame=}')
+        oglClass:  OglClass  = self._shape
 
         if self._prefs.snapToGrid is True:
             snappedX, snappedY = OglUtils.snapCoordinatesToGrid(self._classX, self._classY, self._prefs.backgroundGridInterval)

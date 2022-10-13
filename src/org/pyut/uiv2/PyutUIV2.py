@@ -62,7 +62,7 @@ from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
-from org.pyut.uiv2.eventengine.Events import EVENT_GET_ACTIVE_UML_FRAME
+from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
 from org.pyut.uiv2.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_DIAGRAM
@@ -74,7 +74,7 @@ from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.Events import GetActiveUmlFrameEvent
+from org.pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
 from org.pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
@@ -144,7 +144,7 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_MINI_PROJECT_INFORMATION,   callback=self._onMiniProjectInformation)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_GET_ACTIVE_UML_FRAME,       callback=self._onGetActivateUmlFrame)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME, callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
@@ -529,6 +529,8 @@ class PyutUIV2(IPyutUI):
             newCurrentProject: IPyutProject = currentProjects[0]
             self._projectManager.currentProject = newCurrentProject
             self._projectManager.updateDiagramNotebookIfPossible(project=newCurrentProject)
+        else:
+            self._projectManager.currentProject = None
 
         self._updateApplicationTitle()
 
@@ -583,24 +585,14 @@ class PyutUIV2(IPyutUI):
         # Save number of initial documents
         nbInitialDocuments = len(project.documents)
 
-        # Load data...
         if not project.insertProject(filename):
             self._displayError("The specified file can't be loaded !")
-            return False
-
-        try:
-            for document in project.documents[nbInitialDocuments:]:
-                self._diagramNotebook.AddPage(document.diagramFrame, document.title)
-
+        else:
             self.__notebookCurrentPage = self._diagramNotebook.GetPageCount()-1
             self._diagramNotebook.SetSelection(self.__notebookCurrentPage)
-        except (ValueError, Exception) as e:
-            self._displayError(f"An error occurred while adding the project to the notebook {e}")
-            return False
-
-        # Select first frame as current frame
-        if len(project.documents) > nbInitialDocuments:
-            self._frame = project.documents[nbInitialDocuments].diagramFrame
+            # Select first frame as current frame
+            if len(project.documents) > nbInitialDocuments:
+                self._frame = project.documents[nbInitialDocuments].diagramFrame
 
     # noinspection PyUnusedLocal
     def _onDiagramModified(self, event: UMLDiagramModifiedEvent):
@@ -617,7 +609,7 @@ class PyutUIV2(IPyutUI):
         cb = event.callback
         cb(projectInformation)
 
-    def _onGetActivateUmlFrame(self, event: GetActiveUmlFrameEvent):
+    def _onGetActivateUmlFrame(self, event: ActiveUmlFrameEvent):
         cb = event.callback
         cb(self._projectManager.currentFrame)
 
@@ -647,10 +639,17 @@ class PyutUIV2(IPyutUI):
             currentZoom: float = 1.0
         else:
             currentZoom = self._projectManager.currentFrame.GetCurrentZoom()
+        if self._projectManager.currentProject is None:
+            newFilename:     str = ''
+            projectModified: bool = False
+        else:
+            newFilename     = self._projectManager.currentProject.filename
+            projectModified = self._projectManager.currentProject.modified
+
         self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationTitle,
-                                    newFilename=self._projectManager.currentProject.filename,
+                                    newFilename=newFilename,
                                     currentFrameZoomFactor=currentZoom,
-                                    projectModified=self._projectManager.currentProject.modified)
+                                    projectModified=projectModified)
 
     def _updateApplicationStatus(self, statusMessage: str):
 

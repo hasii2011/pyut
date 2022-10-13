@@ -96,7 +96,8 @@ class ProjectManager:
         Args:
             newProject:   Must have been previously managed
         """
-        assert newProject in self._projects
+
+        assert newProject in self._projects or newProject is None, ''
         self._currentProject = newProject
 
     @property

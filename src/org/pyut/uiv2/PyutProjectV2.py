@@ -204,12 +204,6 @@ class PyutProjectV2(IPyutProject):
         # Update text   TODO caller must use project manager call
         # self.updateTreeText()
 
-        # Register to mediator
-        if len(self._documents) > 0:
-            frame = self._documents[0].diagramFrame
-            self._mediator.getFileHandling().registerUmlFrame(frame)
-
-        # Return
         return True
 
     @deprecated(reason='Use .frames property')

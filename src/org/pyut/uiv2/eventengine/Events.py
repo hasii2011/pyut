@@ -41,7 +41,7 @@ AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
 SelectToolEvent,               EVENT_SELECT_TOOL                    = NewEvent()
 SetToolActionEvent,            EVENT_SET_TOOL_ACTION                = NewEvent()
 MiniProjectInformationEvent,   EVENT_MINI_PROJECT_INFORMATION       = NewEvent()
-GetActiveUmlFrameEvent,        EVENT_GET_ACTIVE_UML_FRAME           = NewEvent()
+ActiveUmlFrameEvent, EVENT_ACTIVE_UML_FRAME           = NewEvent()
 ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
 
 
@@ -91,7 +91,7 @@ class EventType(str, Enum):
         parameters
             callback - Callback that is invoked with a parameter of type MiniProjectInformation
 
-    GetActiveUmlFrameEvent
+    ActiveUmlFrameEvent
         Used to retrieve the currently active frame
         parameters:
             callback - Callback this is invoked with a parameter of type UmlDiagramsFrame
@@ -149,6 +149,6 @@ class EventType(str, Enum):
     SelectTool               = ('SelectTool',               SelectToolEvent(),               EVENT_SELECT_TOOL)
     SetToolAction            = ('SetToolAction',            SetToolActionEvent(),            EVENT_SET_TOOL_ACTION)
     MiniProjectInformation   = ('MiniProjectInformation',   MiniProjectInformationEvent(),   EVENT_MINI_PROJECT_INFORMATION)
-    GetActiveUmlFrame        = ('GetActiveUmlFrame',        GetActiveUmlFrameEvent(),        EVENT_GET_ACTIVE_UML_FRAME)
+    ActiveUmlFrame           = ('ActiveUmlFrame',           ActiveUmlFrameEvent(),           EVENT_ACTIVE_UML_FRAME)
     ActiveProjectInformation = ('ActiveProjectInformation', ActiveProjectInformationEvent(), EVENT_ACTIVE_PROJECT_INFORMATION)
     EditClass                = ('EditClass',                EditClassEvent(),                EVENT_EDIT_CLASS)

@@ -17,7 +17,7 @@ from org.pyut.uiv2.eventengine.Events import EditClassEvent
 from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from org.pyut.uiv2.eventengine.Events import CutShapeEvent
 from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.Events import GetActiveUmlFrameEvent
+from org.pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
 from org.pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
@@ -98,7 +98,7 @@ class EventEngine(IEventEngine):
                 self._sendSetToolActionEvent(**kwargs)
             case EventType.MiniProjectInformation:
                 self._sendMiniProjectInformationEvent(**kwargs)
-            case EventType.GetActiveUmlFrame:
+            case EventType.ActiveUmlFrame:
                 self._sendGetActiveUmlFrameEvent(**kwargs)
             case EventType.ActiveProjectInformation:
                 self._sendActiveProjectInformationEvent(**kwargs)
@@ -183,7 +183,7 @@ class EventEngine(IEventEngine):
     def _sendGetActiveUmlFrameEvent(self, **kwargs):
 
         cb:          ActiveUmlFrameCallback = kwargs[CALLBACK_PARAMETER]
-        eventToPost: GetActiveUmlFrameEvent = GetActiveUmlFrameEvent(callback=cb)
+        eventToPost: ActiveUmlFrameEvent = ActiveUmlFrameEvent(callback=cb)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendActiveProjectInformationEvent(self, **kwargs):

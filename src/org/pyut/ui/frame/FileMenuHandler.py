@@ -29,7 +29,6 @@ from wx import Window
 from wx import CloseEvent
 
 from wx import PostEvent as wxPostEvent
-from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
@@ -40,19 +39,17 @@ from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.general.Globals import _
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
-from ogl.OglClass import OglClass
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutPrintout import PyutPrintout
 
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.ui.tools.SharedTypes import PluginMap
 
-from org.pyut.uiv2.PyutUIV2 import PyutUIV2
+from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
 
 from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
 from org.pyut.uiv2.eventengine.Events import EventType
@@ -75,7 +72,6 @@ class FileMenuHandler(BaseMenuHandler):
         self._plugins:            PluginMap       = cast(PluginMap, {})     # To store the plugins
 
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
-        self._treeNotebookHandler:     PyutUIV2    = self._mediator.getFileHandling()
 
         self._printData: PrintData = cast(PrintData, None)
 
@@ -150,27 +146,33 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        PyutUtils.displayWarning(_("The project insert is experimental, use it at your own risk.\n"
-                                   "You risk a shapes ID duplicate with unexpected results !"))
+        PyutUtils.displayWarning(msg="The project insert is experimental, use it at your own risk.\nYou risk a shapes ID duplicate with unexpected results !")
 
-        if self._treeNotebookHandler.currentProject is None:
-            PyutUtils.displayError(_("No project to insert this file into !"))
-            return
+        self._eventEngine.sendEvent(EventType.ActiveProjectInformation, callback=self._doInsertProject)
 
-        # Ask which project to insert
-        defaultDirectory: str    = self._currentDirectoryHandler.currentDirectory
+    def _doInsertProject(self, activeProjectInformation: ActiveProjectInformation):
+        """
 
-        dlg = FileDialog(self._parent, _("Choose a project"), defaultDirectory, "", "*.put", FD_OPEN)
-        if dlg.ShowModal() != ID_OK:
+        Args:
+            activeProjectInformation:
+        """
+        if activeProjectInformation.pyutProject is not None:
+            # Ask which project to insert
+            defaultDirectory: str    = self._currentDirectoryHandler.currentDirectory
+
+            dlg = FileDialog(self._parent, "Choose a project", defaultDirectory, "", "*.put", FD_OPEN)
+            if dlg.ShowModal() != ID_OK:
+                dlg.Destroy()
+                return False
+            self._currentDirectoryHandler.currentDirectory = dlg.GetPath()
+            filename = dlg.GetPath()
             dlg.Destroy()
-            return False
-        self._currentDirectoryHandler.currentDirectory = dlg.GetPath()
-        filename = dlg.GetPath()
-        dlg.Destroy()
 
-        self.logger.warning(f'inserting file: {filename}')
+            self.logger.warning(f'inserting file: {filename}')
 
-        self._eventEngine.sendEvent(EventType.InsertProject, projectFilename=filename)
+            self._eventEngine.sendEvent(EventType.InsertProject, projectFilename=filename)
+        else:
+            PyutUtils.displayError("No project to insert this file into !")
 
     # noinspection PyUnusedLocal
     def onFileOpen(self, event: CommandEvent):
@@ -225,44 +227,14 @@ class FileMenuHandler(BaseMenuHandler):
         self._eventEngine.sendEvent(EventType.DeleteDiagram)
 
     def onImport(self, event: CommandEvent):
-
-        # self._treeNotebookHandler.newProject()                              # TODO  Use events
-        self._treeNotebookHandler.newDocument(DiagramType.CLASS_DIAGRAM)    # TODO
-        # self._mediator.updateTitle()
-        cl = self._importPlugins[event.GetId()]
-
-        obj = cl(self._mediator.getUmlObjects(), self._mediator.activeUmlFrame)
-
-        # Do plugin functionality
-        try:
-            wxYield()
-            obj.doImport()
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."))
-            self.logger.error(f'{e}')
-
-        parent: Window = self._menu.GetWindow()
-
-        parent.Refresh()
+        """
+        TODO: Re-enable plugins with PyutPluginCore
+        """
 
     def onExport(self, event: CommandEvent):
         """
-        Callback.
-
-        Args:
-            event: A command event
+        TODO: Re-enable plugins with PyutPluginCore
         """
-        # Create a plugin instance
-        cl = self._exportPlugins[event.GetId()]
-        umlObjects: List[OglClass]      = cast(List[OglClass], self._mediator.getUmlObjects())
-        umlFrame: UmlClassDiagramsFrame = self._mediator.activeUmlFrame
-        obj = cl(umlObjects, umlFrame)
-        try:
-            wxYield()
-            obj.doExport()
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An error occurred while executing the selected plugin"), _("Error..."))
-            self.logger.error(f'{e}')
 
     # noinspection PyUnusedLocal
     def onPyutPreferences(self, event: CommandEvent):

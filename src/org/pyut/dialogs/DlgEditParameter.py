@@ -40,17 +40,15 @@ from org.pyut.general.Globals import _
 
 class DlgEditParameter(BaseDlgEdit):
 
-    def __init__(self, parent, windowId, parameterToEdit: PyutParameter, mediator=None):
+    def __init__(self, parent, parameterToEdit: PyutParameter):
         """
         The Dialog for parameter editing
         Args:
             parent:
-            windowId:
             parameterToEdit:  The parameter that is being edited
-            mediator:
         """
 
-        super().__init__(parent, windowId, _("Parameter Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(parent, ID_ANY, _("Parameter Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self._parameterToEdit: PyutParameter = parameterToEdit
 
@@ -133,13 +131,7 @@ class DlgEditParameter(BaseDlgEdit):
         else:
             self._parameterToEdit.defaultValue = ''
 
-        # Tell window that its data has been modified
-        # TODO use event handling
-        fileHandling = self._ctrl.getFileHandling()
-        project = fileHandling.getCurrentProject()
-        if project is not None:
-            project.modified = True
-
+        self._setProjectModified()
         # Close dialog
         self.EndModal(OK)
 

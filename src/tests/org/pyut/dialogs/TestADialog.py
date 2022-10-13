@@ -49,18 +49,15 @@ from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutType import PyutType
 
-
 from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine
 
 from tests.TestBase import TestBase
 
-from unittest.mock import MagicMock
 
 from tests.org.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
 
@@ -89,9 +86,9 @@ class TestADialog(App):
         #
         # Introduce a mock
         #
-        fileHandler = MagicMock()
-        self._mediator = Mediator()
-        self._mediator.registerFileHandling(fileHandler)
+        # fileHandler = MagicMock()
+        # self._mediator = Mediator()
+        # self._mediator.registerFileHandling(fileHandler)
 
         mainSizer: BoxSizer = self._createSelectionControls(frameTop)
 
@@ -200,7 +197,7 @@ class TestADialog(App):
 
     def _testDlgEditParameter(self) -> str:
         pyutParameter: PyutParameter = PyutParameter()
-        with DlgEditParameter(parent=self._frameTop, windowId=ID_ANY, parameterToEdit=pyutParameter, mediator=Mediator()) as dlg:
+        with DlgEditParameter(parent=self._frameTop, parameterToEdit=pyutParameter) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutParameter}'
             else:

@@ -10,15 +10,11 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from miniogl.Diagram import Diagram
 
-from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
-from pyutmodel.PyutMethod import PyutMethod
-
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
     from org.pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
-    from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 
@@ -101,18 +97,6 @@ class Mediator(Singleton):
         Returns: a string
         """
         return self._appPath
-
-    def registerFileHandling(self, treeNotebookHandler):
-        """
-        Register the main part of the user interface
-        """
-        self._treeNotebookHandler: PyutUIV2 = treeNotebookHandler
-
-    def getFileHandling(self):  # -> TreeNotebookHandler:
-        """
-        Returns:  the FileHandling class
-        """
-        return self._treeNotebookHandler
 
     def registerAppPath(self, path: str):
         """

@@ -435,7 +435,7 @@ class PyutXml:
 
         umlFrame: UmlDiagramsFrame = document.diagramFrame
         mediator: Mediator = Mediator()
-        mediator.getFileHandling().showFrame(umlFrame)
+        # mediator.getFileHandling().showFrame(umlFrame)
 
         return umlFrame
 

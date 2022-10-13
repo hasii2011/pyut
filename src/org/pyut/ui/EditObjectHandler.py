@@ -54,7 +54,7 @@ class EditObjectHandler:
 
         self._x = x
         self._y = y
-        self._eventEngine.sendEvent(EventType.GetActiveUmlFrame, callback=self._cbGetActiveUmlFrame)
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrame)
 
     def _cbGetActiveUmlFrame(self, umlFrame: 'UmlDiagramsFrame'):
 
