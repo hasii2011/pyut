@@ -105,5 +105,6 @@ setup(
                       'xmlschema==1.11.1',
                       'pyutmodel==1.1.0',
                       'ogl==0.60.5',
+                      'oglio==0.5.7'
                       ]
 )

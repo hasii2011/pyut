@@ -29,8 +29,6 @@ from wx import Yield as wxYield
 
 from org.pyut.PyutConstants import PyutConstants
 
-from org.pyut.general.exceptions.UnsupportedXmlFileFormat import UnsupportedXmlFileFormat
-
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
@@ -44,6 +42,9 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 
 from org.pyut.persistence.IoFile import IoFile
+
+from oglio.Reader import Reader
+from oglio.Types import OglProject
 
 PyutProjects = NewType('PyutProjects', List[IPyutProject])
 
@@ -235,6 +236,7 @@ class ProjectManager:
         """
         Create a new project;  Adds it to the Project Tree;
 
+        TODO: Check to see if we already have an emtpy project; If true bump the file name
         Returns:  A default empty project
         """
         project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._projectTree, self._projectTree.projectTreeRoot)
@@ -242,8 +244,8 @@ class ProjectManager:
         projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=project)
 
         project.projectTreeRoot = projectTreeRoot
-        self.addProject(project)
-        self.currentProject = project
+        # self.addProject(project)
+        # self.currentProject = project
 
         wxYield()
         return project
@@ -270,42 +272,33 @@ class ProjectManager:
 
             projectToSave.modified = False
 
-    def openProject(self, filename, project: IPyutProject = None):
+    def openProject(self, filename, project: IPyutProject = None) -> OglProject:
         """
         Open a file
         TODO:  Fix V2 this does 2 things loads from a file or from a project
-
+        TODO: Handle this with OglIO
         Args:
             filename:
             project:
         """
         self.logger.info(f'{filename=} {project=}')
-        # Exit if the project is already loaded
-        if self.isProjectLoaded(filename) is True:
-            self._displayError("The selected project is already loaded !")
-            return
+
         # Create a new project ?
         if project is None:
             project = self.newProject()
-        # Load the project and add it
-        try:
-            self._readProject(filename=filename, projectToRead=project)
+            project.filename = filename
 
-            # TODO V2 UI bogus fix .newProject added to the list
-            # Need to keep it this way until we get the new IOXml plug
-            if project in self.projects:
-                pass
-            else:
-                self.addProject(project)
-            self.currentProject = project
-            PyutPreferences().addNewLastOpenedFilesEntry(project.filename)
+        # Load the project
+        oglProject: OglProject = self._readFile(filename=filename)
 
-        except (ValueError, Exception) as e:
-            self.logger.error(f"An error occurred while loading the project ! {e}")
-            raise e
+        self.addProject(project)
+        self.currentProject = project
+        PyutPreferences().addNewLastOpenedFilesEntry(project.filename)
 
-        # self._addProjectDocumentsToNotebook(project)
-        # self.logger.debug(f'{self._currentFrame=} {self.currentProject=} {self._diagramNotebook.GetSelection()=}')
+        self.updateProjectTreeText(pyutProject=project)
+        wxYield()
+
+        return oglProject
 
     def saveProjectAs(self, projectToSave: IPyutProject):
         """
@@ -384,38 +377,23 @@ class ProjectManager:
         finally:
             EndBusyCursor()
 
-    # def loadFromFilename(self, filename: str) -> bool:
-    def _readProject(self, filename: str, projectToRead: IPyutProject):
+    def _readFile(self, filename: str) -> OglProject:
         """
         Interface to the actual I/O code
-
-        Load a project from a file
-
+        Get the project Ogl Objects
         Args:
             filename: filename to open
 
-        Returns:
-            `True` if the operation succeeded
+        Returns:    Returns an OglProject
         """
         self.logger.info(f'loadFromFilename: {filename=}')
         BeginBusyCursor()
-        from org.pyut.persistence.IoFile import IoFile  # Avoid Nuitka cyclical dependency
 
-        io: IoFile = IoFile()
-        wxYield()
+        reader: Reader = Reader()
 
-        projectToRead.filename = filename
-        try:
-            io.open(filename, projectToRead)
-            self._modified = False
-        except (ValueError, Exception, UnsupportedXmlFileFormat) as e:
-            EndBusyCursor()
-            self.logger.error(f"Error loading file: {e}")
-            raise e
-
+        oglProject:   OglProject   = reader.readFile(fqFileName=filename)
         EndBusyCursor()
-        self.updateProjectTreeText(pyutProject=projectToRead)
-        wxYield()
+        return oglProject
 
     def _justTheFileName(self, filename):
         """

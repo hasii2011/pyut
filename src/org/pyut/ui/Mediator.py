@@ -88,7 +88,7 @@ class Mediator(Singleton):
         Args:
             diagramType:
         """
-        self._treeNotebookHandler.newDocument(docType=diagramType)
+        self._treeNotebookHandler.newDiagram(docType=diagramType)
 
     def getAppPath(self) -> str:
         """
@@ -229,4 +229,4 @@ class Mediator(Singleton):
         return self._toolboxOwner.getCategories()
 
     def createDocument(self, diagramType: DiagramType):
-        return self._treeNotebookHandler.newDocument(diagramType)
+        return self._treeNotebookHandler.newDiagram(diagramType)

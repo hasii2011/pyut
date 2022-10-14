@@ -13,3 +13,24 @@ class DiagramType(Enum):
 
     def __repr__(self):
         return self.__str__()
+
+    @classmethod
+    def toEnum(cls, strValue: str) -> 'DiagramType':
+        """
+        Converts the input string to the attachment location
+        Args:
+            strValue:   A serialized string value
+
+        Returns:  The visibility enumeration
+        """
+        canonicalStr: str = strValue.strip(' ').lower()
+
+        if canonicalStr == 'class_diagram':
+            return DiagramType.CLASS_DIAGRAM
+        elif canonicalStr == 'sequence_diagram':
+            return DiagramType.SEQUENCE_DIAGRAM
+        elif canonicalStr == 'usecase_diagram':
+            return DiagramType.USECASE_DIAGRAM
+        else:
+            print(f'Warning: did not recognize this diagram type: {canonicalStr}')
+            return DiagramType.CLASS_DIAGRAM

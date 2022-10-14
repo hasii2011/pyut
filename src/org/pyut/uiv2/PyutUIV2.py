@@ -10,6 +10,20 @@ from logging import DEBUG
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 
+from miniogl.Diagram import Diagram
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglLink import OglLink
+
+from ogl.OglObject import OglObject
+from oglio.Types import OglClasses
+from oglio.Types import OglNotes
+from oglio.Types import OglSDInstances
+from oglio.Types import OglSDMessages
+from oglio.Types import OglTexts
+from oglio.Types import OglActors
+from oglio.Types import OglUseCases
+
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
@@ -32,6 +46,10 @@ from wx import Menu
 from wx import MessageDialog
 
 from wx import Yield as wxYield
+
+from oglio.Types import OglDocument
+from oglio.Types import OglLinks
+from oglio.Types import OglProject
 
 from pyutmodel.PyutClass import PyutClass
 
@@ -241,7 +259,7 @@ class PyutUIV2(IPyutUI):
                 return project
         return NO_PYUT_PROJECT
 
-    def newDocument(self, docType: DiagramType):
+    def newDiagram(self, docType: DiagramType):
         """
         Maintained for PyutXmlV10, until we can fix that;  Probably with oglio
 
@@ -251,10 +269,10 @@ class PyutUIV2(IPyutUI):
         Returns:  The created diagram
 
         """
-        newDiagramEvent: NewDiagramEvent = NewDiagramEvent(diagramType=docType)
-        return self._onNewDiagram(event=newDiagramEvent)
 
-    def _onNewDiagram(self, event: NewDiagramEvent) -> IPyutDocument:
+        return self._newDiagram(diagramType=docType)
+
+    def _onNewDiagram(self, event: NewDiagramEvent):
         """
         Create a new document;
         Adds the tree entry
@@ -268,7 +286,38 @@ class PyutUIV2(IPyutUI):
 
         """
         diagramType: DiagramType = event.diagramType
+        self._newDiagram(diagramType=diagramType)
+
+    @deprecated(reason='use property .currentProject')
+    def getCurrentProject(self) -> IPyutProject:
+        """
+        Get the current working project
+
+        Returns:
+            the current project or None if not found
+        """
+        return self._projectManager.currentProject
+
+    def isProjectLoaded(self, filename: str) -> bool:
+        """
+        Args:
+            filename:
+
+        Returns:
+            `True` if the project is already loaded
+        """
+        return self._projectManager.isProjectLoaded(filename=filename)
+
+    def _newDiagram(self, diagramType: DiagramType):
+        """
+        Create a new frame on the current project
+
+        Args:
+            diagramType:
+        """
         pyutProject: IPyutProject = self._projectManager.currentProject
+        #
+        # TODO  Invoker should create an appropriate project
         if pyutProject is None:
             self._projectManager.newProject()
             pyutProject = self._projectManager.currentProject
@@ -294,40 +343,18 @@ class PyutUIV2(IPyutUI):
 
         self._updateApplicationTitle()
 
-        return document
-
-    @deprecated(reason='use property .currentProject')
-    def getCurrentProject(self) -> IPyutProject:
-        """
-        Get the current working project
-
-        Returns:
-            the current project or None if not found
-        """
-        return self._projectManager.currentProject
-
-    def isProjectLoaded(self, filename: str) -> bool:
-        """
-        Args:
-            filename:
-
-        Returns:
-            `True` if the project is already loaded
-        """
-        return self._projectManager.isProjectLoaded(filename=filename)
-
-    def openFile(self, filename, project: IPyutProject = None) -> bool:
-        """
-        Args:
-            filename:
-            project:
-
-        Returns:
-            `True` if operation succeeded
-        """
-        self._projectManager.openProject(filename=filename, project=project)
-
-        return True
+    # def openFile(self, filename, project: IPyutProject = None) -> bool:
+    #     """
+    #     Args:
+    #         filename:
+    #         project:
+    #
+    #     Returns:
+    #         `True` if operation succeeded
+    #     """
+    #     self._projectManager.openProject(filename=filename, project=project)
+    #
+    #     return True
 
     # noinspection PyUnusedLocal
     def _onDiagramNotebookPageChanged(self, event):
@@ -545,15 +572,16 @@ class PyutUIV2(IPyutUI):
 
     def _onOpenProject(self, event: OpenProjectEvent):
 
-        projectFilename = event.projectFilename
-        self._projectManager.openProject(filename=projectFilename)
+        projectFilename: str = event.projectFilename
+        if self._projectManager.isProjectLoaded(projectFilename) is True:
+            self._displayError("The selected project is already loaded !")
+        else:
+            oglProject: OglProject = self._projectManager.openProject(filename=projectFilename)
 
-        self._updateApplicationTitle()
-        self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
+            self._placeShapesOnFrames(oglProject=oglProject)
 
-        # self._preferences.addNewLastOpenedFilesEntry(filename)
-        # self._updateRecentlyOpenedMenuItems()
-        # self._mediator.updateTitle()
+            self._updateApplicationTitle()
+            self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
 
     # noinspection PyUnusedLocal
     def _onSaveProject(self, event: SaveProjectEvent):
@@ -632,6 +660,32 @@ class PyutUIV2(IPyutUI):
         dlg.ShowModal()
         dlg.Destroy()
 
+    def _placeShapesOnFrames(self, oglProject: OglProject):
+        """
+        Creates the necessary frames to load the various OglDocuments onto
+        respective Pyut frames in the DiagramNotebook
+
+        Assumes `._openProject()` was called to set up the current project
+        Args:
+            oglProject:   The ogl project to display
+        """
+        for document in oglProject.oglDocuments.values():
+            oglDocument: OglDocument = cast(OglDocument, document)
+            diagramType: DiagramType = DiagramType.toEnum(oglDocument.documentType)
+            self._newDiagram(diagramType=diagramType)                   # sets a frame in the current project
+            newFrame = self._projectManager.currentFrame
+            # Don't care what type of diagram since those lists will be empty
+            self._layoutOglClasses(umlFrame=newFrame, oglClasses=oglDocument.oglClasses)
+            self._layoutOglLinks(umlFrame=newFrame,   oglLinks=oglDocument.oglLinks)
+            self._layoutOglNotes(umlFrame=newFrame,   oglNotes=oglDocument.oglNotes)
+            self._layoutOglTexts(umlFrame=newFrame,   oglTexts=oglDocument.oglTexts)
+
+            self._layoutOglActors(umlFrame=newFrame,   oglActors=oglDocument.oglActors)
+            self._layoutOglUseCases(umlFrame=newFrame, oglUseCases=oglDocument.oglUseCases)
+
+            self._layoutOglSDInstances(umlFrame=newFrame, oglSDInstances=oglDocument.oglSDInstances)
+            self._layoutOglSDMessages(umlFrame=newFrame, oglSDMessages=oglDocument.oglSDMessages)
+
     def _updateApplicationTitle(self):
 
         # Account for "Untitled" project with no frame
@@ -659,3 +713,43 @@ class PyutUIV2(IPyutUI):
 
         booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
         booBoo.ShowModal()
+
+    def _layoutOglClasses(self, umlFrame: UmlDiagramsFrame, oglClasses: OglClasses):
+        for oglClass in oglClasses:
+            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglClass,)
+
+    def _layoutOglLinks(self, umlFrame: UmlDiagramsFrame, oglLinks: OglLinks):
+        for oglLink in oglLinks:
+            # TODO:  Special handling for OglInterface2 links
+            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
+
+    def _layoutOglNotes(self, umlFrame: UmlDiagramsFrame, oglNotes: OglNotes):
+        for oglNote in oglNotes:
+            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglNote)
+
+    def _layoutOglTexts(self, umlFrame: UmlDiagramsFrame, oglTexts: OglTexts):
+        for oglText in oglTexts:
+            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglText)
+
+    def _layoutOglActors(self, umlFrame: UmlDiagramsFrame, oglActors: OglActors):
+        for oglActor in oglActors:
+            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglActor)
+
+    def _layoutOglUseCases(self, umlFrame: UmlDiagramsFrame, oglUseCases: OglUseCases):
+        for oglUseCase in oglUseCases:
+            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglUseCase)
+
+    def _layoutOglSDInstances(self, umlFrame: UmlDiagramsFrame, oglSDInstances: OglSDInstances):
+        diagram: Diagram = umlFrame.getDiagram()
+        for oglSDInstance in oglSDInstances.values():
+            diagram.AddShape(oglSDInstance)
+        umlFrame.Refresh()
+
+    def _layoutOglSDMessages(self, umlFrame: UmlDiagramsFrame, oglSDMessages: OglSDMessages):
+        diagram: Diagram = umlFrame.getDiagram()
+        for oglSDMessage in oglSDMessages.values():
+            diagram.AddShape(oglSDMessage)
+
+    def _displayAnOglObject(self, umlFrame: UmlDiagramsFrame, oglObject: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink]):
+        x, y = oglObject.GetPosition()
+        umlFrame.addShape(oglObject, x, y)

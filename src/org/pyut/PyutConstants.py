@@ -1,7 +1,11 @@
+
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
 from org.pyut.enums.DiagramType import DiagramType
+
+# noinspection PyPackageRequirements
+from deprecated import deprecated
 
 # Types of diagrams labels
 DiagramsLabels = {
@@ -40,6 +44,7 @@ class PyutConstants:
         return DiagramsStrings[inType]
 
     @staticmethod
+    @deprecated
     def diagramTypeFromString(string):
         """
         TODO:  This code belongs in the enumeration class

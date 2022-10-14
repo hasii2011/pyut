@@ -22,6 +22,6 @@ class IPyutUI(SplitterWindow, metaclass=MyMeta):
     def __init__(self, topLevelWindow: Frame):
         super().__init__(parent=topLevelWindow, id=ID_ANY)
 
-    @abstractmethod
-    def openFile(self, filename, project: IPyutProject = None) -> bool:
-        pass
+    # @abstractmethod
+    # def openFile(self, filename, project: IPyutProject = None) -> bool:
+    #     pass
