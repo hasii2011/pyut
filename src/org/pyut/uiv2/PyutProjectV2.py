@@ -177,35 +177,6 @@ class PyutProjectV2(IPyutProject):
     def deleteDocument(self, document: IPyutDocument):
         self._documents.remove(document)
 
-    def insertProject(self, filename: str) -> bool:
-        """
-        Insert another project into this one
-
-        Args:
-            filename: filename to open
-
-        Returns:
-            `True` if the operation succeeded
-        """
-        # Load the file
-        from org.pyut.persistence import IoFile
-        BeginBusyCursor()
-        io = IoFile.IoFile()
-
-        try:
-            io.open(filename, self)
-            self._modified = False
-        except (ValueError, Exception) as e:
-            PyutUtils.displayError(f"Error loading file {e}")
-            EndBusyCursor()
-            return False
-        EndBusyCursor()
-
-        # Update text   TODO caller must use project manager call
-        # self.updateTreeText()
-
-        return True
-
     @deprecated(reason='Use .frames property')
     def getFrames(self) -> List[UmlFrameType]:
         """

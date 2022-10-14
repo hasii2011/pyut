@@ -584,6 +584,7 @@ class PyutUIV2(IPyutUI):
         self._updateApplicationTitle()
         self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
 
+    # noinspection PyUnusedLocal
     def _onInsertProject(self, event: InsertProjectEvent):
         """
         Insert a file into the current project
@@ -592,21 +593,22 @@ class PyutUIV2(IPyutUI):
             event: The project filename to insert
 
         """
-        filename: str = event.projectFilename
-        # Get current project
-        project: IPyutProject = self._projectManager.currentProject
-
-        # Save number of initial documents
-        nbInitialDocuments = len(project.documents)
-
-        if not project.insertProject(filename):
-            self._displayError("The specified file can't be loaded !")
-        else:
-            self.__notebookCurrentPage = self._diagramNotebook.GetPageCount()-1
-            self._diagramNotebook.SetSelection(self.__notebookCurrentPage)
-            # Select first frame as current frame
-            if len(project.documents) > nbInitialDocuments:
-                self._frame = project.documents[nbInitialDocuments].diagramFrame
+        self._displayError("Currently unsupported")
+        # filename: str = event.projectFilename
+        # # Get current project
+        # project: IPyutProject = self._projectManager.currentProject
+        #
+        # # Save number of initial documents
+        # nbInitialDocuments = len(project.documents)
+        #
+        # if not project.insertProject(filename):
+        #     self._displayError("The specified file can't be loaded !")
+        # else:
+        #     self.__notebookCurrentPage = self._diagramNotebook.GetPageCount()-1
+        #     self._diagramNotebook.SetSelection(self.__notebookCurrentPage)
+        #     # Select first frame as current frame
+        #     if len(project.documents) > nbInitialDocuments:
+        #         self._frame = project.documents[nbInitialDocuments].diagramFrame
 
     # noinspection PyUnusedLocal
     def _onDiagramModified(self, event: UMLDiagramModifiedEvent):
