@@ -173,7 +173,7 @@ class PyutApplicationFrameV2(Frame):
         self._alreadyDisplayedTipsFrame = False
 
         # TODO:  Fix later for V2
-        self.SetDropTarget(PyutFileDropTarget(treeNotebookHandler=self._pyutUIV2))
+        self.SetDropTarget(PyutFileDropTarget(eventEngine=self._eventEngine))
 
         if self.GetThemeEnabled() is True:
             self.SetThemeEnabled(True)

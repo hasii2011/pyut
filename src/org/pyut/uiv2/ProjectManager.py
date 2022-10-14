@@ -1,6 +1,7 @@
 
 from typing import List
 from typing import NewType
+from typing import Tuple
 from typing import cast
 
 from logging import Logger
@@ -10,6 +11,8 @@ from copy import copy
 
 from os import path as osPath
 
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 from wx import FD_OVERWRITE_PROMPT
 from wx import FD_SAVE
 from wx import ICON_ERROR
@@ -28,23 +31,38 @@ from wx import EndBusyCursor
 from wx import Yield as wxYield
 
 from org.pyut.PyutConstants import PyutConstants
+from org.pyut.general.exceptions.UnsupportedFileTypeException import UnsupportedFileTypeException
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from org.pyut.ui.umlframes.UmlFrame import UmlFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
+from org.pyut.uiv2.IPyutDocument import PyutDocuments
 from org.pyut.uiv2.IPyutProject import IPyutProject
 
 from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.ProjectTree import ProjectTree
+from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 
-from org.pyut.persistence.IoFile import IoFile
-
+from ogl.OglClass import OglClass
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglLink import OglLink
+from ogl.OglNote import OglNote
+from ogl.OglText import OglText
+from oglio.Writer import Writer
 from oglio.Reader import Reader
 from oglio.Types import OglProject
+from oglio.Types import OglDocument
+from oglio.Types import OglDocumentTitle
+from ogl.OglActor import OglActor
+from ogl.OglUseCase import OglUseCase
+
+from oglio.toXmlV10.OglToDom import OglToDom
 
 PyutProjects = NewType('PyutProjects', List[IPyutProject])
 
@@ -244,8 +262,6 @@ class ProjectManager:
         projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=project)
 
         project.projectTreeRoot = projectTreeRoot
-        # self.addProject(project)
-        # self.currentProject = project
 
         wxYield()
         return project
@@ -272,21 +288,21 @@ class ProjectManager:
 
             projectToSave.modified = False
 
-    def openProject(self, filename, project: IPyutProject = None) -> OglProject:
+    def openProject(self, filename: str) -> Tuple[OglProject, IPyutProject]:
         """
-        Open a file
-        TODO:  Fix V2 this does 2 things loads from a file or from a project
-        TODO: Handle this with OglIO
+        Open a file, creates PyutProject, update myself, make the new project
+        the current one;  Update the UI
+
+        Supports .put and .xml extensions
         Args:
             filename:
-            project:
-        """
-        self.logger.info(f'{filename=} {project=}')
 
-        # Create a new project ?
-        if project is None:
-            project = self.newProject()
-            project.filename = filename
+        Returns:  Tuple: The OglProject that was read and a newly created PyutProject
+        """
+        self.logger.info(f'{filename=}')
+
+        project: IPyutProject = self.newProject()
+        project.filename = filename
 
         # Load the project
         oglProject: OglProject = self._readFile(filename=filename)
@@ -298,7 +314,7 @@ class ProjectManager:
         self.updateProjectTreeText(pyutProject=project)
         wxYield()
 
-        return oglProject
+        return oglProject, project
 
     def saveProjectAs(self, projectToSave: IPyutProject):
         """
@@ -364,18 +380,50 @@ class ProjectManager:
         Args:
             projectToWrite:
         """
-        io: IoFile = IoFile()
         BeginBusyCursor()
-        try:
-            io.save(projectToWrite)
-            self._modified = False
-        except (ValueError, Exception) as e:
-            msg:     str = f"An error occurred while saving project {e}"
-            caption: str = 'Error from IoFile'
-            booBoo: MessageDialog = MessageDialog(parent=None, message=msg, caption=caption, style=OK | ICON_ERROR)
-            booBoo.ShowModal()
-        finally:
-            EndBusyCursor()
+        oglProject: OglProject = OglProject()
+        oglProject.codePath = projectToWrite.codePath
+        oglProject.version  = OglToDom.VERSION  # TODO wait for a better place for XML Version
+        documents: PyutDocuments = projectToWrite.documents
+        for document in documents:
+            pyutDocument: PyutDocumentV2 = cast(PyutDocumentV2, document)
+
+            oglDocument:  OglDocument = self._toBasicOglDocument(pyutDocument=pyutDocument)
+            diagramFrame: UmlFrame    = pyutDocument.diagramFrame
+            oglObjects:   UmlObjects  = diagramFrame.getUmlObjects()
+
+            for oglObject in oglObjects:
+                match oglObject:
+                    case OglClass() as oglObject:
+                        oglDocument.oglClasses.append(oglObject)
+                    case OglSDMessage() as oglObject:               # Put here so it does not fall into OglLink
+                        oglSDMessage: OglSDMessage = cast(OglSDMessage, oglObject)
+                        modelId: int = oglSDMessage.pyutObject.id
+                        oglDocument.oglSDMessages[modelId] = oglSDMessage
+                    case OglLink() as oglObject:
+                        oglDocument.oglLinks.append(oglObject)
+                    case OglInterface2() as oglObject:
+                        oglDocument.oglLinks.append(cast(OglLink, oglObject))      # temp cast until I fix OglInterface2
+                    case OglNote() as oglObject:
+                        oglDocument.oglNotes.append(oglObject)
+                    case OglText() as oglObject:
+                        oglDocument.oglTexts.append(oglObject)
+                    case OglUseCase() as oglObject:
+                        oglDocument.oglUseCases.append(oglObject)
+                    case OglActor() as oglObject:
+                        oglDocument.oglActors.append(oglObject)
+                    case OglSDInstance() as oglObject:
+                        oglSDInstance: OglSDInstance = cast(OglSDInstance, oglObject)
+                        modelId = oglSDInstance.pyutObject.id
+                        oglDocument.oglSDInstances[modelId] = oglSDInstance
+                    case _:
+                        self.logger.error(f'Unknown ogl object type: {oglObject}, not saved')
+            oglProject.oglDocuments[oglDocument.documentTitle] = oglDocument
+
+            oglWriter: Writer = Writer()
+            oglWriter.writeFile(oglProject=oglProject, fqFileName=projectToWrite.filename)
+
+        EndBusyCursor()
 
     def _readFile(self, filename: str) -> OglProject:
         """
@@ -391,7 +439,13 @@ class ProjectManager:
 
         reader: Reader = Reader()
 
-        oglProject:   OglProject   = reader.readFile(fqFileName=filename)
+        if filename.endswith('.put'):
+            oglProject: OglProject = reader.readFile(fqFileName=filename)
+        elif filename.endswith('.xml'):
+            oglProject = reader.readXmlFile(fqFileName=filename)
+        else:
+            raise UnsupportedFileTypeException()
+
         EndBusyCursor()
         return oglProject
 
@@ -467,3 +521,28 @@ class ProjectManager:
 
         booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
         booBoo.ShowModal()
+
+    def _toBasicOglDocument(self, pyutDocument: IPyutDocument) -> OglDocument:
+        """
+        Extracts basic Pyut Document properties and moves them to the OglDocument
+
+        Args:
+            pyutDocument:
+
+        Returns: A new OglDocument
+        """
+        oglDocument: OglDocument = OglDocument()
+        oglDocument.documentType = pyutDocument.diagramType.__str__()
+        oglDocument.documentTitle = OglDocumentTitle(pyutDocument.title)
+
+        diagramFrame: UmlFrame = pyutDocument.diagramFrame
+        scrollPosX, scrollPosY = diagramFrame.GetViewStart()
+
+        xUnit, yUnit = diagramFrame.GetScrollPixelsPerUnit()
+
+        oglDocument.scrollPositionX = scrollPosX
+        oglDocument.scrollPositionY = scrollPosY
+        oglDocument.pixelsPerUnitX = xUnit
+        oglDocument.pixelsPerUnitY = yUnit
+
+        return oglDocument

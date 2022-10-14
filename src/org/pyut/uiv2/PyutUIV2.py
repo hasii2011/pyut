@@ -270,7 +270,7 @@ class PyutUIV2(IPyutUI):
 
         """
 
-        return self._newDiagram(diagramType=docType)
+        return self._newDiagram(self._projectManager.currentProject, diagramType=docType)
 
     def _onNewDiagram(self, event: NewDiagramEvent):
         """
@@ -278,15 +278,17 @@ class PyutUIV2(IPyutUI):
         Adds the tree entry
         Selects the tree entry
         Selects the appropriate notebook frame
-
-        TODO:  Event handler should not return a value;  temporarily does
-
         Args:
            event    The event which contains the diagram type to create
 
         """
         diagramType: DiagramType = event.diagramType
-        self._newDiagram(diagramType=diagramType)
+        pyutProject: IPyutProject = self._projectManager.currentProject
+        if pyutProject is None:
+            self._projectManager.newProject()
+            pyutProject = self._projectManager.currentProject
+
+        self._newDiagram(pyutProject=pyutProject, diagramType=diagramType)
 
     @deprecated(reason='use property .currentProject')
     def getCurrentProject(self) -> IPyutProject:
@@ -308,38 +310,22 @@ class PyutUIV2(IPyutUI):
         """
         return self._projectManager.isProjectLoaded(filename=filename)
 
-    def _newDiagram(self, diagramType: DiagramType):
+    def _newDiagram(self, pyutProject: IPyutProject, diagramType: DiagramType, diagramName: str = ''):
         """
         Create a new frame on the current project
 
         Args:
             diagramType:
         """
-        pyutProject: IPyutProject = self._projectManager.currentProject
-        #
-        # TODO  Invoker should create an appropriate project
-        if pyutProject is None:
-            self._projectManager.newProject()
-            pyutProject = self._projectManager.currentProject
-
         document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, docType=diagramType, eventEngine=self._eventEngine)
 
-        self._projectManager.addDocumentNodeToTree(pyutProject=pyutProject, documentNode=document)
-
-        self._projectManager.currentFrame   = document.diagramFrame
-        self._projectManager.currentProject = pyutProject
-        self._projectManager.currentFrame.Refresh()
-        wxYield()
+        if diagramName != '':
+            document.title = diagramName
 
         pyutProject.documents.append(document)
 
-        self._diagramNotebook.AddPage(page=document.diagramFrame, text=document.title)
-
-        notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
-        if notebookCurrentPageNumber >= 0:
-            if self.logger.isEnabledFor(DEBUG):
-                self.logger.debug(f'Current notebook page: {notebookCurrentPageNumber}')
-            self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
+        self._updateProjectManagerWithNewDocument(pyutProject=pyutProject, document=document)
+        self._addNewDocumentToDiagramNotebook(newDocument=document)
 
         self._updateApplicationTitle()
 
@@ -576,9 +562,9 @@ class PyutUIV2(IPyutUI):
         if self._projectManager.isProjectLoaded(projectFilename) is True:
             self._displayError("The selected project is already loaded !")
         else:
-            oglProject: OglProject = self._projectManager.openProject(filename=projectFilename)
+            oglProject, pyutProject = self._projectManager.openProject(filename=projectFilename)
 
-            self._placeShapesOnFrames(oglProject=oglProject)
+            self._placeShapesOnFrames(oglProject=oglProject, pyutProject=pyutProject)
 
             self._updateApplicationTitle()
             self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
@@ -660,7 +646,7 @@ class PyutUIV2(IPyutUI):
         dlg.ShowModal()
         dlg.Destroy()
 
-    def _placeShapesOnFrames(self, oglProject: OglProject):
+    def _placeShapesOnFrames(self, oglProject: OglProject, pyutProject: IPyutProject):
         """
         Creates the necessary frames to load the various OglDocuments onto
         respective Pyut frames in the DiagramNotebook
@@ -668,11 +654,13 @@ class PyutUIV2(IPyutUI):
         Assumes `._openProject()` was called to set up the current project
         Args:
             oglProject:   The ogl project to display
+            pyutProject:   My version
         """
         for document in oglProject.oglDocuments.values():
             oglDocument: OglDocument = cast(OglDocument, document)
             diagramType: DiagramType = DiagramType.toEnum(oglDocument.documentType)
-            self._newDiagram(diagramType=diagramType)                   # sets a frame in the current project
+            self._newDiagram(pyutProject=pyutProject, diagramType=diagramType, diagramName=oglDocument.documentTitle)
+
             newFrame = self._projectManager.currentFrame
             # Don't care what type of diagram since those lists will be empty
             self._layoutOglClasses(umlFrame=newFrame, oglClasses=oglDocument.oglClasses)
@@ -753,3 +741,30 @@ class PyutUIV2(IPyutUI):
     def _displayAnOglObject(self, umlFrame: UmlDiagramsFrame, oglObject: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink]):
         x, y = oglObject.GetPosition()
         umlFrame.addShape(oglObject, x, y)
+
+    def _updateProjectManagerWithNewDocument(self, pyutProject: IPyutProject, document: PyutDocumentV2):
+        """
+
+        Args:
+            pyutProject:
+            document:
+        """
+        self._projectManager.addDocumentNodeToTree(pyutProject=pyutProject, documentNode=document)
+        self._projectManager.currentFrame   = document.diagramFrame
+        self._projectManager.currentProject = pyutProject
+        self._projectManager.currentFrame.Refresh()
+        wxYield()
+
+    def _addNewDocumentToDiagramNotebook(self, newDocument: PyutDocumentV2):
+        """
+
+        Args:
+            newDocument:   The new document to add
+        """
+        self._diagramNotebook.AddPage(page=newDocument.diagramFrame, text=newDocument.title)
+
+        notebookCurrentPageNumber  = self._diagramNotebook.GetPageCount() - 1
+        if notebookCurrentPageNumber >= 0:
+            if self.logger.isEnabledFor(DEBUG):
+                self.logger.debug(f'Current notebook page: {notebookCurrentPageNumber}')
+            self._diagramNotebook.SetSelection(notebookCurrentPageNumber)

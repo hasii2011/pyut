@@ -16,21 +16,22 @@ from wx import Yield as wxYield
 
 from org.pyut.PyutConstants import PyutConstants
 
-from org.pyut.uiv2.IPyutUI import IPyutUI
+from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 FileNames = NewType('FileNames', List[str])
 
 
 class PyutFileDropTarget(FileDropTarget):
 
-    def __init__(self, treeNotebookHandler: IPyutUI):
+    def __init__(self, eventEngine: IEventEngine):
 
         super().__init__()
 
         self.logger: Logger = getLogger(__name__)
         self.logger.setLevel(INFO)
 
-        self._pyutUI: IPyutUI = treeNotebookHandler
+        self._eventEngine: IEventEngine = eventEngine
 
     def OnDropFiles(self, x: int, y: int, filenames: FileNames) -> bool:
         """
@@ -63,14 +64,11 @@ class PyutFileDropTarget(FileDropTarget):
 
     def _loadFiles(self, filenames: FileNames):
 
-        pyutUI: IPyutUI = self._pyutUI
-
-        for xmlFilename in filenames:
+        for filename in filenames:
             wxYield()
+            self._eventEngine.sendEvent(EventType.OpenProject, projectFilename=filename)
 
-            success: bool = pyutUI.openFile(xmlFilename)    # TODO V2 should send a message
-            if success is False:
-                self._displayError(message="Error on drag and drop")
+        return True
 
     def _displayError(self, message: str):
 
