@@ -56,6 +56,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 [
     ID_TXT_METHOD_NAME,
@@ -73,9 +74,9 @@ from org.pyut.general.Globals import _
 
 class DlgEditMethod(BaseDlgEdit):
 
-    def __init__(self, parent, pyutMethod: PyutMethod, editInterface: bool = False):
+    def __init__(self, parent, eventEngine: IEventEngine, pyutMethod: PyutMethod, editInterface: bool = False):
 
-        super().__init__(parent, ID_ANY, _("Method Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(parent, eventEngine=eventEngine, title="Edit Method", theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self.logger:         Logger = getLogger(__name__)
         self._editInterface: bool   = editInterface
@@ -228,7 +229,7 @@ class DlgEditMethod(BaseDlgEdit):
 
         Returns: return code from dialog
         """
-        self._dlgParam: DlgEditParameter = DlgEditParameter(parent=self, parameterToEdit=param)
+        self._dlgParam: DlgEditParameter = DlgEditParameter(parent=self, eventEngine=self._eventEngine, parameterToEdit=param)
         return self._dlgParam.ShowModal()
 
     # noinspection PyUnusedLocal

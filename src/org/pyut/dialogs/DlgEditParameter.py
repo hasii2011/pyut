@@ -30,6 +30,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 [
     ID_TXT_PARAM_NAME,
@@ -40,7 +41,7 @@ from org.pyut.general.Globals import _
 
 class DlgEditParameter(BaseDlgEdit):
 
-    def __init__(self, parent, parameterToEdit: PyutParameter):
+    def __init__(self, parent, eventEngine: IEventEngine, parameterToEdit: PyutParameter):
         """
         The Dialog for parameter editing
         Args:
@@ -48,7 +49,7 @@ class DlgEditParameter(BaseDlgEdit):
             parameterToEdit:  The parameter that is being edited
         """
 
-        super().__init__(parent, ID_ANY, _("Parameter Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(parent, eventEngine=eventEngine, title="Edit Parameter", theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self._parameterToEdit: PyutParameter = parameterToEdit
 

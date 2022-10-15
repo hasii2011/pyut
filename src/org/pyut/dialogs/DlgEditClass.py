@@ -190,7 +190,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         Returns: return code from dialog
         """
-        self._dlgField = DlgEditField(theParent=self, fieldToEdit=field)
+        self._dlgField = DlgEditField(theParent=self, eventEngine=self._eventEngine, fieldToEdit=field)
         return self._dlgField.ShowModal()
 
     def _dupParams(self, parameters):

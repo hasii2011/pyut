@@ -12,8 +12,6 @@ from logging import getLogger
 from deprecated import deprecated
 
 from wx import TreeItemId
-from wx import BeginBusyCursor
-from wx import EndBusyCursor
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -23,7 +21,6 @@ from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.uiv2.IPyutProject import PyutDocuments
 from org.pyut.uiv2.IPyutProject import UmlFrameType
 
-from org.pyut.ui.Mediator import Mediator
 from org.pyut.uiv2.Types import Frames
 
 if TYPE_CHECKING:
@@ -46,7 +43,6 @@ class PyutProjectV2(IPyutProject):
         """
         super().__init__()
         self.logger:       Logger   = getLogger(__name__)
-        self._mediator:    Mediator = Mediator()
 
         self._documents: PyutDocuments = PyutDocuments([])
 

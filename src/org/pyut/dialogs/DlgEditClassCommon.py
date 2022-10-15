@@ -80,14 +80,9 @@ class DlgEditClassCommon(Dialog):
 
         self._parent = parent   # TODO  Do I really need to stash this
 
-        from org.pyut.ui.Mediator import Mediator
-
         self.logger:         Logger       = DlgEditClassCommon.clsLogger
         self._editInterface: bool         = editInterface
         self._eventEngine:   IEventEngine = eventEngine
-        #
-        # TODO remove this
-        self._mediator:      Mediator        = Mediator()
 
         self._pyutModel:     CommonClassType = pyutModel
         self._pyutModelCopy: CommonClassType = deepcopy(pyutModel)
@@ -339,7 +334,7 @@ class DlgEditClassCommon(Dialog):
             editInterface: bool = True
         else:
             editInterface = False
-        self._dlgMethod: DlgEditMethod = DlgEditMethod(parent=self, pyutMethod=methodToEdit, editInterface=editInterface,)
+        self._dlgMethod: DlgEditMethod = DlgEditMethod(parent=self, eventEngine=self._eventEngine, pyutMethod=methodToEdit, editInterface=editInterface,)
         return self._dlgMethod.ShowModal()
 
     # noinspection PyUnusedLocal

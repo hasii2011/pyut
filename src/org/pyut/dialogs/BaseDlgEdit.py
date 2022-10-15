@@ -2,7 +2,6 @@ from wx import CANCEL
 from wx import CAPTION
 from wx import CommandEvent
 
-from wx import ID_ANY
 from wx import OK
 from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
@@ -24,13 +23,13 @@ class BaseDlgEdit(Dialog):
     """
     Provides a common place to host duplicate code
     """
-    def __init__(self, theParent, eventEngine: IEventEngine, theTitle=None, theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP):
+    def __init__(self, theParent, eventEngine: IEventEngine, title=None, theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP):
 
-        from org.pyut.ui.Mediator import Mediator
+        # from org.pyut.ui.Mediator import Mediator
 
-        super().__init__(theParent, ID_ANY, title=theTitle, style=theStyle)
+        super().__init__(theParent, title=title, style=theStyle)
 
-        self._ctrl = Mediator()
+        self._eventEngine: IEventEngine = eventEngine
 
     def _createDialogButtonsContainer(self, buttons=OK) -> Sizer:
 

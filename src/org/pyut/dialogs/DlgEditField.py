@@ -1,5 +1,4 @@
 
-from typing import TYPE_CHECKING
 
 from wx import ALIGN_CENTER_VERTICAL
 from wx import ALIGN_RIGHT
@@ -35,7 +34,7 @@ from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
-
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 [
     ID_TXT_FIELD_NAME,
@@ -46,9 +45,9 @@ from org.pyut.general.Globals import _
 
 class DlgEditField(BaseDlgEdit):
 
-    def __init__(self, theParent, fieldToEdit: PyutField):
+    def __init__(self, theParent, eventEngine: IEventEngine, fieldToEdit: PyutField):
 
-        super().__init__(theParent, ID_ANY, _("Field Edit"), theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(theParent,  eventEngine=eventEngine, title="Edit Field", theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self._fieldToEdit: PyutField = fieldToEdit
         # ----------------

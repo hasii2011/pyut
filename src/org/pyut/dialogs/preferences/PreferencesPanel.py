@@ -5,17 +5,17 @@ from wx import Panel
 from wx import Window
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.ui.Mediator import Mediator
 
 
 class PreferencesPanel(Panel):
-
+    """
+    Make this abstract
+    """
     def __init__(self, parent: Window):
 
         super().__init__(parent=parent, style=BORDER_SUNKEN)
 
         self._prefs:    PyutPreferences = PyutPreferences()
-        self._mediator: Mediator        = Mediator()
 
     def _createControls(self):
         """

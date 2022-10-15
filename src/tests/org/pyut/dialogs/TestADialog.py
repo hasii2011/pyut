@@ -55,6 +55,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine
+from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from tests.TestBase import TestBase
 
@@ -89,7 +90,7 @@ class TestADialog(App):
         # fileHandler = MagicMock()
         # self._mediator = Mediator()
         # self._mediator.registerFileHandling(fileHandler)
-
+        self._eventEngine: IEventEngine = EventEngine(listeningWindow=frameTop)
         mainSizer: BoxSizer = self._createSelectionControls(frameTop)
 
         frameTop.SetAutoLayout(True)
@@ -173,7 +174,7 @@ class TestADialog(App):
 
     def _testDlgEditField(self) -> str:
         pyutField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
-        with DlgEditField(theParent=self._frameTop, fieldToEdit=pyutField) as dlg:
+        with DlgEditField(theParent=self._frameTop, eventEngine=self._eventEngine, fieldToEdit=pyutField) as dlg:
             if dlg.ShowModal() == OK:
                 return f'{pyutField=}'
             else:
@@ -197,7 +198,7 @@ class TestADialog(App):
 
     def _testDlgEditParameter(self) -> str:
         pyutParameter: PyutParameter = PyutParameter()
-        with DlgEditParameter(parent=self._frameTop, parameterToEdit=pyutParameter) as dlg:
+        with DlgEditParameter(parent=self._frameTop, eventEngine=self._eventEngine, parameterToEdit=pyutParameter) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutParameter}'
             else:
@@ -264,7 +265,7 @@ class TestADialog(App):
         )
         savePreference: DisplayMethodParameters = PyutMethod.displayParameters
         PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
-        with DlgEditMethod(parent=self._frameTop, pyutMethod=pyutMethod) as dlg:
+        with DlgEditMethod(parent=self._frameTop, eventEngine=self._eventEngine, pyutMethod=pyutMethod) as dlg:
             ans = dlg.ShowModal()
 
             if ans == OK:
