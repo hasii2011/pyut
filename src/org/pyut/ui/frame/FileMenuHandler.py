@@ -274,30 +274,35 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._doPrintPreview)
+
+    def _doPrintPreview(self, diagramFrame: UmlClassDiagramsFrame):
+
+        self._eventEngine.sendEvent(EventType.DeSelectAllShapes)
+        wxYield()
+
         parent: Window = self._parent
 
-        # self._mediator.deselectAllShapes()
-        frame = self._mediator.activeUmlFrame
-        if frame == -1:
-            PyutUtils.displayError(_("Can't print nonexistent frame..."), _("Error..."))
+        if diagramFrame is None:
+            PyutUtils.displayError("No frame to print", "Keyboard to Computer Interface Error")
             return
 
-        printout  = PyutPrintout(frame)
-        printout2 = PyutPrintout(frame)
+        printout  = PyutPrintout(diagramFrame)
+        printout2 = PyutPrintout(diagramFrame)
         preview   = PrintPreview(printout, printout2, self._printData)
 
         if not preview.IsOk():
-            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."))
+            PyutUtils.displayError("Unknown Preview Error", "Error")
             return
 
-        frame = PreviewFrame(preview, parent, _("Diagram preview"))
-        frame.Initialize()
-        frame.Centre(BOTH)
+        previewFrame: PreviewFrame = PreviewFrame(preview, parent, "Diagram preview")
+        previewFrame.Initialize()
+        previewFrame.Centre(BOTH)
 
         try:
-            frame.Show(True)
+            previewFrame.Show(True)
         except (ValueError, Exception) as e:
-            PyutUtils.displayError(_("An unknown error occurred while previewing"), _("Error..."))
+            PyutUtils.displayError(f"Preview error {e}", "Error")
 
     # noinspection PyUnusedLocal
     def onPrint(self, event: CommandEvent):
