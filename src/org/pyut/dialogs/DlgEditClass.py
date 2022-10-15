@@ -212,11 +212,12 @@ class DlgEditClass(DlgEditClassCommon):
         self._txtName.SetValue(self._pyutModelCopy.name)
 
         # Fill Stereotype
-        stereotype = self._pyutModelCopy.getStereotype()
-        if stereotype is None:
+        stereotype = self._pyutModelCopy.stereotype
+        if stereotype is None or stereotype.name is None:
             strStereotype = ""
         else:
             strStereotype = stereotype.name
+
         self._txtStereotype.SetValue(strStereotype)
 
         # Fill the list controls
