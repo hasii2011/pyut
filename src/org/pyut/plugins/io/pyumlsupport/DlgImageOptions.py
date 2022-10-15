@@ -69,7 +69,7 @@ class DlgImageOptions(BaseDlgEdit):
          self.__fileSelectBtn,   self.__imageFormatChoiceId
          ] = PyutUtils.assignID(7)
 
-        super().__init__(theParent, NO_EVENT_ENGINE, theTitle='UML Image Generation Options')
+        super().__init__(theParent, NO_EVENT_ENGINE, title='UML Image Generation Options')
 
         self.logger:        Logger       = getLogger(__name__)
         imageOptions.outputFileName = PyutPreferences().pdfExportFileName

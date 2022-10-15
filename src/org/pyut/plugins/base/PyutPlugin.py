@@ -19,6 +19,7 @@ from wx import FileSelector
 from wx import MessageDialog
 from wx import Yield as wxYield
 
+from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 InputFormatType  = NewType('InputFormatType', Tuple[str, str, str])
@@ -133,7 +134,7 @@ class PyutPlugin:
             return ""
         else:
             directory = aDirectory.GetPath()
-            self._ctrl.setCurrentDir(directory)
+            CurrentDirectoryHandler().currentDirectory = directory
             aDirectory.Destroy()
             return directory
 
@@ -152,7 +153,7 @@ class PyutPlugin:
             return ""
         else:
             directory = dirDialog.GetPath()
-            self._ctrl.setCurrentDir(directory)
+            CurrentDirectoryHandler().currentDirectory = directory
             dirDialog.Destroy()
             return directory
 

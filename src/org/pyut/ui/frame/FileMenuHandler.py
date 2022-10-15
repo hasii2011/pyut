@@ -13,6 +13,7 @@ from wx import ID_ANY
 from wx import ID_OK
 from wx import PAPER_A4
 from wx import PORTRAIT
+from wx import PRINTER_ERROR
 from wx import PRINT_QUALITY_HIGH
 from wx import EVT_CLOSE
 
@@ -29,6 +30,7 @@ from wx import Window
 from wx import CloseEvent
 
 from wx import PostEvent as wxPostEvent
+from wx import Yield as wxYield
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
@@ -48,6 +50,7 @@ from org.pyut.ui.PyutPrintout import PyutPrintout
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.ui.tools.SharedTypes import PluginMap
+from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
 
@@ -304,20 +307,28 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        if self._mediator.getDiagram() is None:
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._doPrint)
+
+    def _doPrint(self, diagramFrame: UmlClassDiagramsFrame):
+
+        if diagramFrame is None:
             PyutUtils.displayError(_("No diagram to print !"), _("Error"))
             return
-        # self._mediator.deselectAllShapes()
+
+        self._eventEngine.sendEvent(EventType.DeSelectAllShapes)
+        wxYield()
         printDialogData: PrintDialogData = PrintDialogData()
 
         printDialogData.SetPrintData(self._printData)
         printDialogData.SetMinPage(1)
         printDialogData.SetMaxPage(1)
         printer  = Printer(printDialogData)
-        printout = PyutPrintout(self._mediator.activeUmlFrame)
+        printout = PyutPrintout(diagramFrame)
 
         if not printer.Print(self._parent, printout, True):
-            PyutUtils.displayError(_("Cannot print"), _("Error"))
+            # May have been cancelled
+            if Printer.GetLastError() == PRINTER_ERROR:
+                PyutUtils.displayError("Cannot print", "Error")
 
     def onRecentlyOpenedFile(self, event: CommandEvent):
         """
@@ -367,7 +378,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         Returns:    The list will be empty if the user cancelled the request
         """
-        currentDir: str       = self._mediator.getCurrentDir()
+        currentDir: str = CurrentDirectoryHandler().currentDirectory
 
         dlg = FileDialog(self._parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
         fileNames: FileNames = FileNames([])

@@ -81,15 +81,6 @@ class Mediator(Singleton):
         """
         return self._treeNotebookHandler.currentFrame
 
-    def newDocument(self, diagramType: DiagramType):
-        """
-        New API for V2 UI;  Mediator does not provide access to any UI component
-        TODO post v2 UI we will send message to UI component
-        Args:
-            diagramType:
-        """
-        self._treeNotebookHandler.newDiagram(docType=diagramType)
-
     def getAppPath(self) -> str:
         """
         Return the path of the application files.
@@ -146,71 +137,6 @@ class Mediator(Singleton):
         """
         self._toolboxOwner.registerTool(tool)
 
-    def getUmlObjects(self) -> 'UmlObjects':
-        """
-        May be empty
-
-        Returns: Return the list of UmlObjects in the diagram.
-        """
-        from org.pyut.ui.umlframes.UmlFrame import UmlObjects
-
-        if self._treeNotebookHandler is None:
-            return UmlObjects([])
-        umlFrame = self._treeNotebookHandler.currentFrame
-        if umlFrame is not None:
-            return cast(UmlObjects, umlFrame.getUmlObjects())
-        else:
-            return UmlObjects([])
-
-    def getSelectedShapes(self):
-        """
-        Return the list of selected OglObjects in the diagram.
-
-        Returns:  May be empty
-        """
-        umlObjects = self.getUmlObjects()
-        if umlObjects is not None:
-            selectedObjects = []
-            for obj in self.getUmlObjects():
-                if obj.IsSelected():
-                    selectedObjects.append(obj)
-
-            return selectedObjects
-        else:
-            return []
-
-    def getDiagram(self) -> Diagram:
-        """
-        Return the uml diagram.
-
-        Returns: The active uml diagram if present, None otherwise
-        """
-
-        umlFrame = self._treeNotebookHandler.currentFrame
-        if umlFrame is None:
-            return cast(Diagram, None)
-        return umlFrame.getDiagram()
-
-    def getCurrentDir(self) -> str:
-        """
-        Return the application's current directory
-
-        Returns:  application's current directory
-        """
-        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
-
-        return currentDirectoryHandler.currentDirectory
-
-    def setCurrentDir(self, directory: str):
-        """
-        Set the application's current directory
-
-        Args:
-            directory:  New application current directory
-        """
-        currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
-        currentDirectoryHandler.currentDirectory = directory
-
     def displayToolbox(self, category):
         """
         Display a toolbox
@@ -227,6 +153,3 @@ class Mediator(Singleton):
         Returns:  The category names
         """
         return self._toolboxOwner.getCategories()
-
-    def createDocument(self, diagramType: DiagramType):
-        return self._treeNotebookHandler.newDiagram(diagramType)
