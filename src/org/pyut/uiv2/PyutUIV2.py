@@ -709,9 +709,22 @@ class PyutUIV2(IPyutUI):
             self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglClass,)
 
     def _layoutOglLinks(self, umlFrame: UmlDiagramsFrame, oglLinks: OglLinks):
-        for oglLink in oglLinks:
+        umlDiagram = umlFrame.GetDiagram()
+        for link in oglLinks:
             # TODO:  Special handling for OglInterface2 links
+            oglLink: OglLink = cast(OglLink, link)
             self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
+            # TODO:
+            # This is bad mooky here. The Ogl objects were created withing having a Diagram
+            # The legacy code deserialized the object while adding them to a frame. This
+            # new code deserializes w/o reference to a frame
+            # If we don't this the AnchorPoints are not on the diagram and lines ends are not
+            # movable.
+            umlDiagram.AddShape(oglLink.sourceAnchor)
+            umlDiagram.AddShape(oglLink.destinationAnchor)
+            controlPoints = oglLink.GetControlPoints()
+            for controlPoint in controlPoints:
+                umlDiagram.AddShape(controlPoint)
 
     def _layoutOglNotes(self, umlFrame: UmlDiagramsFrame, oglNotes: OglNotes):
         for oglNote in oglNotes:

@@ -50,23 +50,9 @@
             "level":     "WARNING",
             "propagate": "False"
         },
-        "org.pyut.uiv2.PyutUIV2": {
+        "org.pyut.uiv2": {
             "level":     "WARNING",
             "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
-        "org.pyut.uiv2.ProjectTree": {
-            "level":     "WARNING",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
-        "org.pyut.uiv2.PyutProjectV2": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandlerFunctionNames"],
-            "propagate": "False"
-        },
-        "org.pyut.uiv2.PyutDocumentV2": {
-            "level":     "WARNING",
             "propagate": "False"
         }
     }
