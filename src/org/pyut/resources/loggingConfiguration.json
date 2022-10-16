@@ -54,6 +54,12 @@
             "level":     "WARNING",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
+        },
+        "org.pyut.uiv2.ProjectManager": {
+            "level":     "WARNING",
+            "handlers":  ["consoleHandler"],
+            "propagate": "False"
         }
+
     }
 }

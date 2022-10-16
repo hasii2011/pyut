@@ -1,16 +1,6 @@
 
 from typing import TYPE_CHECKING
 
-from wx import Frame
-from wx import ToolBar
-
-from wx import NewIdRef as wxNewIdRef
-
-from org.pyut.enums.DiagramType import DiagramType
-
-from miniogl.Diagram import Diagram
-
-from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 
 if TYPE_CHECKING:
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
@@ -18,9 +8,6 @@ if TYPE_CHECKING:
 
 from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
 
-from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
-
-from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
 from org.pyut.general.Singleton import Singleton
 
@@ -65,7 +52,6 @@ class Mediator(Singleton):
 
         self._toolBar  = None   # toolbar
         self._tools    = None   # toolbar tools
-        self._appPath  = None   # Application files' path
 
         self._appFrame: PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)   # Application's main frame
 
@@ -80,76 +66,3 @@ class Mediator(Singleton):
         Returns:  The UML frame
         """
         return self._treeNotebookHandler.currentFrame
-
-    def getAppPath(self) -> str:
-        """
-        Return the path of the application files.
-
-        Returns: a string
-        """
-        return self._appPath
-
-    def registerAppPath(self, path: str):
-        """
-        Register the path of the application files.
-
-        Args:
-            path:
-        """
-        self._appPath = path
-
-    def registerAppFrame(self, appFrame: Frame):
-        """
-        Register the application's main frame.
-
-        Args:
-            appFrame:  Application's main frame
-        """
-        self._appFrame = appFrame
-        if self._toolboxOwner is None:
-            self._toolboxOwner = ToolboxOwner(appFrame)
-
-    def registerToolBar(self, tb: ToolBar):
-        """
-        Register the toolbar.
-
-        Args:
-            tb: The toolbar
-        """
-        self._toolBar = tb
-
-    def registerToolBarTools(self, tools: List[wxNewIdRef]):
-        """
-        Register the toolbar tools.
-
-        Args:
-            tools:  a list of the tools IDs
-        """
-        self._tools = tools
-
-    def registerTool(self, tool):
-        """
-        Add a tool to a toolbox
-
-        Args:
-            tool:  The tool to add
-
-        """
-        self._toolboxOwner.registerTool(tool)
-
-    def displayToolbox(self, category):
-        """
-        Display a toolbox
-
-        Args:
-            category:  The tool category to display
-        """
-        self._toolboxOwner.displayToolbox(category)
-
-    def getToolboxesCategories(self) -> CategoryNames:
-        """
-        Return all toolbox categories
-
-        Returns:  The category names
-        """
-        return self._toolboxOwner.getCategories()

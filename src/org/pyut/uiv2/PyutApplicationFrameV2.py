@@ -6,7 +6,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from os import getcwd
 from os import path as osPath
 
 from sys import platform as sysPlatform
@@ -37,7 +36,6 @@ from wx import ToolBar
 from wx import Yield as wxYield
 
 from org.pyut.general.PyutVersion import PyutVersion
-from org.pyut.ui.Mediator import Mediator
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
@@ -68,6 +66,7 @@ from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager should not be in plugins directory
 
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2
+from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine
 from org.pyut.uiv2.eventengine.Events import EVENT_SELECT_TOOL
@@ -114,9 +113,9 @@ class PyutApplicationFrameV2(Frame):
         self._eventEngine: IEventEngine = EventEngine(listeningWindow=self)
         self._pyutUIV2:    PyutUIV2     = PyutUIV2(self, eventEngine=self._eventEngine)
 
-        self._mediator: Mediator = Mediator()
-        self._mediator.registerAppFrame(self)
-        self._mediator.registerAppPath(getcwd())
+        # set up the singleton
+        self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
+        self._toolBoxHandler.applicationFrame = self
 
         self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg='')
         # Last opened Files IDs
@@ -373,7 +372,8 @@ class PyutApplicationFrameV2(Frame):
 
         toolBoxIdMap: ToolboxIdMap = cast(ToolboxIdMap, {})
 
-        categories = self._mediator.getToolboxesCategories()
+        toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
+        categories = toolBoxHandler.toolBoxCategoryNames
 
         for category in categories:
             categoryId = NewIdRef()

@@ -19,6 +19,8 @@ from org.pyut.general.Globals import _
 
 from org.pyut.ui.tools.SharedTypes import PluginMap
 from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
+from org.pyut.ui.tools.Tool import Category
+from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
@@ -26,7 +28,7 @@ class ToolsMenuHandler(BaseMenuHandler):
     """
     Handles calling Tool plugins and I/O Plugins
     """
-    def __init__(self, toolsMenu: Menu, toolPluginsMap: PluginMap, toolboxIds: ToolboxIdMap, eventEngine: IEventEngine =  None):
+    def __init__(self, toolsMenu: Menu, toolPluginsMap: PluginMap, toolboxIds: ToolboxIdMap, eventEngine: IEventEngine = None):
 
         super().__init__(menu=toolsMenu, eventEngine=eventEngine)
 
@@ -63,4 +65,8 @@ class ToolsMenuHandler(BaseMenuHandler):
             umlFrame.Refresh()
 
     def onToolboxMenuClick(self, event: CommandEvent):
-        self._mediator.displayToolbox(self._toolboxIds[event.GetId()])
+
+        toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
+
+        # self._mediator.displayToolbox(self._toolboxIds[event.GetId()])
+        toolBoxHandler.displayToolbox(Category(self._toolboxIds[event.GetId()]))

@@ -28,7 +28,6 @@ from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.Mediator import Mediator
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
@@ -42,6 +41,8 @@ from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 from org.pyut.general.Globals import _
 from org.pyut.ui.tools.SharedTypes import PluginMap
 from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
+from org.pyut.ui.tools.ToolboxTypes import CategoryNames
+from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 
 class MenuCreator:
@@ -377,16 +378,17 @@ class MenuCreator:
         """
         Make the Toolboxes submenu.
         """
-        mediator: Mediator = Mediator()
+        # mediator: Mediator = Mediator()
+        toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
         # Get categories
-        categories = mediator.getToolboxesCategories()
+        # categories = mediator.getToolboxesCategories()
+        categories: CategoryNames = toolBoxHandler.toolBoxCategoryNames
         nb = len(categories)
         if nb == 0:
             return None
         sub: Menu = Menu()
 
         for category in categories:
-
             categoryId = self.__getWxId(category)
             sub.Append(categoryId, category)
             self._containingFrame.Bind(EVT_MENU, self._toolsMenuHandler.onToolboxMenuClick, id=categoryId)

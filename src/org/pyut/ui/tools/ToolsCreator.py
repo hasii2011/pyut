@@ -21,8 +21,6 @@ from wx import ToolBar
 from wx import WindowIDRef
 from wx import Frame
 
-from org.pyut.ui.Mediator import Mediator
-
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
@@ -33,6 +31,7 @@ from org.pyut.ui.tools.ToolIconOwner import ToolIconOwner
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
+from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 PYUT_TOOLS_CATEGORY: Category = Category('Pyut Tools')
 PYUT_MENU_CATEGORY:  Category = Category('PyUt Menu')
@@ -61,7 +60,6 @@ class ToolsCreator:
         self._newActionCallback: Callable        = newActionCallback
 
         self.logger:    Logger   = getLogger(__name__)
-        self._mediator: Mediator = Mediator()
         self._tb:       ToolBar  = frame.CreateToolBar(TB_HORIZONTAL | NO_BORDER | TB_FLAT)
 
         frame.SetToolBar(self._tb)
@@ -90,8 +88,11 @@ class ToolsCreator:
 
         self._tb.Realize()
 
-        self._mediator.registerToolBar(self._tb)
-        self._mediator.registerToolBarTools(TOOL_BAR_IDs)
+        toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
+        # self._mediator.registerToolBar(self._tb)
+        # self._mediator.registerToolBarTools(TOOL_BAR_IDs)
+        toolBoxHandler.toolBar      = self._tb
+        toolBoxHandler.toolBarTools = TOOL_BAR_IDs
 
     def _createElementTools(self):
 
@@ -235,7 +236,8 @@ class ToolsCreator:
                      self._toolRelAggregation, self._toolRelAssociation, self._toolRelNote,
                      self._toolSDInstance, self._toolSDMessage
                      ]:
-            self._mediator.registerTool(tool)
+            # self._mediator.registerTool(tool)
+            ToolBoxHandler().addTool(tool)
 
     def _populateToolBar(self):
 

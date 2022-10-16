@@ -94,7 +94,8 @@ class ProjectManager:
     @property
     def projects(self) -> PyutProjects:
         """
-        The list of currently managed projects
+        The list of currently managed projects;  You get a copy;  So any manipulations
+        will be 'por nada`'
 
         Returns:  Only a copy of the projects
         """
@@ -116,7 +117,9 @@ class ProjectManager:
             newProject:   Must have been previously managed
         """
 
-        assert newProject in self._projects or newProject is None, ''
+        assert newProject in self._projects or newProject is None or newProject.projectName == PyutConstants.DEFAULT_PROJECT_NAME, ''
+        if newProject is None:
+            self.logger.warning(f'Project set to None')
         self._currentProject = newProject
 
     @property
@@ -135,20 +138,6 @@ class ProjectManager:
     def currentFrame(self, newFrame: UmlDiagramsFrame):
         self._currentFrame = newFrame
 
-    def isProjectLoaded(self, filename: str) -> bool:
-        """
-
-        Args:
-            filename:
-
-        Returns:
-            `True` if the project is already loaded
-        """
-        for project in self.projects:
-            if project.filename == filename:
-                return True
-        return False
-
     def addProject(self, project: IPyutProject):
         """
         Add a new project to manage
@@ -157,19 +146,6 @@ class ProjectManager:
         """
         assert project not in self._projects
         self._projects.append(project)
-
-    def addDocumentNodeToTree(self, pyutProject: IPyutProject, documentNode: IPyutDocument):
-        """
-
-        Args:
-            pyutProject:
-            documentNode:
-
-        """
-        nodeID: TreeItemId = self._projectTree.AppendItem(pyutProject.projectTreeRoot, documentNode.title)
-
-        documentNode.treeRoot = nodeID
-        self._projectTree.SetItemData(nodeID, documentNode)
 
     def removeProject(self, project: IPyutProject):
         """
@@ -182,16 +158,16 @@ class ProjectManager:
         assert project in self._projects
         self._projects.remove(project)
 
-    def deleteDocument(self, project: IPyutProject, document: IPyutDocument, confirmation: bool = True):
+    def deleteDocument(self, project: IPyutProject, document: IPyutDocument, askForConfirmation: bool = True):
         """
         Remove a given document from the project.
 
         Args:
             project
             document: PyutDocument to remove from this project
-            confirmation:  If `True` ask for confirmation
+            askForConfirmation:  If `True` ask for confirmation
         """
-        if confirmation:
+        if askForConfirmation is True:
             dlg = MessageDialog(None, f'Are you sure to remove "{document.title}"?', "Remove a document from a project", YES_NO)
             if dlg.ShowModal() == ID_NO:
                 dlg.Destroy()
@@ -207,63 +183,22 @@ class ProjectManager:
         project.documents.remove(document)
         project.modified = True
 
-    def updateProjectTreeText(self, pyutProject: IPyutProject):
-        """
-        Updates the project's name and all of its document names
-
-        Args:
-            pyutProject:  The project data to use
-        """
-        self._projectTree.SetItemText(pyutProject.projectTreeRoot, self._justTheFileName(pyutProject.filename))
-        for document in pyutProject.documents:
-            self.logger.debug(f'Update document name: {document=}')
-            self._projectTree.SetItemText(document.treeRoot, document.title)
-
-    # noinspection PyUnusedLocal
-    def updateTreeText(self, pyutProject: IPyutProject):
-        assert False, 'Use .updateProjectTreeText'
-
-    def updateDocumentName(self, pyutDocument: IPyutDocument):
-        self._projectTree.SetItemText(pyutDocument.treeRoot, pyutDocument.title)
-
-    def updateDiagramNotebookIfPossible(self, project: IPyutProject):
-        """
-
-        Args:
-            project:
-        """
-        project.selectFirstDocument()
-
-        if len(project.documents) > 0:
-            self._currentFrame = project.documents[0].diagramFrame
-            self.syncPageFrameAndNotebook(frame=self._currentFrame)
-
-    def syncPageFrameAndNotebook(self, frame: UmlDiagramsFrame):
-        """
-
-        Args:
-            frame:
-        """
-        for i in range(self._diagramNotebook.GetPageCount()):
-            pageFrame = self._diagramNotebook.GetPage(i)
-            if pageFrame is frame:
-                self._diagramNotebook.SetSelection(i)
-                break
-
     def newProject(self) -> IPyutProject:
         """
-        Create a new project;  Adds it to the Project Tree;
+        Create a new project;  Adds it to the Project Tree;  Adds it to our managed list
 
         TODO: Check to see if we already have an emtpy project; If true bump the file name
+
         Returns:  A default empty project
         """
-        project = PyutProjectV2(PyutConstants.DEFAULT_FILENAME, self._projectTree, self._projectTree.projectTreeRoot)
+        project = PyutProjectV2(PyutConstants.DEFAULT_FILE_NAME, self._projectTree, self._projectTree.projectTreeRoot)
 
         projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=project)
 
         project.projectTreeRoot = projectTreeRoot
 
         wxYield()
+        self.addProject(project=project)
         return project
 
     def saveProject(self, projectToSave: IPyutProject):
@@ -279,7 +214,7 @@ class ProjectManager:
             booBoo: MessageDialog = MessageDialog(parent=None, message='No diagram to save !', caption='Error', style=OK | ICON_ERROR)
             booBoo.ShowModal()
 
-        if projectToSave.filename is None or projectToSave.filename == PyutConstants.DEFAULT_FILENAME:
+        if projectToSave.filename is None or projectToSave.filename == PyutConstants.DEFAULT_FILE_NAME:
             self.saveProjectAs(projectToSave=projectToSave)
             return
         else:
@@ -307,7 +242,6 @@ class ProjectManager:
         # Load the project
         oglProject: OglProject = self._readFile(filename=filename)
 
-        self.addProject(project)
         self.currentProject = project
         PyutPreferences().addNewLastOpenedFilesEntry(project.filename)
 
@@ -372,6 +306,76 @@ class ProjectManager:
         currentDirectoryHandler.currentDirectory = fDialog.GetPath()
 
         projectToSave.modified = False
+
+    def isProjectLoaded(self, filename: str) -> bool:
+        """
+
+        Args:
+            filename:
+
+        Returns:
+            `True` if the project is already loaded
+        """
+        for project in self.projects:
+            if project.filename == filename:
+                return True
+        return False
+
+    def addDocumentNodeToTree(self, pyutProject: IPyutProject, documentNode: IPyutDocument):
+        """
+
+        Args:
+            pyutProject:
+            documentNode:
+
+        """
+        nodeID: TreeItemId = self._projectTree.AppendItem(pyutProject.projectTreeRoot, documentNode.title)
+
+        documentNode.treeRoot = nodeID
+        self._projectTree.SetItemData(nodeID, documentNode)
+
+    def updateProjectTreeText(self, pyutProject: IPyutProject):
+        """
+        Updates the project's name and all of its document names
+
+        Args:
+            pyutProject:  The project data to use
+        """
+        self._projectTree.SetItemText(pyutProject.projectTreeRoot, self._justTheFileName(pyutProject.filename))
+        for document in pyutProject.documents:
+            self.logger.debug(f'Update document name: {document=}')
+            self._projectTree.SetItemText(document.treeRoot, document.title)
+
+    # noinspection PyUnusedLocal
+    def updateTreeText(self, pyutProject: IPyutProject):
+        assert False, 'Use .updateProjectTreeText'
+
+    def updateDocumentName(self, pyutDocument: IPyutDocument):
+        self._projectTree.SetItemText(pyutDocument.treeRoot, pyutDocument.title)
+
+    def updateDiagramNotebookIfPossible(self, project: IPyutProject):
+        """
+
+        Args:
+            project:
+        """
+        project.selectFirstDocument()
+
+        if len(project.documents) > 0:
+            self._currentFrame = project.documents[0].diagramFrame
+            self.syncPageFrameAndNotebook(frame=self._currentFrame)
+
+    def syncPageFrameAndNotebook(self, frame: UmlDiagramsFrame):
+        """
+
+        Args:
+            frame:
+        """
+        for i in range(self._diagramNotebook.GetPageCount()):
+            pageFrame = self._diagramNotebook.GetPage(i)
+            if pageFrame is frame:
+                self._diagramNotebook.SetSelection(i)
+                break
 
     def _writeProject(self, projectToWrite: IPyutProject):
         """

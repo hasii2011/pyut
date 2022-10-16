@@ -118,6 +118,7 @@ MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12         # TODO make this a preference
 
 NO_DIAGRAM_FRAME: UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
 NO_PYUT_PROJECT:  IPyutProject     = cast(IPyutProject, None)
+NO_PYUT_DIAGRAM:  IPyutDocument    = cast(IPyutDocument, None)
 NO_MENU:          Menu             = cast(Menu, None)
 
 
@@ -230,15 +231,15 @@ class PyutUIV2(IPyutUI):
 
         self.diagramNotebook.DeleteAllPages()
 
-    def registerUmlFrame(self, frame: UmlDiagramsFrame):
-        """
-        Register the current UML Frame
-
-        Args:
-            frame:
-        """
-        self.currentFrame = frame
-        self._currentProject = self.getProjectFromFrame(frame)
+    # def registerUmlFrame(self, frame: UmlDiagramsFrame):
+    #     """
+    #     Register the current UML Frame
+    #
+    #     Args:
+    #         frame:
+    #     """
+    #     self.currentFrame = frame
+    #     self._currentProject = self.getProjectFromFrame(frame)
 
     def showFrame(self, frame: UmlDiagramsFrame):
         self._frame = frame
@@ -259,19 +260,6 @@ class PyutUIV2(IPyutUI):
                 return project
         return NO_PYUT_PROJECT
 
-    def newDiagram(self, docType: DiagramType):
-        """
-        Maintained for PyutXmlV10, until we can fix that;  Probably with oglio
-
-        Args:
-            docType:
-
-        Returns:  The created diagram
-
-        """
-
-        return self._newDiagram(self._projectManager.currentProject, diagramType=docType)
-
     def _onNewDiagram(self, event: NewDiagramEvent):
         """
         Create a new document;
@@ -285,8 +273,10 @@ class PyutUIV2(IPyutUI):
         diagramType: DiagramType = event.diagramType
         pyutProject: IPyutProject = self._projectManager.currentProject
         if pyutProject is None:
-            self._projectManager.newProject()
-            pyutProject = self._projectManager.currentProject
+            pyutProject: IPyutProject = self._projectManager.newProject()
+            self._projectManager.currentProject  = pyutProject
+            self._projectManager.currentFrame    = NO_DIAGRAM_FRAME
+            self._projectManager.currentDocument = NO_DIAGRAM_FRAME
 
         self._newDiagram(pyutProject=pyutProject, diagramType=diagramType)
 
@@ -329,19 +319,6 @@ class PyutUIV2(IPyutUI):
 
         self._updateApplicationTitle()
 
-    # def openFile(self, filename, project: IPyutProject = None) -> bool:
-    #     """
-    #     Args:
-    #         filename:
-    #         project:
-    #
-    #     Returns:
-    #         `True` if operation succeeded
-    #     """
-    #     self._projectManager.openProject(filename=filename, project=project)
-    #
-    #     return True
-
     # noinspection PyUnusedLocal
     def _onDiagramNotebookPageChanged(self, event):
         """
@@ -357,6 +334,7 @@ class PyutUIV2(IPyutUI):
         self._projectTree.SelectItem(frameTreeItem)
 
         self._projectManager.currentProject = self.getProjectFromFrame(self._projectManager.currentFrame)
+
         self._projectManager.syncPageFrameAndNotebook(frame=self._projectManager.currentFrame)
         self._updateApplicationTitle()
 
@@ -377,7 +355,8 @@ class PyutUIV2(IPyutUI):
             frame:        UmlDiagramsFrame = pyutDocument.diagramFrame
 
             self._projectManager.currentFrame    = frame
-            self._projectManager.currentProject  = self.getProjectFromFrame(frame)
+            # self._projectManager.currentProject  = self.getProjectFromFrame(frame)
+            self._projectManager.currentProject  = self._projectManager.currentProject
             self._projectManager.currentDocument = pyutDocument
 
             self._projectManager.syncPageFrameAndNotebook(frame=frame)
@@ -385,7 +364,7 @@ class PyutUIV2(IPyutUI):
         elif isinstance(pyutData, PyutProjectV2):
             project: PyutProjectV2 = pyutData
             self._projectManager.currentProject = project
-            projectFrames: List[UmlFrameType] = project.getFrames()
+            projectFrames: List[UmlFrameType] = project.frames
             if len(projectFrames) > 0:
                 self._projectManager.currentFrame = projectFrames[0]
             else:
@@ -501,7 +480,8 @@ class PyutUIV2(IPyutUI):
         """
         currentProject: IPyutProject = self._projectManager.currentProject
         if currentProject is None and self.currentFrame is not None:
-            currentProject = self.getProjectFromFrame(self.currentFrame)
+            # currentProject = self.getProjectFromFrame(self.currentFrame)
+            currentProject = self._projectManager.currentProject
         if currentProject is None:
             self._displayError(message='No frame to close!')
             return
@@ -552,9 +532,11 @@ class PyutUIV2(IPyutUI):
         """
         Returns:  A default empty project
         """
-        self._projectManager.currentFrame = NO_DIAGRAM_FRAME
+        pyutProject: IPyutProject = self._projectManager.newProject()
 
-        return self._projectManager.newProject()
+        self._projectManager.currentProject  = pyutProject
+        self._projectManager.currentFrame    = NO_DIAGRAM_FRAME
+        self._projectManager.currentDocument = NO_PYUT_DIAGRAM
 
     def _onOpenProject(self, event: OpenProjectEvent):
 
@@ -596,7 +578,7 @@ class PyutUIV2(IPyutUI):
         self._displayError("Currently unsupported")
         # filename: str = event.projectFilename
         # # Get current project
-        # project: IPyutProject = self._projectManager.currentProject
+        # xxProject: IPyutProject = self._projectManager.currentProject
         #
         # # Save number of initial documents
         # nbInitialDocuments = len(project.documents)
@@ -765,8 +747,9 @@ class PyutUIV2(IPyutUI):
             document:
         """
         self._projectManager.addDocumentNodeToTree(pyutProject=pyutProject, documentNode=document)
-        self._projectManager.currentFrame   = document.diagramFrame
-        self._projectManager.currentProject = pyutProject
+        self._projectManager.currentDocument = document
+        self._projectManager.currentFrame    = document.diagramFrame
+        self._projectManager.currentProject  = pyutProject
         self._projectManager.currentFrame.Refresh()
         wxYield()
 
