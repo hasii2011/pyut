@@ -273,7 +273,7 @@ class PyutUIV2(IPyutUI):
         diagramType: DiagramType = event.diagramType
         pyutProject: IPyutProject = self._projectManager.currentProject
         if pyutProject is None:
-            pyutProject: IPyutProject = self._projectManager.newProject()
+            pyutProject = self._projectManager.newProject()
             self._projectManager.currentProject  = pyutProject
             self._projectManager.currentFrame    = NO_DIAGRAM_FRAME
             self._projectManager.currentDocument = NO_DIAGRAM_FRAME
@@ -693,7 +693,6 @@ class PyutUIV2(IPyutUI):
     def _layoutOglLinks(self, umlFrame: UmlDiagramsFrame, oglLinks: OglLinks):
         umlDiagram = umlFrame.GetDiagram()
         for link in oglLinks:
-            # TODO:  Special handling for OglInterface2 links
             oglLink: OglLink = cast(OglLink, link)
             self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
             # TODO:
@@ -702,11 +701,12 @@ class PyutUIV2(IPyutUI):
             # new code deserializes w/o reference to a frame
             # If we don't this the AnchorPoints are not on the diagram and lines ends are not
             # movable.
-            umlDiagram.AddShape(oglLink.sourceAnchor)
-            umlDiagram.AddShape(oglLink.destinationAnchor)
-            controlPoints = oglLink.GetControlPoints()
-            for controlPoint in controlPoints:
-                umlDiagram.AddShape(controlPoint)
+            if isinstance(oglLink, OglInterface2) is False:
+                umlDiagram.AddShape(oglLink.sourceAnchor)
+                umlDiagram.AddShape(oglLink.destinationAnchor)
+                controlPoints = oglLink.GetControlPoints()
+                for controlPoint in controlPoints:
+                    umlDiagram.AddShape(controlPoint)
 
     def _layoutOglNotes(self, umlFrame: UmlDiagramsFrame, oglNotes: OglNotes):
         for oglNote in oglNotes:

@@ -38,10 +38,10 @@ EditClassEvent,       EVENT_EDIT_CLASS,       = NewEvent()
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
 
-SelectToolEvent,               EVENT_SELECT_TOOL                    = NewEvent()
-SetToolActionEvent,            EVENT_SET_TOOL_ACTION                = NewEvent()
-MiniProjectInformationEvent,   EVENT_MINI_PROJECT_INFORMATION       = NewEvent()
-ActiveUmlFrameEvent, EVENT_ACTIVE_UML_FRAME           = NewEvent()
+SelectToolEvent,               EVENT_SELECT_TOOL                = NewEvent()
+SetToolActionEvent,            EVENT_SET_TOOL_ACTION            = NewEvent()
+MiniProjectInformationEvent,   EVENT_MINI_PROJECT_INFORMATION   = NewEvent()
+ActiveUmlFrameEvent,           EVENT_ACTIVE_UML_FRAME           = NewEvent()
 ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
 
 
