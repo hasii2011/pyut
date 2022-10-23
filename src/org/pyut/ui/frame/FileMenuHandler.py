@@ -32,6 +32,8 @@ from wx import CloseEvent
 from wx import PostEvent as wxPostEvent
 from wx import Yield as wxYield
 
+from core.types.PluginDataTypes import PluginIDMap
+
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
@@ -49,7 +51,6 @@ from org.pyut.ui.PyutPrintout import PyutPrintout
 
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
-from org.pyut.ui.tools.SharedTypes import PluginMap
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
@@ -72,7 +73,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         self._lastOpenedFilesIDs: List[int]       = lastOpenFilesIDs
         self._preferences:        PyutPreferences = PyutPreferences()
-        self._plugins:            PluginMap       = cast(PluginMap, {})     # To store the plugins
+        self._plugins:            PluginIDMap     = PluginIDMap({})
 
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
 
@@ -83,19 +84,19 @@ class FileMenuHandler(BaseMenuHandler):
             self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS, self._onUpdateRecentProjects)
 
     @property
-    def exportPlugins(self) -> PluginMap:
+    def exportPlugins(self) -> PluginIDMap:
         raise UnsupportedOperation('Property is write only')
 
     @exportPlugins.setter
-    def exportPlugins(self, exportPlugins: PluginMap):
+    def exportPlugins(self, exportPlugins: PluginIDMap):
         self._exportPlugins = exportPlugins
 
     @property
-    def importPlugins(self) -> PluginMap:
+    def importPlugins(self) -> PluginIDMap:
         raise UnsupportedOperation('Property is write only')
 
     @importPlugins.setter
-    def importPlugins(self, importPlugins: PluginMap):
+    def importPlugins(self, importPlugins: PluginIDMap):
         self._importPlugins = importPlugins
 
     def createTheLastOpenedFilesMenuItems(self):

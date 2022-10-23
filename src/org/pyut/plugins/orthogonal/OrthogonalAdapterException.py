@@ -1,3 +1,0 @@
-
-class OrthogonalAdapterException(Exception):
-    pass

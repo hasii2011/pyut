@@ -4,6 +4,7 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
+from core.types.PluginDataTypes import PluginType
 from wx import EVT_MENU
 from wx import ID_ABOUT
 from wx import ID_CUT
@@ -22,9 +23,13 @@ from wx import ID_UNDO
 from wx import Menu
 from wx import MenuBar
 
+from core.IOPluginInterface import IOPluginInterface
+from core.PluginManager import PluginManager
+from core.ToolPluginInterface import ToolPluginInterface
+from core.types.PluginDataTypes import PluginIDMap
+from core.types.PluginDataTypes import PluginName
+
 from org.pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
-from org.pyut.plugins.base.PyutIoPlugin import PyutIoPlugin
-from org.pyut.plugins.base.PyutToPlugin import PyutToPlugin
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -39,7 +44,7 @@ from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
-from org.pyut.ui.tools.SharedTypes import PluginMap
+
 from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
 from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
@@ -47,18 +52,16 @@ from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 class MenuCreator:
 
-    def __init__(self, frame: Frame, lastOpenFilesID):
-
-        from org.pyut.plugins.PluginManager import PluginManager    # Plugin Manager should not be in plugins directory
+    def __init__(self, frame: Frame, pluginManager: PluginManager, lastOpenFilesID):
 
         self._containingFrame: Frame = frame
         self.lastOpenedFilesID = lastOpenFilesID
 
         self.logger:    Logger          = getLogger(__name__)
         self._prefs:    PyutPreferences = PyutPreferences()
-        self.plugMgr:   PluginManager   = PluginManager()
+        self.plugMgr:   PluginManager   = pluginManager
 
-        self._plugins:    PluginMap    = PluginMap({})     # To store the plugins
+        self._plugins:    PluginIDMap   = PluginIDMap({})     # To store the plugins and their activation IDs
         self._toolboxIds: ToolboxIdMap = ToolboxIdMap({})  # Dictionary id --> toolbox
 
     @property
@@ -94,27 +97,27 @@ class MenuCreator:
         self._helpMenu = helpMenu
 
     @property
-    def toolPlugins(self) -> PluginMap:
+    def toolPlugins(self) -> PluginIDMap:
         raise UnsupportedOperation('Property is write only')
 
     @toolPlugins.setter
-    def toolPlugins(self, toolPlugins: PluginMap):
+    def toolPlugins(self, toolPlugins: PluginIDMap):
         self._toolPlugins = toolPlugins
 
     @property
-    def exportPlugins(self) -> PluginMap:
+    def exportPlugins(self) -> PluginIDMap:
         raise UnsupportedOperation('Property is write only')
 
     @exportPlugins.setter
-    def exportPlugins(self, exportPlugins: PluginMap):
+    def exportPlugins(self, exportPlugins: PluginIDMap):
         self._exportPlugins = exportPlugins
 
     @property
-    def importPlugins(self) -> PluginMap:
+    def importPlugins(self) -> PluginIDMap:
         raise UnsupportedOperation('Property is write only')
 
     @importPlugins.setter
-    def importPlugins(self, importPlugins: PluginMap):
+    def importPlugins(self, importPlugins: PluginIDMap):
         self._importPlugins = importPlugins
 
     @property
@@ -320,18 +323,16 @@ class MenuCreator:
         """
         Make the export submenu.
         """
-        pluginMap: PluginMap = self._exportPlugins
+        pluginMap: PluginIDMap = self._exportPlugins
         sub:       Menu = Menu()
 
         for wxId in pluginMap:
+            # TODO figure out how to quiet mypy
+            clazz: type = pluginMap[wxId]       # type: ignore
+            pluginInstance: IOPluginInterface = clazz(None)
 
-            clazz: type = pluginMap[wxId]
-            pluginInstance: PyutIoPlugin = clazz(None, None)
-
-            pluginName: str = pluginInstance.getOutputFormat()[0]
+            pluginName: PluginName = pluginInstance.name
             sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, pluginName=pluginName, callback=fileMenuHandler.onExport)
-            # sub.Append(wxId, pluginName)
-            # self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onExport, id=wxId)
 
         return sub
 
@@ -339,19 +340,16 @@ class MenuCreator:
         """
         Make the import submenu.
         """
-        pluginMap: PluginMap = self._importPlugins
+        pluginMap: PluginIDMap = self._importPlugins
 
         sub: Menu = Menu()
 
         for wxId in pluginMap:
+            # TODO figure out how to quiet mypy
+            clazz: type = pluginMap[wxId]       # type: ignore
+            pluginInstance: IOPluginInterface = clazz(None)
 
-            clazz: type = pluginMap[wxId]
-            pluginInstance: PyutIoPlugin = clazz(None, None)
-
-            pluginName: str = pluginInstance.getInputFormat()[0]
-
-            # sub.Append(wxId, pluginName)
-            # self._containingFrame.Bind(EVT_MENU, fileMenuHandler.onImport, id=wxId)
+            pluginName: PluginName = pluginInstance.name
             sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, pluginName=pluginName, callback=fileMenuHandler.onImport)
 
         return sub
@@ -360,15 +358,15 @@ class MenuCreator:
         """
         Make the Tools submenu.
         """
-        pluginMap: PluginMap = self._toolPlugins
+        pluginMap: PluginIDMap = self._toolPlugins
         sub:       Menu = Menu()
 
         for wxId in pluginMap:
 
             clazz: type = pluginMap[wxId]
 
-            pluginInstance: PyutToPlugin = clazz(None, None)
-            sub.Append(wxId, pluginInstance.getMenuTitle())
+            pluginInstance: ToolPluginInterface = clazz(None)
+            sub.Append(wxId, pluginInstance.menuTitle)
 
             self._containingFrame.Bind(EVT_MENU, self._toolsMenuHandler.onToolPlugin, id=wxId)
 

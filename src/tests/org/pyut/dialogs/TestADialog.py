@@ -1,6 +1,4 @@
 
-from typing import cast
-
 from logging import Logger
 from logging import getLogger
 
@@ -49,7 +47,6 @@ from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutType import PyutType
 
-from org.pyut.plugins.orthogonal.DlgLayoutSize import DlgLayoutSize
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -129,6 +126,7 @@ class TestADialog(App):
 
         self.logger.warning(f'Selected dialog: {dlgName}')
 
+        # TODO: Make this a 3.10 case statement
         dlgAnswer: str = 'No dialog invoked'
         if dlgName == DialogNamesEnum.DLG_EDIT_TEXT:
             dlgAnswer = self._testDlgEditText()
@@ -136,8 +134,6 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditNote()
         elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES:
             dlgAnswer = self._testDlgPyutPreferences()
-        elif dlgName == DialogNamesEnum.DLG_LAYOUT_SIZE:
-            dlgAnswer = self._testDlgLayoutSize()
         elif dlgName == DialogNamesEnum.DLG_EDIT_PARAMETER:
             dlgAnswer = self._testDlgEditParameter()
         elif dlgName == DialogNamesEnum.DLG_EDIT_CLASS:
@@ -185,14 +181,6 @@ class TestADialog(App):
         with DlgPyutPreferences(parent=self._frameTop, wxId=ID_ANY) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Preferences returned Ok'
-            else:
-                return f'Cancelled'
-
-    def _testDlgLayoutSize(self):
-        with DlgLayoutSize(theParent=self._frameTop) as dlg:
-            dlg: DlgLayoutSize = cast(DlgLayoutSize, dlg)
-            if dlg.ShowModal() == OK:
-                return f'Retrieved data: width={dlg.layoutWidth}  height={dlg.layoutHeight}'
             else:
                 return f'Cancelled'
 

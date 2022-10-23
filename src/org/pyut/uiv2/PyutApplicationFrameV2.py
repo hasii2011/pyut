@@ -35,6 +35,8 @@ from wx import ToolBar
 
 from wx import Yield as wxYield
 
+from core.PluginManager import PluginManager
+
 from org.pyut.general.PyutVersion import PyutVersion
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
@@ -46,7 +48,6 @@ from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from org.pyut.ui.tools.MenuCreator import MenuCreator
-from org.pyut.ui.tools.SharedTypes import PluginMap
 from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
 from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 
@@ -62,8 +63,7 @@ from org.pyut.general.datatypes.Dimensions import Dimensions
 from org.pyut.general.datatypes.Position import Position
 
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
-
-from org.pyut.plugins.PluginManager import PluginManager  # Plugin Manager should not be in plugins directory
+from org.pyut.uiv2.PluginAdapter import PluginAdapter
 
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2
 from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
@@ -106,12 +106,12 @@ class PyutApplicationFrameV2(Frame):
 
         self.logger: Logger = getLogger(__name__)
         self._createApplicationIcon()
-        self._plugMgr: PluginManager = PluginManager()
 
         self.CreateStatusBar()
 
-        self._eventEngine: IEventEngine = EventEngine(listeningWindow=self)
-        self._pyutUIV2:    PyutUIV2     = PyutUIV2(self, eventEngine=self._eventEngine)
+        self._eventEngine: IEventEngine  = EventEngine(listeningWindow=self)
+        self._pluginMgr:   PluginManager = PluginManager(pluginAdapter=PluginAdapter(eventEngine=self._eventEngine))
+        self._pyutUIV2:    PyutUIV2      = PyutUIV2(self, eventEngine=self._eventEngine)
 
         # set up the singleton
         self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
@@ -123,9 +123,9 @@ class PyutApplicationFrameV2(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        self._toolPlugins:   PluginMap = self._plugMgr.mapWxIdsToToolPlugins()
-        self._importPlugins: PluginMap = self._plugMgr.mapWxIdsToImportPlugins()
-        self._exportPlugins: PluginMap = self._plugMgr.mapWxIdsToExportPlugins()
+        # self._toolPluginsIDMap:   PluginMap = self._pluginMgr.mapWxIdsToToolPlugins()
+        # self._importPluginsIDMap: PluginMap = self._pluginMgr.mapWxIdsToImportPlugins()
+        # self._exportPluginsIDMap: PluginMap = self._pluginMgr.mapWxIdsToExportPlugins()
 
         # Initialization
         fileMenu:  Menu = Menu()
@@ -139,10 +139,11 @@ class PyutApplicationFrameV2(Frame):
 
         self._toolboxIds: ToolboxIdMap = self._createToolboxIdMap()
 
-        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, toolPluginsMap=self._toolPlugins, toolboxIds=self._toolboxIds)
+        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, eventEngine=self._eventEngine, pluginManager=self._pluginMgr,
+                                                                    toolboxIds=self._toolboxIds)
         self._helpMenuHandler:  HelpMenuHandler  = HelpMenuHandler(helpMenu=helpMenu)
 
-        self._menuCreator: MenuCreator = MenuCreator(frame=self, lastOpenFilesID=self.lastOpenedFilesID)
+        self._menuCreator: MenuCreator = MenuCreator(frame=self, pluginManager=self._pluginMgr, lastOpenFilesID=self.lastOpenedFilesID)
         self._menuCreator.fileMenu  = fileMenu
         self._menuCreator.editMenu  = editMenu
         self._menuCreator.toolsMenu = toolsMenu
@@ -151,9 +152,9 @@ class PyutApplicationFrameV2(Frame):
         self._menuCreator.editMenuHandler  = self._editMenuHandler
         self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
         self._menuCreator.helpMenuHandler  = self._helpMenuHandler
-        self._menuCreator.toolPlugins      = self._toolPlugins
-        self._menuCreator.exportPlugins    = self._exportPlugins
-        self._menuCreator.importPlugins    = self._importPlugins
+        self._menuCreator.toolPlugins      = self._pluginMgr.toolPluginsIDMap
+        self._menuCreator.exportPlugins    = self._pluginMgr.outputPluginsIDMap
+        self._menuCreator.importPlugins    = self._pluginMgr.inputPluginsIDMap
         self._menuCreator.toolboxIds       = self._toolboxIds
 
         self._menuCreator.initializeMenus()
@@ -207,7 +208,7 @@ class PyutApplicationFrameV2(Frame):
         self._clipboard = None
         self._mediator  = None
         self._prefs     = None
-        self._plugMgr   = None
+        self._pluginMgr   = None
         self._pyutUIV2  = None
 
         self.Destroy()
