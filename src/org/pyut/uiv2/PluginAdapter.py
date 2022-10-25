@@ -137,6 +137,7 @@ class PluginAdapter(IPluginAdapter):
     def _diagramCreated(self, pyutDocument: IPyutDocument):
 
         self._pluginProject = NO_PLUGIN_PROJECT
+
         # TODO Layout the diagram
 
     def _toPyutDiagramType(self, documentType: PluginDocumentType) -> DiagramType:
