@@ -76,6 +76,8 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
+from org.pyut.uiv2.Types import createDiagramFrame
+from org.pyut.uiv2.eventengine.EventEngine import NewNamedProjectCallback
 
 from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
@@ -84,7 +86,9 @@ from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
 from org.pyut.uiv2.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_DIAGRAM
+from org.pyut.uiv2.eventengine.Events import EVENT_NEW_NAMED_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
+from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT_DIAGRAM
 from org.pyut.uiv2.eventengine.Events import EVENT_OPEN_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_DELETE_DIAGRAM
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
@@ -96,6 +100,8 @@ from org.pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
 from org.pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
+from org.pyut.uiv2.eventengine.Events import NewNamedProjectEvent
+from org.pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
 from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
@@ -110,6 +116,8 @@ from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInfo
 from org.pyut.uiv2.eventengine.EventEngine import ActiveProjectInformationCallback
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from org.pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramCallback
+from org.pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 TreeDataType        = Union[PyutProjectV2, PyutDocumentV2]
 
@@ -152,18 +160,20 @@ class PyutUIV2(IPyutUI):
         # Register listeners for things I do that the rest of the application wants
         #
         # Reuse the event handlers on the popup menu;  It does not use the passed in event
-        self._eventEngine.registerListener(pyEventBinder=EVENT_DELETE_DIAGRAM, callback=self._onDeleteDiagram)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_PROJECT,     callback=self._onNewProject)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_DIAGRAM,     callback=self._onNewDiagram)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_OPEN_PROJECT,    callback=self._onOpenProject)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_CLOSE_PROJECT,   callback=self._onCloseProject)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT,    callback=self._onSaveProject)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT_AS, callback=self._onSaveProjectAs)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_INSERT_PROJECT,  callback=self._onInsertProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_DELETE_DIAGRAM,       callback=self._onDeleteDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_PROJECT,          callback=self._onNewProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_NAMED_PROJECT,    callback=self._onNewNamedProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_DIAGRAM,          callback=self._onNewDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_NEW_PROJECT_DIAGRAM,  callback=self._onNewProjectDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_OPEN_PROJECT,         callback=self._onOpenProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CLOSE_PROJECT,        callback=self._onCloseProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT,         callback=self._onSaveProject)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SAVE_PROJECT_AS,      callback=self._onSaveProjectAs)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_INSERT_PROJECT,       callback=self._onInsertProject)
         self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_MINI_PROJECT_INFORMATION,   callback=self._onMiniProjectInformation)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME, callback=self._onGetActivateUmlFrame)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME,           callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
@@ -231,34 +241,9 @@ class PyutUIV2(IPyutUI):
 
         self.diagramNotebook.DeleteAllPages()
 
-    # def registerUmlFrame(self, frame: UmlDiagramsFrame):
-    #     """
-    #     Register the current UML Frame
-    #
-    #     Args:
-    #         frame:
-    #     """
-    #     self.currentFrame = frame
-    #     self._currentProject = self.getProjectFromFrame(frame)
-
     def showFrame(self, frame: UmlDiagramsFrame):
         self._frame = frame
         frame.Show()
-
-    def getProjectFromFrame(self, frame: UmlDiagramsFrame) -> IPyutProject:
-        """
-        Return the project that owns a given frame
-
-        Args:
-            frame:  the frame to get This project
-
-        Returns:
-            PyutProject or None if not found
-        """
-        for project in self._projectManager.projects:
-            if frame in project.frames:
-                return project
-        return NO_PYUT_PROJECT
 
     def _onNewDiagram(self, event: NewDiagramEvent):
         """
@@ -280,34 +265,35 @@ class PyutUIV2(IPyutUI):
 
         self._newDiagram(pyutProject=pyutProject, diagramType=diagramType)
 
-    @deprecated(reason='use property .currentProject')
-    def getCurrentProject(self) -> IPyutProject:
-        """
-        Get the current working project
+    def _onNewProjectDiagram(self, event: NewProjectDiagramEvent):
 
-        Returns:
-            the current project or None if not found
-        """
-        return self._projectManager.currentProject
+        info: NewProjectDiagramInformation = event.newProjectDiagramInformation
 
-    def isProjectLoaded(self, filename: str) -> bool:
-        """
-        Args:
-            filename:
+        pyutDocument: IPyutDocument = self._newDiagram(pyutProject=info.pyutProject,
+                                                       diagramType=info.diagramType,
+                                                       diagramName=info.diagramName)
+        cb: NewProjectDiagramCallback = info.callback
 
-        Returns:
-            `True` if the project is already loaded
-        """
-        return self._projectManager.isProjectLoaded(filename=filename)
+        cb(pyutDocument)
 
-    def _newDiagram(self, pyutProject: IPyutProject, diagramType: DiagramType, diagramName: str = ''):
+    def _newDiagram(self, pyutProject: IPyutProject, diagramType: DiagramType, diagramName: str = '') -> IPyutDocument:
         """
-        Create a new frame on the current project
+        Create a new frame on the input project
+        Update the project
+        Update the UI elements
 
         Args:
-            diagramType:
+            pyutProject:    The project to place the new diagram in
+            diagramType:    Diagram Type
+            diagramName:    Diagram Name
+
+        Returns:
+
         """
-        document: PyutDocumentV2  = PyutDocumentV2(parentFrame=self._diagramNotebook, docType=diagramType, eventEngine=self._eventEngine)
+        umlFrame, defaultDiagramName = createDiagramFrame(parentFrame=self._diagramNotebook, diagramType=diagramType, eventEngine=self._eventEngine)
+        document: PyutDocumentV2     = PyutDocumentV2(diagramFrame=umlFrame, docType=diagramType, eventEngine=self._eventEngine)
+
+        document.title = defaultDiagramName
 
         if diagramName != '':
             document.title = diagramName
@@ -318,6 +304,23 @@ class PyutUIV2(IPyutUI):
         self._addNewDocumentToDiagramNotebook(newDocument=document)
 
         self._updateApplicationTitle()
+
+        return document
+
+    def _getProjectFromFrame(self, frame: UmlDiagramsFrame) -> IPyutProject:
+        """
+        Return the project that owns a given frame
+
+        Args:
+            frame:  the frame to get This project
+
+        Returns:
+            PyutProject or None if not found
+        """
+        for project in self._projectManager.projects:
+            if frame in project.frames:
+                return project
+        return NO_PYUT_PROJECT
 
     # noinspection PyUnusedLocal
     def _onDiagramNotebookPageChanged(self, event):
@@ -333,7 +336,7 @@ class PyutUIV2(IPyutUI):
         frameTreeItem: TreeItemId = self._projectTree.getTreeItemFromFrame(self._projectManager.currentFrame)
         self._projectTree.SelectItem(frameTreeItem)
 
-        self._projectManager.currentProject = self.getProjectFromFrame(self._projectManager.currentFrame)
+        self._projectManager.currentProject = self._getProjectFromFrame(self._projectManager.currentFrame)
 
         self._projectManager.syncPageFrameAndNotebook(frame=self._projectManager.currentFrame)
         self._updateApplicationTitle()
@@ -537,6 +540,15 @@ class PyutUIV2(IPyutUI):
         self._projectManager.currentProject  = pyutProject
         self._projectManager.currentFrame    = NO_DIAGRAM_FRAME
         self._projectManager.currentDocument = NO_PYUT_DIAGRAM
+
+    def _onNewNamedProject(self, event: NewNamedProjectEvent):
+        fqFileName: str = event.projectFilename
+
+        pyutProject: IPyutProject = self._projectManager.newNamedProject(filename=fqFileName)
+
+        cb: NewNamedProjectCallback = event.callback
+
+        cb(pyutProject)
 
     def _onOpenProject(self, event: OpenProjectEvent):
 

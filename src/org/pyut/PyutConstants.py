@@ -8,6 +8,7 @@ from org.pyut.enums.DiagramType import DiagramType
 from deprecated import deprecated
 
 # Types of diagrams labels
+# TODO:  Make this an enumeration
 DiagramsLabels = {
     DiagramType.CLASS_DIAGRAM:    "Class Diagram",
     DiagramType.SEQUENCE_DIAGRAM: "Sequence Diagram",

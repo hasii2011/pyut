@@ -10,7 +10,9 @@ from wx.lib.newevent import NewEvent
 # Constructor returns a tuple; First is the event,  The second is the binder
 #
 NewProjectEvent,              EVENT_NEW_PROJECT               = NewEvent()
+NewNamedProjectEvent,         EVENT_NEW_NAMED_PROJECT         = NewEvent()
 NewDiagramEvent,              EVENT_NEW_DIAGRAM               = NewEvent()
+NewProjectDiagramEvent,       EVENT_NEW_PROJECT_DIAGRAM       = NewEvent()
 DeleteDiagramEvent,           EVENT_DELETE_DIAGRAM            = NewEvent()
 OpenProjectEvent,             EVENT_OPEN_PROJECT              = NewEvent()
 InsertProjectEvent,           EVENT_INSERT_PROJECT            = NewEvent()
@@ -62,14 +64,25 @@ class EventType(str, Enum):
     RemoveDocumentEvent
         Removes the currently selected document
 
+    NewNamedProjectEvent
+        Creates a new project in the project manager and the appropriate UI elements
+        parameter:
+            projectFilename:  The fully qualified file name
+            callback:         The callback to return the IPyutProject object
+
     InsertProjectEvent
         parameter:
-            projectFilename:  Fully qualified name
+            projectFilename:  The fully qualified file name
 
     NewDiagramEvent
         Creates a new diagram on the current project
         parameter:
             diagramType:   A value from the DiagramType enumeration
+
+    NewProjectDiagramEvent
+        Creates a new diagram for the given project;  Includes the UI and model artifacts
+        parameters:
+            NewProjectDiagramInformation
 
     CutShapeEvent
         Cuts only the specified shape
@@ -119,7 +132,9 @@ class EventType(str, Enum):
         return obj
 
     NewProject              = ('NewProject',              NewProjectEvent(),              EVENT_NEW_PROJECT)
+    NewNamedProject         = ('NewNamedProject',         NewNamedProjectEvent,           EVENT_NEW_NAMED_PROJECT)
     NewDiagram              = ('NewDiagram',              NewDiagramEvent(),              EVENT_NEW_DIAGRAM)
+    NewProjectDiagram       = ('NewProjectDiagram',       NewProjectDiagramEvent(),       EVENT_NEW_PROJECT_DIAGRAM)
     DeleteDiagram           = ('DeleteDiagram',           DeleteDiagramEvent(),           EVENT_DELETE_DIAGRAM)
     OpenProject             = ('OpenProject',             OpenProjectEvent(),             EVENT_OPEN_PROJECT)
     InsertProject           = ('InsertProject',           InsertProjectEvent(),           EVENT_INSERT_PROJECT)

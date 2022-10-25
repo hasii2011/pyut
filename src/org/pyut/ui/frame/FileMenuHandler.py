@@ -6,6 +6,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from core.PluginManager import PluginManager
 from wx import BOTH
 from wx import FD_MULTIPLE
 from wx import FD_OPEN
@@ -65,13 +66,15 @@ FileNames = NewType('FileNames', List[str])
 
 class FileMenuHandler(BaseMenuHandler):
 
-    def __init__(self, fileMenu: Menu, lastOpenFilesIDs: List[int], eventEngine: IEventEngine = None):
+    def __init__(self, fileMenu: Menu, lastOpenFilesIDs: List[int], pluginManager: PluginManager, eventEngine: IEventEngine):
 
         super().__init__(menu=fileMenu, eventEngine=eventEngine)
 
+        self._lastOpenedFilesIDs: List[int]      = lastOpenFilesIDs
+        self._pluginManager:      PluginManager = pluginManager
+
         self.logger: Logger = getLogger(__name__)
 
-        self._lastOpenedFilesIDs: List[int]       = lastOpenFilesIDs
         self._preferences:        PyutPreferences = PyutPreferences()
         self._plugins:            PluginIDMap     = PluginIDMap({})
 
@@ -234,6 +237,10 @@ class FileMenuHandler(BaseMenuHandler):
         """
         TODO: Re-enable plugins with PyutPluginCore
         """
+        wxId: int = event.GetId()
+        self.logger.info(f'Import: {wxId=}')
+
+        self._pluginManager.doImport(wxId=wxId)
 
     def onExport(self, event: CommandEvent):
         """

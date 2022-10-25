@@ -1,3 +1,4 @@
+
 from typing import Any
 from typing import Callable
 
@@ -11,10 +12,16 @@ from wx import TreeItemId
 from wx import Window
 
 from org.pyut.enums.DiagramType import DiagramType
-from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
-from org.pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
-from org.pyut.uiv2.eventengine.Events import EditClassEvent
+
+from org.pyut.uiv2.IPyutProject import IPyutProject
+from org.pyut.uiv2.eventengine.Events import NewNamedProjectEvent
+from org.pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
+
 from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
+from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+
+from org.pyut.uiv2.eventengine.Events import EditClassEvent
+from org.pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import CutShapeEvent
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
@@ -29,6 +36,7 @@ from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from org.pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 NEW_NAME_PARAMETER:     str = 'newName'
 DIAGRAM_TYPE_PARAMETER: str = 'diagramType'
@@ -43,13 +51,17 @@ CURRENT_FRAME_ZOOM_FACTOR_PARAMETER: str = 'currentFrameZoomFactor'
 APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
 INSERT_PROJECT_FILENAME_PARAMETER:   str = 'projectFilename'
 OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
+NEW_PROJECT_FROM_FILENAME_PARAMETER: str = OPEN_PROJECT_FILENAME_PARAMETER
 CALLBACK_PARAMETER:                  str = 'callback'
 PYUT_CLASS_PARAMETER:                str = 'pyutClass'
+
+NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER = 'newProjectDiagramInformation'
 
 # EventCallback = NewType('EventCallback', Callable[[CurrentProjectInformation], None])
 MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
 ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for callback
 ActiveProjectInformationCallback  = Callable[[ActiveProjectInformation], None]
+NewNamedProjectCallback           = Callable[[IPyutProject], None]
 
 
 class EventEngine(IEventEngine):
@@ -84,8 +96,12 @@ class EventEngine(IEventEngine):
                 self._sendNewTitleEvent(**kwargs)
             case EventType.UpdateApplicationStatus:
                 self._sendUpdateApplicationStatusEvent(**kwargs)
+            case EventType.NewNamedProject:
+                self._sendNewNamedProjectEvent(**kwargs)
             case EventType.NewDiagram:
                 self._sendNewDiagramEvent(**kwargs)
+            case EventType.NewProjectDiagram:
+                self._sendNewProjectDiagramEvent(**kwargs)
             case EventType.InsertProject:
                 self._sendInsertProjectEvent(**kwargs)
             case EventType.OpenProject:
@@ -137,15 +153,26 @@ class EventEngine(IEventEngine):
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendInsertProjectEvent(self, **kwargs):
-
         projectFilename: str = kwargs[INSERT_PROJECT_FILENAME_PARAMETER]
         eventToPost: InsertProjectEvent = InsertProjectEvent(projectFilename=projectFilename)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendOpenProjectEvent(self, **kwargs):
-
         projectFilename: str = kwargs[OPEN_PROJECT_FILENAME_PARAMETER]
         eventToPost: OpenProjectEvent = OpenProjectEvent(projectFilename=projectFilename)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendNewNamedProjectEvent(self, **kwargs):
+        projectFilename: str                     = kwargs[NEW_PROJECT_FROM_FILENAME_PARAMETER]
+        callback:        NewNamedProjectCallback = kwargs[CALLBACK_PARAMETER]
+        eventToPost:     NewNamedProjectEvent    = NewNamedProjectEvent(projectFilename=projectFilename, callback=callback)
+
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendNewProjectDiagramEvent(self, **kwargs):
+        info: NewProjectDiagramInformation = kwargs[NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER]
+        eventToPost: NewProjectDiagramEvent = NewProjectDiagramEvent(newProjectDiagramInformation=info)
+
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendNewDiagramEvent(self, **kwargs):

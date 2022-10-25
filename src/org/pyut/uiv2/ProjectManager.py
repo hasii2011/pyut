@@ -193,13 +193,31 @@ class ProjectManager:
         """
         project = PyutProjectV2(PyutConstants.DEFAULT_FILE_NAME, self._projectTree, self._projectTree.projectTreeRoot)
 
-        projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=project)
+        return self._manageProject(pyutProject=project)
 
-        project.projectTreeRoot = projectTreeRoot
+    def newNamedProject(self, filename: str) -> IPyutProject:
+        """
+        Creates a skeletal project for a specific file
+        Args:
+            filename:
+        """
+        project: PyutProjectV2 = PyutProjectV2(filename=filename, tree=self._projectTree, treeRoot=self._projectTree.projectTreeRoot)
+
+        return self._manageProject(pyutProject=project)
+
+    def _manageProject(self, pyutProject: PyutProjectV2):
+        """
+        Creates the UI elements for the new project and places in the project manager list
+        Args:
+            pyutProject:
+        """
+        projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=pyutProject)
+
+        pyutProject.projectTreeRoot = projectTreeRoot
 
         wxYield()
-        self.addProject(project=project)
-        return project
+        self.addProject(project=pyutProject)
+        return pyutProject
 
     def saveProject(self, projectToSave: IPyutProject):
         """

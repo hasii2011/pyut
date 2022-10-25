@@ -4,7 +4,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-# noinspection PyPackageRequirements
 from deprecated import deprecated
 
 from wx import ICON_ERROR
@@ -15,14 +14,9 @@ from wx import MessageDialog
 
 from org.pyut.enums.DiagramType import DiagramType
 
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
-
-from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.IPyutProject import UmlFrameType
 
-from org.pyut.PyutConstants import DiagramsLabels
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
@@ -30,28 +24,25 @@ class PyutDocumentV2(IPyutDocument):
     """
     Document : Contains a document : frames, properties, ...
     """
-    def __init__(self, parentFrame: DiagramNotebook, docType: DiagramType, eventEngine: IEventEngine):
+    def __init__(self, diagramFrame: UmlFrameType, docType: DiagramType, eventEngine: IEventEngine):
 
         """
 
         Args:
-            parentFrame:    The frame that will parent the UmlDiagramsFrame that we create
+            diagramFrame:
             docType:        The enumeration value for the diagram type
             eventEngine:    The engine used to communicate with the Pyut UI
         """
+        self._diagramFrame: UmlFrameType = diagramFrame
+
         super().__init__()
         self.logger: Logger   = getLogger(__name__)
 
-        self._parentFrame:    DiagramNotebook = parentFrame
-        self._diagramType:    DiagramType     = docType                 # This document's diagram type
-        self._eventEngine:    IEventEngine    = eventEngine
-        self._treeRoot:       TreeItemId      = cast(TreeItemId, None)   # The document entry in the tree
-        self._treeRootParent: TreeItemId      = cast(TreeItemId, None)   # Project  entry
-
-        self._diagramFrame:   UmlFrameType    = cast(UmlFrameType, None)
-        self._title:          str             = cast(str, None)
-
-        self._createDiagramFrame()
+        self._diagramType:    DiagramType  = docType                 # This document's diagram type
+        self._eventEngine:    IEventEngine = eventEngine
+        self._treeRoot:       TreeItemId   = cast(TreeItemId, None)   # The document entry in the tree
+        self._treeRootParent: TreeItemId   = cast(TreeItemId, None)   # Project  entry
+        self._title:          str          = cast(str, None)
 
     @property
     def title(self) -> str:
@@ -103,25 +94,25 @@ class PyutDocumentV2(IPyutDocument):
     def removeFromTree(self):
         assert False, 'Do not use this method'
 
-    def _createDiagramFrame(self):
-
-        docType:     DiagramType     = self._diagramType
-        parentFrame: DiagramNotebook = self._parentFrame
-
-        self.logger.debug(f'PyutDocument using type {docType}')
-        if docType == DiagramType.CLASS_DIAGRAM:
-            self._title = DiagramsLabels[docType]
-            self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
-        elif docType == DiagramType.SEQUENCE_DIAGRAM:
-            self._title = DiagramsLabels[docType]
-            self._diagramFrame = UmlSequenceDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
-        elif docType == DiagramType.USECASE_DIAGRAM:
-            self._title = DiagramsLabels[docType]
-            self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
-        else:
-            self._displayError(f'Unsupported diagram type; replacing by class diagram: {docType}')
-            self._title = DiagramsLabels[DiagramType.CLASS_DIAGRAM]
-            self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
+    # def _createDiagramFrame(self):
+    #
+    #     docType:     DiagramType     = self._diagramType
+    #     parentFrame: DiagramNotebook = self._parentFrame
+    #
+    #     self.logger.debug(f'PyutDocument using type {docType}')
+    #     if docType == DiagramType.CLASS_DIAGRAM:
+    #         self._title = DiagramsLabels[docType]
+    #         self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
+    #     elif docType == DiagramType.SEQUENCE_DIAGRAM:
+    #         self._title = DiagramsLabels[docType]
+    #         self._diagramFrame = UmlSequenceDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
+    #     elif docType == DiagramType.USECASE_DIAGRAM:
+    #         self._title = DiagramsLabels[docType]
+    #         self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
+    #     else:
+    #         self._displayError(f'Unsupported diagram type; replacing by class diagram: {docType}')
+    #         self._title = DiagramsLabels[DiagramType.CLASS_DIAGRAM]
+    #         self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
 
     def _displayError(self, message: str):
         booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)

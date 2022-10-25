@@ -39,7 +39,7 @@ class PyutProjectV2(IPyutProject):
         Args:
             filename:       The project file name
             tree:           The tree control
-            treeRoot:       Where to root the tree
+            treeRoot:       Where to root the new project item
         """
         super().__init__()
         self.logger:       Logger   = getLogger(__name__)
@@ -50,10 +50,10 @@ class PyutProjectV2(IPyutProject):
         self._modified: bool    = False         # Was the project modified ?
         self._codePath: str     = ""
 
-        self._treeRootParent:  TreeItemId  = treeRoot                 # Parent of the project root entry
         self._tree:            'ProjectTree' = tree                    # Tree I belong to
+        self._treeRootParent:  TreeItemId   = treeRoot                 # Parent of the project root entry
 
-        self._projectTreeRoot:  TreeItemId = cast(TreeItemId, None)   # Root of this project entry in the tree
+        self._projectTreeRoot:  TreeItemId = cast(TreeItemId, None)   # Root of this project entry in projects root
 
     @property
     def filename(self) -> str:

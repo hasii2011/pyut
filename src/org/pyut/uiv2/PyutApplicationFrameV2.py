@@ -123,16 +123,13 @@ class PyutApplicationFrameV2(Frame):
         for index in range(self._prefs.getNbLOF()):
             self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
-        # self._toolPluginsIDMap:   PluginMap = self._pluginMgr.mapWxIdsToToolPlugins()
-        # self._importPluginsIDMap: PluginMap = self._pluginMgr.mapWxIdsToImportPlugins()
-        # self._exportPluginsIDMap: PluginMap = self._pluginMgr.mapWxIdsToExportPlugins()
-
         # Initialization
         fileMenu:  Menu = Menu()
         editMenu:  Menu = Menu()
         toolsMenu: Menu = Menu()
         helpMenu:  Menu = Menu()
-        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID, eventEngine=self._eventEngine)
+        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID, pluginManager=self._pluginMgr,
+                                                                   eventEngine=self._eventEngine)
         self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
 
         self._initializePyutTools()
@@ -152,9 +149,9 @@ class PyutApplicationFrameV2(Frame):
         self._menuCreator.editMenuHandler  = self._editMenuHandler
         self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
         self._menuCreator.helpMenuHandler  = self._helpMenuHandler
-        self._menuCreator.toolPlugins      = self._pluginMgr.toolPluginsIDMap
-        self._menuCreator.exportPlugins    = self._pluginMgr.outputPluginsIDMap
-        self._menuCreator.importPlugins    = self._pluginMgr.inputPluginsIDMap
+        self._menuCreator.toolPlugins      = self._pluginMgr.toolPluginsMap.pluginIdMap
+        self._menuCreator.exportPlugins    = self._pluginMgr.outputPluginsMap.pluginIdMap
+        self._menuCreator.importPlugins    = self._pluginMgr.inputPluginsMap.pluginIdMap
         self._menuCreator.toolboxIds       = self._toolboxIds
 
         self._menuCreator.initializeMenus()
