@@ -4,7 +4,6 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
-from core.types.PluginDataTypes import PluginType
 from wx import EVT_MENU
 from wx import ID_ABOUT
 from wx import ID_CUT
@@ -27,7 +26,7 @@ from core.IOPluginInterface import IOPluginInterface
 from core.PluginManager import PluginManager
 from core.ToolPluginInterface import ToolPluginInterface
 from core.types.PluginDataTypes import PluginIDMap
-from core.types.PluginDataTypes import PluginName
+from core.types.PluginDataTypes import FormatName
 
 from org.pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 
@@ -331,8 +330,8 @@ class MenuCreator:
             clazz: type = pluginMap[wxId]       # type: ignore
             pluginInstance: IOPluginInterface = clazz(None)
 
-            pluginName: PluginName = pluginInstance.name
-            sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, pluginName=pluginName, callback=fileMenuHandler.onExport)
+            formatName: FormatName = pluginInstance.outputFormat.formatName
+            sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, formatName=formatName, callback=fileMenuHandler.onExport)
 
         return sub
 
@@ -349,8 +348,8 @@ class MenuCreator:
             clazz: type = pluginMap[wxId]       # type: ignore
             pluginInstance: IOPluginInterface = clazz(None)
 
-            pluginName: PluginName = pluginInstance.name
-            sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, pluginName=pluginName, callback=fileMenuHandler.onImport)
+            formatName: FormatName = pluginInstance.inputFormat.formatName
+            sub = self.__makeSubMenuEntry(subMenu=sub, wxId=wxId, formatName=formatName, callback=fileMenuHandler.onImport)
 
         return sub
 
@@ -443,9 +442,9 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,     id=SharedIdentifiers.ID_MNU_HELP_WEB)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug,       id=SharedIdentifiers.ID_DEBUG)
 
-    def __makeSubMenuEntry(self, subMenu: Menu, wxId: int, pluginName: str, callback: Callable) -> Menu:
+    def __makeSubMenuEntry(self, subMenu: Menu, wxId: int, formatName: str, callback: Callable) -> Menu:
 
-        subMenu.Append(wxId, pluginName)
+        subMenu.Append(wxId, formatName)
         self._containingFrame.Bind(EVT_MENU, callback, id=wxId)
 
         return subMenu

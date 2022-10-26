@@ -9,17 +9,19 @@ from logging import DEBUG
 
 from miniogl.Diagram import Diagram
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
-from ogl.OglInterface2 import OglInterface2
-from ogl.OglLink import OglLink
 
 from ogl.OglObject import OglObject
 from oglio.Types import OglClasses
+from ogl.OglLink import OglLink
 from oglio.Types import OglNotes
 from oglio.Types import OglSDInstances
 from oglio.Types import OglSDMessages
 from oglio.Types import OglTexts
 from oglio.Types import OglActors
 from oglio.Types import OglUseCases
+from ogl.OglInterface2 import OglInterface2
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
@@ -492,7 +494,7 @@ class PyutUIV2(IPyutUI):
 
         # Close the project
         if currentProject.modified is True:
-            frame = self._projectManager.currentProject.getFrames()[0]
+            frame = self._projectManager.currentProject.frames[0]
             frame.SetFocus()
             self.showFrame(frame)
 
@@ -647,11 +649,15 @@ class PyutUIV2(IPyutUI):
 
         oglObject: OglObject = event.shapeToAdd
         umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
-
-        if isinstance(oglObject, OglLink):
-            self._layoutOglLink(umlFrame=umlFrame, oglLink=oglObject)
-        else:
-            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglObject)
+        match oglObject:
+            case OglLink() as oglObject:
+                self._layoutOglLink(umlFrame=umlFrame, oglLink=cast(OglLink, oglObject))
+            case OglSDInstance() as oglObject:
+                self._layoutOglSDInstance(diagram=umlFrame.getDiagram(), oglSDInstance=cast(OglSDInstance, oglObject))
+            case OglSDMessage() as oglObject:
+                self._layoutOglSDMessage(diagram=umlFrame.getDiagram(), oglSDMessage=cast(OglSDMessage, oglObject))
+            case _:
+                self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglObject)
 
     def _placeShapesOnFrames(self, oglProject: OglProject, pyutProject: IPyutProject):
         """
@@ -714,23 +720,10 @@ class PyutUIV2(IPyutUI):
             self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglClass, )
 
     def _layoutOglLinks(self, umlFrame: UmlDiagramsFrame, oglLinks: OglLinks):
-        umlDiagram = umlFrame.GetDiagram()
+
         for link in oglLinks:
             oglLink: OglLink = cast(OglLink, link)
             self._layoutOglLink(umlFrame=umlFrame, oglLink=oglLink)
-            # self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
-            # TODO:
-            # This is bad mooky here. The Ogl objects were created withing having a Diagram
-            # The legacy code deserialized the object while adding them to a frame. This
-            # new code deserializes w/o reference to a frame
-            # If we don't this the AnchorPoints are not on the diagram and lines ends are not
-            # movable.
-            # if isinstance(oglLink, OglInterface2) is False:
-            #     umlDiagram.AddShape(oglLink.sourceAnchor)
-            #     umlDiagram.AddShape(oglLink.destinationAnchor)
-            #     controlPoints = oglLink.GetControlPoints()
-            #     for controlPoint in controlPoints:
-            #         umlDiagram.AddShape(controlPoint)
 
     def _layoutOglNotes(self, umlFrame: UmlDiagramsFrame, oglNotes: OglNotes):
         for oglNote in oglNotes:
@@ -751,13 +744,13 @@ class PyutUIV2(IPyutUI):
     def _layoutOglSDInstances(self, umlFrame: UmlDiagramsFrame, oglSDInstances: OglSDInstances):
         diagram: Diagram = umlFrame.getDiagram()
         for oglSDInstance in oglSDInstances.values():
-            diagram.AddShape(oglSDInstance)
+            self._layoutOglSDInstance(diagram=diagram, oglSDInstance=oglSDInstance)
         umlFrame.Refresh()
 
     def _layoutOglSDMessages(self, umlFrame: UmlDiagramsFrame, oglSDMessages: OglSDMessages):
         diagram: Diagram = umlFrame.getDiagram()
         for oglSDMessage in oglSDMessages.values():
-            diagram.AddShape(oglSDMessage)
+            self._layoutOglSDMessage(diagram=diagram, oglSDMessage=oglSDMessage)
 
     def _layoutOglLink(self, umlFrame: UmlDiagramsFrame, oglLink: OglLink):
 
@@ -776,6 +769,12 @@ class PyutUIV2(IPyutUI):
             controlPoints = oglLink.GetControlPoints()
             for controlPoint in controlPoints:
                 umlDiagram.AddShape(controlPoint)
+
+    def _layoutOglSDInstance(self, diagram: Diagram, oglSDInstance: OglSDInstance):
+        diagram.AddShape(oglSDInstance)
+
+    def _layoutOglSDMessage(self, diagram: Diagram, oglSDMessage: OglSDMessage):
+        diagram.AddShape(oglSDMessage)
 
     def _layOutAnOglObject(self, umlFrame: UmlDiagramsFrame, oglObject: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink]):
         x, y = oglObject.GetPosition()
