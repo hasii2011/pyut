@@ -5,15 +5,19 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.PyutClass import PyutClass
 from wx import PostEvent
 from wx import PyEventBinder
 from wx import TreeItemId
 from wx import Window
 
+from pyutmodel.PyutClass import PyutClass
+
+from ogl.OglObject import OglObject
+
 from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.uiv2.IPyutProject import IPyutProject
+from org.pyut.uiv2.eventengine.Events import AddShapeEvent
 from org.pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 
@@ -42,6 +46,7 @@ NEW_NAME_PARAMETER:     str = 'newName'
 DIAGRAM_TYPE_PARAMETER: str = 'diagramType'
 TREE_ITEM_ID_PARAMETER: str = 'treeItemId'
 SHAPE_TO_CUT_PARAMETER: str = 'shapeToCut'
+SHAPE_TO_ADD_PARAMETER: str = 'shapeToAdd'
 TOOL_ID_PARAMETER:      str = 'toolId'
 ACTION_PARAMETER:       str = 'action'
 NEW_FILENAME_PARAMETER: str = 'newFilename'
@@ -108,6 +113,8 @@ class EventEngine(IEventEngine):
                 self._sendOpenProjectEvent(**kwargs)
             case EventType.CutShape:
                 self._sendCutShapeEvent(**kwargs)
+            case EventType.AddShape:
+                self._sendAddShapeEvent(**kwargs)
             case EventType.SelectTool:
                 self._sendSelectToolEvent(**kwargs)
             case EventType.SetToolAction:
@@ -186,8 +193,13 @@ class EventEngine(IEventEngine):
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendCutShapeEvent(self, **kwargs):
-        shapeToCut = kwargs[SHAPE_TO_CUT_PARAMETER]
+        shapeToCut: OglObject = kwargs[SHAPE_TO_CUT_PARAMETER]
         eventToPost: CutShapeEvent = CutShapeEvent(shapeToCut=shapeToCut)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendAddShapeEvent(self, **kwargs):
+        shapeToAdd: OglObject = kwargs[SHAPE_TO_ADD_PARAMETER]
+        eventToPost: AddShapeEvent = AddShapeEvent(shapeToAdd=shapeToAdd)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendSelectToolEvent(self, **kwargs):

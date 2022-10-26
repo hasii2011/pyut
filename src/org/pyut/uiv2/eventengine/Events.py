@@ -28,6 +28,7 @@ UpdateRecentProjectsEvent, EVENT_UPDATE_RECENT_PROJECTS = NewEvent()
 
 SelectAllShapesEvent,   EVENT_SELECT_ALL_SHAPES   = NewEvent()
 DeSelectAllShapesEvent, EVENT_DESELECT_ALL_SHAPES = NewEvent()
+AddShapeEvent,          EVENT_ADD_SHAPE           = NewEvent()
 
 CopyShapesEvent,      EVENT_COPY_SHAPES       = NewEvent()
 PasteShapesEvent,     EVENT_PASTE_SHAPES      = NewEvent()
@@ -88,6 +89,11 @@ class EventType(str, Enum):
         Cuts only the specified shape
         parameter:
             shapeToCut
+
+    AddShapeEvent
+        Adds the specified shape on the UI
+        parameter:
+            oglObject      The Ogl document to place on the UML UmlFrame
 
     SelectToolEvent
         Use to select tools in the toolbar as a visual add to the end-user/developer
@@ -151,6 +157,7 @@ class EventType(str, Enum):
 
     SelectAllShapes   = ('SelectAllShapes',        SelectAllShapesEvent(),   EVENT_SELECT_ALL_SHAPES)
     DeSelectAllShapes = ('DeSelectAllShapesEvent', DeSelectAllShapesEvent(), EVENT_DESELECT_ALL_SHAPES)
+    AddShape          = ('AddShapeEvent',          AddShapeEvent(),          EVENT_ADD_SHAPE)
     CopyShapes        = ('CopyShapes',             CopyShapesEvent(),        EVENT_COPY_SHAPES)
     PasteShapes       = ('PasteShapes',            PasteShapesEvent(),       EVENT_PASTE_SHAPES)
     CutShapes         = ('CutShapes',              CutShapesEvent(),         EVENT_CUT_SHAPES)

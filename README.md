@@ -24,7 +24,7 @@ _Some Updates_
 * An improved PDF and image generation capability
 * Additional display options for UML diagrams
 * More preferences externalized through preferences
-* Updated to Python 3.9 and wxPython 4.1
+* Updated to Python 3.10.6 and wxPython 4.2
 * Improved L & F for mac OS X
 * Source code completely re-organized for maintainability
 

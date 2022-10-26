@@ -7,9 +7,6 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
-# noinspection PyPackageRequirements
-from deprecated import deprecated
-
 from miniogl.Diagram import Diagram
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from ogl.OglInterface2 import OglInterface2
@@ -78,8 +75,10 @@ from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
 from org.pyut.uiv2.Types import createDiagramFrame
 from org.pyut.uiv2.eventengine.EventEngine import NewNamedProjectCallback
+from org.pyut.uiv2.eventengine.Events import AddShapeEvent
 
 from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_PROJECT_INFORMATION
+from org.pyut.uiv2.eventengine.Events import EVENT_ADD_SHAPE
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
 from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
@@ -175,6 +174,8 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_MINI_PROJECT_INFORMATION,   callback=self._onMiniProjectInformation)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME,           callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
+        # Used by the Plugin Adapter
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE, callback=self._onAddShape)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
 
@@ -642,6 +643,16 @@ class PyutUIV2(IPyutUI):
         dlg.ShowModal()
         dlg.Destroy()
 
+    def _onAddShape(self, event: AddShapeEvent):
+
+        oglObject: OglObject = event.shapeToAdd
+        umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
+
+        if isinstance(oglObject, OglLink):
+            self._layoutOglLink(umlFrame=umlFrame, oglLink=oglObject)
+        else:
+            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglObject)
+
     def _placeShapesOnFrames(self, oglProject: OglProject, pyutProject: IPyutProject):
         """
         Creates the necessary frames to load the various OglDocuments onto
@@ -700,41 +711,42 @@ class PyutUIV2(IPyutUI):
 
     def _layoutOglClasses(self, umlFrame: UmlDiagramsFrame, oglClasses: OglClasses):
         for oglClass in oglClasses:
-            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglClass,)
+            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglClass, )
 
     def _layoutOglLinks(self, umlFrame: UmlDiagramsFrame, oglLinks: OglLinks):
         umlDiagram = umlFrame.GetDiagram()
         for link in oglLinks:
             oglLink: OglLink = cast(OglLink, link)
-            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
+            self._layoutOglLink(umlFrame=umlFrame, oglLink=oglLink)
+            # self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
             # TODO:
             # This is bad mooky here. The Ogl objects were created withing having a Diagram
             # The legacy code deserialized the object while adding them to a frame. This
             # new code deserializes w/o reference to a frame
             # If we don't this the AnchorPoints are not on the diagram and lines ends are not
             # movable.
-            if isinstance(oglLink, OglInterface2) is False:
-                umlDiagram.AddShape(oglLink.sourceAnchor)
-                umlDiagram.AddShape(oglLink.destinationAnchor)
-                controlPoints = oglLink.GetControlPoints()
-                for controlPoint in controlPoints:
-                    umlDiagram.AddShape(controlPoint)
+            # if isinstance(oglLink, OglInterface2) is False:
+            #     umlDiagram.AddShape(oglLink.sourceAnchor)
+            #     umlDiagram.AddShape(oglLink.destinationAnchor)
+            #     controlPoints = oglLink.GetControlPoints()
+            #     for controlPoint in controlPoints:
+            #         umlDiagram.AddShape(controlPoint)
 
     def _layoutOglNotes(self, umlFrame: UmlDiagramsFrame, oglNotes: OglNotes):
         for oglNote in oglNotes:
-            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglNote)
+            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglNote)
 
     def _layoutOglTexts(self, umlFrame: UmlDiagramsFrame, oglTexts: OglTexts):
         for oglText in oglTexts:
-            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglText)
+            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglText)
 
     def _layoutOglActors(self, umlFrame: UmlDiagramsFrame, oglActors: OglActors):
         for oglActor in oglActors:
-            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglActor)
+            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglActor)
 
     def _layoutOglUseCases(self, umlFrame: UmlDiagramsFrame, oglUseCases: OglUseCases):
         for oglUseCase in oglUseCases:
-            self._displayAnOglObject(umlFrame=umlFrame, oglObject=oglUseCase)
+            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglUseCase)
 
     def _layoutOglSDInstances(self, umlFrame: UmlDiagramsFrame, oglSDInstances: OglSDInstances):
         diagram: Diagram = umlFrame.getDiagram()
@@ -747,7 +759,25 @@ class PyutUIV2(IPyutUI):
         for oglSDMessage in oglSDMessages.values():
             diagram.AddShape(oglSDMessage)
 
-    def _displayAnOglObject(self, umlFrame: UmlDiagramsFrame, oglObject: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink]):
+    def _layoutOglLink(self, umlFrame: UmlDiagramsFrame, oglLink: OglLink):
+
+        self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
+        # TODO:
+        # This is bad mooky here. The Ogl objects were created withing having a Diagram
+        # The legacy code deserialized the object while adding them to a frame. This
+        # new code deserializes w/o reference to a frame
+        # If we don't this the AnchorPoints are not on the diagram and lines ends are not
+        # movable.
+        if isinstance(oglLink, OglInterface2) is False:
+            umlDiagram = umlFrame.GetDiagram()
+
+            umlDiagram.AddShape(oglLink.sourceAnchor)
+            umlDiagram.AddShape(oglLink.destinationAnchor)
+            controlPoints = oglLink.GetControlPoints()
+            for controlPoint in controlPoints:
+                umlDiagram.AddShape(controlPoint)
+
+    def _layOutAnOglObject(self, umlFrame: UmlDiagramsFrame, oglObject: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink]):
         x, y = oglObject.GetPosition()
         umlFrame.addShape(oglObject, x, y)
 

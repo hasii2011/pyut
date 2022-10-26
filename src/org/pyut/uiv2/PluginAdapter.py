@@ -1,28 +1,30 @@
 
 from typing import cast
-from typing import Union
 
 from logging import Logger
 from logging import getLogger
+
+from wx import Yield as wxYield
 
 from core.IPluginAdapter import IPluginAdapter
 from core.IPluginAdapter import ScreenMetrics
 
 from core.types.Types import FrameInformationCallback
 from core.types.Types import FrameSizeCallback
+from core.types.Types import OglObjectType
+from core.types.Types import PluginDocument
 from core.types.Types import PluginDocumentType
 from core.types.Types import PluginProject
 from core.types.Types import SelectedOglObjectsCallback
-
-from ogl.OglLink import OglLink
-from ogl.OglObject import OglObject
 
 from org.pyut.enums.DiagramType import DiagramType
 from org.pyut.general.PyutVersion import PyutVersion
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.IPyutProject import IPyutProject
+
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from org.pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
@@ -107,8 +109,16 @@ class PluginAdapter(IPluginAdapter):
     def deselectAllOglObjects(self):
         pass
 
-    def addShape(self, shape: Union[OglObject, OglLink]):
-        pass
+    def addShape(self, shape: OglObjectType):
+        """
+        Assumes a current frame exists;  This is a check done by the PluginInterfaces
+        Args:
+            shape:
+
+        Returns:
+
+        """
+        self._eventEngine.sendEvent(EventType.AddShape, shapeToAdd=shape)
 
     def loadProject(self, pluginProject: PluginProject):
         """
@@ -133,12 +143,61 @@ class PluginAdapter(IPluginAdapter):
             info.callback    = self._diagramCreated
 
             self._eventEngine.sendEvent(EventType.NewProjectDiagram, newProjectDiagramInformation=info)
+            wxYield()
+        # Done project and all diagrams created;  Do not leave any residue around
+        self._pluginProject = NO_PLUGIN_PROJECT
 
     def _diagramCreated(self, pyutDocument: IPyutDocument):
 
-        self._pluginProject = NO_PLUGIN_PROJECT
+        pluginProject: PluginProject = self._pluginProject
 
-        # TODO Layout the diagram
+        # find the correct plugin document
+        pluginDocument: PluginDocument = cast(PluginDocument, None)
+        for document in pluginProject.pluginDocuments.values():
+            pluginDocument  = cast(PluginDocument, document)
+            if pluginDocument.documentTitle == pyutDocument.title:
+                break
+
+        assert pluginDocument is not None, 'Developer error'
+
+        self._layoutPluginDocument(pluginDocument=pluginDocument)
+
+    def _layoutPluginDocument(self, pluginDocument: PluginDocument):
+        """
+        Loads a plugin's Ogl Objects
+
+        Args:
+            pluginDocument: The plugin document itself
+        """
+        for oglClass in pluginDocument.oglClasses:
+            self._layoutAnOglObject(oglObject=oglClass)
+
+        for oglLink in pluginDocument.oglLinks:
+            # self._layoutLinks(oglLinks=pluginDocument.oglLinks)
+            self._layoutAnOglObject(oglObject=oglLink)
+
+        for oglNote in pluginDocument.oglNotes:
+            self._layoutAnOglObject(oglObject=oglNote)
+
+        for oglText in pluginDocument.oglTexts:
+            self._layoutAnOglObject(oglObject=oglText)
+
+        for oglUseCase in pluginDocument.oglUseCases:
+            self._layoutAnOglObject(oglObject=oglUseCase)
+
+        for oglActor in pluginDocument.oglActors:
+            self._layoutAnOglObject(oglObject=oglActor)
+
+        for oglSDInstance in pluginDocument.oglSDInstances.values():
+            # TODO need pyutplugincore update to fix type mismatch
+            self._layoutAnOglObject(oglObject=oglSDInstance)        # type: ignore
+
+        for oglSDMessage in pluginDocument.oglSDMessages.values():
+            self._layoutAnOglObject(oglObject=oglSDMessage)
+
+    def _layoutAnOglObject(self, oglObject: OglObjectType):
+
+        self.addShape(shape=oglObject)      # type ignore
 
     def _toPyutDiagramType(self, documentType: PluginDocumentType) -> DiagramType:
 
