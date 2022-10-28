@@ -7,8 +7,6 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
-from core.types.Types import FrameInformationCallback
-from core.types.Types import FrameSizeCallback
 from wx import ClientDC
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
@@ -36,6 +34,8 @@ from wx import Yield as wxYield
 from miniogl.Diagram import Diagram
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 
+from pyutmodel.PyutClass import PyutClass
+
 from ogl.OglInterface2 import OglInterface2
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
@@ -53,10 +53,11 @@ from oglio.Types import OglDocument
 from oglio.Types import OglLinks
 from oglio.Types import OglProject
 
-from pyutmodel.PyutClass import PyutClass
-
 from core.types.Types import FrameInformation
 from core.types.Types import FrameSize
+from core.types.Types import FrameInformationCallback
+from core.types.Types import FrameSizeCallback
+from core.types.Types import OglObjects
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -680,9 +681,9 @@ class PyutUIV2(IPyutUI):
         else:
             info.frameActive        = True
             info.clientDC           = ClientDC(projectManager.currentFrame)
-            info.diagramType        = projectManager.currentDocument.diagramType
+            info.diagramType        = projectManager.currentDocument.diagramType.__str__()
             info.diagramTitle       = projectManager.currentDocument.title
-            info.selectedOglObjects = self._diagramNotebook.selectedUmlObjects      # TODO:  Fix this;  This does not seem right
+            info.selectedOglObjects = cast(OglObjects, self._diagramNotebook.selectedUmlObjects)      # TODO:  Fix this;  This does not seem right
 
             (width, height) = projectManager.currentFrame.GetSize()
             frameSize: FrameSize = FrameSize(width=width, height=height)
@@ -700,7 +701,8 @@ class PyutUIV2(IPyutUI):
             pass
         else:
             (width, height) = projectManager.currentFrame.GetSize()
-            frameSize: FrameSize(width=width, height=height)
+            frameSize.width  = width
+            frameSize.height = height
 
         cb: FrameSizeCallback = event.callback
 
