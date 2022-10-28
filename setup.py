@@ -26,7 +26,7 @@ LICENSE = (HERE / 'LICENSE').read_text()
 
 setup(
     name='Pyut',
-    version='6.8.1',
+    version='6.8.5',
     app=APP,
     data_files=DATA_FILES,
     packages=[
@@ -49,7 +49,7 @@ setup(
               'org.pyut.resources.img.toolbar', 'org.pyut.resources.img.toolbar.embedded16', 'org.pyut.resources.img.toolbar.embedded32',
               'org.pyut.resources.locale',
               'org.pyut.ui',   'org.pyut.ui.frame', 'org.pyut.ui.tools', 'org.pyut.ui.umlframes', 'org.pyut.ui.widgets',
-              'org.pyut.uiv2', 'org.pyut.uiv2.eventengine'
+              'org.pyut.uiv2', 'org.pyut.uiv2.eventengine', 'org.pyut.uiv2.eventengine.eventinformation'
               ],
     include_package_data=True,
     zip_safe=False,
