@@ -40,7 +40,6 @@ setup(
               'org.pyut.experimental',
               'org.pyut.general', 'org.pyut.general.datatypes', 'org.pyut.general.exceptions',
               'org.pyut.history', 'org.pyut.history.commands',
-              'org.pyut.persistence', 'org.pyut.persistence.converters',
               'org.pyut.preferences',
               'org.pyut.resources',
               'org.pyut.resources.img',
@@ -85,7 +84,7 @@ setup(
                       'wxPython==4.2.0',
                       'pyutmodel==1.1.0',
                       'ogl==0.60.5',
-                      'oglio==0.5.7'
+                      'oglio==0.5.7',
                       'pyutplugincore==0.5.10',
                       ]
 )

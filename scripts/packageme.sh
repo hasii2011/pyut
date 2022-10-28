@@ -24,8 +24,9 @@ else
     if [[ ${1} = 'deploy' ]] ; then
             echo "in deploy mode"
             rm -rf build dist
-            PACKAGES='wx,xmlschema,pygmlparser,pyutmodel,ogl'
-            python -O setup.py py2app --packages=${PACKAGES} --iconfile src/org/pyut/resources/img/Pyut.icns
+            # PACKAGES='wx,pyutmodel,ogl,oglio,pyutplugincore'
+            # python -O setup.py py2app --packages=${PACKAGES} --iconfile src/org/pyut/resources/img/Pyut.icns
+            python -O setup.py py2app --iconfile src/org/pyut/resources/img/Pyut.icns
             # echo "remove invalid link that code signing complains about"
             # cd "dist/Pyut.app/Contents/Resources/lib/python3.9"  || ! echo "No such directory"
             # rm -rfv site.pyo
