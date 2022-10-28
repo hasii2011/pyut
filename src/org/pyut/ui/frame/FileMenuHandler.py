@@ -235,7 +235,6 @@ class FileMenuHandler(BaseMenuHandler):
 
     def onImport(self, event: CommandEvent):
         """
-        TODO: Re-enable plugins with PyutPluginCore
         """
         wxId: int = event.GetId()
         self.logger.info(f'Import: {wxId=}')
@@ -244,8 +243,10 @@ class FileMenuHandler(BaseMenuHandler):
 
     def onExport(self, event: CommandEvent):
         """
-        TODO: Re-enable plugins with PyutPluginCore
         """
+        wxId: int = event.GetId()
+        self.logger.info(f'Import: {wxId=}')
+        self._pluginManager.doExport(wxId=wxId)
 
     # noinspection PyUnusedLocal
     def onPyutPreferences(self, event: CommandEvent):

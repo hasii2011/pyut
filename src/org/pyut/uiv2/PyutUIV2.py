@@ -7,22 +7,9 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
-from miniogl.Diagram import Diagram
-from miniogl.SelectAnchorPoint import SelectAnchorPoint
-
-from ogl.OglObject import OglObject
-from oglio.Types import OglClasses
-from ogl.OglLink import OglLink
-from oglio.Types import OglNotes
-from oglio.Types import OglSDInstances
-from oglio.Types import OglSDMessages
-from oglio.Types import OglTexts
-from oglio.Types import OglActors
-from oglio.Types import OglUseCases
-from ogl.OglInterface2 import OglInterface2
-from ogl.sd.OglSDInstance import OglSDInstance
-from ogl.sd.OglSDMessage import OglSDMessage
-
+from core.types.Types import FrameInformationCallback
+from core.types.Types import FrameSizeCallback
+from wx import ClientDC
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
@@ -46,11 +33,30 @@ from wx import MessageDialog
 
 from wx import Yield as wxYield
 
+from miniogl.Diagram import Diagram
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+
+from ogl.OglInterface2 import OglInterface2
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
+from ogl.OglObject import OglObject
+
+from oglio.Types import OglClasses
+from ogl.OglLink import OglLink
+from oglio.Types import OglNotes
+from oglio.Types import OglSDInstances
+from oglio.Types import OglSDMessages
+from oglio.Types import OglTexts
+from oglio.Types import OglActors
+from oglio.Types import OglUseCases
 from oglio.Types import OglDocument
 from oglio.Types import OglLinks
 from oglio.Types import OglProject
 
 from pyutmodel.PyutClass import PyutClass
+
+from core.types.Types import FrameInformation
+from core.types.Types import FrameSize
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -84,6 +90,8 @@ from org.pyut.uiv2.eventengine.Events import EVENT_ADD_SHAPE
 from org.pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
 from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
+from org.pyut.uiv2.eventengine.Events import EVENT_FRAME_INFORMATION
+from org.pyut.uiv2.eventengine.Events import EVENT_FRAME_SIZE
 from org.pyut.uiv2.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_INSERT_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_DIAGRAM
@@ -98,6 +106,8 @@ from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
+from org.pyut.uiv2.eventengine.Events import FrameInformationEvent
+from org.pyut.uiv2.eventengine.Events import FrameSizeEvent
 from org.pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
 from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
@@ -176,10 +186,12 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_MINI_PROJECT_INFORMATION,   callback=self._onMiniProjectInformation)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME,           callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
-        # Used by the Plugin Adapter
-        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE, callback=self._onAddShape)
-
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
+        #
+        # Following provided for the Plugin Adapter
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,         callback=self._onAddShape)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_FRAME_INFORMATION, callback=self._onFrameInformation)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_FRAME_SIZE,        callback=self._onFrameSize)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -657,7 +669,42 @@ class PyutUIV2(IPyutUI):
             case OglSDMessage() as oglObject:
                 self._layoutOglSDMessage(diagram=umlFrame.getDiagram(), oglSDMessage=cast(OglSDMessage, oglObject))
             case _:
-                self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglObject)
+                self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglObject)
+
+    def _onFrameInformation(self, event: FrameInformationEvent):
+
+        projectManager: ProjectManager = self._projectManager
+        info: FrameInformation = FrameInformation()
+        if projectManager.currentFrame is None:
+            info.frameActive = False
+        else:
+            info.frameActive        = True
+            info.clientDC           = ClientDC(projectManager.currentFrame)
+            info.diagramType        = projectManager.currentDocument.diagramType
+            info.diagramTitle       = projectManager.currentDocument.title
+            info.selectedOglObjects = self._diagramNotebook.selectedUmlObjects      # TODO:  Fix this;  This does not seem right
+
+            (width, height) = projectManager.currentFrame.GetSize()
+            frameSize: FrameSize = FrameSize(width=width, height=height)
+            info.frameSize = frameSize
+
+        cb: FrameInformationCallback = event.callback
+        cb(info)
+
+    def _onFrameSize(self, event: FrameSizeEvent):
+
+        projectManager: ProjectManager = self._projectManager
+
+        frameSize: FrameSize = FrameSize()
+        if projectManager.currentFrame is None:
+            pass
+        else:
+            (width, height) = projectManager.currentFrame.GetSize()
+            frameSize: FrameSize(width=width, height=height)
+
+        cb: FrameSizeCallback = event.callback
+
+        cb(frameSize)
 
     def _placeShapesOnFrames(self, oglProject: OglProject, pyutProject: IPyutProject):
         """
@@ -717,7 +764,7 @@ class PyutUIV2(IPyutUI):
 
     def _layoutOglClasses(self, umlFrame: UmlDiagramsFrame, oglClasses: OglClasses):
         for oglClass in oglClasses:
-            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglClass, )
+            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglClass, )
 
     def _layoutOglLinks(self, umlFrame: UmlDiagramsFrame, oglLinks: OglLinks):
 
@@ -727,19 +774,19 @@ class PyutUIV2(IPyutUI):
 
     def _layoutOglNotes(self, umlFrame: UmlDiagramsFrame, oglNotes: OglNotes):
         for oglNote in oglNotes:
-            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglNote)
+            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglNote)
 
     def _layoutOglTexts(self, umlFrame: UmlDiagramsFrame, oglTexts: OglTexts):
         for oglText in oglTexts:
-            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglText)
+            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglText)
 
     def _layoutOglActors(self, umlFrame: UmlDiagramsFrame, oglActors: OglActors):
         for oglActor in oglActors:
-            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglActor)
+            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglActor)
 
     def _layoutOglUseCases(self, umlFrame: UmlDiagramsFrame, oglUseCases: OglUseCases):
         for oglUseCase in oglUseCases:
-            self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglUseCase)
+            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglUseCase)
 
     def _layoutOglSDInstances(self, umlFrame: UmlDiagramsFrame, oglSDInstances: OglSDInstances):
         diagram: Diagram = umlFrame.getDiagram()
@@ -754,7 +801,7 @@ class PyutUIV2(IPyutUI):
 
     def _layoutOglLink(self, umlFrame: UmlDiagramsFrame, oglLink: OglLink):
 
-        self._layOutAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
+        self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
         # TODO:
         # This is bad mooky here. The Ogl objects were created withing having a Diagram
         # The legacy code deserialized the object while adding them to a frame. This
@@ -776,7 +823,7 @@ class PyutUIV2(IPyutUI):
     def _layoutOglSDMessage(self, diagram: Diagram, oglSDMessage: OglSDMessage):
         diagram.AddShape(oglSDMessage)
 
-    def _layOutAnOglObject(self, umlFrame: UmlDiagramsFrame, oglObject: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink]):
+    def _layoutAnOglObject(self, umlFrame: UmlDiagramsFrame, oglObject: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink]):
         x, y = oglObject.GetPosition()
         umlFrame.addShape(oglObject, x, y)
 

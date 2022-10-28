@@ -121,6 +121,23 @@ class DiagramNotebook(Notebook):
 
         return umlObjects
 
+    @property
+    def selectedUmlObjects(self) -> UmlObjects:
+        """
+        Return the list of selected OglObjects in the diagram.
+
+        Returns:  May be empty
+        """
+        umlObjects:      UmlObjects = self.umlObjects
+        selectedObjects: UmlObjects = UmlObjects([])
+
+        if umlObjects is not None:
+            for umlObject in umlObjects:
+                if umlObject.IsSelected():
+                    selectedObjects.append(umlObject)
+
+        return selectedObjects
+
     def AddPage(self, page, text, select=False, imageId=NO_IMAGE):
         """
         Override so we can catch double add;  Originally for debugging
@@ -154,7 +171,7 @@ class DiagramNotebook(Notebook):
         Args:
             event:
         """
-        selectedUmlObjects: UmlObjects = self._getSelectedUmlObjects()
+        selectedUmlObjects: UmlObjects = self.selectedUmlObjects
         if len(selectedUmlObjects) > 0:
             self._clipboard = PyutObjects([])
             # put a copy of the PyutObjects in the clipboard
@@ -268,22 +285,6 @@ class DiagramNotebook(Notebook):
                 historyManager.redo()
             else:
                 self._displayWarning(message='Nothing to redo')
-
-    def _getSelectedUmlObjects(self) -> UmlObjects:
-        """
-        Return the list of selected OglObjects in the diagram.
-
-        Returns:  May be empty
-        """
-        umlObjects:      UmlObjects = self.umlObjects
-        selectedObjects: UmlObjects = UmlObjects([])
-
-        if umlObjects is not None:
-            for umlObject in umlObjects:
-                if umlObject.IsSelected():
-                    selectedObjects.append(umlObject)
-
-        return selectedObjects
 
     def _updateApplicationStatus(self, statusMessage: str):
 

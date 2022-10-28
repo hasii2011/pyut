@@ -47,6 +47,10 @@ MiniProjectInformationEvent,   EVENT_MINI_PROJECT_INFORMATION   = NewEvent()
 ActiveUmlFrameEvent,           EVENT_ACTIVE_UML_FRAME           = NewEvent()
 ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
 
+# The following specifically for the plugin adapter
+FrameInformationEvent,         EVENT_FRAME_INFORMATION = NewEvent()
+FrameSizeEvent,                EVENT_FRAME_SIZE        = NewEvent()
+
 
 class EventType(str, Enum):
     """
@@ -119,7 +123,12 @@ class EventType(str, Enum):
         Used to get information on the active project so that the UML Object edit dialogs
         can do their job
         parameters:
-            callback - Callback this is invoked with a parameter of type ActiveProjectInformation
+            callback - Callback that is invoked with a parameter of type ActiveProjectInformation
+
+    FrameInformationEvent
+        Use by the plugin adaptor to provide low level to plugins that need item
+        parameters:
+            callback - Callback this is invoked with a parameter of type FrameInformation
 
     Events with no parameters get stuffed into the enumeration as instances, so they can be used
     event engine simple send method;  To simplify enumeration creation I create instances for all
@@ -174,3 +183,6 @@ class EventType(str, Enum):
     ActiveUmlFrame           = ('ActiveUmlFrame',           ActiveUmlFrameEvent(),           EVENT_ACTIVE_UML_FRAME)
     ActiveProjectInformation = ('ActiveProjectInformation', ActiveProjectInformationEvent(), EVENT_ACTIVE_PROJECT_INFORMATION)
     EditClass                = ('EditClass',                EditClassEvent(),                EVENT_EDIT_CLASS)
+
+    FrameInformation         = ('FrameInformation', FrameInformationEvent(), EVENT_FRAME_INFORMATION)
+    FrameSize                = ('FrameSize',        FrameSizeEvent(),        EVENT_FRAME_SIZE)

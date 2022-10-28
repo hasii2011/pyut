@@ -18,6 +18,7 @@ from org.pyut.enums.DiagramType import DiagramType
 
 from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.uiv2.eventengine.Events import AddShapeEvent
+from org.pyut.uiv2.eventengine.Events import FrameInformationEvent
 from org.pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 
@@ -41,6 +42,9 @@ from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from org.pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
+
+from core.types.Types import FrameInformationCallback
+
 
 NEW_NAME_PARAMETER:     str = 'newName'
 DIAGRAM_TYPE_PARAMETER: str = 'diagramType'
@@ -127,6 +131,9 @@ class EventEngine(IEventEngine):
                 self._sendActiveProjectInformationEvent(**kwargs)
             case EventType.EditClass:
                 self._sendEditClassEvent(**kwargs)
+
+            case EventType.FrameInformation:
+                self._sendFrameInformationEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.UpdateRecentProjects | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
@@ -234,4 +241,10 @@ class EventEngine(IEventEngine):
     def _sendEditClassEvent(self, **kwargs):
         pyutClass: PyutClass = kwargs[PYUT_CLASS_PARAMETER]
         eventToPost: EditClassEvent = EditClassEvent(pyutClass=pyutClass)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendFrameInformationEvent(self, **kwargs):
+
+        cb: FrameInformationCallback = kwargs[CALLBACK_PARAMETER]
+        eventToPost: FrameInformationEvent = FrameInformationEvent(callback=cb)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

@@ -66,15 +66,15 @@ class PluginAdapter(IPluginAdapter):
         from wx import DisplaySize
         from wx import Size
 
-        size: Size        = ScreenDC().GetPPI()
+        ppi: Size        = ScreenDC().GetPPI()
         ds:   DisplaySize = DisplaySize()
 
         sm: ScreenMetrics = ScreenMetrics()
 
-        sm.screenWidth = size.GetWidth()
-        sm.screenHeight = size.GetHeight()
-        sm.dpiX         = ds.GetWidth()
-        sm.dpiY         = ds.GetHeight()
+        sm.screenWidth  = ds[0]
+        sm.screenHeight = ds[1]
+        sm.dpiX         = ppi[0]
+        sm.dpiY         = ppi[1]
 
         return sm
 
@@ -92,10 +92,10 @@ class PluginAdapter(IPluginAdapter):
         pass
 
     def getFrameSize(self, callback: FrameSizeCallback):
-        pass
+        self._eventEngine.sendEvent(EventType.FrameSize, callback=callback)
 
     def getFrameInformation(self, callback: FrameInformationCallback):
-        pass
+        self._eventEngine.sendEvent(EventType.FrameInformation, callback=callback)
 
     def getSelectedOglObjects(self, callback: SelectedOglObjectsCallback):
         pass
@@ -104,10 +104,12 @@ class PluginAdapter(IPluginAdapter):
         pass
 
     def selectAllOglObjects(self):
-        pass
+        self._eventEngine.sendEvent(EventType.SelectAllShapes)
+        wxYield()
 
     def deselectAllOglObjects(self):
-        pass
+        self._eventEngine.sendEvent(EventType.DeSelectAllShapes)
+        wxYield()
 
     def addShape(self, shape: OglObjectType):
         """
@@ -189,8 +191,7 @@ class PluginAdapter(IPluginAdapter):
             self._layoutAnOglObject(oglObject=oglActor)
 
         for oglSDInstance in pluginDocument.oglSDInstances.values():
-            # TODO need pyutplugincore update to fix type mismatch
-            self._layoutAnOglObject(oglObject=oglSDInstance)        # type: ignore
+            self._layoutAnOglObject(oglObject=oglSDInstance)
 
         for oglSDMessage in pluginDocument.oglSDMessages.values():
             self._layoutAnOglObject(oglObject=oglSDMessage)
