@@ -237,7 +237,7 @@ class DlgEditClass(DlgEditClassCommon):
         # Fill display properties
         self._chkShowFields.SetValue(self._pyutModelCopy.showFields)
         self._chkShowMethods.SetValue(self._pyutModelCopy.showMethods)
-        self._chkShowStereotype.SetValue(self._pyutModelCopy.getShowStereotype())
+        self._chkShowStereotype.SetValue(self._pyutModelCopy.displayStereoType)
 
     def _fixBtnFields(self):
         """
