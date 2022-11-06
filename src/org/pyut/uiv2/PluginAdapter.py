@@ -98,10 +98,10 @@ class PluginAdapter(IPluginAdapter):
         self._eventEngine.sendEvent(EventType.FrameInformation, callback=callback)
 
     def getSelectedOglObjects(self, callback: SelectedOglObjectsCallback):
-        pass
+        self._eventEngine.sendEvent(EventType.SelectedOglObjects, callback=callback)
 
     def refreshFrame(self):
-        pass
+        self._eventEngine.sendEvent(EventType.RefreshFrame)
 
     def selectAllOglObjects(self):
         self._eventEngine.sendEvent(EventType.SelectAllShapes)

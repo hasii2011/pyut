@@ -43,23 +43,12 @@
             "propagate": "False"
         },
         "Pyut": {
-            "level":     "WARNING",
+            "level":     "INFO",
             "propagate": "False"
         },
         "org.pyut": {
-            "level":     "WARNING",
-            "propagate": "False"
-        },
-        "org.pyut.uiv2": {
-            "level":     "WARNING",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
-        "org.pyut.uiv2.ProjectManager": {
-            "level":     "WARNING",
-            "handlers":  ["consoleHandler"],
+            "level":     "INFO",
             "propagate": "False"
         }
-
     }
 }

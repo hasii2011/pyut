@@ -7,6 +7,7 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
+from core.types.Types import SelectedOglObjectsCallback
 from wx import ClientDC
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
@@ -70,6 +71,7 @@ from org.pyut.ui.Actions import ACTION_SELECTOR
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.IPyutProject import IPyutProject
@@ -101,8 +103,10 @@ from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT_DIAGRAM
 from org.pyut.uiv2.eventengine.Events import EVENT_OPEN_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_DELETE_DIAGRAM
+from org.pyut.uiv2.eventengine.Events import EVENT_REFRESH_FRAME
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from org.pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
+from org.pyut.uiv2.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
 from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
@@ -116,8 +120,10 @@ from org.pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectEvent
 from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
+from org.pyut.uiv2.eventengine.Events import RefreshFrameEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from org.pyut.uiv2.eventengine.Events import SaveProjectEvent
+from org.pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
 from org.pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from org.pyut.uiv2.eventengine.Events import EditClassEvent
 from org.pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
@@ -190,9 +196,11 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
         #
         # Following provided for the Plugin Adapter
-        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,         callback=self._onAddShape)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_FRAME_INFORMATION, callback=self._onFrameInformation)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_FRAME_SIZE,        callback=self._onFrameSize)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,            callback=self._onAddShape)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_FRAME_INFORMATION,    callback=self._onFrameInformation)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_FRAME_SIZE,           callback=self._onFrameSize)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SELECTED_OGL_OBJECTS, callback=self._selectedOglObjects)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_REFRESH_FRAME,        callback=self._refreshFrame)
 
     @property
     def currentProject(self) -> IPyutProject:
@@ -707,6 +715,23 @@ class PyutUIV2(IPyutUI):
         cb: FrameSizeCallback = event.callback
 
         cb(frameSize)
+
+    def _selectedOglObjects(self, event: SelectedOglObjectsEvent):
+        umlObjects: UmlObjects = self._projectManager.currentFrame.getUmlObjects()
+
+        selectedObjects: OglObjects = OglObjects([])
+        if umlObjects is not None:
+            for obj in umlObjects:
+                if obj.IsSelected():
+                    selectedObjects.append(obj)
+
+        cb: SelectedOglObjectsCallback = event.callback
+
+        cb(selectedObjects)
+
+    # noinspection PyUnusedLocal
+    def _refreshFrame(self, event: RefreshFrameEvent):
+        self._projectManager.currentFrame.Refresh()
 
     def _placeShapesOnFrames(self, oglProject: OglProject, pyutProject: IPyutProject):
         """

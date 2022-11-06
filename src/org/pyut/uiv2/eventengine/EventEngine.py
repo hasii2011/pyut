@@ -21,6 +21,7 @@ from org.pyut.uiv2.eventengine.Events import AddShapeEvent
 from org.pyut.uiv2.eventengine.Events import FrameInformationEvent
 from org.pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from org.pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
+from org.pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
 
 from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
@@ -134,11 +135,13 @@ class EventEngine(IEventEngine):
 
             case EventType.FrameInformation:
                 self._sendFrameInformationEvent(**kwargs)
+            case EventType.SelectedOglObjects:
+                self._sendSelectedOglObjectsEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.UpdateRecentProjects | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
                     EventType.CopyShapes | EventType.PasteShapes | EventType.Undo | EventType.Redo | EventType.CutShapes | \
-                    EventType.AddOglDiagram | EventType.AddPyutDiagram:
+                    EventType.AddOglDiagram | EventType.AddPyutDiagram | EventType.RefreshFrame:
                 self._simpleSendEvent(eventType=eventType)
             case _:
                 assert False, f'Unknown event type: `{eventType}`'
@@ -247,4 +250,10 @@ class EventEngine(IEventEngine):
 
         cb: FrameInformationCallback = kwargs[CALLBACK_PARAMETER]
         eventToPost: FrameInformationEvent = FrameInformationEvent(callback=cb)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendSelectedOglObjectsEvent(self, **kwargs):
+
+        cb: FrameInformationCallback = kwargs[CALLBACK_PARAMETER]
+        eventToPost: SelectedOglObjectsEvent = SelectedOglObjectsEvent(callback=cb)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

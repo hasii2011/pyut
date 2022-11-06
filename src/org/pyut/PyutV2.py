@@ -48,7 +48,7 @@ class PyutV2:
         self.handleCommandLineArguments()
 
         optimize: str = environ.get(f'{PyutConstants.PYTHON_OPTIMIZE}')
-        self.logger.warning(f'{PyutConstants.PYTHON_OPTIMIZE}={optimize}')
+        self.logger.info(f'{PyutConstants.PYTHON_OPTIMIZE}=`{optimize}`')
 
     @property
     def userPath(self) -> str:
@@ -99,7 +99,7 @@ class PyutV2:
 
     def _setOurSysPath(self):
         appMode: str = environ.get(f'{PyutConstants.APP_MODE}')
-        self.logger.warning(f'{{PyutConstants.APP_MODE}}={appMode}  {self._exePath=}')
+        self.logger.info(f'{PyutConstants.APP_MODE}=`{appMode}`  {self._exePath=}')
         if appMode != 'True':
             try:
                 sysPath.append(self._exePath)
@@ -157,9 +157,9 @@ class PyutV2:
 
         # noinspection PyUnreachableCode
         if __debug__:
-            self.logger.warning("Assertions are turned on")
+            self.logger.info("Assertions are turned on")
         else:
-            self.logger.warning("Assertions are turned off")
+            self.logger.info("Assertions are turned off")
 
     def handleCommandLineArguments(self):
         """

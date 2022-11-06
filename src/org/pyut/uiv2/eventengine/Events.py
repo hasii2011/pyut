@@ -48,8 +48,10 @@ ActiveUmlFrameEvent,           EVENT_ACTIVE_UML_FRAME           = NewEvent()
 ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
 
 # The following specifically for the plugin adapter
-FrameInformationEvent,         EVENT_FRAME_INFORMATION = NewEvent()
-FrameSizeEvent,                EVENT_FRAME_SIZE        = NewEvent()
+FrameInformationEvent,         EVENT_FRAME_INFORMATION    = NewEvent()
+FrameSizeEvent,                EVENT_FRAME_SIZE           = NewEvent()
+SelectedOglObjectsEvent,       EVENT_SELECTED_OGL_OBJECTS = NewEvent()
+RefreshFrameEvent,             EVENT_REFRESH_FRAME        = NewEvent()
 
 
 class EventType(str, Enum):
@@ -184,5 +186,7 @@ class EventType(str, Enum):
     ActiveProjectInformation = ('ActiveProjectInformation', ActiveProjectInformationEvent(), EVENT_ACTIVE_PROJECT_INFORMATION)
     EditClass                = ('EditClass',                EditClassEvent(),                EVENT_EDIT_CLASS)
 
-    FrameInformation         = ('FrameInformation', FrameInformationEvent(), EVENT_FRAME_INFORMATION)
-    FrameSize                = ('FrameSize',        FrameSizeEvent(),        EVENT_FRAME_SIZE)
+    FrameInformation         = ('FrameInformation',   FrameInformationEvent(),   EVENT_FRAME_INFORMATION)
+    FrameSize                = ('FrameSize',          FrameSizeEvent(),          EVENT_FRAME_SIZE)
+    SelectedOglObjects       = ('SelectedOglObjects', SelectedOglObjectsEvent(), EVENT_SELECTED_OGL_OBJECTS)
+    RefreshFrame             = ('RefreshFrame',        RefreshFrameEvent(),       EVENT_REFRESH_FRAME)

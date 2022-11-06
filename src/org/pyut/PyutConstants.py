@@ -1,11 +1,5 @@
 
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
-
 from org.pyut.enums.DiagramType import DiagramType
-
-# noinspection PyPackageRequirements
-from deprecated import deprecated
 
 # Types of diagrams labels
 # TODO:  Make this an enumeration
