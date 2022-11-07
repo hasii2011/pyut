@@ -13,7 +13,7 @@ from unittest.mock import MagicMock
 
 from pkg_resources import resource_filename
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.history.commands.Command import Command
 from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand

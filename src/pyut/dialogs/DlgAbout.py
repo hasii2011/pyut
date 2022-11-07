@@ -45,7 +45,7 @@ from wx import TimerEvent
 from wx import Yield as wxYield
 
 from pyut.PyutConstants import PyutConstants
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.enums.ResourceTextType import ResourceTextType
 

@@ -11,7 +11,7 @@ from logging import getLogger
 
 from tests.TestBase import TestBase
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.history.HistoryManager import HistoryManager
 

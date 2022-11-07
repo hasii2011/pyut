@@ -1,5 +1,5 @@
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.ui.Actions import ACTION_NEW_ACTOR
 from org.pyut.ui.Actions import ACTION_NEW_INHERIT_LINK

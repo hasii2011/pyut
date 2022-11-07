@@ -26,7 +26,7 @@ from wx import VERTICAL
 
 from pyutmodel.PyutField import PyutField
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 

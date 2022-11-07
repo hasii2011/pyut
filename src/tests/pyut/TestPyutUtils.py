@@ -9,8 +9,8 @@ from unittest import TestSuite
 
 from tests.TestBase import TestBase
 
-from org.pyut.PyutUtils import PyutUtils
-from org.pyut.PyutUtils import ScreenMetrics
+from pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import ScreenMetrics
 
 from pyut.enums.ResourceTextType import ResourceTextType
 

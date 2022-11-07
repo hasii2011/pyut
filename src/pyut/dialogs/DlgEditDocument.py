@@ -9,7 +9,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import Window
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 

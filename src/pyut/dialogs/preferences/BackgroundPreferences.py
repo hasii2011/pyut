@@ -34,7 +34,7 @@ from pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
 from miniogl.MiniOglColorEnum import MiniOglColorEnum
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 from miniogl.MiniOglPenStyle import MiniOglPenStyle

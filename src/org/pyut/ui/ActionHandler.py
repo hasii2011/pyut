@@ -66,7 +66,7 @@ from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.Events import SetToolActionEvent
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote

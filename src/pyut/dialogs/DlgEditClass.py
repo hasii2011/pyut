@@ -50,7 +50,7 @@ from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 

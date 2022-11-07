@@ -10,7 +10,7 @@ from wx import App
 from wx import Frame
 from wx import ID_ANY
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 from pyut.errorcontroller.ErrorManager import ErrorManager
 
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME

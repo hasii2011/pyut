@@ -13,7 +13,7 @@ from deprecated import deprecated
 
 from wx import TreeItemId
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.preferences import PyutPreferences
 from org.pyut.uiv2.IPyutDocument import IPyutDocument

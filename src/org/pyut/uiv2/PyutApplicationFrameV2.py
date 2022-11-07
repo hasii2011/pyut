@@ -53,7 +53,7 @@ from org.pyut.ui.tools.ToolsCreator import ToolsCreator
 
 from pyut.dialogs.tips.DlgTips import DlgTips
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.PyutConstants import PyutConstants
 

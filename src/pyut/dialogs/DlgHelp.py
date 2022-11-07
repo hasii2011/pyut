@@ -25,7 +25,7 @@ from wx.html import HtmlEasyPrinting
 
 from wx.lib.dialogs import ScrolledMessageDialog
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 

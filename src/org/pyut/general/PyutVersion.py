@@ -1,7 +1,7 @@
 
 from os import linesep as osLineSep
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.enums.ResourceTextType import ResourceTextType
 

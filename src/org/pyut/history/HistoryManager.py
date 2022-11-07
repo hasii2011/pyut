@@ -16,7 +16,7 @@ from org.pyut.history.HistoryUtils import GROUP_COMMENT_ID
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 from org.pyut.history.HistoryUtils import deTokenize
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 
 class HistoryManager:

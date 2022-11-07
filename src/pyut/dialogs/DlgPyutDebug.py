@@ -27,7 +27,7 @@ from wx import BoxSizer
 from wx import CommandEvent
 from wx import SizeEvent
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 

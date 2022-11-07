@@ -52,7 +52,7 @@ from pyut.dialogs.DlgEditCode import DlgEditCode
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
 from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

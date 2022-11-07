@@ -31,7 +31,7 @@ from org.pyut.ui.widgets.TextContainer import TextContainer
 
 from pyut.PyutConstants import PyutConstants
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 

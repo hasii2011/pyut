@@ -16,7 +16,7 @@ from wx import CheckBox
 from wx import CommandEvent
 from wx import Window
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 from pyutmodel.PyutMethod import PyutMethod

@@ -12,7 +12,7 @@ from pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
 from pyutmodel.PyutNote import PyutNote
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 [

@@ -35,7 +35,7 @@ from wx import Yield as wxYield
 from core.types.PluginDataTypes import PluginIDMap
 from core.PluginManager import PluginManager
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
 from pyut.enums.DiagramType import DiagramType

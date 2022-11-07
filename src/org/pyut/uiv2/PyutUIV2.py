@@ -61,7 +61,7 @@ from core.types.Types import FrameInformationCallback
 from core.types.Types import FrameSizeCallback
 from core.types.Types import SelectedOglObjectsCallback
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
 from pyut.dialogs.DlgEditDocument import DlgEditDocument

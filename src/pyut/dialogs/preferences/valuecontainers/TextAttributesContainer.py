@@ -26,7 +26,7 @@ from wx import ComboBox
 
 from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

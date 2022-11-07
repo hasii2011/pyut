@@ -20,7 +20,7 @@ from wx import TextCtrl
 from wx import Dialog
 from wx import StaticText
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import _
 

@@ -32,7 +32,7 @@ from wx import StaticBitmap
 from wx import StaticText
 from wx import VERTICAL
 
-from org.pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import PyutUtils
 
 from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
 from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
