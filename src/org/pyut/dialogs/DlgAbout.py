@@ -51,7 +51,7 @@ from pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
-from org.pyut.resources.img import ImgPyut
+from pyut.resources.img import ImgPyut
 
 [ID_OK] = PyutUtils.assignID(1)
 

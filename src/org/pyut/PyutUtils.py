@@ -48,8 +48,8 @@ class PyutUtils:
     STRIP_SRC_PATH_SUFFIX:  str = f'{osSep}src'
     STRIP_TEST_PATH_SUFFIX: str = f'{osSep}test'
 
-    RESOURCES_PACKAGE_NAME: str = 'org.pyut.resources'
-    RESOURCES_PATH:         str = f'org{osSep}pyut{osSep}resources'
+    RESOURCES_PACKAGE_NAME: str = 'pyut.resources'
+    RESOURCES_PATH:         str = f'pyut{osSep}resources'
 
     RESOURCE_ENV_VAR:       str = 'RESOURCEPATH'
 
@@ -219,7 +219,7 @@ class PyutUtils:
         Returns:  A long string
         """
         # textFileName = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, textType.value)
-        textFileName: str = PyutUtils.retrieveResourcePath(textType.value)
+        textFileName: str = PyutUtils.retrieveResourcePath(cast(str, textType.value))
         cls.clsLogger.debug(f'text filename: {textFileName}')
 
         objRead = open(textFileName, 'r')

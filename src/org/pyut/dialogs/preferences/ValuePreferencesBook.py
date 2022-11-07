@@ -15,11 +15,11 @@ from org.pyut.dialogs.preferences.valuecontainers.DefaultNamesContainer import D
 from org.pyut.dialogs.preferences.valuecontainers.NoteAttributesContainer import NoteAttributesContainer
 from org.pyut.dialogs.preferences.valuecontainers.TextAttributesContainer import TextAttributesContainer
 
-from org.pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
+from pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
 
-from org.pyut.resources.img.toolbar.embedded16.ImgToolboxNote import embeddedImage as ImgToolboxNote
-from org.pyut.resources.img.toolbar.embedded16.ImgToolboxText import embeddedImage as ImgToolboxText
-from org.pyut.resources.img.toolbar.embedded16.ImgToolboxClass import embeddedImage as ImgToolboxClass
+from pyut.resources.img.toolbar.embedded16.ImgToolboxNote import embeddedImage as ImgToolboxNote
+from pyut.resources.img.toolbar.embedded16.ImgToolboxText import embeddedImage as ImgToolboxText
+from pyut.resources.img.toolbar.embedded16.ImgToolboxClass import embeddedImage as ImgToolboxClass
 
 
 def getNextImageID(count):

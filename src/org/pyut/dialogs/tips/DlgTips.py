@@ -42,7 +42,7 @@ from org.pyut.dialogs.tips.TipHandler import TipHandler
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
+from pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
 
 from org.pyut.general.Globals import _
 
