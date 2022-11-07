@@ -14,7 +14,7 @@ from pyutmodel.PyutClass import PyutClass
 
 from ogl.OglObject import OglObject
 
-from org.pyut.enums.DiagramType import DiagramType
+from pyut.enums.DiagramType import DiagramType
 
 from org.pyut.uiv2.IPyutProject import IPyutProject
 from org.pyut.uiv2.eventengine.Events import AddShapeEvent

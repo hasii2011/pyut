@@ -65,7 +65,7 @@ from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.DlgEditClass import DlgEditClass
 from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
 
-from org.pyut.enums.DiagramType import DiagramType
+from pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.Actions import ACTION_SELECTOR
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers

@@ -7,7 +7,7 @@ from abc import abstractmethod
 
 from wx import TreeItemId
 
-from org.pyut.enums.DiagramType import DiagramType
+from pyut.enums.DiagramType import DiagramType
 from org.pyut.uiv2.Types import UmlFrameType
 
 

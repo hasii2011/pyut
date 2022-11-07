@@ -4,7 +4,7 @@ from typing import cast
 
 from dataclasses import dataclass
 
-from org.pyut.enums.DiagramType import DiagramType
+from pyut.enums.DiagramType import DiagramType
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.IPyutProject import IPyutProject
 

@@ -3,7 +3,7 @@ from os import linesep as osLineSep
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.enums.ResourceTextType import ResourceTextType
+from pyut.enums.ResourceTextType import ResourceTextType
 
 
 class PyutVersion:

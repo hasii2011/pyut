@@ -12,7 +12,7 @@ from tests.TestBase import TestBase
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.PyutUtils import ScreenMetrics
 
-from org.pyut.enums.ResourceTextType import ResourceTextType
+from pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 

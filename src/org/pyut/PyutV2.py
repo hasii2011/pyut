@@ -19,7 +19,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.uiv2.PyutAppV2 import PyutAppV2
 
-from org.pyut.enums.ResourceTextType import ResourceTextType
+from pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.general.Lang import Lang
 from org.pyut.general.PyutVersion import PyutVersion

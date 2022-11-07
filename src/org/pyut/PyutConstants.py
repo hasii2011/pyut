@@ -1,5 +1,5 @@
 
-from org.pyut.enums.DiagramType import DiagramType
+from pyut.enums.DiagramType import DiagramType
 
 # Types of diagrams labels
 # TODO:  Make this an enumeration

@@ -47,7 +47,7 @@ from wx import Yield as wxYield
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.enums.ResourceTextType import ResourceTextType
+from pyut.enums.ResourceTextType import ResourceTextType
 
 from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
