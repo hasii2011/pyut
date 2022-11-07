@@ -21,7 +21,6 @@ from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
-from org.pyut.ui.Mediator import Mediator
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine
 
 
@@ -50,10 +49,6 @@ class TestUmlFrame(unittest.TestCase):
     def setUp(self):
         """
         """
-        # Initialize mediator and error manager
-        mediator: Mediator = Mediator()
-        # mediator.setScriptMode()
-
         errorManager: ErrorManager = ErrorManager()
         errorManager.changeType(ErrorViewTypes.RAISE_ERROR_VIEW)
 

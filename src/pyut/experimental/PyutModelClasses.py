@@ -31,8 +31,6 @@ from pyutmodel.PyutType import PyutType
 # noinspection PyUnresolvedReferences
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 # noinspection PyUnresolvedReferences
-from org.pyut.ui.Mediator import Mediator
-# noinspection PyUnresolvedReferences
 from org.pyut.general.Singleton import Singleton
 
 # noinspection PyUnresolvedReferences

@@ -8,6 +8,8 @@ from wx import CommandEvent
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_CLOSE
 from wx import Frame
+from wx import ID_REDO
+from wx import ID_UNDO
 
 from wx import NewIdRef as wxNewIdRef
 
@@ -15,9 +17,8 @@ from wx import NewIdRef as wxNewIdRef
 from org.pyut.general.Globals import _
 from miniogl.DiagramFrame import DiagramFrame
 
-from pyut.preferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.tools.Toolbox import Toolbox as Toolbox2
 
 from org.pyut.ui.tools.Tool import Tool
@@ -59,10 +60,6 @@ class TestToolboxFrame(App):
 
         self._diagramFrame: DiagramFrame = diagramFrame
 
-        self._mediator:     Mediator     = Mediator()
-
-        self._mediator.registerAppFrame(frameTop)
-
         self._toolIconOwner: ToolIconOwner = ToolIconOwner()
         self._toolIconOwner.initializeIcons()
 
@@ -86,7 +83,7 @@ class TestToolboxFrame(App):
                      self._toolRelAggregation, self._toolRelAssociation, self._toolRelNote,
                      self._toolSDInstance, self._toolSDMessage
                      ]:
-            self._mediator.registerTool(tool)
+            pass
 
         self.displayToolbox(PYUT_MENU_CATEGORY)
         self.displayToolbox(PYUT_TOOLS_CATEGORY)
@@ -96,7 +93,7 @@ class TestToolboxFrame(App):
         Emulate call from mediator
         """
         # noinspection PyProtectedMember
-        toolbox: Toolbox2 = Toolbox2(parentWindow=self._diagramFrame, toolboxOwner=self._mediator._toolboxOwner)    # Non-Pythonic usage of protected variable
+        toolbox: Toolbox2 = Toolbox2(parentWindow=self._diagramFrame, toolboxOwner=self)    # Non-Pythonic usage of protected variable
         toolbox.setCategory(category)
 
         toolbox.Show(True)
@@ -139,12 +136,12 @@ class TestToolboxFrame(App):
         self._toolUndo = Tool("pyut-undo", toolIconOwner.toolUndo,
                               caption=_("Undo"), tooltip=_("Undo the last performed action"),
                               category=PYUT_MENU_CATEGORY,
-                              actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_UNDO)
+                              actionCallback=self.__onToolActionCallback, wxID=ID_UNDO)
 
         self._toolRedo = Tool("pyut-redo", toolIconOwner.toolRedo,
                               caption=_("Redo"), tooltip=_("Redo the last undone action"),
                               category=PYUT_MENU_CATEGORY,
-                              actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_REDO)
+                              actionCallback=self.__onToolActionCallback, wxID=ID_REDO)
 
     def _createElementTools(self):
 
