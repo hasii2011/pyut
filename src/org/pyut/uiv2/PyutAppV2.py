@@ -26,7 +26,7 @@ from wx import Yield as wxYield
 
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.errorcontroller.ErrorManager import ErrorManager
+from pyut.errorcontroller.ErrorManager import ErrorManager
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

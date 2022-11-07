@@ -11,7 +11,7 @@ from wx import Frame
 from wx import ID_ANY
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.errorcontroller.ErrorManager import ErrorManager
+from pyut.errorcontroller.ErrorManager import ErrorManager
 
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 
@@ -19,7 +19,7 @@ from org.pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
-from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
+from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine

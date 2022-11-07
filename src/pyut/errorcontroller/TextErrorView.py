@@ -2,7 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.errorcontroller.IErrorView import IErrorView
+from pyut.errorcontroller.IErrorView import IErrorView
 
 from org.pyut.general.Globals import _
 
@@ -29,7 +29,7 @@ class TextErrorView(IErrorView):
 
     def newFatalError(self, msg, title=None, parent=None):
 
-        from org.pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
+        from pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
 
         if title is None:
             title = _("An error occurred...")

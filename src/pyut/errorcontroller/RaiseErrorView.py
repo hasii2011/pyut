@@ -1,6 +1,6 @@
 
-from org.pyut.errorcontroller.IErrorView import IErrorView
-from org.pyut.errorcontroller.PyutException import PyutException
+from pyut.errorcontroller.IErrorView import IErrorView
+from pyut.errorcontroller.PyutException import PyutException
 
 
 class RaiseErrorView(IErrorView):

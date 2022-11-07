@@ -23,7 +23,7 @@ from wx import NewIdRef as wxNewIdRef
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.enums.ResourceTextType import ResourceTextType
 
-from org.pyut.errorcontroller.ErrorManager import ErrorManager
+from pyut.errorcontroller.ErrorManager import ErrorManager
 
 
 @dataclass

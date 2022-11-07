@@ -20,7 +20,7 @@ from wx import Locale
 from org.pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.errorcontroller.ErrorManager import ErrorManager
+from pyut.errorcontroller.ErrorManager import ErrorManager
 
 # Constants
 DEFAULT_LANG = "en"

@@ -1,7 +1,7 @@
 from wx import CommandEvent
 
-from org.pyut.errorcontroller.ErrorManager import ErrorManager
-from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
+from pyut.errorcontroller.ErrorManager import ErrorManager
+from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 
 class DebugErrorViews:

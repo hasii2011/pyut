@@ -9,7 +9,7 @@ from wx import ICON_INFORMATION
 from wx import MessageDialog
 from wx import OK
 
-from org.pyut.errorcontroller.IErrorView import IErrorView
+from pyut.errorcontroller.IErrorView import IErrorView
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
@@ -37,7 +37,7 @@ class GraphicErrorView(IErrorView):
 
     def newFatalError(self, msg, title=None, parent=None):
 
-        from org.pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
+        from pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
 
         if title is None:
             title = _("An error occurred...")

@@ -9,7 +9,7 @@ from unittest import TestSuite
 
 from tests.TestBase import TestBase
 
-from org.pyut.errorcontroller.ErrorManager import ErrorManager
+from pyut.errorcontroller.ErrorManager import ErrorManager
 
 
 class TestErrorManager(TestBase):

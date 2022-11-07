@@ -8,11 +8,11 @@ from sys import exc_info
 
 from traceback import extract_tb
 
-from org.pyut.errorcontroller.IErrorView import IErrorView
-from org.pyut.errorcontroller.GraphicErrorView import GraphicErrorView
-from org.pyut.errorcontroller.TextErrorView import TextErrorView
-from org.pyut.errorcontroller.RaiseErrorView import RaiseErrorView
-from org.pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
+from pyut.errorcontroller.IErrorView import IErrorView
+from pyut.errorcontroller.GraphicErrorView import GraphicErrorView
+from pyut.errorcontroller.TextErrorView import TextErrorView
+from pyut.errorcontroller.RaiseErrorView import RaiseErrorView
+from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from org.pyut.PyutConstants import PyutConstants
 
