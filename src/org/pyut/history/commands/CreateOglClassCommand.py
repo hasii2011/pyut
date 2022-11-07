@@ -12,10 +12,11 @@ from pyutmodel.PyutClass import PyutClass
 
 from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-from org.pyut.uiv2.eventengine.Events import EventType
+from pyut.preferences.PyutPreferences import PyutPreferences
 
+from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
+from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 

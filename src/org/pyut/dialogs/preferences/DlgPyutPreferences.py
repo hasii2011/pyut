@@ -35,7 +35,7 @@ from wx.lib.agw.fmresources import INB_FIT_LABELTEXT
 from wx.lib.agw.labelbook import LabelBook
 
 from org.pyut.dialogs.preferences.ValuePreferencesBook import ValuePreferencesBook
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
 from org.pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
 from org.pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousPreferences

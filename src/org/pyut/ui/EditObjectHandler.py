@@ -29,7 +29,7 @@ from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 if TYPE_CHECKING:
     from org.pyut.ui.umlframes.UmlFrame import UmlFrame

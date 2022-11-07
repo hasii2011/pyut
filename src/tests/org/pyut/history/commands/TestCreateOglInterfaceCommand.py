@@ -24,7 +24,7 @@ from pyutmodel.PyutInterface import PyutInterface
 from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
 

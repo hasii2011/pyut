@@ -9,7 +9,6 @@ from logging import getLogger
 
 from importlib import import_module
 
-from wx import ID_ANY
 from wx import OK
 
 from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
@@ -31,7 +30,7 @@ from ogl.OglInterface2 import OglInterface2
 from org.pyut.history.commands.MethodInformation import MethodInformation
 from org.pyut.history.commands.OglShapeCommand import OglShapeCommand
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class CreateOglInterfaceCommand(OglShapeCommand):

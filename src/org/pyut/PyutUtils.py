@@ -20,7 +20,7 @@ from wx import ScreenDC
 from wx import Size
 from wx import NewIdRef as wxNewIdRef
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.enums.ResourceTextType import ResourceTextType
 
 from pyut.errorcontroller.ErrorManager import ErrorManager

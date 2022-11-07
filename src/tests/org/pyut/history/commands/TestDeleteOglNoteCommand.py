@@ -9,11 +9,14 @@ from unittest import main as unitTestMain
 from unittest.mock import Mock
 
 from pkg_resources import resource_filename
+
 from wx import App
 
 from pyutmodel.PyutNote import PyutNote
+
 from ogl.OglNote import OglNote
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 

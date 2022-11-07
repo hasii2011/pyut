@@ -1,3 +1,4 @@
+
 from wx import ALL
 from wx import BoxSizer
 from wx import ID_ANY
@@ -8,9 +9,7 @@ from wx import Window
 
 from org.pyut.ui.widgets.TextContainer import TextContainer
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
-from org.pyut.general.Globals import _
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class DefaultNamesContainer(Panel):
@@ -24,10 +23,10 @@ class DefaultNamesContainer(Panel):
 
         szrNames: BoxSizer = BoxSizer(VERTICAL)
 
-        interfaceNameContainer: TextContainer = TextContainer(parent=self, labelText=_('Interface Name'), valueChangedCallback=self._interfaceNameChanged)
-        useCaseNameContainer:   TextContainer = TextContainer(parent=self, labelText=_('Use Case Name'),  valueChangedCallback=self._useCaseNameChanged)
-        actorNameContainer:     TextContainer = TextContainer(parent=self, labelText=_('Actor Name'),     valueChangedCallback=self._actorNameChanged)
-        methodNameContainer:    TextContainer = TextContainer(parent=self, labelText=_('Method Name'),    valueChangedCallback=self._methodNameChanged)
+        interfaceNameContainer: TextContainer = TextContainer(parent=self, labelText='Interface Name', valueChangedCallback=self._interfaceNameChanged)
+        useCaseNameContainer:   TextContainer = TextContainer(parent=self, labelText='Use Case Name',  valueChangedCallback=self._useCaseNameChanged)
+        actorNameContainer:     TextContainer = TextContainer(parent=self, labelText='Actor Name',     valueChangedCallback=self._actorNameChanged)
+        methodNameContainer:    TextContainer = TextContainer(parent=self, labelText='Method Name',    valueChangedCallback=self._methodNameChanged)
 
         szrNames.Add(interfaceNameContainer, 0, ALL, DefaultNamesContainer.HORIZONTAL_GAP)
         szrNames.Add(useCaseNameContainer,   0, ALL, DefaultNamesContainer.HORIZONTAL_GAP)

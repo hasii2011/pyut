@@ -14,10 +14,7 @@ from org.pyut.ui.widgets.TextContainer import TextContainer
 
 from ogl.OglDimensions import OglDimensions
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
-
-# noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class NoteAttributesContainer(Panel):
@@ -54,7 +51,7 @@ class NoteAttributesContainer(Panel):
 
     def _createDefaultNoteTextContainer(self, parent: Window) -> TextContainer:
 
-        noteTextContainer: TextContainer = TextContainer(parent=parent, labelText=_('Default Note Text'), valueChangedCallback=self.__noteTextChanged)
+        noteTextContainer: TextContainer = TextContainer(parent=parent, labelText='Default Note Text', valueChangedCallback=self.__noteTextChanged)
 
         self._noteTextContainer = noteTextContainer
 
@@ -62,7 +59,7 @@ class NoteAttributesContainer(Panel):
 
     def _createDefaultNoteSizeContainer(self, parent: Window) -> DimensionsContainer:
 
-        noteWidthHeight:  DimensionsContainer = DimensionsContainer(parent=parent, displayText=_('Note Width/Height'),
+        noteWidthHeight:  DimensionsContainer = DimensionsContainer(parent=parent, displayText='Note Width/Height',
                                                                     valueChangedCallback=self.__noteDimensionsChanged)
 
         self._noteDimensions = noteWidthHeight

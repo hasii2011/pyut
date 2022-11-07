@@ -6,7 +6,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from core.PluginManager import PluginManager
 from wx import BOTH
 from wx import FD_MULTIPLE
 from wx import FD_OPEN
@@ -34,6 +33,7 @@ from wx import PostEvent as wxPostEvent
 from wx import Yield as wxYield
 
 from core.types.PluginDataTypes import PluginIDMap
+from core.PluginManager import PluginManager
 
 from org.pyut.PyutUtils import PyutUtils
 from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
@@ -45,7 +45,7 @@ from org.pyut.general.Globals import _
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.PyutPrintout import PyutPrintout

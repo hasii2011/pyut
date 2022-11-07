@@ -24,7 +24,8 @@ from wx import DefaultPosition
 from wx import WindowIDRef
 from wx import NewIdRef as wxNewIdRef
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
+
 from org.pyut.ui.tools.Tool import Category
 from org.pyut.ui.tools.Tool import Tool
 

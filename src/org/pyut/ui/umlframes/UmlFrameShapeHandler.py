@@ -26,7 +26,7 @@ from ogl.OglText import OglText
 from ogl.OglUseCase import OglUseCase
 from ogl.OglLink import OglLink
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class UmlFrameShapeHandler(DiagramFrame):

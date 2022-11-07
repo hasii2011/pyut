@@ -12,7 +12,7 @@ from org.pyut.ui.widgets.TextContainer import TextContainer
 
 from ogl.OglDimensions import OglDimensions
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

@@ -2,10 +2,10 @@
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.preferences.BaseSubPreference import BaseSubPreference
+from pyut.preferences.BaseSubPreference import BaseSubPreference
 
-from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
-from org.pyut.preferences.PreferencesCommon import PreferencesCommon
+from pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
+from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
 class DebugPreferences(BaseSubPreference):

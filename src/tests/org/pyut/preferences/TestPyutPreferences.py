@@ -14,7 +14,7 @@ from unittest import TestSuite
 
 from tests.TestBase import TestBase
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class TestPyutPreferences(TestBase):

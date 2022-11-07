@@ -7,7 +7,6 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
-from core.types.Types import SelectedOglObjectsCallback
 from wx import ClientDC
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
@@ -37,10 +36,11 @@ from miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from pyutmodel.PyutClass import PyutClass
 
+from ogl.OglObject import OglObject
 from ogl.OglInterface2 import OglInterface2
+
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
-from ogl.OglObject import OglObject
 
 from oglio.Types import OglClasses
 from ogl.OglLink import OglLink
@@ -54,11 +54,12 @@ from oglio.Types import OglDocument
 from oglio.Types import OglLinks
 from oglio.Types import OglProject
 
+from core.types.Types import OglObjects
 from core.types.Types import FrameInformation
 from core.types.Types import FrameSize
 from core.types.Types import FrameInformationCallback
 from core.types.Types import FrameSizeCallback
-from core.types.Types import OglObjects
+from core.types.Types import SelectedOglObjectsCallback
 
 from org.pyut.PyutUtils import PyutUtils
 
@@ -84,9 +85,10 @@ from org.pyut.uiv2.ProjectTree import ProjectTree
 from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from org.pyut.uiv2.PyutProjectV2 import UmlFrameType
+
 from org.pyut.uiv2.Types import createDiagramFrame
+
 from org.pyut.uiv2.eventengine.EventEngine import NewNamedProjectCallback
-from org.pyut.uiv2.eventengine.Events import AddShapeEvent
 
 from org.pyut.uiv2.eventengine.Events import EVENT_ACTIVE_PROJECT_INFORMATION
 from org.pyut.uiv2.eventengine.Events import EVENT_ADD_SHAPE
@@ -110,6 +112,7 @@ from org.pyut.uiv2.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
 from org.pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from org.pyut.uiv2.eventengine.Events import EventType
+from org.pyut.uiv2.eventengine.Events import AddShapeEvent
 from org.pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
 from org.pyut.uiv2.eventengine.Events import FrameInformationEvent
 from org.pyut.uiv2.eventengine.Events import FrameSizeEvent
@@ -723,7 +726,8 @@ class PyutUIV2(IPyutUI):
         if umlObjects is not None:
             for obj in umlObjects:
                 if obj.IsSelected():
-                    selectedObjects.append(obj)
+                    from core.types.Types import OglObjectType
+                    selectedObjects.append(cast(OglObjectType, obj))
 
         cb: SelectedOglObjectsCallback = event.callback
 

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from wx import Bitmap
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
 from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 

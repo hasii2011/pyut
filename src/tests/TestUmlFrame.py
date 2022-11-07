@@ -15,7 +15,7 @@ from pyut.errorcontroller.ErrorManager import ErrorManager
 
 from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 

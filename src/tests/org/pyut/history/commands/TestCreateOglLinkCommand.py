@@ -18,7 +18,7 @@ from miniogl.Shape import Shape
 from ogl.OglClass import OglClass
 from ogl.OglInheritance import OglInheritance
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 

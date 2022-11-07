@@ -9,7 +9,7 @@ from unittest import main as unitTestMain
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.dialogs.tips.DlgTips import DlgTips
 from org.pyut.dialogs.tips.TipHandler import TipHandler

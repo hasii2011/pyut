@@ -40,11 +40,9 @@ from org.pyut.general.LineSplitter import LineSplitter
 
 from org.pyut.dialogs.tips.TipHandler import TipHandler
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
-
-from org.pyut.general.Globals import _
 
 # DEFAULT SIZE
 DEFAULT_WIDTH  = 600
@@ -65,7 +63,7 @@ class DlgTips(Dialog):
         """
         dialogStyle: int  = RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT | STAY_ON_TOP
         dialogSize:  Size = Size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
-        super().__init__(parent, ID_ANY, _("Tips"), DefaultPosition, dialogSize, dialogStyle)
+        super().__init__(parent, ID_ANY, "Tips", DefaultPosition, dialogSize, dialogStyle)
 
         self._prefs:        PyutPreferences = PyutPreferences()
         self._tipsFileName: str = PyutUtils.retrieveResourcePath(f'{DlgTips.TIPS_FILENAME}')
@@ -105,8 +103,8 @@ class DlgTips(Dialog):
 
     def _buildLowerDialog(self) -> BoxSizer:
 
-        nextTipButton:     Button = Button(self, ID_SET_NEXT_TIP, _("&Next tip"))
-        previousTipButton: Button = Button(self, ID_SET_PREVIOUS_TIP, _("&Previous tip"))
+        nextTipButton:     Button = Button(self, ID_SET_NEXT_TIP, "&Next tip")
+        previousTipButton: Button = Button(self, ID_SET_PREVIOUS_TIP, "&Previous tip")
 
         loSizer: BoxSizer = BoxSizer(HORIZONTAL)
 
@@ -114,7 +112,7 @@ class DlgTips(Dialog):
         loSizer.Add(nextTipButton,     WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
         loSizer.Add(Button(self, ID_OK, "&Ok"), 0, ALL | ALIGN_CENTER, 5)
 
-        self._chkShowTips: CheckBox = CheckBox(self, ID_CHK_SHOW_TIPS, _("&Show tips at startup"))
+        self._chkShowTips: CheckBox = CheckBox(self, ID_CHK_SHOW_TIPS, "&Show tips at startup")
 
         showTips: bool = self._prefs.showTipsOnStartup
         self._chkShowTips.SetValue(showTips)

@@ -15,7 +15,8 @@ from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutModifier import PyutModifier
 from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 

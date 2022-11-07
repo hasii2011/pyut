@@ -30,7 +30,7 @@ from core.types.PluginDataTypes import FormatName
 
 from org.pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 

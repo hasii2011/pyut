@@ -15,7 +15,7 @@ from wx import NewIdRef as wxNewIdRef
 from org.pyut.general.Globals import _
 from miniogl.DiagramFrame import DiagramFrame
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
 from org.pyut.ui.Mediator import Mediator
 from org.pyut.ui.tools.Toolbox import Toolbox as Toolbox2

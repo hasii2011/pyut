@@ -11,8 +11,6 @@ from copy import copy
 
 from os import path as osPath
 
-from ogl.sd.OglSDInstance import OglSDInstance
-from ogl.sd.OglSDMessage import OglSDMessage
 from wx import FD_OVERWRITE_PROMPT
 from wx import FD_SAVE
 from wx import ICON_ERROR
@@ -33,7 +31,8 @@ from wx import Yield as wxYield
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.general.exceptions.UnsupportedFileTypeException import UnsupportedFileTypeException
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
+
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
@@ -61,6 +60,9 @@ from oglio.Types import OglDocument
 from oglio.Types import OglDocumentTitle
 from ogl.OglActor import OglActor
 from ogl.OglUseCase import OglUseCase
+
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 
 from oglio.toXmlV10.OglToDom import OglToDom
 

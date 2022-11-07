@@ -16,7 +16,7 @@ from pyutmodel.PyutObject import PyutObject
 
 from ogl.OglObject import OglObject
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 

@@ -7,7 +7,7 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 

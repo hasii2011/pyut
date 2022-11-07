@@ -7,10 +7,10 @@ from org.pyut.general.datatypes.Position import Position
 
 from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
-from org.pyut.preferences.BaseSubPreference import BaseSubPreference
+from pyut.preferences.BaseSubPreference import BaseSubPreference
 
-from org.pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
-from org.pyut.preferences.PreferencesCommon import PreferencesCommon
+from pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
+from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
 class GeneralPreferences(BaseSubPreference):

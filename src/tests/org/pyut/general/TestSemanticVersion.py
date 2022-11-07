@@ -9,7 +9,7 @@ from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from org.pyut.general.SemanticVersion import SemanticVersionError
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 

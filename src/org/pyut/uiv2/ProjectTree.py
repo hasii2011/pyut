@@ -19,7 +19,7 @@ from wx import Window
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2

@@ -57,7 +57,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.PyutConstants import PyutConstants
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.general.datatypes.Dimensions import Dimensions
 from org.pyut.general.datatypes.Position import Position

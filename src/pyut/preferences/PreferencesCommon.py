@@ -8,7 +8,7 @@ from typing import cast
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
-from org.pyut.preferences.BaseSubPreference import BaseSubPreference
+from pyut.preferences.BaseSubPreference import BaseSubPreference
 
 PREFS_NAME_VALUES = Dict[str, str]
 
@@ -19,9 +19,9 @@ class PreferencesCommon(BaseSubPreference):
 
     preferencesFileLocationAndName: str = cast(str, None)
 
-    def init(self, *args, **kwds):
+    def init(self, *args, **kwargs):
 
-        BaseSubPreference.init(self, *args, **kwds)
+        BaseSubPreference.init(self, *args, **kwargs)
 
     @staticmethod
     def determinePreferencesLocation():

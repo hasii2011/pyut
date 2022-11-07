@@ -17,7 +17,7 @@ from pyutmodel.PyutNote import PyutNote
 
 from ogl.OglNote import OglNote
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 

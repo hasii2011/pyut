@@ -48,7 +48,7 @@ from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutType import PyutType
 
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.uiv2.eventengine.EventEngine import EventEngine

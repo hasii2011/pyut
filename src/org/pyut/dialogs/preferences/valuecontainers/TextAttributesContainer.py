@@ -34,7 +34,7 @@ from org.pyut.general.Globals import _
 from ogl.OglTextFontFamily import OglTextFontFamily
 from ogl.OglDimensions import OglDimensions
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class TextAttributesContainer(Panel):

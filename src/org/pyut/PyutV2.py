@@ -15,7 +15,7 @@ from json import load as jsonLoad
 
 from org.pyut.PyutConstants import PyutConstants
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.uiv2.PyutAppV2 import PyutAppV2
 

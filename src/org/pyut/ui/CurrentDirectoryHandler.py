@@ -6,7 +6,7 @@ from os import getcwd
 from os import sep as osSeparator
 
 from org.pyut.general.Singleton import Singleton
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class CurrentDirectoryHandler(Singleton):

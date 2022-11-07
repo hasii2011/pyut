@@ -15,11 +15,11 @@ from ogl.OglDimensions import OglDimensions
 
 from ogl.OglTextFontFamily import OglTextFontFamily
 
-from org.pyut.preferences.DebugPreferences import DebugPreferences
-from org.pyut.preferences.FeaturePreferences import FeaturePreferences
-from org.pyut.preferences.GeneralPreferences import GeneralPreferences
-from org.pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
-from org.pyut.preferences.PreferencesCommon import PreferencesCommon
+from pyut.preferences.DebugPreferences import DebugPreferences
+from pyut.preferences.FeaturePreferences import FeaturePreferences
+from pyut.preferences.GeneralPreferences import GeneralPreferences
+from pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
+from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 from ogl.preferences.OglPreferences import OglPreferences
 

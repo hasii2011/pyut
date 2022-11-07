@@ -9,6 +9,12 @@ from logging import getLogger
 
 # noinspection PyPackageRequirements
 from deprecated import deprecated
+from ogl.OglActor import OglActor
+from ogl.OglClass import OglClass
+from ogl.OglNote import OglNote
+from ogl.OglText import OglText
+from ogl.OglUseCase import OglUseCase
+from ogl.sd.OglSDInstance import OglSDInstance
 
 from wx import EVT_CLOSE
 from wx import EVT_PAINT
@@ -48,7 +54,7 @@ from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 DEFAULT_WIDTH = 3000
 A4_FACTOR:    float = 1.41
 
-UmlObject  = Union[OglObject, OglLink, OglSDMessage, OglInterface2]
+UmlObject  = Union[OglClass, OglLink, OglNote, OglText, OglSDMessage, OglSDInstance, OglActor, OglUseCase, OglInterface2]
 UmlObjects = NewType('UmlObjects', List[UmlObject])
 
 
@@ -224,7 +230,8 @@ class UmlFrame(UmlFrameShapeHandler):
         umlObjects: UmlObjects = UmlObjects([])
 
         for s in self._diagram.GetShapes():
-            if isinstance(s, (OglObject, OglLink, OglSDMessage, OglInterface2)):
+            # This is a duplicate of the UmlObject, since I cannot use NewType
+            if isinstance(s, (OglClass, OglLink, OglNote, OglText, OglSDMessage, OglSDInstance, OglActor, OglUseCase, OglInterface2)):
                 umlObjects.append(s)
 
         return umlObjects

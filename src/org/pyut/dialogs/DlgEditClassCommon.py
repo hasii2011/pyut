@@ -40,7 +40,7 @@ from pyutmodel.PyutMethod import PyutMethod
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine

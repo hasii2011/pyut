@@ -9,7 +9,7 @@ from logging import getLogger
 
 from os import linesep as osLineSep
 
-from org.pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 TipLinesType = NewType('TipLinesType', List[str])
 
