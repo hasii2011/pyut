@@ -30,7 +30,7 @@ from wx import BoxSizer
 from wx import ComboBox
 from wx import Window
 
-from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
+from pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
 from miniogl.MiniOglColorEnum import MiniOglColorEnum
 

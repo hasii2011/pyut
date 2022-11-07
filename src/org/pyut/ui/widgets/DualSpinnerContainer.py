@@ -17,7 +17,7 @@ from wx import Window
 
 from wx import NewIdRef as wxNewIdRef
 
-from org.pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
+from pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
 
 
 @dataclass

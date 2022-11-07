@@ -24,7 +24,7 @@ from wx import CommandEvent
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutType import PyutType
 
-from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils
 

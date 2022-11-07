@@ -34,13 +34,13 @@ from wx.lib.agw.fmresources import INB_FIT_LABELTEXT
 
 from wx.lib.agw.labelbook import LabelBook
 
-from org.pyut.dialogs.preferences.ValuePreferencesBook import ValuePreferencesBook
+from pyut.dialogs.preferences.ValuePreferencesBook import ValuePreferencesBook
 from pyut.preferences import PyutPreferences
 
-from org.pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
-from org.pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousPreferences
-from org.pyut.dialogs.preferences.PositioningPreferences import PositioningPreferences
-from org.pyut.dialogs.preferences.BackgroundPreferences import BackgroundPreferences
+from pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
+from pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousPreferences
+from pyut.dialogs.preferences.PositioningPreferences import PositioningPreferences
+from pyut.dialogs.preferences.BackgroundPreferences import BackgroundPreferences
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _

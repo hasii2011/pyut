@@ -11,8 +11,8 @@ from org.pyut.PyutUtils import PyutUtils
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.dialogs.tips.DlgTips import DlgTips
-from org.pyut.dialogs.tips.TipHandler import TipHandler
+from pyut.dialogs.tips.DlgTips import DlgTips
+from pyut.dialogs.tips.TipHandler import TipHandler
 
 from tests.TestBase import TestBase
 

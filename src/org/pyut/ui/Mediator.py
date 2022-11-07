@@ -1,13 +1,15 @@
 
+from typing import cast
+
+from logging import Logger
+from logging import getLogger
+
 from typing import TYPE_CHECKING
 
+from org.pyut.PyutUtils import PyutUtils
 
 if TYPE_CHECKING:
-    from org.pyut.ui.umlframes.UmlFrame import UmlObjects
     from org.pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
-
-from org.pyut.dialogs.DlgEditClass import *         # Have to do this to avoid cyclical dependency
-
 
 from org.pyut.general.Singleton import Singleton
 

@@ -29,9 +29,9 @@ from wx import SizeEvent
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
-from org.pyut.dialogs.DebugListControl import DebugListControl
+from pyut.dialogs.DebugListControl import DebugListControl
 
 
 class DlgPyutDebug(BaseDlgEdit):

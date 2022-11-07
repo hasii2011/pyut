@@ -21,13 +21,13 @@ from ogl.OglInterface2 import OglInterface2
 from ogl.OglText import OglText
 from ogl.OglClass import OglClass
 
-from org.pyut.dialogs.DlgEditClass import DlgEditClass
-from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
-from org.pyut.dialogs.DlgEditLink import DlgEditLink
-from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
+from pyut.dialogs.DlgEditClass import DlgEditClass
+from pyut.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.dialogs.DlgEditLink import DlgEditLink
+from pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 
-from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

@@ -26,7 +26,7 @@ from org.pyut.general.Globals import _
 
 from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
-from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
+from pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
 
 class GeneralPreferencesPanel(PreferencesPanel):

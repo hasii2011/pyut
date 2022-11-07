@@ -10,10 +10,10 @@ from wx import Window
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-from org.pyut.dialogs.preferences.valuecontainers.ClassContainer import ClassContainer
-from org.pyut.dialogs.preferences.valuecontainers.DefaultNamesContainer import DefaultNamesContainer
-from org.pyut.dialogs.preferences.valuecontainers.NoteAttributesContainer import NoteAttributesContainer
-from org.pyut.dialogs.preferences.valuecontainers.TextAttributesContainer import TextAttributesContainer
+from pyut.dialogs.preferences.valuecontainers.ClassContainer import ClassContainer
+from pyut.dialogs.preferences.valuecontainers.DefaultNamesContainer import DefaultNamesContainer
+from pyut.dialogs.preferences.valuecontainers.NoteAttributesContainer import NoteAttributesContainer
+from pyut.dialogs.preferences.valuecontainers.TextAttributesContainer import TextAttributesContainer
 
 from pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
 

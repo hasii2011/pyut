@@ -36,7 +36,7 @@ from ogl.OglNote import OglNote
 from ogl.OglObject import OglObject
 from ogl.OglLink import OglLink
 
-from org.pyut.dialogs.DlgRemoveLink import DlgRemoveLink
+from pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
 from org.pyut.history.commands.Command import Command
 from org.pyut.history.commands.CommandGroup import CommandGroup

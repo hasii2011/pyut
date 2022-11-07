@@ -41,7 +41,7 @@ from org.pyut.general.Globals import _
 from org.pyut.general.Lang import LANGUAGES
 from org.pyut.general.Lang import DEFAULT_LANG
 
-from org.pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
+from pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
 
 class MiscellaneousPreferences(PreferencesPanel):

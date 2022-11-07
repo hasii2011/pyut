@@ -36,7 +36,7 @@ from core.types.PluginDataTypes import PluginIDMap
 from core.PluginManager import PluginManager
 
 from org.pyut.PyutUtils import PyutUtils
-from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
+from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
 from pyut.enums.DiagramType import DiagramType
 

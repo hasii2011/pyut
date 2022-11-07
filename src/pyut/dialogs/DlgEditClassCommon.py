@@ -30,8 +30,8 @@ from wx import VERTICAL
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.dialogs.DlgEditComment import DlgEditComment
-from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.dialogs.DlgEditComment import DlgEditComment
+from pyut.dialogs.DlgEditMethod import DlgEditMethod
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface

@@ -63,8 +63,8 @@ from core.types.Types import SelectedOglObjectsCallback
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.dialogs.DlgEditClass import DlgEditClass
-from org.pyut.dialogs.DlgEditDocument import DlgEditDocument
+from pyut.dialogs.DlgEditClass import DlgEditClass
+from pyut.dialogs.DlgEditDocument import DlgEditDocument
 
 from pyut.enums.DiagramType import DiagramType
 

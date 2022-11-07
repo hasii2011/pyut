@@ -11,7 +11,7 @@ from importlib import import_module
 
 from wx import OK
 
-from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.dialogs.DlgEditInterface import DlgEditInterface
 
 from miniogl.AttachmentLocation import AttachmentLocation
 

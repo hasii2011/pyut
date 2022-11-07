@@ -6,7 +6,7 @@ from logging import getLogger
 
 from wx import Window
 
-from org.pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
+from pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
 
 from org.pyut.ui.widgets.DualSpinnerContainer import DualSpinnerContainer
 from org.pyut.ui.widgets.DualSpinnerContainer import SpinnerValues

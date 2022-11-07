@@ -12,7 +12,7 @@ from org.pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
 
 from ogl.OglDimensions import OglDimensions
 
-from org.pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
+from pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
 
 
 class DimensionsContainer(DualSpinnerContainer):

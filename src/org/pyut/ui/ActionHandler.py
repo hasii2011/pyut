@@ -68,9 +68,9 @@ from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.dialogs.DlgEditUseCase import DlgEditUseCase
-from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.dialogs.DlgEditUseCase import DlgEditUseCase
+from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 # messages for the status bar
 a = "Click on the source class"

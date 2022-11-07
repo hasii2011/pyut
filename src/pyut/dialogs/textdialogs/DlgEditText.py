@@ -6,7 +6,7 @@ from wx import CommandEvent
 from wx import TextCtrl
 from wx import Window
 
-from org.pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
+from pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
 from pyutmodel.PyutText import PyutText
 

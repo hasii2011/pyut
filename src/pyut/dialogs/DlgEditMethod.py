@@ -48,9 +48,9 @@ from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
-from org.pyut.dialogs.DlgEditCode import DlgEditCode
-from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
-from org.pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.dialogs.DlgEditCode import DlgEditCode
+from pyut.dialogs.DlgEditParameter import DlgEditParameter
+from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from org.pyut.PyutUtils import PyutUtils
 

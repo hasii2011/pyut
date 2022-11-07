@@ -43,8 +43,8 @@ from pyutmodel.PyutStereotype import PyutStereotype
 
 from ogl.OglClass import OglClass
 
-from org.pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
-from org.pyut.dialogs.DlgEditField import DlgEditField
+from pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
+from pyut.dialogs.DlgEditField import DlgEditField
 
 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 

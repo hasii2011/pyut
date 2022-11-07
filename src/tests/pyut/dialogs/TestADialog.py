@@ -23,15 +23,15 @@ from wx import StaticBox
 from wx import StaticBoxSizer
 from wx import NewIdRef as wxNewIdRef
 
-from org.pyut.dialogs.DlgEditClass import DlgEditClass
-from org.pyut.dialogs.DlgEditCode import DlgEditCode
-from org.pyut.dialogs.DlgEditField import DlgEditField
-from org.pyut.dialogs.DlgEditInterface import DlgEditInterface
-from org.pyut.dialogs.DlgEditMethod import DlgEditMethod
-from org.pyut.dialogs.DlgEditParameter import DlgEditParameter
-from org.pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
-from org.pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from org.pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.dialogs.DlgEditClass import DlgEditClass
+from pyut.dialogs.DlgEditCode import DlgEditCode
+from pyut.dialogs.DlgEditField import DlgEditField
+from pyut.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.dialogs.DlgEditParameter import DlgEditParameter
+from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
+from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
