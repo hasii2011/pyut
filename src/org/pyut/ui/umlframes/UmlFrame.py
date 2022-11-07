@@ -35,7 +35,7 @@ from org.pyut.PyutUtils import PyutUtils
 
 from org.pyut.history.HistoryManager import HistoryManager
 
-from org.pyut.experimental.GraphicalHandler import GraphicalHandler
+from pyut.experimental.GraphicalHandler import GraphicalHandler
 
 # noinspection PyProtectedMember
 from org.pyut.general.Globals import _
@@ -301,7 +301,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Calls addHierarchy with the Pyut class list.
         """
-        import org.pyut.experimental.PyutModelClasses as pdc
+        import pyut.experimental.PyutModelClasses as pdc
 
         BeginBusyCursor()
 
@@ -315,7 +315,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Calls addHierarchy with the Ogl class list.
         """
-        import org.pyut.experimental.PyutModelClasses as pdc
+        import pyut.experimental.PyutModelClasses as pdc
 
         BeginBusyCursor()
 

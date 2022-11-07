@@ -39,7 +39,7 @@ class GraphicalHandler:
         """
         # BeginBusyCursor()
 
-        from org.pyut.experimental.PythonMetaClassDataHandler import PythonMetaClassDataHandler
+        from pyut.experimental.PythonMetaClassDataHandler import PythonMetaClassDataHandler
 
         cg: PythonMetaClassDataHandler = PythonMetaClassDataHandler()
         classes: List[type] = cg.getClassListFromNames(display)

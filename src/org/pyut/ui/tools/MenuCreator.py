@@ -430,7 +430,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, editMenuHandler.onSelectAll, id=ID_SELECTALL)
 
         if self._prefs.debugErrorViews is True:
-            from org.pyut.experimental.DebugErrorViews import DebugErrorViews
+            from pyut.experimental.DebugErrorViews import DebugErrorViews
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView,    id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugRaiseErrorView,   id=SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW)
