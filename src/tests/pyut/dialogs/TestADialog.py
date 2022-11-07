@@ -57,7 +57,7 @@ from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from tests.TestBase import TestBase
 
 
-from tests.org.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
+from tests.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
 
 
 class TestADialog(App):

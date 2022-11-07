@@ -27,9 +27,9 @@ class TestAll:
     """
     NOT_TESTS: List[str] = ['TestAll',
                             'TestWxOgl', 'TestBase', 'TestTemplate',
-                            'org/pyut/ui/tools/TestToolboxFrame',
-                            'org/pyut/history/commands/TestCommandCommon',
-                            'TestUmlFrame', 'org/pyut/dialogs/TestADialog', 'TestGriddedDiagramApplication']
+                            'pyut/ui/tools/TestToolboxFrame',
+                            'pyut/history/commands/TestCommandCommon',
+                            'TestUmlFrame', 'pyut/dialogs/TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
     VERBOSITY_DEFAULT: int = 1  # VERBOSITY_QUIET plus a dot for every successful test or an F for every failure

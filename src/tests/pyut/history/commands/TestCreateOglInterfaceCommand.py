@@ -30,7 +30,7 @@ from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfa
 
 from tests.TestBase import TestBase
 
-from tests.org.pyut.history.commands.TestCommandCommon import TestCommandCommon
+from tests.pyut.history.commands.TestCommandCommon import TestCommandCommon
 
 
 class TestCreateOglInterfaceCommand(TestBase):
