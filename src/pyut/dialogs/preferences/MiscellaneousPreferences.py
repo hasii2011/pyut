@@ -29,7 +29,7 @@ from wx import TextCtrl
 
 from org.pyut.ui.widgets.TextContainer import TextContainer
 
-from org.pyut.PyutConstants import PyutConstants
+from pyut.PyutConstants import PyutConstants
 
 from org.pyut.PyutUtils import PyutUtils
 

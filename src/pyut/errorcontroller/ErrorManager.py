@@ -14,7 +14,7 @@ from pyut.errorcontroller.TextErrorView import TextErrorView
 from pyut.errorcontroller.RaiseErrorView import RaiseErrorView
 from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
-from org.pyut.PyutConstants import PyutConstants
+from pyut.PyutConstants import PyutConstants
 
 from org.pyut.general.Singleton import Singleton
 

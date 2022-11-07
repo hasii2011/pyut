@@ -6,7 +6,7 @@ import sys
 import os
 from typing import cast
 
-from org.pyut.PyutConstants import PyutConstants
+from pyut.PyutConstants import PyutConstants
 from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
 from pyut.preferences.BaseSubPreference import BaseSubPreference
 

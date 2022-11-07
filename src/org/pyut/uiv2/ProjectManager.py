@@ -28,7 +28,7 @@ from wx import EndBusyCursor
 
 from wx import Yield as wxYield
 
-from org.pyut.PyutConstants import PyutConstants
+from pyut.PyutConstants import PyutConstants
 from org.pyut.general.exceptions.UnsupportedFileTypeException import UnsupportedFileTypeException
 
 from pyut.preferences.PyutPreferences import PyutPreferences

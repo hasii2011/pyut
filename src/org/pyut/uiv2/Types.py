@@ -6,7 +6,7 @@ from typing import Union
 
 from wx import Notebook
 
-from org.pyut.PyutConstants import DiagramsLabels
+from pyut.PyutConstants import DiagramsLabels
 
 from pyut.enums.DiagramType import DiagramType
 

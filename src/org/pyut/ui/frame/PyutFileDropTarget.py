@@ -14,7 +14,7 @@ from wx import MessageDialog
 
 from wx import Yield as wxYield
 
-from org.pyut.PyutConstants import PyutConstants
+from pyut.PyutConstants import PyutConstants
 
 from org.pyut.uiv2.eventengine.Events import EventType
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine

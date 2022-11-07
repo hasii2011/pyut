@@ -55,7 +55,7 @@ from pyut.dialogs.tips.DlgTips import DlgTips
 
 from org.pyut.PyutUtils import PyutUtils
 
-from org.pyut.PyutConstants import PyutConstants
+from pyut.PyutConstants import PyutConstants
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
