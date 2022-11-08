@@ -12,9 +12,11 @@ from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
 from org.pyut.ui.tools.Tool import Category
-from org.pyut.uiv2.PluginAdapter import PluginAdapter
-from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyut.uiv2.PluginAdapter import PluginAdapter
+from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class ToolsMenuHandler(BaseMenuHandler):

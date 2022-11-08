@@ -10,8 +10,8 @@ from wx import Menu
 
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class EditMenuHandler(BaseMenuHandler):

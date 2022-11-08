@@ -44,7 +44,6 @@ from pyut.enums.DiagramType import DiagramType
 from pyut.general.Globals import _
 from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
-
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
@@ -54,12 +53,13 @@ from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
 
-from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
+
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 FileNames = NewType('FileNames', List[str])
 
@@ -70,17 +70,15 @@ class FileMenuHandler(BaseMenuHandler):
 
         super().__init__(menu=fileMenu, eventEngine=eventEngine)
 
-        self._lastOpenedFilesIDs: List[int]      = lastOpenFilesIDs
+        self._lastOpenedFilesIDs: List[int]     = lastOpenFilesIDs
         self._pluginManager:      PluginManager = pluginManager
 
-        self.logger: Logger = getLogger(__name__)
-
-        self._preferences:        PyutPreferences = PyutPreferences()
-        self._plugins:            PluginIDMap     = PluginIDMap({})
+        self.logger:       Logger          = getLogger(__name__)
+        self._preferences: PyutPreferences = PyutPreferences()
+        self._plugins:     PluginIDMap     = PluginIDMap({})
 
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
-
-        self._printData: PrintData = cast(PrintData, None)
+        self._printData:               PrintData               = cast(PrintData, None)
 
         self._initPrinting()    # Printing data
         if self._preferences.usev2ui is True:

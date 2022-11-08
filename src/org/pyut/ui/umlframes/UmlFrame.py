@@ -47,9 +47,10 @@ from pyut.experimental.GraphicalHandler import GraphicalHandler
 from pyut.general.Globals import _
 
 from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
-from org.pyut.uiv2.eventengine.Events import AddOglDiagramEvent
-from org.pyut.uiv2.eventengine.Events import AddPyutDiagramEvent
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyut.uiv2.eventengine.Events import AddOglDiagramEvent
+from pyut.uiv2.eventengine.Events import AddPyutDiagramEvent
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 DEFAULT_WIDTH = 3000
 A4_FACTOR:    float = 1.41

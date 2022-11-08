@@ -21,8 +21,8 @@ from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.uiv2.IPyutDocument import IPyutDocument
-from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
+from pyut.uiv2.IPyutDocument import IPyutDocument
+from pyut.uiv2.PyutProjectV2 import PyutProjectV2
 
 DocumentTreeItemIds = NewType('DocumentTreeItemIds', List[TreeItemId])
 

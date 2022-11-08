@@ -39,14 +39,14 @@ from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
-from org.pyut.uiv2.IPyutDocument import IPyutDocument
-from org.pyut.uiv2.IPyutDocument import PyutDocuments
-from org.pyut.uiv2.IPyutProject import IPyutProject
+from pyut.uiv2.IPyutDocument import IPyutDocument
+from pyut.uiv2.IPyutDocument import PyutDocuments
+from pyut.uiv2.IPyutProject import IPyutProject
 
-from org.pyut.uiv2.DiagramNotebook import DiagramNotebook
-from org.pyut.uiv2.ProjectTree import ProjectTree
-from org.pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
-from org.pyut.uiv2.PyutProjectV2 import PyutProjectV2
+from pyut.uiv2.DiagramNotebook import DiagramNotebook
+from pyut.uiv2.ProjectTree import ProjectTree
+from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
+from pyut.uiv2.PyutProjectV2 import PyutProjectV2
 
 from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2

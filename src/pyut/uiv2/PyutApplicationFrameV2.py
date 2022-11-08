@@ -63,21 +63,21 @@ from pyut.general.datatypes.Dimensions import Dimensions
 from pyut.general.datatypes.Position import Position
 
 from pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
-from org.pyut.uiv2.PluginAdapter import PluginAdapter
+from pyut.uiv2.PluginAdapter import PluginAdapter
 
-from org.pyut.uiv2.PyutUIV2 import PyutUIV2
-from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.uiv2.PyutUIV2 import PyutUIV2
+from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
-from org.pyut.uiv2.eventengine.EventEngine import EventEngine
-from org.pyut.uiv2.eventengine.Events import EVENT_SELECT_TOOL
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.Events import SelectToolEvent
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.uiv2.eventengine.Events import EVENT_SELECT_TOOL
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.Events import SelectToolEvent
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
-from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
-from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
-from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
+from pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
+from pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
+from pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
+from pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 
 
 class PyutApplicationFrameV2(Frame):

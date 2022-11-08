@@ -14,10 +14,10 @@ from wx import MessageDialog
 
 from pyut.enums.DiagramType import DiagramType
 
-from org.pyut.uiv2.IPyutDocument import IPyutDocument
-from org.pyut.uiv2.IPyutProject import UmlFrameType
+from pyut.uiv2.IPyutDocument import IPyutDocument
+from pyut.uiv2.IPyutProject import UmlFrameType
 
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class PyutDocumentV2(IPyutDocument):

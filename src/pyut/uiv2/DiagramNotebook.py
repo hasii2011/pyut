@@ -50,26 +50,26 @@ from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.umlframes.UmlFrame import UmlObject
 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-from org.pyut.uiv2.eventengine.Events import EVENT_COPY_SHAPES
-from org.pyut.uiv2.eventengine.Events import EVENT_CUT_SHAPES
-from org.pyut.uiv2.eventengine.Events import EVENT_PASTE_SHAPES
-from org.pyut.uiv2.eventengine.Events import EVENT_SELECT_ALL_SHAPES
-from org.pyut.uiv2.eventengine.Events import EVENT_REDO
-from org.pyut.uiv2.eventengine.Events import EVENT_UNDO
-from org.pyut.uiv2.eventengine.Events import EVENT_CUT_SHAPE
-from org.pyut.uiv2.eventengine.Events import EVENT_DESELECT_ALL_SHAPES
+from pyut.uiv2.eventengine.Events import EVENT_COPY_SHAPES
+from pyut.uiv2.eventengine.Events import EVENT_CUT_SHAPES
+from pyut.uiv2.eventengine.Events import EVENT_PASTE_SHAPES
+from pyut.uiv2.eventengine.Events import EVENT_SELECT_ALL_SHAPES
+from pyut.uiv2.eventengine.Events import EVENT_REDO
+from pyut.uiv2.eventengine.Events import EVENT_UNDO
+from pyut.uiv2.eventengine.Events import EVENT_CUT_SHAPE
+from pyut.uiv2.eventengine.Events import EVENT_DESELECT_ALL_SHAPES
 
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.Events import CutShapesEvent
-from org.pyut.uiv2.eventengine.Events import CopyShapesEvent
-from org.pyut.uiv2.eventengine.Events import PasteShapesEvent
-from org.pyut.uiv2.eventengine.Events import SelectAllShapesEvent
-from org.pyut.uiv2.eventengine.Events import RedoEvent
-from org.pyut.uiv2.eventengine.Events import UndoEvent
-from org.pyut.uiv2.eventengine.Events import CutShapeEvent
-from org.pyut.uiv2.eventengine.Events import DeSelectAllShapesEvent
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.Events import CutShapesEvent
+from pyut.uiv2.eventengine.Events import CopyShapesEvent
+from pyut.uiv2.eventengine.Events import PasteShapesEvent
+from pyut.uiv2.eventengine.Events import SelectAllShapesEvent
+from pyut.uiv2.eventengine.Events import RedoEvent
+from pyut.uiv2.eventengine.Events import UndoEvent
+from pyut.uiv2.eventengine.Events import CutShapeEvent
+from pyut.uiv2.eventengine.Events import DeSelectAllShapesEvent
 
 
 PyutObjects = NewType('PyutObjects', List[PyutObject])

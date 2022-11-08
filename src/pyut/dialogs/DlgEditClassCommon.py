@@ -41,9 +41,11 @@ from pyutmodel.PyutMethod import PyutMethod
 from pyut.general.Globals import _
 
 from pyut.preferences.PyutPreferences import PyutPreferences
-from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyut.uiv2.eventengine.Events import EventType
 
 CommonClassType = Union[PyutClass, PyutInterface]
 

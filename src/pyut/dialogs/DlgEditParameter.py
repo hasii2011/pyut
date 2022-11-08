@@ -30,7 +30,7 @@ from pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 [
     ID_TXT_PARAM_NAME,

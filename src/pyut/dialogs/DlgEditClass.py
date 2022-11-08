@@ -52,7 +52,7 @@ from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 from pyut.general.Globals import _
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 # Assign constants
 

@@ -10,13 +10,13 @@ from unittest import main as unitTestMain
 from wx import CommandEvent
 from wx import PyEventBinder
 
-from org.pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
-from org.pyut.uiv2.eventengine.Events import EVENT_UPDATE_TREE_ITEM_NAME
-from org.pyut.uiv2.eventengine.Events import NewProjectEvent
-from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
+from pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
+from pyut.uiv2.eventengine.Events import EVENT_UPDATE_TREE_ITEM_NAME
+from pyut.uiv2.eventengine.Events import NewProjectEvent
+from pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 from tests.TestBase import TestBase
 
-from org.pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.Events import EventType
 
 
 class TestEventType(TestBase):

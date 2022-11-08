@@ -31,7 +31,7 @@ from org.pyut.ui.tools.ToolIconOwner import ToolIconOwner
 
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
-from org.pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.uiv2 import ToolBoxHandler
 
 PYUT_TOOLS_CATEGORY: Category = Category('Pyut Tools')
 PYUT_MENU_CATEGORY:  Category = Category('PyUt Menu')

@@ -21,7 +21,7 @@ from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
-from org.pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.uiv2.eventengine.EventEngine import EventEngine
 
 
 class PyUtApp(App):

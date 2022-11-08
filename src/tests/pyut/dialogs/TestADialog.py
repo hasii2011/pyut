@@ -51,8 +51,8 @@ from pyutmodel.PyutType import PyutType
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.uiv2.eventengine.EventEngine import EventEngine
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine import EventEngine
+from pyut.uiv2.eventengine import IEventEngine
 
 from tests.TestBase import TestBase
 

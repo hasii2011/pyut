@@ -4,7 +4,7 @@ from typing import cast
 from dataclasses import dataclass
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-from org.pyut.uiv2.IPyutProject import IPyutProject
+from pyut.uiv2.IPyutProject import IPyutProject
 
 
 @dataclass

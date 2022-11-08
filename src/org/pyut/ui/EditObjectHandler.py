@@ -36,8 +36,9 @@ if TYPE_CHECKING:
     from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
     from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.Events import EventType
+
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class EditObjectHandler:

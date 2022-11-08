@@ -20,7 +20,7 @@ from pyutmodel.PyutInterface import PyutInterface
 
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class DlgEditInterface(DlgEditClassCommon):

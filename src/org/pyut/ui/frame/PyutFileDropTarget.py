@@ -16,8 +16,8 @@ from wx import Yield as wxYield
 
 from pyut.PyutConstants import PyutConstants
 
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 FileNames = NewType('FileNames', List[str])
 

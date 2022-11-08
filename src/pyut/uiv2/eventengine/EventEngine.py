@@ -16,33 +16,33 @@ from ogl.OglObject import OglObject
 
 from pyut.enums.DiagramType import DiagramType
 
-from org.pyut.uiv2.IPyutProject import IPyutProject
-from org.pyut.uiv2.eventengine.Events import AddShapeEvent
-from org.pyut.uiv2.eventengine.Events import FrameInformationEvent
-from org.pyut.uiv2.eventengine.Events import NewNamedProjectEvent
-from org.pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
-from org.pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
+from pyut.uiv2.IPyutProject import IPyutProject
+from pyut.uiv2.eventengine.Events import AddShapeEvent
+from pyut.uiv2.eventengine.Events import FrameInformationEvent
+from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
+from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
+from pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
 
-from org.pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
-from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
+from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
 
-from org.pyut.uiv2.eventengine.Events import EditClassEvent
-from org.pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
-from org.pyut.uiv2.eventengine.Events import CutShapeEvent
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
-from org.pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
-from org.pyut.uiv2.eventengine.Events import InsertProjectEvent
-from org.pyut.uiv2.eventengine.Events import NewDiagramEvent
-from org.pyut.uiv2.eventengine.Events import OpenProjectEvent
-from org.pyut.uiv2.eventengine.Events import SelectToolEvent
-from org.pyut.uiv2.eventengine.Events import SetToolActionEvent
-from org.pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
-from org.pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
-from org.pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
+from pyut.uiv2.eventengine.Events import EditClassEvent
+from pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
+from pyut.uiv2.eventengine.Events import CutShapeEvent
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
+from pyut.uiv2.eventengine.Events import MiniProjectInformationEvent
+from pyut.uiv2.eventengine.Events import InsertProjectEvent
+from pyut.uiv2.eventengine.Events import NewDiagramEvent
+from pyut.uiv2.eventengine.Events import OpenProjectEvent
+from pyut.uiv2.eventengine.Events import SelectToolEvent
+from pyut.uiv2.eventengine.Events import SetToolActionEvent
+from pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
+from pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
+from pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
-from org.pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 from core.types.Types import FrameInformationCallback
 

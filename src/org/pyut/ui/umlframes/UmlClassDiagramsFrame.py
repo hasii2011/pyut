@@ -25,7 +25,7 @@ from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from pyut.general.CustomEvents import ClassNameChangedEvent
 from pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 CreatedClassesType = namedtuple('CreatedClassesType', 'pyutClass, oglClass')
 

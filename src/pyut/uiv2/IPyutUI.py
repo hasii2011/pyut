@@ -1,12 +1,9 @@
 
 from abc import ABCMeta
-from abc import abstractmethod
 
 from wx import Frame
 from wx import ID_ANY
 from wx import SplitterWindow
-
-from org.pyut.uiv2.IPyutProject import IPyutProject
 
 
 class MyMeta(ABCMeta, type(SplitterWindow)):        # type: ignore

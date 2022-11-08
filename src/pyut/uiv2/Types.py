@@ -12,7 +12,7 @@ from pyut.enums.DiagramType import DiagramType
 
 from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]
 

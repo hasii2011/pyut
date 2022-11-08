@@ -34,10 +34,10 @@ from ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 
-from org.pyut.uiv2.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
-from org.pyut.uiv2.eventengine.Events import EVENT_ADD_PYUT_DIAGRAM
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
+from pyut.uiv2.eventengine.Events import EVENT_ADD_PYUT_DIAGRAM
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class UmlDiagramsFrame(UmlFrame):

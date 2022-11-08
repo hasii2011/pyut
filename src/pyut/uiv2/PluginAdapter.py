@@ -22,12 +22,12 @@ from pyut.general.PyutVersion import PyutVersion
 
 from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
-from org.pyut.uiv2.IPyutDocument import IPyutDocument
-from org.pyut.uiv2.IPyutProject import IPyutProject
+from pyut.uiv2.IPyutDocument import IPyutDocument
+from pyut.uiv2.IPyutProject import IPyutProject
 
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
-from org.pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 NO_PLUGIN_PROJECT = cast(PluginProject, None)
 

@@ -32,7 +32,7 @@ from pyut.errorcontroller.ErrorManager import ErrorManager
 from pyut.general.Globals import _
 
 from pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
-from org.pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
+from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
 
 
 class PyutAppV2(wxApp):

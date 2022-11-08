@@ -1,3 +1,4 @@
+
 from wx import CANCEL
 from wx import CAPTION
 from wx import CommandEvent
@@ -9,9 +10,9 @@ from wx import STAY_ON_TOP
 from wx import Dialog
 from wx import Sizer
 
-from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
-from org.pyut.uiv2.eventengine.Events import EventType
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class BaseDlgEdit(Dialog):

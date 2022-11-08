@@ -22,7 +22,8 @@ from pyut.general.Globals import _
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.PyutUtils import PyutUtils
-from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class HelpMenuHandler(BaseMenuHandler):
