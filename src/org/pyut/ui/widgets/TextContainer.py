@@ -16,7 +16,7 @@ from wx import Window
 from wx import NewIdRef as wxNewIdRef
 
 from pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
-from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
+from pyut.general.Globals import WX_SIZER_CHANGEABLE
 
 
 class TextContainer(BoxSizer):

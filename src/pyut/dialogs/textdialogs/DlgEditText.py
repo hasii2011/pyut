@@ -12,7 +12,7 @@ from pyutmodel.PyutText import PyutText
 
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 [
     ID_TEXT_LINE
 ] = PyutUtils.assignID(1)

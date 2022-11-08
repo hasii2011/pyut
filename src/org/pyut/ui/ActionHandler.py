@@ -21,7 +21,7 @@ from miniogl.Constants import SKIP_EVENT
 
 from ogl.OglClass import OglClass
 
-from org.pyut.general.Singleton import Singleton
+from pyut.general.Singleton import Singleton
 
 from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 

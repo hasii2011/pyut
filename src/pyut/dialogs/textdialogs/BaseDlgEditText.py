@@ -25,7 +25,7 @@ from wx import HORIZONTAL
 from wx import RESIZE_BORDER
 from wx import RIGHT
 
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 
 class BaseDlgEditText(Dialog):

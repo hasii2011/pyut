@@ -11,7 +11,7 @@ from pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import 
 from org.pyut.ui.widgets.DualSpinnerContainer import DualSpinnerContainer
 from org.pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
 
-from org.pyut.general.datatypes.Position import Position
+from pyut.general.datatypes.Position import Position
 
 
 class PositionContainer(DualSpinnerContainer):

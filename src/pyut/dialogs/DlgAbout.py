@@ -49,7 +49,7 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
-from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
+from pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 from pyut.resources.img import ImgPyut
 

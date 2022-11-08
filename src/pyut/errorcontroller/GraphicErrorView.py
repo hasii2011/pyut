@@ -12,7 +12,7 @@ from wx import OK
 from pyut.errorcontroller.IErrorView import IErrorView
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 
 class GraphicErrorView(IErrorView):

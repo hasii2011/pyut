@@ -6,7 +6,7 @@ from typing import Union
 
 from wx import Window
 
-from org.pyut.general.datatypes.Dimensions import Dimensions
+from pyut.general.datatypes.Dimensions import Dimensions
 from org.pyut.ui.widgets.DualSpinnerContainer import DualSpinnerContainer
 from org.pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
 

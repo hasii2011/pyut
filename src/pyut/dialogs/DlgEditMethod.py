@@ -37,8 +37,8 @@ from wx import Button
 from wx import Event
 from wx import FlexGridSizer
 
-from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
-from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
+from pyut.general.Globals import WX_SIZER_CHANGEABLE
+from pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
 
 from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutMethod import PyutModifiers
@@ -55,7 +55,7 @@ from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 from pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 [

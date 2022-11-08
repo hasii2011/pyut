@@ -17,7 +17,7 @@ from wx import Dialog
 from wx import NewIdRef as wxNewIdRef
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface

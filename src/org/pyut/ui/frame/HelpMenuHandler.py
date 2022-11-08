@@ -14,10 +14,10 @@ from pyut.dialogs.DlgAbout import DlgAbout
 from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
 
-from org.pyut.general.PyutVersion import PyutVersion
+from pyut.general.PyutVersion import PyutVersion
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
@@ -54,9 +54,9 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        from org.pyut.general.PyutVersion import PyutVersion
-        from org.pyut.general.GitHubAdapter import GitHubAdapter
-        from org.pyut.general.SemanticVersion import SemanticVersion
+        from pyut.general.PyutVersion import PyutVersion
+        from pyut.general.GitHubAdapter import GitHubAdapter
+        from pyut.general.SemanticVersion import SemanticVersion
 
         wxBeginBusyCursor()
         githubAdapter: GitHubAdapter   = GitHubAdapter()

@@ -34,9 +34,9 @@ from wx import VERTICAL
 
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
-from org.pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
-from org.pyut.general.LineSplitter import LineSplitter
+from pyut.general.Globals import WX_SIZER_CHANGEABLE
+from pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
+from pyut.general.LineSplitter import LineSplitter
 
 from pyut.dialogs.tips.TipHandler import TipHandler
 

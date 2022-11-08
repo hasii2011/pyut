@@ -29,7 +29,7 @@ from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 from pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 from ogl.OglTextFontFamily import OglTextFontFamily
 from ogl.OglDimensions import OglDimensions

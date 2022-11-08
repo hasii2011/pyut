@@ -14,7 +14,7 @@ from wx import ID_UNDO
 from wx import NewIdRef as wxNewIdRef
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 from miniogl.DiagramFrame import DiagramFrame
 
 from pyut.preferences.PyutPreferences import PyutPreferences

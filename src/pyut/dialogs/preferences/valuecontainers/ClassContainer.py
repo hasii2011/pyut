@@ -15,7 +15,7 @@ from ogl.OglDimensions import OglDimensions
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 
 class ClassContainer(Panel):

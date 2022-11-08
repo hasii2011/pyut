@@ -11,7 +11,7 @@ from wx import Size
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
+from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
 from tests.TestBase import TestBase
 

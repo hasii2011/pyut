@@ -19,11 +19,11 @@ from pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
 from org.pyut.ui.widgets.PositionContainer import PositionContainer
 
-from org.pyut.general.datatypes.Dimensions import Dimensions
-from org.pyut.general.datatypes.Position import Position
+from pyut.general.datatypes.Dimensions import Dimensions
+from pyut.general.datatypes.Position import Position
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 
 class PositioningPreferences(PreferencesPanel):

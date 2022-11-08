@@ -4,7 +4,7 @@ from typing import List
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.general.Globals import cmp
+from pyut.general.Globals import cmp
 
 """
    

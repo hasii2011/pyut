@@ -24,7 +24,7 @@ from wx import NewIdRef as wxNewIdRef
 from wx.lib.sized_controls import SizedPanel
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 from pyutmodel.PyutMethod import SourceCode
 
 TXT_CODE: int = wxNewIdRef()

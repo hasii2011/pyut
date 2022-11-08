@@ -33,13 +33,13 @@ from pyut.PyutConstants import PyutConstants
 
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.Globals import WX_SIZER_CHANGEABLE
+from pyut.general.Globals import WX_SIZER_CHANGEABLE
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
-from org.pyut.general.Lang import LANGUAGES
-from org.pyut.general.Lang import DEFAULT_LANG
+from pyut.general.Lang import LANGUAGES
+from pyut.general.Lang import DEFAULT_LANG
 
 from pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 

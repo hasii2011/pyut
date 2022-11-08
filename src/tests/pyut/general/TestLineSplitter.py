@@ -14,7 +14,7 @@ from wx import App
 
 from tests.TestBase import TestBase
 
-from org.pyut.general.LineSplitter import LineSplitter
+from pyut.general.LineSplitter import LineSplitter
 
 
 class TestLineSplitter(TestBase):

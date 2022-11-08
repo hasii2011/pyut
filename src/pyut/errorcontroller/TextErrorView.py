@@ -4,7 +4,7 @@ from logging import getLogger
 
 from pyut.errorcontroller.IErrorView import IErrorView
 
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 
 class TextErrorView(IErrorView):

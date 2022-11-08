@@ -41,8 +41,8 @@ from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from pyut.enums.DiagramType import DiagramType
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
-from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+from pyut.general.Globals import _
+from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
 
 from pyut.preferences.PyutPreferences import PyutPreferences

@@ -43,7 +43,7 @@ from pyut.dialogs.preferences.PositioningPreferences import PositioningPreferenc
 from pyut.dialogs.preferences.BackgroundPreferences import BackgroundPreferences
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 
 class DlgPyutPreferences(Dialog):

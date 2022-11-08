@@ -34,7 +34,7 @@ from wx import Window
 
 from wx import PostEvent as wxPostEvent
 
-from org.pyut.general.CustomEvents import ClassNameChangedEvent
+from pyut.general.CustomEvents import ClassNameChangedEvent
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
@@ -49,7 +49,7 @@ from pyut.dialogs.DlgEditField import DlgEditField
 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 from pyut.PyutUtils import PyutUtils
 
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine

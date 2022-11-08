@@ -28,11 +28,11 @@ from core.ToolPluginInterface import ToolPluginInterface
 from core.types.PluginDataTypes import PluginIDMap
 from core.types.PluginDataTypes import FormatName
 
-from org.pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
+from pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
+from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
@@ -42,7 +42,7 @@ from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames

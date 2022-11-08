@@ -16,7 +16,7 @@ from pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 from org.pyut.uiv2.IPyutDocument import IPyutDocument
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 [
     TXT_DOCUMENT_NAME

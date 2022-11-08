@@ -11,10 +11,10 @@ from unittest import main as unitTestMain
 
 from tests.TestBase import TestBase
 
-from org.pyut.general.StackTraceFormatter import StackTraceFormatter
-from org.pyut.general.StackTraceFormatter import StackTraceList
-from org.pyut.general.StackTraceFormatter import CodeLines
-from org.pyut.general.StackTraceFormatter import CompressedLines
+from pyut.general.StackTraceFormatter import StackTraceFormatter
+from pyut.general.StackTraceFormatter import StackTraceList
+from pyut.general.StackTraceFormatter import CodeLines
+from pyut.general.StackTraceFormatter import CompressedLines
 
 
 class TestStackTraceFormatter(TestBase):

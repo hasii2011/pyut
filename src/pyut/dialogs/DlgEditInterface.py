@@ -19,7 +19,7 @@ from pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from pyutmodel.PyutInterface import PyutInterface
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 

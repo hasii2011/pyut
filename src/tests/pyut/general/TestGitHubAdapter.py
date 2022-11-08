@@ -6,13 +6,13 @@ from typing import cast
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from org.pyut.general.SemanticVersion import SemanticVersion
+from pyut.general.SemanticVersion import SemanticVersion
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.general.GitHubAdapter import GitHubAdapter
+from pyut.general.GitHubAdapter import GitHubAdapter
 
 
 class TestGitHubAdapter(TestBase):

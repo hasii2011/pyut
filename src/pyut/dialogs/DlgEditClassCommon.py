@@ -38,7 +38,7 @@ from pyutmodel.PyutInterface import PyutInterface
 from pyutmodel.PyutMethod import PyutMethod
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 from org.pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation

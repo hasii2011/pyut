@@ -29,7 +29,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.errorcontroller.ErrorManager import ErrorManager
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 from pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 from org.pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2

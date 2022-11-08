@@ -14,7 +14,7 @@ from pyutmodel.PyutNote import PyutNote
 
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 [
     TXT_NOTE
 ] = PyutUtils.assignID(1)

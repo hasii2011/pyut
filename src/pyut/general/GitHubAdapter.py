@@ -9,7 +9,7 @@ from github.GitRelease import GitRelease
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 
-from org.pyut.general.SemanticVersion import SemanticVersion
+from pyut.general.SemanticVersion import SemanticVersion
 
 
 class GitHubAdapter:

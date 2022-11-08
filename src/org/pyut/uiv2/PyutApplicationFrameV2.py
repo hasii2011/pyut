@@ -37,7 +37,7 @@ from wx import Yield as wxYield
 
 from core.PluginManager import PluginManager
 
-from org.pyut.general.PyutVersion import PyutVersion
+from pyut.general.PyutVersion import PyutVersion
 
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
@@ -59,10 +59,10 @@ from pyut.PyutConstants import PyutConstants
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.general.datatypes.Dimensions import Dimensions
-from org.pyut.general.datatypes.Position import Position
+from pyut.general.datatypes.Dimensions import Dimensions
+from pyut.general.datatypes.Position import Position
 
-from org.pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
+from pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 from org.pyut.uiv2.PluginAdapter import PluginAdapter
 
 from org.pyut.uiv2.PyutUIV2 import PyutUIV2

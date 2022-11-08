@@ -22,9 +22,9 @@ from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 from pyutmodel.PyutMethod import PyutMethod
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
-from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
+from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
 from pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 

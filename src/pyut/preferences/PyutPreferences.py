@@ -7,7 +7,7 @@ from logging import getLogger
 
 from configparser import ConfigParser
 
-from org.pyut.general.Singleton import Singleton
+from pyut.general.Singleton import Singleton
 
 from miniogl.MiniOglColorEnum import MiniOglColorEnum
 from miniogl.MiniOglPenStyle import MiniOglPenStyle
@@ -23,9 +23,9 @@ from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 from ogl.preferences.OglPreferences import OglPreferences
 
-from org.pyut.general.datatypes.Position import Position
-from org.pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
-from org.pyut.general.datatypes.Dimensions import Dimensions
+from pyut.general.datatypes.Position import Position
+from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
+from pyut.general.datatypes.Dimensions import Dimensions
 
 
 class PyutPreferences(Singleton):

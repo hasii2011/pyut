@@ -7,7 +7,7 @@ import os
 from typing import cast
 
 from pyut.PyutConstants import PyutConstants
-from org.pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
+from pyut.general.exceptions import PreferencesLocationNotSet
 from pyut.preferences.BaseSubPreference import BaseSubPreference
 
 PREFS_NAME_VALUES = Dict[str, str]

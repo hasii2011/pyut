@@ -11,7 +11,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.general.datatypes.Dimensions import Dimensions
+from pyut.general.datatypes.Dimensions import Dimensions
 
 
 class TestDimensions(TestBase):

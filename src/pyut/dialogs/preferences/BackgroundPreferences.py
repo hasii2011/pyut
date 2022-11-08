@@ -36,7 +36,7 @@ from miniogl.MiniOglColorEnum import MiniOglColorEnum
 
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 from miniogl.MiniOglPenStyle import MiniOglPenStyle
 
 

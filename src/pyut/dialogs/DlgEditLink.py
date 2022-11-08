@@ -32,7 +32,7 @@ from pyut.PyutUtils import PyutUtils
 from pyutmodel.PyutLink import PyutLink
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 
 from copy import deepcopy
 

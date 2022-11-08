@@ -29,7 +29,7 @@ from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 from pyut.PyutUtils import PyutUtils
 
 # noinspection PyProtectedMember
-from org.pyut.general.Globals import _
+from pyut.general.Globals import _
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 [

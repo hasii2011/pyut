@@ -3,7 +3,7 @@ from typing import cast
 
 from configparser import ConfigParser
 
-from org.pyut.general.Singleton import Singleton
+from pyut.general.Singleton import Singleton
 
 
 class BaseSubPreference(Singleton):

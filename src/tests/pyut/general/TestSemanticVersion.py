@@ -8,13 +8,13 @@ from unittest import TestSuite
 
 from unittest import main as unitTestMain
 
-from org.pyut.general.SemanticVersion import SemanticVersionError
+from pyut.general.SemanticVersion import SemanticVersionError
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
 
-from org.pyut.general.SemanticVersion import SemanticVersion
+from pyut.general.SemanticVersion import SemanticVersion
 
 GOOD_PREVIOUS_BASIC_VERSION: str = '6.1.0'
 GOOD_BASIC_VERSION:          str = '6.2.1'

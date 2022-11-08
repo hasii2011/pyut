@@ -16,7 +16,7 @@ from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from pyut.PyutConstants import PyutConstants
 
-from org.pyut.general.Singleton import Singleton
+from pyut.general.Singleton import Singleton
 
 
 class ErrorManager(Singleton):

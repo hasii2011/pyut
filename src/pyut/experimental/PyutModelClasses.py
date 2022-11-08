@@ -31,7 +31,7 @@ from pyutmodel.PyutType import PyutType
 # noinspection PyUnresolvedReferences
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 # noinspection PyUnresolvedReferences
-from org.pyut.general.Singleton import Singleton
+from pyut.general.Singleton import Singleton
 
 # noinspection PyUnresolvedReferences
 from ogl.OglObject import OglObject

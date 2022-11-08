@@ -21,8 +21,8 @@ from org.pyut.uiv2.PyutAppV2 import PyutAppV2
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
-from org.pyut.general.Lang import Lang
-from org.pyut.general.PyutVersion import PyutVersion
+from pyut.general.Lang import Lang
+from pyut.general.PyutVersion import PyutVersion
 
 
 class PyutV2:

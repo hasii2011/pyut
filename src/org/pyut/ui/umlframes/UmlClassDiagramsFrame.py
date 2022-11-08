@@ -23,8 +23,8 @@ from ogl.OglLinkFactory import getOglLinkFactory
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
-from org.pyut.general.CustomEvents import ClassNameChangedEvent
-from org.pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
+from pyut.general.CustomEvents import ClassNameChangedEvent
+from pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
 from org.pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 CreatedClassesType = namedtuple('CreatedClassesType', 'pyutClass, oglClass')
