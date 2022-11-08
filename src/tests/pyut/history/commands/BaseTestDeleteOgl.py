@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from unittest.mock import Mock
 from unittest.mock import PropertyMock
 
-from org.pyut.history.commands.Command import Command
+from pyut.history.commands.Command import Command
 
 from miniogl.Diagram import Diagram
 

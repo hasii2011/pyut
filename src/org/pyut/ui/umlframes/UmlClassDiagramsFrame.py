@@ -3,9 +3,9 @@ from typing import cast
 
 from collections import namedtuple
 
-from org.pyut.history.commands.CommandGroup import CommandGroup
-from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
-from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+from pyut.history.commands.CommandGroup import CommandGroup
+from pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
+from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 from pyutmodel.ModelTypes import ClassName
 from pyutmodel.ModelTypes import Implementors

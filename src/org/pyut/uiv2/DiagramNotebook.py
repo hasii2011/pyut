@@ -38,12 +38,12 @@ from ogl.OglLink import OglLink
 
 from pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
-from org.pyut.history.commands.Command import Command
-from org.pyut.history.commands.CommandGroup import CommandGroup
-from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
-from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
-from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
+from pyut.history.commands.Command import Command
+from pyut.history.commands.CommandGroup import CommandGroup
+from pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
+from pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
+from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+from pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
@@ -256,7 +256,7 @@ class DiagramNotebook(Notebook):
         Args:
             event:
         """
-        from org.pyut.history.HistoryManager import HistoryManager
+        from pyut.history.HistoryManager import HistoryManager
 
         currentFrame: UmlDiagramsFrame = self.currentNotebookFrame
         if currentFrame is None:
@@ -274,7 +274,7 @@ class DiagramNotebook(Notebook):
         Args:
             event:
         """
-        from org.pyut.history.HistoryManager import HistoryManager
+        from pyut.history.HistoryManager import HistoryManager
 
         currentFrame: UmlDiagramsFrame = self.currentNotebookFrame
         if currentFrame is None:

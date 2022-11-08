@@ -1,9 +1,9 @@
 
 from typing import cast
 
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
-from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 
 from pyutmodel.PyutNote import PyutNote
 

@@ -20,7 +20,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from org.pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
+from pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
 from tests.pyut.history.commands.BaseTestDeleteOgl import BaseTestDeleteOgl
 
 

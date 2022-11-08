@@ -4,10 +4,10 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.history.commands.Command import Command
+from pyut.history.commands.Command import Command
 
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenizeValue
 
 
 class PrintCommand(Command):

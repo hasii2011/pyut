@@ -6,21 +6,21 @@ from logging import getLogger
 
 from importlib import import_module
 
-from org.pyut.history.commands.Command import Command
+from pyut.history.commands.Command import Command
 
-from org.pyut.history.HistoryUtils import COMMAND_BEGIN_ID
-from org.pyut.history.HistoryUtils import COMMAND_CLASS_ID
-from org.pyut.history.HistoryUtils import COMMAND_END_ID
-from org.pyut.history.HistoryUtils import COMMAND_MODULE_ID
-from org.pyut.history.HistoryUtils import GROUP_BEGIN_ID
-from org.pyut.history.HistoryUtils import GROUP_COMMENT_ID
-from org.pyut.history.HistoryUtils import GROUP_END_ID
-from org.pyut.history.HistoryUtils import TOKEN_BEGIN
-from org.pyut.history.HistoryUtils import TOKEN_END
+from pyut.history.HistoryUtils import COMMAND_BEGIN_ID
+from pyut.history.HistoryUtils import COMMAND_CLASS_ID
+from pyut.history.HistoryUtils import COMMAND_END_ID
+from pyut.history.HistoryUtils import COMMAND_MODULE_ID
+from pyut.history.HistoryUtils import GROUP_BEGIN_ID
+from pyut.history.HistoryUtils import GROUP_COMMENT_ID
+from pyut.history.HistoryUtils import GROUP_END_ID
+from pyut.history.HistoryUtils import TOKEN_BEGIN
+from pyut.history.HistoryUtils import TOKEN_END
 
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenize
+from pyut.history.HistoryUtils import tokenizeValue
 
 
 class CommandGroup:

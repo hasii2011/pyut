@@ -10,7 +10,7 @@ from ogl.OglUtils import OglUtils
 
 from pyutmodel.PyutClass import PyutClass
 
-from org.pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
+from pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

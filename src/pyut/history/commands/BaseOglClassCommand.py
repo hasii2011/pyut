@@ -1,8 +1,8 @@
 
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenizeValue
 
-from org.pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
+from pyut.history.commands.DeleteOglLinkedObjectCommand import DeleteOglLinkedObjectCommand
 
 from pyut.general.Globals import cmp
 

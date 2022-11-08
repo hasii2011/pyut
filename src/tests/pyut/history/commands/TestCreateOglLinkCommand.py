@@ -10,8 +10,8 @@ from unittest.mock import Mock
 
 from wx import App
 
-from org.pyut.history.HistoryManager import HistoryManager
-from org.pyut.history.commands.CommandGroup import CommandGroup
+from pyut.history.HistoryManager import HistoryManager
+from pyut.history.commands.CommandGroup import CommandGroup
 
 from miniogl.Shape import Shape
 
@@ -24,7 +24,7 @@ from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from tests.TestBase import TestBase
 
-from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 # for testDeSerializeLink
 PARENT_ID: int = 0
@@ -78,7 +78,7 @@ class TestCreateOglLinkCommand(TestBase):
             '<BEGIN_COMMAND_GROUP>'
             '<GROUP_COMMENT=Create link>'
             '<BEGIN_COMMAND>'
-            '<COMMAND_MODULE=org.pyut.history.commands.CreateOglLinkCommand>'
+            '<COMMAND_MODULE=pyut.history.commands.CreateOglLinkCommand>'
             '<COMMAND_CLASS=CreateOglLinkCommand>'
             f'<srcId={CHILD_ID}><dstId={PARENT_ID}>'
             '<srcPos=(264.0, 195.0)><dstPos=(414.0, 450.0)><linkType=INHERITANCE><linkId=2>'

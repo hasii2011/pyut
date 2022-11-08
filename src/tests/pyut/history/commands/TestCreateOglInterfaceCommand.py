@@ -26,7 +26,7 @@ from ogl.OglInterface2 import OglInterface2
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+from pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
 
 from tests.TestBase import TestBase
 

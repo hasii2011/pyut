@@ -8,10 +8,10 @@ from logging import getLogger
 
 from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
-from org.pyut.history.commands.CommandGroup import CommandGroup
-from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+from pyut.history.commands.CommandGroup import CommandGroup
+from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
-from org.pyut.history.HistoryManager import HistoryManager
+from pyut.history.HistoryManager import HistoryManager
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutMethod import PyutMethod
@@ -34,11 +34,9 @@ class GraphicalHandler:
         Classes come from self introspection !!!
         OK, it's too big, but it's not a feature, just a toy.
 
-        @author L. Burgbacher <lb@alawa.ch>
-        @since 1.4
+        Args:
+            display:
         """
-        # BeginBusyCursor()
-
         from pyut.experimental.PythonMetaClassDataHandler import PythonMetaClassDataHandler
 
         cg: PythonMetaClassDataHandler = PythonMetaClassDataHandler()

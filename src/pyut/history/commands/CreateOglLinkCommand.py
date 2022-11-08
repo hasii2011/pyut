@@ -8,7 +8,7 @@ from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutSDMessage import PyutSDMessage
 from pyutmodel.PyutLink import PyutLink
 
-from org.pyut.history.commands.Command import Command
+from pyut.history.commands.Command import Command
 
 from ogl.OglClass import OglClass
 from ogl.OglLink import OglLink
@@ -20,8 +20,8 @@ from ogl.sd.OglSDMessage import OglSDMessage
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenizeValue
 
 
 class CreateOglLinkCommand(Command):
@@ -152,7 +152,7 @@ class CreateOglLinkCommand(Command):
         """
         # create the command to delete an oglLink without add it to the group, then
         # just execute the destruction of the link.
-        from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
+        from pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
         cmd = DelOglLinkCommand(self._link)
         cmd.setGroup(self.getGroup())
         cmd.execute()

@@ -13,7 +13,7 @@ from wx import ID_ANY
 from pyut.PyutUtils import PyutUtils
 from pyut.errorcontroller.ErrorManager import ErrorManager
 
-from org.pyut.history.HistoryUtils import HISTORY_FILE_NAME
+from pyut.history.HistoryUtils import HISTORY_FILE_NAME
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

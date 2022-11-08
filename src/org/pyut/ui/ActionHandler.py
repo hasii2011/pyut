@@ -347,8 +347,8 @@ class ActionHandler(Singleton):
 
     def createLollipopInterface(self, umlFrame: 'UmlDiagramsFrame', implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
-        from org.pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
-        from org.pyut.history.commands.CommandGroup import CommandGroup
+        from pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+        from pyut.history.commands.CommandGroup import CommandGroup
 
         attachmentAnchor.setYouAreTheSelectedAnchor()
 
@@ -364,8 +364,8 @@ class ActionHandler(Singleton):
 
     def _createOglClass(self, umlFrame, x: int, y: int):
 
-        from org.pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
-        from org.pyut.history.commands.CommandGroup import CommandGroup
+        from pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
+        from pyut.history.commands.CommandGroup import CommandGroup
 
         cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y, eventEngine=self._eventEngine)
         group: CommandGroup          = CommandGroup("Create class")
@@ -415,8 +415,8 @@ class ActionHandler(Singleton):
 
     def _createLink(self, umlFrame):
 
-        from org.pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
-        from org.pyut.history.commands.CommandGroup import CommandGroup
+        from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+        from pyut.history.commands.CommandGroup import CommandGroup
 
         linkType = LINK_TYPE[self._currentAction]
         cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)

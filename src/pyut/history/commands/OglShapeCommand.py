@@ -1,8 +1,8 @@
 
-from org.pyut.history.commands.Command import Command
-from org.pyut.history.commands.MethodInformation import MethodInformation
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.commands.Command import Command
+from pyut.history.commands.MethodInformation import MethodInformation
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenizeValue
 
 
 class OglShapeCommand(Command):

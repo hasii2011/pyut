@@ -15,12 +15,12 @@ from pkg_resources import resource_filename
 
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.history.commands.Command import Command
-from org.pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
-from org.pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
-from org.pyut.history.commands.CommandGroup import CommandGroup
+from pyut.history.commands.Command import Command
+from pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
+from pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
+from pyut.history.commands.CommandGroup import CommandGroup
 
-from org.pyut.history.HistoryManager import HistoryManager
+from pyut.history.HistoryManager import HistoryManager
 
 from tests.TestBase import TestBase
 

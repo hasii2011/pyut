@@ -1,8 +1,8 @@
 from typing import List
 from typing import Tuple
 
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenizeValue
 
 from pyutmodel.PyutClassCommon import PyutClassCommon
 from pyutmodel.PyutMethod import PyutMethod

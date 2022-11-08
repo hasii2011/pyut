@@ -15,8 +15,8 @@ from pyut.dialogs.DlgEditInterface import DlgEditInterface
 
 from miniogl.AttachmentLocation import AttachmentLocation
 
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenizeValue
 
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from pyutmodel.ModelTypes import ClassName
@@ -27,8 +27,8 @@ from pyutmodel.PyutInterface import PyutInterface
 from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
 
-from org.pyut.history.commands.MethodInformation import MethodInformation
-from org.pyut.history.commands.OglShapeCommand import OglShapeCommand
+from pyut.history.commands.MethodInformation import MethodInformation
+from pyut.history.commands.OglShapeCommand import OglShapeCommand
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

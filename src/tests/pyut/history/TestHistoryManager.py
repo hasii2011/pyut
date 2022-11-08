@@ -13,17 +13,16 @@ from tests.TestBase import TestBase
 
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.history.HistoryManager import HistoryManager
+from pyut.history.HistoryManager import HistoryManager
 
-from org.pyut.history.commands.CommandGroup import CommandGroup
+from pyut.history.commands.CommandGroup import CommandGroup
 
 from tests.resources.testclass.PrintCommand import PrintCommand
 
 
 class TestHistory(TestBase):
     """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
-    This is the unit test of the HistoryManager. It was tested on 21.11.2005,
+    This is the unit test of the HistoryManager.
     and it works perfectly. It's also a good example to see how it works.
 
     Made into a real unit test; Put in Python 3 logging -- 2019 HASII

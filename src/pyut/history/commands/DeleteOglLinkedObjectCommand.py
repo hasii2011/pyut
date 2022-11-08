@@ -1,8 +1,8 @@
 
-from org.pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 
-from org.pyut.history.HistoryUtils import deTokenize
-from org.pyut.history.HistoryUtils import tokenizeValue
+from pyut.history.HistoryUtils import deTokenize
+from pyut.history.HistoryUtils import tokenizeValue
 
 
 class DeleteOglLinkedObjectCommand(DeleteOglObjectCommand):

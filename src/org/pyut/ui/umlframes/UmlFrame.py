@@ -39,7 +39,7 @@ from org.pyut.ui.Actions import ACTION_ZOOM_IN
 
 from pyut.PyutUtils import PyutUtils
 
-from org.pyut.history.HistoryManager import HistoryManager
+from pyut.history.HistoryManager import HistoryManager
 
 from pyut.experimental.GraphicalHandler import GraphicalHandler
 
