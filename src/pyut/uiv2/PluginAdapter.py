@@ -20,7 +20,7 @@ from core.types.Types import SelectedOglObjectsCallback
 from pyut.enums.DiagramType import DiagramType
 from pyut.general.PyutVersion import PyutVersion
 
-from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject

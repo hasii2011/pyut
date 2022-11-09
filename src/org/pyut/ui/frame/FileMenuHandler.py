@@ -46,7 +46,7 @@ from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from pyut.ui.PyutPrintout import PyutPrintout
 
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler

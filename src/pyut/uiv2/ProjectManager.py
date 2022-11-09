@@ -35,7 +35,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-from org.pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
+from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from org.pyut.ui.umlframes.UmlFrame import UmlFrame
 from org.pyut.ui.umlframes.UmlFrame import UmlObjects
 
