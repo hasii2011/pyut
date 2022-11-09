@@ -21,8 +21,8 @@ from wx import ToolBar
 from wx import WindowIDRef
 from wx import Frame
 
-from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
-from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
+from pyut.ui.frame.EditMenuHandler import EditMenuHandler
+from pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
 from pyut.ui.tools.Tool import Category
 from pyut.ui.tools.Tool import Tool

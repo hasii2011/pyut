@@ -49,7 +49,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from pyut.ui.PyutPrintout import PyutPrintout
 
-from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
+from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 

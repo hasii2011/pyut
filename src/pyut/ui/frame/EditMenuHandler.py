@@ -8,7 +8,7 @@ from wx import CommandEvent
 from wx import Menu
 
 
-from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
+from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine

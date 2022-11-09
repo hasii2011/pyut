@@ -34,10 +34,10 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
-from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
-from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
-from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
-from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
+from pyut.ui.frame.EditMenuHandler import EditMenuHandler
+from pyut.ui.frame.FileMenuHandler import FileMenuHandler
+from pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
+from pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 

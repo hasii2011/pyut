@@ -8,7 +8,7 @@ from wx import Menu
 from core.IPluginAdapter import IPluginAdapter
 from core.PluginManager import PluginManager
 
-from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
+from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.ui.tools.SharedTypes import ToolboxIdMap
 from pyut.ui.tools.Tool import Category

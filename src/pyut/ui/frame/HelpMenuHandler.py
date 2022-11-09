@@ -19,7 +19,7 @@ from pyut.general.PyutVersion import PyutVersion
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
 
-from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
+from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.PyutUtils import PyutUtils
 
