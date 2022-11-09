@@ -1,10 +1,12 @@
 
 version: '2.1'
-orbs:
-  python: circleci/python@1.1.0
+
 jobs:
   machine:
     image: ubuntu-2204:current
+
+orbs:
+  python: circleci/python@1.1.0
   build:
     executor: python/default
     steps:
