@@ -15,6 +15,7 @@ from wx import CLOSE_BOX
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import EVT_SIZE
+from wx import ID_ANY
 from wx import LEFT
 from wx import OK
 from wx import ID_OK
@@ -56,9 +57,9 @@ class DlgPyutDebug(BaseDlgEdit):
 
     COLUMN_WIDTH_RATIOS: List[float] = [NAME_PERCENTAGE, LEVEL_PERCENTAGE, DISABLED_PERCENTAGE, PROPAGATE_PERCENTAGE]
 
-    def __init__(self, theParent, theWindowId):
+    def __init__(self, parent):
 
-        super().__init__(theParent, theWindowId, "Debug Pyut", theStyle=CLOSE_BOX | CAPTION | RESIZE_BORDER)
+        super().__init__(parent, ID_ANY, "Debug Pyut", theStyle=CLOSE_BOX | CAPTION | RESIZE_BORDER)
         self.logger: Logger = getLogger(__name__)
 
         hs:        Sizer    = self._createDialogButtonsContainer()
@@ -103,9 +104,9 @@ class DlgPyutDebug(BaseDlgEdit):
         nColumns: int = self._list.GetColumnCount()
         self.logger.info(f'width: {width} nColumns: {nColumns}')
 
-        adjustedWidth = width - DlgPyutDebug.SCROLL_BAR_SPACE
+        adjustedWidth: int = width - DlgPyutDebug.SCROLL_BAR_SPACE
         for x in range(nColumns):
-            colWidth: float = adjustedWidth * DlgPyutDebug.COLUMN_WIDTH_RATIOS[x]
+            colWidth: int = round(adjustedWidth * DlgPyutDebug.COLUMN_WIDTH_RATIOS[x])
             self.logger.info(f'x: {x} colWidth: {colWidth}')
             self._list.SetColumnWidth(x, colWidth)  # Allow room for scroll bar
 

@@ -13,3 +13,4 @@ class DialogNamesEnum(Enum):
     DLG_EDIT_FIELD       = 'DlgEditField'
     DLG_EDIT_METHOD      = 'DlgEditMethod'
     DLG_EDIT_CODE        = 'DlgEditCode'
+    DLG_PYUT_DEBUG       = 'DlgPyutDebug'

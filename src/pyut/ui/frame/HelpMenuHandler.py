@@ -16,9 +16,6 @@ from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 
 from pyut.general.PyutVersion import PyutVersion
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
-
 from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.PyutUtils import PyutUtils
@@ -44,7 +41,7 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        dlg = DlgAbout(self._parent, ID_ANY, _("About PyUt ") + PyutVersion.getPyUtVersion())
+        dlg = DlgAbout(self._parent, ID_ANY, "About PyUt " + PyutVersion.getPyUtVersion())
         dlg.ShowModal()
         dlg.Destroy()
 
@@ -64,14 +61,16 @@ class HelpMenuHandler(BaseMenuHandler):
         latestVersion: SemanticVersion = githubAdapter.getLatestVersionNumber()
 
         myVersion: SemanticVersion = SemanticVersion(PyutVersion.getPyUtVersion())
+        # latestVersion.major = 9        Manual test
         if myVersion < latestVersion:
-            msg = _("PyUt version ") + str(latestVersion) + _(" is available on https://github.com/hasii2011/PyUt/releases")
+            # msg = "PyUt version " + str(latestVersion) + " is available on https://github.com/hasii2011/PyUt/releases"
+            msg = f"PyUt version {str(latestVersion)} is available on https://github.com/hasii2011/PyUt/releases"
         else:
-            msg = _("No newer version yet !")
+            msg = "No newer version yet !"
 
         wxEndBusyCursor()
         wxYield()
-        PyutUtils.displayInformation(msg, _("Check for newer version"), self._parent)
+        PyutUtils.displayInformation(msg, "Check for newer version", self._parent)
 
     # noinspection PyUnusedLocal
     def onHelpWeb(self, event: CommandEvent):
@@ -90,5 +89,5 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        with DlgPyutDebug(self._parent, ID_ANY) as dlg:
+        with DlgPyutDebug(self._parent) as dlg:
             dlg.ShowModal()

@@ -29,6 +29,7 @@ from pyut.dialogs.DlgEditField import DlgEditField
 from pyut.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
+from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
@@ -50,9 +51,10 @@ from pyutmodel.PyutType import PyutType
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.ui.umlframes import UmlClassDiagramsFrame
-from pyut.uiv2.eventengine import EventEngine
-from pyut.uiv2.eventengine import IEventEngine
+from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
+from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from tests.TestBase import TestBase
 
@@ -146,6 +148,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditMethod()
         elif dlgName == DialogNamesEnum.DLG_EDIT_CODE:
             dlgAnswer = self._testDlgEditCode()
+        elif dlgName == DialogNamesEnum.DLG_PYUT_DEBUG:
+            dlgAnswer = self._testDlgPyutDebug()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -280,6 +284,13 @@ class TestADialog(App):
                 return f'Retrieved data: {dlg.sourceCode}'
             else:
                 return f'Cancelled'
+
+    def _testDlgPyutDebug(self):
+        with DlgPyutDebug(self._frameTop) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                return "Good"
+            else:
+                return 'Cancelled'
 
 
 testApp: App = TestADialog(redirect=False)
