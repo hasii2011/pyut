@@ -77,7 +77,7 @@ class UmlFrame(UmlFrameShapeHandler):
         Args:
             parent: The parent window
         """
-        from org.pyut.ui.EditObjectHandler import EditObjectHandler
+        from pyut.ui.EditObjectHandler import EditObjectHandler
 
         super().__init__(parent)
 

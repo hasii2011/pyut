@@ -15,7 +15,7 @@ from wx import TreeItemId
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.preferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject
 from pyut.uiv2.IPyutProject import PyutDocuments
