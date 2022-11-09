@@ -46,7 +46,7 @@ from pyut.general.Globals import _
 
 from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
 from org.pyut.ui.tools.ToolboxTypes import CategoryNames
-from pyut.uiv2 import ToolBoxHandler
+from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 
 class MenuCreator:
