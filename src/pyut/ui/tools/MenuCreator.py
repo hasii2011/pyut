@@ -39,13 +39,13 @@ from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
 from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
-from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
 
-from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
-from org.pyut.ui.tools.ToolboxTypes import CategoryNames
+from pyut.ui.tools.SharedTypes import ToolboxIdMap
+from pyut.ui.tools.ToolboxTypes import CategoryNames
 from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 

@@ -57,7 +57,7 @@ from pyut.ui.Actions import ACTION_SELECTOR
 from pyut.ui.Actions import ACTION_ZOOM_IN
 from pyut.ui.Actions import ACTION_ZOOM_OUT
 
-from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine

@@ -19,14 +19,14 @@ from miniogl.DiagramFrame import DiagramFrame
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.tools.Toolbox import Toolbox as Toolbox2
+from pyut.ui.tools.Toolbox import Toolbox as Toolbox2
 
-from org.pyut.ui.tools.Tool import Tool
-from org.pyut.ui.tools.ToolIconOwner import ToolIconOwner
+from pyut.ui.tools.Tool import Tool
+from pyut.ui.tools.ToolIconOwner import ToolIconOwner
 
-from org.pyut.ui.tools.ToolsCreator import PYUT_MENU_CATEGORY
-from org.pyut.ui.tools.ToolsCreator import PYUT_TOOLS_CATEGORY
-from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
+from pyut.ui.tools.ToolsCreator import PYUT_MENU_CATEGORY
+from pyut.ui.tools.ToolsCreator import PYUT_TOOLS_CATEGORY
+from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
 from tests.TestBase import TestBase
 
 

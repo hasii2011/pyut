@@ -24,10 +24,10 @@ from wx import Frame
 from org.pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from org.pyut.ui.frame.FileMenuHandler import FileMenuHandler
 
-from org.pyut.ui.tools.Tool import Category
-from org.pyut.ui.tools.Tool import Tool
-from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
-from org.pyut.ui.tools.ToolIconOwner import ToolIconOwner
+from pyut.ui.tools.Tool import Category
+from pyut.ui.tools.Tool import Tool
+from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
+from pyut.ui.tools.ToolIconOwner import ToolIconOwner
 
 # noinspection PyProtectedMember
 from pyut.general.Globals import _

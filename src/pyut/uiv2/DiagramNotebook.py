@@ -47,8 +47,8 @@ from pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-from pyut.ui.umlframes import UmlObject
-from pyut.ui.umlframes import UmlObjects
+from pyut.ui.umlframes.UmlFrame import UmlObject
+from pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 

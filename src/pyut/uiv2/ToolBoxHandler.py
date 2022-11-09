@@ -11,10 +11,10 @@ from wx import ToolBar
 from wx import NewIdRef as wxNewIdRef
 
 from pyut.general.Singleton import Singleton
-from org.pyut.ui.tools.Tool import Category
-from org.pyut.ui.tools.Tool import Tool
-from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
-from org.pyut.ui.tools.ToolboxTypes import CategoryNames
+from pyut.ui.tools.Tool import Category
+from pyut.ui.tools.Tool import Tool
+from pyut.ui.tools.ToolboxOwner import ToolboxOwner
+from pyut.ui.tools.ToolboxTypes import CategoryNames
 
 
 class ToolBoxHandler(Singleton):

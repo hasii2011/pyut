@@ -6,13 +6,13 @@ from logging import getLogger
 
 from wx import Window
 
-from org.pyut.ui.tools.Tool import Category
-from org.pyut.ui.tools.Tool import Tool
-from org.pyut.ui.tools.Toolbox import Toolbox
+from pyut.ui.tools.Tool import Category
+from pyut.ui.tools.Tool import Tool
+from pyut.ui.tools.Toolbox import Toolbox
 
-from org.pyut.ui.tools.ToolboxTypes import CategoryNames
-from org.pyut.ui.tools.ToolboxTypes import ToolCategories
-from org.pyut.ui.tools.ToolboxTypes import Tools
+from pyut.ui.tools.ToolboxTypes import CategoryNames
+from pyut.ui.tools.ToolboxTypes import ToolCategories
+from pyut.ui.tools.ToolboxTypes import Tools
 
 
 class ToolboxOwner:

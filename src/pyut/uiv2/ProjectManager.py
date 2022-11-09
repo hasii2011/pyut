@@ -36,8 +36,8 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
-from pyut.ui.umlframes import UmlFrame
-from pyut.ui.umlframes import UmlObjects
+from pyut.ui.umlframes.UmlFrame import UmlFrame
+from pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutDocument import PyutDocuments

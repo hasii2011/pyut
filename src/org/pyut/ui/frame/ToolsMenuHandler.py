@@ -10,8 +10,8 @@ from core.PluginManager import PluginManager
 
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
-from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
-from org.pyut.ui.tools.Tool import Category
+from pyut.ui.tools.SharedTypes import ToolboxIdMap
+from pyut.ui.tools.Tool import Category
 
 from pyut.uiv2.PluginAdapter import PluginAdapter
 from pyut.uiv2.ToolBoxHandler import ToolBoxHandler

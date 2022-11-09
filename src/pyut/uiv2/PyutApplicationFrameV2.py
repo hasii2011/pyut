@@ -45,11 +45,11 @@ from org.pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
 from org.pyut.ui.frame.PyutFileDropTarget import PyutFileDropTarget
 from org.pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
-from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
-from org.pyut.ui.tools.MenuCreator import MenuCreator
-from org.pyut.ui.tools.SharedTypes import ToolboxIdMap
-from org.pyut.ui.tools.ToolsCreator import ToolsCreator
+from pyut.ui.tools.MenuCreator import MenuCreator
+from pyut.ui.tools.SharedTypes import ToolboxIdMap
+from pyut.ui.tools.ToolsCreator import ToolsCreator
 
 from pyut.dialogs.tips.DlgTips import DlgTips
 

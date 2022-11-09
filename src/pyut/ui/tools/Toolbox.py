@@ -26,10 +26,10 @@ from wx import NewIdRef as wxNewIdRef
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.tools.Tool import Category
-from org.pyut.ui.tools.Tool import Tool
+from pyut.ui.tools.Tool import Category
+from pyut.ui.tools.Tool import Tool
 
-from org.pyut.ui.tools.ToolboxTypes import Tools
+from pyut.ui.tools.ToolboxTypes import Tools
 
 
 class Toolbox(MiniFrame):
@@ -53,7 +53,7 @@ class Toolbox(MiniFrame):
             toolboxOwner:   ToolboxOwner
         """
 
-        from org.pyut.ui.tools.ToolboxOwner import ToolboxOwner
+        from pyut.ui.tools.ToolboxOwner import ToolboxOwner
 
         self.logger: Logger = getLogger(__name__)
 
