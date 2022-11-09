@@ -27,7 +27,7 @@ from wx import MessageDialog
 from wx import StaticText
 from wx import TextCtrl
 
-from org.pyut.ui.widgets.TextContainer import TextContainer
+from pyut.ui.widgets.TextContainer import TextContainer
 
 from pyut.PyutConstants import PyutConstants
 

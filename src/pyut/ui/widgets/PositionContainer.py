@@ -8,8 +8,8 @@ from wx import Window
 
 from pyut.dialogs.preferences.valuecontainers.WriteOnlyPropertyException import WriteOnlyPropertyException
 
-from org.pyut.ui.widgets.DualSpinnerContainer import DualSpinnerContainer
-from org.pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
+from pyut.ui.widgets.DualSpinnerContainer import DualSpinnerContainer
+from pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
 
 from pyut.general.datatypes.Position import Position
 

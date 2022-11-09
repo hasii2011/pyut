@@ -9,8 +9,8 @@ from wx import Panel
 from wx import VERTICAL
 from wx import Window
 
-from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
-from org.pyut.ui.widgets.TextContainer import TextContainer
+from pyut.ui.widgets.DimensionsContainer import DimensionsContainer
+from pyut.ui.widgets.TextContainer import TextContainer
 
 from ogl.OglDimensions import OglDimensions
 

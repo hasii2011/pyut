@@ -7,8 +7,8 @@ from typing import Union
 from wx import Window
 
 from pyut.general.datatypes.Dimensions import Dimensions
-from org.pyut.ui.widgets.DualSpinnerContainer import DualSpinnerContainer
-from org.pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
+from pyut.ui.widgets.DualSpinnerContainer import DualSpinnerContainer
+from pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
 
 from ogl.OglDimensions import OglDimensions
 

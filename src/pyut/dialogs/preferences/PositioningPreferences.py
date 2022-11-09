@@ -16,8 +16,8 @@ from wx import NewIdRef as wxNewIdRef
 
 from pyut.dialogs.preferences.PreferencesPanel import PreferencesPanel
 
-from org.pyut.ui.widgets.DimensionsContainer import DimensionsContainer
-from org.pyut.ui.widgets.PositionContainer import PositionContainer
+from pyut.ui.widgets.DimensionsContainer import DimensionsContainer
+from pyut.ui.widgets.PositionContainer import PositionContainer
 
 from pyut.general.datatypes.Dimensions import Dimensions
 from pyut.general.datatypes.Position import Position
