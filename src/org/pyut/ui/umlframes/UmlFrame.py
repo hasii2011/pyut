@@ -35,7 +35,7 @@ from miniogl.DiagramFrame import DiagramFrame
 from miniogl.RectangleShape import RectangleShape
 
 from pyut.ui.ActionHandler import ActionHandler
-from org.pyut.ui.Actions import ACTION_ZOOM_IN
+from pyut.ui.Actions import ACTION_ZOOM_IN
 
 from pyut.PyutUtils import PyutUtils
 
