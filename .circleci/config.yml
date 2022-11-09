@@ -2,8 +2,8 @@
 version: '2.1'
 
 orbs:
-  python: circleci/python@1.1.0
-
+  python: circleci/python@2.1.1
+  
 jobs:
   build:
     executor: python/default
@@ -13,6 +13,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt update
+            sudo apt install libnotify-dev
             sudo apt install libgtk-3-dev
             sudo apt-get install -y  libsdl2-dev
             pip install wheel==0.38.4
