@@ -1,5 +1,5 @@
-wheel~=0.37.1
-setuptools==65.5.0
+wheel==0.38.3
+setuptools==65.5.1
 
 PyGithub==1.55
 Deprecated==1.2.13
@@ -11,7 +11,7 @@ pkgversions==0.2.2
 py2app==0.28.4
 
 html-testRunner~=1.2.1
-mypy==0.982
+mypy==0.990
 mypy-extensions==0.4.3
 types-Deprecated==1.2.9
 types-setuptools==65.5.0.2

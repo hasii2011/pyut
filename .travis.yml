@@ -28,9 +28,9 @@ before_install:
 install:
   - python3 --version
   - uname -a
-  - pip install setuptools
-  - pip install wheel
-  - pip install six
+  - pip install setuptools==65.5.1
+  - pip install wheel==0.38.3
+  - pip install six==1.16.0
   - pip install attrdict3
   # - pip install wxPython
   # - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
