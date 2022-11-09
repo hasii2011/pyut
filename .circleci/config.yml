@@ -8,8 +8,6 @@ jobs:
     steps:
       - checkout
       - python/install-packages:
-          pkg-manager: pip
-      - python/install-packages:
           args: wheel==0.38.4
           pkg-manager: pip
       - python/install-packages:
