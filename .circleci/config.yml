@@ -13,10 +13,7 @@ jobs:
             pip install setuptools==65.5.1
             pip install six==1.16.0
             pip install attrdict3
-            pip download wxpython
-            pip wheel -v wxPython-4.2.0.tar.gz
-            ls -al
-            pip install wxPython-4.2.0-cp310-cp310-linux_aarch64.whl
+            pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
             scripts/runtests.sh
           name: Unit Tests
 workflows:
