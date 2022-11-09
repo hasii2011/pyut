@@ -6,8 +6,6 @@ orbs:
 
 jobs:
   build:
-    machine:
-      image: ubuntu-2204:current
     executor: python/default
     steps:
       - checkout
