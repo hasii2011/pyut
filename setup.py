@@ -8,15 +8,15 @@ import pathlib
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 
-APP = ['src/org/pyut/PyutV2.py']
-DATA_FILES = [('org/pyut/resources', ['src/org/pyut/resources/loggingConfiguration.json']),
-              ('org/pyut/resources', ['src/org/pyut/resources/Kilroy-Pyut.txt']),
-              ('org/pyut/resources', ['src/org/pyut/resources/Help.txt']),
-              ('org/pyut/resources', ['src/org/pyut/resources/Kudos.txt']),
-              ('org/pyut/resources', ['src/org/pyut/resources/tips.txt']),
-              ('org/pyut/resources', ['src/org/pyut/resources/version.txt']),
+APP = ['src/pyut/PyutV2.py']
+DATA_FILES = [('pyut/resources', ['src/pyut/resources/loggingConfiguration.json']),
+              ('pyut/resources', ['src/pyut/resources/Kilroy-Pyut.txt']),
+              ('pyut/resources', ['src/pyut/resources/Help.txt']),
+              ('pyut/resources', ['src/pyut/resources/Kudos.txt']),
+              ('pyut/resources', ['src/pyut/resources/tips.txt']),
+              ('pyut/resources', ['src/pyut/resources/version.txt']),
 
-              ('org/pyut/resources/img', ['src/org/pyut/resources/img/pyut.ico']),
+              ('pyut/resources/img', ['src/pyut/resources/img/pyut.ico']),
               ]
 OPTIONS = {}
 
@@ -30,25 +30,24 @@ setup(
     app=APP,
     data_files=DATA_FILES,
     packages=[
-              'org',
-              'org.pyut',
-              'org.pyut.dialogs', 'org.pyut.dialogs.preferences', 'org.pyut.dialogs.preferences.valuecontainers',
-              'org.pyut.dialogs.textdialogs',
-              'org.pyut.dialogs.tips',
-              'org.pyut.enums',
-              'org.pyut.errorcontroller',
-              'org.pyut.experimental',
-              'org.pyut.general', 'org.pyut.general.datatypes', 'org.pyut.general.exceptions',
-              'org.pyut.history', 'org.pyut.history.commands',
-              'org.pyut.preferences',
-              'org.pyut.resources',
-              'org.pyut.resources.img',
-              'org.pyut.resources.img.methodparameters',
-              'org.pyut.resources.img.splash',
-              'org.pyut.resources.img.toolbar', 'org.pyut.resources.img.toolbar.embedded16', 'org.pyut.resources.img.toolbar.embedded32',
-              'org.pyut.resources.locale',
-              'org.pyut.ui',   'org.pyut.ui.frame', 'org.pyut.ui.tools', 'org.pyut.ui.umlframes', 'org.pyut.ui.widgets',
-              'org.pyut.uiv2', 'org.pyut.uiv2.eventengine', 'org.pyut.uiv2.eventengine.eventinformation'
+              'pyut',
+              'pyut.dialogs', 'pyut.dialogs.preferences', 'pyut.dialogs.preferences.valuecontainers',
+              'pyut.dialogs.textdialogs',
+              'pyut.dialogs.tips',
+              'pyut.enums',
+              'pyut.errorcontroller',
+              'pyut.experimental',
+              'pyut.general', 'pyut.general.datatypes', 'pyut.general.exceptions',
+              'pyut.history', 'pyut.history.commands',
+              'pyut.preferences',
+              'pyut.resources',
+              'pyut.resources.img',
+              'pyut.resources.img.methodparameters',
+              'pyut.resources.img.splash',
+              'pyut.resources.img.toolbar', 'pyut.resources.img.toolbar.embedded16', 'pyut.resources.img.toolbar.embedded32',
+              'pyut.resources.locale',
+              'pyut.ui',   'pyut.ui.frame', 'pyut.ui.tools', 'pyut.ui.umlframes', 'pyut.ui.widgets',
+              'pyut.uiv2', 'pyut.uiv2.eventengine', 'pyut.uiv2.eventengine.eventinformation'
               ],
     include_package_data=True,
     zip_safe=False,
