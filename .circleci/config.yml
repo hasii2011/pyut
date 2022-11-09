@@ -3,7 +3,11 @@ version: '2.1'
 
 orbs:
   python: circleci/python@1.1.0
+
+jobs:
   build:
+    machine:
+      image: ubuntu-2204:current
     executor: python/default
     steps:
       - checkout
