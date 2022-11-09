@@ -7,7 +7,7 @@ from pyut.history.commands.Command import Command
 
 from miniogl.Diagram import Diagram
 
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from tests.TestBase import TestBase
 

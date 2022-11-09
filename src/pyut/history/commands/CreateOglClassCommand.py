@@ -14,7 +14,7 @@ from pyut.history.commands.BaseOglClassCommand import BaseOglClassCommand
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine

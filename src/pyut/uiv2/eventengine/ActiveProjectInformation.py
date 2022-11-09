@@ -3,7 +3,7 @@ from typing import cast
 
 from dataclasses import dataclass
 
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.uiv2.IPyutProject import IPyutProject
 
 

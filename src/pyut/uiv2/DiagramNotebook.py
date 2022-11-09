@@ -45,10 +45,10 @@ from pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
 from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
 from pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
 
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-from org.pyut.ui.umlframes.UmlFrame import UmlObject
-from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.umlframes import UmlObject
+from pyut.ui.umlframes import UmlObjects
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 

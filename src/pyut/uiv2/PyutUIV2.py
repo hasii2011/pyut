@@ -71,8 +71,8 @@ from pyut.enums.DiagramType import DiagramType
 from pyut.ui.Actions import ACTION_SELECTOR
 from org.pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject

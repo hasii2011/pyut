@@ -50,7 +50,7 @@ from pyutmodel.PyutType import PyutType
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from pyut.ui.umlframes import UmlClassDiagramsFrame
 from pyut.uiv2.eventengine import EventEngine
 from pyut.uiv2.eventengine import IEventEngine
 

@@ -17,7 +17,7 @@ from wx import TreeCtrl
 from wx import TreeItemId
 from wx import Window
 
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

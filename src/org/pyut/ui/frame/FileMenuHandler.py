@@ -51,7 +51,7 @@ from pyut.ui.PyutPrintout import PyutPrintout
 
 from org.pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
 

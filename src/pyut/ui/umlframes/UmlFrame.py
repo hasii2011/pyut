@@ -46,7 +46,7 @@ from pyut.experimental.GraphicalHandler import GraphicalHandler
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
 
-from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
+from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from pyut.uiv2.eventengine.Events import AddOglDiagramEvent
 from pyut.uiv2.eventengine.Events import AddPyutDiagramEvent

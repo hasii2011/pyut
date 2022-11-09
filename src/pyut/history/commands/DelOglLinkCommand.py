@@ -11,7 +11,7 @@ from pyutmodel.PyutLinkType import PyutLinkType
 
 from pyut.history.HistoryUtils import deTokenize
 from pyut.history.HistoryUtils import tokenizeValue
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from pyut.ui.umlframes import UmlClassDiagramsFrame
 
 
 class DelOglLinkCommand(DeleteOglObjectCommand):

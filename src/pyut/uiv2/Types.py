@@ -10,8 +10,8 @@ from pyut.PyutConstants import DiagramsLabels
 
 from pyut.enums.DiagramType import DiagramType
 
-from org.pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
+from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]

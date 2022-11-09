@@ -32,9 +32,9 @@ from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 if TYPE_CHECKING:
-    from org.pyut.ui.umlframes.UmlFrame import UmlFrame
-    from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-    from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+    from pyut.ui.umlframes.UmlFrame import UmlFrame
+    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+    from pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from pyut.uiv2.eventengine.Events import EventType
 
@@ -187,7 +187,7 @@ class EditObjectHandler:
 
         Returns: Return the list of UmlObjects in the diagram.
         """
-        from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+        from pyut.ui.umlframes.UmlFrame import UmlObjects
 
         # if self._treeNotebookHandler is None:
         #     return UmlObjects([])

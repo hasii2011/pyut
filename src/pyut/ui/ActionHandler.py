@@ -23,16 +23,15 @@ from ogl.OglClass import OglClass
 
 from pyut.general.Singleton import Singleton
 
-from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
+from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 if TYPE_CHECKING:
-    from org.pyut.ui.umlframes.UmlFrame import UmlFrame
-    from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+    from pyut.ui.umlframes.UmlFrame import UmlFrame
+    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutLinkType import PyutLinkType
-
 
 from pyut.ui.Actions import ACTION_DESTINATION_AGGREGATION_LINK
 from pyut.ui.Actions import ACTION_DESTINATION_ASSOCIATION_LINK
@@ -260,7 +259,7 @@ class ActionHandler(Singleton):
             umlFrame.Refresh()
         elif self._currentAction == ACTION_NEW_SD_INSTANCE:
             try:
-                from org.pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
+                from pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
                 if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
                     PyutUtils.displayError("A SD INSTANCE can't be added to a class diagram. You must create a sequence diagram.")
                     return

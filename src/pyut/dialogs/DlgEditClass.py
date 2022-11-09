@@ -46,7 +46,7 @@ from ogl.OglClass import OglClass
 from pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from pyut.dialogs.DlgEditField import DlgEditField
 
-from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.umlframes.UmlFrame import UmlObjects
 
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
@@ -86,7 +86,7 @@ class DlgEditClass(DlgEditClassCommon):
             eventEngine:
             pyutClass:      Class modified by dialog
         """
-        from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+        from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
         self.logger:       Logger       = getLogger(__name__)
         self._pyutClass:   PyutClass    = pyutClass

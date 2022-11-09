@@ -1,3 +1,4 @@
+
 from typing import Callable
 from typing import List
 from typing import Dict
@@ -6,7 +7,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from org.pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
+from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from pyut.history.commands.CommandGroup import CommandGroup
 from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand

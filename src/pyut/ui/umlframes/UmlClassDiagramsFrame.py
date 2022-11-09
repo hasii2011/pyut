@@ -20,8 +20,8 @@ from ogl.OglInterface import OglInterface
 from ogl.OglInterface2 import OglInterface2
 from ogl.OglLinkFactory import getOglLinkFactory
 
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from pyut.general.CustomEvents import ClassNameChangedEvent
 from pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED

@@ -33,11 +33,11 @@ from pyut.general.exceptions.UnsupportedFileTypeException import UnsupportedFile
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from org.pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
-from org.pyut.ui.umlframes.UmlFrame import UmlFrame
-from org.pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.umlframes import UmlFrame
+from pyut.ui.umlframes import UmlObjects
 
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutDocument import PyutDocuments
