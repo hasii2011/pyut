@@ -53,7 +53,7 @@ from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 
 from pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
 from pyut.uiv2.eventengine.Events import EventType

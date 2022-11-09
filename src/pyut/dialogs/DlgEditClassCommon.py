@@ -42,7 +42,7 @@ from pyut.general.Globals import _
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from pyut.uiv2.eventengine.Events import EventType

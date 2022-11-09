@@ -59,7 +59,7 @@ from pyut.ui.Actions import ACTION_ZOOM_OUT
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
-from pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
+from pyut.uiv2.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from pyut.uiv2.eventengine.Events import EVENT_SET_TOOL_ACTION

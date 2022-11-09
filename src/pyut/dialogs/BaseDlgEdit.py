@@ -10,7 +10,7 @@ from wx import STAY_ON_TOP
 from wx import Dialog
 from wx import Sizer
 
-from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 

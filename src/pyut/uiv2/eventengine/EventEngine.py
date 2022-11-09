@@ -23,8 +23,8 @@ from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 from pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
 
-from pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
-from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
+from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 
 from pyut.uiv2.eventengine.Events import EditClassEvent
 from pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent

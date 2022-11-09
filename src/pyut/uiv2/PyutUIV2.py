@@ -131,8 +131,8 @@ from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from pyut.uiv2.eventengine.Events import EditClassEvent
 from pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
 
-from pyut.uiv2.eventengine.MiniProjectInformation import MiniProjectInformation
-from pyut.uiv2.eventengine.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
+from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 
 from pyut.uiv2.eventengine.EventEngine import ActiveProjectInformationCallback
 
