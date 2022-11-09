@@ -7,14 +7,10 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/install-packages:
-          args: wheel==0.38.4
-          pkg-manager: pip
-      - python/install-packages:
-          args: setuptools==65.5.1
-          pkg-manager: pip
       - run:
           command: |
+            pip install wheel==0.38.4
+            pip install setuptools==65.5.1
             pip download wxpython
             pip wheel -v wxPython-4.2.0.tar.gz
             ls -al
