@@ -18,11 +18,13 @@ jobs:
             sudo apt install libnotify-dev
             sudo apt install libgtk-3-dev
             sudo apt-get install -y  libsdl2-dev
+            pip install --upgrade pip
             pip install wheel==0.38.4
             pip install setuptools==65.5.1
             pip install six==1.16.0
             pip install attrdict3
             pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
+            pip install PyGithub==1.55
             pip install pyutmodel~=1.1.0
             pip install ogl~=0.60.8
             pip install oglio==0.5.10
@@ -32,6 +34,7 @@ jobs:
             name: run tests
             command: | 
               export DISPLAY=localhost:0.0
+              xvfb
               scripts/runtests.sh
 workflows:
   main:
