@@ -36,6 +36,7 @@ jobs:
             command: | 
               export DISPLAY=localhost:0.0
               echo $PATH
+              whereis xvfb
               xvfb
               scripts/runtests.sh
 workflows:
