@@ -1,14 +1,16 @@
 
 version: '2.1'
 
-orbs:
-  python: circleci/python@2.1.1
+workflows:
+  main:
+    jobs:
+      - build
 
 jobs:
   build:
     machine:
       - image: ubuntu-2204
-    executor: python/default
+
     steps:
       - checkout
       - run:
@@ -34,7 +36,3 @@ jobs:
             name: run tests
             command: | 
               scripts/runtests.sh
-workflows:
-  main:
-    jobs:
-      - build
