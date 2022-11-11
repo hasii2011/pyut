@@ -8,7 +8,7 @@ workflows:
   main:
     jobs:
       - build
-      - 
+
 jobs:
   build:
     docker:
