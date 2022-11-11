@@ -2,7 +2,7 @@
 version: '2.1'
 
 orbs:
-  python: circleci/python@2.1.1-python-browsers
+  python: circleci/python@2.1.1
 
 jobs:
   build:
