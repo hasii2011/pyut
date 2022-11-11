@@ -1,16 +1,19 @@
 
 version: '2.1'
 
+orbs:
+  python: circleci/python@2.1.1
+
 workflows:
   main:
     jobs:
       - build
-
+      - 
 jobs:
   build:
-    machine:
-      - image: ubuntu-2204
-
+    docker:
+      - image: cimg/python:3.10
+    executor: python/default
     steps:
       - checkout
       - run:
