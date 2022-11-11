@@ -32,12 +32,12 @@ jobs:
             pip install pyutplugincore==0.5.14
             pip install html-testRunner~=1.2.1
       - run:
+          name: Running X virtual framebuffer
+          command: Xvfb :99 -screen 0 1280x1024x24
+          background: true
+      - run:
             name: run tests
             command: | 
-              export DISPLAY=localhost:0.0
-              echo $PATH
-              whereis xvfb
-              xvfb
               scripts/runtests.sh
 workflows:
   main:

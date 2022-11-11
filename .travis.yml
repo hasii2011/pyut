@@ -36,7 +36,7 @@ install:
   # - pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
   # - pip install -U -f  https://extras.wxpython.org/wxPython4/extras/manylinux-test/wxPython-4.2.0-cp310-cp310-manylinux_2_28_x86_64.whl wxPython
   - pip download wxPython
-  - pip wheel -qqq wxPython-4.2.0.tar.gz
+  - travis_wait pip wheel -qqq wxPython-4.2.0.tar.gz
   - ls -al
   - pip install wxPython-4.2.0-cp310-cp310-linux_aarch64.whl
   - pip install orthogonal~=1.1.7
