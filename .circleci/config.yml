@@ -37,7 +37,9 @@ jobs:
             pip install pyutplugincore==0.5.14
             pip install html-testRunner~=1.2.1
       - run:
+          name: Run Xvfb
+          command: Xvfb
+      - run:
             name: run tests
             command: | 
-              Xvfb
               scripts/runtests.sh
