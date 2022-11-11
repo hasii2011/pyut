@@ -6,8 +6,8 @@ orbs:
 
 jobs:
   build:
-    docker:
-      - image: cimg/python:3.10
+    machine:
+      - image: ubuntu-2204
     executor: python/default
     steps:
       - checkout
