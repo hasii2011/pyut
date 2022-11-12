@@ -16,7 +16,7 @@ function changeToProjectRoot {
 changeToProjectRoot
 
 REPO_SLUG='hasii2011/PyUt'
-VERSION_FILE='src/org/pyut/resources/version.txt'
+VERSION_FILE='src/pyut/resources/version.txt'
 
 traviscli  --repo-slug ${REPO_SLUG} --file ${VERSION_FILE}
 
