@@ -12,7 +12,7 @@ workflows:
 jobs:
   build:
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/python:3.10-browsers
     executor: python/default
     steps:
       - checkout
@@ -23,7 +23,6 @@ jobs:
             sudo apt install libnotify-dev
             sudo apt install libgtk-3-dev
             sudo apt-get install -y  libsdl2-dev
-            sudo apt install xvfb
             pip install --upgrade pip
             pip install wheel==0.38.4
             pip install setuptools==65.5.1
@@ -39,4 +38,4 @@ jobs:
       - run:
             name: run tests
             command: | 
-              xvfb-run scripts/runtests.sh
+              scripts/runtests.sh
