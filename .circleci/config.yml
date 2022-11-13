@@ -11,6 +11,8 @@ workflows:
 
 jobs:
   build:
+    tags:
+      only: /^v[0-9]+(\.[0-9]+)*$/
     docker:
       - image: cimg/python:3.10-browsers
     executor: python/default
