@@ -380,9 +380,9 @@ class DlgEditClass(DlgEditClassCommon):
         self._pyutClass.fields = self._pyutModelCopy.fields
 
         # Update display properties
-        self._pyutClass.showFields  = self._chkShowFields.GetValue()
-        self._pyutClass.showMethods = self._chkShowMethods.GetValue()
-        self._pyutClass.setShowStereotype(self._chkShowStereotype.GetValue())
+        self._pyutClass.showFields        = self._chkShowFields.GetValue()
+        self._pyutClass.showMethods       = self._chkShowMethods.GetValue()
+        self._pyutClass.displayStereoType = self._chkShowStereotype.GetValue()
 
         #
         # Get common stuff from base class

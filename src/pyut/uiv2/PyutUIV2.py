@@ -771,7 +771,7 @@ class PyutUIV2(IPyutUI):
         if self._projectManager.currentFrame is None:
             currentZoom: float = 1.0
         else:
-            currentZoom = self._projectManager.currentFrame.GetCurrentZoom()
+            currentZoom = self._projectManager.currentFrame.currentZoom
         if self._projectManager.currentProject is None:
             newFilename:     str = ''
             projectModified: bool = False
@@ -840,7 +840,7 @@ class PyutUIV2(IPyutUI):
         # If we don't this the AnchorPoints are not on the diagram and lines ends are not
         # movable.
         if isinstance(oglLink, OglInterface2) is False:
-            umlDiagram = umlFrame.GetDiagram()
+            umlDiagram = umlFrame.diagram
 
             umlDiagram.AddShape(oglLink.sourceAnchor)
             umlDiagram.AddShape(oglLink.destinationAnchor)

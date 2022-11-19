@@ -352,12 +352,13 @@ class ActionHandler(Singleton):
 
         attachmentAnchor.setYouAreTheSelectedAnchor()
 
-        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(umlFrame=umlFrame, implementor=implementor, attachmentAnchor=attachmentAnchor)
+        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(umlFrame=umlFrame, eventEngine=self._eventEngine,
+                                                                   implementor=implementor, attachmentAnchor=attachmentAnchor)
         group: CommandGroup = CommandGroup("Create lollipop")
 
         group.addCommand(cmd)
-        umlFrame.getHistory().addCommandGroup(group)
-        umlFrame.getHistory().execute()
+        umlFrame.historyManager.addCommandGroup(group)
+        umlFrame.historyManager.execute()
 
     def _onSetToolAction(self, event: SetToolActionEvent):
         self.currentAction = event.action
@@ -370,12 +371,11 @@ class ActionHandler(Singleton):
         cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y, eventEngine=self._eventEngine)
         group: CommandGroup          = CommandGroup("Create class")
         group.addCommand(cmd)
-        umlFrame.getHistory().addCommandGroup(group)
-        umlFrame.getHistory().execute()
+        umlFrame.historyManager.addCommandGroup(group)
+        umlFrame.historyManager.execute()
 
         if not self._currentActionPersistent:
             self._currentAction = ACTION_SELECTOR
-            # self.selectTool(self._tools[0])
             self._selectTool(SharedIdentifiers.ID_ARROW)
 
     def _createNewText(self, umlFrame, x: int, y: int):

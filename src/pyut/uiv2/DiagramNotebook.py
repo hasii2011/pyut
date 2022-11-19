@@ -378,7 +378,7 @@ class DiagramNotebook(Notebook):
         if frame is None:
             self._displayError("No frame found !")
         else:
-            diagram: Diagram         = frame.GetDiagram()
+            diagram: Diagram         = frame.diagram
             shapes:  List[OglObject] = diagram.GetShapes()
             for oglShape in shapes:
                 shape: OglObject = cast(OglObject, oglShape)
