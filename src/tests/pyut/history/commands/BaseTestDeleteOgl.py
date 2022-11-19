@@ -3,6 +3,8 @@ from unittest.mock import MagicMock
 from unittest.mock import Mock
 from unittest.mock import PropertyMock
 
+from miniogl.DiagramFrame import DiagramFrame
+
 from pyut.history.commands.Command import Command
 
 from miniogl.Diagram import Diagram
@@ -30,12 +32,12 @@ class BaseTestDeleteOgl(TestBase):
 
     def _createMockDiagram(self) -> Mock:
 
-        mockFrame: Mock = Mock(spec=UmlClassDiagramsFrame)
+        mockFrame: Mock = Mock(spec=DiagramFrame)
 
-        mockFrame.GetXOffset.return_value     = 0
-        mockFrame.GetYOffset.return_value     = 0
-        mockFrame.GetCurrentZoom.return_value = 1.0
-        mockFrame.eventEngine                = PropertyMock(return_value=None)
+        mockFrame.xOffSet     = PropertyMock(return_value=0)
+        mockFrame.yOffSet     = PropertyMock(return_value=0)
+        mockFrame.currentZoom = PropertyMock(return_value=1.0)
+        mockFrame.eventEngine = PropertyMock(return_value=None)
 
         mockDiagram: Mock = Mock(spec=Diagram)
         mockDiagram.GetPanel.return_value = mockFrame

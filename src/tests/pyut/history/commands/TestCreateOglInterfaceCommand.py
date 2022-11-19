@@ -8,6 +8,7 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from miniogl.DiagramFrame import DiagramFrame
 from pkg_resources import resource_filename
 
 from wx import App
@@ -23,10 +24,14 @@ from pyutmodel.PyutInterface import PyutInterface
 
 from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
+from wx import Frame
+from wx import ID_ANY
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from tests.TestBase import TestBase
 
@@ -53,6 +58,13 @@ class TestCreateOglInterfaceCommand(TestBase):
         self.logger: Logger = TestCreateOglInterfaceCommand.clsLogger
         self.app:    App    = App()
 
+        #  Create frame
+        baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
+        # noinspection PyTypeChecker
+        umlFrame = DiagramFrame(baseFrame)
+
+        self._eventEngine: IEventEngine = EventEngine(listeningWindow=umlFrame)
+
         fqFileName: str = resource_filename(TestBase.RESOURCES_TEST_DATA_PACKAGE_NAME, 'OglInterface2.txt')
         saveFile = open(fqFileName)
         self._serializedCommand: str = saveFile.read()
@@ -67,9 +79,10 @@ class TestCreateOglInterfaceCommand(TestBase):
         pyutClass:    PyutClass     = PyutClass(name='Implementor')
         implementor:  OglClass      = OglClass(pyutClass=pyutClass)
 
-        attachmentAnchor: SelectAnchorPoint = SelectAnchorPoint(x=100, y=100, attachmentPoint=AttachmentLocation.NORTH)
+        attachmentAnchor: SelectAnchorPoint = SelectAnchorPoint(x=100, y=100, attachmentPoint=AttachmentLocation.NORTH, parent=None)
 
-        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=implementor, attachmentAnchor=attachmentAnchor, umlFrame=None)
+        cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=implementor, eventEngine=self._eventEngine,
+                                                                            attachmentAnchor=attachmentAnchor, umlFrame=None)
 
         #
         # Override the created OglInterface2
@@ -106,7 +119,8 @@ class TestCreateOglInterfaceCommand(TestBase):
     def testDeserialize(self):
 
         cOglXFaceCmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(implementor=cast(OglClass, None), attachmentAnchor=cast(SelectAnchorPoint, None),
-                                                                            umlFrame=None)
+                                                                            umlFrame=None,
+                                                                            eventEngine=self._eventEngine)
 
         cOglXFaceCmd.deserialize(self._serializedCommand)
 

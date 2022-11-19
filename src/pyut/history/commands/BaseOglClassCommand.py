@@ -34,12 +34,12 @@ class BaseOglClassCommand(DeleteOglLinkedObjectCommand):
         pyutClass: PyutClass = self._shape.pyutObject
         classDescription = pyutClass.description
 
-        if pyutClass.getStereotype() is not None:
+        if pyutClass.stereotype is not None:
             classStereotypeName = pyutClass.getStereotype().name
         else:
             classStereotypeName = ""
 
-        classShowStereotype = repr(pyutClass.getShowStereotype())
+        classShowStereotype = repr(pyutClass.displayStereoType)
         classShowMethods = repr(pyutClass.showMethods)
         classShowFields = repr(pyutClass.showFields)
 

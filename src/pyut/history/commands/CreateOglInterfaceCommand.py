@@ -31,11 +31,12 @@ from pyut.history.commands.MethodInformation import MethodInformation
 from pyut.history.commands.OglShapeCommand import OglShapeCommand
 
 from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class CreateOglInterfaceCommand(OglShapeCommand):
 
-    def __init__(self,  umlFrame, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
+    def __init__(self,  umlFrame, eventEngine: IEventEngine, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
         """
 
         Args:
@@ -48,6 +49,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         self.logger: Logger = getLogger(__name__)
 
         self._umlFrame = umlFrame
+        self._eventEngine: IEventEngine = eventEngine
         if implementor is None and attachmentAnchor is None:
             pass
         else:
@@ -97,7 +99,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
 
         shapePosition: Tuple[int, int] = eval(deTokenize("position", serializedShape))
 
-        attachmentAnchor: SelectAnchorPoint = SelectAnchorPoint(x=shapePosition[0], y=shapePosition[1], attachmentPoint=attachmentPoint)
+        attachmentAnchor: SelectAnchorPoint = SelectAnchorPoint(x=shapePosition[0], y=shapePosition[1], attachmentPoint=attachmentPoint, parent=None)
 
         oglInterface2: OglInterface2 = oglInterface2Type(pyutInterface=pyutInterface, destinationAnchor=attachmentAnchor)
 
@@ -119,7 +121,7 @@ class CreateOglInterfaceCommand(OglShapeCommand):
         self._removeUnneededAnchorPoints(self._implementor, attachmentAnchor)
         umlFrame.Refresh()
 
-        with DlgEditInterface(umlFrame, self._pyutInterface) as dlg:
+        with DlgEditInterface(parent=umlFrame, eventEngine=self._eventEngine, pyutInterface=self._pyutInterface) as dlg:
             if dlg.ShowModal() == OK:
                 self.logger.info(f'model: {self._pyutInterface}')
 

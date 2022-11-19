@@ -66,7 +66,7 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
 
         oglNote: OglNote = OglNote(pyutNote=pyutNote, w=100, h=100)
 
-        oglNote._diagram = mockDiagram     # Normally should not do this; only in unit test
+        # oglNote._diagram = mockDiagram     # Normally should not do this; only in unit test
         oglNote._eventEngine = None
         oglNote.SetPosition(1024, 1024)
         oglNote.SetSize(width=100, height=100)

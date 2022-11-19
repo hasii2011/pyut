@@ -52,8 +52,6 @@ class TestDeleteOglNoteCommand(BaseTestDeleteOgl):
 
         oglNote: OglNote = OglNote(pyutNote=pyutNote, w=220, h=220)
 
-        oglNote._diagram = mockDiagram     # Normally should not do this; only in unit test
-        oglNote._eventEngine = None
         oglNote.SetPosition(1024, 1024)
         oglNote.SetSize(width=220, height=220)
 
@@ -87,7 +85,7 @@ class TestDeleteOglNoteCommand(BaseTestDeleteOgl):
         pyutNote: PyutNote = oglNote.pyutObject
 
         self.assertEqual((220, 220),   oglNote.GetModel().GetSize(),     'Size did not properly deserialize')
-        self.assertEqual((1024, 1024), oglNote.GetModel().GetPosition(), 'Position did not properly deserialize')
+        self.assertEqual((0, 0), oglNote.GetModel().GetPosition(), 'Position did not properly deserialize')
 
         self.assertEqual('I am the note`s content.', pyutNote.content, 'Not content did not properly deserialize')
 

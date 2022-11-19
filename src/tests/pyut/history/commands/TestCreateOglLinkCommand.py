@@ -68,8 +68,8 @@ class TestCreateOglLinkCommand(TestBase):
 
         Shape.ID = 0    # reset this since it runs in the entire unit test context
 
-        self._parent: OglClass = OglClass()
-        self._child:  OglClass = OglClass()
+        self._parent: OglClass = OglClass(pyutClass=None)
+        self._child:  OglClass = OglClass(pyutClass=None)
         cmd: CreateOglLinkCommand = CreateOglLinkCommand(src=self._child, dst=self._parent)    # inheritance points back to parent
 
         cmd._group = mockCommandGroup
