@@ -19,14 +19,14 @@ from ogl.OglClass import OglClass
 from ogl.events.OglEventEngine import OglEventEngine
 
 from ogl.events.OglEvents import EVT_CREATE_LOLLIPOP_INTERFACE
-from ogl.events.OglEvents import EVT_PROJECT_MODIFIED
+from ogl.events.OglEvents import EVT_DIAGRAM_FRAME_MODIFIED
 from ogl.events.OglEvents import EVT_SHAPE_SELECTED
 from ogl.events.OglEvents import EVT_CUT_OGL_CLASS
 from ogl.events.OglEvents import EVT_REQUEST_LOLLIPOP_LOCATION
 
 from ogl.events.OglEvents import ShapeSelectedEvent
 from ogl.events.OglEvents import CutOglClassEvent
-from ogl.events.OglEvents import ProjectModifiedEvent
+from ogl.events.OglEvents import DiagramFrameModifiedEvent
 from ogl.events.OglEvents import RequestLollipopLocationEvent
 from ogl.events.OglEvents import CreateLollipopInterfaceEvent
 
@@ -80,7 +80,7 @@ class UmlDiagramsFrame(UmlFrame):
 
         self._oglEventEngine.registerListener(EVT_SHAPE_SELECTED,            self._onShapeSelected)
         self._oglEventEngine.registerListener(EVT_CUT_OGL_CLASS,             self._onCutOglClassShape)
-        self._oglEventEngine.registerListener(EVT_PROJECT_MODIFIED,          self._onProjectModified)
+        self._oglEventEngine.registerListener(EVT_DIAGRAM_FRAME_MODIFIED, self._onDiagramFrameModified)
         self._oglEventEngine.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
         self._oglEventEngine.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
 
@@ -169,9 +169,9 @@ class UmlDiagramsFrame(UmlFrame):
         self._eventEngine.sendEvent(EventType.CutShape, shapeToCut=selectedOglClass)
 
     # noinspection PyUnusedLocal
-    def _onProjectModified(self, event: ProjectModifiedEvent):
+    def _onDiagramFrameModified(self, event: DiagramFrameModifiedEvent):
         """
-        Receives the project modified event from the Ogl Layer.  We
+        Receives the diagram frame modified event from the Ogl Layer.  We
         have to forward a Pyut specific event
         Args:
             event:
