@@ -136,7 +136,7 @@ class TestPyutPreferences(TestBase):
 
     def _emptyPrefs(self):
 
-        self.prefs: PyutPreferences = PyutPreferences()
+        self.prefs = PyutPreferences()
         self.prefs._createEmptyPreferences()
         self.prefs._preferencesCommon.saveConfig()
 

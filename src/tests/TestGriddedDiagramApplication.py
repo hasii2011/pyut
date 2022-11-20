@@ -1,3 +1,4 @@
+
 from wx import BOTTOM
 from wx import DEFAULT_FRAME_STYLE
 from wx import EXPAND
@@ -10,7 +11,7 @@ from wx import Frame
 from wx import BoxSizer
 
 from miniogl.DiagramFrame import DiagramFrame
-from pyut.preferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 from tests.TestBase import TestBase
 
 WINDOW_WIDTH:  int = 900

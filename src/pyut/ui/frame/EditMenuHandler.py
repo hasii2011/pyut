@@ -16,7 +16,7 @@ from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 class EditMenuHandler(BaseMenuHandler):
 
-    def __init__(self, editMenu: Menu, eventEngine: IEventEngine = None):
+    def __init__(self, editMenu: Menu, eventEngine: IEventEngine | None = None):
 
         super().__init__(menu=editMenu, eventEngine=eventEngine)
 

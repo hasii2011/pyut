@@ -75,8 +75,8 @@ class TestMethodInformation(TestBase):
         pyutMethods: List[PyutMethod] = pyutClassCommon.methods
         self.assertEqual(2, len(pyutMethods), 'I should only deserialize this many')
 
-        for pyutMethod in pyutMethods:
-            pyutMethod: PyutMethod = cast(PyutMethod, pyutMethod)
+        for method in pyutMethods:
+            pyutMethod: PyutMethod = cast(PyutMethod, method)
             self.logger.debug(f'{pyutMethod}')
             self.assertIsNotNone(pyutMethod.name, 'Where is my method name')
             self.assertIsNotNone(pyutMethod.visibility, 'Where is the method visibility')

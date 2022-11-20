@@ -586,7 +586,7 @@ class PyutPreferences(Singleton):
 
     def _createEmptyPreferences(self):
 
-        self._config: ConfigParser = ConfigParser()
+        self._config = ConfigParser()
 
         self._preferencesCommon.configParser  = self._config
         self._generalPrefs.configParser       = self._config

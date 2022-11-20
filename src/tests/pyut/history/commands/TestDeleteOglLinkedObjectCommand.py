@@ -9,6 +9,7 @@ from unittest import main as unitTestMain
 
 from unittest.mock import Mock
 
+from ogl.events.OglEventEngine import OglEventEngine
 from pkg_resources import resource_filename
 
 from wx import App
@@ -66,8 +67,7 @@ class TestDeleteOglLinkedObjectCommand(BaseTestDeleteOgl):
 
         oglNote: OglNote = OglNote(pyutNote=pyutNote, w=100, h=100)
 
-        # oglNote._diagram = mockDiagram     # Normally should not do this; only in unit test
-        oglNote._eventEngine = None
+        oglNote._eventEngine = cast(OglEventEngine, None)
         oglNote.SetPosition(1024, 1024)
         oglNote.SetSize(width=100, height=100)
         oglNote._id = 3     # must match deserialized file

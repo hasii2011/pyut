@@ -10,6 +10,7 @@ from logging import getLogger
 # noinspection PyPackageRequirements
 from deprecated import deprecated
 from ogl.OglActor import OglActor
+from ogl.OglAssociation import OglAssociation
 from ogl.OglClass import OglClass
 from ogl.OglNote import OglNote
 from ogl.OglText import OglText
@@ -282,7 +283,7 @@ class UmlFrame(UmlFrameShapeHandler):
     #     # Return values
     #     return minx, miny, maxX, maxy
 
-    def getUmlObjectById(self, objectId: int):
+    def getUmlObjectById(self, objectId: int) -> UmlObject | None:
         """
 
         Args:
@@ -293,10 +294,10 @@ class UmlFrame(UmlFrameShapeHandler):
         """
 
         for shape in self.GetDiagram().GetShapes():
-            if isinstance(shape, (OglObject, OglLink)):
+            if isinstance(shape, (OglClass, OglLink, OglObject)):
                 if shape.pyutObject.id == objectId:
-                    return shape
-        return None
+                    return cast(UmlObject, shape)
+        return cast(UmlObject, None)
 
     @deprecated('Use the historyManager property')
     def getHistory(self):

@@ -104,7 +104,7 @@ class TestPyutUtils(TestBase):
 
     def testGetTempFilePathDebug(self):
 
-        PyutPreferences.useDebugTempFileLocation = True
+        self.prefs.useDebugTempFileLocation = True
         PyutUtils.setBasePath(TestPyutUtils.BASE_TEST_PATH)
 
         fqFileName: str = PyutUtils.getTempFilePath(TestPyutUtils.FAKE_TEST_FILENAME)
@@ -112,7 +112,7 @@ class TestPyutUtils(TestBase):
 
     def testGetTempFilePathProduction(self):
 
-        PyutPreferences.useDebugTempFileLocation = False
+        self.prefs.useDebugTempFileLocation = False
         PyutUtils.setBasePath(TestPyutUtils.BASE_TEST_PATH)
 
         fqFileName: str = PyutUtils.getTempFilePath(TestPyutUtils.FAKE_TEST_FILENAME)

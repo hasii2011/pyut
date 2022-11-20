@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -144,7 +146,7 @@ class PyutAppV2(wxApp):
         """
         """
         self.__do    = None
-        self._frame  = None
+        self._frame  = cast(PyutApplicationFrameV2, None)
         self.splash  = None
         # Seemed to be removed in the latest versions of wxPython ???
         try:

@@ -1,27 +1,27 @@
 
+from typing import Any
 from typing import cast
 
-from pyut.history.commands.Command import Command
-from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-from ogl import OglClass
-
+from ogl.OglClass import OglClass
 from ogl.OglLinkFactory import getLinkType
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
 from pyut.history.HistoryUtils import deTokenize
 from pyut.history.HistoryUtils import tokenizeValue
-from pyut.ui.umlframes import UmlClassDiagramsFrame
+from pyut.history.commands.Command import Command
+from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+
+from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 
 class DelOglLinkCommand(DeleteOglObjectCommand):
     """
-    @author P. Dabrowski <przemek.dabrowski@destroy-display.com> (15.11.2005)
-    This class is a part of the history system of PyUt.
-    Every action that needs to be redone/undone should have an associated
-    command. This class is to be considered as an abstract class.
+    This class is part of the Pyut history system
+    Every action that needs to be redone/undone should have an
+    associated command.
+    TODO: This should be an abstract class
     """
-
     def __init__(self, link=None):
 
         DeleteOglObjectCommand.__init__(self, link)
@@ -32,6 +32,8 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
         self._linkSrcId    = None
         self._linkDestId   = None
         self._linkId       = None
+
+        self._shape: Any = None     # what a cheat !!
 
     def serialize(self):
 
@@ -70,18 +72,23 @@ class DelOglLinkCommand(DeleteOglObjectCommand):
         self._shape = umlFrame.getUmlObjectById(self._linkId)
 
     def undo(self):
+        """
+        TODO:  Fix this unholy mess of untyped code;  Or better you redo Pyut's history system
+        """
 
         umlFrame: UmlClassDiagramsFrame = self.getGroup().getHistory().getFrame()
-        src:      OglClass              = umlFrame.getUmlObjectById(self._linkSrcId)
-        dest:     OglClass              = umlFrame.getUmlObjectById(self._linkDestId)
+        src:      OglClass              = umlFrame.getUmlObjectById(self._linkSrcId)    # type: ignore
+        dest:     OglClass              = umlFrame.getUmlObjectById(self._linkDestId)   # type: ignore
 
         if self._shape is None:
             self._shape = umlFrame.createLink(src=src, dst=dest, linkType=self._linkType)
             umlFrame.GetDiagram().AddShape(shape=self._shape, withModelUpdate=True)
 
         self._shape.pyutObject.id = self._linkId
-        self._shape.GetSource().GetModel().SetPosition(self._srcPosition[0], self._srcPosition[1])
-        self._shape.GetDestination().GetModel().SetPosition(self._destPosition[0], self._destPosition[1])
+
+        self._shape.GetSource().GetModel().SetPosition(self._srcPosition[0], self._srcPosition[1])          # type: ignore
+        self._shape.GetDestination().GetModel().SetPosition(self._destPosition[0], self._destPosition[1])   # type: ignore
+
         self._shape.GetSource().UpdateFromModel()
         self._shape.GetDestination().UpdateFromModel()
-        umlFrame.Refresh()
+        umlFrame    .Refresh()

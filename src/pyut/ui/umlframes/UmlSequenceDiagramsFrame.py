@@ -25,7 +25,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     """
     cdfDebugId: int = 0x00FFF   # UML Sequence Diagrams Frame Debug ID
 
-    def __init__(self, parent, eventEngine: IEventEngine = None):
+    def __init__(self, parent, eventEngine: IEventEngine | None = None):
         """
 
         Args:

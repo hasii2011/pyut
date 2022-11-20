@@ -553,7 +553,7 @@ class PyutUIV2(IPyutUI):
             self._projectManager.currentProject = newCurrentProject
             self._projectManager.updateDiagramNotebookIfPossible(project=newCurrentProject)
         else:
-            self._projectManager.currentProject = None
+            self._projectManager.currentProject = cast(IPyutProject, None)
 
         self._updateApplicationTitle()
 

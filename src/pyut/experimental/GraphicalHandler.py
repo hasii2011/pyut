@@ -38,7 +38,7 @@ class GraphicalHandler:
         Args:
             display:
         """
-        from pyut.experimental.PythonMetaClassDataHandler import PythonMetaClassDataHandler
+        from pyut.experimental.PythonMetaClassDataHandler import PythonMetaClassDataHandler # type: ignore
 
         cg: PythonMetaClassDataHandler = PythonMetaClassDataHandler()
         classes: List[type] = cg.getClassListFromNames(display)

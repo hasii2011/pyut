@@ -12,7 +12,7 @@ from ogl.OglNote import OglNote
 
 class DeleteOglNoteCommand(DeleteOglObjectCommand):
 
-    def __init__(self, oglNote: OglNote = None):
+    def __init__(self, oglNote: OglNote | None = None):
         """
 
         Args:

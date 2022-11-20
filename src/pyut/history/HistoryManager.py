@@ -53,7 +53,7 @@ class HistoryManager:
             self._fileName: str = f'{PyutUtils.getBasePath()}{osSep}{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
         else:
             tempDir: str = gettempdir()
-            self._fileName: str = f'{tempDir}{osSep}{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
+            self._fileName = f'{tempDir}{osSep}{HISTORY_FILE_NAME}{str(self.__class__.historyId)}'
 
         self._frame    = theFrame
         """
@@ -152,7 +152,7 @@ class HistoryManager:
         """
 
         self._groupToExecute.execute()
-        self._groupToExecute = None
+        self._groupToExecute = cast(CommandGroup, None)
 
     def addCommandGroup(self, group: CommandGroup):
         """

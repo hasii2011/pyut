@@ -47,7 +47,7 @@ class PyutV2:
         """
         self.handleCommandLineArguments()
 
-        optimize: str = environ.get(f'{PyutConstants.PYTHON_OPTIMIZE}')
+        optimize: str | None = environ.get(f'{PyutConstants.PYTHON_OPTIMIZE}')
         self.logger.info(f'{PyutConstants.PYTHON_OPTIMIZE}=`{optimize}`')
 
     @property
@@ -98,7 +98,7 @@ class PyutV2:
         return absPath
 
     def _setOurSysPath(self):
-        appMode: str = environ.get(f'{PyutConstants.APP_MODE}')
+        appMode: str | None = environ.get(f'{PyutConstants.APP_MODE}')
         self.logger.info(f'{PyutConstants.APP_MODE}=`{appMode}`  {self._exePath=}')
         if appMode != 'True':
             try:

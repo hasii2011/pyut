@@ -27,7 +27,7 @@ class HelpMenuHandler(BaseMenuHandler):
 
     PYUT_WIKI: str = 'https://github.com/hasii2011/PyUt/wiki/'
 
-    def __init__(self, helpMenu: Menu, eventEngine: IEventEngine = None):
+    def __init__(self, helpMenu: Menu, eventEngine: IEventEngine | None = None):
 
         super().__init__(menu=helpMenu, eventEngine=eventEngine)
 

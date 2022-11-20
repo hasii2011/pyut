@@ -37,7 +37,7 @@ class TestEventType(TestBase):
 
     def testNewProjectEventType(self):
         smartEnum:          EventType    = EventType.NewProject
-        actualCommandEvent: CommandEvent = smartEnum.NewProject.commandEvent
+        actualCommandEvent: CommandEvent = smartEnum.NewProject.commandEvent    # type: ignore
 
         self.assertTrue(isinstance(actualCommandEvent, NewProjectEvent), 'The custom enumeration is broken - Bad Event')
 
@@ -52,7 +52,7 @@ class TestEventType(TestBase):
 
     def testUpdateTreeItemNameEvent(self):
         smartEnum:          EventType    = EventType.UpdateTreeItemName
-        actualCommandEvent: CommandEvent = smartEnum.UpdateTreeItemName.commandEvent
+        actualCommandEvent: CommandEvent = smartEnum.UpdateTreeItemName.commandEvent    # type: ignore
 
         self.assertTrue(isinstance(actualCommandEvent, UpdateTreeItemNameEvent), 'The custom enumeration is broken - Bad Event')
 

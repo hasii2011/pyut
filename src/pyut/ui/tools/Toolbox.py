@@ -85,9 +85,9 @@ class Toolbox(MiniFrame):
 
         self.SetSizer(gridSizer)
 
-        for tool in self._tools:
+        for gizmo in self._tools:
 
-            tool: Tool = cast(Tool, tool)
+            tool: Tool = cast(Tool, gizmo)
             self.logger.debug(f'{tool.caption=}')
             if isinstance(tool.wxID, WindowIDRef) is True:
                 buttonID = tool.wxID

@@ -17,7 +17,7 @@ class Vertex(GraphElement):
 
     def surround_half_edges(self):  # clockwise
         yield self.inc
-        he = self.inc.pred.twin
+        he = self.inc.pred.twin         # type: ignore
         while he is not self.inc:
             yield he
             he = he.pred.twin

@@ -86,7 +86,7 @@ class TestCreateOglLinkCommand(TestBase):
             '<END_COMMAND_GROUP>'
         )
         cmd.deserialize(serializedInfo=serializedLink)
-        link: OglInheritance = cmd._link
+        link: OglInheritance = cmd._link        # type: ignore
 
         self.assertIsNotNone(link, 'We should have created it')
         self.assertTrue(isinstance(link, OglInheritance), 'Create wrong type of link')

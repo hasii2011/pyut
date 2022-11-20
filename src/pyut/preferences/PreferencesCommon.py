@@ -1,10 +1,11 @@
 
 from typing import Dict
+from typing import Optional
+from typing import cast
 
 import sys
 
 import os
-from typing import cast
 
 from pyut.PyutConstants import PyutConstants
 from pyut.general.exceptions import PreferencesLocationNotSet
@@ -29,7 +30,7 @@ class PreferencesCommon(BaseSubPreference):
         This method MUST (I repeat MUST) be called before attempting to instantiate the preferences Singleton
         """
         if sys.platform == "linux2" or sys.platform == "linux" or sys.platform == PyutConstants.THE_GREAT_MAC_PLATFORM:
-            homeDir:  str = os.getenv('HOME')
+            homeDir:  Optional[str] = os.getenv('HOME')
             fullName: str = f'{homeDir}/{PreferencesCommon.PREFERENCES_FILENAME}'
             PreferencesCommon.preferencesFileLocationAndName = fullName
         else:

@@ -59,7 +59,7 @@ class PyutUtils:
 
     def __init__(self):
 
-        PyutUtils.logger = getLogger(__name__)
+        self.logger: Logger = getLogger(__name__)
 
     @staticmethod
     def strFloatToInt(floatValue: str) -> int:

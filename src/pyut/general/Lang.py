@@ -64,9 +64,9 @@ class Lang:
             localedir: str = f'{orgDirectory}{osSep}{Lang.LOCALE_DIRECTORY}'
             method = 1          # Really ?
             if method == 0:
-                # Possibility to load all languages, then do an install on fly
+                # Possibility to load all languages, then do an install on the fly
                 tr = gettext.translation(domain, localedir, languages=[language])
-                tr.install(True)
+                tr.install(True)    # type: ignore
             elif method == 1:
                 # Set locale for wxWidget
                 loc = Locale(wxLangID)

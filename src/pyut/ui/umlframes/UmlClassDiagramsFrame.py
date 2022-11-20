@@ -41,12 +41,12 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
     It derives its functionality from UmlDiagramsFrame, but
     it knows the structure of a class diagram and it can load class diagram data.
     """
-    def __init__(self, parent, eventEngine: IEventEngine = None):
+    def __init__(self, parent, eventEngine: IEventEngine | None = None):
         """
 
         Args:
             parent:
-            eventEngine: Pyut event engine  TODO, set to None for UI V1 code
+            eventEngine: Pyut event engine
         """
         self._cdfDebugId: int = UmlClassDiagramsFrame.cdfDebugId
 

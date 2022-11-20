@@ -205,9 +205,9 @@ class PyutApplicationFrameV2(Frame):
 
         self._clipboard = None
         self._mediator  = None
-        self._prefs     = None
-        self._pluginMgr   = None
-        self._pyutUIV2  = None
+        self._prefs     = cast(PyutPreferences, None)
+        self._pluginMgr = cast(PluginManager, None)
+        self._pyutUIV2  = cast(PyutUIV2, None)
 
         self.Destroy()
 

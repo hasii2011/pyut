@@ -145,8 +145,8 @@ class TestCreateOglInterfaceCommand(TestBase):
         self.assertIsNotNone(pyutMethods, 'Where are my methods')
         self.assertEqual(2, len(pyutMethods), 'Deserialized an incorrect number of methods')
 
-        for pyutMethod in pyutMethods:
-            pyutMethod: PyutMethod = cast(PyutMethod, pyutMethod)
+        for method in pyutMethods:
+            pyutMethod: PyutMethod = cast(PyutMethod, method)
             methodName: str        = pyutMethod.name
 
             self.assertTrue(methodName == 'floatMethod' or methodName == 'intMethod', 'Must be one or the other')

@@ -179,7 +179,6 @@ class DlgEditClass(DlgEditClassCommon):
         self._oldClassName: str = pyutClass.name
 
         self.Centre()
-        # self.ShowModal()
 
     def _callDlgEditField(self, field: PyutField) -> int:
         """
@@ -212,7 +211,7 @@ class DlgEditClass(DlgEditClassCommon):
         self._txtName.SetValue(self._pyutModelCopy.name)
 
         # Fill Stereotype
-        stereotype = self._pyutModelCopy.stereotype
+        stereotype = cast(PyutClass, self._pyutModelCopy).stereotype
         if stereotype is None or stereotype.name is None:
             strStereotype = ""
         else:
@@ -237,7 +236,7 @@ class DlgEditClass(DlgEditClassCommon):
         # Fill display properties
         self._chkShowFields.SetValue(self._pyutModelCopy.showFields)
         self._chkShowMethods.SetValue(self._pyutModelCopy.showMethods)
-        self._chkShowStereotype.SetValue(self._pyutModelCopy.displayStereoType)
+        self._chkShowStereotype.SetValue(cast(PyutClass, self._pyutModelCopy).displayStereoType)
 
     def _fixBtnFields(self):
         """

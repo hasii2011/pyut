@@ -2,6 +2,7 @@
 from typing import Tuple
 from typing import cast
 
+from ogl.OglAssociation import OglAssociation
 from wx import Point
 
 from pyutmodel.PyutClass import PyutClass
@@ -47,7 +48,7 @@ class CreateOglLinkCommand(Command):
         # the constructor will have no parameters and so the link
         # will be created or retrieved in the deserialize method.
         if src is None or dst is None:
-            self._link = None
+            self._link: OglLink = cast(OglLink, None)
         else:
             self._link = self._createLink(src, dst, linkType, srcPos, dstPos)
 
@@ -66,7 +67,7 @@ class CreateOglLinkCommand(Command):
         # get the model end position of the link
         dstPos = self._link.GetDestination().GetModel().GetPosition()
         # get the type of the link (see OglLinkFactory)
-        linkType = getLinkType(self._link)
+        linkType = getLinkType(cast(OglAssociation, self._link))
         # get the pyutId of the link
         linkId = self._link.pyutObject.id
         # serialize required data needed to undo/redo the link
