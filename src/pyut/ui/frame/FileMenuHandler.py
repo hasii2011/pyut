@@ -55,9 +55,7 @@ from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 
-from pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
 from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -66,12 +64,11 @@ FileNames = NewType('FileNames', List[str])
 
 class FileMenuHandler(BaseMenuHandler):
 
-    def __init__(self, fileMenu: Menu, lastOpenFilesIDs: List[int], pluginManager: PluginManager, eventEngine: IEventEngine):
+    def __init__(self, fileMenu: Menu, pluginManager: PluginManager, eventEngine: IEventEngine):
 
         super().__init__(menu=fileMenu, eventEngine=eventEngine)
 
-        self._lastOpenedFilesIDs: List[int]     = lastOpenFilesIDs
-        self._pluginManager:      PluginManager = pluginManager
+        self._pluginManager: PluginManager = pluginManager
 
         self.logger:       Logger          = getLogger(__name__)
         self._preferences: PyutPreferences = PyutPreferences()
@@ -81,8 +78,6 @@ class FileMenuHandler(BaseMenuHandler):
         self._printData:               PrintData               = cast(PrintData, None)
 
         self._initPrinting()    # Printing data
-        if self._preferences.usev2ui is True:
-            self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS, self._onUpdateRecentProjects)
 
     @property
     def exportPlugins(self) -> PluginIDMap:
@@ -99,9 +94,6 @@ class FileMenuHandler(BaseMenuHandler):
     @importPlugins.setter
     def importPlugins(self, importPlugins: PluginIDMap):
         self._importPlugins = importPlugins
-
-    def createTheLastOpenedFilesMenuItems(self):
-        self._updateRecentlyOpenedMenuItems()
 
     # noinspection PyUnusedLocal
     def onNewProject(self, event: CommandEvent):
@@ -349,16 +341,8 @@ class FileMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        for index in range(self._preferences.getNbLOF()):
-            if event.GetId() == self._lastOpenedFilesIDs[index]:
-                try:
-                    lst:      List[str] = self._preferences.getLastOpenedFilesList()
-                    fileName: str = lst[index]
-                    self.loadFile(FileNames(FileNames([fileName])))
-                    self._preferences.addNewLastOpenedFilesEntry(lst[index])
-                    self._updateRecentlyOpenedMenuItems()
-                except (ValueError, Exception) as e:
-                    self.logger.error(f'{e}')
+        pass
+        # TODO:  FileHistory manager call goes here
 
     # noinspection PyUnusedLocal
     def onExit(self, event: CommandEvent):
@@ -400,28 +384,6 @@ class FileMenuHandler(BaseMenuHandler):
 
         dlg.Destroy()
         return fileNames
-
-    # noinspection PyUnusedLocal
-    def _onUpdateRecentProjects(self, event: UpdateRecentProjectsEvent):
-        self._updateRecentlyOpenedMenuItems()
-
-    def _updateRecentlyOpenedMenuItems(self):
-        """
-        Set the menu items for the last opened files
-        """
-
-        self.logger.debug(f'{self._menu=}')
-
-        index: int = 0
-        files: List[str] = self._preferences.getLastOpenedFilesList()
-        for fileName in files:
-
-            openFilesId: int = self._lastOpenedFilesIDs[index]
-            menuLabel: str = f"&{str(index + 1)} {fileName}"
-            self.logger.debug(f'lbL: {menuLabel}  openFilesId: {openFilesId}')
-            self._menu.SetLabel(id=openFilesId, label=menuLabel)
-
-            index += 1
 
     def _initPrinting(self):
         """

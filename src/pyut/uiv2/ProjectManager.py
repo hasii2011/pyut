@@ -239,7 +239,7 @@ class ProjectManager:
             return
         else:
             self._writeProject(projectToWrite=projectToSave)
-            PyutPreferences().addNewLastOpenedFilesEntry(projectToSave.filename)
+            # TODO:  FileHistory Manager call goes here
 
             projectToSave.modified = False
 
@@ -263,7 +263,7 @@ class ProjectManager:
         oglProject: OglProject = self._readFile(filename=filename)
 
         self.currentProject = project
-        PyutPreferences().addNewLastOpenedFilesEntry(project.filename)
+        # TODO:  FileHistory Manager goes here
 
         self.updateProjectTreeText(pyutProject=project)
         wxYield()
@@ -308,20 +308,7 @@ class ProjectManager:
         self._writeProject(projectToWrite=projectToSave)
         self.updateProjectTreeText(pyutProject=projectToSave)
 
-        PyutPreferences().addNewLastOpenedFilesEntry(projectToSave.filename)
-        # Modify notebook text
-        # for i in range(self._diagramNotebook.GetPageCount()):
-        #     frame = self._diagramNotebook.GetPage(i)
-        #     documents = [document for document in projectToSave.documents if document.diagramFrame is frame]
-        #     if len(documents) > 0:
-        #         document = documents[0]
-        #         if frame in projectToSave.getFrames():
-        #             diagramTitle: str = document.title
-        #             shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
-        #
-        #             self._diagramNotebook.SetPageText(i, shortName)
-        #     else:
-        #         self.logger.info("Not updating notebook in FileHandling")
+        # TODO:  FileHistory Manager goes here
 
         currentDirectoryHandler.currentDirectory = fDialog.GetPath()
 

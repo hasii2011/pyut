@@ -1,5 +1,4 @@
 
-from typing import List
 from typing import cast
 
 from logging import Logger
@@ -30,14 +29,8 @@ from pyut.general.datatypes.Dimensions import Dimensions
 
 class PyutPreferences(Singleton):
 
-    DEFAULT_NB_LOF: int = 5         # Number of last opened files, by default
-
     DEFAULT_PDF_EXPORT_FILE_NAME: str = 'PyutExport'
-
-    FILE_KEY:       str = "File"
-
-    OPENED_FILES_SECTION:       str = "RecentlyOpenedFiles"
-    NUMBER_OF_ENTRIES:          str = "Number_of_Recently_Opened_Files"
+    FILE_KEY:                     str = "File"
 
     """
     The goal of this class is to handle Pyut Preferences, to load them and save
@@ -53,15 +46,6 @@ class PyutPreferences(Singleton):
         
       - to set a pyut' preference :
         prefs.preferenceName = xxx
-
-      - To change the number of last opened files, use :
-        prefs.setNbLOF(x)
-      - To get the number of last opened files, use :
-        prefs.getNbLOF()
-      - To get the list of Last Opened files, use :
-        prefs.getLastOpenedFilesList()
-      - To add a file to the Last Opened Files list, use :
-        prefs.addNewLastOpenedFilesEntry(filename)
 
     The preferences are loaded on the first instantiation of this
     class and are auto-saved when a value is added or changed.
@@ -103,59 +87,6 @@ class PyutPreferences(Singleton):
     @staticmethod
     def getPreferencesLocation():
         return PreferencesCommon.getPreferencesLocation()
-
-    def getNbLOF(self) -> int:
-        """
-
-        Returns:  the number of last opened files to keep
-        """
-        ans: str = self._config.get(PyutPreferences.OPENED_FILES_SECTION, PyutPreferences.NUMBER_OF_ENTRIES)
-        return int(ans)
-
-    def setNbLOF(self, nbLOF: int):
-        """
-        Set the number of last opened files
-        Args:
-            nbLOF:  The new value for the number or last opened files to remember
-        """
-        self._config.set(PyutPreferences.OPENED_FILES_SECTION, PyutPreferences.NUMBER_OF_ENTRIES, str(max(nbLOF, 0)))
-        self._preferencesCommon.saveConfig()
-
-    def getLastOpenedFilesList(self) -> List[str]:
-        """
-
-        Returns:          Return the list of files
-        """
-        lstFiles = []
-
-        # Read data
-        for index in range(self.getNbLOF()):
-            fileNameKey: str = f'{PyutPreferences.FILE_KEY}{str(index+1)}'
-            lstFiles.append(self._config.get(PyutPreferences.OPENED_FILES_SECTION, fileNameKey))
-        return lstFiles
-
-    def addNewLastOpenedFilesEntry(self, filename: str):
-        """
-        Add a file to the list of last opened files
-
-        Args:
-            filename:   The file name to add
-        """
-        # Get list
-        lstFiles = self.getLastOpenedFilesList()
-
-        # Already in list ? => remove
-        if filename in lstFiles:
-            lstFiles.remove(filename)
-
-        # Insert on top of the list
-        lstFiles = [filename]+lstFiles
-
-        # Save
-        for idx in range(PyutPreferences.DEFAULT_NB_LOF):
-            fileNameKey: str = f'{PyutPreferences.FILE_KEY}{str(idx+1)}'
-            self._config.set(PyutPreferences.OPENED_FILES_SECTION, fileNameKey, lstFiles[idx])
-        self._preferencesCommon.saveConfig()
 
     @property
     def overrideProgramExitSize(self) -> bool:
@@ -563,26 +494,10 @@ class PyutPreferences(Singleton):
         # Read data
         self._config.read(PyutPreferences.getPreferencesLocation())
 
-        # Create a "LastOpenedFiles" structure ?
-        hasSection: bool = self._config.has_section(PyutPreferences.OPENED_FILES_SECTION)
-        self.logger.debug(f'hasSection: {hasSection}')
-        if hasSection is False:
-            self.__addOpenedFilesSection()
-
         self._generalPrefs.addAnyMissingMainPreferences()
         self._miscellaneousPrefs.addAnyMissingPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
         self._featurePrefs.addAnyMissingFeaturePreferences()
-
-    def __addOpenedFilesSection(self):
-
-        self._config.add_section(PyutPreferences.OPENED_FILES_SECTION)
-        # Set last opened files
-        self._config.set(PyutPreferences.OPENED_FILES_SECTION, PyutPreferences.NUMBER_OF_ENTRIES, str(PyutPreferences.DEFAULT_NB_LOF))
-        for idx in range(PyutPreferences.DEFAULT_NB_LOF):
-            fileNameKey: str = f'{PyutPreferences.FILE_KEY}{str(idx+1)}'
-            self._config.set(PyutPreferences.OPENED_FILES_SECTION, fileNameKey, "")
-        self._preferencesCommon.saveConfig()
 
     def _createEmptyPreferences(self):
 

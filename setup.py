@@ -26,7 +26,7 @@ LICENSE = (HERE / 'LICENSE').read_text()
 
 setup(
     name='Pyut',
-    version='7.0.0',
+    version='7.1.0',
     app=APP,
     data_files=DATA_FILES,
     packages=[

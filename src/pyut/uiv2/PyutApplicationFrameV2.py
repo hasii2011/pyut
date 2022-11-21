@@ -119,18 +119,13 @@ class PyutApplicationFrameV2(Frame):
         self._toolBoxHandler.applicationFrame = self
 
         self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg='')
-        # Last opened Files IDs
-        self.lastOpenedFilesID = []
-        for index in range(self._prefs.getNbLOF()):
-            self.lastOpenedFilesID.append(PyutUtils.assignID(1)[0])
 
         # Initialization
         fileMenu:  Menu = Menu()
         editMenu:  Menu = Menu()
         toolsMenu: Menu = Menu()
         helpMenu:  Menu = Menu()
-        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, lastOpenFilesIDs=self.lastOpenedFilesID, pluginManager=self._pluginMgr,
-                                                                   eventEngine=self._eventEngine)
+        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, pluginManager=self._pluginMgr, eventEngine=self._eventEngine)
         self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
 
         self._initializePyutTools()
@@ -141,7 +136,7 @@ class PyutApplicationFrameV2(Frame):
                                                                     toolboxIds=self._toolboxIds)
         self._helpMenuHandler:  HelpMenuHandler  = HelpMenuHandler(helpMenu=helpMenu)
 
-        self._menuCreator: MenuCreator = MenuCreator(frame=self, pluginManager=self._pluginMgr, lastOpenFilesID=self.lastOpenedFilesID)
+        self._menuCreator: MenuCreator = MenuCreator(frame=self, pluginManager=self._pluginMgr)
         self._menuCreator.fileMenu  = fileMenu
         self._menuCreator.editMenu  = editMenu
         self._menuCreator.toolsMenu = toolsMenu

@@ -45,23 +45,6 @@ class TestPyutPreferences(TestBase):
     def tearDown(self):
         self._restoreBackup()
 
-    def testLastOpenedFiles(self):
-        """
-        Test the management of last opened file.
-        """
-        files = [
-            "uno", "dos", "tres", "quattro", "cinco", "seis"
-        ]
-        self.prefs.init()  # reload prefs
-        self.prefs.setNbLOF(len(files) - 1)
-        self.assertTrue(self.prefs.getNbLOF() == len(files) - 1, "wrong nbLOF")
-        for file in files:
-            self.prefs.addNewLastOpenedFilesEntry(file)
-        files.reverse()  # because it's a last in first out
-        files.pop()      # remove last one which should have been dropped
-        for i in range(len(files) - 1):
-            self.assertTrue(self.prefs.getLastOpenedFilesList()[i] == files[i], "wrong file name")
-
     def testAutoResizeOptionIsTrue(self):
 
         self.prefs.init()  # reload default prefs

@@ -51,10 +51,9 @@ from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 class MenuCreator:
 
-    def __init__(self, frame: Frame, pluginManager: PluginManager, lastOpenFilesID):
+    def __init__(self, frame: Frame, pluginManager: PluginManager):
 
         self._containingFrame: Frame = frame
-        self.lastOpenedFilesID = lastOpenFilesID
 
         self.logger:    Logger          = getLogger(__name__)
         self._prefs:    PyutPreferences = PyutPreferences()
@@ -191,8 +190,6 @@ class MenuCreator:
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
 
-        self._fileMenuHandler.createTheLastOpenedFilesMenuItems()   # TODO move this call into the handler constructor
-
         self._bindFileMenuHandlers(containingFrame, self._fileMenuHandler)
         self._bindEditMenuHandlers(containingFrame, self._editMenuHandler)
         self._bindHelpMenuHandlers(containingFrame, self._helpMenuHandler)
@@ -238,10 +235,9 @@ class MenuCreator:
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW, _("Print pre&view"), _("Diagram preview before printing"))
         fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT, _("&Print\tCtrl-P"), _("Print the current diagram"))
         fileMenu.AppendSeparator()
-        sub = self._makeRecentlyOpenedMenu()
-        fileMenu.AppendSubMenu(sub, _('Recently Opened'))
-        fileMenu.AppendSeparator()
 
+        fileMenu.AppendSeparator()
+        # TODO:  Use File History manager to create the recently opened list here
         fileMenu.Append(ID_EXIT, _("E&xit"), _("Exit PyUt"))
 
     def _initializeEditMenu(self):
@@ -305,18 +301,6 @@ class MenuCreator:
         mnuEdit.AppendSubMenu(sub,  _('Add Diagram'))
 
         return mnuEdit
-
-    def _makeRecentlyOpenedMenu(self):
-
-        sub: Menu = Menu()
-
-        index = 0
-        for index in range(index, self._prefs.getNbLOF()):
-            # self.fileMenu.Append(self.lastOpenedFilesID[index], "&" + str(index + 1) + " -")
-            lofAgain: str = f"&{str(index + 1)} -"
-            sub.Append(self.lastOpenedFilesID[index], lofAgain)
-
-        return sub
 
     def _makeExportMenu(self, fileMenuHandler: FileMenuHandler):
         """
@@ -408,9 +392,6 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrint,             id=SharedIdentifiers.ID_MNU_FILE_PRINT)
 
         #  EVT_MENU(self, ID_MNU_FILE_DIAGRAM_PROPERTIES,self._OnMnuFileDiagramProperties)
-
-        for index in range(self._prefs.getNbLOF()):
-            containingFrame.Bind(EVT_MENU, fileMenuHandler.onRecentlyOpenedFile, id=self.lastOpenedFilesID[index])
 
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPyutPreferences, id=ID_PREFERENCES)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit,            id=ID_EXIT)

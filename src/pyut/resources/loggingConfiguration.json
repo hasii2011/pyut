@@ -46,7 +46,7 @@
             "level":     "INFO",
             "propagate": "False"
         },
-        "org.pyut": {
+        "pyut": {
             "level":     "INFO",
             "propagate": "False"
         }
