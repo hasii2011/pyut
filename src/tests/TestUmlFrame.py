@@ -13,7 +13,7 @@ from wx import ID_ANY
 from pyut.PyutUtils import PyutUtils
 from pyut.errorcontroller.ErrorManager import ErrorManager
 
-from pyut.history.HistoryUtils import HISTORY_FILE_NAME
+# from pyut.history.HistoryUtils import HISTORY_FILE_NAME
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -70,12 +70,13 @@ class TestUmlFrame(unittest.TestCase):
 
         del self.app
         del self._umlFrame
-        for x in range(4):
-
-            try:
-                osRemove(f'{HISTORY_FILE_NAME}{x}')
-            except (ValueError, Exception):
-                pass    # we truly want to ignore
+        # TODO remove new .json files
+        # for x in range(4):
+        #
+        #     try:
+        #         osRemove(f'{HISTORY_FILE_NAME}{x}')
+        #     except (ValueError, Exception):
+        #         pass    # we truly want to ignore
 
     def testClassCreation(self):
         """

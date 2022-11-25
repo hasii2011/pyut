@@ -28,7 +28,6 @@ class TestAll:
     NOT_TESTS: List[str] = ['TestAll',
                             'TestWxOgl', 'TestBase', 'TestTemplate',
                             'pyut/ui/tools/TestToolboxFrame',
-                            'pyut/history/commands/TestCommandCommon',
                             'TestUmlFrame', 'pyut/dialogs/TestADialog', 'TestGriddedDiagramApplication']
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result
