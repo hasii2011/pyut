@@ -64,38 +64,45 @@ from ogl.sd.OglSDInstance import OglSDInstance
 from ogl import OglLinkFactory
 
 PyutClassNames: List[str] = [
+    "DisplayMethodParameters",
+    "PyutActor",
     "PyutClass",
+    "PyutClassCommon",
+    "PyutDisplayParameters",
     "PyutField",
+    "PyutInterface",
     "PyutLink",
     "PyutLinkedObject",
-    "PyutNote",
-    "PyutUseCase",
-    "PyutActor",
+    "PyutLinkType",
     "PyutMethod",
     "PyutModifier",
+    "PyutNote",
     "PyutObject",
-    "PyutParam",
-    "PyutStereotype",
-    "PyutType",
-    "PyutVisibility",
+    "PyutParameter",
+    "PyutSDInstance"
     "PyutSDMessage",
-    "Mediator",
-    "Singleton",
+    "PyutStereotype",
+    "PyutText",
+    "PyutType",
+    "PyutUseCase",
+    "PyutVisibilityEnum",
 ]
 
 OglClassNames: List[str] = [
-    "OglObject",
-    "OglClass",
-    "OglNote",
     "OglActor",
-    "OglUseCase",
-    "OglLink",
-    "OglNoteLink",
-    "OglAssociation",
     "OglAggregation",
+    "OglAssociation",
+    "OglClass",
     "OglComposition",
-    "OglSDInstance",
     "OglInheritance",
     "OglInterface",
-    "OglLinkFactory"
+    "OglInterface2",
+    "OglLink",
+    "OglNote",
+    "OglNoteLink",
+    "OglObject",
+    "OglText"
+    "OglUseCase",
+    "OglSDInstance",
+    "OglSDMessage"
 ]

@@ -588,14 +588,15 @@ class PyutUIV2(IPyutUI):
             self._placeShapesOnFrames(oglProject=oglProject, pyutProject=pyutProject)
 
             self._updateApplicationTitle()
-            self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
+            self._eventEngine.sendEvent(EventType.UpdateRecentProjects, projectFilename=projectFilename)
 
     # noinspection PyUnusedLocal
     def _onSaveProject(self, event: SaveProjectEvent):
 
-        self._projectManager.saveProject(projectToSave=self._projectManager.currentProject)
+        projectToSave: IPyutProject = self._projectManager.currentProject
+        self._projectManager.saveProject(projectToSave=projectToSave)
         self._updateApplicationTitle()
-        self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
+        self._eventEngine.sendEvent(EventType.UpdateRecentProjects, projectFilename=projectToSave.filename)
 
     # noinspection PyUnusedLocal
     def _onSaveProjectAs(self, event: SaveProjectAsEvent):
@@ -603,7 +604,7 @@ class PyutUIV2(IPyutUI):
 
         self._projectManager.saveProjectAs(projectToSave=currentProject)
         self._updateApplicationTitle()
-        self._eventEngine.sendEvent(EventType.UpdateRecentProjects)
+        self._eventEngine.sendEvent(EventType.UpdateRecentProjects, projectFilename=currentProject.filename)
 
     # noinspection PyUnusedLocal
     def _onInsertProject(self, event: InsertProjectEvent):

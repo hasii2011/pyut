@@ -22,6 +22,7 @@ from pyut.uiv2.eventengine.Events import FrameInformationEvent
 from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 from pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
+from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 
 from pyut.uiv2.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
@@ -56,6 +57,7 @@ TOOL_ID_PARAMETER:      str = 'toolId'
 ACTION_PARAMETER:       str = 'action'
 NEW_FILENAME_PARAMETER: str = 'newFilename'
 
+
 PROJECT_MODIFIED_PARAMETER:          str = 'projectModified'
 CURRENT_FRAME_ZOOM_FACTOR_PARAMETER: str = 'currentFrameZoomFactor'
 APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
@@ -64,6 +66,8 @@ OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
 NEW_PROJECT_FROM_FILENAME_PARAMETER: str = OPEN_PROJECT_FILENAME_PARAMETER
 CALLBACK_PARAMETER:                  str = 'callback'
 PYUT_CLASS_PARAMETER:                str = 'pyutClass'
+
+PROJECT_FILENAME_PARAMETER: str = INSERT_PROJECT_FILENAME_PARAMETER
 
 NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER = 'newProjectDiagramInformation'
 
@@ -137,9 +141,11 @@ class EventEngine(IEventEngine):
                 self._sendFrameInformationEvent(**kwargs)
             case EventType.SelectedOglObjects:
                 self._sendSelectedOglObjectsEvent(**kwargs)
+            case EventType.UpdateRecentProjects:
+                self._sendUpdateRecentProjectEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
-                    EventType.UMLDiagramModified | EventType.UpdateRecentProjects | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
+                    EventType.UMLDiagramModified | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
                     EventType.CopyShapes | EventType.PasteShapes | EventType.Undo | EventType.Redo | EventType.CutShapes | \
                     EventType.AddOglDiagram | EventType.AddPyutDiagram | EventType.RefreshFrame:
                 self._simpleSendEvent(eventType=eventType)
@@ -256,4 +262,9 @@ class EventEngine(IEventEngine):
 
         cb: FrameInformationCallback = kwargs[CALLBACK_PARAMETER]
         eventToPost: SelectedOglObjectsEvent = SelectedOglObjectsEvent(callback=cb)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendUpdateRecentProjectEvent(self, **kwargs):
+        projectFilename: str = kwargs[PROJECT_FILENAME_PARAMETER]
+        eventToPost: UpdateRecentProjectsEvent = UpdateRecentProjectsEvent(projectFilename=projectFilename)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

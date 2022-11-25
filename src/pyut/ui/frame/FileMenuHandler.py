@@ -9,7 +9,9 @@ from logging import getLogger
 from wx import BOTH
 from wx import FD_MULTIPLE
 from wx import FD_OPEN
+from wx import FileHistory
 from wx import ID_ANY
+from wx import ID_FILE1
 from wx import ID_OK
 from wx import PAPER_A4
 from wx import PORTRAIT
@@ -64,11 +66,19 @@ FileNames = NewType('FileNames', List[str])
 
 class FileMenuHandler(BaseMenuHandler):
 
-    def __init__(self, fileMenu: Menu, pluginManager: PluginManager, eventEngine: IEventEngine):
+    def __init__(self, fileMenu: Menu, eventEngine: IEventEngine, pluginManager: PluginManager, fileHistory: FileHistory):
+        """
 
+        Args:
+            fileMenu:       The file menu
+            eventEngine:    The event engine
+            pluginManager:  Plugin manager to get IDs from
+            fileHistory:    File History to load and update to and from
+        """
         super().__init__(menu=fileMenu, eventEngine=eventEngine)
 
         self._pluginManager: PluginManager = pluginManager
+        self._fileHistory:   FileHistory   = fileHistory
 
         self.logger:       Logger          = getLogger(__name__)
         self._preferences: PyutPreferences = PyutPreferences()
@@ -181,7 +191,7 @@ class FileMenuHandler(BaseMenuHandler):
         """
         fileNames: FileNames = self._askForFilesToLoad()
         if len(fileNames) > 0:
-            self.loadFile(fileNames)
+            self.loadFiles(fileNames)
 
     # noinspection PyUnusedLocal
     def onFileSave(self, event: CommandEvent):
@@ -357,10 +367,22 @@ class FileMenuHandler(BaseMenuHandler):
         parent: Window = event.GetEventObject().GetWindow()
         wxPostEvent(parent, closeEvent)
 
-    def loadFile(self, fileNames: FileNames):
+    def onOpenRecent(self, event: CommandEvent):
         """
-        Load the specified filename;  This is externally available so that
-        we can open a file from the command line
+        Opens the selected 'recently' opened file
+        Args:
+            event:
+        """
+        fileNum: int = event.GetId() - ID_FILE1
+        path:    str = self._fileHistory.GetHistoryFile(fileNum)
+
+        self.logger.info(f'{event=} - filename: {path}')
+        self.loadFiles(fileNames=FileNames([path]))
+
+    def loadFiles(self, fileNames: FileNames):
+        """
+        Load the specified filenames;  This is externally available so that
+        we can open a files from the command line
 
         Args:
             fileNames: A list of files to load

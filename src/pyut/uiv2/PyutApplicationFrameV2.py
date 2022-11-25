@@ -14,6 +14,8 @@ from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
+from wx import EVT_WINDOW_DESTROY
+from wx import FRAME_TOOL_WINDOW
 from wx import EVT_CLOSE
 from wx import FRAME_EX_METAL
 from wx import EVT_ACTIVATE
@@ -21,9 +23,10 @@ from wx import EVT_ACTIVATE
 from wx import ActivateEvent
 from wx import AcceleratorEntry
 from wx import CommandEvent
-from wx import FRAME_TOOL_WINDOW
+from wx import FileHistory
 from wx import Frame
 from wx import ID_ANY
+from wx import ID_FILE1
 
 from wx import NewIdRef
 from wx import Point
@@ -32,6 +35,7 @@ from wx import Icon
 from wx import AcceleratorTable
 from wx import Menu
 from wx import ToolBar
+from wx import WindowDestroyEvent
 
 from wx import Yield as wxYield
 
@@ -64,6 +68,7 @@ from pyut.general.datatypes.Dimensions import Dimensions
 from pyut.general.datatypes.Position import Position
 
 from pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
+from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
 from pyut.uiv2.PluginAdapter import PluginAdapter
 
 from pyut.uiv2.PyutUIV2 import PyutUIV2
@@ -71,8 +76,10 @@ from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 from pyut.uiv2.eventengine.EventEngine import EventEngine
 from pyut.uiv2.eventengine.Events import EVENT_SELECT_TOOL
+from pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import SelectToolEvent
+from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
@@ -112,6 +119,8 @@ class PyutApplicationFrameV2(Frame):
 
         self._eventEngine: IEventEngine  = EventEngine(listeningWindow=self)
         self._pluginMgr:   PluginManager = PluginManager(pluginAdapter=PluginAdapter(eventEngine=self._eventEngine))
+        self._fileHistory: FileHistory   = FileHistory(idBase=ID_FILE1)
+
         self._pyutUIV2:    PyutUIV2      = PyutUIV2(self, eventEngine=self._eventEngine)
 
         # set up the singleton
@@ -125,7 +134,9 @@ class PyutApplicationFrameV2(Frame):
         editMenu:  Menu = Menu()
         toolsMenu: Menu = Menu()
         helpMenu:  Menu = Menu()
-        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, pluginManager=self._pluginMgr, eventEngine=self._eventEngine)
+        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine,
+                                                                   pluginManager=self._pluginMgr,
+                                                                   fileHistory=self._fileHistory)
         self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
 
         self._initializePyutTools()
@@ -152,6 +163,13 @@ class PyutApplicationFrameV2(Frame):
 
         self._menuCreator.initializeMenus()
 
+        fileHistoryConfiguration: FileHistoryConfiguration = FileHistoryConfiguration(appName='pyutV3',
+                                                                                      vendorName='ElGatoMalo',
+                                                                                      localFilename='pyutRecentFiles.ini')
+
+        self._fileHistory.UseMenu(fileMenu)
+        self._fileHistory.Load(fileHistoryConfiguration)
+
         self.__setupKeyboardShortcuts()
 
         self._eventEngine.sendEvent(EventType.NewProject)
@@ -165,7 +183,6 @@ class PyutApplicationFrameV2(Frame):
         # Initialize the tips frame
         self._alreadyDisplayedTipsFrame = False
 
-        # TODO:  Fix later for V2
         self.SetDropTarget(PyutFileDropTarget(eventEngine=self._eventEngine))
 
         if self.GetThemeEnabled() is True:
@@ -174,7 +191,11 @@ class PyutApplicationFrameV2(Frame):
         self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_TITLE,  self._onUpdateTitle)
         self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_STATUS, self._onUpdateStatus)
         self._eventEngine.registerListener(EVENT_SELECT_TOOL,               self._onSelectTool)
+        self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS,    self._onUpdateRecentProjects)
 
+        self._fileMenu: Menu = fileMenu     # So we can destroy you later !!!
+
+        self.Bind(EVT_WINDOW_DESTROY, self._cleanupFileHistory)
         self.Bind(EVT_ACTIVATE, self._onActivate)
         self.Bind(EVT_CLOSE, self.Close)
 
@@ -206,12 +227,32 @@ class PyutApplicationFrameV2(Frame):
 
         self.Destroy()
 
+    # noinspection PyUnusedLocal
+    def _cleanupFileHistory(self, event: WindowDestroyEvent):
+        """
+        A little extra cleanup is required for the FileHistory control;
+        Take time to persist the file history
+        Args:
+            event:
+        """
+        #
+        # On OS X this gets stored in ~/Library/Preferences
+        # Nothing I did to the FileHistoryConfiguration object seemed to change that
+        fileHistoryConfiguration: FileHistoryConfiguration = FileHistoryConfiguration(appName='pyutV3',
+                                                                                      vendorName='ElGatoMalo',
+                                                                                      localFilename='pyutRecentFiles.ini')
+
+        self._fileHistory.Save(fileHistoryConfiguration)
+
+        # del self._fileHistory
+        # self._fileMenu.Destroy()
+
     def loadByFilename(self, filename):
         """
         Load the specified filename; called by PyutApp
         """
         # ignore until I find a good place for FileNames
-        self._fileMenuHandler.loadFile(fileNames=[filename])  # type: ignore
+        self._fileMenuHandler.loadFiles(fileNames=[filename])  # type: ignore
 
     def removeEmptyProject(self):
 
@@ -273,6 +314,10 @@ class PyutApplicationFrameV2(Frame):
         #     toolBar.ToggleTool(deselectedToolId, False)
         #
         # toolBar.ToggleTool(toolId, True)
+
+    def _onUpdateRecentProjects(self, event: UpdateRecentProjectsEvent):
+        projectFilename: str = event.projectFilename
+        self._fileHistory.AddFileToHistory(filename=projectFilename)
 
     def _onNewAction(self, event: CommandEvent):
         """

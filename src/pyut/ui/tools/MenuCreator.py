@@ -5,9 +5,12 @@ from logging import Logger
 from logging import getLogger
 
 from wx import EVT_MENU
+from wx import EVT_MENU_RANGE
 from wx import ID_ABOUT
 from wx import ID_CUT
 from wx import ID_COPY
+from wx import ID_FILE1
+from wx import ID_FILE9
 from wx import ID_OPEN
 from wx import ID_PASTE
 from wx import ID_EXIT
@@ -395,6 +398,8 @@ class MenuCreator:
 
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPyutPreferences, id=ID_PREFERENCES)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit,            id=ID_EXIT)
+
+        containingFrame.Bind(EVT_MENU_RANGE, fileMenuHandler.onOpenRecent, id=ID_FILE1, id2=ID_FILE9)
 
     def _bindEditMenuHandlers(self, containingFrame: Frame, editMenuHandler: EditMenuHandler):
 
