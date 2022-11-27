@@ -7,16 +7,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-# noinspection PyPackageRequirements
-from deprecated import deprecated
-from ogl.OglActor import OglActor
-from ogl.OglAssociation import OglAssociation
-from ogl.OglClass import OglClass
-from ogl.OglNote import OglNote
-from ogl.OglText import OglText
-from ogl.OglUseCase import OglUseCase
-from ogl.sd.OglSDInstance import OglSDInstance
-
 from wx import EVT_CLOSE
 from wx import EVT_PAINT
 
@@ -24,23 +14,29 @@ from wx import BeginBusyCursor
 from wx import EndBusyCursor
 from wx import MouseEvent
 from wx import Notebook
-
-from ogl.OglInterface2 import OglInterface2
-from ogl.OglObject import OglObject
-from ogl.OglLink import OglLink
-
-from ogl.sd.OglSDMessage import OglSDMessage
+from wx import CommandProcessor
 
 from miniogl.Constants import SKIP_EVENT
 from miniogl.DiagramFrame import DiagramFrame
 from miniogl.RectangleShape import RectangleShape
 
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglObject import OglObject
+from ogl.OglLink import OglLink
+from ogl.OglActor import OglActor
+
+from ogl.OglClass import OglClass
+from ogl.OglNote import OglNote
+from ogl.OglText import OglText
+from ogl.OglUseCase import OglUseCase
+
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
+
 from pyut.ui.ActionHandler import ActionHandler
 from pyut.ui.Actions import ACTION_ZOOM_IN
 
 from pyut.PyutUtils import PyutUtils
-
-from pyut.history.HistoryManager import HistoryManager
 
 from pyut.experimental.GraphicalHandler import GraphicalHandler
 
@@ -72,7 +68,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
     clsUmlFrameLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent: Notebook, eventEngine: IEventEngine):
+    def __init__(self, parent: Notebook, eventEngine: IEventEngine, commandProcessor: CommandProcessor):
         """
 
         Args:
@@ -82,10 +78,11 @@ class UmlFrame(UmlFrameShapeHandler):
 
         super().__init__(parent)
 
-        self.logger:       Logger       = UmlFrame.clsUmlFrameLogger
-        self._eventEngine: IEventEngine = eventEngine
+        self.logger:            Logger           = UmlFrame.clsUmlFrameLogger
+        self._eventEngine:      IEventEngine     = eventEngine
+        self._commandProcessor: CommandProcessor = commandProcessor
 
-        self._actionHandler:      ActionHandler    = ActionHandler(eventEngine=eventEngine)
+        self._actionHandler:     ActionHandler     = ActionHandler(eventEngine=eventEngine, commandProcessor=commandProcessor)
         self._editObjectHandler: EditObjectHandler = EditObjectHandler(eventEngine=eventEngine)
 
         self.maxWidth:  int  = DEFAULT_WIDTH
@@ -97,8 +94,6 @@ class UmlFrame(UmlFrameShapeHandler):
         initPosY:  int = 0
         self.SetScrollbars(UmlFrame.PIXELS_PER_UNIT_X, UmlFrame.PIXELS_PER_UNIT_Y, nbrUnitsX, nbrUnitsY, initPosX, initPosY, False)
 
-        self._historyManager: HistoryManager = HistoryManager(self)
-
         # Close event
         self.Bind(EVT_CLOSE, self.evtClose)
         self.Bind(EVT_PAINT, self.OnPaint)
@@ -107,14 +102,14 @@ class UmlFrame(UmlFrameShapeHandler):
 
         self._defaultCursor = self.GetCursor()
 
-    @property
-    def historyManager(self) -> HistoryManager:
-        """
-        Read-only as this is created on the frame initialization.
-
-        Returns:  The frame's history manager.
-        """
-        return self._historyManager
+    # @property
+    # def historyManager(self) -> HistoryManager:
+    #     """
+    #     Read-only as this is created on the frame initialization.
+    #
+    #     Returns:  The frame's history manager.
+    #     """
+    #     return self._historyManager
 
     # noinspection PyUnusedLocal
     def setCodePath(self, path: str):
@@ -145,7 +140,7 @@ class UmlFrame(UmlFrameShapeHandler):
         Args:
             event:
         """
-        self._historyManager.destroy()
+        # self._historyManager.destroy()
         self.Destroy()
 
     def OnLeftDown(self, event: MouseEvent):
@@ -299,11 +294,11 @@ class UmlFrame(UmlFrameShapeHandler):
                     return cast(UmlObject, shape)
         return cast(UmlObject, None)
 
-    @deprecated('Use the historyManager property')
-    def getHistory(self):
-        """
-        """
-        return self._historyManager
+    # @deprecated('Use the historyManager property')
+    # def getHistory(self):
+    #     """
+    #     """
+    #     return self._historyManager
 
     # noinspection PyUnusedLocal
     def _onAddPyutDiagram(self, event: AddPyutDiagramEvent):
@@ -314,7 +309,8 @@ class UmlFrame(UmlFrameShapeHandler):
 
         BeginBusyCursor()
 
-        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
+        # gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
+        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth)
         gh.addHierarchy(pdc.PyutClassNames)
 
         EndBusyCursor()
@@ -328,7 +324,8 @@ class UmlFrame(UmlFrameShapeHandler):
 
         BeginBusyCursor()
 
-        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
+        # gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
+        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth)
         gh.addHierarchy(pdc.OglClassNames)
 
         EndBusyCursor()

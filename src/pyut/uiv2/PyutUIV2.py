@@ -8,6 +8,7 @@ from logging import getLogger
 from logging import DEBUG
 
 from wx import ClientDC
+from wx import CommandProcessor
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
@@ -153,16 +154,17 @@ NO_MENU:          Menu             = cast(Menu, None)
 
 class PyutUIV2(IPyutUI):
 
-    def __init__(self, topLevelWindow: Frame, eventEngine: IEventEngine):
+    def __init__(self, topLevelWindow: Frame, eventEngine: IEventEngine, commandProcessor: CommandProcessor):
 
         super().__init__(topLevelWindow=topLevelWindow)
 
         self.logger: Logger = getLogger(__name__)
 
-        self._parentWindow:    Frame           = topLevelWindow
-        self._eventEngine:     IEventEngine    = eventEngine
-        self._projectTree:     ProjectTree     = ProjectTree(parentWindow=self)
-        self._diagramNotebook: DiagramNotebook = DiagramNotebook(parentWindow=self, eventEngine=eventEngine)
+        self._parentWindow:     Frame           = topLevelWindow
+        self._eventEngine:      IEventEngine    = eventEngine
+        self._commandProcessor: CommandProcessor = commandProcessor
+        self._projectTree:      ProjectTree     = ProjectTree(parentWindow=self)
+        self._diagramNotebook:  DiagramNotebook = DiagramNotebook(parentWindow=self, eventEngine=eventEngine)
 
         # Set splitter
         self.SetMinimumPaneSize(20)
@@ -282,7 +284,7 @@ class PyutUIV2(IPyutUI):
            event    The event which contains the diagram type to create
 
         """
-        diagramType: DiagramType = event.diagramType
+        diagramType:      DiagramType      = event.diagramType
         pyutProject: IPyutProject = self._projectManager.currentProject
         if pyutProject is None:
             pyutProject = self._projectManager.newProject()
@@ -303,7 +305,8 @@ class PyutUIV2(IPyutUI):
 
         cb(pyutDocument)
 
-    def _newDiagram(self, pyutProject: IPyutProject, diagramType: DiagramType, diagramName: str = '') -> IPyutDocument:
+    def _newDiagram(self, pyutProject: IPyutProject,
+                    diagramType: DiagramType, diagramName: str = '') -> IPyutDocument:
         """
         Create a new frame on the input project
         Update the project
@@ -314,10 +317,12 @@ class PyutUIV2(IPyutUI):
             diagramType:    Diagram Type
             diagramName:    Diagram Name
 
-        Returns:
-
+        Returns: The new created PyutDocument, aka diagram
         """
-        umlFrame, defaultDiagramName = createDiagramFrame(parentFrame=self._diagramNotebook, diagramType=diagramType, eventEngine=self._eventEngine)
+        umlFrame, defaultDiagramName = createDiagramFrame(parentFrame=self._diagramNotebook,
+                                                          diagramType=diagramType,
+                                                          eventEngine=self._eventEngine,
+                                                          commandProcessor=self._commandProcessor)
         document: PyutDocumentV2     = PyutDocumentV2(diagramFrame=umlFrame, docType=diagramType, eventEngine=self._eventEngine)
 
         document.title = defaultDiagramName

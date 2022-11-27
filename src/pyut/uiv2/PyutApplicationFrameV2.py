@@ -13,6 +13,7 @@ from sys import platform as sysPlatform
 from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
+from wx import CommandProcessor
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_WINDOW_DESTROY
 from wx import FRAME_TOOL_WINDOW
@@ -121,7 +122,9 @@ class PyutApplicationFrameV2(Frame):
         self._pluginMgr:   PluginManager = PluginManager(pluginAdapter=PluginAdapter(eventEngine=self._eventEngine))
         self._fileHistory: FileHistory   = FileHistory(idBase=ID_FILE1)
 
-        self._pyutUIV2:    PyutUIV2      = PyutUIV2(self, eventEngine=self._eventEngine)
+        self._commandProcessor: CommandProcessor = CommandProcessor()
+
+        self._pyutUIV2:    PyutUIV2      = PyutUIV2(self, eventEngine=self._eventEngine, commandProcessor=self._commandProcessor)
 
         # set up the singleton
         self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
@@ -134,9 +137,13 @@ class PyutApplicationFrameV2(Frame):
         editMenu:  Menu = Menu()
         toolsMenu: Menu = Menu()
         helpMenu:  Menu = Menu()
+
+        self._commandProcessor.SetEditMenu(editMenu)
+
         self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine,
                                                                    pluginManager=self._pluginMgr,
-                                                                   fileHistory=self._fileHistory)
+                                                                   fileHistory=self._fileHistory
+                                                                   )
         self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
 
         self._initializePyutTools()

@@ -9,11 +9,6 @@ from logging import getLogger
 
 from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
-from pyut.history.commands.CommandGroup import CommandGroup
-from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
-
-from pyut.history.HistoryManager import HistoryManager
-
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutMethod import PyutMethod
 
@@ -22,11 +17,10 @@ from ogl.OglClass import OglClass
 
 class GraphicalHandler:
 
-    def __init__(self, umlFrame: UmlFrameShapeHandler, maxWidth: int, historyManager: HistoryManager):
+    def __init__(self, umlFrame: UmlFrameShapeHandler, maxWidth: int):
 
         self.logger:          Logger               = getLogger(__name__)
         self._umlFrame:       UmlFrameShapeHandler = umlFrame
-        self._historyManager: HistoryManager       = historyManager
         self._maxWidth:       int                  = maxWidth
 
     def addHierarchy(self, display):
@@ -38,7 +32,7 @@ class GraphicalHandler:
         Args:
             display:
         """
-        from pyut.experimental.PythonMetaClassDataHandler import PythonMetaClassDataHandler # type: ignore
+        from pyut.experimental.PythonMetaClassDataHandler import PythonMetaClassDataHandler     # type: ignore
 
         cg: PythonMetaClassDataHandler = PythonMetaClassDataHandler()
         classes: List[type] = cg.getClassListFromNames(display)
@@ -110,14 +104,7 @@ class GraphicalHandler:
         Returns: an OgLink
 
         """
-        cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
-        # cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=father, dst=child)
-        # inheritance points back to parent
-        cmd: CreateOglLinkCommand = CreateOglLinkCommand(src=child, dst=parent)
-        cmdGroup.addCommand(cmd)
-        self._historyManager.addCommandGroup(cmdGroup)
-
-        cmd.execute()
+        pass    # TODO:  Actually create a link with History Manager
 
     def positionClassHierarchy(self, oglClassDefinitions: List[OglClass]):
         """

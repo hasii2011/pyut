@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from logging import Logger
 from logging import getLogger
 
+from wx import CommandProcessor
 from wx import ID_OK
 from wx import CANCEL
 from wx import CENTRE
@@ -24,6 +25,7 @@ from ogl.OglClass import OglClass
 from pyut.general.Singleton import Singleton
 
 from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
+from pyut.ui.wxcommands.CommandCreateOglClass import CommandCreateOglClass
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlFrame import UmlFrame
@@ -169,8 +171,9 @@ class ActionHandler(Singleton):
 
     def init(self, **kwargs):
 
-        self.logger:       Logger       = getLogger(__name__)
-        self._eventEngine: IEventEngine = kwargs['eventEngine']
+        self.logger:            Logger           = getLogger(__name__)
+        self._eventEngine:      IEventEngine     = kwargs['eventEngine']
+        self._commandProcessor: CommandProcessor = kwargs['commandProcessor']
 
         self._currentAction:           int  = ACTION_SELECTOR
         self._currentActionPersistent: bool = False
@@ -347,33 +350,37 @@ class ActionHandler(Singleton):
 
     def createLollipopInterface(self, umlFrame: 'UmlDiagramsFrame', implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
-        from pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
-        from pyut.history.commands.CommandGroup import CommandGroup
-
-        attachmentAnchor.setYouAreTheSelectedAnchor()
-
-        cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(umlFrame=umlFrame, eventEngine=self._eventEngine,
-                                                                   implementor=implementor, attachmentAnchor=attachmentAnchor)
-        group: CommandGroup = CommandGroup("Create lollipop")
-
-        group.addCommand(cmd)
-        umlFrame.historyManager.addCommandGroup(group)
-        umlFrame.historyManager.execute()
+        pass    # TODO: Implement this!!!
+        # from pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
+        # from pyut.history.commands.CommandGroup import CommandGroup
+        #
+        # attachmentAnchor.setYouAreTheSelectedAnchor()
+        #
+        # cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(umlFrame=umlFrame, eventEngine=self._eventEngine,
+        #                                                            implementor=implementor, attachmentAnchor=attachmentAnchor)
+        # group: CommandGroup = CommandGroup("Create lollipop")
+        #
+        # group.addCommand(cmd)
+        # umlFrame.historyManager.addCommandGroup(group)
+        # umlFrame.historyManager.execute()
 
     def _onSetToolAction(self, event: SetToolActionEvent):
         self.currentAction = event.action
 
     def _createOglClass(self, umlFrame, x: int, y: int):
 
-        from pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
-        from pyut.history.commands.CommandGroup import CommandGroup
+        # TODO implement this
+        # from pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
+        # from pyut.history.commands.CommandGroup import CommandGroup
+        #
+        # cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y, eventEngine=self._eventEngine)
+        # group: CommandGroup          = CommandGroup("Create class")
+        # group.addCommand(cmd)
+        # umlFrame.historyManager.addCommandGroup(group)
+        # umlFrame.historyManager.execute()
 
-        cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y, eventEngine=self._eventEngine)
-        group: CommandGroup          = CommandGroup("Create class")
-        group.addCommand(cmd)
-        umlFrame.historyManager.addCommandGroup(group)
-        umlFrame.historyManager.execute()
-
+        command: CommandCreateOglClass = CommandCreateOglClass(x=x, y=y, eventEngine=self._eventEngine)
+        self._commandProcessor.Submit(command=command, storeIt=True)
         if not self._currentActionPersistent:
             self._currentAction = ACTION_SELECTOR
             self._selectTool(SharedIdentifiers.ID_ARROW)
@@ -415,16 +422,17 @@ class ActionHandler(Singleton):
 
     def _createLink(self, umlFrame):
 
-        from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
-        from pyut.history.commands.CommandGroup import CommandGroup
-
-        linkType = LINK_TYPE[self._currentAction]
-        cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
-
-        cmdGroup = CommandGroup("create link")
-        cmdGroup.addCommand(cmd)
-        umlFrame.getHistory().addCommandGroup(cmdGroup)
-        umlFrame.getHistory().execute()
+        # from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+        # from pyut.history.commands.CommandGroup import CommandGroup
+        #
+        # linkType = LINK_TYPE[self._currentAction]
+        # cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
+        #
+        # cmdGroup = CommandGroup("create link")
+        # cmdGroup.addCommand(cmd)
+        # umlFrame.getHistory().addCommandGroup(cmdGroup)
+        # umlFrame.getHistory().execute()
+        # TODO Implement this
         self._src = None
         self._dst = None
 

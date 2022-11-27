@@ -3,9 +3,9 @@ from typing import cast
 
 from collections import namedtuple
 
-from pyut.history.commands.CommandGroup import CommandGroup
-from pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
-from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
+# from pyut.history.commands.CommandGroup import CommandGroup
+# from pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
+# from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
 
 from pyutmodel.ModelTypes import ClassName
 from pyutmodel.ModelTypes import Implementors
@@ -19,6 +19,7 @@ from ogl.OglClass import OglClass
 from ogl.OglInterface import OglInterface
 from ogl.OglInterface2 import OglInterface2
 from ogl.OglLinkFactory import getOglLinkFactory
+from wx import CommandProcessor
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
@@ -41,7 +42,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
     It derives its functionality from UmlDiagramsFrame, but
     it knows the structure of a class diagram and it can load class diagram data.
     """
-    def __init__(self, parent, eventEngine: IEventEngine | None = None):
+    def __init__(self, parent, eventEngine: IEventEngine | None = None, commandProcessor: CommandProcessor | None = None):
         """
 
         Args:
@@ -52,7 +53,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         UmlClassDiagramsFrame.cdfDebugId += 1
 
-        super().__init__(parent, eventEngine=eventEngine)   # type: ignore
+        super().__init__(parent, eventEngine=eventEngine, commandProcessor=commandProcessor)   # type: ignore
         self.newDiagram()
 
         self.Bind(EVT_CLASS_NAME_CHANGED, self._onClassNameChanged)
@@ -61,11 +62,12 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         x, y = oglClass.GetPosition()
 
-        cmdGroup: CommandGroup         = CommandGroup("Create class")
-        cmd:     CreateOglClassCommand = CreateOglClassCommand(x=x, y=y, eventEngine=self._eventEngine, oglClass=oglClass)
-        cmdGroup.addCommand(cmd)
-        self.getHistory().addCommandGroup(cmdGroup)
-        cmd.execute()
+        # TODO:  Use new command processor
+        # cmdGroup: CommandGroup         = CommandGroup("Create class")
+        # cmd:     CreateOglClassCommand = CreateOglClassCommand(x=x, y=y, eventEngine=self._eventEngine, oglClass=oglClass)
+        # cmdGroup.addCommand(cmd)
+        # self.getHistory().addCommandGroup(cmdGroup)
+        # cmd.execute()
 
     def createLink(self, src: OglClass, dst: OglClass, linkType: PyutLinkType = PyutLinkType.AGGREGATION):
         """
@@ -102,12 +104,13 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
             parent: Parent PyutClass
 
         """
-        cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
-        cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=child, dst=parent)    # inheritance points back to parent
-        cmdGroup.addCommand(cmd)
-        self._historyManager.addCommandGroup(cmdGroup)
-
-        cmd.execute()
+        # cmdGroup: CommandGroup         = CommandGroup('Creating an inheritance link')
+        # cmd:      CreateOglLinkCommand = CreateOglLinkCommand(src=child, dst=parent)    # inheritance points back to parent
+        # cmdGroup.addCommand(cmd)
+        # self._historyManager.addCommandGroup(cmdGroup)
+        #
+        # cmd.execute()
+        pass    # TODO use new CommandProcessor
 
     def createInterfaceLink(self, src: OglClass, dst: OglClass) -> OglInterface:
         """

@@ -13,7 +13,7 @@ from wx import EVT_CLOSE
 from wx import ICON_ERROR
 from wx import ICON_WARNING
 from wx import ID_ANY
-from wx import ID_YES
+# from wx import ID_YES
 from wx import NO_IMAGE
 from wx import OK
 
@@ -36,14 +36,14 @@ from ogl.OglNote import OglNote
 from ogl.OglObject import OglObject
 from ogl.OglLink import OglLink
 
-from pyut.dialogs.DlgRemoveLink import DlgRemoveLink
+# from pyut.dialogs.DlgRemoveLink import DlgRemoveLink
 
-from pyut.history.commands.Command import Command
-from pyut.history.commands.CommandGroup import CommandGroup
-from pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
-from pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
-from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-from pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
+# from pyut.history.commands.Command import Command
+# from pyut.history.commands.CommandGroup import CommandGroup
+# from pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
+# from pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
+# from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
+# from pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
@@ -256,17 +256,17 @@ class DiagramNotebook(Notebook):
         Args:
             event:
         """
-        from pyut.history.HistoryManager import HistoryManager
+        # from pyut.history.HistoryManager import HistoryManager
 
         currentFrame: UmlDiagramsFrame = self.currentNotebookFrame
         if currentFrame is None:
             self._displayWarning(message='No selected/available frame')
-        else:
-            historyManager: HistoryManager = currentFrame.getHistory()
-            if historyManager.isUndoPossible() is True:
-                historyManager.undo()
-            else:
-                self._displayWarning(message='Nothing to undo')
+        # else:
+        #     historyManager: HistoryManager = currentFrame.getHistory()
+        #     if historyManager.isUndoPossible() is True:
+        #         historyManager.undo()
+        #     else:
+        #         self._displayWarning(message='Nothing to undo')
 
     # noinspection PyUnusedLocal
     def _onRedo(self, event: RedoEvent):
@@ -274,97 +274,100 @@ class DiagramNotebook(Notebook):
         Args:
             event:
         """
-        from pyut.history.HistoryManager import HistoryManager
+        # from pyut.history.HistoryManager import HistoryManager
 
         currentFrame: UmlDiagramsFrame = self.currentNotebookFrame
         if currentFrame is None:
             self._displayWarning(message='No selected/available frame')
-        else:
-            historyManager: HistoryManager = currentFrame.getHistory()
-            if historyManager.isRedoPossible() is True:
-                historyManager.redo()
-            else:
-                self._displayWarning(message='Nothing to redo')
+        # else:
+        #     historyManager: HistoryManager = currentFrame.getHistory()
+        #     if historyManager.isRedoPossible() is True:
+        #         historyManager.redo()
+        #     else:
+        #         self._displayWarning(message='Nothing to redo')
 
     def _updateApplicationStatus(self, statusMessage: str):
 
         self._eventEngine.sendEvent(eventType=EventType.UpdateApplicationStatus, applicationStatusMsg=statusMessage)
 
-    def _deleteShapeFromFrame(self, oglObjectToDelete: UmlObject, cmdGroup: CommandGroup) -> CommandGroup:
+    # def _deleteShapeFromFrame(self, oglObjectToDelete: UmlObject, cmdGroup: CommandGroup) -> CommandGroup:
+    def _deleteShapeFromFrame(self, oglObjectToDelete: UmlObject):
         """
         This is the common method to delete a shape from a UML frame. In addition, this method
         adds the appropriate history commands in order to support undo
 
         Args:
             oglObjectToDelete:  The Ogl object to remove from the frame
-            cmdGroup:   The command group to update with an appropriate delete command
 
         Returns:    The updated command group
         """
         if isinstance(oglObjectToDelete, OglClass):
-
             oglClass: OglClass = cast(OglClass, oglObjectToDelete)
-            cmd: DeleteOglClassCommand = DeleteOglClassCommand(oglClass)
-            cmdGroup.addCommand(cmd)
-            links = oglClass.links
-            for link in links:
-                cmdGroup = self._addADeleteLinkCommand(oglLink=link, cmdGroup=cmdGroup)
+            pass
+            # cmd: DeleteOglClassCommand = DeleteOglClassCommand(oglClass)
+            # cmdGroup.addCommand(cmd)
+            # links = oglClass.links
+            # for link in links:
+            #     cmdGroup = self._addADeleteLinkCommand(oglLink=link, cmdGroup=cmdGroup)
 
         elif isinstance(oglObjectToDelete, OglNote):
             oglNote: 'OglNote' = cast(OglNote, oglObjectToDelete)
-            delNoteCmd: DeleteOglNoteCommand = DeleteOglNoteCommand(oglNote)
-            cmdGroup.addCommand(delNoteCmd)
+            pass
+            # delNoteCmd: DeleteOglNoteCommand = DeleteOglNoteCommand(oglNote)
+            # cmdGroup.addCommand(delNoteCmd)
 
         elif isinstance(oglObjectToDelete, OglLink):
             oglLink: OglLink = cast(OglLink, oglObjectToDelete)
-            cmdGroup = self._addADeleteLinkCommand(oglLink=oglLink, cmdGroup=cmdGroup)
+            pass
+            # cmdGroup = self._addADeleteLinkCommand(oglLink=oglLink, cmdGroup=cmdGroup)
 
         elif isinstance(oglObjectToDelete, OglObject):
-            delObjCmd: DeleteOglObjectCommand = DeleteOglObjectCommand(oglObjectToDelete)
-            cmdGroup.addCommand(delObjCmd)
+            pass
+            # delObjCmd: DeleteOglObjectCommand = DeleteOglObjectCommand(oglObjectToDelete)
+            # cmdGroup.addCommand(delObjCmd)
 
         else:
             assert False, 'Unknown OGL Object'
 
         oglObjectToDelete.Detach()
 
-        return cmdGroup
+        # return cmdGroup
 
-    def _addADeleteLinkCommand(self, oglLink: OglLink, cmdGroup: CommandGroup) -> CommandGroup:
+    # def _addADeleteLinkCommand(self, oglLink: OglLink, cmdGroup: CommandGroup) -> CommandGroup:
+    #
+    #     delOglLinkCmd: DelOglLinkCommand = DelOglLinkCommand(oglLink)
+    #     cmdGroup.addCommand(delOglLinkCmd)
+    #
+    #     return cmdGroup
 
-        delOglLinkCmd: DelOglLinkCommand = DelOglLinkCommand(oglLink)
-        cmdGroup.addCommand(delOglLinkCmd)
-
-        return cmdGroup
-
-    def _createDeleteCommand(self, shape: OglObject, umlFrame: UmlDiagramsFrame) -> Command:
-        """
-        TODO:  Fix to support OglInterface2
-        Args:
-            shape:
-            umlFrame:
-
-        Returns:  The created command;  May be none (e.g. OglInterface2)
-        """
-
-        cmd: Command = cast(Command, None)
-        match shape:
-            case OglClass() as shape:
-                cmd = DeleteOglClassCommand(shape)
-            case OglObject() as shape:
-                cmd = DeleteOglObjectCommand(shape)
-            case OglLink() as shape:
-                dlg: DlgRemoveLink = DlgRemoveLink(shape.__str__())  # TODO depends on https://github.com/hasii2011/ogl/issues/18
-                resp = dlg.ShowModal()
-                dlg.Destroy()
-                if resp == ID_YES:
-                    cmd = DelOglLinkCommand(shape)
-            case _:
-                self.logger.warning(f'No history generated for shape type: {shape}')
-                shape.Detach()
-                umlFrame.Refresh()
-
-        return cmd
+    # def _createDeleteCommand(self, shape: OglObject, umlFrame: UmlDiagramsFrame) -> Command:
+    #     """
+    #     TODO:  Fix to support OglInterface2
+    #     Args:
+    #         shape:
+    #         umlFrame:
+    #
+    #     Returns:  The created command;  May be none (e.g. OglInterface2)
+    #     """
+    #
+    #     cmd: Command = cast(Command, None)
+    #     match shape:
+    #         case OglClass() as shape:
+    #             cmd = DeleteOglClassCommand(shape)
+    #         case OglObject() as shape:
+    #             cmd = DeleteOglObjectCommand(shape)
+    #         case OglLink() as shape:
+    #             dlg: DlgRemoveLink = DlgRemoveLink(shape.__str__())  # TODO depends on https://github.com/hasii2011/ogl/issues/18
+    #             resp = dlg.ShowModal()
+    #             dlg.Destroy()
+    #             if resp == ID_YES:
+    #                 cmd = DelOglLinkCommand(shape)
+    #         case _:
+    #             self.logger.warning(f'No history generated for shape type: {shape}')
+    #             shape.Detach()
+    #             umlFrame.Refresh()
+    #
+    #     return cmd
 
     def _setShapeSelected(self, selectValue: bool):
         """
@@ -394,20 +397,21 @@ class DiagramNotebook(Notebook):
         Args:
             objectsToCut:
         """
-        cmdGroup:     CommandGroup = CommandGroup("Delete UML object(s)")
-        cmdGroupInit: bool         = False
+        # cmdGroup:     CommandGroup = CommandGroup("Delete UML object(s)")
+        # cmdGroupInit: bool         = False
 
         umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
 
         for shape in objectsToCut:
-            cmd: Command = self._createDeleteCommand(cast(OglObject, shape), umlFrame)
-            if cmd is not None:
-                cmdGroup.addCommand(cmd)
-                cmdGroupInit = True
+            pass
+            # cmd: Command = self._createDeleteCommand(cast(OglObject, shape), umlFrame)
+            # if cmd is not None:
+            #     cmdGroup.addCommand(cmd)
+            #     cmdGroupInit = True
 
-        if cmdGroupInit is True:
-            umlFrame.getHistory().addCommandGroup(cmdGroup)
-            umlFrame.getHistory().execute()
+        # if cmdGroupInit is True:
+        #     umlFrame.getHistory().addCommandGroup(cmdGroup)
+        #     umlFrame.getHistory().execute()
         self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
 
     def _displayWarning(self, message: str):

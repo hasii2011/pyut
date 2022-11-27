@@ -4,6 +4,7 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
+from wx import CommandProcessor
 from wx import EVT_CHAR
 from wx import WXK_BACK
 from wx import WXK_DELETE
@@ -59,7 +60,7 @@ class UmlDiagramsFrame(UmlFrame):
     KEY_CODE_UP:           int = WXK_UP
     KEY_CODE_DOWN:         int = WXK_DOWN
 
-    def __init__(self, parent: Notebook, eventEngine: IEventEngine):
+    def __init__(self, parent: Notebook, eventEngine: IEventEngine, commandProcessor: CommandProcessor):
         """
         This class sits at the crux between the underlying OGL layer and the overarching
         Pyut UI.  Thus, it registers to listen for Ogl Events
@@ -69,9 +70,9 @@ class UmlDiagramsFrame(UmlFrame):
             parent: wx.Window parent window;  In practice this is always wx.Notebook instance
             eventEngine: Pyut event engine
         """
-        self.umlDiagramFrameLogger: Logger       = getLogger(__name__)
+        self.umlDiagramFrameLogger: Logger = getLogger(__name__)
 
-        super().__init__(parent, eventEngine=eventEngine)
+        super().__init__(parent, eventEngine=eventEngine, commandProcessor=commandProcessor)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM, callback=self._onAddPyutDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,  callback=self._onAddOglDiagram)
