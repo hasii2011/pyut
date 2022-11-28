@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING
 from logging import Logger
 from logging import getLogger
 
-from wx import CommandProcessor
 from wx import ID_OK
 from wx import CANCEL
 from wx import CENTRE
 from wx import ID_ANY
 from wx import OK
 
+from wx import CommandProcessor
 from wx import TextEntryDialog
 
 from wx import Yield as wxYield
@@ -25,7 +25,9 @@ from ogl.OglClass import OglClass
 from pyut.general.Singleton import Singleton
 
 from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
+
 from pyut.ui.wxcommands.CommandCreateOglClass import CommandCreateOglClass
+from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlFrame import UmlFrame
@@ -425,7 +427,7 @@ class ActionHandler(Singleton):
         # from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
         # from pyut.history.commands.CommandGroup import CommandGroup
         #
-        # linkType = LINK_TYPE[self._currentAction]
+        linkType: PyutLinkType = LINK_TYPE[self._currentAction]
         # cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
         #
         # cmdGroup = CommandGroup("create link")
@@ -433,6 +435,13 @@ class ActionHandler(Singleton):
         # umlFrame.getHistory().addCommandGroup(cmdGroup)
         # umlFrame.getHistory().execute()
         # TODO Implement this
+        command: CommandCreateOglLink = CommandCreateOglLink(eventEngine=self._eventEngine,
+                                                             src=self._src, dst=self._dst,
+                                                             linkType=linkType,
+                                                             srcPos=self._srcPos,
+                                                             dstPos=self._dstPos
+                                                             )
+        self._commandProcessor.Submit(command=command, storeIt=True)
         self._src = None
         self._dst = None
 
