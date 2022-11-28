@@ -91,6 +91,18 @@ class UmlDiagramsFrame(UmlFrame):
     def eventEngine(self) -> OglEventEngine:
         return self._oglEventEngine
 
+    def undo(self):
+        """
+        Undo the last operation on this frame
+        """
+        self._commandProcessor.Undo()
+
+    def redo(self):
+        """
+        Redo the last operation on this frame
+        """
+        self._commandProcessor.Redo()
+
     # noinspection PyUnusedLocal
     def OnClose(self, force=False):
         """

@@ -4,7 +4,7 @@ from typing import cast
 import unittest
 
 from os import getcwd
-from os import remove as osRemove
+# from os import remove as osRemove
 
 from wx import App
 from wx import Frame

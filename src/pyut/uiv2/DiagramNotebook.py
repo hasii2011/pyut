@@ -261,6 +261,8 @@ class DiagramNotebook(Notebook):
         currentFrame: UmlDiagramsFrame = self.currentNotebookFrame
         if currentFrame is None:
             self._displayWarning(message='No selected/available frame')
+        else:
+            currentFrame.undo()
         # else:
         #     historyManager: HistoryManager = currentFrame.getHistory()
         #     if historyManager.isUndoPossible() is True:
@@ -279,6 +281,8 @@ class DiagramNotebook(Notebook):
         currentFrame: UmlDiagramsFrame = self.currentNotebookFrame
         if currentFrame is None:
             self._displayWarning(message='No selected/available frame')
+        else:
+            currentFrame.redo()
         # else:
         #     historyManager: HistoryManager = currentFrame.getHistory()
         #     if historyManager.isRedoPossible() is True:

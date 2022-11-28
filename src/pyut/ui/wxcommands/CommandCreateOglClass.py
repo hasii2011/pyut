@@ -75,6 +75,7 @@ class CommandCreateOglClass(Command):
         return 'CreateOglClass'
 
     def Undo(self) -> bool:
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForUndo)
         return True
 
     def _createNewClass(self) -> OglClass:
@@ -101,9 +102,30 @@ class CommandCreateOglClass(Command):
         if self._invokeEditDialog is True:
             self._eventEngine.sendEvent(EventType.EditClass, pyutClass=pyutClass)
 
-        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrame)
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForAdd)
 
-    def _cbGetActiveUmlFrame(self, frame: 'UmlDiagramsFrame'):
+    def _cbGetActiveUmlFrameForUndo(self, frame: 'UmlDiagramsFrame'):
+
+        from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+        from pyut.ui.umlframes.UmlFrame import UmlObjects
+        from pyutmodel.PyutLinkedObject import PyutLinkedObject
+
+        umlFrame: UmlDiagramsFrame = frame
+        self.logger.info(f'{umlFrame=}')
+        pyutClass: PyutClass = cast(PyutClass, self._shape.pyutObject)
+        # need to check if the class has children, and remove the
+        # references in the children
+        umlObjects: UmlObjects = umlFrame.getUmlObjects()
+        for oglObject in umlObjects:
+            if isinstance(oglObject, OglClass):
+                oglClass: OglClass = cast(OglClass, oglObject)
+                pyutLinkedObject: PyutLinkedObject = oglClass.pyutObject
+                if pyutClass in pyutLinkedObject.getParents():
+                    pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
+        self._shape.Detach()
+        umlFrame.Refresh()
+
+    def _cbGetActiveUmlFrameForAdd(self, frame: 'UmlDiagramsFrame'):
 
         from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
