@@ -39,18 +39,19 @@ class CommandCreateOglLink(Command):
                  srcPos: Point = None,
                  dstPos: Point = None):
 
-        super().__init__(canUndo=True, name='CreateOglLink')
+        self._name: str = self._toCommandName(PyutLinkType.INHERITANCE)   # The default
+        super().__init__(canUndo=True, name=self._name)
 
         self.logger:       Logger       = getLogger(__name__)
         self._eventEngine: IEventEngine = eventEngine
 
         if src is None or dst is None:
-            self._link = None
+            self._link: OglLink = cast(OglLink, None)
         else:
             self._link = self._createLink(src, dst, linkType, srcPos, dstPos)
 
     def GetName(self) -> str:
-        return 'CreateOglLink'
+        return self._name
 
     def CanUndo(self):
         return True
@@ -75,7 +76,8 @@ class CommandCreateOglLink(Command):
 
         umlFrame: UmlDiagramsFrame = frame
 
-        umlFrame.GetDiagram().AddShape(self._link, withModelUpdate=False)
+        # umlFrame.GetDiagram().AddShape(self._link, withModelUpdate=False)
+        umlFrame.diagram.AddShape(self._link, withModelUpdate=False)
 
         # get the view start and end position and assign it to the
         # model position, then the view position is updated from
@@ -111,6 +113,7 @@ class CommandCreateOglLink(Command):
 
         src.pyutObject.addLink(pyutLink)   # add it to the source PyutClass
 
+        self._name = self._toCommandName(linkType)
         return oglLink
 
     def _createInheritanceLink(self, child: OglClass, parent: OglClass) -> OglLink:
@@ -133,7 +136,6 @@ class CommandCreateOglLink(Command):
         parent.addLink(oglLink)
 
         # add it to the PyutClass
-        # child.getPyutObject().addParent(parent.getPyutObject())
         childPyutClass:  PyutClass = cast(PyutClass, child.pyutObject)
         parentPyutClass: PyutClass = cast(PyutClass, parent.pyutObject)
 
@@ -156,3 +158,6 @@ class CommandCreateOglLink(Command):
                                                                linkType=PyutLinkType.SD_MESSAGE, srcPos=srcPos, dstPos=destPos)
 
         return oglSdMessage
+
+    def _toCommandName(self, linkType: PyutLinkType) -> str:
+        return f'{linkType.name.capitalize()} Link'
