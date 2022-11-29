@@ -37,6 +37,7 @@ UndoEvent,            EVENT_UNDO              = NewEvent()
 RedoEvent,            EVENT_REDO              = NewEvent()
 CutShapeEvent,        EVENT_CUT_SHAPE         = NewEvent()
 EditClassEvent,       EVENT_EDIT_CLASS,       = NewEvent()
+EditNoteEvent,        EVENT_EDIT_NOTE         = NewEvent()
 
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
@@ -95,6 +96,16 @@ class EventType(str, Enum):
         Cuts only the specified shape
         parameter:
             shapeToCut
+
+    EditClassEvent
+        Invokes the Edit Class dialog
+        parameter:
+            pyutClass
+
+    EditNoteEvent
+        Invokes the Edit Note dialog
+        parameter:
+            pyutNote
 
     AddShapeEvent
         Adds the specified shape on the UI
@@ -185,8 +196,9 @@ class EventType(str, Enum):
     ActiveUmlFrame           = ('ActiveUmlFrame',           ActiveUmlFrameEvent(),           EVENT_ACTIVE_UML_FRAME)
     ActiveProjectInformation = ('ActiveProjectInformation', ActiveProjectInformationEvent(), EVENT_ACTIVE_PROJECT_INFORMATION)
     EditClass                = ('EditClass',                EditClassEvent(),                EVENT_EDIT_CLASS)
+    EditNote                 = ('EditNote',                 EditNoteEvent(),                 EVENT_EDIT_NOTE)
 
     FrameInformation         = ('FrameInformation',   FrameInformationEvent(),   EVENT_FRAME_INFORMATION)
     FrameSize                = ('FrameSize',          FrameSizeEvent(),          EVENT_FRAME_SIZE)
     SelectedOglObjects       = ('SelectedOglObjects', SelectedOglObjectsEvent(), EVENT_SELECTED_OGL_OBJECTS)
-    RefreshFrame             = ('RefreshFrame',        RefreshFrameEvent(),       EVENT_REFRESH_FRAME)
+    RefreshFrame             = ('RefreshFrame',       RefreshFrameEvent(),       EVENT_REFRESH_FRAME)

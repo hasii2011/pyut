@@ -5,6 +5,7 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
+from pyutmodel.PyutNote import PyutNote
 from wx import PostEvent
 from wx import PyEventBinder
 from wx import TreeItemId
@@ -18,6 +19,7 @@ from pyut.enums.DiagramType import DiagramType
 
 from pyut.uiv2.IPyutProject import IPyutProject
 from pyut.uiv2.eventengine.Events import AddShapeEvent
+from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import FrameInformationEvent
 from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
@@ -66,6 +68,7 @@ OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
 NEW_PROJECT_FROM_FILENAME_PARAMETER: str = OPEN_PROJECT_FILENAME_PARAMETER
 CALLBACK_PARAMETER:                  str = 'callback'
 PYUT_CLASS_PARAMETER:                str = 'pyutClass'
+PYUT_NOTE_PARAMETER:                 str = 'pyutNote'
 
 PROJECT_FILENAME_PARAMETER: str = INSERT_PROJECT_FILENAME_PARAMETER
 
@@ -136,6 +139,8 @@ class EventEngine(IEventEngine):
                 self._sendActiveProjectInformationEvent(**kwargs)
             case EventType.EditClass:
                 self._sendEditClassEvent(**kwargs)
+            case EventType.EditNote:
+                self._sendEditNoteEvent(**kwargs)
 
             case EventType.FrameInformation:
                 self._sendFrameInformationEvent(**kwargs)
@@ -250,6 +255,11 @@ class EventEngine(IEventEngine):
     def _sendEditClassEvent(self, **kwargs):
         pyutClass: PyutClass = kwargs[PYUT_CLASS_PARAMETER]
         eventToPost: EditClassEvent = EditClassEvent(pyutClass=pyutClass)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendEditNoteEvent(self, **kwargs):
+        pyutNote: PyutNote = kwargs[PYUT_NOTE_PARAMETER]
+        eventToPost: EditNoteEvent = EditNoteEvent(pyutNote=pyutNote)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendFrameInformationEvent(self, **kwargs):

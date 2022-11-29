@@ -115,7 +115,7 @@ class EditObjectHandler:
 
         elif isinstance(diagramShape, OglNote):
             pyutObject = diagramShape.pyutObject
-            dlgEditNote: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, cast(PyutNote, pyutObject))
+            dlgEditNote: DlgEditNote = DlgEditNote(umlFrame, cast(PyutNote, pyutObject))
             dlgEditNote.ShowModal()
             dlgEditNote.Destroy()
         elif isinstance(diagramShape, OglUseCase):

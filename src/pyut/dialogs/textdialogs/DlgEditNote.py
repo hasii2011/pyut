@@ -30,15 +30,14 @@ class DlgEditNote(BaseDlgEditText):
         dlg = DlgEditNote(self._uml, ID_ANY, pyutNote)
         dlg.Destroy()
     """
-    def __init__(self, parent: Window, dialogIdentifier, pyutNote: PyutNote):
+    def __init__(self, parent: Window, pyutNote: PyutNote):
         """
 
         Args:
             parent:             parent window to center on
-            dialogIdentifier:   An identifier for the dialog
             pyutNote:           Model object we are editing
         """
-        super().__init__(parent, dialogIdentifier, _("Note Edit"))
+        super().__init__(parent, ID_ANY, "Edit Note")
 
         self._pyutNote:     PyutNote = pyutNote
 

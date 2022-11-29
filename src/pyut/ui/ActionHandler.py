@@ -28,6 +28,7 @@ from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from pyut.ui.wxcommands.CommandCreateOglClass import CommandCreateOglClass
 from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
+from pyut.ui.wxcommands.CommandCreateOglNote import CommandCreateOglNote
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlFrame import UmlFrame
@@ -414,13 +415,18 @@ class ActionHandler(Singleton):
             y: The y-coordinate
         """
 
-        pyutNote: PyutNote = umlFrame.createNewNote(x, y)
+        # pyutNote: PyutNote = umlFrame.createNewNote(x, y)
+        #
+        # self._resetToActionSelector()
+        # dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, pyutNote)
+        # dlg.ShowModal()
+        # dlg.Destroy()
+        # umlFrame.Refresh()
+        command: CommandCreateOglNote = CommandCreateOglNote(x=x, y=y, eventEngine=self._eventEngine)
+        self._commandProcessor.Submit(command=command, storeIt=True)
 
-        self._resetToActionSelector()
-        dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, pyutNote)
-        dlg.ShowModal()
-        dlg.Destroy()
-        umlFrame.Refresh()
+        self._currentAction = ACTION_SELECTOR
+        self._selectTool(SharedIdentifiers.ID_ARROW)
 
     def _createLink(self, umlFrame):
 

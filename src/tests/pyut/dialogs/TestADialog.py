@@ -166,7 +166,7 @@ class TestADialog(App):
     def _testDlgEditNote(self) -> str:
 
         pyutNote: PyutNote = PyutNote(noteText=self._preferences.noteText)
-        with DlgEditNote(parent=self._frameTop, dialogIdentifier=ID_ANY, pyutNote=pyutNote) as dlg:
+        with DlgEditNote(parent=self._frameTop, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutNote.content=}'
             else:

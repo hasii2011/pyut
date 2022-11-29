@@ -7,6 +7,7 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
+from pyutmodel.PyutNote import PyutNote
 from wx import ClientDC
 from wx import CommandProcessor
 from wx import EVT_MENU
@@ -66,6 +67,7 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
 from pyut.dialogs.DlgEditDocument import DlgEditDocument
+from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 
 from pyut.enums.DiagramType import DiagramType
 
@@ -96,6 +98,7 @@ from pyut.uiv2.eventengine.Events import EVENT_ADD_SHAPE
 from pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
 from pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
+from pyut.uiv2.eventengine.Events import EVENT_EDIT_NOTE
 from pyut.uiv2.eventengine.Events import EVENT_FRAME_INFORMATION
 from pyut.uiv2.eventengine.Events import EVENT_FRAME_SIZE
 from pyut.uiv2.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
@@ -111,6 +114,7 @@ from pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from pyut.uiv2.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
 from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
+from pyut.uiv2.eventengine.Events import EditNoteEvent
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import AddShapeEvent
@@ -199,6 +203,7 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME,           callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_NOTE,  callback=self._onEditNote)
         #
         # Following provided for the Plugin Adapter
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,            callback=self._onAddShape)
@@ -672,6 +677,15 @@ class PyutUIV2(IPyutUI):
         self.logger.debug(f"Edit: {pyutClass}")
 
         dlg: DlgEditClass = DlgEditClass(umlFrame, self._eventEngine, pyutClass)
+        dlg.ShowModal()
+        dlg.Destroy()
+
+    def _onEditNote(self, event: EditNoteEvent):
+        pyutNote: PyutNote = event.pyutNote
+        umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
+
+        self.logger.debug(f"Edit: {pyutNote}")
+        dlg: DlgEditNote = DlgEditNote(umlFrame, pyutNote)
         dlg.ShowModal()
         dlg.Destroy()
 

@@ -1,22 +1,18 @@
 
-from typing import Union
 from typing import cast
 from typing import TYPE_CHECKING
 
 from logging import Logger
 from logging import getLogger
 
-from wx import Command
 
 from pyutmodel.PyutClass import PyutClass
 
 from ogl.OglClass import OglClass
-from ogl.OglInterface2 import OglInterface2
-from ogl.OglLink import OglLink
-from ogl.OglObject import OglObject
+
 from ogl.OglUtils import OglUtils
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -24,11 +20,8 @@ from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-# Defines the classes that we can do and undo
-DoableClasses  = Union[OglObject, OglLink, OglInterface2]
 
-
-class CommandCreateOglClass(Command):
+class CommandCreateOglClass(BaseWxCommand):
     """
     This is version 2 of the Pyut undo/redo capability.  This version
     is based on wxPython's CommandProcessor as opposed to the original
@@ -48,38 +41,21 @@ class CommandCreateOglClass(Command):
             y:  ordinate of the class to create
             oglClass:
         """
-        super().__init__(canUndo=True, name='CreateOgClass')
+        super().__init__(canUndo=True, name='Create Class', eventEngine=eventEngine, x=x, y=y, oglObject=oglClass)
 
-        self._classX: int = x
-        self._classY: int = y
-        self._eventEngine: IEventEngine = eventEngine
-
-        self.logger:  Logger          = getLogger(__name__)
-        self._prefs:  PyutPreferences = PyutPreferences()
-
-        if oglClass is None:
-            self._shape:            DoableClasses = self._createNewClass()
-            self._invokeEditDialog: bool     = True
-        else:
-            self._shape = oglClass
-            self._invokeEditDialog = False
+        self.logger: Logger = getLogger(__name__)
 
     def CanUndo(self):
         return True
-
-    def Do(self) -> bool:
-        self._placeShapeOnFrame()
-        return True
-
-    def GetName(self) -> str:
-        return 'CreateOglClass'
 
     def Undo(self) -> bool:
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForUndo)
         return True
 
-    def _createNewClass(self) -> OglClass:
+    def _createNewObject(self) -> OglClass:
         """
+        Implement required abstract method
+
         Create a new class
 
         Returns: the newly created OglClass
