@@ -38,6 +38,7 @@ RedoEvent,            EVENT_REDO              = NewEvent()
 CutShapeEvent,        EVENT_CUT_SHAPE         = NewEvent()
 EditClassEvent,       EVENT_EDIT_CLASS,       = NewEvent()
 EditNoteEvent,        EVENT_EDIT_NOTE         = NewEvent()
+EditTextEvent,        EVENT_EDIT_TEXT         = NewEvent()
 
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
@@ -106,6 +107,11 @@ class EventType(str, Enum):
         Invokes the Edit Note dialog
         parameter:
             pyutNote
+
+    EditTextEvent
+        Invokes the Edit Text dialog
+        parameter:
+            pyutText
 
     AddShapeEvent
         Adds the specified shape on the UI
@@ -197,6 +203,7 @@ class EventType(str, Enum):
     ActiveProjectInformation = ('ActiveProjectInformation', ActiveProjectInformationEvent(), EVENT_ACTIVE_PROJECT_INFORMATION)
     EditClass                = ('EditClass',                EditClassEvent(),                EVENT_EDIT_CLASS)
     EditNote                 = ('EditNote',                 EditNoteEvent(),                 EVENT_EDIT_NOTE)
+    EditText                 = ('EditText',                 EditTextEvent(),                 EVENT_EDIT_TEXT)
 
     FrameInformation         = ('FrameInformation',   FrameInformationEvent(),   EVENT_FRAME_INFORMATION)
     FrameSize                = ('FrameSize',          FrameSizeEvent(),          EVENT_FRAME_SIZE)

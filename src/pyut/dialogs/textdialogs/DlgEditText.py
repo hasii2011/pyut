@@ -1,5 +1,6 @@
 
 from wx import EVT_TEXT
+from wx import ID_ANY
 from wx import TE_MULTILINE
 
 from wx import CommandEvent
@@ -29,15 +30,14 @@ class DlgEditText(BaseDlgEditText):
         dlg.ShowModal()
         dlg.Destroy()
     """
-    def __init__(self, parent: Window, dialogIdentifier, pyutText: PyutText):
+    def __init__(self, parent: Window, pyutText: PyutText):
         """
 
         Args:
             parent:             parent window to center on
-            dialogIdentifier:   An identifier for the dialog
             pyutText:           Model object we are editing
         """
-        super().__init__(parent, dialogIdentifier, _("Diagram Text"))
+        super().__init__(parent, ID_ANY, _("Diagram Text"))
 
         self.pyutText: PyutText = pyutText
 

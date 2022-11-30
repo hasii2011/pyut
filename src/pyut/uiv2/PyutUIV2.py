@@ -7,7 +7,6 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
-from pyutmodel.PyutNote import PyutNote
 from wx import ClientDC
 from wx import CommandProcessor
 from wx import EVT_MENU
@@ -33,19 +32,21 @@ from wx import MessageDialog
 
 from wx import Yield as wxYield
 
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutText import PyutText
+
 from miniogl.Diagram import Diagram
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
-
-from pyutmodel.PyutClass import PyutClass
 
 from ogl.OglObject import OglObject
 from ogl.OglInterface2 import OglInterface2
 
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
-
 from oglio.Types import OglClasses
 from ogl.OglLink import OglLink
+
 from oglio.Types import OglNotes
 from oglio.Types import OglSDInstances
 from oglio.Types import OglSDMessages
@@ -68,6 +69,7 @@ from pyut.PyutUtils import PyutUtils
 from pyut.dialogs.DlgEditClass import DlgEditClass
 from pyut.dialogs.DlgEditDocument import DlgEditDocument
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyut.enums.DiagramType import DiagramType
 
@@ -99,6 +101,7 @@ from pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
 from pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_NOTE
+from pyut.uiv2.eventengine.Events import EVENT_EDIT_TEXT
 from pyut.uiv2.eventengine.Events import EVENT_FRAME_INFORMATION
 from pyut.uiv2.eventengine.Events import EVENT_FRAME_SIZE
 from pyut.uiv2.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
@@ -115,6 +118,7 @@ from pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from pyut.uiv2.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
 from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 from pyut.uiv2.eventengine.Events import EditNoteEvent
+from pyut.uiv2.eventengine.Events import EditTextEvent
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import AddShapeEvent
@@ -138,12 +142,12 @@ from pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
 
 from pyut.uiv2.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramCallback
+from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 from pyut.uiv2.eventengine.EventEngine import ActiveProjectInformationCallback
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramCallback
-from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 TreeDataType        = Union[PyutProjectV2, PyutDocumentV2]
 
@@ -204,6 +208,7 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_NOTE,  callback=self._onEditNote)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_TEXT,  callback=self._onEditText)
         #
         # Following provided for the Plugin Adapter
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,            callback=self._onAddShape)
@@ -686,6 +691,15 @@ class PyutUIV2(IPyutUI):
 
         self.logger.debug(f"Edit: {pyutNote}")
         dlg: DlgEditNote = DlgEditNote(umlFrame, pyutNote)
+        dlg.ShowModal()
+        dlg.Destroy()
+
+    def _onEditText(self, event: EditTextEvent):
+        pyutText: PyutText         = event.pyutText
+        umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
+
+        self.logger.debug(f"Edit: {pyutText}")
+        dlg: DlgEditText = DlgEditText(umlFrame, pyutText)
         dlg.ShowModal()
         dlg.Destroy()
 

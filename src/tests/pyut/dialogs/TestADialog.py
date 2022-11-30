@@ -156,7 +156,7 @@ class TestADialog(App):
     def _testDlgEditText(self) -> str:
 
         pyutText: PyutText = PyutText()
-        with DlgEditText(parent=self._frameTop, dialogIdentifier=ID_ANY, pyutText=pyutText) as dlg:
+        with DlgEditText(parent=self._frameTop, pyutText=pyutText) as dlg:
 
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutText.content=}'

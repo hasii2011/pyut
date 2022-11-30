@@ -109,7 +109,7 @@ class EditObjectHandler:
 
             self.logger.info(f'Double clicked on {oglText}')
 
-            dlgEditText: DlgEditText = DlgEditText(parent=umlFrame, dialogIdentifier=ID_ANY, pyutText=pyutText)
+            dlgEditText: DlgEditText = DlgEditText(parent=umlFrame, pyutText=pyutText)
             dlgEditText.ShowModal()
             dlgEditText.Destroy()
 

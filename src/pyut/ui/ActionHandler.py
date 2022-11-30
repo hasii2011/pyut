@@ -7,7 +7,6 @@ from logging import getLogger
 from wx import ID_OK
 from wx import CANCEL
 from wx import CENTRE
-from wx import ID_ANY
 from wx import OK
 
 from wx import CommandProcessor
@@ -24,18 +23,15 @@ from ogl.OglClass import OglClass
 
 from pyut.general.Singleton import Singleton
 
-from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
-
 from pyut.ui.wxcommands.CommandCreateOglClass import CommandCreateOglClass
 from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
 from pyut.ui.wxcommands.CommandCreateOglNote import CommandCreateOglNote
+from pyut.ui.wxcommands.CommandCreateOglText import CommandCreateOglText
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlFrame import UmlFrame
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutLinkType import PyutLinkType
 
 from pyut.ui.Actions import ACTION_DESTINATION_AGGREGATION_LINK
@@ -74,8 +70,6 @@ from pyut.uiv2.eventengine.Events import SetToolActionEvent
 from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.DlgEditUseCase import DlgEditUseCase
-from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 # messages for the status bar
 a = "Click on the source class"
@@ -239,11 +233,11 @@ class ActionHandler(Singleton):
         if self._currentAction == ACTION_SELECTOR:
             return SKIP_EVENT
         elif self._currentAction == ACTION_NEW_CLASS:
-            self._createOglClass(umlFrame=umlFrame, x=x, y=y)
+            self._createOglClass(x=x, y=y)
         elif self._currentAction == ACTION_NEW_TEXT:
-            self._createNewText(umlFrame, x, y)
+            self._createNewText(x, y)
         elif self._currentAction == ACTION_NEW_NOTE:
-            self._createNewNote(umlFrame, x, y)
+            self._createNewNote(x, y)
         elif self._currentAction == ACTION_NEW_ACTOR:
             pyutActor = umlFrame.createNewActor(x, y)
             if not self._currentActionPersistent:
@@ -298,10 +292,6 @@ class ActionHandler(Singleton):
         Do action when a shape is selected.
         TODO : support each link type
         """
-        # umlFrame = self._treeNotebookHandler.currentFrame
-        # if umlFrame is None:
-        #     return
-
         # do the right action
         if self._currentAction in SOURCE_ACTIONS:
             self.logger.debug(f'Current action in source actions')
@@ -331,7 +321,7 @@ class ActionHandler(Singleton):
                 self._selectActionSelectorTool()
                 self._setStatusText("Action cancelled")
                 return
-            self._createLink(umlFrame)
+            self._createLink()
 
             if self._currentActionPersistent:
                 self._currentAction = self._oldAction
@@ -340,7 +330,7 @@ class ActionHandler(Singleton):
                 self._currentAction = ACTION_SELECTOR
                 self._selectActionSelectorTool()
         else:
-            self._setStatusText("Error : Action not supported by the mediator")
+            self._setStatusText("Error : Action not supported by the Action Handler")
             return
         self._setStatusText(MESSAGES[self._currentAction])
 
@@ -370,65 +360,38 @@ class ActionHandler(Singleton):
     def _onSetToolAction(self, event: SetToolActionEvent):
         self.currentAction = event.action
 
-    def _createOglClass(self, umlFrame, x: int, y: int):
-
-        # TODO implement this
-        # from pyut.history.commands.CreateOglClassCommand import CreateOglClassCommand
-        # from pyut.history.commands.CommandGroup import CommandGroup
-        #
-        # cmd:   CreateOglClassCommand = CreateOglClassCommand(x, y, eventEngine=self._eventEngine)
-        # group: CommandGroup          = CommandGroup("Create class")
-        # group.addCommand(cmd)
-        # umlFrame.historyManager.addCommandGroup(group)
-        # umlFrame.historyManager.execute()
+    def _createOglClass(self, x: int, y: int):
 
         command: CommandCreateOglClass = CommandCreateOglClass(x=x, y=y, eventEngine=self._eventEngine)
         self._commandProcessor.Submit(command=command, storeIt=True)
-        if not self._currentActionPersistent:
-            self._currentAction = ACTION_SELECTOR
-            self._selectTool(SharedIdentifiers.ID_ARROW)
+        self._resetToActionSelector()
 
-    def _createNewText(self, umlFrame, x: int, y: int):
+    def _createNewText(self, x: int, y: int):
         """
         Create a text box on the diagram
 
         Args:
-            umlFrame:  The UML frame that knows hot to place the new text object on the diagram
             x: The x-coordinate
             y: The y-coordinate
         """
-        pyutText: PyutText = umlFrame.createNewText(x, y)
-
+        command: CommandCreateOglText = CommandCreateOglText(x=x, y=y, eventEngine=self._eventEngine)
+        self._commandProcessor.Submit(command=command, storeIt=True)
         self._resetToActionSelector()
-        dlg: DlgEditText = DlgEditText(parent=umlFrame, dialogIdentifier=ID_ANY, pyutText=pyutText)
-        dlg.ShowModal()
-        dlg.Destroy()
-        umlFrame.Refresh()
 
-    def _createNewNote(self, umlFrame: UmlFrameShapeHandler, x: int, y: int):
+    def _createNewNote(self, x: int, y: int):
         """
         Create a note on the diagram
 
         Args:
-            umlFrame:  The UML frame knows how to place the new note on diagram
             x: The x-coordinate
             y: The y-coordinate
         """
-
-        # pyutNote: PyutNote = umlFrame.createNewNote(x, y)
-        #
-        # self._resetToActionSelector()
-        # dlg: DlgEditNote = DlgEditNote(umlFrame, ID_ANY, pyutNote)
-        # dlg.ShowModal()
-        # dlg.Destroy()
-        # umlFrame.Refresh()
         command: CommandCreateOglNote = CommandCreateOglNote(x=x, y=y, eventEngine=self._eventEngine)
         self._commandProcessor.Submit(command=command, storeIt=True)
 
-        self._currentAction = ACTION_SELECTOR
-        self._selectTool(SharedIdentifiers.ID_ARROW)
+        self._resetToActionSelector()
 
-    def _createLink(self, umlFrame):
+    def _createLink(self):
 
         # from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
         # from pyut.history.commands.CommandGroup import CommandGroup

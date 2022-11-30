@@ -26,13 +26,6 @@ class CommandCreateOglNote(BaseWxCommand):
 
         self.logger: Logger = getLogger(__name__)
 
-    def CanUndo(self):
-        return True
-
-    def Undo(self) -> bool:
-        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForUndo)
-        return True
-
     def _createNewObject(self) -> OglNote:
         """
         Implement required abstract method
@@ -68,11 +61,4 @@ class CommandCreateOglNote(BaseWxCommand):
 
         umlFrame.addShape(oglNote, self._classX, self._classY, withModelUpdate=True)
 
-        umlFrame.Refresh()
-
-    def _cbGetActiveUmlFrameForUndo(self, frame: 'UmlDiagramsFrame'):
-
-        umlFrame: UmlDiagramsFrame = frame
-
-        self._shape.Detach()
         umlFrame.Refresh()

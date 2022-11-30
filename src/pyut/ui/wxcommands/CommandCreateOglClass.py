@@ -45,9 +45,6 @@ class CommandCreateOglClass(BaseWxCommand):
 
         self.logger: Logger = getLogger(__name__)
 
-    def CanUndo(self):
-        return True
-
     def Undo(self) -> bool:
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForUndo)
         return True
