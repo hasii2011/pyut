@@ -45,8 +45,14 @@ class CommandCreateOglText(BaseWxCommand):
 
     def _placeShapeOnFrame(self):
 
-        oglText:  OglText  = cast(OglText, self._shape)
+        oglText:  OglText  = cast(OglText, self._shape)                 # get old
         pyutText: PyutText = cast(PyutText, oglText.pyutObject)
+        #
+        # Yet another reason to re-write miniogl.  I don't understand the model
+        # stuff that it is maintaining;  However, I understand I have to recreate
+        # the visuals so Shape._views is correct
+        self._oglObjWidth, self._oglObjHeight = oglText.GetSize()
+        self._shape = OglText(pyutText=pyutText, width=self._oglObjWidth, height=self._oglObjHeight)        # create new
         if self._invokeEditDialog is True:
             self._eventEngine.sendEvent(EventType.EditText, pyutText=pyutText)
 
@@ -60,6 +66,6 @@ class CommandCreateOglText(BaseWxCommand):
         self.logger.info(f'{umlFrame=}')
         oglText:  OglText  = cast(OglText, self._shape)
 
-        umlFrame.addShape(oglText, self._classX, self._classY, withModelUpdate=True)
+        umlFrame.addShape(oglText, self._oglObjX, self._oglObjY, withModelUpdate=True)
 
         umlFrame.Refresh()

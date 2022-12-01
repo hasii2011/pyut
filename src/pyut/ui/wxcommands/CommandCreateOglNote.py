@@ -42,10 +42,18 @@ class CommandCreateOglNote(BaseWxCommand):
     def _placeShapeOnFrame(self):
         """
         Place self._shape on the UML frame
-
         """
-        oglNote:  OglNote  = cast(OglNote, self._shape)
+        # Yet another reason to re-write miniogl.  I don't understand the model
+        # stuff that it is maintaining;  However, I understand I have to recreate
+        # the visuals so Shape._views is correct
+        oglNote:  OglNote  = cast(OglNote, self._shape)                 # get old
         pyutNote: PyutNote = cast(PyutNote, oglNote.pyutObject)
+        #
+        # Yet another reason to re-write miniogl.  I don't understand the model
+        # stuff that it is maintaining;  However, I understand I have to recreate
+        # the visuals so Shape._views is correct
+        self._oglObjWidth, self._oglObjHeight = oglNote.GetSize()
+        self._shape = OglNote(pyutNote, w=self._oglObjWidth, h=self._oglObjHeight)      # create new
         if self._invokeEditDialog is True:
             self._eventEngine.sendEvent(EventType.EditNote, pyutNote=pyutNote)
 
@@ -59,6 +67,6 @@ class CommandCreateOglNote(BaseWxCommand):
         self.logger.info(f'{umlFrame=}')
         oglNote:  OglNote  = cast(OglNote, self._shape)
 
-        umlFrame.addShape(oglNote, self._classX, self._classY, withModelUpdate=True)
+        umlFrame.addShape(oglNote, self._oglObjX, self._oglObjY, withModelUpdate=True)
 
         umlFrame.Refresh()

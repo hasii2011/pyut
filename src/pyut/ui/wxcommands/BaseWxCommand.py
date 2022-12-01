@@ -41,8 +41,8 @@ class BaseWxCommand(Command, metaclass=MyMeta):
 
         super().__init__(canUndo=canUndo, name=name)
 
-        self._classX:       int = x
-        self._classY:       int = y
+        self._oglObjX:     int = x
+        self._oglObjY:     int = y
         self._eventEngine: IEventEngine = eventEngine
         self._name:        str = name
 
@@ -54,6 +54,12 @@ class BaseWxCommand(Command, metaclass=MyMeta):
         else:
             self._shape            = oglObject
             self._invokeEditDialog = False
+        #
+        # Get either the new width & height or the one from the incoming object
+        #
+        w, h = self._shape.GetSize()
+        self._oglObjWidth:  int = w
+        self._oglObjHeight: int = h
 
     def GetName(self) -> str:
         return self._name

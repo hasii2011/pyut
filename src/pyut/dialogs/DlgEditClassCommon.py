@@ -9,11 +9,7 @@ from copy import deepcopy
 from wx import ALIGN_CENTER
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALL
-from wx import BoxSizer
-from wx import Button
 from wx import CAPTION
-from wx import CommandEvent
-from wx import Dialog
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_LISTBOX_DCLICK
@@ -21,12 +17,18 @@ from wx import EVT_TEXT
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import LB_SINGLE
-from wx import ListBox
 from wx import OK
 from wx import RESIZE_BORDER
+from wx import STAY_ON_TOP
+from wx import VERTICAL
+
+from wx import BoxSizer
+from wx import Button
+from wx import ListBox
+from wx import CommandEvent
+from wx import Dialog
 from wx import StaticText
 from wx import TextCtrl
-from wx import VERTICAL
 
 from pyut.PyutUtils import PyutUtils
 
@@ -78,7 +80,7 @@ class DlgEditClassCommon(Dialog):
 
     def __init__(self, parent, eventEngine: IEventEngine, dlgTitle: str, pyutModel: Union[PyutClass, PyutInterface], editInterface: bool = False,):
 
-        super().__init__(parent, ID_ANY, dlgTitle, style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, ID_ANY, dlgTitle, style=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self._parent = parent   # TODO  Do I really need to stash this
 

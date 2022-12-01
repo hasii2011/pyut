@@ -68,10 +68,16 @@ class CommandCreateOglClass(BaseWxCommand):
     def _placeShapeOnFrame(self):
         """
         Place self._shape on the UML frame
-
         """
-        oglClass:  OglClass  = cast(OglClass, self._shape)
+        oglClass:  OglClass  = cast(OglClass, self._shape)              # get old
         pyutClass: PyutClass = cast(PyutClass, oglClass.pyutObject)
+        #
+        # Yet another reason to re-write miniogl.  I don't understand the model
+        # stuff that it is maintaining;  However, I understand I have to recreate
+        # the visuals so Shape._views is correct
+        self._oglObjWidth, self._oglObjHeight = oglClass.GetSize()
+        self._shape = OglClass(pyutClass, w=self._oglObjWidth, h=self._oglObjHeight)        # create new
+
         if self._invokeEditDialog is True:
             self._eventEngine.sendEvent(EventType.EditClass, pyutClass=pyutClass)
 
@@ -107,12 +113,11 @@ class CommandCreateOglClass(BaseWxCommand):
         oglClass:  OglClass  = cast(OglClass, self._shape)
 
         if self._prefs.snapToGrid is True:
-            snappedX, snappedY = OglUtils.snapCoordinatesToGrid(self._classX, self._classY, self._prefs.backgroundGridInterval)
+            snappedX, snappedY = OglUtils.snapCoordinatesToGrid(self._oglObjX, self._oglObjY, self._prefs.backgroundGridInterval)
             umlFrame.addShape(oglClass, snappedX, snappedY, withModelUpdate=True)
         else:
-            umlFrame.addShape(oglClass, self._classX, self._classY, withModelUpdate=True)
+            umlFrame.addShape(oglClass, self._oglObjX, self._oglObjY, withModelUpdate=True)
 
-        # med.autoResize(pyutClass)
         if self._prefs.autoResizeShapesOnEdit is True:
             oglClass.autoResize()
 

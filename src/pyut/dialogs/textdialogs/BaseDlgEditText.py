@@ -6,25 +6,27 @@ from logging import getLogger
 
 from wx import ALIGN_CENTER_HORIZONTAL
 from wx import BOTTOM
-from wx import BoxSizer
-from wx import Button
-from wx import Dialog
 from wx import EVT_BUTTON
 from wx import EXPAND
-from wx import StaticText
-from wx import TextCtrl
+from wx import STAY_ON_TOP
+from wx import RESIZE_BORDER
+from wx import CAPTION
 from wx import VERTICAL
-from wx import Window
-from wx import CommandEvent
-
 from wx import ALL
 from wx import OK
 from wx import CANCEL
-from wx import CAPTION
 from wx import HORIZONTAL
-from wx import RESIZE_BORDER
 from wx import RIGHT
 
+from wx import TextCtrl
+from wx import Window
+from wx import CommandEvent
+from wx import StaticText
+from wx import BoxSizer
+from wx import Button
+from wx import Dialog
+
+# noinspection PyProtectedMember
 from pyut.general.Globals import _
 
 
@@ -34,7 +36,7 @@ class BaseDlgEditText(Dialog):
 
     def __init__(self, parent: Window, dialogIdentifier: int, dialogTitle: str):
 
-        super().__init__(parent, dialogIdentifier, dialogTitle, style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, dialogIdentifier, dialogTitle, style=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
 
         self._returnAction: int = cast(int, None)   # describe how the user exited the dialog box
 
