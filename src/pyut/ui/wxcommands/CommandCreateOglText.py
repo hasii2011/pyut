@@ -12,7 +12,7 @@ from ogl.OglText import OglText
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
-from pyut.ui.wxcommands.BaseWxCommand import DoableClass
+from pyut.ui.wxcommands.BaseWxCommand import DoableObjectType
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -29,7 +29,7 @@ class CommandCreateOglText(BaseWxCommand):
 
         super().__init__(canUndo=True, name='Create Text', eventEngine=eventEngine, x=x, y=y, oglObject=oglText)
 
-    def _createNewObject(self) -> DoableClass:
+    def _createNewObject(self) -> DoableObjectType:
 
         preferences: PyutPreferences = self._prefs
 

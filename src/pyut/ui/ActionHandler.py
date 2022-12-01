@@ -398,8 +398,8 @@ class ActionHandler(Singleton):
         command: CommandCreateOglLink = CommandCreateOglLink(eventEngine=self._eventEngine,
                                                              src=self._src, dst=self._dst,
                                                              linkType=linkType,
-                                                             srcPos=self._srcPos,
-                                                             dstPos=self._dstPos
+                                                             srcPoint=self._srcPos,
+                                                             dstPoint=self._dstPos
                                                              )
         self._commandProcessor.Submit(command=command, storeIt=True)
         self._src = None

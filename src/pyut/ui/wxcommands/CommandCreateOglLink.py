@@ -6,7 +6,11 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import Command
+from wx import Point
+
 from miniogl.AnchorPoint import AnchorPoint
+
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutLink import PyutLink
 from pyutmodel.PyutLinkType import PyutLinkType
@@ -19,11 +23,11 @@ from ogl.OglLinkFactory import getOglLinkFactory
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
 
-from wx import Command
-from wx import Point
-
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyut.ui.wxcommands.BaseWxCommand import DoableObjectType
+
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
@@ -34,10 +38,21 @@ class CommandCreateOglLink(Command):
     NO_NAME_MESSAGE: str = "testMessage()"
 
     def __init__(self, eventEngine: IEventEngine,
-                 src, dst,
+                 src: DoableObjectType,
+                 dst: DoableObjectType,
                  linkType: PyutLinkType = PyutLinkType.INHERITANCE,
-                 srcPos: Point = None,
-                 dstPos: Point = None):
+                 srcPoint: Point = None,
+                 dstPoint: Point = None):
+        """
+
+        Args:
+            eventEngine:    A references to the Pyut event engine
+            src:            The source UML Object
+            dst:            The destination UML Object
+            linkType:       The Link Type
+            srcPoint:       The source attachment point
+            dstPoint:       The destination attachment point
+        """
 
         self._name: str = self._toCommandName(PyutLinkType.INHERITANCE)   # The default
         super().__init__(canUndo=True, name=self._name)
@@ -45,18 +60,18 @@ class CommandCreateOglLink(Command):
         self.logger:       Logger       = getLogger(__name__)
         self._eventEngine: IEventEngine = eventEngine
 
-        self._srcOglObject = src
-        self._dstOglObject = dst
+        self._srcOglObject: DoableObjectType = src
+        self._dstOglObject: DoableObjectType = dst
 
         self._linkType: PyutLinkType = linkType
-        self._srcPoint: Point        = srcPos
-        self._dstPoint: Point        = dstPos
+        self._srcPoint: Point        = srcPoint
+        self._dstPoint: Point        = dstPoint
 
         self._link:     OglLink = cast(OglLink, None)
         # if src is None or dst is None:
         #     self._link: OglLink = cast(OglLink, None)
         # else:
-        #     self._link = self._createLink(src, dst, linkType, srcPos, dstPos)
+        #     self._link = self._createLink(src, dst, linkType, srcPoint, dstPoint)
 
     def GetName(self) -> str:
         return self._name
@@ -68,7 +83,7 @@ class CommandCreateOglLink(Command):
         src = self._srcOglObject
         dst = self._dstOglObject
         if src is None or dst is None:
-            self._link: OglLink = cast(OglLink, None)
+            self._link = cast(OglLink, None)
         else:
             self._link = self._createLink(src, dst, self._linkType, self._srcPoint, self._dstPoint)
 

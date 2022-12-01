@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 # Defines the classes that we can do and undo
-DoableClass  = Union[OglObject, OglLink, OglInterface2]
+DoableObjectType  = Union[OglObject, OglLink, OglInterface2]
 
 
 class MyMeta(ABCMeta, type(Command)):        # type: ignore
@@ -37,7 +37,7 @@ class BaseWxCommand(Command, metaclass=MyMeta):
     This class implements the .GetName method for all subclasses
     This class implements the .
     """
-    def __init__(self, canUndo: bool, name: str, eventEngine: IEventEngine, x: int, y: int, oglObject: DoableClass | None = None):
+    def __init__(self, canUndo: bool, name: str, eventEngine: IEventEngine, x: int, y: int, oglObject: DoableObjectType | None = None):
 
         super().__init__(canUndo=canUndo, name=name)
 
@@ -49,7 +49,7 @@ class BaseWxCommand(Command, metaclass=MyMeta):
         self._prefs: PyutPreferences = PyutPreferences()
 
         if oglObject is None:
-            self._shape:            DoableClass = self._createNewObject()
+            self._shape:            DoableObjectType = self._createNewObject()
             self._invokeEditDialog: bool     = True
         else:
             self._shape            = oglObject
@@ -76,7 +76,7 @@ class BaseWxCommand(Command, metaclass=MyMeta):
         return True
 
     @abstractmethod
-    def _createNewObject(self) -> DoableClass:
+    def _createNewObject(self) -> DoableObjectType:
         """
         Creates an appropriate class for the new command
 
