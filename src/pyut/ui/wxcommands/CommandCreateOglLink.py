@@ -45,10 +45,18 @@ class CommandCreateOglLink(Command):
         self.logger:       Logger       = getLogger(__name__)
         self._eventEngine: IEventEngine = eventEngine
 
-        if src is None or dst is None:
-            self._link: OglLink = cast(OglLink, None)
-        else:
-            self._link = self._createLink(src, dst, linkType, srcPos, dstPos)
+        self._srcOglObject = src
+        self._dstOglObject = dst
+
+        self._linkType: PyutLinkType = linkType
+        self._srcPoint: Point        = srcPos
+        self._dstPoint: Point        = dstPos
+
+        self._link:     OglLink = cast(OglLink, None)
+        # if src is None or dst is None:
+        #     self._link: OglLink = cast(OglLink, None)
+        # else:
+        #     self._link = self._createLink(src, dst, linkType, srcPos, dstPos)
 
     def GetName(self) -> str:
         return self._name
@@ -57,6 +65,12 @@ class CommandCreateOglLink(Command):
         return True
 
     def Do(self) -> bool:
+        src = self._srcOglObject
+        dst = self._dstOglObject
+        if src is None or dst is None:
+            self._link: OglLink = cast(OglLink, None)
+        else:
+            self._link = self._createLink(src, dst, self._linkType, self._srcPoint, self._dstPoint)
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForAdd)
         return True
@@ -76,7 +90,6 @@ class CommandCreateOglLink(Command):
 
         umlFrame: UmlDiagramsFrame = frame
 
-        # umlFrame.GetDiagram().AddShape(self._link, withModelUpdate=False)
         umlFrame.diagram.AddShape(self._link, withModelUpdate=False)
 
         # get the view start and end position and assign it to the

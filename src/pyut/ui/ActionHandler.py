@@ -287,7 +287,7 @@ class ActionHandler(Singleton):
             return SKIP_EVENT
         return EVENT_PROCESSED
 
-    def shapeSelected(self, umlFrame, shape, position=None):
+    def shapeSelected(self, shape, position=None):
         """
         Do action when a shape is selected.
         TODO : support each link type
@@ -393,17 +393,8 @@ class ActionHandler(Singleton):
 
     def _createLink(self):
 
-        # from pyut.history.commands.CreateOglLinkCommand import CreateOglLinkCommand
-        # from pyut.history.commands.CommandGroup import CommandGroup
-        #
         linkType: PyutLinkType = LINK_TYPE[self._currentAction]
-        # cmd = CreateOglLinkCommand(self._src, self._dst, linkType, self._srcPos, self._dstPos)
-        #
-        # cmdGroup = CommandGroup("create link")
-        # cmdGroup.addCommand(cmd)
-        # umlFrame.getHistory().addCommandGroup(cmdGroup)
-        # umlFrame.getHistory().execute()
-        # TODO Implement this
+
         command: CommandCreateOglLink = CommandCreateOglLink(eventEngine=self._eventEngine,
                                                              src=self._src, dst=self._dst,
                                                              linkType=linkType,
@@ -442,9 +433,6 @@ class ActionHandler(Singleton):
             toolId:  The tool id
         """
         self._eventEngine.sendEvent(EventType.SelectTool, toolId=toolId)
-        # for deselectedToolId in self._tools:
-        #     self._toolBar.ToggleTool(deselectedToolId, False)
-        # self._toolBar.ToggleTool(toolId, True)
 
     def __createPotentialAttachmentPoints(self, destinationClass: OglClass, umlFrame):
 

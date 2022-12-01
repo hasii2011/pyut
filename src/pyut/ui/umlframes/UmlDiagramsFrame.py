@@ -166,7 +166,7 @@ class UmlDiagramsFrame(UmlFrame):
 
         if self._actionHandler.actionWaiting:
             self.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
-            self._actionHandler.shapeSelected(self, shapeSelectedData.shape, shapeSelectedData.position)
+            self._actionHandler.shapeSelected(shapeSelectedData.shape, shapeSelectedData.position)
 
     def _onCutOglClassShape(self, cutOglClassEvent: CutOglClassEvent):
         """
