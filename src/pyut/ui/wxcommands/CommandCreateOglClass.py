@@ -30,7 +30,7 @@ class CommandCreateOglClass(BaseWxCommand):
 
     clsCounter: int = 1
 
-    def __init__(self, eventEngine: IEventEngine, x: int = 0, y: int = 0, oglClass: OglClass | None = None):
+    def __init__(self, x: int, y: int, eventEngine: IEventEngine):
         """
         If the caller provides a ready-made class this command uses it and does not
         invoke the class editor
@@ -39,9 +39,9 @@ class CommandCreateOglClass(BaseWxCommand):
             eventEngine
             x:  abscissa of the class to create
             y:  ordinate of the class to create
-            oglClass:
+
         """
-        super().__init__(canUndo=True, name='Create Class', eventEngine=eventEngine, x=x, y=y, oglObject=oglClass)
+        super().__init__(canUndo=True, name='Create Class', x=x, y=y, eventEngine=eventEngine)
 
         self.logger: Logger = getLogger(__name__)
 
@@ -78,8 +78,7 @@ class CommandCreateOglClass(BaseWxCommand):
         self._oglObjWidth, self._oglObjHeight = oglClass.GetSize()
         self._shape = OglClass(pyutClass, w=self._oglObjWidth, h=self._oglObjHeight)        # create new
 
-        if self._invokeEditDialog is True:
-            self._eventEngine.sendEvent(EventType.EditClass, pyutClass=pyutClass)
+        self._eventEngine.sendEvent(EventType.EditClass, pyutClass=pyutClass)
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForAdd)
 

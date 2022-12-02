@@ -20,9 +20,9 @@ if TYPE_CHECKING:
 
 class CommandCreateOglNote(BaseWxCommand):
 
-    def __init__(self, eventEngine: IEventEngine, x: int = 0, y: int = 0, oglNote: OglNote | None = None):
+    def __init__(self, x: int, y: int, eventEngine: IEventEngine):
 
-        super().__init__(canUndo=True, name='Create Note', eventEngine=eventEngine, x=x, y=y, oglObject=oglNote)
+        super().__init__(canUndo=True, name='Create Note', x=x, y=y, eventEngine=eventEngine)
 
         self.logger: Logger = getLogger(__name__)
 
@@ -54,8 +54,8 @@ class CommandCreateOglNote(BaseWxCommand):
         # the visuals so Shape._views is correct
         self._oglObjWidth, self._oglObjHeight = oglNote.GetSize()
         self._shape = OglNote(pyutNote, w=self._oglObjWidth, h=self._oglObjHeight)      # create new
-        if self._invokeEditDialog is True:
-            self._eventEngine.sendEvent(EventType.EditNote, pyutNote=pyutNote)
+
+        self._eventEngine.sendEvent(EventType.EditNote, pyutNote=pyutNote)
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForAdd)
 

@@ -23,11 +23,11 @@ if TYPE_CHECKING:
 
 class CommandCreateOglText(BaseWxCommand):
 
-    def __init__(self, eventEngine: IEventEngine, x: int = 0, y: int = 0, oglText: OglText | None = None):
+    def __init__(self, x: int, y: int, eventEngine: IEventEngine):
 
         self.logger: Logger = getLogger(__name__)
 
-        super().__init__(canUndo=True, name='Create Text', eventEngine=eventEngine, x=x, y=y, oglObject=oglText)
+        super().__init__(canUndo=True, name='Create Text', x=x, y=y, eventEngine=eventEngine)
 
     def _createNewObject(self) -> DoableObjectType:
 
@@ -53,8 +53,8 @@ class CommandCreateOglText(BaseWxCommand):
         # the visuals so Shape._views is correct
         self._oglObjWidth, self._oglObjHeight = oglText.GetSize()
         self._shape = OglText(pyutText=pyutText, width=self._oglObjWidth, height=self._oglObjHeight)        # create new
-        if self._invokeEditDialog is True:
-            self._eventEngine.sendEvent(EventType.EditText, pyutText=pyutText)
+
+        self._eventEngine.sendEvent(EventType.EditText, pyutText=pyutText)
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForAdd)
 

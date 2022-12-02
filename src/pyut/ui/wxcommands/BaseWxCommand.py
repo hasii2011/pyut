@@ -1,19 +1,23 @@
 
 from typing import TYPE_CHECKING
 from typing import Union
+from typing import cast
 
 from abc import ABCMeta
 from abc import abstractmethod
 
 from wx import Command
 
+from pyutmodel.PyutLinkedObject import PyutLinkedObject
+
+from ogl.OglClass import OglClass
 from ogl.OglLink import OglLink
 from ogl.OglObject import OglObject
 from ogl.OglInterface2 import OglInterface2
 
 from pyut.preferences.PyutPreferences import PyutPreferences
-from pyut.uiv2.eventengine.Events import EventType
 
+from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 if TYPE_CHECKING:
@@ -37,7 +41,7 @@ class BaseWxCommand(Command, metaclass=MyMeta):
     This class implements the .GetName method for all subclasses
     This class implements the .
     """
-    def __init__(self, canUndo: bool, name: str, eventEngine: IEventEngine, x: int, y: int, oglObject: DoableObjectType | None = None):
+    def __init__(self, canUndo: bool, name: str, eventEngine: IEventEngine, x: int, y: int):
 
         super().__init__(canUndo=canUndo, name=name)
 
@@ -48,14 +52,9 @@ class BaseWxCommand(Command, metaclass=MyMeta):
 
         self._prefs: PyutPreferences = PyutPreferences()
 
-        if oglObject is None:
-            self._shape:            DoableObjectType = self._createNewObject()
-            self._invokeEditDialog: bool     = True
-        else:
-            self._shape            = oglObject
-            self._invokeEditDialog = False
+        self._shape: DoableObjectType = self._createNewObject()
         #
-        # Get either the new width & height or the one from the incoming object
+        # Save these for later
         #
         w, h = self._shape.GetSize()
         self._oglObjWidth:  int = w
@@ -90,6 +89,20 @@ class BaseWxCommand(Command, metaclass=MyMeta):
         Implemented by subclasses to support .Do
         """
         pass
+
+    def _removeOglObjectFromFrame(self, umlFrame: 'UmlDiagramsFrame', pyutClass: PyutLinkedObject | None = None):
+
+        from pyut.ui.umlframes.UmlFrame import UmlObjects
+
+        umlObjects: UmlObjects = umlFrame.getUmlObjects()
+        for oglObject in umlObjects:
+            if isinstance(oglObject, OglClass):
+                oglClass: OglClass = cast(OglClass, oglObject)
+                pyutLinkedObject: PyutLinkedObject = oglClass.pyutObject
+                if pyutClass in pyutLinkedObject.getParents():
+                    pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
+        self._shape.Detach()
+        umlFrame.Refresh()
 
     def _cbGetActiveUmlFrameForUndo(self, frame: 'UmlDiagramsFrame'):
         """
