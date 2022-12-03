@@ -12,7 +12,7 @@ from ogl.OglClass import OglClass
 
 from ogl.OglUtils import OglUtils
 
-from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
+from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 
-class CommandCreateOglClass(BaseWxCommand):
+class CommandCreateOglClass(BaseWxCreateCommand):
     """
     This is version 2 of the Pyut undo/redo capability.  This version
     is based on wxPython's CommandProcessor as opposed to the original

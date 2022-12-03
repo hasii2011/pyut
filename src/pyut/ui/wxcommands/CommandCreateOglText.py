@@ -11,7 +11,7 @@ from ogl.OglText import OglText
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
+from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
 
 from pyut.uiv2.eventengine.Events import EventType
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 
-class CommandCreateOglText(BaseWxCommand):
+class CommandCreateOglText(BaseWxCreateCommand):
 
     def __init__(self, x: int, y: int, eventEngine: IEventEngine):
 

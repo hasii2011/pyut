@@ -9,7 +9,7 @@ from pyutmodel.PyutNote import PyutNote
 
 from ogl.OglNote import OglNote
 
-from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
+from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 
-class CommandCreateOglNote(BaseWxCommand):
+class CommandCreateOglNote(BaseWxCreateCommand):
 
     def __init__(self, x: int, y: int, eventEngine: IEventEngine):
 

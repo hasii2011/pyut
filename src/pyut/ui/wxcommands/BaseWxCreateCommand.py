@@ -33,7 +33,7 @@ class MyMeta(ABCMeta, type(Command)):        # type: ignore
     pass
 
 
-class BaseWxCommand(Command, metaclass=MyMeta):
+class BaseWxCreateCommand(Command, metaclass=MyMeta):
     """
     Base command for commands that create UML objects and associate and edit dialog with them.
     This class implements the .GetName method for all subclasses
