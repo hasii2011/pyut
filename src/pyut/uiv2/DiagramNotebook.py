@@ -52,6 +52,7 @@ from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.ui.umlframes.UmlFrame import UmlObject
 from pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.wxcommands.CommandDeleteOglNote import CommandDeleteOglNote
 from pyut.ui.wxcommands.CommandDeleteOglText import CommandDeleteOglText
 from pyut.ui.wxcommands.Types import DoableObjectType
 
@@ -343,6 +344,8 @@ class DiagramNotebook(Notebook):
                 pass
             case OglText() as shape:
                 cmd = CommandDeleteOglText(oglText=shape, eventEngine=self._eventEngine)
+            case OglNote() as shape:
+                cmd = CommandDeleteOglNote(oglNote=shape, eventEngine=self._eventEngine)
             case OglLink() as shape:
                 # dlg: DlgRemoveLink = DlgRemoveLink(shape.__str__())  # TODO depends on https://github.com/hasii2011/ogl/issues/18
                 # resp = dlg.ShowModal()

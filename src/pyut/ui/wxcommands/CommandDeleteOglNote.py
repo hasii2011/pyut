@@ -1,39 +1,33 @@
 
-from typing import TYPE_CHECKING
-
 from logging import Logger
 from logging import getLogger
 
+from pyutmodel.PyutNote import PyutNote
 from wx import Yield as wxYield
 
-from pyutmodel.PyutText import PyutText
-
-from ogl.OglText import OglText
+from ogl.OglNote import OglNote
 
 from pyut.ui.wxcommands.BaseWxDeleteCommand import BaseWxDeleteCommand
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-if TYPE_CHECKING:
-    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
+class CommandDeleteOglNote(BaseWxDeleteCommand):
 
-class CommandDeleteOglText(BaseWxDeleteCommand):
+    def __init__(self, oglNote: OglNote, eventEngine: IEventEngine):
 
-    def __init__(self, oglText: OglText, eventEngine: IEventEngine):
-
-        super().__init__(name='Delete Ogl Text', doableObject=oglText, eventEngine=eventEngine)
+        super().__init__(name='Delete Note', doableObject=oglNote, eventEngine=eventEngine)
 
         self.logger: Logger = getLogger(__name__)
 
-        self._pyutText: PyutText = oglText.pyutObject
+        self._pyutNote: PyutNote = oglNote.pyutObject
 
     def Undo(self) -> bool:
         """
         Override this member method to un-execute a previous Do.
         """
-        self._objectToDelete = OglText(self._pyutText, width=self._oglObjWidth, height=self._oglObjHeight)      # create new
+        self._objectToDelete = OglNote(self._pyutNote, w=self._oglObjWidth, h=self._oglObjHeight)      # create new
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForUndoDelete)
 
         wxYield()
