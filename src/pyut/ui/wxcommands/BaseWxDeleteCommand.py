@@ -1,10 +1,9 @@
 
 from typing import TYPE_CHECKING
 
-from wx import Command
-
 from wx import Yield as wxYield
 
+from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
 
 from pyut.uiv2.eventengine.Events import EventType
@@ -14,7 +13,7 @@ if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 
-class BaseWxDeleteCommand(Command):
+class BaseWxDeleteCommand(BaseWxCommand):
 
     def __init__(self, name: str, doableObject: DoableObjectType, eventEngine: IEventEngine):
 

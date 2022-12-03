@@ -52,6 +52,7 @@ from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.ui.umlframes.UmlFrame import UmlObject
 from pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.wxcommands.CommandDeleteOglClass import CommandDeleteOglClass
 from pyut.ui.wxcommands.CommandDeleteOglNote import CommandDeleteOglNote
 from pyut.ui.wxcommands.CommandDeleteOglText import CommandDeleteOglText
 from pyut.ui.wxcommands.Types import DoableObjectType
@@ -340,8 +341,7 @@ class DiagramNotebook(Notebook):
         cmd: Command = cast(Command, None)
         match shape:
             case OglClass() as shape:
-                # cmd = DeleteOglClassCommand(shape)
-                pass
+                cmd = CommandDeleteOglClass(oglClass=shape, eventEngine=self._eventEngine)
             case OglText() as shape:
                 cmd = CommandDeleteOglText(oglText=shape, eventEngine=self._eventEngine)
             case OglNote() as shape:

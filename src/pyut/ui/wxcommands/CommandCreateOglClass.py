@@ -85,25 +85,11 @@ class CommandCreateOglClass(BaseWxCreateCommand):
     def _cbGetActiveUmlFrameForUndo(self, frame: 'UmlDiagramsFrame'):
 
         from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-        from pyut.ui.umlframes.UmlFrame import UmlObjects
-        from pyutmodel.PyutLinkedObject import PyutLinkedObject
 
         umlFrame: UmlDiagramsFrame = frame
         self.logger.info(f'{umlFrame=}')
         pyutClass: PyutClass = cast(PyutClass, self._shape.pyutObject)
-        self._removeOglObjectFromFrame(umlFrame=umlFrame,pyutClass=pyutClass)
-
-        # need to check if the class has children, and remove the
-        # references in the children
-        # umlObjects: UmlObjects = umlFrame.getUmlObjects()
-        # for oglObject in umlObjects:
-        #     if isinstance(oglObject, OglClass):
-        #         oglClass: OglClass = cast(OglClass, oglObject)
-        #         pyutLinkedObject: PyutLinkedObject = oglClass.pyutObject
-        #         if pyutClass in pyutLinkedObject.getParents():
-        #             pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
-        # self._shape.Detach()
-        # umlFrame.Refresh()
+        self._removeOglObjectFromFrame(umlFrame=umlFrame, oglObject=self._shape, pyutClass=pyutClass)
 
     def _cbGetActiveUmlFrameForAdd(self, frame: 'UmlDiagramsFrame'):
 
@@ -113,13 +99,5 @@ class CommandCreateOglClass(BaseWxCreateCommand):
         self.logger.info(f'{umlFrame=}')
         oglClass:  OglClass  = cast(OglClass, self._shape)
 
-        if self._prefs.snapToGrid is True:
-            snappedX, snappedY = OglUtils.snapCoordinatesToGrid(self._oglObjX, self._oglObjY, self._prefs.backgroundGridInterval)
-            umlFrame.addShape(oglClass, snappedX, snappedY, withModelUpdate=True)
-        else:
-            umlFrame.addShape(oglClass, self._oglObjX, self._oglObjY, withModelUpdate=True)
-
-        if self._prefs.autoResizeShapesOnEdit is True:
-            oglClass.autoResize()
-
+        self._addOglClassToFrame(umlFrame=umlFrame, oglClass=oglClass, x=self._oglObjX, y=self._oglObjY)
         umlFrame.Refresh()

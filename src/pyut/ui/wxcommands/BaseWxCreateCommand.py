@@ -7,13 +7,13 @@ from logging import getLogger
 from abc import ABCMeta
 from abc import abstractmethod
 
-from wx import Command
-
 from pyutmodel.PyutLinkedObject import PyutLinkedObject
 
 from ogl.OglClass import OglClass
 
 from pyut.preferences.PyutPreferences import PyutPreferences
+
+from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
 
 from pyut.uiv2.eventengine.Events import EventType
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 # Defines the classes that we can do and undo
 
 
-class MyMeta(ABCMeta, type(Command)):        # type: ignore
+class MyMeta(ABCMeta, type(BaseWxCommand)):        # type: ignore
     """
     I have know idea why this works:
     https://stackoverflow.com/questions/66591752/metaclass-conflict-when-trying-to-create-a-python-abstract-class-that-also-subcl
@@ -33,7 +33,7 @@ class MyMeta(ABCMeta, type(Command)):        # type: ignore
     pass
 
 
-class BaseWxCreateCommand(Command, metaclass=MyMeta):
+class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMeta):
     """
     Base command for commands that create UML objects and associate and edit dialog with them.
     This class implements the .GetName method for all subclasses
@@ -89,21 +89,6 @@ class BaseWxCreateCommand(Command, metaclass=MyMeta):
         Implemented by subclasses to support .Do
         """
         pass
-
-    def _removeOglObjectFromFrame(self, umlFrame: 'UmlDiagramsFrame', pyutClass: PyutLinkedObject | None = None):
-
-        from pyut.ui.umlframes.UmlFrame import UmlObjects
-
-        umlObjects: UmlObjects = umlFrame.getUmlObjects()
-        for oglObject in umlObjects:
-            if isinstance(oglObject, OglClass):
-                oglClass: OglClass = cast(OglClass, oglObject)
-                pyutLinkedObject: PyutLinkedObject = oglClass.pyutObject
-                if pyutClass in pyutLinkedObject.getParents():
-                    self.clsLogger.warning(f'Removing {pyutClass=} from {pyutLinkedObject=}')
-                    pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
-        self._shape.Detach()
-        umlFrame.Refresh()
 
     def _cbGetActiveUmlFrameForUndo(self, frame: 'UmlDiagramsFrame'):
         """
