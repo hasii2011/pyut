@@ -60,8 +60,6 @@ class UmlFrame(UmlFrameShapeHandler):
     """
     Represents a canvas for drawing diagrams.
     It provides all the methods to add new classes, notes, links...
-    It also routes some click events to the mediator. See the `OnLeftDown`
-    method.
     """
     PIXELS_PER_UNIT_X: int = 20
     PIXELS_PER_UNIT_Y: int = 20
@@ -102,15 +100,6 @@ class UmlFrame(UmlFrameShapeHandler):
 
         self._defaultCursor = self.GetCursor()
 
-    # @property
-    # def historyManager(self) -> HistoryManager:
-    #     """
-    #     Read-only as this is created on the frame initialization.
-    #
-    #     Returns:  The frame's history manager.
-    #     """
-    #     return self._historyManager
-
     # noinspection PyUnusedLocal
     def setCodePath(self, path: str):
         """
@@ -149,32 +138,23 @@ class UmlFrame(UmlFrameShapeHandler):
         If there's an action pending in the mediator, give it the event, else
         let it go to the next handler.
         """
-        # self.logger.debug(f' leftDown - action waiting: {self._mediator.actionWaiting()}')
-        # self.logger.debug(f' leftDown - action waiting: {self._actionHandler.actionWaiting}')
-        # if self._mediator.actionWaiting():
         if self._actionHandler.actionWaiting:
             x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
-            # skip = self._mediator.doAction(x, y)
+
             skip = self._actionHandler.doAction(self, x, y)
 
-            # if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
             if self._actionHandler.currentAction == ACTION_ZOOM_IN:
                 DiagramFrame._BeginSelect(self, event)
 
             if skip == SKIP_EVENT:
                 DiagramFrame.OnLeftDown(self, event)
-
         else:
-            # DiagramFrame.OnLeftDown(self, event)
             super().OnLeftDown(event)
 
     def OnLeftUp(self, event: MouseEvent):
         """
         To make the right action if it is a selection or a zoom.
         """
-        # self.logger.debug(f' leftUp - current action: {self._mediator.getCurrentAction()}')
-        # self.logger.debug(f' leftDown - action waiting: {self._actionHandler.actionWaiting}')
-        # if self._mediator.getCurrentAction() == ACTION_ZOOM_IN:
         if self._actionHandler.currentAction == ACTION_ZOOM_IN:
             width, height = self._selector.GetSize()
             x, y = self._selector.GetPosition()
@@ -182,10 +162,9 @@ class UmlFrame(UmlFrameShapeHandler):
             self._selector = cast(RectangleShape, None)
             self.DoZoomIn(x, y, width, height)
             self.Refresh()
-            # self._mediator.updateTitle()
+
             self._actionHandler.updateTitle()
         else:
-            # DiagramFrame.OnLeftUp(self, event)
             super().OnLeftUp(event)
 
     def OnLeftDClick(self, event: MouseEvent):
@@ -197,9 +176,9 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         x, y = self.CalcUnscrolledPosition(event.GetX(), event.GetY())
         self.logger.debug(f'leftDoubleClick - {x},{y}')
-        # self._mediator.editObject(x, y)     # TODO send event to a dialog handler
+
         self._editObjectHandler.editObject(x, y)
-        # DiagramFrame.OnLeftDClick(self, event)
+
         super().OnLeftDClick(event)
 
     def newDiagram(self):
@@ -293,12 +272,6 @@ class UmlFrame(UmlFrameShapeHandler):
                 if shape.pyutObject.id == objectId:
                     return cast(UmlObject, shape)
         return cast(UmlObject, None)
-
-    # @deprecated('Use the historyManager property')
-    # def getHistory(self):
-    #     """
-    #     """
-    #     return self._historyManager
 
     # noinspection PyUnusedLocal
     def _onAddPyutDiagram(self, event: AddPyutDiagramEvent):

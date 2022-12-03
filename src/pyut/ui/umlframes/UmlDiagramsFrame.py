@@ -161,7 +161,6 @@ class UmlDiagramsFrame(UmlFrame):
         Args:
             event:   Event which contains data on the selected shape
         """
-
         shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
 
         if self._actionHandler.actionWaiting:
@@ -173,7 +172,6 @@ class UmlDiagramsFrame(UmlFrame):
         Ogl Event handler
         Args:
             cutOglClassEvent:
-
         """
         selectedOglClass: OglClass = cutOglClassEvent.selectedShape
         self._eventEngine.sendEvent(EventType.DeSelectAllShapes)
@@ -231,7 +229,6 @@ class UmlDiagramsFrame(UmlFrame):
         """
         is this really useful?
         """
-
         from miniogl.LinePoint import LinePoint
         from miniogl.ControlPoint import ControlPoint
 
@@ -260,7 +257,6 @@ class UmlDiagramsFrame(UmlFrame):
 
         Args:
             callback:
-
         """
         from ogl.OglObject import OglObject
 

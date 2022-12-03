@@ -226,9 +226,6 @@ class ActionHandler(Singleton):
             y: y coord where the action must take place
         """
         self.logger.debug(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
-        # umlFrame = self._treeNotebookHandler.currentFrame
-        # if umlFrame is None:
-        #     return
         self._resetStatusText()
         if self._currentAction == ACTION_SELECTOR:
             return SKIP_EVENT
