@@ -91,17 +91,19 @@ class CommandCreateOglClass(BaseWxCommand):
         umlFrame: UmlDiagramsFrame = frame
         self.logger.info(f'{umlFrame=}')
         pyutClass: PyutClass = cast(PyutClass, self._shape.pyutObject)
+        self._removeOglObjectFromFrame(umlFrame=umlFrame,pyutClass=pyutClass)
+
         # need to check if the class has children, and remove the
         # references in the children
-        umlObjects: UmlObjects = umlFrame.getUmlObjects()
-        for oglObject in umlObjects:
-            if isinstance(oglObject, OglClass):
-                oglClass: OglClass = cast(OglClass, oglObject)
-                pyutLinkedObject: PyutLinkedObject = oglClass.pyutObject
-                if pyutClass in pyutLinkedObject.getParents():
-                    pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
-        self._shape.Detach()
-        umlFrame.Refresh()
+        # umlObjects: UmlObjects = umlFrame.getUmlObjects()
+        # for oglObject in umlObjects:
+        #     if isinstance(oglObject, OglClass):
+        #         oglClass: OglClass = cast(OglClass, oglObject)
+        #         pyutLinkedObject: PyutLinkedObject = oglClass.pyutObject
+        #         if pyutClass in pyutLinkedObject.getParents():
+        #             pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
+        # self._shape.Detach()
+        # umlFrame.Refresh()
 
     def _cbGetActiveUmlFrameForAdd(self, frame: 'UmlDiagramsFrame'):
 

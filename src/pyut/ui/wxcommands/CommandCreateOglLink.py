@@ -26,8 +26,7 @@ from ogl.sd.OglSDMessage import OglSDMessage
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-from pyut.ui.wxcommands.BaseWxCommand import DoableObjectType
-
+from pyut.ui.wxcommands.Types import DoableObjectType
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame

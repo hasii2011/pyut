@@ -12,7 +12,7 @@ from ogl.OglText import OglText
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
-from pyut.ui.wxcommands.BaseWxCommand import DoableObjectType
+from pyut.ui.wxcommands.Types import DoableObjectType
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine

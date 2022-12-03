@@ -1,7 +1,8 @@
-
 from typing import TYPE_CHECKING
-from typing import Union
 from typing import cast
+
+from logging import Logger
+from logging import getLogger
 
 from abc import ABCMeta
 from abc import abstractmethod
@@ -11,11 +12,9 @@ from wx import Command
 from pyutmodel.PyutLinkedObject import PyutLinkedObject
 
 from ogl.OglClass import OglClass
-from ogl.OglLink import OglLink
-from ogl.OglObject import OglObject
-from ogl.OglInterface2 import OglInterface2
 
 from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.ui.wxcommands.Types import DoableObjectType
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -24,7 +23,6 @@ if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 # Defines the classes that we can do and undo
-DoableObjectType  = Union[OglObject, OglLink, OglInterface2]
 
 
 class MyMeta(ABCMeta, type(Command)):        # type: ignore
@@ -41,6 +39,8 @@ class BaseWxCommand(Command, metaclass=MyMeta):
     This class implements the .GetName method for all subclasses
     This class implements the .
     """
+    clsLogger: Logger = getLogger(__name__)
+
     def __init__(self, canUndo: bool, name: str, eventEngine: IEventEngine, x: int, y: int):
 
         super().__init__(canUndo=canUndo, name=name)
@@ -100,6 +100,7 @@ class BaseWxCommand(Command, metaclass=MyMeta):
                 oglClass: OglClass = cast(OglClass, oglObject)
                 pyutLinkedObject: PyutLinkedObject = oglClass.pyutObject
                 if pyutClass in pyutLinkedObject.getParents():
+                    self.clsLogger.warning(f'Removing {pyutClass=} from {pyutLinkedObject=}')
                     pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
         self._shape.Detach()
         umlFrame.Refresh()

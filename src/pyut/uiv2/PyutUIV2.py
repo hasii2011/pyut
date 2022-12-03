@@ -172,7 +172,7 @@ class PyutUIV2(IPyutUI):
         self._eventEngine:      IEventEngine    = eventEngine
         self._commandProcessor: CommandProcessor = commandProcessor
         self._projectTree:      ProjectTree     = ProjectTree(parentWindow=self)
-        self._diagramNotebook:  DiagramNotebook = DiagramNotebook(parentWindow=self, eventEngine=eventEngine)
+        self._diagramNotebook:  DiagramNotebook = DiagramNotebook(parentWindow=self, eventEngine=eventEngine, commandProcessor=commandProcessor)
 
         # Set splitter
         self.SetMinimumPaneSize(20)
