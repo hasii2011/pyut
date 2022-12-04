@@ -72,33 +72,35 @@ from pyut.PyutUtils import PyutUtils
 from pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 
 # messages for the status bar
-a = "Click on the source class"
-b = "Now, click on the destination class"
+
+CLICK:    str = 'Click'
+LOCATION: str = f'{CLICK} to place the new'
+ON:       str = f'{CLICK} on the'
 
 MESSAGES = {
-    ACTION_SELECTOR:        "Ready",
-    ACTION_NEW_CLASS:       "Click where you want to put the new class",
-    ACTION_NEW_NOTE:        "Click where you want to put the new note",
-    ACTION_NEW_ACTOR:       "Click where you want to put the new actor",
-    ACTION_NEW_TEXT:        'Click where you want to put the new text',
-    ACTION_NEW_USECASE:     "Click where you want to put the new use case",
-    ACTION_NEW_SD_INSTANCE: "Click where you want to put the new instance",
-    ACTION_NEW_SD_MESSAGE:  "Click inside the lifeline for the new message",
-    ACTION_DESTINATION_SD_MESSAGE: "Click inside the lifeline for the destination of the message",
-    ACTION_NEW_IMPLEMENT_LINK:   a,
-    ACTION_NEW_INHERIT_LINK:     a,
-    ACTION_NEW_AGGREGATION_LINK: a,
-    ACTION_NEW_COMPOSITION_LINK: a,
-    ACTION_NEW_ASSOCIATION_LINK: a,
-    ACTION_NEW_NOTE_LINK:        a,
-    ACTION_DESTINATION_IMPLEMENT_LINK:   b,
-    ACTION_DESTINATION_INHERIT_LINK:     b,
-    ACTION_DESTINATION_AGGREGATION_LINK: b,
-    ACTION_DESTINATION_COMPOSITION_LINK: b,
-    ACTION_DESTINATION_ASSOCIATION_LINK: b,
-    ACTION_DESTINATION_NOTE_LINK:        b,
-    ACTION_ZOOM_IN:     "Select the area to fit on",
-    ACTION_ZOOM_OUT:    "Select the central point",
+    ACTION_SELECTOR:                     'Ready',
+    ACTION_NEW_CLASS:                    f'{LOCATION} class',
+    ACTION_NEW_NOTE:                     f'{LOCATION} note',
+    ACTION_NEW_ACTOR:                    f'{LOCATION} actor',
+    ACTION_NEW_TEXT:                     f'{LOCATION} text',
+    ACTION_NEW_USECASE:                  f'{LOCATION} case',
+    ACTION_NEW_SD_INSTANCE:              f'{LOCATION} instance',
+    ACTION_NEW_SD_MESSAGE:               'Click inside the lifeline of the caller',
+    ACTION_DESTINATION_SD_MESSAGE:       'Click inside the lifeline of the message implementer',
+    ACTION_NEW_IMPLEMENT_LINK:           f'{ON} interface implementor',
+    ACTION_NEW_INHERIT_LINK:             f'{ON} subclass',
+    ACTION_NEW_AGGREGATION_LINK:         f'{ON} aggregator',
+    ACTION_NEW_COMPOSITION_LINK:         f'{ON} composer',
+    ACTION_NEW_ASSOCIATION_LINK:         f'{ON} source of the association',
+    ACTION_NEW_NOTE_LINK:                f'{ON} note',
+    ACTION_DESTINATION_IMPLEMENT_LINK:   f'{ON} interface',
+    ACTION_DESTINATION_INHERIT_LINK:     f'{ON} parent class',
+    ACTION_DESTINATION_AGGREGATION_LINK: f'{ON} "aggregated" class',
+    ACTION_DESTINATION_COMPOSITION_LINK: f'{ON} "composed" class',
+    ACTION_DESTINATION_ASSOCIATION_LINK: f'{ON} destination of the association',
+    ACTION_DESTINATION_NOTE_LINK:        f'{ON} class',
+    ACTION_ZOOM_IN:                      'Select the area to zoom in',
+    ACTION_ZOOM_OUT:                     'Select the central point',
 
 }
 
