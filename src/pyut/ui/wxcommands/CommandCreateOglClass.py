@@ -10,8 +10,6 @@ from pyutmodel.PyutClass import PyutClass
 
 from ogl.OglClass import OglClass
 
-from ogl.OglUtils import OglUtils
-
 from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 
 from pyut.uiv2.eventengine.Events import EventType

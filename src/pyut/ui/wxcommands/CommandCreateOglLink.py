@@ -1,40 +1,20 @@
 
-from typing import TYPE_CHECKING
-from typing import Tuple
-from typing import cast
-
 from logging import Logger
 from logging import getLogger
 
-from wx import Command
 from wx import Point
+from wx import Yield as wxYield
 
-from miniogl.AnchorPoint import AnchorPoint
-
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutLink import PyutLink
 from pyutmodel.PyutLinkType import PyutLinkType
-from pyutmodel.PyutSDMessage import PyutSDMessage
 
-from ogl.OglClass import OglClass
-from ogl.OglLink import OglLink
-from ogl.OglLinkFactory import getOglLinkFactory
-
-from ogl.sd.OglSDInstance import OglSDInstance
-from ogl.sd.OglSDMessage import OglSDMessage
-
+from pyut.ui.wxcommands.BaseWxLinkCommand import BaseWxLinkCommand
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from pyut.ui.wxcommands.Types import DoableObjectType
 
-if TYPE_CHECKING:
-    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-
-class CommandCreateOglLink(Command):
-
-    NO_NAME_MESSAGE: str = "testMessage()"
+class CommandCreateOglLink(BaseWxLinkCommand):
 
     def __init__(self, eventEngine: IEventEngine,
                  src: DoableObjectType,
@@ -52,139 +32,31 @@ class CommandCreateOglLink(Command):
             srcPoint:       The source attachment point
             dstPoint:       The destination attachment point
         """
-
-        self._name: str = self._toCommandName(PyutLinkType.INHERITANCE)   # The default
-        super().__init__(canUndo=True, name=self._name)
+        super().__init__(partialName='Create', linkType=linkType, eventEngine=eventEngine)
 
         self.logger:       Logger       = getLogger(__name__)
-        self._eventEngine: IEventEngine = eventEngine
 
         self._srcOglObject: DoableObjectType = src
         self._dstOglObject: DoableObjectType = dst
 
-        self._linkType: PyutLinkType = linkType
         self._srcPoint: Point        = srcPoint
         self._dstPoint: Point        = dstPoint
 
-        self._link:     OglLink = cast(OglLink, None)
-        # if src is None or dst is None:
-        #     self._link: OglLink = cast(OglLink, None)
-        # else:
-        #     self._link = self._createLink(src, dst, linkType, srcPoint, dstPoint)
-
-    def GetName(self) -> str:
-        return self._name
-
-    def CanUndo(self):
-        return True
-
     def Do(self) -> bool:
-        src = self._srcOglObject
-        dst = self._dstOglObject
-        if src is None or dst is None:
-            self._link = cast(OglLink, None)
-        else:
-            self._link = self._createLink(src, dst, self._linkType, self._srcPoint, self._dstPoint)
+        self._link = self._createLink(self._srcOglObject, self._dstOglObject, self._linkType, self._srcPoint, self._dstPoint)
+        self.logger.info(f'Create: {self._link}')
 
-        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForAdd)
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbPlaceLink)
         return True
 
     def Undo(self) -> bool:
-        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForUndo)
+        """
+        Returns:  True to indicate the undo was done
+        """
+        self.logger.info(f'Undo Create: {self._link}')
+
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbDoDeleteLink)
+
+        wxYield()
+
         return True
-
-    def _cbGetActiveUmlFrameForUndo(self, frame: 'UmlDiagramsFrame'):
-
-        umlFrame: UmlDiagramsFrame = frame
-
-        self._link.Detach()
-        umlFrame.Refresh()
-
-    def _cbGetActiveUmlFrameForAdd(self, frame: 'UmlDiagramsFrame'):
-
-        umlFrame: UmlDiagramsFrame = frame
-
-        umlFrame.diagram.AddShape(self._link, withModelUpdate=False)
-
-        # get the view start and end position and assign it to the
-        # model position, then the view position is updated from
-        # the model -- Legacy comment.  Not sure what that means -- Humberto
-        sourcePoint:      AnchorPoint = self._link.GetSource()
-        destinationPoint: AnchorPoint = self._link.GetDestination()
-
-        srcPosX, srcPosY = sourcePoint.GetPosition()
-        dstPosX, dstPosY = destinationPoint.GetPosition()
-
-        self._link.GetSource().GetModel().SetPosition(srcPosX, srcPosY)
-        self._link.GetDestination().GetModel().SetPosition(dstPosX, dstPosY)
-        self._link.UpdateFromModel()
-
-        umlFrame.Refresh()
-
-    def _createLink(self, src, dst, linkType: PyutLinkType, srcPos, dstPos) -> OglLink:
-
-        if linkType == PyutLinkType.INHERITANCE:
-            return self._createInheritanceLink(src, dst)
-        elif linkType == PyutLinkType.SD_MESSAGE:
-            return self._createSDMessage(src=src, dest=dst, srcPos=srcPos, destPos=dstPos)
-
-        pyutLink: PyutLink = PyutLink("", linkType=linkType, source=src.pyutObject, destination=dst.pyutObject)
-
-        # Call the factory to create OGL Link
-        oglLinkFactory = getOglLinkFactory()
-
-        oglLink: OglLink = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutLink, destShape=dst, linkType=linkType)
-
-        src.addLink(oglLink)  # add it to the source Ogl Linkable Object
-        dst.addLink(oglLink)  # add it to the destination Linkable Object
-
-        src.pyutObject.addLink(pyutLink)   # add it to the source PyutClass
-
-        self._name = self._toCommandName(linkType)
-        return oglLink
-
-    def _createInheritanceLink(self, child: OglClass, parent: OglClass) -> OglLink:
-        """
-        Add a parent link between the child and parent objects.
-
-        Args:
-            child:  Child PyutClass
-            parent: Parent PyutClass
-
-        Returns:
-            The inheritance OglLink
-        """
-        sourceClass:      PyutClass = cast(PyutClass, child.pyutObject)
-        destinationClass: PyutClass = cast(PyutClass, parent.pyutObject)
-        pyutLink:         PyutLink = PyutLink("", linkType=PyutLinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
-        oglLink:          OglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, PyutLinkType.INHERITANCE)
-
-        child.addLink(oglLink)
-        parent.addLink(oglLink)
-
-        # add it to the PyutClass
-        childPyutClass:  PyutClass = cast(PyutClass, child.pyutObject)
-        parentPyutClass: PyutClass = cast(PyutClass, parent.pyutObject)
-
-        childPyutClass.addParent(parentPyutClass)
-
-        return oglLink
-
-    def _createSDMessage(self, src: OglSDInstance, dest: OglSDInstance, srcPos: Point, destPos: Point) -> OglSDMessage:
-
-        srcRelativeCoordinates:  Tuple[int, int] = src.ConvertCoordToRelative(0, srcPos[1])
-        destRelativeCoordinates: Tuple[int, int] = dest.ConvertCoordToRelative(0, destPos[1])
-
-        srcY  = srcRelativeCoordinates[1]
-        destY = destRelativeCoordinates[1]
-
-        pyutSDMessage = PyutSDMessage(CommandCreateOglLink.NO_NAME_MESSAGE, src.pyutObject, srcY, dest.pyutObject, destY)
-
-        oglLinkFactory = getOglLinkFactory()
-        oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest,
-                                                               linkType=PyutLinkType.SD_MESSAGE, srcPos=srcPos, dstPos=destPos)
-
-        return oglSdMessage
-
-    def _toCommandName(self, linkType: PyutLinkType) -> str:
-        return f'{linkType.name.capitalize()} Link'

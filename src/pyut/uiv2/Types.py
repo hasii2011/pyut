@@ -38,7 +38,7 @@ def createDiagramFrame(parentFrame: Notebook, diagramType: DiagramType,
             diagramFrame:       UmlFrameType = UmlClassDiagramsFrame(parentFrame, eventEngine=eventEngine, commandProcessor=commandProcessor)
         case DiagramType.SEQUENCE_DIAGRAM:
             defaultDiagramName = DiagramsLabels[diagramType]
-            diagramFrame       = UmlSequenceDiagramsFrame(parentFrame, eventEngine=eventEngine)
+            diagramFrame       = UmlSequenceDiagramsFrame(parentFrame, eventEngine=eventEngine, commandProcessor=commandProcessor)
         case DiagramType.USECASE_DIAGRAM:
             defaultDiagramName = DiagramsLabels[diagramType]
             diagramFrame       = UmlClassDiagramsFrame(parentFrame, eventEngine=eventEngine, commandProcessor=commandProcessor)

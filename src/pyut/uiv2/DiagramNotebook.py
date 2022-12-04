@@ -8,18 +8,16 @@ from logging import getLogger
 
 from copy import copy
 
-from ogl.OglText import OglText
 from wx import CLIP_CHILDREN
-from wx import Command
-from wx import CommandProcessor
 from wx import EVT_CLOSE
 from wx import ICON_ERROR
 from wx import ICON_WARNING
 from wx import ID_ANY
-# from wx import ID_YES
 from wx import NO_IMAGE
 from wx import OK
 
+from wx import Command
+from wx import CommandProcessor
 from wx import MessageDialog
 from wx import Notebook
 from wx import Window
@@ -38,21 +36,15 @@ from ogl.OglUseCase import OglUseCase
 from ogl.OglNote import OglNote
 from ogl.OglObject import OglObject
 from ogl.OglLink import OglLink
-
-# from pyut.dialogs.DlgRemoveLink import DlgRemoveLink
-
-# from pyut.history.commands.Command import Command
-# from pyut.history.commands.CommandGroup import CommandGroup
-# from pyut.history.commands.DeleteOglClassCommand import DeleteOglClassCommand
-# from pyut.history.commands.DeleteOglNoteCommand import DeleteOglNoteCommand
-# from pyut.history.commands.DeleteOglObjectCommand import DeleteOglObjectCommand
-# from pyut.history.commands.DelOglLinkCommand import DelOglLinkCommand
+from ogl.OglText import OglText
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.ui.umlframes.UmlFrame import UmlObject
 from pyut.ui.umlframes.UmlFrame import UmlObjects
+
 from pyut.ui.wxcommands.CommandDeleteOglClass import CommandDeleteOglClass
+from pyut.ui.wxcommands.CommandDeleteOglLink import CommandDeleteOglLink
 from pyut.ui.wxcommands.CommandDeleteOglNote import CommandDeleteOglNote
 from pyut.ui.wxcommands.CommandDeleteOglText import CommandDeleteOglText
 from pyut.ui.wxcommands.Types import DoableObjectType
@@ -320,24 +312,30 @@ class DiagramNotebook(Notebook):
         Args:
             objectsToCut:
         """
-        # cmdGroup:     CommandGroup = CommandGroup("Delete UML object(s)")
-        # cmdGroupInit: bool         = False
-
         umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
 
         for shape in objectsToCut:
-            cmd: Command = self._createDeleteCommand(cast(DoableObjectType, shape), umlFrame)
-            if cmd is not None:
-                self._commandProcessor.Submit(cmd)
-            #     cmdGroup.addCommand(cmd)
-            #     cmdGroupInit = True
+            cmd: Command = self._createDeleteCommand(cast(DoableObjectType, shape))
+            if cmd is None:
+                shape.Detach()
+                umlFrame.Refresh()
+            else:
+                submitStatus: bool = self._commandProcessor.Submit(command=cmd, storeIt=True)
+                self.logger.warning(f'{submitStatus=}')
 
-        # if cmdGroupInit is True:
-        #     umlFrame.getHistory().addCommandGroup(cmdGroup)
-        #     umlFrame.getHistory().execute()
         self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
 
-    def _createDeleteCommand(self, shape: DoableObjectType, umlFrame: UmlDiagramsFrame) -> Command:
+    def _createDeleteCommand(self, shape: DoableObjectType) -> Command:
+        """
+        TODO:  Update to support OglInterface2, OglUseCase, OglActor
+
+        If no command type exists for the input shape log a warning
+
+        Args:
+            shape:
+
+        Returns:  A command to submit or None;
+        """
         cmd: Command = cast(Command, None)
         match shape:
             case OglClass() as shape:
@@ -347,44 +345,11 @@ class DiagramNotebook(Notebook):
             case OglNote() as shape:
                 cmd = CommandDeleteOglNote(oglNote=shape, eventEngine=self._eventEngine)
             case OglLink() as shape:
-                # dlg: DlgRemoveLink = DlgRemoveLink(shape.__str__())  # TODO depends on https://github.com/hasii2011/ogl/issues/18
-                # resp = dlg.ShowModal()
-                # dlg.Destroy()
-                # if resp == ID_YES:
-                #     cmd = DelOglLinkCommand(shape)
-                pass
+                oglLink:  OglLink     = cast(OglLink, shape)
+                cmd = CommandDeleteOglLink(oglLink=oglLink, eventEngine=self._eventEngine)
             case _:
                 self.logger.warning(f'No history generated for shape type: {shape}')
-                shape.Detach()
-                umlFrame.Refresh()
         return cmd
-        #     """
-        #     TODO:  Fix to support OglInterface2
-        #     Args:
-        #         shape:
-        #         umlFrame:
-        #
-        #     Returns:  The created command;  May be none (e.g. OglInterface2)
-        #     """
-        #
-        #     cmd: Command = cast(Command, None)
-        #     match shape:
-        #         case OglClass() as shape:
-        #             cmd = DeleteOglClassCommand(shape)
-        #         case OglObject() as shape:
-        #             cmd = DeleteOglObjectCommand(shape)
-        #         case OglLink() as shape:
-        #             dlg: DlgRemoveLink = DlgRemoveLink(shape.__str__())  # TODO depends on https://github.com/hasii2011/ogl/issues/18
-        #             resp = dlg.ShowModal()
-        #             dlg.Destroy()
-        #             if resp == ID_YES:
-        #                 cmd = DelOglLinkCommand(shape)
-        #         case _:
-        #             self.logger.warning(f'No history generated for shape type: {shape}')
-        #             shape.Detach()
-        #             umlFrame.Refresh()
-        #
-        #     return cmd
 
     def _displayWarning(self, message: str):
         self._displayMessage(message=message, caption='Huh?', iconType=ICON_WARNING)
