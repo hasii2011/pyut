@@ -39,6 +39,8 @@ CutShapeEvent,        EVENT_CUT_SHAPE         = NewEvent()          # TODO:  I d
 EditClassEvent,       EVENT_EDIT_CLASS,       = NewEvent()
 EditNoteEvent,        EVENT_EDIT_NOTE         = NewEvent()
 EditTextEvent,        EVENT_EDIT_TEXT         = NewEvent()
+EditActorEvent,       EVENT_EDIT_ACTOR        = NewEvent()
+EditUseCaseEvent,     EVENT_EDIT_USE_CASE     = NewEvent()
 
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
@@ -112,6 +114,11 @@ class EventType(str, Enum):
         Invokes the Edit Text dialog
         parameter:
             pyutText
+
+    EditActorEvent
+        Invokes a general Edit dialog for the name
+        parameter:
+            pyutActor
 
     AddShapeEvent
         Adds the specified shape on the UI
@@ -204,6 +211,8 @@ class EventType(str, Enum):
     EditClass                = ('EditClass',                EditClassEvent(),                EVENT_EDIT_CLASS)
     EditNote                 = ('EditNote',                 EditNoteEvent(),                 EVENT_EDIT_NOTE)
     EditText                 = ('EditText',                 EditTextEvent(),                 EVENT_EDIT_TEXT)
+    EditActor                = ('EditActor',                EditActorEvent(),                EVENT_EDIT_ACTOR)
+    EditUseCase              = ('EditUseCase',              EditUseCaseEvent(),              EVENT_EDIT_USE_CASE)
 
     FrameInformation         = ('FrameInformation',   FrameInformationEvent(),   EVENT_FRAME_INFORMATION)
     FrameSize                = ('FrameSize',          FrameSizeEvent(),          EVENT_FRAME_SIZE)

@@ -47,7 +47,7 @@ class CommandCreateOglClass(BaseWxCreateCommand):
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForUndo)
         return True
 
-    def _createNewObject(self) -> OglClass:
+    def _createPrototypeInstance(self) -> OglClass:
         """
         Implement required abstract method
 

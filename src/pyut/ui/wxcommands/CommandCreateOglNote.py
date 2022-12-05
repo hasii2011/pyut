@@ -26,11 +26,11 @@ class CommandCreateOglNote(BaseWxCreateCommand):
 
         self.logger: Logger = getLogger(__name__)
 
-    def _createNewObject(self) -> OglNote:
+    def _createPrototypeInstance(self) -> OglNote:
         """
         Implement required abstract method
 
-        Create a new class
+        Create a new Note
 
         Returns: the newly created OglNote
         """
@@ -48,10 +48,7 @@ class CommandCreateOglNote(BaseWxCreateCommand):
         # the visuals so Shape._views is correct
         oglNote:  OglNote  = cast(OglNote, self._shape)                 # get old
         pyutNote: PyutNote = cast(PyutNote, oglNote.pyutObject)
-        #
-        # Yet another reason to re-write miniogl.  I don't understand the model
-        # stuff that it is maintaining;  However, I understand I have to recreate
-        # the visuals so Shape._views is correct
+
         self._oglObjWidth, self._oglObjHeight = oglNote.GetSize()
         self._shape = OglNote(pyutNote, w=self._oglObjWidth, h=self._oglObjHeight)      # create new
 
@@ -65,7 +62,8 @@ class CommandCreateOglNote(BaseWxCreateCommand):
 
         umlFrame: UmlDiagramsFrame = frame
         self.logger.info(f'{umlFrame=}')
-        oglNote:  OglNote  = cast(OglNote, self._shape)
+
+        oglNote: OglNote = cast(OglNote, self._shape)
 
         umlFrame.addShape(oglNote, self._oglObjX, self._oglObjY, withModelUpdate=True)
 

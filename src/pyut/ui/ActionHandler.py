@@ -22,6 +22,7 @@ from miniogl.Constants import SKIP_EVENT
 from ogl.OglClass import OglClass
 
 from pyut.general.Singleton import Singleton
+from pyut.ui.wxcommands.CommandCreateOglActor import CommandCreateOglActor
 
 from pyut.ui.wxcommands.CommandCreateOglClass import CommandCreateOglClass
 from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
@@ -238,16 +239,7 @@ class ActionHandler(Singleton):
         elif self._currentAction == ACTION_NEW_NOTE:
             self._createNewNote(x, y)
         elif self._currentAction == ACTION_NEW_ACTOR:
-            pyutActor = umlFrame.createNewActor(x, y)
-            if not self._currentActionPersistent:
-                self._currentAction = ACTION_SELECTOR
-                self._selectActionSelectorTool()
-            dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
-
-            if dlg.ShowModal() == ID_OK:
-                pyutActor.name = dlg.GetValue()
-            dlg.Destroy()
-            umlFrame.Refresh()
+            self._createActor(x, y)
         elif self._currentAction == ACTION_NEW_USECASE:
             pyutUseCase = umlFrame.createNewUseCase(x, y)
             if not self._currentActionPersistent:
@@ -386,6 +378,18 @@ class ActionHandler(Singleton):
             y: The y-coordinate
         """
         command: CommandCreateOglNote = CommandCreateOglNote(x=x, y=y, eventEngine=self._eventEngine)
+        self._commandProcessor.Submit(command=command, storeIt=True)
+
+        self._resetToActionSelector()
+
+    def _createActor(self, x: int, y: int):
+        """
+
+        Args:
+            x: The x-coordinate
+            y: The y-coordinate
+        """
+        command: CommandCreateOglActor = CommandCreateOglActor(x=x, y=y, eventEngine=self._eventEngine)
         self._commandProcessor.Submit(command=command, storeIt=True)
 
         self._resetToActionSelector()

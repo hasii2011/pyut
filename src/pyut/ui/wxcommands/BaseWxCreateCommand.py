@@ -1,15 +1,11 @@
+
 from typing import TYPE_CHECKING
-from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
 from abc import ABCMeta
 from abc import abstractmethod
-
-from pyutmodel.PyutLinkedObject import PyutLinkedObject
-
-from ogl.OglClass import OglClass
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -52,7 +48,7 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMeta):
 
         self._prefs: PyutPreferences = PyutPreferences()
 
-        self._shape: DoableObjectType = self._createNewObject()
+        self._shape: DoableObjectType = self._createPrototypeInstance()
         #
         # Save these for later
         #
@@ -75,7 +71,7 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMeta):
         return True
 
     @abstractmethod
-    def _createNewObject(self) -> DoableObjectType:
+    def _createPrototypeInstance(self) -> DoableObjectType:
         """
         Creates an appropriate class for the new command
 

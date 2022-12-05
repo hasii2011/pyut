@@ -29,7 +29,7 @@ class CommandCreateOglText(BaseWxCreateCommand):
 
         super().__init__(canUndo=True, name='Create Text', x=x, y=y, eventEngine=eventEngine)
 
-    def _createNewObject(self) -> DoableObjectType:
+    def _createPrototypeInstance(self) -> DoableObjectType:
 
         preferences: PyutPreferences = self._prefs
 

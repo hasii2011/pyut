@@ -13,6 +13,7 @@ from wx import Window
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
+from pyutmodel.PyutActor import PyutActor
 
 from ogl.OglObject import OglObject
 
@@ -20,6 +21,7 @@ from pyut.enums.DiagramType import DiagramType
 
 from pyut.uiv2.IPyutProject import IPyutProject
 from pyut.uiv2.eventengine.Events import AddShapeEvent
+from pyut.uiv2.eventengine.Events import EditActorEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
 from pyut.uiv2.eventengine.Events import FrameInformationEvent
@@ -72,6 +74,7 @@ CALLBACK_PARAMETER:                  str = 'callback'
 PYUT_CLASS_PARAMETER:                str = 'pyutClass'
 PYUT_NOTE_PARAMETER:                 str = 'pyutNote'
 PYUT_TEXT_PARAMETER:                 str = 'pyutText'
+PYUT_ACTOR_PARAMETER:                str = 'pyutActor'
 
 PROJECT_FILENAME_PARAMETER: str = INSERT_PROJECT_FILENAME_PARAMETER
 
@@ -146,6 +149,8 @@ class EventEngine(IEventEngine):
                 self._sendEditNoteEvent(**kwargs)
             case EventType.EditText:
                 self._sendEditTextEvent(**kwargs)
+            case EventType.EditActor:
+                self._sendEditActorEvent(**kwargs)
 
             case EventType.FrameInformation:
                 self._sendFrameInformationEvent(**kwargs)
@@ -270,6 +275,11 @@ class EventEngine(IEventEngine):
     def _sendEditTextEvent(self, **kwargs):
         pyutText: PyutText = kwargs[PYUT_TEXT_PARAMETER]
         eventToPost: EditTextEvent = EditTextEvent(pyutText=pyutText)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendEditActorEvent(self, **kwargs):
+        pyutActor: PyutActor = kwargs[PYUT_ACTOR_PARAMETER]
+        eventToPost: EditActorEvent = EditActorEvent(pyutActor=pyutActor)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendFrameInformationEvent(self, **kwargs):

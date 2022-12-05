@@ -7,8 +7,9 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
+from wx import CANCEL
+from wx import CENTRE
 from wx import ClientDC
-from wx import CommandProcessor
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
@@ -17,11 +18,13 @@ from wx import EVT_TREE_SEL_CHANGED
 from wx import ICON_ERROR
 from wx import ICON_QUESTION
 from wx import ID_ANY
+from wx import ID_OK
 from wx import ID_YES
 from wx import OK
 from wx import YES_NO
 from wx import ITEM_NORMAL
 
+from wx import CommandProcessor
 from wx import Frame
 from wx import TreeEvent
 from wx import TreeItemId
@@ -29,12 +32,14 @@ from wx import CommandEvent
 from wx import MenuEvent
 from wx import Menu
 from wx import MessageDialog
+from wx import TextEntryDialog
 
 from wx import Yield as wxYield
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
+from pyutmodel.PyutActor import PyutActor
 
 from miniogl.Diagram import Diagram
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
@@ -98,6 +103,7 @@ from pyut.uiv2.eventengine.EventEngine import NewNamedProjectCallback
 from pyut.uiv2.eventengine.Events import EVENT_ACTIVE_PROJECT_INFORMATION
 from pyut.uiv2.eventengine.Events import EVENT_ADD_SHAPE
 from pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
+from pyut.uiv2.eventengine.Events import EVENT_EDIT_ACTOR
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
 from pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_NOTE
@@ -117,9 +123,10 @@ from pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from pyut.uiv2.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
 from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
+
+from pyut.uiv2.eventengine.Events import EditActorEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
-
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import AddShapeEvent
 from pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
@@ -206,9 +213,11 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_MINI_PROJECT_INFORMATION,   callback=self._onMiniProjectInformation)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME,           callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
+        # TODO:  Should these handler go somewhere else
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_NOTE,  callback=self._onEditNote)
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_TEXT,  callback=self._onEditText)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_ACTOR, callback=self._onEditActor)
         #
         # Following provided for the Plugin Adapter
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,            callback=self._onAddShape)
@@ -702,6 +711,16 @@ class PyutUIV2(IPyutUI):
         dlg: DlgEditText = DlgEditText(umlFrame, pyutText)
         dlg.ShowModal()
         dlg.Destroy()
+
+    def _onEditActor(self, event: EditActorEvent):
+        pyutActor: PyutActor        = event.pyutActor
+        umlFrame:  UmlDiagramsFrame = self._projectManager.currentFrame
+
+        dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
+        if dlg.ShowModal() == ID_OK:
+            pyutActor.name = dlg.GetValue()
+        dlg.Destroy()
+        umlFrame.Refresh()
 
     def _onAddShape(self, event: AddShapeEvent):
 

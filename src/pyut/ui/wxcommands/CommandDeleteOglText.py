@@ -1,6 +1,4 @@
 
-from typing import TYPE_CHECKING
-
 from logging import Logger
 from logging import getLogger
 
@@ -14,9 +12,6 @@ from pyut.ui.wxcommands.BaseWxDeleteCommand import BaseWxDeleteCommand
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-
-if TYPE_CHECKING:
-    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 
 class CommandDeleteOglText(BaseWxDeleteCommand):
