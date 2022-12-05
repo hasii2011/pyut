@@ -1,5 +1,4 @@
 
-from typing import TYPE_CHECKING
 from typing import cast
 
 from logging import Logger
@@ -13,8 +12,6 @@ from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 from pyut.uiv2.eventengine.Events import EventType
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-if TYPE_CHECKING:
-    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 
 class CommandCreateOglActor(BaseWxCreateCommand):
@@ -51,22 +48,4 @@ class CommandCreateOglActor(BaseWxCreateCommand):
 
         self._eventEngine.sendEvent(EventType.EditActor, pyutActor=pyutActor)
 
-        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForAdd)
-
-    def _cbGetActiveUmlFrameForAdd(self, frame: 'UmlDiagramsFrame'):
-        """
-        TODO:  This is common code for create Note, Text, Actor, and UseCase
-        Args:
-            frame:
-        """
-
-        from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-
-        umlFrame: UmlDiagramsFrame = frame
-        self.logger.info(f'{umlFrame=}')
-
-        oglActor: OglActor = cast(OglActor, self._shape)
-
-        umlFrame.addShape(oglActor, self._oglObjX, self._oglObjY, withModelUpdate=True)
-
-        umlFrame.Refresh()
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbAddOglObjectToFrame)

@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 # Defines the classes that we can do and undo
 
 
-class MyMeta(ABCMeta, type(BaseWxCommand)):        # type: ignore
+class MyMetaBaseWxCommand(ABCMeta, type(BaseWxCommand)):        # type: ignore
     """
     I have know idea why this works:
     https://stackoverflow.com/questions/66591752/metaclass-conflict-when-trying-to-create-a-python-abstract-class-that-also-subcl
@@ -29,7 +29,7 @@ class MyMeta(ABCMeta, type(BaseWxCommand)):        # type: ignore
     pass
 
 
-class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMeta):
+class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
     """
     Base command for commands that create UML objects and associate and edit dialog with them.
     This class implements the .GetName method for all subclasses
@@ -99,4 +99,20 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMeta):
         umlFrame: UmlDiagramsFrame = frame
 
         self._shape.Detach()
+        umlFrame.Refresh()
+
+    def _cbAddOglObjectToFrame(self, frame: 'UmlDiagramsFrame'):
+        """
+        his is common code for create Note, Text, Actor, and UseCase
+        Args:
+            frame:
+        """
+
+        from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
+        umlFrame: UmlDiagramsFrame = frame
+        self.clsLogger.info(f'{umlFrame=}')
+
+        umlFrame.addShape(self._shape, self._oglObjX, self._oglObjY, withModelUpdate=True)
+
         umlFrame.Refresh()

@@ -1,5 +1,4 @@
 
-from typing import TYPE_CHECKING
 from typing import cast
 
 from logging import Logger
@@ -13,9 +12,6 @@ from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-
-if TYPE_CHECKING:
-    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 
 class CommandCreateOglNote(BaseWxCreateCommand):
@@ -54,17 +50,4 @@ class CommandCreateOglNote(BaseWxCreateCommand):
 
         self._eventEngine.sendEvent(EventType.EditNote, pyutNote=pyutNote)
 
-        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForAdd)
-
-    def _cbGetActiveUmlFrameForAdd(self, frame: 'UmlDiagramsFrame'):
-
-        from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-
-        umlFrame: UmlDiagramsFrame = frame
-        self.logger.info(f'{umlFrame=}')
-
-        oglNote: OglNote = cast(OglNote, self._shape)
-
-        umlFrame.addShape(oglNote, self._oglObjX, self._oglObjY, withModelUpdate=True)
-
-        umlFrame.Refresh()
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbAddOglObjectToFrame)
