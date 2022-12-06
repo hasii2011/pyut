@@ -83,7 +83,7 @@ MESSAGES = {
 
 }
 
-# a table of the next action to select
+# a dictionary of the next action to select
 NEXT_ACTION = {
     Action.SELECTOR:                 Action.SELECTOR,
     Action.NEW_CLASS:                Action.SELECTOR,
@@ -214,28 +214,28 @@ class ActionHandler(Singleton):
         # TODO:  convert to match (aka switch) statement
         handlerStatus: int    = EVENT_PROCESSED
         currentAction: Action = self._currentAction
-        # match currentAction:
 
-        if currentAction == Action.SELECTOR:
-            handlerStatus = SKIP_EVENT
-        elif currentAction == Action.NEW_CLASS:
-            self._createOglClass(x=x, y=y)
-        elif currentAction == Action.NEW_TEXT:
-            self._createNewText(x, y)
-        elif currentAction == Action.NEW_NOTE:
-            self._createNewNote(x, y)
-        elif currentAction == Action.NEW_ACTOR:
-            self._createActor(x, y)
-        elif currentAction == Action.NEW_USECASE:
-            self._createNewUseCase(umlFrame, x, y)
-        elif currentAction == Action.NEW_SD_INSTANCE:
-            self._attemptSDInstanceCreation(umlFrame, x, y)
-        elif currentAction == Action.ZOOM_IN:
-            handlerStatus = SKIP_EVENT
-        elif currentAction == Action.ZOOM_OUT:
-            self._doZoomOut(umlFrame, x, y)
-        else:
-            handlerStatus = SKIP_EVENT
+        match currentAction:
+            case Action.SELECTOR:
+                handlerStatus = SKIP_EVENT
+            case Action.NEW_CLASS:
+                self._createOglClass(x=x, y=y)
+            case Action.NEW_TEXT:
+                self._createNewText(x, y)
+            case Action.NEW_NOTE:
+                self._createNewNote(x, y)
+            case Action.NEW_ACTOR:
+                self._createActor(x, y)
+            case Action.NEW_USECASE:
+                self._createNewUseCase(umlFrame, x, y)
+            case Action.NEW_SD_INSTANCE:
+                self._attemptSDInstanceCreation(umlFrame, x, y)
+            case Action.ZOOM_IN:
+                handlerStatus = SKIP_EVENT
+            case Action.ZOOM_OUT:
+                self._doZoomOut(umlFrame, x, y)
+            case _:
+                handlerStatus = SKIP_EVENT
 
         return handlerStatus
 
