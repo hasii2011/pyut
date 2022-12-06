@@ -35,29 +35,7 @@ if TYPE_CHECKING:
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
-from pyut.ui.Action import ACTION_DESTINATION_AGGREGATION_LINK
-from pyut.ui.Action import ACTION_DESTINATION_ASSOCIATION_LINK
-from pyut.ui.Action import ACTION_DESTINATION_COMPOSITION_LINK
-from pyut.ui.Action import ACTION_DESTINATION_IMPLEMENT_LINK
-from pyut.ui.Action import ACTION_DESTINATION_INHERIT_LINK
-from pyut.ui.Action import ACTION_DESTINATION_NOTE_LINK
-from pyut.ui.Action import ACTION_DESTINATION_SD_MESSAGE
-from pyut.ui.Action import ACTION_NEW_ACTOR
-from pyut.ui.Action import ACTION_NEW_AGGREGATION_LINK
-from pyut.ui.Action import ACTION_NEW_ASSOCIATION_LINK
-from pyut.ui.Action import ACTION_NEW_CLASS
-from pyut.ui.Action import ACTION_NEW_COMPOSITION_LINK
-from pyut.ui.Action import ACTION_NEW_IMPLEMENT_LINK
-from pyut.ui.Action import ACTION_NEW_INHERIT_LINK
-from pyut.ui.Action import ACTION_NEW_NOTE
-from pyut.ui.Action import ACTION_NEW_NOTE_LINK
-from pyut.ui.Action import ACTION_NEW_SD_INSTANCE
-from pyut.ui.Action import ACTION_NEW_SD_MESSAGE
-from pyut.ui.Action import ACTION_NEW_TEXT
-from pyut.ui.Action import ACTION_NEW_USECASE
-from pyut.ui.Action import ACTION_SELECTOR
-from pyut.ui.Action import ACTION_ZOOM_IN
-from pyut.ui.Action import ACTION_ZOOM_OUT
+from pyut.ui.Action import Action
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
@@ -79,91 +57,91 @@ LOCATION: str = f'{CLICK} to place the new'
 ON:       str = f'{CLICK} on the'
 
 MESSAGES = {
-    ACTION_SELECTOR:                     'Ready',
-    ACTION_NEW_CLASS:                    f'{LOCATION} class',
-    ACTION_NEW_NOTE:                     f'{LOCATION} note',
-    ACTION_NEW_ACTOR:                    f'{LOCATION} actor',
-    ACTION_NEW_TEXT:                     f'{LOCATION} text',
-    ACTION_NEW_USECASE:                  f'{LOCATION} case',
-    ACTION_NEW_SD_INSTANCE:              f'{LOCATION} instance',
-    ACTION_NEW_SD_MESSAGE:               'Click inside the lifeline of the caller',
-    ACTION_DESTINATION_SD_MESSAGE:       'Click inside the lifeline of the message implementer',
-    ACTION_NEW_IMPLEMENT_LINK:           f'{ON} interface implementor',
-    ACTION_NEW_INHERIT_LINK:             f'{ON} subclass',
-    ACTION_NEW_AGGREGATION_LINK:         f'{ON} aggregator',
-    ACTION_NEW_COMPOSITION_LINK:         f'{ON} composer',
-    ACTION_NEW_ASSOCIATION_LINK:         f'{ON} source of the association',
-    ACTION_NEW_NOTE_LINK:                f'{ON} note',
-    ACTION_DESTINATION_IMPLEMENT_LINK:   f'{ON} interface',
-    ACTION_DESTINATION_INHERIT_LINK:     f'{ON} parent class',
-    ACTION_DESTINATION_AGGREGATION_LINK: f'{ON} "aggregated" class',
-    ACTION_DESTINATION_COMPOSITION_LINK: f'{ON} "composed" class',
-    ACTION_DESTINATION_ASSOCIATION_LINK: f'{ON} destination of the association',
-    ACTION_DESTINATION_NOTE_LINK:        f'{ON} class',
-    ACTION_ZOOM_IN:                      'Select the area to zoom in',
-    ACTION_ZOOM_OUT:                     'Select the central point',
+    Action.SELECTOR:                     'Ready',
+    Action.NEW_CLASS:                    f'{LOCATION} class',
+    Action.NEW_NOTE:                     f'{LOCATION} note',
+    Action.NEW_ACTOR:                    f'{LOCATION} actor',
+    Action.NEW_TEXT:                     f'{LOCATION} text',
+    Action.NEW_USECASE:                  f'{LOCATION} case',
+    Action.NEW_SD_INSTANCE:              f'{LOCATION} instance',
+    Action.NEW_SD_MESSAGE:               'Click inside the lifeline of the caller',
+    Action.DESTINATION_SD_MESSAGE:       'Click inside the lifeline of the message implementer',
+    Action.NEW_IMPLEMENT_LINK:           f'{ON} interface implementor',
+    Action.NEW_INHERIT_LINK:             f'{ON} subclass',
+    Action.NEW_AGGREGATION_LINK:         f'{ON} aggregator',
+    Action.NEW_COMPOSITION_LINK:         f'{ON} composer',
+    Action.NEW_ASSOCIATION_LINK:         f'{ON} source of the association',
+    Action.NEW_NOTE_LINK:                f'{ON} note',
+    Action.DESTINATION_IMPLEMENT_LINK:   f'{ON} interface',
+    Action.DESTINATION_INHERIT_LINK:     f'{ON} parent class',
+    Action.DESTINATION_AGGREGATION_LINK: f'{ON} "aggregated" class',
+    Action.DESTINATION_COMPOSITION_LINK: f'{ON} "composed" class',
+    Action.DESTINATION_ASSOCIATION_LINK: f'{ON} destination of the association',
+    Action.DESTINATION_NOTE_LINK:        f'{ON} class',
+    Action.ZOOM_IN:                      'Select the area to zoom in',
+    Action.ZOOM_OUT:                     'Select the central point',
 
 }
 
 # a table of the next action to select
 NEXT_ACTION = {
-    ACTION_SELECTOR:    ACTION_SELECTOR,
-    ACTION_NEW_CLASS:   ACTION_SELECTOR,
-    ACTION_NEW_NOTE:    ACTION_SELECTOR,
-    ACTION_NEW_IMPLEMENT_LINK:          ACTION_DESTINATION_IMPLEMENT_LINK,
-    ACTION_NEW_INHERIT_LINK:            ACTION_DESTINATION_INHERIT_LINK,
-    ACTION_NEW_AGGREGATION_LINK:        ACTION_DESTINATION_AGGREGATION_LINK,
-    ACTION_NEW_COMPOSITION_LINK:        ACTION_DESTINATION_COMPOSITION_LINK,
-    ACTION_NEW_ASSOCIATION_LINK:        ACTION_DESTINATION_ASSOCIATION_LINK,
-    ACTION_NEW_NOTE_LINK:               ACTION_DESTINATION_NOTE_LINK,
-    ACTION_DESTINATION_IMPLEMENT_LINK:  ACTION_SELECTOR,
+    Action.SELECTOR:                 Action.SELECTOR,
+    Action.NEW_CLASS:                Action.SELECTOR,
+    Action.NEW_NOTE:                 Action.SELECTOR,
+    Action.NEW_IMPLEMENT_LINK:          Action.DESTINATION_IMPLEMENT_LINK,
+    Action.NEW_INHERIT_LINK:            Action.DESTINATION_INHERIT_LINK,
+    Action.NEW_AGGREGATION_LINK:        Action.DESTINATION_AGGREGATION_LINK,
+    Action.NEW_COMPOSITION_LINK:        Action.DESTINATION_COMPOSITION_LINK,
+    Action.NEW_ASSOCIATION_LINK:        Action.DESTINATION_ASSOCIATION_LINK,
+    Action.NEW_NOTE_LINK:               Action.DESTINATION_NOTE_LINK,
+    Action.DESTINATION_IMPLEMENT_LINK:  Action.SELECTOR,
 
-    ACTION_DESTINATION_INHERIT_LINK:     ACTION_SELECTOR,
-    ACTION_DESTINATION_AGGREGATION_LINK: ACTION_SELECTOR,
-    ACTION_DESTINATION_COMPOSITION_LINK: ACTION_SELECTOR,
-    ACTION_DESTINATION_ASSOCIATION_LINK: ACTION_SELECTOR,
-    ACTION_DESTINATION_NOTE_LINK:        ACTION_SELECTOR,
-    ACTION_NEW_ACTOR:                    ACTION_SELECTOR,
-    ACTION_NEW_USECASE:                  ACTION_SELECTOR,
+    Action.DESTINATION_INHERIT_LINK:     Action.SELECTOR,
+    Action.DESTINATION_AGGREGATION_LINK: Action.SELECTOR,
+    Action.DESTINATION_COMPOSITION_LINK: Action.SELECTOR,
+    Action.DESTINATION_ASSOCIATION_LINK: Action.SELECTOR,
+    Action.DESTINATION_NOTE_LINK:        Action.SELECTOR,
+    Action.NEW_ACTOR:                    Action.SELECTOR,
+    Action.NEW_USECASE:                  Action.SELECTOR,
 
-    ACTION_NEW_SD_INSTANCE: ACTION_SELECTOR,
-    ACTION_NEW_SD_MESSAGE:  ACTION_DESTINATION_SD_MESSAGE,
+    Action.NEW_SD_INSTANCE: Action.SELECTOR,
+    Action.NEW_SD_MESSAGE:  Action.DESTINATION_SD_MESSAGE,
 
-    ACTION_ZOOM_IN: ACTION_ZOOM_IN
+    Action.ZOOM_IN: Action.ZOOM_IN
 }
 
 # list of actions which are source events
 SOURCE_ACTIONS = [
-    ACTION_NEW_IMPLEMENT_LINK,
-    ACTION_NEW_INHERIT_LINK,
-    ACTION_NEW_AGGREGATION_LINK,
-    ACTION_NEW_COMPOSITION_LINK,
-    ACTION_NEW_ASSOCIATION_LINK,
-    ACTION_NEW_NOTE_LINK,
-    ACTION_NEW_SD_MESSAGE,
+    Action.NEW_IMPLEMENT_LINK,
+    Action.NEW_INHERIT_LINK,
+    Action.NEW_AGGREGATION_LINK,
+    Action.NEW_COMPOSITION_LINK,
+    Action.NEW_ASSOCIATION_LINK,
+    Action.NEW_NOTE_LINK,
+    Action.NEW_SD_MESSAGE,
 ]
 # list of actions which are destination events
 DESTINATION_ACTIONS = [
-    ACTION_DESTINATION_IMPLEMENT_LINK,
-    ACTION_DESTINATION_INHERIT_LINK,
-    ACTION_DESTINATION_AGGREGATION_LINK,
-    ACTION_DESTINATION_COMPOSITION_LINK,
-    ACTION_DESTINATION_ASSOCIATION_LINK,
-    ACTION_DESTINATION_NOTE_LINK,
-    ACTION_DESTINATION_SD_MESSAGE,
-    ACTION_ZOOM_IN,
-    ACTION_ZOOM_OUT
+    Action.DESTINATION_IMPLEMENT_LINK,
+    Action.DESTINATION_INHERIT_LINK,
+    Action.DESTINATION_AGGREGATION_LINK,
+    Action.DESTINATION_COMPOSITION_LINK,
+    Action.DESTINATION_ASSOCIATION_LINK,
+    Action.DESTINATION_NOTE_LINK,
+    Action.DESTINATION_SD_MESSAGE,
+    Action.ZOOM_IN,
+    Action.ZOOM_OUT
 ]
 
 # OglLink enumerations according to the current action
 LINK_TYPE = {
-    ACTION_DESTINATION_IMPLEMENT_LINK:     PyutLinkType.INTERFACE,
-    ACTION_DESTINATION_INHERIT_LINK:       PyutLinkType.INHERITANCE,
-    ACTION_DESTINATION_AGGREGATION_LINK:   PyutLinkType.AGGREGATION,
-    ACTION_DESTINATION_COMPOSITION_LINK:   PyutLinkType.COMPOSITION,
-    ACTION_DESTINATION_ASSOCIATION_LINK:   PyutLinkType.ASSOCIATION,
-    ACTION_DESTINATION_NOTE_LINK:          PyutLinkType.NOTELINK,
-    ACTION_DESTINATION_SD_MESSAGE:         PyutLinkType.SD_MESSAGE,
+    Action.DESTINATION_IMPLEMENT_LINK:     PyutLinkType.INTERFACE,
+    Action.DESTINATION_INHERIT_LINK:       PyutLinkType.INHERITANCE,
+    Action.DESTINATION_AGGREGATION_LINK:   PyutLinkType.AGGREGATION,
+    Action.DESTINATION_COMPOSITION_LINK:   PyutLinkType.COMPOSITION,
+    Action.DESTINATION_ASSOCIATION_LINK:   PyutLinkType.ASSOCIATION,
+    Action.DESTINATION_NOTE_LINK:          PyutLinkType.NOTELINK,
+    Action.DESTINATION_SD_MESSAGE:         PyutLinkType.SD_MESSAGE,
 }
 
 
@@ -175,8 +153,8 @@ class ActionHandler(Singleton):
         self._eventEngine:      IEventEngine     = kwargs['eventEngine']
         self._commandProcessor: CommandProcessor = kwargs['commandProcessor']
 
-        self._currentAction:           int  = ACTION_SELECTOR
-        self._currentActionPersistent: bool = False
+        self._currentAction:           Action = Action.SELECTOR
+        self._currentActionPersistent: bool   = False
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_SET_TOOL_ACTION, callback=self._onSetToolAction)
 
@@ -185,21 +163,19 @@ class ActionHandler(Singleton):
         """
         Returns: `True` if there's an action waiting to be completed, else `False`
         """
-        return self._currentAction != ACTION_SELECTOR
+        return self._currentAction != Action.SELECTOR
 
     @property
-    def currentAction(self):
+    def currentAction(self) -> Action:
         return self._currentAction
 
     @currentAction.setter
-    def currentAction(self, action: int):
+    def currentAction(self, action: Action):
         """
-        TODO make actions enumerations
-        Set the new current action.
         This tells the action handler which action to do for the next doAction call.
 
         Args:
-            action:  the action from ACTION constants
+            action:  the action from ACTION enumeration
         """
         self.logger.debug(f'Set current action to: {action}')
         if self._currentAction == action:
@@ -231,32 +207,32 @@ class ActionHandler(Singleton):
         Returns: Event handler status
 
         """
-        self.logger.debug(f'doAction: {self._currentAction}  {ACTION_SELECTOR=}')
+        self.logger.debug(f'doAction: {self._currentAction}  {Action.SELECTOR=}')
         self._resetStatusText()
         # TODO:  make the createXXX methods return the command;  Do a single submittal on return
         # TODO:  rename the createXXX methods to createXXXCommand
         # TODO:  convert to match (aka switch) statement
-        handlerStatus: int = EVENT_PROCESSED
-        currentAction: int = self._currentAction
+        handlerStatus: int    = EVENT_PROCESSED
+        currentAction: Action = self._currentAction
         # match currentAction:
 
-        if currentAction == ACTION_SELECTOR:
+        if currentAction == Action.SELECTOR:
             handlerStatus = SKIP_EVENT
-        elif currentAction == ACTION_NEW_CLASS:
+        elif currentAction == Action.NEW_CLASS:
             self._createOglClass(x=x, y=y)
-        elif currentAction == ACTION_NEW_TEXT:
+        elif currentAction == Action.NEW_TEXT:
             self._createNewText(x, y)
-        elif currentAction == ACTION_NEW_NOTE:
+        elif currentAction == Action.NEW_NOTE:
             self._createNewNote(x, y)
-        elif currentAction == ACTION_NEW_ACTOR:
+        elif currentAction == Action.NEW_ACTOR:
             self._createActor(x, y)
-        elif currentAction == ACTION_NEW_USECASE:
+        elif currentAction == Action.NEW_USECASE:
             self._createNewUseCase(umlFrame, x, y)
-        elif currentAction == ACTION_NEW_SD_INSTANCE:
+        elif currentAction == Action.NEW_SD_INSTANCE:
             self._attemptSDInstanceCreation(umlFrame, x, y)
-        elif currentAction == ACTION_ZOOM_IN:
+        elif currentAction == Action.ZOOM_IN:
             handlerStatus = SKIP_EVENT
-        elif currentAction == ACTION_ZOOM_OUT:
+        elif currentAction == Action.ZOOM_OUT:
             self._doZoomOut(umlFrame, x, y)
         else:
             handlerStatus = SKIP_EVENT
@@ -279,7 +255,7 @@ class ActionHandler(Singleton):
             # if no source, cancel action
             if shape is None:
                 self.logger.info("Action cancelled (no source)")
-                self._currentAction = ACTION_SELECTOR
+                self._currentAction = Action.SELECTOR
                 self._selectActionSelectorTool()
                 self._setStatusText("Action cancelled")
             else:   # store source
@@ -293,7 +269,7 @@ class ActionHandler(Singleton):
             self._dstPos = position
             # if no destination, cancel action
             if self._dst is None:
-                self._currentAction = ACTION_SELECTOR
+                self._currentAction = Action.SELECTOR
                 self._selectActionSelectorTool()
                 self._setStatusText("Action cancelled")
                 return
@@ -303,7 +279,7 @@ class ActionHandler(Singleton):
                 self._currentAction = self._oldAction
                 del self._oldAction
             else:
-                self._currentAction = ACTION_SELECTOR
+                self._currentAction = Action.SELECTOR
                 self._selectActionSelectorTool()
         else:
             self._setStatusText("Error : Action not supported by the Action Handler")
@@ -404,7 +380,7 @@ class ActionHandler(Singleton):
         """
         pyutUseCase = umlFrame.createNewUseCase(x, y)
         if not self._currentActionPersistent:
-            self._currentAction = ACTION_SELECTOR
+            self._currentAction = Action.SELECTOR
             self._selectTool(SharedIdentifiers.ID_ARROW)
         dlg = DlgEditUseCase(umlFrame, -1, pyutUseCase)
         dlg.Destroy()
@@ -422,7 +398,7 @@ class ActionHandler(Singleton):
 
         instance: PyutSDInstance = umlFrame.createNewSDInstance(x, y)
         if not self._currentActionPersistent:
-            self._currentAction = ACTION_SELECTOR
+            self._currentAction = Action.SELECTOR
             self._selectTool(SharedIdentifiers.ID_ARROW)
         dlg = TextEntryDialog(umlFrame, "Instance name", "Enter instance name", instance.instanceName, OK | CANCEL | CENTRE)
         if dlg.ShowModal() == ID_OK:
@@ -463,7 +439,7 @@ class ActionHandler(Singleton):
         For non-persistent tools
         """
         if not self._currentActionPersistent:
-            self._currentAction = ACTION_SELECTOR
+            self._currentAction = Action.SELECTOR
             self._selectTool(SharedIdentifiers.ID_ARROW)
 
     def _selectActionSelectorTool(self):

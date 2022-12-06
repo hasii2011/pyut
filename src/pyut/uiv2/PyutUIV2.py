@@ -78,7 +78,8 @@ from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyut.enums.DiagramType import DiagramType
 
-from pyut.ui.Action import ACTION_SELECTOR
+from pyut.ui.Action import Action
+
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
@@ -428,7 +429,7 @@ class PyutUIV2(IPyutUI):
             self._updateApplicationTitle()
             self._projectManager.currentProject = project
 
-        self._eventEngine.sendEvent(EventType.SetToolAction, action=ACTION_SELECTOR)
+        self._eventEngine.sendEvent(EventType.SetToolAction, action=Action.SELECTOR)
         self._eventEngine.sendEvent(EventType.SelectTool, toolId=SharedIdentifiers.ID_ARROW)
 
     def _onProjectTreeRightClick(self, treeEvent: TreeEvent):

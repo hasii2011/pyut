@@ -44,6 +44,7 @@ from wx import Yield as wxYield
 from core.PluginManager import PluginManager
 
 from pyut.general.PyutVersion import PyutVersion
+from pyut.ui.Action import Action
 
 from pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
@@ -334,10 +335,8 @@ class PyutApplicationFrameV2(Frame):
         Args:
             event:
         """
-        currentAction: int = SharedIdentifiers.ACTIONS[event.GetId()]
+        currentAction: Action = SharedIdentifiers.ACTIONS[event.GetId()]
 
-        # self._mediator.setCurrentAction(currentAction)
-        # self._mediator.selectTool(event.GetId())
         self._eventEngine.sendEvent(EventType.SetToolAction, action=currentAction)
         self._doToolSelect(toolId=event.GetId())
         wxYield()

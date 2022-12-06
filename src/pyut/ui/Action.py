@@ -1,31 +1,37 @@
+from enum import Enum
 
-# an enum of the supported actions
-# TODO make real enumerations
-# TODO remove from mediator
-[
-    ACTION_SELECTOR,
-    ACTION_NEW_CLASS,                   # 1
-    ACTION_NEW_ACTOR,                   # 2
-    ACTION_NEW_USECASE,                 # 3
-    ACTION_NEW_NOTE,                    # 4
-    ACTION_NEW_IMPLEMENT_LINK,          # 5
-    ACTION_NEW_INTERFACE,               # 6
-    ACTION_NEW_INHERIT_LINK,
-    ACTION_NEW_AGGREGATION_LINK,
-    ACTION_NEW_COMPOSITION_LINK,
-    ACTION_NEW_ASSOCIATION_LINK,
-    ACTION_NEW_NOTE_LINK,
-    ACTION_NEW_TEXT,
 
-    ACTION_DESTINATION_IMPLEMENT_LINK,
-    ACTION_DESTINATION_INHERIT_LINK,
-    ACTION_DESTINATION_AGGREGATION_LINK,
-    ACTION_DESTINATION_COMPOSITION_LINK,
-    ACTION_DESTINATION_ASSOCIATION_LINK,
-    ACTION_DESTINATION_NOTE_LINK,
-    ACTION_NEW_SD_INSTANCE,
-    ACTION_NEW_SD_MESSAGE,
-    ACTION_DESTINATION_SD_MESSAGE,
-    ACTION_ZOOM_IN,
-    ACTION_ZOOM_OUT
-] = range(24)
+class Action(Enum):
+
+    SELECTOR             = 'Selector'
+    NEW_CLASS            = 'NewClass'
+    NEW_ACTOR            = 'NewActor'
+    NEW_USECASE          = 'NewUseCase'
+    NEW_NOTE             = 'NewNote'
+    NEW_IMPLEMENT_LINK   = 'NewImplementLink'
+    NEW_INTERFACE        = 'NewInterface'
+    NEW_INHERIT_LINK     = 'NewInheritLink'
+    NEW_AGGREGATION_LINK = 'NewAggregationLink',
+    NEW_COMPOSITION_LINK = 'NewCompositionLink'
+    NEW_ASSOCIATION_LINK = 'NewAssociationLink'
+    NEW_NOTE_LINK        = 'NewNoteLink'
+    NEW_TEXT             = 'NewText'
+
+    DESTINATION_IMPLEMENT_LINK   = 'DestinationImplementLink'
+    DESTINATION_INHERIT_LINK     = 'DestinationInheritLink'
+    DESTINATION_AGGREGATION_LINK = 'DestinationAggregationLink'
+    DESTINATION_COMPOSITION_LINK = 'DestinationCompositionLink'
+    DESTINATION_ASSOCIATION_LINK = 'DestinationAssociationLink'
+    DESTINATION_NOTE_LINK        = 'DestinationNoteLink'
+    NEW_SD_INSTANCE              = 'NewSDInstance'
+    NEW_SD_MESSAGE               = 'NewSDMessage'
+    DESTINATION_SD_MESSAGE       = 'DestinationSDMessage'
+    ZOOM_IN                      = 'ZoomIn'
+    ZOOM_OUT                     = 'ZoomOut'
+
+    def __str__(self):
+        return str(self.name)
+
+    def __repr__(self):
+        return self.name
+

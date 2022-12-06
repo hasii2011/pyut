@@ -34,7 +34,7 @@ from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
 
 from pyut.ui.ActionHandler import ActionHandler
-from pyut.ui.Action import ACTION_ZOOM_IN
+from pyut.ui.Action import Action
 
 from pyut.PyutUtils import PyutUtils
 
@@ -143,7 +143,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
             skip = self._actionHandler.doAction(self, x, y)
 
-            if self._actionHandler.currentAction == ACTION_ZOOM_IN:
+            if self._actionHandler.currentAction == Action.ZOOM_IN:
                 DiagramFrame._BeginSelect(self, event)
 
             if skip == SKIP_EVENT:
@@ -155,7 +155,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         To make the right action if it is a selection or a zoom.
         """
-        if self._actionHandler.currentAction == ACTION_ZOOM_IN:
+        if self._actionHandler.currentAction == Action.ZOOM_IN:
             width, height = self._selector.GetSize()
             x, y = self._selector.GetPosition()
             self._selector.Detach()

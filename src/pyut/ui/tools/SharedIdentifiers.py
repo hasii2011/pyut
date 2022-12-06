@@ -1,22 +1,7 @@
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.ui.Action import ACTION_NEW_ACTOR
-from pyut.ui.Action import ACTION_NEW_INHERIT_LINK
-from pyut.ui.Action import ACTION_NEW_NOTE_LINK
-from pyut.ui.Action import ACTION_NEW_AGGREGATION_LINK
-from pyut.ui.Action import ACTION_NEW_TEXT
-from pyut.ui.Action import ACTION_SELECTOR
-from pyut.ui.Action import ACTION_NEW_CLASS
-from pyut.ui.Action import ACTION_NEW_NOTE
-from pyut.ui.Action import ACTION_NEW_IMPLEMENT_LINK
-from pyut.ui.Action import ACTION_NEW_COMPOSITION_LINK
-from pyut.ui.Action import ACTION_NEW_ASSOCIATION_LINK
-from pyut.ui.Action import ACTION_ZOOM_OUT
-from pyut.ui.Action import ACTION_ZOOM_IN
-from pyut.ui.Action import ACTION_NEW_SD_MESSAGE
-from pyut.ui.Action import ACTION_NEW_SD_INSTANCE
-from pyut.ui.Action import ACTION_NEW_USECASE
+from pyut.ui.Action import Action
 
 
 class SharedIdentifiers:
@@ -44,21 +29,21 @@ class SharedIdentifiers:
     ] = PyutUtils.assignID(41)
 
     ACTIONS = {
-        ID_ARROW:           ACTION_SELECTOR,
-        ID_CLASS:           ACTION_NEW_CLASS,
-        ID_NOTE:            ACTION_NEW_NOTE,
-        ID_REL_INHERITANCE: ACTION_NEW_INHERIT_LINK,
-        ID_REL_REALISATION: ACTION_NEW_IMPLEMENT_LINK,
+        ID_ARROW:           Action.SELECTOR,
+        ID_CLASS:           Action.NEW_CLASS,
+        ID_NOTE:            Action.NEW_NOTE,
+        ID_REL_INHERITANCE: Action.NEW_INHERIT_LINK,
+        ID_REL_REALISATION: Action.NEW_IMPLEMENT_LINK,
 
-        ID_REL_COMPOSITION: ACTION_NEW_COMPOSITION_LINK,
-        ID_REL_AGGREGATION: ACTION_NEW_AGGREGATION_LINK,
-        ID_REL_ASSOCIATION: ACTION_NEW_ASSOCIATION_LINK,
-        ID_REL_NOTE:        ACTION_NEW_NOTE_LINK,
-        ID_ACTOR:           ACTION_NEW_ACTOR,
-        ID_TEXT:            ACTION_NEW_TEXT,
-        ID_USECASE:         ACTION_NEW_USECASE,
-        ID_SD_INSTANCE:     ACTION_NEW_SD_INSTANCE,
-        ID_SD_MESSAGE:      ACTION_NEW_SD_MESSAGE,
-        ID_ZOOM_IN:         ACTION_ZOOM_IN,
-        ID_ZOOM_OUT:        ACTION_ZOOM_OUT,
+        ID_REL_COMPOSITION: Action.NEW_COMPOSITION_LINK,
+        ID_REL_AGGREGATION: Action.NEW_AGGREGATION_LINK,
+        ID_REL_ASSOCIATION: Action.NEW_ASSOCIATION_LINK,
+        ID_REL_NOTE:        Action.NEW_NOTE_LINK,
+        ID_ACTOR:           Action.NEW_ACTOR,
+        ID_TEXT:            Action.NEW_TEXT,
+        ID_USECASE:         Action.NEW_USECASE,
+        ID_SD_INSTANCE:     Action.NEW_SD_INSTANCE,
+        ID_SD_MESSAGE:      Action.NEW_SD_MESSAGE,
+        ID_ZOOM_IN:         Action.ZOOM_IN,
+        ID_ZOOM_OUT:        Action.ZOOM_OUT,
     }
