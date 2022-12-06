@@ -34,7 +34,7 @@ from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
 
 from pyut.ui.ActionHandler import ActionHandler
-from pyut.ui.Actions import ACTION_ZOOM_IN
+from pyut.ui.Action import ACTION_ZOOM_IN
 
 from pyut.PyutUtils import PyutUtils
 

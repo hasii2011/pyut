@@ -1,22 +1,22 @@
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.ui.Actions import ACTION_NEW_ACTOR
-from pyut.ui.Actions import ACTION_NEW_INHERIT_LINK
-from pyut.ui.Actions import ACTION_NEW_NOTE_LINK
-from pyut.ui.Actions import ACTION_NEW_AGGREGATION_LINK
-from pyut.ui.Actions import ACTION_NEW_TEXT
-from pyut.ui.Actions import ACTION_SELECTOR
-from pyut.ui.Actions import ACTION_NEW_CLASS
-from pyut.ui.Actions import ACTION_NEW_NOTE
-from pyut.ui.Actions import ACTION_NEW_IMPLEMENT_LINK
-from pyut.ui.Actions import ACTION_NEW_COMPOSITION_LINK
-from pyut.ui.Actions import ACTION_NEW_ASSOCIATION_LINK
-from pyut.ui.Actions import ACTION_ZOOM_OUT
-from pyut.ui.Actions import ACTION_ZOOM_IN
-from pyut.ui.Actions import ACTION_NEW_SD_MESSAGE
-from pyut.ui.Actions import ACTION_NEW_SD_INSTANCE
-from pyut.ui.Actions import ACTION_NEW_USECASE
+from pyut.ui.Action import ACTION_NEW_ACTOR
+from pyut.ui.Action import ACTION_NEW_INHERIT_LINK
+from pyut.ui.Action import ACTION_NEW_NOTE_LINK
+from pyut.ui.Action import ACTION_NEW_AGGREGATION_LINK
+from pyut.ui.Action import ACTION_NEW_TEXT
+from pyut.ui.Action import ACTION_SELECTOR
+from pyut.ui.Action import ACTION_NEW_CLASS
+from pyut.ui.Action import ACTION_NEW_NOTE
+from pyut.ui.Action import ACTION_NEW_IMPLEMENT_LINK
+from pyut.ui.Action import ACTION_NEW_COMPOSITION_LINK
+from pyut.ui.Action import ACTION_NEW_ASSOCIATION_LINK
+from pyut.ui.Action import ACTION_ZOOM_OUT
+from pyut.ui.Action import ACTION_ZOOM_IN
+from pyut.ui.Action import ACTION_NEW_SD_MESSAGE
+from pyut.ui.Action import ACTION_NEW_SD_INSTANCE
+from pyut.ui.Action import ACTION_NEW_USECASE
 
 
 class SharedIdentifiers:

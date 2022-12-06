@@ -78,7 +78,7 @@ from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyut.enums.DiagramType import DiagramType
 
-from pyut.ui.Actions import ACTION_SELECTOR
+from pyut.ui.Action import ACTION_SELECTOR
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
