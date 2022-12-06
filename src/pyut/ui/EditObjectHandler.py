@@ -120,7 +120,7 @@ class EditObjectHandler:
             dlgEditNote.Destroy()
         elif isinstance(diagramShape, OglUseCase):
             pyutObject = diagramShape.pyutObject
-            dlgEditUseCase: DlgEditUseCase = DlgEditUseCase(umlFrame, ID_ANY, pyutObject)   # TODO fix where we show it here not in constructor
+            dlgEditUseCase: DlgEditUseCase = DlgEditUseCase(umlFrame, pyutObject)   # TODO fix where we show it here not in constructor
             dlgEditUseCase.Destroy()
         elif isinstance(diagramShape, OglActor):
             pyutObject = diagramShape.pyutObject

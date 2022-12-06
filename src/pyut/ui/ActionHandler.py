@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import TYPE_CHECKING
 
 from logging import Logger
@@ -10,6 +11,7 @@ from wx import CENTRE
 from wx import OK
 
 from wx import CommandProcessor
+from wx import Command
 from wx import TextEntryDialog
 
 from wx import Yield as wxYield
@@ -28,6 +30,7 @@ from pyut.ui.wxcommands.CommandCreateOglClass import CommandCreateOglClass
 from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
 from pyut.ui.wxcommands.CommandCreateOglNote import CommandCreateOglNote
 from pyut.ui.wxcommands.CommandCreateOglText import CommandCreateOglText
+from pyut.ui.wxcommands.CommandCreateOglUseCase import CommandCreateOglUseCase
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlFrame import UmlFrame
@@ -47,8 +50,6 @@ from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import SetToolActionEvent
 
 from pyut.PyutUtils import PyutUtils
-
-from pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 
 # messages for the status bar
 
@@ -209,25 +210,23 @@ class ActionHandler(Singleton):
         """
         self.logger.debug(f'doAction: {self._currentAction}  {Action.SELECTOR=}')
         self._resetStatusText()
-        # TODO:  make the createXXX methods return the command;  Do a single submittal on return
-        # TODO:  rename the createXXX methods to createXXXCommand
-        # TODO:  convert to match (aka switch) statement
-        handlerStatus: int    = EVENT_PROCESSED
-        currentAction: Action = self._currentAction
 
+        handlerStatus: int     = EVENT_PROCESSED
+        currentAction: Action  = self._currentAction
+        cmd:           Command = cast(Command, None)
         match currentAction:
             case Action.SELECTOR:
                 handlerStatus = SKIP_EVENT
             case Action.NEW_CLASS:
-                self._createOglClass(x=x, y=y)
+                cmd = CommandCreateOglClass(x=x, y=y, eventEngine=self._eventEngine)
             case Action.NEW_TEXT:
-                self._createNewText(x, y)
+                cmd = CommandCreateOglText(x=x, y=y, eventEngine=self._eventEngine)
             case Action.NEW_NOTE:
-                self._createNewNote(x, y)
+                cmd = CommandCreateOglNote(x=x, y=y, eventEngine=self._eventEngine)
             case Action.NEW_ACTOR:
-                self._createActor(x, y)
+                cmd = CommandCreateOglActor(x=x, y=y, eventEngine=self._eventEngine)
             case Action.NEW_USECASE:
-                self._createNewUseCase(umlFrame, x, y)
+                cmd = CommandCreateOglUseCase(x=x, y=y, eventEngine=self._eventEngine)
             case Action.NEW_SD_INSTANCE:
                 self._attemptSDInstanceCreation(umlFrame, x, y)
             case Action.ZOOM_IN:
@@ -236,6 +235,10 @@ class ActionHandler(Singleton):
                 self._doZoomOut(umlFrame, x, y)
             case _:
                 handlerStatus = SKIP_EVENT
+        if cmd is not None:
+            self._resetToActionSelector()
+            submitStatus: bool = self._commandProcessor.Submit(command=cmd, storeIt=True)
+            self.logger.info(f'Create command submission status: {submitStatus}')
 
         return handlerStatus
 
@@ -325,66 +328,6 @@ class ActionHandler(Singleton):
             PyutUtils.displayError("An SD INSTANCE cannot be added to a class diagram. PLease create a sequence diagram.")
         else:
             self._createNewSDInstance(umlFrame, x, y)
-
-    def _createOglClass(self, x: int, y: int):
-
-        command: CommandCreateOglClass = CommandCreateOglClass(x=x, y=y, eventEngine=self._eventEngine)
-        self._commandProcessor.Submit(command=command, storeIt=True)
-        self._resetToActionSelector()
-
-    def _createNewText(self, x: int, y: int):
-        """
-        Create a text box on the diagram
-
-        Args:
-            x: The x-coordinate
-            y: The y-coordinate
-        """
-        command: CommandCreateOglText = CommandCreateOglText(x=x, y=y, eventEngine=self._eventEngine)
-        self._commandProcessor.Submit(command=command, storeIt=True)
-        self._resetToActionSelector()
-
-    def _createNewNote(self, x: int, y: int):
-        """
-        Create a note on the diagram
-
-        Args:
-            x: The x-coordinate
-            y: The y-coordinate
-        """
-        command: CommandCreateOglNote = CommandCreateOglNote(x=x, y=y, eventEngine=self._eventEngine)
-        self._commandProcessor.Submit(command=command, storeIt=True)
-
-        self._resetToActionSelector()
-
-    def _createActor(self, x: int, y: int):
-        """
-
-        Args:
-            x: The x-coordinate
-            y: The y-coordinate
-        """
-        command: CommandCreateOglActor = CommandCreateOglActor(x=x, y=y, eventEngine=self._eventEngine)
-        self._commandProcessor.Submit(command=command, storeIt=True)
-
-        self._resetToActionSelector()
-
-    def _createNewUseCase(self, umlFrame, x, y):
-        """
-        TODO:  Make a command
-        Args:
-            umlFrame:
-            x:
-            y:
-
-        """
-        pyutUseCase = umlFrame.createNewUseCase(x, y)
-        if not self._currentActionPersistent:
-            self._currentAction = Action.SELECTOR
-            self._selectTool(SharedIdentifiers.ID_ARROW)
-        dlg = DlgEditUseCase(umlFrame, -1, pyutUseCase)
-        dlg.Destroy()
-        umlFrame.Refresh()
 
     def _createNewSDInstance(self, umlFrame, x, y):
         """

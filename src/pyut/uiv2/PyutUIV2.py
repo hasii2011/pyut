@@ -7,6 +7,7 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
+from pyutmodel.PyutUseCase import PyutUseCase
 from wx import CANCEL
 from wx import CENTRE
 from wx import ClientDC
@@ -73,6 +74,7 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
 from pyut.dialogs.DlgEditDocument import DlgEditDocument
+from pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
@@ -109,6 +111,7 @@ from pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
 from pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_NOTE
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_TEXT
+from pyut.uiv2.eventengine.Events import EVENT_EDIT_USE_CASE
 from pyut.uiv2.eventengine.Events import EVENT_FRAME_INFORMATION
 from pyut.uiv2.eventengine.Events import EVENT_FRAME_SIZE
 from pyut.uiv2.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
@@ -128,6 +131,7 @@ from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 from pyut.uiv2.eventengine.Events import EditActorEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
+from pyut.uiv2.eventengine.Events import EditUseCaseEvent
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import AddShapeEvent
 from pyut.uiv2.eventengine.Events import ActiveUmlFrameEvent
@@ -215,10 +219,11 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME,           callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
         # TODO:  Should these handler go somewhere else
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS, callback=self._onEditClass)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_NOTE,  callback=self._onEditNote)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_TEXT,  callback=self._onEditText)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_ACTOR, callback=self._onEditActor)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS,    callback=self._onEditClass)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_NOTE,     callback=self._onEditNote)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_TEXT,     callback=self._onEditText)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_ACTOR,    callback=self._onEditActor)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_USE_CASE, callback=self._onEditUseCase)
         #
         # Following provided for the Plugin Adapter
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,            callback=self._onAddShape)
@@ -718,12 +723,21 @@ class PyutUIV2(IPyutUI):
         pyutActor: PyutActor        = event.pyutActor
         umlFrame:  UmlDiagramsFrame = self._projectManager.currentFrame
 
-        dlg = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
+        dlg: TextEntryDialog = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
         if dlg.ShowModal() == ID_OK:
             pyutActor.name = dlg.GetValue()
         dlg.Destroy()
         umlFrame.Refresh()
 
+    def _onEditUseCase(self, event: EditUseCaseEvent):
+
+        pyutUseCase: PyutUseCase      = event.pyutUseCase
+        umlFrame:    UmlDiagramsFrame = self._projectManager.currentFrame
+
+        # TODO: fix this sucker
+        dlg = DlgEditUseCase(parent=umlFrame, pyutUseCase=pyutUseCase)
+        dlg.Destroy()
+        umlFrame.Refresh()
     def _onAddShape(self, event: AddShapeEvent):
 
         oglObject: OglObject = event.shapeToAdd

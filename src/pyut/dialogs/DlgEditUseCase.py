@@ -8,6 +8,7 @@ from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import EXPAND
 from wx import HORIZONTAL
+from wx import ID_ANY
 from wx import OK
 from wx import RESIZE_BORDER
 from wx import RIGHT
@@ -43,14 +44,14 @@ class DlgEditUseCase(Dialog):
     :author: Philippe Waelti
     :contact: pwaelti@eivd.ch
     """
-    def __init__(self, parent, ID, pyutUseCase):
+    def __init__(self, parent, pyutUseCase):
         """
         Constructor.
 
         @since 1.0
         @author Philippe Waelti <pwaelti@eivd.ch>
         """
-        super().__init__(parent, ID, _("Use Case Edit"), style=RESIZE_BORDER | CAPTION)
+        super().__init__(parent, ID_ANY, _("Use Case Edit"), style=RESIZE_BORDER | CAPTION)
 
         # Associated PyutUseCase
         self._pyutUseCase = pyutUseCase
@@ -89,6 +90,7 @@ class DlgEditUseCase(Dialog):
         self.SetSizer(szrBorder)
         szrBorder.Fit(self)
 
+        # TODO:  Fix this invocation from the constructor
         self.Centre()
         self.ShowModal()
 

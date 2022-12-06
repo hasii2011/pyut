@@ -5,6 +5,7 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
+from pyutmodel.PyutUseCase import PyutUseCase
 from wx import PostEvent
 from wx import PyEventBinder
 from wx import TreeItemId
@@ -24,6 +25,7 @@ from pyut.uiv2.eventengine.Events import AddShapeEvent
 from pyut.uiv2.eventengine.Events import EditActorEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
+from pyut.uiv2.eventengine.Events import EditUseCaseEvent
 from pyut.uiv2.eventengine.Events import FrameInformationEvent
 from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
@@ -75,6 +77,7 @@ PYUT_CLASS_PARAMETER:                str = 'pyutClass'
 PYUT_NOTE_PARAMETER:                 str = 'pyutNote'
 PYUT_TEXT_PARAMETER:                 str = 'pyutText'
 PYUT_ACTOR_PARAMETER:                str = 'pyutActor'
+PYUT_USE_CASE_PARAMETER:             str = 'pyutUseCase'
 
 PROJECT_FILENAME_PARAMETER: str = INSERT_PROJECT_FILENAME_PARAMETER
 
@@ -151,6 +154,8 @@ class EventEngine(IEventEngine):
                 self._sendEditTextEvent(**kwargs)
             case EventType.EditActor:
                 self._sendEditActorEvent(**kwargs)
+            case EventType.EditUseCase:
+                self._sendEditUseCaseEvent(**kwargs)
 
             case EventType.FrameInformation:
                 self._sendFrameInformationEvent(**kwargs)
@@ -263,23 +268,28 @@ class EventEngine(IEventEngine):
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendEditClassEvent(self, **kwargs):
-        pyutClass: PyutClass = kwargs[PYUT_CLASS_PARAMETER]
+        pyutClass:   PyutClass      = kwargs[PYUT_CLASS_PARAMETER]
         eventToPost: EditClassEvent = EditClassEvent(pyutClass=pyutClass)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendEditNoteEvent(self, **kwargs):
-        pyutNote: PyutNote = kwargs[PYUT_NOTE_PARAMETER]
+        pyutNote:    PyutNote      = kwargs[PYUT_NOTE_PARAMETER]
         eventToPost: EditNoteEvent = EditNoteEvent(pyutNote=pyutNote)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendEditTextEvent(self, **kwargs):
-        pyutText: PyutText = kwargs[PYUT_TEXT_PARAMETER]
+        pyutText:    PyutText      = kwargs[PYUT_TEXT_PARAMETER]
         eventToPost: EditTextEvent = EditTextEvent(pyutText=pyutText)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendEditActorEvent(self, **kwargs):
-        pyutActor: PyutActor = kwargs[PYUT_ACTOR_PARAMETER]
+        pyutActor: PyutActor       = kwargs[PYUT_ACTOR_PARAMETER]
         eventToPost: EditActorEvent = EditActorEvent(pyutActor=pyutActor)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendEditUseCaseEvent(self, **kwargs):
+        pyutUseCase: PyutUseCase     = kwargs[PYUT_USE_CASE_PARAMETER]
+        eventToPost: EditUseCaseEvent = EditUseCaseEvent(pyutUseCase=pyutUseCase)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendFrameInformationEvent(self, **kwargs):

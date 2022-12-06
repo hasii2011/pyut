@@ -28,7 +28,7 @@ jobs:
             pip install setuptools==65.5.1
             pip install six==1.16.0
             pip install attrdict3
-            pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
+            pip install -v -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
             pip install PyGithub==1.55
             pip install pyutmodel~=1.1.0
             pip install ogl~=0.60.15
