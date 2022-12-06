@@ -219,67 +219,49 @@ class ActionHandler(Singleton):
 
         self._eventEngine.sendEvent(EventType.MiniProjectInformation, callback=self._doUpdate)
 
-    def doAction(self, umlFrame: 'UmlFrame', x: int, y: int):
+    def doAction(self, umlFrame: 'UmlFrame', x: int, y: int) -> int:
         """
         Do the current action at coordinates x, y.
 
         Args:
             umlFrame:  The frame we are acting on
-            x: x coord where the action must take place
-            y: y coord where the action must take place
+            x: The ordinate where the action must take place
+            y: The abscissa where the action must take place
+
+        Returns: Event handler status
+
         """
-        self.logger.debug(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
+        self.logger.debug(f'doAction: {self._currentAction}  {ACTION_SELECTOR=}')
         self._resetStatusText()
         # TODO:  make the createXXX methods return the command;  Do a single submittal on return
         # TODO:  rename the createXXX methods to createXXXCommand
         # TODO:  convert to match (aka switch) statement
-        if self._currentAction == ACTION_SELECTOR:
-            return SKIP_EVENT
-        elif self._currentAction == ACTION_NEW_CLASS:
+        handlerStatus: int = EVENT_PROCESSED
+        currentAction: int = self._currentAction
+        # match currentAction:
+
+        if currentAction == ACTION_SELECTOR:
+            handlerStatus = SKIP_EVENT
+        elif currentAction == ACTION_NEW_CLASS:
             self._createOglClass(x=x, y=y)
-        elif self._currentAction == ACTION_NEW_TEXT:
+        elif currentAction == ACTION_NEW_TEXT:
             self._createNewText(x, y)
-        elif self._currentAction == ACTION_NEW_NOTE:
+        elif currentAction == ACTION_NEW_NOTE:
             self._createNewNote(x, y)
-        elif self._currentAction == ACTION_NEW_ACTOR:
+        elif currentAction == ACTION_NEW_ACTOR:
             self._createActor(x, y)
-        elif self._currentAction == ACTION_NEW_USECASE:
-            pyutUseCase = umlFrame.createNewUseCase(x, y)
-            if not self._currentActionPersistent:
-                self._currentAction = ACTION_SELECTOR
-                self._selectTool(SharedIdentifiers.ID_ARROW)
-            dlg = DlgEditUseCase(umlFrame, -1, pyutUseCase)
-            dlg.Destroy()
-            umlFrame.Refresh()
-        elif self._currentAction == ACTION_NEW_SD_INSTANCE:
-            try:
-                from pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
-                if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
-                    PyutUtils.displayError("A SD INSTANCE can't be added to a class diagram. You must create a sequence diagram.")
-                    return
-                instance = umlFrame.createNewSDInstance(x, y)
-                if not self._currentActionPersistent:
-                    self._currentAction = ACTION_SELECTOR
-                    self._selectTool(SharedIdentifiers.ID_ARROW)
-
-                dlg = TextEntryDialog(umlFrame, "Instance name", "Enter instance name", instance.getInstanceName(), OK | CANCEL | CENTRE)
-
-                if dlg.ShowModal() == ID_OK:
-                    instance.setInstanceName(dlg.GetValue())
-                dlg.Destroy()
-                umlFrame.Refresh()
-            except (ValueError, Exception) as e:
-                PyutUtils.displayError(f"An error occurred while trying to do this action {e}")
-                umlFrame.Refresh()
-        elif self._currentAction == ACTION_ZOOM_IN:
-            return SKIP_EVENT
-        elif self._currentAction == ACTION_ZOOM_OUT:
-            umlFrame.DoZoomOut(x, y)
-            umlFrame.Refresh()
-            self.updateTitle()
+        elif currentAction == ACTION_NEW_USECASE:
+            self._createNewUseCase(umlFrame, x, y)
+        elif currentAction == ACTION_NEW_SD_INSTANCE:
+            self._attemptSDInstanceCreation(umlFrame, x, y)
+        elif currentAction == ACTION_ZOOM_IN:
+            handlerStatus = SKIP_EVENT
+        elif currentAction == ACTION_ZOOM_OUT:
+            self._doZoomOut(umlFrame, x, y)
         else:
-            return SKIP_EVENT
-        return EVENT_PROCESSED
+            handlerStatus = SKIP_EVENT
+
+        return handlerStatus
 
     def shapeSelected(self, shape, position=None):
         """
@@ -354,6 +336,20 @@ class ActionHandler(Singleton):
     def _onSetToolAction(self, event: SetToolActionEvent):
         self.currentAction = event.action
 
+    def _attemptSDInstanceCreation(self, umlFrame, x, y):
+        """
+        Attempt because we need to check for valid diagram frame
+        Args:
+            umlFrame:
+            x:
+            y:
+        """
+        from pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
+        if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
+            PyutUtils.displayError("An SD INSTANCE cannot be added to a class diagram. PLease create a sequence diagram.")
+        else:
+            self._createNewSDInstance(umlFrame, x, y)
+
     def _createOglClass(self, x: int, y: int):
 
         command: CommandCreateOglClass = CommandCreateOglClass(x=x, y=y, eventEngine=self._eventEngine)
@@ -397,6 +393,43 @@ class ActionHandler(Singleton):
 
         self._resetToActionSelector()
 
+    def _createNewUseCase(self, umlFrame, x, y):
+        """
+        TODO:  Make a command
+        Args:
+            umlFrame:
+            x:
+            y:
+
+        """
+        pyutUseCase = umlFrame.createNewUseCase(x, y)
+        if not self._currentActionPersistent:
+            self._currentAction = ACTION_SELECTOR
+            self._selectTool(SharedIdentifiers.ID_ARROW)
+        dlg = DlgEditUseCase(umlFrame, -1, pyutUseCase)
+        dlg.Destroy()
+        umlFrame.Refresh()
+
+    def _createNewSDInstance(self, umlFrame, x, y):
+        """
+        TODO:  Make command
+        Args:
+            umlFrame:
+            x:
+            y:
+        """
+        from pyutmodel.PyutSDInstance import PyutSDInstance
+
+        instance: PyutSDInstance = umlFrame.createNewSDInstance(x, y)
+        if not self._currentActionPersistent:
+            self._currentAction = ACTION_SELECTOR
+            self._selectTool(SharedIdentifiers.ID_ARROW)
+        dlg = TextEntryDialog(umlFrame, "Instance name", "Enter instance name", instance.instanceName, OK | CANCEL | CENTRE)
+        if dlg.ShowModal() == ID_OK:
+            instance.instanceName = dlg.GetValue()
+        dlg.Destroy()
+        umlFrame.Refresh()
+
     def _createLink(self):
 
         linkType: PyutLinkType = LINK_TYPE[self._currentAction]
@@ -410,6 +443,11 @@ class ActionHandler(Singleton):
         self._commandProcessor.Submit(command=command, storeIt=True)
         self._src = None
         self._dst = None
+
+    def _doZoomOut(self, umlFrame, x: int, y: int):
+        umlFrame.DoZoomOut(x, y)
+        umlFrame.Refresh()
+        self.updateTitle()
 
     def _setStatusText(self, msg: str):
         self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg=msg)

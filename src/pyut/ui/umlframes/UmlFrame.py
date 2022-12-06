@@ -135,7 +135,7 @@ class UmlFrame(UmlFrameShapeHandler):
     def OnLeftDown(self, event: MouseEvent):
         """
         Manage a left down mouse event.
-        If there's an action pending in the mediator, give it the event, else
+        If there's an action pending in the action handler, give it the event, else
         let it go to the next handler.
         """
         if self._actionHandler.actionWaiting:
