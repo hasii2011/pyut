@@ -620,6 +620,7 @@ class PyutUIV2(IPyutUI):
         projectToSave: IPyutProject = self._projectManager.currentProject
         self._projectManager.saveProject(projectToSave=projectToSave)
         self._updateApplicationTitle()
+        self._commandProcessor.MarkAsSaved()
         self._eventEngine.sendEvent(EventType.UpdateRecentProjects, projectFilename=projectToSave.filename)
 
     # noinspection PyUnusedLocal
@@ -628,7 +629,7 @@ class PyutUIV2(IPyutUI):
 
         self._projectManager.saveProjectAs(projectToSave=currentProject)
         self._updateApplicationTitle()
-        self._eventEngine.sendEvent(EventType.UpdateRecentProjects, projectFilename=currentProject.filename)
+        self._commandProcessor.MarkAsSaved()
 
     # noinspection PyUnusedLocal
     def _onInsertProject(self, event: InsertProjectEvent):

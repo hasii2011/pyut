@@ -14,6 +14,7 @@ from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import CommandProcessor
+
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_WINDOW_DESTROY
 from wx import FRAME_TOOL_WINDOW

@@ -42,6 +42,7 @@ from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.ui.umlframes.UmlFrame import UmlObject
 from pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.wxcommands.CommandDeleteOglActor import CommandDeleteOglActor
 
 from pyut.ui.wxcommands.CommandDeleteOglClass import CommandDeleteOglClass
 from pyut.ui.wxcommands.CommandDeleteOglLink import CommandDeleteOglLink
@@ -344,6 +345,8 @@ class DiagramNotebook(Notebook):
                 cmd = CommandDeleteOglText(oglText=shape, eventEngine=self._eventEngine)
             case OglNote() as shape:
                 cmd = CommandDeleteOglNote(oglNote=shape, eventEngine=self._eventEngine)
+            case OglActor() as shape:
+                cmd = CommandDeleteOglActor(oglActor=shape, eventEngine=self._eventEngine)
             case OglLink() as shape:
                 oglLink:  OglLink     = cast(OglLink, shape)
                 cmd = CommandDeleteOglLink(oglLink=oglLink, eventEngine=self._eventEngine)

@@ -230,6 +230,9 @@ class ActionHandler(Singleton):
         """
         self.logger.debug(f'doAction: {self._currentAction}  ACTION_SELECTOR: {ACTION_SELECTOR}')
         self._resetStatusText()
+        # TODO:  make the createXXX methods return the command;  Do a single submittal on return
+        # TODO:  rename the createXXX methods to createXXXCommand
+        # TODO:  convert to match (aka switch) statement
         if self._currentAction == ACTION_SELECTOR:
             return SKIP_EVENT
         elif self._currentAction == ACTION_NEW_CLASS:
