@@ -48,6 +48,7 @@ from pyut.ui.wxcommands.CommandDeleteOglClass import CommandDeleteOglClass
 from pyut.ui.wxcommands.CommandDeleteOglLink import CommandDeleteOglLink
 from pyut.ui.wxcommands.CommandDeleteOglNote import CommandDeleteOglNote
 from pyut.ui.wxcommands.CommandDeleteOglText import CommandDeleteOglText
+from pyut.ui.wxcommands.CommandDeleteOglUseCase import CommandDeleteOglUseCase
 from pyut.ui.wxcommands.Types import DoableObjectType
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -328,7 +329,7 @@ class DiagramNotebook(Notebook):
 
     def _createDeleteCommand(self, shape: DoableObjectType) -> Command:
         """
-        TODO:  Update to support OglInterface2, OglUseCase, OglActor
+        TODO:  Update to support OglInterface2
 
         If no command type exists for the input shape log a warning
 
@@ -348,8 +349,11 @@ class DiagramNotebook(Notebook):
             case OglActor() as shape:
                 cmd = CommandDeleteOglActor(oglActor=shape, eventEngine=self._eventEngine)
             case OglLink() as shape:
-                oglLink:  OglLink     = cast(OglLink, shape)
+                oglLink:  OglLink = cast(OglLink, shape)
                 cmd = CommandDeleteOglLink(oglLink=oglLink, eventEngine=self._eventEngine)
+            case OglUseCase() as shape:
+                oglUseCase: OglUseCase = cast(OglUseCase, shape)
+                cmd = CommandDeleteOglUseCase(oglUseCase=oglUseCase, eventEngine=self._eventEngine)
             case _:
                 self.logger.warning(f'No history generated for shape type: {shape}')
         return cmd
