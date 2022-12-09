@@ -7,7 +7,6 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
-from pyutmodel.PyutUseCase import PyutUseCase
 from wx import CANCEL
 from wx import CENTRE
 from wx import ClientDC
@@ -41,6 +40,7 @@ from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutActor import PyutActor
+from pyutmodel.PyutUseCase import PyutUseCase
 
 from miniogl.Diagram import Diagram
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
@@ -74,7 +74,6 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
 from pyut.dialogs.DlgEditDocument import DlgEditDocument
-from pyut.dialogs.DlgEditUseCase import DlgEditUseCase
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
@@ -665,8 +664,7 @@ class PyutUIV2(IPyutUI):
 
     # noinspection PyUnusedLocal
     def _onDiagramModified(self, event: UMLDiagramModifiedEvent):
-        self._projectManager.currentProject.modified = True
-        self._updateApplicationTitle()
+        self._setProjectModified()
 
     def _onMiniProjectInformation(self, event: MiniProjectInformationEvent):
         projectInformation: MiniProjectInformation  = MiniProjectInformation()
@@ -697,47 +695,52 @@ class PyutUIV2(IPyutUI):
 
         self.logger.debug(f"Edit: {pyutClass}")
 
-        dlg: DlgEditClass = DlgEditClass(umlFrame, self._eventEngine, pyutClass)
-        dlg.ShowModal()
-        dlg.Destroy()
+        with DlgEditClass(umlFrame, self._eventEngine, pyutClass) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                umlFrame.Refresh()
+                # Sends its own modify event
 
     def _onEditNote(self, event: EditNoteEvent):
-        pyutNote: PyutNote = event.pyutNote
+        pyutNote: PyutNote         = event.pyutNote
         umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
 
         self.logger.debug(f"Edit: {pyutNote}")
-        dlg: DlgEditNote = DlgEditNote(umlFrame, pyutNote)
-        dlg.ShowModal()
-        dlg.Destroy()
+        with DlgEditNote(umlFrame, pyutNote) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                self._setProjectModified()
+                umlFrame.Refresh()
 
     def _onEditText(self, event: EditTextEvent):
         pyutText: PyutText         = event.pyutText
         umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
 
         self.logger.debug(f"Edit: {pyutText}")
-        dlg: DlgEditText = DlgEditText(umlFrame, pyutText)
-        dlg.ShowModal()
-        dlg.Destroy()
+        with DlgEditText(umlFrame, pyutText) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                self._setProjectModified()
+                umlFrame.Refresh()
 
     def _onEditActor(self, event: EditActorEvent):
         pyutActor: PyutActor        = event.pyutActor
         umlFrame:  UmlDiagramsFrame = self._projectManager.currentFrame
 
-        dlg: TextEntryDialog = TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE)
-        if dlg.ShowModal() == ID_OK:
-            pyutActor.name = dlg.GetValue()
-        dlg.Destroy()
-        umlFrame.Refresh()
+        with TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                pyutActor.name = dlg.GetValue()
+                self._setProjectModified()
+                umlFrame.Refresh()
 
     def _onEditUseCase(self, event: EditUseCaseEvent):
 
         pyutUseCase: PyutUseCase      = event.pyutUseCase
         umlFrame:    UmlDiagramsFrame = self._projectManager.currentFrame
 
-        # TODO: fix this sucker
-        dlg = DlgEditUseCase(parent=umlFrame, pyutUseCase=pyutUseCase)
-        dlg.Destroy()
-        umlFrame.Refresh()
+        with TextEntryDialog(umlFrame, "Use Case Name", "Enter Use Case Name", pyutUseCase.name, OK | CANCEL | CENTRE) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                pyutUseCase.name = dlg.GetValue()
+                self._setProjectModified()
+                umlFrame.Refresh()
+
     def _onAddShape(self, event: AddShapeEvent):
 
         oglObject: OglObject = event.shapeToAdd
@@ -954,3 +957,7 @@ class PyutUIV2(IPyutUI):
             if self.logger.isEnabledFor(DEBUG):
                 self.logger.debug(f'Current notebook page: {notebookCurrentPageNumber}')
             self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
+
+    def _setProjectModified(self):
+        self._projectManager.currentProject.modified = True
+        self._updateApplicationTitle()
