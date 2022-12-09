@@ -64,12 +64,10 @@ class DlgEditInterface(DlgEditClassCommon):
         self._pyutInterface.methods     = self._pyutModelCopy.methods
         self._pyutInterface.description = self._pyutModelCopy.description
 
-        self._returnAction = OK     # This is probably obsolete
         self.SetReturnCode(OK)
         self.EndModal(OK)
 
     # noinspection PyUnusedLocal
     def _onCancel(self, event: CommandEvent):
-        self._returnAction = CANCEL
         self.SetReturnCode(CANCEL)
         self.EndModal(CANCEL)

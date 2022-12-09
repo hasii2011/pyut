@@ -44,7 +44,6 @@ from pyut.general.Globals import _
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from pyut.uiv2.eventengine.Events import EventType
@@ -356,15 +355,5 @@ class DlgEditClassCommon(Dialog):
 
     def _setProjectModified(self):
         """
-        We need to request some information
         """
-        self._eventEngine.sendEvent(EventType.ActiveProjectInformation, callback=self.__markProjectAsModified)
-
-    def __markProjectAsModified(self, activeProjectInformation: ActiveProjectInformation):
-        """
-        Now we can mark the project as modified
-        Args:
-            activeProjectInformation:
-        """
-
-        activeProjectInformation.pyutProject.modified = True
+        self._eventEngine.sendEvent(EventType.UMLDiagramModified)

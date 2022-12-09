@@ -406,13 +406,11 @@ class DlgEditClass(DlgEditClassCommon):
             parent = self.GetParent()
             wxPostEvent(parent, evt)
 
-        self._returnAction = OK     # This is probably obsolete
         self.SetReturnCode(OK)
         self.EndModal(OK)
 
     # noinspection PyUnusedLocal
     def _onCancel(self, event: CommandEvent):
-        self._returnAction = CANCEL
         self.SetReturnCode(CANCEL)
         self.EndModal(CANCEL)
 

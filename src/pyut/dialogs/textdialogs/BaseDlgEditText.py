@@ -37,21 +37,7 @@ class BaseDlgEditText(Dialog):
     def __init__(self, parent: Window, dialogIdentifier: int, dialogTitle: str):
 
         super().__init__(parent, dialogIdentifier, dialogTitle, style=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
-
-        self._returnAction: int = cast(int, None)   # describe how the user exited the dialog box
-
-        self.clsLogger.info(f'{self._returnAction}')
-
         self.SetAutoLayout(True)
-
-    def getReturnAction(self) -> int:
-        """
-        Return an information on how the user exited the dialog
-
-        Returns:
-            wx.Ok = click on Ok button; wx.Cancel = click on Cancel button
-        """
-        return self._returnAction
 
     def _createDialogButtons(self) -> BoxSizer:
         """
@@ -95,7 +81,7 @@ class BaseDlgEditText(Dialog):
     # noinspection PyUnusedLocal
     def _onCmdOk(self, event: CommandEvent):
 
-        self._returnAction = OK
+        self.SetReturnCode(OK)
         self.EndModal(OK)
 
     # noinspection PyUnusedLocal
@@ -103,6 +89,5 @@ class BaseDlgEditText(Dialog):
         """
         Handle click on "Cancel" button.
         """
-        self._returnAction = CANCEL
-        # self.Close()
+        self.SetReturnCode(CANCEL)
         self.EndModal(CANCEL)
