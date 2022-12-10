@@ -207,20 +207,6 @@ class ProjectManager:
 
         return self._manageProject(pyutProject=project)
 
-    def _manageProject(self, pyutProject: PyutProjectV2):
-        """
-        Creates the UI elements for the new project and places in the project manager list
-        Args:
-            pyutProject:
-        """
-        projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=pyutProject)
-
-        pyutProject.projectTreeRoot = projectTreeRoot
-
-        wxYield()
-        self.addProject(project=pyutProject)
-        return pyutProject
-
     def saveProject(self, projectToSave: IPyutProject):
         """
         Save the project;  If the project has no name or the default file name,
@@ -509,6 +495,20 @@ class ProjectManager:
             self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
 
         self.updateDiagramNotebookIfPossible(project=project)
+
+    def _manageProject(self, pyutProject: PyutProjectV2):
+        """
+        Creates the UI elements for the new project and places in the project manager list
+        Args:
+            pyutProject:
+        """
+        projectTreeRoot: TreeItemId = self._projectTree.addProjectToTree(pyutProject=pyutProject)
+
+        pyutProject.projectTreeRoot = projectTreeRoot
+
+        wxYield()
+        self.addProject(project=pyutProject)
+        return pyutProject
 
     def _removeAllReferencesToUmlFrame(self, umlFrame: UmlDiagramsFrame):
         """

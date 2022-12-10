@@ -9,7 +9,6 @@ from logging import DEBUG
 
 from wx import CANCEL
 from wx import CENTRE
-from wx import ClientDC
 from wx import EVT_MENU
 from wx import EVT_MENU_CLOSE
 from wx import EVT_NOTEBOOK_PAGE_CHANGED
@@ -24,6 +23,8 @@ from wx import OK
 from wx import YES_NO
 from wx import ITEM_NORMAL
 
+from wx import ClientDC
+from wx import SplitterWindow
 from wx import CommandProcessor
 from wx import Frame
 from wx import TreeEvent
@@ -89,7 +90,7 @@ from pyut.ui.umlframes.UmlFrame import UmlObjects
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject
 
-from pyut.uiv2.IPyutUI import IPyutUI
+
 from pyut.uiv2.DiagramNotebook import DiagramNotebook
 from pyut.uiv2.ProjectManager import ProjectManager
 from pyut.uiv2.ProjectManager import PyutProjects
@@ -171,11 +172,11 @@ NO_PYUT_DIAGRAM:  IPyutDocument    = cast(IPyutDocument, None)
 NO_MENU:          Menu             = cast(Menu, None)
 
 
-class PyutUIV2(IPyutUI):
+class PyutUIV2(SplitterWindow):
 
     def __init__(self, topLevelWindow: Frame, eventEngine: IEventEngine, commandProcessor: CommandProcessor):
 
-        super().__init__(topLevelWindow=topLevelWindow)
+        super().__init__(parent=topLevelWindow)
 
         self.logger: Logger = getLogger(__name__)
 
@@ -231,47 +232,6 @@ class PyutUIV2(IPyutUI):
         self._eventEngine.registerListener(pyEventBinder=EVENT_SELECTED_OGL_OBJECTS, callback=self._selectedOglObjects)
         self._eventEngine.registerListener(pyEventBinder=EVENT_REFRESH_FRAME,        callback=self._refreshFrame)
 
-    @property
-    def currentProject(self) -> IPyutProject:
-        return self._projectManager.currentProject
-
-    @currentProject.setter
-    def currentProject(self, newProject: IPyutProject):
-
-        self._projectManager.currentProject = newProject
-
-        self._notebookCurrentPageNumber = self._diagramNotebook.GetPageCount() - 1
-        self._diagramNotebook.SetSelection(self._notebookCurrentPageNumber)
-
-        self.logger.debug(f'{self._notebookCurrentPageNumber=}')
-
-    @property
-    def currentDocument(self) -> IPyutDocument:
-        """
-        Get the current document.
-
-        Returns:
-            the current document or None if not found
-        """
-        return self._projectManager.currentDocument
-
-    @property
-    def currentFrame(self) -> UmlDiagramsFrame:
-        return self._projectManager.currentFrame
-
-    @currentFrame.setter
-    def currentFrame(self, newFrame: UmlDiagramsFrame):
-        self._projectManager.currentFrame = newFrame
-
-    @property
-    def diagramNotebook(self) -> DiagramNotebook:
-        """
-        This will be removed when we use eventing from the mediator to send messages
-
-        Returns:  The UI component
-        """
-        return self._diagramNotebook
-
     def handleUnsavedProjects(self):
         """
         Close all files
@@ -292,7 +252,7 @@ class PyutUIV2(IPyutUI):
                     self._projectManager.saveProject(projectToSave=pyutProject)
                 dlg.Destroy()
 
-        self.diagramNotebook.DeleteAllPages()
+        self._diagramNotebook.DeleteAllPages()
 
     def showFrame(self, frame: UmlDiagramsFrame):
         self._frame = frame
@@ -420,8 +380,8 @@ class PyutUIV2(IPyutUI):
 
             self._projectManager.syncPageFrameAndNotebook(frame=frame)
 
-        elif isinstance(pyutData, PyutProjectV2):
-            project: PyutProjectV2 = pyutData
+        elif isinstance(pyutData, IPyutProject):
+            project: IPyutProject = pyutData
             self._projectManager.currentProject = project
             projectFrames: List[UmlFrameType] = project.frames
             if len(projectFrames) > 0:
@@ -429,7 +389,7 @@ class PyutUIV2(IPyutUI):
             else:
                 self._projectManager.currentFrame = NO_DIAGRAM_FRAME
 
-            self._projectManager.syncPageFrameAndNotebook(frame=self.currentFrame)
+            self._projectManager.syncPageFrameAndNotebook(frame=self._projectManager.currentFrame)
             self._updateApplicationTitle()
             self._projectManager.currentProject = project
 
@@ -486,7 +446,7 @@ class PyutUIV2(IPyutUI):
 
             self.__documentPopupMenu = popupMenu
 
-        self.logger.debug(f'Current diagram: `{self.currentDocument}`')
+        self.logger.debug(f'Current diagram: `{self._projectManager.currentDocument}`')
         self._parentWindow.PopupMenu(self.__documentPopupMenu)
 
     # noinspection PyUnusedLocal
@@ -501,8 +461,9 @@ class PyutUIV2(IPyutUI):
     # noinspection PyUnusedLocal
     def _onEditDiagramName(self, event: CommandEvent):
 
-        currentDocument: IPyutDocument   = self._projectManager.currentDocument
-        dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=self.currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
+        currentDocument: IPyutDocument    = self._projectManager.currentDocument
+        currentFrame:    UmlDiagramsFrame = self._projectManager.currentFrame
+        dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
 
         dlgEditDocument.Destroy()
 
@@ -520,7 +481,7 @@ class PyutUIV2(IPyutUI):
             event:  May be invoked via the event engine with a RemoveDocumentEvent
         """
         project:         IPyutProject  = self._projectManager.currentProject
-        currentDocument: IPyutDocument = self.currentDocument
+        currentDocument: IPyutDocument = self._projectManager.currentDocument
 
         self._projectManager.deleteDocument(project=project, document=currentDocument)
 
@@ -538,9 +499,7 @@ class PyutUIV2(IPyutUI):
         Close the current project
         """
         currentProject: IPyutProject = self._projectManager.currentProject
-        if currentProject is None and self.currentFrame is not None:
-            # currentProject = self.getProjectFromFrame(self.currentFrame)
-            currentProject = self._projectManager.currentProject
+
         if currentProject is None:
             self._displayError(message='No frame to close!')
             return
