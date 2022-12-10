@@ -4,8 +4,10 @@ from enum import Enum
 
 class DialogNamesEnum(Enum):
 
+    DLG_PYUT_PREFERENCES_EDITOR = 'DlgPyutPreferencesEditor'
+
     DLG_EDIT_NOTE        = 'DlgEditNote'
-    DLG_PYUT_PREFERENCES = 'DlgPyutPreferences'
+    DLG_PYUT_PREFERENCES = 'PyutPreferencesEditor'
     DLG_EDIT_TEXT        = 'DlgEditText'
     DLG_EDIT_PARAMETER   = 'DlgEditParameter'
     DLG_EDIT_CLASS       = 'DlgEditClass'

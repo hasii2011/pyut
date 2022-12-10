@@ -38,7 +38,7 @@
     },
     "loggers": {
         "root": {
-            "level":     "INFO",
+            "level":     "WARNING",
             "handlers":  ["consoleHandler"],
             "propagate": "False"
         },

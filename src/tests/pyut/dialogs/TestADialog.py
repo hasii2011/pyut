@@ -31,6 +31,7 @@ from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
 from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
+from pyut.dialogs.preferencesv2.PyutPreferencesEditor import PyutPreferencesEditor
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
@@ -80,7 +81,8 @@ class TestADialog(App):
 
         self.SetTopWindow(frameTop)
 
-        self._frameTop = frameTop
+        self._frame: Frame = frameTop
+
         self._preferences: PyutPreferences = PyutPreferences()
         self._dlgSelectionId: wxNewIdRef = wxNewIdRef()
         #
@@ -150,13 +152,15 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditCode()
         elif dlgName == DialogNamesEnum.DLG_PYUT_DEBUG:
             dlgAnswer = self._testDlgPyutDebug()
+        elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES_EDITOR:
+            dlgAnswer = self._testPyutPreferencesEditor()
 
         self.logger.warning(f'{dlgAnswer=}')
 
     def _testDlgEditText(self) -> str:
 
         pyutText: PyutText = PyutText()
-        with DlgEditText(parent=self._frameTop, pyutText=pyutText) as dlg:
+        with DlgEditText(parent=self._frame, pyutText=pyutText) as dlg:
 
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutText.content=}'
@@ -166,7 +170,7 @@ class TestADialog(App):
     def _testDlgEditNote(self) -> str:
 
         pyutNote: PyutNote = PyutNote(noteText=self._preferences.noteText)
-        with DlgEditNote(parent=self._frameTop, pyutNote=pyutNote) as dlg:
+        with DlgEditNote(parent=self._frame, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutNote.content=}'
             else:
@@ -174,7 +178,7 @@ class TestADialog(App):
 
     def _testDlgEditField(self) -> str:
         pyutField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
-        with DlgEditField(theParent=self._frameTop, eventEngine=self._eventEngine, fieldToEdit=pyutField) as dlg:
+        with DlgEditField(theParent=self._frame, eventEngine=self._eventEngine, fieldToEdit=pyutField) as dlg:
             if dlg.ShowModal() == OK:
                 return f'{pyutField=}'
             else:
@@ -182,7 +186,7 @@ class TestADialog(App):
 
     def _testDlgPyutPreferences(self) -> str:
 
-        with DlgPyutPreferences(parent=self._frameTop, wxId=ID_ANY) as dlg:
+        with DlgPyutPreferences(parent=self._frame, wxId=ID_ANY) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Preferences returned Ok'
             else:
@@ -190,7 +194,7 @@ class TestADialog(App):
 
     def _testDlgEditParameter(self) -> str:
         pyutParameter: PyutParameter = PyutParameter()
-        with DlgEditParameter(parent=self._frameTop, eventEngine=self._eventEngine, parameterToEdit=pyutParameter) as dlg:
+        with DlgEditParameter(parent=self._frame, eventEngine=self._eventEngine, parameterToEdit=pyutParameter) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutParameter}'
             else:
@@ -199,10 +203,10 @@ class TestADialog(App):
     def _testDlgEditClass(self):
         pyutClass: PyutClass = PyutClass(name='Ozzee')
 
-        eventEngine: EventEngine = EventEngine(listeningWindow=self._frameTop)
+        eventEngine: EventEngine = EventEngine(listeningWindow=self._frame)
         # Not a notebook
         # noinspection PyTypeChecker
-        umlFrame:    UmlClassDiagramsFrame = UmlClassDiagramsFrame(parent=self._frameTop, eventEngine=eventEngine)
+        umlFrame:    UmlClassDiagramsFrame = UmlClassDiagramsFrame(parent=self._frame, eventEngine=eventEngine)
         with DlgEditClass(parent=umlFrame, pyutClass=pyutClass, eventEngine=eventEngine) as dlg:
             if dlg.ShowModal() == OK:
                 classStr: str = (
@@ -226,10 +230,10 @@ class TestADialog(App):
 
     def _testDlgEditInterface(self):
 
-        eventEngine: EventEngine = EventEngine(listeningWindow=self._frameTop)
+        eventEngine: EventEngine = EventEngine(listeningWindow=self._frame)
 
         pyutInterface: PyutInterface = PyutInterface(name='Ozzee')
-        with DlgEditInterface(parent=self._frameTop, eventEngine=eventEngine, pyutInterface=pyutInterface) as dlg:
+        with DlgEditInterface(parent=self._frame, eventEngine=eventEngine, pyutInterface=pyutInterface) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutInterface}'
             else:
@@ -257,7 +261,7 @@ class TestADialog(App):
         )
         savePreference: DisplayMethodParameters = PyutMethod.displayParameters
         PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
-        with DlgEditMethod(parent=self._frameTop, eventEngine=self._eventEngine, pyutMethod=pyutMethod) as dlg:
+        with DlgEditMethod(parent=self._frame, eventEngine=self._eventEngine, pyutMethod=pyutMethod) as dlg:
             ans = dlg.ShowModal()
 
             if ans == OK:
@@ -279,19 +283,30 @@ class TestADialog(App):
                 'return ans'
             ]
         )
-        with DlgEditCode(self._frameTop, ID_ANY, sourceCode) as dlg:
+        with DlgEditCode(self._frame, ID_ANY, sourceCode) as dlg:
             if dlg.ShowModal() == ID_OK:
                 return f'Retrieved data: {dlg.sourceCode}'
             else:
                 return f'Cancelled'
 
     def _testDlgPyutDebug(self):
-        with DlgPyutDebug(self._frameTop) as dlg:
+        with DlgPyutDebug(self._frame) as dlg:
             if dlg.ShowModal() == ID_OK:
                 return "Good"
             else:
                 return 'Cancelled'
 
+    def _testPyutPreferencesEditor(self) -> str:
+
+        from wx import Yield
+        from wx import Sleep
+        pyutPreferencesEditor: PyutPreferencesEditor = PyutPreferencesEditor()
+        pyutPreferencesEditor.addPanels()
+        pyutPreferencesEditor.Show(parent=self._frame)
+        Yield()
+        Sleep(5)
+
+        return 'Superb'
 
 testApp: App = TestADialog(redirect=False)
 

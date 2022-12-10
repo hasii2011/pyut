@@ -37,7 +37,7 @@ from wx.lib.agw.labelbook import LabelBook
 from pyut.dialogs.preferences.ValuePreferencesBook import ValuePreferencesBook
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.dialogs.preferences.GeneralPreferences import GeneralPreferencesPanel
+from pyut.dialogs.preferences.GeneralPreferencesPanel import GeneralPreferencesPanel
 from pyut.dialogs.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from pyut.dialogs.preferences.PositioningPreferences import PositioningPreferences
 from pyut.dialogs.preferences.BackgroundPreferences import BackgroundPreferences
