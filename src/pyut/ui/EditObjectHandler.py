@@ -5,7 +5,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from ogl.OglInheritance import OglInheritance
 from wx import CANCEL
 from wx import CENTRE
 
@@ -21,6 +20,9 @@ from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutNote import PyutNote
 
+from miniogl.AnchorPoint import AnchorPoint
+
+from ogl.OglInheritance import OglInheritance
 from ogl.OglText import OglText
 from ogl.OglClass import OglClass
 from ogl.OglNote import OglNote
@@ -104,7 +106,7 @@ class EditObjectHandler:
                 self._editAssociation(diagramShape)
             case OglInterface() as diagramShape:
                 self._editLink(diagramShape)
-            case OglInheritance() as diagramShape:
+            case OglInheritance() | AnchorPoint() as diagramShape:
                 pass        # ignored
             case _:
                 self.logger.error(f'Unknown shape')

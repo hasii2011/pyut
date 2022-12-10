@@ -43,25 +43,9 @@ from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutActor import PyutActor
 from pyutmodel.PyutUseCase import PyutUseCase
 
-from miniogl.Diagram import Diagram
-from miniogl.SelectAnchorPoint import SelectAnchorPoint
-
 from ogl.OglObject import OglObject
-from ogl.OglInterface2 import OglInterface2
 
-from ogl.sd.OglSDInstance import OglSDInstance
-from ogl.sd.OglSDMessage import OglSDMessage
-from oglio.Types import OglClasses
-from ogl.OglLink import OglLink
-
-from oglio.Types import OglNotes
-from oglio.Types import OglSDInstances
-from oglio.Types import OglSDMessages
-from oglio.Types import OglTexts
-from oglio.Types import OglActors
-from oglio.Types import OglUseCases
 from oglio.Types import OglDocument
-from oglio.Types import OglLinks
 from oglio.Types import OglProject
 
 from core.types.Types import OglObjects
@@ -92,6 +76,7 @@ from pyut.uiv2.IPyutProject import IPyutProject
 
 
 from pyut.uiv2.DiagramNotebook import DiagramNotebook
+from pyut.uiv2.LayoutEngine import LayoutEngine
 from pyut.uiv2.ProjectManager import ProjectManager
 from pyut.uiv2.ProjectManager import PyutProjects
 from pyut.uiv2.ProjectTree import ProjectTree
@@ -702,17 +687,10 @@ class PyutUIV2(SplitterWindow):
 
     def _onAddShape(self, event: AddShapeEvent):
 
-        oglObject: OglObject = event.shapeToAdd
-        umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
-        match oglObject:
-            case OglLink() as oglObject:
-                self._layoutOglLink(umlFrame=umlFrame, oglLink=cast(OglLink, oglObject))
-            case OglSDInstance() as oglObject:
-                self._layoutOglSDInstance(diagram=umlFrame.getDiagram(), oglSDInstance=cast(OglSDInstance, oglObject))
-            case OglSDMessage() as oglObject:
-                self._layoutOglSDMessage(diagram=umlFrame.getDiagram(), oglSDMessage=cast(OglSDMessage, oglObject))
-            case _:
-                self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglObject)
+        oglObject: OglObject        = event.shapeToAdd
+        umlFrame:  UmlDiagramsFrame = self._projectManager.currentFrame
+
+        LayoutEngine().addShape(umlFrame=umlFrame, oglObject=oglObject)     # too cute for words
 
     def _onFrameInformation(self, event: FrameInformationEvent):
 
@@ -778,23 +756,14 @@ class PyutUIV2(SplitterWindow):
             oglProject:   The ogl project to display
             pyutProject:   My version
         """
+        layoutEngine: LayoutEngine = LayoutEngine()
         for document in oglProject.oglDocuments.values():
             oglDocument: OglDocument = cast(OglDocument, document)
             diagramType: DiagramType = DiagramType.toEnum(oglDocument.documentType)
             self._newDiagram(pyutProject=pyutProject, diagramType=diagramType, diagramName=oglDocument.documentTitle)
 
             newFrame = self._projectManager.currentFrame
-            # Don't care what type of diagram since those lists will be empty
-            self._layoutOglClasses(umlFrame=newFrame, oglClasses=oglDocument.oglClasses)
-            self._layoutOglLinks(umlFrame=newFrame,   oglLinks=oglDocument.oglLinks)
-            self._layoutOglNotes(umlFrame=newFrame,   oglNotes=oglDocument.oglNotes)
-            self._layoutOglTexts(umlFrame=newFrame,   oglTexts=oglDocument.oglTexts)
-
-            self._layoutOglActors(umlFrame=newFrame,   oglActors=oglDocument.oglActors)
-            self._layoutOglUseCases(umlFrame=newFrame, oglUseCases=oglDocument.oglUseCases)
-
-            self._layoutOglSDInstances(umlFrame=newFrame, oglSDInstances=oglDocument.oglSDInstances)
-            self._layoutOglSDMessages(umlFrame=newFrame, oglSDMessages=oglDocument.oglSDMessages)
+            layoutEngine.layout(umlFrame=newFrame, oglDocument=oglDocument)
 
     def _updateApplicationTitle(self):
 
@@ -823,71 +792,6 @@ class PyutUIV2(SplitterWindow):
 
         booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
         booBoo.ShowModal()
-
-    def _layoutOglClasses(self, umlFrame: UmlDiagramsFrame, oglClasses: OglClasses):
-        for oglClass in oglClasses:
-            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglClass, )
-
-    def _layoutOglLinks(self, umlFrame: UmlDiagramsFrame, oglLinks: OglLinks):
-
-        for link in oglLinks:
-            oglLink: OglLink = cast(OglLink, link)
-            self._layoutOglLink(umlFrame=umlFrame, oglLink=oglLink)
-
-    def _layoutOglNotes(self, umlFrame: UmlDiagramsFrame, oglNotes: OglNotes):
-        for oglNote in oglNotes:
-            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglNote)
-
-    def _layoutOglTexts(self, umlFrame: UmlDiagramsFrame, oglTexts: OglTexts):
-        for oglText in oglTexts:
-            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglText)
-
-    def _layoutOglActors(self, umlFrame: UmlDiagramsFrame, oglActors: OglActors):
-        for oglActor in oglActors:
-            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglActor)
-
-    def _layoutOglUseCases(self, umlFrame: UmlDiagramsFrame, oglUseCases: OglUseCases):
-        for oglUseCase in oglUseCases:
-            self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglUseCase)
-
-    def _layoutOglSDInstances(self, umlFrame: UmlDiagramsFrame, oglSDInstances: OglSDInstances):
-        diagram: Diagram = umlFrame.getDiagram()
-        for oglSDInstance in oglSDInstances.values():
-            self._layoutOglSDInstance(diagram=diagram, oglSDInstance=oglSDInstance)
-        umlFrame.Refresh()
-
-    def _layoutOglSDMessages(self, umlFrame: UmlDiagramsFrame, oglSDMessages: OglSDMessages):
-        diagram: Diagram = umlFrame.getDiagram()
-        for oglSDMessage in oglSDMessages.values():
-            self._layoutOglSDMessage(diagram=diagram, oglSDMessage=oglSDMessage)
-
-    def _layoutOglLink(self, umlFrame: UmlDiagramsFrame, oglLink: OglLink):
-
-        self._layoutAnOglObject(umlFrame=umlFrame, oglObject=oglLink)
-        # TODO:
-        # This is bad mooky here. The Ogl objects were created withing having a Diagram
-        # The legacy code deserialized the object while adding them to a frame. This
-        # new code deserializes w/o reference to a frame
-        # If we don't this the AnchorPoints are not on the diagram and lines ends are not
-        # movable.
-        if isinstance(oglLink, OglInterface2) is False:
-            umlDiagram = umlFrame.diagram
-
-            umlDiagram.AddShape(oglLink.sourceAnchor)
-            umlDiagram.AddShape(oglLink.destinationAnchor)
-            controlPoints = oglLink.GetControlPoints()
-            for controlPoint in controlPoints:
-                umlDiagram.AddShape(controlPoint)
-
-    def _layoutOglSDInstance(self, diagram: Diagram, oglSDInstance: OglSDInstance):
-        diagram.AddShape(oglSDInstance)
-
-    def _layoutOglSDMessage(self, diagram: Diagram, oglSDMessage: OglSDMessage):
-        diagram.AddShape(oglSDMessage)
-
-    def _layoutAnOglObject(self, umlFrame: UmlDiagramsFrame, oglObject: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink]):
-        x, y = oglObject.GetPosition()
-        umlFrame.addShape(oglObject, x, y)
 
     def _updateProjectManagerWithNewDocument(self, pyutProject: IPyutProject, document: PyutDocumentV2):
         """
