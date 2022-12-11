@@ -59,7 +59,7 @@ class TestUmlFrame(unittest.TestCase):
         #  Create frame
         baseFrame: Frame = Frame(None, ID_ANY, "", size=(10, 10))
         # noinspection PyTypeChecker
-        umlFrame = UmlFrame(baseFrame, EventEngine(listeningWindow=baseFrame), commandProcessor=None)
+        umlFrame = UmlFrame(baseFrame, EventEngine(listeningWindow=baseFrame))
         umlFrame.Show(True)
 
         self._umlFrame: UmlFrame = umlFrame

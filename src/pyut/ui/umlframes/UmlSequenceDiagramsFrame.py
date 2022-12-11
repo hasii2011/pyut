@@ -1,6 +1,4 @@
 
-from wx import CommandProcessor
-
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyutmodel.PyutSDInstance import PyutSDInstance
@@ -27,14 +25,14 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
     """
     cdfDebugId: int = 0x00FFF   # UML Sequence Diagrams Frame Debug ID
 
-    def __init__(self, parent, commandProcessor: CommandProcessor, eventEngine: IEventEngine | None = None):
+    def __init__(self, parent, eventEngine: IEventEngine | None = None):
         """
 
         Args:
             parent:  The parent window
-            eventEngine: Pyut event engine  TODO Set to None for UI V1 code;  Remove ignore
+            eventEngine: Pyut event engine
         """
-        super().__init__(parent, eventEngine=eventEngine, commandProcessor=commandProcessor)       # type: ignore
+        super().__init__(parent, eventEngine=eventEngine)   # type: ignore
 
         self._cdfDebugId: int = UmlSequenceDiagramsFrame.cdfDebugId
 

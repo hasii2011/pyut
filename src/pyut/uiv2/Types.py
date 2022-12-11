@@ -5,7 +5,6 @@ from typing import Tuple
 from typing import Union
 
 from wx import Notebook
-from wx import CommandProcessor
 
 from pyut.PyutConstants import DiagramsLabels
 
@@ -20,14 +19,13 @@ Frames = NewType('Frames', List[UmlFrameType])
 
 
 def createDiagramFrame(parentFrame: Notebook, diagramType: DiagramType,
-                       eventEngine: IEventEngine, commandProcessor: CommandProcessor) -> Tuple[UmlFrameType, str]:
+                       eventEngine: IEventEngine) -> Tuple[UmlFrameType, str]:
     """
 
     Args:
         parentFrame:
         diagramType:
         eventEngine:
-        commandProcessor:
 
     Returns:  The tuple of the new diagram frame and the default diagram name
     """
@@ -35,13 +33,13 @@ def createDiagramFrame(parentFrame: Notebook, diagramType: DiagramType,
     match diagramType:
         case DiagramType.CLASS_DIAGRAM:
             defaultDiagramName: str          = DiagramsLabels[diagramType]
-            diagramFrame:       UmlFrameType = UmlClassDiagramsFrame(parentFrame, eventEngine=eventEngine, commandProcessor=commandProcessor)
+            diagramFrame:       UmlFrameType = UmlClassDiagramsFrame(parentFrame, eventEngine=eventEngine)
         case DiagramType.SEQUENCE_DIAGRAM:
             defaultDiagramName = DiagramsLabels[diagramType]
-            diagramFrame       = UmlSequenceDiagramsFrame(parentFrame, eventEngine=eventEngine, commandProcessor=commandProcessor)
+            diagramFrame       = UmlSequenceDiagramsFrame(parentFrame, eventEngine=eventEngine)
         case DiagramType.USECASE_DIAGRAM:
             defaultDiagramName = DiagramsLabels[diagramType]
-            diagramFrame       = UmlClassDiagramsFrame(parentFrame, eventEngine=eventEngine, commandProcessor=commandProcessor)
+            diagramFrame       = UmlClassDiagramsFrame(parentFrame, eventEngine=eventEngine)
         case _:
             print(f'Unsupported diagram type; replacing with class diagram: {diagramType}')
             defaultDiagramName = DiagramsLabels[DiagramType.CLASS_DIAGRAM]

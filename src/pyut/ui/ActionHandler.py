@@ -10,7 +10,6 @@ from wx import CANCEL
 from wx import CENTRE
 from wx import OK
 
-from wx import CommandProcessor
 from wx import Command
 from wx import TextEntryDialog
 
@@ -152,7 +151,6 @@ class ActionHandler(Singleton):
 
         self.logger:            Logger           = getLogger(__name__)
         self._eventEngine:      IEventEngine     = kwargs['eventEngine']
-        self._commandProcessor: CommandProcessor = kwargs['commandProcessor']
 
         self._currentAction:           Action = Action.SELECTOR
         self._currentActionPersistent: bool   = False
@@ -237,12 +235,12 @@ class ActionHandler(Singleton):
                 handlerStatus = SKIP_EVENT
         if cmd is not None:
             self._resetToActionSelector()
-            submitStatus: bool = self._commandProcessor.Submit(command=cmd, storeIt=True)
+            submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
             self.logger.info(f'Create command submission status: {submitStatus}')
 
         return handlerStatus
 
-    def shapeSelected(self, shape, position=None):
+    def shapeSelected(self, umlDiagramsFrame: 'UmlDiagramsFrame', shape, position=None):
         """
         Do action when a shape is selected.
         TODO : support each link type
@@ -276,7 +274,7 @@ class ActionHandler(Singleton):
                 self._selectActionSelectorTool()
                 self._setStatusText("Action cancelled")
                 return
-            self._createLink()
+            self._createLink(umlDiagramsFrame)
 
             if self._currentActionPersistent:
                 self._currentAction = self._oldAction
@@ -349,7 +347,7 @@ class ActionHandler(Singleton):
         dlg.Destroy()
         umlFrame.Refresh()
 
-    def _createLink(self):
+    def _createLink(self, umlDiagramsFrame: 'UmlDiagramsFrame'):
 
         linkType: PyutLinkType = LINK_TYPE[self._currentAction]
 
@@ -359,7 +357,7 @@ class ActionHandler(Singleton):
                                                              srcPoint=self._srcPos,
                                                              dstPoint=self._dstPos
                                                              )
-        self._commandProcessor.Submit(command=command, storeIt=True)
+        umlDiagramsFrame.commandProcessor.Submit(command=command, storeIt=True)
         self._src = None
         self._dst = None
 

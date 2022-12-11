@@ -17,7 +17,6 @@ from wx import NO_IMAGE
 from wx import OK
 
 from wx import Command
-from wx import CommandProcessor
 from wx import MessageDialog
 from wx import Notebook
 from wx import Window
@@ -78,19 +77,17 @@ PyutObjects = NewType('PyutObjects', List[PyutObject])
 
 class DiagramNotebook(Notebook):
 
-    def __init__(self, parentWindow: Window, eventEngine: IEventEngine, commandProcessor: CommandProcessor):
+    def __init__(self, parentWindow: Window, eventEngine: IEventEngine):
         """
 
         Args:
             parentWindow:   Our hosting window
             eventEngine:    The Pyut Event Engine
-            commandProcessor:  The Pyut command processor to support do, undo, and redo
         """
 
         super().__init__(parentWindow, ID_ANY, style=CLIP_CHILDREN)
 
         self._eventEngine:      IEventEngine     = eventEngine
-        self._commandProcessor: CommandProcessor = commandProcessor
 
         self.logger:     Logger      = getLogger(__name__)
         self._clipboard: PyutObjects = PyutObjects([])            # will be re-created at every copy
@@ -322,7 +319,7 @@ class DiagramNotebook(Notebook):
                 shape.Detach()
                 umlFrame.Refresh()
             else:
-                submitStatus: bool = self._commandProcessor.Submit(command=cmd, storeIt=True)
+                submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
                 self.logger.warning(f'{submitStatus=}')
 
         self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated

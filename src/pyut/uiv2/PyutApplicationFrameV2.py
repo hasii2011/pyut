@@ -78,10 +78,14 @@ from pyut.uiv2.PyutUIV2 import PyutUIV2
 from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
 from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.uiv2.eventengine.Events import AssociateEditMenuEvent
+from pyut.uiv2.eventengine.Events import EVENT_ASSOCIATE_EDIT_MENU
 from pyut.uiv2.eventengine.Events import EVENT_SELECT_TOOL
+from pyut.uiv2.eventengine.Events import EVENT_UPDATE_EDIT_MENU
 from pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import SelectToolEvent
+from pyut.uiv2.eventengine.Events import UpdateEditMenuEvent
 from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -124,9 +128,7 @@ class PyutApplicationFrameV2(Frame):
         self._pluginMgr:   PluginManager = PluginManager(pluginAdapter=PluginAdapter(eventEngine=self._eventEngine))
         self._fileHistory: FileHistory   = FileHistory(idBase=ID_FILE1)
 
-        self._commandProcessor: CommandProcessor = CommandProcessor()
-
-        self._pyutUIV2:    PyutUIV2      = PyutUIV2(self, eventEngine=self._eventEngine, commandProcessor=self._commandProcessor)
+        self._pyutUIV2:    PyutUIV2      = PyutUIV2(self, eventEngine=self._eventEngine)
 
         # set up the singleton
         self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
@@ -139,8 +141,6 @@ class PyutApplicationFrameV2(Frame):
         editMenu:  Menu = Menu()
         toolsMenu: Menu = Menu()
         helpMenu:  Menu = Menu()
-
-        self._commandProcessor.SetEditMenu(editMenu)
 
         self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine,
                                                                    pluginManager=self._pluginMgr,
@@ -201,8 +201,11 @@ class PyutApplicationFrameV2(Frame):
         self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_STATUS, self._onUpdateStatus)
         self._eventEngine.registerListener(EVENT_SELECT_TOOL,               self._onSelectTool)
         self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS,    self._onUpdateRecentProjects)
+        self._eventEngine.registerListener(EVENT_UPDATE_EDIT_MENU,          self._onUpdateEditMenu)
+        self._eventEngine.registerListener(EVENT_ASSOCIATE_EDIT_MENU,       self._onAssociateEditMenu)
 
         self._fileMenu: Menu = fileMenu     # So we can destroy you later !!!
+        self._editMenu: Menu = editMenu
 
         self.Bind(EVT_WINDOW_DESTROY, self._cleanupFileHistory)
         self.Bind(EVT_ACTIVATE, self._onActivate)
@@ -350,6 +353,14 @@ class PyutApplicationFrameV2(Frame):
             toolBar.ToggleTool(deselectedToolId, False)
 
         toolBar.ToggleTool(toolId, True)
+
+    def _onUpdateEditMenu(self, event: UpdateEditMenuEvent):
+        cp: CommandProcessor = event.commandProcessor
+        cp.SetMenuStrings()
+
+    def _onAssociateEditMenu(self, event: AssociateEditMenuEvent):
+        cp: CommandProcessor = event.commandProcessor
+        cp.SetEditMenu(self._editMenu)
 
     def _onActivate(self, event: ActivateEvent):
         """

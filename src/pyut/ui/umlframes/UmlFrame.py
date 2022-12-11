@@ -66,7 +66,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
     clsUmlFrameLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent: Notebook, eventEngine: IEventEngine, commandProcessor: CommandProcessor):
+    def __init__(self, parent: Notebook, eventEngine: IEventEngine):
         """
 
         Args:
@@ -78,9 +78,9 @@ class UmlFrame(UmlFrameShapeHandler):
 
         self.logger:            Logger           = UmlFrame.clsUmlFrameLogger
         self._eventEngine:      IEventEngine     = eventEngine
-        self._commandProcessor: CommandProcessor = commandProcessor
+        self._commandProcessor: CommandProcessor = CommandProcessor()
 
-        self._actionHandler:     ActionHandler     = ActionHandler(eventEngine=eventEngine, commandProcessor=commandProcessor)
+        self._actionHandler:     ActionHandler     = ActionHandler(eventEngine=eventEngine)
         self._editObjectHandler: EditObjectHandler = EditObjectHandler(eventEngine=eventEngine)
 
         self.maxWidth:  int  = DEFAULT_WIDTH
@@ -99,6 +99,10 @@ class UmlFrame(UmlFrameShapeHandler):
         self.SetInfinite(True)
 
         self._defaultCursor = self.GetCursor()
+
+    @property
+    def commandProcessor(self) -> CommandProcessor:
+        return self._commandProcessor
 
     # noinspection PyUnusedLocal
     def setCodePath(self, path: str):

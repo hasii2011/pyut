@@ -57,6 +57,8 @@ FrameSizeEvent,                EVENT_FRAME_SIZE           = NewEvent()
 SelectedOglObjectsEvent,       EVENT_SELECTED_OGL_OBJECTS = NewEvent()
 RefreshFrameEvent,             EVENT_REFRESH_FRAME        = NewEvent()
 
+UpdateEditMenuEvent,    EVENT_UPDATE_EDIT_MENU    = NewEvent()
+AssociateEditMenuEvent, EVENT_ASSOCIATE_EDIT_MENU = NewEvent()
 
 class EventType(str, Enum):
     """
@@ -156,6 +158,17 @@ class EventType(str, Enum):
         parameters:
             callback - Callback this is invoked with a parameter of type FrameInformation
 
+    UpdateEditMenuEvent
+        Used to update the Edit menu Undo/redo menu items.  This involves using the
+        command processor associated with each Uml Frame
+        parameters:
+            commandProcessor - The command processor associated with the currently visible UML Frame
+
+    AssociateEditMenu:
+        Used on the initial creation of a UML frame to associate it with the Edit Menu
+        parameters:
+            commandProcessor - The command processor associated with the currently visible UML Frame
+
     Events with no parameters get stuffed into the enumeration as instances, so they can be used
     event engine simple send method;  To simplify enumeration creation I create instances for all
     event types
@@ -218,3 +231,6 @@ class EventType(str, Enum):
     FrameSize                = ('FrameSize',          FrameSizeEvent(),          EVENT_FRAME_SIZE)
     SelectedOglObjects       = ('SelectedOglObjects', SelectedOglObjectsEvent(), EVENT_SELECTED_OGL_OBJECTS)
     RefreshFrame             = ('RefreshFrame',       RefreshFrameEvent(),       EVENT_REFRESH_FRAME)
+
+    UpdateEditMenu    = ('UpdateEditMenu',    UpdateEditMenuEvent(),    EVENT_UPDATE_EDIT_MENU)
+    AssociateEditMenu = ('AssociateEditMenu', AssociateEditMenuEvent(), EVENT_ASSOCIATE_EDIT_MENU)

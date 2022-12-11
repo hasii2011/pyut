@@ -22,6 +22,7 @@ from pyut.enums.DiagramType import DiagramType
 
 from pyut.uiv2.IPyutProject import IPyutProject
 from pyut.uiv2.eventengine.Events import AddShapeEvent
+from pyut.uiv2.eventengine.Events import AssociateEditMenuEvent
 from pyut.uiv2.eventengine.Events import EditActorEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
@@ -30,6 +31,7 @@ from pyut.uiv2.eventengine.Events import FrameInformationEvent
 from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 from pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
+from pyut.uiv2.eventengine.Events import UpdateEditMenuEvent
 from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 
 from pyut.uiv2.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
@@ -64,6 +66,8 @@ SHAPE_TO_ADD_PARAMETER: str = 'shapeToAdd'
 TOOL_ID_PARAMETER:      str = 'toolId'
 ACTION_PARAMETER:       str = 'action'
 NEW_FILENAME_PARAMETER: str = 'newFilename'
+
+COMMAND_PROCESSOR_PARAMETER: str = 'commandProcessor'
 
 
 PROJECT_MODIFIED_PARAMETER:          str = 'projectModified'
@@ -163,6 +167,11 @@ class EventEngine(IEventEngine):
                 self._sendSelectedOglObjectsEvent(**kwargs)
             case EventType.UpdateRecentProjects:
                 self._sendUpdateRecentProjectEvent(**kwargs)
+
+            case EventType.UpdateEditMenu:
+                self._sendUpdateEditMenuEvent(**kwargs)
+            case EventType.AssociateEditMenu:
+                self._sendAssicateEditMenuEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
@@ -308,3 +317,20 @@ class EventEngine(IEventEngine):
         projectFilename: str = kwargs[PROJECT_FILENAME_PARAMETER]
         eventToPost: UpdateRecentProjectsEvent = UpdateRecentProjectsEvent(projectFilename=projectFilename)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendUpdateEditMenuEvent(self, **kwargs):
+
+        from wx import CommandProcessor
+
+        commandProcessor: CommandProcessor    = kwargs[COMMAND_PROCESSOR_PARAMETER]
+        eventToPost:      UpdateEditMenuEvent = UpdateEditMenuEvent(commandProcessor=commandProcessor)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendAssicateEditMenuEvent(self, **kwargs):
+
+        from wx import CommandProcessor
+
+        commandProcessor: CommandProcessor       = kwargs[COMMAND_PROCESSOR_PARAMETER]
+        eventToPost:      AssociateEditMenuEvent = AssociateEditMenuEvent(commandProcessor=commandProcessor)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+

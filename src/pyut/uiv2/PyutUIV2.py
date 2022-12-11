@@ -159,7 +159,7 @@ NO_MENU:          Menu             = cast(Menu, None)
 
 class PyutUIV2(SplitterWindow):
 
-    def __init__(self, topLevelWindow: Frame, eventEngine: IEventEngine, commandProcessor: CommandProcessor):
+    def __init__(self, topLevelWindow: Frame, eventEngine: IEventEngine):
 
         super().__init__(parent=topLevelWindow)
 
@@ -167,9 +167,8 @@ class PyutUIV2(SplitterWindow):
 
         self._parentWindow:     Frame           = topLevelWindow
         self._eventEngine:      IEventEngine    = eventEngine
-        self._commandProcessor: CommandProcessor = commandProcessor
         self._projectTree:      ProjectTree     = ProjectTree(parentWindow=self)
-        self._diagramNotebook:  DiagramNotebook = DiagramNotebook(parentWindow=self, eventEngine=eventEngine, commandProcessor=commandProcessor)
+        self._diagramNotebook:  DiagramNotebook = DiagramNotebook(parentWindow=self, eventEngine=eventEngine)
 
         # Set splitter
         self.SetMinimumPaneSize(20)
@@ -290,8 +289,7 @@ class PyutUIV2(SplitterWindow):
         """
         umlFrame, defaultDiagramName = createDiagramFrame(parentFrame=self._diagramNotebook,
                                                           diagramType=diagramType,
-                                                          eventEngine=self._eventEngine,
-                                                          commandProcessor=self._commandProcessor)
+                                                          eventEngine=self._eventEngine)
         document: PyutDocumentV2     = PyutDocumentV2(diagramFrame=umlFrame, docType=diagramType, eventEngine=self._eventEngine)
 
         document.title = defaultDiagramName
@@ -306,6 +304,8 @@ class PyutUIV2(SplitterWindow):
 
         self._updateApplicationTitle()
 
+        cp: CommandProcessor = umlFrame.commandProcessor
+        self._eventEngine.sendEvent(EventType.AssociateEditMenu, commandProcessor=cp)
         return document
 
     def _getProjectFromFrame(self, frame: UmlDiagramsFrame) -> IPyutProject:
@@ -341,6 +341,9 @@ class PyutUIV2(SplitterWindow):
 
         self._projectManager.syncPageFrameAndNotebook(frame=self._projectManager.currentFrame)
         self._updateApplicationTitle()
+
+        cp: CommandProcessor = self._projectManager.currentFrame.commandProcessor
+        self._eventEngine.sendEvent(EventType.UpdateEditMenu, commandProcessor=cp)
 
     def _onProjectTreeSelectionChanged(self, event: TreeEvent):
         """
@@ -569,7 +572,10 @@ class PyutUIV2(SplitterWindow):
         projectToSave: IPyutProject = self._projectManager.currentProject
         self._projectManager.saveProject(projectToSave=projectToSave)
         self._updateApplicationTitle()
-        self._commandProcessor.MarkAsSaved()
+
+        commandProcessor: CommandProcessor = self._projectManager.currentFrame.commandProcessor
+        commandProcessor.MarkAsSaved()
+
         self._eventEngine.sendEvent(EventType.UpdateRecentProjects, projectFilename=projectToSave.filename)
 
     # noinspection PyUnusedLocal
@@ -578,7 +584,9 @@ class PyutUIV2(SplitterWindow):
 
         self._projectManager.saveProjectAs(projectToSave=currentProject)
         self._updateApplicationTitle()
-        self._commandProcessor.MarkAsSaved()
+
+        commandProcessor: CommandProcessor = self._projectManager.currentFrame.commandProcessor
+        commandProcessor.MarkAsSaved()
 
     # noinspection PyUnusedLocal
     def _onInsertProject(self, event: InsertProjectEvent):

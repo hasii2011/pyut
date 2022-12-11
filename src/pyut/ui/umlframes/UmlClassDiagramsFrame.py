@@ -9,8 +9,6 @@ from pyutmodel.PyutInterface import PyutInterface
 
 from ogl.OglInterface2 import OglInterface2
 
-from wx import CommandProcessor
-
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 
@@ -32,7 +30,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
     It derives its functionality from UmlDiagramsFrame, but
     it knows the structure of a class diagram and it can load class diagram data.
     """
-    def __init__(self, parent, eventEngine: IEventEngine | None = None, commandProcessor: CommandProcessor | None = None):
+    def __init__(self, parent, eventEngine: IEventEngine | None = None):
         """
 
         Args:
@@ -43,7 +41,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         UmlClassDiagramsFrame.cdfDebugId += 1
 
-        super().__init__(parent, eventEngine=eventEngine, commandProcessor=commandProcessor)   # type: ignore
+        super().__init__(parent, eventEngine=eventEngine)   # type: ignore
         self.newDiagram()
 
         self.Bind(EVT_CLASS_NAME_CHANGED, self._onClassNameChanged)

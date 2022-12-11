@@ -4,7 +4,6 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
-from wx import CommandProcessor
 from wx import EVT_CHAR
 from wx import WXK_BACK
 from wx import WXK_DELETE
@@ -60,7 +59,7 @@ class UmlDiagramsFrame(UmlFrame):
     KEY_CODE_UP:           int = WXK_UP
     KEY_CODE_DOWN:         int = WXK_DOWN
 
-    def __init__(self, parent: Notebook, eventEngine: IEventEngine, commandProcessor: CommandProcessor):
+    def __init__(self, parent: Notebook, eventEngine: IEventEngine):
         """
         This class sits at the crux between the underlying OGL layer and the overarching
         Pyut UI.  Thus, it registers to listen for Ogl Events
@@ -72,7 +71,7 @@ class UmlDiagramsFrame(UmlFrame):
         """
         self.umlDiagramFrameLogger: Logger = getLogger(__name__)
 
-        super().__init__(parent, eventEngine=eventEngine, commandProcessor=commandProcessor)
+        super().__init__(parent, eventEngine=eventEngine)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM, callback=self._onAddPyutDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,  callback=self._onAddOglDiagram)
@@ -165,7 +164,7 @@ class UmlDiagramsFrame(UmlFrame):
 
         if self._actionHandler.actionWaiting:
             self.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
-            self._actionHandler.shapeSelected(shapeSelectedData.shape, shapeSelectedData.position)
+            self._actionHandler.shapeSelected(self, shapeSelectedData.shape, shapeSelectedData.position)
 
     def _onCutOglClassShape(self, cutOglClassEvent: CutOglClassEvent):
         """
