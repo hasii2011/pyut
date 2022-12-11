@@ -2,6 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
+from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
 from wx import DEFAULT_FRAME_STYLE
@@ -19,7 +20,6 @@ from wx import Frame
 from wx import CommandEvent
 from wx import ComboBox
 from wx import BoxSizer
-from wx import StaticBox
 from wx import StaticBoxSizer
 from wx import NewIdRef as wxNewIdRef
 
@@ -65,8 +65,6 @@ from tests.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
 
 class TestADialog(App):
 
-    FRAME_ID: int = ID_ANY
-
     MINI_GAP:         int = 3
     NOTHING_SELECTED: int = -1
 
@@ -74,7 +72,7 @@ class TestADialog(App):
 
         TestBase.setUpLogging()
         self.logger: Logger = getLogger(__name__)
-        frameTop:    Frame = Frame(parent=None, id=TestADialog.FRAME_ID, title="Test A Dialog", size=(400, 200), style=DEFAULT_FRAME_STYLE)
+        frameTop:    Frame = Frame(parent=None, id=ID_ANY, title="Test A Dialog", size=(400, 200), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(False)
 
         PyutPreferences.determinePreferencesLocation()
@@ -85,14 +83,9 @@ class TestADialog(App):
 
         self._preferences: PyutPreferences = PyutPreferences()
         self._dlgSelectionId: wxNewIdRef = wxNewIdRef()
-        #
-        # Introduce a mock
-        #
-        # fileHandler = MagicMock()
-        # self._mediator = Mediator()
-        # self._mediator.registerFileHandling(fileHandler)
+
         self._eventEngine: IEventEngine = EventEngine(listeningWindow=frameTop)
-        mainSizer: BoxSizer = self._createSelectionControls(frameTop)
+        mainSizer:         BoxSizer     = self._createSelectionControls(frameTop)
 
         frameTop.SetAutoLayout(True)
         frameTop.SetSizer(mainSizer)
@@ -100,9 +93,17 @@ class TestADialog(App):
 
         return True
 
-    def _createSelectionControls(self, parentFrame: Frame):
+    def OnExit(self):
+        """
+        """
+        try:
+            return App.OnExit(self)
+        except (ValueError, Exception) as e:
+            self.logger.error(f'OnExit: {e}')
 
-        mainSizer: BoxSizer = BoxSizer(VERTICAL)
+    def _createSelectionControls(self, parentFrame: Frame) -> BoxSizer:
+
+        mainSizer: BoxSizer = BoxSizer(HORIZONTAL)
 
         dialogChoices = []
         for dlgName in DialogNamesEnum:
@@ -112,12 +113,11 @@ class TestADialog(App):
 
         self._cmbDlgName.SetSelection(TestADialog.NOTHING_SELECTED)
 
-        box:    StaticBox      = StaticBox(parentFrame, ID_ANY, "Dialog Selection")
-        szrDlg: StaticBoxSizer = StaticBoxSizer(box, HORIZONTAL)
+        szrDlg: StaticBoxSizer = StaticBoxSizer(parent=parentFrame, orient=VERTICAL | ALIGN_TOP, label='Dialog Selection')
 
-        szrDlg.Add(self._cmbDlgName, 1, LEFT | RIGHT, TestADialog.MINI_GAP)
+        szrDlg.Add(self._cmbDlgName, 1, LEFT | RIGHT | ALIGN_TOP, TestADialog.MINI_GAP)
 
-        mainSizer.Add(szrDlg, 1, ALL, TestADialog.MINI_GAP)
+        mainSizer.Add(szrDlg, proportion=0, flag=ALL, border=TestADialog.MINI_GAP)
         self.Bind(EVT_COMBOBOX, self.onDlgNameSelectionChanged, self._dlgSelectionId)
 
         return mainSizer
@@ -298,13 +298,9 @@ class TestADialog(App):
 
     def _testPyutPreferencesEditor(self) -> str:
 
-        from wx import Yield
-        from wx import Sleep
         pyutPreferencesEditor: PyutPreferencesEditor = PyutPreferencesEditor()
         pyutPreferencesEditor.addPanels()
-        pyutPreferencesEditor.Show(parent=self._frame)
-        Yield()
-        Sleep(5)
+        pyutPreferencesEditor.ShowModal(parent=self._frame)
 
         return 'Superb'
 
