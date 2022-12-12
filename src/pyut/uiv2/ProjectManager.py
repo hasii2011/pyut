@@ -70,6 +70,9 @@ PyutProjects = NewType('PyutProjects', List[IPyutProject])
 
 MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12         # TODO make this a preference
 
+def defaultProjectNumber():
+    for i in range(9999):
+        yield i
 
 class ProjectManager:
     """
@@ -92,6 +95,9 @@ class ProjectManager:
         self._currentProject:  IPyutProject     = cast(IPyutProject, None)
         self._currentDocument: IPyutDocument    = cast(IPyutDocument, None)
         self._currentFrame:    UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
+
+        self._defaultProjectNumber = defaultProjectNumber()
+
 
     @property
     def projects(self) -> PyutProjects:
@@ -139,6 +145,23 @@ class ProjectManager:
     @currentFrame.setter
     def currentFrame(self, newFrame: UmlDiagramsFrame):
         self._currentFrame = newFrame
+
+    def getProject(self, projectName: str) -> IPyutProject:
+        """
+        Return the project that has the input name
+        Args:
+            projectName: The project name
+
+        Returns:  The project associated with the name;  May return 'None' if
+        there is no such project
+        """
+        foundProject: IPyutProject = cast(IPyutProject, None)
+        for currentProject in self._projects:
+            if currentProject.projectName == projectName:
+                foundProject = currentProject
+                break
+
+        return foundProject
 
     def addProject(self, project: IPyutProject):
         """
@@ -189,11 +212,14 @@ class ProjectManager:
         """
         Create a new project;  Adds it to the Project Tree;  Adds it to our managed list
 
-        TODO: Check to see if we already have an emtpy project; If true bump the file name
-
         Returns:  A default empty project
         """
-        project = PyutProjectV2(PyutConstants.DEFAULT_FILE_NAME, self._projectTree, self._projectTree.projectTreeRoot)
+        fileName: str = f'{PyutConstants.DEFAULT_FILE_NAME}'
+        if self.getProject(PyutConstants.DEFAULT_PROJECT_NAME) is not None:
+            sequenceNumber: int = next(self._defaultProjectNumber)
+            fileName = f'{PyutConstants.DEFAULT_PROJECT_NAME}_{sequenceNumber}.{PyutConstants.PYUT_EXTENSION}'
+
+        project = PyutProjectV2(fileName, self._projectTree, self._projectTree.projectTreeRoot)
 
         return self._manageProject(pyutProject=project)
 
@@ -220,12 +246,11 @@ class ProjectManager:
             booBoo: MessageDialog = MessageDialog(parent=None, message='No diagram to save !', caption='Error', style=OK | ICON_ERROR)
             booBoo.ShowModal()
 
-        if projectToSave.filename is None or projectToSave.filename == PyutConstants.DEFAULT_FILE_NAME:
+        if projectToSave.filename is None or PyutConstants.DEFAULT_PROJECT_NAME in projectToSave.filename:
             self.saveProjectAs(projectToSave=projectToSave)
             return
         else:
             self._writeProject(projectToWrite=projectToSave)
-            # TODO:  FileHistory Manager call goes here
 
             projectToSave.modified = False
 
@@ -293,8 +318,6 @@ class ProjectManager:
         projectToSave.filename = fDialog.GetPath()
         self._writeProject(projectToWrite=projectToSave)
         self.updateProjectTreeText(pyutProject=projectToSave)
-
-        # TODO:  FileHistory Manager goes here
 
         currentDirectoryHandler.currentDirectory = fDialog.GetPath()
 

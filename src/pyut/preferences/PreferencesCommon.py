@@ -8,7 +8,7 @@ import sys
 import os
 
 from pyut.PyutConstants import PyutConstants
-from pyut.general.exceptions import PreferencesLocationNotSet
+from pyut.general.exceptions.PreferencesLocationNotSet import PreferencesLocationNotSet
 from pyut.preferences.BaseSubPreference import BaseSubPreference
 
 PREFS_NAME_VALUES = Dict[str, str]
@@ -51,6 +51,5 @@ class PreferencesCommon(BaseSubPreference):
         """
         Save data to the preferences file
         """
-        f = open(PreferencesCommon.getPreferencesLocation(), "w")
-        self._config.write(f)
-        f.close()
+        with open(PreferencesCommon.getPreferencesLocation(), "w") as fd:
+            self._config.write(fd)

@@ -344,16 +344,6 @@ class FileMenuHandler(BaseMenuHandler):
             if Printer.GetLastError() == PRINTER_ERROR:
                 PyutUtils.displayError("Cannot print", "Error")
 
-    def onRecentlyOpenedFile(self, event: CommandEvent):
-        """
-        Open a file from the last opened files list
-
-        Args:
-            event:
-        """
-        pass
-        # TODO:  FileHistory manager call goes here
-
     # noinspection PyUnusedLocal
     def onExit(self, event: CommandEvent):
         """

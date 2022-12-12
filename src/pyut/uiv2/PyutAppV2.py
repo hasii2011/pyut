@@ -129,8 +129,8 @@ class PyutAppV2(wxApp):
         appFrame:    PyutApplicationFrameV2 = self._frame
 
         if prefs.loadLastOpenedProject is True:
-            # TODO: Use the FileHistory Manager here
-            pass
+            appFrame.loadLastOpenedProject()
+            loadedAFile = True
         self.logger.info(f'{argv=}')
         for filename in [el for el in argv[1:] if el[0] != '-']:
             self.logger.info('Load file on command line')
@@ -138,7 +138,7 @@ class PyutAppV2(wxApp):
             loadedAFile = True
 
         if loadedAFile is True:
-            appFrame.removeEmptyProject()
+            appFrame.removeDefaultEmptyProject()
 
     def OnExit(self):
         """

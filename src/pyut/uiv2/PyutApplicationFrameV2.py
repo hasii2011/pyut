@@ -182,7 +182,7 @@ class PyutApplicationFrameV2(Frame):
         self.__setupKeyboardShortcuts()
 
         self._eventEngine.sendEvent(EventType.NewProject)
-
+        wxYield()       # A hacky way to get the above to act like an method call
         if self._prefs.centerAppOnStartUp is True:
             self.Center(BOTH)  # Center on the screen
         else:
@@ -239,6 +239,22 @@ class PyutApplicationFrameV2(Frame):
 
         self.Destroy()
 
+    def loadByFilename(self, filename):
+        """
+        Load the specified filename; called by PyutApp
+        """
+        # ignore until I find a good place for FileNames
+        self._fileMenuHandler.loadFiles(fileNames=[filename])  # type: ignore
+
+    def removeDefaultEmptyProject(self):
+
+        self.logger.info(f'Remove the default project')
+        self._pyutUIV2.closeDefaultEmptyProject()
+
+    def loadLastOpenedProject(self):
+        lastOpenFileName: str = self._fileHistory.GetHistoryFile(0)
+        self.loadByFilename(filename=lastOpenFileName)
+
     # noinspection PyUnusedLocal
     def _cleanupFileHistory(self, event: WindowDestroyEvent):
         """
@@ -255,35 +271,6 @@ class PyutApplicationFrameV2(Frame):
                                                                                       localFilename='pyutRecentFiles.ini')
 
         self._fileHistory.Save(fileHistoryConfiguration)
-
-        # del self._fileHistory
-        # self._fileMenu.Destroy()
-
-    def loadByFilename(self, filename):
-        """
-        Load the specified filename; called by PyutApp
-        """
-        # ignore until I find a good place for FileNames
-        self._fileMenuHandler.loadFiles(fileNames=[filename])  # type: ignore
-
-    def removeEmptyProject(self):
-
-        self.logger.info(f'Remove the default project')
-
-        # mainUI:   PyutUIV2            = self._treeNotebookHandler
-
-        # defaultProject: PyutProject = mainUI.getProject(PyutConstants.DEFAULT_FILENAME)
-        # if defaultProject is not None:
-        #
-        #     self.logger.info(f'Removing: {defaultProject}')
-        #     mainUI.currentProject = defaultProject
-        #     mainUI.closeCurrentProject()
-        #
-        #     projects: List[PyutProject] = mainUI.getProjects()
-        #     self.logger.info(f'{projects=}')
-        #
-        #     firstProject: PyutProject = projects[0]
-        #     self.selectProject(project=firstProject)
 
     def _onUpdateTitle(self, event: UpdateApplicationTitleEvent):
         """
