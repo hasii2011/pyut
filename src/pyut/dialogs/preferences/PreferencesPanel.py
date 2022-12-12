@@ -1,4 +1,7 @@
 
+from abc import ABCMeta
+from abc import abstractmethod
+
 from wx import BORDER_SUNKEN
 
 from wx import Panel
@@ -6,8 +9,15 @@ from wx import Window
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
+class MetaPreferencesPanel(ABCMeta, type(Panel)):        # type: ignore
+    """
+    I have know idea why this works:
+    https://stackoverflow.com/questions/66591752/metaclass-conflict-when-trying-to-create-a-python-abstract-class-that-also-subcl
+    """
+    pass
 
-class PreferencesPanel(Panel):
+
+class PreferencesPanel(Panel, metaclass=MetaPreferencesPanel):
     """
     Make this abstract
     """
@@ -17,6 +27,7 @@ class PreferencesPanel(Panel):
 
         self._prefs:    PyutPreferences = PyutPreferences()
 
+    @abstractmethod
     def _createControls(self):
         """
         Abstract method
@@ -24,6 +35,7 @@ class PreferencesPanel(Panel):
         """
         pass
 
+    @abstractmethod
     def _setControlValues(self):
         """
         Set the default values on the controls.
