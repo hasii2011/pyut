@@ -1,6 +1,7 @@
 
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from wx import ALIGN_TOP
 from wx import ALL
@@ -87,6 +88,9 @@ class TestADialog(App):
         self._eventEngine: IEventEngine = EventEngine(listeningWindow=frameTop)
         mainSizer:         BoxSizer     = self._createSelectionControls(frameTop)
 
+        # Need to hold onto this reference
+        self._pyutPreferencesEditor: PyutPreferencesEditor = cast(PyutPreferencesEditor, None)
+
         frameTop.SetAutoLayout(True)
         frameTop.SetSizer(mainSizer)
         frameTop.Show(True)
@@ -152,7 +156,7 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditCode()
         elif dlgName == DialogNamesEnum.DLG_PYUT_DEBUG:
             dlgAnswer = self._testDlgPyutDebug()
-        elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES_EDITOR:
+        elif dlgName == DialogNamesEnum.PYUT_PREFERENCES_EDITOR:
             dlgAnswer = self._testPyutPreferencesEditor()
 
         self.logger.warning(f'{dlgAnswer=}')
@@ -300,8 +304,9 @@ class TestADialog(App):
 
         pyutPreferencesEditor: PyutPreferencesEditor = PyutPreferencesEditor()
         pyutPreferencesEditor.addPanels()
-        pyutPreferencesEditor.ShowModal(parent=self._frame)
+        pyutPreferencesEditor.Show(parent=self._frame)
 
+        self._pyutPreferencesEditor = pyutPreferencesEditor
         return 'Superb'
 
 testApp: App = TestADialog(redirect=False)

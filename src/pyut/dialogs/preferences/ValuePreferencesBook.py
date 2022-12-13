@@ -4,6 +4,7 @@ from typing import List
 from wx import BK_DEFAULT
 
 from wx import Bitmap
+from wx import ID_ANY
 from wx import ImageList
 from wx import Toolbook
 from wx import Window
@@ -36,9 +37,9 @@ class ValuePreferencesBook(Toolbook):
     VERTICAL_GAP:   int = 2
     HORIZONTAL_GAP: int = 5
 
-    def __init__(self, parent: Window, wxId: int):
+    def __init__(self, parent):
 
-        super().__init__(parent, wxId, style=BK_DEFAULT)
+        super().__init__(parent, ID_ANY, style=BK_DEFAULT)
 
         self._createControls()
 

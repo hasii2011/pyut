@@ -102,7 +102,7 @@ class DlgPyutPreferences(Dialog):
         positioningPreferences: PositioningPreferences   = PositioningPreferences(parent=self)
         miscPanel:              MiscellaneousPreferences = MiscellaneousPreferences(parent=self)
         backgroundPreferences:  BackgroundPreferences    = BackgroundPreferences(parent=self)
-        valuePreferences:       ValuePreferencesBook     = ValuePreferencesBook(parent=self, wxId=ID_ANY)
+        valuePreferences:       ValuePreferencesBook     = ValuePreferencesBook(parent=self)
 
         book.AddPage(generalPreferences,     text=_('General'),        select=True)
         book.AddPage(positioningPreferences, text=_('Positioning'),    select=False)
