@@ -11,10 +11,10 @@ from wx.lib.sized_controls import SizedPanel
 
 from pyut.general.datatypes.Dimensions import Dimensions
 from pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
-from pyut.ui.widgets.DualSpinnerContainerV2 import DualSpinnerContainerV2
+from pyut.ui.widgets.DualSpinnerControl import DualSpinnerControl
 
 
-class DimensionsControl(DualSpinnerContainerV2):
+class DimensionsControl(DualSpinnerControl):
     """
     A facade around the basic dual spinner control;   Essentially
         * Converts the spinner values to and from the Dimension type;

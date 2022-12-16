@@ -15,8 +15,8 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from tests.TestBase import TestBase
 
-from pyut.ui.widgets.DualSpinnerContainerV2 import DualSpinnerContainerV2
-from pyut.ui.widgets.DualSpinnerContainerV2 import SpinnerValues
+from pyut.ui.widgets.DualSpinnerControl import DualSpinnerControl
+from pyut.ui.widgets.DualSpinnerControl import SpinnerValues
 from pyut.ui.widgets.DimensionsControl import DimensionsControl
 from pyut.ui.widgets.PositionControl import PositionControl
 
@@ -35,7 +35,7 @@ class TestSizedPreferencesPanels(App):
         pane: SizedPanel = frame.GetContentsPane()
         pane.SetSizerType("vertical")
 
-        ds: DualSpinnerContainerV2 = DualSpinnerContainerV2(sizedPanel=pane, boxTitle='Bare Spinner', valueChangedCallback=self._spinnerChanged)
+        ds: DualSpinnerControl = DualSpinnerControl(sizedPanel=pane, boxTitle='Bare Spinner', valueChangedCallback=self._spinnerChanged)
         pc: PositionControl    = PositionControl(sizedPanel=pane, displayText='Position',
                                                  valueChangedCallback=self._positionChanged, minValue=0, maxValue=2048)
         dc: DimensionsControl  = DimensionsControl(sizedPanel=pane, displayText='Dimensions',

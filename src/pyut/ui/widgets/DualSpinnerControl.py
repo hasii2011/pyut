@@ -25,7 +25,7 @@ class SpinnerValues:
     value0: int = 0
     value1: int = 0
 
-class DualSpinnerContainerV2(SizedStaticBox):
+class DualSpinnerControl(SizedStaticBox):
     """
     A component that pairs two spinners in a horizontal panel;  Callers set
     the title to display and optionally the minimum and maximum spinner values

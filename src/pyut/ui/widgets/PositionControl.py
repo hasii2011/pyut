@@ -8,11 +8,11 @@ from wx.lib.sized_controls import SizedPanel
 
 from pyut.general.datatypes.Position import Position
 
-from pyut.ui.widgets.DualSpinnerContainerV2 import DualSpinnerContainerV2
-from pyut.ui.widgets.DualSpinnerContainerV2 import SpinnerValues
+from pyut.ui.widgets.DualSpinnerControl import DualSpinnerControl
+from pyut.ui.widgets.DualSpinnerControl import SpinnerValues
 
 
-class PositionControl(DualSpinnerContainerV2):
+class PositionControl(DualSpinnerControl):
     """
     A facade around the basic dual spinner control;   Essentially
         * Converts the spinner values to and from the Position type;
