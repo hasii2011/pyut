@@ -42,11 +42,11 @@ class PositionControl(DualSpinnerControl):
 
         super().__init__(sizedPanel, displayText, self._onSpinValueChangedCallback, minValue, maxValue)
 
-    def _position(self, newValue: Position):
+    def _setPosition(self, newValue: Position):
         self._position = newValue
         self.spinnerValues = SpinnerValues(value0=newValue.x, value1=newValue.y)
 
-    position = property(fset=_position, doc='Write only property to set values')
+    position = property(fset=_setPosition, doc='Write only property to set values')
 
     def _onSpinValueChangedCallback(self, spinnerValues: SpinnerValues):
         self.logger.info(f'{spinnerValues}')

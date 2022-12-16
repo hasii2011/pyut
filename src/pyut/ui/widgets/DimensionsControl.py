@@ -39,15 +39,15 @@ class DimensionsControl(DualSpinnerControl):
         """
         self.logger:                     Logger     = getLogger(__name__)
         self._dimensionsChangedCallback: Callable   = valueChangedCallback
-        self._dimensions:                Dimensions = Dimensions()
+        self._dimensions:                Union[Dimensions, OglDimensions] = Dimensions()
 
         super().__init__(sizedPanel, displayText, self._onSpinValueChangedCallback, minValue, maxValue)
 
-    def _dimensions(self, newValue: Union[Dimensions, OglDimensions]):
+    def _setDimensions(self, newValue: Union[Dimensions, OglDimensions]):
         self._dimensions = newValue
         self.spinnerValues = SpinnerValues(value0=newValue.width, value1=newValue.height)
 
-    dimensions = property(fset=_dimensions, doc='Write only property to set dimensions on control')
+    dimensions = property(fset=_setDimensions, doc='Write only property to set dimensions on control')
 
     def _onSpinValueChangedCallback(self, spinnerValues: SpinnerValues):
         self.logger.info(f'{spinnerValues}')
