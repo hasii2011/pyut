@@ -1,0 +1,74 @@
+
+from logging import Logger
+from logging import getLogger
+
+from wx import ID_ANY
+
+from wx import App
+
+from wx.lib.sized_controls import SizedFrame
+from wx.lib.sized_controls import SizedPanel
+
+from pyut.general.datatypes.Dimensions import Dimensions
+from pyut.general.datatypes.Position import Position
+from pyut.preferences.PyutPreferences import PyutPreferences
+
+from tests.TestBase import TestBase
+
+from pyut.ui.widgets.DualSpinnerContainerV2 import DualSpinnerContainerV2
+from pyut.ui.widgets.DualSpinnerContainerV2 import SpinnerValues
+from pyut.ui.widgets.DimensionsContainerV2 import DimensionsContainerV2
+from pyut.ui.widgets.PositionContainerV2 import PositionContainerV2
+
+
+class TestSizedPreferencesPanels(App):
+
+    # noinspection PyUnusedLocal
+    def OnInit(self):
+
+        TestBase.setUpLogging()
+        PyutPreferences.determinePreferencesLocation()
+        self.logger: Logger = getLogger(__name__)
+
+        frame: SizedFrame = SizedFrame(parent=None, id=ID_ANY, title="Test Sized PreferencesPanels")
+
+        pane: SizedPanel = frame.GetContentsPane()
+        pane.SetSizerType("vertical")
+
+        ds: DualSpinnerContainerV2 = DualSpinnerContainerV2(sizedPanel=pane, boxTitle='Bare Spinner', valueChangedCallback=self._spinnerChanged)
+        pc: PositionContainerV2    = PositionContainerV2(sizedPanel=pane, displayText='Position',
+                                                         valueChangedCallback=self._positionChanged, minValue=0, maxValue=2048)
+        dc: DimensionsContainerV2  = DimensionsContainerV2(sizedPanel=pane, displayText='Dimensions',
+                                                           valueChangedCallback=self._dimensionsChanged, minValue=100, maxValue=600)
+        frame.Show(True)
+
+        self.SetTopWindow(frame)
+        frame.CreateStatusBar() # should always do this when there's a resize border
+
+        # frame.Fit()
+
+        self._frame:       SizedFrame = frame
+        self._preferences: PyutPreferences = PyutPreferences()
+
+        return True
+
+    def OnExit(self):
+        """
+        """
+        try:
+            return App.OnExit(self)
+        except (ValueError, Exception) as e:
+            self.logger.error(f'OnExit: {e}')
+
+    def _spinnerChanged(self, spinnerValues: SpinnerValues):
+        self.logger.info(f'{spinnerValues=}')
+
+    def _positionChanged(self, position: Position):
+        self.logger.info(f'{position=}')
+
+    def _dimensionsChanged(self, dimensions: Dimensions):
+        self.logger.info(f'{dimensions=}')
+
+testApp: App = TestSizedPreferencesPanels(redirect=False)
+
+testApp.MainLoop()
