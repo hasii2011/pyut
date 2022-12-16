@@ -18,7 +18,7 @@ from wx.lib.sized_controls import SizedPanel
 from wx.lib.sized_controls import SizedStaticBox
 
 SPINNER_WIDTH:  int = 60
-SPINNER_HEIGHT: int = 20
+SPINNER_HEIGHT: int = 35
 
 @dataclass
 class SpinnerValues:
@@ -58,7 +58,7 @@ class DualSpinnerContainerV2(SizedStaticBox):
 
         self.SetSizerType('horizontal')
         # noinspection PyUnresolvedReferences
-        self.SetSizerProps(expand=True, proportion=1)
+        self.SetSizerProps(expand=True, proportion=1, border=(('left','right', 'bottom'),5))
 
         self._callback: Callable = valueChangedCallback
 
