@@ -14,7 +14,7 @@ from pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
 from pyut.ui.widgets.DualSpinnerContainerV2 import DualSpinnerContainerV2
 
 
-class DimensionsContainerV2(DualSpinnerContainerV2):
+class DimensionsControl(DualSpinnerContainerV2):
     """
     A facade around the basic dual spinner control;   Essentially
         * Converts the spinner values to and from the Dimension type;

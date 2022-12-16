@@ -16,7 +16,7 @@ from pyut.general.datatypes.Dimensions import Dimensions
 from pyut.general.datatypes.Position import Position
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.ui.widgets.DimensionsContainerV2 import DimensionsContainerV2
+from pyut.ui.widgets.DimensionsControl import DimensionsControl
 from pyut.ui.widgets.PositionControl import PositionControl
 
 
@@ -32,7 +32,7 @@ class PositioningPreferencesPage(StockPreferencesPage):
 
         self._cbCenterAppOnStartup:   CheckBox              = cast(CheckBox, None)
         self._appPositionControls:    PositionControl   = cast(PositionControl, None)
-        self._appDimensionsContainer: DimensionsContainerV2 = cast(DimensionsContainerV2, None)
+        self._appDimensionsContainer: DimensionsControl = cast(DimensionsControl, None)
 
     def CreateWindow(self, parent) -> Window:
 
@@ -42,7 +42,7 @@ class PositioningPreferencesPage(StockPreferencesPage):
         self._cbCenterAppOnStartup = CheckBox(verticalPanel, self._centerAppOnStartupId, 'Center Pyut on Startup')
 
         self._appPositionControls = self._createAppPositionControls(sizedPanel=verticalPanel)
-        self._appDimensionsContainer: DimensionsContainerV2 = self._createAppSizeControls(sizedPanel=verticalPanel)
+        self._appDimensionsContainer: DimensionsControl = self._createAppSizeControls(sizedPanel=verticalPanel)
 
         self._setControlValues()
         parent.Bind(EVT_CHECKBOX, self._onCenterOnStartupChanged, id=self._centerAppOnStartupId)
@@ -66,11 +66,11 @@ class PositioningPreferencesPage(StockPreferencesPage):
 
         return appPositionControls
 
-    def _createAppSizeControls(self, sizedPanel: SizedPanel) -> DimensionsContainerV2:
+    def _createAppSizeControls(self, sizedPanel: SizedPanel) -> DimensionsControl:
 
-        appSizeControls: DimensionsContainerV2 = DimensionsContainerV2(sizedPanel=sizedPanel, displayText="Startup Width/Height",
-                                                                       minValue=480, maxValue=4096,
-                                                                       valueChangedCallback=self._appSizeChanged)
+        appSizeControls: DimensionsControl = DimensionsControl(sizedPanel=sizedPanel, displayText="Startup Width/Height",
+                                                               minValue=480, maxValue=4096,
+                                                               valueChangedCallback=self._appSizeChanged)
         return appSizeControls
 
     def _setControlValues(self):
