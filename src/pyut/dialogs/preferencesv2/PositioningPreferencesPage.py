@@ -15,8 +15,9 @@ from wx.lib.sized_controls import SizedPanel
 from pyut.general.datatypes.Dimensions import Dimensions
 from pyut.general.datatypes.Position import Position
 from pyut.preferences.PyutPreferences import PyutPreferences
+
 from pyut.ui.widgets.DimensionsContainerV2 import DimensionsContainerV2
-from pyut.ui.widgets.PositionContainerV2 import PositionContainerV2
+from pyut.ui.widgets.PositionControl import PositionControl
 
 
 class PositioningPreferencesPage(StockPreferencesPage):
@@ -30,7 +31,7 @@ class PositioningPreferencesPage(StockPreferencesPage):
         self._valuesChanged:        bool = False
 
         self._cbCenterAppOnStartup:   CheckBox              = cast(CheckBox, None)
-        self._appPositionControls:    PositionContainerV2   = cast(PositionContainerV2, None)
+        self._appPositionControls:    PositionControl   = cast(PositionControl, None)
         self._appDimensionsContainer: DimensionsContainerV2 = cast(DimensionsContainerV2, None)
 
     def CreateWindow(self, parent) -> Window:
@@ -57,11 +58,11 @@ class PositioningPreferencesPage(StockPreferencesPage):
     def GetName(self) -> str:
         return 'Positions'
 
-    def _createAppPositionControls(self, sizedPanel: SizedPanel) -> PositionContainerV2:
+    def _createAppPositionControls(self, sizedPanel: SizedPanel) -> PositionControl:
 
-        appPositionControls: PositionContainerV2 = PositionContainerV2(sizedPanel=sizedPanel, displayText='Startup Position',
-                                                                       minValue=0, maxValue=2048,
-                                                                       valueChangedCallback=self._appPositionChanged)
+        appPositionControls: PositionControl = PositionControl(sizedPanel=sizedPanel, displayText='Startup Position',
+                                                               minValue=0, maxValue=2048,
+                                                               valueChangedCallback=self._appPositionChanged)
 
         return appPositionControls
 

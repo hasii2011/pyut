@@ -12,7 +12,7 @@ from pyut.ui.widgets.DualSpinnerContainerV2 import DualSpinnerContainerV2
 from pyut.ui.widgets.DualSpinnerContainerV2 import SpinnerValues
 
 
-class PositionContainerV2(DualSpinnerContainerV2):
+class PositionControl(DualSpinnerContainerV2):
     """
     A facade around the basic dual spinner control;   Essentially
         * Converts the spinner values to and from the Position type;
