@@ -1,6 +1,11 @@
+
+from typing import Callable
+from typing import Union
+
 from logging import Logger
 from logging import getLogger
-from typing import Callable
+
+from ogl.OglDimensions import OglDimensions
 
 from wx.lib.sized_controls import SizedPanel
 
@@ -37,6 +42,12 @@ class DimensionsContainerV2(DualSpinnerContainerV2):
         self._dimensions:                Dimensions = Dimensions()
 
         super().__init__(sizedPanel, displayText, self._onSpinValueChangedCallback, minValue, maxValue)
+
+    def _dimensions(self, newValue: Union[Dimensions, OglDimensions]):
+        self._dimensions = newValue
+        self.spinnerValues = SpinnerValues(value0=newValue.width, value1=newValue.height)
+
+    dimensions = property(fset=_dimensions, doc='Write only property to set dimensions on control')
 
     def _onSpinValueChangedCallback(self, spinnerValues: SpinnerValues):
         self.logger.info(f'{spinnerValues}')

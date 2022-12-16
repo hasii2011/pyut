@@ -38,7 +38,6 @@ class DualSpinnerContainerV2(SizedStaticBox):
 
     dscLogger: Logger = getLogger(__name__)     # Used as base class; So needs unique logger
 
-
     def __init__(self, sizedPanel: SizedPanel, boxTitle: str,
                  valueChangedCallback: Callable,
                  minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE):
@@ -84,8 +83,24 @@ class DualSpinnerContainerV2(SizedStaticBox):
             spinnerValues:
         """
         self._spinnerValues = spinnerValues
+        self._spinner0.SetValue(spinnerValues.value0)
+        self._spinner0.SetValue(spinnerValues.value1)
 
     spinnerValues = property(fset=_setSpinnerValues, doc='Write only property to initialize spinner values')
+
+    def enableControls(self, value: bool):
+        """
+        Enable or disable the spinner controls
+
+        Args:
+            value: `True` to enable, else `False`
+        """
+        if value is True:
+            self._spinner0.Enable()
+            self._spinner1.Enable()
+        else:
+            self._spinner0.Disable()
+            self._spinner1.Disable()
 
     def _onSpinnerValueChanged(self, event: CommandEvent):
 
