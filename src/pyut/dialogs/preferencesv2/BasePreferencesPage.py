@@ -30,9 +30,6 @@ class BasePreferencesPage(StockPreferencesPage):
 
     @abstractmethod
     def _setControlValues(self):
-        """
-        Set the default values on the controls.
-        """
         pass
     def _fixPanelSize(self, panel: SizedPanel):
         """
