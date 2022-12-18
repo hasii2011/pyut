@@ -11,6 +11,7 @@ from pyut.dialogs.preferencesv2.PositioningPreferencesPage import PositioningPre
 class PyutPreferencesEditor(PreferencesEditor):
     """
     Not really a dialog;  Just some syntactic sugar
+    Preferences editor provides a better specific platform look and feel
     """
     def __init__(self):
 
@@ -18,8 +19,8 @@ class PyutPreferencesEditor(PreferencesEditor):
 
     def addPanels(self):
 
-        self.AddPage(page=PositioningPreferencesPage())
         self.AddPage(page=GeneralPreferencesPage())
+        self.AddPage(page=PositioningPreferencesPage())
         self.AddPage(page=MiscellaneousPreferencesPage())
         self.AddPage(page=DiagramPreferencesPage())
         self.AddPage(page=DefaultValuesPreferencesPage())

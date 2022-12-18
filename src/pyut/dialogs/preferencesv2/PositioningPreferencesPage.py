@@ -5,32 +5,32 @@ from wx import EVT_CHECKBOX
 
 from wx import CheckBox
 from wx import CommandEvent
-from wx import StockPreferencesPage
 from wx import Window
 
 from wx import NewIdRef as wxNewIdRef
 
 from wx.lib.sized_controls import SizedPanel
 
+from pyut.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
 from pyut.general.datatypes.Dimensions import Dimensions
 from pyut.general.datatypes.Position import Position
-from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.widgets.DimensionsControl import DimensionsControl
 from pyut.ui.widgets.PositionControl import PositionControl
 
 
-class PositioningPreferencesPage(StockPreferencesPage):
+class PositioningPreferencesPage(BasePreferencesPage):
+    """
+    Implemented using sized components for better platform look and feel
+    """
 
     def __init__(self):
-        super().__init__(kind=StockPreferencesPage.Kind_General)
-
-        self._preferences: PyutPreferences = PyutPreferences()
+        super().__init__()
 
         self._centerAppOnStartupId: int  = wxNewIdRef()
         self._valuesChanged:        bool = False
 
-        self._cbCenterAppOnStartup:   CheckBox              = cast(CheckBox, None)
+        self._cbCenterAppOnStartup:   CheckBox          = cast(CheckBox, None)
         self._appPositionControls:    PositionControl   = cast(PositionControl, None)
         self._appDimensionsContainer: DimensionsControl = cast(DimensionsControl, None)
 
@@ -41,18 +41,13 @@ class PositioningPreferencesPage(StockPreferencesPage):
 
         self._cbCenterAppOnStartup = CheckBox(verticalPanel, self._centerAppOnStartupId, 'Center Pyut on Startup')
 
-        self._appPositionControls = self._createAppPositionControls(sizedPanel=verticalPanel)
-        self._appDimensionsContainer: DimensionsControl = self._createAppSizeControls(sizedPanel=verticalPanel)
+        self._appPositionControls    = self._createAppPositionControls(sizedPanel=verticalPanel)
+        self._appDimensionsContainer = self._createAppSizeControls(sizedPanel=verticalPanel)
 
         self._setControlValues()
         parent.Bind(EVT_CHECKBOX, self._onCenterOnStartupChanged, id=self._centerAppOnStartupId)
 
-        # Do the following or does not get resized correctly
-        # A little trick to make sure that the sizer cannot be resized to
-        # less screen space than the controls need
-        verticalPanel.Fit()
-        verticalPanel.SetMinSize(verticalPanel.GetSize())
-
+        self._fixPanelSize(panel=verticalPanel)
         return verticalPanel
 
     def GetName(self) -> str:
