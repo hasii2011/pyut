@@ -7,14 +7,14 @@ from wx import Bitmap
 from wx import ID_ANY
 from wx import ImageList
 from wx import Toolbook
-from wx import Window
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 from pyut.dialogs.preferences.valuecontainers.ClassContainer import ClassContainer
-from pyut.dialogs.preferences.valuecontainers.DefaultNamesContainer import DefaultNamesContainer
+
 from pyut.dialogs.preferences.valuecontainers.DefaultNamesControl import DefaultNamesControl
-from pyut.dialogs.preferences.valuecontainers.NoteAttributesContainer import NoteAttributesContainer
+
+from pyut.dialogs.preferences.valuecontainers.NoteAttributesControl import NoteAttributesControl
 from pyut.dialogs.preferences.valuecontainers.TextAttributesContainer import TextAttributesContainer
 
 from pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
@@ -57,10 +57,10 @@ class ValuePreferencesBook(Toolbook):
 
         imageIdGenerator = getNextImageID(imageList.GetImageCount())
 
-        notePanel:         NoteAttributesContainer = NoteAttributesContainer(parent=self)
+        notePanel:         NoteAttributesControl   = NoteAttributesControl(parent=self)
         textPanel:         TextAttributesContainer = TextAttributesContainer(parent=self)
         classPanel:        ClassContainer          = ClassContainer(parent=self)
-        # defaultNamesPanel: DefaultNamesContainer   = DefaultNamesContainer(parent=self)
+
         defaultNamesPanel: DefaultNamesControl      = DefaultNamesControl(parent=self)
 
         self.AddPage(notePanel,         text='Notes', select=True,  imageId=next(imageIdGenerator))
