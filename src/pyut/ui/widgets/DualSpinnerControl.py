@@ -40,7 +40,9 @@ class DualSpinnerControl(SizedStaticBox):
 
     def __init__(self, sizedPanel: SizedPanel, boxTitle: str,
                  valueChangedCallback: Callable,
-                 minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE):
+                 minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE,
+                 setControlsSize: bool = True,
+                 ):
         """
 
         Args:
@@ -50,7 +52,9 @@ class DualSpinnerControl(SizedStaticBox):
                                    first parameter to be an object of type SpinnerValues
             minValue:       The minimum value for the spinner values
             maxValue:       The maximum value for the spinner values
-
+            setControlsSize:  Whether to specify the spinner size;  This is a hack
+            because in some SizedPanels the spinners are appropriately sized and in others they
+            are not
         """
 
         super().__init__(sizedPanel, ID_ANY, boxTitle)
@@ -64,8 +68,12 @@ class DualSpinnerControl(SizedStaticBox):
         self._wxSpinner0Id: int = wxNewIdRef()
         self._wxSpinner1Id: int = wxNewIdRef()
 
-        self._spinner0: SpinCtrl = SpinCtrl(self, self._wxSpinner0Id, "", size=(SPINNER_WIDTH, SPINNER_HEIGHT))
-        self._spinner1: SpinCtrl = SpinCtrl(self, self._wxSpinner1Id, "", size=(SPINNER_WIDTH, SPINNER_HEIGHT))
+        if setControlsSize is True:
+            self._spinner0: SpinCtrl = SpinCtrl(self, self._wxSpinner0Id, "", size=(SPINNER_WIDTH, SPINNER_HEIGHT))
+            self._spinner1: SpinCtrl = SpinCtrl(self, self._wxSpinner1Id, "", size=(SPINNER_WIDTH, SPINNER_HEIGHT))
+        else:
+            self._spinner0: SpinCtrl = SpinCtrl(self, self._wxSpinner0Id, "")
+            self._spinner1: SpinCtrl = SpinCtrl(self, self._wxSpinner1Id, "")
 
         self._spinner0.SetRange(minValue, maxValue)
         self._spinner1.SetRange(minValue, maxValue)

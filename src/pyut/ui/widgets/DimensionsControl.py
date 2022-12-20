@@ -26,7 +26,8 @@ class DimensionsControl(DualSpinnerControl):
 
     def __init__(self, sizedPanel: SizedPanel, displayText: str,
                  valueChangedCallback: Callable,
-                 minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE):
+                 minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE,
+                 setControlsSize: bool = True):
         """
 
         Args:
@@ -41,7 +42,7 @@ class DimensionsControl(DualSpinnerControl):
         self._dimensionsChangedCallback: Callable   = valueChangedCallback
         self._dimensions:                Union[Dimensions, OglDimensions] = Dimensions()
 
-        super().__init__(sizedPanel, displayText, self._onSpinValueChangedCallback, minValue, maxValue)
+        super().__init__(sizedPanel, displayText, self._onSpinValueChangedCallback, minValue, maxValue, setControlsSize)
 
     def _setDimensions(self, newValue: Union[Dimensions, OglDimensions]):
         self._dimensions = newValue
