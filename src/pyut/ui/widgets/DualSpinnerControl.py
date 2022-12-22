@@ -72,13 +72,13 @@ class DualSpinnerControl(SizedStaticBox):
             self._spinner0: SpinCtrl = SpinCtrl(self, self._wxSpinner0Id, "", size=(SPINNER_WIDTH, SPINNER_HEIGHT))
             self._spinner1: SpinCtrl = SpinCtrl(self, self._wxSpinner1Id, "", size=(SPINNER_WIDTH, SPINNER_HEIGHT))
         else:
-            self._spinner0: SpinCtrl = SpinCtrl(self, self._wxSpinner0Id, "")
-            self._spinner1: SpinCtrl = SpinCtrl(self, self._wxSpinner1Id, "")
+            self._spinner0 = SpinCtrl(self, self._wxSpinner0Id, "")
+            self._spinner1 = SpinCtrl(self, self._wxSpinner1Id, "")
 
         self._spinner0.SetRange(minValue, maxValue)
         self._spinner1.SetRange(minValue, maxValue)
 
-        self._spinnerValues: SpinnerValues = SpinnerValues(minValue, minValue)
+        self._spinnerValues: SpinnerValues = SpinnerValues(minValue, maxValue)
         #
         # Bind to the text control;  Then we can type in or spin
         self.Bind(EVT_TEXT, self._onSpinnerValueChanged, self._spinner0)
@@ -92,7 +92,8 @@ class DualSpinnerControl(SizedStaticBox):
         """
         self._spinnerValues = spinnerValues
         self._spinner0.SetValue(spinnerValues.value0)
-        self._spinner0.SetValue(spinnerValues.value1)
+        self._spinner1.SetValue(spinnerValues.value1)
+        self.dscLogger.info(f'range: {self._spinner0.GetRange()} - {self._spinner0.GetValue()=} {self._spinner1.GetValue()=}')
 
     spinnerValues = property(fset=_setSpinnerValues, doc='Write only property to initialize spinner values')
 

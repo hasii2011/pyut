@@ -33,9 +33,11 @@ class ClassControl(SizedPanel):
         self._className: TextCtrl = TextCtrl(nameSizer, value=self._preferences.className, size=(160, 25))
         self._className.SetSizerProps(proportion=0, expand=False)
 
-        DimensionsControl(sizedPanel=self, displayText='Class Width/Height',
-                          valueChangedCallback=self._classDimensionsChanged,
-                          setControlsSize=False)
+        self._classDimensions: DimensionsControl = DimensionsControl(sizedPanel=self, displayText='Class Width/Height',
+                                                                     valueChangedCallback=self._classDimensionsChanged,
+                                                                     setControlsSize=False)
+
+        self._classDimensions.dimensions = self._preferences.classDimensions
 
         parent.Bind(EVT_TEXT, self._classNameChanged, self._className)
         self.Fit()

@@ -21,12 +21,12 @@ class DimensionsControl(DualSpinnerControl):
         * Handles the spinner callback
         * Forwards the spinner values as Dimension values
     """
-    DEFAULT_MIN_VALUE: int = 100
-    DEFAULT_MAX_VALUE: int = 300
+    DIMENSION_MIN_VALUE: int = 50
+    DIMENSION_MAX_VALUE: int = 300
 
     def __init__(self, sizedPanel: SizedPanel, displayText: str,
                  valueChangedCallback: Callable,
-                 minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE,
+                 minValue: int = DIMENSION_MIN_VALUE, maxValue: int = DIMENSION_MAX_VALUE,
                  setControlsSize: bool = True):
         """
 
@@ -37,6 +37,7 @@ class DimensionsControl(DualSpinnerControl):
                                    first parameter to be a Dimension argument that is the new value
             minValue:              The minimum dimension value
             maxValue:              The maximum dimension value
+            setControlsSize
         """
         self.logger:                     Logger     = getLogger(__name__)
         self._dimensionsChangedCallback: Callable   = valueChangedCallback
@@ -45,7 +46,7 @@ class DimensionsControl(DualSpinnerControl):
         super().__init__(sizedPanel, displayText, self._onSpinValueChangedCallback, minValue, maxValue, setControlsSize)
 
     def _setDimensions(self, newValue: Union[Dimensions, OglDimensions]):
-        self._dimensions = newValue
+        self._dimensions  = newValue
         self.spinnerValues = SpinnerValues(value0=newValue.width, value1=newValue.height)
 
     dimensions = property(fset=_setDimensions, doc='Write only property to set dimensions on control')

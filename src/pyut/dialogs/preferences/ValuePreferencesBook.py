@@ -13,9 +13,8 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 from pyut.dialogs.preferences.valuecontainers.ClassControl import ClassControl
 
 from pyut.dialogs.preferences.valuecontainers.DefaultNamesControl import DefaultNamesControl
-
 from pyut.dialogs.preferences.valuecontainers.NoteAttributesControl import NoteAttributesControl
-from pyut.dialogs.preferences.valuecontainers.TextAttributesContainer import TextAttributesContainer
+from pyut.dialogs.preferences.valuecontainers.TextAttributesControl import TextAttributesControl
 
 from pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
 
@@ -58,7 +57,7 @@ class ValuePreferencesBook(Toolbook):
         imageIdGenerator = getNextImageID(imageList.GetImageCount())
 
         notePanel:  NoteAttributesControl   = NoteAttributesControl(parent=self)
-        textPanel:  TextAttributesContainer = TextAttributesContainer(parent=self)
+        textPanel:  TextAttributesControl   = TextAttributesControl(parent=self)
         classPanel: ClassControl            = ClassControl(parent=self)
 
         defaultNamesPanel: DefaultNamesControl      = DefaultNamesControl(parent=self)

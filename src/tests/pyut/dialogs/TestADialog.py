@@ -69,10 +69,14 @@ class TestADialog(App):
     MINI_GAP:         int = 3
     NOTHING_SELECTED: int = -1
 
+    def __init__(self, redirect: bool):
+        App.__init__(self, redirect)
+
+        self.logger: Logger = getLogger(__name__)
+
     def OnInit(self):
 
         TestBase.setUpLogging()
-        self.logger: Logger = getLogger(__name__)
         frameTop:    Frame = Frame(parent=None, id=ID_ANY, title="Test A Dialog", size=(400, 200), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(False)
 

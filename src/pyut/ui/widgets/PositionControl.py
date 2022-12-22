@@ -20,12 +20,12 @@ class PositionControl(DualSpinnerControl):
         * Forwards the spinner values as Position values
 
     """
-    DEFAULT_MIN_VALUE: int = 100  # For the control only
-    DEFAULT_MAX_VALUE: int = 300  # For the control only
+    POSITION_MIN_VALUE: int = 0  # For the control only
+    POSITION_MAX_VALUE: int = 2048  # For the control only
 
     def __init__(self, sizedPanel: SizedPanel, displayText: str,
                  valueChangedCallback: Callable,
-                 minValue: int = DEFAULT_MIN_VALUE, maxValue: int = DEFAULT_MAX_VALUE,
+                 minValue: int = POSITION_MIN_VALUE, maxValue: int = POSITION_MAX_VALUE,
                  setControlsSize: bool = True):
         """
 

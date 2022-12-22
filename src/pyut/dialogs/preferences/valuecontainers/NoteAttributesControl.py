@@ -35,10 +35,11 @@ class NoteAttributesControl(SizedPanel):
 
         parent.Bind(EVT_TEXT, self._onNoteTextChanged, noteText)
 
-        DimensionsControl(sizedPanel=self, displayText='Note Width/Height',
-                          valueChangedCallback=self._noteDimensionsChanged,
-                          setControlsSize=False)
+        self._noteDimensions: DimensionsControl = DimensionsControl(sizedPanel=self, displayText='Note Width/Height',
+                                                                    valueChangedCallback=self._noteDimensionsChanged,
+                                                                    setControlsSize=False)
 
+        self._noteDimensions.dimensions = self._preferences.noteDimensions
         # self.Fit()
         # self.SetMinSize(self.GetSize())
 
