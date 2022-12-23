@@ -5,6 +5,7 @@ from wx import EVT_CHECKBOX
 
 from wx import CheckBox
 from wx import CommandEvent
+from wx import Panel
 from wx import Window
 
 from wx import NewIdRef as wxNewIdRef
@@ -24,40 +25,39 @@ class PositioningPreferencesPage(BasePreferencesPage):
     Implemented using sized components for better platform look and feel
     """
 
-    def __init__(self):
-        super().__init__()
-
+    def __init__(self, parent: Window):
+        super().__init__(parent)
+        self.SetSizerType('vertical')
         self._centerAppOnStartupId: int  = wxNewIdRef()
         self._valuesChanged:        bool = False
 
         self._cbCenterAppOnStartup:   CheckBox          = cast(CheckBox, None)
         self._appPositionControls:    PositionControl   = cast(PositionControl, None)
         self._appDimensionsContainer: DimensionsControl = cast(DimensionsControl, None)
+        self._createWindow(parent)
 
-    def CreateWindow(self, parent) -> Window:
+    def _createWindow(self, parent):
 
-        verticalPanel: SizedPanel = SizedPanel(parent)
-        verticalPanel.SetSizerType('vertical')
+        self._cbCenterAppOnStartup = CheckBox(self, self._centerAppOnStartupId, 'Center Pyut on Startup')
 
-        self._cbCenterAppOnStartup = CheckBox(verticalPanel, self._centerAppOnStartupId, 'Center Pyut on Startup')
+        self._appPositionControls    = self._createAppPositionControls(sizedPanel=self)
+        self._appDimensionsContainer = self._createAppSizeControls(sizedPanel=self)
 
-        self._appPositionControls    = self._createAppPositionControls(sizedPanel=verticalPanel)
-        self._appDimensionsContainer = self._createAppSizeControls(sizedPanel=verticalPanel)
+        Panel(self, size=(1,75))  # TODO: this is a hack
 
         self._setControlValues()
         parent.Bind(EVT_CHECKBOX, self._onCenterOnStartupChanged, id=self._centerAppOnStartupId)
 
-        self._fixPanelSize(panel=verticalPanel)
-        return verticalPanel
-
-    def GetName(self) -> str:
+    @property
+    def name(self) -> str:
         return 'Positions'
 
     def _createAppPositionControls(self, sizedPanel: SizedPanel) -> PositionControl:
 
         appPositionControls: PositionControl = PositionControl(sizedPanel=sizedPanel, displayText='Startup Position',
                                                                minValue=0, maxValue=2048,
-                                                               valueChangedCallback=self._appPositionChanged)
+                                                               valueChangedCallback=self._appPositionChanged,
+                                                               setControlsSize=False)
 
         return appPositionControls
 
@@ -65,7 +65,8 @@ class PositioningPreferencesPage(BasePreferencesPage):
 
         appSizeControls: DimensionsControl = DimensionsControl(sizedPanel=sizedPanel, displayText="Startup Width/Height",
                                                                minValue=480, maxValue=4096,
-                                                               valueChangedCallback=self._appSizeChanged)
+                                                               valueChangedCallback=self._appSizeChanged,
+                                                               setControlsSize=False)
         return appSizeControls
 
     def _setControlValues(self):

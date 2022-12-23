@@ -31,10 +31,12 @@ from pyut.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
 from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
-from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
-from pyut.dialogs.preferencesv2.PyutPreferencesEditor import PyutPreferencesEditor
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+
+from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
+
+from pyut.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
@@ -70,34 +72,34 @@ class TestADialog(App):
     NOTHING_SELECTED: int = -1
 
     def __init__(self, redirect: bool):
-        App.__init__(self, redirect)
+        PyutPreferences.determinePreferencesLocation()
 
-        self.logger: Logger = getLogger(__name__)
+        self.logger:          Logger          = getLogger(__name__)
+        self._preferences:    PyutPreferences = PyutPreferences()
+        self._dlgSelectionId: wxNewIdRef      = wxNewIdRef()
+
+        self._frame:       Frame        = cast(Frame, None)
+        self._eventEngine: IEventEngine = cast(EventEngine, None)
+
+        super().__init__(self, redirect)
+
 
     def OnInit(self):
 
         TestBase.setUpLogging()
-        frameTop:    Frame = Frame(parent=None, id=ID_ANY, title="Test A Dialog", size=(400, 200), style=DEFAULT_FRAME_STYLE)
-        frameTop.Show(False)
+        self._frame      = Frame(parent=None, id=ID_ANY, title="Test A Dialog", size=(400, 200), style=DEFAULT_FRAME_STYLE)
+        self._eventEngine = EventEngine(listeningWindow=self._frame)
 
-        PyutPreferences.determinePreferencesLocation()
+        self._frame.Show(False)
 
-        self.SetTopWindow(frameTop)
+        self.SetTopWindow(self._frame)
 
-        self._frame: Frame = frameTop
+        mainSizer:         BoxSizer     = self._createSelectionControls(self._frame)
 
-        self._preferences: PyutPreferences = PyutPreferences()
-        self._dlgSelectionId: wxNewIdRef = wxNewIdRef()
+        self._frame.SetAutoLayout(True)
+        self._frame.SetSizer(mainSizer)
+        self._frame.Show(True)
 
-        self._eventEngine: IEventEngine = EventEngine(listeningWindow=frameTop)
-        mainSizer:         BoxSizer     = self._createSelectionControls(frameTop)
-
-        # Need to hold onto this reference
-        self._pyutPreferencesEditor: PyutPreferencesEditor = cast(PyutPreferencesEditor, None)
-
-        frameTop.SetAutoLayout(True)
-        frameTop.SetSizer(mainSizer)
-        frameTop.Show(True)
 
         return True
 
@@ -146,6 +148,8 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditNote()
         elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES:
             dlgAnswer = self._testDlgPyutPreferences()
+        elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES_V2:
+            dlgAnswer = self._testDlgPyutPreferencesV2()
         elif dlgName == DialogNamesEnum.DLG_EDIT_PARAMETER:
             dlgAnswer = self._testDlgEditParameter()
         elif dlgName == DialogNamesEnum.DLG_EDIT_CLASS:
@@ -160,8 +164,6 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditCode()
         elif dlgName == DialogNamesEnum.DLG_PYUT_DEBUG:
             dlgAnswer = self._testDlgPyutDebug()
-        elif dlgName == DialogNamesEnum.PYUT_PREFERENCES_EDITOR:
-            dlgAnswer = self._testPyutPreferencesEditor()
 
         self.logger.warning(f'{dlgAnswer=}')
 
@@ -195,6 +197,14 @@ class TestADialog(App):
     def _testDlgPyutPreferences(self) -> str:
 
         with DlgPyutPreferences(parent=self._frame, wxId=ID_ANY) as dlg:
+            if dlg.ShowModal() == OK:
+                return f'Preferences returned Ok'
+            else:
+                return f'Cancelled'
+
+    def _testDlgPyutPreferencesV2(self) -> str:
+
+        with DlgPyutPreferencesV2(parent=self._frame) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Preferences returned Ok'
             else:
@@ -304,15 +314,7 @@ class TestADialog(App):
             else:
                 return 'Cancelled'
 
-    def _testPyutPreferencesEditor(self) -> str:
 
-        pyutPreferencesEditor: PyutPreferencesEditor = PyutPreferencesEditor()
-        pyutPreferencesEditor.addPanels()
-        pyutPreferencesEditor.Show(parent=self._frame)
-
-        self._pyutPreferencesEditor = pyutPreferencesEditor
-        return 'Superb'
-
-testApp: App = TestADialog(redirect=False)
+testApp: TestADialog = TestADialog(redirect=False)
 
 testApp.MainLoop()

@@ -33,8 +33,8 @@ class DualSpinnerControl(SizedStaticBox):
     sizes
     """
 
-    DEFAULT_MIN_VALUE: int = 100  # For the control only
-    DEFAULT_MAX_VALUE: int = 300  # For the control only
+    DEFAULT_MIN_VALUE: int = 100
+    DEFAULT_MAX_VALUE: int = 300
 
     dscLogger: Logger = getLogger(__name__)     # Used as base class; So needs unique logger
 
@@ -61,7 +61,8 @@ class DualSpinnerControl(SizedStaticBox):
 
         self.SetSizerType('horizontal')
         # noinspection PyUnresolvedReferences
-        self.SetSizerProps(expand=True, proportion=1, border=(('left','right', 'bottom'),5))
+        # self.SetSizerProps(expand=True, proportion=1, border=(('left','right', 'bottom'),5))
+        self.SetSizerProps(expand=True, proportion=1)
 
         self._callback: Callable = valueChangedCallback
 

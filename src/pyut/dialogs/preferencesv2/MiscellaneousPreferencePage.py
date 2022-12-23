@@ -7,51 +7,45 @@ from wx import ID_ANY
 
 from wx import CommandEvent
 from wx import StaticText
-from wx import StockPreferencesPage
 from wx import TextCtrl
 from wx import Window
 
 from wx import NewIdRef as wxNewIdRef
 
-from wx.lib.sized_controls import SizedPanel
 from pyut.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
 
 
 class MiscellaneousPreferencesPage(BasePreferencesPage):
 
-    def __init__(self):
+    def __init__(self, parent: Window):
         self.logger: Logger = getLogger(__name__)
 
-        super().__init__(kind=StockPreferencesPage.Kind_General)
-
+        super().__init__(parent)
+        self.SetSizerType('form')
         self._pdfFileNameWxId:   int = wxNewIdRef()
         self._imageFileNameWxId: int = wxNewIdRef()
         self._fastEditNameWxId:  int = wxNewIdRef()
 
-    def CreateWindow(self, parent) -> Window:
+        self._createWindow(parent)
 
-        panel: SizedPanel = SizedPanel(parent)
-        panel.SetSizerType('form')
+    def _createWindow(self, parent):
 
-        StaticText(panel, ID_ANY, 'PDF Filename:')
-        pdfFileName: TextCtrl = TextCtrl(panel, self._pdfFileNameWxId, self._preferences.pdfExportFileName)
-        pdfFileName.SetSizerProps(expand=True)
+        StaticText(self, ID_ANY, 'PDF Filename:')
+        TextCtrl(self, id=self._pdfFileNameWxId, value=self._preferences.pdfExportFileName, size=(100,25))
 
-        StaticText(panel, ID_ANY, 'Image Filename:')
-        imageFileName: TextCtrl = TextCtrl(panel, self._imageFileNameWxId, self._preferences.wxImageFileName)
-        imageFileName.SetSizerProps(expand=True)
+        StaticText(self, ID_ANY, 'Image Filename:')
+        TextCtrl(self, self._imageFileNameWxId, self._preferences.wxImageFileName, size=(100,25))
 
-        StaticText(panel, ID_ANY, 'FastEdit Editor Name:')
-        fastEditorName: TextCtrl = TextCtrl(panel,  self._fastEditNameWxId, self._preferences.editor)
-        fastEditorName.SetSizerProps(expand=True)
+        StaticText(self, ID_ANY, 'FastEdit Editor Name:')
+        TextCtrl(self,  self._fastEditNameWxId, self._preferences.editor, size=(100,25))
 
         parent.Bind(EVT_TEXT, self._onNameChange, id=self._pdfFileNameWxId)
         parent.Bind(EVT_TEXT, self._onNameChange, id=self._imageFileNameWxId)
         parent.Bind(EVT_TEXT, self._onNameChange, id=self._fastEditNameWxId)
-        return panel
 
-    def GetName(self) -> str:
-        return 'Miscellaneous'
+    @property
+    def name(self) -> str:
+        return 'Plugins'
 
     def _setControlValues(self):
         pass

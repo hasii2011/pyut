@@ -12,10 +12,7 @@ from wx import EVT_CHECKBOX
 
 from wx import CheckBox
 from wx import CommandEvent
-from wx import StockPreferencesPage
 from wx import Window
-
-from wx.lib.sized_controls import SizedPanel
 
 from pyut.PyutUtils import PyutUtils
 from pyut.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
@@ -40,8 +37,9 @@ class GeneralPreferencesPage(BasePreferencesPage):
     the necessary creation information;  How esoteric of me !!!  ;-(
     """
 
-    def __init__(self):
-        super().__init__(kind=StockPreferencesPage.Kind_General)
+    def __init__(self, parent: Window):
+        super().__init__(parent)
+        self.SetSizerType('vertical')
 
         self.logger:  Logger = getLogger(__name__)
         self._change: bool   = False
@@ -65,25 +63,27 @@ class GeneralPreferencesPage(BasePreferencesPage):
             ControlData(label='Display Project Extension', initialValue=p.displayProjectExtension, wxId=self._displayProjectExtensionWxId)
         ]
 
-    def CreateWindow(self, parent) -> Window:
+        self._createWindow(parent)
 
-        panel: SizedPanel = SizedPanel(parent)
-        panel.SetSizerType('vertical')
+    def _createWindow(self, parent: Window) :
+
+        # panel: SizedPanel = SizedPanel(parent)
+        # panel.SetSizerType('vertical')
 
         for cd in self._controlData:
             control: ControlData = cast(ControlData, cd)
-            control.instanceVar = CheckBox(panel, control.wxId, label=control.label)
+            control.instanceVar = CheckBox(self, control.wxId, label=control.label)
             control.instanceVar.SetValue(control.initialValue)
             parent.Bind(EVT_CHECKBOX, self._onValueChanged, id=control.wxId)
 
-        self._btnResetTips = Button(panel, self._resetTipsWxId, 'Reset Tips')
+        self._btnResetTips = Button(self, self._resetTipsWxId, 'Reset Tips')
 
         parent.Bind(EVT_BUTTON,   self._onResetTips, id=self._resetTipsWxId)
 
-        self._fixPanelSize(panel=panel)
-        return panel
+        self._fixPanelSize(panel=self)
 
-    def GetName(self) -> str:
+    @property
+    def name(self) -> str:
         return 'General'
 
     def _setControlValues(self):
