@@ -20,7 +20,6 @@ from wx import ComboBox
 from wx import SpinCtrl
 from wx import SpinEvent
 from wx import CommandEvent
-from wx import StockPreferencesPage
 from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
@@ -34,41 +33,38 @@ SPINNER_HEIGHT: int = 35
 
 class DiagramPreferencesPage(BasePreferencesPage):
 
-    def __init__(self):
+    def __init__(self, parent: Window):
 
         self.logger: Logger = getLogger(__name__)
 
-        super().__init__(kind=StockPreferencesPage.Kind_General)
+        super().__init__(parent)
+        self.SetSizerType('vertical')
 
         self._enableBackgroundGrid: CheckBox = cast(CheckBox, None)
         self._snapToGrid:           CheckBox = cast(CheckBox, None)
         self._gridInterval:         SpinCtrl = cast(SpinCtrl, None)
         self._gridLineColor:        ComboBox = cast(ComboBox, None)
         self._gridStyleChoice:      Choice   = cast(Choice, None)
+        self._createWindow(parent)
 
-    def CreateWindow(self, parent) -> Window:
+    def _createWindow(self, parent):
 
-        panel: SizedPanel = SizedPanel(parent)
-        panel.SetSizerType('vertical')
+        self._enableBackgroundGrid = CheckBox(self, label='Enable Background Grid')
+        self._snapToGrid           = CheckBox(self, label='Snap to Grid')
 
-        self._enableBackgroundGrid = CheckBox(panel, label='Enable Background Grid')
-        self._snapToGrid           = CheckBox(panel, label='Snap to Grid')
+        gridIntervalSSB: SizedStaticBox = SizedStaticBox(self, label='Grid Interval')
+        gridIntervalSSB.SetSizerProps(expand=True, proportion=1)
 
-        gridIntervalSSB: SizedStaticBox = SizedStaticBox(panel, label='Grid Interval')
-        gridIntervalSSB.SetSizerProps(proportion=1, border=(('left','right', 'bottom'),5))
-
-        self._gridInterval= SpinCtrl(parent=gridIntervalSSB, size=(SPINNER_WIDTH, SPINNER_HEIGHT))
-
-        self._createGridLineColorControl(panel=panel)
-        self._createGridStyleChoice(panel=panel)
-
+        # self._gridInterval= SpinCtrl(parent=gridIntervalSSB, size=(SPINNER_WIDTH, SPINNER_HEIGHT))
+        self._gridInterval = SpinCtrl(parent=gridIntervalSSB)
+        self._createGridOptions(panel=self)
         self._setControlValues()
         self._bindCallbacks(parent=parent)
 
-        self._fixPanelSize(panel=panel)
-        return panel
+        self._fixPanelSize(panel=self)
 
-    def GetName(self) -> str:
+    @property
+    def name(self) -> str:
         return 'Diagram'
 
     def _setControlValues(self):
@@ -93,6 +89,15 @@ class DiagramPreferencesPage(BasePreferencesPage):
         parent.Bind(EVT_SPINCTRL, self._onGridIntervalChanged,           self._gridInterval)
         parent.Bind(EVT_CHOICE,   self._onGridStyleChanged,              self._gridStyleChoice)
 
+    def _createGridOptions(self, panel: SizedPanel):
+
+        gridPanel: SizedPanel = SizedPanel(panel)
+        gridPanel.SetSizerType('horizontal')
+        gridPanel.SetSizerProps(expand=True, proportion=1)
+
+        self._createGridLineColorControl(panel=gridPanel)
+        self._createGridStyleChoice(panel=gridPanel)
+
     def _createGridLineColorControl(self, panel: SizedPanel):
 
         colorChoices = []
@@ -100,7 +105,7 @@ class DiagramPreferencesPage(BasePreferencesPage):
             colorChoices.append(cc.value)
 
         gridLineColorSSB: SizedStaticBox = SizedStaticBox(panel, label='Grid Line Color')
-        gridLineColorSSB.SetSizerProps(proportion=1, border=(('left','right', 'bottom'),5))
+        gridLineColorSSB.SetSizerProps(expand=True, proportion=1)
 
         self._gridLineColor = ComboBox(gridLineColorSSB, choices=colorChoices, style=CB_READONLY)
 
@@ -109,7 +114,7 @@ class DiagramPreferencesPage(BasePreferencesPage):
         gridStyles = [s.value for s in MiniOglPenStyle]
 
         gridLineStyleSSB: SizedStaticBox = SizedStaticBox(panel, label='Grid Line Style')
-        gridLineStyleSSB.SetSizerProps(proportion=1, border=(('left','right', 'bottom'),5))
+        gridLineStyleSSB.SetSizerProps(expand=True, proportion=1)
 
         self._gridStyleChoice = Choice(gridLineStyleSSB, choices=gridStyles)
 

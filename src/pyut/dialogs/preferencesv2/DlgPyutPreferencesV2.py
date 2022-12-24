@@ -15,10 +15,12 @@ from wx import RESIZE_BORDER
 
 from wx import CommandEvent
 from wx import Notebook
+from wx import Size
 
 from wx.lib.sized_controls import SizedDialog
 from wx.lib.sized_controls import SizedPanel
 
+from pyut.dialogs.preferencesv2.DiagramPreferencesPage import DiagramPreferencesPage
 from pyut.dialogs.preferencesv2.GeneralPrefencesPage import GeneralPreferencesPage
 from pyut.dialogs.preferencesv2.MiscellaneousPreferencePage import MiscellaneousPreferencesPage
 from pyut.dialogs.preferencesv2.PositioningPreferencesPage import PositioningPreferencesPage
@@ -49,7 +51,9 @@ class DlgPyutPreferencesV2(SizedDialog):
         Args:
             parent:
         """
-        super().__init__(parent, ID_ANY, "Preferences", style=DEFAULT_DIALOG_STYLE | RESIZE_BORDER)
+        style:   int  = DEFAULT_DIALOG_STYLE | RESIZE_BORDER
+        dlgSize: Size = Size(420,380)
+        super().__init__(parent, ID_ANY, "Preferences", size=dlgSize, style=style)
         self.logger:  Logger          = getLogger(__name__)
         self.__prefs: PyutPreferences = PyutPreferences()
 
@@ -61,9 +65,8 @@ class DlgPyutPreferencesV2(SizedDialog):
 
         self.Bind(EVT_BUTTON, self.__OnCmdOk, id=ID_OK)
         self.Bind(EVT_CLOSE,  self.__OnClose)
-        self.Fit()
-        self.SetMinSize(self.GetSize())
-
+        # self.Fit()
+        # self.SetMinSize(self.GetSize())
 
     def _createTheControls(self, sizedPanel: SizedPanel):
         """
@@ -71,17 +74,18 @@ class DlgPyutPreferencesV2(SizedDialog):
         """
         style: int = NB_TOP | NB_FIXEDWIDTH
         book: Notebook = Notebook(sizedPanel, style=style)
+        book.SetSizerProps(expand=True, proportion=1)
 
-        generalPreferences:         GeneralPreferencesPage      = GeneralPreferencesPage(book)
-        positioningPreferences:     PositioningPreferencesPage  = PositioningPreferencesPage(book)
+        generalPreferences:         GeneralPreferencesPage       = GeneralPreferencesPage(book)
+        positioningPreferences:     PositioningPreferencesPage   = PositioningPreferencesPage(book)
         miscellaneousPreferences:   MiscellaneousPreferencesPage = MiscellaneousPreferencesPage(book)
-        # backgroundPreferences:  BackgroundPreferences    = BackgroundPreferences(parent=self)
+        diagramPreferences:         DiagramPreferencesPage       = DiagramPreferencesPage(book)
         # valuePreferences:       ValuePreferencesBook     = ValuePreferencesBook(parent=self)
         #
         book.AddPage(generalPreferences,       text=generalPreferences.name,        select=True)
         book.AddPage(positioningPreferences,   text=positioningPreferences.name,    select=False)
         book.AddPage(miscellaneousPreferences, text=miscellaneousPreferences.name,  select=False)
-        # book.AddPage(backgroundPreferences,  text=_('Diagram'),        select=False)
+        book.AddPage(diagramPreferences,       text=diagramPreferences.name,        select=False)
         # book.AddPage(valuePreferences,       text=_('Default Values'), select=False)
         #
         # self._positioningPreferences: PositioningPreferences = positioningPreferences

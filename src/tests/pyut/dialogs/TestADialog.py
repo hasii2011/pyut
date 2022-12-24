@@ -81,7 +81,7 @@ class TestADialog(App):
         self._frame:       Frame        = cast(Frame, None)
         self._eventEngine: IEventEngine = cast(EventEngine, None)
 
-        super().__init__(self, redirect)
+        super().__init__(redirect)
 
 
     def OnInit(self):
