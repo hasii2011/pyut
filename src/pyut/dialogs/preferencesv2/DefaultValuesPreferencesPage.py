@@ -9,10 +9,10 @@ from wx import Window
 
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-from pyut.dialogs.preferencesv2.valuecontainers.ClassControl import ClassControl
-from pyut.dialogs.preferencesv2.valuecontainers.DefaultNamesControl import DefaultNamesControl
-from pyut.dialogs.preferencesv2.valuecontainers.NoteAttributesControl import NoteAttributesControl
-from pyut.dialogs.preferencesv2.valuecontainers.TextAttributesControl import TextAttributesControl
+from pyut.dialogs.preferencesv2.valuecontrols.ClassControl import ClassControl
+from pyut.dialogs.preferencesv2.valuecontrols.DefaultNamesControl import DefaultNamesControl
+from pyut.dialogs.preferencesv2.valuecontrols.NoteAttributesControl import NoteAttributesControl
+from pyut.dialogs.preferencesv2.valuecontrols.TextAttributesControl import TextAttributesControl
 
 from pyut.resources.img.DefaultPreferences import embeddedImage as DefaultPreferences
 
