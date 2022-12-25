@@ -83,11 +83,11 @@ class DlgPyutPreferencesV2(SizedDialog):
         diagramPreferences:         DiagramPreferencesPage       = DiagramPreferencesPage(book)
         valuePreferences:          DefaultValuesPreferencesPage  = DefaultValuesPreferencesPage(book)
         #
-        book.AddPage(generalPreferences,       text=generalPreferences.name,        select=False)
+        book.AddPage(generalPreferences,       text=generalPreferences.name,        select=True)
         book.AddPage(positioningPreferences,   text=positioningPreferences.name,    select=False)
         book.AddPage(miscellaneousPreferences, text=miscellaneousPreferences.name,  select=False)
         book.AddPage(diagramPreferences,       text=diagramPreferences.name,        select=False)
-        book.AddPage(valuePreferences,         text=valuePreferences.name,          select=True)
+        book.AddPage(valuePreferences,         text=valuePreferences.name,          select=False)
 
     def __OnClose(self, event):
 
