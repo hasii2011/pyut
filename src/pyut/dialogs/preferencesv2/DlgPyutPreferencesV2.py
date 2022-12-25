@@ -20,6 +20,7 @@ from wx import Size
 from wx.lib.sized_controls import SizedDialog
 from wx.lib.sized_controls import SizedPanel
 
+from pyut.dialogs.preferencesv2.DefaultValuesPreferencesPage import DefaultValuesPreferencesPage
 from pyut.dialogs.preferencesv2.DiagramPreferencesPage import DiagramPreferencesPage
 from pyut.dialogs.preferencesv2.GeneralPrefencesPage import GeneralPreferencesPage
 from pyut.dialogs.preferencesv2.MiscellaneousPreferencePage import MiscellaneousPreferencesPage
@@ -52,7 +53,7 @@ class DlgPyutPreferencesV2(SizedDialog):
             parent:
         """
         style:   int  = DEFAULT_DIALOG_STYLE | RESIZE_BORDER
-        dlgSize: Size = Size(420,380)
+        dlgSize: Size = Size(440,400)
         super().__init__(parent, ID_ANY, "Preferences", size=dlgSize, style=style)
         self.logger:  Logger          = getLogger(__name__)
         self.__prefs: PyutPreferences = PyutPreferences()
@@ -80,16 +81,13 @@ class DlgPyutPreferencesV2(SizedDialog):
         positioningPreferences:     PositioningPreferencesPage   = PositioningPreferencesPage(book)
         miscellaneousPreferences:   MiscellaneousPreferencesPage = MiscellaneousPreferencesPage(book)
         diagramPreferences:         DiagramPreferencesPage       = DiagramPreferencesPage(book)
-        # valuePreferences:       ValuePreferencesBook     = ValuePreferencesBook(parent=self)
+        valuePreferences:          DefaultValuesPreferencesPage  = DefaultValuesPreferencesPage(book)
         #
-        book.AddPage(generalPreferences,       text=generalPreferences.name,        select=True)
+        book.AddPage(generalPreferences,       text=generalPreferences.name,        select=False)
         book.AddPage(positioningPreferences,   text=positioningPreferences.name,    select=False)
         book.AddPage(miscellaneousPreferences, text=miscellaneousPreferences.name,  select=False)
         book.AddPage(diagramPreferences,       text=diagramPreferences.name,        select=False)
-        # book.AddPage(valuePreferences,       text=_('Default Values'), select=False)
-        #
-        # self._positioningPreferences: PositioningPreferences = positioningPreferences
-        # self._valuePreferences:       ValuePreferencesBook   = valuePreferences
+        book.AddPage(valuePreferences,         text=valuePreferences.name,          select=True)
 
     def __OnClose(self, event):
 

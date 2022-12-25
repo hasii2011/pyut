@@ -7,6 +7,7 @@ from wx import ID_ANY
 
 from wx import CommandEvent
 from wx import StaticText
+from wx import TE_MULTILINE
 from wx import TextCtrl
 from wx import Window
 
@@ -31,8 +32,8 @@ class NoteAttributesControl(SizedPanel):
         nameSizer.SetSizerProps(proportion=0, expand=False)
 
         StaticText(nameSizer, ID_ANY, 'Default Note Text:')
-        noteText: TextCtrl = TextCtrl(nameSizer, value=self._preferences.noteText)
-
+        noteText: TextCtrl = TextCtrl(nameSizer, value=self._preferences.noteText, size=(400, 100), style = TE_MULTILINE)
+        noteText.SetSizerProps(expand=True, proportion=1)
         parent.Bind(EVT_TEXT, self._onNoteTextChanged, noteText)
 
         self._noteDimensions: DimensionsControl = DimensionsControl(sizedPanel=self, displayText='Note Width/Height',

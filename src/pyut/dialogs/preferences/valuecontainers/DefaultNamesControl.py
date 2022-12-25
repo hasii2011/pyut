@@ -51,6 +51,7 @@ class DefaultNamesControl(SizedPanel):
             nameData: NameData = cast(NameData, nd)
             StaticText(self, ID_ANY, nameData.label)
             nameData.textCtrl = TextCtrl(self, value=nameData.initialValue)
+            nameData.textCtrl.SetSizerProps(expand=True)
             parent.Bind(EVT_TEXT, nameData.callback, nameData.textCtrl)
 
     def _onInterfaceNameChanged(self, event: CommandEvent):
