@@ -1,7 +1,8 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
-from typing import cast
 
 from wx import ALIGN_TOP
 from wx import ALL
@@ -22,6 +23,7 @@ from wx import CommandEvent
 from wx import ComboBox
 from wx import BoxSizer
 from wx import StaticBoxSizer
+
 from wx import NewIdRef as wxNewIdRef
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
@@ -34,24 +36,20 @@ from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
-from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
-
 from pyut.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
-from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 from pyutmodel.PyutInterface import PyutInterface
 from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutMethod import PyutModifiers
 from pyutmodel.PyutMethod import SourceCode
 from pyutmodel.PyutModifier import PyutModifier
-
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutType import PyutType
-
+from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -61,7 +59,6 @@ from pyut.uiv2.eventengine.EventEngine import EventEngine
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from tests.TestBase import TestBase
-
 
 from tests.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
 
@@ -146,8 +143,6 @@ class TestADialog(App):
             dlgAnswer = self._testDlgEditText()
         elif dlgName == DialogNamesEnum.DLG_EDIT_NOTE:
             dlgAnswer = self._testDlgEditNote()
-        elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES:
-            dlgAnswer = self._testDlgPyutPreferences()
         elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES_V2:
             dlgAnswer = self._testDlgPyutPreferencesV2()
         elif dlgName == DialogNamesEnum.DLG_EDIT_PARAMETER:
@@ -193,14 +188,6 @@ class TestADialog(App):
                 return f'{pyutField=}'
             else:
                 return 'Cancelled'
-
-    def _testDlgPyutPreferences(self) -> str:
-
-        with DlgPyutPreferences(parent=self._frame, wxId=ID_ANY) as dlg:
-            if dlg.ShowModal() == OK:
-                return f'Preferences returned Ok'
-            else:
-                return f'Cancelled'
 
     def _testDlgPyutPreferencesV2(self) -> str:
 

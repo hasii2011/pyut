@@ -10,7 +10,6 @@ from wx import BOTH
 from wx import FD_MULTIPLE
 from wx import FD_OPEN
 from wx import FileHistory
-from wx import ID_ANY
 from wx import ID_FILE1
 from wx import ID_OK
 from wx import PAPER_A4
@@ -38,7 +37,7 @@ from core.types.PluginDataTypes import PluginIDMap
 from core.PluginManager import PluginManager
 
 from pyut.PyutUtils import PyutUtils
-from pyut.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
+from pyut.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
 
 from pyut.enums.DiagramType import DiagramType
 
@@ -84,6 +83,8 @@ class FileMenuHandler(BaseMenuHandler):
         self._preferences: PyutPreferences = PyutPreferences()
         self._plugins:     PluginIDMap     = PluginIDMap({})
 
+        self._exportPlugins: PluginIDMap   = cast(PluginIDMap, None)
+        self._importPlugins: PluginIDMap   = cast(PluginIDMap, None)
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
         self._printData:               PrintData               = cast(PrintData, None)
 
@@ -253,7 +254,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         self.logger.debug(f"Before dialog show")
 
-        with DlgPyutPreferences(self._parent, ID_ANY) as dlg:
+        with DlgPyutPreferencesV2(self._parent) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.debug(f'Waiting for answer')
             else:

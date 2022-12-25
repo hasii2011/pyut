@@ -10,8 +10,9 @@ from ogl.OglDimensions import OglDimensions
 from wx.lib.sized_controls import SizedPanel
 
 from pyut.general.datatypes.Dimensions import Dimensions
-from pyut.ui.widgets.DualSpinnerContainer import SpinnerValues
+
 from pyut.ui.widgets.DualSpinnerControl import DualSpinnerControl
+from pyut.ui.widgets.DualSpinnerControl import SpinnerValues
 
 
 class DimensionsControl(DualSpinnerControl):
