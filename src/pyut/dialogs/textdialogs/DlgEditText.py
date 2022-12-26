@@ -1,52 +1,56 @@
 
 from wx import EVT_TEXT
-from wx import ID_ANY
 from wx import TE_MULTILINE
 
 from wx import CommandEvent
 from wx import TextCtrl
 from wx import Window
 
+from wx.lib.sized_controls import SizedPanel
+
 from pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
 from pyutmodel.PyutText import PyutText
 
-from pyut.PyutUtils import PyutUtils
-
-from pyut.general.Globals import _
-[
-    ID_TEXT_LINE
-] = PyutUtils.assignID(1)
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class DlgEditText(BaseDlgEditText):
     """
-    Defines a multi-line text control dialog for placing an editing
+    Defines a multi-line text control dialog for placing an editable
     text on the UML Diagram
 
 
     Sample use:
-        dlg = DlgEditText(self._uml, ID_ANY, pyutText)
-        dlg.ShowModal()
-        dlg.Destroy()
+        with DlgEditText(parent=self._frame, eventEngine=self._eventEngine, pyutText=pyutText) as dlg:
+
+            if dlg.ShowModal() == OK:
+                return f'Retrieved data: {pyutText.content=}'
+            else:
+                return f'Cancelled'
+
     """
-    def __init__(self, parent: Window, pyutText: PyutText):
+    def __init__(self, parent: Window, eventEngine: IEventEngine, pyutText: PyutText):
         """
 
         Args:
             parent:             parent window to center on
+            eventEngine
             pyutText:           Model object we are editing
         """
-        super().__init__(parent, ID_ANY, _("Diagram Text"))
+        super().__init__(parent, eventEngine=eventEngine, title='Diagram Text')
+
+        sizedPanel: SizedPanel = self.GetContentsPane()
 
         self.pyutText: PyutText = pyutText
 
-        self._txtCtrl: TextCtrl = TextCtrl(self, ID_TEXT_LINE, self.pyutText.content, size=(300, 80), style=TE_MULTILINE)
+        self._txtCtrl: TextCtrl = TextCtrl(sizedPanel, value=self.pyutText.content, style=TE_MULTILINE)
+        self._txtCtrl.SetSizerProps(expand=True, proportion=1)
         self._txtCtrl.SetFocus()
 
-        self._setupMainDialogLayout(self._txtCtrl)
+        self._createStandardOkCancelButtonSizer()
 
-        self.Bind(EVT_TEXT, self._onTextLineChange, id=ID_TEXT_LINE)
+        self.Bind(EVT_TEXT, self._onTextLineChange, self._txtCtrl)
 
         self.Centre()
 
@@ -58,3 +62,4 @@ class DlgEditText(BaseDlgEditText):
             event:
         """
         self.pyutText.content = event.GetString()
+        self._markCurrentDiagramAsModified()

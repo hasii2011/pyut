@@ -56,6 +56,8 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
+from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from tests.TestBase import TestBase
@@ -80,7 +82,6 @@ class TestADialog(App):
 
         super().__init__(redirect)
 
-
     def OnInit(self):
 
         TestBase.setUpLogging()
@@ -97,6 +98,7 @@ class TestADialog(App):
         self._frame.SetSizer(mainSizer)
         self._frame.Show(True)
 
+        self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
 
         return True
 
@@ -137,35 +139,37 @@ class TestADialog(App):
 
         self.logger.warning(f'Selected dialog: {dlgName}')
 
-        # TODO: Make this a 3.10 case statement
         dlgAnswer: str = 'No dialog invoked'
-        if dlgName == DialogNamesEnum.DLG_EDIT_TEXT:
-            dlgAnswer = self._testDlgEditText()
-        elif dlgName == DialogNamesEnum.DLG_EDIT_NOTE:
-            dlgAnswer = self._testDlgEditNote()
-        elif dlgName == DialogNamesEnum.DLG_PYUT_PREFERENCES_V2:
-            dlgAnswer = self._testDlgPyutPreferencesV2()
-        elif dlgName == DialogNamesEnum.DLG_EDIT_PARAMETER:
-            dlgAnswer = self._testDlgEditParameter()
-        elif dlgName == DialogNamesEnum.DLG_EDIT_CLASS:
-            dlgAnswer = self._testDlgEditClass()
-        elif dlgName == DialogNamesEnum.DLG_EDIT_INTERFACE:
-            dlgAnswer = self._testDlgEditInterface()
-        elif dlgName == DialogNamesEnum.DLG_EDIT_FIELD:
-            dlgAnswer = self._testDlgEditField()
-        elif dlgName == DialogNamesEnum.DLG_EDIT_METHOD:
-            dlgAnswer = self._testDlgEditMethod()
-        elif dlgName == DialogNamesEnum.DLG_EDIT_CODE:
-            dlgAnswer = self._testDlgEditCode()
-        elif dlgName == DialogNamesEnum.DLG_PYUT_DEBUG:
-            dlgAnswer = self._testDlgPyutDebug()
+        match dlgName:
+            case DialogNamesEnum.DLG_EDIT_TEXT:
+                dlgAnswer = self._testDlgEditText()
+            case DialogNamesEnum.DLG_EDIT_NOTE:
+                dlgAnswer = self._testDlgEditNote()
+            case DialogNamesEnum.DLG_PYUT_PREFERENCES_V2:
+                dlgAnswer = self._testDlgPyutPreferencesV2()
+            case DialogNamesEnum.DLG_EDIT_PARAMETER:
+                dlgAnswer = self._testDlgEditParameter()
+            case DialogNamesEnum.DLG_EDIT_CLASS:
+                dlgAnswer = self._testDlgEditClass()
+            case DialogNamesEnum.DLG_EDIT_INTERFACE:
+                dlgAnswer = self._testDlgEditInterface()
+            case DialogNamesEnum.DLG_EDIT_FIELD:
+                dlgAnswer = self._testDlgEditField()
+            case DialogNamesEnum.DLG_EDIT_METHOD:
+                dlgAnswer = self._testDlgEditMethod()
+            case DialogNamesEnum.DLG_EDIT_CODE:
+                dlgAnswer = self._testDlgEditCode()
+            case DialogNamesEnum.DLG_PYUT_DEBUG:
+                dlgAnswer = self._testDlgPyutDebug()
+            case _:
+                self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
 
     def _testDlgEditText(self) -> str:
 
         pyutText: PyutText = PyutText()
-        with DlgEditText(parent=self._frame, pyutText=pyutText) as dlg:
+        with DlgEditText(parent=self._frame, eventEngine=self._eventEngine, pyutText=pyutText) as dlg:
 
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutText.content=}'
@@ -175,7 +179,7 @@ class TestADialog(App):
     def _testDlgEditNote(self) -> str:
 
         pyutNote: PyutNote = PyutNote(noteText=self._preferences.noteText)
-        with DlgEditNote(parent=self._frame, pyutNote=pyutNote) as dlg:
+        with DlgEditNote(parent=self._frame, eventEngine=self._eventEngine, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutNote.content=}'
             else:
@@ -301,6 +305,9 @@ class TestADialog(App):
             else:
                 return 'Cancelled'
 
+    # noinspection PyUnusedLocal
+    def _onDiagramModified(self, event: UMLDiagramModifiedEvent):
+        self.logger.info(f'Diagram was modified')
 
 testApp: TestADialog = TestADialog(redirect=False)
 

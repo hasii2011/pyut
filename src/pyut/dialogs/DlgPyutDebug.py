@@ -11,6 +11,7 @@ from wx import CANCEL
 from wx import CAPTION
 from wx import CENTER
 from wx import CLOSE_BOX
+from wx import Dialog
 
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
@@ -28,14 +29,12 @@ from wx import BoxSizer
 from wx import CommandEvent
 from wx import SizeEvent
 
-from pyut.PyutUtils import PyutUtils
-
-from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from wx import NewIdRef as wxNewIdRef
 
 from pyut.dialogs.DebugListControl import DebugListControl
 
 
-class DlgPyutDebug(BaseDlgEdit):
+class DlgPyutDebug(Dialog):
     """
     Sample use:
 
@@ -47,7 +46,6 @@ class DlgPyutDebug(BaseDlgEdit):
                 self.logger.info(f'Cancelled')
 
     """
-
     SCROLL_BAR_SPACE: int = 7
 
     NAME_PERCENTAGE:      float = 0.45
@@ -59,13 +57,13 @@ class DlgPyutDebug(BaseDlgEdit):
 
     def __init__(self, parent):
 
-        super().__init__(parent, ID_ANY, "Debug Pyut", theStyle=CLOSE_BOX | CAPTION | RESIZE_BORDER)
+        super().__init__(parent, ID_ANY, "Debug Pyut", style=CLOSE_BOX | CAPTION | RESIZE_BORDER)
         self.logger: Logger = getLogger(__name__)
 
-        hs:        Sizer    = self._createDialogButtonsContainer()
-        mainSizer: BoxSizer = BoxSizer(orient=VERTICAL)
+        self._list: DebugListControl = self._initializeTheControls()
 
-        self._list: DebugListControl = self.__initializeTheControls()
+        hs:        Sizer    = self.CreateStdDialogButtonSizer(OK)
+        mainSizer: BoxSizer = BoxSizer(orient=VERTICAL)
 
         mainSizer.Add(self._list, 0, LEFT | RIGHT | ALIGN_LEFT, border=5)
         mainSizer.Add(hs,         0, CENTER)
@@ -74,29 +72,28 @@ class DlgPyutDebug(BaseDlgEdit):
 
         mainSizer.Fit(self)
 
-        self.Bind(EVT_SIZE, self.__onSize)
+        self.Bind(EVT_SIZE, self._onSize)
 
-        self.Bind(EVT_BUTTON, self.__OnCmdOk, id=ID_OK)
-        self.Bind(EVT_CLOSE,  self.__OnClose)
+        self.Bind(EVT_BUTTON, self._onOk, id=ID_OK)
+        self.Bind(EVT_CLOSE, self._onClose)
 
-    def __initializeTheControls(self) -> DebugListControl:
+    def _initializeTheControls(self) -> DebugListControl:
         """
         Initialize the controls.
         """
-        [self.__tId] = PyutUtils.assignID(1)
+        self._tId = wxNewIdRef()
 
-        dbgListCtrl: DebugListControl = DebugListControl(self, self.__tId, style=BORDER_SUNKEN)
+        dbgListCtrl: DebugListControl = DebugListControl(self, self._tId, style=BORDER_SUNKEN)
 
         dbgListCtrl.populateList()
 
         return dbgListCtrl
 
-    def __onSize(self, event: SizeEvent):
+    def _onSize(self, event: SizeEvent):
         """
 
         Args:
             event:
-
         """
         size: Tuple[int, int] = event.GetSize()
 
@@ -115,7 +112,7 @@ class DlgPyutDebug(BaseDlgEdit):
 
         self._list.SetSize(adjustedWidth, dlgHeight)
 
-    def __OnCmdOk(self, event: CommandEvent):
+    def _onOk(self, event: CommandEvent):
         """
         """
         event.Skip(skip=True)
@@ -123,7 +120,7 @@ class DlgPyutDebug(BaseDlgEdit):
         self.EndModal(OK)
 
     # noinspection PyUnusedLocal
-    def __OnClose(self, event: CommandEvent):
+    def _onClose(self, event: CommandEvent):
         """
         """
         self.SetReturnCode(CANCEL)

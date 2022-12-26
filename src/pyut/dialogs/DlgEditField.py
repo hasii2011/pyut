@@ -6,7 +6,6 @@ from wx import ALL
 from wx import BoxSizer
 from wx import Button
 from wx import CANCEL
-from wx import CAPTION
 from wx import DefaultSize
 
 from wx import EVT_BUTTON
@@ -17,9 +16,7 @@ from wx import ID_ANY
 from wx import OK
 from wx import Point
 from wx import RA_SPECIFY_ROWS
-from wx import RESIZE_BORDER
 from wx import RadioBox
-from wx import STAY_ON_TOP
 from wx import StaticText
 from wx import TextCtrl
 from wx import VERTICAL
@@ -47,7 +44,7 @@ class DlgEditField(BaseDlgEdit):
 
     def __init__(self, theParent, eventEngine: IEventEngine, fieldToEdit: PyutField):
 
-        super().__init__(theParent,  eventEngine=eventEngine, title="Edit Field", theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(theParent,  eventEngine=eventEngine, title="Edit Field")
 
         self._fieldToEdit: PyutField = fieldToEdit
         # ----------------
@@ -146,7 +143,7 @@ class DlgEditField(BaseDlgEdit):
         else:
             self._fieldToEdit.defaultValue = None
 
-        self._setProjectModified()
+        self._markCurrentDiagramAsModified()
 
         # Close dialog
         self.EndModal(OK)

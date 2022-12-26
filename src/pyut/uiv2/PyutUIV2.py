@@ -16,7 +16,6 @@ from wx import EVT_TREE_ITEM_RIGHT_CLICK
 from wx import EVT_TREE_SEL_CHANGED
 from wx import ICON_ERROR
 from wx import ICON_QUESTION
-from wx import ID_ANY
 from wx import ID_OK
 from wx import ID_YES
 from wx import OK
@@ -59,7 +58,6 @@ from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
-from pyut.dialogs.DlgEditDocument import DlgEditDocument
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
@@ -166,11 +164,11 @@ class PyutUIV2(SplitterWindow):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._parentWindow:     Frame           = topLevelWindow
-        self._eventEngine:      IEventEngine    = eventEngine
-        self._projectTree:      ProjectTree     = ProjectTree(parentWindow=self)
-        self._diagramNotebook:  DiagramNotebook = DiagramNotebook(parentWindow=self, eventEngine=eventEngine)
-
+        self._parentWindow:     Frame            = topLevelWindow
+        self._eventEngine:      IEventEngine     = eventEngine
+        self._projectTree:      ProjectTree      = ProjectTree(parentWindow=self)
+        self._diagramNotebook:  DiagramNotebook  = DiagramNotebook(parentWindow=self, eventEngine=eventEngine)
+        self._frame:            UmlDiagramsFrame = cast(UmlDiagramsFrame, None)
         # Set splitter
         self.SetMinimumPaneSize(20)
         self.SplitVertically(self._projectTree, self._diagramNotebook, SASH_POSITION)
@@ -460,9 +458,12 @@ class PyutUIV2(SplitterWindow):
 
         currentDocument: IPyutDocument    = self._projectManager.currentDocument
         currentFrame:    UmlDiagramsFrame = self._projectManager.currentFrame
-        dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
-
-        dlgEditDocument.Destroy()
+        # dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
+        # dlgEditDocument.Destroy()
+        with TextEntryDialog(currentFrame, "Edit Diagram Title", "Diagram Title", currentDocument.title, OK | CANCEL | CENTRE) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                currentDocument.title = dlg.GetValue()
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
         notebookCurrentPageNumber: int = self._diagramNotebook.GetSelection()
         self._diagramNotebook.SetPageText(page=notebookCurrentPageNumber, text=currentDocument.title)
@@ -632,9 +633,8 @@ class PyutUIV2(SplitterWindow):
         umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
 
         self.logger.debug(f"Edit: {pyutNote}")
-        with DlgEditNote(umlFrame, pyutNote) as dlg:
+        with DlgEditNote(umlFrame, eventEngine=self._eventEngine, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == ID_OK:
-                self._setProjectModified()
                 umlFrame.Refresh()
 
     def _onEditText(self, event: EditTextEvent):
@@ -642,9 +642,8 @@ class PyutUIV2(SplitterWindow):
         umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
 
         self.logger.debug(f"Edit: {pyutText}")
-        with DlgEditText(umlFrame, pyutText) as dlg:
+        with DlgEditText(umlFrame, eventEngine=self._eventEngine, pyutText=pyutText) as dlg:
             if dlg.ShowModal() == ID_OK:
-                self._setProjectModified()
                 umlFrame.Refresh()
 
     def _onEditActor(self, event: EditActorEvent):

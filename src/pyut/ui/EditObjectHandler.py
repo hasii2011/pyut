@@ -134,16 +134,14 @@ class EditObjectHandler:
         oglText:  OglText  = cast(OglText, diagramShape)
         pyutText: PyutText = oglText.pyutText
 
-        with DlgEditText(parent=umlFrame, pyutText=pyutText) as dlg:
-            if dlg.ShowModal() == OK:
-                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+        with DlgEditText(parent=umlFrame, eventEngine=self._eventEngine, pyutText=pyutText) as dlg:
+            dlg.ShowModal()
 
     def _editNote(self, umlFrame: 'UmlDiagramsFrame', oglNote: OglNote):
 
         pyutNote: PyutNote = oglNote.pyutObject
-        with DlgEditNote(umlFrame, pyutNote) as dlg:
-            if dlg.ShowModal() == ID_OK:
-                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+        with DlgEditNote(umlFrame, eventEngine=self._eventEngine, pyutNote=pyutNote) as dlg:
+            dlg.ShowModal()
 
     def _editUseCase(self, umlFrame: 'UmlDiagramsFrame', oglUseCase: OglUseCase):
 

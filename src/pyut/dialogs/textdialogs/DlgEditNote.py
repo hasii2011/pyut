@@ -1,23 +1,17 @@
 
 from wx import EVT_TEXT
-from wx import ID_ANY
 from wx import TE_MULTILINE
 
 from wx import CommandEvent
 from wx import TextCtrl
-from wx import StaticText
 from wx import Window
+from wx.lib.sized_controls import SizedPanel
 
 from pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
 
 from pyutmodel.PyutNote import PyutNote
 
-from pyut.PyutUtils import PyutUtils
-
-from pyut.general.Globals import _
-[
-    TXT_NOTE
-] = PyutUtils.assignID(1)
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class DlgEditNote(BaseDlgEditText):
@@ -27,30 +21,33 @@ class DlgEditNote(BaseDlgEditText):
     displayed in a UML note.
 
     Sample use:
-        dlg = DlgEditNote(self._uml, ID_ANY, pyutNote)
-        dlg.Destroy()
+        with DlgEditNote(umlFrame, pyutNote) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+
     """
-    def __init__(self, parent: Window, pyutNote: PyutNote):
+    def __init__(self, parent: Window, eventEngine: IEventEngine, pyutNote: PyutNote):
         """
 
         Args:
-            parent:             parent window to center on
-            pyutNote:           Model object we are editing
+            parent:      parent window to center on
+            eventEngine:
+            pyutNote:    Model object we are editing
         """
-        super().__init__(parent, ID_ANY, "Edit Note")
+        super().__init__(parent, eventEngine=eventEngine, title="Edit Note")
 
-        self._pyutNote:     PyutNote = pyutNote
+        self._pyutNote: PyutNote = pyutNote
 
-        label: StaticText = StaticText(self, ID_ANY, _("Note text"))
-        self._txtCtrl: TextCtrl = TextCtrl(self, TXT_NOTE, self._pyutNote.content, size=(400, 180), style=TE_MULTILINE)
+        sizedPanel: SizedPanel = self.GetContentsPane()
+
+        self._txtCtrl: TextCtrl = TextCtrl(sizedPanel, value=self._pyutNote.content, size=(400, 180), style=TE_MULTILINE)
         self._txtCtrl.SetFocus()
 
-        self._setupMainDialogLayout(self._txtCtrl, label)
+        self._createStandardOkCancelButtonSizer()
 
-        self.Bind(EVT_TEXT, self._onTxtNoteChange, id=TXT_NOTE)
+        self.Bind(EVT_TEXT, self._onTxtNoteChange, self._txtCtrl)
 
         self.Centre()
-        # self.ShowModal()
 
     def _onTxtNoteChange(self, event: CommandEvent):
         """
@@ -60,3 +57,4 @@ class DlgEditNote(BaseDlgEditText):
             event:
         """
         self._pyutNote.content = event.GetString()
+        self._markCurrentDiagramAsModified()

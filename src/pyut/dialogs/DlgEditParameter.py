@@ -3,14 +3,11 @@ from wx import ALIGN_CENTER_HORIZONTAL
 from wx import ALIGN_RIGHT
 from wx import ALL
 from wx import CANCEL
-from wx import CAPTION
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import OK
-from wx import RESIZE_BORDER
-from wx import STAY_ON_TOP
 from wx import VERTICAL
 
 from wx import BoxSizer
@@ -49,7 +46,7 @@ class DlgEditParameter(BaseDlgEdit):
             parameterToEdit:  The parameter that is being edited
         """
 
-        super().__init__(parent, eventEngine=eventEngine, title="Edit Parameter", theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(parent, eventEngine=eventEngine, title="Edit Parameter")
 
         self._parameterToEdit: PyutParameter = parameterToEdit
 
@@ -132,7 +129,7 @@ class DlgEditParameter(BaseDlgEdit):
         else:
             self._parameterToEdit.defaultValue = ''
 
-        self._setProjectModified()
+        self._markCurrentDiagramAsModified()
         # Close dialog
         self.EndModal(OK)
 

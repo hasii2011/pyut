@@ -9,7 +9,6 @@ from wx import ALIGN_CENTER_VERTICAL
 from wx import ALIGN_RIGHT
 from wx import ALL
 from wx import CANCEL
-from wx import CAPTION
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_TEXT
@@ -20,8 +19,7 @@ from wx import ID_OK
 from wx import LB_SINGLE
 from wx import OK
 from wx import RA_SPECIFY_ROWS
-from wx import RESIZE_BORDER
-from wx import STAY_ON_TOP
+
 from wx import VERTICAL
 
 from wx import Sizer
@@ -77,7 +75,7 @@ class DlgEditMethod(BaseDlgEdit):
 
     def __init__(self, parent, eventEngine: IEventEngine, pyutMethod: PyutMethod, editInterface: bool = False):
 
-        super().__init__(parent, eventEngine=eventEngine, title="Edit Method", theStyle=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(parent, eventEngine=eventEngine, title="Edit Method")
 
         self.logger:         Logger = getLogger(__name__)
         self._editInterface: bool   = editInterface
@@ -159,7 +157,7 @@ class DlgEditMethod(BaseDlgEdit):
         self._lstParams: ListBox = ListBox(self, ID_LST_PARAM_LIST, choices=[], style=LB_SINGLE)
 
         szrParamButtons: BoxSizer = self._createParameterButtonsContainer()
-        szrButtons:      BoxSizer = self._createDialogButtonsContainer()
+        szrButtons:      BoxSizer = self._createStandardOkCancelButtonSizer()
 
         szr3: BoxSizer = BoxSizer(VERTICAL)
 
@@ -197,7 +195,7 @@ class DlgEditMethod(BaseDlgEdit):
 
         return szrParamButtons
 
-    def _createDialogButtonsContainer(self, buttons=OK) -> BoxSizer:
+    def _createStandardOkCancelButtonSizer(self, buttons=OK) -> BoxSizer:
         """
         Override base class with our custom version
         Args:
@@ -267,7 +265,7 @@ class DlgEditMethod(BaseDlgEdit):
             self._pyutMethodCopy.parameters.append(param)
             # Add fields in dialog list
             self._lstParams.Append(str(param))
-            self._setProjectModified()
+            self._markCurrentDiagramAsModified()
 
     # noinspection PyUnusedLocal
     def _onParamEdit (self, event: Event):
@@ -282,7 +280,7 @@ class DlgEditMethod(BaseDlgEdit):
         if ret == OK:
             # Modify param in dialog list
             self._lstParams.SetString(selection, str(param))
-            self._setProjectModified()
+            self._markCurrentDiagramAsModified()
 
     # noinspection PyUnusedLocal
     def _onParamRemove (self, event: Event):
@@ -308,7 +306,7 @@ class DlgEditMethod(BaseDlgEdit):
         # Fix buttons of params list (enable or not)
         self._fixBtnParam()
 
-        self._setProjectModified()
+        self._markCurrentDiagramAsModified()
 
     # noinspection PyUnusedLocal
     def _onParamUp (self, event: Event):
@@ -333,7 +331,7 @@ class DlgEditMethod(BaseDlgEdit):
         # Fix buttons (enable or not)
         self._fixBtnParam()
 
-        self._setProjectModified()
+        self._markCurrentDiagramAsModified()
 
     # noinspection PyUnusedLocal
     def _onParamDown (self, event: Event):
@@ -358,7 +356,7 @@ class DlgEditMethod(BaseDlgEdit):
         # Fix buttons (enable or not)
         self._fixBtnParam()
 
-        self._setProjectModified()
+        self._markCurrentDiagramAsModified()
 
     # noinspection PyUnusedLocal
     def _onMethodCode(self, event: CommandEvent):
@@ -395,7 +393,7 @@ class DlgEditMethod(BaseDlgEdit):
 
         self._pyutMethod.sourceCode = self._pyutMethodCopy.sourceCode
 
-        self._setProjectModified()
+        self._markCurrentDiagramAsModified()
         # Close dialog
         self.EndModal(OK)
 
