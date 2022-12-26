@@ -12,15 +12,13 @@ class DebugPreferences(BaseSubPreference):
 
     DEBUG_SECTION:   str = 'Debug'
 
-    DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # If `True` any created temporary files appear in the current directory
-    PYUTIO_PLUGIN_AUTO_SELECT_ALL: str = 'pyutio_plugin_auto_select_all'  # if `True` auto-select shapes in plugins
-    DEBUG_DIAGRAM_FRAME:           str = 'debug_diagram_frame'
+    DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # TODO: is a plugin preference
+    PYUTIO_PLUGIN_AUTO_SELECT_ALL: str = 'pyutio_plugin_auto_select_all'  # TODO:  Is a plugin preference
     DEBUG_ERROR_VIEWS:             str = 'debug_error_views'              # If true allows testing of the error views through Pyut
 
     DEBUG_PREFERENCES:  PREFS_NAME_VALUES = {
         DEBUG_TEMP_FILE_LOCATION:       'False',
         PYUTIO_PLUGIN_AUTO_SELECT_ALL:  'False',
-        DEBUG_DIAGRAM_FRAME:            'False',
         DEBUG_ERROR_VIEWS:              'False'
     }
 

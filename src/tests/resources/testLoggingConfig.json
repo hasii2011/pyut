@@ -50,20 +50,15 @@
             "level": "WARNING",
             "propagate": "False"
         },
-        "tests.org.pyut.persistence.converters.TestOglToMiniDomV10": {
-            "level": "WARNING",
-            "propagate": "False"
-        },
-        "tests.org.pyut.persistence.converters.TestMiniDomToOglV10": {
-            "level": "WARNING",
-            "propagate": "False"
-        },
-
         "org.pyut.dialogs.DlgPyutDebug": {
             "level": "WARNING",
             "propagate": "False"
         },
         "org.pyut.plugins.io.javasupport.ReverseJava": {
+            "level":     "INFO",
+            "propagate": "False"
+        },
+        "pyut.ui.widgets.DualSpinnerControl": {
             "level":     "INFO",
             "propagate": "False"
         }

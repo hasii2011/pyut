@@ -31,14 +31,13 @@ setup(
     data_files=DATA_FILES,
     packages=[
               'pyut',
-              'pyut.dialogs', 'pyut.dialogs.preferences', 'pyut.dialogs.preferences.valuecontainers',
+              'pyut.dialogs', 'pyut.dialogs.preferencesv2', 'pyut.dialogs.preferencesv2.valuecontrols',
               'pyut.dialogs.textdialogs',
               'pyut.dialogs.tips',
               'pyut.enums',
               'pyut.errorcontroller',
               'pyut.experimental',
               'pyut.general', 'pyut.general.datatypes', 'pyut.general.exceptions',
-              'pyut.history', 'pyut.history.commands',
               'pyut.preferences',
               'pyut.resources',
               'pyut.resources.img',
@@ -46,7 +45,7 @@ setup(
               'pyut.resources.img.splash',
               'pyut.resources.img.toolbar', 'pyut.resources.img.toolbar.embedded16', 'pyut.resources.img.toolbar.embedded32',
               'pyut.resources.locale',
-              'pyut.ui',   'pyut.ui.frame', 'pyut.ui.tools', 'pyut.ui.umlframes', 'pyut.ui.widgets',
+              'pyut.ui',   'pyut.ui.frame', 'pyut.ui.tools', 'pyut.ui.umlframes', 'pyut.ui.widgets', 'pyut.ui.wxcommands'
               'pyut.uiv2', 'pyut.uiv2.eventengine', 'pyut.uiv2.eventengine.eventinformation'
               ],
     include_package_data=True,
