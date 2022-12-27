@@ -3,6 +3,7 @@ from wx import CANCEL
 from wx import CAPTION
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
+from wx import ID_CANCEL
 from wx import ID_OK
 from wx import OK
 from wx import RESIZE_BORDER
@@ -39,7 +40,8 @@ class BaseDlgEdit(SizedDialog):
         adding callbacks for the Ok and Cancel buttons
         """
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(OK | CANCEL))
-        self.Bind(EVT_BUTTON, self._onOk, id=ID_OK)
+        self.Bind(EVT_BUTTON, self._onOk,    id=ID_OK)
+        self.Bind(EVT_BUTTON, self._onClose, id=ID_CANCEL)
         self.Bind(EVT_CLOSE,  self._onClose)
 
     def _convertNone (self, theString: str):
@@ -54,18 +56,16 @@ class BaseDlgEdit(SizedDialog):
             theString = ''
         return theString
 
+    # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):
         """
         """
-        event.Skip(skip=True)
-        self.SetReturnCode(OK)
         self.EndModal(OK)
 
     # noinspection PyUnusedLocal
     def _onClose(self, event: CommandEvent):
         """
         """
-        self.SetReturnCode(CANCEL)
         self.EndModal(CANCEL)
 
     def _markCurrentDiagramAsModified(self):

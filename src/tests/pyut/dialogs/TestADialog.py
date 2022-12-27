@@ -1,4 +1,4 @@
-
+from typing import Union
 from typing import cast
 
 from logging import Logger
@@ -28,6 +28,7 @@ from wx import NewIdRef as wxNewIdRef
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
 from pyut.dialogs.DlgEditCode import DlgEditCode
+from pyut.dialogs.DlgEditComment import DlgEditComment
 from pyut.dialogs.DlgEditField import DlgEditField
 from pyut.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
@@ -161,6 +162,8 @@ class TestADialog(App):
                 dlgAnswer = self._testDlgEditText()
             case DialogNamesEnum.DLG_EDIT_NOTE:
                 dlgAnswer = self._testDlgEditNote()
+            case DialogNamesEnum.DLG_EDIT_DESCRIPTION:
+                dlgAnswer = self._testDlgEditDescription()
             case DialogNamesEnum.DLG_PYUT_PREFERENCES_V2:
                 dlgAnswer = self._testDlgPyutPreferencesV2()
             case DialogNamesEnum.DLG_EDIT_PARAMETER:
@@ -181,6 +184,15 @@ class TestADialog(App):
                 self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
+
+    def _testDlgEditDescription(self):
+        pyutModel: Union[PyutClass, PyutInterface] = PyutInterface(name='IGato')
+        pyutModel.description = 'I describe El Gato Tonto'
+        with DlgEditComment(self._frame, eventEngine=self._eventEngine, pyutModel=pyutModel) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                pyutModel.description = dlg.GetValue()
+
+        return pyutModel.description
 
     def _testDlgEditUseCase(self):
         pyutUseCase: PyutUseCase = PyutUseCase(name='OzzeeTheWickedGato')

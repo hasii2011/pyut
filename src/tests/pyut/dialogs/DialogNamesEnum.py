@@ -7,6 +7,7 @@ class DialogNamesEnum(Enum):
     DLG_EDIT_USE_CASE    = 'DlgEditUseCase'
     DLG_EDIT_ACTOR       = 'DlgEditActor'
     DLG_EDIT_NOTE        = 'DlgEditNote'
+    DLG_EDIT_DESCRIPTION = 'DlgEditDescription'
     DLG_EDIT_TEXT        = 'DlgEditText'
     DLG_EDIT_PARAMETER   = 'DlgEditParameter'
     DLG_EDIT_CLASS       = 'DlgEditClass'

@@ -54,8 +54,7 @@ class DlgEditCode(SizedDialog):
         panel.SetSizerType('vertical')
 
         self._txtCtrl: TextCtrl = TextCtrl(panel, TXT_CODE, self._displayableSourceCode, style=TE_MULTILINE)
-        # This method is there but PyCharm cannot find it
-        # noinspection PyUnresolvedReferences
+
         self._txtCtrl.SetSizerProps(expand=True)
         print(f'{self._txtCtrl.GetSize()=}')
 

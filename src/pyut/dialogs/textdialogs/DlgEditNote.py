@@ -7,14 +7,14 @@ from wx import TextCtrl
 from wx import Window
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.dialogs.textdialogs.BaseDlgEditText import BaseDlgEditText
+from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
 
 from pyutmodel.PyutNote import PyutNote
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
-class DlgEditNote(BaseDlgEditText):
+class DlgEditNote(BaseDlgEdit):
     """
     Defines a multi-line text control dialog for note editing.
     This dialog is used to ask the user to enter the text that will be

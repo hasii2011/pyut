@@ -1,118 +1,51 @@
+
 from typing import Union
 
-from wx import CANCEL
-from wx import EVT_BUTTON
 from wx import EVT_TEXT
-from wx import ID_ANY
-from wx import OK
 from wx import TE_MULTILINE
 
 from wx import TextCtrl
-from wx import StaticText
-from wx import Button
-from wx import Point
-from wx import Size
-from wx import Dialog
+from wx import Window
 
-from wx import NewIdRef as wxNewIdRef
+from wx.lib.sized_controls import SizedPanel
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface
 
-TXT_COMMENT = wxNewIdRef()
+from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
-class DlgEditComment(Dialog):
+class DlgEditComment(BaseDlgEdit):
     """
-    Dialog for the class comment edition.
+    Edit a class description
     """
-
-    def __init__(self, parent, ID, pyutModel: Union[PyutClass, PyutInterface]):
+    def __init__(self, parent: Window, eventEngine: IEventEngine, pyutModel: Union[PyutClass, PyutInterface]):
         """
 
         Args:
             parent:
-            ID:
+            eventEngine:
             pyutModel:
         """
+        super().__init__(parent, eventEngine=eventEngine, title="Edit Description")
 
-        super().__init__(parent, ID, _("Description Edit"))
-
-        # Associated PyutLink
         self._pyutModel: Union[PyutClass, PyutInterface] = pyutModel
 
-        self.SetSize(Size(416, 200))
+        sizedPanel: SizedPanel = self.GetContentsPane()
 
-        # init members vars
-        self._text = self._pyutModel.description
-        self._returnAction = OK   # describe how the user exited the dialog box
-
-        # labels
-        StaticText(self, ID_ANY, _("Class description"),  Point(8, 8))
-
-        # text
-        self._txtCtrl: TextCtrl = TextCtrl(self, TXT_COMMENT, self._text, Point(8, 24), Size(392, 100), TE_MULTILINE)
-
-        # Set the focus
+        self._txtCtrl: TextCtrl = TextCtrl(sizedPanel, value=self._pyutModel.description, style=TE_MULTILINE)
+        self._txtCtrl.SetSizerProps(expand=True, proportion=1)
         self._txtCtrl.SetFocus()
 
+        self._createStandardOkCancelButtonSizer()
+
         # text events
-        self.Bind(EVT_TEXT, self._onTxtNoteChange, id=TXT_COMMENT)
-
-        # Ok/Cancel
-        Button(self, OK, _("&Ok"), Point(120, 140))
-        Button(self, CANCEL, _("&Cancel"), Point(208, 140))
-
-        # button events
-        self.Bind(EVT_BUTTON, self._onCmdOk, id=OK)
-        self.Bind(EVT_BUTTON, self._onCmdCancel, id=CANCEL)
+        self.Bind(EVT_TEXT, self._onTxtDescriptionChange, self._txtCtrl)
 
         self.Centre()
-        self.ShowModal()
 
-    def _onTxtNoteChange(self, event):
-        """
-        Event occurring when TXT_COMMENT change.
-
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        """
-        self._text = event.GetString()
-
-    # noinspection PyUnusedLocal
-    def _onCmdOk(self, event):
-        """
-        Handle click on "Ok" button.
-
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        """
-
-        self._pyutModel.description = self._text
-
-        self._returnAction = OK
-        self.Close()
-
-    # noinspection PyUnusedLocal
-    def _onCmdCancel(self, event):
-        """
-        Handle click on "Cancel" button.
-
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        """
-        self._returnAction = CANCEL
-        self.Close()
-
-    def getReturnAction(self):
-        """
-        Return an info on how the user exited the dialog box
-
-        @return : wx.Ok = click on Ok button; wx.Cancel = click on Cancel button
-        @since 1.0
-        @author Philippe Waelti <pwaelti@eivd.ch>
-        """
-        return self._returnAction
+    def _onTxtDescriptionChange(self, event):
+        self._pyutModel.description = event.GetString()
+        self._markCurrentDiagramAsModified()
