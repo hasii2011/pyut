@@ -25,7 +25,7 @@ from pyutmodel.PyutField import PyutField
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.dialogs.BaseEditDialog import BaseEditDialog
 
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
@@ -40,7 +40,7 @@ from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 ] = PyutUtils.assignID(3)
 
 
-class DlgEditField(BaseDlgEdit):
+class DlgEditField(BaseEditDialog):
 
     def __init__(self, theParent, eventEngine: IEventEngine, fieldToEdit: PyutField):
 

@@ -13,11 +13,11 @@ from wx.lib.sized_controls import SizedPanel
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface
 
-from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.dialogs.BaseEditDialog import BaseEditDialog
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
-class DlgEditComment(BaseDlgEdit):
+class DlgEditComment(BaseEditDialog):
     """
     Edit a class description
     """

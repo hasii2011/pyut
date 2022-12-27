@@ -48,7 +48,7 @@ from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from pyut.dialogs.DlgEditCode import DlgEditCode
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
-from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.dialogs.BaseEditDialog import BaseEditDialog
 
 from pyut.PyutUtils import PyutUtils
 
@@ -71,7 +71,7 @@ from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 ] = PyutUtils.assignID(10)
 
 
-class DlgEditMethod(BaseDlgEdit):
+class DlgEditMethod(BaseEditDialog):
 
     def __init__(self, parent, eventEngine: IEventEngine, pyutMethod: PyutMethod, editInterface: bool = False):
 

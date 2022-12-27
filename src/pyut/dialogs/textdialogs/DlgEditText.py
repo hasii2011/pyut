@@ -8,14 +8,14 @@ from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.dialogs.BaseEditDialog import BaseEditDialog
 
 from pyutmodel.PyutText import PyutText
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
-class DlgEditText(BaseDlgEdit):
+class DlgEditText(BaseEditDialog):
     """
     Defines a multi-line text control dialog for placing an editable
     text on the UML Diagram

@@ -21,7 +21,7 @@ from wx import CommandEvent
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutType import PyutType
 
-from pyut.dialogs.BaseDlgEdit import BaseDlgEdit
+from pyut.dialogs.BaseEditDialog import BaseEditDialog
 
 from pyut.PyutUtils import PyutUtils
 
@@ -36,7 +36,7 @@ from pyut.uiv2.eventengine.IEventEngine import IEventEngine
  ] = PyutUtils.assignID(3)
 
 
-class DlgEditParameter(BaseDlgEdit):
+class DlgEditParameter(BaseEditDialog):
 
     def __init__(self, parent, eventEngine: IEventEngine, parameterToEdit: PyutParameter):
         """

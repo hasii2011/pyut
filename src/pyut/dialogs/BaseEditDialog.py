@@ -17,7 +17,7 @@ from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
-class BaseDlgEdit(SizedDialog):
+class BaseEditDialog(SizedDialog):
 
     PROPORTION_CHANGEABLE: int = 1
     CONTAINER_GAP:         int = 3
