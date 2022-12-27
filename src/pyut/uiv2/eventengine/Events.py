@@ -60,6 +60,8 @@ RefreshFrameEvent,             EVENT_REFRESH_FRAME        = NewEvent()
 UpdateEditMenuEvent,    EVENT_UPDATE_EDIT_MENU    = NewEvent()
 AssociateEditMenuEvent, EVENT_ASSOCIATE_EDIT_MENU = NewEvent()
 
+ClassNameChangedEvent, EVENT_CLASS_NAME_CHANGED   = NewEvent()
+
 class EventType(str, Enum):
     """
     UpdateApplicationTitleEvent
@@ -164,10 +166,17 @@ class EventType(str, Enum):
         parameters:
             commandProcessor - The command processor associated with the currently visible UML Frame
 
-    AssociateEditMenu:
+    AssociateEditMenuEvent:
         Used on the initial creation of a UML frame to associate it with the Edit Menu
         parameters:
             commandProcessor - The command processor associated with the currently visible UML Frame
+
+    ClassNameChangedEvent:
+        Used if a dialog or some code changes a class name.  We have to update the model and the
+        model
+        parameters:
+            oldClassName - the old class name
+            newClassName - the new class name
 
     Events with no parameters get stuffed into the enumeration as instances, so they can be used
     event engine simple send method;  To simplify enumeration creation I create instances for all
@@ -234,3 +243,5 @@ class EventType(str, Enum):
 
     UpdateEditMenu    = ('UpdateEditMenu',    UpdateEditMenuEvent(),    EVENT_UPDATE_EDIT_MENU)
     AssociateEditMenu = ('AssociateEditMenu', AssociateEditMenuEvent(), EVENT_ASSOCIATE_EDIT_MENU)
+
+    ClassNameChanged  = ('ClassNameChanged', ClassNameChangedEvent, EVENT_CLASS_NAME_CHANGED)

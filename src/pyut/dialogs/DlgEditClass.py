@@ -32,10 +32,6 @@ from wx import StaticText
 from wx import CommandEvent
 from wx import Window
 
-from wx import PostEvent as wxPostEvent
-
-from pyut.general.CustomEvents import ClassNameChangedEvent
-
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutParameter import PyutParameter
@@ -51,6 +47,7 @@ from pyut.ui.umlframes.UmlFrame import UmlObjects
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
 from pyut.PyutUtils import PyutUtils
+from pyut.uiv2.eventengine.Events import EventType
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -402,9 +399,7 @@ class DlgEditClass(DlgEditClassCommon):
         self._setProjectModified()
 
         if self._oldClassName != self._pyutClass.name:
-            evt: ClassNameChangedEvent = ClassNameChangedEvent(oldClassName=self._oldClassName, newClassName=self._pyutClass.name)
-            parent = self.GetParent()
-            wxPostEvent(parent, evt)
+            self._eventEngine.sendEvent(EventType.ClassNameChanged, oldClassName=self._oldClassName, newClassName=self._pyutClass.name)
 
         self.SetReturnCode(OK)
         self.EndModal(OK)

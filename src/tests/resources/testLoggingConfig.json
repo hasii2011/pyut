@@ -26,35 +26,23 @@
             "level": "INFO",
             "propagate": "False"
         },
-        "org": {
-            "level":     "WARNING",
-            "propagate": "False"
-        },
-        "org.pyut": {
-            "level":     "WARNING",
-            "propagate": "False"
-        },
-        "org.pyut.MiniOgl": {
-            "level":     "INFO",
-            "propagate": "False"
-        },
-        "org.pyut.plugins": {
+        "pyut": {
             "level":     "WARNING",
             "propagate": "False"
         },
         "tests": {
-            "level": "WARNING",
+            "level": "INFO",
             "propagate": "False"
         },
         "tests.TestCommandGroup": {
             "level": "WARNING",
             "propagate": "False"
         },
-        "org.pyut.dialogs.DlgPyutDebug": {
+        "pyut.dialogs.DlgPyutDebug": {
             "level": "WARNING",
             "propagate": "False"
         },
-        "org.pyut.plugins.io.javasupport.ReverseJava": {
+        "pyut.plugins.io.javasupport.ReverseJava": {
             "level":     "INFO",
             "propagate": "False"
         },

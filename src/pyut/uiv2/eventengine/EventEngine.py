@@ -23,6 +23,7 @@ from pyut.enums.DiagramType import DiagramType
 from pyut.uiv2.IPyutProject import IPyutProject
 from pyut.uiv2.eventengine.Events import AddShapeEvent
 from pyut.uiv2.eventengine.Events import AssociateEditMenuEvent
+from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
 from pyut.uiv2.eventengine.Events import EditActorEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
@@ -85,7 +86,10 @@ PYUT_USE_CASE_PARAMETER:             str = 'pyutUseCase'
 
 PROJECT_FILENAME_PARAMETER: str = INSERT_PROJECT_FILENAME_PARAMETER
 
-NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER = 'newProjectDiagramInformation'
+NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER: str = 'newProjectDiagramInformation'
+
+OLD_CLASS_NAME_PARAMETER: str = 'oldClassName'
+NEW_CLASS_NAME_PARAMETER: str = 'newClassName'
 
 # EventCallback = NewType('EventCallback', Callable[[CurrentProjectInformation], None])
 MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
@@ -171,7 +175,10 @@ class EventEngine(IEventEngine):
             case EventType.UpdateEditMenu:
                 self._sendUpdateEditMenuEvent(**kwargs)
             case EventType.AssociateEditMenu:
-                self._sendAssicateEditMenuEvent(**kwargs)
+                self._sendAssociateEditMenuEvent(**kwargs)
+
+            case EventType.ClassNameChanged:
+                self._sendClassNameChangedEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
@@ -326,7 +333,7 @@ class EventEngine(IEventEngine):
         eventToPost:      UpdateEditMenuEvent = UpdateEditMenuEvent(commandProcessor=commandProcessor)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
-    def _sendAssicateEditMenuEvent(self, **kwargs):
+    def _sendAssociateEditMenuEvent(self, **kwargs):
 
         from wx import CommandProcessor
 
@@ -334,3 +341,8 @@ class EventEngine(IEventEngine):
         eventToPost:      AssociateEditMenuEvent = AssociateEditMenuEvent(commandProcessor=commandProcessor)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
+    def _sendClassNameChangedEvent(self, **kwargs):
+        oldClassName: str = kwargs[OLD_CLASS_NAME_PARAMETER]
+        newClassName: str = kwargs[NEW_CLASS_NAME_PARAMETER]
+        eventToPost: ClassNameChangedEvent =  ClassNameChangedEvent(oldClassName=oldClassName, newClassName=newClassName)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)

@@ -11,9 +11,9 @@ from ogl.OglInterface2 import OglInterface2
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
 
-from pyut.general.CustomEvents import ClassNameChangedEvent
-from pyut.general.CustomEvents import EVT_CLASS_NAME_CHANGED
+from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 CreatedClassesType = namedtuple('CreatedClassesType', 'pyutClass, oglClass')
@@ -44,7 +44,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         super().__init__(parent, eventEngine=eventEngine)   # type: ignore
         self.newDiagram()
 
-        self.Bind(EVT_CLASS_NAME_CHANGED, self._onClassNameChanged)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED, callback=self._onClassNameChanged)
 
     def _onClassNameChanged(self, event: ClassNameChangedEvent):
 
@@ -65,6 +65,8 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
                     self.logger.warning(f'{idx=} - {pyutInterface.name=} {implementor=}')
                     if implementor == oldClassName:
                         pyutInterface.implementors[idx] = newClassName
+
+        event.Skip(True)   # For testability; In reality we are the only handler
 
     def __repr__(self) -> str:
 

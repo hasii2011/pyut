@@ -67,6 +67,8 @@ from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from pyut.uiv2.Types import UmlFrameType
 
 from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
+from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
 from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -110,6 +112,7 @@ class TestADialog(App):
         self._frame.Show(True)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED,   callback=self._onClassNameChanged)
 
         return True
 
@@ -268,16 +271,15 @@ class TestADialog(App):
     def _testDlgEditClass(self):
         pyutClass: PyutClass = PyutClass(name='Ozzee')
 
-        eventEngine: EventEngine = EventEngine(listeningWindow=self._frame)
         # Not a notebook
         # noinspection PyTypeChecker
-        umlFrame:    UmlClassDiagramsFrame = UmlClassDiagramsFrame(parent=self._frame, eventEngine=eventEngine)
-        with DlgEditClass(parent=umlFrame, pyutClass=pyutClass, eventEngine=eventEngine) as dlg:
+        umlFrame:    UmlClassDiagramsFrame = UmlClassDiagramsFrame(parent=self._frame, eventEngine=self._eventEngine)
+        with DlgEditClass(parent=umlFrame, pyutClass=pyutClass, eventEngine=self._eventEngine) as dlg:
             if dlg.ShowModal() == OK:
                 classStr: str = (
                     f'{pyutClass.name=} '
                     f'{pyutClass.description=} '
-                    f'stereotype={pyutClass.getStereotype()} '
+                    f'stereotype={pyutClass.stereotype} '
                 )
                 if len(pyutClass.methods) > 0:
                     addedMethods: str = f''
@@ -295,10 +297,8 @@ class TestADialog(App):
 
     def _testDlgEditInterface(self):
 
-        eventEngine: EventEngine = EventEngine(listeningWindow=self._frame)
-
         pyutInterface: PyutInterface = PyutInterface(name='Ozzee')
-        with DlgEditInterface(parent=self._frame, eventEngine=eventEngine, pyutInterface=pyutInterface) as dlg:
+        with DlgEditInterface(parent=self._frame, eventEngine=self._eventEngine, pyutInterface=pyutInterface) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutInterface}'
             else:
@@ -364,6 +364,12 @@ class TestADialog(App):
     # noinspection PyUnusedLocal
     def _onDiagramModified(self, event: UMLDiagramModifiedEvent):
         self.logger.info(f'Diagram was modified')
+
+    def _onClassNameChanged(self, event: ClassNameChangedEvent):
+
+        oldClassName: str = event.oldClassName
+        newClassName: str = event.newClassName
+        self.logger.info(f'Class Name Changed Event: {oldClassName=} {newClassName=}')
 
 testApp: TestADialog = TestADialog(redirect=False)
 
