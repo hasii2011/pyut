@@ -58,6 +58,8 @@ from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
+from pyut.dialogs.Wrappers import DlgEditActor
+from pyut.dialogs.Wrappers import DlgEditUseCase
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
@@ -650,7 +652,7 @@ class PyutUIV2(SplitterWindow):
         pyutActor: PyutActor        = event.pyutActor
         umlFrame:  UmlDiagramsFrame = self._projectManager.currentFrame
 
-        with TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE) as dlg:
+        with DlgEditActor(umlFrame, actorName=pyutActor.name) as dlg:
             if dlg.ShowModal() == ID_OK:
                 pyutActor.name = dlg.GetValue()
                 self._setProjectModified()
@@ -661,7 +663,7 @@ class PyutUIV2(SplitterWindow):
         pyutUseCase: PyutUseCase      = event.pyutUseCase
         umlFrame:    UmlDiagramsFrame = self._projectManager.currentFrame
 
-        with TextEntryDialog(umlFrame, "Use Case Name", "Enter Use Case Name", pyutUseCase.name, OK | CANCEL | CENTRE) as dlg:
+        with DlgEditUseCase(umlFrame, useCaseName=pyutUseCase.name) as dlg:
             if dlg.ShowModal() == ID_OK:
                 pyutUseCase.name = dlg.GetValue()
                 self._setProjectModified()

@@ -33,6 +33,8 @@ from pyut.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
 from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
+from pyut.dialogs.Wrappers import DlgEditActor
+from pyut.dialogs.Wrappers import DlgEditDiagramTitle
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 
@@ -49,11 +51,19 @@ from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutType import PyutType
+from pyutmodel.PyutActor import PyutActor
+from pyutmodel.PyutUseCase import PyutUseCase
+
 from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 
+from pyut.dialogs.Wrappers import DlgEditUseCase
+from pyut.enums.DiagramType import DiagramType
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+from pyut.uiv2.IPyutDocument import IPyutDocument
+from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
+from pyut.uiv2.Types import UmlFrameType
 
 from pyut.uiv2.eventengine.EventEngine import EventEngine
 from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
@@ -141,6 +151,12 @@ class TestADialog(App):
 
         dlgAnswer: str = 'No dialog invoked'
         match dlgName:
+            case DialogNamesEnum.DLG_EDIT_USE_CASE:
+                dlgAnswer = self._testDlgEditUseCase()
+            case DialogNamesEnum.DLG_EDIT_ACTOR:
+                dlgAnswer = self._testDlgEditActor()
+            case DialogNamesEnum.DLG_EDIT_DIAGRAM_TITLE:
+                dlgAnswer = self._testDlgEditDiagramTitle()
             case DialogNamesEnum.DLG_EDIT_TEXT:
                 dlgAnswer = self._testDlgEditText()
             case DialogNamesEnum.DLG_EDIT_NOTE:
@@ -165,6 +181,34 @@ class TestADialog(App):
                 self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
+
+    def _testDlgEditUseCase(self):
+        pyutUseCase: PyutUseCase = PyutUseCase(name='OzzeeTheWickedGato')
+        with DlgEditUseCase(self._frame, useCaseName=pyutUseCase.name) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                pyutUseCase.name = dlg.GetValue()
+
+        return pyutUseCase.name
+
+    def _testDlgEditActor(self):
+        pyutActor: PyutActor = PyutActor(actorName='ActorFran')
+        with DlgEditActor(self._frame, actorName=pyutActor.name) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                pyutActor.name = dlg.GetValue()
+
+        return pyutActor.name
+
+    def _testDlgEditDiagramTitle(self):
+        diagram: IPyutDocument = PyutDocumentV2(diagramFrame=cast(UmlFrameType, None),
+                                                docType=DiagramType.CLASS_DIAGRAM,
+                                                eventEngine=self._eventEngine)
+        diagram.title = 'Basic Diagram Title'
+
+        with DlgEditDiagramTitle(self._frame, diagramTitle=diagram.title) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                diagram.title = dlg.GetValue()
+
+        return diagram.title
 
     def _testDlgEditText(self) -> str:
 

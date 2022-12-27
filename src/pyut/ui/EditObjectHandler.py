@@ -5,13 +5,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from wx import CANCEL
-from wx import CENTRE
-
 from wx import ID_OK
-from wx import OK
-
-from wx import TextEntryDialog
 
 from pyutmodel.PyutActor import PyutActor
 from pyutmodel.PyutClass import PyutClass
@@ -39,6 +33,9 @@ from pyut.dialogs.DlgEditLink import DlgEditLink
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
 from pyut.dialogs.DlgEditInterface import DlgEditInterface
+
+from pyut.dialogs.Wrappers import DlgEditActor
+from pyut.dialogs.Wrappers import DlgEditUseCase
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -146,7 +143,7 @@ class EditObjectHandler:
     def _editUseCase(self, umlFrame: 'UmlDiagramsFrame', oglUseCase: OglUseCase):
 
         pyutUseCase: PyutUseCase = oglUseCase.pyutObject
-        with TextEntryDialog(umlFrame, "Use Case Name", "Enter Use Case Name", pyutUseCase.name, OK | CANCEL | CENTRE) as dlg:
+        with DlgEditUseCase(umlFrame, useCaseName=pyutUseCase.name) as dlg:
             if dlg.ShowModal() == ID_OK:
                 pyutUseCase.name = dlg.GetValue()
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
@@ -154,7 +151,7 @@ class EditObjectHandler:
     def _editActor(self, umlFrame: 'UmlDiagramsFrame', oglActor: OglActor):
 
         pyutActor: PyutActor = oglActor.pyutObject
-        with TextEntryDialog(umlFrame, "Actor name", "Enter actor name", pyutActor.name, OK | CANCEL | CENTRE) as dlg:
+        with DlgEditActor(umlFrame, actorName=pyutActor.name) as dlg:
             if dlg.ShowModal() == ID_OK:
                 pyutActor.name = dlg.GetValue()
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
