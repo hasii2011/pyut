@@ -17,7 +17,7 @@ from pyut.dialogs.BaseEditDialog import BaseEditDialog
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
-class DlgEditComment(BaseEditDialog):
+class DlgEditDescription(BaseEditDialog):
     """
     Edit a class description
     """

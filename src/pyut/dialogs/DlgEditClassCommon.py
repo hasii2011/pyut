@@ -33,7 +33,7 @@ from wx import TextCtrl
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.dialogs.DlgEditComment import DlgEditComment
+from pyut.dialogs.DlgEditDescription import DlgEditDescription
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 
 from pyutmodel.PyutClass import PyutClass
@@ -198,7 +198,7 @@ class DlgEditClassCommon(Dialog):
         Args:
             event:
         """
-        with DlgEditComment(self, eventEngine=self._eventEngine, pyutModel=self._pyutModelCopy) as dlg:
+        with DlgEditDescription(self, eventEngine=self._eventEngine, pyutModel=self._pyutModelCopy) as dlg:
             if dlg.ShowModal() == OK:
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
             else:

@@ -28,7 +28,7 @@ from wx import NewIdRef as wxNewIdRef
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
 from pyut.dialogs.DlgEditCode import DlgEditCode
-from pyut.dialogs.DlgEditComment import DlgEditComment
+from pyut.dialogs.DlgEditDescription import DlgEditDescription
 from pyut.dialogs.DlgEditField import DlgEditField
 from pyut.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
@@ -191,7 +191,7 @@ class TestADialog(App):
     def _testDlgEditDescription(self):
         pyutModel: Union[PyutClass, PyutInterface] = PyutInterface(name='IGato')
         pyutModel.description = 'I describe El Gato Tonto'
-        with DlgEditComment(self._frame, eventEngine=self._eventEngine, pyutModel=pyutModel) as dlg:
+        with DlgEditDescription(self._frame, eventEngine=self._eventEngine, pyutModel=pyutModel) as dlg:
             if dlg.ShowModal() == OK:
                 pyutModel.description = dlg.GetValue()
 
