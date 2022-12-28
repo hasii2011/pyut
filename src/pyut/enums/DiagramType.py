@@ -17,11 +17,11 @@ class DiagramType(Enum):
     @classmethod
     def toEnum(cls, strValue: str) -> 'DiagramType':
         """
-        Converts the input string to the attachment location
+        Converts the input string to the correct diagram type
         Args:
-            strValue:   A serialized string value
+            strValue:   A string value
 
-        Returns:  The visibility enumeration
+        Returns:  The diagram type enumeration
         """
         canonicalStr: str = strValue.strip(' ').lower()
 

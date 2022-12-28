@@ -33,6 +33,8 @@ from pyut.dialogs.DlgEditField import DlgEditField
 from pyut.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
+from pyut.dialogs.DlgEditStereoTypes import DlgEditStereoTypes
+from pyut.dialogs.DlgEditStereoTypes import PyutStereotype
 from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 from pyut.dialogs.Wrappers import DlgEditActor
 from pyut.dialogs.Wrappers import DlgEditDiagramTitle
@@ -155,6 +157,8 @@ class TestADialog(App):
 
         dlgAnswer: str = 'No dialog invoked'
         match dlgName:
+            case DialogNamesEnum.DLG_EDIT_STEREOTYPES:
+                dlgAnswer = self._testDlgEditStereoTypes()
             case DialogNamesEnum.DLG_EDIT_USE_CASE:
                 dlgAnswer = self._testDlgEditUseCase()
             case DialogNamesEnum.DLG_EDIT_ACTOR:
@@ -187,6 +191,15 @@ class TestADialog(App):
                 self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
+
+    def _testDlgEditStereoTypes(self):
+        # temp stereotype until model is updated
+        pyutStereotype: PyutStereotype = PyutStereotype.METACLASS
+        with DlgEditStereoTypes(self._frame, eventEngine=self._eventEngine, pyutStereotype=pyutStereotype) as dlg:
+            if dlg.ShowModal() == OK:
+                return dlg.value
+            else:
+                return 'bogosity'
 
     def _testDlgEditDescription(self):
         pyutModel: Union[PyutClass, PyutInterface] = PyutInterface(name='IGato')

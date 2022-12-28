@@ -19,3 +19,4 @@ class DialogNamesEnum(Enum):
 
     DLG_EDIT_DIAGRAM_TITLE  = 'DlgEditDiagramTitle'
     DLG_PYUT_PREFERENCES_V2 = 'DlgPyutPreferencesV2'
+    DLG_EDIT_STEREOTYPES    = 'DlgEditStereotypes'
