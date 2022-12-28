@@ -1,4 +1,5 @@
 
+from typing import cast
 from typing import Union
 
 from logging import Logger
@@ -109,6 +110,9 @@ class DlgEditClassCommon(Dialog):
         self._szrNameStereotype.Add(lblName, 0, ALL | ALIGN_CENTER, 5)
         self._szrNameStereotype.Add(self._txtName, 1, ALIGN_CENTER)
 
+        self._btnOk:          Button = cast(Button, None)
+        self._btnCancel:      Button = cast(Button, None)
+        self._btnDescription: Button = cast(Button, None)
         self._szrButtons: BoxSizer = self.createButtonContainer()
 
         self._szrMain: BoxSizer = BoxSizer(VERTICAL)
@@ -191,18 +195,15 @@ class DlgEditClassCommon(Dialog):
     def _onDescription(self, event: CommandEvent):
         """
         Called when the class description button is pressed.
-
         Args:
             event:
         """
-        dlg = DlgEditComment(self, ID_ANY, self._pyutModelCopy)
-        dlg.Destroy()
+        with DlgEditComment(self, eventEngine=self._eventEngine, pyutModel=self._pyutModelCopy) as dlg:
+            if dlg.ShowModal() == OK:
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+            else:
+                self._pyutModelCopy.description = self._pyutModel.description
 
-        self._setProjectModified()
-        # fileHandling = self._mediator.getFileHandling()
-        # project = fileHandling.getCurrentProject()
-        # if project is not None:
-        #     project.setModified()
 
     # noinspection PyUnusedLocal
     def _evtMethodList(self, event: CommandEvent):

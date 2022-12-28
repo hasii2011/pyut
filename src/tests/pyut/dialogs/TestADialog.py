@@ -192,7 +192,7 @@ class TestADialog(App):
         pyutModel: Union[PyutClass, PyutInterface] = PyutInterface(name='IGato')
         pyutModel.description = 'I describe El Gato Tonto'
         with DlgEditComment(self._frame, eventEngine=self._eventEngine, pyutModel=pyutModel) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 pyutModel.description = dlg.GetValue()
 
         return pyutModel.description
@@ -200,7 +200,7 @@ class TestADialog(App):
     def _testDlgEditUseCase(self):
         pyutUseCase: PyutUseCase = PyutUseCase(name='OzzeeTheWickedGato')
         with DlgEditUseCase(self._frame, useCaseName=pyutUseCase.name) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 pyutUseCase.name = dlg.GetValue()
 
         return pyutUseCase.name
@@ -208,7 +208,7 @@ class TestADialog(App):
     def _testDlgEditActor(self):
         pyutActor: PyutActor = PyutActor(actorName='ActorFran')
         with DlgEditActor(self._frame, actorName=pyutActor.name) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 pyutActor.name = dlg.GetValue()
 
         return pyutActor.name
@@ -220,7 +220,7 @@ class TestADialog(App):
         diagram.title = 'Basic Diagram Title'
 
         with DlgEditDiagramTitle(self._frame, diagramTitle=diagram.title) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 diagram.title = dlg.GetValue()
 
         return diagram.title
@@ -349,7 +349,7 @@ class TestADialog(App):
             ]
         )
         with DlgEditCode(self._frame, ID_ANY, sourceCode) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 return f'Retrieved data: {dlg.sourceCode}'
             else:
                 return f'Cancelled'

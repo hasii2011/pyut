@@ -48,4 +48,3 @@ class DlgEditComment(BaseEditDialog):
 
     def _onTxtDescriptionChange(self, event):
         self._pyutModel.description = event.GetString()
-        self._markCurrentDiagramAsModified()
