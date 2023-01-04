@@ -6,16 +6,17 @@ from logging import getLogger
 
 from wx import Yield as wxYield
 
-from core.IPluginAdapter import IPluginAdapter
-from core.IPluginAdapter import ScreenMetrics
+from pyutplugins.coreinterfaces.IPluginAdapter import IPluginAdapter
+from pyutplugins.coreinterfaces.IPluginAdapter import ScreenMetrics
 
-from core.types.Types import FrameInformationCallback
-from core.types.Types import FrameSizeCallback
-from core.types.Types import OglObjectType
-from core.types.Types import PluginDocument
-from core.types.Types import PluginDocumentType
-from core.types.Types import PluginProject
-from core.types.Types import SelectedOglObjectsCallback
+from pyutplugins.CoreTypes import CurrentProjectCallback
+from pyutplugins.CoreTypes  import FrameInformationCallback
+from pyutplugins.CoreTypes  import FrameSizeCallback
+from pyutplugins.CoreTypes  import OglObjectType
+from pyutplugins.CoreTypes  import PluginDocument
+from pyutplugins.CoreTypes  import PluginDocumentType
+from pyutplugins.CoreTypes import PluginProject
+from pyutplugins.CoreTypes  import SelectedOglObjectsCallback
 
 from pyut.enums.DiagramType import DiagramType
 from pyut.general.PyutVersion import PyutVersion
@@ -121,6 +122,12 @@ class PluginAdapter(IPluginAdapter):
 
         """
         self._eventEngine.sendEvent(EventType.AddShape, shapeToAdd=shape)
+
+    def requestCurrentProject(self, callback: CurrentProjectCallback):
+        self._eventEngine.sendEvent(EventType.RequestCurrentProject, callback=callback)
+
+    def indicatePluginModifiedProject(self):
+        self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def loadProject(self, pluginProject: PluginProject):
         """

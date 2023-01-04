@@ -13,23 +13,21 @@ from sys import platform as sysPlatform
 from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
-from wx import CommandProcessor
-
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_WINDOW_DESTROY
 from wx import FRAME_TOOL_WINDOW
 from wx import EVT_CLOSE
 from wx import FRAME_EX_METAL
 from wx import EVT_ACTIVATE
+from wx import ID_ANY
+from wx import ID_FILE1
 
 from wx import ActivateEvent
 from wx import AcceleratorEntry
 from wx import CommandEvent
 from wx import FileHistory
 from wx import Frame
-from wx import ID_ANY
-from wx import ID_FILE1
-
+from wx import CommandProcessor
 from wx import NewIdRef
 from wx import Point
 from wx import Size
@@ -41,7 +39,7 @@ from wx import WindowDestroyEvent
 
 from wx import Yield as wxYield
 
-from core.PluginManager import PluginManager
+from pyutplugins.PluginManager import PluginManager
 
 from pyut.general.PyutVersion import PyutVersion
 from pyut.ui.Action import Action
@@ -182,7 +180,7 @@ class PyutApplicationFrameV2(Frame):
         self.__setupKeyboardShortcuts()
 
         self._eventEngine.sendEvent(EventType.NewProject)
-        wxYield()       # A hacky way to get the above to act like an method call
+        wxYield()       # A hacky way to get the above to act like a method call
         if self._prefs.centerAppOnStartUp is True:
             self.Center(BOTH)  # Center on the screen
         else:
@@ -231,8 +229,6 @@ class PyutApplicationFrameV2(Frame):
             ourSize: Tuple[int, int] = self.GetSize()
             self._prefs.startupSize = Dimensions(ourSize[0], ourSize[1])
 
-        self._clipboard = None
-        self._mediator  = None
         self._prefs     = cast(PyutPreferences, None)
         self._pluginMgr = cast(PluginManager, None)
         self._pyutUIV2  = cast(PyutUIV2, None)

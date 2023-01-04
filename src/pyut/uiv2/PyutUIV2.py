@@ -47,12 +47,14 @@ from ogl.OglObject import OglObject
 from oglio.Types import OglDocument
 from oglio.Types import OglProject
 
-from core.types.Types import OglObjects
-from core.types.Types import FrameInformation
-from core.types.Types import FrameSize
-from core.types.Types import FrameInformationCallback
-from core.types.Types import FrameSizeCallback
-from core.types.Types import SelectedOglObjectsCallback
+from pyutplugins.CoreTypes import OglObjects
+from pyutplugins.CoreTypes import FrameInformation
+from pyutplugins.CoreTypes import FrameSize
+from pyutplugins.CoreTypes import FrameInformationCallback
+from pyutplugins.CoreTypes import FrameSizeCallback
+from pyutplugins.CoreTypes import SelectedOglObjectsCallback
+from pyutplugins.CoreTypes import CurrentProjectCallback
+from pyutplugins.CoreTypes import PluginProject
 
 from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
@@ -75,9 +77,9 @@ from pyut.ui.umlframes.UmlFrame import UmlObjects
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject
 
-
 from pyut.uiv2.DiagramNotebook import DiagramNotebook
 from pyut.uiv2.LayoutEngine import LayoutEngine
+from pyut.uiv2.PluginProjectCreator import PluginProjectCreator
 from pyut.uiv2.ProjectManager import ProjectManager
 from pyut.uiv2.ProjectManager import PyutProjects
 from pyut.uiv2.ProjectTree import ProjectTree
@@ -109,6 +111,7 @@ from pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT_DIAGRAM
 from pyut.uiv2.eventengine.Events import EVENT_OPEN_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_DELETE_DIAGRAM
 from pyut.uiv2.eventengine.Events import EVENT_REFRESH_FRAME
+from pyut.uiv2.eventengine.Events import EVENT_REQUEST_CURRENT_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from pyut.uiv2.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
@@ -131,6 +134,7 @@ from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 from pyut.uiv2.eventengine.Events import NewProjectEvent
 from pyut.uiv2.eventengine.Events import OpenProjectEvent
 from pyut.uiv2.eventengine.Events import RefreshFrameEvent
+from pyut.uiv2.eventengine.Events import RequestCurrentProjectEvent
 from pyut.uiv2.eventengine.Events import SaveProjectAsEvent
 from pyut.uiv2.eventengine.Events import SaveProjectEvent
 from pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
@@ -216,6 +220,8 @@ class PyutUIV2(SplitterWindow):
         self._eventEngine.registerListener(pyEventBinder=EVENT_FRAME_SIZE,           callback=self._onFrameSize)
         self._eventEngine.registerListener(pyEventBinder=EVENT_SELECTED_OGL_OBJECTS, callback=self._selectedOglObjects)
         self._eventEngine.registerListener(pyEventBinder=EVENT_REFRESH_FRAME,        callback=self._refreshFrame)
+
+        self._eventEngine.registerListener(pyEventBinder=EVENT_REQUEST_CURRENT_PROJECT, callback=self._pluginRequestCurrentProject)
 
     def handleUnsavedProjects(self):
         """
@@ -712,6 +718,15 @@ class PyutUIV2(SplitterWindow):
 
         cb(frameSize)
 
+    def _pluginRequestCurrentProject(self, event: RequestCurrentProjectEvent):
+
+        cb:                   CurrentProjectCallback = event.callback
+        pyutProject:          IPyutProject           = self._projectManager.currentProject
+        pluginProjectCreator: PluginProjectCreator   = PluginProjectCreator()
+        pluginProject:        PluginProject          = pluginProjectCreator.toPluginProject(pyutProject=pyutProject)
+
+        cb(pluginProject)
+
     def _selectedOglObjects(self, event: SelectedOglObjectsEvent):
         umlObjects: UmlObjects = self._projectManager.currentFrame.getUmlObjects()
 
@@ -719,7 +734,7 @@ class PyutUIV2(SplitterWindow):
         if umlObjects is not None:
             for obj in umlObjects:
                 if obj.IsSelected():
-                    from core.types.Types import OglObjectType
+                    from pyutplugins.CoreTypes import OglObjectType
                     selectedObjects.append(cast(OglObjectType, obj))
 
         cb: SelectedOglObjectsCallback = event.callback

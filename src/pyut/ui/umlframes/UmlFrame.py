@@ -203,6 +203,8 @@ class UmlFrame(UmlFrameShapeHandler):
 
     def getUmlObjects(self) -> UmlObjects:
         """
+        TODO:  Make this a property
+
         Retrieve UML objects from the UML Frame
 
         Returns:  The Uml objects on this diagram

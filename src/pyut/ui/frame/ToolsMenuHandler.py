@@ -5,8 +5,9 @@ from logging import getLogger
 from wx import CommandEvent
 from wx import Menu
 
-from core.IPluginAdapter import IPluginAdapter
-from core.PluginManager import PluginManager
+from pyutplugins.coreinterfaces.IPluginAdapter import IPluginAdapter
+
+from pyutplugins.PluginManager import PluginManager
 
 from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 

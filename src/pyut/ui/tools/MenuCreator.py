@@ -25,11 +25,13 @@ from wx import ID_UNDO
 from wx import Menu
 from wx import MenuBar
 
-from core.IOPluginInterface import IOPluginInterface
-from core.PluginManager import PluginManager
-from core.ToolPluginInterface import ToolPluginInterface
-from core.types.PluginDataTypes import PluginIDMap
-from core.types.PluginDataTypes import FormatName
+from pyutplugins.PluginManager import PluginManager
+
+from pyutplugins.coreinterfaces.IOPluginInterface import IOPluginInterface
+from pyutplugins.coreinterfaces.ToolPluginInterface import ToolPluginInterface
+
+from pyutplugins.coretypes.PluginDataTypes import PluginIDMap
+from pyutplugins.coretypes.PluginDataTypes import FormatName
 
 from pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 

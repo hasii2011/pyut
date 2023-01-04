@@ -31,6 +31,7 @@ from pyut.uiv2.eventengine.Events import EditUseCaseEvent
 from pyut.uiv2.eventengine.Events import FrameInformationEvent
 from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
+from pyut.uiv2.eventengine.Events import RequestCurrentProjectEvent
 from pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
 from pyut.uiv2.eventengine.Events import UpdateEditMenuEvent
 from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
@@ -56,7 +57,8 @@ from pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
-from core.types.Types import FrameInformationCallback
+from pyutplugins.CoreTypes import FrameInformationCallback
+from pyutplugins.CoreTypes import CurrentProjectCallback
 
 
 NEW_NAME_PARAMETER:     str = 'newName'
@@ -177,6 +179,8 @@ class EventEngine(IEventEngine):
             case EventType.AssociateEditMenu:
                 self._sendAssociateEditMenuEvent(**kwargs)
 
+            case EventType.RequestCurrentProject:
+                self._sendRequestCurrentProjectEvent(**kwargs)
             case EventType.ClassNameChanged:
                 self._sendClassNameChangedEvent(**kwargs)
 
@@ -345,4 +349,9 @@ class EventEngine(IEventEngine):
         oldClassName: str = kwargs[OLD_CLASS_NAME_PARAMETER]
         newClassName: str = kwargs[NEW_CLASS_NAME_PARAMETER]
         eventToPost: ClassNameChangedEvent =  ClassNameChangedEvent(oldClassName=oldClassName, newClassName=newClassName)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendRequestCurrentProjectEvent(self, **kwargs):
+        callback: CurrentProjectCallback = kwargs[CALLBACK_PARAMETER]
+        eventToPost: RequestCurrentProjectEvent = RequestCurrentProjectEvent(callback=callback)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

@@ -98,7 +98,6 @@ class ProjectManager:
 
         self._defaultProjectNumber = defaultProjectNumber()
 
-
     @property
     def projects(self) -> PyutProjects:
         """

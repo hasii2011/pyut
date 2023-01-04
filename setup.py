@@ -80,9 +80,9 @@ setup(
     install_requires=[
                       'PyGithub==1.55',
                       'wxPython==4.2.0',
-                      'pyutmodel==1.2.0',
-                      'ogl~=0.60.15',
-                      'oglio~=0.5.20',
-                      'pyutplugincore~=0.6.3',
+                      'pyutmodel==1.3.3',
+                      'ogl~=0.60.25',
+                      'oglio~=0.5.40',
+                      'pyutplugins~=0.6.6',
                       ]
 )

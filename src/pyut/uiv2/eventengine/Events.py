@@ -60,7 +60,8 @@ RefreshFrameEvent,             EVENT_REFRESH_FRAME        = NewEvent()
 UpdateEditMenuEvent,    EVENT_UPDATE_EDIT_MENU    = NewEvent()
 AssociateEditMenuEvent, EVENT_ASSOCIATE_EDIT_MENU = NewEvent()
 
-ClassNameChangedEvent, EVENT_CLASS_NAME_CHANGED   = NewEvent()
+ClassNameChangedEvent,       EVENT_CLASS_NAME_CHANGED      = NewEvent()
+RequestCurrentProjectEvent,  EVENT_REQUEST_CURRENT_PROJECT = NewEvent()
 
 class EventType(str, Enum):
     """
@@ -244,4 +245,5 @@ class EventType(str, Enum):
     UpdateEditMenu    = ('UpdateEditMenu',    UpdateEditMenuEvent(),    EVENT_UPDATE_EDIT_MENU)
     AssociateEditMenu = ('AssociateEditMenu', AssociateEditMenuEvent(), EVENT_ASSOCIATE_EDIT_MENU)
 
-    ClassNameChanged  = ('ClassNameChanged', ClassNameChangedEvent, EVENT_CLASS_NAME_CHANGED)
+    ClassNameChanged      = ('ClassNameChanged',      ClassNameChangedEvent(),      EVENT_CLASS_NAME_CHANGED)
+    RequestCurrentProject = ('RequestCurrentProject', RequestCurrentProjectEvent(), EVENT_REQUEST_CURRENT_PROJECT)

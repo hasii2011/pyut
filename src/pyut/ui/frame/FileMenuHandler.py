@@ -33,8 +33,9 @@ from wx import CloseEvent
 from wx import PostEvent as wxPostEvent
 from wx import Yield as wxYield
 
-from core.types.PluginDataTypes import PluginIDMap
-from core.PluginManager import PluginManager
+from pyutplugins.coretypes.PluginDataTypes import PluginIDMap
+
+from pyutplugins.PluginManager import PluginManager
 
 from pyut.PyutUtils import PyutUtils
 from pyut.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
