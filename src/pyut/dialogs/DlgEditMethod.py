@@ -15,7 +15,6 @@ from wx import EVT_TEXT
 from wx import EXPAND
 from wx import HORIZONTAL
 from wx import ID_ANY
-from wx import ID_OK
 from wx import LB_SINGLE
 from wx import OK
 from wx import RA_SPECIFY_ROWS
@@ -362,7 +361,7 @@ class DlgEditMethod(BaseEditDialog):
     def _onMethodCode(self, event: CommandEvent):
         sourceCode: SourceCode = self._pyutMethodCopy.sourceCode
         with DlgEditCode(parent=self, wxID=ID_ANY, sourceCode=sourceCode) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 self.logger.debug(f'Answered Ok')
                 self._pyutMethodCopy.sourceCode = dlg.sourceCode
             else:
@@ -378,7 +377,7 @@ class DlgEditMethod(BaseEditDialog):
         """
         self._pyutMethod.name = self._txtName.GetValue()
         modifiers: PyutModifiers = PyutModifiers([])
-        for aModifier in self._txtModifiers.GetValue().split():
+        for aModifier in self._txtModifiers.GetValue().split(','):
             modifiers.append(PyutModifier(aModifier))
         self._pyutMethod.modifiers = modifiers
 

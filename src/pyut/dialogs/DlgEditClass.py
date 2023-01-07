@@ -5,37 +5,28 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from wx import ALIGN_CENTER
-from wx import ALIGN_CENTER_HORIZONTAL
-from wx import ALIGN_RIGHT
-from wx import ALL
 from wx import CANCEL
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_LISTBOX_DCLICK
-from wx import EXPAND
-from wx import HORIZONTAL
+
 from wx import ICON_ERROR
-from wx import ID_ANY
 from wx import OK
-from wx import VERTICAL
 from wx import LB_SINGLE
 
-from wx import Dialog
 from wx import ListBox
 from wx import MessageDialog
-from wx import TextCtrl
 from wx import Button
-from wx import BoxSizer
-from wx import CheckBox
-from wx import StaticText
 from wx import CommandEvent
 from wx import Window
+from wx import CheckBox
+
+from wx.lib.sized_controls import SizedPanel
+from wx.lib.sized_controls import SizedStaticBox
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutParameter import PyutParameter
-from pyutmodel.PyutStereotype import PyutStereotype
 
 from ogl.OglClass import OglClass
 
@@ -85,101 +76,82 @@ class DlgEditClass(DlgEditClassCommon):
         """
         from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-        self.logger:       Logger       = getLogger(__name__)
-        self._pyutClass:   PyutClass    = pyutClass
-
-        super().__init__(parent=parent, eventEngine=eventEngine, dlgTitle=_("Edit Class"), pyutModel=self._pyutClass, editInterface=False)
-
         assert isinstance(parent, UmlDiagramsFrame), 'Developer error.  Must be a Uml Diagram Frame'
         self._umlFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, parent)
 
-        lblStereotype:       StaticText = StaticText (self, -1, _("Stereotype"))
-        self._txtStereotype: TextCtrl   = TextCtrl(self, ID_TXT_STEREO_TYPE, "", size=(125, -1))
+        self.logger:       Logger       = getLogger(__name__)
+        self._pyutClass:   PyutClass    = pyutClass
 
-        self._szrNameStereotype.Add(lblStereotype, 0, ALL, 5)
-        self._szrNameStereotype.Add(self._txtStereotype, 1, ALIGN_CENTER)
-
-        # Label Fields
-        lblField = StaticText (self, -1, _("Fields :"))
-
-        # ListBox List
-        self._lstFieldList = ListBox(self, ID_LST_FIELD_LIST, choices=[], style=LB_SINGLE)
-        self.Bind(EVT_LISTBOX, self._evtFieldList, id=ID_LST_FIELD_LIST)
-        self.Bind(EVT_LISTBOX_DCLICK, self._evtFieldListDClick, id=ID_LST_FIELD_LIST)
-
-        # Button Add
-        self._btnFieldAdd = Button(self, ID_BTN_FIELD_ADD, _("&Add"))
-        self.Bind(EVT_BUTTON, self._onFieldAdd, id=ID_BTN_FIELD_ADD)
-
-        # Button Edit
-        self._btnFieldEdit = Button(self, ID_BTN_FIELD_EDIT, _("&Edit"))
-        self.Bind(EVT_BUTTON, self._onFieldEdit, id=ID_BTN_FIELD_EDIT)
-
-        # Button Remove
-        self._btnFieldRemove = Button(self, ID_BTN_FIELD_REMOVE, _("&Remove"))
-        self.Bind(EVT_BUTTON, self._onFieldRemove, id=ID_BTN_FIELD_REMOVE)
-
-        # Button Up
-        self._btnFieldUp = Button(self, ID_BTN_FIELD_UP, _("&Up"))
-        self.Bind(EVT_BUTTON, self._onFieldUp, id=ID_BTN_FIELD_UP)
-
-        # Button Down
-        self._btnFieldDown = Button(self, ID_BTN_FIELD_DOWN, _("&Down"))
-        self.Bind(EVT_BUTTON, self._onFieldDown, id=ID_BTN_FIELD_DOWN)
-
-        # Sizer for Fields buttons
-        szrFieldButtons = BoxSizer (HORIZONTAL)
-        szrFieldButtons.Add(self._btnFieldAdd, 0, ALL, 5)
-        szrFieldButtons.Add(self._btnFieldEdit, 0, ALL, 5)
-        szrFieldButtons.Add(self._btnFieldRemove, 0, ALL, 5)
-        szrFieldButtons.Add(self._btnFieldUp, 0, ALL, 5)
-        szrFieldButtons.Add(self._btnFieldDown, 0, ALL, 5)
-
-        szrMethodButtons: BoxSizer = self._createMethodsUIArtifacts()
-
-        self._chkShowStereotype: CheckBox = CheckBox(self, ID_ANY, _("Show stereotype"))    # Show stereotype checkbox
-        self._chkShowFields:     CheckBox = CheckBox(self, ID_ANY, _("Show fields"))        # Show fields checkbox
-        self._chkShowMethods:    CheckBox = CheckBox(self, ID_ANY, _("Show methods"))       # Show methods checkbox
-
-        # Sizer for display properties
-        szrDisplayProperties = BoxSizer (VERTICAL)
-        szrDisplayProperties.Add(self._chkShowStereotype, 0, ALL, 5)
-        szrDisplayProperties.Add(self._chkShowFields,    0, ALL, 5)
-        szrDisplayProperties.Add(self._chkShowMethods,   0, ALL, 5)
-
-        self._szrMain.Add(lblField, 0, ALL, 5)
-        self._szrMain.Add(self._lstFieldList, 1, ALL | EXPAND, 5)
-        self._szrMain.Add(szrFieldButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-
-        self._szrMain.Add(self._lblMethod, 0, ALL, 5)
-        self._szrMain.Add(self._lstMethodList, 1, ALL | EXPAND, 5)
-        self._szrMain.Add(szrMethodButtons, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-
-        self._szrMain.Add(szrDisplayProperties, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        self._szrMain.Add(self._szrButtons, 0, ALL | ALIGN_RIGHT, 5)     # wxPython 4.1.0 Vertical alignment flags are ignored in vertical sizers
-
-        # Fill the txt control with class data
-        self._fillAllControls()
-
-        # Fix buttons (enable or not)
-        self._fixBtnFields()
-        self._fixBtnMethod()
-
-        # Set the focus and selection
-        self._txtName.SetFocus()
-        self._txtName.SetSelection(0, len(self._txtName.GetValue()))
-
-        # Help Pycharm
-        self._dlgMethod: Dialog = cast(Dialog, None)
-        self._szrMain.Fit(self)     # subclasses need to do this
+        super().__init__(parent=parent, eventEngine=eventEngine, dlgTitle="Edit Class", pyutModel=self._pyutClass, editInterface=False)
 
         self._oldClassName: str = pyutClass.name
 
+        sizedPanel: SizedPanel = self.GetContentsPane()
+        sizedPanel.SetSizerProps(expand=True, proportion=1)
+
+        self._lstFieldList: ListBox = cast(ListBox, None)
+        self._btnFieldAdd:    Button = cast(Button, None)
+        self._btnFieldEdit:   Button = cast(Button, None)
+        self._btnFieldRemove: Button = cast(Button, None)
+        self._btnFieldUp:     Button = cast(Button, None)
+        self._btnFieldDown:   Button = cast(Button, None)
+
+        self._createFieldControls(parent=sizedPanel)
+        self._createMethodControls(parent=sizedPanel)
+        self._createMethodButtons(parent=sizedPanel)
+
+        self._fillAllControls()
+        #
+        self._fixBtnFields()
+        self._fixBtnMethod()
+        #
+        self._className.SetFocus()
+        self._className.SetSelection(0, len(self._className.GetValue()))
         self.Centre()
+        self._createButtonContainer(sizedPanel)
+        # a little trick to make sure that you can't resize the dialog to
+        # less screen space than the controls need
+        self.Fit()
+        self.SetMinSize(self.GetSize())
+
+    def _createFieldControls(self, parent: SizedPanel):
+
+        sizedStaticBox: SizedStaticBox = SizedStaticBox(parent, label='Fields:')
+        sizedStaticBox.SetSizerProps(expand=True, proportion=1)
+        sizedStaticBox.SetSizerType('vertical')
+
+        self._lstFieldList = ListBox(sizedStaticBox, ID_LST_FIELD_LIST, choices=[], style=LB_SINGLE)  # size=(-1, 125)
+        self._lstFieldList.SetSizerProps(expand=True, proportion=1)
+
+        btnPanel: SizedPanel = SizedPanel(parent)
+        btnPanel.SetSizerType('horizontal')
+
+        self._btnFieldAdd    = Button(btnPanel, ID_BTN_FIELD_ADD,    '&Add')
+        self._btnFieldEdit   = Button(btnPanel, ID_BTN_FIELD_EDIT,   '&Edit')
+        self._btnFieldRemove = Button(btnPanel, ID_BTN_FIELD_REMOVE, '&Remove')
+        self._btnFieldUp     = Button(btnPanel, ID_BTN_FIELD_UP,     '&Up')
+        self._btnFieldDown   = Button(btnPanel, ID_BTN_FIELD_DOWN,   '&Down')
+
+        self.Bind(EVT_LISTBOX,        self._evtFieldList, id=ID_LST_FIELD_LIST)
+        self.Bind(EVT_LISTBOX_DCLICK, self._evtFieldListDClick, id=ID_LST_FIELD_LIST)
+        self.Bind(EVT_BUTTON, self._onFieldAdd, id=ID_BTN_FIELD_ADD)
+        self.Bind(EVT_BUTTON, self._onFieldEdit, id=ID_BTN_FIELD_EDIT)
+        self.Bind(EVT_BUTTON, self._onFieldRemove, id=ID_BTN_FIELD_REMOVE)
+        self.Bind(EVT_BUTTON, self._onFieldUp, id=ID_BTN_FIELD_UP)
+        self.Bind(EVT_BUTTON, self._onFieldDown, id=ID_BTN_FIELD_DOWN)
+
+    def _createMethodButtons(self, parent: SizedPanel):
+
+        buttonPanel: SizedPanel = SizedPanel(parent)
+        buttonPanel.SetSizerType('horizontal')
+
+        self._chkShowStereotype: CheckBox = CheckBox(buttonPanel, label='Show stereotype')
+        self._chkShowFields:     CheckBox = CheckBox(buttonPanel, label='Show fields')
+        self._chkShowMethods:    CheckBox = CheckBox(buttonPanel, label='Show methods')
 
     def _callDlgEditField(self, field: PyutField) -> int:
         """
-                Dialog for Field editing
+        Dialog for edit a field
 
         Args:
             field:  Field to be edited
@@ -189,9 +161,9 @@ class DlgEditClass(DlgEditClassCommon):
         self._dlgField = DlgEditField(theParent=self, eventEngine=self._eventEngine, fieldToEdit=field)
         return self._dlgField.ShowModal()
 
-    def _dupParams(self, parameters):
+    def _duplicateParameters(self, parameters):
         """
-        Duplicate a list of params, all params are duplicated too.
+        Duplicate the list of param
         """
         dupParams = []
         for parameter in parameters:
@@ -205,16 +177,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         """
         # Fill Class name
-        self._txtName.SetValue(self._pyutModelCopy.name)
-
-        # Fill Stereotype
-        stereotype = cast(PyutClass, self._pyutModelCopy).stereotype
-        if stereotype is None or stereotype.name is None:
-            strStereotype = ""
-        else:
-            strStereotype = stereotype.name
-
-        self._txtStereotype.SetValue(strStereotype)
+        self._className.SetValue(self._pyutModelCopy.name)
 
         # Fill the list controls
         try:
@@ -370,8 +333,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         Activated when button OK is clicked.
         """
-        strStereotype: str = self._txtStereotype.GetValue()
-        self._pyutClass.stereotype = PyutStereotype(strStereotype)
+        # self._pyutClass.stereotype = PyutStereotype(strStereotype)
         # Adds all fields in a list
         self._pyutClass.fields = self._pyutModelCopy.fields
 

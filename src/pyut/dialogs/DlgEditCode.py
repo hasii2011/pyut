@@ -86,12 +86,12 @@ class DlgEditCode(SizedDialog):
         """
         """
         self._sourceCode = SourceCode(self._displayableSourceCode.split(osLineSep))
-        self.SetReturnCode(ID_OK)
-        self.EndModal(ID_OK)
+        self.SetReturnCode(OK)       # TODO Fix this;  should be OK
+        self.EndModal(OK)
 
     # noinspection PyUnusedLocal
     def __onClose(self, event: CommandEvent):
         """
         """
-        self.SetReturnCode(CANCEL)
+        self.SetReturnCode(CANCEL)      # This is correct
         self.EndModal(ID_CANCEL)

@@ -4,24 +4,19 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from wx import ALIGN_CENTER_HORIZONTAL
-from wx import ALIGN_RIGHT
-from wx import ALL
 from wx import CANCEL
-from wx import EXPAND
 from wx import OK
 
-from wx import BoxSizer
 from wx import CommandEvent
 
-from pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
+from wx.lib.sized_controls import SizedPanel
 
 from pyutmodel.PyutInterface import PyutInterface
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
+
+from pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 
 class DlgEditInterface(DlgEditClassCommon):
 
@@ -32,23 +27,23 @@ class DlgEditInterface(DlgEditClassCommon):
         self._pyutInterface:     PyutInterface = pyutInterface
         self._pyutInterfaceCopy: PyutInterface = deepcopy(pyutInterface)
 
-        super().__init__(parent, eventEngine=eventEngine, dlgTitle=_('Edit Interface'), pyutModel=self._pyutInterfaceCopy, editInterface=True)
+        super().__init__(parent, eventEngine=eventEngine, dlgTitle='Edit Interface', pyutModel=self._pyutInterfaceCopy, editInterface=True)
 
         self.logger: Logger = DlgEditInterface.clsLogger
 
-        szrMethodButtons: BoxSizer = self._createMethodsUIArtifacts()
+        sizedPanel: SizedPanel = self.GetContentsPane()
 
-        self._szrMain.Add(self._lblMethod,     0, ALL, 5)
-        self._szrMain.Add(self._lstMethodList, 1, ALL | EXPAND, 5)
-        self._szrMain.Add(szrMethodButtons,    0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-
-        self._szrMain.Add(self._szrButtons, 0, ALL | ALIGN_RIGHT, 5)
+        self._createMethodControls(parent=sizedPanel)
+        self._createButtonContainer(sizedPanel)
 
         # Fill Class name
-        self._txtName.SetValue(self._pyutModelCopy. name)
+        self._className.SetValue(self._pyutModelCopy. name)
         self._fillMethodList()
+        # a little trick to make sure that you can't resize the dialog to
+        # less screen space than the controls need
+        self.Fit()
+        self.SetMinSize(self.GetSize())
 
-        self._szrMain.Fit(self)
 
     # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):

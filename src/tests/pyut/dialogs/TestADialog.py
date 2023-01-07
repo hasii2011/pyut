@@ -33,8 +33,8 @@ from pyut.dialogs.DlgEditField import DlgEditField
 from pyut.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
-from pyut.dialogs.DlgEditStereoTypes import DlgEditStereoTypes
-from pyut.dialogs.DlgEditStereoTypes import PyutStereotype
+from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
+from pyut.dialogs.DlgEditStereotype import PyutStereotype
 from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 from pyut.dialogs.Wrappers import DlgEditActor
 from pyut.dialogs.Wrappers import DlgEditDiagramTitle
@@ -195,7 +195,7 @@ class TestADialog(App):
     def _testDlgEditStereoTypes(self):
         # temp stereotype until model is updated
         pyutStereotype: PyutStereotype = PyutStereotype.METACLASS
-        with DlgEditStereoTypes(self._frame, eventEngine=self._eventEngine, pyutStereotype=pyutStereotype) as dlg:
+        with DlgEditStereotype(self._frame, eventEngine=self._eventEngine, pyutStereotype=pyutStereotype) as dlg:
             if dlg.ShowModal() == OK:
                 return dlg.value
             else:
@@ -287,6 +287,7 @@ class TestADialog(App):
         # Not a notebook
         # noinspection PyTypeChecker
         umlFrame:    UmlClassDiagramsFrame = UmlClassDiagramsFrame(parent=self._frame, eventEngine=self._eventEngine)
+        # ans: str = ''
         with DlgEditClass(parent=umlFrame, pyutClass=pyutClass, eventEngine=self._eventEngine) as dlg:
             if dlg.ShowModal() == OK:
                 classStr: str = (
@@ -294,19 +295,27 @@ class TestADialog(App):
                     f'{pyutClass.description=} '
                     f'stereotype={pyutClass.stereotype} '
                 )
+                if len(pyutClass.fields) > 0:
+                    addedFields: str = ''
+                    for field in pyutClass.fields:
+                        addedFields = f'{addedFields} {field} '
+                    classStr = f'{classStr} Fields: {addedFields}'
+
                 if len(pyutClass.methods) > 0:
                     addedMethods: str = f''
                     for method in pyutClass.methods:
                         addedMethods = f'{addedMethods} {method} '
-                    classStr = f'{classStr} Methods - {addedMethods}'
-                return f'Retrieved data: {classStr}'
+                    classStr = f'{classStr} Methods: {addedMethods}'
+                ans: str = f'Retrieved data: {classStr}'
             else:
                 classStr = (
                     f'{pyutClass.name=} '
                     f'{pyutClass.description=} '
                     f'stereotype={pyutClass.stereotype} '
                 )
-                return f'Cancelled:  {classStr}'
+                ans = f'Cancelled:  {classStr}'
+        umlFrame.Destroy()
+        return ans
 
     def _testDlgEditInterface(self):
 

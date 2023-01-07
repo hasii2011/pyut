@@ -7,41 +7,36 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from wx import ALIGN_CENTER
-from wx import ALIGN_CENTER_HORIZONTAL
-from wx import ALL
-from wx import CAPTION
 from wx import EVT_BUTTON
 from wx import EVT_LISTBOX
 from wx import EVT_LISTBOX_DCLICK
 from wx import EVT_TEXT
-from wx import HORIZONTAL
 from wx import ID_ANY
 from wx import LB_SINGLE
 from wx import OK
 from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
-from wx import VERTICAL
-
-from wx import BoxSizer
 from wx import Button
 from wx import ListBox
 from wx import CommandEvent
-from wx import Dialog
 from wx import StaticText
 from wx import TextCtrl
+from wx import ID_OK
+from wx import ID_CANCEL
+from wx import DEFAULT_DIALOG_STYLE
 
-from pyut.PyutUtils import PyutUtils
+from wx.lib.sized_controls import SizedDialog
+from wx.lib.sized_controls import SizedPanel
+from wx.lib.sized_controls import SizedStaticBox
 
 from pyut.dialogs.DlgEditDescription import DlgEditDescription
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface
 from pyutmodel.PyutMethod import PyutMethod
-
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
+from pyutmodel.PyutStereotype import PyutStereotype
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -51,18 +46,8 @@ from pyut.uiv2.eventengine.Events import EventType
 
 CommonClassType = Union[PyutClass, PyutInterface]
 
-[
-    ID_TEXT_NAME,
-    ID_BTN_DESCRIPTION,
-    ID_BTN_OK,
-    ID_BTN_CANCEL,
-    ID_BTN_METHOD_ADD, ID_BTN_METHOD_EDIT, ID_BTN_METHOD_REMOVE,
-    ID_BTN_METHOD_UP, ID_BTN_METHOD_DOWN, ID_LST_METHOD_LIST,
 
-] = PyutUtils.assignID(10)
-
-
-class DlgEditClassCommon(Dialog):
+class DlgEditClassCommon(SizedDialog):
     """
     This parent class is responsible for the comment attributes that Classes and Interfaces share.
     These are
@@ -80,9 +65,9 @@ class DlgEditClassCommon(Dialog):
 
     def __init__(self, parent, eventEngine: IEventEngine, dlgTitle: str, pyutModel: Union[PyutClass, PyutInterface], editInterface: bool = False,):
 
-        super().__init__(parent, ID_ANY, dlgTitle, style=RESIZE_BORDER | CAPTION | STAY_ON_TOP)
+        super().__init__(parent, ID_ANY, dlgTitle, style=RESIZE_BORDER | STAY_ON_TOP | DEFAULT_DIALOG_STYLE)
 
-        self._parent = parent   # TODO  Do I really need to stash this
+        self._parent = parent   #
 
         self.logger:         Logger       = DlgEditClassCommon.clsLogger
         self._editInterface: bool         = editInterface
@@ -91,97 +76,90 @@ class DlgEditClassCommon(Dialog):
         self._pyutModel:     CommonClassType = pyutModel
         self._pyutModelCopy: CommonClassType = deepcopy(pyutModel)
 
-        self.SetAutoLayout(True)
+        sizedPanel: SizedPanel = self.GetContentsPane()
+        sizedPanel.SetSizerType('vertical')
 
-        if editInterface is True:
-            lbl: str = _('Interface Name')
-        else:
-            lbl = _('Class Name')
+        self._createNameControls(parent=sizedPanel, editInterface=editInterface)
 
-        lblName:       StaticText = StaticText (self, ID_ANY, lbl)
-        self._txtName: TextCtrl   = TextCtrl(self, ID_TEXT_NAME, "", size=(125, -1))
-
-        # text events
-        self.Bind(EVT_TEXT, self._onNameChange, id=ID_TEXT_NAME)
-
-        # Name and Stereotype sizer
-        self._szrNameStereotype: BoxSizer = BoxSizer(HORIZONTAL)
-
-        self._szrNameStereotype.Add(lblName, 0, ALL | ALIGN_CENTER, 5)
-        self._szrNameStereotype.Add(self._txtName, 1, ALIGN_CENTER)
+        self._lstMethodList:   ListBox = cast(ListBox, None)
+        self._btnMethodAdd:    Button = cast(Button, None)
+        self._btnMethodEdit:   Button = cast(Button, None)
+        self._btnMethodRemove: Button = cast(Button, None)
+        self._btnMethodUp:     Button = cast(Button, None)
+        self._btnMethodDown:   Button = cast(Button, None)
 
         self._btnOk:          Button = cast(Button, None)
         self._btnCancel:      Button = cast(Button, None)
         self._btnDescription: Button = cast(Button, None)
-        self._szrButtons: BoxSizer = self.createButtonContainer()
+        self._btnStereotype:  Button = cast(Button, None)
 
-        self._szrMain: BoxSizer = BoxSizer(VERTICAL)
+    def _createNameControls(self, parent: SizedPanel, editInterface: bool, ):
 
-        self._szrMain.Add(self._szrNameStereotype, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
+        if editInterface is True:
+            lbl: str = 'Interface Name:'
+        else:
+            lbl = 'Class Name:'
 
-        self.SetSizer(self._szrMain)
+        namePanel: SizedPanel = SizedPanel(parent)
+        namePanel.SetSizerType('horizontal')
 
-    def createButtonContainer(self) -> BoxSizer:
+        StaticText(namePanel, label=lbl)
+        self._className: TextCtrl = TextCtrl(namePanel, value='', size=(250, -1))  #
+
+        self.Bind(EVT_TEXT, self._onNameChange, self._className)
+
+    def _createButtonContainer(self, parent: SizedPanel):
         """
-        Create Ok, Cancel and description buttons
+        Create Ok, Cancel, stereotype and description buttons;
+        since we want to use a custom button layout, we won't use the
+        CreateStdDialogBtnSizer here, we'll just create our own panel with
+        a horizontal layout and add the buttons to that;`
+
         Returns:  The container
         """
+        sizedPanel: SizedPanel = SizedPanel(parent)
+        sizedPanel.SetSizerType('horizontal')
+        sizedPanel.SetSizerProps(expand=True, proportion=1, halign='right')
+
         # Buttons OK, cancel and description
-        self._btnOk = Button(self, ID_BTN_OK, _("&Ok"))
-        self.Bind(EVT_BUTTON, self._onOk, id=ID_BTN_OK)
+        if self._editInterface is False:
+            self._btnStereotype = Button(sizedPanel, label='&Stereotype')
+            self.Bind(EVT_BUTTON, self._onStereotype, self._btnStereotype)
+
+        self._btnDescription = Button(sizedPanel, label="&Description...")
+        self._btnOk          = Button(sizedPanel, ID_OK, '&Ok')
+        self._btnCancel      = Button(sizedPanel, ID_CANCEL, '&Cancel')
+
+        self.Bind(EVT_BUTTON, self._onOk,          self._btnOk)
+        self.Bind(EVT_BUTTON, self._onCancel,      self._btnCancel)
+        self.Bind(EVT_BUTTON, self._onDescription, self._btnDescription)
         self._btnOk.SetDefault()
 
-        self._btnCancel = Button(self, ID_BTN_CANCEL, _("&Cancel"))
-        self.Bind(EVT_BUTTON, self._onCancel, id=ID_BTN_CANCEL)
+    def _createMethodControls(self, parent: SizedPanel):
 
-        self._btnDescription = Button(self, ID_BTN_DESCRIPTION, _("&Description..."))
-        self.Bind(EVT_BUTTON, self._onDescription, id=ID_BTN_DESCRIPTION)
+        sizedStaticBox: SizedStaticBox = SizedStaticBox(parent, label='Methods:')
+        sizedStaticBox.SetSizerProps(expand=True, proportion=1)
+        sizedStaticBox.SetSizerType('horizontal')
 
-        szrButtons: BoxSizer = BoxSizer (HORIZONTAL)
-        szrButtons.Add(self._btnDescription, 0, ALL, 5)
-        szrButtons.Add(self._btnOk, 0, ALL, 5)
-        szrButtons.Add(self._btnCancel, 0, ALL, 5)
+        self._lstMethodList = ListBox(sizedStaticBox, choices=[], style=LB_SINGLE)  # size=(-1, 125)
+        self._lstMethodList.SetSizerProps(expand=True, proportion=1)
 
-        return szrButtons
+        btnPanel: SizedPanel = SizedPanel(parent)
+        btnPanel.SetSizerType('horizontal')
+        self._btnMethodAdd    = Button(btnPanel, label='A&dd')
+        self._btnMethodEdit   = Button(btnPanel, label='Ed&it')
+        self._btnMethodRemove = Button(btnPanel, label='Re&move')
+        self._btnMethodUp     = Button(btnPanel, label='U&p')
+        self._btnMethodDown   = Button(btnPanel, label='Do&wn')
 
-    def _createMethodsUIArtifacts(self) -> BoxSizer:
+        self.Bind(EVT_LISTBOX,        self._evtMethodList,       self._lstMethodList)
+        self.Bind(EVT_LISTBOX_DCLICK, self._evtMethodListDClick, self._lstMethodList)
 
-        self._lblMethod = StaticText (self, ID_ANY, _("Methods:"))
-
-        self._lstMethodList: ListBox = ListBox(self, ID_LST_METHOD_LIST, choices=[], style=LB_SINGLE)
-        self.Bind(EVT_LISTBOX,        self._evtMethodList,       id=ID_LST_METHOD_LIST)
-        self.Bind(EVT_LISTBOX_DCLICK, self._evtMethodListDClick, id=ID_LST_METHOD_LIST)
-
-        # Button Add
-        self._btnMethodAdd = Button(self, ID_BTN_METHOD_ADD, _("A&dd"))
-        self.Bind(EVT_BUTTON, self._onMethodAdd, id=ID_BTN_METHOD_ADD)
-
-        # Button Edit
-        self._btnMethodEdit = Button(self, ID_BTN_METHOD_EDIT, _("Ed&it"))
-        self.Bind(EVT_BUTTON, self._onMethodEdit, id=ID_BTN_METHOD_EDIT)
-
-        # Button Remove
-        self._btnMethodRemove = Button(self, ID_BTN_METHOD_REMOVE, _("Re&move"))
-        self.Bind(EVT_BUTTON, self._onMethodRemove, id=ID_BTN_METHOD_REMOVE)
-
-        # Button Up
-        self._btnMethodUp = Button(self, ID_BTN_METHOD_UP, _("U&p"))
-        self.Bind(EVT_BUTTON, self._onMethodUp, id=ID_BTN_METHOD_UP)
-
-        # Button Down
-        self._btnMethodDown = Button(self, ID_BTN_METHOD_DOWN, _("Do&wn"))
-        self.Bind(EVT_BUTTON, self._onMethodDown, id=ID_BTN_METHOD_DOWN)
-
-        # Sizer for Methods buttons
-        szrMethodButtons: BoxSizer = BoxSizer (HORIZONTAL)
-
-        szrMethodButtons.Add(self._btnMethodAdd, 0, ALL, 5)
-        szrMethodButtons.Add(self._btnMethodEdit, 0, ALL, 5)
-        szrMethodButtons.Add(self._btnMethodRemove, 0, ALL, 5)
-        szrMethodButtons.Add(self._btnMethodUp, 0, ALL, 5)
-        szrMethodButtons.Add(self._btnMethodDown, 0, ALL, 5)
-
-        return szrMethodButtons
+        self.Bind(EVT_BUTTON, self._onMethodAdd,    self._btnMethodAdd)
+        self.Bind(EVT_BUTTON, self._onMethodEdit,   self._btnMethodEdit)
+        self.Bind(EVT_BUTTON, self._onMethodRemove, self._btnMethodRemove)
+        self.Bind(EVT_BUTTON, self._onMethodUp,     self._btnMethodUp)
+        self.Bind(EVT_BUTTON, self._onMethodDown,   self._btnMethodDown)
 
     def _fillMethodList(self):
 
@@ -203,7 +181,6 @@ class DlgEditClassCommon(Dialog):
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
             else:
                 self._pyutModelCopy.description = self._pyutModel.description
-
 
     # noinspection PyUnusedLocal
     def _evtMethodList(self, event: CommandEvent):
@@ -338,8 +315,23 @@ class DlgEditClassCommon(Dialog):
             editInterface: bool = True
         else:
             editInterface = False
-        self._dlgMethod: DlgEditMethod = DlgEditMethod(parent=self, eventEngine=self._eventEngine, pyutMethod=methodToEdit, editInterface=editInterface,)
-        return self._dlgMethod.ShowModal()
+        with DlgEditMethod(parent=self, eventEngine=self._eventEngine, pyutMethod=methodToEdit, editInterface=editInterface) as dlg:
+            return dlg.ShowModal()
+
+    # noinspection PyUnusedLocal
+    def _onStereotype(self, event: CommandEvent):
+        """
+        Do the funky type casting to quiet mypy;  Eventually, the data model will be updated
+        See: https://github.com/hasii2011/pyutmodel/issues/14
+
+        Args:
+            event:
+
+        """
+        stereotype: PyutStereotype = cast(PyutClass, self._pyutModelCopy).stereotype
+        with DlgEditStereotype(parent=self._parent, eventEngine=self._eventEngine, pyutStereotype=stereotype) as dlg:
+            if dlg.ShowModal() == OK:
+                cast(PyutClass, self._pyutModelCopy).stereotype = dlg.value
 
     # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):
@@ -352,6 +344,11 @@ class DlgEditClassCommon(Dialog):
 
     # noinspection PyUnusedLocal
     def _onCancel(self, event: CommandEvent):
+        """
+        Called when the Cancel button is pressed;  Subclasses must implement
+        Args:
+            event:
+        """
         pass
 
     def _setProjectModified(self):
