@@ -118,7 +118,7 @@ class DlgEditClassCommon(SizedDialog):
         """
         sizedPanel: SizedPanel = SizedPanel(parent)
         sizedPanel.SetSizerType('horizontal')
-        sizedPanel.SetSizerProps(expand=True, proportion=1, halign='right')
+        sizedPanel.SetSizerProps(expand=False, halign='right')  # expand False allows aligning right
 
         # Buttons OK, cancel and description
         if self._editInterface is False:

@@ -37,7 +37,7 @@ from wx.lib.sized_controls import SizedPanel
 from wx.lib.sized_controls import SizedStaticBox
 
 from pyutmodel.PyutMethod import PyutMethod
-from pyutmodel.PyutMethod import PyutModifiers
+
 from pyutmodel.PyutMethod import SourceCode
 
 from pyutmodel.PyutParameter import PyutParameter
@@ -45,6 +45,7 @@ from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 from pyut.dialogs.DlgEditCode import DlgEditCode
+from pyut.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
 
 
@@ -71,9 +72,11 @@ class DlgEditMethod(SizedDialog):
 
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerType('vertical')
-        self._createMethodInformation(parent=sizedPanel)
-        self._createParameterControls(parent=sizedPanel)
-        self._createCustomDialogButtons(parent=sizedPanel)
+        # sizedPanel.SetSizerProps(expand=False)  # Avoid extra space at bottom of dialog
+
+        self._layoutMethodInformation(parent=sizedPanel)
+        self._layoutParameterControls(parent=sizedPanel)
+        self._layoutCustomDialogButtons(parent=sizedPanel)
 
         self._initializeDataInControls()
         self._fixBtnDlgMethods()
@@ -100,11 +103,11 @@ class DlgEditMethod(SizedDialog):
         for i in self._pyutMethodCopy.parameters:
             self._lstParams.Append(str(i))
 
-    def _createMethodInformation(self, parent: SizedPanel):
+    def _layoutMethodInformation(self, parent: SizedPanel):
 
         infoPanel: SizedPanel = SizedPanel(parent)
         infoPanel.SetSizerType('horizontal')
-        self._createMethodVisibility(infoPanel)
+        self._layoutMethodVisibility(infoPanel)
 
         methodPanel: SizedPanel = SizedPanel(infoPanel)
         methodPanel.SetSizerType("grid", {"cols":2}) # 2-column grid layout
@@ -116,17 +119,18 @@ class DlgEditMethod(SizedDialog):
         self._txtName   = TextCtrl(methodPanel, value="", size=(125, -1))
         self._txtReturn = TextCtrl(methodPanel, value="", size=(125, -1))
 
-        self._btnModifiers = Button(parent, label='&Modifiers...')
+        if self._editInterface is False:
+            self._btnModifiers = Button(parent, label='&Modifiers...')
+            self.Bind(EVT_BUTTON, self._onModifiers, self._btnModifiers)
 
         self.Bind(EVT_TEXT, self._evtMethodText, self._txtName)
-        self.Bind(EVT_BUTTON, self._onModifiers, self._btnModifiers)
 
-    def _createMethodVisibility(self, parent: SizedPanel):
+    def _layoutMethodVisibility(self, parent: SizedPanel):
 
         if self._editInterface is False:
             self._rdbVisibility = RadioBox(parent, ID_ANY, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
 
-    def _createParameterControls(self, parent: SizedPanel):
+    def _layoutParameterControls(self, parent: SizedPanel):
         """
         This layout code is duplicated 3 times, Field, methods, parameters
         TODO:  Find a way to keep DRY
@@ -156,8 +160,7 @@ class DlgEditMethod(SizedDialog):
         self.Bind(EVT_BUTTON, self._onParameterUp,     self._btnParamUp)
         self.Bind(EVT_BUTTON, self._onParameterDown,   self._btnParamDown)
 
-
-    def _createCustomDialogButtons(self, parent:SizedPanel):
+    def _layoutCustomDialogButtons(self, parent: SizedPanel):
         """
         Override the base class
         Create Ok, Cancel and Code buttons;
@@ -170,9 +173,8 @@ class DlgEditMethod(SizedDialog):
         """
         sizedPanel: SizedPanel = SizedPanel(parent)
         sizedPanel.SetSizerType('horizontal')
-        sizedPanel.SetSizerProps(expand=True, proportion=1, halign='right')
-
-        # Buttons OK, cancel and code
+        sizedPanel.SetSizerProps(expand=False, halign='right')  # expand False allows aligning right
+        # Buttons OK, Cancel and Code
         if self._editInterface is False:
             self._btnCode = Button(sizedPanel, label='&Code')
             self.Bind(EVT_BUTTON, self._onMethodCode, self._btnCode)
@@ -184,7 +186,6 @@ class DlgEditMethod(SizedDialog):
         self.Bind(EVT_BUTTON, self._onCancel, self._btnCancel)
 
         self._btnOk.SetDefault()
-
 
     # noinspection PyUnusedLocal
     def _evtMethodText (self, event: Event):
@@ -308,7 +309,10 @@ class DlgEditMethod(SizedDialog):
 
     # noinspection PyUnusedLocal
     def _onModifiers(self, event: CommandEvent):
-        self.logger.warning(f'Do not forget to invoke the Modifier dialog')
+
+        with DlgEditMethodModifiers(parent=self, pyutModifiers=self._pyutMethodCopy.modifiers) as dlg:
+            if dlg.ShowModal() == OK:
+                self._pyutMethodCopy.modifiers = dlg.pyutModifiers
 
     # noinspection PyUnusedLocal
     def _onMethodCode(self, event: CommandEvent):
@@ -329,11 +333,8 @@ class DlgEditMethod(SizedDialog):
             event:
         """
         self._pyutMethod.name = self._txtName.GetValue()
-        modifiers: PyutModifiers = PyutModifiers([])
 
-        # for aModifier in self._txtModifiers.GetValue().split(','):
-        #     modifiers.append(PyutModifier(aModifier))
-        self._pyutMethod.modifiers = modifiers
+        self._pyutMethod.modifiers = self._pyutMethodCopy.modifiers
 
         returnType: PyutType = PyutType(self._txtReturn.GetValue())
         self._pyutMethod.returnType = returnType

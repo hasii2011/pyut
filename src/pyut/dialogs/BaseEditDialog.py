@@ -1,6 +1,6 @@
 
 from wx import CANCEL
-from wx import CAPTION
+from wx import DEFAULT_DIALOG_STYLE
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import ID_CANCEL
@@ -25,11 +25,11 @@ class BaseEditDialog(SizedDialog):
     """
     def __init__(self, parent, title=''):
 
-        style: int = RESIZE_BORDER | CAPTION | STAY_ON_TOP
+        style: int = RESIZE_BORDER | STAY_ON_TOP | DEFAULT_DIALOG_STYLE
 
         super().__init__(parent, title=title, style=style)
 
-    def _createStandardOkCancelButtonSizer(self):
+    def _layoutStandardOkCancelButtonSizer(self):
         """
         Call this last when creating controls;  Will take care of
         adding callbacks for the Ok and Cancel buttons

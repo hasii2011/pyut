@@ -45,7 +45,7 @@ class DlgEditText(BaseEditDialog):
         self._txtCtrl.SetSizerProps(expand=True, proportion=1)
         self._txtCtrl.SetFocus()
 
-        self._createStandardOkCancelButtonSizer()
+        self._layoutStandardOkCancelButtonSizer()
 
         self.Bind(EVT_TEXT, self._onTextLineChange, self._txtCtrl)
 

@@ -41,7 +41,7 @@ class DlgEditNote(BaseEditDialog):
         self._txtCtrl: TextCtrl = TextCtrl(sizedPanel, value=self._pyutNote.content, size=(400, 180), style=TE_MULTILINE)
         self._txtCtrl.SetFocus()
 
-        self._createStandardOkCancelButtonSizer()
+        self._layoutStandardOkCancelButtonSizer()
 
         self.Bind(EVT_TEXT, self._onTxtNoteChange, self._txtCtrl)
 

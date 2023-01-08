@@ -18,8 +18,6 @@ from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-
 from pyutmodel.PyutStereotype import PyutStereotype
 
 from pyut.dialogs.BaseEditDialog import BaseEditDialog
@@ -44,6 +42,7 @@ class DlgEditStereotype(BaseEditDialog):
         classStereoTypes:         List[str] = [enum.value for enum in PyutStereotype]
         self._label:              StaticText = StaticText(panel, label='Stereotypes')
         self._stereoTypeSelector: ListBox    = ListBox(panel, choices=classStereoTypes)
+        self._stereoTypeSelector.SetSizerProps(proportion=1, expand=True)
 
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(OK | CANCEL))
 

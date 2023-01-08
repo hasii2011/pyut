@@ -36,6 +36,7 @@ from pyut.dialogs.DlgEditField import DlgEditField
 from pyut.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.dialogs.DlgEditLink import DlgEditLink
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
 from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
 from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
@@ -101,6 +102,7 @@ class TestADialog(App):
 
         super().__init__(redirect)
 
+
     def OnInit(self):
 
         TestBase.setUpLogging()
@@ -161,6 +163,8 @@ class TestADialog(App):
 
         dlgAnswer: str = 'No dialog invoked'
         match dlgName:
+            case DialogNamesEnum.DLG_EDIT_METHOD_MODIFIERS:
+                dlgAnswer = self._testDlgEditMethodModifiers()
             case DialogNamesEnum.DLG_EDIT_LINK:
                 dlgAnswer = self._testDlgEditLink()
             case DialogNamesEnum.DLG_EDIT_STEREOTYPES:
@@ -198,6 +202,14 @@ class TestADialog(App):
 
         self.logger.warning(f'{dlgAnswer=}')
 
+    def _testDlgEditMethodModifiers(self):
+        pyutModifiers: PyutModifiers = PyutModifiers(
+            [PyutModifier('static'), PyutModifier('abstract'), PyutModifier('virtual'), ]
+        )
+        with DlgEditMethodModifiers(parent=self._frame, pyutModifiers=pyutModifiers) as dlg:
+            if dlg.ShowModal() == OK:
+                return f'{dlg.pyutModifiers}'
+
     def _testDlgEditLink(self):
         srcClass: PyutClass = PyutClass(name='Source Class')
         dstClass: PyutClass = PyutClass(name='Destination Class')
@@ -213,6 +225,7 @@ class TestADialog(App):
                 return f'{pyutLink.sourceCardinality=} {pyutLink.destinationCardinality=} relationship: {pyutLink.name}'
             else:
                 return 'No change'
+
     def _testDlgEditStereotype(self):
 
         pyutStereotype: PyutStereotype = PyutStereotype.METACLASS
