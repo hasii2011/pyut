@@ -37,7 +37,7 @@ class GeneralPreferences(BaseSubPreference):
         ORG_DIRECTORY:             '.',
         LAST_DIRECTORY:            '.',
         SHOW_TIPS_ON_STARTUP:      'False',
-        LOAD_LAST_OPENED_PROJECT:  'True',
+        LOAD_LAST_OPENED_PROJECT:  'False',
         DISPLAY_PROJECT_EXTENSION: 'False',
         AUTO_RESIZE_SHAPE_ON_EDIT: 'True',
         FULL_SCREEN:               'False',
