@@ -641,8 +641,10 @@ class PyutUIV2(SplitterWindow):
         umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
 
         self.logger.debug(f"Edit: {pyutNote}")
-        with DlgEditNote(umlFrame, eventEngine=self._eventEngine, pyutNote=pyutNote) as dlg:
+        with DlgEditNote(umlFrame, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == ID_OK:
+                self._setProjectModified()
+
                 umlFrame.Refresh()
 
     def _onEditText(self, event: EditTextEvent):
@@ -650,8 +652,9 @@ class PyutUIV2(SplitterWindow):
         umlFrame: UmlDiagramsFrame = self._projectManager.currentFrame
 
         self.logger.debug(f"Edit: {pyutText}")
-        with DlgEditText(umlFrame, eventEngine=self._eventEngine, pyutText=pyutText) as dlg:
+        with DlgEditText(umlFrame, pyutText=pyutText) as dlg:
             if dlg.ShowModal() == ID_OK:
+                self._setProjectModified()
                 umlFrame.Refresh()
 
     def _onEditActor(self, event: EditActorEvent):

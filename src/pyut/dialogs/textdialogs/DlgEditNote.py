@@ -5,13 +5,12 @@ from wx import TE_MULTILINE
 from wx import CommandEvent
 from wx import TextCtrl
 from wx import Window
-from wx.lib.sized_controls import SizedPanel
 
-from pyut.dialogs.BaseEditDialog import BaseEditDialog
+from wx.lib.sized_controls import SizedPanel
 
 from pyutmodel.PyutNote import PyutNote
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.dialogs.BaseEditDialog import BaseEditDialog
 
 
 class DlgEditNote(BaseEditDialog):
@@ -26,15 +25,14 @@ class DlgEditNote(BaseEditDialog):
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     """
-    def __init__(self, parent: Window, eventEngine: IEventEngine, pyutNote: PyutNote):
+    def __init__(self, parent: Window, pyutNote: PyutNote):
         """
 
         Args:
             parent:      parent window to center on
-            eventEngine:
             pyutNote:    Model object we are editing
         """
-        super().__init__(parent, eventEngine=eventEngine, title="Edit Note")
+        super().__init__(parent, title="Edit Note")
 
         self._pyutNote: PyutNote = pyutNote
 
@@ -57,4 +55,3 @@ class DlgEditNote(BaseEditDialog):
             event:
         """
         self._pyutNote.content = event.GetString()
-        self._markCurrentDiagramAsModified()

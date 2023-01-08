@@ -12,8 +12,6 @@ from pyut.dialogs.BaseEditDialog import BaseEditDialog
 
 from pyutmodel.PyutText import PyutText
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-
 
 class DlgEditText(BaseEditDialog):
     """
@@ -30,15 +28,14 @@ class DlgEditText(BaseEditDialog):
                 return f'Cancelled'
 
     """
-    def __init__(self, parent: Window, eventEngine: IEventEngine, pyutText: PyutText):
+    def __init__(self, parent: Window, pyutText: PyutText):
         """
 
         Args:
             parent:             parent window to center on
-            eventEngine
             pyutText:           Model object we are editing
         """
-        super().__init__(parent, eventEngine=eventEngine, title='Diagram Text')
+        super().__init__(parent, title='Diagram Text')
 
         sizedPanel: SizedPanel = self.GetContentsPane()
 
@@ -62,4 +59,3 @@ class DlgEditText(BaseEditDialog):
             event:
         """
         self.pyutText.content = event.GetString()
-        self._markCurrentDiagramAsModified()

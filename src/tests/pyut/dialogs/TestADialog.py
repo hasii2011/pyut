@@ -75,6 +75,7 @@ from pyut.uiv2.eventengine.EventEngine import EventEngine
 from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
 from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
 from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
+from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -215,7 +216,7 @@ class TestADialog(App):
     def _testDlgEditStereotype(self):
 
         pyutStereotype: PyutStereotype = PyutStereotype.METACLASS
-        with DlgEditStereotype(self._frame, eventEngine=self._eventEngine, pyutStereotype=pyutStereotype) as dlg:
+        with DlgEditStereotype(self._frame, pyutStereotype=pyutStereotype) as dlg:
             if dlg.ShowModal() == OK:
                 return dlg.value
             else:
@@ -224,7 +225,7 @@ class TestADialog(App):
     def _testDlgEditDescription(self):
         pyutModel: Union[PyutClass, PyutInterface] = PyutInterface(name='IGato')
         pyutModel.description = 'I describe El Gato Tonto'
-        with DlgEditDescription(self._frame, eventEngine=self._eventEngine, pyutModel=pyutModel) as dlg:
+        with DlgEditDescription(self._frame, pyutModel=pyutModel) as dlg:
             if dlg.ShowModal() == OK:
                 pyutModel.description = dlg.GetValue()
 
@@ -261,25 +262,28 @@ class TestADialog(App):
     def _testDlgEditText(self) -> str:
 
         pyutText: PyutText = PyutText()
-        with DlgEditText(parent=self._frame, eventEngine=self._eventEngine, pyutText=pyutText) as dlg:
+        with DlgEditText(parent=self._frame, pyutText=pyutText) as dlg:
 
             if dlg.ShowModal() == OK:
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
                 return f'Retrieved data: {pyutText.content=}'
+
             else:
                 return f'Cancelled'
 
     def _testDlgEditNote(self) -> str:
 
         pyutNote: PyutNote = PyutNote(noteText=self._preferences.noteText)
-        with DlgEditNote(parent=self._frame, eventEngine=self._eventEngine, pyutNote=pyutNote) as dlg:
+        with DlgEditNote(parent=self._frame, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == OK:
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
                 return f'Retrieved data: {pyutNote.content=}'
             else:
                 return f'Cancelled'
 
     def _testDlgEditField(self) -> str:
         pyutField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
-        with DlgEditField(theParent=self._frame, eventEngine=self._eventEngine, fieldToEdit=pyutField) as dlg:
+        with DlgEditField(theParent=self._frame, fieldToEdit=pyutField) as dlg:
             if dlg.ShowModal() == OK:
                 return f'{pyutField=}'
             else:
@@ -294,8 +298,8 @@ class TestADialog(App):
                 return f'Cancelled'
 
     def _testDlgEditParameter(self) -> str:
-        pyutParameter: PyutParameter = PyutParameter()
-        with DlgEditParameter(parent=self._frame, eventEngine=self._eventEngine, parameterToEdit=pyutParameter) as dlg:
+        pyutParameter: PyutParameter = PyutParameter(name='testParameter', parameterType=PyutType("int"), defaultValue='42')
+        with DlgEditParameter(parent=self._frame, parameterToEdit=pyutParameter) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutParameter}'
             else:
@@ -348,8 +352,12 @@ class TestADialog(App):
 
     def _testDlgEditMethod(self):
         pyutMethod:     PyutMethod    = PyutMethod(name='OzzeeMethod')
-        pyutParameter: PyutParameter = PyutParameter(name='testMethod', parameterType=PyutType("int"), defaultValue=42)
+        pyutParameter:  PyutParameter = PyutParameter(name='intParameter',  parameterType=PyutType("int"), defaultValue='42')
+        floatParameter: PyutParameter = PyutParameter(name='floatParameter', parameterType=PyutType("float"), defaultValue='1.0')
+        boolParameter:  PyutParameter = PyutParameter(name='boolParameter',  parameterType=PyutType("bool"), defaultValue='False')
         pyutMethod.addParameter(pyutParameter)
+        pyutMethod.addParameter(floatParameter)
+        pyutMethod.addParameter(boolParameter)
         pyutMethod.modifiers = PyutModifiers(
             [
                 PyutModifier('modifier1'),
@@ -368,7 +376,7 @@ class TestADialog(App):
         )
         savePreference: DisplayMethodParameters = PyutMethod.displayParameters
         PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
-        with DlgEditMethod(parent=self._frame, eventEngine=self._eventEngine, pyutMethod=pyutMethod) as dlg:
+        with DlgEditMethod(parent=self._frame, pyutMethod=pyutMethod) as dlg:
             ans = dlg.ShowModal()
 
             if ans == OK:
@@ -405,7 +413,7 @@ class TestADialog(App):
 
     # noinspection PyUnusedLocal
     def _onDiagramModified(self, event: UMLDiagramModifiedEvent):
-        self.logger.info(f'Diagram was modified')
+        self.logger.warning(f'Diagram was modified')
 
     def _onClassNameChanged(self, event: ClassNameChangedEvent):
 

@@ -5,7 +5,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from wx import ID_OK
+from wx import OK
 
 from pyutmodel.PyutActor import PyutActor
 from pyutmodel.PyutClass import PyutClass
@@ -113,7 +113,7 @@ class EditObjectHandler:
     def _editClass(self, umlFrame: 'UmlDiagramsFrame', diagramShape: OglObject):
         pyutClass: PyutClass = diagramShape.pyutObject
         with DlgEditClass(umlFrame, self._eventEngine, pyutClass) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 self._autoResize(umlFrame, diagramShape)
                 # This dialog sends the modified event
 
@@ -122,7 +122,7 @@ class EditObjectHandler:
         pyutInterface: PyutInterface = lollipop.pyutInterface
 
         with DlgEditInterface(umlFrame, self._eventEngine, pyutInterface) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 self.logger.info(f'{pyutInterface=}')
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
@@ -131,20 +131,22 @@ class EditObjectHandler:
         oglText:  OglText  = cast(OglText, diagramShape)
         pyutText: PyutText = oglText.pyutText
 
-        with DlgEditText(parent=umlFrame, eventEngine=self._eventEngine, pyutText=pyutText) as dlg:
-            dlg.ShowModal()
+        with DlgEditText(parent=umlFrame, pyutText=pyutText) as dlg:
+            if dlg.ShowModal() == OK:
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editNote(self, umlFrame: 'UmlDiagramsFrame', oglNote: OglNote):
 
         pyutNote: PyutNote = oglNote.pyutObject
-        with DlgEditNote(umlFrame, eventEngine=self._eventEngine, pyutNote=pyutNote) as dlg:
-            dlg.ShowModal()
+        with DlgEditNote(umlFrame, pyutNote=pyutNote) as dlg:
+            if dlg.ShowModal() == OK:
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editUseCase(self, umlFrame: 'UmlDiagramsFrame', oglUseCase: OglUseCase):
 
         pyutUseCase: PyutUseCase = oglUseCase.pyutObject
         with DlgEditUseCase(umlFrame, useCaseName=pyutUseCase.name) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 pyutUseCase.name = dlg.GetValue()
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
@@ -152,19 +154,19 @@ class EditObjectHandler:
 
         pyutActor: PyutActor = oglActor.pyutObject
         with DlgEditActor(umlFrame, actorName=pyutActor.name) as dlg:
-            if dlg.ShowModal() == ID_OK:
+            if dlg.ShowModal() == OK:
                 pyutActor.name = dlg.GetValue()
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editLink(self, oglLink: OglLink):
         with DlgEditLink(None, oglLink.pyutObject) as dlg:
-            if dlg.ShowModal() == ID_OK:
-                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+            if dlg.ShowModal() == OK:
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
 
     def _editAssociation(self, diagramShape):
         with DlgEditLink(None, diagramShape.pyutObject) as dlg:
-            if dlg.ShowModal() == ID_OK:
-                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+            if dlg.ShowModal() == OK:
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
 
     def _autoResize(self, umlFrame: 'UmlDiagramsFrame', obj: OglObject):
         """
