@@ -32,9 +32,9 @@ class DlgEditStereotype(BaseEditDialog):
                     self._pyutModel.stereotype = dlg.value
     """
 
-    def __init__(self, parent: Window, eventEngine: IEventEngine, pyutStereotype: PyutStereotype):
+    def __init__(self, parent: Window, pyutStereotype: PyutStereotype):
 
-        super().__init__(parent=parent, eventEngine=eventEngine, title='Select Stereotype')
+        super().__init__(parent=parent, title='Select Stereotype')
         self.logger: Logger = getLogger(__name__)
 
         panel: SizedPanel = self.GetContentsPane()

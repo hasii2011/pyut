@@ -9,27 +9,24 @@ from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
 
-
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface
 
 from pyut.dialogs.BaseEditDialog import BaseEditDialog
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class DlgEditDescription(BaseEditDialog):
     """
     Edit a class description
     """
-    def __init__(self, parent: Window, eventEngine: IEventEngine, pyutModel: Union[PyutClass, PyutInterface]):
+    def __init__(self, parent: Window, pyutModel: Union[PyutClass, PyutInterface]):
         """
 
         Args:
             parent:
-            eventEngine:
             pyutModel:
         """
-        super().__init__(parent, eventEngine=eventEngine, title="Edit Description")
+        super().__init__(parent, title="Edit Description")
 
         self._pyutModel: Union[PyutClass, PyutInterface] = pyutModel
 

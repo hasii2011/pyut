@@ -1,5 +1,4 @@
 
-
 from wx import ALIGN_CENTER_VERTICAL
 from wx import ALIGN_RIGHT
 from wx import ALL
@@ -31,7 +30,6 @@ from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
 # noinspection PyProtectedMember
 from pyut.general.Globals import _
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 [
     ID_TXT_FIELD_NAME,
@@ -42,9 +40,9 @@ from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 class DlgEditField(BaseEditDialog):
 
-    def __init__(self, theParent, eventEngine: IEventEngine, fieldToEdit: PyutField):
+    def __init__(self, theParent, fieldToEdit: PyutField):
 
-        super().__init__(theParent,  eventEngine=eventEngine, title="Edit Field")
+        super().__init__(theParent, title="Edit Field")
 
         self._fieldToEdit: PyutField = fieldToEdit
         # ----------------
@@ -143,9 +141,6 @@ class DlgEditField(BaseEditDialog):
         else:
             self._fieldToEdit.defaultValue = None
 
-        self._markCurrentDiagramAsModified()
-
-        # Close dialog
         self.EndModal(OK)
 
     # noinspection PyUnusedLocal

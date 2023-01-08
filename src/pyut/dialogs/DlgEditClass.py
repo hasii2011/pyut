@@ -158,7 +158,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         Returns: return code from dialog
         """
-        self._dlgField = DlgEditField(theParent=self, eventEngine=self._eventEngine, fieldToEdit=field)
+        self._dlgField = DlgEditField(theParent=self, fieldToEdit=field)
         return self._dlgField.ShowModal()
 
     def _duplicateParameters(self, parameters):
@@ -224,7 +224,6 @@ class DlgEditClass(DlgEditClassCommon):
             self._pyutModelCopy.fields.append(field)
             # Add fields in dialog list
             self._lstFieldList.Append(str(field))
-            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldEdit(self, event: CommandEvent):
@@ -237,7 +236,6 @@ class DlgEditClass(DlgEditClassCommon):
         if ret == OK:
             # Modify field in dialog list
             self._lstFieldList.SetString(selection, str(field))
-            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldRemove(self, event: CommandEvent):
@@ -259,7 +257,6 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons of fields list (enable or not)
         self._fixBtnFields()
-        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldUp(self, event: CommandEvent):
@@ -280,7 +277,6 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
-        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onFieldDown(self, event: CommandEvent):
@@ -300,7 +296,6 @@ class DlgEditClass(DlgEditClassCommon):
 
         # Fix buttons (enable or not)
         self._fixBtnFields()
-        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _evtFieldList(self, event):

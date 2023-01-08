@@ -13,9 +13,6 @@ from wx import CommandEvent
 
 from wx.lib.sized_controls import SizedDialog
 
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-
 
 class BaseEditDialog(SizedDialog):
 
@@ -26,13 +23,11 @@ class BaseEditDialog(SizedDialog):
     """
     Provides a common place to host duplicate code
     """
-    def __init__(self, parent, eventEngine: IEventEngine, title=''):
+    def __init__(self, parent, title=''):
 
         style: int = RESIZE_BORDER | CAPTION | STAY_ON_TOP
 
         super().__init__(parent, title=title, style=style)
-
-        self._eventEngine: IEventEngine = eventEngine
 
     def _createStandardOkCancelButtonSizer(self):
         """
@@ -67,8 +62,3 @@ class BaseEditDialog(SizedDialog):
         """
         """
         self.EndModal(CANCEL)
-
-    def _markCurrentDiagramAsModified(self):
-        """
-        """
-        self._eventEngine.sendEvent(EventType.UMLDiagramModified)

@@ -115,7 +115,6 @@ class DlgEditClassCommon(SizedDialog):
         CreateStdDialogBtnSizer here, we'll just create our own panel with
         a horizontal layout and add the buttons to that;`
 
-        Returns:  The container
         """
         sizedPanel: SizedPanel = SizedPanel(parent)
         sizedPanel.SetSizerType('horizontal')
@@ -176,7 +175,7 @@ class DlgEditClassCommon(SizedDialog):
         Args:
             event:
         """
-        with DlgEditDescription(self, eventEngine=self._eventEngine, pyutModel=self._pyutModelCopy) as dlg:
+        with DlgEditDescription(self, pyutModel=self._pyutModelCopy) as dlg:
             if dlg.ShowModal() == OK:
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
             else:
@@ -207,7 +206,6 @@ class DlgEditClassCommon(SizedDialog):
         if ret == OK:
             # Modify method in dialog list
             self._lstMethodList.SetString(selection, method.getString())
-            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onMethodAdd(self, event: CommandEvent):
@@ -224,7 +222,6 @@ class DlgEditClassCommon(SizedDialog):
             self._pyutModelCopy.methods.append(method)
             # Add fields in dialog list
             self._lstMethodList.Append(method.getString())
-            self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onMethodDown(self, event):
@@ -245,8 +242,6 @@ class DlgEditClassCommon(SizedDialog):
         # Fix buttons (enable or not)
         self._fixBtnMethod()
 
-        self._setProjectModified()
-
     # noinspection PyUnusedLocal
     def _onMethodRemove(self, event: CommandEvent):
         """
@@ -266,7 +261,6 @@ class DlgEditClassCommon(SizedDialog):
 
         # Fix buttons of methods list (enable or not)
         self._fixBtnMethod()
-        self._setProjectModified()
 
     # noinspection PyUnusedLocal
     def _onMethodUp(self, event: CommandEvent):
@@ -286,7 +280,6 @@ class DlgEditClassCommon(SizedDialog):
 
         # Fix buttons (enable or not)
         self._fixBtnMethod()
-        self._setProjectModified()
 
     def _fixBtnMethod(self):
         """
@@ -315,7 +308,7 @@ class DlgEditClassCommon(SizedDialog):
             editInterface: bool = True
         else:
             editInterface = False
-        with DlgEditMethod(parent=self, eventEngine=self._eventEngine, pyutMethod=methodToEdit, editInterface=editInterface) as dlg:
+        with DlgEditMethod(parent=self, pyutMethod=methodToEdit, editInterface=editInterface) as dlg:
             return dlg.ShowModal()
 
     # noinspection PyUnusedLocal
@@ -329,7 +322,7 @@ class DlgEditClassCommon(SizedDialog):
 
         """
         stereotype: PyutStereotype = cast(PyutClass, self._pyutModelCopy).stereotype
-        with DlgEditStereotype(parent=self._parent, eventEngine=self._eventEngine, pyutStereotype=stereotype) as dlg:
+        with DlgEditStereotype(parent=self._parent, pyutStereotype=stereotype) as dlg:
             if dlg.ShowModal() == OK:
                 cast(PyutClass, self._pyutModelCopy).stereotype = dlg.value
 
