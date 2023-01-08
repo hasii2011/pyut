@@ -4,6 +4,9 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from pyutmodel.PyutLink import PyutLink
+from pyutmodel.PyutLinkType import PyutLinkType
+from pyutmodel.PyutStereotype import PyutStereotype
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -31,10 +34,10 @@ from pyut.dialogs.DlgEditCode import DlgEditCode
 from pyut.dialogs.DlgEditDescription import DlgEditDescription
 from pyut.dialogs.DlgEditField import DlgEditField
 from pyut.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.dialogs.DlgEditLink import DlgEditLink
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
 from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
-from pyut.dialogs.DlgEditStereotype import PyutStereotype
 from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
 from pyut.dialogs.Wrappers import DlgEditActor
 from pyut.dialogs.Wrappers import DlgEditDiagramTitle
@@ -157,8 +160,10 @@ class TestADialog(App):
 
         dlgAnswer: str = 'No dialog invoked'
         match dlgName:
+            case DialogNamesEnum.DLG_EDIT_LINK:
+                dlgAnswer = self._testDlgEditLink()
             case DialogNamesEnum.DLG_EDIT_STEREOTYPES:
-                dlgAnswer = self._testDlgEditStereoTypes()
+                dlgAnswer = self._testDlgEditStereotype()
             case DialogNamesEnum.DLG_EDIT_USE_CASE:
                 dlgAnswer = self._testDlgEditUseCase()
             case DialogNamesEnum.DLG_EDIT_ACTOR:
@@ -192,8 +197,23 @@ class TestADialog(App):
 
         self.logger.warning(f'{dlgAnswer=}')
 
-    def _testDlgEditStereoTypes(self):
-        # temp stereotype until model is updated
+    def _testDlgEditLink(self):
+        srcClass: PyutClass = PyutClass(name='Source Class')
+        dstClass: PyutClass = PyutClass(name='Destination Class')
+        pyutLink: PyutLink = PyutLink(name='Ozzee',
+                                      cardSrc='0..*',
+                                      cardDest='0..*',
+                                      source=srcClass,
+                                      destination=dstClass,
+                                      linkType=PyutLinkType.AGGREGATION)
+        with DlgEditLink(parent=self._frame, pyutLink=pyutLink) as dlg:
+            if dlg.ShowModal() == OK:
+                pyutLink = dlg.value
+                return f'{pyutLink.sourceCardinality=} {pyutLink.destinationCardinality=} relationship: {pyutLink.name}'
+            else:
+                return 'No change'
+    def _testDlgEditStereotype(self):
+
         pyutStereotype: PyutStereotype = PyutStereotype.METACLASS
         with DlgEditStereotype(self._frame, eventEngine=self._eventEngine, pyutStereotype=pyutStereotype) as dlg:
             if dlg.ShowModal() == OK:

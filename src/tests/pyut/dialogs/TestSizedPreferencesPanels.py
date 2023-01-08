@@ -24,6 +24,7 @@ from pyut.ui.widgets.PositionControl import PositionControl
 class TestSizedPreferencesPanels(App):
 
     # noinspection PyUnusedLocal
+    # noinspection PyAttributeOutsideInit
     def OnInit(self):
 
         TestBase.setUpLogging()
@@ -44,8 +45,6 @@ class TestSizedPreferencesPanels(App):
 
         self.SetTopWindow(frame)
         frame.CreateStatusBar() # should always do this when there's a resize border
-
-        # frame.Fit()
 
         self._frame:       SizedFrame = frame
         self._preferences: PyutPreferences = PyutPreferences()
