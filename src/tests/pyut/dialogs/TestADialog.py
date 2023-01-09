@@ -1,12 +1,12 @@
+
 from typing import Union
 from typing import cast
 
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.PyutLink import PyutLink
-from pyutmodel.PyutLinkType import PyutLinkType
-from pyutmodel.PyutStereotype import PyutStereotype
+from copy import deepcopy
+
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -29,24 +29,9 @@ from wx import StaticBoxSizer
 
 from wx import NewIdRef as wxNewIdRef
 
-from pyut.dialogs.DlgEditClass import DlgEditClass
-from pyut.dialogs.DlgEditCode import DlgEditCode
-from pyut.dialogs.DlgEditDescription import DlgEditDescription
-from pyut.dialogs.DlgEditField import DlgEditField
-from pyut.dialogs.DlgEditInterface import DlgEditInterface
-from pyut.dialogs.DlgEditLink import DlgEditLink
-from pyut.dialogs.DlgEditMethod import DlgEditMethod
-from pyut.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
-from pyut.dialogs.DlgEditParameter import DlgEditParameter
-from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
-from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
-from pyut.dialogs.Wrappers import DlgEditActor
-from pyut.dialogs.Wrappers import DlgEditDiagramTitle
-from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
-
-from pyut.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
-
+from pyutmodel.PyutLink import PyutLink
+from pyutmodel.PyutLinkType import PyutLinkType
+from pyutmodel.PyutStereotype import PyutStereotype
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutInterface import PyutInterface
@@ -79,6 +64,24 @@ from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyut.dialogs.DlgEditClass import DlgEditClass
+from pyut.dialogs.DlgEditCode import DlgEditCode
+from pyut.dialogs.DlgEditDescription import DlgEditDescription
+from pyut.dialogs.DlgEditField import DlgEditField
+from pyut.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.dialogs.DlgEditLink import DlgEditLink
+from pyut.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
+from pyut.dialogs.DlgEditParameter import DlgEditParameter
+from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
+from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
+from pyut.dialogs.Wrappers import DlgEditActor
+from pyut.dialogs.Wrappers import DlgEditDiagramTitle
+from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+
+from pyut.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
 
 from tests.TestBase import TestBase
 
@@ -295,26 +298,36 @@ class TestADialog(App):
                 return f'Cancelled'
 
     def _testDlgEditField(self) -> str:
-        pyutField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
-        with DlgEditField(theParent=self._frame, fieldToEdit=pyutField) as dlg:
+        pyutField:     PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
+        pyutFieldCopy: PyutField = deepcopy(pyutField)
+        with DlgEditField(parent=self._frame, fieldToEdit=pyutFieldCopy) as dlg:
             if dlg.ShowModal() == OK:
                 return f'{pyutField=}'
             else:
-                return 'Cancelled'
+                nameOk:         bool = pyutField.name == pyutFieldCopy.name
+                typeOk:         bool = pyutField.type == pyutFieldCopy.type
+                defaultValueOk: bool = pyutField.defaultValue == pyutFieldCopy.defaultValue
+
+                return f'Cancelled: {nameOk=} {typeOk=} {defaultValueOk=}'
+
+    def _testDlgEditParameter(self) -> str:
+        pyutParameter:     PyutParameter = PyutParameter(name='testParameter', parameterType=PyutType("int"), defaultValue='42')
+        pyutParameterCopy: PyutParameter = deepcopy(pyutParameter)
+        with DlgEditParameter(parent=self._frame, parameterToEdit=pyutParameterCopy) as dlg:
+            if dlg.ShowModal() == OK:
+                return f'Retrieved data: {pyutParameter}'
+            else:
+                nameOk:         bool = pyutParameter.name == pyutParameterCopy.name
+                typeOk:         bool = pyutParameter.type == pyutParameterCopy.type
+                defaultValueOk: bool = pyutParameter.defaultValue == pyutParameterCopy.defaultValue
+
+                return f'Cancelled: {nameOk=} {typeOk=} {defaultValueOk=}'
 
     def _testDlgPyutPreferencesV2(self) -> str:
 
         with DlgPyutPreferencesV2(parent=self._frame) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Preferences returned Ok'
-            else:
-                return f'Cancelled'
-
-    def _testDlgEditParameter(self) -> str:
-        pyutParameter: PyutParameter = PyutParameter(name='testParameter', parameterType=PyutType("int"), defaultValue='42')
-        with DlgEditParameter(parent=self._frame, parameterToEdit=pyutParameter) as dlg:
-            if dlg.ShowModal() == OK:
-                return f'Retrieved data: {pyutParameter}'
             else:
                 return f'Cancelled'
 

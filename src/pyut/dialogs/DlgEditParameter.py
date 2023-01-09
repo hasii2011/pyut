@@ -1,141 +1,56 @@
 
-from wx import ALIGN_CENTER_HORIZONTAL
-from wx import ALIGN_RIGHT
-from wx import ALL
-from wx import CANCEL
-from wx import EVT_BUTTON
-from wx import EVT_TEXT
-from wx import HORIZONTAL
-from wx import ID_ANY
-from wx import OK
-from wx import VERTICAL
-
-from wx import BoxSizer
-from wx import Button
-from wx import StaticText
-from wx import TextCtrl
-from wx import Event
-from wx import FlexGridSizer
 from wx import CommandEvent
 
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutType import PyutType
+from wx import Window
 
-from pyut.dialogs.BaseEditDialog import BaseEditDialog
-
-from pyut.PyutUtils import PyutUtils
-
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
-
-[
-    ID_TXT_PARAM_NAME,
-    ID_BTN_PARAM_OK,
-    ID_BTN_PARAM_CANCEL
- ] = PyutUtils.assignID(3)
+from pyut.dialogs.BaseEditParamFieldDialog import BaseEditParamFieldDialog
 
 
-class DlgEditParameter(BaseEditDialog):
+class DlgEditParameter(BaseEditParamFieldDialog):
 
-    def __init__(self, parent, parameterToEdit: PyutParameter):
+    def __init__(self, parent: Window, parameterToEdit: PyutParameter):
         """
-        The Dialog for parameter editing
+        The Dialog to edit PyutParameters
         Args:
             parent:
             parameterToEdit:  The parameter that is being edited
         """
-
-        super().__init__(parent, title="Edit Parameter")
+        super().__init__(parent, title="Edit Parameter", layoutField=False)
 
         self._parameterToEdit: PyutParameter = parameterToEdit
 
-        # ----------------
-        # Design of dialog
-        # ----------------
-        self.SetAutoLayout(True)
-
-        # Txt Ctrl Name
-        lblName:       StaticText = StaticText (self, ID_ANY, _("Name"))
-        self._txtName: TextCtrl   = TextCtrl(self, ID_TXT_PARAM_NAME, "", size=(125, -1))
-
-        self.Bind(EVT_TEXT, self._evtParamText, id=ID_TXT_PARAM_NAME)
-
-        # Txt Ctrl Type
-        lblType:       StaticText = StaticText (self, ID_ANY, _("Type"))
-        self._txtType: TextCtrl   = TextCtrl(self, ID_ANY, "", size=(125, -1))
-
-        # Txt Ctrl Default
-        lblDefault:       StaticText = StaticText (self, ID_ANY, _("Default Value"))
-        self._txtDefault: TextCtrl   = TextCtrl(self, ID_ANY, "", size=(125, -1))
-
-        # ---------------------
-        # Buttons OK and cancel
-        self._btnOk: Button = Button(self, ID_BTN_PARAM_OK, _("&Ok"))
-        self.Bind(EVT_BUTTON, self._onParamOk, id=ID_BTN_PARAM_OK)
-        self._btnOk.SetDefault()
-
-        self._btnCancel: Button = Button(self, ID_BTN_PARAM_CANCEL, _("&Cancel"))
-        self.Bind(EVT_BUTTON, self._onParamCancel, id=ID_BTN_PARAM_CANCEL)
-
-        szrButtons: BoxSizer = BoxSizer (HORIZONTAL)
-        szrButtons.Add(self._btnOk, 0, ALL, 5)
-        szrButtons.Add(self._btnCancel, 0, ALL, 5)
-
-        szr1: FlexGridSizer = FlexGridSizer(cols=3, hgap=6, vgap=6)
-        szr1.AddMany([lblName, lblType, lblDefault, self._txtName, self._txtType, self._txtDefault])
-
-        szr2: BoxSizer = BoxSizer(VERTICAL)
-        szr2.Add(szr1, 0, ALL | ALIGN_CENTER_HORIZONTAL, 5)
-        szr2.Add(szrButtons, 0, ALL | ALIGN_RIGHT, 5)
-
-        self.SetSizer(szr2)
-        self.SetAutoLayout(True)
-
-        szr2.Fit(self)
-
-        # Fill the text controls with PyutParam data
-        self._txtName.SetValue(self._parameterToEdit.name)
+        self._name.SetValue(self._parameterToEdit.name)
         paramType: PyutType = self._parameterToEdit.type
-        self._txtType.SetValue(paramType.value)
-        self._txtDefault.SetValue(self._convertNone(self._parameterToEdit.defaultValue))
+        self._type.SetValue(paramType.value)
+        self._defaultValue.SetValue(self._convertNone(self._parameterToEdit.defaultValue))
 
-        # Fix state of buttons (enabled or not)
-        self._fixBtnDlgParams()
-
-        # Set the focus
-        self._txtName.SetFocus()
-        self.Centre()
+        self._name.SetFocus()
+        # a little trick to make sure that you can't resize the dialog to
+        # less screen space than the controls need
+        self.Fit()
+        self.SetMinSize(self.GetSize())
 
     # noinspection PyUnusedLocal
-    def _evtParamText (self, event: Event):
+    def _onOk (self, event: CommandEvent):
         """
-        Check if button "Add" has to be enabled or not.
-
+        Add additional behavior to super class method
         Args:
             event:
-
         """
-        self._btnOk.Enable(self._txtName.GetValue() != "")
 
-    # noinspection PyUnusedLocal
-    def _onParamOk (self, event: CommandEvent):
+        nameValue: str = self._name.GetValue()
+        if nameValue == '':
+            self._indicateEmptyName()
+            return
 
-        self._parameterToEdit.name = self._txtName.GetValue()
-        paramType: PyutType = PyutType(self._txtType.GetValue())
+        self._parameterToEdit.name = nameValue
+        paramType: PyutType = PyutType(self._type.GetValue())
         self._parameterToEdit.type = paramType
-        if self._txtDefault.GetValue() != "":
-            self._parameterToEdit.defaultValue = self._txtDefault.GetValue()
+        if self._defaultValue.GetValue() != "":
+            self._parameterToEdit.defaultValue = self._defaultValue.GetValue()
         else:
             self._parameterToEdit.defaultValue = ''
-        # Close dialog
-        self.EndModal(OK)
 
-    # noinspection PyUnusedLocal
-    def _onParamCancel (self, event: CommandEvent):
-        self.EndModal(CANCEL)
-
-    def _fixBtnDlgParams (self):
-        """
-        Fix state of buttons in dialog params (enable or not).
-        """
-        self._btnOk.Enable(self._txtName.GetValue() != "")
+        super()._onOk(event)

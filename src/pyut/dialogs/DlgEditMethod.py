@@ -72,7 +72,6 @@ class DlgEditMethod(SizedDialog):
 
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerType('vertical')
-        # sizedPanel.SetSizerProps(expand=False)  # Avoid extra space at bottom of dialog
 
         self._layoutMethodInformation(parent=sizedPanel)
         self._layoutParameterControls(parent=sizedPanel)
