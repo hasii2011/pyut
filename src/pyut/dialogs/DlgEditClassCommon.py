@@ -79,7 +79,7 @@ class DlgEditClassCommon(SizedDialog):
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerType('vertical')
 
-        self._createNameControls(parent=sizedPanel, editInterface=editInterface)
+        self._layoutNameControls(parent=sizedPanel, editInterface=editInterface)
 
         self._lstMethodList:   ListBox = cast(ListBox, None)
         self._btnMethodAdd:    Button = cast(Button, None)
@@ -93,7 +93,7 @@ class DlgEditClassCommon(SizedDialog):
         self._btnDescription: Button = cast(Button, None)
         self._btnStereotype:  Button = cast(Button, None)
 
-    def _createNameControls(self, parent: SizedPanel, editInterface: bool, ):
+    def _layoutNameControls(self, parent: SizedPanel, editInterface: bool, ):
 
         if editInterface is True:
             lbl: str = 'Interface Name:'
@@ -108,7 +108,7 @@ class DlgEditClassCommon(SizedDialog):
 
         self.Bind(EVT_TEXT, self._onNameChange, self._className)
 
-    def _createButtonContainer(self, parent: SizedPanel):
+    def _layoutDialogButtonContainer(self, parent: SizedPanel):
         """
         Create Ok, Cancel, stereotype and description buttons;
         since we want to use a custom button layout, we won't use the
@@ -134,7 +134,7 @@ class DlgEditClassCommon(SizedDialog):
         self.Bind(EVT_BUTTON, self._onDescription, self._btnDescription)
         self._btnOk.SetDefault()
 
-    def _createMethodControls(self, parent: SizedPanel):
+    def _layoutMethodControls(self, parent: SizedPanel):
 
         sizedStaticBox: SizedStaticBox = SizedStaticBox(parent, label='Methods:')
         sizedStaticBox.SetSizerProps(expand=True, proportion=1)

@@ -6,23 +6,16 @@ from logging import Logger
 from logging import getLogger
 
 from wx import CANCEL
-from wx import EVT_BUTTON
-from wx import EVT_LISTBOX
-from wx import EVT_LISTBOX_DCLICK
 
-from wx import ICON_ERROR
 from wx import OK
-from wx import LB_SINGLE
 
 from wx import ListBox
-from wx import MessageDialog
 from wx import Button
 from wx import CommandEvent
 from wx import Window
 from wx import CheckBox
 
 from wx.lib.sized_controls import SizedPanel
-from wx.lib.sized_controls import SizedStaticBox
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutField import PyutField
@@ -30,13 +23,17 @@ from pyutmodel.PyutParameter import PyutParameter
 
 from ogl.OglClass import OglClass
 
+from pyut.PyutAdvancedListBox import AdvancedListBoxItems
+from pyut.PyutAdvancedListBox import AdvancedListCallbacks
+from pyut.PyutAdvancedListBox import CallbackAnswer
+from pyut.PyutAdvancedListBox import DownCallbackData
+from pyut.PyutAdvancedListBox import PyutAdvancedListBox
+from pyut.PyutAdvancedListBox import UpCallbackData
 from pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from pyut.dialogs.DlgEditField import DlgEditField
 
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
 from pyut.PyutUtils import PyutUtils
 from pyut.uiv2.eventengine.Events import EventType
 
@@ -96,9 +93,11 @@ class DlgEditClass(DlgEditClassCommon):
         self._btnFieldUp:     Button = cast(Button, None)
         self._btnFieldDown:   Button = cast(Button, None)
 
+        self._pyutFields: PyutAdvancedListBox = cast(PyutAdvancedListBox, None)
+
         self._createFieldControls(parent=sizedPanel)
-        self._createMethodControls(parent=sizedPanel)
-        self._createMethodButtons(parent=sizedPanel)
+        self._layoutMethodControls(parent=sizedPanel)
+        self._layoutMethodDisplayOptions(parent=sizedPanel)
 
         self._fillAllControls()
         #
@@ -108,7 +107,7 @@ class DlgEditClass(DlgEditClassCommon):
         self._className.SetFocus()
         self._className.SetSelection(0, len(self._className.GetValue()))
         self.Centre()
-        self._createButtonContainer(sizedPanel)
+        self._layoutDialogButtonContainer(sizedPanel)
         # a little trick to make sure that you can't resize the dialog to
         # less screen space than the controls need
         self.Fit()
@@ -116,31 +115,16 @@ class DlgEditClass(DlgEditClassCommon):
 
     def _createFieldControls(self, parent: SizedPanel):
 
-        sizedStaticBox: SizedStaticBox = SizedStaticBox(parent, label='Fields:')
-        sizedStaticBox.SetSizerProps(expand=True, proportion=1)
-        sizedStaticBox.SetSizerType('vertical')
+        callbacks: AdvancedListCallbacks = AdvancedListCallbacks()
+        callbacks.addCallback    = self._fieldAddCallback
+        callbacks.editCallback   = self._fieldEditCallback
+        callbacks.removeCallback = self._fieldRemoveCallback
+        callbacks.upCallback     = self._fieldUpCallback
+        callbacks.downCallback   = self._fieldDownCallback
 
-        self._lstFieldList = ListBox(sizedStaticBox, ID_LST_FIELD_LIST, choices=[], style=LB_SINGLE)  # size=(-1, 125)
-        self._lstFieldList.SetSizerProps(expand=True, proportion=1)
+        self._pyutFields = PyutAdvancedListBox(parent=parent, title='Fields:', callbacks=callbacks)
 
-        btnPanel: SizedPanel = SizedPanel(parent)
-        btnPanel.SetSizerType('horizontal')
-
-        self._btnFieldAdd    = Button(btnPanel, ID_BTN_FIELD_ADD,    '&Add')
-        self._btnFieldEdit   = Button(btnPanel, ID_BTN_FIELD_EDIT,   '&Edit')
-        self._btnFieldRemove = Button(btnPanel, ID_BTN_FIELD_REMOVE, '&Remove')
-        self._btnFieldUp     = Button(btnPanel, ID_BTN_FIELD_UP,     '&Up')
-        self._btnFieldDown   = Button(btnPanel, ID_BTN_FIELD_DOWN,   '&Down')
-
-        self.Bind(EVT_LISTBOX,        self._evtFieldList, id=ID_LST_FIELD_LIST)
-        self.Bind(EVT_LISTBOX_DCLICK, self._evtFieldListDClick, id=ID_LST_FIELD_LIST)
-        self.Bind(EVT_BUTTON, self._onFieldAdd, id=ID_BTN_FIELD_ADD)
-        self.Bind(EVT_BUTTON, self._onFieldEdit, id=ID_BTN_FIELD_EDIT)
-        self.Bind(EVT_BUTTON, self._onFieldRemove, id=ID_BTN_FIELD_REMOVE)
-        self.Bind(EVT_BUTTON, self._onFieldUp, id=ID_BTN_FIELD_UP)
-        self.Bind(EVT_BUTTON, self._onFieldDown, id=ID_BTN_FIELD_DOWN)
-
-    def _createMethodButtons(self, parent: SizedPanel):
+    def _layoutMethodDisplayOptions(self, parent: SizedPanel):
 
         buttonPanel: SizedPanel = SizedPanel(parent)
         buttonPanel.SetSizerType('horizontal')
@@ -179,19 +163,13 @@ class DlgEditClass(DlgEditClassCommon):
         # Fill Class name
         self._className.SetValue(self._pyutModelCopy.name)
 
-        # Fill the list controls
-        try:
-            for el in self._pyutModelCopy.fields:
-                self.logger.debug(f'field: {el}')
-                self._lstFieldList.Append(str(el))
+        fieldItems: AdvancedListBoxItems = AdvancedListBoxItems([])
+        for field in self._pyutModelCopy.fields:
+            pyutField: PyutField = cast(PyutField, field)
+            fieldItems.append(str(pyutField))     # Depends on a reasonable __str__ implementation
+        self._pyutFields.setItems(fieldItems)
 
-            self._fillMethodList()
-        except (ValueError, Exception) as e:
-
-            eMsg: str = _(f"Error: {e}")
-            dlg = MessageDialog(self, eMsg, OK | ICON_ERROR)
-            dlg.ShowModal()
-            dlg.Destroy()
+        self._fillMethodList()
 
         # Fill display properties
         self._chkShowFields.SetValue(self._pyutModelCopy.showFields)
@@ -202,126 +180,70 @@ class DlgEditClass(DlgEditClassCommon):
         """
         Fix buttons of fields list (enable or not).
         """
-        selection = self._lstFieldList.GetSelection()
-        # Button Edit and Remove
-        ans = selection != -1
-        self._btnFieldEdit.Enable(ans)
-        self._btnFieldRemove.Enable(ans)
-        self._btnFieldUp.Enable(selection > 0)
-        self._btnFieldDown.Enable(ans and selection < self._lstFieldList.GetCount() - 1)
+        # selection = self._lstFieldList.GetSelection()
+        # # Button Edit and Remove
+        # ans = selection != -1
+        # self._btnFieldEdit.Enable(ans)
+        # self._btnFieldRemove.Enable(ans)
+        # self._btnFieldUp.Enable(selection > 0)
+        # self._btnFieldDown.Enable(ans and selection < self._lstFieldList.GetCount() - 1)
+        pass
 
-    # noinspection PyUnusedLocal
-    def _onFieldAdd(self, event: CommandEvent):
-        """
-        Add a new field in the list.
+    def _fieldAddCallback(self) -> CallbackAnswer:
+        field:   PyutField     = PyutField()
+        answer: CallbackAnswer = CallbackAnswer()
+        with DlgEditField(parent=self, fieldToEdit=field) as dlg:
+            if dlg.ShowModal() == OK:
+                answer.item  = str(field)
+                answer.valid = True
+            else:
+                answer.valid = False
+        return answer
 
-        Args:
-            event:
-        """
-        field: PyutField = PyutField()
-        ret = self._callDlgEditField(field)
-        if ret == OK:
-            self._pyutModelCopy.fields.append(field)
-            # Add fields in dialog list
-            self._lstFieldList.Append(str(field))
+    def _fieldEditCallback(self, selection: int) -> CallbackAnswer:
 
-    # noinspection PyUnusedLocal
-    def _onFieldEdit(self, event: CommandEvent):
-        """
-        Edit a field.
-        """
-        selection = self._lstFieldList.GetSelection()
-        field = self._pyutModelCopy.fields[selection]
-        ret = self._callDlgEditField(field)
-        if ret == OK:
-            # Modify field in dialog list
-            self._lstFieldList.SetString(selection, str(field))
+        field:   PyutField     = self._pyutModelCopy.fields[selection]
+        answer: CallbackAnswer = CallbackAnswer()
+        with DlgEditField(parent=self, fieldToEdit=field) as dlg:
+            if dlg.ShowModal() == OK:
+                answer.item  = str(field)
+                answer.valid = True
+            else:
+                answer.valid = False
+        return answer
 
-    # noinspection PyUnusedLocal
-    def _onFieldRemove(self, event: CommandEvent):
-        """
-        Remove a field from the list.
-        """
-        # Remove from list control
-        selection = self._lstFieldList.GetSelection()
-        self._lstFieldList.Delete(selection)
+    def _fieldRemoveCallback(self, selection: int):
 
-        # Select next
-        if self._lstFieldList.GetCount() > 0:
-            index = min(selection, self._lstFieldList.GetCount()-1)
-            self._lstFieldList.SetSelection(index)
-
-        # Remove from _pyutModelCopy
-        fields = self._pyutModelCopy.fields
+        fields: List[PyutField] = self._pyutModelCopy.fields
         fields.pop(selection)
 
-        # Fix buttons of fields list (enable or not)
-        self._fixBtnFields()
+    def _fieldUpCallback(self, selection: int) -> UpCallbackData:
 
-    # noinspection PyUnusedLocal
-    def _onFieldUp(self, event: CommandEvent):
-        """
-        Move up a field in the list.
-        """
-        # Move up the field in _pyutModelCopy
-        selection = self._lstFieldList.GetSelection()
-        fields = self._pyutModelCopy.fields
-        field = fields[selection]
+        fields: List[PyutField] = self._pyutModelCopy.fields
+        field:   PyutField      = fields[selection]
+
         fields.pop(selection)
         fields.insert(selection - 1, field)
 
-        # Move up the field in dialog list
-        self._lstFieldList.SetString(selection, str(fields[selection]))
-        self._lstFieldList.SetString(selection - 1, str(fields[selection - 1]))
-        self._lstFieldList.SetSelection(selection - 1)
+        upCallbackData: UpCallbackData = UpCallbackData()
 
-        # Fix buttons (enable or not)
-        self._fixBtnFields()
+        upCallbackData.previousItem = str(fields[selection-1])
+        upCallbackData.currentItem  = str(fields[selection])
 
-    # noinspection PyUnusedLocal
-    def _onFieldDown(self, event: CommandEvent):
-        """
-        Move down a field in the list.
-        """
-        selection = self._lstFieldList.GetSelection()
-        fields = self._pyutModelCopy.fields
-        field = fields[selection]
+        return upCallbackData
+
+    def _fieldDownCallback(self, selection: int) -> DownCallbackData:
+
+        fields: List[PyutField] = self._pyutModelCopy.fields
+        field:  PyutField       = fields[selection]
         fields.pop(selection)
         fields.insert(selection + 1, field)
 
-        # Move down the field in dialog list
-        self._lstFieldList.SetString(selection, str(fields[selection]))
-        self._lstFieldList.SetString(selection + 1, str(fields[selection + 1]))
-        self._lstFieldList.SetSelection(selection + 1)
+        downCallbackData: DownCallbackData = DownCallbackData()
+        downCallbackData.nextItem    = str(fields[selection+1])
+        downCallbackData.currentItem = str(fields[selection])
 
-        # Fix buttons (enable or not)
-        self._fixBtnFields()
-
-    # noinspection PyUnusedLocal
-    def _evtFieldList(self, event):
-        """
-        Called when click on Fields list.
-        """
-        self._fixBtnFields()
-
-    def _evtFieldListDClick(self, event: CommandEvent):
-        """
-        Called when there is a double click on Fields list.
-        """
-        self._onFieldEdit(event)
-
-    def _convertNone(self, theString):
-        """
-        Return the same string, if string = None, return an empty string.
-
-        Args:
-            theString:  The string
-
-        Returns:  The input string or 'None' if it was empty
-        """
-        if theString is None:
-            theString = ""
-        return theString
+        return downCallbackData
 
     # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):

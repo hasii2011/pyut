@@ -333,6 +333,10 @@ class TestADialog(App):
 
     def _testDlgEditClass(self):
         pyutClass: PyutClass = PyutClass(name='Ozzee')
+        ozzeeField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
+        franField:  PyutField = PyutField(name='Fran',  fieldType=PyutType('str'),   defaultValue='left')
+        opieField:  PyutField = PyutField(name='Opie',  fieldType=PyutType('int'),   defaultValue='9')
+        pyutClass.fields = [ozzeeField, opieField, franField]
 
         # Not a notebook
         # noinspection PyTypeChecker

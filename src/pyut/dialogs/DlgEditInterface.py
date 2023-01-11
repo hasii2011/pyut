@@ -33,8 +33,8 @@ class DlgEditInterface(DlgEditClassCommon):
 
         sizedPanel: SizedPanel = self.GetContentsPane()
 
-        self._createMethodControls(parent=sizedPanel)
-        self._createButtonContainer(sizedPanel)
+        self._layoutMethodControls(parent=sizedPanel)
+        self._layoutDialogButtonContainer(sizedPanel)
 
         # Fill Class name
         self._className.SetValue(self._pyutModelCopy. name)
