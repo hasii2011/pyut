@@ -95,14 +95,14 @@ class DlgEditClass(DlgEditClassCommon):
 
         self._pyutFields: PyutAdvancedListBox = cast(PyutAdvancedListBox, None)
 
-        self._createFieldControls(parent=sizedPanel)
+        self._layoutFieldControls(parent=sizedPanel)
         self._layoutMethodControls(parent=sizedPanel)
         self._layoutMethodDisplayOptions(parent=sizedPanel)
 
         self._fillAllControls()
         #
         self._fixBtnFields()
-        self._fixBtnMethod()
+
         #
         self._className.SetFocus()
         self._className.SetSelection(0, len(self._className.GetValue()))
@@ -113,7 +113,7 @@ class DlgEditClass(DlgEditClassCommon):
         self.Fit()
         self.SetMinSize(self.GetSize())
 
-    def _createFieldControls(self, parent: SizedPanel):
+    def _layoutFieldControls(self, parent: SizedPanel):
 
         callbacks: AdvancedListCallbacks = AdvancedListCallbacks()
         callbacks.addCallback    = self._fieldAddCallback
@@ -132,18 +132,6 @@ class DlgEditClass(DlgEditClassCommon):
         self._chkShowStereotype: CheckBox = CheckBox(buttonPanel, label='Show stereotype')
         self._chkShowFields:     CheckBox = CheckBox(buttonPanel, label='Show fields')
         self._chkShowMethods:    CheckBox = CheckBox(buttonPanel, label='Show methods')
-
-    def _callDlgEditField(self, field: PyutField) -> int:
-        """
-        Dialog for edit a field
-
-        Args:
-            field:  Field to be edited
-
-        Returns: return code from dialog
-        """
-        self._dlgField = DlgEditField(parent=self, fieldToEdit=field)
-        return self._dlgField.ShowModal()
 
     def _duplicateParameters(self, parameters):
         """
@@ -190,12 +178,14 @@ class DlgEditClass(DlgEditClassCommon):
         pass
 
     def _fieldAddCallback(self) -> CallbackAnswer:
-        field:   PyutField     = PyutField()
+        # TODO Use default field name when available
+        field:   PyutField     = PyutField(name='FieldName')
         answer: CallbackAnswer = CallbackAnswer()
         with DlgEditField(parent=self, fieldToEdit=field) as dlg:
             if dlg.ShowModal() == OK:
                 answer.item  = str(field)
                 answer.valid = True
+                self._pyutModelCopy.fields.append(field)
             else:
                 answer.valid = False
         return answer

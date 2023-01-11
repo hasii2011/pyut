@@ -7,6 +7,7 @@ from logging import getLogger
 
 from copy import deepcopy
 
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -338,6 +339,10 @@ class TestADialog(App):
         opieField:  PyutField = PyutField(name='Opie',  fieldType=PyutType('int'),   defaultValue='9')
         pyutClass.fields = [ozzeeField, opieField, franField]
 
+        ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibilityEnum.PROTECTED)
+        franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibilityEnum.PRIVATE)
+        opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibilityEnum.PUBLIC)
+        pyutClass.methods = [ozzeeMethod, franMethod, opieMethod]
         # Not a notebook
         # noinspection PyTypeChecker
         umlFrame:    UmlClassDiagramsFrame = UmlClassDiagramsFrame(parent=self._frame, eventEngine=self._eventEngine)
@@ -373,7 +378,12 @@ class TestADialog(App):
 
     def _testDlgEditInterface(self):
 
-        pyutInterface: PyutInterface = PyutInterface(name='Ozzee')
+        pyutInterface: PyutInterface = PyutInterface(name=self._preferences.interfaceName)
+        ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibilityEnum.PUBLIC)
+        franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibilityEnum.PUBLIC)
+        opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibilityEnum.PUBLIC)
+        pyutInterface.methods = [ozzeeMethod, franMethod, opieMethod]
+
         with DlgEditInterface(parent=self._frame, eventEngine=self._eventEngine, pyutInterface=pyutInterface) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutInterface}'

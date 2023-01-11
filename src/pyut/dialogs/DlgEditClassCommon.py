@@ -1,4 +1,5 @@
 
+from typing import List
 from typing import cast
 from typing import Union
 
@@ -8,27 +9,29 @@ from logging import getLogger
 from copy import deepcopy
 
 from wx import EVT_BUTTON
-from wx import EVT_LISTBOX
-from wx import EVT_LISTBOX_DCLICK
 from wx import EVT_TEXT
 from wx import ID_ANY
-from wx import LB_SINGLE
 from wx import OK
 from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
-from wx import Button
-from wx import ListBox
-from wx import CommandEvent
-from wx import StaticText
-from wx import TextCtrl
 from wx import ID_OK
 from wx import ID_CANCEL
 from wx import DEFAULT_DIALOG_STYLE
 
+from wx import Button
+from wx import CommandEvent
+from wx import StaticText
+from wx import TextCtrl
+
 from wx.lib.sized_controls import SizedDialog
 from wx.lib.sized_controls import SizedPanel
-from wx.lib.sized_controls import SizedStaticBox
 
+from pyut.PyutAdvancedListBox import AdvancedListBoxItems
+from pyut.PyutAdvancedListBox import AdvancedListCallbacks
+from pyut.PyutAdvancedListBox import CallbackAnswer
+from pyut.PyutAdvancedListBox import DownCallbackData
+from pyut.PyutAdvancedListBox import PyutAdvancedListBox
+from pyut.PyutAdvancedListBox import UpCallbackData
 from pyut.dialogs.DlgEditDescription import DlgEditDescription
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
@@ -81,13 +84,6 @@ class DlgEditClassCommon(SizedDialog):
 
         self._layoutNameControls(parent=sizedPanel, editInterface=editInterface)
 
-        self._lstMethodList:   ListBox = cast(ListBox, None)
-        self._btnMethodAdd:    Button = cast(Button, None)
-        self._btnMethodEdit:   Button = cast(Button, None)
-        self._btnMethodRemove: Button = cast(Button, None)
-        self._btnMethodUp:     Button = cast(Button, None)
-        self._btnMethodDown:   Button = cast(Button, None)
-
         self._btnOk:          Button = cast(Button, None)
         self._btnCancel:      Button = cast(Button, None)
         self._btnDescription: Button = cast(Button, None)
@@ -136,34 +132,24 @@ class DlgEditClassCommon(SizedDialog):
 
     def _layoutMethodControls(self, parent: SizedPanel):
 
-        sizedStaticBox: SizedStaticBox = SizedStaticBox(parent, label='Methods:')
-        sizedStaticBox.SetSizerProps(expand=True, proportion=1)
-        sizedStaticBox.SetSizerType('horizontal')
+        callbacks: AdvancedListCallbacks = AdvancedListCallbacks()
+        callbacks.addCallback    = self._methodAddCallback
+        callbacks.editCallback   = self._methodEditCallback
+        callbacks.removeCallback = self._methodRemoveCallback
+        callbacks.upCallback     = self._methodUpCallback
+        callbacks.downCallback   = self._methodDownCallback
 
-        self._lstMethodList = ListBox(sizedStaticBox, choices=[], style=LB_SINGLE)  # size=(-1, 125)
-        self._lstMethodList.SetSizerProps(expand=True, proportion=1)
-
-        btnPanel: SizedPanel = SizedPanel(parent)
-        btnPanel.SetSizerType('horizontal')
-        self._btnMethodAdd    = Button(btnPanel, label='A&dd')
-        self._btnMethodEdit   = Button(btnPanel, label='Ed&it')
-        self._btnMethodRemove = Button(btnPanel, label='Re&move')
-        self._btnMethodUp     = Button(btnPanel, label='U&p')
-        self._btnMethodDown   = Button(btnPanel, label='Do&wn')
-
-        self.Bind(EVT_LISTBOX,        self._evtMethodList,       self._lstMethodList)
-        self.Bind(EVT_LISTBOX_DCLICK, self._evtMethodListDClick, self._lstMethodList)
-
-        self.Bind(EVT_BUTTON, self._onMethodAdd,    self._btnMethodAdd)
-        self.Bind(EVT_BUTTON, self._onMethodEdit,   self._btnMethodEdit)
-        self.Bind(EVT_BUTTON, self._onMethodRemove, self._btnMethodRemove)
-        self.Bind(EVT_BUTTON, self._onMethodUp,     self._btnMethodUp)
-        self.Bind(EVT_BUTTON, self._onMethodDown,   self._btnMethodDown)
+        self._pyutMethods = PyutAdvancedListBox(parent=parent, title='Methods:', callbacks=callbacks)
 
     def _fillMethodList(self):
 
+        methodItems: AdvancedListBoxItems = AdvancedListBoxItems([])
+
         for method in self._pyutModelCopy.methods:
-            self._lstMethodList.Append(method.getString())
+            pyutMethod: PyutMethod = cast(PyutMethod, method)
+            methodItems.append(str(pyutMethod))
+
+        self._pyutMethods.setItems(methodItems)
 
     def _onNameChange(self, event):
         self._pyutModelCopy.name = event.GetString()
@@ -181,135 +167,80 @@ class DlgEditClassCommon(SizedDialog):
             else:
                 self._pyutModelCopy.description = self._pyutModel.description
 
-    # noinspection PyUnusedLocal
-    def _evtMethodList(self, event: CommandEvent):
-        """
-        Called when there is a click on Methods list.
-        """
-        self._fixBtnMethod()
-
-    def _evtMethodListDClick(self, event: CommandEvent):
-        """
-        Called when click on Methods list.
-        """
-        self._onMethodEdit(event)
-
-    # noinspection PyUnusedLocal
-    def _onMethodEdit(self, event: CommandEvent):
+    def _methodEditCallback(self, selection: int):
         """
         Edit a method.
         """
-        selection = self._lstMethodList.GetSelection()
-        method = self._pyutModelCopy.methods[selection]
+        method: PyutMethod = self._pyutModelCopy.methods[selection]
 
-        ret = self._invokeEditMethodDialog(method)
-        if ret == OK:
-            # Modify method in dialog list
-            self._lstMethodList.SetString(selection, method.getString())
+        return self._editMethod(pyutMethod=method)
 
-    # noinspection PyUnusedLocal
-    def _onMethodAdd(self, event: CommandEvent):
+    def _methodAddCallback(self) -> CallbackAnswer:
         """
-        Add a new method in the list.
-        Args:
-            event:
         """
-        methodName: str = PyutPreferences().methodName
-        # Add fields in PyutClass copy object
-        method: PyutMethod = PyutMethod(methodName)
-        ret = self._invokeEditMethodDialog(method)
-        if ret == OK:
+        method: PyutMethod     = PyutMethod(name=PyutPreferences().methodName)
+        answer: CallbackAnswer = self._editMethod(pyutMethod=method)
+        if answer.valid is True:
             self._pyutModelCopy.methods.append(method)
-            # Add fields in dialog list
-            self._lstMethodList.Append(method.getString())
 
-    # noinspection PyUnusedLocal
-    def _onMethodDown(self, event):
+        return answer
+
+    def _editMethod(self, pyutMethod: PyutMethod) -> CallbackAnswer:
         """
-        Move down a method in the list.
+        Common method to edit either new or old method
+        Args:
+            pyutMethod:
         """
-        selection = self._lstMethodList.GetSelection()
-        methods = self._pyutModelCopy.methods
-        method = methods[selection]
-        methods.pop(selection)
-        methods.insert(selection + 1, method)
+        self.logger.info(f'method to edit: {pyutMethod}')
 
-        # Move up the method in dialog list
-        self._lstMethodList.SetString(selection, methods[selection].getString())
-        self._lstMethodList.SetString(selection + 1, methods[selection + 1].getString())
-        self._lstMethodList.SetSelection(selection + 1)
+        answer: CallbackAnswer = CallbackAnswer()
 
-        # Fix buttons (enable or not)
-        self._fixBtnMethod()
+        with DlgEditMethod(parent=self, pyutMethod=pyutMethod, editInterface=self._editInterface) as dlg:
+            if dlg.ShowModal() == OK:
+                answer.item = str(pyutMethod)
+                answer.valid = True
+            else:
+                answer.valid = False
 
-    # noinspection PyUnusedLocal
-    def _onMethodRemove(self, event: CommandEvent):
-        """
-        Remove a field from the list.
-        """
-        selection = self._lstMethodList.GetSelection()
-        self._lstMethodList.Delete(selection)
+        return answer
 
-        # Select next
-        if self._lstMethodList.GetCount() > 0:
-            index = min(selection, self._lstMethodList.GetCount()-1)
-            self._lstMethodList.SetSelection(index)
+    def _methodRemoveCallback(self, selection: int):
 
         # Remove from _pyutModelCopy
-        methods = self._pyutModelCopy.methods
+        methods: List[PyutMethod] = self._pyutModelCopy.methods
         methods.pop(selection)
 
-        # Fix buttons of methods list (enable or not)
-        self._fixBtnMethod()
-
-    # noinspection PyUnusedLocal
-    def _onMethodUp(self, event: CommandEvent):
+    def _methodUpCallback(self, selection: int) -> UpCallbackData:
         """
         Move up a method in the list.
         """
-        selection = self._lstMethodList.GetSelection()
-        methods   = self._pyutModelCopy.methods
-        method    = methods[selection]
+        methods: List[PyutMethod] = self._pyutModelCopy.methods
+        method:  PyutMethod       = methods[selection]
         methods.pop(selection)
-        methods.insert(selection - 1, method)
+        methods.insert(selection-1, method)
 
-        # Move up the method in dialog list
-        self._lstMethodList.SetString(selection, methods[selection].getString())
-        self._lstMethodList.SetString(selection - 1, methods[selection - 1].getString())
-        self._lstMethodList.SetSelection(selection - 1)
+        upCallbackData: UpCallbackData = UpCallbackData()
 
-        # Fix buttons (enable or not)
-        self._fixBtnMethod()
+        upCallbackData.previousItem = str(methods[selection-1])
+        upCallbackData.currentItem  = str(methods[selection])
 
-    def _fixBtnMethod(self):
+        return upCallbackData
+
+    def _methodDownCallback(self, selection: int) -> DownCallbackData:
         """
-        Fix buttons of Method list (enable or not).
+        Move down a method in the list.
         """
-        selection = self._lstMethodList.GetSelection()
-        # Button Edit and Remove
-        enabled: bool = selection != -1
+        methods: List[PyutMethod] = self._pyutModelCopy.methods
+        method:  PyutMethod       = methods[selection]
 
-        self._btnMethodEdit.Enable(enabled)
-        self._btnMethodRemove.Enable(enabled)
-        self._btnMethodUp.Enable(selection > 0)
-        self._btnMethodDown.Enable(enabled and selection < self._lstMethodList.GetCount() - 1)
+        methods.pop(selection)
+        methods.insert(selection+1, method)
 
-    def _invokeEditMethodDialog(self, methodToEdit: PyutMethod) -> int:
-        """
-        Create and invoke the dialog for Method editing.
+        downCallbackData: DownCallbackData = DownCallbackData()
+        downCallbackData.currentItem = str(methods[selection])
+        downCallbackData.nextItem    = str(methods[selection+1])
 
-        Args:
-            methodToEdit: Method to be edited
-
-        Returns: The return code from dialog
-        """
-        self.logger.info(f'method to edit: {methodToEdit}')
-        if self._editInterface is True:
-            editInterface: bool = True
-        else:
-            editInterface = False
-        with DlgEditMethod(parent=self, pyutMethod=methodToEdit, editInterface=editInterface) as dlg:
-            return dlg.ShowModal()
+        return downCallbackData
 
     # noinspection PyUnusedLocal
     def _onStereotype(self, event: CommandEvent):
