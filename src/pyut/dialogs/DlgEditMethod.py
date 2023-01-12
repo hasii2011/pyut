@@ -5,18 +5,16 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from wx import CANCEL
 from wx import DEFAULT_DIALOG_STYLE
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import ID_ANY
-from wx import ID_CANCEL
-from wx import ID_OK
 from wx import OK
 from wx import RA_SPECIFY_ROWS
 from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 
+from wx import Colour
 from wx import RadioBox
 from wx import CommandEvent
 from wx import DefaultSize
@@ -24,9 +22,7 @@ from wx import StaticText
 from wx import TextCtrl
 from wx import Point
 from wx import Button
-from wx import Event
 
-from wx.lib.sized_controls import SizedDialog
 from wx.lib.sized_controls import SizedPanel
 
 from pyutmodel.PyutMethod import PyutMethod
@@ -43,12 +39,13 @@ from pyut.PyutAdvancedListBox import CallbackAnswer
 from pyut.PyutAdvancedListBox import DownCallbackData
 from pyut.PyutAdvancedListBox import PyutAdvancedListBox
 from pyut.PyutAdvancedListBox import UpCallbackData
+from pyut.dialogs.BaseEditDialog import BaseEditDialog
 from pyut.dialogs.DlgEditCode import DlgEditCode
 from pyut.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
 
 
-class DlgEditMethod(SizedDialog):
+class DlgEditMethod(BaseEditDialog):
 
     def __init__(self, parent,  pyutMethod: PyutMethod, editInterface: bool = False):
 
@@ -60,12 +57,12 @@ class DlgEditMethod(SizedDialog):
         self._pyutMethod:     PyutMethod = pyutMethod
         self._pyutMethodCopy: PyutMethod = deepcopy(pyutMethod)
 
-        self._rdbVisibility: RadioBox = cast(RadioBox, None)
-        self._txtName:       TextCtrl = cast(TextCtrl, None)
-        self._txtReturn:     TextCtrl = cast(TextCtrl, None)
-        self._btnModifiers:  Button   = cast(Button, None)
-        self._btnOk:         Button   = cast(Button, None)
-        self._btnCancel:     Button   = cast(Button, None)
+        self._rdbVisibility:    RadioBox = cast(RadioBox, None)
+        self._methodName:       TextCtrl = cast(TextCtrl, None)
+        self._MethodReturnType: TextCtrl = cast(TextCtrl, None)
+        self._btnModifiers:     Button   = cast(Button, None)
+        self._btnOk:            Button   = cast(Button, None)
+        self._btnCancel:        Button   = cast(Button, None)
 
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerType('vertical')
@@ -74,10 +71,13 @@ class DlgEditMethod(SizedDialog):
 
         self._layoutMethodInformation(parent=sizedPanel)
         self._layoutParameterControls(parent=sizedPanel)
-        self._layoutCustomDialogButtons(parent=sizedPanel)
+        self._layoutStandardOkCancelButtonSizer()
 
         self._initializeDataInControls()
-        self._fixBtnDlgMethods()
+
+        self._normalNameBackgroundColour: Colour = self._methodName.GetBackgroundColour()
+
+        self.Bind(EVT_TEXT, self._onMethodNameChange, self._methodName)
 
         self.Fit()
         self.SetMinSize(self.GetSize())
@@ -86,9 +86,9 @@ class DlgEditMethod(SizedDialog):
         """
             Fill the text controls with PyutMethod data
         """
-        self._txtName.SetValue(self._pyutMethodCopy.name)
+        self._methodName.SetValue(self._pyutMethodCopy.name)
 
-        self._txtReturn.SetValue(str(self._pyutMethodCopy.returnType))
+        self._MethodReturnType.SetValue(str(self._pyutMethodCopy.returnType))
 
         if self._editInterface is False:
             self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.visibility))
@@ -113,14 +113,12 @@ class DlgEditMethod(SizedDialog):
         StaticText (methodPanel, label="Name")
         StaticText (methodPanel, label="Return type")
 
-        self._txtName   = TextCtrl(methodPanel, value="", size=(125, -1))
-        self._txtReturn = TextCtrl(methodPanel, value="", size=(125, -1))
+        self._methodName   = TextCtrl(methodPanel, value="", size=(125, -1))
+        self._MethodReturnType = TextCtrl(methodPanel, value="", size=(125, -1))
 
         if self._editInterface is False:
             self._btnModifiers = Button(parent, label='&Modifiers...')
             self.Bind(EVT_BUTTON, self._onModifiers, self._btnModifiers)
-
-        self.Bind(EVT_TEXT, self._evtMethodText, self._txtName)
 
     def _layoutMethodVisibility(self, parent: SizedPanel):
 
@@ -140,43 +138,6 @@ class DlgEditMethod(SizedDialog):
         callbacks.downCallback   = self._parameterDownCallback
 
         self._pyutParameters = PyutAdvancedListBox(parent=parent, title='Parameters:', callbacks=callbacks)
-
-    def _layoutCustomDialogButtons(self, parent: SizedPanel):
-        """
-        Override the base class
-        Create Ok, Cancel and Code buttons;
-        since we want to use a custom button layout, we won't use the
-        CreateStdDialogBtnSizer here, we'll just create our own panel with
-        a horizontal layout and add the buttons to that;`
-
-        Args:
-            parent:
-        """
-        sizedPanel: SizedPanel = SizedPanel(parent)
-        sizedPanel.SetSizerType('horizontal')
-        sizedPanel.SetSizerProps(expand=False, halign='right')  # expand False allows aligning right
-        # Buttons OK, Cancel and Code
-        if self._editInterface is False:
-            self._btnCode = Button(sizedPanel, label='&Code')
-            self.Bind(EVT_BUTTON, self._onMethodCode, self._btnCode)
-
-        self._btnOk     = Button(sizedPanel, ID_OK, '&Ok')
-        self._btnCancel = Button(sizedPanel, ID_CANCEL, '&Cancel')
-
-        self.Bind(EVT_BUTTON, self._onOk,     self._btnOk)
-        self.Bind(EVT_BUTTON, self._onCancel, self._btnCancel)
-
-        self._btnOk.SetDefault()
-
-    # noinspection PyUnusedLocal
-    def _evtMethodText (self, event: Event):
-        """
-        Check if button "Add" has to be enabled or not.
-
-        Args:
-            event: event that call this subprogram.
-        """
-        self._fixBtnDlgMethods()
 
     def _parameterAddCallback (self) -> CallbackAnswer:
         # TODO Use default parameter name when available
@@ -253,18 +214,28 @@ class DlgEditMethod(SizedDialog):
                 self.logger.debug(f'Do nothing code dialog cancelled')
 
     # noinspection PyUnusedLocal
-    def _onOk (self, event: Event):
+    def _onMethodNameChange(self, event: CommandEvent):
+
+        updatedName: str = self._methodName.GetValue().strip()
+        self.logger.warning(f'{updatedName=}')
+        if  self._methodName.GetValue().strip() == '':
+            self._indicateEmptyTextCtrl(name=self._methodName)
+        else:
+            self._indicateNonEmptyTextCtrl(name=self._methodName, normalBackgroundColor=self._normalNameBackgroundColour)
+
+    # noinspection PyUnusedLocal
+    def _onOk (self, event: CommandEvent):
         """
         When button OK from dlgEditMethod is clicked.
 
         Args:
             event:
         """
-        self._pyutMethod.name = self._txtName.GetValue()
+        self._pyutMethod.name = self._methodName.GetValue()
 
         self._pyutMethod.modifiers = self._pyutMethodCopy.modifiers
 
-        returnType: PyutType = PyutType(self._txtReturn.GetValue())
+        returnType: PyutType = PyutType(self._MethodReturnType.GetValue())
         self._pyutMethod.returnType = returnType
         self._pyutMethod.parameters = self._pyutMethodCopy.parameters
 
@@ -275,14 +246,8 @@ class DlgEditMethod(SizedDialog):
 
         self._pyutMethod.sourceCode = self._pyutMethodCopy.sourceCode
 
-        self.EndModal(OK)
+        super()._onOk(event)
 
     # noinspection PyUnusedLocal
     def _onCancel (self, event):
-        self.EndModal(CANCEL)
-
-    def _fixBtnDlgMethods (self):
-        """
-        Fix state of buttons in dialog method (enable or not).
-        """
-        self._btnOk.Enable(self._txtName.GetValue() != "")
+        self._onOk(event)

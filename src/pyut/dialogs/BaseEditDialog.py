@@ -1,5 +1,8 @@
+from logging import Logger
+from logging import getLogger
 
 from wx import CANCEL
+from wx import Colour
 from wx import DEFAULT_DIALOG_STYLE
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
@@ -10,12 +13,15 @@ from wx import RESIZE_BORDER
 from wx import STAY_ON_TOP
 
 from wx import CommandEvent
+from wx import ColourDatabase
 from wx import StdDialogButtonSizer
+from wx import TextCtrl
 
 from wx.lib.sized_controls import SizedDialog
 
 
 class BaseEditDialog(SizedDialog):
+    baseDlgLogger: Logger = getLogger(__name__)
     """
     Provides a common place to host duplicate code
     """
@@ -58,3 +64,11 @@ class BaseEditDialog(SizedDialog):
         """
         """
         self.EndModal(CANCEL)
+
+    def _indicateEmptyTextCtrl(self, name: TextCtrl):
+
+        self.baseDlgLogger.warning(f'Name is empty!!')
+        name.BackgroundColour = ColourDatabase().Find('Red')
+
+    def _indicateNonEmptyTextCtrl(self, name: TextCtrl, normalBackgroundColor: Colour):
+        name.BackgroundColour = normalBackgroundColor

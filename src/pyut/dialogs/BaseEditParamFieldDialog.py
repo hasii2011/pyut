@@ -3,18 +3,17 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from wx import Colour
-from wx import ColourDatabase
-from wx import CommandEvent
 from wx import DEFAULT_DIALOG_STYLE
-from wx import DefaultSize
 from wx import EVT_TEXT
 from wx import ID_ANY
 from wx import RA_SPECIFY_ROWS
+from wx import STAY_ON_TOP
 
+from wx import Colour
+from wx import CommandEvent
+from wx import DefaultSize
 from wx import Point
 from wx import RadioBox
-from wx import STAY_ON_TOP
 from wx import StaticText
 from wx import TextCtrl
 from wx import Window
@@ -82,14 +81,6 @@ class BaseEditParamFieldDialog(BaseEditDialog):
         updatedName: str = self._name.GetValue().strip()
         self.basePFDLogger.warning(f'{updatedName=}')
         if  self._name.GetValue().strip() == '':
-            self._indicateEmptyName()
+            self._indicateEmptyTextCtrl(name=self._name)
         else:
-            self._indicateNonEmptyName()
-
-    def _indicateEmptyName(self):
-
-        self.basePFDLogger.warning(f'Name is empty!!')
-        self._name.BackgroundColour = ColourDatabase().Find('Red')
-
-    def _indicateNonEmptyName(self):
-        self._name.BackgroundColour = self._normalNameBackgroundColour
+            self._indicateNonEmptyTextCtrl(name=self._name, normalBackgroundColor=self._normalNameBackgroundColour)
