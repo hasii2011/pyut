@@ -17,6 +17,13 @@ The GitHub URL is:
         https://github.com/hasii2011/PyUt/
 
 
+  Pyut 7.0.0 Mac OS X Release
+  ===========================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+  See the following
+  https://github.com/hasii2011/PyUt/wiki/Version-7.0.0
+
+
   Pyut 6.8.1 Mac OS X Release
   ===========================
   Humberto A. Sanchez II, Consultant, Python Enthusiast

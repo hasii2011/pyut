@@ -72,19 +72,19 @@ class DlgAbout(Dialog):
     DlgAbout : About box for Pyut.
 
     Use it like a normal dialog box
-        dlg=DlgAbout(self, -1, "")
-        dlg.ShowModal()
-        dlg.Destroy()
+
+        with DlgAbout(self._parent, "About PyUt " + PyutVersion.getPyUtVersion()) as dlg:
+            dlg.ShowModal()
+
     """
-    def __init__(self, parent: Window, wxID: int, title: str):
+    def __init__(self, parent: Window, title: str):
         """
 
         Args:
             parent:     parent window
-            wxID:        wx ID of this frame
             title:      Title to display
         """
-        super().__init__(parent, wxID, title, DefaultPosition, Size(FrameWidth, FrameHeight))
+        super().__init__(parent, ID_ANY, title, DefaultPosition, Size(FrameWidth, FrameHeight))
 
         self.logger:  Logger = getLogger(__name__)
 
@@ -105,7 +105,7 @@ class DlgAbout(Dialog):
         self._panel: Panel = Panel(self, ID_ANY, size=(FrameWidth, FrameHeight))
 
         self._picture: StaticBitmap = StaticBitmap(self, ID_ANY, ImgPyut.embeddedImage.GetBitmap())
-        summaryText:   str = "2022 Humberto Sanchez II and the PyUt team.\nGNU AFFERO GENERAL PUBLIC LICENSE"
+        summaryText:   str = "2023 Humberto Sanchez II and the PyUt team.\nGNU AFFERO GENERAL PUBLIC LICENSE"
         self._label:   StaticText   = StaticText(self, ID_ANY, summaryText, style=CAPTION)
 
         # Main sizer
@@ -128,6 +128,7 @@ class DlgAbout(Dialog):
         self.Bind(EVT_BUTTON, self._onOk, btnOk)
         self._panel.Bind(EVT_PAINT, self.OnRefreshPanel)
         self.Bind(EVT_CLOSE, self._onOk)
+        btnOk.SetDefault()
 
     @property
     def textPosition(self) -> int:

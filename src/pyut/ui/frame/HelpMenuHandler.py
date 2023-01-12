@@ -2,8 +2,6 @@
 from logging import Logger
 from logging import getLogger
 
-from wx import ID_ANY
-
 from wx import CommandEvent
 from wx import Menu
 from wx import BeginBusyCursor as wxBeginBusyCursor
@@ -34,16 +32,15 @@ class HelpMenuHandler(BaseMenuHandler):
         self.logger: Logger = getLogger(__name__)
 
     # noinspection PyUnusedLocal
-    def onAbout(self, event: CommandEvent):
+    def _onAbout(self, event: CommandEvent):
         """
         Show the Pyut about dialog
 
         Args:
             event:
         """
-        dlg = DlgAbout(self._parent, ID_ANY, "About PyUt " + PyutVersion.getPyUtVersion())
-        dlg.ShowModal()
-        dlg.Destroy()
+        with DlgAbout(self._parent, f"About Pyut {PyutVersion.getPyUtVersion()}") as dlg:
+            dlg.ShowModal()
 
     # noinspection PyUnusedLocal
     def onHelpVersion(self, event: CommandEvent):
@@ -79,7 +76,7 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        PyutUtils.displayInformation(f"Please point your browser to {HelpMenuHandler.PYUT_WIKI}", "Pyut's new wiki", self._parent)
+        PyutUtils.displayInformation(f"Please point your browser to {HelpMenuHandler.PYUT_WIKI}", "The new Pyut Wiki", self._parent)
 
     # noinspection PyUnusedLocal
     def onDebug(self, event: CommandEvent):

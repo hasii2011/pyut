@@ -425,7 +425,7 @@ class MenuCreator:
 
     def _bindHelpMenuHandlers(self, containingFrame: Frame, helpMenuHandler: HelpMenuHandler):
 
-        containingFrame.Bind(EVT_MENU, helpMenuHandler.onAbout,       id=ID_ABOUT)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler._onAbout, id=ID_ABOUT)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion, id=SharedIdentifiers.ID_MNU_HELP_VERSION)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,     id=SharedIdentifiers.ID_MNU_HELP_WEB)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug,       id=SharedIdentifiers.ID_DEBUG)
