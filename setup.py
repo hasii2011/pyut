@@ -45,7 +45,7 @@ setup(
               'pyut.resources.img.splash',
               'pyut.resources.img.toolbar', 'pyut.resources.img.toolbar.embedded16', 'pyut.resources.img.toolbar.embedded32',
               'pyut.resources.locale',
-              'pyut.ui',   'pyut.ui.frame', 'pyut.ui.tools', 'pyut.ui.umlframes', 'pyut.ui.widgets', 'pyut.ui.wxcommands'
+              'pyut.ui',   'pyut.ui.frame', 'pyut.ui.tools', 'pyut.ui.umlframes', 'pyut.ui.widgets', 'pyut.ui.wxcommands',
               'pyut.uiv2', 'pyut.uiv2.eventengine', 'pyut.uiv2.eventengine.eventinformation'
               ],
     include_package_data=True,
