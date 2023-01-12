@@ -1,6 +1,5 @@
 <img src="./developer/agpl-license-web-badge-version-2-256x48.png"/> 
 
-[![Build Status](https://travis-ci.com/hasii2011/PyUt.svg?branch=master)](https://travis-ci.com/hasii2011/PyUt)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/hasii2011/PyUt/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/hasii2011/PyUt/tree/master)
