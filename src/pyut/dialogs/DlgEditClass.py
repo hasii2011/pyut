@@ -6,11 +6,8 @@ from logging import Logger
 from logging import getLogger
 
 from wx import CANCEL
-
 from wx import OK
 
-from wx import ListBox
-from wx import Button
 from wx import CommandEvent
 from wx import Window
 from wx import CheckBox
@@ -34,18 +31,8 @@ from pyut.dialogs.DlgEditField import DlgEditField
 
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 
-from pyut.PyutUtils import PyutUtils
 from pyut.uiv2.eventengine.Events import EventType
-
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-
-# Assign constants
-
-[
-    ID_TXT_STEREO_TYPE,
-    ID_BTN_FIELD_ADD, ID_BTN_FIELD_EDIT, ID_BTN_FIELD_REMOVE,
-    ID_BTN_FIELD_UP, ID_BTN_FIELD_DOWN, ID_LST_FIELD_LIST,
-   ] = PyutUtils.assignID(7)
 
 
 class DlgEditClass(DlgEditClassCommon):
@@ -86,13 +73,6 @@ class DlgEditClass(DlgEditClassCommon):
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerProps(expand=True, proportion=1)
 
-        self._lstFieldList: ListBox = cast(ListBox, None)
-        self._btnFieldAdd:    Button = cast(Button, None)
-        self._btnFieldEdit:   Button = cast(Button, None)
-        self._btnFieldRemove: Button = cast(Button, None)
-        self._btnFieldUp:     Button = cast(Button, None)
-        self._btnFieldDown:   Button = cast(Button, None)
-
         self._pyutFields: PyutAdvancedListBox = cast(PyutAdvancedListBox, None)
 
         self._layoutFieldControls(parent=sizedPanel)
@@ -100,13 +80,9 @@ class DlgEditClass(DlgEditClassCommon):
         self._layoutMethodDisplayOptions(parent=sizedPanel)
 
         self._fillAllControls()
-        #
-        self._fixBtnFields()
 
-        #
         self._className.SetFocus()
         self._className.SetSelection(0, len(self._className.GetValue()))
-        self.Centre()
         self._layoutDialogButtonContainer(sizedPanel)
         # a little trick to make sure that you can't resize the dialog to
         # less screen space than the controls need
@@ -163,19 +139,6 @@ class DlgEditClass(DlgEditClassCommon):
         self._chkShowFields.SetValue(self._pyutModelCopy.showFields)
         self._chkShowMethods.SetValue(self._pyutModelCopy.showMethods)
         self._chkShowStereotype.SetValue(cast(PyutClass, self._pyutModelCopy).displayStereoType)
-
-    def _fixBtnFields(self):
-        """
-        Fix buttons of fields list (enable or not).
-        """
-        # selection = self._lstFieldList.GetSelection()
-        # # Button Edit and Remove
-        # ans = selection != -1
-        # self._btnFieldEdit.Enable(ans)
-        # self._btnFieldRemove.Enable(ans)
-        # self._btnFieldUp.Enable(selection > 0)
-        # self._btnFieldDown.Enable(ans and selection < self._lstFieldList.GetCount() - 1)
-        pass
 
     def _fieldAddCallback(self) -> CallbackAnswer:
         # TODO Use default field name when available

@@ -1,4 +1,3 @@
-
 from typing import cast
 
 from logging import Logger
@@ -6,17 +5,13 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from pyutmodel.PyutMethod import PyutParameters
 from wx import CANCEL
 from wx import DEFAULT_DIALOG_STYLE
 from wx import EVT_BUTTON
-from wx import EVT_LISTBOX
-from wx import EVT_LISTBOX_DCLICK
 from wx import EVT_TEXT
 from wx import ID_ANY
 from wx import ID_CANCEL
 from wx import ID_OK
-from wx import LB_SINGLE
 from wx import OK
 from wx import RA_SPECIFY_ROWS
 from wx import RESIZE_BORDER
@@ -28,22 +23,26 @@ from wx import DefaultSize
 from wx import StaticText
 from wx import TextCtrl
 from wx import Point
-from wx import ListBox
 from wx import Button
 from wx import Event
 
 from wx.lib.sized_controls import SizedDialog
 from wx.lib.sized_controls import SizedPanel
-from wx.lib.sized_controls import SizedStaticBox
 
 from pyutmodel.PyutMethod import PyutMethod
-
 from pyutmodel.PyutMethod import SourceCode
+from pyutmodel.PyutMethod import PyutParameters
 
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 
+from pyut.PyutAdvancedListBox import AdvancedListBoxItems
+from pyut.PyutAdvancedListBox import AdvancedListCallbacks
+from pyut.PyutAdvancedListBox import CallbackAnswer
+from pyut.PyutAdvancedListBox import DownCallbackData
+from pyut.PyutAdvancedListBox import PyutAdvancedListBox
+from pyut.PyutAdvancedListBox import UpCallbackData
 from pyut.dialogs.DlgEditCode import DlgEditCode
 from pyut.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
 from pyut.dialogs.DlgEditParameter import DlgEditParameter
@@ -68,10 +67,10 @@ class DlgEditMethod(SizedDialog):
         self._btnOk:         Button   = cast(Button, None)
         self._btnCancel:     Button   = cast(Button, None)
 
-        self._lstParams: ListBox = cast(ListBox, None)
-
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerType('vertical')
+
+        self._pyutParameters: PyutAdvancedListBox = cast(PyutAdvancedListBox, None)
 
         self._layoutMethodInformation(parent=sizedPanel)
         self._layoutParameterControls(parent=sizedPanel)
@@ -79,7 +78,6 @@ class DlgEditMethod(SizedDialog):
 
         self._initializeDataInControls()
         self._fixBtnDlgMethods()
-        self._fixBtnParam()
 
         self.Fit()
         self.SetMinSize(self.GetSize())
@@ -88,19 +86,19 @@ class DlgEditMethod(SizedDialog):
         """
             Fill the text controls with PyutMethod data
         """
-
         self._txtName.SetValue(self._pyutMethodCopy.name)
-        # modifiers: PyutModifiers = self._pyutMethodCopy.modifiers
-        # singleModifierString: str  = " ".join(map(lambda x: str(x), modifiers))
 
-        # self._txtModifiers.SetValue(singleModifierString)
         self._txtReturn.SetValue(str(self._pyutMethodCopy.returnType))
 
         if self._editInterface is False:
             self._rdbVisibility.SetStringSelection(str(self._pyutMethodCopy.visibility))
 
-        for i in self._pyutMethodCopy.parameters:
-            self._lstParams.Append(str(i))
+        parameterItems: AdvancedListBoxItems = AdvancedListBoxItems([])
+        for parameter in self._pyutMethodCopy.parameters:
+            pyutParameter: PyutParameter = cast(PyutParameter, parameter)
+            parameterItems.append(str(pyutParameter))     # Depends on a reasonable __str__ implementation
+
+        self._pyutParameters.setItems(parameterItems)
 
     def _layoutMethodInformation(self, parent: SizedPanel):
 
@@ -131,33 +129,17 @@ class DlgEditMethod(SizedDialog):
 
     def _layoutParameterControls(self, parent: SizedPanel):
         """
-        This layout code is duplicated 3 times, Field, methods, parameters
-        TODO:  Find a way to keep DRY
         Args:
             parent:
         """
-        sizedStaticBox: SizedStaticBox = SizedStaticBox(parent, label='Parameters:')
-        sizedStaticBox.SetSizerProps(expand=True, proportion=1)
-        sizedStaticBox.SetSizerType('horizontal')
+        callbacks: AdvancedListCallbacks = AdvancedListCallbacks()
+        callbacks.addCallback    = self._parameterAddCallback
+        callbacks.editCallback   = self._parameterEditCallback
+        callbacks.removeCallback = self._parameterRemoveCallback
+        callbacks.upCallback     = self._parameterUpCallback
+        callbacks.downCallback   = self._parameterDownCallback
 
-        self._lstParams     = ListBox(sizedStaticBox, choices=[], style=LB_SINGLE)
-        self._lstParams.SetSizerProps(expand=True, proportion=1)
-
-        btnPanel: SizedPanel = SizedPanel(parent)
-        btnPanel.SetSizerType('horizontal')
-        self._btnParamAdd    = Button(btnPanel, label='A&dd')
-        self._btnParamEdit   = Button(btnPanel, label='Ed&it')
-        self._btnParamRemove = Button(btnPanel, label='Re&move')
-        self._btnParamUp     = Button(btnPanel, label='U&p')
-        self._btnParamDown   = Button(btnPanel, label='Do&wn')
-
-        self.Bind(EVT_LISTBOX,        self._evtParamList, self._lstParams)
-        self.Bind(EVT_LISTBOX_DCLICK, self._evtParamList, self._lstParams)
-        self.Bind(EVT_BUTTON, self._onParameterAdd,    self._btnParamAdd)
-        self.Bind(EVT_BUTTON, self._onParameterEdit,   self._btnParamEdit)
-        self.Bind(EVT_BUTTON, self._onParameterRemove, self._btnParamRemove)
-        self.Bind(EVT_BUTTON, self._onParameterUp,     self._btnParamUp)
-        self.Bind(EVT_BUTTON, self._onParameterDown,   self._btnParamDown)
+        self._pyutParameters = PyutAdvancedListBox(parent=parent, title='Parameters:', callbacks=callbacks)
 
     def _layoutCustomDialogButtons(self, parent: SizedPanel):
         """
@@ -196,115 +178,62 @@ class DlgEditMethod(SizedDialog):
         """
         self._fixBtnDlgMethods()
 
-    # noinspection PyUnusedLocal
-    def _evtParamList (self, event):
-        """
-        Called when click on Params list.  Fix buttons (enable or not)
+    def _parameterAddCallback (self) -> CallbackAnswer:
+        # TODO Use default parameter name when available
+        pyutParameter: PyutParameter  = PyutParameter(name='parameter1')
+        answer:        CallbackAnswer = self._editParameter(pyutParameter=pyutParameter)
+        if answer.valid is True:
+            self._pyutMethodCopy.parameters.append(pyutParameter)
 
-        Args:
-            event: The Event that invoked this method
-        """
-        self._fixBtnParam()
+        return answer
 
-    # noinspection PyUnusedLocal
-    def _onParameterAdd (self, event: CommandEvent):
-        """
-        Add a new parameter to the list
+    def _parameterEditCallback (self, selection: int) -> CallbackAnswer:
 
-        Args:
-            event:
-        """
-        pyutParameter: PyutParameter = PyutParameter()
-        with  DlgEditParameter(parent=self, parameterToEdit=pyutParameter) as dlg:
-            if dlg.ShowModal() == OK:
-                self._pyutMethodCopy.parameters.append(pyutParameter)
-
-                # Add fields in dialog list
-                self._lstParams.Append(str(pyutParameter))
-
-    # noinspection PyUnusedLocal
-    def _onParameterEdit (self, event: Event):
-        """
-        Edit a parameter
-        Args:
-            event:
-        """
-        selection:     int           = self._lstParams.GetSelection()
         pyutParameter: PyutParameter = self._pyutMethodCopy.parameters[selection]
+        return self._editParameter(pyutParameter=pyutParameter)
+
+    def _editParameter(self, pyutParameter: PyutParameter) -> CallbackAnswer:
+
+        answer:        CallbackAnswer = CallbackAnswer()
         with  DlgEditParameter(parent=self, parameterToEdit=pyutParameter) as dlg:
             if dlg.ShowModal() == OK:
-                # Modify param in dialog list
-                self._lstParams.SetString(selection, str(pyutParameter))
+                answer.valid = True
+                answer.item  = str(pyutParameter)
+            else:
+                answer.valid = False
 
-    # noinspection PyUnusedLocal
-    def _onParameterRemove (self, event: Event):
-        """
-        Remove a parameter from the list.
+        return answer
 
-        Args:
-            event:
-        """
-        # Remove from list control
-        selection: int = self._lstParams.GetSelection()
-        self._lstParams.Delete(selection)
-
-        # Select next
-        if self._lstParams.GetCount() > 0:
-            index = min(selection, self._lstParams.GetCount() - 1)
-            self._lstParams.SetSelection(index)
-
-        # Remove from _pyutMethodCopy
+    def _parameterRemoveCallback (self, selection: int):
         pyutParameters: PyutParameters = self._pyutMethodCopy.parameters
         pyutParameters.pop(selection)
 
-        # Fix buttons of params list (enable or not)
-        self._fixBtnParam()
+    def _parameterUpCallback (self, selection: int) -> UpCallbackData:
 
-    # noinspection PyUnusedLocal
-    def _onParameterUp (self, event: Event):
-        """
-        Move up a param in the list.
-
-        Args:
-            event:
-        """
-        # Move up the param in _pyutMethodCopy
-        selection:      int            = self._lstParams.GetSelection()
         pyutParameters: PyutParameters = self._pyutMethodCopy.parameters
         pyutParameter:  PyutParameter  = pyutParameters[selection]
         pyutParameters.pop(selection)
-        pyutParameters.insert(selection - 1, pyutParameter)
+        pyutParameters.insert(selection-1, pyutParameter)
 
-        # Move up the param in dialog list
-        self._lstParams.SetString(selection, str(pyutParameters[selection]))
-        self._lstParams.SetString(selection - 1, str(pyutParameters[selection - 1]))
-        self._lstParams.SetSelection(selection - 1)
+        upCallbackData: UpCallbackData = UpCallbackData()
+        upCallbackData.currentItem  = str(pyutParameters[selection])
+        upCallbackData.previousItem = str(pyutParameters[selection-1])
 
-        # Fix buttons (enable or not)
-        self._fixBtnParam()
+        return upCallbackData
 
     # noinspection PyUnusedLocal
-    def _onParameterDown (self, event: Event):
-        """
-        Move down a param in the list.
-        Args:
-            event:
-        """
-        # Move up the param in _pyutMethodCopy
-        selection:     int            = self._lstParams.GetSelection()
+    def _parameterDownCallback (self, selection: int) -> DownCallbackData:
+
         parameters:    PyutParameters = self._pyutMethodCopy.parameters
-        pyutParameter: PyutParameter = parameters[selection]
+        pyutParameter: PyutParameter  = parameters[selection]
         parameters.pop(selection)
         parameters.insert(selection + 1, pyutParameter)
 
-        # Move up the param in dialog list
-        self._lstParams.SetString(selection, str(parameters[selection]))
-        self._lstParams.SetString(
-            selection + 1, str(parameters[selection + 1]))
-        self._lstParams.SetSelection(selection + 1)
+        downCallbackData: DownCallbackData = DownCallbackData()
+        downCallbackData.currentItem = str(parameters[selection])
+        downCallbackData.nextItem    = str(parameters[selection+1])
 
-        # Fix buttons (enable or not)
-        self._fixBtnParam()
+        return downCallbackData
 
     # noinspection PyUnusedLocal
     def _onModifiers(self, event: CommandEvent):
@@ -357,15 +286,3 @@ class DlgEditMethod(SizedDialog):
         Fix state of buttons in dialog method (enable or not).
         """
         self._btnOk.Enable(self._txtName.GetValue() != "")
-
-    def _fixBtnParam (self):
-        """
-            Fix the parameter list buttons(enable or not).
-        """
-        selection: int = self._lstParams.GetSelection()
-        # Button Edit and Remove
-        enabled: bool = selection != -1
-        self._btnParamEdit.Enable(enabled)
-        self._btnParamRemove.Enable(enabled)
-        self._btnParamUp.Enable(selection > 0)
-        self._btnParamDown.Enable(enabled and selection < self._lstParams.GetCount() - 1)
