@@ -8,11 +8,11 @@ from pyut.general.Singleton import Singleton
 
 class BaseSubPreference(Singleton):
 
-    def init(self, *args, **kwds):
+    def init(self, *args, **kwargs):
 
         self._config: ConfigParser = cast(ConfigParser, None)
 
-        for name, value in kwds.items():
+        for name, value in kwargs.items():
             protectedName: str = f'_{name}'
             if not hasattr(self, protectedName):
                 raise TypeError(f"Unexpected keyword argument {protectedName}")

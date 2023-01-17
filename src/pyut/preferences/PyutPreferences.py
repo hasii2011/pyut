@@ -51,6 +51,7 @@ class PyutPreferences(Singleton):
     class and are auto-saved when a value is added or changed.
 
     """
+    # noinspection PyAttributeOutsideInit
     def init(self):
         """
         """
@@ -103,6 +104,7 @@ class PyutPreferences(Singleton):
 
     @overrideProgramExitSize.setter
     def overrideProgramExitSize(self, theNewValue: bool):
+        # noinspection PyAttributeOutsideInit
         self._overrideProgramExitSize = theNewValue
 
     @property
@@ -113,6 +115,7 @@ class PyutPreferences(Singleton):
 
     @overrideProgramExitPosition.setter
     def overrideProgramExitPosition(self, theNewValue: bool):
+        # noinspection PyAttributeOutsideInit
         self._overrideProgramExitPosition = theNewValue
 
     @property
@@ -316,14 +319,6 @@ class PyutPreferences(Singleton):
     @debugErrorViews.setter
     def debugErrorViews(self, theNewValue: bool):
         self._debugPrefs.debugErrorViews = theNewValue
-
-    @property
-    def usev2ui(self) -> bool:
-        return self._featurePrefs.usev2ui
-
-    @usev2ui.setter
-    def usev2ui(self, newValue: bool):
-        self._featurePrefs.usev2ui = newValue
 
     @property
     def backgroundGridEnabled(self) -> bool:

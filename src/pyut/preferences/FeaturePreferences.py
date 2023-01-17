@@ -13,11 +13,8 @@ class FeaturePreferences(BaseSubPreference):
     """
 
     FEATURE_SECTION: str = 'Features'
-    USE_V2_UI:      str = 'use_v2_ui'
 
     FEATURE_PREFERENCES:  PREFS_NAME_VALUES = {
-        USE_V2_UI: 'True',
-
     }
 
     def init(self, *args, **kwargs):
@@ -27,16 +24,6 @@ class FeaturePreferences(BaseSubPreference):
         BaseSubPreference.init(self, *args, **kwargs)
 
         self._preferencesCommon: PreferencesCommon = PreferencesCommon(self._config)
-
-    @property
-    def usev2ui(self) -> bool:
-        ans: bool = self._config.getboolean(FeaturePreferences.FEATURE_SECTION, FeaturePreferences.USE_V2_UI)
-        return ans
-
-    @usev2ui.setter
-    def usev2ui(self, newValue: bool):
-        self._config.set(FeaturePreferences.FEATURE_SECTION, FeaturePreferences.USE_V2_UI, str(newValue))
-        self._preferencesCommon.saveConfig()
 
     def addAnyMissingFeaturePreferences(self):
 
