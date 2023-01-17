@@ -92,6 +92,7 @@ from pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
 from pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 
+HACK_ADJUST_EXIT_HEIGHT: int = 16
 
 class PyutApplicationFrameV2(Frame):
     """
@@ -227,7 +228,10 @@ class PyutApplicationFrameV2(Frame):
                 self._prefs.startupPosition = pos
         if self._prefs.overrideProgramExitSize is False:
             ourSize: Tuple[int, int] = self.GetSize()
-            self._prefs.startupSize = Dimensions(ourSize[0], ourSize[1])
+
+            # See issue https://github.com/hasii2011/PyUt/issues/452
+            # I need to check this on a larger monitor;
+            self._prefs.startupSize = Dimensions(ourSize[0], ourSize[1] - HACK_ADJUST_EXIT_HEIGHT)
 
         self._prefs     = cast(PyutPreferences, None)
         self._pluginMgr = cast(PluginManager, None)
