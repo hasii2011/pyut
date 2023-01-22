@@ -203,7 +203,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         Activated when button OK is clicked.
         """
-        self._pyutClass.stereotype = self._pyutModelCopy.stereotype
+        self._pyutClass.stereotype = cast(PyutClass, self._pyutModelCopy).stereotype
         # Adds all fields in a list
         self._pyutClass.fields = self._pyutModelCopy.fields
 
