@@ -159,9 +159,9 @@ class TestADialog(App):
 
     def onDlgNameSelectionChanged(self, event: CommandEvent):
 
-        colorValue: str = event.GetString()
+        dialogName: str = event.GetString()
 
-        dlgName: DialogNamesEnum = DialogNamesEnum(colorValue)
+        dlgName: DialogNamesEnum = DialogNamesEnum(dialogName)
 
         self.logger.warning(f'Selected dialog: {dlgName}')
 

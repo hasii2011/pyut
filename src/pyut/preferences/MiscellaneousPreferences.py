@@ -26,11 +26,12 @@ class MiscellaneousPreferences(BaseSubPreference):
         ORTHOGONAL_LAYOUT_SIZE: Dimensions(1000, 1000).__str__(),
     }
 
-    def init(self, *args, **kwds):
+    # noinspection PyAttributeOutsideInit
+    def init(self, *args, **kwargs):
 
         self.logger:  Logger = getLogger(__name__)
 
-        BaseSubPreference.init(self, *args, **kwds)
+        BaseSubPreference.init(self, *args, **kwargs)
 
         self._preferencesCommon: PreferencesCommon = PreferencesCommon(self._config)
 
