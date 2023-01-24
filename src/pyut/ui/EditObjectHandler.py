@@ -15,6 +15,8 @@ from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutNote import PyutNote
 
 from miniogl.AnchorPoint import AnchorPoint
+from miniogl.ControlPoint import ControlPoint
+from miniogl.SizerShape import SizerShape
 
 from ogl.OglInheritance import OglInheritance
 from ogl.OglText import OglText
@@ -25,14 +27,14 @@ from ogl.OglActor import OglActor
 from ogl.OglAssociation import OglAssociation
 from ogl.OglInterface import OglInterface
 from ogl.OglInterface2 import OglInterface2
-from ogl.OglLink import OglLink
 from ogl.OglObject import OglObject
 
 from pyut.dialogs.DlgEditClass import DlgEditClass
 from pyut.dialogs.DlgEditLink import DlgEditLink
+from pyut.dialogs.DlgEditInterface import DlgEditInterface
+
 from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
-from pyut.dialogs.DlgEditInterface import DlgEditInterface
 
 from pyut.dialogs.Wrappers import DlgEditActor
 from pyut.dialogs.Wrappers import DlgEditUseCase
@@ -85,7 +87,6 @@ class EditObjectHandler:
         if diagramShape is None:
             return
 
-        # noinspection PyUnusedLocal
         match diagramShape:
             case OglClass() as diagramShape:
                 self._editClass(umlFrame, diagramShape)
@@ -101,13 +102,11 @@ class EditObjectHandler:
                 self._editActor(umlFrame, diagramShape)
             case OglAssociation() as diagramShape:
                 self._editAssociation(diagramShape)
-            case OglInterface() as diagramShape:
-                self._editLink(diagramShape)
-            case OglInheritance() | AnchorPoint() as diagramShape:
-                pass        # ignored
+            case OglInheritance() | OglInterface() | AnchorPoint() | ControlPoint() | SizerShape():
+                pass    # Nothing to edit on inheritance or interface relationships
             case _:
                 self.logger.error(f'Unknown shape')
-                PyutUtils.displayError(msg='Unknown shape', title='Developer Error')
+                PyutUtils.displayError(msg=f'EditObjectHandler: Unknown shape: {diagramShape}', title='Developer Error')
         umlFrame.Refresh()
 
     def _editClass(self, umlFrame: 'UmlDiagramsFrame', diagramShape: OglObject):
@@ -158,14 +157,11 @@ class EditObjectHandler:
                 pyutActor.name = dlg.GetValue()
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
-    def _editLink(self, oglLink: OglLink):
-        with DlgEditLink(None, oglLink.pyutObject) as dlg:
-            if dlg.ShowModal() == OK:
-                self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
+    def _editAssociation(self, oglAssociation: OglAssociation):
 
-    def _editAssociation(self, diagramShape):
-        with DlgEditLink(None, diagramShape.pyutObject) as dlg:
+        with DlgEditLink(None, oglAssociation.pyutObject) as dlg:
             if dlg.ShowModal() == OK:
+                oglAssociation.pyutObject = dlg.value
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
 
     def _autoResize(self, umlFrame: 'UmlDiagramsFrame', obj: OglObject):
