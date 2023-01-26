@@ -5,7 +5,6 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.PyutUseCase import PyutUseCase
 from wx import PostEvent
 from wx import PyEventBinder
 from wx import TreeItemId
@@ -15,8 +14,12 @@ from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutActor import PyutActor
+from pyutmodel.PyutUseCase import PyutUseCase
 
 from ogl.OglObject import OglObject
+
+from pyutplugins.ExternalTypes import CurrentProjectCallback
+from pyutplugins.ExternalTypes import FrameInformationCallback
 
 from pyut.enums.DiagramType import DiagramType
 
@@ -56,9 +59,6 @@ from pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
-
-from pyutplugins.CoreTypes import FrameInformationCallback
-from pyutplugins.CoreTypes import CurrentProjectCallback
 
 
 NEW_NAME_PARAMETER:     str = 'newName'

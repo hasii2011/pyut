@@ -26,7 +26,7 @@ LICENSE = (HERE / 'LICENSE').read_text()
 
 setup(
     name='Pyut',
-    version='7.5.2',
+    version='7.5.3',
     app=APP,
     data_files=DATA_FILES,
     packages=[
@@ -78,11 +78,11 @@ setup(
     ),
     setup_requires=['py2app'],
     install_requires=[
-                      'PyGithub==1.55',
+                      'PyGithub==1.57',
                       'wxPython==4.2.0',
-                      'pyutmodel==1.3.3',
-                      'ogl~=0.60.25',
-                      'oglio~=0.5.40',
-                      'pyutplugins~=0.6.6',
+                      'pyutmodel==1.3.4',
+                      'ogl~=0.60.30',
+                      'oglio~=0.5.50',
+                      'pyutplugins~=0.6.7',
                       ]
 )

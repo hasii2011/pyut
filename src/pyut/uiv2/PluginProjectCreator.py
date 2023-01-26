@@ -13,10 +13,10 @@ from ogl.OglUseCase import OglUseCase
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
 
-from pyutplugins.CoreTypes import PluginProject
-from pyutplugins.CoreTypes import PluginDocument
-from pyutplugins.CoreTypes import PluginDocumentType
-from pyutplugins.CoreTypes import PluginDocumentTitle
+from pyutplugins.ExternalTypes import PluginDocument
+from pyutplugins.ExternalTypes import PluginDocumentTitle
+from pyutplugins.ExternalTypes import PluginDocumentType
+from pyutplugins.ExternalTypes import PluginProject
 
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject

@@ -3,6 +3,7 @@ from typing import Callable
 
 from logging import Logger
 from logging import getLogger
+from typing import cast
 
 from wx import EVT_MENU
 from wx import EVT_MENU_RANGE
@@ -27,11 +28,11 @@ from wx import MenuBar
 
 from pyutplugins.PluginManager import PluginManager
 
-from pyutplugins.coreinterfaces.IOPluginInterface import IOPluginInterface
-from pyutplugins.coreinterfaces.ToolPluginInterface import ToolPluginInterface
+from pyutplugins.plugintypes.PluginDataTypes import PluginIDMap
+from pyutplugins.plugintypes.PluginDataTypes import FormatName
 
-from pyutplugins.coretypes.PluginDataTypes import PluginIDMap
-from pyutplugins.coretypes.PluginDataTypes import FormatName
+from pyutplugins.plugininterfaces.IOPluginInterface import IOPluginInterface
+from pyutplugins.plugininterfaces.ToolPluginInterface import ToolPluginInterface
 
 from pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 
@@ -67,6 +68,20 @@ class MenuCreator:
         self._plugins:    PluginIDMap   = PluginIDMap({})     # To store the plugins and their activation IDs
         self._toolboxIds: ToolboxIdMap = ToolboxIdMap({})  # Dictionary id --> toolbox
 
+        self._fileMenu:  Menu = cast(Menu, None)
+        self._editMenu:  Menu = cast(Menu, None)
+        self._toolsMenu: Menu = cast(Menu, None)
+        self._helpMenu:  Menu = cast(Menu, None)
+
+        self._toolPlugins:   PluginIDMap = cast(PluginIDMap, None)
+        self._exportPlugins: PluginIDMap = cast(PluginIDMap, None)
+        self._importPlugins: PluginIDMap = cast(PluginIDMap, None)
+
+        self._fileMenuHandler:  FileMenuHandler  = cast(FileMenuHandler, None)
+        self._editMenuHandler:  EditMenuHandler  = cast(EditMenuHandler, None)
+        self._toolsMenuHandler: ToolsMenuHandler = cast(ToolsMenuHandler, None)
+        self._helpMenuHandler:  HelpMenuHandler  = cast(HelpMenuHandler, None)
+
     @property
     def fileMenu(self) -> Menu:
         raise UnsupportedOperation('Property is write only')
@@ -89,7 +104,7 @@ class MenuCreator:
 
     @toolsMenu.setter
     def toolsMenu(self, toolsMenu: Menu):
-        self._toolsMenu: Menu = toolsMenu
+        self._toolsMenu = toolsMenu
 
     @property
     def helpMenu(self):
@@ -204,21 +219,21 @@ class MenuCreator:
         fileMenu: Menu = self._fileMenu
 
         self.mnuFileNew = Menu()
-        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_PROJECT, _("&New project\tCtrl-N"), _("New project"))
-        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM, _("New c&lass diagram\tCtrl-L"), _("New class diagram"))
-        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM, _("New s&equence diagram\tCtrl-E"),
-                               _("New sequence diagram"))
-        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM, _("New &use-case diagram\tCtrl-U"),
-                               _("New use-case diagram"))
-        fileMenu.AppendSubMenu(self.mnuFileNew, _("&New"))
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT, _("&Insert a project...\t"),
-                        _("Insert a project in the current project..."))
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_PROJECT, "&New project\tCtrl-N", "New project")
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM, "New c&lass diagram\tCtrl-L", "New class diagram")
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM, "New s&equence diagram\tCtrl-E",
+                               "New sequence diagram")
+        self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM, "New &use-case diagram\tCtrl-U",
+                               "New use-case diagram")
+        fileMenu.AppendSubMenu(self.mnuFileNew, "&New")
+        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT, "&Insert a project...\t",
+                        "Insert a project in the current project...")
         # Use stock identifier and properties
         fileMenu.Append(ID_OPEN)
         fileMenu.Append(ID_SAVE)
         fileMenu.Append(ID_SAVEAS)
-        fileMenu.Append(SharedIdentifiers.ID_MNU_PROJECT_CLOSE, _("&Close project\tCtrl-W"), _("Close current project"))
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_REMOVE_DIAGRAM, _("&Delete diagram"), _("Delete the diagram from the project"))
+        fileMenu.Append(SharedIdentifiers.ID_MNU_PROJECT_CLOSE, "&Close project\tCtrl-W", "Close current project")
+        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_REMOVE_DIAGRAM, "&Delete diagram", "Delete the diagram from the project")
         fileMenu.AppendSeparator()
 
         fileMenuHandler: FileMenuHandler = self._fileMenuHandler
@@ -425,7 +440,7 @@ class MenuCreator:
 
     def _bindHelpMenuHandlers(self, containingFrame: Frame, helpMenuHandler: HelpMenuHandler):
 
-        containingFrame.Bind(EVT_MENU, helpMenuHandler._onAbout, id=ID_ABOUT)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onAbout,       id=ID_ABOUT)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion, id=SharedIdentifiers.ID_MNU_HELP_VERSION)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,     id=SharedIdentifiers.ID_MNU_HELP_WEB)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug,       id=SharedIdentifiers.ID_DEBUG)

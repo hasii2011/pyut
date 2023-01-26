@@ -47,14 +47,14 @@ from ogl.OglObject import OglObject
 from oglio.Types import OglDocument
 from oglio.Types import OglProject
 
-from pyutplugins.CoreTypes import OglObjects
-from pyutplugins.CoreTypes import FrameInformation
-from pyutplugins.CoreTypes import FrameSize
-from pyutplugins.CoreTypes import FrameInformationCallback
-from pyutplugins.CoreTypes import FrameSizeCallback
-from pyutplugins.CoreTypes import SelectedOglObjectsCallback
-from pyutplugins.CoreTypes import CurrentProjectCallback
-from pyutplugins.CoreTypes import PluginProject
+from pyutplugins.ExternalTypes import CurrentProjectCallback
+from pyutplugins.ExternalTypes import FrameInformation
+from pyutplugins.ExternalTypes import FrameInformationCallback
+from pyutplugins.ExternalTypes import FrameSize
+from pyutplugins.ExternalTypes import FrameSizeCallback
+from pyutplugins.ExternalTypes import OglObjects
+from pyutplugins.ExternalTypes import PluginProject
+from pyutplugins.ExternalTypes import SelectedOglObjectsCallback
 
 from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
@@ -737,7 +737,7 @@ class PyutUIV2(SplitterWindow):
         if umlObjects is not None:
             for obj in umlObjects:
                 if obj.IsSelected():
-                    from pyutplugins.CoreTypes import OglObjectType
+                    from pyutplugins.ExternalTypes import OglObjectType
                     selectedObjects.append(cast(OglObjectType, obj))
 
         cb: SelectedOglObjectsCallback = event.callback

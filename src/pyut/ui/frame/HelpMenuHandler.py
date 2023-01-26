@@ -32,7 +32,7 @@ class HelpMenuHandler(BaseMenuHandler):
         self.logger: Logger = getLogger(__name__)
 
     # noinspection PyUnusedLocal
-    def _onAbout(self, event: CommandEvent):
+    def onAbout(self, event: CommandEvent):
         """
         Show the Pyut about dialog
 

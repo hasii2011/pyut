@@ -7,10 +7,12 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+
 from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutMethods
 
 from ogl.OglClass import OglClass
 
@@ -47,7 +49,7 @@ class GraphicalHandler:
             klassMethods: List[Callable] = cg.getMethodsFromClass(cl)
 
             # add the methods
-            methods: List[PyutMethod] = cg.generatePyutMethods(klassMethods)
+            methods: PyutMethods = cg.generatePyutMethods(klassMethods)
 
             # TODO:  Figure out how to use property name as callable -- Kind of works
             # methods = sorted(methods, key=PyutMethod.getName)

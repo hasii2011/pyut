@@ -7,7 +7,6 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -34,11 +33,17 @@ from pyutmodel.PyutLink import PyutLink
 from pyutmodel.PyutLinkType import PyutLinkType
 from pyutmodel.PyutStereotype import PyutStereotype
 from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutInterface import PyutInterface
+
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutField import PyutFields
+
 from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutMethod import PyutModifiers
 from pyutmodel.PyutMethod import SourceCode
+from pyutmodel.PyutMethod import PyutMethods
+
+from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 from pyutmodel.PyutModifier import PyutModifier
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutParameter import PyutParameter
@@ -337,12 +342,12 @@ class TestADialog(App):
         ozzeeField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
         franField:  PyutField = PyutField(name='Fran',  fieldType=PyutType('str'),   defaultValue='left')
         opieField:  PyutField = PyutField(name='Opie',  fieldType=PyutType('int'),   defaultValue='9')
-        pyutClass.fields = [ozzeeField, opieField, franField]
+        pyutClass.fields      = PyutFields([ozzeeField, opieField, franField])
 
         ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibilityEnum.PROTECTED)
         franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibilityEnum.PRIVATE)
         opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibilityEnum.PUBLIC)
-        pyutClass.methods = [ozzeeMethod, franMethod, opieMethod]
+        pyutClass.methods          = PyutMethods([ozzeeMethod, franMethod, opieMethod])
         # Not a notebook
         # noinspection PyTypeChecker
         umlFrame:    UmlClassDiagramsFrame = UmlClassDiagramsFrame(parent=self._frame, eventEngine=self._eventEngine)
@@ -382,7 +387,7 @@ class TestADialog(App):
         ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibilityEnum.PUBLIC)
         franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibilityEnum.PUBLIC)
         opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibilityEnum.PUBLIC)
-        pyutInterface.methods = [ozzeeMethod, franMethod, opieMethod]
+        pyutInterface.methods      = PyutMethods([ozzeeMethod, franMethod, opieMethod])
 
         with DlgEditInterface(parent=self._frame, eventEngine=self._eventEngine, pyutInterface=pyutInterface) as dlg:
             if dlg.ShowModal() == OK:

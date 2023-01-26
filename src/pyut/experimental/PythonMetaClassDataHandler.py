@@ -10,6 +10,7 @@ from logging import getLogger
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutMethod import PyutMethod
+from pyutmodel.PyutMethod import PyutMethods
 from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
@@ -63,9 +64,9 @@ class PythonMetaClassDataHandler:
 
         return clsMethods
 
-    def generatePyutMethods(self, clsMethods: List[classmethod]) -> List[PyutMethod]:
+    def generatePyutMethods(self, clsMethods: List[classmethod]) -> PyutMethods:
 
-        methods: List[PyutMethod] = []
+        methods: PyutMethods = PyutMethods([])
         for me in clsMethods:
             funcName: str        = me.__name__
             meth:     PyutMethod = PyutMethod(funcName)
