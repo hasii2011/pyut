@@ -21,4 +21,4 @@ wxPython==4.2.0
 pyutmodel~=1.3.4
 ogl~=0.60.30
 oglio~=0.5.50
-pyutplugins~=0.6.7
+pyutplugins~=0.6.9

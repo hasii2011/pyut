@@ -62,7 +62,7 @@ setup(
     options=dict(py2app=dict(
         plist=dict(
             CFBundleGetInfoString='Edits Pyut UML Files',
-            CFBundleIdentifier='org.pyut',
+            CFBundleIdentifier='pyut',
             CFBundleDocumentTypes=[
                 {'CFBundleTypeName': 'Pyut'},
                 {'CFBundleTypeRole': 'Editor'},
@@ -83,6 +83,6 @@ setup(
                       'pyutmodel==1.3.4',
                       'ogl~=0.60.30',
                       'oglio~=0.5.50',
-                      'pyutplugins~=0.6.7',
+                      'pyutplugins~=0.6.9',
                       ]
 )

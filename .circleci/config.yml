@@ -36,7 +36,7 @@ jobs:
             pip install pyutmodel~=1.3.4
             pip install ogl~=0.60.30
             pip install oglio~=0.5.50
-            pip install pyutplugins~=0.6.7
+            pip install pyutplugins~=0.6.9
             pip install html-testRunner~=1.2.1
       - run:
             name: run tests
