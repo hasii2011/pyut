@@ -6,6 +6,8 @@ from logging import getLogger
 
 from configparser import ConfigParser
 
+from pyutplugins.toolplugins.orthogonal.LayoutAreaSize import LayoutAreaSize
+
 from pyut.general.Singleton import Singleton
 
 from miniogl.MiniOglColorEnum import MiniOglColorEnum
@@ -17,10 +19,11 @@ from ogl.OglTextFontFamily import OglTextFontFamily
 from pyut.preferences.DebugPreferences import DebugPreferences
 from pyut.preferences.FeaturePreferences import FeaturePreferences
 from pyut.preferences.GeneralPreferences import GeneralPreferences
-from pyut.preferences.MiscellaneousPreferences import MiscellaneousPreferences
 from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 from ogl.preferences.OglPreferences import OglPreferences
+
+from pyutplugins.preferences.PluginPreferences import PluginPreferences
 
 from pyut.general.datatypes.Position import Position
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
@@ -68,11 +71,11 @@ class PyutPreferences(Singleton):
 
         self._preferencesCommon:  PreferencesCommon        = PreferencesCommon()
         self._generalPrefs:       GeneralPreferences       = GeneralPreferences()
-        self._miscellaneousPrefs: MiscellaneousPreferences = MiscellaneousPreferences()
         self._debugPrefs:         DebugPreferences         = DebugPreferences()
         self._featurePrefs:       FeaturePreferences       = FeaturePreferences()
 
-        self._oglPrefs: OglPreferences = OglPreferences()
+        self._oglPrefs:    OglPreferences    = OglPreferences()
+        self._pluginPrefs: PluginPreferences = PluginPreferences()
 
         self._createEmptyPreferences()
 
@@ -117,30 +120,6 @@ class PyutPreferences(Singleton):
     def overrideProgramExitPosition(self, theNewValue: bool):
         # noinspection PyAttributeOutsideInit
         self._overrideProgramExitPosition = theNewValue
-
-    @property
-    def pdfExportFileName(self) -> str:
-        return self._miscellaneousPrefs.pdfExportFileName
-
-    @pdfExportFileName.setter
-    def pdfExportFileName(self, newValue: str):
-        self._miscellaneousPrefs.pdfExportFileName = newValue
-
-    @property
-    def wxImageFileName(self) -> str:
-        return self._miscellaneousPrefs.wxImageFileName
-
-    @wxImageFileName.setter
-    def wxImageFileName(self, newValue: str):
-        self._miscellaneousPrefs.wxImageFileName = newValue
-
-    @property
-    def orthogonalLayoutSize(self) -> Dimensions:
-        return self._miscellaneousPrefs.orthogonalLayoutSize
-
-    @orthogonalLayoutSize.setter
-    def orthogonalLayoutSize(self, newValue: Dimensions):
-        self._miscellaneousPrefs.orthogonalLayoutSize = newValue
 
     @property
     def showTipsOnStartup(self) -> bool:
@@ -247,14 +226,6 @@ class PyutPreferences(Singleton):
     @fullScreen.setter
     def fullScreen(self, theNewValue: bool):
         self._generalPrefs.fullScreen = theNewValue
-
-    @property
-    def i18n(self) -> str:
-        return self._miscellaneousPrefs.i18n
-
-    @i18n.setter
-    def i18n(self, theNewValue: str):
-        self._miscellaneousPrefs.i18n = theNewValue
 
     @property
     def currentTip(self) -> int:
@@ -467,6 +438,31 @@ class PyutPreferences(Singleton):
     def methodName(self, newValue: str):
         self._oglPrefs.methodName = newValue
 
+    @property
+    def wxImageFileName(self) -> str:
+        return self._pluginPrefs.wxImageFileName
+
+    @wxImageFileName.setter
+    def wxImageFileName(self, newValue: str):
+        self._pluginPrefs.wxImageFileName = newValue
+
+    @property
+    def orthogonalLayoutSize(self) -> LayoutAreaSize:
+        return self._pluginPrefs.orthogonalLayoutSize
+
+    @orthogonalLayoutSize.setter
+    def orthogonalLayoutSize(self, newValue: LayoutAreaSize):
+        self._pluginPrefs.orthogonalLayoutSize = newValue
+
+    @property
+    def sugiyamaStepByStep(self) -> bool:
+        ans: bool = self._pluginPrefs.sugiyamaStepByStep
+        return ans
+
+    @sugiyamaStepByStep.setter
+    def sugiyamaStepByStep(self, newValue: bool):
+        self._pluginPrefs.sugiyamaStepByStep = newValue
+
     def __loadConfig(self):
         """
         Load preferences from configuration file
@@ -490,7 +486,6 @@ class PyutPreferences(Singleton):
         self._config.read(PyutPreferences.getPreferencesLocation())
 
         self._generalPrefs.addAnyMissingMainPreferences()
-        self._miscellaneousPrefs.addAnyMissingPreferences()
         self._debugPrefs.addAnyMissingDebugPreferences()
         self._featurePrefs.addAnyMissingFeaturePreferences()
 
@@ -500,7 +495,6 @@ class PyutPreferences(Singleton):
 
         self._preferencesCommon.configParser  = self._config
         self._generalPrefs.configParser       = self._config
-        self._miscellaneousPrefs.configParser = self._config
         self._debugPrefs.configParser         = self._config
         self._featurePrefs.configParser       = self._config
         #

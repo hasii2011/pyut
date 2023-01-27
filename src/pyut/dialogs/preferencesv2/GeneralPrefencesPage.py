@@ -67,8 +67,6 @@ class GeneralPreferencesPage(BasePreferencesPage):
 
     def _createWindow(self, parent: Window) :
 
-        # panel: SizedPanel = SizedPanel(parent)
-        # panel.SetSizerType('vertical')
 
         for cd in self._controlData:
             control: ControlData = cast(ControlData, cd)

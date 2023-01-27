@@ -23,7 +23,7 @@ from wx.lib.sized_controls import SizedPanel
 from pyut.dialogs.preferencesv2.DefaultValuesPreferencesPage import DefaultValuesPreferencesPage
 from pyut.dialogs.preferencesv2.DiagramPreferencesPage import DiagramPreferencesPage
 from pyut.dialogs.preferencesv2.GeneralPrefencesPage import GeneralPreferencesPage
-from pyut.dialogs.preferencesv2.MiscellaneousPreferencePage import MiscellaneousPreferencesPage
+from pyut.dialogs.preferencesv2.PluginPreferencePage import PluginPreferencesPage
 from pyut.dialogs.preferencesv2.PositioningPreferencesPage import PositioningPreferencesPage
 
 from pyut.preferences.PyutPreferences import PyutPreferences
@@ -77,17 +77,17 @@ class DlgPyutPreferencesV2(SizedDialog):
         book: Notebook = Notebook(sizedPanel, style=style)
         book.SetSizerProps(expand=True, proportion=1)
 
-        generalPreferences:         GeneralPreferencesPage       = GeneralPreferencesPage(book)
-        positioningPreferences:     PositioningPreferencesPage   = PositioningPreferencesPage(book)
-        miscellaneousPreferences:   MiscellaneousPreferencesPage = MiscellaneousPreferencesPage(book)
-        diagramPreferences:         DiagramPreferencesPage       = DiagramPreferencesPage(book)
-        valuePreferences:          DefaultValuesPreferencesPage  = DefaultValuesPreferencesPage(book)
+        generalPreferences:     GeneralPreferencesPage       = GeneralPreferencesPage(book)
+        positioningPreferences: PositioningPreferencesPage   = PositioningPreferencesPage(book)
+        diagramPreferences:     DiagramPreferencesPage       = DiagramPreferencesPage(book)
+        valuePreferences:       DefaultValuesPreferencesPage = DefaultValuesPreferencesPage(book)
+        pluginPreferences:      PluginPreferencesPage        = PluginPreferencesPage(book)
         #
-        book.AddPage(generalPreferences,       text=generalPreferences.name,        select=True)
-        book.AddPage(positioningPreferences,   text=positioningPreferences.name,    select=False)
-        book.AddPage(miscellaneousPreferences, text=miscellaneousPreferences.name,  select=False)
-        book.AddPage(diagramPreferences,       text=diagramPreferences.name,        select=False)
-        book.AddPage(valuePreferences,         text=valuePreferences.name,          select=False)
+        book.AddPage(generalPreferences,     text=generalPreferences.name,     select=True)
+        book.AddPage(positioningPreferences, text=positioningPreferences.name, select=False)
+        book.AddPage(diagramPreferences,     text=diagramPreferences.name,     select=False)
+        book.AddPage(valuePreferences,       text=valuePreferences.name,       select=False)
+        book.AddPage(pluginPreferences,      text=pluginPreferences.name,      select=False)
 
     def __OnClose(self, event):
 

@@ -21,7 +21,6 @@ from pyut.uiv2.PyutAppV2 import PyutAppV2
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
-from pyut.general.Lang import Lang
 from pyut.general.PyutVersion import PyutVersion
 
 
@@ -84,7 +83,6 @@ class PyutV2:
         self._updateOurDirectoryPreferences()
         self._displayIntro()
         app: PyutAppV2 = PyutAppV2(redirect=False)
-        Lang.importLanguage()
 
         pyutV2.displaySystemMetrics()
 
