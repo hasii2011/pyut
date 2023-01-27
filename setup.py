@@ -23,10 +23,11 @@ OPTIONS = {}
 # The text of the README file
 README = (HERE / "README.md").read_text()
 LICENSE = (HERE / 'LICENSE').read_text()
+VERSION = (HERE / 'src/pyut/resources/version.txt').read_text()
 
 setup(
     name='Pyut',
-    version='7.6.0',
+    version=VERSION,
     app=APP,
     data_files=DATA_FILES,
     packages=[
