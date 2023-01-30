@@ -171,8 +171,7 @@ class BaseWxLinkCommand(Command):
         pyutSDMessage = PyutSDMessage(BaseWxLinkCommand.NO_NAME_MESSAGE, src.pyutObject, srcY, dest.pyutObject, destY)
 
         oglLinkFactory = getOglLinkFactory()
-        oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest,
-                                                               linkType=PyutLinkType.SD_MESSAGE, srcPos=srcPos, dstPos=destPos)
+        oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest, linkType=PyutLinkType.SD_MESSAGE)
 
         return oglSdMessage
 
