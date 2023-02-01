@@ -82,8 +82,8 @@ setup(
                       'PyGithub==1.57',
                       'wxPython==4.2.0',
                       'pyutmodel==1.3.4',
-                      'ogl~=0.60.30',
-                      'oglio~=0.5.50',
-                      'pyutplugins~=0.6.9',
+                      'ogl~=0.60.41',
+                      'oglio~=0.5.51',
+                      'pyutplugins~=0.8.11',
                       ]
 )

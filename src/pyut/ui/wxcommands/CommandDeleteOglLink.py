@@ -24,8 +24,8 @@ class CommandDeleteOglLink(BaseWxLinkCommand):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._srcOglObject = oglLink.getSourceShape()
-        self._dstOglObject = oglLink.getDestinationShape()
+        self._srcOglObject = oglLink.sourceShape
+        self._dstOglObject = oglLink.destinationShape
 
         sourceAnchorPoint      = oglLink.sourceAnchor
         destinationAnchorPoint = oglLink.destinationAnchor

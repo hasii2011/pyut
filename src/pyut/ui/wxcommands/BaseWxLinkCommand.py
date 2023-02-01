@@ -176,4 +176,8 @@ class BaseWxLinkCommand(Command):
         return oglSdMessage
 
     def _toCommandName(self, linkType: PyutLinkType) -> str:
-        return f'{linkType.name.capitalize()} Link'
+        # Because I do not like the generated name
+        if linkType == PyutLinkType.SD_MESSAGE:
+            return f'SDMessage Link'
+        else:
+            return f'{linkType.name.capitalize()} Link'
