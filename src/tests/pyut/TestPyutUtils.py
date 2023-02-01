@@ -102,27 +102,6 @@ class TestPyutUtils(TestBase):
         actualName:   str = projectName
         self.assertEqual(expectedName, actualName, 'Did not work')
 
-    def testGetTempFilePathDebug(self):
-
-        self.prefs.useDebugTempFileLocation = True
-        PyutUtils.setBasePath(TestPyutUtils.BASE_TEST_PATH)
-
-        fqFileName: str = PyutUtils.getTempFilePath(TestPyutUtils.FAKE_TEST_FILENAME)
-        self.assertEqual(f'{TestPyutUtils.BASE_TEST_PATH}/{TestPyutUtils.FAKE_TEST_FILENAME}', fqFileName, 'Should be local path')
-
-    def testGetTempFilePathProduction(self):
-
-        self.prefs.useDebugTempFileLocation = False
-        PyutUtils.setBasePath(TestPyutUtils.BASE_TEST_PATH)
-
-        fqFileName: str = PyutUtils.getTempFilePath(TestPyutUtils.FAKE_TEST_FILENAME)
-        #
-        # Going to be something like:
-        # /var/folders/83/_dybkw8115vcgcybw433gs4h0000gn/T/hasiiTheGreat.doc
-        #
-        self.assertNotEqual(f'{TestPyutUtils.BASE_TEST_PATH}/{TestPyutUtils.FAKE_TEST_FILENAME}', fqFileName, 'Should be system temp')
-        self.logger.info(f'temp file name {fqFileName}')
-
     def testGetScreenMetrics(self):
         from wx import App
 

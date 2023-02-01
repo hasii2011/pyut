@@ -32,8 +32,6 @@ from pyut.general.datatypes.Dimensions import Dimensions
 
 class PyutPreferences(Singleton):
 
-    DEFAULT_PDF_EXPORT_FILE_NAME: str = 'PyutExport'
-    FILE_KEY:                     str = "File"
 
     """
     The goal of this class is to handle Pyut Preferences, to load them and save
@@ -236,14 +234,6 @@ class PyutPreferences(Singleton):
         self._generalPrefs.currentTip = theNewValue
 
     @property
-    def editor(self) -> str:
-        return self._generalPrefs.editor
-
-    @editor.setter
-    def editor(self, theNewValue: str):
-        self._generalPrefs.editor = theNewValue
-
-    @property
     def showParameters(self) -> bool:
         return self._oglPrefs.showParameters
 
@@ -252,28 +242,12 @@ class PyutPreferences(Singleton):
         self._oglPrefs.showParameters = theNewValue
 
     @property
-    def useDebugTempFileLocation(self) -> bool:
-        return self._debugPrefs.useDebugTempFileLocation
-
-    @useDebugTempFileLocation.setter
-    def useDebugTempFileLocation(self, theNewValue: bool):
-        self._debugPrefs.useDebugTempFileLocation = theNewValue
-
-    @property
     def debugBasicShape(self):
         return self._oglPrefs.debugBasicShape
 
     @debugBasicShape.setter
     def debugBasicShape(self, theNewValue: bool):
         self._oglPrefs.debugBasicShape = theNewValue
-
-    @property
-    def pyutIoPluginAutoSelectAll(self) -> bool:
-        return self._debugPrefs.pyutIoPluginAutoSelectAll
-
-    @pyutIoPluginAutoSelectAll.setter
-    def pyutIoPluginAutoSelectAll(self, theNewValue: bool):
-        self._debugPrefs.pyutIoPluginAutoSelectAll = theNewValue
 
     @property
     def debugDiagramFrame(self) -> bool:

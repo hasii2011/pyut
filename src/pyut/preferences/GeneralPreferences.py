@@ -26,7 +26,6 @@ class GeneralPreferences(BaseSubPreference):
     AUTO_RESIZE_SHAPE_ON_EDIT:  str = 'Auto_Resize_Shape_On_Edit'
     FULL_SCREEN:                str = 'Full_Screen'
     CURRENT_TIP:                str = 'Current_Tip'
-    EDITOR:                     str = 'Editor'
     STARTUP_SIZE:               str = 'startup_size'
     STARTUP_POSITION:           str = 'startup_position'
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
@@ -42,13 +41,13 @@ class GeneralPreferences(BaseSubPreference):
         AUTO_RESIZE_SHAPE_ON_EDIT: 'True',
         FULL_SCREEN:               'False',
         CURRENT_TIP:               '0',
-        EDITOR:                    'brackets',
         STARTUP_SIZE:              Dimensions(1024, 768).__str__(),
         STARTUP_POSITION:          Position(5, 5).__str__(),
         CENTER_APP_ON_STARTUP:     'True',
         TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value,
     }
 
+    # noinspection PyAttributeOutsideInit
     def init(self, *args, **kwargs):
 
         self.logger:  Logger            = getLogger(__name__)
@@ -148,15 +147,6 @@ class GeneralPreferences(BaseSubPreference):
     @currentTip.setter
     def currentTip(self, theNewValue: int):
         self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.CURRENT_TIP, str(theNewValue))
-        self._preferencesCommon.saveConfig()
-
-    @property
-    def editor(self) -> str:
-        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.EDITOR)
-
-    @editor.setter
-    def editor(self, theNewValue: str):
-        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.EDITOR, theNewValue)
         self._preferencesCommon.saveConfig()
 
     @property

@@ -12,13 +12,9 @@ class DebugPreferences(BaseSubPreference):
 
     DEBUG_SECTION:   str = 'Debug'
 
-    DEBUG_TEMP_FILE_LOCATION:      str = 'debug_temp_file_location'       # TODO: is a plugin preference
-    PYUTIO_PLUGIN_AUTO_SELECT_ALL: str = 'pyutio_plugin_auto_select_all'  # TODO:  Is a plugin preference
     DEBUG_ERROR_VIEWS:             str = 'debug_error_views'              # If true allows testing of the error views through Pyut
 
     DEBUG_PREFERENCES:  PREFS_NAME_VALUES = {
-        DEBUG_TEMP_FILE_LOCATION:       'False',
-        PYUTIO_PLUGIN_AUTO_SELECT_ALL:  'False',
         DEBUG_ERROR_VIEWS:              'False'
     }
 
@@ -42,26 +38,6 @@ class DebugPreferences(BaseSubPreference):
 
         except (ValueError, Exception) as e:
             self.logger.error(f"Error: {e}")
-
-    @property
-    def useDebugTempFileLocation(self) -> bool:
-        ans: bool = self._config.getboolean(DebugPreferences.DEBUG_SECTION, DebugPreferences.DEBUG_TEMP_FILE_LOCATION)
-        return ans
-
-    @useDebugTempFileLocation.setter
-    def useDebugTempFileLocation(self, theNewValue: bool):
-        self._config.set(DebugPreferences.DEBUG_SECTION, DebugPreferences.DEBUG_TEMP_FILE_LOCATION, str(theNewValue))
-        self._preferencesCommon.saveConfig()
-
-    @property
-    def pyutIoPluginAutoSelectAll(self) -> bool:
-        ans: bool = self._config.getboolean(DebugPreferences.DEBUG_SECTION, DebugPreferences.PYUTIO_PLUGIN_AUTO_SELECT_ALL)
-        return ans
-
-    @pyutIoPluginAutoSelectAll.setter
-    def pyutIoPluginAutoSelectAll(self, theNewValue: bool):
-        self._config.set(DebugPreferences.DEBUG_SECTION, DebugPreferences.PYUTIO_PLUGIN_AUTO_SELECT_ALL, str(theNewValue))
-        self._preferencesCommon.saveConfig()
 
     @property
     def debugErrorViews(self):

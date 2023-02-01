@@ -272,17 +272,6 @@ class PyutUtils:
         return fqFileName
 
     @classmethod
-    def getTempFilePath(cls, fileName: str) -> str:
-
-        if PyutPreferences().useDebugTempFileLocation is True:
-            fqFileName: str = f'{PyutUtils.getBasePath()}{osSep}{fileName}'
-        else:
-            tempDir: str = gettempdir()
-            fqFileName = f'{tempDir}{osSep}{fileName}'
-
-        return fqFileName
-
-    @classmethod
     def getScreenMetrics(cls) -> ScreenMetrics:
 
         scrResolution: Size            = ScreenDC().GetPPI()

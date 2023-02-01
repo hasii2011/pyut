@@ -66,31 +66,6 @@ class TestPyutPreferences(TestBase):
         self.assertEqual(autoResize, False, 'What !! I set it to the boolean `False`')
         self.logger.info(f'{autoResize}')
 
-    def testUseDebugTempFileLocationTrue(self):
-        self.prefs.init()  # reload prefs
-        self.prefs.useDebugTempFileLocation = True
-        self.assertTrue(self.prefs.useDebugTempFileLocation, 'Syntactic sugar not working')
-
-    def testUseDebugTempFileLocationFalse(self):
-        self.prefs.init()  # reload prefs
-        self.prefs.useDebugTempFileLocation = False
-        self.assertFalse(self.prefs.useDebugTempFileLocation, 'Syntactic sugar not working')
-
-    def testDebugBasicShapeTrue(self):
-        # TODO move to TestOglPreferences
-        self.prefs.init()  # reload prefs
-        oldValue: bool = self.prefs.debugBasicShape
-        self.prefs.debugBasicShape = True
-        self.assertTrue(self.prefs.debugBasicShape, 'Syntactic sugar not working')
-        self.prefs.debugBasicShape = oldValue
-
-    def testDebugBasicShapeFalse(self):
-        self.prefs.init()  # reload prefs
-        oldValue: bool = self.prefs.debugBasicShape
-        self.prefs.debugBasicShape = False
-        self.assertFalse(self.prefs.debugBasicShape, 'Syntactic sugar not working')
-        self.prefs.debugBasicShape = oldValue
-
     def _backupPrefs(self):
 
         prefsFileName: str = PyutPreferences.getPreferencesLocation()
