@@ -25,25 +25,6 @@ function checkStatus {
     fi
 }
 
-function manuallyRunSomeTests {
-
-  python3 -m unittest tests.TestUmlFrame.TestUmlFrame.testClassCreation
-  status=$?
-  checkStatus ${status} testClassCreation
-
-  python3 -m unittest tests.TestUmlFrame.TestUmlFrame.testNoteCreation
-  status=$?
-  checkStatus ${status} testNoteCreation
-
-  python3 -m unittest tests.TestUmlFrame.TestUmlFrame.testActorCreation
-  status=$?
-  checkStatus ${status} testActorCreation
-
-  python3 -m unittest tests.TestUmlFrame.TestUmlFrame.testUseCaseCreation
-  status=$?
-  checkStatus ${status} testUseCaseCreation
-
-}
 changeToProjectRoot
 
 echo "Travis Build directory: ${TRAVIS_BUILD_DIR}"
@@ -52,8 +33,6 @@ echo "current: $(pwd)"
 
 python3 -m tests.TestAll
 status=$?
-
-manuallyRunSomeTests
 
 cd -  > /dev/null 2>&1 || ! echo "No such directory"
 
