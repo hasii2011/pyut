@@ -84,6 +84,6 @@ setup(
                       'pyutmodel==1.3.4',
                       'ogl~=0.60.41',
                       'oglio~=0.5.51',
-                      'pyutplugins~=0.8.11',
+                      'pyutplugins~=0.8.18',
                       ]
 )

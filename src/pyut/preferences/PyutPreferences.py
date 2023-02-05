@@ -6,8 +6,6 @@ from logging import getLogger
 
 from configparser import ConfigParser
 
-from pyutplugins.toolplugins.orthogonal.LayoutAreaSize import LayoutAreaSize
-
 from pyut.general.Singleton import Singleton
 
 from miniogl.MiniOglColorEnum import MiniOglColorEnum
@@ -22,8 +20,6 @@ from pyut.preferences.GeneralPreferences import GeneralPreferences
 from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 from ogl.preferences.OglPreferences import OglPreferences
-
-from pyutplugins.preferences.PluginPreferences import PluginPreferences
 
 from pyut.general.datatypes.Position import Position
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
@@ -73,7 +69,6 @@ class PyutPreferences(Singleton):
         self._featurePrefs:       FeaturePreferences       = FeaturePreferences()
 
         self._oglPrefs:    OglPreferences    = OglPreferences()
-        self._pluginPrefs: PluginPreferences = PluginPreferences()
 
         self._createEmptyPreferences()
 
@@ -411,31 +406,6 @@ class PyutPreferences(Singleton):
     @methodName.setter
     def methodName(self, newValue: str):
         self._oglPrefs.methodName = newValue
-
-    @property
-    def wxImageFileName(self) -> str:
-        return self._pluginPrefs.wxImageFileName
-
-    @wxImageFileName.setter
-    def wxImageFileName(self, newValue: str):
-        self._pluginPrefs.wxImageFileName = newValue
-
-    @property
-    def orthogonalLayoutSize(self) -> LayoutAreaSize:
-        return self._pluginPrefs.orthogonalLayoutSize
-
-    @orthogonalLayoutSize.setter
-    def orthogonalLayoutSize(self, newValue: LayoutAreaSize):
-        self._pluginPrefs.orthogonalLayoutSize = newValue
-
-    @property
-    def sugiyamaStepByStep(self) -> bool:
-        ans: bool = self._pluginPrefs.sugiyamaStepByStep
-        return ans
-
-    @sugiyamaStepByStep.setter
-    def sugiyamaStepByStep(self, newValue: bool):
-        self._pluginPrefs.sugiyamaStepByStep = newValue
 
     def __loadConfig(self):
         """

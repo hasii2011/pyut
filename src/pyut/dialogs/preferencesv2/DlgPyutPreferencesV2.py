@@ -23,11 +23,12 @@ from wx.lib.sized_controls import SizedPanel
 from pyut.dialogs.preferencesv2.DefaultValuesPreferencesPage import DefaultValuesPreferencesPage
 from pyut.dialogs.preferencesv2.DiagramPreferencesPage import DiagramPreferencesPage
 from pyut.dialogs.preferencesv2.GeneralPrefencesPage import GeneralPreferencesPage
-from pyut.dialogs.preferencesv2.PluginPreferencesPage import PluginPreferencesPage
+
 from pyut.dialogs.preferencesv2.PositioningPreferencesPage import PositioningPreferencesPage
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
+from pyutplugins.common.ui.preferences.PluginPreferencesPage import PluginPreferencesPage
 
 class DlgPyutPreferencesV2(SizedDialog):
     """
