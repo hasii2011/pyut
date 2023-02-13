@@ -20,8 +20,9 @@ from wx import Size
 from wx.lib.sized_controls import SizedDialog
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.dialogs.preferencesv2.DefaultValuesPreferencesPage import DefaultValuesPreferencesPage
-from pyut.dialogs.preferencesv2.DiagramPreferencesPage import DiagramPreferencesPage
+from ogl.ui.DefaultValuesPreferencesPage import DefaultValuesPreferencesPage
+from ogl.ui.DiagramPreferencesPage import DiagramPreferencesPage
+
 from pyut.dialogs.preferencesv2.GeneralPrefencesPage import GeneralPreferencesPage
 
 from pyut.dialogs.preferencesv2.PositioningPreferencesPage import PositioningPreferencesPage

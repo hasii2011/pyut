@@ -82,6 +82,7 @@ setup(
                       'PyGithub==1.57',
                       'wxPython==4.2.0',
                       'pyutmodel==1.4.0',
+                      'hasiicommon~=0.0.6',
                       'ogl~=0.70.0',
                       'oglio~=0.5.62',
                       'pyutplugins~=0.8.21',
