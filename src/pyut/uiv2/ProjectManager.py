@@ -270,6 +270,8 @@ class ProjectManager:
         project.filename = filename
 
         # Load the project
+        # TODO:  Put in a try catch here to handle when reading old/bad files
+
         oglProject: OglProject = self._readFile(filename=filename)
 
         self.currentProject = project

@@ -33,10 +33,10 @@ jobs:
             pip install attrdict3
             pip install -v -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
             pip install PyGithub
-            pip install pyutmodel~=1.3.4
-            pip install ogl~=0.60.41
-            pip install oglio~=0.5.51
-            pip install pyutplugins~=0.8.18
+            pip install pyutmodel~=1.4.0
+            pip install ogl~=0.70.0
+            pip install oglio~=0.5.62
+            pip install pyutplugins~=0.8.21
             pip install html-testRunner~=1.2.1
       - run:
             name: run tests

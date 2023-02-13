@@ -41,8 +41,8 @@ class DlgEditField(BaseEditParamFieldDialog):
         """
         nameValue: str = self._name.GetValue().strip()
         if nameValue == '':
-            self._indicateEmptyName()
-            return
+            self._indicateEmptyTextCtrl(self._name)
+            return  # will not end modal dialog
 
         self._fieldToEdit.name = nameValue
 
@@ -54,6 +54,6 @@ class DlgEditField(BaseEditParamFieldDialog):
         if self._defaultValue.GetValue().strip() != "":
             self._fieldToEdit.defaultValue = self._defaultValue.GetValue().strip()
         else:
-            self._fieldToEdit.defaultValue = None
+            self._fieldToEdit.defaultValue = ''
 
         super()._onOk(event)

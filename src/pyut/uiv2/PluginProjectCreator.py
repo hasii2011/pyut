@@ -12,6 +12,7 @@ from ogl.OglActor import OglActor
 from ogl.OglUseCase import OglUseCase
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
+from oglio import OglVersion
 
 from pyutplugins.ExternalTypes import PluginDocument
 from pyutplugins.ExternalTypes import PluginDocumentTitle
@@ -35,6 +36,7 @@ class PluginProjectCreator:
         pluginProject.projectName = pyutProject.projectName
         pluginProject.fileName    = pyutProject.filename
         pluginProject.codePath    = pyutProject.codePath
+        pluginProject.version     = OglVersion.version
         for document in pyutProject.documents:
             pyutDocument:   IPyutDocument = cast(IPyutDocument, document)
             pluginDocument: PluginDocument = PluginDocument()
