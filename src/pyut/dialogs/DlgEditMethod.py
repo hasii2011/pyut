@@ -9,6 +9,8 @@ from wx import DEFAULT_DIALOG_STYLE
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import ID_ANY
+from wx import ID_CANCEL
+from wx import ID_OK
 from wx import OK
 from wx import RA_SPECIFY_ROWS
 from wx import RESIZE_BORDER
@@ -61,8 +63,7 @@ class DlgEditMethod(BaseEditDialog):
         self._methodName:       TextCtrl = cast(TextCtrl, None)
         self._MethodReturnType: TextCtrl = cast(TextCtrl, None)
         self._btnModifiers:     Button   = cast(Button, None)
-        self._btnOk:            Button   = cast(Button, None)
-        self._btnCancel:        Button   = cast(Button, None)
+
 
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerType('vertical')
@@ -71,7 +72,11 @@ class DlgEditMethod(BaseEditDialog):
 
         self._layoutMethodInformation(parent=sizedPanel)
         self._layoutParameterControls(parent=sizedPanel)
-        self._layoutStandardOkCancelButtonSizer()
+
+        self._btnCode:          Button = cast(Button, None)
+        self._btnOk:            Button = cast(Button, None)
+        self._btnCancel:        Button = cast(Button, None)
+        self._layoutDialogButtonContainer(parent=sizedPanel)
 
         self._initializeDataInControls()
 
@@ -138,6 +143,26 @@ class DlgEditMethod(BaseEditDialog):
         callbacks.downCallback   = self._parameterDownCallback
 
         self._pyutParameters = PyutAdvancedListBox(parent=parent, title='Parameters:', callbacks=callbacks)
+
+    def _layoutDialogButtonContainer(self, parent: SizedPanel):
+        """
+        Create Ok, Cancel, and Code buttons;
+        Since we want to use a custom button set, we won't use the
+        CreateStdDialogBtnSizer here, we'll just create our own panel with
+        a horizontal layout and add the buttons to that;`
+        """
+        sizedPanel: SizedPanel = SizedPanel(parent)
+        sizedPanel.SetSizerType('horizontal')
+        sizedPanel.SetSizerProps(expand=False, halign='right')  # expand False allows aligning right
+
+        self._btnCode   = Button(sizedPanel, label="C&ode...")
+        self._btnOk     = Button(sizedPanel, ID_OK, '&Ok')
+        self._btnCancel = Button(sizedPanel, ID_CANCEL, '&Cancel')
+
+        self.Bind(EVT_BUTTON, self._onOk,         self._btnOk)
+        self.Bind(EVT_BUTTON, self._onCancel,     self._btnCancel)
+        self.Bind(EVT_BUTTON, self._onMethodCode, self._btnCode)
+        self._btnOk.SetDefault()
 
     def _parameterAddCallback (self) -> CallbackAnswer:
         # TODO Use default parameter name when available

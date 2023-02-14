@@ -44,7 +44,6 @@ class DlgEditInterface(DlgEditClassCommon):
         self.Fit()
         self.SetMinSize(self.GetSize())
 
-
     # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):
         """
