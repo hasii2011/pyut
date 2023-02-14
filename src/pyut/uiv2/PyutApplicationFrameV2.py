@@ -39,20 +39,22 @@ from wx import WindowDestroyEvent
 
 from wx import Yield as wxYield
 
+from hasiicommon.Dimensions import Dimensions
+from hasiicommon.Position import Position
+
 from pyutplugins.PluginManager import PluginManager
 
 from pyut.general.PyutVersion import PyutVersion
+
 from pyut.ui.Action import Action
 
 from pyut.ui.frame.FileMenuHandler import FileMenuHandler
 from pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 from pyut.ui.frame.EditMenuHandler import EditMenuHandler
 from pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
-
 from pyut.ui.frame.PyutFileDropTarget import PyutFileDropTarget
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
-
 from pyut.ui.tools.MenuCreator import MenuCreator
 from pyut.ui.tools.SharedTypes import ToolboxIdMap
 from pyut.ui.tools.ToolsCreator import ToolsCreator
@@ -65,13 +67,10 @@ from pyut.PyutConstants import PyutConstants
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.general.datatypes.Dimensions import Dimensions
-from pyut.general.datatypes.Position import Position
-
 from pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
+
 from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
 from pyut.uiv2.PluginAdapter import PluginAdapter
-
 from pyut.uiv2.PyutUIV2 import PyutUIV2
 from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 

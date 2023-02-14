@@ -6,6 +6,7 @@ from logging import Logger
 from logging import getLogger
 
 from ogl.OglUtils import OglUtils
+from ogl.preferences.OglPreferences import OglPreferences
 from pyutmodel.PyutLinkedObject import PyutLinkedObject
 
 from ogl.OglClass import OglClass
@@ -30,7 +31,8 @@ class BaseWxCommand(Command):
     def __init__(self, canUndo: bool, name: str):
 
         super().__init__(canUndo=canUndo, name=name)
-        self._preferences: PyutPreferences = PyutPreferences()
+        self._preferences:    PyutPreferences = PyutPreferences()
+        self._oglPreferences: OglPreferences  = OglPreferences()
 
     def _removeOglObjectFromFrame(self, umlFrame: 'UmlDiagramsFrame', oglObject: DoableObjectType, pyutClass: PyutLinkedObject | None = None):
 
@@ -49,8 +51,8 @@ class BaseWxCommand(Command):
 
     def _addOglClassToFrame(self, umlFrame: 'UmlDiagramsFrame', oglClass: OglClass, x: int, y: int):
 
-        if self._preferences.snapToGrid is True:
-            snappedX, snappedY = OglUtils.snapCoordinatesToGrid(x, y, self._preferences.backgroundGridInterval)
+        if self._oglPreferences.snapToGrid is True:
+            snappedX, snappedY = OglUtils.snapCoordinatesToGrid(x, y, self._oglPreferences.backgroundGridInterval)
             umlFrame.addShape(oglClass, snappedX, snappedY, withModelUpdate=True)
         else:
             umlFrame.addShape(oglClass, x, y, withModelUpdate=True)

@@ -6,24 +6,17 @@ from logging import getLogger
 
 from configparser import ConfigParser
 
+from hasiicommon.Dimensions import Dimensions
+from hasiicommon.Position import Position
+
 from pyut.general.Singleton import Singleton
-
-from miniogl.MiniOglColorEnum import MiniOglColorEnum
-from miniogl.MiniOglPenStyle import MiniOglPenStyle
-from ogl.OglDimensions import OglDimensions
-
-from ogl.OglTextFontFamily import OglTextFontFamily
 
 from pyut.preferences.DebugPreferences import DebugPreferences
 from pyut.preferences.FeaturePreferences import FeaturePreferences
 from pyut.preferences.GeneralPreferences import GeneralPreferences
 from pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from ogl.preferences.OglPreferences import OglPreferences
-
-from pyut.general.datatypes.Position import Position
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
-from pyut.general.datatypes.Dimensions import Dimensions
 
 
 class PyutPreferences(Singleton):
@@ -67,8 +60,6 @@ class PyutPreferences(Singleton):
         self._generalPrefs:       GeneralPreferences       = GeneralPreferences()
         self._debugPrefs:         DebugPreferences         = DebugPreferences()
         self._featurePrefs:       FeaturePreferences       = FeaturePreferences()
-
-        self._oglPrefs:    OglPreferences    = OglPreferences()
 
         self._createEmptyPreferences()
 
@@ -179,14 +170,6 @@ class PyutPreferences(Singleton):
         self._generalPrefs.orgDirectory = theNewValue
 
     @property
-    def centerDiagram(self):
-        return self._oglPrefs.centerDiagram
-
-    @centerDiagram.setter
-    def centerDiagram(self, theNewValue: bool):
-        self._oglPrefs.centerDiagram = theNewValue
-
-    @property
     def centerAppOnStartUp(self) -> bool:
         return self._generalPrefs.centerAppOnStartUp
 
@@ -229,183 +212,12 @@ class PyutPreferences(Singleton):
         self._generalPrefs.currentTip = theNewValue
 
     @property
-    def showParameters(self) -> bool:
-        return self._oglPrefs.showParameters
-
-    @showParameters.setter
-    def showParameters(self, theNewValue: bool):
-        self._oglPrefs.showParameters = theNewValue
-
-    @property
-    def debugBasicShape(self):
-        return self._oglPrefs.debugBasicShape
-
-    @debugBasicShape.setter
-    def debugBasicShape(self, theNewValue: bool):
-        self._oglPrefs.debugBasicShape = theNewValue
-
-    @property
-    def debugDiagramFrame(self) -> bool:
-        return self._oglPrefs.debugDiagramFrame
-
-    @debugDiagramFrame.setter
-    def debugDiagramFrame(self, theNewValue: bool):
-        self._oglPrefs.debugDiagramFrame = theNewValue
-
-    @property
     def debugErrorViews(self):
         return self._debugPrefs.debugErrorViews
 
     @debugErrorViews.setter
     def debugErrorViews(self, theNewValue: bool):
         self._debugPrefs.debugErrorViews = theNewValue
-
-    @property
-    def backgroundGridEnabled(self) -> bool:
-        return self._oglPrefs.backgroundGridEnabled
-
-    @backgroundGridEnabled.setter
-    def backgroundGridEnabled(self, theNewValue: bool):
-        self._oglPrefs.backgroundGridEnabled = theNewValue
-
-    @property
-    def snapToGrid(self) -> bool:
-        return self._oglPrefs.snapToGrid
-
-    @snapToGrid.setter
-    def snapToGrid(self, theNewValue: bool):
-        self._oglPrefs.snapToGrid = theNewValue
-
-    @property
-    def backgroundGridInterval(self) -> int:
-        return self._oglPrefs.backgroundGridInterval
-
-    @backgroundGridInterval.setter
-    def backgroundGridInterval(self, theNewValue: int):
-        self._oglPrefs.backgroundGridInterval = theNewValue
-
-    @property
-    def gridLineColor(self) -> MiniOglColorEnum:
-        return self._oglPrefs.gridLineColor
-
-    @gridLineColor.setter
-    def gridLineColor(self, theNewValue: MiniOglColorEnum):
-        self._oglPrefs.gridLineColor = theNewValue
-
-    @property
-    def gridLineStyle(self) -> MiniOglPenStyle:
-        return self._oglPrefs.gridLineStyle
-
-    @gridLineStyle.setter
-    def gridLineStyle(self, theNewValue: MiniOglPenStyle):
-        self._oglPrefs.gridLineStyle = theNewValue
-
-    @property
-    def noteText(self) -> str:
-        return self._oglPrefs.noteText
-
-    @noteText.setter
-    def noteText(self, theNewValue: str):
-        self._oglPrefs.noteText = theNewValue
-
-    @property
-    def noteDimensions(self) -> OglDimensions:
-        return self._oglPrefs.noteDimensions
-
-    @noteDimensions.setter
-    def noteDimensions(self, newValue: OglDimensions):
-        self._oglPrefs.noteDimensions = newValue
-
-    @property
-    def textDimensions(self) -> OglDimensions:
-        return self._oglPrefs.textDimensions
-
-    @textDimensions.setter
-    def textDimensions(self, newValue: OglDimensions):
-        self._oglPrefs.textDimensions = newValue
-
-    @property
-    def textBold(self) -> bool:
-        return self._oglPrefs.textBold
-
-    @textBold.setter
-    def textBold(self, newValue: bool):
-        self._oglPrefs.textBold = newValue
-
-    @property
-    def textItalicize(self) -> bool:
-        return self._oglPrefs.textItalicize
-
-    @textItalicize.setter
-    def textItalicize(self, newValue: bool):
-        self._oglPrefs.textItalicize = newValue
-
-    @property
-    def textFontFamily(self) -> OglTextFontFamily:
-        """
-        Returns: The text font family
-        """
-        return self._oglPrefs.textFontFamily
-
-    @textFontFamily.setter
-    def textFontFamily(self, newValue: OglTextFontFamily):
-        self._oglPrefs.textFontFamily = newValue
-
-    @property
-    def textFontSize(self) -> int:
-        return self._oglPrefs.textFontSize
-
-    @textFontSize.setter
-    def textFontSize(self, newValue: int):
-        self._oglPrefs.textFontSize = newValue
-
-    @property
-    def className(self) -> str:
-        return self._oglPrefs.className
-
-    @className.setter
-    def className(self, newValue: str):
-        self._oglPrefs.className = newValue
-
-    @property
-    def classDimensions(self) -> OglDimensions:
-        return self._oglPrefs.classDimensions
-
-    @classDimensions.setter
-    def classDimensions(self, newValue: OglDimensions):
-        self._oglPrefs.classDimensions = newValue
-
-    @property
-    def interfaceName(self) -> str:
-        return self._oglPrefs.interfaceName
-
-    @interfaceName.setter
-    def interfaceName(self, newValue: str):
-        self._oglPrefs.interfaceName = newValue
-
-    @property
-    def useCaseName(self) -> str:
-        return self._oglPrefs.useCaseName
-
-    @useCaseName.setter
-    def useCaseName(self, newValue: str):
-        self._oglPrefs.useCaseName = newValue
-
-    @property
-    def actorName(self) -> str:
-        return self._oglPrefs.actorName
-
-    @actorName.setter
-    def actorName(self, newValue: str):
-        self._oglPrefs.actorName = newValue
-
-    @property
-    def methodName(self) -> str:
-        return self._oglPrefs.methodName
-
-    @methodName.setter
-    def methodName(self, newValue: str):
-        self._oglPrefs.methodName = newValue
 
     def __loadConfig(self):
         """

@@ -1,6 +1,10 @@
 
 from typing import cast
 
+from hasiicommon.Dimensions import Dimensions
+from hasiicommon.Position import Position
+from hasiicommon.ui.widgets.DimensionsControl import DimensionsControl
+from hasiicommon.ui.widgets.PositionControl import PositionControl
 from wx import EVT_CHECKBOX
 
 from wx import CheckBox
@@ -13,11 +17,6 @@ from wx import NewIdRef as wxNewIdRef
 from wx.lib.sized_controls import SizedPanel
 
 from pyut.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
-from pyut.general.datatypes.Dimensions import Dimensions
-from pyut.general.datatypes.Position import Position
-
-from pyut.ui.widgets.DimensionsControl import DimensionsControl
-from pyut.ui.widgets.PositionControl import PositionControl
 
 
 class PositioningPreferencesPage(BasePreferencesPage):

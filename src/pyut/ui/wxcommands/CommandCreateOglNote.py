@@ -30,7 +30,7 @@ class CommandCreateOglNote(BaseWxCreateCommand):
 
         Returns: the newly created OglNote
         """
-        pyutNote: PyutNote = PyutNote(noteText=self._prefs.noteText)
+        pyutNote: PyutNote = PyutNote(noteText=self._oglPreferences.noteText)
         oglNote:  OglNote  = OglNote(pyutNote)
 
         return oglNote

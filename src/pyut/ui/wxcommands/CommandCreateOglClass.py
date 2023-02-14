@@ -55,7 +55,7 @@ class CommandCreateOglClass(BaseWxCreateCommand):
 
         Returns: the newly created OglClass
         """
-        className: str       = f'{self._prefs.className}{CommandCreateOglClass.clsCounter}'
+        className: str       = f'{self._oglPreferences.className}{CommandCreateOglClass.clsCounter}'
         pyutClass: PyutClass = PyutClass(className)
         oglClass:  OglClass  = OglClass(pyutClass)
 

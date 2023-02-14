@@ -7,6 +7,7 @@ from logging import getLogger
 
 from copy import deepcopy
 
+from ogl.preferences.OglPreferences import OglPreferences
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -104,13 +105,13 @@ class TestADialog(App):
 
         self.logger:          Logger          = getLogger(__name__)
         self._preferences:    PyutPreferences = PyutPreferences()
+        self._oglPreferences: OglPreferences  = OglPreferences()
         self._dlgSelectionId: wxNewIdRef      = wxNewIdRef()
 
         self._frame:       Frame        = cast(Frame, None)
         self._eventEngine: IEventEngine = cast(EventEngine, None)
 
         super().__init__(redirect)
-
 
     def OnInit(self):
 
@@ -295,7 +296,7 @@ class TestADialog(App):
 
     def _testDlgEditNote(self) -> str:
 
-        pyutNote: PyutNote = PyutNote(noteText=self._preferences.noteText)
+        pyutNote: PyutNote = PyutNote(noteText=self._oglPreferences.noteText)
         with DlgEditNote(parent=self._frame, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == OK:
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
@@ -383,7 +384,7 @@ class TestADialog(App):
 
     def _testDlgEditInterface(self):
 
-        pyutInterface: PyutInterface = PyutInterface(name=self._preferences.interfaceName)
+        pyutInterface: PyutInterface = PyutInterface(name=self._oglPreferences.interfaceName)
         ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibilityEnum.PUBLIC)
         franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibilityEnum.PUBLIC)
         opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibilityEnum.PUBLIC)

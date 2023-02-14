@@ -32,6 +32,7 @@ from pyut.PyutAdvancedListBox import CallbackAnswer
 from pyut.PyutAdvancedListBox import DownCallbackData
 from pyut.PyutAdvancedListBox import PyutAdvancedListBox
 from pyut.PyutAdvancedListBox import UpCallbackData
+
 from pyut.dialogs.DlgEditDescription import DlgEditDescription
 from pyut.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
@@ -41,7 +42,7 @@ from pyutmodel.PyutInterface import PyutInterface
 from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutStereotype import PyutStereotype
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -178,7 +179,7 @@ class DlgEditClassCommon(SizedDialog):
     def _methodAddCallback(self) -> CallbackAnswer:
         """
         """
-        method: PyutMethod     = PyutMethod(name=PyutPreferences().methodName)
+        method: PyutMethod     = PyutMethod(name=OglPreferences().methodName)
         answer: CallbackAnswer = self._editMethod(pyutMethod=method)
         if answer.valid is True:
             self._pyutModelCopy.methods.append(method)

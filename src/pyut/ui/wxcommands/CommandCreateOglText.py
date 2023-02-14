@@ -8,7 +8,7 @@ from pyutmodel.PyutText import PyutText
 
 from ogl.OglText import OglText
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from ogl.preferences.OglPreferences import OglPreferences
 
 from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
@@ -27,7 +27,7 @@ class CommandCreateOglText(BaseWxCreateCommand):
 
     def _createPrototypeInstance(self) -> DoableObjectType:
 
-        preferences: PyutPreferences = self._prefs
+        preferences: OglPreferences = self._oglPreferences
 
         pyutText: PyutText = PyutText(textContent=preferences.noteText)
 

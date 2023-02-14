@@ -24,7 +24,7 @@ class CommandCreateOglUseCase(BaseWxCreateCommand):
 
     def _createPrototypeInstance(self) -> OglUseCase:
 
-        pyutUseCase: PyutUseCase = PyutUseCase(name=self._prefs.useCaseName)
+        pyutUseCase: PyutUseCase = PyutUseCase(name=self._oglPreferences.useCaseName)
         oglUseCase:  OglUseCase  = OglUseCase(pyutUseCase)
 
         return oglUseCase
