@@ -1,6 +1,4 @@
 
-from typing import cast
-
 from logging import Logger
 from logging import getLogger
 
@@ -23,8 +21,9 @@ class ErrorManager(Singleton):
     """
     This class handle errors.
     """
-    clsLogger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
+    logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
 
+    # noinspection PyAttributeOutsideInit
     def init(self, view=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
         """
         Singleton constructor
@@ -32,6 +31,7 @@ class ErrorManager(Singleton):
         self.changeType(view)
         self._view: IErrorView = GraphicErrorView()
 
+    # noinspection PyAttributeOutsideInit
     def changeType(self, view: ErrorViewTypes):
 
         if view == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
@@ -43,7 +43,7 @@ class ErrorManager(Singleton):
         else:
             self._view = GraphicErrorView()
 
-    def newFatalError(self, msg=None, title=None, parent=None):
+    def newFatalError(self, msg='', title='', parent=None):
         if msg is None:
             msg = ""
         if title is None:
@@ -51,20 +51,20 @@ class ErrorManager(Singleton):
         ErrorManager.addToLogFile("Fatal error: " + title, msg)
         self._view.newFatalError(msg, title, parent)
 
-    def newWarning(self, msg, title=None, parent=None):
+    def newWarning(self, msg, title='', parent=None):
         ErrorManager.addToLogFile(f"Warning: {title}", msg)
         self._view.newWarning(msg, title, parent)
 
-    def newInformation(self, msg, title=None, parent=None):
+    def newInformation(self, msg, title='', parent=None):
         ErrorManager.addToLogFile(f"Info: {title}", msg)
         self._view.newInformation(msg, title, parent)
 
-    def displayInformation(self, msg, title=None, parent=None):
+    def displayInformation(self, msg, title='', parent=None):
         ErrorManager.addToLogFile(f"Info: {title}", msg)
         self._view.displayInformation(msg, title, parent)
 
-    @staticmethod
-    def getErrorInfo() -> str:
+    @classmethod
+    def getErrorInfo(cls) -> str:
         """
         Returns:
             System exception information as a formatted string
@@ -79,22 +79,14 @@ class ErrorManager(Singleton):
             for el in extract_tb(exc_info()[2]):
                 errMsg = errMsg + f'{str(el)}\n'
 
-        if errMsg == '':
-            errMsg = cast(str, None)
-        else:
-            prependMsg: str = f'The following error occurred : {str(exc_info()[1])}'
-            prependMsg += f'\n\n---------------------------\n'
-            errMsg = f'{prependMsg}{errMsg}'
-
         return errMsg
 
-    @staticmethod
-    def addToLogFile(title: str, msg: str):
+    @classmethod
+    def addToLogFile(cls, title: str, msg: str):
 
-        ErrorManager.clsLogger.info("---------------------------")
+        cls.logger.error("--------------------------------------------------------------------")
+        cls.logger.error(f'{title} - {msg}')
 
         errMsg: str = ErrorManager.getErrorInfo()
-
-        ErrorManager.clsLogger.info(f'{title} - {msg}\n')
-        if errMsg is not None:
-            ErrorManager.clsLogger.info(errMsg)
+        if errMsg != '':
+            cls.logger.error(errMsg)

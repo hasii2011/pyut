@@ -31,6 +31,7 @@ from wx import TreeItemId
 from wx import CommandEvent
 from wx import MenuEvent
 from wx import Menu
+from wx import MessageBox
 from wx import MessageDialog
 from wx import TextEntryDialog
 
@@ -80,6 +81,8 @@ from pyut.uiv2.IPyutProject import IPyutProject
 from pyut.uiv2.DiagramNotebook import DiagramNotebook
 from pyut.uiv2.LayoutEngine import LayoutEngine
 from pyut.uiv2.PluginProjectCreator import PluginProjectCreator
+from pyut.uiv2.ProjectException import ProjectException
+from pyut.uiv2.ProjectException import ProjectExceptionType
 from pyut.uiv2.ProjectManager import ProjectManager
 from pyut.uiv2.ProjectManager import PyutProjects
 from pyut.uiv2.ProjectTree import ProjectTree
@@ -538,13 +541,15 @@ class PyutUIV2(SplitterWindow):
         if self._projectManager.isProjectLoaded(projectFilename) is True:
             self._displayError("The selected project is already loaded !")
         else:
-            oglProject, pyutProject = self._projectManager.openProject(filename=projectFilename)
+            try:
+                oglProject, pyutProject = self._projectManager.openProject(filename=projectFilename)
+                self._placeShapesOnFrames(oglProject=oglProject, pyutProject=pyutProject)
 
-            self._placeShapesOnFrames(oglProject=oglProject, pyutProject=pyutProject)
-
-            self._updateApplicationTitle()
-            self._eventEngine.sendEvent(EventType.UpdateRecentProjects, projectFilename=projectFilename)
-            self.closeDefaultEmptyProject()
+                self._updateApplicationTitle()
+                self._eventEngine.sendEvent(EventType.UpdateRecentProjects, projectFilename=projectFilename)
+                self.closeDefaultEmptyProject()
+            except ProjectException as pe:
+                self._handleOpenProjectException(pe)
 
     # noinspection PyUnusedLocal
     def _onSaveProject(self, event: SaveProjectEvent):
@@ -826,6 +831,17 @@ class PyutUIV2(SplitterWindow):
     def _setProjectModified(self):
         self._projectManager.currentProject.modified = True
         self._updateApplicationTitle()
+
+    def _handleOpenProjectException(self, pe: ProjectException):
+        from wx import EndBusyCursor
+
+        EndBusyCursor()
+        MessageBox(message=f'{pe}', caption='Project Open Error', style=ICON_ERROR)
+        if (pe.exceptionType == ProjectExceptionType.INVALID_PROJECT or
+                pe.exceptionType == ProjectExceptionType.PROJECT_NOT_FOUND or
+                pe.exceptionType == ProjectExceptionType.ATTRIBUTE_ERROR):
+
+            self._closeProject(projectToClose=pe.project)
 
     def _closeProject(self, projectToClose: IPyutProject):
         """

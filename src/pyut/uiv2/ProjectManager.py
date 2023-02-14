@@ -11,6 +11,8 @@ from copy import copy
 
 from os import path as osPath
 
+from xml.sax import SAXParseException
+
 from wx import FD_OVERWRITE_PROMPT
 from wx import FD_SAVE
 from wx import ICON_ERROR
@@ -29,6 +31,9 @@ from wx import EndBusyCursor
 from wx import Yield as wxYield
 
 from pyut.PyutConstants import PyutConstants
+
+from pyut.errorcontroller.ErrorManager import ErrorManager
+
 from pyut.general.exceptions.UnsupportedFileTypeException import UnsupportedFileTypeException
 
 from pyut.preferences.PyutPreferences import PyutPreferences
@@ -44,6 +49,8 @@ from pyut.uiv2.IPyutDocument import PyutDocuments
 from pyut.uiv2.IPyutProject import IPyutProject
 
 from pyut.uiv2.DiagramNotebook import DiagramNotebook
+from pyut.uiv2.ProjectException import ProjectException
+from pyut.uiv2.ProjectException import ProjectExceptionType
 from pyut.uiv2.ProjectTree import ProjectTree
 from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from pyut.uiv2.PyutProjectV2 import PyutProjectV2
@@ -269,14 +276,22 @@ class ProjectManager:
         project: IPyutProject = self.newProject()
         project.filename = filename
 
-        # Load the project
-        # TODO:  Put in a try catch here to handle when reading old/bad files
-
-        oglProject: OglProject = self._readFile(filename=filename)
+        try:
+            oglProject: OglProject = self._readFile(filename=filename)
+        except SAXParseException:
+            ErrorManager.addToLogFile(title='Invalid Project Content', msg='Recovery Started')
+            raise ProjectException(exceptionType=ProjectExceptionType.INVALID_PROJECT, message='Invalid Project Content', project=project)
+        except FileNotFoundError:
+            ErrorManager.addToLogFile(title='Project not found', msg='Recovery Started')
+            raise ProjectException(exceptionType=ProjectExceptionType.PROJECT_NOT_FOUND, message='Project not found', project=project)
+        except AttributeError as ae:
+            ErrorManager.addToLogFile(title='Attribute Error', msg=f'{ae}')
+            raise ProjectException(exceptionType=ProjectExceptionType.ATTRIBUTE_ERROR, message='Incompatible XML', project=project)
+        except (ValueError, Exception) as e:
+            ErrorManager.addToLogFile(title='Unknown Error', msg=f'{e}')
+            raise ProjectException(exceptionType=ProjectExceptionType.UNKNOWN_ERROR, message='Unknown Error', project=project)
 
         self.currentProject = project
-        # TODO:  FileHistory Manager goes here
-
         self.updateProjectTreeText(pyutProject=project)
         wxYield()
 

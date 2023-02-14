@@ -39,7 +39,7 @@
     "loggers": {
         "root": {
             "level":     "WARNING",
-            "handlers":  ["consoleHandler"],
+            "handlers":  ["rotatingFileHandler"],
             "propagate": "False"
         },
         "Pyut": {
