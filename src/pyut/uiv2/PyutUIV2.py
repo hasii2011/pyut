@@ -60,11 +60,11 @@ from pyutplugins.ExternalTypes import SelectedOglObjectsCallback
 from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
 
-from pyut.dialogs.DlgEditClass import DlgEditClass
-from pyut.dialogs.Wrappers import DlgEditActor
-from pyut.dialogs.Wrappers import DlgEditUseCase
-from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
+from pyut.uiv2.dialogs.Wrappers import DlgEditActor
+from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
+from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyut.enums.DiagramType import DiagramType
 

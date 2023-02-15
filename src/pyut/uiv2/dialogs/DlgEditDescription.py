@@ -12,7 +12,7 @@ from wx.lib.sized_controls import SizedPanel
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface
 
-from pyut.dialogs.BaseEditDialog import BaseEditDialog
+from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
 
 
 class DlgEditDescription(BaseEditDialog):

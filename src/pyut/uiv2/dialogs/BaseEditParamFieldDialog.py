@@ -20,7 +20,7 @@ from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.dialogs.BaseEditDialog import BaseEditDialog
+from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
 
 
 class BaseEditParamFieldDialog(BaseEditDialog):

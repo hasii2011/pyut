@@ -33,9 +33,9 @@ from pyut.PyutAdvancedListBox import DownCallbackData
 from pyut.PyutAdvancedListBox import PyutAdvancedListBox
 from pyut.PyutAdvancedListBox import UpCallbackData
 
-from pyut.dialogs.DlgEditDescription import DlgEditDescription
-from pyut.dialogs.DlgEditMethod import DlgEditMethod
-from pyut.dialogs.DlgEditStereotype import DlgEditStereotype
+from pyut.uiv2.dialogs.DlgEditDescription import DlgEditDescription
+from pyut.uiv2.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.uiv2.dialogs.DlgEditStereotype import DlgEditStereotype
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface

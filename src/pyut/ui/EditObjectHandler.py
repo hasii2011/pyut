@@ -29,15 +29,15 @@ from ogl.OglInterface import OglInterface
 from ogl.OglInterface2 import OglInterface2
 from ogl.OglObject import OglObject
 
-from pyut.dialogs.DlgEditClass import DlgEditClass
-from pyut.dialogs.DlgEditLink import DlgEditLink
-from pyut.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
+from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
+from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
 
-from pyut.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
 
-from pyut.dialogs.Wrappers import DlgEditActor
-from pyut.dialogs.Wrappers import DlgEditUseCase
+from pyut.uiv2.dialogs.Wrappers import DlgEditActor
+from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

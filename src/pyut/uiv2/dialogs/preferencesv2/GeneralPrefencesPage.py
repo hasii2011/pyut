@@ -15,7 +15,7 @@ from wx import CommandEvent
 from wx import Window
 
 from pyut.PyutUtils import PyutUtils
-from pyut.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
+from pyut.uiv2.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 from pyut.preferences.PyutPreferences import PyutPreferences
 

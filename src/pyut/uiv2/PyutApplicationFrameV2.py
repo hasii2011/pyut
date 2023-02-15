@@ -59,7 +59,7 @@ from pyut.ui.tools.MenuCreator import MenuCreator
 from pyut.ui.tools.SharedTypes import ToolboxIdMap
 from pyut.ui.tools.ToolsCreator import ToolsCreator
 
-from pyut.dialogs.tips.DlgTips import DlgTips
+from pyut.uiv2.dialogs.tips.DlgTips import DlgTips
 
 from pyut.PyutUtils import PyutUtils
 

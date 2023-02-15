@@ -8,8 +8,8 @@ from wx import BeginBusyCursor as wxBeginBusyCursor
 from wx import EndBusyCursor as wxEndBusyCursor
 from wx import Yield as wxYield
 
-from pyut.dialogs.DlgAbout import DlgAbout
-from pyut.dialogs.DlgPyutDebug import DlgPyutDebug
+from pyut.uiv2.dialogs.DlgAbout import DlgAbout
+from pyut.uiv2.dialogs.DlgPyutDebug import DlgPyutDebug
 
 
 from pyut.general.PyutVersion import PyutVersion

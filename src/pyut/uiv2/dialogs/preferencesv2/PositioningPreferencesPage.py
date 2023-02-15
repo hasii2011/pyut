@@ -16,7 +16,7 @@ from wx import NewIdRef as wxNewIdRef
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
+from pyut.uiv2.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
 
 
 class PositioningPreferencesPage(BasePreferencesPage):

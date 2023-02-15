@@ -38,7 +38,7 @@ from pyut.general.Globals import WX_SIZER_CHANGEABLE
 from pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
 from pyut.general.LineSplitter import LineSplitter
 
-from pyut.dialogs.tips.TipHandler import TipHandler
+from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

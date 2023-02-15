@@ -5,7 +5,7 @@ from pyutmodel.PyutParameter import PyutParameter
 from pyutmodel.PyutType import PyutType
 from wx import Window
 
-from pyut.dialogs.BaseEditParamFieldDialog import BaseEditParamFieldDialog
+from pyut.uiv2.dialogs.BaseEditParamFieldDialog import BaseEditParamFieldDialog
 
 
 class DlgEditParameter(BaseEditParamFieldDialog):

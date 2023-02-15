@@ -16,7 +16,7 @@ from pyutmodel.PyutInterface import PyutInterface
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
-from pyut.dialogs.DlgEditClassCommon import DlgEditClassCommon
+from pyut.uiv2.dialogs.DlgEditClassCommon import DlgEditClassCommon
 
 class DlgEditInterface(DlgEditClassCommon):
 
