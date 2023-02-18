@@ -8,22 +8,13 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from wx import EVT_BUTTON
 from wx import EVT_TEXT
-from wx import ID_ANY
 from wx import OK
-from wx import RESIZE_BORDER
-from wx import STAY_ON_TOP
-from wx import ID_OK
-from wx import ID_CANCEL
-from wx import DEFAULT_DIALOG_STYLE
 
-from wx import Button
 from wx import CommandEvent
 from wx import StaticText
 from wx import TextCtrl
 
-from wx.lib.sized_controls import SizedDialog
 from wx.lib.sized_controls import SizedPanel
 
 from pyut.PyutAdvancedListBox import AdvancedListBoxItems
@@ -32,6 +23,9 @@ from pyut.PyutAdvancedListBox import CallbackAnswer
 from pyut.PyutAdvancedListBox import DownCallbackData
 from pyut.PyutAdvancedListBox import PyutAdvancedListBox
 from pyut.PyutAdvancedListBox import UpCallbackData
+from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
+from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButton
+from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButtons
 
 from pyut.uiv2.dialogs.DlgEditDescription import DlgEditDescription
 from pyut.uiv2.dialogs.DlgEditMethod import DlgEditMethod
@@ -51,7 +45,7 @@ from pyut.uiv2.eventengine.Events import EventType
 CommonClassType = Union[PyutClass, PyutInterface]
 
 
-class DlgEditClassCommon(SizedDialog):
+class DlgEditClassCommon(BaseEditDialog):
     """
     This parent class is responsible for the comment attributes that Classes and Interfaces share.
     These are
@@ -69,7 +63,7 @@ class DlgEditClassCommon(SizedDialog):
 
     def __init__(self, parent, eventEngine: IEventEngine, dlgTitle: str, pyutModel: Union[PyutClass, PyutInterface], editInterface: bool = False,):
 
-        super().__init__(parent, ID_ANY, dlgTitle, style=RESIZE_BORDER | STAY_ON_TOP | DEFAULT_DIALOG_STYLE)
+        super().__init__(parent, dlgTitle)
 
         self._parent = parent   #
 
@@ -84,11 +78,6 @@ class DlgEditClassCommon(SizedDialog):
         sizedPanel.SetSizerType('vertical')
 
         self._layoutNameControls(parent=sizedPanel, editInterface=editInterface)
-
-        self._btnOk:          Button = cast(Button, None)
-        self._btnCancel:      Button = cast(Button, None)
-        self._btnDescription: Button = cast(Button, None)
-        self._btnStereotype:  Button = cast(Button, None)
 
     def _layoutNameControls(self, parent: SizedPanel, editInterface: bool, ):
 
@@ -111,25 +100,21 @@ class DlgEditClassCommon(SizedDialog):
         since we want to use a custom button layout, we won't use the
         CreateStdDialogBtnSizer here, we'll just create our own panel with
         a horizontal layout and add the buttons to that;`
-
         """
-        sizedPanel: SizedPanel = SizedPanel(parent)
-        sizedPanel.SetSizerType('horizontal')
-        sizedPanel.SetSizerProps(expand=False, halign='right')  # expand False allows aligning right
 
-        # Buttons OK, cancel and description
+        customDialogButtons: CustomDialogButtons = CustomDialogButtons([])
         if self._editInterface is False:
-            self._btnStereotype = Button(sizedPanel, label='&Stereotype')
-            self.Bind(EVT_BUTTON, self._onStereotype, self._btnStereotype)
+            stereotypeDialogButton: CustomDialogButton = CustomDialogButton()
+            stereotypeDialogButton.label    = '&Stereotype...'
+            stereotypeDialogButton.callback = self._onStereotype
+            customDialogButtons.append(stereotypeDialogButton)
 
-        self._btnDescription = Button(sizedPanel, label="&Description...")
-        self._btnOk          = Button(sizedPanel, ID_OK, '&Ok')
-        self._btnCancel      = Button(sizedPanel, ID_CANCEL, '&Cancel')
+        descriptionDialogButton: CustomDialogButton = CustomDialogButton()
+        descriptionDialogButton.label    = '&Description...'
+        descriptionDialogButton.callback = self._onDescription
 
-        self.Bind(EVT_BUTTON, self._onOk,          self._btnOk)
-        self.Bind(EVT_BUTTON, self._onCancel,      self._btnCancel)
-        self.Bind(EVT_BUTTON, self._onDescription, self._btnDescription)
-        self._btnOk.SetDefault()
+        customDialogButtons.append(descriptionDialogButton)
+        self._layoutCustomDialogButtonContainer(parent=parent, customButtons=customDialogButtons)
 
     def _layoutMethodControls(self, parent: SizedPanel):
 
@@ -257,24 +242,6 @@ class DlgEditClassCommon(SizedDialog):
         with DlgEditStereotype(parent=self._parent, pyutStereotype=stereotype) as dlg:
             if dlg.ShowModal() == OK:
                 cast(PyutClass, self._pyutModelCopy).stereotype = dlg.value
-
-    # noinspection PyUnusedLocal
-    def _onOk(self, event: CommandEvent):
-        """
-        Called when the Ok button is pressed;  Subclasses must implement
-        Args:
-            event:
-        """
-        pass
-
-    # noinspection PyUnusedLocal
-    def _onCancel(self, event: CommandEvent):
-        """
-        Called when the Cancel button is pressed;  Subclasses must implement
-        Args:
-            event:
-        """
-        pass
 
     def _setProjectModified(self):
         """

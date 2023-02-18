@@ -75,8 +75,8 @@ class BaseEditDialog(SizedDialog):
             button:             Button             = Button(buttonPanel, label=customDialogButton.label)
             self.Bind(EVT_BUTTON, customDialogButton.callback, button)
 
-        self._btnOk     = Button(buttonPanel, ID_OK, '&Ok')
         self._btnCancel = Button(buttonPanel, ID_CANCEL, '&Cancel')
+        self._btnOk     = Button(buttonPanel, ID_OK, '&Ok')
 
         self.Bind(EVT_BUTTON, self._onOk,    self._btnOk)
         self.Bind(EVT_BUTTON, self._onClose, self._btnCancel)
