@@ -118,6 +118,8 @@ class PyutAdvancedListBox(SizedPanel):
         self._btnUp     = Button(btnPanel, label='&Up')
         self._btnDown   = Button(btnPanel, label='&Down')
 
+        self._fixButtons()
+
     def _bindEventHandlers(self):
 
         self.Bind(EVT_LISTBOX_DCLICK, self._onListDoubleClick, self._itemList)
