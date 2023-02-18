@@ -17,12 +17,12 @@ from wx import TextCtrl
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.PyutAdvancedListBox import AdvancedListBoxItems
-from pyut.PyutAdvancedListBox import AdvancedListCallbacks
-from pyut.PyutAdvancedListBox import CallbackAnswer
-from pyut.PyutAdvancedListBox import DownCallbackData
-from pyut.PyutAdvancedListBox import PyutAdvancedListBox
-from pyut.PyutAdvancedListBox import UpCallbackData
+from pyut.uiv2.PyutAdvancedListBox import AdvancedListBoxItems
+from pyut.uiv2.PyutAdvancedListBox import AdvancedListCallbacks
+from pyut.uiv2.PyutAdvancedListBox import CallbackAnswer
+from pyut.uiv2.PyutAdvancedListBox import DownCallbackData
+from pyut.uiv2.PyutAdvancedListBox import PyutAdvancedListBox
+from pyut.uiv2.PyutAdvancedListBox import UpCallbackData
 from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
 from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButton
 from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButtons
