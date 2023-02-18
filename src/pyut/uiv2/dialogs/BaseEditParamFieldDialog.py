@@ -38,7 +38,7 @@ class BaseEditParamFieldDialog(BaseEditDialog):
             layoutField: If 'True' includes the visibility radio buttons for a field
         """
 
-        super().__init__(parent, title=title, style=STAY_ON_TOP | DEFAULT_DIALOG_STYLE)
+        super().__init__(parent, title=title)
 
         self._rdbVisibility: RadioBox = cast(RadioBox, None)
         self._name:          TextCtrl = cast(TextCtrl, None)

@@ -5,7 +5,6 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from wx import DEFAULT_DIALOG_STYLE
 from wx import EVT_BUTTON
 from wx import EVT_TEXT
 from wx import ID_ANY
@@ -13,8 +12,6 @@ from wx import ID_CANCEL
 from wx import ID_OK
 from wx import OK
 from wx import RA_SPECIFY_ROWS
-from wx import RESIZE_BORDER
-from wx import STAY_ON_TOP
 
 from wx import Colour
 from wx import RadioBox
@@ -51,7 +48,7 @@ class DlgEditMethod(BaseEditDialog):
 
     def __init__(self, parent,  pyutMethod: PyutMethod, editInterface: bool = False):
 
-        super().__init__(parent, title="Edit Method", style=RESIZE_BORDER | STAY_ON_TOP | DEFAULT_DIALOG_STYLE)
+        super().__init__(parent, title="Edit Method")
 
         self.logger:         Logger = getLogger(__name__)
         self._editInterface: bool   = editInterface

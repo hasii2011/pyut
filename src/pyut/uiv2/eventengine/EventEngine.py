@@ -41,6 +41,7 @@ from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 
 from pyut.uiv2.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
+from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 from pyut.uiv2.eventengine.Events import EditClassEvent
 from pyut.uiv2.eventengine.Events import ActiveProjectInformationEvent
@@ -58,7 +59,6 @@ from pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 from pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 
 NEW_NAME_PARAMETER:     str = 'newName'

@@ -38,6 +38,7 @@ from pyutplugins.PluginManager import PluginManager
 from pyutplugins.plugintypes.PluginDataTypes import PluginIDMap
 
 from pyut.PyutUtils import PyutUtils
+from pyut.uiv2.dialogs.DlgEditProjectHistory import DlgEditProjectHistory
 from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
 
 from pyut.enums.DiagramType import DiagramType
@@ -86,6 +87,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         self._exportPlugins: PluginIDMap   = cast(PluginIDMap, None)
         self._importPlugins: PluginIDMap   = cast(PluginIDMap, None)
+
         self._currentDirectoryHandler: CurrentDirectoryHandler = CurrentDirectoryHandler()
         self._printData:               PrintData               = cast(PrintData, None)
 
@@ -106,6 +108,17 @@ class FileMenuHandler(BaseMenuHandler):
     @importPlugins.setter
     def importPlugins(self, importPlugins: PluginIDMap):
         self._importPlugins = importPlugins
+
+    def loadFiles(self, fileNames: FileNames):
+        """
+        Load the specified filenames;  This is externally available so that
+        we can open a files from the command line
+
+        Args:
+            fileNames: A list of files to load
+        """
+        for fileName in fileNames:
+            self._eventEngine.sendEvent(EventType.OpenProject, projectFilename=fileName)
 
     # noinspection PyUnusedLocal
     def onNewProject(self, event: CommandEvent):
@@ -287,6 +300,44 @@ class FileMenuHandler(BaseMenuHandler):
         """
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._doPrintPreview)
 
+    # noinspection PyUnusedLocal
+    def onPrint(self, event: CommandEvent):
+        """
+        Print the current diagram
+
+        Args:
+            event:
+        """
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._doPrint)
+
+    def onExit(self, event: CommandEvent):
+        """
+        Exit the program
+
+        Args:
+            event:
+        """
+        closeEvent: CloseEvent = CloseEvent(EVT_CLOSE.typeId)
+
+        parent: Window = event.GetEventObject().GetWindow()
+        wxPostEvent(parent, closeEvent)
+
+    def onOpenRecent(self, event: CommandEvent):
+        """
+        Opens the selected 'recently' opened file
+        Args:
+            event:
+        """
+        fileNum: int = event.GetId() - ID_FILE1
+        path:    str = self._fileHistory.GetHistoryFile(fileNum)
+
+        self.logger.info(f'{event=} - filename: {path}')
+        self.loadFiles(fileNames=FileNames([path]))
+
+    def onManageFileHistory(self, event: CommandEvent):
+        with DlgEditProjectHistory(parent=None, fileHistory=self._fileHistory) as dlg:
+            dlg.ShowModal()
+
     def _doPrintPreview(self, diagramFrame: UmlClassDiagramsFrame):
 
         self._eventEngine.sendEvent(EventType.DeSelectAllShapes)
@@ -315,16 +366,6 @@ class FileMenuHandler(BaseMenuHandler):
         except (ValueError, Exception) as e:
             PyutUtils.displayError(f"Preview error {e}", "Error")
 
-    # noinspection PyUnusedLocal
-    def onPrint(self, event: CommandEvent):
-        """
-        Print the current diagram
-
-        Args:
-            event:
-        """
-        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._doPrint)
-
     def _doPrint(self, diagramFrame: UmlClassDiagramsFrame):
 
         if diagramFrame is None:
@@ -345,42 +386,6 @@ class FileMenuHandler(BaseMenuHandler):
             # May have been cancelled
             if Printer.GetLastError() == PRINTER_ERROR:
                 PyutUtils.displayError("Cannot print", "Error")
-
-    # noinspection PyUnusedLocal
-    def onExit(self, event: CommandEvent):
-        """
-        Exit the program
-
-        Args:
-            event:
-        """
-        closeEvent: CloseEvent = CloseEvent(EVT_CLOSE.typeId)
-
-        parent: Window = event.GetEventObject().GetWindow()
-        wxPostEvent(parent, closeEvent)
-
-    def onOpenRecent(self, event: CommandEvent):
-        """
-        Opens the selected 'recently' opened file
-        Args:
-            event:
-        """
-        fileNum: int = event.GetId() - ID_FILE1
-        path:    str = self._fileHistory.GetHistoryFile(fileNum)
-
-        self.logger.info(f'{event=} - filename: {path}')
-        self.loadFiles(fileNames=FileNames([path]))
-
-    def loadFiles(self, fileNames: FileNames):
-        """
-        Load the specified filenames;  This is externally available so that
-        we can open a files from the command line
-
-        Args:
-            fileNames: A list of files to load
-        """
-        for fileName in fileNames:
-            self._eventEngine.sendEvent(EventType.OpenProject, projectFilename=fileName)
 
     def _askForFilesToLoad(self) -> FileNames:
         """

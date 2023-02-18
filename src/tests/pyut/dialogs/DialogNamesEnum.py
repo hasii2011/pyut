@@ -4,7 +4,8 @@ from enum import Enum
 
 class DialogNamesEnum(Enum):
 
-    DLG_EDIT_METHOD_MODIFIERS   = 'DlgEditMethodModifiers'
+    DLG_EDIT_METHOD_MODIFIERS = 'DlgEditMethodModifiers'
+    DLG_EDIT_PROJECT_HISTORY  = 'DlgEditProjectHistory'
 
     DLG_EDIT_LINK        = 'DlgEditLink'
     DLG_EDIT_CLASS       = 'DlgEditClass'

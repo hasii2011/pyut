@@ -7,22 +7,21 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from ogl.preferences.OglPreferences import OglPreferences
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
-from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_COMBOBOX
 from wx import HORIZONTAL
+from wx import ICON_EXCLAMATION
 from wx import ID_ANY
 from wx import ID_OK
 from wx import LEFT
+from wx import MessageDialog
 from wx import OK
 from wx import RIGHT
 from wx import VERTICAL
 
 from wx import App
-from wx import Frame
 from wx import CommandEvent
 from wx import ComboBox
 from wx import BoxSizer
@@ -55,7 +54,8 @@ from pyutmodel.PyutUseCase import PyutUseCase
 
 from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 
-from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
+from ogl.preferences.OglPreferences import OglPreferences
+
 from pyut.enums.DiagramType import DiagramType
 from pyut.preferences.PyutPreferences import PyutPreferences
 
@@ -86,6 +86,7 @@ from pyut.uiv2.dialogs.DlgPyutDebug import DlgPyutDebug
 
 from pyut.uiv2.dialogs.Wrappers import DlgEditActor
 from pyut.uiv2.dialogs.Wrappers import DlgEditDiagramTitle
+from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
 
 from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
@@ -93,6 +94,7 @@ from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
 from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
 
 from tests.TestBase import TestBase
+from tests.pyut.dialogs.DialogFrame import DialogFrame
 
 from tests.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
 
@@ -110,7 +112,7 @@ class TestADialog(App):
         self._oglPreferences: OglPreferences  = OglPreferences()
         self._dlgSelectionId: wxNewIdRef      = wxNewIdRef()
 
-        self._frame:       Frame        = cast(Frame, None)
+        self._frame:       DialogFrame  = cast(DialogFrame, None)
         self._eventEngine: IEventEngine = cast(EventEngine, None)
 
         super().__init__(redirect)
@@ -118,7 +120,8 @@ class TestADialog(App):
     def OnInit(self):
 
         TestBase.setUpLogging()
-        self._frame      = Frame(parent=None, id=ID_ANY, title="Test A Dialog", size=(400, 200), style=DEFAULT_FRAME_STYLE)
+
+        self._frame = DialogFrame()
         self._eventEngine = EventEngine(listeningWindow=self._frame)
 
         self._frame.Show(False)
@@ -144,7 +147,7 @@ class TestADialog(App):
         except (ValueError, Exception) as e:
             self.logger.error(f'OnExit: {e}')
 
-    def _createSelectionControls(self, parentFrame: Frame) -> BoxSizer:
+    def _createSelectionControls(self, parentFrame: DialogFrame) -> BoxSizer:
 
         mainSizer: BoxSizer = BoxSizer(HORIZONTAL)
 
@@ -175,6 +178,8 @@ class TestADialog(App):
 
         dlgAnswer: str = 'No dialog invoked'
         match dlgName:
+            case DialogNamesEnum.DLG_EDIT_PROJECT_HISTORY:
+                dlgAnswer = self._testDlgEditFileHistory()
             case DialogNamesEnum.DLG_EDIT_METHOD_MODIFIERS:
                 dlgAnswer = self._testDlgEditMethodModifiers()
             case DialogNamesEnum.DLG_EDIT_LINK:
@@ -213,6 +218,11 @@ class TestADialog(App):
                 self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
+
+    def _testDlgEditFileHistory(self):
+        dlg = MessageDialog(self._frame, "Test via File--> Manage Projects", "Warning", OK | ICON_EXCLAMATION)
+        dlg.ShowModal()
+        return f'Cancelled'
 
     def _testDlgEditMethodModifiers(self):
         pyutModifiers: PyutModifiers = PyutModifiers(

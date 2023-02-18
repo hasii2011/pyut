@@ -47,9 +47,6 @@ from pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
-
 from pyut.ui.tools.SharedTypes import ToolboxIdMap
 from pyut.ui.tools.ToolboxTypes import CategoryNames
 from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
@@ -189,11 +186,11 @@ class MenuCreator:
         # mnuTools = Menu()
         sub = self._makeToolsMenu()
         if sub is not None:
-            self._toolsMenu.AppendSubMenu(sub, _("Tools"), _('Tools are here'))
+            self._toolsMenu.AppendSubMenu(sub, "Tools", 'Tools are here')
 
         sub = self._makeToolboxesMenu()
         if sub is not None:
-            self._toolsMenu.AppendSubMenu(sub, _("Toolboxes"), _('Toolboxes are here'))
+            self._toolsMenu.AppendSubMenu(sub, "Toolboxes", 'Toolboxes are here')
 
         # Plugins identified
         self._fileMenuHandler.importPlugins = self._importPlugins
@@ -202,10 +199,10 @@ class MenuCreator:
         self._initializeHelpMenu()
 
         mnuBar = MenuBar()
-        mnuBar.Append(self._fileMenu,  _("&File"))
-        mnuBar.Append(self._editMenu,  _("&Edit"))
-        mnuBar.Append(self._toolsMenu, _("&Tools"))
-        mnuBar.Append(self._helpMenu,  _("&Help"))
+        mnuBar.Append(self._fileMenu,  "&File")
+        mnuBar.Append(self._editMenu,  "&Edit")
+        mnuBar.Append(self._toolsMenu, "&Tools")
+        mnuBar.Append(self._helpMenu,  "&Help")
 
         containingFrame: Frame = self._containingFrame
         containingFrame.SetMenuBar(mnuBar)
@@ -226,7 +223,7 @@ class MenuCreator:
         self.mnuFileNew.Append(SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM, "New &use-case diagram\tCtrl-U",
                                "New use-case diagram")
         fileMenu.AppendSubMenu(self.mnuFileNew, "&New")
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT, "&Insert a project...\t",
+        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_INSERT_PROJECT, "&Insert a project...",
                         "Insert a project in the current project...")
         # Use stock identifier and properties
         fileMenu.Append(ID_OPEN)
@@ -242,23 +239,22 @@ class MenuCreator:
         if sub is None:
             sub = Menu()
         if sub is not None:
-            self._fileMenu.AppendSubMenu(sub, _("Export"))
+            self._fileMenu.AppendSubMenu(sub, "Export")
         sub = self._makeImportMenu(fileMenuHandler=fileMenuHandler)
         if sub is not None:
-            # self._fileMenu.AppendSubMenu(NewIdRef(), _("Import"), sub)
-            self._fileMenu.AppendSubMenu(sub, _("Import"))
+            self._fileMenu.AppendSubMenu(sub, "Import")
         fileMenu.AppendSeparator()
-        fileMenu.Append(ID_PREFERENCES, _("P&references"), _("PyUt preferences"))
+        fileMenu.Append(ID_PREFERENCES, "P&references", "PyUt preferences")
         # fileMenu.Append(ID_MNU_FILE_DIAGRAM_PROPERTIES,_("&Diagram Properties"), _("Diagram properties"))
         fileMenu.AppendSeparator()
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP, _("Print se&tup..."), _("Display the print setup dialog box"))
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW, _("Print pre&view"), _("Diagram preview before printing"))
-        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT, _("&Print\tCtrl-P"), _("Print the current diagram"))
+        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP, "Print se&tup...", "Display the print setup dialog box")
+        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW, "Print pre&view", "Diagram preview before printing")
+        fileMenu.Append(SharedIdentifiers.ID_MNU_FILE_PRINT, "&Print\tCtrl-P", "Print the current diagram")
         fileMenu.AppendSeparator()
-
+        fileMenu.Append(SharedIdentifiers.ID_MENU_FILE_MANAGE_FILE_HISTORY, 'Manage Projects')
         fileMenu.AppendSeparator()
         # TODO:  Use File History manager to create the recently opened list here
-        fileMenu.Append(ID_EXIT, _("E&xit"), _("Exit PyUt"))
+        fileMenu.Append(ID_EXIT, "E&xit", "Exit PyUt")
 
     def _initializeEditMenu(self):
 
@@ -267,10 +263,6 @@ class MenuCreator:
         mnuEdit.Append(ID_UNDO)
         mnuEdit.Append(ID_REDO)
         mnuEdit.AppendSeparator()
-        # mnuEdit.Append(ID_CUT, _("Cu&t\tCtrl-X"), _("Cut selected data"))
-        # mnuEdit.Append(ID_COPY)
-        # mnuEdit.Append(ID_PASTE, _("&Paste\tCtrl-V"), _("Paste selected data"))
-        # mnuEdit.Append(SharedIdentifiers.ID_MNU_EDIT_SELECT_ALL, _("&Select all\tCtrl-A"), _("Select all elements"))
         #
         # Use all the stock properties
         #
@@ -292,14 +284,13 @@ class MenuCreator:
 
         mnuHelp = self._helpMenu
 
-        # mnuHelp.Append(ID_ABOUT, _("&About PyUt..."), _("Display the About PyUt dialog box"))
         # Use the stock properties
         mnuHelp.Append(ID_ABOUT)
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_VERSION, _("Check for newer versions"), _("Check if a newer version of Pyut exists"))
-        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_WEB,     _("&Web site"), _("Open PyUt web site"))
+        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_VERSION, "Check for newer versions", "Check if a newer version of Pyut exists")
+        mnuHelp.Append(SharedIdentifiers.ID_MNU_HELP_WEB,     "&Web site", "Open PyUt web site")
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(SharedIdentifiers.ID_DEBUG, _("&Debug"), _("Open IPython shell"))
+        mnuHelp.Append(SharedIdentifiers.ID_DEBUG, "&Debug", "Open IPython shell")
 
     def _initializeErrorViewSubMenu(self, mnuEdit: Menu) -> Menu:
 
@@ -308,17 +299,17 @@ class MenuCreator:
         sub.Append(SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW,    '&Text Error View',      'Test text error view')
         sub.Append(SharedIdentifiers.ID_MENU_RAISE_ERROR_VIEW,   '&Exception Error View', 'Test raising exception')
 
-        mnuEdit.AppendSubMenu(sub, _('Show Error View'))
+        mnuEdit.AppendSubMenu(sub, 'Show Error View')
 
         return mnuEdit
 
     def _initializeAddDiagramSubMenu(self, mnuEdit: Menu) -> Menu:
 
         sub: Menu = Menu()
-        sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_DIAGRAM, _("&Pyut Data Model"), _("Add the Pyut UML Diagram"))
-        sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_DIAGRAM,  _("&Ogl Graphical Model"), _("Add the Ogl UML Diagram"))
+        sub.Append(SharedIdentifiers.ID_MNU_ADD_PYUT_DIAGRAM, "&Pyut Data Model",    "Add the Pyut UML Diagram")
+        sub.Append(SharedIdentifiers.ID_MNU_ADD_OGL_DIAGRAM,  "&Ogl Graphical Model", "Add the Ogl UML Diagram")
 
-        mnuEdit.AppendSubMenu(sub,  _('Add Diagram'))
+        mnuEdit.AppendSubMenu(sub,  'Add Diagram')
 
         return mnuEdit
 
@@ -406,7 +397,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSave,          id=ID_SAVE)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileSaveAs,        id=ID_SAVEAS)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onFileClose,         id=SharedIdentifiers.ID_MNU_PROJECT_CLOSE)
-        containingFrame.Bind(EVT_MENU, fileMenuHandler.onDeleteDiagram, id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DIAGRAM)
+        containingFrame.Bind(EVT_MENU, fileMenuHandler.onDeleteDiagram,     id=SharedIdentifiers.ID_MNU_FILE_REMOVE_DIAGRAM)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintSetup,        id=SharedIdentifiers.ID_MNU_FILE_PRINT_SETUP)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrintPreview,      id=SharedIdentifiers.ID_MNU_FILE_PRINT_PREVIEW)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPrint,             id=SharedIdentifiers.ID_MNU_FILE_PRINT)
@@ -415,6 +406,8 @@ class MenuCreator:
 
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onPyutPreferences, id=ID_PREFERENCES)
         containingFrame.Bind(EVT_MENU, fileMenuHandler.onExit,            id=ID_EXIT)
+
+        containingFrame.Bind(EVT_MENU,       fileMenuHandler.onManageFileHistory, id=SharedIdentifiers.ID_MENU_FILE_MANAGE_FILE_HISTORY)
 
         containingFrame.Bind(EVT_MENU_RANGE, fileMenuHandler.onOpenRecent, id=ID_FILE1, id2=ID_FILE9)
 
