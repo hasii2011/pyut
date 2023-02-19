@@ -105,22 +105,22 @@ class TestToolboxFrame(App):
         self._toolNewProject = Tool("pyut-new-project", toolIconOwner.toolNewProject,
                                     caption=_("New Project"), tooltip=_("Create a new project"),
                                     category=PYUT_MENU_CATEGORY,
-                                    actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_FILE_NEW_PROJECT)
+                                    actionCallback=self.__onToolActionCallback, wxID=SID.ID_MENU_FILE_NEW_PROJECT)
 
         self._toolNewClassDiagram = Tool("pyut-new-class-diagram", toolIconOwner.toolNewClassDiagram,
                                          caption=_("New Class Diagram"), tooltip=_("Create a new class diagram"),
                                          category=PYUT_MENU_CATEGORY,
-                                         actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_FILE_NEW_CLASS_DIAGRAM)
+                                         actionCallback=self.__onToolActionCallback, wxID=SID.ID_MENU_FILE_NEW_CLASS_DIAGRAM)
 
         self._toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", toolIconOwner.toolNewSequenceDiagram,
                                             caption=_("New Sequence Diagram"), tooltip=_("Create a new sequence diagram"),
                                             category=PYUT_MENU_CATEGORY,
-                                            actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM)
+                                            actionCallback=self.__onToolActionCallback, wxID=SID.ID_MENU_FILE_NEW_SEQUENCE_DIAGRAM)
 
         self._toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram", toolIconOwner.toolNewUseCaseDiagram,
                                            caption=_("New Use Case diagram"), tooltip=_("Create a new use case diagram"),
                                            category=PYUT_MENU_CATEGORY,
-                                           actionCallback=self.__onToolActionCallback, wxID=SID.ID_MNU_FILE_NEW_USECASE_DIAGRAM)
+                                           actionCallback=self.__onToolActionCallback, wxID=SID.ID_MENU_FILE_NEW_USECASE_DIAGRAM)
 
         # Shared ID do not ave IDs for stock IDs
         self._toolOpen = Tool("pyut-open", toolIconOwner.toolOpen,
@@ -189,27 +189,27 @@ class TestToolboxFrame(App):
         self._toolRelInheritance = Tool("pyut-rel-inheritance", toolIconOwner.toolRelInheritance,
                                         caption=_("New inheritance relation"), tooltip=_("New inheritance relation"),
                                         category=PYUT_TOOLS_CATEGORY,
-                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_REL_INHERITANCE, isToggle=True)
+                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_INHERITANCE, isToggle=True)
 
         self._toolRelRealization = Tool("pyut-rel-realization", toolIconOwner.toolRelRealization,
                                         caption=_("New Realization relation"), tooltip=_("New Realization relation"),
                                         category=PYUT_TOOLS_CATEGORY,
-                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_REL_REALISATION, isToggle=True)
+                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_REALIZATION, isToggle=True)
 
         self._toolRelComposition = Tool("pyut-rel-composition", toolIconOwner.toolRelComposition,
                                         caption=_("New composition relation"), tooltip=_("New composition relation"),
                                         category=PYUT_TOOLS_CATEGORY,
-                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_REL_COMPOSITION, isToggle=True)
+                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_COMPOSITION, isToggle=True)
 
         self._toolRelAggregation = Tool("pyut-rel-aggregation", toolIconOwner.toolRelAggregation,
                                         caption=_("New aggregation relation"), tooltip=_("New aggregation relation"),
                                         category=PYUT_TOOLS_CATEGORY,
-                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_REL_AGGREGATION, isToggle=True)
+                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_AGGREGATION, isToggle=True)
 
         self._toolRelAssociation = Tool("pyut-rel-association", toolIconOwner.toolRelAssociation,
                                         caption=_("New association relation"), tooltip=_("New association relation"),
                                         category=PYUT_TOOLS_CATEGORY,
-                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_REL_ASSOCIATION, isToggle=True)
+                                        actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_ASSOCIATION, isToggle=True)
 
         self._toolRelNote = Tool("pyut-rel-note", toolIconOwner.toolRelNote,
                                  caption=_("New note relation"), tooltip=_("New note relation"),

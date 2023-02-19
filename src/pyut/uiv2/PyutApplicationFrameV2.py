@@ -393,17 +393,17 @@ class PyutApplicationFrameV2(Frame):
         #  initialize the accelerator table
         # Since we are using the stock IDs we do not need to set up those accelerators
         lst = [
-            (ACCEL_CTRL,     ord('n'),   SharedIdentifiers.ID_MNU_FILE_NEW_PROJECT),
-            (ACCEL_CTRL,     ord('N'),   SharedIdentifiers.ID_MNU_FILE_NEW_PROJECT),
-            (ACCEL_CTRL,     ord('l'),   SharedIdentifiers.ID_MNU_FILE_NEW_CLASS_DIAGRAM),
-            (ACCEL_CTRL,     ord('E'),   SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM),
-            (ACCEL_CTRL,     ord('e'),   SharedIdentifiers.ID_MNU_FILE_NEW_SEQUENCE_DIAGRAM),
-            (ACCEL_CTRL,     ord('U'),   SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM),
-            (ACCEL_CTRL,     ord('u'),   SharedIdentifiers.ID_MNU_FILE_NEW_USECASE_DIAGRAM),
-            (ACCEL_CTRL,     ord('p'),   SharedIdentifiers.ID_MNU_FILE_PRINT),
-            (ACCEL_CTRL,     ord('P'),   SharedIdentifiers.ID_MNU_FILE_PRINT),
-            (ACCEL_CTRL,     ord('d'),   SharedIdentifiers.ID_DEBUG),
-            (ACCEL_CTRL,     ord('D'),   SharedIdentifiers.ID_DEBUG),
+            (ACCEL_CTRL,     ord('n'),   SharedIdentifiers.ID_MENU_FILE_NEW_PROJECT),
+            (ACCEL_CTRL,     ord('N'),   SharedIdentifiers.ID_MENU_FILE_NEW_PROJECT),
+            (ACCEL_CTRL,     ord('l'),   SharedIdentifiers.ID_MENU_FILE_NEW_CLASS_DIAGRAM),
+            (ACCEL_CTRL,     ord('E'),   SharedIdentifiers.ID_MENU_FILE_NEW_SEQUENCE_DIAGRAM),
+            (ACCEL_CTRL,     ord('e'),   SharedIdentifiers.ID_MENU_FILE_NEW_SEQUENCE_DIAGRAM),
+            (ACCEL_CTRL,     ord('U'),   SharedIdentifiers.ID_MENU_FILE_NEW_USECASE_DIAGRAM),
+            (ACCEL_CTRL,     ord('u'),   SharedIdentifiers.ID_MENU_FILE_NEW_USECASE_DIAGRAM),
+            (ACCEL_CTRL,     ord('p'),   SharedIdentifiers.ID_MENU_FILE_PRINT),
+            (ACCEL_CTRL,     ord('P'),   SharedIdentifiers.ID_MENU_FILE_PRINT),
+            (ACCEL_CTRL,     ord('d'),   SharedIdentifiers.ID_MENU_HELP_DEBUG),
+            (ACCEL_CTRL,     ord('D'),   SharedIdentifiers.ID_MENU_HELP_DEBUG),
             ]
         acc = []
         for el in lst:
