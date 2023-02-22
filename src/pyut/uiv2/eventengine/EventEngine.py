@@ -5,6 +5,8 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
+from ogl.OglClass import OglClass
+from pyutmodel.PyutInterface import PyutInterface
 from wx import PostEvent
 from wx import PyEventBinder
 from wx import TreeItemId
@@ -28,6 +30,7 @@ from pyut.uiv2.eventengine.Events import AddShapeEvent
 from pyut.uiv2.eventengine.Events import AssociateEditMenuEvent
 from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
 from pyut.uiv2.eventengine.Events import EditActorEvent
+from pyut.uiv2.eventengine.Events import EditInterfaceEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
 from pyut.uiv2.eventengine.Events import EditUseCaseEvent
@@ -69,6 +72,9 @@ SHAPE_TO_ADD_PARAMETER: str = 'shapeToAdd'
 TOOL_ID_PARAMETER:      str = 'toolId'
 ACTION_PARAMETER:       str = 'action'
 NEW_FILENAME_PARAMETER: str = 'newFilename'
+
+IMPLEMENTOR_PARAMETER:    str = 'implementor'
+PYUT_INTERFACE_PARAMETER: str = 'pyutInterface'
 
 COMMAND_PROCESSOR_PARAMETER: str = 'commandProcessor'
 
@@ -166,6 +172,8 @@ class EventEngine(IEventEngine):
                 self._sendEditActorEvent(**kwargs)
             case EventType.EditUseCase:
                 self._sendEditUseCaseEvent(**kwargs)
+            case EventType.EditInterface:
+                self._sendEditInterfaceEvent(**kwargs)
 
             case EventType.FrameInformation:
                 self._sendFrameInformationEvent(**kwargs)
@@ -310,6 +318,13 @@ class EventEngine(IEventEngine):
     def _sendEditUseCaseEvent(self, **kwargs):
         pyutUseCase: PyutUseCase     = kwargs[PYUT_USE_CASE_PARAMETER]
         eventToPost: EditUseCaseEvent = EditUseCaseEvent(pyutUseCase=pyutUseCase)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendEditInterfaceEvent(self, **kwargs):
+
+        pyutInterface: PyutInterface      = kwargs[PYUT_INTERFACE_PARAMETER]
+        implementor:   OglClass           = kwargs[IMPLEMENTOR_PARAMETER]
+        eventToPost:   EditInterfaceEvent = EditInterfaceEvent(pyutInterface=pyutInterface, implementor=implementor)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendFrameInformationEvent(self, **kwargs):

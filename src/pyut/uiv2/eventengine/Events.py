@@ -41,6 +41,7 @@ EditNoteEvent,        EVENT_EDIT_NOTE         = NewEvent()
 EditTextEvent,        EVENT_EDIT_TEXT         = NewEvent()
 EditActorEvent,       EVENT_EDIT_ACTOR        = NewEvent()
 EditUseCaseEvent,     EVENT_EDIT_USE_CASE     = NewEvent()
+EditInterfaceEvent,   EVENT_EDIT_INTERFACE    = NewEvent()
 
 AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
 AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
@@ -236,6 +237,7 @@ class EventType(str, Enum):
     EditText                 = ('EditText',                 EditTextEvent(),                 EVENT_EDIT_TEXT)
     EditActor                = ('EditActor',                EditActorEvent(),                EVENT_EDIT_ACTOR)
     EditUseCase              = ('EditUseCase',              EditUseCaseEvent(),              EVENT_EDIT_USE_CASE)
+    EditInterface            = ('EditInterface',            EditInterfaceEvent(),            EVENT_EDIT_INTERFACE)
 
     FrameInformation         = ('FrameInformation',   FrameInformationEvent(),   EVENT_FRAME_INFORMATION)
     FrameSize                = ('FrameSize',          FrameSizeEvent(),          EVENT_FRAME_SIZE)

@@ -8,22 +8,11 @@ from wx import Brush
 from wx import Pen
 from wx import Window
 
-from pyutmodel.PyutActor import PyutActor
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutText import PyutText
-from pyutmodel.PyutUseCase import PyutUseCase
-
 from miniogl.DiagramFrame import DiagramFrame
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 
-from ogl.OglActor import OglActor
-from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
-from ogl.OglNote import OglNote
 from ogl.OglObject import OglObject
-from ogl.OglText import OglText
-from ogl.OglUseCase import OglUseCase
 from ogl.OglLink import OglLink
 
 from pyut.preferences.PyutPreferences import PyutPreferences

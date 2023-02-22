@@ -103,7 +103,7 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
 
     def _cbAddOglObjectToFrame(self, frame: 'UmlDiagramsFrame'):
         """
-        his is common code for create Note, Text, Actor, and UseCase
+        This is common code for create Note, Text, Actor, and UseCase
         Args:
             frame:
         """

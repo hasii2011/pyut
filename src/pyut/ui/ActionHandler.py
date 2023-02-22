@@ -15,27 +15,22 @@ from wx import TextEntryDialog
 
 from wx import Yield as wxYield
 
-from miniogl.AttachmentLocation import AttachmentLocation
+from pyutmodel.PyutLinkType import PyutLinkType
+
+from miniogl.AttachmentSide import AttachmentSide
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from miniogl.Constants import EVENT_PROCESSED
 from miniogl.Constants import SKIP_EVENT
 
 from ogl.OglClass import OglClass
 
-from pyut.general.Singleton import Singleton
+from pyut.ui.wxcommands.CommandCreateLollipopInterface import CommandCreateLollipopInterface
 from pyut.ui.wxcommands.CommandCreateOglActor import CommandCreateOglActor
-
 from pyut.ui.wxcommands.CommandCreateOglClass import CommandCreateOglClass
 from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
 from pyut.ui.wxcommands.CommandCreateOglNote import CommandCreateOglNote
 from pyut.ui.wxcommands.CommandCreateOglText import CommandCreateOglText
 from pyut.ui.wxcommands.CommandCreateOglUseCase import CommandCreateOglUseCase
-
-if TYPE_CHECKING:
-    from pyut.ui.umlframes.UmlFrame import UmlFrame
-    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-
-from pyutmodel.PyutLinkType import PyutLinkType
 
 from pyut.ui.Action import Action
 
@@ -49,6 +44,12 @@ from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import SetToolActionEvent
 
 from pyut.PyutUtils import PyutUtils
+
+from pyut.general.Singleton import Singleton
+
+if TYPE_CHECKING:
+    from pyut.ui.umlframes.UmlFrame import UmlFrame
+    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 # messages for the status bar
 
@@ -147,6 +148,7 @@ LINK_TYPE = {
 
 class ActionHandler(Singleton):
 
+    # noinspection PyAttributeOutsideInit
     def init(self, **kwargs):
 
         self.logger:            Logger           = getLogger(__name__)
@@ -180,7 +182,9 @@ class ActionHandler(Singleton):
         if self._currentAction == action:
             self._currentActionPersistent = True
         else:
+            # noinspection PyAttributeOutsideInit
             self._currentAction = action
+            # noinspection PyAttributeOutsideInit
             self._currentActionPersistent = False
 
         # self.setStatusText(MESSAGES[self._currentAction])
@@ -204,7 +208,6 @@ class ActionHandler(Singleton):
             y: The abscissa where the action must take place
 
         Returns: Event handler status
-
         """
         self.logger.debug(f'doAction: {self._currentAction}  {Action.SELECTOR=}')
         self._resetStatusText()
@@ -250,6 +253,7 @@ class ActionHandler(Singleton):
             self.logger.debug(f'Current action in source actions')
             # get the next action needed to complete the whole action
             if self._currentActionPersistent:
+                # noinspection PyAttributeOutsideInit
                 self._oldAction = self._currentAction
             self._currentAction = NEXT_ACTION[self._currentAction]
 
@@ -261,12 +265,16 @@ class ActionHandler(Singleton):
                 self._setStatusText("Action cancelled")
             else:   # store source
                 self.logger.debug(f'Store source - shape {shape}  position: {position}')
+                # noinspection PyAttributeOutsideInit
                 self._src    = shape
+                # noinspection PyAttributeOutsideInit
                 self._srcPos = position
         elif self._currentAction in DESTINATION_ACTIONS:
             self.logger.debug(f'Current action in destination actions')
             # store the destination object
+            # noinspection PyAttributeOutsideInit
             self._dst    = shape
+            # noinspection PyAttributeOutsideInit
             self._dstPos = position
             # if no destination, cancel action
             if self._dst is None:
@@ -280,6 +288,7 @@ class ActionHandler(Singleton):
                 self._currentAction = self._oldAction
                 del self._oldAction
             else:
+                # noinspection PyAttributeOutsideInit
                 self._currentAction = Action.SELECTOR
                 self._selectActionSelectorTool()
         else:
@@ -295,20 +304,21 @@ class ActionHandler(Singleton):
         wxYield()
 
     def createLollipopInterface(self, umlFrame: 'UmlDiagramsFrame', implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
+        """
+        Todo:  This should be moved to a standard action
 
-        pass    # TODO: Implement this!!!
-        # from pyut.history.commands.CreateOglInterfaceCommand import CreateOglInterfaceCommand
-        # from pyut.history.commands.CommandGroup import CommandGroup
-        #
-        # attachmentAnchor.setYouAreTheSelectedAnchor()
-        #
-        # cmd: CreateOglInterfaceCommand = CreateOglInterfaceCommand(umlFrame=umlFrame, eventEngine=self._eventEngine,
-        #                                                            implementor=implementor, attachmentAnchor=attachmentAnchor)
-        # group: CommandGroup = CommandGroup("Create lollipop")
-        #
-        # group.addCommand(cmd)
-        # umlFrame.historyManager.addCommandGroup(group)
-        # umlFrame.historyManager.execute()
+        Args:
+            umlFrame:
+            implementor:
+            attachmentAnchor:
+        """
+        attachmentAnchor.setYouAreTheSelectedAnchor()
+        cmd: CommandCreateLollipopInterface = CommandCreateLollipopInterface(implementor=implementor,
+                                                                             attachmentAnchor=attachmentAnchor,
+                                                                             eventEngine=self._eventEngine)
+
+        submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
+        self.logger.info(f'Create command submission status: {submitStatus}')
 
     def _onSetToolAction(self, event: SetToolActionEvent):
         self.currentAction = event.action
@@ -408,14 +418,14 @@ class ActionHandler(Singleton):
         eastX  = dw
         eastY  = dh // 2
 
-        self.__createAnchorHints(destinationClass, southX, southY, AttachmentLocation.SOUTH, umlFrame)
-        self.__createAnchorHints(destinationClass, northX, northY, AttachmentLocation.NORTH, umlFrame)
-        self.__createAnchorHints(destinationClass, westX, westY, AttachmentLocation.WEST, umlFrame)
-        self.__createAnchorHints(destinationClass, eastX, eastY, AttachmentLocation.EAST, umlFrame)
+        self.__createAnchorHints(destinationClass, southX, southY, AttachmentSide.SOUTH, umlFrame)
+        self.__createAnchorHints(destinationClass, northX, northY, AttachmentSide.NORTH, umlFrame)
+        self.__createAnchorHints(destinationClass, westX, westY,   AttachmentSide.WEST,  umlFrame)
+        self.__createAnchorHints(destinationClass, eastX, eastY,   AttachmentSide.EAST,  umlFrame)
 
-    def __createAnchorHints(self, destinationClass: OglClass, anchorX: int, anchorY: int, attachmentPoint: AttachmentLocation, umlFrame):
+    def __createAnchorHints(self, destinationClass: OglClass, anchorX: int, anchorY: int, attachmentSide: AttachmentSide, umlFrame):
 
-        anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=anchorX, y=anchorY, attachmentPoint=attachmentPoint, parent=destinationClass)
+        anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=anchorX, y=anchorY, attachmentSide=attachmentSide, parent=destinationClass)
         anchorHint.SetProtected(True)
 
         destinationClass.AddAnchorPoint(anchorHint)

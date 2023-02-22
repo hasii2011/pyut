@@ -7,6 +7,8 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
+from ogl.OglClass import OglClass
+from pyutmodel.PyutInterface import PyutInterface
 from wx import CANCEL
 from wx import CENTRE
 from wx import EVT_MENU
@@ -61,6 +63,7 @@ from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
 
 from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
+from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.uiv2.dialogs.Wrappers import DlgEditActor
 from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
 from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
@@ -100,6 +103,7 @@ from pyut.uiv2.eventengine.Events import EVENT_CLOSE_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_ACTOR
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_CLASS
 from pyut.uiv2.eventengine.Events import EVENT_ACTIVE_UML_FRAME
+from pyut.uiv2.eventengine.Events import EVENT_EDIT_INTERFACE
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_NOTE
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_TEXT
 from pyut.uiv2.eventengine.Events import EVENT_EDIT_USE_CASE
@@ -121,6 +125,7 @@ from pyut.uiv2.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
 from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 
 from pyut.uiv2.eventengine.Events import EditActorEvent
+from pyut.uiv2.eventengine.Events import EditInterfaceEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
 from pyut.uiv2.eventengine.Events import EditUseCaseEvent
@@ -211,11 +216,12 @@ class PyutUIV2(SplitterWindow):
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME,           callback=self._onGetActivateUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
         # TODO:  Should these handler go somewhere else
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS,    callback=self._onEditClass)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_NOTE,     callback=self._onEditNote)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_TEXT,     callback=self._onEditText)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_ACTOR,    callback=self._onEditActor)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_USE_CASE, callback=self._onEditUseCase)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS,     callback=self._onEditClass)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_NOTE,      callback=self._onEditNote)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_TEXT,      callback=self._onEditText)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_ACTOR,     callback=self._onEditActor)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_USE_CASE,  callback=self._onEditUseCase)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_INTERFACE, callback= self._onEditInterface)
         #
         # Following provided for the Plugin Adapter
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,            callback=self._onAddShape)
@@ -682,6 +688,20 @@ class PyutUIV2(SplitterWindow):
                 pyutUseCase.name = dlg.GetValue()
                 self._setProjectModified()
                 umlFrame.Refresh()
+
+    def _onEditInterface(self, event: EditInterfaceEvent):
+
+        umlFrame:      UmlDiagramsFrame = self._projectManager.currentFrame
+        pyutInterface: PyutInterface    = event.pyutInterface
+        implementor:   OglClass         = event.implementor
+
+        with DlgEditInterface(umlFrame, eventEngine=self._eventEngine, pyutInterface=pyutInterface) as dlg:
+            if dlg.ShowModal() == OK:
+                self.logger.info(f'model: {pyutInterface}')
+
+                pyutClass: PyutClass = cast(PyutClass, implementor.pyutObject)
+                pyutClass.addInterface(pyutInterface)
+
 
     def _onAddShape(self, event: AddShapeEvent):
 
