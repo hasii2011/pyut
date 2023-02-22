@@ -1,6 +1,6 @@
 
 
-BASE_RESOURCES_PACKAGE:  str = 'org.pyut.resources'
+BASE_RESOURCES_PACKAGE:  str = 'pyut.resources'
 IMAGE_RESOURCES_PACKAGE: str = f'{BASE_RESOURCES_PACKAGE}.img'
 
 # These are given a name because wxPython is weird and did not name them
