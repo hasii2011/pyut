@@ -14,7 +14,7 @@ from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from pyut.PyutConstants import PyutConstants
 
-from pyut.general.Singleton import Singleton
+from hasiicommon.Singleton import Singleton
 
 
 class ErrorManager(Singleton):

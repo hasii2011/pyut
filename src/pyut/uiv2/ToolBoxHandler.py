@@ -10,7 +10,8 @@ from wx import ToolBar
 
 from wx import NewIdRef as wxNewIdRef
 
-from pyut.general.Singleton import Singleton
+from hasiicommon.Singleton import Singleton
+
 from pyut.ui.tools.Tool import Category
 from pyut.ui.tools.Tool import Tool
 from pyut.ui.tools.ToolboxOwner import ToolboxOwner
@@ -19,11 +20,9 @@ from pyut.ui.tools.ToolboxTypes import CategoryNames
 
 class ToolBoxHandler(Singleton):
 
+    # noinspection PyAttributeOutsideInit
     def init(self, **kwargs):
-
-        # self._eventEngine: IEventEngine = kwargs['eventEngine']
         self.logger:       Logger       = getLogger(__name__)
-
         self._toolboxOwner: ToolboxOwner = cast(ToolboxOwner, None)
         self._toolBar:      ToolBar      = cast(ToolBar, None)
 

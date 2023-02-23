@@ -1,8 +1,11 @@
-from collections import Counter
-from logging import Logger
-from logging import getLogger
+
 from typing import List
 from typing import cast
+
+from logging import Logger
+from logging import getLogger
+
+from collections import Counter
 
 from github import Github
 from github.GitRelease import GitRelease

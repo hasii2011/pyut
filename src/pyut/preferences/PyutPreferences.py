@@ -8,8 +8,7 @@ from configparser import ConfigParser
 
 from hasiicommon.Dimensions import Dimensions
 from hasiicommon.Position import Position
-
-from pyut.general.Singleton import Singleton
+from hasiicommon.Singleton import Singleton
 
 from pyut.preferences.DebugPreferences import DebugPreferences
 from pyut.preferences.FeaturePreferences import FeaturePreferences
@@ -20,8 +19,6 @@ from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
 
 class PyutPreferences(Singleton):
-
-
     """
     The goal of this class is to handle Pyut Preferences, to load them and save
     them from/to a file.
@@ -39,7 +36,6 @@ class PyutPreferences(Singleton):
 
     The preferences are loaded on the first instantiation of this
     class and are auto-saved when a value is added or changed.
-
     """
     # noinspection PyAttributeOutsideInit
     def init(self):

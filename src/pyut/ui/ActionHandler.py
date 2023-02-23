@@ -15,6 +15,8 @@ from wx import TextEntryDialog
 
 from wx import Yield as wxYield
 
+from hasiicommon.Singleton import Singleton
+
 from pyutmodel.PyutLinkType import PyutLinkType
 
 from miniogl.AttachmentSide import AttachmentSide
@@ -45,7 +47,6 @@ from pyut.uiv2.eventengine.Events import SetToolActionEvent
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.general.Singleton import Singleton
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlFrame import UmlFrame

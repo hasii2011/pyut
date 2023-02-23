@@ -3,11 +3,12 @@ from typing import cast
 
 from configparser import ConfigParser
 
-from pyut.general.Singleton import Singleton
+from hasiicommon.Singleton import Singleton
 
 
 class BaseSubPreference(Singleton):
 
+    # noinspection PyAttributeOutsideInit
     def init(self, *args, **kwargs):
 
         self._config: ConfigParser = cast(ConfigParser, None)
@@ -24,4 +25,5 @@ class BaseSubPreference(Singleton):
 
     @configParser.setter
     def configParser(self, newValue: ConfigParser):
+        # noinspection PyAttributeOutsideInit
         self._config = newValue

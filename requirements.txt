@@ -1,7 +1,7 @@
 wheel==0.38.4
-setuptools==67.3.1
+setuptools==67.4.0
 
-PyGithub==1.57
+PyGithub==1.58.0
 Deprecated==1.2.13
 
 pyut2xml==0.1.1
@@ -11,15 +11,15 @@ pkgversions==0.2.2
 py2app==0.28.4
 
 html-testRunner~=1.2.1
-mypy==1.0.0
+mypy==1.0.1
 mypy-extensions==1.0.0
-types-Deprecated==1.2.9
-types-setuptools==67.2.0.1
-typing_extensions==4.4.0
+types-Deprecated==1.2.9.1
+types-setuptools==67.4.0.1
+typing_extensions==4.5.0
 
 wxPython==4.2.0
 pyutmodel==1.4.0
-hasiicommon~=0.0.6
-ogl==0.70.0
-oglio==0.5.62
-pyutplugins==0.8.21
+hasiicommon~=0.0.7
+ogl==0.70.20
+oglio==0.5.80
+pyutplugins==0.8.40
