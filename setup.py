@@ -32,9 +32,6 @@ setup(
     data_files=DATA_FILES,
     packages=[
               'pyut',
-              'pyut.dialogs', 'pyut.dialogs.preferencesv2',
-              'pyut.dialogs.textdialogs',
-              'pyut.dialogs.tips',
               'pyut.enums',
               'pyut.errorcontroller',
               'pyut.experimental',
@@ -46,8 +43,11 @@ setup(
               'pyut.resources.img.splash',
               'pyut.resources.locale',
               'pyut.ui',   'pyut.ui.frame', 'pyut.ui.tools', 'pyut.ui.umlframes', 'pyut.ui.wxcommands',
-              'pyut.uiv2', 'pyut.uiv2.eventengine', 'pyut.uiv2.eventengine.eventinformation'
-              ],
+              'pyut.uiv2', 'pyut.uiv2.eventengine', 'pyut.uiv2.eventengine.eventinformation',
+              'pyut.uiv2.dialogs', 'pyut.uiv2.dialogs.preferencesv2',
+              'pyut.uiv2.dialogs.textdialogs',
+              'pyut.uiv2.dialogs.tips',
+    ],
     include_package_data=True,
     zip_safe=False,
     package_dir={'': 'src'},
@@ -78,7 +78,7 @@ setup(
     ),
     setup_requires=['py2app'],
     install_requires=[
-                      'PyGithub==1.57',
+                      'PyGithub==1.58',
                       'wxPython==4.2.0',
                       'pyutmodel==1.4.0',
                       'hasiicommon~=0.0.7',
