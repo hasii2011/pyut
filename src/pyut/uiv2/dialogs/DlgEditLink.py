@@ -52,7 +52,7 @@ class DlgEditLink (SizedDialog):
         self._imgArrow: StaticBitmap = self._linkImage(sizedPanel, pyutLink.linkType)
 
         gridPanel: SizedPanel = SizedPanel(parent=sizedPanel)
-        gridPanel.SetSizerType("grid", {"cols":3}) # 3-column grid layout
+        gridPanel.SetSizerType("grid", {"cols": 3})   # 3-column grid layout
         gridPanel.SetSizerProps(expand=True, proportion=1)
 
         #  labels
@@ -60,9 +60,9 @@ class DlgEditLink (SizedDialog):
         StaticText(gridPanel, label="Relationship").SetSizerProps(halign="center")
         StaticText(gridPanel, label="Destination Cardinality").SetSizerProps(halign="right")
         #  text
-        self._sourceCardinality:      TextCtrl = TextCtrl(gridPanel, value="", size=(120,-1))
-        self._relationship:           TextCtrl = TextCtrl(gridPanel, value="", size=(120,-1))
-        self._destinationCardinality: TextCtrl = TextCtrl(gridPanel, value="", size=(120,-1))
+        self._sourceCardinality:      TextCtrl = TextCtrl(gridPanel, value="", size=(120, -1))
+        self._relationship:           TextCtrl = TextCtrl(gridPanel, value="", size=(120, -1))
+        self._destinationCardinality: TextCtrl = TextCtrl(gridPanel, value="", size=(120, -1))
 
         self._sourceCardinality.SetSizerProps(halign="left")
         self._relationship.SetSizerProps(halign="center")

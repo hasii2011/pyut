@@ -17,6 +17,7 @@ from pyutmodel.PyutNote import PyutNote
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.ControlPoint import ControlPoint
 from miniogl.SizerShape import SizerShape
+from miniogl.TextShape import TextShape
 
 from ogl.OglInheritance import OglInheritance
 from ogl.OglText import OglText
@@ -102,7 +103,7 @@ class EditObjectHandler:
                 self._editActor(umlFrame, diagramShape)
             case OglAssociation() as diagramShape:
                 self._editAssociation(diagramShape)
-            case OglInheritance() | OglInterface() | AnchorPoint() | ControlPoint() | SizerShape():
+            case OglInheritance() | OglInterface() | AnchorPoint() | ControlPoint() | SizerShape() | TextShape():
                 pass    # Nothing to edit on inheritance or interface relationships
             case _:
                 self.logger.error(f'Unknown shape')

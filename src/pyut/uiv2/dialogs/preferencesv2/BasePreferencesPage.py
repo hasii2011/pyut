@@ -8,12 +8,14 @@ from wx.lib.sized_controls import SizedPanel
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
+
 class MyMetaBasePreferencesPage(ABCMeta, type(SizedPanel)):        # type: ignore
     """
     I have know idea why this works:
     https://stackoverflow.com/questions/66591752/metaclass-conflict-when-trying-to-create-a-python-abstract-class-that-also-subcl
     """
     pass
+
 
 class BasePreferencesPage(SizedPanel):
 

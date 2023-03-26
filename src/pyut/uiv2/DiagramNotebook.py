@@ -139,7 +139,7 @@ class DiagramNotebook(Notebook):
 
         if umlObjects is not None:
             for umlObject in umlObjects:
-                if umlObject.IsSelected():
+                if umlObject.selected is True:
                     selectedObjects.append(umlObject)
 
         return selectedObjects

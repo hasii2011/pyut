@@ -87,14 +87,14 @@ class BaseWxLinkCommand(Command):
         # get the view start and end position and assign it to the
         # model position, then the view position is updated from
         # the model -- Legacy comment.  Not sure what that means -- Humberto
-        sourcePoint:      AnchorPoint = self._link.GetSource()
-        destinationPoint: AnchorPoint = self._link.GetDestination()
+        sourcePoint:      AnchorPoint = self._link.sourceAnchor
+        destinationPoint: AnchorPoint = self._link.destinationAnchor
 
         srcPosX, srcPosY = sourcePoint.GetPosition()
         dstPosX, dstPosY = destinationPoint.GetPosition()
 
-        self._link.GetSource().GetModel().SetPosition(srcPosX, srcPosY)
-        self._link.GetDestination().GetModel().SetPosition(dstPosX, dstPosY)
+        self._link.sourceAnchor.GetModel().SetPosition(srcPosX, srcPosY)
+        self._link.destinationAnchor.GetModel().SetPosition(dstPosX, dstPosY)
         self._link.UpdateFromModel()
 
         umlFrame.Refresh()

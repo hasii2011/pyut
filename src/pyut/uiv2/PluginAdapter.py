@@ -170,6 +170,7 @@ class PluginAdapter(IPluginAdapter):
         assert pluginDocument is not None, 'Developer error'
 
         self._layoutPluginDocument(pluginDocument=pluginDocument)
+        self._eventEngine.sendEvent(EventType.RefreshFrame)
 
     def _layoutPluginDocument(self, pluginDocument: PluginDocument):
         """
