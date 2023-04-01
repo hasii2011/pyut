@@ -5,7 +5,7 @@ from logging import getLogger
 from os import getcwd
 from os import sep as osSeparator
 
-from hasiicommon.Singleton import Singleton
+from hasiihelper.Singleton import Singleton
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

@@ -6,9 +6,9 @@ from logging import getLogger
 
 from configparser import ConfigParser
 
-from hasiicommon.Dimensions import Dimensions
-from hasiicommon.Position import Position
-from hasiicommon.Singleton import Singleton
+from hasiihelper.Dimensions import Dimensions
+from hasiihelper.Position import Position
+from hasiihelper.Singleton import Singleton
 
 from pyut.preferences.DebugPreferences import DebugPreferences
 from pyut.preferences.FeaturePreferences import FeaturePreferences

@@ -1,8 +1,9 @@
 
 from typing import cast
 
-from hasiicommon.Dimensions import Dimensions
-from hasiicommon.Position import Position
+from hasiihelper.Dimensions import Dimensions
+from hasiihelper.Position import Position
+
 from hasiicommon.ui.widgets.DimensionsControl import DimensionsControl
 from hasiicommon.ui.widgets.PositionControl import PositionControl
 from wx import EVT_CHECKBOX
@@ -42,7 +43,7 @@ class PositioningPreferencesPage(BasePreferencesPage):
         self._appPositionControls    = self._createAppPositionControls(sizedPanel=self)
         self._appDimensionsContainer = self._createAppSizeControls(sizedPanel=self)
 
-        Panel(self, size=(1,75))  # TODO: this is a hack
+        Panel(self, size=(1, 75))  # TODO: this is a hack
 
         self._setControlValues()
         parent.Bind(EVT_CHECKBOX, self._onCenterOnStartupChanged, id=self._centerAppOnStartupId)
@@ -111,6 +112,3 @@ class PositioningPreferencesPage(BasePreferencesPage):
         self._enablePositionControls(val)
 
         self._valuesChanged = True
-
-
-

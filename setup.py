@@ -80,10 +80,11 @@ setup(
     install_requires=[
                       'PyGithub==1.58',
                       'wxPython==4.2.0',
-                      'pyutmodel==1.4.0',
-                      'hasiicommon~=0.0.7',
-                      'ogl~=0.70.20',
-                      'oglio~=0.5.80',
-                      'pyutplugins~=0.8.40',
+                      'hasiihelper~=0.1.0',
+                      'pyutmodel==1.4.2',
+                      'hasiicommon~=0.2.1',
+                      'ogl~=0.70.22',
+                      'oglio~=0.6.0',
+                      'pyutplugins~=0.8.42',
                       ]
 )

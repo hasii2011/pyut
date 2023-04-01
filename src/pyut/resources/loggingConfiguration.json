@@ -49,12 +49,6 @@
         "pyut": {
             "level":     "INFO",
             "propagate": "False"
-        },
-        "pyut.ui.widgets.DualSpinnerControl": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
         }
-
     }
 }

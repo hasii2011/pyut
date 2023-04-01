@@ -10,7 +10,7 @@ from wx import ToolBar
 
 from wx import NewIdRef as wxNewIdRef
 
-from hasiicommon.Singleton import Singleton
+from hasiihelper.Singleton import Singleton
 
 from pyut.ui.tools.Tool import Category
 from pyut.ui.tools.Tool import Tool

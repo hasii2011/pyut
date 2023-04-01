@@ -71,7 +71,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         pyutLink = PyutSDMessage("msg test", src.getPyutObject(), srcTime, dst.getPyutObject(), dstTime)
 
         oglLink = OglSDMessage(src, pyutLink, dst)
-        pyutLink.setOglObject(oglLink)
+        # pyutLink.setOglObject(oglLink)
 
         src.addLink(oglLink)
         dst.addLink(oglLink)
