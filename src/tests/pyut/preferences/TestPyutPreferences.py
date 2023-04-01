@@ -2,7 +2,6 @@
 from typing import cast
 
 from logging import Logger
-from logging import getLogger
 
 from os import remove as osRemove
 from os import path as osPath
@@ -11,6 +10,8 @@ from shutil import copyfile
 
 from unittest import main as unitTestMain
 from unittest import TestSuite
+
+from hasiihelper.UnitTestBase import UnitTestBase
 
 from tests.TestBase import TestBase
 
@@ -26,8 +27,7 @@ class TestPyutPreferences(TestBase):
 
     @classmethod
     def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestPyutPreferences.clsLogger = getLogger(__name__)
+        UnitTestBase.setUpClass()
         PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
@@ -36,13 +36,13 @@ class TestPyutPreferences(TestBase):
 
         Instantiate a prefs (Singleton class) and fill it.
         """
-        self.logger: Logger = TestPyutPreferences.clsLogger
-
+        super().setUp()
         self._backupPrefs()
         self.prefs: PyutPreferences = PyutPreferences()
         self._emptyPrefs()
 
     def tearDown(self):
+        super().tearDown()
         self._restoreBackup()
 
     def testAutoResizeOptionIsTrue(self):
@@ -53,7 +53,7 @@ class TestPyutPreferences(TestBase):
 
         autoResize: bool = self.prefs.autoResizeShapesOnEdit
         self.assertEqual(autoResize, True, 'What !! I set it to boolean `True`')
-        self.logger.info(f'{autoResize}')
+        # self.logger.info(f'{autoResize}')   does not work;  How does inheritance work with class variables
 
     def testAutoResizeOptionIsFalse(self):
 
@@ -64,7 +64,7 @@ class TestPyutPreferences(TestBase):
         autoResize: bool = self.prefs.autoResizeShapesOnEdit
 
         self.assertEqual(autoResize, False, 'What !! I set it to the boolean `False`')
-        self.logger.info(f'{autoResize}')
+        # self.logger.info(f'{autoResize}')   does not work;  How does inheritance work with class variables
 
     def _backupPrefs(self):
 

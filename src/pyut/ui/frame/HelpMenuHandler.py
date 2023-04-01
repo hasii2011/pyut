@@ -51,7 +51,7 @@ class HelpMenuHandler(BaseMenuHandler):
         """
         from pyut.general.PyutVersion import PyutVersion
         from pyut.general.GitHubAdapter import GitHubAdapter
-        from pyut.general.SemanticVersion import SemanticVersion
+        from hasiihelper.SemanticVersion import SemanticVersion
 
         wxBeginBusyCursor()
         githubAdapter: GitHubAdapter   = GitHubAdapter()

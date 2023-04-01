@@ -12,7 +12,7 @@ from github.GitRelease import GitRelease
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 
-from pyut.general.SemanticVersion import SemanticVersion
+from hasiihelper.SemanticVersion import SemanticVersion
 
 
 class GitHubAdapter:

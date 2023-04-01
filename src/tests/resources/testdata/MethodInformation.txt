@@ -1,1 +1,0 @@
-<classDescription=I am a test class><methods=[(\'floatMethod\', \'-\', \'float\', "[(\'param1\', \'Type1\', \'\')]", \'[]\'), (\'finalMethod\', \'#\', \'int\', "[(\'param2\', \'Type2\', \'\')]", "[\'final\']")]>

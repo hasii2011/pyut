@@ -6,7 +6,7 @@ from typing import cast
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from pyut.general.SemanticVersion import SemanticVersion
+from hasiihelper.SemanticVersion import SemanticVersion
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
