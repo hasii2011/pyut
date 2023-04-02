@@ -1,9 +1,4 @@
 
-from typing import cast
-
-from logging import Logger
-from logging import getLogger
-
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
@@ -14,26 +9,20 @@ from pyut.uiv2.eventengine.Events import EVENT_NEW_PROJECT
 from pyut.uiv2.eventengine.Events import EVENT_UPDATE_TREE_ITEM_NAME
 from pyut.uiv2.eventengine.Events import NewProjectEvent
 from pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
-from tests.TestBase import TestBase
+
+from hasiihelper.UnitTestBase import UnitTestBase
 
 from pyut.uiv2.eventengine.Events import EventType
 
 
-class TestEventType(TestBase):
+class TestEventType(UnitTestBase):
     """
     """
-    clsLogger: Logger = cast(Logger, None)
-
-    @classmethod
-    def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestEventType.clsLogger = getLogger(__name__)
-
     def setUp(self):
-        self.logger: Logger = TestEventType.clsLogger
+        super().setUp()
 
     def tearDown(self):
-        pass
+        super().tearDown()
 
     def testNewProjectEventType(self):
         smartEnum:          EventType    = EventType.NewProject

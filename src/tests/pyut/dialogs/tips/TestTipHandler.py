@@ -1,11 +1,8 @@
 
-from typing import cast
-
-from logging import Logger
-from logging import getLogger
-
 from unittest import TestSuite
 from unittest import main as unitTestMain
+
+from hasiihelper.UnitTestBase import UnitTestBase
 
 from pyut.PyutUtils import PyutUtils
 
@@ -20,20 +17,17 @@ from tests.TestBase import TestBase
 class TestTipHandler(TestBase):
     """
     """
-    clsLogger: Logger = cast(Logger, None)
-
     @classmethod
     def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestTipHandler.clsLogger = getLogger(__name__)
+        UnitTestBase.setUpClass()
         PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
-        self.logger: Logger = TestTipHandler.clsLogger
+        super().setUp()
         self._tipsFileName: str = PyutUtils.retrieveResourcePath(f'{DlgTips.TIPS_FILENAME}')
 
     def tearDown(self):
-        pass
+        super().tearDown()
 
     def testInitialization(self):
 

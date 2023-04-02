@@ -1,29 +1,21 @@
 
-from logging import Logger
-from logging import getLogger
-from typing import cast
-
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from hasiihelper.SemanticVersion import SemanticVersion
+from hasiihelper.UnitTestBase import UnitTestBase
 
 from pyut.preferences.PyutPreferences import PyutPreferences
-
-from tests.TestBase import TestBase
 
 from pyut.general.GitHubAdapter import GitHubAdapter
 
 
-class TestGitHubAdapter(TestBase):
+class TestGitHubAdapter(UnitTestBase):
     """
     """
-    clsLogger: Logger = cast(Logger, None)
-
     @classmethod
     def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestGitHubAdapter.clsLogger = getLogger(__name__)
+        UnitTestBase.setUpClass()
         PyutPreferences.determinePreferencesLocation()
 
         import warnings
@@ -32,10 +24,11 @@ class TestGitHubAdapter(TestBase):
         warnings.filterwarnings(action="ignore", message="unclosed", category=ResourceWarning)
 
     def setUp(self):
-        self.logger:        Logger        = TestGitHubAdapter.clsLogger
+        super().setUp()
         self.githubAdapter: GitHubAdapter = GitHubAdapter()
 
     def tearDown(self):
+        super().tearDown()
         self.githubAdapter.cleanUp()
         del self.githubAdapter
 

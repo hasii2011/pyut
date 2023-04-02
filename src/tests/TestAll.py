@@ -28,7 +28,6 @@ class TestAll:
     NOT_TESTS: List[str] = ['TestAll',
                             'TestWxOgl', 'TestBase', 'TestTemplate',
                             'pyut/ui/tools/TestToolboxFrame',
-                            'TestUmlFrame',
                             'pyut/dialogs/TestADialog',
                             'TestGriddedDiagramApplication',
                             ]

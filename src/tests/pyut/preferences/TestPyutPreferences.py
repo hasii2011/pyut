@@ -1,8 +1,4 @@
 
-from typing import cast
-
-from logging import Logger
-
 from os import remove as osRemove
 from os import path as osPath
 
@@ -22,8 +18,6 @@ class TestPyutPreferences(TestBase):
     """
     """
     BACKUP_SUFFIX: str = '.backup'
-
-    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):

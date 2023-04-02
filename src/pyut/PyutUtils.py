@@ -9,6 +9,10 @@ from logging import getLogger
 
 from dataclasses import dataclass
 
+from importlib.abc import Traversable
+
+from importlib.resources import files
+
 from os import sep as osSep
 
 from pkg_resources import resource_filename
@@ -260,11 +264,16 @@ class PyutUtils:
     def getResourcePath(cls, packageName: str, fileName: str):
 
         try:
-            fqFileName: str = resource_filename(packageName, fileName)
+            # fqFileName: str = resource_filename(packageName, fileName
+            traversable: Traversable = files(packageName) / fileName
+            print(f'Used Traversable')
+            return str(traversable)
+
         except (ValueError, Exception):
             #
             # Maybe we are in an app
             #
+            print(f'Did not use Traversable')
             from os import environ
             pathToResources: Optional[str] = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
             fqFileName = f'{pathToResources}/{packageName}/{fileName}'

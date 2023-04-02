@@ -1,13 +1,8 @@
 
-from typing import cast
-
-from logging import Logger
-from logging import getLogger
-
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
-from tests.TestBase import TestBase
+from hasiihelper.UnitTestBase import UnitTestBase
 
 from pyut.PyutUtils import PyutUtils
 from pyut.PyutUtils import ScreenMetrics
@@ -17,25 +12,22 @@ from pyut.enums.ResourceTextType import ResourceTextType
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 
-class TestPyutUtils(TestBase):
-
-    clsLogger: Logger = cast(Logger, None)
+class TestPyutUtils(UnitTestBase):
 
     BASE_TEST_PATH:     str = '/users/home/hasii'
     FAKE_TEST_FILENAME: str = 'hasiiTheGreat.doc'
 
     @classmethod
     def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestPyutUtils.clsLogger = getLogger(__name__)
+        UnitTestBase.setUpClass()
         PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
-        self.logger: Logger          = TestPyutUtils.clsLogger
+        super().setUp()
         self.prefs:  PyutPreferences = PyutPreferences()
 
     def tearDown(self):
-        pass
+        super().tearDown()
 
     def testAssignId(self):
         testIds = [Test_Id1, Test_Id2, Test_Id3] = PyutUtils.assignID(3)

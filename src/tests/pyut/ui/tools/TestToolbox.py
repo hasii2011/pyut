@@ -1,9 +1,4 @@
 
-from typing import cast
-
-from logging import Logger
-from logging import getLogger
-
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
@@ -13,28 +8,25 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
-from tests.TestBase import TestBase
-
 from pyut.ui.tools.Toolbox import Toolbox
 
+from hasiihelper.UnitTestBase import UnitTestBase
 
-class TestToolbox(TestBase):
+
+class TestToolbox(UnitTestBase):
     """
     """
-    clsLogger: Logger = cast(Logger, None)
-
     @classmethod
     def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestToolbox.clsLogger = getLogger(__name__)
+        UnitTestBase.setUpClass()
         PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
-        self.logger: Logger = TestToolbox.clsLogger
+        super().setUp()
         self._preferences: PyutPreferences = PyutPreferences()
 
     def tearDown(self):
-        pass
+        super().tearDown()
 
     def testComputeToolboxNumberRows(self):
 

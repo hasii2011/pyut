@@ -1,15 +1,10 @@
 
-from typing import cast
-
-from logging import Logger
-from logging import getLogger
-
 from traceback import StackSummary
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from tests.TestBase import TestBase
+from hasiihelper.UnitTestBase import UnitTestBase
 
 from pyut.general.StackTraceFormatter import StackTraceFormatter
 from pyut.general.StackTraceFormatter import StackTraceList
@@ -17,21 +12,14 @@ from pyut.general.StackTraceFormatter import CodeLines
 from pyut.general.StackTraceFormatter import CompressedLines
 
 
-class TestStackTraceFormatter(TestBase):
+class TestStackTraceFormatter(UnitTestBase):
     """
     """
-    clsLogger: Logger = cast(Logger, None)
-
-    @classmethod
-    def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestStackTraceFormatter.clsLogger = getLogger(__name__)
-
     def setUp(self):
-        self.logger: Logger = TestStackTraceFormatter.clsLogger
+        super().setUp()
 
     def tearDown(self):
-        pass
+        super().tearDown()
 
     def testBasic(self):
 

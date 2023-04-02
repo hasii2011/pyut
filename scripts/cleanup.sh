@@ -21,9 +21,5 @@ find . -type f -name UnitTest.gml   -delete
 
 rm -rf src/UNKNOWN.egg-info
 
-cd src/tests/resources/testdata > /dev/null 2>&1 || ! echo "No such directory"
-
-find . -type f -name "*.png" -delete
-
 cd - > /dev/null 2>&1 || ! echo "No such directory"
 find . -type f -name "translationGraph.gml" -delete

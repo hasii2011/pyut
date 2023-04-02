@@ -1,16 +1,10 @@
 
-from typing import cast
 from typing import List
-
-from logging import Logger
-from logging import getLogger
 
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from unittest.mock import Mock
-
-from wx import App
 
 from tests.TestBase import TestBase
 
@@ -20,26 +14,13 @@ from pyut.general.LineSplitter import LineSplitter
 class TestLineSplitter(TestBase):
     """
     """
-    clsLogger: Logger = cast(Logger, None)
-
-    @classmethod
-    def setUpClass(cls):
-
-        TestBase.setUpLogging()
-        TestLineSplitter.clsLogger = getLogger(__name__)
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
 
     def setUp(self):
-        self.logger:       Logger       = TestLineSplitter.clsLogger
-        self.app:          App          = App()
+        super().setUp()
         self.lineSplitter: LineSplitter = LineSplitter()
 
     def tearDown(self):
-        self.app.OnExit()
-        del self.app
+        super().tearDown()
 
     def testNoSplit(self):
 
