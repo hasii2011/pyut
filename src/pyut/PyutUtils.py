@@ -15,16 +15,11 @@ from importlib.resources import files
 
 from os import sep as osSep
 
-from pkg_resources import resource_filename
-
-from tempfile import gettempdir
-
 from wx import DisplaySize
 from wx import ScreenDC
 from wx import Size
 from wx import NewIdRef as wxNewIdRef
 
-from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.enums.ResourceTextType import ResourceTextType
 
 from pyut.errorcontroller.ErrorManager import ErrorManager
@@ -222,7 +217,6 @@ class PyutUtils:
 
         Returns:  A long string
         """
-        # textFileName = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, textType.value)
         textFileName: str = PyutUtils.retrieveResourcePath(cast(str, textType.value))
         cls.clsLogger.debug(f'text filename: {textFileName}')
 
@@ -233,52 +227,29 @@ class PyutUtils:
         return requestedText
 
     @classmethod
-    def retrieveResourcePath(cls, bareFileName: str) -> str:
-        # noinspection SpellCheckingInspection
+    def retrieveResourcePath(cls, bareFileName: str, packageName: str = RESOURCES_PACKAGE_NAME) -> str:
         """
-
-        TODO:
-        Use this method in Python 3.9
-        from importlib_resources import files
-        configFilePath: str  = files('org.pyut.resources').joinpath(Pyut.JSON_LOGGING_CONFIG_FILENAME)
-
+        Assume we are in an app;  If not then we are in development
         Args:
             bareFileName:  Simple file name
+            packageName:   The package from which to retrieve the resource
 
         Returns:  The fully qualified file name
-
         """
         try:
-            fqFileName: Optional[str] = resource_filename(PyutUtils.RESOURCES_PACKAGE_NAME, bareFileName)
-        except (ValueError, Exception):
-            #
-            # Maybe we are in an app
-            #
             from os import environ
-            pathToResources: Optional[str] = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
-            fqFileName = f'{pathToResources}/{PyutUtils.RESOURCES_PATH}/{bareFileName}'
+            pathToResources: str = environ[f'{PyutUtils.RESOURCE_ENV_VAR}']
+            fqFileName:      str = f'{pathToResources}/{PyutUtils.RESOURCES_PATH}/{bareFileName}'
+        except KeyError:
+            traversable: Traversable = files(packageName) / bareFileName
+            fqFileName = str(traversable)
 
-        return cast(str, fqFileName)
+        return fqFileName
 
     @classmethod
     def getResourcePath(cls, packageName: str, fileName: str):
 
-        try:
-            # fqFileName: str = resource_filename(packageName, fileName
-            traversable: Traversable = files(packageName) / fileName
-            print(f'Used Traversable')
-            return str(traversable)
-
-        except (ValueError, Exception):
-            #
-            # Maybe we are in an app
-            #
-            print(f'Did not use Traversable')
-            from os import environ
-            pathToResources: Optional[str] = environ.get(f'{PyutUtils.RESOURCE_ENV_VAR}')
-            fqFileName = f'{pathToResources}/{packageName}/{fileName}'
-
-        return fqFileName
+        return cls.retrieveResourcePath(packageName=packageName, bareFileName=fileName)
 
     @classmethod
     def getScreenMetrics(cls) -> ScreenMetrics:
