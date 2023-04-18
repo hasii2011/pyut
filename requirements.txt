@@ -9,6 +9,8 @@ epr2md==0.1.2
 traviscli==0.3.2
 pkgversions==0.2.2
 py2app==0.28.5
+buildlackey~=0.7.0
+versionoverlord~=0.5.8
 
 html-testRunner~=1.2.1
 mypy==1.2.0

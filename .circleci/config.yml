@@ -44,4 +44,4 @@ jobs:
       - run:
             name: run tests
             command: | 
-              scripts/runtests.sh
+              runtests
