@@ -11,7 +11,7 @@ from wx import Frame
 from wx import BoxSizer
 
 from miniogl.DiagramFrame import DiagramFrame
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 from tests.TestBase import TestBase
 
 WINDOW_WIDTH:  int = 900

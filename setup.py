@@ -8,22 +8,22 @@ import pathlib
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 
-APP = ['src/pyut/PyutV2.py']
-DATA_FILES = [('pyut/resources', ['src/pyut/resources/loggingConfiguration.json']),
-              ('pyut/resources', ['src/pyut/resources/Kilroy-Pyut.txt']),
-              ('pyut/resources', ['src/pyut/resources/Help.txt']),
-              ('pyut/resources', ['src/pyut/resources/Kudos.txt']),
-              ('pyut/resources', ['src/pyut/resources/tips.txt']),
-              ('pyut/resources', ['src/pyut/resources/version.txt']),
+APP = ['pyut/PyutV2.py']
+DATA_FILES = [('pyut/resources', ['pyut/resources/loggingConfiguration.json']),
+              ('pyut/resources', ['pyut/resources/Kilroy-Pyut.txt']),
+              ('pyut/resources', ['pyut/resources/Help.txt']),
+              ('pyut/resources', ['pyut/resources/Kudos.txt']),
+              ('pyut/resources', ['pyut/resources/tips.txt']),
+              ('pyut/resources', ['pyut/resources/version.txt']),
 
-              ('pyut/resources/img', ['src/pyut/resources/img/pyut.ico']),
+              ('pyut/resources/img', ['pyut/resources/img/pyut.ico']),
               ]
 OPTIONS = {}
 
 # The text of the README file
 README = (HERE / "README.md").read_text()
 LICENSE = (HERE / 'LICENSE').read_text()
-VERSION = (HERE / 'src/pyut/resources/version.txt').read_text()
+VERSION = (HERE / 'pyut/resources/version.txt').read_text()
 
 setup(
     name='Pyut',
@@ -50,7 +50,6 @@ setup(
     ],
     include_package_data=True,
     zip_safe=False,
-    package_dir={'': 'src'},
 
     url='https://github.com/hasii2011/PyUt',
     author='Humberto A. Sanchez II',

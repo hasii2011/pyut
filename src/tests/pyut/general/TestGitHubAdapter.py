@@ -5,9 +5,9 @@ from unittest import main as unitTestMain
 from hasiihelper.SemanticVersion import SemanticVersion
 from hasiihelper.UnitTestBase import UnitTestBase
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
-from pyut.general.GitHubAdapter import GitHubAdapter
+from pyut import GitHubAdapter
 
 
 class TestGitHubAdapter(UnitTestBase):

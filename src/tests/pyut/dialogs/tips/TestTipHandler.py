@@ -4,11 +4,11 @@ from unittest import main as unitTestMain
 
 from hasiihelper.UnitTestBase import UnitTestBase
 
-from pyut.PyutUtils import PyutUtils
+from pyut import PyutUtils
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
-from pyut.uiv2.dialogs.tips.DlgTips import DlgTips
+from pyut.uiv2.dialogs.tips import DlgTips
 from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
 
 from tests.TestBase import TestBase

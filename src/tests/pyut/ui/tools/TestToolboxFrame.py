@@ -14,19 +14,19 @@ from wx import ID_UNDO
 from wx import NewIdRef as wxNewIdRef
 
 # noinspection PyProtectedMember
-from pyut.general.Globals import _
+from pyut import _
 from miniogl.DiagramFrame import DiagramFrame
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
-from pyut.ui.tools.Toolbox import Toolbox as Toolbox2
+from pyut.ui import Toolbox as Toolbox2
 
-from pyut.ui.tools.Tool import Tool
-from pyut.ui.tools.ToolIconOwner import ToolIconOwner
+from pyut.ui import Tool
+from pyut.ui import ToolIconOwner
 
-from pyut.ui.tools.ToolsCreator import PYUT_MENU_CATEGORY
-from pyut.ui.tools.ToolsCreator import PYUT_TOOLS_CATEGORY
-from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
+from pyut.ui import PYUT_MENU_CATEGORY
+from pyut.ui import PYUT_TOOLS_CATEGORY
+from pyut.ui import SharedIdentifiers as SID
 from tests.TestBase import TestBase
 
 

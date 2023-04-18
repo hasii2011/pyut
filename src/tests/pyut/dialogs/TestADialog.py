@@ -57,41 +57,41 @@ from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 from ogl.preferences.OglPreferences import OglPreferences
 
 from pyut.enums.DiagramType import DiagramType
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
-from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
-from pyut.uiv2.Types import UmlFrameType
+from pyut.ui import UmlClassDiagramsFrame
+from pyut import IPyutDocument
+from pyut import PyutDocumentV2
+from pyut import UmlFrameType
 
 from pyut.uiv2.eventengine.EventEngine import EventEngine
-from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
-from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
-from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut import ClassNameChangedEvent
+from pyut import EVENT_CLASS_NAME_CHANGED
+from pyut import EVENT_UML_DIAGRAM_MODIFIED
+from pyut import EventType
+from pyut import UMLDiagramModifiedEvent
+from pyut import IEventEngine
 
-from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
-from pyut.uiv2.dialogs.DlgEditCode import DlgEditCode
-from pyut.uiv2.dialogs.DlgEditDescription import DlgEditDescription
-from pyut.uiv2.dialogs.DlgEditField import DlgEditField
+from pyut.uiv2.dialogs import DlgEditClass
+from pyut.uiv2.dialogs import DlgEditCode
+from pyut.uiv2.dialogs import DlgEditDescription
+from pyut.uiv2.dialogs import DlgEditField
 from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
-from pyut.uiv2.dialogs.DlgEditMethod import DlgEditMethod
-from pyut.uiv2.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
-from pyut.uiv2.dialogs.DlgEditParameter import DlgEditParameter
-from pyut.uiv2.dialogs.DlgEditStereotype import DlgEditStereotype
+from pyut.uiv2.dialogs import DlgEditMethod
+from pyut.uiv2.dialogs import DlgEditMethodModifiers
+from pyut.uiv2.dialogs import DlgEditParameter
+from pyut.uiv2.dialogs import DlgEditStereotype
 from pyut.uiv2.dialogs.DlgPyutDebug import DlgPyutDebug
 
-from pyut.uiv2.dialogs.Wrappers import DlgEditActor
-from pyut.uiv2.dialogs.Wrappers import DlgEditDiagramTitle
-from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
+from pyut.uiv2.dialogs import DlgEditActor
+from pyut.uiv2.dialogs import DlgEditDiagramTitle
+from pyut.uiv2.dialogs import DlgEditUseCase
 
 from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.uiv2.dialogs.textdialogs import DlgEditText
 
-from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
+from pyut.uiv2.dialogs import DlgPyutPreferencesV2
 
 from tests.TestBase import TestBase
 from tests.pyut.dialogs.DialogFrame import DialogFrame

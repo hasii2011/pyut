@@ -11,7 +11,7 @@ from hasiihelper.UnitTestBase import UnitTestBase
 
 from tests.TestBase import TestBase
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences import PyutPreferences
 
 
 class TestPyutPreferences(TestBase):
