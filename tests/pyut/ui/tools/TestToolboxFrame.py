@@ -13,7 +13,6 @@ from wx import ID_UNDO
 
 from wx import NewIdRef as wxNewIdRef
 
-# noinspection PyProtectedMember
 from miniogl.DiagramFrame import DiagramFrame
 
 from pyut.preferences.PreferencesCommon import PreferencesCommon
