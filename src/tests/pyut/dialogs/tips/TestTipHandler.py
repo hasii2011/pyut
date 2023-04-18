@@ -2,13 +2,15 @@
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
+from hasiihelper.ResourceManager import ResourceManager
 from hasiihelper.UnitTestBase import UnitTestBase
 
-from pyut import PyutUtils
+from pyut.general.Globals import BASE_RESOURCES_PACKAGE
+from pyut.general.Globals import BASE_RESOURCE_PATH
 
-from pyut.preferences import PyutPreferences
+from pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from pyut.uiv2.dialogs.tips import DlgTips
+from pyut.uiv2.dialogs.tips.DlgTips import DlgTips
 from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
 
 from tests.TestBase import TestBase
@@ -20,11 +22,13 @@ class TestTipHandler(TestBase):
     @classmethod
     def setUpClass(cls):
         UnitTestBase.setUpClass()
-        PyutPreferences.determinePreferencesLocation()
+        PreferencesCommon.determinePreferencesLocation()
 
     def setUp(self):
         super().setUp()
-        self._tipsFileName: str = PyutUtils.retrieveResourcePath(f'{DlgTips.TIPS_FILENAME}')
+        self._tipsFileName: str = ResourceManager.retrieveResourcePath(bareFileName=f'{DlgTips.TIPS_FILENAME}',
+                                                                       packageName=f'{BASE_RESOURCES_PACKAGE}',
+                                                                       resourcePath=f'{BASE_RESOURCE_PATH}')
 
     def tearDown(self):
         super().tearDown()

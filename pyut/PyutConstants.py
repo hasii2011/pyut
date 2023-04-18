@@ -35,24 +35,3 @@ class PyutConstants:
     # Python logging mechanism
     # Needs to match the name in loggingConfiguration.json
     MAIN_LOGGING_NAME:     str = "Pyut"
-
-    # @staticmethod
-    # def diagramTypeAsString(inType):
-    #     return DiagramsStrings[inType]
-    #
-    # @staticmethod
-    # @deprecated
-    # def diagramTypeFromString(string):
-    #     """
-    #     TODO:  This code belongs in the enumeration class
-    #
-    #     Args:
-    #         string:   A String that can be matched to the enumeration
-    #
-    #     Returns:
-    #
-    #     """
-    #     for key in DiagramsStrings:
-    #         if DiagramsStrings[key] == string:
-    #             return key
-    #     return DiagramType.UNKNOWN_DIAGRAM

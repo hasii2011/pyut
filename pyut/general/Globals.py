@@ -1,7 +1,10 @@
 
+from os import sep as osSep
 
 BASE_RESOURCES_PACKAGE:  str = 'pyut.resources'
 IMAGE_RESOURCES_PACKAGE: str = f'{BASE_RESOURCES_PACKAGE}.img'
+
+BASE_RESOURCE_PATH: str = f'pyut{osSep}resources'
 
 # These are given a name because wxPython is weird and did not name them
 WX_SIZER_NOT_CHANGEABLE: int = 0
