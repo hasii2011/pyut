@@ -51,7 +51,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
 
-    url='https://github.com/hasii2011/PyUt',
+    url='https://github.com/hasii2011/Pyut',
     author='Humberto A. Sanchez II',
     author_email='Humberto.A.Sanchez.II@gmail.com',
     maintainer='Humberto A. Sanchez II',

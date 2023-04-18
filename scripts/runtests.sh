@@ -32,8 +32,6 @@ echo "current: $(pwd)"
 python3 -m tests.TestAll
 status=$?
 
-cd -  > /dev/null 2>&1 || ! echo "No such directory"
-
 ./scripts/cleanup.sh
 
 # echo "Exit with status: ${status}"

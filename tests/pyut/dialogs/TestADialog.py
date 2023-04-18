@@ -34,15 +34,12 @@ from pyutmodel.PyutLinkType import PyutLinkType
 from pyutmodel.PyutStereotype import PyutStereotype
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutInterface import PyutInterface
-
 from pyutmodel.PyutField import PyutField
 from pyutmodel.PyutField import PyutFields
-
 from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutMethod import PyutModifiers
 from pyutmodel.PyutMethod import SourceCode
 from pyutmodel.PyutMethod import PyutMethods
-
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
 from pyutmodel.PyutModifier import PyutModifier
 from pyutmodel.PyutNote import PyutNote
@@ -51,51 +48,55 @@ from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutType import PyutType
 from pyutmodel.PyutActor import PyutActor
 from pyutmodel.PyutUseCase import PyutUseCase
-
 from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
 
 from ogl.preferences.OglPreferences import OglPreferences
 
 from pyut.enums.DiagramType import DiagramType
-from pyut.preferences import PyutPreferences
 
-from pyut.ui import UmlClassDiagramsFrame
-from pyut import IPyutDocument
-from pyut import PyutDocumentV2
-from pyut import UmlFrameType
+from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from pyut.uiv2.eventengine.EventEngine import EventEngine
-from pyut import ClassNameChangedEvent
-from pyut import EVENT_CLASS_NAME_CHANGED
-from pyut import EVENT_UML_DIAGRAM_MODIFIED
-from pyut import EventType
-from pyut import UMLDiagramModifiedEvent
-from pyut import IEventEngine
+from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from pyut.uiv2.dialogs import DlgEditClass
-from pyut.uiv2.dialogs import DlgEditCode
-from pyut.uiv2.dialogs import DlgEditDescription
-from pyut.uiv2.dialogs import DlgEditField
+from pyut.uiv2.IPyutDocument import IPyutDocument
+from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
+
+from pyut.uiv2.Types import UmlFrameType
+
+from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
+
+from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
+from pyut.uiv2.dialogs.DlgEditCode import DlgEditCode
+from pyut.uiv2.dialogs.DlgEditDescription import DlgEditDescription
+from pyut.uiv2.dialogs.DlgEditField import DlgEditField
 from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
 from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
-from pyut.uiv2.dialogs import DlgEditMethod
-from pyut.uiv2.dialogs import DlgEditMethodModifiers
-from pyut.uiv2.dialogs import DlgEditParameter
-from pyut.uiv2.dialogs import DlgEditStereotype
+from pyut.uiv2.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.uiv2.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
+from pyut.uiv2.dialogs.DlgEditParameter import DlgEditParameter
+from pyut.uiv2.dialogs.DlgEditStereotype import DlgEditStereotype
 from pyut.uiv2.dialogs.DlgPyutDebug import DlgPyutDebug
 
-from pyut.uiv2.dialogs import DlgEditActor
-from pyut.uiv2.dialogs import DlgEditDiagramTitle
-from pyut.uiv2.dialogs import DlgEditUseCase
-
 from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.uiv2.dialogs.textdialogs import DlgEditText
+from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
 
-from pyut.uiv2.dialogs import DlgPyutPreferencesV2
+from pyut.uiv2.dialogs.Wrappers import DlgEditActor
+from pyut.uiv2.dialogs.Wrappers import DlgEditDiagramTitle
+from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
+
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.uiv2.eventengine.EventEngine import EventEngine
+
+from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
+from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
+from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 
 from tests.TestBase import TestBase
-from tests.pyut.dialogs.DialogFrame import DialogFrame
 
+from tests.pyut.dialogs.DialogFrame import DialogFrame
 from tests.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
 
 
@@ -105,7 +106,7 @@ class TestADialog(App):
     NOTHING_SELECTED: int = -1
 
     def __init__(self, redirect: bool):
-        PyutPreferences.determinePreferencesLocation()
+        PreferencesCommon.determinePreferencesLocation()
 
         self.logger:          Logger          = getLogger(__name__)
         self._preferences:    PyutPreferences = PyutPreferences()
@@ -478,6 +479,7 @@ class TestADialog(App):
         oldClassName: str = event.oldClassName
         newClassName: str = event.newClassName
         self.logger.info(f'Class Name Changed Event: {oldClassName=} {newClassName=}')
+
 
 testApp: TestADialog = TestADialog(redirect=False)
 

@@ -4,12 +4,11 @@ from unittest import TestSuite
 
 from hasiihelper.UnitTestBase import UnitTestBase
 
-from pyut import PyutUtils
-from pyut import ScreenMetrics
+from pyut.PyutUtils import PyutUtils
+from pyut.PyutUtils import ScreenMetrics
+from pyut.PyutUtils import ResourceTextType
 
-from pyut import ResourceTextType
-
-from pyut.preferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class TestPyutUtils(UnitTestBase):

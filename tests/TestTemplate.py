@@ -7,7 +7,7 @@ from logging import getLogger
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from pyut.preferences import PyutPreferences
+from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 from tests.TestBase import TestBase
 
@@ -18,7 +18,7 @@ from tests.TestBase import TestBase
 class TestTemplate(TestBase):
     """
     You need to change the name of this class to Test`xxxx`
-    Where `xxxx' is the name of the class that you want to test.
+    Where `xxxx` is the name of the class that you want to test.
 
     See existing tests for more information.
     """
@@ -28,7 +28,7 @@ class TestTemplate(TestBase):
     def setUpClass(cls):
         TestBase.setUpLogging()
         TestTemplate.clsLogger = getLogger(__name__)
-        PyutPreferences.determinePreferencesLocation()
+        PreferencesCommon.determinePreferencesLocation()
 
     def setUp(self):
         self.logger: Logger = TestTemplate.clsLogger

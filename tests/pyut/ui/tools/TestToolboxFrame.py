@@ -14,19 +14,19 @@ from wx import ID_UNDO
 from wx import NewIdRef as wxNewIdRef
 
 # noinspection PyProtectedMember
-from pyut import _
 from miniogl.DiagramFrame import DiagramFrame
 
-from pyut.preferences import PyutPreferences
+from pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from pyut.ui import Toolbox as Toolbox2
+from pyut.ui.tools.Tool import Tool
+from pyut.ui.tools.ToolIconOwner import ToolIconOwner
+from pyut.ui.tools.ToolsCreator import PYUT_MENU_CATEGORY
+from pyut.ui.tools.ToolsCreator import PYUT_TOOLS_CATEGORY
 
-from pyut.ui import Tool
-from pyut.ui import ToolIconOwner
+from pyut.ui.tools.Toolbox import Toolbox as Toolbox2
 
-from pyut.ui import PYUT_MENU_CATEGORY
-from pyut.ui import PYUT_TOOLS_CATEGORY
-from pyut.ui import SharedIdentifiers as SID
+from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
+
 from tests.TestBase import TestBase
 
 
@@ -39,9 +39,10 @@ class TestToolboxFrame(App):
     WINDOW_WIDTH:  int = 900
     WINDOW_HEIGHT: int = 500
 
+    # noinspection PyAttributeOutsideInit
     def OnInit(self):
 
-        PyutPreferences.determinePreferencesLocation()
+        PreferencesCommon.determinePreferencesLocation()
 
         frameTop: Frame = Frame(parent=None, id=TestToolboxFrame.FRAME_ID, title="Test Toolbox Version 2",
                                 size=(TestToolboxFrame.WINDOW_WIDTH, TestToolboxFrame.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
@@ -75,6 +76,7 @@ class TestToolboxFrame(App):
         self._createElementTools()
         self._createRelationshipTools()
 
+        # noinspection PyUnusedLocal
         for tool in [self._toolNewProject, self._toolNewClassDiagram, self._toolNewSequenceDiagram, self._toolNewUseCaseDiagram,
                      self._toolOpen, self._toolSave,
                      self._toolArrow, self._toolZoomIn, self._toolZoomOut, self._toolUndo, self._toolRedo,
@@ -103,43 +105,43 @@ class TestToolboxFrame(App):
         toolIconOwner: ToolIconOwner = self._toolIconOwner
 
         self._toolNewProject = Tool("pyut-new-project", toolIconOwner.toolNewProject,
-                                    caption=_("New Project"), tooltip=_("Create a new project"),
+                                    caption="New Project", tooltip="Create a new project",
                                     category=PYUT_MENU_CATEGORY,
                                     actionCallback=self.__onToolActionCallback, wxID=SID.ID_MENU_FILE_NEW_PROJECT)
 
         self._toolNewClassDiagram = Tool("pyut-new-class-diagram", toolIconOwner.toolNewClassDiagram,
-                                         caption=_("New Class Diagram"), tooltip=_("Create a new class diagram"),
+                                         caption="New Class Diagram", tooltip="Create a new class diagram",
                                          category=PYUT_MENU_CATEGORY,
                                          actionCallback=self.__onToolActionCallback, wxID=SID.ID_MENU_FILE_NEW_CLASS_DIAGRAM)
 
         self._toolNewSequenceDiagram = Tool("pyut-new-sequence-diagram", toolIconOwner.toolNewSequenceDiagram,
-                                            caption=_("New Sequence Diagram"), tooltip=_("Create a new sequence diagram"),
+                                            caption="New Sequence Diagram", tooltip="Create a new sequence diagram",
                                             category=PYUT_MENU_CATEGORY,
                                             actionCallback=self.__onToolActionCallback, wxID=SID.ID_MENU_FILE_NEW_SEQUENCE_DIAGRAM)
 
         self._toolNewUseCaseDiagram = Tool("pyut-new-use-case-diagram", toolIconOwner.toolNewUseCaseDiagram,
-                                           caption=_("New Use Case diagram"), tooltip=_("Create a new use case diagram"),
+                                           caption="New Use Case diagram", tooltip="Create a new use case diagram",
                                            category=PYUT_MENU_CATEGORY,
                                            actionCallback=self.__onToolActionCallback, wxID=SID.ID_MENU_FILE_NEW_USECASE_DIAGRAM)
 
         # Shared ID do not ave IDs for stock IDs
         self._toolOpen = Tool("pyut-open", toolIconOwner.toolOpen,
-                              caption=_("Open"), tooltip=_("Open a file"),
+                              caption="Open", tooltip="Open a file",
                               category=PYUT_MENU_CATEGORY,
                               actionCallback=self.__onToolActionCallback, wxID=wxNewIdRef())
 
         self._toolSave = Tool("pyut-save", toolIconOwner.toolSave,
-                              caption=_("Save"), tooltip=_("Save current UML Diagram"),
+                              caption="Save", tooltip="Save current UML Diagram",
                               category=PYUT_MENU_CATEGORY,
                               actionCallback=self.__onToolActionCallback, wxID=wxNewIdRef())
 
         self._toolUndo = Tool("pyut-undo", toolIconOwner.toolUndo,
-                              caption=_("Undo"), tooltip=_("Undo the last performed action"),
+                              caption="Undo", tooltip="Undo the last performed action",
                               category=PYUT_MENU_CATEGORY,
                               actionCallback=self.__onToolActionCallback, wxID=ID_UNDO)
 
         self._toolRedo = Tool("pyut-redo", toolIconOwner.toolRedo,
-                              caption=_("Redo"), tooltip=_("Redo the last undone action"),
+                              caption="Redo", tooltip="Redo the last undone action",
                               category=PYUT_MENU_CATEGORY,
                               actionCallback=self.__onToolActionCallback, wxID=ID_REDO)
 
@@ -148,37 +150,37 @@ class TestToolboxFrame(App):
         toolIconOwner: ToolIconOwner = self._toolIconOwner
 
         self._toolArrow = Tool("pyut-arrow", toolIconOwner.toolArrow,
-                               caption=_("Arrow"), tooltip=_("Select tool"),
+                               caption="Arrow", tooltip="Select tool",
                                category=PYUT_TOOLS_CATEGORY,
                                actionCallback=self.__onToolActionCallback, wxID=SID.ID_ARROW, isToggle=True)
 
         self._toolClass = Tool("pyut-class", toolIconOwner.toolClass,
-                               caption=_("Class"), tooltip=_("Create a new class"),
+                               caption="Class", tooltip="Create a new class",
                                category=PYUT_TOOLS_CATEGORY,
                                actionCallback=self.__onToolActionCallback, wxID=SID.ID_CLASS, isToggle=True)
 
         self._toolActor = Tool("pyut-actor", toolIconOwner.toolActor,
-                               caption=_("Actor"), tooltip=_("Create a new actor"),
+                               caption="Actor", tooltip="Create a new actor",
                                category=PYUT_TOOLS_CATEGORY,
                                actionCallback=self.__onToolActionCallback, wxID=SID.ID_ACTOR, isToggle=True)
 
         self._toolUseCase = Tool("pyut-use-case", toolIconOwner.toolUseCase,
-                                 caption=_("Use Case"), tooltip=_("Create a new use case"),
+                                 caption="Use Case", tooltip="Create a new use case",
                                  category=PYUT_TOOLS_CATEGORY,
                                  actionCallback=self.__onToolActionCallback, wxID=SID.ID_USECASE, isToggle=True)
 
         self._toolNote = Tool("pyut-note", toolIconOwner.toolNote,
-                              caption=_("Note"), tooltip=_("Create a new note"),
+                              caption="Note", tooltip="Create a new note",
                               category=PYUT_TOOLS_CATEGORY,
                               actionCallback=self.__onToolActionCallback, wxID=SID.ID_NOTE, isToggle=True)
 
         self._toolZoomIn = Tool("pyut-zoomIn", toolIconOwner.toolZoomIn,
-                                caption=_("Zoom In"), tooltip=_("Zoom in on the selected area"),
+                                caption="Zoom In", tooltip="Zoom in on the selected area",
                                 category=PYUT_TOOLS_CATEGORY,
                                 actionCallback=self.__onToolActionCallback, wxID=SID.ID_ZOOM_IN, isToggle=True)
 
         self._toolZoomOut = Tool("pyut-zoomOut", toolIconOwner.toolZoomIn,
-                                 caption=_("Zoom Out"), tooltip=_("Zoom out from the clicked point"),
+                                 caption="Zoom Out", tooltip="Zoom out from the clicked point",
                                  category=PYUT_TOOLS_CATEGORY,
                                  actionCallback=self.__onToolActionCallback, wxID=SID.ID_ZOOM_OUT, isToggle=True)
 
@@ -187,47 +189,47 @@ class TestToolboxFrame(App):
         toolIconOwner: ToolIconOwner = self._toolIconOwner
 
         self._toolRelInheritance = Tool("pyut-rel-inheritance", toolIconOwner.toolRelInheritance,
-                                        caption=_("New inheritance relation"), tooltip=_("New inheritance relation"),
+                                        caption="New inheritance relation", tooltip="New inheritance relation",
                                         category=PYUT_TOOLS_CATEGORY,
                                         actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_INHERITANCE, isToggle=True)
 
         self._toolRelRealization = Tool("pyut-rel-realization", toolIconOwner.toolRelRealization,
-                                        caption=_("New Realization relation"), tooltip=_("New Realization relation"),
+                                        caption="New Realization relation", tooltip="New Realization relation",
                                         category=PYUT_TOOLS_CATEGORY,
                                         actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_REALIZATION, isToggle=True)
 
         self._toolRelComposition = Tool("pyut-rel-composition", toolIconOwner.toolRelComposition,
-                                        caption=_("New composition relation"), tooltip=_("New composition relation"),
+                                        caption="New composition relation", tooltip="New composition relation",
                                         category=PYUT_TOOLS_CATEGORY,
                                         actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_COMPOSITION, isToggle=True)
 
         self._toolRelAggregation = Tool("pyut-rel-aggregation", toolIconOwner.toolRelAggregation,
-                                        caption=_("New aggregation relation"), tooltip=_("New aggregation relation"),
+                                        caption="New aggregation relation", tooltip="New aggregation relation",
                                         category=PYUT_TOOLS_CATEGORY,
                                         actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_AGGREGATION, isToggle=True)
 
         self._toolRelAssociation = Tool("pyut-rel-association", toolIconOwner.toolRelAssociation,
-                                        caption=_("New association relation"), tooltip=_("New association relation"),
+                                        caption="New association relation", tooltip="New association relation",
                                         category=PYUT_TOOLS_CATEGORY,
                                         actionCallback=self.__onToolActionCallback, wxID=SID.ID_RELATIONSHIP_ASSOCIATION, isToggle=True)
 
         self._toolRelNote = Tool("pyut-rel-note", toolIconOwner.toolRelNote,
-                                 caption=_("New note relation"), tooltip=_("New note relation"),
+                                 caption="New note relation", tooltip="New note relation",
                                  category=PYUT_TOOLS_CATEGORY,
                                  actionCallback=self.__onToolActionCallback, wxID=SID.ID_REL_NOTE, isToggle=True)
 
         self._toolText = Tool("pyut-text", toolIconOwner.toolText,
-                              caption=_("New Text Box"), tooltip=_("New Text Box"),
+                              caption="New Text Box", tooltip="New Text Box",
                               category=PYUT_TOOLS_CATEGORY,
                               actionCallback=self.__onToolActionCallback, wxID=SID.ID_TEXT, isToggle=True)
 
         self._toolSDInstance = Tool("pyut-sd-instance", toolIconOwner.toolSDInstance,
-                                    caption=_("New sequence diagram instance object"), tooltip=_("New sequence diagram instance object"),
+                                    caption="New sequence diagram instance object", tooltip="New sequence diagram instance object",
                                     category=PYUT_TOOLS_CATEGORY,
                                     actionCallback=self.__onToolActionCallback, wxID=SID.ID_SD_INSTANCE, isToggle=True)
 
         self._toolSDMessage = Tool("pyut-sd-message", toolIconOwner.toolSDMessage,
-                                   caption=_("New sequence diagram message object"), tooltip=_("New sequence diagram message object"),
+                                   caption="New sequence diagram message object", tooltip="New sequence diagram message object",
                                    category=PYUT_TOOLS_CATEGORY,
                                    actionCallback=self.__onToolActionCallback, wxID=SID.ID_SD_MESSAGE, isToggle=True)
 

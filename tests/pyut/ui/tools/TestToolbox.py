@@ -4,11 +4,11 @@ from unittest import main as unitTestMain
 
 from wx import Size
 
-from pyut.preferences import PyutPreferences
+from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut import ToolBarIconSize
+from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
-from pyut.ui import Toolbox
+from pyut.ui.tools.Toolbox import Toolbox
 
 from hasiihelper.UnitTestBase import UnitTestBase
 

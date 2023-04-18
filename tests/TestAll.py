@@ -148,7 +148,7 @@ class TestAll:
 def main():
 
     if ".." not in sysPath:
-        sysPath.append("..")  # access to the classes to test
+        sysPath.append("../src")  # access to the classes to test
 
     testAll: TestAll = TestAll()
     status: int = 0

@@ -13,13 +13,10 @@ changeToProjectRoot
 
 rm -rf dist build
 rm -rf Pyut.dist Pyut.build
-rm -rf src/Pyut.egg-info
+rm -rf Pyut.egg-info
 
 find . -type f -name pyutHistory"*" -delete
 find . -type f -name "*.log"        -delete
 find . -type f -name UnitTest.gml   -delete
 
-rm -rf src/UNKNOWN.egg-info
-
-cd - > /dev/null 2>&1 || ! echo "No such directory"
-find . -type f -name "translationGraph.gml" -delete
+rm -rf UNKNOWN.egg-info

@@ -26,7 +26,8 @@ from wx import WindowDestroyEvent
 from wx import PostEvent as wxPostEvent
 from wx import NewIdRef as wxNewIdRef
 
-from pyut import FileHistoryConfiguration
+from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
+
 from pyut.uiv2.dialogs.DlgEditProjectHistory import DlgEditProjectHistory
 
 
@@ -43,7 +44,7 @@ class DialogFrame(Frame):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._id_menu_file_manage_file_history : int = wxNewIdRef()
+        self._id_menu_file_manage_file_history: int = wxNewIdRef()
         menuBar:  MenuBar = MenuBar()
         fileMenu: Menu  = Menu()
         fileMenu.Append(self._id_menu_file_manage_file_history, 'Manage Projects')
@@ -77,6 +78,7 @@ class DialogFrame(Frame):
         """
         self._fileHistory.Save(self._fileHistoryConfiguration)
 
+    # noinspection PyUnusedLocal
     def _onManageFileHistory(self, event: CommandEvent):
 
         with DlgEditProjectHistory(parent=self, fileHistory=self._fileHistory) as dlg:
@@ -84,7 +86,6 @@ class DialogFrame(Frame):
                 return f'Ok'
             else:
                 return f'Cancelled'
-
 
     def _onExit(self, event: CommandEvent):
         """
@@ -116,4 +117,3 @@ class DialogFrame(Frame):
             self._fileHistory.AddFileToHistory(filename='/tmp/fifty.py')
         except (ValueError, Exception) as e:
             self.logger.error(f'File History error:  {e}')
-

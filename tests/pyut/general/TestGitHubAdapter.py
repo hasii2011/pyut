@@ -5,9 +5,9 @@ from unittest import main as unitTestMain
 from hasiihelper.SemanticVersion import SemanticVersion
 from hasiihelper.UnitTestBase import UnitTestBase
 
-from pyut.preferences import PyutPreferences
+from pyut.general.GitHubAdapter import GitHubAdapter
 
-from pyut import GitHubAdapter
+from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 
 class TestGitHubAdapter(UnitTestBase):
@@ -16,7 +16,7 @@ class TestGitHubAdapter(UnitTestBase):
     @classmethod
     def setUpClass(cls):
         UnitTestBase.setUpClass()
-        PyutPreferences.determinePreferencesLocation()
+        PreferencesCommon.determinePreferencesLocation()
 
         import warnings
         # To ignore this warning:

@@ -9,9 +9,10 @@ from unittest import TestSuite
 
 from hasiihelper.UnitTestBase import UnitTestBase
 
-from tests.TestBase import TestBase
+from pyut.preferences.PreferencesCommon import PreferencesCommon
+from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.preferences import PyutPreferences
+from tests.TestBase import TestBase
 
 
 class TestPyutPreferences(TestBase):
@@ -22,7 +23,7 @@ class TestPyutPreferences(TestBase):
     @classmethod
     def setUpClass(cls):
         UnitTestBase.setUpClass()
-        PyutPreferences.determinePreferencesLocation()
+        PreferencesCommon.determinePreferencesLocation()
 
     def setUp(self):
         """
