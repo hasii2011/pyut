@@ -84,7 +84,7 @@ setup(
                       'pyutmodel==1.4.3',
                       'hasiicommon~=0.2.2',
                       'ogl~=0.70.26',
-                      'oglio~=0.7.1',
-                      'pyutplugins~=0.8.50          s',
+                      'oglio~=0.7.2',
+                      'pyutplugins~=0.8.55',
                       ]
 )
