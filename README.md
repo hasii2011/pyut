@@ -51,6 +51,9 @@ I asked the original developers if it was Ok to fork this project.  This is what
 This is the fork. I let Cedric know.  
 
 
+## Developer Notes
+This project uses [buildlackey](https://github.com/hasii2011/buildlackey) for day to day development builds
+
 ___
 
 Updated and modified by <a href="mailto:email@humberto.a.sanchez.ii@gmail.com?subject=Hello Humberto">Humberto A. Sanchez II</a>  (C) 2023
