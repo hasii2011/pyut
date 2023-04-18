@@ -78,7 +78,7 @@ setup(
     ),
     setup_requires=['py2app'],
     install_requires=[
-                      'PyGithub==1.58',
+                      'PyGithub==1.58.1',
                       'wxPython==4.2.0',
                       'hasiihelper~=0.2.0',
                       'pyutmodel==1.4.3',
