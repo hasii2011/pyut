@@ -97,10 +97,10 @@ class PyutApplicationFrameV2(Frame):
     PyutApplicationFrame : main pyut frame; contain menus, status bar, UML frame, ...
 
     Instantiated by PyutApp.py
-    Use it as a normal Frame
-        dlg=PyutApplicationFrame(self, wx.ID_ANY, "Pyut")
-        dlg.Show()
-        dlg.Destroy()
+    Use it:
+        frame = PyutApplicationFrame(self, wx.ID_ANY, "Pyut")
+        frame.Show()
+        frame.Destroy()
     """
 
     def __init__(self, title: str):
@@ -133,39 +133,7 @@ class PyutApplicationFrameV2(Frame):
 
         self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg='')
 
-        # Initialization
-        fileMenu:  Menu = Menu()
-        editMenu:  Menu = Menu()
-        toolsMenu: Menu = Menu()
-        helpMenu:  Menu = Menu()
-
-        self._fileMenuHandler:  FileMenuHandler  = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine,
-                                                                   pluginManager=self._pluginMgr,
-                                                                   fileHistory=self._fileHistory
-                                                                   )
-        self._editMenuHandler:  EditMenuHandler  = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
-
-        self._initializePyutTools()
-
-        self._toolboxIds: ToolboxIdMap = self._createToolboxIdMap()
-
-        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, eventEngine=self._eventEngine, pluginManager=self._pluginMgr,
-                                                                    toolboxIds=self._toolboxIds)
-        self._helpMenuHandler:  HelpMenuHandler  = HelpMenuHandler(helpMenu=helpMenu)
-
-        self._menuCreator: MenuCreator = MenuCreator(frame=self, pluginManager=self._pluginMgr)
-        self._menuCreator.fileMenu  = fileMenu
-        self._menuCreator.editMenu  = editMenu
-        self._menuCreator.toolsMenu = toolsMenu
-        self._menuCreator.helpMenu  = helpMenu
-        self._menuCreator.fileMenuHandler  = self._fileMenuHandler
-        self._menuCreator.editMenuHandler  = self._editMenuHandler
-        self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
-        self._menuCreator.helpMenuHandler  = self._helpMenuHandler
-        self._menuCreator.toolPlugins      = self._pluginMgr.toolPluginsMap.pluginIdMap
-        self._menuCreator.exportPlugins    = self._pluginMgr.outputPluginsMap.pluginIdMap
-        self._menuCreator.importPlugins    = self._pluginMgr.inputPluginsMap.pluginIdMap
-        self._menuCreator.toolboxIds       = self._toolboxIds
+        fileMenu, editMenu = self._initializeMenuHandlers()
 
         self._menuCreator.initializeMenus()
 
@@ -207,6 +175,46 @@ class PyutApplicationFrameV2(Frame):
         self.Bind(EVT_WINDOW_DESTROY, self._cleanupFileHistory)
         self.Bind(EVT_ACTIVATE,       self._onActivate)
         self.Bind(EVT_CLOSE,          self.Close)
+
+    def _initializeMenuHandlers(self) -> Tuple[Menu, Menu]:
+        """
+        Returns: a tuple with the file menu and the edit menu
+        """
+
+        fileMenu:  Menu = Menu()
+        editMenu:  Menu = Menu()
+        toolsMenu: Menu = Menu()
+        helpMenu:  Menu = Menu()
+        self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine,
+                                                                 pluginManager=self._pluginMgr,
+                                                                 fileHistory=self._fileHistory
+                                                                 )
+
+        self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
+        self._initializePyutTools()
+
+        self._toolboxIds:       ToolboxIdMap     = self._createToolboxIdMap()
+        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, eventEngine=self._eventEngine, pluginManager=self._pluginMgr,
+                                                                    toolboxIds=self._toolboxIds)
+        self._helpMenuHandler: HelpMenuHandler = HelpMenuHandler(helpMenu=helpMenu)
+        self._menuCreator:     MenuCreator     = MenuCreator(frame=self, pluginManager=self._pluginMgr)
+
+        self._menuCreator.fileMenu  = fileMenu
+        self._menuCreator.editMenu  = editMenu
+        self._menuCreator.toolsMenu = toolsMenu
+        self._menuCreator.helpMenu  = helpMenu
+
+        self._menuCreator.fileMenuHandler  = self._fileMenuHandler
+        self._menuCreator.editMenuHandler  = self._editMenuHandler
+        self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
+        self._menuCreator.helpMenuHandler  = self._helpMenuHandler
+
+        self._menuCreator.toolPlugins   = self._pluginMgr.toolPluginsMap.pluginIdMap
+        self._menuCreator.exportPlugins = self._pluginMgr.outputPluginsMap.pluginIdMap
+        self._menuCreator.importPlugins = self._pluginMgr.inputPluginsMap.pluginIdMap
+        self._menuCreator.toolboxIds    = self._toolboxIds
+
+        return fileMenu, editMenu
 
     def Close(self, force=False):
         """
