@@ -1,7 +1,6 @@
 
 from typing import cast
 from typing import List
-from typing import Optional
 from typing import Tuple
 
 from logging import Logger

@@ -1,9 +1,7 @@
 
-from os import chdir
 from os import getcwd
 from os import environ
 
-from sys import path as sysPath
 from sys import argv
 
 from logging import Logger
@@ -30,13 +28,11 @@ class PyutV2:
 
     def __init__(self):
         self._setupSystemLogging()
+
         self.logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
         PyutPreferences.determinePreferencesLocation()
-        # Lang.importLanguage()
 
-        self._exePath:  str = self._getExePath()
         self._userPath: str = getcwd()      # where the user launched pyut from
-        PyutUtils.setBasePath(self._exePath)
 
         self._cmdLineArgsHandled: bool = False
         """
@@ -87,23 +83,6 @@ class PyutV2:
         pyutV2.displaySystemMetrics()
 
         app.MainLoop()
-
-    def _getExePath(self) -> str:
-        """
-        Return the absolute path currently used
-        """
-        absPath = sysPath[0]
-        return absPath
-
-    def _setOurSysPath(self):
-        appMode: str | None = environ.get(f'{PyutConstants.APP_MODE}')
-        self.logger.info(f'{PyutConstants.APP_MODE}=`{appMode}`  {self._exePath=}')
-        if appMode != 'True':
-            try:
-                sysPath.append(self._exePath)
-                chdir(self._exePath)
-            except OSError as msg:
-                self.logger.error(f"_setOurSysPath - Error while setting path: {msg}")
 
     def _updateOurDirectoryPreferences(self):
         """
