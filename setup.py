@@ -61,7 +61,7 @@ setup(
             CFBundleGetInfoString='Edits Pyut UML Files',
             CFBundleIdentifier='pyut',
             CFBundleDocumentTypes=[
-                {'CFBundleTypeName': 'yyut'},
+                {'CFBundleTypeName': 'pyut'},
                 {'CFBundleTypeRole': 'Editor'},
                 {'CFBundleTypeExtensions':  ['put', 'xml']}
             ],

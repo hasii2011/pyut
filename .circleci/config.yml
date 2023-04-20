@@ -40,7 +40,7 @@ jobs:
             pip install oglio==0.7.2
             pip install pyutplugins==0.8.55
             pip install html-testRunner==1.2.1
-            pip install buildlackey~=0.8.0
+            pip install buildlackey~=0.8.1
       - run:
             name: run tests
             command: | 
