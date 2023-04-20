@@ -1,5 +1,3 @@
-"""
-"""
 
 from setuptools import setup
 
@@ -26,7 +24,7 @@ LICENSE = (HERE / 'LICENSE').read_text()
 VERSION = (HERE / 'pyut/resources/version.txt').read_text()
 
 setup(
-    name='Pyut',
+    name='pyut',
     version=VERSION,
     app=APP,
     data_files=DATA_FILES,
@@ -51,7 +49,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
 
-    url='https://github.com/hasii2011/Pyut',
+    url='https://github.com/hasii2011/pyut',
     author='Humberto A. Sanchez II',
     author_email='Humberto.A.Sanchez.II@gmail.com',
     maintainer='Humberto A. Sanchez II',
@@ -63,7 +61,7 @@ setup(
             CFBundleGetInfoString='Edits Pyut UML Files',
             CFBundleIdentifier='pyut',
             CFBundleDocumentTypes=[
-                {'CFBundleTypeName': 'Pyut'},
+                {'CFBundleTypeName': 'yyut'},
                 {'CFBundleTypeRole': 'Editor'},
                 {'CFBundleTypeExtensions':  ['put', 'xml']}
             ],

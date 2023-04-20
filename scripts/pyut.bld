@@ -1,0 +1,2 @@
+rm -rf build dist
+python -O setup.py py2app --iconfile pyut/resources/img/Pyut.icns

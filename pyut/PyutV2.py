@@ -79,7 +79,7 @@ class PyutV2:
         logging.logThreads   = False
 
     def startApp(self):
-        self._setOurSysPath()
+        # self._setOurSysPath()
         self._updateOurDirectoryPreferences()
         self._displayIntro()
         app: PyutAppV2 = PyutAppV2(redirect=False)

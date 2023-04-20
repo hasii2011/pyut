@@ -15,7 +15,7 @@ pyutHistory*
 *.put copy
 /BaseSave.xml
 junk*.*
-/.mypy_cache/
-/Pyut.app/
+/.mypy_cache
+/pyut.app/
 .envrc
 .python-version
