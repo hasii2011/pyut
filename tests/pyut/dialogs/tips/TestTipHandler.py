@@ -5,8 +5,7 @@ from unittest import main as unitTestMain
 from hasiihelper.ResourceManager import ResourceManager
 from hasiihelper.UnitTestBase import UnitTestBase
 
-from pyut.general.Globals import BASE_RESOURCES_PACKAGE
-from pyut.general.Globals import BASE_RESOURCE_PATH
+from pyut.PyutConstants import PyutConstants
 
 from pyut.preferences.PreferencesCommon import PreferencesCommon
 
@@ -27,8 +26,8 @@ class TestTipHandler(TestBase):
     def setUp(self):
         super().setUp()
         self._tipsFileName: str = ResourceManager.retrieveResourcePath(bareFileName=f'{DlgTips.TIPS_FILENAME}',
-                                                                       packageName=f'{BASE_RESOURCES_PACKAGE}',
-                                                                       resourcePath=f'{BASE_RESOURCE_PATH}')
+                                                                       packageName=f'{PyutConstants.BASE_RESOURCES_PACKAGE}',
+                                                                       resourcePath=f'{PyutConstants.BASE_RESOURCE_PATH}')
 
     def tearDown(self):
         super().tearDown()

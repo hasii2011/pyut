@@ -66,7 +66,6 @@ from pyut.PyutConstants import PyutConstants
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
 
 from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
 from pyut.uiv2.PluginAdapter import PluginAdapter
@@ -116,6 +115,8 @@ class PyutApplicationFrameV2(Frame):
 
         # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
         super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_TOOL_WINDOW)
+
+        self.Bind(EVT_ACTIVATE,       self._onActivate)
 
         self.logger: Logger = getLogger(__name__)
         self._createApplicationIcon()
@@ -206,8 +207,7 @@ class PyutApplicationFrameV2(Frame):
         self._editMenu: Menu = editMenu
 
         self.Bind(EVT_WINDOW_DESTROY, self._cleanupFileHistory)
-        self.Bind(EVT_ACTIVATE, self._onActivate)
-        self.Bind(EVT_CLOSE, self.Close)
+        self.Bind(EVT_CLOSE,          self.Close)
 
     def Close(self, force=False):
         """
@@ -356,14 +356,14 @@ class PyutApplicationFrameV2(Frame):
         Args:
             event:
         """
-        self.logger.debug(f'_onActivate event: {event}')
+        self.logger.warning(f'_onActivate event: {event}')
         try:
             if self._alreadyDisplayedTipsFrame is True or self._prefs is False:
                 return
             # Display tips frame
             self._alreadyDisplayedTipsFrame = True
             prefs: PyutPreferences = PyutPreferences()
-            self.logger.debug(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
+            self.logger.warning(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
             if prefs.showTipsOnStartup is True:
                 # noinspection PyUnusedLocal
                 tipsFrame = DlgTips(self)
@@ -427,7 +427,7 @@ class PyutApplicationFrameV2(Frame):
     def _createApplicationIcon(self):
 
         if sysPlatform != PyutConstants.THE_GREAT_MAC_PLATFORM:
-            fileName: str = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
+            fileName: str = PyutUtils.getResourcePath(packageName=PyutConstants.IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
             icon: Icon = Icon(fileName, BITMAP_TYPE_ICO)
             self.SetIcon(icon)
 

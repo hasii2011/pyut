@@ -14,7 +14,7 @@ from wx import ClientDC
 
 from wx import CloseEvent
 from wx import CommandEvent
-from wx import DefaultPosition
+
 from wx import Dialog
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
@@ -34,8 +34,8 @@ from wx import VERTICAL
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.general.Globals import WX_SIZER_CHANGEABLE
-from pyut.general.Globals import WX_SIZER_NOT_CHANGEABLE
+from pyut.PyutConstants import PyutConstants
+
 from pyut.general.LineSplitter import LineSplitter
 
 from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
@@ -63,7 +63,7 @@ class DlgTips(Dialog):
         """
         dialogStyle: int  = RESIZE_BORDER | SYSTEM_MENU | CAPTION | FRAME_FLOAT_ON_PARENT | STAY_ON_TOP
         dialogSize:  Size = Size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
-        super().__init__(parent, ID_ANY, "Tips", DefaultPosition, dialogSize, dialogStyle)
+        super().__init__(parent=parent, id=ID_ANY, title="Tips", size=dialogSize, style=dialogStyle)
 
         self._prefs:        PyutPreferences = PyutPreferences()
         self._tipsFileName: str = PyutUtils.retrieveResourcePath(f'{DlgTips.TIPS_FILENAME}')
@@ -77,9 +77,9 @@ class DlgTips(Dialog):
 
         mainSizer: BoxSizer = BoxSizer(VERTICAL)
 
-        mainSizer.Add(upSizer,           WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
-        mainSizer.Add(self._chkShowTips, WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
-        mainSizer.Add(loSizer,           WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
+        mainSizer.Add(upSizer,           PyutConstants.WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
+        mainSizer.Add(self._chkShowTips, PyutConstants.WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
+        mainSizer.Add(loSizer,           PyutConstants.WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
 
         mainSizer.Fit(self)
 
@@ -93,11 +93,12 @@ class DlgTips(Dialog):
 
         bmp: Bitmap = TipsLogo.GetBitmap()
         self._picture: StaticBitmap = StaticBitmap(self, ID_ANY, bmp)
-        self._label:   StaticText   = StaticText(self, ID_ANY, tip, size=Size(DEFAULT_WIDTH * 0.8, DEFAULT_HEIGHT * 0.8), style=ST_NO_AUTORESIZE)
+        fixedSize: Size = Size(round(DEFAULT_WIDTH * 0.8), round(DEFAULT_HEIGHT * 0.8))
+        self._label:   StaticText   = StaticText(self, ID_ANY, tip, size=fixedSize, style=ST_NO_AUTORESIZE)
 
         upSizer: BoxSizer = BoxSizer(HORIZONTAL)
-        upSizer.Add(self._picture, WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
-        upSizer.Add(self._label,   WX_SIZER_CHANGEABLE,     ALL | ALIGN_CENTER, 5)
+        upSizer.Add(self._picture, PyutConstants.WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
+        upSizer.Add(self._label,   PyutConstants.WX_SIZER_CHANGEABLE,     ALL | ALIGN_CENTER, 5)
 
         return upSizer
 
@@ -108,8 +109,8 @@ class DlgTips(Dialog):
 
         loSizer: BoxSizer = BoxSizer(HORIZONTAL)
 
-        loSizer.Add(previousTipButton, WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
-        loSizer.Add(nextTipButton,     WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
+        loSizer.Add(previousTipButton, PyutConstants.WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
+        loSizer.Add(nextTipButton,     PyutConstants.WX_SIZER_NOT_CHANGEABLE, ALL | ALIGN_CENTER, 5)
         loSizer.Add(Button(self, ID_OK, "&Ok"), 0, ALL | ALIGN_CENTER, 5)
 
         self._chkShowTips: CheckBox = CheckBox(self, ID_CHK_SHOW_TIPS, "&Show tips at startup")

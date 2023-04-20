@@ -49,8 +49,6 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
-from pyut.general.Globals import IMAGE_RESOURCES_PACKAGE
-
 from pyut.resources.img import ImgPyut
 
 [ID_OK] = PyutUtils.assignID(1)
@@ -90,7 +88,7 @@ class DlgAbout(Dialog):
 
         if sysPlatform != PyutConstants.THE_GREAT_MAC_PLATFORM:
 
-            fileName: str  = PyutUtils.getResourcePath(packageName=IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
+            fileName: str  = PyutUtils.getResourcePath(packageName=PyutConstants.IMAGE_RESOURCES_PACKAGE, fileName='pyut.ico')
             icon:     Icon = Icon(fileName, BITMAP_TYPE_ICO)
             self.SetIcon(icon)
 
