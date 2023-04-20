@@ -1,6 +1,5 @@
 
-from os import remove as osRemove
-from os import path as osPath
+from pathlib import Path
 
 from shutil import copyfile
 
@@ -63,29 +62,25 @@ class TestPyutPreferences(TestBase):
 
     def _backupPrefs(self):
 
-        prefsFileName: str = PyutPreferences.getPreferencesLocation()
-        source: str = prefsFileName
-        target: str = f"{prefsFileName}{TestPyutPreferences.BACKUP_SUFFIX}"
-        if osPath.exists(source):
+        prefsPath:     Path = Path(PyutPreferences.getPreferencesLocation())
+        targetPath:    Path = Path(f'{prefsPath}{TestPyutPreferences.BACKUP_SUFFIX}')
+        if prefsPath.exists() is True and prefsPath.is_file() is True:
             try:
-                copyfile(source, target)
+                copyfile(prefsPath, targetPath)
             except IOError as e:
                 self.logger.error(f"Unable to copy file. {e}")
 
     def _restoreBackup(self):
+        targetPath:       Path = Path(PyutPreferences.getPreferencesLocation())
+        backupPrefsPath:  Path = Path(f'{targetPath}{TestPyutPreferences.BACKUP_SUFFIX}')
 
-        prefsFileName: str = PyutPreferences.getPreferencesLocation()
-        source: str = f"{prefsFileName}{TestPyutPreferences.BACKUP_SUFFIX}"
-        target: str = prefsFileName
-        if osPath.exists(source):
+        if backupPrefsPath.exists() is True and backupPrefsPath.is_file() is True:
             try:
-                copyfile(source, target)
+                copyfile(backupPrefsPath, targetPath)
             except IOError as e:
                 self.logger.error(f"Unable to copy file. {e}")
 
-            osRemove(source)
-        else:
-            osRemove(target)
+            backupPrefsPath.unlink()
 
     def _emptyPrefs(self):
 
