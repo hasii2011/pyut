@@ -8,16 +8,14 @@ from logging import getLogger
 
 from dataclasses import dataclass
 
-from importlib.abc import Traversable
-
-from importlib.resources import files
-
 from os import sep as osSep
 
 from wx import DisplaySize
 from wx import ScreenDC
 from wx import Size
 from wx import NewIdRef as wxNewIdRef
+
+from hasiihelper.ResourceManager import ResourceManager
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
@@ -235,14 +233,9 @@ class PyutUtils:
 
         Returns:  The fully qualified file name
         """
-        try:
-            from os import environ
-            pathToResources: str = environ[f'{PyutUtils.RESOURCE_ENV_VAR}']
-            fqFileName:      str = f'{pathToResources}/{PyutUtils.RESOURCES_PATH}/{bareFileName}'
-        except KeyError:
-            traversable: Traversable = files(packageName) / bareFileName
-            fqFileName = str(traversable)
-
+        fqFileName: str = ResourceManager.retrieveResourcePath(bareFileName=bareFileName,
+                                                               resourcePath=PyutUtils.RESOURCES_PATH,
+                                                               packageName=packageName)
         return fqFileName
 
     @classmethod
