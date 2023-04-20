@@ -1,4 +1,4 @@
-
+from pathlib import Path
 from typing import cast
 from typing import List
 from typing import Tuple
@@ -20,6 +20,7 @@ from hasiihelper.ResourceManager import ResourceManager
 from pyut.enums.ResourceTextType import ResourceTextType
 
 from pyut.errorcontroller.ErrorManager import ErrorManager
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 @dataclass
@@ -258,3 +259,23 @@ class PyutUtils:
         screenMetrics.dpiY = scrResolution.GetHeight()
 
         return screenMetrics
+
+    @classmethod
+    def determineProjectName(cls, filename: str):
+        """
+        Returns a project name
+
+        TODO: This is a dupe of what is in ProjectTree
+        Args:
+            filename:  raw file name
+
+        Returns:
+            A project name as determined by preferences
+        """
+        fileNamePath: Path = Path(filename)
+        if PyutPreferences().displayProjectExtension is False:
+            projectName: str = fileNamePath.stem
+        else:
+            projectName = fileNamePath.name
+
+        return projectName

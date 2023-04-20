@@ -3,8 +3,6 @@ from typing import List
 from typing import cast
 from typing import TYPE_CHECKING
 
-from os import path as osPath
-
 from logging import Logger
 from logging import getLogger
 
@@ -15,7 +13,6 @@ from wx import TreeItemId
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject
 from pyut.uiv2.IPyutProject import PyutDocuments
@@ -80,7 +77,7 @@ class PyutProjectV2(IPyutProject):
 
         Returns:   Nice short hane
         """
-        return self._justTheFileName(self.filename)
+        return PyutUtils.determineProjectName(self.filename)
 
     @property
     def codePath(self) -> str:
@@ -194,22 +191,6 @@ class PyutProjectV2(IPyutProject):
             treeData = self._tree.GetItemData(treeDocItem)
             self.logger.debug(f'{treeData}')
             self._tree.SelectItem(treeDocItem)
-
-    def _justTheFileName(self, filename):
-        """
-        Return just the file name portion of the fully qualified path
-
-        Args:
-            filename:  file name to display
-
-        Returns:
-            A better file name
-        """
-        regularFileName: str = osPath.split(filename)[1]
-        if PyutPreferences().displayProjectExtension is False:
-            regularFileName = osPath.splitext(regularFileName)[0]
-
-        return regularFileName
 
     def __repr__(self):
         projectName: str = PyutUtils.extractFileName(self._filename)

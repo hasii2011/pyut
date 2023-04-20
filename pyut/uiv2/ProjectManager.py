@@ -31,12 +31,11 @@ from wx import EndBusyCursor
 from wx import Yield as wxYield
 
 from pyut.PyutConstants import PyutConstants
+from pyut.PyutUtils import PyutUtils
 
 from pyut.errorcontroller.ErrorManager import ErrorManager
 
 from pyut.general.exceptions.UnsupportedFileTypeException import UnsupportedFileTypeException
-
-from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
@@ -77,9 +76,11 @@ PyutProjects = NewType('PyutProjects', List[IPyutProject])
 
 MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12         # TODO make this a preference
 
+
 def defaultProjectNumber():
     for i in range(9999):
         yield i
+
 
 class ProjectManager:
     """
@@ -373,7 +374,7 @@ class ProjectManager:
         Args:
             pyutProject:  The project data to use
         """
-        self._projectTree.SetItemText(pyutProject.projectTreeRoot, self._justTheFileName(pyutProject.filename))
+        self._projectTree.SetItemText(pyutProject.projectTreeRoot, PyutUtils.determineProjectName(pyutProject.filename))
         for document in pyutProject.documents:
             self.logger.debug(f'Update document name: {document=}')
             self._projectTree.SetItemText(document.treeRoot, document.title)
@@ -484,21 +485,6 @@ class ProjectManager:
 
         EndBusyCursor()
         return oglProject
-
-    def _justTheFileName(self, filename):
-        """
-        Return just the file name portion of the fully qualified path
-
-        Args:
-            filename:  long file name
-
-        Returns: A better file name to display
-        """
-        regularFileName: str = osPath.split(filename)[1]
-        if PyutPreferences().displayProjectExtension is False:
-            regularFileName = osPath.splitext(regularFileName)[0]
-
-        return regularFileName
 
     def _shortenNotebookPageDiagramName(self, diagramTitle: str) -> str:
         """

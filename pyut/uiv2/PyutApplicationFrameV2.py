@@ -6,7 +6,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from os import path as osPath
 
 from sys import platform as sysPlatform
 
@@ -92,6 +91,7 @@ from pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
 from pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
 
 HACK_ADJUST_EXIT_HEIGHT: int = 16
+
 
 class PyutApplicationFrameV2(Frame):
     """
@@ -280,7 +280,7 @@ class PyutApplicationFrameV2(Frame):
         filename:               str   = event.newFilename
         currentFrameZoomFactor: float = event.currentFrameZoomFactor
         projectModified:        bool  = event.projectModified
-        projectName:            str   = self._justTheFileName(filename=filename)
+        projectName:            str   = PyutUtils.determineProjectName(filename=filename)
         pyutVersion:            str   = PyutVersion.getPyUtVersion()
 
         txt:       str = f'Pyut v{pyutVersion} - {projectName}'
@@ -438,19 +438,3 @@ class PyutApplicationFrameV2(Frame):
         acc = self._createAcceleratorTable()
         accel_table = AcceleratorTable(acc)
         self.SetAcceleratorTable(accel_table)
-
-    def _justTheFileName(self, filename):
-        """
-        Return just the file name portion of the fully qualified path
-        TODO: This is a dupe of what is in ProjectTree
-        Args:
-            filename:  file name to display
-
-        Returns:
-            A better file name
-        """
-        regularFileName: str = osPath.split(filename)[1]
-        if PyutPreferences().displayProjectExtension is False:
-            regularFileName = osPath.splitext(regularFileName)[0]
-
-        return regularFileName
