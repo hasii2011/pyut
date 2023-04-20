@@ -20,10 +20,11 @@ DiagramsStrings = {
 
 class PyutConstants:
 
-    PYUT_EXTENSION:       str = 'put'
+    PYUT_EXTENSION:       str = '.put'
     XML_EXTENSION:        str = '.xml'
+
     DEFAULT_PROJECT_NAME: str = 'Untitled'
-    DEFAULT_FILE_NAME:    str = f'{DEFAULT_PROJECT_NAME}.{PYUT_EXTENSION}'
+    DEFAULT_FILE_NAME:    str = f'{DEFAULT_PROJECT_NAME}{PYUT_EXTENSION}'
 
     APP_MODE:         str = 'APP_MODE'
     # noinspection SpellCheckingInspection

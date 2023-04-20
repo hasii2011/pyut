@@ -224,7 +224,7 @@ class ProjectManager:
         fileName: str = f'{PyutConstants.DEFAULT_FILE_NAME}'
         if self.getProject(PyutConstants.DEFAULT_PROJECT_NAME) is not None:
             sequenceNumber: int = next(self._defaultProjectNumber)
-            fileName = f'{PyutConstants.DEFAULT_PROJECT_NAME}_{sequenceNumber}.{PyutConstants.PYUT_EXTENSION}'
+            fileName = f'{PyutConstants.DEFAULT_PROJECT_NAME}_{sequenceNumber}{PyutConstants.PYUT_EXTENSION}'
 
         project = PyutProjectV2(fileName, self._projectTree, self._projectTree.projectTreeRoot)
 

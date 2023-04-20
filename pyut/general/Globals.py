@@ -1,7 +1,7 @@
 
 from os import sep as osSep
 
-PYUT_PROJECT_SUFFIX:     str = '.put'
+
 BASE_RESOURCES_PACKAGE:  str = 'pyut.resources'
 IMAGE_RESOURCES_PACKAGE: str = f'{BASE_RESOURCES_PACKAGE}.img'
 

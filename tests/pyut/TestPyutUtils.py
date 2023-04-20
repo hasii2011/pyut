@@ -4,7 +4,7 @@ from unittest import TestSuite
 
 from hasiihelper.UnitTestBase import UnitTestBase
 
-from pyut.general.Globals import PYUT_PROJECT_SUFFIX
+from pyut.PyutConstants import PyutConstants
 
 from pyut.PyutUtils import PyutUtils
 from pyut.PyutUtils import ScreenMetrics
@@ -19,7 +19,7 @@ class TestPyutUtils(UnitTestBase):
     FAKE_TEST_FILENAME: str = 'hasiiTheGreat.doc'
 
     BASE_PROJECT_NAME: str = 'OzzeeElGato'
-    FULL_PROJECT_NAME: str = f'{BASE_PROJECT_NAME}{PYUT_PROJECT_SUFFIX}'
+    FULL_PROJECT_NAME: str = f'{BASE_PROJECT_NAME}{PyutConstants.PYUT_EXTENSION}'
 
     @classmethod
     def setUpClass(cls):
@@ -38,7 +38,7 @@ class TestPyutUtils(UnitTestBase):
         self.prefs.displayProjectExtension = False
 
         expectedProjectName: str = TestPyutUtils.BASE_PROJECT_NAME
-        projectName: str = PyutUtils.determineProjectName(filename=f'{TestPyutUtils.BASE_PROJECT_NAME}{PYUT_PROJECT_SUFFIX}')
+        projectName: str = PyutUtils.determineProjectName(filename=f'{TestPyutUtils.BASE_PROJECT_NAME}{PyutConstants.PYUT_EXTENSION}')
 
         self.assertEqual(expectedProjectName, projectName, 'Code did not strip suffix')
 
@@ -49,7 +49,7 @@ class TestPyutUtils(UnitTestBase):
         self.prefs.displayProjectExtension = True
 
         expectedProjectName: str = TestPyutUtils.FULL_PROJECT_NAME
-        projectName: str = PyutUtils.determineProjectName(filename=f'{TestPyutUtils.BASE_PROJECT_NAME}{PYUT_PROJECT_SUFFIX}')
+        projectName: str = PyutUtils.determineProjectName(filename=f'{TestPyutUtils.BASE_PROJECT_NAME}{PyutConstants.PYUT_EXTENSION}')
 
         self.assertEqual(expectedProjectName, projectName, 'Code suffix was inadvertently stripped')
 
