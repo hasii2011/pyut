@@ -486,41 +486,6 @@ class ProjectManager:
         EndBusyCursor()
         return oglProject
 
-    # def _shortenNotebookPageDiagramName(self, diagramTitle: str) -> str:
-    #     """
-    #     Return a shorter filename to display; For file names longer
-    #     than `MAX_NOTEBOOK_PAGE_NAME_LENGTH` this method takes the first
-    #     four characters and the last eight as the shortened file name
-    #
-    #     Args:
-    #         diagramTitle:  The diagram name to display
-    #
-    #     Returns:
-    #         A short diagram name
-    #     """
-    #     justFileName: str = osPath.split(diagramTitle)[1]
-    #     if len(justFileName) > MAX_NOTEBOOK_PAGE_NAME_LENGTH:
-    #         firstFour: str = justFileName[:4]
-    #         lastEight: str = justFileName[-8:]
-    #         return f'{firstFour}{lastEight}'
-    #     else:
-    #         return justFileName
-
-    # def _addProjectDocumentsToNotebook(self, project: IPyutProject):
-    #
-    #     self.logger.info(f'{project=}')
-    #
-    #     for document in project.documents:
-    #         diagramTitle: str = document.title
-    #         shortName:    str = self._shortenNotebookPageDiagramName(diagramTitle)
-    #         self._diagramNotebook.AddPage(document.diagramFrame, shortName)
-    #
-    #     notebookCurrentPageNumber: int  = self._diagramNotebook.GetPageCount()-1
-    #     if notebookCurrentPageNumber >= 0:
-    #         self._diagramNotebook.SetSelection(notebookCurrentPageNumber)
-    #
-    #     self.updateDiagramNotebookIfPossible(project=project)
-    #
     def _manageProject(self, pyutProject: PyutProjectV2):
         """
         Creates the UI elements for the new project and places in the project manager list
