@@ -116,8 +116,6 @@ class PyutApplicationFrameV2(Frame):
         # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
         super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_TOOL_WINDOW)
 
-        self.Bind(EVT_ACTIVATE,       self._onActivate)
-
         self.logger: Logger = getLogger(__name__)
         self._createApplicationIcon()
 
@@ -189,7 +187,7 @@ class PyutApplicationFrameV2(Frame):
             self.SetPosition(pt=Point(x=appPosition.x, y=appPosition.y))
 
         # Initialize the tips frame
-        self._alreadyDisplayedTipsFrame = False
+        self._tipAlreadyDisplayed: bool = False
 
         self.SetDropTarget(PyutFileDropTarget(eventEngine=self._eventEngine))
 
@@ -207,6 +205,7 @@ class PyutApplicationFrameV2(Frame):
         self._editMenu: Menu = editMenu
 
         self.Bind(EVT_WINDOW_DESTROY, self._cleanupFileHistory)
+        self.Bind(EVT_ACTIVATE,       self._onActivate)
         self.Bind(EVT_CLOSE,          self.Close)
 
     def Close(self, force=False):
@@ -356,21 +355,18 @@ class PyutApplicationFrameV2(Frame):
         Args:
             event:
         """
-        self.logger.warning(f'_onActivate event: {event}')
-        try:
-            if self._alreadyDisplayedTipsFrame is True or self._prefs is False:
-                return
+        self.logger.info(f'_onActivate event: {event.GetActive()}=')
+        if self._tipAlreadyDisplayed is True or self._prefs is False:
+            pass
+        else:
             # Display tips frame
-            self._alreadyDisplayedTipsFrame = True
+            self._tipAlreadyDisplayed = True
             prefs: PyutPreferences = PyutPreferences()
-            self.logger.warning(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
+            self.logger.info(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
             if prefs.showTipsOnStartup is True:
                 # noinspection PyUnusedLocal
                 tipsFrame = DlgTips(self)
                 tipsFrame.Show(show=True)
-        except (ValueError, Exception) as e:
-            if self._prefs is not None:
-                self.logger.error(f'_onActivate: {e}')
 
     def _initializePyutTools(self):
         """
