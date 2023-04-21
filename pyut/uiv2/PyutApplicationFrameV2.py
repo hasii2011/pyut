@@ -58,7 +58,7 @@ from pyut.ui.tools.MenuCreator import MenuCreator
 from pyut.ui.tools.SharedTypes import ToolboxIdMap
 from pyut.ui.tools.ToolsCreator import ToolsCreator
 
-from pyut.uiv2.dialogs.tips.DlgTips import DlgTips
+from pyut.uiv2.dialogs.tips.DlgTipsV2 import DlgTipsV2
 
 from pyut.PyutUtils import PyutUtils
 
@@ -373,7 +373,7 @@ class PyutApplicationFrameV2(Frame):
             self.logger.info(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
             if prefs.showTipsOnStartup is True:
                 # noinspection PyUnusedLocal
-                tipsFrame = DlgTips(self)
+                tipsFrame: DlgTipsV2 = DlgTipsV2(self)
                 tipsFrame.Show(show=True)
 
     def _initializePyutTools(self):

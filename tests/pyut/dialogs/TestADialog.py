@@ -85,6 +85,8 @@ from pyut.uiv2.dialogs.Wrappers import DlgEditActor
 from pyut.uiv2.dialogs.Wrappers import DlgEditDiagramTitle
 from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
 
+from pyut.uiv2.dialogs.tips.DlgTipsV2 import DlgTipsV2
+
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from pyut.uiv2.eventengine.EventEngine import EventEngine
 
@@ -179,6 +181,8 @@ class TestADialog(App):
 
         dlgAnswer: str = 'No dialog invoked'
         match dlgName:
+            case DialogNamesEnum.DLG_TIPS_V2:
+                dlgAnswer = self.testDlgTipsV2()
             case DialogNamesEnum.DLG_EDIT_PROJECT_HISTORY:
                 dlgAnswer = self._testDlgEditFileHistory()
             case DialogNamesEnum.DLG_EDIT_METHOD_MODIFIERS:
@@ -219,6 +223,13 @@ class TestADialog(App):
                 self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
+
+    def testDlgTipsV2(self):
+        dlg: DlgTipsV2 = DlgTipsV2(self._frame)
+        if dlg.ShowModal() == OK:
+            return 'Ok'
+        else:
+            return 'Cancel'
 
     def _testDlgEditFileHistory(self):
         dlg = MessageDialog(self._frame, "Test via File--> Manage Projects", "Warning", OK | ICON_EXCLAMATION)

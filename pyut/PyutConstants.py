@@ -46,3 +46,5 @@ class PyutConstants:
 
     WX_SIZER_NOT_CHANGEABLE: int = 0
     WX_SIZER_CHANGEABLE:     int = 1
+
+    TIPS_FILENAME: str = 'tips.txt'
