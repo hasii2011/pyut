@@ -26,10 +26,12 @@ from wx import TextCtrl
 from wx.lib.sized_controls import SizedDialog
 from wx.lib.sized_controls import SizedPanel
 
+
 @dataclass
 class CustomDialogButton:
     label:    str = ''
     callback: Callable = cast(Callable, None)
+
 
 CustomDialogButtons = NewType('CustomDialogButtons', List[CustomDialogButton])
 

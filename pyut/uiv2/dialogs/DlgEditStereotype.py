@@ -22,6 +22,7 @@ from pyutmodel.PyutStereotype import PyutStereotype
 
 from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
 
+
 class DlgEditStereotype(BaseEditDialog):
     """
     Usage:

@@ -18,6 +18,7 @@ from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from pyut.uiv2.dialogs.DlgEditClassCommon import DlgEditClassCommon
 
+
 class DlgEditInterface(DlgEditClassCommon):
 
     clsLogger: Logger = getLogger(__name__)

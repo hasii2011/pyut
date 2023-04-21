@@ -99,7 +99,7 @@ class DlgEditClassCommon(BaseEditDialog):
         Create Ok, Cancel, stereotype and description buttons;
         since we want to use a custom button layout, we won't use the
         CreateStdDialogBtnSizer here, we'll just create our own panel with
-        a horizontal layout and add the buttons to that;`
+        a horizontal layout and add the buttons to that;
         """
 
         customDialogButtons: CustomDialogButtons = CustomDialogButtons([])
