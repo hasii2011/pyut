@@ -9,7 +9,6 @@ from pyut.PyutConstants import PyutConstants
 
 from pyut.preferences.PreferencesCommon import PreferencesCommon
 
-from pyut.uiv2.dialogs.tips.DlgTips import DlgTips
 from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
 
 from tests.TestBase import TestBase
@@ -25,7 +24,7 @@ class TestTipHandler(TestBase):
 
     def setUp(self):
         super().setUp()
-        self._tipsFileName: str = ResourceManager.retrieveResourcePath(bareFileName=f'{DlgTips.TIPS_FILENAME}',
+        self._tipsFileName: str = ResourceManager.retrieveResourcePath(bareFileName=f'{PyutConstants.TIPS_FILENAME}',
                                                                        packageName=f'{PyutConstants.BASE_RESOURCES_PACKAGE}',
                                                                        resourcePath=f'{PyutConstants.BASE_RESOURCE_PATH}')
 

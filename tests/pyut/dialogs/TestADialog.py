@@ -438,7 +438,7 @@ class TestADialog(App):
         pyutMethod.sourceCode = SourceCode(
             [
                 'ans: bool = False',
-                'if param1 > 23:',
+                'if strParam > 23:',
                 '    ans = False',
                 '',
                 'return ans'
@@ -462,7 +462,7 @@ class TestADialog(App):
         sourceCode: SourceCode = SourceCode(
             [
                 'ans: bool = False',
-                'if param1 > 23:',
+                'if strParam > 23:',
                 '    ans = False',
                 '',
                 'return ans'
