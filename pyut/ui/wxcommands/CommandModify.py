@@ -26,9 +26,10 @@ class CommandModify(Command):
 
         self._object: object = anyObject
 
-        self._methodName:    str        = ''
-        self._oldParameters: Parameters = Parameters([])
-        self._newParameters: Parameters = Parameters([])
+        self._methodName:       str       = ''
+        self._methodIsProperty: bool      = False
+        self._oldParameters:    Parameters = Parameters([])
+        self._newParameters:    Parameters = Parameters([])
 
     def CanUndo(self) -> bool:
         """
@@ -41,9 +42,13 @@ class CommandModify(Command):
         """
         """
         assert self._methodName != '', 'You must set a method name'
-        assert len(self._newParameters) != 0, 'You have have saved the new parameters'
-        method = getattr(self._object, self._methodName)
-        apply(method, self._newParameters)
+        assert len(self._newParameters) != 0, 'You have have not saved the new parameters'
+        if self.methodIsProperty is True:
+            assert len(self._newParameters) == 1, 'Properties can only have a single parameter'
+            setattr(self._object, self._methodName, self._newParameters[0])
+        else:
+            method = getattr(self._object, self._methodName)
+            apply(method, self._newParameters)
 
         return True
 
@@ -51,9 +56,13 @@ class CommandModify(Command):
         """
         """
         assert self._methodName != '', 'You must set a method name'
-        assert len(self._oldParameters) != 0, 'You have have saved the old parameters'
-        method = getattr(self._object, self._methodName)
-        apply(method, self._oldParameters)
+        assert len(self._oldParameters) != 0, 'You have have not saved the old parameters'
+        if self.methodIsProperty is True:
+            assert len(self._oldParameters) == 1, 'Properties can only have a single parameter'
+            setattr(self._object, self._methodName, self._oldParameters[0])
+        else:
+            method = getattr(self._object, self._methodName)
+            apply(method, self._oldParameters)
 
         return True
 
@@ -75,8 +84,16 @@ class CommandModify(Command):
         self._methodName = newName
 
     @property
+    def methodIsProperty(self) -> bool:
+        return self._methodIsProperty
+
+    @methodIsProperty.setter
+    def methodIsProperty(self, newValue: bool):
+        self._methodIsProperty = newValue
+
+    @property
     def oldParameters(self) -> Parameters:
-        assert len(self._oldParameters) != 0, 'You have have saved the old parameters'
+        assert len(self._oldParameters) != 0, 'You have have not saved the old parameters'
         return self._oldParameters
 
     @oldParameters.setter
@@ -92,7 +109,7 @@ class CommandModify(Command):
 
     @property
     def newParameters(self) -> Parameters:
-        assert len(self._newParameters) != 0, 'You have have saved the new parameters'
+        assert len(self._newParameters) != 0, 'You have have not saved the new parameters'
         return self._newParameters
 
     @newParameters.setter

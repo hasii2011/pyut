@@ -12,10 +12,19 @@ from pyut.ui.wxcommands.CommandModify import Parameters
 class UnitTestClass:
 
     def __init__(self):
-        self._strParam: str = ''
-        self._intParam: int = -1
-        self._floatParam1: float = 0.0
-        self._floatParam2: float = 0.0
+        self._strParam:          str = ''
+        self._intParam:          int = -1
+        self._floatParam1:       float = 0.0
+        self._floatParam2:       float = 0.0
+        self._propertyParameter: str = ''
+
+    @property
+    def propertyParameter(self) -> str:
+        return self._propertyParameter
+
+    @propertyParameter.setter
+    def propertyParameter(self, newValue: str):
+        self._propertyParameter = newValue
 
     @property
     def stringParameter(self) -> str:
@@ -94,6 +103,43 @@ class TestCommandModify(UnitTestBase):
         self._commandProcessor.Submit(cmdModify)
 
         self.assertTrue(testClass.stringParameter == newParam, 'We did not do the modification')
+
+    def testPropertyParameter(self):
+
+        oldPropertyValue: str = 'oldValue'
+        newPropertyValue: str = 'newValue'
+
+        testClass: UnitTestClass = UnitTestClass()
+        testClass.propertyParameter = oldPropertyValue
+
+        cmdModify: CommandModify = CommandModify(canUndo=True, name='PropertyModify', anyObject=testClass)
+        cmdModify.methodName       = 'propertyParameter'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([oldPropertyValue])
+        cmdModify.newParameters    = Parameters([newPropertyValue])
+
+        self._commandProcessor.Submit(cmdModify)
+
+        self.assertTrue(testClass.propertyParameter == newPropertyValue, 'We did not do the property modification')
+
+    def testUndoProperty(self):
+        oldPropertyValue: str = 'oldValue'
+        newPropertyValue: str = 'newValue'
+
+        testClass: UnitTestClass = UnitTestClass()
+        testClass.propertyParameter = oldPropertyValue
+
+        cmdModify: CommandModify = CommandModify(canUndo=True, name='PropertyModify', anyObject=testClass)
+        cmdModify.methodName       = 'propertyParameter'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([oldPropertyValue])
+        cmdModify.newParameters    = Parameters([newPropertyValue])
+
+        self._commandProcessor.Submit(cmdModify)
+
+        self._commandProcessor.Undo()
+
+        self.assertTrue(testClass.propertyParameter == oldPropertyValue, 'We did not Undo the property modification')
 
     def testMultipleParameters(self):
         oldFloatParam1: float = 23.0
