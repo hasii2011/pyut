@@ -1,5 +1,4 @@
 
-from typing import TYPE_CHECKING
 from typing import cast
 
 from logging import Logger
@@ -30,31 +29,27 @@ from ogl.OglInterface import OglInterface
 from ogl.OglInterface2 import OglInterface2
 from ogl.OglObject import OglObject
 
-from pyut.ui.umlframes.BasicFrame import BasicFrame
 from pyut.ui.wxcommands.CommandModify import CommandModify
 from pyut.ui.wxcommands.CommandModify import Parameters
+
 from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
 from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
 from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
-
 from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
-
 from pyut.uiv2.dialogs.Wrappers import DlgEditActor
 from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
+
+from pyut.ui.umlframes.UmlFrame import UmlFrame
+from pyut.ui.umlframes.UmlFrame import UmlObjects
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.PyutUtils import PyutUtils
-
-if TYPE_CHECKING:
-    from pyut.ui.umlframes.UmlFrame import UmlFrame
-    from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
-    from pyut.ui.umlframes.UmlFrame import UmlObjects
-
-from pyut.uiv2.eventengine.Events import EventType
-
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class EditObjectHandler:
@@ -141,7 +136,7 @@ class EditObjectHandler:
         with DlgEditText(parent=umlFrame, pyutText=pyutText) as dlg:
             if dlg.ShowModal() == OK:
                 cmdModify.newParameters = Parameters([pyutText.content])
-                self._submitModifyCommand(basicFrame=umlFrame, cmdModifyCommand=cmdModify)
+                self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editNote(self, umlFrame: 'UmlDiagramsFrame', oglNote: OglNote):
@@ -202,5 +197,5 @@ class EditObjectHandler:
 
         return cast(UmlObjects, umlFrame.getUmlObjects())
 
-    def _submitModifyCommand(self, basicFrame: BasicFrame, cmdModifyCommand: CommandModify):
-        basicFrame.commandProcessor.Submit(command=cmdModifyCommand)
+    def _submitModifyCommand(self, umlFrame: UmlFrame, cmdModifyCommand: CommandModify):
+        umlFrame.commandProcessor.Submit(command=cmdModifyCommand)
