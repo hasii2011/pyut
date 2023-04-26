@@ -142,8 +142,16 @@ class EditObjectHandler:
     def _editNote(self, umlFrame: 'UmlDiagramsFrame', oglNote: OglNote):
 
         pyutNote: PyutNote = oglNote.pyutObject
+
+        cmdModify: CommandModify = CommandModify(name='Undo Note Text', anyObject=pyutNote, eventEngine=self._eventEngine)
+        cmdModify.methodName       = 'content'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([pyutNote.content])
+
         with DlgEditNote(umlFrame, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == OK:
+                cmdModify.newParameters = Parameters([pyutNote.content])
+                self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editUseCase(self, umlFrame: 'UmlDiagramsFrame', oglUseCase: OglUseCase):
