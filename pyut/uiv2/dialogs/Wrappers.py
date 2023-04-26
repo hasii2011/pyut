@@ -19,6 +19,7 @@ class DlgEditUseCase(TextEntryDialog):
     def __init__(self, parent: Window, useCaseName: str):
         super().__init__(parent, message="Use Case Name", caption="Edit Use Case Name", value=useCaseName, style=OK | CANCEL | CENTER)
 
+
 class DlgEditActor(TextEntryDialog):
     """
     Syntactic sugar around a text entry dialog specifically for
@@ -31,6 +32,7 @@ class DlgEditActor(TextEntryDialog):
     """
     def __init__(self, parent: Window, actorName: str):
         super().__init__(parent, message="Actor Name", caption="Edit Actor Name", value=actorName, style=OK | CANCEL | CENTER)
+
 
 class DlgEditDiagramTitle(TextEntryDialog):
     """

@@ -9,22 +9,25 @@ from logging import getLogger
 from wx import Command
 
 from pyut.general.Globals import apply
-# from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
 
 Parameters = NewType('Parameters', List[Any])
 
 
 class CommandModify(Command):
 
-    def __init__(self, canUndo: bool, name: str, anyObject: object):
+    def __init__(self, name: str, anyObject: object, eventEngine: IEventEngine):
 
         self.logger: Logger = getLogger(__name__)
 
-        super().__init__(canUndo=canUndo, name=name)
+        super().__init__(canUndo=True, name=name)
 
         # self._preferences: PyutPreferences = PyutPreferences()
 
-        self._object: object = anyObject
+        self._object:      object       = anyObject
+        self._eventEngine: IEventEngine = eventEngine
 
         self._methodName:       str       = ''
         self._methodIsProperty: bool      = False
@@ -64,6 +67,7 @@ class CommandModify(Command):
             method = getattr(self._object, self._methodName)
             apply(method, self._oldParameters)
 
+        self._eventEngine.sendEvent(EventType.RefreshFrame)
         return True
 
     @property

@@ -1,12 +1,15 @@
-
+from typing import Callable
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
 from hasiihelper.UnitTestBase import UnitTestBase
 from wx import CommandProcessor
+from wx import PyEventBinder
 
 from pyut.ui.wxcommands.CommandModify import CommandModify
 from pyut.ui.wxcommands.CommandModify import Parameters
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class UnitTestClass:
@@ -49,13 +52,22 @@ class UnitTestClass:
         self._floatParam2 = floatParam2
 
 
+class DummyEventEngine(IEventEngine):
+
+    def registerListener(self, pyEventBinder: PyEventBinder, callback: Callable):
+        pass
+
+    def sendEvent(self, eventType: EventType, **kwargs):
+        pass
+
+
 class TestCommandModify(UnitTestBase):
     """
     """
     def setUp(self):
         super().setUp()
         testClass: UnitTestClass = UnitTestClass()
-        self._invalidCommand: CommandModify = CommandModify(canUndo=True, name='InvalidCommand', anyObject=testClass)
+        self._invalidCommand: CommandModify = CommandModify(name='InvalidCommand', anyObject=testClass, eventEngine=DummyEventEngine())
 
         self._commandProcessor: CommandProcessor = CommandProcessor()
 
@@ -64,7 +76,7 @@ class TestCommandModify(UnitTestBase):
 
     def testCorrectName(self):
         testClass: UnitTestClass = UnitTestClass()
-        cmdModify: CommandModify = CommandModify(canUndo=True, name='NameTest', anyObject=testClass)
+        cmdModify: CommandModify = CommandModify(name='NameTest', anyObject=testClass, eventEngine=DummyEventEngine())
 
         self.assertEqual('NameTest', cmdModify.GetName(), 'Name not correctly saved')
         self.assertEqual('NameTest', cmdModify.GetName(), 'Name not correctly saved')
@@ -95,7 +107,7 @@ class TestCommandModify(UnitTestBase):
 
         testClass: UnitTestClass = UnitTestClass()
         testClass.method1(strParam=oldParam)
-        cmdModify: CommandModify = CommandModify(canUndo=True, name='SimpleModify', anyObject=testClass)
+        cmdModify: CommandModify = CommandModify(name='SimpleModify', anyObject=testClass, eventEngine=DummyEventEngine())
         cmdModify.methodName = 'method1'
         cmdModify.oldParameters = Parameters([oldParam])
         cmdModify.newParameters = Parameters([newParam])
@@ -112,7 +124,7 @@ class TestCommandModify(UnitTestBase):
         testClass: UnitTestClass = UnitTestClass()
         testClass.propertyParameter = oldPropertyValue
 
-        cmdModify: CommandModify = CommandModify(canUndo=True, name='PropertyModify', anyObject=testClass)
+        cmdModify: CommandModify = CommandModify(name='PropertyModify', anyObject=testClass, eventEngine=DummyEventEngine())
         cmdModify.methodName       = 'propertyParameter'
         cmdModify.methodIsProperty = True
         cmdModify.oldParameters    = Parameters([oldPropertyValue])
@@ -129,7 +141,7 @@ class TestCommandModify(UnitTestBase):
         testClass: UnitTestClass = UnitTestClass()
         testClass.propertyParameter = oldPropertyValue
 
-        cmdModify: CommandModify = CommandModify(canUndo=True, name='PropertyModify', anyObject=testClass)
+        cmdModify: CommandModify = CommandModify(name='PropertyModify', anyObject=testClass, eventEngine=DummyEventEngine())
         cmdModify.methodName       = 'propertyParameter'
         cmdModify.methodIsProperty = True
         cmdModify.oldParameters    = Parameters([oldPropertyValue])
@@ -150,7 +162,7 @@ class TestCommandModify(UnitTestBase):
         testClass: UnitTestClass = UnitTestClass()
         testClass.method3(floatParam1=oldFloatParam1, floatParam2=oldFloatParam2)
 
-        cmdModify: CommandModify = CommandModify(canUndo=True, name='MultipleParameters', anyObject=testClass)
+        cmdModify: CommandModify = CommandModify(name='MultipleParameters', anyObject=testClass, eventEngine=DummyEventEngine())
         cmdModify.methodName = 'method3'
         cmdModify.oldParameters = Parameters([oldFloatParam1, oldFloatParam2])
         cmdModify.newParameters = Parameters([newFloatParam1, newFloatParam2])
@@ -165,7 +177,7 @@ class TestCommandModify(UnitTestBase):
 
         testClass: UnitTestClass = UnitTestClass()
         testClass.method1(strParam=oldParam)
-        cmdModify: CommandModify = CommandModify(canUndo=True, name='SimpleModify', anyObject=testClass)
+        cmdModify: CommandModify = CommandModify(name='SimpleModify', anyObject=testClass, eventEngine=DummyEventEngine())
         cmdModify.methodName = 'method1'
         cmdModify.oldParameters = Parameters([oldParam])
         cmdModify.newParameters = Parameters([newParam])

@@ -85,7 +85,7 @@ class BaseEditDialog(SizedDialog):
 
         self._btnOk.SetDefault()
 
-    def _convertNone (self, theString: str):
+    def _convertNone(self, theString: str):
         """
 
         Args:

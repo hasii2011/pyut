@@ -30,6 +30,9 @@ from ogl.OglInterface import OglInterface
 from ogl.OglInterface2 import OglInterface2
 from ogl.OglObject import OglObject
 
+from pyut.ui.umlframes.BasicFrame import BasicFrame
+from pyut.ui.wxcommands.CommandModify import CommandModify
+from pyut.ui.wxcommands.CommandModify import Parameters
 from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
 from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
 from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
@@ -131,8 +134,14 @@ class EditObjectHandler:
         oglText:  OglText  = cast(OglText, diagramShape)
         pyutText: PyutText = oglText.pyutText
 
+        cmdModify: CommandModify = CommandModify(name='Undo Edit Text', anyObject=pyutText, eventEngine=self._eventEngine)
+        cmdModify.methodName       = 'content'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([pyutText.content])
         with DlgEditText(parent=umlFrame, pyutText=pyutText) as dlg:
             if dlg.ShowModal() == OK:
+                cmdModify.newParameters = Parameters([pyutText.content])
+                self._submitModifyCommand(basicFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editNote(self, umlFrame: 'UmlDiagramsFrame', oglNote: OglNote):
@@ -192,3 +201,6 @@ class EditObjectHandler:
         from pyut.ui.umlframes.UmlFrame import UmlObjects
 
         return cast(UmlObjects, umlFrame.getUmlObjects())
+
+    def _submitModifyCommand(self, basicFrame: BasicFrame, cmdModifyCommand: CommandModify):
+        basicFrame.commandProcessor.Submit(command=cmdModifyCommand)
