@@ -301,7 +301,7 @@ class TestADialog(App):
         diagram.title = 'Basic Diagram Title'
 
         with DlgEditDiagramTitle(self._frame, diagramTitle=diagram.title) as dlg:
-            if dlg.ShowModal() == OK:
+            if dlg.ShowModal() == ID_OK:
                 diagram.title = dlg.GetValue()
 
         return diagram.title

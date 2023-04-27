@@ -4,6 +4,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import ID_OK
 from wx import OK
 
 from pyutmodel.PyutActor import PyutActor
@@ -156,18 +157,31 @@ class EditObjectHandler:
 
     def _editUseCase(self, umlFrame: 'UmlDiagramsFrame', oglUseCase: OglUseCase):
 
-        pyutUseCase: PyutUseCase = oglUseCase.pyutObject
+        pyutUseCase: PyutUseCase   = oglUseCase.pyutObject
+        cmdModify:   CommandModify = CommandModify(name='Undo Note Text', anyObject=pyutUseCase, eventEngine=self._eventEngine)
+        cmdModify.methodName       = 'name'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([pyutUseCase.name])
+
         with DlgEditUseCase(umlFrame, useCaseName=pyutUseCase.name) as dlg:
-            if dlg.ShowModal() == OK:
-                pyutUseCase.name = dlg.GetValue()
+            ans: int = dlg.ShowModal()
+            if ans == ID_OK:
+                cmdModify.newParameters = Parameters([dlg.GetValue()])
+                self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editActor(self, umlFrame: 'UmlDiagramsFrame', oglActor: OglActor):
 
-        pyutActor: PyutActor = oglActor.pyutObject
+        pyutActor:   PyutActor     = oglActor.pyutObject
+        cmdModify:   CommandModify = CommandModify(name='Undo Actor Name', anyObject=pyutActor, eventEngine=self._eventEngine)
+        cmdModify.methodName       = 'name'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([pyutActor.name])
+
         with DlgEditActor(umlFrame, actorName=pyutActor.name) as dlg:
-            if dlg.ShowModal() == OK:
-                pyutActor.name = dlg.GetValue()
+            if dlg.ShowModal() == ID_OK:
+                cmdModify.newParameters = Parameters([dlg.GetValue()])
+                self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editAssociation(self, oglAssociation: OglAssociation):
