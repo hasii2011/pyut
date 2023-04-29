@@ -4,6 +4,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from copy import deepcopy
+
 from wx import ID_OK
 from wx import OK
 
@@ -13,6 +15,7 @@ from pyutmodel.PyutInterface import PyutInterface
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutNote import PyutNote
+from pyutmodel.PyutLink import PyutLink
 
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.ControlPoint import ControlPoint
@@ -72,13 +75,13 @@ class EditObjectHandler:
         self._y = y
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrame)
 
-    def _cbGetActiveUmlFrame(self, umlFrame: 'UmlDiagramsFrame'):
+    def _cbGetActiveUmlFrame(self, umlFrame: UmlDiagramsFrame):
 
         self.logger.info(f'{umlFrame=}')
 
         self._doEditObject(x=self._x, y=self._y, umlFrame=umlFrame)
 
-    def _doEditObject(self, x: int, y: int, umlFrame: 'UmlDiagramsFrame'):
+    def _doEditObject(self, x: int, y: int, umlFrame: UmlDiagramsFrame):
         """
         Edit the object at x, y.
         """
@@ -101,7 +104,7 @@ class EditObjectHandler:
             case OglActor() as diagramShape:
                 self._editActor(umlFrame, diagramShape)
             case OglAssociation() as diagramShape:
-                self._editAssociation(diagramShape)
+                self._editAssociation(umlFrame, diagramShape)
             case OglInheritance() | OglInterface() | AnchorPoint() | ControlPoint() | SizerShape() | TextShape():
                 pass    # Nothing to edit on inheritance or interface relationships
             case _:
@@ -109,14 +112,14 @@ class EditObjectHandler:
                 PyutUtils.displayError(msg=f'EditObjectHandler: Unknown shape: {diagramShape}', title='Developer Error')
         umlFrame.Refresh()
 
-    def _editClass(self, umlFrame: 'UmlDiagramsFrame', diagramShape: OglObject):
+    def _editClass(self, umlFrame: UmlDiagramsFrame, diagramShape: OglObject):
         pyutClass: PyutClass = diagramShape.pyutObject
         with DlgEditClass(umlFrame, self._eventEngine, pyutClass) as dlg:
             if dlg.ShowModal() == OK:
                 self._autoResize(umlFrame, diagramShape)
                 # This dialog sends the modified event
 
-    def _editOglInterface2(self, umlFrame: 'UmlDiagramsFrame', lollipop: OglInterface2):
+    def _editOglInterface2(self, umlFrame: UmlDiagramsFrame, lollipop: OglInterface2):
 
         pyutInterface: PyutInterface = lollipop.pyutInterface
 
@@ -125,7 +128,7 @@ class EditObjectHandler:
                 self.logger.info(f'{pyutInterface=}')
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
-    def _editText(self, umlFrame: 'UmlDiagramsFrame', diagramShape: OglObject):
+    def _editText(self, umlFrame: UmlDiagramsFrame, diagramShape: OglObject):
 
         oglText:  OglText  = cast(OglText, diagramShape)
         pyutText: PyutText = oglText.pyutText
@@ -140,7 +143,7 @@ class EditObjectHandler:
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
-    def _editNote(self, umlFrame: 'UmlDiagramsFrame', oglNote: OglNote):
+    def _editNote(self, umlFrame: UmlDiagramsFrame, oglNote: OglNote):
 
         pyutNote: PyutNote = oglNote.pyutObject
 
@@ -155,7 +158,7 @@ class EditObjectHandler:
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
-    def _editUseCase(self, umlFrame: 'UmlDiagramsFrame', oglUseCase: OglUseCase):
+    def _editUseCase(self, umlFrame: UmlDiagramsFrame, oglUseCase: OglUseCase):
 
         pyutUseCase: PyutUseCase   = oglUseCase.pyutObject
         cmdModify:   CommandModify = CommandModify(name='Undo Note Text', anyObject=pyutUseCase, eventEngine=self._eventEngine)
@@ -170,7 +173,7 @@ class EditObjectHandler:
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
-    def _editActor(self, umlFrame: 'UmlDiagramsFrame', oglActor: OglActor):
+    def _editActor(self, umlFrame: UmlDiagramsFrame, oglActor: OglActor):
 
         pyutActor:   PyutActor     = oglActor.pyutObject
         cmdModify:   CommandModify = CommandModify(name='Undo Actor Name', anyObject=pyutActor, eventEngine=self._eventEngine)
@@ -184,14 +187,22 @@ class EditObjectHandler:
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
-    def _editAssociation(self, oglAssociation: OglAssociation):
+    def _editAssociation(self, umlFrame: UmlFrame, oglAssociation: OglAssociation):
+
+        pyutLink:    PyutLink      = oglAssociation.pyutObject
+        oldPyutLink: PyutLink      = deepcopy(pyutLink)
+        cmdModify:   CommandModify = CommandModify(name='Undo Link Edit', anyObject=oglAssociation, eventEngine=self._eventEngine)
+        cmdModify.methodName       = 'pyutObject'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([oldPyutLink])
 
         with DlgEditLink(None, oglAssociation.pyutObject) as dlg:
             if dlg.ShowModal() == OK:
-                oglAssociation.pyutObject = dlg.value
+                cmdModify.newParameters = Parameters([dlg.value])
+                self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
 
-    def _autoResize(self, umlFrame: 'UmlDiagramsFrame', obj: OglObject):
+    def _autoResize(self, umlFrame: UmlDiagramsFrame, obj: OglObject):
         """
         Auto-resize the given object.
 
@@ -209,7 +220,7 @@ class EditObjectHandler:
 
             obj.autoResize()
 
-    def _getUmlObjects(self, umlFrame: 'UmlFrame') -> 'UmlObjects':
+    def _getUmlObjects(self, umlFrame: UmlFrame) -> UmlObjects:
         """
         May be empty
 
