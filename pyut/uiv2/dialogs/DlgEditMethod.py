@@ -62,7 +62,6 @@ class DlgEditMethod(BaseEditDialog):
         self._MethodReturnType: TextCtrl = cast(TextCtrl, None)
         self._btnModifiers:     Button   = cast(Button, None)
 
-
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerType('vertical')
 

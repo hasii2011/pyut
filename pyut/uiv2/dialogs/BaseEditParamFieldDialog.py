@@ -3,11 +3,9 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from wx import DEFAULT_DIALOG_STYLE
 from wx import EVT_TEXT
 from wx import ID_ANY
 from wx import RA_SPECIFY_ROWS
-from wx import STAY_ON_TOP
 
 from wx import Colour
 from wx import CommandEvent
@@ -29,7 +27,7 @@ class BaseEditParamFieldDialog(BaseEditDialog):
     """
     basePFDLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent: Window, title, layoutField: bool=True):
+    def __init__(self, parent: Window, title, layoutField: bool = True):
         """
 
         Args:

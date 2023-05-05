@@ -24,7 +24,7 @@ LICENSE = (HERE / 'LICENSE').read_text()
 VERSION = (HERE / 'pyut/resources/version.txt').read_text()
 
 setup(
-    name='pyut',
+    name='Pyut',
     version=VERSION,
     app=APP,
     data_files=DATA_FILES,
@@ -80,6 +80,6 @@ setup(
                       'hasiicommon~=0.2.2',
                       'ogl~=0.70.26',
                       'oglio~=0.7.2',
-                      'pyutplugins~=0.8.55',
+                      'pyutplugins~=0.8.60',
                       ]
 )
