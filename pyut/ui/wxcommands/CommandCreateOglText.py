@@ -29,7 +29,7 @@ class CommandCreateOglText(BaseWxCreateCommand):
 
         preferences: OglPreferences = self._oglPreferences
 
-        pyutText: PyutText = PyutText(textContent=preferences.noteText)
+        pyutText: PyutText = PyutText(textContent=preferences.textValue)
 
         oglText: OglText       = OglText(pyutText)
         oglText.textFontFamily = preferences.textFontFamily
