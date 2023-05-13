@@ -1,7 +1,7 @@
 wheel==0.40.0
 setuptools==67.7.2
 
-PyGithub==1.58.1
+PyGithub==1.58.2
 Deprecated==1.2.13
 
 pyut2xml==0.1.1
@@ -13,10 +13,10 @@ buildlackey~=0.8.1
 versionoverlord~=0.5.8
 
 html-testRunner~=1.2.1
-mypy==1.2.0
+mypy==1.3.0
 mypy-extensions==1.0.0
 types-Deprecated==1.2.9.2
-types-setuptools==67.7.0.1
+types-setuptools==67.7.0.2
 typing_extensions==4.5.0
 
 wxPython==4.2.0
@@ -24,5 +24,5 @@ hasiihelper==0.2.0
 pyutmodel==1.4.3
 hasiicommon==0.2.2
 ogl==0.70.26
-oglio==0.7.2
-pyutplugins==0.8.60
+oglio==0.7.4
+pyutplugins==0.8.80

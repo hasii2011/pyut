@@ -16,11 +16,15 @@ from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutLink import PyutLink
+from pyutmodel.PyutSDInstance import PyutSDInstance
 
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.ControlPoint import ControlPoint
 from miniogl.SizerShape import SizerShape
 from miniogl.TextShape import TextShape
+
+
+from ogl.sd.OglSDInstance import OglSDInstance
 
 from ogl.OglInheritance import OglInheritance
 from ogl.OglText import OglText
@@ -39,6 +43,7 @@ from pyut.ui.wxcommands.CommandModify import Parameters
 from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
 from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
 from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.uiv2.dialogs.Wrappers import DlgEditSDInstanceName
 from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
 from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
 from pyut.uiv2.dialogs.Wrappers import DlgEditActor
@@ -105,6 +110,8 @@ class EditObjectHandler:
                 self._editActor(umlFrame, diagramShape)
             case OglAssociation() as diagramShape:
                 self._editAssociation(umlFrame, diagramShape)
+            case OglSDInstance() as diagramShape:
+                self._editInstanceName(umlFrame, diagramShape)
             case OglInheritance() | OglInterface() | AnchorPoint() | ControlPoint() | SizerShape() | TextShape():
                 pass    # Nothing to edit on inheritance or interface relationships
             case _:
@@ -201,6 +208,19 @@ class EditObjectHandler:
                 cmdModify.newParameters = Parameters([dlg.value])
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
+
+    def _editInstanceName(self, umlFrame: UmlFrame, oglSDInstance: OglSDInstance):
+        pyutSDInstance:    PyutSDInstance = oglSDInstance.pyutObject
+        cmdModify:         CommandModify  = CommandModify(name='Undo Instance Name', anyObject=pyutSDInstance, eventEngine=self._eventEngine)
+        cmdModify.methodName       = 'instanceName'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([pyutSDInstance.instanceName])
+
+        with DlgEditSDInstanceName(umlFrame, instanceName=pyutSDInstance.instanceName) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                cmdModify.newParameters = Parameters([dlg.GetValue()])
+                self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _autoResize(self, umlFrame: UmlDiagramsFrame, obj: OglObject):
         """
