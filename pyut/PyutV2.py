@@ -1,15 +1,14 @@
 
-from os import getcwd
-from os import environ
-
-from sys import argv
-
 from logging import Logger
 from logging import getLogger
 
 import logging.config
 
 from json import load as jsonLoad
+
+from os import environ
+
+from sys import argv
 
 from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
@@ -27,33 +26,20 @@ class PyutV2:
     JSON_LOGGING_CONFIG_FILENAME: str = "loggingConfiguration.json"
 
     def __init__(self):
-        self._setupSystemLogging()
-
-        self.logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
+        self._setupApplicationLogging()
         PyutPreferences.determinePreferencesLocation()
 
-        self._userPath: str = getcwd()      # where the user launched pyut from
+        self.logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
 
         self._cmdLineArgsHandled: bool = False
         """
         If `True` then we handled some command line arguments that do not require the
         full startup of Pyut.  Examples of this are `--help` or `--version`.
-        TODO:  Perhaps rename this to `_startupUI` or `_fullStartup` or `_startUI`
         """
-        self.handleCommandLineArguments()
+        self._handleCommandLineArguments()
 
         optimize: str | None = environ.get(f'{PyutConstants.PYTHON_OPTIMIZE}')
         self.logger.info(f'{PyutConstants.PYTHON_OPTIMIZE}=`{optimize}`')
-
-    @property
-    def userPath(self) -> str:
-        return self._userPath
-
-    @userPath.setter
-    def userPath(self, theNewValue: str):
-        self._userPath = theNewValue
-        prefs: PyutPreferences = PyutPreferences()
-        prefs.userDirectory = theNewValue
 
     @property
     def cmdLineArgsHandled(self) -> bool:
@@ -63,7 +49,7 @@ class PyutV2:
     def cmdLineArgsHandled(self, theNewValue: bool):
         self._cmdLineArgsHandled = theNewValue
 
-    def _setupSystemLogging(self):
+    def _setupApplicationLogging(self):
 
         configFilePath: str = PyutUtils.retrieveResourcePath(PyutV2.JSON_LOGGING_CONFIG_FILENAME)
 
@@ -74,39 +60,21 @@ class PyutV2:
         logging.logProcesses = False
         logging.logThreads   = False
 
-    def startApp(self):
-        # self._setOurSysPath()
-        self._updateOurDirectoryPreferences()
-        self._displayIntro()
+    def startApplication(self):
+        self._displayIntroduction()
         app: PyutAppV2 = PyutAppV2(redirect=False)
 
-        pyutV2.displaySystemMetrics()
+        pyutV2._displaySystemMetrics()
 
         app.MainLoop()
 
-    def _updateOurDirectoryPreferences(self):
-        """
-        Define last open directory ?
-            - default is current directory
-            - last opened directory for developers (pyut/src present)
-        """
-        prefs: PyutPreferences = PyutPreferences()    # Prefs handler
-        prefs.orgDirectory = getcwd()
-
-        if (self._userPath.find('PyUt/src') == -1) and (self._userPath.find('PyUt2/src') == -1):
-
-            self.logger.debug(f'{self._userPath=}')
-
-            prefs.lastOpenedDirectory = self._userPath
-            self.logger.debug(f'{prefs.lastOpenedDirectory=}')
-
-    def _displayIntro(self):
+    def _displayIntroduction(self):
 
         introText: str = PyutUtils.retrieveResourceText(ResourceTextType.INTRODUCTION_TEXT_TYPE)
         print(introText)
-        self.displayVersionInformation()
+        self._displayVersionInformation()
 
-    def displayVersionInformation(self):
+    def _displayVersionInformation(self):
         import wx
         import sys
         import platform
@@ -121,7 +89,7 @@ class PyutV2:
         print(f'WxPython: {wx.__version__}')
         print(f'Python:   {sys.version.split(" ")[0]}')
 
-    def displaySystemMetrics(self):
+    def _displaySystemMetrics(self):
         from wx import ScreenDC
         from wx import DisplaySize
         from wx import Size
@@ -138,19 +106,18 @@ class PyutV2:
         else:
             self.logger.info("Assertions are turned off")
 
-    def handleCommandLineArguments(self):
+    def _handleCommandLineArguments(self):
         """
-        Handle command line arguments, display help, ...
+        Handle command line arguments, display help and version
 
-        @return True if arguments were found and handled (means no startup)
+        Returns:  if arguments were found and handled (means no startup)
         """
-
         if len(argv) < 2:
             self.cmdLineArgsHandled = False
             return
         # Process command line arguments
         if argv[1] == "--version":
-            self.displayVersionInformation()
+            self._displayVersionInformation()
             self.cmdLineArgsHandled = True
             return
         elif argv[1] == "--help":
@@ -160,10 +127,6 @@ class PyutV2:
             self.cmdLineArgsHandled = True
             return
 
-        for param in argv[1:]:
-            if param[:18] == "--start_directory=":
-                print(f'Starting with default directory: {param[18:]}')
-                self.userPath = param[18:]
         self.cmdLineArgsHandled = False
 
 
@@ -175,4 +138,4 @@ if __name__ == "__main__":
 
     # Launch pyut
     if pyutV2.cmdLineArgsHandled is False:
-        pyutV2.startApp()
+        pyutV2.startApplication()

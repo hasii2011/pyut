@@ -17,9 +17,6 @@ class GeneralPreferences(BaseSubPreference):
 
     MAIN_SECTION:    str = 'Main'
 
-    USER_DIRECTORY:             str = 'userPath'
-    ORG_DIRECTORY:              str = 'orgDirectory'
-    LAST_DIRECTORY:             str = 'LastDirectory'
     SHOW_TIPS_ON_STARTUP:       str = 'Show_Tips_On_Startup'
     LOAD_LAST_OPENED_PROJECT:   str = 'load_last_opened_project'
     DISPLAY_PROJECT_EXTENSION:  str = 'display_project_extension'
@@ -28,13 +25,11 @@ class GeneralPreferences(BaseSubPreference):
     CURRENT_TIP:                str = 'Current_Tip'
     STARTUP_SIZE:               str = 'startup_size'
     STARTUP_POSITION:           str = 'startup_position'
+    DIAGRAMS_DIRECTORY:          str = 'diagrams_directory'
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
     TOOL_BAR_ICON_SIZE:         str = 'tool_bar_icon_size'
 
     GENERAL_PREFERENCES: PREFS_NAME_VALUES = {
-        USER_DIRECTORY:            '.',
-        ORG_DIRECTORY:             '.',
-        LAST_DIRECTORY:            '.',
         SHOW_TIPS_ON_STARTUP:      'False',
         LOAD_LAST_OPENED_PROJECT:  'False',
         DISPLAY_PROJECT_EXTENSION: 'False',
@@ -43,6 +38,7 @@ class GeneralPreferences(BaseSubPreference):
         CURRENT_TIP:               '0',
         STARTUP_SIZE:              Dimensions(1024, 768).__str__(),
         STARTUP_POSITION:          Position(5, 5).__str__(),
+        DIAGRAMS_DIRECTORY:        '',                      # will be rationally set by CurrentDirectoryHandler
         CENTER_APP_ON_STARTUP:     'True',
         TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value,
     }
@@ -67,33 +63,6 @@ class GeneralPreferences(BaseSubPreference):
                     self.__addMissingMainPreference(prefName, GeneralPreferences.GENERAL_PREFERENCES[prefName])
         except (ValueError, Exception) as e:
             self.logger.error(f"Error: {e}")
-
-    @property
-    def userDirectory(self) -> str:
-        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.USER_DIRECTORY)
-
-    @userDirectory.setter
-    def userDirectory(self, theNewValue: str):
-        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.USER_DIRECTORY, theNewValue)
-        self._preferencesCommon.saveConfig()
-
-    @property
-    def orgDirectory(self) -> str:
-        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.ORG_DIRECTORY)
-
-    @orgDirectory.setter
-    def orgDirectory(self, theNewValue: str):
-        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.ORG_DIRECTORY, theNewValue)
-        self._preferencesCommon.saveConfig()
-
-    @property
-    def lastOpenedDirectory(self) -> str:
-        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.LAST_DIRECTORY)
-
-    @lastOpenedDirectory.setter
-    def lastOpenedDirectory(self, theNewValue: str):
-        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.LAST_DIRECTORY, theNewValue)
-        self._preferencesCommon.saveConfig()
 
     @property
     def showTipsOnStartup(self) -> bool:
@@ -179,6 +148,15 @@ class GeneralPreferences(BaseSubPreference):
     @startupPosition.setter
     def startupPosition(self, newValue: Position):
         self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.STARTUP_POSITION, newValue.__str__())
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def diagramsDirectory(self) -> str:
+        return self._config.get(GeneralPreferences.MAIN_SECTION, GeneralPreferences.DIAGRAMS_DIRECTORY)
+
+    @diagramsDirectory.setter
+    def diagramsDirectory(self, newValue: str):
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.DIAGRAMS_DIRECTORY, newValue)
         self._preferencesCommon.saveConfig()
 
     @property

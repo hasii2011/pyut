@@ -142,30 +142,6 @@ class PyutPreferences(Singleton):
         self._generalPrefs.autoResizeShapesOnEdit = newValue
 
     @property
-    def userDirectory(self) -> str:
-        return self._generalPrefs.userDirectory
-
-    @userDirectory.setter
-    def userDirectory(self, theNewValue: str):
-        self._generalPrefs.userDirectory = theNewValue
-
-    @property
-    def lastOpenedDirectory(self) -> str:
-        return self._generalPrefs.lastOpenedDirectory
-
-    @lastOpenedDirectory.setter
-    def lastOpenedDirectory(self, theNewValue: str):
-        self._generalPrefs.lastOpenedDirectory = theNewValue
-
-    @property
-    def orgDirectory(self) -> str:
-        return self._generalPrefs.orgDirectory
-
-    @orgDirectory.setter
-    def orgDirectory(self, theNewValue: str):
-        self._generalPrefs.orgDirectory = theNewValue
-
-    @property
     def centerAppOnStartUp(self) -> bool:
         return self._generalPrefs.centerAppOnStartUp
 
@@ -190,6 +166,14 @@ class PyutPreferences(Singleton):
     def startupSize(self, newValue: Dimensions):
         self._generalPrefs.startupSize = newValue
         self.overrideProgramExitSize = True
+
+    @property
+    def diagramsDirectory(self) -> str:
+        return self._generalPrefs.diagramsDirectory
+
+    @diagramsDirectory.setter
+    def diagramsDirectory(self, newValue: str):
+        self._generalPrefs.diagramsDirectory = newValue
 
     @property
     def fullScreen(self) -> bool:

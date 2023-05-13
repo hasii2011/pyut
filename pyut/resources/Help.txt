@@ -1,7 +1,6 @@
 
-Syntax: pyut [filename] [--version] [--help] [--start_directory=xxx] file1 file2 ...
+Syntax: pyut [filename] [--version] [--help] file1 file2 ...
 
 e.g.    pyut --version             display version number
         pyut --help                display this help
         pyut file1 file2           load files
-        pyut --start_directory=/xxx   start in directory '/xxx' as the default directory

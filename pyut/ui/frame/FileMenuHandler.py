@@ -334,6 +334,7 @@ class FileMenuHandler(BaseMenuHandler):
         self.logger.info(f'{event=} - filename: {path}')
         self.loadFiles(fileNames=FileNames([path]))
 
+    # noinspection PyUnusedLocal
     def onManageFileHistory(self, event: CommandEvent):
         with DlgEditProjectHistory(parent=None, fileHistory=self._fileHistory) as dlg:
             dlg.ShowModal()

@@ -221,7 +221,7 @@ class PyutUIV2(SplitterWindow):
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_TEXT,      callback=self._onEditText)
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_ACTOR,     callback=self._onEditActor)
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_USE_CASE,  callback=self._onEditUseCase)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_INTERFACE, callback= self._onEditInterface)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_INTERFACE, callback=self._onEditInterface)
         #
         # Following provided for the Plugin Adapter
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_SHAPE,            callback=self._onAddShape)
@@ -701,7 +701,6 @@ class PyutUIV2(SplitterWindow):
 
                 pyutClass: PyutClass = cast(PyutClass, implementor.pyutObject)
                 pyutClass.addInterface(pyutInterface)
-
 
     def _onAddShape(self, event: AddShapeEvent):
 

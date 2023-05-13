@@ -2,8 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
-from os import getcwd
 from os import sep as osSeparator
+from os import environ as osEnviron
 
 from hasiihelper.Singleton import Singleton
 
@@ -12,17 +12,25 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 class CurrentDirectoryHandler(Singleton):
 
+    HOME_ENV_VAR:            str = 'HOME'
+    DIAGRAMS_DIRECTORY_NAME: str = ''
+
     # noinspection PyAttributeOutsideInit
     def init(self):
 
-        self.logger:       Logger          = getLogger(__name__)
-        self._preferences: PyutPreferences = PyutPreferences()
-        self._lastDir:     str             = getcwd()
+        self.logger:            Logger          = getLogger(__name__)
+        self._preferences:      PyutPreferences = PyutPreferences()
+        self._currentDirectory: str             = ''
+
+        if self._preferences.diagramsDirectory == '':
+            if CurrentDirectoryHandler.HOME_ENV_VAR in osEnviron:
+                self._currentDirectory              = osEnviron[CurrentDirectoryHandler.HOME_ENV_VAR]
+                self._preferences.diagramsDirectory = osEnviron[CurrentDirectoryHandler.HOME_ENV_VAR]
 
     @property
     def currentDirectory(self):
 
-        return self._lastDir
+        return self._currentDirectory
 
     @currentDirectory.setter
     def currentDirectory(self, fullPath: str):
@@ -33,6 +41,4 @@ class CurrentDirectoryHandler(Singleton):
             fullPath:   Full path, with filename
         """
         # noinspection PyAttributeOutsideInit
-        self._lastDir = fullPath[:fullPath.rindex(osSeparator)]
-
-        self._preferences.lastOpenedDirectory = self._lastDir
+        self._currentDirectory = fullPath[:fullPath.rindex(osSeparator)]

@@ -19,6 +19,7 @@ from wx import ListBox
 from wx.lib.sized_controls import SizedPanel
 from wx.lib.sized_controls import SizedStaticBox
 
+
 class CallbackAnswer:
     """
     A callback returns True if the value in item is to be placed in the listbox
@@ -27,15 +28,19 @@ class CallbackAnswer:
     valid: bool = False
     item:  str  = ''
 
+
 AdvancedListBoxItems = NewType('AdvancedListBoxItems', List[str])
+
 
 @dataclass
 class MoveCallbackData:
     currentItem:  str = ''
 
+
 @dataclass
 class UpCallbackData(MoveCallbackData):
     previousItem: str = ''
+
 
 @dataclass
 class DownCallbackData(MoveCallbackData):
@@ -47,6 +52,7 @@ EditCallback   = Callable[[int], CallbackAnswer]    # Consumer provided callback
 RemoveCallback = Callable[[int], None]              # Consumer provided callback;  Expects the list box selection #; Returns a CallbackAnswer
 UpCallback     = Callable[[int], UpCallbackData]
 DownCallback   = Callable[[int], DownCallbackData]
+
 
 @dataclass
 class AdvancedListCallbacks:
