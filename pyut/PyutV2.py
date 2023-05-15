@@ -79,6 +79,12 @@ class PyutV2:
         import sys
         import platform
 
+        from ogl import __version__ as oglVersion
+        # noinspection PyPackageRequirements
+        from untanglepyut import __version__ as untanglePyutVersion
+        from oglio import __version__ as oglioVersion
+        from pyutplugins import __version__ as pluginVersion
+
         print("Versions: ")
         print(f"PyUt:     {PyutVersion.getPyUtVersion()}")
         print(f'Platform: {platform.platform()}')
@@ -87,6 +93,14 @@ class PyutV2:
         print(f'    Release:      {platform.release()}')
 
         print(f'WxPython: {wx.__version__}')
+        print(f'')
+        print(f'Pyut Packages')
+        print(f'    Ogl:             {oglVersion}')
+        print(f'    Untangle Pyut:   {untanglePyutVersion}')
+        print(f'    OglIO:           {oglioVersion}')
+        print(f'    Plugin Platform: {pluginVersion}')
+
+        print(f'')
         print(f'Python:   {sys.version.split(" ")[0]}')
 
     def _displaySystemMetrics(self):

@@ -17,6 +17,7 @@ from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutLink import PyutLink
 from pyutmodel.PyutSDInstance import PyutSDInstance
+from pyutmodel.PyutSDMessage import PyutSDMessage
 
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.ControlPoint import ControlPoint
@@ -25,6 +26,7 @@ from miniogl.TextShape import TextShape
 
 
 from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
 
 from ogl.OglInheritance import OglInheritance
 from ogl.OglText import OglText
@@ -43,11 +45,14 @@ from pyut.ui.wxcommands.CommandModify import Parameters
 from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
 from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
 from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
+
 from pyut.uiv2.dialogs.Wrappers import DlgEditSDInstanceName
-from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.uiv2.dialogs.Wrappers import DlgEditSDMessage
 from pyut.uiv2.dialogs.Wrappers import DlgEditActor
 from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
+
+from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyut.ui.umlframes.UmlFrame import UmlFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
@@ -111,7 +116,9 @@ class EditObjectHandler:
             case OglAssociation() as diagramShape:
                 self._editAssociation(umlFrame, diagramShape)
             case OglSDInstance() as diagramShape:
-                self._editInstanceName(umlFrame, diagramShape)
+                self._editSDInstanceName(umlFrame, diagramShape)
+            case OglSDMessage() as diagramShape:
+                self._editSDMessage(umlFrame, diagramShape)
             case OglInheritance() | OglInterface() | AnchorPoint() | ControlPoint() | SizerShape() | TextShape():
                 pass    # Nothing to edit on inheritance or interface relationships
             case _:
@@ -209,7 +216,7 @@ class EditObjectHandler:
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
 
-    def _editInstanceName(self, umlFrame: UmlFrame, oglSDInstance: OglSDInstance):
+    def _editSDInstanceName(self, umlFrame: UmlFrame, oglSDInstance: OglSDInstance):
         pyutSDInstance:    PyutSDInstance = oglSDInstance.pyutObject
         cmdModify:         CommandModify  = CommandModify(name='Undo Instance Name', anyObject=pyutSDInstance, eventEngine=self._eventEngine)
         cmdModify.methodName       = 'instanceName'
@@ -217,6 +224,19 @@ class EditObjectHandler:
         cmdModify.oldParameters    = Parameters([pyutSDInstance.instanceName])
 
         with DlgEditSDInstanceName(umlFrame, instanceName=pyutSDInstance.instanceName) as dlg:
+            if dlg.ShowModal() == ID_OK:
+                cmdModify.newParameters = Parameters([dlg.GetValue()])
+                self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
+                self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+
+    def _editSDMessage(self, umlFrame: UmlFrame, oglSDMessage: OglSDMessage):
+        pyutSDMessage: PyutSDMessage = oglSDMessage.pyutSDMessage
+        cmdModify:     CommandModify = CommandModify(name='Undo SD Message', anyObject=pyutSDMessage, eventEngine=self._eventEngine)
+        cmdModify.methodName       = 'message'
+        cmdModify.methodIsProperty = True
+        cmdModify.oldParameters    = Parameters([pyutSDMessage.message])
+
+        with DlgEditSDMessage(umlFrame, messageName=pyutSDMessage.message) as dlg:
             if dlg.ShowModal() == ID_OK:
                 cmdModify.newParameters = Parameters([dlg.GetValue()])
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)

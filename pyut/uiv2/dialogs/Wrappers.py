@@ -51,3 +51,8 @@ class DlgEditDiagramTitle(TextEntryDialog):
 class DlgEditSDInstanceName(TextEntryDialog):
     def __init__(self, parent: Window, instanceName: str):
         super().__init__(parent, "Instance", "Enter instance name", instanceName, OK | CANCEL | CENTER)
+
+
+class DlgEditSDMessage(TextEntryDialog):
+    def __init__(self, parent: Window, messageName: str):
+        super().__init__(parent, 'Message', 'Enter message name', messageName, OK | CANCEL | CENTER)
