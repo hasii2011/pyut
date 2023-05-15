@@ -36,9 +36,9 @@ jobs:
             pip install hasiihelper~=0.2.0
             pip install pyutmodel==1.4.3
             pip install hasiicommon==0.2.2
-            pip install ogl==0.70.26
-            pip install oglio==0.7.4
-            pip install pyutplugins==0.8.80
+            pip install ogl==0.70.30
+            pip install oglio==0.7.5
+            pip install pyutplugins==0.8.85
             pip install html-testRunner==1.2.1
             pip install buildlackey~=0.8.1
       - run:

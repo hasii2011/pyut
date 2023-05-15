@@ -126,7 +126,8 @@ class PyutV2:
             print(helpText)
             self.cmdLineArgsHandled = True
             return
-
+        else:
+            self.logger.info(f'If these are files;  Will be loaded by PyutAppV2 startup')
         self.cmdLineArgsHandled = False
 
 

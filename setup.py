@@ -53,11 +53,13 @@ setup(
     maintainer='Humberto A. Sanchez II',
     maintainer_email='humberto.a.sanchez.ii@gmail.com',
     description='The Python UML Tool',
-    long_description=README,
+    long_description='A UML Diagrammer with plugin support and reverse engineering capabilities.',
     options=dict(py2app=dict(
         plist=dict(
+            NSRequiresAquaSystemAppearance='True',
             CFBundleGetInfoString='Edits Pyut UML Files',
             CFBundleIdentifier='pyut',
+            CFBundleShortVersionString='8.0.0',
             CFBundleDocumentTypes=[
                 {'CFBundleTypeName': 'pyut'},
                 {'CFBundleTypeRole': 'Editor'},
@@ -68,18 +70,13 @@ setup(
                 APP_MODE='True',
                 PYTHONOPTIMIZE='1',
             ),
+            LSMultipleInstancesProhibited='True',
         )
     ),
     ),
     setup_requires=['py2app'],
-    install_requires=[
-                      'PyGithub==1.58.1',
+    install_requires=['pyutmodel==1.4.3', 'ogl==0.70.30', 'oglio==0.7.5', 'pyutplugins==0.8.85', 'hasiicommon~=0.2.2', 'hasiihelper~=0.2.0',
+                      'PyGithub==1.58.2',
                       'wxPython==4.2.0',
-                      'hasiihelper~=0.2.0',
-                      'pyutmodel==1.4.3',
-                      'hasiicommon~=0.2.2',
-                      'ogl~=0.70.26',
-                      'oglio~=0.7.4',
-                      'pyutplugins~=0.8.80',
                       ]
 )

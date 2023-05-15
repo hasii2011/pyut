@@ -31,6 +31,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyutplugins.common.ui.preferences.PluginPreferencesPage import PluginPreferencesPage
 
+
 class DlgPyutPreferencesV2(SizedDialog):
     """
     This is the preferences dialog for Pyut.  This is version 2 of this dialog from 
@@ -55,7 +56,7 @@ class DlgPyutPreferencesV2(SizedDialog):
             parent:
         """
         style:   int  = DEFAULT_DIALOG_STYLE | RESIZE_BORDER
-        dlgSize: Size = Size(440,400)
+        dlgSize: Size = Size(460, 440)
         super().__init__(parent, ID_ANY, "Preferences", size=dlgSize, style=style)
         self.logger:  Logger          = getLogger(__name__)
         self.__prefs: PyutPreferences = PyutPreferences()

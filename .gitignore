@@ -4,7 +4,7 @@ __pycache__/
 /html/
 build/
 dist/
-pyut.egg-info
+Pyut.egg-info
 /pyenv-3.10.10/
 /site/
 /docs/

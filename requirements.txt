@@ -23,6 +23,6 @@ wxPython==4.2.0
 hasiihelper==0.2.0
 pyutmodel==1.4.3
 hasiicommon==0.2.2
-ogl==0.70.26
-oglio==0.7.4
-pyutplugins==0.8.80
+ogl==0.70.30
+oglio==0.7.5
+pyutplugins==0.8.85
