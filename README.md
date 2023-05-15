@@ -2,9 +2,9 @@
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/hasii2011/PyUt/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/hasii2011/PyUt/tree/master)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/hasii2011/pyut/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/hasii2011/PyUt/tree/master)
 
-[![CircleCI](https://dl.circleci.com/insights-snapshot/gh/hasii2011/PyUt/master/main/badge.svg?window=30d)](https://app.circleci.com/insights/github/hasii2011/PyUt/workflows/main/overview?branch=master&reporting-window=last-30-days&insights-snapshot=true)
+[![CircleCI](https://dl.circleci.com/insights-snapshot/gh/hasii2011/pyut/master/main/badge.svg?window=30d)](https://app.circleci.com/insights/github/hasii2011/PyUt/workflows/main/overview?branch=master&reporting-window=last-30-days&insights-snapshot=true)
 
 <a href="https://gitmoji.dev">
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
