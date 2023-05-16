@@ -75,7 +75,7 @@ setup(
     ),
     ),
     setup_requires=['py2app'],
-    install_requires=['pyutmodel==1.4.3', 'ogl==0.70.30', 'oglio==0.7.5', 'pyutplugins==0.8.85', 'hasiicommon~=0.2.2', 'hasiihelper~=0.2.0',
+    install_requires=['pyutmodel==1.4.3', 'ogl==0.70.40', 'oglio==0.7.6', 'pyutplugins==0.8.90', 'hasiicommon~=0.2.2', 'hasiihelper~=0.2.0',
                       'PyGithub==1.58.2',
                       'wxPython==4.2.0',
                       ]
