@@ -35,9 +35,9 @@ jobs:
             pip install PyGithub
             pip install hasiihelper~=0.2.0
             pip install pyutmodel==1.4.4
-            pip install hasiicommon==0.2.2
+            pip install hasiicommon==0.3.1
             pip install ogl==0.70.52
-            pip install oglio==0.7.6
+            pip install oglio==0.7.7
             pip install pyutplugins==0.8.90
             pip install html-testRunner==1.2.1
             pip install buildlackey~=0.8.1

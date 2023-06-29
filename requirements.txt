@@ -12,11 +12,11 @@ buildlackey~=0.8.1
 versionoverlord~=0.5.8
 
 html-testRunner~=1.2.1
-mypy==1.4.0
+mypy==1.4.1
 mypy-extensions==1.0.0
 types-Deprecated==1.2.9.2
 types-setuptools==68.0.0.0
-typing_extensions==4.6.3
+typing_extensions==4.7.0
 
 wxPython==4.2.1
 hasiihelper==0.2.1
