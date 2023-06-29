@@ -24,7 +24,7 @@ LICENSE = (HERE / 'LICENSE').read_text()
 VERSION = (HERE / 'pyut/resources/version.txt').read_text()
 
 setup(
-    name='Pyut',
+    name='pyut',
     version=VERSION,
     app=APP,
     data_files=DATA_FILES,
@@ -75,8 +75,8 @@ setup(
     ),
     ),
     setup_requires=['py2app'],
-    install_requires=['pyutmodel==1.4.3', 'ogl==0.70.40', 'oglio==0.7.6', 'pyutplugins==0.8.90', 'hasiicommon~=0.2.2', 'hasiihelper~=0.2.0',
+    install_requires=['pyutmodel==1.4.4', 'ogl==0.70.52', 'oglio==0.7.7', 'pyutplugins==0.9.0', 'hasiicommon~=0.3.1', 'hasiihelper~=0.2.1',
                       'PyGithub==1.58.2',
-                      'wxPython==4.2.0',
+                      'wxPython==4.2.1',
                       ]
 )

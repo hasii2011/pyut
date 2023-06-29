@@ -15,7 +15,7 @@ workflows:
 jobs:
   build:
     docker:
-      - image: cimg/python:3.10-browsers
+      - image: cimg/python:3.11-browsers
     executor: python/default
     steps:
       - checkout
@@ -34,9 +34,9 @@ jobs:
             pip install -v -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
             pip install PyGithub
             pip install hasiihelper~=0.2.0
-            pip install pyutmodel==1.4.3
+            pip install pyutmodel==1.4.4
             pip install hasiicommon==0.2.2
-            pip install ogl==0.70.40
+            pip install ogl==0.70.52
             pip install oglio==0.7.6
             pip install pyutplugins==0.8.90
             pip install html-testRunner==1.2.1
