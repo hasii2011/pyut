@@ -66,8 +66,8 @@ def suite() -> TestSuite:
     import unittest
 
     testSuite: TestSuite = TestSuite()
-    # noinspection PyUnresolvedReferences
-    testSuite.addTest(unittest.makeSuite(TestToolbox))
+
+    testSuite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testCaseClass=TestToolbox))
 
     return testSuite
 

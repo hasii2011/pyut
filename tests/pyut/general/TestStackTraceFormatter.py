@@ -129,8 +129,8 @@ def suite() -> TestSuite:
     import unittest
 
     testSuite: TestSuite = TestSuite()
-    # noinspection PyUnresolvedReferences
-    testSuite.addTest(unittest.makeSuite(TestStackTraceFormatter))
+
+    testSuite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testCaseClass=TestStackTraceFormatter))
 
     return testSuite
 

@@ -23,5 +23,5 @@ hasiihelper==0.2.1
 pyutmodel==1.4.4
 hasiicommon==0.3.1
 ogl==0.70.52
-oglio==0.7.7
+oglio~=0.7.7
 pyutplugins==0.9.0
