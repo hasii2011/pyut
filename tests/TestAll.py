@@ -29,6 +29,10 @@ class TestAll:
                             'TestWxOgl', 'TestBase', 'TestTemplate',
                             'pyut/ui/tools/TestToolboxFrame',
                             'pyut/dialogs/TestADialog',
+                            'pyut/ui/tools/TestToolbox',
+                            'pyut/ui/wxcommands/TestCommandModify',     # run this manually
+                            'pyut/uiv2/eventengine/TestEventType',      # run this manually
+                            'pyut/dialogs/tips/TestTipHandler',
                             'TestGriddedDiagramApplication',
                             ]
 

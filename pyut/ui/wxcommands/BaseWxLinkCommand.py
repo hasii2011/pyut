@@ -15,6 +15,7 @@ from pyutmodel.PyutSDMessage import PyutSDMessage
 
 from ogl.OglClass import OglClass
 from ogl.OglLink import OglLink
+from ogl.OglAssociation import OglAssociation
 
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
@@ -83,6 +84,15 @@ class BaseWxLinkCommand(Command):
         umlFrame: UmlDiagramsFrame = frame
 
         umlFrame.diagram.AddShape(self._link, withModelUpdate=False)
+        #
+        # TODO: Is this a hack?  I think it is
+        #
+        if isinstance(self._link, OglAssociation):
+            oglAssociation: OglAssociation = cast(OglAssociation, self._link)
+            oglAssociation.createDefaultAssociationLabels()
+            umlFrame.diagram.AddShape(shape=oglAssociation.centerLabel)
+            umlFrame.diagram.AddShape(shape=oglAssociation.sourceCardinality)
+            umlFrame.diagram.AddShape(shape=oglAssociation.destinationCardinality)
 
         # get the view start and end position and assign it to the
         # model position, then the view position is updated from

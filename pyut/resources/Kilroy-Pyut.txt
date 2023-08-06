@@ -9,4 +9,4 @@
                  |_|       |_|    \___/    |_|
 
 
-                                        A little UML 1.4 editor
+                                        A little UML 1.4+ editor

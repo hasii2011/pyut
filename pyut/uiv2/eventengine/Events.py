@@ -64,6 +64,7 @@ AssociateEditMenuEvent, EVENT_ASSOCIATE_EDIT_MENU = NewEvent()
 ClassNameChangedEvent,       EVENT_CLASS_NAME_CHANGED      = NewEvent()
 RequestCurrentProjectEvent,  EVENT_REQUEST_CURRENT_PROJECT = NewEvent()
 
+
 class EventType(str, Enum):
     """
     UpdateApplicationTitleEvent

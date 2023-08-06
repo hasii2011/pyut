@@ -1,27 +1,27 @@
-wheel==0.40.0
+wheel==0.41.1
 setuptools==68.0.0
 
-PyGithub==1.58.2
+PyGithub==1.59.1
 Deprecated==1.2.14
 
 pyut2xml==0.1.1
 epr2md==0.1.2
 pkgversions==0.2.2
 py2app==0.28.5
-buildlackey~=0.8.1
-versionoverlord~=0.5.8
+buildlackey==1.1.0
+versionoverlord==0.6.0
 
 html-testRunner~=1.2.1
 mypy==1.4.1
 mypy-extensions==1.0.0
-types-Deprecated==1.2.9.2
-types-setuptools==68.0.0.0
-typing_extensions==4.7.0
+types-Deprecated==1.2.9.3
+types-setuptools==68.0.0.3
+typing_extensions==4.7.1
 
 wxPython==4.2.1
 hasiihelper==0.2.1
 pyutmodel==1.4.4
 hasiicommon==0.3.1
-ogl==0.70.52
-oglio~=0.7.7
-pyutplugins==0.9.0
+ogl==0.85.0
+oglio==1.0.0
+pyutplugins==1.0.0

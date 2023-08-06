@@ -363,7 +363,7 @@ class EventEngine(IEventEngine):
     def _sendClassNameChangedEvent(self, **kwargs):
         oldClassName: str = kwargs[OLD_CLASS_NAME_PARAMETER]
         newClassName: str = kwargs[NEW_CLASS_NAME_PARAMETER]
-        eventToPost: ClassNameChangedEvent =  ClassNameChangedEvent(oldClassName=oldClassName, newClassName=newClassName)
+        eventToPost: ClassNameChangedEvent = ClassNameChangedEvent(oldClassName=oldClassName, newClassName=newClassName)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendRequestCurrentProjectEvent(self, **kwargs):

@@ -32,15 +32,15 @@ jobs:
             pip install six==1.16.0
             pip install attrdict3~=2.0.2
             pip install -v -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
-            pip install PyGithub
+            pip install PyGithub~=1.59.1
             pip install hasiihelper~=0.2.0
             pip install pyutmodel==1.4.4
             pip install hasiicommon==0.3.1
-            pip install ogl==0.70.52
-            pip install oglio==0.7.7
-            pip install pyutplugins==0.8.90
+            pip install ogl==0.85.0
+            pip install oglio==1.0.0
+            pip install pyutplugins==1.0.0
             pip install html-testRunner==1.2.1
-            pip install buildlackey~=0.8.1
+            pip install buildlackey~=1.1.0
       - run:
             name: run tests
             command: | 

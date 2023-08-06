@@ -1,4 +1,5 @@
 
+from typing import List
 from typing import Union
 from typing import cast
 
@@ -8,6 +9,8 @@ from logging import getLogger
 from miniogl.Diagram import Diagram
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 
+from ogl.OglAssociation import OglAssociation
+from ogl.OglAssociationLabel import OglAssociationLabel
 from ogl.OglInterface2 import OglInterface2
 from ogl.OglLink import OglLink
 from ogl.OglObject import OglObject
@@ -121,6 +124,32 @@ class LayoutEngine:
             controlPoints = oglLink.GetControlPoints()
             for controlPoint in controlPoints:
                 umlDiagram.AddShape(controlPoint)
+
+        if isinstance(oglLink, OglAssociation) is True:
+            oglAssociation: OglAssociation = cast(OglAssociation, oglLink)
+            self._layoutAssociationLabels(oglAssociation, umlFrame)
+
+    def _layoutAssociationLabels(self, oglAssociation: OglAssociation, umlFrame: UmlDiagramsFrame):
+        """
+        Only called for OglAssociation instances
+
+        TODO:
+        More bad mooky for the same reason as lollipop interfaces
+
+        Args:
+            oglAssociation:     The association
+            umlFrame:           The diagram frame to place them on
+        """
+
+        associationLabels: List[OglAssociationLabel] = [
+            oglAssociation.centerLabel,
+            oglAssociation.sourceCardinality,
+            oglAssociation.destinationCardinality
+        ]
+        for oglAssociationLabel in associationLabels:
+            if oglAssociationLabel is not None:
+                x, y = oglAssociationLabel.GetPosition()
+                umlFrame.addShape(oglAssociationLabel, x=x, y=y)
 
     def _layoutOglSDInstance(self, diagram: Diagram, oglSDInstance: OglSDInstance):
         diagram.AddShape(oglSDInstance)

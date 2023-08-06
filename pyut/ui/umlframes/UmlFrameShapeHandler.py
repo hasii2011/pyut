@@ -12,6 +12,7 @@ from miniogl.DiagramFrame import DiagramFrame
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from ogl.OglInterface2 import OglInterface2
+from ogl.OglAssociationLabel import OglAssociationLabel
 from ogl.OglObject import OglObject
 from ogl.OglLink import OglLink
 
@@ -32,7 +33,7 @@ class UmlFrameShapeHandler(DiagramFrame):
         self.logger:       Logger = getLogger(__name__)
         self._preferences: PyutPreferences = PyutPreferences()
 
-    def addShape(self, shape: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink],
+    def addShape(self, shape: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink, OglAssociationLabel],
                  x: int, y: int, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
         """
         Add a shape to the UmlFrame.
