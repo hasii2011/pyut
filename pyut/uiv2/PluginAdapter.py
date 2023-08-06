@@ -18,8 +18,9 @@ from pyutplugins.ExternalTypes import SelectedOglObjectsCallback
 from pyutplugins.IPluginAdapter import IPluginAdapter
 from pyutplugins.IPluginAdapter import ScreenMetrics
 
+from pyut import __version__ as pyutVersion
+
 from pyut.enums.DiagramType import DiagramType
-from pyut.general.PyutVersion import PyutVersion
 
 from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
@@ -50,7 +51,7 @@ class PluginAdapter(IPluginAdapter):
 
     @property
     def pyutVersion(self) -> str:
-        return PyutVersion.getPyUtVersion()
+        return pyutVersion
 
     @pyutVersion.setter
     def pyutVersion(self, newVersion: str):

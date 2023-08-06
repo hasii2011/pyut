@@ -8,11 +8,10 @@ from wx import BeginBusyCursor as wxBeginBusyCursor
 from wx import EndBusyCursor as wxEndBusyCursor
 from wx import Yield as wxYield
 
+from pyut import __version__ as pyutVersion
+
 from pyut.uiv2.dialogs.DlgAbout import DlgAbout
 from pyut.uiv2.dialogs.DlgPyutDebug import DlgPyutDebug
-
-
-from pyut.general.PyutVersion import PyutVersion
 
 from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
@@ -39,7 +38,7 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        with DlgAbout(self._parent, f"About Pyut {PyutVersion.getPyUtVersion()}") as dlg:
+        with DlgAbout(self._parent, f"About Pyut {pyutVersion}") as dlg:
             dlg.ShowModal()
 
     # noinspection PyUnusedLocal
@@ -49,7 +48,6 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        from pyut.general.PyutVersion import PyutVersion
         from pyut.general.GitHubAdapter import GitHubAdapter
         from hasiihelper.SemanticVersion import SemanticVersion
 
@@ -57,7 +55,7 @@ class HelpMenuHandler(BaseMenuHandler):
         githubAdapter: GitHubAdapter   = GitHubAdapter()
         latestVersion: SemanticVersion = githubAdapter.getLatestVersionNumber()
 
-        myVersion: SemanticVersion = SemanticVersion(PyutVersion.getPyUtVersion())
+        myVersion: SemanticVersion = SemanticVersion(pyutVersion)
         # latestVersion.major = 9        Manual test
         if myVersion < latestVersion:
             # msg = "PyUt version " + str(latestVersion) + " is available on https://github.com/hasii2011/PyUt/releases"

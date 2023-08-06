@@ -3,6 +3,8 @@ from setuptools import setup
 
 import pathlib
 
+from pyut import __version__
+
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 
@@ -12,8 +14,6 @@ DATA_FILES = [('pyut/resources', ['pyut/resources/loggingConfiguration.json']),
               ('pyut/resources', ['pyut/resources/Help.txt']),
               ('pyut/resources', ['pyut/resources/Kudos.txt']),
               ('pyut/resources', ['pyut/resources/tips.txt']),
-              ('pyut/resources', ['pyut/resources/version.txt']),
-
               ('pyut/resources/img', ['pyut/resources/img/pyut.ico']),
               ]
 OPTIONS = {}
@@ -21,11 +21,10 @@ OPTIONS = {}
 # The text of the README file
 README = (HERE / "README.md").read_text()
 LICENSE = (HERE / 'LICENSE').read_text()
-VERSION = (HERE / 'pyut/resources/version.txt').read_text()
 
 setup(
     name='pyut',
-    version=VERSION,
+    version=__version__,
     app=APP,
     data_files=DATA_FILES,
     packages=[

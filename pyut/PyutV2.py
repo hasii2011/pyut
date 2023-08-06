@@ -10,6 +10,8 @@ from os import environ
 
 from sys import argv
 
+from pyut import __version__ as pyutVersion
+
 from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
 from pyut.preferences.PyutPreferences import PyutPreferences
@@ -17,8 +19,6 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.uiv2.PyutAppV2 import PyutAppV2
 
 from pyut.enums.ResourceTextType import ResourceTextType
-
-from pyut.general.PyutVersion import PyutVersion
 
 
 class PyutV2:
@@ -86,7 +86,7 @@ class PyutV2:
         from pyutplugins import __version__ as pluginVersion
 
         print("Versions: ")
-        print(f"PyUt:     {PyutVersion.getPyUtVersion()}")
+        print(f"PyUt:     {pyutVersion}")
         print(f'Platform: {platform.platform()}')
         print(f'    System:       {platform.system()}')
         print(f'    Version:      {platform.version()}')
@@ -135,7 +135,7 @@ class PyutV2:
             self.cmdLineArgsHandled = True
             return
         elif argv[1] == "--help":
-            print(f"PyUt, version {PyutVersion.getPyUtVersion()}")
+            print(f"PyUt, version {pyutVersion}")
             helpText: str = PyutUtils.retrieveResourceText(ResourceTextType.HELP_TEXT_TYPE)
             print(helpText)
             self.cmdLineArgsHandled = True

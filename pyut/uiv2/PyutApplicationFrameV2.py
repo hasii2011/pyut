@@ -43,7 +43,7 @@ from hasiihelper.Position import Position
 
 from pyutplugins.PluginManager import PluginManager
 
-from pyut.general.PyutVersion import PyutVersion
+from pyut import __version__ as pyutVersion
 
 from pyut.ui.Action import Action
 
@@ -288,7 +288,6 @@ class PyutApplicationFrameV2(Frame):
         currentFrameZoomFactor: float = event.currentFrameZoomFactor
         projectModified:        bool  = event.projectModified
         projectName:            str   = PyutUtils.determineProjectName(filename=filename)
-        pyutVersion:            str   = PyutVersion.getPyUtVersion()
 
         txt:       str = f'Pyut v{pyutVersion} - {projectName}'
         indicator: str = ''
