@@ -77,5 +77,6 @@ setup(
     install_requires=['pyutmodel==1.4.4', 'ogl==0.85.0', 'oglio==1.0.0', 'pyutplugins==1.0.0', 'hasiicommon~=0.3.1', 'hasiihelper~=0.2.1',
                       'PyGithub==1.59.1',
                       'wxPython==4.2.1',
+                      'chardet==5.2.0'
                       ]
 )
