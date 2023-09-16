@@ -80,9 +80,3 @@ to monitor their terms of service.
 Any use of this project's code by GitHub Copilot, past or present, is done
 without my permission.  I do not consent to GitHub's use of this project's
 code in Copilot.
-
-A repository owner may opt out of Copilot by changing Settings --> GitHub Copilot.
-
-I have done so.
-
-
