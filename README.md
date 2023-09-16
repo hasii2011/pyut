@@ -9,8 +9,6 @@
 [![CircleCI](https://dl.circleci.com/insights-snapshot/gh/hasii2011/pyut/master/main/badge.svg?window=30d)](https://app.circleci.com/insights/github/hasii2011/PyUt/workflows/main/overview?branch=master&reporting-window=last-30-days&insights-snapshot=true)
 
 
-[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
-
 
 𝓟 𝓨 𝓤 𝓣 stands for Python UML Tool. Actually, Pyut is only a class diagram editor
 
