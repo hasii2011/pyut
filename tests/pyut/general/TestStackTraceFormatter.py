@@ -4,7 +4,7 @@ from traceback import StackSummary
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from hasiihelper.UnitTestBase import UnitTestBase
+from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.general.StackTraceFormatter import StackTraceFormatter
 from pyut.general.StackTraceFormatter import StackTraceList

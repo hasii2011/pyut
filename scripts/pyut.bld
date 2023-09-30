@@ -1,2 +1,2 @@
-rm -rf build dist
+rm -rf build dist Pyut.egg-info
 python -O setup.py py2app --iconfile pyut/resources/img/Pyut.icns

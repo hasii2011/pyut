@@ -2,8 +2,8 @@
 from logging import Logger
 from logging import getLogger
 
-from hasiihelper.Dimensions import Dimensions
-from hasiihelper.Position import Position
+from codeallybasic.Dimensions import Dimensions
+from codeallybasic.Position import Position
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 

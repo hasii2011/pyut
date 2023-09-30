@@ -3,12 +3,13 @@ from enum import Enum
 
 from pyut.uiv2.IPyutProject import IPyutProject
 
+
 class ProjectExceptionType(Enum):
     INVALID_PROJECT   = 'Invalid Project'
     PROJECT_NOT_FOUND = 'Project Not Found'
     ATTRIBUTE_ERROR   = 'Attribute Error'
+    TYPE_ERROR        = 'Type Error'
     UNKNOWN_ERROR     = 'Unknown Error'
-
 
 
 class ProjectException(Exception):

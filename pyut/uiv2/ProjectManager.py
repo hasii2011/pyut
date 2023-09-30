@@ -288,6 +288,9 @@ class ProjectManager:
         except AttributeError as ae:
             ErrorManager.addToLogFile(title='Attribute Error', msg=f'{ae}')
             raise ProjectException(exceptionType=ProjectExceptionType.ATTRIBUTE_ERROR, message='Incompatible XML', project=project)
+        except TypeError as te:
+            ErrorManager.addToLogFile(title='Type Error', msg=f'{te}')
+            raise ProjectException(exceptionType=ProjectExceptionType.TYPE_ERROR, message=f'Type Error {te}', project=project)
         except (ValueError, Exception) as e:
             ErrorManager.addToLogFile(title='Unknown Error', msg=f'{e}')
             raise ProjectException(exceptionType=ProjectExceptionType.UNKNOWN_ERROR, message='Unknown Error', project=project)

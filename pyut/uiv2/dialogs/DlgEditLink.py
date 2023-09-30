@@ -101,9 +101,9 @@ class DlgEditLink (SizedDialog):
         """
         Provide an example image in linkImage
         """
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipAssociation import embeddedImage as ImgToolboxRelationshipAssociation
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipAggregation import embeddedImage as ImgToolboxRelationshipAggregation
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipComposition import embeddedImage as ImgToolboxRelationshipComposition
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipAssociation import embeddedImage as ImgToolboxRelationshipAssociation
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipAggregation import embeddedImage as ImgToolboxRelationshipAggregation
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipComposition import embeddedImage as ImgToolboxRelationshipComposition
         linkTypeToImage = {
             PyutLinkType.ASSOCIATION: ImgToolboxRelationshipAssociation,
             PyutLinkType.AGGREGATION: ImgToolboxRelationshipAggregation,

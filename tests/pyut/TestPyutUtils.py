@@ -2,7 +2,7 @@
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
-from hasiihelper.UnitTestBase import UnitTestBase
+from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.PyutConstants import PyutConstants
 

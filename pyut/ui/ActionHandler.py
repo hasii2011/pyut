@@ -15,7 +15,7 @@ from wx import TextEntryDialog
 
 from wx import Yield as wxYield
 
-from hasiihelper.Singleton import Singleton
+from codeallybasic.Singleton import Singleton
 
 from pyutmodel.PyutLinkType import PyutLinkType
 

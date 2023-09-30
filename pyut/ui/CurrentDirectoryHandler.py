@@ -5,7 +5,7 @@ from logging import getLogger
 from os import sep as osSeparator
 from os import environ as osEnviron
 
-from hasiihelper.Singleton import Singleton
+from codeallybasic.Singleton import Singleton
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 

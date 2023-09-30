@@ -11,7 +11,7 @@ from pyut.uiv2.eventengine.Events import NewProjectEvent
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import UpdateTreeItemNameEvent
 
-from hasiihelper.UnitTestBase import UnitTestBase
+from codeallybasic.UnitTestBase import UnitTestBase
 
 
 class TestEventType(UnitTestBase):

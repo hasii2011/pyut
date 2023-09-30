@@ -3,7 +3,7 @@ from typing import cast
 
 from configparser import ConfigParser
 
-from hasiihelper.Singleton import Singleton
+from codeallybasic.Singleton import Singleton
 
 
 class BaseSubPreference(Singleton):

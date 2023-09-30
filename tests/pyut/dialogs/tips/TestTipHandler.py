@@ -2,8 +2,8 @@
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from hasiihelper.ResourceManager import ResourceManager
-from hasiihelper.UnitTestBase import UnitTestBase
+from codeallybasic.ResourceManager import ResourceManager
+from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.PyutConstants import PyutConstants
 

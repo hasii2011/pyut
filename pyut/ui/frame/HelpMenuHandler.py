@@ -49,7 +49,7 @@ class HelpMenuHandler(BaseMenuHandler):
             event:
         """
         from pyut.general.GitHubAdapter import GitHubAdapter
-        from hasiihelper.SemanticVersion import SemanticVersion
+        from codeallybasic.SemanticVersion import SemanticVersion
 
         wxBeginBusyCursor()
         githubAdapter: GitHubAdapter   = GitHubAdapter()

@@ -38,8 +38,8 @@ from wx import WindowDestroyEvent
 
 from wx import Yield as wxYield
 
-from hasiihelper.Dimensions import Dimensions
-from hasiihelper.Position import Position
+from codeallybasic.Dimensions import Dimensions
+from codeallybasic.Position import Position
 
 from pyutplugins.PluginManager import PluginManager
 

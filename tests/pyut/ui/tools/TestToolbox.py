@@ -10,7 +10,7 @@ from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
 from pyut.ui.tools.Toolbox import Toolbox
 
-from hasiihelper.UnitTestBase import UnitTestBase
+from codeallybasic.UnitTestBase import UnitTestBase
 
 
 class TestToolbox(UnitTestBase):

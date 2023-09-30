@@ -2,8 +2,8 @@
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
-from hasiihelper.SemanticVersion import SemanticVersion
-from hasiihelper.UnitTestBase import UnitTestBase
+from codeallybasic.SemanticVersion import SemanticVersion
+from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.general.GitHubAdapter import GitHubAdapter
 

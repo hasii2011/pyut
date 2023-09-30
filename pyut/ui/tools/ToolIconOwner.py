@@ -61,14 +61,14 @@ class ToolIconOwner:
 
     def __loadSmallElementToolIcons(self):
 
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxArrow import embeddedImage as ImgToolboxArrow
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxClass import embeddedImage as ImgToolboxClass
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxActor import embeddedImage as ImgToolboxActor
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxUseCase import embeddedImage as ImgToolboxUseCase
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxNote import embeddedImage as ImgToolboxNote
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxText import embeddedImage as ImgToolboxText
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxZoomIn import embeddedImage as ImgToolboxZoomIn
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxZoomOut import embeddedImage as ImgToolboxZoomOut
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxArrow import embeddedImage as ImgToolboxArrow
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxClass import embeddedImage as ImgToolboxClass
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxActor import embeddedImage as ImgToolboxActor
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxUseCase import embeddedImage as ImgToolboxUseCase
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxNote import embeddedImage as ImgToolboxNote
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxText import embeddedImage as ImgToolboxText
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxZoomIn import embeddedImage as ImgToolboxZoomIn
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxZoomOut import embeddedImage as ImgToolboxZoomOut
 
         self.toolArrow   = ImgToolboxArrow.GetBitmap()
         self.toolClass   = ImgToolboxClass.GetBitmap()
@@ -81,14 +81,14 @@ class ToolIconOwner:
 
     def __loadSmallMenuToolIcons(self):
 
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxNewProject import embeddedImage as ImgToolboxNewProject
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxNewClassDiagram import embeddedImage as ImgToolboxNewClassDiagram
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxNewSequenceDiagram import embeddedImage as ImgToolboxNewSequenceDiagram
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxNewUseCaseDiagram import embeddedImage as ImgToolboxNewUseCaseDiagram
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxOpenFile import embeddedImage as ImgToolboxOpenFile
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxSaveDiagram import embeddedImage as ImgToolboxSaveDiagram
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxUndo import embeddedImage as ImgToolboxUndo
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRedo import embeddedImage as ImgToolboxRedo
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxNewProject import embeddedImage as ImgToolboxNewProject
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxNewClassDiagram import embeddedImage as ImgToolboxNewClassDiagram
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxNewSequenceDiagram import embeddedImage as ImgToolboxNewSequenceDiagram
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxNewUseCaseDiagram import embeddedImage as ImgToolboxNewUseCaseDiagram
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxOpenFile import embeddedImage as ImgToolboxOpenFile
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxSaveDiagram import embeddedImage as ImgToolboxSaveDiagram
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxUndo import embeddedImage as ImgToolboxUndo
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRedo import embeddedImage as ImgToolboxRedo
 
         self.toolNewProject         = ImgToolboxNewProject.GetBitmap()
         self.toolNewClassDiagram    = ImgToolboxNewClassDiagram.GetBitmap()
@@ -101,14 +101,14 @@ class ToolIconOwner:
 
     def __loadSmallRelationshipToolIcons(self):
 
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipInheritance import embeddedImage as ImgToolboxRelationshipInheritance
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipRealization import embeddedImage as ImgToolboxRelationshipRealization
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipComposition import embeddedImage as ImgToolboxRelationshipComposition
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipAggregation import embeddedImage as ImgToolboxRelationshipAggregation
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipAssociation import embeddedImage as ImgToolboxRelationshipAssociation
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxRelationshipNote import embeddedImage as ImgToolboxRelationshipNote
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxSequenceDiagramInstance import embeddedImage as ImgToolboxSequenceDiagramInstance
-        from hasiicommon.resources.images.icons.embedded16.ImgToolboxSequenceDiagramMessage import embeddedImage as ImgToolboxSequenceDiagramMessage
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipInheritance import embeddedImage as ImgToolboxRelationshipInheritance
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipRealization import embeddedImage as ImgToolboxRelationshipRealization
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipComposition import embeddedImage as ImgToolboxRelationshipComposition
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipAggregation import embeddedImage as ImgToolboxRelationshipAggregation
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipAssociation import embeddedImage as ImgToolboxRelationshipAssociation
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxRelationshipNote import embeddedImage as ImgToolboxRelationshipNote
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxSequenceDiagramInstance import embeddedImage as ImgToolboxSequenceDiagramInstance
+        from codeallyadvanced.resources.images.icons.embedded16.ImgToolboxSequenceDiagramMessage import embeddedImage as ImgToolboxSequenceDiagramMessage
 
         self.toolRelInheritance = ImgToolboxRelationshipInheritance.GetBitmap()
         self.toolRelRealization = ImgToolboxRelationshipRealization.GetBitmap()
@@ -121,14 +121,14 @@ class ToolIconOwner:
 
     def __loadLargeElementToolIcons(self):
 
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxArrow import embeddedImage as ImgToolboxArrow
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxClass import embeddedImage as ImgToolboxClass
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxActor import embeddedImage as ImgToolboxActor
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxUseCase import embeddedImage as ImgToolboxUseCase
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxNote import embeddedImage as ImgToolboxNote
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxText import embeddedImage as ImgToolboxText
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxZoomIn import embeddedImage as ImgToolboxZoomIn
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxZoomOut import embeddedImage as ImgToolboxZoomOut
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxArrow import embeddedImage as ImgToolboxArrow
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxClass import embeddedImage as ImgToolboxClass
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxActor import embeddedImage as ImgToolboxActor
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxUseCase import embeddedImage as ImgToolboxUseCase
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxNote import embeddedImage as ImgToolboxNote
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxText import embeddedImage as ImgToolboxText
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxZoomIn import embeddedImage as ImgToolboxZoomIn
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxZoomOut import embeddedImage as ImgToolboxZoomOut
 
         self.toolArrow   = ImgToolboxArrow.GetBitmap()
         self.toolClass   = ImgToolboxClass.GetBitmap()
@@ -141,14 +141,14 @@ class ToolIconOwner:
 
     def __loadLargeMenuToolIcons(self):
 
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxNewProject import embeddedImage as ImgToolboxNewProject
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxNewClassDiagram import embeddedImage as ImgToolboxNewClassDiagram
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxNewSequenceDiagram import embeddedImage as ImgToolboxNewSequenceDiagram
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxNewUseCaseDiagram import embeddedImage as ImgToolboxNewUseCaseDiagram
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxOpenFile import embeddedImage as ImgToolboxOpenFile
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxSaveDiagram import embeddedImage as ImgToolboxSaveDiagram
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxUndo import embeddedImage as ImgToolboxUndo
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxRedo import embeddedImage as ImgToolboxRedo
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxNewProject import embeddedImage as ImgToolboxNewProject
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxNewClassDiagram import embeddedImage as ImgToolboxNewClassDiagram
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxNewSequenceDiagram import embeddedImage as ImgToolboxNewSequenceDiagram
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxNewUseCaseDiagram import embeddedImage as ImgToolboxNewUseCaseDiagram
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxOpenFile import embeddedImage as ImgToolboxOpenFile
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxSaveDiagram import embeddedImage as ImgToolboxSaveDiagram
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxUndo import embeddedImage as ImgToolboxUndo
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxRedo import embeddedImage as ImgToolboxRedo
 
         self.toolNewProject         = ImgToolboxNewProject.GetBitmap()
         self.toolNewClassDiagram    = ImgToolboxNewClassDiagram.GetBitmap()
@@ -161,14 +161,14 @@ class ToolIconOwner:
 
     def __loadLargeRelationshipToolIcons(self):
 
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxRelationshipInheritance import embeddedImage as ImgToolboxRelationshipInheritance
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxRelationshipRealization import embeddedImage as ImgToolboxRelationshipRealization
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxRelationshipComposition import embeddedImage as ImgToolboxRelationshipComposition
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxRelationshipAggregation import embeddedImage as ImgToolboxRelationshipAggregation
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxRelationshipAssociation import embeddedImage as ImgToolboxRelationshipAssociation
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxRelationshipNote import embeddedImage as ImgToolboxRelationshipNote
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxSequenceDiagramInstance import embeddedImage as ImgToolboxSequenceDiagramInstance
-        from hasiicommon.resources.images.icons.embedded32.ImgToolboxSequenceDiagramMessage import embeddedImage as ImgToolboxSequenceDiagramMessage
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxRelationshipInheritance import embeddedImage as ImgToolboxRelationshipInheritance
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxRelationshipRealization import embeddedImage as ImgToolboxRelationshipRealization
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxRelationshipComposition import embeddedImage as ImgToolboxRelationshipComposition
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxRelationshipAggregation import embeddedImage as ImgToolboxRelationshipAggregation
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxRelationshipAssociation import embeddedImage as ImgToolboxRelationshipAssociation
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxRelationshipNote import embeddedImage as ImgToolboxRelationshipNote
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxSequenceDiagramInstance import embeddedImage as ImgToolboxSequenceDiagramInstance
+        from codeallyadvanced.resources.images.icons.embedded32.ImgToolboxSequenceDiagramMessage import embeddedImage as ImgToolboxSequenceDiagramMessage
 
         self.toolRelInheritance = ImgToolboxRelationshipInheritance.GetBitmap()
         self.toolRelRealization = ImgToolboxRelationshipRealization.GetBitmap()

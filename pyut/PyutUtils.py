@@ -16,7 +16,7 @@ from wx import ScreenDC
 from wx import Size
 from wx import NewIdRef as wxNewIdRef
 
-from hasiihelper.ResourceManager import ResourceManager
+from codeallybasic.ResourceManager import ResourceManager
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
