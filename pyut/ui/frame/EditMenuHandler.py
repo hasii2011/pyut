@@ -82,7 +82,7 @@ class EditMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        self._eventEngine.sendEvent(EventType.AddOglDiagram)
+        self._eventEngine.sendEvent(EventType.AddPyutDiagram)
 
     # noinspection PyUnusedLocal
     def onAddOgl(self, event: CommandEvent):

@@ -1,105 +1,103 @@
 
 from typing import List
 
-# These unused imports add in the classes so that the test code in UmlFrame.addHierarchy can do an introspection
-# noinspection PyUnresolvedReferences
-from pyutmodel.PyutClass import PyutClass
-# noinspection PyUnresolvedReferences
-from pyutmodel.PyutField import PyutField
-# noinspection PyUnresolvedReferences
-from pyutmodel.PyutLink import PyutLink
-# noinspection PyUnresolvedReferences
-from pyutmodel.PyutLinkedObject import PyutLinkedObject
-# noinspection PyUnresolvedReferences
-from pyutmodel.PyutNote import PyutNote
-# noinspection PyUnresolvedReferences
-from pyutmodel.PyutUseCase import PyutUseCase
-# noinspection PyUnresolvedReferences
+from pyutmodel.PyutDisplayParameters import PyutDisplayParameters
+from pyutmodel import ModelTypes
 from pyutmodel.PyutActor import PyutActor
-# noinspection PyUnresolvedReferences
+from pyutmodel.PyutClass import PyutClass
+from pyutmodel.PyutClassCommon import PyutClassCommon
+from pyutmodel.PyutField import PyutField
+from pyutmodel.PyutInterface import PyutInterface
+from pyutmodel.PyutLink import PyutLink
+from pyutmodel.PyutLinkedObject import PyutLinkedObject
+from pyutmodel.PyutLinkType import PyutLinkType
 from pyutmodel.PyutMethod import PyutMethod
-# noinspection PyUnresolvedReferences
 from pyutmodel.PyutModifier import PyutModifier
-# noinspection PyUnresolvedReferences
+from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutObject import PyutObject
-# noinspection PyUnresolvedReferences
 from pyutmodel.PyutParameter import PyutParameter
-# noinspection PyUnresolvedReferences
+from pyutmodel.PyutSDInstance import PyutSDInstance
+from pyutmodel.PyutSDMessage import PyutSDMessage
 from pyutmodel.PyutStereotype import PyutStereotype
-# noinspection PyUnresolvedReferences
+from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutType import PyutType
-# noinspection PyUnresolvedReferences
+from pyutmodel.PyutUseCase import PyutUseCase
 from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
-# noinspection PyUnresolvedReferences
-from ogl.OglObject import OglObject
-# noinspection PyUnresolvedReferences
-from ogl import OglClass
-# noinspection PyUnresolvedReferences
-from ogl import OglNote
-# noinspection PyUnresolvedReferences
-from ogl.OglActor import OglActor
-# noinspection PyUnresolvedReferences
-from ogl.OglUseCase import OglUseCase
 
-# noinspection PyUnresolvedReferences
-from ogl.OglLink import OglLink
-# noinspection PyUnresolvedReferences
-from ogl import OglNoteLink
-# noinspection PyUnresolvedReferences
+from ogl.OglActor import OglActor
+from ogl.OglAggregation import OglAggregation
 from ogl.OglAssociation import OglAssociation
-# noinspection PyUnresolvedReferences
-from ogl import OglAggregation
-# noinspection PyUnresolvedReferences
+from ogl.OglAssociationLabel import OglAssociationLabel
+from ogl.OglClass import OglClass
 from ogl.OglComposition import OglComposition
-# noinspection PyUnresolvedReferences
+from ogl import OglConstants
+from ogl.OglDimensions import OglDimensions
 from ogl.OglInheritance import OglInheritance
-# noinspection PyUnresolvedReferences
 from ogl.OglInterface import OglInterface
-# noinspection PyUnresolvedReferences
+from ogl.OglInterface2 import OglInterface2
+from ogl.OglLink import OglLink
+from ogl.OglLinkFactory import OglLinkFactory
+from ogl.OglNote import OglNote
+from ogl.OglNoteLink import OglNoteLink
+from ogl.OglObject import OglObject
+from ogl.OglPosition import OglPosition
+from ogl.OglText import OglText
+from ogl.OglTextFontFamily import OglTextFontFamily
+from ogl.OglUseCase import OglUseCase
+from ogl.OglUtils import OglUtils
+
+from ogl.sd.OglInstanceName import OglInstanceName
 from ogl.sd.OglSDInstance import OglSDInstance
-# noinspection PyUnresolvedReferences
-from ogl import OglLinkFactory
+from ogl.sd.OglSDMessage import OglSDMessage
 
 PyutClassNames: List[str] = [
-    "DisplayMethodParameters",
-    "PyutActor",
-    "PyutClass",
-    "PyutClassCommon",
-    "PyutDisplayParameters",
-    "PyutField",
-    "PyutInterface",
-    "PyutLink",
-    "PyutLinkedObject",
-    "PyutLinkType",
-    "PyutMethod",
-    "PyutModifier",
-    "PyutNote",
-    "PyutObject",
-    "PyutParameter",
-    "PyutSDInstance"
-    "PyutSDMessage",
-    "PyutStereotype",
-    "PyutText",
-    "PyutType",
-    "PyutUseCase",
-    "PyutVisibilityEnum",
+    ModelTypes.__name__,
+    PyutActor.__name__,
+    PyutClass.__name__,
+    PyutClassCommon.__name__,
+    PyutDisplayParameters.__name__,
+    PyutField.__name__,
+    PyutInterface.__name__,
+    PyutLink.__name__,
+    PyutLinkedObject.__name__,
+    PyutLinkType.__name__,
+    PyutMethod.__name__,
+    PyutModifier.__name__,
+    PyutNote.__name__,
+    PyutObject.__name__,
+    PyutParameter.__name__,
+    PyutSDInstance.__name__,
+    PyutSDMessage.__name__,
+    PyutStereotype.__name__,
+    PyutText.__name__,
+    PyutType.__name__,
+    PyutUseCase.__name__,
+    PyutVisibilityEnum.__name__,
 ]
 
 OglClassNames: List[str] = [
-    "OglActor",
-    "OglAggregation",
-    "OglAssociation",
-    "OglClass",
-    "OglComposition",
-    "OglInheritance",
-    "OglInterface",
-    "OglInterface2",
-    "OglLink",
-    "OglNote",
-    "OglNoteLink",
-    "OglObject",
-    "OglText"
-    "OglUseCase",
-    "OglSDInstance",
-    "OglSDMessage"
+    OglActor.__name__,
+    OglAggregation.__name__,
+    OglAssociation.__name__,
+    OglAssociationLabel.__name__,
+    OglClass.__name__,
+    OglComposition.__name__,
+    OglConstants.__name__,
+    OglDimensions.__name__,
+    OglInheritance.__name__,
+    OglInterface.__name__,
+    OglInterface2.__name__,
+    OglLink.__name__,
+    OglLinkFactory.__name__,
+    OglNote.__name__,
+    OglNoteLink.__name__,
+    OglObject.__name__,
+    OglPosition.__name__,
+    OglText.__name__,
+    OglTextFontFamily.__name__,
+    OglUseCase.__name__,
+    OglUtils.__name__,
+    OglInstanceName.__name__,
+    OglSDInstance.__name__,
+    OglSDMessage.__name__
 ]

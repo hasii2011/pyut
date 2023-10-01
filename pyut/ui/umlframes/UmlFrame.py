@@ -284,13 +284,12 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Calls addHierarchy with the Pyut class list.
         """
-        import pyut.experimental.PyutModelClasses as pdc
+        from pyut.experimental import PyutModelClasses
 
         BeginBusyCursor()
 
-        # gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
-        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth)
-        gh.addHierarchy(pdc.PyutClassNames)
+        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, eventEngine=self._eventEngine, maxWidth=self.maxWidth)
+        gh.addHierarchy(PyutModelClasses.PyutClassNames)
 
         EndBusyCursor()
 
@@ -299,12 +298,11 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Calls addHierarchy with the Ogl class list.
         """
-        import pyut.experimental.PyutModelClasses as pdc
+        from pyut.experimental import PyutModelClasses
 
         BeginBusyCursor()
 
-        # gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth, historyManager=self._historyManager)
-        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, maxWidth=self.maxWidth)
-        gh.addHierarchy(pdc.OglClassNames)
+        gh: GraphicalHandler = GraphicalHandler(umlFrame=self, eventEngine=self._eventEngine, maxWidth=self.maxWidth)
+        gh.addHierarchy(PyutModelClasses.OglClassNames)
 
         EndBusyCursor()

@@ -7,23 +7,30 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from wx import Point
 
 from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
+from pyutmodel.PyutLinkType import PyutLinkType
 from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutMethod import PyutMethod
 from pyutmodel.PyutMethod import PyutMethods
 
 from ogl.OglClass import OglClass
 
+from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
+
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
 
 class GraphicalHandler:
 
-    def __init__(self, umlFrame: UmlFrameShapeHandler, maxWidth: int):
+    def __init__(self, umlFrame: UmlFrameShapeHandler, eventEngine: IEventEngine, maxWidth: int):
 
         self.logger:          Logger               = getLogger(__name__)
         self._umlFrame:       UmlFrameShapeHandler = umlFrame
         self._maxWidth:       int                  = maxWidth
+
+        self._eventEngine: IEventEngine = eventEngine
 
     def addHierarchy(self, display):
         """
@@ -49,7 +56,7 @@ class GraphicalHandler:
             klassMethods: List[Callable] = cg.getMethodsFromClass(cl)
 
             # add the methods
-            methods: PyutMethods = cg.generatePyutMethods(klassMethods)
+            methods: PyutMethods = cg.generatePyutMethods(cast(PyutMethods, klassMethods))
 
             # TODO:  Figure out how to use property name as callable -- Kind of works
             # methods = sorted(methods, key=PyutMethod.getName)
@@ -58,6 +65,10 @@ class GraphicalHandler:
 
             oglClassDef = self.addToDiagram(pyutClassDef)
             classNameToOglClass[cl.__name__] = oglClassDef
+
+        oglClassDefinitions: List[OglClass] = list(classNameToOglClass.values())
+
+        self.positionClassHierarchy(oglClassDefinitions)
 
         # now, search for parent links
         for oglClassDef in classNameToOglClass.values():
@@ -73,12 +84,6 @@ class GraphicalHandler:
                 dest = classNameToOglClass.get(parent)
                 if dest is not None:  # maybe we don't have the parent loaded
                     self.createInheritanceLink(oglClassDef, dest)
-
-        oglClassDefinitions: List[OglClass] = list(classNameToOglClass.values())
-
-        self.positionClassHierarchy(oglClassDefinitions)
-
-        # EndBusyCursor()
 
     def addToDiagram(self, pyutClassDef: PyutClass) -> OglClass:
         """
@@ -106,7 +111,21 @@ class GraphicalHandler:
         Returns: an OgLink
 
         """
-        pass    # TODO:  Actually create a link with History Manager
+        from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
+        childX, childY   = child.GetPosition()
+        parentX, parentY = parent.GetPosition()
+        sourcePosition:      Point = Point(childX, childY)
+        destinationPosition: Point = Point(parentX, parentY)
+
+        command: CommandCreateOglLink = CommandCreateOglLink(eventEngine=self._eventEngine,
+                                                             src=child, dst=parent,
+                                                             linkType=PyutLinkType.INHERITANCE,
+                                                             srcPoint=sourcePosition,
+                                                             dstPoint=destinationPosition
+                                                             )
+        umlDiagramsFrame: UmlDiagramsFrame = cast(UmlDiagramsFrame, self._umlFrame)
+        umlDiagramsFrame.commandProcessor.Submit(command=command, storeIt=True)
 
     def positionClassHierarchy(self, oglClassDefinitions: List[OglClass]):
         """
