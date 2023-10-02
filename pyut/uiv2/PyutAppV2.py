@@ -6,7 +6,9 @@ from logging import getLogger
 
 from sys import argv
 from sys import exc_info
+
 from traceback import extract_tb
+from typing import cast
 
 from wx.adv import SplashScreen
 from wx.adv import SPLASH_CENTRE_ON_PARENT
@@ -45,14 +47,18 @@ class PyutAppV2(wxApp):
 
     def __init__(self, redirect: bool, showSplash: bool = True, showMainFrame: bool = True):
 
+        from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
+
         self.logger: Logger = getLogger(__name__)
+
+        self.splash: SplashScreen = cast(SplashScreen, None)
 
         self._showSplash:    bool = showSplash
         self._showMainFrame: bool = showMainFrame
+        self._frame:         PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)
 
         super().__init__(redirect)
 
-    # noinspection PyAttributeOutsideInit
     def OnInit(self):
         """
         """
@@ -61,7 +67,7 @@ class PyutAppV2(wxApp):
         HelpProvider.Set(provider)
         try:
             # Create the SplashScreen
-            if self._showSplash:
+            if self._showSplash is True:
 
                 bmp: Bitmap = splashImage.GetBitmap()
                 self.splash = SplashScreen(bmp, SPLASH_CENTRE_ON_PARENT | SPLASH_TIMEOUT, PyutAppV2.SPLASH_TIMEOUT_MSECS, parent=None,
@@ -71,7 +77,7 @@ class PyutAppV2(wxApp):
                 self.splash.Show(True)
                 wxYield()
 
-            self._frame: PyutApplicationFrameV2 = PyutApplicationFrameV2("Pyut UI V2")
+            self._frame = PyutApplicationFrameV2("Pyut UI V2")
             self.SetTopWindow(self._frame)
             self._AfterSplash()
 
@@ -131,6 +137,8 @@ class PyutAppV2(wxApp):
             self.logger.error(f'Error: {exc_info()[0]}')
             self.logger.error('Msg: {exc_info()[1]}')
             self.logger.error('Trace:')
+
+            # noinspection PyTypeChecker
             for el in extract_tb(exc_info()[2]):
                 self.logger.error(el)
             dlg.ShowModal()

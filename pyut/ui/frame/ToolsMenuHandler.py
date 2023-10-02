@@ -27,10 +27,9 @@ class ToolsMenuHandler(BaseMenuHandler):
 
         super().__init__(menu=toolsMenu, eventEngine=eventEngine)
 
-        self.logger:          Logger       = getLogger(__name__)
+        self.logger:         Logger       = getLogger(__name__)
         self._pluginManager: PluginManager = pluginManager
-        # self._toolPluginsMap: PluginIDMap  = toolPluginsMap
-        self._toolboxIds:     ToolboxIdMap = toolboxIds
+        self._toolboxIds:    ToolboxIdMap = toolboxIds
 
         self._pluginAdapter:  IPluginAdapter = PluginAdapter(eventEngine=eventEngine)
 
@@ -49,4 +48,7 @@ class ToolsMenuHandler(BaseMenuHandler):
         toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
 
         # self._mediator.displayToolbox(self._toolboxIds[event.GetId()])        # TODO
-        toolBoxHandler.displayToolbox(Category(self._toolboxIds[event.GetId()]))
+        eventId:     int = event.GetId()
+        categoryStr: str = self._toolboxIds[eventId]
+
+        toolBoxHandler.displayToolbox(Category(categoryStr))

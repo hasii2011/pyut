@@ -95,7 +95,7 @@ class Toolbox(MiniFrame):
                 buttonID = wxNewIdRef()
 
             bitMapButton: BitmapButton = BitmapButton(parent=self, id=buttonID, bitmap=tool.img)
-            self.logger.warning(f'{buttonID=} - {tool.actionCallback=}')
+            self.logger.debug(f'{buttonID=} - {tool.actionCallback=}')
             bitMapButton.Bind(EVT_BUTTON, tool.actionCallback, buttonID)
 
             gridSizer.Add(bitMapButton, 0, EXPAND)

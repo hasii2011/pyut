@@ -5,8 +5,6 @@ from typing import Callable
 from logging import Logger
 from logging import getLogger
 
-from ogl.OglClass import OglClass
-from pyutmodel.PyutInterface import PyutInterface
 from wx import PostEvent
 from wx import PyEventBinder
 from wx import TreeItemId
@@ -17,8 +15,10 @@ from pyutmodel.PyutNote import PyutNote
 from pyutmodel.PyutText import PyutText
 from pyutmodel.PyutActor import PyutActor
 from pyutmodel.PyutUseCase import PyutUseCase
+from pyutmodel.PyutInterface import PyutInterface
 
 from ogl.OglObject import OglObject
+from ogl.OglClass import OglClass
 
 from pyutplugins.ExternalTypes import CurrentProjectCallback
 from pyutplugins.ExternalTypes import FrameInformationCallback

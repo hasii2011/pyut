@@ -22,18 +22,9 @@ class ToolBoxHandler(Singleton):
 
     # noinspection PyAttributeOutsideInit
     def init(self, **kwargs):
-        self.logger:       Logger       = getLogger(__name__)
+        self.logger:        Logger       = getLogger(__name__)
         self._toolboxOwner: ToolboxOwner = cast(ToolboxOwner, None)
         self._toolBar:      ToolBar      = cast(ToolBar, None)
-
-    def _setToolboxOwner(self, appFrame: Frame):
-        """
-        Register the application's main frame.
-
-        Args:
-            appFrame:  Application's main frame
-        """
-        self._toolboxOwner = ToolboxOwner(appFrame)
 
     def _setToolBar(self, tb: ToolBar):
         """
@@ -53,7 +44,7 @@ class ToolBoxHandler(Singleton):
         """
         self._tools = tools
 
-    def _setApplicationFrame(self, applicationFrame):
+    def _setApplicationFrame(self, applicationFrame: Frame):
         self._toolboxOwner = ToolboxOwner(parent=applicationFrame)
 
     @property
@@ -65,7 +56,6 @@ class ToolBoxHandler(Singleton):
         """
         return self._toolboxOwner.getCategories()
 
-    toolBoxOwner     = property(fset=_setToolboxOwner)
     toolBar          = property(fset=_setToolBar)
     toolBarTools     = property(fset=_setToolBarTools)
     applicationFrame = property(fset=_setApplicationFrame)

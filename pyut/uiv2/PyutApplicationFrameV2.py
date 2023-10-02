@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import Optional
 from typing import Tuple
 from typing import cast
 
@@ -9,14 +10,17 @@ from logging import getLogger
 
 from sys import platform as sysPlatform
 
+from os import getenv as osGetEnv
+
 from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
-from wx import EVT_WINDOW_DESTROY
-from wx import FRAME_TOOL_WINDOW
-from wx import EVT_CLOSE
 from wx import FRAME_EX_METAL
+from wx import FRAME_FLOAT_ON_PARENT
+from wx import FRAME_TOOL_WINDOW
+from wx import EVT_WINDOW_DESTROY
+from wx import EVT_CLOSE
 from wx import EVT_ACTIVATE
 from wx import ID_ANY
 from wx import ID_FILE1
@@ -98,7 +102,7 @@ class PyutApplicationFrameV2(Frame):
 
     Instantiated by PyutApp.py
     Use it:
-        frame = PyutApplicationFrame(self, wx.ID_ANY, "Pyut")
+        frame = PyutApplicationFrame(self, "Pyut")
         frame.Show()
         frame.Destroy()
     """
@@ -113,8 +117,20 @@ class PyutApplicationFrameV2(Frame):
 
         appSize: Size = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
 
+        appModeStr: Optional[str] = osGetEnv(PyutConstants.APP_MODE)
+        if appModeStr is None:
+            appMode: bool = False
+        else:
+            appMode = PyutUtils.secureBoolean(appModeStr)
+
         # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
-        super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_TOOL_WINDOW)
+        # in production mode use FRAME_TOOL_WINDOW
+        #
+        frameStyle: int = DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_FLOAT_ON_PARENT
+        if appMode is True:
+            frameStyle = frameStyle | FRAME_TOOL_WINDOW
+
+        super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=frameStyle)
 
         self.logger: Logger = getLogger(__name__)
         self._createApplicationIcon()
