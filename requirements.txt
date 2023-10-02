@@ -25,5 +25,5 @@ codeallybasic==0.5.2
 codeallyadvanced==0.5.2
 pyutmodel==1.5.0
 ogl==0.90.3
-oglio==1.2.0
-pyutplugins==1.1.5
+oglio==1.2.1
+pyutplugins==1.1.6
