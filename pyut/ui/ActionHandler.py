@@ -28,6 +28,8 @@ from ogl.OglActor import OglActor
 from ogl.OglNote import OglNote
 from ogl.OglObject import OglObject
 from ogl.OglClass import OglClass
+from ogl.OglText import OglText
+from ogl.OglUseCase import OglUseCase
 
 from miniogl.AttachmentSide import AttachmentSide
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
@@ -167,8 +169,17 @@ UML_RELATIONSHIP_ACTIONS: Actions = Actions([
     Action.NEW_ASSOCIATION_LINK,
 ])
 
+UML_RELATIONSHIP_LINK_ACTIONS: Actions = Actions([
+    Action.DESTINATION_IMPLEMENT_LINK,
+    Action.DESTINATION_INHERIT_LINK,
+    Action.DESTINATION_AGGREGATION_LINK,
+    Action.DESTINATION_COMPOSITION_LINK,
+    Action.DESTINATION_ASSOCIATION_LINK,
+])
+
 
 NONE_OGL_OBJECT: OglObject = cast(OglObject, None)
+
 
 @dataclass
 class ValidationResult:
@@ -292,18 +303,8 @@ class ActionHandler(Singleton):
 
         if self._currentAction in SOURCE_ACTIONS:
             self._attemptSourceAction(oglObject, position)
-
         elif self._currentAction in DESTINATION_ACTIONS:
-            self._dst    = oglObject
-            self._dstPos = position
-
-            self._createLink(umlDiagramsFrame)
-
-            if self._currentActionPersistent:
-                self._currentAction = self._oldAction
-            else:
-                self._currentAction = Action.SELECTOR
-                self._selectActionSelectorTool()
+            self._attemptDestinationAction(oglObject, position, umlDiagramsFrame)
         else:
             self._setStatusText("Error : Action not supported by the Action Handler")
             return
@@ -355,6 +356,30 @@ class ActionHandler(Singleton):
             PyutUtils.displayWarning(msg=result.errorMessage, title='Invalid Source')
             self._cancelAction(msg='Invalid Source')
 
+    def _attemptDestinationAction(self, oglObject: OglObject, position: Point, umlDiagramsFrame: 'UmlDiagramsFrame'):
+        """
+
+        Args:
+            oglObject:
+            position:
+            umlDiagramsFrame:
+        """
+        result: ValidationResult = self._validateDestinationAction(oglObject=oglObject)
+        if result.isValid is True:
+            self._dst    = oglObject
+            self._dstPos = position
+
+            self._createLink(umlDiagramsFrame)
+
+            if self._currentActionPersistent:
+                self._currentAction = self._oldAction
+            else:
+                self._currentAction = Action.SELECTOR
+                self._selectActionSelectorTool()
+        else:
+            PyutUtils.displayWarning(msg=result.errorMessage, title='Invalid Destination')
+            self._cancelAction(msg='Invalid Destination')
+
     def _validateSourceAction(self, oglObject: OglObject) -> ValidationResult:
 
         result: ValidationResult = ValidationResult()
@@ -368,6 +393,21 @@ class ActionHandler(Singleton):
             if not isinstance(oglObject, OglClass):
                 result.isValid      = False
                 result.errorMessage = 'UML relationships must start at a class'
+
+        return result
+
+    def _validateDestinationAction(self, oglObject: OglObject) -> ValidationResult:
+
+        result: ValidationResult = ValidationResult()
+        if self._currentAction == Action.DESTINATION_ASSOCIATION_LINK and isinstance(oglObject, OglUseCase):
+            pass
+        elif self._currentAction in UML_RELATIONSHIP_LINK_ACTIONS:
+            if not isinstance(oglObject, OglClass):
+                result.isValid      = False
+                result.errorMessage = 'UML relationships must end at a class'
+        elif self._currentAction == Action.DESTINATION_NOTE_LINK and (isinstance(oglObject, OglNote) or isinstance(oglObject, OglText)):
+            result.isValid = False
+            result.errorMessage = 'Note to Note or Note to Text\nassociations not allowed'
 
         return result
 

@@ -1,4 +1,4 @@
-<img src="./developer/agpl-license-web-badge-version-2-256x48.png"/> 
+![](https://github.com/hasii2011/code-ally-basic/blob/master/developer/agpl-license-web-badge-version-2-256x48.png "AGPL")
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/hasii2011/pyut/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/hasii2011/PyUt/tree/master)
@@ -26,7 +26,7 @@ _Some Updates_
 * An improved PDF and image generation capability
 * Additional display options for UML diagrams
 * More preferences externalized through preferences
-* Updated to Python 3.10.10 and wxPython 4.2
+* Updated to Python 3.11.5 and wxPython 4.2
 * Improved L & F for mac OS X
 * Source code completely re-organized for maintainability
 

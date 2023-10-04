@@ -379,7 +379,7 @@ class PyutApplicationFrameV2(Frame):
             event:
         """
         self.logger.info(f'_onActivate event: {event.GetActive()}=')
-        if self._tipAlreadyDisplayed is True or self._prefs is False:
+        if self._tipAlreadyDisplayed is True:
             pass
         else:
             # Display tips frame

@@ -31,7 +31,7 @@
             "formatter": "pyutSimple",
             "filename": "/tmp/pyut.log",
             "mode": "a",
-            "maxBytes": 20480,
+            "maxBytes": 81920,
             "backupCount": 5,
             "encoding": "utf-8"
         }

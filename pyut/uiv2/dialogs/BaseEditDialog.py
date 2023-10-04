@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from wx import Button
 from wx import CANCEL
 from wx import Colour
+from wx import DEFAULT_DIALOG_STYLE
+from wx import STAY_ON_TOP
 from wx import EVT_BUTTON
 from wx import EVT_CLOSE
 from wx import ID_CANCEL
@@ -43,7 +45,7 @@ class BaseEditDialog(SizedDialog):
     """
     def __init__(self, parent, title=''):
 
-        super().__init__(parent, title=title)
+        super().__init__(parent, title=title, style=DEFAULT_DIALOG_STYLE | STAY_ON_TOP)
 
     def _layoutStandardOkCancelButtonSizer(self):
         """

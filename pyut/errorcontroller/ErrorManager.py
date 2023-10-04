@@ -40,8 +40,6 @@ class ErrorManager(Singleton):
             self._view = TextErrorView()
         elif view == ErrorViewTypes.RAISE_ERROR_VIEW:
             self._view = RaiseErrorView()
-        else:
-            self._view = GraphicErrorView()
 
     def newFatalError(self, msg='', title='', parent=None):
         if msg is None:

@@ -322,7 +322,7 @@ class MenuCreator:
 
         for wxId in pluginMap:
             # TODO figure out how to quiet mypy
-            clazz: type = pluginMap[wxId]       # type: ignore
+            clazz: type = pluginMap[wxId]
             pluginInstance: IOPluginInterface = clazz(None)
 
             formatName: FormatName = pluginInstance.outputFormat.formatName
@@ -340,7 +340,7 @@ class MenuCreator:
 
         for wxId in pluginMap:
             # TODO figure out how to quiet mypy
-            clazz: type = pluginMap[wxId]       # type: ignore
+            clazz: type = pluginMap[wxId]
             pluginInstance: IOPluginInterface = clazz(None)
 
             formatName: FormatName = pluginInstance.inputFormat.formatName
