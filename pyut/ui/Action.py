@@ -28,6 +28,7 @@ class Action(Enum):
     DESTINATION_SD_MESSAGE       = 'DestinationSDMessage'
     ZOOM_IN                      = 'ZoomIn'
     ZOOM_OUT                     = 'ZoomOut'
+    NO_ACTION                    = 'NoAction'
 
     def __str__(self):
         return str(self.name)

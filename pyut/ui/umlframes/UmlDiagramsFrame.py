@@ -1,5 +1,6 @@
 
 from typing import Callable
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -15,6 +16,7 @@ from wx import KeyEvent
 from wx import Notebook
 
 from ogl.OglClass import OglClass
+from ogl.OglObject import OglObject
 
 from ogl.events.OglEventEngine import OglEventEngine
 
@@ -80,7 +82,7 @@ class UmlDiagramsFrame(UmlFrame):
 
         self._oglEventEngine.registerListener(EVT_SHAPE_SELECTED,            self._onShapeSelected)
         self._oglEventEngine.registerListener(EVT_CUT_OGL_CLASS,             self._onCutOglClassShape)
-        self._oglEventEngine.registerListener(EVT_DIAGRAM_FRAME_MODIFIED, self._onDiagramFrameModified)
+        self._oglEventEngine.registerListener(EVT_DIAGRAM_FRAME_MODIFIED,    self._onDiagramFrameModified)
         self._oglEventEngine.registerListener(EVT_REQUEST_LOLLIPOP_LOCATION, self._onRequestLollipopLocation)
         self._oglEventEngine.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
 
@@ -156,15 +158,19 @@ class UmlDiagramsFrame(UmlFrame):
         """
         In practice this is only used on UML Class diagrams when the user
         wants to create links between classes;  For example, associations and inheritance
-        x
+
         Args:
             event:   Event which contains data on the selected shape
         """
         shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
 
+        selectedOglObject: OglObject = cast(OglObject, shapeSelectedData.shape)
+
+        assert isinstance(selectedOglObject, OglObject) is True, 'Ogl layer should only select Ogl Objects'
+
         if self._actionHandler.actionWaiting:
             self.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
-            self._actionHandler.shapeSelected(self, shapeSelectedData.shape, shapeSelectedData.position)
+            self._actionHandler.shapeSelected(self, selectedOglObject, shapeSelectedData.position)
 
     def _onCutOglClassShape(self, cutOglClassEvent: CutOglClassEvent):
         """

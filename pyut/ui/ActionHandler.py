@@ -1,9 +1,13 @@
 
+from typing import List
+from typing import NewType
 from typing import cast
 from typing import TYPE_CHECKING
 
 from logging import Logger
 from logging import getLogger
+
+from dataclasses import dataclass
 
 from wx import ID_OK
 from wx import CANCEL
@@ -11,6 +15,7 @@ from wx import CENTRE
 from wx import OK
 
 from wx import Command
+from wx import Point
 from wx import TextEntryDialog
 
 from wx import Yield as wxYield
@@ -19,12 +24,16 @@ from codeallybasic.Singleton import Singleton
 
 from pyutmodel.PyutLinkType import PyutLinkType
 
+from ogl.OglActor import OglActor
+from ogl.OglNote import OglNote
+from ogl.OglObject import OglObject
+from ogl.OglClass import OglClass
+
 from miniogl.AttachmentSide import AttachmentSide
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from miniogl.Constants import EVENT_PROCESSED
 from miniogl.Constants import SKIP_EVENT
 
-from ogl.OglClass import OglClass
 
 from pyut.ui.wxcommands.CommandCreateLollipopInterface import CommandCreateLollipopInterface
 from pyut.ui.wxcommands.CommandCreateOglActor import CommandCreateOglActor
@@ -51,6 +60,8 @@ from pyut.PyutUtils import PyutUtils
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlFrame import UmlFrame
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
+Actions = NewType('Actions', List[Action])
 
 # messages for the status bar
 
@@ -113,7 +124,7 @@ NEXT_ACTION = {
 }
 
 # list of actions which are source events
-SOURCE_ACTIONS = [
+SOURCE_ACTIONS: Actions = Actions([
     Action.NEW_IMPLEMENT_LINK,
     Action.NEW_INHERIT_LINK,
     Action.NEW_AGGREGATION_LINK,
@@ -121,9 +132,10 @@ SOURCE_ACTIONS = [
     Action.NEW_ASSOCIATION_LINK,
     Action.NEW_NOTE_LINK,
     Action.NEW_SD_MESSAGE,
-]
+])
+
 # list of actions which are destination events
-DESTINATION_ACTIONS = [
+DESTINATION_ACTIONS: Actions = Actions([
     Action.DESTINATION_IMPLEMENT_LINK,
     Action.DESTINATION_INHERIT_LINK,
     Action.DESTINATION_AGGREGATION_LINK,
@@ -133,7 +145,8 @@ DESTINATION_ACTIONS = [
     Action.DESTINATION_SD_MESSAGE,
     Action.ZOOM_IN,
     Action.ZOOM_OUT
-]
+])
+
 
 # OglLink enumerations according to the current action
 LINK_TYPE = {
@@ -146,6 +159,22 @@ LINK_TYPE = {
     Action.DESTINATION_SD_MESSAGE:         PyutLinkType.SD_MESSAGE,
 }
 
+UML_RELATIONSHIP_ACTIONS: Actions = Actions([
+    Action.NEW_INHERIT_LINK,
+    Action.NEW_AGGREGATION_LINK,
+    Action.NEW_COMPOSITION_LINK,
+    Action.NEW_IMPLEMENT_LINK,
+    Action.NEW_ASSOCIATION_LINK,
+])
+
+
+NONE_OGL_OBJECT: OglObject = cast(OglObject, None)
+
+@dataclass
+class ValidationResult:
+    isValid:      bool = True
+    errorMessage: str = ''
+
 
 class ActionHandler(Singleton):
 
@@ -156,7 +185,11 @@ class ActionHandler(Singleton):
         self._eventEngine:      IEventEngine     = kwargs['eventEngine']
 
         self._currentAction:           Action = Action.SELECTOR
+        self._oldAction:               Action = Action.NO_ACTION
         self._currentActionPersistent: bool   = False
+
+        self._dst:    OglObject = NONE_OGL_OBJECT
+        self._dstPos: Point     = cast(Point, None)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_SET_TOOL_ACTION, callback=self._onSetToolAction)
 
@@ -244,57 +277,37 @@ class ActionHandler(Singleton):
 
         return handlerStatus
 
-    def shapeSelected(self, umlDiagramsFrame: 'UmlDiagramsFrame', shape, position=None):
+    # noinspection PyAttributeOutsideInit
+    def shapeSelected(self, umlDiagramsFrame: 'UmlDiagramsFrame', oglObject: OglObject, position: Point):
         """
         Do action when a shape is selected.
-        TODO : support each link type
-        """
-        # do the right action
-        if self._currentAction in SOURCE_ACTIONS:
-            self.logger.debug(f'Current action in source actions')
-            # get the next action needed to complete the whole action
-            if self._currentActionPersistent:
-                # noinspection PyAttributeOutsideInit
-                self._oldAction = self._currentAction
-            self._currentAction = NEXT_ACTION[self._currentAction]
 
-            # if no source, cancel action
-            if shape is None:
-                self.logger.info("Action cancelled (no source)")
-                self._currentAction = Action.SELECTOR
-                self._selectActionSelectorTool()
-                self._setStatusText("Action cancelled")
-            else:   # store source
-                self.logger.debug(f'Store source - shape {shape}  position: {position}')
-                # noinspection PyAttributeOutsideInit
-                self._src    = shape
-                # noinspection PyAttributeOutsideInit
-                self._srcPos = position
+        TODO : support each link type
+        Args:
+            umlDiagramsFrame:
+            oglObject:
+            position:
+        """
+        assert oglObject is not None, 'This should not happen since Ogl layer indirectly sent this event'
+
+        if self._currentAction in SOURCE_ACTIONS:
+            self._attemptSourceAction(oglObject, position)
+
         elif self._currentAction in DESTINATION_ACTIONS:
-            self.logger.debug(f'Current action in destination actions')
-            # store the destination object
-            # noinspection PyAttributeOutsideInit
-            self._dst    = shape
-            # noinspection PyAttributeOutsideInit
+            self._dst    = oglObject
             self._dstPos = position
-            # if no destination, cancel action
-            if self._dst is None:
-                self._currentAction = Action.SELECTOR
-                self._selectActionSelectorTool()
-                self._setStatusText("Action cancelled")
-                return
+
             self._createLink(umlDiagramsFrame)
 
             if self._currentActionPersistent:
                 self._currentAction = self._oldAction
-                del self._oldAction
             else:
-                # noinspection PyAttributeOutsideInit
                 self._currentAction = Action.SELECTOR
                 self._selectActionSelectorTool()
         else:
             self._setStatusText("Error : Action not supported by the Action Handler")
             return
+
         self._setStatusText(MESSAGES[self._currentAction])
 
     def requestLollipopLocation(self, umlFrame: 'UmlDiagramsFrame', destinationClass: OglClass):
@@ -320,6 +333,50 @@ class ActionHandler(Singleton):
 
         submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
         self.logger.info(f'Create command submission status: {submitStatus}')
+
+    def _attemptSourceAction(self, oglObject: OglObject, position: Point):
+        """
+
+        Args:
+            position:  Where the user clicked on the frame
+            oglObject: What he clicked on
+
+        """
+        result: ValidationResult = self._validateSourceAction(oglObject=oglObject)
+        if result.isValid is True:
+            if self._currentActionPersistent:
+                self._oldAction = self._currentAction
+            self._currentAction = NEXT_ACTION[self._currentAction]
+
+            self.logger.debug(f'Store source - shape {oglObject}  position: {position}')
+            self._src    = oglObject
+            self._srcPos = position
+        else:
+            PyutUtils.displayWarning(msg=result.errorMessage, title='Invalid Source')
+            self._cancelAction(msg='Invalid Source')
+
+    def _validateSourceAction(self, oglObject: OglObject) -> ValidationResult:
+
+        result: ValidationResult = ValidationResult()
+
+        if self.currentAction == Action.NEW_NOTE_LINK and not isinstance(oglObject, OglNote):
+            result.isValid      = False
+            result.errorMessage = 'Source of note link must be a note'
+        elif self._currentAction == Action.NEW_ASSOCIATION_LINK and isinstance(oglObject, OglActor):
+            pass
+        elif self._currentAction in UML_RELATIONSHIP_ACTIONS:
+            if not isinstance(oglObject, OglClass):
+                result.isValid      = False
+                result.errorMessage = 'UML relationships must start at a class'
+
+        return result
+
+    def _cancelAction(self, msg: str):
+
+        self.logger.info(f'{msg}')
+        self._currentAction = Action.SELECTOR
+        self._selectActionSelectorTool()
+        self._setStatusText(f'{msg}')
 
     def _onSetToolAction(self, event: SetToolActionEvent):
         self.currentAction = event.action
@@ -369,8 +426,8 @@ class ActionHandler(Singleton):
                                                              dstPoint=self._dstPos
                                                              )
         umlDiagramsFrame.commandProcessor.Submit(command=command, storeIt=True)
-        self._src = None
-        self._dst = None
+        self._src = NONE_OGL_OBJECT
+        self._dst = NONE_OGL_OBJECT
 
     def _doZoomOut(self, umlFrame, x: int, y: int):
         umlFrame.DoZoomOut(x, y)
