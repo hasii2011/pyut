@@ -5,15 +5,26 @@ from typing import TYPE_CHECKING
 from logging import Logger
 from logging import getLogger
 
-from ogl.OglUtils import OglUtils
-from ogl.preferences.OglPreferences import OglPreferences
-from pyutmodel.PyutLinkedObject import PyutLinkedObject
-
-from ogl.OglClass import OglClass
-
 from wx import Command
 
+from pyutmodel.PyutLinkedObject import PyutLinkedObject
+
+from ogl.OglUtils import OglUtils
+from ogl.OglClass import OglClass
+from ogl.OglActor import OglActor
+from ogl.OglLink import OglLink
+from ogl.OglNote import OglNote
+from ogl.OglText import OglText
+from ogl.OglUseCase import OglUseCase
+from ogl.OglInterface2 import OglInterface2
+
+from ogl.sd.OglSDInstance import OglSDInstance
+from ogl.sd.OglSDMessage import OglSDMessage
+
+from ogl.preferences.OglPreferences import OglPreferences
+
 from pyut.preferences.PyutPreferences import PyutPreferences
+
 from pyut.ui.wxcommands.Types import DoableObjectType
 
 if TYPE_CHECKING:
@@ -42,7 +53,9 @@ class BaseWxCommand(Command):
 
         for obj in umlObjects:
 
-            if isinstance(obj, OglClass):
+            # if isinstance(obj, OglClass):
+            # This is a duplicate of the UmlObject, since I cannot use NewType
+            if isinstance(obj, (OglClass, OglLink, OglNote, OglText, OglSDMessage, OglSDInstance, OglActor, OglUseCase, OglInterface2)):
 
                 potentialObject: OglClass = cast(OglClass, obj)
 

@@ -5,18 +5,23 @@ from unittest import main as unitTestMain
 from unittest.mock import MagicMock
 from unittest.mock import PropertyMock
 
-from ogl.OglObject import OglObject
-from pyutmodel.PyutObject import PyutObject
 from wx import Notebook
+
+from codeallyadvanced.ui.UnitTestBaseW import UnitTestBaseW
+
+from pyutmodel.PyutClass import PyutClass
+
+from ogl.OglClass import OglClass
+
 
 from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
-from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
-from pyut.uiv2.eventengine.EventEngine import EventEngine
 
-from tests.TestBase import TestBase
+from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
+
+from pyut.uiv2.eventengine.EventEngine import EventEngine
 
 
 def idGenerator():
@@ -36,7 +41,7 @@ class Foo:
 MAX_OGL_OBJECTS: int = 2
 
 
-class TestBaseWxCommand(TestBase):
+class TestBaseWxCommand(UnitTestBaseW):
     """
     """
     @classmethod
@@ -61,9 +66,6 @@ class TestBaseWxCommand(TestBase):
 
     def testIsSameObjectFail(self):
 
-        # mockNoteBook:    MagicMock = MagicMock(spec=Notebook)
-        # mockEventEngine: MagicMock = MagicMock(spec=EventEngine)
-
         baseWxCommand:   BaseWxCommand = BaseWxCommand(canUndo=True, name='UnitTestCommand')
         objectToRemove:  MagicMock     = self._createMockOglObject()
         potentialObject: MagicMock     = self._createMockOglObject()
@@ -71,9 +73,30 @@ class TestBaseWxCommand(TestBase):
         same: bool = baseWxCommand._isSameObject(objectToRemove=objectToRemove, potentialObject=potentialObject)
         self.assertFalse(same, 'These are not the same')
 
-    def testName2(self):
-        """Another test"""
-        pass
+    def testIsSameObjectPass(self):
+        baseWxCommand:   BaseWxCommand = BaseWxCommand(canUndo=True, name='UnitTestCommand')
+        objectToRemove:  MagicMock     = self._createMockOglObject()
+        potentialObject: MagicMock     = objectToRemove
+
+        same: bool = baseWxCommand._isSameObject(objectToRemove=objectToRemove, potentialObject=potentialObject)
+        self.assertTrue(same, 'These are the same')
+
+    def testRemoveOglObjectFromFrame(self):
+
+        noteBook:         Notebook         = Notebook(parent=self._listeningWindow)
+        mockEventEngine:  MagicMock        = MagicMock(spec=EventEngine)
+        umlDiagramsFrame: UmlDiagramsFrame = UmlDiagramsFrame(parent=noteBook, eventEngine=mockEventEngine)
+        oglClass:         OglClass         = OglClass(pyutClass=self._createMockPyutObject())
+
+        umlDiagramsFrame.addShape(oglClass, x=0, y=0)
+
+        baseWxCommand: BaseWxCommand = BaseWxCommand(canUndo=True, name='UnitTestCommand')
+
+        baseWxCommand._removeOglObjectFromFrame(umlFrame=umlDiagramsFrame, oglObject=oglClass)
+
+        umlObjects = umlDiagramsFrame.getUmlObjects()
+
+        self.assertEqual(0, len(umlObjects), 'There should be none on the frame')
 
     def _createMockUmlFrame(self) -> MagicMock:
 
@@ -90,8 +113,9 @@ class TestBaseWxCommand(TestBase):
     def _createMockOglObject(self) -> MagicMock:
         """
         Mock Ogl Objects need mock PyutObjects
+        Specifically need one that matches the UmlObject Union
         """
-        mockOglObject:  MagicMock = MagicMock(spec=OglObject)
+        mockOglObject:  MagicMock = MagicMock(spec=OglClass)
         mockPyutObject: MagicMock = self._createMockPyutObject()
 
         type(mockOglObject).pyutObject = PropertyMock(return_value=mockPyutObject)
@@ -100,7 +124,7 @@ class TestBaseWxCommand(TestBase):
 
     def _createMockPyutObject(self) -> MagicMock:
 
-        mockPyutObject: MagicMock = MagicMock(spec=PyutObject)
+        mockPyutObject: MagicMock = MagicMock(spec=PyutClass)
 
         # type(mockPyutClass).name = PropertyMock(return_value=className)
         newId: int = next(self._idGenerator)
