@@ -39,15 +39,22 @@ class BaseWxCommand(Command):
         from pyut.ui.umlframes.UmlFrame import UmlObjects
 
         umlObjects: UmlObjects = umlFrame.getUmlObjects()
-        for oglObject in umlObjects:
-            if isinstance(oglObject, OglClass):
-                oglClass: OglClass = cast(OglClass, oglObject)
-                pyutLinkedObject: PyutLinkedObject = oglClass.pyutObject
-                if pyutClass in pyutLinkedObject.getParents():
-                    self.clsLogger.warning(f'Removing {pyutClass=} from {pyutLinkedObject=}')
-                    pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
-        oglObject.Detach()
-        umlFrame.Refresh()
+
+        for obj in umlObjects:
+
+            if isinstance(obj, OglClass):
+
+                potentialObject: OglClass = cast(OglClass, obj)
+
+                if self._isSameObject(objectToRemove=oglObject, potentialObject=potentialObject):
+
+                    pyutLinkedObject: PyutLinkedObject = potentialObject.pyutObject
+
+                    if pyutClass in pyutLinkedObject.getParents():
+                        self.clsLogger.warning(f'Removing {pyutClass=} from {pyutLinkedObject=}')
+                        pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
+                    potentialObject.Detach()
+                    umlFrame.Refresh()
 
     def _addOglClassToFrame(self, umlFrame: 'UmlDiagramsFrame', oglClass: OglClass, x: int, y: int):
 
@@ -59,3 +66,22 @@ class BaseWxCommand(Command):
 
         if self._preferences.autoResizeShapesOnEdit is True:
             oglClass.autoResize()
+
+    def _isSameObject(self, objectToRemove: DoableObjectType, potentialObject: DoableObjectType) -> bool:
+        """
+        This probably could be done by updating the OglObject with the __equ__ dunder method.
+        Wait until the ogl project updates
+
+        Args:
+            objectToRemove:   Object we were told to remove
+            potentialObject:  The one that is on the frame
+
+        Returns:  `True` if they are one and the same, else `False`
+
+        """
+        ans: bool = False
+
+        if objectToRemove.pyutObject.id == potentialObject.pyutObject.id:
+            ans = True
+
+        return ans

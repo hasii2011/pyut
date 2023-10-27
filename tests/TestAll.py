@@ -26,14 +26,11 @@ class TestAll:
     The class that can run our unit tests in various formats
     """
     NOT_TESTS: List[str] = ['TestAll',
-                            'TestWxOgl', 'TestBase', 'TestTemplate',
-                            'pyut/ui/tools/TestToolboxFrame',
-                            'pyut/dialogs/TestADialog',
+                            'TestBase', 'TestTemplate',
                             'pyut/ui/tools/TestToolbox',
                             'pyut/ui/wxcommands/TestCommandModify',     # run this manually
                             'pyut/uiv2/eventengine/TestEventType',      # run this manually
                             'pyut/dialogs/tips/TestTipHandler',
-                            'TestGriddedDiagramApplication',
                             ]
 
     VERBOSITY_QUIET:   int = 0  # Print the total numbers of tests executed and the global result

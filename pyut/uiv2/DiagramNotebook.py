@@ -252,8 +252,9 @@ class DiagramNotebook(Notebook):
         """
         umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
         if umlFrame is not None:
-            selectedShapes = umlFrame.GetSelectedShapes()       # TODO Not reliable
-            self._doCut(objectsToCut=selectedShapes)
+            # selectedShapes = umlFrame.GetSelectedShapes()       # TODO Not reliable
+            # self._doCut(objectsToCut=selectedShapes)
+            self._eventEngine.sendEvent(EventType.SelectedOglObjects, callback=self._doCut)
 
     # noinspection PyUnusedLocal
     def _onUndo(self, event: UndoEvent):

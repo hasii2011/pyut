@@ -55,7 +55,7 @@ ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
 # The following specifically for the plugin adapter
 FrameInformationEvent,         EVENT_FRAME_INFORMATION    = NewEvent()
 FrameSizeEvent,                EVENT_FRAME_SIZE           = NewEvent()
-SelectedOglObjectsEvent,       EVENT_SELECTED_OGL_OBJECTS = NewEvent()
+SelectedOglObjectsEvent,       EVENT_SELECTED_OGL_OBJECTS = NewEvent()      # Pyut will also use this callback
 RefreshFrameEvent,             EVENT_REFRESH_FRAME        = NewEvent()
 
 UpdateEditMenuEvent,    EVENT_UPDATE_EDIT_MENU    = NewEvent()

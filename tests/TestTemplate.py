@@ -1,9 +1,4 @@
 
-from typing import cast
-
-from logging import Logger
-from logging import getLogger
-
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
@@ -22,19 +17,17 @@ class TestTemplate(TestBase):
 
     See existing tests for more information.
     """
-    clsLogger: Logger = cast(Logger, None)
 
     @classmethod
     def setUpClass(cls):
-        TestBase.setUpLogging()
-        TestTemplate.clsLogger = getLogger(__name__)
+        super().setUpClass()
         PreferencesCommon.determinePreferencesLocation()
 
     def setUp(self):
-        self.logger: Logger = TestTemplate.clsLogger
-
+        super().setUp()
+        
     def tearDown(self):
-        pass
+        super().tearDown()
 
     def testName1(self):
         pass
@@ -49,8 +42,8 @@ def suite() -> TestSuite:
     import unittest
 
     testSuite: TestSuite = TestSuite()
-    # noinspection PyUnresolvedReferences
-    testSuite.addTest(unittest.makeSuite(TestTemplate))
+
+    testSuite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(testCaseClass=TestTemplate))
 
     return testSuite
 

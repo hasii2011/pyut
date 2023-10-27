@@ -5,7 +5,7 @@ clear
 
 projectType='github'
 orgName='hasii2011'
-repoName='PyUt'
+repoName='pyut'
 
 project_slug="${projectType}/${orgName}/${repoName}"
 
