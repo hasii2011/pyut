@@ -252,8 +252,6 @@ class DiagramNotebook(Notebook):
         """
         umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
         if umlFrame is not None:
-            # selectedShapes = umlFrame.GetSelectedShapes()       # TODO Not reliable
-            # self._doCut(objectsToCut=selectedShapes)
             self._eventEngine.sendEvent(EventType.SelectedOglObjects, callback=self._doCut)
 
     # noinspection PyUnusedLocal
@@ -312,18 +310,21 @@ class DiagramNotebook(Notebook):
         Args:
             objectsToCut:
         """
-        umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
+        if len(objectsToCut) > 0:
+            umlFrame: UmlDiagramsFrame = self.currentNotebookFrame
 
-        for shape in objectsToCut:
-            cmd: Command = self._createDeleteCommand(cast(DoableObjectType, shape))
-            if cmd is None:
-                shape.Detach()
-                umlFrame.Refresh()
-            else:
-                submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
-                self.logger.warning(f'{submitStatus=}')
+            for shape in objectsToCut:
+                cmd: Command = self._createDeleteCommand(cast(DoableObjectType, shape))
+                if cmd is None:
+                    shape.Detach()
+                    umlFrame.Refresh()
+                else:
+                    submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
+                    self.logger.warning(f'{submitStatus=}')
 
-        self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
+            self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
+        else:
+            self.logger.info('No objects were selected;  So nothing to cut')
 
     def _createDeleteCommand(self, shape: DoableObjectType) -> Command:
         """
