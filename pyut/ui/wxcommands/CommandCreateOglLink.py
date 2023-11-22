@@ -43,7 +43,7 @@ class CommandCreateOglLink(BaseWxLinkCommand):
         self._dstPoint: Point        = dstPoint
 
     def Do(self) -> bool:
-        self._link = self._createLink(self._srcOglObject, self._dstOglObject, self._linkType, self._srcPoint, self._dstPoint)
+        self._link = self._createLink()
         self.logger.info(f'Create: {self._link}')
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbPlaceLink)

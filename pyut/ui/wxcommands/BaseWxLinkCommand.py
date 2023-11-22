@@ -69,7 +69,18 @@ class BaseWxLinkCommand(Command):
 
         umlFrame: UmlDiagramsFrame = frame
 
-        self._link.Detach()
+        link: OglLink = self._link
+
+        if isinstance(link, OglAssociation):
+            oglAssociation: OglAssociation = cast(OglAssociation, link)
+            if oglAssociation.centerLabel is not None:
+                oglAssociation.centerLabel.Detach()
+            if oglAssociation.sourceCardinality is not None:
+                oglAssociation.sourceCardinality.Detach()
+            if oglAssociation.destinationCardinality is not None:
+                oglAssociation.destinationCardinality.Detach()
+
+        link.Detach()
         umlFrame.Refresh()
 
     def _cbPlaceLink(self, frame: 'UmlDiagramsFrame'):
@@ -90,6 +101,7 @@ class BaseWxLinkCommand(Command):
         if isinstance(self._link, OglAssociation):
             oglAssociation: OglAssociation = cast(OglAssociation, self._link)
             oglAssociation.createDefaultAssociationLabels()
+
             umlFrame.diagram.AddShape(shape=oglAssociation.centerLabel)
             umlFrame.diagram.AddShape(shape=oglAssociation.sourceCardinality)
             umlFrame.diagram.AddShape(shape=oglAssociation.destinationCardinality)
@@ -109,36 +121,44 @@ class BaseWxLinkCommand(Command):
 
         umlFrame.Refresh()
 
-    def _createLink(self, src, dst, linkType: PyutLinkType, srcPos: Point, dstPos: Point) -> OglLink:
+    def _createLink(self) -> OglLink:
         """
-        Creates a specific OglLink instance depending on the link type
-        Args:
-            src:        The source object
-            dst:        The destination object
-            linkType:
-            srcPos:     The source position
-            dstPos:     The destination position
 
-        Returns:
+        Returns:  A specific OglLink instance depending on the link type
         """
+        # src, dst, linkType: PyutLinkType, srcPos: Point, dstPos: Point
+        # self._srcOglObject, self._dstOglObject, self._linkType, self._srcPoint, self._dstPoint
+        linkType: PyutLinkType     = self._linkType
+        src:      DoableObjectType = self._srcOglObject
+        dst:      DoableObjectType = self._dstOglObject
+        srcPos:   Point            = self._srcPoint
+        dstPos:   Point            = self._dstPoint
+
+        srcClass: OglClass = cast(OglClass, src)
+        dstClass: OglClass = cast(OglClass, dst)
 
         if linkType == PyutLinkType.INHERITANCE:
-            return self._createInheritanceLink(src, dst)
+            return self._createInheritanceLink(srcClass, dstClass)
         elif linkType == PyutLinkType.SD_MESSAGE:
-            return self._createSDMessage(src=src, dest=dst, srcPos=srcPos, destPos=dstPos)
+            srcSdInstance: OglSDInstance = cast(OglSDInstance, src)
+            dstSdInstance: OglSDInstance = cast(OglSDInstance, dst)
+            return self._createSDMessage(src=srcSdInstance, dest=dstSdInstance, srcPos=srcPos, destPos=dstPos)
 
-        pyutLink: PyutLink = PyutLink("", linkType=linkType, source=src.pyutObject, destination=dst.pyutObject)
+        pyutLink: PyutLink = PyutLink("", linkType=linkType, source=srcClass.pyutObject, destination=dstClass.pyutObject)
+
         pyutLink.name = f'{linkType.name.capitalize()}-{pyutLink.id}'
+        # pyutLink.destinationCardinality = ''
+        # pyutLink.sourceCardinality      = ''
 
         # Call the factory to create OGL Link
         oglLinkFactory = getOglLinkFactory()
 
         oglLink: OglLink = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutLink, destShape=dst, linkType=linkType)
 
-        src.addLink(oglLink)  # add it to the source Ogl Linkable Object
-        dst.addLink(oglLink)  # add it to the destination Linkable Object
+        srcClass.addLink(oglLink)  # add it to the source Ogl Linkable Object
+        dstClass.addLink(oglLink)  # add it to the destination Linkable Object
 
-        src.pyutObject.addLink(pyutLink)   # add it to the source PyutClass
+        srcClass.pyutObject.addLink(pyutLink)   # add it to the source PyutClass
 
         self._name = self._toCommandName(linkType)
         return oglLink

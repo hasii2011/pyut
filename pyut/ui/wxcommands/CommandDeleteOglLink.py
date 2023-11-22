@@ -47,7 +47,7 @@ class CommandDeleteOglLink(BaseWxLinkCommand):
 
     def Undo(self) -> bool:
 
-        self._link = self._createLink(self._srcOglObject, self._dstOglObject, self._linkType, self._srcPoint, self._dstPoint)
+        self._link = self._createLink()
 
         self.logger.info(f'Undo Delete: {self._link}')
 

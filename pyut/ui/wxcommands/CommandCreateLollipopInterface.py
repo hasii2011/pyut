@@ -23,7 +23,6 @@ from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 
 class CommandCreateLollipopInterface(BaseWxCreateCommand):
 
-
     def __init__(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint, eventEngine: IEventEngine):
 
         self.logger: Logger = getLogger(__name__)
