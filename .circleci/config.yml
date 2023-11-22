@@ -38,7 +38,7 @@ jobs:
             pip install pyutmodel==1.5.0
             pip install ogl==0.90.3
             pip install oglio==1.2.1
-            pip install pyutplugins==1.1.6
+            pip install pyutplugins==1.2.1
             pip install html-testRunner==1.2.1
             pip install buildlackey~=1.5.0
       - run:
