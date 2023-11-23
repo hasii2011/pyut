@@ -50,7 +50,8 @@ class BaseWxLinkCommand(Command):
         self._srcPoint: Point = cast(Point, None)
         self._dstPoint: Point = cast(Point, None)
 
-        self._link: OglLink      = cast(OglLink, None)
+        self._link:     OglLink   = cast(OglLink, None)
+        self._pyutLink: PyutLink = cast(PyutLink, None)     # for undo of delete
 
     def GetName(self) -> str:
         return self._name
@@ -128,39 +129,49 @@ class BaseWxLinkCommand(Command):
         """
         # src, dst, linkType: PyutLinkType, srcPos: Point, dstPos: Point
         # self._srcOglObject, self._dstOglObject, self._linkType, self._srcPoint, self._dstPoint
-        linkType: PyutLinkType     = self._linkType
-        src:      DoableObjectType = self._srcOglObject
-        dst:      DoableObjectType = self._dstOglObject
-        srcPos:   Point            = self._srcPoint
-        dstPos:   Point            = self._dstPoint
-
-        srcClass: OglClass = cast(OglClass, src)
-        dstClass: OglClass = cast(OglClass, dst)
+        linkType: PyutLinkType = self._linkType
+        srcPos:   Point        = self._srcPoint
+        dstPos:   Point        = self._dstPoint
 
         if linkType == PyutLinkType.INHERITANCE:
+            srcClass: OglClass = cast(OglClass, self._srcOglObject)
+            dstClass: OglClass = cast(OglClass, self._dstOglObject)
             return self._createInheritanceLink(srcClass, dstClass)
         elif linkType == PyutLinkType.SD_MESSAGE:
-            srcSdInstance: OglSDInstance = cast(OglSDInstance, src)
-            dstSdInstance: OglSDInstance = cast(OglSDInstance, dst)
+            srcSdInstance: OglSDInstance = cast(OglSDInstance, self._srcOglObject)
+            dstSdInstance: OglSDInstance = cast(OglSDInstance, self._dstOglObject)
             return self._createSDMessage(src=srcSdInstance, dest=dstSdInstance, srcPos=srcPos, destPos=dstPos)
 
-        pyutLink: PyutLink = PyutLink("", linkType=linkType, source=srcClass.pyutObject, destination=dstClass.pyutObject)
+        oglLink: OglLink = self._createAssociationLink()
 
-        pyutLink.name = f'{linkType.name.capitalize()}-{pyutLink.id}'
-        # pyutLink.destinationCardinality = ''
-        # pyutLink.sourceCardinality      = ''
+        return oglLink
+
+    def _createAssociationLink(self) -> OglLink:
+
+        srcClass: OglClass = cast(OglClass, self._srcOglObject)
+        dstClass: OglClass = cast(OglClass, self._dstOglObject)
+
+        linkType: PyutLinkType = self._linkType
+
+        # If none we are creating from scratch
+        if self._pyutLink is None:
+            pyutLink: PyutLink = PyutLink("", linkType=linkType, source=srcClass.pyutObject, destination=dstClass.pyutObject)
+            pyutLink.name = f'{linkType.name.capitalize()}-{pyutLink.id}'
+        else:
+            # If we have a value we are undoing a delete
+            pyutLink = self._pyutLink
 
         # Call the factory to create OGL Link
-        oglLinkFactory = getOglLinkFactory()
 
-        oglLink: OglLink = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutLink, destShape=dst, linkType=linkType)
+        oglLinkFactory = getOglLinkFactory()
+        oglLink: OglLink = oglLinkFactory.getOglLink(srcShape=srcClass, pyutLink=pyutLink, destShape=dstClass, linkType=linkType)
 
         srcClass.addLink(oglLink)  # add it to the source Ogl Linkable Object
         dstClass.addLink(oglLink)  # add it to the destination Linkable Object
-
-        srcClass.pyutObject.addLink(pyutLink)   # add it to the source PyutClass
+        srcClass.pyutObject.addLink(pyutLink)  # add it to the source PyutClass
 
         self._name = self._toCommandName(linkType)
+
         return oglLink
 
     def _createInheritanceLink(self, child: OglClass, parent: OglClass) -> OglLink:
@@ -176,8 +187,8 @@ class BaseWxLinkCommand(Command):
         """
         sourceClass:      PyutClass = cast(PyutClass, child.pyutObject)
         destinationClass: PyutClass = cast(PyutClass, parent.pyutObject)
-        pyutLink:         PyutLink = PyutLink("", linkType=PyutLinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
-        oglLink:          OglLink = getOglLinkFactory().getOglLink(child, pyutLink, parent, PyutLinkType.INHERITANCE)
+        pyutLink:         PyutLink  = PyutLink("", linkType=PyutLinkType.INHERITANCE, source=sourceClass, destination=destinationClass)
+        oglLink:          OglLink   = getOglLinkFactory().getOglLink(child, pyutLink, parent, PyutLinkType.INHERITANCE)
 
         child.addLink(oglLink)
         parent.addLink(oglLink)

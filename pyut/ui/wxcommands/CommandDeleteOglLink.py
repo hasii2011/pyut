@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -6,7 +8,9 @@ from wx import Point
 from wx import Yield as wxYield
 
 from pyutmodel.PyutLinkType import PyutLinkType
+
 from ogl.OglLink import OglLink
+from ogl.OglAssociation import OglAssociation
 
 from pyut.ui.wxcommands.BaseWxLinkCommand import BaseWxLinkCommand
 from pyut.uiv2.eventengine.Events import EventType
@@ -36,6 +40,10 @@ class CommandDeleteOglLink(BaseWxLinkCommand):
         self._dstPoint = Point(x=dstX, y=dstY)
 
         self._link = oglLink        # Save the link to delete
+        if isinstance(self._link, OglAssociation):
+            oglAssociation: OglAssociation = cast(OglAssociation, self._link)
+
+            self._pyutLink = oglAssociation.pyutObject
 
     def Do(self) -> bool:
         self.logger.info(f'Delete: {self._link}')
