@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 from typing import Tuple
 from typing import cast
 
-from ogl.OglLinkFactory import OglLinkFactory
 from wx import Command
 from wx import Point
 
@@ -139,13 +138,15 @@ class BaseWxLinkCommand(Command):
         if linkType == PyutLinkType.INHERITANCE:
             srcClass: OglClass = cast(OglClass, self._srcOglObject)
             dstClass: OglClass = cast(OglClass, self._dstOglObject)
-            return self._createInheritanceLink(srcClass, dstClass)
+            oglLink: OglLink = self._createInheritanceLink(srcClass, dstClass)
         elif linkType == PyutLinkType.SD_MESSAGE:
             srcSdInstance: OglSDInstance = cast(OglSDInstance, self._srcOglObject)
             dstSdInstance: OglSDInstance = cast(OglSDInstance, self._dstOglObject)
-            return self._createSDMessage(src=srcSdInstance, dest=dstSdInstance, srcPos=srcPos, destPos=dstPos)
+            oglLink = self._createSDMessage(src=srcSdInstance, dest=dstSdInstance, srcPos=srcPos, destPos=dstPos)
+        else:
+            oglLink = self._createAssociationLink()
 
-        oglLink: OglLink = self._createAssociationLink()
+        oglLink.SetSpline(self._spline)
 
         return oglLink
 
