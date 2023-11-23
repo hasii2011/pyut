@@ -7,6 +7,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from deprecated import deprecated
 from wx import EVT_CLOSE
 from wx import EVT_PAINT
 
@@ -103,6 +104,22 @@ class UmlFrame(UmlFrameShapeHandler):
     @property
     def commandProcessor(self) -> CommandProcessor:
         return self._commandProcessor
+
+    @property
+    def umlObjects(self) -> UmlObjects:
+        """
+        Retrieve UML objects from the UML Frame
+
+        Returns:  The Uml objects on this diagram
+        """
+        umlObjects: UmlObjects = UmlObjects([])
+
+        for s in self._diagram.GetShapes():
+            # This is a duplicate of the UmlObject, since I cannot use NewType
+            if isinstance(s, (OglClass, OglLink, OglNote, OglText, OglSDMessage, OglSDInstance, OglActor, OglUseCase, OglInterface2)):
+                umlObjects.append(s)
+
+        return umlObjects
 
     # noinspection PyUnusedLocal
     def setCodePath(self, path: str):
@@ -201,11 +218,10 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         return self._diagram
 
+    @deprecated(reason='Use the "umlObjects" property')
     def getUmlObjects(self) -> UmlObjects:
         """
-        TODO:  Make this a property
-
-        Retrieve UML objects from the UML Frame
+       Retrieve UML objects from the UML Frame
 
         Returns:  The Uml objects on this diagram
         """

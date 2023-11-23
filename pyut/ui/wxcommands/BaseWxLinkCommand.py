@@ -3,15 +3,18 @@ from typing import TYPE_CHECKING
 from typing import Tuple
 from typing import cast
 
+from ogl.OglLinkFactory import OglLinkFactory
 from wx import Command
 from wx import Point
-
-from miniogl.AnchorPoint import AnchorPoint
 
 from pyutmodel.PyutClass import PyutClass
 from pyutmodel.PyutLink import PyutLink
 from pyutmodel.PyutLinkType import PyutLinkType
 from pyutmodel.PyutSDMessage import PyutSDMessage
+
+from miniogl.AnchorPoint import AnchorPoint
+from miniogl.LineShape import ControlPoints
+from miniogl.ShapeModel import ShapeModel
 
 from ogl.OglClass import OglClass
 from ogl.OglLink import OglLink
@@ -40,7 +43,7 @@ class BaseWxLinkCommand(Command):
 
         super().__init__(canUndo=True, name=self._name)
 
-        self._eventEngine: IEventEngine = eventEngine
+        self._eventEngine:    IEventEngine   = eventEngine
 
         self._srcOglObject: DoableObjectType = cast(DoableObjectType, None)
         self._dstOglObject: DoableObjectType = cast(DoableObjectType, None)
@@ -50,8 +53,10 @@ class BaseWxLinkCommand(Command):
         self._srcPoint: Point = cast(Point, None)
         self._dstPoint: Point = cast(Point, None)
 
-        self._link:     OglLink   = cast(OglLink, None)
-        self._pyutLink: PyutLink = cast(PyutLink, None)     # for undo of delete
+        self._link:          OglLink       = cast(OglLink, None)
+        self._pyutLink:      PyutLink      = cast(PyutLink, None)    # for undo of delete
+        self._controlPoints: ControlPoints = ControlPoints([])       # for undo of delete
+        self._spline:        bool          = False
 
     def GetName(self) -> str:
         return self._name
@@ -127,8 +132,6 @@ class BaseWxLinkCommand(Command):
 
         Returns:  A specific OglLink instance depending on the link type
         """
-        # src, dst, linkType: PyutLinkType, srcPos: Point, dstPos: Point
-        # self._srcOglObject, self._dstOglObject, self._linkType, self._srcPoint, self._dstPoint
         linkType: PyutLinkType = self._linkType
         srcPos:   Point        = self._srcPoint
         dstPos:   Point        = self._dstPoint
@@ -165,6 +168,8 @@ class BaseWxLinkCommand(Command):
 
         oglLinkFactory = getOglLinkFactory()
         oglLink: OglLink = oglLinkFactory.getOglLink(srcShape=srcClass, pyutLink=pyutLink, destShape=dstClass, linkType=linkType)
+        self._placeAnchorsInCorrectPosition(oglLink=oglLink)
+        self._createNeededControlPoints(oglLink=oglLink)
 
         srcClass.addLink(oglLink)  # add it to the source Ogl Linkable Object
         dstClass.addLink(oglLink)  # add it to the destination Linkable Object
@@ -193,6 +198,8 @@ class BaseWxLinkCommand(Command):
         child.addLink(oglLink)
         parent.addLink(oglLink)
 
+        self._placeAnchorsInCorrectPosition(oglLink=oglLink)
+        self._createNeededControlPoints(oglLink=oglLink)
         # add it to the PyutClass
         childPyutClass:  PyutClass = cast(PyutClass, child.pyutObject)
         parentPyutClass: PyutClass = cast(PyutClass, parent.pyutObject)
@@ -215,6 +222,35 @@ class BaseWxLinkCommand(Command):
         oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest, linkType=PyutLinkType.SD_MESSAGE)
 
         return oglSdMessage
+
+    def _placeAnchorsInCorrectPosition(self, oglLink: OglLink):
+
+        srcAnchor: AnchorPoint = oglLink.sourceAnchor
+        dstAnchor: AnchorPoint = oglLink.destinationAnchor
+
+        srcX, srcY = self._srcPoint.Get()
+        dstX, dstY = self._dstPoint.Get()
+
+        srcAnchor.SetPosition(x=srcX, y=srcY)
+        dstAnchor.SetPosition(x=dstX, y=dstY)
+
+        srcModel: ShapeModel = srcAnchor.GetModel()
+        dstModel: ShapeModel = dstAnchor.GetModel()
+
+        srcModel.SetPosition(x=srcX, y=srcY)
+        dstModel.SetPosition(x=dstY, y=dstY)
+
+    def _createNeededControlPoints(self, oglLink: OglLink):
+
+        parent:   OglClass = oglLink.sourceAnchor.GetParent()
+        selfLink: bool     = parent is oglLink.destinationAnchor.GetParent()
+
+        for controlPoint in self._controlPoints:
+            oglLink.AddControl(control=controlPoint, after=None)    # type: ignore
+            if selfLink:
+                x, y = controlPoint.GetPosition()
+                controlPoint.SetParent(parent)
+                controlPoint.SetPosition(x, y)
 
     def _toCommandName(self, linkType: PyutLinkType) -> str:
         # Because I do not like the generated name

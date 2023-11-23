@@ -755,12 +755,12 @@ class PyutUIV2(SplitterWindow):
         cb(pluginProject)
 
     def _selectedOglObjects(self, event: SelectedOglObjectsEvent):
-        umlObjects: UmlObjects = self._projectManager.currentFrame.getUmlObjects()
+        umlObjects: UmlObjects = self._projectManager.currentFrame.umlObjects
 
         selectedObjects: OglObjects = OglObjects([])
         if umlObjects is not None:
             for obj in umlObjects:
-                if obj.IsSelected():
+                if obj.selected is True:
                     from pyutplugins.ExternalTypes import OglObjectType
                     selectedObjects.append(cast(OglObjectType, obj))
 
