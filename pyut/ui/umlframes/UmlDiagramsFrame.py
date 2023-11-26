@@ -18,8 +18,6 @@ from wx import Notebook
 from ogl.OglClass import OglClass
 from ogl.OglObject import OglObject
 
-from ogl.events.OglEventEngine import OglEventEngine
-
 from ogl.events.OglEvents import EVT_CREATE_LOLLIPOP_INTERFACE
 from ogl.events.OglEvents import EVT_DIAGRAM_FRAME_MODIFIED
 from ogl.events.OglEvents import EVT_SHAPE_SELECTED
@@ -78,8 +76,6 @@ class UmlDiagramsFrame(UmlFrame):
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM, callback=self._onAddPyutDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,  callback=self._onAddOglDiagram)
 
-        self._oglEventEngine: OglEventEngine = OglEventEngine(listeningWindow=self)
-
         self._oglEventEngine.registerListener(EVT_SHAPE_SELECTED,            self._onShapeSelected)
         self._oglEventEngine.registerListener(EVT_CUT_OGL_CLASS,             self._onCutOglClassShape)
         self._oglEventEngine.registerListener(EVT_DIAGRAM_FRAME_MODIFIED,    self._onDiagramFrameModified)
@@ -87,10 +83,6 @@ class UmlDiagramsFrame(UmlFrame):
         self._oglEventEngine.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
 
         self.Bind(EVT_CHAR, self._onProcessKeyboard)
-
-    @property
-    def eventEngine(self) -> OglEventEngine:
-        return self._oglEventEngine
 
     def undo(self):
         """

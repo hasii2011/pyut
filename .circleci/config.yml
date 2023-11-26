@@ -35,13 +35,13 @@ jobs:
             pip install PyGithub~=1.59.1
             pip install codeallybasic~=0.5.2
             pip install codeallyadvanced==0.5.2
-            pip install pyutmodel==1.5.0
-            pip install ogl==0.90.3
-            pip install oglio==1.2.1
-            pip install pyutplugins==1.2.1
+            pip install pyutmodel==1.5.1
+            pip install ogl==1.0.0
+            pip install oglio==1.2.2
+            pip install pyutplugins==1.2.2
             pip install html-testRunner==1.2.1
             pip install buildlackey~=1.5.0
       - run:
             name: run tests
             command: | 
-              runtests
+              unittests -s .

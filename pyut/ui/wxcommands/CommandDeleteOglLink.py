@@ -40,7 +40,7 @@ class CommandDeleteOglLink(BaseWxLinkCommand):
         self._dstPoint = Point(x=dstX, y=dstY)
 
         self._controlPoints = oglLink.GetControlPoints()       # in case we have bends
-        self._spline        = oglLink.GetSpline()
+        self._spline        = oglLink.spline
 
         self._link = oglLink        # Save the link to delete
         if isinstance(self._link, OglAssociation):

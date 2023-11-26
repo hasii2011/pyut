@@ -146,7 +146,7 @@ class BaseWxLinkCommand(Command):
         else:
             oglLink = self._createAssociationLink()
 
-        oglLink.SetSpline(self._spline)
+        oglLink.spline = self._spline
 
         return oglLink
 
@@ -247,7 +247,7 @@ class BaseWxLinkCommand(Command):
         selfLink: bool     = parent is oglLink.destinationAnchor.GetParent()
 
         for controlPoint in self._controlPoints:
-            oglLink.AddControl(control=controlPoint, after=None)    # type: ignore
+            oglLink.AddControl(control=controlPoint, after=None)
             if selfLink:
                 x, y = controlPoint.GetPosition()
                 controlPoint.SetParent(parent)
