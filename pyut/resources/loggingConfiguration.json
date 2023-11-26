@@ -49,12 +49,6 @@
         "pyut": {
             "level":     "INFO",
             "propagate": "False"
-        },
-        "miniogl.DiagramFrame": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
         }
-
     }
 }
