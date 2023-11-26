@@ -10,7 +10,7 @@ Deprecated==1.2.14
 # pyut2xml==0.1.1
 # epr2md==0.1.2
 py2app==0.28.6
-buildlackey==1.5.0
+buildlackey==1.6.0
 versionoverlord==0.6.2
 
 html-testRunner~=1.2.1
@@ -26,4 +26,4 @@ codeallyadvanced==0.5.2
 pyutmodel==1.5.1
 ogl==1.0.0
 oglio==1.2.2
-pyutplugins==1.2.1
+pyutplugins==1.2.2
