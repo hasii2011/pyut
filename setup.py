@@ -74,7 +74,12 @@ setup(
     ),
     ),
     setup_requires=['py2app'],
-    install_requires=['pyutmodel==1.5.1', 'ogl==1.0.0', 'oglio==1.2.2', 'pyutplugins==1.2.2', 'codeallybasic~=0.5.2', 'codeallyadvanced~=0.5.2',
+    install_requires=['pyutmodel==1.5.1',
+                      'ogl==1.0.0',
+                      'oglio==1.2.2',
+                      'pyutplugins==1.2.2',
+                      'codeallybasic~=0.5.2',
+                      'codeallyadvanced~=0.5.2',
                       'PyGithub==1.59.1',
                       'wxPython==4.2.1',
                       'chardet==5.2.0'
