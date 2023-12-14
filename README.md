@@ -20,15 +20,16 @@ See [documentation](https://github.com/hasii2011/PyUt/wiki)
 _Some Updates_
 
 * Mermaid Support
-* Better support for Python code import
+* Better support for importing Python code
 * Better support for orthogonal lines
-* New Orthogonal layout
-* An improved PDF and image generation capability
+* New Orthogonal layout engine
+* An improved PDF and image generation capability (image is alpha)
 * Additional display options for UML diagrams
-* More preferences externalized through preferences
+* More internal parameters externalized through preferences
 * Updated to Python 3.11.5 and wxPython 4.2
 * Improved L & F for mac OS X
-* Source code completely re-organized for maintainability
+* Source code completely re-organized for maintainability 
+* Apple code signed for easy of use on OS X
 
 
 
