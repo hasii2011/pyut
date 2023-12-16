@@ -1,3 +1,4 @@
+
 from typing import cast
 
 from logging import Logger
@@ -64,21 +65,21 @@ class BaseEditParamFieldDialog(BaseEditDialog):
             self._rdbVisibility = RadioBox(controlsPanel, ID_ANY, "", Point(35, 30), DefaultSize, ["+", "-", "#"], style=RA_SPECIFY_ROWS)
 
         gridPanel: SizedPanel = SizedPanel(parent=controlsPanel)
-        gridPanel.SetSizerType("grid", {"cols":3}) # 3-column grid layout
+        gridPanel.SetSizerType("grid", {"cols": 3})   # 3-column grid layout
 
         StaticText(gridPanel, label="Name").SetSizerProps(proportion=1)
         StaticText(gridPanel, label="Type").SetSizerProps(proportion=1)
         StaticText(gridPanel, label="Default Value").SetSizerProps(proportion=1)
 
-        self._name         = TextCtrl(gridPanel, value="", size=(140,-1))  #
-        self._type         = TextCtrl(gridPanel, value="", size=(100,-1))  #
-        self._defaultValue = TextCtrl(gridPanel, value="", size=(80,-1))  #
+        self._name         = TextCtrl(gridPanel, value="", size=(140, -1))  #
+        self._type         = TextCtrl(gridPanel, value="", size=(100, -1))  #
+        self._defaultValue = TextCtrl(gridPanel, value="", size=(80, -1))  #
 
     # noinspection PyUnusedLocal
     def _onNameChange(self, event: CommandEvent):
         updatedName: str = self._name.GetValue().strip()
         self.basePFDLogger.warning(f'{updatedName=}')
-        if  self._name.GetValue().strip() == '':
+        if self._name.GetValue().strip() == '':
             self._indicateEmptyTextCtrl(name=self._name)
         else:
             self._indicateNonEmptyTextCtrl(name=self._name, normalBackgroundColor=self._normalNameBackgroundColour)

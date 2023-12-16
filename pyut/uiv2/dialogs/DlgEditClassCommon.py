@@ -31,10 +31,11 @@ from pyut.uiv2.dialogs.DlgEditDescription import DlgEditDescription
 from pyut.uiv2.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.uiv2.dialogs.DlgEditStereotype import DlgEditStereotype
 
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutInterface import PyutInterface
-from pyutmodel.PyutMethod import PyutMethod
-from pyutmodel.PyutStereotype import PyutStereotype
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutInterface import PyutInterface
+from pyutmodelv2.PyutMethod import PyutMethod
+
+from pyutmodelv2.enumerations.PyutStereotype import PyutStereotype
 
 from ogl.preferences.OglPreferences import OglPreferences
 

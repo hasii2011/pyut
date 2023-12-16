@@ -4,7 +4,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.PyutText import PyutText
+from pyutmodelv2.PyutText import PyutText
 
 from ogl.OglText import OglText
 
@@ -29,7 +29,7 @@ class CommandCreateOglText(BaseWxCreateCommand):
 
         preferences: OglPreferences = self._oglPreferences
 
-        pyutText: PyutText = PyutText(textContent=preferences.textValue)
+        pyutText: PyutText = PyutText(content=preferences.textValue)
 
         oglText: OglText       = OglText(pyutText)
         oglText.textFontFamily = preferences.textFontFamily

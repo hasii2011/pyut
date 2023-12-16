@@ -9,7 +9,7 @@ from wx import Notebook
 
 from codeallyadvanced.ui.UnitTestBaseW import UnitTestBaseW
 
-from pyutmodel.PyutClass import PyutClass
+from pyutmodelv2.PyutClass import PyutClass
 
 from ogl.OglClass import OglClass
 
@@ -128,7 +128,8 @@ class TestBaseWxCommand(UnitTestBaseW):
 
         # type(mockPyutClass).name = PropertyMock(return_value=className)
         newId: int = next(self._idGenerator)
-        type(mockPyutObject).id = PropertyMock(return_value=newId)
+        type(mockPyutObject).id      = PropertyMock(return_value=newId)
+        type(mockPyutObject).parents = PropertyMock(return_value=[])
 
         return mockPyutObject
 

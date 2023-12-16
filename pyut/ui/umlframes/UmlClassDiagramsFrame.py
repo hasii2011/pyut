@@ -3,9 +3,10 @@ from typing import cast
 
 from collections import namedtuple
 
-from pyutmodel.ModelTypes import ClassName
-from pyutmodel.ModelTypes import Implementors
-from pyutmodel.PyutInterface import PyutInterface
+from pyutmodelv2.PyutModelTypes import ClassName
+from pyutmodelv2.PyutModelTypes import Implementors
+
+from pyutmodelv2.PyutInterface import PyutInterface
 
 from ogl.OglInterface2 import OglInterface2
 

@@ -5,8 +5,9 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.ModelTypes import ClassName
-from pyutmodel.PyutInterface import PyutInterface
+from pyutmodelv2.PyutModelTypes import ClassName
+
+from pyutmodelv2.PyutInterface import PyutInterface
 
 from miniogl.AttachmentSide import AttachmentSide
 from miniogl.SelectAnchorPoint import SelectAnchorPoint

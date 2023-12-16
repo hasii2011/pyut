@@ -1,8 +1,8 @@
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-from pyutmodel.PyutSDInstance import PyutSDInstance
-from pyutmodel.PyutSDMessage import PyutSDMessage
+from pyutmodelv2.PyutSDInstance import PyutSDInstance
+from pyutmodelv2.PyutSDMessage import PyutSDMessage
 
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage

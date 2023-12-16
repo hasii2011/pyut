@@ -21,11 +21,11 @@ from wx import MessageDialog
 from wx import Notebook
 from wx import Window
 
-from pyutmodel.PyutActor import PyutActor
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutObject import PyutObject
-from pyutmodel.PyutUseCase import PyutUseCase
+from pyutmodelv2.PyutActor import PyutActor
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutNote import PyutNote
+from pyutmodelv2.PyutObject import PyutObject
+from pyutmodelv2.PyutUseCase import PyutUseCase
 
 from miniogl.Diagram import Diagram
 

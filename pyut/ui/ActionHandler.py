@@ -22,7 +22,7 @@ from wx import Yield as wxYield
 
 from codeallybasic.Singleton import Singleton
 
-from pyutmodel.PyutLinkType import PyutLinkType
+from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from ogl.OglActor import OglActor
 from ogl.OglNote import OglNote
@@ -443,7 +443,7 @@ class ActionHandler(Singleton):
             x:
             y:
         """
-        from pyutmodel.PyutSDInstance import PyutSDInstance
+        from pyutmodelv2.PyutSDInstance import PyutSDInstance
 
         instance: PyutSDInstance = umlFrame.createNewSDInstance(x, y)
         if not self._currentActionPersistent:

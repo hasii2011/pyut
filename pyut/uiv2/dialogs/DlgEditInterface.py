@@ -11,7 +11,7 @@ from wx import CommandEvent
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyutmodel.PyutInterface import PyutInterface
+from pyutmodelv2.PyutInterface import PyutInterface
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 

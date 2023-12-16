@@ -14,9 +14,9 @@ from wx import CheckBox
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutField import PyutField
-from pyutmodel.PyutParameter import PyutParameter
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutField import PyutField
+from pyutmodelv2.PyutParameter import PyutParameter
 
 from ogl.OglClass import OglClass
 
@@ -115,7 +115,7 @@ class DlgEditClass(DlgEditClassCommon):
         """
         dupParams = []
         for parameter in parameters:
-            duplicate: PyutParameter = PyutParameter(name=parameter.name, parameterType=parameter.type, defaultValue=parameter.defaultValue)
+            duplicate: PyutParameter = PyutParameter(name=parameter.name, type=parameter.type, defaultValue=parameter.defaultValue)
             dupParams.append(duplicate)
         return dupParams
 

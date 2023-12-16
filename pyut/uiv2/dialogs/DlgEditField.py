@@ -1,10 +1,12 @@
 
 from wx import CommandEvent
-
-from pyutmodel.PyutField import PyutField
-from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
-from pyutmodel.PyutType import PyutType
 from wx import Window
+
+from pyutmodelv2.PyutField import PyutField
+
+from pyutmodelv2.PyutType import PyutType
+
+from pyutmodelv2.enumerations.PyutVisibility import PyutVisibility
 
 from pyut.uiv2.dialogs.BaseEditParamFieldDialog import BaseEditParamFieldDialog
 
@@ -47,8 +49,8 @@ class DlgEditField(BaseEditParamFieldDialog):
         self._fieldToEdit.name = nameValue
 
         self._fieldToEdit.type = PyutType(self._type.GetValue().strip())
-        visStr: str                = self._rdbVisibility.GetStringSelection()
-        vis:    PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
+        visStr: str            = self._rdbVisibility.GetStringSelection()
+        vis:    PyutVisibility = PyutVisibility.toEnum(visStr)
         self._fieldToEdit.visibility = vis
 
         if self._defaultValue.GetValue().strip() != "":

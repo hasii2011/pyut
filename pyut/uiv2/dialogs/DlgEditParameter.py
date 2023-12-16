@@ -1,9 +1,9 @@
 
 from wx import CommandEvent
-
-from pyutmodel.PyutParameter import PyutParameter
-from pyutmodel.PyutType import PyutType
 from wx import Window
+
+from pyutmodelv2.PyutParameter import PyutParameter
+from pyutmodelv2.PyutType import PyutType
 
 from pyut.uiv2.dialogs.BaseEditParamFieldDialog import BaseEditParamFieldDialog
 

@@ -11,9 +11,10 @@ from wx import Point
 
 from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
-from pyutmodel.PyutLinkType import PyutLinkType
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutMethod import PyutMethods
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutMethod import PyutMethods
+
+from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from ogl.OglClass import OglClass
 

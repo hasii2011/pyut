@@ -6,10 +6,11 @@ from typing import cast
 from wx import Command
 from wx import Point
 
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutLink import PyutLink
-from pyutmodel.PyutLinkType import PyutLinkType
-from pyutmodel.PyutSDMessage import PyutSDMessage
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutLink import PyutLink
+from pyutmodelv2.PyutSDMessage import PyutSDMessage
+
+from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.LineShape import ControlPoints
@@ -162,7 +163,7 @@ class BaseWxLinkCommand(Command):
             pyutLink: PyutLink = PyutLink("", linkType=linkType, source=srcClass.pyutObject, destination=dstClass.pyutObject)
             pyutLink.name = f'{linkType.name.capitalize()}-{pyutLink.id}'
         else:
-            # If we have a value we are undoing a delete
+            # If we have a value we are undoing a delete action
             pyutLink = self._pyutLink
 
         # Call the factory to create OGL Link

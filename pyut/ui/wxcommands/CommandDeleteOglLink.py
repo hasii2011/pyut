@@ -7,7 +7,7 @@ from logging import getLogger
 from wx import Point
 from wx import Yield as wxYield
 
-from pyutmodel.PyutLinkType import PyutLinkType
+from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from ogl.OglLink import OglLink
 from ogl.OglAssociation import OglAssociation
