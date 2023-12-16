@@ -77,7 +77,7 @@ setup(
     install_requires=['pyutmodelv2==2.0.0a7',
                       'ogl==2.0.0a7',
                       'oglio==2.0.0a7',
-                      'pyutplugins==2.0.0a10',
+                      'pyutplugins==2.0.0a11',
                       'codeallybasic~=0.5.2',
                       'codeallyadvanced~=0.5.2',
                       'PyGithub==1.59.1',
