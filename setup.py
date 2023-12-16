@@ -74,7 +74,7 @@ setup(
     ),
     ),
     setup_requires=['py2app'],
-    install_requires=['pyutmodel==2.0.0a7',
+    install_requires=['pyutmodelv2==2.0.0a7',
                       'ogl==2.0.0a7',
                       'oglio==2.0.0a7',
                       'pyutplugins==2.0.0a9',

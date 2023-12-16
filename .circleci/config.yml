@@ -34,7 +34,7 @@ jobs:
             pip install PyGithub~=2.1.1
             pip install codeallybasic~=0.5.2
             pip install codeallyadvanced==0.5.2
-            pip install pyutmodel==2.0.0a7
+            pip install pyutmodelv2==2.0.0a7
             pip install ogl==2.0.0a7
             pip install oglio==2.0.0a7
             pip install pyutplugins==2.0.0a9
