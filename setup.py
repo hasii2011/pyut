@@ -80,7 +80,7 @@ setup(
                       'pyutplugins==2.0.0',
                       'codeallybasic~=0.5.2',
                       'codeallyadvanced~=0.5.2',
-                      'PyGithub==1.59.1',
+                      'PyGithub==2.1.1',
                       'wxPython==4.2.1',
                       'chardet==5.2.0'
                       ]

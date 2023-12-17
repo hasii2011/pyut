@@ -11,7 +11,7 @@ Deprecated==1.2.14
 # epr2md==0.1.2
 py2app==0.28.6
 buildlackey==1.6.2
-versionoverlord==1.0.0
+versionoverlord==1.1.0
 
 html-testRunner~=1.2.1
 mypy==1.7.1
