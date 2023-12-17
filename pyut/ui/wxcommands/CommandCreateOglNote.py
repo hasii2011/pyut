@@ -4,7 +4,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.PyutNote import PyutNote
+from pyutmodelv2.PyutNote import PyutNote
 
 from ogl.OglNote import OglNote
 
@@ -30,7 +30,7 @@ class CommandCreateOglNote(BaseWxCreateCommand):
 
         Returns: the newly created OglNote
         """
-        pyutNote: PyutNote = PyutNote(noteText=self._oglPreferences.noteText)
+        pyutNote: PyutNote = PyutNote(content=self._oglPreferences.noteText)
         oglNote:  OglNote  = OglNote(pyutNote)
 
         return oglNote

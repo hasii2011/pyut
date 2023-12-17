@@ -19,8 +19,8 @@ from wx.adv import EditableListBox
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyutmodel.PyutMethod import PyutModifiers
-from pyutmodel.PyutModifier import PyutModifier
+from pyutmodelv2.PyutMethod import PyutModifiers
+from pyutmodelv2.PyutModifier import PyutModifier
 
 from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
 
@@ -46,7 +46,7 @@ class DlgEditMethodModifiers(BaseEditDialog):
         return self._stringToPyutModifiers()
 
     def _layoutEditableListBox(self, parent: SizedPanel):
-        style: int = EL_DEFAULT_STYLE |EL_ALLOW_NEW | EL_ALLOW_EDIT | EL_ALLOW_DELETE
+        style: int = EL_DEFAULT_STYLE | EL_ALLOW_NEW | EL_ALLOW_EDIT | EL_ALLOW_DELETE
         self._elb = EditableListBox(parent, ID_ANY, "Modifiers", (-1, -1), (-1, -1), style=style)
 
         self._elb.SetStrings(self._pyutModifiersToStrings())
@@ -74,7 +74,7 @@ class DlgEditMethodModifiers(BaseEditDialog):
         pyutModifiers: PyutModifiers = PyutModifiers([])
         strList:       List[str]     = self._elb.GetStrings()
         for modifierString in strList:
-            pyutModifier: PyutModifier = PyutModifier(modifierTypeName=modifierString)
+            pyutModifier: PyutModifier = PyutModifier(name=modifierString)
             pyutModifiers.append(pyutModifier)
 
         return pyutModifiers

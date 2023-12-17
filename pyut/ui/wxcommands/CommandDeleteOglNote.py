@@ -2,8 +2,9 @@
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.PyutNote import PyutNote
 from wx import Yield as wxYield
+
+from pyutmodelv2.PyutNote import PyutNote
 
 from ogl.OglNote import OglNote
 

@@ -5,7 +5,7 @@ from logging import getLogger
 from wx import Point
 from wx import Yield as wxYield
 
-from pyutmodel.PyutLinkType import PyutLinkType
+from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from pyut.ui.wxcommands.BaseWxLinkCommand import BaseWxLinkCommand
 from pyut.uiv2.eventengine.Events import EventType

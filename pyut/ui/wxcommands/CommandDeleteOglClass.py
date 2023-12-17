@@ -6,7 +6,7 @@ from typing import cast
 
 from wx import Yield as wxYield
 
-from pyutmodel.PyutClass import PyutClass
+from pyutmodelv2.PyutClass import PyutClass
 
 from ogl.OglClass import OglClass
 

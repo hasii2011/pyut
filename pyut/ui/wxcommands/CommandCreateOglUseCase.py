@@ -4,7 +4,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.PyutUseCase import PyutUseCase
+from pyutmodelv2.PyutUseCase import PyutUseCase
 
 from ogl.OglUseCase import OglUseCase
 

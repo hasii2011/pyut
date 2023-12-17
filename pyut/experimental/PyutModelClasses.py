@@ -1,28 +1,30 @@
 
 from typing import List
 
-from pyutmodel.PyutDisplayParameters import PyutDisplayParameters
-from pyutmodel import ModelTypes
-from pyutmodel.PyutActor import PyutActor
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutClassCommon import PyutClassCommon
-from pyutmodel.PyutField import PyutField
-from pyutmodel.PyutInterface import PyutInterface
-from pyutmodel.PyutLink import PyutLink
-from pyutmodel.PyutLinkedObject import PyutLinkedObject
-from pyutmodel.PyutLinkType import PyutLinkType
-from pyutmodel.PyutMethod import PyutMethod
-from pyutmodel.PyutModifier import PyutModifier
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutObject import PyutObject
-from pyutmodel.PyutParameter import PyutParameter
-from pyutmodel.PyutSDInstance import PyutSDInstance
-from pyutmodel.PyutSDMessage import PyutSDMessage
-from pyutmodel.PyutStereotype import PyutStereotype
-from pyutmodel.PyutText import PyutText
-from pyutmodel.PyutType import PyutType
-from pyutmodel.PyutUseCase import PyutUseCase
-from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodelv2 import PyutModelTypes
+
+from pyutmodelv2.PyutActor import PyutActor
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutClassCommon import PyutClassCommon
+from pyutmodelv2.PyutField import PyutField
+from pyutmodelv2.PyutInterface import PyutInterface
+from pyutmodelv2.PyutLink import PyutLink
+from pyutmodelv2.PyutLinkedObject import PyutLinkedObject
+from pyutmodelv2.PyutMethod import PyutMethod
+from pyutmodelv2.PyutModifier import PyutModifier
+from pyutmodelv2.PyutNote import PyutNote
+from pyutmodelv2.PyutObject import PyutObject
+from pyutmodelv2.PyutParameter import PyutParameter
+from pyutmodelv2.PyutSDInstance import PyutSDInstance
+from pyutmodelv2.PyutSDMessage import PyutSDMessage
+from pyutmodelv2.PyutText import PyutText
+from pyutmodelv2.PyutType import PyutType
+from pyutmodelv2.PyutUseCase import PyutUseCase
+
+from pyutmodelv2.enumerations.PyutDisplayParameters import PyutDisplayParameters
+from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
+from pyutmodelv2.enumerations.PyutVisibility import PyutVisibility
+from pyutmodelv2.enumerations.PyutStereotype import PyutStereotype
 
 from ogl.OglActor import OglActor
 from ogl.OglAggregation import OglAggregation
@@ -51,7 +53,7 @@ from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
 
 PyutClassNames: List[str] = [
-    ModelTypes.__name__,
+    PyutModelTypes.__name__,
     PyutActor.__name__,
     PyutClass.__name__,
     PyutClassCommon.__name__,
@@ -72,7 +74,7 @@ PyutClassNames: List[str] = [
     PyutText.__name__,
     PyutType.__name__,
     PyutUseCase.__name__,
-    PyutVisibilityEnum.__name__,
+    PyutVisibility.__name__,
 ]
 
 OglClassNames: List[str] = [

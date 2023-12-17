@@ -8,7 +8,7 @@ from logging import getLogger
 from logging import DEBUG
 
 from ogl.OglClass import OglClass
-from pyutmodel.PyutInterface import PyutInterface
+from pyutmodelv2.PyutInterface import PyutInterface
 from wx import CANCEL
 from wx import CENTRE
 from wx import EVT_MENU
@@ -39,11 +39,11 @@ from wx import TextEntryDialog
 
 from wx import Yield as wxYield
 
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutText import PyutText
-from pyutmodel.PyutActor import PyutActor
-from pyutmodel.PyutUseCase import PyutUseCase
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutNote import PyutNote
+from pyutmodelv2.PyutText import PyutText
+from pyutmodelv2.PyutActor import PyutActor
+from pyutmodelv2.PyutUseCase import PyutUseCase
 
 from ogl.OglObject import OglObject
 

@@ -23,9 +23,7 @@ from wx.lib.sized_controls import SizedDialog
 from wx import NewIdRef as wxNewIdRef
 from wx.lib.sized_controls import SizedPanel
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
-from pyutmodel.PyutMethod import SourceCode
+from pyutmodelv2.PyutMethod import SourceCode
 
 TXT_CODE: int = wxNewIdRef()
 
@@ -46,7 +44,7 @@ class DlgEditCode(SizedDialog):
         self._sourceCode:            SourceCode = sourceCode
         self._displayableSourceCode: str        = f'{osLineSep}'.join(sourceCode)
 
-        super().__init__(parent, wxID, _('Method Code'), style=CAPTION | CLOSE_BOX | DIALOG_EX_METAL)
+        super().__init__(parent, wxID, 'Method Code', style=CAPTION | CLOSE_BOX | DIALOG_EX_METAL)
 
         self.Center(BOTH)
         panel: SizedPanel = self.GetContentsPane()

@@ -4,7 +4,7 @@ from logging import getLogger
 
 from wx import Yield as wxYield
 
-from pyutmodel.PyutActor import PyutActor
+from pyutmodelv2.PyutActor import PyutActor
 
 from ogl.OglActor import OglActor
 

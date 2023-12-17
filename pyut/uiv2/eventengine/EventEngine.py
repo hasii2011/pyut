@@ -10,12 +10,12 @@ from wx import PyEventBinder
 from wx import TreeItemId
 from wx import Window
 
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutText import PyutText
-from pyutmodel.PyutActor import PyutActor
-from pyutmodel.PyutUseCase import PyutUseCase
-from pyutmodel.PyutInterface import PyutInterface
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutNote import PyutNote
+from pyutmodelv2.PyutText import PyutText
+from pyutmodelv2.PyutActor import PyutActor
+from pyutmodelv2.PyutUseCase import PyutUseCase
+from pyutmodelv2.PyutInterface import PyutInterface
 
 from ogl.OglObject import OglObject
 from ogl.OglClass import OglClass

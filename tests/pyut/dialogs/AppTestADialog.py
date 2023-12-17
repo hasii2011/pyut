@@ -29,26 +29,26 @@ from wx import StaticBoxSizer
 
 from wx import NewIdRef as wxNewIdRef
 
-from pyutmodel.PyutLink import PyutLink
-from pyutmodel.PyutLinkType import PyutLinkType
-from pyutmodel.PyutStereotype import PyutStereotype
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutInterface import PyutInterface
-from pyutmodel.PyutField import PyutField
-from pyutmodel.PyutField import PyutFields
-from pyutmodel.PyutMethod import PyutMethod
-from pyutmodel.PyutMethod import PyutModifiers
-from pyutmodel.PyutMethod import SourceCode
-from pyutmodel.PyutMethod import PyutMethods
-from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
-from pyutmodel.PyutModifier import PyutModifier
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutParameter import PyutParameter
-from pyutmodel.PyutText import PyutText
-from pyutmodel.PyutType import PyutType
-from pyutmodel.PyutActor import PyutActor
-from pyutmodel.PyutUseCase import PyutUseCase
-from pyutmodel.DisplayMethodParameters import DisplayMethodParameters
+from pyutmodelv2.PyutLink import PyutLink
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutInterface import PyutInterface
+from pyutmodelv2.PyutField import PyutField
+from pyutmodelv2.PyutField import PyutFields
+from pyutmodelv2.PyutMethod import PyutMethod
+from pyutmodelv2.PyutMethod import PyutModifiers
+from pyutmodelv2.PyutMethod import SourceCode
+from pyutmodelv2.PyutMethod import PyutMethods
+from pyutmodelv2.PyutModifier import PyutModifier
+from pyutmodelv2.PyutNote import PyutNote
+from pyutmodelv2.PyutParameter import PyutParameter
+from pyutmodelv2.PyutText import PyutText
+from pyutmodelv2.PyutType import PyutType
+from pyutmodelv2.PyutActor import PyutActor
+from pyutmodelv2.PyutUseCase import PyutUseCase
+
+from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
+from pyutmodelv2.enumerations.PyutStereotype import PyutStereotype
+from pyutmodelv2.enumerations.PyutVisibility import PyutVisibility
 
 from ogl.preferences.OglPreferences import OglPreferences
 
@@ -248,8 +248,8 @@ class TestADialog(App):
         srcClass: PyutClass = PyutClass(name='Source Class')
         dstClass: PyutClass = PyutClass(name='Destination Class')
         pyutLink: PyutLink = PyutLink(name='Ozzee',
-                                      cardSrc='0..*',
-                                      cardDest='0..*',
+                                      cardinalitySource='0..*',
+                                      cardinalityDestination='0..*',
                                       source=srcClass,
                                       destination=dstClass,
                                       linkType=PyutLinkType.AGGREGATION)
@@ -270,13 +270,13 @@ class TestADialog(App):
                 return 'bogosity'
 
     def _testDlgEditDescription(self):
-        pyutModel: Union[PyutClass, PyutInterface] = PyutInterface(name='IGato')
-        pyutModel.description = 'I describe El Gato Tonto'
-        with DlgEditDescription(self._frame, pyutModel=pyutModel) as dlg:
+        pyutmodel: Union[PyutClass, PyutInterface] = PyutInterface(name='IGato')
+        pyutmodel.description = 'I describe El Gato Tonto'
+        with DlgEditDescription(self._frame, pyutModel=pyutmodel) as dlg:
             if dlg.ShowModal() == OK:
-                pyutModel.description = dlg.GetValue()
+                pyutmodel.description = dlg.GetValue()
 
-        return pyutModel.description
+        return pyutmodel.description
 
     def _testDlgEditUseCase(self):
         pyutUseCase: PyutUseCase = PyutUseCase(name='OzzeeTheWickedGato')
@@ -320,7 +320,7 @@ class TestADialog(App):
 
     def _testDlgEditNote(self) -> str:
 
-        pyutNote: PyutNote = PyutNote(noteText=self._oglPreferences.noteText)
+        pyutNote: PyutNote = PyutNote(content=self._oglPreferences.noteText)
         with DlgEditNote(parent=self._frame, pyutNote=pyutNote) as dlg:
             if dlg.ShowModal() == OK:
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
@@ -329,7 +329,7 @@ class TestADialog(App):
                 return f'Cancelled'
 
     def _testDlgEditField(self) -> str:
-        pyutField:     PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
+        pyutField:     PyutField = PyutField(name='Ozzee', type=PyutType('float'), defaultValue='42.0')
         pyutFieldCopy: PyutField = deepcopy(pyutField)
         with DlgEditField(parent=self._frame, fieldToEdit=pyutFieldCopy) as dlg:
             if dlg.ShowModal() == OK:
@@ -342,7 +342,7 @@ class TestADialog(App):
                 return f'Cancelled: {nameOk=} {typeOk=} {defaultValueOk=}'
 
     def _testDlgEditParameter(self) -> str:
-        pyutParameter:     PyutParameter = PyutParameter(name='testParameter', parameterType=PyutType("int"), defaultValue='42')
+        pyutParameter:     PyutParameter = PyutParameter(name='testParameter', type=PyutType("int"), defaultValue='42')
         pyutParameterCopy: PyutParameter = deepcopy(pyutParameter)
         with DlgEditParameter(parent=self._frame, parameterToEdit=pyutParameterCopy) as dlg:
             if dlg.ShowModal() == OK:
@@ -364,14 +364,14 @@ class TestADialog(App):
 
     def _testDlgEditClass(self):
         pyutClass: PyutClass = PyutClass(name='Ozzee')
-        ozzeeField: PyutField = PyutField(name='Ozzee', fieldType=PyutType('float'), defaultValue='42.0')
-        franField:  PyutField = PyutField(name='Fran',  fieldType=PyutType('str'),   defaultValue='left')
-        opieField:  PyutField = PyutField(name='Opie',  fieldType=PyutType('int'),   defaultValue='9')
+        ozzeeField: PyutField = PyutField(name='Ozzee', type=PyutType('float'), defaultValue='42.0')
+        franField:  PyutField = PyutField(name='Fran',  type=PyutType('str'),   defaultValue='left')
+        opieField:  PyutField = PyutField(name='Opie',  type=PyutType('int'),   defaultValue='9')
         pyutClass.fields      = PyutFields([ozzeeField, opieField, franField])
 
-        ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibilityEnum.PROTECTED)
-        franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibilityEnum.PRIVATE)
-        opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibilityEnum.PUBLIC)
+        ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibility.PROTECTED)
+        franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibility.PRIVATE)
+        opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibility.PUBLIC)
         pyutClass.methods          = PyutMethods([ozzeeMethod, franMethod, opieMethod])
         # Not a notebook
         # noinspection PyTypeChecker
@@ -409,9 +409,9 @@ class TestADialog(App):
     def _testDlgEditInterface(self):
 
         pyutInterface: PyutInterface = PyutInterface(name=self._oglPreferences.interfaceName)
-        ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibilityEnum.PUBLIC)
-        franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibilityEnum.PUBLIC)
-        opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibilityEnum.PUBLIC)
+        ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibility.PUBLIC)
+        franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibility.PUBLIC)
+        opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibility.PUBLIC)
         pyutInterface.methods      = PyutMethods([ozzeeMethod, franMethod, opieMethod])
 
         with DlgEditInterface(parent=self._frame, eventEngine=self._eventEngine, pyutInterface=pyutInterface) as dlg:
@@ -422,9 +422,9 @@ class TestADialog(App):
 
     def _testDlgEditMethod(self):
         pyutMethod:     PyutMethod    = PyutMethod(name='OzzeeMethod')
-        pyutParameter:  PyutParameter = PyutParameter(name='intParameter',  parameterType=PyutType("int"), defaultValue='42')
-        floatParameter: PyutParameter = PyutParameter(name='floatParameter', parameterType=PyutType("float"), defaultValue='1.0')
-        boolParameter:  PyutParameter = PyutParameter(name='boolParameter',  parameterType=PyutType("bool"), defaultValue='False')
+        pyutParameter:  PyutParameter = PyutParameter(name='intParameter',   type=PyutType("int"), defaultValue='42')
+        floatParameter: PyutParameter = PyutParameter(name='floatParameter', type=PyutType("float"), defaultValue='1.0')
+        boolParameter:  PyutParameter = PyutParameter(name='boolParameter',  type=PyutType("bool"), defaultValue='False')
         pyutMethod.addParameter(pyutParameter)
         pyutMethod.addParameter(floatParameter)
         pyutMethod.addParameter(boolParameter)
@@ -444,8 +444,8 @@ class TestADialog(App):
                 'return ans'
             ]
         )
-        savePreference: DisplayMethodParameters = PyutMethod.displayParameters
-        PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
+        # savePreference: DisplayMethodParameters = PyutMethod.displayParameters
+        # PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
         with DlgEditMethod(parent=self._frame, pyutMethod=pyutMethod) as dlg:
             ans = dlg.ShowModal()
 
@@ -454,7 +454,7 @@ class TestADialog(App):
             else:
                 retrievedData = f'Cancelled'
 
-        PyutMethod.displayParameters = savePreference
+        # PyutMethod.displayParameters = savePreference
         return retrievedData
 
     def _testDlgEditCode(self):

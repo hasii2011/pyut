@@ -23,13 +23,14 @@ from wx import Button
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyutmodel.PyutMethod import PyutMethod
-from pyutmodel.PyutMethod import SourceCode
-from pyutmodel.PyutMethod import PyutParameters
+from pyutmodelv2.PyutMethod import PyutMethod
+from pyutmodelv2.PyutMethod import SourceCode
+from pyutmodelv2.PyutMethod import PyutParameters
 
-from pyutmodel.PyutParameter import PyutParameter
-from pyutmodel.PyutType import PyutType
-from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodelv2.PyutParameter import PyutParameter
+from pyutmodelv2.PyutType import PyutType
+
+from pyutmodelv2.enumerations.PyutVisibility import PyutVisibility
 
 from pyut.uiv2.PyutAdvancedListBox import AdvancedListBoxItems
 from pyut.uiv2.PyutAdvancedListBox import AdvancedListCallbacks
@@ -112,11 +113,10 @@ class DlgEditMethod(BaseEditDialog):
         self._layoutMethodVisibility(infoPanel)
 
         methodPanel: SizedPanel = SizedPanel(infoPanel)
-        methodPanel.SetSizerType("grid", {"cols":2}) # 2-column grid layout
+        methodPanel.SetSizerType("grid", {"cols": 2})  # 2-column grid layout
 
-
-        StaticText (methodPanel, label="Name")
-        StaticText (methodPanel, label="Return type")
+        StaticText(methodPanel, label="Name")
+        StaticText(methodPanel, label="Return type")
 
         self._methodName   = TextCtrl(methodPanel, value="", size=(125, -1))
         self._MethodReturnType = TextCtrl(methodPanel, value="", size=(125, -1))
@@ -161,7 +161,7 @@ class DlgEditMethod(BaseEditDialog):
     def _editParameter(self, pyutParameter: PyutParameter) -> CallbackAnswer:
 
         answer:        CallbackAnswer = CallbackAnswer()
-        with  DlgEditParameter(parent=self, parameterToEdit=pyutParameter) as dlg:
+        with DlgEditParameter(parent=self, parameterToEdit=pyutParameter) as dlg:
             if dlg.ShowModal() == OK:
                 answer.valid = True
                 answer.item  = str(pyutParameter)
@@ -223,7 +223,7 @@ class DlgEditMethod(BaseEditDialog):
 
         updatedName: str = self._methodName.GetValue().strip()
         self.logger.warning(f'{updatedName=}')
-        if  self._methodName.GetValue().strip() == '':
+        if self._methodName.GetValue().strip() == '':
             self._indicateEmptyTextCtrl(name=self._methodName)
         else:
             self._indicateNonEmptyTextCtrl(name=self._methodName, normalBackgroundColor=self._normalNameBackgroundColour)
@@ -247,8 +247,8 @@ class DlgEditMethod(BaseEditDialog):
 
         if self._editInterface is False:
             visStr:      str               = self._rdbVisibility.GetStringSelection()
-            visibility: PyutVisibilityEnum = PyutVisibilityEnum.toEnum(visStr)
-            self._pyutMethod.setVisibility(visibility)
+            visibility: PyutVisibility = PyutVisibility.toEnum(visStr)
+            self._pyutMethod.visibility = visibility
 
         self._pyutMethod.sourceCode = self._pyutMethodCopy.sourceCode
 

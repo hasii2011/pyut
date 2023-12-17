@@ -7,7 +7,7 @@ from logging import getLogger
 
 from wx import Command
 
-from pyutmodel.PyutLinkedObject import PyutLinkedObject
+from pyutmodelv2.PyutLinkedObject import PyutLinkedObject
 
 from ogl.OglUtils import OglUtils
 from ogl.OglClass import OglClass
@@ -63,9 +63,9 @@ class BaseWxCommand(Command):
 
                     pyutLinkedObject: PyutLinkedObject = potentialObject.pyutObject
 
-                    if pyutClass in pyutLinkedObject.getParents():
+                    if pyutClass in pyutLinkedObject.parents:
                         self.clsLogger.warning(f'Removing {pyutClass=} from {pyutLinkedObject=}')
-                        pyutLinkedObject.getParents().remove(cast(PyutLinkedObject, pyutClass))
+                        pyutLinkedObject.parents.remove(cast(PyutLinkedObject, pyutClass))
                     potentialObject.Detach()
                     umlFrame.Refresh()
 

@@ -9,15 +9,15 @@ from copy import deepcopy
 from wx import ID_OK
 from wx import OK
 
-from pyutmodel.PyutActor import PyutActor
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutInterface import PyutInterface
-from pyutmodel.PyutText import PyutText
-from pyutmodel.PyutUseCase import PyutUseCase
-from pyutmodel.PyutNote import PyutNote
-from pyutmodel.PyutLink import PyutLink
-from pyutmodel.PyutSDInstance import PyutSDInstance
-from pyutmodel.PyutSDMessage import PyutSDMessage
+from pyutmodelv2.PyutActor import PyutActor
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutInterface import PyutInterface
+from pyutmodelv2.PyutText import PyutText
+from pyutmodelv2.PyutUseCase import PyutUseCase
+from pyutmodelv2.PyutNote import PyutNote
+from pyutmodelv2.PyutLink import PyutLink
+from pyutmodelv2.PyutSDInstance import PyutSDInstance
+from pyutmodelv2.PyutSDMessage import PyutSDMessage
 
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.ControlPoint import ControlPoint

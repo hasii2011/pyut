@@ -18,7 +18,7 @@ from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyutmodel.PyutStereotype import PyutStereotype
+from pyutmodelv2.enumerations.PyutStereotype import PyutStereotype
 
 from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
 
