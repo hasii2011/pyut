@@ -8,12 +8,13 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from pyutmodel.PyutClass import PyutClass
-from pyutmodel.PyutMethod import PyutMethod
-from pyutmodel.PyutMethod import PyutMethods
-from pyutmodel.PyutParameter import PyutParameter
-from pyutmodel.PyutType import PyutType
-from pyutmodel.PyutVisibilityEnum import PyutVisibilityEnum
+from pyutmodelv2.PyutClass import PyutClass
+from pyutmodelv2.PyutMethod import PyutMethod
+from pyutmodelv2.PyutMethod import PyutMethods
+from pyutmodelv2.PyutParameter import PyutParameter
+from pyutmodelv2.PyutType import PyutType
+
+from pyutmodelv2.enumerations.PyutVisibility import PyutVisibility
 
 
 class PythonMetaClassDataHandler:
@@ -91,7 +92,7 @@ class PythonMetaClassDataHandler:
                             defVal = args[3][i - firstDefVal]
                             if isinstance(defVal, str):
                                 defVal = f'"{defVal}"'
-                            param = PyutParameter(arg, PyutType(""), str(defVal))
+                            param = PyutParameter(name=arg, type=PyutType(value=""), defaultValue=str(defVal))
                         else:
                             param = PyutParameter(arg)
                         meth.addParameter(param)
@@ -100,9 +101,9 @@ class PythonMetaClassDataHandler:
             func_name = funcName
             if func_name[-2:] != "__":
                 if func_name[0:2] == "__":
-                    meth.visibility = PyutVisibilityEnum.PRIVATE
+                    meth.visibility = PyutVisibility.PRIVATE
                 elif func_name[0] == "_":
-                    meth.visibility = PyutVisibilityEnum.PROTECTED
+                    meth.visibility = PyutVisibility.PROTECTED
 
         return methods
 
