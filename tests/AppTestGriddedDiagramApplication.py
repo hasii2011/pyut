@@ -13,7 +13,7 @@ from wx import BoxSizer
 from miniogl.DiagramFrame import DiagramFrame
 
 from pyut.preferences.PreferencesCommon import PreferencesCommon
-from tests.TestBase import TestBase
+from tests.ProjectTestBase import ProjectTestBase
 
 WINDOW_WIDTH:  int = 900
 WINDOW_HEIGHT: int = 500
@@ -35,7 +35,7 @@ class TestGriddedDiagramApplication(App):
 
         PreferencesCommon.determinePreferencesLocation()
 
-        TestBase.setUpLogging()
+        ProjectTestBase.setUpLogging()
 
         frameTop: Frame = Frame(parent=None, id=ID_ANY, title="Test Gridded Diagram", size=(WINDOW_WIDTH, WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
 

@@ -11,10 +11,10 @@ from pyut.preferences.PreferencesCommon import PreferencesCommon
 
 from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
 
-from tests.TestBase import TestBase
+from tests.ProjectTestBase import ProjectTestBase
 
 
-class TestTipHandler(TestBase):
+class TestTipHandler(ProjectTestBase):
     """
     """
     @classmethod

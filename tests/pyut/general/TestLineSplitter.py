@@ -6,12 +6,12 @@ from unittest import main as unitTestMain
 
 from unittest.mock import Mock
 
-from tests.TestBase import TestBase
+from tests.ProjectTestBase import ProjectTestBase
 
 from pyut.general.LineSplitter import LineSplitter
 
 
-class TestLineSplitter(TestBase):
+class TestLineSplitter(ProjectTestBase):
     """
     """
 

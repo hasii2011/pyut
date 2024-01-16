@@ -2,12 +2,12 @@
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
-from tests.TestBase import TestBase
+from tests.ProjectTestBase import ProjectTestBase
 
 from pyut.errorcontroller.ErrorManager import ErrorManager
 
 
-class TestErrorManager(TestBase):
+class TestErrorManager(ProjectTestBase):
     """
     """
 

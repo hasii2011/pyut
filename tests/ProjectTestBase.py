@@ -2,7 +2,7 @@
 from codeallyadvanced.ui.UnitTestBaseW import UnitTestBaseW
 
 
-class TestBase(UnitTestBaseW):
+class ProjectTestBase(UnitTestBaseW):
 
     RESOURCES_TEST_CLASSES_PACKAGE_NAME:      str = 'tests.resources.testclass'
     RESOURCES_TEST_JAVA_CLASSES_PACKAGE_NAME: str = 'tests.resources.testclass.ozzee'

@@ -29,7 +29,7 @@ from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
 
 from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
-from tests.TestBase import TestBase
+from tests.ProjectTestBase import ProjectTestBase
 
 
 class TestToolboxFrame(App):
@@ -50,7 +50,7 @@ class TestToolboxFrame(App):
                                 size=(TestToolboxFrame.WINDOW_WIDTH, TestToolboxFrame.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)
         frameTop.Show(True)
 
-        TestBase.setUpLogging()
+        ProjectTestBase.setUpLogging()
 
         self.logger: Logger = getLogger(__name__)
         diagramFrame: DiagramFrame = DiagramFrame(frameTop)

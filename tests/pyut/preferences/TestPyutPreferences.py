@@ -11,10 +11,10 @@ from codeallybasic.UnitTestBase import UnitTestBase
 from pyut.preferences.PreferencesCommon import PreferencesCommon
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from tests.TestBase import TestBase
+from tests.ProjectTestBase import ProjectTestBase
 
 
-class TestPyutPreferences(TestBase):
+class TestPyutPreferences(ProjectTestBase):
     """
     """
     BACKUP_SUFFIX: str = '.backup'

@@ -96,7 +96,7 @@ from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
 
-from tests.TestBase import TestBase
+from tests.ProjectTestBase import ProjectTestBase
 
 from tests.pyut.dialogs.DialogFrame import DialogFrame
 from tests.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
@@ -122,7 +122,7 @@ class AppTestADialog(App):
 
     def OnInit(self):
 
-        TestBase.setUpLogging()
+        ProjectTestBase.setUpLogging()
 
         self._frame = DialogFrame()
         self._eventEngine = EventEngine(listeningWindow=self._frame)
