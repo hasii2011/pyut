@@ -102,7 +102,7 @@ from tests.pyut.dialogs.DialogFrame import DialogFrame
 from tests.pyut.dialogs.DialogNamesEnum import DialogNamesEnum
 
 
-class TestADialog(App):
+class AppTestADialog(App):
 
     MINI_GAP:         int = 3
     NOTHING_SELECTED: int = -1
@@ -160,13 +160,13 @@ class TestADialog(App):
 
         self._cmbDlgName: ComboBox = ComboBox(parentFrame, self._dlgSelectionId, choices=dialogChoices, style=CB_READONLY)
 
-        self._cmbDlgName.SetSelection(TestADialog.NOTHING_SELECTED)
+        self._cmbDlgName.SetSelection(AppTestADialog.NOTHING_SELECTED)
 
         szrDlg: StaticBoxSizer = StaticBoxSizer(parent=parentFrame, orient=VERTICAL | ALIGN_TOP, label='Dialog Selection')
 
-        szrDlg.Add(self._cmbDlgName, 1, LEFT | RIGHT | ALIGN_TOP, TestADialog.MINI_GAP)
+        szrDlg.Add(self._cmbDlgName, 1, LEFT | RIGHT | ALIGN_TOP, AppTestADialog.MINI_GAP)
 
-        mainSizer.Add(szrDlg, proportion=0, flag=ALL, border=TestADialog.MINI_GAP)
+        mainSizer.Add(szrDlg, proportion=0, flag=ALL, border=AppTestADialog.MINI_GAP)
         self.Bind(EVT_COMBOBOX, self.onDlgNameSelectionChanged, self._dlgSelectionId)
 
         return mainSizer
@@ -492,6 +492,6 @@ class TestADialog(App):
         self.logger.info(f'Class Name Changed Event: {oldClassName=} {newClassName=}')
 
 
-testApp: TestADialog = TestADialog(redirect=False)
+testApp: AppTestADialog = AppTestADialog(redirect=False)
 
 testApp.MainLoop()
