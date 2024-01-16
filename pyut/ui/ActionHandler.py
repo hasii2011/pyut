@@ -22,7 +22,13 @@ from wx import Yield as wxYield
 
 from codeallybasic.Singleton import Singleton
 
+from codeallyadvanced.ui.AttachmentSide import AttachmentSide
+
 from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
+
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from miniogl.Constants import EVENT_PROCESSED
+from miniogl.Constants import SKIP_EVENT
 
 from ogl.OglActor import OglActor
 from ogl.OglNote import OglNote
@@ -30,12 +36,6 @@ from ogl.OglObject import OglObject
 from ogl.OglClass import OglClass
 from ogl.OglText import OglText
 from ogl.OglUseCase import OglUseCase
-
-from miniogl.AttachmentSide import AttachmentSide
-from miniogl.SelectAnchorPoint import SelectAnchorPoint
-from miniogl.Constants import EVENT_PROCESSED
-from miniogl.Constants import SKIP_EVENT
-
 
 from pyut.ui.wxcommands.CommandCreateLollipopInterface import CommandCreateLollipopInterface
 from pyut.ui.wxcommands.CommandCreateOglActor import CommandCreateOglActor

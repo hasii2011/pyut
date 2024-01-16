@@ -1,5 +1,5 @@
 wheel==0.42.0
-setuptools==69.0.2
+setuptools==69.0.3
 
 # the following necessary when building the
 # application with py2App
@@ -7,23 +7,21 @@ chardet==5.2.0
 PyGithub==2.1.1
 Deprecated==1.2.14
 
-# pyut2xml==0.1.1
-# epr2md==0.1.2
 py2app==0.28.6
-buildlackey==1.6.2
-versionoverlord==1.1.0
+buildlackey==1.6.3
+versionoverlord==1.2.0
 
 html-testRunner~=1.2.1
-mypy==1.7.1
+mypy==1.8.0
 mypy-extensions==1.0.0
-types-Deprecated==1.2.9.3
-types-setuptools==69.0.0.0
+types-Deprecated==1.2.9.20240106
+types-setuptools==69.0.0.20240115
 typing_extensions==4.9.0
 
 wxPython==4.2.1
-codeallybasic==0.5.2
-codeallyadvanced==0.5.2
-pyutmodelv2==2.0.0
-ogl==2.0.0
-oglio==2.0.0
-pyutplugins==2.0.0
+codeallybasic==1.0.0
+codeallyadvanced==1.0.0
+pyutmodelv2==2.1.0
+ogl==2.1.0
+oglio==2.1.0
+pyutplugins==2.1.5

@@ -5,11 +5,12 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from codeallyadvanced.ui.AttachmentSide import AttachmentSide
+
 from pyutmodelv2.PyutModelTypes import ClassName
 
 from pyutmodelv2.PyutInterface import PyutInterface
 
-from miniogl.AttachmentSide import AttachmentSide
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 
 from ogl.OglClass import OglClass
