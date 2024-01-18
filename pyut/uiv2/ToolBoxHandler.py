@@ -10,7 +10,8 @@ from wx import ToolBar
 
 from wx import NewIdRef as wxNewIdRef
 
-from codeallybasic.Singleton import Singleton
+
+from codeallybasic.SingletonV3 import SingletonV3
 
 from pyut.ui.tools.Tool import Category
 from pyut.ui.tools.Tool import Tool
@@ -18,12 +19,21 @@ from pyut.ui.tools.ToolboxOwner import ToolboxOwner
 from pyut.ui.tools.ToolboxTypes import CategoryNames
 
 
-class ToolBoxHandler(Singleton):
+PARAMETER_FRAME: str = 'frame'
 
-    # noinspection PyAttributeOutsideInit
-    def init(self, **kwargs):
+
+class ToolBoxHandler(metaclass=SingletonV3):
+
+    def __init__(self, **kwargs):
+        print('Executed ToolBoxHandler constructor')
+
         self.logger:        Logger       = getLogger(__name__)
-        self._toolboxOwner: ToolboxOwner = cast(ToolboxOwner, None)
+
+        assert PARAMETER_FRAME in kwargs, 'We need a frame to initialize ourselves'
+        frame: Frame = kwargs[PARAMETER_FRAME]
+
+        self._toolboxOwner: ToolboxOwner = ToolboxOwner(parent=frame)
+
         self._toolBar:      ToolBar      = cast(ToolBar, None)
 
     def _setToolBar(self, tb: ToolBar):
@@ -40,12 +50,9 @@ class ToolBoxHandler(Singleton):
         Register the toolbar tools.
 
         Args:
-            tools:  a list of the tools IDs
+            tools:  a list of the tool IDs
         """
         self._tools = tools
-
-    def _setApplicationFrame(self, applicationFrame: Frame):
-        self._toolboxOwner = ToolboxOwner(parent=applicationFrame)
 
     @property
     def toolBoxCategoryNames(self) -> CategoryNames:
@@ -56,9 +63,10 @@ class ToolBoxHandler(Singleton):
         """
         return self._toolboxOwner.getCategories()
 
-    toolBar          = property(fset=_setToolBar)
-    toolBarTools     = property(fset=_setToolBarTools)
-    applicationFrame = property(fset=_setApplicationFrame)
+    # noinspection PyTypeChecker
+    toolBar      = property(fget=None, fset=_setToolBar)
+    # noinspection PyTypeChecker
+    toolBarTools = property(fget=None, fset=_setToolBarTools)
 
     def addTool(self, tool: Tool):
         """
@@ -79,10 +87,5 @@ class ToolBoxHandler(Singleton):
         """
         self._toolboxOwner.displayToolbox(category)
 
-    def getToolboxesCategories(self) -> CategoryNames:
-        """
-        Return all toolbox categories
-
-        Returns:  The category names
-        """
-        return self._toolboxOwner.getCategories()
+    def __repr__(self) -> str:
+        return f'<{self.__class__.__name__} at {hex(id(self))}>'

@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import cast
 
 from logging import Logger
 from logging import getLogger
@@ -8,7 +9,6 @@ from sys import argv
 from sys import exc_info
 
 from traceback import extract_tb
-from typing import cast
 
 from wx.adv import SplashScreen
 from wx.adv import SPLASH_CENTRE_ON_PARENT
@@ -83,7 +83,8 @@ class PyutAppV2(wxApp):
 
             return True
         except (ValueError, Exception) as e:
-            self.logger.error(f'{e}')
+            errorMsg: str = ErrorManager.getErrorInfo()
+            self.logger.error(f'{errorMsg}')
             dlg = MessageDialog(None, f"The following error occurred: {exc_info()[1]}", "An error occurred...", OK | ICON_ERROR)
             errMessage: str = ErrorManager.getErrorInfo()
             self.logger.debug(errMessage)

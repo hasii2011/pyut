@@ -68,9 +68,10 @@ class TestToolboxFrame(App):
 
         frameTop.Bind(EVT_CLOSE, self.__onCloseFrame)
 
-        self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
+        self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler(frame=frameTop)
 
-        self._toolBoxHandler.applicationFrame = frameTop
+        # self._toolBoxHandler.applicationFrame = frameTop
+
         self._toolBoxHandler.toolBarTools  = [
             SID.ID_MENU_FILE_NEW_PROJECT, SID.ID_MENU_FILE_NEW_CLASS_DIAGRAM, SID.ID_MENU_FILE_NEW_SEQUENCE_DIAGRAM, SID.ID_MENU_FILE_NEW_USECASE_DIAGRAM,
             ID_OPEN, ID_SAVE, ID_UNDO, ID_REDO

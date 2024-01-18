@@ -203,6 +203,7 @@ class ToolsCreator:
 
     def _createToolBoxes(self):
 
+        toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
         for tool in [self._toolNewProject, self._toolNewClassDiagram, self._toolNewSequenceDiagram, self._toolNewUseCaseDiagram,
                      self._toolOpen, self._toolSave,
                      self._toolArrow, self._toolZoomIn, self._toolZoomOut, self._toolUndo, self._toolRedo,
@@ -212,7 +213,8 @@ class ToolsCreator:
                      self._toolSDInstance, self._toolSDMessage
                      ]:
             # self._mediator.registerTool(tool)
-            ToolBoxHandler().addTool(tool)
+
+            toolBoxHandler.addTool(tool)
 
     def _populateToolBar(self):
 

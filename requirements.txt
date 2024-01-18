@@ -19,9 +19,9 @@ types-setuptools==69.0.0.20240115
 typing_extensions==4.9.0
 
 wxPython==4.2.1
-codeallybasic==1.0.0
-codeallyadvanced==1.0.0
+codeallybasic==1.1.0
+codeallyadvanced==1.1.0
 pyutmodelv2==2.1.0
-ogl==2.1.0
-oglio==2.1.0
-pyutplugins==2.1.5
+ogl==2.1.5
+oglio==2.1.5
+pyutplugins==2.1.10

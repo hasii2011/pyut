@@ -144,8 +144,7 @@ class PyutApplicationFrameV2(Frame):
         self._pyutUIV2:    PyutUIV2      = PyutUIV2(self, eventEngine=self._eventEngine)
 
         # set up the singleton
-        self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler()
-        self._toolBoxHandler.applicationFrame = self
+        self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler(frame=self)
 
         self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg='')
 
