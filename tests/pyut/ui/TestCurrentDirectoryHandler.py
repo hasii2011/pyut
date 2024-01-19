@@ -26,19 +26,27 @@ class TestCurrentDirectoryHandler(UnitTestBase):
 
         self._preferences: PyutPreferences = PyutPreferences()
 
+    # TODO Broken when run as part of all unit tests;  Works standalone
+
     def tearDown(self):
         super().tearDown()
 
     # def testSingletonBehavior(self):
     #
-    #     # saveDiagramsDirectory: str = self._preferences.diagramsDirectory
-    #
     #     instance1: CurrentDirectoryHandler = CurrentDirectoryHandler()
     #     instance2: CurrentDirectoryHandler = CurrentDirectoryHandler()
     #
-    #     # self._preferences.diagramsDirectory = saveDiagramsDirectory
-    #
     #     self.assertEqual(instance1, instance2, 'Ouch no longer a Singleton')
+    # def testGetPreferenceValue(self):
+    #
+    #     expectedValue: str = self._preferences.diagramsDirectory
+    #     self.logger.info(f'{expectedValue=}')
+    #
+    #     cdh: CurrentDirectoryHandler = CurrentDirectoryHandler()
+    #
+    #     actualValue: str = cdh.currentDirectory
+    #
+    #     self.assertEqual(expectedValue, actualValue, 'We did not get preferences value')
 
 
 def suite() -> TestSuite:

@@ -25,7 +25,6 @@ PARAMETER_FRAME: str = 'frame'
 class ToolBoxHandler(metaclass=SingletonV3):
 
     def __init__(self, **kwargs):
-        print('Executed ToolBoxHandler constructor')
 
         self.logger:        Logger       = getLogger(__name__)
 
@@ -35,6 +34,8 @@ class ToolBoxHandler(metaclass=SingletonV3):
         self._toolboxOwner: ToolboxOwner = ToolboxOwner(parent=frame)
 
         self._toolBar:      ToolBar      = cast(ToolBar, None)
+
+        self.logger.debug('Executed ToolBoxHandler constructor')
 
     def _setToolBar(self, tb: ToolBar):
         """

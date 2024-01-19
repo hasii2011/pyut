@@ -22,15 +22,15 @@ class PyutPreferences(Singleton):
     """
     The goal of this class is to handle Pyut Preferences, to load them and save
     them from/to a file.
-    
+
     To use it :
-    
+
       - instantiate a PyutPreferences object :
         prefs: PyutPreferences = PyutPreferences()
-        
+
       - to get a pyut' preference :
         prefs = myPP.preferenceName
-        
+
       - to set a pyut' preference :
         prefs.preferenceName = xxx
 
