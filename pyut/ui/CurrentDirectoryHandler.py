@@ -35,7 +35,7 @@ class CurrentDirectoryHandler(Singleton):
     @currentDirectory.setter
     def currentDirectory(self, fullPath: str):
         """
-        Set current working directory.
+        Set the current working directory.
 
         Args:
             fullPath:   Full path, with filename
