@@ -10,16 +10,36 @@
   About Pyut... and the many developers who have
   contributed ...
 
-  Don't forget to visit the Pyut's official website:
+  Remember to visit the Pyut's official website:
         https://github.com/hasii2011/PyUt/wiki
 
 The GitHub URL is:
         https://github.com/hasii2011/PyUt/
 
+  Pyut 8.0.0 - 8.4.0 Mac OS X Release
+  ===========================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+  8.4.0
+    - Added ability to display or not display dunder methods
+    or the constructor in Class diagrams
+  8.3.0
+    - Used the new V2 PyutModel
+  See:
+        https://github.com/hasii2011/pyut/wiki/Version-8.0.0
+        https://github.com/hasii2011/pyut/wiki/Version-8.2.0
+
+  Pyut 7.5.0 - 7.8.0 Mac OS X Release
+  ===========================
+  Humberto A. Sanchez II, Consultant, Python Enthusiast
+    See:
+        https://github.com/hasii2011/pyut/wiki/Version-7.5.0
+        https://github.com/hasii2011/pyut/wiki/Version-7.7.0
+        https://github.com/hasii2011/pyut/wiki/Version-7.8.0
 
   Pyut 7.0.0 Mac OS X Release
   ===========================
   Humberto A. Sanchez II, Consultant, Python Enthusiast
+
   See the following
   https://github.com/hasii2011/PyUt/wiki/Version-7.0.0
 
@@ -35,7 +55,7 @@ The GitHub URL is:
     - This is a precursor to integrating external Pyut
     plugins which depend on an eventing mechanism.
     - Additionally, this version uses the latest
-    wxPython (4.20) and a late version of Python
+    version of wxPython (4.20) and a late version of Python
     (3.10.6). We are trying to get onto the latest version
      of our dependencies
 
@@ -105,12 +125,12 @@ The GitHub URL is:
   This was an update longer overdue. Over the last
   couple of releases
 
-  - We had dropped the editor preferences
+  - We had dropped the editor preferences.
   - How Pyut saved its position was broken as was the
   preference settings for it
   - Python reverse engineering was not generating method
   parameters correctly
-  - Importing of xml documents and in essence saving
+  - Importing of xml documents and saving
   Pyut diagrams was broken
 
   Pyut 6.5.2 Mac OS X Release
@@ -128,11 +148,11 @@ The GitHub URL is:
   Humberto A. Sanchez II, Consultant, Python Enthusiast
 
     - Updated toolbar cleaner more MAC like; Option
-      to have large icons or small icons in toolbar
+      to have large icons or small icons in the toolbar
     - Added new Text element to allow putting free text
       in dialogs; Can resize text size, bold and
       italicize
-    - New PyutVersion now include a build number
+    - New PyutVersion now includes a build number
 
 
   Pyut 6.3.0. Mac OS X Release
@@ -143,7 +163,7 @@ The GitHub URL is:
     - Pyut uses the wxPython 4.1.1 widget set
     - There is a wxPython native image generation plugin
     - Pyut acts more like a Mac app by moving the
-      About and Exit sub-menu items to the App Menu
+      About and Exit submenu items to the App Menu
 
   Pyut 6.2. Mac OS X Release
   ==========================
@@ -152,7 +172,7 @@ The GitHub URL is:
     - Diagrams now have an optional and customizable
     background grid. It is on by default
     - UML objects on the static diagrams now 'snap' to
-    'grid'; This is configurable option as is the grid
+    'grid'; This is a configurable option as is the grid
     size
 
 

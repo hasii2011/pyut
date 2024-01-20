@@ -53,8 +53,8 @@ from pyut.resources.img import ImgPyut
 
 [ID_OK] = PyutUtils.assignID(1)
 
-FrameWidth:  int = 425       # Canvas width
-FrameHeight: int = 300       # and height
+FrameWidth:  int = 600       # Dialog width
+FrameHeight: int = 250       # and height
 
 FADE_IN_LENGTH: int = 63
 
@@ -139,7 +139,7 @@ class DlgAbout(Dialog):
     # noinspection PyUnusedLocal
     def _onOk(self, event):
         """
-        _onOk : Handle user click on the OK button
+        _onOk : Handle a user click on the OK button
 
         """
         self._timer.Stop()
@@ -194,11 +194,11 @@ class DlgAbout(Dialog):
 
         backRed:   int = 240
         backGreen: int = 248
-        backBlue:  int = 255    # Background color  -- alice blue 240,248,255)
+        backBlue:  int = 255    # Background color  -- alice blue 240,248,255
 
         frontRed:   int = 105
         frontGreen: int = 105
-        frontBlue:  int = 105   # Foreground color  -- dim grey
+        frontBlue:  int = 105   # Foreground color  -- dim gray
 
         self.logger.debug(f'Enter OnRefreshPanel')
         # Init memory buffer
