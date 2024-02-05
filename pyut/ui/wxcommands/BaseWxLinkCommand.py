@@ -160,8 +160,12 @@ class BaseWxLinkCommand(Command):
 
         # If none we are creating from scratch
         if self._pyutLink is None:
-            pyutLink: PyutLink = PyutLink("", linkType=linkType, source=srcClass.pyutObject, destination=dstClass.pyutObject)
-            pyutLink.name = f'{linkType.name.capitalize()}-{pyutLink.id}'
+            pyutLink: PyutLink = PyutLink(name="", linkType=linkType, source=srcClass.pyutObject, destination=dstClass.pyutObject)
+            # TODO: This will not be needed when Ogl supports this as a preference
+            if linkType == PyutLinkType.INTERFACE:
+                pyutLink.name = 'implements'
+            else:
+                pyutLink.name = f'{linkType.name.capitalize()}-{pyutLink.id}'
         else:
             # If we have a value we are undoing a delete action
             pyutLink = self._pyutLink
