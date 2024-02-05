@@ -77,10 +77,10 @@ setup(
     install_requires=[
                       'codeallybasic>=1.1.0',
                       'codeallyadvanced>=1.1.0',
-                      'pyutmodelv2>=2.1.0',
-                      'ogl>=2.1.16',
-                      'oglio>=2.1.5',
-                      'pyutplugins>=2.1.10',
+                      'pyutmodelv2>=2.1.5',
+                      'ogl>=2.1.17',
+                      'oglio>=2.1.6',
+                      'pyutplugins>=2.2.2',
                       'PyGithub==2.1.1',
                       'wxPython==4.2.1',
                       'chardet==5.2.0'

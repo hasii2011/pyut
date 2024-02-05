@@ -102,7 +102,7 @@ class BaseWxLinkCommand(Command):
 
         umlFrame.diagram.AddShape(self._link, withModelUpdate=False)
         #
-        # TODO: Is this a hack?  I think it is
+        # TODO: Is this a hack?  I think it is;  need OglLinkFactory Update
         #
         if isinstance(self._link, OglAssociation):
             oglAssociation: OglAssociation = cast(OglAssociation, self._link)
