@@ -44,6 +44,7 @@ from wx import Yield as wxYield
 
 from codeallybasic.Dimensions import Dimensions
 from codeallybasic.Position import Position
+from codeallybasic.SecureConversions import SecureConversions
 
 from pyutplugins.PluginManager import PluginManager
 
@@ -121,7 +122,7 @@ class PyutApplicationFrameV2(Frame):
         if appModeStr is None:
             appMode: bool = False
         else:
-            appMode = PyutUtils.secureBoolean(appModeStr)
+            appMode = SecureConversions.secureBoolean(appModeStr)
 
         # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
         # in production mode use FRAME_TOOL_WINDOW

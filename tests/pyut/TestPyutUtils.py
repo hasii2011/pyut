@@ -140,36 +140,6 @@ class TestPyutUtils(UnitTestBase):
 
         self.logger.info(f'{screenMetrics=}')
 
-    def testStrFloatToInt(self):
-
-        retValue: int = PyutUtils.strFloatToInt('23.0')
-
-        self.assertEqual(23, retValue, 'Conversion failed')
-
-    def testStrIntLikeFloatToInt(self):
-
-        retValue: int = PyutUtils.strFloatToInt('23')
-
-        self.assertEqual(23, retValue, 'Conversion failed')
-
-    def testStrFloatToIntThrowsException(self):
-        """
-        Assumes assertions turned on
-        """
-
-        self.assertRaises(AssertionError, lambda: self._failsOnAlphaInput())
-
-    def testDoubleDecimalPoints(self):
-        self.assertRaises(AssertionError, lambda: self._failsOnDoubleDecimalPoints())
-
-    # noinspection PyUnusedLocal
-    def _failsOnAlphaInput(self):
-        retValue: int = PyutUtils.strFloatToInt('aa')
-
-    # noinspection PyUnusedLocal
-    def _failsOnDoubleDecimalPoints(self):
-        retValue: int = PyutUtils.strFloatToInt('23.0.0')
-
 
 def suite() -> TestSuite:
 

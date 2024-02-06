@@ -60,24 +60,6 @@ class PyutUtils:
         self.logger: Logger = getLogger(__name__)
 
     @staticmethod
-    def strFloatToInt(floatValue: str) -> int:
-        """
-        Will fail during development with assertions turned on
-
-        Args:
-            floatValue:
-
-        Returns:  An integer value
-        """
-        assert floatValue is not None, 'Cannot be None'
-        assert floatValue != '', 'Cannot be empty string'
-        assert floatValue.replace('.', '', 1).isdigit(), 'String must be numeric'
-
-        integerValue: int = int(float(floatValue))
-
-        return integerValue
-
-    @staticmethod
     def extractFileName(fullPath: str) -> str:
         """
         Used to get just the file name for a full path.  Does NOT include the file extension
@@ -93,40 +75,6 @@ class PyutUtils:
         s:     str       = pName[:-4]               # strip the suffix and the dot ('.')
 
         return s
-
-    @staticmethod
-    def secureInteger(x: str):
-        if x is not None and x != '':
-            return int(x)
-        else:
-            return 0
-
-    @staticmethod
-    def secureBoolean(x: str):
-        try:
-            if x is not None:
-                if x in [True, "True", "true", 1, "1"]:
-                    return True
-        except (ValueError, Exception) as e:
-            PyutUtils.clsLogger.error(f'secureBoolean error: {e}')
-        return False
-
-    @staticmethod
-    def secureFloat(possibleFloatStr: str) -> float:
-        if possibleFloatStr is not None:
-            return float(possibleFloatStr)
-        return 0.0
-
-    @staticmethod
-    def secureSplineInt(splineX: str) -> int:
-        if splineX is None:
-            return 0
-        elif splineX == "_DeprecatedNonBool: False" or splineX == "False":
-            return 0
-        elif splineX == "_DeprecatedNonBool: True" or splineX == "True":
-            return 1
-        else:
-            return int(splineX)
 
     @staticmethod
     def displayInformation(msg, title=None, parent=None):
@@ -228,7 +176,6 @@ class PyutUtils:
     @classmethod
     def retrieveResourcePath(cls, bareFileName: str, packageName: str = RESOURCES_PACKAGE_NAME) -> str:
         """
-        Assume we are in an app;  If not then we are in development
         Args:
             bareFileName:  Simple file name
             packageName:   The package from which to retrieve the resource
