@@ -157,7 +157,7 @@ class GeneralPreferencesPage(BasePreferencesPage):
         with DirDialog(None, 'Choose the Diagrams Directory', style=DD_DEFAULT_STYLE) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self._preferences.diagramsDirectory = dlg.GetPath()
-                self._textDiagramsDirectory = dlg.GetPath()
+                self._textDiagramsDirectory.SetValue(self._preferences.diagramsDirectory)
 
     def _isLargeIconSize(self) -> bool:
         if self._preferences.toolBarIconSize == ToolBarIconSize.SIZE_32:
