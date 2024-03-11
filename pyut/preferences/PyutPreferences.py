@@ -25,13 +25,13 @@ class PyutPreferences(Singleton):
 
     To use it :
 
-      - instantiate a PyutPreferences object :
+      - Instantiate a PyutPreferences object :
         prefs: PyutPreferences = PyutPreferences()
 
-      - to get a pyut' preference :
+      - To get a pyut' preference :
         prefs = myPP.preferenceName
 
-      - to set a pyut' preference :
+      - To set a pyut' preference :
         prefs.preferenceName = xxx
 
     The preferences are loaded on the first instantiation of this
@@ -64,7 +64,7 @@ class PyutPreferences(Singleton):
     @staticmethod
     def determinePreferencesLocation():
         """
-        This method MUST (I repeat MUST) be called before attempting to instantiate the preferences Singleton
+        This method MUST (I repeat MUST) be called before attempting to instantiate the preference Singleton
         """
         PreferencesCommon.determinePreferencesLocation()
 
@@ -159,6 +159,14 @@ class PyutPreferences(Singleton):
         self.overrideProgramExitPosition = True
 
     @property
+    def virtualWindowWidth(self) -> int:
+        return self._generalPrefs.virtualWindowWidth
+
+    @virtualWindowWidth.setter
+    def virtualWindowWidth(self, newValue: int):
+        self._generalPrefs.virtualWindowWidth = newValue
+
+    @property
     def startupSize(self) -> Dimensions:
         return self._generalPrefs.startupSize
 
@@ -201,7 +209,7 @@ class PyutPreferences(Singleton):
 
     def __loadConfig(self):
         """
-        Load preferences from configuration file
+        Load preferences from the configuration file
         """
         # Make sure that the configuration file exists
         # noinspection PyUnusedLocal

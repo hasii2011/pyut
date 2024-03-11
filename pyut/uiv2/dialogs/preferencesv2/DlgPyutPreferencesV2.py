@@ -34,14 +34,14 @@ from pyutplugins.common.ui.preferences.PluginPreferencesPage import PluginPrefer
 
 class DlgPyutPreferencesV2(SizedDialog):
     """
-    This is the preferences dialog for Pyut.  This is version 2 of this dialog from 
+    This is the preference's dialog for Pyut.  This is version 2 of this dialog from
     the legacy application.  This version of Pyut added many more preferences.
 
     Display the current preferences, the possible values, and save modified values.
 
-    This works just like preferences on OS X work.  They are changed
+    This works like preferences on OS X work.  They are changed
     immediately
-    
+
     To use it from a wxFrame:
     ```python
 
@@ -56,7 +56,7 @@ class DlgPyutPreferencesV2(SizedDialog):
             parent:
         """
         style:   int  = DEFAULT_DIALOG_STYLE | RESIZE_BORDER
-        dlgSize: Size = Size(460, 440)
+        dlgSize: Size = Size(460, 500)
         super().__init__(parent, ID_ANY, "Preferences", size=dlgSize, style=style)
         self.logger:  Logger          = getLogger(__name__)
         self.__prefs: PyutPreferences = PyutPreferences()

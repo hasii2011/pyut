@@ -50,7 +50,6 @@ from pyut.uiv2.eventengine.Events import AddOglDiagramEvent
 from pyut.uiv2.eventengine.Events import AddPyutDiagramEvent
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-DEFAULT_WIDTH = 3000
 A4_FACTOR:    float = 1.41
 
 UmlObject  = Union[OglClass, OglLink, OglNote, OglText, OglSDMessage, OglSDInstance, OglActor, OglUseCase, OglInterface2]
@@ -60,7 +59,7 @@ UmlObjects = NewType('UmlObjects', List[UmlObject])
 class UmlFrame(UmlFrameShapeHandler):
     """
     Represents a canvas for drawing diagrams.
-    It provides all the methods to add new classes, notes, links...
+    It provides all the methods to add new classes, notes, and links.
     """
     PIXELS_PER_UNIT_X: int = 20
     PIXELS_PER_UNIT_Y: int = 20
@@ -84,7 +83,7 @@ class UmlFrame(UmlFrameShapeHandler):
         self._actionHandler:     ActionHandler     = ActionHandler(eventEngine=eventEngine)
         self._editObjectHandler: EditObjectHandler = EditObjectHandler(eventEngine=eventEngine)
 
-        self.maxWidth:  int  = DEFAULT_WIDTH
+        self.maxWidth:  int  = self._preferences.virtualWindowWidth
         self.maxHeight: int = int(self.maxWidth / A4_FACTOR)  # 1.41 is for A4 support
 
         nbrUnitsX: int = int(self.maxWidth / UmlFrame.PIXELS_PER_UNIT_X)
@@ -190,7 +189,7 @@ class UmlFrame(UmlFrameShapeHandler):
 
     def OnLeftDClick(self, event: MouseEvent):
         """
-        Manage a left double click mouse event.
+        Manage a left double-click mouse event.
 
         Args:
             event:
@@ -285,8 +284,8 @@ class UmlFrame(UmlFrameShapeHandler):
         Args:
             objectId:  The id of the object we want
 
-        Returns:  The uml object that has the specified id. If there is no
-        matching object returns `None`
+        Returns:  The uml object that has the specified id.
+        If no matching object is found, this method returns `None`
         """
 
         for shape in self.GetDiagram().GetShapes():

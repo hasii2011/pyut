@@ -10,16 +10,20 @@ from wx import DD_DEFAULT_STYLE
 from wx import DirDialog
 from wx import EVT_BUTTON
 from wx import EVT_CHECKBOX
+from wx import EVT_SPINCTRL
 from wx import ID_ANY
 
 from wx import Button
 from wx import CheckBox
 from wx import CommandEvent
 from wx import ID_OK
+from wx import SpinCtrl
+from wx import SpinEvent
 from wx import TextCtrl
 from wx import Window
 
 from wx.lib.buttons import GenBitmapButton
+from wx.lib.sized_controls import SizedPanel
 
 from wx.lib.sized_controls import SizedStaticBox
 
@@ -46,7 +50,7 @@ class GeneralPreferencesPage(BasePreferencesPage):
     """
     Implemented using sized components for better platform look and feel
     Using wx IDs to minimize callbacks
-    Since these are just a bunch of checkboxes that drive true/false preferences,
+    Since these are a bunch of checkboxes that drive true/false preferences,
     I can encapsulate creating them in a list with a dataclass that hosts all
     the necessary creation information;  How esoteric of me !!!  ;-(
     """
@@ -61,11 +65,14 @@ class GeneralPreferencesPage(BasePreferencesPage):
         [
             self._maximizeWxId,        self._autoResizeWxId,            self._showTipsWxId,
             self._toolBarIconSizeWxId, self._loadLastOpenedProjectWxId, self._displayProjectExtensionWxId,
+            self._virtualWindowWidthId,
             self._resetTipsWxId,
-        ] = PyutUtils.assignID(7)
+        ] = PyutUtils.assignID(8)
 
-        self._btnResetTips:          Button  = cast(Button, None)
+        self._btnResetTips:          Button   = cast(Button, None)
         self._textDiagramsDirectory: TextCtrl = cast(TextCtrl, None)
+        self._virtualWindowWidth:    SpinCtrl = cast(SpinCtrl, None)
+
         p: PyutPreferences = self._preferences
         self._controlData = [
             ControlData(label='&Full Screen on startup',   initialValue=p.fullScreen,              wxId=self._maximizeWxId),
@@ -76,28 +83,42 @@ class GeneralPreferencesPage(BasePreferencesPage):
             ControlData(label='Display Project Extension', initialValue=p.displayProjectExtension, wxId=self._displayProjectExtensionWxId)
         ]
 
-        self._layoutWindow(parent)
+        self._layoutWindow(sizedPanel=self)
 
-    def _layoutWindow(self, parent: Window):
+    def _layoutWindow(self, sizedPanel: SizedPanel):
+
+        togglePanel: SizedStaticBox = SizedStaticBox(sizedPanel, label='')
+        togglePanel.SetSizerType('Vertical')
+        togglePanel.SetSizerProps(expand=True, proportion=6)
 
         for cd in self._controlData:
             control: ControlData = cast(ControlData, cd)
-            control.instanceVar = CheckBox(self, control.wxId, label=control.label)
+            control.instanceVar = CheckBox(togglePanel, control.wxId, label=control.label)
             control.instanceVar.SetValue(control.initialValue)
-            parent.Bind(EVT_CHECKBOX, self._onValueChanged, id=control.wxId)
+            sizedPanel.Bind(EVT_CHECKBOX, self._onValueChanged, id=control.wxId)
 
-        self._layoutDiagramsDirectory(parent)
-        self._btnResetTips = Button(self, self._resetTipsWxId, 'Reset Tips')
+        self._btnResetTips = Button(togglePanel, self._resetTipsWxId, 'Reset Tips')
 
-        parent.Bind(EVT_BUTTON,   self._onResetTips, id=self._resetTipsWxId)
+        virtualWindowWidthBox: SizedStaticBox = SizedStaticBox(sizedPanel, label='Virtual Window Width')
+        virtualWindowWidthBox.SetSizerType('vertical')
+        virtualWindowWidthBox.SetSizerProps(expand=False, proportion=2)
+
+        self._virtualWindowWidth = SpinCtrl(virtualWindowWidthBox, self._virtualWindowWidthId, min=1000, max=25000, size=(75, 25))
+
+        self._virtualWindowWidth.SetValue(self._preferences.virtualWindowWidth)
+        sizedPanel.Bind(EVT_SPINCTRL, self._virtualWindowWidthChanged, id=self._virtualWindowWidthId)
+
+        self._layoutDiagramsDirectory(sizedPanel)
+
+        sizedPanel.Bind(EVT_BUTTON, self._onResetTips, id=self._resetTipsWxId)
 
         self._fixPanelSize(panel=self)
 
-    def _layoutDiagramsDirectory(self, parent: Window):
-        directoryPanel: SizedStaticBox = SizedStaticBox(self, label='Diagrams Directory')
+    def _layoutDiagramsDirectory(self, sizedPanel: SizedPanel):
+        directoryPanel: SizedStaticBox = SizedStaticBox(sizedPanel, label='Diagrams Directory')
 
         directoryPanel.SetSizerType('horizontal')
-        directoryPanel.SetSizerProps(expand=True, proportion=1)
+        directoryPanel.SetSizerProps(expand=True, proportion=2)
 
         textCtrl: TextCtrl = TextCtrl(directoryPanel)
         textCtrl.SetSizerProps(expand=False, proportion=5)
@@ -109,7 +130,7 @@ class GeneralPreferencesPage(BasePreferencesPage):
         textCtrl.SetEditable(False)
 
         self._textDiagramsDirectory = textCtrl
-        parent.Bind(EVT_BUTTON, self._onSelectDiagramsDirectory, selectButton)
+        sizedPanel.Bind(EVT_BUTTON, self._onSelectDiagramsDirectory, selectButton)
 
     @property
     def name(self) -> str:
@@ -158,6 +179,11 @@ class GeneralPreferencesPage(BasePreferencesPage):
             if dlg.ShowModal() == ID_OK:
                 self._preferences.diagramsDirectory = dlg.GetPath()
                 self._textDiagramsDirectory.SetValue(self._preferences.diagramsDirectory)
+
+    # noinspection PyUnusedLocal
+    def _virtualWindowWidthChanged(self, event: SpinEvent):
+
+        self._preferences.virtualWindowWidth = self._virtualWindowWidth.GetValue()
 
     def _isLargeIconSize(self) -> bool:
         if self._preferences.toolBarIconSize == ToolBarIconSize.SIZE_32:

@@ -12,11 +12,12 @@ from pyut.preferences.BaseSubPreference import BaseSubPreference
 from pyut.preferences.PreferencesCommon import PREFS_NAME_VALUES
 from pyut.preferences.PreferencesCommon import PreferencesCommon
 
+DEFAULT_WIDTH = 3000
+
 
 class GeneralPreferences(BaseSubPreference):
 
     MAIN_SECTION:    str = 'Main'
-
     SHOW_TIPS_ON_STARTUP:       str = 'Show_Tips_On_Startup'
     LOAD_LAST_OPENED_PROJECT:   str = 'load_last_opened_project'
     DISPLAY_PROJECT_EXTENSION:  str = 'display_project_extension'
@@ -25,7 +26,8 @@ class GeneralPreferences(BaseSubPreference):
     CURRENT_TIP:                str = 'Current_Tip'
     STARTUP_SIZE:               str = 'startup_size'
     STARTUP_POSITION:           str = 'startup_position'
-    DIAGRAMS_DIRECTORY:          str = 'diagrams_directory'
+    VIRTUAL_WINDOW_WIDTH:       str = 'virtual_window_width'
+    DIAGRAMS_DIRECTORY:         str = 'diagrams_directory'
     CENTER_APP_ON_STARTUP:      str = 'center_app_on_startup'  # If 'False' honor startup_x, startup_y
     TOOL_BAR_ICON_SIZE:         str = 'tool_bar_icon_size'
 
@@ -38,6 +40,7 @@ class GeneralPreferences(BaseSubPreference):
         CURRENT_TIP:               '0',
         STARTUP_SIZE:              Dimensions(1024, 768).__str__(),
         STARTUP_POSITION:          Position(5, 5).__str__(),
+        VIRTUAL_WINDOW_WIDTH:      str(DEFAULT_WIDTH),
         DIAGRAMS_DIRECTORY:        '',                      # will be rationally set by CurrentDirectoryHandler
         CENTER_APP_ON_STARTUP:     'True',
         TOOL_BAR_ICON_SIZE:        ToolBarIconSize.SIZE_32.value,
@@ -148,6 +151,15 @@ class GeneralPreferences(BaseSubPreference):
     @startupPosition.setter
     def startupPosition(self, newValue: Position):
         self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.STARTUP_POSITION, newValue.__str__())
+        self._preferencesCommon.saveConfig()
+
+    @property
+    def virtualWindowWidth(self) -> int:
+        return self._config.getint(GeneralPreferences.MAIN_SECTION, GeneralPreferences.VIRTUAL_WINDOW_WIDTH)
+
+    @virtualWindowWidth.setter
+    def virtualWindowWidth(self, newValue: int):
+        self._config.set(GeneralPreferences.MAIN_SECTION, GeneralPreferences.VIRTUAL_WINDOW_WIDTH, str(newValue))
         self._preferencesCommon.saveConfig()
 
     @property
