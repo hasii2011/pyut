@@ -244,7 +244,7 @@ class MenuCreator:
         if sub is not None:
             self._fileMenu.AppendSubMenu(sub, "Import")
         fileMenu.AppendSeparator()
-        fileMenu.Append(ID_PREFERENCES, "P&references", "PyUt preferences")
+        fileMenu.Append(ID_PREFERENCES, "P&references", "Pyut preferences")
         # fileMenu.Append(ID_MNU_FILE_DIAGRAM_PROPERTIES,_("&Diagram Properties"), _("Diagram properties"))
         fileMenu.AppendSeparator()
         fileMenu.Append(SharedIdentifiers.ID_MENU_FILE_PRINT_SETUP, "Print se&tup...", "Display the print setup dialog box")

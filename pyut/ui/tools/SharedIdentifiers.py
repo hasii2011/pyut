@@ -32,21 +32,21 @@ class SharedIdentifiers:
     ] = PyutUtils.assignID(41)
 
     ACTIONS = {
-        ID_ARROW                   :           Action.SELECTOR,
-        ID_CLASS                   :           Action.NEW_CLASS,
-        ID_NOTE                    :            Action.NEW_NOTE,
+        ID_ARROW:                    Action.SELECTOR,
+        ID_CLASS:                    Action.NEW_CLASS,
+        ID_NOTE:                     Action.NEW_NOTE,
         ID_RELATIONSHIP_INHERITANCE: Action.NEW_INHERIT_LINK,
         ID_RELATIONSHIP_REALIZATION: Action.NEW_IMPLEMENT_LINK,
 
         ID_RELATIONSHIP_COMPOSITION: Action.NEW_COMPOSITION_LINK,
         ID_RELATIONSHIP_AGGREGATION: Action.NEW_AGGREGATION_LINK,
         ID_RELATIONSHIP_ASSOCIATION: Action.NEW_ASSOCIATION_LINK,
-        ID_REL_NOTE                :        Action.NEW_NOTE_LINK,
-        ID_ACTOR                   :           Action.NEW_ACTOR,
-        ID_TEXT                    :            Action.NEW_TEXT,
-        ID_USECASE                 :         Action.NEW_USECASE,
-        ID_SD_INSTANCE             :     Action.NEW_SD_INSTANCE,
-        ID_SD_MESSAGE              :      Action.NEW_SD_MESSAGE,
-        ID_ZOOM_IN                 :         Action.ZOOM_IN,
-        ID_ZOOM_OUT                :        Action.ZOOM_OUT,
+        ID_REL_NOTE:                 Action.NEW_NOTE_LINK,
+        ID_ACTOR:                    Action.NEW_ACTOR,
+        ID_TEXT:                     Action.NEW_TEXT,
+        ID_USECASE:                  Action.NEW_USECASE,
+        ID_SD_INSTANCE:              Action.NEW_SD_INSTANCE,
+        ID_SD_MESSAGE:               Action.NEW_SD_MESSAGE,
+        ID_ZOOM_IN:                  Action.ZOOM_IN,
+        ID_ZOOM_OUT:                 Action.ZOOM_OUT,
     }

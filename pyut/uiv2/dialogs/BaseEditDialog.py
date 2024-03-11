@@ -63,7 +63,7 @@ class BaseEditDialog(SizedDialog):
         """
         Create Ok and Cancel
         Since we want to use a custom button set, we will not use the
-        CreateStdDialogBtnSizer here, we'll just create our own panel with
+        CreateStdDialogBtnSizer here, we'll create our own panel with
         a horizontal layout and add the buttons to that
 
         Args:

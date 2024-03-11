@@ -35,7 +35,7 @@ _Some Updates_
 
 
 ---------
-I asked the original developers if it was Ok to fork this project.  This is what one replied:
+I asked the original developers if it was Ok to fork this project.  One developer replied:
 
 
 >> Hello,
@@ -52,7 +52,7 @@ This is the fork. I let Cedric know.
 
 
 ## Developer Notes
-This project uses [buildlackey](https://github.com/hasii2011/buildlackey) for day to day development builds
+This project uses [buildlackey](https://github.com/hasii2011/buildlackey) for day-to-day development builds
 
 ___
 
@@ -72,10 +72,10 @@ I urge you to read about the
 [Give up GitHub](https://GiveUpGitHub.org) campaign from
 [the Software Freedom Conservancy](https://sfconservancy.org).
 
-While I do not advocate for all the issues listed there I do not like that
+While I do not advocate for all the issues listed there, I do not like that
 a company like Microsoft may profit from open source projects.
 
-I continue to use GitHub because it offers the services I need for free.  But, I continue
+I continue to use GitHub because it offers the services I need for free.  But I continue
 to monitor their terms of service.
 
 Any use of this project's code by GitHub Copilot, past or present, is done
