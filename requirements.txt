@@ -15,12 +15,12 @@ versionoverlord==1.4.0
 html-testRunner~=1.2.1
 mypy==1.9.0
 mypy-extensions==1.0.0
-types-Deprecated==1.2.9.20240106
+types-Deprecated==1.2.9.20240311
 types-setuptools==69.1.0.20240310
 typing_extensions==4.10.0
 
 wxPython==4.2.1
-codeallybasic==1.3.0
+codeallybasic==1.3.1
 codeallyadvanced==1.3.1
 pyutmodelv2==2.1.5
 ogl==2.1.20

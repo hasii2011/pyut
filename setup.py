@@ -75,7 +75,7 @@ setup(
     ),
     setup_requires=['py2app'],
     install_requires=[
-                      'codeallybasic>=1.3.0',
+                      'codeallybasic>=1.3.1',
                       'codeallyadvanced>=1.3.1',
                       'pyutmodelv2>=2.1.5',
                       'ogl>=2.1.20',
