@@ -14,8 +14,6 @@ from pyutmodelv2.PyutClass import PyutClass
 from ogl.OglClass import OglClass
 
 
-from pyut.preferences.PreferencesCommon import PreferencesCommon
-
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 
@@ -47,7 +45,6 @@ class TestBaseWxCommand(UnitTestBaseW):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        PreferencesCommon.determinePreferencesLocation()
 
     def setUp(self):
         super().setUp()

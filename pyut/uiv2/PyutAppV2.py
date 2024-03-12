@@ -28,7 +28,7 @@ from wx import DefaultSize as wxDefaultSize
 from wx import App as wxApp
 from wx import Yield as wxYield
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.errorcontroller.ErrorManager import ErrorManager
 
@@ -84,7 +84,7 @@ class PyutAppV2(wxApp):
             return True
         except (ValueError, Exception) as e:
             errorMsg: str = ErrorManager.getErrorInfo()
-            self.logger.error(f'{errorMsg}')
+            self.logger.error(f'{e} - {errorMsg}')
             dlg = MessageDialog(None, f"The following error occurred: {exc_info()[1]}", "An error occurred...", OK | ICON_ERROR)
             errMessage: str = ErrorManager.getErrorInfo()
             self.logger.debug(errMessage)
@@ -113,8 +113,8 @@ class PyutAppV2(wxApp):
         AfterSplash : Occurs after the splash screen is launched; launch the application
         """
         try:
-            # Handle application file names on the command line
-            prefs: PyutPreferences = PyutPreferences()
+            # Handle application filenames on the command line
+            prefs: PyutPreferencesV2 = PyutPreferencesV2()
             self._handleCommandLineFileNames(prefs)
 
             if self._frame is None:
@@ -146,7 +146,7 @@ class PyutAppV2(wxApp):
             dlg.Destroy()
             return False
 
-    def _handleCommandLineFileNames(self, prefs: PyutPreferences):
+    def _handleCommandLineFileNames(self, prefs: PyutPreferencesV2):
 
         loadedAFile: bool                 = False
         appFrame:    PyutApplicationFrameV2 = self._frame

@@ -33,7 +33,7 @@ from pyut.uiv2.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesP
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.resources.img import folder as ImgFolder
 
@@ -73,7 +73,7 @@ class GeneralPreferencesPage(BasePreferencesPage):
         self._textDiagramsDirectory: TextCtrl = cast(TextCtrl, None)
         self._virtualWindowWidth:    SpinCtrl = cast(SpinCtrl, None)
 
-        p: PyutPreferences = self._preferences
+        p: PyutPreferencesV2 = self._preferences
         self._controlData = [
             ControlData(label='&Full Screen on startup',   initialValue=p.fullScreen,              wxId=self._maximizeWxId),
             ControlData(label='&Resize classes on edit',   initialValue=p.autoResizeShapesOnEdit,  wxId=self._autoResizeWxId),
@@ -146,7 +146,7 @@ class GeneralPreferencesPage(BasePreferencesPage):
 
         eventID:  int = event.GetId()
         newValue: bool = event.IsChecked()
-        p:        PyutPreferences = self._preferences
+        p:        PyutPreferencesV2 = self._preferences
 
         match eventID:
             case self._maximizeWxId:

@@ -36,7 +36,7 @@ from pyutplugins.plugininterfaces.ToolPluginInterface import ToolPluginInterface
 
 from pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
@@ -58,16 +58,16 @@ class MenuCreator:
 
         self._containingFrame: Frame = frame
 
-        self.logger:    Logger          = getLogger(__name__)
-        self._prefs:    PyutPreferences = PyutPreferences()
-        self.plugMgr:   PluginManager   = pluginManager
+        self.logger:    Logger            = getLogger(__name__)
+        self._prefs:    PyutPreferencesV2 = PyutPreferencesV2()
+        self.plugMgr:   PluginManager     = pluginManager
 
         self._plugins:    PluginIDMap   = PluginIDMap({})     # To store the plugins and their activation IDs
         self._toolboxIds: ToolboxIdMap = ToolboxIdMap({})  # Dictionary id --> toolbox
 
         self._fileMenu:  Menu = cast(Menu, None)
         self._editMenu:  Menu = cast(Menu, None)
-        self._toolsMenu: Menu = cast(Menu, None)
+        self._toolMenu: Menu = cast(Menu, None)
         self._helpMenu:  Menu = cast(Menu, None)
 
         self._toolPlugins:   PluginIDMap = cast(PluginIDMap, None)
@@ -101,7 +101,7 @@ class MenuCreator:
 
     @toolsMenu.setter
     def toolsMenu(self, toolsMenu: Menu):
-        self._toolsMenu = toolsMenu
+        self._toolMenu = toolsMenu
 
     @property
     def helpMenu(self):
@@ -184,13 +184,13 @@ class MenuCreator:
         #    Tools menu
         # -----------------
         # mnuTools = Menu()
-        sub = self._makeToolsMenu()
+        sub = self._makeToolMenu()
         if sub is not None:
-            self._toolsMenu.AppendSubMenu(sub, "Tools", 'Tools are here')
+            self._toolMenu.AppendSubMenu(sub, "Tools", 'Tools are here')
 
-        sub = self._makeToolboxesMenu()
+        sub = self._makeToolboxMenu()
         if sub is not None:
-            self._toolsMenu.AppendSubMenu(sub, "Toolboxes", 'Toolboxes are here')
+            self._toolMenu.AppendSubMenu(sub, "Toolboxes", 'Toolboxes are here')
 
         # Plugins identified
         self._fileMenuHandler.importPlugins = self._importPlugins
@@ -201,7 +201,7 @@ class MenuCreator:
         mnuBar = MenuBar()
         mnuBar.Append(self._fileMenu,  "&File")
         mnuBar.Append(self._editMenu,  "&Edit")
-        mnuBar.Append(self._toolsMenu, "&Tools")
+        mnuBar.Append(self._toolMenu, "&Tools")
         mnuBar.Append(self._helpMenu,  "&Help")
 
         containingFrame: Frame = self._containingFrame
@@ -348,7 +348,7 @@ class MenuCreator:
 
         return sub
 
-    def _makeToolsMenu(self):
+    def _makeToolMenu(self):
         """
         Make the Tools submenu.
         """
@@ -366,7 +366,7 @@ class MenuCreator:
 
         return sub
 
-    def _makeToolboxesMenu(self):
+    def _makeToolboxMenu(self):
         """
         Make the Toolboxes submenu.
         """

@@ -24,7 +24,7 @@ from wx import DefaultPosition
 from wx import WindowIDRef
 from wx import NewIdRef as wxNewIdRef
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.ui.tools.Tool import Category
 from pyut.ui.tools.Tool import Tool
@@ -63,9 +63,9 @@ class Toolbox(MiniFrame):
         self._tools:    Tools = Tools([])
         self._category: Category  = Category("")
 
-        self._parentWindow: Window          = parentWindow
-        self._toolboxOwner: ToolboxOwner    = toolboxOwner
-        self._preferences:  PyutPreferences = PyutPreferences()
+        self._parentWindow: Window            = parentWindow
+        self._toolboxOwner: ToolboxOwner      = toolboxOwner
+        self._preferences:  PyutPreferencesV2 = PyutPreferencesV2()
 
         self.Bind(EVT_CLOSE, self.eventClose)
 

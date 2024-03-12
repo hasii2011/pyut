@@ -7,7 +7,7 @@ from os import environ as osEnviron
 
 from codeallybasic.SingletonV3 import SingletonV3
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 
 class CurrentDirectoryHandler(metaclass=SingletonV3):
@@ -17,9 +17,9 @@ class CurrentDirectoryHandler(metaclass=SingletonV3):
 
     def __init__(self):
 
-        self.logger:            Logger          = getLogger(__name__)
-        self._preferences:      PyutPreferences = PyutPreferences()
-        self._currentDirectory: str             = ''
+        self.logger:            Logger            = getLogger(__name__)
+        self._preferences:      PyutPreferencesV2 = PyutPreferencesV2()
+        self._currentDirectory: str               = ''
 
         if self._preferences.diagramsDirectory == '':
             if CurrentDirectoryHandler.HOME_ENV_VAR in osEnviron:
@@ -37,7 +37,7 @@ class CurrentDirectoryHandler(metaclass=SingletonV3):
     def currentDirectory(self, fullPath: str):
         """
         Set the current working directory.
-        We'll strip off the file name
+        We'll strip off the filename
 
         Args:
             fullPath:   Full path, with filename

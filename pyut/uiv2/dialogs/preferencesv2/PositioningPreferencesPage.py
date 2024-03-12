@@ -1,11 +1,6 @@
 
 from typing import cast
 
-from codeallybasic.Dimensions import Dimensions
-from codeallybasic.Position import Position
-
-from codeallyadvanced.ui.widgets.DimensionsControl import DimensionsControl
-from codeallyadvanced.ui.widgets.PositionControl import PositionControl
 from wx import EVT_CHECKBOX
 
 from wx import CheckBox
@@ -16,6 +11,12 @@ from wx import Window
 from wx import NewIdRef as wxNewIdRef
 
 from wx.lib.sized_controls import SizedPanel
+
+from codeallybasic.Dimensions import Dimensions
+from codeallybasic.Position import Position
+
+from codeallyadvanced.ui.widgets.DimensionsControl import DimensionsControl
+from codeallyadvanced.ui.widgets.PositionControl import PositionControl
 
 from pyut.uiv2.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
 
@@ -73,7 +74,7 @@ class PositioningPreferencesPage(BasePreferencesPage):
         """
         Set the position controls based on the value of appropriate preference value
         """
-        if self._preferences.centerAppOnStartUp is True:
+        if self._preferences.centerAppOnStartup is True:
             self._appPositionControls.enableControls(False)
             self._cbCenterAppOnStartup.SetValue(True)
         else:
@@ -88,7 +89,7 @@ class PositioningPreferencesPage(BasePreferencesPage):
         Enable/Disable position controls based on the value of appropriate preference value
 
         Args:
-            newValue:  If 'True' position controls are disabled else they are enabled
+            newValue:  If 'True' the position controls are disabled else they are enabled
         """
         if newValue is True:
             self._appPositionControls.enableControls(False)
@@ -108,7 +109,7 @@ class PositioningPreferencesPage(BasePreferencesPage):
         """
         val: bool = event.IsChecked()
 
-        self._preferences.centerAppOnStartUp = val
+        self._preferences.centerAppOnStartup = val
         self._enablePositionControls(val)
 
         self._valuesChanged = True

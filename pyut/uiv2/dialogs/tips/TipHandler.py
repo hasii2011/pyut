@@ -9,7 +9,7 @@ from logging import getLogger
 
 from os import linesep as osLineSep
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 TipLinesType = NewType('TipLinesType', List[str])
 
@@ -22,10 +22,10 @@ class TipHandler:
         """
 
         Args:
-            fqFileName:  Fully qualified file name
+            fqFileName:  Fully qualified filename
         """
-        self.logger: Logger          = getLogger(__name__)
-        self._prefs: PyutPreferences = PyutPreferences()
+        self.logger: Logger            = getLogger(__name__)
+        self._prefs: PyutPreferencesV2 = PyutPreferencesV2()
 
         tipLines: TipLinesType = self._cacheTips(fileName=fqFileName)
         tipCount: int          = self._computeTipCount(tipLines=tipLines)

@@ -1,8 +1,6 @@
 
 from codeallyadvanced.ui.UnitTestBaseW import UnitTestBaseW
 
-from pyut.preferences.PyutPreferences import PyutPreferences
-
 
 class ProjectTestBase(UnitTestBaseW):
 
@@ -13,7 +11,6 @@ class ProjectTestBase(UnitTestBaseW):
 
     def setUp(self):
         super().setUp()
-        PyutPreferences.determinePreferencesLocation()
 
     def tearDown(self):
         super().tearDown()

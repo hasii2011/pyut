@@ -7,8 +7,6 @@ from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.PyutConstants import PyutConstants
 
-from pyut.preferences.PreferencesCommon import PreferencesCommon
-
 from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
 
 from tests.ProjectTestBase import ProjectTestBase
@@ -20,7 +18,6 @@ class TestTipHandler(ProjectTestBase):
     @classmethod
     def setUpClass(cls):
         UnitTestBase.setUpClass()
-        PreferencesCommon.determinePreferencesLocation()
 
     def setUp(self):
         super().setUp()

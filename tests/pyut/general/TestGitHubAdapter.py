@@ -7,8 +7,6 @@ from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.general.GitHubAdapter import GitHubAdapter
 
-from pyut.preferences.PreferencesCommon import PreferencesCommon
-
 
 class TestGitHubAdapter(UnitTestBase):
     """
@@ -16,7 +14,6 @@ class TestGitHubAdapter(UnitTestBase):
     @classmethod
     def setUpClass(cls):
         UnitTestBase.setUpClass()
-        PreferencesCommon.determinePreferencesLocation()
 
         import warnings
         # To ignore this warning:

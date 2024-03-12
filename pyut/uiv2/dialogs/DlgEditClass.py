@@ -46,8 +46,8 @@ class DlgEditClass(DlgEditClassCommon):
     Dialogs for methods and fields editing are implemented in different dialog classes and
     created when invoking the _callDlgEditMethod and _callDlgEditField methods.
 
-    Because dialog works on a copy of the PyutClass object, if you cancel the
-    dialog any modifications are lost.
+    Because the dialog works on a copy of the PyutClass object, if you cancel the
+     dialog, any modifications are lost.
 
     """
     def __init__(self, parent: Window, eventEngine: IEventEngine, pyutClass: PyutClass):
@@ -220,9 +220,9 @@ class DlgEditClass(DlgEditClassCommon):
         self._pyutClass.fields      = self._pyutModelCopy.fields
         self._pyutClass.description = self._pyutModelCopy.description
 
-        from pyut.preferences.PyutPreferences import PyutPreferences
+        from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
-        prefs: PyutPreferences = PyutPreferences()
+        prefs: PyutPreferencesV2 = PyutPreferencesV2()
         if prefs.autoResizeShapesOnEdit is True:
             oglClass: OglClass = self._getAssociatedOglClass(self._pyutClass)
 
@@ -258,7 +258,7 @@ class DlgEditClass(DlgEditClassCommon):
 
     def _getUmlObjects(self) -> UmlObjects:
         """
-        May be empty
+        The frame may contain no UML objects.
 
         Returns: Return the list of UmlObjects in the diagram.
         """

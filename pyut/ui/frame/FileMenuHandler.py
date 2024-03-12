@@ -43,11 +43,9 @@ from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferen
 
 from pyut.enums.DiagramType import DiagramType
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
 from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from pyut.ui.PyutPrintout import PyutPrintout
@@ -81,9 +79,9 @@ class FileMenuHandler(BaseMenuHandler):
         self._pluginManager: PluginManager = pluginManager
         self._fileHistory:   FileHistory   = fileHistory
 
-        self.logger:       Logger          = getLogger(__name__)
-        self._preferences: PyutPreferences = PyutPreferences()
-        self._plugins:     PluginIDMap     = PluginIDMap({})
+        self.logger:       Logger            = getLogger(__name__)
+        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
+        self._plugins:     PluginIDMap       = PluginIDMap({})
 
         self._exportPlugins: PluginIDMap   = cast(PluginIDMap, None)
         self._importPlugins: PluginIDMap   = cast(PluginIDMap, None)
@@ -111,7 +109,7 @@ class FileMenuHandler(BaseMenuHandler):
 
     def loadFiles(self, fileNames: FileNames):
         """
-        Load the specified filenames;  This is externally available so that
+        Load the specified filenames;  This is public so that
         we can open a files from the command line
 
         Args:
@@ -277,7 +275,7 @@ class FileMenuHandler(BaseMenuHandler):
     # noinspection PyUnusedLocal
     def onPrintSetup(self, event: CommandEvent):
         """
-        Display the print setup dialog box
+        Display the print setup dialog
 
         Args:
             event:
@@ -370,7 +368,7 @@ class FileMenuHandler(BaseMenuHandler):
     def _doPrint(self, diagramFrame: UmlClassDiagramsFrame):
 
         if diagramFrame is None:
-            PyutUtils.displayError(_("No diagram to print !"), _("Error"))
+            PyutUtils.displayError("No diagram to print !", "Error")
             return
 
         self._eventEngine.sendEvent(EventType.DeSelectAllShapes)
@@ -384,7 +382,7 @@ class FileMenuHandler(BaseMenuHandler):
         printout = PyutPrintout(diagramFrame)
 
         if not printer.Print(self._parent, printout, True):
-            # May have been cancelled
+            # May have been canceled
             if Printer.GetLastError() == PRINTER_ERROR:
                 PyutUtils.displayError("Cannot print", "Error")
 
@@ -392,11 +390,11 @@ class FileMenuHandler(BaseMenuHandler):
         """
         Ask for the files to load.
 
-        Returns:    The list will be empty if the user cancelled the request
+        Returns:    The list will be empty if the user canceled the request
         """
         currentDir: str = CurrentDirectoryHandler().currentDirectory
 
-        dlg = FileDialog(self._parent, _("Choose a file"), currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
+        dlg = FileDialog(self._parent, "Choose a file", currentDir, "", "*.put", FD_OPEN | FD_MULTIPLE)
         fileNames: FileNames = FileNames([])
         if dlg.ShowModal() == ID_OK:
             fileNames = dlg.GetPaths()

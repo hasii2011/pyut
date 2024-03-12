@@ -10,7 +10,7 @@ from pyut.PyutUtils import PyutUtils
 from pyut.PyutUtils import ScreenMetrics
 from pyut.PyutUtils import ResourceTextType
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 
 class TestPyutUtils(UnitTestBase):
@@ -24,11 +24,10 @@ class TestPyutUtils(UnitTestBase):
     @classmethod
     def setUpClass(cls):
         UnitTestBase.setUpClass()
-        PyutPreferences.determinePreferencesLocation()
 
     def setUp(self):
         super().setUp()
-        self.prefs:  PyutPreferences = PyutPreferences()
+        self.prefs:  PyutPreferencesV2 = PyutPreferencesV2()
 
     def tearDown(self):
         super().tearDown()

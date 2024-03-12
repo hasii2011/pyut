@@ -39,7 +39,7 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.general.LineSplitter import LineSplitter
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
 
@@ -63,9 +63,9 @@ class DlgTipsV2(SizedDialog):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._prefs:        PyutPreferences = PyutPreferences()
-        self._tipsFileName: str             = PyutUtils.retrieveResourcePath(f'{PyutConstants.TIPS_FILENAME}')
-        self._tipHandler:   TipHandler      = TipHandler(fqFileName=self._tipsFileName)
+        self._prefs:        PyutPreferencesV2 = PyutPreferencesV2()
+        self._tipsFileName: str               = PyutUtils.retrieveResourcePath(f'{PyutConstants.TIPS_FILENAME}')
+        self._tipHandler:   TipHandler        = TipHandler(fqFileName=self._tipsFileName)
 
         panel: SizedPanel = self.GetContentsPane()
 
@@ -89,7 +89,7 @@ class DlgTipsV2(SizedDialog):
     def _layoutUpperDialog(self, parent: SizedPanel):
         """
             topPanel:  Image and static text widget
-            bottomPanel:  The show tips check box
+            bottomPanel:  The show tips checkbox
         Args:
             parent:  Dialog container
         """
@@ -116,7 +116,7 @@ class DlgTipsV2(SizedDialog):
         Create Ok, Previous Tip and Next Tip buttons;
 
         Since we want to use a custom button layout, we will not use the
-        CreateStdDialogBtnSizer here, we'll just create our own panel with
+        CreateStdDialogBtnSizer here, we'll create our own panel with
         a horizontal layout and add the buttons to that;
 
         Args:
@@ -148,7 +148,7 @@ class DlgTipsV2(SizedDialog):
     # noinspection PyUnusedLocal
     def _onNextTip(self, event: CommandEvent):
         """
-        Select and display next tip
+        Select and display the next tip
         """
         self._tipHandler.incrementTipNumber(1)
         self._label.SetLabel(self._getTipText())

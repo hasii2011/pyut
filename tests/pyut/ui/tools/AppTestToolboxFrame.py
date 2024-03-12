@@ -16,8 +16,6 @@ from wx import ID_UNDO
 
 from miniogl.DiagramFrame import DiagramFrame
 
-from pyut.preferences.PreferencesCommon import PreferencesCommon
-
 from pyut.ui.tools.Tool import Category
 from pyut.ui.tools.Tool import Tool
 from pyut.ui.tools.ToolIconOwner import ToolIconOwner
@@ -43,8 +41,6 @@ class TestToolboxFrame(App):
 
     # noinspection PyAttributeOutsideInit
     def OnInit(self):
-
-        PreferencesCommon.determinePreferencesLocation()
 
         frameTop: Frame = Frame(parent=None, id=TestToolboxFrame.FRAME_ID, title="Test Toolbox Version 2",
                                 size=(TestToolboxFrame.WINDOW_WIDTH, TestToolboxFrame.WINDOW_HEIGHT), style=DEFAULT_FRAME_STYLE)

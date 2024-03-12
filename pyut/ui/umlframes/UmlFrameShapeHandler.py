@@ -16,7 +16,7 @@ from ogl.OglAssociationLabel import OglAssociationLabel
 from ogl.OglObject import OglObject
 from ogl.OglLink import OglLink
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 
 class UmlFrameShapeHandler(DiagramFrame):
@@ -31,7 +31,7 @@ class UmlFrameShapeHandler(DiagramFrame):
         super().__init__(parent)
 
         self.logger:       Logger = getLogger(__name__)
-        self._preferences: PyutPreferences = PyutPreferences()
+        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
 
     def addShape(self, shape: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink, OglAssociationLabel],
                  x: int, y: int, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):
@@ -44,7 +44,7 @@ class UmlFrameShapeHandler(DiagramFrame):
             y: coord of the center of the shape
             pen: pen to use
             brush:  brush to use
-            withModelUpdate: if true the model of the shape will update from the shape (view) when added to the diagram.
+            withModelUpdate: IUf true, the model of the shape will update from the shape (view) when added to the diagram.
         """
         shape.draggable = True
         shape.SetPosition(x, y)

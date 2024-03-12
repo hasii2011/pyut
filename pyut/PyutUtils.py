@@ -21,7 +21,7 @@ from codeallybasic.ResourceManager import ResourceManager
 from pyut.enums.ResourceTextType import ResourceTextType
 
 from pyut.errorcontroller.ErrorManager import ErrorManager
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 
 @dataclass
@@ -35,12 +35,9 @@ class ScreenMetrics:
 
 class PyutUtils:
     """
-    This static class is for frequently used pyut utilities.
+    This static class is for frequently used Pyut utility methods.
 
-    hasii
-    Updated this to avoid a circular dependency this module and mediator;  This module
-    retrieved the mediator singleton and asked it for its error manager.  Nothing special about that
-    as the error manager is a singleton;  So I just ask the error manager directly for it
+    TODO: Utility classes are an anti-pattern
     """
 
     STRIP_SRC_PATH_SUFFIX:  str = f'{osSep}src'
@@ -62,16 +59,17 @@ class PyutUtils:
     @staticmethod
     def extractFileName(fullPath: str) -> str:
         """
-        Used to get just the file name for a full path.  Does NOT include the file extension
+        Used to get the filename for a full path.
+        Does NOT include the file extension
 
         Args:
             fullPath:   The fully qualified path
 
         Returns:
-            A string that is just the file name without the file extension
+            A string that is the filename without the file extension
         """
         comps: List[str] = fullPath.split('/')      # break up into path components
-        pName: str       = comps[len(comps) - 1]    # The file name is the last one
+        pName: str       = comps[len(comps) - 1]    # The filename is the last one
         s:     str       = pName[:-4]               # strip the suffix and the dot ('.')
 
         return s
@@ -177,10 +175,10 @@ class PyutUtils:
     def retrieveResourcePath(cls, bareFileName: str, packageName: str = RESOURCES_PACKAGE_NAME) -> str:
         """
         Args:
-            bareFileName:  Simple file name
+            bareFileName:  Simple filename
             packageName:   The package from which to retrieve the resource
 
-        Returns:  The fully qualified file name
+        Returns:  The fully qualified filename
         """
         fqFileName: str = ResourceManager.retrieveResourcePath(bareFileName=bareFileName,
                                                                resourcePath=PyutUtils.RESOURCES_PATH,
@@ -221,7 +219,7 @@ class PyutUtils:
             A project name as determined by preferences
         """
         fileNamePath: Path = Path(filename)
-        if PyutPreferences().displayProjectExtension is False:
+        if PyutPreferencesV2().displayProjectExtension is False:
             projectName: str = fileNamePath.stem
         else:
             projectName = fileNamePath.name

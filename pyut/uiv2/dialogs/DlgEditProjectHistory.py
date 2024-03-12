@@ -14,7 +14,8 @@ from wx import Size
 from wx.lib.sized_controls import SizedPanel
 from wx.lib.sized_controls import SizedStaticBox
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+
 from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
 from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButton
 from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButtons
@@ -51,14 +52,14 @@ class DlgEditProjectHistory(BaseEditDialog):
         files:   List[str] = []
         fhCount: int       = self._fileHistory.GetCount()
 
-        showProjectExtension: bool = PyutPreferences().displayProjectExtension
+        showProjectExtension: bool = PyutPreferencesV2().displayProjectExtension
         for i in range(fhCount):
             fName:     str = self._fileHistory.GetHistoryFile(i)
             path:      Path = Path(fName)
             if showProjectExtension is True:
                 shortName: str = path.name
             else:
-                shortName =  path.stem
+                shortName = path.stem
             files.append(shortName)
 
         self._recentProjects = CheckListBox(parent=selectionPanel, id=ID_ANY, choices=files, size=Size(width=250, height=200))
@@ -78,11 +79,11 @@ class DlgEditProjectHistory(BaseEditDialog):
         idxOfItemsToRemove: Tuple[int] = self._recentProjects.GetCheckedItems()
 
         iteration: int = 0
-        # Since the list is one less on each list traversal
+        # Since the list is one less on each list traversal,
         # we have to adjust the removal index on each iteration
         # through the list
         for idx in idxOfItemsToRemove:
             idxToRemove: int = idx - iteration
             self._fileHistory.RemoveFileFromHistory(idxToRemove)
-            iteration +=1
+            iteration += 1
         super()._onOk(event)

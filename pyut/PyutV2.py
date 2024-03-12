@@ -14,7 +14,7 @@ from pyut import __version__ as pyutVersion
 
 from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.uiv2.PyutAppV2 import PyutAppV2
 
@@ -27,7 +27,6 @@ class PyutV2:
 
     def __init__(self):
         self._setupApplicationLogging()
-        PyutPreferences.determinePreferencesLocation()
 
         self.logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
 
@@ -112,7 +111,7 @@ class PyutV2:
         print('')
         print(f'Display Size: {DisplaySize()}')
         print(f'x-DPI: {size.GetWidth()} y-DPI: {size.GetHeight()}')
-        print(f'toolBarIconSize: {PyutPreferences().toolBarIconSize.value}')
+        print(f'toolBarIconSize: {PyutPreferencesV2().toolBarIconSize.value}')
 
         # noinspection PyUnreachableCode
         if __debug__:
@@ -122,7 +121,7 @@ class PyutV2:
 
     def _handleCommandLineArguments(self):
         """
-        Handle command line arguments, display help and version
+        Handle command line arguments, display help, and version
 
         Returns:  if arguments were found and handled (means no startup)
         """

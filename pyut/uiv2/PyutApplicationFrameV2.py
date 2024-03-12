@@ -69,7 +69,7 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.PyutConstants import PyutConstants
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 
 from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
@@ -99,7 +99,7 @@ HACK_ADJUST_EXIT_HEIGHT: int = 16
 
 class PyutApplicationFrameV2(Frame):
     """
-    PyutApplicationFrame : main pyut frame; contain menus, status bar, UML frame, ...
+    PyutApplicationFrame : main pyut frame; contain menus, status bar, and the UML frame
 
     Instantiated by PyutApp.py
     Use it:
@@ -112,9 +112,9 @@ class PyutApplicationFrameV2(Frame):
         """
 
         Args:
-            title:      Title to display
+            title:      Application title
         """
-        self._prefs: PyutPreferences = PyutPreferences()
+        self._prefs: PyutPreferencesV2 = PyutPreferencesV2()
 
         appSize: Size = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
 
@@ -164,7 +164,7 @@ class PyutApplicationFrameV2(Frame):
 
         self._eventEngine.sendEvent(EventType.NewProject)
         wxYield()       # A hacky way to get the above to act like a method call
-        if self._prefs.centerAppOnStartUp is True:
+        if self._prefs.centerAppOnStartup is True:
             self.Center(BOTH)  # Center on the screen
         else:
             appPosition: Position = self._prefs.startupPosition
@@ -244,7 +244,7 @@ class PyutApplicationFrameV2(Frame):
 
         if self._prefs.overrideProgramExitPosition is False:
             # Only save position if we are not auto-saving
-            if self._prefs.centerAppOnStartUp is False:
+            if self._prefs.centerAppOnStartup is False:
                 x, y = self.GetPosition()
                 pos: Position = Position(x=x, y=y)
                 self._prefs.startupPosition = pos
@@ -255,7 +255,7 @@ class PyutApplicationFrameV2(Frame):
             # I need to check this on a larger monitor;
             self._prefs.startupSize = Dimensions(ourSize[0], ourSize[1] - HACK_ADJUST_EXIT_HEIGHT)
 
-        self._prefs     = cast(PyutPreferences, None)
+        self._prefs     = cast(PyutPreferencesV2, None)
         self._pluginMgr = cast(PluginManager, None)
         self._pyutUIV2  = cast(PyutUIV2, None)
 
@@ -373,7 +373,7 @@ class PyutApplicationFrameV2(Frame):
     def _onActivate(self, event: ActivateEvent):
         """
         EVT_ACTIVATE Callback; display tips frame.
-        But only, the first activate
+        But only on the first activation
 
         Args:
             event:
@@ -384,7 +384,7 @@ class PyutApplicationFrameV2(Frame):
         else:
             # Display tips frame
             self._tipAlreadyDisplayed = True
-            prefs: PyutPreferences = PyutPreferences()
+            prefs: PyutPreferencesV2 = PyutPreferencesV2()
             self.logger.info(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
             if prefs.showTipsOnStartup is True:
                 # noinspection PyUnusedLocal
@@ -409,8 +409,8 @@ class PyutApplicationFrameV2(Frame):
         """
         Accelerator table initialization
         """
-        #  initialize the accelerator table
-        # Since we are using the stock IDs we do not need to set up those accelerators
+        # initialize the accelerator table
+        # Since we are using the stock identifiers, we do not need to set up those accelerators
         lst = [
             (ACCEL_CTRL,     ord('n'),   SharedIdentifiers.ID_MENU_FILE_NEW_PROJECT),
             (ACCEL_CTRL,     ord('N'),   SharedIdentifiers.ID_MENU_FILE_NEW_PROJECT),
@@ -452,7 +452,7 @@ class PyutApplicationFrameV2(Frame):
 
     def __setupKeyboardShortcuts(self):
         """
-        Accelerators init. (=Keyboards shortcuts)
+        Initialize the accelerators. These are the keyboard shortcuts
         """
         acc = self._createAcceleratorTable()
         accel_table = AcceleratorTable(acc)

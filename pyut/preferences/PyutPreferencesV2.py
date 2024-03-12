@@ -23,7 +23,7 @@ SECTION_GENERAL: Section = Section(
         ConfigurationNameValue(name=PropertyName('showTipsOnStartup'),       defaultValue='False'),
         ConfigurationNameValue(name=PropertyName('loadLastOpenedProject'),   defaultValue='False'),
         ConfigurationNameValue(name=PropertyName('displayProjectExtension'), defaultValue='False'),
-        ConfigurationNameValue(name=PropertyName('autoResizeShapeOnEdit'),   defaultValue='True'),
+        ConfigurationNameValue(name=PropertyName('autoResizeShapesOnEdit'),  defaultValue='True'),
         ConfigurationNameValue(name=PropertyName('fullScreen'),              defaultValue='False'),
         ConfigurationNameValue(name=PropertyName('centerAppOnStartup'),      defaultValue='False'),
         ConfigurationNameValue(name=PropertyName('toolBarIconSize'),         defaultValue=ToolBarIconSize.SIZE_32.value),
@@ -62,8 +62,47 @@ class PyutPreferencesV2(ConfigurationProperties, metaclass=SingletonV3):
 
         super().__init__(baseFileName='pyut.ini', moduleName='pyut', sections=PYUT_SECTIONS)
 
+        self._overrideProgramExitSize:     bool = False
+        self._overrideProgramExitPosition: bool = False
+        """
+        Set to `True` by the preferences dialog when the end-user either manually specifies
+        the size or position of the Pyut application.  If it is False, then normal end
+        of application logic prevails;
+        
+        These are not persisted
+        """
+
         self._configParser.optionxform = str        # type: ignore
         self._loadConfiguration()
+
+    @property
+    def overrideProgramExitSize(self) -> bool:
+        """
+        Some values like the final application position and size are automatically computed and set
+        when the application exits.
+
+        However, these can also be set by the end-user via the preferences' dialog.
+
+        It is up to Pyut to check the value of this flag to determine if the end-user has manually set these
+
+        Returns: `True` if the application can use the computed values;  Else return `False` as the
+        end-user has manually specified them.
+        """
+        return self._overrideProgramExitSize
+
+    @overrideProgramExitSize.setter
+    def overrideProgramExitSize(self, theNewValue: bool):
+        self._overrideProgramExitSize = theNewValue
+
+    @property
+    def overrideProgramExitPosition(self) -> bool:
+        """
+        """
+        return self._overrideProgramExitPosition
+
+    @overrideProgramExitPosition.setter
+    def overrideProgramExitPosition(self, theNewValue: bool):
+        self._overrideProgramExitPosition = theNewValue
 
     @property
     @configurationGetter(sectionName=GENERAL_SECTION_NAME, deserializeFunction=int)
@@ -107,12 +146,12 @@ class PyutPreferencesV2(ConfigurationProperties, metaclass=SingletonV3):
 
     @property
     @configurationGetter(sectionName=GENERAL_SECTION_NAME, deserializeFunction=SecureConversions.secureBoolean)
-    def autoResizeShapeOnEdit(self) -> bool:
+    def autoResizeShapesOnEdit(self) -> bool:
         return False
 
-    @autoResizeShapeOnEdit.setter
+    @autoResizeShapesOnEdit.setter
     @configurationSetter(sectionName=GENERAL_SECTION_NAME)
-    def autoResizeShapeOnEdit(self, newValue: bool):
+    def autoResizeShapesOnEdit(self, newValue: bool):
         pass
 
     @property
@@ -176,7 +215,7 @@ class PyutPreferencesV2(ConfigurationProperties, metaclass=SingletonV3):
         pass
 
     @property
-    @configurationGetter(sectionName=GENERAL_SECTION_NAME, deserializeFunction=Dimensions.deSerialize)
+    @configurationGetter(sectionName=GENERAL_SECTION_NAME, deserializeFunction=Position.deSerialize)
     def startupPosition(self) -> Position:
         return Position(0, 0)
 

@@ -6,12 +6,12 @@ from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 
 class MyMetaBasePreferencesPage(ABCMeta, type(SizedPanel)):        # type: ignore
     """
-    I have know idea why this works:
+    I have no idea why this works:
     https://stackoverflow.com/questions/66591752/metaclass-conflict-when-trying-to-create-a-python-abstract-class-that-also-subcl
     """
     pass
@@ -25,7 +25,7 @@ class BasePreferencesPage(SizedPanel):
 
         super().__init__(parent)
 
-        self._preferences: PyutPreferences = PyutPreferences()
+        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
 
     @property
     @abstractmethod
@@ -38,9 +38,9 @@ class BasePreferencesPage(SizedPanel):
 
     def _fixPanelSize(self, panel: SizedPanel):
         """
-        Do the following or does not get resized correctly
+        Use this method or a dialog will not get resized correctly
         A little trick to make sure that the sizer cannot be resized to
-        less screen space than the controls need
+        less screen space than the controls needs;
 
         Args:
             panel:

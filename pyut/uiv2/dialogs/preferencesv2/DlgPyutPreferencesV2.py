@@ -27,15 +27,16 @@ from pyut.uiv2.dialogs.preferencesv2.GeneralPrefencesPage import GeneralPreferen
 
 from pyut.uiv2.dialogs.preferencesv2.PositioningPreferencesPage import PositioningPreferencesPage
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyutplugins.common.ui.preferences.PluginPreferencesPage import PluginPreferencesPage
 
 
 class DlgPyutPreferencesV2(SizedDialog):
     """
-    This is the preference's dialog for Pyut.  This is version 2 of this dialog from
-    the legacy application.  This version of Pyut added many more preferences.
+    This class is Pyut's preference dialog.
+    This implementation is version 2 of this dialog from the legacy application.
+    This version of Pyut added many more preferences.
 
     Display the current preferences, the possible values, and save modified values.
 
@@ -57,9 +58,9 @@ class DlgPyutPreferencesV2(SizedDialog):
         """
         style:   int  = DEFAULT_DIALOG_STYLE | RESIZE_BORDER
         dlgSize: Size = Size(460, 500)
-        super().__init__(parent, ID_ANY, "Preferences", size=dlgSize, style=style)
-        self.logger:  Logger          = getLogger(__name__)
-        self.__prefs: PyutPreferences = PyutPreferences()
+        super().__init__(parent, ID_ANY, "Pyut Preferences", size=dlgSize, style=style)
+        self.logger:  Logger            = getLogger(__name__)
+        self.__prefs: PyutPreferencesV2 = PyutPreferencesV2()
 
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerProps(expand=True)
@@ -109,7 +110,7 @@ class DlgPyutPreferencesV2(SizedDialog):
     def __potentiallyDisplayInfoMessage(self):
 
         # if self._positioningPreferences.valuesChanged is True:
-        #     dlg = MessageDialog(self, "You must restart Pyut for position/size changes", "Warning", OK | ICON_EXCLAMATION)
+        #     dlg = MessageDialog(self, "Restart Pyut for position/size changes", "Warning", OK | ICON_EXCLAMATION)
         #     dlg.ShowModal()
         #     dlg.Destroy()
 

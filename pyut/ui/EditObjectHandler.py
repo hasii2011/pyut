@@ -61,7 +61,7 @@ from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.PyutUtils import PyutUtils
 
@@ -251,7 +251,7 @@ class EditObjectHandler:
             obj:
 
         """
-        prefs: PyutPreferences = PyutPreferences()
+        prefs: PyutPreferencesV2 = PyutPreferencesV2()
 
         if prefs.autoResizeShapesOnEdit is True:
             if isinstance(obj, PyutClass):
@@ -262,7 +262,7 @@ class EditObjectHandler:
 
     def _getUmlObjects(self, umlFrame: UmlFrame) -> UmlObjects:
         """
-        May be empty
+        The fame may contain no UML shapes.
 
         Returns: Return the list of UmlObjects in the diagram.
         """

@@ -7,7 +7,7 @@ from logging import getLogger
 from abc import ABCMeta
 from abc import abstractmethod
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
 from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 class MyMetaBaseWxCommand(ABCMeta, type(BaseWxCommand)):        # type: ignore
     """
-    I have know idea why this works:
+    I have no idea why this works:
     https://stackoverflow.com/questions/66591752/metaclass-conflict-when-trying-to-create-a-python-abstract-class-that-also-subcl
     """
     pass
@@ -33,7 +33,7 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
     """
     Base command for commands that create UML objects and associate and edit dialog with them.
     This class implements the .GetName method for all subclasses
-    This class implements the .
+    This class implements the basic command methods.
     """
     clsLogger: Logger = getLogger(__name__)
 
@@ -46,7 +46,7 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
         self._eventEngine: IEventEngine = eventEngine
         self._name:        str = name
 
-        self._prefs: PyutPreferences = PyutPreferences()
+        self._prefs: PyutPreferencesV2 = PyutPreferencesV2()
 
         self._shape: DoableObjectType = self._createPrototypeInstance()
         #
@@ -89,7 +89,7 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
     def _cbGetActiveUmlFrameForUndo(self, frame: 'UmlDiagramsFrame'):
         """
         This is the default simple behavior;  If you need more complex
-        behavior override this method
+         behavior, override this method
 
         Args:
             frame:
@@ -103,7 +103,8 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
 
     def _cbAddOglObjectToFrame(self, frame: 'UmlDiagramsFrame'):
         """
-        This is common code for create Note, Text, Actor, and UseCase
+        This is common code needed to create Note, Text, Actor, and UseCase shapes.
+
         Args:
             frame:
         """
