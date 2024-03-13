@@ -42,6 +42,12 @@
             "handlers":  ["rotatingFileHandler"],
             "propagate": "False"
         },
+        "pyutplugins": {
+            "level":     "INFO",
+            "handlers":  ["rotatingFileHandler"],
+            "propagate": "False"
+        },
+
         "Pyut": {
             "level":     "INFO",
             "propagate": "False"

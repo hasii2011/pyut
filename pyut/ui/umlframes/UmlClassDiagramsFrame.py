@@ -3,6 +3,8 @@ from typing import cast
 
 from collections import namedtuple
 
+from wx import MouseEvent
+
 from pyutmodelv2.PyutModelTypes import ClassName
 from pyutmodelv2.PyutModelTypes import Implementors
 
@@ -10,10 +12,11 @@ from pyutmodelv2.PyutInterface import PyutInterface
 
 from ogl.OglInterface2 import OglInterface2
 
+from pyut.ui.umlframes.UmlClassDiagramFrameMenuHandler import UmlClassDiagramFrameMenuHandler
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
-from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
 
+from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
 from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -45,7 +48,19 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         super().__init__(parent, eventEngine=eventEngine)   # type: ignore
         self.newDiagram()
 
+        self._menuHandler:  UmlClassDiagramFrameMenuHandler = cast(UmlClassDiagramFrameMenuHandler, None)
+
         self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED, callback=self._onClassNameChanged)
+
+    def OnRightDown(self, event: MouseEvent):
+
+        super().OnRightDown(event=event)
+
+        print(f'UmlClassDiagrams.OnRightDown')
+        if self._menuHandler is None:
+            self._menuHandler = UmlClassDiagramFrameMenuHandler(self)
+
+        self._menuHandler.popupMenu(event=event)
 
     def _onClassNameChanged(self, event: ClassNameChangedEvent):
 
