@@ -106,7 +106,6 @@ class BaseWxLinkCommand(Command):
         #
         if isinstance(self._link, OglAssociation):
             oglAssociation: OglAssociation = cast(OglAssociation, self._link)
-            oglAssociation.createDefaultAssociationLabels()
 
             umlFrame.diagram.AddShape(shape=oglAssociation.centerLabel)
             umlFrame.diagram.AddShape(shape=oglAssociation.sourceCardinality)
@@ -114,7 +113,7 @@ class BaseWxLinkCommand(Command):
 
         # get the view start and end position and assign it to the
         # model position, then the view position is updated from
-        # the model -- Legacy comment.  Not sure what that means -- Humberto
+        # the model – Legacy comment.  Not sure what that means – Humberto
         sourcePoint:      AnchorPoint = self._link.sourceAnchor
         destinationPoint: AnchorPoint = self._link.destinationAnchor
 
@@ -158,7 +157,7 @@ class BaseWxLinkCommand(Command):
 
         linkType: PyutLinkType = self._linkType
 
-        # If none we are creating from scratch
+        # If none, we are creating from scratch
         if self._pyutLink is None:
             pyutLink: PyutLink = PyutLink(name="", linkType=linkType, source=srcClass.pyutObject, destination=dstClass.pyutObject)
             # TODO: This will not be needed when Ogl supports this as a preference
@@ -167,7 +166,7 @@ class BaseWxLinkCommand(Command):
             else:
                 pyutLink.name = f'{linkType.name.capitalize()}-{pyutLink.id}'
         else:
-            # If we have a value we are undoing a delete action
+            # If we have a value, we are undoing a delete action
             pyutLink = self._pyutLink
 
         # Call the factory to create OGL Link
@@ -178,7 +177,7 @@ class BaseWxLinkCommand(Command):
         self._createNeededControlPoints(oglLink=oglLink)
 
         srcClass.addLink(oglLink)  # add it to the source Ogl Linkable Object
-        dstClass.addLink(oglLink)  # add it to the destination Linkable Object
+        dstClass.addLink(oglLink)  # add it to the destination Ogl Linkable Object
         srcClass.pyutObject.addLink(pyutLink)  # add it to the source PyutClass
 
         self._name = self._toCommandName(linkType)

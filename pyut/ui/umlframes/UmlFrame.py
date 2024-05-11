@@ -248,6 +248,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         return self.maxHeight
 
+    # TODO:  Get the version from the pyutplugins Scaffold UI
     # def getObjectsBoundaries(self):
     #     """
     #     TODO:  This appears to be an unused method

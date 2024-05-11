@@ -78,7 +78,7 @@ setup(
                       'codeallybasic>=1.3.1',
                       'codeallyadvanced>=1.3.1',
                       'pyutmodelv2>=2.1.5',
-                      'ogl>=2.1.20',
+                      'ogl>=2.1.31',
                       'oglio>=2.1.7',
                       'pyutplugins>=2.3.1',
                       'PyGithub==2.2.0',

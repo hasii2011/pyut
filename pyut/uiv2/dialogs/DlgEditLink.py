@@ -37,7 +37,7 @@ class DlgEditLink (SizedDialog):
             if dlg.ShowModal() == OK:
                 pyutLink = dlg.value
 
-    The input PyutLink is only updated on Ok;  Else if the dialogs is
+    The input PyutLink is only updated on Ok;  Else if the dialog is
     "canceled" any updated values are discarded
     """
     def __init__(self, parent, pyutLink: PyutLink):
@@ -118,7 +118,7 @@ class DlgEditLink (SizedDialog):
     # noinspection PyUnusedLocal
     def _onCmdOk(self, event: CommandEvent):
         """
-        Handle click on "Ok" button
+        Handle click "Ok" button
 
         Args:
             event:

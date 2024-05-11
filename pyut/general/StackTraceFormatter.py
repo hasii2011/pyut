@@ -140,13 +140,13 @@ class StackTraceFormatter:
 
     def _getFileName(self, fileLineNum: str) -> str:
         """
-        Does not necessarily return entire code path;  Retrieves a default number of characters;  Can
+        Does not necessarily return an entire code path;  Retrieves a default number of characters;  Can
         be controlled by the class consumer
 
         Args:
-            fileLineNum: The part of the raw code line that contains the file name and the line number
+            fileLineNum: The part of the raw code line that contains the filename and the line number
 
-        Returns:  The text of the file name
+        Returns:  The text of the filename
         """
         flnParse:         List[str] = fileLineNum.split(StackTraceFormatter.COMMA)
         rawFileNameParse: str       = flnParse[0]
