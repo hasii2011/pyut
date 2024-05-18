@@ -80,7 +80,7 @@ setup(
                       'pyutmodelv2>=2.1.5',
                       'ogl>=2.1.32',
                       'oglio>=2.1.7',
-                      'pyutplugins>=2.4.0',
+                      'pyutplugins>=2.4.1',
                       'PyGithub==2.2.0',
                       'wxPython==4.2.1',
                       'chardet==5.2.0'

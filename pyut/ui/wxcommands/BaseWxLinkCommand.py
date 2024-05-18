@@ -119,7 +119,7 @@ class BaseWxLinkCommand(Command):
 
         # get the view start and end position and assign it to the
         # model position, then the view position is updated from
-        # the model – Legacy comment.  Not sure what that means – Humberto
+        # the model: Legacy comment.  Not sure what that means: Humberto
         sourcePoint:      AnchorPoint = self._link.sourceAnchor
         destinationPoint: AnchorPoint = self._link.destinationAnchor
 

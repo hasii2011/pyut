@@ -39,12 +39,12 @@
     "loggers": {
         "root": {
             "level":     "WARNING",
-            "handlers":  ["rotatingFileHandler"],
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
         "pyutplugins": {
             "level":     "INFO",
-            "handlers":  ["rotatingFileHandler"],
+            "handlers":  ["consoleHandler"],
             "propagate": "False"
         },
 
