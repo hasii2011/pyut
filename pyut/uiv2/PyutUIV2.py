@@ -213,7 +213,7 @@ class PyutUIV2(SplitterWindow):
         self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_MINI_PROJECT_INFORMATION,   callback=self._onMiniProjectInformation)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME,           callback=self._onGetActivateUmlFrame)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_UML_FRAME, callback=self._onGetActiveUmlFrame)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ACTIVE_PROJECT_INFORMATION, callback=self._onActiveProjectInformation)
         # TODO:  Should these handler go somewhere else
         self._eventEngine.registerListener(pyEventBinder=EVENT_EDIT_CLASS,     callback=self._onEditClass)
@@ -623,7 +623,7 @@ class PyutUIV2(SplitterWindow):
         cb = event.callback
         cb(projectInformation)
 
-    def _onGetActivateUmlFrame(self, event: ActiveUmlFrameEvent):
+    def _onGetActiveUmlFrame(self, event: ActiveUmlFrameEvent):
         cb = event.callback
         cb(self._projectManager.currentFrame)
 

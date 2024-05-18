@@ -55,8 +55,14 @@ class BaseWxLinkCommand(Command):
 
         self._link:          OglLink       = cast(OglLink, None)
         self._pyutLink:      PyutLink      = cast(PyutLink, None)    # for undo of delete
-        self._controlPoints: ControlPoints = ControlPoints([])       # for undo of delete
+        self._controlPoints: ControlPoints = ControlPoints([])       # for undo of delete or create link from plugin manager
         self._spline:        bool          = False
+
+    def _controlPointsSetter(self, newValues: ControlPoints):
+        self._controlPoints = newValues
+
+    # noinspection PyTypeChecker
+    controlPoints = property(fget=None, fset=_controlPointsSetter)
 
     def GetName(self) -> str:
         return self._name

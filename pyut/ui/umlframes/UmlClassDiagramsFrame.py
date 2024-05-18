@@ -25,7 +25,7 @@ CreatedClassesType = namedtuple('CreatedClassesType', 'pyutClass, oglClass')
 
 class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
-    cdfDebugId: int = 0x000FF   # UML Class Diagrams Frame Debug ID
+    UMLFrameNextId: int = 0x000FF   # UML Class Diagrams Frame ID
 
     """
     UmlClassDiagramsFrame : a UML class diagram frame.
@@ -41,16 +41,21 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
             parent:
             eventEngine: Pyut event engine
         """
-        self._cdfDebugId: int = UmlClassDiagramsFrame.cdfDebugId
-
-        UmlClassDiagramsFrame.cdfDebugId += 1
 
         super().__init__(parent, eventEngine=eventEngine)   # type: ignore
         self.newDiagram()
 
         self._menuHandler:  UmlClassDiagramFrameMenuHandler = cast(UmlClassDiagramFrameMenuHandler, None)
 
+        UmlClassDiagramsFrame.UMLFrameNextId += 1
+
+        self._frameId: int = UmlClassDiagramsFrame.UMLFrameNextId
+
         self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED, callback=self._onClassNameChanged)
+
+    @property
+    def frameId(self) -> int:
+        return self._frameId
 
     def OnRightDown(self, event: MouseEvent):
 
@@ -86,5 +91,5 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
     def __repr__(self) -> str:
 
-        debugId: str = f'0x{self._cdfDebugId:06X}'
+        debugId: str = f'0x{self._frameId:06X}'
         return f'UmlClassDiagramsFrame:[{debugId=}]'

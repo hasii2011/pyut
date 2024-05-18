@@ -35,9 +35,9 @@ jobs:
             pip install codeallybasic~=1.3.1
             pip install codeallyadvanced==1.3.1
             pip install pyutmodelv2==2.1.5
-            pip install ogl==2.1.31
+            pip install ogl==2.1.32
             pip install oglio==2.1.7
-            pip install pyutplugins==2.3.1
+            pip install pyutplugins==2.4.0
             pip install html-testRunner==1.2.1
             pip install buildlackey~=1.6.3
       - run:

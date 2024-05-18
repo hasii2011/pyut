@@ -1,53 +1,43 @@
 
-from typing import cast
-
 from enum import Enum
-
-from wx import CommandEvent
-from wx import PyEventBinder
 
 from wx.lib.newevent import NewEvent
 
 #
 # The constructor returns a tuple; The first is the event,  The second is the binder
 #
-NewProjectEvent,              EVENT_NEW_PROJECT               = NewEvent()
-NewNamedProjectEvent,         EVENT_NEW_NAMED_PROJECT         = NewEvent()
-NewDiagramEvent,              EVENT_NEW_DIAGRAM               = NewEvent()
-NewProjectDiagramEvent,       EVENT_NEW_PROJECT_DIAGRAM       = NewEvent()
-DeleteDiagramEvent,           EVENT_DELETE_DIAGRAM            = NewEvent()
-OpenProjectEvent,             EVENT_OPEN_PROJECT              = NewEvent()
-InsertProjectEvent,           EVENT_INSERT_PROJECT            = NewEvent()
-SaveProjectEvent,             EVENT_SAVE_PROJECT              = NewEvent()
-SaveProjectAsEvent,           EVENT_SAVE_PROJECT_AS           = NewEvent()
-CloseProjectEvent,            EVENT_CLOSE_PROJECT             = NewEvent()
-UpdateTreeItemNameEvent,      EVENT_UPDATE_TREE_ITEM_NAME     = NewEvent()
-UpdateApplicationTitleEvent,  EVENT_UPDATE_APPLICATION_TITLE  = NewEvent()
-UpdateApplicationStatusEvent, EVENT_UPDATE_APPLICATION_STATUS = NewEvent()
-
-UMLDiagramModifiedEvent,   EVENT_UML_DIAGRAM_MODIFIED   = NewEvent()
-UpdateRecentProjectsEvent, EVENT_UPDATE_RECENT_PROJECTS = NewEvent()
-
-SelectAllShapesEvent,   EVENT_SELECT_ALL_SHAPES   = NewEvent()
-DeSelectAllShapesEvent, EVENT_DESELECT_ALL_SHAPES = NewEvent()
-AddShapeEvent,          EVENT_ADD_SHAPE           = NewEvent()
-
-CopyShapesEvent,      EVENT_COPY_SHAPES       = NewEvent()
-PasteShapesEvent,     EVENT_PASTE_SHAPES      = NewEvent()
-CutShapesEvent,       EVENT_CUT_SHAPES        = NewEvent()
-UndoEvent,            EVENT_UNDO              = NewEvent()
-RedoEvent,            EVENT_REDO              = NewEvent()
-CutShapeEvent,        EVENT_CUT_SHAPE         = NewEvent()          # TODO:  I do not think this is used anymore
-EditClassEvent,       EVENT_EDIT_CLASS,       = NewEvent()
-EditNoteEvent,        EVENT_EDIT_NOTE         = NewEvent()
-EditTextEvent,        EVENT_EDIT_TEXT         = NewEvent()
-EditActorEvent,       EVENT_EDIT_ACTOR        = NewEvent()
-EditUseCaseEvent,     EVENT_EDIT_USE_CASE     = NewEvent()
-EditInterfaceEvent,   EVENT_EDIT_INTERFACE    = NewEvent()
-
-AddPyutDiagramEvent, EVENT_ADD_PYUT_DIAGRAM = NewEvent()
-AddOglDiagramEvent,  EVENT_ADD_OGL_DIAGRAM  = NewEvent()
-
+NewProjectEvent,               EVENT_NEW_PROJECT                = NewEvent()
+NewNamedProjectEvent,          EVENT_NEW_NAMED_PROJECT          = NewEvent()
+NewDiagramEvent,               EVENT_NEW_DIAGRAM                = NewEvent()
+NewProjectDiagramEvent,        EVENT_NEW_PROJECT_DIAGRAM        = NewEvent()
+DeleteDiagramEvent,            EVENT_DELETE_DIAGRAM             = NewEvent()
+OpenProjectEvent,              EVENT_OPEN_PROJECT               = NewEvent()
+InsertProjectEvent,            EVENT_INSERT_PROJECT             = NewEvent()
+SaveProjectEvent,              EVENT_SAVE_PROJECT               = NewEvent()
+SaveProjectAsEvent,            EVENT_SAVE_PROJECT_AS            = NewEvent()
+CloseProjectEvent,             EVENT_CLOSE_PROJECT              = NewEvent()
+UpdateTreeItemNameEvent,       EVENT_UPDATE_TREE_ITEM_NAME      = NewEvent()
+UpdateApplicationTitleEvent,   EVENT_UPDATE_APPLICATION_TITLE   = NewEvent()
+UpdateApplicationStatusEvent,  EVENT_UPDATE_APPLICATION_STATUS  = NewEvent()
+UMLDiagramModifiedEvent,       EVENT_UML_DIAGRAM_MODIFIED       = NewEvent()
+UpdateRecentProjectsEvent,     EVENT_UPDATE_RECENT_PROJECTS     = NewEvent()
+SelectAllShapesEvent,          EVENT_SELECT_ALL_SHAPES          = NewEvent()
+DeSelectAllShapesEvent,        EVENT_DESELECT_ALL_SHAPES        = NewEvent()
+AddShapeEvent,                 EVENT_ADD_SHAPE                  = NewEvent()
+CopyShapesEvent,               EVENT_COPY_SHAPES                = NewEvent()
+PasteShapesEvent,              EVENT_PASTE_SHAPES               = NewEvent()
+CutShapesEvent,                EVENT_CUT_SHAPES                 = NewEvent()
+UndoEvent,                     EVENT_UNDO                       = NewEvent()
+RedoEvent,                     EVENT_REDO                       = NewEvent()
+CutShapeEvent,                 EVENT_CUT_SHAPE                  = NewEvent()          # TODO:  I do not think this is used anymore
+EditClassEvent,                EVENT_EDIT_CLASS,                = NewEvent()
+EditNoteEvent,                 EVENT_EDIT_NOTE                  = NewEvent()
+EditTextEvent,                 EVENT_EDIT_TEXT                  = NewEvent()
+EditActorEvent,                EVENT_EDIT_ACTOR                 = NewEvent()
+EditUseCaseEvent,              EVENT_EDIT_USE_CASE              = NewEvent()
+EditInterfaceEvent,            EVENT_EDIT_INTERFACE             = NewEvent()
+AddPyutDiagramEvent,           EVENT_ADD_PYUT_DIAGRAM           = NewEvent()
+AddOglDiagramEvent,            EVENT_ADD_OGL_DIAGRAM            = NewEvent()
 SelectToolEvent,               EVENT_SELECT_TOOL                = NewEvent()
 SetToolActionEvent,            EVENT_SET_TOOL_ACTION            = NewEvent()
 MiniProjectInformationEvent,   EVENT_MINI_PROJECT_INFORMATION   = NewEvent()
@@ -55,19 +45,19 @@ ActiveUmlFrameEvent,           EVENT_ACTIVE_UML_FRAME           = NewEvent()
 ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
 
 # The following specifically for the plugin adapter
-FrameInformationEvent,         EVENT_FRAME_INFORMATION    = NewEvent()
-FrameSizeEvent,                EVENT_FRAME_SIZE           = NewEvent()
-SelectedOglObjectsEvent,       EVENT_SELECTED_OGL_OBJECTS = NewEvent()      # Pyut will also use this callback
-RefreshFrameEvent,             EVENT_REFRESH_FRAME        = NewEvent()
+FrameInformationEvent,         EVENT_FRAME_INFORMATION       = NewEvent()
+FrameSizeEvent,                EVENT_FRAME_SIZE              = NewEvent()
+SelectedOglObjectsEvent,       EVENT_SELECTED_OGL_OBJECTS    = NewEvent()      # Pyut will also use this callback
+RefreshFrameEvent,             EVENT_REFRESH_FRAME           = NewEvent()
+UpdateEditMenuEvent,           EVENT_UPDATE_EDIT_MENU        = NewEvent()
+AssociateEditMenuEvent,        EVENT_ASSOCIATE_EDIT_MENU     = NewEvent()
+ClassNameChangedEvent,         EVENT_CLASS_NAME_CHANGED      = NewEvent()
+RequestCurrentProjectEvent,    EVENT_REQUEST_CURRENT_PROJECT = NewEvent()
+DeleteLinkEvent,               EVENT_DELETE_LINK             = NewEvent()
+CreateLinkEvent,               EVENT_CREATE_LINK             = NewEvent()
 
-UpdateEditMenuEvent,    EVENT_UPDATE_EDIT_MENU    = NewEvent()
-AssociateEditMenuEvent, EVENT_ASSOCIATE_EDIT_MENU = NewEvent()
 
-ClassNameChangedEvent,       EVENT_CLASS_NAME_CHANGED      = NewEvent()
-RequestCurrentProjectEvent,  EVENT_REQUEST_CURRENT_PROJECT = NewEvent()
-
-
-class EventType(str, Enum):
+class EventType(Enum):
     """
     UpdateApplicationTitleEvent
         Updates the application title
@@ -188,68 +178,50 @@ class EventType(str, Enum):
     event types
     """
 
-    commandEvent:  CommandEvent
-    pyEventBinder: PyEventBinder
-
-    def __new__(cls, title: str, commandEvent: CommandEvent, binder: PyEventBinder) -> 'EventType':
-        obj = str.__new__(cls, title)
-        obj._value_ = title
-
-        obj.commandEvent  = commandEvent
-        obj.pyEventBinder = binder
-
-        return cast(obj, EventType)
-
-    NewProject              = ('NewProject',              NewProjectEvent(),              EVENT_NEW_PROJECT)
-    NewNamedProject         = ('NewNamedProject',         NewNamedProjectEvent,           EVENT_NEW_NAMED_PROJECT)
-    NewDiagram              = ('NewDiagram',              NewDiagramEvent(),              EVENT_NEW_DIAGRAM)
-    NewProjectDiagram       = ('NewProjectDiagram',       NewProjectDiagramEvent(),       EVENT_NEW_PROJECT_DIAGRAM)
-    DeleteDiagram           = ('DeleteDiagram',           DeleteDiagramEvent(),           EVENT_DELETE_DIAGRAM)
-    OpenProject             = ('OpenProject',             OpenProjectEvent(),             EVENT_OPEN_PROJECT)
-    InsertProject           = ('InsertProject',           InsertProjectEvent(),           EVENT_INSERT_PROJECT)
-    SaveProject             = ('SaveProject',             SaveProjectEvent(),             EVENT_SAVE_PROJECT)
-    SaveProjectAs           = ('SaveProjectAs',           SaveProjectAsEvent(),           EVENT_SAVE_PROJECT_AS)
-    CloseProject            = ('CloseProject',            CloseProjectEvent(),            EVENT_CLOSE_PROJECT)
-    UpdateTreeItemName      = ('UpdateTreeItemName',      UpdateTreeItemNameEvent(),      EVENT_UPDATE_TREE_ITEM_NAME)
-    UpdateApplicationTitle  = ('UpdateApplicationTitle',  UpdateApplicationTitleEvent(),  EVENT_UPDATE_APPLICATION_TITLE)
-    UpdateApplicationStatus = ('UpdateApplicationStatus', UpdateApplicationStatusEvent(), EVENT_UPDATE_APPLICATION_STATUS)
-
-    UpdateRecentProjects    = ('UpdateRecentProjects', UpdateRecentProjectsEvent(), EVENT_UPDATE_RECENT_PROJECTS)
-
-    UMLDiagramModified      = ('UMLDiagramModified',   UMLDiagramModifiedEvent(),   EVENT_UML_DIAGRAM_MODIFIED)
-
-    SelectAllShapes   = ('SelectAllShapes',        SelectAllShapesEvent(),   EVENT_SELECT_ALL_SHAPES)
-    DeSelectAllShapes = ('DeSelectAllShapesEvent', DeSelectAllShapesEvent(), EVENT_DESELECT_ALL_SHAPES)
-    AddShape          = ('AddShapeEvent',          AddShapeEvent(),          EVENT_ADD_SHAPE)
-    CopyShapes        = ('CopyShapes',             CopyShapesEvent(),        EVENT_COPY_SHAPES)
-    PasteShapes       = ('PasteShapes',            PasteShapesEvent(),       EVENT_PASTE_SHAPES)
-    CutShapes         = ('CutShapes',              CutShapesEvent(),         EVENT_CUT_SHAPES)
-    Undo              = ('Undo',                   UndoEvent(),              EVENT_UNDO)
-    Redo              = ('Redo',                   RedoEvent(),              EVENT_REDO)
-    CutShape          = ('CutShape',               CutShapeEvent(),          EVENT_CUT_SHAPE)
-
-    AddPyutDiagram = ('AddPyutDiagram', AddPyutDiagramEvent(), EVENT_ADD_PYUT_DIAGRAM)
-    AddOglDiagram  = ('AddOglDiagram',  AddOglDiagramEvent(),  EVENT_ADD_OGL_DIAGRAM)
-
-    SelectTool               = ('SelectTool',               SelectToolEvent(),               EVENT_SELECT_TOOL)
-    SetToolAction            = ('SetToolAction',            SetToolActionEvent(),            EVENT_SET_TOOL_ACTION)
-    MiniProjectInformation   = ('MiniProjectInformation',   MiniProjectInformationEvent(),   EVENT_MINI_PROJECT_INFORMATION)
-    ActiveUmlFrame           = ('ActiveUmlFrame',           ActiveUmlFrameEvent(),           EVENT_ACTIVE_UML_FRAME)
-    ActiveProjectInformation = ('ActiveProjectInformation', ActiveProjectInformationEvent(), EVENT_ACTIVE_PROJECT_INFORMATION)
-    EditClass                = ('EditClass',                EditClassEvent(),                EVENT_EDIT_CLASS)
-    EditNote                 = ('EditNote',                 EditNoteEvent(),                 EVENT_EDIT_NOTE)
-    EditText                 = ('EditText',                 EditTextEvent(),                 EVENT_EDIT_TEXT)
-    EditActor                = ('EditActor',                EditActorEvent(),                EVENT_EDIT_ACTOR)
-    EditUseCase              = ('EditUseCase',              EditUseCaseEvent(),              EVENT_EDIT_USE_CASE)
-    EditInterface            = ('EditInterface',            EditInterfaceEvent(),            EVENT_EDIT_INTERFACE)
-
-    FrameInformation         = ('FrameInformation',   FrameInformationEvent(),   EVENT_FRAME_INFORMATION)
-    FrameSize                = ('FrameSize',          FrameSizeEvent(),          EVENT_FRAME_SIZE)
-    SelectedOglObjects       = ('SelectedOglObjects', SelectedOglObjectsEvent(), EVENT_SELECTED_OGL_OBJECTS)
-    RefreshFrame             = ('RefreshFrame',       RefreshFrameEvent(),       EVENT_REFRESH_FRAME)
-
-    UpdateEditMenu    = ('UpdateEditMenu',    UpdateEditMenuEvent(),    EVENT_UPDATE_EDIT_MENU)
-    AssociateEditMenu = ('AssociateEditMenu', AssociateEditMenuEvent(), EVENT_ASSOCIATE_EDIT_MENU)
-
-    ClassNameChanged      = ('ClassNameChanged',      ClassNameChangedEvent(),      EVENT_CLASS_NAME_CHANGED)
-    RequestCurrentProject = ('RequestCurrentProject', RequestCurrentProjectEvent(), EVENT_REQUEST_CURRENT_PROJECT)
+    NewProject               = 'NewProject'
+    NewNamedProject          = 'NewNamedProject'
+    NewDiagram               = 'NewDiagram'
+    NewProjectDiagram        = 'NewProjectDiagram'
+    DeleteDiagram            = 'DeleteDiagram'
+    OpenProject              = 'OpenProject'
+    InsertProject            = 'InsertProject'
+    SaveProject              = 'SaveProject'
+    SaveProjectAs            = 'SaveProjectAs'
+    CloseProject             = 'CloseProject'
+    UpdateTreeItemName       = 'UpdateTreeItemName'
+    UpdateApplicationTitle   = 'UpdateApplicationTitle'
+    UpdateApplicationStatus  = 'UpdateApplicationStatus'
+    UpdateRecentProjects     = 'UpdateRecentProjects'
+    UMLDiagramModified       = 'UMLDiagramModified'
+    SelectAllShapes          = 'SelectAllShapes'
+    DeSelectAllShapes        = 'DeSelectAllShapesEvent'
+    AddShape                 = 'AddShapeEvent'
+    CopyShapes               = 'CopyShapes'
+    PasteShapes              = 'PasteShapes'
+    CutShapes                = 'CutShapes'
+    Undo                     = 'Undo'
+    Redo                     = 'Redo'
+    CutShape                 = 'CutShape'
+    AddPyutDiagram           = 'AddPyutDiagram'
+    AddOglDiagram            = 'AddOglDiagram'
+    SelectTool               = 'SelectTool'
+    SetToolAction            = 'SetToolAction'
+    MiniProjectInformation   = 'MiniProjectInformation'
+    ActiveUmlFrame           = 'ActiveUmlFrame'
+    ActiveProjectInformation = 'ActiveProjectInformation'
+    EditClass                = 'EditClass'
+    EditNote                 = 'EditNote'
+    EditText                 = 'EditText'
+    EditActor                = 'EditActor'
+    EditUseCase              = 'EditUseCase'
+    EditInterface            = 'EditInterface'
+    FrameInformation         = 'FrameInformation'
+    FrameSize                = 'FrameSize'
+    SelectedOglObjects       = 'SelectedOglObjects'
+    RefreshFrame             = 'RefreshFrame'
+    UpdateEditMenu           = 'UpdateEditMenu'
+    AssociateEditMenu        = 'AssociateEditMenu'
+    ClassNameChanged         = 'ClassNameChanged'
+    RequestCurrentProject    = 'RequestCurrentProject'
+    DeleteLink               = 'DeleteLink'
+    CreateLink               = 'CreateLink'

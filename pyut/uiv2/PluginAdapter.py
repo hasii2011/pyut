@@ -4,7 +4,20 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from copy import deepcopy
+
+from wx import Command
+from wx import CommandProcessor
+from wx import Point
+
 from wx import Yield as wxYield
+
+from miniogl.ControlPoint import ControlPoint
+from miniogl.LineShape import ControlPoints
+
+from ogl.OglLink import OglLink
+from ogl.OglPosition import OglPosition
+from ogl.OglPosition import OglPositions
 
 from pyutplugins.ExternalTypes import CurrentProjectCallback
 from pyutplugins.ExternalTypes import FrameInformationCallback
@@ -14,6 +27,10 @@ from pyutplugins.ExternalTypes import PluginDocument
 from pyutplugins.ExternalTypes import PluginDocumentType
 from pyutplugins.ExternalTypes import PluginProject
 from pyutplugins.ExternalTypes import SelectedOglObjectsCallback
+from pyutplugins.ExternalTypes import CreatedLinkCallback
+from pyutplugins.ExternalTypes import LinkInformation
+from pyutplugins.ExternalTypes import ObjectBoundaries
+from pyutplugins.ExternalTypes import ObjectBoundaryCallback
 
 from pyutplugins.IPluginAdapter import IPluginAdapter
 from pyutplugins.IPluginAdapter import ScreenMetrics
@@ -24,6 +41,11 @@ from pyut.enums.DiagramType import DiagramType
 
 from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
+from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
+from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
+from pyut.ui.wxcommands.CommandDeleteOglLink import CommandDeleteOglLink
+
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject
 
@@ -31,7 +53,10 @@ from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
-NO_PLUGIN_PROJECT = cast(PluginProject, None)
+NO_PLUGIN_PROJECT           = cast(PluginProject, None)
+NO_OBJECT_BOUNDARY_CALLBACK = cast(ObjectBoundaryCallback, None)
+NO_OGL_LINK                 = cast(OglLink, None)
+NO_LINK_INFORMATION         = cast(LinkInformation, None)
 
 
 class PluginAdapter(IPluginAdapter):
@@ -47,7 +72,10 @@ class PluginAdapter(IPluginAdapter):
 
         self._eventEngine: IEventEngine = eventEngine
 
-        self._pluginProject: PluginProject = NO_PLUGIN_PROJECT  # temp store between callbacks
+        self._pluginProject:   PluginProject          = NO_PLUGIN_PROJECT             # temp save between callbacks
+        self._saveCallback:    ObjectBoundaryCallback = NO_OBJECT_BOUNDARY_CALLBACK   # temp save
+        self._oglLink:         OglLink                = NO_OGL_LINK                   # temp save
+        self._linkInformation: LinkInformation        = NO_LINK_INFORMATION           # temp save
 
     @property
     def pyutVersion(self) -> str:
@@ -140,6 +168,64 @@ class PluginAdapter(IPluginAdapter):
         filename: str = pluginProject.fileName
         self._eventEngine.sendEvent(EventType.NewNamedProject, projectFilename=filename, callback=self._projectCreated)
 
+    def getObjectBoundaries(self, callback: ObjectBoundaryCallback):
+        self._saveCallback = callback
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._onObjectBoundariesActiveUmlFrame)
+
+    def deleteLink(self, oglLink: OglLink):
+
+        self._oglLink = oglLink
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._onDeleteLinkActiveUmlFrame)
+
+    def createLink(self, linkInformation: LinkInformation, callback: CreatedLinkCallback):
+
+        self._linkInformation = linkInformation
+        self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._onCreateLinkActiveUmlFrame)
+        wxYield()   # make sure we process the above event first
+
+    def _onObjectBoundariesActiveUmlFrame(self, activeFrame: UmlDiagramsFrame):
+
+        objectBoundaries: ObjectBoundaries = activeFrame.objectBoundaries
+
+        assert self._saveCallback != NO_OBJECT_BOUNDARY_CALLBACK, 'Developer forgot to save the callback'
+
+        self._saveCallback(objectBoundaries)
+
+        self._saveCallback = NO_OBJECT_BOUNDARY_CALLBACK
+
+    def _onDeleteLinkActiveUmlFrame(self, activeFrame: UmlDiagramsFrame):
+
+        assert self._oglLink != NO_OGL_LINK, 'Developer forgot to save the link to delete'
+        commandProcessor: CommandProcessor = activeFrame.commandProcessor
+        cmd:              Command          = CommandDeleteOglLink(oglLink=self._oglLink, eventEngine=self._eventEngine)
+        submitStatus:      bool            = commandProcessor.Submit(command=cmd, storeIt=True)
+        self.logger.warning(f'{submitStatus=}')
+
+        self._oglLink = NO_OGL_LINK
+        self.refreshFrame()
+
+    def _onCreateLinkActiveUmlFrame(self, activeFrame: UmlDiagramsFrame):
+
+        assert self._linkInformation != NO_LINK_INFORMATION
+
+        commandProcessor: CommandProcessor = activeFrame.commandProcessor
+
+        sourcePoint:      OglPosition = self._linkInformation.path[0]
+        destinationPoint: OglPosition = self._linkInformation.path[-1]
+        command: CommandCreateOglLink = CommandCreateOglLink(eventEngine=self._eventEngine,
+                                                             src=self._linkInformation.sourceShape,
+                                                             dst=self._linkInformation.destinationShape,
+                                                             linkType=self._linkInformation.linkType,
+                                                             srcPoint=self._toWxPoint(sourcePoint),
+                                                             dstPoint=self._toWxPoint(destinationPoint),
+                                                             )
+        command.controlPoints = self._toControlPoints(self._linkInformation.path)
+        submitStatus:      bool            = commandProcessor.Submit(command=command, storeIt=True)
+        self.logger.warning(f'{submitStatus=}')
+
+        # self._linkInformation = NO_LINK_INFORMATION
+        self.refreshFrame()
+
     def _projectCreated(self, pyutProject: IPyutProject):
 
         pluginProject: PluginProject = self._pluginProject
@@ -217,3 +303,22 @@ class PluginAdapter(IPluginAdapter):
             return DiagramType.USECASE_DIAGRAM
         else:
             return DiagramType.SEQUENCE_DIAGRAM
+
+    def _toWxPoint(self, oglPosition: OglPosition) -> Point:
+
+        return Point(x=oglPosition.x, y=oglPosition.y)
+
+    def _toControlPoints(self, path: OglPositions) -> ControlPoints:
+
+        pathCopy: OglPositions = deepcopy(path)
+        pathCopy.pop(0)     # remove start
+        pathCopy = OglPositions(pathCopy[:-1])
+
+        controlPoints: ControlPoints = ControlPoints([])
+        for pt in pathCopy:
+            point: OglPosition = cast(OglPosition, pt)
+            controlPoint: ControlPoint = ControlPoint(x=point.x, y=point.y)
+
+            controlPoints.append(controlPoint)
+
+        return controlPoints

@@ -41,9 +41,6 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.experimental.GraphicalHandler import GraphicalHandler
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
-
 from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
 from pyut.uiv2.eventengine.Events import AddOglDiagramEvent
@@ -139,7 +136,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         Display class diagram properties
         """
-        PyutUtils.displayError(_("Not yet implemented !"))
+        PyutUtils.displayError('Not yet implemented !')
 
     # noinspection PyUnusedLocal
     def evtClose(self, event):
@@ -247,37 +244,6 @@ class UmlFrame(UmlFrameShapeHandler):
         Returns: The frame height
         """
         return self.maxHeight
-
-    # TODO:  Get the version from the pyutplugins Scaffold UI
-    # def getObjectsBoundaries(self):
-    #     """
-    #     TODO:  This appears to be an unused method
-    #
-    #     Return object boundaries (coordinates)
-    #
-    #     """
-    #     infinite = 1e9
-    #     minx     = infinite
-    #     maxX     = -infinite
-    #     miny     = infinite
-    #     maxy     = -infinite
-    #
-    #     # Get boundaries
-    #     for shapeObject in self._diagram.GetShapes():
-    #         # Get object limits
-    #         ox1, oy1 = shapeObject.GetPosition()
-    #         ox2, oy2 = shapeObject.GetSize()
-    #         ox2 += ox1
-    #         oy2 += oy1
-    #
-    #         # Update min-max
-    #         minx = min(minx, ox1)
-    #         maxX = max(maxX, ox2)
-    #         miny = min(miny, oy1)
-    #         maxy = max(maxy, oy2)
-    #
-    #     # Return values
-    #     return minx, miny, maxX, maxy
 
     def getUmlObjectById(self, objectId: int) -> UmlObject | None:
         """

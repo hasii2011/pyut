@@ -4,7 +4,10 @@ from typing import Callable
 
 from logging import Logger
 from logging import getLogger
+from typing import Dict
+from typing import NewType
 
+from wx import CommandEvent
 from wx import PostEvent
 from wx import PyEventBinder
 from wx import TreeItemId
@@ -26,9 +29,16 @@ from pyutplugins.ExternalTypes import FrameInformationCallback
 from pyut.enums.DiagramType import DiagramType
 
 from pyut.uiv2.IPyutProject import IPyutProject
+from pyut.uiv2.eventengine.Events import AddOglDiagramEvent
+from pyut.uiv2.eventengine.Events import AddPyutDiagramEvent
 from pyut.uiv2.eventengine.Events import AddShapeEvent
 from pyut.uiv2.eventengine.Events import AssociateEditMenuEvent
 from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
+from pyut.uiv2.eventengine.Events import CloseProjectEvent
+from pyut.uiv2.eventengine.Events import CopyShapesEvent
+from pyut.uiv2.eventengine.Events import CutShapesEvent
+from pyut.uiv2.eventengine.Events import DeSelectAllShapesEvent
+from pyut.uiv2.eventengine.Events import DeleteDiagramEvent
 from pyut.uiv2.eventengine.Events import EditActorEvent
 from pyut.uiv2.eventengine.Events import EditInterfaceEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
@@ -37,8 +47,17 @@ from pyut.uiv2.eventengine.Events import EditUseCaseEvent
 from pyut.uiv2.eventengine.Events import FrameInformationEvent
 from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
+from pyut.uiv2.eventengine.Events import NewProjectEvent
+from pyut.uiv2.eventengine.Events import PasteShapesEvent
+from pyut.uiv2.eventengine.Events import RedoEvent
+from pyut.uiv2.eventengine.Events import RefreshFrameEvent
 from pyut.uiv2.eventengine.Events import RequestCurrentProjectEvent
+from pyut.uiv2.eventengine.Events import SaveProjectAsEvent
+from pyut.uiv2.eventengine.Events import SaveProjectEvent
+from pyut.uiv2.eventengine.Events import SelectAllShapesEvent
 from pyut.uiv2.eventengine.Events import SelectedOglObjectsEvent
+from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
+from pyut.uiv2.eventengine.Events import UndoEvent
 from pyut.uiv2.eventengine.Events import UpdateEditMenuEvent
 from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
 
@@ -99,11 +118,31 @@ NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER: str = 'newProjectDiagramInformation'
 OLD_CLASS_NAME_PARAMETER: str = 'oldClassName'
 NEW_CLASS_NAME_PARAMETER: str = 'newClassName'
 
-# EventCallback = NewType('EventCallback', Callable[[CurrentProjectInformation], None])
 MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
 ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for callback
 ActiveProjectInformationCallback  = Callable[[ActiveProjectInformation], None]
 NewNamedProjectCallback           = Callable[[IPyutProject], None]
+
+EventEnumToType = NewType('EventEnumToType', Dict[EventType, CommandEvent])
+
+SimpleEvents: EventEnumToType = EventEnumToType({
+    EventType.NewProject:         NewProjectEvent,
+    EventType.DeleteDiagram:      DeleteDiagramEvent,
+    EventType.CloseProject:       CloseProjectEvent,
+    EventType.SaveProject:        SaveProjectEvent,
+    EventType.SaveProjectAs:      SaveProjectAsEvent,
+    EventType.UMLDiagramModified: UMLDiagramModifiedEvent,
+    EventType.SelectAllShapes:    SelectAllShapesEvent,
+    EventType.DeSelectAllShapes:  DeSelectAllShapesEvent,
+    EventType.CopyShapes:         CopyShapesEvent,
+    EventType.PasteShapes:        PasteShapesEvent,
+    EventType.Undo:               UndoEvent,
+    EventType.Redo:               RedoEvent,
+    EventType.CutShapes:          CutShapesEvent,
+    EventType.AddOglDiagram:      AddOglDiagramEvent,
+    EventType.AddPyutDiagram:     AddPyutDiagramEvent,
+    EventType.RefreshFrame:       RefreshFrameEvent,
+})
 
 
 class EventEngine(IEventEngine):
@@ -123,7 +162,7 @@ class EventEngine(IEventEngine):
     def __init__(self, listeningWindow: Window):
 
         self._listeningWindow: Window = listeningWindow
-        self.logger: Logger = getLogger(__name__)
+        self.logger:           Logger = getLogger(__name__)
 
     def registerListener(self, pyEventBinder: PyEventBinder, callback: Callable):
         self._listeningWindow.Bind(pyEventBinder, callback)
@@ -200,6 +239,15 @@ class EventEngine(IEventEngine):
             case _:
                 assert False, f'Unknown event type: `{eventType}`'
 
+    def _simpleSendEvent(self, eventType: EventType):
+
+        try:
+            eventClazz = SimpleEvents[eventType]
+            event = eventClazz()
+            PostEvent(dest=self._listeningWindow, event=event)
+        except KeyError:
+            self.logger.error(f'Unhandled event type: {eventType.value}')
+
     def _sendUpdateTreeItemNameEvent(self, **kwargs):
 
         newName: str = kwargs[NEW_NAME_PARAMETER]
@@ -250,10 +298,6 @@ class EventEngine(IEventEngine):
 
         diagramType: DiagramType = kwargs[DIAGRAM_TYPE_PARAMETER]
         eventToPost: NewDiagramEvent = NewDiagramEvent(diagramType=diagramType)
-        PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _simpleSendEvent(self, eventType: EventType):
-        eventToPost = eventType.commandEvent
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendCutShapeEvent(self, **kwargs):

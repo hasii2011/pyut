@@ -5,6 +5,8 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from sys import maxsize
+
 from wx import EVT_CHAR
 from wx import WXK_BACK
 from wx import WXK_DELETE
@@ -38,6 +40,8 @@ from pyut.uiv2.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
 from pyut.uiv2.eventengine.Events import EVENT_ADD_PYUT_DIAGRAM
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyutplugins.ExternalTypes import ObjectBoundaries
 
 
 class UmlDiagramsFrame(UmlFrame):
@@ -73,8 +77,8 @@ class UmlDiagramsFrame(UmlFrame):
 
         super().__init__(parent, eventEngine=eventEngine)
 
-        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM, callback=self._onAddPyutDiagram)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,  callback=self._onAddOglDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM,      callback=self._onAddPyutDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,       callback=self._onAddOglDiagram)
 
         self._oglEventEngine.registerListener(EVT_SHAPE_SELECTED,            self._onShapeSelected)
         self._oglEventEngine.registerListener(EVT_CUT_OGL_CLASS,             self._onCutOglClassShape)
@@ -83,6 +87,35 @@ class UmlDiagramsFrame(UmlFrame):
         self._oglEventEngine.registerListener(EVT_CREATE_LOLLIPOP_INTERFACE, self._onCreateLollipopInterface)
 
         self.Bind(EVT_CHAR, self._onProcessKeyboard)
+
+    @property
+    def objectBoundaries(self) -> ObjectBoundaries:
+        """
+
+        Return object boundaries (coordinates)
+
+        """
+        minX: int = maxsize
+        maxX: int = -maxsize
+        minY: int = maxsize
+        maxY: int = -maxsize
+
+        # Get boundaries
+        for shapeObject in self._diagram.GetShapes():
+            # Get object limits
+            ox1, oy1 = shapeObject.GetPosition()
+            ox2, oy2 = shapeObject.GetSize()
+            ox2 += ox1
+            oy2 += oy1
+
+            # Update min-max
+            minX = min(minX, ox1)
+            maxX = max(maxX, ox2)
+            minY = min(minY, oy1)
+            maxY = max(maxY, oy2)
+
+        # Return values
+        return ObjectBoundaries(minX=minX, minY=minY, maxX=maxX, maxY=maxY)
 
     def undo(self):
         """
