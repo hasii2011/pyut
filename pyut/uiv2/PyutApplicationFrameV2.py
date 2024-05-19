@@ -16,7 +16,6 @@ from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
-from wx import FRAME_EX_METAL
 from wx import FRAME_FLOAT_ON_PARENT
 from wx import FRAME_TOOL_WINDOW
 from wx import EVT_WINDOW_DESTROY
@@ -127,8 +126,10 @@ class PyutApplicationFrameV2(Frame):
         # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
         # in production mode use FRAME_TOOL_WINDOW
         #
-        frameStyle: int = DEFAULT_FRAME_STYLE | FRAME_EX_METAL | FRAME_FLOAT_ON_PARENT
+        frameStyle: int = DEFAULT_FRAME_STYLE
         if appMode is True:
+            frameStyle = frameStyle | FRAME_TOOL_WINDOW
+        else:
             frameStyle = frameStyle | FRAME_TOOL_WINDOW
 
         super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=frameStyle)

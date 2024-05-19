@@ -481,7 +481,11 @@ class ActionHandler(Singleton):
         self._setStatusText('')
 
     def _doUpdate(self, projectInformation: MiniProjectInformation):
-        pass
+
+        self._eventEngine.sendEvent(EventType.UpdateApplicationTitle,
+                                    newFilename=projectInformation.projectName,
+                                    currentFrameZoomFactor=projectInformation.frameZoom,
+                                    projectModified=projectInformation.projectModified)
 
     def _resetToActionSelector(self):
         """
