@@ -10,34 +10,31 @@ from sys import exc_info
 
 from traceback import extract_tb
 
-
-from wx.adv import SPLASH_NO_TIMEOUT
-from wx.adv import SplashScreen
-from wx.adv import SPLASH_CENTRE_ON_PARENT
-
 from wx import OK
 from wx import ICON_ERROR
-from wx import STAY_ON_TOP
-
 from wx import HelpProvider
 from wx import SimpleHelpProvider
 from wx import ScreenDC
 from wx import MessageDialog
-from wx import DefaultPosition as wxDefaultPosition
 from wx import Bitmap
-from wx import DefaultSize as wxDefaultSize
 
 from wx import App as wxApp
 from wx import Yield as wxYield
 
+from wx.lib.agw.advancedsplash import AS_CENTER_ON_PARENT
+from wx.lib.agw.advancedsplash import AS_TIMEOUT
+from wx.lib.agw.advancedsplash import AdvancedSplash
+
 from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
-
 from pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
+
 from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
 
 
 class PyutAppV2(wxApp):
+
+    SPLASH_TIME_OUT: int = 6000
     """
     PyutApp : main pyut application class.
 
@@ -52,7 +49,7 @@ class PyutAppV2(wxApp):
 
         from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
 
-        self.splash: SplashScreen = cast(SplashScreen, None)
+        self.splash: AdvancedSplash = cast(AdvancedSplash, None)
 
         self._showSplash: bool = showSplash
         self._frame:      PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)
@@ -70,15 +67,13 @@ class PyutAppV2(wxApp):
         HelpProvider.Set(provider)
         # Create the SplashScreen
 
-        bmp:         Bitmap = splashImage.GetBitmap()
-        splashStyle: int    = SPLASH_NO_TIMEOUT | SPLASH_CENTRE_ON_PARENT
-        self.splash = SplashScreen(bitmap=bmp,
-                                   splashStyle=splashStyle,
-                                   milliseconds=PyutAppV2.SPLASH_TIMEOUT_MSECS,
-                                   parent=None,
-                                   pos=wxDefaultPosition,
-                                   size=wxDefaultSize,
-                                   style=STAY_ON_TOP)
+        bmp:      Bitmap = splashImage.GetBitmap()
+        agwStyle: int    = AS_CENTER_ON_PARENT | AS_TIMEOUT
+        self.splash = AdvancedSplash(parent=self._frame,
+                                     bitmap=bmp,
+                                     timeout=PyutAppV2.SPLASH_TIMEOUT_MSECS,
+                                     agwStyle=agwStyle
+                                     )
 
         self.logger.debug(f'Showing splash screen')
         self.splash.Show(True)
