@@ -94,26 +94,6 @@ class PyutDocumentV2(IPyutDocument):
     def removeFromTree(self):
         assert False, 'Do not use this method'
 
-    # def _createDiagramFrame(self):
-    #
-    #     docType:     DiagramType     = self._diagramType
-    #     parentFrame: DiagramNotebook = self._parentFrame
-    #
-    #     self.logger.debug(f'PyutDocument using type {docType}')
-    #     if docType == DiagramType.CLASS_DIAGRAM:
-    #         self._title = DiagramsLabels[docType]
-    #         self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
-    #     elif docType == DiagramType.SEQUENCE_DIAGRAM:
-    #         self._title = DiagramsLabels[docType]
-    #         self._diagramFrame = UmlSequenceDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
-    #     elif docType == DiagramType.USECASE_DIAGRAM:
-    #         self._title = DiagramsLabels[docType]
-    #         self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
-    #     else:
-    #         self._displayError(f'Unsupported diagram type; replacing by class diagram: {docType}')
-    #         self._title = DiagramsLabels[DiagramType.CLASS_DIAGRAM]
-    #         self._diagramFrame = UmlClassDiagramsFrame(parentFrame, eventEngine=self._eventEngine)
-
     def _displayError(self, message: str):
         booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
         booBoo.ShowModal()

@@ -1,4 +1,5 @@
 wheel==0.43.0
+# Don't upgrade past this versio as 70.x.x does not work
 setuptools==69.1.1
 
 # the following necessary when building the

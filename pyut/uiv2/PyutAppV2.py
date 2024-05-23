@@ -10,12 +10,14 @@ from sys import exc_info
 
 from traceback import extract_tb
 
+
+from wx.adv import SPLASH_NO_TIMEOUT
 from wx.adv import SplashScreen
 from wx.adv import SPLASH_CENTRE_ON_PARENT
-from wx.adv import SPLASH_TIMEOUT
 
 from wx import OK
 from wx import ICON_ERROR
+from wx import STAY_ON_TOP
 
 from wx import HelpProvider
 from wx import SimpleHelpProvider
@@ -30,7 +32,6 @@ from wx import Yield as wxYield
 
 from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
 
-from pyut.errorcontroller.ErrorManager import ErrorManager
 
 from pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
@@ -45,17 +46,16 @@ class PyutAppV2(wxApp):
     """
     SPLASH_TIMEOUT_MSECS: int = 3000
 
-    def __init__(self, redirect: bool, showSplash: bool = True, showMainFrame: bool = True):
-
-        from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
+    def __init__(self, redirect: bool, showSplash: bool = True):
 
         self.logger: Logger = getLogger(__name__)
 
+        from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
+
         self.splash: SplashScreen = cast(SplashScreen, None)
 
-        self._showSplash:    bool = showSplash
-        self._showMainFrame: bool = showMainFrame
-        self._frame:         PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)
+        self._showSplash: bool = showSplash
+        self._frame:      PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)
 
         super().__init__(redirect)
 
@@ -64,33 +64,31 @@ class PyutAppV2(wxApp):
         """
         provider: SimpleHelpProvider = SimpleHelpProvider()
 
+        self._frame = PyutApplicationFrameV2("Pyut UI V2")
+        wxYield()
+
         HelpProvider.Set(provider)
-        try:
-            # Create the SplashScreen
-            if self._showSplash is True:
+        # Create the SplashScreen
 
-                bmp: Bitmap = splashImage.GetBitmap()
-                self.splash = SplashScreen(bmp, SPLASH_CENTRE_ON_PARENT | SPLASH_TIMEOUT, PyutAppV2.SPLASH_TIMEOUT_MSECS, parent=None,
-                                           pos=wxDefaultPosition, size=wxDefaultSize)
+        bmp:         Bitmap = splashImage.GetBitmap()
+        splashStyle: int    = SPLASH_NO_TIMEOUT | SPLASH_CENTRE_ON_PARENT
+        self.splash = SplashScreen(bitmap=bmp,
+                                   splashStyle=splashStyle,
+                                   milliseconds=PyutAppV2.SPLASH_TIMEOUT_MSECS,
+                                   parent=None,
+                                   pos=wxDefaultPosition,
+                                   size=wxDefaultSize,
+                                   style=STAY_ON_TOP)
 
-                self.logger.debug(f'Showing splash screen')
-                self.splash.Show(True)
-                wxYield()
+        self.logger.debug(f'Showing splash screen')
+        self.splash.Show(True)
 
-            self._frame = PyutApplicationFrameV2("Pyut UI V2")
-            self.SetTopWindow(self._frame)
-            self._AfterSplash()
+        self.SetTopWindow(self._frame)
+        self._frame.Show(True)
 
-            return True
-        except (ValueError, Exception) as e:
-            errorMsg: str = ErrorManager.getErrorInfo()
-            self.logger.error(f'{e} - {errorMsg}')
-            dlg = MessageDialog(None, f"The following error occurred: {exc_info()[1]}", "An error occurred...", OK | ICON_ERROR)
-            errMessage: str = ErrorManager.getErrorInfo()
-            self.logger.debug(errMessage)
-            dlg.ShowModal()
-            dlg.Destroy()
-            return False
+        self._AfterSplash()
+
+        return True
 
     def MacOpenFiles(self, fileNames: List[str]):
         """
@@ -120,9 +118,6 @@ class PyutAppV2(wxApp):
             if self._frame is None:
                 self.logger.error("Exiting due to previous errors")
                 return False
-
-            if self._showMainFrame is True:
-                self._frame.Show(True)
 
             # Show full screen ?
             if prefs.fullScreen is True:
@@ -156,7 +151,7 @@ class PyutAppV2(wxApp):
             loadedAFile = True
         self.logger.info(f'{argv=}')
         for filename in [el for el in argv[1:] if el[0] != '-']:
-            self.logger.info('Load file on command line')
+            self.logger.info(f'Load file on command line: {filename}')
             appFrame.loadByFilename(f'{filename}')
             loadedAFile = True
 
