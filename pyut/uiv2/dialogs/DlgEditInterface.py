@@ -35,7 +35,7 @@ class DlgEditInterface(DlgEditClassCommon):
         sizedPanel: SizedPanel = self.GetContentsPane()
 
         self._layoutMethodControls(parent=sizedPanel)
-        self._layoutDialogButtonContainer(sizedPanel)
+        self._defineAdditionalDialogButtons(sizedPanel)
 
         # Fill Class name
         self._className.SetValue(self._pyutModelCopy. name)
@@ -44,6 +44,13 @@ class DlgEditInterface(DlgEditClassCommon):
         # less screen space than the controls need
         self.Fit()
         self.SetMinSize(self.GetSize())
+
+    def _defineAdditionalDialogButtons(self, parent: SizedPanel):
+        """
+        Override base class
+        """
+        self._defineDescriptionButton()
+        self._layoutCustomDialogButtonContainer(parent=parent, customButtons=self._customDialogButtons)
 
     # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):

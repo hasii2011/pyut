@@ -78,6 +78,8 @@ class DlgEditClassCommon(BaseEditDialog):
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerType('vertical')
 
+        self._customDialogButtons: CustomDialogButtons = CustomDialogButtons([])
+
         self._layoutNameControls(parent=sizedPanel, editInterface=editInterface)
 
     def _layoutNameControls(self, parent: SizedPanel, editInterface: bool, ):
@@ -95,7 +97,7 @@ class DlgEditClassCommon(BaseEditDialog):
 
         self.Bind(EVT_TEXT, self._onNameChange, self._className)
 
-    def _layoutDialogButtonContainer(self, parent: SizedPanel):
+    def _defineAdditionalDialogButtons(self, parent: SizedPanel):
         """
         Create Ok, Cancel, stereotype and description buttons;
         since we want to use a custom button layout, we won't use the
@@ -103,19 +105,25 @@ class DlgEditClassCommon(BaseEditDialog):
         a horizontal layout and add the buttons to that;
         """
 
-        customDialogButtons: CustomDialogButtons = CustomDialogButtons([])
-        if self._editInterface is False:
-            stereotypeDialogButton: CustomDialogButton = CustomDialogButton()
-            stereotypeDialogButton.label    = '&Stereotype...'
-            stereotypeDialogButton.callback = self._onStereotype
-            customDialogButtons.append(stereotypeDialogButton)
+        self._defineStereoTypeButton()
+        self._defineDescriptionButton()
+        self._layoutCustomDialogButtonContainer(parent=parent, customButtons=self._customDialogButtons)
+
+    def _defineStereoTypeButton(self):
+
+        stereotypeDialogButton: CustomDialogButton = CustomDialogButton()
+        stereotypeDialogButton.label    = '&Stereotype...'
+        stereotypeDialogButton.callback = self._onStereotype
+
+        self._customDialogButtons.append(stereotypeDialogButton)
+
+    def _defineDescriptionButton(self):
 
         descriptionDialogButton: CustomDialogButton = CustomDialogButton()
         descriptionDialogButton.label    = '&Description...'
         descriptionDialogButton.callback = self._onDescription
 
-        customDialogButtons.append(descriptionDialogButton)
-        self._layoutCustomDialogButtonContainer(parent=parent, customButtons=customDialogButtons)
+        self._customDialogButtons.append(descriptionDialogButton)
 
     def _layoutMethodControls(self, parent: SizedPanel):
 

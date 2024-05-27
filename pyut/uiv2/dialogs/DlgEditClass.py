@@ -83,7 +83,7 @@ class DlgEditClass(DlgEditClassCommon):
 
         self._className.SetFocus()
         self._className.SetSelection(0, len(self._className.GetValue()))
-        self._layoutDialogButtonContainer(sizedPanel)
+        self._defineAdditionalDialogButtons(sizedPanel)
         # a little trick to make sure that you can't resize the dialog to
         # less screen space than the controls need
         self.Fit()

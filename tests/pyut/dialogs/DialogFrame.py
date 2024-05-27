@@ -10,6 +10,7 @@ from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_CLOSE
 from wx import EVT_MENU
 from wx import EVT_WINDOW_DESTROY
+from wx import FRAME_FLOAT_ON_PARENT
 from wx import ID_EXIT
 from wx import ID_FILE1
 
@@ -40,7 +41,7 @@ class DialogFrame(Frame):
 
     def __init__(self):
 
-        super().__init__(parent=None, title="Test A Dialog", size=(400, 200), style=DEFAULT_FRAME_STYLE)
+        super().__init__(parent=None, title="Test A Dialog", size=(400, 200), style=DEFAULT_FRAME_STYLE | FRAME_FLOAT_ON_PARENT)
 
         self.logger: Logger = getLogger(__name__)
 
