@@ -1,4 +1,4 @@
-
+from typing import List
 from typing import Union
 from typing import cast
 
@@ -32,6 +32,8 @@ from wx import NewIdRef as wxNewIdRef
 from pyutmodelv2.PyutLink import PyutLink
 from pyutmodelv2.PyutClass import PyutClass
 from pyutmodelv2.PyutInterface import PyutInterface
+from pyutmodelv2.PyutInterface import PyutInterfaces
+
 from pyutmodelv2.PyutField import PyutField
 from pyutmodelv2.PyutField import PyutFields
 from pyutmodelv2.PyutMethod import PyutMethod
@@ -39,12 +41,13 @@ from pyutmodelv2.PyutMethod import PyutModifiers
 from pyutmodelv2.PyutMethod import SourceCode
 from pyutmodelv2.PyutMethod import PyutMethods
 from pyutmodelv2.PyutModifier import PyutModifier
-from pyutmodelv2.PyutNote import PyutNote
 from pyutmodelv2.PyutParameter import PyutParameter
+from pyutmodelv2.PyutModelTypes import ClassName
+from pyutmodelv2.PyutUseCase import PyutUseCase
+from pyutmodelv2.PyutActor import PyutActor
+from pyutmodelv2.PyutNote import PyutNote
 from pyutmodelv2.PyutText import PyutText
 from pyutmodelv2.PyutType import PyutType
-from pyutmodelv2.PyutActor import PyutActor
-from pyutmodelv2.PyutUseCase import PyutUseCase
 
 from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 from pyutmodelv2.enumerations.PyutStereotype import PyutStereotype
@@ -85,6 +88,9 @@ from pyut.uiv2.dialogs.Wrappers import DlgEditDiagramTitle
 from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
 
 from pyut.uiv2.dialogs.tips.DlgTipsV2 import DlgTipsV2
+from pyut.uiv2.eventengine.EventEngine import GetLollipopInterfacesCallback
+from pyut.uiv2.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
+from pyut.uiv2.eventengine.Events import GetLollipopInterfacesEvent
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 from pyut.uiv2.eventengine.EventEngine import EventEngine
@@ -137,6 +143,7 @@ class AppTestADialog(App):
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
         self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED,   callback=self._onClassNameChanged)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_GET_LOLLIPOP_INTERFACES, callback=self._onGetLollipopInterfaces)
 
         return True
 
@@ -488,6 +495,22 @@ class AppTestADialog(App):
         oldClassName: str = event.oldClassName
         newClassName: str = event.newClassName
         self.logger.info(f'Class Name Changed Event: {oldClassName=} {newClassName=}')
+
+    def _onGetLollipopInterfaces(self, event: GetLollipopInterfacesEvent):
+
+        fakeInterfaceNames: List[str]      = ['fakeInterface1', 'fakeInterface2', 'fakeInterface3', 'fakeInterface4', 'fakeInterface5']
+        fakeLollipops:      PyutInterfaces = PyutInterfaces([])
+
+        implementor: int = 0
+        for fakeName in fakeInterfaceNames:
+            pyutInterface: PyutInterface = PyutInterface()
+            pyutInterface.name = fakeName
+            pyutInterface.addImplementor(ClassName(f'Implementor{implementor}'))
+            fakeLollipops.append(pyutInterface)
+
+        cb: GetLollipopInterfacesCallback = event.callback
+
+        cb(fakeLollipops)
 
 
 testApp: AppTestADialog = AppTestADialog(redirect=False)

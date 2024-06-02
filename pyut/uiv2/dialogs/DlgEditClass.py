@@ -6,9 +6,12 @@ from logging import Logger
 from logging import getLogger
 
 from wx import CANCEL
+from wx import EVT_TEXT
 from wx import OK
 
 from wx import CommandEvent
+from wx import StaticText
+from wx import TextCtrl
 from wx import Window
 from wx import CheckBox
 
@@ -75,6 +78,8 @@ class DlgEditClass(DlgEditClassCommon):
 
         self._pyutFields: PyutAdvancedListBox = cast(PyutAdvancedListBox, None)
 
+        self._layoutNameControls(parent=sizedPanel)
+
         self._layoutFieldControls(parent=sizedPanel)
         self._layoutMethodControls(parent=sizedPanel)
         self._layoutMethodDisplayOptions(parent=sizedPanel)
@@ -88,6 +93,18 @@ class DlgEditClass(DlgEditClassCommon):
         # less screen space than the controls need
         self.Fit()
         self.SetMinSize(self.GetSize())
+
+    def _layoutNameControls(self, parent: SizedPanel):
+
+        lbl: str = 'Class Name:'
+
+        namePanel: SizedPanel = SizedPanel(parent)
+        namePanel.SetSizerType('horizontal')
+
+        StaticText(namePanel, label=lbl)
+        self._className: TextCtrl = TextCtrl(namePanel, value='', size=(250, -1))  #
+
+        self.Bind(EVT_TEXT, self._onNameChange, self._className)
 
     def _layoutFieldControls(self, parent: SizedPanel):
 

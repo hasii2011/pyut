@@ -8,12 +8,8 @@ from logging import getLogger
 
 from copy import deepcopy
 
-from wx import EVT_TEXT
 from wx import OK
-
 from wx import CommandEvent
-from wx import StaticText
-from wx import TextCtrl
 
 from wx.lib.sized_controls import SizedPanel
 
@@ -79,23 +75,6 @@ class DlgEditClassCommon(BaseEditDialog):
         sizedPanel.SetSizerType('vertical')
 
         self._customDialogButtons: CustomDialogButtons = CustomDialogButtons([])
-
-        self._layoutNameControls(parent=sizedPanel, editInterface=editInterface)
-
-    def _layoutNameControls(self, parent: SizedPanel, editInterface: bool, ):
-
-        if editInterface is True:
-            lbl: str = 'Interface Name:'
-        else:
-            lbl = 'Class Name:'
-
-        namePanel: SizedPanel = SizedPanel(parent)
-        namePanel.SetSizerType('horizontal')
-
-        StaticText(namePanel, label=lbl)
-        self._className: TextCtrl = TextCtrl(namePanel, value='', size=(250, -1))  #
-
-        self.Bind(EVT_TEXT, self._onNameChange, self._className)
 
     def _defineAdditionalDialogButtons(self, parent: SizedPanel):
         """

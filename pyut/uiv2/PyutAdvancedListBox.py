@@ -84,7 +84,7 @@ class PyutAdvancedListBox(SizedPanel):
         super().__init__(parent)
         self.SetSizerType('vertical')
         # noinspection PyUnresolvedReferences
-        self.SetSizerProps(expand=True, proportion=1)   # SizeProps is a mixin
+        self.SetSizerProps(expand=True, proportion=2)   # SizeProps is a mixin
 
         self._callbacks: AdvancedListCallbacks = callbacks
 

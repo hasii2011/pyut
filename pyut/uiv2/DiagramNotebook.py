@@ -26,6 +26,8 @@ from pyutmodelv2.PyutClass import PyutClass
 from pyutmodelv2.PyutNote import PyutNote
 from pyutmodelv2.PyutObject import PyutObject
 from pyutmodelv2.PyutUseCase import PyutUseCase
+from pyutmodelv2.PyutInterface import PyutInterface
+from pyutmodelv2.PyutInterface import PyutInterfaces
 
 from miniogl.Diagram import Diagram
 
@@ -48,6 +50,7 @@ from pyut.ui.wxcommands.CommandDeleteOglLink import CommandDeleteOglLink
 from pyut.ui.wxcommands.CommandDeleteOglNote import CommandDeleteOglNote
 from pyut.ui.wxcommands.CommandDeleteOglText import CommandDeleteOglText
 from pyut.ui.wxcommands.CommandDeleteOglUseCase import CommandDeleteOglUseCase
+
 from pyut.ui.wxcommands.Types import DoableObjectType
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
@@ -60,6 +63,7 @@ from pyut.uiv2.eventengine.Events import EVENT_REDO
 from pyut.uiv2.eventengine.Events import EVENT_UNDO
 from pyut.uiv2.eventengine.Events import EVENT_CUT_SHAPE
 from pyut.uiv2.eventengine.Events import EVENT_DESELECT_ALL_SHAPES
+from pyut.uiv2.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
 
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.Events import CutShapesEvent
@@ -70,7 +74,9 @@ from pyut.uiv2.eventengine.Events import RedoEvent
 from pyut.uiv2.eventengine.Events import UndoEvent
 from pyut.uiv2.eventengine.Events import CutShapeEvent
 from pyut.uiv2.eventengine.Events import DeSelectAllShapesEvent
+from pyut.uiv2.eventengine.Events import GetLollipopInterfacesEvent
 
+from pyut.uiv2.eventengine.EventEngine import GetLollipopInterfacesCallback
 
 PyutObjects = NewType('PyutObjects', List[PyutObject])
 
@@ -101,6 +107,7 @@ class DiagramNotebook(Notebook):
         self._eventEngine.registerListener(pyEventBinder=EVENT_REDO,                callback=self._onRedo)
         self._eventEngine.registerListener(pyEventBinder=EVENT_CUT_SHAPE,           callback=self._onCutShape)    # TODO:  I do not think this is used anymore
 
+        self._eventEngine.registerListener(pyEventBinder=EVENT_GET_LOLLIPOP_INTERFACES, callback=self._onGetLollipopInterfaces)
         self.Bind(EVT_CLOSE, self.Close)
 
     @property
@@ -277,6 +284,27 @@ class DiagramNotebook(Notebook):
             self._displayWarning(message='No selected/available frame')
         else:
             currentFrame.redo()
+
+    def _onGetLollipopInterfaces(self, event: GetLollipopInterfacesEvent):
+        """
+        Invokes the provided callback with any pyutInterfaces on the diagram.
+        It may return an empty list.
+
+        Args:
+            event:
+        """
+        umlObjects:     UmlObjects     = self.umlObjects
+        pyutInterfaces: PyutInterfaces = PyutInterfaces([])
+
+        for umlObject in umlObjects:
+
+            pyutObject: PyutObject = umlObject.pyutObject
+            if isinstance(pyutObject, PyutInterface):
+                pyutInterfaces.append(pyutObject)
+
+        callback: GetLollipopInterfacesCallback = event.callback
+
+        callback(pyutInterfaces)
 
     def _updateApplicationStatus(self, statusMessage: str):
 

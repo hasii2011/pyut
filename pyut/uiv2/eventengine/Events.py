@@ -43,6 +43,7 @@ SetToolActionEvent,            EVENT_SET_TOOL_ACTION            = NewEvent()
 MiniProjectInformationEvent,   EVENT_MINI_PROJECT_INFORMATION   = NewEvent()
 ActiveUmlFrameEvent,           EVENT_ACTIVE_UML_FRAME           = NewEvent()
 ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
+GetLollipopInterfacesEvent,    EVENT_GET_LOLLIPOP_INTERFACES    = NewEvent()
 
 # The following specifically for the plugin adapter
 FrameInformationEvent,         EVENT_FRAME_INFORMATION       = NewEvent()
@@ -209,6 +210,7 @@ class EventType(Enum):
     MiniProjectInformation   = 'MiniProjectInformation'
     ActiveUmlFrame           = 'ActiveUmlFrame'
     ActiveProjectInformation = 'ActiveProjectInformation'
+    GetLollipopInterfaces    = 'GetLollipopInterfaces'
     EditClass                = 'EditClass'
     EditNote                 = 'EditNote'
     EditText                 = 'EditText'

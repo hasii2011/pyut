@@ -7,6 +7,7 @@ from logging import getLogger
 from typing import Dict
 from typing import NewType
 
+from pyutmodelv2.PyutInterface import PyutInterfaces
 from wx import CommandEvent
 from wx import PostEvent
 from wx import PyEventBinder
@@ -44,6 +45,7 @@ from pyut.uiv2.eventengine.Events import EditInterfaceEvent
 from pyut.uiv2.eventengine.Events import EditNoteEvent
 from pyut.uiv2.eventengine.Events import EditTextEvent
 from pyut.uiv2.eventengine.Events import EditUseCaseEvent
+from pyut.uiv2.eventengine.Events import GetLollipopInterfacesEvent
 from pyut.uiv2.eventengine.Events import FrameInformationEvent
 from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
@@ -92,12 +94,11 @@ TOOL_ID_PARAMETER:      str = 'toolId'
 ACTION_PARAMETER:       str = 'action'
 NEW_FILENAME_PARAMETER: str = 'newFilename'
 
-IMPLEMENTOR_PARAMETER:    str = 'implementor'
-PYUT_INTERFACE_PARAMETER: str = 'pyutInterface'
+IMPLEMENTOR_PARAMETER:         str = 'implementor'
+PYUT_INTERFACE_PARAMETER:      str = 'pyutInterface'
+PYUT_INTERFACE_NAME_PARAMETER: str = 'pyutInterfaceName'
 
-COMMAND_PROCESSOR_PARAMETER: str = 'commandProcessor'
-
-
+COMMAND_PROCESSOR_PARAMETER:         str = 'commandProcessor'
 PROJECT_MODIFIED_PARAMETER:          str = 'projectModified'
 CURRENT_FRAME_ZOOM_FACTOR_PARAMETER: str = 'currentFrameZoomFactor'
 APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
@@ -111,8 +112,7 @@ PYUT_TEXT_PARAMETER:                 str = 'pyutText'
 PYUT_ACTOR_PARAMETER:                str = 'pyutActor'
 PYUT_USE_CASE_PARAMETER:             str = 'pyutUseCase'
 
-PROJECT_FILENAME_PARAMETER: str = INSERT_PROJECT_FILENAME_PARAMETER
-
+PROJECT_FILENAME_PARAMETER:                str = INSERT_PROJECT_FILENAME_PARAMETER
 NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER: str = 'newProjectDiagramInformation'
 
 OLD_CLASS_NAME_PARAMETER: str = 'oldClassName'
@@ -122,6 +122,7 @@ MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
 ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for callback
 ActiveProjectInformationCallback  = Callable[[ActiveProjectInformation], None]
 NewNamedProjectCallback           = Callable[[IPyutProject], None]
+GetLollipopInterfacesCallback     = Callable[[PyutInterfaces], None]            # Figure out appropriate type for callback
 
 EventEnumToType = NewType('EventEnumToType', Dict[EventType, CommandEvent])
 
@@ -230,7 +231,8 @@ class EventEngine(IEventEngine):
                 self._sendRequestCurrentProjectEvent(**kwargs)
             case EventType.ClassNameChanged:
                 self._sendClassNameChangedEvent(**kwargs)
-
+            case EventType.GetLollipopInterfaces:
+                self._sendGetLollipopInterfacesEvent(**kwargs)
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
                     EventType.CopyShapes | EventType.PasteShapes | EventType.Undo | EventType.Redo | EventType.CutShapes | \
@@ -410,7 +412,14 @@ class EventEngine(IEventEngine):
         eventToPost: ClassNameChangedEvent = ClassNameChangedEvent(oldClassName=oldClassName, newClassName=newClassName)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
+    def _sendGetLollipopInterfacesEvent(self, **kwargs):
+
+        cb: GetLollipopInterfacesCallback = kwargs[CALLBACK_PARAMETER]
+
+        event: GetLollipopInterfacesEvent = GetLollipopInterfacesEvent(callback=cb)
+        PostEvent(dest=self._listeningWindow, event=event)
+
     def _sendRequestCurrentProjectEvent(self, **kwargs):
-        callback: CurrentProjectCallback = kwargs[CALLBACK_PARAMETER]
+        callback:    CurrentProjectCallback     = kwargs[CALLBACK_PARAMETER]
         eventToPost: RequestCurrentProjectEvent = RequestCurrentProjectEvent(callback=callback)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

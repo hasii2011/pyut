@@ -34,12 +34,8 @@
             "level": "WARNING",
             "propagate": "False"
         },
-        "pyut.ui.CurrentDirectoryHandler": {
-            "level": "INFO",
-            "propagate": "False"
-        },
-        "codeallybasic.UnitTestBase": {
-            "level": "INFO",
+        "pyut.uiv2.dialogs": {
+            "level":     "INFO",
             "propagate": "False"
         }
     }

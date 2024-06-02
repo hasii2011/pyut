@@ -8,7 +8,7 @@ chardet==5.2.0
 PyGithub==2.2.0
 Deprecated==1.2.14
 
-py2app==0.28.7
+py2app==0.28.8
 buildlackey==1.6.3
 versionoverlord==1.4.0
 
@@ -22,7 +22,7 @@ typing_extensions==4.10.0
 wxPython==4.2.1
 codeallybasic==1.3.1
 codeallyadvanced==1.3.1
-pyutmodelv2==2.1.5
+pyutmodelv2==2.1.6
 ogl==2.1.32
 oglio==2.1.7
 pyutplugins==2.4.1
