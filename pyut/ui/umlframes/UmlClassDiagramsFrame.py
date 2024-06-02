@@ -1,6 +1,9 @@
 
 from typing import cast
 
+from logging import Logger
+from logging import getLogger
+
 from collections import namedtuple
 
 from wx import MouseEvent
@@ -9,6 +12,8 @@ from pyutmodelv2.PyutModelTypes import ClassName
 from pyutmodelv2.PyutModelTypes import Implementors
 
 from pyutmodelv2.PyutInterface import PyutInterface
+
+from miniogl.Shape import Shape
 
 from ogl.OglInterface2 import OglInterface2
 
@@ -43,6 +48,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         """
 
         super().__init__(parent, eventEngine=eventEngine)   # type: ignore
+        self.localLogger: Logger = getLogger(__name__)
         self.newDiagram()
 
         self._menuHandler:  UmlClassDiagramFrameMenuHandler = cast(UmlClassDiagramFrameMenuHandler, None)
@@ -61,11 +67,12 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         super().OnRightDown(event=event)
 
-        print(f'UmlClassDiagrams.OnRightDown')
-        if self._menuHandler is None:
-            self._menuHandler = UmlClassDiagramFrameMenuHandler(self)
+        self.localLogger.debug(f'UmlClassDiagrams.OnRightDown')
+        if self._areWeOverAShape(event=event) is False:
+            if self._menuHandler is None:
+                self._menuHandler = UmlClassDiagramFrameMenuHandler(self)
 
-        self._menuHandler.popupMenu(event=event)
+            self._menuHandler.popupMenu(event=event)
 
     def _onClassNameChanged(self, event: ClassNameChangedEvent):
 
@@ -88,6 +95,15 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
                         pyutInterface.implementors[idx] = newClassName
 
         event.Skip(True)   # For testability; In reality we are the only handler
+
+    def _areWeOverAShape(self, event: MouseEvent) -> bool:
+        answer:         bool  = True
+        potentialShape: Shape = self.FindShape(x=event.GetX(), y=event.GetY())
+        # Don't popup over a shape
+        if potentialShape is None:
+            answer = False
+
+        return answer
 
     def __repr__(self) -> str:
 
