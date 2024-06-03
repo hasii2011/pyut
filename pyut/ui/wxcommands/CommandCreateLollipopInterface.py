@@ -35,12 +35,6 @@ class CommandCreateLollipopInterface(BaseWxCreateCommand):
         # x,y will be reset correctly prior to adding the lollipop
         super().__init__(canUndo=True, name='Create Interface', eventEngine=eventEngine, x=0, y=0)
 
-        # pyutInterface: PyutInterface = PyutInterface()
-        # pyutInterface.addImplementor(ClassName(implementor.pyutObject.name))
-        #
-        # self._pyutInterface: PyutInterface = pyutInterface
-        # self._oglInterface:  OglInterface2 = OglInterface2(pyutInterface, self._attachmentAnchor)
-
     def _createPrototypeInstance(self) -> DoableObjectType:
 
         pyutInterface: PyutInterface = PyutInterface()
@@ -68,9 +62,6 @@ class CommandCreateLollipopInterface(BaseWxCreateCommand):
         self._shape = self._oglInterface
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbAddOglObjectToFrame)
-
-        # umlFrame.addShape(self._shape, x, y, withModelUpdate=True)
-        # umlFrame.Refresh()
 
         return True
 
