@@ -137,9 +137,13 @@ class EditObjectHandler:
 
         pyutInterface: PyutInterface = lollipop.pyutInterface
 
-        with DlgEditInterface(umlFrame, self._eventEngine, pyutInterface) as dlg:
+        editMode: bool = True
+        if len(pyutInterface.name) == 0:
+            editMode = False
+
+        with DlgEditInterface(umlFrame, self._eventEngine, lollipop, editMode=editMode) as dlg:
             if dlg.ShowModal() == OK:
-                self.logger.info(f'{dlg.pyutInterface=}')
+                self.logger.info(f'{dlg.pyutInterface.name=}')
                 lollipop.pyutInterface = dlg.pyutInterface
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 

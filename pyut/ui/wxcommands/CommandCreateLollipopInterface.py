@@ -43,6 +43,7 @@ class CommandCreateLollipopInterface(BaseWxCreateCommand):
         self._pyutInterface: PyutInterface = pyutInterface
         self._oglInterface:  OglInterface2 = OglInterface2(pyutInterface, self._attachmentAnchor)
 
+        self.logger.debug(f'Created Prototype Instance: {pyutInterface.name=} {pyutInterface.id=}')
         return self._oglInterface
 
     def _placeShapeOnFrame(self):
@@ -51,7 +52,7 @@ class CommandCreateLollipopInterface(BaseWxCreateCommand):
 
         self._removeUnneededAnchorPoints(self._implementor, attachmentAnchor)
 
-        self._eventEngine.sendEvent(EventType.EditInterface, pyutInterface=self._pyutInterface, implementor=self._implementor)
+        self._eventEngine.sendEvent(EventType.EditInterface, oglInterface2=self._oglInterface, implementor=self._implementor)
 
         anchorPosition: Tuple[int, int] = attachmentAnchor.GetPosition()
         self.logger.info(f'anchorPosition: {anchorPosition}')

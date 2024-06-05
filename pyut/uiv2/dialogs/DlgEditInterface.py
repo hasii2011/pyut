@@ -9,6 +9,8 @@ from logging import getLogger
 
 from copy import deepcopy
 
+from ogl.OglInterface2 import OglInterface2
+from pyutmodelv2.PyutModelTypes import ClassName
 from wx import OK
 from wx import CANCEL
 from wx import CB_DROPDOWN
@@ -44,18 +46,23 @@ class DlgEditInterface(DlgEditClassCommon):
 
     clsLogger: Logger = getLogger(__name__)
 
-    def __init__(self, parent, eventEngine: IEventEngine, pyutInterface: PyutInterface):
+    def __init__(self, parent, eventEngine: IEventEngine, oglInterface2: OglInterface2, editMode: bool = False):
 
-        self._pyutInterface:     PyutInterface = pyutInterface
-        self._pyutInterfaceCopy: PyutInterface = deepcopy(pyutInterface)
+        self._oglInterface2:     OglInterface2 = oglInterface2
+        self._pyutInterface:     PyutInterface = oglInterface2.pyutInterface
+        self._pyutInterfaceCopy: PyutInterface = deepcopy(oglInterface2.pyutInterface)
+        self.editMode:           bool          = editMode
+        self._implementor:       ClassName     = self._pyutInterface.implementors[0]
 
         super().__init__(parent, eventEngine=eventEngine, dlgTitle='Edit Interface', pyutModel=self._pyutInterfaceCopy, editInterface=True)
 
         self.logger: Logger = DlgEditInterface.clsLogger
 
-        self._interfaceName: ComboBox       = cast(ComboBox, None)
-        self._interfaces:    PyutInterfaces = cast(PyutInterfaces, None)
-        sizedPanel:          SizedPanel     = self.GetContentsPane()
+        self._interfaceNameControl: ComboBox           = cast(ComboBox, None)
+        self._interfaces:           PyutInterfaces     = cast(PyutInterfaces, None)
+        self._pyutInterfacesDict:   PyutInterfacesDict = cast(PyutInterfacesDict, None)
+
+        sizedPanel:                 SizedPanel     = self.GetContentsPane()
 
         self._eventEngine.sendEvent(EventType.GetLollipopInterfaces, callback=self._getLollipopInterfacesCallback)
 
@@ -73,8 +80,11 @@ class DlgEditInterface(DlgEditClassCommon):
         return self._pyutInterface
 
     def _getLollipopInterfacesCallback(self, pyutInterfaces: PyutInterfaces):
-        self.logger.info(f'{pyutInterfaces=}')
-        self._interfaces = pyutInterfaces
+
+        self.logger.info(f'{pyutInterfaces=} {len(pyutInterfaces)=}')
+
+        self._interfaces         = pyutInterfaces
+        self._pyutInterfacesDict = self._toDictionary(self._interfaces)
 
     def _layoutInterfaceNameSelectionControl(self, parent: SizedPanel):
 
@@ -89,8 +99,13 @@ class DlgEditInterface(DlgEditClassCommon):
                                        choices=interfaceNames,
                                        style=CB_DROPDOWN | TE_PROCESS_ENTER | CB_SORT
                                        )
-        cb.SetValue(self._pyutInterfaceCopy.name)
-        self._interfaceName = cb
+        if self.editMode is True:
+            if len(self._pyutInterfaceCopy.name) > 0:
+                cb.SetValue(self._pyutInterfaceCopy.name)
+        else:
+            cb.SetValue('')
+
+        self._interfaceNameControl = cb
 
         self.Bind(EVT_COMBOBOX,   self._onInterfaceNameChanged,        cb)
         self.Bind(EVT_TEXT_ENTER, self._interfaceNameEnterKeyPressed,  cb)
@@ -110,10 +125,17 @@ class DlgEditInterface(DlgEditClassCommon):
         Args:
             event:
         """
-        newInterfaceName: str = event.GetString()
-        self.logger.info(f'{newInterfaceName}')
-        self._pyutModelCopy.name = newInterfaceName
-        event.Skip()
+        selectedInterfaceName: str = event.GetString()
+
+        assert selectedInterfaceName in self._pyutInterfacesDict.keys(), 'Must be an existing interface'
+
+        selectedInterface: PyutInterface = self._pyutInterfacesDict[selectedInterfaceName]
+        self.logger.debug(f'Selection Changed {selectedInterface.name=} {selectedInterface.id=}')
+
+        self._pyutModelCopy = selectedInterface
+        self._fillMethodList()
+
+        event.Skip(True)
 
     def _interfaceNameEnterKeyPressed(self, event: CommandEvent):
 
@@ -137,17 +159,23 @@ class DlgEditInterface(DlgEditClassCommon):
         Args:
             event:
         """
-        pyutInterfacesDict:    PyutInterfacesDict = self._toDictionary(self._interfaces)
         selectedInterfaceName: str                = self._pyutModelCopy.name
+        pyutInterfacesDict:    PyutInterfacesDict = self._pyutInterfacesDict
         if selectedInterfaceName in pyutInterfacesDict.keys():
-            self._pyutInterface = deepcopy(pyutInterfacesDict[selectedInterfaceName])
+
+            existingInterface: PyutInterface = pyutInterfacesDict[selectedInterfaceName]
+            self._pyutInterface = existingInterface
+            self._pyutInterface.addImplementor(self._implementor)
+            self.logger.debug(f'Using existing interface. {self._pyutInterface.name=} {self._pyutInterface.id=} {self._pyutInterface.implementors}')
         else:
             # Get common stuff from base class
             #
             self._pyutInterface.name        = self._pyutModelCopy.name
             self._pyutInterface.methods     = self._pyutModelCopy.methods
             self._pyutInterface.description = self._pyutModelCopy.description
+            self.logger.debug(f'Using new interface. {self._pyutInterface.name=} {self._pyutInterface.id=}')
 
+        self._oglInterface2.pyutInterface = self._pyutInterface
         self.SetReturnCode(OK)
         self.EndModal(OK)
 

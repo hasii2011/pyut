@@ -7,6 +7,9 @@ from logging import getLogger
 
 from copy import deepcopy
 
+from codeallyadvanced.ui.AttachmentSide import AttachmentSide
+from miniogl.SelectAnchorPoint import SelectAnchorPoint
+from ogl.OglInterface2 import OglInterface2
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -414,12 +417,16 @@ class AppTestADialog(App):
     def _testDlgEditInterface(self):
 
         pyutInterface: PyutInterface = PyutInterface(name=self._oglPreferences.interfaceName)
-        ozzeeMethod: PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibility.PUBLIC)
-        franMethod:  PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibility.PUBLIC)
-        opieMethod:  PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibility.PUBLIC)
+        ozzeeMethod:   PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibility.PUBLIC)
+        franMethod:    PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibility.PUBLIC)
+        opieMethod:    PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibility.PUBLIC)
         pyutInterface.methods      = PyutMethods([ozzeeMethod, franMethod, opieMethod])
 
-        with DlgEditInterface(parent=self._frame, eventEngine=self._eventEngine, pyutInterface=pyutInterface) as dlg:
+        anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=4, y=4, attachmentSide=AttachmentSide.EAST, parent=None)
+        anchorHint.SetProtected(True)
+
+        oglInterface2: OglInterface2 = OglInterface2(destinationAnchor=anchorHint, pyutInterface=pyutInterface)
+        with DlgEditInterface(parent=self._frame, eventEngine=self._eventEngine, oglInterface2=oglInterface2) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutInterface}'
             else:

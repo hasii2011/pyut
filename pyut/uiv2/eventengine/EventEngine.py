@@ -7,6 +7,7 @@ from logging import getLogger
 from typing import Dict
 from typing import NewType
 
+from ogl.OglInterface2 import OglInterface2
 from pyutmodelv2.PyutInterface import PyutInterfaces
 from wx import CommandEvent
 from wx import PostEvent
@@ -111,6 +112,8 @@ PYUT_NOTE_PARAMETER:                 str = 'pyutNote'
 PYUT_TEXT_PARAMETER:                 str = 'pyutText'
 PYUT_ACTOR_PARAMETER:                str = 'pyutActor'
 PYUT_USE_CASE_PARAMETER:             str = 'pyutUseCase'
+
+OGL_INTERFACE2_PARAMETER:            str = 'oglInterface2'
 
 PROJECT_FILENAME_PARAMETER:                str = INSERT_PROJECT_FILENAME_PARAMETER
 NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER: str = 'newProjectDiagramInformation'
@@ -368,9 +371,9 @@ class EventEngine(IEventEngine):
 
     def _sendEditInterfaceEvent(self, **kwargs):
 
-        pyutInterface: PyutInterface      = kwargs[PYUT_INTERFACE_PARAMETER]
+        oglInterface2: OglInterface2      = kwargs[OGL_INTERFACE2_PARAMETER]
         implementor:   OglClass           = kwargs[IMPLEMENTOR_PARAMETER]
-        eventToPost:   EditInterfaceEvent = EditInterfaceEvent(pyutInterface=pyutInterface, implementor=implementor)
+        eventToPost:   EditInterfaceEvent = EditInterfaceEvent(oglInterface2=oglInterface2, implementor=implementor)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
 
     def _sendFrameInformationEvent(self, **kwargs):

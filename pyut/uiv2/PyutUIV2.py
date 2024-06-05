@@ -7,8 +7,6 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
-from ogl.OglClass import OglClass
-from pyutmodelv2.PyutInterface import PyutInterface
 from wx import CANCEL
 from wx import CENTRE
 from wx import EVT_MENU
@@ -46,6 +44,8 @@ from pyutmodelv2.PyutActor import PyutActor
 from pyutmodelv2.PyutUseCase import PyutUseCase
 
 from ogl.OglObject import OglObject
+from ogl.OglClass import OglClass
+from ogl.OglInterface2 import OglInterface2
 
 from oglio.Types import OglDocument
 from oglio.Types import OglProject
@@ -692,11 +692,12 @@ class PyutUIV2(SplitterWindow):
     def _onEditInterface(self, event: EditInterfaceEvent):
 
         umlFrame:      UmlDiagramsFrame = self._projectManager.currentFrame
-        pyutInterface: PyutInterface    = event.pyutInterface
+        oglInterface2: OglInterface2    = event.oglInterface2
         implementor:   OglClass         = event.implementor
 
-        with DlgEditInterface(umlFrame, eventEngine=self._eventEngine, pyutInterface=pyutInterface) as dlg:
+        with DlgEditInterface(umlFrame, eventEngine=self._eventEngine, oglInterface2=oglInterface2) as dlg:
             if dlg.ShowModal() == OK:
+                pyutInterface = dlg.pyutInterface
                 self.logger.info(f'model: {pyutInterface}')
 
                 pyutClass: PyutClass = cast(PyutClass, implementor.pyutObject)
