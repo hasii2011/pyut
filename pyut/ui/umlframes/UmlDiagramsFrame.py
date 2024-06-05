@@ -38,7 +38,6 @@ from pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from pyut.uiv2.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
 from pyut.uiv2.eventengine.Events import EVENT_ADD_PYUT_DIAGRAM
-from pyut.uiv2.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
@@ -80,7 +79,6 @@ class UmlDiagramsFrame(UmlFrame):
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM,        callback=self._onAddPyutDiagram)
         self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,         callback=self._onAddOglDiagram)
-        # self._eventEngine.registerListener(pyEventBinder=EVENT_FIND_LOLLIPOP_INTERFACE, callback=self._onFindLollipopInterface)
 
         self._oglEventEngine.registerListener(EVT_SHAPE_SELECTED,            self._onShapeSelected)
         self._oglEventEngine.registerListener(EVT_CUT_OGL_CLASS,             self._onCutOglClassShape)

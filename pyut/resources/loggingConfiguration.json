@@ -39,22 +39,33 @@
     "loggers": {
         "root": {
             "level":     "WARNING",
-            "handlers":  ["consoleHandler"],
+            "handlers":  ["rotatingFileHandler"],
             "propagate": "False"
         },
-        "pyutplugins": {
-            "level":     "INFO",
-            "handlers":  ["consoleHandler"],
-            "propagate": "False"
-        },
-
         "Pyut": {
             "level":     "INFO",
-            "propagate": "False"
+            "propagate": "False",
+            "handlers":  ["rotatingFileHandler"]
         },
         "pyut": {
             "level":     "INFO",
-            "propagate": "False"
+            "propagate": "False",
+            "handlers":  ["rotatingFileHandler"]
+        },
+        "pyut.uiv2.dialogs.DlgEditInterface": {
+            "level":     "DEBUG",
+            "propagate": "False",
+            "handlers":  ["consoleHandler"]
+        },
+        "pyut.ui.wxcommands.CommandCreateLollipopInterface": {
+            "level":     "DEBUG",
+            "propagate": "False",
+            "handlers":  ["consoleHandler"]
+        },
+        "ogl.OglInterface2": {
+            "level":     "DEBUG",
+            "propagate": "False",
+            "handlers":  ["consoleHandler"]
         }
     }
 }
