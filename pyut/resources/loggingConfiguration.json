@@ -51,11 +51,6 @@
             "level":     "INFO",
             "propagate": "False",
             "handlers":  ["rotatingFileHandler"]
-        },
-        "untanglepyut.UnTangleOglLinks": {
-            "level":     "DEBUG",
-            "propagate": "False",
-            "handlers":  ["consoleHandler"]
         }
     }
 }
