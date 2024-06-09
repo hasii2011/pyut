@@ -302,7 +302,8 @@ class DiagramNotebook(Notebook):
             if isinstance(pyutObject, PyutInterface):
                 pyutInterface: PyutInterface = cast(PyutInterface, pyutObject)
                 if pyutInterface.name != '' or len(pyutInterface.name) > 0:
-                    pyutInterfaces.append(pyutObject)
+                    if pyutInterface not in pyutInterfaces:
+                        pyutInterfaces.append(pyutObject)
 
         callback: GetLollipopInterfacesCallback = event.callback
 
