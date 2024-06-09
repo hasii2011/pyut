@@ -220,10 +220,9 @@ class PluginAdapter(IPluginAdapter):
                                                              dstPoint=self._toWxPoint(destinationPoint),
                                                              )
         command.controlPoints = self._toControlPoints(self._linkInformation.path)
-        submitStatus:      bool            = commandProcessor.Submit(command=command, storeIt=True)
+        submitStatus: bool            = commandProcessor.Submit(command=command, storeIt=True)
         self.logger.warning(f'{submitStatus=}')
 
-        # self._linkInformation = NO_LINK_INFORMATION
         self.refreshFrame()
 
     def _projectCreated(self, pyutProject: IPyutProject):
@@ -318,6 +317,7 @@ class PluginAdapter(IPluginAdapter):
         for pt in pathCopy:
             point: OglPosition = cast(OglPosition, pt)
             controlPoint: ControlPoint = ControlPoint(x=point.x, y=point.y)
+            controlPoint.SetVisible(True)
 
             controlPoints.append(controlPoint)
 
