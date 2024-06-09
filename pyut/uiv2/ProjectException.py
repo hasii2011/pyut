@@ -9,7 +9,8 @@ class ProjectExceptionType(Enum):
     PROJECT_NOT_FOUND = 'Project Not Found'
     ATTRIBUTE_ERROR   = 'Attribute Error'
     TYPE_ERROR        = 'Type Error'
-    UNKNOWN_ERROR     = 'Unknown Error'
+    ASSERTION_ERROR   = 'Assertion Error'
+    GENERAL_ERROR     = 'General Error'
 
 
 class ProjectException(Exception):

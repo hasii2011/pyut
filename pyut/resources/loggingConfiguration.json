@@ -52,17 +52,7 @@
             "propagate": "False",
             "handlers":  ["rotatingFileHandler"]
         },
-        "pyut.uiv2.dialogs.DlgEditInterface": {
-            "level":     "DEBUG",
-            "propagate": "False",
-            "handlers":  ["consoleHandler"]
-        },
-        "pyut.ui.wxcommands.CommandCreateLollipopInterface": {
-            "level":     "DEBUG",
-            "propagate": "False",
-            "handlers":  ["consoleHandler"]
-        },
-        "ogl.OglInterface2": {
+        "untanglepyut.UnTangleOglLinks": {
             "level":     "DEBUG",
             "propagate": "False",
             "handlers":  ["consoleHandler"]

@@ -708,7 +708,8 @@ class PyutUIV2(SplitterWindow):
         oglObject: OglObject        = event.shapeToAdd
         umlFrame:  UmlDiagramsFrame = self._projectManager.currentFrame
 
-        LayoutEngine().addShape(umlFrame=umlFrame, oglObject=oglObject)     # too cute for words
+        layoutEngine: LayoutEngine = LayoutEngine()
+        layoutEngine.addShape(umlFrame=umlFrame, oglObject=oglObject)     # too cute for words
 
     def _onFrameInformation(self, event: FrameInformationEvent):
 

@@ -9,8 +9,6 @@ from logging import getLogger
 
 from copy import copy
 
-# from os import path as osPath
-
 from xml.sax import SAXParseException
 
 from wx import FD_OVERWRITE_PROMPT
@@ -70,7 +68,7 @@ from ogl.OglUseCase import OglUseCase
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
 
-from oglio.toXmlV10.OglToDom import OglToDom
+from oglio.toXmlV11.OglToXml import XML_VERSION
 
 PyutProjects = NewType('PyutProjects', List[IPyutProject])
 
@@ -291,9 +289,15 @@ class ProjectManager:
         except TypeError as te:
             ErrorManager.addToLogFile(title='Type Error', msg=f'{te}')
             raise ProjectException(exceptionType=ProjectExceptionType.TYPE_ERROR, message=f'Type Error {te}', project=project)
+        except AssertionError as assertionError:
+            ErrorManager.addToLogFile(title='Assertion Raised', msg=f'{assertionError}')
+            raise ProjectException(exceptionType=ProjectExceptionType.ASSERTION_ERROR, message=f'Type Error {assertionError}', project=project)
         except (ValueError, Exception) as e:
-            ErrorManager.addToLogFile(title='Unknown Error', msg=f'{e}')
-            raise ProjectException(exceptionType=ProjectExceptionType.UNKNOWN_ERROR, message='Unknown Error', project=project)
+            ErrorManager.addToLogFile(title='General Error', msg=f'{e}')
+
+            errorMsg: str = ErrorManager.getErrorInfo()
+
+            raise ProjectException(exceptionType=ProjectExceptionType.GENERAL_ERROR, message=errorMsg, project=project)
 
         self.currentProject = project
         self.updateProjectTreeText(pyutProject=project)
@@ -423,7 +427,7 @@ class ProjectManager:
         BeginBusyCursor()
         oglProject: OglProject = OglProject()
         oglProject.codePath = projectToWrite.codePath
-        oglProject.version  = OglToDom.VERSION  # TODO wait for a better place for XML Version
+        oglProject.version  = XML_VERSION           # Do not really need this as oglio sets it appropriately
         documents: PyutDocuments = projectToWrite.documents
         for document in documents:
             pyutDocument: PyutDocumentV2 = cast(PyutDocumentV2, document)
