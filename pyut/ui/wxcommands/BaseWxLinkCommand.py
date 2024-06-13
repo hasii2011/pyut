@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from typing import Tuple
 from typing import cast
 
+from miniogl.ControlPoint import ControlPoint
 from wx import Command
 from wx import Point
 
@@ -254,12 +255,14 @@ class BaseWxLinkCommand(Command):
         parent:   OglClass = oglLink.sourceAnchor.GetParent()
         selfLink: bool     = parent is oglLink.destinationAnchor.GetParent()
 
-        for controlPoint in self._controlPoints:
+        for cp in self._controlPoints:
+            controlPoint: ControlPoint = cast(ControlPoint, cp)
             oglLink.AddControl(control=controlPoint, after=None)
             if selfLink:
                 x, y = controlPoint.GetPosition()
                 controlPoint.SetParent(parent)
                 controlPoint.SetPosition(x, y)
+                controlPoint.draggable = True
 
     def _toCommandName(self, linkType: PyutLinkType) -> str:
         # Because I do not like the generated name
