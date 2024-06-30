@@ -27,7 +27,7 @@
         },
 
         "rotatingFileHandler": {
-            "class": "logging.handlers.logging.handlers.RotatingFileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "formatter": "pyutSimple",
             "filename": "/tmp/pyut.log",
             "mode": "a",
@@ -37,11 +37,6 @@
         }
     },
     "loggers": {
-        "root": {
-            "level":     "WARNING",
-            "handlers":  ["rotatingFileHandler"],
-            "propagate": "False"
-        },
         "Pyut": {
             "level":     "INFO",
             "propagate": "False",
