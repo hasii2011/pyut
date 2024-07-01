@@ -434,7 +434,7 @@ class ProjectManager:
 
             oglDocument:  OglDocument = self._toBasicOglDocument(pyutDocument=pyutDocument)
             diagramFrame: UmlFrame    = pyutDocument.diagramFrame
-            oglObjects:   UmlObjects  = diagramFrame.getUmlObjects()
+            oglObjects:   UmlObjects  = diagramFrame.umlObjects
 
             for oglObject in oglObjects:
                 match oglObject:

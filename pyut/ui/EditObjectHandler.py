@@ -267,13 +267,13 @@ class EditObjectHandler:
 
     def _getUmlObjects(self, umlFrame: UmlFrame) -> UmlObjects:
         """
-        The fame may contain no UML shapes.
+        The frame may contain no UML shapes.
 
         Returns: Return the list of UmlObjects in the diagram.
         """
         from pyut.ui.umlframes.UmlFrame import UmlObjects
 
-        return cast(UmlObjects, umlFrame.getUmlObjects())
+        return cast(UmlObjects, umlFrame.umlObjects)
 
     def _submitModifyCommand(self, umlFrame: UmlFrame, cmdModifyCommand: CommandModify):
         umlFrame.commandProcessor.Submit(command=cmdModifyCommand)

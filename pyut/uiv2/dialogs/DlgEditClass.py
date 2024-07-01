@@ -279,4 +279,4 @@ class DlgEditClass(DlgEditClassCommon):
 
         Returns: Return the list of UmlObjects in the diagram.
         """
-        return cast(UmlObjects, self._umlFrame.getUmlObjects())
+        return cast(UmlObjects, self._umlFrame.umlObjects)

@@ -80,7 +80,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
         newClassName: ClassName = ClassName(event.newClassName)
         self.logger.warning(f'{oldClassName=} {newClassName=}')
 
-        umlObjects: UmlObjects = self.getUmlObjects()
+        umlObjects: UmlObjects = self.umlObjects
 
         for umlObject in umlObjects:
             if isinstance(umlObject, OglInterface2):

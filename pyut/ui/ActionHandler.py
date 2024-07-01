@@ -9,6 +9,7 @@ from logging import getLogger
 
 from dataclasses import dataclass
 
+from codeallybasic.SingletonV3 import SingletonV3
 from wx import ID_OK
 from wx import CANCEL
 from wx import CENTRE
@@ -19,8 +20,6 @@ from wx import Point
 from wx import TextEntryDialog
 
 from wx import Yield as wxYield
-
-from codeallybasic.Singleton import Singleton
 
 from codeallyadvanced.ui.AttachmentSide import AttachmentSide
 
@@ -187,13 +186,13 @@ class ValidationResult:
     errorMessage: str = ''
 
 
-class ActionHandler(Singleton):
+class ActionHandler(metaclass=SingletonV3):
 
     # noinspection PyAttributeOutsideInit
-    def init(self, **kwargs):
+    def __init__(self, eventEngine: IEventEngine):
 
         self.logger:            Logger           = getLogger(__name__)
-        self._eventEngine:      IEventEngine     = kwargs['eventEngine']
+        self._eventEngine:      IEventEngine     = eventEngine
 
         self._currentAction:           Action = Action.SELECTOR
         self._oldAction:               Action = Action.NO_ACTION

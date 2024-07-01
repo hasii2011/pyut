@@ -53,7 +53,7 @@ class PluginProjectCreator:
             pluginDocument.pixelsPerUnitX  = xUnit
             pluginDocument.pixelsPerUnitY  = yUnit
 
-            for umlObject in diagramFrame.getUmlObjects():
+            for umlObject in diagramFrame.umlObjects:
                 match umlObject:
                     case OglInterface2():
                         oglInterface2: OglInterface2 = cast(OglInterface2, umlObject)
