@@ -42,7 +42,7 @@ class DlgEditParameter(BaseEditParamFieldDialog):
 
         nameValue: str = self._name.GetValue()
         if nameValue == '':
-            self._indicateEmptyName()
+            self._indicateEmptyTextCtrl(self._name)
             return
 
         self._parameterToEdit.name = nameValue

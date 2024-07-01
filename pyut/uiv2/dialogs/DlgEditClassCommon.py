@@ -138,6 +138,7 @@ class DlgEditClassCommon(BaseEditDialog):
         with DlgEditDescription(self, pyutModel=self._pyutModelCopy) as dlg:
             if dlg.ShowModal() == OK:
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+                self._pyutModelCopy.description = dlg.description
             else:
                 self._pyutModelCopy.description = self._pyutModel.description
 

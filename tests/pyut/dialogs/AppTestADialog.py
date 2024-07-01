@@ -10,6 +10,7 @@ from copy import deepcopy
 from codeallyadvanced.ui.AttachmentSide import AttachmentSide
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from ogl.OglInterface2 import OglInterface2
+from pyutmodelv2.PyutModelTypes import Implementors
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -282,7 +283,7 @@ class AppTestADialog(App):
         pyutmodel.description = 'I describe El Gato Tonto'
         with DlgEditDescription(self._frame, pyutModel=pyutmodel) as dlg:
             if dlg.ShowModal() == OK:
-                pyutmodel.description = dlg.GetValue()
+                pyutmodel.description = dlg.description
 
         return pyutmodel.description
 
@@ -339,7 +340,7 @@ class AppTestADialog(App):
     def _testDlgEditField(self) -> str:
         pyutField:     PyutField = PyutField(name='Ozzee', type=PyutType('float'), defaultValue='42.0')
         pyutFieldCopy: PyutField = deepcopy(pyutField)
-        with DlgEditField(parent=self._frame, fieldToEdit=pyutFieldCopy) as dlg:
+        with DlgEditField(parent=self._frame, fieldToEdit=pyutField) as dlg:
             if dlg.ShowModal() == OK:
                 return f'{pyutField=}'
             else:
@@ -352,7 +353,7 @@ class AppTestADialog(App):
     def _testDlgEditParameter(self) -> str:
         pyutParameter:     PyutParameter = PyutParameter(name='testParameter', type=PyutType("int"), defaultValue='42')
         pyutParameterCopy: PyutParameter = deepcopy(pyutParameter)
-        with DlgEditParameter(parent=self._frame, parameterToEdit=pyutParameterCopy) as dlg:
+        with DlgEditParameter(parent=self._frame, parameterToEdit=pyutParameter) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Retrieved data: {pyutParameter}'
             else:
@@ -420,7 +421,11 @@ class AppTestADialog(App):
         ozzeeMethod:   PyutMethod    = PyutMethod(name='ozzeeMethod', visibility=PyutVisibility.PUBLIC)
         franMethod:    PyutMethod    = PyutMethod(name='franMethod',  visibility=PyutVisibility.PUBLIC)
         opieMethod:    PyutMethod    = PyutMethod(name='opieMethod',  visibility=PyutVisibility.PUBLIC)
-        pyutInterface.methods      = PyutMethods([ozzeeMethod, franMethod, opieMethod])
+        pyutInterface.methods        = PyutMethods([ozzeeMethod, franMethod, opieMethod])
+
+        implementor: ClassName = ClassName('Implementor')
+
+        pyutInterface.implementors = Implementors([implementor])
 
         anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=4, y=4, attachmentSide=AttachmentSide.EAST, parent=None)
         anchorHint.protected = True
@@ -456,8 +461,6 @@ class AppTestADialog(App):
                 'return ans'
             ]
         )
-        # savePreference: DisplayMethodParameters = PyutMethod.displayParameters
-        # PyutMethod.displayParameters = DisplayMethodParameters.WITH_PARAMETERS
         with DlgEditMethod(parent=self._frame, pyutMethod=pyutMethod) as dlg:
             ans = dlg.ShowModal()
 

@@ -43,5 +43,9 @@ class DlgEditDescription(BaseEditDialog):
 
         self.Centre()
 
+    @property
+    def description(self) -> str:
+        return self._pyutModel.description
+
     def _onTxtDescriptionChange(self, event):
         self._pyutModel.description = event.GetString()
