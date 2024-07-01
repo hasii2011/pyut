@@ -72,7 +72,7 @@ class CommandCreateLollipopInterface(BaseWxCreateCommand):
     def _removeUnneededAnchorPoints(self, implementor: OglClass, attachmentAnchor: SelectAnchorPoint):
 
         attachmentSide: AttachmentSide = attachmentAnchor.attachmentPoint
-        for iAnchor in implementor.GetAnchors():
+        for iAnchor in implementor.anchors:
             if isinstance(iAnchor, SelectAnchorPoint):
                 anchor: SelectAnchorPoint = cast(SelectAnchorPoint, iAnchor)
                 if anchor.attachmentPoint != attachmentSide:

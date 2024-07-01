@@ -110,7 +110,7 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         umlObjects: UmlObjects = UmlObjects([])
 
-        for s in self._diagram.GetShapes():
+        for s in self._diagram.shapes:
             # This is a duplicate of the UmlObject, since I cannot use NewType
             if isinstance(s, (OglClass, OglLink, OglNote, OglText, OglSDMessage, OglSDInstance, OglActor, OglUseCase, OglInterface2)):
                 umlObjects.append(s)
@@ -214,22 +214,6 @@ class UmlFrame(UmlFrameShapeHandler):
         """
         return self._diagram
 
-    @deprecated(reason='Use the "umlObjects" property')
-    def getUmlObjects(self) -> UmlObjects:
-        """
-       Retrieve UML objects from the UML Frame
-
-        Returns:  The Uml objects on this diagram
-        """
-        umlObjects: UmlObjects = UmlObjects([])
-
-        for s in self._diagram.GetShapes():
-            # This is a duplicate of the UmlObject, since I cannot use NewType
-            if isinstance(s, (OglClass, OglLink, OglNote, OglText, OglSDMessage, OglSDInstance, OglActor, OglUseCase, OglInterface2)):
-                umlObjects.append(s)
-
-        return umlObjects
-
     def getWidth(self):
         """
 
@@ -255,7 +239,7 @@ class UmlFrame(UmlFrameShapeHandler):
         If no matching object is found, this method returns `None`
         """
 
-        for shape in self.GetDiagram().GetShapes():
+        for shape in self.diagram.shapes:
             if isinstance(shape, (OglClass, OglLink, OglObject)):
                 if shape.pyutObject.id == objectId:
                     return cast(UmlObject, shape)

@@ -101,7 +101,7 @@ class UmlDiagramsFrame(UmlFrame):
         maxY: int = -maxsize
 
         # Get boundaries
-        for shapeObject in self._diagram.GetShapes():
+        for shapeObject in self._diagram.shapes:
             # Get object limits
             ox1, oy1 = shapeObject.GetPosition()
             ox2, oy2 = shapeObject.GetSize()

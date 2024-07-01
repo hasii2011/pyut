@@ -91,7 +91,7 @@ class TestBaseWxCommand(UnitTestBaseW):
 
         baseWxCommand._removeOglObjectFromFrame(umlFrame=umlDiagramsFrame, oglObject=oglClass)
 
-        umlObjects = umlDiagramsFrame.getUmlObjects()
+        umlObjects = umlDiagramsFrame.umlObjects
 
         self.assertEqual(0, len(umlObjects), 'There should be none on the frame')
 

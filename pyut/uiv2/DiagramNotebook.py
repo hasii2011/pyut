@@ -8,6 +8,7 @@ from logging import getLogger
 
 from copy import copy
 
+from miniogl.Shape import Shapes
 from pyutmodelv2.PyutLink import PyutLinks
 from wx import CLIP_CHILDREN
 from wx import EVT_CLOSE
@@ -131,7 +132,7 @@ class DiagramNotebook(Notebook):
         umlFrame:   UmlDiagramsFrame = self.currentNotebookFrame
         umlObjects: UmlObjects       = UmlObjects([])
         if umlFrame is not None:
-            umlObjects = umlFrame.getUmlObjects()
+            umlObjects = umlFrame.umlObjects
 
         return umlObjects
 
@@ -327,7 +328,7 @@ class DiagramNotebook(Notebook):
             self._displayError("No frame found !")
         else:
             diagram: Diagram         = frame.diagram
-            shapes:  List[OglObject] = diagram.GetShapes()
+            shapes:  Shapes = diagram.shapes
             for oglShape in shapes:
                 shape: OglObject = cast(OglObject, oglShape)
                 shape.selected = selectValue

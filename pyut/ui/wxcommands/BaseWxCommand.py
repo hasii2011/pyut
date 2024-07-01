@@ -49,7 +49,7 @@ class BaseWxCommand(Command):
 
         from pyut.ui.umlframes.UmlFrame import UmlObjects
 
-        umlObjects: UmlObjects = umlFrame.getUmlObjects()
+        umlObjects: UmlObjects = umlFrame.umlObjects
 
         for obj in umlObjects:
 
