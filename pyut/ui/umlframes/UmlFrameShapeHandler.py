@@ -49,7 +49,7 @@ class UmlFrameShapeHandler(DiagramFrame):
         shape.draggable = True
         shape.SetPosition(x, y)
         if pen is not None:
-            shape.SetPen(pen)
+            shape.pen = pen
         if brush is not None:
-            shape.SetBrush(brush)
+            shape.brush = brush
         self._diagram.AddShape(shape, withModelUpdate)

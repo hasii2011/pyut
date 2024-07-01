@@ -76,5 +76,5 @@ class CommandCreateLollipopInterface(BaseWxCreateCommand):
             if isinstance(iAnchor, SelectAnchorPoint):
                 anchor: SelectAnchorPoint = cast(SelectAnchorPoint, iAnchor)
                 if anchor.attachmentPoint != attachmentSide:
-                    anchor.SetProtected(False)
+                    anchor.protected = False
                     anchor.Detach()

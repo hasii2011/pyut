@@ -15,7 +15,8 @@ from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.LineShape import ControlPoints
-from miniogl.ShapeModel import ShapeModel
+
+from miniogl.models.ShapeModel import ShapeModel
 
 from ogl.OglClass import OglClass
 from ogl.OglLink import OglLink
@@ -125,8 +126,8 @@ class BaseWxLinkCommand(Command):
         srcPosX, srcPosY = sourcePoint.GetPosition()
         dstPosX, dstPosY = destinationPoint.GetPosition()
 
-        self._link.sourceAnchor.GetModel().SetPosition(srcPosX, srcPosY)
-        self._link.destinationAnchor.GetModel().SetPosition(dstPosX, dstPosY)
+        self._link.sourceAnchor.model.SetPosition(srcPosX, srcPosY)
+        self._link.destinationAnchor.model.SetPosition(dstPosX, dstPosY)
         self._link.UpdateFromModel()
 
         umlFrame.Refresh()
@@ -244,23 +245,23 @@ class BaseWxLinkCommand(Command):
         srcAnchor.SetPosition(x=srcX, y=srcY)
         dstAnchor.SetPosition(x=dstX, y=dstY)
 
-        srcModel: ShapeModel = srcAnchor.GetModel()
-        dstModel: ShapeModel = dstAnchor.GetModel()
+        srcModel: ShapeModel = srcAnchor.model
+        dstModel: ShapeModel = dstAnchor.model
 
         srcModel.SetPosition(x=srcX, y=srcY)
         dstModel.SetPosition(x=dstY, y=dstY)
 
     def _createNeededControlPoints(self, oglLink: OglLink):
 
-        parent:   OglClass = oglLink.sourceAnchor.GetParent()
-        selfLink: bool     = parent is oglLink.destinationAnchor.GetParent()
+        parent:   OglClass = oglLink.sourceAnchor.parent
+        selfLink: bool     = parent is oglLink.destinationAnchor.parent
 
         for cp in self._controlPoints:
             controlPoint: ControlPoint = cast(ControlPoint, cp)
             oglLink.AddControl(control=controlPoint, after=None)
             if selfLink:
                 x, y = controlPoint.GetPosition()
-                controlPoint.SetParent(parent)
+                controlPoint.parent = parent
                 controlPoint.SetPosition(x, y)
                 controlPoint.draggable = True
 

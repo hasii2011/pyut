@@ -236,24 +236,24 @@ class UmlDiagramsFrame(UmlFrame):
 
         from ogl.OglLink import OglLink
 
-        selected = self.GetSelectedShapes()
+        selected = self.selectedShapes
         self.logger.info(f'Selected Shape: {selected}')
         for shape in selected:
             if isinstance(shape, OglLink):
-                shape.SetSpline(not shape.GetSpline())
+                shape.spline = (not shape.spline)
         self.Refresh()
 
     def _moveSelectedShapeUp(self):
         """
         Move the selected shape one level up in z-order
         """
-        self._moveSelectedShapeZOrder(self.GetDiagram().MoveToFront)
+        self._moveSelectedShapeZOrder(self.diagram.MoveToFront)
 
     def _moveSelectedShapeDown(self):
         """
         Move the selected shape one level down in z-order
         """
-        self._moveSelectedShapeZOrder(self.GetDiagram().MoveToBack)
+        self._moveSelectedShapeZOrder(self.diagram.MoveToBack)
 
     def _insertSelectedShape(self):
         """
@@ -262,7 +262,7 @@ class UmlDiagramsFrame(UmlFrame):
         from miniogl.LinePoint import LinePoint
         from miniogl.ControlPoint import ControlPoint
 
-        selectedShapes = self.GetSelectedShapes()
+        selectedShapes = self.selectedShapes
         if len(selectedShapes) == 1:
 
             selectedShape = selectedShapes.pop()
@@ -270,15 +270,15 @@ class UmlDiagramsFrame(UmlFrame):
                 px, py = selectedShape.GetPosition()
                 # add a control point and make it child of the shape if it's a
                 # self link
-                line = selectedShape.GetLines()[0]
-                if line.GetSource().GetParent() is line.GetDestination().GetParent():
-                    cp = ControlPoint(0, 0, line.GetSource().GetParent())
+                line = selectedShape.lines[0]
+                if line.sourceAnchor.parent is line.destinationAnchor.parent:
+                    cp = ControlPoint(0, 0, line.sourceAnchor.parent)
                     cp.SetPosition(px + 20, py + 20)
                 else:
                     cp = ControlPoint(px + 20, py + 20)
 
                 line.AddControl(cp, selectedShape)
-                self.GetDiagram().AddShape(cp)
+                self.diagram.AddShape(cp)
                 self.Refresh()
 
     def _moveSelectedShapeZOrder(self, callback: Callable):
@@ -290,7 +290,7 @@ class UmlDiagramsFrame(UmlFrame):
         """
         from ogl.OglObject import OglObject
 
-        selected = self.GetSelectedShapes()
+        selected = self.selectedShapes
         if len(selected) > 0:
             for oglObject in selected:
                 if isinstance(oglObject, OglObject):

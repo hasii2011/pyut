@@ -528,7 +528,7 @@ class ActionHandler(Singleton):
     def __createAnchorHints(self, destinationClass: OglClass, anchorX: int, anchorY: int, attachmentSide: AttachmentSide, umlFrame):
 
         anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=anchorX, y=anchorY, attachmentSide=attachmentSide, parent=destinationClass)
-        anchorHint.SetProtected(True)
+        anchorHint.protected = True
 
         destinationClass.AddAnchorPoint(anchorHint)
         umlFrame.getDiagram().AddShape(anchorHint)

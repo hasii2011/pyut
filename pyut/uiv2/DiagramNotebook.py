@@ -8,6 +8,7 @@ from logging import getLogger
 
 from copy import copy
 
+from pyutmodelv2.PyutLink import PyutLinks
 from wx import CLIP_CHILDREN
 from wx import EVT_CLOSE
 from wx import ICON_ERROR
@@ -191,7 +192,7 @@ class DiagramNotebook(Notebook):
             for umlObject in selectedUmlObjects:
                 if isinstance(umlObject, OglClass):
                     umlObjectCopy = copy(umlObject.pyutObject)
-                    umlObjectCopy.setLinks([])              # we don't want to copy the links
+                    umlObjectCopy.links = PyutLinks([])              # we don't want to copy the links
                     self._clipboard.append(umlObjectCopy)
 
             self._updateApplicationStatus(f'Copied {len(self._clipboard)} objects')
@@ -329,7 +330,7 @@ class DiagramNotebook(Notebook):
             shapes:  List[OglObject] = diagram.GetShapes()
             for oglShape in shapes:
                 shape: OglObject = cast(OglObject, oglShape)
-                shape.SetSelected(selectValue)
+                shape.selected = selectValue
 
             frame.Refresh()
 

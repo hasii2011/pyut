@@ -423,7 +423,7 @@ class AppTestADialog(App):
         pyutInterface.methods      = PyutMethods([ozzeeMethod, franMethod, opieMethod])
 
         anchorHint: SelectAnchorPoint = SelectAnchorPoint(x=4, y=4, attachmentSide=AttachmentSide.EAST, parent=None)
-        anchorHint.SetProtected(True)
+        anchorHint.protected = True
 
         oglInterface2: OglInterface2 = OglInterface2(destinationAnchor=anchorHint, pyutInterface=pyutInterface)
         with DlgEditInterface(parent=self._frame, eventEngine=self._eventEngine, oglInterface2=oglInterface2) as dlg:

@@ -317,7 +317,7 @@ class PluginAdapter(IPluginAdapter):
         for pt in pathCopy:
             point: OglPosition = cast(OglPosition, pt)
             controlPoint: ControlPoint = ControlPoint(x=point.x, y=point.y)
-            controlPoint.SetVisible(True)
+            controlPoint.visible = True
 
             controlPoints.append(controlPoint)
 
