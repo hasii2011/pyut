@@ -6,6 +6,8 @@ from sys import exc_info
 
 from traceback import extract_tb
 
+from codeallybasic.SingletonV3 import SingletonV3
+
 from pyut.errorcontroller.IErrorView import IErrorView
 from pyut.errorcontroller.GraphicErrorView import GraphicErrorView
 from pyut.errorcontroller.TextErrorView import TextErrorView
@@ -14,19 +16,16 @@ from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from pyut.PyutConstants import PyutConstants
 
-from codeallybasic.Singleton import Singleton
 
-
-class ErrorManager(Singleton):
+class ErrorManager(metaclass=SingletonV3):
     """
     This class handle errors.
     """
     logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
 
     # noinspection PyAttributeOutsideInit
-    def init(self, view=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
+    def __init__(self, view=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
         """
-        Singleton constructor
         """
         self.changeType(view)
         self._view: IErrorView = GraphicErrorView()

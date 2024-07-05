@@ -188,7 +188,6 @@ class ValidationResult:
 
 class ActionHandler(metaclass=SingletonV3):
 
-    # noinspection PyAttributeOutsideInit
     def __init__(self, eventEngine: IEventEngine):
 
         self.logger:            Logger           = getLogger(__name__)
