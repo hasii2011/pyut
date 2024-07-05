@@ -7,12 +7,12 @@ from logging import getLogger
 
 from collections import Counter
 
+from semantic_version import Version as SemanticVersion
+
 from github import Github
 from github.GitRelease import GitRelease
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
-
-from codeallybasic.SemanticVersion import SemanticVersion
 
 
 class GitHubAdapter:

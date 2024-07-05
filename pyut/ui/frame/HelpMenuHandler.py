@@ -8,6 +8,8 @@ from wx import BeginBusyCursor as wxBeginBusyCursor
 from wx import EndBusyCursor as wxEndBusyCursor
 from wx import Yield as wxYield
 
+from semantic_version import Version as SemanticVersion
+
 from pyut import __version__ as pyutVersion
 
 from pyut.uiv2.dialogs.DlgAbout import DlgAbout
@@ -49,7 +51,6 @@ class HelpMenuHandler(BaseMenuHandler):
             event:
         """
         from pyut.general.GitHubAdapter import GitHubAdapter
-        from codeallybasic.SemanticVersion import SemanticVersion
 
         wxBeginBusyCursor()
         githubAdapter: GitHubAdapter   = GitHubAdapter()
@@ -58,7 +59,6 @@ class HelpMenuHandler(BaseMenuHandler):
         myVersion: SemanticVersion = SemanticVersion(pyutVersion)
         # latestVersion.major = 9        Manual test
         if myVersion < latestVersion:
-            # msg = "PyUt version " + str(latestVersion) + " is available on https://github.com/hasii2011/PyUt/releases"
             msg = f"PyUt version {str(latestVersion)} is available on https://github.com/hasii2011/PyUt/releases"
         else:
             msg = "No newer version yet !"
