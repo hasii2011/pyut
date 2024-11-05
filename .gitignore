@@ -6,6 +6,7 @@ build/
 dist/
 Pyut.egg-info
 /pyenv-3.11.5/
+/pyenv-3.12.7/
 /site/
 /docs/
 /pyut.log

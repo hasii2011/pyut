@@ -246,7 +246,8 @@ class TestToolboxFrame(App):
         """
         self.Destroy()
 
+if __name__ == '__main__':
 
-testApp: App = TestToolboxFrame(redirect=False)
+    testApp: App = TestToolboxFrame(redirect=False)
 
-testApp.MainLoop()
+    testApp.MainLoop()

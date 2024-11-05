@@ -212,7 +212,6 @@ class ToolsCreator:
                      self._toolRelAggregation, self._toolRelAssociation, self._toolRelNote,
                      self._toolSDInstance, self._toolSDMessage
                      ]:
-            # self._mediator.registerTool(tool)
 
             toolBoxHandler.addTool(tool)
 

@@ -153,7 +153,7 @@ class DlgEditClassCommon(BaseEditDialog):
     def _methodAddCallback(self) -> CallbackAnswer:
         """
         """
-        method: PyutMethod     = PyutMethod(name=OglPreferences().methodName)
+        method: PyutMethod     = PyutMethod(name=OglPreferences().defaultNameMethod)
         answer: CallbackAnswer = self._editMethod(pyutMethod=method)
         if answer.valid is True:
             self._pyutModelCopy.methods.append(method)

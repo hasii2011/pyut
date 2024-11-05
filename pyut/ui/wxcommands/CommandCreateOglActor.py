@@ -29,7 +29,7 @@ class CommandCreateOglActor(BaseWxCreateCommand):
 
         Returns:    The newly created actor
         """
-        pyutActor: PyutActor = PyutActor(actorName=self._oglPreferences.actorName)
+        pyutActor: PyutActor = PyutActor(actorName=self._oglPreferences.defaultNameActor)
 
         oglActor:  OglActor  = OglActor(pyutActor)
 

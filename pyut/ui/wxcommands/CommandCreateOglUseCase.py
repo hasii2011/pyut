@@ -14,6 +14,7 @@ from pyut.uiv2.eventengine.Events import EventType
 
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
+
 class CommandCreateOglUseCase(BaseWxCreateCommand):
 
     def __init__(self, x: int, y: int, eventEngine: IEventEngine):
@@ -24,7 +25,7 @@ class CommandCreateOglUseCase(BaseWxCreateCommand):
 
     def _createPrototypeInstance(self) -> OglUseCase:
 
-        pyutUseCase: PyutUseCase = PyutUseCase(name=self._oglPreferences.useCaseName)
+        pyutUseCase: PyutUseCase = PyutUseCase(name=self._oglPreferences.defaultNameUsecase)
         oglUseCase:  OglUseCase  = OglUseCase(pyutUseCase)
 
         return oglUseCase
