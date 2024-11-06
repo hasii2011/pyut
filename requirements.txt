@@ -5,12 +5,12 @@ setuptools==70.1.1
 # the following necessary when building the
 # application with py2App
 chardet==5.2.0
-PyGithub==2.2.0
+PyGithub==2.4.0
 Deprecated==1.2.14
 
 py2app==0.28.8
 buildlackey==1.7.0
-versionoverlord==1.4.0
+# versionoverlord==1.4.0
 
 html-testRunner~=1.2.1
 mypy==1.13.0

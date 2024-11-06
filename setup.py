@@ -82,7 +82,7 @@ setup(
         'oglio>=2.3.1',
         'pyutplugins>=2.6.0',
         'semantic-version==2.10.0',
-        'PyGithub==2.2.0',
+        'PyGithub==2.4.0',
         'wxPython==4.2.2',
         'chardet==5.2.0'
     ]
