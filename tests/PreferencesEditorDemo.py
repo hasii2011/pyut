@@ -35,7 +35,7 @@ class DemoPreferencesPage(StockPreferencesPage):
 
 class MainFrame(SizedFrame):
     def __init__(self):
-        super().__init__(parent=None, id=ID_ANY, title="Show da' Anomaly", size=(300,200), style=DEFAULT_FRAME_STYLE)
+        super().__init__(parent=None, id=ID_ANY, title="Show da' Anomaly", size=(300, 200), style=DEFAULT_FRAME_STYLE)
 
         self._preferencesEditor: PreferencesEditor = cast(PreferencesEditor, None)
         sizedPanel:   SizedPanel = self.GetContentsPane()

@@ -48,6 +48,7 @@ from codeallybasic.SecureConversions import SecureConversions
 from pyutplugins.PluginManager import PluginManager
 
 from pyut import __version__ as pyutVersion
+from pyut.preferences.PyutPreferencesV3 import PyutPreferencesV3
 
 from pyut.ui.Action import Action
 
@@ -114,6 +115,8 @@ class PyutApplicationFrameV2(Frame):
             title:      Application title
         """
         self._prefs: PyutPreferencesV2 = PyutPreferencesV2()
+
+        self._prefsNew: PyutPreferencesV3 = PyutPreferencesV3()
 
         appSize: Size = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
 
