@@ -300,7 +300,8 @@ class DiagramNotebook(Notebook):
 
         for umlObject in umlObjects:
 
-            pyutObject: PyutObject = umlObject.pyutObject
+            # will not get a OglSDInstance
+            pyutObject: PyutObject = umlObject.pyutObject       # type: ignore
             if isinstance(pyutObject, PyutInterface):
                 pyutInterface: PyutInterface = cast(PyutInterface, pyutObject)
                 if pyutInterface.name != '' or len(pyutInterface.name) > 0:
