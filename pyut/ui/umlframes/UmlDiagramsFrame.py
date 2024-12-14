@@ -181,8 +181,6 @@ class UmlDiagramsFrame(UmlFrame):
 
     def _onShapeSelected(self, event: ShapeSelectedEvent):
         """
-        In practice this is only used on UML Class diagrams when the user
-        wants to create links between classes;  For example, associations and inheritance
 
         Args:
             event:   Event which contains data on the selected shape
@@ -190,8 +188,6 @@ class UmlDiagramsFrame(UmlFrame):
         shapeSelectedData: ShapeSelectedEventData = event.shapeSelectedData
 
         selectedOglObject: OglObject = cast(OglObject, shapeSelectedData.shape)
-
-        assert isinstance(selectedOglObject, OglObject) is True, 'Ogl layer should only select Ogl Objects'
 
         if self._actionHandler.actionWaiting:
             self.umlDiagramFrameLogger.debug(f'{shapeSelectedData=}')
@@ -206,7 +202,7 @@ class UmlDiagramsFrame(UmlFrame):
         selectedOglClass: OglClass = cutOglClassEvent.selectedShape
         self._eventEngine.sendEvent(EventType.DeSelectAllShapes)
 
-        selectedOglClass.SetSelected(True)
+        selectedOglClass.selected = True
         self._eventEngine.sendEvent(EventType.CutShape, shapeToCut=selectedOglClass)
 
     # noinspection PyUnusedLocal

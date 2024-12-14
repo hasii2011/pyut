@@ -42,17 +42,16 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         self._cdInstances = []  # type: ignore
 
     # noinspection PyUnusedLocal
-    def createNewSDInstance(self, x, y):
+    def createNewSDInstance(self, x, y) -> OglSDInstance:
         """
         Create a new sequence diagram instance
         """
         # Create and add instance
         pyutSDInstance: PyutSDInstance = PyutSDInstance()
-        oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance)
-
+        oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance=pyutSDInstance)
         self.addShape(oglSDInstance, x, oglSDInstance.GetPosition()[1])
 
-        return pyutSDInstance
+        return oglSDInstance
 
     def createNewLink(self, src, dst, srcPos=None, dstPos=None):
         """

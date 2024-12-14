@@ -60,7 +60,7 @@ class PluginProjectCreator:
                         pluginDocument.oglLinks.append(oglInterface2)
                     case OglSDInstance():
                         oglSDInstance: OglSDInstance = cast(OglSDInstance, umlObject)
-                        pluginDocument.oglSDInstances[oglSDInstance.pyutObject.id] = oglSDInstance
+                        pluginDocument.oglSDInstances[oglSDInstance.pyutSDInstance.id] = oglSDInstance
                     case OglSDMessage():
                         oglSDMessage: OglSDMessage = cast(OglSDMessage, umlObject)
                         pluginDocument.oglSDMessages[oglSDMessage.pyutObject.id] = oglSDMessage

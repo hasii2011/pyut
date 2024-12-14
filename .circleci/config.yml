@@ -15,7 +15,7 @@ workflows:
 jobs:
   build:
     docker:
-      - image: cimg/python:3.11-browsers
+      - image: cimg/python:3.12-browsers
     executor: python/default
     steps:
       - checkout
@@ -36,9 +36,9 @@ jobs:
             pip install codeallybasic==1.7.0
             pip install codeallyadvanced==1.3.2
             pip install pyutmodelv2==2.2.0  
-            pip install ogl==3.1.0
-            pip install oglio==2.3.1
-            pip install pyutplugins==3.0.0
+            pip install ogl==3.6.0
+            pip install oglio==2.3.3
+            pip install pyutplugins==3.1.1
             pip install html-testRunner==1.2.1
             pip install buildlackey==1.7.0
       - run:

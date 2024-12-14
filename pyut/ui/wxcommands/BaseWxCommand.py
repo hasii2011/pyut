@@ -94,7 +94,12 @@ class BaseWxCommand(Command):
         """
         ans: bool = False
 
-        if objectToRemove.pyutObject.id == potentialObject.pyutObject.id:
-            ans = True
+        if isinstance(objectToRemove, OglSDInstance):
+            nonOglObject: OglSDInstance = cast(OglSDInstance, objectToRemove)
+            if nonOglObject.pyutSDInstance.id == nonOglObject.pyutSDInstance.id:
+                ans = True
+        else:
+            if objectToRemove.pyutObject.id == potentialObject.pyutObject.id:   # type: ignore
+                ans = True
 
         return ans

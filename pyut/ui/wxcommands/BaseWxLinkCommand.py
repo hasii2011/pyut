@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from typing import Tuple
 from typing import cast
 
-from miniogl.ControlPoint import ControlPoint
+from ogl.OglActor import OglActor
 from wx import Command
 from wx import Point
 
@@ -15,6 +15,7 @@ from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.LineShape import ControlPoints
+from miniogl.ControlPoint import ControlPoint
 
 from miniogl.models.ShapeModel import ShapeModel
 
@@ -227,7 +228,10 @@ class BaseWxLinkCommand(Command):
         srcY  = srcRelativeCoordinates[1]
         destY = destRelativeCoordinates[1]
 
-        pyutSDMessage = PyutSDMessage(BaseWxLinkCommand.NO_NAME_MESSAGE, src.pyutObject, srcY, dest.pyutObject, destY)
+        if isinstance(src, OglActor):
+            pyutSDMessage: PyutSDMessage = PyutSDMessage(BaseWxLinkCommand.NO_NAME_MESSAGE, src.pyutObject, srcY, dest.pyutSDInstance, destY)
+        else:
+            pyutSDMessage = PyutSDMessage(BaseWxLinkCommand.NO_NAME_MESSAGE, src.pyutSDInstance, srcY, dest.pyutSDInstance, destY)
 
         oglLinkFactory = getOglLinkFactory()
         oglSdMessage: OglSDMessage = oglLinkFactory.getOglLink(srcShape=src, pyutLink=pyutSDMessage, destShape=dest, linkType=PyutLinkType.SD_MESSAGE)

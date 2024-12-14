@@ -10,6 +10,7 @@ from logging import getLogger
 from dataclasses import dataclass
 
 from codeallybasic.SingletonV3 import SingletonV3
+
 from wx import ID_OK
 from wx import CANCEL
 from wx import CENTRE
@@ -35,6 +36,8 @@ from ogl.OglObject import OglObject
 from ogl.OglClass import OglClass
 from ogl.OglText import OglText
 from ogl.OglUseCase import OglUseCase
+
+from ogl.sd.OglSDInstance import OglSDInstance
 
 from pyut.ui.wxcommands.CommandCreateLollipopInterface import CommandCreateLollipopInterface
 from pyut.ui.wxcommands.CommandCreateOglActor import CommandCreateOglActor
@@ -287,7 +290,7 @@ class ActionHandler(metaclass=SingletonV3):
         return handlerStatus
 
     # noinspection PyAttributeOutsideInit
-    def shapeSelected(self, umlDiagramsFrame: 'UmlDiagramsFrame', oglObject: OglObject, position: Point):
+    def shapeSelected(self, umlDiagramsFrame: 'UmlDiagramsFrame', oglObject: OglObject | OglSDInstance, position: Point):
         """
         Do action when a shape is selected.
 
@@ -300,9 +303,9 @@ class ActionHandler(metaclass=SingletonV3):
         assert oglObject is not None, 'This should not happen since Ogl layer indirectly sent this event'
 
         if self._currentAction in SOURCE_ACTIONS:
-            self._attemptSourceAction(oglObject, position)
+            self._attemptSourceAction(cast(OglObject, oglObject), position)
         elif self._currentAction in DESTINATION_ACTIONS:
-            self._attemptDestinationAction(oglObject, position, umlDiagramsFrame)
+            self._attemptDestinationAction(cast(OglObject, oglObject), position, umlDiagramsFrame)
         else:
             self._setStatusText("Error : Action not supported by the Action Handler")
             return
@@ -442,14 +445,20 @@ class ActionHandler(metaclass=SingletonV3):
             y:
         """
         from pyutmodelv2.PyutSDInstance import PyutSDInstance
+        from ogl.sd.OglSDInstance import OglSDInstance
 
-        instance: PyutSDInstance = umlFrame.createNewSDInstance(x, y)
+        instance: OglSDInstance = umlFrame.createNewSDInstance(x, y)
         if not self._currentActionPersistent:
             self._currentAction = Action.SELECTOR
             self._selectTool(SharedIdentifiers.ID_ARROW)
-        dlg = TextEntryDialog(umlFrame, "Instance name", "Enter instance name", instance.instanceName, OK | CANCEL | CENTRE)
+        dlg = TextEntryDialog(umlFrame, "Instance name", "Enter instance name", instance.pyutSDInstance.instanceName, OK | CANCEL | CENTRE)
         if dlg.ShowModal() == ID_OK:
-            instance.instanceName = dlg.GetValue()
+
+            instanceName: str = dlg.GetValue()
+
+            pyutSDInstance: PyutSDInstance = instance.pyutSDInstance
+            pyutSDInstance.instanceName = instanceName
+            instance.pyutSDInstance = pyutSDInstance
         dlg.Destroy()
         umlFrame.Refresh()
 

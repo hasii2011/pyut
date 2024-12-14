@@ -458,7 +458,7 @@ class ProjectManager:
                         oglDocument.oglActors.append(oglObject)
                     case OglSDInstance() as oglObject:
                         oglSDInstance: OglSDInstance = cast(OglSDInstance, oglObject)
-                        modelId = oglSDInstance.pyutObject.id
+                        modelId = oglSDInstance.pyutSDInstance.id
                         oglDocument.oglSDInstances[modelId] = oglSDInstance
                     case _:
                         self.logger.error(f'Unknown ogl object type: {oglObject}, not saved')

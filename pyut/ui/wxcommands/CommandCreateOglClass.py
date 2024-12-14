@@ -86,7 +86,8 @@ class CommandCreateOglClass(BaseWxCreateCommand):
 
         umlFrame: UmlDiagramsFrame = frame
         self.logger.info(f'{umlFrame=}')
-        pyutClass: PyutClass = cast(PyutClass, self._shape.pyutObject)
+        # SD Instance will not appear here
+        pyutClass: PyutClass = cast(PyutClass, self._shape.pyutObject)  # type: ignore
         self._removeOglObjectFromFrame(umlFrame=umlFrame, oglObject=self._shape, pyutClass=pyutClass)
 
     def _cbGetActiveUmlFrameForAdd(self, frame: 'UmlDiagramsFrame'):

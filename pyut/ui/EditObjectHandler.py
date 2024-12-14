@@ -24,9 +24,8 @@ from miniogl.ControlPoint import ControlPoint
 from miniogl.SizerShape import SizerShape
 from miniogl.TextShape import TextShape
 
-
-from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
+from ogl.sd.OglSDInstance import OglSDInstance
 
 from ogl.OglInheritance import OglInheritance
 from ogl.OglText import OglText
@@ -221,16 +220,36 @@ class EditObjectHandler:
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
 
+    # def _editSDInstanceName(self, umlFrame: UmlFrame, oglSDInstance: OglSDInstance):
+    #     pyutSDInstance:    PyutSDInstance = oglSDInstance.pyutObject
+    #     cmdModify:         CommandModify  = CommandModify(name='Undo Instance Name', anyObject=pyutSDInstance, eventEngine=self._eventEngine)
+    #     cmdModify.methodName       = 'instanceName'
+    #     cmdModify.methodIsProperty = True
+    #     cmdModify.oldParameters    = Parameters([pyutSDInstance.instanceName])
+    #
+    #     with DlgEditSDInstanceName(umlFrame, instanceName=pyutSDInstance.instanceName) as dlg:
+    #         if dlg.ShowModal() == ID_OK:
+    #             cmdModify.newParameters = Parameters([dlg.GetValue()])
+    #             self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
+    #             self._eventEngine.sendEvent(EventType.UMLDiagramModified)
+
     def _editSDInstanceName(self, umlFrame: UmlFrame, oglSDInstance: OglSDInstance):
-        pyutSDInstance:    PyutSDInstance = oglSDInstance.pyutObject
-        cmdModify:         CommandModify  = CommandModify(name='Undo Instance Name', anyObject=pyutSDInstance, eventEngine=self._eventEngine)
-        cmdModify.methodName       = 'instanceName'
+
+        pyutSDInstance:    PyutSDInstance = oglSDInstance.pyutSDInstance
+        cmdModify:         CommandModify  = CommandModify(name='Undo Instance Name', anyObject=oglSDInstance, eventEngine=self._eventEngine)
+        cmdModify.methodName       = 'pyutSDInstance'
         cmdModify.methodIsProperty = True
-        cmdModify.oldParameters    = Parameters([pyutSDInstance.instanceName])
+        cmdModify.oldParameters    = Parameters([pyutSDInstance])
 
         with DlgEditSDInstanceName(umlFrame, instanceName=pyutSDInstance.instanceName) as dlg:
             if dlg.ShowModal() == ID_OK:
-                cmdModify.newParameters = Parameters([dlg.GetValue()])
+
+                newPyutSDInstance: PyutSDInstance = PyutSDInstance()
+                newPyutSDInstance.instanceGraphicalType  = pyutSDInstance.instanceGraphicalType
+                newPyutSDInstance.instanceLifeLineLength = pyutSDInstance.instanceLifeLineLength
+                newPyutSDInstance.instanceName           = dlg.GetValue()
+
+                cmdModify.newParameters = Parameters([newPyutSDInstance])
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
