@@ -32,7 +32,7 @@ from pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 from pyut.ui.PyutApplicationFrameV2 import PyutApplicationFrameV2
 
 
-class PyutAppV2(wxApp):
+class PyutApp(wxApp):
 
     SPLASH_TIME_OUT: int = 6000
     """
@@ -71,7 +71,7 @@ class PyutAppV2(wxApp):
         agwStyle: int    = AS_CENTER_ON_PARENT | AS_TIMEOUT
         self.splash = AdvancedSplash(parent=self._frame,
                                      bitmap=bmp,
-                                     timeout=PyutAppV2.SPLASH_TIMEOUT_MSECS,
+                                     timeout=PyutApp.SPLASH_TIMEOUT_MSECS,
                                      agwStyle=agwStyle
                                      )
 

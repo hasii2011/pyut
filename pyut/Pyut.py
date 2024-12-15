@@ -16,7 +16,7 @@ from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.ui.PyutAppV2 import PyutAppV2
+from pyut.ui.PyutApp import PyutApp
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
@@ -61,7 +61,7 @@ class Pyut:
 
     def startApplication(self):
         self._displayIntroduction()
-        app: PyutAppV2 = PyutAppV2(redirect=False)
+        app: PyutApp = PyutApp(redirect=False)
 
         pyut._displaySystemMetrics()
 
@@ -140,7 +140,7 @@ class Pyut:
             self.cmdLineArgsHandled = True
             return
         else:
-            self.logger.info(f'If these are files;  Will be loaded by PyutAppV2 startup')
+            self.logger.info(f'If these are files;  Will be loaded by PyutApp startup')
         self.cmdLineArgsHandled = False
 
 
