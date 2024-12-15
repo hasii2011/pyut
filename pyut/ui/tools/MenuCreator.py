@@ -40,10 +40,10 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
-from pyut.ui.menuhandler.EditMenuHandler import EditMenuHandler
-from pyut.ui.menuhandler.FileMenuHandler import FileMenuHandler
-from pyut.ui.menuhandler.HelpMenuHandler import HelpMenuHandler
-from pyut.ui.menuhandler.ToolsMenuHandler import ToolsMenuHandler
+from pyut.ui.menuhandlers.EditMenuHandler import EditMenuHandler
+from pyut.ui.menuhandlers.FileMenuHandler import FileMenuHandler
+from pyut.ui.menuhandlers.HelpMenuHandler import HelpMenuHandler
+from pyut.ui.menuhandlers.ToolsMenuHandler import ToolsMenuHandler
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 

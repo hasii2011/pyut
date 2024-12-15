@@ -15,7 +15,7 @@ from pyut import __version__ as pyutVersion
 from pyut.ui.dialogs.DlgAbout import DlgAbout
 from pyut.ui.dialogs.DlgPyutDebug import DlgPyutDebug
 
-from pyut.ui.menuhandler.BaseMenuHandler import BaseMenuHandler
+from pyut.ui.menuhandlers.BaseMenuHandler import BaseMenuHandler
 
 from pyut.PyutUtils import PyutUtils
 

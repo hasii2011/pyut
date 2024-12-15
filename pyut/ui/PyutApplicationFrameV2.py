@@ -50,11 +50,11 @@ from pyut import __version__ as pyutVersion
 
 from pyut.ui.Action import Action
 
-from pyut.ui.menuhandler.FileMenuHandler import FileMenuHandler
-from pyut.ui.menuhandler.ToolsMenuHandler import ToolsMenuHandler
-from pyut.ui.menuhandler.EditMenuHandler import EditMenuHandler
-from pyut.ui.menuhandler.HelpMenuHandler import HelpMenuHandler
-from pyut.ui.menuhandler.PyutFileDropTarget import PyutFileDropTarget
+from pyut.ui.menuhandlers.FileMenuHandler import FileMenuHandler
+from pyut.ui.menuhandlers.ToolsMenuHandler import ToolsMenuHandler
+from pyut.ui.menuhandlers.EditMenuHandler import EditMenuHandler
+from pyut.ui.menuhandlers.HelpMenuHandler import HelpMenuHandler
+from pyut.ui.menuhandlers.PyutFileDropTarget import PyutFileDropTarget
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 from pyut.ui.tools.MenuCreator import MenuCreator
