@@ -8,7 +8,7 @@ from abc import abstractmethod
 from wx import TreeItemId
 
 from pyut.enums.DiagramType import DiagramType
-from pyut.uiv2.Types import UmlFrameType
+from pyut.ui.Types import UmlFrameType
 
 
 class IPyutDocument(ABC):

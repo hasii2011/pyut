@@ -93,7 +93,7 @@ from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 from pyut.uiv2.PyutProjectV2 import PyutProjectV2
 from pyut.uiv2.PyutProjectV2 import UmlFrameType
 
-from pyut.uiv2.Types import createDiagramFrame
+from pyut.ui.Types import createDiagramFrame
 
 from pyut.uiv2.eventengine.EventEngine import NewNamedProjectCallback
 

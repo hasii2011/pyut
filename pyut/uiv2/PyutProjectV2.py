@@ -18,7 +18,7 @@ from pyut.uiv2.IPyutProject import IPyutProject
 from pyut.uiv2.IPyutProject import PyutDocuments
 from pyut.uiv2.IPyutProject import UmlFrameType
 
-from pyut.uiv2.Types import Frames
+from pyut.ui.Types import Frames
 
 if TYPE_CHECKING:
     from pyut.uiv2.ProjectTree import ProjectTree

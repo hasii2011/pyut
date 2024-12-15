@@ -1,3 +1,4 @@
+
 from typing import List
 from typing import Union
 from typing import cast
@@ -68,7 +69,7 @@ from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 
-from pyut.uiv2.Types import UmlFrameType
+from pyut.ui.Types import UmlFrameType
 
 from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferences import DlgPyutPreferences
 

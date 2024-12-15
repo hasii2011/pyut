@@ -21,7 +21,7 @@ from pyutplugins.ExternalTypes import PluginProject
 
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject
-from pyut.uiv2.Types import UmlFrameType
+from pyut.ui.Types import UmlFrameType
 
 
 class PluginProjectCreator:
